@@ -1,126 +1,168 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7326B17B401;
-	Fri, 14 Feb 2025 04:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6972142AAF;
+	Fri, 14 Feb 2025 04:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739507656; cv=none; b=bVgVT/8W1pM0uMec/td9eLoBA9REK/71wdKiuMS9QshfL/G73GXavK12p9WmDfr4SoeS4MaJ1PZku0b0xul7lBttJqYAbkft28k8Gd1sfb1QrC8bVe3Es8DOgjzYedstekgeQ6tEdeKPucHePAJTkW+EMtK3OS2gnqfaN3nBZQY=
+	t=1739508619; cv=none; b=gMmbRtVXkfuS41WCQpjm8ZXUBaLMZxiOaUICtHW5+IlHiubpOORZaW3z+i5nxlcv+7u1S/skgp1yat91Ge17tx/FuJ7QqvkOMC/dSztTaxRA7h3WqyjDMT0vV+gnCL7ytfC7gK9wMoIgA2zrGOMqOHVwNCSWKitC4w3dyix1GC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739507656; c=relaxed/simple;
-	bh=aE2wWcqpFbC4XebLj7NF3xjtNb+1wLW9AH1SRvAJy9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kC8Vn4PHooL3bWXg1Ie+QKgh1cPFq+emTmhWS0KwjE9IMT8KLhPq6jFNtQ+osXqGoOWcY4Bfg8SZq+0myG3y0J08LFKlqta8xocIF7UDLb6FRkTTKymqnD5nYmWqDMwZmUKd9ZrzL5PM3Y9a4UKpvOhshUUoZnJZcUvlW9rlp+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bbT5E6bx; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739508619; c=relaxed/simple;
+	bh=gPVj4mO6xQJrCt3sZYWJNbH9C8SimtbKXR7wY1fjf90=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SfltRmKOiw5sz1HQg9km8aSfBgAe1dSK7bCqmvFVg+2PxTYBA+eJNZF0pUSrQmArkxneJ7jZpcSdZhU3z18eEevM2GUWkgujQcs2Yx5fCqpsx7j1lTyS1KxtoI1+j3KXEZa4H4inpHSpDWCGwdKWvbZ2TltB+b+OboBZt5KuLyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JorwI9bI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbT5E6bx"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab7f42ee3ecso325847166b.0;
-        Thu, 13 Feb 2025 20:34:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739507653; x=1740112453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aE2wWcqpFbC4XebLj7NF3xjtNb+1wLW9AH1SRvAJy9A=;
-        b=bbT5E6bxHBpVQS80mYwrID2IuYMN4ZFBzu82MlIrQP4EWTqQjzskOQdm2yLssOylxw
-         ebsb8oleBO0Od5gKbysSObkfydMD9+G+cKyw5iVt8SSa0g/yauMhI7obvBQ9D/12xp3p
-         KE1G/DaA3bvKcgF6htn+1AM1VU6YiolJwDavK3Uz5Lo9TUlJcKyXSUoHWARalayUya4Z
-         awO5eYul19vEPza1INstZCU5npKHL8atE9TYicsu+euCdF9ofyylHxB5PmF4jUq8fNED
-         NmrQjkEJWkRfVHMiEetty44RgJnI9FkuU4ZdfK9HMfYamkSWp52m0eBnwNWURPP/6JON
-         mntA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739507653; x=1740112453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aE2wWcqpFbC4XebLj7NF3xjtNb+1wLW9AH1SRvAJy9A=;
-        b=Eyaf/MLSrsNi3JdHohGeoEwemi237dKNWSBhpO0DLbwMK8dSz7wWqwfHKgwehOcyL7
-         4HQ72CJMmlq6PQkE2mKh8LMhaFrsi2YNn5CPi+xjI8rt5RafH7QSf2py/tSR5Ctlnlm5
-         0c5HIxbXbZ2CzN3ydalapbdAJA6MAmoUeKU2NIJ3mPbqMk3HVqpmCovHBCzfqrezjJTE
-         7MOoco8cuxCEh4/4qMevzlwNfbAZwZj9R3rzXr4tEsQn157g4ukFTuX0Z9o1KM5v3pwo
-         KVgvF3ZTgqduxNmc5+oosfRGDhfPHIW765nPDKwoS70ELDXY4T+FXyun+Zu7VNjDpzvi
-         PwJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrQp68rAddgmf4RUee9lv6TQ6Q0s+ehwkyOUReBGGzz/sA0hNcIUbLY/C4Gv1FfgRNMdc73VX3QOc=@vger.kernel.org, AJvYcCXcyd7TN84StiNcjjpdPxv/XEJjHOjjIzgDLe1BTUx3Xv+uTPfCGN9pkaTnYfsUKtYlvNm2dMw+FKkFBVXe@vger.kernel.org
-X-Gm-Message-State: AOJu0YymyfU1Z/pILkQNlBQyVRHUP3wq/LEqEPOyczXXmdhpFG9SVr5s
-	1bjpx0XK1jzdHU/HJh6KK6wYWPYUlQluwQEYSBvBlUkYlLpsx9BslGmxqBpSyv1dA8tEkAOYSSU
-	z/7KLoAW+4XtLlufDfLloXIXOqKe8/GsqJDfaXQ==
-X-Gm-Gg: ASbGncsovH5ujNbsuZf824XL2v2DHktKwDQlOgNnj74vJBzj+bOHgXIsnCSfh12h6hh
-	bMmasG78FLxWb7k0PL8V4kNrrMSkBtRv8ERGXaPZobxSmIL76OVURUSS9YTZ9WYD6lyPpTZCC
-X-Google-Smtp-Source: AGHT+IEdWqk6OuWF9cpgOPkxClX2jfBAmhUTYRnLlwYU2C8FQEalrxY4didEhXlEEI2pQRacKG1c6+qdxnFlk94LWCU=
-X-Received: by 2002:a17:906:f59b:b0:ab6:8bc1:9b5a with SMTP id
- a640c23a62f3a-aba5018d9a1mr611382466b.41.1739507652395; Thu, 13 Feb 2025
- 20:34:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JorwI9bI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739508618; x=1771044618;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=gPVj4mO6xQJrCt3sZYWJNbH9C8SimtbKXR7wY1fjf90=;
+  b=JorwI9bIUscB+rO2CNT6mhd6Aej2x39pdqMJ4kV/Svc0iULJQFsnsrRa
+   Mj51M5DpENNxBU3lHUXBBEOTQDiaBBY0GnS1wl2kvrx9akq1jeyV0UlM8
+   o+VRAtN/moCQTNt+Bi/pvCoN3JTKnPyYrBqiSQrkJgpfmbPb6OEPk6PB4
+   kF7g8s057LUA3Kw+vXNJP1mys2Y+DJXn4FjVndzs5wMKYerNqTKN6IMkI
+   5QbzxYSHBbpQMIntK2H3rL+SKs91L7JQ1xLbanLAgeXDCGvqchEKPGQ6x
+   B2ED/Ii7sTOcmx6yRdck7j6ukRXknGaXIVtDTEoQT4bMMwwPc+FUZK+Yo
+   w==;
+X-CSE-ConnectionGUID: u7AS2e6uShGQvvfrlgPHgA==
+X-CSE-MsgGUID: 65PyX/SOR6CSShPK05QAYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40361826"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="40361826"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 20:50:15 -0800
+X-CSE-ConnectionGUID: 2b+fgtn9Q7+FDC4KwavSPQ==
+X-CSE-MsgGUID: wezvzmt3Tm6HcUS0QIfqlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="113096903"
+Received: from mohdfai2-mobl.gar.corp.intel.com (HELO [10.247.123.6]) ([10.247.123.6])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 20:50:07 -0800
+Message-ID: <e5c5d7ed-9f47-4af1-aee4-4632099bd546@linux.intel.com>
+Date: Fri, 14 Feb 2025 12:50:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213054222.21776-1-alexs@kernel.org> <20250213054222.21776-2-alexs@kernel.org>
- <5d35c3f6-a52f-4e63-a972-50ee2898947e@linux.dev> <CAD-N9QXhmNBUFPfo11-h0H0Du_JFNX_Qxcs8aoesW8=ABgneaw@mail.gmail.com>
-In-Reply-To: <CAD-N9QXhmNBUFPfo11-h0H0Du_JFNX_Qxcs8aoesW8=ABgneaw@mail.gmail.com>
-From: Alex Shi <seakeel@gmail.com>
-Date: Fri, 14 Feb 2025 12:33:35 +0800
-X-Gm-Features: AWEUYZk20DCwab62mCru-z3vCsCxAjsGUM0lUQ3P4Vqq843x7N2uOL-h_E0v6dQ
-Message-ID: <CAJy-AmmZAuZWUS5TTuSGg5y33Q7Q52CGQ7en5vg_eB2W2y_s9Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] docs/zh_CN: add few request for Chinese translation
-To: Dongliang Mu <mudongliangabcd@gmail.com>
-Cc: Yanteng Si <si.yanteng@linux.dev>, alexs@kernel.org, 
-	Yanteng Si <siyanteng@loongson.cn>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH iwl-next v4 0/9] igc: Add support for Frame Preemption
+ feature in IGC
+From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@linux.intel.com>
+To: Kurt Kanzenbach <kurt@linutronix.de>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Simon Horman <horms@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Furong Xu <0x1207@gmail.com>,
+ Russell King <rmk+kernel@armlinux.org.uk>,
+ Serge Semin <fancer.lancer@gmail.com>,
+ Xiaolei Wang <xiaolei.wang@windriver.com>,
+ Suraj Jaiswal <quic_jsuraj@quicinc.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, Gal Pressman <gal@nvidia.com>,
+ Jesper Nilsson <jesper.nilsson@axis.com>,
+ Andrew Halaney <ahalaney@redhat.com>,
+ Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+References: <20250210070207.2615418-1-faizal.abdul.rahim@linux.intel.com>
+ <20250210070207.2615418-1-faizal.abdul.rahim@linux.intel.com>
+ <20250212220121.ici3qll66pfoov62@skbuf>
+ <b19357dc-590d-458c-9646-ee5993916044@linux.intel.com>
+ <87cyfmnjdh.fsf@kurt.kurt.home>
+ <5902cc28-a649-4ae9-a5ba-83aa265abaf8@linux.intel.com>
+ <20250213130003.nxt2ev47a6ppqzrq@skbuf>
+ <1c981aa1-e796-4c53-9853-3eae517f2f6d@linux.intel.com>
+ <877c5undbg.fsf@kurt.kurt.home> <20250213184613.cqc2zhj2wkaf5hn7@skbuf>
+ <87v7td3bi1.fsf@kurt.kurt.home>
+ <b7740709-6b4a-4f44-b4d7-e265bb823aca@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <b7740709-6b4a-4f44-b4d7-e265bb823aca@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-RG9uZ2xpYW5nIE11IDxtdWRvbmdsaWFuZ2FiY2RAZ21haWwuY29tPiDkuo4yMDI15bm0MuaciDE0
-5pel5ZGo5LqUIDExOjI15YaZ6YGT77yaDQo+DQo+IE9uIFRodSwgRmViIDEzLCAyMDI1IGF0IDY6
-MjTigK9QTSBZYW50ZW5nIFNpIDxzaS55YW50ZW5nQGxpbnV4LmRldj4gd3JvdGU6DQo+ID4NCj4g
-Pg0KPiA+IOWcqCAyLzEzLzI1IDE6NDIgUE0sIGFsZXhzQGtlcm5lbC5vcmcg5YaZ6YGTOg0KPiA+
-ID4gRnJvbTogQWxleCBTaGkgPGFsZXhzQGtlcm5lbC5vcmc+DQo+ID4gPg0KPiA+ID4gQSBnb29k
-IGNoZWNrZWQgc3VtbWl0IGNvdWxkIHNhdmUgbXVjaCB0aW1lIGZvciBsaW51eC1kb2MgbWFpbnRh
-aW5lci4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4IFNoaSA8YWxleHNAa2VybmVs
-Lm9yZz4NCj4gPiA+IENjOiBZYW50ZW5nIFNpIDxzaXlhbnRlbmdAbG9vbmdzb24uY24+DQo+ID4g
-PiBDYzogSm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4NCj4gPiA+IENjOiBsaW51eC1k
-b2NAdmdlci5rZXJuZWwub3JnDQo+ID4gPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zw0KPiA+DQo+ID4gUmV2aWV3ZWQtYnk6IFlhbnRlbmcgU2kgPHNpLnlhbnRlbmdAbGludXguZGV2
-Pg0KPiA+DQo+ID4NCj4gPg0KPiA+ID4gLS0tDQo+ID4gPiAgIERvY3VtZW50YXRpb24vdHJhbnNs
-YXRpb25zL3poX0NOL2luZGV4LnJzdCB8IDggKysrKysrKy0NCj4gPiA+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy96aF9DTi9pbmRleC5yc3QgYi9Eb2N1bWVu
-dGF0aW9uL3RyYW5zbGF0aW9ucy96aF9DTi9pbmRleC5yc3QNCj4gPiA+IGluZGV4IDc1NzRlMTY3
-MzE4MC4uY2M1MTJjYTU0MTcyIDEwMDY0NA0KPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi90cmFu
-c2xhdGlvbnMvemhfQ04vaW5kZXgucnN0DQo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL3RyYW5z
-bGF0aW9ucy96aF9DTi9pbmRleC5yc3QNCj4gPiA+IEBAIC0yNiw3ICsyNiwxMyBAQA0KPiA+ID4g
-ICDpobrkvr/or7TkuIvvvIzkuK3mlofmlofmoaPkuZ/pnIDopoHpgbXlrojlhoXmoLjnvJbnoIHp
-o47moLzvvIzpo47moLzkuK3kuK3mloflkozoi7HmlofnmoTkuLvopoHkuI3lkIzlsLHmmK/kuK3m
-locNCj4gPiA+ICAg55qE5a2X56ym5qCH54K55Y2g55So5Lik5Liq6Iux5paH5a2X56ym5a695bqm
-77yM5omA5Lul77yM5b2T6Iux5paH6KaB5rGC5LiN6KaB6LaF6L+H5q+P6KGMMTAw5Liq5a2X56ym
-5pe277yMDQo+ID4gPiAgIOS4reaWh+WwseS4jeimgei2hei/hzUw5Liq5a2X56ym44CC5Y+m5aSW
-77yM5Lmf6KaB5rOo5oSPJy0n77yMJz0n562J56ym5Y+35LiO55u45YWz5qCH6aKY55qE5a+56b2Q
-44CC5Zyo5bCGDQo+ID4gPiAt6KGl5LiB5o+Q5Lqk5Yiw56S+5Yy65LmL5YmN77yM5LiA5a6a6KaB
-6L+b6KGM5b+F6KaB55qEIGBgY2hlY2twYXRjaC5wbGBgIOajgOafpeWSjOe8luivkea1i+ivleOA
-gg0KPiA+ID4gK+ihpeS4geaPkOS6pOWIsOekvuWMuuS5i+WJje+8jOS4gOWumuimgei/m+ihjOW/
-heimgeeahCBgYGNoZWNrcGF0Y2gucGxgYCDmo4Dmn6XlkoznvJbor5HmtYvor5XvvIznoa7kv50N
-Cj4gPiA+ICvlnKggYGBtYWtlIGh0bWxkb2NzL3BkZmRvY3NgYCDkuK3kuI3lop7liqDmlrDnmoTl
-kYrorabvvIzmnIDlkI7vvIzlronoo4Xmo4Dmn6XkvaDnlJ/miJDnmoQNCj4gPiA+ICtodG1sL3Bk
-ZiDmlofku7bvvIznoa7orqTlroPku6znnIvotbfmnaXmmK/mraPluLjnmoTjgIINCj4gPiA+ICsN
-Cj4gPiA+ICvmj5DkuqTkuYvliY3or7fnoa7orqTkvaDnmoTooaXkuIHlj6/ku6XmraPluLjmj5Dk
-uqTliLDkuK3mlofmlofmoaPnu7TmiqTlupM6DQo+ID4gPiAraHR0cHM6Ly9naXQua2VybmVsLm9y
-Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvYWxleHMvbGludXguZ2l0Lw0KPiA+DQo+ID4gPiAr
-5aaC5p6c5L2g55qE6KGl5LiB5L6d6LWW5LqO5YW25LuW5Lq655qE6KGl5LiBLCDlj6/ku6XkuI7l
-hbbku5bkurrllYbph4/lkI7nlLHmn5DkuIDkuKrkurrlkIjlubbmj5DkuqTjgIINCj4gPg0KPiA+
-IEkgdGhpbmsgdGhpcyByZXF1aXJlcyBhIGRldGFpbGVkIHR1dG9yaWFsLiBPdGhlcndpc2UsIGl0
-DQo+ID4NCj4gPiB3aWxsIGluY3JlYXNlIHRoZSBkaWZmaWN1bHR5IGZvciBiZWdpbm5lcnMgdG8g
-Z2V0IHN0YXJ0ZWQuDQo+ID4NCj4gPiBIb3cgYWJvdXQgcmVtb3ZpbmcgaXQgZm9yIG5vdz8gSSBo
-YXZlIGEgcGxhbiB0byB3cml0ZQ0KPiA+DQo+ID4gYSB0cmFuc2xhdGlvbiBndWlkZWJvb2suIFdo
-YXQncyB5b3VyIG9waW5pb24/DQo+DQo+IEdvb2QgaWRlYS4gSSBjYW4gaGVscCBjb250cmlidXRl
-LiBPdXIgVHJhbnNsYXRpb24gVGVhbSBoYXMgYSBzaW1wbGUNCj4gb25lIHRvIGd1aWRlIHRlYW0g
-bWVtYmVycyBpbiBrZXJuZWwgZG9jdW1lbnQgdHJhbnNsYXRpb24uDQo+DQo+IE9uZSBpc3N1ZSBp
-biBteSBtaW5kIGlzLCBgbWFrZSBodG1sZG9jc2AgbmVlZHMgbXVjaCByZXNvdWNlIGluIHRoZSBj
-b21waWxhdGlvbi4NCg0KTmljZSBkb2MhIExvb2tzIHZlcnkgdXNlZnVsLg0KQnV0IGl0IGFsc28g
-bWVudGlvbmVkICdtYWtlIGh0bWxkb2NzJyBpcyByZXF1aXJlZCwgc28gd2hhdCdzIHlvdXINCmZp
-bmFsIHN1Z2dlc3Rpb24gZm9yICdtYWtlIGh0bWxkb2NzJz8NCg0KPg0KPiBbMV0gaHR0cHM6Ly9n
-aXRodWIuY29tL2h1c3Qtb3Blbi1hdG9tLWNsdWIvVHJhbnNsYXRlUHJvamVjdC93aWtpLzMuMS0l
-RTUlODYlODUlRTYlQTAlQjglRTYlOTYlODclRTYlQTElQTMlRTclQkYlQkIlRTglQUYlOTElRTYl
-OEMlODclRTUlOEQlOTcNCg==
+
+
+On 14/2/2025 12:20 pm, Abdul Rahim, Faizal wrote:
+> 
+> 
+> On 14/2/2025 3:12 am, Kurt Kanzenbach wrote:
+>> On Thu Feb 13 2025, Vladimir Oltean wrote:
+>>> So, confusingly to me, it seems like one operating mode is fundamentally
+>>> different from the other, and something will have to change if both will
+>>> be made to behave the same. What will change? You say mqprio will behave
+>>> like taprio, but I think if anything, mqprio is the one which does the
+>>> right thing, in igc_tsn_tx_arb(), and taprio seems to use the default Tx
+>>> arbitration scheme?
+>>
+>> Correct. taprio is using the default scheme. mqprio configures it to
+>> what ever the user provided (in igc_tsn_tx_arb()).
+>>
+>>> I don't think I'm on the same page as you guys, because to me, it is
+>>> just odd that the P traffic classes would be the first ones with
+>>> mqprio, but the last ones with taprio.
+>>
+>> I think we are on the same page here. At the end both have to behave the
+>> same. Either by using igc_tsn_tx_arb() for taprio too or only using the
+>> default scheme for both (and thereby keeping broken_mqprio). Whatever
+>> Faizal implements I'll match the behavior with mqprio.
+>>
+> 
+> Hi Kurt & Vladimir,
+> 
+> After reading Vladimir's reply on tc, hw queue, and socket priority mapping 
+> for both taprio and mqprio, I agree they should follow the same priority 
+> scheme for consistency—both in code and command usage (i.e., taprio, 
+> mqprio, and fpe in both configurations). Since igc_tsn_tx_arb() ensures a 
+> standard mapping of tc, socket priority, and hardware queue priority, I'll 
+> enable taprio to use igc_tsn_tx_arb() in a separate patch submission.
+> 
+> I'll split the changes based on Vladimir's suggestion.
+> 
+> First part - ethtool-mm related:
+> igc: Add support to get frame preemption statistics via ethtool
+> igc: Add support to get MAC Merge data via ethtool
+> igc: Add support to set tx-min-frag-size
+> igc: Add support for frame preemption verification
+> igc: Set the RX packet buffer size for TSN mode
+> igc: Optimize TX packet buffer utilization
+> igc: Rename xdp_get_tx_ring() for non-XDP usage
+> net: ethtool: mm: Extract stmmac verification logic into a common library
+> 
+> Second part:
+> igc: Add support for preemptible traffic class in taprio and mqprio
+> igc: Use igc_tsn_tx_arb() for taprio queue priority scheme
+> igc: Kurt's patch on mqprio to use normal TSN Tx mode
+> 
+> Kurt can keep igc_tsn_tx_arb() for his mqprio patch, so preemptible tc 
+> should work the same for both taprio and mqprio.
+> 
+> I'm suggesting to include Kurt's patch in the second part since there's 
+> some dependency and potential code conflict, even though it mixes different 
+> functional changes in the same series.
+
+I forgot that the second part patch:
+igc: Add support for preemptible traffic class in taprio and mqprio
+
+depends on the first part ethtool-mm, which would delay Kurt's patch.
+
+So Kurt, if you'd prefer to submit yours first, that's okay too.
+
+
+
