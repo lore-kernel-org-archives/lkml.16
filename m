@@ -1,129 +1,71 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75C41DE2B4;
-	Fri, 14 Feb 2025 22:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BBC1DE2B4;
+	Fri, 14 Feb 2025 22:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739572640; cv=none; b=jf5KmH62rz06yd5v3IC4OpqQpuceO1RObqYDAvvk6gOtby57O/hjHWlwRW2fqQH+EaieIr7sRlZ6aBQ0Zz6Stir8q6+0HZH2XaSm12Hx/tRjbzg4Mff3YKCWOB7TFJtfvAOmoz9Tgfy/K3Htp/mBfO3xG5+hEbPqQyV4XS4hbQA=
+	t=1739572709; cv=none; b=q9EFaFHy1HLNj+4XoCz/Exywhl3UeVYf05kpYoY7Ikqd/Q/3zrOubNCj5edxUaqnjkUC5tlOdD6wAdauziauxnWQit0hGswalQgHxO+keFtlHd9QGnwMh+bFYOGi4zFtG2JP+Qd6wDdprjMnvYjwzloJvqIJMLEe4uoaguKIIE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739572640; c=relaxed/simple;
-	bh=r/NYCYjMogkoPU8rkXkhPxSGNwsywVNs1fQ8IZdA0n4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Vx3uZIgq5f8qh+l7vC9k0TH/PhfN8eVLQhweE1mU0Uars5QFhYm92rOsCIUsZesdgUl5d4sK/dDTyHXGkqaiOk86e+9xHqgTzbQrAuPvO+WiZjJc2Vn+WXk/XPiDDk9AoqvY77qLPkrn+z7GYJ85samrfIljmC3H/dHWP8/td3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hWbPBGNw; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739572709; c=relaxed/simple;
+	bh=szl/OLYs7mzB+NubdfuL4IBkjVF11zP8JCxRFtT6eK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zh9Bv1hwrCueOIIlfCz2MKtZZ+1ZLqq5QTgwkESvSk4KuoOvQdOfeMOl60IFR+hMHMpSyOCb2dMKqXQ4QLqidu9yN5LKS7zSFf8+GgqqHK4g+fY1oNKPVnzm6WYtwcrHULwfZTZm8068qfgZTP3C6QTiIJ0k2mK/K6GXlZfJOII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmCZrUJE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hWbPBGNw"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51EMb3Nc1043280
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 14 Feb 2025 16:37:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739572624;
-	bh=PSnKZ9pgEEZ6nNIIZ9dM7rFmu3IDFEefyD7U0e7a6so=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=hWbPBGNwNNtgiRAJOFdPM4u/GvQuf1BrvUi2N42/b7mUgj0g9ooN1VSt2mPP8O5P0
-	 sjbSOkhSp3d/M34ei97ktwEYN9lzC7bFLfFByLT/ZS7g+63VzJpgyVdha3tOfgLT0Y
-	 sV76BPCsP8lE+fF9E+uJ/eQmpGzKqV5qX7Z32z60=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51EMb3Zd083376;
-	Fri, 14 Feb 2025 16:37:03 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
- Feb 2025 16:37:03 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 14 Feb 2025 16:37:03 -0600
-Received: from [128.247.81.19] (uda0506412.dhcp.ti.com [128.247.81.19])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51EMb3Ow035234;
-	Fri, 14 Feb 2025 16:37:03 -0600
-Message-ID: <b3e96184-e20c-4935-b86c-73c95b00b9fc@ti.com>
-Date: Fri, 14 Feb 2025 16:37:03 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmCZrUJE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE60C4CED1;
+	Fri, 14 Feb 2025 22:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739572709;
+	bh=szl/OLYs7mzB+NubdfuL4IBkjVF11zP8JCxRFtT6eK8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JmCZrUJEPno8p6kZ6lkrEVnFM245IHgwgIg9agQmzBsaQ5oLCLsVY8qzO0EE8raFs
+	 Qz1WAhSNKm81Ziw1D77HO06a+PpBobRm1SIng6Uiq79Gi7ukm1weI1h9Xk9dmtodNQ
+	 z/cvagwsQsn8KISeWQN8RzJ8g+4XxT+kU00RnrwILYnb1uiFX9XAAfGWU4uB1pnQ9l
+	 5TCaxXXXCZlfpBLvu2F4Y8jnQqbnxEORwXBv2gPT36ubSbJ/mMQ+dIZUgK4m+Dokhl
+	 mvUcpq6ZNdQKfIdVZgD4zGBLTnJPHHvH9vtKhtP3m28TZ4wFNfPaDmbzMUAfSAeH2Q
+	 4e7qOQA4rqJuQ==
+From: Bjorn Andersson <andersson@kernel.org>
+To: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexey Minnekhanov <alexeymin@postmarketos.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org
+Subject: Re: (subset) [PATCH v3 0/3] Add missing SDCC resets for SDM630/660
+Date: Fri, 14 Feb 2025 16:38:11 -0600
+Message-ID: <173957268924.110887.17281364730088178156.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250203063427.358327-1-alexeymin@postmarketos.org>
+References: <20250203063427.358327-1-alexeymin@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62a7-sk: Add alias for RTC
-To: Dhruva Gole <d-gole@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <msp@baylibre.com>,
-        <khilman@baylibre.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20250212210604.745175-1-k-willis@ti.com>
- <20250214062141.gdmkepuuyqb22xuh@lcpd911>
-Content-Language: en-US
-From: Kendall Willis <k-willis@ti.com>
-In-Reply-To: <20250214062141.gdmkepuuyqb22xuh@lcpd911>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 2/14/25 00:21, Dhruva Gole wrote:
-> On Feb 12, 2025 at 15:06:04 -0600, Kendall Willis wrote:
->> From: Vibhore Vardhan <vibhore@ti.com>
->>
->> Adds alias for SoC RTC so that it gets assigned rtc0. PMIC node is
->> assisgned rtc1 so that PMIC RTC gets probed as rtc1. This makes it
-> 
-> Nit: Fix the spelling of assigned please.
-> 
->> consistent for testing rtcwake with other AM62 devices where rtc0
->> is SoC RTC.
->>
->> Signed-off-by: Vibhore Vardhan <vibhore@ti.com>
->> [k-willis@ti.com: Reworded commit message]
->> Signed-off-by: Kendall Willis <k-willis@ti.com>
->> ---
->> Tested with rtcwake on AM62A.
-> 
-> Any test logs you can provide would be great!
-> 
->>
->> Original patch for AM62A existed in the TI Vendor tree with Vibhore's
->> authorship:
->> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/?h=ti-linux-6.6.y&id=f745d9063212d1088dcfb068ecb4b16648b96487
->> ---
->>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->> index a6f0d87a50d8..51ea961f166e 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->> @@ -22,6 +22,8 @@ aliases {
->>   		serial3 = &main_uart1;
->>   		mmc0 = &sdhci0;
->>   		mmc1 = &sdhci1;
->> +		rtc0 = &wkup_rtc0;
->> +		rtc1 = &tps659312;
->>   	};
->>   
->>   	chosen {
->>
->> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> 
-> It's nice that you've mentioned this, but it seems to be from Feb2.
-> Can you please base it on latest linux-next when you send in future?
-> This will avoid any merge conflicts in advance.
-> 
-> For this though, you may get away with it because nobody else may have
-> touched this file so far...
-> 
-> If you do send a v2, feel free to pick:
-> Reviewed-by: Dhruva Gole <d-gole@ti.com>
-> 
 
-Hi Dhruva,
+On Mon, 03 Feb 2025 09:34:23 +0300, Alexey Minnekhanov wrote:
+> These resets are part of GCC space and were missed during initial
+> porting of the platform.
+> 
+> Changelog:
+> 
+> v3:
+>  * dropped fixes tags, picked r-b
+> 
+> [...]
 
-Thanks for the feedback and the review. I will be adding the changes 
-mentioned by you in v2 :)
+Applied, thanks!
 
-Best,
-Kendall Willis
+[2/3] clk: qcom: gcc-sdm660: Add missing SDCC block resets
+      commit: 497457f61fd6d375c7615926956793286f631f7f
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
