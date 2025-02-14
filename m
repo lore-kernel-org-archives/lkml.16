@@ -1,105 +1,132 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97380266EE5
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACE72627ED
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739546318; cv=none; b=qWfhB9JMQoJd0KEXjPWgGCaTK4+MTMZPAdNWNhRWCeatfvuzBfD2BYjz2/8ts46m0qWq0Z6l3q9fLXfqa+ZZGblVopDUuwvogLFezOz4uDRCREugWSDnsG5qnarbrOBmj4dSrwvtT+fi/pUBbhTfwdwdsaBOgQA7UvNhd483MeU=
+	t=1739546335; cv=none; b=Pk0fBtnKR8ugGnDSfFF6FFYeJfPsUvVpXBF/V28JMb44Hp909BvLYIjNB0vZaGSLVBT+lExd1UHbs9/BhLcX4n0Pi2MjTvjNAPCVMmeTSpBbWS6HQmAa993Yrqjfx5nhV1kYC5grAwDxMBRt7E5eLhDtL+DNtnekss3PKDVJkgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739546318; c=relaxed/simple;
-	bh=khiM/ryaaEil6pLN+/17eJzNX76ge6PFhXLfoJXCGLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BpmM20ntOw+zNmDgxpj6+fbsUm5EZXAr2IZKGPLhJV5dYz2lnoLpPFlUE7wcxxyQC44taDshr+TM1wTEWq2z1vK/TeO564Zh/dKSyq+PhcrAQ4GDijDU/z1gJBgjuzQV5C9Y9RjlO8+VU3wODi4T7Vd/8MMWKlPd7LJYKPf8mM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cLNOzJl2; arc=none smtp.client-ip=209.85.208.175
+	s=arc-20240116; t=1739546335; c=relaxed/simple;
+	bh=X6fmGX2I2dkDJfx+wdUhyhODSoxO3XWWRG2Bykz8K8I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IELWqxC4QpateKeKTeYRtBvHovVlAxJLnx49DnGUbLHI9TxGY5IuttxpMEmrgfVaUBIYL11TWTjC8Nsq8KTnDS8SD7QVzrhFmxkJxyv24GZXJFcwBKr0dyxi9fusmGLWvdnoTnFf2ZNbyZfplUd/2dBo3UpS4vCSGPmgb0kC+AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MHEEeXJI; arc=none smtp.client-ip=209.85.219.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cLNOzJl2"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-308ec50eb3dso22457181fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:18:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MHEEeXJI"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e573136107bso1956143276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:18:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739546315; x=1740151115; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OcMZLvgo2+3kThO/hfiHuPvII26oDwywV7kGrf9ppp8=;
-        b=cLNOzJl2A1/vuizglh4nHJ6+tGN7YWDR+B9XPK9Zzr9AEnkTK5rHMFPcWm9oLniytX
-         fTIhJY2ZWnLasJApXyNfLx9DolTHxRSwxS2pZ42/wI39SgbJEq8p49WCnoUkHxaVySLQ
-         2jBzk/2CVOaZOXqbYaZJUzhz/drGb44iOjvcY9+sxPWZm5+Zwns8M84+0cnxCJyqjmhj
-         zxpZZ3mbDSaYck/zgbdaVbGtwADZK8Cg3Tl54MM3vAtYuVHV6YsWlQUt414t8m0n8wjt
-         DmZPwuufiwQAI8OobOD2bm+V4fvqcGNVVrlSC7xWEhOlrsOqTpHMMZorceqKLjHlFfeN
-         sk/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739546315; x=1740151115;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1739546333; x=1740151133; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OcMZLvgo2+3kThO/hfiHuPvII26oDwywV7kGrf9ppp8=;
-        b=WvuDmZr1mxf9eSi53E66z3gmvC5b4YI4uA29tqnM9xRH/dqz07iqioli+TIf7q82Sl
-         9AMGYHc57TrDl8wqVCnXxmRExVEz1ZLZJQmuN4IAOnGQZgZzJpZ13t57r/8pqToPrwY8
-         8gIAiy39gGcrjL6T4/DW6oOfsJqx6Tq4YVN84+jR48pcZIYQTZtMpyfa2axdJ2aajk3+
-         I1gSSh/tYx+I4rMJohYjKCyhAbCyb24vauv1awU0vRpVaeRcnDzp9zqyBRtvXP8iMl7o
-         co3BoTriUCzJ+tfg71oc0AEIJl3hg3GRWiANifaGvsC2I7vZUF5DmnpC/ZCNAjw0i5t2
-         2M0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVG6iwrW1HHHLjzUdmZjiP12lmha/7brRcCnJw38lDTumoi2l0sqNc5ou4hjPo+iIC7+MnBHx6DGpRNQkk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+Bh7s1nkVtwxQ3roO1bJksH5MbT6kfyTrdZBDtJrVZUkzpRRl
-	GIwp9Ew7MtvTAN4oS9xExyoUiq1Gjmhwwh3KRBJ7jq19UlvwxoAnAm52DyNaNM4=
-X-Gm-Gg: ASbGnctXo5Y6ukBFfGGIdJ/+klbKCsz+xuDdCsrfcCONOQQ2DRk/UPVs/b8WJRgYo5h
-	wrwn3siYSXMCGEuMx5lnTBZ5uocMxdMLasIIyYjVUfnwz8HFyMzLa0OIXZwuoeKdv2BGH222wnb
-	Cf5QpaT1eNU9lLUQzeSWwBYYMpu/Z36S6Vp8N3LQB5PZeASsXnqNzIdVTpKyDsGut4ghNDER+re
-	xqeQvWhRzBVoRX6Dun+5fJw51wjGW2LJnhLIONhU3mb+WTUDbAnJ7uz5YieJyvQqtmws5IeRMg4
-	Yn/Lq62XaLWksgMh4VpqtDpVFdO9DJVZxqpnwMb2em9CWs9OSTFKngcwd5sz8XSnaozhvT0=
-X-Google-Smtp-Source: AGHT+IEezzYlzsneQzuZxQe4Yo+jf7QLilk9BuU0obW1zoL2W/XDA76D0mSIeKsRAt8vyBqyYw8shw==
-X-Received: by 2002:a05:651c:b29:b0:306:10d6:28b0 with SMTP id 38308e7fff4ca-30903630202mr37322251fa.1.1739546314624;
-        Fri, 14 Feb 2025 07:18:34 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309100c528asm5887331fa.22.2025.02.14.07.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 07:18:34 -0800 (PST)
-Date: Fri, 14 Feb 2025 17:18:31 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jonathan Marek <jonathan@marek.ca>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Rob Clark <robdclark@chromium.org>
-Subject: Re: [PATCH v3 2/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
- clock driver
-Message-ID: <g6ddzfh6vsd7zgyopzassfp5ehife2t5mlq5jbjdcas3ewed2t@th37tsj7mmsw>
-References: <20250214-drm-msm-phy-pll-cfg-reg-v3-0-0943b850722c@linaro.org>
- <20250214-drm-msm-phy-pll-cfg-reg-v3-2-0943b850722c@linaro.org>
+        bh=vud2l+W++O1Da7DS2WaNrJ9AJreXoCTXE/UW9zsHPAo=;
+        b=MHEEeXJIISHWfi8fFGNS5M/0sHPie7eQ5FOJ9F1uCHkuU8IK8hRpE4bcOeeU12fVct
+         L0iDQa7sqUqzXCftkjagqPZSlhEiin4phboJWvDzYP9d80mnIIQa0ArvHid9QAPZQqB7
+         /DkfK5W1c+nLJvtNUZGebvj5oefK92C/XxUuYn3QWO8w7wH6GcoQWkNBvlAVlsDu9Ea5
+         W0UKpUajgUjWySRIp9j/rK726/7MYcqGt/KhgelqRF7jbUZQtQxiT/Xdtb06TdDGXaoI
+         azCrmZCGp0tS1jvfaYRo32YpJMhHx/0MXYOLQ+1JBunZRarjfae4inou7SLzB2wmgyzU
+         EU6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739546333; x=1740151133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vud2l+W++O1Da7DS2WaNrJ9AJreXoCTXE/UW9zsHPAo=;
+        b=SSNmAceWxZGNbsPFQrVYRn5yGJ5y2+0xfNKyMUxVfIxZWbA+7mWG/N4yNtCy3i8tyD
+         hkM1pfoXj4urxemicOxCvAuFrktlr1DhYaLdZJDPo9k9MWXr8dWuh9nHbjf29xgj23gv
+         Ce7sageyQcE99Ea2xDXwtRAJ9nQWwei6UR6wckKFE+1+Cg4pVUOHB+nSktgvSawbU7VE
+         KBAICH8m0k0apPTRieI/r4VOzDy24lCT2jokC5E1VvWpB9vFZg3cPMekzkq9BwqxLqfZ
+         IYpTE4RVn1/LWC1bz6g2WZ3IPP1UCAzDCJX9H4StDxQjn49E13Rn5SojXu5i7ype4MT5
+         2BBw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+iYXNeELWgyPsq6CnD9OIw2mWISjW7tcXzyHvqqVVOMtAJJAJVu6EYzBg44FzfUoZB7dSxNJDtioX3gg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwygdWOH3eTuxsyQxvM7WlORGCM8Y2UzFVjyONuDudE15Cyh4q5
+	2ysi/Fp7QmQ20SpphggLAB7fMSdgbvR+lGiQxu9io6t6fW/TL1hV67hv2O+pVrZy5lXMEQHRuUH
+	AxPSxr26qmXG0+nV0dCpMEf+b4NrtM03T6/l2xQ==
+X-Gm-Gg: ASbGncu5LPM3KzjfUN+mBe3S3vq4EtGRozqEWdbQTbIWCY9M0hkqVoAUWKKMv8nHSkd
+	EzN+CeTGDnVTG/npxMVrEkBZYhqEPV54+ajcR1CWsUa3rb/xnh5UHs1xHA1uAeAI0TS1WctJKs6
+	jl0A3n07ZPwRJ0da2fn2Q8IZ87ipO8Kp4=
+X-Google-Smtp-Source: AGHT+IHBLi+DSdWwdkBiZJtFZDCRKWBo+hYt3CPdJ1MsUWNFmP3OHtc7puT3fPX9/BKcGYQszQlVBW84g9IFUoqX2jg=
+X-Received: by 2002:a05:6902:10c8:b0:e58:4a5:2ca8 with SMTP id
+ 3f1490d57ef6-e5d9f17a12dmr10834168276.37.1739546332754; Fri, 14 Feb 2025
+ 07:18:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214-drm-msm-phy-pll-cfg-reg-v3-2-0943b850722c@linaro.org>
+References: <20250213204044.660-1-wachiturroxd150@gmail.com>
+ <20250213204044.660-3-wachiturroxd150@gmail.com> <CAPLW+4nJVf0raJ-O3u6uUteBi--N5xGwvzXp7cHqbkdMJ8gCSQ@mail.gmail.com>
+ <cf0a5ab5-265f-4429-8c11-8b669f00bc70@linaro.org>
+In-Reply-To: <cf0a5ab5-265f-4429-8c11-8b669f00bc70@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Fri, 14 Feb 2025 09:18:42 -0600
+X-Gm-Features: AWEUYZltiapjR3VtfT1WDOygMRkvnzikuCurH43pDPL6b-n2GaubYKFDPd37TJA
+Message-ID: <CAPLW+4nYMShK=mgXcct0QFQa_bTLcdWdcCOKSToxgx8tWqTreg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] spi: s3c64xx: add support exynos990-spi to new
+ port config data
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Denzeel Oliva <wachiturroxd150@gmail.com>, andi.shyti@kernel.org, broonie@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, linux-spi@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 14, 2025 at 04:08:42PM +0100, Krzysztof Kozlowski wrote:
-> PHY_CMN_CLK_CFG1 register is updated by the PHY driver and by a mux
-> clock from Common Clock Framework:
-> devm_clk_hw_register_mux_parent_hws().  There could be a path leading to
-> concurrent and conflicting updates between PHY driver and clock
-> framework, e.g. changing the mux and enabling PLL clocks.
-> 
-> Add dedicated spinlock to be sure all PHY_CMN_CLK_CFG1 updates are
-> synchronized.
-> 
-> While shuffling the code, define and use PHY_CMN_CLK_CFG1 bitfields to
-> make the code more readable and obvious.
-> 
-> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
+On Fri, Feb 14, 2025 at 12:39=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linar=
+o.org> wrote:
+>
+> Hi, Sam,
+>
+> On 2/14/25 12:08 AM, Sam Protsenko wrote:
+> > On Thu, Feb 13, 2025 at 2:41=E2=80=AFPM Denzeel Oliva <wachiturroxd150@=
+gmail.com> wrote:
+> >>
+> >> Exynos990 uses the same version of USI SPI (v2.1) as the GS101.
+> >> Removed fifo_lvl_mask and rx_lvl_offset, and changed to the new data
+> >> configuration port.
+> >>
+> >> The difference from other new port configuration data is that fifo_dep=
+th
+> >> is only specified in fifo-depth in DT.
+> >>
+> >
+> > In the code below I can see this bit:
+> >
+> >     /* If not specified in DT, defaults to 64 */
+> >     .fifo_depth     =3D 64,
+> >
+> > Is that intentional or is it some leftover that was meant to be
+> > removed before the submission? From s3c64xx_spi_probe() it looks like
+> > the "fifo-depth" DT property is ignored if .fifo_depth is set in the
+> > port_config:
+>
+> fifo-depth in port config is intended for IPs where all their instances
+> use the same FIFO depth. fifo-depth from DT is ignored because the
+> compatible knows better than what developers may in DT in this case, it
+> is intentional.
+>
+> >
+> >     if (sdd->port_conf->fifo_depth)
+> >         sdd->fifo_depth =3D sdd->port_conf->fifo_depth;
+> >     else if (of_property_read_u32(pdev->dev.of_node, "fifo-depth",
+> > &sdd->fifo_depth))
+> >         sdd->fifo_depth =3D FIFO_DEPTH(sdd);
+> >
+> > Btw, wouldn't it be reasonable to flip this probe() code the other way
+>
+> No, please. IPs that have instances with different FIFO depths shall
+> rely only on DT to specify their FIFO depths.
+>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fair enough. Does it mean the port_config.fifo_depth should be made
+obsolete? Or it makes sense for older SoCs where FIFO depth is fixed,
+or something like that?
 
--- 
-With best wishes
-Dmitry
+> Cheers,
+> ta
