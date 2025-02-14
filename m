@@ -1,216 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4E21FBEB0;
-	Fri, 14 Feb 2025 21:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739568551; cv=fail; b=dvv0AapPhH6RyB6503h18wRY4VS0fqdbq3cYkFl2NEgG/Kl4WrVtMHDeEMaoGvvzzmzAo4pQUV4gQuW7oDCZ0phtzeeZ4DAPSe4UHdSCzs2jhNDc/5Ci3TzRg/dZdTsEdfqoyvyLIPDpKs+Ag90TtbGjATV6fBHv3mmt+cYGrfg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739568551; c=relaxed/simple;
-	bh=w4luRuvPZqh8wi2jjo3zaOGQGDt0laAb1eHjnLFZZ3I=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RMorFXhsM0A983Fdu0H+akKv8nY7z2JzErt7tjDDNsqszouDbcnIDNNWfM9FWG7EeG2bOLwb5wuPDXEnNrytUIOGWq6WVq0hsoqiVjS8TnY9qRR0hnscTHDiOLFHJgvsfyvhEgdLNq0OK/eNrgOgk62NbIXFLvIBuGOv2icYRkE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZGpzkRs0; arc=fail smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C361DC98B
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 21:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739568564; cv=none; b=b2hyWyRJr04XEp5ZlevBw+ujwyC/XRumPRjPAii+1OBlU14gBoIo5TAaWEMdnAqpfs8LhY2hybgyTxLxN9IqEoFSzyTgIPTCG96xQhaXgrpDK54mCTGQjRi5/a2CTqyTcBCfIru4JRUZyug1OOsbUDszX9gXYhE1v5wFiKfRoC0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739568564; c=relaxed/simple;
+	bh=TpZ5BcIn4SbzC6/X1Y2evpTO0RYHCL8ZdezckaFFpW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UvydE+poWBO2W8aOKIrzNONyx4aiE7qF4IHJNhi9qVRD5lHbY+1hJtRNAWcXCFO+63yMl7Q7FOnIpW3hq5amJp6mPnpaFuKHfakGefGHC7ZSCAU4/KNMP/F3ARLXWH6PyJiHsNXp6l0H6RCLGKoDcORQSWqxLjBT5Q2dTGdTckM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jwcTPERa; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZGpzkRs0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwcTPERa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739568550; x=1771104550;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=w4luRuvPZqh8wi2jjo3zaOGQGDt0laAb1eHjnLFZZ3I=;
-  b=ZGpzkRs0XCXsBf0P54KOY4C4tCRsXnkHh3J9GW0U1Gi0iTnA3iJi5y3A
-   2Bs8ee+B/3iCE6DGtSagpN/V5Q3Hqs0u84Fb5ZktmaAuuzDw/FlY9J4PL
-   Tr+tctNWCSO/3OXUhoaWcTL3J+Es/PMSkHzrKtYjPMTk1iWDNCBgMPGIs
-   batUjXvpEmgC7UJdU9saEgbQRtk2nKCNBR1YcwCm0g3e8ns67dIxDhgEO
-   NBFxhqiu768DajDaNZrvDpKZjV1YWVAG1j2odJQ0ITF8MNQBiQHShqiH6
-   voCNpIw0Ks4NMXJleEk18yIPoNWxK4736qwcQfDFcCG00Nmv3BM8dx8x/
-   w==;
-X-CSE-ConnectionGUID: 5eqRcDFdRDmVhOHB411GEg==
-X-CSE-MsgGUID: MEkORI+wQv60nCTFvi0UQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40455370"
+  t=1739568563; x=1771104563;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TpZ5BcIn4SbzC6/X1Y2evpTO0RYHCL8ZdezckaFFpW0=;
+  b=jwcTPERa1CRCLfosRpcFRze9obHoPGCSmvA8sfrvr7vTnrm/MoWQUYiW
+   LwtRkiKD9LowGQT5tLRO/wvfZ4mt6fkIpdUee1aYuWiZgo0Y1ucA5k9sj
+   /TlCJ1EgAqh+3a9RNH3H/G+JVIqbdqWn0KbCAmHecaVBrajHGRD5oJ/Sj
+   7xCjE9hU45399Sbc87GvROfhV+eeQIwHD4UQ3heZKss+aS495/gA8QlMN
+   WQxd8dYepVYGtZp5cv2rADDL6VWBMkwejEfhd+NbvvSSXW/YEQI3j6GVe
+   oP7QN0tODhm7owR+xUr2tDIyCp9NM/MLdGvZQeJHM4++ZFG3bmd1lU8Qb
+   g==;
+X-CSE-ConnectionGUID: AqAeZN1TTvmKUJmtw4oHQw==
+X-CSE-MsgGUID: 4dOpMs9eRrC1Uh6011rsvw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40599599"
 X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="40455370"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 13:29:09 -0800
-X-CSE-ConnectionGUID: Q16NPUpISJq8KnOiex6rFg==
-X-CSE-MsgGUID: x5rT1EQ6S2S7NgdREJAjbQ==
+   d="scan'208";a="40599599"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 13:29:22 -0800
+X-CSE-ConnectionGUID: J8qkXJLGTmCQjbjvrG1+qg==
+X-CSE-MsgGUID: UovYy1mBQ0GlO5csthlfeQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="136788945"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Feb 2025 13:29:08 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 14 Feb 2025 13:29:07 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 14 Feb 2025 13:29:07 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 14 Feb 2025 13:29:07 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LC0tZKRO/eXbiwFebrHl3k0iDWiUbd3YHx3DTXbu/Q1PGeXa/+eHJaonuhAmjOO/fXfLucW0XwHPcToPFxAQ6M+reobzHoyesGCKhWCnZJ4rgXwQ/hPGrbL41TAAFDUr6b6/sp7W/+5EHAYNsJ6dMQZyMKlLNUZsf9Zat2tLBXTP6FqZGV94eXLKTL1lT+3xHE9vnFOCU8v1hVwv7zL481laRHL9Fp0KNAZnQCVjZlSlfMYsOG+fM5nxOOaI/oD5eNiX6EMNB9jROxlRMqkBDu/tPSpJJ8mv+VYUzKVRe0ChPh+WmRzoLLrUTXq2qFZbKOqWz/lfInaexBo9Zp6Thw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SgnmH5StICUvFECQJT0YamosG24WhoMwslaYK137Iis=;
- b=woByw9w+uBtN8Gkd0rex4/Wmg29xJNokMGkrU3wL1cDzIz3iBbvltUx2qJ1cnElUvWEZ9cBSD8zQD9JC5uIiupzf+dR37GJwrCsgU8X3cEiYMIJ9uQVQYx4nKsOPaoP6fRngaBYH3SavbEm9aAFLGMHTUjbKyt/sv/99bVfavlAJ+Bw5auJIzoLmtXsEZMSZoqtL44joYvW/mNx8TyceDTA1ZbsmrokOqXK82++cd6zaXZ2W89vAoMkYiuLbMprLD9fsivgHxkWbJjeeByVcBBpMxaRjjnYAMlTCJiWin+a8j53GuSJmqEd9GV9TlLOGVqLoqBdPBpbAmqynijYKQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CYYPR11MB8306.namprd11.prod.outlook.com (2603:10b6:930:c6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.15; Fri, 14 Feb
- 2025 21:29:05 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Fri, 14 Feb 2025
- 21:29:04 +0000
-Date: Fri, 14 Feb 2025 13:29:01 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
-	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v7 08/17] cxl/pci: Map CXL PCIe Upstream Switch Port RAS
- registers
-Message-ID: <67afb59d6d2df_2d2c2944f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-9-terry.bowman@amd.com>
- <67ac00b78e492_2d1e29486@dwillia2-xfh.jf.intel.com.notmuch>
- <9f2531dd-6ee3-4e71-9b29-4cdf9da410a6@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9f2531dd-6ee3-4e71-9b29-4cdf9da410a6@amd.com>
-X-ClientProxiedBy: MW4PR04CA0202.namprd04.prod.outlook.com
- (2603:10b6:303:86::27) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
+   d="scan'208";a="113290900"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 14 Feb 2025 13:29:18 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tj3FL-001ABb-1q;
+	Fri, 14 Feb 2025 21:29:15 +0000
+Date: Sat, 15 Feb 2025 05:28:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Xin Ji <xji@analogixsemi.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: oe-kbuild-all@lists.linux.dev, bliang@analogixsemi.com,
+	qwen@analogixsemi.com, treapking@google.com,
+	Xin Ji <xji@analogixsemi.com>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge:anx7625: Enable DSC feature
+Message-ID: <202502150516.xZBLDIlz-lkp@intel.com>
+References: <20250213123331.3016824-1-xji@analogixsemi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CYYPR11MB8306:EE_
-X-MS-Office365-Filtering-Correlation-Id: f840bda5-c35e-4733-d7fd-08dd4d3e9b57
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?PMJTqw3YcH3DPJYsaHUY4oROrSioIdmwwjauy+Qpn4/cIWUiKoCzT3INXH5o?=
- =?us-ascii?Q?A4duUVVFx4Mt80jRLPI62mznFgc/J3y23ur9rx5EP9XD6DXgjU+iuDyFxJhJ?=
- =?us-ascii?Q?bQ9caO7T/IZDZjPYgV2clqPmpxvXlNIuYphTWyQpN0pS6RSTGj4GcrFMUECw?=
- =?us-ascii?Q?jyzeRu7PlnfUumjHBV/gevMXqMjo/gWZEO6R0wbYRCWguxJl4H12bIGRlzGq?=
- =?us-ascii?Q?JXYhAx7X4vHlPoSyXVDWtgGHD05acotfX73+UxjVUxj4WLYl2ugS2uIYbNM7?=
- =?us-ascii?Q?7d9j8EVo0MNwElFkNx3SQfxrKl4b6ObEv1eb/iPMytlnp5ZffpAh/v+jKejo?=
- =?us-ascii?Q?EoSSb6MM71m7wns4pohVCIrc9taUwAtnSTKkHgfZwISON0hnxj4/Xw4nDMJD?=
- =?us-ascii?Q?74Wp2W7QCTxkFbLQ0Tij4WO0Ql62RE3thkUxG3zgPDImR7zNC0nUGtac09nU?=
- =?us-ascii?Q?OWpz2JU0eQ2pPCZ7lc9IlHS+euZFI0NnlVwecIUJgvqB45Ek4qputUVjE0hY?=
- =?us-ascii?Q?+TfHCRHXIn9yNtfxmX9cXcpxEvPjCCj0liybskbj+80Rld86oKMcZ4+aKq7Z?=
- =?us-ascii?Q?P6O4soQDQVaAi7OOj1iNK/A4hAi7m0L59Grw5lB1iPwF4TnVOlPdpEg7ic05?=
- =?us-ascii?Q?NnqxFQhJsdHeQaB+xcS5be2B9Y1NHrrn3iAVpsWNX/2UI3Ce+IvowDianeoQ?=
- =?us-ascii?Q?nNc3YHuijcp4Kon5XrCkEdibvqMO4PJxCxAY1jg7ndoBaj6bOBXSE/Iplw6M?=
- =?us-ascii?Q?CzeTWomJFKy2F2FLja6MSluT7ElV5CIwnN17CJGTpokilXWARvxUG0fRjjW5?=
- =?us-ascii?Q?i51nYXAXY2Ll8mWqSRMSk3EjVfRlLmM+LvlohRydPuO5UHX3yNdNQ8wx/lcX?=
- =?us-ascii?Q?XlVVGrOC6K9cfFSIPnW9jaDFXEISMHILo2lDlQy9d2mQsC/CMwNBA6vaAfB+?=
- =?us-ascii?Q?UAbr0hETMLcwyxs80h5Cbj57b3OpX4SbtGPr3IfdUVmmilZRHoBSuCMKHqA/?=
- =?us-ascii?Q?eRYpvvBhwW4dIgsRxawr0iciC1csQH4Y6PliPnNeYMolXDBusmEHhAOQvpjQ?=
- =?us-ascii?Q?nnEWMf+3zOjOY/PxqCogJDytAelXpAaG9c/77D2cHec+WWu1fxv1dix3lY7q?=
- =?us-ascii?Q?Qww0OvZXarW+O3meC5RRpzmANF9JcqLzUkaba049le+gclk590hpkHbdwLex?=
- =?us-ascii?Q?K/EKOgTm3GuF+gLnd4BIEWhGoBI3oQJUR9ggJdxS/9Ss4/Szve9sryW7bfPo?=
- =?us-ascii?Q?P8re6dF/O16J1s9Xr+02nMlmaYEX2Ei6XWzV84SEhScGMlRdyGmh15K/V2/v?=
- =?us-ascii?Q?UljCCNDdMRTv0pRGptoQxKmvN+FVM5Ey0B1xSFFSlcsGSYz4AYu1kEqtnakt?=
- =?us-ascii?Q?nG/7szMfBVzZ/jH/L05aUcEGNOZFLVAa9EHsMylsuBGBXPj39JyLCp7H+/SG?=
- =?us-ascii?Q?abijisu8Abo=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?smB9CCvNh0Ug724BXTd/bw3IzS9XoP7KLsBkmFI/NLqwVS2gT6GojtlXM/eO?=
- =?us-ascii?Q?aSJHFauvu1nV2idIiyxRu3ZnbwYHHhpFAVhhV50RYDrIC/VxfNGr4wAjfd95?=
- =?us-ascii?Q?kT6kkimDSZWrvtz2Y/QlrSjZbVYHty0NiXyqrTKx6IHAC6EE3dKsHWAapJxq?=
- =?us-ascii?Q?aPVri3eN8YPgBOyQF1Qg9txdjHwixuNSOD9QpOx5SFUJXEErXveW8itxjQvP?=
- =?us-ascii?Q?4rIZcIqIMOdEF73t2pxePwpt7t/1XucJVNW29S1kunV/ar3KnghzOxBlbOu/?=
- =?us-ascii?Q?1pQr48AF5R4F6NEqlRl0UoeJk6cNYtpcuQYx9BoNlU1/nsiCua4W3kQ4oHAp?=
- =?us-ascii?Q?R9tXGY2tbhSimPzdA7FUscXUU38HHIOITlk5kfNCbj/piNIzw0BEmbAEsLKT?=
- =?us-ascii?Q?zN7j8YXtdtBMk+e9x07i4imHnn3AMfOwZtSgSRHL6ongaKEZdC+g7bEa0I8w?=
- =?us-ascii?Q?/3Rf91Lnw7hC08YxqF68yZgynYB73qwapwIjTtVa1KMCirzZTvYLUWbelGc2?=
- =?us-ascii?Q?Wc/mwHy7tbSm9Ub8yByRDqTFvkrHeXFPGY6c8iA0a7nDyiRKWZcrG7of8JD6?=
- =?us-ascii?Q?1ur4FTjt2RmSPCJjz27Ci+nhfcOxCbmCRiIcyKBIhQekH0nCJUj3Kx2rs0IC?=
- =?us-ascii?Q?K8S2QJQKwya9azcNODNG+sYUx5cM2dKU53lRltcu1A+O4PdCsyMlT8yezdI4?=
- =?us-ascii?Q?V/h79ExOmovSQPKSzih2Fn1f4IN8VkPV4nkKASR++vKxSlDJCAsGyEhsbpTC?=
- =?us-ascii?Q?cV8Gu+l9/pZwlrQOwyo43v2wXtMtDCqQFwOi3QKD4lRglHEnosWfiR5oZSLL?=
- =?us-ascii?Q?qB/ZiNZG2ne51EdibdgZSZGA/3HOBfiBxZtJ7bAUk/Cg/tjuGX6RLpj7MmAY?=
- =?us-ascii?Q?x1SjR5TehbI3SG5Gy0KFfCY2coNqciTZhdlM2BIUBbBT1mWa1LjjmmGyNftI?=
- =?us-ascii?Q?+NG7X2geGtdEZnbRRyApj9QMV5h6Gg12VKXsDZRMwpiOjCH7H475Th+eBh5A?=
- =?us-ascii?Q?/ykhXH+SzaELAWfQddzdEdyxvFd+1Mde7Q2ZRkC7NoYEzLAXoN9q3A9LtewR?=
- =?us-ascii?Q?B9aUrOZkGyB9EJO+uealBpdPoDnCcJtiJA5NAQ+vcUUAoFY76ebgvT90EdeQ?=
- =?us-ascii?Q?w9GV2NxThKNq0WLAKSps+W4pynm0kQbi2hDiOUSC2sXuR8OW/MXPUx0Iq76Y?=
- =?us-ascii?Q?TQlJ1qHruEK1XmuAfXMLLgNwIQfx9bG/ySTtR4yfNSbNBHndDd8PAGTwgvNI?=
- =?us-ascii?Q?7ZRZF2uNnY2l6tEQ8GJPDvkSmpXmuaqFt/YZcisSCBm8diPCtlSZB3ZQKaNB?=
- =?us-ascii?Q?M6pq0Fh48y8wXAC1r696pt37znIUJ+Uxlb4vOpSg+VVRYe6GwbZD+hVZl4fA?=
- =?us-ascii?Q?tZwwVCZcaezdF098+fOuwCjm8O5P8aEt1iJYWPcukIZbJs9NVu9yjcuIGSUE?=
- =?us-ascii?Q?O1uDug0vPW5apZRiuORp0FUTOl5sRkRBMzMX5lcarCW6ax+me7gJFrnyWhhu?=
- =?us-ascii?Q?15tMfGoQioSJi+IL7PjYcY/KEy8573/iNQRlWjO7Lp5SEUQMUtAso7qGfIGO?=
- =?us-ascii?Q?hfzEgB48jgLQ90O/4TW9bYZ7yKwE7/5fMM/OMuyzP/cEVY7CZB6ijsCgxEqD?=
- =?us-ascii?Q?Tg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f840bda5-c35e-4733-d7fd-08dd4d3e9b57
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 21:29:04.7905
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YvOSVFULXw0UhkDYDuVUmkW1M+IGjqKJXIntH5Bj6t5zWyVGmB/rmsdBe0muCTMqPadBDoS/pL5xcFphF8FPEffm96362xYn9t5TGCfuJ1Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8306
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213123331.3016824-1-xji@analogixsemi.com>
 
-Bowman, Terry wrote:
-> 
-> 
-> On 2/11/2025 8:00 PM, Dan Williams wrote:
-> > Terry Bowman wrote:
-> >> Add logic to map CXL PCIe Upstream Switch Port (USP) RAS registers.
-> >>
-> >> Introduce 'struct cxl_regs' member into 'struct cxl_port' to cache a
-> >> pointer to the CXL Upstream Port's mapped RAS registers.
-> >>
-> >> Also, introduce cxl_uport_init_ras_reporting() to perform the USP RAS
-> >> register mapping. This is similar to the existing
-> >> cxl_dport_init_ras_reporting() but for USP devices.
-> >>
-> >> The USP may have multiple downstream endpoints. Before mapping RAS
-> >> registers check if the registers are already mapped.
-> > Yes, now this sharing makes sense, but the ras_init_mutex +
-> > cxl_init_ep_ports_aer() approach to solving it is broken.
-> >
-> >> Introduce a mutex for synchronizing accesses to the cached RAS
-> >> mapping.
-> > In this case, especially for VH configs, you should just be able to map
-> > the RAS registers once from cxl_endpoint_port_probe(). That will
-> > naturally only be called once when the first endpoint arrives, and will
-> > never be torn down until the last cxl_detach_ep() event triggers
-> > delete_switch_port().
-> There is still RPs and USPs that will be called for mapping more than once,
-> right? This will require synchronization, right?
+Hi Xin,
 
-I feel like this would be a symptom of endpoint registration doing too
-much work. endpoint ports should only care about enabling RAS in their
-immediate upstream dport. So, what seems to be missing is upstream ports
-doing the same for their upstream dport.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on linus/master]
+[also build test ERROR on drm-misc/drm-misc-next v6.14-rc2 next-20250214]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Xin-Ji/drm-bridge-anx7625-Enable-DSC-feature/20250213-203558
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250213123331.3016824-1-xji%40analogixsemi.com
+patch subject: [PATCH] drm/bridge:anx7625: Enable DSC feature
+config: arm-randconfig-003-20250215 (https://download.01.org/0day-ci/archive/20250215/202502150516.xZBLDIlz-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250215/202502150516.xZBLDIlz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502150516.xZBLDIlz-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/analogix/anx7625.o: in function `anx7625_bridge_mode_fixup':
+>> drivers/gpu/drm/bridge/analogix/anx7625.c:2472:(.text.anx7625_bridge_mode_fixup+0x9e): undefined reference to `__aeabi_uldivmod'
+>> arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/analogix/anx7625.c:2562:(.text.anx7625_bridge_mode_fixup+0x10e): undefined reference to `__aeabi_uldivmod'
+
+
+vim +2472 drivers/gpu/drm/bridge/analogix/anx7625.c
+
+  2440	
+  2441	static bool anx7625_bridge_mode_fixup(struct drm_bridge *bridge,
+  2442					      const struct drm_display_mode *mode,
+  2443					      struct drm_display_mode *adj)
+  2444	{
+  2445		struct anx7625_data *ctx = bridge_to_anx7625(bridge);
+  2446		struct device *dev = ctx->dev;
+  2447		u32 hsync, hfp, hbp, hblanking;
+  2448		u32 adj_hsync, adj_hfp, adj_hbp, adj_hblanking, delta_adj;
+  2449		u32 vref, adj_clock;
+  2450	
+  2451		DRM_DEV_DEBUG_DRIVER(dev, "drm mode fixup set\n");
+  2452	
+  2453		hsync = mode->hsync_end - mode->hsync_start;
+  2454		hfp = mode->hsync_start - mode->hdisplay;
+  2455		hbp = mode->htotal - mode->hsync_end;
+  2456		hblanking = mode->htotal - mode->hdisplay;
+  2457	
+  2458		dev_dbg(dev, "before mode fixup\n");
+  2459		dev_dbg(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
+  2460			hsync, hfp, hbp, adj->clock);
+  2461		dev_dbg(dev, "hsync_start(%d), hsync_end(%d), htot(%d)\n",
+  2462			adj->hsync_start, adj->hsync_end, adj->htotal);
+  2463		adj_hfp = hfp;
+  2464		adj_hsync = hsync;
+  2465		adj_hbp = hbp;
+  2466		adj_hblanking = hblanking;
+  2467	
+  2468		if (mode->clock > DSC_PIXEL_CLOCK) {
+  2469			adj_hsync = DSC_HSYNC_LEN;
+  2470			adj_hfp = DSC_HFP_LEN;
+  2471			adj_hbp = DSC_HBP_LEN;
+> 2472			vref = (u64)adj->clock * 1000 * 1000 / (adj->htotal * adj->vtotal);
+  2473			goto calculate_timing;
+  2474		}
+  2475	
+  2476		/* No need fixup for external monitor */
+  2477		if (!ctx->pdata.panel_bridge)
+  2478			return true;
+  2479	
+  2480		/* HFP needs to be even */
+  2481		if (hfp & 0x1) {
+  2482			adj_hfp += 1;
+  2483			adj_hblanking += 1;
+  2484		}
+  2485	
+  2486		/* HBP needs to be even */
+  2487		if (hbp & 0x1) {
+  2488			adj_hbp -= 1;
+  2489			adj_hblanking -= 1;
+  2490		}
+  2491	
+  2492		/* HSYNC needs to be even */
+  2493		if (hsync & 0x1) {
+  2494			if (adj_hblanking < hblanking)
+  2495				adj_hsync += 1;
+  2496			else
+  2497				adj_hsync -= 1;
+  2498		}
+  2499	
+  2500		/*
+  2501		 * Once illegal timing detected, use default HFP, HSYNC, HBP
+  2502		 * This adjusting made for built-in eDP panel, for the externel
+  2503		 * DP monitor, may need return false.
+  2504		 */
+  2505		if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
+  2506			adj_hsync = SYNC_LEN_DEF;
+  2507			adj_hfp = HFP_HBP_DEF;
+  2508			adj_hbp = HFP_HBP_DEF;
+  2509			vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
+  2510			if (hblanking < HBLANKING_MIN) {
+  2511				delta_adj = HBLANKING_MIN - hblanking;
+  2512				adj_clock = vref * delta_adj * adj->vtotal;
+  2513				adj->clock += DIV_ROUND_UP(adj_clock, 1000);
+  2514			} else {
+  2515				delta_adj = hblanking - HBLANKING_MIN;
+  2516				adj_clock = vref * delta_adj * adj->vtotal;
+  2517				adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
+  2518			}
+  2519	
+  2520			DRM_WARN("illegal hblanking timing, use default.\n");
+  2521			DRM_WARN("hfp(%d), hbp(%d), hsync(%d).\n", hfp, hbp, hsync);
+  2522		} else if (adj_hfp < HP_MIN) {
+  2523			/* Adjust hfp if hfp less than HP_MIN */
+  2524			delta_adj = HP_MIN - adj_hfp;
+  2525			adj_hfp = HP_MIN;
+  2526	
+  2527			/*
+  2528			 * Balance total HBlanking pixel, if HBP does not have enough
+  2529			 * space, adjust HSYNC length, otherwise adjust HBP
+  2530			 */
+  2531			if ((adj_hbp - delta_adj) < HP_MIN)
+  2532				/* HBP not enough space */
+  2533				adj_hsync -= delta_adj;
+  2534			else
+  2535				adj_hbp -= delta_adj;
+  2536		} else if (adj_hbp < HP_MIN) {
+  2537			delta_adj = HP_MIN - adj_hbp;
+  2538			adj_hbp = HP_MIN;
+  2539	
+  2540			/*
+  2541			 * Balance total HBlanking pixel, if HBP hasn't enough space,
+  2542			 * adjust HSYNC length, otherwize adjust HBP
+  2543			 */
+  2544			if ((adj_hfp - delta_adj) < HP_MIN)
+  2545				/* HFP not enough space */
+  2546				adj_hsync -= delta_adj;
+  2547			else
+  2548				adj_hfp -= delta_adj;
+  2549		}
+  2550	
+  2551	calculate_timing:
+  2552	
+  2553		dev_dbg(dev, "after mode fixup\n");
+  2554		dev_dbg(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
+  2555			adj_hsync, adj_hfp, adj_hbp, adj->clock);
+  2556	
+  2557		/* Reconstruct timing */
+  2558		adj->hsync_start = adj->hdisplay + adj_hfp;
+  2559		adj->hsync_end = adj->hsync_start + adj_hsync;
+  2560		adj->htotal = adj->hsync_end + adj_hbp;
+  2561		if (mode->clock > DSC_PIXEL_CLOCK)
+> 2562			adj->clock = (u64)vref * adj->htotal * adj->vtotal / 1000 / 1000;
+  2563	
+  2564		dev_dbg(dev, "hsync_start(%d), hsync_end(%d), htot(%d), clock(%d)\n",
+  2565			adj->hsync_start, adj->hsync_end, adj->htotal, adj->clock);
+  2566	
+  2567		return true;
+  2568	}
+  2569	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
