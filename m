@@ -1,65 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23F71A316A;
-	Sat, 15 Feb 2025 10:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB73A1A0BFE;
+	Sat, 15 Feb 2025 10:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739616962; cv=none; b=Asp7AaH2GxUJAeFwNQUJVmRwKEUmwAyB1LFX5cT32msphVrfHT8zNfI1HR1esRItIrAgKObOwyO/I/CiL64U/T/PELlQUXTHTWgYbcQsGduYASogEJUH5LAvRtqSPVpNg23+XX6aff2e9c3bgD5igBLztBLO6Y1QmFdFefn04e8=
+	t=1739617000; cv=none; b=PY7C7vfrqB9DEV8oq5EeC/0AW7QUpyMClNciheX0MtVdnTBUlc+dkJ2DrO0k1HnYht+89w0OE1JooA7UITuSdEBx0GD1wtGJA4LXEC2HIBYXDCVFuOC1WEy46UDkp3wkF91OOwdUzxhRDUEvwzC79K6iw5MOkuAZNNhV5ytNwrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739616962; c=relaxed/simple;
-	bh=SSUx7OzLzc6SxMkhifY9y6/0jC+CUN1tFzb7Au0bWAI=;
+	s=arc-20240116; t=1739617000; c=relaxed/simple;
+	bh=KKkuNpqYVQJ7sX54ZXOu9KhreNJ0yRAaiXl54k1lVwc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Lv9uiMBxCNbXP9V/hrUYRmX4Al4YvIwK/U01+IGRWGjgcfDywpBnh9U9w0g8fzk62sgK1NRWqm/7JhJnS5BJDtsSG3CEfXK0Ri4XL+WmPdsGjv+qSaplTmgaYcBvC+TzgQQfoQ7JA/vwyLf1iDPw3XwowTTtUPtriYfqbN1IqfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=24DPUQTk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NthJqut1; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=nJ7rIqgVu4iW1TZevrLI3Ee3ds0eBLcKx2/YCt+zkS7R8+65kNLuV6RgngYtjjyPV9VoRnLjO4D2gVUsd4KXCQQ1Y4CXpo8X6PJ2hMqMsNmzKi0eVOJAxsbMZ7z04TPQb12Ct+AX3AsoId/RrDhFVbcuYXvGyMYzCa3k0oSMVSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p4CooJmU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vlGJ2wLs; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="24DPUQTk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NthJqut1"
-Date: Sat, 15 Feb 2025 10:55:58 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p4CooJmU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vlGJ2wLs"
+Date: Sat, 15 Feb 2025 10:56:36 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739616959;
+	s=2020; t=1739616997;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5nWyQm3CHTMNeNCnReiBfKhfxsApT/3vKxVPVpAcdfA=;
-	b=24DPUQTkKa3mVXuM/lp4SyO9pQ8cF0uiJ+B8JHlucZQ7c8R6M7ouFB36NfguVQz2xmUi25
-	l1xw5YtZl4zHQIy+3+m4mofqGG7dNp0vBldnFr46t++XT/OXyfGd6aylP/AZSsI+YkcGh7
-	TgSp6MDK9Gtu9SiZ85xkJf0sP0pzXZYqyWb7QbbB9cEKYQ6OtKqwIdcseqUHNTQk2FJpVF
-	ItMBdYtP6zNR+qbjnEEbuiYJpDrkzke+DO6sXLHfdLHviVogFMVEXEmv6JIp65xw4hE8UY
-	mBP7Qye/qgj5hCxTKafoFf6mOsHvZN7RhQHPG9SZeKRPWHsyvpeHLmCfzciYfg==
+	bh=YgNfOQ9DlebyTJ/BGf1C6GOZCBT0lJeCGQ8xPpD6gb0=;
+	b=p4CooJmUTzFInYHwiEoMQq2RZHgWxXtQolmnsovu6es9myubWtqp0bLxP6yQd2DxWrBdZt
+	LmJlX2z2B44y/9XZzPaRM0um/vWNwlyfYxfICgG6Vo4yfhcKOfxBES2xLA5gtlx4nV0Tts
+	ZiyoriCgLf0ICtgWwRLe1d4QKBCv939JXeNgVyMYy0l7i+QonOFipkwVIH2IkwbO2GUK9z
+	Cya7v6M2WN3RhAl/jOxiRId7vH+F/UzL+1ZpLkAGATeHy8PYtt+XtayQ5k/Mwa07lshvNf
+	oD5cCCs0jK1UhcbixBRTPcb+EdvCOyZPVlmsYJKda+aiwTfCCAXeiMLe2c6MbA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739616959;
+	s=2020e; t=1739616997;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5nWyQm3CHTMNeNCnReiBfKhfxsApT/3vKxVPVpAcdfA=;
-	b=NthJqut1ss8SV4dh+Ld6tsxQ3r/94SLU+QpDTuA/TfcjcxhUVSm/CG/4eu2g/cq2O6LwxZ
-	ddo9k/SFI8JwG7Ag==
-From: "tip-bot2 for zihan zhou" <tip-bot2@linutronix.de>
+	bh=YgNfOQ9DlebyTJ/BGf1C6GOZCBT0lJeCGQ8xPpD6gb0=;
+	b=vlGJ2wLswnAe18lofH6fsPNZFIrtBiO2DgZHGuVD/tfiBHj2TEoKWtQuPUGjvoU2HSMII7
+	CzUjtMxtdY/9TFAw==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: sched/core] sched: Cancel the slice protection of the idle entity
-Cc: zihan zhou <15645113830zzh@gmail.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
+Subject: [tip: x86/core] x86/ibt: Clean up poison_endbr()
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Sami Tolvanen <samitolvanen@google.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250208080850.16300-1-15645113830zzh@gmail.com>
-References: <20250208080850.16300-1-15645113830zzh@gmail.com>
+In-Reply-To: <20250207122546.815505775@infradead.org>
+References: <20250207122546.815505775@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173961695853.10177.12588433756462565858.tip-bot2@tip-bot2>
+Message-ID: <173961699688.10177.10294695308983261568.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,123 +65,131 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     f553741ac8c0e467a3b873e305f34b902e50b86d
-Gitweb:        https://git.kernel.org/tip/f553741ac8c0e467a3b873e305f34b902e50b86d
-Author:        zihan zhou <15645113830zzh@gmail.com>
-AuthorDate:    Sat, 08 Feb 2025 16:08:52 +08:00
+Commit-ID:     c4239a72a29d58a4377c2db8583c24f9e2b79d01
+Gitweb:        https://git.kernel.org/tip/c4239a72a29d58a4377c2db8583c24f9e2b79d01
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 07 Feb 2025 13:15:37 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 14 Feb 2025 10:32:00 +01:00
+CommitterDate: Fri, 14 Feb 2025 10:32:06 +01:00
 
-sched: Cancel the slice protection of the idle entity
+x86/ibt: Clean up poison_endbr()
 
-A wakeup non-idle entity should preempt idle entity at any time,
-but because of the slice protection of the idle entity, the non-idle
-entity has to wait, so just cancel it.
+Basically, get rid of the .warn argument and explicitly don't call the
+function when we know there isn't an endbr. This makes the calling
+code clearer.
 
-This patch is aimed at minimizing the impact of SCHED_IDLE on
-SCHED_NORMAL. For example, a task with SCHED_IDLE policy that sleeps for
-1s and then runs for 3 ms, running cyclictest on the same cpu, has a
-maximum latency of 3 ms, which is caused by the slice protection of the
-idle entity. It is unreasonable. With this patch, the cyclictest latency
-under the same conditions is basically the same on the cpu with idle
-processes and on empty cpu.
+Note: perhaps don't add functions to .cfi_sites when the function
+doesn't have endbr -- OTOH why would the compiler emit the prefix if
+it has already determined there are no indirect callers and has
+omitted the ENDBR instruction.
 
-[peterz: add helpers]
-Fixes: 63304558ba5d ("sched/eevdf: Curb wakeup-preemption")
-Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Tested-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20250208080850.16300-1-15645113830zzh@gmail.com
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+Link: https://lore.kernel.org/r/20250207122546.815505775@infradead.org
 ---
- kernel/sched/fair.c | 46 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 33 insertions(+), 13 deletions(-)
+ arch/x86/kernel/alternative.c | 43 ++++++++++++++++++++++++++++------
+ 1 file changed, 36 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1c0ef43..61b826f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -884,6 +884,26 @@ struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index fda11df..e285933 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -865,14 +865,12 @@ Efault:
+ 
+ static void poison_cfi(void *addr);
+ 
+-static void __init_or_module poison_endbr(void *addr, bool warn)
++static void __init_or_module poison_endbr(void *addr)
+ {
+ 	u32 poison = gen_endbr_poison();
+ 
+-	if (!is_endbr(addr)) {
+-		WARN_ON_ONCE(warn);
++	if (WARN_ON_ONCE(!is_endbr(addr)))
+ 		return;
+-	}
+ 
+ 	DPRINTK(ENDBR, "ENDBR at: %pS (%px)", addr, addr);
+ 
+@@ -897,7 +895,7 @@ void __init_or_module noinline apply_seal_endbr(s32 *start, s32 *end)
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+ 
+-		poison_endbr(addr, true);
++		poison_endbr(addr);
+ 		if (IS_ENABLED(CONFIG_FINEIBT))
+ 			poison_cfi(addr - 16);
+ 	}
+@@ -1200,6 +1198,14 @@ static int cfi_rewrite_preamble(s32 *start, s32 *end)
+ 		void *addr = (void *)s + *s;
+ 		u32 hash;
+ 
++		/*
++		 * When the function doesn't start with ENDBR the compiler will
++		 * have determined there are no indirect calls to it and we
++		 * don't need no CFI either.
++		 */
++		if (!is_endbr(addr + 16))
++			continue;
++
+ 		hash = decode_preamble_hash(addr);
+ 		if (WARN(!hash, "no CFI hash found at: %pS %px %*ph\n",
+ 			 addr, addr, 5, addr))
+@@ -1220,7 +1226,10 @@ static void cfi_rewrite_endbr(s32 *start, s32 *end)
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+ 
+-		poison_endbr(addr+16, false);
++		if (!is_endbr(addr + 16))
++			continue;
++
++		poison_endbr(addr + 16);
+ 	}
  }
  
- /*
-+ * HACK, stash a copy of deadline at the point of pick in vlag,
-+ * which isn't used until dequeue.
-+ */
-+static inline void set_protect_slice(struct sched_entity *se)
-+{
-+	se->vlag = se->deadline;
-+}
-+
-+static inline bool protect_slice(struct sched_entity *se)
-+{
-+	return se->vlag == se->deadline;
-+}
-+
-+static inline void cancel_protect_slice(struct sched_entity *se)
-+{
-+	if (protect_slice(se))
-+		se->vlag = se->deadline + 1;
-+}
-+
-+/*
-  * Earliest Eligible Virtual Deadline First
-  *
-  * In order to provide latency guarantees for different request sizes
-@@ -919,11 +939,7 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
- 	if (curr && (!curr->on_rq || !entity_eligible(cfs_rq, curr)))
- 		curr = NULL;
+@@ -1353,9 +1362,23 @@ static inline void poison_hash(void *addr)
  
--	/*
--	 * Once selected, run a task until it either becomes non-eligible or
--	 * until it gets a new slice. See the HACK in set_next_entity().
--	 */
--	if (sched_feat(RUN_TO_PARITY) && curr && curr->vlag == curr->deadline)
-+	if (sched_feat(RUN_TO_PARITY) && curr && protect_slice(curr))
- 		return curr;
- 
- 	/* Pick the leftmost entity if it's eligible */
-@@ -5528,11 +5544,8 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
- 		update_stats_wait_end_fair(cfs_rq, se);
- 		__dequeue_entity(cfs_rq, se);
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
--		/*
--		 * HACK, stash a copy of deadline at the point of pick in vlag,
--		 * which isn't used until dequeue.
--		 */
--		se->vlag = se->deadline;
-+
-+		set_protect_slice(se);
- 	}
- 
- 	update_stats_curr_start(cfs_rq, se);
-@@ -8781,8 +8794,15 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int 
- 	 * Preempt an idle entity in favor of a non-idle entity (and don't preempt
- 	 * in the inverse case).
- 	 */
--	if (cse_is_idle && !pse_is_idle)
-+	if (cse_is_idle && !pse_is_idle) {
-+		/*
-+		 * When non-idle entity preempt an idle entity,
-+		 * don't give idle entity slice protection.
+ static void poison_cfi(void *addr)
+ {
++	/*
++	 * Compilers manage to be inconsistent with ENDBR vs __cfi prefixes,
++	 * some (static) functions for which they can determine the address
++	 * is never taken do not get a __cfi prefix, but *DO* get an ENDBR.
++	 *
++	 * As such, these functions will get sealed, but we need to be careful
++	 * to not unconditionally scribble the previous function.
++	 */
+ 	switch (cfi_mode) {
+ 	case CFI_FINEIBT:
+ 		/*
++		 * FineIBT prefix should start with an ENDBR.
 +		 */
-+		cancel_protect_slice(se);
- 		goto preempt;
-+	}
++		if (!is_endbr(addr))
++			break;
 +
- 	if (cse_is_idle != pse_is_idle)
- 		return;
++		/*
+ 		 * __cfi_\func:
+ 		 *	osp nopl (%rax)
+ 		 *	subl	$0, %r10d
+@@ -1363,12 +1386,18 @@ static void poison_cfi(void *addr)
+ 		 *	ud2
+ 		 * 1:	nop
+ 		 */
+-		poison_endbr(addr, false);
++		poison_endbr(addr);
+ 		poison_hash(addr + fineibt_preamble_hash);
+ 		break;
  
-@@ -8801,8 +8821,8 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int 
- 	 * Note that even if @p does not turn out to be the most eligible
- 	 * task at this moment, current's slice protection will be lost.
- 	 */
--	if (do_preempt_short(cfs_rq, pse, se) && se->vlag == se->deadline)
--		se->vlag = se->deadline + 1;
-+	if (do_preempt_short(cfs_rq, pse, se))
-+		cancel_protect_slice(se);
- 
- 	/*
- 	 * If @p has become the most eligible task, force preemption.
+ 	case CFI_KCFI:
+ 		/*
++		 * kCFI prefix should start with a valid hash.
++		 */
++		if (!decode_preamble_hash(addr))
++			break;
++
++		/*
+ 		 * __cfi_\func:
+ 		 *	movl	$0, %eax
+ 		 *	.skip	11, 0x90
