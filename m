@@ -1,89 +1,88 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244DB1373
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FD31373;
+	Sat, 15 Feb 2025 00:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739580736; cv=none; b=kaPL09zSTZE3feS8V7I/ozQrBcxaFrzfg4as4JHe6HJ4rbch+PexGu5H+99iIcD6ZOrTbzD7YwfUxY6GMKy0yUa4o0mWVUpTIsXk/msaIfuQUi6ml2O4d+07wQI7NzqGE+UckM6VFMKYRJy1bbPNbj3AbtlERZitQKoyNKf0Ww8=
+	t=1739580776; cv=none; b=kVVJUGfmp8TqkV/eQ36DXIP7lnYM/hLkwF8kz5CaOymhTjMDznlGV/TqsiI1t2g1iTOSoPLjmTJ4y4o/a7NXKyRfUKvfr4dK2Oaq3l7v/5wOo7yBTuL2xHgxWSfeIsfZrK4vKEkJQNdkOuxLlqc/1fRW+1y8ysrXy6hv472DOS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739580736; c=relaxed/simple;
-	bh=C270t9vOE8Jd+0AZ0H/d/kXPNITGhRctKxTbG4yjY1k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XqecCkvk7QyovdtXlOMcjGFnb/5d9GjpRp74RmZDGRHl1IjbSWnLwwey7zbzd9oXJXihYOT3jS8wDsM7NOKStUWYr8/stXHzqBNatCdo77HCPWT8gsDwDG33VkvJCXAqDIK9Z4g1/sIBUeb+6jtq0jHMvDuBgGzR1kWJBTnXS+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ITZVA4hE; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739580776; c=relaxed/simple;
+	bh=18gY+6DNEY6pm3vWq+D6ujWxKSDxDmMWkCpBg3C4kX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/kuHhcWxgVl9bdxodX32xyoDNou/W2sEbR6ymbIq2iv/PeGSom4xBrCTj8PUig20GV/21pD9KVjYI3geOsZevTkY+4Tu/T54VJsNdVG4WCLkgjlZAzmbxrnqERLLqoIp92GD92jN4NjCHizO8CVM+UZMoCkyah4I665VU6RvrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovwI50sY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITZVA4hE"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fbff6426f5so5517770a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:52:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739580733; x=1740185533; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L/w+c2CabV0dIn4w6RFieU1p5sEx0QasW8TYiOxAj4U=;
-        b=ITZVA4hEQbj8DbTd6VLOe83i48HN4WVhK92t66ZBvgIkSYEKaYG3ukG6BkMcVnZauY
-         0KJ031TlqMgrvVZHA4BJ9eUZbtDVTFkI+G4MYN2PKLGD6XwWKVfOTVz/QQ3yYCpnMiSh
-         EHVh7vADuBlvZ3MlCo109d66BAEh+najNQFtGJqx77TQK+m9g/6PGioQUhs/lVpHF5D1
-         nQpIWoy3wQwBD4tQ1+HV2b1l6Z7kXJpXbYSGhEGnpBriNqeqzhojKlxSncQoYffk1/To
-         mtgHo/k+liTc5+tlr9OZcOEjTTgsjyo8gijiKuFJfeVS587obGLlNIHi0pEYRSWXtTHL
-         YMfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739580733; x=1740185533;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L/w+c2CabV0dIn4w6RFieU1p5sEx0QasW8TYiOxAj4U=;
-        b=EApAcnuRekqvpr5k9v5NJ+Gr7fXuCNMZpViavS8jZzuSOvcIiEJobFZ/KM3Es97Zo/
-         PN1p44sHjOrmfxFIIJbfm+HTzXm01QPjH77mFh+demTrwYF4YwLYcmCuIDeHVEeUQ8J5
-         BNCdsi8R8DSGyik3dIubevrcj9KSA1hHdu6cQJPsU0GwOT/Jo6dazOfU/+OFbi+/8Oop
-         pIlVy/I1BfByVtYgNchZtXW6Sr03w4HK9yprKyub6+pwZf1+Gc/jg2Wld3FirfBoPqCX
-         PkSCioPVJcef7gg3lXOhah2ZcTllLlNaYyeJkz116lIynSSeIY/iJ8zt/W6pX+qiESQQ
-         WUXQ==
-X-Gm-Message-State: AOJu0Yw0AVGU8vje90N4bKkWUnttYTXxjhKX/Fc4vIKQlToBOeREPa4B
-	d+j1O8jr5Q3KNRQDWgvHudVm7InzOKHFhmiybkDVmkx0SH44AhQdYCoXa1eKKaBn1uUyLsk1z0y
-	bfg==
-X-Google-Smtp-Source: AGHT+IEzoM1kxytohJPzZiUBujM5HphgBOfWYDv5T6Prq7S8s2l8rylIt6ug7wHW06IQB/WPGcFyCMxgDYU=
-X-Received: from pjuw7.prod.google.com ([2002:a17:90a:d607:b0:2fc:2ee0:d38a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c0c:b0:2f6:d266:f45e
- with SMTP id 98e67ed59e1d1-2fc40d14fcemr1771692a91.2.1739580733408; Fri, 14
- Feb 2025 16:52:13 -0800 (PST)
-Date: Fri, 14 Feb 2025 16:50:12 -0800
-In-Reply-To: <20250127013837.12983-1-haifeng.zhao@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovwI50sY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52048C4CED1;
+	Sat, 15 Feb 2025 00:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739580776;
+	bh=18gY+6DNEY6pm3vWq+D6ujWxKSDxDmMWkCpBg3C4kX8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ovwI50sYHPvDuCNdAtmm/diy3+7sjRnAxjQvFxRltR2vSR1aK9SwhufnXSs08c1bY
+	 SvGyE+sbayWKiryq61Pdzt4p5c5wCBYEn/stlbFt322ZnM3tgcReeWlA1ZEvFn9SmB
+	 A5lClx5fgRT7VI5S77KE/eR8f8i1upQ++qC2nnIt2Zr6nX1R1EFU8BvzOOTlIToJyB
+	 DRMSCqPzNRrKp1guhqn/K8TPITflmd/47YYP0019oAR0SbcIBXQliijmNwVA/vWfO4
+	 aBbqzjBo4sIyE012lO1g4eMUuqIxj9DBYnF/yMFn7RAP1XO2hJhoD/Q70ohjS04iOy
+	 ZHu03G5EEzVIQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>
+Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v2 00/17] amd-pstate cleanups
+Date: Fri, 14 Feb 2025 18:52:27 -0600
+Message-ID: <20250215005244.1212285-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250127013837.12983-1-haifeng.zhao@linux.intel.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <173958023920.1189103.10850075100042366704.b4-ty@google.com>
-Subject: Re: [PATCH v2] KVM: x86/cpuid: add type suffix to decimal const 48
- fix building warning
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, hpa@zytor.com, bp@alien8.de, tglx@linutronix.de, 
-	mingo@redhat.com, Ethan Zhao <haifeng.zhao@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org, 
-	joro@8bytes.org, jmattson@google.com, wanpengli@tencent.com, 
-	pbonzini@redhat.com, etzhao@outlook.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 27 Jan 2025 09:38:37 +0800, Ethan Zhao wrote:
-> The default type of a decimal constant is determined by the magnitude of
-> its value. If the value falls within the range of int, its type is int;
-> otherwise, if it falls within the range of unsigned int, its type is
-> unsigned int. This results in the constant 48 being of type int. In the
-> following min call,
-> 
-> g_phys_as = min(g_phys_as, 48);
-> 
-> [...]
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Applied to kvm-x86 misc, thanks!
+This series overhauls locking and drops many unnecessarily cached
+variables.
 
-[1/1] KVM: x86/cpuid: add type suffix to decimal const 48 fix building warning
-      https://github.com/kvm-x86/linux/commit/a11128ce1636
+Debugging messages are also dropped in favor of more ftracing.
 
---
-https://github.com/kvm-x86/linux/tree/next
+This series is based off superm1/linux.git bleeding-edge branch.
+
+Mario Limonciello (17):
+  cpufreq/amd-pstate: Show a warning when a CPU fails to setup
+  cpufreq/amd-pstate: Drop min and max cached frequencies
+  cpufreq/amd-pstate: Move perf values into a union
+  cpufreq/amd-pstate: Overhaul locking
+  cpufreq/amd-pstate: Drop `cppc_cap1_cached`
+  cpufreq/amd-pstate-ut: Use _free macro to free put policy
+  cpufreq/amd-pstate-ut: Allow lowest nonlinear and lowest to be the
+    same
+  cpufreq/amd-pstate-ut: Drop SUCCESS and FAIL enums
+  cpufreq/amd-pstate-ut: Continue on missing policies
+  cpufreq/amd-pstate-ut: Adjust variable scope for
+    amd_pstate_ut_check_freq()
+  cpufreq/amd-pstate: Replace all AMD_CPPC_* macros with masks
+  cpufreq/amd-pstate: Cache CPPC request in shared mem case too
+  cpufreq/amd-pstate: Move all EPP tracing into *_update_perf and
+    *_set_epp functions
+  cpufreq/amd-pstate: Update cppc_req_cached for shared mem EPP writes
+  cpufreq/amd-pstate: Drop debug statements for policy setting
+  cpufreq/amd-pstate: Rework CPPC enabling
+  cpufreq/amd-pstate: Stop caching EPP
+
+ arch/x86/include/asm/msr-index.h   |  20 +-
+ arch/x86/kernel/acpi/cppc.c        |   2 +-
+ drivers/cpufreq/amd-pstate-trace.h |  13 +-
+ drivers/cpufreq/amd-pstate-ut.c    | 204 ++++------
+ drivers/cpufreq/amd-pstate.c       | 589 ++++++++++++++---------------
+ drivers/cpufreq/amd-pstate.h       |  60 +--
+ 6 files changed, 414 insertions(+), 474 deletions(-)
+
+-- 
+2.43.0
+
