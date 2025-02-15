@@ -1,166 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933231925AC;
-	Sat, 15 Feb 2025 00:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1024F1885B8
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739580902; cv=none; b=FJaDtX41B8BcTzMcPRs5jJ9PQEOWXVeU/tQPG612Ft9kopXko3IxWeY3QcQwS3J7KuRu4PBVsd7R0SvguoibdKzaO9D0tUyHZe/uRxBNLpSc9EA6bwilebhemCFA7nsQpN4fjfnrY5Zlxru8ZpJSfESopOXxI+SxmtuB46uurnA=
+	t=1739580903; cv=none; b=Q2ZckEahV3sVrXqJ8JBlqWlT1Weoru78gfCysWiYo+dMEXF7UDLvCfQOAJTSMJA6OXcmE0UDxL/lEFWY1PMrg2HrTFaq0Tldy8tSm4YrBbl931SdlGcOzuB9lvDHOWwIg9w9NUSOE5qSpwjE2eAg7SgKmJYGulvpE1ZTrhi7y6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739580902; c=relaxed/simple;
-	bh=xNVlLenkvG2vhuYPE5tLdxeYbge7k4Nuv4kwBtl5rD8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y25DIHz8xBETGJHWffZbEXAr8N3p5rHBitQbkI3GPQzneBSeOmO9CTeVD7oGunZARLIppoxHZH+U7SkyuqRvMQ/Vu/VR8st3dajnck0NIa3Zi4bOVygjJmwfu4VKU+URlMelCVhqUMLDS3WoKr378GdFmFmesnFVYDBVQuZvsYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9CnHvia; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739580903; c=relaxed/simple;
+	bh=EOahgPz6fyQhSLBWqHv6GC8sZf/XOeLdOvMNVwUIpnY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Qk9OGGyvjK2lmuZkpjZtlmMhhO1Sd2rPtvYHlSmcTU/tBOpc2Rlf3Z3LeIuADs1Ht1E9V/VX0oGn2+n/Ihdct4IwjQocdKrw/d9EomtF0GRpoaiA+TT16l1D89+hhB/dNBzCTX/wF4w/QHHJiQnqAHo7VWvSxDGMLgeBE5UIFsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wtod9iN6; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9CnHvia"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A47C4CEE6;
-	Sat, 15 Feb 2025 00:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739580902;
-	bh=xNVlLenkvG2vhuYPE5tLdxeYbge7k4Nuv4kwBtl5rD8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l9CnHviagF8D3AVJL73gegi7YXunng4wPOq5gGmz5Y/jWNpgQwJtclG/yBT9NqPAv
-	 OUXW/BUGv8KLqs4Xmv5pK8AfELt2PQAcMaCKBgU5vmoP7xJB1kMpE/RjVwCMv3cN6X
-	 W5lH+Fi8d1VrSPKQRFlgJgHK9EHJhoteAImf92pv4P+Ia/ed2g6bdbkPe7PEcvRw0f
-	 M5sfebFXoCQstgyNHFViwHOW5tfAWPbjRwHZXs7f6Ec8aXVfHN9FfMkO2lUPjbtd6o
-	 gWYodg8iYrjCrWtu0Bbx0eIVnx83cWz/s0TMcWqZiqXj3qTE1Uxo8AMGNd/z1x06bj
-	 ijsqm4eXXMk7w==
-From: Mario Limonciello <superm1@kernel.org>
-To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 4/5] cpufreq/amd-pstate: Add support for raw EPP writes
-Date: Fri, 14 Feb 2025 18:54:47 -0600
-Message-ID: <20250215005448.1216646-5-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250215005448.1216646-1-superm1@kernel.org>
-References: <20250215005448.1216646-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wtod9iN6"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220ff7d7b67so15759215ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:55:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739580900; x=1740185700; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gTgQsorQjh14TutxhLLCxQmV6p+nBtXX/1kn8rG1LNI=;
+        b=Wtod9iN6Ol6G1C2+n1COE1+3IjxIyqlCgOZuiNA91jEzp5cPW2wYUmAPhKrT4v0t7I
+         j+VEZPjvV1cXMDEaNcKxBv36Ai8pgKLYQ98JOjaIQtIyWbpCMTTaxR6Mi21stYMRRssY
+         YBXBfuxQDRUnKzED+ijt7k527hVQAsCZl52W4OSePiplLvj/FPhNgVMbizhRCEouRb+6
+         yWckVuoUSLT+gRApobHMwWEhfGR+y2lBlXk2JP3eweaJJ1YQlBPhZNDgm2ddryVupYmy
+         jhN9G6DQikxakNfMo/GMoMXZGQoYgg5bwo4Fz4ZRhCUXPk3/k4eWuaHS2cx/wIa8VV5e
+         uBDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739580900; x=1740185700;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gTgQsorQjh14TutxhLLCxQmV6p+nBtXX/1kn8rG1LNI=;
+        b=heyCP4sjL696zCPfdLNuohvQnY1gQQhFT8/jXJnCj//eru2vvuCVr5wBhN0wIJ/0IK
+         qA9atDi7/HxDRzISDb233dPHqFfmsEoz5QB2awYWHVQ6USD04FemnXZy6J1oTEWjcHhc
+         JQ+oSftpUXzclq/F7y8xgLDp0lT9bO+QT7qYXsfTaTXTfHGuKe2luEquKMIqKY9wxOt6
+         FP34KfkWbLxsmoZGVibbR4kTJ6YYNWXcIXewBCbtS4PzQG3DPGA0qgppybzPLAPWsYUQ
+         tR915K+wyA/1KiFLzxWcmlfQQk7nEBrupF5NQiXJKklL4QHX1o501m+GgF7EvJL4aBER
+         ZwrA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtqnaUJon71zAgt9W4mj4bpzHRVYJdQauGZcf2X8OTa8NakUe4w4uJJQ9Z+8CYZEKdr5f908XY8RekhoA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwZqRkPDZBeHrwgg6vvnkUA6A9rgYs5UxtWPvWq9kZj1fn1aao
+	Kzvz2AGummJJzAPgyhNNCVAz7vJpHxVdXOlslGqJiDfUX0qU7+RZmzRWSKfwvBjWO5DRe/SaMgJ
+	QZw==
+X-Google-Smtp-Source: AGHT+IFnNgJr4fAST/anqb/OhGfaJPL4qFzSio+iAadkBSAqDbENgFOFYfhtq5SRt2eIpuzxLd/Yc+sQw1s=
+X-Received: from plblg3.prod.google.com ([2002:a17:902:fb83:b0:21c:5115:8766])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f787:b0:216:410d:4c53
+ with SMTP id d9443c01a7336-221040b1916mr20971295ad.41.1739580900440; Fri, 14
+ Feb 2025 16:55:00 -0800 (PST)
+Date: Fri, 14 Feb 2025 16:50:18 -0800
+In-Reply-To: <20241211013302.1347853-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20241211013302.1347853-1-seanjc@google.com>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <173958033580.1190199.12371307462069862956.b4-ty@google.com>
+Subject: Re: [PATCH 0/5] KVM: x86: Address xstate_required_size() perf regression
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Tue, 10 Dec 2024 17:32:57 -0800, Sean Christopherson wrote:
+> Fix a hilarious/revolting performance regression (relative to older CPU
+> generations) in xstate_required_size() that pops up due to CPUID _in the
+> host_ taking 3x-4x longer on Emerald Rapids than Skylake.
+> 
+> The issue rears its head on nested virtualization transitions, as KVM
+> (unnecessarily) performs runtime CPUID updates, including XSAVE sizes,
+> multiple times per transition.  And calculating XSAVE sizes, especially
+> for vCPUs with a decent number of supported XSAVE features and compacted
+> format support, can add up to thousands of cycles.
+> 
+> [...]
 
-The energy performance preference field of the CPPC request MSR
-supports values from 0 to 255, but the strings only offer 4 values.
+Applied 2-5 to kvm-x86 misc, with a changelog that doesn't incorrectly state
+that CPUID is a mandatory intercept on AMD.
 
-The other values are useful for tuning the performance of some
-workloads.
+[1/5] KVM: x86: Cache CPUID.0xD XSTATE offsets+sizes during module init
+      (no commit info)
+[2/5] KVM: x86: Use for-loop to iterate over XSTATE size entries
+      https://github.com/kvm-x86/linux/commit/aa93b6f96f64
+[3/5] KVM: x86: Apply TSX_CTRL_CPUID_CLEAR if and only if the vCPU has RTM or HLE
+      https://github.com/kvm-x86/linux/commit/7e9f735e7ac4
+[4/5] KVM: x86: Query X86_FEATURE_MWAIT iff userspace owns the CPUID feature bit
+      https://github.com/kvm-x86/linux/commit/a487f6797c88
+[5/5] KVM: x86: Defer runtime updates of dynamic CPUID bits until CPUID emulation
+      https://github.com/kvm-x86/linux/commit/93da6af3ae56
 
-Add support for writing the raw energy performance preference value
-to the sysfs file.  If the last value written was an integer then
-an integer will be returned.  If the last value written was a string
-then a string will be returned.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- Documentation/admin-guide/pm/amd-pstate.rst | 16 +++++++++++-----
- drivers/cpufreq/amd-pstate.c                | 11 +++++++++--
- drivers/cpufreq/amd-pstate.h                |  1 +
- 3 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
-index 36950fb6568c0..0e4d2e0aaeff7 100644
---- a/Documentation/admin-guide/pm/amd-pstate.rst
-+++ b/Documentation/admin-guide/pm/amd-pstate.rst
-@@ -280,16 +280,22 @@ A list of all the supported EPP preferences that could be used for
- These profiles represent different hints that are provided
- to the low-level firmware about the user's desired energy vs efficiency
- tradeoff.  ``default`` represents the epp value is set by platform
--firmware. This attribute is read-only.
-+firmware. ``custom`` designates that integer values 0-255 may be written
-+as well.  This attribute is read-only.
- 
- ``energy_performance_preference``
- 
- The current energy performance preference can be read from this attribute.
- and user can change current preference according to energy or performance needs
--Please get all support profiles list from
--``energy_performance_available_preferences`` attribute, all the profiles are
--integer values defined between 0 to 255 when EPP feature is enabled by platform
--firmware, but if the dynamic EPP feature is enabled, driver will block writes.
-+Coarse named profiles are available in the attribute
-+``energy_performance_available_preferences``.
-+Users can also write individual integer values between 0 to 255.
-+When EPP feature is enabled by platform firmware but if the dynamic EPP feature is
-+enabled, driver will ignore the written value. Lower epp values shift the bias
-+towards improved performance while a higher epp value shifts the bias towards
-+power-savings. The exact impact can change from one platform to the other.
-+If a valid integer was last written, then a number will be returned on future reads.
-+If a valid string was last written then a string will be returned on future reads.
- This attribute is read-write.
- 
- ``boost``
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 5d5f602ef1407..0d71eaf7366f2 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -1330,6 +1330,7 @@ ssize_t store_energy_performance_preference(struct cpufreq_policy *policy,
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 	char str_preference[21];
- 	ssize_t ret;
-+	bool raw_epp = FALSE;
- 	u8 epp;
- 
- 	if (cpudata->dynamic_epp) {
-@@ -1346,6 +1347,7 @@ ssize_t store_energy_performance_preference(struct cpufreq_policy *policy,
- 	 * matches an index in the energy_perf_strings array
- 	 */
- 	ret = kstrtou8(str_preference, 0, &epp);
-+	raw_epp = !ret;
- 	if (ret) {
- 		ret = match_string(energy_perf_strings, -1, str_preference);
- 		if (ret < 0 || ret == EPP_INDEX_CUSTOM)
-@@ -1365,7 +1367,9 @@ ssize_t store_energy_performance_preference(struct cpufreq_policy *policy,
- 	if (ret)
- 		return ret;
- 
--	return ret ? ret : count;
-+	cpudata->raw_epp = raw_epp;
-+
-+	return count;
- }
- EXPORT_SYMBOL_GPL(store_energy_performance_preference);
- 
-@@ -1376,6 +1380,9 @@ ssize_t show_energy_performance_preference(struct cpufreq_policy *policy, char *
- 
- 	epp = FIELD_GET(AMD_CPPC_EPP_PERF_MASK, cpudata->cppc_req_cached);
- 
-+	if (cpudata->raw_epp)
-+		return sysfs_emit(buf, "%u\n", epp);
-+
- 	switch (epp) {
- 	case AMD_CPPC_EPP_PERFORMANCE:
- 		preference = EPP_INDEX_PERFORMANCE;
-@@ -1390,7 +1397,7 @@ ssize_t show_energy_performance_preference(struct cpufreq_policy *policy, char *
- 		preference = EPP_INDEX_POWERSAVE;
- 		break;
- 	default:
--		return sysfs_emit(buf, "%u\n", epp);
-+		return -EINVAL;
- 	}
- 
- 	return sysfs_emit(buf, "%s\n", energy_perf_strings[preference]);
-diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
-index f1bbac4faf83d..490fb46f05602 100644
---- a/drivers/cpufreq/amd-pstate.h
-+++ b/drivers/cpufreq/amd-pstate.h
-@@ -106,6 +106,7 @@ struct amd_cpudata {
- 	u8	epp_default_ac;
- 	u8	epp_default_dc;
- 	bool	dynamic_epp;
-+	bool	raw_epp;
- 	struct notifier_block power_nb;
- 
- 	/* platform profile */
--- 
-2.43.0
-
+--
+https://github.com/kvm-x86/linux/tree/next
