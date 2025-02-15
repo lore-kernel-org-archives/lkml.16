@@ -1,180 +1,119 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from mta20.hihonor.com (mta20.hihonor.com [81.70.206.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A349D531
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 08:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38E218B477
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 08:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739607854; cv=none; b=X5Y3T2Hx35DgMrbJlPDHqfGGXsnCG+LfxrrXsHnhji33pi73JPWmDD5gnitvOXpYvyMbM7gcb3eID+v4p2o+wsj3yzuIZcQ+OM0CUlhSSLJqR4mS7gEAb74nMOqoFvHxZ6nn/CVVkh1Gy+guu4SnId1hijY6GOobs3+lPLLHzHw=
+	t=1739608324; cv=none; b=SwDfhZAM/17dHkjlLh1juZcL686+VupF6Qpb7X0g3d/12tVH7PT+6wJ1F/60fZsEmHb74q0BOmoB69k8Om1xD6waPctL50vFNasz7+5RQ0UOUFOkLh7x1h2ytS+av8Tu+RraoPJ5LT+BUztqB8yzUDKHEKKDDiZKHLfRzBG5l0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739607854; c=relaxed/simple;
-	bh=rdSKbbowuaC1k0JdIAz968nF++zG2YTQpuC1grZhOhc=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=iI5XdUjesKc+VxyiyLaqNn8pI4WpmzGrF3jvIjHcpHZ4adb3JXt2I0DDR16imwKeKCxPkXUN3e12NthEf3ZhFuwzm+4sxxWrfY39EUhz+3Px03DpdhpPKKHRRSagG9d21l0QyKKvnnWBFqvUNSznpis8yCERoxPZmLHjYoDbvo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ONDnj+DW; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ONDnj+DW"
+	s=arc-20240116; t=1739608324; c=relaxed/simple;
+	bh=JJSptrnjGAdciiuJNS4fjWaeNKENxtOCG7Eb8yMsNjo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=adScMZNqp4ZxwCVfxsEyoNPAq/rx2Yoyqd07sA1CvHJtQjfrSG9HR2BIoh4gAJM0dE8uSZeL1TGYDw0VITjsH27HGoXNHjAUXlbx+rGBKFTRiMRxRZGAteCX+wWjb6lUJqB/2Jqdd9lSBjUp0z7NaxLQmGMimR+Ws+n+HLCWa8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w001.hihonor.com (unknown [10.68.25.235])
+	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4Yw2Dk3bHTzYmJMc;
+	Sat, 15 Feb 2025 16:30:46 +0800 (CST)
+Received: from a008.hihonor.com (10.68.30.56) by w001.hihonor.com
+ (10.68.25.235) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 15 Feb
+ 2025 16:31:51 +0800
+Received: from a007.hihonor.com (10.68.22.31) by a008.hihonor.com
+ (10.68.30.56) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 15 Feb
+ 2025 16:31:50 +0800
+Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
+ a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
+ 15.02.1544.011; Sat, 15 Feb 2025 16:31:50 +0800
+From: gaoxu <gaoxu2@honor.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>, Andrew Morton
+	<akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Suren
+  Baghdasaryan" <surenb@google.com>, Barry Song <21cnbao@gmail.com>,
+	yipengxiang <yipengxiang@honor.com>
+Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjJdIG1tOiBGaXggcG9zc2libGUgTlVMTCBwb2lu?=
+ =?utf-8?B?dGVyIGRlcmVmZXJlbmNlIGluIF9fc3dhcF9kdXBsaWNhdGU=?=
+Thread-Topic: [PATCH v2] mm: Fix possible NULL pointer dereference in
+ __swap_duplicate
+Thread-Index: Adt/c+jLXWIUvZ+8S8+6YIq3M7UYAf//mAiA//95OWA=
+Date: Sat, 15 Feb 2025 08:31:50 +0000
+Message-ID: <ca2a581c9601426abb3b29f2535956ab@honor.com>
+References: <afecae337e5b4b2b8ce4e5a591957f89@honor.com>
+ <8bda689f466f7426df696ec52648592f262091bb@linux.dev>
+In-Reply-To: <8bda689f466f7426df696ec52648592f262091bb@linux.dev>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739607848;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rdSKbbowuaC1k0JdIAz968nF++zG2YTQpuC1grZhOhc=;
-	b=ONDnj+DW0Vk+1xIOKRX2gMsrKjF7m0YXCLxenLBymWKk3cm4A4jncD3elBlF9/i55HR33o
-	8RMxKFdurvaBGlhVgsL6TFMoDG+PenGnCJgUVr23zt9xANhxbBwNyu2P1ot9TAufkbg6Pa
-	3KKLOhMxGbwJtvebL/0xEmWkDjqBiWs=
-Date: Sat, 15 Feb 2025 08:24:07 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yosry Ahmed" <yosry.ahmed@linux.dev>
-Message-ID: <8bda689f466f7426df696ec52648592f262091bb@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v2] mm: Fix possible NULL pointer dereference in
- __swap_duplicate
-To: "gaoxu" <gaoxu2@honor.com>, "Andrew Morton" <akpm@linux-foundation.org>,
- linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, "Suren  Baghdasaryan" <surenb@google.com>,
- "Barry Song" <21cnbao@gmail.com>, "yipengxiang" <yipengxiang@honor.com>
-In-Reply-To: <afecae337e5b4b2b8ce4e5a591957f89@honor.com>
-References: <afecae337e5b4b2b8ce4e5a591957f89@honor.com>
-X-Migadu-Flow: FLOW_OUT
 
-February 14, 2025 at 10:52 PM, "gaoxu" <gaoxu2@honor.com> wrote:
-
-
-
->=20
->=20Add a NULL check on the return value of swp_swap_info in __swap_dupli=
-cate
->=20
->=20to prevent crashes caused by NULL pointer dereference.
->=20
->=20The reason why swp_swap_info() returns NULL is unclear; it may be due=
- to
->=20
->=20CPU cache issues or DDR bit flips. The probability of this issue is v=
-ery
->=20
->=20small, and the stack info we encountered is as follows=EF=BC=9A
->=20
->=20Unable to handle kernel NULL pointer dereference at virtual address
->=20
->=200000000000000058
->=20
->=20[RB/E]rb_sreason_str_set: sreason_str set null_pointer
->=20
->=20Mem abort info:
->=20
->=20 ESR =3D 0x0000000096000005
->=20
->=20 EC =3D 0x25: DABT (current EL), IL =3D 32 bits
->=20
->=20 SET =3D 0, FnV =3D 0
->=20
->=20 EA =3D 0, S1PTW =3D 0
->=20
->=20 FSC =3D 0x05: level 1 translation fault
->=20
->=20Data abort info:
->=20
->=20 ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
->=20
->=20 CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
->=20
->=20 GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
->=20
->=20user pgtable: 4k pages, 39-bit VAs, pgdp=3D00000008a80e5000
->=20
->=20[0000000000000058] pgd=3D0000000000000000, p4d=3D0000000000000000,
->=20
->=20pud=3D0000000000000000
->=20
->=20Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
->=20
->=20Skip md ftrace buffer dump for: 0x1609e0
->=20
->=20...
->=20
->=20pc : swap_duplicate+0x44/0x164
->=20
->=20lr : copy_page_range+0x508/0x1e78
->=20
->=20sp : ffffffc0f2a699e0
->=20
->=20x29: ffffffc0f2a699e0 x28: ffffff8a5b28d388 x27: ffffff8b06603388
->=20
->=20x26: ffffffdf7291fe70 x25: 0000000000000006 x24: 0000000000100073
->=20
->=20x23: 00000000002d2d2f x22: 0000000000000008 x21: 0000000000000000
->=20
->=20x20: 00000000002d2d2f x19: 18000000002d2d2f x18: ffffffdf726faec0
->=20
->=20x17: 0000000000000000 x16: 0010000000000001 x15: 0040000000000001
->=20
->=20x14: 0400000000000001 x13: ff7ffffffffffb7f x12: ffeffffffffffbff
->=20
->=20x11: ffffff8a5c7e1898 x10: 0000000000000018 x9 : 0000000000000006
->=20
->=20x8 : 1800000000000000 x7 : 0000000000000000 x6 : ffffff8057c01f10
->=20
->=20x5 : 000000000000a318 x4 : 0000000000000000 x3 : 0000000000000000
->=20
->=20x2 : 0000006daf200000 x1 : 0000000000000001 x0 : 18000000002d2d2f
->=20
->=20Call trace:
->=20
->=20 swap_duplicate+0x44/0x164
->=20
->=20 copy_page_range+0x508/0x1e78
->=20
->=20 copy_process+0x1278/0x21cc
->=20
->=20 kernel_clone+0x90/0x438
->=20
->=20 __arm64_sys_clone+0x5c/0x8c
->=20
->=20 invoke_syscall+0x58/0x110
->=20
->=20 do_el0_svc+0x8c/0xe0
->=20
->=20 el0_svc+0x38/0x9c
->=20
->=20 el0t_64_sync_handler+0x44/0xec
->=20
->=20 el0t_64_sync+0x1a8/0x1ac
->=20
->=20Code: 9139c35a 71006f3f 54000568 f8797b55 (f9402ea8)
->=20
->=20---[ end trace 0000000000000000 ]---
->=20
->=20Kernel panic - not syncing: Oops: Fatal exception
->=20
->=20SMP: stopping secondary CPUs
->=20
->=20The patch seems to only provide a workaround, but there are no more
->=20
->=20effective software solutions to handle the bit flips problem. This pa=
-th
->=20
->=20will change the issue from a system crash to a process exception, the=
-reby
->=20
->=20reducing the impact on the entire machine.
->=20
->=20Signed-off-by: gaoxu <gaoxu2@honor.com>
->=20
->=20Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-
-
-I did not review this patch, I only made a suggestion. Please only add Re=
-view tags when explicitly given.
+PiANCj4gRmVicnVhcnkgMTQsIDIwMjUgYXQgMTA6NTIgUE0sICJnYW94dSIgPGdhb3h1MkBob25v
+ci5jb20+IHdyb3RlOg0KPiANCj4gDQo+IA0KPiA+DQo+ID4gQWRkIGEgTlVMTCBjaGVjayBvbiB0
+aGUgcmV0dXJuIHZhbHVlIG9mIHN3cF9zd2FwX2luZm8gaW4gX19zd2FwX2R1cGxpY2F0ZQ0KPiA+
+DQo+ID4gdG8gcHJldmVudCBjcmFzaGVzIGNhdXNlZCBieSBOVUxMIHBvaW50ZXIgZGVyZWZlcmVu
+Y2UuDQo+ID4NCj4gPiBUaGUgcmVhc29uIHdoeSBzd3Bfc3dhcF9pbmZvKCkgcmV0dXJucyBOVUxM
+IGlzIHVuY2xlYXI7IGl0IG1heSBiZSBkdWUgdG8NCj4gPg0KPiA+IENQVSBjYWNoZSBpc3N1ZXMg
+b3IgRERSIGJpdCBmbGlwcy4gVGhlIHByb2JhYmlsaXR5IG9mIHRoaXMgaXNzdWUgaXMgdmVyeQ0K
+PiA+DQo+ID4gc21hbGwsIGFuZCB0aGUgc3RhY2sgaW5mbyB3ZSBlbmNvdW50ZXJlZCBpcyBhcyBm
+b2xsb3dz77yaDQo+ID4NCj4gPiBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBOVUxMIHBvaW50ZXIg
+ZGVyZWZlcmVuY2UgYXQgdmlydHVhbCBhZGRyZXNzDQo+ID4NCj4gPiAwMDAwMDAwMDAwMDAwMDU4
+DQo+ID4NCj4gPiBbUkIvRV1yYl9zcmVhc29uX3N0cl9zZXQ6IHNyZWFzb25fc3RyIHNldCBudWxs
+X3BvaW50ZXINCj4gPg0KPiA+IE1lbSBhYm9ydCBpbmZvOg0KPiA+DQo+ID4gIEVTUiA9IDB4MDAw
+MDAwMDA5NjAwMDAwNQ0KPiA+DQo+ID4gIEVDID0gMHgyNTogREFCVCAoY3VycmVudCBFTCksIElM
+ID0gMzIgYml0cw0KPiA+DQo+ID4gIFNFVCA9IDAsIEZuViA9IDANCj4gPg0KPiA+ICBFQSA9IDAs
+IFMxUFRXID0gMA0KPiA+DQo+ID4gIEZTQyA9IDB4MDU6IGxldmVsIDEgdHJhbnNsYXRpb24gZmF1
+bHQNCj4gPg0KPiA+IERhdGEgYWJvcnQgaW5mbzoNCj4gPg0KPiA+ICBJU1YgPSAwLCBJU1MgPSAw
+eDAwMDAwMDA1LCBJU1MyID0gMHgwMDAwMDAwMA0KPiA+DQo+ID4gIENNID0gMCwgV25SID0gMCwg
+VG5EID0gMCwgVGFnQWNjZXNzID0gMA0KPiA+DQo+ID4gIEdDUyA9IDAsIE92ZXJsYXkgPSAwLCBE
+aXJ0eUJpdCA9IDAsIFhzID0gMA0KPiA+DQo+ID4gdXNlciBwZ3RhYmxlOiA0ayBwYWdlcywgMzkt
+Yml0IFZBcywgcGdkcD0wMDAwMDAwOGE4MGU1MDAwDQo+ID4NCj4gPiBbMDAwMDAwMDAwMDAwMDA1
+OF0gcGdkPTAwMDAwMDAwMDAwMDAwMDAsIHA0ZD0wMDAwMDAwMDAwMDAwMDAwLA0KPiA+DQo+ID4g
+cHVkPTAwMDAwMDAwMDAwMDAwMDANCj4gPg0KPiA+IEludGVybmFsIGVycm9yOiBPb3BzOiAwMDAw
+MDAwMDk2MDAwMDA1IFsjMV0gUFJFRU1QVCBTTVANCj4gPg0KPiA+IFNraXAgbWQgZnRyYWNlIGJ1
+ZmZlciBkdW1wIGZvcjogMHgxNjA5ZTANCj4gPg0KPiA+IC4uLg0KPiA+DQo+ID4gcGMgOiBzd2Fw
+X2R1cGxpY2F0ZSsweDQ0LzB4MTY0DQo+ID4NCj4gPiBsciA6IGNvcHlfcGFnZV9yYW5nZSsweDUw
+OC8weDFlNzgNCj4gPg0KPiA+IHNwIDogZmZmZmZmYzBmMmE2OTllMA0KPiA+DQo+ID4geDI5OiBm
+ZmZmZmZjMGYyYTY5OWUwIHgyODogZmZmZmZmOGE1YjI4ZDM4OCB4Mjc6IGZmZmZmZjhiMDY2MDMz
+ODgNCj4gPg0KPiA+IHgyNjogZmZmZmZmZGY3MjkxZmU3MCB4MjU6IDAwMDAwMDAwMDAwMDAwMDYg
+eDI0OiAwMDAwMDAwMDAwMTAwMDczDQo+ID4NCj4gPiB4MjM6IDAwMDAwMDAwMDAyZDJkMmYgeDIy
+OiAwMDAwMDAwMDAwMDAwMDA4IHgyMTogMDAwMDAwMDAwMDAwMDAwMA0KPiA+DQo+ID4geDIwOiAw
+MDAwMDAwMDAwMmQyZDJmIHgxOTogMTgwMDAwMDAwMDJkMmQyZiB4MTg6IGZmZmZmZmRmNzI2ZmFl
+YzANCj4gPg0KPiA+IHgxNzogMDAwMDAwMDAwMDAwMDAwMCB4MTY6IDAwMTAwMDAwMDAwMDAwMDEg
+eDE1OiAwMDQwMDAwMDAwMDAwMDAxDQo+ID4NCj4gPiB4MTQ6IDA0MDAwMDAwMDAwMDAwMDEgeDEz
+OiBmZjdmZmZmZmZmZmZmYjdmIHgxMjogZmZlZmZmZmZmZmZmZmJmZg0KPiA+DQo+ID4geDExOiBm
+ZmZmZmY4YTVjN2UxODk4IHgxMDogMDAwMDAwMDAwMDAwMDAxOCB4OSA6IDAwMDAwMDAwMDAwMDAw
+MDYNCj4gPg0KPiA+IHg4IDogMTgwMDAwMDAwMDAwMDAwMCB4NyA6IDAwMDAwMDAwMDAwMDAwMDAg
+eDYgOiBmZmZmZmY4MDU3YzAxZjEwDQo+ID4NCj4gPiB4NSA6IDAwMDAwMDAwMDAwMGEzMTggeDQg
+OiAwMDAwMDAwMDAwMDAwMDAwIHgzIDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+DQo+ID4geDIgOiAw
+MDAwMDA2ZGFmMjAwMDAwIHgxIDogMDAwMDAwMDAwMDAwMDAwMSB4MCA6IDE4MDAwMDAwMDAyZDJk
+MmYNCj4gPg0KPiA+IENhbGwgdHJhY2U6DQo+ID4NCj4gPiAgc3dhcF9kdXBsaWNhdGUrMHg0NC8w
+eDE2NA0KPiA+DQo+ID4gIGNvcHlfcGFnZV9yYW5nZSsweDUwOC8weDFlNzgNCj4gPg0KPiA+ICBj
+b3B5X3Byb2Nlc3MrMHgxMjc4LzB4MjFjYw0KPiA+DQo+ID4gIGtlcm5lbF9jbG9uZSsweDkwLzB4
+NDM4DQo+ID4NCj4gPiAgX19hcm02NF9zeXNfY2xvbmUrMHg1Yy8weDhjDQo+ID4NCj4gPiAgaW52
+b2tlX3N5c2NhbGwrMHg1OC8weDExMA0KPiA+DQo+ID4gIGRvX2VsMF9zdmMrMHg4Yy8weGUwDQo+
+ID4NCj4gPiAgZWwwX3N2YysweDM4LzB4OWMNCj4gPg0KPiA+ICBlbDB0XzY0X3N5bmNfaGFuZGxl
+cisweDQ0LzB4ZWMNCj4gPg0KPiA+ICBlbDB0XzY0X3N5bmMrMHgxYTgvMHgxYWMNCj4gPg0KPiA+
+IENvZGU6IDkxMzljMzVhIDcxMDA2ZjNmIDU0MDAwNTY4IGY4Nzk3YjU1IChmOTQwMmVhOCkNCj4g
+Pg0KPiA+IC0tLVsgZW5kIHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgXS0tLQ0KPiA+DQo+ID4gS2Vy
+bmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IE9vcHM6IEZhdGFsIGV4Y2VwdGlvbg0KPiA+DQo+ID4g
+U01QOiBzdG9wcGluZyBzZWNvbmRhcnkgQ1BVcw0KPiA+DQo+ID4gVGhlIHBhdGNoIHNlZW1zIHRv
+IG9ubHkgcHJvdmlkZSBhIHdvcmthcm91bmQsIGJ1dCB0aGVyZSBhcmUgbm8gbW9yZQ0KPiA+DQo+
+ID4gZWZmZWN0aXZlIHNvZnR3YXJlIHNvbHV0aW9ucyB0byBoYW5kbGUgdGhlIGJpdCBmbGlwcyBw
+cm9ibGVtLiBUaGlzIHBhdGgNCj4gPg0KPiA+IHdpbGwgY2hhbmdlIHRoZSBpc3N1ZSBmcm9tIGEg
+c3lzdGVtIGNyYXNoIHRvIGEgcHJvY2VzcyBleGNlcHRpb24sIHRoZXJlYnkNCj4gPg0KPiA+IHJl
+ZHVjaW5nIHRoZSBpbXBhY3Qgb24gdGhlIGVudGlyZSBtYWNoaW5lLg0KPiA+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogZ2FveHUgPGdhb3h1MkBob25vci5jb20+DQo+ID4NCj4gPiBSZXZpZXdlZC1ieTog
+WW9zcnkgQWhtZWQgPHlvc3J5LmFobWVkQGxpbnV4LmRldj4NCj4gDQo+IA0KPiBJIGRpZCBub3Qg
+cmV2aWV3IHRoaXMgcGF0Y2gsIEkgb25seSBtYWRlIGEgc3VnZ2VzdGlvbi4gUGxlYXNlIG9ubHkg
+YWRkIFJldmlldw0KPiB0YWdzIHdoZW4gZXhwbGljaXRseSBnaXZlbi4NCnNvcnJ5LCBJIHdpbGwg
+cmVzZW5kIGEgcGF0Y2ggdGhhdCByZW1vdmVzIHRoZSBSZXZpZXcgdGFncy4NCg==
