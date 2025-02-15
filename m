@@ -1,70 +1,39 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D6E19D8BE
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 09:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6853319D8A2;
+	Sat, 15 Feb 2025 09:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739611516; cv=none; b=RT9TYULxni/f3YTmv4qllE76KQCOYlKx0XTvReTQ6k47tjzETS5aBi36AaGHVAI6M0gWjpUvh4RphqXL+mY3Mdg5JLyIQfS/OWIgV7t12YE53LtkrObSXqs41UGBwQc2wtvU23G1dwrHMLc3M0ZXb9rXK2jY2zP2XcHcCV+B9lc=
+	t=1739611560; cv=none; b=VidqKqumXpWhqjPgCJ2d0qAWWBk3MUqN019VGro7q8CMUwnPiJkKFl8i6mF4SkdzMwXXWO1rllr+8U2lAK2llDA3WthuW9NHC3JHczRwzol1jmAwMwZC4tdx8yQPBjhFslLKVLuZU8Hx7cfBkoXCyrKwoazC+EoI+tECxjFSVX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739611516; c=relaxed/simple;
-	bh=fUEhJUJqOaQ6kqDr/ymTWQoQOscJJR6mrSLqxVNnVhc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tVSTayHsmTfNizu/iWD30gd8vxEr+zdbpEX+ayHzV+4T12y6c+cEH5S40+dVCiAOzC2Ynkqn+nmKz9aX0pWVOofKRLc/ky0NFXbCNfdOL2DEJJ4FkKfCbcTXvaOWEGRsOVgNDUZiVXGtDnMeTJlrGo/poKWMIaUVbzAY9WtlCoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kudGv7dj; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kudGv7dj"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-438a39e659cso19847425e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 01:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739611512; x=1740216312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KbpcipICDHXuME30jOt6GpmvUkIPw+/TuJhtLOZoIJE=;
-        b=kudGv7djwhYMRO3Ou4v/47TcrnQk6Hgr7X9RPe6o2yWg/wOQ+nLh0apMEmcMa7M3f9
-         sqNguNOtInbQpL8oHKtTVtbigdEv9bmpNU5kaUiOj9WzUuaezgsCaTaCYc7iaWYqXOPZ
-         Z/4XRgslioiPTzktxOtjAOpNIUvBKHMR/oGSGhv6gOHGWDl35VQxaxtSkrZ//uOsqERm
-         agolgOaUZyKpg9uVbtkiDL4qw7kl17DRaf++i6RwNIV0EwkRSB6FfGljDwhyNqPPBU/D
-         GvoJXY/En9vBmbBEvSwec6BcVj3RptnHX9PgJPHevyx+Bn6hVg7HyjfPsDzbZeWE2+4q
-         A5hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739611512; x=1740216312;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KbpcipICDHXuME30jOt6GpmvUkIPw+/TuJhtLOZoIJE=;
-        b=MFhbAs7Kg76aeIi2/4HT2HkRt+XG8BC5b+Sc2qZWx6SAUeVbX+UEG7PPoYrUhWrZtQ
-         7zZEcPzJKTWDxAWWCPdRQ5nTyaGaLW6sR6R/1sub5MwqD58v4As9puNEw1D1psEv3QBw
-         KKtBTEBBNEogHQ403DvA9DJd3Jt6CTtTaWNNI70qvJr8xySoMiQR4AcWiYkstZb0/2WW
-         l41arhAIL5tXxpy5CcoHWRPERr2nk384HewYf0vQd0Nh1xzK1NKg6aCjCqi7tOdQhBV2
-         /hrpuh8e2IulGHVCvENojCHXMisJsNN26487AoedTy2/rGgwWkZO0YDJqT8FbJtdC17h
-         DVgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgtFJVmq4Qpna4Pio+0vGJMLgboxHfN734AFANxV8nEH2kAXg0YnTXcIIvLnrS9fXNHQ6hv/JqdHRuYSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhobbSaFMQWcZJbgm06GsZkmnPbwHe/7Dg5JkuWSsm2a9l/RmR
-	iP5o5npuwosy+0dOULbwOWdaWii9VzDrw2PUdvRfgdLGUaM27r3FDZoVcoNlQh0=
-X-Gm-Gg: ASbGnct64sAbYWiFGr21M2ajIl4BS4hTZu5Bkle44JDe/rU7HBGZzpMnsL4alrg9tQw
-	Tze9hkWhLfdrpy7Z//Pd+stU27Ac0bu3uCx88DjKHAMGMjibZFJKVuaohEwJ0xHORoOQBFlIsSu
-	UHumEONMYXV4Jx4yeJPLr8Efq9no4/tMOfUo3Wc/iIUxWHLq/TMr5CaJDiv7afvl/hHxuqO6SOw
-	5xPZNhS5X59uAtwIyhwUjW07GXBd2tr6EpvNv1+CLDQ1zYB3NG1aN7UMYEv/+blb40QygU7Z94N
-	K0Ltf8YzwFzY
-X-Google-Smtp-Source: AGHT+IFkUX2lCfN6as9yUxvWctb2+wcKM91fqinvxlY72zNbgOkS02wV6iv5kqX++4LIwQqaOdaE+A==
-X-Received: by 2002:a05:600c:4fc9:b0:439:564a:6503 with SMTP id 5b1f17b1804b1-4396e705d5fmr28556145e9.18.1739611511767;
-        Sat, 15 Feb 2025 01:25:11 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:de0:6b3:d799:3d4f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04ee2fsm95776445e9.4.2025.02.15.01.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 01:25:11 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1739611560; c=relaxed/simple;
+	bh=DjWLiNorl5ume31k8GQXKZ1BFIOrFPSqhdTJ3sEpNYY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ARHyo2QE0JZ1fl90cPv0VD9mZGgVBBqBSqgf3+cu+ts50u/zv0+IDmX7q8QM9KC0XemVHJl7pEG89KeD8gGjZlFklmcQgpCCInDkJp4XgUVQoBz7JkiTDMJfU2hE+pA5VJDYE8MsKzFI2qsG1KVEeVwwDMLKEqFwrYg5hWxFSew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Yw3Rq752Mz4f3jY2;
+	Sat, 15 Feb 2025 17:25:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6F3581A1405;
+	Sat, 15 Feb 2025 17:25:49 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgAni1+bXbBn+Q+iDw--.49525S4;
+	Sat, 15 Feb 2025 17:25:49 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com
+Cc: linux-raid@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio fixes for v6.14-rc3 - take 2
-Date: Sat, 15 Feb 2025 10:25:08 +0100
-Message-ID: <20250215092508.5849-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH 0/7 md-6.15] md: introduce md_submodle_head
+Date: Sat, 15 Feb 2025 17:22:18 +0800
+Message-Id: <20250215092225.2427977-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,60 +41,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAni1+bXbBn+Q+iDw--.49525S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw4kuF1DXFW3JFW8KFy3urg_yoWDZwc_ZF
+	yYqFy3JryUXF17Ga4fXrsxZrWkAr4vvr1vqF9Fg3yrZw13Ww47Gr109w47Xw18uFyjvan8
+	Xr18Gw1Fy340qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb48FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
+	U==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Yu Kuai <yukuai3@huawei.com>
 
-Linus,
+This set introduce md_submodle_head and related API to replace
+personality and md-cluter registration, and remove lots of exported
+helpers and global variables.
 
-Here's a second attempt at the PR with fixes for the upcoming RC. The
-sparse warning I mentioned in my previous email turned out to be a false
-positive - the "offending" commit wasn't the culprit - but I removed it
-anyway and will send it again next week with the sparse issue fixed
-separately.
+Also prepare to add kconfig for md-bitmap.
 
-Details for this one are in the signed tag.
+Yu Kuai (7):
+  md: merge common code into find_pers()
+  md: only include md-cluster.h if necessary
+  md: introduce struct md_submodule_head and APIs
+  md: switch personalities to use md_submodule_head
+  md/md-cluster: cleanup md_cluster_ops reference
+  md: don't export md_cluster_ops
+  md: switch md-cluster to use md_submodle_head
 
-Please pull,
-Bartosz
+ drivers/md/md-bitmap.c  |   8 +-
+ drivers/md/md-cluster.c |  18 ++-
+ drivers/md/md-cluster.h |   6 +
+ drivers/md/md-linear.c  |  15 ++-
+ drivers/md/md.c         | 259 +++++++++++++++++++---------------------
+ drivers/md/md.h         |  48 +++++---
+ drivers/md/raid0.c      |  18 +--
+ drivers/md/raid1-10.c   |   4 +-
+ drivers/md/raid1.c      |  33 ++---
+ drivers/md/raid10.c     |  41 ++++---
+ drivers/md/raid5.c      |  70 +++++++----
+ 11 files changed, 297 insertions(+), 223 deletions(-)
 
-The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
+-- 
+2.39.2
 
-  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc3-take2
-
-for you to fetch changes up to 7b4aebeecbbd5b5fe73e35fad3f62ed21aa7ef44:
-
-  gpiolib: Fix crash on error in gpiochip_get_ngpios() (2025-02-13 18:51:39 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.14-rc3 - take 2
-
-- fix interrupt handling issues in gpio-bcm-kona
-- add an ACPI quirk for Acer Nitro ANV14 fixing an issue with spurious
-  wake up events
-- add missing return value checks to gpio-stmpe
-- fix a crash in error path in gpiochip_get_ngpios()
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpiolib: Fix crash on error in gpiochip_get_ngpios()
-
-Artur Weber (3):
-      gpio: bcm-kona: Fix GPIO lock/unlock for banks above bank 0
-      gpio: bcm-kona: Make sure GPIO bits are unlocked when requesting IRQ
-      gpio: bcm-kona: Add missing newline to dev_err format string
-
-Mario Limonciello (1):
-      gpiolib: acpi: Add a quirk for Acer Nitro ANV14
-
-Wentao Liang (1):
-      gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-
- drivers/gpio/gpio-bcm-kona.c | 71 ++++++++++++++++++++++++++++++++++++--------
- drivers/gpio/gpio-stmpe.c    | 15 ++++++++--
- drivers/gpio/gpiolib-acpi.c  | 14 +++++++++
- drivers/gpio/gpiolib.c       |  6 ++--
- 4 files changed, 87 insertions(+), 19 deletions(-)
