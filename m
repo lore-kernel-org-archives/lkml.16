@@ -1,61 +1,129 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BF878F4B
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 19:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF031F8F09
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 19:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739648110; cv=none; b=Vf/t+s1PxoHkfOVCk0aarigNDDu1hMwXVxdHz6rugmVTlgKPMRUb5cmeMFf60Y3GTjQ44GDNAH//gw6bSQf3ejwf7f1VuFU1NKw/yHRYY7mA+Of9zjXBZ7aAWfRJQR69KthF72AfYUtfDvBAfb783CXsUgKFLQkTCRjy/vLcmBA=
+	t=1739648127; cv=none; b=r0fPMGuk1d55594fAj3SmknIL3HAK8kWOk99yEEMiX4qz1EA3jbUCn7+qdcpG+tEwwgb1nruKArjBhdhAymugYdYty8ZF61h+DsugpaOndmgnpyoVLTRrAywtEJGmulaqIRdeTu3sOxmL30hQrvcj7w1Ewv3bWYbzQRjns4qcNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739648110; c=relaxed/simple;
-	bh=yBXzG4i9Dkiru55lQyz1Xr5+cE0Yl9ZHuQy6/bd/lrM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jVmN7ShA8bRz8L0Py7fTU04BcLQPZcaqL7N6wEv7diGOl8b1ZaQSq46FALOlkvKcmaVMl5yiI2ZGD81mpz5CBKVvPHDSSITptWVJS+bJtbrAvsYKt3CBDB2NAjlPQr2JdXuN94Smk8y2fH2KrZps2ucwlpJUTTEaU2azU7ZxiJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d18a1a0f0eso61691695ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 11:35:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739648108; x=1740252908;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZKU5Kcevzf5gXwIZbo3x8mZboejbG5jsHlKHFlgunn8=;
-        b=a0SyrPtKlYgztYeB89OQPVT5gUYIC1HZq1D5EBWZjFYO6mlP8FnqV7NtcP2K2SeV5B
-         72LXWwW1Xihh/ZlvMnp0T2qdg6hB4ksdgtWqckW6ML21YgM+eNCT4iKAmQ22s7MuiVtq
-         KMcBchl/6I0xtUdHvc8MG5x7cVNTs4QWISI0LbjZcBrJg/KSrgeA0/J/75L0GZmOl6rl
-         mn3YcGf41WJVUDXTliWqQ3Tr50viOT0b0m+nS3Hd6QhQwg5bmYKbmH6UVGIo+qQJnhkk
-         Fas3qYJ31ZwcK76zEtTpJAuvL1Z+TtjijpKi0LofBtyHeR8vQSQoI0ONDl6LjVY9F61G
-         wGzA==
-X-Gm-Message-State: AOJu0YzM9xDIEjR+s6IC2k0Ink2s9ehdn94ioizB7/FKNRmemsGiLEEf
-	EkDgkkNQsbdUtapUIij/JL87nBjpEoP4SHlIrWhM9aGcrSeKs7DBGxXuTvTUi9SZtC/aFJxW6pj
-	Sp5wiMXVJXwDNVIuuFZyTkRmyaB9FpQ1kvJquwIWcR11jcGEsuXz2Omw=
-X-Google-Smtp-Source: AGHT+IFrhzAHg4m024aaL5RG7tk+MDBh0jWGu4pde4D2wOrGssZvy+uONVStdh015B3uV06SIvD1Eo8CpJEs8c5idGyw66rGNHN3
+	s=arc-20240116; t=1739648127; c=relaxed/simple;
+	bh=DWFhykgEBIP6CT0ODgW61pQyFxQtgTH725Fg9dZrMCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ETq79hAciGtQuzUdpentCtXaDuDf993eoE4ldk69KfRkYXbxLBMXt+lPuQ8ypGd+pCqaQmss630qZUTbFgit0nNFOUjE5fnUR/viDR4FmtMVGINjTNLcmXlquGdc3RZZwm7om4/wcnFurZfVTTrzzyfMDJ+fgE+Qq/mlH+S1rTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W9HxCIAY; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W9HxCIAY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739648126; x=1771184126;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DWFhykgEBIP6CT0ODgW61pQyFxQtgTH725Fg9dZrMCA=;
+  b=W9HxCIAYms66r9twmOYsYuIvf2Yz2soKZUjf/AVYMOcKxw3x5IRisNYD
+   BfTZ6hzJJop35DU7azO/oxzv13nMQ44aswT4YNZAA+g3GCDskFzunl9Qk
+   dii7ChITLPNZ44Z47bNw/T7nWey4WuIjsb2f8KgM1DIihjdsdtO5EPy2u
+   KZuzgK797thIL0mkFwycMFcpBG9Hkj0zq9ICs2/KY4IL/E0hW4fS3iTzr
+   JxVaXroJfiGZV69rF2JuZb7BhNAHxpGuVNJavZZ/Ea+CfsLw9qmRNUHLg
+   SZu3peJrjRpA73wrmOXUBgqyYjgAzKpyAnBM0bMfFTnp6I5aTj2f76Pw9
+   Q==;
+X-CSE-ConnectionGUID: qYgEVhIoS1OfhraybGb7XQ==
+X-CSE-MsgGUID: txyCQJ1sQJqrbvw6F580HQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11346"; a="51356936"
+X-IronPort-AV: E=Sophos;i="6.13,289,1732608000"; 
+   d="scan'208";a="51356936"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2025 11:35:25 -0800
+X-CSE-ConnectionGUID: byhxzi1fQhet0cVnE79/rg==
+X-CSE-MsgGUID: 0LnPZu0fT7i3b5Wp/2gr4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="136972270"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 15 Feb 2025 11:35:23 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tjNwe-001B7L-2b;
+	Sat, 15 Feb 2025 19:35:20 +0000
+Date: Sun, 16 Feb 2025 03:34:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Prakash Sangappa <prakash.sangappa@oracle.com>,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	peterz@infradead.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, tglx@linutronix.de,
+	prakash.sangappa@oracle.com
+Subject: Re: [PATCH 1/2] Sched: Scheduler time slice extension
+Message-ID: <202502160310.ZHjm28qH-lkp@intel.com>
+References: <20250215005414.224409-2-prakash.sangappa@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a4d:b0:3d1:9fd2:d9cd with SMTP id
- e9e14a558f8ab-3d2807c4396mr33260345ab.9.1739648108526; Sat, 15 Feb 2025
- 11:35:08 -0800 (PST)
-Date: Sat, 15 Feb 2025 11:35:08 -0800
-In-Reply-To: <67ae3912.050a0220.21dd3.0021.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b0ec6c.050a0220.6f0b7.001b.GAE@google.com>
-Subject: Re: [syzbot] 
-From: syzbot <syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250215005414.224409-2-prakash.sangappa@oracle.com>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+Hi Prakash,
 
-***
+kernel test robot noticed the following build errors:
 
-Subject: 
-Author: purvayeshi550@gmail.com
+[auto build test ERROR on tip/sched/core]
+[also build test ERROR on peterz-queue/sched/core linus/master v6.14-rc2 next-20250214]
+[cannot apply to tip/core/entry]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-#syz test
+url:    https://github.com/intel-lab-lkp/linux/commits/Prakash-Sangappa/Sched-Scheduler-time-slice-extension/20250215-090421
+base:   tip/sched/core
+patch link:    https://lore.kernel.org/r/20250215005414.224409-2-prakash.sangappa%40oracle.com
+patch subject: [PATCH 1/2] Sched: Scheduler time slice extension
+config: hexagon-allnoconfig (https://download.01.org/0day-ci/archive/20250216/202502160310.ZHjm28qH-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 910be4ff90d7d07bd4518ea03b85c0974672bf9c)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250216/202502160310.ZHjm28qH-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502160310.ZHjm28qH-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/sched/build_policy.c:66:
+>> kernel/sched/syscalls.c:1372:15: error: no member named 'rseq_sched_delay' in 'struct task_struct'
+    1372 |         if (current->rseq_sched_delay) {
+         |             ~~~~~~~  ^
+   1 error generated.
+
+
+vim +1372 kernel/sched/syscalls.c
+
+  1361	
+  1362	/**
+  1363	 * sys_sched_yield - yield the current processor to other threads.
+  1364	 *
+  1365	 * This function yields the current CPU to other tasks. If there are no
+  1366	 * other threads running on this CPU then this function will return.
+  1367	 *
+  1368	 * Return: 0.
+  1369	 */
+  1370	SYSCALL_DEFINE0(sched_yield)
+  1371	{
+> 1372		if (current->rseq_sched_delay) {
+  1373			schedule();
+  1374			return 0;
+  1375		}
+  1376	
+  1377		do_sched_yield();
+  1378		return 0;
+  1379	}
+  1380	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
