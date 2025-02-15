@@ -1,200 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C791EDA13;
-	Sat, 15 Feb 2025 18:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3986986344;
+	Sat, 15 Feb 2025 18:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739645567; cv=none; b=LCLPYdL+DFsltPS25QLAbsWCQxTgy0OiVUyfRlhKo/pDZMEhsuN++JF9N2w8c9HJQOcPfvJbUSsu3o1tg5vGMFncFrdzKJaMLzMrwkHMPbXJzqyRHJxTb5CF3Ii/20bIQClid3nGt27pai4Rp7Bz6QhJf6/agDdMEJYHQwBaQcw=
+	t=1739645994; cv=none; b=d6wPUMN1EiDs1z/6jzqKX0P3mX2VUmmy50uxFwkJw6nY8BHLa6pBy7p/cH1H2XKF/DKe1zLdgeDrPWJhDgcljBEGHRSKURxX4v/j7lRfOSWrUNeC1wpDief1HIPAdoCPK0CicjpBrcVA+0tYQJB+TIGVqL34+BFH+J4Y28qJtQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739645567; c=relaxed/simple;
-	bh=/PQD4PwAVkDwv0RHEHZ6GErT3TxEUPl8AR+MB47KVcE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d+XpYEgBJ0ovugWFA5AYJDbRZRtYyJMl98MEzwYU0Dr4Ut4pDjGhj6fNn4UK6+8CiLxy92izX6/HVCOtCOwwyE3e6EDsvkoSaoWtGCDTtTdEdzKrZRqGS/XIQS+SLNEpLd9g6MkajFrXsksS1kE9T0eEucNZofCkFqWrSfGlAcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcTf1zJS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739645994; c=relaxed/simple;
+	bh=SIek9AZrmDDSHA/mGhVsfU1xRpl+TjHv7xhuwz2zBwY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vv3KtIfZSrPsHcTxjxvr2RNpve7WBkgJm1hw2X+9NPLI5wUpo+AxNNtKKtY4hU6AfnP6ZazyH5AQrujmXj1SzaS5TNXt0XHBOpzWBb3THOWCnZQNaHkx2+rXMMUq8kwlTrCiYnfr8aqEpiAAiZS627O3TSNVdAD+OFLHgJCtvR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=exef2AXX; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcTf1zJS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6354CC4CEDF;
-	Sat, 15 Feb 2025 18:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739645566;
-	bh=/PQD4PwAVkDwv0RHEHZ6GErT3TxEUPl8AR+MB47KVcE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mcTf1zJS7dFUPBwQcmPveA2paU2Vl8Ar+hMeCC3u+jrIgw+89XfU25VM7eSh5lI4l
-	 a0bQzPW6zL1V387oPaFf2jQyZ4CpL1iO4fBkDus/sGXbsA4kc8azIOtBzY5J/UqesN
-	 hC0gn2JdI01TFCBdd1Ab4qJE6diT+0kBrdmrANI+LQEV0HDaWh5XxYyUDsKuMNDAjI
-	 IzB2y3cIaeBbin34FdtPnCSRd7/gm8c4iXaMJENt2KrCQc754lr6ik3sjpEbz622JQ
-	 HIsB94TmWTMX7ZJD7LlPpBV99K38SOzoFzqyr9BtoxwY0LC54J5h9Cv6DveBnRhO04
-	 O/7ms4hdlkQfQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tjNHQ-004Qno-4c;
-	Sat, 15 Feb 2025 18:52:44 +0000
-From: Marc Zyngier <maz@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Christoph Fritz <chf.fritz@googlemail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] irqchip/gic-v3: Fix rk3399 workaround when secure interrupts are enabled
-Date: Sat, 15 Feb 2025 18:52:41 +0000
-Message-Id: <20250215185241.3768218-1-maz@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exef2AXX"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-46b1d40abbdso26099341cf.2;
+        Sat, 15 Feb 2025 10:59:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739645992; x=1740250792; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rTdyAEdwmG2Xhseb5nN+DvsL/03ZonxPNgdIwAd3G1I=;
+        b=exef2AXXTflwkY+dNDig10PxVj7GQKMpcFu4ysLXF1qSiw4UKTJogYCFiyX358Im69
+         ZLcZhNPPIfqrYAYQRwhVcGOxo30sBksWyleHx0o5m8HJoU+CQf3gpK0qkl5etffLfTZL
+         vhTndnE4olVJv5tnafSUycVJhXWAzQ7tk4s3MFu4Hi9DM/82GP85aImli9QjhzNi43Eu
+         tGR5VNCDYfnNHakt1hn2ONnIFUu9fpPEW9O/xVdINLIhz+0yfJmiGCuPS2mnp028iXtZ
+         LhueeGVyxSYUgPpc4bBvhkPo2+tfqyEyWKsiU+Gfioap3smIu6/Cgl50xah8LjFkQXEr
+         JM1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739645992; x=1740250792;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rTdyAEdwmG2Xhseb5nN+DvsL/03ZonxPNgdIwAd3G1I=;
+        b=asNUacTsRepD7QsYMPFKbnswC9/z8EOVnKcsSuCX4aXo1aMwQU190/9yUdu2XArQ7E
+         W/GPXdANvLASvGMPdpHXFiZrqVNy+dTWUVMcsiUYoCMWGZjzWllvzs2yws+pJsiKnbip
+         f+/5W4HWYiQ4hpuypxD+GpXB+Fh4BHNcP+XHEnU4TcqXxWRcKanJseLJROVo0bB9fIOj
+         UOaXn2Z0voL4Hb8+mLTFdTlBy6Eif4oa+m5ogpDCWKG8JErGAybgJg22qgyhB65BWLJZ
+         e4udbSsD5omlQURe6szzBy5/IOSRm07jtLEVvNY/P6+JMvqhaGl/aohVNyHcCiCpkcKe
+         Ki2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWcZ8Vt6ByMkYFjdMnvZ3ivwMUIWBt6cdJCiTyuJOwfYyKk4pfhS19dpGyOFACvPx3mc7J7/JPM1Uk4bpKj@vger.kernel.org, AJvYcCXJqfFMOn56fR2PY/m/4KRUwQrFwEpeycDen7cmfyRI+IpvSw/ZRNQ+MXFG6Zkt/aXY2QGx5JzhxFDE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ86mT3zUuwukVZ8WVYLw8zrExnxicwwOPR7qlUxBv3eo8MMjN
+	PKrSGW0hFoJ56PaaGWcxfFpRru/y5u78k4IofQkeP+8QevKoIqMQer/b+zAgQZsO/Qt7A+vgbHN
+	cJZsU7gAhu3DKtNRR82TNvvD/N3vvBUmfYLszdvA6
+X-Gm-Gg: ASbGncvbIhMF6XOYjZgkyO5pqXS7b8ruVOUcBcm9EWq2qdCnlGKQ3MXhx6kQRLRykvo
+	z+bGfVdDkIi7unaQAtAmlaf+LlPGsbyxc8RgxnoXWmDzP8Jsluli1NzKewyClPGNbMtuCqiQo+m
+	c=
+X-Google-Smtp-Source: AGHT+IEsmXhJVdCVr8Bg6tahWwwvjf0aL4gfGKBNLDAW1xv9dvvbafCFVU91Pi/cY5fJ/ARik12lizAot8rgosoNp9g=
+X-Received: by 2002:ac8:5988:0:b0:471:ae33:b35a with SMTP id
+ d75a77b69052e-471dbea0cd0mr53875731cf.41.1739645991985; Sat, 15 Feb 2025
+ 10:59:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, mark.rutland@arm.com, chf.fritz@googlemail.com, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20240617-rk-dts-additions-v5-0-c1f5f3267f1e@gmail.com>
+ <20240617-rk-dts-additions-v5-7-c1f5f3267f1e@gmail.com> <d8ce8db2-1717-40f8-b53e-24cc71a758c9@cherry.de>
+In-Reply-To: <d8ce8db2-1717-40f8-b53e-24cc71a758c9@cherry.de>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Sat, 15 Feb 2025 21:59:44 +0300
+X-Gm-Features: AWEUYZnvNTR7HkacV2LThVjtWGe7OZYAvU7_F4y9BXZkoo6KpcSWYw8wQ8OOOjY
+Message-ID: <CABjd4Yw-r-ogfwcrph4K1wbkybS25gk6LFg8wpqLG27uWdybNA@mail.gmail.com>
+Subject: Re: [PATCH v5 7/8] arm64: dts: rockchip: Add OPP data for CPU cores
+ on RK3588j
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Dragan Simic <dsimic@manjaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Chen-Yu Tsai <wens@kernel.org>, Diederik de Haas <didi.debian@cknow.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Christoph reports that their rk3399 system dies since we merged
-773c05f417fa1 ("irqchip/gic-v3: Work around insecure GIC
-integrations").
+Hi Quentin,
 
-It appears that some rk3399 have some secure payloads, and that
-the firmware sets SCR_EL3.FIQ==1. Obivously, disabling security
-in that configuration leads to even more problems.
+On Tue, Feb 11, 2025 at 7:32=E2=80=AFPM Quentin Schulz <quentin.schulz@cher=
+ry.de> wrote:
+>
+> Hi all,
+>
+> On 6/17/24 8:28 PM, Alexey Charkov wrote:
+> > RK3588j is the 'industrial' variant of RK3588, and it uses a different
+> > set of OPPs both in terms of allowed frequencies and in terms of
+> > applicable voltages at each frequency setpoint.
+> >
+> > Add the OPPs that apply to RK3588j (and apparently RK3588m too) to
+> > enable dynamic CPU frequency scaling.
+> >
+> > OPP values are derived from Rockchip downstream sources [1] by taking
+> > only those OPPs which have the highest frequency for a given voltage
+> > level and dropping the rest (if they are included, the kernel complains
+> > at boot time about them being inefficient)
+> >
+> > [1] https://github.com/rockchip-linux/kernel/blob/604cec4004abe5a96c734=
+f2fab7b74809d2d742f/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> >
+>
+> Funny stuff actually. Rockchip have their own downstream cpufreq driver
+> which autodetects at runtime the SoC variant and filter out OPPs based
+> on that info. And this patch is based on those values and filters.
+>
+> However, they also decided that maybe this isn't the best way to do it
+> and they decided to have an rk3588j.dtsi where they remove some of those
+> OPPs instead of just updating the mask/filter in their base dtsi
+> (rk3588s.dtsi downstream). See
+> https://github.com/rockchip-linux/kernel/blob/604cec4004abe5a96c734f2fab7=
+b74809d2d742f/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
 
-Let's revisit the workaround by:
+Funny stuff indeed! Judging by the comments in the file you
+referenced, those higher OPP values constitute an 'overdrive' mode,
+and apparently the chip shouldn't stay in those for prolonged periods
+of time. However, I couldn't locate any dts file inside Rockchip
+sources that would include this rk3588j.dtsi - so not sure if we
+should follow what it says too zealously.
 
-- making it rk3399 specific
-- checking whether Group-0 is available, which is a good proxy
-  for SCR_EL3.FIQ being 0
-- either apply the workaround if Group-0 is available, or disable
-  pseudo-NMIs if not
+> So...
+>
+> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> > ---
+> >   arch/arm64/boot/dts/rockchip/rk3588j.dtsi | 108 +++++++++++++++++++++=
++++++++++
+> >   1 file changed, 108 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588j.dtsi b/arch/arm64/boo=
+t/dts/rockchip/rk3588j.dtsi
+> > index 0bbeee399a63..b7e69553857b 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
+> > @@ -5,3 +5,111 @@
+> >    */
+> >
+> >   #include "rk3588-extra.dtsi"
+> > +
+> > +/ {
+> > +     cluster0_opp_table: opp-table-cluster0 {
+> > +             compatible =3D "operating-points-v2";
+> > +             opp-shared;
+> > +
+> > +             opp-1416000000 {
+> > +                     opp-hz =3D /bits/ 64 <1416000000>;
+> > +                     opp-microvolt =3D <750000 750000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +                     opp-suspend;
+> > +             };
+> > +             opp-1608000000 {
+> > +                     opp-hz =3D /bits/ 64 <1608000000>;
+> > +                     opp-microvolt =3D <887500 887500 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-1704000000 {
+> > +                     opp-hz =3D /bits/ 64 <1704000000>;
+> > +                     opp-microvolt =3D <937500 937500 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+>
+> None of those are valid according to Rockchip, we should have
 
-Note that this doesn't mean that the secure side is able to receive
-interrupts anyway, as we make all interrupts non-secure anyway.
-Clearly, nobody ever tested secure interrupts on this platform.
+Well, valid but more taxing on the hardware apparently.
 
-With that, Christoph is able to use their rk3399.
+>                 opp-1296000000 {
+>                         opp-hz =3D /bits/ 64 <1296000000>;
+>                         opp-microvolt =3D <750000 750000 950000>;
+>                         clock-latency-ns =3D <40000>;
+>                         opp-suspend;
+>                 };
+>
+> instead?
 
-Reported-by: Christoph Fritz <chf.fritz@googlemail.com>
-Tested-by: Christoph Fritz <chf.fritz@googlemail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 773c05f417fa1 ("irqchip/gic-v3: Work around insecure GIC integrations")
-Link: https://lore.kernel.org/r/b1266652fb64857246e8babdf268d0df8f0c36d9.camel@googlemail.com
----
- drivers/irqchip/irq-gic-v3.c | 53 +++++++++++++++++++++++++++---------
- 1 file changed, 40 insertions(+), 13 deletions(-)
+I dropped this one because it uses a lower frequency but same voltage
+as the 1.416 GHz one, thus being 'inefficient' as the thermal
+subsystem says in the logs. It can be added back if we decide to
+remove opp-1416000000.
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 76dce0aac2465..270d7a4d85a6d 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -44,6 +44,7 @@ static u8 dist_prio_nmi __ro_after_init = GICV3_PRIO_NMI;
- #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
- #define FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539	(1ULL << 1)
- #define FLAGS_WORKAROUND_ASR_ERRATUM_8601001	(1ULL << 2)
-+#define FLAGS_WORKAROUND_INSECURE		(1ULL << 3)
- 
- #define GIC_IRQ_TYPE_PARTITION	(GIC_IRQ_TYPE_LPI + 1)
- 
-@@ -83,6 +84,8 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
- #define GIC_LINE_NR	min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
- #define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
- 
-+static bool nmi_support_forbidden;
-+
- /*
-  * There are 16 SGIs, though we only actually use 8 in Linux. The other 8 SGIs
-  * are potentially stolen by the secure side. Some code, especially code dealing
-@@ -163,21 +166,27 @@ static void __init gic_prio_init(void)
- {
- 	bool ds;
- 
--	ds = gic_dist_security_disabled();
--	if (!ds) {
--		u32 val;
--
--		val = readl_relaxed(gic_data.dist_base + GICD_CTLR);
--		val |= GICD_CTLR_DS;
--		writel_relaxed(val, gic_data.dist_base + GICD_CTLR);
-+	cpus_have_group0 = gic_has_group0();
- 
--		ds = gic_dist_security_disabled();
--		if (ds)
--			pr_warn("Broken GIC integration, security disabled");
-+	ds = gic_dist_security_disabled();
-+	if ((gic_data.flags & FLAGS_WORKAROUND_INSECURE) && !ds) {
-+		if (cpus_have_group0) {
-+			u32 val;
-+
-+			val = readl_relaxed(gic_data.dist_base + GICD_CTLR);
-+			val |= GICD_CTLR_DS;
-+			writel_relaxed(val, gic_data.dist_base + GICD_CTLR);
-+
-+			ds = gic_dist_security_disabled();
-+			if (ds)
-+				pr_warn("Broken GIC integration, security disabled\n");
-+		} else {
-+			pr_warn("Broken GIC integration, pNMI forbidden\n");
-+			nmi_support_forbidden = true;
-+		}
- 	}
- 
- 	cpus_have_security_disabled = ds;
--	cpus_have_group0 = gic_has_group0();
- 
- 	/*
- 	 * How priority values are used by the GIC depends on two things:
-@@ -209,7 +218,7 @@ static void __init gic_prio_init(void)
- 	 * be in the non-secure range, we program the non-secure values into
- 	 * the distributor to match the PMR values we want.
- 	 */
--	if (cpus_have_group0 & !cpus_have_security_disabled) {
-+	if (cpus_have_group0 && !cpus_have_security_disabled) {
- 		dist_prio_irq = __gicv3_prio_to_ns(dist_prio_irq);
- 		dist_prio_nmi = __gicv3_prio_to_ns(dist_prio_nmi);
- 	}
-@@ -1922,6 +1931,18 @@ static bool gic_enable_quirk_arm64_2941627(void *data)
- 	return true;
- }
- 
-+static bool gic_enable_quirk_rk3399(void *data)
-+{
-+	struct gic_chip_data *d = data;
-+
-+	if (of_machine_is_compatible("rockchip,rk3399")) {
-+		d->flags |= FLAGS_WORKAROUND_INSECURE;
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static bool rd_set_non_coherent(void *data)
- {
- 	struct gic_chip_data *d = data;
-@@ -1996,6 +2017,12 @@ static const struct gic_quirk gic_quirks[] = {
- 		.property = "dma-noncoherent",
- 		.init   = rd_set_non_coherent,
- 	},
-+	{
-+		.desc	= "GICv3: Insecure RK3399 integration",
-+		.iidr	= 0x0000043b,
-+		.mask	= 0xff000fff,
-+		.init	= gic_enable_quirk_rk3399,
-+	},
- 	{
- 	}
- };
-@@ -2004,7 +2031,7 @@ static void gic_enable_nmi_support(void)
- {
- 	int i;
- 
--	if (!gic_prio_masking_enabled())
-+	if (!gic_prio_masking_enabled() || nmi_support_forbidden)
- 		return;
- 
- 	rdist_nmi_refs = kcalloc(gic_data.ppi_nr + SGI_NR,
--- 
-2.39.2
+> and...
+>
+> > +     };
+> > +
+> > +     cluster1_opp_table: opp-table-cluster1 {
+> > +             compatible =3D "operating-points-v2";
+> > +             opp-shared;
+> > +
+> > +             opp-1416000000 {
+> > +                     opp-hz =3D /bits/ 64 <1416000000>;
+> > +                     opp-microvolt =3D <750000 750000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-1608000000 {
+> > +                     opp-hz =3D /bits/ 64 <1608000000>;
+> > +                     opp-microvolt =3D <787500 787500 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-1800000000 {
+> > +                     opp-hz =3D /bits/ 64 <1800000000>;
+> > +                     opp-microvolt =3D <875000 875000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-2016000000 {
+> > +                     opp-hz =3D /bits/ 64 <2016000000>;
+> > +                     opp-microvolt =3D <950000 950000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+>
+> opp-1800000000 and opp-2016000000 should be removed.
+>
+> and...
+>
+> > +     };
+> > +
+> > +     cluster2_opp_table: opp-table-cluster2 {
+> > +             compatible =3D "operating-points-v2";
+> > +             opp-shared;
+> > +
+> > +             opp-1416000000 {
+> > +                     opp-hz =3D /bits/ 64 <1416000000>;
+> > +                     opp-microvolt =3D <750000 750000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-1608000000 {
+> > +                     opp-hz =3D /bits/ 64 <1608000000>;
+> > +                     opp-microvolt =3D <787500 787500 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-1800000000 {
+> > +                     opp-hz =3D /bits/ 64 <1800000000>;
+> > +                     opp-microvolt =3D <875000 875000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-2016000000 {
+> > +                     opp-hz =3D /bits/ 64 <2016000000>;
+> > +                     opp-microvolt =3D <950000 950000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+>
+> opp-1800000000 and opp-2016000000 should be removed as well.
+>
+> Did I misunderstand what Rockchip did here? Adding Kever in Cc at least
+> for awareness on Rockchip side :)
+>
+> I guess another option could be to mark those above as
+>
+> turbo-mode;
+>
+> though no clue what this would entail. From a glance at cpufreq, it
+> seems that for Rockchip since we use the default cpufreq-dt, it would
+> mark those as unusable, so essentially a no-op, so better remove them
+> entirely?
 
+I believe the opp core just marks 'turbo-mode' opps as
+CPUFREQ_BOOST_FREQ, and cpufreq-dt only passes that flag along to the
+cpufreq core. But then to actually use those boost frequencies I would
+guess the governor needs to somehow know the power/thermal constraints
+of the chip?.. Don't know where that is defined.
+
+Best,
+Alexey
