@@ -1,64 +1,145 @@
-Received: from antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D87D151998;
-	Sat, 15 Feb 2025 02:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF84D531;
+	Sat, 15 Feb 2025 02:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739585713; cv=none; b=K6D/wGbf4nPGo6Qq+8ejpRlvJNUGw9BVkp2WG/daUl9v1tWCsQ4fI3t97xOkF+SO4tqaQYnClnRtZimLHA+TJyrb7qowqiNn/YsuRjU+WZ7esPe4Ii5Nc7rTCnhTFLKuEwMu0N9RZ9Tz+xY4YEH9Uc+JS8y68TuZDM6BPMMPQM8=
+	t=1739585916; cv=none; b=COnE3pQXfARWzvJ01FnbnWOjoc27jchW1ASAoq3z+RT3cGCC2s/WqP48ZImIDLueUAxrroMyo4TgOHM3N5G7sajOSZpyGjXwy88bralYThJxA69jarVLlfAtx+tfDxxiqtvZEVQV1jcvpBacl6cqxmzUoO2+WllDTpSglEEGQU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739585713; c=relaxed/simple;
-	bh=f/HFjrGZbsXz4gTQGvHCYTL/7eWhGkkflXSVPCcpWIg=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j+5fwzHkcHhV4i7I3SYmpWMp/rH+YITGd7UJeXAc0SQcPjm6W6pf2vWb01ZgIBJo0h3zxitxdVXKqh43PILAZx64NnZJKi+QjJ3mfTPxw3SzohljY9XYjTTg7nTzIR1OhmnkX069XSbWHPsKp8EyHoq+a1bahuzb7Kv2WfVBWsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=nX25qR1t; arc=none smtp.client-ip=91.227.220.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
+	s=arc-20240116; t=1739585916; c=relaxed/simple;
+	bh=4C1B8IsBhRqb49TH63Utggw8L3oBxRdkOnxFEleZItE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=kXUO3khmgEmVgYc4G1FRUi3NSX7VWRbeygysxOht57N5UwxLL88Qp4Vk6w7edR2w+iToS/mudanR6eEUlC+pTMz4PhmnSPgFhjAKgVMCZyLG3lIcjEIClq51FO2A9witKEZLA3zHdgmFs2G4k40D4qA8P1x5PCmhpUr02prbfMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=BGWeaSuI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Dt3EUNBN; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="nX25qR1t"
-Date: Sat, 15 Feb 2025 03:05:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
-	s=202107; t=1739585126;
-	bh=f/HFjrGZbsXz4gTQGvHCYTL/7eWhGkkflXSVPCcpWIg=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To:Cc:Cc:content-type:content-type:date:date:
-	 From:from:in-reply-to:in-reply-to:message-id:mime-version:
-	 mime-version:references:reply-to:Sender:Subject:Subject:To:To;
-	b=nX25qR1t0By4jFQtme5p9vdemxtjh6jOZl7YKFvaupfHyjrwTb/PM2Acgd3TLMPPG
-	 fQaUTiIKqdq6I8ff8k5Lu973dJ/bRcEmHsydD8igbP1WkjbsrsRo/sDj2jowpXxwHR
-	 5DC2VZNNNPTrJPTHWm2rTsesqCBHXfw9TVaCpit0gFqLdSWTDzzQ+yfZVub5jObwro
-	 EeJuscbEoIzMl/uMDpnrmfwz5u3ZI/SIB01G0/HOTHUgwv08+ZXjzswCt/A/IUwfL2
-	 dAnlKV7EhbC0rgiCtRIElirmPK+7JOxCdoW/Ghz2vKZXVgFYqhCjGLY9YpfJf8vfhO
-	 YkTixwq13v75Q==
-From: Markus Reichelt <lkt+2023@mareichelt.com>
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.12 000/419] 6.12.14-rc2 review
-Message-ID: <20250215020526.GA23322@pc21.mareichelt.com>
-Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250214133845.788244691@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="BGWeaSuI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Dt3EUNBN"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 3E68E254010D;
+	Fri, 14 Feb 2025 21:18:32 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-04.internal (MEProxy); Fri, 14 Feb 2025 21:18:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1739585912;
+	 x=1739672312; bh=omhDKWPHUaEQkAzY0LeNukJciihkvBdoVj6M3o5CeGg=; b=
+	BGWeaSuIni8UcpgWiNlO4gEwIskI2QhiLWPJj3bUhgIU0rjdU1ASIDPAB7DTZq3D
+	zhIUD1ygvwc81j3fYXqnKVtgLHsTEZiwpuiiQdQCxEKMcOOKR6WhIoDWGSAtFE3Y
+	1ASOVMmBn+DY0ourg1Hzhi4qOe3EQMOjECYurIomMPIz4UxrdbtQ9D8T6UY9No6b
+	zjpHzweo9Bas3BvOpM0TjyK+dkcqKmBDtuQOB61ZSvOV7isqzfC1kMCZVH0hfSpq
+	e5dBPVnYSQGJCLT5GL1TwdhVfGpKCzzotX4Pk9fePtSo4vnxdTCMqzirLZpFq0Da
+	Jbh+xq56fsR3+U0pUtUkmw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739585912; x=
+	1739672312; bh=omhDKWPHUaEQkAzY0LeNukJciihkvBdoVj6M3o5CeGg=; b=D
+	t3EUNBN0n1ifg5zBsjiFS2516t/KN8QkOYogmVExQw94WxqUzHrbj5BxyTK4pBxi
+	aM1N5LZFMtRjgM04JUzZXaOstzHYCE+2j44CQt6WRMH3EZ+isx3mhB8AECWOHspZ
+	jA8tiYbi012S7ntTkSUh2cZij52m1DAnw3ziNNQPKR/5IFEGrElKujrcJt42eiAI
+	7aFlSJ+/3oe4KL5DmtReg/rtSlhLug9qQclgOH1j6SXlxfg5E384Yo4JaqP8Bdwf
+	fvPw9hDNVXGX6YdAHdsmGzSIqf4bDaQzLU1vugzc9o+6rRXLA7trKnIXvKgb3MZ4
+	o5kf1LCazWpQZk5kXSOhA==
+X-ME-Sender: <xms:d_mvZ5dLG-6NSjKr4bJBF44z3znNpjir56kWw2DeLSLLi_WVH2ZTBQ>
+    <xme:d_mvZ3P1stDRggKgGtxsYO7Z5hQfIYRACgeCj1JuoeSSzQD7sxVBbLWBe31ae88y_
+    tIyy2iZuRSK7_vB3tc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehudefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
+    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
+    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdp
+    rhgtphhtthhopehkuhhurhhtsgesghhmrghilhdrtghomhdprhgtphhtthhopeifpggrrh
+    hmihhnsehgmhigrdguvgdprhgtphhtthhopehsohihvghrsehirhhlrdhhuhdprhgtphht
+    thhopehlvghnsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhig
+    rdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdr
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:d_mvZygsHJwrDeNN_6CQ5oh5OtJYbJ3VzpbhYl4FkUj4PZNJqiC8BA>
+    <xmx:d_mvZy8pbnF3Rq-dxETbzvAL4RVf-lkTB3E3tl9-96YWxm19thJwSw>
+    <xmx:d_mvZ1uHfzr61kH7JfViQF6uQnrRRmLzaf_UI3O093RJHf489AKfpw>
+    <xmx:d_mvZxEAs64XzTTEqIyWrTm2C8O0iGtYwDtV8z2K2NNvarNIBOwSHQ>
+    <xmx:ePmvZ7BuThXFhSIEubQ4WgoXKgVj69Ud62Rg5Ik1xUlvC6ajW2rLcn2j>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id E8FE33C0066; Fri, 14 Feb 2025 21:18:30 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214133845.788244691@linuxfoundation.org>
+Date: Fri, 14 Feb 2025 21:18:10 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Kurt Borja" <kuurtb@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Len Brown" <lenb@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "Armin Wolf" <W_Armin@gmx.de>, "Gergo Koteles" <soyer@irl.hu>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <9a8a5084-589d-4c45-a011-5bf4d0dfc8ba@app.fastmail.com>
+In-Reply-To: <20250212193058.32110-1-kuurtb@gmail.com>
+References: <20250212193058.32110-1-kuurtb@gmail.com>
+Subject: Re: [PATCH] ACPI: platform_profile: Fix memory leak in
+ profile_class_is_visible()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-> This is the start of the stable review cycle for the 6.12.14 release.
-> There are 419 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Feb 12, 2025, at 2:30 PM, Kurt Borja wrote:
+> If class_find_device() finds a device it's reference count is
+> incremented. Call put_device() to drop this reference before returning.
+>
+> Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI 
+> platform profile")
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/acpi/platform_profile.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c 
+> b/drivers/acpi/platform_profile.c
+> index fc92e43d0fe9..2ad53cc6aae5 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -417,8 +417,14 @@ static int profile_class_registered(struct device 
+> *dev, const void *data)
 > 
-> Responses should be made by Sun, 16 Feb 2025 13:37:21 +0000.
-> Anything received after that time might be too late.
+>  static umode_t profile_class_is_visible(struct kobject *kobj, struct 
+> attribute *attr, int idx)
+>  {
+> -	if (!class_find_device(&platform_profile_class, NULL, NULL, 
+> profile_class_registered))
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(&platform_profile_class, NULL, NULL, 
+> profile_class_registered);
+> +	if (!dev)
+>  		return 0;
+> +
+> +	put_device(dev);
+> +
+>  	return attr->mode;
+>  }
+> 
+>
+> base-commit: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
+> -- 
+> 2.48.1
+Good find. Looks good to me.
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
-Hi Greg
-
-6.12.14-rc2 compiles, boots and runs here on x86_64 (AMD Ryzen 5 7520U,
-Slackware64-current), no regressions observed.
-
-Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
+Mark
