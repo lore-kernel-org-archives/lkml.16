@@ -1,50 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76B73FBA7;
-	Sat, 15 Feb 2025 00:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5113738DE0;
+	Sat, 15 Feb 2025 00:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739578544; cv=none; b=U2Eq41tOpTU56PRsefZ0qsXdiMqNIEVEWHKkx0pQK+i0NQyYJn1m64Mj/wKA1Tb9M11JyPkobgHFLP8FKLhyN5IdYV+L+X90mtQ+0Sz+ImpiN8W9u9OrS9YU+kz+NI4+BA9P5OBgdPSgiUxdylQiNGTkDjWDhu87K9QviGNvvWs=
+	t=1739578544; cv=none; b=SlhIxAFmADb6J+kvFMQ64E+F2Gj66PNVagPxg+HZ9Fl4DBVJFO5dF9DI3MTDQOizPUxZbq9oXOfm4D0WiUgrNYcPjTv7fAB24fT04LTbCyiDjQIfPCQKZd66sv5R2Lp4YdWMNqCflPGw/AVte+2SvjJdvn5px8G7HCmTbpSQJDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739578544; c=relaxed/simple;
-	bh=7W6Ea+aFfRsj5/jpu0ZzrQ6VDkfBCTxhGks/L0dpItM=;
+	bh=yMlSfAbo5SwX9U3Zm9brFEYsVdtidFXiSZeVBPMUye8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=XuIfK/y2DdkaLRHcX429EwjF6ubWfKncXrwE2VEfLGQluoYC3h5d85IGsiWUbr2G7PSITTm8MPCW26h8+CakGrkhK+/6SHYDUkaHwhP+yd9rZ1C+L1xU1sa9O5Pcf2t5YFXRt1eDZMVFZid80YBfO19d9j5V2bG0vKUJLDbs2Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L+NkluNV; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=XkHsNooMhwp0hA0Dd7NzDRjrhvtj6jhMLX54Jy8fzEW7ekb2ygZhMGlh16LNz3yw248GWeJ/I+izKyhxuT2HsXv1u8RkLm2paWQ79RaT9rdyYtZ2MVtVpoupb87RqfoKf2TmmwtlyiHvl/AxSTplKdY6A9Kz+AFoDHj+wGItSRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kJ3xCOzI; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L+NkluNV"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EAC48Y002088;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kJ3xCOzI"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EJ2VG5025470;
 	Sat, 15 Feb 2025 00:15:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ih94t1hxQLsxjSGLqI+DzVxJ1wVgpeS141rsSCs4JSE=; b=L+NkluNV0yNJWO+c
-	q8x22cPRlbuPXPoFlzjZQXUma7qhFbB57Xf3nkv81uB6Pta+0neD/hrHpSI+oqlB
-	JtNhUcJdd4SuaZs5hDtqHSu4t5y+dVJvPbK6Gc/7I14zpHTYzr6J3IPaUEJALej/
-	z5THO6GlLKSBIz/NmSy4gNgxJ8HewdwHamCGVMzJvek7GQibND6CpmQg14EJg7ij
-	p5SgScAGzH+mPGmzqYIZ+PrKqAcMSw9Topojejg65DjkUVAGwslTRKNZqwgwMjM8
-	9H6sPKfOC86tza4Fyor61C5gbUPMNCpoW2RMu9xH7ORjY4c/32owl/STUEY0yVOA
-	4r/v5g==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44s5w4eexy-1
+	Bhe+aQmWsDigtUsgNF/ga1WOtJXu21ZcnfBC03qMU1k=; b=kJ3xCOzIkq0xPfxH
+	qs3YYipqersAX8los6t+2oZ5l9kAWwdsVPiKP/plMMnceWEfks2ZtAZCMjjOa/rB
+	6ROX6uFcWfBunUigCmZSXzGqzXwtaVepqbQCWwVHWi+m9cHfjTFDT7lr7e1qSkGv
+	HXAcFAD1fOUjlJZe1oDta1rOSUXt7hFp8xaMKNTux05mpf6FFkQnEzPuQErcVvef
+	Rpi8nJDjz+Yp3FImTBWlIaYIuYAZc511MReAAkyTxotS8zPdCbL3ohvUMO/29a88
+	aXhr6M8zJ1qzC9ezI9F9iLmlQqbOvhOAp6niZs7flqFuIkAh9JNbo/yVA7K9Wina
+	b6MEsg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44tbms0jae-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:27 +0000 (GMT)
+	Sat, 15 Feb 2025 00:15:26 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FQjE012713
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FPlL025746
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:26 GMT
+	Sat, 15 Feb 2025 00:15:25 GMT
 Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 14 Feb 2025 16:15:26 -0800
+ 15.2.1544.9; Fri, 14 Feb 2025 16:15:25 -0800
 From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Fri, 14 Feb 2025 16:14:29 -0800
-Subject: [PATCH v6 06/14] drm/msm/dpu: Fail atomic_check if multiple
- outputs request CDM block
+Date: Fri, 14 Feb 2025 16:14:27 -0800
+Subject: [PATCH v6 04/14] drm/msm/dpu: Add CWB to msm_display_topology
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250214-concurrent-wb-v6-6-a44c293cf422@quicinc.com>
+Message-ID: <20250214-concurrent-wb-v6-4-a44c293cf422@quicinc.com>
 References: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 In-Reply-To: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 To: Rob Clark <robdclark@gmail.com>,
@@ -77,128 +76,131 @@ CC: <quic_ebharadw@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         "Jessica
  Zhang" <quic_jesszhan@quicinc.com>
 X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=3751;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=4059;
  i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=7W6Ea+aFfRsj5/jpu0ZzrQ6VDkfBCTxhGks/L0dpItM=;
- b=Zvlj0BMNSDKlITuPqOUFPusLi4i5lGXdLX6jHx6aieJ/BG/db046tKEW/nn5BwkUcSvaBDQEo
- +oTaIkXXLBUCMYE1NXLOw1MQpcQFkmI5eQerFsRC7w9SL0A2xwoEobe
+ bh=yMlSfAbo5SwX9U3Zm9brFEYsVdtidFXiSZeVBPMUye8=;
+ b=qw1fmjGyhCsIJwRYOkz1ekG/XpY9KA2Nsy8SxFK335tS2y+DrycR7YKLoTD9PgXpl+AKgrd3X
+ 1HIap7DoNHhD1csgHmSl8PDWeimw9D+oUvzDW1zZSG+hU3jYElvnpCh
 X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
  pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: M-xq9OaaiLidXVLxRtpBBAotLJ36ixME
-X-Proofpoint-ORIG-GUID: M-xq9OaaiLidXVLxRtpBBAotLJ36ixME
+X-Proofpoint-GUID: p8ani97b-EjcjKDOFQUg7iNmrDE7JxTA
+X-Proofpoint-ORIG-GUID: p8ani97b-EjcjKDOFQUg7iNmrDE7JxTA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_10,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- phishscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502150000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ impostorscore=0 suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 phishscore=0 mlxlogscore=999 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502150000
 
-Currently, our hardware only supports a single output using CDM block at
-most. Because of this, we cannot support cases where both writeback and DP
-output request CDM simultaneously
+Currently, the topology is calculated based on the assumption that the
+user cannot request real-time and writeback simultaneously. For example,
+the number of LMs and CTLs are currently based off the number of phys
+encoders under the assumption there will be at least 1 LM/CTL per phys
+encoder.
 
-To avoid this happening when CWB is enabled, change
-msm_display_topoloy.needs_cdm into a num_cdm counter to track how many
-outputs are requesting CDM block. Return EINVAL if multiple outputs are
-trying to reserve CDM.
+This will not hold true for concurrent writeback as both phys encoders
+(1 real-time and 1 writeback) must be driven by 1 LM/CTL when concurrent
+writeback is enabled.
 
+To account for this, add a cwb_enabled flag and only adjust the number of
+CTL/LMs needed by a given topology based on the number of phys encoders
+only if CWB is not enabled.
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
-Changes in v6:
-- cdm_requested -> num_cdm
 
+---
 Changes in v5:
-- Changed check to fail only if multiple outputs are requesting CDM
-  simultaneously
+- Reworded commit message to be more specific
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  4 ++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c      | 12 +++++++++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h      |  5 +++--
- 3 files changed, 14 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 11 ++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c   | 14 ++++++++++++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h   |  2 ++
+ 3 files changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index ad969a5b9434..0e4f27da9534 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -692,10 +692,10 @@ void dpu_encoder_update_topology(struct drm_encoder *drm_enc,
- 		fb = conn_state->writeback_job->fb;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index ba5c60296e17..7c0ab1cee057 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -1246,6 +1246,8 @@ static struct msm_display_topology dpu_crtc_get_topology(
+ 		dpu_encoder_update_topology(drm_enc, &topology, crtc_state->state,
+ 					    &crtc_state->adjusted_mode);
  
- 		if (fb && MSM_FORMAT_IS_YUV(msm_framebuffer_format(fb)))
--			topology->needs_cdm = true;
-+			topology->num_cdm++;
- 	} else if (disp_info->intf_type == INTF_DP) {
- 		if (msm_dp_is_yuv_420_enabled(priv->dp[disp_info->h_tile_instance[0]], adj_mode))
--			topology->needs_cdm = true;
-+			topology->num_cdm++;
- 	}
- }
++	topology.cwb_enabled = drm_crtc_in_clone_mode(crtc_state);
++
+ 	/*
+ 	 * Datapath topology selection
+ 	 *
+@@ -1259,9 +1261,16 @@ static struct msm_display_topology dpu_crtc_get_topology(
+ 	 * If DSC is enabled, use 2 LMs for 2:2:1 topology
+ 	 *
+ 	 * Add dspps to the reservation requirements if ctm is requested
++	 *
++	 * Only hardcode num_lm to 2 for cases where num_intf == 2 and CWB is not
++	 * enabled. This is because in cases where CWB is enabled, num_intf will
++	 * count both the WB and real-time phys encoders.
++	 *
++	 * For non-DSC CWB usecases, have the num_lm be decided by the
++	 * (mode->hdisplay > MAX_HDISPLAY_SPLIT) check.
+ 	 */
  
+-	if (topology.num_intf == 2)
++	if (topology.num_intf == 2 && !topology.cwb_enabled)
+ 		topology.num_lm = 2;
+ 	else if (topology.num_dsc == 2)
+ 		topology.num_lm = 2;
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-index 0fbb92021b18..4da2e47265d4 100644
+index a7b4086ae990..0fbb92021b18 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-@@ -585,7 +585,8 @@ static int _dpu_rm_reserve_dsc(struct dpu_rm *rm,
+@@ -381,8 +381,18 @@ static int _dpu_rm_reserve_ctls(
+ 	int i = 0, j, num_ctls;
+ 	bool needs_split_display;
  
- static int _dpu_rm_reserve_cdm(struct dpu_rm *rm,
- 			       struct dpu_global_state *global_state,
--			       uint32_t crtc_id)
-+			       uint32_t crtc_id,
-+			       int num_cdm)
- {
- 	/* try allocating only one CDM block */
- 	if (!rm->cdm_blk) {
-@@ -593,6 +594,11 @@ static int _dpu_rm_reserve_cdm(struct dpu_rm *rm,
- 		return -EIO;
- 	}
+-	/* each hw_intf needs its own hw_ctrl to program its control path */
+-	num_ctls = top->num_intf;
++	/*
++	 * For non-CWB mode, each hw_intf needs its own hw_ctl to program its
++	 * control path.
++	 *
++	 * Hardcode num_ctls to 1 if CWB is enabled because in CWB, both the
++	 * writeback and real-time encoders must be driven by the same control
++	 * path
++	 */
++	if (top->cwb_enabled)
++		num_ctls = 1;
++	else
++		num_ctls = top->num_intf;
  
-+	if (num_cdm > 1) {
-+		DPU_ERROR("More than 1 INTF requesting CDM\n");
-+		return -EINVAL;
-+	}
-+
- 	if (global_state->cdm_to_crtc_id) {
- 		DPU_ERROR("CDM_0 is already allocated\n");
- 		return -EIO;
-@@ -629,8 +635,8 @@ static int _dpu_rm_make_reservation(
- 	if (ret)
- 		return ret;
+ 	needs_split_display = _dpu_rm_needs_split_display(top);
  
--	if (topology->needs_cdm) {
--		ret = _dpu_rm_reserve_cdm(rm, global_state, crtc_id);
-+	if (topology->num_cdm > 0) {
-+		ret = _dpu_rm_reserve_cdm(rm, global_state, crtc_id, topology->num_cdm);
- 		if (ret) {
- 			DPU_ERROR("unable to find CDM blk\n");
- 			return ret;
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-index b854e42d319d..a19dbdb1b6f4 100644
+index 463c532cdfdf..b854e42d319d 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-@@ -51,7 +51,8 @@ struct dpu_rm_sspp_requirements {
-  * @num_intf:     number of interfaces the panel is mounted on
+@@ -52,6 +52,7 @@ struct dpu_rm_sspp_requirements {
   * @num_dspp:     number of dspp blocks used
   * @num_dsc:      number of Display Stream Compression (DSC) blocks used
-- * @needs_cdm:    indicates whether cdm block is needed for this display topology
-+ * @num_cdm:      indicates how many outputs are requesting cdm block for
-+ *                    this display topology
-  * @cwb_enabled:  indicates whether CWB is enabled for this display topology
+  * @needs_cdm:    indicates whether cdm block is needed for this display topology
++ * @cwb_enabled:  indicates whether CWB is enabled for this display topology
   */
  struct msm_display_topology {
-@@ -59,7 +60,7 @@ struct msm_display_topology {
- 	u32 num_intf;
+ 	u32 num_lm;
+@@ -59,6 +60,7 @@ struct msm_display_topology {
  	u32 num_dspp;
  	u32 num_dsc;
--	bool needs_cdm;
-+	int num_cdm;
- 	bool cwb_enabled;
+ 	bool needs_cdm;
++	bool cwb_enabled;
  };
  
+ int dpu_rm_init(struct drm_device *dev,
 
 -- 
 2.48.1
