@@ -1,175 +1,316 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E2B18B03;
-	Sat, 15 Feb 2025 00:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E041CD0C;
+	Sat, 15 Feb 2025 00:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739577794; cv=none; b=QMg3j1jtJPuRu7wZByJfjGdMzyTP8ZRvNTLX5rzIx6zjuIOblwnr5TbhE41YwyRzXt8lDpcvg8K3czI0dDy/kiP5RwSbTzsQuK74ok/qOX7Cv3vdpvqnHhR5o/oy0XS/jTM0UnS8HpJarZShycIDWl/B3RykfdBQSFqfO+vq/ok=
+	t=1739577795; cv=none; b=OK/JXvgNcBh+XQWcT9N2bLFsAFebeuHjmYrQDbQUgA/5PEScdDgwidbblGr5OYZC9Iy7F/ktsxQJpQPAYBjOSokyDnP+zfERBFxKT0VnwtPXUmzFQ9oT0q1AFgysWCvV6ZpxNI9/ez4xA5aS1OBWURoow8OM9i9N5s/0Su+Ov0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739577794; c=relaxed/simple;
-	bh=75ue9XmQyJ8qhP80PF/AOl1KCjY+SUIQzJSjEnRvCuw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MZ0xdxcAT0dVExk0SZp3Jeb+DrleDMIuX36fK3msOl5QhBigIR0W5ZWq0mocx4GgThCg5uMkcwiSGgT5nVWJGufCf22BgViRs630ilxxy5nQpl7uFyCDWHZjVcs/c6qCVCC861SdtmYeVEhtbLe8+1luZ86F+np6dC8GtIi2r2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bn23Mbon; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1739577795; c=relaxed/simple;
+	bh=I33ECS2dn4xDgX9A3s2ndVHD+u+pmKmrL/6XQzYxerM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A4slnwxK90Y7MdjPYUj73O+V/59y4c5f5QDXo4LnkwSjlFmrA4kYhrGMLeFsoKtxU6I4jJ+OhY0KPUX5cEqiv6JrVRAjOI996dFlpcjejsNm4qF1mAtMNKP9p6Ne87mG923axR9kkZ9+PSieTeGzfIhxpXID0PAaYbAEdjedc/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FftUHtFc; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bn23Mbon"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-220f048c038so21024025ad.2;
-        Fri, 14 Feb 2025 16:03:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FftUHtFc"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6f9c6d147edso24593127b3.3;
+        Fri, 14 Feb 2025 16:03:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1739577792; x=1740182592; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlljIDmRX1XH1IW3oY9g1rM7wniUPX9ut1iHFiQ3C7I=;
-        b=Bn23MbonObpYsoZ2W/HbxH+Jm+kM4ZwZ4AI0XGwca4ugekWa3nVgS3mwwmGWOxV+F4
-         cnWOo9LqlHEiZQ8rvDzfEyZZY3560f+f8bwjw9xpUQy8gG0UgcVpGirkH4Mkh5xkF/r4
-         VqTRaIFXUkOtMBs+TPWNn6tAoQamdwGJfUuFhUv8iZ9ziJ/FgScOSTUMB9PMMW4WDct5
-         aVPDwlmuvOl2g2bkjyYivXYhcTKW3DMxfStmmiXKQXU26LLL8guKaw5RtGYATEmytJrN
-         g8JD3ruV0dIeQTs/Ok50Iigmf35sD/WCMiW7/TgiL2xokCudaXPdWHpw99DhcGa9DTvu
-         6XYA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nef+ttkW6sOw/of/q3ow/c0DyRk7Vqkp8UwOrc60xng=;
+        b=FftUHtFcJEbner79sT4Kh09rsvQk2iW1VFweRSKIvL9L6ojdD1IwiGRvXACAOaUem/
+         zS0J0ECE5kcv/ZOglYhS5ZcoRxNyoqwv2eKoF+lkce3i/81j1A0X0C3ybuNGUg91E9aA
+         HVq1c6LXhLP3GTc+TSAvf5fQOAvO8jjpc8sMvLq2YZGKh+nImTQM88J2phVzfatl7xEb
+         SUKU3dfTHwmg2sDXncYZdYQzUEXy7zdS1rJlKP1D1NBsXXPBGg1PY6to6mO4FANrVXiL
+         ObBmcLPZItaI9PnlrdNPUFTT+v4Sz3z6OMZHPy7q7Mc4kUnzZkvSI1hCE3IjRdwT8r2V
+         emPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1739577792; x=1740182592;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hlljIDmRX1XH1IW3oY9g1rM7wniUPX9ut1iHFiQ3C7I=;
-        b=epyjSObyie4bZgJBnIoixUa/3GEXfpYwtrFPr42+kAtMmGMkRkQGZOYxF8HxqIX6GT
-         vngZtQXHa6uyLc9Y97hRUm9LBDAeCJGkM+JOIldY6GCHac8TYNFrPCi3rda59Z9TioyK
-         AAvss2JBkQRt8+T6i+HAmqU6ozj4YKL54A7T1Xc6g0GsYFBYfIJ7GVGETHb4hZi3S46U
-         Fh+3tVyduqOTkw7o9tsAcCfLuc7ccXwo15X8DHqsCAj8wwrnISGCR1RGQP9p/sVztCNw
-         tTHVPeG9y3yP1Q+TlHSnXGlVhVRaguWRyrSc4wlNHaX3UQT4kQCJufbumwzq0rZvFckQ
-         NGrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHcQyIynHODI4O5qIsfPyzRKpIIU0aVJASDXrzJTtSdLEjv8bHxqRaropgQXJfZYNadO22svLwgFzrMxM=@vger.kernel.org, AJvYcCVugfKqBGStOmJeuoCBT6UYSIzSemNjm3D3dgc7dVf++Tzwu8r1XGDlySeKiECh9egBedN6owqn544RAeJl@vger.kernel.org, AJvYcCXuDlX3E9AyypkeDGcS8sppCX35Jp0r0pLrsoUAHuzQDpCx0jVBQFSSFG4nJushpXCQyAK+4lyGH9/E@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgn77eT59VaL15w2qYiyKSo5XIsTejtkkCx3hrskI/QGQC4Ykk
-	zDwcdKeSMXGB0qoIW2Rr1fAL7a/V4E7MKXnVXQjdM+Gp4cr9cYu/
-X-Gm-Gg: ASbGncszDIwDi10AhSAIcec/T2ShPA/ro352t+7how5gKnbmBTTZGG+AD+bd117o8Xp
-	XkD433x2Wdkofh73wn6XP2pD3CO64xFagOpWodpPhJUqCuVCGMGjpOK5SXg4wYWhdtAIZ0VwSzA
-	bUvP5pfpKScuT8Z6hIOz1EBeNj+4ouU5VzCfeu9qH3SyV3nrGtXaLW2pBH97mQPthRIt9ZNIelu
-	BOO3Klvj0L2AIP7c22ubnUbXB1FNow5x6QqlTzjJen7RtH6YIKn62NaetGqUi2hSz0PVC1G3+w2
-	rAP7OLY7Hr3Wy1lniyx37X1/m4dGg9xoW/i8cbumFubgqeG6O1s4qVgtedGPRuJdkke+bz0nIZj
-	p+XAx1SDYYA==
-X-Google-Smtp-Source: AGHT+IEup2zgA/YTbycAj6IzspoC2++Jftu7jKLzx1hPV3+F+i7RaOUhB21dbPrRSyLCtfppm6LLiw==
-X-Received: by 2002:a17:902:fc4e:b0:220:ecf7:4b5c with SMTP id d9443c01a7336-22103f16d99mr19774315ad.14.1739577792063;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nef+ttkW6sOw/of/q3ow/c0DyRk7Vqkp8UwOrc60xng=;
+        b=OypVALKAh2nS/TYyE5TwFVMI6mshWi1TleY0ZDHJtaN/xajweZoyTEvhF2BXj4DR/i
+         Wr4VeYCl6xq6c7ym6p+jYqDKrSBi1WszxBpayNHy+CuuIoaIy5CKykthE0jXf1y7q6d8
+         a1lI/cOS1U4i1gJNR+3ocugfB2sRJ8+qOkDTdJk0riaMH6KsvCuoGjAbewFiMmQd5jqG
+         k1Scvj+lHd4XCsuHfHTfuhpiFzoP1V7yVUKey5vF6NbfYria3psw3mMWgQRSp3Qo7obf
+         UaJOvahT6jxIVq2rsExQ9EEb2ysY37Hjvamrpk81fBnJNgW2VSKXsigyACgdI+BThg90
+         yyHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWOuLs1l3z7QyaO5kqvCc3t+YqCpgrpmStKhEEpth99NFl8/sMiaWwwsPSCTDb6oHTCx6vwgXAEoZgc9jc=@vger.kernel.org, AJvYcCWqCgcSnqXIxjoBtgQoNANZCOsikisharQ3blaEq36jLK4ciPZgZe43+WRFT6hLsmZ4f4E76ymeqAc9UlMlanJHeOxQqQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyDQiykUe3rpOColHmkj6AFWSddCwpI8qVYVQxGGE0gwLe+Gwn
+	JYH0D8PabMxHPJxvIqa6piwy85GzQHzm1cR+SDtnYVmVOc1l9ukouujJcQ==
+X-Gm-Gg: ASbGncustrFeOQBWruCcIXzQEo793Kcwbhe7iSpWMBB37MUjRDZ0QGmqQ/xxj2BRjwx
+	zDa3Z/XdCCO9DC/dlmzkyralBjaY+UOIqHJ73EtriFatLQhrl3zY3q2/Xw1S0Nrrlk/FCLJAzuK
+	5YNp5apKCShjfgNSJLYmBTSdvvmw+K7TOxjmPvINWDB69Yo3CNZBENpojgrz7MuK25HPUzDz0g3
+	EqzgJvvOLqvGR8DpJJdVkBd7RzHiCXflteFd7RFhlDoi/H1Todrgc1tcMSVCjyCaurC8ke75lHa
+	947XtuFR1covI31hyc8/Qno=
+X-Google-Smtp-Source: AGHT+IEheVAFV0wi/wzsqTMVLV3X3BaSwCdvJMaIS9By7sccuhiYNDmYBozGqjlzr0KxAdwDt8cv5A==
+X-Received: by 2002:a05:690c:30f:b0:6f9:7801:7b2b with SMTP id 00721157ae682-6fb583a1865mr14679067b3.35.1739577792535;
         Fri, 14 Feb 2025 16:03:12 -0800 (PST)
-Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220f26ea127sm15071155ad.96.2025.02.14.16.03.04
+Received: from localhost.localdomain ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb35d586e5sm9844207b3.17.2025.02.14.16.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 14 Feb 2025 16:03:11 -0800 (PST)
-From: James Calligeros <jcalligeros99@gmail.com>
-Subject: [PATCH 00/27] ASoC: tas27{64,70}: improve support for Apple codec
- variants
-Date: Sat, 15 Feb 2025 10:02:33 +1000
-Message-Id: <20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com>
+From: Kurt Borja <kuurtb@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 1/2] platform/x86: thinkpad_acpi: Move subdriver initialization to tpacpi_pdriver's probe.
+Date: Fri, 14 Feb 2025 19:03:01 -0500
+Message-ID: <20250215000302.19753-2-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250215000302.19753-1-kuurtb@gmail.com>
+References: <20250215000302.19753-1-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJnZr2cC/yWMQQqAIBQFryJ/3QcVddFVokXoqz5EiUIE0d2TW
- g7MzE0VRVCpVzcVnFLl2BuYTlFcp30BS2pMVluvrXE85byB45EQ+TcqBwQfUjSwLlErc8Es13c
- dxud5AZVWfeBlAAAA
-X-Change-ID: 20250214-apple-codec-changes-6e656dc1e24d
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
- Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- asahi@lists.linux.dev, James Calligeros <jcalligeros99@gmail.com>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik@protonmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3173;
- i=jcalligeros99@gmail.com; h=from:subject:message-id;
- bh=75ue9XmQyJ8qhP80PF/AOl1KCjY+SUIQzJSjEnRvCuw=;
- b=owGbwMvMwCV2xczoYuD3ygTG02pJDOnrb268Kpqxx+/WY2FLY4/4DzG3N+7VWbr5oo5UrpSnt
- YO5IrNzRykLgxgXg6yYIsuGJiGP2UZsN/tFKvfCzGFlAhnCwMUpABPZeZyR4TDH5wyzDGvO3T3e
- s54v3XRAtLxbx1HiubkI94EDgnn3JjL8ld63WOZ3e2io9OOT6W9nn3zUsiMtesnuKy/PJ3UcfV4
- TyA0A
-X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
- fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-Hi all,
+It was reported that if subdrivers assigned devres resources inside
+ibm_init_struct's .init callbacks, driver binding would fail with the
+following error message:
 
-This series introduces a number of changes to the drivers for
-the Texas Instruments TAS2764 and TAS2770 amplifiers in order to
-introduce (and improve in the case of TAS2770) support for the
-variants of these amps found in Apple Silicon Macs.
+	platform thinkpad_acpi: Resources present before probing
 
-Apple's variant of TAS2764 is known as SN012776, and as always with
-Apple is a subtly incompatible variant with a number of quirks. It
-is not publicly available. The TAS2770 variant is known as TAS5770L,
-and does not require incompatible handling.
+Let the driver core manage the lifetimes of the subdrivers and children
+devices, by initializing them inside tpacpi_driver's .probe callback.
+This is appropriate because these subdrivers usually expose sysfs groups
+and the driver core manages this automatically to avoid races.
 
-Much as with the Cirrus codec patches, I do not
-expect that we will get any official acknowledgement that these parts
-exist from TI, however I would be delighted to be proven wrong.
+One immediate benefit of this, is that we are now able to use devres
+inside .init subdriver callbacks.
 
-This series has been living in the downstream Asahi kernel tree[1]
-for over two years, and has been tested by many thousands of users
-by this point[2].
+platform_create_bundle is specifically used because it makes the
+driver's probe type synchronous and returns an ERR_PTR if attachment
+failed.
 
-Regards,
-James
+Additionally, to make error handling simpler, allocate the input device
+using devm_input_allocate_device().
 
-[1] https://github.com/AsahiLinux/linux/tree/asahi-wip
-[2] https://stats.asahilinux.org/
-
+Reported-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Closes: https://lore.kernel.org/platform-driver-x86/20250208091438.5972-1-mpearson-lenovo@squebb.ca/#t
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
-Hector Martin (14):
-      ASoC: tas2764: Enable main IRQs
-      ASoC: tas2764: Power up/down amp on mute ops
-      ASoC: tas2764: Add SDZ regulator
-      ASoC: tas2764: Add reg defaults for TAS2764_INT_CLK_CFG
-      ASoC: tas2764: Mark SW_RESET as volatile
-      ASoC: tas2764: Fix power control mask
-      ASoC: tas2764: Wait for ramp-down after shutdown
-      ASoC: tas2770: Add SDZ regulator
-      ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
-      ASoC: tas2770: Add zero-fill and pull-down controls
-      ASoC: tas2770: Support setting the PDM TX slot
-      ASoC: tas2770: Fix volume scale
-      ASoC: tas2764: Set the SDOUT polarity correctly
-      ASoC: tas2770: Set the SDOUT polarity correctly
+ drivers/platform/x86/thinkpad_acpi.c | 136 ++++++++++++---------------
+ 1 file changed, 62 insertions(+), 74 deletions(-)
 
-James Calligeros (2):
-      ASoC: dt-bindings: tas27xx: add compatible for SN012776
-      ASoC: dt-bindings: tas2770: add compatible for TAS5770L
-
-Martin Povišer (11):
-      ASoC: tas2764: Extend driver to SN012776
-      ASoC: tas2764: Add control concerning overcurrent events
-      ASoC: tas2770: Factor out set_ivsense_slots
-      ASoC: tas2770: Fix and redo I/V sense TDM slot setting logic
-      ASoC: tas2764: Reinit cache on part reset
-      ASoC: tas2764: Configure zeroing of SDOUT slots
-      ASoC: tas2764: Apply Apple quirks
-      ASoC: tas2764: Raise regmap range maximum
-      ASoC: tas2770: Export 'die_temp' to sysfs
-      ASoC: tas2764: Export 'die_temp' to sysfs
-      ASoC: tas2764: Crop SDOUT zero-out mask based on BCLK ratio
-
- .../bindings/sound/ti,tas2770.yaml       |   1 +
- .../bindings/sound/ti,tas27xx.yaml       |   1 +
- sound/soc/codecs/Kconfig                 |   1 +
- sound/soc/codecs/tas2764-quirks.h        | 188 +++++++++++++++
- sound/soc/codecs/tas2764.c               | 302 +++++++++++++++++++++----
- sound/soc/codecs/tas2764.h               |  29 ++-
- sound/soc/codecs/tas2770.c               | 264 +++++++++++++++++----
- sound/soc/codecs/tas2770.h               |  20 ++
- 8 files changed, 711 insertions(+), 95 deletions(-)
----
-base-commit: cc7708ae5e2aab296203fcec774695fc9d995f48
-change-id: 20250214-apple-codec-changes-6e656dc1e24d
-
-Best regards,
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index ab1cade5ef23..ad9de48cc122 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -367,8 +367,6 @@ static struct {
+ 	u32 beep_needs_two_args:1;
+ 	u32 mixer_no_level_control:1;
+ 	u32 battery_force_primary:1;
+-	u32 input_device_registered:1;
+-	u32 platform_drv_registered:1;
+ 	u32 sensors_pdrv_registered:1;
+ 	u32 hotkey_poll_active:1;
+ 	u32 has_adaptive_kbd:1;
+@@ -11815,36 +11813,20 @@ MODULE_PARM_DESC(profile_force, "Force profile mode. -1=off, 1=MMC, 2=PSC");
+ 
+ static void thinkpad_acpi_module_exit(void)
+ {
+-	struct ibm_struct *ibm, *itmp;
+-
+ 	tpacpi_lifecycle = TPACPI_LIFE_EXITING;
+ 
+ 	if (tpacpi_hwmon)
+ 		hwmon_device_unregister(tpacpi_hwmon);
+ 	if (tp_features.sensors_pdrv_registered)
+ 		platform_driver_unregister(&tpacpi_hwmon_pdriver);
+-	if (tp_features.platform_drv_registered)
+-		platform_driver_unregister(&tpacpi_pdriver);
+-
+-	list_for_each_entry_safe_reverse(ibm, itmp,
+-					 &tpacpi_all_drivers,
+-					 all_drivers) {
+-		ibm_exit(ibm);
+-	}
+-
+-	dbg_printk(TPACPI_DBG_INIT, "finished subdriver exit path...\n");
+-
+-	if (tpacpi_inputdev) {
+-		if (tp_features.input_device_registered)
+-			input_unregister_device(tpacpi_inputdev);
+-		else
+-			input_free_device(tpacpi_inputdev);
+-	}
+-
+ 	if (tpacpi_sensors_pdev)
+ 		platform_device_unregister(tpacpi_sensors_pdev);
+-	if (tpacpi_pdev)
++
++	if (tpacpi_pdev) {
++		platform_driver_unregister(&tpacpi_pdriver);
+ 		platform_device_unregister(tpacpi_pdev);
++	}
++
+ 	if (proc_dir)
+ 		remove_proc_entry(TPACPI_PROC_DIR, acpi_root_dir);
+ 	if (tpacpi_wq)
+@@ -11856,11 +11838,63 @@ static void thinkpad_acpi_module_exit(void)
+ 	kfree(thinkpad_id.nummodel_str);
+ }
+ 
++static void tpacpi_subdrivers_release(void *data)
++{
++	struct ibm_struct *ibm, *itmp;
++
++	list_for_each_entry_safe_reverse(ibm, itmp, &tpacpi_all_drivers, all_drivers)
++		ibm_exit(ibm);
++
++	dbg_printk(TPACPI_DBG_INIT, "finished subdriver exit path...\n");
++}
++
++static int __init tpacpi_pdriver_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	devm_mutex_init(&pdev->dev, &tpacpi_inputdev_send_mutex);
++
++	tpacpi_inputdev = devm_input_allocate_device(&pdev->dev);
++	if (!tpacpi_inputdev)
++		return -ENOMEM;
++
++	tpacpi_inputdev->name = "ThinkPad Extra Buttons";
++	tpacpi_inputdev->phys = TPACPI_DRVR_NAME "/input0";
++	tpacpi_inputdev->id.bustype = BUS_HOST;
++	tpacpi_inputdev->id.vendor = thinkpad_id.vendor;
++	tpacpi_inputdev->id.product = TPACPI_HKEY_INPUT_PRODUCT;
++	tpacpi_inputdev->id.version = TPACPI_HKEY_INPUT_VERSION;
++	tpacpi_inputdev->dev.parent = &tpacpi_pdev->dev;
++
++	/* Init subdriver dependencies */
++	tpacpi_detect_brightness_capabilities();
++
++	/* Init subdrivers */
++	for (unsigned int i = 0; i < ARRAY_SIZE(ibms_init); i++) {
++		ret = ibm_init(&ibms_init[i]);
++		if (ret >= 0 && *ibms_init[i].param)
++			ret = ibms_init[i].data->write(ibms_init[i].param);
++		if (ret < 0) {
++			tpacpi_subdrivers_release(NULL);
++			return ret;
++		}
++	}
++
++	ret = devm_add_action_or_reset(&pdev->dev, tpacpi_subdrivers_release, NULL);
++	if (ret)
++		return ret;
++
++	ret = input_register_device(tpacpi_inputdev);
++	if (ret < 0)
++		pr_err("unable to register input device\n");
++
++	return ret;
++}
+ 
+ static int __init thinkpad_acpi_module_init(void)
+ {
+ 	const struct dmi_system_id *dmi_id;
+-	int ret, i;
++	int ret;
+ 	acpi_object_type obj_type;
+ 
+ 	tpacpi_lifecycle = TPACPI_LIFE_INIT;
+@@ -11920,15 +11954,16 @@ static int __init thinkpad_acpi_module_init(void)
+ 		tp_features.quirks = dmi_id->driver_data;
+ 
+ 	/* Device initialization */
+-	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, PLATFORM_DEVID_NONE,
+-							NULL, 0);
++	tpacpi_pdev = platform_create_bundle(&tpacpi_pdriver, tpacpi_pdriver_probe,
++					     NULL, 0, NULL, 0);
+ 	if (IS_ERR(tpacpi_pdev)) {
+ 		ret = PTR_ERR(tpacpi_pdev);
+ 		tpacpi_pdev = NULL;
+-		pr_err("unable to register platform device\n");
++		pr_err("unable to register platform device/driver bundle\n");
+ 		thinkpad_acpi_module_exit();
+ 		return ret;
+ 	}
++
+ 	tpacpi_sensors_pdev = platform_device_register_simple(
+ 						TPACPI_HWMON_DRVR_NAME,
+ 						PLATFORM_DEVID_NONE, NULL, 0);
+@@ -11940,46 +11975,8 @@ static int __init thinkpad_acpi_module_init(void)
+ 		return ret;
+ 	}
+ 
+-	mutex_init(&tpacpi_inputdev_send_mutex);
+-	tpacpi_inputdev = input_allocate_device();
+-	if (!tpacpi_inputdev) {
+-		thinkpad_acpi_module_exit();
+-		return -ENOMEM;
+-	} else {
+-		/* Prepare input device, but don't register */
+-		tpacpi_inputdev->name = "ThinkPad Extra Buttons";
+-		tpacpi_inputdev->phys = TPACPI_DRVR_NAME "/input0";
+-		tpacpi_inputdev->id.bustype = BUS_HOST;
+-		tpacpi_inputdev->id.vendor = thinkpad_id.vendor;
+-		tpacpi_inputdev->id.product = TPACPI_HKEY_INPUT_PRODUCT;
+-		tpacpi_inputdev->id.version = TPACPI_HKEY_INPUT_VERSION;
+-		tpacpi_inputdev->dev.parent = &tpacpi_pdev->dev;
+-	}
+-
+-	/* Init subdriver dependencies */
+-	tpacpi_detect_brightness_capabilities();
+-
+-	/* Init subdrivers */
+-	for (i = 0; i < ARRAY_SIZE(ibms_init); i++) {
+-		ret = ibm_init(&ibms_init[i]);
+-		if (ret >= 0 && *ibms_init[i].param)
+-			ret = ibms_init[i].data->write(ibms_init[i].param);
+-		if (ret < 0) {
+-			thinkpad_acpi_module_exit();
+-			return ret;
+-		}
+-	}
+-
+ 	tpacpi_lifecycle = TPACPI_LIFE_RUNNING;
+ 
+-	ret = platform_driver_register(&tpacpi_pdriver);
+-	if (ret) {
+-		pr_err("unable to register main platform driver\n");
+-		thinkpad_acpi_module_exit();
+-		return ret;
+-	}
+-	tp_features.platform_drv_registered = 1;
+-
+ 	ret = platform_driver_register(&tpacpi_hwmon_pdriver);
+ 	if (ret) {
+ 		pr_err("unable to register hwmon platform driver\n");
+@@ -11998,15 +11995,6 @@ static int __init thinkpad_acpi_module_init(void)
+ 		return ret;
+ 	}
+ 
+-	ret = input_register_device(tpacpi_inputdev);
+-	if (ret < 0) {
+-		pr_err("unable to register input device\n");
+-		thinkpad_acpi_module_exit();
+-		return ret;
+-	} else {
+-		tp_features.input_device_registered = 1;
+-	}
+-
+ 	return 0;
+ }
+ 
 -- 
-James Calligeros <jcalligeros99@gmail.com>
+2.48.1
 
