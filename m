@@ -1,50 +1,49 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098402943F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D09E2BAE3;
 	Sat, 15 Feb 2025 00:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739578542; cv=none; b=bxDJPNDM3evAXw3macBwJovqByE9nbzPvN+Gi8QM6gce/Bi5zRzzo+nZl1IeQ7O6MpercGES71DdVsBNmHpQiFeW01dSa1BFXCFKPqihVpTHLxfWRsgr/z0VQRUxdfn9OSvYBH4aFxAg3CQsdPXtTxb1r0XCv/oeclno2Ct/hbE=
+	t=1739578543; cv=none; b=BwDNL1KgaL0+z7s7t8dGpFyhXy8zJODU+uUXa6dTjyHS+PSCs4aUEw1BKxIM+Qzcb8bMgR+Wpn7BEp1Veda6ju7kSy43rnbRxTON4Rx8f+psIzq7rOgFh9akqkBsARPMasLhBjukOlyeSblCmD91blY07ilYF6bsB616fDF+16g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739578542; c=relaxed/simple;
-	bh=LypIT3Vsvo+COpx9vViitKdfHH7SaO6HMvWRQmInK90=;
+	s=arc-20240116; t=1739578543; c=relaxed/simple;
+	bh=2OQ2vZXGMR/FikvMUOspwkU+fXkaY8KpVYF4kd1tUUg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=L0XBlQ6GL/fHV5rjNIfyIVdwgBGCUyNHjTBF4Tl7aSSKO9pD26ql46RcG5F3slIG4G//0lII5gqONAV4FzUnCvNBq8JI8/uZUpwbrEQFcvmViZqcAnvFzmxH0KD7cNnfUkEam++jsbqEy/dJX/xy2/V10vTkAoRasqP/cP7HDmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QVkcleuE; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=d6OkRDCL2hsF/C1y4KABMogG2XU+zB4TBC0fubw4yJikpcR33kyeXTAU4jduSeaLHUSYdIuQ+OzGyxnFNgxfSvouxKT4H3s1AyL0+EcUc5zzXT1OYdDiGHS/N5GSfnhCxeRdwCtUUhYyvW+zRk4cg20OdppSDyeyCU/frviZ0J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V0Xp2qt5; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QVkcleuE"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51F082BM000738;
-	Sat, 15 Feb 2025 00:15:27 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V0Xp2qt5"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EBgilf017466;
+	Sat, 15 Feb 2025 00:15:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	myD/s69pQEXYf8tAFqqd+x3CdRklck+3AlJhWp6po88=; b=QVkcleuEZ+wV0DvI
-	lF1QWYDQFId5P2Kc3XSsXnb7kU+cDZxXvpYdun3pRUXu5C7K9GtVzMnni7WGyJr5
-	vkXpCdVKCOkqSrq1WOGuLOhzbxJLJXTAK5OyaDOvPh03kY2566H8Iou1K/8U/1Ai
-	cvFe2VP2IOUl+9KSZLx4vzwPTqUyYmODDJz8oh/kAPEe1VUqnGkUCjbOrBInba+T
-	+/gqyXe7mvHe/vf3SOQWJd+5QZ6H1u56un/mIhl5dG2kKk0CVjD1xEyFpMjlUAEj
-	AQxDTIU9Jc9qnSryd0b51M6A7JFpghsKPeonkLX1dVgcZ53G5UP7xOii3Egeik7V
-	MztVXA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44seq051kp-1
+	9zmcir4afxNKA0l+VbGoSqaQ3oCyXctYdlAH+owLBkY=; b=V0Xp2qt5fAVXVdKT
+	FTT6mIl1VwQqr1bm8vkc4JkXtEBPAtHQooLHIxnwZVg+lAku3C0hexzmjyzQYLEs
+	0QSUIwlILDcq/ARrc/jZBHFRNM6aw62aEyXks6oODrn9+wgobjI41gKtA66Pc9zA
+	DX8VkqeU5JT2p5m5+x18R2yEqAEf/ZR5rXysQJ81C1CGPIWxGUfZ+tNvjiq1hP0Y
+	gk+Nj5+B/WPmXOF5eJEHdk6HGUviJZD2gV5FvRBKfXbq8n4pTmt+0Uzv2qi6KWC5
+	cqQu2K+U/GKN3l/SCxVDiYkm1HWgsOJzuh51PPF6w4mgEjMymE8Xr5fJFlwXvdxr
+	Rpi9Dg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44t56vhm85-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:27 +0000 (GMT)
+	Sat, 15 Feb 2025 00:15:29 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FQAe012705
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FSXd025773
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:26 GMT
+	Sat, 15 Feb 2025 00:15:28 GMT
 Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 14 Feb 2025 16:15:25 -0800
+ 15.2.1544.9; Fri, 14 Feb 2025 16:15:28 -0800
 From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Fri, 14 Feb 2025 16:14:28 -0800
-Subject: [PATCH v6 05/14] drm/msm/dpu: Require modeset if clone mode status
- changes
+Date: Fri, 14 Feb 2025 16:14:37 -0800
+Subject: [PATCH v6 14/14] drm/msm/dpu: Set possible clones for all encoders
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250214-concurrent-wb-v6-5-a44c293cf422@quicinc.com>
+Message-ID: <20250214-concurrent-wb-v6-14-a44c293cf422@quicinc.com>
 References: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 In-Reply-To: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 To: Rob Clark <robdclark@gmail.com>,
@@ -77,109 +76,122 @@ CC: <quic_ebharadw@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         "Jessica
  Zhang" <quic_jesszhan@quicinc.com>
 X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=3521;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=3631;
  i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=LypIT3Vsvo+COpx9vViitKdfHH7SaO6HMvWRQmInK90=;
- b=1Un89lFl88+zWMKA9SRjPt7j+PyUD5pXcYNg5kU/kwKUP1L4PmEYdt7JZ4kpuQtpF/71ax4w4
- w020U36NAxxDGZGI3JwrhAU1/Iw6QJNdnYCt+oto9H7Vd6fw6ojCHyL
+ bh=2OQ2vZXGMR/FikvMUOspwkU+fXkaY8KpVYF4kd1tUUg=;
+ b=5ww6RYGkQ7BpkvuEVTxfzDnJirnLUBrau4pCNocvz6vt+1+pac4fADqZMiS0llCFCv1HyHWVH
+ e9icrzYNasoBBytl7+56Uqjcwz749b/YAcpia7v6H42QOsKtaUDm4xT
 X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
  pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: VMiAb72SR3DvelqGqanbUMWZQA7l9JGZ
-X-Proofpoint-ORIG-GUID: VMiAb72SR3DvelqGqanbUMWZQA7l9JGZ
+X-Proofpoint-ORIG-GUID: rNvV53zbztZbUss1rMdNaF-YEVN8PNq4
+X-Proofpoint-GUID: rNvV53zbztZbUss1rMdNaF-YEVN8PNq4
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_10,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 bulkscore=0 clxscore=1015 priorityscore=1501 adultscore=0
- mlxscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502150000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502150000
 
-If the clone mode enabled status is changing, a modeset needs to happen
-so that the resources can be reassigned
+Set writeback encoders as possible clones for DSI encoders and vice
+versa.
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 17 ++++++++++++-----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h |  3 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  |  5 +++--
- 3 files changed, 17 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 32 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h |  2 ++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |  7 +++++--
+ 3 files changed, 39 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 7c0ab1cee057..5c9c317c9347 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -1351,19 +1351,26 @@ static int dpu_crtc_assign_resources(struct drm_crtc *crtc,
-  *
-  * Check if the changes in the object properties demand full mode set.
-  */
--int dpu_crtc_check_mode_changed(struct drm_crtc_state *crtc_state)
-+int dpu_crtc_check_mode_changed(struct drm_crtc_state *old_crtc_state,
-+				struct drm_crtc_state *new_crtc_state)
- {
- 	struct drm_encoder *drm_enc;
--	struct drm_crtc *crtc = crtc_state->crtc;
-+	struct drm_crtc *crtc = new_crtc_state->crtc;
-+	bool clone_mode_enabled = drm_crtc_in_clone_mode(old_crtc_state);
-+	bool clone_mode_requested = drm_crtc_in_clone_mode(new_crtc_state);
- 
- 	DRM_DEBUG_ATOMIC("%d\n", crtc->base.id);
- 
- 	/* there might be cases where encoder needs a modeset too */
--	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask) {
--		if (dpu_encoder_needs_modeset(drm_enc, crtc_state->state))
--			crtc_state->mode_changed = true;
-+	drm_for_each_encoder_mask(drm_enc, crtc->dev, new_crtc_state->encoder_mask) {
-+		if (dpu_encoder_needs_modeset(drm_enc, new_crtc_state->state))
-+			new_crtc_state->mode_changed = true;
- 	}
- 
-+	if ((clone_mode_requested && !clone_mode_enabled) ||
-+	    (!clone_mode_requested && clone_mode_enabled))
-+		new_crtc_state->mode_changed = true;
-+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 5b1dd74471d2..a61598710acd 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -2564,6 +2564,38 @@ static int dpu_encoder_virt_add_phys_encs(
  	return 0;
  }
  
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-index 51a3b5fc879a..94392b9b9245 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-@@ -239,7 +239,8 @@ static inline int dpu_crtc_frame_pending(struct drm_crtc *crtc)
- 	return crtc ? atomic_read(&to_dpu_crtc(crtc)->frame_pending) : -EINVAL;
- }
++/**
++ * dpu_encoder_get_clones - Calculate the possible_clones for DPU encoder
++ * @drm_enc:        DRM encoder pointer
++ * Returns:         possible_clones mask
++ */
++uint32_t dpu_encoder_get_clones(struct drm_encoder *drm_enc)
++{
++	struct drm_encoder *curr;
++	int type = drm_enc->encoder_type;
++	uint32_t clone_mask = drm_encoder_mask(drm_enc);
++
++	/*
++	 * Set writeback as possible clones of real-time DSI encoders and vice
++	 * versa
++	 *
++	 * Writeback encoders can't be clones of each other and DSI
++	 * encoders can't be clones of each other.
++	 *
++	 * TODO: Add DP encoders as valid possible clones for writeback encoders
++	 * (and vice versa) once concurrent writeback has been validated for DP
++	 */
++	drm_for_each_encoder(curr, drm_enc->dev) {
++		if ((type == DRM_MODE_ENCODER_VIRTUAL &&
++		    curr->encoder_type == DRM_MODE_ENCODER_DSI) ||
++		    (type == DRM_MODE_ENCODER_DSI &&
++		    curr->encoder_type == DRM_MODE_ENCODER_VIRTUAL))
++			clone_mask |= drm_encoder_mask(curr);
++	}
++
++	return clone_mask;
++}
++
+ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
+ 				 struct dpu_kms *dpu_kms,
+ 				 struct msm_display_info *disp_info)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+index 8503386bb503..ca1ca2e51d7e 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+@@ -60,6 +60,8 @@ enum dpu_intf_mode dpu_encoder_get_intf_mode(struct drm_encoder *encoder);
  
--int dpu_crtc_check_mode_changed(struct drm_crtc_state *crtc_state);
-+int dpu_crtc_check_mode_changed(struct drm_crtc_state *old_crtc_state,
-+				struct drm_crtc_state *new_crtc_state);
+ void dpu_encoder_virt_runtime_resume(struct drm_encoder *encoder);
  
- int dpu_crtc_vblank(struct drm_crtc *crtc, bool en);
- 
++uint32_t dpu_encoder_get_clones(struct drm_encoder *drm_enc);
++
+ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
+ 		int drm_enc_mode,
+ 		struct msm_display_info *disp_info);
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index c6b3b2e147b4..423af6f8251c 100644
+index 423af6f8251c..ec40405b27a1 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -449,11 +449,12 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
- static int dpu_kms_check_mode_changed(struct msm_kms *kms, struct drm_atomic_state *state)
- {
- 	struct drm_crtc_state *new_crtc_state;
-+	struct drm_crtc_state *old_crtc_state;
- 	struct drm_crtc *crtc;
- 	int i;
+@@ -2,7 +2,7 @@
+ /*
+  * Copyright (C) 2013 Red Hat
+  * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
+- * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+  *
+  * Author: Rob Clark <robdclark@gmail.com>
+  */
+@@ -824,8 +824,11 @@ static int _dpu_kms_drm_obj_init(struct dpu_kms *dpu_kms)
+ 		return ret;
  
--	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i)
--		dpu_crtc_check_mode_changed(new_crtc_state);
-+	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i)
-+		dpu_crtc_check_mode_changed(old_crtc_state, new_crtc_state);
+ 	num_encoders = 0;
+-	drm_for_each_encoder(encoder, dev)
++	drm_for_each_encoder(encoder, dev) {
+ 		num_encoders++;
++		if (catalog->cwb_count > 0)
++			encoder->possible_clones = dpu_encoder_get_clones(encoder);
++	}
  
- 	return 0;
- }
+ 	max_crtc_count = min(catalog->mixer_count, num_encoders);
+ 
 
 -- 
 2.48.1
