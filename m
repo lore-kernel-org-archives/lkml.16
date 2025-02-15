@@ -1,136 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC5328F1
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148374314B;
+	Sat, 15 Feb 2025 00:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739577636; cv=none; b=VjCmDqHCvI9NAyxXwoxM4cwLxnLX6WCmNdhXWCvCzgj5gMp9sN9cMAOTd4xa+UZt+ktvz9cLD7915b40BXx55wGucHL1CycGBG1DBAuDukpPlFMljXjvFTyvoEgay+7wOU3z4YFPS6sYs2dttB+UbfIhDIvw3okoyMWeb5ISQHw=
+	t=1739577787; cv=none; b=ZdwOQxKXR3f2Wg9u5wMNitAIgMdmfsuddlVy6/uY38zqB4f9Yz1a4V5ouggKLRVgGV0i2BglPnapwOlw8cIB5AIIC6FzGXpE4Hp1o2amYwIUwaiR6HgUlKWoa+BGh6jHQAuKMcIA/KoRwDVUP3PW7l4kuRRMoUWqmTbPYgcXVwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739577636; c=relaxed/simple;
-	bh=amuutJCuNDxyZJ7QgT7xRyCe6q1uiWlS8hBJVV0XIWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bUAIAQ23VF7OoankpahPDAzLSBZJi2dpV2lBnLrfilcD7wV1JHsphR0SAuxftqvlB+RFGz4BT5WkpIPkMN8ZkP66/09HGQyAnRNzQCfNrqnLtgctCJxXHONIi+mth6U4Av1Ws0Ty8nsPLfUiRvw1h/zAqBCWCx38IM8jRpaxwE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fRYzY/5r; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739577787; c=relaxed/simple;
+	bh=iW+MrykrbylejRiXBKBgkl6Powy5HIH+S5gFCuZLyVs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=L6zkvOScdglOGxPAnqTImojCmcS/pSXgk01cd9P0GnN4KGWJ/+tdnx2Sc7p//jl3KRueHl4d3MTF2AZvPE3O1GwK9Qj4w1NI4d3JMZwGsTWQPaoE9Ev2Z/Y3M5kYMH2xuu4tDJLxutga/sbNR4yoKggy6WxAotqYEEKMrPC89Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLWwr8Ak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fRYzY/5r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739577634; x=1771113634;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=amuutJCuNDxyZJ7QgT7xRyCe6q1uiWlS8hBJVV0XIWI=;
-  b=fRYzY/5rl+F9147tpvejdDtU7g4aklO7N+uGCqlt2fV2oCMGOcBaGPWz
-   2+MQvHgXWkPyte0Xj6mTJ9NyxbU+xKn/ETWU2khw7O9ZbSXcYsN/QkZRs
-   owt2UXq0NgJ6eeL6VluB6Fm5XxprEqqA4I4mzyFX0CN30IhT+CcIunQxy
-   H3IDiduvkGVffpZglgizThU0mie+dS8bNtsVqFPwhLxi5K9Mr0XXbjpLa
-   +RWEKuzAPJvi9DHGJ+czAdAnKQe/aUIfeY6yP0dyH1RwlgGPO5GWW8GME
-   ye+IgOJE6+QMAC5HRwI+p2pJH9SqK0As3EMdJWrRdRI0LeBohzzENWkjM
-   A==;
-X-CSE-ConnectionGUID: SwAV7vu4R9+522QWLErtsw==
-X-CSE-MsgGUID: s2Q23VUNT16R6CSlDYwcmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="39526550"
-X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="39526550"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 16:00:34 -0800
-X-CSE-ConnectionGUID: qvTrUmPaRKKDNmIluC0dnw==
-X-CSE-MsgGUID: q5BlMU0ITliDd0aybViZww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="113449214"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 14 Feb 2025 16:00:32 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tj5bi-001AIv-1A;
-	Sat, 15 Feb 2025 00:00:30 +0000
-Date: Sat, 15 Feb 2025 08:00:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: ld.lld: error: relocation R_RISCV_HI20 cannot be used against symbol
- 'errata_list'; recompile with -fPIC
-Message-ID: <202502150711.cW42YQaA-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLWwr8Ak"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D330C4CED1;
+	Sat, 15 Feb 2025 00:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739577785;
+	bh=iW+MrykrbylejRiXBKBgkl6Powy5HIH+S5gFCuZLyVs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TLWwr8Ak+yHpQXmV8oiHcRD+47G1BLf07aoQVkikjMA72aBAwkZJITIQ+jcFTdmfA
+	 /RG8icY28pYhn1QOZfTqROOQRSGpDzBXcFmSoFwYot7M53hHcvIcA/rDz69K/zZrp5
+	 JwcPtgYm1XadasqBmQmX74FLT2MklAB3gBJm00LECDippkJmOkWYugqNsRMgkyrnDk
+	 MLNoUpK58pPMdyKFtaKa4ZRo+lsth8/Vw6xuUtwXq21y+n3aO8FGy3IpCJEAGtQ2O4
+	 dlUaXL+pp4+qyIgAd0da8K3ZubyRqG0M6elI9PzrTaaYPIQMPG3RIXmZmtTTPE1g3t
+	 VE6naDRcodJyg==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 0/2] PCI: Avoid capability searches in save/restore state
+Date: Fri, 14 Feb 2025 18:02:59 -0600
+Message-Id: <20250215000301.175097-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Masahiro,
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-FYI, the error/warning still remains.
+Reduce the number of times we search config space for PCI capabilities when
+saving and restoring device state.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   04f41cbf03ec7221ab0b179e336f4c805ee55520
-commit: f79dc03fe68c79d388908182e68d702f7f1786bc kconfig: refactor choice value calculation
-date:   7 months ago
-config: riscv-randconfig-r054-20250214 (https://download.01.org/0day-ci/archive/20250215/202502150711.cW42YQaA-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250215/202502150711.cW42YQaA-lkp@intel.com/reproduce)
+Bjorn Helgaas (2):
+  PCI: Avoid pointless capability searches
+  PCI: Cache offset of Resizable BAR capability
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502150711.cW42YQaA-lkp@intel.com/
+ drivers/pci/pci.c       | 36 +++++++++++++++++++++---------------
+ drivers/pci/pci.h       |  1 +
+ drivers/pci/pcie/aspm.c | 15 ++++++++-------
+ drivers/pci/probe.c     |  1 +
+ include/linux/pci.h     |  1 +
+ 5 files changed, 32 insertions(+), 22 deletions(-)
 
-All errors (new ones prefixed by >>):
+v2 changes:
+  - Drop VC change that broke saving state (thanks, Ilpo)
 
->> ld.lld: error: relocation R_RISCV_HI20 cannot be used against symbol 'errata_list'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:93 (arch/riscv/errata/sifive/errata.c:93)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_LO12_I cannot be used against symbol 'errata_list'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:93 (arch/riscv/errata/sifive/errata.c:93)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_HI20 cannot be used against symbol 'errata_list'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:0 (arch/riscv/errata/sifive/errata.c:0)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_LO12_I cannot be used against symbol 'errata_list'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:0 (arch/riscv/errata/sifive/errata.c:0)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_HI20 cannot be used against symbol '.L.str.8'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:0 (arch/riscv/errata/sifive/errata.c:0)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_LO12_I cannot be used against symbol '.L.str.8'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:71 (arch/riscv/errata/sifive/errata.c:71)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_HI20 cannot be used against symbol '.L.str'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:99 (arch/riscv/errata/sifive/errata.c:99)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_LO12_I cannot be used against symbol '.L.str'; recompile with -fPIC
-   >>> defined in vmlinux.a(arch/riscv/errata/sifive/errata.o)
-   >>> referenced by errata.c:99 (arch/riscv/errata/sifive/errata.c:99)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_HI20 cannot be used against symbol 'text_mutex'; recompile with -fPIC
-   >>> defined in vmlinux.a(kernel/extable.o)
-   >>> referenced by errata.c:99 (arch/riscv/errata/sifive/errata.c:99)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
---
->> ld.lld: error: relocation R_RISCV_LO12_I cannot be used against symbol 'text_mutex'; recompile with -fPIC
-   >>> defined in vmlinux.a(kernel/extable.o)
-   >>> referenced by errata.c:99 (arch/riscv/errata/sifive/errata.c:99)
-   >>>               arch/riscv/errata/sifive/errata.o:(sifive_errata_patch_func) in archive vmlinux.a
+v1: https://lore.kernel.org/r/20250208050329.1092214-1-helgaas@kernel.org
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
