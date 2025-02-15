@@ -1,401 +1,332 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from mx08-00701402.pphosted.com (mx08-00701402.pphosted.com [143.55.150.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED2523CE;
-	Sat, 15 Feb 2025 14:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739628780; cv=none; b=PBKgNqgY6Mb5zizKKv9UbCgA9fTNZf8Z22s4vk14yiAQpRtJAlBdaROEFl1KyqRdV/894DO/iyOF5/zKu3FQ4gTWXlvoKp8mA1kdZc3wyOa44aCUAr8hYimrFeG89CYCVOm68NpsOIGaaL+nc296Kvz69DfulsPp1QbOsVgbQdA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739628780; c=relaxed/simple;
-	bh=U0xKFCEJrC+Mr4BS7xANqFJUU0XLRCKnekW93NrV92k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bn3Qww6tJtCoVEHgQH4YdgDjQTL2IxKJO8EJIqe5bzibWDWYrPvYch6dXWVqAZuTshzWnqgUVMDDar/dY+7N3AqUSOE5+VinL+PrdVt31RYC38LSc6IfRdWuMdJUyqWqgUb5Mb0ZLQKKTfwTggveaw6HUmvISL80sk08ulgVlN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=Xs87Nwkz; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9FD13DDAE;
+	Sat, 15 Feb 2025 14:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=143.55.150.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739629082; cv=fail; b=UO4RPW59CboZpR0m+2np4Q6F/UPohksw6dpLILR5wkh8Oi5GoIG3BRjxvZ7dvsPB6K3wxkCxOGafJqIyE3I2MnC2C6dAIGIx4p1GCJ4VkpxSakmxnDzJuwBbvGhUJLkEOF8m2BcSXUBYKHGKRbVHOqFc9FjRYK+4FWbFQDjzeY0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739629082; c=relaxed/simple;
+	bh=OtInwFM/k7jWWPcWX/X7c5BA7YgMbXc5m98/+syPpJw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KjTtjYH4Zlk+i3mfi1bYY5KEAdXzaW0ZW7nvn9uRssutfsriuBxcADYr6Rbzyqd/shr8U59sbqz/usSRA/RJxrf3e+ibgUNwGMqLQpBKsfpMeJj+MuoASShcAfpxYcrSAfe7yMJjhuuZXNqHuyNI34aVg66rYccc8Ijvas3bLXc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=liebherr.com; spf=pass smtp.mailfrom=liebherr.com; dkim=pass (1024-bit key) header.d=liebherr.com header.i=@liebherr.com header.b=gC2Fafqt; arc=fail smtp.client-ip=143.55.150.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=liebherr.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=liebherr.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="Xs87Nwkz"
-Received: from [10.0.0.200] (unknown [10.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id B23A41639E7;
-	Sat, 15 Feb 2025 15:12:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1739628768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3dmO342TrNpWXsF7gNwCYRAYy784U9uDerJyfnmnQJ4=;
-	b=Xs87NwkzfynHqyb+GEacuvtVFnNvD7IY7n+V1v/AKEXGsgGPAiHBUNwDncF9S30SnjAXyr
-	5rOmcevj3Plmn8CobL4C5jxCiGIHtpRJXS7sCTOBroTCGOJw0ORozo/ZAYkNPDMhWNJKck
-	Cdku8QeTFhrW/ITiLwvHN1glEs2sjgI=
-Message-ID: <1597453a-31fc-49eb-8b69-efeb8805c67a@ixit.cz>
-Date: Sat, 15 Feb 2025 15:12:46 +0100
+	dkim=pass (1024-bit key) header.d=liebherr.com header.i=@liebherr.com header.b="gC2Fafqt"
+Received: from pps.filterd (m0408744.ppops.net [127.0.0.1])
+	by mx08-00701402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51FAj3Kv011767;
+	Sat, 15 Feb 2025 12:31:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=liebherr.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=key1; bh=L9AXA
+	xZOK1ybDiFwHfEP6NHaFTCMvu6xDFr0oQ9/ceA=; b=gC2FafqtYCoRNQuoTOwTG
+	MyyrucWxo6gHbjlUt4VklN89n622EWKM5i9tD4p8hamsGBLsiSFhsZq9ALuc4vPr
+	yytXFyKx5tSnz6hhmTAgSM/ByWIpv2x6HBQqLptWHPcm/3DVTk6Ds2g0BNUK7sMX
+	6hKoxT2SwMaXvCntcYvmPo=
+Received: from eur02-db5-obe.outbound.protection.outlook.com (mail-db5eur02lp2112.outbound.protection.outlook.com [104.47.11.112])
+	by mx08-00701402.pphosted.com (PPS) with ESMTPS id 44ts8g015d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Feb 2025 12:31:34 +0100 (CET)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RV5qUG3ClMQ1JddEGP+9l0xsGlJZtRKvrxh6EqHx4MIh6KzBLWT4ZMfDZtp3bDCcbj7wPApMSollmM3OaJOWZFPQPbuPuPU7HlEs9nvrQ8JkyvfEVe/KuSk15oT/Tv+obmljhpKqSl8XoK3wb5BsXeHbmRQA6lQC/qs9a8/raDae8JS9fUxzCSmg8epN4v9XBYpL7hnxudwJ8LHBvI0SrtiVmVyolWs15s3GjF1qxwxlCbwrcBiJhunW6UTm1vxnDo2MaUTYD4QTFbWOgFgPG9H3rEgkMz+XeusHnKy6iCiH7/7GH8RxxYB9Y1S5wz4Udjb+ouzxwccKyROmuYdqdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=L9AXAxZOK1ybDiFwHfEP6NHaFTCMvu6xDFr0oQ9/ceA=;
+ b=YOandVRmdSS2ZTGHDvxmLiAIjyyd1xIAZkWlIMWWnMwN1VWH4UbyIepECyxR1p8+wpqyQ9gcPNYncxzLgapKAc9QOFnd4g+mDAxsLGb/9qsucmNsilO9JT7JRLMF8hcTExGgfNME3cwvLb7ocnRfxbLmmeGZRjoH9JD+HmczU4zo2OW9+sS6nJgDM+cYLz3dDhz6hFWzarWypho68+pt1bfvZK1N41yV+2EK3R8Fo5tpLvQNSvKENQd92TLj33hf36eKOLnwrXXlpHq/qYV7ZWzvo8w/m+elcJ7r5gA4VCNiy6gabtjoHSlOYgAZgObm92KdvGjTlPfhVtSb1ggsww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=liebherr.com; dmarc=pass action=none header.from=liebherr.com;
+ dkim=pass header.d=liebherr.com; arc=none
+Received: from DB8P192MB0838.EURP192.PROD.OUTLOOK.COM (2603:10a6:10:148::24)
+ by PR3P192MB0715.EURP192.PROD.OUTLOOK.COM (2603:10a6:102:41::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Sat, 15 Feb
+ 2025 11:31:29 +0000
+Received: from DB8P192MB0838.EURP192.PROD.OUTLOOK.COM
+ ([fe80::5952:3024:60c4:b090]) by DB8P192MB0838.EURP192.PROD.OUTLOOK.COM
+ ([fe80::5952:3024:60c4:b090%5]) with mapi id 15.20.8445.016; Sat, 15 Feb 2025
+ 11:31:29 +0000
+From: "Fedrau Dimitri (LED)" <Dimitri.Fedrau@liebherr.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        "davem@davemloft.net"
+	<davem@davemloft.net>
+CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        Andrew Lunn
+	<andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet
+	<edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+        Russell King
+	<linux@armlinux.org.uk>,
+        "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+        Christophe Leroy
+	<christophe.leroy@csgroup.eu>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit
+	<hkallweit1@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        =?iso-8859-1?Q?K=F6ry_Maincent?= <kory.maincent@bootlin.com>,
+        =?iso-8859-1?Q?Marek_Beh=FAn?= <kabel@kernel.org>,
+        Oleksij Rempel
+	<o.rempel@pengutronix.de>,
+        =?iso-8859-1?Q?Nicol=F2_Veronese?=
+	<nicveronese@gmail.com>,
+        Simon Horman <horms@kernel.org>,
+        "mwojtas@chromium.org" <mwojtas@chromium.org>,
+        Antoine Tenart
+	<atenart@kernel.org>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Romain Gantois
+	<romain.gantois@bootlin.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Sean
+ Anderson <seanga2@gmail.com>,
+        "dima.fedrau@gmail.com" <dima.fedrau@gmail.com>
+Subject: AW: [PATCH net-next v4 04/15] net: phy: dp83822: Add support for
+ phy_port representation
+Thread-Topic: [PATCH net-next v4 04/15] net: phy: dp83822: Add support for
+ phy_port representation
+Thread-Index: AQHbfgBURKBndR7rdkWvdPBEKVm8oLNIN45w
+Date: Sat, 15 Feb 2025 11:31:28 +0000
+Message-ID:
+ <DB8P192MB08386B9F0FB342EB7B0FA785F3F92@DB8P192MB0838.EURP192.PROD.OUTLOOK.COM>
+References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
+ <20250213101606.1154014-5-maxime.chevallier@bootlin.com>
+In-Reply-To: <20250213101606.1154014-5-maxime.chevallier@bootlin.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB8P192MB0838:EE_|PR3P192MB0715:EE_
+x-ms-office365-filtering-correlation-id: 2e8a7833-5029-427a-b714-08dd4db44a24
+x-pp-secret: l9btit3ms7a.tlaangawwjp1g9smhjqpmsmlcnax
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?uwlBx+NMhSwPED7QGWX9kW3RowbNUZDWgvEnfQ/ulDon1S5wyHQb2J2BYE?=
+ =?iso-8859-1?Q?vEiizIPj1mKZmpnqCbHJuCjvzpM2zfjbYNvwKnmfuzXBb9XKOe7TtdpP7B?=
+ =?iso-8859-1?Q?gBVIZo+nvoZsckn7Pfu/ozaQtE0tP4xtY+a4EjcobVZqca1FACADfW601K?=
+ =?iso-8859-1?Q?wdW2LR5JLeizb1wHICwMaH0uERbpRxFh2k3ZCqpCf3cs7KtJbXv/47ba5o?=
+ =?iso-8859-1?Q?9xg7FaZywQtcGgt2YIj0Qyg63afxd9P5qVeNV/0LrgTvbdIO6wB4hEf/WJ?=
+ =?iso-8859-1?Q?oWpbG0pPm3uYufHGEWTGusFZZFcnM7IaF0D2zHgm1s5pvv0BhKeHKRFezG?=
+ =?iso-8859-1?Q?lgLlB721ob6UOIKLw9Hvy6mS5dgEIkSNmrgrlFE5B61ZCtuxFDaKLZBVtk?=
+ =?iso-8859-1?Q?F4im0VMKr0yKeUWp99QoKdD7fiHq63+5dhh5HA9vJIrTqZZ/k+4Ni49wGo?=
+ =?iso-8859-1?Q?fIDCaVawSkyV/113VkyDNgRkAaNDkUKWr5CemTpPrxz2dImCX8SLTGQmA3?=
+ =?iso-8859-1?Q?TQpcNvx3tO1s0nCi7BlEjZgqVtWOMP37P0diyGAda0ThdS4bB2rqk0F9zR?=
+ =?iso-8859-1?Q?8YyfLgu0ipbVuxBnCX7enmD7FjGMKJWwdeIJkOMxlGDmiS1ubvlagCgdK3?=
+ =?iso-8859-1?Q?NJxGJuMr87CnoJC/fypEu69UFPOHBwMQO4stnyQE6F7TM5tyZnyoXB/jNq?=
+ =?iso-8859-1?Q?u3Z/6k9wbH1PsI3KUhP82BFlgNXZbzTaQ3AKJlBz41e3jSCeZmW4dc3LTf?=
+ =?iso-8859-1?Q?FCngQ9RDZq4MAQAM7S0PpGStir4d65o1GqYJ/CHvdb1OQnBpWr3GQkzfPZ?=
+ =?iso-8859-1?Q?43JwB6wz0F+yBwql2bxDQcub18IOaqrq9hQqrVB6xCqTM0nElhKEjGY55A?=
+ =?iso-8859-1?Q?2uN4xHJTMvxvHsgtxhT6x9gaoIchJSGXSrk9o3Xe1eYcxp+oMJKiZMcyRD?=
+ =?iso-8859-1?Q?XHFk4YNTOLa5MHkUn8MtNrM0INRP6QHAN7V9uH968bgbokrzqgt3iDauNe?=
+ =?iso-8859-1?Q?s2lvy7Zr42OLxD7gzfd+9oKiCGpVxF6oDOTY8OhksnR2j/Om14cZDbdOJo?=
+ =?iso-8859-1?Q?ZaNHREwxMCWZSGD9NduXFAlFTD7FC3tqJ1CRa2eBI7+Y1jCDzVBMvsY2Ba?=
+ =?iso-8859-1?Q?I8PZirji3QrZKVZz+NoWrVTUJadKfnJ6YRsypWebhpmjtjT0lOkfysO8r6?=
+ =?iso-8859-1?Q?YZ6JVbapYD9F1/ZBfwrzHMmkkIxHzOvuR/3JLIp67uK1hz49V5s9RR+Goo?=
+ =?iso-8859-1?Q?50Qu7Hn8qU8r/NU9/NATlxqyzE/tGc+svKrj6crIZS/Jn7Fv7ES9m0Vdz9?=
+ =?iso-8859-1?Q?23rlwQd4LhWxmnwqhi93HJ9LOz/gLCRN5zaJ1fXyzaN4mqTkmbSdoXtfgw?=
+ =?iso-8859-1?Q?EOflDTqikzxOQD7FREbnbUXL4gQ8LiIGLCO9N2fEfpvsw4OfhivBoTIbEH?=
+ =?iso-8859-1?Q?+9TIn5wVEwAZFYhZzPl9ONcIdrLNQj0HlOtPq8omRiIzkZc7DbURJvSSVl?=
+ =?iso-8859-1?Q?/bJ1zXOBACUQdcX6cbI4qZ?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8P192MB0838.EURP192.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?3ftY0xkQsaORUXPz/gcQ0AZfS6FnVB5t2J0eelHeUKwK05yfnEAhtECgMd?=
+ =?iso-8859-1?Q?gHpbpver81jmS1Aza/eyjfbqA2/zmq4MwSSDEwMo1gefFAvbRMmefyjiSU?=
+ =?iso-8859-1?Q?zaoJlK1hyg/RAAviLKZyRhz+IPxzdGbkIGUostMCEqIblDb+iHG//5ffHB?=
+ =?iso-8859-1?Q?eEm4UdWSrlDko8/fwhu5jPJSejhldDGyw8QiHG2fvBCiqggtnMtGmpObxS?=
+ =?iso-8859-1?Q?py+ElXqn0v2nsv/06Pza5iq7BR51v9cf22APohy5QuMWEsbvlc+2SIyZQ4?=
+ =?iso-8859-1?Q?OK9cWy71JaUMX2OumqVjlGB3fOajnRHI3jP8S+Yg0AZ/5SATEMBx8IFcvp?=
+ =?iso-8859-1?Q?URn6/oerRa4SupDvgzI+/6bZgHDRFqfbXw89EpVnafWGSAeEu6yEvAdGaW?=
+ =?iso-8859-1?Q?+REg5TnVLB+iBMYiWLgvgmK07Hn4SpGgC4p6PB7QdGr+2nb1yUrTe0DLz7?=
+ =?iso-8859-1?Q?QRYEn3ddyB4KEnJmFnbb1Cul4gUuLXVU1N1XwYx4C33207lk5zSybCDBg8?=
+ =?iso-8859-1?Q?453XaK6ik23uTrY16LPpZ641Lbe4mJCux05DO2Hoy3iC4PLyohCfFE9z7a?=
+ =?iso-8859-1?Q?wTFkYgRWJX+J1zfxIgc/TKaxOld136FNCdNSrr/sV1o+bmBDsT2lnYhDeL?=
+ =?iso-8859-1?Q?DHyuq/FZM3Qvb6SBIPi2d8yV2eyEzqJ9uDWMsL9cTPMcZ3+fehw859tv6Z?=
+ =?iso-8859-1?Q?fho8nfwdWFL4RTs9xY3lsELirS9O/VoQcNqQBVnYq3IYRWYew/U6wpabVT?=
+ =?iso-8859-1?Q?7Dpz2628pYpygK/ByIE75dZMvlhVZcnQQE6RVH63W2nLi+9UNkfsktL9DI?=
+ =?iso-8859-1?Q?ZGNH/eSjlbiqR4qhB3dMkSt082HbmbB155NLVWbM3TYSRQ31gf/fjHIwij?=
+ =?iso-8859-1?Q?aKA4p6ddAz0IsJNXvu+2tgLj9owQ6+uxr0Gb2v8gLqM/LwCk4A5ghqHyPS?=
+ =?iso-8859-1?Q?X761+IeXObgTRKTcTojS7l1Km7InGp0LAMsw4vOTd49cCyEsI2Ny1azjqw?=
+ =?iso-8859-1?Q?hrAkAnFe18e2rCVbnVWciAKQ/Emczzz4fedRam5XL7Hhi6ebW3ZUo+KX6L?=
+ =?iso-8859-1?Q?a7udpAXNl44Ee3ZKEIUZPx4soBNPWGLiCR/PYTizF63lUfZGcPm9W9gC0A?=
+ =?iso-8859-1?Q?UQglslU6iehdj7vAfVRkt89dgC0WiOo60ySvUFKZ1OYDsojbb/wzsmyqw0?=
+ =?iso-8859-1?Q?iCnuKwJeNUllcuZX7mL8h4NABzbwDDbkCOk/5wa+T7fqrW6ViS02w4o3NC?=
+ =?iso-8859-1?Q?vXO2xrcEumTD5orOahPQcNSI1RRX8cnoGwjyCnCo235sha62oQKUqzdDDw?=
+ =?iso-8859-1?Q?DWXG5bZcGC2hpsB0lBVDlhnUXwrmhHKn/dmPNuExJ5SGz8wf/ffUkbwv/Q?=
+ =?iso-8859-1?Q?JkdRq2cx6vs73elTPawPltFC1Wu9P216JSM3Kcxw/S+94uHD8X98oeR98H?=
+ =?iso-8859-1?Q?5TEywua+uNHTgs4GPr67MIB0YjneSMR7JmBcA3ztWXhG4x/baltuGY1A7T?=
+ =?iso-8859-1?Q?mROdgArn2jjLEJ0t6oJrOf8HZUvb/Q6hIsjK2HeGDMEpboznhOwaGE2R/x?=
+ =?iso-8859-1?Q?lBm4ZvsaGA4sFr//Cd+a1OXQ8mnK9HdvpiYVGzqcp1O8qOLwoNOCmruNZZ?=
+ =?iso-8859-1?Q?1LNjMenUXstw494QY8FwQYqMRTroc7qVez/9GpXIcBz2MbbVYs4XwDdQ?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 2/3] iio: light: Add support for AL3000a illuminance
- sensor
-To: Svyatoslav Ryhel <clamor95@gmail.com>, Jonathan Cameron
- <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Matti Vaittinen <mazziesaccount@gmail.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Emil Gedenryd <emil.gedenryd@axis.com>,
- Arthur Becker <arthur.becker@sentec.com>,
- Mudit Sharma <muditsharma.info@gmail.com>,
- Per-Daniel Olsson <perdaniel.olsson@axis.com>,
- Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
- Ivan Orlov <ivan.orlov0322@gmail.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20250215103159.106343-1-clamor95@gmail.com>
- <20250215103159.106343-3-clamor95@gmail.com>
-Content-Language: en-US
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- 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
-In-Reply-To: <20250215103159.106343-3-clamor95@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	6XjSJXRSYkE2tlyN0KOPR6I/FMIJFPM3qb5BphlRr04B58YVp7PRyrseF+dzDDdTsLRfCUs17Z7Xyg/v7QUWAkQJPHpsN8I3wHM6pxkTbTgvVoOUKzrSG5g3BiQTFWLpFBWqQk4LHMYSp6fC3qFsbse+xW/JYZ36GrhgmT3+LBcfudVXXwSb+91waT29cytrL7kWuWuId9gLT5JmSOPvoD/gJ/hOa3I7huOpS4ERMiBlY1ecndBV5KJ6tebpTLixMFhcSjIaJEKGZSRDpWH1cA1730QvXhPKc4vhb716xt70YQrRS2SbkWaRCQSC8b0bYPRPxypj7+C7KqjLxyJuj0cGxpEZ/AHJm7Bw8NI3LWZHfXj1tkNz0HSoSo0/tINUvGzXEJ+nM2KQkwL+gVyjMmW4h6LpOAJTfEndLhn54lTGLR7wtD4lAnbPxjmr2LvFH34JU3KQxjOrr3LurQhW9tFDax24gSHfBv+shMyQvDOOLQx/PxLt+humALFL4x/v4nWB5C1EFktrykTYXoz0R/bD7zQndTyR+0c5AHYVXhg3D3MrCcWH12wkQE6uPxGTKxT8Xb5oyNB+ytcLCpz35SahFBXHc7vKrWdTmuS44DuYA4ktE4YcAWXVJ2dJ6gWwqCeleu2h73ZHlYEUzGXKiA==
+X-OriginatorOrg: liebherr.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8P192MB0838.EURP192.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e8a7833-5029-427a-b714-08dd4db44a24
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Feb 2025 11:31:28.9746
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3336d6b0-b132-47ee-a49b-3ab470a5336e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nsgKXQdqKRiomcM/HF0Uzj2jF3rN0cptX9D6p7Vv7xvrwJCbEtoCoQA7ic+9SwDmjWMMc0Pjpk16Bd7r+d3ykcQUGOZjp2KKDCgPp/8GQqc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3P192MB0715
+X-Proofpoint-GUID: RC4qKJz_h63CJq-LSudNXfCTaMSLkIi1
+X-Proofpoint-ORIG-GUID: RC4qKJz_h63CJq-LSudNXfCTaMSLkIi1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ mlxscore=0 clxscore=1011 malwarescore=0 adultscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.21.0-2501170000 definitions=main-2502150102
 
+Hi Maxime,
 
+> -----Urspr=FCngliche Nachricht-----
+> Von: Maxime Chevallier <maxime.chevallier@bootlin.com>=20
+> Gesendet: Donnerstag, 13. Februar 2025 11:16
+>
+[...]
+> =20
+> @@ -781,17 +782,6 @@ static int dp83822_of_init(struct phy_device *phydev=
+)
+>  	struct device *dev =3D &phydev->mdio.dev;
+>  	const char *of_val;
+> =20
+> -	/* Signal detection for the PHY is only enabled if the FX_EN and the
+> -	 * SD_EN pins are strapped. Signal detection can only enabled if FX_EN
+> -	 * is strapped otherwise signal detection is disabled for the PHY.
+> -	 */
+Does it make sense to keep the comment ?
 
-On 15/02/2025 11:31, Svyatoslav Ryhel wrote:
-> AL3000a is a simple I2C-based ambient light sensor, which is
-> closely related to AL3010 and AL3320a, but has significantly
-> different way of processing data generated by the sensor.
-> 
-> Tested-by: Robert Eckelmann <longnoserob@gmail.com>
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> ---
->   drivers/iio/light/Kconfig   |  10 ++
->   drivers/iio/light/Makefile  |   1 +
->   drivers/iio/light/al3000a.c | 221 ++++++++++++++++++++++++++++++++++++
->   3 files changed, 232 insertions(+)
->   create mode 100644 drivers/iio/light/al3000a.c
-> 
-> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-> index e34e551eef3e..142f7f7ef0ec 100644
-> --- a/drivers/iio/light/Kconfig
-> +++ b/drivers/iio/light/Kconfig
-> @@ -43,6 +43,16 @@ config ADUX1020
->   	 To compile this driver as a module, choose M here: the
->   	 module will be called adux1020.
->   
-> +config AL3000A
-> +	tristate "AL3000a ambient light sensor"
-> +	depends on I2C
-> +	help
-> +	  Say Y here if you want to build a driver for the Dyna Image AL3000a
-> +	  ambient light sensor.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called al3000a.
-> +
->   config AL3010
->   	tristate "AL3010 ambient light sensor"
->   	depends on I2C
-> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-> index 11a4041b918a..17030a4cc340 100644
-> --- a/drivers/iio/light/Makefile
-> +++ b/drivers/iio/light/Makefile
-> @@ -7,6 +7,7 @@
->   obj-$(CONFIG_ACPI_ALS)		+= acpi-als.o
->   obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
->   obj-$(CONFIG_ADUX1020)		+= adux1020.o
-> +obj-$(CONFIG_AL3000A)		+= al3000a.o
->   obj-$(CONFIG_AL3010)		+= al3010.o
->   obj-$(CONFIG_AL3320A)		+= al3320a.o
->   obj-$(CONFIG_APDS9300)		+= apds9300.o
-> diff --git a/drivers/iio/light/al3000a.c b/drivers/iio/light/al3000a.c
-> new file mode 100644
-> index 000000000000..58d4336dd081
-> --- /dev/null
-> +++ b/drivers/iio/light/al3000a.c
-> @@ -0,0 +1,221 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <linux/array_size.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/pm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/types.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +#define AL3000A_DRV_NAME		"al3000a"
-> +#define AL3000A_REG_SYSTEM		0x00
-> +#define AL3000A_REG_DATA		0x05
-> +
-> +#define AL3000A_CONFIG_ENABLE		0x00
-> +#define AL3000A_CONFIG_DISABLE		0x0b
-> +#define AL3000A_CONFIG_RESET		0x0f
-> +#define AL3000A_GAIN_MASK		GENMASK(5, 0)
-> +
-> +/*
-> + * This are pre-calculated lux values based on possible output of sensor
-> + * (range 0x00 - 0x3F)
-> + */
-> +static const u32 lux_table[] = {
-> +	1, 1, 1, 2, 2, 2, 3, 4,					/* 0 - 7 */
-> +	4, 5, 6, 7, 9, 11, 13, 16,				/* 8 - 15 */
-> +	19, 22, 27, 32, 39, 46, 56, 67,				/* 16 - 23 */
-> +	80, 96, 116, 139, 167, 200, 240, 289,			/* 24 - 31 */
-> +	347, 416, 499, 600, 720, 864, 1037, 1245,		/* 32 - 39 */
-> +	1495, 1795, 2155, 2587, 3105, 3728, 4475, 5373,		/* 40 - 47 */
-> +	6450, 7743, 9296, 11160, 13397, 16084, 19309, 23180,	/* 48 - 55 */
-> +	27828, 33408, 40107, 48148, 57803, 69393, 83306, 100000 /* 56 - 63 */
-> +};
-> +
-> +static const struct regmap_config al3000a_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = AL3000A_REG_DATA,
-> +};
-> +
-> +struct al3000a_data {
-> +	struct regmap *regmap;
-> +	struct regulator *vdd_supply;
-> +};
-> +
-> +static const struct iio_chan_spec al3000a_channels[] = {
-> +	{
-> +		.type = IIO_LIGHT,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_SCALE),
-> +	},
-> +};
-> +
-> +static int al3000a_set_pwr(struct al3000a_data *data, bool pwr)
+> -	if (dp83822->fx_enabled && dp83822->fx_sd_enable)
+> -		dp83822->fx_signal_det_low =3D device_property_present(dev,
+> -								     "ti,link-loss-low");
+> -	if (!dp83822->fx_enabled)
+> -		dp83822->fx_enabled =3D device_property_present(dev,
+> -							      "ti,fiber-mode");
+> -
+>  	if (!device_property_read_string(dev, "ti,gpio2-clk-out", &of_val)) {
+>  		if (strcmp(of_val, "mac-if") =3D=3D 0) {
+>  			dp83822->gpio2_clk_out =3D DP83822_CLK_SRC_MAC_IF;
+> @@ -884,6 +874,43 @@ static int dp83822_read_straps(struct phy_device *ph=
+ydev)
+>  	return 0;
+>  }
+> =20
+> +static int dp83822_attach_port(struct phy_device *phydev, struct phy_por=
+t *port)
 > +{
-> +	struct device *dev = regmap_get_device(data->regmap);
-> +	u8 val = pwr ? AL3000A_CONFIG_ENABLE : AL3000A_CONFIG_DISABLE;
+> +	struct dp83822_private *dp83822 =3D phydev->priv;
 > +	int ret;
 > +
-> +	if (pwr) {
-> +		ret = regulator_enable(data->vdd_supply);
-> +		if (ret < 0) {
-> +			dev_err(dev, "failed to enable vdd power supply\n");
+> +	if (port->mediums) {
+> +		if (phy_port_is_fiber(port) ||
+> +		    port->mediums & BIT(ETHTOOL_LINK_MEDIUM_BASEX))
+> +			dp83822->fx_enabled =3D true;
+> +	} else {
+> +		ret =3D dp83822_read_straps(phydev);
+> +		if (ret)
 > +			return ret;
-> +		}
-> +	}
 > +
-> +	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, val);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to write system register\n");
-> +		return ret;
-> +	}
+> +#ifdef CONFIG_OF_MDIO
+> +		if (dp83822->fx_enabled && dp83822->fx_sd_enable)
+> +			dp83822->fx_signal_det_low =3D
+> +				device_property_present(dev, "ti,link-loss-low");
+> +		if (!dp83822->fx_enabled)
+> +			dp83822->fx_enabled =3D
+> +				device_property_present(dev, "ti,fiber-mode");
+> +#endif
+
+I think this is to make it backwards compatible to the dp83822 bindings,
+is it worth mentioning this in a comment ?
+
 > +
-> +	if (!pwr) {
-> +		ret = regulator_disable(data->vdd_supply);
-> +		if (ret < 0) {
-> +			dev_err(dev, "failed to disable vdd power supply\n");
-> +			return ret;
+> +		if (dp83822->fx_enabled) {
+> +			port->lanes =3D 1;
+> +			port->mediums =3D BIT(ETHTOOL_LINK_MEDIUM_BASEF) |
+> +					BIT(ETHTOOL_LINK_MEDIUM_BASEX);
+> +		} else {
+> +			/* This PHY can only to 100BaseTX max, so on 2 lanes */
+> +			port->lanes =3D 2;
+> +			port->mediums =3D BIT(ETHTOOL_LINK_MEDIUM_BASET);
 > +		}
 > +	}
 > +
 > +	return 0;
 > +}
 > +
-> +static void al3000a_set_pwr_off(void *_data)
-> +{
-> +	struct al3000a_data *data = _data;
-> +
-> +	al3000a_set_pwr(data, false);
-> +}
-> +
-> +static int al3000a_init(struct al3000a_data *data)
-> +{
-> +	int ret;
-> +
-> +	ret = al3000a_set_pwr(data, true);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, AL3000A_CONFIG_RESET);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, AL3000A_CONFIG_ENABLE);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int al3000a_read_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan, int *val,
-> +			    int *val2, long mask)
-> +{
-> +	struct al3000a_data *data = iio_priv(indio_dev);
-> +	int ret, gain;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = regmap_read(data->regmap, AL3000A_REG_DATA, &gain);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		*val = lux_table[gain & AL3000A_GAIN_MASK];
+>  static int dp8382x_probe(struct phy_device *phydev)
+>  {
+>  	struct dp83822_private *dp83822;
+> @@ -900,25 +927,13 @@ static int dp8382x_probe(struct phy_device *phydev)
+> =20
+>  static int dp83822_probe(struct phy_device *phydev)
+>  {
+> -	struct dp83822_private *dp83822;
+>  	int ret;
+> =20
+>  	ret =3D dp8382x_probe(phydev);
+>  	if (ret)
+>  		return ret;
+> =20
+> -	dp83822 =3D phydev->priv;
+> -
+> -	ret =3D dp83822_read_straps(phydev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret =3D dp83822_of_init(phydev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (dp83822->fx_enabled)
+> -		phydev->port =3D PORT_FIBRE;
+> +	dp83822_of_init(phydev);
 
-Why did you chosen to do post-processing in the RAW channel instead 
-doing it in INFO_SCALE (same as al3010 does)?
+Keep the check of the return value.
 
-Except this, LGTM.
+> =20
+>  	return 0;
+>  }
+> @@ -1104,6 +1119,7 @@ static int dp83822_led_hw_control_get(struct phy_de=
+vice *phydev, u8 index,
+>  		.led_hw_is_supported =3D dp83822_led_hw_is_supported,	\
+>  		.led_hw_control_set =3D dp83822_led_hw_control_set,	\
+>  		.led_hw_control_get =3D dp83822_led_hw_control_get,	\
+> +		.attach_port =3D dp83822_attach_port		\
+>  	}
+> =20
+>  #define DP83825_PHY_DRIVER(_id, _name)				\
+> --=20
+> 2.48.1
 
-Documentation and DT patch:
-
-Reviewed-by: David Heidelberg <david@ixit.cz>
-> +
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val = 1;
-> +
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info al3000a_info = {
-> +	.read_raw	= al3000a_read_raw,
-> +};
-> +
-> +static int al3000a_probe(struct i2c_client *client)
-> +{
-> +	struct al3000a_data *data;
-> +	struct device *dev = &client->dev;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +
-> +	data->regmap = devm_regmap_init_i2c(client, &al3000a_regmap_config);
-> +	if (IS_ERR(data->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(data->regmap),
-> +				     "cannot allocate regmap\n");
-> +
-> +	data->vdd_supply = devm_regulator_get(dev, "vdd");
-> +	if (IS_ERR(data->vdd_supply))
-> +		return dev_err_probe(dev, PTR_ERR(data->vdd_supply),
-> +				     "failed to get vdd regulator\n");
-> +
-> +	indio_dev->info = &al3000a_info;
-> +	indio_dev->name = AL3000A_DRV_NAME;
-> +	indio_dev->channels = al3000a_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(al3000a_channels);
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	ret = al3000a_init(data);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "failed to init ALS\n");
-> +
-> +	ret = devm_add_action_or_reset(dev, al3000a_set_pwr_off, data);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "failed to add action\n");
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +static int al3000a_suspend(struct device *dev)
-> +{
-> +	struct al3000a_data *data = iio_priv(dev_get_drvdata(dev));
-> +
-> +	return al3000a_set_pwr(data, false);
-> +}
-> +
-> +static int al3000a_resume(struct device *dev)
-> +{
-> +	struct al3000a_data *data = iio_priv(dev_get_drvdata(dev));
-> +
-> +	return al3000a_set_pwr(data, true);
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(al3000a_pm_ops, al3000a_suspend, al3000a_resume);
-> +
-> +static const struct of_device_id al3000a_of_match[] = {
-> +	{ .compatible = "dynaimage,al3000a" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, al3000a_of_match);
-> +
-> +static struct i2c_driver al3000a_driver = {
-> +	.driver = {
-> +		.name = AL3000A_DRV_NAME,
-> +		.of_match_table = al3000a_of_match,
-> +		.pm = pm_sleep_ptr(&al3000a_pm_ops),
-> +	},
-> +	.probe = al3000a_probe,
-> +};
-> +module_i2c_driver(al3000a_driver);
-> +
-> +MODULE_AUTHOR("Svyatolsav Ryhel <clamor95@gmail.com>");
-> +MODULE_DESCRIPTION("al3000a Ambient Light Sensor driver");
-> +MODULE_LICENSE("GPL");
-
--- 
-David Heidelberg
-
+Best regards,
+Dimitri Fedrau
