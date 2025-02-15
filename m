@@ -1,121 +1,98 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB7CDDA8
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 02:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559F0DDA8;
+	Sat, 15 Feb 2025 02:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739585350; cv=none; b=fexkHvEhA3hu5EkwuiGdmXDNse9FdtnEzjFQSdgZc2YXGW4QeVRuOqkKMRAscO0uiV+uxJBYhPCv9u+vmurtmsYp5q26+12rZZsaWYVcWhHUfAKemPGFbCchUKq+c6bveH67CXKdPXu5glUUl5zZuyMRh959+CuRh8EtUwcCfk8=
+	t=1739585463; cv=none; b=NuwzVm/yWmR2Gy3vp2JzGIPuSfdZMWtcZY/5vHCE6KWfG9tC9rpQgKzTxg2JqZ75xhD7871zzcR+9rLR2/zZLMQpXILV1nuKRGj1yUEgVsM2l86AqrtzuFcNGYk5BvUHVoyG7czZD39SpQuF8YpxxsQfz913A3oDoPT+J0GHTwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739585350; c=relaxed/simple;
-	bh=E4OYdfaIiYC8Qjp1Y6DzTMvKsgVQ7c7a1Hru7VLrKWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TaF0s6WYibt4OqvQOrlY5Nz4JZs5NpniH37evBV8igJzJGevxF/n7svWNH3AlLqLV/2P5nrZXlPUIJo4PQp8KegemMMBxHIJVlhOtGdUEyjmoIsATIVOVl3cGQp+nw+OV7RQI4ttfNvLHwNhrg0jS/My1KCZYN3wuAfUZdeu1N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W7aDMuB1; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739585463; c=relaxed/simple;
+	bh=F5KisoC8Tthb+v772aLV0rGOTT3v7PraAXuSa0ZJRA4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Bdn58YFMg5K4w/3HFQNX9VJn8rMNXHAlUFS2fDIfTg7/QlMjRUFT7fvRg52aTYWopBarLdfF8rXe+l4zJm0LGtIyWd4eQwgmzvaYmolJtw9QKX3rfIebHY7loSCdTiq04Mrh5yJrmVAgRpESDxcOYVrw9o+DFxlVuEtFDbUU14g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MVGqCEVf; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W7aDMuB1"
-Date: Sat, 15 Feb 2025 02:08:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739585346;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xo2P5E0/M5KD94XnehsexSIOx+TwWuT6jmlBnTmKr1U=;
-	b=W7aDMuB1A2dThwnDfWQmN/GuOK5BptsezXaBoE3Sths+AlpeoMgxTO8F/FVWJ5jKkCGS9D
-	nifQjL5HdpIVWVXzjPBRSHuuxibZgglj2rNZQTZ1ISRJpDQkBygg3/DbVgsClFgnTiDJVI
-	HtUpw2eZphXN1fG7hYfobPnWAi9sWgY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Rik van Riel <riel@surriel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de,
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
-	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
-	Manali Shukla <Manali.Shukla@amd.com>
-Subject: Re: [PATCH v11 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-Message-ID: <Z6_3O75TzANMFrKN@google.com>
-References: <20250213161423.449435-1-riel@surriel.com>
- <20250213161423.449435-7-riel@surriel.com>
- <ab55a809-e0d2-4364-84ce-917a40ee299a@intel.com>
- <20250214194013.GA2198@noisy.programming.kicks-ass.net>
- <c42c314c-3c1b-4e4a-803a-ecf31685d4cc@intel.com>
- <3e26626aa1c01aaa5d1e7b42d3ffbd632c3264fb.camel@surriel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVGqCEVf"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22104c4de96so4775635ad.3;
+        Fri, 14 Feb 2025 18:11:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739585461; x=1740190261; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cgsra6bFpPQ7HN+6ev8KDhCx7x/FZrXI1rWFFA2/rG8=;
+        b=MVGqCEVfuwcPscXGegdx9V8OhA2BkSDgfxU8bqp1YqyBKBSryljPdI6ZlQMTTb7zUG
+         hbPdxfLELjT+f2y/Pi0EtecAsW9X8RENdR9joPuKdPmv3YUQhinm1vKO7Ziep2j28d/Q
+         Tr/vZHlayct7LxspaFKfHAAoPpwF6zi4ohM1srjlSGsVT3gS19sbvOhU5eBM8TPUFFqg
+         dn1m4ZT4UqMBU12WvDbvqH3IdDwMSVFRFLRvf4F2gDFQhM96m7Y9EMWKYsfwhPSgbv8j
+         czaR7eQCgL9k0Dzq08KdQ52ct8rBQtL0coa5c+yRPBYP8IvQDIJ+bYsjsFYCwMjyG8qb
+         fTGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739585461; x=1740190261;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cgsra6bFpPQ7HN+6ev8KDhCx7x/FZrXI1rWFFA2/rG8=;
+        b=TtcjFDAolVdVzovJbnqOx0iIjXSkATIfWyMADfbpUVgurhIyaPeDSiQliUp/MR2DNS
+         ZV3WGfhvGQPYbM0u4lGUcliCY7wKXJhivOteaIUQweQdEEHnUJvnTjVhxt9AhH7XWkMW
+         BUIiUFXQ88Jz0OctaDeuB6tDtM+uolpTGya4WsEa40Hv7jqO05+/feMDZKgb9z/JPIRT
+         4/42Fd34ASAdQE6DIC9VuqWmPNlp9heiOBWDVbuBbKsEje4XOhv+z/XsoLIFbf5fUg0J
+         bkr2siXWoZt7eelcYmCn2gA4nru44yHI6AWz/i0tVz7WQIs6Pzg51J+9Tl4WWcYX2mp+
+         FrfA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Ch8aIFmPcobWOHrO1LY2DI1fqhoFWrj1CNkEgIDjQO9Ch20s/h6O+PBvKq/8bgnExdlZ5EYzCAKT@vger.kernel.org, AJvYcCX4BvIeIleCFN1Z4tC0WMD1ZjwhDSSSCE2m5y3AU//CJq8LyqOC4+zvm5G2Gkv0cLhsG1or4/egZyamnTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFx9FAR5XXHcQxkoHx+G+qeb7CjsVQiyXY9myeia2GmuDNLjRv
+	yK20x/xHmdNfxxBc6T9XPgN4la3rssRIylpvNgFXec1RzDK0zcy8
+X-Gm-Gg: ASbGncvT4909uS+Q6pAdjsXQKsw0cCF+pG655AV15iWrj8Si+QIlJG5TqB8cKVhkayq
+	Z6K/Jmr5hWvBy1Jq4e03/ePjvfMJGVLrMSgqIxePY0Ro4GUfvPBDDMmgGhET5BB+g1Q+khpQci+
+	t+G8dQ6NWRCC8KFBH1VyTYumC9ifvvIwiRTIU600qVVVN7HaxCeduVKjhtRpByNLYooCt1L1oaI
+	oBoh/BZjGyL+QWKotA++OSi+7NBafaO4E8ifjAIjoJk292zqZBCYmo8c/DmAkKlde2FipRskt08
+	iDoxt4GHGaYI8JGuoXfr0pBg
+X-Google-Smtp-Source: AGHT+IHxkLLwpKOHi1XIzxumWsIvj/ijr9w69VL72lr3gAh2s8kzIVA/IAWOv5dH1ks0QDxzucWaqg==
+X-Received: by 2002:a17:902:db0c:b0:215:9bc2:42ec with SMTP id d9443c01a7336-221040cf223mr21801725ad.47.1739585461518;
+        Fri, 14 Feb 2025 18:11:01 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.159.118])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d53674b1sm35362715ad.98.2025.02.14.18.10.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 18:11:01 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: christophe.jaillet@wanadoo.fr
+Cc: bhelgaas@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	scott@spiteful.org,
+	trintaeoitogc@gmail.com
+Subject: Re: [RESEND PATCH] PCI: cpci: remove unused fields
+Date: Fri, 14 Feb 2025 23:10:54 -0300
+Message-Id: <20250215021054.222787-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <a1af3a07-1e76-488b-82f7-87b3a4907f26@wanadoo.fr>
+References: <a1af3a07-1e76-488b-82f7-87b3a4907f26@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3e26626aa1c01aaa5d1e7b42d3ffbd632c3264fb.camel@surriel.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Fri, Feb 14, 2025 at 08:25:51PM -0500, Rik van Riel wrote:
-> On Fri, 2025-02-14 at 11:55 -0800, Dave Hansen wrote:
-> > 
-> > Fair enough. If we don't have a better name, we can at least do:
-> > 
-> > 	if (new_bad_name()) {
-> > 		new_thing();
-> > 	} else {
-> > 		old_thing();
-> > 	}
-> > 
-> > My real heartburn is with:
-> > 
-> > 	if (new_bad_name()) {
-> > 		new_thing();
-> > 	} else if (need_thing_1()) {
-> > 		old_thing1();
-> > 	} else {
-> > 		old_thing2();
-> > 	}
-> > 
-> > Where new and old are logically squished together.
-> > 
-> Do we want to group this code by history, or
-> by function?
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+> If neither get_power nor set_power where defined in any driver, then 
+> cpci_get_power_status() was always returning 1.
 > 
-> I would argue that new_thing() and old_thing1()
-> are closer to each other functionally (they both
-> do remote TLB invalidation) than they are to 
-> old_thing2(), which does local-only invalidation.
-> 
-> I can organize the code however people want,
-> but I would like a second opinion on this idea :)
+> IIUC, now it may return 1 or 0 depending of if enable_slot() or 
+> disable_slot() have been called.
+You is right... ever return 1, but, this is a expected behavior?
+Don't seems for me, that ever return 1 is the right way.
 
-IIUC the discussion is about:
+> I don't know the impact of this change and I dont know if it is correct, 
+> but I think you should explain why this change of behavior is fine.
+I submitt this patch only with intention that save resources removing the
+get_power and set_power pointers and yours calls.
 
-	if (broadcast_kernel_range_flush(info))
-       		; /* Fall through. */
-	else if (info->end == TLB_FLUSH_ALL)
-		on_each_cpu(do_flush_tlb_all, NULL, 1);
-	else
-		on_each_cpu(do_kernel_range_flush, info, 1);
+Thoughts ?? 
 
-In this case I agree with Dave. old_thing1() and old_thing2() are both
-sending IPIs, the difference is that old_thing1() is doing a full flush
-while old_thing2() is doing a range flush. Not sure why you mentioned
-that old_thing2() does local invalidation.
-
-broadcast_kernel_range_flush() also decides between full and range
-flushes internally. So the main difference between 'new' and 'old' here
-is using the broadcast flush vs the IPI flush.
-
-So I think what Dave wants (and I agree) is:
-	if (!broadcast_kernel_range_flush(info))
-		ipi_kernel_range_flush(info)
-
-Where ipi_kernel_range_flush() contains old_thing1() and oldthing2().
-
-> -- 
-> All Rights Reversed.
-> 
+Thanks,
+Guilherme
