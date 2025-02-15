@@ -1,95 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA021A83EB;
-	Sat, 15 Feb 2025 10:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30BD70824;
+	Sat, 15 Feb 2025 11:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739617189; cv=none; b=e+469Mw90H0JEiUnykvhAgmjFWsugr5N8diOwI+zMJaXwnqNJMxAc+90z9APPfRnxAul9ey0JHm9t4LfhQrokUJR/PWrEEnYHDZX/U06pRahcRgZTb/Nm1Ics98ouR1orxK+TvE3d6LBTf2V8I2nARcOUadU94Z7JBJmUdWspHg=
+	t=1739617267; cv=none; b=qZRYUZBB7FPM7+XxV0QCM25itjwCZgieCeuw7tGfrQYAnZOUWACgELhexOyq4g6a/k3siFvNBuLMVBFcVy10llmh9l1MpGx6HBML7TtxTLnEG190zfGc+dcSgWvLR6AYdPcIuPTxQlAp656gVLgMfhdoGPyCEU69lGaiqzx5tZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739617189; c=relaxed/simple;
-	bh=v7PXerc38yX4CSSTiNxWoTxizSMopm2JkQfFEFeuHsE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FafPhtGwR63+y4xlK41UHhE6DlhSjmZDt7bbljZU5kUvEKuG4WF7Ou29iyaNi4CXZF8qnacnhKlX86DxqhE2xwCXnuF+/4PEMgMiA5tuuc8TTBG5kNInh+kfCFMlECs66/MQKGf4bHzI4HV5thTLqMrha2bUM6MUUSw2XZIFFMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUx0A6Zj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739617267; c=relaxed/simple;
+	bh=taUL8GvzEIHC87/SEVJl/tjSqqcyWj5N2NeN6/rEVG4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=tb6YTGr+I23oh8Wc7+U54aELVvLc85y0x1qnreTRPklfH/Nd7zHqA4ar0Uyj+QJSQ9iJFfr2FV17obF5NlHC/NeffgUW7QgrTWnx11zn//3kvlvUZXbYF8pLeg9JDTBm/mGFkKRz6CGvtnkRqwlyZ1O25a4bYzZMR5SjIPBsByg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=a8Xp3lXf; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUx0A6Zj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFBDC4CEDF;
-	Sat, 15 Feb 2025 10:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739617188;
-	bh=v7PXerc38yX4CSSTiNxWoTxizSMopm2JkQfFEFeuHsE=;
-	h=From:Date:Subject:To:Cc:From;
-	b=DUx0A6ZjPb9BoXkHbezSjdfVqHsoUe0OAfrSML3F1k49QZuLomKa2q3odI/nq90cD
-	 5ZZRRr7UV541UZXdkxYccEC/oREHDTx/crrd1C4qh6WRl1VS5CU/Z6fhEZFJ92SA3w
-	 H6FOa+CssOG4CkzZFeGwFjiBUnO5ghwDgNO7jFIsjZf4IAqGocTsbpFjaU6mVXmw7e
-	 b4mUYREs/jTGvlp/oVLhRMHpMJE/WtdrGdlSxHzvw/5gyrmu3sc98jkATUng3nCZnx
-	 I9jFC5eBYxpC9RROfH8IeE0nvk3d58oWWuZdILkPjDjxDFBKtMnxBfRKuxXAsiQJU3
-	 OkJBYdoeep/Jw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Sat, 15 Feb 2025 11:58:15 +0100
-Subject: [PATCH] block: set bi_vcnt when cloning bio
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="a8Xp3lXf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739617237; x=1740222037; i=markus.elfring@web.de;
+	bh=lwlOpS/PngUjZo7c6ftmB0Rq3lhMukkPp4s5og7vFrs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=a8Xp3lXfz1eCB64IfdUNs2agY4JJhHHboa4RDHsub3kfeQL8BwlziQDS49kW2EM8
+	 Ut7iUkec1S0puZ1L11C/Jvbrf6ZX5lyxZrvU5qzSMNntwRHLjVjD5PJ7+wrpioMKU
+	 +eIn3JGhQdKCW/R0dV/RONXbXN6c34IaocOBW3yfyTVXzCH2LKXnSmVlYiBUyvocW
+	 DY7GAeTx+hiZsOscaNmtLELRIjlWBmIqPsLeQZT86wJ17BwY4qMU4+5OIt5ZKNbCE
+	 Kcf6zduj7xSpr3qPuRCZ1q+usLE97dduAwBvJSgH8Y1uFpzuUrgmTMpiusEAkbP+A
+	 nhRUquMDOfn2HnGRqA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.21]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MnX17-1t2jtg18In-00c4v5; Sat, 15
+ Feb 2025 12:00:37 +0100
+Message-ID: <98327a4d-7684-4908-9d67-5dfcaa229ae1@web.de>
+Date: Sat, 15 Feb 2025 12:00:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250215-clone-bi_vcnt-v1-1-5d00c95fd53a@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAEZzsGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0NT3eSc/LxU3aTM+LLkvBLdNOM0c3MDSwsLC0sTJaCegqLUtMwKsHn
- RsbW1AMAHFYlfAAAA
-X-Change-ID: 20250215-clone-bi_vcnt-f3f770988894
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Oliver Mangold <oliver.mangold@pm.me>, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=780; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=v7PXerc38yX4CSSTiNxWoTxizSMopm2JkQfFEFeuHsE=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnsHNWsWLBMjvJzH4+k0Jo39tw83pgfr1HRvVxM
- I9HkjZD6cqJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7BzVgAKCRDhuBo+eShj
- d8m/D/98mFEDqez+HIXSjUNykYa93Js07AnK+4CAp2CL+xvL7IhOuvJm24g6AiqrL6C38f3kKvm
- 6+0Kc+R6UFktOIIO09uPII8SLhi6kOtgWGxTanSYwJbZx6wadCQKchEOk5YeEVF2LPDsukWvXI3
- bSg67dX1GTW0iVOG5r6ar0jdKdyvNJcrZhkq0r/Uk9z8yAVv30RXBXm03LAFJj0cn1gv/cHnQS3
- HdIHw+jMlWA6zG7VbyrpQuzURfpldQC58aAT6SalyChHNoIusuKAW6pk5bf9wYxtuIJd11gjQrv
- I5lJQ3yo2RuzSxZanc+f0CyyLSeFB/BNANjR+mHoaXYMMn2dYsXtr9SRGkuBzx+A/M2+F54/Jw7
- RSnWsWx2q/a8IPAH5QLp6DVe4ur/t/FwjW1a8rovOs51JNhGoYuXU30yRwtuewGmjFhAlx3HH7R
- /yB5OKA0PiS7PB9d1dkZ+uZ9r/jcwBhfasRhV7sVXknjGbcUkVr5UvDqSPDEKc1iUJtvdZLFBRS
- krT9NUcc4TidA1a/4pqR452uA738R13joxxsbuj1PEzbyJcU8M1lIjgqnpx1VImu7Vmk0B70Gmw
- /i4JiYTVHKRs5FcXFQZwjmmJMTqweaO+qWnuEaAK6LO9he/hKA+7LojRgaS+SyVqbdjg2MhGCfH
- USYLR/JUZJSKYKw==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+User-Agent: Mozilla Thunderbird
+To: Shuai Xue <xueshuai@linux.alibaba.com>, dmaengine@vger.kernel.org,
+ Dave Jiang <dave.jiang@intel.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+ Nikhil Rao <nikhil.rao@intel.com>
+References: <20250215054431.55747-2-xueshuai@linux.alibaba.com>
+Subject: Re: [PATCH v2 1/7] dmaengine: idxd: fix memory leak in error handling
+ path of idxd_setup_wqs()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250215054431.55747-2-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:y4YNU/Ldfti/nNnkoM/15BDbsFCs0cpuJFILpvgO2iZi9lC3w96
+ J0B14dMNa6nIy6pyg5xbGHX5uzvIuNkmkwwVLQBioR01OXg/SHUklYw0aAItAKe846kyIzs
+ 9UXGflXNqmqoq5UjTpbn2hHzZB3cFeC4Fr1XJt7+lYcmFtp8EerUiMcjFu4wGNh1hvWpo1Y
+ i4VUNKl2bhyi1ZCuEef8A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:mw6Mo6hEnY4=;BlRHP++aeom6XB14pE33vK0tv78
+ YdcyjUy8EMcHdetlEn1Nnnmu22p4CsHHWltG8XdLvZrTCSACwpEiEzYlRrsV1DUmhpCvLQmOz
+ vP782XXYs/ncg/e2wBCuhwjzLC8XYr/96e3KUUvFJ7YWU1NAJKjUXTrdjydKBQCS5b44T1Dce
+ 7KwblP/D1ukvXM/CRanj5Kyllu/Yrek6LcWHrOc8aFFFN7QvVbFDNXOiLQLpU5VuI7vV9E+ae
+ 7HC6cWvxOOq8yp37XS7LW71QGjuwLESh2tS+Ml9UOtWCVnRQXWazdxrM+SWYCQhM12PsYQ+T1
+ YY1rugZyWED9t02UsG/f6DCcie0UQlxNsykKPW55GPtv0Zj9UYDda6jwRQ01OnNs0scY3+4hl
+ MtMm/lasmUpVrUBf9m7sEpmbRWKaz4XnpIgJpkRKUxi7mTWvl7+4GmuxjQQy8tElv0eofQPBL
+ xUaoIgKyS5fCw8L6Lv0bqhVw02w5DDATY5ol23l8ZE6wnhHt0yErm3aHUA8b6i9778bEOXjiu
+ pQ5b3BMVrgskfUgJKrYkbWgNfyggwiU3SZcwqMM1bIRUPBowTFkq/1LHLNDIMgxJQeqE1zdRN
+ xuigqgevx1FrjyQ6NaQIIw7ofl70atYJJP732N3h6ldmldYWPs2wZ1v9y4ScfsSQzxra7uyPy
+ VRY6w/7EkWZY3+mhFh3v/0/n1hW9TV+IXAxfCUXXl7VTltsB201JUGUasNn9Q9iV/xf2UU3b2
+ pcDjvPXLmSdvLp3iHyDcjXG2Q9OMSflWS7yPNHhC/ARKp2xMt01BlDxQnpGWRDqlNpiaUiz5Y
+ zoKow4EoPUjcHjjH7VrU7232+r3QHdUMOl+ZL4vm6ZNgewVIr9FZO9vB4PKYxmKSyWZu5shXW
+ nSuR4EJIAZv8zhQDcS9iNCyHwUmtEjWch/T50HDhhGTj0C3fow0/y467hN3FP/LGJsCwLdDwc
+ Pm/FCmbUkDHrEUVVUg8HmYLapiBUzwiiSmhVsAdFtIqia/IMC5Y3ELvwXUn8PcIlmCgXr664Z
+ LreME/I0aFITjOhHhBEYKRFUfpzlWxi4yvVznK4OlSk1cs0opTxfHwGrbqa2qANy7fAC6HLim
+ RJ1pIKGci+LdNy6pZNJjkvkoAVVnkJQdqvGXK/5Xnf9/W31Jhg0Sxlf7gaGTDfrR5IKNjBLe0
+ dQKcXtoTeAUvkMD7Xf5tQLgPLJgz4rXKSB5sbTFVHXYqE+ET9AXVYlmpBulcOOMSkHKtAPJPZ
+ jvPR8ilY+6vzkVW738eTHTnMC8k3I3p9HIuuHOLMGSH6y4GTygplsKS6fGJovOWYHiICeoz+Y
+ m8dmMnKIqTHwtNgVtxAFOROSXjK4lxDAf9SKdtrNXafJZMwCEQL9llX5A1Q7XOLD3oGbRhJMh
+ MlpKvlVVQkOdrI/vFP7eGGertta6N22X8a24UMkv7QredWOPtro9znaUFW+SJRxKL2Sic2yS3
+ xrmAelA==
 
-When cloning a bio, the `bio.bi_vcnt` field is not cloned. This is a
-problem if users want to perform bounds checks on the `bio.bi_io_vec`
-field.
+> Memory allocated for wqs is not freed if an error occurs during
+> idxd_setup_wqs(). To fix it, free the allocated memory in the reverse
+> order of allocation before exiting the function in case of an error.
+>
+> Fixes: a8563a33a5e2 ("dmanegine: idxd: reformat opcap output to match bi=
+tmap_parse() input")
+=E2=80=A6
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- block/bio.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/bio.c b/block/bio.c
-index f0c416e5931d9..334eedf312803 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -870,6 +870,7 @@ struct bio *bio_alloc_clone(struct block_device *bdev, struct bio *bio_src,
- 		return NULL;
- 	}
- 	bio->bi_io_vec = bio_src->bi_io_vec;
-+	bio->bi_vcnt = bio_src->bi_vcnt;
- 
- 	return bio;
- }
-
----
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-change-id: 20250215-clone-bi_vcnt-f3f770988894
-
-Best regards,
--- 
-Andreas Hindborg <a.hindborg@kernel.org>
+Will a =E2=80=9Cstable tag=E2=80=9D become relevant also for this patch se=
+ries?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/stable-kernel-rules.rst?h=3Dv6.14-rc2#n3
 
 
+> +++ b/drivers/dma/idxd/init.c
+> @@ -169,8 +169,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+=E2=80=A6
+> @@ -204,6 +205,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>  		wq->wqcfg =3D kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(=
+dev));
+>  		if (!wq->wqcfg) {
+>  			put_device(conf_dev);
+> +			kfree(wq);
+>  			rc =3D -ENOMEM;
+>  			goto err;
+>  		}
+=E2=80=A6
+
+I got the impression that more common exception handling code could be mov=
+ed
+to additional jump targets at the end of such function implementations.
+Will further adjustment opportunities be taken into account for
+the affected resource management?
+
+Regards,
+Markus
