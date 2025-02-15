@@ -1,111 +1,90 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43867CF16
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C856582D98;
+	Sat, 15 Feb 2025 00:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739580945; cv=none; b=gGOHHpMSU56Q0GCTIxcTAwZd1cva2wl9jcoE3fIX+keX1dbevofzH8CDHkRvLWO5vszyl8Wt4YF+pTT/nD4Y3ilBaF49EEIkoBN+FaKGVcmztyZ/FwINx02MRhwTjJRXaxeZsoS5WNipk6a50aQ7qxa3FnB2tG/xjLY9s5DEy2g=
+	t=1739580957; cv=none; b=f2Eqa46InYsaPuvacpCpDjhxNaoUzYvSCnXuYLQ4XfjEFXVIeqAHbJK55YbSsBSFkQecYI3291iHq6VBqEIqc5OnRG3RW7Wlys/Qs2ndYOMewMVF2BJSOQ0gKfngvINgeQKC4tT9S7ovRMCaPyrtGXjOrBPoX382DV3xIgp/xH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739580945; c=relaxed/simple;
-	bh=oTrztYsLyvwtgGLVf1tQ8GAPVF5vvtL5w9W5awmGqWI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BAc6oUcEW+UWDZG0tjl8zBhhVaMrkCbgg8DKb7wHj0QdDhJCPYnf2biKhZ4kHR9CKkPWu613546vTRBoYwlW0i+wSeDtX6NRaqRsNeoSMkgtq0PzH3R27f4Se3jLp5e0Q6AQ1kQPxnep/NgLNRpM+8Le5zLKyLsDV7CpDkPKg68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i/yQ3cbi; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739580957; c=relaxed/simple;
+	bh=nIXcpxIUSKHDj4yKjrFu8Z6Y37bAcj6b8+fVzwIrLgY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a3rMHvgEPUFLecTpXw710Gugoa/R4tMHe6hybeSzv8UMyVUZCybPXJCuzRaO2oSjJx2kzzzmfbz9GgPcIACcJxValgJ3tOiGHduA6NwvBNLroEzeq+gP68Ihu99p2VUbO1JhqEr9EUDF6rZ/oACE0K8SlZcQtpNRcjOU8oNEdac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QWYreGa/; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i/yQ3cbi"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc2fee4425so3361460a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:55:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739580942; x=1740185742; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pNsIgOyf4QC9I3CvrkHrF/C70G83LOB+aLDY9O6HBIc=;
-        b=i/yQ3cbihV/Ik0YOx9Cygpca48VSYCeJ0KLb4389/eyGMBuIjen9Vs5kMcxStwldDU
-         bqU83omkwKQKXedsre+vl0BUYTaMBzTR1+TEk9Mm4bVJQ4HLfzN6TgRjcuWirTTQ1QBn
-         HWVWyotS77GKSTdQ/Hr8ovlxcg26Vhr/xQd0NLPy9YLxTR/pHIQK3YBB5QNHvCBWukwn
-         F6QA+4R5MQCj+e2RLnB43xRwWFM7ENzigyT9AxuOTFgf8HQnJFQ7N41eLbyDsXBnc7Sm
-         8Wje5Jc3jgjydXUaO1sVGQadfLZaykAG6EADwvX3z7nio+M1EAyvvOE7MdGo/tWYM3qB
-         Oszw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739580942; x=1740185742;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pNsIgOyf4QC9I3CvrkHrF/C70G83LOB+aLDY9O6HBIc=;
-        b=fIIhmclDzzRjG6KnH65acJehaFdw17DwQdRcZnx2e1AgtWgUXY9nwghwPQEx6MJq8x
-         JtM5bPYDrAKcJgBxjPzOv1R3wXzYHAnnfLFGyC7RRUpgnrciRA1PmHqWFisCS7cAhs0B
-         62fh1gO46OnCf1OQA8/fzgdVMdARHM5F5AbOfKoorXrcqWE8S0Jmqd5VzXIRW9Sn4eaY
-         /UH+1RTUIutzytokPrhoMup02LwlG2HnmJ8DkxDLy/3TU4iM+013e9GenejBi2R9l1mM
-         R1NPLtbgWACFoaRgrgKUMgpwKKkpdgRmPdhmwxXSRHeVeKwlesOdkkR1Zz/ZP6Deb62u
-         PISQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3QLhM4bm9Q7YqeQIA4aULEe4n8SM/xqwihSTxnP4h6lCZPBiFSAkxq5dwuJrxIuL45nb4m2X+M7IFZBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxOyZLPu3Vh9g5K7/SANeBARjlKA07+JPCJvA7DfUkPHsMoucu
-	0cscqVNBzR864hcnUip6cVThTD1UjvsKGSDkXgeF7y5h30Logu/+QvTVkIp8ydrRf3b5Tfmc20a
-	xXA==
-X-Google-Smtp-Source: AGHT+IFivmaYswWZhaa6Czc5kcx3boX9fghq5jele205LhNXaQ8LsTuPJ7sgZ5ibW32cKGozhQE/CKLT3Eg=
-X-Received: from pjboe14.prod.google.com ([2002:a17:90b:394e:b0:2ea:9d23:79a0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1e0e:b0:2ee:8427:4b02
- with SMTP id 98e67ed59e1d1-2fc41049fbfmr1809156a91.28.1739580941915; Fri, 14
- Feb 2025 16:55:41 -0800 (PST)
-Date: Fri, 14 Feb 2025 16:50:24 -0800
-In-Reply-To: <20250204004038.1680123-1-jthoughton@google.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QWYreGa/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739580953;
+	bh=nIXcpxIUSKHDj4yKjrFu8Z6Y37bAcj6b8+fVzwIrLgY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=QWYreGa/6yH2TXVLCawRPa35+LxXk1hZym5F2VlQ/OyTS+GV8svkU/rjrS39UK8Mk
+	 4Sq7DqMdekxG1Cthb89kmnzRgRt3PJ6CHaVPKm3sQ1+gI/0/svXob35j6BFjADRuEx
+	 1B5+KfOda3u2ens8t/F5O7sxoeq/ZPrmGk7cCLon8fhAOjx9jHqgse+d9EWZWs6kuw
+	 GYymbHStNxvxdHakffxSE3+dSlIkI4iyEaks1mH6x7GBI7BcFopC/Qx4oRXZuCtDKa
+	 Hbj8/d+5Q2XxFvx7kMX9sRLCN9B+9J46DlleRinvN1d7u5/DEUUXi+KcqGhkmnSUWk
+	 PlqX7CTWZxZ/g==
+Received: from localhost (144.232.221.87.dynamic.jazztel.es [87.221.232.144])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 613E817E0239;
+	Sat, 15 Feb 2025 01:55:53 +0100 (CET)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH 0/4] Improve Rockchip VOP2 display modes handling on RK3588
+ HDMI1
+Date: Sat, 15 Feb 2025 02:55:36 +0200
+Message-Id: <20250215-vop2-hdmi1-disp-modes-v1-0-81962a7151d6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250204004038.1680123-1-jthoughton@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <173958060314.1192011.10710541316458092620.b4-ty@google.com>
-Subject: Re: [PATCH v9 00/11] KVM: x86/mmu: Age sptes locklessly
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	James Houghton <jthoughton@google.com>
-Cc: David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Wei Xu <weixugc@google.com>, 
-	Yu Zhao <yuzhao@google.com>, Axel Rasmussen <axelrasmussen@google.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAjmr2cC/x3MMQqAMAxA0atIZgM2KBSvIg7VRM2gLQ2IIL27x
+ fEN/79gklUMxuaFLLeaxqvCtQ2sR7h2QeVqoI6GjtyAd0yEB5/qkNUSnpHFUILn0JNfVi9Q25R
+ l0+f/TnMpH1L0CLVnAAAA
+X-Change-ID: 20250215-vop2-hdmi1-disp-modes-ea8da428bc8e
+To: Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-On Tue, 04 Feb 2025 00:40:27 +0000, James Houghton wrote:
-> By aging sptes locklessly with the TDP MMU and the shadow MMU, neither
-> vCPUs nor reclaim (mmu_notifier_invalidate_range*) will get stuck
-> waiting for aging. This contention reduction improves guest performance
-> and saves a significant amount of Google Cloud's CPU usage, and it has
-> valuable improvements for ChromeOS, as Yu has mentioned previously[1].
-> 
-> Please see v8[8] for some performance results using
-> access_tracking_perf_test patched to use MGLRU.
-> 
-> [...]
+As a followup to getting basic HDMI1 output support [1] merged upstream,
+make use of the HDMI1 PHY PLL to provide better VOP2 display modes
+handling for the second HDMI output port on RK3588 SoC, similarly to
+what has been achieved recently for HDMI0 [2].
 
-Applied to kvm-x86 mmu, thanks!
+Additionally, enable HDMI1 output on Rockchip RK3588 EVB1.
 
-[01/11] KVM: Rename kvm_handle_hva_range()
-        https://github.com/kvm-x86/linux/commit/374ccd63600b
-[02/11] KVM: Add lockless memslot walk to KVM
-        https://github.com/kvm-x86/linux/commit/aa34b811650c
-[03/11] KVM: x86/mmu: Factor out spte atomic bit clearing routine
-        https://github.com/kvm-x86/linux/commit/e29b74920e6f
-[04/11] KVM: x86/mmu: Relax locking for kvm_test_age_gfn() and kvm_age_gfn()
-        https://github.com/kvm-x86/linux/commit/b146a9b34aed
-[05/11] KVM: x86/mmu: Rename spte_has_volatile_bits() to spte_needs_atomic_write()
-        https://github.com/kvm-x86/linux/commit/61d65f2dc766
-[06/11] KVM: x86/mmu: Skip shadow MMU test_young if TDP MMU reports page as young
-        https://github.com/kvm-x86/linux/commit/e25c2332346f
-[07/11] KVM: x86/mmu: Only check gfn age in shadow MMU if indirect_shadow_pages > 0
-        https://github.com/kvm-x86/linux/commit/8c403cf23119
-[08/11] KVM: x86/mmu: Refactor low level rmap helpers to prep for walking w/o mmu_lock
-        https://github.com/kvm-x86/linux/commit/9fb13ba6b5ff
-[09/11] KVM: x86/mmu: Add infrastructure to allow walking rmaps outside of mmu_lock
-        https://github.com/kvm-x86/linux/commit/4834eaded91e
-[10/11] KVM: x86/mmu: Add support for lockless walks of rmap SPTEs
-        https://github.com/kvm-x86/linux/commit/bb6c7749ccee
-[11/11] KVM: x86/mmu: Support rmap walks without holding mmu_lock when aging gfns
-        https://github.com/kvm-x86/linux/commit/af3b6a9eba48
+[1] https://lore.kernel.org/lkml/20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com/
+[2] https://lore.kernel.org/lkml/20250204-vop2-hdmi0-disp-modes-v3-0-d71c6a196e58@collabora.com/
 
---
-https://github.com/kvm-x86/linux/tree/next
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
+Cristian Ciocaltea (4):
+      drm/rockchip: vop2: Improve display modes handling on RK3588 HDMI1
+      arm64: dts: rockchip: Enable HDMI1 PHY clk provider on RK3588
+      arm64: dts: rockchip: Add HDMI1 PHY PLL clock source to VOP2 on RK3588
+      arm64: dts: rockchip: Enable HDMI1 on rk3588-evb1
+
+ arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts | 42 ++++++++++++++++++++++--
+ arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi   | 22 +++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c     | 26 ++++++++++++++-
+ 3 files changed, 87 insertions(+), 3 deletions(-)
+---
+base-commit: 0ae0fa3bf0b44c8611d114a9f69985bf451010c3
+change-id: 20250215-vop2-hdmi1-disp-modes-ea8da428bc8e
+
