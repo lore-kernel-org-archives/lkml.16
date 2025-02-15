@@ -1,122 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CACA11187;
-	Sat, 15 Feb 2025 01:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2507213C80E
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 01:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739581414; cv=none; b=eLcFTPzqtsn7ivQ4W/VeZi9C9y+iDSwZyUyZu3Qz0Ne7ueV8Hzllsuo3neutIZUJ28Gg8RvSBFZiZEMpBPejvR8NiZbAl5epowvYdh30xjg/ISDHLSBGfPO6/DbVi9UFS46eRgoYHlKiUOvd5r0w6A0R7P69I6SHrmanJn7KV/8=
+	t=1739581476; cv=none; b=FgZfuObr1uUiNBKRJz4VOoaKATu+/buQ23+r3efgy476EaqjUDWQLSzMUm32YFpfTzDKgCdRhJWQG90Cp6Q3EM5dmEXuo0eK2QpH4HejkqDkzrC59qOLchdbKFpCXJ21VoQLm13A5csJ01dhNzXRV/t/R6L0xbYnWb6KdE9v28s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739581414; c=relaxed/simple;
-	bh=1jWwksNfcXOTbsI5skvdkT/hHXIEc071tYG5CLbIBtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdu/1W/LC6CJjQXzsNhG0/t/v7Bud/lGyWaJTJjP6yRYoohtlLbLamekrxOCYGOuSyR21uo7L3mNQSK6Me8yMoX29BPzL3/v3GvMeMbZHH2NSVH1sKUGjyYnBU5vAkA7WTgHvHtK4JJ1VMDREaMEwKsUPlmRrnEsU5lo3ZmNVIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ECmTK2nA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739581476; c=relaxed/simple;
+	bh=W1PfXsK8Dj/IOV9U04Ew3tdiTcOqnHPCWj3pwXw3J4w=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=J9s+mZKM+xisRAEmMFlKTqg76qAqqLdrfv4mIYw1BFzslsbaeqIsDw8F8ORu4dLe63oJKe6kFL2d5vI3J8NMwtAa8AO8uzBpOlLnyx7cEAXq6LXbX84sSH+oM+BAolXQ4p8cK81Z0wp3qKgR2yhDV29KDoWsbGS/MMAb/OGhEXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=BpJZEjAd; arc=none smtp.client-ip=203.205.221.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ECmTK2nA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74B7C4CED1;
-	Sat, 15 Feb 2025 01:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739581413;
-	bh=1jWwksNfcXOTbsI5skvdkT/hHXIEc071tYG5CLbIBtw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ECmTK2nAMK7Kk2OVfwgOZdKLnU3lPIs+tPrJ5fa6ZhQ86dfjK8A/OTTJyFmyg7H1u
-	 4ouJeWzjNd9iKQeRaCGmSktD9FXv6zmhzxCPkVivsKpehr9bbRVgDIidTSnIK2/Lor
-	 Lg7fnt8yWQOFreYKdEIvXvVktfViPuOWtS1/0iuRZTn/5TtZywQxGmwyTkAgAvuNrx
-	 iuAyHIAn8zrEzYFG7bNqvKh4LM+kdWfzZS50RT4x6l4JbO+dt+ymxoua5X662iEYYT
-	 OtZlbUie1SriiRaFtbrXbXZTmqTT0eXqVf1b+hjJ7ywBJ2rWcJjgewLfnsLEEfbFi4
-	 Xb8YL4rbG6gTA==
-Date: Fri, 14 Feb 2025 17:03:33 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Elizabeth Figura <zfigura@codeweavers.com>
-Cc: Mike Lothian <mike@fireburn.co.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	dri-devel@lists.freedesktop.org, Arnd Bergmann <arnd@arndb.de>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	wine-devel@winehq.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Arkadiusz Hiler <ahiler@codeweavers.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH] ntsync: Set the permissions to be 0666
-Message-ID: <20250215010333.GO3028674@frogsfrogsfrogs>
-References: <20250214122759.2629-2-mike@fireburn.co.uk>
- <1911589.tdWV9SEqCh@camazotz>
- <20250214184539.GC21799@frogsfrogsfrogs>
- <8487800.T7Z3S40VBb@camazotz>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="BpJZEjAd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1739581161; bh=6/QcT1QkuuTKM24+t2ztN8oGZqIds9C+fSou5xFgRNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=BpJZEjAdIv5b4EkMRdOwhbQH9wzondu3O7i1Xuupyl5dIrJXVT06TIW1NwlIDhwKd
+	 zIyLZOstfGFMaUajcq6U8mmFV2A+BHPFTmNpmX81FkCPWyncPHflSDbB+dSBwuIyrO
+	 TClccbGQISc9PpCmiRA2dxtoTrWzWMCtVab/fiv4=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id ED409AA0; Sat, 15 Feb 2025 08:59:20 +0800
+X-QQ-mid: xmsmtpt1739581160ty8xvmc1e
+Message-ID: <tencent_6EC0D361236A496543ABC44E176E577EA605@qq.com>
+X-QQ-XMAILINFO: N7h1OCCDntujNMaS2jrERWzTKyQb2Ge+20+a1oCANOFq3Au3b9DLQm/ECPDv7D
+	 g1mrSuUKZdCw9Fl4IOAnvBbD1KSSxBeyN9/D3WHtk6E7X2mROZ/aEt9uJHtxbsLEQlqu7/4ij+HV
+	 1BwrQlk/361JJ/FPctXY+iU7EJDSM/gy25KybBboMT03HqBTQ5F+9t+de1zcdl+wSbf15pKpm8w1
+	 SOc5mLzd8t6fyKFxfzib36wccgvSbYyjWinTG1PIHaikKVHkIeXMp/f9yeH2IhHxCDv7Ez9yjxRn
+	 Xj53PVpt5zR56VdQtjr4awl8goNRoDQL9/yBDiW0EUTzmCvtCdy1o0/4xpW5ZujbcZJRiAdEFeSC
+	 lBxMm/mQxlUA3aCRsUvunbqa+5AlQXZBFgjD+JQuVdlIIfxTpNtqe+el1eanivBZk73V1Ygxm7er
+	 q6xmAv6A/UZPKtnOMCNGcsegTGan1EkisrCsfOfgvjtBdqresoJS34Grx2tfIINW+cA6DUYcDUmN
+	 /35U/qgspL8nMESPcFYXwQzF3rVBGwXAGd/tY2hPastOHUHEKwQxZR9TnoHZ8X8lm0uPDdfGsr8R
+	 l4P8bkh2UeaurJ3ZBLtCIOQAlcqqARYObBSjZ5umcWu+KRSdfXkFT/hiJcR82CKKBvDH1iRIJIi7
+	 TP2NrU42owH0J89wx+AdE/tUfH9RzXhccm0cnLciQgR6ptzqJHTvam/DtCFyuHC5N8wxizu/NMjV
+	 yY2hlWAI/qQhQptiCxVq5oQoK+BnQSmq2l9f7E8sfBYyVx3YIiM/5LtOnHHWEzypWFWDJVQG2H9w
+	 TeYAiqOWIFwdIdFdLtUNnvhaIu2RC6YlSJzamhNbaTEMENoY8PDSPIeYnWCVPY8BBIIEi6r0GZF7
+	 Da9U46sUBl/Rojhd9D/4qcNoshvIXlrQ==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+e1dc29a4daf3f8051130@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [netfs?] KASAN: slab-use-after-free Write in io_submit_one
+Date: Sat, 15 Feb 2025 08:59:20 +0800
+X-OQ-MSGID: <20250215005919.1020762-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
+References: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8487800.T7Z3S40VBb@camazotz>
 
-On Fri, Feb 14, 2025 at 04:15:25PM -0600, Elizabeth Figura wrote:
-> On Friday, 14 February 2025 12:45:39 CST Darrick J. Wong wrote:
-> > On Fri, Feb 14, 2025 at 12:13:03PM -0600, Elizabeth Figura wrote:
-> > > On Friday, 14 February 2025 07:06:20 CST Greg Kroah-Hartman wrote:
-> > > > On Fri, Feb 14, 2025 at 12:28:00PM +0000, Mike Lothian wrote:
-> > > > > This allows ntsync to be usuable by non-root processes out of the box
-> > > > 
-> > > > Are you sure you need/want that?  If so, why?  How did existing testing
-> > > > not ever catch this?
-> > > 
-> > > Hi, sorry, this is of course my fault.
-> > > 
-> > > We do need /dev/ntsync to be openable from user space for it to be
-> > > useful. I'm not sure what the most "correct" permissions are to have
-> > > in this case (when we don't specifically need read or write), but I
-> > > don't think I see a reason not to just set to 666 or 444.
-> > > 
-> > > I originally assumed that the right way to do this was not to set the
-> > > mode on the kernel file but rather through udev; I believe I was using
-> > > the code for /dev/loop-control or /dev/fuse as an example, which both
-> > > do that. So I (and others who tested) had just manually set up udev
-> > > rules for this, with the eventual intent of adding a default rule to
-> > > systemd like the others. I only recently realized that doing something
-> > > like this patch is possible and precedented.
-> > > 
-> > > I don't know what the best way to address this is, but this is
-> > > certainly the simplest.
-> > 
-> > Paranoid defaults in the kernel, and then a udev rule to relax the mode
-> > at runtime.  You could also have logind scripts to add add per-user
-> > allow acls to the device file at user session set up time... or however
-> > it is that /dev/sr0 has me on the allow list.  I'm not sure how that
-> > happens exactly, but it works smoothly.
-> > 
-> > I get far less complaining about relaxing posture than tightening it
-> > (==breaking things) after the fact.
-> 
-> FWIW, it may be worth stressing that this is not a hardware device in
-> any sense, it's a software driver that only lives in a char device
-> (and dedicated module) for the sake of isolating the code. I can't
-> imagine any reason to control access per-user, although my experience
-> may not be enough to grant such imagination.
+#syz test
 
-Oh, I'm aware that ntsync is a driver for a software "device" that
-implements various Windows APIs and isn't real hardware. :)
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index f65affa5a9e4..7854d55120b8 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -371,9 +371,11 @@ static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
+ 
+ 	if (rreq->iocb) {
+ 		rreq->iocb->ki_pos += rreq->transferred;
+-		if (rreq->iocb->ki_complete)
++		if (rreq->iocb->ki_complete) {
+ 			rreq->iocb->ki_complete(
+ 				rreq->iocb, rreq->error ? rreq->error : rreq->transferred);
++			rreq->iocb->ki_complete = NULL;
++		}
+ 	}
+ 	if (rreq->netfs_ops->done)
+ 		rreq->netfs_ops->done(rreq);
 
-But, you might want prevent non-root systemd services (e.g. avahi) from
-being able to access /dev/ntsync if, say, someone breaches that, while
-at the same time allowing access to (say) logged-in users who can run
-Wine.
-
-> The only actual risk is a bug in the code itself—which is always
-> possible—but at that point you'd presumably just want to disable it at
-> build time or something similar.
-
-<shrug> Well yes, I could turn it off in my bespoke kernels, but most
-distributors turn on a lot of modules to minimize friction for users.
-Chances are that'll be most of them if this enables better Steam gaming.
-
---D
