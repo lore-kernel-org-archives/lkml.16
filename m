@@ -1,74 +1,73 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5D11C701C
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 13:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F35478F35
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 13:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739625163; cv=none; b=PjUyUrr4d/EZ9h+0IY/7G1gRuixDSlGAnNse4Awmkwy9Km6rXT6Gc7Ba5cet4wBZgBTe3i9AnvFBEgkmA6r2/mp09l34O8qiiBOarQdrCpBijJZCnPr703bMs+S+hkzSYiN91TSvjpjRlVvs71ZbPOJrqgPuexQwO90unsEpj5w=
+	t=1739625466; cv=none; b=JFF9xZtLjImQeOzTLGHUCkAL7fM7FI2WYo0kReCp4N5LsofRndl8h2Xsr05gWPBobgtfHoJe7iViH1r2agdxZcauN7QE7HbN/8OZdArkSjE/4AAwwunlmsbvGKofyskRr1i/ANYWtLuxTY53lTrj+RIjPLl9fpO1EbbftSWApnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739625163; c=relaxed/simple;
-	bh=kqJhfXI+i5MZlzlpH0kJljCFi2elURZJY0oYoLVGE3g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LSDvsXQ0mzYJ+7rqCBPB1t4QbnvaQvL/WMNUgHggo4zdJ2KrTAAo2Bdmx7VV8VLtmNwPT7BoihPEjkd1V+wDIkpIPybHRv6EcT+4B6zqkiYasAOl9ljDgmqjfww25wCQ50Fw9ZUQl8BkYuGQLd28L6j9O9E69xrrAtKkkREtlNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=imVYqRTM; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1739625466; c=relaxed/simple;
+	bh=DKMOzS871WD9BJFS19NydgkrDfk1vu7SOxWaxOYXzfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lugYWn9c2bRGiicX0UVTlzI2ZFS0zNWPFZw6gaR8m5XGn1zfis+GKosIN3lW6j+e2t/q6oAdJTSAhVilhTyht3MW5/Pi80yyHYJywxDaklAABVViamApTZniHTdJFzD5VwF2+Y/roVQxKkP+g808JvqdapsZAhYgrFvIp67gen4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LVGl/8BU; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="imVYqRTM"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abb7aecd39fso62815766b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 05:12:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LVGl/8BU"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38f245ac38dso369159f8f.2
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 05:17:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1739625158; x=1740229958; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739625463; x=1740230263; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=T+v/olVdsNjQIMDpCltiAzjI2f/hzh2HRF4DFpt5Fqo=;
-        b=imVYqRTMA0rIzrydAiNEWiefpuq22JBt/svuZKlnJ057iC2L53yfhk13g+HtQ5GPm0
-         lrqghby0kM+OZZ6MRD+NcOqwwoCstcGFAj6wYfPFau820PR0b7lKI4fEYHIwqjrooltc
-         iP6P23szwbsNgKNU9h0uxv7r9KIMjfnk/rcxGPKiGmn5EWeaoTHxYYOWl9JSW53p02Y9
-         +XmCNfPi766DajUd097vRbrvMmjyDBfi/TbZEGBwU1Ock26A/2Epax/GZB63R5YjI53L
-         xX2dZgyUP4iD0VAwxMZXAvwldWzXfbSUfBLwQwPGyfcpz0bxU77Q/7ZIGey5HEmflnqe
-         T/2A==
+        bh=vGXmB4cgRj7i46AipgnBwCCKNXQmiHxqqe+OiiW6adI=;
+        b=LVGl/8BUxnK3QhuGWpelbYdTp40jtgGS6U3Vsm8rGKV5MdZMcffnRsu3ukt5DixLWa
+         qE+c2CxKez7Kk1OtydeH6u4TB917XXFBy77m8RZqfxCTuhJzON6wv+tqMGeIjx2nu+sa
+         uTiq7X3vhUvWnlk+I6WGERCSdVgVFraRE+15PLNl9Jf9kipirnA6VplGGAyJiRQUYU62
+         cR0ZNnlF2cpdOuGGrX0nY8kdELRKymLw0x+RkalXJqCWBgc6BZL7BMlRTE4CJrSItehn
+         hJsVgya5PE3QyAc2x173F1dcFBMEmKn95XaI96a+AwnBkV3ImwRgXnkf5IZtj5vIEfZa
+         iOBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739625158; x=1740229958;
+        d=1e100.net; s=20230601; t=1739625463; x=1740230263;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=T+v/olVdsNjQIMDpCltiAzjI2f/hzh2HRF4DFpt5Fqo=;
-        b=viy+GVPhkUayRLjuqKJ+UmcZOudlvKIgLPgEtLDe1FUE0lISp//kIjcUY0Q0IrDf0Q
-         P8zms7WXDULaeLWfBZ0DkCAHp+ejrmxWLvmvHMxNqzoJKjGPNvO0o9QPFvNhCM2gFBUA
-         k6v7o/ZiTf1lvqv2E0LzW5C6IGGJPhfDT4G07spjGnAJWsS4s/E0gq69fJW10XjhZgJF
-         llVeYyFeTlIq7+vJe8Mh5MsO6/RdmsFiPliOWlYJ8cI3LvuEnLl+lpQ155/RLnveOQ/M
-         tAtmejbMrqy4Tv6AWsAoPh5C7w7j19IqtQ8UWA813isMeARB3UlwAPUl1hKa32x6h5wr
-         zPqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdQaMXrbTPhhyTnvthwjzuJUPHRzBQra3+5hXadUJorOrpuNkdbFve4NXMVqr4KuSVw7sGQq4EKRtb7bU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5jDgED6suL1j+aD07oXh4FQseBsP3wbmQhl4WA+XXijCeP0d2
-	GilRcpY4eokBnemBuhbevnE64IHVYM/P1qFcR9Q/yv4JRLMJCxKwLKFDTaHGcaE=
-X-Gm-Gg: ASbGncvG/npCiGHSOnBgfdDHLygjw4CpzgT9b8aXP9WmsvGKi7dPyIsgSXXY0ehMgKM
-	dOWSWFn81qUxlQqAu8ssuWshr1KTuFaV7CAg2bi8wA01PVLgKCFGGNXK6AIVsv3yeuHCrBJlWG1
-	UUQlwQlWdx0GlYzdlN6UgwPwDzaFzMH/vQ3wnh/iavTWULxA3VG/h7eTQ6rlBa5qRkv0pRLc9lw
-	ZgS4n7szUktvEKJ3T3uBxGi4uLd9G/xyALMsa00IR4TGmWjBFwzMcweLw4L/lvk3yI1JNvyHC3S
-	tngeQVEBMwdkTunu3c2idv4ONv3IKKbHo0LL0EKTXoOVVg==
-X-Google-Smtp-Source: AGHT+IHGlrrgVz5JEinVT+JSgLk0BgO7y0QXdyl23G+Z1dOq1A3nA6LJrZK0R2Q+k2rxgykw6+EBqg==
-X-Received: by 2002:a17:906:6a0c:b0:ab7:d34a:8f83 with SMTP id a640c23a62f3a-abb70ab8b5emr267680566b.17.1739625158403;
-        Sat, 15 Feb 2025 05:12:38 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.173])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb837378e7sm39289266b.52.2025.02.15.05.12.37
+        bh=vGXmB4cgRj7i46AipgnBwCCKNXQmiHxqqe+OiiW6adI=;
+        b=JsvVjK6yhnHeAB7mVIrgpgfQ6fz8Ua7eQNJuIvlCYJERSF4eUmCb5/5M5EBArRmPAp
+         +/N4TLskVqtCX7GGpkqyslac3HwDVFazjpof5duniBs4J4nQzLQlAiwmyqUgexeGtQaH
+         AiYl2j0nyNmgMpCP2xL3o66JNWY78Ix9haC3M4XtavE+joC9DNy3mZvEMbyURFyI8vr/
+         U8HT2Esx6+QHsQ4KK1kd6oPAfGjyFrp21uRkNwMMK5h/LcQqOXl0P1hp9eVPE0+ifxmn
+         ZZVBkXIBw9jmkhuR+LcmKQFBjq5071Cz5HgDOTYoTUDLq92z6+Xi+54rzaYQklISbSal
+         um4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDTMW3oW/OcAsFpAGKi+c66nh8+9CIQ7jgKhs+12GCRHgUYy+M3meJMmJ5qUQkpuRJ9Ol1Rm9tbIaqEZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIjw+uouBCZVh5SL/lnhvs0SzHcU2Tr7lSQ0Y+8sAFl3KXxUlm
+	KBR+ZBZU4aHlc0bNb3qJ9lMboiOgn7dNjCF02yXXwgbWxIr74cra8p5k4uWnoEk=
+X-Gm-Gg: ASbGnctj0v43E2y+B8LKGEC5qpbziKHgmFJXwJMliFKPYnOu0VByh4oSIwqHCg8zYhz
+	obhbGS7LCESOn0s45I3wTwsa5fsoRZ1m9BzmPAzX5ZcAbvBuDYZeh+8fUutUCcA9Uup4zaEUZn3
+	gCsVU53DRScacSaViGjDWpqoJdr2rjryKn+hCDYoaapKQ4ZPXsBhlhjypn6CWp6omamCKh+dInq
+	XTXCf/l6FvycOlQTbMChO3mpqsvifj3Ms2WpSz4QPrcpxPIZkLDkjnbJkTaRoq26RSpBGTLdoqg
+	pPzsk2yBtyy9Z1UaujjFVMCAFYnGqA==
+X-Google-Smtp-Source: AGHT+IH7z2R9nNG93i2MZaB5NKPEWF7rlrwQLWbs/edrhlggOHxufJUOIdYz/d9/Z3xKUdvgy+nFkg==
+X-Received: by 2002:a5d:6c66:0:b0:38a:888c:6785 with SMTP id ffacd0b85a97d-38f33f29377mr1138906f8f.6.1739625462851;
+        Sat, 15 Feb 2025 05:17:42 -0800 (PST)
+Received: from krzk-bin.. ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5eeesm7284499f8f.63.2025.02.15.05.17.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 05:12:37 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	linus.walleij@linaro.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	biju.das.jz@bp.renesas.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH] pinctrl: renesas: rzg2l: Suppress binding attributes
-Date: Sat, 15 Feb 2025 15:12:35 +0200
-Message-ID: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
+        Sat, 15 Feb 2025 05:17:42 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-kbuild@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2] docs: kconfig: Mention IS_REACHABLE as way for optional dependency
+Date: Sat, 15 Feb 2025 14:17:39 +0100
+Message-ID: <20250215131739.220629-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,31 +77,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Several drivers express optional Kconfig dependency with FOO || !FOO,
+but for many choices this is neither suitable (lack of stubs for !FOO
+like in HWMON) nor really needed and driver can be built in even if FOO
+is the module.  This is achieved with IS_REACHABLE, so move earlier
+section from "imply" chapter to "Optional dependencies" and grow the
+description.
 
-Suppress binding attributes for the rzg2l pinctrl driver, as it is an
-essential block for Renesas SoCs. Unbinding the driver leads to warnings
-from __device_links_no_driver() and can eventually render the system
-inaccessible.
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Fixes: c4c4637eb57f ("pinctrl: renesas: Add RZ/G2L pin and gpio controller driver")
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index ce4a07a3df49..5f006a059d9c 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -3386,6 +3386,7 @@ static struct platform_driver rzg2l_pinctrl_driver = {
- 		.name = DRV_NAME,
- 		.of_match_table = of_match_ptr(rzg2l_pinctrl_of_table),
- 		.pm = pm_sleep_ptr(&rzg2l_pinctrl_pm_ops),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = rzg2l_pinctrl_probe,
- };
+Changes in v2:
+1. Replace FOO->BAR
+2. Instead of referencing earlier "imply", move the code here and add
+   more text (Masahiro)
+---
+ Documentation/kbuild/kconfig-language.rst | 35 ++++++++++++++---------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index 2619fdf56e68..9a8dff58b3af 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -194,16 +194,6 @@ applicable everywhere (see syntax).
+   ability to hook into a secondary subsystem while allowing the user to
+   configure that subsystem out without also having to unset these drivers.
+ 
+-  Note: If the combination of FOO=y and BAZ=m causes a link error,
+-  you can guard the function call with IS_REACHABLE()::
+-
+-	foo_init()
+-	{
+-		if (IS_REACHABLE(CONFIG_BAZ))
+-			baz_register(&foo);
+-		...
+-	}
+-
+   Note: If the feature provided by BAZ is highly desirable for FOO,
+   FOO should imply not only BAZ, but also its dependency BAR::
+ 
+@@ -580,15 +570,32 @@ Some drivers are able to optionally use a feature from another module
+ or build cleanly with that module disabled, but cause a link failure
+ when trying to use that loadable module from a built-in driver.
+ 
+-The most common way to express this optional dependency in Kconfig logic
+-uses the slightly counterintuitive::
++There are two ways to express this optional dependency:
+ 
+-  config FOO
++1. If pre-processor can discard entire optional code or module BAR does not
++   provide !BAR stubs then call can be guarded with IS_REACHABLE()::
++
++	foo_init()
++	{
++		if (IS_REACHABLE(CONFIG_BAR))
++			bar_register(&foo);
++		...
++	}
++
++   Drawback: this might lead to run-time debugging, when looking why
++   bar_register() was not called.
++
++2. Otherwise (and module BAR must provide all !BAR stubs) use the slightly
++   counterintuitive Kconfig syntax::
++
++     config FOO
+ 	tristate "Support for foo hardware"
+ 	depends on BAR || !BAR
+ 
+ This means that there is either a dependency on BAR that disallows
+-the combination of FOO=y with BAR=m, or BAR is completely disabled.
++the combination of FOO=y with BAR=m, or BAR is completely disabled.  Unlike
++IS_REACHABLE(), this option favors configuration-time debugging.
++
+ For a more formalized approach if there are multiple drivers that have
+ the same dependency, a helper symbol can be used, like::
+ 
 -- 
 2.43.0
 
