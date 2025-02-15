@@ -1,143 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189C31096F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2179411185;
 	Sat, 15 Feb 2025 00:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739577791; cv=none; b=G6SWmh5AeGcTMexa6xjzEOOJcCOwbjo8wtjmwYMRneEFfRt8msYLQYM0jog2/5KCddKnaO2hEESTvceBXnd9GLt9Ldt5x9jhR/SM3KrqQnWL1oKEtr6y+wQTpl5NKQz1klGgxRHEgtK5zpxsuxJyvUgEuDQ+ViBH17Ba4kAEM0E=
+	t=1739577792; cv=none; b=QYTMuNDRvMR42mopJhU/0yAmdRWs1VG5593MGqHzK1VFYo8a950pHVUkAJ6MS70GZOTWwpciF+UqD01b1Xl10tXHRTDbGtxTwl88w4fYeLVffcvVamIuVanlJtetzY31LW2gHuDGbeE9m3z9sgz90YqPWlfE+SWBfDxMp/Tlj70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739577791; c=relaxed/simple;
-	bh=LZmLoCUg08NiVuotxrtqAjBOOXyj6jZPtonN1xnIy4A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uAvWmDvab+7X5HoVNSisVU4RQYbJeTKXBE4DIe1fmC7jTf3zJtVJv3hMgekeTyoKsM8p8iP0Awjqc3q3qOwWZ4R5PmxDilw41le9s0RZ+134yCu13koR0oZ5eQUDE6EBsCeO/03e8zQjkjBAF5826zNRL4KPAVtoqsthlnjf3oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p35LgQoc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739577792; c=relaxed/simple;
+	bh=7PW9ECbTvbxLratiQ5RGwLyR8ihQ/4Nt9a7Gx+Sn52E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NO/QTvoeCRGZ9C+dIiES5+Q8bpTxGP5igxg+JvxC2K+oJlKyirVjyole9putfr98OKd8Whu+9yX5GEeHlvjDiNo2tTNhyExAk4Krbf+kr4hNj7KNYV9dfuKDEOMlkSifK3GdyOp8xwX62396ojrDc5XqopB9Eci2GNmcvE5RGR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VkPyDyvD; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p35LgQoc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C1BC4CED1;
-	Sat, 15 Feb 2025 00:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739577790;
-	bh=LZmLoCUg08NiVuotxrtqAjBOOXyj6jZPtonN1xnIy4A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p35LgQocFaddJNP++Q2tfgtWsy/Rgk6APOwPSl9UKUkTfCTLhWekS0zCupTf0Rs1p
-	 FlipWpvQNwyUS+6tc0LnJxz6WGcCVNEgRbplqYxI/oyLu6NyuihfcutXwAaGe8AOgz
-	 tjAYb5POICChBpxb6YzwLM84muOIkb8OGWpt2YCmn09ZjhMQxm8UJzdFbI8hDGmV0K
-	 5U7k4KQ/BFHo43RSVIpA7jW3J++E6/ZOofCy9gPlgqOi8xKt0SPPX4j2v0dk0QBmMB
-	 1Pom8G2S8dlUywZWRyVmPNJSKRNyBi+EAetVWJEa4Fr0HVA9j3HHj4JZJ+UHwb9QxL
-	 Fp9pfx8rUXkuw==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkPyDyvD"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f754678c29so25456317b3.0;
+        Fri, 14 Feb 2025 16:03:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739577790; x=1740182590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oNvPfToKnR/rR/b+ekcS3fLQgOP+3Z1umibcOsqYhhE=;
+        b=VkPyDyvDM+Qj6HXa7Zjc+MiaQcDal7izD5hW/euaS06MVE1bdp4+aWTDWRXMLiUNv/
+         vxrefnmEXXhQZ1rQlkKaxkagb7mN4Z184SsTt3oFznQsi+LjqoByqMEk2TnLJWAdZf4A
+         Ro1WCgnz25uoCR8fFk2Z26BM3NSJ6fqIDXDfamqhdl4rlvnIqND2A9PhB8ubhvShPIYR
+         fQJD6Xt+QlQ4p0kUC+QfO4ATG3/vwB6Zq91++2De5oejmVMsgZZRhJdLNMIulq8DXei9
+         Dt8TTURf5QBxgFvWG5drVWzLxya7VCXxQ3TxhBB0w97T9yjXZmgeliqkI+HvTUqtBwSf
+         18iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739577790; x=1740182590;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oNvPfToKnR/rR/b+ekcS3fLQgOP+3Z1umibcOsqYhhE=;
+        b=A1cMSy0FzygxLnTb6V60eOsdE4Qw4ofIBiIqVp9Nmpa6XWBKGVQVmTKYpiuaszGNH4
+         axcTk3MEOs3Q7/wQQWM6vu8AXr+baKg8nQU6bH7XRingJbDs7C4pK/ES1+lmlqVyzQ8H
+         RcHhxI2IJ/91aWxdfG7N5i7zdFHls0aJLqUDZ6Gcq8p/sITI+GRLD97s4w9DsGgpXtLL
+         TbnLyiP6rUHYhIpNDjubGG3LExAPVs8gGWqIIhi1e0X9SszXcyJ7I2zlsutAnefTbs8v
+         sH+4phINPlbHngH5BFcqI5wULkE+yRBN9bPFRudlg6E9tSSPuHsob2I0gEFNsuyGy7Sb
+         9txw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMpsweSCBDHRx8++lbrBN2FBZv8O7IU5E3rjOy63zLhLPiHaIU2n2Qf6V0XTG2LlXIWxVGmC70UD9ibbpOqanN5EfQmg==@vger.kernel.org, AJvYcCUPcO7KQbyr2w0NDfKjmafODRpy9Tmb3wSH7QYQcVaFthXdf6grXEOoL7mvPpxH2OJeNOvngwhINkD6+qQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyuil3nYMrmdqEQZnMeX9fQ/vsEFdllmisi33JF7VX3Rm+yVvkX
+	qdWm84EoGDwdw+SNw0jjCldHjXvZu/9RGOFsdObOifV7hPJ6GuS7
+X-Gm-Gg: ASbGncu3+ODEa/wTWqoH+rq7RaqN9vMJTGobwF6UgdMGOq1SZQ2s6wDnmJUNnB8Y3CZ
+	/+Qid3oHmBsT9/5Hw/Rs8DNZAoZ/x03hdtkifXgGJF+IaFH+sG5oEH1OviPP9sVAHh6JQBFoLIP
+	jvaQNMa+9Aa4K6reu+jBii8iigKG92sj6NeAwp0e1NOwF1YicZLhRJkiVFNs5ajq4w8x+sK3Btk
+	d55+PObyegENMbz+ipPfIEm4hmAsCMuLIBriFEofP6k4yyd7nCiZU8vw/o47eBIfEv/2ReBmgOP
+	gPPQvP05ljvmXsZ4cUMKb5o=
+X-Google-Smtp-Source: AGHT+IFzWDzEi24i/nz1De+3xJ3ckkugm3ihnELKtJEzL0femZ/Le90PGY4M2oc8iPbhpg6LLOokug==
+X-Received: by 2002:a05:690c:498a:b0:6f6:7b3f:2a68 with SMTP id 00721157ae682-6fb5837e82dmr17829787b3.31.1739577789988;
+        Fri, 14 Feb 2025 16:03:09 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb35d586e5sm9844207b3.17.2025.02.14.16.03.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 16:03:09 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 2/2] PCI: Cache offset of Resizable BAR capability
-Date: Fri, 14 Feb 2025 18:03:01 -0600
-Message-Id: <20250215000301.175097-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250215000301.175097-1-helgaas@kernel.org>
-References: <20250215000301.175097-1-helgaas@kernel.org>
+	Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 0/2] platform/x86: thinkpad_acpi: Enable devres for subdriver .init callbacks
+Date: Fri, 14 Feb 2025 19:03:00 -0500
+Message-ID: <20250215000302.19753-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Hi all,
 
-Previously most resizable BAR interfaces (pci_rebar_get_possible_sizes(),
-pci_rebar_set_size(), etc) as well as pci_restore_state() searched config
-space for a Resizable BAR capability.  Most devices don't have such a
-capability, so this is wasted effort, especially for pci_restore_state().
+It was reported by Mark [1] that if subdrivers used devres, the
+tpacpi_pdev wouldn't bind successfully to the device, thus failing to
+create the various sysfs attributes that this driver exposes.
 
-Search for a Resizable BAR capability once at enumeration-time and cache
-the offset so we don't have to search every time we need it.  No functional
-change intended.
+The original problem is already fixed, however a complete solution was
+due.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+The approach I took is to let the driver core manage the lifetimes of
+the subdrivers (details in Patch [1/2]). This enables devres for
+subdrivers and IMO makes the code more maintainable (because of the
+lifetime gurantees).
+
+This was compile tested only, because (unfortunately) I don't own a
+thinkpad so some testing is absolutely required, as this is an extremely
+intricate driver.
+
+Based on top of the for-next branch.
+
+~ Kurt
 ---
- drivers/pci/pci.c   | 9 +++++++--
- drivers/pci/pci.h   | 1 +
- drivers/pci/probe.c | 1 +
- include/linux/pci.h | 1 +
- 4 files changed, 10 insertions(+), 2 deletions(-)
+[1] https://lore.kernel.org/platform-driver-x86/20250208091438.5972-1-mpearson-lenovo@squebb.ca/#t
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 503376bf7e75..cf2632080a94 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1872,7 +1872,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
- 	unsigned int pos, nbars, i;
- 	u32 ctrl;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+	pos = pdev->rebar_cap;
- 	if (!pos)
- 		return;
- 
-@@ -3719,6 +3719,11 @@ void pci_acs_init(struct pci_dev *dev)
- 	pci_enable_acs(dev);
- }
- 
-+void pci_rebar_init(struct pci_dev *pdev)
-+{
-+	pdev->rebar_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+}
-+
- /**
-  * pci_rebar_find_pos - find position of resize ctrl reg for BAR
-  * @pdev: PCI device
-@@ -3733,7 +3738,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
- 	unsigned int pos, nbars, i;
- 	u32 ctrl;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+	pos = pdev->rebar_cap;
- 	if (!pos)
- 		return -ENOTSUPP;
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 01e51db8d285..d7b46ddfd6d2 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -799,6 +799,7 @@ static inline int acpi_get_rc_resources(struct device *dev, const char *hid,
- }
- #endif
- 
-+void pci_rebar_init(struct pci_dev *pdev);
- int pci_rebar_get_current_size(struct pci_dev *pdev, int bar);
- int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size);
- static inline u64 pci_rebar_size_to_bytes(int size)
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..24dd3dcfd223 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2564,6 +2564,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_rcec_init(dev);		/* Root Complex Event Collector */
- 	pci_doe_init(dev);		/* Data Object Exchange */
- 	pci_tph_init(dev);		/* TLP Processing Hints */
-+	pci_rebar_init(dev);		/* Resizable BAR */
- 
- 	pcie_report_downtraining(dev);
- 	pci_init_reset_methods(dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..9e5bbd996c83 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -353,6 +353,7 @@ struct pci_dev {
- 	struct pci_dev  *rcec;          /* Associated RCEC device */
- #endif
- 	u32		devcap;		/* PCIe Device Capabilities */
-+	u16		rebar_cap;	/* Resizable BAR capability offset */
- 	u8		pcie_cap;	/* PCIe capability offset */
- 	u8		msi_cap;	/* MSI capability offset */
- 	u8		msix_cap;	/* MSI-X capability offset */
+Kurt Borja (2):
+  platform/x86: thinkpad_acpi: Move subdriver initialization to
+    tpacpi_pdriver's probe.
+  platform/x86: thinkpad_acpi: Move HWMON initialization to
+    tpacpi_hwmon_pdriver's probe
+
+ drivers/platform/x86/thinkpad_acpi.c | 176 ++++++++++++---------------
+ 1 file changed, 77 insertions(+), 99 deletions(-)
+
+
+base-commit: d497c47481f8e8f13e3191c9a707ed942d3bb3d7
 -- 
-2.34.1
+2.48.1
 
