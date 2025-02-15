@@ -1,49 +1,49 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3DEEEAB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A943B192;
 	Sat, 15 Feb 2025 00:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739578543; cv=none; b=O6+8XS6CnuXo25pZ2IDcbLGwJqWq7eGNWhmtubMSGPiDE6zfJZl82+T/eVgpS+oBWRQZZzaee2PJQX9ROry5WCInUuVLaYeU9Qj2GxGpQuzU4RBK+VorDCvXz8uoR7TcdtOR/MzUTGMr7LmI3Fnqne8E5Ja53XbgZSue2SK4mdQ=
+	t=1739578543; cv=none; b=NvNs0QahodTUcAVCMmrYucoltYdA4qVXYAla1EQmHitUjFq+owpbLAGrcolDv1XvA4oS4fmF3XRu6G++gXhITD1hsLVppPBrYp9Yepa6bGQ5zMmTq1OHmrpdmb0cbQIS3zUkvEnw1LAOXgEIjfVsxa1vsnELeWgFIy35TWVQoSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739578543; c=relaxed/simple;
-	bh=cuhKQoGfK9+UJZMhHCTsWxvRhZaf1bDsBsTxO/vq/84=;
+	bh=EHhiT+0dWBVudJepaAMBdhiYZEq4yAFmUsUSqMmZ9kM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=qTUT3Cwt2SvNNdg7q3b3UFTwGa8z8e/pSEJBCeWCHconbR1ki2x1LhigevVoTYXwYS/Q9xst7uIXAjwtOmWBvLpAyRRTq/WvzW24DVYK1lQtYiEgqwY0wsd7QmNaaNhultEOOylcNCGJjQ8+aZLbjBKe5qeyKNzq7zN9QvqQm14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oVBtp2LL; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=Sk8K2RtJKRLtfJUzrb2ZOh0NG54/x+sH2McnKPTEJhSxbj3gCS5KGEPkskP3BVXpdw882tMIPMAd0W2sgydHaT+dh2CScq67BTDkf8lyVEDLeDM/uhG51EHdifDr0M/0ZGYfuzbO6OgisSeHiSQi+Nmt3SpGgPVsKZ+PG/pb9ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B53DhqaJ; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oVBtp2LL"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EJ28dF024638;
-	Sat, 15 Feb 2025 00:15:29 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B53DhqaJ"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51F00SII023270;
+	Sat, 15 Feb 2025 00:15:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	SyFRIjgwqZRv8TNLPM8OodnVrmxwCcK5YVr6PD513jo=; b=oVBtp2LLdGcmwInR
-	zQUOzMdym/8tw27h9uXyGI0FJd4jYGDu76jyiHqUBWFW+AJ2g7bVyfT7jzqdT91y
-	XcQr2SQbhUafFdWaWG6HOaYIgean7/H7F/lfnD+3ZEhFKnmebBBTLIu9cX7/+SnB
-	BN5ZlB0rjVR54f8BTmb+V05jb9Thc9NaJ5cWyp+wCMOPspLd87SZm9SGDrdEH9i0
-	ta887GR2UM+Dnu/poPgGYaHAAbM/Wm3n7FGUVYInn0yIkYoLQsx2kWIgBI/Hln5h
-	U/+o+lkaqDiAqHIygD1gVZczyBumqvBbZDi8wrMoBNvMoEu38lgThHnFgIOiZaZ4
-	yZ1ZSg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44tbms0jag-1
+	UBSXBxADo0RU8LD+9yNUygZ3xMbNnqDsIOHDixCNL1k=; b=B53DhqaJT6lGoG1J
+	TmQXUBdZdg0oQDCE4qKS9rmBtveDP5TmbxaWR/eiq4kfALxxeJs1zOIoQP24RS/A
+	8fkkGKhaYPiDImXMgmyJxN6L7Rti7DfSCQTud30DSnOB7je0O64OmdZy2cr7RNw4
+	zxBXaakqhH55o2/ADXfliZjN3g5RP8sdSbBL6pf/1WTBsCo5CyLP2Z28g1rN4sbz
+	S+3fSVt86dxP26Hnsh6dbphdLxMGKJcIE8DXuwSiWEn2BzeDfLMYPTx6J+Ig6VlM
+	NCWyRrRY/0t5JQ2h7aJgCPksdHB6MRr459RmckeeJp+magFzDqMQ6bn3Dr7nEpvn
+	8ylPXA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sc5udj75-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:29 +0000 (GMT)
+	Sat, 15 Feb 2025 00:15:28 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FSNv009368
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FRT4028161
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:28 GMT
+	Sat, 15 Feb 2025 00:15:27 GMT
 Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 14 Feb 2025 16:15:28 -0800
+ 15.2.1544.9; Fri, 14 Feb 2025 16:15:26 -0800
 From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Fri, 14 Feb 2025 16:14:36 -0800
-Subject: [PATCH v6 13/14] drm/msm/dpu: Reorder encoder kickoff for CWB
+Date: Fri, 14 Feb 2025 16:14:31 -0800
+Subject: [PATCH v6 08/14] drm/msm/dpu: Configure CWB in writeback encoder
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250214-concurrent-wb-v6-13-a44c293cf422@quicinc.com>
+Message-ID: <20250214-concurrent-wb-v6-8-a44c293cf422@quicinc.com>
 References: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 In-Reply-To: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 To: Rob Clark <robdclark@gmail.com>,
@@ -76,156 +76,228 @@ CC: <quic_ebharadw@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         "Jessica
  Zhang" <quic_jesszhan@quicinc.com>
 X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=4414;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=7389;
  i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=cuhKQoGfK9+UJZMhHCTsWxvRhZaf1bDsBsTxO/vq/84=;
- b=GAKDkUwuxguKVqGKHwRzRYogmFQs5uzw41UWIjUyHpyalLiJF3RzzDXo4np4JsaTv/yFwyVyM
- oE1NhhqpkxYAFnBcdShw/12mUiRGVV7yuBMHaBqp3JANzbQdKoEySEw
+ bh=EHhiT+0dWBVudJepaAMBdhiYZEq4yAFmUsUSqMmZ9kM=;
+ b=EDKcBveoTwC+X2Rl9GknSfYZyYR9Y+M6JljfHSFBlHhEBgHMW294UXekBLoEpQB+yDsPZp+nI
+ 73rdrMd5PgCCLMiNRayuoabvmXX5QAYtd5z7dC8H467G3XrTCkmi/v8
 X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
  pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PtM7ttOpaSk2uA3z9xsE5QrWvHzvm3ex
-X-Proofpoint-ORIG-GUID: PtM7ttOpaSk2uA3z9xsE5QrWvHzvm3ex
+X-Proofpoint-GUID: 3xgDBdeK0mb5TiP-aleVG5VkOPk7_pE3
+X-Proofpoint-ORIG-GUID: 3xgDBdeK0mb5TiP-aleVG5VkOPk7_pE3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_10,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- impostorscore=0 suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502150000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502150000
 
-Add a helper that will handle the correct order of the encoder kickoffs
-for concurrent writeback.
-
-For concurrent writeback, the realtime encoder must always kickoff last
-as it will call the trigger flush and start.
-
-This avoids the following scenario where the writeback encoder
-increments the pending kickoff count after the WB_DONE interrupt is
-fired:
-
-If the realtime encoder is kicked off first, the encoder kickoff will
-flush/start the encoder and increment the pending kickoff count. The
-WB_DONE interrupt then fires (before the writeback encoder is kicked
-off). When the writeback encoder enters its kickoff, it will skip the
-flush/start (due to CWB being enabled) and hit a frame done timeout
-as the frame was kicked off (and the WB_DONE interrupt fired) without
-the pending kickoff count being incremented.
-
-In addition, the writeback timer should only start after the realtime
-encoder is kicked off to ensure that we don't get timeouts when the
-system has a heavy load (ex. when debug logs are enabled)
+Cache the CWB block mask in the DPU virtual encoder and configure CWB
+according to the CWB block mask within the writeback phys encoder
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 74 ++++++++++++++++++++++++++------
- 1 file changed, 60 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        | 75 +++++++++++++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |  7 +-
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |  4 +-
+ 3 files changed, 83 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 60df3ee9419a..4073d821158c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -953,6 +953,45 @@ static int _dpu_crtc_wait_for_frame_done(struct drm_crtc *crtc)
- 	return rc;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index b7d10855e6bf..2cd1de88448d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -24,6 +24,7 @@
+ #include "dpu_hw_catalog.h"
+ #include "dpu_hw_intf.h"
+ #include "dpu_hw_ctl.h"
++#include "dpu_hw_cwb.h"
+ #include "dpu_hw_dspp.h"
+ #include "dpu_hw_dsc.h"
+ #include "dpu_hw_merge3d.h"
+@@ -139,6 +140,7 @@ enum dpu_enc_rc_states {
+  *			num_phys_encs.
+  * @hw_dsc:		Handle to the DSC blocks used for the display.
+  * @dsc_mask:		Bitmask of used DSC blocks.
++ * @cwb_mask		Bitmask of used CWB muxes
+  * @intfs_swapped:	Whether or not the phys_enc interfaces have been swapped
+  *			for partial update right-only cases, such as pingpong
+  *			split where virtual pingpong does not generate IRQs
+@@ -185,6 +187,7 @@ struct dpu_encoder_virt {
+ 	struct dpu_hw_dsc *hw_dsc[MAX_CHANNELS_PER_ENC];
+ 
+ 	unsigned int dsc_mask;
++	unsigned int cwb_mask;
+ 
+ 	bool intfs_swapped;
+ 
+@@ -1151,6 +1154,7 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
+ 	int num_cwb = 0;
+ 	bool is_cwb_encoder;
+ 	unsigned int dsc_mask = 0;
++	unsigned int cwb_mask = 0;
+ 	int i;
+ 
+ 	if (!drm_enc) {
+@@ -1191,8 +1195,12 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
+ 						       ARRAY_SIZE(hw_pp));
+ 	}
+ 
+-	for (i = 0; i < num_cwb; i++)
++	for (i = 0; i < num_cwb; i++) {
+ 		dpu_enc->hw_cwb[i] = to_dpu_hw_cwb(hw_cwb[i]);
++		cwb_mask |= BIT(dpu_enc->hw_cwb[i]->idx - CWB_0);
++	}
++
++	dpu_enc->cwb_mask = cwb_mask;
+ 
+ 	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
+ 		drm_enc->crtc, DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
+@@ -2232,6 +2240,9 @@ void dpu_encoder_helper_phys_cleanup(struct dpu_encoder_phys *phys_enc)
+ 	if (phys_enc->hw_pp && phys_enc->hw_pp->ops.setup_dither)
+ 		phys_enc->hw_pp->ops.setup_dither(phys_enc->hw_pp, NULL);
+ 
++	if (dpu_enc->cwb_mask)
++		dpu_encoder_helper_phys_setup_cwb(phys_enc, false);
++
+ 	/* reset the merge 3D HW block */
+ 	if (phys_enc->hw_pp && phys_enc->hw_pp->merge_3d) {
+ 		phys_enc->hw_pp->merge_3d->ops.setup_3d_mode(phys_enc->hw_pp->merge_3d,
+@@ -2275,6 +2286,56 @@ void dpu_encoder_helper_phys_cleanup(struct dpu_encoder_phys *phys_enc)
+ 	ctl->ops.clear_pending_flush(ctl);
  }
  
-+static int dpu_crtc_kickoff_clone_mode(struct drm_crtc *crtc)
++void dpu_encoder_helper_phys_setup_cwb(struct dpu_encoder_phys *phys_enc,
++				       bool enable)
 +{
-+	struct drm_encoder *encoder;
-+	struct drm_encoder *rt_encoder = NULL, *wb_encoder;
-+	struct dpu_kms *dpu_kms = _dpu_crtc_get_kms(crtc);
++	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(phys_enc->parent);
++	struct dpu_hw_cwb *hw_cwb;
++	struct dpu_hw_cwb_setup_cfg cwb_cfg;
 +
-+	/* Find encoder for real time display */
-+	drm_for_each_encoder_mask(encoder, crtc->dev,
-+				  crtc->state->encoder_mask) {
-+		if (encoder->encoder_type == DRM_MODE_ENCODER_VIRTUAL)
-+			wb_encoder = encoder;
-+		else
-+			rt_encoder = encoder;
++	struct dpu_kms *dpu_kms;
++	struct dpu_global_state *global_state;
++	struct dpu_hw_blk *rt_pp_list[MAX_CHANNELS_PER_ENC];
++	int num_pp;
++
++	if (!phys_enc->hw_wb)
++		return;
++
++	dpu_kms = phys_enc->dpu_kms;
++	global_state = dpu_kms_get_existing_global_state(dpu_kms);
++	num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
++					       phys_enc->parent->crtc,
++					       DPU_HW_BLK_PINGPONG, rt_pp_list,
++					       ARRAY_SIZE(rt_pp_list));
++
++	if (num_pp == 0 || num_pp > MAX_CHANNELS_PER_ENC) {
++		DPU_DEBUG_ENC(dpu_enc, "invalid num_pp %d\n", num_pp);
++		return;
 +	}
-+
-+	if (!rt_encoder || !wb_encoder) {
-+		DRM_DEBUG_ATOMIC("real time or wb encoder not found\n");
-+		return -EINVAL;
-+	}
-+
-+	dpu_encoder_prepare_for_kickoff(wb_encoder);
-+	dpu_encoder_prepare_for_kickoff(rt_encoder);
-+
-+	dpu_vbif_clear_errors(dpu_kms);
 +
 +	/*
-+	 * Kickoff real time encoder last as it's the encoder that
-+	 * will do the flush
++	 * The CWB mux supports using LM or DSPP as tap points. For now,
++	 * always use LM tap point
 +	 */
-+	dpu_encoder_kickoff(wb_encoder);
-+	dpu_encoder_kickoff(rt_encoder);
++	cwb_cfg.input = INPUT_MODE_LM_OUT;
 +
-+	/* Don't start frame done timers until the kickoffs have finished */
-+	dpu_encoder_start_frame_done_timer(wb_encoder);
-+	dpu_encoder_start_frame_done_timer(rt_encoder);
++	for (int i = 0; i < MAX_CHANNELS_PER_ENC; i++) {
++		hw_cwb = dpu_enc->hw_cwb[i];
++		if (!hw_cwb)
++			continue;
 +
-+	return 0;
++		if (enable) {
++			struct dpu_hw_pingpong *hw_pp =
++					to_dpu_hw_pingpong(rt_pp_list[i]);
++			cwb_cfg.pp_idx = hw_pp->idx;
++		} else {
++			cwb_cfg.pp_idx = PINGPONG_NONE;
++		}
++
++		hw_cwb->ops.config_cwb(hw_cwb, &cwb_cfg);
++	}
 +}
 +
  /**
-  * dpu_crtc_commit_kickoff - trigger kickoff of the commit for this crtc
-  * @crtc: Pointer to drm crtc object
-@@ -981,13 +1020,27 @@ void dpu_crtc_commit_kickoff(struct drm_crtc *crtc)
- 			goto end;
- 		}
- 	}
--	/*
--	 * Encoder will flush/start now, unless it has a tx pending. If so, it
--	 * may delay and flush at an irq event (e.g. ppdone)
--	 */
--	drm_for_each_encoder_mask(encoder, crtc->dev,
--				  crtc->state->encoder_mask)
--		dpu_encoder_prepare_for_kickoff(encoder);
+  * dpu_encoder_helper_phys_setup_cdm - setup chroma down sampling block
+  * @phys_enc: Pointer to physical encoder
+@@ -2735,6 +2796,18 @@ enum dpu_intf_mode dpu_encoder_get_intf_mode(struct drm_encoder *encoder)
+ 	return INTF_MODE_NONE;
+ }
+ 
++/**
++ * dpu_encoder_helper_get_cwb_mask - get CWB blocks mask for the DPU encoder
++ * @phys_enc: Pointer to physical encoder structure
++ */
++unsigned int dpu_encoder_helper_get_cwb_mask(struct dpu_encoder_phys *phys_enc)
++{
++	struct drm_encoder *encoder = phys_enc->parent;
++	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(encoder);
 +
-+	if (drm_crtc_in_clone_mode(crtc->state)) {
-+		if (dpu_crtc_kickoff_clone_mode(crtc))
-+			goto end;
-+	} else {
-+		/*
-+		 * Encoder will flush/start now, unless it has a tx pending.
-+		 * If so, it may delay and flush at an irq event (e.g. ppdone)
-+		 */
-+		drm_for_each_encoder_mask(encoder, crtc->dev,
-+				crtc->state->encoder_mask)
-+			dpu_encoder_prepare_for_kickoff(encoder);
++	return dpu_enc->cwb_mask;
++}
 +
-+		dpu_vbif_clear_errors(dpu_kms);
+ /**
+  * dpu_encoder_helper_get_dsc - get DSC blocks mask for the DPU encoder
+  *   This helper function is used by physical encoder to get DSC blocks mask
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
+index 63f09857025c..61b22d949454 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+  * Copyright (c) 2015-2018 The Linux Foundation. All rights reserved.
+  */
+ 
+@@ -309,6 +309,8 @@ static inline enum dpu_3d_blend_mode dpu_encoder_helper_get_3d_blend_mode(
+ 	return BLEND_3D_NONE;
+ }
+ 
++unsigned int dpu_encoder_helper_get_cwb_mask(struct dpu_encoder_phys *phys_enc);
 +
-+		drm_for_each_encoder_mask(encoder, crtc->dev,
-+				crtc->state->encoder_mask) {
-+			dpu_encoder_kickoff(encoder);
-+			dpu_encoder_start_frame_done_timer(encoder);
-+		}
-+	}
+ unsigned int dpu_encoder_helper_get_dsc(struct dpu_encoder_phys *phys_enc);
  
- 	if (atomic_inc_return(&dpu_crtc->frame_pending) == 1) {
- 		/* acquire bandwidth and other resources */
-@@ -997,13 +1050,6 @@ void dpu_crtc_commit_kickoff(struct drm_crtc *crtc)
+ struct drm_dsc_config *dpu_encoder_get_dsc_config(struct drm_encoder *drm_enc);
+@@ -331,6 +333,9 @@ int dpu_encoder_helper_wait_for_irq(struct dpu_encoder_phys *phys_enc,
  
- 	dpu_crtc->play_count++;
+ void dpu_encoder_helper_phys_cleanup(struct dpu_encoder_phys *phys_enc);
  
--	dpu_vbif_clear_errors(dpu_kms);
--
--	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask) {
--		dpu_encoder_kickoff(encoder);
--		dpu_encoder_start_frame_done_timer(encoder);
--	}
--
- 	reinit_completion(&dpu_crtc->frame_done_comp);
++void dpu_encoder_helper_phys_setup_cwb(struct dpu_encoder_phys *phys_enc,
++				       bool enable);
++
+ void dpu_encoder_helper_phys_setup_cdm(struct dpu_encoder_phys *phys_enc,
+ 				       const struct msm_format *dpu_fmt,
+ 				       u32 output_type);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
+index 4c006ec74575..f2cbc9335e54 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+  */
  
- end:
+ #define pr_fmt(fmt)	"[drm:%s:%d] " fmt, __func__, __LINE__
+@@ -340,6 +340,8 @@ static void dpu_encoder_phys_wb_setup(
+ 
+ 	dpu_encoder_helper_phys_setup_cdm(phys_enc, format, CDM_CDWN_OUTPUT_WB);
+ 
++	dpu_encoder_helper_phys_setup_cwb(phys_enc, true);
++
+ 	dpu_encoder_phys_wb_setup_ctl(phys_enc);
+ }
+ 
 
 -- 
 2.48.1
