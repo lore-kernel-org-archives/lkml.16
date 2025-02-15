@@ -1,94 +1,81 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1A6151995
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C2B154C0B;
+	Sat, 15 Feb 2025 00:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739580826; cv=none; b=K1VeM1ALc6HLXAsvLTKGmmiKxC90KQB+58U5C7ZsLSA1iGd5aQkyUW7c+LXFe3Gl/kb9ZQfPBeCmkqO5NANQiEvC/iRv3Forn7G1zeZySIYp5+axBJFg3+VEW63IZC/P2oWrhEu2OlhivaHyBQj+OY8MIWtaOBI6UwigHuqia3E=
+	t=1739580827; cv=none; b=TxQHavdnyIwIBlqoaxgf/BmtFYotWNF1vI19kHBQo4JbDTt2p4dnWUgtwXC8/BWsyCfNiK+Q/qFGuf1GvrWdDCTWOFE3mCnLGa9MojBEaQ6tntmj9yxNlCxKPu4Uj1ozqwD20K6IOnf/1Nqa01bDspjzMSIfGT2hTNwjTMWt1jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739580826; c=relaxed/simple;
-	bh=r4upbXWz/jHR+BK3elm6yyIyLVx20H1k45CXl0DWRU0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=V7m9uF6kGjKPery2zUkgIStsCzP8wfqjMHOS1mhFc2TLbXpGsTWxLTREEo1gziih7+nppgK2DwkD8ahetxuauXEBSiL6senSHYIWSlYyyAHjec67VV6wc2Xu0byqTvBNvwoLnR+CeYDGZI7+mHAT7nAzGpI9XboU2EXD5WVSBsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nU2KMg25; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739580827; c=relaxed/simple;
+	bh=U2QJb6XIJC6fNter4lBmA14G9QFD+52FUM0I1jZgCx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MsF1njaWdf61H25YdARdrrsJ8pJIcyT8wNOvHJN+sKMFKXrvl6PRytk0eqM1JAyHsM24ycVk6K8st77yOCqkiUjJeNYoJ/5j4C4tFEj4IU5bzkczYJv8fe9yIrh4E+dJCVkL7axGlckp71bwxXCJ5G7akUthxbg1KMw7p7dzEK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sE5KJbIE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nU2KMg25"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1eabf4f7so3998314a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:53:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739580825; x=1740185625; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BFcmzJ0i+heVKybi2WQ/QCTEEQ4/aTm12Bn74IUsP94=;
-        b=nU2KMg250c2JI2c9jvFBNgXa6858eoDU6e0JDiNa5GWrUtHrJv/hSSDD2umEs5NXAU
-         8VdxdKMLQY9QnYUD5OL9ulizkw3VsaUUD8za1Ot8W9/wyoyePH4ZqpLyTuePaqIGOkDd
-         UmUzjVsNs48EweoB7KL+IlzwYbERUf1pTIhtIKxaxj5AoBMUM0LNYuGMETt1KBseru4a
-         /q7Ek/2cdYJHw0IfroC2ITfGvETmGgvcq2ZYIgTrv4S9WpNbdY43Kn6kv3z1TgEjWcBg
-         XZi3xA6Oit2dalDf869BVUi3wXmIbkh9hxZzu6FW0krV8Nn3n6coqZzUHRykpdo5T6Yl
-         WCow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739580825; x=1740185625;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BFcmzJ0i+heVKybi2WQ/QCTEEQ4/aTm12Bn74IUsP94=;
-        b=Uuj4Mv/eQHv0i/7M33NGJ/z6KYCEbVlNnC/iFt6wnfDTohvcuXbwbROPwxDHpLSVXF
-         XP1tKd6YjLCj9SPpI9anQ5gnMYzLzUp/lsMZxDNnu/bDl8z3vGz3AieHmlC8ExQe/XQc
-         ikBniDuWF3Q/jDHMQbttNPoBF6Ulr8Mmr38Zp+jwiLuuIcqGZXD7Q6vCDaX+H12f6zxm
-         8beVig85zIcDazuuaBc70XJhvWPtO26NvfxizRTm83HfgpPS28BY1X4xr0l7pSgnmeZO
-         oMsTn6rL27P6kyL6OOn0wEyJ6Kjsxfeh36YRJAvz1JlY/Ojx7pgbM/QvcCsZVnFB8NsT
-         fqKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU63ymHWtaeptW1bjCrJ3419UqMvBzbUGbdTgWMlPUr4lVt+PbCNUoK/3EMdasPxh5epCYRyCeGhSR0FZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOGfL8MFSpdr1LdiVXljQqNIyL2bJLCVRNAZaQxQTocOtpJCnL
-	wwrqXaWkqAvaCAs/jtSmokux6Pn7TdaaCyARrgwLkY6EGnO38YWuOMKWVT65rySaQmH+tykyxj6
-	nOQ==
-X-Google-Smtp-Source: AGHT+IGN1wRdgJaTgxmY9eExFQAkm/T4/RvoSDxP5bwSGPAnxCuDU/nufXXbQXJN5CFpgj5o1N4k1ihL4Is=
-X-Received: from pjbsi15.prod.google.com ([2002:a17:90b:528f:b0:2f9:c349:2f84])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1b0d:b0:2fa:2217:531b
- with SMTP id 98e67ed59e1d1-2fc40f234c9mr1600051a91.21.1739580824734; Fri, 14
- Feb 2025 16:53:44 -0800 (PST)
-Date: Fri, 14 Feb 2025 16:50:14 -0800
-In-Reply-To: <20250113200150.487409-1-jmattson@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sE5KJbIE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E90C4CEE2;
+	Sat, 15 Feb 2025 00:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739580826;
+	bh=U2QJb6XIJC6fNter4lBmA14G9QFD+52FUM0I1jZgCx4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sE5KJbIErIEnMN8ssaRMOU7wYVNoq49KmLNBuOhpYT2dC9Qp58XGtuzTjVjfE8v4g
+	 MIeHJ9R3ASbAwY59YMeQB58dQgb/7ehBG+RdOt9nLndobnNZcRKdqvLLcDAgF7rEow
+	 56ij5RYIxWo5PS9bO1Rj0bRnVRry6lwsPhdxyycJsZfZl19PE5irc2c9d82I9SXjFf
+	 vY15DyE4TWVyYOcfOhXXaZ0LeVcSj/HKxM0ep2rfawnO/omKg1ZBAzk7AnVH3S6yk9
+	 9hxrMz8+dFD0NjTsNnLK7ta8GhuD7l0xgA7aD+jVdldnpo8siG5+cXOmM6ai9hqF11
+	 FI+arOB4Cx7cQ==
+Date: Fri, 14 Feb 2025 16:53:45 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Russell King
+ <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>, Daniel Golle <daniel@makrotopia.org>,
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>, Sean Anderson
+ <seanga2@gmail.com>
+Subject: Re: [PATCH net-next v4 00/15] Introduce an ethernet port
+ representation
+Message-ID: <20250214165345.6cab996f@kernel.org>
+In-Reply-To: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
+References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250113200150.487409-1-jmattson@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <173958021460.1188824.2106156728368699135.b4-ty@google.com>
-Subject: Re: [PATCH 0/2] KVM: x86: Clean up MP_STATE transitions
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>, 
-	Gleb Natapov <gleb@redhat.com>, Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>, 
-	Suzuki Poulose <suzuki@in.ibm.com>, Srivatsa Vaddagiri <vatsa@linux.vnet.ibm.com>, 
-	Jan Kiszka <jan.kiszka@siemens.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 13 Jan 2025 12:01:42 -0800, Jim Mattson wrote:
-> Introduce a generic setter, kvm_set_mp_state(), and use that to ensure that
-> pv_unhalted is cleared on all transitions to KVM_MP_STATE_RUNNABLE.
-> 
-> Jim Mattson (2):
->   KVM: x86: Introduce kvm_set_mp_state()
->   KVM: x86: Clear pv_unhalted on all transitions to
->     KVM_MP_STATE_RUNNABLE
-> 
-> [...]
+On Thu, 13 Feb 2025 11:15:48 +0100 Maxime Chevallier wrote:
+> This is V4 of the series introducing the phy_port infrastructure.
 
-Applied to kvm-x86 misc, thanks!
+FWIW it doesn't seem to apply:
 
-[1/2] KVM: x86: Introduce kvm_set_mp_state()
-      https://github.com/kvm-x86/linux/commit/c9e5f3fa9039
-[2/2] KVM: x86: Clear pv_unhalted on all transitions to KVM_MP_STATE_RUNNABLE
-      https://github.com/kvm-x86/linux/commit/e9cb61055fee
+Applying: net: ethtool: Introduce ETHTOOL_LINK_MEDIUM_* values
+Applying: net: ethtool: Export the link_mode_params definitions
+error: sha1 information is lacking or useless (net/ethtool/common.c).
+error: could not build fake ancestor
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+Patch failed at 0002 net: ethtool: Export the link_mode_params definitions
 
---
-https://github.com/kvm-x86/linux/tree/next
+-- 
+pw-bot: cr
