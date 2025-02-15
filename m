@@ -1,110 +1,120 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6ED1EDA36;
-	Sat, 15 Feb 2025 19:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F2E1A9B58
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 19:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739646303; cv=none; b=jdWzo/2ciWCeIkPiz4sxGnDllAeoLFihk1reUIy3iXMKVNy+Rmk07iE/2J5bSc5eU+XOOdDIWB6DjLbAi03nhoIp58ya7pa83pkIG5ATu2UT4gVYaHbrAGM8PAEGvRVxIWgSnUXLgbV8G16ONq7Vd5V1pa3GF7lDfJY+KoBlEnI=
+	t=1739647565; cv=none; b=Ycc/TAMyg5qIMzbwtXours+24+DRTxWIRlsJbnPpVVphjYNgS9SzC59h++uE+1Y+0O5n7KemduZHwppB9wkhunKThe0LZ84bOtfI5mbyozsNWmPlB/qj9SsE2Dn4xMBjeC7jM3MN1ntMhyElqmzVd1NmhdrobfKPMtCNaUqDX8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739646303; c=relaxed/simple;
-	bh=R1vwAjSHqRQZG+Gr5qGl6CNoxLsPMBo/Oh1dwtSW7BA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tYFSV/J4d/9xEQYj5xM2l1Fnbv4juXr7HoV02Q4NG1a8fNq0+0ZcHjLtrLbsH5tMN58+iu7WAQ2Nf/4nrjFE/mooHVAb6xVCt05AZiAbi26jkSS45WAthYZvRn61Vsae3DDVpIUrKSznJ+SBzPbLVltuPFR/U6UaC93jTEurdn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=zuaE5qWf; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zuaE5qWf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=q4LqKRCXJnPDKHuRcvP8uYDa5EhADrSmcCiECY0GjxM=; b=zuaE5qWfzmZLlfybUdO4Ful9fX
-	Xvpz0iKNb62xJZJcS9AjOF7w1g90YGN2BSDUF3gQ6MKPPwaPNIy4o0tnJtLPN9Y7dxT8N4Xg43aYX
-	KKI++HSMbNUP3hmELC/qFIkBpIAMmYfBkjRaWWK+ntwwQwgRUeB0mOc6hKHo+buP2QjHzC+iR9JI6
-	Otw+CJYdDPe+67oPxzbd9/lqY7BsiBUcP46MIyZbuvro3TtJuvq/KI3ubrWaA2r/KXO2aCo7OWwKq
-	6fHn/UNAPS2QYADk3YVBADdeQOHb+7BZ8UF1DF9dp3lYUSlNMXuQBf+sYAL7+yipIdYNoLw4jr1CO
-	lER37mjQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50940)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tjNLk-00010g-2o;
-	Sat, 15 Feb 2025 18:57:13 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tjNLZ-0004Pp-2G;
-	Sat, 15 Feb 2025 18:57:01 +0000
-Date: Sat, 15 Feb 2025 18:57:01 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
-	Sean Anderson <seanga2@gmail.com>
-Subject: Re: [PATCH net-next v4 05/15] net: phy: Create a phy_port for
- PHY-driven SFPs
-Message-ID: <Z7DjfRwd3dbcEXTY@shell.armlinux.org.uk>
-References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
- <20250213101606.1154014-6-maxime.chevallier@bootlin.com>
+	s=arc-20240116; t=1739647565; c=relaxed/simple;
+	bh=QFDOIGqVG3OaK9BFd54IG1zfKf+O6oDDSIgyNKNCzgA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JWJ6RVYQLCOJIXdyT2kvXZabUKxE1jD5yr/kKL8nXIWMj0pI/nieIL11KAwtZJvWp6Grnp+Cb2cMmWQTsKdgqiQztI8fub6xRp8znwwA+AI58uawen1abBcFVgN6GS8ZehIk/RjV36Yc6c+PW8nAfqAUDPJ6K2YcCzgCRAUbNxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce81a40f5cso53202045ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 11:26:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739647563; x=1740252363;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lge3+MFxdQLOEv6Bj71Qxa7coFnMI4tbf6hDS9EroMw=;
+        b=sOrA9ddpwlni6SWPB1rv5KSoy4qKQXNV2poN4DdEgNZZ90oLfnJkyN0oMoOaSfcIiG
+         Wn8XWDt6TA9BnJlbymSw0nEJ6jRowZtM2QbPkCDUcWZkcyHy4PeaPfb9WeeOj46MSHl8
+         MmurEWYpV9UgTJUO9poQdd01DnuYrWehBeMnn6MImvJfXrdS8IRdgTzqj3Yo9b6PeZ+M
+         vp6MRIBOhRYKzE8NC3nD60TRW7EZGO1SLaaQq/DaI8EQiCAHw+O7wwI0GbqUsNmRLC/Y
+         f8ZMYGqunvNlW2kYI04ojLqMchvHivOG40ZZnHXH9h7x3qx35SswhXMISkLKQifJw+fI
+         CIuQ==
+X-Gm-Message-State: AOJu0Yxz3YI7354OL5S9LiwpZgcpuMgj9mjZkE+Z5Fz3KJm4j/6RrMZE
+	NSbWWP05w1LQQE5+/puDNCi1OwXEH+UBPkP7x/7DgkXu7lbhjW+WcORJTwB/hGqQ+G60OuIcY8i
+	uPvXQlBGUjz2HCgZko+TeunsFi8ZD4kMFitnUGTCkc15746z4UKfJ4nM=
+X-Google-Smtp-Source: AGHT+IEOBwmkOW8eC0/vXf/t1gKhqh++QvK6SGC8gCG3M+aDBLiKH/aSYfYg7QUNPibHfRqwo5Sb3usTYGUQkGZlsbApA4sWp9qV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213101606.1154014-6-maxime.chevallier@bootlin.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Received: by 2002:a05:6e02:1a8b:b0:3cf:c8bf:3b87 with SMTP id
+ e9e14a558f8ab-3d28076c338mr27686285ab.1.1739647563012; Sat, 15 Feb 2025
+ 11:26:03 -0800 (PST)
+Date: Sat, 15 Feb 2025 11:26:02 -0800
+In-Reply-To: <CAMp3bLV_i_7hQSmBH==x4EkDeKsfRdZD3FOnQj=278Lvi45P5w@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b0ea4a.050a0220.6f0b7.0019.GAE@google.com>
+Subject: Re: [syzbot] [ppp?] KMSAN: uninit-value in ppp_sync_send (2)
+From: syzbot <syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, purvayeshi550@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 13, 2025 at 11:15:53AM +0100, Maxime Chevallier wrote:
-> Some PHY devices may be used as media-converters to drive SFP ports (for
-> example, to allow using SFP when the SoC can only output RGMII). This is
-> already supported to some extend by allowing PHY drivers to registers
-> themselves as being SFP upstream.
-> 
-> However, the logic to drive the SFP can actually be split to a per-port
-> control logic, allowing support for multi-port PHYs, or PHYs that can
-> either drive SFPs or Copper.
-> 
-> To that extent, create a phy_port when registering an SFP bus onto a
-> PHY. This port is considered a "serdes" port, in that it can feed data
-> to anther entity on the link. The PHY driver needs to specify the
-> various PHY_INTERFACE_MODE_XXX that this port supports.
-> 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Hello,
 
-With this change, using phy_port requires phylink to also be built in
-an appropriate manner. Currently, phylink depends on phylib. phy_port
-becomes part of phylib. This patch makes phylib depend on phylink,
-thereby creating a circular dependency when modular.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: uninit-value in ppp_sync_send
 
-I think a different approach is needed here.
+=====================================================
+BUG: KMSAN: uninit-value in ppp_sync_txmunge drivers/net/ppp/ppp_synctty.c:517 [inline]
+BUG: KMSAN: uninit-value in ppp_sync_send+0x21c/0xb00 drivers/net/ppp/ppp_synctty.c:569
+ ppp_sync_txmunge drivers/net/ppp/ppp_synctty.c:517 [inline]
+ ppp_sync_send+0x21c/0xb00 drivers/net/ppp/ppp_synctty.c:569
+ ppp_channel_bridge_input drivers/net/ppp/ppp_generic.c:2280 [inline]
+ ppp_input+0x1f1/0xe60 drivers/net/ppp/ppp_generic.c:2304
+ pppoe_rcv_core+0x1d3/0x720 drivers/net/ppp/pppoe.c:379
+ sk_backlog_rcv+0x13b/0x420 include/net/sock.h:1122
+ __release_sock+0x1da/0x330 net/core/sock.c:3106
+ release_sock+0x6b/0x250 net/core/sock.c:3660
+ pppoe_sendmsg+0xb35/0xc50 drivers/net/ppp/pppoe.c:903
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:733
+ ____sys_sendmsg+0x903/0xb60 net/socket.c:2573
+ ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2627
+ __sys_sendmmsg+0x2ff/0x880 net/socket.c:2716
+ __do_sys_sendmmsg net/socket.c:2743 [inline]
+ __se_sys_sendmmsg net/socket.c:2740 [inline]
+ __x64_sys_sendmmsg+0xbc/0x120 net/socket.c:2740
+ x64_sys_call+0x33c2/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:308
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4121 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ kmem_cache_alloc_node_noprof+0x907/0xe00 mm/slub.c:4216
+ kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:587
+ __alloc_skb+0x363/0x7b0 net/core/skbuff.c:678
+ alloc_skb include/linux/skbuff.h:1331 [inline]
+ sock_wmalloc+0xfe/0x1a0 net/core/sock.c:2746
+ pppoe_sendmsg+0x385/0xc50 drivers/net/ppp/pppoe.c:867
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:733
+ ____sys_sendmsg+0x903/0xb60 net/socket.c:2573
+ ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2627
+ __sys_sendmmsg+0x2ff/0x880 net/socket.c:2716
+ __do_sys_sendmmsg net/socket.c:2743 [inline]
+ __se_sys_sendmmsg net/socket.c:2740 [inline]
+ __x64_sys_sendmmsg+0xbc/0x120 net/socket.c:2740
+ x64_sys_call+0x33c2/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:308
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 UID: 0 PID: 6825 Comm: syz.0.16 Not tainted 6.14.0-rc2-syzkaller-00281-g496659003dac-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+=====================================================
+
+
+Tested on:
+
+commit:         49665900 Merge tag 'i2c-for-6.14-rc3' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1177e7df980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=92e8820bdc5f2bf2
+dashboard link: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14dacbf8580000
+
