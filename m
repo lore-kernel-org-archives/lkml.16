@@ -1,49 +1,49 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5426F38DE3;
-	Sat, 15 Feb 2025 00:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A9D38DE1;
+	Sat, 15 Feb 2025 00:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739578543; cv=none; b=Wg3i4mKIVdaqt48ee7+ITP5pt+TIILjWXKs5XbmoBNaaXoMQjykaN9iqkXdgGrVAcpszSKAdKeIiaHXONSfOMlMWWZpMURy/0bGqNvitEgbRGh2GMk9liJnq0LDAxtUaHXW9zaJZJYdMmxKCZyAUhAKMlUETfCk6I/NQ905bhb4=
+	t=1739578544; cv=none; b=lj7Bi2I/ofT9jxy2qbPimBU4vglitbvNIvTWGVWLkmKJjL47ZC+AdsKpS4TaBkMN1GYwzZ4wfnm9AL2YAOijjYqSxKEiW2LRgbLwZi+8U4Ajg28Zb6Rc01oLpCLWUPBxSDHRhuN9Te7D79q2hYT0n4Qd39XOOxEPqC4dQmhckNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739578543; c=relaxed/simple;
-	bh=pHmpWq997UkN4mXaycvCRWIiGyMXXH+YD2kh3yfTP0o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=oXZFQkNtbkPStWytCeF/iM1MWg8mF6vF/hcoPwLUmlpO8t34dtRUHybINItLDcUd0jMBjJ47CE7Y6kShpCvH6WCP2+LXb3TXZhxnD9MCTh7YNMGYJoyhqqniM+qSKC/4zLK5Qk36mIJr9AKVxEFtoz2gGjMuZVuCuPN/PkqJrk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gCuE5a7j; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1739578544; c=relaxed/simple;
+	bh=yrox517d2kKb02JMPVJ/dy4HnLL670ZkdSU2kV+q0Hs=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=mzPSobrQio/zL3+ZU3yDQZ4J8udjPbDXMlJod3s0k5mNUASus9YsR8MXu9AizbDyRCfJBA7mJryFFt+jXMRT4JhZBMLsVZiozt/DbS9U2edUWgYGjX0EELMG8nG4itJFJITk85mzWuWjiAFQoOdpbsy76KYPj/n5tk3yy9//xZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MZKnr01m; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gCuE5a7j"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EH4uBh012386;
-	Sat, 15 Feb 2025 00:15:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hqNqoJznMPR3WwleOQ8gsi0rjmnTyQTZFXfc0J7qIt4=; b=gCuE5a7jB917T/vV
-	Hr01eavY7xHYVorwvNV++hP+gU3nWqwq5RGPgnpcv7lI9UHnTSY1RlFwxCdnXTC+
-	gznT5DWOpbC87E8ueva6qHoIdOqQYYAU2xUESsyrJsTL7lVScA1+O5gxMBV69q60
-	LTV6G+xC0HSDVYLK+diUha3EaP1CKbEOfpHwD1DhLWGYNgf4LQLXuqtS9PBgkkaV
-	pGGx0HKuJIagnKJ9Yn2MYDlKjFZmyZxUrzCgqweKk3BxNvmC83HDMWImagHXbjBe
-	ch+J2/65SP5pEACfYfBlGDjUiLD1X6E8mmEvgpnQ8l/xg1J55DdySTIaWbxW7xdM
-	OIqfAQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sc5udj74-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:27 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FQKo028158
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MZKnr01m"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EBh6N8018566;
 	Sat, 15 Feb 2025 00:15:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=mupee+uanTAEHfj/LNfoiv
+	opOeXJI+XkEy8HnDLaFho=; b=MZKnr01mldyu1lCmGUeA0UukFRy4u2x9mptkDv
+	QPxwqFxEEQ8TitByqRHnu9WZ2g6aQdbWwjI5L4WKToe69r6NRRC1bvackQAetjd5
+	Ha2tM/hOVVmYoNNZXsLaWTXBheerKfdx2LxBvgyrDBuujXMPGtOm7mnuKX73Mc0+
+	zW1RBvhJScU8r9yx9bB1N4pN77jqaRvHoH+q/LFAI8lF/eG6dZjF0zWjVSeoxEwh
+	8tuQZbTvOgaobUOOT3JRDe0DAC9WDH4zKNQg9W7DZeZgFOWrXcqoWbmrK9A4dmY0
+	NCYqPtX3KfGftBDilaZ1wnSWya2Jqz6J7yuJTrrnFawo9eCA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44t56vhm7y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Feb 2025 00:15:25 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FOcH025739
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Feb 2025 00:15:24 GMT
 Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 14 Feb 2025 16:15:26 -0800
+ 15.2.1544.9; Fri, 14 Feb 2025 16:15:24 -0800
 From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Fri, 14 Feb 2025 16:14:30 -0800
-Subject: [PATCH v6 07/14] drm/msm/dpu: Reserve resources for CWB
+Subject: [PATCH v6 00/14] drm/msm/dpu: Add Concurrent Writeback Support for
+ DPU 10.x+
+Date: Fri, 14 Feb 2025 16:14:23 -0800
+Message-ID: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,9 +52,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250214-concurrent-wb-v6-7-a44c293cf422@quicinc.com>
-References: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
-In-Reply-To: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAGDcr2cC/23STU7DMBAF4KtUWWNkj/+z4h6Ihe2MiSWSFCcNV
+ FXvzrQFKlpW0Tj+XqznHJoZa8G5aTeHpuJa5jKNNJiHTZP6ML4iKx3NDXBQ3AjH0jSmXa04Luw
+ jMm87A9LZ7DU0ZLYVc/k85z2/0NyXeZnq/hy/itPqJcmBv0laBeNMc4jCBASM8el9V1IZ02Oah
+ uaUtcLVe1C3Hshbp3z2nKMz8t7LXy+4MLdekg9Spuyjl07qe6+uHu69Ip8R6LW3wWZ+7/WP11z
+ AbZOrJm+UUSloaXiX//rjpdyKtDqX5dLw9YrazeVYAKyrA+tKXfZsmDqccWHOcetjBzagadfzP
+ f2FVDv3rNvuWJI5JOtyMsJ+b92GJfXnnTk6DDZ6tMnpHE6J2vlktBaCO+kggNSc//8BIehUS4+
+ VHnOIb8iitVGgFN7a3NLPQSqGGamXYShLu3HGoJLRKx0zFXD8Ak57uFysAgAA
+X-Change-ID: 20240618-concurrent-wb-97d62387f952
 To: Rob Clark <robdclark@gmail.com>,
         Dmitry Baryshkov
 	<dmitry.baryshkov@linaro.org>,
@@ -76,314 +81,199 @@ CC: <quic_ebharadw@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         "Jessica
  Zhang" <quic_jesszhan@quicinc.com>
 X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=10277;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=8544;
  i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=pHmpWq997UkN4mXaycvCRWIiGyMXXH+YD2kh3yfTP0o=;
- b=qHRaoAik2oLHBbupbB9sOd0QWkaOUQEuw7uR4b7b6vsIgnoBqG3h4orwcpS93Xr3BNou5mISm
- NITJqOUTByBDJL0DkyLa8pRcw/4R5O9SaoULL1elo4wyBTDhP3x1vxC
+ bh=yrox517d2kKb02JMPVJ/dy4HnLL670ZkdSU2kV+q0Hs=;
+ b=YDz6+JylNkQ2KvJZk5J08dkg3x1Pl7wnPXjg0AaU89N9GJQ+DJEMEtvw1WlhuNE2BAbj3Ix3w
+ +C8uh1IJZlFB2X2Jd1NKsvLfXfSB5EiqoEkuU5m13mGsJ1cfg/gV2Ty
 X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
  pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 0vuXWOu3wzAU-SdOdE5EjJfgrv7sskof
-X-Proofpoint-ORIG-GUID: 0vuXWOu3wzAU-SdOdE5EjJfgrv7sskof
+X-Proofpoint-ORIG-GUID: RGW1xVfJoEmwSw6TI3oXND3F22NWsJOP
+X-Proofpoint-GUID: RGW1xVfJoEmwSw6TI3oXND3F22NWsJOP
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_10,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 phishscore=0
- spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502150000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502150000
 
-Add support for RM to reserve dedicated CWB PINGPONGs and CWB muxes
+DPU supports a single writeback session running concurrently with primary
+display when the CWB mux is configured properly. This series enables
+clone mode for DPU driver and adds support for programming the CWB mux
+in cases where the hardware has dedicated CWB pingpong blocks. Currently,
+the CWB hardware blocks have only been added to the SM8650
+hardware catalog and only DSI has been exposed as a possible_clone of WB.
 
-For concurrent writeback, even-indexed CWB muxes must be assigned to
-even-indexed LMs and odd-indexed CWB muxes for odd-indexed LMs. The same
-even/odd rule applies for dedicated CWB PINGPONGs.
+This changes are split into two parts:
 
-Track the CWB muxes in the global state and add a CWB-specific helper to
-reserve the correct CWB muxes and dedicated PINGPONGs following the
-even/odd rule.
+The first part of the series will pull in Dmitry's patches to refactor
+the DPU resource manager to be based off of CRTC instead of encoder.
+This includes some changes (noted in the relevant commits) by me and
+Abhinav to fix some issues with getting the global state and refactoring
+the CDM allocation to work with Dmitry's changes.
 
-Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+The second part of the series will add support for CWB by doing the
+following:
+
+1) Add the CWB mux to the hardware catalog and clarify the pingpong
+   block index enum to specifiy which pingpong blocks are dedicated to
+   CWB only and which ones are general use pingpong blocks
+2) Add support for configuring the CWB mux via dpu_hw_cwb ops
+3) Add pending flush support for CWB
+4) Add support for validating clone mode in the DPU CRTC and setting up
+   CWB within the encoder
+5) Adjust the encoder trigger flush, trigger start, and kickoff order to
+   accomodate clone mode
+6) Adjust when the frame done timer is started for clone mode
+7) Define the possible clones for DPU encoders so that WB encoders can
+   be cloned by non-WB encoders
+
+The feature was tested on SM8650 using IGT's kms_writeback test with the
+following change [1] and dumping the writeback framebuffer when in clone
+mode. I haven't gotten the chance to test it on DP yet, but I've
+validated both single and dual LM on DSI.
+
+To test CWB with IGT, you'll need to apply this series [1] and run the
+following command to dump the writeback buffer:
+
+IGT_FRAME_DUMP_PATH=<dump path> FRAME_PNG_FILE_NAME=<file name> \
+./build/tests/kms_writeback -d [--run-subtest dump-valid-clones] \
+
+You can also do CRC validation by running this command:
+
+./build/tests/kms_writeback [--run-subtest dump-valid-clones]
+
+Note: When running IGT on SC7180, you will also need this IGT fix [2] to
+prevent IGT tests from failing after runningt kms_color@ctm-* tests.
+
+[1] https://patchwork.freedesktop.org/series/137933/
+[2] https://patchwork.freedesktop.org/series/144911/
 
 ---
 Changes in v6:
-- Add a comment on using the RM HW block array index to enforce the CWB
-  odd/even rule (Dmitry)
+- Don't return early from dpu_crtc_assign_resources() if encoder mask is
+  0
+- Dropped duplicate initialization and unnecessary clearing of the crtc
+  state
+- Fixed b4 dependencies list (Dmitry)
+- cdm_requested -> num_cdm (Dmitry)
+- Added comment doc on why we can use the RM array index to enforce the
+  CWB odd/even rule (Dmitry)
+- Link to v5: https://lore.kernel.org/r/20250128-concurrent-wb-v5-0-6464ca5360df@quicinc.com
 
 Changes in v5:
-- Allocate CWB muxes first then allocate PINGPONG block based on CWB mux
-  index
-- Corrected comment doc on odd/even rule
+- Rebased onto MSM modeset fixes series (Dmitry)
+- Reordered RM refactor patches to prevent breaking CI and to avoid
+  breaking when partially applied (Dmitry)
+- Switch CWB resource reservation to reserve CWB mux first (Dmitry)
+- Reworded commit messages to be clearer (Dmitry)
+- Change CDM check to fail only if both DP and WB outputs are
+  requesting the CDM block simultaneously (Dmitry)
+- Use helper to grab dsc config in dpu_encoder_update_topology
+- Link to v4: https://lore.kernel.org/r/20241216-concurrent-wb-v4-0-fe220297a7f0@quicinc.com
+
+Changes in v4:
+- Rebased onto latest msm-next
+- Added kunit tests for framework changes
+- Skip valid clone check for encoders that don't have any possible clones set
+  (this is to avoid failing kunit tests, specifically the HDMI state helper tests)
+- Link to v3: https://lore.kernel.org/r/20241016-concurrent-wb-v3-0-a33cf9b93835@quicinc.com
+
+Changes in v3:
+- Dropped support for CWB on DP connectors for now
+- Dropped unnecessary PINGPONG array in *_setup_cwb()
+- Add a check to make sure CWB and CDM aren't supported simultaneously
+  (Dmitry)
+- Document cwb_enabled checks in dpu_crtc_get_topology() (Dmitry)
+- Moved implementation of drm_crtc_in_clone_mode() to drm_crtc.c (Jani)
+- Dropped duplicate error message for reserving CWB resources (Dmitry)
+- Added notes in framework changes about posting a separate series to
+  add proper KUnit tests (Maxime)
+- Added commit message note addressing Sima's comment on handling
+  mode_changed (Dmitry)
+- Formatting fixes (Dmitry)
+- Added proper kerneldocs (Dmitry)
+- Renamed dpu_encoder_helper_get_cwb() -> *_get_cwb_mask() (Dmitry)
+- Capitalize all instances of "pingpong" in comments (Dmitry)
+- Link to v2: https://lore.kernel.org/r/20240924-concurrent-wb-v2-0-7849f900e863@quicinc.com
+
+Changes in v2:
+- Moved CWB hardware programming to its own dpu_hw_cwb abstraction
+  (Dmitry)
+- Reserve and get assigned CWB muxes using RM API and KMS global state
+  (Dmitry)
+- Dropped requirement to have only one CWB session at a time
+- Moved valid clone mode check to DRM framework (Dmitry and Ville)
+- Switch to default CWB tap point to LM as the DSPP
+- Dropped printing clone mode status in atomic state (Dmitry)
+- Call dpu_vbif_clear_errors() before dpu_encoder_kickoff() (Dmitry)
+- Squashed setup_input_ctrl() and setup_input_mode() into a single
+  dpu_hw_cwb op (Dmitry)
+- Moved function comment docs to correct place and fixed wording of
+  comments/commit messages (Dmitry)
+- Grabbed old CRTC state using proper drm_atomic_state API in
+  dpu_crtc_atomic_check() (Dmitry)
+- Split HW catalog changes of adding the CWB mux block and changing the
+  dedicated CWB pingpong indices into 2 separate commits (Dmitry)
+- Moved clearing the dpu_crtc_state.num_mixers to "drm/msm/dpu: fill
+  CRTC resources in dpu_crtc.c" (Dmitry)
+- Fixed alignment and other formatting issues (Dmitry)
+- Link to v1: https://lore.kernel.org/r/20240829-concurrent-wb-v1-0-502b16ae2ebb@quicinc.com
+
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 34 +++++++++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h |  2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h     |  1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c      | 87 +++++++++++++++++++++++++++++
- 4 files changed, 120 insertions(+), 4 deletions(-)
+Dmitry Baryshkov (3):
+      drm/msm/dpu: fill CRTC resources in dpu_crtc.c
+      drm/msm/dpu: move resource allocation to CRTC
+      drm/msm/dpu: switch RM to use crtc_id rather than enc_id for allocation
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 0e4f27da9534..b7d10855e6bf 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2,7 +2,7 @@
- /*
-  * Copyright (C) 2013 Red Hat
-  * Copyright (c) 2014-2018, 2020-2021 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-  *
-  * Author: Rob Clark <robdclark@gmail.com>
-  */
-@@ -28,6 +28,7 @@
- #include "dpu_hw_dsc.h"
- #include "dpu_hw_merge3d.h"
- #include "dpu_hw_cdm.h"
-+#include "dpu_hw_cwb.h"
- #include "dpu_formats.h"
- #include "dpu_encoder_phys.h"
- #include "dpu_crtc.h"
-@@ -133,6 +134,9 @@ enum dpu_enc_rc_states {
-  * @cur_slave:		As above but for the slave encoder.
-  * @hw_pp:		Handle to the pingpong blocks used for the display. No.
-  *			pingpong blocks can be different than num_phys_encs.
-+ * @hw_cwb:		Handle to the CWB muxes used for concurrent writeback
-+ *			display. Number of CWB muxes can be different than
-+ *			num_phys_encs.
-  * @hw_dsc:		Handle to the DSC blocks used for the display.
-  * @dsc_mask:		Bitmask of used DSC blocks.
-  * @intfs_swapped:	Whether or not the phys_enc interfaces have been swapped
-@@ -177,6 +181,7 @@ struct dpu_encoder_virt {
- 	struct dpu_encoder_phys *cur_master;
- 	struct dpu_encoder_phys *cur_slave;
- 	struct dpu_hw_pingpong *hw_pp[MAX_CHANNELS_PER_ENC];
-+	struct dpu_hw_cwb *hw_cwb[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_dsc *hw_dsc[MAX_CHANNELS_PER_ENC];
- 
- 	unsigned int dsc_mask;
-@@ -1141,7 +1146,10 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
- 	struct dpu_hw_blk *hw_pp[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_blk *hw_dsc[MAX_CHANNELS_PER_ENC];
-+	struct dpu_hw_blk *hw_cwb[MAX_CHANNELS_PER_ENC];
- 	int num_ctl, num_pp, num_dsc;
-+	int num_cwb = 0;
-+	bool is_cwb_encoder;
- 	unsigned int dsc_mask = 0;
- 	int i;
- 
-@@ -1155,6 +1163,8 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
- 
- 	priv = drm_enc->dev->dev_private;
- 	dpu_kms = to_dpu_kms(priv->kms);
-+	is_cwb_encoder = drm_crtc_in_clone_mode(crtc_state) &&
-+			dpu_enc->disp_info.intf_type == INTF_WB;
- 
- 	global_state = dpu_kms_get_existing_global_state(dpu_kms);
- 	if (IS_ERR_OR_NULL(global_state)) {
-@@ -1165,9 +1175,25 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
- 	trace_dpu_enc_mode_set(DRMID(drm_enc));
- 
- 	/* Query resource that have been reserved in atomic check step. */
--	num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
--		drm_enc->crtc, DPU_HW_BLK_PINGPONG, hw_pp,
--		ARRAY_SIZE(hw_pp));
-+	if (is_cwb_encoder) {
-+		num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
-+						       drm_enc->crtc,
-+						       DPU_HW_BLK_DCWB_PINGPONG,
-+						       hw_pp, ARRAY_SIZE(hw_pp));
-+		num_cwb = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
-+						       drm_enc->crtc,
-+						       DPU_HW_BLK_CWB,
-+						       hw_cwb, ARRAY_SIZE(hw_cwb));
-+	} else {
-+		num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
-+						       drm_enc->crtc,
-+						       DPU_HW_BLK_PINGPONG, hw_pp,
-+						       ARRAY_SIZE(hw_pp));
-+	}
-+
-+	for (i = 0; i < num_cwb; i++)
-+		dpu_enc->hw_cwb[i] = to_dpu_hw_cwb(hw_cwb[i]);
-+
- 	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
- 		drm_enc->crtc, DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-index ba7bb05efe9b..8d820cd1b554 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-@@ -77,12 +77,14 @@ enum dpu_hw_blk_type {
- 	DPU_HW_BLK_LM,
- 	DPU_HW_BLK_CTL,
- 	DPU_HW_BLK_PINGPONG,
-+	DPU_HW_BLK_DCWB_PINGPONG,
- 	DPU_HW_BLK_INTF,
- 	DPU_HW_BLK_WB,
- 	DPU_HW_BLK_DSPP,
- 	DPU_HW_BLK_MERGE_3D,
- 	DPU_HW_BLK_DSC,
- 	DPU_HW_BLK_CDM,
-+	DPU_HW_BLK_CWB,
- 	DPU_HW_BLK_MAX,
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index 54ef6cfa2485..a57ec2ec1060 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -132,6 +132,7 @@ struct dpu_global_state {
- 	uint32_t cdm_to_crtc_id;
- 
- 	uint32_t sspp_to_crtc_id[SSPP_MAX - SSPP_NONE];
-+	uint32_t cwb_to_crtc_id[CWB_MAX - CWB_0];
- };
- 
- struct dpu_global_state
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-index 4da2e47265d4..3efbba425ca6 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-@@ -233,6 +233,59 @@ static int _dpu_rm_get_lm_peer(struct dpu_rm *rm, int primary_idx)
- 	return -EINVAL;
- }
- 
-+static int _dpu_rm_reserve_cwb_mux_and_pingpongs(struct dpu_rm *rm,
-+						 struct dpu_global_state *global_state,
-+						 uint32_t crtc_id,
-+						 struct msm_display_topology *topology)
-+{
-+	int num_cwb_mux = topology->num_lm, cwb_mux_count = 0;
-+	int cwb_pp_start_idx = PINGPONG_CWB_0 - PINGPONG_0;
-+	int cwb_pp_idx[MAX_BLOCKS];
-+	int cwb_mux_idx[MAX_BLOCKS];
-+
-+	/*
-+	 * Reserve additional dedicated CWB PINGPONG blocks and muxes for each
-+	 * mixer
-+	 *
-+	 * TODO: add support reserving resources for platforms with no
-+	 *       PINGPONG_CWB
-+	 */
-+	for (int i = 0; i < ARRAY_SIZE(rm->mixer_blks) &&
-+	     cwb_mux_count < num_cwb_mux; i++) {
-+		for (int j = 0; j < ARRAY_SIZE(rm->cwb_blks); j++) {
-+			/*
-+			 * Odd LMs must be assigned to odd CWB muxes and even
-+			 * LMs with even CWB muxes.
-+			 *
-+			 * Since the RM HW block array index is based on the HW
-+			 * block ids, we can also use the array index to enforce
-+			 * the odd/even rule. See dpu_rm_init() for more
-+			 * information
-+			 */
-+			if (reserved_by_other(global_state->cwb_to_crtc_id, j, crtc_id) ||
-+			    i % 2 != j % 2)
-+				continue;
-+
-+			cwb_mux_idx[cwb_mux_count] = j;
-+			cwb_pp_idx[cwb_mux_count] = j + cwb_pp_start_idx;
-+			cwb_mux_count++;
-+			break;
-+		}
-+	}
-+
-+	if (cwb_mux_count != num_cwb_mux) {
-+		DPU_ERROR("Unable to reserve all CWB PINGPONGs\n");
-+		return -ENAVAIL;
-+	}
-+
-+	for (int i = 0; i < cwb_mux_count; i++) {
-+		global_state->pingpong_to_crtc_id[cwb_pp_idx[i]] = crtc_id;
-+		global_state->cwb_to_crtc_id[cwb_mux_idx[i]] = crtc_id;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * _dpu_rm_check_lm_and_get_connected_blks - check if proposed layer mixer meets
-  *	proposed use case requirements, incl. hardwired dependent blocks like
-@@ -623,6 +676,12 @@ static int _dpu_rm_make_reservation(
- 		return ret;
- 	}
- 
-+	if (topology->cwb_enabled) {
-+		ret = _dpu_rm_reserve_cwb_mux_and_pingpongs(rm, global_state,
-+							    crtc_id, topology);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	ret = _dpu_rm_reserve_ctls(rm, global_state, crtc_id,
- 			topology);
-@@ -680,6 +739,8 @@ void dpu_rm_release(struct dpu_global_state *global_state,
- 	_dpu_rm_clear_mapping(global_state->dspp_to_crtc_id,
- 			ARRAY_SIZE(global_state->dspp_to_crtc_id), crtc_id);
- 	_dpu_rm_clear_mapping(&global_state->cdm_to_crtc_id, 1, crtc_id);
-+	_dpu_rm_clear_mapping(global_state->cwb_to_crtc_id,
-+			ARRAY_SIZE(global_state->cwb_to_crtc_id), crtc_id);
- }
- 
- /**
-@@ -824,6 +885,7 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
- 
- 	switch (type) {
- 	case DPU_HW_BLK_PINGPONG:
-+	case DPU_HW_BLK_DCWB_PINGPONG:
- 		hw_blks = rm->pingpong_blks;
- 		hw_to_crtc_id = global_state->pingpong_to_crtc_id;
- 		max_blks = ARRAY_SIZE(rm->pingpong_blks);
-@@ -853,6 +915,11 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
- 		hw_to_crtc_id = &global_state->cdm_to_crtc_id;
- 		max_blks = 1;
- 		break;
-+	case DPU_HW_BLK_CWB:
-+		hw_blks = rm->cwb_blks;
-+		hw_to_crtc_id = global_state->cwb_to_crtc_id;
-+		max_blks = ARRAY_SIZE(rm->cwb_blks);
-+		break;
- 	default:
- 		DPU_ERROR("blk type %d not managed by rm\n", type);
- 		return 0;
-@@ -863,6 +930,20 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
- 		if (hw_to_crtc_id[i] != crtc_id)
- 			continue;
- 
-+		if (type == DPU_HW_BLK_PINGPONG) {
-+			struct dpu_hw_pingpong *pp = to_dpu_hw_pingpong(hw_blks[i]);
-+
-+			if (pp->idx >= PINGPONG_CWB_0)
-+				continue;
-+		}
-+
-+		if (type == DPU_HW_BLK_DCWB_PINGPONG) {
-+			struct dpu_hw_pingpong *pp = to_dpu_hw_pingpong(hw_blks[i]);
-+
-+			if (pp->idx < PINGPONG_CWB_0)
-+				continue;
-+		}
-+
- 		if (num_blks == blks_size) {
- 			DPU_ERROR("More than %d resources assigned to crtc %d\n",
- 				  blks_size, crtc_id);
-@@ -945,4 +1026,10 @@ void dpu_rm_print_state(struct drm_printer *p,
- 		dpu_rm_print_state_helper(p, rm->hw_sspp[i] ? &rm->hw_sspp[i]->base : NULL,
- 					  global_state->sspp_to_crtc_id[i]);
- 	drm_puts(p, "\n");
-+
-+	drm_puts(p, "\tcwb=");
-+	for (i = 0; i < ARRAY_SIZE(global_state->cwb_to_crtc_id); i++)
-+		dpu_rm_print_state_helper(p, rm->cwb_blks[i],
-+					  global_state->cwb_to_crtc_id[i]);
-+	drm_puts(p, "\n");
- }
+Jessica Zhang (11):
+      drm/msm/dpu: Add CWB to msm_display_topology
+      drm/msm/dpu: Require modeset if clone mode status changes
+      drm/msm/dpu: Fail atomic_check if multiple outputs request CDM block
+      drm/msm/dpu: Reserve resources for CWB
+      drm/msm/dpu: Configure CWB in writeback encoder
+      drm/msm/dpu: Support CWB in dpu_hw_ctl
+      drm/msm/dpu: Adjust writeback phys encoder setup for CWB
+      drm/msm/dpu: Start frame done timer after encoder kickoff
+      drm/msm/dpu: Skip trigger flush and start for CWB
+      drm/msm/dpu: Reorder encoder kickoff for CWB
+      drm/msm/dpu: Set possible clones for all encoders
 
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           | 222 ++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h           |   3 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        | 418 ++++++++++++---------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h        |  16 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |   7 +-
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |  16 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         |  30 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |  15 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h        |   2 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |  27 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h            |  13 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             | 298 ++++++++++-----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h             |  14 +-
+ 13 files changed, 753 insertions(+), 328 deletions(-)
+---
+base-commit: 866e43b945bf98f8e807dfa45eca92f931f3a032
+change-id: 20240618-concurrent-wb-97d62387f952
+prerequisite-change-id: 20241222-drm-dirty-modeset-88079bd27ae6:v2
+prerequisite-patch-id: 0c61aabfcd13651203f476985380cbf4d3c299e6
+prerequisite-patch-id: c6026f08011c288fd301676e9fa6f46d0cc1dab7
+prerequisite-patch-id: b0cb06d5c88791d6e4755d879ced0d5050aa3cbf
+prerequisite-patch-id: fd72ddde9dba0df053113bc505c213961a9760da
+prerequisite-change-id: 20250209-dpu-c3fac78fc617:v2
+prerequisite-patch-id: c84d2b4b06be06384968429085d1e8ebae23a583
+prerequisite-patch-id: fb8ea7b9e7c85fabd27589c6551108382a235002
+prerequisite-change-id: 20250211-dither-disable-b77b1e31977f:v1
+prerequisite-patch-id: 079e04296212b4b83d51394b5a9b5eea6870d98a
+
+Best regards,
 -- 
-2.48.1
+Jessica Zhang <quic_jesszhan@quicinc.com>
 
