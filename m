@@ -1,181 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41DD13DDAE;
-	Sat, 15 Feb 2025 14:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0043F1B532F;
+	Sat, 15 Feb 2025 14:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739629226; cv=none; b=rCq2WkSh5I4X6DnJFXWiTriCvQpUsMTuHV5P+uBNTqd6bDcVD/30TYUz/EDXesM6FDiPm0dP55urpz/7hfXUnd6crche615C8/3cKwytq6EP/OxWdQ01N/P/+KQ40SNa3OLfGB0l6Iom1tGkFv+xveK+fAJmVVG5+UFQwHXb0t0=
+	t=1739629250; cv=none; b=F3sQdMrHD8RCFXz/XgeCjKxJ9Hl7Si0wS42AC8SELCiQQU7fI8+UXgdsruxa3yS9rKwvvcEO0r5nNsy5/NqwaXsUwHyaYxJLVNrGd85KQcjDQxlnCRu+5RU8k+EzbTw3pz1qRfhMHEFhitXl/+H3oa5dA0MY5V0KRyoJr/bvcdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739629226; c=relaxed/simple;
-	bh=vMvQRjuv1vGCSFx8wFuFSrwF4Vfs84FA2cOaPrDafZY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m2mIXrHHX8RR2bY+1lstNox4RPaQ/HXzFKko14WPUIEoov08ATESc/CHWJU6eT1sldwXPOuI6Qv3dx00RAIymXSBsANnS+6xJgZgP99LcOYj8zXzA0GKSUja5IfCNWkdE/Ixf+M18wy+RGhIq3NMmg0UoiTVSQgWtqL59ByXACk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYaZmSXG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739629250; c=relaxed/simple;
+	bh=9uSRy5YwtCFQyHZsA76qYd3sx/h0OTyVxLvPXfU/XOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OftCMaZae3t6/JlwyTcwjlUOPkHyb45VcFmpk53B6SFJinr2VU8OvzxOUFHsXoCwKlnVjHI9jXu3oLfpzlyrU8bNjuCuEwry8+8wrMSiWcbxSZVnPnwDl0FGFxSSQCdMUqMx/c+xlnqzOsWQQjq2LgYLHi1Id1YXlL6q+h1BmT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HjhlUc1D; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYaZmSXG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54115C4CEE8;
-	Sat, 15 Feb 2025 14:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739629226;
-	bh=vMvQRjuv1vGCSFx8wFuFSrwF4Vfs84FA2cOaPrDafZY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HYaZmSXGFXQ7XcFmvAhp5sLGJ4+Mxv0Ll+Iuy+rwJcuVrBSlYM+ea3VBIEQyr/2tb
-	 o8llVs0DlGciXon2G4zCZJvkrGT3JTFELmSKXsZzjk+ZcYXgQjtm2GCGPax9a53Zr/
-	 JC5UOvtX2cFt3Pgc0dPFMqO5/1WDCKjcPGiSHhO89xAMZi6tDPfKUlatSyxnv1v5s+
-	 E3jzpKxgk/HnKp359kDhFTovdvpcMMY6amC7YGx6FLD2cZfu6JbWQsQRRZ6bDhFqCF
-	 ER1zG+iEz3hPO8P/Zx2Kw//pF4n3sv8l2i/O2e3w8qpF8HHzPI9TudkfGCZuNA+Ra8
-	 gyX4Oxl74F0SQ==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3091fecb637so14120201fa.1;
-        Sat, 15 Feb 2025 06:20:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUncpjoqN+YgJU8Wg3J5XjV9qOk9ByWnYPhl1yZw7Aq2UZRSI+aKetUbD3dv4phqAOxYkJzK7PN+Rk=@vger.kernel.org, AJvYcCXDLw+pmNt3EPfmsAb+v9twFZM8jB0DsSzRAFb+fSpxr26XCf3AmzeHkfafZ1hlqSPMg37X2cLTE40Adrsf@vger.kernel.org, AJvYcCXgAPUcxHY/hT7ps5qJTSbvc3C+7WKwVz4OWwQNXxsNCWO5n0L5SIxtz8jCP7o2edNtB0WrxMzkVVNdT+tw@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRhxXWQGuefeQag4VqzGvQdzWorCux3VzRYZ5mlFaMDh+N9kb3
-	Cn9wdyhTLbgcpLzDIJXDoSLDR4LMty5CPJuwFkPPrEsEQHYvtWTV3t+YQsa7zMsFCFb9ZM1NS9c
-	rP8aFYUGi51IffUG+Mq3wx2WOf0Q=
-X-Google-Smtp-Source: AGHT+IEn4QmvBBN4zk0EepOwGaCTOHfaVaSe8FqudfNVLihJRqeNKKool8KtoxB6GlwlfdxZCKdgpO3jveG+b+F6Nug=
-X-Received: by 2002:a05:6512:2342:b0:542:2190:9d99 with SMTP id
- 2adb3069b0e04-5452fe2e32bmr1192255e87.6.1739629225000; Sat, 15 Feb 2025
- 06:20:25 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HjhlUc1D"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6C42840E01A1;
+	Sat, 15 Feb 2025 14:20:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fLWYrGP1x5ap; Sat, 15 Feb 2025 14:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739629241; bh=FvtP+96Hz/CW7VSStEV/oT/LfP9o+DeYiDp94whDh+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HjhlUc1D2YERb3dMUSBRQO819si1b5MIvcs4vJ2Tl5qDX+8KsmehZDaz2DLl/AO0W
+	 bPBatnNAh16BZgOvCLe2SozMkoaX6xc4Sese+9/rRqm6ADg9YE1HEpOkZ5QJDUrNdr
+	 OWsHAuR8koEqE12mTTIEuz+hO95eRlyo/vcVVvgvzut5k4C1yeUSFZ/68lCwh0EpfO
+	 hpyGYIHdmzLvFJCaGUUXphDPJiCzBW0nqY87jFQAFSn2KtS4c+2gjtUdu/DfszFZU9
+	 rt8dSxZXaI0IYIJEDcmmcn1JBhdazos4UafnVml1CKsTyeoYKDW9AIoNgb7ICRxFIa
+	 QEj/j3rkz4G5bzW1D61602jqbbB1PQHh6jiM1sP5YoAAvauTInF0dup7Gaf01peqQE
+	 sTBjs+rpzgxlDM3JPm1Gw/QhvEUHNwB4tX2LsCfR6B2TOVWC+aWjlHrZcGXi/6/7+G
+	 2SUEprPliy8n/E47nGrjAC7XmBoAbadqfcGXR/fKcieikAea9mhPx4aqXm1Bkp1iff
+	 Uj+9dPHeuIZZtpZtZyUqjUkFI7jYDisblFnXgB/qjfkmlfK+uui37tfKm2Z9i1+qh6
+	 mhXMtedZmzxGv4m3P4xWEanTFVVNIioiikReWPOPUxqtN8+f6z/Fd4seCHF0QJbVVW
+	 RP7RFzgIx/cQtHmIQdWnN5EI=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 179E140E016A;
+	Sat, 15 Feb 2025 14:20:24 +0000 (UTC)
+Date: Sat, 15 Feb 2025 15:20:17 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+	will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
+	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
+Subject: Re: [PATCH v5 1/5] x86/cpufeatures: Add {required,disabled} feature
+ configs
+Message-ID: <20250215142017.GCZ7CioRHgpm6a-eIZ@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com>
+ <20250106070727.3211006-2-xin@zytor.com>
+ <20250214215823.GEZ6-8f5wt--IWggtl@fat_crate.local>
+ <469D0BEE-76D6-4417-B5B0-0054D3F96784@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250215114223.140688-1-krzysztof.kozlowski@linaro.org>
- <CAK7LNATqSPBnGfVXCfJq7oCtE1ge4-L5QY6gVx8_chpmKDQusg@mail.gmail.com> <886cb4b9-9d95-4346-9c38-923cb7c69036@linaro.org>
-In-Reply-To: <886cb4b9-9d95-4346-9c38-923cb7c69036@linaro.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 15 Feb 2025 23:19:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQXXrwCGHKJRCynM3edT9JyQ-f_CXHOoZaBH76csD1URw@mail.gmail.com>
-X-Gm-Features: AWEUYZl1j8av6G_nZeziPb8eszZ-qUH_e-MDL7y56CpjrilMtMb_j-ZyK67b6wo
-Message-ID: <CAK7LNAQXXrwCGHKJRCynM3edT9JyQ-f_CXHOoZaBH76csD1URw@mail.gmail.com>
-Subject: Re: [PATCH] docs: kconfig: Mention IS_REACHABLE as way for optional dependency
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <469D0BEE-76D6-4417-B5B0-0054D3F96784@zytor.com>
 
-On Sat, Feb 15, 2025 at 10:02=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 15/02/2025 13:54, Masahiro Yamada wrote:
-> > On Sat, Feb 15, 2025 at 8:42=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> Several drivers express optional Kconfig dependency with FOO || !FOO,
-> >> but for many choices this is neither suitable (lack of stubs for !FOO
-> >> like in HWMON) nor really needed and driver can be built in even if FO=
-O
-> >> is the module.  This is achieved with IS_REACHABLE, so provide cross
-> >> reference to it.
-> >>
-> >> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> >> Cc: Arnd Bergmann <arnd@arndb.de>
-> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >> ---
-> >>  Documentation/kbuild/kconfig-language.rst | 13 ++++++++++---
-> >>  1 file changed, 10 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation=
-/kbuild/kconfig-language.rst
-> >> index 2619fdf56e68..66248294a552 100644
-> >> --- a/Documentation/kbuild/kconfig-language.rst
-> >> +++ b/Documentation/kbuild/kconfig-language.rst
-> >> @@ -194,6 +194,8 @@ applicable everywhere (see syntax).
-> >>    ability to hook into a secondary subsystem while allowing the user =
-to
-> >>    configure that subsystem out without also having to unset these dri=
-vers.
-> >>
-> >> +.. _is_reachable:
-> >
-> > Instead of this, could you move this hunk below ?
-> >
->
-> Ack
->
-> >
-> >
-> >
-> >
-> >>    Note: If the combination of FOO=3Dy and BAZ=3Dm causes a link error=
-,
-> >>    you can guard the function call with IS_REACHABLE()::
-> >>
-> >> @@ -580,10 +582,15 @@ Some drivers are able to optionally use a featur=
-e from another module
-> >>  or build cleanly with that module disabled, but cause a link failure
-> >>  when trying to use that loadable module from a built-in driver.
-> >>
-> >> -The most common way to express this optional dependency in Kconfig lo=
-gic
-> >> -uses the slightly counterintuitive::
-> >> +There are two ways to express this optional dependency:
-> >>
-> >> -  config FOO
-> >> +1. If pre-processor can discard entire optional code or module FOO do=
-es not
-> >> +   provide !FOO stubs then in the C code :ref:`IS_REACHABLE<is_reacha=
-ble>`
-> >
-> > Instead of the link, please move the code example at line 200 to here.
-> >
-> > The note at line 197 is not strongly related to the 'imply' keyword.
-> >
-> >
-> > One more thing, please document the drawback of IS_REACHABLE.
->
-> Ack
->
-> >
-> > It is true that IS_REACHABLE() resolves the link error, but we
-> > will end up with run-time debugging.
-> >
-> > foo_init()
-> > {
-> >         if (IS_REACHABLE(CONFIG_BAZ))
-> >                 baz_register(&foo);
-> >         ...
-> > }
-> >
-> > Even if CONFIG_BAZ is enabled, baz_register() may get discarded.
->
-> Hm, why would that happen? For compiler this would be "if(true)", so
-> what case would lead to discarding?
+On Sat, Feb 15, 2025 at 02:12:35AM -0800, H. Peter Anvin wrote:
+> CX8 is the name of the CPUID flag, for better or worse. 
 
+Right, so a separate patch:
 
+git grep X86_CMPXCHG64
+arch/x86/Kconfig:135:   select ARCH_USE_CMPXCHG_LOCKREF         if X86_CMPXCHG64
+arch/x86/Kconfig.cpu:369:config X86_CMPXCHG64
+arch/x86/Kconfig.cpu:383:       default "5" if X86_32 && X86_CMPXCHG64
+arch/x86/include/asm/asm-prototypes.h:19:#ifndef CONFIG_X86_CMPXCHG64
+arch/x86/include/asm/atomic64_32.h:51:#ifdef CONFIG_X86_CMPXCHG64
+arch/x86/include/asm/cmpxchg_32.h:72:#ifdef CONFIG_X86_CMPXCHG64
+arch/x86/include/asm/required-features.h:26:#ifdef CONFIG_X86_CMPXCHG64
+arch/x86/lib/Makefile:59:ifneq ($(CONFIG_X86_CMPXCHG64),y)
+arch/x86/lib/cmpxchg8b_emu.S:10:#ifndef CONFIG_X86_CMPXCHG64
+lib/atomic64_test.c:257:#elif defined(CONFIG_X86_CMPXCHG64)
+tools/arch/x86/include/asm/required-features.h:26:#ifdef CONFIG_X86_CMPXCHG64
 
-Let's say this code hunk exists in foo-init.c
-and it is compiled by CONFIG_FOO.
+should be easy.
 
-  obj-$(CONFIG_FOO) +=3D foo-init.o
+> It seems to me to be a bit silly to have dummy symbols that mean literally
+> the same thing, but ...
 
-If you see the top Makefile, 'MODULE' is defined only when
-this code is compiled as a module.
+Why if they're confined and encapsulated in a single file:
+arch/x86/Kconfig.cpufeatures ?
 
-   KBUILD_CFLAGS_MODULE  :=3D -DMODULE
+Rest of the kernel doesn't need to know whether a feature is required or not,
+right?
 
-For the combination of CONFIG_FOO=3Dy and CONFIG_BAZ=3Dm,
+-- 
+Regards/Gruss,
+    Boris.
 
-   IS_BUILTIN(CONFIG_BAZ) is 0
-   IS_MODULE(CONFIG_BAZ) is 1
-   __is_defined(MODULE) is 0
-
-Hence, IS_REACHABLE(CONFIG_BAZ) is 0
-
-This code becomes
-
-   if (0)
-          baz_register(&foo);
-
-
-and the compiler will optimize out this function call.
-
-
-
---
-Best Regards
-Masahiro Yamada
+https://people.kernel.org/tglx/notes-about-netiquette
