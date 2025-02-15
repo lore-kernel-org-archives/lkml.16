@@ -1,28 +1,29 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5D9199249;
-	Sat, 15 Feb 2025 05:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE7E19DF66;
+	Sat, 15 Feb 2025 05:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739598284; cv=none; b=LylNZo3OILwOSfC7ybZZwA5lmQpTnffnX7oEpn4LeFlbEeqLBpCr6RXBkhmP+Dnrox/ElHq/wivRRWK1Wrr8ZKempRTGpKxUm3lfDHpbL4J7zKPBq+3t6NS9hVs9Lgakygf88ks9UarG4Hv1zCPNcB8wXWGRp/4EzuqAFv57Vvg=
+	t=1739598286; cv=none; b=fQq6YicQI9TU8IwDnRpmnMDoB8k24BDh6hbeLvcn5FWQXE70ef4qF5KIlaaCtqs50+wHMGi7dBBgU4MFl1bT9uA38O34rSQDkeASNb3uaMgSQdR1p8IaPQt7tamegisfv1MUeLGPSHV3Kh/OI6Pn+rcYcLxLGmdTCHtm6+GPzp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739598284; c=relaxed/simple;
-	bh=NCSdWgAyB9GwA2YCGu135x1XWwxq+kEerYZhAyuyT48=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WIWlO8qwdURGWQCyw0tb6PxWhv0XqBCIofgcyCZdlaxUngT1RNTaCo1M1M44jm+VC1Ve19HE7xzEOADOvLw0yvQpTMKWmCVfdrzxtFCgOAw2jpDZ3nb0Yz3czcfASFt0g37RRNKHfhvxMH2z5wioU+IO+YEZJJVMblTGzkn+eqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=f1PtebCd; arc=none smtp.client-ip=115.124.30.130
+	s=arc-20240116; t=1739598286; c=relaxed/simple;
+	bh=Gd3QuvVUwwaXOMTn22LJfR8ggxA+qsdsGFMiFuF6moU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oWclOIl9e8pYrtWiqbCD6Ue41S+KvJrTNQvisoIXyHzK3oQN4HV7488vtU/63YV804ByV3GgdNMHIeLAAZhRFK1Vq937JGcNGg5yjCOxPFWNAMkgK3rbDCugLyr89zhH9q311jmdbvetsvbT9YU8nJTO3np5g/valwvHRv50k/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=U1QanTi4; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="f1PtebCd"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="U1QanTi4"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1739598273; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=gaohxVqLnwihnfcqEQStSwIObC4TyJYGXBI1LEh0Ans=;
-	b=f1PtebCdJEFRM0mdS5P0uOb2jLghG7bGY/5t/dAFyYxUoYgVQNRv1fwITUmyuoIiWOVOl7aJUeC/UM/J6mjYkivR3vf4nuygzoHQsT+Sl7bmrjwCLtSQMtwszfDCVPT6TU/wVdXDfTkKL7WQPJnauzkSbf1eNCshynRqjG6hJB8=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPSysMy_1739598272 cluster:ay36)
+	t=1739598276; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=TwIpPAeALoWFsS7S+cMv96y4UX2XGf68/jW3CZv7Zuw=;
+	b=U1QanTi42mbeTm5XlxzaoRZHgehVx64MhqIH8HMGi0XNuz4sfg9LdXSSK4toHDfWEE6KTWyp3zQvOGh6bJwIc1Afh+/CFKsFfjQNAnPPFPspSOrJAxopWVrjtZB6r+Gwne3paoFFEWZXLtAcuYQo/0eAqabbYVdOgwK+ii1t9rc=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPSysO0_1739598275 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 15 Feb 2025 13:44:33 +0800
+          Sat, 15 Feb 2025 13:44:35 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: vinicius.gomes@intel.com,
 	dave.jiang@intel.com,
@@ -31,10 +32,12 @@ Cc: nikhil.rao@intel.com,
 	xueshuai@linux.alibaba.com,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/7] dmaengine: idxd: fix memory leak in error handling path
-Date: Sat, 15 Feb 2025 13:44:24 +0800
-Message-ID: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
+Subject: [PATCH v2 4/7] dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
+Date: Sat, 15 Feb 2025 13:44:28 +0800
+Message-ID: <20250215054431.55747-5-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
+References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,28 +46,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-changes since v1:
-- add Reviewed-by tag for patch 1-5 from Dave Jiang
-- add fixes tag
-- add patch 6 and 7 to fix memory leak in remove call per Vinicius
+Memory allocated for idxd is not freed if an error occurs during
+idxd_alloc(). To fix it, free the allocated memory in the reverse order
+of allocation before exiting the function in case of an error.
 
-Shuai Xue (7):
-  dmaengine: idxd: fix memory leak in error handling path of
-    idxd_setup_wqs
-  dmaengine: idxd: fix memory leak in error handling path of
-    idxd_setup_engines
-  dmaengine: idxd: fix memory leak in error handling path of
-    idxd_setup_groups
-  dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
-  dmaengine: idxd: fix memory leak in error handling path of
-    idxd_pci_probe
-  dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove
-    call
-  dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
+Fixes: a8563a33a5e2 ("dmanegine: idxd: reformat opcap output to match bitmap_parse() input")
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/init.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
- drivers/dma/idxd/init.c | 75 ++++++++++++++++++++++++++++-------------
- 1 file changed, 51 insertions(+), 24 deletions(-)
-
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index a2da68e6144d..dc34830fe7c3 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -567,28 +567,34 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
+ 	idxd_dev_set_type(&idxd->idxd_dev, idxd->data->type);
+ 	idxd->id = ida_alloc(&idxd_ida, GFP_KERNEL);
+ 	if (idxd->id < 0)
+-		return NULL;
++		goto err_ida;
+ 
+ 	idxd->opcap_bmap = bitmap_zalloc_node(IDXD_MAX_OPCAP_BITS, GFP_KERNEL, dev_to_node(dev));
+-	if (!idxd->opcap_bmap) {
+-		ida_free(&idxd_ida, idxd->id);
+-		return NULL;
+-	}
++	if (!idxd->opcap_bmap)
++		goto err_opcap;
+ 
+ 	device_initialize(conf_dev);
+ 	conf_dev->parent = dev;
+ 	conf_dev->bus = &dsa_bus_type;
+ 	conf_dev->type = idxd->data->dev_type;
+ 	rc = dev_set_name(conf_dev, "%s%d", idxd->data->name_prefix, idxd->id);
+-	if (rc < 0) {
+-		put_device(conf_dev);
+-		return NULL;
+-	}
++	if (rc < 0)
++		goto err_name;
+ 
+ 	spin_lock_init(&idxd->dev_lock);
+ 	spin_lock_init(&idxd->cmd_lock);
+ 
+ 	return idxd;
++
++err_name:
++	put_device(conf_dev);
++	bitmap_free(idxd->opcap_bmap);
++err_opcap:
++	ida_free(&idxd_ida, idxd->id);
++err_ida:
++	kfree(idxd);
++
++	return NULL;
+ }
+ 
+ static int idxd_enable_system_pasid(struct idxd_device *idxd)
 -- 
 2.39.3
 
