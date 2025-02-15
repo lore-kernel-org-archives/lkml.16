@@ -1,86 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A398719ABDE;
-	Sat, 15 Feb 2025 15:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB78B672;
+	Sat, 15 Feb 2025 15:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739633825; cv=none; b=j4ut4OQxSLZ0CzCpDGI1RoZpSQOLICja9oZtmxVkSVA44OuNx67AiaOOdI3qjWlM6Ijgniugm7t2o1Q8idoEPhWyWTRZ7uf/Q83uLM1rM4Sl7EdslJQhKlRqXud0QTQeSXBEFfeqAwyewXc18A/qr/e3xxw+Oe5m7grnOJWMTNE=
+	t=1739634874; cv=none; b=mQOxo8ayAPRz7z2ZnpAQSQTagIaMyX+AWqiCFgK/tRoQG7yd0C5zfZA5aQN2TK39FkYa2Q7rBYhpkKfnY0/zg9JhSQAneVzZaavwRTOzjPfjYaC0j69ehQZbXmrxcpkD77b+TpkGzkStguN6U/F8MHn2ZCV/XYTR2zKm9QmJcQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739633825; c=relaxed/simple;
-	bh=qgv+eEVZ/QnPjxw+OPstNIcH0nqgtyxfQny/S6YCJtk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qH99oHVjNR36CY4M0BhkT0qxzF51ieWPIsuhdrjmFVfmQCZ9PpBpKC09aLQZnb0ZA6JVBL/eLx0Nfc0MbfkubgTmLwTOtL++Q6ZGByD7RLtAaaGi8Ydg0BRtcxITg7v/3hlvQ4dmQyvmuupSu/JxEZU5TAK5k3wWXg2spGefhvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ridc4nAL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739634874; c=relaxed/simple;
+	bh=26GYFrHbr7JggtvPQTzzFsKlQey/lVDmwjCdKwDC8b4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VrW2FA7oibmXHltGLLM7FEJi5GZZWHwFIXs7h26TpKC/p+OdRDNsTqDomNTQNBbi91BiHNXGxYn4/QKZSbcTnDm7807bG/FVNRc6+PeZ55wrlu5xg8TdfzttGmEMkFcl4PSV9u/sid4sezydr79nX7tdm+pvjakFCKQ8ITMo2ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlP7JuCb; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ridc4nAL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C997AC4CEDF;
-	Sat, 15 Feb 2025 15:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739633824;
-	bh=qgv+eEVZ/QnPjxw+OPstNIcH0nqgtyxfQny/S6YCJtk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ridc4nALUjWrp5cBYzBAq/S6FbCz0TryGfM5G1WLruiZA4EMUdYLZJ+B42Ji0Cfqh
-	 X7tEEMcPVUMBp5VHdzYIxiy33u19YLL6lPrybjXkR39Hd/9Fp9t3KcoOFzqSvSRoDF
-	 h5ULtHij4F57ZX2+GmRJiIKjih4WyUd0JRQACQir2txsxu7mvi63kHQwv9rv0l8Ea6
-	 2SL6tYnlxU/CmldIEumZSuqG0tZ+r2TkSezyMZqN8n/nekD80NWB85D/1+b8lvN0pS
-	 wafMhE61PtHa/urVi5xf2/Xov0eUwiCHvEswxns6T33/b3B5QzToL72shju1Q6bEJw
-	 ckcCdB5kSbx4w==
-Date: Sun, 16 Feb 2025 00:37:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH] tracing: Do not allow mmap() of persistent ring buffer
-Message-Id: <20250216003702.eef00d543ebbc3b16140ed9c@kernel.org>
-In-Reply-To: <20250214095943.178501fa@gandalf.local.home>
-References: <20250213180737.061871ae@gandalf.local.home>
-	<20250214110722.7eaf35b42c4858e6b74500f7@kernel.org>
-	<20250213212147.6511b235@gandalf.local.home>
-	<20250214161332.8797b20f09e068c33f872698@kernel.org>
-	<20250214070712.01997ea1@gandalf.local.home>
-	<20250214233613.bde0638f393186f56f0b30eb@kernel.org>
-	<20250214095943.178501fa@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlP7JuCb"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220bff984a0so53573855ad.3;
+        Sat, 15 Feb 2025 07:54:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739634873; x=1740239673; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5qpP+HFn0u8S2m2Ngj2udrNOWfIGZJrWyc92xDPpz1k=;
+        b=MlP7JuCbZO9kwAb+20yxbXjovzH6YWsxpp4crYC7f/qmIhq3/k0CiE/1cQtQx04Q8u
+         rtLPmxWuWOWF3XVALfOtA7S7Baj2ENbAcjxOLPWMbZ75Eol+PuB3XFS4aWhYcjtkGhiE
+         gkFIKkhN++cqkkq4lS9KJpxkXjkhDRg8lAvDoc7CWXajl/sVzNNff/Y74cucihAgn9iS
+         EdXrVT8SDfzazF+x3osdJ0S9AFm6hbZxJL2SBbOqZN5wNHIy4fbhqv/PylarSmmrrk6T
+         7Bmp/FDW6CSTmgw32C2qKePR1kbFyTHMpsGQb0eso+dvGA+TQe26u0y9p7P5URmrwPLF
+         dgug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739634873; x=1740239673;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5qpP+HFn0u8S2m2Ngj2udrNOWfIGZJrWyc92xDPpz1k=;
+        b=Bbqbk76G4dWMdTNroWtfQJ7N6D1Lh6cuT425SFwF61Tx9e3YyE+2pP5O9Y72mD2L5z
+         9rqTm7980lH6ATnk5QOZsAm0DADok2qUguRpxKEgyvAcXAEwSJo1x3+30k4PAR5saWJ0
+         /vg5WOuUo8fjDLYZPLLCFKEYXPlGSaQXgRE6c2d1QMO3MKATC5vYJPc7d9XJIvMSyGI+
+         OFdIYMYYS6k8G/Gbt+l3ktvMbcDx6Rs5SQEbrAgoXPE5ogZDCV6UOGtqtIvDJQIx5N9R
+         uP1U6pNLfFiuiA5c2Rft2/3fJwIEQqEmrw20lvS1zeWmUFh2o0r9KEc2KO5OfNOwixY+
+         w6IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqz4bWppk3L1cfnqSM/DSDHks9SBcRCO0V9+i7PW3ffQacGQn0nAj7YEh4u5eIsZn/59EvL7zv+eY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEhJlcFuaNx5V6VlUKqSgqI0P4M6jh7Z00OciP2M4eoWq/UG/r
+	E7iJ0z2otuXE7HQkuKPes9jtCcORQ6wC7ysEnY+XV74/rOpt3YCc
+X-Gm-Gg: ASbGncvc0olO0In0uedDT2Slx/qRi+YzHsbTFn5BhgKBYIfqL2sYPAgWGQTVeCs7YjS
+	0rjiIf7NEVhYD41KVltdQX1mISHeHPuKwaTxhuyAOIl1eONmBu6PVdS+JGC/YQmYLtd2wawFvnz
+	Gi9YhXuKMMM2WY+vHPwRXTe1KuSvnWTwv62yTLg5NWSpQvbPk30j6iVLby6oktqFYB3doLuZRGc
+	mGT9vEU165e4vyENETS5Gmwts9J7o4Qa0akIImgcERUwtP1/qGUSyZzpx9LTafVIz6gfvofEBU3
+	FGBlnJ2TwQQuL/xAzG1X
+X-Google-Smtp-Source: AGHT+IFAPKdfxucRBcn45GGdfBU8PyxpnyKhZaNIMTaIZpbuVMsg2IsHifoUa5smmNzE8SEk/2/gng==
+X-Received: by 2002:a17:903:2ac8:b0:21f:3e2d:7d41 with SMTP id d9443c01a7336-22103efec37mr40681135ad.11.1739634872547;
+        Sat, 15 Feb 2025 07:54:32 -0800 (PST)
+Received: from eleanor-wkdl.. ([140.116.96.205])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d53492d0sm45286395ad.35.2025.02.15.07.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Feb 2025 07:54:32 -0800 (PST)
+From: Yu-Chun Lin <eleanor15x@gmail.com>
+To: akpm@linux-foundation.org,
+	visitorckw@gmail.com,
+	corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: [PATCH] Documentation/core-api: min_heap: update for variable types change
+Date: Sat, 15 Feb 2025 23:54:21 +0800
+Message-ID: <20250215155421.2010336-1-eleanor15x@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Feb 2025 09:59:43 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Update the documentation to reflect the change in variable types of
+'nr' and 'size' from 'int' to 'size_t', ensuring consistency with
+commit dec6c0aac4fc ("lib min_heap: Switch to size_t").
 
-> On Fri, 14 Feb 2025 23:36:13 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > 
-> > > It's not supported. If you try it, it will crash. This prevents reading via
-> > > mmap() on a boot buffer. I don't know what you are asking. Once this patch
-> > > is applied, mmap() will always fail on the boot buffer before or after you
-> > > start it.  
-> > 
-> > Hmm, I meant it is supported for other non-persisten ring buffer, isn't it?
-> 
-> Correct. It is supported in other buffers, but it just isn't supported in
-> the persistent one.
-> 
-> This patch only disables mmap if it's trying to mmap a persistent one.
-> 
-> I guess I don't understand your concern.
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+---
+ Documentation/core-api/min_heap.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-My concern is related to the fixes policy. If this is a "fix", we will
-backport the new "disables mmap on persistent ring buffer" limitation
-to the stable kernel (that was not documented previously.)
-
-However, from the user point of view, "mmap() ring buffers" is already
-supported (although it did not work on stable kernel for now). Thus I think
-the "Fix" is expected as "fixing mmap() persistent ring buffer". 
-
-Thank you,
-
+diff --git a/Documentation/core-api/min_heap.rst b/Documentation/core-api/min_heap.rst
+index 683bc6d09f00..9f57766581df 100644
+--- a/Documentation/core-api/min_heap.rst
++++ b/Documentation/core-api/min_heap.rst
+@@ -47,8 +47,8 @@ Example:
+ 
+     #define MIN_HEAP_PREALLOCATED(_type, _name, _nr)
+     struct _name {
+-        int nr;         /* Number of elements in the heap */
+-        int size;       /* Maximum number of elements that can be held */
++        size_t nr;         /* Number of elements in the heap */
++        size_t size;       /* Maximum number of elements that can be held */
+         _type *data;    /* Pointer to the heap data */
+         _type preallocated[_nr];  /* Static preallocated array */
+     }
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
