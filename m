@@ -1,133 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8114A08;
-	Sat, 15 Feb 2025 10:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA021A83EB;
+	Sat, 15 Feb 2025 10:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739617187; cv=none; b=XH68jjXRYaa6D74I+9Y/o1LECZ6p2hxI3AtkB5MJz1FvIFKkgyHrHmhAtRG0lee0BF9M+jTxqqL5Laj8uqpzfO4pwp6MuTA85HIL3qmgQAn7v1JrWn7LCAgwyBRjzXd4vGeHlXG/a7fBFh4tozzSnWJWK6T0yUNWwwQj4VILpxw=
+	t=1739617189; cv=none; b=e+469Mw90H0JEiUnykvhAgmjFWsugr5N8diOwI+zMJaXwnqNJMxAc+90z9APPfRnxAul9ey0JHm9t4LfhQrokUJR/PWrEEnYHDZX/U06pRahcRgZTb/Nm1Ics98ouR1orxK+TvE3d6LBTf2V8I2nARcOUadU94Z7JBJmUdWspHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739617187; c=relaxed/simple;
-	bh=IlbUBSOJy8hOCCuGT+m8jqc2wR8Ma7WO/ztuxQvUf0U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kGG8PxAX3ifySvVNNG69Q00smdXXOtNqrAAwqvY2qrPhS4h5W1u/QZn2ActdzjOgfR+1wYALqtmu1u/cmtkgSShitx8L0gGO3UUoZZAInObXhQ3DjqIARaJ1V4m5DwtGF2Ar6UylfFq7teFgBFoYoDSnZeuwVALfCkiiVz4PSwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUSl3slT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739617189; c=relaxed/simple;
+	bh=v7PXerc38yX4CSSTiNxWoTxizSMopm2JkQfFEFeuHsE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FafPhtGwR63+y4xlK41UHhE6DlhSjmZDt7bbljZU5kUvEKuG4WF7Ou29iyaNi4CXZF8qnacnhKlX86DxqhE2xwCXnuF+/4PEMgMiA5tuuc8TTBG5kNInh+kfCFMlECs66/MQKGf4bHzI4HV5thTLqMrha2bUM6MUUSw2XZIFFMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUx0A6Zj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUSl3slT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D3FC4CEDF;
-	Sat, 15 Feb 2025 10:59:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUx0A6Zj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFBDC4CEDF;
+	Sat, 15 Feb 2025 10:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739617186;
-	bh=IlbUBSOJy8hOCCuGT+m8jqc2wR8Ma7WO/ztuxQvUf0U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=LUSl3slT0ZUUyJPm7yt5eaId153RO4WYRqzjHXQnrQeuhhxrWfvCWEFnYSKAFFs69
-	 Fgoz2B8bbtcoHXkA/00gDJM0kpaOLFd2rOz/LNYnzQSWQTBbXKCYGSpl69w4qSPSRZ
-	 vjq5CNs/2HOaMJ/6ar8xOK7B5eMRXguifXOJSvf72Xk7Xc6lBI14oUoelBOqgowmr2
-	 Y8FqG912N9T5XlQ+WO1P5APZYHqR2sAW7HAwBSaS25ON6+iZTGTRmCRVunZz9O2h8l
-	 6MWY6hmUsemRgsCtqvti5mKeRb5snng2PFK/2JTNydoqumLbFZujehPiLJzX7/QGQ5
-	 dyiWZjtfbKKwA==
+	s=k20201202; t=1739617188;
+	bh=v7PXerc38yX4CSSTiNxWoTxizSMopm2JkQfFEFeuHsE=;
+	h=From:Date:Subject:To:Cc:From;
+	b=DUx0A6ZjPb9BoXkHbezSjdfVqHsoUe0OAfrSML3F1k49QZuLomKa2q3odI/nq90cD
+	 5ZZRRr7UV541UZXdkxYccEC/oREHDTx/crrd1C4qh6WRl1VS5CU/Z6fhEZFJ92SA3w
+	 H6FOa+CssOG4CkzZFeGwFjiBUnO5ghwDgNO7jFIsjZf4IAqGocTsbpFjaU6mVXmw7e
+	 b4mUYREs/jTGvlp/oVLhRMHpMJE/WtdrGdlSxHzvw/5gyrmu3sc98jkATUng3nCZnx
+	 I9jFC5eBYxpC9RROfH8IeE0nvk3d58oWWuZdILkPjDjxDFBKtMnxBfRKuxXAsiQJU3
+	 OkJBYdoeep/Jw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Lyude Paul" <lyude@redhat.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
- <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
-  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Guangbo Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
- <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 04/14] rust: hrtimer: implement `HrTimerPointer` for
- `Arc`
-In-Reply-To: <4ce7b3dcbac5ba71d3f58d72f3c01d250da784e7.camel@redhat.com>
-	(Lyude Paul's message of "Mon, 10 Feb 2025 17:28:45 -0500")
-References: <20250203-hrtimer-v3-v6-12-rc2-v7-0-189144725399@kernel.org>
-	<20250203-hrtimer-v3-v6-12-rc2-v7-4-189144725399@kernel.org>
-	<5J6GLBNLTKE7HjIIlETU_xZcmzd9Nr1riVbm43DFR6LqAC_YnxQAMqMx8_QGZAqJ4wbTUkzHVn3Yra_irTB0Hg==@protonmail.internalid>
-	<4ce7b3dcbac5ba71d3f58d72f3c01d250da784e7.camel@redhat.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Sat, 15 Feb 2025 11:35:08 +0100
-Message-ID: <874j0vv6lf.fsf@kernel.org>
+Date: Sat, 15 Feb 2025 11:58:15 +0100
+Subject: [PATCH] block: set bi_vcnt when cloning bio
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250215-clone-bi_vcnt-v1-1-5d00c95fd53a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAEZzsGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0NT3eSc/LxU3aTM+LLkvBLdNOM0c3MDSwsLC0sTJaCegqLUtMwKsHn
+ RsbW1AMAHFYlfAAAA
+X-Change-ID: 20250215-clone-bi_vcnt-f3f770988894
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Oliver Mangold <oliver.mangold@pm.me>, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=780; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=v7PXerc38yX4CSSTiNxWoTxizSMopm2JkQfFEFeuHsE=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnsHNWsWLBMjvJzH4+k0Jo39tw83pgfr1HRvVxM
+ I9HkjZD6cqJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7BzVgAKCRDhuBo+eShj
+ d8m/D/98mFEDqez+HIXSjUNykYa93Js07AnK+4CAp2CL+xvL7IhOuvJm24g6AiqrL6C38f3kKvm
+ 6+0Kc+R6UFktOIIO09uPII8SLhi6kOtgWGxTanSYwJbZx6wadCQKchEOk5YeEVF2LPDsukWvXI3
+ bSg67dX1GTW0iVOG5r6ar0jdKdyvNJcrZhkq0r/Uk9z8yAVv30RXBXm03LAFJj0cn1gv/cHnQS3
+ HdIHw+jMlWA6zG7VbyrpQuzURfpldQC58aAT6SalyChHNoIusuKAW6pk5bf9wYxtuIJd11gjQrv
+ I5lJQ3yo2RuzSxZanc+f0CyyLSeFB/BNANjR+mHoaXYMMn2dYsXtr9SRGkuBzx+A/M2+F54/Jw7
+ RSnWsWx2q/a8IPAH5QLp6DVe4ur/t/FwjW1a8rovOs51JNhGoYuXU30yRwtuewGmjFhAlx3HH7R
+ /yB5OKA0PiS7PB9d1dkZ+uZ9r/jcwBhfasRhV7sVXknjGbcUkVr5UvDqSPDEKc1iUJtvdZLFBRS
+ krT9NUcc4TidA1a/4pqR452uA738R13joxxsbuj1PEzbyJcU8M1lIjgqnpx1VImu7Vmk0B70Gmw
+ /i4JiYTVHKRs5FcXFQZwjmmJMTqweaO+qWnuEaAK6LO9he/hKA+7LojRgaS+SyVqbdjg2MhGCfH
+ USYLR/JUZJSKYKw==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-"Lyude Paul" <lyude@redhat.com> writes:
+When cloning a bio, the `bio.bi_vcnt` field is not cloned. This is a
+problem if users want to perform bounds checks on the `bio.bi_io_vec`
+field.
 
-> On Mon, 2025-02-03 at 16:07 +0100, Andreas Hindborg wrote:
->> This patch allows the use of intrusive `hrtimer` fields in structs that are
->> managed by an `Arc`.
->>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->> ---
->>  rust/kernel/time/hrtimer.rs     |  3 +-
->>  rust/kernel/time/hrtimer/arc.rs | 89 +++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 91 insertions(+), 1 deletion(-)
->>
->> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
->> index a6332924efabd40c475a112bbc434db77596a16f..3494c00481a4bd25735edf44b6bdcbec9810243e 100644
->> --- a/rust/kernel/time/hrtimer.rs
->> +++ b/rust/kernel/time/hrtimer.rs
->> @@ -119,7 +119,6 @@ unsafe fn raw_get(ptr: *const Self) -> *mut bindings::hrtimer {
->>      /// # Safety
->>      ///
->>      /// `self_ptr` must point to a valid `Self`.
->> -    #[allow(dead_code)]
->>      pub(crate) unsafe fn raw_cancel(self_ptr: *const Self) -> bool {
->>          // SAFETY: timer_ptr points to an allocation of at least `HrTimer` size.
->>          let c_timer_ptr = unsafe { HrTimer::raw_get(self_ptr) };
->> @@ -310,3 +309,5 @@ unsafe fn raw_get_timer(ptr: *const Self) ->
->>          }
->>      }
->>  }
->> +
->> +mod arc;
->> diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..d1c90631d00362bdc38be1ccc75429ae294ab544
->> --- /dev/null
->> +++ b/rust/kernel/time/hrtimer/arc.rs
->> @@ -0,0 +1,89 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +use super::HasHrTimer;
->> +use super::HrTimer;
->> +use super::HrTimerCallback;
->> +use super::HrTimerHandle;
->> +use super::HrTimerPointer;
->> +use super::RawHrTimerCallback;
->> +use crate::sync::Arc;
->> +use crate::sync::ArcBorrow;
->> +use crate::time::Ktime;
->> +
->> +/// A handle for an `Arc<HasHrTimer<T>>` returned by a call to
->> +/// [`HrTimerPointer::start`].
->> +pub struct ArcHrTimerHandle<T>
->> +where
->> +    T: HasHrTimer<T>,
->> +{
->> +    pub(crate) inner: Arc<T>,
->> +}
->> +
->
-> BTW - I noticed the other day that it doesn't seem like we actually expose
-> this type to users anywhere, even though we would want access to it for
-> storing the timer handle in structures
->
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ block/bio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for noticing! I'll make sure to `pub use` then handles in the
-parent module.
+diff --git a/block/bio.c b/block/bio.c
+index f0c416e5931d9..334eedf312803 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -870,6 +870,7 @@ struct bio *bio_alloc_clone(struct block_device *bdev, struct bio *bio_src,
+ 		return NULL;
+ 	}
+ 	bio->bi_io_vec = bio_src->bi_io_vec;
++	bio->bi_vcnt = bio_src->bi_vcnt;
+ 
+ 	return bio;
+ }
 
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250215-clone-bi_vcnt-f3f770988894
 
 Best regards,
-Andreas Hindborg
-
+-- 
+Andreas Hindborg <a.hindborg@kernel.org>
 
 
