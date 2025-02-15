@@ -1,117 +1,110 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE2C1DF988;
-	Sat, 15 Feb 2025 17:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FED1C7011;
+	Sat, 15 Feb 2025 17:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739640004; cv=none; b=Iv7SJf/dyaU5LzvnBctBxbU1jzRLEzLAiiSmi/qB55UY29UWxOoeqqQcN3WXoMdHIM/SSURbAM8PKI4Ixhm2njjAhSyDc8A/q5rvtN1EpoBX2AfnHhVIaQjZKFaFi1RPcy8g7LcuP6/nE6guUNBCJ6AJcEhZ1vdJik5kTlzzk3I=
+	t=1739640284; cv=none; b=dLgFcwizYLWq/1V9dY40lDqesnkIvs8Ffm5bQFkXmXLnppBSe4bL9QXJW8eF08TB7PefE+HeAeUPAwWDLYx1kO4+nBeLK8yfP9kb105kKZ+VuL+Wr9e5HDT6eNBFw+xeqYlPd4acg8uoZwa880fFZC5wdA21eQDQLCjcV0skOTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739640004; c=relaxed/simple;
-	bh=4nL2yU5OQ9u/veQyteOUiLzrTY2mgfat8NMPtV3lUW0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=gkl/XgigklQEkblhyTSlPc+xN8MkBpCmUbXkssgXmnzONsihrux84y9DNuIf9Wo9TYJ05PeiY2YkshUh6NIdzqH5Cu0MeZHcsX5h781vB42WTD1LXRvc7DQDIJoYEOZdmB5V5Mt732GwKB2C3frONDcAexSjo/10csH5PPnqDd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c8GyV/7W; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739640284; c=relaxed/simple;
+	bh=9xux18qx9ubVkdev0TOvJT7zo+/EGQTZgqk+KXMRMYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PkOODaSRpChbphJ+ya2+c4Qb6rjMNOrHrzP89P2BgsJQLUIMnpPOK/KbdSPazSZoOX/sk4eYzpp0uH1213qfUOgDWybbH/wj7k195GwQ1PoexkzTkIwQslxHVmPuXelGrM/rYZljcvz9yHR12fAUv/8UjbRbQn4AUT4QSW9F+yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxV2AH4u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c8GyV/7W"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51FFhkcU024742;
-	Sat, 15 Feb 2025 17:19:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	O+EHMKuQvFtrl4KDLo6nawUa0FRWBpLee8ssqH8cjCs=; b=c8GyV/7WnHOl1lUY
-	kynWEfL8VDSJoreyzXg3UDuSkIb0Ary2vvetuhpm4L+XTBlo5GUtTijkuY1vmLfq
-	K2OnZG9t7D4TyNcrcdsoMwmjXJ/uubdXYaVW2tCRk4trmRuHiaClYxEpQVL/2kgG
-	XuBm86m9Vjrxuq6L0bQWI4eKnuuhBaUh7mTTygRvPdQi3Bx4MFjzuBTMSvWasTyb
-	bazgScneUqmMRgVvNkzIj/7MaMoFeDFAjcIEJnbWOq0GRsAGckGFUKrnKG3YRTeH
-	tJXdhT6fa485kNuRVzAKw7F58Dp++aXEjCPpoAg+v6zxOoX5DLKdDDS8nQ02JtSd
-	UXBUVg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44tkqj8u1h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 17:19:46 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51FHJjYw031642
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 17:19:45 GMT
-Received: from [10.213.96.105] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 15 Feb
- 2025 09:19:42 -0800
-From: Vedang Nagar <quic_vnagar@quicinc.com>
-Date: Sat, 15 Feb 2025 22:49:32 +0530
-Subject: [PATCH v2 1/2] media: venus: fix OOB read issue due to double read
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxV2AH4u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58453C4CEDF;
+	Sat, 15 Feb 2025 17:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739640284;
+	bh=9xux18qx9ubVkdev0TOvJT7zo+/EGQTZgqk+KXMRMYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oxV2AH4uovLSS1POfDAWHYffP3cNZ4M+Gn0RWnrVzIWIMzwtOPcUVqqutZwCzYJwE
+	 B8pNNyQZhVpnzhyq8C9s+IXkxiNJMbl7iG22pBop0ScpmFB+JDMU1THxBeP1T6PK0e
+	 sBrs4uR2cQNc/yxB8i0IB/om8gSM8BH5LtixtwDh1lwyYHVXH8PI9iYR9fUbv6gX5w
+	 q/JtDs5UQeskIsRXFN2bEv5bMP85abNbsbFfkOK8c+iRyG0RQqzeVjpwT7mSAKausk
+	 9tvpYVAg8EBgFPHJVWeuCR1SaP/qM7R7WSCuKx7wTFVXkfQx/YYiVeKj4BaI2fD+b/
+	 8gzKavLMUjFcw==
+Date: Sat, 15 Feb 2025 17:24:40 +0000
+From: Simon Horman <horms@kernel.org>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	skhan@linuxfoundation.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH net-next v2] af_unix: Fix undefined 'other' error
+Message-ID: <20250215172440.GS1615191@kernel.org>
+References: <20250210075006.9126-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250215-venus-security-fixes-v2-1-cfc7e4b87168@quicinc.com>
-References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
-In-Reply-To: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
-To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vedang Nagar <quic_vnagar@quicinc.com>
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739639980; l=1198;
- i=quic_vnagar@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=4nL2yU5OQ9u/veQyteOUiLzrTY2mgfat8NMPtV3lUW0=;
- b=qVV6Mpk1MqTVSgUSQkcvl2/UvI7pnLGkHuYYu7eEdZvTDYXouNCVnmv29pLhhsY1STDYTZzBu
- s75/BMS79lbBz8lOMzx5mHoRNoTW+AIE9dpTeCjb1GFvoHZ3MEnbcJt
-X-Developer-Key: i=quic_vnagar@quicinc.com; a=ed25519;
- pk=GHqLT8NPue4v+CDHbZork8Ps39CBHq345GQKvCZ1glE=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: jduhREhtvSJFGL4URUkXjb9122cJwWQx
-X-Proofpoint-ORIG-GUID: jduhREhtvSJFGL4URUkXjb9122cJwWQx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-15_07,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 impostorscore=0 priorityscore=1501
- bulkscore=0 mlxlogscore=692 suspectscore=0 phishscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502150153
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210075006.9126-1-purvayeshi550@gmail.com>
 
-During message queue read, the address is being read twice
-from the shared memory. The first read is validated against
-the size of the packet, however the second read is not
-being validated. Therefore, it's possible for firmware to
-modify the value to a bigger invalid value which can lead
-to OOB read access issue while reading the packet.
-Added fix to reupdate the size of the packet which was
-read for the first time.
++ Iwashima-san, Dan
 
-Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
----
- drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, Feb 10, 2025 at 01:20:06PM +0530, Purva Yeshi wrote:
+> Fix issue detected by smatch tool:
+> An "undefined 'other'" error occur in __releases() annotation.
+> 
+> Fix an undefined 'other' error in unix_wait_for_peer() caused by  
+> __releases(&unix_sk(other)->lock) being placed before 'other' is in  
+> scope. Since AF_UNIX does not use Sparse annotations, remove it to fix  
+> the issue.  
+> 
+> Eliminate the error without affecting functionality.  
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+> V1 - https://lore.kernel.org/lkml/20250209184355.16257-1-purvayeshi550@gmail.com/
+> V2 - Remove __releases() annotation as AF_UNIX does not use Sparse annotations.
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-index f9437b6412b91c2483670a2b11f4fd43f3206404..c124db8ac79d18f32289a690ee82145dc93daee6 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.c
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-@@ -298,6 +298,7 @@ static int venus_read_queue(struct venus_hfi_device *hdev,
- 			memcpy(pkt, rd_ptr, len);
- 			memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
- 		}
-+		*(u32 *)pkt = dwords << 2;
- 	} else {
- 		/* bad packet received, dropping */
- 		new_rd_idx = qhdr->write_idx;
+Hi Iwashima-san, all,
 
--- 
-2.34.1
+in v1 of this change you commented that:
 
+  Tweaking an annotation with a comment for a static analyzer to fix
+  a warning for yet another static analyzer is too much.
+
+  Please remove sparse annotation instead.
+
+  Here's the only place where sparse is used in AF_UNIX code, and we
+  don't use sparse even for /proc/net/unix.
+
+And I do understand entirely that we don't want to overly tweak
+things to keep static analysis tools happy. But I don't think the
+patch description describes the situation completely. So I'd like
+to provide a bit more information.
+
+My understanding is that the two static analysis tools under discussion
+are Smatch and Sparse, where AFAIK Smatch is a fork of Sparse.
+
+Without this patch, when checking af_unix.c, both Smatch and Sparse report
+(only):
+
+ .../af_unix.c:1511:9: error: undefined identifier 'other'
+ .../af_unix.c:1511:9: error: undefined identifier 'other'
+ .../af_unix.c:1511:9: error: undefined identifier 'other'
+ .../af_unix.c:1511:9: error: undefined identifier 'other'
+
+And with either v1 or v2 of this patch applied Smatch reports nothing.
+While Sparse reports:
+
+ .../af_unix.c:234:13: warning: context imbalance in 'unix_table_double_lock' - wrong count at exit
+ .../af_unix.c:253:28: warning: context imbalance in 'unix_table_double_unlock' - unexpected unlock
+ .../af_unix.c:1386:13: warning: context imbalance in 'unix_state_double_lock' - wrong count at exit
+ .../af_unix.c:1403:17: warning: context imbalance in 'unix_state_double_unlock' - unexpected unlock
+ .../af_unix.c:2089:25: warning: context imbalance in 'unix_dgram_sendmsg' - unexpected unlock
+ .../af_unix.c:3335:20: warning: context imbalance in 'unix_get_first' - wrong count at exit
+ .../af_unix.c:3366:34: warning: context imbalance in 'unix_get_next' - unexpected unlock
+ .../af_unix.c:3396:42: warning: context imbalance in 'unix_seq_stop' - unexpected unlock
+ .../af_unix.c:3499:34: warning: context imbalance in 'bpf_iter_unix_hold_batch' - unexpected unlock
+
+TBH, I'm unsure which is worse. Nor how to improve things.
