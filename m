@@ -1,67 +1,154 @@
-Received: from hutie.ust.cz (hutie.ust.cz [185.8.165.127])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24E938DE0;
-	Sat, 15 Feb 2025 00:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.8.165.127
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D465570838;
+	Sat, 15 Feb 2025 00:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739579101; cv=none; b=lplux9rYLZQSrU/T+KyBu5I6NFKeqGXF+FyAtIRJyiYyi9bPLllekjOe64i3htd4ByU7VhYeQTKMYKxNBn8AznOJEf9aKp0pZSC/787RKKqPfrFozQoZbHFtIHsmLuNZ7lzRipeR+/NvndxMvHl+qfSqfDyZqoG6eVWu0VkbMG8=
+	t=1739579130; cv=none; b=tCQG8IohTRgFjJwJcFP49aa2O8lLaJtPBGOv30i5FlPaV0+Ylns+VX6n79+zHuwwCw4S9cIQeEpjkbdLFj0JNXx5m10yz/JajNTNM0gRSTOVD8Y0mkDCmg7v/HbW6rEqseBRHrSXHaSFZDyirshXJH4MvWu5e2CrbF5LOtQZdlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739579101; c=relaxed/simple;
-	bh=jrfcXmzCF8F8brijULRi4AH9cEzhL9Gg1BBF/pr3kmU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=TX3WScc5kGJbPXJavFmc9JLvlyi7Yn5NiNnnrGBZWZ9gClUnPbYTWlJ84PBAgQw9VEVP8yWye5C35Wvj5ZoZx8vSdt6MEnGPwokQsStC2CdJAnYUWjU0OJMkg1E9KMoSFifpqP8wadPrJChCy5O9400uEU/4ynGmrDhVHji6h+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cutebit.org; spf=pass smtp.mailfrom=cutebit.org; dkim=pass (1024-bit key) header.d=cutebit.org header.i=@cutebit.org header.b=fv/8Nih5; arc=none smtp.client-ip=185.8.165.127
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cutebit.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cutebit.org
+	s=arc-20240116; t=1739579130; c=relaxed/simple;
+	bh=IW/SqQfxeQmQgIMqD034z8MULl63SVEGpFiSlN9F+NA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AHeUhup7iy3/buDkL4LvLWHOj9oxZg/BheWtAiDFrm6YF19Oy5gWZvNs4Nc0ZFKqO0Mk8aCZprZOQxHtuyh7Xf+XvLFzt/uTDZQsddQgeEg9MaW89Mn3v6PyahUQbq8bEgKVxsiZt+UX7DyNUlWg52TfTwcvSaYtChUUMF0bm4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=f6+La4pM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cutebit.org header.i=@cutebit.org header.b="fv/8Nih5"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
-	t=1739578604; bh=jrfcXmzCF8F8brijULRi4AH9cEzhL9Gg1BBF/pr3kmU=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=fv/8Nih5mKUJpLB13OEhgT4eYP79NSNaxYSjadbJ/WJlQWAeMeBs+RSgTZNrvWjSO
-	 m2tg52Mq7vwbzNh1ZA9lgBOW9YuFWUquIRBaWkBaBAUQ/cLaARsHwwaNijw/ywmdMi
-	 A/MNcbWNvT+71TiQc1m4rA7sdYGaakuVkTvMmfm0=
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="f6+La4pM"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EJPaRQ016993;
+	Sat, 15 Feb 2025 00:25:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	u+hSOnIMMeVvS2QYh/UjPRnQTvRZ8sgfZthDEyGmQvI=; b=f6+La4pMNvwWyJlj
+	m1J4rtzKYNf54sGtsLMaewNgRXqyCVMGcvF0JGO1b+kAMyGYVYoPzMPZBvBMh/A+
+	q4kVje+9aaHHIBEGoyhHDV1On9SOJD5xXxTJZA32f1gWeF9XJuGYLsHOC+6Sv1qk
+	KHAtInore69NAXXoZ21w0e0EduiYMsOvTTl/oIIBtpvX0ZjKmj4h3xC6u4lO2/Eb
+	GM5fw3gOzE0DY7aLSpVKR0UOzxOJqjallw63Ohs2V0fl7w+ZLGRTl+twfIVQmdYq
+	Sm07o4k/vYL1O2Jof2/KWHF7YyylcPUBTq16/TeyfCY6/PmI71jyEg9JGn03P2Qd
+	+LeMBw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sde8d8s9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Feb 2025 00:25:22 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0P9jZ026595
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Feb 2025 00:25:09 GMT
+Received: from [10.134.70.212] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 14 Feb
+ 2025 16:25:08 -0800
+Message-ID: <ebea664b-6f53-440a-aa2f-4d4991fb5e1f@quicinc.com>
+Date: Fri, 14 Feb 2025 16:25:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: [PATCH 04/27] ASoC: tas2764: Add control concerning overcurrent
- events
-From: =?utf-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
-In-Reply-To: <20250215-apple-codec-changes-v1-4-723569b21b19@gmail.com>
-Date: Sat, 15 Feb 2025 01:16:34 +0100
-Cc: linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org,
- asahi@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BB75A9FB-83F9-4E3A-8F7C-44C3CA1368CD@cutebit.org>
-References: <20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com>
- <20250215-apple-codec-changes-v1-4-723569b21b19@gmail.com>
-To: James Calligeros <jcalligeros99@gmail.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 04/15] drm/msm/dpu: polish log for resource allocation
+Content-Language: en-US
+To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250118-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v5-0-9701a16340da@linaro.org>
+ <20250118-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v5-4-9701a16340da@linaro.org>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250118-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v5-4-9701a16340da@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: DQwPNJp53HyA9lhgnHy5aU4wIlgncz6v
+X-Proofpoint-ORIG-GUID: DQwPNJp53HyA9lhgnHy5aU4wIlgncz6v
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_10,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 mlxscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502150002
 
-Hi James,
 
-thanks for your upstreaming efforts. Let me make one request below.
 
-> On 15. 2. 2025, at 1:02, James Calligeros <jcalligeros99@gmail.com> =
-wrote:
->=20
-> From: Martin Povi=C5=A1er <povik@protonmail.com>
+On 1/17/2025 8:00 AM, Jun Nie wrote:
+> It is more likely that resource allocation may fail in complex usage
+> case, such as quad-pipe case, than existing usage cases.
+> A resource type ID is printed on failure in the current implementation,
+> but the raw ID number is not explicit enough to help easily understand
+> which resource caused the failure, so add a table to match the type ID
+> to an human readable resource name and use it in the error print.
+> 
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
 
-The protonmail address appears here by accident. Please replace with =
-povik+lin@cutebit.org to match the signed-off-by.
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-Martin
-
-> Add control to expose the option of autoretry behavior on overcurrent
-> events in the codec.
->=20
-> Signed-off-by: Martin Povi=C5=A1er <povik+lin@cutebit.org>
-> Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c | 23 +++++++++++++++++++----
+>   1 file changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+> index a67ad58acd99f..24e085437039e 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+> @@ -802,6 +802,21 @@ void dpu_rm_release_all_sspp(struct dpu_global_state *global_state,
+>   		ARRAY_SIZE(global_state->sspp_to_crtc_id), crtc_id);
+>   }
+>   
+> +static char *dpu_hw_blk_type_name[] = {
+> +	[DPU_HW_BLK_TOP] = "TOP",
+> +	[DPU_HW_BLK_SSPP] = "SSPP",
+> +	[DPU_HW_BLK_LM] = "LM",
+> +	[DPU_HW_BLK_CTL] = "CTL",
+> +	[DPU_HW_BLK_PINGPONG] = "pingpong",
+> +	[DPU_HW_BLK_INTF] = "INTF",
+> +	[DPU_HW_BLK_WB] = "WB",
+> +	[DPU_HW_BLK_DSPP] = "DSPP",
+> +	[DPU_HW_BLK_MERGE_3D] = "merge_3d",
+> +	[DPU_HW_BLK_DSC] = "DSC",
+> +	[DPU_HW_BLK_CDM] = "CDM",
+> +	[DPU_HW_BLK_MAX] = "unknown",
+> +};
+> +
+>   /**
+>    * dpu_rm_get_assigned_resources - Get hw resources of the given type that are
+>    *     assigned to this encoder
+> @@ -862,13 +877,13 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
+>   			continue;
+>   
+>   		if (num_blks == blks_size) {
+> -			DPU_ERROR("More than %d resources assigned to enc %d\n",
+> -				  blks_size, enc_id);
+> +			DPU_ERROR("More than %d %s assigned to enc %d\n",
+> +				  blks_size, dpu_hw_blk_type_name[type], enc_id);
+>   			break;
+>   		}
+>   		if (!hw_blks[i]) {
+> -			DPU_ERROR("Allocated resource %d unavailable to assign to enc %d\n",
+> -				  type, enc_id);
+> +			DPU_ERROR("%s unavailable to assign to enc %d\n",
+> +				  dpu_hw_blk_type_name[type], enc_id);
+>   			break;
+>   		}
+>   		blks[num_blks++] = hw_blks[i];
+> 
+> -- 
+> 2.34.1
+> 
 
