@@ -1,109 +1,281 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F1E19CC06;
-	Sat, 15 Feb 2025 14:21:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17077156C79
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 14:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739629311; cv=none; b=fyd5DuR67Sh0kVP5T9ortGu+tMpt4INs/qEKp+racsTtzp5U8A95C7u0HBf+3zC93l/TRqpoOwtkDmT+4jqVOxn4x4rki4Oa0z90XXJY6Sf4m239L/NZ58cqpUP5Fwu+lQHooAgCf2D5NOK3YMizRUzuQkiPzfzfdrpHqXn5yWg=
+	t=1739629339; cv=none; b=Du5a7B/mW91MPPFLLg60Bj0aGFAwKfarTpAnaZilpH51B+Ns5HH1r44GyjSa5LS90d99qLIZ8Y+UzQZbuwTCzIuWQhLIRSAdv8J23lkDTdpAu21t19z3YPTIjULzgOmvIqZTGZ+JScjMBYYt96FihPnweXd06wRz50Wkgx3tUvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739629311; c=relaxed/simple;
-	bh=O3b2JU3w/ODuxO3MLy1UzoyGGGaXmBwx1eEl4Fz+mQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RfEq7dqFwFUy/4Fwms5iZa4E4tzyYYcvH5OvKGKNaaYjJIu48she1vgxrtSnJ15VJxc5urCGh12XGz7dqF4lzx7RJtMO9miaRGNu8Wdhss1DFfF/Z0JYabyyy3ZLvTcyv6/m/vRHjuUuynxNqsT2Ct3g1e6cjSt9XEUkGHDoeVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hEGS9Kir; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739629339; c=relaxed/simple;
+	bh=hqW6ymOflAStCUdXwcL9PQWcJaSBxkT9va/7k3d0riM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tjCydTNZZMiQhtTjLgtBS0Koxz49vZesszT5ARJ5GIZ0MNhmMkAO8gLPVMK3z4+l507SeMbg6PLgi00mQXqESnxGdEOT5ztUrZ6cuRrkKZrtU1vGx81RvKO2XP5ekb6UIRIALY7tmK6YegTdLrCM5idtF6pzZU1vXo2aJUlAFzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5LU7CJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hEGS9Kir"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 862E6C4CEEB;
-	Sat, 15 Feb 2025 14:21:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5LU7CJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40255C4CEDF;
+	Sat, 15 Feb 2025 14:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739629310;
-	bh=O3b2JU3w/ODuxO3MLy1UzoyGGGaXmBwx1eEl4Fz+mQw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hEGS9Kir7L5VKuSvVoS3WRtvXngeEsvB3GpV/9fjCOCrhy9sYWKacXw8hfRSBUh7K
-	 pQZuyRLi1IsaXGh5mqgZF5yxp82d1nSThvgFxU/3GtN0sZ0D+XmFoeMJGfKfeR0RHa
-	 7UPYmkg7WVu8yxQcGHqTxN7kaaADW1ft3LFhoi82R3muUtYgP4rFVGadux8Ws4CURt
-	 bzfGrVEMPNYAJd+uQmsYUqD6yKPcm8MFiy76nPuP+mdpOoXzwxCaBVLF+sOiJJvhqD
-	 nvgZ5j2uO2rYTsGSomJLxTGBORrHL/rXl9k5ceasmIC1swXfsCfsIAz0jRm5ZnQA7i
-	 ofKhDMDYRJOKA==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3072f8dc069so30378011fa.3;
-        Sat, 15 Feb 2025 06:21:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUEQa72l7iNrUozyP8ZgDz0DNRQ4PT6+Y1o4wlcQaZFWnCjeQ0MyOKfy8w/RnfMWAE1yDWB4Ed+59Fnk4Cu@vger.kernel.org, AJvYcCVWmcbJcwQJWYqHlSlyGGPSLsJvWTmxMqXfoUIkao1N0orAPWpkdGKYnsRILzTJ2iW/muM=@vger.kernel.org, AJvYcCVhPIneuuIiFaQDmaNRoa3IaGJ7a7xeHTweFxLuencKtPQN1TCi8E5S+lPZcqTNCT9VbDwWLYXFnLJIaUcR2ecn@vger.kernel.org, AJvYcCX3kQWokwX97aythkIvSL6Bj0GZgDOJxfWJKRWfAQTUN+B0dvhmzD1IlmKHxMwI43luUoj8wZ/YzWMYe5oj@vger.kernel.org, AJvYcCXuislqfI/BpS19OwxajBEHBci2Bl4m9TUAKntEqMxCohs3XcxsbiNdSsK5OElbKJJNSJdpKC4WFGv64g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgdQAi1vqYReQ5xCYtJB2X/7ZBOGMldOxf3uuZe1H/uid81Mub
-	QNVqFZt+8gkgXoVTzZd1HL0gw11bAQ0IOOKwBT3RVivGcn9uwG0KtB4+79gkrvBTAPIMOSeBA2W
-	YCfWSYlJsMIHI5l6uD2KSfqphrhA=
-X-Google-Smtp-Source: AGHT+IHJAH2llTK/8FUeOa/uyjvPOa+oEZ4jzkPOcw5/nJJ+S7w8Kd3yArGdplvM1hiKKoy+jgbSokUCpMby5X/HYDE=
-X-Received: by 2002:a2e:99d6:0:b0:308:fa1d:1fed with SMTP id
- 38308e7fff4ca-30927afee15mr9904211fa.34.1739629309211; Sat, 15 Feb 2025
- 06:21:49 -0800 (PST)
+	s=k20201202; t=1739629338;
+	bh=hqW6ymOflAStCUdXwcL9PQWcJaSBxkT9va/7k3d0riM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=r5LU7CJFB5NReP5POx76or/k0jq3lZN/wUK2VoEhsj4S2hJ4z/4WojyEoTIzNUOgo
+	 ip0tcxCVf4hKRiR0voivRcnHCmEaUfS5l53O3nNqEhtLKm/A0VWCLxNSHaM8xZwK2+
+	 JeLsHT7tPbQYSAloBIuPHNfUK8d5addpf0BkkrjnmMqZM7QL/UY4wg7CpORQVVrrcx
+	 s3FH+/vWiNauiH0myW7s7ImisAmeNpX7LkUXXnJN4VCyP5NlIw4jt8CkPWc1ks6tE1
+	 aNluGGv4W8/8iNIkveq0X9hmrhZ+ZTzxYJ4vFHsnE5WrxquoeCrrLNoe15TmEd71y4
+	 GIEhu3DXsqS/g==
+X-Mailer: emacs 31.0.50 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, will@kernel.org,
+	maz@kernel.org, catalin.marinas@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	gregkh@linuxfoundation.org, steven.price@arm.com,
+	suzuki.poulose@arm.com,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 1/1] arm64: realm: Use aliased addresses for device DMA
+ to shared buffers
+In-Reply-To: <20250212171411.951874-2-suzuki.poulose@arm.com>
+References: <20250212171411.951874-1-suzuki.poulose@arm.com>
+ <20250212171411.951874-2-suzuki.poulose@arm.com>
+Date: Sat, 15 Feb 2025 19:52:11 +0530
+Message-ID: <yq5apljj9tkc.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207012045.2129841-1-stephen.s.brennan@oracle.com> <20250207012045.2129841-2-stephen.s.brennan@oracle.com>
-In-Reply-To: <20250207012045.2129841-2-stephen.s.brennan@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 15 Feb 2025 23:21:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQokoST0FnByeWywaghTMP2aG7hQaV1T=TcQ=1v4ZLQrg@mail.gmail.com>
-X-Gm-Features: AWEUYZk8XrdR9lJozRpCY9QyaANy91FqaGQymPUxQ0WR6PL3n7MJiW1ZBtl7LX4
-Message-ID: <CAK7LNAQokoST0FnByeWywaghTMP2aG7hQaV1T=TcQ=1v4ZLQrg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kallsyms: output rodata to ".kallsyms_rodata"
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Kees Cook <kees@kernel.org>, KP Singh <kpsingh@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Sami Tolvanen <samitolvanen@google.com>, 
-	Eduard Zingerman <eddyz87@gmail.com>, linux-arch@vger.kernel.org, 
-	Stanislav Fomichev <sdf@fomichev.me>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Jiri Olsa <jolsa@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Jann Horn <jannh@google.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Hao Luo <haoluo@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kbuild@vger.kernel.org, 
-	Daniel Borkmann <daniel@iogearbox.net>, Nathan Chancellor <nathan@kernel.org>, 
-	linux-debuggers@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
-	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 10:21=E2=80=AFAM Stephen Brennan
-<stephen.s.brennan@oracle.com> wrote:
+Suzuki K Poulose <suzuki.poulose@arm.com> writes:
+
+> When a device performs DMA to a shared buffer using physical addresses,
+> (without Stage1 translation), the device must use the "{I}PA address" wit=
+h the
+> top bit set in Realm. This is to make sure that a trusted device will be =
+able
+> to write to shared buffers as well as the protected buffers. Thus, a Real=
+m must
+> always program the full address including the "protection" bit, like AMD =
+SME
+> encryption bits.
 >
-> When vmlinux is linked, the rodata from kallsyms is placed arbitrarily
-> within the .rodata section. The linking process is repeated several
-> times, since the kallsyms data size changes, which shifts symbols,
-> requiring re-generating the data and re-linking.
+> Add the support for this by providing arm64 version of the phys_to_dma().=
+ We
+> cannot use the __sme_mask as it assumes the "encryption" always "sets a b=
+it",
+> which is the opposite for CCA. i.e., "set a bit" for "decrypted" address.=
+ So,
+> move the common code that can be reused by all - i.e., add __phys_to_dma(=
+) and
+> __dma_to_phys() - and do the arch specific processing.
 >
-> BTF is generated during the first link only. For variables, BTF includes
-> a BTF_K_DATASEC for each data section that may contain a variable, which
-> includes the variable's name, type, and offset within the data section.
-> Because the size of kallsyms data changes during later links, the
-> offsets of variables placed after it in .rodata will change. This means
-> that BTF_K_DATASEC information for those variables becomes inaccurate.
+> Please note that the VMM needs to similarly make sure that the SMMU Stage=
+2 in
+> the Non-secure world is setup accordingly to map IPA at the unprotected a=
+lias.
 >
-> This is not currently a problem, because BTF currently only generates
-> variable data for percpu variables. However, the next commit will add
-> support for generating BTF for all global variables, including for the
-> .rodata section.
->
-> We could re-generate BTF each time vmlinux is linked, but this is quite
-> expensive, and should be avoided at all costs. Further as each chunk of
-> data (BTF and kallsyms) are re-generated, there's no guarantee that
-> their sizes will converge anyway.
->
-> Instead, we can take advantage of the fact that BTF only cares to store
-> the offset of variables from the start of their section. Therefore, so
-> long as the kallsyms data is stored last in the .rodata section, no
-> offsets will be affected. Adjust kallsyms to output to .rodata.kallsyms,
-> and update the linker script to include this at the end of .rodata.
->
-> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Steven Price <steven.price@arm.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
+>  arch/arm64/Kconfig                  |  1 +
+>  arch/arm64/include/asm/dma-direct.h | 38 +++++++++++++++++++++++++++++
+>  include/linux/dma-direct.h          | 35 +++++++++++++++++---------
+>  3 files changed, 62 insertions(+), 12 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/dma-direct.h
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index fcdd0ed3eca8..7befe04106de 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -41,6 +41,7 @@ config ARM64
+>  	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+>  	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>  	select ARCH_HAS_NONLEAF_PMD_YOUNG if ARM64_HAFT
+> +	select ARCH_HAS_PHYS_TO_DMA
+>  	select ARCH_HAS_PTE_DEVMAP
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select ARCH_HAS_HW_PTE_YOUNG
+> diff --git a/arch/arm64/include/asm/dma-direct.h b/arch/arm64/include/asm=
+/dma-direct.h
+> new file mode 100644
+> index 000000000000..37c3270542b8
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/dma-direct.h
+> @@ -0,0 +1,38 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ASM_DMA_DIRECT_H
+> +#define __ASM_DMA_DIRECT_H
+> +
+> +#include <asm/pgtable-prot.h>
+> +
+> +static inline unsigned long addr_to_shared(unsigned long addr)
+> +{
+> +	if (is_realm_world())
+> +		addr |=3D prot_ns_shared;
+> +	return addr;
+> +}
+> +
+> +static inline unsigned long addr_to_private(unsigned long addr)
+> +{
+> +	if (is_realm_world())
+> +		addr &=3D prot_ns_shared - 1;
+> +	return addr;
+> +}
+> +
+> +static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t pad=
+dr)
+> +{
+> +	return __phys_to_dma(dev, paddr);
+> +}
+> +
+> +static inline dma_addr_t phys_to_dma_unencrypted(struct device *dev,
+> +						 phys_addr_t paddr)
+> +{
+> +	return addr_to_shared(__phys_to_dma(dev, paddr));
+> +}
+> +#define phys_to_dma_unencrypted phys_to_dma_unencrypted
+> +
+> +static inline phys_addr_t dma_to_phys(struct device *dev, dma_addr_t dma=
+_addr)
+> +{
+> +	return addr_to_private(__dma_to_phys(dev, dma_addr));
+> +}
+> +
+> +#endif	/* __ASM_DMA_DIRECT_H */
+> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+> index d7e30d4f7503..3e9bf6ca640e 100644
+> --- a/include/linux/dma-direct.h
+> +++ b/include/linux/dma-direct.h
+> @@ -72,18 +72,36 @@ static inline dma_addr_t dma_range_map_max(const stru=
+ct bus_dma_region *map)
+>  	return ret;
+>  }
+>=20=20
+> +static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t p=
+addr)
+> +{
+> +	if (dev->dma_range_map)
+> +		return translate_phys_to_dma(dev, paddr);
+> +	return paddr;
+> +}
+> +
+> +static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t d=
+ma_addr)
+> +{
+> +	phys_addr_t paddr;
+> +
+> +	if (dev->dma_range_map)
+> +		paddr =3D translate_dma_to_phys(dev, dma_addr);
+> +	else
+> +		paddr =3D dma_addr;
+> +
+> +	return paddr;
+> +}
+> +
+>  #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+>  #include <asm/dma-direct.h>
+>  #ifndef phys_to_dma_unencrypted
+>  #define phys_to_dma_unencrypted		phys_to_dma
+>  #endif
+>  #else
+> +
+>  static inline dma_addr_t phys_to_dma_unencrypted(struct device *dev,
+>  		phys_addr_t paddr)
+>  {
+> -	if (dev->dma_range_map)
+> -		return translate_phys_to_dma(dev, paddr);
+> -	return paddr;
+> +	return __phys_to_dma(dev, paddr);
+>  }
+>=20=20
+>  /*
+> @@ -94,19 +112,12 @@ static inline dma_addr_t phys_to_dma_unencrypted(str=
+uct device *dev,
+>   */
+>  static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t pad=
+dr)
+>  {
+> -	return __sme_set(phys_to_dma_unencrypted(dev, paddr));
+> +	return __sme_set(__phys_to_dma(dev, paddr));
+>  }
+>=20=20
+>  static inline phys_addr_t dma_to_phys(struct device *dev, dma_addr_t dma=
+_addr)
+>  {
+> -	phys_addr_t paddr;
+> -
+> -	if (dev->dma_range_map)
+> -		paddr =3D translate_dma_to_phys(dev, dma_addr);
+> -	else
+> -		paddr =3D dma_addr;
+> -
+> -	return __sme_clr(paddr);
+> +	return __sme_clr(__dma_to_phys(dev, dma_addr));
+>  }
+>  #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
+>=20=20
+> --=20
+> 2.43.0
 
-I am fine if this is helpful for BTF.
+How about the below?
 
+The function name addr_to_shared is too generic to be included in the
+dma-direct.h header file. Since we don=E2=80=99t expect it to be called
+directly, we can either inline it or find a more specific name.
 
+Additionally, for dma_to_phys conversion, we first retrieve the private
+address/alias before switching to the physical address. While both
+approaches yield the correct result, this change more clearly defines the
+conversion rules?
 
---=20
-Best Regards
-Masahiro Yamada
+modified   arch/arm64/include/asm/dma-direct.h
+@@ -4,14 +4,14 @@
+=20
+ #include <asm/pgtable-prot.h>
+=20
+-static inline unsigned long addr_to_shared(unsigned long addr)
++static inline unsigned long shared_dma_addr(unsigned long addr)
+ {
+ 	if (is_realm_world())
+ 		addr |=3D prot_ns_shared;
+ 	return addr;
+ }
+=20
+-static inline unsigned long addr_to_private(unsigned long addr)
++static inline unsigned long private_dma_addr(unsigned long addr)
+ {
+ 	if (is_realm_world())
+ 		addr &=3D prot_ns_shared - 1;
+@@ -26,13 +26,14 @@ static inline dma_addr_t phys_to_dma(struct device *dev=
+, phys_addr_t paddr)
+ static inline dma_addr_t phys_to_dma_unencrypted(struct device *dev,
+ 						 phys_addr_t paddr)
+ {
+-	return addr_to_shared(__phys_to_dma(dev, paddr));
++	return shared_dma_addr(__phys_to_dma(dev, paddr));
+ }
+ #define phys_to_dma_unencrypted phys_to_dma_unencrypted
+=20
+ static inline phys_addr_t dma_to_phys(struct device *dev, dma_addr_t dma_a=
+ddr)
+ {
+-	return addr_to_private(__dma_to_phys(dev, dma_addr));
++	/* if it is a shared dma addr convert to private before looking for phys_=
+addr */
++	return __dma_to_phys(dev, private_dma_addr(dma_addr));
+ }
+=20
+ #endif	/* __ASM_DMA_DIRECT_H */
