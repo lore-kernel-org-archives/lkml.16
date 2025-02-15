@@ -1,81 +1,100 @@
-Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2507213C80E
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 01:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC67141C92
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 01:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739581476; cv=none; b=FgZfuObr1uUiNBKRJz4VOoaKATu+/buQ23+r3efgy476EaqjUDWQLSzMUm32YFpfTzDKgCdRhJWQG90Cp6Q3EM5dmEXuo0eK2QpH4HejkqDkzrC59qOLchdbKFpCXJ21VoQLm13A5csJ01dhNzXRV/t/R6L0xbYnWb6KdE9v28s=
+	t=1739581575; cv=none; b=sPj8Wim9q3fndDVohZ8FpkeLitfpbtrtKxrXE0/qunboiWbZYHslo/y0DVXIhlI1WJHKtoXhkJz3T2Dj7VNkL99vKdgKo9J5J5v9uO7mT7W7alA4l0Gl+KiKI3K7a6cRIdWaHGWPVB/gqJu+EkzPQT2raos4+Qm6Ac50ImcjOic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739581476; c=relaxed/simple;
-	bh=W1PfXsK8Dj/IOV9U04Ew3tdiTcOqnHPCWj3pwXw3J4w=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=J9s+mZKM+xisRAEmMFlKTqg76qAqqLdrfv4mIYw1BFzslsbaeqIsDw8F8ORu4dLe63oJKe6kFL2d5vI3J8NMwtAa8AO8uzBpOlLnyx7cEAXq6LXbX84sSH+oM+BAolXQ4p8cK81Z0wp3qKgR2yhDV29KDoWsbGS/MMAb/OGhEXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=BpJZEjAd; arc=none smtp.client-ip=203.205.221.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1739581575; c=relaxed/simple;
+	bh=5wliXWDYsrFCwme0bU8BDoFYLmTGBwCFoyuhP4vduys=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=IJVXOdN51ntcMwgH/Mm9TZYwgTPoLZNWRGO7qClS8cKBOPOP8ZhwBKBbK2F4+FcNW0nnQMqQhUt2sgIDLk7H+9izYYeUpFOsIFQQDoCTDil9nt/taxjJGKathIv7j3auzzrWTsWRZegRIPc7W1e1N0HeFiJ7AQUbVLrjnsuLW7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Om+ngLa3; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="BpJZEjAd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1739581161; bh=6/QcT1QkuuTKM24+t2ztN8oGZqIds9C+fSou5xFgRNQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=BpJZEjAdIv5b4EkMRdOwhbQH9wzondu3O7i1Xuupyl5dIrJXVT06TIW1NwlIDhwKd
-	 zIyLZOstfGFMaUajcq6U8mmFV2A+BHPFTmNpmX81FkCPWyncPHflSDbB+dSBwuIyrO
-	 TClccbGQISc9PpCmiRA2dxtoTrWzWMCtVab/fiv4=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id ED409AA0; Sat, 15 Feb 2025 08:59:20 +0800
-X-QQ-mid: xmsmtpt1739581160ty8xvmc1e
-Message-ID: <tencent_6EC0D361236A496543ABC44E176E577EA605@qq.com>
-X-QQ-XMAILINFO: N7h1OCCDntujNMaS2jrERWzTKyQb2Ge+20+a1oCANOFq3Au3b9DLQm/ECPDv7D
-	 g1mrSuUKZdCw9Fl4IOAnvBbD1KSSxBeyN9/D3WHtk6E7X2mROZ/aEt9uJHtxbsLEQlqu7/4ij+HV
-	 1BwrQlk/361JJ/FPctXY+iU7EJDSM/gy25KybBboMT03HqBTQ5F+9t+de1zcdl+wSbf15pKpm8w1
-	 SOc5mLzd8t6fyKFxfzib36wccgvSbYyjWinTG1PIHaikKVHkIeXMp/f9yeH2IhHxCDv7Ez9yjxRn
-	 Xj53PVpt5zR56VdQtjr4awl8goNRoDQL9/yBDiW0EUTzmCvtCdy1o0/4xpW5ZujbcZJRiAdEFeSC
-	 lBxMm/mQxlUA3aCRsUvunbqa+5AlQXZBFgjD+JQuVdlIIfxTpNtqe+el1eanivBZk73V1Ygxm7er
-	 q6xmAv6A/UZPKtnOMCNGcsegTGan1EkisrCsfOfgvjtBdqresoJS34Grx2tfIINW+cA6DUYcDUmN
-	 /35U/qgspL8nMESPcFYXwQzF3rVBGwXAGd/tY2hPastOHUHEKwQxZR9TnoHZ8X8lm0uPDdfGsr8R
-	 l4P8bkh2UeaurJ3ZBLtCIOQAlcqqARYObBSjZ5umcWu+KRSdfXkFT/hiJcR82CKKBvDH1iRIJIi7
-	 TP2NrU42owH0J89wx+AdE/tUfH9RzXhccm0cnLciQgR6ptzqJHTvam/DtCFyuHC5N8wxizu/NMjV
-	 yY2hlWAI/qQhQptiCxVq5oQoK+BnQSmq2l9f7E8sfBYyVx3YIiM/5LtOnHHWEzypWFWDJVQG2H9w
-	 TeYAiqOWIFwdIdFdLtUNnvhaIu2RC6YlSJzamhNbaTEMENoY8PDSPIeYnWCVPY8BBIIEi6r0GZF7
-	 Da9U46sUBl/Rojhd9D/4qcNoshvIXlrQ==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+e1dc29a4daf3f8051130@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [netfs?] KASAN: slab-use-after-free Write in io_submit_one
-Date: Sat, 15 Feb 2025 08:59:20 +0800
-X-OQ-MSGID: <20250215005919.1020762-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
-References: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Om+ngLa3"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220fb031245so18000225ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:06:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739581573; x=1740186373; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=gnHrxG87g2zrpNznbUWyypfRtpr7va7BhlbJAw1+aOQ=;
+        b=Om+ngLa3jxTKgaX7Canh3KrefjMF9f9R+pxKqw1qMdfYuVfPoVaPM6YaDh8Hyb5iDM
+         UhN03+GRWOS7q/aDkQFRHaXpeN86Zxzjvb344yehazSmn/YkJlIWFil2ZbBa+x6iGhCw
+         Qm0nNnmuh3citPrsn6yhuwaP+HMBObp3hUmSnmziF+NfXviXyislWG9G19A+amZLwpQO
+         0iucd3nGaBBK6jxkc736S3WhXBbZTV2mq0oJEYM69AFY6YCWUap4ZeGLrumthlZ30e5q
+         7T/+dtdwWBxu5xOQa3teEMxF/mt/PSb7F6x0aptw8JM2hb36QSM5oiCBjyXBCguTPWqj
+         PDHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739581573; x=1740186373;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gnHrxG87g2zrpNznbUWyypfRtpr7va7BhlbJAw1+aOQ=;
+        b=OaGTF5GOZ/a+4EVj9CylsCcXN4YBZPfV+HSLmvDtk5oBxCd45Bzn3YXAKQmWH7o+Y9
+         k8gd5VhR7WQrntctFXP2G6MrX0jPbT0BP2WJhz/pjZOj1V4gJ6/ZXo+S1aIehS7nk2hp
+         m5b9vNpLwOA8LTYgbN8TO/L0GTwVNF4sqtumpxpa0vk26XcYJZ7cSaF6UiPMn0i0/NGZ
+         7xdik/w8ZhGvCWLvv4pBjTi4BBaWlWwFYXXwGl74ISJSqBLk0MqWkLyCQRCDGKaBquQp
+         tZzvjhS9UiJjehqJiAUQKjYLZdA8lw59PVS4rb8iii7FzY0LPIqt2XUSsRljol5rg/Vc
+         3fHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVA98+3DQAH6ZWPRH+Nw94ZxMGGhgQsLTmL7Y44sP8PDwPke72VcMXB60YCGDi/dbuASkHQxFrRG8qWCyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxld5Wlb/xKaTe4ywZlL0v47CblD+SvNBCDdUrQOBxxc1L9vuOG
+	PwSWaUJvCvqjla5MmHa9BIG6jEo8UvilFSxKxErMKsVaF525Wv8y1wbNvdN5vQiFGy/TpdwsySt
+	bQQ==
+X-Google-Smtp-Source: AGHT+IFqpbcx0eksJgzswjg2oejQ8+iZ+7K9CjQZzR/co/7jmMUA3+1XjLY7h+QZJ+aWbZridj68BiDJaJg=
+X-Received: from pjbpd11.prod.google.com ([2002:a17:90b:1dcb:b0:2fa:27e2:a64d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:dac5:b0:216:7ee9:2227
+ with SMTP id d9443c01a7336-221040a8e62mr21822595ad.36.1739581573052; Fri, 14
+ Feb 2025 17:06:13 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 14 Feb 2025 17:06:08 -0800
+In-Reply-To: <20250215010609.1199982-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250215010609.1199982-1-seanjc@google.com>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250215010609.1199982-2-seanjc@google.com>
+Subject: [PATCH 1/2] KVM: x86: Don't inject PV async #PF if SEND_ALWAYS=0 and
+ guest state is protected
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-#syz test
+Don't inject PV async #PFs into guests with protected register state, i.e.
+SEV-ES and SEV-SNP guests, unless the guest has opted-in to receiving #PFs
+at CPL0.  For protected guests, the actual CPL of the guest is unknown.
 
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index f65affa5a9e4..7854d55120b8 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -371,9 +371,11 @@ static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
+Note, no sane CoCo guest should enable PV async #PF, but the current state
+of Linux-as-a-CoCo-guest isn't entirely sane.
+
+Fixes: add5e2f04541 ("KVM: SVM: Add support for the SEV-ES VMSA")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 58b82d6fd77c..3b67425c3e3d 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13395,7 +13395,7 @@ static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
+ 		return false;
  
- 	if (rreq->iocb) {
- 		rreq->iocb->ki_pos += rreq->transferred;
--		if (rreq->iocb->ki_complete)
-+		if (rreq->iocb->ki_complete) {
- 			rreq->iocb->ki_complete(
- 				rreq->iocb, rreq->error ? rreq->error : rreq->transferred);
-+			rreq->iocb->ki_complete = NULL;
-+		}
- 	}
- 	if (rreq->netfs_ops->done)
- 		rreq->netfs_ops->done(rreq);
+ 	if (vcpu->arch.apf.send_user_only &&
+-	    kvm_x86_call(get_cpl)(vcpu) == 0)
++	    (vcpu->arch.guest_state_protected || !kvm_x86_call(get_cpl)(vcpu)))
+ 		return false;
+ 
+ 	if (is_guest_mode(vcpu)) {
+-- 
+2.48.1.601.g30ceb7b040-goog
 
