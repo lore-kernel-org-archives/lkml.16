@@ -1,181 +1,123 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C8C2B9C6;
-	Sat, 15 Feb 2025 00:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F072B7BAEC;
+	Sat, 15 Feb 2025 00:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739577797; cv=none; b=CrRlVuOU3/jWNgwH08S+QGD23W/uBT4dsESgvkTkv6lLmIYeZYKrOVPjmyq72BSa6LQEPsj+/dM2SYTW7/jJsYdACZi1Rdg2EnbXqAikzeG+MjCXQnBIIP2QKqNL6vnhTlRVixvfdS/Fn7F9mgTdia+Xph3TeGbupp0+KmSPMb0=
+	t=1739577801; cv=none; b=ptcsjZfv7K8z7CyuvMXOleZfaD/gzETqwJr+DGYrwFoUIyr449MvijIYqoCMRZ1dftWFylR0jodfhS41QKQJY1a16h2/QVcNOCrzOylZBBCW/LUeVc+aUJc+DvFCGmwCDbSgiwkPjcD0K2qCKPfQSMFz4Uo8osbRJmOCvRaE04E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739577797; c=relaxed/simple;
-	bh=UZt3Sx5BqortNKMQ/4+d7A6bnmyYPHqSwK6q2bElWv8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oOiH0yi3IAdeNPHeGwasqbKg4jzPlCW1a+nrBZzifVrzSXOiWcSF8xqt+1ZOt1lqo1CdB30T5x+FX9zndZaySnjWha0lS+zjLDuEhHAs4J6wYrGSlAFKWAZTqRw9s/B1KcdEKY9bUxcq5HZ+AjcKwdKrb+nRV7oMF88UndWMQQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgzHoSrT; arc=none smtp.client-ip=209.85.128.173
+	s=arc-20240116; t=1739577801; c=relaxed/simple;
+	bh=CIEabKLwQYFi5rWVG64RsxgpPhddtq04bXOdegmdaRY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=srpZBo8ytrwKM+2pHmbel2jWeJMonkmXO7wJYngls8BvuUcad+nUXnuhyd0YEHdzAxWi+AjKbmprEyVshxMNJSQfUGf+H89LqymSd6Tatq3v6YYe2AeDOkh8duhqjTw0S5QRbqjJVeFtMMsBD6KqQEwfrNP7uDaKWCzFtDZGcJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6QiBMAB; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgzHoSrT"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6fb3a611afdso17626837b3.0;
-        Fri, 14 Feb 2025 16:03:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6QiBMAB"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f3c119fe6so62662265ad.0;
+        Fri, 14 Feb 2025 16:03:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739577794; x=1740182594; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7degOyP+5HxIUK+nkGc+HV6cv18/eI0UzCJ3KUecVYU=;
-        b=hgzHoSrTUzgmJbMS8i4+bRkgLCKBkzwpj3Oq4ztRAWGV1n8Qi1/dIP7DLMrFlxVjrp
-         VT59Pn+pzKwhRnVuGTfGU0oeTO9rCrFiojHOHJ+UMJdSIFF7i1yNU+2qYfJ3Wh8TkPI7
-         +y1UC4vSV2C4eHj+9AiYkMO2JjABNLYJLVH3Sn7BhFJr/rT/JJocKX6ItbXrRKNzG+qR
-         ONtMaMRJavZaij46TM7Uhes5k9+eQbTMzKfKM0jF3o/lX44XsSDXM7hb2LYdDtEgfLCw
-         HuVU8L23lY/yT64LgX74wz4QOq+crSL+OW60zqvJ4AWqOp0lm59eeYXKYd9BoJXwvmCo
-         pz1g==
+        d=gmail.com; s=20230601; t=1739577799; x=1740182599; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ycy+7wK55n2BwKAQm8/kS9AwdfvEsdhnbKKp04wJVgI=;
+        b=P6QiBMABJaDpGsI/hQxH3F+l/Ao/4ZSydbZoP8SsTM4OcY1AM/lbo52Q6CB5aPoaXW
+         59wACGjl7sxP//VZ1ddA/xIgeE7CG6UUoyG+IaoPg3A9AioCMr0pHVtqkGJ/Ivmfc8hl
+         /JPX5wylMsTkz909eGvwFDWymPuJmZLS6xKeRrzW72FpqQchrXkwWUMdf33/laoO277P
+         bUEzPxGOlNTFoG4Gzpnwlpi5/92tohG6VzWi1Lwtn9DbYit+jxL0T28GXwdDOyBjNNg8
+         +HGtQJ158FbYBiJxiIwb+Iy6IhrF7GfteEh4e+m85avzOzvEYGM03iwPyH0KMCaLXYJL
+         kC5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739577794; x=1740182594;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739577799; x=1740182599;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7degOyP+5HxIUK+nkGc+HV6cv18/eI0UzCJ3KUecVYU=;
-        b=cvqaj5YUT6i0FjUx8wlP2kYCDWYQJH8a7f2V/95zCZ75dP4sQ51Lkyad9NUYmJth60
-         lA/i3k/onPRpj/7IqsOnSHvdPntEvIxRNHa1+pm7TLZGwcGjT03Y1lyFM0541p6jLe7Y
-         MdKUiXHhv9ejjdgCssBBqDD9x+/eofXLpVO5sCLgB5Z7rp/dx7c9NOJ+q+ZiFZ7l4mPU
-         hVkOy8cqqKJbNBGLoPJBYwJOfBO7fROOS1LyoY4+4iBo0GgFhDZK3he6B1aqHnAL4rJl
-         6xIhuRFv3xn3dHwyRGqwKejkFeoOb8frZlkR+8YgMYPOEFJWxHs6atmazKIaQs8B+LdX
-         37eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPlGXXoB7sx+SG66r2HrMJmQVawrXqsdpoa1wdE+utyiaUtMqBECY5vWfngqXE0oZCW/1ocgjiuH87F/Y=@vger.kernel.org, AJvYcCVvS/dAL6kFnL0GJfC/U6FnnT92BkW6W1bpR/S24/0ymV5hn5jDKJLQuFI2sZBgu6U5fTObHx10igepi58M8WjswxU0BQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YypKXJqbcGA/pahAvV1ADGYRDdh1NE1JwwBIyyzpJhAFiNLu8j6
-	LFTuo596p76BnKVxt298oU3uaU1dzXVzrHptCxLBKly1ta/GyLdf
-X-Gm-Gg: ASbGncsKL4IiaAJzAz/d7ZMSm2ClZ+oCJC/uj9x9/2H54pFRhS+TjzeH2KiTWhVi5fj
-	ZLAEpu4HrCkfjmRVe7uHAJv2bpI8A+0URrVCPBxebxI33RV9WzgVpSEBPEqhRbFi5h52qIGft+f
-	OnSUq88uKShgZZyEQMmzbvMS6tS//hHJpPe8m97j7xwUs7NAg8XjxR98oDnOlz83TEznYr8jEAY
-	FAJVm3UPJDehht2aWLQRgKW7r9Ivenq0atEKGVxNfIUeqVJTqSt2JtkR7zN5KvGB0x8qO1cjbKt
-	CM4LKvueGaF2PsvWjXWStaM=
-X-Google-Smtp-Source: AGHT+IGF82wIiXajjjsnCjQpmX9L/21cH1U7GHhNpZZYOWpxlPHY2CkxftG5WiXmNCzCI5UcjpMspg==
-X-Received: by 2002:a05:690c:640f:b0:6f9:983f:4365 with SMTP id 00721157ae682-6fb58390c8cmr12268617b3.36.1739577794594;
-        Fri, 14 Feb 2025 16:03:14 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb35d586e5sm9844207b3.17.2025.02.14.16.03.12
+        bh=Ycy+7wK55n2BwKAQm8/kS9AwdfvEsdhnbKKp04wJVgI=;
+        b=fE1nw95XH5ivMqXaEiHZmlK6ecNWFJKeMD3nEG0rGzMeN8/fP1KX1MOvd5ZFTqxwJJ
+         tKxzl+rjiQLFcjN2qqJoVGWhanJrYv5lEaWL1ysXSPA2yyEH9unHHuhraYBk38OY65nP
+         /eQ4AApUjgd71ufXDTf9/iBAV/e9Wy1+LQdsnOhpmGcnqwemHGc5Kwvbzxd8TUtLdT2t
+         D0XEqJ3umRIGLQAuIdUa3RU6yw15v8aMUWmObyu5TDBWt7li8C/CW/6rJ8C2Z9o9k8ZE
+         MaPeaDFM+1mG27PvxDGgNCdoBejcvJoHQDMl3p6/cH85y5c2G6ic9XhPs4ySYNAuUiO2
+         ZtCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHK0NlL9XygHjvlBFPpp7JkZLhdHHPl7yE/MmT3f+dQsLIV6Op3moiPV28v18iN4eiBcZjrAN0Y0q0@vger.kernel.org, AJvYcCWB67RLtw7mM9xgBmDeme+fCb4PjsaZfMfcs0R8355EUJdEti25smLmnpcajUdD5mGpP3KPJufBHyuwF5c=@vger.kernel.org, AJvYcCXAHqpQ/IbmXmvJPylkHbLEZbKvXdeyBRLO2Rbn9uAdER/sqKjrdTDKifxid7k4+t3YOPmvgzW2o4ZX1sdH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJaRAfvgqu8SkUf8goQDluIMGWhwrbVeCCxcnqnN2f6lWr0QWl
+	lET11Go54NM/gVMWnQx80/VaLwiqIciA8fks8aF1BoCl24Q6rh50
+X-Gm-Gg: ASbGncs0BGy4BolUcFhI32GZGkyoBen9XNp74aHfwpVX+3NCPQQUx4n6CVVb4+up0a8
+	MagF9vjUNtKWaCXmd2AUnLlKU609kvtxuSUKSbX+Pr5/e2fu9ric5XOPSrR+K+OubXZlsFfKf16
+	dmoyDQaHdzj4oYTnuiD428n2g8SnKncHkT6SlZ4q+uvneoKGG0+BZVD3CDgGh4gC/1KF0tb1IsS
+	u0ol0a7cuyN7xBaETx2qxVcEf1l51GsvqMwfNb1nV4HQm/7okx7TBz3tAM182m25LElYU8c3tD3
+	MYsgRtxP/utQWJbJj7PageVi0+XJGxJhVP8elYB/+u0i6hMIxk65suVFuW97c18q9QnA2xbdfyD
+	W5fH4C1MgAw==
+X-Google-Smtp-Source: AGHT+IEQm7tez2sFvaRnjwzh7kSHWcuD4/AClFoJ/jh+RwdHvWH7dcB1tkblv6tQ6+TIuQ9PaI+aIQ==
+X-Received: by 2002:a17:903:2341:b0:21a:8d8c:450d with SMTP id d9443c01a7336-221040d11e4mr18863625ad.53.1739577799290;
+        Fri, 14 Feb 2025 16:03:19 -0800 (PST)
+Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220f26ea127sm15071155ad.96.2025.02.14.16.03.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 16:03:14 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 2/2] platform/x86: thinkpad_acpi: Move HWMON initialization to tpacpi_hwmon_pdriver's probe
-Date: Fri, 14 Feb 2025 19:03:02 -0500
-Message-ID: <20250215000302.19753-3-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250215000302.19753-1-kuurtb@gmail.com>
-References: <20250215000302.19753-1-kuurtb@gmail.com>
+        Fri, 14 Feb 2025 16:03:18 -0800 (PST)
+From: James Calligeros <jcalligeros99@gmail.com>
+Date: Sat, 15 Feb 2025 10:02:34 +1000
+Subject: [PATCH 01/27] ASoC: dt-bindings: tas27xx: add compatible for
+ SN012776
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250215-apple-codec-changes-v1-1-723569b21b19@gmail.com>
+References: <20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com>
+In-Reply-To: <20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, James Calligeros <jcalligeros99@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=910;
+ i=jcalligeros99@gmail.com; h=from:subject:message-id;
+ bh=CIEabKLwQYFi5rWVG64RsxgpPhddtq04bXOdegmdaRY=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOnrb24xXsK/dc2f4GcLfycVX/oQqmQ3y39WUYHQ91+98
+ 9+6apUpdpSyMIhxMciKKbJsaBLymG3EdrNfpHIvzBxWJpAhDFycAjCRG54M/5MXt1c+rym55Xun
+ fIk7m3dq2X/RBTtLWKSKNlqWv/p0s4OR4dqbFAPZrcvu8m3bxNDsIFPcbRdRbPvmwNNXixs93xZ
+ mcAAA
+X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
+ fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-Let the driver core manage the lifetime of the HWMON device, by
-registering it inside tpacpi_hwmon_pdriver's probe and using
-devm_hwmon_device_register_with_groups().
+The TI SN012776 is a variant of TAS2764 found in Apple Silicon Macs.
+It continues Apple's long-standing policy of getting vendors to
+spin out subtly incompatible and Apple-exclusive variants of their
+publicly available parts.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 44 +++++++++++-----------------
- 1 file changed, 17 insertions(+), 27 deletions(-)
+ .../bindings/sound/ti,tas27xx.yaml       | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ad9de48cc122..a7e82157bd67 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -367,7 +367,6 @@ static struct {
- 	u32 beep_needs_two_args:1;
- 	u32 mixer_no_level_control:1;
- 	u32 battery_force_primary:1;
--	u32 sensors_pdrv_registered:1;
- 	u32 hotkey_poll_active:1;
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
-@@ -11815,12 +11814,10 @@ static void thinkpad_acpi_module_exit(void)
- {
- 	tpacpi_lifecycle = TPACPI_LIFE_EXITING;
+diff --git a/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml b/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml
+index 5447482179c14ee78885e5bee02f4549428694a6..fcaae848e78a1137e4d44f98258207bba68772b9 100644
+--- a/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml
++++ b/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml
+@@ -24,6 +24,7 @@ properties:
+     enum:
+       - ti,tas2764
+       - ti,tas2780
++      - ti,sn012776 # Apple variant of TAS2764
  
--	if (tpacpi_hwmon)
--		hwmon_device_unregister(tpacpi_hwmon);
--	if (tp_features.sensors_pdrv_registered)
-+	if (tpacpi_sensors_pdev) {
- 		platform_driver_unregister(&tpacpi_hwmon_pdriver);
--	if (tpacpi_sensors_pdev)
- 		platform_device_unregister(tpacpi_sensors_pdev);
-+	}
- 
- 	if (tpacpi_pdev) {
- 		platform_driver_unregister(&tpacpi_pdriver);
-@@ -11891,6 +11888,17 @@ static int __init tpacpi_pdriver_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int __init tpacpi_hwmon_pdriver_probe(struct platform_device *pdev)
-+{
-+	tpacpi_hwmon = devm_hwmon_device_register_with_groups(
-+		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
-+
-+	if (IS_ERR(tpacpi_hwmon))
-+		pr_err("unable to register hwmon device\n");
-+
-+	return PTR_ERR_OR_ZERO(tpacpi_hwmon);
-+}
-+
- static int __init thinkpad_acpi_module_init(void)
- {
- 	const struct dmi_system_id *dmi_id;
-@@ -11964,37 +11972,19 @@ static int __init thinkpad_acpi_module_init(void)
- 		return ret;
- 	}
- 
--	tpacpi_sensors_pdev = platform_device_register_simple(
--						TPACPI_HWMON_DRVR_NAME,
--						PLATFORM_DEVID_NONE, NULL, 0);
-+	tpacpi_sensors_pdev = platform_create_bundle(&tpacpi_hwmon_pdriver,
-+						     tpacpi_hwmon_pdriver_probe,
-+						     NULL, 0, NULL, 0);
- 	if (IS_ERR(tpacpi_sensors_pdev)) {
- 		ret = PTR_ERR(tpacpi_sensors_pdev);
- 		tpacpi_sensors_pdev = NULL;
--		pr_err("unable to register hwmon platform device\n");
-+		pr_err("unable to register hwmon platform device/driver bundle\n");
- 		thinkpad_acpi_module_exit();
- 		return ret;
- 	}
- 
- 	tpacpi_lifecycle = TPACPI_LIFE_RUNNING;
- 
--	ret = platform_driver_register(&tpacpi_hwmon_pdriver);
--	if (ret) {
--		pr_err("unable to register hwmon platform driver\n");
--		thinkpad_acpi_module_exit();
--		return ret;
--	}
--	tp_features.sensors_pdrv_registered = 1;
--
--	tpacpi_hwmon = hwmon_device_register_with_groups(
--		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
--	if (IS_ERR(tpacpi_hwmon)) {
--		ret = PTR_ERR(tpacpi_hwmon);
--		tpacpi_hwmon = NULL;
--		pr_err("unable to register hwmon device\n");
--		thinkpad_acpi_module_exit();
--		return ret;
--	}
--
- 	return 0;
- }
- 
+   reg:
+     maxItems: 1
+
 -- 
 2.48.1
 
