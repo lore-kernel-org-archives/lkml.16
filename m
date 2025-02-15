@@ -1,90 +1,120 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED3819F419;
-	Sat, 15 Feb 2025 05:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923BB2907;
+	Sat, 15 Feb 2025 05:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739598286; cv=none; b=UMgEyJ+u+1MKNueQMWxL+BjaJkltu7cb19byzLD+MzSyEorYwib1T6bayKakGZ5lWOGxHezxEsCVGtdZC3hWAXCR+Kav5K1VYS0vgUStc+2o9talYLv58CFUo8J1cnDeBZ8PaP5ewQUdB1N4u7caUNTU4w4lvF2v27cDMZArypQ=
+	t=1739598663; cv=none; b=b+m0ctMxBNOgf7AH7a8xvDEf8ZPLteA8/Ekk+3VuHC6N+IQPGPdXf5DfnKBiWUSodGu1mheq6zT6asqeXtyU3lBT9uoAvoorvRNrkMypXmWt2oyWRa1xEHfo4c3bmwZI6CkjWP+A6Bel8xf6ZZtG/zvGxqiI0BCndVWWMjmUE3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739598286; c=relaxed/simple;
-	bh=kHWOKaugnCugIRfbWHpMJb0nYUXoXLMBAwcA+g+xgrs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pN4OU+ZhBVSB61WpnXALeiBU1aHqjVpHfRysSOhElOlz+TJLgE9idPblQqgmJDsWUC2JSDXsNCcJNJmQI7/O/paGu+2ctPGBzzuD+W2ueB+tg/Cfpw2XRlGbP9pcHqW9PYi+sGWyjygiHIVqdRQDjlVU8J1sWu4pvgQe1ysCtS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yXBp7FAj; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1739598663; c=relaxed/simple;
+	bh=HoClBAvZD2da3+9BbElBY6ADIVMTozMtYq6pQ/u8mCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XjIxoK8NmyC5ZNfo/r/7QPpjlEXglyJQcc7PhLTWE1JnpE4yUwT2BmBXTqPhvcnjHzMTpQq6pf965aBwjZSNkPB53UYlq8YiyQqZV0d2iv8dLAjUiZZt7bTeL15IU2PqWpf82OEpIp760CBcHqKtwO6Li3nrgYqBFQ72UvCR+VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=SPd7L8Xe; arc=none smtp.client-ip=117.135.210.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yXBp7FAj"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739598276; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Ip3C2z8pFwpxrfoRX4KLEGAhWo1Y0wrskFEhejStJcE=;
-	b=yXBp7FAj2/7kSggJ95Cr2ayM2Bls5y1CATV9iYuW8kF2OVLZqZO6O7dwx8p0gwPJIdN2BNtCuEMDn1I8gWyJM/Wn05ZCdlL7hKYsgEtSfMMKlFRqYlqD3L/I7W14x+t57Y67CHQj/GIypR2x7I/5j1VpPj2FFa2VX3ei1EqLR0I=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPSysO9_1739598275 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 15 Feb 2025 13:44:36 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: vinicius.gomes@intel.com,
-	dave.jiang@intel.com,
-	vkoul@kernel.org
-Cc: nikhil.rao@intel.com,
-	xueshuai@linux.alibaba.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/7] dmaengine: idxd: fix memory leak in error handling path of idxd_pci_probe
-Date: Sat, 15 Feb 2025 13:44:29 +0800
-Message-ID: <20250215054431.55747-6-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
-References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="SPd7L8Xe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=Mc5SW8GnMLeHxZeokKRv9vWvAzpmR3VljH2nIJCFHOA=;
+	b=SPd7L8XemSiJCFisVB+Ehpquqkrcl41L4/HAE3zLayXWmIwdAjuunZYQOwnV7j
+	yNbfXIyq20Qf0jKLCNJw00DZr5KmgTrNY/WSXAzwJYSHV0bN5HA/+iiPTlMWyydV
+	rzGJgrqKtAdWhmy5dE96SG2b653qGhQu7Bs0pSymHIyQM=
+Received: from [172.19.20.199] (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSkvCgDXf7UXK7Bnf_lLAw--.8703S2;
+	Sat, 15 Feb 2025 13:50:16 +0800 (CST)
+Message-ID: <d043bdd2-a978-4a09-869e-b6e43f5ce409@126.com>
+Date: Sat, 15 Feb 2025 13:50:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hugetlb: wait for hugepage folios to be freed
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
+ osalvador@suse.de, liuzixing@hygon.cn
+References: <1739514729-21265-1-git-send-email-yangge1116@126.com>
+ <37363b17-88b0-4ccc-a115-8c9f1d83a1b5@redhat.com>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <37363b17-88b0-4ccc-a115-8c9f1d83a1b5@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSkvCgDXf7UXK7Bnf_lLAw--.8703S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF1Dtw4kJw4xJw15AFWDJwb_yoW5WrWDpF
+	WrKr4UKayDJr9ayrnrX39Y9r109rWrXFWxGF1aqry3Can8Xr17KF1Sv3Z0ga98Ar10kr40
+	qrWjvwnruF1UZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbdbbUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOhf0G2ewEbrW6AAAsA
 
-Memory allocated for idxd is not freed if an error occurs during
-idxd_pci_probe(). To fix it, free the allocated memory in the reverse
-order of allocation before exiting the function in case of an error.
 
-Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/init.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index dc34830fe7c3..ac1cdc1d82bf 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -550,6 +550,14 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 		idxd->hw.iaa_cap.bits = ioread64(idxd->reg_base + IDXD_IAACAP_OFFSET);
- }
- 
-+static void idxd_free(struct idxd_device *idxd)
-+{
-+	put_device(idxd_confdev(idxd));
-+	bitmap_free(idxd->opcap_bmap);
-+	ida_free(&idxd_ida, idxd->id);
-+	kfree(idxd);
-+}
-+
- static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1219,7 +1227,7 @@ int idxd_pci_probe_alloc(struct idxd_device *idxd, struct pci_dev *pdev,
-  err:
- 	pci_iounmap(pdev, idxd->reg_base);
-  err_iomap:
--	put_device(idxd_confdev(idxd));
-+	idxd_free(idxd);
-  err_idxd_alloc:
- 	pci_disable_device(pdev);
- 	return rc;
--- 
-2.39.3
+在 2025/2/14 16:08, David Hildenbrand 写道:
+> On 14.02.25 07:32, yangge1116@126.com wrote:
+>> From: Ge Yang <yangge1116@126.com>
+>>
+>> Since the introduction of commit b65d4adbc0f0 ("mm: hugetlb: defer 
+>> freeing
+>> of HugeTLB pages"), which supports deferring the freeing of HugeTLB 
+>> pages,
+>> the allocation of contiguous memory through cma_alloc() may fail
+>> probabilistically.
+>>
+>> In the CMA allocation process, if it is found that the CMA area is 
+>> occupied
+>> by in-use hugepage folios, these in-use hugepage folios need to be 
+>> migrated
+>> to another location. When there are no available hugepage folios in the
+>> free HugeTLB pool during the migration of in-use HugeTLB pages, new 
+>> folios
+>> are allocated from the buddy system. A temporary state is set on the 
+>> newly
+>> allocated folio. Upon completion of the hugepage folio migration, the
+>> temporary state is transferred from the new folios to the old folios.
+>> Normally, when the old folios with the temporary state are freed, it is
+>> directly released back to the buddy system. However, due to the deferred
+>> freeing of HugeTLB pages, the PageBuddy() check fails, ultimately leading
+>> to the failure of cma_alloc().
+>>
+>> Here is a simplified call trace illustrating the process:
+>> cma_alloc()
+>>      ->__alloc_contig_migrate_range() // Migrate in-use hugepage
+>>          ->unmap_and_move_huge_page()
+>>              ->folio_putback_hugetlb() // Free old folios
+>>      ->test_pages_isolated()
+>>          ->__test_page_isolated_in_pageblock()
+>>               ->PageBuddy(page) // Check if the page is in buddy
+>>
+>> To resolve this issue, we have implemented a function named
+>> wait_for_hugepage_folios_freed(). This function ensures that the hugepage
+>> folios are properly released back to the buddy system after their 
+>> migration
+>> is completed. By invoking wait_for_hugepage_folios_freed() following the
+>> migration process, we guarantee that when test_pages_isolated() is
+>> executed, it will successfully pass.
+> 
+> Okay, so after every successful migration -> put of src, we wait for the 
+> src to actually get freed.
+> 
+> When migrating multiple hugetlb folios, we'd wait once per folio.
+> 
+> It reminds me a bit about pcp caches, where folios are !buddy until the 
+> pcp was drained.
+> 
+It seems that we only track unmovable, reclaimable, and movable pages on 
+the pcp lists. For specific details, please refer to the 
+free_frozen_pages() function.
+
+> I wonder if that waiting should instead be done exactly once after 
+> migrating multiple folios? For example, at the beginning of 
+> test_pages_isolated(), to "flush" that state from any previous migration?
+> 
+Yes, this can improve performance. I will make the modification in the 
+next version. Thank you.
+> Thanks for all your effort around making CMA allocations / migration 
+> more reliable.
+> 
 
