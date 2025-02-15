@@ -1,49 +1,49 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5113738DE0;
-	Sat, 15 Feb 2025 00:15:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8D32B9BF;
+	Sat, 15 Feb 2025 00:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739578544; cv=none; b=SlhIxAFmADb6J+kvFMQ64E+F2Gj66PNVagPxg+HZ9Fl4DBVJFO5dF9DI3MTDQOizPUxZbq9oXOfm4D0WiUgrNYcPjTv7fAB24fT04LTbCyiDjQIfPCQKZd66sv5R2Lp4YdWMNqCflPGw/AVte+2SvjJdvn5px8G7HCmTbpSQJDU=
+	t=1739578544; cv=none; b=N6e8Bwln9AyD5sY+1g4cE36Trr3ujMDRomzxMkC2VYUNbd9svAbt83YzZ5Xuwhli5n+XLjja+CPC1x+hd48WjvE1ZjK70bG+XR7qrPWql9pDqQ3rFdjsinq9Od2Ounx2DnnTOFGT1YvuepYurF9cZgiTucQVgRuP2fH2fUyqnfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739578544; c=relaxed/simple;
-	bh=yMlSfAbo5SwX9U3Zm9brFEYsVdtidFXiSZeVBPMUye8=;
+	bh=SMZBPsasJbBFnVgjAlty9+s5zaRvKNREnIftvTHyOkw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=XkHsNooMhwp0hA0Dd7NzDRjrhvtj6jhMLX54Jy8fzEW7ekb2ygZhMGlh16LNz3yw248GWeJ/I+izKyhxuT2HsXv1u8RkLm2paWQ79RaT9rdyYtZ2MVtVpoupb87RqfoKf2TmmwtlyiHvl/AxSTplKdY6A9Kz+AFoDHj+wGItSRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kJ3xCOzI; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=opfOqLWeIrZQgWv8rL+JBhyL0NjilRpjSRZU9Kr8Jk1Q5vPWw2aW/hBB/VOF/yChpw12x6LDndDi1ZdEfsankUii5dqvOA8HiT87z4bQJgLPpKyyvrvdjSJcU1XrBRmes25uXc3eDbRAGKhMEioy520Ey0C4fGK9Qg//dYxUibI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CcagdEFK; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kJ3xCOzI"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EJ2VG5025470;
-	Sat, 15 Feb 2025 00:15:27 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CcagdEFK"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EHRxni000965;
+	Sat, 15 Feb 2025 00:15:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Bhe+aQmWsDigtUsgNF/ga1WOtJXu21ZcnfBC03qMU1k=; b=kJ3xCOzIkq0xPfxH
-	qs3YYipqersAX8los6t+2oZ5l9kAWwdsVPiKP/plMMnceWEfks2ZtAZCMjjOa/rB
-	6ROX6uFcWfBunUigCmZSXzGqzXwtaVepqbQCWwVHWi+m9cHfjTFDT7lr7e1qSkGv
-	HXAcFAD1fOUjlJZe1oDta1rOSUXt7hFp8xaMKNTux05mpf6FFkQnEzPuQErcVvef
-	Rpi8nJDjz+Yp3FImTBWlIaYIuYAZc511MReAAkyTxotS8zPdCbL3ohvUMO/29a88
-	aXhr6M8zJ1qzC9ezI9F9iLmlQqbOvhOAp6niZs7flqFuIkAh9JNbo/yVA7K9Wina
-	b6MEsg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44tbms0jae-1
+	/Kbil3aO44w/7IuRSfybLQ6VgSaRl4S8+1QNcZH3AkI=; b=CcagdEFK/HMyUBpC
+	DV2O9Zh7R06yuXmCUHp1aFgMI4vYiUjE1KChX8Kmny+4h6G5jpjSuzQuhRYfnGq+
+	DmK0hGyDzaop8/xOSQHytyt10uWvhDN0vGkljh2K7vzbpjJvsk2lkiUthnH6BR4H
+	FFFtM4nuzrpVqkscow2BIROfQx4ypHXMFAi5hp/Wh2x6QMInozsA6nilsG0R5EI3
+	UKPHEbvgSJKFWF0GS9vsMmojkIm/LJiCXktdWdSKGtM4A8z4xHfUJCpXhEkUFX4Y
+	0WZt9+YsNCQXS2Do/et7+FsgG+ghKhKnn87hRgJYnFkHYMdq8wn2NLzraPdoaa2G
+	Dc6OEg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sc7bdjak-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Sat, 15 Feb 2025 00:15:26 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FPlL025746
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FP30012689
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Sat, 15 Feb 2025 00:15:25 GMT
 Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 14 Feb 2025 16:15:25 -0800
+ 15.2.1544.9; Fri, 14 Feb 2025 16:15:24 -0800
 From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Fri, 14 Feb 2025 16:14:27 -0800
-Subject: [PATCH v6 04/14] drm/msm/dpu: Add CWB to msm_display_topology
+Date: Fri, 14 Feb 2025 16:14:24 -0800
+Subject: [PATCH v6 01/14] drm/msm/dpu: fill CRTC resources in dpu_crtc.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250214-concurrent-wb-v6-4-a44c293cf422@quicinc.com>
+Message-ID: <20250214-concurrent-wb-v6-1-a44c293cf422@quicinc.com>
 References: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 In-Reply-To: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 To: Rob Clark <robdclark@gmail.com>,
@@ -76,131 +76,185 @@ CC: <quic_ebharadw@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         "Jessica
  Zhang" <quic_jesszhan@quicinc.com>
 X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=4059;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=5685;
  i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=yMlSfAbo5SwX9U3Zm9brFEYsVdtidFXiSZeVBPMUye8=;
- b=qw1fmjGyhCsIJwRYOkz1ekG/XpY9KA2Nsy8SxFK335tS2y+DrycR7YKLoTD9PgXpl+AKgrd3X
- 1HIap7DoNHhD1csgHmSl8PDWeimw9D+oUvzDW1zZSG+hU3jYElvnpCh
+ bh=Ihb/cfiboO9Q/Wd7m/OxkBrjbkcmiCQBicYIGNspWwg=;
+ b=S8dBBfL11TkGtijwL1DF3hPb4vkSII3bGbiIDMkMMcu9hv1gOnEU7rd8TkNHvV3PqK3Bfd1lU
+ wqI4tNIbwW7AFctgdki0yZgQHXi8/a6rLyiPvzdtNLm1NyEjwy9gqZ/
 X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
  pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: p8ani97b-EjcjKDOFQUg7iNmrDE7JxTA
-X-Proofpoint-ORIG-GUID: p8ani97b-EjcjKDOFQUg7iNmrDE7JxTA
+X-Proofpoint-ORIG-GUID: gsdGM9H70Nb4qkApJkkUxvFt5X3rBusr
+X-Proofpoint-GUID: gsdGM9H70Nb4qkApJkkUxvFt5X3rBusr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_10,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- impostorscore=0 suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502150000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=798
+ phishscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502150000
 
-Currently, the topology is calculated based on the assumption that the
-user cannot request real-time and writeback simultaneously. For example,
-the number of LMs and CTLs are currently based off the number of phys
-encoders under the assumption there will be at least 1 LM/CTL per phys
-encoder.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-This will not hold true for concurrent writeback as both phys encoders
-(1 real-time and 1 writeback) must be driven by 1 LM/CTL when concurrent
-writeback is enabled.
+Stop poking into CRTC state from dpu_encoder.c, fill CRTC HW resources
+from dpu_crtc_assign_resources().
 
-To account for this, add a cwb_enabled flag and only adjust the number of
-CTL/LMs needed by a given topology based on the number of phys encoders
-only if CWB is not enabled.
-
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+[quic_abhinavk@quicinc.com: cleaned up formatting]
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-
 ---
+Changes in v6:
+- Do not return early if encoder_mask is 0
 Changes in v5:
-- Reworded commit message to be more specific
+- Reordered to prevent breaking CI or upon partial application
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 11 ++++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c   | 14 ++++++++++++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h   |  2 ++
- 3 files changed, 24 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 63 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 37 -----------------
+ 2 files changed, 63 insertions(+), 37 deletions(-)
 
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index ba5c60296e17..7c0ab1cee057 100644
+index 29485e76f531..90fc94d1a2b3 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -1246,6 +1246,8 @@ static struct msm_display_topology dpu_crtc_get_topology(
- 		dpu_encoder_update_topology(drm_enc, &topology, crtc_state->state,
- 					    &crtc_state->adjusted_mode);
+@@ -1230,6 +1230,63 @@ static int dpu_crtc_reassign_planes(struct drm_crtc *crtc, struct drm_crtc_state
+ 	return ret;
+ }
  
-+	topology.cwb_enabled = drm_crtc_in_clone_mode(crtc_state);
++#define MAX_CHANNELS_PER_CRTC 2
 +
- 	/*
- 	 * Datapath topology selection
- 	 *
-@@ -1259,9 +1261,16 @@ static struct msm_display_topology dpu_crtc_get_topology(
- 	 * If DSC is enabled, use 2 LMs for 2:2:1 topology
- 	 *
- 	 * Add dspps to the reservation requirements if ctm is requested
-+	 *
-+	 * Only hardcode num_lm to 2 for cases where num_intf == 2 and CWB is not
-+	 * enabled. This is because in cases where CWB is enabled, num_intf will
-+	 * count both the WB and real-time phys encoders.
-+	 *
-+	 * For non-DSC CWB usecases, have the num_lm be decided by the
-+	 * (mode->hdisplay > MAX_HDISPLAY_SPLIT) check.
- 	 */
- 
--	if (topology.num_intf == 2)
-+	if (topology.num_intf == 2 && !topology.cwb_enabled)
- 		topology.num_lm = 2;
- 	else if (topology.num_dsc == 2)
- 		topology.num_lm = 2;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-index a7b4086ae990..0fbb92021b18 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-@@ -381,8 +381,18 @@ static int _dpu_rm_reserve_ctls(
- 	int i = 0, j, num_ctls;
- 	bool needs_split_display;
- 
--	/* each hw_intf needs its own hw_ctrl to program its control path */
--	num_ctls = top->num_intf;
++static int dpu_crtc_assign_resources(struct drm_crtc *crtc,
++				     struct drm_crtc_state *crtc_state)
++{
++	struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_CRTC];
++	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_CRTC];
++	struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_CRTC];
++	int i, num_lm, num_ctl, num_dspp;
++	struct dpu_kms *dpu_kms = _dpu_crtc_get_kms(crtc);
++	struct dpu_global_state *global_state;
++	struct dpu_crtc_state *cstate;
++	struct drm_encoder *drm_enc;
++
 +	/*
-+	 * For non-CWB mode, each hw_intf needs its own hw_ctl to program its
-+	 * control path.
-+	 *
-+	 * Hardcode num_ctls to 1 if CWB is enabled because in CWB, both the
-+	 * writeback and real-time encoders must be driven by the same control
-+	 * path
++	 * For now, grab the first encoder in the crtc state as we don't
++	 * support clone mode yet
 +	 */
-+	if (top->cwb_enabled)
-+		num_ctls = 1;
-+	else
-+		num_ctls = top->num_intf;
++	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask)
++		break;
++
++	global_state = dpu_kms_get_global_state(crtc_state->state);
++	if (IS_ERR(global_state))
++		return PTR_ERR(global_state);
++
++	if (!crtc_state->enable)
++		return 0;
++
++	cstate = to_dpu_crtc_state(crtc_state);
++
++	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
++						drm_enc->base.id,
++						DPU_HW_BLK_CTL, hw_ctl,
++						ARRAY_SIZE(hw_ctl));
++	num_lm = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
++					       drm_enc->base.id,
++					       DPU_HW_BLK_LM, hw_lm,
++					       ARRAY_SIZE(hw_lm));
++	num_dspp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
++						 drm_enc->base.id,
++						 DPU_HW_BLK_DSPP, hw_dspp,
++						 ARRAY_SIZE(hw_dspp));
++
++	for (i = 0; i < num_lm; i++) {
++		int ctl_idx = (i < num_ctl) ? i : (num_ctl-1);
++
++		cstate->mixers[i].hw_lm = to_dpu_hw_mixer(hw_lm[i]);
++		cstate->mixers[i].lm_ctl = to_dpu_hw_ctl(hw_ctl[ctl_idx]);
++		if (i < num_dspp)
++			cstate->mixers[i].hw_dspp = to_dpu_hw_dspp(hw_dspp[i]);
++	}
++
++	cstate->num_mixers = num_lm;
++
++	return 0;
++}
++
+ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
+ 		struct drm_atomic_state *state)
+ {
+@@ -1245,6 +1302,12 @@ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
  
- 	needs_split_display = _dpu_rm_needs_split_display(top);
+ 	bool needs_dirtyfb = dpu_crtc_needs_dirtyfb(crtc_state);
  
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-index 463c532cdfdf..b854e42d319d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-@@ -52,6 +52,7 @@ struct dpu_rm_sspp_requirements {
-  * @num_dspp:     number of dspp blocks used
-  * @num_dsc:      number of Display Stream Compression (DSC) blocks used
-  * @needs_cdm:    indicates whether cdm block is needed for this display topology
-+ * @cwb_enabled:  indicates whether CWB is enabled for this display topology
-  */
- struct msm_display_topology {
- 	u32 num_lm;
-@@ -59,6 +60,7 @@ struct msm_display_topology {
- 	u32 num_dspp;
- 	u32 num_dsc;
- 	bool needs_cdm;
-+	bool cwb_enabled;
- };
++	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
++		rc = dpu_crtc_assign_resources(crtc, crtc_state);
++		if (rc < 0)
++			return rc;
++	}
++
+ 	if (dpu_use_virtual_planes &&
+ 	    (crtc_state->planes_changed || crtc_state->zpos_changed)) {
+ 		rc = dpu_crtc_reassign_planes(crtc, crtc_state);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 682496eccab5..d6ca499cef18 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -719,40 +719,6 @@ static struct msm_display_topology dpu_encoder_get_topology(
+ 	return topology;
+ }
  
- int dpu_rm_init(struct drm_device *dev,
+-static void dpu_encoder_assign_crtc_resources(struct dpu_kms *dpu_kms,
+-					      struct drm_encoder *drm_enc,
+-					      struct dpu_global_state *global_state,
+-					      struct drm_crtc_state *crtc_state)
+-{
+-	struct dpu_crtc_state *cstate;
+-	struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_ENC];
+-	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
+-	struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_ENC];
+-	int num_lm, num_ctl, num_dspp, i;
+-
+-	cstate = to_dpu_crtc_state(crtc_state);
+-
+-	memset(cstate->mixers, 0, sizeof(cstate->mixers));
+-
+-	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
+-		drm_enc->base.id, DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
+-	num_lm = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
+-		drm_enc->base.id, DPU_HW_BLK_LM, hw_lm, ARRAY_SIZE(hw_lm));
+-	num_dspp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
+-		drm_enc->base.id, DPU_HW_BLK_DSPP, hw_dspp,
+-		ARRAY_SIZE(hw_dspp));
+-
+-	for (i = 0; i < num_lm; i++) {
+-		int ctl_idx = (i < num_ctl) ? i : (num_ctl-1);
+-
+-		cstate->mixers[i].hw_lm = to_dpu_hw_mixer(hw_lm[i]);
+-		cstate->mixers[i].lm_ctl = to_dpu_hw_ctl(hw_ctl[ctl_idx]);
+-		cstate->mixers[i].hw_dspp = i < num_dspp ? to_dpu_hw_dspp(hw_dspp[i]) : NULL;
+-	}
+-
+-	cstate->num_mixers = num_lm;
+-}
+-
+ /**
+  * dpu_encoder_virt_check_mode_changed: check if full modeset is required
+  * @drm_enc:    Pointer to drm encoder structure
+@@ -823,9 +789,6 @@ static int dpu_encoder_virt_atomic_check(
+ 		if (crtc_state->enable)
+ 			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
+ 					drm_enc, crtc_state, &topology);
+-		if (!ret)
+-			dpu_encoder_assign_crtc_resources(dpu_kms, drm_enc,
+-							  global_state, crtc_state);
+ 	}
+ 
+ 	trace_dpu_enc_atomic_check_flags(DRMID(drm_enc), adj_mode->flags);
 
 -- 
 2.48.1
