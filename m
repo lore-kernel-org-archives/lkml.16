@@ -1,49 +1,49 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A9D38DE1;
-	Sat, 15 Feb 2025 00:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96431195;
+	Sat, 15 Feb 2025 00:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739578544; cv=none; b=lj7Bi2I/ofT9jxy2qbPimBU4vglitbvNIvTWGVWLkmKJjL47ZC+AdsKpS4TaBkMN1GYwzZ4wfnm9AL2YAOijjYqSxKEiW2LRgbLwZi+8U4Ajg28Zb6Rc01oLpCLWUPBxSDHRhuN9Te7D79q2hYT0n4Qd39XOOxEPqC4dQmhckNs=
+	t=1739578545; cv=none; b=nGEx4I/E+kQ4wum+TyzHo18NJQy3vlQj9SmgiBVtjisgxTcmo5de0bBR0WnbGeLYY1ggZB+jsJzo7WEsl5d6R2vTmFjxvPFNYJfqNoiif79YMzVJgzIbsHh2IHZZUyMU9B0SnRnN1cKVkCPw1JLcdVzecZK+WEeB80oqLF9aLg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739578544; c=relaxed/simple;
-	bh=yrox517d2kKb02JMPVJ/dy4HnLL670ZkdSU2kV+q0Hs=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=mzPSobrQio/zL3+ZU3yDQZ4J8udjPbDXMlJod3s0k5mNUASus9YsR8MXu9AizbDyRCfJBA7mJryFFt+jXMRT4JhZBMLsVZiozt/DbS9U2edUWgYGjX0EELMG8nG4itJFJITk85mzWuWjiAFQoOdpbsy76KYPj/n5tk3yy9//xZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MZKnr01m; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1739578545; c=relaxed/simple;
+	bh=MdDC4iAnia85rXat36LA8J7ZGCc13Tos3BnciYbM58s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=P7rkfbacrMuGF4CsxlRjCfHXHTpH4szV88mZpHg6axNS/v0eoJtVEER1GVCE9smWW43xPzBGcEqbtxvJVaWMAaYKYNFO6pNOXhnfG40/5/5KrHGog7YmU6zL7UqRCU/XiDycPFK0sivL3k1ML/MZgPgpuwCVm/bWE6tdsgRJtqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ASPjyUPJ; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MZKnr01m"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EBh6N8018566;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ASPjyUPJ"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EECt9K020743;
 	Sat, 15 Feb 2025 00:15:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=mupee+uanTAEHfj/LNfoiv
-	opOeXJI+XkEy8HnDLaFho=; b=MZKnr01mldyu1lCmGUeA0UukFRy4u2x9mptkDv
-	QPxwqFxEEQ8TitByqRHnu9WZ2g6aQdbWwjI5L4WKToe69r6NRRC1bvackQAetjd5
-	Ha2tM/hOVVmYoNNZXsLaWTXBheerKfdx2LxBvgyrDBuujXMPGtOm7mnuKX73Mc0+
-	zW1RBvhJScU8r9yx9bB1N4pN77jqaRvHoH+q/LFAI8lF/eG6dZjF0zWjVSeoxEwh
-	8tuQZbTvOgaobUOOT3JRDe0DAC9WDH4zKNQg9W7DZeZgFOWrXcqoWbmrK9A4dmY0
-	NCYqPtX3KfGftBDilaZ1wnSWya2Jqz6J7yuJTrrnFawo9eCA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44t56vhm7y-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Iai7Dxj+oAL7f1O9OqOlOJXdUF+w6cLlfrkif/n1nas=; b=ASPjyUPJKoxyvKQS
+	ZyGvtJwL2CymQxfK9XxUZb5kExQBXvjBM5qElbbLD6nmggsyixcBw0zA2sLNFcYc
+	aqBOS7Mz9TCTremIgs7EWhcJbXNyKOItuCHltgzJc0WVIPZHb2C3Py2Ns+Ze4uuA
+	ZPFxGaCasoxqdNYiF+PeI4RCinF0IfqJqOjQI5qJ35T7vnTKI48d1W1enznwwwGH
+	cpxm8Rjsu32ejWANPijE5ODp7QIvFohFmROXUEDhQis+tEtiqVzFCNJdDxxV3QKi
+	yP0v2m9qc5XoQ6ynIRABXUCDciUtDuYw6iIcQBmxOcyE46XZJj8+igmq2oMJY+Um
+	FGG5wQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44t7d898bf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Sat, 15 Feb 2025 00:15:25 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FOcH025739
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51F0FPIv017121
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Feb 2025 00:15:24 GMT
+	Sat, 15 Feb 2025 00:15:25 GMT
 Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.1544.9; Fri, 14 Feb 2025 16:15:24 -0800
 From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Subject: [PATCH v6 00/14] drm/msm/dpu: Add Concurrent Writeback Support for
- DPU 10.x+
-Date: Fri, 14 Feb 2025 16:14:23 -0800
-Message-ID: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
+Date: Fri, 14 Feb 2025 16:14:25 -0800
+Subject: [PATCH v6 02/14] drm/msm/dpu: move resource allocation to CRTC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,14 +52,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGDcr2cC/23STU7DMBAF4KtUWWNkj/+z4h6Ihe2MiSWSFCcNV
- FXvzrQFKlpW0Tj+XqznHJoZa8G5aTeHpuJa5jKNNJiHTZP6ML4iKx3NDXBQ3AjH0jSmXa04Luw
- jMm87A9LZ7DU0ZLYVc/k85z2/0NyXeZnq/hy/itPqJcmBv0laBeNMc4jCBASM8el9V1IZ02Oah
- uaUtcLVe1C3Hshbp3z2nKMz8t7LXy+4MLdekg9Spuyjl07qe6+uHu69Ip8R6LW3wWZ+7/WP11z
- AbZOrJm+UUSloaXiX//rjpdyKtDqX5dLw9YrazeVYAKyrA+tKXfZsmDqccWHOcetjBzagadfzP
- f2FVDv3rNvuWJI5JOtyMsJ+b92GJfXnnTk6DDZ6tMnpHE6J2vlktBaCO+kggNSc//8BIehUS4+
- VHnOIb8iitVGgFN7a3NLPQSqGGamXYShLu3HGoJLRKx0zFXD8Ak57uFysAgAA
-X-Change-ID: 20240618-concurrent-wb-97d62387f952
+Message-ID: <20250214-concurrent-wb-v6-2-a44c293cf422@quicinc.com>
+References: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
+In-Reply-To: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
 To: Rob Clark <robdclark@gmail.com>,
         Dmitry Baryshkov
 	<dmitry.baryshkov@linaro.org>,
@@ -81,199 +76,497 @@ CC: <quic_ebharadw@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
         "Jessica
  Zhang" <quic_jesszhan@quicinc.com>
 X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=8544;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739578524; l=16481;
  i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=yrox517d2kKb02JMPVJ/dy4HnLL670ZkdSU2kV+q0Hs=;
- b=YDz6+JylNkQ2KvJZk5J08dkg3x1Pl7wnPXjg0AaU89N9GJQ+DJEMEtvw1WlhuNE2BAbj3Ix3w
- +C8uh1IJZlFB2X2Jd1NKsvLfXfSB5EiqoEkuU5m13mGsJ1cfg/gV2Ty
+ bh=rAFNeBU1I6UjIjFNZgJdrH0fdmG6YSQt8Mocof+lsPY=;
+ b=vCoi0/1ZhIdarJXFK7d26L0upAFZMMAn/eQ6Ydt/T5wZib85igQ/Bz40v1lmBrhB9kB4Y9dn4
+ qIQSl2hSLt0BS2BKuEZpXmxUg7F+yP0mnNlCgnIG3QICZ0/TQ+/SVv5
 X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
  pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: RGW1xVfJoEmwSw6TI3oXND3F22NWsJOP
-X-Proofpoint-GUID: RGW1xVfJoEmwSw6TI3oXND3F22NWsJOP
+X-Proofpoint-GUID: 62Owm_uC15uOmmKeuwqF045-KKn226KO
+X-Proofpoint-ORIG-GUID: 62Owm_uC15uOmmKeuwqF045-KKn226KO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_10,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502150000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 adultscore=0 impostorscore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 clxscore=1015 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502150000
 
-DPU supports a single writeback session running concurrently with primary
-display when the CWB mux is configured properly. This series enables
-clone mode for DPU driver and adds support for programming the CWB mux
-in cases where the hardware has dedicated CWB pingpong blocks. Currently,
-the CWB hardware blocks have only been added to the SM8650
-hardware catalog and only DSI has been exposed as a possible_clone of WB.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-This changes are split into two parts:
+All resource allocation is centered around the LMs. Then other blocks
+(except DSCs) are allocated basing on the LMs that was selected, and LM
+powers up the CRTC rather than the encoder.
 
-The first part of the series will pull in Dmitry's patches to refactor
-the DPU resource manager to be based off of CRTC instead of encoder.
-This includes some changes (noted in the relevant commits) by me and
-Abhinav to fix some issues with getting the global state and refactoring
-the CDM allocation to work with Dmitry's changes.
+Moreover if at some point the driver supports encoder cloning,
+allocating resources from the encoder will be incorrect, as all clones
+will have different encoder IDs, while LMs are to be shared by these
+encoders.
 
-The second part of the series will add support for CWB by doing the
-following:
+In addition, move mode_changed() to dpu_crtc as encoder no longer has
+access to topology information
 
-1) Add the CWB mux to the hardware catalog and clarify the pingpong
-   block index enum to specifiy which pingpong blocks are dedicated to
-   CWB only and which ones are general use pingpong blocks
-2) Add support for configuring the CWB mux via dpu_hw_cwb ops
-3) Add pending flush support for CWB
-4) Add support for validating clone mode in the DPU CRTC and setting up
-   CWB within the encoder
-5) Adjust the encoder trigger flush, trigger start, and kickoff order to
-   accomodate clone mode
-6) Adjust when the frame done timer is started for clone mode
-7) Define the possible clones for DPU encoders so that WB encoders can
-   be cloned by non-WB encoders
-
-The feature was tested on SM8650 using IGT's kms_writeback test with the
-following change [1] and dumping the writeback framebuffer when in clone
-mode. I haven't gotten the chance to test it on DP yet, but I've
-validated both single and dual LM on DSI.
-
-To test CWB with IGT, you'll need to apply this series [1] and run the
-following command to dump the writeback buffer:
-
-IGT_FRAME_DUMP_PATH=<dump path> FRAME_PNG_FILE_NAME=<file name> \
-./build/tests/kms_writeback -d [--run-subtest dump-valid-clones] \
-
-You can also do CRC validation by running this command:
-
-./build/tests/kms_writeback [--run-subtest dump-valid-clones]
-
-Note: When running IGT on SC7180, you will also need this IGT fix [2] to
-prevent IGT tests from failing after runningt kms_color@ctm-* tests.
-
-[1] https://patchwork.freedesktop.org/series/137933/
-[2] https://patchwork.freedesktop.org/series/144911/
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+[quic_abhinavk@quicinc.com: Refactored resource allocation for CDM]
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+[quic_jesszhan@quicinc.com: Changed to grabbing exising global state]
+Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
 ---
 Changes in v6:
-- Don't return early from dpu_crtc_assign_resources() if encoder mask is
-  0
-- Dropped duplicate initialization and unnecessary clearing of the crtc
-  state
-- Fixed b4 dependencies list (Dmitry)
-- cdm_requested -> num_cdm (Dmitry)
-- Added comment doc on why we can use the RM array index to enforce the
-  CWB odd/even rule (Dmitry)
-- Link to v5: https://lore.kernel.org/r/20250128-concurrent-wb-v5-0-6464ca5360df@quicinc.com
+- Added note on duplicated checks in dpu_encoder_needs_modeset() and
+  dpu_encoder_update_topology() (Dmitry)
 
 Changes in v5:
-- Rebased onto MSM modeset fixes series (Dmitry)
-- Reordered RM refactor patches to prevent breaking CI and to avoid
-  breaking when partially applied (Dmitry)
-- Switch CWB resource reservation to reserve CWB mux first (Dmitry)
-- Reworded commit messages to be clearer (Dmitry)
-- Change CDM check to fail only if both DP and WB outputs are
-  requesting the CDM block simultaneously (Dmitry)
-- Use helper to grab dsc config in dpu_encoder_update_topology
-- Link to v4: https://lore.kernel.org/r/20241216-concurrent-wb-v4-0-fe220297a7f0@quicinc.com
-
-Changes in v4:
-- Rebased onto latest msm-next
-- Added kunit tests for framework changes
-- Skip valid clone check for encoders that don't have any possible clones set
-  (this is to avoid failing kunit tests, specifically the HDMI state helper tests)
-- Link to v3: https://lore.kernel.org/r/20241016-concurrent-wb-v3-0-a33cf9b93835@quicinc.com
-
-Changes in v3:
-- Dropped support for CWB on DP connectors for now
-- Dropped unnecessary PINGPONG array in *_setup_cwb()
-- Add a check to make sure CWB and CDM aren't supported simultaneously
-  (Dmitry)
-- Document cwb_enabled checks in dpu_crtc_get_topology() (Dmitry)
-- Moved implementation of drm_crtc_in_clone_mode() to drm_crtc.c (Jani)
-- Dropped duplicate error message for reserving CWB resources (Dmitry)
-- Added notes in framework changes about posting a separate series to
-  add proper KUnit tests (Maxime)
-- Added commit message note addressing Sima's comment on handling
-  mode_changed (Dmitry)
-- Formatting fixes (Dmitry)
-- Added proper kerneldocs (Dmitry)
-- Renamed dpu_encoder_helper_get_cwb() -> *_get_cwb_mask() (Dmitry)
-- Capitalize all instances of "pingpong" in comments (Dmitry)
-- Link to v2: https://lore.kernel.org/r/20240924-concurrent-wb-v2-0-7849f900e863@quicinc.com
-
-Changes in v2:
-- Moved CWB hardware programming to its own dpu_hw_cwb abstraction
-  (Dmitry)
-- Reserve and get assigned CWB muxes using RM API and KMS global state
-  (Dmitry)
-- Dropped requirement to have only one CWB session at a time
-- Moved valid clone mode check to DRM framework (Dmitry and Ville)
-- Switch to default CWB tap point to LM as the DSPP
-- Dropped printing clone mode status in atomic state (Dmitry)
-- Call dpu_vbif_clear_errors() before dpu_encoder_kickoff() (Dmitry)
-- Squashed setup_input_ctrl() and setup_input_mode() into a single
-  dpu_hw_cwb op (Dmitry)
-- Moved function comment docs to correct place and fixed wording of
-  comments/commit messages (Dmitry)
-- Grabbed old CRTC state using proper drm_atomic_state API in
-  dpu_crtc_atomic_check() (Dmitry)
-- Split HW catalog changes of adding the CWB mux block and changing the
-  dedicated CWB pingpong indices into 2 separate commits (Dmitry)
-- Moved clearing the dpu_crtc_state.num_mixers to "drm/msm/dpu: fill
-  CRTC resources in dpu_crtc.c" (Dmitry)
-- Fixed alignment and other formatting issues (Dmitry)
-- Link to v1: https://lore.kernel.org/r/20240829-concurrent-wb-v1-0-502b16ae2ebb@quicinc.com
-
+- Reordered to prevent breaking CI and upon partial applciation
+- Moved mode_changed() from dpu_encoder to dpu_crtc
+- Dropped dpu_encoder_needs_dsc_merge() refactor to clean up commit
+- In dpu_encoder_update_topology(), grab DSC config using dpu_encoder
+  helper as dpu_encoder->dsc hasn't been set yet
 ---
-Dmitry Baryshkov (3):
-      drm/msm/dpu: fill CRTC resources in dpu_crtc.c
-      drm/msm/dpu: move resource allocation to CRTC
-      drm/msm/dpu: switch RM to use crtc_id rather than enc_id for allocation
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    |  79 +++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h    |   2 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 176 +++++++++-------------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h |  11 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |  19 +--
+ 5 files changed, 147 insertions(+), 140 deletions(-)
 
-Jessica Zhang (11):
-      drm/msm/dpu: Add CWB to msm_display_topology
-      drm/msm/dpu: Require modeset if clone mode status changes
-      drm/msm/dpu: Fail atomic_check if multiple outputs request CDM block
-      drm/msm/dpu: Reserve resources for CWB
-      drm/msm/dpu: Configure CWB in writeback encoder
-      drm/msm/dpu: Support CWB in dpu_hw_ctl
-      drm/msm/dpu: Adjust writeback phys encoder setup for CWB
-      drm/msm/dpu: Start frame done timer after encoder kickoff
-      drm/msm/dpu: Skip trigger flush and start for CWB
-      drm/msm/dpu: Reorder encoder kickoff for CWB
-      drm/msm/dpu: Set possible clones for all encoders
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index 90fc94d1a2b3..79fdee54716b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -1231,6 +1231,50 @@ static int dpu_crtc_reassign_planes(struct drm_crtc *crtc, struct drm_crtc_state
+ }
+ 
+ #define MAX_CHANNELS_PER_CRTC 2
++#define MAX_HDISPLAY_SPLIT 1080
++
++static struct msm_display_topology dpu_crtc_get_topology(
++		struct drm_crtc *crtc,
++		struct dpu_kms *dpu_kms,
++		struct drm_crtc_state *crtc_state)
++{
++	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
++	struct msm_display_topology topology = {0};
++	struct drm_encoder *drm_enc;
++
++	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask)
++		dpu_encoder_update_topology(drm_enc, &topology, crtc_state->state,
++					    &crtc_state->adjusted_mode);
++
++	/*
++	 * Datapath topology selection
++	 *
++	 * Dual display
++	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
++	 *
++	 * Single display
++	 * 1 LM, 1 INTF
++	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
++	 *
++	 * If DSC is enabled, use 2 LMs for 2:2:1 topology
++	 *
++	 * Add dspps to the reservation requirements if ctm is requested
++	 */
++
++	if (topology.num_intf == 2)
++		topology.num_lm = 2;
++	else if (topology.num_dsc == 2)
++		topology.num_lm = 2;
++	else if (dpu_kms->catalog->caps->has_3d_merge)
++		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
++	else
++		topology.num_lm = 1;
++
++	if (crtc_state->ctm)
++		topology.num_dspp = topology.num_lm;
++
++	return topology;
++}
+ 
+ static int dpu_crtc_assign_resources(struct drm_crtc *crtc,
+ 				     struct drm_crtc_state *crtc_state)
+@@ -1243,6 +1287,8 @@ static int dpu_crtc_assign_resources(struct drm_crtc *crtc,
+ 	struct dpu_global_state *global_state;
+ 	struct dpu_crtc_state *cstate;
+ 	struct drm_encoder *drm_enc;
++	struct msm_display_topology topology;
++	int ret;
+ 
+ 	/*
+ 	 * For now, grab the first encoder in the crtc state as we don't
+@@ -1251,13 +1297,24 @@ static int dpu_crtc_assign_resources(struct drm_crtc *crtc,
+ 	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask)
+ 		break;
+ 
++	/*
++	 * Release and Allocate resources on every modeset
++	 */
+ 	global_state = dpu_kms_get_global_state(crtc_state->state);
+ 	if (IS_ERR(global_state))
+ 		return PTR_ERR(global_state);
+ 
++	dpu_rm_release(global_state, drm_enc);
++
+ 	if (!crtc_state->enable)
+ 		return 0;
+ 
++	topology = dpu_crtc_get_topology(crtc, dpu_kms, crtc_state);
++	ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
++			     drm_enc, crtc_state, &topology);
++	if (ret)
++		return ret;
++
+ 	cstate = to_dpu_crtc_state(crtc_state);
+ 
+ 	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
+@@ -1287,6 +1344,28 @@ static int dpu_crtc_assign_resources(struct drm_crtc *crtc,
+ 	return 0;
+ }
+ 
++/**
++ * dpu_crtc_check_mode_changed: check if full modeset is required
++ * @crtc_state:	Corresponding CRTC state to be checked
++ *
++ * Check if the changes in the object properties demand full mode set.
++ */
++int dpu_crtc_check_mode_changed(struct drm_crtc_state *crtc_state)
++{
++	struct drm_encoder *drm_enc;
++	struct drm_crtc *crtc = crtc_state->crtc;
++
++	DRM_DEBUG_ATOMIC("%d\n", crtc->base.id);
++
++	/* there might be cases where encoder needs a modeset too */
++	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask) {
++		if (dpu_encoder_needs_modeset(drm_enc, crtc_state->state))
++			crtc_state->mode_changed = true;
++	}
++
++	return 0;
++}
++
+ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
+ 		struct drm_atomic_state *state)
+ {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+index 0b148f3ce0d7..51a3b5fc879a 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+@@ -239,6 +239,8 @@ static inline int dpu_crtc_frame_pending(struct drm_crtc *crtc)
+ 	return crtc ? atomic_read(&to_dpu_crtc(crtc)->frame_pending) : -EINVAL;
+ }
+ 
++int dpu_crtc_check_mode_changed(struct drm_crtc_state *crtc_state);
++
+ int dpu_crtc_vblank(struct drm_crtc *crtc, bool en);
+ 
+ void dpu_crtc_vblank_callback(struct drm_crtc *crtc);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index d6ca499cef18..924d5600bd60 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -58,8 +58,6 @@
+ 
+ #define IDLE_SHORT_TIMEOUT	1
+ 
+-#define MAX_HDISPLAY_SPLIT 1080
+-
+ /* timeout in frames waiting for frame done */
+ #define DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES 5
+ 
+@@ -622,7 +620,7 @@ bool dpu_encoder_use_dsc_merge(struct drm_encoder *drm_enc)
+ 		if (dpu_enc->phys_encs[i])
+ 			intf_count++;
+ 
+-	/* See dpu_encoder_get_topology, we only support 2:2:1 topology */
++	/* See dpu_crtc_get_topology, we only support 2:2:1 topology */
+ 	if (dpu_enc->dsc)
+ 		num_dsc = 2;
+ 
+@@ -647,153 +645,92 @@ struct drm_dsc_config *dpu_encoder_get_dsc_config(struct drm_encoder *drm_enc)
+ 	return NULL;
+ }
+ 
+-static struct msm_display_topology dpu_encoder_get_topology(
+-			struct dpu_encoder_virt *dpu_enc,
+-			struct drm_display_mode *mode,
+-			struct drm_crtc_state *crtc_state,
+-			struct drm_connector_state *conn_state)
++void dpu_encoder_update_topology(struct drm_encoder *drm_enc,
++				 struct msm_display_topology *topology,
++				 struct drm_atomic_state *state,
++				 const struct drm_display_mode *adj_mode)
+ {
+-	struct msm_drm_private *priv = dpu_enc->base.dev->dev_private;
+-	struct msm_display_info *disp_info = &dpu_enc->disp_info;
+-	struct dpu_kms *dpu_kms = to_dpu_kms(priv->kms);
+-	struct drm_dsc_config *dsc = dpu_encoder_get_dsc_config(&dpu_enc->base);
+-	struct msm_display_topology topology = {0};
+-	int i, intf_count = 0;
++	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(drm_enc);
++	struct drm_connector *connector;
++	struct drm_connector_state *conn_state;
++	struct msm_display_info *disp_info;
++	struct drm_framebuffer *fb;
++	struct msm_drm_private *priv;
++	struct drm_dsc_config *dsc;
++
++	int i;
+ 
+ 	for (i = 0; i < MAX_PHYS_ENCODERS_PER_VIRTUAL; i++)
+ 		if (dpu_enc->phys_encs[i])
+-			intf_count++;
+-
+-	/* Datapath topology selection
+-	 *
+-	 * Dual display
+-	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
+-	 *
+-	 * Single display
+-	 * 1 LM, 1 INTF
+-	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
+-	 *
+-	 * Add dspps to the reservation requirements if ctm is requested
+-	 */
+-	if (intf_count == 2)
+-		topology.num_lm = 2;
+-	else if (!dpu_kms->catalog->caps->has_3d_merge)
+-		topology.num_lm = 1;
+-	else
+-		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
+-
+-	if (crtc_state->ctm)
+-		topology.num_dspp = topology.num_lm;
++			topology->num_intf++;
+ 
+-	topology.num_intf = intf_count;
++	dsc = dpu_encoder_get_dsc_config(drm_enc);
+ 
++	/* We only support 2 DSC mode (with 2 LM and 1 INTF) */
+ 	if (dsc) {
+-		/*
+-		 * In case of Display Stream Compression (DSC), we would use
+-		 * 2 DSC encoders, 2 layer mixers and 1 interface
+-		 * this is power optimal and can drive up to (including) 4k
+-		 * screens
+-		 */
+-		topology.num_dsc = 2;
+-		topology.num_lm = 2;
+-		topology.num_intf = 1;
++		topology->num_dsc = 2;
++		topology->num_intf = 1;
+ 	}
+ 
++	connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
++	if (!connector)
++		return;
++	conn_state = drm_atomic_get_new_connector_state(state, connector);
++	if (!conn_state)
++		return;
++
++	disp_info = &dpu_enc->disp_info;
++
++	priv = drm_enc->dev->dev_private;
++
+ 	/*
+ 	 * Use CDM only for writeback or DP at the moment as other interfaces cannot handle it.
+ 	 * If writeback itself cannot handle cdm for some reason it will fail in its atomic_check()
+ 	 * earlier.
+ 	 */
+ 	if (disp_info->intf_type == INTF_WB && conn_state->writeback_job) {
+-		struct drm_framebuffer *fb;
+-
+ 		fb = conn_state->writeback_job->fb;
+ 
+ 		if (fb && MSM_FORMAT_IS_YUV(msm_framebuffer_format(fb)))
+-			topology.needs_cdm = true;
++			topology->needs_cdm = true;
+ 	} else if (disp_info->intf_type == INTF_DP) {
+-		if (msm_dp_is_yuv_420_enabled(priv->dp[disp_info->h_tile_instance[0]], mode))
+-			topology.needs_cdm = true;
++		if (msm_dp_is_yuv_420_enabled(priv->dp[disp_info->h_tile_instance[0]], adj_mode))
++			topology->needs_cdm = true;
+ 	}
+-
+-	return topology;
+ }
+ 
+-/**
+- * dpu_encoder_virt_check_mode_changed: check if full modeset is required
+- * @drm_enc:    Pointer to drm encoder structure
+- * @crtc_state:	Corresponding CRTC state to be checked
+- * @conn_state: Corresponding Connector's state to be checked
+- *
+- * Check if the changes in the object properties demand full mode set.
+- */
+-int dpu_encoder_virt_check_mode_changed(struct drm_encoder *drm_enc,
+-					struct drm_crtc_state *crtc_state,
+-					struct drm_connector_state *conn_state)
++bool dpu_encoder_needs_modeset(struct drm_encoder *drm_enc, struct drm_atomic_state *state)
+ {
++	struct drm_connector *connector;
++	struct drm_connector_state *conn_state;
++	struct drm_framebuffer *fb;
+ 	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(drm_enc);
+-	struct msm_display_topology topology;
+-
+-	DPU_DEBUG_ENC(dpu_enc, "\n");
+-
+-	/* Using mode instead of adjusted_mode as it wasn't computed yet */
+-	topology = dpu_encoder_get_topology(dpu_enc, &crtc_state->mode, crtc_state, conn_state);
+-
+-	if (topology.needs_cdm && !dpu_enc->cur_master->hw_cdm)
+-		crtc_state->mode_changed = true;
+-	else if (!topology.needs_cdm && dpu_enc->cur_master->hw_cdm)
+-		crtc_state->mode_changed = true;
+-
+-	return 0;
+-}
+-
+-static int dpu_encoder_virt_atomic_check(
+-		struct drm_encoder *drm_enc,
+-		struct drm_crtc_state *crtc_state,
+-		struct drm_connector_state *conn_state)
+-{
+-	struct dpu_encoder_virt *dpu_enc;
+-	struct msm_drm_private *priv;
+-	struct dpu_kms *dpu_kms;
+-	struct drm_display_mode *adj_mode;
+-	struct msm_display_topology topology;
+-	struct dpu_global_state *global_state;
+-	int ret = 0;
+-
+-	if (!drm_enc || !crtc_state || !conn_state) {
+-		DPU_ERROR("invalid arg(s), drm_enc %d, crtc/conn state %d/%d\n",
+-				drm_enc != NULL, crtc_state != NULL, conn_state != NULL);
+-		return -EINVAL;
+-	}
+-
+-	dpu_enc = to_dpu_encoder_virt(drm_enc);
+-	DPU_DEBUG_ENC(dpu_enc, "\n");
+ 
+-	priv = drm_enc->dev->dev_private;
+-	dpu_kms = to_dpu_kms(priv->kms);
+-	adj_mode = &crtc_state->adjusted_mode;
+-	global_state = dpu_kms_get_global_state(crtc_state->state);
+-	if (IS_ERR(global_state))
+-		return PTR_ERR(global_state);
++	if (!drm_enc || !state)
++		return false;
+ 
+-	trace_dpu_enc_atomic_check(DRMID(drm_enc));
++	connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
++	if (!connector)
++		return false;
+ 
+-	topology = dpu_encoder_get_topology(dpu_enc, adj_mode, crtc_state, conn_state);
++	conn_state = drm_atomic_get_new_connector_state(state, connector);
+ 
+-	/*
+-	 * Release and Allocate resources on every modeset
++	/**
++	 * These checks are duplicated from dpu_encoder_update_topology() since
++	 * CRTC and encoder don't hold topology information
+ 	 */
+-	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+-		dpu_rm_release(global_state, drm_enc);
+-
+-		if (crtc_state->enable)
+-			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
+-					drm_enc, crtc_state, &topology);
++	if (dpu_enc->disp_info.intf_type == INTF_WB && conn_state->writeback_job) {
++		fb = conn_state->writeback_job->fb;
++		if (fb && MSM_FORMAT_IS_YUV(msm_framebuffer_format(fb))) {
++			if (!dpu_enc->cur_master->hw_cdm)
++				return true;
++		} else {
++			if (dpu_enc->cur_master->hw_cdm)
++				return true;
++		}
+ 	}
+ 
+-	trace_dpu_enc_atomic_check_flags(DRMID(drm_enc), adj_mode->flags);
+-
+-	return ret;
++	return false;
+ }
+ 
+ static void _dpu_encoder_update_vsync_source(struct dpu_encoder_virt *dpu_enc,
+@@ -2615,7 +2552,6 @@ static const struct drm_encoder_helper_funcs dpu_encoder_helper_funcs = {
+ 	.atomic_mode_set = dpu_encoder_virt_atomic_mode_set,
+ 	.atomic_disable = dpu_encoder_virt_atomic_disable,
+ 	.atomic_enable = dpu_encoder_virt_atomic_enable,
+-	.atomic_check = dpu_encoder_virt_atomic_check,
+ };
+ 
+ static const struct drm_encoder_funcs dpu_encoder_funcs = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+index da133ee4701a..b0ac10ebd02c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+@@ -80,6 +80,13 @@ int dpu_encoder_get_crc(const struct drm_encoder *drm_enc, u32 *crcs, int pos);
+ 
+ bool dpu_encoder_use_dsc_merge(struct drm_encoder *drm_enc);
+ 
++void dpu_encoder_update_topology(struct drm_encoder *drm_enc,
++				 struct msm_display_topology *topology,
++				 struct drm_atomic_state *state,
++				 const struct drm_display_mode *adj_mode);
++
++bool dpu_encoder_needs_modeset(struct drm_encoder *drm_enc, struct drm_atomic_state *state);
++
+ void dpu_encoder_prepare_wb_job(struct drm_encoder *drm_enc,
+ 		struct drm_writeback_job *job);
+ 
+@@ -88,8 +95,4 @@ void dpu_encoder_cleanup_wb_job(struct drm_encoder *drm_enc,
+ 
+ bool dpu_encoder_is_valid_for_commit(struct drm_encoder *drm_enc);
+ 
+-int dpu_encoder_virt_check_mode_changed(struct drm_encoder *drm_enc,
+-					struct drm_crtc_state *crtc_state,
+-					struct drm_connector_state *conn_state);
+-
+ #endif /* __DPU_ENCODER_H__ */
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index 5ce06e25990c..c6b3b2e147b4 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -449,24 +449,11 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
+ static int dpu_kms_check_mode_changed(struct msm_kms *kms, struct drm_atomic_state *state)
+ {
+ 	struct drm_crtc_state *new_crtc_state;
+-	struct drm_connector *connector;
+-	struct drm_connector_state *new_conn_state;
++	struct drm_crtc *crtc;
+ 	int i;
+ 
+-	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
+-		struct drm_encoder *encoder;
+-
+-		WARN_ON(!!new_conn_state->best_encoder != !!new_conn_state->crtc);
+-
+-		if (!new_conn_state->crtc || !new_conn_state->best_encoder)
+-			continue;
+-
+-		new_crtc_state = drm_atomic_get_new_crtc_state(state, new_conn_state->crtc);
+-
+-		encoder = new_conn_state->best_encoder;
+-
+-		dpu_encoder_virt_check_mode_changed(encoder, new_crtc_state, new_conn_state);
+-	}
++	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i)
++		dpu_crtc_check_mode_changed(new_crtc_state);
+ 
+ 	return 0;
+ }
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           | 222 ++++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h           |   3 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        | 418 ++++++++++++---------
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h        |  16 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |   7 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |  16 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         |  30 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |  15 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h        |   2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |  27 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h            |  13 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             | 298 ++++++++++-----
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h             |  14 +-
- 13 files changed, 753 insertions(+), 328 deletions(-)
----
-base-commit: 866e43b945bf98f8e807dfa45eca92f931f3a032
-change-id: 20240618-concurrent-wb-97d62387f952
-prerequisite-change-id: 20241222-drm-dirty-modeset-88079bd27ae6:v2
-prerequisite-patch-id: 0c61aabfcd13651203f476985380cbf4d3c299e6
-prerequisite-patch-id: c6026f08011c288fd301676e9fa6f46d0cc1dab7
-prerequisite-patch-id: b0cb06d5c88791d6e4755d879ced0d5050aa3cbf
-prerequisite-patch-id: fd72ddde9dba0df053113bc505c213961a9760da
-prerequisite-change-id: 20250209-dpu-c3fac78fc617:v2
-prerequisite-patch-id: c84d2b4b06be06384968429085d1e8ebae23a583
-prerequisite-patch-id: fb8ea7b9e7c85fabd27589c6551108382a235002
-prerequisite-change-id: 20250211-dither-disable-b77b1e31977f:v1
-prerequisite-patch-id: 079e04296212b4b83d51394b5a9b5eea6870d98a
-
-Best regards,
 -- 
-Jessica Zhang <quic_jesszhan@quicinc.com>
+2.48.1
 
