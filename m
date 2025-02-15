@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4590A1A265E;
-	Sat, 15 Feb 2025 10:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23F71A316A;
+	Sat, 15 Feb 2025 10:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739616961; cv=none; b=N3dKbYPjp6gyqX3c3CKXUUzRMZpOas9rorl0bsHV0KwGMVaorTVkde7eT56S6CPcoQjlk5rAOdKWDYGqBsRlg/PBq8g2FiPlZ8LTT0u3Q2+d/D5zBjPFT8ta9djWnC6v4+i6sktYwoAGbCv/J9stZ4i53iN4/waoBgWFC9I3Oss=
+	t=1739616962; cv=none; b=Asp7AaH2GxUJAeFwNQUJVmRwKEUmwAyB1LFX5cT32msphVrfHT8zNfI1HR1esRItIrAgKObOwyO/I/CiL64U/T/PELlQUXTHTWgYbcQsGduYASogEJUH5LAvRtqSPVpNg23+XX6aff2e9c3bgD5igBLztBLO6Y1QmFdFefn04e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739616961; c=relaxed/simple;
-	bh=GkY+egXIM3GyYLc2ENwowGhk7sj0FaBsV4aacldQ7Io=;
+	s=arc-20240116; t=1739616962; c=relaxed/simple;
+	bh=SSUx7OzLzc6SxMkhifY9y6/0jC+CUN1tFzb7Au0bWAI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=OSMbDOLxqBNVSP3RSRJayNLH2PwtcUcGuH4Wxp3x1kpaWjCpX6vcuvvx53Ze2wTL/mZKKmabdHhLbMDQ+W0Iwgy1ji4QjIqYUEMV9jG9GM32GKLXH2bn2j0jn90yoHIKBMh4bR4lMsBvU/5Y88bFJkITBndBO4KRgmLm8cGp2Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3ue3qMwr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=boqWaUlE; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Lv9uiMBxCNbXP9V/hrUYRmX4Al4YvIwK/U01+IGRWGjgcfDywpBnh9U9w0g8fzk62sgK1NRWqm/7JhJnS5BJDtsSG3CEfXK0Ri4XL+WmPdsGjv+qSaplTmgaYcBvC+TzgQQfoQ7JA/vwyLf1iDPw3XwowTTtUPtriYfqbN1IqfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=24DPUQTk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NthJqut1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3ue3qMwr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="boqWaUlE"
-Date: Sat, 15 Feb 2025 10:55:57 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="24DPUQTk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NthJqut1"
+Date: Sat, 15 Feb 2025 10:55:58 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739616958;
+	s=2020; t=1739616959;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jmOJnWNjJT09hc5I0j0v2HvKTNHVDiQWBMYjoEKkBFQ=;
-	b=3ue3qMwrQmZ8awQEWzyx+bSFUpZqwgHJsUf5+z/YLa27dZB178doDLOg4jUlO4/8p/qlF7
-	VLEbB5g8z4bo/8k0vv7VHnKtCRxkjTVSA+eNTkLhNhe1wFzmvoriyaeqRpE4FI/sjXNNcs
-	Hqyd867ksLWHJtfzj48i5fretkvdXtB/Iiyp3VV5/zypNH5Vs6m05R+AdrHYwBvSnc7njK
-	I7V/d+jN0UkbPAMcu3gJ/cRIwKkbzWrrONTUeCZUkHsabbe5TEmpMvQOgbgGLe5bLZL/io
-	dZbU/3vKBcCabIB/XyMv8O3zznApNRXssGg3RBAON+T4Qs1T7Gh7nRyOsTOPOg==
+	bh=5nWyQm3CHTMNeNCnReiBfKhfxsApT/3vKxVPVpAcdfA=;
+	b=24DPUQTkKa3mVXuM/lp4SyO9pQ8cF0uiJ+B8JHlucZQ7c8R6M7ouFB36NfguVQz2xmUi25
+	l1xw5YtZl4zHQIy+3+m4mofqGG7dNp0vBldnFr46t++XT/OXyfGd6aylP/AZSsI+YkcGh7
+	TgSp6MDK9Gtu9SiZ85xkJf0sP0pzXZYqyWb7QbbB9cEKYQ6OtKqwIdcseqUHNTQk2FJpVF
+	ItMBdYtP6zNR+qbjnEEbuiYJpDrkzke+DO6sXLHfdLHviVogFMVEXEmv6JIp65xw4hE8UY
+	mBP7Qye/qgj5hCxTKafoFf6mOsHvZN7RhQHPG9SZeKRPWHsyvpeHLmCfzciYfg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739616958;
+	s=2020e; t=1739616959;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jmOJnWNjJT09hc5I0j0v2HvKTNHVDiQWBMYjoEKkBFQ=;
-	b=boqWaUlE11U/DWlbhGKVAWqt2h2hkcdlpCBQbO0WziYUdfqumZrISvx9DqV6ldkpf3zHSt
-	cKq7n1ZWEZEr2iAg==
+	bh=5nWyQm3CHTMNeNCnReiBfKhfxsApT/3vKxVPVpAcdfA=;
+	b=NthJqut1ss8SV4dh+Ld6tsxQ3r/94SLU+QpDTuA/TfcjcxhUVSm/CG/4eu2g/cq2O6LwxZ
+	ddo9k/SFI8JwG7Ag==
 From: "tip-bot2 for zihan zhou" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Reduce the default slice to avoid tasks
- getting an extra tick
+Subject:
+ [tip: sched/core] sched: Cancel the slice protection of the idle entity
 Cc: zihan zhou <15645113830zzh@gmail.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250208075322.13139-1-15645113830zzh@gmail.com>
-References: <20250208075322.13139-1-15645113830zzh@gmail.com>
+In-Reply-To: <20250208080850.16300-1-15645113830zzh@gmail.com>
+References: <20250208080850.16300-1-15645113830zzh@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173961695796.10177.6989709679283453357.tip-bot2@tip-bot2>
+Message-ID: <173961695853.10177.12588433756462565858.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,79 +69,121 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     2ae891b826958b60919ea21c727f77bcd6ffcc2c
-Gitweb:        https://git.kernel.org/tip/2ae891b826958b60919ea21c727f77bcd6ffcc2c
+Commit-ID:     f553741ac8c0e467a3b873e305f34b902e50b86d
+Gitweb:        https://git.kernel.org/tip/f553741ac8c0e467a3b873e305f34b902e50b86d
 Author:        zihan zhou <15645113830zzh@gmail.com>
-AuthorDate:    Sat, 08 Feb 2025 15:53:23 +08:00
+AuthorDate:    Sat, 08 Feb 2025 16:08:52 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Fri, 14 Feb 2025 10:32:00 +01:00
 
-sched: Reduce the default slice to avoid tasks getting an extra tick
+sched: Cancel the slice protection of the idle entity
 
-The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
-means that we have a default slice of:
+A wakeup non-idle entity should preempt idle entity at any time,
+but because of the slice protection of the idle entity, the non-idle
+entity has to wait, so just cancel it.
 
-  0.75 for 1 cpu
-  1.50 up to 3 cpus
-  2.25 up to 7 cpus
-  3.00 for 8 cpus and above.
+This patch is aimed at minimizing the impact of SCHED_IDLE on
+SCHED_NORMAL. For example, a task with SCHED_IDLE policy that sleeps for
+1s and then runs for 3 ms, running cyclictest on the same cpu, has a
+maximum latency of 3 ms, which is caused by the slice protection of the
+idle entity. It is unreasonable. With this patch, the cyclictest latency
+under the same conditions is basically the same on the cpu with idle
+processes and on empty cpu.
 
-For HZ=250 and HZ=100, because of the tick accuracy, the runtime of
-tasks is far higher than their slice.
-
-For HZ=1000 with 8 cpus or more, the accuracy of tick is already
-satisfactory, but there is still an issue that tasks will get an extra
-tick because the tick often arrives a little faster than expected. In
-this case, the task can only wait until the next tick to consider that it
-has reached its deadline, and will run 1ms longer.
-
-vruntime + sysctl_sched_base_slice =     deadline
-        |-----------|-----------|-----------|-----------|
-             1ms          1ms         1ms         1ms
-                   ^           ^           ^           ^
-                 tick1       tick2       tick3       tick4(nearly 4ms)
-
-There are two reasons for tick error: clockevent precision and the
-CONFIG_IRQ_TIME_ACCOUNTING/CONFIG_PARAVIRT_TIME_ACCOUNTING. with
-CONFIG_IRQ_TIME_ACCOUNTING every tick will be less than 1ms, but even
-without it, because of clockevent precision, tick still often less than
-1ms.
-
-In order to make scheduling more precise, we changed 0.75 to 0.70,
-Using 0.70 instead of 0.75 should not change much for other configs
-and would fix this issue:
-
-  0.70 for 1 cpu
-  1.40 up to 3 cpus
-  2.10 up to 7 cpus
-  2.8 for 8 cpus and above.
-
-This does not guarantee that tasks can run the slice time accurately
-every time, but occasionally running an extra tick has little impact.
-
+[peterz: add helpers]
+Fixes: 63304558ba5d ("sched/eevdf: Curb wakeup-preemption")
 Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20250208075322.13139-1-15645113830zzh@gmail.com
+Tested-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20250208080850.16300-1-15645113830zzh@gmail.com
 ---
- kernel/sched/fair.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/sched/fair.c | 46 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 33 insertions(+), 13 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 61b826f..1784752 100644
+index 1c0ef43..61b826f 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -74,10 +74,10 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+@@ -884,6 +884,26 @@ struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
+ }
+ 
  /*
-  * Minimal preemption granularity for CPU-bound tasks:
++ * HACK, stash a copy of deadline at the point of pick in vlag,
++ * which isn't used until dequeue.
++ */
++static inline void set_protect_slice(struct sched_entity *se)
++{
++	se->vlag = se->deadline;
++}
++
++static inline bool protect_slice(struct sched_entity *se)
++{
++	return se->vlag == se->deadline;
++}
++
++static inline void cancel_protect_slice(struct sched_entity *se)
++{
++	if (protect_slice(se))
++		se->vlag = se->deadline + 1;
++}
++
++/*
+  * Earliest Eligible Virtual Deadline First
   *
-- * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
-+ * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
-  */
--unsigned int sysctl_sched_base_slice			= 750000ULL;
--static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
-+unsigned int sysctl_sched_base_slice			= 700000ULL;
-+static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
+  * In order to provide latency guarantees for different request sizes
+@@ -919,11 +939,7 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
+ 	if (curr && (!curr->on_rq || !entity_eligible(cfs_rq, curr)))
+ 		curr = NULL;
  
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+-	/*
+-	 * Once selected, run a task until it either becomes non-eligible or
+-	 * until it gets a new slice. See the HACK in set_next_entity().
+-	 */
+-	if (sched_feat(RUN_TO_PARITY) && curr && curr->vlag == curr->deadline)
++	if (sched_feat(RUN_TO_PARITY) && curr && protect_slice(curr))
+ 		return curr;
  
+ 	/* Pick the leftmost entity if it's eligible */
+@@ -5528,11 +5544,8 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 		update_stats_wait_end_fair(cfs_rq, se);
+ 		__dequeue_entity(cfs_rq, se);
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+-		/*
+-		 * HACK, stash a copy of deadline at the point of pick in vlag,
+-		 * which isn't used until dequeue.
+-		 */
+-		se->vlag = se->deadline;
++
++		set_protect_slice(se);
+ 	}
+ 
+ 	update_stats_curr_start(cfs_rq, se);
+@@ -8781,8 +8794,15 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int 
+ 	 * Preempt an idle entity in favor of a non-idle entity (and don't preempt
+ 	 * in the inverse case).
+ 	 */
+-	if (cse_is_idle && !pse_is_idle)
++	if (cse_is_idle && !pse_is_idle) {
++		/*
++		 * When non-idle entity preempt an idle entity,
++		 * don't give idle entity slice protection.
++		 */
++		cancel_protect_slice(se);
+ 		goto preempt;
++	}
++
+ 	if (cse_is_idle != pse_is_idle)
+ 		return;
+ 
+@@ -8801,8 +8821,8 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int 
+ 	 * Note that even if @p does not turn out to be the most eligible
+ 	 * task at this moment, current's slice protection will be lost.
+ 	 */
+-	if (do_preempt_short(cfs_rq, pse, se) && se->vlag == se->deadline)
+-		se->vlag = se->deadline + 1;
++	if (do_preempt_short(cfs_rq, pse, se))
++		cancel_protect_slice(se);
+ 
+ 	/*
+ 	 * If @p has become the most eligible task, force preemption.
