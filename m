@@ -1,81 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C2B154C0B;
-	Sat, 15 Feb 2025 00:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D04154C0B;
+	Sat, 15 Feb 2025 00:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739580827; cv=none; b=TxQHavdnyIwIBlqoaxgf/BmtFYotWNF1vI19kHBQo4JbDTt2p4dnWUgtwXC8/BWsyCfNiK+Q/qFGuf1GvrWdDCTWOFE3mCnLGa9MojBEaQ6tntmj9yxNlCxKPu4Uj1ozqwD20K6IOnf/1Nqa01bDspjzMSIfGT2hTNwjTMWt1jQ=
+	t=1739580839; cv=none; b=mEGeDTalSlhHEVx+udTXkjzLtenBnsCUnqGstkPj47PJ0M8ek3XAKN/D5WYI3qeUQjz3P90Bscce300NHxT5aepCWvMMH8XY3uz3XqglSsdt3xyEHhgVPVKVyjHzPmQZzKrf5KyocNpEhaumsYgvWmkKIB9JPqIJB/1qd2BGlA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739580827; c=relaxed/simple;
-	bh=U2QJb6XIJC6fNter4lBmA14G9QFD+52FUM0I1jZgCx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MsF1njaWdf61H25YdARdrrsJ8pJIcyT8wNOvHJN+sKMFKXrvl6PRytk0eqM1JAyHsM24ycVk6K8st77yOCqkiUjJeNYoJ/5j4C4tFEj4IU5bzkczYJv8fe9yIrh4E+dJCVkL7axGlckp71bwxXCJ5G7akUthxbg1KMw7p7dzEK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sE5KJbIE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739580839; c=relaxed/simple;
+	bh=lBuK/bSbUTeN6/buU76cBjlajqTaZ8mhrN+dn8TsGwE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=TPMc/iP+y8R1pU6nFJsYZnx1CtvtMBOWMne1a86pIbYD9H8XL7nAye8G5Y/mIXHx2rR/BWEsPqlM39ynhebvdUe3LCm8Tlz5jZvUGtZG2u+5sNLSBiVn3r7ndU/MpDVbvgfM8Cxzm+LmRdHtEEdTWTzSKPns6KJfHW+btYKbZDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FyG6sgO0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sE5KJbIE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E90C4CEE2;
-	Sat, 15 Feb 2025 00:53:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FyG6sgO0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD87C4CED1;
+	Sat, 15 Feb 2025 00:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739580826;
-	bh=U2QJb6XIJC6fNter4lBmA14G9QFD+52FUM0I1jZgCx4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sE5KJbIErIEnMN8ssaRMOU7wYVNoq49KmLNBuOhpYT2dC9Qp58XGtuzTjVjfE8v4g
-	 MIeHJ9R3ASbAwY59YMeQB58dQgb/7ehBG+RdOt9nLndobnNZcRKdqvLLcDAgF7rEow
-	 56ij5RYIxWo5PS9bO1Rj0bRnVRry6lwsPhdxyycJsZfZl19PE5irc2c9d82I9SXjFf
-	 vY15DyE4TWVyYOcfOhXXaZ0LeVcSj/HKxM0ep2rfawnO/omKg1ZBAzk7AnVH3S6yk9
-	 9hxrMz8+dFD0NjTsNnLK7ta8GhuD7l0xgA7aD+jVdldnpo8siG5+cXOmM6ai9hqF11
-	 FI+arOB4Cx7cQ==
-Date: Fri, 14 Feb 2025 16:53:45 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Russell King
- <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Herve Codina
- <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner
- Kallweit <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
- =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
- <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
- <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
- mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
- Gantois <romain.gantois@bootlin.com>, Daniel Golle <daniel@makrotopia.org>,
- Dimitri Fedrau <dimitri.fedrau@liebherr.com>, Sean Anderson
- <seanga2@gmail.com>
-Subject: Re: [PATCH net-next v4 00/15] Introduce an ethernet port
- representation
-Message-ID: <20250214165345.6cab996f@kernel.org>
-In-Reply-To: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
-References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
+	s=k20201202; t=1739580839;
+	bh=lBuK/bSbUTeN6/buU76cBjlajqTaZ8mhrN+dn8TsGwE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=FyG6sgO0VcBr2Cw0gjpLeN3qgR9DFcwvspmaQdN+BdJEF/1p7gqfwTAfdz267Jpux
+	 kziLavEyeinjbkmIiKFfsmBgYctYQJqwYPCxgB5bS0D2XIzQ+12hADTOhZigI5vRYQ
+	 i8VVjJSULf2cg2WGIYbdDpAbCfnlagySeKo+VzwB1ZMZLok208VCIRZ2nvv+zZ77ZX
+	 RfUNqnV1Kf/s7XczDdlY2sczeWzxz7xpsfxEcqI9xAXPzrjpGK6dCPDxnHtc5mLDKy
+	 MMBGprkTL6iXSX6P3d3OXppmRvJVJYntxPz9ql4debPJKyV0kI99P+SNp5jvi34xcu
+	 Z3EAnsnnPfncg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB01D380CEE8;
+	Sat, 15 Feb 2025 00:54:29 +0000 (UTC)
+Subject: Re: [GIT PULL] Thermal control fixes for v6.14-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0hZnJHLmwh9K7_auS+JeinAx0DWd1vi-bWr_qDp5ZnyGw@mail.gmail.com>
+References: <CAJZ5v0hZnJHLmwh9K7_auS+JeinAx0DWd1vi-bWr_qDp5ZnyGw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0hZnJHLmwh9K7_auS+JeinAx0DWd1vi-bWr_qDp5ZnyGw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.14-rc3
+X-PR-Tracked-Commit-Id: a6768c4f92e152265590371975d44c071a5279c7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3f2ca7b8b33db7d094ef729e6b0707b5534159b0
+Message-Id: <173958086859.2153475.12582084633117526210.pr-tracker-bot@kernel.org>
+Date: Sat, 15 Feb 2025 00:54:28 +0000
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Feb 2025 11:15:48 +0100 Maxime Chevallier wrote:
-> This is V4 of the series introducing the phy_port infrastructure.
+The pull request you sent on Fri, 14 Feb 2025 21:51:56 +0100:
 
-FWIW it doesn't seem to apply:
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.14-rc3
 
-Applying: net: ethtool: Introduce ETHTOOL_LINK_MEDIUM_* values
-Applying: net: ethtool: Export the link_mode_params definitions
-error: sha1 information is lacking or useless (net/ethtool/common.c).
-error: could not build fake ancestor
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config set advice.mergeConflict false"
-Patch failed at 0002 net: ethtool: Export the link_mode_params definitions
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3f2ca7b8b33db7d094ef729e6b0707b5534159b0
+
+Thank you!
 
 -- 
-pw-bot: cr
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
