@@ -1,155 +1,111 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427DE1FDA65;
-	Sat, 15 Feb 2025 00:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B691FE44B
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739580966; cv=none; b=sl8JD3DoSfMUadqWMxztN1cH9sy0jUdOhbRidmGLmFireR5ET2KlBVS+pCw3UwlADEqzOyuuwtUWcslmvuzEPxATwTBjaFsITf2ZMI8DhRiPoq2Hgf7B7nrLZMUujYguzNOuwLjpQ0/L2neWSWtMQP1XS3civAkj4d/8o+zn9Mo=
+	t=1739580970; cv=none; b=G8UfGHs3I2SjrYDWddDYrzl2q+tsw2hi0noAYjm+kwkSgUU05HfAXtQTNp+TQ2fNCJf+b6HnZQ/FxGgKutO70YGTmDNA+GYByU6pASC/5r8BPwFvmrvtkBJqoJ4iB54P1xZ5m7kZG6btsvFZyxQRL5csEIPWJyYjQI0kAD5MItc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739580966; c=relaxed/simple;
-	bh=SamXBzmLvsEp0Jz0d1kldxkjLOu7b/3p5uRtusyt+UA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FtbFLjQT6Hy+F6s72C88B+5QAUKGL5Dros6M9+aw2SksS2J7Z3cCNZByP0uDRHjhmZejq9Xe2PD4OnMkfyZ0ORXrZJStkd3PY9wwEjaotE87XnrDuHHbFmWTTTyQLKubLNzbJuwXwE0ImJt0LsIK7qcSFK6LubH70ENo4CjosRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YHX+RxPr; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739580970; c=relaxed/simple;
+	bh=Jekbf6Q0cU6Wx7OkQXLe7hOjuTG5eVvU2JGpq1WJW1c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=L/HQPMXrNqoXLxbSZvwJdnotiA86KN8i/CbLjATx1+uahDYAeI7KqzF6lGdWBA4TkKleKTNQelBI+2pn0IRRzL0KN9QJGwGmOP4e7WTY7cJhoK/gmi7OaQWkToQmIiEKKCwNCIHjWxGkgwukQBn+I1mIbMpXR+lL2Ge5BgpysNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vYZT9dG1; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YHX+RxPr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739580959;
-	bh=SamXBzmLvsEp0Jz0d1kldxkjLOu7b/3p5uRtusyt+UA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YHX+RxPrOuFbD+K59CXEFQAKW0HgHAw+8zomFsb8XCMPAUAIK9LnBBkYXUAGtoZot
-	 Yr2h1HVHvWsManylI0wE8R54lIaqsvDqPHcw2vs5q2C6BjA9mcWMZDMEI7WfPSwrVW
-	 DMCHpLcI+jjq/fMurpyrvcxTsp4n55fXyCVl6MyrGYPweNpty1qeQjUbQEKlNGKfcr
-	 Y+tcnqZb2JHSTgh1M21nkOsTONZ6mpTln9Y42PVtMw/n/tA4FZaf7RcQExzH+9ILnT
-	 3ZxLNvamZHzLkAetsNE+EJAwVrql4HGXdF7lf0OzPagELxU4A4tkAuIX3V4CmPnWx7
-	 wox9izcsH8Ifw==
-Received: from localhost (144.232.221.87.dynamic.jazztel.es [87.221.232.144])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 3229D17E1553;
-	Sat, 15 Feb 2025 01:55:59 +0100 (CET)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Sat, 15 Feb 2025 02:55:40 +0200
-Subject: [PATCH 4/4] arm64: dts: rockchip: Enable HDMI1 on rk3588-evb1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vYZT9dG1"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc2f22f959so2457723a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:56:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739580968; x=1740185768; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fL7l1+LmTgBeEbzpsciM8sZysU50WTuc3k3as/xBPhw=;
+        b=vYZT9dG17Id6ykd3yNlOBUuVIt7vo1xPRtBmm8EA31vAuRicJjFdBIkEIsACq6irTk
+         +SG3yTH99nv0oYns6CkTVj0ePUI0/9EsGL4BfGwhMqkvY8aWfdaYkDEttzbM1aHAJbVl
+         qY+VnanWnsW2rbz007mhsN83ByASAo0c247CJ8XXmm18WadYkXGiY5VOja1iIn2QY93N
+         DNKWBNwQJGJbbsAaOI7i9pG/FK4nvoHCfwZuo7x5pk5O0VFOR/2gjzoSwZ9alUP74CE0
+         fA05ijB85bWO34pRI8g6xTjgAXHFWXtdxqukTyTubXLr/LSE1GwmvVHs0OYb8hcDyhbH
+         H1xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739580968; x=1740185768;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fL7l1+LmTgBeEbzpsciM8sZysU50WTuc3k3as/xBPhw=;
+        b=cFamfjCUX9W7mkyIc3z1b1gJCJ2JFdlfZ6VjJAbsxhFMcSqcIGXiC7k2lA9E4goX+v
+         JE7g7wGKXGqlh5aWe+vb9wHHtttLynfkTs1h1xLeCnZ7RWv/WRwLNyh/AnOwCZ5vpRpg
+         1uoGyKdLK14Sr38atY/+Tvh6NP8PzIApp2gtsWXxyHCZP4G9xVydTQkZWr97waoYiXnP
+         vOxXuT2sAVrRt+WSxsIlj1QynH9hCxoee1mgR//1/MJQLRtCjreF1xoTlwyMWmlMuawA
+         cUZQ/+K99aaRwjdOH2EbsvbobzHV1+SS4jwDIZfwBi5vQ7dvgonCDAEibyByLbgGrYLy
+         NMNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcr2MdnNNEsl33aM6npeElU52XxEfb3Hbq0ohSqaDHDlnZtQC2IIwrd0MZLnQcqqvil7xBIVyUAZI6auo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweVnCvnYzIXNeEo8ZW0acBG+5aH51i7x/gKCn8rGqmNC2xNNCQ
+	23eOXK48twtoRX+tsJW5mNlJdKGbunkMzNqGgCVz/PRLlZpWNg1jZTbXrXzRFlSZOznjle4l/wT
+	OWQ==
+X-Google-Smtp-Source: AGHT+IGD6lMbhax+0H1lXwQiLO2YDpzdhmH8XWd8CjdLfJqWYkoGcpnAs+TyM1wwCnmQp7KQ9OxRdUOlICc=
+X-Received: from pfbf10.prod.google.com ([2002:a05:6a00:ad8a:b0:730:8970:1f9c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d55:b0:728:15fd:dabb
+ with SMTP id d2e1a72fcca58-73262200ec7mr2404019b3a.8.1739580968046; Fri, 14
+ Feb 2025 16:56:08 -0800 (PST)
+Date: Fri, 14 Feb 2025 16:50:26 -0800
+In-Reply-To: <20250201013827.680235-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250201013827.680235-1-seanjc@google.com>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <173958053855.1191632.15119979488375341205.b4-ty@google.com>
+Subject: Re: [PATCH v2 00/11] KVM: x86: pvclock fixes and cleanups
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com, 
+	Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250215-vop2-hdmi1-disp-modes-v1-4-81962a7151d6@collabora.com>
-References: <20250215-vop2-hdmi1-disp-modes-v1-0-81962a7151d6@collabora.com>
-In-Reply-To: <20250215-vop2-hdmi1-disp-modes-v1-0-81962a7151d6@collabora.com>
-To: Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-Mailer: b4 0.14.2
 
-Add the necessary DT changes to enable the second HDMI output port on
-Rockchip RK3588 EVB1.
+On Fri, 31 Jan 2025 17:38:16 -0800, Sean Christopherson wrote:
+> Fix a lockdep splat in KVM's suspend notifier by simply removing a spurious
+> kvm->lock acquisition related to kvmclock, and then try to wrangle KVM's
+> pvclock handling into something approaching sanity (I made the mistake of
+> looking at how KVM handled PVCLOCK_GUEST_STOPPED).
+> 
+> The Xen changes are slightly better tested this time around, though given
+> how many bugs there were in v1, that isn't saying a whole lot.
+> 
+> [...]
 
-While at it, switch the position of &vop_mmu and @vop to maintain the
-alphabetical order.
+Applied to kvm-x86 pvclock, to start getting coverage in -next.  I put this in
+its own branch so that it can be reworked/discarded as reviews come in.
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
----
- arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts | 42 ++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+[01/11] KVM: x86: Don't take kvm->lock when iterating over vCPUs in suspend notifier
+        https://github.com/kvm-x86/linux/commit/d9c5ed0a9b52
+[02/11] KVM: x86: Eliminate "handling" of impossible errors during SUSPEND
+        https://github.com/kvm-x86/linux/commit/4198f38aed24
+[03/11] KVM: x86: Drop local pvclock_flags variable in kvm_guest_time_update()
+        https://github.com/kvm-x86/linux/commit/aceb04f571e9
+[04/11] KVM: x86: Process "guest stopped request" once per guest time update
+        https://github.com/kvm-x86/linux/commit/6c4927a4b7b8
+[05/11] KVM: x86/xen: Use guest's copy of pvclock when starting timer
+        https://github.com/kvm-x86/linux/commit/ca28aa63918b
+[06/11] KVM: x86: Don't bleed PVCLOCK_GUEST_STOPPED across PV clocks
+        https://github.com/kvm-x86/linux/commit/24c166378026
+[07/11] KVM: x86: Set PVCLOCK_GUEST_STOPPED only for kvmclock, not for Xen PV clock
+        https://github.com/kvm-x86/linux/commit/93fb0b10e712
+[08/11] KVM: x86: Pass reference pvclock as a param to kvm_setup_guest_pvclock()
+        https://github.com/kvm-x86/linux/commit/46aed4d4a7db
+[09/11] KVM: x86: Remove per-vCPU "cache" of its reference pvclock
+        https://github.com/kvm-x86/linux/commit/39d61b46adfd
+[10/11] KVM: x86: Setup Hyper-V TSC page before Xen PV clocks (during clock update)
+        https://github.com/kvm-x86/linux/commit/847d68abf10c
+[11/11] KVM: x86: Override TSC_STABLE flag for Xen PV clocks in kvm_guest_time_update()
+        https://github.com/kvm-x86/linux/commit/1b3c38050b5c
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-index 3fd0665cde2ca15cd309919ff751b00e0f53a400..27a7895595ee9fa2f5d5f3096cbe334c1d3792cf 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-@@ -132,6 +132,17 @@ hdmi0_con_in: endpoint {
- 		};
- 	};
- 
-+	hdmi1-con {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi1_con_in: endpoint {
-+				remote-endpoint = <&hdmi1_out_con>;
-+			};
-+		};
-+	};
-+
- 	pcie20_avdd0v85: regulator-pcie20-avdd0v85 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "pcie20_avdd0v85";
-@@ -364,10 +375,30 @@ hdmi0_out_con: endpoint {
- 	};
- };
- 
-+&hdmi1 {
-+	status = "okay";
-+};
-+
-+&hdmi1_in {
-+	hdmi1_in_vp1: endpoint {
-+		remote-endpoint = <&vp1_out_hdmi1>;
-+	};
-+};
-+
-+&hdmi1_out {
-+	hdmi1_out_con: endpoint {
-+		remote-endpoint = <&hdmi1_con_in>;
-+	};
-+};
-+
- &hdptxphy0 {
- 	status = "okay";
- };
- 
-+&hdptxphy1 {
-+	status = "okay";
-+};
-+
- &i2c2 {
- 	status = "okay";
- 
-@@ -1371,11 +1402,11 @@ &usb_host1_xhci {
- 	status = "okay";
- };
- 
--&vop_mmu {
-+&vop {
- 	status = "okay";
- };
- 
--&vop {
-+&vop_mmu {
- 	status = "okay";
- };
- 
-@@ -1385,3 +1416,10 @@ vp0_out_hdmi0: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
- 		remote-endpoint = <&hdmi0_in_vp0>;
- 	};
- };
-+
-+&vp1 {
-+	vp1_out_hdmi1: endpoint@ROCKCHIP_VOP2_EP_HDMI1 {
-+		reg = <ROCKCHIP_VOP2_EP_HDMI1>;
-+		remote-endpoint = <&hdmi1_in_vp1>;
-+	};
-+};
-
--- 
-2.48.1
-
+--
+https://github.com/kvm-x86/linux/tree/next
