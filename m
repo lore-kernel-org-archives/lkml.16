@@ -1,115 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A861A9B58;
-	Sat, 15 Feb 2025 19:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BF878F4B
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 19:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739647780; cv=none; b=Q8gX2zyuYP//F017zYnC2Z9sBK2zPL47/IUgJQHgenr/hRL7ZM2zEX7gBqPjORHSzjusTRpEWbNIgswkdeyEq2OKNgiw+hxpy31ADsFFwAvPVloFBzkAW4+7mKdeiZqksEwBdj0xRzPLMITrV6coowUSvrtnLfoCxtbji8fmHrk=
+	t=1739648110; cv=none; b=Vf/t+s1PxoHkfOVCk0aarigNDDu1hMwXVxdHz6rugmVTlgKPMRUb5cmeMFf60Y3GTjQ44GDNAH//gw6bSQf3ejwf7f1VuFU1NKw/yHRYY7mA+Of9zjXBZ7aAWfRJQR69KthF72AfYUtfDvBAfb783CXsUgKFLQkTCRjy/vLcmBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739647780; c=relaxed/simple;
-	bh=ehjLwgwM1t69iI6E6+1h4fWJ2pSx2/m/NQW5hQlky4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZTzXEOuhie0ynRr2zkPIWAZmstlOad3oyLOJg7brU4cTAmIEUthWrN7it5eqnA4vfeD5+i+vLzZg+niNew3oAn7I/ehkW6uBEqwfNTnz9j0yfKbBClezQUlWmKpcFyLqnB5Xa37jyVlossJ04UcPQ+hkks2EY+7brLdipjsCXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SOqyZZj/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SOqyZZj/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0CFC4CEDF;
-	Sat, 15 Feb 2025 19:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739647780;
-	bh=ehjLwgwM1t69iI6E6+1h4fWJ2pSx2/m/NQW5hQlky4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SOqyZZj/6kaTgkoyRaSBLMkEf8t/HOsFy5n/BwQu/S8iSLlwwxv6GIW6enPOFSspd
-	 tjulUo7ckzOFqTrhC2L6V8oTuOPa7/d2QraO3FXiIuUcXroVIO7m19mY3QTti2d1r1
-	 Per0q5mHQyJ+o8VM+kuHJcgxZTnbjRrBDSii4fyxBR6QY963nCQN33VpGaXWaX4unX
-	 5wZXByBs1xS6PpXwMg740spgBWodKwE2fZ6/jWFxDFw+t4SCx5UCYpqfLwDGt6vLQl
-	 AXR5lN1Ry5NAW2bRNiBUmMfTRYa50AOOsw8xWD2SaxTCF7MpbVVwTx6h+CILnXSO7e
-	 lAIvsFK8A3taA==
-Date: Sat, 15 Feb 2025 19:29:35 +0000
-From: Simon Horman <horms@kernel.org>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Shahar Shitrit <shshitrit@nvidia.com>,
-	Gal Pressman <gal@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Carolina Jubran <cjubran@nvidia.com>
-Subject: Re: [PATCH net-next 4/4] net/mlx5: Add sensor name to temperature
- event message
-Message-ID: <20250215192935.GU1615191@kernel.org>
-References: <20250213094641.226501-1-tariqt@nvidia.com>
- <20250213094641.226501-5-tariqt@nvidia.com>
+	s=arc-20240116; t=1739648110; c=relaxed/simple;
+	bh=yBXzG4i9Dkiru55lQyz1Xr5+cE0Yl9ZHuQy6/bd/lrM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jVmN7ShA8bRz8L0Py7fTU04BcLQPZcaqL7N6wEv7diGOl8b1ZaQSq46FALOlkvKcmaVMl5yiI2ZGD81mpz5CBKVvPHDSSITptWVJS+bJtbrAvsYKt3CBDB2NAjlPQr2JdXuN94Smk8y2fH2KrZps2ucwlpJUTTEaU2azU7ZxiJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d18a1a0f0eso61691695ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 11:35:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739648108; x=1740252908;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZKU5Kcevzf5gXwIZbo3x8mZboejbG5jsHlKHFlgunn8=;
+        b=a0SyrPtKlYgztYeB89OQPVT5gUYIC1HZq1D5EBWZjFYO6mlP8FnqV7NtcP2K2SeV5B
+         72LXWwW1Xihh/ZlvMnp0T2qdg6hB4ksdgtWqckW6ML21YgM+eNCT4iKAmQ22s7MuiVtq
+         KMcBchl/6I0xtUdHvc8MG5x7cVNTs4QWISI0LbjZcBrJg/KSrgeA0/J/75L0GZmOl6rl
+         mn3YcGf41WJVUDXTliWqQ3Tr50viOT0b0m+nS3Hd6QhQwg5bmYKbmH6UVGIo+qQJnhkk
+         Fas3qYJ31ZwcK76zEtTpJAuvL1Z+TtjijpKi0LofBtyHeR8vQSQoI0ONDl6LjVY9F61G
+         wGzA==
+X-Gm-Message-State: AOJu0YzM9xDIEjR+s6IC2k0Ink2s9ehdn94ioizB7/FKNRmemsGiLEEf
+	EkDgkkNQsbdUtapUIij/JL87nBjpEoP4SHlIrWhM9aGcrSeKs7DBGxXuTvTUi9SZtC/aFJxW6pj
+	Sp5wiMXVJXwDNVIuuFZyTkRmyaB9FpQ1kvJquwIWcR11jcGEsuXz2Omw=
+X-Google-Smtp-Source: AGHT+IFrhzAHg4m024aaL5RG7tk+MDBh0jWGu4pde4D2wOrGssZvy+uONVStdh015B3uV06SIvD1Eo8CpJEs8c5idGyw66rGNHN3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213094641.226501-5-tariqt@nvidia.com>
+X-Received: by 2002:a05:6e02:1a4d:b0:3d1:9fd2:d9cd with SMTP id
+ e9e14a558f8ab-3d2807c4396mr33260345ab.9.1739648108526; Sat, 15 Feb 2025
+ 11:35:08 -0800 (PST)
+Date: Sat, 15 Feb 2025 11:35:08 -0800
+In-Reply-To: <67ae3912.050a0220.21dd3.0021.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b0ec6c.050a0220.6f0b7.001b.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 13, 2025 at 11:46:41AM +0200, Tariq Toukan wrote:
-> From: Shahar Shitrit <shshitrit@nvidia.com>
-> 
-> Previously, a temperature event message included a bitmap indicating
-> which sensors detect high temperatures.
-> 
-> To enhance clarity, we modify the message format to explicitly list
-> the names of the overheating sensors, alongside the sensors bitmap.
-> If HWMON is not configured, the event message remains unchanged.
-> 
-> Signed-off-by: Shahar Shitrit <shshitrit@nvidia.com>
-> Reviewed-by: Carolina Jubran <cjubran@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+***
 
-...
+Subject: 
+Author: purvayeshi550@gmail.com
 
-> +#if IS_ENABLED(CONFIG_HWMON)
-> +static void print_sensor_names_in_bit_set(struct mlx5_core_dev *dev, struct mlx5_hwmon *hwmon,
-> +					  u64 bit_set, int bit_set_offset)
-> +{
-> +	unsigned long *bit_set_ptr = (unsigned long *)&bit_set;
-> +	int num_bits = sizeof(bit_set) * BITS_PER_BYTE;
-> +	int i;
-> +
-> +	for_each_set_bit(i, bit_set_ptr, num_bits) {
-> +		const char *sensor_name = hwmon_get_sensor_name(hwmon, i + bit_set_offset);
-> +
-> +		mlx5_core_warn(dev, "Sensor name[%d]: %s\n", i + bit_set_offset, sensor_name);
-> +	}
-> +}
-
-nit:
-
-If you have to respin for some other reason, please consider limiting lines
-to 80 columns wide or less here and elsewhere in this patch where it
-doesn't reduce readability (subjective I know).
-
-e.g.:
-
-static void print_sensor_names_in_bit_set(struct mlx5_core_dev *dev,
-                                          struct mlx5_hwmon *hwmon,
-                                          u64 bit_set, int bit_set_offset)
-{
-        unsigned long *bit_set_ptr = (unsigned long *)&bit_set;
-        int num_bits = sizeof(bit_set) * BITS_PER_BYTE;
-        int i;
-
-        for_each_set_bit(i, bit_set_ptr, num_bits) {
-                const char *sensor_name;
-
-                sensor_name = hwmon_get_sensor_name(hwmon, i + bit_set_offset);
-
-                mlx5_core_warn(dev, "Sensor name[%d]: %s\n",
-                               i + bit_set_offset, sensor_name);
-        }
-}
-
-...
+#syz test
