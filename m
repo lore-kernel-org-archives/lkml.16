@@ -1,145 +1,126 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691E11A841A;
-	Sat, 15 Feb 2025 00:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6445291E
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739577982; cv=none; b=jzLXAq8S3nNTVT2Qh5Pas7TwJoPcuWx3Bg57PZCy5gFApZL1aRM2OHQm23PwPi48YuVzg/+h9l9dx3ec5SoYeBZgEpHky8RMOHuWaCFT8oghulyFHxcJuqVWSNvmb6zCVyBycsmSYCBvJ+mewcX9FjL9hat1FnXDvUYiqgIY/w4=
+	t=1739577999; cv=none; b=jO4u0Gy1s5X6yLjDT5C+DaH1XPUh9t2bWX8pJ0Ay3NxwTbwEJlJKskLHws72we2N5CSC4gexQV+I+FxGSS+TtVteFvDn1hYPBkjdHVdm3AV+0+NKkTjsn5LVE1bO0+aMcWvphKyzF14Kj5XkjNMXNvMMKUMXQYKQTj8Q8nWWGpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739577982; c=relaxed/simple;
-	bh=YGx9PSaUXVNDPo2cH+rNjw2DIvjtU+dlXI+O382Ewmw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MmmAYc78a2N9c1bmMb36uxWHayb/R+3yavEJVfWTD913uBRyNE/5upj2IzYCSJ2JEybkJ0B5ZDKAvjFzUlVCZADe9j9KIS7ILnfqZEmS0y8nWxws1B2DLuFkKI3EFvkos4K0cvoRwW0q6Gas0QrODtZqDpzephlI6ueI2XAV/ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwKPX+d9; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739577999; c=relaxed/simple;
+	bh=0w/O7XAcHnizaNLgdZdoSUadEkfJ3M787zxOIN8dWYo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WEboHJjpgJR9ZgR3TwA0kacqf/FRVtZ6jvKhc7rUcymtvB5qSILRIayy9eOkLvOoiFHgYF3DD/sDCeT5YXnSUjWN7xZV0rKwPpvngKVLJVZQXmLFdK3TTJpcAL6R0omkvkZqVniAPqWM8VT0ziJC1hI1+XHTvd6nrEJV9VtuTOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3KFErU9N; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwKPX+d9"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220e83d65e5so35561795ad.1;
-        Fri, 14 Feb 2025 16:06:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3KFErU9N"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc0bc05bb5so5478312a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:06:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739577979; x=1740182779; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PZ84+yPdbVuhz7ak3Hw1Cb8Gf7TrNSS/4QEXDz4j3UI=;
-        b=mwKPX+d9ZxjXnlHOLDVHaUdrpL5ZjIXHrs7IT1VUHgJDXtoJRF7DafI1fkHKOLP+cl
-         n9F4EThzZdOPolEMSXvsvGdGDPXhKtM57sPcQjIvD0CbUMzXZhqi2pnZse/S7z6QeDCo
-         C67RBS49QV4Y4y1LlWiOiPn1MrXfVyrFQKD1ia9Js6e0oobFXsiPqg3UaNbiG5ToObxM
-         Y+TWTsqiZqTwYOKUzwM67dhva2NC2XQil8/9+f6NHk7FvdJc00KMJWYcoloTK8YWNof+
-         /ejKsgyIfRADfIVLi1MXG7HdHA3S+Cw/pBqqfUNwsclm7UqsH9W0GDibG4zfFS63H7kG
-         7UfA==
+        d=google.com; s=20230601; t=1739577997; x=1740182797; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dz+g4lvshIwKtoF1GJvNgyo0KsDnNgM7fWbFaBaiOh4=;
+        b=3KFErU9NUwFUP7h1KzUBneCbkTxGh60Rpe5woG43epw3FhWj7EjzQLgzNifcBmGBJ5
+         Q/BM7UAKDMoiomWW0k4Ko9H25tNid7HtRn6YMOToTb0XF7ReAKVPjCxZUb2lhtCJs/NB
+         RqvwTmP4t9ADYjyNCzy9hqUe4LRNcIiJvHrVqd+IigjoaGHXoEn+ZnvnbS60VVnudL3i
+         YeUQKSHLM4mq2uYB+T2ag8sNeJpNMLJpeoyYI4kYIEaZypHvghR6RM3fSRHeJdkbdvVN
+         b4dTA+EAqAhku/H82+QLdvh6u6OB01kNpKXZtywMLzwlFscUgdouXSZgivbSt8kATvZe
+         HQhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739577979; x=1740182779;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PZ84+yPdbVuhz7ak3Hw1Cb8Gf7TrNSS/4QEXDz4j3UI=;
-        b=k2MV127Wc2yv26Qof4TPaXPx0TaAiUIpOyXITOHa+2P6mI4mR6kO5AzOwvjVZ9XttE
-         zjoss4QJuQSo8+yZO+/XDymrYxLNd17negLfc2a+dHzDlu9JxW1rZDTOODMulp5734N3
-         RpUUshyPUw+TMb8+vT5kpihQD9v39UifGS9NImcz999l+4CNhc8g8NNI+6fXYgvYmt4Q
-         hgYTfqpSPyg5+voDCJwdp5G64Cy6UUkX4nV0CzIqYx41G9J35/i+caAgAz8x+iuV1PZo
-         HyF/lOCh/yjQctXZkOfTVQQ1B+H/LPR79HmJRq7ywVMVfb0+6+1QM1T/OlhXup2zIvf4
-         ijEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcJVCP8A9RasBdQkYBJwqLweRolLhBvd/Uq1h6ad0ppGmf4QBch/vrGcALmxQKTBnJfeXrXes7KEslICs=@vger.kernel.org, AJvYcCVl8b6ua6gU5/7/fww/CPByn7ox5AOGVX0kVVjYCjfEmfhKcisdsPqO7KLneNPWFf2IqguF8iKDjaM7QY/2@vger.kernel.org, AJvYcCVlM2uRejOZ9yzaxK7Dfvonqcgig3N9XS2OKpwwV+FSR08Kf7lE2gBQ1yPKJV8zvfbRh3lRp8GjnuK2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLPr/SqA1Ntb/IgcSEpxgWV7NBYJOD2tu8CyPDquW3vDhnNape
-	ClA7SFEqCLySUJfRXzXW+2gn9EkzJ9Is2e7R0Ke7+z9bGh5pm1XS
-X-Gm-Gg: ASbGncv3KwJczCYnJT5HTYHbU5+XHawAPMgInC7rf7WB4v3ASOLoR4cRbNsDKFfqOji
-	3qbR42Di96kPaeFVsfKuO8lAH02Dy0c2n6TS2wJ7oOdfgsPC87Vjbf6Tdlx9EowU5UZF8eMB0in
-	5BbB63cdtHVmOGTvihMk4MGUCUlvxUjJNF+adrFtRIECPmV8LLQFqp59nty0aAPTt8n/llMQtyF
-	1q9bkEh0t7RpYBQJY3UmcJnhhUGPoDMe2XnyoaWywcvpDF2rR/nWbv1gR4X0Z/MhZRUPnS1jQCC
-	pATruljVCZx3oQYqGaDu9avYtWrAiZQpRbPGeCS7As/QHBtfGAm/WMMXvUyyn1Ky3iOiZq41aoh
-	fwCM4bXDLLA==
-X-Google-Smtp-Source: AGHT+IG6Hm9pNI6VvtCGvN8M2e0uv4buL4nr2DpT31d3QO2bC+lTvrwW2S2SN9aTyfVa/+xOt06boA==
-X-Received: by 2002:a17:902:d50d:b0:220:f91a:4650 with SMTP id d9443c01a7336-2210402bfb5mr20473085ad.19.1739577979635;
-        Fri, 14 Feb 2025 16:06:19 -0800 (PST)
-Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220f26ea127sm15071155ad.96.2025.02.14.16.06.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 16:06:19 -0800 (PST)
-From: James Calligeros <jcalligeros99@gmail.com>
-Date: Sat, 15 Feb 2025 10:03:00 +1000
-Subject: [PATCH 27/27] ASoC: tas2770: Set the SDOUT polarity correctly
+        d=1e100.net; s=20230601; t=1739577997; x=1740182797;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dz+g4lvshIwKtoF1GJvNgyo0KsDnNgM7fWbFaBaiOh4=;
+        b=oalgYyAlE0l4p3BqrOzIQtNcHzFFkR86kXmLv1PzTFZWW+JFGJdn9lIR6CiQMLy59v
+         IA6hdQDYYrDuxi7Y4iD9LOEQJat4V+QS5DSRXT+j58SH17/m7yp+GjKh51Q75UURVM2s
+         MlCus5J6RtGsn+LinceBXsG+O6DvU0+LWXWkuF67rx/NbGv0bxC7wpYSD7qKvHLSDMED
+         oXceUn7HkNL4178RYT6gk8G/4YVxTyFeVoyfvT/KSYq24y3/xpSSOW1IiccQB2brcgFT
+         4tih13xerVOyNyfdWHM2rtAv3jjE0/yb8tcqWRT8uH1kCH4KAkiflJJUpTC/a7ILStbH
+         qEuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZwF/EX+8PenIYQGWkAx8rng+G/mX42fGjWcNqO8SjwnvQs1wkknPOJrJJ9E3AYVY0YYcZ5DYWY0sPdLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBLPLhzU8wOJ+DwLB+5oDAeTGk5ktEIT1UaBknB2zk0IAte32T
+	yjAfhBGpn5nuHPvh9XqV9fHxnW8nA1w3UJyiX6GMyTI8LL4qN8ELcCdirzzgfcSRqfz8mrjaW4p
+	GYA==
+X-Google-Smtp-Source: AGHT+IFAaagnVh/yITNphVgAXZIbFbGAItl4BwYxNoiKtsFJ0MqhK/MMO9jwFhGOc3GUOdsRMoFtefDlolA=
+X-Received: from pfbc6.prod.google.com ([2002:a05:6a00:ad06:b0:72b:ccb:c99b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4f95:b0:730:949d:2d36
+ with SMTP id d2e1a72fcca58-732618c21femr2181317b3a.18.1739577997093; Fri, 14
+ Feb 2025 16:06:37 -0800 (PST)
+Date: Fri, 14 Feb 2025 16:06:35 -0800
+In-Reply-To: <20250214234058.2074135-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250215-apple-codec-changes-v1-27-723569b21b19@gmail.com>
-References: <20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com>
-In-Reply-To: <20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
- Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- asahi@lists.linux.dev, James Calligeros <jcalligeros99@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1752;
- i=jcalligeros99@gmail.com; h=from:subject:message-id;
- bh=t7b1dvsnhFRkTomOlVk7jphWt6a+ItGg7B4nOBgPrGs=;
- b=owGbwMvMwCV2xczoYuD3ygTG02pJDOnrb+54zPRzi9h80w331v155OGz4v3mBdahNcVm3Z9Vw
- nbL5W/Y31HKwiDGxSArpsiyoUnIY7YR281+kcq9MHNYmUCGMHBxCsBEdhgx/NPaa8J6NsC2Y9aK
- RV63t9iuXGixfo+cxJW+Sb9K/liqnN/GyHDBZFPP34qt1uL7bsUVZEorrp7E3SrLs+apoRZvc8G
- Kn4wA
-X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
- fpr=B08212489B3206D98F1479BDD43632D151F77960
+Mime-Version: 1.0
+References: <20250125011833.3644371-1-seanjc@google.com> <20250214234058.2074135-1-pbonzini@redhat.com>
+Message-ID: <Z6_ai1HdLWiTJ2Pf@google.com>
+Subject: Re: [PATCH] KVM: x86: Load DR6 with guest value only before entering
+ .vcpu_run() loop
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	John Stultz <jstultz@google.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Hector Martin <marcan@marcan.st>
+On Fri, Feb 14, 2025, Paolo Bonzini wrote:
+> Queued, thanks.
 
-TX launch polarity needs to be the opposite of RX capture polarity, to
-generate the right bit slot alignment.
+Drat, I was too slow today.  I applied and pushed this to "kvm-x86 fixes" and
+linux-next (as of yesterday), along with a few other things, I just haven't sent
+out the "thanks" yet (got sidetracked).
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
----
- sound/soc/codecs/tas2770.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+If you want to grab those, here's a semi-impromptu pull request.  Otherwise I'll
+just drop this particular commit.
 
-diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
-index a9e65f95ec8600d905c45db4e013d3c2602fa8dc..793a0df499a631d8e4670d4a452572b2dae0c477 100644
---- a/sound/soc/codecs/tas2770.c
-+++ b/sound/soc/codecs/tas2770.c
-@@ -358,7 +358,7 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	struct snd_soc_component *component = dai->component;
- 	struct tas2770_priv *tas2770 =
- 			snd_soc_component_get_drvdata(component);
--	u8 tdm_rx_start_slot = 0, invert_fpol = 0, fpol_preinv = 0, asi_cfg_1 = 0;
-+	u8 tdm_rx_start_slot = 0, invert_fpol = 0, fpol_preinv = 0, asi_cfg_1 = 0, asi_cfg_4 = 0;
- 	int ret;
- 
- 	switch (fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) {
-@@ -375,6 +375,7 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		fallthrough;
- 	case SND_SOC_DAIFMT_NB_NF:
- 		asi_cfg_1 |= TAS2770_TDM_CFG_REG1_RX_RSING;
-+		asi_cfg_4 |= TAS2770_TDM_CFG_REG4_TX_EDGE_FALLING;
- 		break;
- 	case SND_SOC_DAIFMT_IB_IF:
- 		invert_fpol = 1;
-@@ -393,6 +394,12 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG4,
-+					    TAS2770_TDM_CFG_REG4_TX_EDGE_FALLING,
-+					    asi_cfg_4);
-+	if (ret < 0)
-+		return ret;
-+
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
- 		tdm_rx_start_slot = 1;
+--
 
--- 
-2.48.1
+The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
+  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
+
+are available in the Git repository at:
+
+  https://github.com/kvm-x86/linux.git tags/kvm-x86-fixes-6.14-rcN
+
+for you to fetch changes up to c2fee09fc167c74a64adb08656cb993ea475197e:
+
+  KVM: x86: Load DR6 with guest value only before entering .vcpu_run() loop (2025-02-12 08:59:38 -0800)
+
+----------------------------------------------------------------
+KVM fixes for 6.14 part 1
+
+ - Reject Hyper-V SEND_IPI hypercalls if the local APIC isn't being emulated
+   by KVM to fix a NULL pointer dereference.
+
+ - Enter guest mode (L2) from KVM's perspective before initializing the vCPU's
+   nested NPT MMU so that the MMU is properly tagged for L2, not L1.
+
+ - Load the guest's DR6 outside of the innermost .vcpu_run() loop, as the
+   guest's value may be stale if a VM-Exit is handled in the fastpath.
+
+----------------------------------------------------------------
+Sean Christopherson (6):
+      KVM: x86: Reject Hyper-V's SEND_IPI hypercalls if local APIC isn't in-kernel
+      KVM: selftests: Mark test_hv_cpuid_e2big() static in Hyper-V CPUID test
+      KVM: selftests: Manage CPUID array in Hyper-V CPUID test's core helper
+      KVM: selftests: Add CPUID tests for Hyper-V features that need in-kernel APIC
+      KVM: nSVM: Enter guest mode before initializing nested NPT MMU
+      KVM: x86: Load DR6 with guest value only before entering .vcpu_run() loop
+
+ arch/x86/include/asm/kvm-x86-ops.h             |  1 +
+ arch/x86/include/asm/kvm_host.h                |  1 +
+ arch/x86/kvm/hyperv.c                          |  6 +++++-
+ arch/x86/kvm/mmu/mmu.c                         |  2 +-
+ arch/x86/kvm/svm/nested.c                      | 10 +++++-----
+ arch/x86/kvm/svm/svm.c                         | 13 ++++++-------
+ arch/x86/kvm/vmx/main.c                        |  1 +
+ arch/x86/kvm/vmx/vmx.c                         | 10 ++++++----
+ arch/x86/kvm/vmx/x86_ops.h                     |  1 +
+ arch/x86/kvm/x86.c                             |  3 +++
+ tools/testing/selftests/kvm/x86/hyperv_cpuid.c | 47 ++++++++++++++++++++++++++++++++---------------
+ 11 files changed, 62 insertions(+), 33 deletions(-)
