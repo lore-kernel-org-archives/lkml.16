@@ -1,98 +1,158 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1024F1885B8
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA1319ABDE;
+	Sat, 15 Feb 2025 00:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739580903; cv=none; b=Q2ZckEahV3sVrXqJ8JBlqWlT1Weoru78gfCysWiYo+dMEXF7UDLvCfQOAJTSMJA6OXcmE0UDxL/lEFWY1PMrg2HrTFaq0Tldy8tSm4YrBbl931SdlGcOzuB9lvDHOWwIg9w9NUSOE5qSpwjE2eAg7SgKmJYGulvpE1ZTrhi7y6U=
+	t=1739580903; cv=none; b=HS1hvDBlyxpyczwa379VYo4qm5OKMHNQsfRI6sWmDIF977P3HDJXIKGXz2+DCtC1+NB7V/YyzqhbdUMbKIzIl2mh8Ujx0/ZozYgH5po8JIHPzCBmGKa0t2JeEmRUypsaAUA2vlghqsZNP3X+z+0U0fPhfkXvySHMwMAh3fSTvfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739580903; c=relaxed/simple;
-	bh=EOahgPz6fyQhSLBWqHv6GC8sZf/XOeLdOvMNVwUIpnY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Qk9OGGyvjK2lmuZkpjZtlmMhhO1Sd2rPtvYHlSmcTU/tBOpc2Rlf3Z3LeIuADs1Ht1E9V/VX0oGn2+n/Ihdct4IwjQocdKrw/d9EomtF0GRpoaiA+TT16l1D89+hhB/dNBzCTX/wF4w/QHHJiQnqAHo7VWvSxDGMLgeBE5UIFsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wtod9iN6; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	bh=gJBb3JyO4xb+ZhP18SRMcjTy36ZQoLUIZdnq9lF0008=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BZQbQpaRthvDsjN3XnVTES+JNak4miwWdoNFbdhWdhrXM+bvo7aWep66RLB3lFuU74Hem7Bc9KTm47wz15lmaxbzez4feck3o0DU7XTVuBqOZOCLbv2ckGRm6Gt2bd2A27sedRYCBN/JZbKm9XlOLMDYrYTNCq8tk6uDBCXt9Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhoKX1i7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wtod9iN6"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220ff7d7b67so15759215ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:55:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739580900; x=1740185700; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTgQsorQjh14TutxhLLCxQmV6p+nBtXX/1kn8rG1LNI=;
-        b=Wtod9iN6Ol6G1C2+n1COE1+3IjxIyqlCgOZuiNA91jEzp5cPW2wYUmAPhKrT4v0t7I
-         j+VEZPjvV1cXMDEaNcKxBv36Ai8pgKLYQ98JOjaIQtIyWbpCMTTaxR6Mi21stYMRRssY
-         YBXBfuxQDRUnKzED+ijt7k527hVQAsCZl52W4OSePiplLvj/FPhNgVMbizhRCEouRb+6
-         yWckVuoUSLT+gRApobHMwWEhfGR+y2lBlXk2JP3eweaJJ1YQlBPhZNDgm2ddryVupYmy
-         jhN9G6DQikxakNfMo/GMoMXZGQoYgg5bwo4Fz4ZRhCUXPk3/k4eWuaHS2cx/wIa8VV5e
-         uBDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739580900; x=1740185700;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTgQsorQjh14TutxhLLCxQmV6p+nBtXX/1kn8rG1LNI=;
-        b=heyCP4sjL696zCPfdLNuohvQnY1gQQhFT8/jXJnCj//eru2vvuCVr5wBhN0wIJ/0IK
-         qA9atDi7/HxDRzISDb233dPHqFfmsEoz5QB2awYWHVQ6USD04FemnXZy6J1oTEWjcHhc
-         JQ+oSftpUXzclq/F7y8xgLDp0lT9bO+QT7qYXsfTaTXTfHGuKe2luEquKMIqKY9wxOt6
-         FP34KfkWbLxsmoZGVibbR4kTJ6YYNWXcIXewBCbtS4PzQG3DPGA0qgppybzPLAPWsYUQ
-         tR915K+wyA/1KiFLzxWcmlfQQk7nEBrupF5NQiXJKklL4QHX1o501m+GgF7EvJL4aBER
-         ZwrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtqnaUJon71zAgt9W4mj4bpzHRVYJdQauGZcf2X8OTa8NakUe4w4uJJQ9Z+8CYZEKdr5f908XY8RekhoA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwZqRkPDZBeHrwgg6vvnkUA6A9rgYs5UxtWPvWq9kZj1fn1aao
-	Kzvz2AGummJJzAPgyhNNCVAz7vJpHxVdXOlslGqJiDfUX0qU7+RZmzRWSKfwvBjWO5DRe/SaMgJ
-	QZw==
-X-Google-Smtp-Source: AGHT+IFnNgJr4fAST/anqb/OhGfaJPL4qFzSio+iAadkBSAqDbENgFOFYfhtq5SRt2eIpuzxLd/Yc+sQw1s=
-X-Received: from plblg3.prod.google.com ([2002:a17:902:fb83:b0:21c:5115:8766])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f787:b0:216:410d:4c53
- with SMTP id d9443c01a7336-221040b1916mr20971295ad.41.1739580900440; Fri, 14
- Feb 2025 16:55:00 -0800 (PST)
-Date: Fri, 14 Feb 2025 16:50:18 -0800
-In-Reply-To: <20241211013302.1347853-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhoKX1i7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57B8AC4CEE9;
+	Sat, 15 Feb 2025 00:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739580903;
+	bh=gJBb3JyO4xb+ZhP18SRMcjTy36ZQoLUIZdnq9lF0008=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GhoKX1i7AugFrX1chA1NAottTknWKSNboE3e9MCu0TV4jrk+qzbGEzRLr00R3hb60
+	 hM++KpZpvO207VlYIKDnVp+VHwbsu9NZhJD+FOwZVRqQ29Xw50ywSjoqehTvecQp9c
+	 eutnSu+vfHvHnmaQN+pc0bWHuPbe+rrhoG6BoE3V5NlkKaV8fsLK+6eqVH6HrHyf0k
+	 NTr4JfNm5aT0EzYLQ/s7pJ6DypYmkAw+h9CAbR/sb8onvQNJfn3B1wm8vyuByM205u
+	 LqzAOXfjm07S1bbYA734/B/taeGu2BPDzxKuNVgs8rUWIpqFzdQGaJBUT6Sslvlflo
+	 TGaVCCM0hdcMA==
+From: Mario Limonciello <superm1@kernel.org>
+To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>
+Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH 5/5] cpufreq/amd-pstate-ut: Add a unit test for raw EPP
+Date: Fri, 14 Feb 2025 18:54:48 -0600
+Message-ID: <20250215005448.1216646-6-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250215005448.1216646-1-superm1@kernel.org>
+References: <20250215005448.1216646-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241211013302.1347853-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <173958033580.1190199.12371307462069862956.b4-ty@google.com>
-Subject: Re: [PATCH 0/5] KVM: x86: Address xstate_required_size() perf regression
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Dec 2024 17:32:57 -0800, Sean Christopherson wrote:
-> Fix a hilarious/revolting performance regression (relative to older CPU
-> generations) in xstate_required_size() that pops up due to CPUID _in the
-> host_ taking 3x-4x longer on Emerald Rapids than Skylake.
-> 
-> The issue rears its head on nested virtualization transitions, as KVM
-> (unnecessarily) performs runtime CPUID updates, including XSAVE sizes,
-> multiple times per transition.  And calculating XSAVE sizes, especially
-> for vCPUs with a decent number of supported XSAVE features and compacted
-> format support, can add up to thousands of cycles.
-> 
-> [...]
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Applied 2-5 to kvm-x86 misc, with a changelog that doesn't incorrectly state
-that CPUID is a mandatory intercept on AMD.
+Ensure that all supported raw EPP values work properly.
 
-[1/5] KVM: x86: Cache CPUID.0xD XSTATE offsets+sizes during module init
-      (no commit info)
-[2/5] KVM: x86: Use for-loop to iterate over XSTATE size entries
-      https://github.com/kvm-x86/linux/commit/aa93b6f96f64
-[3/5] KVM: x86: Apply TSX_CTRL_CPUID_CLEAR if and only if the vCPU has RTM or HLE
-      https://github.com/kvm-x86/linux/commit/7e9f735e7ac4
-[4/5] KVM: x86: Query X86_FEATURE_MWAIT iff userspace owns the CPUID feature bit
-      https://github.com/kvm-x86/linux/commit/a487f6797c88
-[5/5] KVM: x86: Defer runtime updates of dynamic CPUID bits until CPUID emulation
-      https://github.com/kvm-x86/linux/commit/93da6af3ae56
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/cpufreq/amd-pstate-ut.c | 58 +++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
---
-https://github.com/kvm-x86/linux/tree/next
+diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
+index 067e9e325102e..b5bf0c37d8037 100644
+--- a/drivers/cpufreq/amd-pstate-ut.c
++++ b/drivers/cpufreq/amd-pstate-ut.c
+@@ -25,6 +25,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
++#include <linux/mm.h>
+ #include <linux/fs.h>
+ #include <linux/cleanup.h>
+ 
+@@ -32,6 +33,7 @@
+ 
+ #include "amd-pstate.h"
+ 
++DEFINE_FREE(free_page, void *, if (_T) free_page((unsigned long)_T))
+ 
+ struct amd_pstate_ut_struct {
+ 	const char *name;
+@@ -45,6 +47,7 @@ static int amd_pstate_ut_acpi_cpc_valid(u32 index);
+ static int amd_pstate_ut_check_enabled(u32 index);
+ static int amd_pstate_ut_check_perf(u32 index);
+ static int amd_pstate_ut_check_freq(u32 index);
++static int amd_pstate_ut_epp(u32 index);
+ static int amd_pstate_ut_check_driver(u32 index);
+ 
+ static struct amd_pstate_ut_struct amd_pstate_ut_cases[] = {
+@@ -52,6 +55,7 @@ static struct amd_pstate_ut_struct amd_pstate_ut_cases[] = {
+ 	{"amd_pstate_ut_check_enabled",    amd_pstate_ut_check_enabled    },
+ 	{"amd_pstate_ut_check_perf",       amd_pstate_ut_check_perf       },
+ 	{"amd_pstate_ut_check_freq",       amd_pstate_ut_check_freq       },
++	{"amd_pstate_ut_epp",              amd_pstate_ut_epp              },
+ 	{"amd_pstate_ut_check_driver",	   amd_pstate_ut_check_driver     }
+ };
+ 
+@@ -238,6 +242,60 @@ static int amd_pstate_set_mode(enum amd_pstate_mode mode)
+ 	return amd_pstate_update_status(mode_str, strlen(mode_str));
+ }
+ 
++static int amd_pstate_ut_epp(u32 index)
++{
++	struct cpufreq_policy *policy __free(put_cpufreq_policy) = NULL;
++	void *buf __free(free_page) = NULL;
++	struct amd_cpudata *cpudata;
++	int ret, cpu = 0;
++	u16 epp;
++
++	policy = cpufreq_cpu_get(cpu);
++	if (!policy)
++		return -ENODEV;
++
++	cpudata = policy->driver_data;
++
++	/* disable dynamic EPP before running test */
++	if (cpudata->dynamic_epp) {
++		pr_debug("Dynamic EPP is enabled, disabling it\n");
++		amd_pstate_clear_dynamic_epp(policy);
++	}
++
++	buf = (void *)__get_free_page(GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	ret = amd_pstate_set_mode(AMD_PSTATE_ACTIVE);
++	if (ret)
++		return ret;
++
++	for (epp = 0; epp <= U8_MAX; epp++) {
++		u8 val;
++
++		/* write all EPP values */
++		memset(buf, 0, sizeof(buf));
++		snprintf(buf, PAGE_SIZE, "%d", epp);
++		ret = store_energy_performance_preference(policy, buf, sizeof(buf));
++		if (ret < 0)
++			return ret;
++
++		/* check if the EPP value reads back correctly for raw numbers */
++		memset(buf, 0, sizeof(buf));
++		ret = show_energy_performance_preference(policy, buf);
++		if (ret < 0)
++			return ret;
++		strreplace(buf, '\n', '\0');
++		ret = kstrtou8(buf, 0, &val);
++		if (!ret && epp != val) {
++			pr_err("Raw EPP value mismatch: %d != %d\n", epp, val);
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
+ static int amd_pstate_ut_check_driver(u32 index)
+ {
+ 	enum amd_pstate_mode mode1, mode2 = AMD_PSTATE_DISABLE;
+-- 
+2.43.0
+
