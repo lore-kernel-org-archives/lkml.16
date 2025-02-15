@@ -1,72 +1,67 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB78B672;
-	Sat, 15 Feb 2025 15:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6A3B672;
+	Sat, 15 Feb 2025 15:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739634874; cv=none; b=mQOxo8ayAPRz7z2ZnpAQSQTagIaMyX+AWqiCFgK/tRoQG7yd0C5zfZA5aQN2TK39FkYa2Q7rBYhpkKfnY0/zg9JhSQAneVzZaavwRTOzjPfjYaC0j69ehQZbXmrxcpkD77b+TpkGzkStguN6U/F8MHn2ZCV/XYTR2zKm9QmJcQo=
+	t=1739635071; cv=none; b=pIFEdFi1xBXulJ2Xw+ARr//6RWMbLDJQqmLommNffpoXxqLNHR5+pZgkWfUjdXF80LybgJMBHIbZU+O+3n2nl7Cf0TD6y8cBGofjIsTqhZyP9n6NxD3aJC0Lk/uh2F23cH0Gzp9UjRrutqmsJvb7sXbet9fupL7U4XHF5ejNl3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739634874; c=relaxed/simple;
-	bh=26GYFrHbr7JggtvPQTzzFsKlQey/lVDmwjCdKwDC8b4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VrW2FA7oibmXHltGLLM7FEJi5GZZWHwFIXs7h26TpKC/p+OdRDNsTqDomNTQNBbi91BiHNXGxYn4/QKZSbcTnDm7807bG/FVNRc6+PeZ55wrlu5xg8TdfzttGmEMkFcl4PSV9u/sid4sezydr79nX7tdm+pvjakFCKQ8ITMo2ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlP7JuCb; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739635071; c=relaxed/simple;
+	bh=4cxnaIRCSk0B4fuAfPyf8j0yr6SHL5W0ftPhLQJviEA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oBL1I5Bxb934tRMOkvPmikF+FXkecEycj6/zzCS3PoLKK4l/qrdeRoYsnX3ws+1ZzYi1ZQzohBzwqAmKD77+YDA+SigGYWBhdgtyJq21iZoP/frzx+8geCOzEGVy+SWLdYKM3pXvYgdPS+ydI1eVAH1OUW2PBjnT0WNJjWwh8x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sl+ZFgve; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlP7JuCb"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220bff984a0so53573855ad.3;
-        Sat, 15 Feb 2025 07:54:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739634873; x=1740239673; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5qpP+HFn0u8S2m2Ngj2udrNOWfIGZJrWyc92xDPpz1k=;
-        b=MlP7JuCbZO9kwAb+20yxbXjovzH6YWsxpp4crYC7f/qmIhq3/k0CiE/1cQtQx04Q8u
-         rtLPmxWuWOWF3XVALfOtA7S7Baj2ENbAcjxOLPWMbZ75Eol+PuB3XFS4aWhYcjtkGhiE
-         gkFIKkhN++cqkkq4lS9KJpxkXjkhDRg8lAvDoc7CWXajl/sVzNNff/Y74cucihAgn9iS
-         EdXrVT8SDfzazF+x3osdJ0S9AFm6hbZxJL2SBbOqZN5wNHIy4fbhqv/PylarSmmrrk6T
-         7Bmp/FDW6CSTmgw32C2qKePR1kbFyTHMpsGQb0eso+dvGA+TQe26u0y9p7P5URmrwPLF
-         dgug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739634873; x=1740239673;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5qpP+HFn0u8S2m2Ngj2udrNOWfIGZJrWyc92xDPpz1k=;
-        b=Bbqbk76G4dWMdTNroWtfQJ7N6D1Lh6cuT425SFwF61Tx9e3YyE+2pP5O9Y72mD2L5z
-         9rqTm7980lH6ATnk5QOZsAm0DADok2qUguRpxKEgyvAcXAEwSJo1x3+30k4PAR5saWJ0
-         /vg5WOuUo8fjDLYZPLLCFKEYXPlGSaQXgRE6c2d1QMO3MKATC5vYJPc7d9XJIvMSyGI+
-         OFdIYMYYS6k8G/Gbt+l3ktvMbcDx6Rs5SQEbrAgoXPE5ogZDCV6UOGtqtIvDJQIx5N9R
-         uP1U6pNLfFiuiA5c2Rft2/3fJwIEQqEmrw20lvS1zeWmUFh2o0r9KEc2KO5OfNOwixY+
-         w6IA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqz4bWppk3L1cfnqSM/DSDHks9SBcRCO0V9+i7PW3ffQacGQn0nAj7YEh4u5eIsZn/59EvL7zv+eY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEhJlcFuaNx5V6VlUKqSgqI0P4M6jh7Z00OciP2M4eoWq/UG/r
-	E7iJ0z2otuXE7HQkuKPes9jtCcORQ6wC7ysEnY+XV74/rOpt3YCc
-X-Gm-Gg: ASbGncvc0olO0In0uedDT2Slx/qRi+YzHsbTFn5BhgKBYIfqL2sYPAgWGQTVeCs7YjS
-	0rjiIf7NEVhYD41KVltdQX1mISHeHPuKwaTxhuyAOIl1eONmBu6PVdS+JGC/YQmYLtd2wawFvnz
-	Gi9YhXuKMMM2WY+vHPwRXTe1KuSvnWTwv62yTLg5NWSpQvbPk30j6iVLby6oktqFYB3doLuZRGc
-	mGT9vEU165e4vyENETS5Gmwts9J7o4Qa0akIImgcERUwtP1/qGUSyZzpx9LTafVIz6gfvofEBU3
-	FGBlnJ2TwQQuL/xAzG1X
-X-Google-Smtp-Source: AGHT+IFAPKdfxucRBcn45GGdfBU8PyxpnyKhZaNIMTaIZpbuVMsg2IsHifoUa5smmNzE8SEk/2/gng==
-X-Received: by 2002:a17:903:2ac8:b0:21f:3e2d:7d41 with SMTP id d9443c01a7336-22103efec37mr40681135ad.11.1739634872547;
-        Sat, 15 Feb 2025 07:54:32 -0800 (PST)
-Received: from eleanor-wkdl.. ([140.116.96.205])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d53492d0sm45286395ad.35.2025.02.15.07.54.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 07:54:32 -0800 (PST)
-From: Yu-Chun Lin <eleanor15x@gmail.com>
-To: akpm@linux-foundation.org,
-	visitorckw@gmail.com,
-	corbet@lwn.net
-Cc: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH] Documentation/core-api: min_heap: update for variable types change
-Date: Sat, 15 Feb 2025 23:54:21 +0800
-Message-ID: <20250215155421.2010336-1-eleanor15x@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sl+ZFgve"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739635070; x=1771171070;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4cxnaIRCSk0B4fuAfPyf8j0yr6SHL5W0ftPhLQJviEA=;
+  b=Sl+ZFgvefFggzCDZYC4B2JuxUwqVIZe5wzhNWcDjSz22FQDfs9STlx1f
+   a72ts5sXxrAYEqjdLhCnS/olkD1fg//eNVlolLZ2y1cwK8EcpHZPpb4XR
+   SZ23hUDZyjz+7UtaOCU9pB7ML/Zp50fNYYbkQwQ4drXSeF9bTbeTHJqOD
+   kUvkOheKDwyUHtnaVIDhdnT4sQKyo70x2XU7bwxcY8svK0cmQ0qK8z5bn
+   gAL+GnMwtuKzZ1r67jYcKfDVMENlK55DMPe+fWXjTCo2xC4VL70/osRLv
+   /gKV2esDMB/zb4LwkuZTFATHBZ5CmFqjUk2nlqQkxdvYh3jgT/Vz5fY6u
+   w==;
+X-CSE-ConnectionGUID: pYOMkMHsQgKg/Y0yiA02/Q==
+X-CSE-MsgGUID: 5biMeDMfTV2Ni50lffDAQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11346"; a="40509933"
+X-IronPort-AV: E=Sophos;i="6.13,289,1732608000"; 
+   d="scan'208";a="40509933"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2025 07:57:49 -0800
+X-CSE-ConnectionGUID: lM3jTKIaRtOzDSJWrdCk6A==
+X-CSE-MsgGUID: V5ucWNWxRk2CMrZhMptEXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,289,1732608000"; 
+   d="scan'208";a="113701902"
+Received: from test2-linux-lab.an.altera.com ([10.244.157.115])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2025 07:57:47 -0800
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dinguyen@kernel.org,
+	joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matthew.gerlach@altera.com,
+	peter.colberg@altera.com,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v7 0/7] Add PCIe Root Port support for Agilex family of chips
+Date: Sat, 15 Feb 2025 09:53:52 -0600
+Message-Id: <20250215155359.321513-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,30 +70,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update the documentation to reflect the change in variable types of
-'nr' and 'size' from 'int' to 'size_t', ensuring consistency with
-commit dec6c0aac4fc ("lib min_heap: Switch to size_t").
+This patch set adds PCIe Root Port support for the Agilex family of FPGA chips.
+Version 6 refactors duplicate dts snippets into dtsi's for correctness and
+maintainability.
 
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
----
- Documentation/core-api/min_heap.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Patch 1:
+  Add new compatible strings for the three variants of the Agilex PCIe controller IP.
 
-diff --git a/Documentation/core-api/min_heap.rst b/Documentation/core-api/min_heap.rst
-index 683bc6d09f00..9f57766581df 100644
---- a/Documentation/core-api/min_heap.rst
-+++ b/Documentation/core-api/min_heap.rst
-@@ -47,8 +47,8 @@ Example:
- 
-     #define MIN_HEAP_PREALLOCATED(_type, _name, _nr)
-     struct _name {
--        int nr;         /* Number of elements in the heap */
--        int size;       /* Maximum number of elements that can be held */
-+        size_t nr;         /* Number of elements in the heap */
-+        size_t size;       /* Maximum number of elements that can be held */
-         _type *data;    /* Pointer to the heap data */
-         _type preallocated[_nr];  /* Static preallocated array */
-     }
+Patch 2:
+  Add new board compatible string for Agilex F-series devkit with PCIe Root Port.
+
+Patch 3:
+  Fix fixed-clock schema warnings in socfpga_agilex.dtsi before adding to it.
+
+Patch 4:
+  Move bus@80000000 dt node to socfpga_agilex.dtsi.
+
+Patch 5:
+  Add base dtsi for PCIe Root Port support of the Agilex family of chips.
+
+Patch 6:
+  Add dts enabling PCIe Root Port support on an Agilex F-series Development Kit.
+
+Patch 7:
+  Update Altera PCIe controller driver to support the Agilex family of chips.
+
+D M, Sharath Kumar (1):
+  PCI: altera: Add Agilex support
+
+Matthew Gerlach (6):
+  dt-bindings: PCI: altera: Add binding for Agilex
+  dt-bindings: intel: document Agilex PCIe Root Port
+  arm64: dts: agilex: Fix fixed-clock schema warnings
+  arm64: dts: agilex: move bus@80000000 to socfpga_agilex.dtsi
+  arm64: dts: agilex: add dtsi for PCIe Root Port
+  arm64: dts: agilex: add dts enabling PCIe Root Port
+
+ .../bindings/arm/intel,socfpga.yaml           |   1 +
+ .../bindings/pci/altr,pcie-root-port.yaml     |  10 +
+ arch/arm64/boot/dts/intel/Makefile            |   1 +
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi |  14 +
+ .../socfpga_agilex7f_socdk_pcie_root_port.dts | 147 ++++++++++
+ .../boot/dts/intel/socfpga_agilex_n6000.dts   |  31 +--
+ .../intel/socfpga_agilex_pcie_root_port.dtsi  |  48 ++++
+ .../boot/dts/intel/socfpga_agilex_socdk.dts   |   1 +
+ .../dts/intel/socfpga_agilex_socdk_nand.dts   |   1 +
+ drivers/pci/controller/pcie-altera.c          | 253 +++++++++++++++++-
+ 10 files changed, 479 insertions(+), 28 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+
 -- 
-2.43.0
+2.34.1
 
