@@ -1,195 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943D318B484;
-	Sat, 15 Feb 2025 08:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD4A4C8E
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 08:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739607021; cv=none; b=kAP6kjMWhrH1EP9kQrvz2K6+14o/US1ihqXl8grzlVaLyO0EeJMZDu/haAEYLFyKRsKMyXoBiCZWdWg5epLg0me40G6wmNYxyXtSUmKJzLncsjv1H+9tGVA2yDRo7Y3xEP0sf18UeVE6OiwhVKfXYwo6L7Zx6AaVq3/ClWOg3dI=
+	t=1739607101; cv=none; b=AoRtnINFjf/GilYmLsVXqVZAMLZx8YjyVs8Jwsw+z31rBLa15nfCbxn3Sw85CeQkPULrZcmVgWOJiQ6INVmVdFKQ9t8Rr6+tOD0uxL+SvVtWKJwdA30tVAtc7UK0behxR2MpngNxSRBxF8hzManRScV7mChabIwdyfp4M2amhYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739607021; c=relaxed/simple;
-	bh=8Z1xP31hwmqaAUASq29l4vz+9GKnK9tTM4TAZIAgEjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PnOCA4KGn7S/rZowDqQAJcxJD6t2qvVEFpWNAUaIkO/yBnCc6feoiccvi1b/AXQ2EnWj1vVoCUaXuslBgvGg3d8DPUkbCEe0JKA71Twfe2wWIIq4lF/R6uYBWAIu2obelPEz9K0b+EaPHVMlz+pvz3AKG3FY2UpA39Z0HgE4Qyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CaQJLhRL; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739607101; c=relaxed/simple;
+	bh=MIB9YG7SMXhiZkroBYC/2fPcFC3PXBJXUnzSF+oHi2k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xg5aSnVnESfAaDv6qU68IM16mjczECVP6gM3hNJfOAgguRLy0g/ar/uc8+hq1mm7w+ba3+T+lmP4oSkpG3nGNlI3gRtxnb/KRphEGOdtX7CxIYdnH71EqdTdcWexALA4oAs74v1VQ4QWlNI7NYnbETctK4ARmeUdFROp300QQyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rvVk21LJ; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CaQJLhRL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739607019; x=1771143019;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8Z1xP31hwmqaAUASq29l4vz+9GKnK9tTM4TAZIAgEjQ=;
-  b=CaQJLhRLwBMYUbFt8GQXz+aEdq+wzHxM485Ojc6D7HUqrJgjQO+ONHHA
-   X9XBRHyBnxRfNV5Z6opbttNtO4yLdrfPusW4JaBdXNTFLnLMynzvXrcEt
-   E+L/jA+xLHuOwsF6stIfnbFJfHioJjVQ17L+bJFCDgGT4f1uRQ8hEvYKh
-   qvJ0R6FlyM7+o+EOSX+rJb8fdSDbKP8jejIt4LIU3SVW7dqfeEHSXUqlS
-   Xtr/lYfdE1PBq2hSGZPpFRwzzvLvpRL4cxSaztmEDJHYCOW62yrEvqb8d
-   doSNC4PPvbsBseRy5k0ZUYIYiAsKZ0VkaknkMbSqD2BnRZRJ76QHxVRCW
-   w==;
-X-CSE-ConnectionGUID: qdOo8fNXRNCCBjFtBu6KcA==
-X-CSE-MsgGUID: TYJoTJ73THOOO/7C9Yd0Tw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40064499"
-X-IronPort-AV: E=Sophos;i="6.13,288,1732608000"; 
-   d="scan'208";a="40064499"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2025 00:10:18 -0800
-X-CSE-ConnectionGUID: bewlr2URSS6r3bJaAzTbLA==
-X-CSE-MsgGUID: fd0/3d0CTemnZX0S3D0SMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="150825252"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 15 Feb 2025 00:10:15 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tjDFd-001AcR-0H;
-	Sat, 15 Feb 2025 08:10:13 +0000
-Date: Sat, 15 Feb 2025 16:09:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: NeilBrown <neilb@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Change inode_operations.mkdir to return struct
- dentry *
-Message-ID: <202502151519.0MA7hz8D-lkp@intel.com>
-References: <20250214052204.3105610-2-neilb@suse.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvVk21LJ"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so2859394e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:11:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739607097; x=1740211897; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CkZVKWk0Rec6ui/RFP9uHI49J1VIb9gZDRSut/d8t4c=;
+        b=rvVk21LJrr0zxC8tTtr4ylRcmckEHrewL7zRcGVMTGYLRXSyYmMo5+rbhqgdEI2VaO
+         5ndXeCizmTmFcYzC/PZJF904cW7jPkkB9UtdWxBnXu5Ul3ut/aNC1plkRtflSnCKnqLW
+         nV4Knt8Sz6dvlktRfP1kp4Wacq3/53I19bi1+qR7pWtTMZi3vFNsic+vr++NCZhCia4J
+         uZqUVU/nfvHBTPDMsGgQJIbEtGvxgVl4U9VxdF/0ES9se0nr/UjtXVknp19QzCilS6E9
+         u/B8OiI3AXJ6Xr/3d4vPdKFYBbaRegvLsq3XcZRJIow2Ih9+epGWes/ODiqXipE0LRxX
+         VoKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739607097; x=1740211897;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CkZVKWk0Rec6ui/RFP9uHI49J1VIb9gZDRSut/d8t4c=;
+        b=Ew1yLJFlkmvIsxOSJCofju5nDykfLCHGWD+03wPEqkebwoGlnFe5hUdW2hjSgurtL/
+         UxbMOxStBaHc/sMxArJYIhNaDHBcRy4GYfWLzoMFC9rjoRaQEY1Irq4OLq10X1Yr2CAp
+         a77VQyhc9A+1tdmbdjQ0vW0i0J1pw9HIVaYhlKg4yG7pewvx7vIATZIHmpgPeZeyGLSN
+         NJC4Tl2Bj2KYwlW3PVTbnXhEBFl9s9c7sKXgushITY3kvxJCNoGESZsPcm/A/i0eEoWu
+         Lkg1YNkAwsrTh5m2gI4+34cReIgyWMzhQviWtVvCnRbtc5hVcBREbr0vGDJh+or0+MWL
+         Jr/g==
+X-Forwarded-Encrypted: i=1; AJvYcCW5F/tAJj1dG2VfZNyc74KXAyhNl6oeyt3U3su9KHqtu2nqoYPmbCkLRrjx3qez4JTbP+RrUPRJEE36hYU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3dk9vJA05I0J+boxJJk5Kpn8ZbCIOTvDW1TmLZ4cMiJLKhuHL
+	MMNK4RSoTwmw56PiS9hk9RNWNbCfj/r75Wb3MfqwsntKsgf4n9p7Nk01b14W50IeqnommF39+l8
+	6YDg0Bc+ekZut3eSCgGgVKT3XWVaS2oLh8hoVSA==
+X-Gm-Gg: ASbGncskThKha7Y0kGqsBOQtPCYBfceYb9KttKrNlk1cwmK+VTcPtOuiAHPz+/gSIEO
+	YfBn9Kgxkh0ukFW9vdsqBYctGaolyOTgojcxg8AokaR9oLpWjBy+SDsDUZX8Wthxc4wLUcjzBsR
+	uviA==
+X-Google-Smtp-Source: AGHT+IFySeuBuCSbb1zkeS3POUiA8vLWZz45AnvAi+gYcVyqHWR28Ifs//asPxiy+DFqEI5PMjMjr8TyFF76K3JwH5w=
+X-Received: by 2002:a05:6512:2214:b0:545:958:180d with SMTP id
+ 2adb3069b0e04-5452fe82dc9mr652835e87.38.1739607097382; Sat, 15 Feb 2025
+ 00:11:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214052204.3105610-2-neilb@suse.de>
+References: <20250214061104.1959525-1-baolu.lu@linux.intel.com>
+ <CABQgh9FMy7oVt9+enSpJxXvkux+czMFqbsPZVgmBV+rFWWvhGA@mail.gmail.com> <20250214125600.GA3696814@ziepe.ca>
+In-Reply-To: <20250214125600.GA3696814@ziepe.ca>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Sat, 15 Feb 2025 16:11:25 +0800
+X-Gm-Features: AWEUYZmIvYjS71A50TWsWus9ODDai7SS8JRE7LLRBPYaaxOmD8THXJkZIf975hY
+Message-ID: <CABQgh9FQYe46hfjcs+o6GfLaS7OfSqrmvXUzOKd6PRK8oBF8Jw@mail.gmail.com>
+Subject: Re: [PATCH 00/12] iommu: Remove IOMMU_DEV_FEAT_SVA/_IOPF
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Kevin Tian <kevin.tian@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, 
+	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi NeilBrown,
+Hi, Jason
 
-kernel test robot noticed the following build errors:
+On Fri, 14 Feb 2025 at 20:56, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Fri, Feb 14, 2025 at 04:43:12PM +0800, Zhangfei Gao wrote:
+> > 3. qemu boot multi device,  test fails, host kernel reports
+> > [Hardware Error]
+>
+> More details? Can you bisect?
 
-[auto build test ERROR on brauner-vfs/vfs.all]
-[also build test ERROR on trondmy-nfs/linux-next driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus cifs/for-next xfs-linux/for-next linus/master v6.14-rc2 next-20250214]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+It does not relate to multi devices, one device also happens when user
+page fault triggers.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/nfs-change-mkdir-inode_operation-to-return-alternate-dentry-if-needed/20250214-141741
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250214052204.3105610-2-neilb%40suse.de
-patch subject: [PATCH 1/3] Change inode_operations.mkdir to return struct dentry *
-config: um-randconfig-001-20250215 (https://download.01.org/0day-ci/archive/20250215/202502151519.0MA7hz8D-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 910be4ff90d7d07bd4518ea03b85c0974672bf9c)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250215/202502151519.0MA7hz8D-lkp@intel.com/reproduce)
+iopf_queue_remove_device is called.
+rcu_assign_pointer(param->fault_param, NULL);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502151519.0MA7hz8D-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from fs/hostfs/hostfs_kern.c:13:
-   In file included from include/linux/pagemap.h:11:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:549:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     549 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:567:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     567 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from fs/hostfs/hostfs_kern.c:13:
-   In file included from include/linux/pagemap.h:11:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:585:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from fs/hostfs/hostfs_kern.c:13:
-   In file included from include/linux/pagemap.h:11:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:601:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     601 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:616:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     616 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:631:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     631 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:724:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     724 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:737:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     737 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:750:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     750 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:764:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     764 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:778:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     778 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:792:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     792 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> fs/hostfs/hostfs_kern.c:689:10: error: incompatible integer to pointer conversion returning 'int' from a function with result type 'struct dentry *' [-Wint-conversion]
-     689 |                 return -ENOMEM;
-         |                        ^~~~~~~
-   12 warnings and 1 error generated.
+call trace
+[  304.961312] Call trace:
+[  304.961314]  show_stack+0x20/0x38 (C)
+[  304.961319]  dump_stack_lvl+0xc0/0xd0
+[  304.961324]  dump_stack+0x18/0x28
+[  304.961327]  iopf_queue_remove_device+0xb0/0x1f0
+[  304.961331]  arm_smmu_remove_master_domain+0x204/0x250
+[  304.961336]  arm_smmu_attach_commit+0x64/0x100
+[  304.961338]  arm_smmu_attach_dev_nested+0x104/0x1a8
+[  304.961340]  __iommu_attach_device+0x2c/0x110
+[  304.961343]  __iommu_device_set_domain.isra.0+0x78/0xe0
+[  304.961345]  __iommu_group_set_domain_internal+0x78/0x160
+[  304.961347]  iommu_replace_group_handle+0x9c/0x150
+[  304.961350]  iommufd_fault_domain_replace_dev+0x88/0x120
+[  304.961353]  iommufd_device_do_replace+0x190/0x3c0
+[  304.961355]  iommufd_device_change_pt+0x270/0x688
+[  304.961357]  iommufd_device_replace+0x20/0x38
+[  304.961359]  vfio_iommufd_physical_attach_ioas+0x30/0x78
+[  304.961363]  vfio_df_ioctl_attach_pt+0xa8/0x188
+[  304.961366]  vfio_device_fops_unl_ioctl+0x310/0x990
 
 
-vim +689 fs/hostfs/hostfs_kern.c
+When page fault triggers:
 
-^1da177e4c3f41 Linus Torvalds    2005-04-16  681  
-456289e0bd14ce NeilBrown         2025-02-14  682  static struct dentry *hostfs_mkdir(struct mnt_idmap *idmap, struct inode *ino,
-549c7297717c32 Christian Brauner 2021-01-21  683  				   struct dentry *dentry, umode_t mode)
-^1da177e4c3f41 Linus Torvalds    2005-04-16  684  {
-^1da177e4c3f41 Linus Torvalds    2005-04-16  685  	char *file;
-^1da177e4c3f41 Linus Torvalds    2005-04-16  686  	int err;
-^1da177e4c3f41 Linus Torvalds    2005-04-16  687  
-c5322220eb91b9 Al Viro           2010-06-06  688  	if ((file = dentry_name(dentry)) == NULL)
-f1adc05e773830 Jeff Dike         2007-05-08 @689  		return -ENOMEM;
-^1da177e4c3f41 Linus Torvalds    2005-04-16  690  	err = do_mkdir(file, mode);
-e9193059b1b373 Al Viro           2010-06-06  691  	__putname(file);
-456289e0bd14ce NeilBrown         2025-02-14  692  	if (err)
-456289e0bd14ce NeilBrown         2025-02-14  693  		return ERR_PTR(err);
-456289e0bd14ce NeilBrown         2025-02-14  694  	else
-456289e0bd14ce NeilBrown         2025-02-14  695  		return dentry;
-^1da177e4c3f41 Linus Torvalds    2005-04-16  696  }
-^1da177e4c3f41 Linus Torvalds    2005-04-16  697  
+[ 1016.383578] ------------[ cut here ]-----------
+[ 1016.388184] WARNING: CPU: 35 PID: 717 at
+drivers/iommu/io-pgfault.c:231 iommu_report_device_fault+0x2c8/0x470
+[ 1016.398057] Modules linked in:
+[ 1016.401102] CPU: 35 UID: 0 PID: 717 Comm: irq/31-arm-smmu Not
+tainted 6.14.0-rc2-g4384d0f9bd24-dirty #19
+[ 1016.410538] Hardware name: Huawei TaiShan 200 (Model
+2280)/BC82AMDD, BIOS 2280-V2 CS V5.B133.01 03/25/2021
+[ 1016.420147] pstate: a0400009 (NzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[ 1016.427077] pc : iommu_report_device_fault+0x2c8/0x470
+[ 1016.432194] lr : iommu_report_device_fault+0x2c8/0x470
+[ 1016.437309] sp : ffff80008c7fbb20
+[ 1016.440609] x29: ffff80008c7fbb20 x28: ffff4f25c95aa6ac x27: ffffb5d5fd356818
+[ 1016.447714] x26: ffffb5d600a0b8a0 x25: 0000000000000000 x24: ffff6f454371d0a0
+[ 1016.454819] x23: ffffb5d5ff9544e0 x22: ffff4f4545796040 x21: ffff6f25466d80c8
+[ 1016.461923] x20: ffff80008c7fbc88 x19: ffff6f25631a2780 x18: 000000000000ffff
+[ 1016.469028] x17: 0000000000000001 x16: ffffffffffffffff x15: 0000000000000001
+[ 1016.476132] x14: 0000000000000001 x13: 0000000000000001 x12: ffff0001fffedf00
+[ 1016.483236] x11: 0000000000000000 x10: 0000000000000c80 x9 : ffffb5d5fde985f0
+[ 1016.490340] x8 : ffff4f4545796d20 x7 : 0000aaaada7af000 x6 : 0000000000000001
+[ 1016.497444] x5 : ffffb5d600a0b000 x4 : ffffb5d600a0be70 x3 : 0000000000000000
+[ 1016.504548] x2 : ffff4f4545796040 x1 : 0000000000000000 x0 : 0000000000000000
+[ 1016.511652] Call trace:
+[ 1016.514088]  iommu_report_device_fault+0x2c8/0x470 (P)
+[ 1016.519205]  arm_smmu_handle_event+0x100/0x170
+[ 1016.523633]  arm_smmu_evtq_thread+0x1e4/0x4a0
+[ 1016.527973]  irq_thread_fn+0x34/0xb8
+[ 1016.531534]  irq_thread+0x160/0x310
+[ 1016.535008]  kthread+0x124/0x220
+[ 1016.538225]  ret_from_fork+0x10/0x20
+[ 1016.541786] ---[ end trace 0000000000000000 ]---
+[ 1016.546403] arm-smmu-v3 arm-smmu-v3.3.auto: event 0x10 received:
+[ 1016.552474] arm-smmu-v3 arm-smmu-v3.3.auto:  0x0000750100001810
+[ 1016.558453] arm-smmu-v3 arm-smmu-v3.3.auto:  0x0000120080000176
+[ 1016.564430] arm-smmu-v3 arm-smmu-v3.3.auto:  0x0000aaaada7af000
+[ 1016.570406] arm-smmu-v3 arm-smmu-v3.3.auto:  0x0000aaaada7af000
+[ 1016.576380] arm-smmu-v3 arm-smmu-v3.3.auto: event: F_TRANSLATION
+client: 0000:75:00.1 sid: 0x7501 ssid: 0x1 iova: 0xaaaada7af000 ipa:
+0xaaaada7af000
+[ 1016.589700] arm-smmu-v3 arm-smmu-v3.3.auto: unpriv data write s1
+"Input address caused fault" stall stag: 0x176
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+Thanks
