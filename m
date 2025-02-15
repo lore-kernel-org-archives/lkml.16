@@ -1,111 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7FF19E965
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 10:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A1319E7ED;
+	Sat, 15 Feb 2025 10:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739614153; cv=none; b=cuRRdvz6rDxfXc6iTFBzJJGtBijmZhsS8aoJN7dsz0umRUuEy1oWGPoO4KayBQFOiZ2N/VNj4R0yss5WKqIeBC+dCRzl1Eq2+kYbO8sVpzsv/2aTolfDu760nSNMWLwNQ2c1PSQ9xfbZSnMepivZ5jBOzhMuRILNNN6QaTXUHB0=
+	t=1739614417; cv=none; b=jzZYjinmUOlG1WW7XzEWWaKAvo/VF4T046bDemMtvE6vBsTbBt8GYzttOUXjKEsZ/7PdjX7QBRSgCIS7w+cLV2VngIK5/q7ZZhtv2cmFdz6FB9CnDKr7AW/EPbtgSej9xvmDiu4a95q5dASTSmJtxDY7D9EUMtsJrPPkDWvwj3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739614153; c=relaxed/simple;
-	bh=xH3ekLyCUJXjtIM6uXeT6Wz5TQoPzfdJQKog0Ix76xE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pXjeizcCDPYrEXAk7eJbabTBjO+iAgCUTXX5E/LQLGjbEj3USCRUlR9ZWiIAkyw6+N14sl8v+5i120ohU2mB++pFrGDE+lno3/u7nVjeSVbfuWsoZRpmdjv1eBaqSRX+/hBgNtVFYKJEarum9hZFWdsWB5jfr0pGsUCAgnyLRs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E/YIaglY; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739614417; c=relaxed/simple;
+	bh=nx2PoXHsvS/XVR8uJBkBCEecgQMqraMnp2Xv51E+fsc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=FlC6zMDv/qeoKCXYVJBR1LhsSdnAYUw8gJQLSFDhFJKcidoZB63B0W7BthpNsO/4Zv1u+KUm7XDXQfwhB156DaiCniXSAcOnWPGtTjiO3UPcop/ewiN9s1dkgC7bqwzsK39m/nQqGoL1WnbJys/XELp+/lZ5queG+vfR/T31Bnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=HB64S2On; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/YIaglY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739614152; x=1771150152;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xH3ekLyCUJXjtIM6uXeT6Wz5TQoPzfdJQKog0Ix76xE=;
-  b=E/YIaglYoP0QORFb/UHCQq/i4IHjVX8W7kUgJAeDwIpTZzHqBVz9hz13
-   7nodmRHB2giVlHqq9aNLQJenLaFajXCu8tqpL6e8IZ5otTzS+MhY/zzht
-   lX5SHHOqVx5S++b6tZmjMYEN6swLqy2VmCf1OgnJitEh+IjNzd800KSOc
-   Y/67GEnoc05yaMd9GK8VigeLImvaUI3PKgeh1QLl7hxxjn4FdSw1qtcAA
-   L5+NLcs8wQA8YscT7nPBZlvJGHO1FsSbW9beCysVRntSZU3B4WOjcWrWc
-   2Dvjgk5P3LvN1GwljTiWaYo1oSCuBShggN34LvHHIh5yTRYUDFRDkvpCQ
-   w==;
-X-CSE-ConnectionGUID: U4XQq8PpRgudmyXVkiS0lQ==
-X-CSE-MsgGUID: lCEmLXFxThi7lx5yz6ppfg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40628888"
-X-IronPort-AV: E=Sophos;i="6.13,288,1732608000"; 
-   d="scan'208";a="40628888"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2025 02:09:11 -0800
-X-CSE-ConnectionGUID: cSns9aWoTzGhPl1aIFPH/A==
-X-CSE-MsgGUID: IixXSpCuR9CDqZiOuF0NHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,288,1732608000"; 
-   d="scan'208";a="114186845"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2025 02:09:09 -0800
-Message-ID: <d578bf4c-f475-42bf-9cb8-21941fc7af88@linux.intel.com>
-Date: Sat, 15 Feb 2025 18:06:11 +0800
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HB64S2On"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51FACZA8072435
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 15 Feb 2025 02:12:36 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51FACZA8072435
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025011701; t=1739614357;
+	bh=nx2PoXHsvS/XVR8uJBkBCEecgQMqraMnp2Xv51E+fsc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=HB64S2OnDCnHJCIOjYmyUwbzasS2j8r8/OdLWABpVAysVT0YdaUahvaCoscAHzQjs
+	 OgPOlRIcH1AFqVX/MaJllQHo/VAK+EZt0OkUly03NeDh0deW2raXYjYlwr+bPKt8wr
+	 lhciD6koXeIgYvQzlVich/BOJprcwhlDgw0necXj6GZ5XJT/fZW0UsYWQoIsSXR9HI
+	 KIdGxiX2VdIxeeOG9mf2c631oLYcAVsQ9LZjVSkbjwLaJY3EuTnopdbQUOK8lPsMSC
+	 z0+oLovjz8+0j8QO2MJMnWT6A+7TyXpdvMGBzOaXI8nXRISZi/OyCo70NwOroIjolh
+	 9SgByjdeyC9yQ==
+Date: Sat, 15 Feb 2025 02:12:35 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Borislav Petkov <bp@alien8.de>, "Xin Li (Intel)" <xin@zytor.com>
+CC: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, will@kernel.org, peterz@infradead.org,
+        yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+        namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
+        nik.borisov@suse.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_1/5=5D_x86/cpufeatures=3A_A?=
+ =?US-ASCII?Q?dd_=7Brequired=2Cdisabled=7D_feature_configs?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250214215823.GEZ6-8f5wt--IWggtl@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com> <20250106070727.3211006-2-xin@zytor.com> <20250214215823.GEZ6-8f5wt--IWggtl@fat_crate.local>
+Message-ID: <469D0BEE-76D6-4417-B5B0-0054D3F96784@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/12] iommu: Remove IOMMU_DEV_FEAT_SVA/_IOPF
-To: Zhangfei Gao <zhangfei.gao@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Kevin Tian <kevin.tian@intel.com>,
- Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Vinod Koul <vkoul@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-References: <20250214061104.1959525-1-baolu.lu@linux.intel.com>
- <CABQgh9FMy7oVt9+enSpJxXvkux+czMFqbsPZVgmBV+rFWWvhGA@mail.gmail.com>
- <20250214125600.GA3696814@ziepe.ca>
- <CABQgh9FQYe46hfjcs+o6GfLaS7OfSqrmvXUzOKd6PRK8oBF8Jw@mail.gmail.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <CABQgh9FQYe46hfjcs+o6GfLaS7OfSqrmvXUzOKd6PRK8oBF8Jw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2/15/25 16:11, Zhangfei Gao wrote:
-> It does not relate to multi devices, one device also happens when user
-> page fault triggers.
-> 
-> iopf_queue_remove_device is called.
-> rcu_assign_pointer(param->fault_param, NULL);
-> 
-> call trace
-> [  304.961312] Call trace:
-> [  304.961314]  show_stack+0x20/0x38 (C)
-> [  304.961319]  dump_stack_lvl+0xc0/0xd0
-> [  304.961324]  dump_stack+0x18/0x28
-> [  304.961327]  iopf_queue_remove_device+0xb0/0x1f0
-> [  304.961331]  arm_smmu_remove_master_domain+0x204/0x250
-> [  304.961336]  arm_smmu_attach_commit+0x64/0x100
-> [  304.961338]  arm_smmu_attach_dev_nested+0x104/0x1a8
-> [  304.961340]  __iommu_attach_device+0x2c/0x110
-> [  304.961343]  __iommu_device_set_domain.isra.0+0x78/0xe0
-> [  304.961345]  __iommu_group_set_domain_internal+0x78/0x160
-> [  304.961347]  iommu_replace_group_handle+0x9c/0x150
-> [  304.961350]  iommufd_fault_domain_replace_dev+0x88/0x120
-> [  304.961353]  iommufd_device_do_replace+0x190/0x3c0
-> [  304.961355]  iommufd_device_change_pt+0x270/0x688
-> [  304.961357]  iommufd_device_replace+0x20/0x38
-> [  304.961359]  vfio_iommufd_physical_attach_ioas+0x30/0x78
-> [  304.961363]  vfio_df_ioctl_attach_pt+0xa8/0x188
-> [  304.961366]  vfio_device_fops_unl_ioctl+0x310/0x990
-> 
-> 
-> When page fault triggers:
-> 
-> [ 1016.383578] ------------[ cut here ]-----------
-> [ 1016.388184] WARNING: CPU: 35 PID: 717 at
-> drivers/iommu/io-pgfault.c:231 iommu_report_device_fault+0x2c8/0x470
+CX8 is the name of the CPUID flag, for better or worse=2E=20
 
-It's likely that iopf_queue_add_device() was not called for this device.
-
-Thanks,
-baolu
+It seems to me to be a bit silly to have dummy symbols that mean literally=
+ the same thing, but =2E=2E=2E
