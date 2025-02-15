@@ -1,75 +1,57 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AC614012;
-	Sat, 15 Feb 2025 02:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCC1DDA8
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 02:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739585208; cv=none; b=rqBpW2xZm6cqtILOnPL0JAZQ/I6+csIutAs5mVH3rcjXrNOYYHsxxNF4LWl3+xrUzqxI0S3nS6FHG8408STRNHE0ae2BrUAkTGga5lBI4dL7ad+QBBWBsB8UUWASD0Z9k+k8nsYYcPcokyWr+ISDY3KRnRbehnTZhFuUhkBG+qk=
+	t=1739585209; cv=none; b=twEIbMrWI2759RgRux8swqwUTRgq6DIJKUaWUYSZ6xEswpL5qOUJsx1HkKGQu5t2bfs4EtgReLZekTv7uXC3yrvY72bRtu9L0AD+iRkLC5pfm16KVqPHzRCZ6uUEdMa/YTdyr6qedQtKMMlN9zEcVM1bYv5daGkhB6wOZ7pRv8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739585208; c=relaxed/simple;
-	bh=XR7AOhY6S34dKewifz+km1VWG9yebCK5SGbtEbta3bw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J2mOnQac5hwn4iJyAiaIFfy+bNzL5/nOk6tjQ3jOGUn9f6/9F8l6oBWoJhTVR0iHGBcGa33FvRDzWjOQcYvBQRsUV23SKpuGT9qInG3dbFlOxSDyXF7zkcdPXI/+siFbfzWIezNbGsmU68O50PJdCNPyUqR9NjmF40FzNY/27GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gvi/krYb; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739585209; c=relaxed/simple;
+	bh=MzthKMpX9KqIlm+3tgNfBQvwf9/vPDjpd5I3Y/62o5U=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=EPSIctgOqSndGb/Dkkw2UKX4pMwK0rpo9HnyEERDA/iIKX7hEROpGezp1MHEdVfcuT5W3BRHH/F/z0vC3K7VpkfXQWd7VPaWWoEyxMRTIItiXhUaGUBSt3t0PcNwbI4l3QYnvVQnmQW9qaVM8dy+tGFKVlzAzH0ctUd29sQ7Rlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hjLcEcvs; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gvi/krYb"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fa8ada6662so4999502a91.1;
-        Fri, 14 Feb 2025 18:06:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739585206; x=1740190006; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m3HOnpJxe0NdKNGJOO+XqAJq7CFi8wQ7LHZoTb4qt4I=;
-        b=Gvi/krYbtj42Fj/42FHOLNu+/TA/U9aawjV3cd7iUTolOSgStUMHWovB+Gp4aBLgLG
-         rS+Hj0SkcaVetCOwFb3neew/Lxy4LwSEifovS8Pzee3LE8+AwTk4XtLxpU49zHIVUnuo
-         9jbMiAJICcvexnNQFy0fcP7s8rLi5mkKpDunzOalC7DXeAuPBxPve0YCE1QUxwhTgP8m
-         KiZDWc8/Xw463DiSsCHkWxc+aX6Y7GO18z+NKts1z5XvYlyCcQm4psDGIxSnep2Mx3z+
-         MGgautbTX8QD0z2TH+KtleXjj1uhn0LSeAgLI6wX5bDF+eTs7kqht95nhT0b9Qes/0L0
-         1ZRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739585206; x=1740190006;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m3HOnpJxe0NdKNGJOO+XqAJq7CFi8wQ7LHZoTb4qt4I=;
-        b=dZ3ZmGKVQrK0r3hnhdvSIAcYxz6hhDzwIqv3Fsb96icQ2r4F2va4uS8aNOyq0TmcXe
-         s13fnjumm+DB2ogr3FnKlm004dT3Rohxper1GzjtgOopqkwe1w0794AxswALJ6Oga+jK
-         hE/ROHvSgWchyJWxZDbthcrlKMgBK8aP/GMSdb0iuzBetol4WwiOgScJAExFyLhMkElt
-         oES8lnQbtriOYx+v2R5YJk2CTRl3zyBiwbyYeeZs1r4Twl+7Gb2l/cxGIPR0rZocpqRf
-         24No9FCKJ+KmxnjbOwTsNUIx1m5cfkOyuDoRHdhYxA2t26WjYP7+n+yi5bkbA1eVAR3O
-         pT+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUDzeL5o4QOQoMVll5J6tr8krGqJJ7F1jLFLlV+7Un1wETRwQICs9ivUnMVtvff/YCqwf/dDfZexRHnEKU=@vger.kernel.org, AJvYcCXF0bmtfo01x8bXyncJa74EhPCPyMaA+/UTedO3yOzvP4RugJfsCBzB16J8vPECZpj2xDiz5ZZPZw36@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI+2EK92pM01FYH4vecQlKm9V5WcJzGbCeIocVmFIY94FCTe6/
-	Wpd4UHIWsdSvJKVJGs3MGUBndPaZq3yfUfMeNaE8ug+Flro2UPCH
-X-Gm-Gg: ASbGncuGJl3AgeUvkbujmNb7n+H92GrvQn3SubRjqEVBpAfgil7qBsJeZmkl0QPA1b6
-	hsdsdh9xmI3ZlgcsxwX5vu0ojPmOY9z6A8+HZ6vI8Q7oIkz6guXzwD53QCMxQveszpPEKHvEcxg
-	mIyMkOOtmGPQi+KeRL1DLxYyXSQ+RUZYP+6GRx0s/QybtjtvdfvkTysaFE2JPfZAboN8YGJXVdl
-	ueoi9OY4YNuecEpINAK9ulzZrZWbNOB5J5RDs+z22x91VKXP21gi3xBtWdEYXOnlS2LhPX8wf32
-	DMwroK82E8uaxi1a+GLPu5+o
-X-Google-Smtp-Source: AGHT+IHop3S/O5egKSMDEHdYYSPIkN92gkImI2lM0f7ymUc+Yot11QLU/FVOBFAexTXqSZZLbgzItg==
-X-Received: by 2002:a05:6a00:3e0c:b0:730:74f8:25b9 with SMTP id d2e1a72fcca58-732618d54b1mr2524363b3a.17.1739585205777;
-        Fri, 14 Feb 2025 18:06:45 -0800 (PST)
-Received: from linuxsimoes.. ([187.120.159.118])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242761538sm3914913b3a.139.2025.02.14.18.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 18:06:45 -0800 (PST)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: helgaas@kernel.org
-Cc: bhelgaas@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	scott@spiteful.org,
-	trintaeoitogc@gmail.com
-Subject: Re: [RESEND PATCH] PCI: cpci: remove unused fields
-Date: Fri, 14 Feb 2025 23:06:37 -0300
-Message-Id: <20250215020637.217456-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250213212627.GA129476@bhelgaas>
-References: <20250213212627.GA129476@bhelgaas>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hjLcEcvs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1739585200; bh=kLWbNa7rHBqbc8lkjhhNsnqxVEvCI0tfPtnxNaOJp9o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=hjLcEcvsWQOxstzgqmMdKA6M6ruAST6/d5Ovhxjb8b911sStdHuOXly9kuX4d0Slz
+	 d8nYmVhwL6I11iQn2FNeqCwowePZXqjD2Gwwmlu/wahB7pO4268eWmoWHLKMb1fOeo
+	 W2MTRcYifXdmzsqHj+g6tgJyIwCeANfs+veyuKow=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 238400E; Sat, 15 Feb 2025 10:00:35 +0800
+X-QQ-mid: xmsmtpt1739584835tm8u2aki3
+Message-ID: <tencent_531E37224ACA755D7751666E3C2736789709@qq.com>
+X-QQ-XMAILINFO: NnYhxYSyuBnLcW5XKGOg3GwknI6eo2Q77+MNgCTkhmEKBbofyLK2yS9ZO5JSxR
+	 CohTFvykLF5tUprDksnSkC9nBa/KXl222QR3bmEnNWezZ3/gmvJHd3XCrM1W0FOFi+dGwFQXAHoW
+	 KFCzlsg18J4SMFSD/IufNglgwB5qrAHifSVspRu1yxrrs18KLaeczLJMYjY1gCO2ljSCxIqrH1YO
+	 fGsb1Cg7uTNkRCDWnpPRsODszSjgUyGD1HL0LL52xa/4GUp1cs3G/EaC+RNoSGBUl+EnsseKrKpD
+	 z440I+AK+o+zTB2J2zWzjJVH1awW1pV+FC66Z/GBx51wKwKhQ/M0psuyRjy4hdG128rzBZ6vbGID
+	 tjXIRHvdpfYWDeaHahrfl7B2GVlkPK51xY2Ktg4MDO9fYqb5JZgXn7BHQzTsKrt6bLNtL3G5Eryq
+	 CWQt9y0JVMQ65KIuApLwgnQDEJ4j5gK3WJNNukDN4h/8q9SG5OUMOgn24PaPmz/1isVSfQwDUctj
+	 q5zcgFfIA5jNove9mTjWj6QG3oY78Arzg6VknCDEy6HWufvmV2SvtkOq+m2S+HaUJJS1Or+/Znzv
+	 czOFcO8Q3SLxHKFjGBwJioonLj/VGLL6Bv4tOUPCllWmPAoOikelCParEoc1kA3qDDsLVAYRLwHt
+	 y4eGtSFojOLx5kShCjJPvXQBnEHD+zzWIcw8QuB25cJ7AeJDIdtLdvUr8qBqwt9qnJ4ja6ktiYhn
+	 uOf3h+orNebuo8rJvyXofjwVKyZumha0fVipbNm8PrsbcoDTLzjENMdEETQ4whcOAU5RdV34bBzO
+	 UyjGhiWQwufuycQ5+60rIfzksESToRicHx/a35OCqjx1lSesmjaztdlGTgB8SuX9KuDNZ4MJyYhv
+	 NH9EYOi8qkL23AVaI9lVvDaQFmB52F3dyuQcLNuqTly9yjKWLdb+Uq68MJQWjMh3JOZ8EEiLeh8E
+	 WR6gutkvRKKNPkr+WSNY8m6Exu0xk1
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+e1dc29a4daf3f8051130@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [netfs?] KASAN: slab-use-after-free Write in io_submit_one
+Date: Sat, 15 Feb 2025 10:00:36 +0800
+X-OQ-MSGID: <20250215020035.1076254-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
+References: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,28 +60,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-> There are no implementations of ->set_power() or ->get_power(), are
-> there?  If not, we can just remove them and the calls to them.
-> 
-> I don't see why we should add SLOT_ENABLED.
-Are not implementations of set_power() and get_power(). 
-I removed this funcions and in enable_slot(), disable_slot() and
-cpci_get_power_status() I use a `flags` field that I create in
-cpci_hp_controller_ops struct. I created this `flags` for store a power_status
-and use this in enable_slot(), disable_slot() and cpci_get_power_status() that
-before uses a set_power() and get_power(). I do this way, because I seeing this
-patter in another pci subsystems. In adittion on this, the flags can be used
-for store anothers values.
+#syz test
 
-But the Christophe JAILLET <christophe.jaillet@wanadoo.fr> say:
-"If neither get_power nor set_power where defined in any driver, then 
-cpci_get_power_status() was always returning 1.
-IIUC, now it may return 1 or 0 depending of if enable_slot() or 
-disable_slot() have been called."
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index f65affa5a9e4..93eb315fffea 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -371,9 +371,11 @@ static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
+ 
+ 	if (rreq->iocb) {
+ 		rreq->iocb->ki_pos += rreq->transferred;
+-		if (rreq->iocb->ki_complete)
++		if (rreq->iocb->ki_complete) {
+ 			rreq->iocb->ki_complete(
+ 				rreq->iocb, rreq->error ? rreq->error : rreq->transferred);
++			rreq->iocb = NULL;
++		}
+ 	}
+ 	if (rreq->netfs_ops->done)
+ 		rreq->netfs_ops->done(rreq);
 
-Do you think that is better we only return 1 in pci_get_power_status() and
-remove SLOT_ENABLED and `flags` field?
-
-Thanks,
-Guilherme
