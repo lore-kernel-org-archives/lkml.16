@@ -1,89 +1,82 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFE31A3178
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2025 00:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F4113CA9C;
+	Sat, 15 Feb 2025 00:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739581019; cv=none; b=pEcViUvJ8/8DZhNT9ZUYa3guECUWQyeKMAG1RqH+Nj1TYZNDEZ/Cg3z79SBzmCFrRoVMkuPTZ2iq7ZZJK3mk0vlBKUBtuF8lvixldeE0xVAdVdQWFG5PSfc0x+MMAmloZeGAeQik4BAYjg1jIBzG8pioVvaC4JvzbNhJwFkuUdw=
+	t=1739581024; cv=none; b=F8CmtDcNo3yyC2fo2l5Y0Z3tk9QJ3dIMwnPhf6fRfrGD6m77aIJVLGAuscrQZPY+Tn1X6nfq6Nm2d3ZenwfhQN18GytBCpcZxLMG8cektA/ithuhLRQguqGJc+fh8Wc/qH8K20bLaL5l6baYB38hgba29SmZanDmIK4lJ7OFgwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739581019; c=relaxed/simple;
-	bh=+KR+FPyiWdY6nzi5E/xfi5ZIbXs6yttfbKTh2BzTWUY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HuwVzv6ZzhHu0UDGEeV0+ostPdMmyEbYDCyaHhIL4K0MIpufWUOVQRJ4oPp67CN9pDqfYVbhq6FWaEmaK/0fiq1NNXZv+k4khntT5igg+8GRBdA0yMZkKCFS9QGzEENPyRo1C/EPJ25XSM04R6B4OBWAZYNBRHSlI5gfmyf5PrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eJAEfnto; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739581024; c=relaxed/simple;
+	bh=imiRXcRe5fIzga1fTl2XI0oxBCEsG3xFvR07QmMegj0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MtBgXtMG58EEOUQTVpAZeBJxctnZXdOooMkqpoR5Mxb5t3t5ZxKK5qyu9QcFRYfgVbLJDBzs2N8RI74RhMKD59xtAWBo3de1N9KFG9s3OQV3FyIWMhF7MjUV4vyT1Fq+LHmK9Wc6JtRLeTjdIBTZwPAU9zmx8gmf42bk+SwAfjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MtsgTaCl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eJAEfnto"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc1eabf4f7so4000998a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739581017; x=1740185817; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dYdp5KEOM09jg9p9N6DLn1QBn6Otq5JJd2KkgOh4RdE=;
-        b=eJAEfntoM5S7pFhA8vMKB2H7G2qIcnGiPNWXo9/+Sln0so7OC9g0UG1j9RNCrBO6AM
-         gjL+F2RmurdArV+u5GUUEQsdGDfxrIyUdSTVYOCkZYNlXiKAtblppNCBt3ByvgGqeDnC
-         3AufWoNpIDXXYNDRjnbnSlTohQLfcIv6qVLbt+j+gIttQjZzauV7NU0EoaMMblkWG91r
-         RECLEeRmh3JmHDbLE9IzCnrs+13du4SEnhkoa7G0HuuATq7uWC7fqgx2sFE9LsPhB0HE
-         TtHj0jgiuO35KV3B5ftz/oD852t3st3tbaF3gNGrR0qs01tjrm9McOuC+39df5H7AQQ9
-         DiNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739581017; x=1740185817;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dYdp5KEOM09jg9p9N6DLn1QBn6Otq5JJd2KkgOh4RdE=;
-        b=h2VdNINoZGQObdVfOSJpU6+y2broNRatLxetygGtbOlwBBfEdCpNjDVZHKol1JSqNR
-         P4C3cHubbzfOUTNQ8S+NVrOji5VDgfCENeIae3NRaoTvJfC0cAYHEWd96bYX0QmoUctY
-         nG0X7++7yJqp6Mw05hff5w5fjfQcjwaqcrs2FUFI+qBeIIYU4f6qxq10J0mAAKPDDkve
-         DBM9iAbM7bjbf2QQ7biojo+cWMWlSDU6x42cp6sMHABt559OW/lWUHbXbe/KgLxwjG5h
-         PsIDAv/K082egPTzHZjPTBvae4plfRY+cWFXSojghe4pxzRmdnJx6OG4Ae+PJzkWEwxv
-         aqYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUT8nF/LSKccJcEGFXUXSLza2wEH1bHf2vrbGo8M5fYOOxW8tOb84wHa+T5J4AAOCif147yxpGbmgOWhh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySpEPezWaFvwQogbKJbG+jzS7i5Kb46w+NH2q3G5QuCFaJzIa7
-	efDjZvrtzbAzxNs7Vxv6DTfkAFR3IsLmcX/Csl1bsZMKYDNKawCpe2wnhj+LBztJzKbt6fbBLI7
-	QHQ==
-X-Google-Smtp-Source: AGHT+IFyXn/jnfPe9MBamhPWud5uhVvBM7H05Zvnq/KLsngCiWW3jisWRrlgNP9Gm+ydmlhJ/vnEjK2DQMw=
-X-Received: from pjboh15.prod.google.com ([2002:a17:90b:3a4f:b0:2fc:3022:36b4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d8d:b0:2f7:4cce:ae37
- with SMTP id 98e67ed59e1d1-2fc40f22cd2mr2192939a91.18.1739581017169; Fri, 14
- Feb 2025 16:56:57 -0800 (PST)
-Date: Fri, 14 Feb 2025 16:50:41 -0800
-In-Reply-To: <de0437379dfab11e431a23c8ce41a29234c06cbf.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MtsgTaCl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F33CC4CED1;
+	Sat, 15 Feb 2025 00:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739581023;
+	bh=imiRXcRe5fIzga1fTl2XI0oxBCEsG3xFvR07QmMegj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MtsgTaClPzNEeNFM589RpXlKOsY6YNX5SrT20oR5i2WSWVQIA2sBcgRkL6roIoAk9
+	 Z5VVHLTLn8qirFBrwEtZ+7AJXyGamHTeanDTXLSqMQcHZUDImxSJe3lIhnv4pWPpUk
+	 YOcPPb4wCXftDpbLQVz3mQNtNxRS7YusiLrZNSielDmLUyThQbJonkm1UXSNQpI7LJ
+	 dCtcl+3vQxJQAJ/lqGCjdhRQMH8SWEnV+jjSLHT3dHs4tTIXhoMl6AyUosZiLU18Fz
+	 1eUdPB0eOPHZQxc5YVdsrvZscfIng5R/k6bTKaqO0LpC5a2x6NYIh3lLCUfImB6KuS
+	 p75eqMwUImy6Q==
+Date: Sat, 15 Feb 2025 00:56:59 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.12 000/419] 6.12.14-rc2 review
+Message-ID: <Z6_mW-l_zGRthtBU@finisterre.sirena.org.uk>
+References: <20250214133845.788244691@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201011400.669483-1-seanjc@google.com> <de0437379dfab11e431a23c8ce41a29234c06cbf.camel@infradead.org>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <173958006311.1187438.11536700176929455.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: x86/xen: Only write Xen hypercall page for guest
- writes to MSR
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Paul Durrant <paul@xen.org>, 
-	David Woodhouse <dwmw2@infradead.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com, 
-	Joao Martins <joao.m.martins@oracle.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="b1zMQeLm7Y0fmuUQ"
+Content-Disposition: inline
+In-Reply-To: <20250214133845.788244691@linuxfoundation.org>
+X-Cookie: Editing is a rewording activity.
 
-On Thu, 06 Feb 2025 19:14:19 +0000, David Woodhouse wrote:
-> The Xen hypercall page MSR is write-only. When the guest writes an address
-> to the MSR, the hypervisor populates the referenced page with hypercall
-> functions.
-> 
-> There is no reason for the host ever to write to the MSR, and it isn't
-> even readable.
-> 
-> [...]
 
-Applied to kvm-x86 xen, thanks!  I'll post v2 of my series on top.
+--b1zMQeLm7Y0fmuUQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[1/1] KVM: x86/xen: Only write Xen hypercall page for guest writes to MSR
-      https://github.com/kvm-x86/linux/commit/3617c0ee7dec
+On Fri, Feb 14, 2025 at 02:58:41PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.14 release.
+> There are 419 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
---
-https://github.com/kvm-x86/linux/tree/next
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--b1zMQeLm7Y0fmuUQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmev5lsACgkQJNaLcl1U
+h9BK0Qf3SzoFKJQ5kz2A1VqO+kHwutHNzrjB5O7aSBnpK4EMWhRwrIVV4qhT+tA7
+xT9Vj1WX4in3tBlXf2hGGQXLHFm46ARFn91DkrxAdj6HYTQynQ8fDyQtehmCnHSV
+STZvh9VFVBrQKLYBzsY9ljJLBj0BzZ8LHwX67es9GYQvlh0H+a9k+l1kOB5voJtc
+6vExTBBJvIzWVwpc81mF8mE3pH0IK33qSTXZ4voZHHaSW3yTNiaczUWCyXEC9UG9
+Jd4ob3t4CFsGGjZEm/55CqirUeF5dnXEAFxIEEpYVtKpqw80DKsGgUledfKZkUuo
+rxaX+0JTOBxpPAMWGqUh0QABTTwi
+=qL4n
+-----END PGP SIGNATURE-----
+
+--b1zMQeLm7Y0fmuUQ--
