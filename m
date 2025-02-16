@@ -1,63 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FEC19DFA2
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 21:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FABC7D3F4
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 21:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739739750; cv=none; b=HORb99UqERhM19chqPOyIHAaIbgHxTm9462WDVandU41//g6V5XI8di/AUra6vEZF8B+UIOePNVmZo3KrYUtKRGAEd632j1Cyy9Tm2ABKT2Dbl9Wy3zC16hDe/MsEesZ8lTaY21X7U9cy/QDoOm86ve99IRTx6Lg/MiTRCIUTII=
+	t=1739739983; cv=none; b=Y2n2+kace6qcHZ4y9NcLvKaKSfdB8L3xNFgFDiO/VIuHwpXCy39Xh2IhAyT80lWwhCjpBp5lTZcBhp2UdAmKUQjHVZNMVRVE15u8wnN/xzg2nX3olJh7xhPTFM+4t76ltmCU5QIjd6RyVy1RhpPH/fb/htxtB2VeMNBBUvn2qT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739739750; c=relaxed/simple;
-	bh=D1X1COA3z7rVRMESgK+v/dOvT3aHKlcA+fRFxgd/goI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=OT6uEvJ02Lq9te6pPZoXC/G+SrmJ21lPOZmazy1Lt5zKMIiYJpaXebDIKKzN8AGHygVDbjMMazbD4J3KH5CvV2ohqAppoupZXAV7m0KIUPUBE15WvMpM2MmNZDIlg+TnNv1Hafok/mrjWvIWUj1DOvmWGSR1v+yYg1l/I6PbMHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6Sanss5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6Sanss5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4996CC4CEDD;
-	Sun, 16 Feb 2025 21:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739739750;
-	bh=D1X1COA3z7rVRMESgK+v/dOvT3aHKlcA+fRFxgd/goI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=L6Sanss52tS0+o0rd2GDRtd/eCJ/eCRlZUspTopbZGVkwyZKqNg5YTON6taIzbHHa
-	 FFnIm7Z5foZmlDRump6nprbqVANpFRTpghvsQRvP+zvkf5FimdL2V2Vf/jMRvGIPW3
-	 9VjTuaszsRRjPKNmS9XuHAS1t6RHCxE29GgIwkd7pLCsFBu+LIN+h6erl7bLx3k73j
-	 JXNaN6yvyHIMLWn44QGM2giyAimYDzc4H/FkIeNXCWgsl0etCzHswEuR/v8MSS90yE
-	 /1INVugrclagyOkprTpZJ13/wXcSxsFGXvYZFYopnpNwH4H92qeIGP3ID3qkk4a6+W
-	 iGAzqzeSBjckw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70B67380AA7F;
-	Sun, 16 Feb 2025 21:03:01 +0000 (UTC)
-Subject: Re: [GIT PULL] Driver core addition for 6.14-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z7IAjdCB8Ly5GIjW@kroah.com>
-References: <Z7IAjdCB8Ly5GIjW@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z7IAjdCB8Ly5GIjW@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-6.14-rc3
-X-PR-Tracked-Commit-Id: 78418f300d3999f1cf8a9ac71065bf2eca61f4dd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ae5fa8ce7ef230be50ed63d16883bada29990293
-Message-Id: <173973978013.2568330.3282156229769858460.pr-tracker-bot@kernel.org>
-Date: Sun, 16 Feb 2025 21:03:00 +0000
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+	s=arc-20240116; t=1739739983; c=relaxed/simple;
+	bh=/lJW4Nwa9drddAWPmv4yfiD0e1cGAXOU5bzRZiMUNdg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T/89MKqcvNZvok4SfZpQPRPCg9cKzeuLvMOUhQ+VEzZS2ZAZENENVIrXoigtqRqBbtAuV3E4ukBtwtl92jSnSB3yPpyT9gIr1jzbiqXtDAzFNEYxvx62aR/NJVZeBKix17qF+Jeb6YYT8Ssz6Rz5UPeV6uB+P9YCR5xffRIg830=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
+Received: from MUA
+	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.98)
+	(envelope-from <mhej@vps-ovh.mhejs.net>)
+	id 1tjlXh-00000007Mme-24sX;
+	Sun, 16 Feb 2025 21:47:09 +0100
+Message-ID: <ecbc5fd0-06fd-4de3-b77e-f0af24377f12@maciej.szmigiero.name>
+Date: Sun, 16 Feb 2025 21:47:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] amdgpu/pm/legacy: fix suspend/resume issues
+To: Alex Deucher <alexander.deucher@amd.com>
+Cc: "chr[]" <chris@rudorff.com>, amd-gfx@lists.freedesktop.org,
+ linux-kernel <linux-kernel@vger.kernel.org>
+References: <20250212161129.2712730-1-alexander.deucher@amd.com>
+Content-Language: en-US, pl-PL
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+In-Reply-To: <20250212161129.2712730-1-alexander.deucher@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Sender: mhej@vps-ovh.mhejs.net
 
-The pull request you sent on Sun, 16 Feb 2025 16:13:17 +0100:
+On 12.02.2025 17:11, Alex Deucher wrote:
+> From: "chr[]" <chris@rudorff.com>
+> 
+> resume and irq handler happily races in set_power_state()
+> 
+> * amdgpu_legacy_dpm_compute_clocks() needs lock
+> * protect irq work handler
+> * fix dpm_enabled usage
+> 
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/2524
+> Fixes: 3712e7a49459 ("drm/amd/pm: unified lock protections in amdgpu_dpm.c")
+> Signed-off-by: chr[] <chris@rudorff.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> ---
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-6.14-rc3
+Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name> # on Oland PRO
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ae5fa8ce7ef230be50ed63d16883bada29990293
+Thanks,
+Maciej
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
