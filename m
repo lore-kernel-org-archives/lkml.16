@@ -1,83 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD17A18DB21;
-	Sun, 16 Feb 2025 16:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8333F1EB2A;
+	Sun, 16 Feb 2025 16:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739724015; cv=none; b=VZlOg5wCFVWAnB7TwG8b4IjiD55dnHrrrTkXWhw3KB2y5OHxsBPD9TlAoTQeVB7RyVnQwZe9k/eaANlIQmdl+WM3UofjEaQhQrthpr1zPVpZYowIBz89hv1Ew15ZFAjfPE9SAgSftQhuZB0mPaWgaaekAgk/cFx6674w/PPKCvU=
+	t=1739724139; cv=none; b=dwFrJ42gXTEPOc5widIdTpoblSYD8HK+NcMaZmZpV6Zh2DDvlrzdcox+63IQIrpQt1R/7o9+sdGDvLtkYfpHw7+HkL1fchyHsJ400IhpXLXPBP9wReaRKo9YMpLJ0sa7BcyifV3T01AD9Ah/60uBokBVt9W0HO3PPQqCR/4aYzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739724015; c=relaxed/simple;
-	bh=VYToQ/4dqk8RStG8Ey/hwHeYLBxZ15D7FpT1+nhkAlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XXgFGBe9lOsdMr1myZchHny20KLwO8vOaHfW7Tq6x7GpaUxWt9eqk8X90QrApMUCSMOQg4NemgRN3DJ/S+nimfOuZtqwxOn0PAU/gvMYPh3yC9P2eIUD0Wg+7YfrdV0UxVDnlJZXjLcYPWRnYU43gmcZbPtvBA4ZQKBuXP+qiTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTdNsL1o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739724139; c=relaxed/simple;
+	bh=5hnPF+bgOORINojs0uGlAFdWczPtX8nHtq7D6DocPNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nxfthe3u1HNnWkaPbkSedqAFrKOx7TRXjDfSxzlsDnhE3TCjK+dZvhQRo02YMg/qoHHVKHntgW9gtlDQQZTYHZFRO9jqCVNsarvSSF4PIAzoVGBFe1ybd+0A37SFmC5wUfAX3JmtFogb008VQJRSdObWQZA3SbHNSra+zGgUvyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTcz0maW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTdNsL1o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04DF5C4CEDD;
-	Sun, 16 Feb 2025 16:40:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTcz0maW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD7FFC4CEE4;
+	Sun, 16 Feb 2025 16:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739724014;
-	bh=VYToQ/4dqk8RStG8Ey/hwHeYLBxZ15D7FpT1+nhkAlA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BTdNsL1okkXPSEIIN6irCt05MdKuE0I4zIpWS4OL92Yo1o5E8+lWiNuSHLWMCCBdp
-	 R3YvXcDSp81TDacYwpy2LK2a3/k2fpF6v0jNyMg2wkmkmiNpUQi71aYly4Gs04mCCU
-	 pAulIvcx2yN2pL0ast1gR1CqQFxOGClG9o2RqJ+UkiE8AUdkZf5Xr1C2caE+2THuSW
-	 GM0yuGvzlnW7jRdgY3OPAlAhkslEHAzrLoMpk9MlatTssgjLGgUM235wj+1vhUXFTj
-	 U3uS+mILpWeShAP88Kk/CqqGvFiMbghIm2lQibXko76KC4C1vMSwglRd2dhb6EhZKM
-	 B26JEhRucysIQ==
-Date: Sun, 16 Feb 2025 16:40:04 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Robert Budai <robert.budai@analog.com>
-Cc: Nuno Sa <nuno.sa@analog.com>, Ramona Gradinariu
- <ramona.gradinariu@analog.com>, Antoniu Miclaus
- <antoniu.miclaus@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v7 0/6] Add support for ADIS16550
-Message-ID: <20250216164004.000483a1@jic23-huawei>
-In-Reply-To: <20250211175706.276987-1-robert.budai@analog.com>
-References: <20250211175706.276987-1-robert.budai@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1739724138;
+	bh=5hnPF+bgOORINojs0uGlAFdWczPtX8nHtq7D6DocPNM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MTcz0maWsdhmg3AJNIGRxpTATB9dR2/+o0onL8Vhkr6ODd7inNBTejcchP4XBh5vp
+	 J+f89A0Oob2jT/Wj3dS2WWMXtDH54mji72Om/Cv1Pswxl31DTW8a2CrpxTonb5Gh9R
+	 zhgavxGoujJkPJYwJHYkcaO7fwCakg2c4wLfq9XaVuoGqMWNC3M8s54twRwt5EhV/l
+	 wBoov0RBekvhC7mP1AWJwE94/SbX5kTIjMFEs3dRv9xTFzjszj89EgdQnQRDHYcNAj
+	 ATR46WIEHeagviEbuQvRdjlDg8D4a8xHhJwL5BFuvtwGnLZwzVUyQubYLyiGV0PyY1
+	 Njw2wK2ZRKxGA==
+Received: by pali.im (Postfix)
+	id CE943A7F; Sun, 16 Feb 2025 17:42:05 +0100 (CET)
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To: Amir Goldstein <amir73il@gmail.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	ronnie sahlberg <ronniesahlberg@gmail.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Steve French <sfrench@samba.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 1/4] fs: Add FS_XFLAG_COMPRESSED & FS_XFLAG_ENCRYPTED for FS_IOC_FS[GS]ETXATTR API
+Date: Sun, 16 Feb 2025 17:40:26 +0100
+Message-Id: <20250216164029.20673-2-pali@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250216164029.20673-1-pali@kernel.org>
+References: <20250216164029.20673-1-pali@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 19:56:57 +0200
-Robert Budai <robert.budai@analog.com> wrote:
+This allows to get or set FS_COMPR_FL and FS_ENCRYPT_FL bits via FS_IOC_FSGETXATTR/FS_IOC_FSSETXATTR API.
 
-> *** BLURB HERE ***
-Missing... 
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ fs/ioctl.c               | 8 ++++++++
+ include/linux/fileattr.h | 4 ++--
+ include/uapi/linux/fs.h  | 2 ++
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-> 
-> Robert Budai (6):
->   iio: imu: adis: Add custom ops struct
->   iio: imu: adis: Add reset to custom ops
->   iio: imu: adis: Add DIAG_STAT register
->   dt-bindings: iio: Add adis16550 bindings
->   iio: imu: adis16550: add adis16550 support
->   docs: iio: add documentation for adis16550 driver
-> 
->  .../bindings/iio/imu/adi,adis16550.yaml       |   73 ++
->  Documentation/iio/adis16550.rst               |  376 ++++++
->  Documentation/iio/index.rst                   |    1 +
->  MAINTAINERS                                   |   10 +
->  drivers/iio/imu/Kconfig                       |   13 +
->  drivers/iio/imu/Makefile                      |    1 +
->  drivers/iio/imu/adis.c                        |   36 +-
->  drivers/iio/imu/adis16550.c                   | 1151 +++++++++++++++++
->  include/linux/iio/imu/adis.h                  |   34 +-
->  9 files changed, 1682 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
->  create mode 100644 Documentation/iio/adis16550.rst
->  create mode 100644 drivers/iio/imu/adis16550.c
-> 
+diff --git a/fs/ioctl.c b/fs/ioctl.c
+index 638a36be31c1..9f3609b50779 100644
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -480,6 +480,10 @@ void fileattr_fill_xflags(struct fileattr *fa, u32 xflags)
+ 		fa->flags |= FS_DAX_FL;
+ 	if (fa->fsx_xflags & FS_XFLAG_PROJINHERIT)
+ 		fa->flags |= FS_PROJINHERIT_FL;
++	if (fa->fsx_xflags & FS_XFLAG_COMPRESSED)
++		fa->flags |= FS_COMPR_FL;
++	if (fa->fsx_xflags & FS_XFLAG_ENCRYPTED)
++		fa->flags |= FS_ENCRYPT_FL;
+ }
+ EXPORT_SYMBOL(fileattr_fill_xflags);
+ 
+@@ -496,6 +500,8 @@ void fileattr_fill_flags(struct fileattr *fa, u32 flags)
+ 	memset(fa, 0, sizeof(*fa));
+ 	fa->flags_valid = true;
+ 	fa->flags = flags;
++	if (fa->flags & FS_COMPR_FL)
++		fa->fsx_xflags |= FS_XFLAG_COMPRESSED;
+ 	if (fa->flags & FS_SYNC_FL)
+ 		fa->fsx_xflags |= FS_XFLAG_SYNC;
+ 	if (fa->flags & FS_IMMUTABLE_FL)
+@@ -506,6 +512,8 @@ void fileattr_fill_flags(struct fileattr *fa, u32 flags)
+ 		fa->fsx_xflags |= FS_XFLAG_NODUMP;
+ 	if (fa->flags & FS_NOATIME_FL)
+ 		fa->fsx_xflags |= FS_XFLAG_NOATIME;
++	if (fa->flags & FS_ENCRYPT_FL)
++		fa->fsx_xflags |= FS_XFLAG_ENCRYPTED;
+ 	if (fa->flags & FS_DAX_FL)
+ 		fa->fsx_xflags |= FS_XFLAG_DAX;
+ 	if (fa->flags & FS_PROJINHERIT_FL)
+diff --git a/include/linux/fileattr.h b/include/linux/fileattr.h
+index 47c05a9851d0..c297e6151703 100644
+--- a/include/linux/fileattr.h
++++ b/include/linux/fileattr.h
+@@ -7,12 +7,12 @@
+ #define FS_COMMON_FL \
+ 	(FS_SYNC_FL | FS_IMMUTABLE_FL | FS_APPEND_FL | \
+ 	 FS_NODUMP_FL |	FS_NOATIME_FL | FS_DAX_FL | \
+-	 FS_PROJINHERIT_FL)
++	 FS_PROJINHERIT_FL | FS_COMPR_FL | FS_ENCRYPT_FL)
+ 
+ #define FS_XFLAG_COMMON \
+ 	(FS_XFLAG_SYNC | FS_XFLAG_IMMUTABLE | FS_XFLAG_APPEND | \
+ 	 FS_XFLAG_NODUMP | FS_XFLAG_NOATIME | FS_XFLAG_DAX | \
+-	 FS_XFLAG_PROJINHERIT)
++	 FS_XFLAG_PROJINHERIT | FS_XFLAG_COMPRESSED | FS_XFLAG_ENCRYPTED)
+ 
+ /*
+  * Merged interface for miscellaneous file attributes.  'flags' originates from
+diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+index 2bbe00cf1248..367bc5289c47 100644
+--- a/include/uapi/linux/fs.h
++++ b/include/uapi/linux/fs.h
+@@ -167,6 +167,8 @@ struct fsxattr {
+ #define FS_XFLAG_FILESTREAM	0x00004000	/* use filestream allocator */
+ #define FS_XFLAG_DAX		0x00008000	/* use DAX for IO */
+ #define FS_XFLAG_COWEXTSIZE	0x00010000	/* CoW extent size allocator hint */
++#define FS_XFLAG_COMPRESSED	0x00020000	/* compressed file */
++#define FS_XFLAG_ENCRYPTED	0x00040000	/* encrypted file */
+ #define FS_XFLAG_HASATTR	0x80000000	/* no DIFLAG for this	*/
+ 
+ /* the read-only stuff doesn't really belong here, but any other place is
+-- 
+2.20.1
 
