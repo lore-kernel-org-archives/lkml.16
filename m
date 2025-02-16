@@ -1,182 +1,223 @@
 Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B43156F54;
-	Sun, 16 Feb 2025 08:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E86014658B;
+	Sun, 16 Feb 2025 08:47:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739695321; cv=none; b=eAx2JIvEebx1gOxcKpS8b97DxhlkYuAQFfKy1CgaGDVCb9V2wqYa8wfmBJlWU8tSdSRS/CwnScvw7b5NgX03HeCk9E7S9M7Ok/HkZTguwngc6s/hXSjTms8k9N0DpSwA0WAVxu33zSceXEl44WaP3rV8ogqjNY/xbnk560Mq4dI=
+	t=1739695632; cv=none; b=EDhzvsZsCp3CVMO2xTzuJ+HxUrYAcaYuNr4p5J/IGylu+rM/QkHFed2I/5WLrkUf0mEZemeR2kaB3ahWWMNqBn7N02eaJriDnj79xoWq4YbPJ41Od1P73EuF0x4Ah53VtoKaGljjTr9oKKU0dZgMnQjK30Vv/zxiTIkbmxeuTPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739695321; c=relaxed/simple;
-	bh=Vskc2wwVqA5Ms7gkLQLcg3MEV8RCfdMgVZ3QWgJZO90=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D6fQNz7cIc1mcModLLxn6yFBbCP0dmrFe+1Owiarp6VwQp3F7eBPKd+GZsB8sxvECt5IkbaUQBFZVItK5h/MXMZJirCsi9xz1HpRpxQmBkcy3gT72LXeG4N1eco2gecyfAiGVyXpb8ETHp4+MHQIAd3dsztrm6cq5Cvo8czTRJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4TwHDBp; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1739695632; c=relaxed/simple;
+	bh=dgLIkuXCcjsa0ryvpJNdPC6pa01pbIKoRU7VPbnSE/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fPEjH7AfrF4vgI8UgsRdURNXG0miiScaP9JWQi5vhRuz+Wadd6+Oi70er3n3Yw3/RK1vhcdirT60s7/kXVE8NwIPapLPP0GhvOgZhm+3oRj/Ex2Q5YJi4FiZweTiI45c2agbR3305n/D/WVMcvtlC3qSrII+zZivqDVze7ZNW/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AAJjO3BD; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4TwHDBp"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220d39a5627so49610245ad.1;
-        Sun, 16 Feb 2025 00:42:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAJjO3BD"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2212a930001so2105405ad.0;
+        Sun, 16 Feb 2025 00:47:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739695320; x=1740300120; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Uo8I2VTpZsm/M0eSKbaSlNCrIf12xCPXDdrqy9nBvo=;
-        b=P4TwHDBpeh6M7610/9FzvPiOeoeLOR3PgXmVV1tPALgZrMvLancGcIp8hPyVB/o29W
-         uDc/nngDkJX7EDbYMiIRyCf4WVg29QaqLDprmD4IA3OOfFE8FO4Y7F7jB30hSM50D+hp
-         OiBGNLhC1TtSEvVyUGuyPwdt9TqF/lw6riG6Wzh5BdkgYuOyQjRyBxWUJ/+tZqPrQJa1
-         CJOutdmi7uMHQmSi3L8DdtJcVWDWTfH5kY/iB+YkjfdPkEIoORlhagWlVLhAMcnz+nAa
-         GTEek2t06T8xKWrk0X9OSIOjwbuOz3rkAPwnVIQ9wzIJzStFiwkOF9dGl8g0Eg8YrZ/L
-         gLnw==
+        d=gmail.com; s=20230601; t=1739695630; x=1740300430; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xGLzo1ULaJmlQlynE+LEweCnpKSiaThlEE0rSn94tRs=;
+        b=AAJjO3BDOYTPHx6hGijqEeh5CE+tmf0uPAxp+2M5V/N/F3jvLPue7GAjooPckTztCR
+         AygMzL1UBHV1ch36NpKfyJ7jw4y0f3iHNOnP4f1PWFbtwCvr7Csjv3ZlHTIde2stJ9/n
+         N4bhB/t/WlB+epOy1hZxyoACzy7elHcSfmy15KIkOD2PUJcqprBSS76QWDDQ4ebq1KTf
+         LJAFt4lkxKuBL8dBERieA3bBzIfr6evUYM8n5ohCL3rzC9a4nVx5+YyRQvysmU4Rozfl
+         z8GoGuCw4/JNZ58M18Yy/enXVeijijJ+IM4TIxuOy/WOQB+E91suaeAEwdCnZv3yN2ty
+         0TLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739695320; x=1740300120;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Uo8I2VTpZsm/M0eSKbaSlNCrIf12xCPXDdrqy9nBvo=;
-        b=Poxe4B31jRopDecnkIQkqljbPC1DMsCrfahT2T/VfflBwwvjFWwB7lptq0Y/4R9qvD
-         oN+eJ3jVN/B5RikuVdO/u7lcBZZn7dNAMdAJWOsJkb0wqce1fnQQMnOxzk6FJVqg6K6s
-         5ASBbkDgxrXYycL3u5xUGJVg4VSGATYwWW436thqQQHXLnbYYgc/T5+FeYzKkOI3XmZt
-         IxxN8FmSzOAlx1iKEeexJFHlAdc53lKpgJB+t/2YHd7I5vKL8iTD2K+F55E4RZKJMI69
-         XUpUvp0wycf+IE/XgIQsZ5lYBvVFIJjCp34dKpysPAVbPjYbjE7nYwxxu+4fl+qmXNqK
-         7SVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVizOdCUhDK68JpDKOzK7e8b7jMOAGONhmR6BQFIwM4qrUPkqpPheDICWWkrQ+6TG4FBORt@vger.kernel.org, AJvYcCWVA8+rKcnz7MzHukU6et8B3aZlSWM/hwqWB3Cm+2MhbG0u2gxy7AYUMrXmIGkpstgOLvxkgT4rdFRJoJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWu0w+Bo4Fx4jEO1k4Sa8HwrJRHgKBq/v4X+LmRfx1YTa5YoQF
-	uFojMRwemKy+hjtWZqFQCZS1TCLBJBcOSvVO3zMpcCmD9KtkMSQxSBhz9cC0
-X-Gm-Gg: ASbGncsi64Vq0gAmEhJPifIjbrYnxT4jlhOL1+ot7ixcqQE8+YGWtL/HT3/HgBEFC53
-	l1RCHuTT1VZTGrLaxokbKA3hhNcCVORQLM5qlrRmkIUAHvc9RH6mvNJFk1C54zLnxtw1+ryMQhv
-	DsFlJYsi9RG+pLZRfcJyckFq0rZAxVvFUIdlZ877WeJ9OVd+AMbHZWaGJYbAqoWgymnBpbGxe7K
-	ty0bsm5KDOyantG5h6iA//L6wHwN0tdxQp5hJOmAqEiqji/m+rkplirtfUJlN/7HXMh3bd9pvh0
-	q1gj7ynoaIk1nlfFw88WPczHQrJsDN83X1vyduk1qGbmPXx7Zv7NGhv4fyr0Hw==
-X-Google-Smtp-Source: AGHT+IFWSv7o5UfJZsr45iFaTsnSGgjOJ/QEPD95j0N9PVTAsh9E6EiQ4ySP/8hifcKlUKOW3csoJg==
-X-Received: by 2002:a17:902:d4cd:b0:221:2f4:5446 with SMTP id d9443c01a7336-22104048145mr89810585ad.25.1739695319630;
-        Sun, 16 Feb 2025 00:41:59 -0800 (PST)
-Received: from VM-119-80-tencentos.localdomain ([14.22.11.165])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5349634sm52681805ad.31.2025.02.16.00.41.55
+        d=1e100.net; s=20230601; t=1739695630; x=1740300430;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xGLzo1ULaJmlQlynE+LEweCnpKSiaThlEE0rSn94tRs=;
+        b=cadxBCzDjILci4/S8UW4dOnfXmnCXo7WZ7wza0goRGQ7dsk9vPl9iIBrJJGLo9qToj
+         0Ec5DYL7BJowZKXfLF3nx4UosJN/ZXNTLs7N9ONTkx05RlAV6Bpfv0LOPPkwOu2lpDoO
+         C9wfEv1syeNHHXX6tYWO7kIvIlKzbkWLc6nEYARMm9bEAz6Fdv6sUNf6kufXWZjykBOp
+         iUKv9MYpU5OtMv6L8Sr2if7Oq5tc1hI6k7E9CG4fkete7JIylpeuSuRZ65+20KG3lEyR
+         ogrr1Glkp/Uyzhe9VjyLr95+XDRDezSJDywTINChfI/Q21ucC/vrPsuPQvM40ciPwk8j
+         i6rg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBjpu0YwyL8YuLPWkDXn72z8wkeq4ceDcpNPBseJC64cVBTXeifbMletdmKsgZlhzqOeGtyK5BArbtLg==@vger.kernel.org, AJvYcCWpv2QjdnjRNm9NxUxtksTDRcli46JYbsOPd9Yb9PfrxvFx66bjrhdKKsjVYM0vErzjDyhaKK/jlk1T@vger.kernel.org, AJvYcCXxvk9MAmjy+5uT4n/xDUZ+Cb1soV34Ry80Y6wx2rN1vVTiyLYjaHkgirrrqUFas2eiaHEG7Spzzq5G8idY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4oQnvv6Ra1vHLGQKFF68kj1YVjIbthxpQvj8QocgwBdrWqONl
+	E8DreAJ1BkC4zWzcGb7LlWF+D5o5WIPxws26NBfLlFR16VwUqhxa
+X-Gm-Gg: ASbGnctwmH+sAoZhAxi6dEpw5RR5Alqdwkl62P90jY+MflHjszxIi8hZj31X9cOBZt7
+	yfBVioTfl1xuioDPzj6AkbXXYPk/R7fHZarAJe3mEY1GAJENHKl/1dmoiqJGBRGZllpsI9TbKdY
+	0ik6/2QR44c2UYsp7c+J6rpW1qOxKdlqg765z9iqcMKTLm9+73x70JRbR2emHV4DPCRhJMNCvtP
+	ITLsiuWspAPN3Usk3eIIRBROZDUWuVDM/FBq3Q1ulpcj/zw11PilFB5eiiep3PU7o7JrmIppkZc
+	dvmq/udp6WNarEM=
+X-Google-Smtp-Source: AGHT+IFwGSO57uiGrSPWaSqPF81f0cIB7VO2BKvwKqm/QvTPTue+VPSNxvUpu8h5yIfCrS1nOycvLQ==
+X-Received: by 2002:a05:6a21:62c4:b0:1e1:c0d7:7502 with SMTP id adf61e73a8af0-1ee8cc1347amr10454149637.37.1739695629977;
+        Sun, 16 Feb 2025 00:47:09 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7325aadd797sm3323334b3a.34.2025.02.16.00.47.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 00:41:59 -0800 (PST)
-From: Yongliang Gao <leonylgao@gmail.com>
-To: Neeraj.Upadhyay@amd.com,
-	paulmck@kernel.org,
-	frederic@kernel.org,
-	thunder.leizhen@huawei.com
-Cc: frankjpliu@tencent.com,
-	kernelxing@tencent.com,
-	rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yongliang Gao <leonylgao@tencent.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v3] rcu/cpu_stall_cputime: fix the hardirq count for x86 architecture
-Date: Sun, 16 Feb 2025 16:41:09 +0800
-Message-Id: <20250216084109.3109837-1-leonylgao@gmail.com>
-X-Mailer: git-send-email 2.39.3
+        Sun, 16 Feb 2025 00:47:08 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id ADD564208F47; Sun, 16 Feb 2025 15:46:57 +0700 (WIB)
+Date: Sun, 16 Feb 2025 15:46:57 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: David Reaver <me@davidreaver.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+	Konstantin Khlebnikov <koct9i@gmail.com>, linux-doc@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] docs: iostats: Rewrite intro, remove outdated formats
+Message-ID: <Z7GmAcpIRrmbWHQ7@archie.me>
+References: <20250215180114.157948-1-me@davidreaver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1k5tCeOp3IGuamdw"
+Content-Disposition: inline
+In-Reply-To: <20250215180114.157948-1-me@davidreaver.com>
 
-From: Yongliang Gao <leonylgao@tencent.com>
 
-When counting the number of hardirqs in the x86 architecture,
-it is essential to add arch_irq_stat_cpu to ensure accuracy.
+--1k5tCeOp3IGuamdw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For example, a CPU loop within the rcu_read_lock function.
+On Sat, Feb 15, 2025 at 10:01:13AM -0800, David Reaver wrote:
+> diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-=
+guide/iostats.rst
+> index 609a3201fd4e..9453196ade51 100644
+> --- a/Documentation/admin-guide/iostats.rst
+> +++ b/Documentation/admin-guide/iostats.rst
+> @@ -2,62 +2,39 @@
+>  I/O statistics fields
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -Since 2.4.20 (and some versions before, with patches), and 2.5.45,
+> -more extensive disk statistics have been introduced to help measure disk
+> -activity. Tools such as ``sar`` and ``iostat`` typically interpret these=
+ and do
+> -the work for you, but in case you are interested in creating your own
+> -tools, the fields are explained here.
+> -
+> -In 2.4 now, the information is found as additional fields in
+> -``/proc/partitions``.  In 2.6 and upper, the same information is found i=
+n two
+> -places: one is in the file ``/proc/diskstats``, and the other is within
+> -the sysfs file system, which must be mounted in order to obtain
+> -the information. Throughout this document we'll assume that sysfs
+> -is mounted on ``/sys``, although of course it may be mounted anywhere.
+> -Both ``/proc/diskstats`` and sysfs use the same source for the informati=
+on
+> -and so should not differ.
+> -
+> -Here are examples of these different formats::
+> -
+> -   2.4:
+> -      3     0   39082680 hda 446216 784926 9550688 4382310 424847 312726=
+ 5922052 19310380 0 3376340 23705160
+> -      3     1    9221278 hda1 35486 0 35496 38030 0 0 0 0 0 38030 38030
+> -
+> -   2.6+ sysfs:
+> -      446216 784926 9550688 4382310 424847 312726 5922052 19310380 0 337=
+6340 23705160
+> -      35486    38030    38030    38030
+> -
+> -   2.6+ diskstats:
+> -      3    0   hda 446216 784926 9550688 4382310 424847 312726 5922052 1=
+9310380 0 3376340 23705160
+> -      3    1   hda1 35486 38030 38030 38030
+> -
+> -   4.18+ diskstats:
+> -      3    0   hda 446216 784926 9550688 4382310 424847 312726 5922052 1=
+9310380 0 3376340 23705160 0 0 0 0
+> -
+> -On 2.4 you might execute ``grep 'hda ' /proc/partitions``. On 2.6+, you =
+have
+> -a choice of ``cat /sys/block/hda/stat`` or ``grep 'hda ' /proc/diskstats=
+``.
+> -
+> -The advantage of one over the other is that the sysfs choice works well
+> -if you are watching a known, small set of disks.  ``/proc/diskstats`` may
+> -be a better choice if you are watching a large number of disks because
+> -you'll avoid the overhead of 50, 100, or 500 or more opens/closes with
+> -each snapshot of your disk statistics.
+> -
+> -In 2.4, the statistics fields are those after the device name. In
+> -the above example, the first field of statistics would be 446216.
+> -By contrast, in 2.6+ if you look at ``/sys/block/hda/stat``, you'll
+> -find just the 15 fields, beginning with 446216.  If you look at
+> -``/proc/diskstats``, the 15 fields will be preceded by the major and
+> -minor device numbers, and device name.  Each of these formats provides
+> -15 fields of statistics, each meaning exactly the same things.
+> -All fields except field 9 are cumulative since boot.  Field 9 should
+> -go to zero as I/Os complete; all others only increase (unless they
+> -overflow and wrap). Wrapping might eventually occur on a very busy
+> -or long-lived system; so applications should be prepared to deal with
+> -it. Regarding wrapping, the types of the fields are either unsigned
+> -int (32 bit) or unsigned long (32-bit or 64-bit, depending on your
+> -machine) as noted per-field below. Unless your observations are very
+> -spread in time, these fields should not wrap twice before you notice it.
+> +The kernel exposes disk statistics via ``/proc/diskstats`` and
+> +``/sys/block/<device>/stat``. These stats are usually accessed via tools
+> +such as ``sar`` and ``iostat``.
+> +
+> +Here are examples using a disk with two partitions::
+> +
+> +   /proc/diskstats:
+> +     259       0 nvme0n1 255999 814 12369153 47919 996852 81 36123024 42=
+5995 0 301795 580470 0 0 0 0 60602 106555
+> +     259       1 nvme0n1p1 492 813 17572 96 848 81 108288 210 0 76 307 0=
+ 0 0 0 0 0
+> +     259       2 nvme0n1p2 255401 1 12343477 47799 996004 0 36014736 425=
+784 0 344336 473584 0 0 0 0 0 0
+> +
+> +   /sys/block/nvme0n1/stat:
+> +     255999 814 12369153 47919 996858 81 36123056 426009 0 301809 580491=
+ 0 0 0 0 60605 106562
+> +
+> +   /sys/block/nvme0n1/nvme0n1p1/stat:
+> +     492 813 17572 96 848 81 108288 210 0 76 307 0 0 0 0 0 0
+> +
+> +Both files contain the same 17 statistics. ``/sys/block/<device>/stat``
+> +contains the fields for ``<device>``. In ``/proc/diskstats`` the fields
+> +are prefixed with the major and minor device numbers and the device
+> +name. In the example above, the first stat value for ``nvme0n1`` is
+> +255999 in both files.
+> +
+> +The sysfs ``stat`` file is efficient for monitoring a small, known set
+> +of disks. If you're tracking a large number of devices,
+> +``/proc/diskstats`` is often the better choice since it avoids the
+> +overhead of opening and closing multiple files for each snapshot.
+> +
+> +All fields are cumulative, monotonic counters, except for field 9, which
+> +resets to zero as I/Os complete. The remaining fields reset at boot, on
+> +device reattachment or reinitialization, or when the underlying counter
+> +overflows. Applications reading these counters should detect and handle
+> +resets when comparing stat snapshots.
+> =20
+>  Each set of stats only applies to the indicated device; if you want
+>  system-wide stats you'll have to find all the devices and sum them all u=
+p.
+>=20
 
-Before:
-[   70.910184] rcu: INFO: rcu_preempt self-detected stall on CPU
-[   70.910436] rcu:     3-....: (4999 ticks this GP) idle=***
-[   70.910711] rcu:              hardirqs   softirqs   csw/system
-[   70.910870] rcu:      number:        0        657            0
-[   70.911024] rcu:     cputime:        0          0         2498   ==> 2498(ms)
-[   70.911278] rcu:     (t=5001 jiffies g=3677 q=29 ncpus=8)
+The doc LGTM, thanks!
 
-After:
-[   68.046132] rcu: INFO: rcu_preempt self-detected stall on CPU
-[   68.046354] rcu:     2-....: (4999 ticks this GP) idle=***
-[   68.046628] rcu:              hardirqs   softirqs   csw/system
-[   68.046793] rcu:      number:     2498        663            0
-[   68.046951] rcu:     cputime:        0          0         2496   ==> 2496(ms)
-[   68.047244] rcu:     (t=5000 jiffies g=3825 q=4 ncpus=8)
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Fixes: be42f00b73a0 ("rcu: Add RCU stall diagnosis information")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501090842.SfI6QPGS-lkp@intel.com/
-Signed-off-by: Yongliang Gao <leonylgao@tencent.com>
-Reviewed-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+--=20
+An old man doll... just what I always wanted! - Clara
 
----
-Changes from v2:
-- Add Reviewed-by 'Neeraj Upadhyay' information
-- Link to v2: https://lore.kernel.org/all/20250109024652.1342595-1-leonylgao@gmail.com
-Changes from v1:
-- Fix compilation error when using arm64-allnoconfig/riscv-randconfig. [kernel test robot]
-- Link to v1: https://lore.kernel.org/r/20250108065716.2888148-1-leonylgao%40gmail.com
----
----
- kernel/rcu/tree.c       | 10 +++++++---
- kernel/rcu/tree.h       |  2 +-
- kernel/rcu/tree_stall.h |  4 ++--
- 3 files changed, 10 insertions(+), 6 deletions(-)
+--1k5tCeOp3IGuamdw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 475f31deed14..a0dab5923d03 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -781,6 +781,10 @@ static int rcu_watching_snap_save(struct rcu_data *rdp)
- 	return 0;
- }
- 
-+#ifndef arch_irq_stat_cpu
-+#define arch_irq_stat_cpu(cpu) 0
-+#endif
-+
- /*
-  * Returns positive if the specified CPU has passed through a quiescent state
-  * by virtue of being in or having passed through an dynticks idle state since
-@@ -916,9 +920,9 @@ static int rcu_watching_snap_recheck(struct rcu_data *rdp)
- 			rsrp->cputime_irq     = kcpustat_field(kcsp, CPUTIME_IRQ, cpu);
- 			rsrp->cputime_softirq = kcpustat_field(kcsp, CPUTIME_SOFTIRQ, cpu);
- 			rsrp->cputime_system  = kcpustat_field(kcsp, CPUTIME_SYSTEM, cpu);
--			rsrp->nr_hardirqs = kstat_cpu_irqs_sum(rdp->cpu);
--			rsrp->nr_softirqs = kstat_cpu_softirqs_sum(rdp->cpu);
--			rsrp->nr_csw = nr_context_switches_cpu(rdp->cpu);
-+			rsrp->nr_hardirqs = kstat_cpu_irqs_sum(cpu) + arch_irq_stat_cpu(cpu);
-+			rsrp->nr_softirqs = kstat_cpu_softirqs_sum(cpu);
-+			rsrp->nr_csw = nr_context_switches_cpu(cpu);
- 			rsrp->jiffies = jiffies;
- 			rsrp->gp_seq = rdp->gp_seq;
- 		}
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index a9a811d9d7a3..1bba2225e744 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -168,7 +168,7 @@ struct rcu_snap_record {
- 	u64		cputime_irq;	/* Accumulated cputime of hard irqs */
- 	u64		cputime_softirq;/* Accumulated cputime of soft irqs */
- 	u64		cputime_system; /* Accumulated cputime of kernel tasks */
--	unsigned long	nr_hardirqs;	/* Accumulated number of hard irqs */
-+	u64		nr_hardirqs;	/* Accumulated number of hard irqs */
- 	unsigned int	nr_softirqs;	/* Accumulated number of soft irqs */
- 	unsigned long long nr_csw;	/* Accumulated number of task switches */
- 	unsigned long   jiffies;	/* Track jiffies value */
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 925fcdad5dea..56b21219442b 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -435,8 +435,8 @@ static void print_cpu_stat_info(int cpu)
- 	rsr.cputime_system  = kcpustat_field(kcsp, CPUTIME_SYSTEM, cpu);
- 
- 	pr_err("\t         hardirqs   softirqs   csw/system\n");
--	pr_err("\t number: %8ld %10d %12lld\n",
--		kstat_cpu_irqs_sum(cpu) - rsrp->nr_hardirqs,
-+	pr_err("\t number: %8lld %10d %12lld\n",
-+		kstat_cpu_irqs_sum(cpu) + arch_irq_stat_cpu(cpu) - rsrp->nr_hardirqs,
- 		kstat_cpu_softirqs_sum(cpu) - rsrp->nr_softirqs,
- 		nr_context_switches_cpu(cpu) - rsrp->nr_csw);
- 	pr_err("\tcputime: %8lld %10lld %12lld   ==> %d(ms)\n",
--- 
-2.39.3
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ7Gl+gAKCRD2uYlJVVFO
+o1p5AQDkfhl6zkpLLKdDOA6iiuY0vt3XzWg2iXIsZ9/ZMhviyQEA6nkZpo8HHpqN
+TqtgvYhTFxAQ524Eb7DMKx3axQ/IXAk=
+=CLqk
+-----END PGP SIGNATURE-----
+
+--1k5tCeOp3IGuamdw--
