@@ -1,105 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FC6188724;
-	Sun, 16 Feb 2025 17:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D0B1AAC9;
+	Sun, 16 Feb 2025 17:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739725660; cv=none; b=Ul4YhJtnpFGI+qBsPhW2Gxlt3UsUJ06YDwNvh3b/+lwUfYYqYDCekrwreYiKadh93W5CWrNdgg2AhP/ZPRik4EJ9AICbM8Q4fL8edq5FIsfNcErW2UP+SACNKrp9vAAkouMsX4jJNa3KhzvtHrDM2n3GS2eseRZ25bhGkFHraPY=
+	t=1739725695; cv=none; b=SrTmE9e8MnabfuPULrMHcVrF9/lwMOzmQBwJty3QUlsxaZDCjXjkc+lLDvXC7cR8c71gyg+XlNnRGHL0CcuvGybnt08ByJhxPUyp/mz3qKyowzh/uVwwNDJdl0xbiDlWVyHz0ei3C92m0xl1Ox4cDzqRSo8MzgJkq6GjpOCZeTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739725660; c=relaxed/simple;
-	bh=c/9tgpooSevtIXvhv7PfQOLK0UYpRmLA8i6VZpmd/iY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M+V4zDbDGUYpNRvDPo7Yr96q1aoa9ZZOeGY8dfphTDQTFJ4XC4qtRe+fDVpR7ImK6bjaArWN+xVsQKhG2HDByqfvUVGkYpY2dylWacJFRru9yC6HtNcCvowJ1M6zRb16ylTz6WQ4z/apFV+SjziLEMThKFuY4gQkYGBF9YbaXuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ROq5nN8R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739725695; c=relaxed/simple;
+	bh=/N419Jjps23Vm5o3weAzAHFlgOhhlc9/Av3/FoZCn8k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=lrzOF3rdngKe56ehMoJGaVYTRvZjOWCAC2cFwutPy/7lup8i7fKlS/JkxsWE6HnF+8hktHw47I8VuN6Qwax1+Xq2yj1MH8gs8cUlWtmSeKbu1eO3WSRjD3lNxX9c5LPayJmsjTl8Rh5oXb9qeFDD+kp6WAtFKsIinMST8DAjqvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5Cc86cz; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ROq5nN8R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A380AC4CEDD;
-	Sun, 16 Feb 2025 17:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739725659;
-	bh=c/9tgpooSevtIXvhv7PfQOLK0UYpRmLA8i6VZpmd/iY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ROq5nN8RVyJAMn17jXCyBSVuaEax3FPssecRERcsRwBH3AHln2IMI1OzwOYnJT4su
-	 /POZOgxKJL+W8w0TIeDJ3N5uMBPfvUIpY3t2ZVLgY5/CUW9kF0k2hrsoIdIMbVrX5H
-	 hwOMIOHqcVr2u/DkGxscJtNzZ++N+fdGSd5I045laZYna0p5b6rIev7XGetR5k0U5h
-	 WCrYazJLBjKOMjQmJ8L5NJzwkGlVj7g4vlkpwFGinrZGX24RLLsen368EKtPtfesxl
-	 DAeCS9f9NLcrGeuPHdSw33HXpd02y5fTcr7YkCo0m3SHmIaInFgISngBZPa2rxWe5u
-	 FrXx6uqkC8A1w==
-Date: Sun, 16 Feb 2025 09:07:39 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Ruiwu Chen <rwchen404@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	kees@kernel.org, joel.granados@kernel.org, zachwade.k@gmail.com
-Subject: Re: [PATCH] drop_caches: re-enable message after disabling
-Message-ID: <20250216170739.GA1564284@frogsfrogsfrogs>
-References: <20250216101729.2332-1-rwchen404@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5Cc86cz"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54622829175so79302e87.0;
+        Sun, 16 Feb 2025 09:08:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739725692; x=1740330492; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/N419Jjps23Vm5o3weAzAHFlgOhhlc9/Av3/FoZCn8k=;
+        b=D5Cc86czePK3ElxOp4gv7LXDMhulXmbgpf38B5IzZS+3XKcSqpolRSlVypEYAQjaIm
+         MUj46jxNakescDg0rhWMKTN/XyN7ACXEDZ0Qa+eDSBeg8rxTxtTv4lJcMeRwGk3TGgVc
+         AGXIPJOcEUeQioyd6DczjnncIuAAL3MaEq1+xvyVWCXXXtjNLwuf7SVEW8VqRXwWHMtz
+         El7tj+idaDS5n/FsEnDEf8YWJkUNjgLd91bKtKAzwBoTWDeAe5D0WBqTChIEUqlseGtI
+         /3UtzJTKudT85dwa3X/R4WgBNyOKilTPgwaevEP55jhxLz3cBYhfVBNHcbZClr1mmlqS
+         8wlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739725692; x=1740330492;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/N419Jjps23Vm5o3weAzAHFlgOhhlc9/Av3/FoZCn8k=;
+        b=Bb+Axrke36wLJfzus0YgfDAWiOdBQjJVpdIHM8TBulelAPNM7nhU2BsHumvvS8yRKO
+         SFildBjYzamQh4jsLug5EwnNcxPD+MYq19eiACqQOS2DgoiBzJDIuyOS0KDc/+3kK8vO
+         undGSoB8mEDn3XO5P78+f7bh4Xr+QWEL1Jm7bL0JhAyj0ENK7JEWefBVTNX7Xa5Bmk0N
+         eMy1INZKsTbyn7+bKqHwcXOCdJ1e9froLNLhv1OMqGUA7nT4l3oU6E/snbj8RWuoYieS
+         M6F+jID8a8UFe0xYOmneUI9BbJwueSWIdsoThfWL4ph7K1pz2zZ0y6IRbTsviluidnOU
+         U3gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKIw6xJui6MrjP+oW8RdDSGHm+ogE84vyQGEo80WKk6vY0PUXZYfnY5G+92SWlYIb1L2MXlP7THVzSN44A@vger.kernel.org, AJvYcCXjv7ssJcstKi1mTxgaqP7J8D+txzRVU5CiBY1BC5fGpcpBaYwGAW76m/pHTboYY+MZWqQ/NpTFkE6Ctg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjhPwPyzYyh2x3NymegtbrvQr0lPpWjjSHxSl6ndhl7sD2Ofp/
+	Wt4uLfJ+qN5C+SZFcsDdZGrlzssnV8Ru60HelejK6YBH+m5OZQd/
+X-Gm-Gg: ASbGncu8D9kEZCq+YQaP4bbiw19h3O46TLgrkHdMLuOeHRA6795zq60ZVRPvHOJ8WX0
+	8B0495KHfz4na3OJIcYksPgqKg6hAENdPHeYnY2B3UXBdVkuXRDxWzg0Mx5Go8s6u6tC61mM4oJ
+	kjTtnJW+ZfYZt5CXSNpe/MkXp7xQqBXX5yk1OBK8zJ3yNESAOZwRuBrh1X+QAIUAnLGHcu0F29l
+	rc/fpByvI73yjTrq4WZondCOOZmuTJxiAqcSB0szP5bwLCOZluDgGRb5gxfOFAgxR7OBmuwXMTu
+	2d5XfvfBArI0CzFvtLEOEmv8PCga0UGgmP223G1LiOMW6dyrWJ/PiPwLX6MxXg==
+X-Google-Smtp-Source: AGHT+IG79RCqXdLXG/HYFwClaSDt/ZsTMc6dIp2bgXOZ71fA6MF40N8lXz97AC8QaU45ONheAhjtlw==
+X-Received: by 2002:a05:6512:ea1:b0:545:ae6:d73d with SMTP id 2adb3069b0e04-5452fe767f3mr2112547e87.45.1739725691902;
+        Sun, 16 Feb 2025 09:08:11 -0800 (PST)
+Received: from es40.darklands.se (h-94-254-104-176.A469.priv.bahnhof.se. [94.254.104.176])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452a67e6c3sm921808e87.1.2025.02.16.09.08.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2025 09:08:11 -0800 (PST)
+From: Magnus Lindholm <linmag7@gmail.com>
+To: linmag7@gmail.com,
+	richard.henderson@linaro.org,
+	mattst88@gmail.com,
+	glaubitz@physik.fu-berlin.de,
+	ink@unseen.parts,
+	kees@kernel.org,
+	arnd@arndb.de,
+	linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org
+Subject: [PATCH 0/1] alpha: Fix pte_swp_exclusive on alpha
+Date: Sun, 16 Feb 2025 18:04:52 +0100
+Message-ID: <20250216170748.2258-1-linmag7@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250216101729.2332-1-rwchen404@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 16, 2025 at 06:17:29PM +0800, Ruiwu Chen wrote:
-> When 'echo 4 > /proc/sys/vm/drop_caches' the message is disabled,
-> but there is no interface to enable the message, only by restarting
-> the way, so I want to add the 'echo 0 > /proc/sys/vm/drop_caches'
-> way to enabled the message again.
-
-Please update Documentation/ to note this new API.
-
---D
-
-> Signed-off-by: Ruiwu Chen <rwchen404@gmail.com>
-> ---
->  fs/drop_caches.c | 7 +++++--
->  kernel/sysctl.c  | 2 +-
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/drop_caches.c b/fs/drop_caches.c
-> index d45ef541d848..c90cfaf9756d 100644
-> --- a/fs/drop_caches.c
-> +++ b/fs/drop_caches.c
-> @@ -57,7 +57,7 @@ int drop_caches_sysctl_handler(const struct ctl_table *table, int write,
->  	if (ret)
->  		return ret;
->  	if (write) {
-> -		static int stfu;
-> +		static bool stfu;
->  
->  		if (sysctl_drop_caches & 1) {
->  			lru_add_drain_all();
-> @@ -73,7 +73,10 @@ int drop_caches_sysctl_handler(const struct ctl_table *table, int write,
->  				current->comm, task_pid_nr(current),
->  				sysctl_drop_caches);
->  		}
-> -		stfu |= sysctl_drop_caches & 4;
-> +		if (sysctl_drop_caches == 0)
-> +			stfu = false;
-> +		else if (sysctl_drop_caches == 4)
-> +			stfu = true;
->  	}
->  	return 0;
->  }
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index cb57da499ebb..f2e06e074724 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -2088,7 +2088,7 @@ static const struct ctl_table vm_table[] = {
->  		.maxlen		= sizeof(int),
->  		.mode		= 0200,
->  		.proc_handler	= drop_caches_sysctl_handler,
-> -		.extra1		= SYSCTL_ONE,
-> +		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_FOUR,
->  	},
->  	{
-> -- 
-> 2.27.0
-> 
-> 
+First noticed that swapoff fails to unmount/free a previously used swap
+file or partition on alpha. swapoff fails to writeback exclusive swap
+pages and gets stuck in an infinite loop trying to do so. This was
+introduced in commit a172d5128706028ac07b8db709728379ecc72f6e. This
+patch provides a fix for pte_swp_exclusive. Verified on UP2000 alpha.
