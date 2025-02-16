@@ -1,77 +1,42 @@
-Received: from mail-il1-f226.google.com (mail-il1-f226.google.com [209.85.166.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BA216EB4C
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 22:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACB2C2EF;
+	Sun, 16 Feb 2025 23:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739746778; cv=none; b=pCirMlfZH8pFqoiHoAl+djLgd264URly4NTeWpBRMyroqecMR1uTne0eOC05elKnTiUy1mtke9AYluaJVH4g3uxV+IR0to3ZzxoTs0M08s452x8ryjtQ8fUA8ognkphtohUBigU9n1ib9MNG33sDyTSNNU0HITBXwLgGZziGRvs=
+	t=1739746832; cv=none; b=MgtioPSW2T0v6yCreQcp5enYrIwvzAI6ahtyKWdmv9GZNElHAd0ksHh5XwefvfXg6mCr3OFWehZK+6zGzNDV0jb97vvTClE75iW9MNxdt2X/Ah/GyRT1ifBAWfM59q6CNwijmc7eN2Y1Y8tLiFklSJ470ecVQymUeTQdPSERxzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739746778; c=relaxed/simple;
-	bh=9irgLr0l3CK861ewxkX+DyGlZog3CP8czx5f2HVoHBc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W8F57JZZXjaefdli68feKzwaJwRi9Q4mkVouGc0y1Wy7UtVLcdAlwnqBa23p57IfzLK8xs9bvqbtZR78LVaTXWg4PtxR/jjVDxY3QiMov1eaABWYo5Ro6kLp/8SOd/RXrraxFUmCXIrtyRYOtTvpZbUm/flCsYmUAXIkoRZI0wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Ges7LyK2; arc=none smtp.client-ip=209.85.166.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1739746832; c=relaxed/simple;
+	bh=2d6ZtWkWQ357DtEP1dRgzHJghjeMoRX2Npj7Yv4hSGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tjtbhQk1zHn1FzCDjQrLsbUUBbvTbOIeVXnXpHikoF1qngBqL9YS7nut0h6gBqhxKjlo5mgWfXbuLdUCFNjaZXI9sa/mEQ28VWNH26FGCJHLdPAv4S8jDudCBTC5YjASpkx7e/mUC3Btyo8XiBncTxdDjsHZu4lSk5roIvGLa+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QohltwnV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Ges7LyK2"
-Received: by mail-il1-f226.google.com with SMTP id e9e14a558f8ab-3d1a2975566so538945ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 14:59:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1739746774; x=1740351574; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VOzqu2X3lgSbiyrDMUmee+hDSe3BZ5BDlMMCth/AVYM=;
-        b=Ges7LyK2fOgOBSxJxtANMjHiT5rEaymm/r3cCRHWmgntv+3/F5SjSCo3nBj03Cw3Hk
-         jbsGaimSKwKd8cdElgJ6tjGIFiPGUa4PCXQl8FFfHsb1s9D1ZY/YXMtrDKLJMuNBdTKL
-         D9Ktk3WBO+VDxyVMq4PI6S1p2I88UnMra5KpJfkZ4HKHwMDOvXxEFHhz1oKD3a3O6vdv
-         C+doITv0KnffUXn7/GonsyGwedUkqB48BELJU3heZfYBOdBTYVY1q8L7gYnKeJSngSKx
-         K5HF6uinvCP4Dkn88A4tzVKhc0E5Ekwv/5wft8n7PPvXYEQ6ldzlMqGkyqRhgTe/gQpw
-         L5Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739746774; x=1740351574;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VOzqu2X3lgSbiyrDMUmee+hDSe3BZ5BDlMMCth/AVYM=;
-        b=xTROCzYyhzLMuW8fRmb3KADhb84f2V+mJ8mAAcAS1xf3dyqA1D4ew2T9OCVh6lOakp
-         Ybehg0/CLFpeINu1kBtvcECZShrua4Q1BxvIn3yFif+p8EpNhXt6WbZBMLaBYeFUoWzP
-         7TRoUkBSep9RtVOJq9wNxFC84Fs+/+IHYLjHg0b9+9LelHay3sEilKj+IIA6M6/co3QA
-         TBiswbQ6PwisVIdkteutkLI6X+ZEpUcGpXM2HPaxEylx6KnQ2GaFRkj+Huvh7qeZ76R0
-         OfPs0wsn7104DrLPA6PsBCjwYUoVMrlhtVG75xEo2V+cnjULa3CVpdjysPOxJj4oAgph
-         tuIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjV0T4Ah5UCbM1mslrFfkcWxAIDNemiixEoWCgMUWQCZ6pChC0q7LfMznJv3noPSwgN0VW01B4UAI99UI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0g2VR0WvrlWP77O8pDCkOj8AlprKGMswDywY9nYzzDtTi2P6E
-	jvyz+u7PN2STnk0SJig1BdDip8EVQqn5XuoFVPKsA/4cZSDvvgNuNzjK+G12yve3TOSYBQEfRvz
-	4DPB6DI5reT5fUSO1OE15JbXjfBP4gHZo
-X-Gm-Gg: ASbGncu2h24ULa7u7YvKmb5AzY/1+KefcsK6E1k2QMa5v3quAu907yCiiZwEpX5ugA/
-	R3+jE/Wu7Tkez6HZCQeO8K/TbOyZw1AqDVoNowmdhpBeyH1gVeefdBed3CXU2txrLCS+/0pDq/R
-	DSig+B8AkFZtiarSQNH5mjEyCJQCufYKxxnVoEm40MGLrajIBzabjKkU8onqwBjn25XxznagQjC
-	jYIvR1FDDCk8cohJJ/WHf9jBUaDUreax+WJlGGniPq7ZwonTfMYjD+0WcdGxLWxA15uYzl6738X
-	f6bZNBxrgIEvM+n0mSpq/SFNt7HvvMhq9x9qsg==
-X-Google-Smtp-Source: AGHT+IGNZMUsQmjwhNAChABqyKb9P9CjO83bZ1o2Eo+zQFFzpwLHMh0KGUHlsnvWzivnKptXFveCictNYXwy
-X-Received: by 2002:a05:6e02:20cd:b0:3d0:255e:fe7 with SMTP id e9e14a558f8ab-3d2808cfca6mr15592615ab.4.1739746774637;
-        Sun, 16 Feb 2025 14:59:34 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4ee9e72f6fesm33931173.44.2025.02.16.14.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 14:59:34 -0800 (PST)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5536C34022D;
-	Sun, 16 Feb 2025 15:59:32 -0700 (MST)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 4862AE416FC; Sun, 16 Feb 2025 15:59:02 -0700 (MST)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring/rsrc: avoid NULL check in io_put_rsrc_node()
-Date: Sun, 16 Feb 2025 15:58:59 -0700
-Message-ID: <20250216225900.1075446-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QohltwnV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65928C4CEDD;
+	Sun, 16 Feb 2025 23:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739746831;
+	bh=2d6ZtWkWQ357DtEP1dRgzHJghjeMoRX2Npj7Yv4hSGE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QohltwnVNTwOz7KDrIKCLR37vW5W4nrOzm7uF7UIuCKk1SlnGDxR0Z/2pl3ag4fm9
+	 SY5blg5pleNqD+N3p2pu3d2nWtMCvQEihDPmiyWmHwgRO9vEgBKe4d4reZuZDyZyGM
+	 EkAiu18j4zY5bfptlaaAhja8S/IeQ07X6uZkD7vLBiMDXyDkd6NOZt/OGAAwacjEc0
+	 4aBn2i/12jAC6TPGTJSeL3H2ZM6tUyGWGmHLbNgTpyCHhPXIJS2kXgdmG398QvYsP0
+	 qlPhWtPFLB4P5gZuswb7PN1rWTQJva2HMrcvWrvNKMzN0R40VYUBZz2ydGC8sPGoYe
+	 mc9HLIccc8gyA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Zhihang Shao <zhihang.shao.iscas@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Xiao Wang <xiao.w.wang@intel.com>,
+	Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH 0/4] RISC-V CRC optimizations
+Date: Sun, 16 Feb 2025 14:55:26 -0800
+Message-ID: <20250216225530.306980-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,56 +45,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Most callers of io_put_rsrc_node() already check that node is non-NULL:
-- io_rsrc_data_free()
-- io_sqe_buffer_register()
-- io_reset_rsrc_node()
-- io_req_put_rsrc_nodes() (REQ_F_BUF_NODE indicates non-NULL buf_node)
+This patchset is a replacement for
+"[PATCH v4] riscv: Optimize crct10dif with Zbc extension"
+(https://lore.kernel.org/r/20250211071101.181652-1-zhihang.shao.iscas@gmail.com/).
+It adopts the approach that I'm taking for x86 where code is shared
+among CRC variants.  It replaces the existing Zbc optimized CRC32
+functions, then adds Zbc optimized CRC-T10DIF and CRC64 functions.
 
-Only io_splice_cleanup() can call io_put_rsrc_node() with a NULL node.
-So move the NULL check there.
+This new code should be significantly faster than the current Zbc
+optimized CRC32 code and the previously proposed CRC-T10DIF code.  It
+uses "folding" instead of just Barrett reduction, and it also implements
+Barrett reduction more efficiently.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- io_uring/rsrc.h   | 2 +-
- io_uring/splice.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+This applies to crc-next at
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next.
+It depends on other patches that are queued there for 6.15, so I plan to
+take it through there if there are no objections.
 
-diff --git a/io_uring/rsrc.h b/io_uring/rsrc.h
-index 190f7ee45de9..a6d883c62b22 100644
---- a/io_uring/rsrc.h
-+++ b/io_uring/rsrc.h
-@@ -81,11 +81,11 @@ static inline struct io_rsrc_node *io_rsrc_node_lookup(struct io_rsrc_data *data
- }
- 
- static inline void io_put_rsrc_node(struct io_ring_ctx *ctx, struct io_rsrc_node *node)
- {
- 	lockdep_assert_held(&ctx->uring_lock);
--	if (node && !--node->refs)
-+	if (!--node->refs)
- 		io_free_rsrc_node(ctx, node);
- }
- 
- static inline bool io_reset_rsrc_node(struct io_ring_ctx *ctx,
- 				      struct io_rsrc_data *data, int index)
-diff --git a/io_uring/splice.c b/io_uring/splice.c
-index 5b84f1630611..7b89bd84d486 100644
---- a/io_uring/splice.c
-+++ b/io_uring/splice.c
-@@ -49,11 +49,12 @@ int io_tee_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 
- void io_splice_cleanup(struct io_kiocb *req)
- {
- 	struct io_splice *sp = io_kiocb_to_cmd(req, struct io_splice);
- 
--	io_put_rsrc_node(req->ctx, sp->rsrc_node);
-+	if (sp->rsrc_node)
-+		io_put_rsrc_node(req->ctx, sp->rsrc_node);
- }
- 
- static struct file *io_splice_get_file(struct io_kiocb *req,
- 				       unsigned int issue_flags)
- {
+Tested with crc_kunit in QEMU (set CONFIG_CRC_KUNIT_TEST=y and
+CONFIG_CRC_BENCHMARK=y), both 32-bit and 64-bit.  I don't have real Zbc
+capable hardware to benchmark this on, but the new code should work very
+well; similar optimizations work very well on other architectures.
+
+Eric Biggers (4):
+  riscv/crc: add "template" for Zbc optimized CRC functions
+  riscv/crc32: reimplement the CRC32 functions using new template
+  riscv/crc-t10dif: add Zbc optimized CRC-T10DIF function
+  riscv/crc64: add Zbc optimized CRC64 functions
+
+ arch/riscv/Kconfig                  |   2 +
+ arch/riscv/lib/Makefile             |   5 +
+ arch/riscv/lib/crc-clmul-consts.h   | 122 +++++++++++
+ arch/riscv/lib/crc-clmul-template.h | 265 ++++++++++++++++++++++++
+ arch/riscv/lib/crc-clmul.h          |  23 +++
+ arch/riscv/lib/crc-t10dif.c         |  24 +++
+ arch/riscv/lib/crc16_msb.c          |  18 ++
+ arch/riscv/lib/crc32-riscv.c        | 310 ----------------------------
+ arch/riscv/lib/crc32.c              |  53 +++++
+ arch/riscv/lib/crc32_lsb.c          |  18 ++
+ arch/riscv/lib/crc32_msb.c          |  18 ++
+ arch/riscv/lib/crc64.c              |  34 +++
+ arch/riscv/lib/crc64_lsb.c          |  18 ++
+ arch/riscv/lib/crc64_msb.c          |  18 ++
+ scripts/gen-crc-consts.py           |  55 ++++-
+ 15 files changed, 672 insertions(+), 311 deletions(-)
+ create mode 100644 arch/riscv/lib/crc-clmul-consts.h
+ create mode 100644 arch/riscv/lib/crc-clmul-template.h
+ create mode 100644 arch/riscv/lib/crc-clmul.h
+ create mode 100644 arch/riscv/lib/crc-t10dif.c
+ create mode 100644 arch/riscv/lib/crc16_msb.c
+ delete mode 100644 arch/riscv/lib/crc32-riscv.c
+ create mode 100644 arch/riscv/lib/crc32.c
+ create mode 100644 arch/riscv/lib/crc32_lsb.c
+ create mode 100644 arch/riscv/lib/crc32_msb.c
+ create mode 100644 arch/riscv/lib/crc64.c
+ create mode 100644 arch/riscv/lib/crc64_lsb.c
+ create mode 100644 arch/riscv/lib/crc64_msb.c
+
+
+base-commit: cf1ea3a7c1f63cba7d1dd313ee3accde0c0c8988
 -- 
-2.45.2
+2.48.1
 
