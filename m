@@ -1,38 +1,38 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D3E1A3155;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F31E1A3161;
 	Sun, 16 Feb 2025 19:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739734428; cv=none; b=RulNUgUf9z8tS3iUBswz/8HOtHjfZQ1UEM6KEZ1O6+955ekuhRqInXd/BlCwW/4tYTvoPdvLyYADp6Ud+iiXhgmIPv/8ZmLuG846m82zDyDbYp46LN2dV9M3DwUDy2Fut6IX2SvGvmAtkBNv2REOeTeJpbMEZT0gcS0avkh76mQ=
+	t=1739734428; cv=none; b=Pfur9P8mwUPIgow+1zBdCDQszPjeFbyZvTCmT6V3iA4VQmjPEf/TLGQIuEquLnl/Czu+3VAUjayzzfOUngavma6dd6nsBBWwLm6stExe7fDknF1ZGVtc9mqRwyfOPGIX4xX1e5PkODYdCuFqonUY/6HkcHtHLxwhCbIR6p6Lkjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739734428; c=relaxed/simple;
-	bh=yy/egALJlGg2nyNQfr1nfCTmkXionDmd0uyxqFsuSmw=;
+	bh=kVzMWrgel67Mo9Ygay0IYNyhWBOB4SrG6RdEbD8Pw0c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rH5s2JxX9xkgpD2KEnPtSDpQ3pHRt/vg2VxBCN/dyIsFVkawamIZZN41kSqlCysCLiOVxqNU8cFty06XxKw363RKyHj35VdX6Jx9rn9Qd4NNoP3/VU0JaC4arTRn7b5/0JXYvvWpyMfZrijeSVnS1eRDct0koo21ZgrTMLV3JNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MlXfy2YM; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=gIVszBOcxmMAPHP2N7/Lu0pOQFck94/ZJOv1S4988Or8dnVOFNfZxe7982ZAYGlzZe9I3NwRNUJkzYaZ9ieaf62Xotr0a/RW9+DDg6dnLUACIX6NWE+Kbrm9rsrIBUNKu6sDPS8mwMwCOPEsu/QykV+BHlLyF+v/JPYepQSPqQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Uv6mBTab; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MlXfy2YM"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Uv6mBTab"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1739734394; x=1740339194; i=w_armin@gmx.de;
-	bh=rgLcWVwAD5AFEDNUDNUW1/ig/txcNSoRp3vKvht8+6c=;
+	s=s31663417; t=1739734400; x=1740339200; i=w_armin@gmx.de;
+	bh=l76DFXanPHoGvanPZenEdjlmcNhNLDXwwR/QizhaJBg=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=MlXfy2YMw51CWV0Zo2Gqgl4/ACoFJbFrL5rbKjCyR3DWfmZxgCPFPVJwAn7ssWzY
-	 kexh6Gordz64gW7PdUexJ5bP5e8RtakiRK+BIJOtxU0H68hq6jXFafBx+JxTvsBbm
-	 BFrL/6PeK0CZMMYghHHabXhMl+Oozj7d8TKisiUd6SacYdZDkE2PwwuiBXKcUgGsX
-	 RdSWrI4j9C0hoY8jguGF7EmDXAL0zOUbJv9qARMcgoPcmpoujezoaDWSnTjm+tvbs
-	 9gTI6upRsdaKXgx81he7GJAHbcTq0jLjcT15ebP5fLbdDtG6EwQQzT4A4DMpxeLW9
-	 VUah9qQV+KFtyV86dA==
+	b=Uv6mBTabls2fFkqDWs4kLofxEpUx7RPag9xb7eZe82qsTf3HpGqpRMlzVri1j1G+
+	 X8OfueEl4eQaFHNC8RqCdp69XbeqiZOhpl3FZFSibhP3Rxd1TrB8xpJTuu3VfiFb8
+	 2U70BBXUC4HN2uGZRQJbi33uVEYrAXwUtgM7Wjzf9ng1Mtk7Quo6uW0rsTPcY2LIq
+	 QQoOXg/SYw86Ag7hAc8coKJkafzfHHIlUPBMd91qIYEP91FBQe/Uj63zKfWo9sQsK
+	 BxnlN4FwmYeMkZS/Gjd1P74xtj06OhODmLDw+RJI3GZNSivCGKk7moy74WWcH2J5e
+	 5ndNqPahg6sazgO8aA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N1Obb-1tLREP2Ohn-00udkZ; Sun, 16 Feb 2025 20:33:14 +0100
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N1wll-1tLzCI22vZ-00xljU; Sun, 16 Feb 2025 20:33:19 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: james@equiv.tech,
 	markpearson@lenovo.com,
@@ -46,9 +46,9 @@ Cc: jdelvare@suse.com,
 	platform-driver-x86@vger.kernel.org,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v2 5/8] platform/x86: wmi: Use devres to disable the WMI device
-Date: Sun, 16 Feb 2025 20:32:48 +0100
-Message-Id: <20250216193251.866125-6-W_Armin@gmx.de>
+Subject: [PATCH v2 7/8] platform/x86: wmi: Call WCxx methods when setting data blocks
+Date: Sun, 16 Feb 2025 20:32:50 +0100
+Message-Id: <20250216193251.866125-8-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250216193251.866125-1-W_Armin@gmx.de>
 References: <20250216193251.866125-1-W_Armin@gmx.de>
@@ -59,123 +59,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:foQTVB0Ul4JZlTR+BQrhH2jsmqcpefP37lV069chqlusmHSXOcS
- gqqr09+JTAio3a9t3Azm7EKYzNMWCqTizTQNU2nBvTbQIw9TLTRg9Df8FbZk5nvgnKDIgJ8
- TEkl0J0pIDzAW2wTrAICol/rCkIokpOiC5Jod0SXbGOCw0pLwgIx0bejPpe/AbCaOKDq0YB
- x88hrVfKd0cRH80SFJYjA==
+X-Provags-ID: V03:K1:F57wgiORwOAZmkbtP4YoHkBZ301swdj6njSKsDQY9TMzbVvrezU
+ lGMd+twSMeydRysUd3Lqf2gMqEgKNjgX2mRBEEGCKiXcrLm+0OKqMjwn4xYyKrL80P7MHfS
+ CJM/22Oe6VkPSo2maorrwvSSXIsI9ZK77ylcmqRgFfhu8XI64jqKa6tcGdBhxlRKsXhywRw
+ GCere+19zcITPMIsLJuhQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3w6imBrrSFs=;5j8/Aa5e/ratfIs67vS9q5hEJR9
- jNdTitAKmbP2R9fobzsRZ60Dm/Nc+s8jpu03TXtioHJ3nga4Obs++baMUn4uEVaC26o3fGONG
- NP+qiM2CRtJGnMxLkGiuAaoOzhPej0iPIpvRXTtXkiOicXuIHMGKc5KVOluqv/KYVoZo9EUyI
- K2CQaNqJaMHxhPZNZkfYtFDQaCrsBCmpw5E1ElYcQuHIVTNnGdc9llrh8/h2wWwJGmU4KfIsr
- U8cF1caFVzLA781/BSAYXfv0icfKFOvW2CQ7ra2TBH/7rACZlgETFc5s3IdCW8llENGIAWyPs
- G55kSVLK4vo8UZJkk6P5McNbQ9eSMZ15yAvhEGJ74lK7QZtIEX+SDEgiuanGyQJT7XsdkJr+X
- z/V/5Ny+OLuSPo7Bkw2kixBO4AsdCKECAsYaG/rtxKft0QLs2PsGR2ThKFGL80dFV2LeDC7My
- FXeO6RBqjM+qdHZRSlstg9Ga2C+vp4gfURR3PmYRksU/mxaKtLb0po/VrHoXgsnNpn99l/vGV
- DoVJNKWlIAMX1bV1WuiZH8SZYnXgUh8Kx2OPKmqDBlLt7QOQSoviIG3uke16JvnqZZA+RVk+m
- /Suw37lHoR6IFrX9Q/28q7/NimimZQqRLrina8arUsmHDC8Ft6JxBaJQmT23SPafjYaL5jK50
- JvA+Sca9zP974VHVg9c+r02TcvFw0KsrFErRK5fyvWyoz60knwK9voBH2ORjQatNAkxNc/kJm
- OGxyDvSJpqzXLOiUuQwKaorKlTrWrWXLflgtm/cwceCyd3uNY5g1vPBCllJDm3Jq7W7qIyCGt
- 0yWBSHUzS6mflt/SVRIDh4/bKGOuh05QK+zMM28dGJAO8+F1oDYvSlnjpCGcOPz+WbrrO9eUl
- +IJN5vRIBTehny1UTJdS3/p0k7lKKd84VaA4wUfECK6/9n5TyMPL2OghJKpw980z5kCgBwWH0
- WARalYGHnasMav0Dg5fKNyDnrD44VxkcFLw8idgvfp0MCM82+XnEoFam0pHefBCxwmd5IQbsR
- TkfKWMyrcLuU6VekDn6sgju51Uu8l+wpOT941/V+Zx5LuYkvO1ayhsET6tbp2pxqy3TC+ez/B
- Cs1IMWEyDfUtZm1TxCO1MBfiuDj6utK15jiTIXi1HtwXOpSPPtoefiSXU4m6/c0h2bzxR6RbN
- 3thcvuCt6+R66AT82OSLnY5QwRq1sMZyIQSbDVlqyYKOYdUCPzZP5re/5CQ5P9shnjU0r11Mo
- aE6RVaGHGS9joqWKLNeacaZfw6GDCTt1Tz0sOWNU7TgmtrgmOZhtoRcXJpAT6KDh1l06RLKc5
- ag89Nm79HMGv28dy+7B+q206NzdsLqjZLPfPPOSIhazRwziNRXp/vHDRawiBdCPiHUNjfKrfA
- ncqitgGwzlRpnmjAMHjpgM6YnjRp9BzKplOBgCa8AmGECSmhQFNFZvOB4q
+UI-OutboundReport: notjunk:1;M01:P0:gHvqS0MJtWk=;xYyimcpvjFI+5keTpMX50YmnS0a
+ vRn/imuk4PUnKFcOIcoZ0McjtXn8Zjyd8kGvKOGyMkKfUBqmDeCbUhbNbdAQM9h+3e+1753zs
+ bZfq91c0qeZ+JfODfKmLtFafY5Ss7VHxQ3xtxbFMGVRhBAemNvKGF58fAuX1Zz8NjLNrkpOt4
+ XDUOphwsaKbDUwQ6xtLye53qLRc5EHYlE9FsRnrGZY4TdjcrDYaiIK/Fojl12vQ9SVNo9UVYG
+ zVaskswE+nWJCwbSr3D8fmx0XEHNOjtO7gceT3hB+k1e2hKny42PO+NfI5Q/bfaRM6IrCQSOY
+ 0ghpQ1KI0iIrWAd1nxRUSIZV7+QJnFI84aviFM5bWl1SqagO5ZJUZGXlNbfM7VSh27O7JtAzy
+ pG4Kye691RN6BCv0HoCHX5WEEuP/afOJ8yDm0DkRVfpkm3vTAc8Vb1JZOOWXRvXctls+1by2p
+ b1QkGGGbUfORPHtVUdM++D04HQrGdFsD6yo7ESjq2Ueuuoxs8kY9CAUjo0/fTgRSC+tEdB7re
+ AGR+Myl/n+tkmIhdtc1tusEXTHjX1CTRoqcBcw6vJJWYKloQbpvffo5I2Sid8mJXAXsj8+nLm
+ erUg6fqkqyihB6ens9lDaSdSffqyEcxxzM3RWQnSrnrpAXSFTc/bqH/MZmS5irNm5oRpekabC
+ 2QDyJVwAOUYhT6gwoSrpn7tQcp/MKmhPBQDnEuGCQywLX5ZIaAi8H6wlmy6IKJWyin2A9mIev
+ tnlfXmVSgDHOPRa81cSP+T3LwllEajcEd8t3nyAXOSiCrbVfbX3ZPzzhL0ROJsMqGkhirUmSp
+ pKo86QlNEGw44xuV9p4ATvr8KAGE/WChHE8jYN2nxBvvAaPx3qhfo/OSvg7LSu5kNjyIgw0iJ
+ 4LZ5KzVRcCk9fg4tYJl3jknsO+Jfuj6J/2E7TZn8pGggwmmALDvGqPrYI404XlQkq+VMkQj4t
+ oRQRVmndBjmDSBcw+ciZeQlZlb+bNFqMfaOAVQ/p9vmGQgPbN8SuEWJ0O2mlNRvzUpLS78a/m
+ bjq3fOOl1W6xBCU8rA2SA1wGEa1hZ0Uc5LjyjhFfMVU7Uc2cx+9cgdFbu4rKSC8mjroVzGcnx
+ 7+z4Lms+BlA6tdagtC5GEXT3G9n0s8zxAUdAs28ez6yBb9Q5kEOc+qoFezdWktVcqnws87obC
+ /nDlxat+ZlwAoy5h2XiL5WUpaqZnJCrBo3ZYImy1sZXDANziGs0On5G4U/undSws7DhgOWqHy
+ IeoSftF4QtwWYWVrN9fqyJvrDzyp7Bi16ahC1ivGRJoIzw0EEasQRRmH7YXOdbA9qaRIiEXdU
+ u2zmcqxlsnpOUVrND+WyxqzW7YWY2YVoVSPmFjlO13ozgXvPrHaIgXsqOPaTsoBKIdxMC/lI0
+ 27INI+NvPJ54rIz9lgDitiiqlgWUPDgv5QK6EL2eEHmX8CQKYUdmQUClfPtAJ7ZtbU1X9Unr3
+ mbJfX+zclVK5l2dhF/DDltzMW2Bzs9z92wa+fDj6FWRhKWuS3
 
-Use devm_add_action_or_reset() to disable the WMI device instead of
-manually calling wmi_method_enable() to prepare for future changes
-inside the WMI data block handlign code.
+After performing some tests with a custom SSDT table available at
+https://github.com/Wer-Wolf/acpi-wmi-ssdt i found out that Windows
+also enables data block collection even when the data block is
+being set.
 
-The reason for this is that we have to make sure that all
-devres-managed resources are released first because some might still
-want to access the underlying WMI device.
-
-Because devres-managed resources are not released during shutdown
-we still have to manually disable the WMI device in this case.
+Emulate this behaviour to avoid confusing the ACPI firmware.
+The bus-based API already implements this behaviour, so only the
+legacy GUID-based API needs to be changed.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ Documentation/wmi/acpi-interface.rst | 3 +++
+ drivers/platform/x86/wmi.c           | 6 ++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/Documentation/wmi/acpi-interface.rst b/Documentation/wmi/acpi=
+-interface.rst
+index 06fb7fcf4413..f1b28835d23c 100644
+=2D-- a/Documentation/wmi/acpi-interface.rst
++++ b/Documentation/wmi/acpi-interface.rst
+@@ -89,6 +89,9 @@ Similar to the ``WExx`` ACPI methods, except that it con=
+trols data collection
+ instead of events and thus the last two characters of the ACPI method nam=
+e are
+ the method ID of the data block to enable/disable.
+
++Those ACPI methods are also called before setting data blocks to match th=
+e
++behaviour of the Windows driver.
++
+ _WED ACPI method
+ ----------------
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 646370bd6b03..7cb36a71e9ea 100644
+index 97c4a161799e..db76c5bc6e12 100644
 =2D-- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -821,11 +821,19 @@ static int wmi_dev_match(struct device *dev, const s=
-truct device_driver *driver)
- 	return 0;
- }
+@@ -461,8 +461,14 @@ acpi_status wmi_set_block(const char *guid_string, u8=
+ instance, const struct acp
+ 	if (IS_ERR(wdev))
+ 		return AE_ERROR;
 
-+static void wmi_dev_disable(void *data)
-+{
-+	struct wmi_block *wblock =3D data;
++	if (wmi_device_enable(wdev, true) < 0)
++		dev_warn(&wdev->dev, "Failed to enable device\n");
 +
-+	if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
-+		dev_warn(&wblock->dev.dev, "Failed to disable device\n");
-+}
+ 	status =3D  wmidev_block_set(wdev, instance, in);
+
++	if (wmi_device_enable(wdev, false) < 0)
++		dev_warn(&wdev->dev, "Failed to disable device\n");
 +
- static int wmi_dev_probe(struct device *dev)
- {
- 	struct wmi_block *wblock =3D dev_to_wblock(dev);
- 	struct wmi_driver *wdriver =3D to_wmi_driver(dev->driver);
--	int ret =3D 0;
-+	int ret;
+ 	wmi_device_put(wdev);
 
- 	/* Some older WMI drivers will break if instantiated multiple times,
- 	 * so they are blocked from probing WMI devices with a duplicated GUID.
-@@ -847,15 +855,19 @@ static int wmi_dev_probe(struct device *dev)
- 	if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
- 		dev_warn(dev, "failed to enable device -- probing anyway\n");
-
-+	/*
-+	 * We have to make sure that all devres-managed resources are released f=
-irst because
-+	 * some might still want to access the underlying WMI device.
-+	 */
-+	ret =3D devm_add_action_or_reset(dev, wmi_dev_disable, wblock);
-+	if (ret < 0)
-+		return ret;
-+
- 	if (wdriver->probe) {
- 		ret =3D wdriver->probe(to_wmi_device(dev),
- 				find_guid_context(wblock, wdriver));
--		if (ret) {
--			if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
--				dev_warn(dev, "Failed to disable device\n");
--
-+		if (ret)
- 			return ret;
--		}
- 	}
-
- 	down_write(&wblock->notify_lock);
-@@ -876,9 +888,6 @@ static void wmi_dev_remove(struct device *dev)
-
- 	if (wdriver->remove)
- 		wdriver->remove(to_wmi_device(dev));
--
--	if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
--		dev_warn(dev, "failed to disable device\n");
- }
-
- static void wmi_dev_shutdown(struct device *dev)
-@@ -902,6 +911,10 @@ static void wmi_dev_shutdown(struct device *dev)
- 		if (wdriver->shutdown)
- 			wdriver->shutdown(to_wmi_device(dev));
-
-+		/*
-+		 * We still need to disable the WMI device here since devres-managed re=
-sources
-+		 * like wmi_dev_disable() will not be release during shutdown.
-+		 */
- 		if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
- 			dev_warn(dev, "Failed to disable device\n");
- 	}
+ 	return status;
 =2D-
 2.39.5
 
