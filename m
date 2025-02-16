@@ -1,109 +1,190 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD9A19047C;
-	Sun, 16 Feb 2025 17:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59A7C2EF;
+	Sun, 16 Feb 2025 17:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739725717; cv=none; b=MiRta8DCgiRRb4clCBrPxrQaEDBkj5tKvQTx+wKB+bXtTl5KHqOcoGugWQ4+fxm7F6hRskBNyPiXsoxVN8QnpHAN5YpjQhy7tAD2Py2tLxsSj4/BIlbz4Tqv0Yz3f3TC50j/uY4LSWM6gKmDKhbdyqbqzBigl2lg3TM1FkQsv2U=
+	t=1739725901; cv=none; b=Z5DPOO1Z+EB4Zaen/u4Qie6UhF5gTfTDmJZslESDNKMs63RgK5GJXea1FT72DeMTJ0KyJq6LCAHS1C5lelJDAefhEgTnmqA2rMKNUsacbqZPKOP8Cn+rIy2hKsWQWPXTmG7KV6Kx7/kATxe3qOzAroyhzp2XhwozBR08f8bVo60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739725717; c=relaxed/simple;
-	bh=HEHXMI6WdAfby4lnVNaQ09H/JY0Nm/qewozJ+5uMGqo=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iOaX/eF1M/P4WaxeIyZWm4P0UbQbdUM9oZ0p41NuJWYoVYkHt0sMzFkseeqqpjF8TMw+7Jaxh0YP2BxqyKBvbkwZbMPwceho57mmqAXzng6oOt7LOL8e4vobxpAXpjO2ZMbxLa0RinvYjSB6Su7m8flP5GF0E/vxPvWvWHLxTSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m7UU8tAf; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739725901; c=relaxed/simple;
+	bh=E3tM1vECsfCNDcVKuUmehQ1xAbFy3el7aesQvhH+k9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iAej/2HcOM0uEIpAk5DHAw5nREjuSKFamNweJV82XCEyg76f5i3LRPsuHb1eI7I5qs7nBmMIoTtuV1udaiA7PZgF4H7ySvAz3s8HBOg0a0/X/n2DXe9uGj+bZFrx29bndiLd3ZH5GAQa0Sqp0R4utuJp4VmymRmiU5F8uuJ4Fjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5EUEH45; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7UU8tAf"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54298ec925bso4953765e87.3;
-        Sun, 16 Feb 2025 09:08:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739725713; x=1740330513; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QhA9rB+TVGhS4kXmOmdpbdYF2mOnK+KxvNZOwrTjUJk=;
-        b=m7UU8tAfyuupMTyiUpYF7aOe8K3xEEZKETDjQfktJlXXwJT9xWzTu91/8gmO4ZbPls
-         DANZEb1z351oBLDNcIqfSvEgdF5i8Prbu8ADpBJ1EMhgcylJhS4t0AKdsEgMW5b93Q+w
-         PLEzJNXQpBWtd6WcT1Tn1cZjy3jGS9rXHOMwvSu/auyh7MV/0CAEjrzX8IVyMuQC5dps
-         kzHVN+ibLtc0eUTcL/aU+Xz0H9Cq/ZB5hmXRW/SHk0bhwdkbWTntRzVQ871ZykIdh0eV
-         oB/84+tkRIvHCqheAVAudvp8g/FpWuav8ffbXTttjmqeElx4reuLiIaYbDzg8XoOdIj6
-         MX+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739725713; x=1740330513;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QhA9rB+TVGhS4kXmOmdpbdYF2mOnK+KxvNZOwrTjUJk=;
-        b=fcVL27r2bVQCvRWnfiCaVlIchQkL8rDBIH+l6tael93kQoUjCNnxUdt/PsHS90R30K
-         vV9kczkqpnpdZd3hhGrcXoYu3YsOoBKxUjng9tkhQv+5bOcmYznExSwBZ7AFits8iKl7
-         MIU7VTZggku9VylU6v1q5gw+gGK9OdqHbsDdmALfPyQ8WTR02AqXGz4PGzE1CUnBMOU7
-         viGjFPxu67mmTPxZyr9uYi6SnDSm2pA/V8lD/eVronMmQIZ0Y4oz9VUIkP0e7r75tgqa
-         54Scfl6U1dFPqQ06bP0aSdSnT6aCLap5A1JXbJ/xjLnYsq6fpoL6Ay4CJE/iXsrR4b6j
-         A+4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWHOT+Cbg9w0VI86mM860MoQ+B0BU6Xhxug11ilFELpIpVzqOAq6tJSgVs2ZDrBPUkyHHaAq8iwNH7EIA==@vger.kernel.org, AJvYcCWxDfgnspH8thSdtgePbMZs4oGwc1/tSDHc7cHm0UK3vbnN9wSEoq9dZAT4FHcbtAVoAoLuRndIyx5NEmzY@vger.kernel.org
-X-Gm-Message-State: AOJu0YylgfudFB2xJ7VYWSekLn4Uwm53LoPg8ZoqMnxEaedUZfuyOsy/
-	BiRd9783uP2Z9GsGIEdWv2ij9v48mgC/ihWs+BVvN2OKVljGxSwm
-X-Gm-Gg: ASbGncsCT05/wiJHzL+cZYZ/pKoymdC+DYPmj5uFinczU5M+11nKKIv+2I4T7x04C5f
-	CtAxumL7NtnPlLYUZ7j+hisSBXRe4O1FnkgtqC1jRSELUeisZfXwYStHGN/rR6XfjBZuq9s0kGC
-	ORNPVHsKIHtvW2AgyvEEF1vZorZIOOdeOfLM7kxvoWwLhrZsW2oPQJOR1IBMab2lMpfn3hoSWno
-	hAvH2OOJWx+CPIX8WxIrDEV+VjhbU8+fmV8k/c/Uq4mEdL9OvZ7wTJItoreL+EWJTn+x7CRD2to
-	If+zaxx/wkx5JsichZiO4lQS/4WzMkipg+iOMozFpeCtfq4jsyZkEON2aGqHgQ==
-X-Google-Smtp-Source: AGHT+IHOCKvLeeQf3yKBb2Vl70hk6+HUiPYWTe5RwG9kk7T3GiyDNf6DCsCp7pLUpYPlxnmGHNcyPA==
-X-Received: by 2002:a05:6512:3b28:b0:545:60b:f391 with SMTP id 2adb3069b0e04-5452fe2e48emr1355722e87.2.1739725713228;
-        Sun, 16 Feb 2025 09:08:33 -0800 (PST)
-Received: from es40.darklands.se (h-94-254-104-176.A469.priv.bahnhof.se. [94.254.104.176])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452a67e6c3sm921808e87.1.2025.02.16.09.08.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 09:08:32 -0800 (PST)
-From: Magnus Lindholm <linmag7@gmail.com>
-To: linmag7@gmail.com,
-	richard.henderson@linaro.org,
-	mattst88@gmail.com,
-	glaubitz@physik.fu-berlin.de,
-	ink@unseen.parts,
-	kees@kernel.org,
-	arnd@arndb.de,
-	linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org
-Subject: [PATCH 1/1] alpha: Fix pte_swp_exclusive on alpha
-Date: Sun, 16 Feb 2025 18:04:53 +0100
-Message-ID: <20250216170748.2258-2-linmag7@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250216170748.2258-1-linmag7@gmail.com>
-References: <20250216170748.2258-1-linmag7@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5EUEH45"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C922C4CEDD;
+	Sun, 16 Feb 2025 17:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739725900;
+	bh=E3tM1vECsfCNDcVKuUmehQ1xAbFy3el7aesQvhH+k9U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d5EUEH45FgIT0tSYCP+/dp+hDPvoqH2cgVpcdfKjF7xJajbfN/BtvB9J+85qvoAiQ
+	 ZcbloqGjoyyI6t+C0+ywv0irkGFXXcywQFtj/KIWvhvlBPJQ2484LwsEfRyCbPGH4e
+	 nGWgagkX+sxG1s77xbtZ3QhLFpIAQd/c/QBEgdnBSCR061osm3/qx6mQeOagWpC6c6
+	 Kvocnxv7x0p/drZGLZYK8MXU81kyHKB548b9qBQikSSN8QZx8hLfJur4jRZwHPg+UO
+	 LABq9C+6MtuFoBZPVDr1txsonojHCuQeeaYRt9e8M5fu916OSwrnGSOW1Kg+W4oA6r
+	 vCtq8u2sGFBvw==
+Date: Sun, 16 Feb 2025 17:11:32 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v2 04/14] iio: accel: adxl345: refac set_interrupts and
+ IRQ map
+Message-ID: <20250216171132.46445edc@jic23-huawei>
+In-Reply-To: <20250210110119.260858-5-l.rubusch@gmail.com>
+References: <20250210110119.260858-1-l.rubusch@gmail.com>
+	<20250210110119.260858-5-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Function pte_swp_exclusive() checks if _PAGE_SWP_EXCLUSIVE bit is set in
-PTE but returns lower 32-bits only. Shift bits right by 32 to return upper
-32-bits of PTE which contain the _PAGE_SWP_EXCLUSIVE bit. On alpha this is
-bit 39 but on most other architectures this bit already resides somewhere
-in the first 32-bits and hence a shift is not necessary on those archs.
+On Mon, 10 Feb 2025 11:01:09 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
----
- arch/alpha/include/asm/pgtable.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Split the current set_interrupts() functionality. Separate writing the
+> interrupt map from writing the interrupt enable register.
+> 
+> Move writing the interrupt map into the probe(). The interrupt map will
+> setup which event finally will go over the INT line. Thus, all events
+> are mapped to this interrupt line now once at the beginning.
+> 
+> On the other side the function set_interrupts() will now be focussed on
+> enabling interrupts for event features. Thus it will be renamed to
+> write_interrupts() to better distinguish from further usage of get/set
+> in the conext of the sensor features.
+> 
+> Also, add the missing initial reset of the interrupt enable register.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 
-diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pgtable.h
-index 02e8817a8921..a96d652629fd 100644
---- a/arch/alpha/include/asm/pgtable.h
-+++ b/arch/alpha/include/asm/pgtable.h
-@@ -336,7 +336,7 @@ extern inline pte_t mk_swap_pte(unsigned long type, unsigned long offset)
- 
- static inline int pte_swp_exclusive(pte_t pte)
- {
--	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
-+	return (pte_val(pte) & _PAGE_SWP_EXCLUSIVE)>>32;
- }
- 
- static inline pte_t pte_swp_mkexclusive(pte_t pte)
--- 
-2.48.1
+After this cleanup (which is good) I wonder why we need to store
+intmap at all?  Can we not just get it back from the regmap cache
+in the few places we need it (mostly as RMW updates I think).
+
+Jonathan
+
+> ---
+>  drivers/iio/accel/adxl345_core.c | 46 +++++++++++++++-----------------
+>  1 file changed, 22 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index 2928c1c0760f..910ad21279ed 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -14,10 +14,10 @@
+>  #include <linux/regmap.h>
+>  #include <linux/units.h>
+>  
+> -#include <linux/iio/iio.h>
+> -#include <linux/iio/sysfs.h>
+>  #include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+>  #include <linux/iio/kfifo_buf.h>
+> +#include <linux/iio/sysfs.h>
+
+Unrelated change.  Should not be in this patch
+
+>  
+>  #include "adxl345.h"
+>  
+> @@ -96,26 +96,6 @@ static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
+>  	return regmap_write(st->regmap, ADXL345_REG_POWER_CTL, val);
+>  }
+>  
+> -static int adxl345_set_interrupts(struct adxl345_state *st)
+> -{
+> -	int ret;
+> -	unsigned int int_enable = st->int_map;
+> -	unsigned int int_map;
+> -
+> -	/*
+> -	 * Any bits set to 0 in the INT map register send their respective
+> -	 * interrupts to the INT1 pin, whereas bits set to 1 send their respective
+> -	 * interrupts to the INT2 pin. The intio shall convert this accordingly.
+> -	 */
+> -	int_map = st->intio ? st->int_map : ~st->int_map;
+> -
+> -	ret = regmap_write(st->regmap, ADXL345_REG_INT_MAP, int_map);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return regmap_write(st->regmap, ADXL345_REG_INT_ENABLE, int_enable);
+> -}
+> -
+>  static int adxl345_read_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *chan,
+>  			    int *val, int *val2, long mask)
+> @@ -376,7 +356,7 @@ static int adxl345_buffer_postenable(struct iio_dev *indio_dev)
+>  	struct adxl345_state *st = iio_priv(indio_dev);
+>  	int ret;
+>  
+> -	ret = adxl345_set_interrupts(st);
+> +	ret = regmap_write(st->regmap, ADXL345_REG_INT_ENABLE, st->int_map);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -395,7 +375,7 @@ static int adxl345_buffer_predisable(struct iio_dev *indio_dev)
+>  		return ret;
+>  
+>  	st->int_map = 0x00;
+
+Maybe you deal with this in a later patch, but in general, why do we need a cached value?
+Maybe we should rely on regmap caching to get it back from the register cheaply wherever
+it is needed.
+
+
+> -	return adxl345_set_interrupts(st);
+> +	return regmap_write(st->regmap, ADXL345_REG_INT_ENABLE, st->int_map);
+>  }
+>  
+>  static const struct iio_buffer_setup_ops adxl345_buffer_ops = {
+> @@ -514,6 +494,8 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  		return -ENODEV;
+>  	st->fifo_delay = fifo_delay_default;
+>  
+> +	st->int_map = 0x00;			/* reset interrupts */
+> +
+>  	indio_dev->name = st->info->name;
+>  	indio_dev->info = &adxl345_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+> @@ -521,6 +503,11 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  	indio_dev->num_channels = ARRAY_SIZE(adxl345_channels);
+>  	indio_dev->available_scan_masks = adxl345_scan_masks;
+>  
+> +	/* Reset interrupts at start up */
+> +	ret = regmap_write(st->regmap, ADXL345_REG_INT_ENABLE, st->int_map);
+> +	if (ret)
+> +		return ret;
+> +
+>  	if (setup) {
+>  		/* Perform optional initial bus specific configuration */
+>  		ret = setup(dev, st->regmap);
+> @@ -571,6 +558,17 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  	}
+>  
+>  	if (st->intio != ADXL345_INT_NONE) {
+> +		/*
+> +		 * Any bits set to 0 in the INT map register send their respective
+> +		 * interrupts to the INT1 pin, whereas bits set to 1 send their respective
+> +		 * interrupts to the INT2 pin. The intio shall convert this accordingly.
+> +		 */
+> +		regval = st->intio ? 0xff : 0;
+> +
+> +		ret = regmap_write(st->regmap, ADXL345_REG_INT_MAP, regval);
+> +		if (ret)
+> +			return ret;
+> +
+>  		/* FIFO_STREAM mode is going to be activated later */
+>  		ret = devm_iio_kfifo_buffer_setup(dev, indio_dev, &adxl345_buffer_ops);
+>  		if (ret)
 
