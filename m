@@ -1,101 +1,75 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F00450FE;
-	Sun, 16 Feb 2025 16:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB3D450FE;
+	Sun, 16 Feb 2025 16:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739724636; cv=none; b=qZQNyKrpYfxuCGG1KtRzpTUst6qh0kIfU2T/I5OVJYNKJlZ3bA7hoDmqQt+yL0FS+qp8faYlOtVQpuATqPv4SA/7COKe0pke+FTSpuC++x6dDrNBcPy3r/IOaIR+ncsMJL/+cymUgr5KthPJ3sjwpj6g1qwm6Ao7Fa2gx6BSgeY=
+	t=1739724859; cv=none; b=ER2+IeFRxy83jAtinHSAuEDTr5I3oHclvyNTLwEYfYUFdGQQ5u5fTu3VbYnCnjT80EZZg5FHXmSvGlPS/rv8UoagPtCjkGpRqlMSppLelV6RFL3o0CveJrS4rIwckeYQ3mL26cY2bJLz7xmRFk7DNswjSvlbwSiEJAjSr9pcQEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739724636; c=relaxed/simple;
-	bh=O+xf4Pjh0FmkOANa2TdynZ4baqKl4IxACwdRgqvC/gA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r5164bMbKE+bCDpeuN5mqu/jEFMJA2EsVvuKje9mMm+JbQ+JrytpPj5wyJtTkPAvu5gq/ZZf1cuFKDifE+teFc2/oOK42Wucz3E/DB+0zeukxmKEPpiTkxH710KdqFmB1VaCgbJeU1Lh/IX6iHIrlfHV6ABDGcAAWxDyNrJZ9BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=VjgOO79O; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739724859; c=relaxed/simple;
+	bh=pTlZ14AnOX+J+ZoO/hKr1nC/IBpBU/25GV1jkqIE8A8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kXsk6LKOv4hZXCd7rQvL2XxrsCn48cE8EbuUys9YDXuNCfFlAoJwuXep40FERK+UudXMw7yZ3kW0jHur5ZBz/jsvQU0zPdhqJ4vDJTTo64IMzPHRl9nMGLzUpnVNEHgeEDmtA7hyMNwUhjmbf0jDlZPHhNXLmAFRhrvuLxHwx+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7yboXjw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="VjgOO79O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ndDFacYqo5RlTSgmq7eZGeOr8WEe1xcV2iL6qYnhkrE=; b=VjgOO79O9dV3jmyYmrxcyFKIzx
-	ZZsgTTEktk+7JOZ2gQPmpUmzDtszyHdRfl+cW2yGNpgmlkTQuwS//AD7dx2fgR8b1fjFXgZ62nwC8
-	opA5jNImvhrvDsk6V2O96fFuDvojeNt1wGPIYrmHisaIZ4t8QtQ9RoNNYzRExb7/vq8TFR8MHYlkO
-	+eMjeEAm/tNuf60ca5jO1zDzSy0a1KeUW9D+khJDevmhE+hJoD1atZLKakcxe+1Mtz+v/ZJfK2A73
-	sd60MvpYswXDFuO6s1aUCuWxQhKn4E3tH1vQPzjxcjvEp5IM919pkhchG2Kc5PhtAWRwe5D6SODul
-	/7Gu9Njg==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tjhqO-005FJp-JW; Sun, 16 Feb 2025 17:50:18 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Bernd Schubert <bschubert@ddn.com>
-Cc: Dave Chinner <david@fromorbit.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Matt Harvey <mharvey@jumptrading.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luis Henriques <luis@igalia.com>
-Subject: [PATCH v5 1/2] vfs: export invalidate_inodes()
-Date: Sun, 16 Feb 2025 16:50:07 +0000
-Message-ID: <20250216165008.6671-2-luis@igalia.com>
-In-Reply-To: <20250216165008.6671-1-luis@igalia.com>
-References: <20250216165008.6671-1-luis@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7yboXjw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6966C4CEDD;
+	Sun, 16 Feb 2025 16:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739724858;
+	bh=pTlZ14AnOX+J+ZoO/hKr1nC/IBpBU/25GV1jkqIE8A8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C7yboXjw4BMW5zsi0GF/0TZR65srPHVJr2yte36QBHktyNm/thmCjpyMV1iAH13/b
+	 evp5Qm4CARBJsxTWVCnrXBTEWlKADDmt/DluCFOqYg4O9tvOzwP4KXxwB3e545H81E
+	 lTF7S4h7BZmZilqwgtHEyLqGhWXfxsKxoN8S3vqM9TFRyWaG2Q8PiEHAlTdF7pg16z
+	 yrVxYQNgHB3Kb0ss1IK0Q3g1Bd7iCNRFs0HIkX20JyIpuvCT0dNiYiX1LrKygS/wGN
+	 6CbY6r1AQFeFfa0A1qCIsBVhAINd6ZOTDngbl5a0rWEn19IhMFdEcIMemYcQ8imURy
+	 8ibGffRUK8HYg==
+Date: Sun, 16 Feb 2025 06:54:16 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	Yury Norov <yury.norov@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Joel Fernandes <joel@joelfernandes.org>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHSET v12 sched_ext/for-6.15] sched_ext: split global idle
+ cpumask into per-NUMA cpumasks
+Message-ID: <Z7IYOHDLVUTiYuI5@slm.duckdns.org>
+References: <20250214194134.658939-1-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214194134.658939-1-arighi@nvidia.com>
 
-Signed-off-by: Luis Henriques <luis@igalia.com>
----
- fs/inode.c         | 1 +
- fs/internal.h      | 1 -
- include/linux/fs.h | 1 +
- 3 files changed, 2 insertions(+), 1 deletion(-)
+On Fri, Feb 14, 2025 at 08:39:59PM +0100, Andrea Righi wrote:
+> = Overview =
+> 
+> As discussed during the sched_ext office hours, using a global cpumask to
+> keep track of the idle CPUs can be inefficient and it may not scale really
+> well on large NUMA systems.
+> 
+> Therefore, split the idle cpumask into multiple per-NUMA node cpumasks to
+> improve scalability and performance on such large systems.
+> 
+> Scalability issues seem to be more noticeable on Intel Sapphire Rapids
+> dual-socket architectures.
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 5587aabdaa5e..88387ecb2c34 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -939,6 +939,7 @@ void invalidate_inodes(struct super_block *sb)
- 
- 	dispose_list(&dispose);
- }
-+EXPORT_SYMBOL(invalidate_inodes);
- 
- /*
-  * Isolate the inode from the LRU in preparation for freeing it.
-diff --git a/fs/internal.h b/fs/internal.h
-index e7f02ae1e098..7cb515cede3f 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -207,7 +207,6 @@ bool in_group_or_capable(struct mnt_idmap *idmap,
-  * fs-writeback.c
-  */
- extern long get_nr_dirty_inodes(void);
--void invalidate_inodes(struct super_block *sb);
- 
- /*
-  * dcache.c
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2c3b2f8a621f..ff016885646e 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3270,6 +3270,7 @@ extern void discard_new_inode(struct inode *);
- extern unsigned int get_next_ino(void);
- extern void evict_inodes(struct super_block *sb);
- void dump_mapping(const struct address_space *);
-+extern void invalidate_inodes(struct super_block *sb);
- 
- /*
-  * Userspace may rely on the inode number being non-zero. For example, glibc
+Applied 1-7 to sched_ext/for-6.15.
+
+Thanks.
+
+-- 
+tejun
