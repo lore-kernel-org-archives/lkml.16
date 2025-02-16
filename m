@@ -1,145 +1,181 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EED1442F4
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 19:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D3E1A3155;
+	Sun, 16 Feb 2025 19:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739734427; cv=none; b=YfSRUuNcPcdsVhAbNPbzD8wBh77vS0LAP41jqP7uZJgHW4bGAdjUbJQJdf0EMGuppKD8CRG/kShslZkV3uzHZERNUbx8EAlfyuOTrEfzihK669RU4BMN5YID/Hb9NG6zsAjrjvSWOKF2xk7xJm8MVnXAleZrvFdmk3sKXXDpAng=
+	t=1739734428; cv=none; b=RulNUgUf9z8tS3iUBswz/8HOtHjfZQ1UEM6KEZ1O6+955ekuhRqInXd/BlCwW/4tYTvoPdvLyYADp6Ud+iiXhgmIPv/8ZmLuG846m82zDyDbYp46LN2dV9M3DwUDy2Fut6IX2SvGvmAtkBNv2REOeTeJpbMEZT0gcS0avkh76mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739734427; c=relaxed/simple;
-	bh=bxFZkh3GxelTk2s9pdgdEfZyDa8KLecC+NZADbOkTxY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tj9/cWvxd6Dmrrse3DsrNdwt8Ers4SUyOxMO7+QqD9jTb7Vr6BhF+5oU8/WNTifE5IT6h8U7zv/OBiha8rbgFFL+06xgpCimnRG9wPC4lnovkBPWexFwsKLfDLlgovCG/07KZVKYObXDbvY2xPVoeu9ySTMvPMkKM1VeIz2wZCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V1zBXtc6; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739734428; c=relaxed/simple;
+	bh=yy/egALJlGg2nyNQfr1nfCTmkXionDmd0uyxqFsuSmw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rH5s2JxX9xkgpD2KEnPtSDpQ3pHRt/vg2VxBCN/dyIsFVkawamIZZN41kSqlCysCLiOVxqNU8cFty06XxKw363RKyHj35VdX6Jx9rn9Qd4NNoP3/VU0JaC4arTRn7b5/0JXYvvWpyMfZrijeSVnS1eRDct0koo21ZgrTMLV3JNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MlXfy2YM; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1zBXtc6"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abb8e405640so85390266b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 11:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739734422; x=1740339222; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+rdajbzChx3zXu80o9uC5gbyEQ6hbhHwr37XpGawygg=;
-        b=V1zBXtc6k6e9kKaz2yQcgujZqI2RHU3LOpMAPsQFwRj6EmLdA1bf5HilLrqqlCuzB3
-         NQ5YUpHzHQziPEdY46nV8GyjDNj5aMRbvyT+SPIZRnq/+ALd9oTEe8WI2JTeosLx0vl6
-         ln3gM96FCRNKxe9SZ5wBFX0mNJI+tD/0EwaxGAIlFraY51Ta2ULq3+VRMWMZq4+tcub+
-         kj0Lt9f6RvGVDKfwaEp/1OLvBf+RZW6bhcAVgaejM8laRfUqC8DFvsrfxVRrmdYTMjwZ
-         DSy4dosb9fIiJA3Ngtpj37QnxyMpKA3nJKzjHEkqXGnzXuEIIp/Vm+WWqhPkQfwyxz45
-         xREA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739734422; x=1740339222;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+rdajbzChx3zXu80o9uC5gbyEQ6hbhHwr37XpGawygg=;
-        b=HGLS8rHKgzsghHwxTecPWB//6iqnC6ciXulI3ovFX8c/6HK+rNnG2XEbKzKbvwQ1rX
-         1TfOHpPE/bsNGOwctB/Uo+WWJU/0aVrMcAT6I3AwLv6hJlltfFoqxA4LuaZhowv20xfj
-         whPsuR5mcvuE5B6bIXPlb8YgM5lWaTBbI/tQcdAbyV30qpDHZyXjuiV+ntzwjJIvTP5F
-         J7gd9B3TA+QPYonKItHhnXLndjELNY4msh8YGp0lAtvCDo4yYD40O/g7vPH/XsxsGVz/
-         XGpd5OlRHHjapcrXlN+nWdpPsth6EC2DpNkv5C1ISWw2tJdfCkg9lUswmm/+f4g/iqAE
-         NlQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuXZt0qisHK8Cm6mbVBjNvv5gpxL1O2/0vrFYRUgLHf2hKkcPBJ9nhvIFIwjhsQsLsadu5KcOtMnVDd8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1xWsCmT0ZPKG9Jzs2CSqIgtz7oPIQohTcPHSmqNkPadrxl6cb
-	51W5u/dGCTantg78bILbzohWg6pZ6s83UiPo3r1x6Kb/dD57jy3jTEgDw83FjhInMPuTVUMAMIW
-	MUfs=
-X-Gm-Gg: ASbGncsjhNVcgSld6zEvBFELZJVPUKHGD/xBBndK+NQ0zH8x505ltMF7XurCQr3PQZ2
-	6mBxCWbsNYE366nkMXcMslOHm8SIuzDJNo3JDymnJ4CqzEktRLdJobeUhbGxYvFRIZ4LxIQWwQc
-	zQuVlup1PE9uEL9lk5tokOqC0rW0ppPso6frs/I2tHkNL8cBsQUpM5IlF0uCkg+wB3sWQE7yRyX
-	RuqvEgMLMkw+3s42WLscvv5ZYGVoujScfY8tbYZVt6Le565GbVfSLZIsrrXHcf6K3In96LZNmna
-	xJm17kXRKJUrrzhmkoRj
-X-Google-Smtp-Source: AGHT+IH1F3igbJlqramKS8IIZVfgTeP1tXThk89INYy49QTfryu4Jt4JBGKucuQ3oNfDdmwaojg53A==
-X-Received: by 2002:a17:907:7752:b0:aa6:79fa:b47d with SMTP id a640c23a62f3a-abb7091cedcmr597981666b.1.1739734422335;
-        Sun, 16 Feb 2025 11:33:42 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-aba533bdd39sm747734166b.167.2025.02.16.11.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 11:33:42 -0800 (PST)
-Date: Sun, 16 Feb 2025 22:33:38 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Simon Horman <horms@kernel.org>
-Cc: Purva Yeshi <purvayeshi550@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	skhan@linuxfoundation.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Kuniyuki Iwashima <kuniyu@amazon.com>,
-	linux-sparse@vger.kernel.org
-Subject: Re: [PATCH net-next v2] af_unix: Fix undefined 'other' error
-Message-ID: <4fbba9c0-1802-43ec-99c4-e456b38b6ffd@stanley.mountain>
-References: <20250210075006.9126-1-purvayeshi550@gmail.com>
- <20250215172440.GS1615191@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MlXfy2YM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1739734394; x=1740339194; i=w_armin@gmx.de;
+	bh=rgLcWVwAD5AFEDNUDNUW1/ig/txcNSoRp3vKvht8+6c=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=MlXfy2YMw51CWV0Zo2Gqgl4/ACoFJbFrL5rbKjCyR3DWfmZxgCPFPVJwAn7ssWzY
+	 kexh6Gordz64gW7PdUexJ5bP5e8RtakiRK+BIJOtxU0H68hq6jXFafBx+JxTvsBbm
+	 BFrL/6PeK0CZMMYghHHabXhMl+Oozj7d8TKisiUd6SacYdZDkE2PwwuiBXKcUgGsX
+	 RdSWrI4j9C0hoY8jguGF7EmDXAL0zOUbJv9qARMcgoPcmpoujezoaDWSnTjm+tvbs
+	 9gTI6upRsdaKXgx81he7GJAHbcTq0jLjcT15ebP5fLbdDtG6EwQQzT4A4DMpxeLW9
+	 VUah9qQV+KFtyV86dA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N1Obb-1tLREP2Ohn-00udkZ; Sun, 16 Feb 2025 20:33:14 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: james@equiv.tech,
+	markpearson@lenovo.com,
+	jorge.lopez2@hp.com
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v2 5/8] platform/x86: wmi: Use devres to disable the WMI device
+Date: Sun, 16 Feb 2025 20:32:48 +0100
+Message-Id: <20250216193251.866125-6-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250216193251.866125-1-W_Armin@gmx.de>
+References: <20250216193251.866125-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250215172440.GS1615191@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:foQTVB0Ul4JZlTR+BQrhH2jsmqcpefP37lV069chqlusmHSXOcS
+ gqqr09+JTAio3a9t3Azm7EKYzNMWCqTizTQNU2nBvTbQIw9TLTRg9Df8FbZk5nvgnKDIgJ8
+ TEkl0J0pIDzAW2wTrAICol/rCkIokpOiC5Jod0SXbGOCw0pLwgIx0bejPpe/AbCaOKDq0YB
+ x88hrVfKd0cRH80SFJYjA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3w6imBrrSFs=;5j8/Aa5e/ratfIs67vS9q5hEJR9
+ jNdTitAKmbP2R9fobzsRZ60Dm/Nc+s8jpu03TXtioHJ3nga4Obs++baMUn4uEVaC26o3fGONG
+ NP+qiM2CRtJGnMxLkGiuAaoOzhPej0iPIpvRXTtXkiOicXuIHMGKc5KVOluqv/KYVoZo9EUyI
+ K2CQaNqJaMHxhPZNZkfYtFDQaCrsBCmpw5E1ElYcQuHIVTNnGdc9llrh8/h2wWwJGmU4KfIsr
+ U8cF1caFVzLA781/BSAYXfv0icfKFOvW2CQ7ra2TBH/7rACZlgETFc5s3IdCW8llENGIAWyPs
+ G55kSVLK4vo8UZJkk6P5McNbQ9eSMZ15yAvhEGJ74lK7QZtIEX+SDEgiuanGyQJT7XsdkJr+X
+ z/V/5Ny+OLuSPo7Bkw2kixBO4AsdCKECAsYaG/rtxKft0QLs2PsGR2ThKFGL80dFV2LeDC7My
+ FXeO6RBqjM+qdHZRSlstg9Ga2C+vp4gfURR3PmYRksU/mxaKtLb0po/VrHoXgsnNpn99l/vGV
+ DoVJNKWlIAMX1bV1WuiZH8SZYnXgUh8Kx2OPKmqDBlLt7QOQSoviIG3uke16JvnqZZA+RVk+m
+ /Suw37lHoR6IFrX9Q/28q7/NimimZQqRLrina8arUsmHDC8Ft6JxBaJQmT23SPafjYaL5jK50
+ JvA+Sca9zP974VHVg9c+r02TcvFw0KsrFErRK5fyvWyoz60knwK9voBH2ORjQatNAkxNc/kJm
+ OGxyDvSJpqzXLOiUuQwKaorKlTrWrWXLflgtm/cwceCyd3uNY5g1vPBCllJDm3Jq7W7qIyCGt
+ 0yWBSHUzS6mflt/SVRIDh4/bKGOuh05QK+zMM28dGJAO8+F1oDYvSlnjpCGcOPz+WbrrO9eUl
+ +IJN5vRIBTehny1UTJdS3/p0k7lKKd84VaA4wUfECK6/9n5TyMPL2OghJKpw980z5kCgBwWH0
+ WARalYGHnasMav0Dg5fKNyDnrD44VxkcFLw8idgvfp0MCM82+XnEoFam0pHefBCxwmd5IQbsR
+ TkfKWMyrcLuU6VekDn6sgju51Uu8l+wpOT941/V+Zx5LuYkvO1ayhsET6tbp2pxqy3TC+ez/B
+ Cs1IMWEyDfUtZm1TxCO1MBfiuDj6utK15jiTIXi1HtwXOpSPPtoefiSXU4m6/c0h2bzxR6RbN
+ 3thcvuCt6+R66AT82OSLnY5QwRq1sMZyIQSbDVlqyYKOYdUCPzZP5re/5CQ5P9shnjU0r11Mo
+ aE6RVaGHGS9joqWKLNeacaZfw6GDCTt1Tz0sOWNU7TgmtrgmOZhtoRcXJpAT6KDh1l06RLKc5
+ ag89Nm79HMGv28dy+7B+q206NzdsLqjZLPfPPOSIhazRwziNRXp/vHDRawiBdCPiHUNjfKrfA
+ ncqitgGwzlRpnmjAMHjpgM6YnjRp9BzKplOBgCa8AmGECSmhQFNFZvOB4q
 
-I've added the linux-sparse@vger.kernel.org mailing list to the CC.
+Use devm_add_action_or_reset() to disable the WMI device instead of
+manually calling wmi_method_enable() to prepare for future changes
+inside the WMI data block handlign code.
 
-On Sat, Feb 15, 2025 at 05:24:40PM +0000, Simon Horman wrote:
-> My understanding is that the two static analysis tools under discussion
-> are Smatch and Sparse, where AFAIK Smatch is a fork of Sparse.
-> 
-> Without this patch, when checking af_unix.c, both Smatch and Sparse report
-> (only):
-> 
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
-> 
+The reason for this is that we have to make sure that all
+devres-managed resources are released first because some might still
+want to access the underlying WMI device.
 
-Smatch isn't a fork of Sparse, it uses Sparse as a C front-end.
-This warning is really from Sparse, not Smatch.  The warning started
-when we changed the definition of unix_sk() in commit b064ba9c3cfa
-("af_unix: preserve const qualifier in unix_sk()").
+Because devres-managed resources are not released during shutdown
+we still have to manually disable the WMI device in this case.
 
-Smatch doesn't actually use these locking annotations at all.  Instead,
-Smatch has a giant table with all the locks listed.
-https://github.com/error27/smatch/blob/master/smatch_locking.c
-Smatch uses the cross function database for this as well if it's
-available.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-Unfortunately, Smatch does not parse the unix_wait_for_peer() function
-correctly.  It sees that something is unlocked but it can't figure out
-what.  I believe the problem is that Smatch doesn't parse
-container_of_const().  Fixing that has been on my TODO list for a while.
-The caller used unix_state_lock() to take the lock and that has a
-unix_sk() in it as well.  So smatch doesn't see this lock at all that's
-why it doesn't print a warning.
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 646370bd6b03..7cb36a71e9ea 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -821,11 +821,19 @@ static int wmi_dev_match(struct device *dev, const s=
+truct device_driver *driver)
+ 	return 0;
+ }
 
-regards,
-dan carpenter
++static void wmi_dev_disable(void *data)
++{
++	struct wmi_block *wblock =3D data;
++
++	if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
++		dev_warn(&wblock->dev.dev, "Failed to disable device\n");
++}
++
+ static int wmi_dev_probe(struct device *dev)
+ {
+ 	struct wmi_block *wblock =3D dev_to_wblock(dev);
+ 	struct wmi_driver *wdriver =3D to_wmi_driver(dev->driver);
+-	int ret =3D 0;
++	int ret;
 
-> Without this patch, when checking af_unix.c, both Smatch and Sparse report
-> (only):
-> 
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
->  .../af_unix.c:1511:9: error: undefined identifier 'other'
-> 
-> And with either v1 or v2 of this patch applied Smatch reports nothing.
-> While Sparse reports:
-> 
->  .../af_unix.c:234:13: warning: context imbalance in 'unix_table_double_lock' - wrong count at exit
->  .../af_unix.c:253:28: warning: context imbalance in 'unix_table_double_unlock' - unexpected unlock
->  .../af_unix.c:1386:13: warning: context imbalance in 'unix_state_double_lock' - wrong count at exit
->  .../af_unix.c:1403:17: warning: context imbalance in 'unix_state_double_unlock' - unexpected unlock
->  .../af_unix.c:2089:25: warning: context imbalance in 'unix_dgram_sendmsg' - unexpected unlock
->  .../af_unix.c:3335:20: warning: context imbalance in 'unix_get_first' - wrong count at exit
->  .../af_unix.c:3366:34: warning: context imbalance in 'unix_get_next' - unexpected unlock
->  .../af_unix.c:3396:42: warning: context imbalance in 'unix_seq_stop' - unexpected unlock
->  .../af_unix.c:3499:34: warning: context imbalance in 'bpf_iter_unix_hold_batch' - unexpected unlock
-> 
-> TBH, I'm unsure which is worse. Nor how to improve things.
+ 	/* Some older WMI drivers will break if instantiated multiple times,
+ 	 * so they are blocked from probing WMI devices with a duplicated GUID.
+@@ -847,15 +855,19 @@ static int wmi_dev_probe(struct device *dev)
+ 	if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
+ 		dev_warn(dev, "failed to enable device -- probing anyway\n");
 
++	/*
++	 * We have to make sure that all devres-managed resources are released f=
+irst because
++	 * some might still want to access the underlying WMI device.
++	 */
++	ret =3D devm_add_action_or_reset(dev, wmi_dev_disable, wblock);
++	if (ret < 0)
++		return ret;
++
+ 	if (wdriver->probe) {
+ 		ret =3D wdriver->probe(to_wmi_device(dev),
+ 				find_guid_context(wblock, wdriver));
+-		if (ret) {
+-			if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
+-				dev_warn(dev, "Failed to disable device\n");
+-
++		if (ret)
+ 			return ret;
+-		}
+ 	}
 
+ 	down_write(&wblock->notify_lock);
+@@ -876,9 +888,6 @@ static void wmi_dev_remove(struct device *dev)
+
+ 	if (wdriver->remove)
+ 		wdriver->remove(to_wmi_device(dev));
+-
+-	if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
+-		dev_warn(dev, "failed to disable device\n");
+ }
+
+ static void wmi_dev_shutdown(struct device *dev)
+@@ -902,6 +911,10 @@ static void wmi_dev_shutdown(struct device *dev)
+ 		if (wdriver->shutdown)
+ 			wdriver->shutdown(to_wmi_device(dev));
+
++		/*
++		 * We still need to disable the WMI device here since devres-managed re=
+sources
++		 * like wmi_dev_disable() will not be release during shutdown.
++		 */
+ 		if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
+ 			dev_warn(dev, "Failed to disable device\n");
+ 	}
+=2D-
+2.39.5
 
