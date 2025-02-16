@@ -1,158 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E04119ABC2;
-	Sun, 16 Feb 2025 19:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A56743166;
+	Sun, 16 Feb 2025 19:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739732990; cv=none; b=HXAGnvzzlQkPPYHIjSVkawnSpIEyuGDXyOqBqSn9FTnbtWVfBkygB2HqX7XKQVRB293b3J4mAS0UdA20ppVcQLK6JVI6mmj+HBZUaHgT3GHKNYlTD5lu/UzTQoobn+cmpi7PFBeTwEOfaRBVtYiKO6N5fkp1kbLKA2Ua1w/+lBs=
+	t=1739734399; cv=none; b=iGmPt95QRGuWEWS8jdrKdSPaG4fpXRdAoBdPuapc+4NFzCiN2TXOAjuHl2/NkYAqThRSb0xTMhH9z6Y7mFo9dmAUmt+sC5FV8n8Ii8akVSoXMGQ5gwr6KFve4IPPh5chcW9QYmQTa0WO9FS4/OajJ9NbAs/+kxj1MpdKPp6ZHVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739732990; c=relaxed/simple;
-	bh=43PE+ybG5ai0fUI2JHrGDr+HV775T2akdlm+svW1kak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IoLshK6352PacgfLIGZyeaxpCiENCYTWE78Hh0XnUKl1k7MlTt6YXjrZzguY3dHIdE0rTStmK+q98ZKnehg+6eD4eAeEy6rVrIuUNQkdViWNx9G00iljQ0qzoRJWzs1ejIbbM6eChj2cnpFcoNFnXxvp1BfBU10+kpHB2yEDxUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VEY7xmFB; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739734399; c=relaxed/simple;
+	bh=bY9wGJAHHKJfi5+faI192PpB74uBuDOL4lP2cm/vKCs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UiBTIuXDtmSkCs7XrvMvtmlOVFZfsBrVrN9aZBsW6x7tdDMuJgozexbF8GfQPMoon8NWwDyL+At40EbM/8vGHLcEsYWiG1jbqeBUmmkrbQG8Mma2VknRXXk3wmkJLVrLVHl8lXhtaxd7d6ByYz4oOPvZanjswXgrqWP7pXYL5M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=a8YbtLqL; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VEY7xmFB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739732989; x=1771268989;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=43PE+ybG5ai0fUI2JHrGDr+HV775T2akdlm+svW1kak=;
-  b=VEY7xmFBWWf7LK0QwAlykE6fB13KxHNb6Nghasvap70CD8ys6ar8FDKV
-   2lqmw0QYiIUGZaIlIyWH5qbE3IhH1DE29G6DJFu92tHmWUN/En2fbXqLm
-   F3TMNYd3c2apCycrdE6RlP/iCxRKE0sbckmXJDMZwHb9rme3jKMqA2x7P
-   4QcbHGN2QCBRa34u/V0PkVTtZy/cAhcz3RBYDzv+iOqOMT6ymvmWxedE+
-   R9l7hAUM8JD5cJvoVJeotg4B2vatCMPA9PyuqfLKY0wGSj8In1RhzRjRX
-   +njLMUMKLfnfSAeD2w0CxytMBRIFSeJAPhorFMHlWYr60IS/Dc48ZZBIN
-   w==;
-X-CSE-ConnectionGUID: mC0xVXLCS1OaXdKV1S3KAQ==
-X-CSE-MsgGUID: J77sd33ES4ySkRkSaB1+1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="65773639"
-X-IronPort-AV: E=Sophos;i="6.13,291,1732608000"; 
-   d="scan'208";a="65773639"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 11:09:48 -0800
-X-CSE-ConnectionGUID: njlfmQXoREanvy8Syb5NEQ==
-X-CSE-MsgGUID: 1GY4+8dWSIqT3AFVwTJAUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,291,1732608000"; 
-   d="scan'208";a="113811061"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 16 Feb 2025 11:09:43 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tjk1M-001CAl-2r;
-	Sun, 16 Feb 2025 19:09:40 +0000
-Date: Mon, 17 Feb 2025 03:09:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Emil Gedenryd <emil.gedenryd@axis.com>,
-	Arthur Becker <arthur.becker@sentec.com>,
-	Mudit Sharma <muditsharma.info@gmail.com>,
-	Per-Daniel Olsson <perdaniel.olsson@axis.com>,
-	Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	David Heidelberg <david@ixit.cz>
-Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] iio: light: Add support for AL3000a illuminance
- sensor
-Message-ID: <202502170243.eNwe0AL0-lkp@intel.com>
-References: <20250216162721.124834-3-clamor95@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="a8YbtLqL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1739734379; x=1740339179; i=w_armin@gmx.de;
+	bh=mM2EQkLQYCZVlwJp2GMGxpCWqqXp/hAG0cIERHbUn/s=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=a8YbtLqL6i+1C5PcwHa5GebcEwOULxrl71rlDnpYp2K8rpy7RfQcVHXq0AAkRDp9
+	 EYrQ65Jod6PZcRefo3xOYPbKzR5gshPnOHum/fDxhBpqwp8wHvsfNjoAnBtfA7CEL
+	 iSxYPtNmSz15iILXvH0JSSSN56pxWMMrHHcufE6iIVytFeVe4s4+NqU72kxpSJ51Y
+	 PIzXC7r4jcSlASwr74JjMfKiQb8vAAdQeLITy3zFKFNcFERSbiTB9MoT60xVHjOHG
+	 nAykRyGuQp1Pc0LjjBTHFigy6PW5ydNckADCsh8tZFyD3KNe/b83Q0wy8GTI1Qzkz
+	 qtOjSd7ki4gj4CChPg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MOzOw-1u0Hhf0WSK-00K8gK; Sun, 16 Feb 2025 20:32:59 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: james@equiv.tech,
+	markpearson@lenovo.com,
+	jorge.lopez2@hp.com
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v2 1/8] hwmon: (hp-wmi-sensors) Use the WMI bus API when accessing sensors
+Date: Sun, 16 Feb 2025 20:32:44 +0100
+Message-Id: <20250216193251.866125-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250216193251.866125-1-W_Armin@gmx.de>
+References: <20250216193251.866125-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250216162721.124834-3-clamor95@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Kci9+d/nK9nZ7kslj4gKHXclO1R0iKB9O3BgiKYatv7zbOAcECO
+ 3wD8C7DPfxcLEakjPkpn3hox+k5YvWkHjMNvZoZ/WuArD3pT1oJxXkwbkiD5OwZNiUr05lj
+ I0Bqj/AQu7e+CgymGFTY+tUE6Gxbj8cCXJi5H2AFlii16BrE05WsoaB2loclpl1SVcCm9I1
+ 3d14vciUE0uHhqq3Wx9ew==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SkSnWk2fMaA=;qcUOHmLyfPHbpjMeIxxnMoYqZHE
+ 5J7vw2risTVkmrzfqMa3gV/gEMNxFUMsnBoCijrF9Humm81gOgSo+X8/le0efE0tvfaTOa0FT
+ LUzsZKUt88PbmT4ZRbCqv0dilheo15adhuKF6bcliKnWqeLPPza5GOAinvy+N1P1nDY4v8aQj
+ VlctrsOG0U9xsfrmVyiRlELNJJATJuZxzq2LfcBCD1MLCWxgxGpPnxENFwtyvSYgqCGmhuarI
+ f8jTH/wkW1qkmsl4Wb3ZkirXxf3FIl0JepEYzGle5H3ksfQVVJXxzyc/cDwAAnDDrbatjUbxC
+ e1B6MuBTgtwdFd3quVkwwoOiLycOWXHQsK9ljUkGru8csz0E7Ow0ridGGAoOFCjtcm4WQelvc
+ 5kUgGXs1UN2ECqJNLiHQZ75VNy0pfq2Gj3exfpp2XguePzgKoulYiRWuJrdUpGRRDnmdbO/yZ
+ VaZzJL9WLp69uk8RtRlhHTta2E4K32No6r01JmH2dZepzrbkXIbp6Lfwd41dg83nVV9jUuEaW
+ a+qgkVdkjOw7rCxFCdC4hAboDOnSXdAAcEsmTGaMW/SfJ7DwsKgHhlqu1ngaXk7C+QL3XY0TP
+ epz1xSwWbqJPJ16JLao+Hdx5MMq6ftbg7Um+o4tT7XsxGus/GOb15nGtdaramvI2xnDODAk9e
+ 3OKKp/o2GTIXRRKvFE4SqXGCk9pwKVWeFBZ7RD9g+9HJWoTnx1rz71DziHDz3+6p01Hz1kIQU
+ CeESjbNC7CFajAW7cmvv2d9eBD14IG40pI0iQRrXnxE6vRxC7JRfI4+xLiug3VMYK5k8SJUKK
+ nlnYePoO6Rh0vEo9bKL7mNSDunqVBUacdDOTWHPm8K6lQBFaWAHct6RS0hdEpPKAqsKDuWuA4
+ yiMuhqlDLVZNX1Rd8c8Gy2tSfIabJv6t9Ya756dgPmwHXWVOELRgqp9L1hi05LITvBNvJ9A04
+ v2+IxoIcl7ZEjttwbxHcIo89DGey7U2DzEAxusA0rGrhbpy/HXDqsZbN8JxJ9cWIxh+Qi6Ljs
+ Z8bgSnHo3Mwa3FkoAmJjzSnGzA+kaDFf4A+yEkHA9z5DGb7GcPK3GKFiWNkOpqesYvYacC0oC
+ +pbofvYA5HxvmZb5CmIN9XZV8HdcqZiIUhk//iLJutGgiGFMcNVSALzfYcpfM3YlhpbmJ9LTn
+ YNDUi6QockjyRfflIjowKsjxFqRPQcjnzdcuHyN5y8mQ+dZEbLFvCR5oVSNaTPdz0rcierJr9
+ 8coOUGd0nmhucCfrxNo3/PBDVIQNQ0eJs5mHHVuYvEpqrgRtC1VDInVOge6cv6Y3IzMzfPjc6
+ znAr8QlOVwM5q+r+AzZO0m/P74j4fX8nH78X+8+OEPq7cgpj1KuMAwNXx+dro9x2slpkyxYSn
+ I8cLwFtrvJzydrrl9Fx8dLcbDtno18klRen5V38EC/lCcSZFdbAfWDOtZd
 
-Hi Svyatoslav,
+Since the driver already binds to HP_WMI_NUMERIC_SENSOR_GUID, using
+wmidev_block_query() allows for faster sensor access.
 
-kernel test robot noticed the following build errors:
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: James Seo <james@equiv.tech>
+Reviewed-by: James Seo <james@equiv.tech>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/hwmon/hp-wmi-sensors.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.14-rc2 next-20250214]
-[cannot apply to jic23-iio/togreg]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors=
+.c
+index d6bdad26feb1..03c684ba83bd 100644
+=2D-- a/drivers/hwmon/hp-wmi-sensors.c
++++ b/drivers/hwmon/hp-wmi-sensors.c
+@@ -1197,7 +1197,7 @@ static int hp_wmi_update_info(struct hp_wmi_sensors =
+*state,
+ 	if (time_after(jiffies, info->last_updated + HZ)) {
+ 		mutex_lock(&state->lock);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Svyatoslav-Ryhel/dt-bindings-iio-light-al3010-add-al3000a-support/20250217-002927
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250216162721.124834-3-clamor95%40gmail.com
-patch subject: [PATCH v3 2/3] iio: light: Add support for AL3000a illuminance sensor
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250217/202502170243.eNwe0AL0-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250217/202502170243.eNwe0AL0-lkp@intel.com/reproduce)
+-		wobj =3D hp_wmi_get_wobj(HP_WMI_NUMERIC_SENSOR_GUID, instance);
++		wobj =3D wmidev_block_query(state->wdev, instance);
+ 		if (!wobj) {
+ 			ret =3D -EIO;
+ 			goto out_unlock;
+@@ -1745,7 +1745,7 @@ static int init_numeric_sensors(struct hp_wmi_sensor=
+s *state,
+ 		return -ENOMEM;
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502170243.eNwe0AL0-lkp@intel.com/
+ 	for (i =3D 0, info =3D info_arr; i < icount; i++, info++) {
+-		wobj =3D hp_wmi_get_wobj(HP_WMI_NUMERIC_SENSOR_GUID, i);
++		wobj =3D wmidev_block_query(state->wdev, i);
+ 		if (!wobj)
+ 			return -EIO;
 
-All errors (new ones prefixed by >>):
+=2D-
+2.39.5
 
-   In file included from include/linux/device/driver.h:21,
-                    from include/linux/device.h:32,
-                    from drivers/iio/light/al3000a.c:4:
->> drivers/iio/light/al3000a.c:202:26: error: 'al3010_id' undeclared here (not in a function); did you mean 'al3000a_id'?
-     202 | MODULE_DEVICE_TABLE(i2c, al3010_id);
-         |                          ^~~~~~~~~
-   include/linux/module.h:250:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
-     250 | extern typeof(name) __mod_device_table__##type##__##name                \
-         |               ^~~~
->> include/linux/module.h:250:21: error: '__mod_device_table__i2c__al3010_id' aliased to undefined symbol 'al3010_id'
-     250 | extern typeof(name) __mod_device_table__##type##__##name                \
-         |                     ^~~~~~~~~~~~~~~~~~~~
-   drivers/iio/light/al3000a.c:202:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
-     202 | MODULE_DEVICE_TABLE(i2c, al3010_id);
-         | ^~~~~~~~~~~~~~~~~~~
---
-   In file included from include/linux/device/driver.h:21,
-                    from include/linux/device.h:32,
-                    from al3000a.c:4:
-   al3000a.c:202:26: error: 'al3010_id' undeclared here (not in a function); did you mean 'al3000a_id'?
-     202 | MODULE_DEVICE_TABLE(i2c, al3010_id);
-         |                          ^~~~~~~~~
-   include/linux/module.h:250:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
-     250 | extern typeof(name) __mod_device_table__##type##__##name                \
-         |               ^~~~
->> include/linux/module.h:250:21: error: '__mod_device_table__i2c__al3010_id' aliased to undefined symbol 'al3010_id'
-     250 | extern typeof(name) __mod_device_table__##type##__##name                \
-         |                     ^~~~~~~~~~~~~~~~~~~~
-   al3000a.c:202:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
-     202 | MODULE_DEVICE_TABLE(i2c, al3010_id);
-         | ^~~~~~~~~~~~~~~~~~~
-
-
-vim +202 drivers/iio/light/al3000a.c
-
-   197	
-   198	static const struct i2c_device_id al3000a_id[] = {
-   199		{"al3000a", },
-   200		{}
-   201	};
- > 202	MODULE_DEVICE_TABLE(i2c, al3010_id);
-   203	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
