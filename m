@@ -1,106 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF9D19C553;
-	Sun, 16 Feb 2025 16:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952B327735;
+	Sun, 16 Feb 2025 16:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739724224; cv=none; b=lxxo9IKjHKCSC5Vk9/7BYtNPOmKderSts4gzN4OT67gP6+pRmPLUL235ah3zHXG7/GDPeoS0lUBPOF5DByrrK9u35tdYAD1gr4hQq4wGNrv9H2ayT1RUBvca24ef4EWijZvosYFbqZIm5BUu1a4ryWxSCPX6KT6859n+GMfdbGY=
+	t=1739724476; cv=none; b=MtWjjLxRoDAVuR5S9TeuhXEynPz4P8QFhPk38+RzYvHm4fXR0PVgHnpBKHTqvsdqqk1pNSN66NergMH57DZeigw9hDl25qWLNPH3e/Hda1VuisBF0gHiIrouv40HLzFxBtJTANXh+lQlKVZDhlyh059U3TtwJpXk9MHBngweqy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739724224; c=relaxed/simple;
-	bh=qmM5JnFO5fEclNMcfcLBUzwYQRlokmI+pHvjDEFXItk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mD4zFVWQSo1rvrx8fZnxRinNqCLFkDZ5DgfBeLA5LpxE7gWFJD/1ZI/SU9mex2a2n9z5076M//PF8QXtNWzca/FZs7p1HAxibRZ2yA1ffS78xGPeqLWVPRAA/2iU80XFqvebY4kIY9Cy4xxM/vWd32cQveaHXmY1GIjC2HGHP7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzIuAcvx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739724476; c=relaxed/simple;
+	bh=IArlZb5AAFNmcNA8acokFZt6Q5WrRCAl6rU6DHtR3qM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hc3+u21L/YRYR4Q+goEdU+6JOEaNOUrGV/wOojXiEuZqMDiMjamlVejaFbbEV//4ARAfWW5fQwZS9mgiMpiWIV/hjAQtShAgJAL9krmvI6NHi5ez07ew4AAjfoX5WhBnve5FI24S/hi1MbESgvCuunrkP28Jx9++DTKZpOCv4Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mId+bfbv; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzIuAcvx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E08C4CEDD;
-	Sun, 16 Feb 2025 16:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739724221;
-	bh=qmM5JnFO5fEclNMcfcLBUzwYQRlokmI+pHvjDEFXItk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=CzIuAcvx1AeLape84eZ+fn1mbdzVuuppGlAW0LvD+hUXhGGx8JmeRdDnkiDOBIuqo
-	 7GgqQsVv3J9JQMPh/htjEgs5VqJ7fepKiW+FFG0/bPxrYwVvj8QHRhr+nJqxsq+EN9
-	 IrOrnwVgY/cjRgDt0OW5kfawBuG2tdegfJEc73i6hopUIP3bpie5FXUlH9qq8BHwNT
-	 Gg7luZO99f/WM8FkcqTQhlTV7yItHniGDJUKypcktv/M81LHXJ9JYwIWbL88e1jgnd
-	 gvGaipueE7JvU02F+ECMM6EWCrJjpUDTOmdigtpFitcWGLJixLH3A3hkUlAGoddQU5
-	 lxCPzOOwjTYKg==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54622e97753so32559e87.0;
-        Sun, 16 Feb 2025 08:43:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXmpF0Iuy1vMzAQxCPtdG12UKsO5bruAAgrx7wUDdsnnTPH47tdvRigJbg816yCh8u0bCpTEBkyA7eFJ94=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yylgb6Mf+hCFudynbcj4U8aF4KXJa8b43EiRQ1pCQ3VZMl9fODA
-	LUJgOQ/N/irR4DmOU3Hxbwrfisr7nq/0ImpArHv5xu5pzH96yfKnKjDEmV8nRE7E8AxHOwXGhy6
-	Or4MJo8FPpSVkJlpwKIJ9XmfE3NI=
-X-Google-Smtp-Source: AGHT+IFMqZK9L64dKeunHskpD3P86Jc8yO4JC1sRXLT96hSn4Vm/qA2XoP8Q28H8EG0xMm33i6OP3Xk/YnGrWpE+RvY=
-X-Received: by 2002:a05:6512:2356:b0:545:3035:f0bb with SMTP id
- 2adb3069b0e04-5453035f1e6mr1973967e87.22.1739724220510; Sun, 16 Feb 2025
- 08:43:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mId+bfbv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=LEkCAs/Rhm3S6/6tTKrC5dGrEE0/b2vF5aFA3/U0TKE=; b=mId+bfbv+NmHRgGafrz4SFmU6R
+	9vxduBhLKI6G+vbPIGyZiya7x+5TdENPiQNHhesNFES2+sx0cvAwMV1iTHmBjXRgQyPh/WTVImjV4
+	w26MDDWvmNdbQnfDk3du5xh6pJcdXp65XrIfXuhnHlGOQY3nQJNen7aKPfhy+rEuijmc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tjhny-00Ehjc-QC; Sun, 16 Feb 2025 17:47:42 +0100
+Date: Sun, 16 Feb 2025 17:47:42 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v2 2/5] net: phy: mediatek: Add token ring
+ access helper functions in mtk-phy-lib
+Message-ID: <8070a622-c6b8-4cf7-9845-ffa8b0478fb4@lunn.ch>
+References: <20250213080553.921434-1-SkyLake.Huang@mediatek.com>
+ <20250213080553.921434-3-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 17 Feb 2025 01:43:03 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARNw193tNyEd_2SmY4m-z7NYWd9k+GTEi8Ck0f5RtOm_A@mail.gmail.com>
-X-Gm-Features: AWEUYZlDaLlvfIFJ6djexSaWI7TTWe0H4MpCo628rg7A5uWsu_w-_JvuYpQhaR4
-Message-ID: <CAK7LNARNw193tNyEd_2SmY4m-z7NYWd9k+GTEi8Ck0f5RtOm_A@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v6.14-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213080553.921434-3-SkyLake.Huang@mediatek.com>
 
-Hello Linus,
+On Thu, Feb 13, 2025 at 04:05:50PM +0800, Sky Huang wrote:
+> From: Sky Huang <skylake.huang@mediatek.com>
+> 
+> This patch adds TR(token ring) manipulations and adds correct
+> macro names for those magic numbers. TR is a way to access
+> proprietary registers on page 52b5. Use these helper functions
+> so we can see which fields we're going to modify/set/clear.
+> 
+> TR functions with __* prefix mean that the operations inside
+> aren't wrapped by page select/restore functions.
+> 
+> This patch doesn't really change registers' settings but just
+> enhances readability and maintainability.
+> 
+> Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
 
-Please pull Kbuild fixes.
-Thanks
+This is better, a bit smaller, but still pretty big. If you have made
+a typo, and broken it, it is going to take a while to find it, no help
+from git bisect.
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3=
-:
-
-  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v6.14-2
-
-for you to fetch changes up to b28fb1f2ef45eeef1cd2c23149b50d184d545a3e:
-
-  modpost: Fix a few typos in a comment (2025-02-16 03:10:58 +0900)
-
-----------------------------------------------------------------
-Kbuild fixes for v6.14 (2nd)
-
- - Fix annoying logs when building tools in parallel
-
- - Fix the Debian linux-headers package build again
-
- - Fix the target triple detection for userspace programs on Clang
-
-----------------------------------------------------------------
-Masahiro Yamada (2):
-      tools: fix annoying "mkdir -p ..." logs when building tools in parall=
-el
-      kbuild: fix linux-headers package build when $(CC) cannot link usersp=
-ace
-
-Thomas Wei=C3=9Fschuh (1):
-      kbuild: userprogs: fix bitsize and target detection on clang
-
-Uwe Kleine-K=C3=B6nig (1):
-      modpost: Fix a few typos in a comment
-
- Makefile                             | 13 ++++---------
- scripts/mod/modpost.c                |  4 ++--
- scripts/package/install-extmod-build |  4 ++--
- 3 files changed, 8 insertions(+), 13 deletions(-)
-
-
---=20
-Best Regards
-Masahiro Yamada
+    Andrew
