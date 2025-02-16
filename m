@@ -1,88 +1,106 @@
-Received: from smtp.smtpout.orange.fr (smtp-65.smtpout.orange.fr [80.12.242.65])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80B74C70;
-	Sun, 16 Feb 2025 21:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B991A3166;
+	Sun, 16 Feb 2025 21:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739741634; cv=none; b=lt/+IVuhW1QlCEglpJsBFrYbfn8eI2LVUBEpoD/5BDUSRzuISS+zfFgn6BfAZh/7TFML6p3BNTDYxgrcMh/1kCvWhkPeAhT8oF8nMIWsAB2wt/g3DsBqI4V0tzKiNTAL4Kaahswtsm0e9wmDK+E6WcBAoABJvUm0RlH3mxFReyE=
+	t=1739741887; cv=none; b=ggGNQFMCHAlmw4nILxtopJIzZS0nEzOcrPedQwp6D6nwPGpZ/IhkAx3o7nb/gNpD+T37dj/F3SzPjTvMMfebkugKxXRtVqZzotT5eDLv9dRmuhUaotF0N3igJp6J42h2sMkdPjWJGtnUehPt5eyyNMosDIwZeAUkwoxxkJ61X5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739741634; c=relaxed/simple;
-	bh=7guRH1aGM8Oh0aNzrHu+kgdJ26FPwWdwt/A0ZwzFSsU=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
-	 In-Reply-To:Content-Type; b=p3RiZj62dNmBTgMyenTtSMazRqPOrXn0j/FbxKwjhwtOS3g/4yHGe/uQ1OJsoCOxF7lTXPGhAQn9gPu6wsmROKGnZ4ocFOgE1zS/QKQqBhvLOJA2McHDVX+XZPI8ksnIVxWmJuBVfnmzEu8B4fiyvPTXPNZJU8wEvUl9zbkUc8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QbRGpGXT; arc=none smtp.client-ip=80.12.242.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1739741887; c=relaxed/simple;
+	bh=IF6pVl4zQizxYn5QlEcFpICPjqhGa5hULzQnER5lP8w=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=EmZRpPcNFECrHFtK4p//RUH8SPobgkIiPmNy6yqCSv8d20zC37P1i0TF7UCn9Gywvy3xC1sarfOetsJ/LwbqYin+0FZirhbsbng5NtYqKJ46d1SJSfqFgXRwYukDKPGsKaQzQc7UrcnzZ+xCw+2+PsWucNhklEDYf4H0nT/FFNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFYRsAC8; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QbRGpGXT"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id jm7qtro1wBmk4jm7ttKqTm; Sun, 16 Feb 2025 22:24:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1739741076;
-	bh=0lA5RpCI8RgDLbiFA6kjdlW7BOO4zRImL2WUGm+cZio=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To;
-	b=QbRGpGXTEERSgWydbfK8F3S6nB4XFi7sMpQThiZi3L0G3x1FhjjcK0mAXUB2juw5s
-	 YyEblB6RihQXQQvLViMLCCLKHNKSYHbfoUcl8AzKes/6VASSCpdypOqSC+xeB/O3CK
-	 7jlmGxNCSH0zaZhUbJxpIcJxvRDPiEpC29zIVdCFUJt6on8Mj1pZvahJOlO2hAfQ8s
-	 AxgeS98Wnw7hMXdkq09/79Z9iP3ujUsk+rHW7sKzpnuHhUIjICrq75p1JyZl+eKqWJ
-	 nQYSnL89h0Yh5fzw+gb6eOdiHpgL5XpZOxn0/eq2F6yIsOeQo1AwUtaiYn0L4lu2tR
-	 GGTjVF3PkqJmw==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sun, 16 Feb 2025 22:24:36 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <b0af7103-882d-41ec-8b15-7c8955e1b77e@wanadoo.fr>
-Date: Sun, 16 Feb 2025 22:24:30 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFYRsAC8"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e5dab3f3880so2829253276.0;
+        Sun, 16 Feb 2025 13:38:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739741884; x=1740346684; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IF6pVl4zQizxYn5QlEcFpICPjqhGa5hULzQnER5lP8w=;
+        b=gFYRsAC8EFh5UIDZvcMMohImVXa42fcFWtk7PzIQ92wjuBHdyZ5Eodw7ijkiX1wEMi
+         KKle10DgNLi8iS4IWgTMnc+qoKLRtYzYG8ybDaaoBKOOSqxg0jPuXAm0ahmAswDA5lXO
+         ljYYhCOf34/p2YNw/08Ne49t1923u79c7G+cgJJLZ/FF8N6VSXIrcBAyECkVtvyWSL4B
+         Fauku3EARwLrTFuqX5DWKuD21RehiGhqJNdc48iwdUafoK36JyriuLrAB9ZrPCLrqDUB
+         21qlnCgSMU6M1+KXQo1Kq5/1FvPE+bzYpkDbXsZyZeoepgU3Yuv+2V1wEe6lkrhD0ALK
+         +ojg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739741884; x=1740346684;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IF6pVl4zQizxYn5QlEcFpICPjqhGa5hULzQnER5lP8w=;
+        b=ecckih+5YoD3ICcPQqCZmxl0h1uh2D6m9hB6kmf3dyT3Bk4Gdw1Ek1vF2zPRPVR25Z
+         tVyxfKm6pPxTmurrFHLUvVvj9DW9dUSAWqDeHjvyy7nnT5jfiXzoCafU93upPZn/QLjr
+         dcDlIYq91u1iTaTCU6S9R9a3SIC50wlQ3NTWYwJlwekatwzHQNEgM3wpEdnWenZx0uat
+         a44Wz3J1RRINBOw53UP7fMutNpr9MRfv5nKhjti+1h2YT/1s/5wlXp93n9AiZ7c/upWB
+         h73tSPX7A4G5ioq3cLdSdgRTgh1UkKIiSflS1Q1K54zug9JmAZRS8ek4ShkrrttXQGKP
+         yHxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHNvhjMR5iO2ZtEAAR86L/o0IBgB4/gt3Mn6Xn88omYWGfNrToK+MRM0ssROeh7ymKhgHsVb7miMYPd74=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa3vH9CeE4lqyiwPuOIL5RmpFMoLWAEyobrHwhFdorBcvpsfZP
+	uq8IlLX6MXc6bkED4iz22LRZAkqwt3RN+adbFAhX+y5ApoTGHPQn
+X-Gm-Gg: ASbGncuCjAIgaLuPD7PKT0G3q3QAnXJtxx89AXieyG4SLDiOJESGTW/aVtlFH1vKsrt
+	s8OK6+KStTeoZAarNyJcsziij9qmQJbMROO5QOvTxLzlXYCub6Qxk3xMWdYUArNwmQsP2g+o1rB
+	Hp6zvFUgjGvN1TFQZvgPuf4W7P2Tojld0SwUcoHB4Y/CjGrlxnI9TWbePyLvOgqswqRr2IBh8v5
+	QViNJyWoe+rr/qghW2wHG2UG5w+V5F6J6mvu//keN5QQeve6CxgzQAGS3mRoGe3T6nxdm0NUEpX
+	NNezuN8=
+X-Google-Smtp-Source: AGHT+IHvGesQUS9nPKj/egH0V2uzwj8cYBdhnXi3RNtWhGfhqO4tpeSImuJ28eXWm7fe38Ruh7Zi7Q==
+X-Received: by 2002:a05:6902:160c:b0:e5b:1389:bbd4 with SMTP id 3f1490d57ef6-e5dc9043e20mr6179617276.17.1739741884596;
+        Sun, 16 Feb 2025 13:38:04 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dae0da252sm2310431276.43.2025.02.16.13.38.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Feb 2025 13:38:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] iio: light: Add support for AL3000a illuminance
- sensor
-References: <20250216162721.124834-1-clamor95@gmail.com>
- <20250216162721.124834-3-clamor95@gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: clamor95@gmail.com
-Cc: andriy.shevchenko@linux.intel.com, arthur.becker@sentec.com,
- conor+dt@kernel.org, david@ixit.cz, devicetree@vger.kernel.org,
- emil.gedenryd@axis.com, ivan.orlov0322@gmail.com,
- javier.carrasco.cruz@gmail.com, jic23@kernel.org, jonathanh@nvidia.com,
- krzk+dt@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
- mazziesaccount@gmail.com, muditsharma.info@gmail.com,
- perdaniel.olsson@axis.com, robh@kernel.org, subhajit.ghosh@tweaklogic.com,
- thierry.reding@gmail.com
-In-Reply-To: <20250216162721.124834-3-clamor95@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 16 Feb 2025 16:38:01 -0500
+Message-Id: <D7U70YVABPR6.SGRKVTITDNDI@gmail.com>
+Subject: Re: [PATCH 10/10] platform/x86: alienware-wmi: Improve and update
+ documentation
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: <platform-driver-x86@vger.kernel.org>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250208051614.10644-1-kuurtb@gmail.com>
+ <20250208051614.10644-11-kuurtb@gmail.com>
+ <b65ffe38-78a3-4d37-b1d1-366bc6870665@gmx.de>
+ <D7U61KGOZE98.1M14RIIPBVFNC@gmail.com>
+ <198a578f-99d6-4d98-8186-eab141a2550d@gmx.de>
+In-Reply-To: <198a578f-99d6-4d98-8186-eab141a2550d@gmx.de>
 
-Le 16/02/2025 à 17:27, Svyatoslav Ryhel a écrit :
-> AL3000a is a simple I2C-based ambient light sensor, which is
-> closely related to AL3010 and AL3320a, but has significantly
-> different way of processing data generated by the sensor.
+On Sun Feb 16, 2025 at 4:29 PM -05, Armin Wolf wrote:
+> Maybe you can use the "pwmX_auto_channels_temp" attribute to expose this =
+information
+> to userspace?
 
-...
+I like this approach.
 
-> +static int al3000a_resume(struct device *dev)
-> +{
-> +	struct al3000a_data *data = iio_priv(dev_get_drvdata(dev));
-> +
-> +	return al3000a_set_pwr_on(data);
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(al3000a_pm_ops, al3000a_suspend, al3000a_resume);
-> +
-> +static const struct i2c_device_id al3000a_id[] = {
-> +	{"al3000a", },
+>
+> Anyway i attached the acpidump you requested. Sadly i cannot remember fro=
+m which device
+> i got it from.
 
-Nitpick: missing leading space after {
+Thanks!
 
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, al3010_id);
+Also thank you for reviewing this set :) I'll implement the changes and
+send a new version by tomorrow.
+
+>
+> Thanks,
+> Armin Wolf
+>
