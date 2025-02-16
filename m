@@ -1,148 +1,67 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE035748F;
-	Sun, 16 Feb 2025 22:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA0B19DF9A
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 22:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739746242; cv=none; b=iYFrPXBLEiFtX8h+LM85xjunJC4sj85gKSgmHg8ncZODIApAc4aUzaFKarcer/i+fzgCBVPU/pHjsr6Eq3XprZc01JoqvXuBInx9iFrmzcR89XczqDDjJg0/te19dlXK2FHHDPTHZmF+UDHF1Yw1kiuXIoM3PCo40V5aUx9MP5I=
+	t=1739746740; cv=none; b=AgODR+7d7Hq7gs3l/6MiS1hjsOjd0WwUZTIQjuusKaSUOxrpt3Lg0wp7jm9UtUQ6Wj+eXRbxDJYhAc0yqk4jYe8PHatHMoBYz+nwFUUU7TqVItX7Gu+6XldtRyHsWOavrq+QnbbOaL3IhB9o10J/71GAr7yoZ/Nq+opz/fq8BL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739746242; c=relaxed/simple;
-	bh=MVPYUEfqQP7SYtryyiFnYb+MCB/nRuUktfoW6AhsSsE=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=CB1wJ8S3qP9XVNAfCrWmpmMmug4nCPxcxLmle82AHef4xbGC8Qw+7O71hQLbloGhXugL08LyC7sBRgws+qvFMQkhET6HX8Ey0g6V8b6CzPyzR1VgsnztMJeq7fseY/8PBSRyVagHO28is7iOOtIBITmPsj4yLSwuvie66wX/sMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BfZgYw00; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739746740; c=relaxed/simple;
+	bh=igPFcIAqETZ+TgmghW+VIvY/P4E+wul801/Cgld7s3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcjuQo3+Qpm4zDfBT7wKFk4Yx0i58N09arQ/3Hc15YThZV9436Qp+7+1eeMEuw1U9D6f33GLkwklmPJwmEsH98yqSs5OvEqp6YQiV6ftQEyvZMkvEgfQ64sDsP23shkYD3GMB5JpCa0DzLUo1QhLBhW17FYFfy1CKNJANgA1J3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=be0TvN1E; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BfZgYw00"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220d601886fso48224415ad.1;
-        Sun, 16 Feb 2025 14:50:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739746240; x=1740351040; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rwRpTiFhkazH7eZCnzFo4dfJTeXkjVTocPymKPEhdxo=;
-        b=BfZgYw00LiTNTk+K0EWlPpbX4GkcUorSqwXbpFtvWHVoqwJd2R04XvLO7pKjDyg8BI
-         +P8M3xK56K6zjzVq9Bzvp0LeHyuuA7NUX+G+xDrqyrjJ3yzg/oGJy5Phdi1r72IxYUFT
-         snJqqwSbx3GVh55xgKYtOl2/CJy12U9eI8q0wVIop6HV30ccqrwuGW+eSe+bpMmZ9f9Y
-         5PIhVisYOY7d7QPLjdDo5t1C0eO7RsDff4KFdic3Yx6b6eAdCrjnAeHwPd4YtTJyA1gq
-         CmZ7eVscVy0SJiwk5F1mx0SOLYEb+lM9TDIVS0QFC/oOtw3Wh7zTMyMY8Sp9TPfDhTiQ
-         hGow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739746240; x=1740351040;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rwRpTiFhkazH7eZCnzFo4dfJTeXkjVTocPymKPEhdxo=;
-        b=v+cjbNQpIAG0t7d7KhavjRSvFZp3yjbULsfudE7YpkxkI4MTPv+3mF51wJjkOlcE7n
-         77OauOrG8KO04DlN23l7K5v3k5wRXeQE1/fyCTcFncC5YDa0Ylup9oDMC96GZ/KtlRUP
-         BcruDKXHjLNnS1nT1JZJnWmEqn1W5MbA3jaPbyVpUrMyRBDl/96n0FjHLowW5KYcPjoJ
-         J3EkMvnUOLmUEiMUyaY6Et10BteMM/MUTDqf+ocvB4242jGtz64hsqnjvDExYO7H/5cJ
-         jWpJGgQinEAH+mMMOj1EvlfmglOuKbKLwtZS3gmoXojTScLyIWPuZQ6RqLmQ037n4eNm
-         GbUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUph41B+DMA9yuboNms8DGnV6S2mu/wfV1lApzLtd4QwrK/MRIi95onvV3YTBVQFT/u/LP4hwel@vger.kernel.org, AJvYcCW1lMXeM8lCs37Rb+NpgnZQjcOp0pZtU6T9+Bo9f0HP/pt5ZDur1NGXeTxdmdvq7//FiE6VYquOANkHKPM=@vger.kernel.org, AJvYcCWwnuWSGhYx9AUXl4MOQedOKOgNSeKDz3twzMBQnxmvNLCnbVh4j850+pdy4HtA33c3T9/V9/kwX+oWdyfm5Jc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8ByqjWu2yAMm06jFiIRaSg+IRkfmsEml1tIOf9esvbcH7OUAI
-	ZoQS8d1nC8bweaH8+xoXhDRpYMMlVwE/+9ziTuW7hbTh6cjmRcLV
-X-Gm-Gg: ASbGncv1iNFZpmI5vzYi/3Plgzbi61TvpoWAYNYqOQFGYEfhLpwWW47h6/es3WQG6ze
-	wqY6FEJcLnasD0Wyqbla6klKsIrpIUsUr/wsZOsMpgLAavbu9K9wPCvgKTeYcnInHDmNNBPnUk+
-	kR35FCJHgOSPNkJp4QddFRgQrsvYCAqHRytdgkhGhqIOc0+npoqovthtvsqhjUnJ4pzGwUKYbKj
-	BUOEaxKtNLrjOXWRWGz8mT/HO2U/HK9m7/Pjl/GxXLf3+EgeB7QaRbjdif3AbtzRV+j+dVa+BL6
-	FMgRrgakbP/+YeA6nEP3NtOzWmEJ/JCHfRWJCy7VltkDMwuZfkiokSfx4HYi9d4KcerFSx/H
-X-Google-Smtp-Source: AGHT+IE6flqDwVsTpGpc3YTvZ/iHfBKBaGrBtHop4poOhkkBMwzDiFwM8gvHelDmDsGXIxZ3B+QX9g==
-X-Received: by 2002:a17:903:32c3:b0:220:e7ae:dbcf with SMTP id d9443c01a7336-22104039c9cmr81807265ad.23.1739746240046;
-        Sun, 16 Feb 2025 14:50:40 -0800 (PST)
-Received: from localhost (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d536733fsm60448195ad.77.2025.02.16.14.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 14:50:39 -0800 (PST)
-Date: Mon, 17 Feb 2025 07:50:29 +0900 (JST)
-Message-Id: <20250217.075029.1780115689208398996.fujita.tomonori@gmail.com>
-To: daniel.almeida@collabora.com
-Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
- hkallweit1@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
- alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com,
- anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
- arnd@arndb.de, jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com, me@kloenk.dev
-Subject: Re: [PATCH v10 7/8] rust: Add read_poll_timeout functions
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CEF87294-8580-4C84-BEA3-EB72E63ED7DF@collabora.com>
-References: <3F610447-C8B9-4F9D-ABDA-31989024D109@collabora.com>
-	<20250214.131330.2062210935756508516.fujita.tomonori@gmail.com>
-	<CEF87294-8580-4C84-BEA3-EB72E63ED7DF@collabora.com>
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="be0TvN1E"
+Date: Sun, 16 Feb 2025 17:58:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1739746726;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C/FXzmX2dHrZoHi4o+NcVuNP8PcXZi9MiUagI2/vqQU=;
+	b=be0TvN1EmVBtW2YkSgKuZ/yiYLovqVqiUaVEoJkZ4fTO9CKWzFGE0YqEkTYDZ4xSYHTepl
+	NK1JSjLwP8PDAA1H86rV49gfeX6n7n0IT6XDuz4G1Qwg0CYpsE7iufk1GnIpfdz2aVFIOz
+	48q3d9NBuP9c4tUI5f2OL7pdWVTXLYUIlgucQfGW9OEf8mTKsgC2cp3A++8r1akcPGz7eA
+	/xJ6/yCljddO7Q2Yhy0hGaAtgAKAPsrnNs47Tth94hZA/N57VgjrrH9bKr3jtnlYazbQnN
+	Aof6kaFHS+mo7NrHlwQXUVjnau7WyRyT12EFf9qgniLRQ9iN+qtj5fWCZ/J8tw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: James Calligeros <jcalligeros99@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shi Fu <shifu0704@thundersoft.com>,
+	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	asahi@lists.linux.dev
+Subject: Re: [PATCH 03/27] ASoC: tas2764: Extend driver to SN012776
+Message-ID: <Z7JtoIOECq-BjT9V@blossom>
+References: <20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com>
+ <20250215-apple-codec-changes-v1-3-723569b21b19@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-2022-jp
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250215-apple-codec-changes-v1-3-723569b21b19@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, 16 Feb 2025 09:19:02 -0300
-Daniel Almeida <daniel.almeida@collabora.com> wrote:
+>  config SND_SOC_TAS2764
+>  	tristate "Texas Instruments TAS2764 Mono Audio amplifier"
+>  	depends on I2C
+> +	depends on OF
 
->>>> +/// Polls periodically until a condition is met or a timeout is reached.
->>>> +///
->>>> +/// ```rust
->>>> +/// use kernel::io::poll::read_poll_timeout;
->>>> +/// use kernel::time::Delta;
->>>> +/// use kernel::sync::{SpinLock, new_spinlock};
->>>> +///
->>>> +/// let lock = KBox::pin_init(new_spinlock!(()), kernel::alloc::flags::GFP_KERNEL)?;
->>>> +/// let g = lock.lock();
->>>> +/// read_poll_timeout(|| Ok(()), |()| true, Delta::from_micros(42), Some(Delta::from_micros(42)));
->>>> +/// drop(g);
->>>> +///
->>>> +/// # Ok::<(), Error>(())
->>> 
->>> IMHO, the example section here needs to be improved.
->> 
->> Do you have any specific ideas?
->> 
->> Generally, this function is used to wait for the hardware to be
->> ready. So I can't think of a nice example.
-> 
-> Just pretend that you’re polling some mmio address that indicates whether some hardware
-> block is ready, for example.
-> 
-> You can use “ignore” if you want, the example just has to illustrate how this function works, really.
-
-Ah, you use `ignore` comment. I was only considering examples that
-would actually be tested.
-
-
-> Something like
-> 
-> ```ignore
->  /* R is a fictional type that abstracts a memory-mapped register where `read()` returns Result<u32> */
->  fn wait_for_hardware(ready_register: R) {
->      let op = || ready_register.read()?
-> 
->      // `READY` is some device-specific constant that we are waiting for.
->      let cond =  |value: &u32| { *value == READY }
-> 
->      let res = io::poll::read_poll_timeout (/* fill this with the right arguments */);
-> 
->      /* show how `res` works, is -ETIMEDOUT returned on Err? */
-> 
->      match res {
->        Ok(<what is here?>) => { /* hardware is ready */}
->        Err(e) => { /* explain that *value != READY here? */ }
-> 
->      /* sleep is Option<Delta>, how does this work? i.e.: show both None, and Some(…) with some comments. */
->  } 
-> ```
-> 
-> That’s just a rough draft, but I think it's going to be helpful for users.
-
-I'll add an example based on the code QT2025 PHY (8th patch). It's
-similar to the above.
-
-Thanks,
+Do we want to drop support for !OF configurations? The alternative would
+be extra #ifdef soup. I don't know if this is a useful build configuration but we should be deliberate about adding the depends.
