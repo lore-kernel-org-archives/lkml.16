@@ -1,146 +1,167 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1982525771;
-	Sun, 16 Feb 2025 18:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4628825771;
+	Sun, 16 Feb 2025 18:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739728978; cv=none; b=YCRKSWNW+4wsa18lbHt1r/KsIqwZqp+a5UFe13GB3nXir3gbKYlsK/mZFeJERoxqddP/tSjS+bzfUHyLP3wRZ6gVKqJiTaR2BgH/2HTp5G0VjdiF34HWP11Kq0+yGy96NPHVEN5737vHbUpj78Ou0vWKeWNhqjft4N3UBEN+GDc=
+	t=1739729366; cv=none; b=fVgrtwIs9ed3xxfYDt0arEi10r3v4DdPBrUKijio+s5sMKM5/He+bd6jDUfz/B5vkKx+BLzpCa+oZWe7qr48bRt4fsoKaVMGFwv214GdtyxDYShwl+yM/2nEZISj2c3gXPp102rYfmwPaNYm07mXODSy/fvhz+wxpvcvaOewTww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739728978; c=relaxed/simple;
-	bh=t+WEa/YV84UHDrghWTAOC96OzfAFkWsWBd2b101LDa8=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=cWgw9KrHLKCQ4Pi5ik8aQhlkN0uYPLqBLbFoRzaVU86vjBlEKghVF1uxJnqVU09c1X/SzFpMCqUiXRX99Pz1vkX+YnATc6QJHlaWcuBXNMkPJwuLThGfX9Uajv1++9q9zcIJUsMcpYmZ5BaL6yOUcs8dwbkSrfF2R3Phgrbe2Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JYhvvmWZ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739729366; c=relaxed/simple;
+	bh=O/E/r5ASZKXffJhOIy6Fl6+74Z3ePdDBUDsU152mGFo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pFv5CANTSvKpmvaDC3IyshTEUxSZPwVHh5eavLCKKxEKvlU5savl9vCsFeUsKTwEEcKFtB0Rqu/Re6aa2d4Jegh/g0MlH6L4pW4ZtmR1ZnAwnE7AZK19dJpyO2uYL2qAYHkcin60t6adxH+xDv5/JQxxdJQ8RChBEx+P2EhaLpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7T9LPn/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JYhvvmWZ"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51GFFC6d004824;
-	Sun, 16 Feb 2025 18:02:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=t+WEa/YV84UHDrghWTAOC96OzfAF
-	kWsWBd2b101LDa8=; b=JYhvvmWZDFFsQnZKMzDtfI7NFM3GwsOqdZXlGTEB9Fpw
-	kBX4hzvw1uAlIU8vwI1W07phxjJ5tydgZPxEC3JZIaOIHePglXpwURBxJC0sXhfE
-	cl1AB9N0HnznsVnJl+ACctlGpmynjOqku5FK/Wn4SHZd538zHOui95kPsfYHH11a
-	H/DRJX0IC8e74cl3XztMdNyeZma11VU82a1bQ8T+FYJ1lzwGm0kBjieEbyFH5OCL
-	G2qWjCIkMyl84MYCHKxEA44NFbFqb+zK2tiwca9utZY1n40/XkDqlere1ysQ2OV3
-	r/paTv6seKAL9Rt0goSgUkUom1qHW6Sk78WJyFNM7Q==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44u9u7t3vg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 16 Feb 2025 18:02:42 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51GHaRgb003891;
-	Sun, 16 Feb 2025 18:02:41 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44u68njp2m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 16 Feb 2025 18:02:41 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51GI2eeO29295120
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 16 Feb 2025 18:02:40 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D5F15803F;
-	Sun, 16 Feb 2025 18:02:40 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2D1E558060;
-	Sun, 16 Feb 2025 18:02:37 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.242.32])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTPS;
-	Sun, 16 Feb 2025 18:02:36 +0000 (GMT)
-From: Venkat <venkat88@linux.ibm.com>
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7T9LPn/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44A3C4CEDD;
+	Sun, 16 Feb 2025 18:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739729365;
+	bh=O/E/r5ASZKXffJhOIy6Fl6+74Z3ePdDBUDsU152mGFo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=H7T9LPn/uWmvfZ3KjI/F5rPc6+db5eXkhogkBeuN9CI8rMEPFVh7XxqOL8KB06fKl
+	 qVmjn6fQlFMHzLN5F6ExW0YX8OK1LO6DJIg5ODqks3r1WAgAOz+fkKUDFWoZqQnDOn
+	 lLx70FoaNJ7P57N0iWy7/zZM8QIXgTXy5iN8i+o49YCWbpO6eYzQFr1/h8GFwUthbq
+	 3oco4TwdcLfZg+Jmz2tdM2MTnC7r6gFRBLyL2xnfq5/O57ihh/pvznnwv/tV/YV0GQ
+	 gAUz+veYkHclqDTncQWNEAXgDS5Q0o5v1UDkzI8aUkSzX0/S1p+4Ulk4yZopzxQ+8A
+	 M6Y9AaMq+bKjA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tjj51-004b85-7o;
+	Sun, 16 Feb 2025 18:09:23 +0000
+Date: Sun, 16 Feb 2025 18:09:22 +0000
+Message-ID: <86jz9psqwd.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: luoyonggang@gmail.com
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Sebastian Ott <sebott@redhat.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] KVM: arm64: Allow userspace to change MIDR_EL1
+In-Reply-To: <CAE2XoE9=hjP+qpsy+FcYcSDectDajiXjtcMCVpacSo4cFOo=tQ@mail.gmail.com>
+References: <20250211143910.16775-1-sebott@redhat.com>
+	<20250211143910.16775-2-sebott@redhat.com>
+	<Z7BoydkyT_h0gwOV@linux.dev>
+	<CAE2XoE_8ihJZQF856w-_F+cgJW7fLWGz7M7Ztoxzw2vE51_m1A@mail.gmail.com>
+	<87v7tb17os.wl-maz@kernel.org>
+	<CAE2XoE9=hjP+qpsy+FcYcSDectDajiXjtcMCVpacSo4cFOo=tQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [next-20250212] FStests generic/451 on EXT4 FS resulting in
- kernel OOPs
-Message-Id: <7F085D3B-4AE5-4DDC-94BB-59EF8A67A592@linux.ibm.com>
-Date: Sun, 16 Feb 2025 23:32:24 +0530
-Cc: fstests@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
-To: tytso@mit.edu, robh@kernel.org, angelogioacchino.delregno@collabora.com,
-        chunfeng.yun@mediatek.com, vkoul@kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: A4tV1X1Njir-qAVKGwGrVvZlbr3Tu9-B
-X-Proofpoint-ORIG-GUID: A4tV1X1Njir-qAVKGwGrVvZlbr3Tu9-B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-16_05,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=695
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 phishscore=0 spamscore=0 clxscore=1011 impostorscore=0
- bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502160159
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: luoyonggang@gmail.com, oliver.upton@linux.dev, sebott@redhat.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, shameerali.kolothum.thodi@huawei.com, cohuck@redhat.com, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-I did attempt git bisect, and the first bad commit is =
-d49e636ed7014be354d1ee279b8f4957e8def389.
+On Sat, 15 Feb 2025 19:04:20 +0000,
+"=E7=BD=97=E5=8B=87=E5=88=9A(Yonggang Luo)" <luoyonggang@gmail.com> wrote:
+>=20
+> According to this, the MIDR EL1 is updated properly, but the MIDR for
+> aarch32 is not updated, and I don't know how to hook the update for
+> MIDR for aarch32
 
-Git bisect log:
+It is the same thing. The AArch32 view is configured the same way as
+the AArch64 view, and there is nothing to do at all (that's what
+VPIDR_EL2 is all about).
 
- #git bisect log
-#git bisect start
-# status: waiting for both good and bad commits
-# good: [a64dcfb451e254085a7daee5fe51bf22959d52d3] Linux 6.14-rc2
-git bisect good a64dcfb451e254085a7daee5fe51bf22959d52d3
-# status: waiting for bad commit, 1 good commit known
-# bad: [c674aa7c289e51659e40dda0f954886ef7f80042] Add linux-next =
-specific files for 20250212
-git bisect bad c674aa7c289e51659e40dda0f954886ef7f80042
-# good: [0a354ebcff3e3564281f2ee70b7094f5d16b762e] Merge branch =
-'for-next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git
-git bisect good 0a354ebcff3e3564281f2ee70b7094f5d16b762e
-# good: [21abbfe377b86bac23e3d167f002a492391555c7] Merge branch =
-'for-next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
-git bisect good 21abbfe377b86bac23e3d167f002a492391555c7
-# good: [fcd8e79b9c555ea05cca4ab4593e3fa02722158f] Merge branch =
-'usb-next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-git bisect good fcd8e79b9c555ea05cca4ab4593e3fa02722158f
-# bad: [8b5e9ed3e14f98a0dfa9a2e15654c0f4d94ac64c] Merge branch =
-'pwm/for-next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git
-git bisect bad 8b5e9ed3e14f98a0dfa9a2e15654c0f4d94ac64c
-# bad: [4e91a64bcf478f6f7cf7aab043d80ca671367348] Merge branch =
-'staging-next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
-git bisect bad 4e91a64bcf478f6f7cf7aab043d80ca671367348
-# good: [7b465a0d58c19a45ddf81c90bc8ba04693de038b] iio: light: adux1020: =
-Drop unneeded assignment for cache_type
-git bisect good 7b465a0d58c19a45ddf81c90bc8ba04693de038b
-# good: [66b800119cc5ced59aa45d523e8ef9af54211abd] Merge branch 'togreg' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-git bisect good 66b800119cc5ced59aa45d523e8ef9af54211abd
-# bad: [1fad5171135d31d3d9258715c7d3fefa378797e0] Merge branch =
-'for-next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-w1.git
-git bisect bad 1fad5171135d31d3d9258715c7d3fefa378797e0
-# good: [0d8db251dd15d2e284f5a6a53bc2b869f3eca711] phy: qcom: qmp-pcie: =
-Add X1P42100 Gen4x4 PHY
-git bisect good 0d8db251dd15d2e284f5a6a53bc2b869f3eca711
-# bad: [d49e636ed7014be354d1ee279b8f4957e8def389] Merge branch 'next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
-git bisect bad d49e636ed7014be354d1ee279b8f4957e8def389
-# good: [88c0053baed659acd85b87dd52cbd75f3d8806be] phy: Use =
-(of|device)_property_present() for non-boolean properties
-git bisect good 88c0053baed659acd85b87dd52cbd75f3d8806be
-# first bad commit: [d49e636ed7014be354d1ee279b8f4957e8def389] Merge =
-branch 'next' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
-#
+With Oliver's change, I'm correctly getting a different MIDR using a
+hacked up kvmtool, see below. I suspect you're not running with the
+correct patch applied.
 
-Regards,
-Venkat.=09=
+	M.
+
+* kvmtool hack:
+
+diff --git a/arm/aarch64/kvm-cpu.c b/arm/aarch64/kvm-cpu.c
+index c8be10b..f8ecbfe 100644
+--- a/arm/aarch64/kvm-cpu.c
++++ b/arm/aarch64/kvm-cpu.c
+@@ -128,6 +128,18 @@ static void reset_vcpu_aarch64(struct kvm_cpu *vcpu)
+ 	}
+ }
+=20
++static void reset_vcpu_midr(struct kvm_cpu *vcpu)
++{
++	struct kvm_one_reg reg;
++	u64 midr =3D 0xbadf00d5;
++
++	reg.id =3D ARM64_SYS_REG(ARM_CPU_ID, 0);
++	reg.addr =3D (u64)&midr;
++
++	if (ioctl(vcpu->vcpu_fd, KVM_SET_ONE_REG, &reg) < 0)
++		die("KVM_SET_ONE_REG failed (set_midr vcpu%ld", vcpu->cpu_id);
++}
++
+ void kvm_cpu__select_features(struct kvm *kvm, struct kvm_vcpu_init *init)
+ {
+ 	if (kvm->cfg.arch.aarch32_guest) {
+@@ -181,6 +193,8 @@ void kvm_cpu__reset_vcpu(struct kvm_cpu *vcpu)
+ 			die_perror("sched_setaffinity");
+ 	}
+=20
++	reset_vcpu_midr(vcpu);
++
+ 	if (kvm->cfg.arch.aarch32_guest)
+ 		return reset_vcpu_aarch32(vcpu);
+ 	else
+
+* arm64 host:
+
+$ cat /proc/cpuinfo=20
+processor	: 0
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 4
+
+* arm64 guest:
+
+# cat /proc/cpuinfo
+processor	: 0
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0xba
+CPU architecture: 8
+CPU variant	: 0xd
+CPU part	: 0x00d
+CPU revision	: 5
+
+* arm32 guest:
+
+# cat /proc/cpuinfo=20
+processor	: 0
+model name	: ARMv7 Processor rev 5 (v7l)
+BogoMIPS	: 200.00
+Features	: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vf=
+pd32 lpae evtstrm aes pmull sha1 sha2 crc32=20
+CPU implementer	: 0xba
+CPU architecture: 7
+CPU variant	: 0xd
+CPU part	: 0x00d
+CPU revision	: 5
+
+--=20
+Without deviation from the norm, progress is not possible.
