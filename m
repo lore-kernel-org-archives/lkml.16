@@ -1,36 +1,37 @@
 Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B271993BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B91199935;
 	Sun, 16 Feb 2025 16:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739724634; cv=none; b=QSXz4l6JZnDIgHIwZgwc45GskJonN4Ni9ownHNVy90hOVHNQJjziQTpRNoigKCvV12+qh+sDNy72s9PziFbznOY/o26hYwRuTGH2hVuEcbrfhOi3TiRFfmaZhzQ+p2vd8HWi7viaiS8k7gzjDE550LwZeoivQiCCHFKlIgn0oY4=
+	t=1739724635; cv=none; b=h5iUWg3OzyoTViHeb1pQnB06o+HaWKCvmJf94JRX+yl1UxduEQkF5yxenZexAnSOcIlD5B6nGHgOlxB2XuLrJvmCcUgB7KkqEugBEUjQqlk4o0PHMT8LFqxOVg1fJp00Ah/Z43d5hMjQ5SWZVfGnbvPHE7j2SZ0SKf023xgtVIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739724634; c=relaxed/simple;
-	bh=K8160Mpl70SxTgtjMA/0Q+r9PBVwXxxO9s5QYPkl8aw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G8tF46deF1eAMoC+PD4iqqRCrJo09brpqjexksswyfcHAkT/I6yjMxq7qFEVtHr7hDYMFaPfTG7tQn6cdu5TDi8+Wk459pDVCG8ftfsEvk8kbnss00uPiRcWzyraMnCQYnXWgzN0lkP5rwXbxj3JaVR+eGBJycAnSvGajv8HwMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=G/71Qlyf; arc=none smtp.client-ip=178.60.130.6
+	s=arc-20240116; t=1739724635; c=relaxed/simple;
+	bh=MYDNA7vQdGwvrR9u4naOeO04qzzQoPZZQw+WAtjhwI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cVpisn6SminYFklCizv7aIsWQXD7kWtLh+NX+7NTKYgnYYhfTddQvA3FpwmVDokHdIuCNZbCFw0XMu+5qsCYmTDKYXXFb1IBhEk5+GpwyL9ZDrR7URfEpZ6XpA8XyUXf2Tzf7hcXF2lv3HDamdUrzZqfncH95BXPaCukA3Zm2ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=X0NHws+j; arc=none smtp.client-ip=178.60.130.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="G/71Qlyf"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="X0NHws+j"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=GuJjkzhA/wxq6jSIF/WL5nNUMyBZkTHRN/TfStd13Ks=; b=G/71QlyfRee1MbPwJBS7D94Jds
-	TFLe+ku8YKFGPTerJNTl0/Z0f9SYMhZhDAZJq55CrodjM5SegC+cjzvwndhiXNc9FNkQWiG84B5iD
-	fws/7fDkx3Ke3peQ6e0u/EpJRbp3gnDUATm5mw4hpmW54mhD/SPWWjHUd6uYx3/vT9s6WzWbs62VK
-	9dUDeK+x1pNkukzHmcrO5fbV96TUU6AGZlQLtPWOf6J6g1cxM8GRBc7Eq2wCHOlytA6AGZVBHqjHC
-	G+a7E7HKvcJrANWWUGgV1+KWo8RkfQOWwEzKMbthQR4rg7agrYO6S8WLwgVZoAIFU2T0uQWWHbP7X
-	CtmUG3MA==;
+	bh=X//16u3A076vRnXiSh6q78jzmve7NLCpY7kdhsSSP7E=; b=X0NHws+jlyf6zpAJhycCm8HZ72
+	8QLIr6FQ+1nB04GXQ8oA3AMcRk0rsKxWJiX7dJxKj5oMBE6bPlbeAxKyFH09m3dEHJgkyl71M9EUp
+	OZht1174YB1hCQkMwG1Lqv0fZkvJi8nOeB4G/U9o6TVptF9j0gnYEq9kFdtVlV6NTYNxO+mnENZHX
+	vMPVopPhkQGLnM/eWad/cu1CzGglPla0wR/rrQpT743UMuCgKT8ZUm4c87UrjOWQeRXWMxEFBjG/l
+	Pzw9XEf6w1pNh0coSn/65ik+6V6GkB7ixdBVtLwWHpRnMe6GkCfhmRVczpujhhdyMkmYs6T4HBkKX
+	FVWsa9hQ==;
 Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
 	by fanzine2.igalia.com with utf8esmtpsa 
 	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tjhqM-005FJd-Cg; Sun, 16 Feb 2025 17:50:16 +0100
+	id 1tjhqO-005FJw-Sa; Sun, 16 Feb 2025 17:50:18 +0100
 From: Luis Henriques <luis@igalia.com>
 To: Miklos Szeredi <miklos@szeredi.hu>,
 	Bernd Schubert <bschubert@ddn.com>
@@ -42,9 +43,11 @@ Cc: Dave Chinner <david@fromorbit.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Luis Henriques <luis@igalia.com>
-Subject: [PATCH v5 0/2] fuse: allow notify_inval for all inodes
-Date: Sun, 16 Feb 2025 16:50:06 +0000
-Message-ID: <20250216165008.6671-1-luis@igalia.com>
+Subject: [PATCH v5 2/2] fuse: add new function to invalidate cache for all inodes
+Date: Sun, 16 Feb 2025 16:50:08 +0000
+Message-ID: <20250216165008.6671-3-luis@igalia.com>
+In-Reply-To: <20250216165008.6671-1-luis@igalia.com>
+References: <20250216165008.6671-1-luis@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,50 +56,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi!
+Currently userspace is able to notify the kernel to invalidate the cache
+for an inode.  This means that, if all the inodes in a filesystem need to
+be invalidated, then userspace needs to iterate through all of them and do
+this kernel notification separately.
 
-In this version, invalidate_inodes() needs to be exported to be used by
-fuse_reverse_inval_all().  This is a big simplification of this function,
-which now simply calls shrink_dcache_sb() and invalidate_inodes().
+This patch adds a new option that allows userspace to invalidate all the
+inodes with a single notification operation.  In addition to invalidate
+all the inodes, it also shrinks the sb dcache.
 
-It's clear that inodes still being referenced will not be invalidated --
-but that's already the case for the single inode NOTIFY_INVAL_INODE fuse
-operation.  
-
-* Changes since v4
-- Replaced superblock inodes iteration by a single call to
-  invalidate_inodes().  Also do the shrink_dcache_sb() first. (Dave Chinner)
-
-* Changes since v3
-- Added comments to clarify semantic changes in fuse_reverse_inval_inode()
-  when called with FUSE_INVAL_ALL_INODES (suggested by Bernd).
-- Added comments to inodes iteration loop to clarify __iget/iput usage
-  (suggested by Joanne)
-- Dropped get_fuse_mount() call -- fuse_mount can be obtained from
-  fuse_ilookup() directly (suggested by Joanne)
-
-(Also dropped the RFC from the subject.)
-
-* Changes since v2
-- Use the new helper from fuse_reverse_inval_inode(), as suggested by Bernd.
-- Also updated patch description as per checkpatch.pl suggestion.
-
-* Changes since v1
-As suggested by Bernd, this patch v2 simply adds an helper function that
-will make it easier to replace most of it's code by a call to function
-super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
-
-[1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
-
-
-Luis Henriques (2):
-  vfs: export invalidate_inodes()
-  fuse: add new function to invalidate cache for all inodes
-
+Signed-off-by: Luis Henriques <luis@igalia.com>
+---
  fs/fuse/inode.c           | 33 +++++++++++++++++++++++++++++++++
- fs/inode.c                |  1 +
- fs/internal.h             |  1 -
- include/linux/fs.h        |  1 +
  include/uapi/linux/fuse.h |  3 +++
- 5 files changed, 38 insertions(+), 1 deletion(-)
+ 2 files changed, 36 insertions(+)
 
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index e9db2cb8c150..01a4dc5677ae 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -547,6 +547,36 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
+ 	return NULL;
+ }
+ 
++static int fuse_reverse_inval_all(struct fuse_conn *fc)
++{
++	struct fuse_mount *fm;
++	struct inode *inode;
++
++	inode = fuse_ilookup(fc, FUSE_ROOT_ID, &fm);
++	if (!inode || !fm)
++		return -ENOENT;
++
++	/* Remove all possible active references to cached inodes */
++	shrink_dcache_sb(fm->sb);
++
++	/* Remove all unreferenced inodes from cache */
++	invalidate_inodes(fm->sb);
++
++	return 0;
++}
++
++/*
++ * Notify to invalidate inodes cache.  It can be called with @nodeid set to
++ * either:
++ *
++ * - An inode number - Any pending writebacks within the rage [@offset @len]
++ *   will be triggered and the inode will be validated.  To invalidate the whole
++ *   cache @offset has to be set to '0' and @len needs to be <= '0'; if @offset
++ *   is negative, only the inode attributes are invalidated.
++ *
++ * - FUSE_INVAL_ALL_INODES - All the inodes in the superblock are invalidated
++ *   and the whole dcache is shrinked.
++ */
+ int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
+ 			     loff_t offset, loff_t len)
+ {
+@@ -555,6 +585,9 @@ int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
+ 	pgoff_t pg_start;
+ 	pgoff_t pg_end;
+ 
++	if (nodeid == FUSE_INVAL_ALL_INODES)
++		return fuse_reverse_inval_all(fc);
++
+ 	inode = fuse_ilookup(fc, nodeid, NULL);
+ 	if (!inode)
+ 		return -ENOENT;
+diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+index 5e0eb41d967e..e5852b63f99f 100644
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -669,6 +669,9 @@ enum fuse_notify_code {
+ 	FUSE_NOTIFY_CODE_MAX,
+ };
+ 
++/* The nodeid to request to invalidate all inodes */
++#define FUSE_INVAL_ALL_INODES 0
++
+ /* The read buffer is required to be at least 8k, but may be much larger */
+ #define FUSE_MIN_READ_BUFFER 8192
+ 
