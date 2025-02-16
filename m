@@ -1,376 +1,283 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D59819C54C;
-	Sun, 16 Feb 2025 16:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8822619A288;
+	Sun, 16 Feb 2025 16:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739723268; cv=none; b=LJS8aP05zjiCI/fAvA50LfPMZjxHWiLfBFGy6h3Bg5DmgwkucOaRMDitNeSH4iZct2EBa3twVuT2247NbLNkSGq0hU+ZwDTquzgCPMW+Aninjn1nhpbYnj05M2MahRg7ua78hMsv6DqzhY6nRn8JJn+kPLDxcbKGY6hJVVJdOjI=
+	t=1739723346; cv=none; b=Da67Z3DyXB3CWZXk5m83eAzR8vYgbj9qA/nRpCJFCEq3zTDD/F3SSN16DteLUwiezmP0d/A3mYF7Y2QKyy+hutVA90GAUh3S+/nAtMSEInLAOSZ6/XQRc9QU/jb/mIT2/yni7zS8YApiv9uU5nlgZ1fh2+KKEHP70fubVkK+ijs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739723268; c=relaxed/simple;
-	bh=SqRuN4nPpK1Jrs2Ur/NfN9E0ibl/CtmVE2MTYRKQZfk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gyrWnmdLHrrkOHZv3hxzpcibNe8NgPACnDemS0MFhUyKWuLTBTfSbuqCs1QZedAkwh5i6ph+5pt6am6Rw8c76KWpmJLN0TUQwvugurUOGye2WF1VcoPOxm3+1mRHWB4i+NCMDSfxj0hD8JX0g9DFVTsO1c1LD4Z1KkL0biCeLe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rrh+K+HL; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739723346; c=relaxed/simple;
+	bh=BB1M9pZes0XnX0AWgNfSTRychSVPRlf6abBbzHDQJNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=htdkXJ2Db+f6kO1MIX/yLqhJC3znnAc7AGJERJRlEk9U9fqEXtbG/VAyDei3N9QI8YcTncuQ9g3C/kjaOx9ts5Sc0A7de+ZicEhf2VnI2jzjSkptWfMQYwWFxpka4fK/+7JSmr0DPgsXClG3dL3qll4VrF48+cfOz8YYB8VYIDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HSFCGGsD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rrh+K+HL"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5452e6f2999so2330350e87.3;
-        Sun, 16 Feb 2025 08:27:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739723264; x=1740328064; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HoKBID6eSvgle5yFrCRKBBd0f5CeSDfOXm5LCgLPXGA=;
-        b=Rrh+K+HL9jxt2oW2Q/FAYGa4VGI6e1pEDEKCUwsEXpR6KmBCJovQyfa6SIVf/nzYrD
-         kDqn/Twho6KI/Ez2qmNR9FGPRLw6hYIU7V8iIzsYwOA/IBe7YSvssa47c5wPPaPnm/ky
-         ZgUegGartITmNADhYC5SjPYHVcuW7XexZJHiybrN59E812KmvmKvFCMw49UzuUQfbPwd
-         /QFE+FHvRYLH2cSM9Riq+O5mLtnbcuXjvcDwTpcKOUzyojD86PDrEKlrnk9rFV0EgKPH
-         X6o8uq+eHuNhi3gKiN2/xwsVbbNd96l62P78hmtHGjjzf4bWDOwLbv+j4SFTzI5ypmaj
-         fYjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739723264; x=1740328064;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HoKBID6eSvgle5yFrCRKBBd0f5CeSDfOXm5LCgLPXGA=;
-        b=DskcGw+errBHP+HV73bdaz1EXbjNtScCyvvsfgQ0IoxCGj5HF76vq3Fm7S+cfDgkLp
-         5k/kuw/tA5zSzQc+jsUQM+Nf9lCNFElYPNtDB/1tXvPZo6cTRqmX7xTUadkoSp6vv7e4
-         jmeAyvBtKy+u8zyas5dPwG/2iC2Ii7YfairqVbC1x/lQEdcZs4FB+8C4r5kObUvnewMr
-         Nb2Ce+3NyY5d0ubZW9mXxpJFjYABxQJmMJd+u6Eu9OX9dzsk2Yi4QKnFw35KL1ZCwrCe
-         Dcdm6jMpi4OfMvyy89NL8XsQyIuZX4ox1y1MVcFwHNPm4lVSwMvpA7kNDoQ9FyZp/JWA
-         Yd6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUV80d5coh7PiQRHK4kJn8SPYndoekNlfVF7dJVy0Lmn9e++H5K80qhh8zVPGjDy34pKQtvSazx1TWAUtI=@vger.kernel.org, AJvYcCUWTQYUdLFfJqiDx+WoNednZzJh3Zy8+xMyFLklwSQWpzUt9npjiKP+q8KLwk4n/XkrCodS26+KGC9SttrI@vger.kernel.org, AJvYcCV9UqUDT5dHyl2aBDz6h6fa7wXj2tqXYRIvVpIxecv8VHHUGxgrKRRCExXUDyzPCHlwPRF1BVHKGmv2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGzW4SKVFiS9d6Ruu7D9Dc2EGBXDlj3Ssctvvrl31yA/SFKJR0
-	YEw+EmTq/0KcdDDSzT5H3BIAPDLCPtKgO9ZZ1egNcnL0NkwsyVjPGuVUXQ==
-X-Gm-Gg: ASbGncsb165NMohMPSd84UEXlkSk79eqdda+sRx0Cl7AFdmx/HhPKJDpYH4tJnSKdHd
-	u71WEmthb9wxamIlmbkXfhrYHNH1U4poEn6CNLIFfxWNkbqguu7r/DKP7EazQfRs7h8kcOp2UTQ
-	sF/WZdTUFc14vomattsu0bqgTpqlKjK902a9FRNpR2xuH5D/nNL+dun5PaqQAs3zD/ChdR9lP0V
-	kwsl8Rt3cxWMot5UdG/a4Og5A9XLFl/1+prwsA+lxalMS15hIfgZOKr8N0x64VgeFtIeipr68wx
-	TF5tYA==
-X-Google-Smtp-Source: AGHT+IEiUD8yT8spipQblR6kTffgJtIc0e9Z/UlYzPUEBONj0OXbJILF819skZhF9j8ElyyiWKQunA==
-X-Received: by 2002:a05:6512:3dab:b0:545:114a:5618 with SMTP id 2adb3069b0e04-5452fe263eamr2139330e87.7.1739723263815;
-        Sun, 16 Feb 2025 08:27:43 -0800 (PST)
-Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5456468c28csm481835e87.122.2025.02.16.08.27.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 08:27:43 -0800 (PST)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Emil Gedenryd <emil.gedenryd@axis.com>,
-	Arthur Becker <arthur.becker@sentec.com>,
-	Mudit Sharma <muditsharma.info@gmail.com>,
-	Per-Daniel Olsson <perdaniel.olsson@axis.com>,
-	Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	David Heidelberg <david@ixit.cz>
-Cc: linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH v3 2/3] iio: light: Add support for AL3000a illuminance sensor
-Date: Sun, 16 Feb 2025 18:27:20 +0200
-Message-ID: <20250216162721.124834-3-clamor95@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250216162721.124834-1-clamor95@gmail.com>
-References: <20250216162721.124834-1-clamor95@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HSFCGGsD"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51GEglqK028585;
+	Sun, 16 Feb 2025 16:28:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Fefc5d7Yr5GC1JM/WaUcFMRv4iRq/YkXdeYK/2W7m3E=; b=HSFCGGsDVfJ9kKqt
+	779YGeriTSswDn3uG7qrLfBRULNFytdzsv1NNVL2rlc/wEPAhyqX41hadtO92T4l
+	/IVcLkvupA5pYl/pSpW9MS3jRAxH2RX4s+ZJ9QKzh+voojN8P/opBOYRqZJy0OaI
+	44cG13MFp1cXqNJaHipSvpYGHLRCD8cXDTMv6lZ8YKkkvxf2+SOmiWl6sb8BYwPQ
+	tpEn/7uNyN/+521GfE/4bwu0VAJ5PlTYPj7LCCika9egStlGEUei9AZc0f3TdK8d
+	ijMS9JGgpZENjT9Pv+jDipwvXjVhaYoMBmMicRWOk1WW6zBv7GjmF6wTSJPl3UMB
+	GuaJxg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44tm3gta0d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 16 Feb 2025 16:28:51 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51GGSob0026790
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 16 Feb 2025 16:28:50 GMT
+Received: from [10.216.15.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 16 Feb
+ 2025 08:28:45 -0800
+Message-ID: <4482b900-2ec0-44c1-9b68-3b403a1df7d8@quicinc.com>
+Date: Sun, 16 Feb 2025 21:58:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V8 3/7] interconnect: qcom: Add multidev EPSS L3 support
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Odelu Kukatla <quic_okukatla@quicinc.com>,
+        "Mike
+ Tipton" <quic_mdtipton@quicinc.com>,
+        Jeff Johnson
+	<quic_jjohnson@quicinc.com>,
+        Andrew Halaney <ahalaney@redhat.com>,
+        Sibi
+ Sankar <quic_sibis@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250205182743.915-1-quic_rlaggysh@quicinc.com>
+ <20250205182743.915-4-quic_rlaggysh@quicinc.com>
+ <fclfywuw3p43pcj42gi2w5kutvnto3rcrdng2zl2pzgpvz7dis@cjx2e6v4skfm>
+Content-Language: en-US
+From: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+In-Reply-To: <fclfywuw3p43pcj42gi2w5kutvnto3rcrdng2zl2pzgpvz7dis@cjx2e6v4skfm>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 3Pc0CGekBsZEW164Qp0G6t9N5dzBdf6q
+X-Proofpoint-GUID: 3Pc0CGekBsZEW164Qp0G6t9N5dzBdf6q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-16_05,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502160149
 
-AL3000a is a simple I2C-based ambient light sensor, which is
-closely related to AL3010 and AL3320a, but has significantly
-different way of processing data generated by the sensor.
 
-Tested-by: Robert Eckelmann <longnoserob@gmail.com>
-Tested-by: Antoni Aloy Torrens <aaloytorrens@gmail.com>
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-Reviewed-by: David Heidelberg <david@ixit.cz>
----
- drivers/iio/light/Kconfig   |  10 ++
- drivers/iio/light/Makefile  |   1 +
- drivers/iio/light/al3000a.c | 223 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 234 insertions(+)
- create mode 100644 drivers/iio/light/al3000a.c
 
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 29ffa8491927..37f83e1d8893 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -43,6 +43,16 @@ config ADUX1020
- 	 To compile this driver as a module, choose M here: the
- 	 module will be called adux1020.
- 
-+config AL3000A
-+	tristate "AL3000a ambient light sensor"
-+	depends on I2C
-+	help
-+	  Say Y here if you want to build a driver for the Dyna Image AL3000a
-+	  ambient light sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called al3000a.
-+
- config AL3010
- 	tristate "AL3010 ambient light sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index f14a37442712..03f10786273a 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -7,6 +7,7 @@
- obj-$(CONFIG_ACPI_ALS)		+= acpi-als.o
- obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
- obj-$(CONFIG_ADUX1020)		+= adux1020.o
-+obj-$(CONFIG_AL3000A)		+= al3000a.o
- obj-$(CONFIG_AL3010)		+= al3010.o
- obj-$(CONFIG_AL3320A)		+= al3320a.o
- obj-$(CONFIG_APDS9300)		+= apds9300.o
-diff --git a/drivers/iio/light/al3000a.c b/drivers/iio/light/al3000a.c
-new file mode 100644
-index 000000000000..bc7fd122b218
---- /dev/null
-+++ b/drivers/iio/light/al3000a.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/types.h>
-+
-+#include <linux/iio/iio.h>
-+
-+#define AL3000A_REG_SYSTEM		0x00
-+#define AL3000A_REG_DATA		0x05
-+
-+#define AL3000A_CONFIG_ENABLE		0x00
-+#define AL3000A_CONFIG_DISABLE		0x0b
-+#define AL3000A_CONFIG_RESET		0x0f
-+#define AL3000A_GAIN_MASK		GENMASK(5, 0)
-+
-+/*
-+ * This are pre-calculated lux values based on possible output of sensor
-+ * (range 0x00 - 0x3F)
-+ */
-+static const u32 lux_table[] = {
-+	1, 1, 1, 2, 2, 2, 3, 4,					/* 0 - 7 */
-+	4, 5, 6, 7, 9, 11, 13, 16,				/* 8 - 15 */
-+	19, 22, 27, 32, 39, 46, 56, 67,				/* 16 - 23 */
-+	80, 96, 116, 139, 167, 200, 240, 289,			/* 24 - 31 */
-+	347, 416, 499, 600, 720, 864, 1037, 1245,		/* 32 - 39 */
-+	1495, 1795, 2155, 2587, 3105, 3728, 4475, 5373,		/* 40 - 47 */
-+	6450, 7743, 9296, 11160, 13397, 16084, 19309, 23180,	/* 48 - 55 */
-+	27828, 33408, 40107, 48148, 57803, 69393, 83306, 100000 /* 56 - 63 */
-+};
-+
-+static const struct regmap_config al3000a_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = AL3000A_REG_DATA,
-+};
-+
-+struct al3000a_data {
-+	struct regmap *regmap;
-+	struct regulator *vdd_supply;
-+};
-+
-+static const struct iio_chan_spec al3000a_channels[] = {
-+	{
-+		.type = IIO_LIGHT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-+	},
-+};
-+
-+static int al3000a_set_pwr_on(struct al3000a_data *data)
-+{
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
-+
-+	ret = regulator_enable(data->vdd_supply);
-+	if (ret) {
-+		dev_err(dev, "failed to enable vdd power supply\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, AL3000A_CONFIG_ENABLE);
-+	if (ret) {
-+		dev_err(dev, "failed to write system register\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void al3000a_set_pwr_off(void *_data)
-+{
-+	struct al3000a_data *data = _data;
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
-+
-+	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, AL3000A_CONFIG_DISABLE);
-+	if (ret) {
-+		dev_err(dev, "failed to write system register\n");
-+		return;
-+	}
-+
-+	ret = regulator_disable(data->vdd_supply);
-+	if (ret) {
-+		dev_err(dev, "failed to disable vdd power supply\n");
-+		return;
-+	}
-+}
-+
-+static int al3000a_init(struct al3000a_data *data)
-+{
-+	int ret;
-+
-+	ret = al3000a_set_pwr_on(data);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, AL3000A_CONFIG_RESET);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, AL3000A_CONFIG_ENABLE);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int al3000a_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan, int *val,
-+			    int *val2, long mask)
-+{
-+	struct al3000a_data *data = iio_priv(indio_dev);
-+	int ret, gain;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_PROCESSED:
-+		ret = regmap_read(data->regmap, AL3000A_REG_DATA, &gain);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = lux_table[gain & AL3000A_GAIN_MASK];
-+
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info al3000a_info = {
-+	.read_raw = al3000a_read_raw,
-+};
-+
-+static int al3000a_probe(struct i2c_client *client)
-+{
-+	struct al3000a_data *data;
-+	struct device *dev = &client->dev;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+
-+	data->regmap = devm_regmap_init_i2c(client, &al3000a_regmap_config);
-+	if (IS_ERR(data->regmap))
-+		return dev_err_probe(dev, PTR_ERR(data->regmap),
-+				     "cannot allocate regmap\n");
-+
-+	data->vdd_supply = devm_regulator_get(dev, "vdd");
-+	if (IS_ERR(data->vdd_supply))
-+		return dev_err_probe(dev, PTR_ERR(data->vdd_supply),
-+				     "failed to get vdd regulator\n");
-+
-+	indio_dev->info = &al3000a_info;
-+	indio_dev->name = "al3000a";
-+	indio_dev->channels = al3000a_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(al3000a_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = al3000a_init(data);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to init ALS\n");
-+
-+	ret = devm_add_action_or_reset(dev, al3000a_set_pwr_off, data);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to add action\n");
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static int al3000a_suspend(struct device *dev)
-+{
-+	struct al3000a_data *data = iio_priv(dev_get_drvdata(dev));
-+
-+	al3000a_set_pwr_off(data);
-+	return 0;
-+}
-+
-+static int al3000a_resume(struct device *dev)
-+{
-+	struct al3000a_data *data = iio_priv(dev_get_drvdata(dev));
-+
-+	return al3000a_set_pwr_on(data);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(al3000a_pm_ops, al3000a_suspend, al3000a_resume);
-+
-+static const struct i2c_device_id al3000a_id[] = {
-+	{"al3000a", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, al3010_id);
-+
-+static const struct of_device_id al3000a_of_match[] = {
-+	{ .compatible = "dynaimage,al3000a" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, al3000a_of_match);
-+
-+static struct i2c_driver al3000a_driver = {
-+	.driver = {
-+		.name = "al3000a",
-+		.of_match_table = al3000a_of_match,
-+		.pm = pm_sleep_ptr(&al3000a_pm_ops),
-+	},
-+	.probe = al3000a_probe,
-+	.id_table = al3000a_id,
-+};
-+module_i2c_driver(al3000a_driver);
-+
-+MODULE_AUTHOR("Svyatolsav Ryhel <clamor95@gmail.com>");
-+MODULE_DESCRIPTION("al3000a Ambient Light Sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+On 2/10/2025 4:27 PM, Dmitry Baryshkov wrote:
+> On Wed, Feb 05, 2025 at 06:27:39PM +0000, Raviteja Laggyshetty wrote:
+>> EPSS on SA8775P has two instances, necessitating the creation of two
+>> device nodes with different compatibles due to the unique ICC node ID
+>> and name limitations in the interconnect framework. Add multidevice
+>> support for the OSM-L3 provider to dynamically obtain unique node IDs
+>> and register with the framework.
+>>
+>> Signed-off-by: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+>> ---
+>>  drivers/interconnect/qcom/osm-l3.c | 46 +++++++++++++++++-------------
+>>  1 file changed, 26 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+>> index 6a656ed44d49..da2d82700b5a 100644
+>> --- a/drivers/interconnect/qcom/osm-l3.c
+>> +++ b/drivers/interconnect/qcom/osm-l3.c
+>> @@ -1,6 +1,7 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  /*
+>>   * Copyright (c) 2020-2021, The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+>>   */
+>>  
+>>  #include <linux/args.h>
+>> @@ -33,6 +34,7 @@
+>>  #define EPSS_REG_PERF_STATE		0x320
+>>  
+>>  #define OSM_L3_MAX_LINKS		1
+>> +#define ALLOC_DYN_ID			-1
+> 
+> This should be defined by ICC framework.
+
+ok, I will move this to framework.
+> 
+>>  
+>>  #define to_osm_l3_provider(_provider) \
+>>  	container_of(_provider, struct qcom_osm_l3_icc_provider, provider)
+>> @@ -55,46 +57,40 @@ struct qcom_osm_l3_icc_provider {
+>>   */
+>>  struct qcom_osm_l3_node {
+>>  	const char *name;
+>> -	u16 links[OSM_L3_MAX_LINKS];
+>> -	u16 id;
+>> +	struct qcom_osm_l3_node *links[OSM_L3_MAX_LINKS];
+>> +	int id;
+>>  	u16 num_links;
+>>  	u16 buswidth;
+>>  };
+>>  
+>>  struct qcom_osm_l3_desc {
+>> -	const struct qcom_osm_l3_node * const *nodes;
+>> +	struct qcom_osm_l3_node * const *nodes;
+>>  	size_t num_nodes;
+>>  	unsigned int lut_row_size;
+>>  	unsigned int reg_freq_lut;
+>>  	unsigned int reg_perf_state;
+>>  };
+>>  
+>> -enum {
+>> -	OSM_L3_MASTER_NODE = 10000,
+>> -	OSM_L3_SLAVE_NODE,
+>> -};
+>> -
+>> -#define DEFINE_QNODE(_name, _id, _buswidth, ...)			\
+>> -	static const struct qcom_osm_l3_node _name = {			\
+>> +#define DEFINE_QNODE(_name, _buswidth, ...)			\
+>> +	static struct qcom_osm_l3_node _name = {			\
+>>  		.name = #_name,						\
+>> -		.id = _id,						\
+>>  		.buswidth = _buswidth,					\
+>>  		.num_links = COUNT_ARGS(__VA_ARGS__),			\
+>>  		.links = { __VA_ARGS__ },				\
+>>  	}
+>>  
+>> -DEFINE_QNODE(osm_l3_master, OSM_L3_MASTER_NODE, 16, OSM_L3_SLAVE_NODE);
+>> -DEFINE_QNODE(osm_l3_slave, OSM_L3_SLAVE_NODE, 16);
+>> +DEFINE_QNODE(osm_l3_slave, 16);
+>> +DEFINE_QNODE(osm_l3_master, 16, &osm_l3_slave);
+>>  
+>> -static const struct qcom_osm_l3_node * const osm_l3_nodes[] = {
+>> +static struct qcom_osm_l3_node * const osm_l3_nodes[] = {
+>>  	[MASTER_OSM_L3_APPS] = &osm_l3_master,
+>>  	[SLAVE_OSM_L3] = &osm_l3_slave,
+>>  };
+>>  
+>> -DEFINE_QNODE(epss_l3_master, OSM_L3_MASTER_NODE, 32, OSM_L3_SLAVE_NODE);
+>> -DEFINE_QNODE(epss_l3_slave, OSM_L3_SLAVE_NODE, 32);
+>> +DEFINE_QNODE(epss_l3_slave, 32);
+>> +DEFINE_QNODE(epss_l3_master, 32, &epss_l3_slave);
+>>  
+>> -static const struct qcom_osm_l3_node * const epss_l3_nodes[] = {
+>> +static struct qcom_osm_l3_node * const epss_l3_nodes[] = {
+>>  	[MASTER_EPSS_L3_APPS] = &epss_l3_master,
+>>  	[SLAVE_EPSS_L3_SHARED] = &epss_l3_slave,
+>>  };
+>> @@ -164,7 +160,7 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>>  	const struct qcom_osm_l3_desc *desc;
+>>  	struct icc_onecell_data *data;
+>>  	struct icc_provider *provider;
+>> -	const struct qcom_osm_l3_node * const *qnodes;
+>> +	struct qcom_osm_l3_node * const *qnodes;
+>>  	struct icc_node *node;
+>>  	size_t num_nodes;
+>>  	struct clk *clk;
+>> @@ -242,6 +238,10 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>>  
+>>  	icc_provider_init(provider);
+>>  
+>> +	/*Initialize IDs to ALLOC_DYN_ID to indicate dynamic id allocation*/
+>> +	for (i = 0; i < num_nodes; i++)
+>> +		qnodes[i]->id = ALLOC_DYN_ID;
+> 
+> This can be initialized statically.
+
+There are two instances of EPSS L3 and the target specific compatible
+data is global which requires resetting the IDs for the second instance
+probe. If we don't the reset the IDs back to ALLOC_DYN_ID, then ICC
+framework assumes that ID has been already allocated and doesn't create
+the new ICC nodes for the second instance.
+
+> 
+>> +
+>>  	for (i = 0; i < num_nodes; i++) {
+>>  		size_t j;
+>>  
+>> @@ -250,14 +250,19 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>>  			ret = PTR_ERR(node);
+>>  			goto err;
+>>  		}
+>> +		qnodes[i]->id = node->id;
+> 
+> Should not be necessary.
+This is required, each qnode corresponds to a ICC node in framework and
+some nodes get created in icc_node_create() API and some in
+icc_link_create() API, to have a track of node creation qnode->id is
+used, hence initializing qnode->id with id allocated during icc node
+creation and avoid creation of duplicate nodes.
+> 
+>>  
+>>  		node->name = qnodes[i]->name;
+>>  		/* Cast away const and add it back in qcom_osm_l3_set() */
+>>  		node->data = (void *)qnodes[i];
+>>  		icc_node_add(node, provider);
+>>  
+>> -		for (j = 0; j < qnodes[i]->num_links; j++)
+>> -			icc_link_create(node, qnodes[i]->links[j]);
+>> +		for (j = 0; j < qnodes[i]->num_links; j++) {
+>> +			struct qcom_osm_l3_node *link_node = qnodes[i]->links[j];
+>> +
+>> +			icc_link_create(node, link_node->id);
+> 
+> Please add icc_link_nodes() (or something like that), taking two struct
+> icc_node instances. Then you can use it here, instead of reading back
+> the ID. Ideally the 'ID' should become an internal detail which is of no
+> concern for the ICC drivers.
+>
+
+Instead of reading back the link node id from the framework, I will call
+icc_node_create before calling the icc_link_create() API and assign the
+allocated id to respective qnode in the following way:
+
+struct qcom_osm_l3_node *qn_link_node = qnodes[i]->links[j];
+struct icc_node *link_node = icc_node_create(qnodes[i]->links[j]->id);
+qn_link_node->id = link_node->id;
+icc_link_create(node, link_node->id);
+
+This looks cleaner than reading back the id.
+
+
+>> +			link_node->id = (node->links[node->num_links - 1])->id;
+>> +		}
+>>  
+>>  		data->nodes[i] = node;
+>>  	}
+>> @@ -278,6 +283,7 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>>  static const struct of_device_id osm_l3_of_match[] = {
+>>  	{ .compatible = "qcom,epss-l3", .data = &epss_l3_l3_vote },
+>>  	{ .compatible = "qcom,osm-l3", .data = &osm_l3 },
+>> +	{ .compatible = "qcom,sa8775p-epss-l3", .data = &epss_l3_perf_state },
+>>  	{ .compatible = "qcom,sc7180-osm-l3", .data = &osm_l3 },
+>>  	{ .compatible = "qcom,sc7280-epss-l3", .data = &epss_l3_perf_state },
+>>  	{ .compatible = "qcom,sdm845-osm-l3", .data = &osm_l3 },
+>> -- 
+>> 2.39.2
+>>
+> 
 
