@@ -1,33 +1,33 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9081B808;
-	Sun, 16 Feb 2025 16:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8741487C8;
+	Sun, 16 Feb 2025 16:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739722644; cv=none; b=miLf03hk1vM10hgPIt3TE9KQtRUuJNFzbnF9BjHeWyXrwxjg7TVyEu14rZMfOB36/72Sz67VcfMmu/g9IeRB/wZcXvWuZ88f6zRymY32WGUHnPErVGCfVcJ+38xhIC1GketHGbbjo+wxrHrLeoHMgGGWlc7Kq9JrK+ePAk5NuQk=
+	t=1739722725; cv=none; b=itp+WKKliM9D3aCdp+uehCeDK9TdIxmy0Nc2bqhvXSv4ECcDRYos1517N6KrMGWSYXuHuez64BxuMqfZiTTldUhBM5m0NalSGEx9uFRn3KfnsTXYeF1cQZ3PZlAvzcjbk1pYAcxwvsR/CG+6TdJ6A5tYP5ceRm/m8aecFZFNBeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739722644; c=relaxed/simple;
-	bh=7xhhfB2c5CN9vWOSbk+0aAtHHvR/6Y0Ye2cs4tagP+Y=;
+	s=arc-20240116; t=1739722725; c=relaxed/simple;
+	bh=xa+ykwNu0h1H72N65u+BSWp/fkCg4qdUbTOkeo2YZtA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SFjV44OB0iikxQXzQpZgsQ0n4LlRP4LoXcIDkvgziMve5QG3uu7i5uOOLxa+J/EgS3OHwHsdCB9Y8ptWt4r7zaxS0rAL+J6zfpFKeY+S174Cu0nDYu7rHRRKgYjTjaZVzbMsYZPJhg/kA9TxlZmpNicj8T/FEKVac+HHImBLu8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=RKazNKOP; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=JRCzcgg+e7EEfpEP7PKLglLlv3yY1QShZYuvaJIaYDwi/DUCCv8VshpeQiL11xiW+NzQpgxoABS5MRmGDPwwo4z//SYsf+05EZmLVLjXuWg2VTm8hITyRRyks+yvU4oFXuO3DFxpG9kbJSIPHJ/ojafwsJuvMYlLzsz8/FCOtJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=5hNT7bO9; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RKazNKOP"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5hNT7bO9"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=FzDhmYkPBX2r4w4yW76IMnXZ3t1dVA8aaIH6pMojOqE=; b=RKazNKOPBPzNyczjpgKUfO4Aei
-	sapidYUMyTBHzfJJheZ3sjJ8R+YhYxAS1qRMZFkdREF1QVmIJ3y0zUcHZvBPw5Agg3t20eBJmamQc
-	s9ij6uWk6v/tQaMETIUOeUEI5DMl1p8m6pu1m75xCw1Ng0995Fp5JCeXA5Wls3Oxlnvg=;
+	bh=NJj3Gp8N/yNawLLhYlUSkThk4LKO/bJ6KDyDCc+/r/Q=; b=5hNT7bO9m7UXqdOirP1F2jhcAo
+	xpw3Z0nEC5elZtIPgosvWBn7wpU1CHvg6X3CMQB4Ah7Ast5KsNx660BSykLh7kg8ynGWmRHni2sDC
+	Pax+R0g7M8a9W5/Q1+BwwDcEFjpI8F2J4RD42GTGF9WsOFSyRbjuJzzOAKN8b5KIzFgI=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1tjhKR-00EhKz-HS; Sun, 16 Feb 2025 17:17:11 +0100
-Date: Sun, 16 Feb 2025 17:17:11 +0100
+	id 1tjhLj-00EhMv-DF; Sun, 16 Feb 2025 17:18:31 +0100
+Date: Sun, 16 Feb 2025 17:18:31 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: dimitri.fedrau@liebherr.com
 Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -41,13 +41,12 @@ Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
 	Russell King <linux@armlinux.org.uk>,
 	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH net-next v5 1/3] dt-bindings: net: ethernet-phy: add
- property tx-amplitude-100base-tx-percent
-Message-ID: <d3bb81cd-72a5-45a5-93f3-56dfac23f6db@lunn.ch>
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: Re: [PATCH net-next v5 2/3] net: phy: Add helper for getting tx
+ amplitude gain
+Message-ID: <aab02a4d-3709-45b1-8331-ee1751c7b225@lunn.ch>
 References: <20250214-dp83822-tx-swing-v5-0-02ca72620599@liebherr.com>
- <20250214-dp83822-tx-swing-v5-1-02ca72620599@liebherr.com>
+ <20250214-dp83822-tx-swing-v5-2-02ca72620599@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,17 +55,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250214-dp83822-tx-swing-v5-1-02ca72620599@liebherr.com>
+In-Reply-To: <20250214-dp83822-tx-swing-v5-2-02ca72620599@liebherr.com>
 
-On Fri, Feb 14, 2025 at 03:14:09PM +0100, Dimitri Fedrau via B4 Relay wrote:
+On Fri, Feb 14, 2025 at 03:14:10PM +0100, Dimitri Fedrau via B4 Relay wrote:
 > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 > 
-> Add property tx-amplitude-100base-tx-percent in the device tree bindings
-> for configuring the tx amplitude of 100BASE-TX PHYs. Modifying it can be
-> necessary to compensate losses on the PCB and connector, so the voltages
-> measured on the RJ45 pins are conforming.
+> Add helper which returns the tx amplitude gain defined in device tree.
+> Modifying it can be necessary to compensate losses on the PCB and
+> connector, so the voltages measured on the RJ45 pins are conforming.
 > 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
