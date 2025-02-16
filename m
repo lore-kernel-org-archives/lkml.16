@@ -1,41 +1,40 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2835A1A2544;
-	Sun, 16 Feb 2025 22:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677A11A256B;
+	Sun, 16 Feb 2025 22:18:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739744299; cv=pass; b=gIDfoNqMGEvb43nUKgtMBkf3+IEeaMcD3SwHDT5UaQvWvhOZND3mNOGPqeBwVoUSs7CnXvooQwI5MjbCxj3VT5F/HjaNP2Tv9E7jq6ty5HBg48EmXxXvjl5WKpfxBgXOs2n4yKiEndDitkeMfzjxRd22P9H6z2/jFIIq3uMTymc=
+	t=1739744300; cv=pass; b=gQySkjAxUqwtgVDGZCCGl7IX1a2sE/5QuLfFrkYbIOiecfOvGg4V5NnDvZwr7zbAi1R85x/r5bR029K4x4/2A83Ui24VoOIHpufAkSPekEiG43H8Ukaxco0N4S3T/8PjtQZ50TnJD/kMat1QKnbiwCSaH/nVkVyTPYY9zDqQzoc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739744299; c=relaxed/simple;
-	bh=wHJhwOeaSpNNbgCYMkjjG1GNlz5YxerPhIo6B14rw9E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cPRjA5RLxqP7ooL9Lll/kycouwMQ02LnsgiVIDI4oo/Djn3SYfZVN8+0IlGBQhncza64A+V5NAEDuU2lVht6LfVJe9nC8L2MaF8KRWVMXazxIBSaviRYEkM+Q4+VGZss6fPYYeK/DAMoWrErTimJrNBNZ2FrghmlkNa7NiAt0xM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=PQavqjZn; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1739744300; c=relaxed/simple;
+	bh=UbTmSHeRcNR9y1w9sWk4L+7Gfr+PNHE8EJupaM4yiQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d8FDrHMaG7dAk4ouZ51/0SVYtw4FXlC0hsed4faQBKRFIC5T8rtOGssXfiz+f+Ry0/LVIgHTZqLF0DA/egOPnLImJxaofjOI/eU/IJqw/cpjAzrMDzqGq4yntjgiWQMioU8TnzK+ln69nZUKffdgj7dhNgKZavc5/Hb0ErSzV44=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=TUjKT8sV; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="PQavqjZn"
-ARC-Seal: i=1; a=rsa-sha256; t=1739744271; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="TUjKT8sV"
+ARC-Seal: i=1; a=rsa-sha256; t=1739744261; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=OIPg5n8vVNysNAPm+Fx4I0iVm/kVBYn1uipiSBFHzqoFnliSnBugJBIG6KTteAFX3rln6Hr/0PDeUNmcALZRNSHIn9Jr83nCFk2QfYlD4E0vmmWxOZ+rU5Oq+WdczxVSEkw6vD4xmhbeFl/mOrtrJ0evvs5loQPxIdCdt+ShcsQ=
+	b=cjI1qX5rKD2Zjd20T7ze3hGakn5kKhIB0o6VZ+kacmLQQknY6m5HK/Z2kPAI8S7Ic8kLO7v9dRTz66ffqNKhx+s17tg8ZXt9XkvnuoRka8xzQhXa2+0dtBgeoEOrSiFbQNpZ3SX0Qsj4r3ksCEjnBzrl4EoH3jd6T+sVcM/TCO0=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739744271; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oCI25TPhy4Id7iRyjm7K0b1dudwW2Ibox3w9+UV2UCs=; 
-	b=TsRIgq+zr3kAZtaC5R6BfiEv7ftvn90Hw1oj6g7EHtbS9KC5HUmI4o59Kgk07RvZ4JQ6oJKZzmytfKelA+38xwh707OeB57t+U7LkPxWMt3TT1modY86vdecxHCx+kS2YWhj2pkA/CQSk7GSje56KtxmJwnjJh9AWBvlABac/wY=
+	t=1739744261; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2uXMZuqioGZ1TWUtUfrDpKK3F04ilgq6QgvYzApfTE0=; 
+	b=GNuYeyVCaqibMqrL9uJLNkYcJxiVKYbyDfAym4RTQH4oyEIHR7wygKFwNbeqjpUq/Ukk1YFZXFFo7h+zlgXyoOf2WwCb7Zg0H5bEK99Hrxp4j35pzq+omGtjSbGlaCjF1h3+VEyoS7mJMpgvoToWn32x/O858e3ypXZUrGSnbVU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
 	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739744271;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739744261;
 	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=oCI25TPhy4Id7iRyjm7K0b1dudwW2Ibox3w9+UV2UCs=;
-	b=PQavqjZngPTcpOG8lvnaNbyjOsHK+eEX9D0ggD8DQkhua7NrntRb9/+tXqnEaw5F
-	aqutiC8q2x7X2wIdQH8F02Vy52j7DgYHN7aK2ZrWMZpwshhgf1JkhzSJaX07FjQsKhl
-	YgDMjGwdjzEk2meE2Wz02msdw5mgN6Tlc1PVHyhQ=
-Received: by mx.zohomail.com with SMTPS id 1739744269720837.2148685030786;
-	Sun, 16 Feb 2025 14:17:49 -0800 (PST)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=2uXMZuqioGZ1TWUtUfrDpKK3F04ilgq6QgvYzApfTE0=;
+	b=TUjKT8sVz4Q7MKk9pzKkq+2ImEWDG810ozJpX2eI8IPJ9nz1IM8iX9hn1ExHEFYp
+	pVdMqD71PdwbaV4MUug4DTPEcKuYoVhoR8vlRPtgqzAy/e9AvuwLEW9Tb+3FX5L/d80
+	XhxOIsg5wddLEjwm8KlnN1h4zCqsx5J/TcPk7V98=
+Received: by mx.zohomail.com with SMTPS id 1739744258146392.05421080390477;
+	Sun, 16 Feb 2025 14:17:38 -0800 (PST)
 From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 To: Heiko Stuebner <heiko@sntech.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -50,12 +49,10 @@ Cc: Rob Herring <robh@kernel.org>,
 	Peter Geis <pgwipeout@gmail.com>,
 	Robin Murphy <robin.murphy@arm.com>,
 	kernel@collabora.com
-Subject: [PATCH v2 3/3] arm64: dts: rockchip: rk356x: Move PCIe MSI to use GIC ITS instead of MBI
-Date: Mon, 17 Feb 2025 01:16:34 +0300
-Message-ID: <20250216221634.364158-4-dmitry.osipenko@collabora.com>
+Subject: [PATCH v2 0/3] Add Rockchip 3568001/2 errata workarounds and enable ITS on RK356x
+Date: Mon, 17 Feb 2025 01:16:31 +0300
+Message-ID: <20250216221634.364158-1-dmitry.osipenko@collabora.com>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250216221634.364158-1-dmitry.osipenko@collabora.com>
-References: <20250216221634.364158-1-dmitry.osipenko@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,28 +62,33 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Rockchip 356x device-tree now supports GIC ITS. Move PCIe controller's
-MSI to use ITS instead of MBI. This removes extra CPU overhead of handling
-PCIe MBIs by letting GIC's ITS to serve the PCIe MSIs.
+Enable GIC ITS support on Rockchip RK3566/RK3568 SoCs by adding
+necessary GIC erratum workarounds and moving RK356x PCIe MSI to use
+ITS instead of MBI.
 
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
----
- arch/arm64/boot/dts/rockchip/rk356x-base.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changelog:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk356x-base.dtsi b/arch/arm64/boot/dts/rockchip/rk356x-base.dtsi
-index 423185686600..4f11141ea146 100644
---- a/arch/arm64/boot/dts/rockchip/rk356x-base.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk356x-base.dtsi
-@@ -969,7 +969,7 @@ pcie2x1: pcie@fe260000 {
- 		num-ib-windows = <6>;
- 		num-ob-windows = <2>;
- 		max-link-speed = <2>;
--		msi-map = <0x0 &gic 0x0 0x1000>;
-+		msi-map = <0x0 &its 0x0 0x1000>;
- 		num-lanes = <1>;
- 		phys = <&combphy2 PHY_TYPE_PCIE>;
- 		phy-names = "pcie-phy";
+v2: - Changed Kconfig and commit descriptions of the GIC driver patch,
+      as was requested by Marc Zyngier.
+
+    - Added ack from Marc Zyngier to the GIC driver patch.
+
+    - Squashed DT patch that added dma-noncoherent property to GIC node
+      into the patch that adds MSI controller node, as was suggested by
+      Marc Zyngier.
+
+Dmitry Osipenko (3):
+  irqchip/gic-v3: Add Rockchip 3568002 erratum workaround
+  arm64: dts: rockchip: rk356x: Add MSI controller node
+  arm64: dts: rockchip: rk356x: Move PCIe MSI to use GIC ITS instead of
+    MBI
+
+ Documentation/arch/arm64/silicon-errata.rst   |  2 ++
+ arch/arm64/Kconfig                            |  9 ++++++++
+ arch/arm64/boot/dts/rockchip/rk356x-base.dtsi | 14 ++++++++++-
+ drivers/irqchip/irq-gic-v3-its.c              | 23 ++++++++++++++++++-
+ 4 files changed, 46 insertions(+), 2 deletions(-)
+
 -- 
 2.48.1
 
