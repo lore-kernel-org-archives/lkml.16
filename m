@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A56743166;
-	Sun, 16 Feb 2025 19:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9AC42AB4;
+	Sun, 16 Feb 2025 19:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739734399; cv=none; b=iGmPt95QRGuWEWS8jdrKdSPaG4fpXRdAoBdPuapc+4NFzCiN2TXOAjuHl2/NkYAqThRSb0xTMhH9z6Y7mFo9dmAUmt+sC5FV8n8Ii8akVSoXMGQ5gwr6KFve4IPPh5chcW9QYmQTa0WO9FS4/OajJ9NbAs/+kxj1MpdKPp6ZHVg=
+	t=1739734399; cv=none; b=L7sszvmBCAsB/+7g5F/vNSQ2IvOc+CFmD//YVqJ23cRMYuwVjJ/DvD7kZdTqhF+ygaFGG47IscDrX9OQAVLzk+C8WsWlxMYwT7NK5cx5lzvMhL612a3K5DbGGPs13W4yVQbkeNBfaQrDnFfbyHvQSD3oGZ24jFc8v6sR0qlp1RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739734399; c=relaxed/simple;
-	bh=bY9wGJAHHKJfi5+faI192PpB74uBuDOL4lP2cm/vKCs=;
+	bh=4zFvPourB8H8dcn2mIjlbEat5V6fdoA0xfssgADHt8o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UiBTIuXDtmSkCs7XrvMvtmlOVFZfsBrVrN9aZBsW6x7tdDMuJgozexbF8GfQPMoon8NWwDyL+At40EbM/8vGHLcEsYWiG1jbqeBUmmkrbQG8Mma2VknRXXk3wmkJLVrLVHl8lXhtaxd7d6ByYz4oOPvZanjswXgrqWP7pXYL5M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=a8YbtLqL; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=Yf0gBCTTkegWXlqSZCGi3rQr0r9oO576R4YnHdbz0aBsaMLv310UEp20iwzgVQCVRSqGvaDC4pYKEZl9Vi01DmF7h1SQjMw+f+djL1IkZcRPXMRail2ujoMtuSjS2cgBwFLSOI6ZVEQsvS5syCprTPgfAFtAjeJf6ZpLLhuAxag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FukaASuM; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="a8YbtLqL"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FukaASuM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1739734379; x=1740339179; i=w_armin@gmx.de;
-	bh=mM2EQkLQYCZVlwJp2GMGxpCWqqXp/hAG0cIERHbUn/s=;
+	s=s31663417; t=1739734388; x=1740339188; i=w_armin@gmx.de;
+	bh=LGy+YSCR5EXvi4r55nuFgMVSm/uxFYtiz967rCHqBWY=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=a8YbtLqL6i+1C5PcwHa5GebcEwOULxrl71rlDnpYp2K8rpy7RfQcVHXq0AAkRDp9
-	 EYrQ65Jod6PZcRefo3xOYPbKzR5gshPnOHum/fDxhBpqwp8wHvsfNjoAnBtfA7CEL
-	 iSxYPtNmSz15iILXvH0JSSSN56pxWMMrHHcufE6iIVytFeVe4s4+NqU72kxpSJ51Y
-	 PIzXC7r4jcSlASwr74JjMfKiQb8vAAdQeLITy3zFKFNcFERSbiTB9MoT60xVHjOHG
-	 nAykRyGuQp1Pc0LjjBTHFigy6PW5ydNckADCsh8tZFyD3KNe/b83Q0wy8GTI1Qzkz
-	 qtOjSd7ki4gj4CChPg==
+	b=FukaASuMPulkd5/llRPinx6CGBQrHgDRlh5W25yb4FXINVbp9un9GXNwQzFWNPBe
+	 J8UQcXzzyrVdGPyyk6aQaAeWlzcFDgJAv4evIvqN5iky4sC99lbFRuTgtbUWNMknt
+	 UCVBouGBUaaCvZn6yCv31Bj1VIPqFrznGlNxgkr6HKrp6paQU65B7CedS23CyQUmo
+	 imwkxnDV0m2hiaSKp/Knt7XjiWxyWZXOiiR4TICF9EDO8c4ngkixshLJEYQnba6Ww
+	 7214awmFX561Z4gbuPqjW4d4blrKXLykqJ/UTZFv79/1fqBkl4/TbspMHNKQ4lx6q
+	 cSt6DZc7R+3vFBNpIw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MOzOw-1u0Hhf0WSK-00K8gK; Sun, 16 Feb 2025 20:32:59 +0100
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MBDj4-1tdeVZ3Pag-002GLc; Sun, 16 Feb 2025 20:33:07 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: james@equiv.tech,
 	markpearson@lenovo.com,
@@ -46,9 +46,9 @@ Cc: jdelvare@suse.com,
 	platform-driver-x86@vger.kernel.org,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v2 1/8] hwmon: (hp-wmi-sensors) Use the WMI bus API when accessing sensors
-Date: Sun, 16 Feb 2025 20:32:44 +0100
-Message-Id: <20250216193251.866125-2-W_Armin@gmx.de>
+Subject: [PATCH v2 3/8] platform/x86: think-lmi: Use WMI bus API when accessing BIOS settings
+Date: Sun, 16 Feb 2025 20:32:46 +0100
+Message-Id: <20250216193251.866125-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250216193251.866125-1-W_Armin@gmx.de>
 References: <20250216193251.866125-1-W_Armin@gmx.de>
@@ -59,69 +59,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Kci9+d/nK9nZ7kslj4gKHXclO1R0iKB9O3BgiKYatv7zbOAcECO
- 3wD8C7DPfxcLEakjPkpn3hox+k5YvWkHjMNvZoZ/WuArD3pT1oJxXkwbkiD5OwZNiUr05lj
- I0Bqj/AQu7e+CgymGFTY+tUE6Gxbj8cCXJi5H2AFlii16BrE05WsoaB2loclpl1SVcCm9I1
- 3d14vciUE0uHhqq3Wx9ew==
+X-Provags-ID: V03:K1:OYDecztJG0YqpsI7jHjqnFqVJkOdsPHa+jTcw42NzfmhRMiw+ZL
+ y6++CTXgYmhvIW8xZiKhzHc1zCpR8SeCd3k1pa7mTrQCbaCe4iK58o6ZpJ1jM+aRMv/V2Jt
+ RTKeNU2KMH9uB84Di2cld9FLOze3MGjdIzpQN9huKh4hu1I4ucvUT9JfdxkJNh6FWDoQMrD
+ ZXIRbmot3VtUKxDnP7/iw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SkSnWk2fMaA=;qcUOHmLyfPHbpjMeIxxnMoYqZHE
- 5J7vw2risTVkmrzfqMa3gV/gEMNxFUMsnBoCijrF9Humm81gOgSo+X8/le0efE0tvfaTOa0FT
- LUzsZKUt88PbmT4ZRbCqv0dilheo15adhuKF6bcliKnWqeLPPza5GOAinvy+N1P1nDY4v8aQj
- VlctrsOG0U9xsfrmVyiRlELNJJATJuZxzq2LfcBCD1MLCWxgxGpPnxENFwtyvSYgqCGmhuarI
- f8jTH/wkW1qkmsl4Wb3ZkirXxf3FIl0JepEYzGle5H3ksfQVVJXxzyc/cDwAAnDDrbatjUbxC
- e1B6MuBTgtwdFd3quVkwwoOiLycOWXHQsK9ljUkGru8csz0E7Ow0ridGGAoOFCjtcm4WQelvc
- 5kUgGXs1UN2ECqJNLiHQZ75VNy0pfq2Gj3exfpp2XguePzgKoulYiRWuJrdUpGRRDnmdbO/yZ
- VaZzJL9WLp69uk8RtRlhHTta2E4K32No6r01JmH2dZepzrbkXIbp6Lfwd41dg83nVV9jUuEaW
- a+qgkVdkjOw7rCxFCdC4hAboDOnSXdAAcEsmTGaMW/SfJ7DwsKgHhlqu1ngaXk7C+QL3XY0TP
- epz1xSwWbqJPJ16JLao+Hdx5MMq6ftbg7Um+o4tT7XsxGus/GOb15nGtdaramvI2xnDODAk9e
- 3OKKp/o2GTIXRRKvFE4SqXGCk9pwKVWeFBZ7RD9g+9HJWoTnx1rz71DziHDz3+6p01Hz1kIQU
- CeESjbNC7CFajAW7cmvv2d9eBD14IG40pI0iQRrXnxE6vRxC7JRfI4+xLiug3VMYK5k8SJUKK
- nlnYePoO6Rh0vEo9bKL7mNSDunqVBUacdDOTWHPm8K6lQBFaWAHct6RS0hdEpPKAqsKDuWuA4
- yiMuhqlDLVZNX1Rd8c8Gy2tSfIabJv6t9Ya756dgPmwHXWVOELRgqp9L1hi05LITvBNvJ9A04
- v2+IxoIcl7ZEjttwbxHcIo89DGey7U2DzEAxusA0rGrhbpy/HXDqsZbN8JxJ9cWIxh+Qi6Ljs
- Z8bgSnHo3Mwa3FkoAmJjzSnGzA+kaDFf4A+yEkHA9z5DGb7GcPK3GKFiWNkOpqesYvYacC0oC
- +pbofvYA5HxvmZb5CmIN9XZV8HdcqZiIUhk//iLJutGgiGFMcNVSALzfYcpfM3YlhpbmJ9LTn
- YNDUi6QockjyRfflIjowKsjxFqRPQcjnzdcuHyN5y8mQ+dZEbLFvCR5oVSNaTPdz0rcierJr9
- 8coOUGd0nmhucCfrxNo3/PBDVIQNQ0eJs5mHHVuYvEpqrgRtC1VDInVOge6cv6Y3IzMzfPjc6
- znAr8QlOVwM5q+r+AzZO0m/P74j4fX8nH78X+8+OEPq7cgpj1KuMAwNXx+dro9x2slpkyxYSn
- I8cLwFtrvJzydrrl9Fx8dLcbDtno18klRen5V38EC/lCcSZFdbAfWDOtZd
+UI-OutboundReport: notjunk:1;M01:P0:eQY/Orl/C+k=;KyES0va4qGRw69QoCFrMtPlrTkf
+ w1MKr0w0CGfv41ognV7ap8aiQCxIUMuwMUtPW6c8kEDHuy11GXvAOKmmz6lO45HUG4S5JLdAU
+ KhFAB349yycK2mV31QUmJ6H4P5bAS4LRSoHBcLqOybHl+iFTD+92wRMvjZOwelaXEHcxtWgO7
+ TsCAL0ZAmSnTWcXIEEXdeYYiso4ML4I+xAdM19QqSvIZ8h3T8W8KL3Dh07uktA9PJ+PS20uu/
+ XvL3YGzBKlF/Add5rx2ozy+9OU1kxuGfnj6WcVbAEVAB8cqLP3MhZrERfkr2P62tqOmdFi4vw
+ FKYrjiD1RryYBmqid9cez0w7uHaV92Z5znAKhHRRzEQJMOYq9wnf1cwMr/sPN+KFbtBeRkQfb
+ p2VG0HJ1JoNphY5ue6kZQegZmjiwUF0xrgymySAjflfEMtHFRzvP66dfujBTe8uY+QLKbpfa6
+ GgGIRt27SvsQFdVxVBFor7CHaOy+qpeizry6tbBktTs40OiEaBXG7hcFs5yKUNPEntjJYaToJ
+ r0E2P2gd00cOY6+YqW4pr1txbUfc8GoA0Lrz89iaLEQPqDioe/yv61YsxczGTKyzMl+SwbW2q
+ zFIlzQ/YrscinaRfvHkAkWB+jYGYMQa6tnoxD5wc9EPxOndpTcyNDBw7656qz29nuhNiyHIOQ
+ r5uYhX4+LME1UdMkB8hTd57/+7JC8QzKZ4VdpDHfYbjC/bu28TZOiuhAO161+K9j89BFmpbim
+ qJ11A36WQxqVdwZgeOXRh8QT1fJmRnkQ/4KyjIswlbFciC0Uy3wOyjmgkniY09q1tPgTa+TM6
+ UDFzzpQuPqhHSrNJtZ9I8etfWKGKU0RNEj/vMcWfEPSOowpGw8gFL/u+4R65ynUNUjqhV8br4
+ rrMb3tLa2gNfmMQlGli1PrA/Ywzii7SiZwSyBGbScLg7/xc4OjhHJVyhkeEE5oHTteGg5D/lA
+ 1pL5s6jJaZFAwLUPww3rZNR/Nu/us2a5XTLTCJDfl6wA4X7/KePbNPPida9T+dcCf2Q1X8fUB
+ Yg/X12gwB9UsLGdByDR0grfRGNWHxT4hKOLvT3T/cPde+hggi45X17srpaw1sYtWjQ92I3JM1
+ 2it48hmaS7PexKRuHTG3rmZrgW306Jhmz8XbF1Ug4ZoTtbafoZr6lgSFKH09D78mPEe/aQ4e+
+ ElSQf18IRzDZibSH7ldxGpwTTO7Tzsb+e2BHpKhsgiGFEm7ePezh6wrXJabNGWkYztUi8O2IY
+ cQJUhoHgqPmYOUAVGVIjSKAxgWuxNUUx03PYidhEMT7J6NAkDsfw/SZZW5iE6D4V9Q3W6+KdY
+ hpnk9ah7B2iV3yIPxp5GdelYh3ZMUIGp/AbVXh9HEIs0YiQMn5XDFRT3vx5sB5/fgoKm46pKN
+ g5E5HGQeB1qs5BZ8Q+MZT0yo2X3lN0aLIkchx66AXZtoC9zleky3P2WfBT
 
-Since the driver already binds to HP_WMI_NUMERIC_SENSOR_GUID, using
-wmidev_block_query() allows for faster sensor access.
+Since the driver already binds to LENOVO_BIOS_SETTING_GUID, using
+wmidev_block_query() inside tlmi_setting() allows for faster
+access to BIOS settings.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: James Seo <james@equiv.tech>
-Reviewed-by: James Seo <james@equiv.tech>
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/hwmon/hp-wmi-sensors.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/think-lmi.c | 23 +++++++++--------------
+ drivers/platform/x86/think-lmi.h |  2 ++
+ 2 files changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors=
-.c
-index d6bdad26feb1..03c684ba83bd 100644
-=2D-- a/drivers/hwmon/hp-wmi-sensors.c
-+++ b/drivers/hwmon/hp-wmi-sensors.c
-@@ -1197,7 +1197,7 @@ static int hp_wmi_update_info(struct hp_wmi_sensors =
-*state,
- 	if (time_after(jiffies, info->last_updated + HZ)) {
- 		mutex_lock(&state->lock);
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
+-lmi.c
+index 2c94a4af9a1d..0fc275e461be 100644
+=2D-- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -344,20 +344,14 @@ static int tlmi_opcode_setting(char *setting, const =
+char *value)
+ 	return ret;
+ }
 
--		wobj =3D hp_wmi_get_wobj(HP_WMI_NUMERIC_SENSOR_GUID, instance);
-+		wobj =3D wmidev_block_query(state->wdev, instance);
- 		if (!wobj) {
- 			ret =3D -EIO;
- 			goto out_unlock;
-@@ -1745,7 +1745,7 @@ static int init_numeric_sensors(struct hp_wmi_sensor=
-s *state,
- 		return -ENOMEM;
+-static int tlmi_setting(int item, char **value, const char *guid_string)
++static int tlmi_setting(struct wmi_device *wdev, int item, char **value)
+ {
+-	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *obj;
+-	acpi_status status;
+ 	int ret;
 
- 	for (i =3D 0, info =3D info_arr; i < icount; i++, info++) {
--		wobj =3D hp_wmi_get_wobj(HP_WMI_NUMERIC_SENSOR_GUID, i);
-+		wobj =3D wmidev_block_query(state->wdev, i);
- 		if (!wobj)
- 			return -EIO;
+-	status =3D wmi_query_block(guid_string, item, &output);
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
+-
+-	obj =3D output.pointer;
++	obj =3D wmidev_block_query(wdev, item);
+ 	if (!obj)
+-		return -ENODATA;
++		return -EIO;
 
+ 	ret =3D tlmi_extract_output_string(obj, value);
+ 	kfree(obj);
+@@ -995,7 +989,7 @@ static ssize_t current_value_show(struct kobject *kobj=
+, struct kobj_attribute *a
+ 	char *item, *value;
+ 	int ret;
+
+-	ret =3D tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID);
++	ret =3D tlmi_setting(setting->wdev, setting->index, &item);
+ 	if (ret)
+ 		return ret;
+
+@@ -1588,7 +1582,7 @@ static struct tlmi_pwd_setting *tlmi_create_auth(con=
+st char *pwd_type,
+ 	return new_pwd;
+ }
+
+-static int tlmi_analyze(void)
++static int tlmi_analyze(struct wmi_device *wdev)
+ {
+ 	int i, ret;
+
+@@ -1625,7 +1619,7 @@ static int tlmi_analyze(void)
+ 		char *item =3D NULL;
+
+ 		tlmi_priv.setting[i] =3D NULL;
+-		ret =3D tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
++		ret =3D tlmi_setting(wdev, i, &item);
+ 		if (ret)
+ 			break;
+ 		if (!item)
+@@ -1648,6 +1642,7 @@ static int tlmi_analyze(void)
+ 			kfree(item);
+ 			goto fail_clear_attr;
+ 		}
++		setting->wdev =3D wdev;
+ 		setting->index =3D i;
+ 		strscpy(setting->display_name, item);
+ 		/* If BIOS selections supported, load those */
+@@ -1666,7 +1661,7 @@ static int tlmi_analyze(void)
+ 			 */
+ 			char *optitem, *optstart, *optend;
+
+-			if (!tlmi_setting(setting->index, &optitem, LENOVO_BIOS_SETTING_GUID))=
+ {
++			if (!tlmi_setting(setting->wdev, setting->index, &optitem)) {
+ 				optstart =3D strstr(optitem, "[Optional:");
+ 				if (optstart) {
+ 					optstart +=3D strlen("[Optional:");
+@@ -1791,7 +1786,7 @@ static int tlmi_probe(struct wmi_device *wdev, const=
+ void *context)
+ {
+ 	int ret;
+
+-	ret =3D tlmi_analyze();
++	ret =3D tlmi_analyze(wdev);
+ 	if (ret)
+ 		return ret;
+
+diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think=
+-lmi.h
+index f267d8b46957..a80452482227 100644
+=2D-- a/drivers/platform/x86/think-lmi.h
++++ b/drivers/platform/x86/think-lmi.h
+@@ -4,6 +4,7 @@
+ #define _THINK_LMI_H_
+
+ #include <linux/types.h>
++#include <linux/wmi.h>
+
+ #define TLMI_SETTINGS_COUNT  256
+ #define TLMI_SETTINGS_MAXLEN 512
+@@ -87,6 +88,7 @@ struct tlmi_pwd_setting {
+ /* Attribute setting details */
+ struct tlmi_attr_setting {
+ 	struct kobject kobj;
++	struct wmi_device *wdev;
+ 	int index;
+ 	char display_name[TLMI_SETTINGS_MAXLEN];
+ 	char *possible_values;
 =2D-
 2.39.5
 
