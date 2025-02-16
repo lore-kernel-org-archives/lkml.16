@@ -1,38 +1,38 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C0914AD0D;
-	Sun, 16 Feb 2025 19:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4FE1442F4;
+	Sun, 16 Feb 2025 19:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739734410; cv=none; b=Hhp3QCa6GcOOd8wKDcKo9rh2LAeuAF5c3zrkrkRHlHyAFpxh7jBYtLUJf3tCmzAZX8T2Sy9Lmdx7vCv54mTJK9wR44S8CMZ6S5Q9YilFAIF5EiUxQ9u4AIiMMiRl4qLQXLOy/6wCSn2dTbiNEoXmeCnTsTQINuEzrmHbVGJ4bFo=
+	t=1739734410; cv=none; b=GH6+ueoVtr9p+MWx77ra+rzR+EFlknY97YUhaiPeZgS5pDfCZs6kwkrhuxaxGzLXcJo60Upm7a85rKj2bVrqy7apgdwMrl+w5P9mndbotmXchpwQJjwO3u6QBRE8Nsv+2PejGUuOONFAmSLCLjySFAWrH9Wt3VNNjpw9hP73jOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739734410; c=relaxed/simple;
-	bh=Ca4htyzMV4BbSbS57tRGc2+Cc0LiM6cUtsp4GcmvYPE=;
+	bh=yMjiz646ZJvCb1m2zwAwWL8ybidlrk4U2RBujeYWMdI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qZq7zkqGgWw97fDQqjVeC16VcZxxaYukEGa3SHIo+a+V87cvksu9VbF832NpMMDpIa1UuQ31tOR8ULlR+9BN4ATW9WK/KpjqAtYNM6Qd6mpWVHWBS0qJXt8FnwwQIc4j9ntKEABLfxXjDI01xL4sSdug8cNoQ3pA/2Ji1+G1BfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=toO+fCLo; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version; b=VNcl8sz0R8kkNWl9sTe8qYOP8cAVzfFVs19DFkqvLnBBpDx1ZkUJ+RENjlTFYsZlX2JG5RB0rLvmhWUnMeb1qUvRpAmOGxQUVIEQ10VZ2ZbFvN7JcOZC0u+d/fvQ3icqleAcvEcVvRuNeXZbOI97EZzDSf9Y2shBFfyg+ZVQdv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nBiTgIaP; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="toO+fCLo"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nBiTgIaP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1739734392; x=1740339192; i=w_armin@gmx.de;
-	bh=486rwmOb89mmDx+Ffk5gLFZ3t0a1l6qw1EFvtUtqR4M=;
+	s=s31663417; t=1739734385; x=1740339185; i=w_armin@gmx.de;
+	bh=7jyOAlVRB2LWS/oqgP3F/K1neWhMeaYSgJQHNRFX1fE=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=toO+fCLoIP+SF3uiXqZTWkDYKgGcK6H3kNXovGDdi39bPNFea0CKHDk6bvjj4pk6
-	 QZ1433SrcOlKU70dYTPcT8dzkBb0xWV0AuXlDCEOIxo2Mv17AGYkH4JIOBPPMoat4
-	 CJDfLO7qPXa3nwYko1ArlCi4QPbOXv7WL/Ki51Pza4vb3h2NTqRJjQ37JGLvuS3Es
-	 AvjEE3FrjKbL92020/p7NBTiSE+z7vGcae/l23kxd9BnMLeGKc+xMNmHuiNyg9plg
-	 qYBNEMCg8IfTR8Hxnu9YaCHV8ZQrdbE0LVeFdt4KwZWCQ86WH80EsFTzSwRvLdiQv
-	 cTf0CybquYGqHdGEpQ==
+	b=nBiTgIaPEYqBE2U9Su9v+czEg1rVh/YlZ7uhRkpaSKZxynoiXU4Zs9xO5COBva0T
+	 Ubunb4qs40HKZIZvue4Q7Zd7uvDZnn88MIAho8ZHBj4YgU+LcmCh53rQGcay2uTPa
+	 t6OvMbf3BD84lSNDmwpkY1ellj3sNVhkKELXYsPPInnBdE/OJUSCwgL316vfT7kzG
+	 aaIf8xRzdliQ8/iMRz9Z5xfuEyb9eaNxWtiloDnHXk63LDqSeHkdTkgRTgXSxGj3Q
+	 WZ9NDoDrzLzNzlxka0MipaDK61l4WKWHL19RLSUmIT540sX3eykJ7pRRb6btx7ZFN
+	 IW4Ew5EDnKjTGDs9+g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1Mkpap-1t4rmq3onX-00hkfU; Sun, 16 Feb 2025 20:33:12 +0100
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MiJVG-1t6onX1vNe-00mXWL; Sun, 16 Feb 2025 20:33:05 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: james@equiv.tech,
 	markpearson@lenovo.com,
@@ -46,9 +46,9 @@ Cc: jdelvare@suse.com,
 	platform-driver-x86@vger.kernel.org,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v2 4/8] platform/x86: hp-bioscfg: Use wmi_instance_count()
-Date: Sun, 16 Feb 2025 20:32:47 +0100
-Message-Id: <20250216193251.866125-5-W_Armin@gmx.de>
+Subject: [PATCH v2 2/8] platform/x86: think-lmi: Use ACPI object when extracting strings
+Date: Sun, 16 Feb 2025 20:32:45 +0100
+Message-Id: <20250216193251.866125-3-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250216193251.866125-1-W_Armin@gmx.de>
 References: <20250216193251.866125-1-W_Armin@gmx.de>
@@ -59,71 +59,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:XkQe/A6H4OjVacgqzzAFK4m6QQUH+OhJO/tL5ttc+HP02Vb9vCV
- LxFJn0uFX1ZFQWtfCoMl80/2D5IUsCRk+7V+odJBqQWx6+JbIX+kVaBtIIkbUQl0Li0tCD5
- ml/ex6m16uLG3fMwbuKXAbPVTAM5hIyWTqdTVlT4LSk2/onjyc0RwYu+mGTmXa8KZA4xmE4
- v1huKG3PxqulVXw7XB2kg==
+X-Provags-ID: V03:K1:kvuCTzUm6FD2pC4C6wZx2zJIpdrQjAHy2hoZAk8DFKAj/ITrjMy
+ JiRYDocLgpFjwvsMCMlitMFQi2B2AwkePI1BPTclVJeyOEG+XQ5Omf7SfBiVPX1rRIz5jU7
+ cLHnlZVJDk7uohwI+5AZrEu+f7428shoHv6SqXNxisWC0u25oPSYcwpKHFwF5oZf/8yyh+L
+ LwOlkzwfE7uwefR/iTTKA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Q5A0Wm4+rl4=;8oTH8q/LU6hRLiUVS6oJ0qWmPKg
- g1GkdyG9pQ4nvAuR6plRr2rNqY683xubIpfNFchy9fs3/bdwxe9O51jIOwZFUPNcYnzouwuuc
- 0PRMy26Us8+p+0f7ge8ZCx+i01n8KH58QH2HBKutJrCzF13FUxtGMFt9hE0D2q+K1x9wODFi+
- rLq1RMcmxyd9A0LgXZN754l7UKNXp8bnoEUiOkr9q5VPu0E8VzIqWR/zGS5tAGOIC4n+x3Izp
- oWuhxl9WBJfk1zSaqozHgjBjxE+MN4xpBxQ2HRK+xI6pWSoTk87irbHfyOquw219Axs7xRjI8
- k3ttZZ85mP7o9K2TPc+8ocw1Z/iy16i1laghJ7CjRuYhyNeV2ei2jG/htNrulMVT6pQ/+PAzQ
- qe1YTDKRx/8igqTEYP1upJsFOOEwlZpCCBripaZGF2W63Z2frMbG54W8bSRfD+ZPXY726HTqk
- w+JHiRKhbLxRMlY/zkwBvv7DT0W6BINTEIqIg/+fYlN0rJtbKHTVSSjMkKuHlzObyzoL3RZyZ
- +mmpUUFcL0bQu7/IRLxq6oAx76CDGi7trHHsrRr7qvIX/Sa6mkqhd5T1hZJFWtOaPDUdf5cZr
- UAyAUWKjkVg9/uiqY1D/xdo9myZ6D0LEZVZ/deUDBVgMzdFFbR15LINb48srOadjhnVYxIbyP
- 8TI0GXIG/eNetFJdcn3INZo09317MZaGfeu1yPYoUxMN61KekTru3ZtOx2lalyarRlEI2+Dcz
- oVgEJ2Eu1Hkb1TvsBesuoNKlX9yrn+eex/ilUQieqxL3jK1Mp2C9vxEe21Ohn0ns3wDHii91K
- CZh46Cx8slfiLc5J8pvJPimWmlrLjWYVVAw9MP5yZtx6uZm2RVJPWeiyWM1QI4wRUUXAHLsDi
- Jqm5Rhn+QEia6+rAzPxxUo5+uPk5wgnP5/G5MSoD/mrcz+21aLOADRA2twfy8xHG7+owY3zo/
- FiX/B2to54HWdsEX+7EUJPnoNQErLFZf1G7Jh903k8o7ynGXq682iTj7RwncQBK+tXAmOHksW
- YKUH0mYUh0MUV5iYYHil0RQOHDi6ngpcfQhJsyDpHi5ZcoLKqSuNfz4WmOHD9fSIFadSu/EcC
- R/7gzOkwcX937WfRqF6ACnb9fbBSY2PDYQ2lQElh5aSwlab+i/DZ/xY3mE4P+TktlFGTkYM74
- szWXEVnZ8zmR6FKCMdR4GZeyV55b1zDVmoDAGvmxSlwX5A5jfw6cBwu3b8FhYrKzhH/7R46Ai
- niJUfea8AXaXmDoGKdVcXU0VLyAF7085YYPlPUujdqqnfvzguRMOurhwWV8D56yc2U2bcppoV
- DbyWny+z2TJkZ++TwXoROXB0Mf4tjFaVZyNkpt+w8WSWtKmM6zyqSC99bLbe/SpBlXPwkJ+zQ
- DNMEP9udgNvDx/2pM2jVlTVdCaHss3Q2XbbWUicubgvgtLb9vtkbn9VBN3++gvVueELuIE+rR
- yctORLg==
+UI-OutboundReport: notjunk:1;M01:P0:2V3eQl82Db0=;BTYUK2JOTIeDEW2PmW+NjizJYyL
+ SnhPwCz+cWrlXPpzA9vDNV/RlrOyXa+SkktJMhRlT8dX6u93+yiaT6SJH0lvyFANHCWj+sNqS
+ pcC9bk3jmxVfVCbdFFd+8pYMOVKayTEC1O391eTRENGu/4wUQ6YxNGxN3u+mij4eLK3+j3AdO
+ 3lBcSeAh+9WLUsBQxDmwAzhQQxVinD7utduXSmoYhxp9pt2gx3HzeihJK+ysSl0j7ZLu28wkB
+ ObnQnxCfLX4Bgxr9W35EIKnjFlnf3kJhy1JT6U4OaA2tllN/F2XwpFSATvN2jBkTz17Aefv9J
+ wqvNx2VQ//IxE4lptkl1xralDU4IyHPuTzioxUF8/Q7RPmx/YsXEzpG4Fm0BRFlZRPO/YcQ35
+ F5jS7qtBNlWqn7BL9UoOvV4H0LK4slS8BQ0ZhyaXEXDMdNuiETMaVic1wOWMf4hjA95Lrt1aM
+ B1nyb16A0BWtIbBL4GXhPzEOZUjC391T8wZI5618uU4Zquq5CxerToGeArpz+hBfbBc9IQsYX
+ wzBSMi6dbxkXosIanzB5KywU3oWErAWHd3PFg917DxQ6GcLdlp2Yyh2yykSrrz2QIqukRZBoF
+ OoOn/QkLm04oyJf3Zf6CEPJ78MfetpUtO7IqaU9SHOT2KtGf4nzXnzZnwYA823KbSiy6o26M0
+ eTt0xYQOWEeu0A6QO0azSFG4rIB78LwQRTHdbgl64/dwZFKlKq5AILT7fJmI1DOUixVsJEIA7
+ SmY4mnsJSilKdZTPbsKT8hplriXDcS38FHINBvEFYDST/xKxclDpfEKcWMlrEqcuwV1sI5/qu
+ +yyZLNpMZFstS7ieRXCDjfVOdiBMy54VHSPrL4K9pNRwCxRZ/wKLsU0WmcPMaknHsTIzyfqP6
+ KroT5NH4l+KzcSD2o4MA9iVzHkSP2p1FjnqmMdK6nozv/aLWv5Uc1zV2Q4npIrFJN68Iqwh43
+ ffiVNerqGgRnZ/NcyWZQJUVeYRnqL6ioo/JMnk5JzNxvImCs8GIQETW7Ri0DN9hIX5CkE6+9T
+ z2/cLT1vvEG+2g+Nvsh2KS5X0x9svC89X+8YD1qjQrTcwnitR845PUIsXvC+fyOBLmImIIpEj
+ D3gVaz+hzifFWpkuGtfUVfJ0C46l3M6lPZ7xtYv+2t2TpEwktjpyZXQTh5wf/v0uBZpJO5aOc
+ J0cVUYb4ZfH7peGta+N7W39fR0orWgEOvlV/epWgNkfzIm6epLYtoIJBKJIABpHSZ7MRdHkms
+ obi8Ee8eVR3L0fiUzImttpY2+NvxAc8bUB57bqNnOeJgiVy/qdd2T22coNSZfTiity5Skv4s6
+ BQxAg8TRMOfszc2vpdQ4ONgQy+p463E2bWbW1ek4pGjUEGmIjIBhd60/krXWm0RWtyDUNrjv8
+ XkBOBAI49NyiR4d9P08MJrD4NlNk3YUE4BfwAoVOh+w74Jh5yAhBu7kLwI
 
-The WMI core already knows the instance count of a WMI guid.
-Use this information instead of querying all possible instances
-which is slow and might be unreliable.
+Move the ACPI buffer handling out of tlmi_extract_output_string()
+and instead pass the unpacked ACPI object to prepare for future
+changes.
 
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/platform/x86/think-lmi.c | 38 +++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platfo=
-rm/x86/hp/hp-bioscfg/bioscfg.c
-index 0b277b7e37dd..63c78b4d8258 100644
-=2D-- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -388,16 +388,13 @@ union acpi_object *hp_get_wmiobj_pointer(int instanc=
-e_id, const char *guid_strin
-  */
- int hp_get_instance_count(const char *guid_string)
- {
--	union acpi_object *wmi_obj =3D NULL;
--	int i =3D 0;
-+	int ret;
-
--	do {
--		kfree(wmi_obj);
--		wmi_obj =3D hp_get_wmiobj_pointer(i, guid_string);
--		i++;
--	} while (wmi_obj);
-+	ret =3D wmi_instance_count(guid_string);
-+	if (ret < 0)
-+		return 0;
-
--	return i - 1;
-+	return ret;
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
+-lmi.c
+index 323316ac6783..2c94a4af9a1d 100644
+=2D-- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -262,16 +262,11 @@ static int tlmi_simple_call(const char *guid, const =
+char *arg)
+ 	return 0;
  }
 
- /**
+-/* Extract output string from WMI return buffer */
+-static int tlmi_extract_output_string(const struct acpi_buffer *output,
+-				      char **string)
++/* Extract output string from WMI return value */
++static int tlmi_extract_output_string(union acpi_object *obj, char **stri=
+ng)
+ {
+-	const union acpi_object *obj;
+ 	char *s;
+
+-	obj =3D output->pointer;
+-	if (!obj)
+-		return -ENOMEM;
+ 	if (obj->type !=3D ACPI_TYPE_STRING || !obj->string.pointer)
+ 		return -EIO;
+
+@@ -352,17 +347,21 @@ static int tlmi_opcode_setting(char *setting, const =
+char *value)
+ static int tlmi_setting(int item, char **value, const char *guid_string)
+ {
+ 	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object *obj;
+ 	acpi_status status;
+ 	int ret;
+
+ 	status =3D wmi_query_block(guid_string, item, &output);
+-	if (ACPI_FAILURE(status)) {
+-		kfree(output.pointer);
++	if (ACPI_FAILURE(status))
+ 		return -EIO;
+-	}
+
+-	ret =3D tlmi_extract_output_string(&output, value);
+-	kfree(output.pointer);
++	obj =3D output.pointer;
++	if (!obj)
++		return -ENODATA;
++
++	ret =3D tlmi_extract_output_string(obj, value);
++	kfree(obj);
++
+ 	return ret;
+ }
+
+@@ -370,19 +369,22 @@ static int tlmi_get_bios_selections(const char *item=
+, char **value)
+ {
+ 	const struct acpi_buffer input =3D { strlen(item), (char *)item };
+ 	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object *obj;
+ 	acpi_status status;
+ 	int ret;
+
+ 	status =3D wmi_evaluate_method(LENOVO_GET_BIOS_SELECTIONS_GUID,
+ 				     0, 0, &input, &output);
+-
+-	if (ACPI_FAILURE(status)) {
+-		kfree(output.pointer);
++	if (ACPI_FAILURE(status))
+ 		return -EIO;
+-	}
+
+-	ret =3D tlmi_extract_output_string(&output, value);
+-	kfree(output.pointer);
++	obj =3D output.pointer;
++	if (!obj)
++		return -ENODATA;
++
++	ret =3D tlmi_extract_output_string(obj, value);
++	kfree(obj);
++
+ 	return ret;
+ }
+
 =2D-
 2.39.5
 
