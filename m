@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4FE1442F4;
-	Sun, 16 Feb 2025 19:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B191442F4;
+	Sun, 16 Feb 2025 19:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739734410; cv=none; b=GH6+ueoVtr9p+MWx77ra+rzR+EFlknY97YUhaiPeZgS5pDfCZs6kwkrhuxaxGzLXcJo60Upm7a85rKj2bVrqy7apgdwMrl+w5P9mndbotmXchpwQJjwO3u6QBRE8Nsv+2PejGUuOONFAmSLCLjySFAWrH9Wt3VNNjpw9hP73jOE=
+	t=1739734416; cv=none; b=l0ZIm2DwL/+aP+CSKABQ62w6pvdNnHbE5WxYdhwOmtpYVYc2nbaPar2+ZFybKbwWxDc63TA0xPPGYoSHFh2isVqYdYtRaVXMIZhpmvY4JMZnWeA0usAvQYc588wDpZq75xctMosUm08Bi9TyoUdQF/E0gJTNr8qJ/iwr7ak1+Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739734410; c=relaxed/simple;
-	bh=yMjiz646ZJvCb1m2zwAwWL8ybidlrk4U2RBujeYWMdI=;
+	s=arc-20240116; t=1739734416; c=relaxed/simple;
+	bh=ID+lTHjLVqPJ/7xdhI9bJLFn9teO4+JhdZK9zVjbwuc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VNcl8sz0R8kkNWl9sTe8qYOP8cAVzfFVs19DFkqvLnBBpDx1ZkUJ+RENjlTFYsZlX2JG5RB0rLvmhWUnMeb1qUvRpAmOGxQUVIEQ10VZ2ZbFvN7JcOZC0u+d/fvQ3icqleAcvEcVvRuNeXZbOI97EZzDSf9Y2shBFfyg+ZVQdv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nBiTgIaP; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version; b=a2mj0F8Wy2b8WxQC5VZ5tojosZmjZcX4rW9fG13TDf7OKbTMrUrUL+ETdKk+OyfhLK30gV1w/hCrtJy1JtGHCV+s77eGlxiH5aY+hstIn+0BmbidAu6pRoB+oz2t6uEq48ICiHH8tETXWbbVs8VZ5o69yfOwxxOEOudlOLXqcsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YofqQONP; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nBiTgIaP"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YofqQONP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1739734385; x=1740339185; i=w_armin@gmx.de;
-	bh=7jyOAlVRB2LWS/oqgP3F/K1neWhMeaYSgJQHNRFX1fE=;
+	s=s31663417; t=1739734402; x=1740339202; i=w_armin@gmx.de;
+	bh=RuoP/0xYYt9z3bJOrdWbm40zFLkGkpfWsyjNl2p49Lk=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=nBiTgIaPEYqBE2U9Su9v+czEg1rVh/YlZ7uhRkpaSKZxynoiXU4Zs9xO5COBva0T
-	 Ubunb4qs40HKZIZvue4Q7Zd7uvDZnn88MIAho8ZHBj4YgU+LcmCh53rQGcay2uTPa
-	 t6OvMbf3BD84lSNDmwpkY1ellj3sNVhkKELXYsPPInnBdE/OJUSCwgL316vfT7kzG
-	 aaIf8xRzdliQ8/iMRz9Z5xfuEyb9eaNxWtiloDnHXk63LDqSeHkdTkgRTgXSxGj3Q
-	 WZ9NDoDrzLzNzlxka0MipaDK61l4WKWHL19RLSUmIT540sX3eykJ7pRRb6btx7ZFN
-	 IW4Ew5EDnKjTGDs9+g==
+	b=YofqQONPxkGF4mtz3bgvN9Z6scS4u6nIMlN84xIgZhvl7oFm/grcrAJAaT0Vh7Zp
+	 ElVzIsr8LYJDk7DW5hghn3QcnZghUH4mJfuBNgZg8LGxJAJ0uk9bpjZIP3xmFZ3AT
+	 AxxEgg426ujptIlghdvrsfbeV1O2q4y/IY+5SEz+ZTk33joGBwt4PwE1KifCN4s0J
+	 rcMD+JuNl0LuATfNqI59CVMaFPU8/0q1dPc3D6iHkGhjOmt+5ek2NZoJwCcDrhPJ9
+	 yHS/jvtq+ZDP2OuctWX+o6IGTuciKWltBk0KJInAeKDT0VzRy6iOUvVCueTdAEBoK
+	 X8x+Mdxw9YsvV85l2A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
  (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MiJVG-1t6onX1vNe-00mXWL; Sun, 16 Feb 2025 20:33:05 +0100
+ 1M89L1-1tf3Z30C3f-00EZn7; Sun, 16 Feb 2025 20:33:22 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: james@equiv.tech,
 	markpearson@lenovo.com,
@@ -46,9 +46,9 @@ Cc: jdelvare@suse.com,
 	platform-driver-x86@vger.kernel.org,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v2 2/8] platform/x86: think-lmi: Use ACPI object when extracting strings
-Date: Sun, 16 Feb 2025 20:32:45 +0100
-Message-Id: <20250216193251.866125-3-W_Armin@gmx.de>
+Subject: [PATCH v2 8/8] platform/x86: wmi: Update documentation regarding the GUID-based API
+Date: Sun, 16 Feb 2025 20:32:51 +0100
+Message-Id: <20250216193251.866125-9-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250216193251.866125-1-W_Armin@gmx.de>
 References: <20250216193251.866125-1-W_Armin@gmx.de>
@@ -59,126 +59,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kvuCTzUm6FD2pC4C6wZx2zJIpdrQjAHy2hoZAk8DFKAj/ITrjMy
- JiRYDocLgpFjwvsMCMlitMFQi2B2AwkePI1BPTclVJeyOEG+XQ5Omf7SfBiVPX1rRIz5jU7
- cLHnlZVJDk7uohwI+5AZrEu+f7428shoHv6SqXNxisWC0u25oPSYcwpKHFwF5oZf/8yyh+L
- LwOlkzwfE7uwefR/iTTKA==
+X-Provags-ID: V03:K1:unI5ci7/U0jgo6xrp2Iof2EdkjfoF+u7bew6UozWBxMoO0QG1zv
+ Dz1J2CiXVy9iS4ngz4eN/f1rHLYCgOLZJJQg3jvzL2zgSnWhzwRQJYvGVsg9AbljWV5p7VR
+ Vgd0veZj6PKMsrC0Vrr9LE98hZGhE4HugjH6bVKr1Nys+FghONDc4R6t6RyJ3yEM1Cgs6R/
+ EPEDxptMriX8ZmRlbSP8g==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2V3eQl82Db0=;BTYUK2JOTIeDEW2PmW+NjizJYyL
- SnhPwCz+cWrlXPpzA9vDNV/RlrOyXa+SkktJMhRlT8dX6u93+yiaT6SJH0lvyFANHCWj+sNqS
- pcC9bk3jmxVfVCbdFFd+8pYMOVKayTEC1O391eTRENGu/4wUQ6YxNGxN3u+mij4eLK3+j3AdO
- 3lBcSeAh+9WLUsBQxDmwAzhQQxVinD7utduXSmoYhxp9pt2gx3HzeihJK+ysSl0j7ZLu28wkB
- ObnQnxCfLX4Bgxr9W35EIKnjFlnf3kJhy1JT6U4OaA2tllN/F2XwpFSATvN2jBkTz17Aefv9J
- wqvNx2VQ//IxE4lptkl1xralDU4IyHPuTzioxUF8/Q7RPmx/YsXEzpG4Fm0BRFlZRPO/YcQ35
- F5jS7qtBNlWqn7BL9UoOvV4H0LK4slS8BQ0ZhyaXEXDMdNuiETMaVic1wOWMf4hjA95Lrt1aM
- B1nyb16A0BWtIbBL4GXhPzEOZUjC391T8wZI5618uU4Zquq5CxerToGeArpz+hBfbBc9IQsYX
- wzBSMi6dbxkXosIanzB5KywU3oWErAWHd3PFg917DxQ6GcLdlp2Yyh2yykSrrz2QIqukRZBoF
- OoOn/QkLm04oyJf3Zf6CEPJ78MfetpUtO7IqaU9SHOT2KtGf4nzXnzZnwYA823KbSiy6o26M0
- eTt0xYQOWEeu0A6QO0azSFG4rIB78LwQRTHdbgl64/dwZFKlKq5AILT7fJmI1DOUixVsJEIA7
- SmY4mnsJSilKdZTPbsKT8hplriXDcS38FHINBvEFYDST/xKxclDpfEKcWMlrEqcuwV1sI5/qu
- +yyZLNpMZFstS7ieRXCDjfVOdiBMy54VHSPrL4K9pNRwCxRZ/wKLsU0WmcPMaknHsTIzyfqP6
- KroT5NH4l+KzcSD2o4MA9iVzHkSP2p1FjnqmMdK6nozv/aLWv5Uc1zV2Q4npIrFJN68Iqwh43
- ffiVNerqGgRnZ/NcyWZQJUVeYRnqL6ioo/JMnk5JzNxvImCs8GIQETW7Ri0DN9hIX5CkE6+9T
- z2/cLT1vvEG+2g+Nvsh2KS5X0x9svC89X+8YD1qjQrTcwnitR845PUIsXvC+fyOBLmImIIpEj
- D3gVaz+hzifFWpkuGtfUVfJ0C46l3M6lPZ7xtYv+2t2TpEwktjpyZXQTh5wf/v0uBZpJO5aOc
- J0cVUYb4ZfH7peGta+N7W39fR0orWgEOvlV/epWgNkfzIm6epLYtoIJBKJIABpHSZ7MRdHkms
- obi8Ee8eVR3L0fiUzImttpY2+NvxAc8bUB57bqNnOeJgiVy/qdd2T22coNSZfTiity5Skv4s6
- BQxAg8TRMOfszc2vpdQ4ONgQy+p463E2bWbW1ek4pGjUEGmIjIBhd60/krXWm0RWtyDUNrjv8
- XkBOBAI49NyiR4d9P08MJrD4NlNk3YUE4BfwAoVOh+w74Jh5yAhBu7kLwI
+UI-OutboundReport: notjunk:1;M01:P0:zAsFx4RIdlg=;5gtkmqYph3E3jIVY4WKohVAAftX
+ 24bLG9z7I0K0O9d44CS17M65bLznB6lLCQclU4oINLun0YoqIxiKLE/zA5uod56STGWQQpdiP
+ wZPmDxZVKd3KQ/oZdPXs+++wm+I+bAmM0yxUe4lIN/QXoXVP5n4Fy7OO8LjjTP554oWDf762K
+ gYTbBVFNVv5onqQBnDESJvejKvzeQtzdEwlbb5PKN8eWG43ookylgKlj81rjLEBcqh/0jqawa
+ VnOxz1vp1wMCLBp9ldUHpQEKRnhxIvALHVrKPtVWLfGOBWpjeVNCfsp5H3I/Oo2hQLqYwDkp1
+ u872kRg5AyBfwBgvuqXEM3ze8aMXxYyUtYhFwsTOerFgcPuBvJABNFStoIroubAztzPG5iipH
+ uuJKPj91QjouYgjjDXbMBRkY7V7hEJNFm8rnVmC/6OkqUrS3uDkzdWWgF8/en677aDtI8DnW7
+ oi2r7rfDtF3y2gLIaMf3UJmZRyKqNxHJ9QUod01uLHbSAJd/i0kE400MnjjkX8bgxI/ly1N/r
+ 6nc/pjpnW/cgb/DvjMYHPeCTc03ESCM3b+i9SjvkeGRxAKaaMrLQVnQGqr68ahbbnbNE7xgq9
+ 7qnCTdF/Ne9/cGv42XmGA6XUpbFeY3QF1lfZD+1enad9gJT2+9ODxRo5r0n4MirVthObbgRSr
+ zBiAjsOXjqi+v8gukmvzHwT3zQyDoIn42bz93D3LvqB7HulKmyXpLiozhNXq8SeZ+lR0j9pfm
+ cpz3GvhF/ktHTKfTRuTd+UFPG5a2T30YljsNy91dyZMzvzrHaDGLIOX8fZUk4JfG/21i58rE1
+ O9ab4kLcrQbCSGPX35v9hODDn6jXyI1HaJ3/g+UXYUOOqx+trilI5VoXoMmsrx37qscB6ewd0
+ JyP+zTo+3x3d0YNey3AEhoG9JVttwhHP935gIfRdbl9bCjqFak36Ye2W/iuMl9vzhJ0JEbOoE
+ zGEOY5nsU+XS1cY9ial28hZzcR8MhUt8IzO2VidhPZ1RIhnmLs5G4M1WcYikPXuiERV41B6Kz
+ MJaLYNkf/XszAO44x6sqyWRKE49uDMyxck1DDLwxYYjMfztcLNyJ86H3ZW+J4opZHAP7d/9G4
+ /UN8MlaY78d5xRCcxSw+PljjlGJlZKSneiehN0bKR+pnlXUsbjvDm8zqWL2lRS53V0Gh8+qLI
+ +lJusQl8Fq9XkrLnQ1Jv6rAP6Bxo2lTyNwQkL5krcDs37vNTksjQWTGBSTlTFhwCBo1zAe7km
+ JqQFekdZ+5lU9Ncjoykh0DqYku2SBBrCfPjgqmy/mNcECkY02+EKJCwkPoKFTOXoTxTsvkjTq
+ 46Qj8LCrrbLgcY6EpET3Ch5qe82AfkMPWks7/6Z322flJroiE5bDqoP+EO2eVc40Lr1L//Gms
+ +QQz5mi3mdX60beRbtI+e/IRkzP1PMFbzy73fHUFZ7erekAgAmdO06hwL5
 
-Move the ACPI buffer handling out of tlmi_extract_output_string()
-and instead pass the unpacked ACPI object to prepare for future
-changes.
+Warn WMI driver developers to not use GUID-based and non-GUID-based
+functions for querying WMI data blocks and handling WMI events
+simultaneously on the same device, as this will corrupt the WMI device
+state and might thus lead to erratic behaviour.
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/think-lmi.c | 38 +++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ Documentation/wmi/driver-development-guide.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
--lmi.c
-index 323316ac6783..2c94a4af9a1d 100644
-=2D-- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -262,16 +262,11 @@ static int tlmi_simple_call(const char *guid, const =
-char *arg)
- 	return 0;
- }
+diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentatio=
+n/wmi/driver-development-guide.rst
+index f7e1089a0559..99ef21fc1c1e 100644
+=2D-- a/Documentation/wmi/driver-development-guide.rst
++++ b/Documentation/wmi/driver-development-guide.rst
+@@ -96,6 +96,10 @@ on a given machine.
+ Because of this, WMI drivers should use the state container design patter=
+n as described in
+ Documentation/driver-api/driver-model/design-patterns.rst.
 
--/* Extract output string from WMI return buffer */
--static int tlmi_extract_output_string(const struct acpi_buffer *output,
--				      char **string)
-+/* Extract output string from WMI return value */
-+static int tlmi_extract_output_string(union acpi_object *obj, char **stri=
-ng)
- {
--	const union acpi_object *obj;
- 	char *s;
-
--	obj =3D output->pointer;
--	if (!obj)
--		return -ENOMEM;
- 	if (obj->type !=3D ACPI_TYPE_STRING || !obj->string.pointer)
- 		return -EIO;
-
-@@ -352,17 +347,21 @@ static int tlmi_opcode_setting(char *setting, const =
-char *value)
- static int tlmi_setting(int item, char **value, const char *guid_string)
- {
- 	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
- 	acpi_status status;
- 	int ret;
-
- 	status =3D wmi_query_block(guid_string, item, &output);
--	if (ACPI_FAILURE(status)) {
--		kfree(output.pointer);
-+	if (ACPI_FAILURE(status))
- 		return -EIO;
--	}
-
--	ret =3D tlmi_extract_output_string(&output, value);
--	kfree(output.pointer);
-+	obj =3D output.pointer;
-+	if (!obj)
-+		return -ENODATA;
++.. warning:: Using both GUID-based and non-GUID-based functions for query=
+ing WMI data blocks and
++             handling WMI events simultaneously on the same device is gua=
+ranteed to corrupt the
++             WMI device state and might lead to erratic behaviour.
 +
-+	ret =3D tlmi_extract_output_string(obj, value);
-+	kfree(obj);
-+
- 	return ret;
- }
-
-@@ -370,19 +369,22 @@ static int tlmi_get_bios_selections(const char *item=
-, char **value)
- {
- 	const struct acpi_buffer input =3D { strlen(item), (char *)item };
- 	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
- 	acpi_status status;
- 	int ret;
-
- 	status =3D wmi_evaluate_method(LENOVO_GET_BIOS_SELECTIONS_GUID,
- 				     0, 0, &input, &output);
--
--	if (ACPI_FAILURE(status)) {
--		kfree(output.pointer);
-+	if (ACPI_FAILURE(status))
- 		return -EIO;
--	}
-
--	ret =3D tlmi_extract_output_string(&output, value);
--	kfree(output.pointer);
-+	obj =3D output.pointer;
-+	if (!obj)
-+		return -ENODATA;
-+
-+	ret =3D tlmi_extract_output_string(obj, value);
-+	kfree(obj);
-+
- 	return ret;
- }
+ WMI method drivers
+ ------------------
 
 =2D-
 2.39.5
