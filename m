@@ -1,38 +1,38 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9AC42AB4;
-	Sun, 16 Feb 2025 19:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56B01442F4;
+	Sun, 16 Feb 2025 19:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739734399; cv=none; b=L7sszvmBCAsB/+7g5F/vNSQ2IvOc+CFmD//YVqJ23cRMYuwVjJ/DvD7kZdTqhF+ygaFGG47IscDrX9OQAVLzk+C8WsWlxMYwT7NK5cx5lzvMhL612a3K5DbGGPs13W4yVQbkeNBfaQrDnFfbyHvQSD3oGZ24jFc8v6sR0qlp1RQ=
+	t=1739734401; cv=none; b=jdCa1Tehv/HYBFM/SrAlpgvZj5lcxhmAwD9hFkn03hEPxdIraCP0ujyghxK2q23bjf5InLSYyVCPdvrwo9tXJi0RF2kg6TGKuOWaGj47uoi4ilL4AV5sLxXd9xUrWJP7elITg8HVi7ETt7UhXgl4tMEpHnCWoYcOFDhMt7OxRpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739734399; c=relaxed/simple;
-	bh=4zFvPourB8H8dcn2mIjlbEat5V6fdoA0xfssgADHt8o=;
+	s=arc-20240116; t=1739734401; c=relaxed/simple;
+	bh=MrfZ4f0ixgqBmbr6b+tZ8nXuoCrWVbwwBuBbnLY9zO0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Yf0gBCTTkegWXlqSZCGi3rQr0r9oO576R4YnHdbz0aBsaMLv310UEp20iwzgVQCVRSqGvaDC4pYKEZl9Vi01DmF7h1SQjMw+f+djL1IkZcRPXMRail2ujoMtuSjS2cgBwFLSOI6ZVEQsvS5syCprTPgfAFtAjeJf6ZpLLhuAxag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FukaASuM; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=idVi3MKgYhgmcLXSg5c4DG4Hf39lpc1ei2PBkpIgShSZHhNEaBHCQOuAUb+b8R1bp8JTSRrSLfR5q4ltpF4JQKW16TUs0lHUbIX1rQShYKd820AhLgMFXjm+DndozzRDeXaiAa6OsfrlzvaxKVvQEJFfBGnIr2slDiP3OqzKZlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=j0N5OScx; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FukaASuM"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="j0N5OScx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1739734388; x=1740339188; i=w_armin@gmx.de;
-	bh=LGy+YSCR5EXvi4r55nuFgMVSm/uxFYtiz967rCHqBWY=;
+	s=s31663417; t=1739734397; x=1740339197; i=w_armin@gmx.de;
+	bh=RfBOHIfH8DCdsKRfj+Ybg/Cue8cCReCmHYRkGqlvgPA=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=FukaASuMPulkd5/llRPinx6CGBQrHgDRlh5W25yb4FXINVbp9un9GXNwQzFWNPBe
-	 J8UQcXzzyrVdGPyyk6aQaAeWlzcFDgJAv4evIvqN5iky4sC99lbFRuTgtbUWNMknt
-	 UCVBouGBUaaCvZn6yCv31Bj1VIPqFrznGlNxgkr6HKrp6paQU65B7CedS23CyQUmo
-	 imwkxnDV0m2hiaSKp/Knt7XjiWxyWZXOiiR4TICF9EDO8c4ngkixshLJEYQnba6Ww
-	 7214awmFX561Z4gbuPqjW4d4blrKXLykqJ/UTZFv79/1fqBkl4/TbspMHNKQ4lx6q
-	 cSt6DZc7R+3vFBNpIw==
+	b=j0N5OScxOjF2LMY/htLMR9mti427TdEgFT8YCyPf91knhnxl3hmGBWrUT6j+Pe/O
+	 /6sMbjEWCJX4X3f0oC+Svue/elZBhjyPUhRGfqlhhPjbo4ydCGKC3WUgdPx7CQZoL
+	 1lyvqJqzTZsbNNCzDY9lty8y7BX9nZxKe1j43GOSyl4QOWDWKWBkoSGYz21lCvQpT
+	 DT5lLV9tuAtcmCV8OVMqIj5fb19ixZSmrOJSE8npsr84+i7pJhuLHNGKsq3phF9PP
+	 Q+v9+YX2zgZN0ovO+jeAHn6zOjCV93k3p7ftJ4+UfMzHkUVXgYLRrterSmM7wapMv
+	 yKJ0Dy4RBSXMpgHJPw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
  (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MBDj4-1tdeVZ3Pag-002GLc; Sun, 16 Feb 2025 20:33:07 +0100
+ 1MD9XF-1tbBfR3vgf-001ygY; Sun, 16 Feb 2025 20:33:17 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: james@equiv.tech,
 	markpearson@lenovo.com,
@@ -46,9 +46,9 @@ Cc: jdelvare@suse.com,
 	platform-driver-x86@vger.kernel.org,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v2 3/8] platform/x86: think-lmi: Use WMI bus API when accessing BIOS settings
-Date: Sun, 16 Feb 2025 20:32:46 +0100
-Message-Id: <20250216193251.866125-4-W_Armin@gmx.de>
+Subject: [PATCH v2 6/8] platform/x86: wmi: Rework WCxx/WExx ACPI method handling
+Date: Sun, 16 Feb 2025 20:32:49 +0100
+Message-Id: <20250216193251.866125-7-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250216193251.866125-1-W_Armin@gmx.de>
 References: <20250216193251.866125-1-W_Armin@gmx.de>
@@ -59,152 +59,289 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:OYDecztJG0YqpsI7jHjqnFqVJkOdsPHa+jTcw42NzfmhRMiw+ZL
- y6++CTXgYmhvIW8xZiKhzHc1zCpR8SeCd3k1pa7mTrQCbaCe4iK58o6ZpJ1jM+aRMv/V2Jt
- RTKeNU2KMH9uB84Di2cld9FLOze3MGjdIzpQN9huKh4hu1I4ucvUT9JfdxkJNh6FWDoQMrD
- ZXIRbmot3VtUKxDnP7/iw==
+X-Provags-ID: V03:K1:0P9QMJU5AH0jT3Z6Bp1YuLyM8hZGN8kYikhhK6uquLHpH8lr+FK
+ X0bEzSScBFpkYvvFcZ1uQrmpts2wJ0FSs/OImw/rvK5PTc1DUJ9MkV+9cwfk8b0ZXlEnRB8
+ 0fVBXIQHqO1ZBXv40NpElYwQRamItMe0AtGvnx8flnUwCxNFNyiamL2u4LjnxkHY1KdvUVl
+ mogiwPkxYg3N6XMnH6O9w==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:eQY/Orl/C+k=;KyES0va4qGRw69QoCFrMtPlrTkf
- w1MKr0w0CGfv41ognV7ap8aiQCxIUMuwMUtPW6c8kEDHuy11GXvAOKmmz6lO45HUG4S5JLdAU
- KhFAB349yycK2mV31QUmJ6H4P5bAS4LRSoHBcLqOybHl+iFTD+92wRMvjZOwelaXEHcxtWgO7
- TsCAL0ZAmSnTWcXIEEXdeYYiso4ML4I+xAdM19QqSvIZ8h3T8W8KL3Dh07uktA9PJ+PS20uu/
- XvL3YGzBKlF/Add5rx2ozy+9OU1kxuGfnj6WcVbAEVAB8cqLP3MhZrERfkr2P62tqOmdFi4vw
- FKYrjiD1RryYBmqid9cez0w7uHaV92Z5znAKhHRRzEQJMOYq9wnf1cwMr/sPN+KFbtBeRkQfb
- p2VG0HJ1JoNphY5ue6kZQegZmjiwUF0xrgymySAjflfEMtHFRzvP66dfujBTe8uY+QLKbpfa6
- GgGIRt27SvsQFdVxVBFor7CHaOy+qpeizry6tbBktTs40OiEaBXG7hcFs5yKUNPEntjJYaToJ
- r0E2P2gd00cOY6+YqW4pr1txbUfc8GoA0Lrz89iaLEQPqDioe/yv61YsxczGTKyzMl+SwbW2q
- zFIlzQ/YrscinaRfvHkAkWB+jYGYMQa6tnoxD5wc9EPxOndpTcyNDBw7656qz29nuhNiyHIOQ
- r5uYhX4+LME1UdMkB8hTd57/+7JC8QzKZ4VdpDHfYbjC/bu28TZOiuhAO161+K9j89BFmpbim
- qJ11A36WQxqVdwZgeOXRh8QT1fJmRnkQ/4KyjIswlbFciC0Uy3wOyjmgkniY09q1tPgTa+TM6
- UDFzzpQuPqhHSrNJtZ9I8etfWKGKU0RNEj/vMcWfEPSOowpGw8gFL/u+4R65ynUNUjqhV8br4
- rrMb3tLa2gNfmMQlGli1PrA/Ywzii7SiZwSyBGbScLg7/xc4OjhHJVyhkeEE5oHTteGg5D/lA
- 1pL5s6jJaZFAwLUPww3rZNR/Nu/us2a5XTLTCJDfl6wA4X7/KePbNPPida9T+dcCf2Q1X8fUB
- Yg/X12gwB9UsLGdByDR0grfRGNWHxT4hKOLvT3T/cPde+hggi45X17srpaw1sYtWjQ92I3JM1
- 2it48hmaS7PexKRuHTG3rmZrgW306Jhmz8XbF1Ug4ZoTtbafoZr6lgSFKH09D78mPEe/aQ4e+
- ElSQf18IRzDZibSH7ldxGpwTTO7Tzsb+e2BHpKhsgiGFEm7ePezh6wrXJabNGWkYztUi8O2IY
- cQJUhoHgqPmYOUAVGVIjSKAxgWuxNUUx03PYidhEMT7J6NAkDsfw/SZZW5iE6D4V9Q3W6+KdY
- hpnk9ah7B2iV3yIPxp5GdelYh3ZMUIGp/AbVXh9HEIs0YiQMn5XDFRT3vx5sB5/fgoKm46pKN
- g5E5HGQeB1qs5BZ8Q+MZT0yo2X3lN0aLIkchx66AXZtoC9zleky3P2WfBT
+UI-OutboundReport: notjunk:1;M01:P0:s4KPpRLx5Ms=;9L9wkEpJgQAjpopQ7DiKR4j2Alj
+ VhOdeW9nu++wEI688sJx474lhlCeMD+hg/CalGbMp1TXB+2wQJpqp17XqXepGWlWHCpzzSF/5
+ Luw9UPR/hoQ/vmvE8mobuutw9HktpYXWHT4R/lOFVhybn86hOe2dNT6OomwWsbDQ4oT/4iHo2
+ BCYYmO7pHStn0UW6g8S6oJ9hiawPAIoKgFvdxjke5di4Rs+ai+9xO4fyoiQVQ5Ri3vy9wJtJ5
+ gIiNk1Tsc2QRa7X5z1/6ZZz4P0wE47L3CRxRcz9q676KwkEIXFWt8kkDS6xE38m3Hc09QeHGT
+ kxfUQ67gAfLqZNzBqHcO05g/+Hf120n9wpKvCGs3w+f3uyUpfDCylC9VXydD0gOTU6YUt1G/d
+ jTIFSyVmmDgb1VoQp63zsnVQTRtHyv/s8F6jAZ7oVPNcJLuJ2RLiTKDcmfeD9gkekNmfldASQ
+ EVq1clLSzEFYt0Te/hMzOP1CtX1zwNFo1EMrFf12Kjmzjugtr1haaxlpuUGoiI+SCmiJRKRlx
+ MJFDY+p1ntC9LvSpuK1xltbLhNS1jKndzyk3QYDj6qLsjIoZjNZrGO5s6phs69JdpOb2FAlXk
+ 4qKSXp+JkiSI2+iW4Xe0R2rFRfnWjyQLr3wFb/1hPIlf053t4Phyy1pcoB7geYCzVXSQO3RIZ
+ pw0p+8Ee5DzlEjRg1zcJaxR7LtErpAW+zW2w2b7n8kCaKVYJXfZpzASmY0jaLOoclNF6eabmc
+ 9rQWjHa4BvixMHKSgYJfrzzcNAIFSAwz1fW8wpD1ed8RTj+6g74BXx9I6RP9FZdLkWUGIVu1Z
+ W67HQOAKQyIRrEHpxZIqzvqArnj6tBIvgchQ4Nf6i7CkiDDdcnoO1eNpHY9JjNZacqCj7Cos3
+ m/MFbO+YJHEEfM+jBsv0+vDmqyPuVUVsBpqR0svEOevWj3QOpx2vRSLFVhH+mAsNQBnMXxwjO
+ 9/i0qGpAw6KGr4fwsZTLVc8xCZyCZsE1ZBR383CQ7FTeU0lq+HvBYvvJrq9nHd5HOGBcYg4d2
+ f5AdDhGMlPsLmTVpYs1R5GtEVjhT4frcccEQgEaj6myJfqHNXzOdBVakSeXeF9MX0AIhoHN1g
+ O153vTMMYArbzF8HKyQQSs9a1pIIgEmyn0CbeWbWqG/u9oa+TGVgyx6jgHXcxhxI++WCMQRIA
+ EGkOjbTO6Ismhgj5ZT1Zc58sP/kezP6DPAY9iA2Z7h+5JAhVYvbFpdq1SrzktufVn3aaoVeZV
+ pi2cKLerofqPMrXjR4g+5eOhbOTRzpOs7Ha+Uyo7XLgMGyOO7Jf2v3TjbQtMWJp6EzsdmhfOa
+ OziQ64AMFyTnBK/QS3SyBHAq8paI/Q1a0pQiaKk3xI9J12IGd7MfV95pZN3YSkHt4FbIu0M8h
+ ut09ulWJ2/hHqNu8RUiYtlKpoaqmIkrnw4vAzMQMxpCWf3pj4DqyXJebKq
 
-Since the driver already binds to LENOVO_BIOS_SETTING_GUID, using
-wmidev_block_query() inside tlmi_setting() allows for faster
-access to BIOS settings.
+The handling of the WExx ACPI methods used for enabling and disabling
+WMI events has multiple flaws:
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+- the ACPI methods are called even when the WMI device has not been
+  marked as expensive.
+
+- WExx ACPI methods might be called for inappropriate WMI devices.
+
+- the error code AE_NOT_FOUND is treated as success.
+
+The handling of the WCxx ACPI methods used for enabling and disabling
+WMI data blocks is also flawed:
+
+- WMI data blocks are enabled and disabled for every single "query"
+  operation. This is racy and inefficient.
+
+Unify the handling of both ACPI methods by introducing a common
+helper function for enabling and disabling WMI devices.
+
+Also enable/disable WMI data blocks during probe/remove and shutdown
+to match the handling of WMI events.
+
+Legacy GUID-based functions still have to enable/disable the WMI
+device manually and thus still suffer from a potential race condition.
+Since those functions are deprecated and suffer from various other
+flaws this issue is purposefully not fixed.
+
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/think-lmi.c | 23 +++++++++--------------
- drivers/platform/x86/think-lmi.h |  2 ++
- 2 files changed, 11 insertions(+), 14 deletions(-)
+ drivers/platform/x86/wmi.c | 112 +++++++++++++++++--------------------
+ 1 file changed, 52 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
--lmi.c
-index 2c94a4af9a1d..0fc275e461be 100644
-=2D-- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -344,20 +344,14 @@ static int tlmi_opcode_setting(char *setting, const =
-char *value)
- 	return ret;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 7cb36a71e9ea..97c4a161799e 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -123,24 +123,6 @@ static const void *find_guid_context(struct wmi_block=
+ *wblock,
+ 	return NULL;
  }
 
--static int tlmi_setting(int item, char **value, const char *guid_string)
-+static int tlmi_setting(struct wmi_device *wdev, int item, char **value)
- {
--	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
- 	union acpi_object *obj;
+-static acpi_status wmi_method_enable(struct wmi_block *wblock, bool enabl=
+e)
+-{
+-	struct guid_block *block;
+-	char method[5];
 -	acpi_status status;
- 	int ret;
-
--	status =3D wmi_query_block(guid_string, item, &output);
--	if (ACPI_FAILURE(status))
--		return -EIO;
+-	acpi_handle handle;
 -
--	obj =3D output.pointer;
-+	obj =3D wmidev_block_query(wdev, item);
- 	if (!obj)
--		return -ENODATA;
+-	block =3D &wblock->gblock;
+-	handle =3D wblock->acpi_device->handle;
+-
+-	snprintf(method, 5, "WE%02X", block->notify_id);
+-	status =3D acpi_execute_simple_method(handle, method, enable);
+-	if (status =3D=3D AE_NOT_FOUND)
+-		return AE_OK;
+-
+-	return status;
+-}
+-
+ #define WMI_ACPI_METHOD_NAME_SIZE 5
+
+ static inline void get_acpi_method_name(const struct wmi_block *wblock,
+@@ -184,6 +166,42 @@ static int wmidev_match_guid(struct device *dev, cons=
+t void *data)
+
+ static const struct bus_type wmi_bus_type;
+
++static const struct device_type wmi_type_event;
++
++static const struct device_type wmi_type_method;
++
++static int wmi_device_enable(struct wmi_device *wdev, bool enable)
++{
++	struct wmi_block *wblock =3D container_of(wdev, struct wmi_block, dev);
++	char method[WMI_ACPI_METHOD_NAME_SIZE];
++	acpi_handle handle;
++	acpi_status status;
++
++	if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
++		return 0;
++
++	if (wblock->dev.dev.type =3D=3D &wmi_type_method)
++		return 0;
++
++	if (wblock->dev.dev.type =3D=3D &wmi_type_event)
++		snprintf(method, sizeof(method), "WE%02X", wblock->gblock.notify_id);
++	else
++		get_acpi_method_name(wblock, 'C', method);
++
++	/* Not all WMI devices marked as expensive actually implement the necess=
+ary ACPI method.
++	 * Ignore this missing ACPI method to match the behaviour of the Windows=
+ driver.
++	 */
++	status =3D acpi_get_handle(wblock->acpi_device->handle, method, &handle)=
+;
++	if (ACPI_FAILURE(status))
++		return 0;
++
++	status =3D acpi_execute_simple_method(handle, NULL, enable);
++	if (ACPI_FAILURE(status))
 +		return -EIO;
++
++	return 0;
++}
++
+ static struct wmi_device *wmi_find_device_by_guid(const char *guid_string=
+)
+ {
+ 	struct device *dev;
+@@ -337,10 +355,8 @@ static acpi_status __query_block(struct wmi_block *wb=
+lock, u8 instance,
+ {
+ 	struct guid_block *block;
+ 	acpi_handle handle;
+-	acpi_status status, wc_status =3D AE_ERROR;
+ 	struct acpi_object_list input;
+ 	union acpi_object wq_params[1];
+-	char wc_method[WMI_ACPI_METHOD_NAME_SIZE];
+ 	char method[WMI_ACPI_METHOD_NAME_SIZE];
 
- 	ret =3D tlmi_extract_output_string(obj, value);
- 	kfree(obj);
-@@ -995,7 +989,7 @@ static ssize_t current_value_show(struct kobject *kobj=
-, struct kobj_attribute *a
- 	char *item, *value;
- 	int ret;
+ 	if (!out)
+@@ -364,40 +380,9 @@ static acpi_status __query_block(struct wmi_block *wb=
+lock, u8 instance,
+ 	if (instance =3D=3D 0 && test_bit(WMI_READ_TAKES_NO_ARGS, &wblock->flags=
+))
+ 		input.count =3D 0;
 
--	ret =3D tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID);
-+	ret =3D tlmi_setting(setting->wdev, setting->index, &item);
- 	if (ret)
- 		return ret;
+-	/*
+-	 * If ACPI_WMI_EXPENSIVE, call the relevant WCxx method first to
+-	 * enable collection.
+-	 */
+-	if (block->flags & ACPI_WMI_EXPENSIVE) {
+-		get_acpi_method_name(wblock, 'C', wc_method);
+-
+-		/*
+-		 * Some GUIDs break the specification by declaring themselves
+-		 * expensive, but have no corresponding WCxx method. So we
+-		 * should not fail if this happens.
+-		 */
+-		wc_status =3D acpi_execute_simple_method(handle, wc_method, 1);
+-	}
+-
+ 	get_acpi_method_name(wblock, 'Q', method);
+-	status =3D acpi_evaluate_object(handle, method, &input, out);
 
-@@ -1588,7 +1582,7 @@ static struct tlmi_pwd_setting *tlmi_create_auth(con=
-st char *pwd_type,
- 	return new_pwd;
+-	/*
+-	 * If ACPI_WMI_EXPENSIVE, call the relevant WCxx method, even if
+-	 * the WQxx method failed - we should disable collection anyway.
+-	 */
+-	if ((block->flags & ACPI_WMI_EXPENSIVE) && ACPI_SUCCESS(wc_status)) {
+-		/*
+-		 * Ignore whether this WCxx call succeeds or not since
+-		 * the previously executed WQxx method call might have
+-		 * succeeded, and returning the failing status code
+-		 * of this call would throw away the result of the WQxx
+-		 * call, potentially leaking memory.
+-		 */
+-		acpi_execute_simple_method(handle, wc_method, 0);
+-	}
+-
+-	return status;
++	return acpi_evaluate_object(handle, method, &input, out);
  }
 
--static int tlmi_analyze(void)
-+static int tlmi_analyze(struct wmi_device *wdev)
+ /**
+@@ -421,9 +406,15 @@ acpi_status wmi_query_block(const char *guid_string, =
+u8 instance,
+ 	if (IS_ERR(wdev))
+ 		return AE_ERROR;
+
++	if (wmi_device_enable(wdev, true) < 0)
++		dev_warn(&wdev->dev, "Failed to enable device\n");
++
+ 	wblock =3D container_of(wdev, struct wmi_block, dev);
+ 	status =3D __query_block(wblock, instance, out);
+
++	if (wmi_device_enable(wdev, false) < 0)
++		dev_warn(&wdev->dev, "Failed to disable device\n");
++
+ 	wmi_device_put(wdev);
+
+ 	return status;
+@@ -471,6 +462,7 @@ acpi_status wmi_set_block(const char *guid_string, u8 =
+instance, const struct acp
+ 		return AE_ERROR;
+
+ 	status =3D  wmidev_block_set(wdev, instance, in);
++
+ 	wmi_device_put(wdev);
+
+ 	return status;
+@@ -551,7 +543,7 @@ acpi_status wmi_install_notify_handler(const char *gui=
+d,
+ 		wblock->handler =3D handler;
+ 		wblock->handler_data =3D data;
+
+-		if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
++		if (wmi_device_enable(wdev, true) < 0)
+ 			dev_warn(&wblock->dev.dev, "Failed to enable device\n");
+
+ 		status =3D AE_OK;
+@@ -588,7 +580,7 @@ acpi_status wmi_remove_notify_handler(const char *guid=
+)
+ 	if (!wblock->handler) {
+ 		status =3D AE_NULL_ENTRY;
+ 	} else {
+-		if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
++		if (wmi_device_enable(wdev, false) < 0)
+ 			dev_warn(&wblock->dev.dev, "Failed to disable device\n");
+
+ 		wblock->handler =3D NULL;
+@@ -823,10 +815,10 @@ static int wmi_dev_match(struct device *dev, const s=
+truct device_driver *driver)
+
+ static void wmi_dev_disable(void *data)
  {
- 	int i, ret;
+-	struct wmi_block *wblock =3D data;
++	struct device *dev =3D data;
 
-@@ -1625,7 +1619,7 @@ static int tlmi_analyze(void)
- 		char *item =3D NULL;
+-	if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
+-		dev_warn(&wblock->dev.dev, "Failed to disable device\n");
++	if (wmi_device_enable(to_wmi_device(dev), false) < 0)
++		dev_warn(dev, "Failed to disable device\n");
+ }
 
- 		tlmi_priv.setting[i] =3D NULL;
--		ret =3D tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
-+		ret =3D tlmi_setting(wdev, i, &item);
- 		if (ret)
- 			break;
- 		if (!item)
-@@ -1648,6 +1642,7 @@ static int tlmi_analyze(void)
- 			kfree(item);
- 			goto fail_clear_attr;
- 		}
-+		setting->wdev =3D wdev;
- 		setting->index =3D i;
- 		strscpy(setting->display_name, item);
- 		/* If BIOS selections supported, load those */
-@@ -1666,7 +1661,7 @@ static int tlmi_analyze(void)
- 			 */
- 			char *optitem, *optstart, *optend;
+ static int wmi_dev_probe(struct device *dev)
+@@ -852,14 +844,14 @@ static int wmi_dev_probe(struct device *dev)
+ 			return -ENODEV;
+ 	}
 
--			if (!tlmi_setting(setting->index, &optitem, LENOVO_BIOS_SETTING_GUID))=
- {
-+			if (!tlmi_setting(setting->wdev, setting->index, &optitem)) {
- 				optstart =3D strstr(optitem, "[Optional:");
- 				if (optstart) {
- 					optstart +=3D strlen("[Optional:");
-@@ -1791,7 +1786,7 @@ static int tlmi_probe(struct wmi_device *wdev, const=
- void *context)
- {
- 	int ret;
+-	if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
++	if (wmi_device_enable(to_wmi_device(dev), true) < 0)
+ 		dev_warn(dev, "failed to enable device -- probing anyway\n");
 
--	ret =3D tlmi_analyze();
-+	ret =3D tlmi_analyze(wdev);
- 	if (ret)
+ 	/*
+ 	 * We have to make sure that all devres-managed resources are released f=
+irst because
+ 	 * some might still want to access the underlying WMI device.
+ 	 */
+-	ret =3D devm_add_action_or_reset(dev, wmi_dev_disable, wblock);
++	ret =3D devm_add_action_or_reset(dev, wmi_dev_disable, dev);
+ 	if (ret < 0)
  		return ret;
 
-diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think=
--lmi.h
-index f267d8b46957..a80452482227 100644
-=2D-- a/drivers/platform/x86/think-lmi.h
-+++ b/drivers/platform/x86/think-lmi.h
-@@ -4,6 +4,7 @@
- #define _THINK_LMI_H_
-
- #include <linux/types.h>
-+#include <linux/wmi.h>
-
- #define TLMI_SETTINGS_COUNT  256
- #define TLMI_SETTINGS_MAXLEN 512
-@@ -87,6 +88,7 @@ struct tlmi_pwd_setting {
- /* Attribute setting details */
- struct tlmi_attr_setting {
- 	struct kobject kobj;
-+	struct wmi_device *wdev;
- 	int index;
- 	char display_name[TLMI_SETTINGS_MAXLEN];
- 	char *possible_values;
+@@ -915,7 +907,7 @@ static void wmi_dev_shutdown(struct device *dev)
+ 		 * We still need to disable the WMI device here since devres-managed re=
+sources
+ 		 * like wmi_dev_disable() will not be release during shutdown.
+ 		 */
+-		if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
++		if (wmi_device_enable(to_wmi_device(dev), false) < 0)
+ 			dev_warn(dev, "Failed to disable device\n");
+ 	}
+ }
 =2D-
 2.39.5
 
