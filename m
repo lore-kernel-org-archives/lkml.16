@@ -1,321 +1,135 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F48119D07A;
-	Sun, 16 Feb 2025 16:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D1519258C;
+	Sun, 16 Feb 2025 16:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739722377; cv=none; b=s2+wrrjvcRYT2MnTBjdzaRiKPiCko1uJ3pnJEeCvEUBTeCxIu+4bSuvEIdnnOgwsiLSGbvDh1JgoL72JVXsz+pwBG8PEDt6vRTc3y2MaEYoGVj/jIZhpDBNp2SPRMGaKpNNeOTSPssNl6atD3qJ2eRIa4RfcsWsGMlfpvpNFTms=
+	t=1739722429; cv=none; b=elavAOk1dAVTAGUZEb834brVAGfEXKODyzfBoWmeK4Me5t27d6mtylTDJ10ddYBbdF7tWyuSsYDf7tWyPcWtJ5rva/ZW7v0lMb86UdfToVpblQ7XczXPYaBHX8iE4Lvdm3LRWj4/TXjqB8SDWnrSZPHOqX0upZLLCSq7N83+RJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739722377; c=relaxed/simple;
-	bh=bLlKBR/fpwcRFHbKSMGsIt7sEUfozoFN+TKaviTKp0A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i4X+qUPZA1TCiSngRGdg5F36XhlpRTEAtGSrhWZ7zsq2sy951n625BLlt8pzLKn7WcIsSGQmzu17okGR3pUxdPg2nhZGtughgiIO5Z9rQHKevcevEkySctDn4gNwaKkyLSlzEpBDih9DcC8zyFx5poeWbN/IhyyhKpugkPC7ltw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IsQrPb5w; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1739722429; c=relaxed/simple;
+	bh=QURX3TCQnsTzseCqpM8c17Q7YT0zSNUmPLnf6rLZkSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gpYzi/bxGI9OxGGOJpfo6x/FPFl8L9YZZiEg6XUrCgm2+9rJo1LZVWJFyonnJ7+O54iS46EgQ+YpbPmJV5/H8VkxcMZhgXTky2bFqqxjcun8qK780k3DlKnWb2RExX4LIuRmEIPTq1fx+obDTNim7A+Fmc6De2xzhiHuqjnJ2dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uui/4bSL; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsQrPb5w"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaec61d0f65so752956766b.1;
-        Sun, 16 Feb 2025 08:12:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uui/4bSL"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-308f141518cso36855231fa.2;
+        Sun, 16 Feb 2025 08:13:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739722374; x=1740327174; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m/R5shfvi4g7oMPn8cw9ImYbr1L1mAF4Luh9InPtUqg=;
-        b=IsQrPb5wG0ZTc9JPqNCcu0zXcu6iqVMSP0u3BhgLWao/FdB5rB6egYg4uG87+WCbc5
-         cTipWCq+mGMM4fmFPU1sIIz8pIG6y1uAZFTVotF8hfXN27+ThnpGeayFBcA2JfQrxuqU
-         Hz6XPkmacffmEzl+EILFDEDmThs1l0HEhI4gdNfyjvBi2W6A9sXP/l1W6JBpD1r6nOS5
-         vLgVJfU0m6KZGugAuw3E7agkiZohaghPAx5V1SQkQUBeImDn0k/yqAGifv6/O/L0parv
-         7/TwpwJhV+h8uDgq9OXZ/vX90M5lPobBQ5L9B50BAOtDWGeJBVst0CdpNSXovJmkOwO3
-         bGzg==
+        d=gmail.com; s=20230601; t=1739722426; x=1740327226; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JGff666KGP905Vy6KNFf0v62t2tqMA1/DHBMRQ+PAkw=;
+        b=Uui/4bSLv2YHzl42Oiwq7JMUHyqLvncoA8Yg5gqq+scWpngbEhXoAPPvS0B1gKtkVU
+         kdnjIRc1KEViLpae7DUhL6yCLek3cWKLuxg/og5+fw2dEw29QAw7HDoNOSry8GPcv29l
+         B1dCnNyBqqGfBxUUEMPLc+AqdIzPkh8HYRKnl514Oif4v+Htd7pc4izw8SpaBt3u7Bsm
+         DMsd6HCAoidSl9yONw2JumcMpQBERgNkzaPIzZs0TVIzo27NF9sHu5uCnShtkVsKaIi+
+         OhO6Sr+nrYbGt/FHfigWg68MRVzm/rN460UO97mQQE8rcD0dvYBDuJcZZJ1tRlIRUAxV
+         /hBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739722374; x=1740327174;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739722426; x=1740327226;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m/R5shfvi4g7oMPn8cw9ImYbr1L1mAF4Luh9InPtUqg=;
-        b=P0tjJ2fCCUYb3Lt5ksMwrA943EbZCgZ8M5qczQRK3227oswRL/tX/y5lct5trbNh5c
-         K+/Ce//u4nQg0q7qG5z88KE8OXgfFTrFfkB5PeNfW3LCjTJcwv6AjwtfFdZ6SHUJPS7k
-         NeDhd+8q57ANNTtyyhsgJWBzy/1i5K5eyXmcgyTBqmhVdQDy+a1h65SA7CmQf/GIEa0y
-         Ba2dqYCNBnQraX7SaI01fDrc54HR+GBEnz1dzcO64pUBsmk0fHfnx+nURjXyVR1Nyxax
-         0TN81i/awnWAwh7q2/sNdjg1JOGTVCqrE/hXkjGX94TKMNCoF4frffMpK5wpD2tzjg0R
-         +TmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDDIwusE1CsjZxTwgrpkTOQ+VxetAbA2Fi/Q0uSog3Wq8uzA5qOkoUaUdQLUSUPx6bhQ2fqQftkhnN@vger.kernel.org, AJvYcCWgmACFW8/oTRmjOBoAIdNs+1G3mRFwukpa2uuxukDW/AOoGKgTR/QGnmh+wl8LH5o7iIH2D46ZcPRx@vger.kernel.org, AJvYcCXMUx0SpVtf83Stm/X+JA3NB+4S8t80WsrfwjVRU1hVeQ4sTg7OrJFBvqKNXmnfbMCE2pXmaOYSQ4Xy2A8i@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFA/ck67XMa9rsS6pI+82Oa50H8zyrA4DPK+OKQ03mk5hUytHC
-	a7sIISOvjPtRtvwXngBPOZQAQKEeFQXk87nt7LpFQWshWrH50rXhVFn74g==
-X-Gm-Gg: ASbGncu/hpVOoJ8tpYAgcFnw5Y+1OlP2fxS/eMOpy6MPpC94CjLZcE9lObKFYoeEFLL
-	wFAH7OJOF1aneIXQKdCoprCweEtVGPbITSN892ei6ftm7L1x4tm9Omg73zxqpU5SrTYg7xx9r4E
-	Os7lXYl3dMGTM7Ry5Dk/5QMInnWcZYiOHiU4VWaFDS8qgYq/5TIYsDyUagNkEKkXQ732pamTY7U
-	Dot4z++h2JB+7zC0/OVrXNqlU8RnRIh6kCp0GQeLvD65r2ZqnX7fkt5yKcc7XM2jtEhAn/KefYY
-	tyZq69vbcDuUVUiRXG5CvlRfNZX8UwtHW6kIEyARc4Fu3LBXMzZIUwhI2iAbuQ==
-X-Google-Smtp-Source: AGHT+IEc4fa9aQqMs6Hkl7wBJhiSx39pgqldlhSZGRQufo5ch84A6G9itwGa0xnnk6M0zRgP1kTguA==
-X-Received: by 2002:a17:906:c14c:b0:ab6:da18:9a3 with SMTP id a640c23a62f3a-abb7115ffdamr610635366b.46.1739722373555;
-        Sun, 16 Feb 2025 08:12:53 -0800 (PST)
-Received: from hex.my.domain (83.8.115.239.ipv4.supernova.orange.pl. [83.8.115.239])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8eea4d65sm148463466b.161.2025.02.16.08.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 08:12:53 -0800 (PST)
-From: Artur Weber <aweber.kernel@gmail.com>
-Date: Sun, 16 Feb 2025 17:12:39 +0100
-Subject: [PATCH RFC 4/5] clk: bcm21664: Add matching bus clocks for
- peripheral clocks
+        bh=JGff666KGP905Vy6KNFf0v62t2tqMA1/DHBMRQ+PAkw=;
+        b=TWnM+sL80tQ1KUqdIH8qxXIBq22zg8V+brDLFoeZ2QqFNt/m/329iA+FooIplmuxWl
+         ycanGxDxK4bDwzt2mYTzxtPlq4WCg2cT0AqTz+0R41/waHRcWRM4VDDn4VAXBBwfG9Le
+         jq+OIZ8gHhSRaaIQV97YXbp0rELsg8EcnkuUhnuLB/P2pyjka5WBXOMfsDHzct8069NJ
+         Gk4PogAvfMDwuaoMr9bPBBoq+xo/6xDhp1w1a62lcxenW4Qnk77ZEZ+G2bDBEvtfuJoX
+         8rFnlDykl+aHUhB2UwJGPeoZQxs27Dp06mUmVt5Hdhh5EUM/TB+B/jTgSmUBZekPCHMx
+         6Blw==
+X-Forwarded-Encrypted: i=1; AJvYcCV87mmrgmHV/rzd8TYu6c4wroWlfemXlygKyHATlclOB9ZWA7JltOR4un3edhrEEzmQlUpjuRf+Ijhb+ftdrw==@vger.kernel.org, AJvYcCXJj+uNQ/vFnXlZaRYWD1EVClTzZV6Yq1Jpt10hFx+Dds/LlhUD7zLDiOxCulG0zKhKlUzD/KSntSHha+Vr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMUgO1TImdRuobJohpyg169mQKjmZKk8gzpV17gvQ/+yUhKBqJ
+	v5fW9vL8dZM97ZKu/caD5/+zgzn3sZdzfXHXXeTtmBVqZsx0dSQ2kT4TXRtLiEfTWeC2CAZLqcP
+	pomC/4CzN25Z2pzey2jYzd2G4lII=
+X-Gm-Gg: ASbGncuL4JsxmLl23Vl7Ny1ZaHJ9Rmrfxia5tO85fTsbMwnFg9MVpNg3tTi4RrKjBHH
+	XzC6WFpWcy9S99kKQAY3PTJZnYxaKqPS0nqDvvyWpjWzTQJFwqVNcTkV6QHzKY5TQ1M+lJECo
+X-Google-Smtp-Source: AGHT+IEPRagxZ65ybd4tMnjdDv98DMPP8zUFkYZRNxajhEeqtRsLRpLYM/sQhEuXJg+hx1mREhu1jEUYnLUSROxRQ0U=
+X-Received: by 2002:a2e:97d1:0:b0:308:f75f:459 with SMTP id
+ 38308e7fff4ca-30927ad674bmr18832661fa.26.1739722425706; Sun, 16 Feb 2025
+ 08:13:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250216-kona-bus-clock-v1-4-e8779d77a6f2@gmail.com>
-References: <20250216-kona-bus-clock-v1-0-e8779d77a6f2@gmail.com>
-In-Reply-To: <20250216-kona-bus-clock-v1-0-e8779d77a6f2@gmail.com>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Alex Elder <elder@kernel.org>, 
- Stanislav Jakubek <stano.jakubek@gmail.com>, linux-clk@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- Artur Weber <aweber.kernel@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739722366; l=7610;
- i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
- bh=bLlKBR/fpwcRFHbKSMGsIt7sEUfozoFN+TKaviTKp0A=;
- b=NXULbaNxhoYHUjH/FEMwhve1priRbY5uyMkMvAvEH7yZowcqHn2sp1vQACmDBmkh0qK1Ql7Ju
- LlxwIHIekIkAcuSzpbWZgVqVPcXbSeoBZlJdjIxyePj4XBmA2pn7PMz
-X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
- pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
+References: <675d01e9.050a0220.37aaf.00be.GAE@google.com> <67af8747.050a0220.21dd3.004c.GAE@google.com>
+ <20250214152358.7ba29d10229e2155c0899774@linux-foundation.org>
+In-Reply-To: <20250214152358.7ba29d10229e2155c0899774@linux-foundation.org>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Mon, 17 Feb 2025 00:13:29 +0800
+X-Gm-Features: AWEUYZlmJ2cXycQc1qMxY9bHA8o93Vs9KEMzZuE7UBLlIeeIlca5E5nvbyGjY2E
+Message-ID: <CAMgjq7DQm+nwTWMdWQ66WW84O6YnhRQvZEjaY3EeXZ5-iKXo-A@mail.gmail.com>
+Subject: Re: [syzbot] [mm?] [bcachefs?] WARNING in lock_list_lru_of_memcg
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: syzbot <syzbot+38a0cbd267eff2d286ff@syzkaller.appspotmail.com>, 
+	chengming.zhou@linux.dev, hannes@cmpxchg.org, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, mhocko@suse.com, muchun.song@linux.dev, 
+	roman.gushchin@linux.dev, sashal@kernel.org, shakeel.butt@linux.dev, 
+	syzkaller-bugs@googlegroups.com, willy@infradead.org, yuzhao@google.com, 
+	zhengqi.arch@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that bus clock support has been implemented into the Broadcom Kona
-clock driver, add bus clocks corresponding to HUB_TIMER, SDIO, UART and
-BSC, as well as the USB OTG bus clock.
+On Sat, Feb 15, 2025 at 7:24=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Fri, 14 Feb 2025 10:11:19 -0800 syzbot <syzbot+38a0cbd267eff2d286ff@sy=
+zkaller.appspotmail.com> wrote:
+>
+> > syzbot has found a reproducer for the following issue on:
+>
+> Thanks.  I doubt if bcachefs is implicated in this?
+>
+> > HEAD commit:    128c8f96eb86 Merge tag 'drm-fixes-2025-02-14' of https:=
+//g..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D148019a4580=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc776e555cfb=
+db82d
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D38a0cbd267eff=
+2d286ff
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for D=
+ebian) 2.40
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D12328bf85=
+80000
+> >
+> > Downloadable assets:
+> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets=
+/7feb34a89c2a/non_bootable_disk-128c8f96.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/a97f78ac821e/vmli=
+nux-128c8f96.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/f451cf16fc9f=
+/bzImage-128c8f96.xz
+> > mounted in repro: https://storage.googleapis.com/syzbot-assets/a7da783f=
+97cf/mount_3.gz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the co=
+mmit:
+> > Reported-by: syzbot+38a0cbd267eff2d286ff@syzkaller.appspotmail.com
+> >
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 0 PID: 5459 at mm/list_lru.c:96 lock_list_lru_of_memcg+0x=
+39e/0x4d0 mm/list_lru.c:96
+>
+>         VM_WARN_ON(!css_is_dying(&memcg->css));
 
-Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
----
- drivers/clk/bcm/clk-bcm21664.c       | 107 +++++++++++++++++++++++++++++++----
- include/dt-bindings/clock/bcm21664.h |  19 ++++++-
- 2 files changed, 111 insertions(+), 15 deletions(-)
+I'm checking this, when last time this was triggered, it was caused by
+a list_lru user did not initialize the memcg list_lru properly before
+list_lru reclaim started, and fixed by:
+https://lore.kernel.org/all/20241222122936.67501-1-ryncsn@gmail.com/T/
 
-diff --git a/drivers/clk/bcm/clk-bcm21664.c b/drivers/clk/bcm/clk-bcm21664.c
-index 520c3aeb4ea9c4a431512c0909f9545c1761d17a..c9d15bde1d49c345c160880f72c96aea94dd9f55 100644
---- a/drivers/clk/bcm/clk-bcm21664.c
-+++ b/drivers/clk/bcm/clk-bcm21664.c
-@@ -39,6 +39,11 @@ static struct peri_clk_data hub_timer_data = {
- 	.trig		= TRIGGER(0x0a40, 4),
- };
- 
-+static struct bus_clk_data hub_timer_apb_data = {
-+	.gate		= HW_SW_GATE(0x0414, 18, 3, 2),
-+	.hyst		= HYST(0x0414, 10, 11),
-+};
-+
- static struct ccu_data aon_ccu_data = {
- 	BCM21664_CCU_COMMON(aon, AON),
- 	.policy		= {
-@@ -47,7 +52,9 @@ static struct ccu_data aon_ccu_data = {
- 	},
- 	.kona_clks	= {
- 		[BCM21664_AON_CCU_HUB_TIMER] =
--			KONA_CLK(aon, hub_timer, peri),
-+			KONA_CLK_PREREQ(aon, hub_timer, peri, hub_timer_apb),
-+		[BCM21664_AON_CCU_HUB_TIMER_APB] =
-+			KONA_CLK(aon, hub_timer_apb, bus),
- 		[BCM21664_AON_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
- 	},
- };
-@@ -122,6 +129,26 @@ static struct peri_clk_data sdio4_sleep_data = {
- 	.gate		= HW_SW_GATE(0x0360, 18, 2, 3),
- };
- 
-+static struct bus_clk_data sdio1_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0358, 16, 0, 1),
-+};
-+
-+static struct bus_clk_data sdio2_ahb_data = {
-+	.gate		= HW_SW_GATE(0x035c, 16, 0, 1),
-+};
-+
-+static struct bus_clk_data sdio3_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0364, 16, 0, 1),
-+};
-+
-+static struct bus_clk_data sdio4_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0360, 16, 0, 1),
-+};
-+
-+static struct bus_clk_data usb_otg_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0348, 16, 0, 1),
-+};
-+
- static struct ccu_data master_ccu_data = {
- 	BCM21664_CCU_COMMON(master, MASTER),
- 	.policy		= {
-@@ -130,13 +157,13 @@ static struct ccu_data master_ccu_data = {
- 	},
- 	.kona_clks	= {
- 		[BCM21664_MASTER_CCU_SDIO1] =
--			KONA_CLK(master, sdio1, peri),
-+			KONA_CLK_PREREQ(master, sdio1, peri, sdio1_ahb),
- 		[BCM21664_MASTER_CCU_SDIO2] =
--			KONA_CLK(master, sdio2, peri),
-+			KONA_CLK_PREREQ(master, sdio2, peri, sdio2_ahb),
- 		[BCM21664_MASTER_CCU_SDIO3] =
--			KONA_CLK(master, sdio3, peri),
-+			KONA_CLK_PREREQ(master, sdio3, peri, sdio3_ahb),
- 		[BCM21664_MASTER_CCU_SDIO4] =
--			KONA_CLK(master, sdio4, peri),
-+			KONA_CLK_PREREQ(master, sdio4, peri, sdio4_ahb),
- 		[BCM21664_MASTER_CCU_SDIO1_SLEEP] =
- 			KONA_CLK(master, sdio1_sleep, peri),
- 		[BCM21664_MASTER_CCU_SDIO2_SLEEP] =
-@@ -145,6 +172,16 @@ static struct ccu_data master_ccu_data = {
- 			KONA_CLK(master, sdio3_sleep, peri),
- 		[BCM21664_MASTER_CCU_SDIO4_SLEEP] =
- 			KONA_CLK(master, sdio4_sleep, peri),
-+		[BCM21664_MASTER_CCU_SDIO1_AHB] =
-+			KONA_CLK(master, sdio1_ahb, bus),
-+		[BCM21664_MASTER_CCU_SDIO2_AHB] =
-+			KONA_CLK(master, sdio2_ahb, bus),
-+		[BCM21664_MASTER_CCU_SDIO3_AHB] =
-+			KONA_CLK(master, sdio3_ahb, bus),
-+		[BCM21664_MASTER_CCU_SDIO4_AHB] =
-+			KONA_CLK(master, sdio4_ahb, bus),
-+		[BCM21664_MASTER_CCU_USB_OTG_AHB] =
-+			KONA_CLK(master, usb_otg_ahb, bus),
- 		[BCM21664_MASTER_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
- 	},
- };
-@@ -225,6 +262,38 @@ static struct peri_clk_data bsc4_data = {
- 	.trig		= TRIGGER(0x0afc, 19),
- };
- 
-+static struct bus_clk_data uartb_apb_data = {
-+	.gate		= HW_SW_GATE_AUTO(0x0400, 16, 0, 1),
-+};
-+
-+static struct bus_clk_data uartb2_apb_data = {
-+	.gate		= HW_SW_GATE_AUTO(0x0404, 16, 0, 1),
-+};
-+
-+static struct bus_clk_data uartb3_apb_data = {
-+	.gate		= HW_SW_GATE_AUTO(0x0408, 16, 0, 1),
-+};
-+
-+static struct bus_clk_data bsc1_apb_data = {
-+	.gate		= HW_SW_GATE_AUTO(0x0458, 16, 0, 1),
-+	.hyst		= HYST(0x0458, 8, 9),
-+};
-+
-+static struct bus_clk_data bsc2_apb_data = {
-+	.gate		= HW_SW_GATE_AUTO(0x045c, 16, 0, 1),
-+	.hyst		= HYST(0x045c, 8, 9),
-+};
-+
-+static struct bus_clk_data bsc3_apb_data = {
-+	.gate		= HW_SW_GATE_AUTO(0x0470, 16, 0, 1),
-+	.hyst		= HYST(0x0470, 8, 9),
-+};
-+
-+static struct bus_clk_data bsc4_apb_data = {
-+	.gate		= HW_SW_GATE_AUTO(0x0474, 16, 0, 1),
-+	.hyst		= HYST(0x0474, 8, 9),
-+};
-+
- static struct ccu_data slave_ccu_data = {
- 	BCM21664_CCU_COMMON(slave, SLAVE),
-        .policy		= {
-@@ -233,19 +302,33 @@ static struct ccu_data slave_ccu_data = {
- 	},
- 	.kona_clks	= {
- 		[BCM21664_SLAVE_CCU_UARTB] =
--			KONA_CLK(slave, uartb, peri),
-+			KONA_CLK_PREREQ(slave, uartb, peri, uartb_apb),
- 		[BCM21664_SLAVE_CCU_UARTB2] =
--			KONA_CLK(slave, uartb2, peri),
-+			KONA_CLK_PREREQ(slave, uartb2, peri, uartb2_apb),
- 		[BCM21664_SLAVE_CCU_UARTB3] =
--			KONA_CLK(slave, uartb3, peri),
-+			KONA_CLK_PREREQ(slave, uartb3, peri, uartb3_apb),
- 		[BCM21664_SLAVE_CCU_BSC1] =
--			KONA_CLK(slave, bsc1, peri),
-+			KONA_CLK_PREREQ(slave, bsc1, peri, bsc1_apb),
- 		[BCM21664_SLAVE_CCU_BSC2] =
--			KONA_CLK(slave, bsc2, peri),
-+			KONA_CLK_PREREQ(slave, bsc2, peri, bsc2_apb),
- 		[BCM21664_SLAVE_CCU_BSC3] =
--			KONA_CLK(slave, bsc3, peri),
-+			KONA_CLK_PREREQ(slave, bsc3, peri, bsc3_apb),
- 		[BCM21664_SLAVE_CCU_BSC4] =
--			KONA_CLK(slave, bsc4, peri),
-+			KONA_CLK_PREREQ(slave, bsc4, peri, bsc4_apb),
-+		[BCM21664_SLAVE_CCU_UARTB_APB] =
-+			KONA_CLK(slave, uartb_apb, bus),
-+		[BCM21664_SLAVE_CCU_UARTB2_APB] =
-+			KONA_CLK(slave, uartb2_apb, bus),
-+		[BCM21664_SLAVE_CCU_UARTB3_APB] =
-+			KONA_CLK(slave, uartb3_apb, bus),
-+		[BCM21664_SLAVE_CCU_BSC1_APB] =
-+			KONA_CLK(slave, bsc1_apb, bus),
-+		[BCM21664_SLAVE_CCU_BSC2_APB] =
-+			KONA_CLK(slave, bsc2_apb, bus),
-+		[BCM21664_SLAVE_CCU_BSC3_APB] =
-+			KONA_CLK(slave, bsc3_apb, bus),
-+		[BCM21664_SLAVE_CCU_BSC4_APB] =
-+			KONA_CLK(slave, bsc4_apb, bus),
- 		[BCM21664_SLAVE_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
- 	},
- };
-diff --git a/include/dt-bindings/clock/bcm21664.h b/include/dt-bindings/clock/bcm21664.h
-index 7c7492742f3d4ca439236f2f352e432989409570..8d3e3796c72b02eace84dfb90d6264dee0297a33 100644
---- a/include/dt-bindings/clock/bcm21664.h
-+++ b/include/dt-bindings/clock/bcm21664.h
-@@ -26,7 +26,8 @@
- /* aon CCU clock ids */
- 
- #define BCM21664_AON_CCU_HUB_TIMER		0
--#define BCM21664_AON_CCU_CLOCK_COUNT		1
-+#define BCM21664_AON_CCU_HUB_TIMER_APB		1
-+#define BCM21664_AON_CCU_CLOCK_COUNT		2
- 
- /* master CCU clock ids */
- 
-@@ -38,7 +39,12 @@
- #define BCM21664_MASTER_CCU_SDIO2_SLEEP		5
- #define BCM21664_MASTER_CCU_SDIO3_SLEEP		6
- #define BCM21664_MASTER_CCU_SDIO4_SLEEP		7
--#define BCM21664_MASTER_CCU_CLOCK_COUNT		8
-+#define BCM21664_MASTER_CCU_SDIO1_AHB		8
-+#define BCM21664_MASTER_CCU_SDIO2_AHB		9
-+#define BCM21664_MASTER_CCU_SDIO3_AHB		10
-+#define BCM21664_MASTER_CCU_SDIO4_AHB		11
-+#define BCM21664_MASTER_CCU_USB_OTG_AHB		12
-+#define BCM21664_MASTER_CCU_CLOCK_COUNT		13
- 
- /* slave CCU clock ids */
- 
-@@ -49,6 +55,13 @@
- #define BCM21664_SLAVE_CCU_BSC2			4
- #define BCM21664_SLAVE_CCU_BSC3			5
- #define BCM21664_SLAVE_CCU_BSC4			6
--#define BCM21664_SLAVE_CCU_CLOCK_COUNT		7
-+#define BCM21664_SLAVE_CCU_BSC1_APB		7
-+#define BCM21664_SLAVE_CCU_BSC2_APB		8
-+#define BCM21664_SLAVE_CCU_BSC3_APB		9
-+#define BCM21664_SLAVE_CCU_BSC4_APB		10
-+#define BCM21664_SLAVE_CCU_UARTB_APB		11
-+#define BCM21664_SLAVE_CCU_UARTB2_APB		12
-+#define BCM21664_SLAVE_CCU_UARTB3_APB		13
-+#define BCM21664_SLAVE_CCU_CLOCK_COUNT		14
- 
- #endif /* _CLOCK_BCM21664_H */
+This shouldn't be a big issue, maybe there are leaks that will be
+fixed upon reparenting, and this new added sanity check might be too
+lenient, I'm not 100% sure though.
 
--- 
-2.48.1
-
+Unfortunately I couldn't reproduce the issue locally with the
+reproducer yet. will keep the test running and see if it can hit this
+WARN_ON.
