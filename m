@@ -1,150 +1,261 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0200214A4C6;
-	Mon, 17 Feb 2025 06:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB2881720
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739772630; cv=none; b=i/e2D1oFMu+5fodtNtsqM2kCbRlgG1bgm73HEWs+Ssibjh+Vdvf5P6Car/M50kXKetmyK6MkslklbTt+o9pmY1pIrgewIegyRayLt0T0Pz233b8VvbEk5ADsBMKgiSrGlt4b3C2jHRiafl+5tx0DeOolq/Jt4BsTT8iaEEqGnK8=
+	t=1739772789; cv=none; b=RuuSYXlY0GSxo7M7YkghmssrDUe/frWkBjEgekqEVVMi9b1F5peRakgq4iqg1SxD9YouR7nr37qVC0gbuwTYX2vPjprBNTctf44BLQ37oAlbl0AFyvNTS6sROGz7cLHQoxRhyjyza8plmwGvju3Iz8+YA2xr4Ntm5nyhXRmA2ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739772630; c=relaxed/simple;
-	bh=CrIuLPMpgJln1b65h2U3ovn7OZsssqG71Lr6yC+n20s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NKRKT3z2RNEHzPC3PED0ZXTwVrc/eSiaZRglaBR66Mi/vaYfft86vMLhClaEhQ3ix7VNgF2RIDq0kfUbjSDxgzBmybeAn1fRDRy4WfRsPig9UavFF3mGvcK9X0tqNpaDrR4KZ9ybfgWSsOHyNs01fZXg4QFlEyVznSD8jIAP4zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QXSCRwtG; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739772789; c=relaxed/simple;
+	bh=gP/DhI4MQzs/dlT7ZaFU923WgrWtY1c1HT7wI1ePtA4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EUu+piC/0KQiaQojwTLmGRLZKXE4rk/p2i1NUPQCgj3S76V1X+9hxtKpOQnYeceuFjyn5KcWiV9GX1x3wrogL1zkm6PdxdkNZp7bL4bI4XMbB2rE7I9py3Z3i8nor3D9+TWKVpkFJYTssMoDXtAn+mJaYvaaLungik7Ap56gj9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d+rdaDlD; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXSCRwtG"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21c2f1b610dso100505965ad.0;
-        Sun, 16 Feb 2025 22:10:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d+rdaDlD"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4bd35d4407aso672030137.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 22:13:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739772628; x=1740377428; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4pUbnlIaFpXwj2FnC9KQKdRLGokSGMi945pdWEyQAOU=;
-        b=QXSCRwtGNj1LOhGIQJCHjoFQIRb5KvUyT4XKbC5d2uU8RnSJsjaxWiY5A/Ay4qTkqs
-         /CED0WQZ9Gz8XdNnSYp/FbiCi43gj70LqJgmzXftXiVFowRJ4SU6E8wsXRo6oOiyWKNP
-         13NxSxBuSqCIOSmSEtP8NSxNmj+ucwlDC2ZtqoJAtX2E+sJDgqhZE5cTCN76lMXJPusM
-         qEW6vsms4wM/KLmss86v7m48pMiEyOPv92UYS5rt42QrIOmLOsG2fSY6awXpv64t1s9l
-         1OfrtyqZ9h0J4D0oTrQ2JbCzumGsnK9TDRqW5DV0HmiiMGvGAGwPdzk6n6oT8hvHmN49
-         jG2w==
+        d=linaro.org; s=google; t=1739772786; x=1740377586; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MnZw/Q+2O7o0YRtcX5JOGAgQhTQPBSaQtuZqXRvPz8U=;
+        b=d+rdaDlDHExgUoRZpQ0jw7IQNkmjMTftI3gbiENVsiHuA3NbP5q4Q+FwhJT6DwErHt
+         AnlvTvmqNn4iQgIxNy7au1rPSOM+8Z65D/LN4675QSymnnBA8fS0FNLw13h5Uj4B+mnC
+         PtwDJXoj2pa7zxfTUsiT+bBD0SjgDFQAxsoTwFUUNe3zrlkSY33q2Wt26azEnEhWmMZM
+         r3qkdvmJVqlWk3vETlBzi6Da9QMrdweKjuJHK2UlHI/6oa8HQGntYZaxgQ6RvyNtlSSp
+         X5M9lCsmiagGB0B0r4FdsszC4ytbbSPrkImYEHMaw9kpTOQ9uxFdsxCaY1fMGPUJTwTm
+         CEYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739772628; x=1740377428;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4pUbnlIaFpXwj2FnC9KQKdRLGokSGMi945pdWEyQAOU=;
-        b=Y7/q+t0sPb4OlDAIFGR6kehzDxtlT9624MbHrb4EXgX5tgbBJXzxBMwi4SgB3XLoff
-         suKJdUxRFTbeln3OLQP6sicO9mfZG0CRZuo0YLt7VopEFPpBXsdycdKe+2SKYuaUu+Dz
-         Vi7Io5saCJyT44lzOd/Q9d1+89DPLPxze/ORui1+72UiDixyF/vMmL/yU7RzHNec/xjZ
-         oaBe9ujKcozTJMHvTN/yn7f9aVHeZTD2l0mTRiZqxoK7lH6Fi3JCePl3jbwhaTHcVtqu
-         7ia46tVJ9XXuS0JjNQTkRHe/3M0r5a8tCixukiEJB2/t7uHf4QpEqxm+y4ErPePaQ0Ic
-         oS/g==
-X-Forwarded-Encrypted: i=1; AJvYcCU5XR8rdjYeH/KNti6yL660N2Gq5nI7OCpEYCHojyNKbaRzVe4oux0jeWDMStQ+p760jogQNmuAQtXuTmcN@vger.kernel.org, AJvYcCU8JkEz+V+6JJC5oeU7jY19fr6s5o/SR28J3zUUHDFs+mhqV0kdt9BHJFOvD5aV9Q8VhelZ+3as8T17@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwa4seCD3wwbAK1XTcMA7W5ZyEdSf+vcV8Fa/mMP7T71lEU9x3
-	tBwE9NFwAo8F7LSw71pnqZkHc1sW2yrtMR+49oAttsLQ9dCRfjY0
-X-Gm-Gg: ASbGnctEkGabofdSXi1Sy6p668UflvAJHlNZLmLqI0qXibDnsT0WrDb8SB4hRihqvIY
-	0c2JFGGcErjJ2uYeIDC+IZyFUnE0t6IYSli2CI8e9ox2LNAamM2E2yOKkQhrRuY8LuD7hs5JrFt
-	zeZvPo1G9/Bj/Hhjtl+/NoVZRieCSymqcJZ5Mg9fHYbSy3m4B8K1ZwVLitN8L+3CWSCIck5ozPf
-	4MCsbzqk0/j01OwTmppRoTMNh100uCI+kwWzWGa9usiEHZbgv56ydVVRqzSmShR8jxO6pfVhbSz
-	p14U5WOQU9eQLlWnvQ==
-X-Google-Smtp-Source: AGHT+IEP/BxIfU7rsnxdSBvVts0xAblW8C+YTQavZsFPW0gEu8GetnOdrXN3b4iJF+M3Wd3LdxRhGw==
-X-Received: by 2002:a17:903:240b:b0:216:3c36:69a7 with SMTP id d9443c01a7336-221040bdbefmr126914955ad.45.1739772628094;
-        Sun, 16 Feb 2025 22:10:28 -0800 (PST)
-Received: from [127.0.1.1] ([59.188.211.160])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-220d559614dsm64411795ad.256.2025.02.16.22.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 22:10:27 -0800 (PST)
-From: Nick Chan <towinchenmi@gmail.com>
-Date: Mon, 17 Feb 2025 14:10:05 +0800
-Subject: [PATCH asahi-soc/dt] arm64: dts: apple: t7000: Add missing CPU
- p-state 7 for J96 and J97
+        d=1e100.net; s=20230601; t=1739772786; x=1740377586;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MnZw/Q+2O7o0YRtcX5JOGAgQhTQPBSaQtuZqXRvPz8U=;
+        b=Qhu06m2xFu/9W/C0kMacEbMQ3TYDUEVIv+K+iiSs1vL+WaGb/bQcPPEOXc09Tkkh0K
+         j4uaVNL3AirNsHV3dcvRU0Jgdf6gM+EOJW6kqXpzifE2GuWAKsa4qMYW0UfBmUfXgTsS
+         a/k9Yfy5gtRnELGlSbRFU5frvUrhAc1y2XzwZyDYQBY0of4lp0/26EKXZHasMXg4uuyP
+         rLRaBkww5q0pKy2e+rJ38xb9aK7D+ZlIyuFxKzSdrDAotFBN+SHJjxR21+quGD4ut8NI
+         31z3TOb0ZHbuE4CVx4rVWCUxe5yHBU8xzszHHs+X1lYZZ85ZdKPH1Km+SU7kYstRsgL6
+         1bsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzF1W5S/y+F/EgOMlMeHsAKLs0fol44qATdIu0DfRVdAAb3Xgayu1Jpk3ywJOrv/8y5Rmp8IORWoEBoHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfPY0+UJlwMnukO3BGMCx1JVAgj6NT2ns7eSIqXvvqhKFtIIQb
+	1Mv7t8+/T6ZrmD4fwlJtz8lncZG7kOpZ4H9DcEP6kTfyboglECJbw0+OPeCrN/MZ7utweC/NTzD
+	vLg/DpubduXi+tjyUc8lpxqrGQUBSU77gkSObdg==
+X-Gm-Gg: ASbGnctxTlryyIPWbBD0haI9t43mpyPbyRT8kvHFpr4yvEUYMrmIokgHA9XKua9j8jA
+	vh4Ya0E1VcF31k9a6bzIjC+coHQEx/+dyTfnRdgou0hWhRLMOBCfuF1jIKL0s6a5EJ6031f0iQw
+	==
+X-Google-Smtp-Source: AGHT+IHc7dJI6eafhkqnIan6daijofUVFUvH3V4pTfdEga1AHuyGIsGH9uwlauqjjjaAaHI1sy0aprZ+BW4OP8MJfMs=
+X-Received: by 2002:a05:6102:c89:b0:4bb:eb4a:f9f2 with SMTP id
+ ada2fe7eead31-4bd3fcc5af7mr3186375137.9.1739772786167; Sun, 16 Feb 2025
+ 22:13:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-mini4-cpufreq-v1-1-8974e90dd806@gmail.com>
-X-B4-Tracking: v=1; b=H4sIALzSsmcC/x3MOw6EMAwA0asg12tBwmdZroIoosQBFxsgBoSEu
- DsR5StmLhCKTAJddkGkg4XnkKA+GdjJhJGQXTLoQteFVl/8c+AK7bL7SCt611j1K6umVi2kZon
- k+Xx/PRgxE6PMNncbDPf9ABnQ8cJtAAAA
-X-Change-ID: 20250217-mini4-cpufreq-fd6c19346518
-To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Neal Gompa <neal@gompa.dev>, 
- Nick Chan <towinchenmi@gmail.com>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1694; i=towinchenmi@gmail.com;
- h=from:subject:message-id; bh=CrIuLPMpgJln1b65h2U3ovn7OZsssqG71Lr6yC+n20s=;
- b=owEBbQKS/ZANAwAIAQHKCLemxQgkAcsmYgBnstLQi0lqAMVlCeQaVyeJCczo/BDvZTB7TtJJL
- U0OzcAix9GJAjMEAAEIAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCZ7LS0AAKCRABygi3psUI
- JK6LD/wLOjw9QUSMfzkPdvScw4BayFO1s3XlFg9mn7p2X3CgI+q65LpwMpolEcUK+tGk5PI80fU
- 5qzO3YX2nj5octVIGyiZOGlu4WFugsfVqC625tzy4PjSAG7kriuVdkG6dE583nlIRGvECaTyB3U
- UP1je8BCtMVGA05El+/mAdq5n9ZYpmlJz6to+OeWWq+230qovTrKYnreAYjgV2l5zLqQb8lUH+1
- 8ljoCwi54eqgOzY7qvs3xlx34VNIxmxx8SBDOWRbuu4oGEJsxlTP41edIGxL82vgjTnmEFVVMTH
- lBNF5ZDc5DlFle5WaaPbkqEUqSdRS57zv6FB6mexeuWXPVd/Q9eR6/Rf/omxdZCob6lKaIz5agT
- 6cQKeu0amy3Mawww1G8mZtiU659aIZHJH3wtpjpi3Ckl3kaM/nktXeIS+z3z6vuAmIacGQzdWvB
- r+NDps/RepRzW/3SCT41riRHDIVWLsAH6C+IfVun4C6fo09ypMAwxSNKnf+MDITvDke/P4RKhrq
- MVIAnUjLsBHZAF5tlK/j1Emomp0Gw/MZUc1Fed5gaaPfey1MGUfK98C4vz7lN8JvsyQa4njF8sq
- 7a4UaCWlDytYMXrZ0MSzDC+UsicQXbF3V2GGWtBhT8k8ukWFTHWRblZ0ezOW9E4pZdyU8HXAS/l
- 6HsT7FIpygtDj7w==
-X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
- fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
+References: <20241217100809.3962439-1-jens.wiklander@linaro.org>
+ <20250212205613.4400a888@collabora.com> <CAFA6WYOaGEPj0xNEDBCoEmjJreEHChjQ2hyXRJ_CYoGhiBonfw@mail.gmail.com>
+ <20250213093557.278f5d19@collabora.com> <CAFA6WYOJkSRsH-15QdqXNMd08Q=Dg4NkRd1Cr9LXA+5nozTF6g@mail.gmail.com>
+ <20250213134008.4cbef142@collabora.com> <CAPj87rM5Y=-Jgf4mwukicF6Yb-vccn2fpG2X1jNq0upH2+cAEQ@mail.gmail.com>
+ <CAHUa44G9hw-z6wzxg=HkVAxPKEW1yES5JTEqRWMvJUJAtcUDkQ@mail.gmail.com>
+ <CAPj87rPHnME5Osgnf5-FSAu22mDpLj=dzvhi_NqEcOwr1ThgGw@mail.gmail.com>
+ <CAHUa44Gs0D1fBD0=+EDgcQUMeDv4knci9trUkYEc1J98qFV7HQ@mail.gmail.com>
+ <CAFA6WYOuTwRPEh3L7+hMyARB_E73xmp+OwhKyS-r4+ryS7=9sw@mail.gmail.com> <20250214164856.0d2ead8a@collabora.com>
+In-Reply-To: <20250214164856.0d2ead8a@collabora.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Mon, 17 Feb 2025 11:42:55 +0530
+X-Gm-Features: AWEUYZnqsQNR6HgNOQ-KCjeibuktCio21DDJEy1SbMXh6xWHOITZYYTdEw2pDRY
+Message-ID: <CAFA6WYPc6EHQwcPuMZRm4C1P6SoDrCzEPUmju_meupB6NXQ1sg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] TEE subsystem for restricted dma-buf allocations
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, Daniel Stone <daniel@fooishbar.org>, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
+	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
+	Florent Tomasin <florent.tomasin@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add missing CPU p-state 7 @ 1512 MHz for iPad mini 4.
+On Fri, 14 Feb 2025 at 21:19, Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+>
+> On Fri, 14 Feb 2025 18:37:14 +0530
+> Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> > On Fri, 14 Feb 2025 at 15:37, Jens Wiklander <jens.wiklander@linaro.org=
+> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Thu, Feb 13, 2025 at 6:39=E2=80=AFPM Daniel Stone <daniel@fooishba=
+r.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, 13 Feb 2025 at 15:57, Jens Wiklander <jens.wiklander@linaro=
+.org> wrote:
+> > > > > On Thu, Feb 13, 2025 at 3:05=E2=80=AFPM Daniel Stone <daniel@fooi=
+shbar.org> wrote:
+> > > > > > But just because TEE is one good backend implementation, doesn'=
+t mean
+> > > > > > it should be the userspace ABI. Why should userspace care that =
+TEE has
+> > > > > > mediated the allocation instead of it being a predefined range =
+within
+> > > > > > DT?
+> > > > >
+> > > > > The TEE may very well use a predefined range that part is abstrac=
+ted
+> > > > > with the interface.
+> > > >
+> > > > Of course. But you can also (and this has been shipped on real
+> > > > devices) handle this without any per-allocation TEE needs by simply
+> > > > allocating from a memory range which is predefined within DT.
+> > > >
+> > > > From the userspace point of view, why should there be one ABI to
+> > > > allocate memory from a predefined range which is delivered by DT to
+> > > > the kernel, and one ABI to allocate memory from a predefined range
+> > > > which is mediated by TEE?
+> > >
+> > > We need some way to specify the protection profile (or use case as
+> > > I've called it in the ABI) required for the buffer. Whether it's
+> > > defined in DT seems irrelevant.
+> > >
+> > > >
+> > > > > >  What advantage
+> > > > > > does userspace get from having to have a different codepath to =
+get a
+> > > > > > different handle to memory? What about x86?
+> > > > > >
+> > > > > > I think this proposal is looking at it from the wrong direction=
+.
+> > > > > > Instead of working upwards from the implementation to userspace=
+, start
+> > > > > > with userspace and work downwards. The interesting property to =
+focus
+> > > > > > on is allocating memory, not that EL1 is involved behind the sc=
+enes.
+> > > > >
+> > > > > From what I've gathered from earlier discussions, it wasn't much =
+of a
+> > > > > problem for userspace to handle this. If the kernel were to provi=
+de it
+> > > > > via a different ABI, how would it be easier to implement in the
+> > > > > kernel? I think we need an example to understand your suggestion.
+> > > >
+> > > > It is a problem for userspace, because we need to expose acceptable
+> > > > parameters for allocation through the entire stack. If you look at =
+the
+> > > > dmabuf documentation in the kernel for how buffers should be alloca=
+ted
+> > > > and exchanged, you can see the negotiation flow for modifiers. This
+> > > > permeates through KMS, EGL, Vulkan, Wayland, GStreamer, and more.
+> > >
+> > > What dma-buf properties are you referring to?
+> > > dma_heap_ioctl_allocate() accepts a few flags for the resulting file
+> > > descriptor and no flags for the heap itself.
+> > >
+> > > >
+> > > > Standardising on heaps allows us to add those in a similar way.
+> > >
+> > > How would you solve this with heaps? Would you use one heap for each
+> > > protection profile (use case), add heap_flags, or do a bit of both?
+>
+> I would say one heap per-profile.
+>
 
-Fixes: e97323994f4a ("arm64: dts: apple: t7000: Add cpufreq nodes")
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
----
-Note, some sources state that Apple TV HD has 1512 MHz A8 too, but that
-is incorrect, the maximum frequency on Apple TV HD as configured by iBoot
-is 1392 MHz.
----
- arch/arm64/boot/dts/apple/t7000-mini4.dtsi | 4 ++++
- arch/arm64/boot/dts/apple/t7000.dtsi       | 6 ++++++
- 2 files changed, 10 insertions(+)
+And then it would have a per vendor multiplication factor as each
+vendor enforces memory restriction in a platform specific manner which
+won't scale.
 
-diff --git a/arch/arm64/boot/dts/apple/t7000-mini4.dtsi b/arch/arm64/boot/dts/apple/t7000-mini4.dtsi
-index 6da15d15601bcd553d6d0e3fda93df4685b57ee1..cc235c5a0c438f3f07ce5318a75dd928615b7818 100644
---- a/arch/arm64/boot/dts/apple/t7000-mini4.dtsi
-+++ b/arch/arm64/boot/dts/apple/t7000-mini4.dtsi
-@@ -57,3 +57,7 @@ &framebuffer0 {
- &typhoon_opp06 {
- 	status = "okay";
- };
-+
-+&typhoon_opp07 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/apple/t7000.dtsi b/arch/arm64/boot/dts/apple/t7000.dtsi
-index d4b479ccfe8c9309b8de6c23f1e90000ad287992..32cac8c30e62d657079dbf32aece8af0fd9cef38 100644
---- a/arch/arm64/boot/dts/apple/t7000.dtsi
-+++ b/arch/arm64/boot/dts/apple/t7000.dtsi
-@@ -84,6 +84,12 @@ typhoon_opp06: opp06 {
- 			clock-latency-ns = <42000>;
- 			status = "disabled"; /* Not available on N102 */
- 		};
-+		typhoon_opp07: opp07 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-level = <7>;
-+			clock-latency-ns = <49000>;
-+			status = "disabled"; /* J96 and J97 only */
-+		};
- 	};
- 
- 	soc {
+> >
+> > Christian gave an historical background here [1] as to why that hasn't
+> > worked in the past with DMA heaps given the scalability issues.
+> >
+> > [1] https://lore.kernel.org/dri-devel/e967e382-6cca-4dee-8333-39892d532=
+f71@gmail.com/
+>
+> Hm, I fail to see where Christian dismiss the dma-heaps solution in
+> this email. He even says:
+>
+> > If the memory is not physically attached to any device, but rather just
+> memory attached to the CPU or a system wide memory controller then
+> expose the memory as DMA-heap with specific requirements (e.g. certain
+> sized pages, contiguous, restricted, encrypted, ...).
 
----
-base-commit: ca96d759d8d24d90b1726c2cc7c568ff4728bb42
-change-id: 20250217-mini4-cpufreq-fd6c19346518
+I am not saying Christian dismissed DMA heaps but rather how
+scalability is an issue. What we are proposing here is a generic
+interface via TEE to the firmware/Trusted OS which can perform all the
+platform specific memory restrictions. This solution will scale across
+vendors.
 
-Best regards,
--- 
-Nick Chan <towinchenmi@gmail.com>
+>
+> >
+> > >
+> > > > If we
+> > > > have to add different allocation mechanisms, then the complexity
+> > > > increases, permeating not only into all the different userspace API=
+s,
+> > > > but also into the drivers which need to support every different
+> > > > allocation mechanism even if they have no opinion on it - e.g. Mali
+> > > > doesn't care in any way whether the allocation comes from a heap or
+> > > > TEE or ACPI or whatever, it cares only that the memory is protected=
+.
+> > > >
+> > > > Does that help?
+> > >
+> > > I think you're missing the stage where an unprotected buffer is
+> > > received and decrypted into a protected buffer. If you use the TEE fo=
+r
+> > > decryption or to configure the involved devices for the use case, it
+> > > makes sense to let the TEE allocate the buffers, too. A TEE doesn't
+> > > have to be an OS in the secure world, it can be an abstraction to
+> > > support the use case depending on the design. So the restricted buffe=
+r
+> > > is already allocated before we reach Mali in your example.
+> > >
+> > > Allocating restricted buffers from the TEE subsystem saves us from
+> > > maintaining proxy dma-buf heaps.
+>
+> Honestly, when I look at dma-heap implementations, they seem
+> to be trivial shells around existing (more complex) allocators, and the
+> boiler plate [1] to expose a dma-heap is relatively small. The dma-buf
+> implementation, you already have, so we're talking about a hundred
+> lines of code to maintain, which shouldn't be significantly more than
+> what you have for the new ioctl() to be honest.
 
+It will rather be redundant vendor specific code under DMA heaps
+calling into firmware/Trusted OS to enforce memory restrictions as you
+can look into Mediatek example [1]. With TEE subsystem managing that
+it won't be the case as we will provide a common abstraction for the
+communication with underlying firmware/Trusted OS.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20240515112308.10171-1-yong.wu=
+@mediatek.com/
+
+> And I'll insist on what
+> Daniel said, it's a small price to pay to have a standard interface to
+> expose to userspace. If dma-heaps are not used for this kind things, I
+> honestly wonder what they will be used for...
+
+Let's try not to forcefully find a use-case for DMA heaps when there
+is a better alternative available. I am still failing to see why you
+don't consider following as a standardised user-space interface:
+
+"When user-space has to work with restricted memory, ask TEE device to
+allocate it"
+
+-Sumit
