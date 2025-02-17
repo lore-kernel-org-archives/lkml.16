@@ -1,143 +1,65 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DE3215F40
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCC0225A4E
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739811112; cv=none; b=XF4yHMUm4RI+RbIJP94vzPuOpk++7j8UbDGieO/xHIiqW4/00ibEloV5LCK3UCXfbxi/+cXlxay4Hlhcd4qS91WmRETtuHavxjI509MBFrPaxBv0x/YCSgq9Yhemk7yyw/HN1UPFbKqC+PdM54+8Eqt78SBuD92kwr51O+/Elx4=
+	t=1739811166; cv=none; b=tBzReYDZcuVKZN+aZA46npvdRRqN5byovFIKNBh0PCLBJSLCagGSoyDL61lFVHSTfAN16szt/qPARxOROxoAzBejsd8nGsIlxXjaY1B/aMrTCngL8gom/ZpwBlcdqSCSd0q0ED5c4a1cw2kDWfhZX5f5IwkxSMv5EPBj+5WFqLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739811112; c=relaxed/simple;
-	bh=i4kh4fE8tCNOERxMZKCNfd+nwooZ+CoVsb2/7WEDgPM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QVFf0KaW6ucPcZNevIg72vIbPjjfS+dUhc+nJh+OliewE+DKTHznIYFsvU7cvqe/56EYwa2YAAL4Imto1mbnr5ZMaBv6lRLpMRtw0Gko0oOZRS/p+TK4eofQs52HMpFYNT0q29/DXXS9La6tajco9B5pSji3ACReNXxRzwDzkqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5WuWEw5; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5WuWEw5"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38f3913569fso1082932f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:51:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739811109; x=1740415909; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w2oH6tzTSJsdgiOYfb4nxFSWGTiJy2ivK4rT2/V8PqA=;
-        b=P5WuWEw5lvtQkXXPRXMC56wRJc/naX9ozoQlLHJEeGbs0+pKMgRyBSnSL3M8CdUxrT
-         E/ZlYgo/sAtjCGSI7nFK12ClB4gp909b3WJuTircRULGhredoDoghBbjPMbycFm/6Lej
-         MY3h8DD2cD7kiBQ/Bac+STMpi9bzJV0n3i9R99tffVgx0Wx7yYnrvvW1HjvRzELxskkc
-         t8bFDCq7dK2xHx82vuOQQycFD6q6ZK5swq9VpSfz/GPbf6Ao6AgKmpxa0o6xDb7z9iXR
-         pZsu9+/zQIMQKkC+oZt8wGxqN/ZWGloQBun3M8zGiSkBmyCsJuMY7yWbW5P5KiYzyt3G
-         ZhrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739811109; x=1740415909;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w2oH6tzTSJsdgiOYfb4nxFSWGTiJy2ivK4rT2/V8PqA=;
-        b=gDGJt2tkOXcMIiHbaVeFkDIFO0hTCjxUo4yRJ1ZxAi+YiocT9SD1JCpW57DN5wnYI6
-         lZ46ESl9UHIIfqiDClTF03Vthv+VBs6s9DX8aWtj4RI5u9YvbhoEXAW8J83axRbu8Bn6
-         OdNpqlDVWQSrDhgnYBzFINFDSD5VtwEWhqWGpd/IsgKiA4PsqvMF4+krOA4EEbxakdCN
-         oV17Xw6zwDFhC7f3TUTwTUtHiMFX3RlcWW7AIwCPOKh+Vmh903aleTkLUhx1fg0/kypv
-         eAukBDB3zRzATggau0/EnnP0zQjM6vwiTkiqK6+Z0IIzNtslcaBQe1FtDL+PCcT7lV5+
-         Pjew==
-X-Forwarded-Encrypted: i=1; AJvYcCX/iWuFWUSQ+YNSrv2KZmKze+b05TaXLxDY28zAGfhYfXvrSWfbszFr9wMgBQYDnRs8qWiI5nzjahgakvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt8iOAJkJOhHhXxixMC2TEc4R6dHFJFRIOf6Zof3IAoYnUl2+7
-	De9SXhEehg/WPz6msfanoyHxdNimcbZSd/HVmCd7WGo+PVxJMWU70D0P244kLP5Dhm3CydCthKN
-	JQHewnUUfp0u8iNu6k3mdjGm5vRw=
-X-Gm-Gg: ASbGncvY81zpLr40pDv9E3DmUe3ilfPyudrEyE/wQF0LayRPRqWZ3ASQEkBb/vqCxGb
-	V+Lovnav54k3ilbWvbyNAh1qINt1YK0YSvVcm3zRJDykjEiFbar7Kc45CPr/UoIg61dKeVqvGOs
-	g=
-X-Google-Smtp-Source: AGHT+IH0o4dLmtlknXlvC/OTn8YRpOAPkYUuYHzk774gCCCS/YCqn9aAJxQI0mTGtmb+b5LT3ywCjvU5rzNhsO+V6Ww=
-X-Received: by 2002:a5d:64e6:0:b0:38d:e3da:8b4f with SMTP id
- ffacd0b85a97d-38f3398735amr10306508f8f.0.1739811108606; Mon, 17 Feb 2025
- 08:51:48 -0800 (PST)
+	s=arc-20240116; t=1739811166; c=relaxed/simple;
+	bh=8hdXX7fViOrZwAtnhTmRckaz1Ylr/OHyhKBG0zEf4xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AAfyB2ga2gKO3EAjOOxDOXATeXyjpDk8Hd5Hxz06hahhUdJBDkzKuOTys7Br8WcXw3WHJV0LzXwboHPTn/LNrGSIHx8XI8l2kpFmiYAKPAsAGRJwwILA80cid6/DjEMkG5Xh1sClLDvsYL5B4Zb2sRxzJ1wo1AVI95JYmlAOyNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA1BC4CED1;
+	Mon, 17 Feb 2025 16:52:44 +0000 (UTC)
+Date: Mon, 17 Feb 2025 11:53:03 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Harshit Agarwal <harshit@nutanix.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Jon Kohler <jon@nutanix.com>, Gauri
+ Patwardhan <gauri.patwardhan@nutanix.com>, Rahul Chunduru
+ <rahul.chunduru@nutanix.com>, Will Ton <william.ton@nutanix.com>
+Subject: Re: [PATCH v2] sched/rt: Fix race in push_rt_task
+Message-ID: <20250217115303.003a1005@gandalf.local.home>
+In-Reply-To: <D7C6B8EE-7AFC-4F1E-8A59-E9573658146C@nutanix.com>
+References: <9C390C10-8741-4992-8E29-303C907C8C00@nutanix.com>
+	<20250213175435.114441-1-harshit@nutanix.com>
+	<20250217105007.45ba8cb4@gandalf.local.home>
+	<D7C6B8EE-7AFC-4F1E-8A59-E9573658146C@nutanix.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213200228.1993588-1-longman@redhat.com> <20250214195242.2480920-1-longman@redhat.com>
-In-Reply-To: <20250214195242.2480920-1-longman@redhat.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Mon, 17 Feb 2025 17:51:37 +0100
-X-Gm-Features: AWEUYZkOL6ftniWInMbuFfxoX1PJLv06k4--glS_oxL3qhOErs8KcVkmUmvHj7I
-Message-ID: <CA+fCnZe=LD0h-0F9tQ=7=b3JbNEfEbp3C7j4w18nK3gAs3Ac9A@mail.gmail.com>
-Subject: Re: [PATCH v4.1 4/4] locking/lockdep: Add kasan_check_byte() check in lock_acquire()
-To: Waiman Long <longman@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Will Deacon <will.deacon@arm.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 14, 2025 at 8:53=E2=80=AFPM Waiman Long <longman@redhat.com> wr=
-ote:
->
-> KASAN instrumentation of lockdep has been disabled as we don't need
-> KASAN to check the validity of lockdep internal data structures and
-> incur unnecessary performance overhead. However, the lockdep_map pointer
-> passed in externally may not be valid (e.g. use-after-free) and we run
-> the risk of using garbage data resulting in false lockdep reports.
->
-> Add kasan_check_byte() call in lock_acquire() for non kernel core data
-> object to catch invalid lockdep_map and print out a KASAN report before
-> any lockdep splat, if any.
->
-> Suggested-by: Marco Elver <elver@google.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  kernel/locking/lockdep.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 8436f017c74d..b15757e63626 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -57,6 +57,7 @@
->  #include <linux/lockdep.h>
->  #include <linux/context_tracking.h>
->  #include <linux/console.h>
-> +#include <linux/kasan.h>
->
->  #include <asm/sections.h>
->
-> @@ -5830,6 +5831,14 @@ void lock_acquire(struct lockdep_map *lock, unsign=
-ed int subclass,
->         if (!debug_locks)
->                 return;
->
-> +       /*
-> +        * As KASAN instrumentation is disabled and lock_acquire() is usu=
-ally
-> +        * the first lockdep call when a task tries to acquire a lock, ad=
-d
-> +        * kasan_check_byte() here to check for use-after-free and other
-> +        * memory errors.
-> +        */
-> +       kasan_check_byte(lock);
-> +
->         if (unlikely(!lockdep_enabled())) {
->                 /* XXX allow trylock from NMI ?!? */
->                 if (lockdep_nmi() && !trylock) {
-> --
-> 2.48.1
->
+On Mon, 17 Feb 2025 16:36:47 +0000
+Harshit Agarwal <harshit@nutanix.com> wrote:
 
-I wonder if kasan_check_read/write() would be a better fit here. Those
-are intended for the compiler-based modes and are no-op for HW_TAGS.
-But I assume lockdep will access this lock variable anyway, so HW_TAGS
-will detect memory errors.
+> Hi Steve,
+> 
+> Thanks for the information. I realized my mistake this after updating this 
+> thread and then later I sent the patch as a separate thread here 
+> https://lore.kernel.org/lkml/20250214170844.201692-1-harshit@nutanix.com/
+> and included the link to v1 along with the changes made.
 
-On the other hand, detecting a bug earlier is better, so
-kasan_check_byte() seems the better choice. And lockdep is not
-intended to be fast / used on production anyway, so the extra
-instructions added by kasan_check_byte() for HW_TAGS don't matter.
+Yeah I just noticed it ;-)
 
-I guess we can change this later, if there's ever a reason to do so.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+> 
+> I had also added a comment on is_migration_disabled like you suggested  here. 
+> This separate patch addresses your comments already.
+> Sorry for the confusion.
+
+I'm behind in my email and I'm just chugging away in order.
+
+-- Steve
