@@ -1,48 +1,45 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21A8C8FE;
-	Mon, 17 Feb 2025 02:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA3546BF;
+	Mon, 17 Feb 2025 02:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739759810; cv=none; b=Uavq7GXdbj0SmXNFDSM2F3M/VKjZxQGFYmgZur8nvHCrJ1ziSSeCd+JUbA9kq8mrMGmkWUCsH58XnqlXWUqpVfFWzSW+qs1a9GgR29Ky1jvrZdi0QL0yefASNMN20DqcFtT8N+A7JO0cw7G+na5V4BBKxy1Ib91kbYfYEjATh4Q=
+	t=1739760150; cv=none; b=n7aTD3LAvZ3zFk7W+NvlThkiNkZAsWWrejsd6Z3ClX2U54VJOn0INuwZ946VrLDw8vKgZk1BMQYqdkudgowJauBgRMQ/h36FgG6LCxtgmR/wd7dbyaX6ZQbPGHdZ+Zfycw1PWcmEE0DEgzAJDBSci7hFXDdWmt/RdCyjS7drzSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739759810; c=relaxed/simple;
-	bh=I2rRDOaKvJmH/fo4VfvrvXCEyC3FkbqRpsXWolij3SY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oIl8YPzUnCQDDu8RnkkukhBGZ1OIMa208KLc8wF89kw6ep0UNZXNH/m8+FkbbrRRseMuznms11BmTXBbFEujZ2F3F3GK7vgsrYpci0CNkyZ88ylXgU4tGEf3j/limeBdwK97+bt0jge7n/1Xun+YB1F52pcysPXGCuGPgJFq8HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Yx6Bp68Lbz1ltbV;
-	Mon, 17 Feb 2025 10:32:50 +0800 (CST)
-Received: from kwepemf100008.china.huawei.com (unknown [7.202.181.222])
-	by mail.maildlp.com (Postfix) with ESMTPS id 776E71402C7;
-	Mon, 17 Feb 2025 10:36:42 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by kwepemf100008.china.huawei.com
- (7.202.181.222) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 17 Feb
- 2025 10:36:40 +0800
-From: Zeng Heng <zengheng4@huawei.com>
-To: <peterz@infradead.org>, <masahiroy@kernel.org>, <mgorman@suse.de>,
-	<guoweikang.kernel@gmail.com>, <mingo@redhat.com>,
-	<vincent.guittot@linaro.org>, <hpa@zytor.com>, <agordeev@linux.ibm.com>,
-	<vschneid@redhat.com>, <tzimmermann@suse.de>, <dave.hansen@linux.intel.com>,
-	<ardb@kernel.org>, <mhiramat@kernel.org>, <juri.lelli@redhat.com>,
-	<geert@linux-m68k.org>, <bp@alien8.de>, <pavel@ucw.cz>,
-	<simona.vetter@ffwll.ch>, <bp@suse.de>, <rostedt@goodmis.org>,
-	<bsegall@google.com>, <nicolas@fjasle.eu>, <sebastian.reichel@collabora.com>,
-	<tglx@linutronix.de>, <akpm@linux-foundation.org>,
-	<mathieu.desnoyers@efficios.com>, <dietmar.eggemann@arm.com>,
-	<lkundrak@v3.sk>, <changhuaixin@linux.alibaba.com>, <nathan@kernel.org>,
-	<javierm@redhat.com>
-CC: <linux-trace-kernel@vger.kernel.org>, <linux-efi@vger.kernel.org>,
-	<bobo.shaobowang@huawei.com>, <linux-kbuild@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH 1/5] ring-buffer: Update pages_touched to reflect persistent buffer content
-Date: Mon, 17 Feb 2025 10:46:35 +0800
-Message-ID: <20250217024639.1980139-1-zengheng4@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739760150; c=relaxed/simple;
+	bh=g18vLvEIV15RdL6Pta+w/k1IEM9YdjuSeCpk6WlEJpc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=moRUceFxJejYOLaz8SqCwevAPsXA5MT7APjE8Q2p/XqcdsdQubEHy/SlwLoZVMQKJJRAGxbZIZaogbSx714hdZu25me802atkH48BGFWhzjdU789iqy/SAMUTgxkfRDxZIE07oqiU0pfOUovWvIvjNYIoW8y7coW0Nko4ZIiEU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=AzZJF1qv; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="AzZJF1qv"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739760142; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=IWnXk2v+MvIdKRnunCl5x6oEXE/uiljBcFUSPpVL73o=;
+	b=AzZJF1qvWmZsVNMAImWeksAs2HzPevm7zSvoCp9JuXiNjwO8kyB9z7QOTQFtVp9W9XWp1jrT5Xo8MKB3UPyT6AK0NZB1l5ypceQynMnQBzjd2yyfzQ/yLSKiFOhVh732npjKbnFpwRE8lbj9u/Lp7sOW9x1gtE6TnylIwhqOQAs=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPYBR1G_1739760140 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Feb 2025 10:42:22 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	bhelgaas@google.com,
+	kbusch@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	xueshuai@linux.alibaba.com,
+	Jonathan.Cameron@huawei.com,
+	terry.bowman@amd.com,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v4 0/3] PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+Date: Mon, 17 Feb 2025 10:42:15 +0800
+Message-ID: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,50 +47,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemf100008.china.huawei.com (7.202.181.222)
 
-From: Steven Rostedt <rostedt@goodmis.org>
+changes since v3:
+- squash patch 1 and 2 into one patch per Sathyanarayanan
+- add comments note for dpc_process_error per Sathyanarayanan
+- pick up Reviewed-by tag from Sathyanarayanan
 
-The pages_touched field represents the number of subbuffers in the ring
-buffer that have content that can be read. This is used in accounting of
-"dirty_pages" and "buffer_percent" to allow the user to wait for the
-buffer to be filled to a certain amount before it reads the buffer in
-blocking mode.
+changes since v2:
+- moving the "err_port" rename to a separate patch per Sathyanarayanan
+- rewrite comments of dpc_process_error per Sathyanarayanan
+- remove NULL initialization for err_dev per Sathyanarayanan
 
-The persistent buffer never updated this value so it was set to zero, and
-this accounting would take it as it had no content. This would cause user
-space to wait for content even though there's enough content in the ring
-buffer that satisfies the buffer_percent.
+changes since v1:
+- rewrite commit log per Bjorn
+- refactor aer_get_device_error_info to reduce duplication per Keith
+- fix to avoid reporting fatal errors twice for root and downstream ports per Keith
 
-Cc: stable@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Link: https://lore.kernel.org/20250214123512.0631436e@gandalf.local.home
-Fixes: 5f3b6e839f3ce ("ring-buffer: Validate boot range memory events")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 5 +++++
- 1 file changed, 5 insertions(+)
+The AER driver has historically avoided reading the configuration space of an
+endpoint or RCiEP that reported a fatal error, considering the link to that
+device unreliable. Consequently, when a fatal error occurs, the AER and DPC
+drivers do not report specific error types, resulting in logs like:
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0419d41a2060..bb6089c2951e 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1850,6 +1850,11 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 				cpu_buffer->cpu);
- 			goto invalid;
- 		}
-+
-+		/* If the buffer has content, update pages_touched */
-+		if (ret)
-+			local_inc(&cpu_buffer->pages_touched);
-+
- 		entries += ret;
- 		entry_bytes += local_read(&head_page->page->commit);
- 		local_set(&cpu_buffer->head_page->entries, ret);
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   nvme 0000:34:00.0: ready 0ms after DPC
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message
+
+AER status registers are sticky and Write-1-to-clear. If the link recovered
+after hot reset, we can still safely access AER status of the error device.
+In such case, report fatal errors which helps to figure out the error root
+case.
+
+After this patch set, the logs like:
+
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+   nvme 0000:34:00.0: ready 0ms after DPC
+   nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+   nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+   nvme 0000:34:00.0:    [ 4] DLP                    (First)
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message 
+
+Shuai Xue (3):
+  PCI/DPC: Clarify naming for error port in DPC Handling
+  PCI/DPC: Run recovery on device that detected the error
+  PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+
+ drivers/pci/pci.h      |  5 +++--
+ drivers/pci/pcie/aer.c | 11 +++++++----
+ drivers/pci/pcie/dpc.c | 34 +++++++++++++++++++++++++++-------
+ drivers/pci/pcie/edr.c | 35 ++++++++++++++++++-----------------
+ drivers/pci/pcie/err.c |  9 +++++++++
+ 5 files changed, 64 insertions(+), 30 deletions(-)
+
 -- 
-2.25.1
+2.39.3
 
