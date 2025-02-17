@@ -1,221 +1,186 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2043.outbound.protection.outlook.com [40.107.241.43])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3ECF14830A;
-	Mon, 17 Feb 2025 03:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739762062; cv=fail; b=FJRDClzskoOz23qfW1wkR2g6tXnvEbYolKqO1n9L/t8yXf/Z+khUEKHtKlhX17zvESOWWNdHsr4Cycfs3568n/NyoAUbRwxTNGKVqDu2JF2BXIdNRAKIEEGWERctjX72OmxMqj7HA1CZtu2S322470YBmzykXo8Fqn1aHuWGIbY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739762062; c=relaxed/simple;
-	bh=aMo58fLYHm1Owhl7L8TA3D8F03OG9iJHkJYGwheJ6To=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Cg62cK1OaUSc8uafGwL8RtWWzJpQ72Vlw20j+sY9V78EohXewTG3jfgOVeDtf9uosnSjvQrPwB4hDIrsEhfixndXLBXc8xYIr0C2kwZRRafpD1oQ9i3i19fptsY7gPdgzqY+qdo2Zm3coF+aTX2xL1n+OuShp3Jaf1MSnB4QGjY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=oLOsbCF2; arc=fail smtp.client-ip=40.107.241.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334B4224D7
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739762377; cv=none; b=Budwzz4dB9vQOE6btojfmdjn3kK/zbQ0ET+5x2vYGy6y+UaGeIjkAkWKnk8vD1Ls7Je1SBnm55ultZo4bOZ+EdOEAfsXTEOhAudEJlOrFLOYAvGyvKYjlZGmGOEiHHLC1NkNnSP1mgc58QScMTvDpEAVg5OMW3+cK7E98yNDPFQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739762377; c=relaxed/simple;
+	bh=pxpAnaDSv/fBMZBZKfFoNkSCH3m0qXu6u93RjU3IikU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C0armWAlrB7MmK7R0U4dXeA7ccUEvuoITZCns/UAXOX0LsBGmW3TEt7qFR/SJpSrjBLowANIc7MaLAhAbawd1iprV8vnFoOJ+hBxX4BbXJC2TK7R1h58/X6F+6Wv3cAGZmhjVvcNw7fSACyNe++TPuRh1QVgqDtdVHnT/6tvxSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cKYSpcVN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="oLOsbCF2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nD0/KlhaHaS0cSZVt0t+QaUiMvpDcBHpxV/uMW+fUcVcDbzIn2Gvswv3OT3r6GkprGNWDeaikMVUbKK8UnD5HP8rshENZqUTtth6F59aLueaOLd6GVkjV9GK9TxGZCZzkAl8pll/oASz4FRUUBLQ9OqE0wirQ/1iKpROoyLLX9+PgE+3nihPDf0FEi7S1tI6S07/xccIftGJmEIYd6vqe/wS1mACfQ1KGjuiKx2wls8sWEBOpl+7cwuy0qDjjjw1Al1uKSqJGNu0ocx7ABEV/+A5r7x2Xmo4CqglPSdecnOMuoWPLU6vCJRJ+jLuG5aVXWyxgS4sb/UISwH0scFgJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+Js2JVHoJNz5Fx27p3xSLUq/uxlACJCCRU2jQ0UOAII=;
- b=t5f2Y2zsQdoCJXpWDRbkjBVQrrc5CFIPOouDe8QvtjUJPrr2zPJLhOqdNIT50X+kzjRjGPnAEk5nwFAIVlMzuG8LNcR7sj9dovlV2m8P9QIxt4pBPwaxIwuiz83Met1kR5bZxDemM2MeScFicyWgmT7M1wY+w7y4Bl8U9+Rf6tYTDoJ5EVTV+KjBuWRzgBkH3z4v57yxoWvOc+dFuRwa72VUV6CvSUYpSsgA/jRLOJj+JoFEAHgSTZLujXhwd+7mstiJi4YiaInfclZVKF1lc+mblAtXzNQ8FmVPeXqjFtEBrrVrAjDtaO9oIfu0Rsdo94QAWIxfKOUnG5PSGUji1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+Js2JVHoJNz5Fx27p3xSLUq/uxlACJCCRU2jQ0UOAII=;
- b=oLOsbCF2uG1EFaliWeTEmVrHo4019OQMNlC1eOhRhy+WBNJn+SxUQKQ6+Eh4G3Y3xRcM2yID9IL7hmVOJetCJ+PfLRYDzgRZ0cViMUXmpnA6e95PMHeAgv1O0h5IzbfpFrcgJSy5cJ/nYQhI9MdLBJ7jkYfKZdK8//OLvpGHFIJRIdsZ9ujaa2ulwbdCY726LtN73Ctx1ldsl0KJZHmMlMVmBt9bVwQ9+wWpyXuhqqfe28+PmQ9/xZtAnWNYxPFxwKmCY+rIShfE6QHZfnzd8LaqsXXFRePkvieg+1UZm5WeG/vWaNCrCjftIdSmLX+0OZhHo0exAHtPy2bKGKgOkQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by AM0PR04MB7043.eurprd04.prod.outlook.com (2603:10a6:208:19b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Mon, 17 Feb
- 2025 03:14:16 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.8445.017; Mon, 17 Feb 2025
- 03:14:16 +0000
-Message-ID: <f8de9c49-aee2-4ce4-b3cf-ee448f9fc293@nxp.com>
-Date: Mon, 17 Feb 2025 11:15:25 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bus: simple-pm-bus: fix forced runtime PM use
-To: Johan Hovold <johan+linaro@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250214102130.3000-1-johan+linaro@kernel.org>
-From: Liu Ying <victor.liu@nxp.com>
-Content-Language: en-US
-In-Reply-To: <20250214102130.3000-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SGBP274CA0004.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::16)
- To AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cKYSpcVN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739762374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EgbKbeBQm7lkao3p6uQLBUr3dfHH6Bslim0jMF3gJaE=;
+	b=cKYSpcVN82Li331bz/K+rHyBcOloznPdKoFJgT4dzMmb698dPOFAKA+nYc0UhSc9+UCDdL
+	14ns5WcCqpQ48V74GuUeEzpok0upG8tTzBuAdCKgUWIhv+CSDA+uVcJnIWGRiIjcXPb540
+	9QoIb9+iIiXGtPEsAHGdFa+kxnma7eM=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-49-irKeDvihMhyho5B76omW6w-1; Sun, 16 Feb 2025 22:19:32 -0500
+X-MC-Unique: irKeDvihMhyho5B76omW6w-1
+X-Mimecast-MFC-AGG-ID: irKeDvihMhyho5B76omW6w_1739762372
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d197e97959so52391725ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 19:19:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739762372; x=1740367172;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EgbKbeBQm7lkao3p6uQLBUr3dfHH6Bslim0jMF3gJaE=;
+        b=AzFK9iCVHQ4r04cSFaDTIcvtfEatRIFMNiwunREcOfOWQZU2Vn0UuG2pz7W/1tPh4J
+         TRDQnmZ1/hL6WEDgTW2w976sA25uexMD4zz3/M2ridDoQyXKSTRRfT1wkfw9EnL4i0O+
+         8WNYIXtfzpy+KnekdWqxJfRpSYDn+rPua/47NACKrI0aMx/znwKi8zJ7c4cL6/M/E5pc
+         lZvi5YspcJO03CnMFfmjozxl1J4QyIF6HmcETT9XgrnxZ60ilSvU6KMdWzoK+LA2RiCh
+         9GiVLnl8XwdU++u+OC3o++nPyZjpUypXw6RoPW5i6q8STajXJAG2527WU2BXtiLbcZ96
+         Aq+Q==
+X-Gm-Message-State: AOJu0Yx60jwwD4ZGmrFrix7XyUoY716lWZfiFUkzqoGph1q53kGJqb/s
+	uBEScWrzGFLomP1d+CHPrg6F2DIEWynz2ymp09MKfOtMAiQlvW7h8yw24VGN0YR/etMLHfYct+l
+	RdYeA2JZFgLZqADGT927zt8hCk1pHoeg41nF93gpKJDBuOpaLOK8ru5mQ+JMi2dwU9FIAvZ++F3
+	0WzUxElxWyVJbCHF1VpP5S4p8dkQXLcvrj1BqR
+X-Gm-Gg: ASbGncs1BUMhOgqAunJSOTfZOdEzGxM/jlgNv6jNxBgG6QfG4bKGYhXZD58/dq/ydoD
+	MCeSwcJJERW1caTuP6+KOZKxFbAo99TRTqWTvM0mj4SYCa/cmc1fR9rGhPqzmH+M=
+X-Received: by 2002:a05:6e02:1b09:b0:3d0:fe8:607e with SMTP id e9e14a558f8ab-3d280940c9bmr64357425ab.14.1739762371861;
+        Sun, 16 Feb 2025 19:19:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFLJ+sakoWDc92vC5PVdrAPLBDgA51ioqiveqE/kVlhzpNtt+A2nTfHDcNxz2e0uNeHln7kmPyQMRXuDBPUaYI=
+X-Received: by 2002:a05:6e02:1b09:b0:3d0:fe8:607e with SMTP id
+ e9e14a558f8ab-3d280940c9bmr64357085ab.14.1739762371480; Sun, 16 Feb 2025
+ 19:19:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AM0PR04MB7043:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9214a644-3908-4a89-9572-08dd4f01294c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b21DeVBEYmo2aWExczB0THRtaXA4a0VGQVVhYzdmOHlyaUxUN0VoRldCc1VR?=
- =?utf-8?B?TlBXajZXNCtvL2lWZXQ1Q3hQNE5DWU4xcUNjME44VFZZdmVycDJqRFBFR0ND?=
- =?utf-8?B?OWdMSVRBTkxubmtsL3dmNmRoY3J2ME0wMFBUUHlSQllUUGZIR1g3MDl1MnlZ?=
- =?utf-8?B?OWhNRW1DYWJQeWdqZ2hham1FL2dkR016V0pjaE9NWjAwQlFvalVtRkpFekNO?=
- =?utf-8?B?WHdUeDVvWjNiVkIrS0x3a3ZTTHlnTUFFNXEzUnB5YXJDSlJadEQ2VndNTFE2?=
- =?utf-8?B?VURMWksrTStFRFpCT2lGZHRvYlF6VW10VXg0d0d1WHAxU0xOSTVTVzFXeTZB?=
- =?utf-8?B?OGZhRi9EdWdtTUt6cm8xK0VTaHJsZnhxRmhURzhGcUJKNzg1TklRT3NoQkIv?=
- =?utf-8?B?MVdKSU9BY0l6VkJBVTVEbUJ4T3oraHM1SkViNFltSTRJU3lIbXRWQzhtNWtN?=
- =?utf-8?B?ZU5EanBjNUhYNW1STjE2SXNOQXE0NGRSZmlDWEdURGZMT2xKUDMxb2YvWklP?=
- =?utf-8?B?cWd1L0JSK1VXZTdXS0IwMDZkZmRHbjFvSkdEQzNRNWxMNUpqQVBrcmMvVTRw?=
- =?utf-8?B?OHplZEtxTHlUK21DUjZnS3RwZXo3WEtNd1YybWsvSnZnbGdNMGxFaFUrV0lE?=
- =?utf-8?B?V25TSUxMRVhNekxQWTFrYzU3alBETzNmeVo0VTRMUDNmV0pWWkRkY3RBZkNS?=
- =?utf-8?B?NnJ3SWk3NFpCSzFSbitTYWIyMDRHVFR1Q2ZPY2NXdDJzRWNjd1JJS0M4NGhS?=
- =?utf-8?B?WVArdGNnYUlzaFN1SEhSaHpzYTk4RmZWWjhJUVl6SWpEWmpsODUyWVYxaFBF?=
- =?utf-8?B?dVZ2TlBPb2xXOGNPcTE5eEhhTnlyL0ZiWjNneXFGRGxNa0s1TmlLUUlndExU?=
- =?utf-8?B?cFZzRmJEUmdFM2pVWit5N25FM3ZOQ2xGQVhDckVmTnc2Z1B0VDgzWE1mOUl0?=
- =?utf-8?B?WWo4Q3l6WE9relN3dEFoSkZmeDc2cVp3SXoyZHdNelhMSitLdUhWbmpjN1R2?=
- =?utf-8?B?WlNQS1A4cWR4WXR1aHArM05tVUwwNFUvRlFpdVJaRkJwRUpEam1vZG9rRm5M?=
- =?utf-8?B?ZGc3U2hha003MkFCMVJna1FMUWtCeUZvcCtQQ2YwczcrY01OZVdDK2RGU3NY?=
- =?utf-8?B?S3lUUVZlUzNLcE54WE9CcWtMN01YMzBPWjhSWWtjcTJPK3ZOVk9lUFRYSHVw?=
- =?utf-8?B?UjhWTDFzOTBwQmRXbzltd2xQTzF4UmtqaFNaalBoN1FYYnljSUl2Nks2Nll1?=
- =?utf-8?B?SUlwamZWUXBkN3dPcFZFem15UkhqN0gvYjlPcFFXNWNkOGpiOHI5QlFrRlkw?=
- =?utf-8?B?UHA5U3pjMFV4Wm9ON0xyak82Y3FBTW5EdkxqZnRIZm41M1YyQkZpeUtUKzhX?=
- =?utf-8?B?NlFWS0hNV3BCU25PT3pZbkdsdUJBUVRtUFpwazRrc1pkWXNZd2VINWFYM1Rh?=
- =?utf-8?B?cmdkcUhLRm5ZMXJBNWp4UzdseHJLRUgyVWJNWG1CRW5rWTlqUkpYY0dZZEFT?=
- =?utf-8?B?UHVhRlNyY05YRVVHZnBObUV1UmVqNW1pYk5IUllHZnZZTGh5aGllNWNmTVVy?=
- =?utf-8?B?bm1Ec2xGMVFva3BOc2xoL3FSam5UWUl5VjhhdHdKSWtlSDk0WldOS2lUR3pv?=
- =?utf-8?B?T1crS3g1OFA5d3BYUWllUnBLRWZ5cmk1cXRERkVvQVZBZitrTjhtQXJTWGEv?=
- =?utf-8?B?QUlKY2xsOFA2ajJ6YnlCTU81cjRiRDlNK3lEd3hVU3dTS0RBdWkxKzdTcGFX?=
- =?utf-8?B?bW4wcUNIU1NoZ0dTS3gyZlp6dXFRUUpkQ3ZhQzE0OW51Q1gzMmxMVHBsRXhU?=
- =?utf-8?B?a0hTY2tIcW5UTWJUYkNZTVRCYytTR1hDSmM4bHoxMUVudGhPYTVkQm5ta2Ru?=
- =?utf-8?Q?Ut/j2nmiBUe/r?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V252aVdTdjd4NE5MYVBzNDVXYUF0Q1p5aldrY1drd3VNRlNnd3pJNlM3Y0Zu?=
- =?utf-8?B?U0hqQmpTUC9Yd1ZzY3dMdmthSi9FWFJ5NXNzMWpWSkhYTldzTFJvZCtuenRw?=
- =?utf-8?B?aEJYTGIvODZ1RFdHclNNb2NJUFlSWVVzZnhFa2pCK25nanY5bTRqR0hic3ZF?=
- =?utf-8?B?bmtldlZrc0NCakVPc05mZ2h3M1VYaVpZUGZKYkZESWpmYWt6djR6UXlFWnp3?=
- =?utf-8?B?MHhrUlN2a21nNXo5S2M4bVpyRUFjaUlWdEZRbGtiZ1FMcitHU1dkdFBCZU5y?=
- =?utf-8?B?cDR2N0J2UzBzOWJzNHAxL0NvRFhUeXlVclVIUzlHN3NUaVI5NU5KaUJuUVo5?=
- =?utf-8?B?N3lqZEx1ejJ1dXJWaHpzSlVlQy9pNEdZdFNpYWJmeTNIRTZySktoRHc0dTdy?=
- =?utf-8?B?SFhxTkJnMllmQ3dnSEcvSUQ1WXlpbGYvSUZMcFRDZ2swajJpdkcvejFoOUhQ?=
- =?utf-8?B?SzZlZnRTSmw0UVdUZ1FVT3N2UjZlbHpNbVBCdFNUTng2dWc3TXV1U3pMSEcz?=
- =?utf-8?B?L2Z2MWRGbW9IUXN6cGxlcGI2UVYwL2p4dmxGaElCY2RWYWtEdkdtRzN5cXZ2?=
- =?utf-8?B?cHBTS0ttVDRvd3YwZG9iMjR2Z0lTeWRZdEJMZ2hKeXhkcWRWSXN5MVBsbzFp?=
- =?utf-8?B?UExpSmFIL1pNQkZLWEhyVkFweVpTUUgzeVlNT21Pb2NocWxRa3RJbEk3K2N2?=
- =?utf-8?B?MkQ2TlJZMjFVOXFnM0VtOEdjWGFRN0hucm90RTJLMllyczRyWnArL0ROMk9L?=
- =?utf-8?B?UExVUzVpUFZHenlQWEJjU2duQ1BnSXRBb3JPakIrd0xReFJRbk53WG9JT2Nk?=
- =?utf-8?B?a2o0YjBwTWlnbEc3TVNES3habWVaTFp1emU1YXJsTTNzWG5QdVU0RmFVK2Zp?=
- =?utf-8?B?Y2hZdkhBTTE5WExSTXpGTTNNeDUyOFhOUUw1MnQxRVdmanJSNXQrYTFOS3M3?=
- =?utf-8?B?aG14M001S2RaWG5TNmN3M2Q2cGJmS0swTGU0WTRMNjRycjhrVHhid0hOOXo4?=
- =?utf-8?B?eklxaDE0Z1ZvRzFRTVRMRDYrcmxKWFRNUmdaMVhGUDRpbUh2TjJGcmJoQjcv?=
- =?utf-8?B?VGNoMUt6bGRuQkpuczhqMHh1V2lidzNnS055anM1TjhNdHk3UFp0dGxEbWlv?=
- =?utf-8?B?K3pyQVZxMVZqY2ExalJHd05NYTduV05qUTVIV0JDMm1QdjNvREl5Q1V3L0NE?=
- =?utf-8?B?c214TmM3dFc4N3RoU2VGM2Q3dUk1OXRpSVo3ZDBSN2tYci8vN0JRUWtSTGFq?=
- =?utf-8?B?cUJGZnp6NjVuOHdTNmZTbnJaNlVlT2VQNGc2ODJ6azNZMHFUbVk1NkVpZ1RC?=
- =?utf-8?B?NTduQzdCN1RWY1VXTnhsdmZkN1FET1BHNHluSDhGUVBneGpReDI3c3JaRkhR?=
- =?utf-8?B?UVZoazlOSHdla3hmTW9hMytGcFk4UTJOaU5CUFF3WWlpSnUxNW1ES2h1bzBi?=
- =?utf-8?B?WERpSUFuT3hvVE4zNUlHbEkrYnVPSEYxT0NUQ2lpTFFWaWoxUHFoVldJZXRj?=
- =?utf-8?B?RUkrS3E0cENsdWdEZG5mM2ZOTFFVNWFEQ2MraVNpSFMzQUs3WW84K09hbzdT?=
- =?utf-8?B?TjVLNzVZSHprdGdSUEVQR1FIcGlvUks2U3l3OGNhRzhpaUg2VmNRSFdNMEJr?=
- =?utf-8?B?cm9CVlB4U1A5cGJCUDd3L01LY0lqeGJDKzFJam01ZVlTMVlyR3FSRmZZU1g2?=
- =?utf-8?B?RWNhSUxoV25KbkRwZWdCakVjY2dBMWV4bXZkVTVnLzBSZ2V5U3Jwalc5RElH?=
- =?utf-8?B?TzJYQ0pBYmVqVmFlcmMzUXYyeFRmaUp3bk80REVQYkxSamJpaUJ3VmFibFhF?=
- =?utf-8?B?L0h6eFh6ZncreE5JNjF1M0VGZUJBTEdpKzZMam9QWFZDS3A4dHdaYWRNVVJD?=
- =?utf-8?B?SGxWRmxoZnFXMzY1K3J6bFJob3JYbGpMM0lEc3pYTkkxNDNsL0hNRTd3MnVW?=
- =?utf-8?B?NHdIaWFBVERXYnlSd3dYaHNBaGdGWnlsbXNFM241WTdIRGg1bCtQWjVXTitP?=
- =?utf-8?B?bk55Ym1YWTNrQlNuZHcyb3hkSDQ3b0NMS0NqQ1h5MFlyMVI0SGl6UGpPRlJV?=
- =?utf-8?B?ZHFQYkxCOHR4UG5nUlpxc0lpemZqU0QxdlBUOEhHbUFFL3p4S0l5eFNZTmgx?=
- =?utf-8?Q?w6nSVQ6U/miEgGeei9Y4FmXim?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9214a644-3908-4a89-9572-08dd4f01294c
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 03:14:16.4989
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qVgNk/1gy8e/yWpHUMRUxrwKM9BUusIkiamFYPu3zMB0ltFyFwcAozBndCqD6dW8lyL8fCVGZHQ/dpMuevmB7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7043
+References: <20250206132754.2596694-1-rppt@kernel.org>
+In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
+From: RuiRui Yang <ruyang@redhat.com>
+Date: Mon, 17 Feb 2025 11:19:45 +0800
+X-Gm-Features: AWEUYZmTtRGOQe_1FWRhP6QKOKg6j7aVMk1lhIeHe6H83IiAgYz-eSDseytmTwE
+Message-ID: <CALu+AoRMQyRDFS_4L0KQkmrFT_S+yk=uZ-Mqt86JQYKKnj-5Ug@mail.gmail.com>
+Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	Anthony Yznaga <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Ashish Kalra <ashish.kalra@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
+	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, 
+	Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, 
+	James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, 
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/14/2025, Johan Hovold wrote:
-> The simple-pm-bus driver only enables runtime PM for some buses
-> ('simple-pm-bus') yet has started calling pm_runtime_force_suspend() and
-> pm_runtime_force_resume() during system suspend unconditionally.
-> 
-> This currently works, but that is not obvious and depends on
-> implementation details which may change at some point.
+On Thu, 6 Feb 2025 at 21:34, Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Hi,
+>
+> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
+> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
+> just to make things simpler instead of ftrace we decided to preserve
+> "reserve_mem" regions.
+>
+> The patches are also available in git:
+> https://git.kernel.org/rppt/h/kho/v4
+>
+>
+> Kexec today considers itself purely a boot loader: When we enter the new
+> kernel, any state the previous kernel left behind is irrelevant and the
+> new kernel reinitializes the system.
+>
+> However, there are use cases where this mode of operation is not what we
+> actually want. In virtualization hosts for example, we want to use kexec
+> to update the host kernel while virtual machine memory stays untouched.
+> When we add device assignment to the mix, we also need to ensure that
+> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
+> need to do the same for the PCI subsystem. If we want to kexec while an
+> SEV-SNP enabled virtual machine is running, we need to preserve the VM
+> context pages and physical memory. See "pkernfs: Persisting guest memory
+> and kernel/device state safely across kexec" Linux Plumbers
+> Conference 2023 presentation for details:
+>
+>   https://lpc.events/event/17/contributions/1485/
+>
+> To start us on the journey to support all the use cases above, this patch
+> implements basic infrastructure to allow hand over of kernel state across
+> kexec (Kexec HandOver, aka KHO). As a really simple example target, we use
+> memblock's reserve_mem.
+> With this patch set applied, memory that was reserved using "reserve_mem"
+> command line options remains intact after kexec and it is guaranteed to
+> reside at the same physical address.
+>
+> == Alternatives ==
+>
+> There are alternative approaches to (parts of) the problems above:
+>
+>   * Memory Pools [1] - preallocated persistent memory region + allocator
+>   * PRMEM [2] - resizable persistent memory regions with fixed metadata
+>                 pointer on the kernel command line + allocator
+>   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
+>                   address location on the kernel command line
+>   * PKRAM [4] - handover of user space pages using a fixed metadata page
+>                 specified via command line
+>
+> All of the approaches above fundamentally have the same problem: They
+> require the administrator to explicitly carve out a physical memory
+> location because they have no mechanism outside of the kernel command
+> line to pass data (including memory reservations) between kexec'ing
+> kernels.
+>
+> KHO provides that base foundation. We will determine later whether we
+> still need any of the approaches above for fast bulk memory handover of for
+> example IOMMU page tables. But IMHO they would all be users of KHO, with
+> KHO providing the foundational primitive to pass metadata and bulk memory
+> reservations as well as provide easy versioning for data.
+>
+> == Overview ==
+>
+> We introduce a metadata file that the kernels pass between each other. How
+> they pass it is architecture specific. The file's format is a Flattened
+> Device Tree (fdt) which has a generator and parser already included in
+> Linux. When the root user enables KHO through /sys/kernel/kho/active, the
+> kernel invokes callbacks to every driver that supports KHO to serialize
+> its state. When the actual kexec happens, the fdt is part of the image
+> set that we boot into. In addition, we keep a "scratch regions" available
+> for kexec: A physically contiguous memory regions that is guaranteed to
+> not have any memory that KHO would preserve.  The new kernel bootstraps
+> itself using the scratch regions and sets all handed over memory as in use.
+> When drivers initialize that support KHO, they introspect the fdt and
+> recover their state from it. This includes memory reservations, where the
+> driver can either discard or claim reservations.
+>
+> == Limitations ==
+>
+> Currently KHO is only implemented for file based kexec. The kernel
+> interfaces in the patch set are already in place to support user space
+> kexec as well, but it is still not implemented it yet inside kexec tools.
+>
 
-Fair enough. It's not a good practice to depend on the PM core behaviour.
+What architecture exactly does this KHO work fine?   Device Tree
+should be ok on arm*, x86 and power*, but how about s390?
 
-Acked-by: Liu Ying <victor.liu@nxp.com>
+Thanks
+Dae
 
-> 
-> Add dedicated system sleep ops and only call pm_runtime_force_suspend()
-> and pm_runtime_force_resume() for buses that use runtime PM to avoid any
-> future surprises.
-> 
-> Fixes: c45839309c3d ("drivers: bus: simple-pm-bus: Use clocks")
-> Cc: Liu Ying <victor.liu@nxp.com>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  drivers/bus/simple-pm-bus.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-> index 5dea31769f9a..d8e029e7e53f 100644
-> --- a/drivers/bus/simple-pm-bus.c
-> +++ b/drivers/bus/simple-pm-bus.c
-> @@ -109,9 +109,29 @@ static int simple_pm_bus_runtime_resume(struct device *dev)
->  	return 0;
->  }
->  
-> +static int simple_pm_bus_suspend(struct device *dev)
-> +{
-> +	struct simple_pm_bus *bus = dev_get_drvdata(dev);
-> +
-> +	if (!bus)
-> +		return 0;
-> +
-> +	return pm_runtime_force_suspend(dev);
-> +}
-> +
-> +static int simple_pm_bus_resume(struct device *dev)
-> +{
-> +	struct simple_pm_bus *bus = dev_get_drvdata(dev);
-> +
-> +	if (!bus)
-> +		return 0;
-> +
-> +	return pm_runtime_force_resume(dev);
-> +}
-> +
->  static const struct dev_pm_ops simple_pm_bus_pm_ops = {
->  	RUNTIME_PM_OPS(simple_pm_bus_runtime_suspend, simple_pm_bus_runtime_resume, NULL)
-> -	NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
-> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(simple_pm_bus_suspend, simple_pm_bus_resume)
->  };
->  
->  #define ONLY_BUS	((void *) 1) /* Match if the device is only a bus. */
-
--- 
-Regards,
-Liu Ying
