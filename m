@@ -1,44 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9133217646;
-	Mon, 17 Feb 2025 11:00:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B93F21858A;
+	Mon, 17 Feb 2025 11:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739790039; cv=none; b=WZLrzzIT2nyKZZZaWhdrTOfgVSfbfiDnc9KYZGMShPdggghR2aDH6SNTb9fjd0yuVpIJg7Grw+qpF7pxzbQbQ8vYACq/VFwPy1oD62lwHG8ZLGhwHoF4ieUAxbEuN6u2YcWDs6b2c3a+BXH9aHCO7QXTIZkMopXgoES3thrRznU=
+	t=1739790041; cv=none; b=aYNd2HWG1C4CMviRgpSjPrJR3XVVabGj4hxOO+7wLe48bkNbr1pQDo3T5jGOaDf0u2RhsvQviQvtbNKtmysZuRv6q3aVVLWzBs0RkNN7qMt7PtVVtZbtDL70PQK/tzSuaQDT9zWxsrgAKssCOG1RZwQU1VDXqNQF5kdgz5dU9A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739790039; c=relaxed/simple;
-	bh=TfZ1KJVQujR/HT3oPEKNiSlDL6xZc4H3LPnzgMSMjm0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ArLlCo4IbxveCRlKSgT/qXOWA/QciRJqu8wFNjxBIu3tRoYIKV1X7RJbtzsUUqFetKmVMJ2ccdIoy7bjIKIIGdAD4a+X8RCgmzDbzUsfw27ooS7WEcXudX+pr7aYgUcTr7PfvcWHcfTsJYIaPx1F7HDE1Fdx0H/WFOM78M60gsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DYODbpZY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8rOM/uJn; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1739790041; c=relaxed/simple;
+	bh=HWe5DWDc72q/BUdcqdWY+r3rAD8bWdOAs1/PuV4Pfm0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UZN8NHPfV5ArzrBKwmoHlKjMJkf8y1pIhuH5vS2tilnqkD7EEzUfbzQ/R2daBYs5A9oWlfce6hYHwrwWil7yglH8H0dqfBTB49hTd2cX0UmQjZcqCE2uh7/BVcWkOD3d/DdORJcarRvHiujS1Se11DcVW/TPfCVJQDsWbFVUjnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zSkADrC5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6gweMfS6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DYODbpZY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8rOM/uJn"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zSkADrC5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6gweMfS6"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739790035;
+	s=2020; t=1739790037;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GvuUwG+qIwvHRQItyyno7DxWnJaEqQNA725TKi+5rlw=;
-	b=DYODbpZYeTzdI8EJRFJtmEi9rvrde+4pFhE8mZWSkxL9FMJuj9lyXKpqVAkkqbnsK3UfnO
-	3hcxLC07lfeViBvXddUfi7UsaK2REhuhl1blC+NdzbVtFfJv4M+9ZiCKQ1fb/c9LTQvQEb
-	K89aYBy49bZnabYfU8ue1p5wCM23tjZJ8ZiHxYCtYJFSoSrwKH9iqlmhc1XowRkM8wyGAG
-	LQFCpOMiTEUqKPh+QMojDL8uDudK2a4mEqEUgcPj0+m5hjbK9ssG6q9Y95JT+DwN2af6Z8
-	E+7drRGpPg2Cyud4X398fIuvBvYLdhgRKLWathA3q09YlO26s/8wtjkjui4KlQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B3mOz7h/METJtenXacdJtpoIbaKepOmdU2Mg3BGzeKc=;
+	b=zSkADrC5IegnOX7SsPv69/QD6W6GOarq3AZlGer2Qv1/IxrTtAGj2tHYBeO6AoL8R52hwu
+	v1pKuK4TXPwDc6b42hUCnztyomq1HFMCAXvRO5bVhyHSvETW7JOwi8SDSyyYmuPiXmKiI8
+	vVY6BbZbTxpCAGg1cIdbRoDkRtYwjmqFilm+V3q73t1MfY3l0VIpmkaOW8ysxR4ks17WuB
+	Ix37y36ExVBWoHFAL3K6SDPMVtAuemIM5NrZw6X1WMQssSByCBtLqbbXoOudIc9Uwq3GFx
+	MwZcY1FiIP8RBc1bfmCtdOY96UjDvQ+T9pxTR8at6qj3jrEUZIxgd+A2/Jtseg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739790035;
+	s=2020e; t=1739790037;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GvuUwG+qIwvHRQItyyno7DxWnJaEqQNA725TKi+5rlw=;
-	b=8rOM/uJnix25mKPK2Db7m1FvxNrrNnpagv0Ue45mykqVbz+9VoGUlXPOHJZeJGcEHIJMLZ
-	rT6gw67A9tzPQyCg==
-Subject: [PATCH 00/12] kunit: Introduce UAPI testing framework
-Date: Mon, 17 Feb 2025 11:59:20 +0100
-Message-Id: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B3mOz7h/METJtenXacdJtpoIbaKepOmdU2Mg3BGzeKc=;
+	b=6gweMfS6ZDrqvYxW6P8kn4DX8lRS85SUqJxdBpaUapk4rbYjuI/Wlm1NY3BR05bAsJEHZZ
+	xziR9bz1jt/IYNCA==
+Date: Mon, 17 Feb 2025 11:59:24 +0100
+Subject: [PATCH 04/12] kbuild: userprogs: add nolibc support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,11 +49,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAIgWs2cC/2WNyw6CMBBFf4XM2po+xbjyPwyLAoNMIMV0CsEQ/
- t3C1uU5yT13A8ZIyPAoNoi4ENMUMqhLAU3vwxsFtZlBS22VVE4Mc6AkBsaxS8iJhbvp0tSNldZ
- qyLNPxI7WM/mqMvfEaYrf82FRhz1iTmpl/mOLElL42pTm3jrvFD5HCnOKU6D12iJU+77/AIrUM
- 9+0AAAA
-X-Change-ID: 20241015-kunit-kselftests-56273bc40442
+Message-Id: <20250217-kunit-kselftests-v1-4-42b4524c3b0a@linutronix.de>
+References: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
+In-Reply-To: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
  Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
  Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
@@ -63,142 +63,84 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  linux-doc@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739790034; l=6312;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739790034; l=3223;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=TfZ1KJVQujR/HT3oPEKNiSlDL6xZc4H3LPnzgMSMjm0=;
- b=ZQpQ0jJup/+DiUt2j1A80eoAA/RKqdnloh7ln/bzlNAjcHcTzXhYPfOV9Um/nbEaIka9ti3VE
- EbUkeD6fpAfDKtPAs3YPH4aLf+Hp686bgjnWsk0zfFLiB/G3GDXF/wA
+ bh=HWe5DWDc72q/BUdcqdWY+r3rAD8bWdOAs1/PuV4Pfm0=;
+ b=j5buKJ4rrEz2ldxRKjQ4EpttQPLf4EfeYRomTllmD/oqWMo/iVu0yTAc2Tf5lDPH8vBmMsjnS
+ qzB/K2tGoJbA6hjQS2M1Crs3OrfPQM77o1deNu9AecBT5pNvHEKXahl
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Currently testing of userspace and in-kernel API use two different
-frameworks. kselftests for the userspace ones and Kunit for the
-in-kernel ones. Besides their different scopes, both have different
-strengths and limitations:
+Userprogs are built with the regular kernel compiler $CC.
+A kernel compiler does not necessarily contain a libc which is required
+for a normal userspace application.
+However the kernel tree does contain a minimal libc implementation
+"nolibc" which can be used to build userspace applications.
 
-Kunit:
-* Tests are normal kernel code.
-* They use the regular kernel toolchain.
-* They can be packaged and distributed as modules conveniently.
-
-Kselftests:
-* Tests are normal userspace code
-* They need a userspace toolchain.
-  A kernel cross toolchain is likely not enough.
-* A fair amout of userland is required to run the tests,
-  which means a full distro or handcrafted rootfs.
-* There is no way to conveniently package and run kselftests with a
-  given kernel image.
-* The kselftests makefiles are not as powerful as regular kbuild.
-  For example they are missing proper header dependency tracking or more
-  complex compiler option modifications.
-
-Therefore kunit is much easier to run against different kernel
-configurations and architectures.
-This series aims to combine kselftests and kunit, avoiding both their
-limitations. It works by compiling the userspace kselftests as part of
-the regular kernel build, embedding them into the kunit kernel or module
-and executing them from there. If the kernel toolchain is not fit to
-produce userspace because of a missing libc, the kernel's own nolibc can
-be used instead.
-The structured TAP output from the kselftest is integrated into the
-kunit KTAP output transparently, the kunit parser can parse the combined
-logs together.
-
-Further room for improvements:
-* Call each test in its completely dedicated namespace
-* Handle additional test files besides the test executable through
-  archives. CPIO, cramfs, etc.
-* Compatibility with kselftest_harness.h (in progress)
-* Expose the blobs in debugfs
-* Provide some convience wrappers around compat userprogs
-* Figure out a migration path/coexistence solution for
-  kunit UAPI and tools/testing/selftests/
-
-Output from the kunit example testcase, note the output of
-"example_uapi_tests".
-
-$ ./tools/testing/kunit/kunit.py run --kunitconfig lib/kunit example
-...
-Running tests with:
-$ .kunit/linux kunit.filter_glob=example kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-[11:53:53] ================== example (10 subtests) ===================
-[11:53:53] [PASSED] example_simple_test
-[11:53:53] [SKIPPED] example_skip_test
-[11:53:53] [SKIPPED] example_mark_skipped_test
-[11:53:53] [PASSED] example_all_expect_macros_test
-[11:53:53] [PASSED] example_static_stub_test
-[11:53:53] [PASSED] example_static_stub_using_fn_ptr_test
-[11:53:53] [PASSED] example_priv_test
-[11:53:53] =================== example_params_test  ===================
-[11:53:53] [SKIPPED] example value 3
-[11:53:53] [PASSED] example value 2
-[11:53:53] [PASSED] example value 1
-[11:53:53] [SKIPPED] example value 0
-[11:53:53] =============== [PASSED] example_params_test ===============
-[11:53:53] [PASSED] example_slow_test
-[11:53:53] ======================= (4 subtests) =======================
-[11:53:53] [PASSED] procfs
-[11:53:53] [PASSED] userspace test 2
-[11:53:53] [SKIPPED] userspace test 3: some reason
-[11:53:53] [PASSED] userspace test 4
-[11:53:53] ================ [PASSED] example_uapi_test ================
-[11:53:53] ===================== [PASSED] example =====================
-[11:53:53] ============================================================
-[11:53:53] Testing complete. Ran 16 tests: passed: 11, skipped: 5
-[11:53:53] Elapsed time: 67.543s total, 1.823s configuring, 65.655s building, 0.058s running
-
-Based on v6.14-rc1 and the series
-"tools/nolibc: compatibility with -Wmissing-prototypes" [0].
-For compatibility with LLVM/clang another series is needed [1].
-
-[0] https://lore.kernel.org/lkml/20250123-nolibc-prototype-v1-0-e1afc5c1999a@weissschuh.net/
-[1] https://lore.kernel.org/lkml/20250213-kbuild-userprog-fixes-v1-0-f255fb477d98@linutronix.de/
+Introduce support to build userprogs against nolibc instead of the
+default C of the compiler, which may not exist.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
-Thomas Weißschuh (12):
-      kconfig: implement CONFIG_HEADERS_INSTALL for Usermode Linux
-      kconfig: introduce CONFIG_ARCH_HAS_NOLIBC
-      kbuild: userprogs: respect CONFIG_WERROR
-      kbuild: userprogs: add nolibc support
-      kbuild: introduce blob framework
-      kunit: tool: Add test for nested test result reporting
-      kunit: tool: Don't overwrite test status based on subtest counts
-      kunit: tool: Parse skipped tests from kselftest.h
-      kunit: Introduce UAPI testing framework
-      kunit: uapi: Add example for UAPI tests
-      kunit: uapi: Introduce preinit executable
-      kunit: uapi: Validate usability of /proc
 
- Documentation/kbuild/makefiles.rst                 |  12 +
- Makefile                                           |   5 +-
- include/kunit/uapi.h                               |  17 ++
- include/linux/blob.h                               |  21 ++
- init/Kconfig                                       |   2 +
- lib/Kconfig.debug                                  |   1 -
- lib/kunit/Kconfig                                  |   9 +
- lib/kunit/Makefile                                 |  17 +-
- lib/kunit/kunit-example-test.c                     |  17 ++
- lib/kunit/kunit-uapi-example.c                     |  58 +++++
- lib/kunit/uapi-preinit.c                           |  61 +++++
- lib/kunit/uapi.c                                   | 250 +++++++++++++++++++++
- scripts/Makefile.blobs                             |  19 ++
- scripts/Makefile.build                             |   6 +
- scripts/Makefile.clean                             |   2 +-
- scripts/Makefile.userprogs                         |  18 +-
- scripts/blob-wrap.c                                |  27 +++
- tools/include/nolibc/Kconfig.nolibc                |  18 ++
- tools/testing/kunit/kunit_parser.py                |  13 +-
- tools/testing/kunit/kunit_tool_test.py             |   9 +
- .../test_is_test_passed-failure-nested.log         |  10 +
- .../test_data/test_is_test_passed-kselftest.log    |   3 +-
- 22 files changed, 584 insertions(+), 11 deletions(-)
 ---
-base-commit: 20e952894066214a80793404c9578d72ef89c5e0
-change-id: 20241015-kunit-kselftests-56273bc40442
+This could probably be moved out of the generic kbuild makefiles.
+I think the ergonimics would suffer and this functionality could be
+used by other users of userprogs.
+---
+ Documentation/kbuild/makefiles.rst | 12 ++++++++++++
+ scripts/Makefile.userprogs         | 14 +++++++++++---
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
-Best regards,
+diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+index d36519f194dc0d18b72a6f3ce7f3649f7c1b5637..cb859dc58b579def4995a5aa2efb45ab4ba3c93f 100644
+--- a/Documentation/kbuild/makefiles.rst
++++ b/Documentation/kbuild/makefiles.rst
+@@ -959,6 +959,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
+ 
+ From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
+ 
++Bulding userprogs against nolibc
++--------------------------------
++
++Not all kernel toolchains provide a libc.
++Simple userprogs can be built against a very simple libc call "nolibc" provided
++by the kernel source tree.
++
++Example::
++
++  # lib/kunit/Makefile
++  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
++
+ When userspace programs are actually built
+ ------------------------------------------
+ 
+diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
+index debbf083bcfa01c89c204a322a1b17e2bdbe95a1..e94f3f2250f531dadbe00f5f5ee6f780bee22487 100644
+--- a/scripts/Makefile.userprogs
++++ b/scripts/Makefile.userprogs
+@@ -16,10 +16,18 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
+ user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
+ user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
+ 
++user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
++		      -ffreestanding $(call cc-option,-mstack-protector-guard=global) \
++		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
++user_nolibc_ldflags := -nostdlib -nostdinc -static
++user_nolibc_ldlibs  := $(call cc-option,-lgcc)
++
+ user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
+-			$($(target-stem)-userccflags)
+-user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
+-user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
++			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
++user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
++			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
++user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
++			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
+ 
+ ifdef CONFIG_WERROR
+ KBUILD_USERCFLAGS += -Werror
+
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.48.1
 
