@@ -1,116 +1,88 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA6C21ADA4;
-	Mon, 17 Feb 2025 12:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 999DB7F9;
+	Mon, 17 Feb 2025 12:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739795406; cv=none; b=AWilwrOSGYj/0aTsko/XrwAVV4hB/N181dv7pRpIn+PmP1UbKjUumzcTjDilQn1b32HKfG7Ua3N8XkFHhdtAlVgVi51O/J69wf+ppEkqMy5VrZuIYC8148xz391Ni7SDcmJTATT+q8bFpt05qmjvZYkTfb52sZNLdtE1GfJ0F10=
+	t=1739795515; cv=none; b=MJ+49WQheyc3UPkXqL/3Mra02dF6FXFx4T1isxwAGN5+CZx/JPX+6Iia3PhsgmwZDvw4b805KjVOGDCiYvRZyTwirdmX6L54uttsJRgrRPwm1BHWhTbMAitENkdlLeaPjAI97llOUy7uueTiBQjj3TsVd04zghooRb+IUcsmDAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739795406; c=relaxed/simple;
-	bh=J3SFBAZDXUNNlAhhsULZrSD2zJqCg4VZ25hYd8Ta7G8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M8IAoyuw5wvTkpZgAzAT4PuCiEhU4LoKzFCFXLt8yzOJXp/bJQ0VaOug6/q/xG2qyzhYhDVWAFxW4byC1av9QYEmzNKWPJIkCe2l/qB551FgKoa8eINga4MO5NJKukgC4bOJ3mH3kKbkU3qEbq4BlMe0JLqZzYHH3dyLBhsCDIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abb7aecd39fso305505466b.0;
-        Mon, 17 Feb 2025 04:30:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739795402; x=1740400202;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I1TIWEZalxxCgY45eBOSHh9u1O+DAvz4HdaYIIkamHg=;
-        b=jQaylfzax9r15NJ8ROFIxyrT7hoe8CShkT6eh1i2qnMLXe7cM3QHSDHizd0fgqNx5e
-         /qrep1w2+xpGBS7fdne2yLb/1I/xjTc6yWRE7U8rRANh2JhgPNka+MxqybBNC9lcGCXw
-         OyDhBPulaaie8F4IEG4LGjHcv47Xz1VKEMDWwRUb22BYhsGHS7HRh4EvCw4/DVAa3IHk
-         /HZGCH/ixb1D3c1oYY7SBeuFBeRLQmFoLspiAxcxjnDMVIVJyNsbFscweM7H2qRKhlZT
-         A7ytx7qSdz63FTQaUFhStjFAEykD4Dcz4ls/1IYb6MhsV1qbWiJC1KLLPvB09c+TfNO9
-         QURQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb87Ex/bNZ9DXzLxm5BD4Ryrli2sbe1QI026GcUy3OkzmdmBzXZi7DrcNHKosS6K6uE6jkun3B21FgZRBbXFMvKig=@vger.kernel.org, AJvYcCV2hFe1VU8ZCwC1zasUObtzi5ENIISLkxdXtW0NQDJnk4DVrI1ocRLRj88k+BsoUjjF6Ojkae5oWvMayQLh@vger.kernel.org, AJvYcCWjWYglyfwvVU10+7J67usVux/sIb+iemG7NOJ0NONRap1zHLmpLVYRrhIqyOXG3k1/mkoGDCSVQIavmAuN@vger.kernel.org, AJvYcCXnq0te/RH2kmpCI6T8PK/GFP34JOH98dmKEkqSuGZeICsA1/lRQ6lC1XAnDWQZMoPlfxPpsAXL+LwL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD/FvH8QMSP/pd7PM5M8fhd4cjEHPYnwq3nIHeLbNaooX94bq/
-	022nKt6zkWUw4Fs9WV2efIb2zEprPSmRMHlDZZkAsK4rZpsq44IsngrPxWuCIFg=
-X-Gm-Gg: ASbGnct5qat9p2xedn6xZmU1nIu+78nfsf+by1bEwLJfm9hdfk5POk897PQmxGrzEGA
-	Z7PFCxLFRLZzl14+qL3AqJ0eKkQvOIJHklfgxqFNJh5yP4a/sQDx2CocII6K35zdRhxzX229LdV
-	+nBBOnCfVmBTP3iUyt9teBdArD4zZgWydi1NDHXaA8dubEC65bYra+MSoGAp8W3fuNwSAEA7s85
-	l5bnvU85jSPoUpAeE2jzWbQtjIGaiVLJqzWeaVEs0Gnj+dfGUpirnKFA/Vyh7qzz0VOt0R2Xt7m
-	EFS5ERLZJuvKptIe+6Wpuc6WzvlHAacH2vgHIaZCXC2muz/Zjh8kYQ==
-X-Google-Smtp-Source: AGHT+IFyU5wJtXXUs4IqnPMunIdCvLam5pfngNR55xHL/oCfHQ5msYgeLsv1nO/TBmFAHxED+IvCzg==
-X-Received: by 2002:a17:907:7706:b0:ab7:b9b5:6104 with SMTP id a640c23a62f3a-abb706ffef2mr756802466b.5.1739795401768;
-        Mon, 17 Feb 2025 04:30:01 -0800 (PST)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53398364sm876166466b.128.2025.02.17.04.30.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 04:30:01 -0800 (PST)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab771575040so1048512166b.1;
-        Mon, 17 Feb 2025 04:30:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1fxaxIpxea+rNPLIr8I9nkxEiMMJZ6Zv/fGwvrPzSmGJdmwhuhWG1+6zRntBKCgeSDgvahYW06fVvMrCt@vger.kernel.org, AJvYcCUGMFVr8EHfljmLPz+1ILvPR5ku+SMJCYTBUpF76eo27L6lI4PrdFqAIuSrv1/bMCcaug0ubJoskeyVmrAq@vger.kernel.org, AJvYcCUL3wdtm/QS3gsOnootuDb1uTIEstChA7gvU73fIOwobcTO/B4rBVxXVEUpiyDgMmj7Ybp+pgWXpjXr@vger.kernel.org, AJvYcCVwDBOZHPDj816E0Cmp4QFcoo2L3maJ0qL5fZnv2VQ0p0Ax7J30IVKyVlsFKIRbQ7lWh5Byc7LV6V835I5PoidMViE=@vger.kernel.org
-X-Received: by 2002:a17:907:3d9e:b0:abb:5b02:9e7 with SMTP id
- a640c23a62f3a-abb708f2d26mr963945066b.12.1739795401012; Mon, 17 Feb 2025
- 04:30:01 -0800 (PST)
+	s=arc-20240116; t=1739795515; c=relaxed/simple;
+	bh=mLoswGq4ee6hpNyl8OOh6wrbHYc6wwRA6DU8avtw+Tw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7yxuRDRQtbItJauivYBZMKv3yOX1PjSGmiCrnvOtPbYJzLp/OBP7kG3HEObcRFpRAX0VQM/oAE8reUdXGNFB56q86fz1iqDePz1CxMOtgaZHLwI3Zgjvf4KzkvfcN0ZeBahvr8I4giXFrAxL6iXW7Orwj9qPWhOkysM0b3lmj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16C171692;
+	Mon, 17 Feb 2025 04:32:12 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 198303F5A1;
+	Mon, 17 Feb 2025 04:31:49 -0800 (PST)
+Date: Mon, 17 Feb 2025 12:31:47 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Keita Morisaki <keyz@google.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+	lpieralisi@kernel.org, linux-kernel@vger.kernel.org,
+	daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, aarontian@google.com,
+	Sudeep Holla <sudeep.holla@arm.com>, yimingtseng@google.com,
+	Dhruva Gole <d-gole@ti.com>, Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
+Message-ID: <Z7MsM5Va5xi-Nuis@bogus>
+References: <20250210055828.1875372-1-keyz@google.com>
+ <CAJZ5v0hWNYB69ydM4--GNtLBgG3WS4MT+S10w46883kHnFMMEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217105354.551788-1-thierry.bultel.yh@bp.renesas.com>
- <20250217105354.551788-4-thierry.bultel.yh@bp.renesas.com> <CAMuHMdWfTsocOwuqDQZOBN7-wGMrrSc=cfJau+U1tx3Pwe+VHA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWfTsocOwuqDQZOBN7-wGMrrSc=cfJau+U1tx3Pwe+VHA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 17 Feb 2025 13:29:47 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUs3uv-yhJxVTot7t3BjXcMDm=sWu-MTRv=-D5PrqX_zg@mail.gmail.com>
-X-Gm-Features: AWEUYZk8HXdwA6QdcVV6UVVVAVy0o-P-gKkZGawCKYB8YbY4M9JB3uv5mL3juaM
-Message-ID: <CAMuHMdUs3uv-yhJxVTot7t3BjXcMDm=sWu-MTRv=-D5PrqX_zg@mail.gmail.com>
-Subject: Re: [PATCH v2 03/13] dt-bindings: serial: Add compatible for Renesas
- RZ/T2H SoC in sci
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hWNYB69ydM4--GNtLBgG3WS4MT+S10w46883kHnFMMEQ@mail.gmail.com>
 
-Hi Thierry,
-
-On Mon, 17 Feb 2025 at 13:20, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Mon, 17 Feb 2025 at 11:54, Thierry Bultel
-> <thierry.bultel.yh@bp.renesas.com> wrote:
-> > Document RZ/T2H (a.k.a r9a09g077) in SCI binding.
+On Mon, Feb 17, 2025 at 12:57:07PM +0100, Rafael J. Wysocki wrote:
+> +Ulf
+> 
+> On Mon, Feb 10, 2025 at 6:58 AM Keita Morisaki <keyz@google.com> wrote:
 > >
-> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > The trace event cpu_idle provides insufficient information for debugging
+> > PSCI requests due to lacking access to determined PSCI domain idle
+> > states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+> > idle states the power domain has.
+> >
+> > Add new trace events namely psci_domain_idle_enter and
+> > psci_domain_idle_exit to trace enter and exit events with a determined
+> > idle state.
+> >
+> > These new trace events will help developers debug CPUidle issues on ARM
+> > systems using PSCI by providing more detailed information about the
+> > requested idle states.
+> >
+> > Signed-off-by: Keita Morisaki <keyz@google.com>
+> > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Reviewed-by: Dhruva Gole <d-gole@ti.com>
+> > Tested-by: Kevin Hilman <khilman@baylibre.com>
+> > ---
+> > v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
+> >         and rephrase the commit message accordingly. Rebased onto the latest.
+> > v2->v3: Add "Reviewed-by: Steven Rostedt"
+> > v3->v4: Add the Tested-by label
+> > v4->v5: Add "Reviewed-by: Dhruva Gole"
+> >
+> > Hopefully this patch gets attention from maintainers of
+> > drivers/cpuidle/cpuidle-psci.c too.
 >
-> Thanks for your patch!
+> Lorenzo, Sudeep, Ulf, any comments?
 >
-> > --- a/Documentation/devicetree/bindings/serial/renesas,sci.yaml
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci.yaml
-> > @@ -20,6 +20,7 @@ properties:
-> >                - renesas,r9a07g043-sci     # RZ/G2UL and RZ/Five
-> >                - renesas,r9a07g044-sci     # RZ/G2{L,LC}
-> >                - renesas,r9a07g054-sci     # RZ/V2L
-> > +              - renesas,r9a09g077-sci     # RZ/T2H
->
-> As the RZ/T2H SCI does not work with a generic SCI driver, it cannot
-> use renesas,sci as a fallback, but needs its own section.
->
-> >            - const: renesas,sci            # generic SCI compatible UART
 
-As the RZ/T2H SCI does support RTS/CTS, the line
+Looks good to me. I left it to Ulf, FWIW:
 
-  uart-has-rtscts: false
-
-needs to become conditional.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Sudeep
