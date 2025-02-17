@@ -1,248 +1,219 @@
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDF8226545;
-	Mon, 17 Feb 2025 21:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC3E238D42
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 21:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739826472; cv=none; b=QPG36kWh5G8TTlpRpoXlW/RU0Dtju3z8MhDlLNeN7ZSVi1MVGR7Ee95YTt8QtyhaInJd6TJCWWJTRg80Df+oBICYrUYhGVXDqg1aaeSRUBbbgoAUuDpeHq8l4bzG2a8BIgig8/Kn+5imROpDfR9NEo7SNLLy7gyQiv49yvPcm2Q=
+	t=1739826475; cv=none; b=uctSyucrHGLc1FN9u+oke2eVlmP2051vE4HkpTnSpbpk/GX0YdBBvQ6W119FyGenma3vlZ/W6qGi9YTJ94ogWztCoHbRW89IeiucIcUsQPyDmfCIbt5XF0qAFMQF0bVLfuhBY7mUfme6JFg+4JDmDSR65OmFEyV1j0rpXfpzomg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739826472; c=relaxed/simple;
-	bh=LsYRpOjpOL3V/STxpqzTCiQRToI3srOvQgLq+WUoynM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=M6oFzLMKsUHS3jr0ZfGmeJexgXez+o8mSyCjMIkPr7EQK+saMJnN6VJ5vPZHF4dd3CrtZY6buCVF6oQycVtcgDB8HvgnIMRNIbrlFWxvBabeOQ+pdA7domDvEIKh77nZYmy4L876ps9KSA7RGrgldtIUEoKwCFJtFiLhq3IPbZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=X6zfjovR; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
+	s=arc-20240116; t=1739826475; c=relaxed/simple;
+	bh=7nmgVP/dRvT4mUIpaGaZSJ8l8wA+CYdvsKbXITlL46Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fM1LCyoMZZO5TAslOAQ5PNmR9fgb+YIquCENdx3vU3avuV4VNLaXI1BZfEKeoatbKXuqIIi3U6HY1eDKnMuUkN/yTn5h4skmk0mZvjSvnXsAE+9aPwBhig254az9H5iETI8OEAGQS1dZJJ8WjnjacVGYQypzjSaz6+b5bWWNDc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=OU8sYveV; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="X6zfjovR"
-From: Fiona Behrens <me@kloenk.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
-	t=1739825928; bh=BRHWXSncwQHxJEXz+lPaEWqa58lv4Bor0CGJfRHxbg8=;
-	h=From:Date:Subject:To:Cc;
-	b=X6zfjovRH7NkXptn/J6mtDR9BX1owDj0vx8EV5djizyPDLDXxE8bLKkwQ71nb7SUg
-	 VtH09O2H2PNU8NmTSQ5qbQ+k+FdeSwYyoTq7IMbClzFWK79RfKpPMGLgH1PvvpaZmH
-	 AZtwS6REop8NX1W58OuDmboOfIPviUDnpE24sC2k=
-Date: Mon, 17 Feb 2025 21:58:14 +0100
-Subject: [PATCH] rust: io: rename `io::Io` accessors
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OU8sYveV"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30a2d4b61e4so12258391fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:07:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1739826471; x=1740431271; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OxAGuJZvVpihlkn5sQuDmNUvGY3NqHPUH3zDQ8Mjtgs=;
+        b=OU8sYveV8JW/bRThjG4SfxNRjKHqm/RLfnlvsONyVoC85uKj8TNQzSNeeXyC/RA4hi
+         BaYJCz+PUGW4V49WWBvBbGcUZqyFjvWiWPVH8BFgV0kkv0WpVWyS1hAM/p+ejKpeq22B
+         yBr49sDipTKkhKzv8xal4oAD0aZD7ycKDKbaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739826471; x=1740431271;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OxAGuJZvVpihlkn5sQuDmNUvGY3NqHPUH3zDQ8Mjtgs=;
+        b=hbwjnNFD5xJoFxpIv4E8mZTIOpLZZAAvPEQ1tY555YUuBPvOAoyv8SSqQ9f7wQjiAS
+         VSW4dUM73hpSFaxS3yP25VVVMGcmOb7tKXcEIgFQAGUVUzVjzjPkhnALT9Va201z/RSZ
+         FzWuT7bBwEmOAt8S34GTavUqYRZyCEaRj4EX0+a5Zxt4cHiLCD0Qb5woQ2OGx3xLfSGT
+         ywQ1h6Eu7OJGqkWIZfLTEQ2ukw2Y77M4jzjmxddYmW/4ieaValFez+y5YLpVNwPboGSS
+         FCCQ4l5whmT/6RYFTRPjNMPDvUmmiiuL1LiS0tpylcMfWbzV9QR3M1zPIKQw9xGHjCni
+         v/vg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLAM+sLMYWWOf1is6ZS01KP5WtkJ76oMt/Un0te17UXVhm0KlY1BZ+faFJAKefuUXc5S77ajCR3v8fIlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw33VpfvLV02oKOqKAEk3y5dqj1HRyNEPR6MA3VnYGT/AVg6Ute
+	tuNghT9C6lCBjzVN7C/p27Tr5+wD29Tmt4m44FSS0REzGnbBX5fCv59bi2yWZPaygA/NQCG78li
+	ubTs8CXrSaceGvGTF3Tv2jbpFYaKjZdZh8hYW
+X-Gm-Gg: ASbGnctyWMoNUTykYBoZ1JVROUaXx4Ryl6UD6YhbiNt9rIf7oQCtqh7dxUWeOkuGjjO
+	Jf+5auSjwGIQa4gzGgShmMqRBegJlg0Y0BvIE3Vsh81Qbz/hpjZuHbAUUsqMHKzL6gDnmsE7s+s
+	ezwxBBAQjn7wMNGkClt4iOo3A33qmN
+X-Google-Smtp-Source: AGHT+IETynsnWXFFoobhNYG6kug3sx2y2J8eck7h+JszqxvDS2xVQtW0RdMXvdFDFC9n5vAIVJ+y3VDSKkTxDfKl/eE=
+X-Received: by 2002:a2e:9a89:0:b0:302:29a5:6e21 with SMTP id
+ 38308e7fff4ca-30927a2d1b2mr29062351fa.3.1739826470909; Mon, 17 Feb 2025
+ 13:07:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-io-generic-rename-v1-1-06d97a9e3179@kloenk.dev>
-X-B4-Tracking: v=1; b=H4sIAOWis2cC/x3MQQqAIBBA0avErBswy4KuEi1MR5tFUyhEIN09a
- fkX7xfIlJgyzE2BRDdnPqVG1zbgdiuRkH1t0EobpbsJ+cRIUpHDRGIPQqN9b4PZhrEPUN2VKPD
- zP5f1fT9gApy0YwAAAA==
-X-Change-ID: 20250217-io-generic-rename-52d3af5b463f
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Daniel Almeida <daniel.almeida@collabora.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7615; i=me@kloenk.dev;
- h=from:subject:message-id; bh=LsYRpOjpOL3V/STxpqzTCiQRToI3srOvQgLq+WUoynM=;
- b=owJ4nJvAy8zAJdbGuXyr5NPHToyn1ZIY0jcv+n/TearU7Binj3UPrrXaX8ufesZINmrV44PFF
- xsatwapOO7qKGVhEONikBVTZNnidf/+j8xlWfb373bDzGFlAhnCwMUpABPJ3Mfwz+5N3OuTYjd9
- 4p/23YmUebR7y1GPXquAgsTprs519xZoTGP4767yYn6X6k6r8utWjqEZJjkCNae4JbddlHKzP9m
- xbUIFDwDSDk9S
-X-Developer-Key: i=me@kloenk.dev; a=openpgp;
- fpr=B44ADFDFF869A66A3FDFDD8B8609A7B519E5E342
+References: <20250217141837.2366663-1-haoxiang_li2024@163.com>
+In-Reply-To: <20250217141837.2366663-1-haoxiang_li2024@163.com>
+From: Guruswamy Basavaiah <guruswamy.basavaiah@broadcom.com>
+Date: Tue, 18 Feb 2025 02:37:39 +0530
+X-Gm-Features: AWEUYZmpt2f5hkCvEnrd6qnO79Fx2QhABAiaPRpC8SsHYZPuHseVCWzRUuHZ9TI
+Message-ID: <CAOgUPBu-c8HwYV0A-Wdga3z8P9+CY3=YUVg73qvq6OkeQ4=2Ag@mail.gmail.com>
+Subject: Re: [PATCH] nfp: bpf: Add check for nfp_app_ctrl_msg_alloc()
+To: Haoxiang Li <haoxiang_li2024@163.com>
+Cc: kuba@kernel.org, louis.peens@corigine.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, qmo@kernel.org, 
+	daniel@iogearbox.net, bpf@vger.kernel.org, oss-drivers@corigine.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000cafa83062e5cea00"
 
-Rename the I/O accessors provided by `Io` to encode the type as
-number instead of letter. This is in preparation for Port I/O support
-to use a trait for generic accessors.
+--000000000000cafa83062e5cea00
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a `c_fn` argument to the accessor generation macro to translate
-between rust and C names.
+Hi Haoxiang,
+Nitpick: The brackets `{}` in the `if (!skb)` check are not required
+for a single-statement block. As per the Linux kernel coding style,
+it's preferable to omit them unless necessary for readability.
+Guru
 
-Suggested-by: Danilo Krummrich <dakr@kernel.org>
-Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/PIO.20support/near/499460541
-Signed-off-by: Fiona Behrens <me@kloenk.dev>
----
- rust/kernel/io.rs               | 66 ++++++++++++++++++++---------------------
- samples/rust/rust_driver_pci.rs | 12 ++++----
- 2 files changed, 39 insertions(+), 39 deletions(-)
+On Mon, Feb 17, 2025 at 7:53=E2=80=AFPM Haoxiang Li <haoxiang_li2024@163.co=
+m> wrote:
+>
+> Add check for the return value of nfp_app_ctrl_msg_alloc() in
+> nfp_bpf_cmsg_alloc() to prevent null pointer dereference.
+>
+> Fixes: ff3d43f7568c ("nfp: bpf: implement helpers for FW map ops")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+> ---
+>  drivers/net/ethernet/netronome/nfp/bpf/cmsg.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c b/drivers/net/=
+ethernet/netronome/nfp/bpf/cmsg.c
+> index 2ec62c8d86e1..09ea1bc72097 100644
+> --- a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+> +++ b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+> @@ -20,6 +20,9 @@ nfp_bpf_cmsg_alloc(struct nfp_app_bpf *bpf, unsigned in=
+t size)
+>         struct sk_buff *skb;
+>
+>         skb =3D nfp_app_ctrl_msg_alloc(bpf->app, size, GFP_KERNEL);
+> +       if (!skb) {
+> +               return NULL;
+> +       }
+>         skb_put(skb, size);
+>
+>         return skb;
+> --
+> 2.25.1
+>
+>
 
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index d4a73e52e3ee68f7b558749ed0108acde92ae5fe..72d80a6f131e3e826ecd9d2c3bcf54e89aa60cc3 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -98,9 +98,9 @@ pub fn maxsize(&self) -> usize {
- ///# fn no_run() -> Result<(), Error> {
- /// // SAFETY: Invalid usage for example purposes.
- /// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
--/// iomem.writel(0x42, 0x0);
--/// assert!(iomem.try_writel(0x42, 0x0).is_ok());
--/// assert!(iomem.try_writel(0x42, 0x4).is_err());
-+/// iomem.write32(0x42, 0x0);
-+/// assert!(iomem.try_write32(0x42, 0x0).is_ok());
-+/// assert!(iomem.try_write32(0x42, 0x4).is_err());
- /// # Ok(())
- /// # }
- /// ```
-@@ -108,7 +108,7 @@ pub fn maxsize(&self) -> usize {
- pub struct Io<const SIZE: usize = 0>(IoRaw<SIZE>);
- 
- macro_rules! define_read {
--    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
-+    ($(#[$attr:meta])* $name:ident, $try_name:ident, $c_fn:ident -> $type_name:ty) => {
-         /// Read IO data from a given offset known at compile time.
-         ///
-         /// Bound checks are performed on compile time, hence if the offset is not known at compile
-@@ -119,7 +119,7 @@ pub fn $name(&self, offset: usize) -> $type_name {
-             let addr = self.io_addr_assert::<$type_name>(offset);
- 
-             // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            unsafe { bindings::$name(addr as _) }
-+            unsafe { bindings::$c_fn(addr as _) }
-         }
- 
-         /// Read IO data from a given offset.
-@@ -131,13 +131,13 @@ pub fn $try_name(&self, offset: usize) -> Result<$type_name> {
-             let addr = self.io_addr::<$type_name>(offset)?;
- 
-             // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            Ok(unsafe { bindings::$name(addr as _) })
-+            Ok(unsafe { bindings::$c_fn(addr as _) })
-         }
-     };
- }
- 
- macro_rules! define_write {
--    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
-+    ($(#[$attr:meta])* $name:ident, $try_name:ident, $c_fn:ident <- $type_name:ty) => {
-         /// Write IO data from a given offset known at compile time.
-         ///
-         /// Bound checks are performed on compile time, hence if the offset is not known at compile
-@@ -148,7 +148,7 @@ pub fn $name(&self, value: $type_name, offset: usize) {
-             let addr = self.io_addr_assert::<$type_name>(offset);
- 
-             // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            unsafe { bindings::$name(value, addr as _, ) }
-+            unsafe { bindings::$c_fn(value, addr as _, ) }
-         }
- 
-         /// Write IO data from a given offset.
-@@ -160,7 +160,7 @@ pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
-             let addr = self.io_addr::<$type_name>(offset)?;
- 
-             // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            unsafe { bindings::$name(value, addr as _) }
-+            unsafe { bindings::$c_fn(value, addr as _) }
-             Ok(())
-         }
-     };
-@@ -218,43 +218,43 @@ fn io_addr_assert<U>(&self, offset: usize) -> usize {
-         self.addr() + offset
-     }
- 
--    define_read!(readb, try_readb, u8);
--    define_read!(readw, try_readw, u16);
--    define_read!(readl, try_readl, u32);
-+    define_read!(read8, try_read8, readb -> u8);
-+    define_read!(read16, try_read16, readw -> u16);
-+    define_read!(read32, try_read32, readl -> u32);
-     define_read!(
-         #[cfg(CONFIG_64BIT)]
--        readq,
--        try_readq,
--        u64
-+        read64,
-+        try_read64,
-+        readq -> u64
-     );
- 
--    define_read!(readb_relaxed, try_readb_relaxed, u8);
--    define_read!(readw_relaxed, try_readw_relaxed, u16);
--    define_read!(readl_relaxed, try_readl_relaxed, u32);
-+    define_read!(read8_relaxed, try_read8_relaxed, readb_relaxed -> u8);
-+    define_read!(read16_relaxed, try_read16_relaxed, readw_relaxed -> u16);
-+    define_read!(read32_relaxed, try_read32_relaxed, readl_relaxed -> u32);
-     define_read!(
-         #[cfg(CONFIG_64BIT)]
--        readq_relaxed,
--        try_readq_relaxed,
--        u64
-+        read64_relaxed,
-+        try_read64_relaxed,
-+        readq_relaxed -> u64
-     );
- 
--    define_write!(writeb, try_writeb, u8);
--    define_write!(writew, try_writew, u16);
--    define_write!(writel, try_writel, u32);
-+    define_write!(write8, try_write8, writeb <- u8);
-+    define_write!(write16, try_write16, writew <- u16);
-+    define_write!(write32, try_write32, writel <- u32);
-     define_write!(
-         #[cfg(CONFIG_64BIT)]
--        writeq,
--        try_writeq,
--        u64
-+        write64,
-+        try_write64,
-+        writeq <- u64
-     );
- 
--    define_write!(writeb_relaxed, try_writeb_relaxed, u8);
--    define_write!(writew_relaxed, try_writew_relaxed, u16);
--    define_write!(writel_relaxed, try_writel_relaxed, u32);
-+    define_write!(write8_relaxed, try_write8_relaxed, writeb_relaxed <- u8);
-+    define_write!(write16_relaxed, try_write16_relaxed, writew_relaxed <- u16);
-+    define_write!(write32_relaxed, try_write32_relaxed, writel_relaxed <- u32);
-     define_write!(
-         #[cfg(CONFIG_64BIT)]
--        writeq_relaxed,
--        try_writeq_relaxed,
--        u64
-+        write64_relaxed,
-+        try_write64_relaxed,
-+        writeq_relaxed <- u64
-     );
- }
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 1fb6e44f33951c521c8b086a7a3a012af911cf26..ddc52db71a82a79657ec53025f9ef81d620516fc 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -43,17 +43,17 @@ struct SampleDriver {
- impl SampleDriver {
-     fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
-         // Select the test.
--        bar.writeb(index.0, Regs::TEST);
-+        bar.write8(index.0, Regs::TEST);
- 
--        let offset = u32::from_le(bar.readl(Regs::OFFSET)) as usize;
--        let data = bar.readb(Regs::DATA);
-+        let offset = u32::from_le(bar.read32(Regs::OFFSET)) as usize;
-+        let data = bar.read8(Regs::DATA);
- 
-         // Write `data` to `offset` to increase `count` by one.
-         //
--        // Note that we need `try_writeb`, since `offset` can't be checked at compile-time.
--        bar.try_writeb(data, offset)?;
-+        // Note that we need `try_write8`, since `offset` can't be checked at compile-time.
-+        bar.try_write8(data, offset)?;
- 
--        Ok(bar.readl(Regs::COUNT))
-+        Ok(bar.read32(Regs::COUNT))
-     }
- }
- 
+--000000000000cafa83062e5cea00
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
----
-base-commit: 2408a807bfc3f738850ef5ad5e3fd59d66168996
-change-id: 20250217-io-generic-rename-52d3af5b463f
-
-Best regards,
--- 
-Fiona Behrens <me@kloenk.dev>
-
+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
+tJVewHuOmXgWQxNWV7Oiszu1d9xAcqyj65s1PrEIIaHnxEM3eTK+teecLEy8QymZjjDTrCHg4x36
+2AczdlQAIiq5TSAucGja5VP8g1zTnfL/RAxEZvLS471GABptArolXY2hMVHdVEYcTduZlu8aHARc
+phXveOB5/l3bPqpMVf2aFalv4ab733Aw6cPuQkbtwpMFifp9Y3s/0HGBfADomK4OeDTDJfuvCp8g
+a907E48SjOJBGkh6c6B3ace2XH+CyB7+WBsoK6hsrV5twAXSe7frgP4lN/4Cm2isQl3D7vXM3PBQ
+ddI2aZzmewTfbgZptt4KCUhZh+t7FGB6ZKppQ++Rx0zsGN1s71MtjJnhXvJyPs9UyL1n7KQPTEX/
+07kwIwdMjxC/hpbZmVq0mVccpMy7FYlTuiwFD+TEnhmxGDTVTJ267fcfrySVBHioA7vugeXaX3yL
+SqGQdCWnsz5LyCxWvcfI7zjiXJLwefechLp0LWEBIH5+0fJPB1lfiy1DUutGDJTh9WZHeXfVVFsf
+rSQ3y0VaTqBESMjYsJnFFYQJ9tZJScBluOYacW6gqPGC6EU+bNYC1wpngwVayaQQMIIGczCCBFug
+AwIBAgIMUk0VAZ2+ny3UPjcLMA0GCSqGSIb3DQEBCwUAMFIxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
+ExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBDQSAy
+MDIzMB4XDTI0MTEyODA2NDY0MloXDTI2MTEyOTA2NDY0MlowgbcxCzAJBgNVBAYTAlVTMRMwEQYD
+VQQIEwpDYWxpZm9ybmlhMREwDwYDVQQHEwhTYW4gSm9zZTEZMBcGA1UEYRMQTlRSVVMrREUtNjYx
+MDExNzEWMBQGA1UEChMNQlJPQURDT00gSU5DLjEcMBoGA1UEAxMTR3VydXN3YW15IEJhc2F2YWlh
+aDEvMC0GCSqGSIb3DQEJARYgZ3VydXN3YW15LmJhc2F2YWlhaEBicm9hZGNvbS5jb20wggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDT0Ds+7uJK45uIzSpcStEgsoGtSBSCM3BYtj8H4WsF
+Ryh4F5x2LhrSFVgvxip1dFM6bqyyLEY82kyxQJSChQ6uFDmhMvf0RLnnLq/bG76MmUGYjFksgx42
+HffC6RhAfZ4rFPHuMTzPdyLnEitTcdBZRZmqtA4TSc/va0ZYpt2NXER42km8pBBJnEUoXWUauk/B
+wE/SJP0UDZHDpR0HTDO+2ul9LeMEGfSKAMWjTnBmC17rCqOM72hW8DJti66bHFRtCHg28L3wRK82
+V4Qk3hqSXX7fETAbc98s08Hx2V/psvw2XJjLa0jcBQcswvSQl0S3Z/k1UN4VBO3I9qP6x4JzAgMB
+AAGjggHhMIIB3TAOBgNVHQ8BAf8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAC
+hjpodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMu
+Y3J0MDkGCCsGAQUFBzABhi1odHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVj
+YTIwMjMwZQYDVR0gBF4wXDAJBgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQw
+MgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1Ud
+EwQCMAAwQQYDVR0fBDowODA2oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2
+c21pbWVjYTIwMjMuY3JsMCsGA1UdEQQkMCKBIGd1cnVzd2FteS5iYXNhdmFpYWhAYnJvYWRjb20u
+Y29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8GA1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCS
+MB0GA1UdDgQWBBTbuVbn7YM8LkfptiejPCXAA9xe6DANBgkqhkiG9w0BAQsFAAOCAgEAfTu20v5U
+JUB1TEHI7Qt8ajW/ToLpU3/BtFFwMne3hQsbEPpJPhBY133wtFoS01K3AFcl6rdOVThpp007r+eb
+bb5KR/oYokEvw2seZ1y33ZqGNQdZDTSzXOXKrm9ATwWRjN7dNhTrr9Of8BS9Kjx6V+O8KRlaoWVI
+GT/t6ubwmFNk9mKNec4RRcDTlu36nJmdwPMu6X2+kxTFRoLpcyIdL9fMkXOIT/JAIyKMURNqKDtz
+InPPvNHgGN9/FYJbqNFj2q5tPbxJbDGfs3i1ulPRTOADhIVwWFrY7MgNMOwcJY8AYO/URDWA3MeZ
+RCvfoIKBHeMgabWapnlLWsOpXJhlnZoSvrw37fkFVc9a/EnUIdXzDs3M20m8jYigf3zK7/lQkoye
+vssiDIcz473ViH6gaZEPN83DN7L1VKgrQ8zHF3qw8ctyH9i7xpWbqZ635JzaNqbZ0eXaA4nNfuCo
+EIsyrGT5sPSvWx8v+OcgMeh00XLvHBZfGAtf64NIedRqamOfuC3W/zpQrnmqr0IDj/tOgoaKBz3N
+KSy5T8E4NeNfiVxB7tOFWQms7pAzfD0OQiUHcjfNLra5uqQlafXezxKKGHeshKukKz8Q7mfV6ES4
+cZtIbMMXwd6jsxAj+vDw9BeG0/M49qmEZ9Rteb6dXnObIte8gDtK41NjSWH1Yslg2YsxggJkMIIC
+YAIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQD
+Ex9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBDQSAyMDIzAgxSTRUBnb6fLdQ+NwswDQYJYIZIAWUD
+BAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIC4PcS7KHtbYF2jzuAzHvX02z7OSdtYpU/2yV9P9Hc/I
+MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDIxNzIxMDc1MVow
+aQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAK
+BggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG
+9w0BAQEFAASCAQBXPwp2edAG950shMh8qrVzNRlbXYs0n/3MPMlwhHWTSK1DpMNvJJBErfIN3DiD
+DEmdDGcgBeealljc0U48/dUCnO+QsF6PmH9O2i8NYsGBx72XJzx8MmBrhhelrmf3xsJ8ygOtrTuf
+0MeIxBsIwLQoHYoi/EjQrGWCb9o6OvW/a4/vJsLE/WRYG/vpl7LZbFjMDLfCxkYLC60i/5JzvOtr
+gkBz3hTY7ksQqjlnEZhlIFNHftpKlmHC1eOshBUhssjnUSJI4AQpUkurhXULEQA2wRcB95YSs3Ao
+PJmfivVo8KSomkOYcXqTDs0LvdKJgpYLH1LPF+Fit7x6+ANMZube
+--000000000000cafa83062e5cea00--
