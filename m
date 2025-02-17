@@ -1,485 +1,138 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE8641A8F6D;
-	Mon, 17 Feb 2025 22:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DD41A9B5B;
+	Mon, 17 Feb 2025 22:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739832600; cv=none; b=F95zx1UYVxkmwgOiWMbqrbuhnbNVRCtogeiCeTzbDC7z0hmcPeyl6xcQLk4povBeOT/bn/l7pJis9rmdhNJfqh/+bRla+dyX4r6mspWfCFJK/LE6H0zzeCAqd2pAEnmlutswcGIOzSpvjuW14+rX00dbIQ5fr5bUdxjqdRAWTeY=
+	t=1739832638; cv=none; b=NbIzMPb0PQGXQpFJ6mvHf2bC8zCs5vLJwU2MUaVweHoF0W3F+Sd+JqRoHCD2KNBQioqsWdSKdxW+8et0mOgfe+hpBETu2Ia6XFOMz4H/hMtH0RHsdXQk8zlnKvZZwxkZ4BZxyrrj/zm0WmUmL8FBj4hkwVoaq4rpsDpE3mb38Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739832600; c=relaxed/simple;
-	bh=BLSB6otTAnDsyxv4dQyqIGnJxk0R4HIXc7ThZMUCZVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WM+w/9KwmtPDZRN24lV+Wl3obPTFVtijYTOY83Uj13D0d8Oj4qk25PBEXCXn253F81C7SYgwRILJYG24j854X/o1l3auy+nEC/hKb8DKVR53iW+4DkUOMw6JJ86hjYAqrz6X1HzGPwd/SQ3XXCwukAdPCYca/4ZfFsNeOCKLiWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E70019F0;
-	Mon, 17 Feb 2025 14:50:16 -0800 (PST)
-Received: from beelzebub.ast.arm.com (unknown [10.118.29.240])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DFCE43F5A1;
-	Mon, 17 Feb 2025 14:49:56 -0800 (PST)
-From: Stuart Yoder <stuart.yoder@arm.com>
-To: linux-integrity@vger.kernel.org,
-	jarkko@kernel.org,
-	peterhuewe@gmx.de,
-	jgg@ziepe.ca,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/5] tpm_crb: implement driver compliant to CRB over FF-A
-Date: Mon, 17 Feb 2025 16:49:42 -0600
-Message-Id: <20250217224946.113951-2-stuart.yoder@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217224946.113951-1-stuart.yoder@arm.com>
-References: <20250217224946.113951-1-stuart.yoder@arm.com>
+	s=arc-20240116; t=1739832638; c=relaxed/simple;
+	bh=/6SGeRltRm31xAdkNm0gzzyt7aeAn431Szrtm/7AyJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m/wuiKj4ZWWN27dTJ0dKkzHdLRmO3pOjGuIOnd+nc376fSdxy7itad+HzVjYQcmFg99SHMoPRyxNFI1KfhUa2DBu+pm0Et0BqsXs4hqzfPWUeKdQhaQVQl7LuKkRDDp9d3ryZHUXYuBn3r2X1RzJUAh6xJVLIgCCXg/I58R9pzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BhVC+Hsu; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhVC+Hsu"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c07b65efeeso401936385a.2;
+        Mon, 17 Feb 2025 14:50:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739832636; x=1740437436; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GuRB9Jwf6lkVtrT6vIlRJUWZnFJbbxQGyG8tssiDsGY=;
+        b=BhVC+Hsu7UPe6UwDPY/QE5dIst6jjqZueUR33w1s/e717U+Sy8Lv/Pza2Z9B7sPS/4
+         CFjNMurj82Fywygw+yJuv+PVJ7KG+rRxZgVJJe8a36zTmokQChclxRLab4m/VyxVGspd
+         o420Gt8NXWZuGJ9koj2K9YlWxk4E1p5YCkpujB2+RqpfduNnDIRmh3YIydnfDMFaKdau
+         Q8/EI+2zjdTTq6FbS0h1lEbOmoGV+N1r/vrBcWcrBw8FDBUw/aGlEUagGc5PGuRmGCpX
+         X23WDCTXR3iAWwIKyuz5bYpruFAe+0B5PxbVQGOGUOv9Pr8xqf8B3wrxKOqivAXe5l+D
+         RNaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739832636; x=1740437436;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GuRB9Jwf6lkVtrT6vIlRJUWZnFJbbxQGyG8tssiDsGY=;
+        b=WJ1kQ1gJdlVMKbutEzN/3fiBVtqFa19gvMVYDq+mpqzyrSXauwyTod/ACZ81zWHTOw
+         xb9OsAXMEy/p/h5VreqYYl6ZqyfC+LpTVrhlWwgSD0cRFX0JcCe1Lk/8DWicyyA+H3y7
+         xEGPgRbjDYLszMqcwWEHNDJ4yHA+rf+dPG6IEf/4g9r3R1FpbFIBGiGRtjm5spqQALmw
+         +40eak5/9EtRXjH1eYPNDOZUYxznNRsfG+3EnSjJNMqd9AVRkNiPUjAyBNHuzeUjlXUl
+         vjakG6w4/5MlJDWwp9A0wza25Sosq9a1dX+kWHwujNBvg8/FxQHvkpMKSQSs0ASCH+wN
+         LBnw==
+X-Forwarded-Encrypted: i=1; AJvYcCV42BkJFK8jx7zILSvYY7IgNYcqiVhaChoyU0Ru+jFsICpsvILabUHLEq1y0d/Fw6C+2uqANqceZROsUAKf@vger.kernel.org, AJvYcCX/sNUInCbirqkoK39D4WhP1GVc+FpfuEiw1dQ0uuBJZpj7dHEsWz4ZDBwZe6Nr+5CI8/TUCKHh@vger.kernel.org, AJvYcCXYIDytNpkxcMOltvqHi27mFG/33TqF5W3ja53YwzwgTzO1BuC3+kTrn8h0zsvVmEASIz0HfIZfdi4O@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJoMLp1aUga6As1uJ9SS+L6/Un9+jJWQbNT8Ckpqne11Uj+1Be
+	M1B7yFbH1Pxgj7+CJPQI1QiZhoOGHyVnrMPRCw2wMHlsoTfazy84
+X-Gm-Gg: ASbGncuhpm7uNaKMIWmkYuMHJ9k9gde2uCLLna5BShxzd/FRCGXENh9felESi/Amhtz
+	R5YN9Uktc/1o5EAcse1pOIZJPENJnLe1h+82JAtHF/1LQUhH2/+KeONmoYfhdqGLDAwvBrHPYcr
+	habnp7G/4CH4rFGQX0so80t9AaHfXcMVoSdDNjR7m6Eg/SEQbGLpBJl3bq9BKym0gjsXu0qpZV4
+	/A1bIBGIPQFZUTc8Kuzldmg1iPjHqsEVNrizLrTa86uHDerA/UMM9tpqwZNFG7jJOg=
+X-Google-Smtp-Source: AGHT+IE77k8p+mAi1BZHXw2Af6ibqX9QoECI2nv0Dz4rUPqmmgRmUNBBDIKtrBxkEobOVjl1YJiisg==
+X-Received: by 2002:a05:620a:44c7:b0:7b6:d97a:2608 with SMTP id af79cd13be357-7c08a9a6481mr1561011085a.17.1739832636093;
+        Mon, 17 Feb 2025 14:50:36 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c0971334f0sm208792885a.56.2025.02.17.14.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 14:50:35 -0800 (PST)
+Date: Tue, 18 Feb 2025 06:50:24 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>, 
+	Andrew Lunn <andrew@lunn.ch>
+Cc: Inochi Amaoto <inochiama@gmail.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, "Jan Petrous (OSS)" <jan.petrous@oss.nxp.com>, 
+	Hariprasad Kelam <hkelam@marvell.com>, =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+	Drew Fustini <dfustini@tenstorrent.com>, Furong Xu <0x1207@gmail.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, 
+	Serge Semin <fancer.lancer@gmail.com>, Lothar Rubusch <l.rubusch@gmail.com>, 
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add glue layer for Sophgo
+ SG2044 SoC
+Message-ID: <rsysy3p5ium5umzz34rtinppcu2b36klgjdtq5j4lm3mylbqbz@z44yeje5wgat>
+References: <20250216123953.1252523-1-inochiama@gmail.com>
+ <20250216123953.1252523-4-inochiama@gmail.com>
+ <Z7IIht2Q-iXEFw7x@shell.armlinux.org.uk>
+ <5e481b95-3cf8-4f71-a76b-939d96e1c4f3@lunn.ch>
+ <js3z3ra7fyg4qwxbly24xqpnvsv76jyikbhk7aturqigewllbx@gvus6ub46vow>
+ <24eecc48-9061-4575-9e3b-6ef35226407a@lunn.ch>
+ <Z7NDakd7zpQ_345D@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7NDakd7zpQ_345D@shell.armlinux.org.uk>
 
-The Arm specification TPM Service CRB over FF-A specification
-defines the FF-A messages to interact with a CRB-based TPM
-implemented as an FF-A secure partition.
+On Mon, Feb 17, 2025 at 02:10:50PM +0000, Russell King (Oracle) wrote:
+> On Mon, Feb 17, 2025 at 02:25:33PM +0100, Andrew Lunn wrote:
+> > > I am not sure all whether devices has this clock, but it appears in
+> > > the databook. So I think it is possible to move this in the core so
+> > > any platform with these clock can reuse it.
+> > 
+> > Great
+> > 
+> > The next problem will be, has everybody called it the same thing in
+> > DT. Since there has been a lot of cut/paste, maybe they have, by
+> > accident.
+> 
+> Tegra186: "tx"
+> imx: "tx"
+> intel: "tx_clk"
+> rk: "clk_mac_speed"
+> s32: "tx"
+> starfive: "tx"
+> sti: "sti-ethclk"
+> 
 
-Spec URL:
-https://developer.arm.com/documentation/den0138/latest/
+The dwc-qos-eth also use clock name "tx", but set the clock with
+extra calibration logic.
 
-This driver is probed when a TPM Secure Partition is
-discovered by the FF-A subsystem. It exposes APIs
-used by the TPM CRB driver to send notifications to
-the TPM.
+> so 50% have settled on "tx" and the rest are doing their own thing, and
+> that horse has already bolted.
+> 
 
-Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
----
- drivers/char/tpm/Kconfig       |   9 +
- drivers/char/tpm/Makefile      |   1 +
- drivers/char/tpm/tpm_crb_ffa.c | 348 +++++++++++++++++++++++++++++++++
- drivers/char/tpm/tpm_crb_ffa.h |  25 +++
- 4 files changed, 383 insertions(+)
- create mode 100644 drivers/char/tpm/tpm_crb_ffa.c
- create mode 100644 drivers/char/tpm/tpm_crb_ffa.h
+The "rx" clock in s32 also uses the same logic. I think the core also
+needs to take it, as this rx clock is also mentioned in the databook.
 
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 0fc9a510e059..4c85b8c00b12 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -210,6 +210,15 @@ config TCG_CRB
- 	  from within Linux.  To compile this driver as a module, choose
- 	  M here; the module will be called tpm_crb.
- 
-+config TCG_ARM_CRB_FFA
-+	tristate "TPM CRB over Arm FF-A Transport"
-+	depends on ARM_FFA_TRANSPORT
-+	default y if (TCG_CRB && ARM_FFA_TRANSPORT)
-+	help
-+	  If the Arm FF-A transport is used to access the TPM say Yes.
-+	  To compile this driver as a module, choose M here; the module
-+	  will be called tpm_crb_ffa.
-+
- config TCG_VTPM_PROXY
- 	tristate "VTPM Proxy Interface"
- 	depends on TCG_TPM
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 9bb142c75243..2b004df8c04b 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -42,5 +42,6 @@ obj-$(CONFIG_TCG_IBMVTPM) += tpm_ibmvtpm.o
- obj-$(CONFIG_TCG_TIS_ST33ZP24) += st33zp24/
- obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
- obj-$(CONFIG_TCG_CRB) += tpm_crb.o
-+obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
- obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
- obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-new file mode 100644
-index 000000000000..bd3c6c41264b
---- /dev/null
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -0,0 +1,348 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ *
-+ * This device driver implements the TPM CRB start method
-+ * as defined in the TPM Service Command Response Buffer
-+ * Interface Over FF-A (DEN0138).
-+ */
-+
-+#define pr_fmt(fmt) "CRB_FFA: " fmt
-+
-+#include <linux/arm_ffa.h>
-+#include "tpm_crb_ffa.h"
-+
-+/* TPM service function status codes */
-+#define CRB_FFA_OK			0x05000001
-+#define CRB_FFA_OK_RESULTS_RETURNED	0x05000002
-+#define CRB_FFA_NOFUNC			0x8e000001
-+#define CRB_FFA_NOTSUP			0x8e000002
-+#define CRB_FFA_INVARG			0x8e000005
-+#define CRB_FFA_INV_CRB_CTRL_DATA	0x8e000006
-+#define CRB_FFA_ALREADY			0x8e000009
-+#define CRB_FFA_DENIED			0x8e00000a
-+#define CRB_FFA_NOMEM			0x8e00000b
-+
-+#define CRB_FFA_VERSION_MAJOR	1
-+#define CRB_FFA_VERSION_MINOR	0
-+
-+/* version encoding */
-+#define CRB_FFA_MAJOR_VERSION_MASK  GENMASK(30, 16)
-+#define CRB_FFA_MINOR_VERSION_MASK  GENMASK(15, 0)
-+#define CRB_FFA_MAJOR_VERSION(x)    ((u16)(FIELD_GET(CRB_FFA_MAJOR_VERSION_MASK, (x))))
-+#define CRB_FFA_MINOR_VERSION(x)    ((u16)(FIELD_GET(CRB_FFA_MINOR_VERSION_MASK, (x))))
-+
-+/*
-+ * Normal world sends requests with FFA_MSG_SEND_DIRECT_REQ and
-+ * responses are returned with FFA_MSG_SEND_DIRECT_RESP for normal
-+ * messages.
-+ *
-+ * All requests with FFA_MSG_SEND_DIRECT_REQ and FFA_MSG_SEND_DIRECT_RESP
-+ * are using the AArch32 SMC calling convention with register usage as
-+ * defined in FF-A specification:
-+ * w0:    Function ID (0x8400006F or 0x84000070)
-+ * w1:    Source/Destination IDs
-+ * w2:    Reserved (MBZ)
-+ * w3-w7: Implementation defined, free to be used below
-+ */
-+
-+/*
-+ * Returns the version of the interface that is available
-+ * Call register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function ID, CRB_FFA_GET_INTERFACE_VERSION
-+ * w5-w7: Reserved (MBZ)
-+ *
-+ * Return register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function status
-+ * w5:    TPM service interface version
-+ *        Bits[31:16]: major version
-+ *        Bits[15:0]: minor version
-+ * w6-w7: Reserved (MBZ)
-+ *
-+ * Possible function status codes in register w4:
-+ *     CRB_FFA_OK_RESULTS_RETURNED: The version of the interface has been
-+ *                                  returned.
-+ */
-+#define CRB_FFA_GET_INTERFACE_VERSION 0x0f000001
-+
-+/*
-+ * Return information on a given feature of the TPM service
-+ * Call register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function ID, CRB_FFA_START
-+ * w5:    Start function qualifier
-+ *            Bits[31:8] (MBZ)
-+ *            Bits[7:0]
-+ *              0: Notifies TPM that a command is ready to be processed
-+ *              1: Notifies TPM that a locality request is ready to be processed
-+ * w6:    TPM locality, one of 0..4
-+ *            -If the start function qualifier is 0, identifies the locality
-+ *             from where the command originated.
-+ *            -If the start function qualifier is 1, identifies the locality
-+ *             of the locality request
-+ * w6-w7: Reserved (MBZ)
-+ *
-+ * Return register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function status
-+ * w5-w7: Reserved (MBZ)
-+ *
-+ * Possible function status codes in register w4:
-+ *     CRB_FFA_OK: the TPM service has been notified successfully
-+ *     CRB_FFA_INVARG: one or more arguments are not valid
-+ *     CRB_FFA_INV_CRB_CTRL_DATA: CRB control data or locality control
-+ *         data at the given TPM locality is not valid
-+ *     CRB_FFA_DENIED: the TPM has previously disabled locality requests and
-+ *         command processing at the given locality
-+ */
-+#define CRB_FFA_START 0x0f000201
-+
-+struct tpm_crb_ffa {
-+	struct ffa_device *ffa_dev;
-+	u16 major_version;
-+	u16 minor_version;
-+	struct mutex msg_data_lock; /* lock to protect sending of FF-A messages */
-+	struct ffa_send_direct_data direct_msg_data;
-+};
-+
-+static struct tpm_crb_ffa *tpm_crb_ffa;
-+
-+static int tpm_crb_ffa_to_linux_errno(int errno)
-+{
-+	int rc;
-+
-+	switch (errno) {
-+	case CRB_FFA_OK:
-+		rc = 0;
-+		break;
-+	case CRB_FFA_OK_RESULTS_RETURNED:
-+		rc = 0;
-+		break;
-+	case CRB_FFA_NOFUNC:
-+		rc = -ENOENT;
-+		break;
-+	case CRB_FFA_NOTSUP:
-+		rc = -EPERM;
-+		break;
-+	case CRB_FFA_INVARG:
-+		rc = -EINVAL;
-+		break;
-+	case CRB_FFA_INV_CRB_CTRL_DATA:
-+		rc = -ENOEXEC;
-+		break;
-+	case CRB_FFA_ALREADY:
-+		rc = -EEXIST;
-+		break;
-+	case CRB_FFA_DENIED:
-+		rc = -EACCES;
-+		break;
-+	case CRB_FFA_NOMEM:
-+		rc = -ENOMEM;
-+		break;
-+	default:
-+		rc = -EINVAL;
-+	}
-+
-+	return rc;
-+}
-+
-+/**
-+ * tpm_crb_ffa_init - called by the CRB driver to do any needed initialization
-+ *
-+ * This function is called by the tpm_crb driver during the tpm_crb
-+ * driver's initialization. If the tpm_crb_ffa has not been probed
-+ * yet, returns -ENOENT in order to force a retry.  If th ffa_crb
-+ * driver had been probed  but failed with an error, returns -ENODEV
-+ * in order to prevent further retries.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int tpm_crb_ffa_init(void)
-+{
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(tpm_crb_ffa))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
-+
-+static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
-+				      unsigned long a0,
-+				      unsigned long a1,
-+				      unsigned long a2)
-+{
-+	const struct ffa_msg_ops *msg_ops;
-+	int ret;
-+
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
-+
-+	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
-+
-+	memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-+	       sizeof(struct ffa_send_direct_data));
-+
-+	tpm_crb_ffa->direct_msg_data.data1 = func_id;
-+	tpm_crb_ffa->direct_msg_data.data2 = a0;
-+	tpm_crb_ffa->direct_msg_data.data3 = a1;
-+	tpm_crb_ffa->direct_msg_data.data4 = a2;
-+
-+	ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-+			&tpm_crb_ffa->direct_msg_data);
-+	if (!ret)
-+		ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-+
-+	return ret;
-+}
-+
-+/**
-+ * tpm_crb_ffa_get_interface_version() - gets the ABI version of the TPM service
-+ * @major: Pointer to caller-allocated buffer to hold the major version
-+ *         number the ABI
-+ * @minor: Pointer to caller-allocated buffer to hold the minor version
-+ *         number the ABI
-+ *
-+ * Returns the major and minor version of the ABI of the FF-A based TPM.
-+ * Allows the caller to evaluate its compatibility with the version of
-+ * the ABI.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
-+{
-+	int rc;
-+
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(tpm_crb_ffa))
-+		return -ENODEV;
-+
-+	if (!major || !minor)
-+		return -EINVAL;
-+
-+	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
-+
-+	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
-+	if (!rc) {
-+		*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+		*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+	}
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(tpm_crb_ffa_get_interface_version);
-+
-+/**
-+ * tpm_crb_ffa_start() - signals the TPM that a field has changed in the CRB
-+ * @request_type: Identifies whether the change to the CRB is in the command
-+ *                fields or locality fields.
-+ * @locality: Specifies the locality number.
-+ *
-+ * Used by the CRB driver
-+ * that might be useful to those using or modifying it.  Begins with
-+ * empty comment line, and may include additional embedded empty
-+ * comment lines.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int tpm_crb_ffa_start(int request_type, int locality)
-+{
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(tpm_crb_ffa))
-+		return -ENODEV;
-+
-+	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
-+
-+	return __tpm_crb_ffa_send_recieve(CRB_FFA_START, request_type, locality, 0x00);
-+}
-+EXPORT_SYMBOL_GPL(tpm_crb_ffa_start);
-+
-+static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
-+{
-+	struct tpm_crb_ffa *p;
-+	int rc;
-+
-+	/* only one instance of a TPM partition is supported */
-+	if (tpm_crb_ffa && !IS_ERR_VALUE(tpm_crb_ffa))
-+		return -EEXIST;
-+
-+	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
-+
-+	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
-+		pr_err("TPM partition doesn't support direct message receive.\n");
-+		return -EINVAL;
-+	}
-+
-+	p = kzalloc(sizeof(*tpm_crb_ffa), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+	tpm_crb_ffa = p;
-+
-+	mutex_init(&tpm_crb_ffa->msg_data_lock);
-+	tpm_crb_ffa->ffa_dev = ffa_dev;
-+	ffa_dev_set_drvdata(ffa_dev, tpm_crb_ffa);
-+
-+	/* if TPM is aarch32 use 32-bit SMCs */
-+	if (!ffa_partition_check_property(ffa_dev, FFA_PARTITION_AARCH64_EXEC))
-+		ffa_dev->ops->msg_ops->mode_32bit_set(ffa_dev);
-+
-+	/* verify compatibility of TPM service version number */
-+	rc = tpm_crb_ffa_get_interface_version(&tpm_crb_ffa->major_version,
-+					       &tpm_crb_ffa->minor_version);
-+	if (rc) {
-+		pr_err("failed to get crb interface version. rc:%d", rc);
-+		goto out;
-+	}
-+
-+	pr_info("ABI version %u.%u", tpm_crb_ffa->major_version,
-+		tpm_crb_ffa->minor_version);
-+
-+	if (tpm_crb_ffa->major_version != CRB_FFA_VERSION_MAJOR ||
-+	   (tpm_crb_ffa->minor_version > 0 &&
-+	    tpm_crb_ffa->minor_version < CRB_FFA_VERSION_MINOR)) {
-+		pr_err("Incompatible ABI version");
-+		goto out;
-+	}
-+
-+	return 0;
-+
-+out:
-+	kfree(tpm_crb_ffa);
-+	tpm_crb_ffa = ERR_PTR(-ENODEV);
-+	return -EINVAL;
-+}
-+
-+static void tpm_crb_ffa_remove(struct ffa_device *ffa_dev)
-+{
-+	kfree(tpm_crb_ffa);
-+	tpm_crb_ffa = NULL;
-+}
-+
-+static const struct ffa_device_id tpm_crb_ffa_device_id[] = {
-+	/* 17b862a4-1806-4faf-86b3-089a58353861 */
-+	{ UUID_INIT(0x17b862a4, 0x1806, 0x4faf,
-+		    0x86, 0xb3, 0x08, 0x9a, 0x58, 0x35, 0x38, 0x61) },
-+	{}
-+};
-+
-+static struct ffa_driver tpm_crb_ffa_driver = {
-+	.name = "ffa-crb",
-+	.probe = tpm_crb_ffa_probe,
-+	.remove = tpm_crb_ffa_remove,
-+	.id_table = tpm_crb_ffa_device_id,
-+};
-+
-+module_ffa_driver(tpm_crb_ffa_driver);
-+
-+MODULE_AUTHOR("Arm");
-+MODULE_DESCRIPTION("FFA CRB driver");
-+MODULE_VERSION("1.0");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/char/tpm/tpm_crb_ffa.h b/drivers/char/tpm/tpm_crb_ffa.h
-new file mode 100644
-index 000000000000..23a9b93287a1
---- /dev/null
-+++ b/drivers/char/tpm/tpm_crb_ffa.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ *
-+ * This device driver implements the TPM CRB start method
-+ * as defined in the TPM Service Command Response Buffer
-+ * Interface Over FF-A (DEN0138).
-+ */
-+#ifndef _TPM_CRB_FFA_H
-+#define _TPM_CRB_FFA_H
-+
-+#if IS_ENABLED(CONFIG_TCG_ARM_CRB_FFA)
-+int tpm_crb_ffa_init(void);
-+int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor);
-+int tpm_crb_ffa_start(int request_type, int locality);
-+#else
-+static inline int tpm_crb_ffa_init(void) { return 0; }
-+static inline int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor) { return 0; }
-+static inline int tpm_crb_ffa_start(int request_type, int locality) { return 0; }
-+#endif
-+
-+#define CRB_FFA_START_TYPE_COMMAND 0
-+#define CRB_FFA_START_TYPE_LOCALITY_REQUEST 1
-+
-+#endif
--- 
-2.34.1
+> I have some ideas on sorting this out, and I'm working on some patches
+> today.
 
+Great, Could you cc me when you submit them? So I can take it and
+change my series.
+
+Regards,
+Inochi
