@@ -1,131 +1,114 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238CB228C81;
-	Mon, 17 Feb 2025 15:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F6E229B0B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 15:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807388; cv=none; b=Bihjohm9R1ejvy34urMkBH3A0DTeOcHsyTVjx+n2hfxK/8Dyo6n/2EiWsm7WW324k92b2TLvAcxbRNFpdpik0Fx+UGvb2Bvz9xcHO3E/djxvo3aZhxaitX1lR+TZ3RybNqjeU8+YiZwFDUOJogkYea4n6KnK8LylcLUKGPJPK5M=
+	t=1739807390; cv=none; b=ic++MwdIXFrcNB8zvgxFP9tRHUgYwJ01fAbh+LxwN0yVkBLzx/XV0WtXPHadzmBxxDuhHMjzpWZtF+nWb0kSOwILwIQ2/oL2kAIskLhNzNC8/qRhLbUPEBflLZRM+CKTmQyxSIwUtVBpeEGlGehquc9Puh3d0QmXFCOOIYlGf+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739807388; c=relaxed/simple;
-	bh=ZXKdmRLdjN+KhBWeFR32miAra/3q4GGxsFO/SDOjuAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DgZyNXM5q6yBLBc3JJEhFpYZDx3XV47Z+xYXpqJ4eHdw8+pCsV2Sf+9srGxw0DGW68iovwrjjn/PniAAFEz572AmFDqpSCte6aUVv4MERrYMlB8BHFaiU93dvBeGifofH8buV4jWR2FquL677bUT+hpCqk2I/Os4wka3kVAaoeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HnNGEhkv; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HnNGEhkv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739807385;
-	bh=ZXKdmRLdjN+KhBWeFR32miAra/3q4GGxsFO/SDOjuAw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HnNGEhkvB7Vp+EiJocPDCwVQMWYV/MbeiEOquw7LVJC+2KGiETsZEgGpILjH0Mt7/
-	 JwpAotwsHyz2X2BbiT/5Y4iXLyfCJ0M1KWhCpDdo42Z1cAR1xZ0pfWMShu2W4ByFLA
-	 EfaBozO0y1UJ2fYZbfaKYuDfuzPwTCGiiyOXpv/F2sPxWKe0rLDIIt8ijjDQfxdO/j
-	 PCeHpTILNaRFQidiz3E07MhiS7HqFz3naHEe8tlIN/2igimC9SymrMc64Ipu60txDb
-	 WTulpAVMvCBloFvmFATJJt2KgXgfrYpEIklehkxkDQW7shmb59a4q4U7ZzvXUvxs7t
-	 6NcdrzvVQEKrg==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1AFDD17E1574;
-	Mon, 17 Feb 2025 16:49:44 +0100 (CET)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	ck.hu@mediatek.com,
-	jitao.shi@mediatek.com,
-	jie.qiu@mediatek.com,
-	junzhi.zhao@mediatek.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com,
-	dmitry.baryshkov@linaro.org,
-	lewis.liao@mediatek.com,
-	ives.chenjh@mediatek.com,
-	tommyyl.chen@mediatek.com,
-	jason-jh.lin@mediatek.com
-Subject: [PATCH v7 19/43] drm/mediatek: mtk_hdmi: Fix typo for aud_sampe_size member
-Date: Mon, 17 Feb 2025 16:48:12 +0100
-Message-ID: <20250217154836.108895-20-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
-References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
+	s=arc-20240116; t=1739807390; c=relaxed/simple;
+	bh=+T9+QSLbqVaktqQ4lOnMjR9OoKYV0X4W7fjhcNuiSPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nwf1Rvki+JlBhiLMxaE4jKes1Xx7c2xHNFxVZ5FyNxBYKKL7JB13V0r/yd7X+aWSAa8S6wHrNVhkDSW3QqFjiMT9tjVGTgsbv6iiC9NuwESAus2op0KNo2PxuIwAG1k2maHL2/2bJ1vwu5H4eKaTV7LsOFJBX34JL8S7M6Cw+Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB18C4CED1;
+	Mon, 17 Feb 2025 15:49:47 +0000 (UTC)
+Date: Mon, 17 Feb 2025 10:50:07 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Harshit Agarwal <harshit@nutanix.com>, Peter Zijlstra
+ <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ linux-kernel@vger.kernel.org, Jon Kohler <jon@nutanix.com>, Gauri
+ Patwardhan <gauri.patwardhan@nutanix.com>, Rahul Chunduru
+ <rahul.chunduru@nutanix.com>, Will Ton <william.ton@nutanix.com>
+Subject: Re: [PATCH v2] sched/rt: Fix race in push_rt_task
+Message-ID: <20250217105007.45ba8cb4@gandalf.local.home>
+In-Reply-To: <20250213175435.114441-1-harshit@nutanix.com>
+References: <9C390C10-8741-4992-8E29-303C907C8C00@nutanix.com>
+	<20250213175435.114441-1-harshit@nutanix.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Rename member aud_sampe_size of struct hdmi_audio_param to
-aud_sample_size to fix a typo and enhance readability.
 
-This commit brings no functional changes.
+FYI,
 
-Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+You should always send a new patch version as a separate thread. That's
+because they can get lost in the thread and makes it harder for maintainers
+to know what the next version of the patch is. I've picked the wrong patch
+version before because there was another version sent that I missed.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 29000cfcf761..6257503ce639 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -136,7 +136,7 @@ enum hdmi_aud_channel_swap_type {
- 
- struct hdmi_audio_param {
- 	enum hdmi_audio_coding_type aud_codec;
--	enum hdmi_audio_sample_size aud_sampe_size;
-+	enum hdmi_audio_sample_size aud_sample_size;
- 	enum hdmi_aud_input_type aud_input_type;
- 	enum hdmi_aud_i2s_fmt aud_i2s_fmt;
- 	enum hdmi_aud_mclk aud_mclk;
-@@ -1033,7 +1033,7 @@ static int mtk_hdmi_output_init(struct mtk_hdmi *hdmi)
- 
- 	hdmi->csp = HDMI_COLORSPACE_RGB;
- 	aud_param->aud_codec = HDMI_AUDIO_CODING_TYPE_PCM;
--	aud_param->aud_sampe_size = HDMI_AUDIO_SAMPLE_SIZE_16;
-+	aud_param->aud_sample_size = HDMI_AUDIO_SAMPLE_SIZE_16;
- 	aud_param->aud_input_type = HDMI_AUD_INPUT_I2S;
- 	aud_param->aud_i2s_fmt = HDMI_I2S_MODE_I2S_24BIT;
- 	aud_param->aud_mclk = HDMI_AUD_MCLK_128FS;
-@@ -1529,14 +1529,14 @@ static int mtk_hdmi_audio_hw_params(struct device *dev, void *data,
- 	switch (daifmt->fmt) {
- 	case HDMI_I2S:
- 		hdmi_params.aud_codec = HDMI_AUDIO_CODING_TYPE_PCM;
--		hdmi_params.aud_sampe_size = HDMI_AUDIO_SAMPLE_SIZE_16;
-+		hdmi_params.aud_sample_size = HDMI_AUDIO_SAMPLE_SIZE_16;
- 		hdmi_params.aud_input_type = HDMI_AUD_INPUT_I2S;
- 		hdmi_params.aud_i2s_fmt = HDMI_I2S_MODE_I2S_24BIT;
- 		hdmi_params.aud_mclk = HDMI_AUD_MCLK_128FS;
- 		break;
- 	case HDMI_SPDIF:
- 		hdmi_params.aud_codec = HDMI_AUDIO_CODING_TYPE_PCM;
--		hdmi_params.aud_sampe_size = HDMI_AUDIO_SAMPLE_SIZE_16;
-+		hdmi_params.aud_sample_size = HDMI_AUDIO_SAMPLE_SIZE_16;
- 		hdmi_params.aud_input_type = HDMI_AUD_INPUT_SPDIF;
- 		break;
- 	default:
--- 
-2.48.1
+On Thu, 13 Feb 2025 17:54:34 +0000
+Harshit Agarwal <harshit@nutanix.com> wrote:
 
+> Solution
+> ========
+> The solution here is fairly simple. After obtaining the lock (at 4a),
+> the check is enhanced to make sure that the task is still at the head of
+> the pushable tasks list. If not, then it is anyway not suitable for
+> being pushed out. The fix also removes any conditions that are no longer
+> needed.
+> 
+> Testing
+> =======
+> The fix is tested on a cluster of 3 nodes, where the panics due to this
+> are hit every couple of days. A fix similar to this was deployed on such
+> cluster and was stable for more than 30 days.
+
+May also want to add:
+
+  Since 'is_migration_disabled()' a faster check than the others, it was moved
+  to be the first check for consistency.
+
+> 
+> Co-developed-by: Jon Kohler <jon@nutanix.com>
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> Co-developed-by: Gauri Patwardhan <gauri.patwardhan@nutanix.com>
+> Signed-off-by: Gauri Patwardhan <gauri.patwardhan@nutanix.com>
+> Co-developed-by: Rahul Chunduru <rahul.chunduru@nutanix.com>
+> Signed-off-by: Rahul Chunduru <rahul.chunduru@nutanix.com>
+> Signed-off-by: Harshit Agarwal <harshit@nutanix.com>
+> Tested-by: Will Ton <william.ton@nutanix.com>
+> ---
+
+You can add here (after the above three dashes), how this version is
+different from the last version. The text below the dashes and before the
+patch is ignored by git, but is useful for reviewers. For instance:
+
+Changes since v1: https://lore.kernel.org/all/20250211054646.23987-1-harshit@nutanix.com/
+
+- Removed the redundant checks that task != pick_next_pushable_task() already has
+
+
+Notice I added a link to the previous version. This helps find the previous
+version without having to make this version a reply to it.
+
+>  kernel/sched/rt.c | 54 +++++++++++++++++++++++------------------------
+>  1 file changed, 26 insertions(+), 28 deletions(-)
+> 
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 4b8e33c615b1..4762dd3f50c5 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1885,6 +1885,27 @@ static int find_lowest_rq(struct task_struct *task)
+>  	return -1;
+>  }
+>  
+
+Otherwise,
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Peter, could you pick this up?
+
+-- Steve
