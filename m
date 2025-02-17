@@ -1,237 +1,219 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B75B178372
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 07:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36134C70;
+	Mon, 17 Feb 2025 07:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739775713; cv=none; b=H8ZKITXdT9d2u+JB3vvjzLSSJ6BsFrhuzYm47+9HDjVoRXI6tvCxJjg2FTcc2SBij5I1RK9+AqS63spXiOfQJvgvZ8fNQX186V+LeDU2jrG5Ts2MWn7p3wXkh8Qnzmi03B3+Mp2GJ/6kUgUF95qD/rjQLNKA33dNKlJECRP6Qkw=
+	t=1739775772; cv=none; b=ujlGtydeIR6G6rLTTkGAo9ruGLJfVkEqCdYCLMQJX/JrBKNKOZMhP4fYIggRMzlrYpkKuVDSCyYHhJmqQ1W0C4YqlRrA9EhcwlwPS3J1WoZLCBe/KcWNhEzLy4YJy/v8O78GQUy0f5rBAWHiQ3deLEIGvAp/m9hOY+H+jhppFFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739775713; c=relaxed/simple;
-	bh=7r4qKklENyXgmD6E9tdOwGRFPxJqo1t1y7v4KhLhWfQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RRQJxx74Hmvm+GkuBXHoMbAmSSOlGSjckqg/8oY66bQu/KQuT+HzMrafRRdtHz4QaCApfccSOh31WjhPR4zSuXNVOziAYQOenykZuGy2AK1aICa9XxuRCiVS8uKn/UxJT0JjyXWcGoURff7pzJWU1UpOjFic4MzTSzfo1caWMfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ps4gzYvH; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739775772; c=relaxed/simple;
+	bh=CnMACyq8fVyIC6o/qW1rsSrblNpgU9XLuyA5xGMStqo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XtM0aiPF9juWN1JqxoEBPh73aFJ7g4eh62KvQrVdhOTbOvIdlSheG2n6LT2OInOLeFD3cgpCNpyBEBgmfkZ2b8viGUF5/2NbOoMRSw7I8wrpY/57rwadAIWhcFl6uoLsgi0cJVwCaruTlmLliGtUUD9x6lTXZyOkQXMb2oUCqYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=qPK+yJh3; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ps4gzYvH"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220e989edb6so74166665ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 23:01:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739775711; x=1740380511; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=u49MZ7ckUjks0G4rUJJF3Jdne3nRn7VDLa3q0SficI4=;
-        b=ps4gzYvH3F+T++8bq5spR0D4mU9HduNNqSUtBYykKd4L86gv4v1wf/taEEslyw8y9L
-         tyeQ7a7erOoeRcX25l70FdjkSbh9me7xkpAXwPVCASljvsTRXEDcLyhuQNtZmVeNozDY
-         XDYOtHwELiJTi9ln8GNFQtgl15lv/TJ/L/3l9MHf+we280+6WI1MBYQYdzS58Aw7Ysgw
-         UkdmqruFGbGq3v5y1OcFZjZxV9eR/eAvkcAuUKSwfwMvhNbPBmrWN4RxQ3u+IdW8VQEU
-         fPB6sSKbcSTDFrc7SL/BwzYKVCvmT5d0FpC2VwXwJ7ZEYAibg0Zz7b5BzE7RMmiPOpFk
-         EA1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739775711; x=1740380511;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u49MZ7ckUjks0G4rUJJF3Jdne3nRn7VDLa3q0SficI4=;
-        b=GIjjI9/mBFsGFnQYSONaDGJ/XwSNzotNiuwsEi3VHSlEZ0WP+DS65yiyxtd3pvCxT+
-         O+7OLab48mmF8vPWtdlcz8QhrX4thc/caMEqlEW/vplyxuRh+dCQKN+Lmxq9Ablnv8hk
-         TvtH9ReBxidGAdImQW+PCmWsm71JKkZBlRFwC/FzWOsvl2RA67PZf8Iahom/CXcolEcU
-         XicuUOeEIlbuRMACgFhcT/lWioSryA7/4KBOAs32SYKTK0Xkm8EFObGPI37fiiDBvICE
-         REgzeWweLrXj061l2lAuYYbMCFxGCP271UaqUvFyC3zXRb5ZRCGmiFmCzwU7ddBKyndQ
-         3A2w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7Ld8B7pvNGBSkY8GrvwQtjs7nJH3TRRI1T9boVxtZppw+WNVr7+O7JxmqUe9Wttdd28R7dtNOO7rKuKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWOmAdwUai5PK1h9A6ZNOpwDMd6kEU593B+eb8onszcY0ZpG2J
-	Dgt3ML1rBirnfL3cr68NrlsWpmoKmgdpw7mEF5hsklO0Z/b2kGsV2MZGATp+E7u9TllZ32XxtoZ
-	p2oKWJuVZLXqEnAsWEQxMAMXPXGfKdxn/s3lc
-X-Gm-Gg: ASbGnctYYU9W7n1vb9jQAbkg5iopFqMPKNmYD0ZwMTIpXl9qjDJg55qkea6zkdoBzrP
-	R4NAwiGl59Z7VQ9iE3p1cCYiIVyzjCXoRuT0acsBBCY+CaqR6Hiu3IS9z/vl+iG+LbaPCuf+JdX
-	dxcJxfqmHOKYpZ0i5ZAQJgdFNasll8
-X-Google-Smtp-Source: AGHT+IFWeRyJtkvClRvrsWaquwaeI1lrqbnBhDHjEWuXWIRcFBofwpVQo+CUyulA1nqe9sELux2HQzrj7rguLgLFLu8=
-X-Received: by 2002:a17:902:fc4e:b0:21f:71b4:d2aa with SMTP id
- d9443c01a7336-22103efeebcmr156092895ad.5.1739775711051; Sun, 16 Feb 2025
- 23:01:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="qPK+yJh3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739775724;
+	bh=tEaf1fdlKHQ41IMwoFr6kAyWu7BQC3uaiiT0Z+Tp1vk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=qPK+yJh3VI328ujJERmfE0AbHl0xq7idc6Cu/wtEllCf+vaueYRadZsV/agWa4on4
+	 PmsR/hK3LQsjw9s5zOn/8js02rsCa9ppghL16ar2Lg5mw7fy6m1enVuVlQ7slPQOs2
+	 dTGS52qt1hGJ8GQk5A+oWbr5KwHq2CcFDHa6SBBY=
+X-QQ-mid: bizesmtpip3t1739775691t5lavpw
+X-QQ-Originating-IP: TBtoORpur2h6g4UaoSd3UoAbLMVGet+CdXOJtAvKbqw=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 17 Feb 2025 15:01:29 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 6567153048782771633
+From: WangYuli <wangyuli@uniontech.com>
+To: cassel@kernel.org
+Cc: chenhuacai@kernel.org,
+	chenhuacai@loongson.cn,
+	dlemoal@kernel.org,
+	jiaxun.yang@flygoat.com,
+	kernel@xen0n.name,
+	linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	WangYuli <wangyuli@uniontech.com>,
+	Jie Fan <fanjie@uniontech.com>,
+	Erpeng Xu <xuerpeng@uniontech.com>
+Subject: Re: Re: [PATCH] ahci: Marvell controllers prefer DMA for ATAPI
+Date: Mon, 17 Feb 2025 15:01:20 +0800
+Message-ID: <36B40EDC960C005C+20250217070120.666907-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <Zt6l6DVeDGzb5W7N@ryzen.lan>
+References: <Zt6l6DVeDGzb5W7N@ryzen.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213200228.1993588-1-longman@redhat.com> <20250213200228.1993588-4-longman@redhat.com>
-In-Reply-To: <20250213200228.1993588-4-longman@redhat.com>
-From: Marco Elver <elver@google.com>
-Date: Mon, 17 Feb 2025 08:00:00 +0100
-X-Gm-Features: AWEUYZmwE5--6gxi63zdBnPmPq2kP11LV4_YCuAvaNLPtiVGpigxkVLu7uW9PZs
-Message-ID: <CANpmjNPRZNTX2BKufHU16ybfcCvDaJmOSgihP7d0r9bgNZtGaQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] locking/lockdep: Disable KASAN instrumentation of lockdep.c
-To: Waiman Long <longman@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Will Deacon <will.deacon@arm.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Ob+TdET2B71e5ulmgkXCW/ALvBh1Qk50Fw2/F7D0yEfDpn7hXosZRLzi
+	aWC5Ga/PoseFquZrV/AeJTJYlnZPJNDae1z6DRTewKSkQYWz8FxxMU0bnGjp3atFGVqsi5g
+	tJF7LjZ1ncLl40hE3JJk7O6mW2mreplYRCSshyHo5o3C7Pe6qJZwFzB9wfZS09hDNOwsxqk
+	iL6tvLgEe5eamt6bahbeFobaVo0qx4UVM1g0VGjRFB//nwoAIgoap7oetkDLBvk+NAy5erF
+	h/DGW2iD7nduCe2PF5nT7hQN+AWc0pgOrAhqYb+/sJhHeiwZdkzINbcRl0/Dt03GahqnuyZ
+	N80S5+zwgWoOsYxEXOsqNCgg1hmYnRuEVtJOv9GXZ4aQSmJTDyavaBLANITyBi0d9YOK3sx
+	rypBHIFoF2DYPYQBfL4omu6bEeyXYclAFhMWx3WxhSZUFE2OC0W9RX7NKWgKs88kVv9tIVa
+	sDWhYDull3GaoREvOtddWkitpLwG4/z25FhB62n+EKczOSVoJlinIzh6i9AkKM3656CCa7w
+	eOGd9k5nbUOvBlJQ9adq+10VzU63CbznGhOPXpuTV4zxnAy2t5CSYJBjrMx2Y37Rpcl3LkN
+	MP+owCu/aJ1QWfcusixGVNQfzlxyq5WAcwDtc+epJyrFaF/z7nC9OturBTLnArGRE+C4FTo
+	aIcHEjmqzN8y3ACUN4Gj1h0E8mn2D5CsLnAnmXcNiVpxYcaP+uiWpj6bK/MYdZ6IEsB5bkU
+	5NVp/kH5nC8pH9/tUfnDDsDssGBt36bWOdTbNguPeJ+GiFnXL43JKYGLzw9Y5v578arZGZA
+	iS9yT7qGOBOSG+7CIaHmAeai/7cKS7rIxQqjZ/NhyiPKQGyNrBMoJd8ND/In1UJFLDSCIGz
+	ENJ8tK1+8M/Kt7hgZ8u0Q+3/YqFUVytcwQsiuogPRnuiR9I4PRc9d34+b6sXysQef19oMfr
+	vLz3z9ZQdvPNC6iMTxeHWbENPEityy79z0i8TWGZMi9gkMA==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Thu, 13 Feb 2025 at 21:02, Waiman Long <longman@redhat.com> wrote:
->
-> Both KASAN and LOCKDEP are commonly enabled in building a debug kernel.
-> Each of them can significantly slow down the speed of a debug kernel.
-> Enabling KASAN instrumentation of the LOCKDEP code will further slow
-> thing down.
->
-> Since LOCKDEP is a high overhead debugging tool, it will never get
-> enabled in a production kernel. The LOCKDEP code is also pretty mature
-> and is unlikely to get major changes. There is also a possibility of
-> recursion similar to KCSAN.
->
-> To evaluate the performance impact of disabling KASAN instrumentation
-> of lockdep.c, the time to do a parallel build of the Linux defconfig
-> kernel was used as the benchmark. Two x86-64 systems (Skylake & Zen 2)
-> and an arm64 system were used as test beds. Two sets of non-RT and RT
-> kernels with similar configurations except mainly CONFIG_PREEMPT_RT
-> were used for evaulation.
->
-> For the Skylake system:
->
->   Kernel                        Run time            Sys time
->   ------                        --------            --------
->   Non-debug kernel (baseline)   0m47.642s             4m19.811s
->
->   [CONFIG_KASAN_INLINE=y]
->   Debug kernel                  2m11.108s (x2.8)     38m20.467s (x8.9)
->   Debug kernel (patched)        1m49.602s (x2.3)     31m28.501s (x7.3)
->   Debug kernel
->   (patched + mitigations=off)   1m30.988s (x1.9)     26m41.993s (x6.2)
->
->   RT kernel (baseline)          0m54.871s             7m15.340s
->
->   [CONFIG_KASAN_INLINE=n]
->   RT debug kernel               6m07.151s (x6.7)    135m47.428s (x18.7)
->   RT debug kernel (patched)     3m42.434s (x4.1)     74m51.636s (x10.3)
->   RT debug kernel
->   (patched + mitigations=off)   2m40.383s (x2.9)     57m54.369s (x8.0)
->
->   [CONFIG_KASAN_INLINE=y]
->   RT debug kernel               3m22.155s (x3.7)     77m53.018s (x10.7)
->   RT debug kernel (patched)     2m36.700s (x2.9)     54m31.195s (x7.5)
->   RT debug kernel
->   (patched + mitigations=off)   2m06.110s (x2.3)     45m49.493s (x6.3)
->
-> For the Zen 2 system:
->
->   Kernel                        Run time            Sys time
->   ------                        --------            --------
->   Non-debug kernel (baseline)   1m42.806s            39m48.714s
->
->   [CONFIG_KASAN_INLINE=y]
->   Debug kernel                  4m04.524s (x2.4)    125m35.904s (x3.2)
->   Debug kernel (patched)        3m56.241s (x2.3)    127m22.378s (x3.2)
->   Debug kernel
->   (patched + mitigations=off)   2m38.157s (x1.5)     92m35.680s (x2.3)
->
->   RT kernel (baseline)           1m51.500s           14m56.322s
->
->   [CONFIG_KASAN_INLINE=n]
->   RT debug kernel               16m04.962s (x8.7)   244m36.463s (x16.4)
->   RT debug kernel (patched)      9m09.073s (x4.9)   129m28.439s (x8.7)
->   RT debug kernel
->   (patched + mitigations=off)    3m31.662s (x1.9)    51m01.391s (x3.4)
->
-> For the arm64 system:
->
->   Kernel                        Run time            Sys time
->   ------                        --------            --------
->   Non-debug kernel (baseline)   1m56.844s             8m47.150s
->   Debug kernel                  3m54.774s (x2.0)     92m30.098s (x10.5)
->   Debug kernel (patched)        3m32.429s (x1.8)     77m40.779s (x8.8)
->
->   RT kernel (baseline)           4m01.641s           18m16.777s
->
->   [CONFIG_KASAN_INLINE=n]
->   RT debug kernel               19m32.977s (x4.9)   304m23.965s (x16.7)
->   RT debug kernel (patched)     16m28.354s (x4.1)   234m18.149s (x12.8)
->
-> Turning the mitigations off doesn't seems to have any noticeable impact
-> on the performance of the arm64 system. So the mitigation=off entries
-> aren't included.
->
-> For the x86 CPUs, cpu mitigations has a much bigger
-> impact on performance, especially the RT debug kernel with
-> CONFIG_KASAN_INLINE=n. The SRSO mitigation in Zen 2 has an especially
-> big impact on the debug kernel. It is also the majority of the slowdown
-> with mitigations on. It is because the patched ret instruction slows
-> down function returns. A lot of helper functions that are normally
-> compiled out or inlined may become real function calls in the debug
-> kernel.
->
-> With CONFIG_KASAN_INLINE=n, the KASAN instrumentation inserts a
-> lot of __asan_loadX*() and __kasan_check_read() function calls to memory
-> access portion of the code. The lockdep's __lock_acquire() function,
-> for instance, has 66 __asan_loadX*() and 6 __kasan_check_read() calls
-> added with KASAN instrumentation. Of course, the actual numbers may vary
-> depending on the compiler used and the exact version of the lockdep code.
->
-> With the Skylake test system, the parallel kernel build times reduction
-> of the RT debug kernel with this patch are:
->
->  CONFIG_KASAN_INLINE=n: -37%
->  CONFIG_KASAN_INLINE=y: -22%
->
-> The time reduction is less with CONFIG_KASAN_INLINE=y, but it is still
-> significant.
->
-> Setting CONFIG_KASAN_INLINE=y can result in a significant performance
-> improvement. The major drawback is a significant increase in the size
-> of kernel text. In the case of vmlinux, its text size increases from
-> 45997948 to 67606807. That is a 47% size increase (about 21 Mbytes). The
-> size increase of other kernel modules should be similar.
->
-> With the newly added rtmutex and lockdep lock events, the relevant
-> event counts for the test runs with the Skylake system were:
->
->   Event type            Debug kernel    RT debug kernel
->   ----------            ------------    ---------------
->   lockdep_acquire       1,968,663,277   5,425,313,953
->   rtlock_slowlock            -            401,701,156
->   rtmutex_slowlock           -                139,672
->
-> The __lock_acquire() calls in the RT debug kernel are x2.8 times of the
-> non-RT debug kernel with the same workload. Since the __lock_acquire()
-> function is a big hitter in term of performance slowdown, this makes
-> the RT debug kernel much slower than the non-RT one. The average lock
-> nesting depth is likely to be higher in the RT debug kernel too leading
-> to longer execution time in the __lock_acquire() function.
->
-> As the small advantage of enabling KASAN instrumentation to catch
-> potential memory access error in the lockdep debugging tool is probably
-> not worth the drawback of further slowing down a debug kernel, disable
-> KASAN instrumentation in the lockdep code to allow the debug kernels
-> to regain some performance back, especially for the RT debug kernels.
->
-> Signed-off-by: Waiman Long <longman@redhat.com>
+Reported-by: WangYuli <wangyuli@uniontech.com>
 
-Reviewed-by: Marco Elver <elver@google.com>
+Hi all,
 
-> ---
->  kernel/locking/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
-> index 0db4093d17b8..a114949eeed5 100644
-> --- a/kernel/locking/Makefile
-> +++ b/kernel/locking/Makefile
-> @@ -5,7 +5,8 @@ KCOV_INSTRUMENT         := n
->
->  obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
->
-> -# Avoid recursion lockdep -> sanitizer -> ... -> lockdep.
-> +# Avoid recursion lockdep -> sanitizer -> ... -> lockdep & improve performance.
-> +KASAN_SANITIZE_lockdep.o := n
->  KCSAN_SANITIZE_lockdep.o := n
->
->  ifdef CONFIG_FUNCTION_TRACER
-> --
-> 2.48.1
->
+During testing, we observed that reading CDs on an INSPUR CE3000F desktop
+computer (with a Phytium FT2000/4 processor [1]) running deepin 23 [2]
+distribution is very slow, taking over a minute.
+
+Further testing revealed that mounting the device from the command line is
+fast.
+  e.g., executing "time mount /dev/sr0 /mnt" returns a value of only 0.898s.
+
+However, deepin's dde-file-manager reads more than just mounting when opening
+the optical drive; it also reads disc information (such as capacity, etc.).
+
+After using udisksctl to first mount and then unmount the disc to reset its
+state, and then using the cd_sessions tool to read disc information, we used
+strace to monitor system calls, testing commands are as follows:
+  udisksctl mount -b /dev/sr0
+  udisksctl unmount -b /dev/sr0
+  strace -Ttt cd_sessions /dev/sr0
+and found that openat was blocked for 42 seconds, and at this point, the
+process had entered kernel space.
+
+[1]. https://www.phytium.com.cn/homepage/production/6/
+[2]. https://cdimage.deepin.com/releases/23/arm64/deepin-desktop-community-23-arm64.iso
+
+
+TEST REPORT:
+
+For this patch, before its introduction, with original system-integrated optical
+drives capable of recognizing discs, the total execution time for cd_sessions was
+92.4 seconds, including 31.6 seconds for openat and 60.6 seconds for ioctl.
+
+With LITE-ON optical drives, under the same condition of disc recognition, the
+total execution time for cd_sessions was 108.2 seconds, with openat taking 45.4
+seconds and ioctl taking 62.9 seconds.
+
+With RITEK optical drives, also when discs were recognizable, the total
+cd_sessions execution time was 98.2 seconds, with openat at 36.7 seconds and ioctl
+at 60.8 seconds.
+
+After the patch was introduced, the time to read disc information (using cd_sessions)
+with all optical drives was reduced to less than 0.5 seconds.
+
+I've tried different pairings of optical drives and SATA controllers, and the test
+results were consistent across the board. The Marvell 88SE9215 controller consistently
+emerges as the source of the problem, no matter the optical drive tested.
+
+Devices lists are as follow:
+
+
+CD-ROM DRIVER LIST:
+  1. original system-integrated optical drive
+           *-cdrom
+                description: DVD writer
+                product: DVD A  DH16AFSH
+                vendor: ATAPI
+                physical id: 0
+                bus info: scsi@2:0.0.0
+                logical name: /dev/cdrom
+                logical name: /dev/sr0
+                version: DC2M
+                capabilities: removable audio cd-r cd-rw dvd dvd-r
+                configuration: ansiversion=5 status=ready
+              *-medium
+                   physical id: 0
+                   logical name: /dev/cdrom
+  2. a LITE-ON optical drive
+           *-cdrom
+                description: DVD writer
+                product: DVD-RW DH16AFSH
+                vendor: PLDS
+                physical id: 0
+                bus info: scsi@2:0.0.0
+                logical name: /dev/cdrom
+                logical name: /dev/sr0
+                version: DL3M
+                capabilities: removable audio cd-r cd-rw dvd dvd-r
+                configuration: ansiversion=5 status=nodisc
+  3. a RITEK optical drive
+           *-cdrom
+                description: DVD writer
+                product: DH-16AFSH SUPDRV
+                vendor: RIDATA
+                physical id: 0
+                bus info: scsi@2:0.0.0
+                logical name: /dev/cdrom
+                logical name: /dev/sr0
+                version: NWDN
+                capabilities: removable audio cd-r cd-rw dvd dvd-r
+                configuration: ansiversion=5 status=nodisc
+
+
+SATA Controllers LIST:
+  1. INSPUR CE3000F
+        *-sata
+             description: SATA controller
+             product: 88SE9215 PCIe 2.0 x1 4-port SATA 6 Gb/s Controller
+             vendor: Marvell Technology Group Ltd.
+             physical id: 0
+             bus info: pci@0000:03:00.0
+             logical name: scsi2
+             logical name: scsi3
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
+             configuration: driver=ahci latency=0
+             resources: irq:43 ioport:2020(size=8) ioport:2030(size=4) ioport:2028(size=8) ioport:2034(size=4) ioport:2000(size=32) memory:58140000-581407ff memory:58100000-5813ffff
+  2. Maxsun MS-WS W680 D4
+             Hardware Class: storage
+             Model: "Intel SATA controller"
+             Vendor: pci 0x8086 "Intel Corporation"
+             Device: pci 0x7ae2 
+             Revision: 0x11
+             Driver: "ahci"
+             Driver Modules: "ahci"
+             Memory Range: 0x82100000-0x82101fff (rw,non-prefetchable)
+             Memory Range: 0x82102800-0x821028ff (rw,non-prefetchable)
+             Memory Range: 0x82102000-0x821027ff (rw,non-prefetchable)
+             IRQ: 166 (no events)
+             Module Alias: "pci:v00008086d00007AE2sv00000000sd00000000bc01sc06i01"
+             Driver Info #0:
+               Driver Status: ahci is active
+               Driver Activation Cmd: "modprobe ahci"
+             Config Status: cfg=new, avail=yes, need=no, active=unknown
+
+
+Tested-by: Jie Fan <fanjie@uniontech.com>
+Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
+Tested-by: WangYuli <wangyuli@uniontech.com>
+
+Currently, due to the limited hardware I have access to, I'm unsure if this is a Marvell
+88SE9215's specific issue or a general Marvell SATA controller problem.
+
+So, I think it's reasonable to add a quirk to handle this for the Marvell 88SE9215 now.
+
+Thanks,
+--
+WangYuli
