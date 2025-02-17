@@ -1,263 +1,93 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE6F21CC56;
-	Mon, 17 Feb 2025 13:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A825D21ADA7;
+	Mon, 17 Feb 2025 13:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797245; cv=none; b=RaXHB5TdP2ApJFhNnAvEO+McwpoXjvDyqsvt/yZN4g5CoNirbBCN07jrHod0yS3Laqg50NCnjR39xWDorkYcHWmY2xkEMkFaka7uxgy1GsVwkD+vhCfDlV9ohmkCdF8fyIK0UTfnqpq1KKrQZVCUs9PrkJpYE7+rzKBsEPsGK7s=
+	t=1739797295; cv=none; b=RcT0SCWjcDdXasVgKeqWzXRoSh2wmm4tmuMINdnTiZPlxJrxjcYK64C3SPUFSNytPiP0qD8VbyCB3XEX1Y4DNiM6zHMAsOZ8l5ZBIGHPqyJH5gSp4qRscXzLxtwTZ+eM0cf5+tNLTSFV3bLUI3KJb7Nb/sC9hywAQEEjLO4upjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797245; c=relaxed/simple;
-	bh=NMGSFpvbLVobJUD1e13M0ql45DWMtAKg69Jm7hViyQg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ipS3xGhXwgxULUnhDrjHl3tSuSFU7nGEeeXS0L6hXvIluGQwOLFiNXlEdjUK1sBvbMZCtTSfIphQ3B10WAokEZ+D8AwytMxkORhaTgvwV+8GTm7Dw9b2ueRVxgTB+Nj6oZ2bQ46fF7qpR/M1qvivuwJbACmRzIU/fJkD2KouDoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mTC7HLHF; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739797295; c=relaxed/simple;
+	bh=Hk9O6kgZtW5HBAPWDi1ubXQtnoQYa4K3Vipj/XLrz20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rLhUjimsb5HiVjdvLx2GPp/efjB71D7Fph6/3IwRnKVEYMHlmCoTQPPAYuaxJI74pwmmDNKUxwZezk/v9vmLkzPIA1PBX+dQ96f2P2tmNHB8DmMZMwkKG1CvDPXDc5hus6XigFlLOie/G3wQpGBC6cl8WotOL0FABlCGfy/z/wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=bO6ALWhb; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mTC7HLHF"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51HD0X4N660316
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 17 Feb 2025 07:00:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739797233;
-	bh=cxjl24+pAY0WWi9V/mRb2dPReER7i3xQHXTEEuQpAaI=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=mTC7HLHFzUs4zWQTw62UOThqShsee94aSviZNOKjFF7DSszfBl3mn0ZvujQUTKe3A
-	 QB3KWRs+cev27BBnwv053kFE2z/cNxtjGE1wVdFNsKm1tYB7QZFwrO/Uv0vU9wlLmK
-	 SMcwq/hgTvpDaiekP/txx+Y/tUSHD0GVr8S2Ex1I=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51HD0X16056195;
-	Mon, 17 Feb 2025 07:00:33 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
- Feb 2025 07:00:32 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 17 Feb 2025 07:00:32 -0600
-Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51HD0Fft072350;
-	Mon, 17 Feb 2025 07:00:28 -0600
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-To: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC: <mripard@kernel.org>, <mchehab@kernel.org>, <jai.luthra@linux.dev>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <devarsht@ti.com>, <vaishnav.a@ti.com>, <r-donadkar@ti.com>,
-        <u-kumar1@ti.com>, <y-abhilashchandra@ti.com>
-Subject: [PATCH v2 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq interrupt and add support for VIDIOC_LOG_STATUS
-Date: Mon, 17 Feb 2025 18:30:13 +0530
-Message-ID: <20250217130013.2802293-3-y-abhilashchandra@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217130013.2802293-1-y-abhilashchandra@ti.com>
-References: <20250217130013.2802293-1-y-abhilashchandra@ti.com>
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="bO6ALWhb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 21E8D442EC;
+	Mon, 17 Feb 2025 13:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1739797291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bOL9mfk/9v5FRO1VfirUKFrE/whi9WWcvzNJX8maZI0=;
+	b=bO6ALWhbXToInNzAwugYrepTD3C+fePro0peaMuYKAJEE3qz90F7zY7uftSaSeTkdCswHs
+	MrTrpDJ1FZM57Tzm8SVabRsLlTnl94kLbVKIH7NDR8ZyawZLlbBqpMXWIjnOoC5rvsbO68
+	GVO3qzIBDclhusXUotVYOinhVZOKqGBIcM3yad8MBNN61YqEt6ndtV62AqmdJu/xjfqmZa
+	7ntQ0wH9q87y8WbWy42Rd38CRgyNvaWCJn0iHeHqSL5InCKdkX7ipQUADuueouPSgSXyhO
+	nadEqh1vOOr6Dzy/itC1ersATHYxw+UUccV8/Ita2PvLOxTv+ntMJzQHctCuPQ==
+Message-ID: <b5ed8cc5-ae78-42f7-bbb8-8f9d286ed7b6@yoseli.org>
+Date: Mon, 17 Feb 2025 14:01:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] m68k: mm: Replace deprecated strncpy() with strscpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-hardening@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-kernel@vger.kernel.org
+References: <20250213141037.50394-2-thorsten.blum@linux.dev>
+Content-Language: en-US, fr
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+In-Reply-To: <20250213141037.50394-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkeegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeflvggrnhdqofhitghhvghlucfjrghuthgsohhishcuoehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrgheqnecuggftrfgrthhtvghrnheptdehkedtieetudeiffekhfeghfdtheetfeeftddvleekgeelieduveetueehgeefnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepfeejrdduieelrdduvdeirddvgeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepfeejrdduieelrdduvdeirddvgeekpdhhvghloheplgduledvrdduieekrddvtddrudeijegnpdhmrghilhhfrhhomhepjhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgpdhnsggprhgtphhtthhopeehpdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumheslhhinhhugidruggvvhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepl
+ hhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-Enable the csi2rx_err_irq interrupt to record any errors during streaming
-and also add support for VIDIOC_LOG_STATUS ioctl. The VIDIOC_LOG_STATUS
-ioctl can be invoked from user space to retrieve the device status,
-including details about any errors.
+Hi Thorsten,
 
-Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
----
+On 2/13/25 3:10 PM, Thorsten Blum wrote:
+> strncpy() is deprecated for NUL-terminated destination buffers. Use
+> strscpy() instead and remove the manual NUL-termination.
+> 
+> Compile-tested only.
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Changes in v2:
-- Address Jai's review comment to get interrupt at probe instead of
-  start_stream.
-- Address Jai's review comment to change dev_warn to dev_dbg when there
-  is no interrupt defined in DT.
+Thanks for the patch !
+It works fine for me:
 
- drivers/media/platform/cadence/cdns-csi2rx.c | 102 ++++++++++++++++++-
- 1 file changed, 101 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-index 4d64df829e75..79f0c31eaf50 100644
---- a/drivers/media/platform/cadence/cdns-csi2rx.c
-+++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-@@ -57,6 +57,28 @@
- #define CSI2RX_LANES_MAX	4
- #define CSI2RX_STREAMS_MAX	4
- 
-+#define CSI2RX_ERROR_IRQS_REG			0x28
-+#define CSI2RX_ERROR_IRQS_MASK_REG		0x2C
-+
-+#define CSI2RX_STREAM3_FIFO_OVERFLOW_IRQ	BIT(19)
-+#define CSI2RX_STREAM2_FIFO_OVERFLOW_IRQ	BIT(18)
-+#define CSI2RX_STREAM1_FIFO_OVERFLOW_IRQ	BIT(17)
-+#define CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ	BIT(16)
-+#define CSI2RX_FRONT_TRUNC_HDR_IRQ		BIT(12)
-+#define CSI2RX_PROT_TRUNCATED_PACKET_IRQ	BIT(11)
-+#define CSI2RX_FRONT_LP_NO_PAYLOAD_IRQ		BIT(10)
-+#define CSI2RX_SP_INVALID_RCVD_IRQ		BIT(9)
-+#define CSI2RX_DATA_ID_IRQ			BIT(7)
-+#define CSI2RX_HEADER_CORRECTED_ECC_IRQ	BIT(6)
-+#define CSI2RX_HEADER_ECC_IRQ			BIT(5)
-+#define CSI2RX_PAYLOAD_CRC_IRQ			BIT(4)
-+
-+#define CSI2RX_ECC_ERRORS		GENMASK(7, 4)
-+#define CSI2RX_PACKET_ERRORS		GENMASK(12, 9)
-+#define CSI2RX_STREAM_ERRORS		GENMASK(19, 16)
-+#define CSI2RX_ERRORS			(CSI2RX_ECC_ERRORS | CSI2RX_PACKET_ERRORS | \
-+					CSI2RX_STREAM_ERRORS)
-+
- enum csi2rx_pads {
- 	CSI2RX_PAD_SINK,
- 	CSI2RX_PAD_SOURCE_STREAM0,
-@@ -71,6 +93,28 @@ struct csi2rx_fmt {
- 	u8				bpp;
- };
- 
-+struct csi2rx_event {
-+	u32 mask;
-+	const char *name;
-+};
-+
-+static const struct csi2rx_event csi2rx_events[] = {
-+	{ CSI2RX_STREAM3_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 3 FIFO detected" },
-+	{ CSI2RX_STREAM2_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 2 FIFO detected" },
-+	{ CSI2RX_STREAM1_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 1 FIFO detected" },
-+	{ CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 0 FIFO detected" },
-+	{ CSI2RX_FRONT_TRUNC_HDR_IRQ, "A truncated header [short or long] has been received" },
-+	{ CSI2RX_PROT_TRUNCATED_PACKET_IRQ, "A truncated long packet has been received" },
-+	{ CSI2RX_FRONT_LP_NO_PAYLOAD_IRQ, "A truncated long packet has been received. No payload" },
-+	{ CSI2RX_SP_INVALID_RCVD_IRQ, "A reserved or invalid short packet has been received" },
-+	{ CSI2RX_DATA_ID_IRQ, "Data ID error in the header packet" },
-+	{ CSI2RX_HEADER_CORRECTED_ECC_IRQ, "ECC error detected and corrected" },
-+	{ CSI2RX_HEADER_ECC_IRQ, "Unrecoverable ECC error" },
-+	{ CSI2RX_PAYLOAD_CRC_IRQ, "CRC error" },
-+};
-+
-+#define CSI2RX_NUM_EVENTS		ARRAY_SIZE(csi2rx_events)
-+
- struct csi2rx_priv {
- 	struct device			*dev;
- 	unsigned int			count;
-@@ -95,6 +139,7 @@ struct csi2rx_priv {
- 	u8				max_lanes;
- 	u8				max_streams;
- 	bool				has_internal_dphy;
-+	u32				events[CSI2RX_NUM_EVENTS];
- 
- 	struct v4l2_subdev		subdev;
- 	struct v4l2_async_notifier	notifier;
-@@ -124,6 +169,24 @@ static const struct csi2rx_fmt formats[] = {
- 	{ .code	= MEDIA_BUS_FMT_BGR888_1X24,  .bpp = 24, },
- };
- 
-+static irqreturn_t csi2rx_irq_handler(int irq, void *dev_id)
-+{
-+	struct csi2rx_priv *csi2rx = dev_id;
-+	int i;
-+	u32 error_status;
-+
-+	error_status = readl(csi2rx->base + CSI2RX_ERROR_IRQS_REG);
-+
-+	for (i = 0; i < CSI2RX_NUM_EVENTS; i++)
-+		if (error_status & csi2rx_events[i].mask)
-+			csi2rx->events[i]++;
-+
-+	writel(CSI2RX_ERRORS & error_status,
-+	       csi2rx->base + CSI2RX_ERROR_IRQS_REG);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static const struct csi2rx_fmt *csi2rx_get_fmt_by_code(u32 code)
- {
- 	unsigned int i;
-@@ -218,6 +281,8 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
- 	reset_control_deassert(csi2rx->p_rst);
- 	csi2rx_reset(csi2rx);
- 
-+	writel(CSI2RX_ERRORS, csi2rx->base + CSI2RX_ERROR_IRQS_MASK_REG);
-+
- 	reg = csi2rx->num_lanes << 8;
- 	for (i = 0; i < csi2rx->num_lanes; i++) {
- 		reg |= CSI2RX_STATIC_CFG_DLANE_MAP(i, csi2rx->lanes[i]);
-@@ -330,6 +395,8 @@ static void csi2rx_stop(struct csi2rx_priv *csi2rx)
- 	reset_control_assert(csi2rx->sys_rst);
- 	clk_disable_unprepare(csi2rx->sys_clk);
- 
-+	writel(0, csi2rx->base + CSI2RX_ERROR_IRQS_MASK_REG);
-+
- 	for (i = 0; i < csi2rx->max_streams; i++) {
- 		writel(CSI2RX_STREAM_CTRL_STOP,
- 		       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
-@@ -361,6 +428,21 @@ static void csi2rx_stop(struct csi2rx_priv *csi2rx)
- 	}
- }
- 
-+static int csi2rx_log_status(struct v4l2_subdev *sd)
-+{
-+	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(sd);
-+	unsigned int i;
-+
-+	for (i = 0; i < CSI2RX_NUM_EVENTS; i++) {
-+		if (csi2rx->events[i])
-+			dev_info(csi2rx->dev, "%s events: %d\n",
-+				 csi2rx_events[i].name,
-+				 csi2rx->events[i]);
-+	}
-+
-+	return 0;
-+}
-+
- static int csi2rx_s_stream(struct v4l2_subdev *subdev, int enable)
- {
- 	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-@@ -466,7 +548,12 @@ static const struct v4l2_subdev_video_ops csi2rx_video_ops = {
- 	.s_stream	= csi2rx_s_stream,
- };
- 
-+static const struct v4l2_subdev_core_ops csi2rx_core_ops = {
-+	.log_status	= csi2rx_log_status,
-+};
-+
- static const struct v4l2_subdev_ops csi2rx_subdev_ops = {
-+	.core		= &csi2rx_core_ops,
- 	.video		= &csi2rx_video_ops,
- 	.pad		= &csi2rx_pad_ops,
- };
-@@ -665,7 +752,7 @@ static int csi2rx_probe(struct platform_device *pdev)
- {
- 	struct csi2rx_priv *csi2rx;
- 	unsigned int i;
--	int ret;
-+	int irq, ret;
- 
- 	csi2rx = kzalloc(sizeof(*csi2rx), GFP_KERNEL);
- 	if (!csi2rx)
-@@ -703,6 +790,19 @@ static int csi2rx_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_cleanup;
- 
-+	irq = platform_get_irq_byname_optional(to_platform_device(csi2rx->dev), "error");
-+
-+	if (irq < 0) {
-+		dev_dbg(csi2rx->dev, "Optional interrupt not defined, proceeding without it\n");
-+	} else {
-+		ret = devm_request_irq(csi2rx->dev, irq, csi2rx_irq_handler, 0,
-+					"csi2rx-irq", csi2rx);
-+		if (ret) {
-+			dev_err(csi2rx->dev, "Unable to request interrupt: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	ret = v4l2_subdev_init_finalize(&csi2rx->subdev);
- 	if (ret)
- 		goto err_cleanup;
--- 
-2.34.1
+Tested-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> ---
+>   arch/m68k/kernel/setup_mm.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
+> index 15c1a595a1de..48ce67947678 100644
+> --- a/arch/m68k/kernel/setup_mm.c
+> +++ b/arch/m68k/kernel/setup_mm.c
+> @@ -243,8 +243,7 @@ void __init setup_arch(char **cmdline_p)
+>   	setup_initial_init_mm((void *)PAGE_OFFSET, _etext, _edata, _end);
+>   
+>   #if defined(CONFIG_BOOTPARAM)
+> -	strncpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
+> -	m68k_command_line[CL_SIZE - 1] = 0;
+> +	strscpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
+>   #endif /* CONFIG_BOOTPARAM */
+>   	process_uboot_commandline(&m68k_command_line[0], CL_SIZE);
+>   	*cmdline_p = m68k_command_line;
 
