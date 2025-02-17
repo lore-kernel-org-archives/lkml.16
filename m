@@ -1,81 +1,147 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D90217733;
-	Mon, 17 Feb 2025 11:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7824B218EB3
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739793301; cv=none; b=Ilgkcq29u9uD1f4Kecknc2P5C3nYevoPaWeYIIyMugRVmySbn+qGBNlrJ74OE9FYNg1BOe9zftR41wXroUNpRnk/E3+ncDLDlZRG9WsUWj0GDs0Yb6vc3hD0KiSoRPhpJ6JsVDpczzrSozkY2zSzZV0rV+tq5whTOTbF6oKxNUU=
+	t=1739793319; cv=none; b=ai5NlwJyU4Dyv6XU6JDLrsHVLu7bA21j17hAnmR+aMv0lt7s0eWKEhHKIy6WLxuCjnvDt/eNnYjat9oyLfDgYnPCIifu+d1tZ1LDpEA3Ov3APIjXBsNoqJVZSN3x3KQIXDQfIo5G74f5mHcKUvyjvkMZpsHQA4/IqK0TY5Z4Qzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739793301; c=relaxed/simple;
-	bh=h+O+ibFzxC5CAgefPBkwm/5PJBNefvtc+BzFWMlwpiw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t5z87ck+gj2nSC1y8xI550hWDW7TGQqVr2/VkyZYrNNn1yPs8fbdryjORrlof/EacULgM8dc11NQFNiKv9oMNMEQVSjf5rAE2H0f1cqjf3x+hrnQePHH6KYCTz7I84kQKLy3Fs51z+wSULtQqHVEthPahRWsGmAOd86qKwbH098=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=pBFGpNEm; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="pBFGpNEm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=UDUhVrBdPRQjgsQkHQ57OQBrnvRcX2sjoY8WgVvH3ls=; b=pBFGpNEmjEzf8R9AXNOh0/fRv9
-	Uamz+e6kKXAN9UJE5xRcwreb4iX8dd4EDhXxZEcjj5pVozANasfCEuxKkfFiN6ukVeKGSmVn+L/3a
-	3dyGrY5WA4W2siFk5YBIbhU8Gkskjc/3KoZ7y7jGSJi65qXwFDKQV5naP3Fc7VWpEraU=;
-Received: from p5b206ef1.dip0.t-ipconnect.de ([91.32.110.241] helo=Maecks.lan)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1tjzGa-006FEq-0d;
-	Mon, 17 Feb 2025 12:26:24 +0100
-From: Felix Fietkau <nbd@nbd.name>
-To: netdev@vger.kernel.org,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: bridge@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: bridge: locally receive all multicast packets if IFF_ALLMULTI is set
-Date: Mon, 17 Feb 2025 12:26:20 +0100
-Message-ID: <20250217112621.66916-1-nbd@nbd.name>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1739793319; c=relaxed/simple;
+	bh=ILp6NWLJjwn2+wYDs/55/nIpNNTPnEsZR6bwXdUBTGI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XNzVGoPnpIBm5sKN3rtbhUdr3Qbt5BcSbQZUK4b3/myFls738v5AxdKuyDtyyvJCramsTkzk2NxU5yXhn2x3ukiFwqjEzQFOgQ9p+r4BuvlJo9vJuM3oPp9dVvKsnpA5ryRbCFct+7X25S5JJB8DlVOJpnXsWKk1ugnwALVEcDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d13fb2256fso31014955ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:55:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739793316; x=1740398116;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+lbVHv9nkluAVpd1VJ6PZljCLsy3EjbT3NB72IM2Efs=;
+        b=hjW86HlPEB3+cJoSSKTYVD1+s4iV+jNZHhstA8dCam2MgXsS+dDgiD6rvoylrmxw3Q
+         EGdnSH1dh9IIwgAO21rHH1NL/Vo7CdHnhJca8iskp0/g9tTTlgEZ0GCFg29Xkg+qQdn7
+         MGmQu27T7gzvEYiMlKL6Pyh//8lQK1nOBlQKA2MzC34lqX+viOSfdlTjkIaImnlWtaPc
+         TMD7S0EmjFXkAq8xlsFJMBqkudV+siTWQc9yCfAIQiNtyIW6XT38OwRAwUYXgPrQooyy
+         sAMkPJ+iaKcqD4g2b7ibrg3iLpsEBEgfRAQc/ikmo6aA0g4eWallBhLMFTX7dgICTkKc
+         OyWA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1OHdeBECMXt55mHqui3JlHOsMxOyrBPCqaPJ6DufaWM7FJ46TAQWaRz36g1dFk7SRY/1SQpl9bop3Fhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdujoNCrS12aPrsw/Zy3boKJ4l/XjCkRYQpqx69Jgpg0Ur99av
+	nSMsEwnke1pk7kgcqHq3qrjuh8jtQS9U+VVVw9Ka99bQqcARDPTj+k0LmoCZHRsnRjijtyt+OQw
+	+FXZ6UcFA1FF97LgxPxiGKcC7W+0GJnKFTlXZHFRO9t5Vin44qWH1VI8=
+X-Google-Smtp-Source: AGHT+IGVc4wtbO074YxvTM6HOoNeAUM7xoiuJHzKiJhlLb1qhI95g/SyTCL0NkKSJYwaUb5UtCjq5ejGormVjjOYiSi427J4CH8G
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:cd82:0:b0:3cf:b3ab:584d with SMTP id
+ e9e14a558f8ab-3d2809209f9mr67293775ab.13.1739793316624; Mon, 17 Feb 2025
+ 03:55:16 -0800 (PST)
+Date: Mon, 17 Feb 2025 03:55:16 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b323a4.050a0220.173698.002a.GAE@google.com>
+Subject: [syzbot] [usb?] KMSAN: uninit-value in mii_nway_restart (2)
+From: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-If multicast snooping is enabled, multicast packets may not always end up on
-the local bridge interface, if the host is not a member of the multicast
-group. Similar to how IFF_PROMISC allows all packets to be received locally,
-let IFF_ALLMULTI allow all multicast packets to be received.
+Hello,
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+syzbot found the following issue on:
+
+HEAD commit:    128c8f96eb86 Merge tag 'drm-fixes-2025-02-14' of https://g..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=11546098580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=264db44f1897cdc3
+dashboard link: https://syzkaller.appspot.com/bug?extid=3361c2d6f78a3e0892f9
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d9d9b0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1039d9b0580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7aa6f3aa12c5/disk-128c8f96.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7ca2c0dbfd2f/vmlinux-128c8f96.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/aa690978a38e/bzImage-128c8f96.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in mii_nway_restart+0x119/0x1e0 drivers/net/mii.c:468
+ mii_nway_restart+0x119/0x1e0 drivers/net/mii.c:468
+ ch9200_bind+0x238/0xeb0 drivers/net/usb/ch9200.c:354
+ usbnet_probe+0xdb0/0x3eb0 drivers/net/usb/usbnet.c:1761
+ usb_probe_interface+0xd33/0x12e0 drivers/usb/core/driver.c:396
+ really_probe+0x4dc/0xd90 drivers/base/dd.c:658
+ __driver_probe_device+0x2ab/0x5d0 drivers/base/dd.c:800
+ driver_probe_device+0x72/0x890 drivers/base/dd.c:830
+ __device_attach_driver+0x568/0x9e0 drivers/base/dd.c:958
+ bus_for_each_drv+0x403/0x620 drivers/base/bus.c:462
+ __device_attach+0x3c1/0x650 drivers/base/dd.c:1030
+ device_initial_probe+0x32/0x40 drivers/base/dd.c:1079
+ bus_probe_device+0x3dc/0x5c0 drivers/base/bus.c:537
+ device_add+0x13aa/0x1ba0 drivers/base/core.c:3665
+ usb_set_configuration+0x31c9/0x38d0 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0x109/0x2a0 drivers/usb/core/generic.c:250
+ usb_probe_device+0x3a7/0x690 drivers/usb/core/driver.c:291
+ really_probe+0x4dc/0xd90 drivers/base/dd.c:658
+ __driver_probe_device+0x2ab/0x5d0 drivers/base/dd.c:800
+ driver_probe_device+0x72/0x890 drivers/base/dd.c:830
+ __device_attach_driver+0x568/0x9e0 drivers/base/dd.c:958
+ bus_for_each_drv+0x403/0x620 drivers/base/bus.c:462
+ __device_attach+0x3c1/0x650 drivers/base/dd.c:1030
+ device_initial_probe+0x32/0x40 drivers/base/dd.c:1079
+ bus_probe_device+0x3dc/0x5c0 drivers/base/bus.c:537
+ device_add+0x13aa/0x1ba0 drivers/base/core.c:3665
+ usb_new_device+0x15f0/0x2470 drivers/usb/core/hub.c:2652
+ hub_port_connect drivers/usb/core/hub.c:5523 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5663 [inline]
+ port_event drivers/usb/core/hub.c:5823 [inline]
+ hub_event+0x4ffb/0x72d0 drivers/usb/core/hub.c:5905
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xc1a/0x1e80 kernel/workqueue.c:3317
+ worker_thread+0xea7/0x14f0 kernel/workqueue.c:3398
+ kthread+0x6b9/0xef0 kernel/kthread.c:464
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Local variable buff created at:
+ ch9200_mdio_read+0x3c/0x100 drivers/net/usb/ch9200.c:180
+ mii_nway_restart+0x8a/0x1e0 drivers/net/mii.c:466
+
+CPU: 1 UID: 0 PID: 3067 Comm: kworker/1:2 Not tainted 6.14.0-rc2-syzkaller-00185-g128c8f96eb86 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Workqueue: usb_hub_wq hub_event
+=====================================================
+
+
 ---
- net/bridge/br_input.c | 2 ++
- 1 file changed, 2 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
-index 232133a0fd21..7fa2da6985b5 100644
---- a/net/bridge/br_input.c
-+++ b/net/bridge/br_input.c
-@@ -155,6 +155,8 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
- 			pkt_type = BR_PKT_MULTICAST;
- 			if (br_multicast_rcv(&brmctx, &pmctx, vlan, skb, vid))
- 				goto drop;
-+			if (br->dev->flags & IFF_ALLMULTI)
-+				local_rcv = true;
- 		}
- 	}
- 
--- 
-2.47.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
