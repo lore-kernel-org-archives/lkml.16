@@ -1,125 +1,110 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD21F21771B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 10:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BD417E45B;
+	Mon, 17 Feb 2025 10:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739789840; cv=none; b=HncDgF5PUnvkxHmTaOqHS3MTfW7Y8gp2ExF5zx50Fws8URNz4BYeIdRLswPzfQ08ZJYI2lREywHY02+xa7qORxSMbPgzdpDjl4c473ToxVqU5sE4ihTcrjLl9a9k/dQxbdRxku4AdcQ2TNC5BMs7m/682IoGJxmPrMcFuSCebd4=
+	t=1739789922; cv=none; b=ZrdxaWMAJPMjQXvEFbsv0LLgdRl0/yG/bWANCoJDQTCelsJWIxU5YNzsCvkQ0e0xusEJUCSNj8gaab2ILXmXDnaZeNouwL54f72JGToHLyGb3oeXaiay0W186r/9FhKP/NkwC3yAgIvDIyUnpgxtHStIuGveBb085TpkEB+pucE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739789840; c=relaxed/simple;
-	bh=kDOoIRjHVfHyTXmfCni8DIKhMZzUPwGTSzjeKFPj7pU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=thdYWIdp/xsqwxIS3Yxcw8WxygbTaS3axvRW8/yWQbDvI1D5kiyqLoIHjsj2fK1qAgCWZ582HbMHxa3ZZkYhsDHdFuY6jQA70H/VqNP0AnY0Ij9A6SSAwrO4Ids06D3nDCbZm+HtHYE2bTJcwRz1W6g5S+O7q4xFWLphhGkKTlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=iYQY7nTu; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1739789922; c=relaxed/simple;
+	bh=N7hfmUF86vXsr+JQeu9N/rh19zThCoacgVDxXP7xhfU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TM2I1gQlRKv0aswqXgjxLS7WVL+Xq/E3nWMbOLMoyDB1cDTtx/O6GMLPKxxzEZj8urm7n6gilK18NvP3M7YNcCVnaXrGiEGzxCKC98J6gblRjEhm6ego8mHLvxR7CB0ZA+xEecJXea4THbDlctXnrL8mzHburAz+79i1fjaCv0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJtVnAVM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="iYQY7nTu"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d2858ce82fso4670965ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 02:57:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1739789838; x=1740394638; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vsTtMyTsJbWMVKOlmUKSf/JarHtELa1O22QRRoXh8xk=;
-        b=iYQY7nTuMdlP/CofJygSUrvl4TP8sjgmW/RCfsgvNoJjk0maNU+TeHPijjiw2kZFRC
-         55diBPrClmBu5u772chLLeSzGCAbVWbNfeDkFSAxo6kInMRpX4gUGBECwZyeeLPpBqEN
-         T20Ym7sIbpl4/HEMEVVa+HtV7QF0TWlKbcG4oFg4W55mtW00FNLWiJh6VXpiX8RPKEKc
-         4qD9oZi8rtJgMPm/EkB+dXXm5K++cWC6ALhrenN3j7rvDDHT8ZQcTFw6gFg+TCcZqMuS
-         wBmyEC4MdKwS2kOCxVrvBOaeUiS90WR7KR1xqiHvK2RunprvamM6NAPzocWsSDdB/uiN
-         B3CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739789838; x=1740394638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vsTtMyTsJbWMVKOlmUKSf/JarHtELa1O22QRRoXh8xk=;
-        b=DPdtZ7ZJANOZSKHQ5eaV1GTLT6SkUcNeCm/S8NIeCeEINpVunjOvQLnLMcnVGhMMu9
-         qBqhqeMs3qsWdJDZjo6gdd5gtk38SvVeviR1ve2jqAecByeNtzEg1aKz3JLSvYgZDgfE
-         u9UVLBjB9o7g1r3DE0AeTC5yf4jICErbDkrsG9HkDW9I1DJKnFLbFAGBbi76ULOikrx7
-         n4GjbH0bR/G4HX0XdmsfOoVkLqxGDK5bNEcfOF2P6SNlVcNetjDqSOZdxVWkWc0SOrCG
-         NrMFX7TxNmfzPSppvGHuMNCXLkRoYJrrwb2hxRqdqCeyn9Cux2fC0FyMczjXYa4kz8uk
-         U4Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ3jYyN1YF4Mpzh/F0IUWGr7x4yWg7qQt2o5V1voTqavTMhkowUimNDwJhRazWXgQIqESFadiWFbSH7PI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1y1sAhqLzvIN0BLLUh3nCfXHAyE17xgOySOBpCAaWdUuv/Bvc
-	8JvcmQtfiFJFKjcY3b4Afsu4xnd7k7Q4pa/vaa0mkbL4krA/ez2yxg1iIhaslS4p2V5Ax3rankg
-	nU+KgCMzs8DRJm/+xMXbyVndxZtyy9JYK0DXnpw==
-X-Gm-Gg: ASbGnculo5aXNk3ZLu6FKWuEM9nVLRcDDowjqGAGKG/lO7kW4W2wh9AB5lck3l8KrOw
-	ac8X36BVKe4+GDEDYoabT6X8KqiT52VS6bFunr49Hx0DPVWHWUCtysy5VoFk3GPsk6aj/6dooBA
-	==
-X-Google-Smtp-Source: AGHT+IF4wt3+bCr8smM4abSpg9jynt5wH6JghaDNkG3zGRYN1zSsdl+CZBbn8XESByuGwGBk4yMvzbUqkz5buCnYAwM=
-X-Received: by 2002:a05:6e02:20cf:b0:3d1:a3d0:d064 with SMTP id
- e9e14a558f8ab-3d281755de7mr70090045ab.0.1739789837889; Mon, 17 Feb 2025
- 02:57:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJtVnAVM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7C6C4CEE2;
+	Mon, 17 Feb 2025 10:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739789922;
+	bh=N7hfmUF86vXsr+JQeu9N/rh19zThCoacgVDxXP7xhfU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XJtVnAVMucYwcaK5F8WyTWl9je4YEc2GfPZ4UhwVaXVq/jIRtX2ky9P4+iqh4fIMK
+	 53xoZX/VCmD4CPIC2R5HRVCSHytx6ofSjN0sGRtCJTVGud2sJ2Sn2cWQiWoKHpwz2v
+	 jdq6k2RUN+kFqDezJxZvCNGmExVsGkZquUYlYZSr46hpB2d7kpdQ7gl/t4HtvOhL9k
+	 XJwuEowh+rrqoGzc0vwOTtp/TD0de7POM2PK9Dn7NhA3jqotB6YbI9UUidkThoqoF4
+	 eKkf8YRvMsM+VaSueHyxrhU/nshhNUVgAhC2hCPxo3gJgwtlxFPA2uEueTV2yJirWh
+	 HTu4UpAYNwkqg==
+Message-ID: <5af1e3a8-31bb-4b8f-8621-b28adafdf0af@kernel.org>
+Date: Mon, 17 Feb 2025 11:58:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217084506.18763-7-ajones@ventanamicro.com> <20250217084506.18763-12-ajones@ventanamicro.com>
-In-Reply-To: <20250217084506.18763-12-ajones@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Mon, 17 Feb 2025 16:27:07 +0530
-X-Gm-Features: AWEUYZlXyegh4HuBYLBwZJ9Tly4L0bQenOk0JsQZ_Py81_lO9EAqEQBtXwOwjmo
-Message-ID: <CAAhSdy23nJq4Uj9amQ9T4iXtNoCSFLnOjjyp7pm6KdNbH7xkmA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] riscv: KVM: Fix SBI sleep_type use
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, cleger@rivosinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: leds: Allow differently named multicolor
+ leds
+To: j.ne@posteo.net, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 17, 2025 at 2:15=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
-om> wrote:
->
-> The spec says sleep_type is 32 bits wide and "In case the data is
-> defined as 32bit wide, higher privilege software must ensure that it
-> only uses 32 bit data." Mask off upper bits of sleep_type before
-> using it.
->
-> Fixes: 023c15151fbb ("RISC-V: KVM: Add SBI system suspend support")
-> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-
-LGTM.
-
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
-
+On 09/02/2025 23:06, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
+> 
+> In some cases, a board may have multiple multi-leds, which can't be
+> distinguished by unit address. In such cases it should be possible to
+> name them differently, for example multi-led-a and multi-led-b.
+> This patch adds another node name pattern to leds-class-multicolor.yaml
+> to allow such names.
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > ---
->  arch/riscv/kvm/vcpu_sbi_system.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/kvm/vcpu_sbi_system.c b/arch/riscv/kvm/vcpu_sbi_s=
-ystem.c
-> index 5d55e08791fa..bc0ebba89003 100644
-> --- a/arch/riscv/kvm/vcpu_sbi_system.c
-> +++ b/arch/riscv/kvm/vcpu_sbi_system.c
-> @@ -4,6 +4,7 @@
->   */
->
->  #include <linux/kvm_host.h>
-> +#include <linux/wordpart.h>
->
->  #include <asm/kvm_vcpu_sbi.h>
->  #include <asm/sbi.h>
-> @@ -19,7 +20,7 @@ static int kvm_sbi_ext_susp_handler(struct kvm_vcpu *vc=
-pu, struct kvm_run *run,
->
->         switch (funcid) {
->         case SBI_EXT_SUSP_SYSTEM_SUSPEND:
-> -               if (cp->a0 !=3D SBI_SUSP_SLEEP_TYPE_SUSPEND_TO_RAM) {
-> +               if (lower_32_bits(cp->a0) !=3D SBI_SUSP_SLEEP_TYPE_SUSPEN=
-D_TO_RAM) {
->                         retdata->err_val =3D SBI_ERR_INVALID_PARAM;
->                         return 0;
->                 }
-> --
-> 2.48.1
->
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
