@@ -1,130 +1,124 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BF921519C;
-	Mon, 17 Feb 2025 09:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554CB2153C7;
+	Mon, 17 Feb 2025 09:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739784677; cv=none; b=ulOktqqRNfoXDIsk2NBqhnfPAOBrnjIH1BcyyW7IcRRSX+LFfWtVj4mIwt8WUxL2X3KIftuWNO+Xx3ylICEzuueG2qIkB8tGvj0B2Xi0+yXKCq3y3QAAxjwj4YCUaHShJzR7n21qBtvIVvqsBrk1V1/i0CR2Jjfg3cbppCqXqcw=
+	t=1739784677; cv=none; b=pLOBZBIEWXdHIvVeo1q2/t6JcxBSdzGr2BOfeoZWufopQdEvEImMVzGoj85qhg4r/PrVOvjHXvC/7yRJTqE62x5oGJth2TEoDTyjdZkOeITyhO+S8xbiYp/kA/ZyhaZzt37pewIHqxxFIt3XqRJ1ECQOxADMZe80WNCptXiW0E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739784677; c=relaxed/simple;
-	bh=BF3BWMnRAgV+XVc7QLQRap/ja+b/weSZ+YkZOb083OM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FppWIrHncgthL/3PAW17LeknnXOPLzh+HVIqoKzujxJs+Vft7irobBNoGbojA8Mk0psF/vWiF/Jhb9+rbku5knZ9XCmA8FuxdUNGyaerS75h/Kd3IB3AZnnxgK/Hy1utkQobRzd+aZDJJBFJlZglMcETZmy7mFfel2hXRSsJSqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fK/H46QJ; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=avuDxrX+bDgNvLafMJuvmb3oYf4uTe94mdHy6Nw7USo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cHF1d2GpbUZbPE63H6pLUCfhNataorShqe85tynBTIGJgqGnDsnCO1xg/6GUB9wyTVrBJvyhE0+2ayaXGcW2uQDQUQyU5XLzM4yTrOAkxaMkkxiiC3aflPnyF6BJB01b73y4mSdm7qsQRC+izvU5+mEDxzhOWfsMA0HAviAGQkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IN+woOZv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fK/H46QJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6D2C04328A;
-	Mon, 17 Feb 2025 09:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739784672;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gzSgtFsogf3LvL+ai4nE5Lt4B+3+Fu9VUwcYPOuEIZQ=;
-	b=fK/H46QJFMLPMcRVkjjcBvXz3suQapWq9E5PCchE4muxik4Ug0FIztPKlE1SGb5DuDwz5a
-	Uoo/64V/Eik/EAM40u63rxPdOzMTUc5FKFGxbkaMwRtBN5QXugz6xEKYFf59C2CPI3qGmh
-	u2dWyZ6LCPd2sA0i6Nm2l6QZWCbNwHDiaPP9GOa9zcetatAYq2HNqRYOpUPYEdK/9SEZcv
-	QBSU/EiTcIELPURB8EgJ9MV8wakky8b0GJorTq/QHU9O5rUi5u4wERdnNw3OTb4gL4kLQh
-	1ripd4J1y7IWjqrj7Anhj4dIEqUdf7WF3Tl1AosWjOQZfn//HL8/QDLv01yDpA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: J. =?utf-8?Q?Neusch=C3=A4fer?= <j.ne@posteo.net>
-Cc: J. =?utf-8?Q?Neusch=C3=A4fer?= via B4 Relay
- <devnull+j.ne.posteo.net@kernel.org>,
-  devicetree@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,  Krzysztof
- Kozlowski <krzk@kernel.org>,  imx@lists.linux.dev,  Scott Wood
- <oss@buserror.net>,  Madhavan Srinivasan <maddy@linux.ibm.com>,  Michael
- Ellerman <mpe@ellerman.id.au>,  Nicholas Piggin <npiggin@gmail.com>,
-  Christophe Leroy <christophe.leroy@csgroup.eu>,  Naveen N Rao
- <naveen@kernel.org>,  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
- <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Damien Le Moal
- <dlemoal@kernel.org>,  Niklas Cassel <cassel@kernel.org>,  Herbert Xu
- <herbert@gondor.apana.org.au>,  "David S. Miller" <davem@davemloft.net>,
-  Lee Jones <lee@kernel.org>,  Vinod Koul <vkoul@kernel.org>,  Lorenzo
- Pieralisi <lpieralisi@kernel.org>,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
-  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Bjorn Helgaas
- <bhelgaas@google.com>,  J. =?utf-8?Q?Neusch=C3=A4fer?=
- <j.neuschaefer@gmx.net>,  Wim Van
- Sebroeck <wim@linux-watchdog.org>,  Guenter Roeck <linux@roeck-us.net>,
-  Mark Brown <broonie@kernel.org>,  Richard Weinberger <richard@nod.at>,
-  Vignesh Raghavendra <vigneshr@ti.com>,  linux-kernel@vger.kernel.org,
-  linux-ide@vger.kernel.org,  linux-crypto@vger.kernel.org,
-  dmaengine@vger.kernel.org,  linux-pci@vger.kernel.org,
-  linux-watchdog@vger.kernel.org,  linux-spi@vger.kernel.org,
-  linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 12/12] dt-bindings: mtd: raw-nand-chip: Relax node
- name pattern
-In-Reply-To: <Z7Iqir-qaZDt6tsx@probook> ("J. =?utf-8?Q?Neusch=C3=A4fer=22'?=
- =?utf-8?Q?s?= message of "Sun, 16
-	Feb 2025 18:12:26 +0000")
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
-	<20250207-ppcyaml-v2-12-8137b0c42526@posteo.net>
-	<87o6zaurv9.fsf@bootlin.com> <Z7Iqir-qaZDt6tsx@probook>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 17 Feb 2025 10:31:08 +0100
-Message-ID: <87tt8svrxf.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IN+woOZv"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H037iS016856;
+	Mon, 17 Feb 2025 09:30:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qQMOQZffzsMfKn3CfdTJ9UbXMyLWAPH3pYBo3aDkzCI=; b=IN+woOZvZ4riNJDc
+	0ISQxdd339uG0ztevjE4ygi9+lU2ovL9ngNjZqW9bmCaLw2cZkO5J29L6gsc31Sd
+	+xSKV0ulQxMs1yeRGceWMSf14qpFzrTJ6sUybZkvYofq1oLmyRo5u9pWLeuwQCpz
+	Om3YrMJixT7qKi69REsEVl7Vh/doHydaiyhkfKW7hFj0e1r45yRgliDrXwvQ8rL7
+	44VUYUhJmQWuFx4+h8wMhGnoOmkqwFDTsIQPhYXt/dw3SLKI7KIQYDTqIjam3Oup
+	5xxE5SGyAXXVanMo+bsnGYaof5ipM4LhCQKUpPOIlKCRbWN54xi8h8JtFqNpXfBX
+	OboE2A==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7us5pu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 09:30:53 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51H9UqSB023604
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 09:30:52 GMT
+Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 17 Feb 2025 01:30:47 -0800
+From: Jie Gan <quic_jiegan@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Jinlong Mao
+	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v12 1/7] Coresight: Add support for new APB clock name
+Date: Mon, 17 Feb 2025 17:30:18 +0800
+Message-ID: <20250217093024.1133096-2-quic_jiegan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
+References: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkedtgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdevhffgtdfhhefggeeftdeiffduiedtgffftddutdehteejhfevieelveegveetnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefledprhgtphhtthhopehjrdhnvgesphhoshhtvghordhnvghtpdhrtghpthhtohepuggvvhhnuhhllhdojhdrnhgvrdhpohhsthgvohdrnhgvtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhsrdhoi
- ihlrggsshdrohhrghdprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehoshhssegsuhhsvghrrhhorhdrnhgvthdprhgtphhtthhopehmrgguugihsehlihhnuhigrdhisghmrdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 8yxdoxNEi5Mq-Ob60YfP-Y0adY6bmR1Q
+X-Proofpoint-ORIG-GUID: 8yxdoxNEi5Mq-Ob60YfP-Y0adY6bmR1Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_04,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=853 spamscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ mlxscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502170083
 
-Hello,
+Add support for new APB clock-name. If the function fails
+to obtain the clock with the name "apb_pclk", it will
+attempt to acquire the clock with the name "apb".
 
->> > In some scenarios, such as under the Freescale eLBC bus, there are raw
->> > NAND chips with a unit address that has a comma in it (cs,offset).
->> > Relax the $nodename pattern in raw-nand-chip.yaml to allow such unit
->> > addresses.
->>=20
->> This is super specific to this controller, I'd rather avoid that in the
->> main (shared) files. I believe you can force another node name in the
->> controller's binding instead?
->
-> It's a bit tricky. AFAICS, when I declare a node name pattern in my
-> specific binding in addition to the generic binding, the result is that
-> both of them apply, so I can't relax stricter requirements:
->
-> # raw-nand-chip.yaml
-> properties:
->   $nodename:
->     pattern: "^nand@[a-f0-9]$"
->
-> # fsl,elbc-fcm-nand.yaml
-> properties:
->   $nodename:
->     pattern: "^nand@[a-f0-9](,[0-9a-f]*)?$"
+Reviewed-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+---
+ include/linux/coresight.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Well, I guess this is creating a second possible node name.
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 17276965ff1d..157c4bd009a1 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -459,8 +459,11 @@ static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+ 	int ret;
+ 
+ 	pclk = clk_get(dev, "apb_pclk");
+-	if (IS_ERR(pclk))
+-		return NULL;
++	if (IS_ERR(pclk)) {
++		pclk = clk_get(dev, "apb");
++		if (IS_ERR(pclk))
++			return NULL;
++	}
+ 
+ 	ret = clk_prepare_enable(pclk);
+ 	if (ret) {
+-- 
+2.34.1
 
-> # dtc
-> /.../fsl,elbc-fcm-nand.example.dtb:
-> nand@1,0: $nodename:0: 'nand@1,0' does not match '^nand@[a-f0-9]$'
->         from schema $id:
-> 	http://devicetree.org/schemas/mtd/fsl,elbc-fcm-nand.yaml#
-
-What about fixing the DT instead?
-
-> (I changed the second pattern to nand-fail@... and dtc warned about it
->  mismatching too.)
->
-> Perhaps I'm missing a DT-schema trick to override a value/pattern.
->
-> Alternatively (pending discussion on patch 11/12), I might end up not
-> referencing raw-nand-chip.yaml.
-
-Ok.
-
-Thanks,
-Miqu=C3=A8l
