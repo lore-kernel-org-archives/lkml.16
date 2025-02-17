@@ -1,31 +1,31 @@
 Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A696B1AA791
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 21:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44451AF0A4
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 21:32:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739827961; cv=none; b=TxMyzSsy9Dt4p6CXEncQx7+Ql23VU4kE54XhWlTn7HryNQ2L4qcwqg3vtNTujybNNAVr2JHgesomi45QXsku5csCpmcJQVZVg+fc/7nKweEzV7wKde30Zs/CIU6rI0mE47rsK+E36bL7ZEWJhH55V+qLfkRdfBzU9KKECDy5rwU=
+	t=1739827965; cv=none; b=hBjDf5oIdTQil30w/+eMXgYcvkYl8IH2mVyyR+q/XUOCgMIPRNqWps3n7fRLuqgpXdvv7JFbAQVxQ3FOakqQrUdjA4FdKQLNs9jn30wujae+vQvy5O7XSWTzvu/3Prv5sP+peyNlEDHa7Bogq//xSC1B+pduN+tb/ktWLa1u42Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739827961; c=relaxed/simple;
-	bh=d90e+aG/dLPhZ45Wax0yq+hKJxVgTdMsCYq09/QZQ0s=;
+	s=arc-20240116; t=1739827965; c=relaxed/simple;
+	bh=hknFIwkcGKVEGhAUgTXGLYiwzwz0RfRZ2lihmtn+v/I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C2o7eb/1Ql8ueLIoECKMNYqDf0zpBVg9uxqlGeG5QaRWyFCU+UgR5y8qzUYs9+L0z9UkT5+b0NmEIkYWteeNGBJxYIZputJgpw3iZqJ2l/3AiB5TobNS/a8nkuaINJ2xOxAdR4AdzpfZfwX+wQlrive+CakFQqZDUryj2ANyVzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=eYj3ws0l; arc=none smtp.client-ip=34.202.193.197
+	 In-Reply-To:To:Cc; b=SMvvPMhFTd6hInHKcj/cIjxFFecCrv5P9Z8Y7N0Jo90dBNEAf8lSbG5cU7FRWHkzFHIpauG2upCr+ij0laqb4JfdPJv54m7fdVgmlhxbu6NEQRsr9/x05Kwp95Mbc87rS8H8fuLv1yzhfxMYWLyuvhMRW/Fm/Xy514eruXCuYA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=FyyomyIF; arc=none smtp.client-ip=34.202.193.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="eYj3ws0l"
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="FyyomyIF"
 Authentication-Results: purelymail.com; auth=pass
-DKIM-Signature: a=rsa-sha256; b=eYj3ws0lIGsVHsw3N0VISHwu3eK10dmpNuKwriaKXMewIeqstQmYqcC6SVFx2RA2uj+TbwUKhSj5xi95BcoKWLPfUZsOwSfrA6BLo0p6t6h/wzS173iJnmVPwfkP4xUwuCpLLanKxk3HA8Am6v0slaeUeNMVUvP39pKJavIcyYcV4fiBE8M1GOe2emvkvXnJgMn+sBzH9fToaUd2ZV/FbVTpjX3pnTx8GQ0mEBOY1GUVVwmUA/9EswdvD4KMO3uZk90G2Au7S1zmieKVdQZ/aIaFfWBRkCNlxOjdR/JH9E82sUJ3Rejmwy/IUAj4O1ci/+4wokKB8gQAfXIsLgR32g==; s=purelymail3; d=purelymail.com; v=1; bh=d90e+aG/dLPhZ45Wax0yq+hKJxVgTdMsCYq09/QZQ0s=; h=Feedback-ID:Received:From:Date:Subject:To;
+DKIM-Signature: a=rsa-sha256; b=FyyomyIFr894CgDIEux8ZVTLlr9iRlrf10hjHZQvghfylYvqXbQxo9Np5Bgh73NSQGNruarZsqAq0p5lujyvWnY+lQhibpzM6vvzSQJEy1LEuXBFJSEhmlaXkMis2WVE4Bj1c0wXJZCkHhwWP/2CxLAzppfnDj3F0qKCjnfNlkS/fIRg8rN6rPgsddlkw1aKAKJV1sq7BKgUcSw24WneoF4W9b3dOJACJtEj0MnDtS82N3ej9/boWN5gF4jondntQvY3/JXoxa4LMZZUIFyMx5zTTx9Qq6VIhkYqbx6w6TsBjgwUw0VQJakdH9aTZlZ5iS5mBVsm0MeObI7oGCge7A==; s=purelymail3; d=purelymail.com; v=1; bh=hknFIwkcGKVEGhAUgTXGLYiwzwz0RfRZ2lihmtn+v/I=; h=Feedback-ID:Received:From:Date:Subject:To;
 Feedback-ID: 68247:10037:null:purelymail
 X-Pm-Original-To: linux-kernel@vger.kernel.org
 Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 42194286;
           (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-          Mon, 17 Feb 2025 21:32:37 +0000 (UTC)
+          Mon, 17 Feb 2025 21:32:40 +0000 (UTC)
 From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-Date: Mon, 17 Feb 2025 22:32:05 +0100
-Subject: [PATCH 3/5] arm64: dts: exynos990-x1s-common: Enable USB
+Date: Mon, 17 Feb 2025 22:32:07 +0100
+Subject: [PATCH 5/5] arm64: dts: exynos990-r8s: Enable USB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-exynos990-dt-changes-febuary-v1-3-99935218cbf4@mentallysanemainliners.org>
+Message-Id: <20250217-exynos990-dt-changes-febuary-v1-5-99935218cbf4@mentallysanemainliners.org>
 References: <20250217-exynos990-dt-changes-febuary-v1-0-99935218cbf4@mentallysanemainliners.org>
 In-Reply-To: <20250217-exynos990-dt-changes-febuary-v1-0-99935218cbf4@mentallysanemainliners.org>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -43,31 +43,30 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Igor Belwon <igor.belwon@mentallysanemainliners.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739827951; l=1301;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739827951; l=1236;
  i=igor.belwon@mentallysanemainliners.org; s=20241206;
- h=from:subject:message-id; bh=d90e+aG/dLPhZ45Wax0yq+hKJxVgTdMsCYq09/QZQ0s=;
- b=Obkdhx9gjqTphT/XZf+SeeVBwNcPUVVI4LdkeHzZTZyuX9KjyvyWQzNj5ap2XocW4QEGQPAOq
- fDOeWiQk3dNBUD31zENjl+XuJqR0tH+pZwbe15BUTRBTDCM3TTRHcgf
+ h=from:subject:message-id; bh=hknFIwkcGKVEGhAUgTXGLYiwzwz0RfRZ2lihmtn+v/I=;
+ b=xcil7QKlppQhkwxh68VRTzsZH+KuVGaBTaffQMihrQKE3bFYFXcERLOFxo+PnFC41npBGAOhT
+ sZBJqNg93CAB572kGmCPeZsiXIn4NmefBAZ3LjTr9MkUVZt8m9zg81e
 X-Developer-Key: i=igor.belwon@mentallysanemainliners.org; a=ed25519;
  pk=qKAuSTWKTaGQM0vwBxV0p6hPKMN4vh0CwZ+bozrG5lY=
 
-The x1s family uses a shared USB configuration. Enable both the
-USB PHY as well as the DWC3 controller.
+Enable both the USB PHY as well as the DWC3 controller nodes.
 
 Since we do not have any PMIC for USB implemented yet, use dummy
 regulators until we do.
 
 Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
 ---
- arch/arm64/boot/dts/exynos/exynos990-x1s-common.dtsi | 16 ++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos990-r8s.dts | 16 ++++++++++++++++
  1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos990-x1s-common.dtsi b/arch/arm64/boot/dts/exynos/exynos990-x1s-common.dtsi
-index 55fa8e9e05db8af51109d20d74cbd7b9a2af38df..7b97220cccb7442dbc5a9f31ae9b9124bee85c62 100644
---- a/arch/arm64/boot/dts/exynos/exynos990-x1s-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos990-x1s-common.dtsi
-@@ -27,6 +27,12 @@ framebuffer0: framebuffer@f1000000 {
- 		};
+diff --git a/arch/arm64/boot/dts/exynos/exynos990-r8s.dts b/arch/arm64/boot/dts/exynos/exynos990-r8s.dts
+index 6bae3c0ecc1caae31d2c6b6e81bbd76a4ccd6f5f..55342db61979bc28e65f68c9ba7d6b452dbf6c07 100644
+--- a/arch/arm64/boot/dts/exynos/exynos990-r8s.dts
++++ b/arch/arm64/boot/dts/exynos/exynos990-r8s.dts
+@@ -44,6 +44,12 @@ memory@80000000 {
+ 		      <0x8 0x80000000 0x0 0xc0000000>;
  	};
  
 +	/* TODO: Remove this once PMIC is implemented */
@@ -79,7 +78,7 @@ index 55fa8e9e05db8af51109d20d74cbd7b9a2af38df..7b97220cccb7442dbc5a9f31ae9b9124
  	reserved-memory {
  		#address-cells = <2>;
  		#size-cells = <2>;
-@@ -96,3 +102,13 @@ key_volup: key-volup-pins {
+@@ -113,3 +119,13 @@ key_volup: key-volup-pins {
  		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
  	};
  };
