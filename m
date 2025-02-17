@@ -1,61 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385AB1A8403;
-	Mon, 17 Feb 2025 08:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2ACF1A8F68
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739782677; cv=none; b=dLMzyB5mUUoT0Idg42IvguLBGCPxRoiEApcPH6Mdki4nWHkRfQWEmygTugZM/gyLbgpqlwBGK1L0LlL/tNXGWvyrv0vukUbnTKi+1OoNdNTonWnEZWfW5V27XTrcPXSZP6jHYEWbGC1XGYhjXKicpKz54ZXaGxp+v/KCBjMpNo4=
+	t=1739782679; cv=none; b=ixTmSEnYM29e2u0BBA/Uh4ni6VdR3+d9TSYO60TcjwQ+jduJQ3lWqeo/COXfAbSv5iy4TFFAcdTmXydRrgBqwrLU0k9VwtqPYetVVp2U+knoPrLZ1mnY+OfpeMV09MQRzDknyQRGzG/zYm90pp3FD2pwTO4c6W7msn2fQ40+2f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739782677; c=relaxed/simple;
-	bh=9macul4XblzTUxF7kH52KxnULiDZU5dKGC5irFFJUOk=;
+	s=arc-20240116; t=1739782679; c=relaxed/simple;
+	bh=cA1sVz4q2Oqx8B9mzL6c4pNCSDxS/s6iPI+hzJGQ4U0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OabgWJQ3aRwQ4muh/EAtawijOjMTOez2sfvPqKK/Q4sN9hN1QM8bskrv8m5foFm/RYUh9WYPO4hRWDpMoAy0pugsBRbdW/HOvU8qtaRHbaex3dwiNEBX0Q/7PKPbdc0zMKu8AYQiYl39Ga8nD/KFzTWNJB5KjyO6Uy22FqUHuX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c4TUdz1A; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 MIME-Version; b=Tz7ndASa9Qkwe4/ZwIg15FNXYKevRTxD9ku8UokozwMBaaRxKCOgChIaHfjudC0FidzSt8LQDhkCseLDUR2H+YF/dbVqH1x46LjnwPJ0EnlRmsnu5nqoF4Ss3eLsAdEKcRXWmJyB7ocHf0IwP/9sNSu1UK/GfD3+HXVvca5TvE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Vyk1P1Qk; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c4TUdz1A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739782675; x=1771318675;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9macul4XblzTUxF7kH52KxnULiDZU5dKGC5irFFJUOk=;
-  b=c4TUdz1AXfqhEFMJK95NX4srtXHHvg6Dnin5dKIZoY3lxYM9aO6RINL1
-   BSlg9NN8WO5Z9LapVByVMRTHrKULbuHh2It9PeDQFe5+IcpZYh95bM1Bk
-   +ninZhVB9IXDe7NnzeQx0MRZoC0IdUFu3haJCP0Uk/Sfe9HfvE9PfkokT
-   AvByQLQPSvJs5YmGtJEzsWDeVrSw9SaNO/gYiM/Oo1l3B4Q1CPQWq7e6L
-   c6F/CTfWZWRm8svvYYTwO5Pb/TcYG/jWutiL3cHw7UpqNmO+ZOrSCFZKQ
-   b+cJyJyhPbo6A0WdZ3VeUb+qC8sKAB8h7aHQtDsCnyVseaXL+d+8ar0no
-   g==;
-X-CSE-ConnectionGUID: w+Z0h93hQx2mTIV9Lsu6DQ==
-X-CSE-MsgGUID: EPsV3rM5S7m8ZS89JzGISQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51883271"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51883271"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 00:57:55 -0800
-X-CSE-ConnectionGUID: 2UL39tiWTj2Ft/EMC0StjQ==
-X-CSE-MsgGUID: 8XYbJa9ZRB24OQfBNNigXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="144989824"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 00:57:52 -0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: rick.p.edgecombe@intel.com,
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Vyk1P1Qk"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fc3fa00323so3830761a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 00:57:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1739782677; x=1740387477; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Atdfv1u3QJvV1o68tlPZkH3S4E5LyywsJGNj7mblCio=;
+        b=Vyk1P1Qk3rBdIkLYMxD8cJpLt2oGNXCIzVcx2XD/PqfC+5knrWvTjjtrxZxP8khf+5
+         CAEKL3sbubez34V3BU4M84/SQekVOXn2HPGETC08Bd4OsWXnmoxEb20IMoBefFjPmXmg
+         gS48kT7cxJlRP6INSsownW/E19tat0RvzEE82WrCytQgjvIufzqTpKHdCxVRtGlrvADf
+         kx+qWE+WqRg5RqXNPo7sWv0aUkKBk43/JAab+/pF/TvXR54COWUNpQBQVXRJ6CL2z5m3
+         kbCVmgtL+qX5OZvZQGckcbiV7V63zZBpNf6lwaWY5iUAeHejxy2K1qshc6hv0hrVCY8p
+         MniA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739782677; x=1740387477;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Atdfv1u3QJvV1o68tlPZkH3S4E5LyywsJGNj7mblCio=;
+        b=eVoN1/4jqWzgP5iIzErvrK44e3OqkycjBrfWjctb8e6Jbt+ojLl7w4LHnoeIPmYMmq
+         KsDO5DiitHqkYqH01oEXFRCfuggcKb0JxnCnAFf7Rh5Vku7prNY95aMC5km0wtCkEhly
+         Jxv9tkXhBqIMSjvIhUkRPTkBjJ0fX5DDdB8cqnaw+N4mcSqwSIeLVcEtRLo2z8o+fraZ
+         jiRr9HPoXCK9M1DSGkbNBf5omJAsgtGPI6zus5UmS5L8G3G5K7N/xsHvz7kiAi7BoQms
+         Hx42orwUPByEqfFhxxM9eh1DZeR4I1Gdyxc+XX+j3UeEEB5Z1ZCA8zAXTnEM8UUdOS5v
+         NvDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyDUIXWDEBgLQJCsjJZRjLJ4TDUMKMWM3M/E43r/MbRisu8jHTv5dd7F/5WmB4dFK5intsRqrZKNwkApk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYeb3QEIxnsYAeMSikuChYlh0ltNE0UlqLMZD0Yoo0Wj/jn9CR
+	VaZs0XRXodNDqlDgZrpiSpHgY7IZQhXKjyQDUL+oMeI0LrIxMrXkWvnVGEqi6CM=
+X-Gm-Gg: ASbGncuN7e1YQhdSsf75Kh32m8+U15/0jXesIOvN0NM/Ad+v/4atHG940rXsW/Mc/AC
+	aMzPuCS7lG4TxYj+jBL1hJPwLILugyDiHGfnWK/dR2IgglU/OjR37JWfz/Q9QLoo11HgPpj+WjR
+	KkINPsz2lhclfEzdEWRJt/U+KdT5NhEOOX/YMHMT25TC9QoJ0yjtSG1sm4vdRZEmg1ta/me+tLn
+	GEdAZ57A37FXSApG/GsCubjPQCw+7VHKWpBXGPBkzg95GRMhiqPI3W678Y82NHQqd75HY8rMbuk
+	HCJ5bOMCCiZ12hR55szeoeBRf3PinALnigJKT9mEp1ngzC6QjjuuU/c=
+X-Google-Smtp-Source: AGHT+IFPW0gjXYzToorJlW4AuIzo5YfoCgQvbwScUi6k6HolCkujw1LAnVbhNnt/U0DkIfz+68pqpQ==
+X-Received: by 2002:a05:6a00:cd4:b0:725:9d70:6ace with SMTP id d2e1a72fcca58-73261798a0amr14960838b3a.6.1739782677006;
+        Mon, 17 Feb 2025 00:57:57 -0800 (PST)
+Received: from anup-ubuntu-vm.localdomain ([122.171.22.227])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242546867sm7632018b3a.24.2025.02.17.00.57.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 00:57:56 -0800 (PST)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: hpa@zytor.com,
+	Marc Zyngier <maz@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 1/2] KVM: TDX: Handle SEPT zap error due to page add error in premap
-Date: Mon, 17 Feb 2025 16:56:42 +0800
-Message-ID: <20250217085642.19696-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20250217085535.19614-1-yan.y.zhao@intel.com>
-References: <20250217085535.19614-1-yan.y.zhao@intel.com>
+	imx@lists.linux.dev,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH v6 01/10] irqchip/riscv-imsic: Set irq_set_affinity for IMSIC base
+Date: Mon, 17 Feb 2025 14:26:47 +0530
+Message-ID: <20250217085657.789309-2-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250217085657.789309-1-apatel@ventanamicro.com>
+References: <20250217085657.789309-1-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,160 +96,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the handling of SEPT zap errors caused by unsuccessful execution of
-tdh_mem_page_add() in KVM_TDX_INIT_MEM_REGION from
-tdx_sept_drop_private_spte() to tdx_sept_zap_private_spte(). Introduce a
-new helper function tdx_is_sept_zap_err_due_to_premap() to detect this
-specific error.
+From: Andrew Jones <ajones@ventanamicro.com>
 
-During the IOCTL KVM_TDX_INIT_MEM_REGION, KVM premaps leaf SPTEs in the
-mirror page table before the corresponding entry in the private page table
-is successfully installed by tdh_mem_page_add(). If an error occurs during
-the invocation of tdh_mem_page_add(), a mismatch between the mirror and
-private page tables results in SEAMCALLs for SEPT zap returning the error
-code TDX_EPT_ENTRY_STATE_INCORRECT.
+Instead of using imsic_irq_set_affinity() for leaf MSI domains, use
+imsic_irq_set_affinity() for the non-leaf IMSIC base domain and use
+irq_chip_set_affinity_parent() for leaf MSI domains. This is required
+for moving the IMSIC driver to the common MSI lib which uses a generic
+msi_domain_set_affinity() for device MSI domains.
 
-The error TDX_EPT_WALK_FAILED is not possible because, during
-KVM_TDX_INIT_MEM_REGION, KVM only premaps leaf SPTEs after successfully
-mapping non-leaf SPTEs. Unlike leaf SPTEs, there is no mismatch in non-leaf
-PTEs between the mirror and private page tables. Therefore, during zap,
-SEAMCALLs should find an empty leaf entry in the private EPT, leading to
-the error TDX_EPT_ENTRY_STATE_INCORRECT instead of TDX_EPT_WALK_FAILED.
-
-Since tdh_mem_range_block() is always invoked before tdh_mem_page_remove(),
-move the handling of SEPT zap errors from tdx_sept_drop_private_spte() to
-tdx_sept_zap_private_spte(). In tdx_sept_zap_private_spte(), return 0 for
-errors due to premap to skip executing other SEAMCALLs for zap, which are
-unnecessary. Return 1 to indicate no other errors, allowing the execution
-of other zap SEAMCALLs to continue.
-
-The failure of tdh_mem_page_add() is uncommon and has not been observed in
-real workloads. Currently, this failure is only hypothetically triggered by
-skipping the real SEAMCALL and faking the add error in the SEAMCALL
-wrapper. Additionally, without this fix, there will be no host crashes or
-other severe issues.
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- arch/x86/kvm/vmx/tdx.c | 64 +++++++++++++++++++++++++++++-------------
- 1 file changed, 45 insertions(+), 19 deletions(-)
+ drivers/irqchip/irq-riscv-imsic-platform.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 8cad38e8e0bc..86c0653d797e 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1616,20 +1616,6 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
- 		tdx_no_vcpus_enter_stop(kvm);
- 	}
- 
--	if (unlikely(kvm_tdx->state != TD_STATE_RUNNABLE &&
--		     err == (TDX_EPT_WALK_FAILED | TDX_OPERAND_ID_RCX))) {
--		/*
--		 * Page is mapped by KVM_TDX_INIT_MEM_REGION, but hasn't called
--		 * tdh_mem_page_add().
--		 */
--		if ((!is_last_spte(entry, level) || !(entry & VMX_EPT_RWX_MASK)) &&
--		    !KVM_BUG_ON(!atomic64_read(&kvm_tdx->nr_premapped), kvm)) {
--			atomic64_dec(&kvm_tdx->nr_premapped);
--			tdx_unpin(kvm, page);
--			return 0;
--		}
--	}
--
- 	if (KVM_BUG_ON(err, kvm)) {
- 		pr_tdx_error_2(TDH_MEM_PAGE_REMOVE, err, entry, level_state);
- 		return -EIO;
-@@ -1667,8 +1653,41 @@ int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
- 	return 0;
- }
- 
-+/*
-+ * Check if the error returned from a SEPT zap SEAMCALL is due to that a page is
-+ * mapped by KVM_TDX_INIT_MEM_REGION without tdh_mem_page_add() being called
-+ * successfully.
-+ *
-+ * Since tdh_mem_sept_add() must have been invoked successfully before a
-+ * non-leaf entry present in the mirrored page table, the SEPT ZAP related
-+ * SEAMCALLs should not encounter err TDX_EPT_WALK_FAILED. They should instead
-+ * find TDX_EPT_ENTRY_STATE_INCORRECT due to an empty leaf entry found in the
-+ * SEPT.
-+ *
-+ * Further check if the returned entry from SEPT walking is with RWX permissions
-+ * to filter out anything unexpected.
-+ *
-+ * Note: @level is pg_level, not the tdx_level. The tdx_level extracted from
-+ * level_state returned from a SEAMCALL error is the same as that passed into
-+ * the SEAMCALL.
-+ */
-+static int tdx_is_sept_zap_err_due_to_premap(struct kvm_tdx *kvm_tdx, u64 err,
-+					     u64 entry, int level)
-+{
-+	if (!err || kvm_tdx->state == TD_STATE_RUNNABLE)
-+		return false;
-+
-+	if (err != (TDX_EPT_ENTRY_STATE_INCORRECT | TDX_OPERAND_ID_RCX))
-+		return false;
-+
-+	if ((is_last_spte(entry, level) && (entry & VMX_EPT_RWX_MASK)))
-+		return false;
-+
-+	return true;
-+}
-+
- static int tdx_sept_zap_private_spte(struct kvm *kvm, gfn_t gfn,
--				     enum pg_level level)
-+				     enum pg_level level, struct page *page)
+diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
+index c708780e8760..5d7c30ad8855 100644
+--- a/drivers/irqchip/irq-riscv-imsic-platform.c
++++ b/drivers/irqchip/irq-riscv-imsic-platform.c
+@@ -96,9 +96,8 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
+ 				  bool force)
  {
- 	int tdx_level = pg_level_to_tdx_sept_level(level);
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-@@ -1686,12 +1705,18 @@ static int tdx_sept_zap_private_spte(struct kvm *kvm, gfn_t gfn,
- 		err = tdh_mem_range_block(&kvm_tdx->td, gpa, tdx_level, &entry, &level_state);
- 		tdx_no_vcpus_enter_stop(kvm);
- 	}
-+	if (tdx_is_sept_zap_err_due_to_premap(kvm_tdx, err, entry, level) &&
-+	    !KVM_BUG_ON(!atomic64_read(&kvm_tdx->nr_premapped), kvm)) {
-+		atomic64_dec(&kvm_tdx->nr_premapped);
-+		tdx_unpin(kvm, page);
-+		return 0;
-+	}
+ 	struct imsic_vector *old_vec, *new_vec;
+-	struct irq_data *pd = d->parent_data;
  
- 	if (KVM_BUG_ON(err, kvm)) {
- 		pr_tdx_error_2(TDH_MEM_RANGE_BLOCK, err, entry, level_state);
- 		return -EIO;
- 	}
--	return 0;
-+	return 1;
- }
+-	old_vec = irq_data_get_irq_chip_data(pd);
++	old_vec = irq_data_get_irq_chip_data(d);
+ 	if (WARN_ON(!old_vec))
+ 		return -ENOENT;
  
- /*
-@@ -1769,6 +1794,7 @@ int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
- int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 				 enum pg_level level, kvm_pfn_t pfn)
- {
-+	struct page *page = pfn_to_page(pfn);
- 	int ret;
+@@ -116,13 +115,13 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
+ 		return -ENOSPC;
  
- 	/*
-@@ -1779,8 +1805,8 @@ int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 	if (KVM_BUG_ON(!is_hkid_assigned(to_kvm_tdx(kvm)), kvm))
- 		return -EINVAL;
+ 	/* Point device to the new vector */
+-	imsic_msi_update_msg(d, new_vec);
++	imsic_msi_update_msg(irq_get_irq_data(d->irq), new_vec);
  
--	ret = tdx_sept_zap_private_spte(kvm, gfn, level);
--	if (ret)
-+	ret = tdx_sept_zap_private_spte(kvm, gfn, level, page);
-+	if (ret <= 0)
- 		return ret;
+ 	/* Update irq descriptors with the new vector */
+-	pd->chip_data = new_vec;
++	d->chip_data = new_vec;
  
- 	/*
-@@ -1789,7 +1815,7 @@ int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 	 */
- 	tdx_track(kvm);
+-	/* Update effective affinity of parent irq data */
+-	irq_data_update_effective_affinity(pd, cpumask_of(new_vec->cpu));
++	/* Update effective affinity */
++	irq_data_update_effective_affinity(d, cpumask_of(new_vec->cpu));
  
--	return tdx_sept_drop_private_spte(kvm, gfn, level, pfn_to_page(pfn));
-+	return tdx_sept_drop_private_spte(kvm, gfn, level, page);
- }
- 
- void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
+ 	/* Move state of the old vector to the new vector */
+ 	imsic_vector_move(old_vec, new_vec);
+@@ -135,6 +134,9 @@ static struct irq_chip imsic_irq_base_chip = {
+ 	.name			= "IMSIC",
+ 	.irq_mask		= imsic_irq_mask,
+ 	.irq_unmask		= imsic_irq_unmask,
++#ifdef CONFIG_SMP
++	.irq_set_affinity	= imsic_irq_set_affinity,
++#endif
+ 	.irq_retrigger		= imsic_irq_retrigger,
+ 	.irq_compose_msi_msg	= imsic_irq_compose_msg,
+ 	.flags			= IRQCHIP_SKIP_SET_WAKE |
+@@ -245,7 +247,7 @@ static bool imsic_init_dev_msi_info(struct device *dev,
+ 		if (WARN_ON_ONCE(domain != real_parent))
+ 			return false;
+ #ifdef CONFIG_SMP
+-		info->chip->irq_set_affinity = imsic_irq_set_affinity;
++		info->chip->irq_set_affinity = irq_chip_set_affinity_parent;
+ #endif
+ 		break;
+ 	default:
 -- 
-2.43.2
+2.43.0
 
