@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56517218EA8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2B1218EB3;
 	Mon, 17 Feb 2025 11:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739792377; cv=none; b=Hqbald2O8aZen7RohypQhazLnv+l/eP7GxGNa5ODMcNglF/JawiF1nFMv8vDL319/fyRSLIvvE8meotNCYs6UCYEJ/VlUmyB8GOHg2wvq5ViKOi+FOHpV8NJfvBkJuYmQWisKc2BuHO1Be9QYDJKCyk/BYhd4JQf8j3k9qT8M8Y=
+	t=1739792377; cv=none; b=IOJhlV18CSyQ2qhBrj2OKbevuacwkzeXIneRqypj+rSOFErRoWtQSCFsDLMpLW+sDVNACEpTcUqDZczFPe7FGOKdN4Hi5eV8se7WP6rykw1FcP9jMAq3U6NEYkwwQS1RkVXh/WADyNE+DfPhllpjemxW7ElqkvJT13Xfx8Xf15Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739792377; c=relaxed/simple;
-	bh=jgUIKutYD6JHar/7UGNU4iJs/xInxZUk3vydF/EOQVw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qKb4fN+yNVT2Fkb/Aw6caJ2qHoT0Kxm4qCYyAYEOKiqaMdTwXgAa87kJfE5CQN7HbIZQqzQwC0eGsdlZNfgP8F0sW9dTx/0iTPuSN1if6/iS9ovMlYJhEpBpXmh4ccjNLjNDA4C2T0jz4Jd0mO/fjB4gI2+a/74ulum9KyyjIFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzxT3XhR; arc=none smtp.client-ip=10.30.226.201
+	bh=eRJtlx+TXRz4sj1yjZeqRnBx9fEKd9tRMuECk2LsGb0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y97Drp38ywJ08RiUOuYq29+pSqPJRYpeTyWnfx+GbUm0dRtth2dCXsgRaYP8P7uYTY/uwR/FbsbPQ2b9N0jrfGuXtl5IeMK8Wc0SQzU/SHtuHGTqA05DxLTcYfU5WJVM7dfdVyiziHMdxyQ34DQzgTHqq13BWMF0irnn6znw2XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRdmqC7k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzxT3XhR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 30806C4CEF6;
-	Mon, 17 Feb 2025 11:39:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRdmqC7k"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C81CDC4CEE4;
+	Mon, 17 Feb 2025 11:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739792377;
-	bh=jgUIKutYD6JHar/7UGNU4iJs/xInxZUk3vydF/EOQVw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=kzxT3XhRjCcjpnvE3++zGyD9rzcaqOjhZUt/UwNxmggVTfyXuL+FyUMHghPQJ33Uf
-	 1rvZjaF+3G9gd9m7RLw0rbRRCtWJQbY+sN8tmHdWm9fKv/eY0IlIldYXXZqadUn/w2
-	 0jTsj/baJIlu63Fd18V1qbxPzuMevn1QLyLrz+R5K59se/dSthFBOHL4D4jGGlyEGR
-	 9ERMKkptF43foAxm3qFoPVJYD3O2X35BTmsvzTzNgs6ogdQ4RuPA/Wd7EW5KplNzld
-	 bXhryTX+2FPKcjbc331ZjMf4Hqh+A5vASO01aZzSDv6rffP6bF+Ggw4d9CNEV33Oba
-	 mTH58v5bVgszA==
+	s=k20201202; t=1739792376;
+	bh=eRJtlx+TXRz4sj1yjZeqRnBx9fEKd9tRMuECk2LsGb0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=DRdmqC7kFX+YX7FOorXzZDbEwEujI1ib5++hgeOGoBD7fMIKi1U6wsdKdNMTTxRrn
+	 M/6pT5GNlnaLpPJPuZhY4PsshcA3kWyKOO9cwGU1Rw6gSf3cvTO8tACJ5vbz9VkTgI
+	 UlnYyhFrPaZaUDdMqihQ2DOxPQ1OqC/o6DgarK22kJYX5cr+rGltBGPqy0cTiK4wNi
+	 MQ3yE+3C1bnG7FnWFhI0MaTWPkxdCXis8StJua+xVw+BAdxWtrx40/5dRbsQlqzbEZ
+	 hVjGr5xHiGfzjYo7mvveRmN0StSfl5Na0rPOCQnYqQNzO6qjkWSCdGI7+OVvhqxzaO
+	 nXH1Tsi6h4w3Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2586CC021AB;
-	Mon, 17 Feb 2025 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1A8C021A9;
+	Mon, 17 Feb 2025 11:39:36 +0000 (UTC)
 From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
-Date: Mon, 17 Feb 2025 12:39:35 +0100
-Subject: [PATCH v7 5/5] MAINTAINERS: Add entries for touchbar display
- driver
+Subject: [PATCH v7 0/5] Driver for pre-DCP apple display controller.
+Date: Mon, 17 Feb 2025 12:39:30 +0100
+Message-Id: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-adpdrm-v7-5-ca2e44b3c7d8@gmail.com>
-References: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com>
-In-Reply-To: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAPIfs2cC/2XPy2rDMBAF0F8JWldFj5Hkyar/UbrQY5QI6jjIx
+ bQE/3vlQG3jLu8w5zLzYCPVQiM7nx6s0lTGMtxacC8nFq/+diFeUstMCQVSKuA+3VPtuTI5kk6
+ p806ytnyvlMv3s+j9o+VrGb+G+vPsneQy/VcxSS64lihTR5YA/dul9+XzNQ49WyomtWd2Zaqxi
+ AI6o7WNAo9M/zEjmluZXph1kKLE7F0+Mtiz7UhojDAYZYXXmOWRmY0pYVZmGgMCiugwhKyOzO7
+ Z9ptdjux8QA1daA/u2TzPvyoNbD+vAQAA
+X-Change-ID: 20241124-adpdrm-25fce3dd8a71
 To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
  Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -57,13 +59,15 @@ To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
 Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alyssa Ross <hi@alyssa.is>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
- Neal Gompa <neal@gompa.dev>
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Neal Gompa <neal@gompa.dev>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Nick Chan <towinchenmi@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739792375; l=1450;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739792375; l=2867;
  i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
- bh=bjGQY6YcAfvFhQstvcidH714PAZmif+zGGMT8HLhTJg=;
- b=CP5gH1NHTRgD2P0uDekGEfmEIKssn+z/69IoffnSBjcMumJcL/ltIZ3nNsYf28XV4BSrdBGq7
- abPAy+0Gi3tBOEnhmFXEFHPOtzA6nZvYx8j1STsY/VT6AWQIzzSzrXK
+ bh=eRJtlx+TXRz4sj1yjZeqRnBx9fEKd9tRMuECk2LsGb0=;
+ b=RMk5Ud/lR7LohTZmy9UXcBvRVStjq2rym8WI1uCB7NGENaBDElVWONJTm0BSFwHXh7TPamH+2
+ 9jlTs2MhNBVBO5XIig2VNo5M79PSAX6EfUmfQHIje6w4udnL07lurUj
 X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
  pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
 X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
@@ -71,47 +75,70 @@ X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
 X-Original-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
 Reply-To: fnkl.kernel@gmail.com
 
-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Hi.
 
-Add the MAINTAINERS entries for the driver
+This patch series adds support for a secondary display controller
+present on Apple M1/M2 chips and used to drive the display of the
+"touchbar" touch panel present on those. 
 
-Acked-by: Sven Peter <sven@svenpeter.dev>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
 Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 ---
- MAINTAINERS | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Changes in v7:
+- No changes aside from adding r-b trailers, effectively a resend.
+- Link to v6: https://lore.kernel.org/r/20250206-adpdrm-v6-0-c8ab9348b853@gmail.com
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a87ddad78e26f28ffd0f3433560d6db1518f9f95..895d682bcf4e351971b04c6515ebf685fd39b662 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7746,6 +7746,22 @@ F:	drivers/gpu/host1x/
- F:	include/linux/host1x.h
- F:	include/uapi/drm/tegra_drm.h
- 
-+DRM DRIVERS FOR PRE-DCP APPLE DISPLAY OUTPUT
-+M:	Sasha Finkelstein <fnkl.kernel@gmail.com>
-+R:	Janne Grunau <j@jannau.net>
-+L:	dri-devel@lists.freedesktop.org
-+L:	asahi@lists.linux.dev
-+S:	Maintained
-+W:	https://asahilinux.org
-+B:	https://github.com/AsahiLinux/linux/issues
-+C:	irc://irc.oftc.net/asahi-dev
-+T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
-+F:	Documentation/devicetree/bindings/display/apple,h7-display-pipe-mipi.yaml
-+F:	Documentation/devicetree/bindings/display/apple,h7-display-pipe.yaml
-+F:	Documentation/devicetree/bindings/display/panel/apple,summit.yaml
-+F:	drivers/gpu/drm/adp/
-+F:	drivers/gpu/drm/panel/panel-summit.c
-+
- DRM DRIVERS FOR RENESAS R-CAR
- M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
- M:	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Changes in v6:
+- Use the drm_connector_helper_get_modes_fixed helper.
+- Split out into a separate MAINTAINERS entry
+- Link to v5: https://lore.kernel.org/r/20250205-adpdrm-v5-0-4e4ec979bbf2@gmail.com
 
--- 
-2.48.1
+Changes in v5:
+- Moved to using the component framework.
+- Other lifetime fixes
+- Link to v4: https://lore.kernel.org/r/20250114-adpdrm-v4-0-e9b5260a39f1@gmail.com
+
+Changes in v4:
+- Fixed dt bindings.
+- Link to v3: https://lore.kernel.org/r/20250112-adpdrm-v3-0-c674dc19fa7f@gmail.com
+
+Changes in v3:
+- Fixed building as module after splitting out mipi block
+- Addressing the review feedback.
+- Link to v2: https://lore.kernel.org/r/20241126-adpdrm-v2-0-c90485336c09@gmail.com
+
+Changes in v2:
+- Addressing the review feedback.
+- Split out the mipi part of the display controller into a separate device
+- Link to v1: https://lore.kernel.org/r/20241124-adpdrm-v1-0-3191d8e6e49a@gmail.com
+
+---
+Sasha Finkelstein (5):
+      dt-bindings: display: Add Apple pre-DCP display controller
+      drm: adp: Add Apple Display Pipe driver
+      drm: panel: Add a panel driver for the Summit display
+      arm64: dts: apple: Add touchbar screen nodes
+      MAINTAINERS: Add entries for touchbar display driver
+
+ .../display/apple,h7-display-pipe-mipi.yaml        |  83 +++
+ .../bindings/display/apple,h7-display-pipe.yaml    |  88 +++
+ .../bindings/display/panel/apple,summit.yaml       |  58 ++
+ MAINTAINERS                                        |  16 +
+ arch/arm64/boot/dts/apple/t8103-j293.dts           |  31 ++
+ arch/arm64/boot/dts/apple/t8103.dtsi               |  61 ++
+ arch/arm64/boot/dts/apple/t8112-j493.dts           |  31 ++
+ arch/arm64/boot/dts/apple/t8112.dtsi               |  61 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/adp/Kconfig                        |  17 +
+ drivers/gpu/drm/adp/Makefile                       |   5 +
+ drivers/gpu/drm/adp/adp-mipi.c                     | 276 +++++++++
+ drivers/gpu/drm/adp/adp_drv.c                      | 617 +++++++++++++++++++++
+ drivers/gpu/drm/panel/Kconfig                      |   9 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-summit.c               | 132 +++++
+ 17 files changed, 1489 insertions(+)
+---
+base-commit: b62cef9a5c673f1b8083159f5dc03c1c5daced2f
+change-id: 20241124-adpdrm-25fce3dd8a71
 
 
