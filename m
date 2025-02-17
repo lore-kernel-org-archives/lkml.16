@@ -1,140 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A261A9B29;
-	Mon, 17 Feb 2025 22:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E1B1A5B9D
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 22:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739832600; cv=none; b=r6Adz+yKsRxOhxrTMAEBbsxl9eciEMCeQrUB3T+3Sy788l8lwVwwTw3k4MyOJ3vfiVQXxe/iL2pPRfDwfMpu8ybZodj9mE1tuhYUJxMN6mfy4EQfXQaHKGdXUBB6ght1ZTwMGY50cTElvuXTKEmPz6gKr1B8HUHiVIxiphHMIpc=
+	t=1739832598; cv=none; b=FcvKeaXXtXw8VXRKNvGGVVckDS1FfaIINCmkG6bNzVs4k/IS8RGRpAScL2q4c4xEOgqNC+eb4yOhSDR4I/VAaNmGbERrB8k3D1VqkypmZ6nT1QE2BAM9Fe9QH5S1DFlAJnRRL/7MiumZ0x7mu8Ry2QKLJNoMjnUCXpwiIEXeF+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739832600; c=relaxed/simple;
-	bh=uCS6HMGtJOcXQhtOrFGQiNvHPuC8UwvUdy4J8iqUoww=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oWRWUscEpuJclCBIs8wWaiSAjF+0nJUwA3R1rhNyn9eqLbkrQ2KfGIZL46mayIT4kWBo0+y7vGPxYOiSDTEmsCd3RsHnZXK9cdPguQ9koddCJQzeff3G2uL0t0sGf+fCgDE/QMxQQFRzvPWRMNarFHt+5eTUjh0iQ0EJW+buuFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94AD51E7D;
-	Mon, 17 Feb 2025 14:50:16 -0800 (PST)
-Received: from beelzebub.ast.arm.com (unknown [10.118.29.240])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 41E193F5A1;
-	Mon, 17 Feb 2025 14:49:57 -0800 (PST)
-From: Stuart Yoder <stuart.yoder@arm.com>
-To: linux-integrity@vger.kernel.org,
-	jarkko@kernel.org,
-	peterhuewe@gmx.de,
-	jgg@ziepe.ca,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/5] tpm_crb: clean-up and refactor check for idle support
-Date: Mon, 17 Feb 2025 16:49:43 -0600
-Message-Id: <20250217224946.113951-3-stuart.yoder@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217224946.113951-1-stuart.yoder@arm.com>
-References: <20250217224946.113951-1-stuart.yoder@arm.com>
+	s=arc-20240116; t=1739832598; c=relaxed/simple;
+	bh=UQFqrnjwwEQrn7+9uZEXrxJvHu9Ovq1ztyrLAcjSCxs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=onF+VjZ1BECxP30FY95cTo4/Pz+z4xIKxPDwyEfB6CpHdgSZqS3rkd0dVbj+WUT9xF4k6AU53M6w7FN0GC9WlN8zmIv162nSOCRRRk1jhQfdxH4gloN3fCsau2/X6FHAUIu3ahwnrSKJExRFMGv5q9kyffAJFYXAtQtwL5WIrWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Fflo9QK7; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Fflo9QK7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1739832588; x=1740091788;
+	bh=UQFqrnjwwEQrn7+9uZEXrxJvHu9Ovq1ztyrLAcjSCxs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=Fflo9QK7937qcX0C92R3OU38ZpSx/hrkuq4rnMm/Q7VEjUhq+IYYBoS4y1sFOjFr3
+	 HF6W53CAH0Gpred2S7Ev5UyCmPlih97wgs5lcSWpY1YSp2hCLoqy8IXnMZ8uUN1RjN
+	 wd/FAH39ZtF/LNE17ErNNr/vA2zhxAjnizjNs+X+r+83UuZVQzxLRJaZNQ/sRfeyLx
+	 fSKV+RWwVBcB0C4GunAcBcFjosnBmLRzw+2N+i/eRQ1jVzj/yZ4SP2gMdU06x9XKzO
+	 /6bzjzUs+pZ94czjEEbSS7f8FAvW47RHLt8hbV5zILt4eLsJGcLhbeZAtyODNI0l3n
+	 EStGe0gMZoQlg==
+Date: Mon, 17 Feb 2025 22:49:45 +0000
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 2/2] rust: enable `too-long-first-doc-paragraph` clippy lint
+Message-ID: <6b914549-ed4f-4b8b-b6c7-9013e5c4c29e@proton.me>
+In-Reply-To: <CANiq72kwME8D2P5C2mbwmTpxekR8u_kdW6GDVz8WERi_NvRZYw@mail.gmail.com>
+References: <20250216213827.3752586-1-benno.lossin@proton.me> <20250216213827.3752586-2-benno.lossin@proton.me> <CANiq72kwME8D2P5C2mbwmTpxekR8u_kdW6GDVz8WERi_NvRZYw@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: d0461f8aaf5f2e9623df850323039ba8cd6fffd4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
--Clean up unnecessary parenthesis usage
--Refactor the two checks for whether the TPM supports idle into a single
- inline function.
+On 17.02.25 19:07, Miguel Ojeda wrote:
+> On Sun, Feb 16, 2025 at 10:38=E2=80=AFPM Benno Lossin <benno.lossin@proto=
+n.me> wrote:
+>>
+>> Introduced in Rust 1.82.0 [1], this lint ensures that the first line of
+>=20
+> We will need to ignore unknown lints so that it does not warn on older
+> compilers.
+>=20
+> We should probably do it conditionally instead -- it requires some
+> rework to do it for everything, but we can easily do it for kernel code.
 
-Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+Ah yeah forgot about that. That's a good point.
+
+> I can tweak it and put this patch into my warning rework series -- I
+> had to send the v2 of that anyway. Sounds good?
+
+Sure!
+
 ---
- drivers/char/tpm/tpm_crb.c | 36 +++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-index ea085b14ab7c..31db879f1324 100644
---- a/drivers/char/tpm/tpm_crb.c
-+++ b/drivers/char/tpm/tpm_crb.c
-@@ -115,6 +115,16 @@ struct tpm2_crb_pluton {
- 	u64 reply_addr;
- };
- 
-+/*
-+ * Returns true if the start method supports idle.
-+ */
-+static inline bool tpm_crb_has_idle(u32 start_method)
-+{
-+	return start_method == ACPI_TPM2_START_METHOD ||
-+	       start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD ||
-+	       start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC;
-+}
-+
- static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
- 				unsigned long timeout)
- {
-@@ -173,9 +183,7 @@ static int __crb_go_idle(struct device *dev, struct crb_priv *priv)
- {
- 	int rc;
- 
--	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
--	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
--	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
-+	if (!tpm_crb_has_idle(priv->sm))
- 		return 0;
- 
- 	iowrite32(CRB_CTRL_REQ_GO_IDLE, &priv->regs_t->ctrl_req);
-@@ -222,9 +230,7 @@ static int __crb_cmd_ready(struct device *dev, struct crb_priv *priv)
- {
- 	int rc;
- 
--	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
--	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
--	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
-+	if (!tpm_crb_has_idle(priv->sm))
- 		return 0;
- 
- 	iowrite32(CRB_CTRL_REQ_CMD_READY, &priv->regs_t->ctrl_req);
-@@ -423,13 +429,13 @@ static int crb_send(struct tpm_chip *chip, u8 *buf, size_t len)
- 	 * report only ACPI start but in practice seems to require both
- 	 * CRB start, hence invoking CRB start method if hid == MSFT0101.
- 	 */
--	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
--	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED) ||
--	    (!strcmp(priv->hid, "MSFT0101")))
-+	if (priv->sm == ACPI_TPM2_COMMAND_BUFFER ||
-+	    priv->sm == ACPI_TPM2_MEMORY_MAPPED ||
-+	    !strcmp(priv->hid, "MSFT0101"))
- 		iowrite32(CRB_START_INVOKE, &priv->regs_t->ctrl_start);
- 
--	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
--	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD))
-+	if (priv->sm == ACPI_TPM2_START_METHOD ||
-+	    priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD)
- 		rc = crb_do_acpi_start(chip);
- 
- 	if (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
-@@ -449,8 +455,8 @@ static void crb_cancel(struct tpm_chip *chip)
- 
- 	iowrite32(CRB_CANCEL_INVOKE, &priv->regs_t->ctrl_cancel);
- 
--	if (((priv->sm == ACPI_TPM2_START_METHOD) ||
--	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD)) &&
-+	if ((priv->sm == ACPI_TPM2_START_METHOD ||
-+	     priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) &&
- 	     crb_do_acpi_start(chip))
- 		dev_err(&chip->dev, "ACPI Start failed\n");
- }
-@@ -609,8 +615,8 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 	 * the control area, as one nice sane region except for some older
- 	 * stuff that puts the control area outside the ACPI IO region.
- 	 */
--	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
--	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
-+	if (priv->sm == ACPI_TPM2_COMMAND_BUFFER ||
-+	    priv->sm == ACPI_TPM2_MEMORY_MAPPED) {
- 		if (iores &&
- 		    buf->control_address == iores->start +
- 		    sizeof(*priv->regs_h))
--- 
-2.34.1
+Cheers,
+Benno
 
