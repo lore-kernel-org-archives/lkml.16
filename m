@@ -1,103 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F85C149C41
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 20:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A47D219A8A;
+	Mon, 17 Feb 2025 20:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739823553; cv=none; b=fPf7EaoEO8zOeEIfEnPxKwrn6kV4roEC1m+eQzsxziYFYeMlq25xMufK9Z4eyRZdYzpnkyMHtRyORhEBtIK9bIfY3xtd1r9XeAMsVoUeVg2dxGX/QA7luFw9mGFLpZIMC5QypQoQVTPK1VhnftsXJl+Gh6bSQ8RCpStT6I0maKk=
+	t=1739823604; cv=none; b=F5hFKCM3B8PrI1jgZx1XHWbuz1msjy5DI/JWmKz76FmkMRD72hQH8yyeGWmnBIY6RK6GbEDdTV06/NK3Q5pFILvR0R7z0juM4IczgwGQ666RdXsklQHCdhV/zSVJ5dpsmLo/B1QeA1ckquQQHuRs608S+ZWxLkp1gFKrXoDGLno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739823553; c=relaxed/simple;
-	bh=vDJ8pRB/Q6DFIX5K/8i7KfCxR64ZIpaCUA0jL1aLzS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2NUPI7lK2U0+MeXFl024c8kIjWAYMwQCv8WWIS5F9dPT//yChtOr26oZz70kPNjww0Xl0k7AfGIt+h8QeTQtUxIrmw2ykSFXkU3Pf7NN5STR9pENjV2grvkJV49lg5QvJp30tucKspRXVzuAaI7UtzWZwLpQsM4QQwCnZn75uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOHL/NLt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739823604; c=relaxed/simple;
+	bh=VGPxZ+UZjJjw8SEv0KgowUz43qF+U/wYeXYgZBnh1kc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MFTcSv3+HL7EPXxFvGrb+FesErgE+L5nrXOkRwWVyCApB88jEQxON/qlU4IMeyy0L/b3sZg5+SGRlLJBjes5adUkac3+YEzGC7SZtrVCwpcrLdCBB0PQ2BFqsYhKtHPesJ/nCKAczQ76491Q5vRCa0D2u9GC+3EK5swqf9iIO44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=cpEFtdSX; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOHL/NLt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A6CC4CED1;
-	Mon, 17 Feb 2025 20:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739823552;
-	bh=vDJ8pRB/Q6DFIX5K/8i7KfCxR64ZIpaCUA0jL1aLzS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MOHL/NLtTeDA4bBAKKGRpCIS9vecC24KZNfiIH2j7thBSWODDL6MhMXzrudOOUmpN
-	 f/1LUgGf6f8n0pl5fNlZKJ41WPI8TQo+xf6EoZvjR/4/UysPrQrtZNFv4+BBFOHsOk
-	 Wq+zuqLnqH+lNeoP76WQjL6dodI4kcMzs39Aq5oZCA+RvFAdSKesT5A96nacZA/K29
-	 yY/6Hw86hJ3cwALswJNx3anKq8sXmjROuj9mmGTx5+eURS+Lw4Yj4bBqCt9FCyg69M
-	 IUiFYRew9+xoYGK86e8eNzutyt2fv+NvJuwEeWl4uVy/GVA+srpJvCWz0R7EvMWdKx
-	 82TGNvx60BdcQ==
-Date: Mon, 17 Feb 2025 12:19:10 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: "Kaplan, David" <David.Kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
-Message-ID: <20250217201910.crsu7xucsa4dz3ub@jpoimboe>
-References: <20250108202515.385902-1-david.kaplan@amd.com>
- <20250108202515.385902-21-david.kaplan@amd.com>
- <20250211180752.pfsjvz62bztpnmoi@jpoimboe>
- <LV3PR12MB9265804700AB74A446F5220F94FC2@LV3PR12MB9265.namprd12.prod.outlook.com>
- <LV3PR12MB926524EFB64F6FB361046C5E94FB2@LV3PR12MB9265.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="cpEFtdSX"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
+ id 2a51783161226919; Mon, 17 Feb 2025 21:19:59 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id D891A9100B0;
+	Mon, 17 Feb 2025 21:19:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1739823599;
+	bh=VGPxZ+UZjJjw8SEv0KgowUz43qF+U/wYeXYgZBnh1kc=;
+	h=From:Subject:Date;
+	b=cpEFtdSXfOtC8SqUKToccmhl9nwVkQvr2n9gMzI7Yl71Om8FHLEQ/n4hJU9hbaRBq
+	 pAy9eCqWwbRtmly/16tayNc8gYGDCq2GW/QH/nl7nnQ4QAr9BOl2XwaZNv6qTwRyRj
+	 VAIZVaysGNoHoNRFCbk2mKwZekQxzKf+ZUv4M1w72W7MV+u1KnI/UAv9Tq+i4TM+oM
+	 nQjw4/0qFm+nMRdc7cDn5bm5p8TNl1gipeQRwR6M8X1OfIt5NNcED/3o47uRT6ST08
+	 8k9fg+SkbNjy2NvALALZKVH/hmX8iC/LHHjrO54G/iMlxHpEhErpQoovUDgM9lCWX5
+	 Q9DGCfRPocqNQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Johan Hovold <johan@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/3] PM: runtime: Introduce pm_runtime_blocked()
+Date: Mon, 17 Feb 2025 21:16:43 +0100
+Message-ID: <8497121.T7Z3S40VBb@rjwysocki.net>
+In-Reply-To: <4966939.GXAFRqVoOG@rjwysocki.net>
+References: <4966939.GXAFRqVoOG@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <LV3PR12MB926524EFB64F6FB361046C5E94FB2@LV3PR12MB9265.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehleefhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgvrhhnsehrohiflhgrnhgurdhhrghrvhgrrhgurdgvughupdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
 
-On Mon, Feb 17, 2025 at 05:33:24PM +0000, Kaplan, David wrote:
-> So actually this doesn't quite work because the code in
-> arch/x86/mm/pti.c has to call cpu_mitigate_attack_vector in order to
-> check if PTI is required (it checks if user->kernel mitigations are
-> needed).  That's the only use of the attack vectors outside of bugs.c.
-> 
-> The original code (using a function and WARN_ON_ONCE) can work, or I
-> could perhaps create a pti-specific function in bugs.c that the pti
-> code can query.  But right now I don't think there is any pti-related
-> code in bugs.c at all.
-> 
-> Any suggestion?
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Hm.  We *could* put the cpu_mitigate_attack_vector() macro in bugs.h and
-make the array global (and possibly exported).  That way anybody could
-call it, but it would still have the compile-time check.
+Introduce a new helper function called pm_runtime_blocked() for
+checking the power.last_status value indicating whether or not the
+enabling of runtime PM for the given device has been blocked (which
+happens in the "prepare" phase of system-wide suspend if runtime
+PM is disabled for the given device at that point and has never
+been enabled so far).
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/power/runtime.c |   17 +++++++++++++++++
+ include/linux/pm_runtime.h   |    2 ++
+ 2 files changed, 19 insertions(+)
+
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -1555,6 +1555,23 @@
+ }
+ EXPORT_SYMBOL_GPL(pm_runtime_enable);
+ 
++bool pm_runtime_blocked(struct device *dev)
++{
++	bool ret;
++
++	/*
++	 * dev->power.last_status is a bit field, so in case it is updated via
++	 * RMW, read it under the spin lock.
++	 */
++	spin_lock_irq(&dev->power.lock);
++
++	ret = dev->power.last_status == RPM_BLOCKED;
++
++	spin_unlock_irq(&dev->power.lock);
++
++	return ret;
++}
++
+ static void pm_runtime_disable_action(void *data)
+ {
+ 	pm_runtime_dont_use_autosuspend(data);
+--- a/include/linux/pm_runtime.h
++++ b/include/linux/pm_runtime.h
+@@ -81,6 +81,7 @@
+ extern void pm_runtime_unblock(struct device *dev);
+ extern void pm_runtime_enable(struct device *dev);
+ extern void __pm_runtime_disable(struct device *dev, bool regular);
++extern bool pm_runtime_blocked(struct device *dev);
+ extern void pm_runtime_allow(struct device *dev);
+ extern void pm_runtime_forbid(struct device *dev);
+ extern void pm_runtime_no_callbacks(struct device *dev);
+@@ -277,6 +278,7 @@
+ static inline void pm_runtime_unblock(struct device *dev) {}
+ static inline void pm_runtime_enable(struct device *dev) {}
+ static inline void __pm_runtime_disable(struct device *dev, bool c) {}
++static inline bool pm_runtime_blocked(struct device *dev) { return true; }
+ static inline void pm_runtime_allow(struct device *dev) {}
+ static inline void pm_runtime_forbid(struct device *dev) {}
+ 
 
 
-However... should these not actually be arch-generic options, like
-mitigations= already is?  It would make for a more consistent user
-interface across arches.
 
-They could even be integrated into the "mitigations=" interface.  The
-options could be combined in any order (separated by commas):
-
-  mitigations=user_kernel,user_user
-  mitigations=guest_host,user_kernel
-  ...etc...
-
-And e.g., "mitigations=off" would simply disable all the vectors.
-
-That would remove ambiguity created by combining mitigations= with
-mitigate_* and would make it easier for all the current
-cpu_mitigations_off() callers: only one global enable/disable interface
-to call instead of two.  Any code calling cpu_mitigations_off() should
-probably be calling something like cpu_mitigate_attack_vector() instead.
-
-cpu_mitigations_off() and cpu_mitigations_auto_nosmt() could be
-deprecated in favor of more vector-specific interfaces, and could be
-removed once all the arches stop using them.  They could be gated by a
-temporary ARCH_USES_MITIGATION_VECTORS option.  As could the per-vector
-cmdline options.
-
-Thoughts?
-
--- 
-Josh
