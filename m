@@ -1,168 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A127C2248AC
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739803943; cv=none; b=l1vTZjX2F/WLPhOj/PFJ2nT6y6li9wIJXr3yfy/gRbwjgGZ5wKtYAqWEf7jliP8DJVdH3ViiI1YwAFX/4Lf/2p19Ms32YzZssZ/jVQ9FDQbW4xfE3pLc4WqSCqVuyYUtYNAmTb53adaPhSclvcPxovEKzGu0pWTUjqrygp4Bj7o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739803943; c=relaxed/simple;
-	bh=BzzPH2vmywHmqMj2cNHtgj0bNaw6qpjGJ4ryviyDMIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jwKpW227zDNo9nSHFERVO4giDsr2XVtoRk/wlEOCgaoEzzyrjSgNsBBvM7eP1NMdFp1nZQMt+3MlQgtE620xotucBS14ksHjxFDLDTiwpazZoZ9ZM8b3KwaGbnrPau9VCDq+6FHDkdHHZemTX2+qwZSkZieiGKldfxcRMVyp3Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ki9qLwQ2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1C42248AC;
+	Mon, 17 Feb 2025 14:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739803949; cv=pass; b=jjpMF52PiuwBPtvR0qr4kyo3NcwrVioWx/F1TV0NuF6CAvEnq9a46BOjofix7pvtiwrluVj9Zeew5oZMOQA2kcDbYHrrdeZW/teBN0xl0beYHdERbzd7BmB2JaBSrf5gDO1W0znbYiPHotOMWuJ/bZfFygGWrn17yCkIoboRT0s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739803949; c=relaxed/simple;
+	bh=JRmCF9LjmJYKWivhjQ6n8IMZFxSXDeNdiP8wgPC7wg0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EkkZGQ5h2PeTNLYz7333gduhTT6310n1Xw+Yf2bS4icVps5TRLkmzLVBaNgsTMop9vkrL06p/f5NO5Hds9AsKS5rSYz3Ja6PbUDC/MM6Tn5TFSiD6nzecyGU5ZHxB5UZDSZG8YHaZjEYQrve5MZrYeVi5LVkBr6NE0DEAYL/QJ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=TW/TVcc6; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ki9qLwQ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739803940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n62JfojyMxlNviTaSrgFR+47IrUK3Jnf+u30cXg6IU8=;
-	b=Ki9qLwQ2rO6sjEDxW5o3zSehLVUdfcgLny+UPz0CpCfWdLJ63ASQZMAJYa69z0E12MGH3n
-	Wdr1Ose6Z2/kBq9YUYkC2DMlULji5ahq1J+wcIkNtRG/DDvRcRjIrLVSMimobTaUgm0NZ1
-	aa2aFdBZGfCnC4VD9UrgEMWnT8RqEl8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-JYB3-b6mPTGS3KlVMu7tew-1; Mon, 17 Feb 2025 09:52:18 -0500
-X-MC-Unique: JYB3-b6mPTGS3KlVMu7tew-1
-X-Mimecast-MFC-AGG-ID: JYB3-b6mPTGS3KlVMu7tew_1739803938
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f4cce15c8so339224f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:52:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739803938; x=1740408738;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n62JfojyMxlNviTaSrgFR+47IrUK3Jnf+u30cXg6IU8=;
-        b=wFJDFZl6ItcGmWFsjclz7cwAS9w/l0WWMAPb+snF81rPj3IgdrWbBgRzeHBWt+9xck
-         hpEEJK2cLQHWBZiPT8Ot+At6FQxFx4UGyzhXk28nYPtduYZL2fkgYJJfrSInM4/c6pDd
-         YszQSlhF1r576JSC2j9El3RjpNfG4O1Vc43nZo+lLxEIk0fmdr4cZy5wMNPyc0+w+pmX
-         GbdDHWHKA8BX76y5Nd762eZQZ3dvTJvGL+XUwndEzykPfjJsIXURI0mj3J5QuB23InY8
-         MdFBq8k8SgjEJZCCtT5Ss27R25XYjrnzPaZ2Y6qGmW4mYehAr6oBYlLAXPjeBBC56Saw
-         E3Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtBO+/bcvL7MxXc0gboMmCgeyXRyP7XXa0CeHiFj6+M3g4XKfeO9v/IzDsViEi3y9wLxXSGv67vYQXr28=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnsw/lwnQjXqR+FXO4wGD3o34hP1bA71TESqqTvRK5/ZZN2BZI
-	iQyicr2HTcf6xtyYiDORAehnnFYSROI2JSTMAKTrDoYLdpWsoCEa848JzY22TTbCrCrZyYlO0ZG
-	jjGEyDFzFAZ3mSRtks/Xkxitg9LkSt49wgThHvz6B6DcvuWoMqSkPCOCwXKDGuQ==
-X-Gm-Gg: ASbGncusFDodfqtgbsQaYXLYq7uxZ0nU+7Xv4EqGX7rmUiwmXQwZFl/qONLYykSN03m
-	64pSCQ5psHDqagD9qDa6TA+786dkllgH2lGQtN/X8pU24An3gGYDAJDPQjqqIOZhVWPtJdn5k0v
-	iZaCmVenBsDllQFgjNsqLmpGNv+cj62IIY0gXSq4cs0EPb7gj80t87mlZehaAffrkxPvoTnuwSD
-	puugkCSua93C8Zi0A1RqWgQLgBCYadu8fbMpocnGSltFByLdx3WqNRgl7rgN7V/JYa8AkG71Yo5
-	mnfMRKD79S68iIWnjMH2LSZJHNuVSH2xjA==
-X-Received: by 2002:adf:e387:0:b0:38f:2113:fba0 with SMTP id ffacd0b85a97d-38f34171386mr7355535f8f.50.1739803937760;
-        Mon, 17 Feb 2025 06:52:17 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHTVdSBHOISJ5tDzp41H2vIhrlfxz3GOda5fRJNmab4HtNRj85X8u3+oM45gnUlcyd4iGxLMA==
-X-Received: by 2002:adf:e387:0:b0:38f:2113:fba0 with SMTP id ffacd0b85a97d-38f34171386mr7355505f8f.50.1739803937339;
-        Mon, 17 Feb 2025 06:52:17 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f2580fe7dsm12482708f8f.0.2025.02.17.06.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 06:52:16 -0800 (PST)
-Date: Mon, 17 Feb 2025 15:52:14 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Phil Auld <pauld@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Aashish Sharma <shraash@google.com>,
-	Shin Kawamura <kawasin@google.com>,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-Message-ID: <Z7NNHmGgrEF666W_@jlelli-thinkpadt14gen4.remote.csb>
-References: <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
- <5a36a2e8-bd78-4875-9b9e-814468ca6692@arm.com>
- <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
- <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
- <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
- <dbd2af63-e9ac-44c8-8bbf-84358e30bf0b@arm.com>
- <Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb>
- <285a43db-c36d-400e-8041-0566f089a482@arm.com>
- <Z62PPUOY5DClYo1A@jlelli-thinkpadt14gen4.remote.csb>
- <20250216163340.ttwddti5pzuynsj5@airbuntu>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="TW/TVcc6"
+ARC-Seal: i=1; a=rsa-sha256; t=1739803806; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UqiwUddfNdEJ/ycmxXdmA38GekVPzC7NL83fV3PdbunGGkpW6BZWqBg/mz4jExLuehulmOar8psrWw0AZbsH72dDH27ioAcXgTbXsgeHcZ6/rrK+tTd2mNjcbO2xbVWmAqf5A0pFyBRk7+poykB50JNs3/2ifC24z6Dl7xirPkI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739803806; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=u5TjcDD2fVC5Z7fmg3HTZT6iZIZPELI9FVatCCA70pE=; 
+	b=JCObFY58kyM/3qfU+hAY6rnwKW7vc+YW4EJSIFVrDEIYBrnt1IWnU5SsVQk2qb+aJ+nwSCz7UDsB0QUl6NQYQ3W8xl64UBR2HE9MMg2j71WMMuIfSZHFBwdsqAgaegonNS2m3xWjK/aDb2xJDxFxPEXZEePKmSuZGSPUv3x6idU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739803806;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=u5TjcDD2fVC5Z7fmg3HTZT6iZIZPELI9FVatCCA70pE=;
+	b=TW/TVcc6KoDGSDzqzNLWxrpINcDFMI7E9zZAO83NE9Ib/LB7/BNAkA69CRhKCD6d
+	93doKC2o251DrvXKPZqiYwJTWJLFEbjIBzH3lgtaC8xKsCR51yPPrjuhxxDK4KycWja
+	mphbbfrvlBGGnOzb889zmvUy7BLnwTRS+jLz5sac=
+Received: by mx.zohomail.com with SMTPS id 173980380247995.30722494540043;
+	Mon, 17 Feb 2025 06:50:02 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v2 7/7] cxl/region: Drop goto pattern of construct_region()
+Date: Mon, 17 Feb 2025 22:48:28 +0800
+Message-Id: <20250217144828.30651-8-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250217144828.30651-1-ming.li@zohomail.com>
+References: <20250217144828.30651-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250216163340.ttwddti5pzuynsj5@airbuntu>
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr080112270a1b3a40a4862390f0c7011f0000a6533c9e532b319b72bcea67a4ff7b47a766f9ac6b7a87cf67:zu08011227637483a4a31eb2f0b8ceb2e6000059b8d4e13f7089160e231c8be7dbb43f030a73e70a3b9635e1:rf0801122d5c87afa6af03d5275597f33e000026a3925e33887a0b88a34465cb4731f8771e61e7a209610abb740fad050b8a:ZohoMail
+X-ZohoMailClient: External
 
-On 16/02/25 16:33, Qais Yousef wrote:
-> On 02/13/25 07:20, Juri Lelli wrote:
-> > On 12/02/25 19:22, Dietmar Eggemann wrote:
-> > > On 11/02/2025 11:42, Juri Lelli wrote:
-> > 
-> > ...
-> > 
-> > > > What about we actually ignore them consistently? We already do that for
-> > > > admission control, so maybe we can do that when rebuilding domains as
-> > > > well (until we find maybe a better way to deal with them).
-> > > > 
-> > > > Does the following make any difference?
-> > > 
-> > > It at least seems to solve the issue. And like you mentioned on irc, we
-> > > don't know the bw req of sugov anyway.
-> > > 
-> > > So with this change we start with 'dl_bw->total_bw = 0' even w/ sugov tasks.
-> > > 
-> > > dl_rq[0]:
-> > >   .dl_nr_running                 : 0
-> > >   .dl_bw->bw                     : 996147
-> > >   .dl_bw->total_bw               : 0       <-- !
-> > > 
-> > > IMHO, people who want to run serious DL can always check whether there
-> > > are already these infrastructural DL tasks or even avoid schedutil.
-> > 
-> > It definitely not ideal and admittedly gross, but not worse than what we
-> > are doing already considering we ignore sugovs at AC and the current
-> > bandwidth allocation its there only to help with PI. So, duck tape. :/
-> > 
-> > A more proper way to work with this would entail coming up with sensible
-> > bandwidth allocation for sugovs, but that's most probably hardware
-> > specific, so I am not sure how we can make that general enough.
-> 
-> I haven't been following the problem closely, but one thing I was considering
-> and I don't know if it makes sense to you and could help with this problem too.
-> Shall we lump sugov with stopper class or create a new sched_class (seems
-> unnecessary, I think stopper should do)? With the consolidate cpufreq update
-> patch I've been working on Vincent raised issues with potential new ctx switch
-> and to improve that I needed to look at improving sugov wakeup path. If we
-> decouple it from DL I think that might fix your problem here and could allow us
-> to special case it for other problems like the ones I faced more easily without
-> missing up with DL.
-> 
-> Has the time come to consider retire the simple solution of making sugov a fake
-> DL task?
+Some operations need to be protected by the cxl_region_rwsem in
+construct_region(). Currently, construct_region() uses down_write() and
+up_write() for the cxl_region_rwsem locking, so there is a goto pattern
+after down_write() invoked to release cxl_region_rwsem.
 
-Problem is that 'ideally' we would want to explicitly take sugovs into
-account when designing the system. We don't do that currently as a
-'temporary solution' that seemed simpler than a proper approach (started
-wondering if it's indeed simpler). So, not sure if moving sugovs outside
-DL is something we want to do.
+construct region() can be optimized to remove the goto pattern. The
+changes are creating a new function called construct_auto_region() which
+will include all checking and operations protected by the
+cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
+and up_write() in construct_auto_region().
 
-Thanks,
-Juri
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+v2:
+- Rename __construct_region() to construct_auto_region(). (Jonathan and Dave)
+---
+ drivers/cxl/core/region.c | 71 +++++++++++++++++++++------------------
+ 1 file changed, 39 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 320a3f218131..7a9e51aba9f4 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3216,49 +3216,31 @@ static int match_region_by_range(struct device *dev, const void *data)
+ 	return 0;
+ }
+ 
+-/* Establish an empty region covering the given HPA range */
+-static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+-					   struct cxl_endpoint_decoder *cxled)
++static int construct_auto_region(struct cxl_region *cxlr,
++				 struct cxl_root_decoder *cxlrd,
++				 struct cxl_endpoint_decoder *cxled)
+ {
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+-	struct cxl_port *port = cxlrd_to_port(cxlrd);
+ 	struct range *hpa = &cxled->cxld.hpa_range;
+ 	struct cxl_region_params *p;
+-	struct cxl_region *cxlr;
+ 	struct resource *res;
+ 	int rc;
+ 
+-	do {
+-		cxlr = __create_region(cxlrd, cxled->mode,
+-				       atomic_read(&cxlrd->region_id));
+-	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
+-
+-	if (IS_ERR(cxlr)) {
+-		dev_err(cxlmd->dev.parent,
+-			"%s:%s: %s failed assign region: %ld\n",
+-			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+-			__func__, PTR_ERR(cxlr));
+-		return cxlr;
+-	}
+-
+-	down_write(&cxl_region_rwsem);
++	guard(rwsem_write)(&cxl_region_rwsem);
+ 	p = &cxlr->params;
+ 	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
+ 		dev_err(cxlmd->dev.parent,
+ 			"%s:%s: %s autodiscovery interrupted\n",
+ 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+ 			__func__);
+-		rc = -EBUSY;
+-		goto err;
++		return -EBUSY;
+ 	}
+ 
+ 	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
+ 
+ 	res = kmalloc(sizeof(*res), GFP_KERNEL);
+-	if (!res) {
+-		rc = -ENOMEM;
+-		goto err;
+-	}
++	if (!res)
++		return -ENOMEM;
+ 
+ 	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
+ 				    dev_name(&cxlr->dev));
+@@ -3281,7 +3263,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 
+ 	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+ 	if (rc)
+-		goto err;
++		return rc;
+ 
+ 	dev_dbg(cxlmd->dev.parent, "%s:%s: %s %s res: %pr iw: %d ig: %d\n",
+ 		dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), __func__,
+@@ -3290,14 +3272,39 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 
+ 	/* ...to match put_device() in cxl_add_to_region() */
+ 	get_device(&cxlr->dev);
+-	up_write(&cxl_region_rwsem);
+ 
+-	return cxlr;
++	return 0;
++}
+ 
+-err:
+-	up_write(&cxl_region_rwsem);
+-	devm_release_action(port->uport_dev, unregister_region, cxlr);
+-	return ERR_PTR(rc);
++/* Establish an empty region covering the given HPA range */
++static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
++					   struct cxl_endpoint_decoder *cxled)
++{
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_port *port = cxlrd_to_port(cxlrd);
++	struct cxl_region *cxlr;
++	int rc;
++
++	do {
++		cxlr = __create_region(cxlrd, cxled->mode,
++				       atomic_read(&cxlrd->region_id));
++	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
++
++	if (IS_ERR(cxlr)) {
++		dev_err(cxlmd->dev.parent,
++			"%s:%s: %s failed assign region: %ld\n",
++			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
++			__func__, PTR_ERR(cxlr));
++		return cxlr;
++	}
++
++	rc = construct_auto_region(cxlr, cxlrd, cxled);
++	if (rc) {
++		devm_release_action(port->uport_dev, unregister_region, cxlr);
++		return ERR_PTR(rc);
++	}
++
++	return cxlr;
+ }
+ 
+ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+-- 
+2.34.1
 
