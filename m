@@ -1,253 +1,170 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C37221727;
-	Mon, 17 Feb 2025 14:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739801370; cv=none; b=I/oXIWU1ibuaYD9QW4GaJ2LXFTVef1vjdLs27Yipart6vv/4J34FCiadbygU1jQx6NO89CfbLHwtiBzmIMjvdRCpeyP8f7scOaGr1kLAN5eAzgJqnbwIH/+Rgpxnqxmae8MX0wfrgi0i1B5cEnf/HuQFaYxsc7cHh+CFCjO6Z9c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739801370; c=relaxed/simple;
-	bh=S+HfPGi/6ba6d0UDLExm1JLQtrRLOt9XJJit5Kyy3RA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VJ8sxSWKb7PaZo/rQVcARMTTdAknKLvD0VlpFyFy8D46AsdnIWKEGN/IcXJsLROncjP9CgpdMNdT/bf7OIBLjCaZ/TPf6lmAYVGsuOI103urjxUlkzwEZv5gqClNWYnUoZ9ZM0tmnn07W14dluujeZ4pFiRqrRNU4TiHU0VT5gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJkIrOvY; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A562222B1;
+	Mon, 17 Feb 2025 14:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739801372; cv=fail; b=X3LjNQxnThTD2NDBtztBvYwK9xqRGNgMl4nWP/Lzzs0lY3K8VTZ9hM90QvY08kawI+FZc27V1GrYm3/Klz4fKhMDRXjjtdm9e+W38cCmjYKoCu1qxtLW8R2uzSIH1IwGyUO658/ZcH7nN7qBKYBpIcdOPciAsAMT1wqaQEOa3qM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739801372; c=relaxed/simple;
+	bh=b893FQdrXhuJYbjNuhZs8nrWnNdnX0uj7q+keyuUcRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=P8iMbjLRetL8ZhvSFxNyt+J3fm6j15ukgMIn9FyrhEfHyyStnCVlH8BUGqWngmoGcNk3L8LzK9wEoHv5t9qAp2s73eufPj7/3MBdQQ0NdAfRNL7Djc2m5bndKvZ9Hp8N984JKH8m4v6i1aht0+N3crj5Wyh3rlCtNvy0Kn4dBHU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Sl5pYVI3; arc=fail smtp.client-ip=40.107.92.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJkIrOvY"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-546202d633dso1104713e87.2;
-        Mon, 17 Feb 2025 06:09:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739801366; x=1740406166; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NBvpaDEnRYexWP0/rCT65mQ1l4vlz411qKmQ+5kOMDY=;
-        b=hJkIrOvYP1lqumE9DGc7B9OZd32z6yXXhml7uAU0tuuocDpdaLdkgU21FeWvtyI3iV
-         Vp9TwYhRhqz6CZYO/B0aLBBfcqITgdUbrGiR0ACZRT2chqoHZkNyTxqiem2FISOY6B3s
-         5VH7TxM9kqEvgfVfpwlChxHJL+Rml+vnl2E2EpJMiFv08lzLsA3lX1Esq4gNICnNr8Sy
-         u9AeYe0V+tEdcIHybbfquG8zSrYf8dBbIZGzfbHjFIHIPXCn5OR69Z4tsae1lFUEvnWv
-         bX2+ioOgdLyhPbF+7ymzmmzgifVxRLNgukT8Nl7AHwvmJmMsMzvRj+2/q1ogHHnnfeTd
-         ZMvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739801366; x=1740406166;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NBvpaDEnRYexWP0/rCT65mQ1l4vlz411qKmQ+5kOMDY=;
-        b=M51Qpue/d4UIDR2gMaCQmjMUFEA0ILp4LUQubyhZlpo6/dMPeSfXyIxCFJ5sABKex/
-         oeuGP+00Y93Ncw1vGHeJb2zYTtjhRu2R9W9UWQImbVvT1+LRiKqEdYmzFONfq2bXEgqc
-         YffKKihy3k5ZhzdCbjiEDCEXJh2R4zwQIhPHuNFLcsHNEbO4kQMc4RnQcR4NrRSPWiZ2
-         +czQsp0bWA/ywRHQnF1lLsxSNq3hNnsfW8DiydXnm4H3Hd4tyf06Vj/9OR5EaZuV7FyU
-         ZxIc7pDg+jvnO4C99imYCyHozW4DVDawwabsOQ/TLcP44pT5B3nGep2hJJXCpoaZGQBx
-         VaQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgKrXuwQNqm5i5FRXYjJuaN47kmlbPVT8E4o0OwVGB0u/1JaYa4IGWgNXOpoRKD1bGJUTc1He1qUfR@vger.kernel.org, AJvYcCWzcx2lk3DYsAYDeSMAqR1yULxVqgYsEO1B/npNNrDrMQ8cJcDyd6rP9sLFz6mOsLCsh8uOsOctY6XaoZcO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+lPwjsZ2LuhMe9TuAf4UpglqpJKyPCzpDP/TJvVTvWcbLnudJ
-	y3dOezX3+tRSZ9dsSOQX8THiwJcuhWxWf02BtkwZ9eIRQKl4LGpl
-X-Gm-Gg: ASbGncss8+6pWtzuRkFBpVUJVMvSINpE1dKq3+B9Qyz0Y+T6QoUEwaE4aZkbRs0zgbi
-	RTdW+OTdVCWm7S5hv+FvY0qsLCDWlJtJJoV7/oI3CSjtY5hHjDesSsLtCKtCiSTPVFe72zQHq6O
-	mRr8AQANVEU82e/NdzQnF0/1OtTaIpLNt2BHT3SSMX3RM3I4VzYOqOc+vxeKkLMk0XjIXRh1Wyk
-	1Ndp4bpV9MMyz/mESLCHURfD1QmZouQEZ4Mf+4D/1Rj6xhUExSdX30LEcBR2LdAaG2BZxDsoCXR
-	zNBYyg==
-X-Google-Smtp-Source: AGHT+IFxia5DKdKWgX6hkQJUH6EY+CAt795XfnBfkMfO9oSW6FA40NQb9/QyEftvaXCvsImNdilT9A==
-X-Received: by 2002:a05:6512:3a91:b0:545:b89:30a4 with SMTP id 2adb3069b0e04-5452fe6369fmr2389050e87.29.1739801364482;
-        Mon, 17 Feb 2025 06:09:24 -0800 (PST)
-Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54531b8ac1dsm866855e87.75.2025.02.17.06.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 06:09:23 -0800 (PST)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: display: bridge: Document Solomon SSD2825
-Date: Mon, 17 Feb 2025 16:09:09 +0200
-Message-ID: <20250217140910.108175-2-clamor95@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250217140910.108175-1-clamor95@gmail.com>
-References: <20250217140910.108175-1-clamor95@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Sl5pYVI3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mneg+cwYP7If6rf7N3bkdQXpr4EPsXZELY17nzAVOoY4Wp8Y5GZAC4xIFn5lAZ0npVj5OPJcZzpjxiPnHuklx689XN+GpZG4d9GsaCMnwm7zgY4qwHJnLdT9AbcHSDH046oYIao3vQX8c6BptzT/jHEXnO4QwUn2ybgjjKg4Wimdiyyf0E3DYC31dkOpRM7ahrT8MfGrDyT0QHX9sdDn0YqzljTwjzCJNfXvkK8k7mbloJ3z/My9DCE/cpHw2Q1EpMiyqfR29xxfRW/MdzKYH60n51cVXUxlvoozGPjW/tL7zv4MgkVssX7vM4riaIILNksyPnLdfPGpCyBJbGmqPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qGxI08ZxGocOAfaXsucvC3sG18vxILHitVvkICiE+14=;
+ b=WDrHF7OMqz7M+IQcoxcbxTWnVe2tWB9LLVm7oe3c8kVo8XiK8t6npHqgthxI0lPswDCeAgCNUWv299nP0xuN//iozd27Tsr2hUjzE97h2mCA3ch4J7WlyOz7l2jpa0/wmgvfyhsw5AMk5AkrrFOMjhOvBAeJTtryIvyofuDl1bAEIiskxPNVg7Y3YApoHF56NeSyq9raWQy70OWAPhX9YYY/OHt4DLnSetAgxY5JMJw4Eh/wMnbdp7DMEPiBhH7LQDlLHgVt7L9QtkJNuQpYhHOAqIrzAg1Kg9x+SrDcectpnJNdaGF5t69u95Ixb57vy/0T1X3Y4hjfSeVUnf3xag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qGxI08ZxGocOAfaXsucvC3sG18vxILHitVvkICiE+14=;
+ b=Sl5pYVI3WNYfowisRnQYj+2Tj5/7vlOkKyI32nBsmAGj79HRD+McSRssqrzbYRnUKTzqJnaS7M8ha8v+TpdFvjaLhybuawcB9XSVdGX7jnQsPtouGX8+9TJolmrJ9rKg1WE2oJXKfaJ2XHlpokl5UtRKw27Oyj4UqYVTlpoMJv0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB6354.namprd12.prod.outlook.com (2603:10b6:208:3e2::11)
+ by LV8PR12MB9270.namprd12.prod.outlook.com (2603:10b6:408:205::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
+ 2025 14:09:27 +0000
+Received: from IA1PR12MB6354.namprd12.prod.outlook.com
+ ([fe80::baf9:26a2:9fab:4514]) by IA1PR12MB6354.namprd12.prod.outlook.com
+ ([fe80::baf9:26a2:9fab:4514%4]) with mapi id 15.20.8445.019; Mon, 17 Feb 2025
+ 14:09:27 +0000
+Date: Mon, 17 Feb 2025 09:09:23 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "Luck, Tony" <tony.luck@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"Smita.KoralahalliChannabasappa@amd.com" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v2 02/16] x86/mce/amd: Remove return value for
+ mce_threshold_create_device()
+Message-ID: <20250217140923.GC591070@yaz-khff2.amd.com>
+References: <20250213-wip-mca-updates-v2-0-3636547fe05f@amd.com>
+ <20250213-wip-mca-updates-v2-2-3636547fe05f@amd.com>
+ <CY8PR11MB71345FB3EA6A7AE492D62E5589FB2@CY8PR11MB7134.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY8PR11MB71345FB3EA6A7AE492D62E5589FB2@CY8PR11MB7134.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BL6PEPF00013E02.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:22e:400:0:1001:0:18) To IA1PR12MB6354.namprd12.prod.outlook.com
+ (2603:10b6:208:3e2::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6354:EE_|LV8PR12MB9270:EE_
+X-MS-Office365-Filtering-Correlation-Id: efb644f8-5091-4145-1624-08dd4f5cb07e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Y+zKQ3JYlLJwqjjiz8N7e98eCEThDE9zQXAXYsL9mH32IgWB//p6kFPFc/N5?=
+ =?us-ascii?Q?7RMbbaSf+GGNNKWGk+Z0b0Kk1w5ITFQFyfLJ/6tlEpTAWN/F2BL1juGdCdrR?=
+ =?us-ascii?Q?uMW6H/3n2boj1QxJBEeGJVgVSmckupe3kvXFu9JdE9K+rdiljvqkzTdTd37i?=
+ =?us-ascii?Q?FXQUblpRxSXTm1W3q7wCFc5YqhQZjLinpvzNRmgZzPTW3pnkiYS2kf/eEmiw?=
+ =?us-ascii?Q?NzuSXDZ9Ab5+dzLyosuDLcVHhX+F5NooxOQuDDwsPxaw09Q/IpdRuROaKXxO?=
+ =?us-ascii?Q?eE/C2s2sHjL6SBXH0GJ8Jbn7D7ZLFBEkQ4j2iW4wUeBD8/nHl4U+EAeqTfv1?=
+ =?us-ascii?Q?rg/fV5hfm5nxZsP4OFuHepOrxuQO4Xz+4AbRa+hLyQKVqUKzj88hFomw7u4O?=
+ =?us-ascii?Q?KFMzAes42nGTCoOOVw7SbU0/c5agBnRadM2fyp1r9Tyy7B/oQsLKfj/XRT0F?=
+ =?us-ascii?Q?DmQu9naIKoz2kOp3126vycG38KjUpSrAKbvm9+zH6NkGP9OVcN7OgTvtXFVc?=
+ =?us-ascii?Q?/+RNTkgnG7CfA7MYK+x67TlG14DOGTt/tPYH/iurS0VsAlD/fQUmhFkbObyr?=
+ =?us-ascii?Q?ChQtcokh1iBaFpi2Qyks/KnkFTp1K/2lPFMG076YxBmDVer+01zzeHW1legH?=
+ =?us-ascii?Q?kbLgq9TFpn30wWpswep1UnZkkZAAuTjpdLkRG/DODucwY2z5s+sUxZgLH6ZR?=
+ =?us-ascii?Q?eOQtCA+MCaMfFRaZHID5KA+kRJJwlhf4TqRVTDe+0c0g2KADbshf/NQlmuFu?=
+ =?us-ascii?Q?hOd5jrpK3GxdRKpcY2tRdk4sy5x8FAVf3EV5sZf08XNs+d7aCGu5TwcULh5b?=
+ =?us-ascii?Q?wmc0leJ2adlgNPdY7e3JfAK4K+oY6LqMgKMtz2dwGCNljvfXkaZDCwAHrT6t?=
+ =?us-ascii?Q?isYSvDlakdkp56uxT50msjnMIV8iM6t2JzAro/lhxpy8pBZlrXR+SXBSNyg9?=
+ =?us-ascii?Q?Ubmq27oAeC1KGIxI3UajOlbK+3a6X4x5EFmAAqI1SAPoTFlWKF8Jdvy4cq/5?=
+ =?us-ascii?Q?GlJEEvIHKXqMYIPchvmdx66LrVwbAlHkkrYqlovx2Qd6qKuicbXyKLcWBYI/?=
+ =?us-ascii?Q?Bgf38PiW4kYUwAsM7cpf/Aseo8/QhS6kvZJsmdHN/8UN3jiPhnur7tXeQyJF?=
+ =?us-ascii?Q?k2Hwv12jeGC8yQsaMkyUQyeYO2Ps+X4PiEhlpb/pztqHI35uovg7fjsyeQGD?=
+ =?us-ascii?Q?jukczv8pwG8asTNqAax3xyHfbpm7rWJLp3sQKF2rIIrumWxngOyGLpS0AeCe?=
+ =?us-ascii?Q?gs8LWxMDgffnE7oDWptmGCMCKc/nZALkQfe5lM07qPGP1B9lSRIjRylv/bG1?=
+ =?us-ascii?Q?wBU3q/HWtOKC7k9XlYi60zTDO0FRxBwP7zj3v/cOhd21pMChwA1BQDSfs/6F?=
+ =?us-ascii?Q?O1R68LiT+7ufEP+8/59+U/WoCAIc?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6354.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eFLtaVtaOo/K95LzQW0XyuTsdlmPXtZrp112ACMPKx/v1N7ptNNNYk1e+lSX?=
+ =?us-ascii?Q?WD9WPJHZIbEtDWvvV6qAzjYNzLGffDMAy2dOy3i/mO1akaK1ar7yCR1saP2v?=
+ =?us-ascii?Q?eEC7rvGnni1xTe589JEtZwsT2PqOoJ8HQSHND1K5Gg50gnK67MQzvabShrpY?=
+ =?us-ascii?Q?nGmQ82TPVICxLGS6PUM6+hQN60WYqTT/X6jDAv0iEXfkO/uU16lL8fG9d4nn?=
+ =?us-ascii?Q?pmUP6mlqva7v9+aRSZQQxDkhwcg+zq8NMZ7GvlmYe3STjoJ5zonz96qvr3Xo?=
+ =?us-ascii?Q?0tOO4JTjjybX4RLq72PjKZYH47ap592CHeLHzuMCDi+nYXiUv0krXohdEPMS?=
+ =?us-ascii?Q?2OSBCGo/9crop0Rd8LoeUIvf6qbD4wz30KeP6sS8Tl6yAmRBNkCcU419g1O5?=
+ =?us-ascii?Q?5lwELgA5kwUPwBLpgfgxmElpI1AUcq23nXWwA3jVtU5ANJ0bXdKJPdV8V4Ft?=
+ =?us-ascii?Q?Pb4W/ow8PzbUDa9pg2Qxl3O/zxtMlwQyQyVP8uOv2eZtv3mgqlddarYzpRrq?=
+ =?us-ascii?Q?25PZTjc+ypCrzcr2k5cAd8jxJLSZPI+CwRSIlkT64BSjThKbhFDqEtVbTCNc?=
+ =?us-ascii?Q?klXaTBqZEJwi9bIGbg7fhWyJyEihKyUn2qKJK5WIYykutAxv1CRASpyQUHIx?=
+ =?us-ascii?Q?EsL38WKY+971JKMV4aqRGbn8FP1HuAFDjUeW7pqlR2W3jMhDQxWKc3VA2mvU?=
+ =?us-ascii?Q?m3ETqj8dBSbRFoFxrHCUVK1jJRASFcVo25f0uvZWRIfjqmnGwRP2ej0u5C5d?=
+ =?us-ascii?Q?xJBAfJo0uKoL7oG2R/qiOGtVa4asRCTGrQwT6RMJiM+E5sXCCqB+ic6Ynees?=
+ =?us-ascii?Q?H17gvmyfT/XXz+5fdBBHZlhz7iufNSk78nhpnDpIs4WQ71XaU3VjVKcazhiZ?=
+ =?us-ascii?Q?z2iwrnUva36z+gCyGPFI4odknTRzZWQC0M63Aw+RGXTKeyQ3Bp2oxO1Ris3S?=
+ =?us-ascii?Q?ZhoQmW9GcySgsKEmbkHLXlqvIzW8PbaITpkwxXW9EQXLFs1EL8zpbmB2gZrs?=
+ =?us-ascii?Q?/37yxbY2qTBwljUweHvX98mIx8+C1S6rIPNO9vkCWTNFjvurzDnfO1ULpdkQ?=
+ =?us-ascii?Q?+C1qhAe3aCL53czInCA7G7bxoGENsiPJJkr9o1hPfrYnYO5y2FFSARHTSDMn?=
+ =?us-ascii?Q?TtB53ZKXbrUNm50EGgV6Q/wUAv/crQO4UWodqlLNdqZPXFRQp4ErN6xW94As?=
+ =?us-ascii?Q?QxyyRz5QSNVPRx9kwXz3rKIsqQsUuhKHMLK90PSSILBgi2wnt0OlAre0vMVp?=
+ =?us-ascii?Q?5qqej+1j7L3FSCewQ+92ldy/6IFFqfK2+A45hmZHAoNYJ9YJcZ00K1BPrUAq?=
+ =?us-ascii?Q?cKtHZqGC9rW+BUU1TdNiUggG5enk3UJGmK/feUVo11eb96AMKIy+agjamG4+?=
+ =?us-ascii?Q?2IRWOSTN+DJbM2jpMjMElu32G0QXNepfESUu+VvPXkgSzMgwCexqrn07WhKH?=
+ =?us-ascii?Q?NbS0Zfh+LWePFGDhUIJyyHIPni3uDntUpQThVRtRhLtvqTSVKLiaYqOV2quh?=
+ =?us-ascii?Q?JBge5VRR3kSpejyDuon9ZmkhGWEcAbHnvqT1NOs5QZsFgwgKwE40H2lmWsiS?=
+ =?us-ascii?Q?rCSB/ieY94AGpcwXoNTZEA2TgdtpeBYyVliHYZpq?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efb644f8-5091-4145-1624-08dd4f5cb07e
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6354.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 14:09:27.4930
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pcj4D/ytMDic9o23pqWZaVXX4Zx/TiW6+s5hPjRZkm8qWSNbqEIXU58FRLPN6nY2sRDZd7bq+/OYs43EFi91Wg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9270
 
-Add bindings for Solomon SSD2825 MIPI master bridge chip that connects an
-application processor with traditional parallel LCD interface and an LCD
-driver with MIPI slave interface. The SSD2825 supports both parallel RGB
-interface and serial SPI interface.
+On Mon, Feb 17, 2025 at 07:11:52AM +0000, Zhuo, Qiuxu wrote:
+> > From: Yazen Ghannam <yazen.ghannam@amd.com>
+> > Sent: Friday, February 14, 2025 12:46 AM
+> > To: x86@kernel.org; Luck, Tony <tony.luck@intel.com>
+> > Cc: linux-kernel@vger.kernel.org; linux-edac@vger.kernel.org;
+> > Smita.KoralahalliChannabasappa@amd.com; Yazen Ghannam
+> > <yazen.ghannam@amd.com>
+> > Subject: [PATCH v2 02/16] x86/mce/amd: Remove return value for
+> > mce_threshold_create_device()
+> > 
+> > The return value is no longer checked, so set return type to 'void'.
+> >
+> 
+> This change can also be applied to mce_threshold_remove_device().
+> 
+> > Also, move function declarations to internal.h, since this function is only used
+> > within the MCE subsystem.
+> 
+> This change can also be applied to mce_threshold_remove_device().
+> 
+> So, can we also apply the two changes above for mce_threshold_remove_device() 
+> in this patch?
+> 
 
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
----
- .../display/bridge/solomon,ssd2825.yaml       | 141 ++++++++++++++++++
- 1 file changed, 141 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
+Yes, good point. I can include these updates.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml b/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
-new file mode 100644
-index 000000000000..e2d293d623b8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
-@@ -0,0 +1,141 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/solomon,ssd2825.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Solomon SSD2825 RGB to MIPI-DSI bridge
-+
-+maintainers:
-+  - Svyatoslav Ryhel <clamor95@gmail.com>
-+
-+allOf:
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+properties:
-+  compatible:
-+    const: solomon,ssd2825
-+
-+  reg:
-+    maxItems: 1
-+
-+  reset-gpios: true
-+
-+  dvdd-supply:
-+    description: Regulator for 1.2V digital power supply.
-+
-+  avdd-supply:
-+    description: Regulator for 1.2V analog power supply.
-+
-+  vddio-supply:
-+    description: Regulator for 1.8V IO power supply.
-+
-+  spi-max-frequency:
-+    maximum: 1000000
-+
-+  spi-cpha: true
-+  spi-cpol: true
-+
-+  clocks:
-+    maxItems: 1
-+    description: Reference TX_CLK used before PLL is locked.
-+
-+  solomon,hs-zero-delay-ns:
-+    description:
-+      HS zero delay period
-+    minimum: 0
-+    maximum: 1700
-+    default: 133
-+
-+  solomon,hs-prep-delay-ns:
-+    description:
-+      HS prep delay period
-+    minimum: 0
-+    maximum: 1728
-+    default: 40
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description:
-+          Video port for RGB input
-+
-+        properties:
-+          endpoint:
-+            $ref: /schemas/graph.yaml#/$defs/endpoint-base
-+            unevaluatedProperties: false
-+
-+            properties:
-+              bus-width:
-+                enum: [ 16, 18, 24 ]
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          Video port for DSI output (panel or connector)
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        dsi@2 {
-+            compatible = "solomon,ssd2825";
-+            reg = <2>;
-+
-+            spi-max-frequency = <1000000>;
-+
-+            spi-cpha;
-+            spi-cpol;
-+
-+            reset-gpios = <&gpio 114 GPIO_ACTIVE_LOW>;
-+
-+            dvdd-supply = <&vdd_1v2>;
-+            avdd-supply = <&vdd_1v2>;
-+            vddio-supply = <&vdd_1v8_io>;
-+
-+            solomon,hs-zero-delay-ns = <300>;
-+            solomon,hs-prep-delay-ns = <65>;
-+
-+            clocks = <&ssd2825_tx_clk>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+
-+                    bridge_input: endpoint {
-+                        remote-endpoint = <&dpi_output>;
-+                        bus-width = <24>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+
-+                    bridge_output: endpoint {
-+                        remote-endpoint = <&panel_input>;
-+                    };
-+                };
-+            };
-+        };
-+    };
--- 
-2.43.0
-
+Thanks,
+Yazen
