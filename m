@@ -1,147 +1,372 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazolkn19013066.outbound.protection.outlook.com [52.103.32.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E33229B0D
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 17:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739813383; cv=none; b=WP0FLavCJRySu0+vBNpWGsu/jgA6SPfnTdeXsuVgMy1fsVpWKeaUP91KvhVVv76XRfT+2QLVbUZRiHkjBNcpZtFUuWKarWN206tjCvv3/6rX9f/VoaO21nZ4Rq9ae6Ujm74/xrqKLc56ruVOYCIpcs2u4AoJMfgYwQ5PbZIQgNc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739813383; c=relaxed/simple;
-	bh=s8dzY5m0DbaSWfX0zyqEIlUY/J7cVRud2RuXtwGN0hE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jl7+Aa+vQgCHJlFa/LrFqEXbkiOtGHoYRurDnoMFyTxz+vrnv8OVxYjL6thrIwpwKEgoKh9h3HLjl+uA9MRkcaH4At37u8D1tOqZq6R7BAudHC39yPPnVr6+j43G86mY8eIEHXaDe5ONVvLoiR6mJ1jn2GNKAjjvxdJwdUkaAkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rmqFTt/m; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AB321C9F1;
+	Mon, 17 Feb 2025 17:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739813393; cv=fail; b=q5tGkwKIpOjnDrQFznEmfYx25mFS+ZAsVEQ/M7LIgLgeFkhtlmNLVU0U4qsiVf40nTDIQNMOm9D97Z4TuuHEnAIL1Wn7ybr1V9xfmnoFQPjY5b3f3npyQ7E7RNwn3D5EhRgVQVhpexRsU4LVzezcgjYVN2UTNJJOyyGnjj5M5Gc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739813393; c=relaxed/simple;
+	bh=xVdRs7wh2ymh+3IV8Kl4HwVqaEMKIvNZnUVpdfSRGAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lif1B9u8LDvzngvicJ+ABWEZX5mTvK1GIV+NY2mVGX2+y2NzMycZQijVfodyPEj4WLeIfUtfFKOYqUZL/xs88oi7CelnVOxjAaYcoo452xEADIrYrkv7jJPzDL34Ao8r6jwbp3tm+qDzij8Vdbhc9fqW73sUUT4FiM+En0ttDYc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=i2JfOwoT; arc=fail smtp.client-ip=52.103.32.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rmqFTt/m"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5461dab4bfdso1763458e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 09:29:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739813378; x=1740418178; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s8dzY5m0DbaSWfX0zyqEIlUY/J7cVRud2RuXtwGN0hE=;
-        b=rmqFTt/mrS84iRmLCwppxeaJvyD957kbtaLsZxyaJc6PMCcstsJcCDQYVqxW2dBnpc
-         XCqsfK5M5RJwrlNORQwziLtshr8I7TYBI6uySRIfSu9ViOCTlAbLlMwFymDUmbPUtw7P
-         TdpgBBAPjtkTNh8mIUAWHiacjHwR2j5HLFnUDpi++0upYyreiBXYEL0BD5uacEtmOqvv
-         mTdPw/XkHhEKz70v47pxOd4e/Z66O4MRNUK9Xs+gtSPeUnh2sYHlvv4H3hH3qBSImJum
-         SEithWz8VH7Owqr4fHcYIzKgGyFXtyVZn5qFF/tzEzdCkb96iYXIwuhAzs4yzWoMr+d/
-         Ghrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739813378; x=1740418178;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s8dzY5m0DbaSWfX0zyqEIlUY/J7cVRud2RuXtwGN0hE=;
-        b=CE+c3SU9jBmwSC0kVfJsKv7N1sAXZrP/NMig+6hc5pxQn4Id6QguBDBhXUl+4Let/0
-         2gx9TAB097KmBD+YHaTivSNYeI8ZGlD4LH/RbgmZGwpysqW/UJQAq2DBn7FAIL9ITup9
-         xAa6sgs5NnotrwmnE5E2wzAhhHc7xZqluqZaZcn+kKsUBZq0pNf2vTs2Wvnu9XLkkZKI
-         CB0gWzEbXsJN9kPY3Uj+FI8JbVs7Rwt3DynE7v2cmq98Ikqgbi0w0t0bWysnmpzvOU57
-         6Xj7SQ8ECYM6+cgqRopaf940IrukTR+PokDT4PWFedzJ8l5E7V0C5MPtJL3uRwyC9Iku
-         dsrw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsAvh2MyAEzBk4mdT7+qCr2qBy3DdwS48la/HXq050SgVVRqcF92Z6IulnS3pVYMNR8IIw0CN+nyPmA7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoWWyejuzIx88U7bxyvOncZRxsWE1sLffZgKzZ0ZXJW17mRJ0Z
-	2yE5ojPSuhkb9q9cqY7qsYKObrguIlWZcNYlu2LVcwZxNlXi9d83C2ORQBhXLquBwiM3QQWbacn
-	e2CjHyuOPX+SCg5lt2yJoQCfjEnFi8mJ6YoTfJA==
-X-Gm-Gg: ASbGnct5KxjTtvS+gxvRqPk9YBdEKlgCb++nSh3t4PeMd9NrbcLy8bj6xx2mOsYzz1/
-	pxz8alVxcum/yFNY2pgGkomKuW5onn69KmpyFWfmYNaAjGhDniww5jPRwPpNEflLdLtUIsoi8Ea
-	sG1ygc+x8aQi0sHpuvizhPATizMw==
-X-Google-Smtp-Source: AGHT+IE8QEuhEYZ24C4MMRyD/iBuHqWWRbXusKYLKvI+f/pb9+H5RoRo7m8dxQTfwNFT6k/Rkn4el4mFMHaELpJojog=
-X-Received: by 2002:a05:6512:308d:b0:545:2d80:a482 with SMTP id
- 2adb3069b0e04-5452fdb7516mr3492740e87.0.1739813378119; Mon, 17 Feb 2025
- 09:29:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="i2JfOwoT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IorTRtmFRIhlguJ5slqXRODJC0xfzbaZjbS4BBvFjk/p9IQm7MOAVROT5Wn2+3CgAkucc8/n8oMELQYEUxNglwVI+3fIUtCnIWlJry3SvxGfn+eRdUJXfQL1fQew9EOwsqSXuCFDSDOcyWTN42s8H8pbuuH1x1tQfwhqteAvnwG94JqRyi8Nsnl3Wg/1lLDoSB9kkCiZnFzXsSFm51mLPv22U3vKesmG6acztzX3wfOn5CKOapkhfhDzEl5Xceo/zkUYio1z0QnqyN00tpWWLdBjRe/nBwWfJeoDSHJXjMBees4wTnnCLzjt0+m/m++ys+7Tt0RNxwUgQLdR793dQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6SxPd8xW+U2Z0veDEotp3KNIz10EIFTL9qxJCVoHTDI=;
+ b=J9tGeWzBmqgdsmwQKMACUQy2G1GY/fzNuBv2r8OKRtr+6Ad56FYIqcUTuBtmW4nDKLxsTeIKemVd/vIOLKUHU0TwX74qjvoALWCJMQZHc2KyzgiQ0sSVekOJoO4gTPU2wipi/IOnI2c73kcVbGb6yPaeVvtO0hAeWFWycLKy6AwNGm2SX0wZhprUar6kJjapzA+Sy8eVFtKxYLVA2ZAMKg8eSD1wdNQJc6q8kP5JfBsJ9/v8nWebXKzUHBQjMC8NBzFox/RZvz7m0SU/MPz7tm8uWdagRtFqbnZrF7+eTfRW6d/pNofDJrmWFotE6M22iIhjSORy9jbhcs0mzPLBOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6SxPd8xW+U2Z0veDEotp3KNIz10EIFTL9qxJCVoHTDI=;
+ b=i2JfOwoTy5Rhjy/RzCryNtF+9j8/M8hJ93RvdGwuQcjtsgVSb04kpsikWFVHmEBqNkSAU+zNo5ynGuUVFFyCvAtxAKGEwwZ18jSC/1voZYrM97aWm3GiP+128D0/pwjKY/X+VtuPq0JqLz/dddBiTgYeRjj0E+5JlA56zK2RRNDh1LHCrg4H1ADylO3zcjMphKep8xzyqiw44ZYfUdsRFYxN94XYz+RdDOGv+6DQ7GlFpWsELgrgrxW6oLqnEMCzzlTJZqBDKXBy2aj58Hwh8Ylf6VCMJtp/p15jiQgeIOQJOu5M05MyRXW9+rWfeOqZrnBqMp9ukqGx2mh0l+A90w==
+Received: from AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
+ by AS8PR03MB8665.eurprd03.prod.outlook.com (2603:10a6:20b:54b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Mon, 17 Feb
+ 2025 17:29:48 +0000
+Received: from AM6PR03MB5080.eurprd03.prod.outlook.com
+ ([fe80::a16:9eb8:6868:f6d8]) by AM6PR03MB5080.eurprd03.prod.outlook.com
+ ([fe80::a16:9eb8:6868:f6d8%5]) with mapi id 15.20.8445.016; Mon, 17 Feb 2025
+ 17:29:48 +0000
+From: Juntong Deng <juntong.deng@outlook.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	memxor@gmail.com,
+	snorcht@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH bpf-next 3/3] selftests/bpf: Add test case for demonstrating BPF debug mode.
+Date: Mon, 17 Feb 2025 17:23:50 +0000
+Message-ID:
+ <AM6PR03MB5080AFB6039F40D3EA6568CB99FB2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <AM6PR03MB50804A5BF211E94A5DF8F66699FB2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+References: <AM6PR03MB50804A5BF211E94A5DF8F66699FB2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P265CA0024.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2ae::19) To AM6PR03MB5080.eurprd03.prod.outlook.com
+ (2603:10a6:20b:90::20)
+X-Microsoft-Original-Message-ID:
+ <20250217172350.56184-3-juntong.deng@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217142758.540601-1-koichiro.den@canonical.com>
- <20250217142758.540601-2-koichiro.den@canonical.com> <CAMRc=McB0bcG4jERmUyrQ=eTP+kcfLBBAOaT7mCMKbgUB1W5nw@mail.gmail.com>
- <d2qdoq3f3jk6gzgsjeqszgaqk7z523r7cfnopxfq4ghsbsqgp3@zjw67ewqzi5u> <uogv4ckqo2e2byspffvfayu44v6fl46sxtu7eudweoye62sofi@5iwsumpttpca>
-In-Reply-To: <uogv4ckqo2e2byspffvfayu44v6fl46sxtu7eudweoye62sofi@5iwsumpttpca>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 17 Feb 2025 18:29:27 +0100
-X-Gm-Features: AWEUYZkUECy20dI1_GnljHzFs8Mj0vatIPhRinb1LxPTtf-RSOskSmCP_32n6aA
-Message-ID: <CAMRc=MdNtDW_Gbd6dsG345110SCWe1vD_rNd_QaWBYRApHBoxQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: pseudo: common helper functions for pseudo gpio devices
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR03MB5080:EE_|AS8PR03MB8665:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4df9cb48-1a8d-401e-1abe-08dd4f78ad9e
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|19110799003|5072599009|8060799006|15080799006|461199028|3412199025|440099028|41001999003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IrryblkVOJtyINkH2YExK/AE9nDJr9lw/AyRPgYJ9vGSGksXgonz2ySLBRYc?=
+ =?us-ascii?Q?XJdN1OlueC/C57xP6jU5k/mVOAuFiHOh/UsP6PBNj/UcOtlo0LkvEK5VGmvb?=
+ =?us-ascii?Q?yKd73w7zFfQ7/XQy/xqn4SyCeMJs0LesqS/fr1wuzWaMfpVOJxCaM3BIkcvu?=
+ =?us-ascii?Q?pue+SPhyWU/gg7U+0kOuZm57X+D2CvHGUoX03gsx2m3+C1nAcqwWz1Y+z0wH?=
+ =?us-ascii?Q?Om6aTU0MB+Yl7ZikEoj2OSfXoQECrXW07HltDDfczH41Y0WZhUfCQdU0acsX?=
+ =?us-ascii?Q?eeD1re7WmKSasjslIlknVbizg+dnJP3X3QiZDAlhbP9g0u2cHvxCO9jembXb?=
+ =?us-ascii?Q?+BnThi6bPF2uPts7PCkd2fZWZz+AW2XeRgOZbL+IWQd1Hvx5fRuqPA2Euu+Q?=
+ =?us-ascii?Q?9MjbpcDyUITMCkN0uLKuYz5I2dye+Yx1GiLBJI/zgQnaktojoNQkNod4osjk?=
+ =?us-ascii?Q?D9SZHI99U+osBPjdZUvPW84798oBKOCw3JUdUEBzuFVNpzFW9dH+T5Mk1OHV?=
+ =?us-ascii?Q?wTYjRJz8s8vFpo0z1oE1L/s1j19HtReVIsY6QAcKxi9JubQkNZ8B/YCD99iu?=
+ =?us-ascii?Q?oErG1cUtYglvFZGVEm7NU7IpES2CkQJQM5o9V7JrPNKltySUcb/IKzmbGxgm?=
+ =?us-ascii?Q?cGTJ5XzONXheQ7anJ0XQ+Zv66X6EwXc6SEQ3BWcECX9c6qobfE2Bfs6GucAW?=
+ =?us-ascii?Q?NYQdXaqgGyUVIOWudCBqCtVm5adlP8CzU/7iQA+T0S0gfMmiLC54KIvCN9Mw?=
+ =?us-ascii?Q?LVBIy0o6y2f8oMRHXfmAnBpfwQ75MhU3V29lxZ4dfBAmi/QdF+ZV86kp3qFA?=
+ =?us-ascii?Q?5pyP0GS4JI7iX/99dMoztUCJHdhsXtHXaTvkFG9+NZyApp3WNy32vp8pBtE/?=
+ =?us-ascii?Q?JgnnjuqsKWwlpnpl0EX8wBpq3pY+ok11TY3qGRiu2mAOlWWf4eisr6UPwrUM?=
+ =?us-ascii?Q?sc5sFmBcTIR9MEK97uEK22vzdMjV6hpDOJp8q1OqGj/gpIdLFc0Oef2sEkS4?=
+ =?us-ascii?Q?kfrZ3yVpe4ZWse9qtXaI8rMr8dYyZ0+1WbRQ8JqGirlo3MwyL3VlOh/eiG4l?=
+ =?us-ascii?Q?9SHr0AYw6Bq20krpxpCrAC70UKKnJA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?DE59tFUyY6Ki/tTgMKZ9V+l4ZTZHR6s7vAFTuLg2B+Bf83SFV1NNkqTnW0ch?=
+ =?us-ascii?Q?SzOH0ZY3GXlWJqcv84x5eabvfpkBcdROvCilYH5jTtFXTRpoMysXqA5S0GAr?=
+ =?us-ascii?Q?dsfdWc80x+N/QxTDgTG4eJOsBvVKdLg5aeCPrd52Rl72bUIgaznmHxF1onVC?=
+ =?us-ascii?Q?U6GjUvoPvCh8X6cHveZwYnM9Fmt/y1y5l5Uw3WVf5/wlbUGwH+0DtDV3nZNp?=
+ =?us-ascii?Q?oXOdixv7+uhz+nBgl7HIecYtnESLbhIV34NynDETCCBIlTX2qKg4WKBZ6aBq?=
+ =?us-ascii?Q?fkzpEUbWy35vYSv+ZcGmUZP729tQt63Gm12XIElGbjHT99kfClGVlHx6Kbq+?=
+ =?us-ascii?Q?ab3awqB8pxsL7vOtcGxYMa2o8vIW/E6RMw/LZAyJLOEAGbbCiixnTRqUo4m0?=
+ =?us-ascii?Q?jN0CFZ5zGBv5KfmM10U/g+2hNVroFEGbZKJwL2lBsnacIpGg7RBa4A73lslj?=
+ =?us-ascii?Q?Z3SP4CFivhly4mvR3glfK1Yv7VzZ57AAI1BRfspX5XRPQfpvLfuwnSDHjoYn?=
+ =?us-ascii?Q?f9qYdCpnqK3MjWrg7GrG/yR+PxwmkEZNxs8btRTYBycYhx1E0iHz7JhG7uDd?=
+ =?us-ascii?Q?5sIIoAnYj5B7+BOLofmoOByAa6BEUGB+xtDtn5YuefUX4OEjeryZER9ZQVtR?=
+ =?us-ascii?Q?6OH1u0/rS6nWRvRcpPbSJ5JeyBlqpxEClYjcZqXbatee2zj0HuUesx8+jhB3?=
+ =?us-ascii?Q?EgFoQgYqjQtG9d9CajSc79JDXBgMn7pvYJjAsF1stqcbdKpoRRhoY0/CwhfO?=
+ =?us-ascii?Q?aSUu1eCRGCNVxrC7N0xkIIbAPXHBUq+O/lq2omkHYvAqDikNGZJU9fzSORNn?=
+ =?us-ascii?Q?nD9fpou8+i00jzcehmmOvVhuHvgt8AmHFP+x0xqpgmpQ5TunLE2BUWro/1nD?=
+ =?us-ascii?Q?Hr3QoVtIHnTeIV0JNwEghK+CkAmhHnGFlUcBUnOc2xIvF3JMiN7Tu3E6+q/F?=
+ =?us-ascii?Q?9vZgWb1cSDhv/lZX8EgXuvy5RxLOz9E/o+WpW+Mki8OPhUyi1m4Cy5VuD1U9?=
+ =?us-ascii?Q?T6CkB5YjBZtLmd80enMAaU9Vn9Lvv38pMkFjikMJ4XdfpyM53U+zEdTbIt4E?=
+ =?us-ascii?Q?WvUIG5DahzsHvLbhyqnAE49bFb9+XQDAS0/5O50oIPAPDY38V1yfvSAMCVnN?=
+ =?us-ascii?Q?UdBJFRypHIGt3ub7FmWLfqZc1amJ6VR9/0TgpN8ux5e0vHMFnCeyAJHTsNkg?=
+ =?us-ascii?Q?I22wh52gjDeukpVQE1swYXHwp+PKDWGrotBkIB0ZmqH7+xrUKX/NYLK24JV5?=
+ =?us-ascii?Q?4Ci4KWLLycQn1SEJX5I0?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4df9cb48-1a8d-401e-1abe-08dd4f78ad9e
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5080.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 17:29:48.6922
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB8665
 
-On Mon, Feb 17, 2025 at 5:21=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
-l.com> wrote:
->
-> On Tue, Feb 18, 2025 at 01:12:17AM GMT, Koichiro Den wrote:
-> > On Mon, Feb 17, 2025 at 04:46:30PM GMT, Bartosz Golaszewski wrote:
-> > > On Mon, Feb 17, 2025 at 3:28=E2=80=AFPM Koichiro Den <koichiro.den@ca=
-nonical.com> wrote:
-> > > >
-> > > > Both gpio-sim and gpio-virtuser share a mechanism to instantiate a
-> > > > platform device and wait synchronously for probe completion.
-> > > > With gpio-aggregator adopting the same approach in a later commit f=
-or
-> > > > its configfs interface, it's time to factor out the common code.
-> > > >
-> > > > Add gpio-pseudo.[ch] to house helper functions used by all the pseu=
-do
-> > > > GPIO device implementations.
-> > > >
-> > > > No functional change.
-> > > >
-> > > > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > > > ---
-> > >
-> >
-> > Thanks for the review.
-> >
-> > > Looking at this patch now, I've realized that there is nothing
-> > > GPIO-specific here. It's a mechanism for synchronous platform device
-> > > probing. I don't think its place is in drivers/gpio/ if we're making
-> > > it a set of library functions. Can I suggest moving it to lib/ and
-> > > renaming the module as pdev_sync_probe or something else that's
-> > > expressive enough to tell users what it does? You can make me the
-> > > maintainer of that module if you wish (feel free to add yourself
-> > > too!).
-> >
-> > I had vaguely envisioned that this might eventually contain some
-> > GPIO-specific code for some reason, and also it's just a tiny utility t=
-o
-> > reduce code duplication, which is why I placed it in the neighborhood,
-> > drivers/gpio/. However, of course you=E2=80=99re right, there=E2=80=99s=
- nothing
-> > GPIO-specific here, so moving it to lib/ makes sense.
-> >
-> > I'm not really sure if this method for synchronous platform device prob=
-ing
-> > can be broadly accepted as a general solution, but I have no objections=
- to
-> > making the change. I'll move it as you suggested and send v2, setting y=
-ou
-> > as its maintainer.
->
-> Regarding this series, I feel that it might make discussions smoother if
-> you submit it directly. So if you're okay with it, please go ahead. In
-> that case, there's even no need to mention me or CC me - I can track it o=
-n
-> ML :)
+This patch adds test case for demonstrating BPF debug mode.
 
-I'm not sure I'm following. Why would I submit it myself? You did most
-of the work already. If you want the changes to gpio-aggregator
-merged, then I think that it's time to refactor this code before we do
-that because repeating it three times is just bad programming. I
-probably wouldn't have done it otherwise at this point.
+Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+---
+ tools/testing/selftests/bpf_debug/Makefile    | 136 ++++++++++++++++++
+ tools/testing/selftests/bpf_debug/debug.bpf.c |  39 +++++
+ tools/testing/selftests/bpf_debug/debug.c     |  24 ++++
+ 3 files changed, 199 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf_debug/Makefile
+ create mode 100644 tools/testing/selftests/bpf_debug/debug.bpf.c
+ create mode 100644 tools/testing/selftests/bpf_debug/debug.c
 
-The code looks good other than that, just put it under lib/, rename
-functions to pdev_sync_probe_init/register/unregister() and send it to
-the list as usual. With that it's good to go. Just make sure to
-mention to Andrew Morton the need for this to go through the GPIO
-tree, I don't think he'll mind.
+diff --git a/tools/testing/selftests/bpf_debug/Makefile b/tools/testing/selftests/bpf_debug/Makefile
+new file mode 100644
+index 000000000000..4afaf2407128
+--- /dev/null
++++ b/tools/testing/selftests/bpf_debug/Makefile
+@@ -0,0 +1,136 @@
++# SPDX-License-Identifier: GPL-2.0
++include ../../../build/Build.include
++include ../../../scripts/Makefile.arch
++include ../../../scripts/Makefile.include
++include ../lib.mk
++
++CUR_DIR := $(abspath .)
++REPO_ROOT := $(abspath ../../../..)
++TOOLS_DIR := $(REPO_ROOT)/tools
++TOOLSINC_DIR := $(TOOLS_DIR)/include
++BPFTOOL_DIR := $(TOOLS_DIR)/bpf/bpftool
++UAPI_DIR := $(TOOLSINC_DIR)/uapi
++LIB_DIR := $(TOOLS_DIR)/lib
++LIBBPF_DIR := $(LIB_DIR)/bpf
++GEN_DIR := $(REPO_ROOT)/include/generated
++GEN_HDR := $(GEN_DIR)/autoconf.h
++
++OUTPUT_DIR := $(CUR_DIR)/build
++INCLUDE_DIR := $(OUTPUT_DIR)/include
++SBIN_DIR:= $(OUTPUT_DIR)/sbin
++OBJ_DIR := $(OUTPUT_DIR)/obj
++DEBUGOBJ_DIR := $(OBJ_DIR)/debug
++LIBBPF_OUTPUT := $(OBJ_DIR)/libbpf/libbpf.a
++LIBBPF_OBJ_DIR := $(OBJ_DIR)/libbpf
++LIBBPF_OBJ := $(LIBBPF_OBJ_DIR)/libbpf.a
++
++DEFAULT_BPFTOOL := $(SBIN_DIR)/bpftool
++BPFTOOL ?= $(DEFAULT_BPFTOOL)
++
++VMLINUX_BTF_PATHS ?= ../../../../vmlinux					\
++		     /sys/kernel/btf/vmlinux					\
++		     /boot/vmlinux-$(shell uname -r)
++VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
++ifeq ($(VMLINUX_BTF),)
++$(error Cannot find a vmlinux for VMLINUX_BTF at any of "$(VMLINUX_BTF_PATHS)")
++endif
++
++ifneq ($(wildcard $(GEN_HDR)),)
++  GENFLAGS := -DHAVE_GENHDR
++endif
++
++CFLAGS += -g -O2 -rdynamic -pthread -Wall -Werror $(GENFLAGS)		\
++	  -I$(INCLUDE_DIR) -I$(GEN_DIR) -I$(LIB_DIR)			\
++	  -I$(TOOLSINC_DIR) -I$(UAPI_DIR) -I$(CUR_DIR)/include		\
++	  -Wno-unused-command-line-argument
++
++LDFLAGS = -lelf -lz
++
++IS_LITTLE_ENDIAN = $(shell $(CC) -dM -E - </dev/null |				\
++			grep 'define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__')
++
++define get_sys_includes
++$(shell $(1) -v -E - </dev/null 2>&1 \
++	| sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }') \
++$(shell $(1) -dM -E - </dev/null | grep '__riscv_xlen ' | awk '{printf("-D__riscv_xlen=%d -D__BITS_PER_LONG=%d", $$3, $$3)}')
++endef
++
++BPF_CFLAGS = -g -D__TARGET_ARCH_$(SRCARCH)				\
++	     $(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-mbig-endian)	\
++	     -I$(CUR_DIR)/include -I$(CUR_DIR)/include/bpf-compat	\
++	     -I$(INCLUDE_DIR) -I$(UAPI_DIR) 				\
++	     -I$(REPO_ROOT)/include					\
++	     $(call get_sys_includes,$(CLANG))				\
++	     -Wall -Wno-compare-distinct-pointer-types			\
++	     -Wno-incompatible-function-pointer-types			\
++	     -O2 -mcpu=v3
++
++MAKE_DIRS := $(sort $(OBJ_DIR)/libbpf $(OBJ_DIR)/libbpf			\
++	     $(OBJ_DIR)/bpftool $(OBJ_DIR)/resolve_btfids		\
++	     $(INCLUDE_DIR) $(DEBUGOBJ_DIR) $(SBIN_DIR))
++
++TEST_GEN_BPF_PROGS_SKEL := $(foreach prog,$(wildcard *.bpf.c),$(INCLUDE_DIR)/$(patsubst %.c,%.skel.h,$(prog)))
++
++TEST_GEN_PROGS := $(addprefix $(SBIN_DIR)/, $(basename $(filter-out $(wildcard *.bpf.c), $(wildcard *.c))))
++
++TEST_GEN_PROGS_OBJ := $(addsuffix .o,$(addprefix $(DEBUGOBJ_DIR)/, $(notdir $(TEST_GEN_PROGS))))
++
++$(MAKE_DIRS):
++	$(call msg,MKDIR,,$@)
++	$(Q)mkdir -p $@
++
++$(LIBBPF_OBJ): $(wildcard $(LIBBPF_DIR)/*.[ch] $(LIBBPF_DIR)/Makefile)			\
++	       $(UAPI_DIR)/linux/bpf.h							\
++	       | $(OBJ_DIR)/libbpf
++	$(Q)$(MAKE) $(submake_extras) -C $(LIBBPF_DIR) OUTPUT=$(OBJ_DIR)/libbpf/	\
++		    EXTRA_CFLAGS='-g -O0 -fPIC'						\
++		    DESTDIR=$(OUTPUT_DIR) prefix= all install_headers
++
++$(DEFAULT_BPFTOOL): $(wildcard $(BPFTOOL_DIR)/*.[ch] $(BPFTOOL_DIR)/Makefile)	\
++		    $(LIBBPF_OUTPUT) | $(OBJ_DIR)/bpftool
++	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOL_DIR)			\
++		    ARCH= CROSS_COMPILE= CC=$(HOSTCC) LD=$(HOSTLD)		\
++		    EXTRA_CFLAGS='-g -O0'					\
++		    OUTPUT=$(OBJ_DIR)/bpftool/					\
++		    LIBBPF_OUTPUT=$(OBJ_DIR)/libbpf/				\
++		    LIBBPF_DESTDIR=$(OUTPUT_DIR)/				\
++		    prefix= DESTDIR=$(OUTPUT_DIR)/ install-bin
++
++$(INCLUDE_DIR)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL) | $(INCLUDE_DIR)
++ifeq ($(VMLINUX_H),)
++	$(call msg,GEN,,$@)
++	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
++else
++	$(call msg,CP,,$@)
++	$(Q)cp "$(VMLINUX_H)" $@
++endif
++
++$(DEBUGOBJ_DIR)/%.bpf.o: %.bpf.c $(INCLUDE_DIR)/vmlinux.h | $(LIBBPF_OBJ) $(DEBUGOBJ_DIR)
++	$(call msg,CLANG-BPF,,$(notdir $@))
++	$(Q)$(CLANG) $(BPF_CFLAGS) -target bpf -c $< -o $@
++
++$(INCLUDE_DIR)/%.bpf.skel.h: $(DEBUGOBJ_DIR)/%.bpf.o $(INCLUDE_DIR)/vmlinux.h $(BPFTOOL) | $(INCLUDE_DIR)
++	$(call msg,GEN-SKEL,,$(notdir $@))
++	$(Q)$(BPFTOOL) gen skeleton $< > $@
++
++$(TEST_GEN_PROGS_OBJ): $(DEBUGOBJ_DIR)/%.o: %.c $(INCLUDE_DIR)/%.bpf.skel.h | $(DEBUGOBJ_DIR)
++	$(call msg,CLANG,,$(notdir $@))
++	$(Q)$(CLANG) $(CFLAGS) -c $< -o $@
++
++$(TEST_GEN_PROGS): $(SBIN_DIR)/%: $(DEBUGOBJ_DIR)/%.o $(LIBBPF_OBJ) | $(SBIN_DIR)
++	$(call msg,CLANG-LINK,,$(notdir $@))
++	$(Q)$(CLANG) $(CFLAGS) $(LDFLAGS) $^ -o $@
++
++override define CLEAN
++	rm -rf $(OUTPUT_DIR)
++endef
++
++all: $(TEST_GEN_PROGS)
++
++.PHONY: all clean help
++
++.DEFAULT_GOAL := all
++
++.DELETE_ON_ERROR:
++
++.SECONDARY:
+diff --git a/tools/testing/selftests/bpf_debug/debug.bpf.c b/tools/testing/selftests/bpf_debug/debug.bpf.c
+new file mode 100644
+index 000000000000..8832cd0e584e
+--- /dev/null
++++ b/tools/testing/selftests/bpf_debug/debug.bpf.c
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++#include <bpf/bpf_core_read.h>
++
++char LICENSE[] SEC("license") = "GPL";
++
++void bpf_task_release(struct task_struct *p) __ksym;
++struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
++
++struct bpf_cpumask *bpf_cpumask_create(void) __ksym;
++void bpf_cpumask_release(struct bpf_cpumask *cpumask) __ksym;
++
++SEC("syscall")
++int test_debug_mode(void *arg)
++{
++	struct bpf_cpumask *cpumask;
++	struct task_struct *task;
++	struct bpf_iter_num it;
++	int *v, pid;
++
++	bpf_iter_num_new(&it, 1, 3);
++	while ((v = bpf_iter_num_next(&it))) {
++		task = bpf_task_from_pid(*v);
++		if (task) {
++			pid = BPF_CORE_READ(task, pid);
++			bpf_task_release(task);
++		}
++	}
++	bpf_iter_num_destroy(&it);
++
++	cpumask = bpf_cpumask_create();
++	if (cpumask)
++		bpf_cpumask_release(cpumask);
++
++	return 0;
++}
+diff --git a/tools/testing/selftests/bpf_debug/debug.c b/tools/testing/selftests/bpf_debug/debug.c
+new file mode 100644
+index 000000000000..1df7ccfeb26d
+--- /dev/null
++++ b/tools/testing/selftests/bpf_debug/debug.c
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <stdio.h>
++#include <bpf/libbpf.h>
++#include <bpf/bpf.h>
++#include "debug.bpf.skel.h"
++
++int main(int argc, char **argv)
++{
++	LIBBPF_OPTS(bpf_object_open_opts, opts);
++	struct debug_bpf *skel;
++	int err, prog_fd;
++
++	opts.debug_mode = true;
++
++	skel = debug_bpf__open_opts(&opts);
++
++	err = debug_bpf__load(skel);
++	prog_fd = bpf_program__fd(skel->progs.test_debug_mode);
++	err = bpf_prog_test_run_opts(prog_fd, NULL);
++
++	debug_bpf__destroy(skel);
++	return err;
++}
+-- 
+2.39.5
 
-Bart
