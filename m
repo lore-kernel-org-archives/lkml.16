@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A49D23908B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 20:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C63239095
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 20:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739824839; cv=none; b=GtSexssTYobeOkSNn+/AoO4BZKK3GHSjDMWidSLN2SCgbNjam1wwO7Z8ljuUCVp+rRkcd/BUFtsOh8eZP+oWOxW7Pzm4FbVXZO4142nZ1sK476emZQz7SaFhpSED76Q16ATG1G4EE2gS9vzVGA7IZc/PBrnMxGu0OFbVLu5dAlQ=
+	t=1739824840; cv=none; b=lwEeY9duPDzFr47Zl0DONfM3zU+J/wIzyLaTsUPUvmwEaS+VSsSQB7j5DycHVr3Q99HpTt2d1VVtP47SBLa3Eugk0mQXzKlwHMtSf4g9E4GufWgECXrGmwZ5bBwaxtpO2wSp3PCAeFzLLQZ75B0gQN/18OmtnQQNzkExToYl4a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739824839; c=relaxed/simple;
-	bh=a7/wDYror7f9u7E/gxJPevZz0fLQnlju7iQq3E/8RZ8=;
+	s=arc-20240116; t=1739824840; c=relaxed/simple;
+	bh=H4n5UnzCG7E2EA8WL/RMCGeDmoPTbT+twxoB+tx8UKE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c6kmPCh4DU4S3MBCVjbs5S2HD6CtpA109s8qKFPtn+pvBb9nSM5Y4TrcBAToVvURunO+nBFXdY7e83Zut1VL6/CZs5zoi0/qq6JsiOPUgwAlaIU8GhuTR5C2iYMz2rLQFHWGXeM35MSxZUkbQC3zGzOsim4aJlNOrlZVRAi+Tcg=
+	 In-Reply-To:To:Cc; b=HDbIiM/WClKsizybF01oFAxeMqIPTCMII2X+Vgj5O8pv4HeqOzapJsDjmml8H2AL4LGXg/7PWkMxFocm2pnjbfmlUFDmUWvLyskGrulJAsNMDHb+c7xaZWCFahDCBgohlhiK3T7Y6WJW4K9ysYQF60Vfjua78bgfc+Rf5WW+zUs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,22 +18,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tk7uZ-0007oL-CW; Mon, 17 Feb 2025 21:40:15 +0100
+	id 1tk7uZ-0007oD-CW; Mon, 17 Feb 2025 21:40:15 +0100
 Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tk7uX-001TG2-36;
+	id 1tk7uX-001TFu-2g;
 	Mon, 17 Feb 2025 21:40:13 +0100
 Received: from localhost ([::1] helo=dude05.red.stw.pengutronix.de)
 	by dude05.red.stw.pengutronix.de with esmtp (Exim 4.96)
 	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tk7uX-000W9t-2W;
+	id 1tk7uX-000W9t-2O;
 	Mon, 17 Feb 2025 21:40:13 +0100
 From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Date: Mon, 17 Feb 2025 21:39:49 +0100
-Subject: [PATCH v3 09/12] platform/chrome: cros_ec_lpc: prepare for
- hw_protection_shutdown removal
+Date: Mon, 17 Feb 2025 21:39:41 +0100
+Subject: [PATCH v3 01/12] reboot: replace __hw_protection_shutdown bool
+ action parameter with an enum
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-hw_protection-reboot-v3-9-e1c09b090c0c@pengutronix.de>
+Message-Id: <20250217-hw_protection-reboot-v3-1-e1c09b090c0c@pengutronix.de>
 References: <20250217-hw_protection-reboot-v3-0-e1c09b090c0c@pengutronix.de>
 In-Reply-To: <20250217-hw_protection-reboot-v3-0-e1c09b090c0c@pengutronix.de>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -66,39 +66,100 @@ X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-In the general case, a driver doesn't know which of system shutdown or
-reboot is the better action to take to protect hardware in an emergency
-situation. For this reason, hw_protection_shutdown is going to be
-removed in favor of hw_protection_trigger, which defaults to shutdown,
-but may be configured at kernel runtime to be a reboot instead.
+Currently __hw_protection_shutdown() either reboots or shuts down the
+system according to its shutdown argument.
 
-The ChromeOS EC situation is different as we do know that shutdown is
-the correct action as the EC is programmed to force reset after the
-short period, thus replace hw_protection_shutdown with
-__hw_protection_trigger with HWPROT_ACT_SHUTDOWN as argument to
-maintain the same behavior.
+To make the logic easier to follow, both inside __hw_protection_shutdown
+and at caller sites, lets replace the bool parameter with an enum.
+
+This will be extra useful, when in a later commit, a third action is
+added to the enumeration.
 
 No functional change.
 
-Acked-by: Tzung-Bi Shih <tzungbi@kernel.org>
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 ---
- drivers/platform/chrome/cros_ec_lpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/reboot.h | 18 +++++++++++++++---
+ kernel/reboot.c        | 14 ++++++--------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-index 5a2f1d98b3501b3b88adaf50fe5784f990310f9f..0b723c1e435c65600d67ad2d447404dfcdc7cf78 100644
---- a/drivers/platform/chrome/cros_ec_lpc.c
-+++ b/drivers/platform/chrome/cros_ec_lpc.c
-@@ -454,7 +454,7 @@ static void cros_ec_lpc_acpi_notify(acpi_handle device, u32 value, void *data)
- 		blocking_notifier_call_chain(&ec_dev->panic_notifier, 0, ec_dev);
- 		kobject_uevent_env(&ec_dev->dev->kobj, KOBJ_CHANGE, (char **)env);
- 		/* Begin orderly shutdown. EC will force reset after a short period. */
--		hw_protection_shutdown("CrOS EC Panic", -1);
-+		__hw_protection_trigger("CrOS EC Panic", -1, HWPROT_ACT_SHUTDOWN);
- 		/* Do not query for other events after a panic is reported */
- 		return;
- 	}
+diff --git a/include/linux/reboot.h b/include/linux/reboot.h
+index abcdde4df697969a8027bcb052efc00daabbbf6a..e97f6b8e858685b4b527daa8920a31eabcf91622 100644
+--- a/include/linux/reboot.h
++++ b/include/linux/reboot.h
+@@ -177,16 +177,28 @@ void ctrl_alt_del(void);
+ 
+ extern void orderly_poweroff(bool force);
+ extern void orderly_reboot(void);
+-void __hw_protection_shutdown(const char *reason, int ms_until_forced, bool shutdown);
++
++/**
++ * enum hw_protection_action - Hardware protection action
++ *
++ * @HWPROT_ACT_SHUTDOWN:
++ *	The system should be shut down (powered off) for HW protection.
++ * @HWPROT_ACT_REBOOT:
++ *	The system should be rebooted for HW protection.
++ */
++enum hw_protection_action { HWPROT_ACT_SHUTDOWN, HWPROT_ACT_REBOOT };
++
++void __hw_protection_shutdown(const char *reason, int ms_until_forced,
++			      enum hw_protection_action action);
+ 
+ static inline void hw_protection_reboot(const char *reason, int ms_until_forced)
+ {
+-	__hw_protection_shutdown(reason, ms_until_forced, false);
++	__hw_protection_shutdown(reason, ms_until_forced, HWPROT_ACT_REBOOT);
+ }
+ 
+ static inline void hw_protection_shutdown(const char *reason, int ms_until_forced)
+ {
+-	__hw_protection_shutdown(reason, ms_until_forced, true);
++	__hw_protection_shutdown(reason, ms_until_forced, HWPROT_ACT_SHUTDOWN);
+ }
+ 
+ /*
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index b5a8569e5d81f57a6baeddd8d166a616d2992085..b20b53f08648d88bac533ab18ea66396b44a3045 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -983,10 +983,7 @@ static void hw_failure_emergency_poweroff(int poweroff_delay_ms)
+  * @ms_until_forced:	Time to wait for orderly shutdown or reboot before
+  *			triggering it. Negative value disables the forced
+  *			shutdown or reboot.
+- * @shutdown:		If true, indicates that a shutdown will happen
+- *			after the critical tempeature is reached.
+- *			If false, indicates that a reboot will happen
+- *			after the critical tempeature is reached.
++ * @action:		The hardware protection action to be taken.
+  *
+  * Initiate an emergency system shutdown or reboot in order to protect
+  * hardware from further damage. Usage examples include a thermal protection.
+@@ -994,7 +991,8 @@ static void hw_failure_emergency_poweroff(int poweroff_delay_ms)
+  * pending even if the previous request has given a large timeout for forced
+  * shutdown/reboot.
+  */
+-void __hw_protection_shutdown(const char *reason, int ms_until_forced, bool shutdown)
++void __hw_protection_shutdown(const char *reason, int ms_until_forced,
++			      enum hw_protection_action action)
+ {
+ 	static atomic_t allow_proceed = ATOMIC_INIT(1);
+ 
+@@ -1009,10 +1007,10 @@ void __hw_protection_shutdown(const char *reason, int ms_until_forced, bool shut
+ 	 * orderly_poweroff failure
+ 	 */
+ 	hw_failure_emergency_poweroff(ms_until_forced);
+-	if (shutdown)
+-		orderly_poweroff(true);
+-	else
++	if (action == HWPROT_ACT_REBOOT)
+ 		orderly_reboot();
++	else
++		orderly_poweroff(true);
+ }
+ EXPORT_SYMBOL_GPL(__hw_protection_shutdown);
+ 
 
 -- 
 2.39.5
