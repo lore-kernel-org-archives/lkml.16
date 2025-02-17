@@ -1,140 +1,178 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31DA22541C;
-	Mon, 17 Feb 2025 15:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEF121CA0C;
+	Mon, 17 Feb 2025 15:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807304; cv=none; b=DISuyioPcD6nhtgwlZZlNWJwb9sGayIPEFWlahyOGjr6mUg/OPeBXwLhSDEvkR6wv5v3or8OrrDmgRR1JAymW8qcNINyQp0hReaArOWjADR+Y8GA1yfz9EHa72UnNhK5cxJwWZMk9MrXRUrhEAmhszwW4iG8iBm7iGyQNXV9a70=
+	t=1739807313; cv=none; b=X/5TMVS1lol476UE5YoX6FcVHBDvGZrwBzQHjZnMM9komyaPN2O7wTbeUBikiUjT+F5QbXok92Xs4EYgT2JotP/tqOh79v+XoDw1NvjqnkVgBNJKoSz0aZjfTpZMO2iCK1lBcpoWsFsALHkmTToaTc7YjFFXyMSCzOHv4BO6+kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739807304; c=relaxed/simple;
-	bh=/lEU7xULHAxpZlni8AN8DMboE77iRpAYV9/tk9IUOWo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GUW+s6eROIBOL6x6R88vWFR08ynAr0+3c0LNA+/sYNN9Ju60+F3ZtmHHSEewqf/626D4GtqdpaO5YAF5rlwoYamvJ57PD6dyU4rSRDKlb8dR2X3lewLeROVaZoQs+7Vvx4vP3kQvo0BZRb98BtlKcqjpJ7Rtyg3neUtZjhtLcxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1739807313; c=relaxed/simple;
+	bh=06+HsNBqZbxG8SrKyC7xwIUS/afQ5IoCNqI5xrOzpH0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d2VTnYJ3nvyNwtGGz7S3vEu4+1NdQhtXGDhnnMMvxGaTP6pp6W1WNQUadK98JJBVlEKVU2zISLdH2m/1ciPaQSlv3bLcR3eK/tEdS7xw01xmcqRgkTlEKRl/2J5XQUVLsR/zlGm2RKOkfE1KvKcgDLYBLX1mwDM/DeBJQHhLfKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5ded46f323fso5703140a12.1;
-        Mon, 17 Feb 2025 07:48:22 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5452c1daabeso2531663e87.1;
+        Mon, 17 Feb 2025 07:48:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739807301; x=1740412101;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9/1TpPTCwLBrR1Kg3bSBlDuh3UE64GUFqlUJpFTwfGE=;
-        b=G0tp/dPoRYQh/uoxqzYK+5tbdiitFxKT1CLYd/ZXgalDq241Flut8pp0U9OY/WgxA1
-         gHjopvCRVCVuEAJlAma1rMUv+IToHBMvwcBb3mJBHxg80D0GOEXNCElTTjSYrUlr3nIi
-         30deSvdIvNUfCTjcGA1+XlTFZthj8ew+KLQ2VvvIznDgZDFrg/jFf+i57W1d1ijtPc20
-         Zms6sgnmX5iX/vefa6ZKyWvN97J7lrf+DFrNLMeKxZX2XrUdLHDJiMhgtYBtaeO56OKS
-         9TPdMMNHCWUIhFLyYBi5IB6aoy0GuvQfM3LxIZBPo+uEvw7JNyJlQ9Arz62/uRT5HHNx
-         9Fjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWuJWWqV/6xiDmISWlyJdyyYDtqrX7M8M12qyC20DSdBfi3Tbd0moG2CC4yoUbVNafG24Gp70/R/6rpFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMjXfv1PbmUS0SzRHOP/9ZsFSP7YoNj4g3mqTiBTdkOvB5sAyH
-	Qn6zIt3GLMhWPD+PNruI43osX9NayHH+4lktJDvmmH5JhHtAHckD
-X-Gm-Gg: ASbGncunUcc33wZKzX2WtalrZGvklgq3RAZtFQr3+oVnFRFyoglbZwctq1+BaVuCZmD
-	wdPwTii+X9zEqOkk65dMQu74FThwHv/fgoSyqS2lzrzwXEK5cqCVuxY279mecQvJ7/7eUaHeaG8
-	qxd/Y2NO/PsPHw4iypvh2OG1lMd0tbQkgLSgWqXXxuMIF+G4hQg69R7lO/pJeffZejA95coaGA7
-	ulvbDsKtUuy1k1kdvyiB73LtW+tu8E19EJe79miB5xkjVyn0xjiA4EIe+haXahIW1nNwzQe01xx
-	UyhVkg==
-X-Google-Smtp-Source: AGHT+IGa1bidXafeMjDwaHLsDjxINfvO4wZU3rw0YCPBPybKrh47+RviRoxnX7Rhi2G5tYu7f0aAPA==
-X-Received: by 2002:a17:906:f59c:b0:ab3:76fb:96ab with SMTP id a640c23a62f3a-abb70e4e1d9mr1096890266b.57.1739807300877;
-        Mon, 17 Feb 2025 07:48:20 -0800 (PST)
-Received: from localhost ([2a03:2880:30ff:3::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9f8442c0sm177973466b.150.2025.02.17.07.48.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 07:48:20 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 17 Feb 2025 07:48:13 -0800
-Subject: [PATCH net-next v2] net: Remove redundant variable declaration in
- __dev_change_flags()
+        d=1e100.net; s=20230601; t=1739807308; x=1740412108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oT48PO3HfIeDjSDux1vBuhE4VoEwoL5q99u+4AwOVE8=;
+        b=X7juZwg0Vaf1j8zTR16m290a06EOcRnUKmriK3MMYU1H6pMXJUwMEH8XlR1Acs1jec
+         i7/sT9U/GkOsjkYcBT8oA0Y/8PibZi7VAh4WhQfDpCubTLUy7+BxvM7R9JQGkvfn2q/L
+         y8Rm5dhMLB5wztVEhWob37beCnAUg+IwRDS4D7aUmkZ/MlMoVRzs7DUGxKo1BwaBekJZ
+         jocH9+2k2+BVdXQZ+rtMv/8IfQeNlMHDI7PH5QXX+QRrSsbBJS2pqXIaql/WeezbPEB1
+         Wu3oBs83TlQCPZKICIz3BDycOeVyZl0qkUr/xax3KXx7fIbF5XbW8lkj3xlRxQ5tCcCZ
+         tAPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrYb8OMYSE/hm9IT6YrgQW2+t7yFTRUR76zKqnOLSw8WHT6Ltkcjb89vrPiqvHkvZzfYp9AbrPxydQ@vger.kernel.org, AJvYcCWIK+/ulHVGj/RLxGpTVH2OksK4CS5INhFH0pc6WxN4FmX55SCxi4OjaCZEBs84L0y3YJrT/wMdY33+LA==@vger.kernel.org, AJvYcCXaIbzjsSnEaMELfLOckhQvnKNuMhcMz/8MU1kzx6CLkoAQC13IsGvnNL5l1TzoNNnwmn+o8DIFwaxNcWy9@vger.kernel.org
+X-Gm-Message-State: AOJu0YytvXEEyVpsn1cQr/dhwyXZ9kC7Y0GVgng9E9kBkcFz855dTzif
+	oL5m3UHS/xFz5iMhnMeBjmVoO3o9pM+i6t4p2zqQvOijqpXdkCj9eky4fvwO
+X-Gm-Gg: ASbGnctdd8HaDm385ZAVStlwPRqsd5QfhHl8tsFevryGy3tgkbTIRMvI1gaoJnO7QYm
+	+OBUbyaAlCmQcVnY2vMM6WxvlgRd3S1Rsp2cAPbasSVNH9o6rkyuFOF3CPT+96qlpNd5beSBncq
+	tfp/uKkk2hJPtA1UGTTwbZzoeEDPdFn/NHnDPNiN+DFLmoiiFyB25Z/KFwcegZRvqFEBbKCpF8E
+	1lmJ2Lw+HxXVyss896pctQKOT1B6S4T/iyNMEGy0RAs4/22DnjkaXuUtoUr3E28k/OieAzwBIG+
+	sHzo557jbYaogkuOn5NWWRiOGxayjQ+y60luhpmqeEKeC8FO
+X-Google-Smtp-Source: AGHT+IHMveMYalbAPmdQk9lzdqMIps0nEuh8cCGZlsvDS6WBd+8FZ+G1TeR4yhJAG+jCdayImAkKWw==
+X-Received: by 2002:a05:6512:3b0b:b0:542:29b6:9c26 with SMTP id 2adb3069b0e04-5452fe95c7emr2982660e87.47.1739807307816;
+        Mon, 17 Feb 2025 07:48:27 -0800 (PST)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545f60c18bcsm785589e87.2.2025.02.17.07.48.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 07:48:26 -0800 (PST)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30a2dfcfd83so11116301fa.1;
+        Mon, 17 Feb 2025 07:48:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU4dib4Sfex2DNoK7Dzi4bh7caniCpvGZJoLgWm2lLqGabG5Y8dQY0YwW2MGjLMtT5N0xjyog6i3vQZBnHf@vger.kernel.org, AJvYcCVUxW6pFEMT50XS3+0MROUODSrZwXQPSBL9RbAXrZuhrPIt0aQlMYNc9ZZ8pdf0Z3qilUUOTdNP8QEMfg==@vger.kernel.org, AJvYcCWbL4hVeP8IIvNVrcX2/QGJRPqomii4TvbYGzVyDLI3CyYAcYiKtgrNxrMfb3RTylIzFZZ1QuTSdolo@vger.kernel.org
+X-Received: by 2002:a2e:88c9:0:b0:309:2012:cc5d with SMTP id
+ 38308e7fff4ca-30927ad64e9mr23653441fa.24.1739807306250; Mon, 17 Feb 2025
+ 07:48:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-old_flags-v2-1-4cda3b43a35f@debian.org>
-X-B4-Tracking: v=1; b=H4sIADxas2cC/23NQQqDMBBG4auEf21KMtW2cdV7FClRRx2QpCQiF
- vHuBdddP/jejsxJOKNWOxKvkiUG1IoKhW7yYWQtPWoFMlQZsqWOc/8eZj9mXdFjYFNRebcdCoV
- P4kG203oh8KIDbwuaQmGSvMT0PSerPfsfb7XaanLG3Vp3dc67Z8+t+HCJaURzHMcPXFLGwq0AA
- AA=
-X-Change-ID: 20250214-old_flags-528fe052471c
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Nicolas Dichtel <nicolas.dichtel@6wind.com>, andrew@lunn.ch
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>, 
- Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1938; i=leitao@debian.org;
- h=from:subject:message-id; bh=/lEU7xULHAxpZlni8AN8DMboE77iRpAYV9/tk9IUOWo=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBns1pDYujvLAfw5utcmAgE+6mDEDCDH4OpvaK6t
- QFU1Qp78/OJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ7NaQwAKCRA1o5Of/Hh3
- bUmYD/0ccF1Vxf3F4MLAjdje/sP41HsJTtFkDULzfzqbkQ4pGvE755kWqw4lbuix80ntioQDj81
- LrIUBOgJfJpg7GnV+aDMW5FriICKAsK8T4pxsWhqyDBC3eRQJvpsviJ9Pif+uG2rKtLwdBAnJWc
- esbOfKORfDD7VTVWD2vX+aarHjNHcgn/TGRwDU9rM5GJPejpNE7HeDv3KJ5TvpYmMS0nZsO3Wtc
- jzD0UAGXqSZk2A2ph56jqwTCGkIJC6bQLALxx0GBsvdOLZnc16WvZ8yceDG+typbcpYitHe8FIs
- tTkj8Vvcj7BvmfAC++HZLfEIsEhi3lvr2fSL4Lsjdfs4Q+IXYOcVDYvWpbfaQSmeEJHNj6LB0Ly
- u0XCBwQtQWFiA9cuYvvK44b2DHtmsAGbXwep/W+TZUccDqzu5rvnMjSsnT5NMf0JTyWGUZ+vi8y
- hxGF3gJEK7PFyyM3zal/FBAavTQPJZSinxu0/lowBJPjwG73tEY0cIOZdcqNp1pEYLmGMqdumSV
- Vlj9KiILvur5H8BXFVLayI7lkggpS1lici0MODmxINQlFoSOq1emuv9IcPlJolW7AXEElYKMPwp
- g/Rx2gMjPMX22dh9SzjFbLUwQl/V6uF0Sa0NoMfXUEfDecZWgDv6yRUu1nyWLJCK3WZE8kqdjI9
- UXeQfVGST6gjrOw==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+References: <20250214003734.14944-1-andre.przywara@arm.com> <20250214003734.14944-5-andre.przywara@arm.com>
+In-Reply-To: <20250214003734.14944-5-andre.przywara@arm.com>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Mon, 17 Feb 2025 23:48:13 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67V7PAOC8MLVzE5SwwvpogN_WLNhQnRVD2pikGVDHtJjA@mail.gmail.com>
+X-Gm-Features: AWEUYZlCDWHC9MbTz92hd57HNQUJnNXRSXbL_QnKKWLChMmYjVCum1sff3H_yMQ
+Message-ID: <CAGb2v67V7PAOC8MLVzE5SwwvpogN_WLNhQnRVD2pikGVDHtJjA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] pinctrl: sunxi: support moved power configuration registers
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The old_flags variable is declared twice in __dev_change_flags(),
-causing a shadow variable warning. This patch fixes the issue by
-removing the redundant declaration, reusing the existing old_flags
-variable instead.
+On Fri, Feb 14, 2025 at 8:40=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
+com> wrote:
+>
+> The Allwinner pincontroller IP features some registers to control the
+> withstand voltage of each pin group. So far those registers were always
+> located at the same offset, but the A523 SoC has moved them (probably to
+> accommodate all eleven pin banks).
+>
+> Add a flag to note this feature, and use that to program the registers
+> either at offset 0x340 or 0x380. So far no pincontroller driver uses
+> this flag, but we need it for the upcoming A523 support.
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 15 +++++++++++----
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  7 +++++--
+>  2 files changed, 16 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunx=
+i/pinctrl-sunxi.c
+> index 83a031ceb29f2..a1057122272bd 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -736,9 +736,9 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi=
+_pinctrl *pctl,
+>                 val =3D uV > 1800000 && uV <=3D 2500000 ? BIT(bank) : 0;
+>
+>                 raw_spin_lock_irqsave(&pctl->lock, flags);
+> -               reg =3D readl(pctl->membase + PIO_POW_MOD_CTL_REG);
+> +               reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset);
+>                 reg &=3D ~BIT(bank);
+> -               writel(reg | val, pctl->membase + PIO_POW_MOD_CTL_REG);
+> +               writel(reg | val, pctl->membase + pctl->pow_mod_sel_offse=
+t);
+>                 raw_spin_unlock_irqrestore(&pctl->lock, flags);
+>
+>                 fallthrough;
+> @@ -746,9 +746,12 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunx=
+i_pinctrl *pctl,
+>                 val =3D uV <=3D 1800000 ? 1 : 0;
+>
+>                 raw_spin_lock_irqsave(&pctl->lock, flags);
+> -               reg =3D readl(pctl->membase + PIO_POW_MOD_SEL_REG);
+> +               reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset +
+> +                           PIO_POW_MOD_SEL_OFS);
+>                 reg &=3D ~(1 << bank);
+> -               writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL=
+_REG);
+> +               writel(reg | val << bank,
+> +                      pctl->membase + pctl->pow_mod_sel_offset +
+> +                      PIO_POW_MOD_SEL_OFS);
+>                 raw_spin_unlock_irqrestore(&pctl->lock, flags);
+>                 return 0;
+>         default:
+> @@ -1520,6 +1523,10 @@ int sunxi_pinctrl_init_with_flags(struct platform_=
+device *pdev,
+>                 pctl->pull_regs_offset =3D PULL_REGS_OFFSET;
+>                 pctl->dlevel_field_width =3D DLEVEL_FIELD_WIDTH;
+>         }
+> +       if (flags & SUNXI_PINCTRL_ELEVEN_BANKS)
+> +               pctl->pow_mod_sel_offset =3D PIO_11B_POW_MOD_SEL_REG;
+> +       else
+> +               pctl->pow_mod_sel_offset =3D PIO_POW_MOD_SEL_REG;
+>
+>         pctl->irq_array =3D devm_kcalloc(&pdev->dev,
+>                                        IRQ_PER_BANK * pctl->desc->irq_ban=
+ks,
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunx=
+i/pinctrl-sunxi.h
+> index 6cf721876d89d..a93385e456a57 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -87,9 +87,11 @@
+>  #define SUNXI_PINCTRL_VARIANT_MASK     GENMASK(7, 0)
+>  #define SUNXI_PINCTRL_NEW_REG_LAYOUT   BIT(8)
+>  #define SUNXI_PINCTRL_PORTF_SWITCH     BIT(9)
+> +#define SUNXI_PINCTRL_ELEVEN_BANKS     BIT(10)
+>
+> -#define PIO_POW_MOD_SEL_REG    0x340
+> -#define PIO_POW_MOD_CTL_REG    0x344
+> +#define PIO_POW_MOD_SEL_REG            0x340
+> +#define PIO_11B_POW_MOD_SEL_REG                0x380
+> +#define PIO_POW_MOD_SEL_OFS            0x004
 
-	net/core/dev.c:9225:16: warning: declaration shadows a local variable [-Wshadow]
-	9225 |                 unsigned int old_flags = dev->flags;
-	|                              ^
-	net/core/dev.c:9185:15: note: previous declaration is here
-	9185 |         unsigned int old_flags = dev->flags;
-	|                      ^
-	1 warning generated.
+Shouldn't this be PIO_POW_MOD_CTL_OFS instead?
 
-Remove the redundant inner declaration and reuse the existing old_flags
-variable since its value is not needed outside the if block, and it is
-safe to reuse the variable. This eliminates the warning while
-maintaining the same functionality.
+ChenYu
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
----
-Changes in v2:
-- Improve the commit message to specify that there is no impact reusing
-  the variable (Andrew)
-- Remove the Fixes tag, since we do not want this to be backported.
-  (Andrew)
-- Link to v1: https://lore.kernel.org/r/20250214-old_flags-v1-1-29096b9399a9@debian.org
----
- net/core/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index d5ab9a4b318ea4926c200ef20dae01eaafa18c6b..cd2474a138201e6ee86acf39ca425d57d8d2e9b4 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9182,7 +9182,7 @@ int __dev_change_flags(struct net_device *dev, unsigned int flags,
- 
- 	if ((flags ^ dev->gflags) & IFF_PROMISC) {
- 		int inc = (flags & IFF_PROMISC) ? 1 : -1;
--		unsigned int old_flags = dev->flags;
-+		old_flags = dev->flags;
- 
- 		dev->gflags ^= IFF_PROMISC;
- 
-
----
-base-commit: 7a7e0197133d18cfd9931e7d3a842d0f5730223f
-change-id: 20250214-old_flags-528fe052471c
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+>
+>  #define PIO_BANK_K_OFFSET              0x500
+>
+> @@ -173,6 +175,7 @@ struct sunxi_pinctrl {
+>         u32                             bank_mem_size;
+>         u32                             pull_regs_offset;
+>         u32                             dlevel_field_width;
+> +       u32                             pow_mod_sel_offset;
+>  };
+>
+>  #define SUNXI_PIN(_pin, ...)                                   \
+> --
+> 2.46.3
+>
