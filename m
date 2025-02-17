@@ -1,148 +1,141 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34133183098
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 07:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5310F4C70;
+	Mon, 17 Feb 2025 07:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739775953; cv=none; b=oMOIFHK/RjJP/cgfASEZ5E9F36VryUl6WTp9bRMb4RshdwJJ5mbXcSho2CV6jnOAZ6CLH6eZvYNosPruuwMP7m5tYklTWbooGce8rwKIxthKNI03R1LHJv0P0ukGXXV6C6NdNcl1SUlnA96Lju65CITVJXTvYL5XIpXW8Ysd0rI=
+	t=1739776003; cv=none; b=L2ffj+iaCihDdhmWmbEyvSbe9qVDRqjVNEIGj3nnIaHv3+EkZyEjw0E61K59987ry9oucfIdckZ8gKx1d3YgPNTuj0l2m+RbfFEbzonbNojAIFhniXj/St8PvEL78LzFHkDj/q902G/TkN/xA0FSnurWY8Moee2zKKpfO1Y/3OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739775953; c=relaxed/simple;
-	bh=Q917az6uxMlj1UneckNovGmKwgFGSq/pCHX6IXoK7jU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DkgCm2FKHSt8StAJRyt1MBEyOdZBynZb6WocOexGW5C4naot0RhQU+yoV04m6R8Bg4rOhJtWlVrJazpUPVd+AM/bU6sXKADBFuYcWMEVkzOu5+0cFALloOcu4kegJ1dCa8hRCY0P2pqBT4RyYPed5VvzFoEYF26XC2IqBZQp3ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=mloevqol; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="mloevqol"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaeec07b705so606038766b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 23:05:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1739775949; x=1740380749; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hDTAaNjPvymL+5POOcQD3DHgYRwOtZyMkyZgmLHZc7Y=;
-        b=mloevqolSJwdXaqJAwAkwf9aq5HwulUkyRGmvcByCgRcQNdAqB25banoZzngUBNmIW
-         pZ5GRdLfTpUc3I0pl2BEduP+qXG8bu2Z4oTw+p+5zGplMSlOIkmu4XZhsrwfZz2sJY0P
-         OmiLV7XahCKOV0wwYWRqE0C6T9Nt8TDGqf/AfxFrHgECFZIijDQQj6BVFboGjLQJQYhn
-         BRdgNC7+xLFH0EekXsjO7UAFGYwg8CEiAjb2njJzrd9Q/4l0ffzvY1aXoZjsEi7JOXka
-         Wq6G0LTW4J3WxQMENMYa5OfI0lLdoE2iBsIygV/jo6gWjJh+nTvtzyXzxKd/L2gReQBH
-         UZtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739775949; x=1740380749;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hDTAaNjPvymL+5POOcQD3DHgYRwOtZyMkyZgmLHZc7Y=;
-        b=FUFSAGEixWBMDw7OVvhJNjwlubaATvvt2iPRkD+blr0QfZBW0QTYsH7xXThxVZ5Ju6
-         fAyzVMS8i2cyf7tO1CUsEFVYuwSCUdq17+drYFX6m7ITjp8ZhPfxSc1UzykD+Bui0wJH
-         BuCYxD6HYmu1hfU6mP6SPXvicJVL5+oD5iM99OUQMex6AM/pt8BYDqZdzfEre8XPb771
-         CrvyL/iiaOA0E7oSkj48Kj35fsa5kCKNw/W6fJ1veKjA3EHmH97sZqBgCR+O+dvu8RNt
-         53h/ThclcraHfBaVc7IhZ9SziyCEA8ps8kOHacCLXZX+CYYSbrhueuaufshm/zNV6GKe
-         kSng==
-X-Forwarded-Encrypted: i=1; AJvYcCU8mvucrpOK1g0Kp4s1M/B92ju3rnrEqAtnZBxyOwPezwZ4l1BLmAzPvwBn2RUv/+2e++qbeNoWvmMscfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5LWtGNuUQbIytP7dW+BhEUoIxKMQMPDjKrwtSSbJmchhA/xpv
-	Bn2Mc1TT4nvn0yTF8sFLAvRcpQhTxBB1Yx6qGjOSUG6ZBRJYIQrX7fuGHbKXecE=
-X-Gm-Gg: ASbGncsomZmAgeIQFWuTrVeKM6XeEXsLRCw/maTf9rlNpMcn85QvbDSwAQFt/IVeh9p
-	DqZi/9ZbwoYL/kDZ4Fy9k+0KMLp24kz6xmAnx5FTFuD+7Ob8Y8of7C9OyjPBANhIjrcjsrnbb6u
-	jE9V7Bpl6qLv8liz8I50Zbxl5eVHOqB9vvFmsVfPh3w6QfqOe30uVOzTiYpC2/+Y3cD4WpGIQQW
-	zIu766IvTZ11PvfDh6pnVNcKw9xKBs1+OWgQ2humm6ESpJokOZTInGF3ZrtaMfRdONRLf/9ne04
-	Ri84yOG8LjwjHyByVpYd4fU=
-X-Google-Smtp-Source: AGHT+IE/V6kFksjmU9jpYeXFzBYu7bIgsDyXTPfFPUEcs+l8eg8Sk2rnVz8ksJX5C4iCTediHir1+g==
-X-Received: by 2002:a17:906:c154:b0:ab6:db3e:2649 with SMTP id a640c23a62f3a-abb70a95729mr814742466b.14.1739775949500;
-        Sun, 16 Feb 2025 23:05:49 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.25])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53376326sm827729466b.87.2025.02.16.23.05.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Feb 2025 23:05:49 -0800 (PST)
-Message-ID: <c04fc470-5ac7-4cef-98ef-5f06c3315ce4@tuxon.dev>
-Date: Mon, 17 Feb 2025 09:05:47 +0200
+	s=arc-20240116; t=1739776003; c=relaxed/simple;
+	bh=qJDsd2z/942OOOCUg26TueeBOG1V50FZockYoCDzi5s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o0CRNkiEIucaGEMnCxSTOCMslakTZh4GX6a1zqvLcNkKNNUT0GOG5ahazoWGkJOd2cK3EJWuPwCoghlXO5vCtB6cEXPzwFhkCbhxeHzQss5Fkj2Cg/BKJ5ZEWF2TkyW334O0ZNp3zyDtLmtWONro6c0kfk3XFPXlFj3K5CED3yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YxDGG4fllz4f3lCf;
+	Mon, 17 Feb 2025 15:06:14 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 891AD1A1527;
+	Mon, 17 Feb 2025 15:06:37 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl_137JnjbRXEA--.5607S4;
+	Mon, 17 Feb 2025 15:06:37 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	leah.rumancik@gmail.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	libaokun1@huawei.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] jbd2: fix off-by-one while erasing journal
+Date: Mon, 17 Feb 2025 14:59:55 +0800
+Message-ID: <20250217065955.3829229-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: microchip: Move address/size-cells properties
- to SoC dtsi
-To: Alexander Dahl <ada@thorsis.com>, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Peter Rosin <peda@axentia.se>,
- "moderated list:ARM/Microchip (AT91) SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250204165205.2375940-1-ada@thorsis.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250204165205.2375940-1-ada@thorsis.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDXOl_137JnjbRXEA--.5607S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF43Ar4rtr1DJFW7CFW5trb_yoW5JFWDpr
+	W7G3W3GrWku340vFn7WrWkXry5XayqkFWUGr4Duwn3X3yfJr1ak34kK3s8J34jqFyxGay7
+	ZF15A3yUGw42q37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUFg4SDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hi, Alexander,
+From: Zhang Yi <yi.zhang@huawei.com>
 
+In __jbd2_journal_erase(), the block_stop parameter includes the last
+block of a contiguous region; however, the calculation of byte_stop is
+incorrect, as it does not account for the bytes in that last block.
+Consequently, the page cache is not cleared properly, which occasionally
+causes the ext4/050 test to fail.
 
-On 04.02.2025 18:52, Alexander Dahl wrote:
-> Avoids warnings with board dts files enabling ethernet-controller node
-> together with phy child node(s).
-> 
-> Signed-off-by: Alexander Dahl <ada@thorsis.com>
-> ---
->  arch/arm/boot/dts/microchip/at91-dvk_su60_somc.dtsi    | 4 ----
->  arch/arm/boot/dts/microchip/at91-sam9_l9260.dts        | 2 --
->  arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts | 2 --
->  arch/arm/boot/dts/microchip/at91-sam9x60ek.dts         | 2 --
->  arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi    | 2 --
->  arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi  | 2 --
->  arch/arm/boot/dts/microchip/at91-sama5d2_ptc_ek.dts    | 2 --
->  arch/arm/boot/dts/microchip/at91-sama5d2_xplained.dts  | 2 --
->  arch/arm/boot/dts/microchip/at91-sama5d3_xplained.dts  | 4 ----
->  arch/arm/boot/dts/microchip/at91-sama7g5ek.dts         | 4 ----
->  arch/arm/boot/dts/microchip/at91-tse850-3.dts          | 3 ---
->  arch/arm/boot/dts/microchip/at91-vinco.dts             | 3 ---
->  arch/arm/boot/dts/microchip/at91rm9200.dtsi            | 2 ++
->  arch/arm/boot/dts/microchip/at91sam9260.dtsi           | 2 ++
->  arch/arm/boot/dts/microchip/at91sam9263.dtsi           | 2 ++
->  arch/arm/boot/dts/microchip/at91sam9g45.dtsi           | 2 ++
->  arch/arm/boot/dts/microchip/at91sam9x5_macb0.dtsi      | 2 ++
->  arch/arm/boot/dts/microchip/at91sam9x5_macb1.dtsi      | 2 ++
->  arch/arm/boot/dts/microchip/sam9x60.dtsi               | 4 ++++
->  arch/arm/boot/dts/microchip/sam9x7.dtsi                | 2 ++
->  arch/arm/boot/dts/microchip/sama5d2.dtsi               | 2 ++
->  arch/arm/boot/dts/microchip/sama5d3_emac.dtsi          | 2 ++
->  arch/arm/boot/dts/microchip/sama5d3_gmac.dtsi          | 2 ++
->  arch/arm/boot/dts/microchip/sama5d3xcm_cmp.dtsi        | 2 --
->  arch/arm/boot/dts/microchip/sama5d3xmb_cmp.dtsi        | 2 --
->  arch/arm/boot/dts/microchip/sama5d3xmb_emac.dtsi       | 2 --
->  arch/arm/boot/dts/microchip/sama5d3xmb_gmac.dtsi       | 2 --
->  arch/arm/boot/dts/microchip/sama7g5.dtsi               | 4 ++++
->  28 files changed, 28 insertions(+), 40 deletions(-)
-> 
+Since block_stop operates on inclusion semantics, it involves repeated
+increments and decrements by 1, significantly increasing the complexity
+of the calculations. Optimize the calculation and fix the incorrect
+byte_stop by make both block_stop and byte_stop to use exclusion
+semantics.
 
-There are some other warnings triggered by these changes:
+This fixes a failure in fstests ext4/050.
 
-  DTC [C] arch/arm/boot/dts/microchip/at91sam9m10g45ek.dtb
-../arch/arm/boot/dts/microchip/at91rm9200.dtsi:213.29-225.6: Warning
-(avoid_unnecessary_addr_size): /ahb/apb/ethernet@fffbc000: unnecessary
-#address-cells/#size-cells without "ranges", "dma-ranges" or child "reg"
-property
-/home/claudiu/repos/linux-microchip/build-arm32/arch/arm/boot/dts/microchip/at91rm9200ek.dtb:
-ethernet-phy: 'reg' is a required property
-../arch/arm/boot/dts/microchip/sama5d3_gmac.dtsi:66.29-77.6: Warning
-(avoid_unnecessary_addr_size): /ahb/apb/ethernet@f0028000: unnecessary
-#address-cells/#size-cells without "ranges", "dma-ranges" or child "reg"
-property
-  also defined at
-../arch/arm/boot/dts/microchip/at91-sama5d3_ksz9477_evb.dts:50.8-58.3
-../arch/arm/boot/dts/microchip/sama5d2.dtsi:382.29-393.6: Warning
-(avoid_unnecessary_addr_size): /ahb/apb/ethernet@f8008000: unnecessary
-#address-cells/#size-cells without "ranges", "dma-ranges" or child "reg"
-property
+Fixes: 01d5d96542fd ("ext4: add discard/zeroout flags to journal flush")
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ fs/jbd2/journal.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-Thank you,
-Claudiu
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index d8084b31b361..49a9e99cbc03 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1965,17 +1965,15 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
+ 			return err;
+ 		}
+ 
+-		if (block_start == ~0ULL) {
+-			block_start = phys_block;
+-			block_stop = block_start - 1;
+-		}
++		if (block_start == ~0ULL)
++			block_stop = block_start = phys_block;
+ 
+ 		/*
+ 		 * last block not contiguous with current block,
+ 		 * process last contiguous region and return to this block on
+ 		 * next loop
+ 		 */
+-		if (phys_block != block_stop + 1) {
++		if (phys_block != block_stop) {
+ 			block--;
+ 		} else {
+ 			block_stop++;
+@@ -1994,11 +1992,10 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
+ 		 */
+ 		byte_start = block_start * journal->j_blocksize;
+ 		byte_stop = block_stop * journal->j_blocksize;
+-		byte_count = (block_stop - block_start + 1) *
+-				journal->j_blocksize;
++		byte_count = (block_stop - block_start) * journal->j_blocksize;
+ 
+ 		truncate_inode_pages_range(journal->j_dev->bd_mapping,
+-				byte_start, byte_stop);
++				byte_start, byte_stop - 1);
+ 
+ 		if (flags & JBD2_JOURNAL_FLUSH_DISCARD) {
+ 			err = blkdev_issue_discard(journal->j_dev,
+@@ -2013,7 +2010,7 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
+ 		}
+ 
+ 		if (unlikely(err != 0)) {
+-			pr_err("JBD2: (error %d) unable to wipe journal at physical blocks %llu - %llu",
++			pr_err("JBD2: (error %d) unable to wipe journal at physical blocks [%llu, %llu)",
+ 					err, block_start, block_stop);
+ 			return err;
+ 		}
+-- 
+2.46.1
+
