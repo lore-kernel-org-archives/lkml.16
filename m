@@ -1,114 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F6E229B0B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 15:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C67228C9D;
+	Mon, 17 Feb 2025 15:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807390; cv=none; b=ic++MwdIXFrcNB8zvgxFP9tRHUgYwJ01fAbh+LxwN0yVkBLzx/XV0WtXPHadzmBxxDuhHMjzpWZtF+nWb0kSOwILwIQ2/oL2kAIskLhNzNC8/qRhLbUPEBflLZRM+CKTmQyxSIwUtVBpeEGlGehquc9Puh3d0QmXFCOOIYlGf+8=
+	t=1739807390; cv=none; b=FjBxGuODX4V3M27hiaJ5JjFHTLijqbtnrMoiYOVqkwq8ATxO70/gHhL8JKAv+ERwUr5k6I5kmmPYKXhCRO/Y5SDCUdS86+RfMgrVbceMDXptqwul6ZMdH4WOgQkd6KLh662Pdh5R+4X/L0SRKWn0JQOCsbjrhtN687Y9xwvCZmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739807390; c=relaxed/simple;
-	bh=+T9+QSLbqVaktqQ4lOnMjR9OoKYV0X4W7fjhcNuiSPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nwf1Rvki+JlBhiLMxaE4jKes1Xx7c2xHNFxVZ5FyNxBYKKL7JB13V0r/yd7X+aWSAa8S6wHrNVhkDSW3QqFjiMT9tjVGTgsbv6iiC9NuwESAus2op0KNo2PxuIwAG1k2maHL2/2bJ1vwu5H4eKaTV7LsOFJBX34JL8S7M6Cw+Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB18C4CED1;
-	Mon, 17 Feb 2025 15:49:47 +0000 (UTC)
-Date: Mon, 17 Feb 2025 10:50:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Harshit Agarwal <harshit@nutanix.com>, Peter Zijlstra
- <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
- <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- linux-kernel@vger.kernel.org, Jon Kohler <jon@nutanix.com>, Gauri
- Patwardhan <gauri.patwardhan@nutanix.com>, Rahul Chunduru
- <rahul.chunduru@nutanix.com>, Will Ton <william.ton@nutanix.com>
-Subject: Re: [PATCH v2] sched/rt: Fix race in push_rt_task
-Message-ID: <20250217105007.45ba8cb4@gandalf.local.home>
-In-Reply-To: <20250213175435.114441-1-harshit@nutanix.com>
-References: <9C390C10-8741-4992-8E29-303C907C8C00@nutanix.com>
-	<20250213175435.114441-1-harshit@nutanix.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	bh=bw8rCx7v+bgiBlD+SI/NQtL2q5RqtEsz/aiuZYDVTg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VVTsZhXaRnAdUKJkoPlB1XM+Vi1KnTd68kOmerXf98LvRW6B23P4n1FquwNX27h8H42lCGOLZN5jwV71XcHsUO0gvX46Gk4Ae0f6u6STLwJfk4yezPDpAEBNnOwQoyHa4oxicOYEKfGoLOY+iIMR7TvXYa3e7m/4MuWLuOdN8Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OW+EUzom; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OW+EUzom"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739807386;
+	bh=bw8rCx7v+bgiBlD+SI/NQtL2q5RqtEsz/aiuZYDVTg0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OW+EUzomV5z/EFv6by8ncUUdp8+dp+9Yexb+IIv9gNDj/OMFWeiHnwOGayOQODAuv
+	 f9Gru2VhjKYtgWa6jFJGHGOcitnYJtb8+EKovhDdrFjECinl4QwHtrvvjeWU7BYt/U
+	 nT3wMtFQ+Z3dk+Ii/6dKcweQzDzxHKgT74FyUQ3bKfUaEmh7UFm/uTEhOQ/xZieAJB
+	 MdJAEnSERA0EqZhza+ezX0znEJqh7FQU6sGs5ucwv6r/f5oFB6kL90xk1WNmthk53C
+	 VosIHn1hdZ3ntzcEmTVBUylCYoqaWtQ8bTipefuA0U3+ZMWylFCm7LY4mkzV2ZwscF
+	 4hUOUiX08GSkA==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 95F1E17E1578;
+	Mon, 17 Feb 2025 16:49:45 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: chunkuang.hu@kernel.org
+Cc: p.zabel@pengutronix.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	ck.hu@mediatek.com,
+	jitao.shi@mediatek.com,
+	jie.qiu@mediatek.com,
+	junzhi.zhao@mediatek.com,
+	dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@collabora.com,
+	dmitry.baryshkov@linaro.org,
+	lewis.liao@mediatek.com,
+	ives.chenjh@mediatek.com,
+	tommyyl.chen@mediatek.com,
+	jason-jh.lin@mediatek.com
+Subject: [PATCH v7 20/43] drm/mediatek: mtk_hdmi: Disgregate function mtk_hdmi_audio_set_param()
+Date: Mon, 17 Feb 2025 16:48:13 +0100
+Message-ID: <20250217154836.108895-21-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
+References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+As a cleanup, and in preparation for splitting common bits of this
+driver, disgregate the code in function mtk_hdmi_audio_set_param()
+to the beginning and end of function mtk_hdmi_audio_hw_params().
 
-FYI,
+In a later commit, the hw_params callback function will also be
+disgregated so that the code will get two functions: one that
+performs the generic hdmi_audio_param copy, and one that performs
+IP specific setup, both of which will be called in the callback,
+allowing all of the non IP version specific code to get moved in
+a common file.
 
-You should always send a new patch version as a separate thread. That's
-because they can get lost in the thread and makes it harder for maintainers
-to know what the next version of the patch is. I've picked the wrong patch
-version before because there was another version sent that I missed.
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/gpu/drm/mediatek/mtk_hdmi.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
-On Thu, 13 Feb 2025 17:54:34 +0000
-Harshit Agarwal <harshit@nutanix.com> wrote:
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+index 6257503ce639..1f90cac112e2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+@@ -1054,20 +1054,6 @@ static void mtk_hdmi_audio_disable(struct mtk_hdmi *hdmi)
+ 	hdmi->audio_enable = false;
+ }
+ 
+-static int mtk_hdmi_audio_set_param(struct mtk_hdmi *hdmi,
+-				    struct hdmi_audio_param *param)
+-{
+-	if (!hdmi->audio_enable) {
+-		dev_err(hdmi->dev, "hdmi audio is in disable state!\n");
+-		return -EINVAL;
+-	}
+-	dev_dbg(hdmi->dev, "codec:%d, input:%d, channel:%d, fs:%d\n",
+-		param->aud_codec, param->aud_input_type,
+-		param->aud_input_chan_type, param->codec_params.sample_rate);
+-	memcpy(&hdmi->aud_param, param, sizeof(*param));
+-	return mtk_hdmi_aud_output_config(hdmi, &hdmi->mode);
+-}
+-
+ static int mtk_hdmi_output_set_display_mode(struct mtk_hdmi *hdmi,
+ 					    struct drm_display_mode *mode)
+ {
+@@ -1487,6 +1473,11 @@ static int mtk_hdmi_audio_hw_params(struct device *dev, void *data,
+ 	struct hdmi_audio_param hdmi_params;
+ 	unsigned int chan = params->cea.channels;
+ 
++	if (!hdmi->audio_enable) {
++		dev_err(hdmi->dev, "hdmi audio is in disable state!\n");
++		return -EINVAL;
++	}
++
+ 	dev_dbg(hdmi->dev, "%s: %u Hz, %d bit, %d channels\n", __func__,
+ 		params->sample_rate, params->sample_width, chan);
+ 
+@@ -1547,8 +1538,13 @@ static int mtk_hdmi_audio_hw_params(struct device *dev, void *data,
+ 
+ 	memcpy(&hdmi_params.codec_params, params,
+ 	       sizeof(hdmi_params.codec_params));
++	memcpy(&hdmi->aud_param, &hdmi_params, sizeof(hdmi_params));
++
++	dev_dbg(hdmi->dev, "codec:%d, input:%d, channel:%d, fs:%d\n",
++		hdmi_params.aud_codec, hdmi_params.aud_input_type,
++		hdmi_params.aud_input_chan_type, hdmi_params.codec_params.sample_rate);
+ 
+-	mtk_hdmi_audio_set_param(hdmi, &hdmi_params);
++	mtk_hdmi_aud_output_config(hdmi, &hdmi->mode);
+ 
+ 	return 0;
+ }
+-- 
+2.48.1
 
-> Solution
-> ========
-> The solution here is fairly simple. After obtaining the lock (at 4a),
-> the check is enhanced to make sure that the task is still at the head of
-> the pushable tasks list. If not, then it is anyway not suitable for
-> being pushed out. The fix also removes any conditions that are no longer
-> needed.
-> 
-> Testing
-> =======
-> The fix is tested on a cluster of 3 nodes, where the panics due to this
-> are hit every couple of days. A fix similar to this was deployed on such
-> cluster and was stable for more than 30 days.
-
-May also want to add:
-
-  Since 'is_migration_disabled()' a faster check than the others, it was moved
-  to be the first check for consistency.
-
-> 
-> Co-developed-by: Jon Kohler <jon@nutanix.com>
-> Signed-off-by: Jon Kohler <jon@nutanix.com>
-> Co-developed-by: Gauri Patwardhan <gauri.patwardhan@nutanix.com>
-> Signed-off-by: Gauri Patwardhan <gauri.patwardhan@nutanix.com>
-> Co-developed-by: Rahul Chunduru <rahul.chunduru@nutanix.com>
-> Signed-off-by: Rahul Chunduru <rahul.chunduru@nutanix.com>
-> Signed-off-by: Harshit Agarwal <harshit@nutanix.com>
-> Tested-by: Will Ton <william.ton@nutanix.com>
-> ---
-
-You can add here (after the above three dashes), how this version is
-different from the last version. The text below the dashes and before the
-patch is ignored by git, but is useful for reviewers. For instance:
-
-Changes since v1: https://lore.kernel.org/all/20250211054646.23987-1-harshit@nutanix.com/
-
-- Removed the redundant checks that task != pick_next_pushable_task() already has
-
-
-Notice I added a link to the previous version. This helps find the previous
-version without having to make this version a reply to it.
-
->  kernel/sched/rt.c | 54 +++++++++++++++++++++++------------------------
->  1 file changed, 26 insertions(+), 28 deletions(-)
-> 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 4b8e33c615b1..4762dd3f50c5 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1885,6 +1885,27 @@ static int find_lowest_rq(struct task_struct *task)
->  	return -1;
->  }
->  
-
-Otherwise,
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Peter, could you pick this up?
-
--- Steve
