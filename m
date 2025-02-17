@@ -1,130 +1,107 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5552621B8E1
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F7421D5AC;
+	Mon, 17 Feb 2025 13:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797243; cv=none; b=iE9nvXrbaYs4nM0YQ3d5K6ILgYp3Vt3T4zou3pW4+kJWgPZllpcSujRbkXl7ax70NuIXAcLXTLfe5hvE0qR6pxsgfL8s9wNUNPbXpHYlNrCHC4Jv4HA0bFGrpNbeWxMPvnl/EOoXZV0khgfhvV55kiF9lbOPUBQYNtCWRy6+Afs=
+	t=1739797246; cv=none; b=EJ1SZNyt14Q846RB7fIEoVjRRZk54MpGbTtfUT/1hptnVTEfFjrqCkWrg4S765e1EFNdJVkTrfQ+nyDSHgFYHLgulZVeFesXPOYHG069owONZnF3rV9nwem8awQ178uR6QTkTel5sf51AOLfAY0tbrc90GjoUbsvkA/Pwcvcyi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797243; c=relaxed/simple;
-	bh=W0xJp2fHBSO+TzErYJnMGlOWfxHwZNWRa8XWc/U/pJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4LUpfP57wZ07WT7ft80mW1faZUhOpisJ7nN9vk995ZMRe7UQEqW0I6YOZm6ojcHhA11WxI2FCertipcP1uSDynbbZUJWNo+dAIfz0N34blMS8Pj7w9rBIEI3ECeJrjieITnWJQzcWFj8dfSDoYX/8ACvwZ1BOWAyYfEQ6+I6Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tk0jX-0005AT-Aw; Mon, 17 Feb 2025 14:00:23 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tk0jV-001PZg-07;
-	Mon, 17 Feb 2025 14:00:21 +0100
-Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id E345E3C4C3B;
-	Mon, 17 Feb 2025 12:57:06 +0000 (UTC)
-Date: Mon, 17 Feb 2025 13:57:06 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: syzbot <syzbot+d7d8c418e8317899e88c@syzkaller.appspotmail.com>
-Cc: davem@davemloft.net, edumazet@google.com, gregkh@linuxfoundation.org, 
-	kuba@kernel.org, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mailhol.vincent@wanadoo.fr, netdev@vger.kernel.org, oneukum@suse.com, pabeni@redhat.com, 
-	stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com, Xu Panda <xu.panda@zte.com.cn>
-Subject: Re: [syzbot] [can?] WARNING in ucan_probe
-Message-ID: <20250217-spectral-cordial-booby-968731-mkl@pengutronix.de>
-References: <67b323a4.050a0220.173698.002b.GAE@google.com>
+	s=arc-20240116; t=1739797246; c=relaxed/simple;
+	bh=I0S+nkLc8AqLe/BXeSPDwTMnzb05obn6iER4S06p86E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TuTB08BJwhtJg23IrEANkZWyH7jwqBfn1z8yhjnSKHlCnuvuoqbjAplax70lka+Rl58Z7ns8Xko2V8LDe5vjS42kijZWO3lXAGRXlKoRAPePNBLRrt5BYvCowQwKtP2RENNjN2JbH8tmDrYAT+gVhWYm6muGKv45U2MzQhONWtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LQZh7F9c; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LQZh7F9c"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51HD0RmG660284
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 17 Feb 2025 07:00:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739797227;
+	bh=5hDuGJeEE0gQog8LTxJ/HbyUs1VjQuCw4lzCkcEFMp4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=LQZh7F9cxm9E99J7PB7w/dJX3H44BrOPLDllc3MDu2ObvFsCkt9zklZJArIKX5gis
+	 hVTv8XkpkoSjqYkNkemY2PQ0CZk8ocwCgtM6yfMiB6bpxulFOkboNzeoBxUra11TzF
+	 NhR3ej+vhShe8XlNYip2kfWVaf3Evs76kXVuUbq0=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51HD0RCl056131;
+	Mon, 17 Feb 2025 07:00:27 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
+ Feb 2025 07:00:27 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 17 Feb 2025 07:00:27 -0600
+Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51HD0Ffs072350;
+	Mon, 17 Feb 2025 07:00:23 -0600
+From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+To: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC: <mripard@kernel.org>, <mchehab@kernel.org>, <jai.luthra@linux.dev>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <devarsht@ti.com>, <vaishnav.a@ti.com>, <r-donadkar@ti.com>,
+        <u-kumar1@ti.com>, <y-abhilashchandra@ti.com>
+Subject: [PATCH v2 1/2] dt-bindings: media: cdns,csi2rx.yaml: Add optional interrupts for cdns-csi2rx
+Date: Mon, 17 Feb 2025 18:30:12 +0530
+Message-ID: <20250217130013.2802293-2-y-abhilashchandra@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250217130013.2802293-1-y-abhilashchandra@ti.com>
+References: <20250217130013.2802293-1-y-abhilashchandra@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="g7xglj7mfzpk3kuh"
-Content-Disposition: inline
-In-Reply-To: <67b323a4.050a0220.173698.002b.GAE@google.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+The Cadence CSI2RX IP exposes 3 interrupts [0] 12.7 camera subsystem.
+Enabling these interrupts will provide additional information about a CSI
+packet or an individual frame. So, add support for optional interrupts
+and interrupt-names properties.
 
---g7xglj7mfzpk3kuh
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [syzbot] [can?] WARNING in ucan_probe
-MIME-Version: 1.0
+[0]: http://www.ti.com/lit/pdf/spruil1
 
-On 17.02.2025 03:55:16, syzbot wrote:
-> Hello,
->=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    496659003dac Merge tag 'i2c-for-6.14-rc3' of git://git.ke=
-r..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D11012bf8580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc776e555cfbdb=
-82d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dd7d8c418e831789=
-9e88c
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14f7b9b0580=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D155602e4580000
->=20
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/c1675d5fc116/dis=
-k-49665900.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/0342ce7d0bc9/vmlinu=
-x-49665900.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/5ce5b4978fc4/b=
-zImage-49665900.xz
->=20
-> The issue was bisected to:
->=20
-> commit b3e40fc85735b787ce65909619fcd173107113c2
-> Author: Oliver Neukum <oneukum@suse.com>
-> Date:   Thu May 2 11:51:40 2024 +0000
->=20
->     USB: usb_parse_endpoint: ignore reserved bits
+Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+---
 
-I think the issue was introduced in: 7fdaf8966aae ("can: ucan: use
-strscpy() to instead of strncpy()"). I'm preparing a fix.
+Changes in v2:
+- Address Krzysztof's review comment to remove flexibility while adding
+  interrupts.
 
-regards,
-Marc
+ .../devicetree/bindings/media/cdns,csi2rx.yaml         | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
+index 2008a47c0580..f335429cbde9 100644
+--- a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
++++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
+@@ -24,6 +24,16 @@ properties:
+   reg:
+     maxItems: 1
+ 
++  interrupts:
++    minItems: 3
++    maxItems: 3
++
++  interrupt-names:
++    items:
++      - const: info
++      - const: error
++      - const: monitor
++
+   clocks:
+     items:
+       - description: CSI2Rx system clock
+-- 
+2.34.1
 
---g7xglj7mfzpk3kuh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmezMh8ACgkQDHRl3/mQ
-kZzmzQgAhZ+U89NLPUKjnFb9vAGYtSjKJb+1+b3OLpNzt9Ta5nZXyX1gMS0I2zd/
-6E3cDfJ7vN/BOGCWTzgTMU5jbLyg4YzCZ2IyfMIyexJjxEUUJ35BkvHj29KUQgtr
-bDrK30tqr/XK3tKOvLDZkacNmKRT8dad8Lv36VOCueQU7bJJVUzTx+SbdRiCn2Bv
-jMMN3hnhJLQpfALoH/GnzESJcka4xyrHd5ZpD3SDx3mJiw82AEcJ+DLOA8X18ZiF
-t1JIY4jgXpD77uMBwsHrhP7FCoW9j/ps/yAbJdc4Je9FCbtvyagP8/uYBNNKGIkJ
-QIrwURE0P+NRGibiA//rqR55T8WU0Q==
-=sBNn
------END PGP SIGNATURE-----
-
---g7xglj7mfzpk3kuh--
