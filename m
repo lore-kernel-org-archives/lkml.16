@@ -1,119 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AD4224F0
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 21:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AF7224F0;
+	Mon, 17 Feb 2025 21:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739829374; cv=none; b=CznWp5NnAAwfERAxqIabaxNpKKTdED9c4vkyLBY55Q710UCDCjAEM8OUaCrZFiaFLfxhjyJlAXWmwBUF3ohlsGzPdHn21zw0DqCsyAkmJoX/Oo3UsYhVtnD+lfz+qT7Xt2zTnppK0DDIK3p/wTGphMmEtOAAYb4AB4v1U1w7wVw=
+	t=1739829415; cv=none; b=LpeMQdcBwBDa3DsbXhiwqGGOB6r3rkhyySC6zzArSGXzox6qlWHjQEdRrou6U2elvl4gr2Sd7cL8cWorfg+MONDrfCGg226hALnRz3X4jiT1d/EUcElH2fya30jMIIX0yD7J+grJOtLp6tgnKG6DXfXOXFPXq9GcE7dIDYi0PK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739829374; c=relaxed/simple;
-	bh=N2pCvbsInOvtXuv75JS94lrc9pN+Og0+y7iXDBWGipE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QDLZWbjpcvFl13F0RQNOvb+dih1PwWdYGbUytDp8KEHceORiXbmHVa6ANCzQVMB4KROLtm9xujX0Cp5a/vKSFPAPApsQVyfKDuAXLwTD8YbCUMBzSx4CHhox8d+NhNZ8Eph6IpmrkoAsUnu38kQdN6ixDj4EbrcYL9a/4cl1fYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YPLLW8EX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739829415; c=relaxed/simple;
+	bh=4VaQl0NtT63hn4RIkgnKAbuhy0jcZQTdg7q6kxOv9w4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BsTBvjtqq/hapONLV4F+daZbNDt7TZ6gMIFBALoxT+JON8NnTNc/Gwt33Vjq5KTxvC9+MuGb9lEOsSa65zIWeG5g9BEHh6GbwtFD9PDweiQhUf89wenJlml6H5o6WKt6aHokqghRUjeCBPcOby9vdJ5HtdyObvUBXAcJmGLLOfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ItSMsNHL; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YPLLW8EX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739829371;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ma+WDCstUob+rO5FJpLhVsCO991W7dWOQMuhns1ORLM=;
-	b=YPLLW8EXZk3IEf82KnfiS7UcC7uYmiGx76757P2FSZ/jb7+Td9VopOitXA9QEhJ9rgq5CU
-	4SLWz8cDOEgtTUqd6zFMVgHU5MqmYOYEyZ05iyTn/AtP+NUzH93z6fzPiLh2271dY9F/y8
-	+TIPkMAyLyXypjccku+RxaFZ+d/R5jQ=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-643-hL-ww40APjOMaKR-tiJvWw-1; Mon, 17 Feb 2025 16:56:10 -0500
-X-MC-Unique: hL-ww40APjOMaKR-tiJvWw-1
-X-Mimecast-MFC-AGG-ID: hL-ww40APjOMaKR-tiJvWw_1739829370
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3cffc88f0cbso3048775ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:56:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739829370; x=1740434170;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ma+WDCstUob+rO5FJpLhVsCO991W7dWOQMuhns1ORLM=;
-        b=rMX4UojaJY+cq6+lD78DXKVrL+np4eceEBe24o9j1w2+nQyePgXolrwb095P2bjgHg
-         F4XS+bzbQ4DKP3KQfhAaT83yYtxwsnN6VD8rQJP0kXsgE75lnaslgk8cUa8qvut6iNou
-         vrBSLxIHwFPL0gUgVd8CxuwW7fRL2/8TaXyzZbu3fuv3x/Y+5/IM6eMmXcVnEnaPtMMX
-         zPNaEuhQEdn806tYGQXockyJRu1QTSHAHfZ5YXZ12zyMu4cthH8gD2toj1BEid5ZXXcp
-         eKf9RY4H3FbpWIH9ilSj3u0W34DNX082PkodDqs5NmD5c/EL0Y3DeiU9PIJNdnJM+NxC
-         VAaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU24qfBNDkKHygYq0ulHgUeGi8FjSox6hMuiJ9cwUVs/l1a35Tt6K0CNt0zEBwdfZTYI/mNMdrzYE3EFz8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytPYEwDEzCcN+GydLfEemFWqCj+rMY2Zxv7LBk5Prwv+JqgIiG
-	xBqkHvsZyTSRR7uEWOahFIFkFNZgv9+XBBryvGNcbwgcwxsbJ5n99IQYGA+4ToKqywUgjZO+BHa
-	6a8xgXeWV0O9eD9SqKULEygzw1k1SsB98yqxFdEr8D1uDdMq72YhQoB+/YthIoQ==
-X-Gm-Gg: ASbGnctK+sJ1eopYPaactWttqnzX0yv6962PQdn+shofk+vGW5pMV20qcQF/Lek4gBr
-	XycGucf/ksScKPWEj6Ci5QobG9N8kJYrttQjgpKbdJGGPCdZPdOUf4K+mEQ29vEwZEENvdiC5Tl
-	DGykbs3CszNj30cXyjZ2cj+AqZtteZNBu6B4Ua9WoYePYRWRKPHDn7e7e/BEl49DDETh2+qB6Wq
-	RYjFyui+UL57Gmv1r+l8GAq8gO91c/glMQ4CSlWMQh6Jy3eJIdmUqiNHf6PGoDpV7iuNG22oR8C
-	5ccblVqS
-X-Received: by 2002:a05:6602:13d4:b0:855:683d:d468 with SMTP id ca18e2360f4ac-85579fe5006mr245136939f.0.1739829369723;
-        Mon, 17 Feb 2025 13:56:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGnC63RTWm/9A8auCeEObZ+CHD/OXQEjDxR7vyZ9cE6BFwEm2a2tfvMMhgn6LJkud3CRBJDvw==
-X-Received: by 2002:a05:6602:13d4:b0:855:683d:d468 with SMTP id ca18e2360f4ac-85579fe5006mr245135939f.0.1739829369431;
-        Mon, 17 Feb 2025 13:56:09 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ee82c8d5b0sm1436012173.120.2025.02.17.13.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 13:56:08 -0800 (PST)
-Date: Mon, 17 Feb 2025 14:56:06 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, peterx@redhat.com,
- mitchell.augustin@canonical.com, clg@redhat.com, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH 4/5] mm: Provide page mask in struct follow_pfnmap_args
-Message-ID: <20250217145606.22b95d9b.alex.williamson@redhat.com>
-In-Reply-To: <c90376b4-0a8b-4db9-8b84-39325b1ac57e@redhat.com>
-References: <20250205231728.2527186-1-alex.williamson@redhat.com>
-	<20250205231728.2527186-5-alex.williamson@redhat.com>
-	<20250214101735.4b180123.alex.williamson@redhat.com>
-	<c90376b4-0a8b-4db9-8b84-39325b1ac57e@redhat.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ItSMsNHL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739829411;
+	bh=4VaQl0NtT63hn4RIkgnKAbuhy0jcZQTdg7q6kxOv9w4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ItSMsNHLFu60POXzGfILeItDV8X97590ll35srQbAmVX16kSPDUODZdf6YAxnsN1M
+	 KejkAQ6qv6fiX45IYVEGfQ+9XZP9r2U9WJimqPIeBCFZatdHkmwThy+bAgBvfOabPs
+	 UhoA6D8C6zcWU/x7BJa9B5QulVfrJ2ZIEhPjn/RJKyve4M7+8SFLm66heJQ/+tL/dg
+	 hgZIu110oCwxgZVRc3zHP822L/mW8SEmgVlh/bQMt7LuHIKs/ZPKY+3ow+o4lmLlEf
+	 LWfdqrhgvrupjCMvruyKtLbk1dffm3Gbz1SwI52UlDhj8awzUQqHwAEjRiiWH9yc+c
+	 doe5tyoH0nteg==
+Received: from earth.mtl.collabora.ca (mtl.collabora.ca [66.171.169.34])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1CEAE17E02BE;
+	Mon, 17 Feb 2025 22:56:44 +0100 (CET)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Algea Cao <algea.cao@rock-chips.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	kernel@collabora.com
+Subject: [PATCH v7 0/3] Add HDMI audio on the rk3588 SoC
+Date: Mon, 17 Feb 2025 16:47:39 -0500
+Message-ID: <20250217215641.372723-1-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Feb 2025 22:39:30 +0100
-David Hildenbrand <david@redhat.com> wrote:
+To support HDMI audio on the rk3588 based devices, the generic HDMI
+Codec framework is used in the dw-hdmi-qp DRM bridge driver.
 
-> On 14.02.25 18:17, Alex Williamson wrote:
-> > 
-> > Nudge.  Peter Xu provided an R-b for the series.  Would any other mm
-> > folks like to chime in here to provide objection or approval for this
-> > change and merging it through the vfio tree?  Series[1].  Thanks!
-> >   
-> 
-> Only skimmed over it, nothing jumped at me except ...
-> 
-> Nitpicking:
-> 
-> I was wondering if "page mask" really the right term here. I know that 
-> we use it in some context (gup, hugetlb, zeropage) to express "mask this 
-> off and you get the start of the aligned huge page".
-> 
-> For something that walks PFNMAPs (page frames without any real "huge 
-> page" logical metadata etc. grouping) it was uintuitive for me at first.
-> 
-> addr_mask or pfn_mask (shifted addr_mask) would have been clearer for me.
-> 
-> No strong opinion, just what came to mind while reading this ...
+The implementation is mainly based on the downstream driver, ported to the
+generic HDMI Codec framework [1] recently merged in the master branch.
+The parameters computation has been kept as is and the data stored in the
+dw_hdmi_qp struct as been cleaned up.
 
-It's called addr_mask in pfnmap_args_setup() so I'm happy to keep that
-naming if pgmask is less intuitive.  Thanks,
+The table for the N values has been edited to reflect N recommended values
+as well as CTS recommended values.
 
-Alex
+The downstream kernel also implements a machine driver for HDMI audio but
+it is doing exactly what the simple-audio-card driver does, so use that
+instead in the RK3588 SoC device tree.
+
+This adds HDMI audio support for both HDMI TX ports.
+
+*** Dependencies ***
+
+Based on Linus' master branch, but also needs Cristian's dts patches for HDMI1
+support [2], which depends on Heiko's patchset for
+phy-rockchip-samsung-hdptx [3]. Patches will apply without [3], but HDMI will
+not work (at all).
+
+[1]: https://lore.kernel.org/all/20241224-drm-bridge-hdmi-connector-v10-0-dc89577cd438@linaro.org
+[2]: https://lore.kernel.org/linux-rockchip/20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com
+[3]: https://lore.kernel.org/lkml/20241206103401.1780416-3-heiko@sntech.de/
+
+Changes since v6:
+ - Fix arguments alignement (checkpatch --strict warnings)
+ - Add hdmi1 audio support too
+ - Move hdmi0_sound node under hdmi0_out_con
+
+Changes since v5:
+ - Simplify audio math computation for N
+ - Move hdmi0-sound node up with other address-less nodes
+
+Changes since v4:
+ - Moved hdmi0_audio node the rk3588-base.dtsi
+ - Enable hdmi0_audio in rk3588-rock-5b.dts
+
+Changes since v3:
+ - Renamed function to start with dw_hdmi_qp
+
+Changes since v2:
+ - Also clear the audio infoframe
+ - Write AUDI_CONTENTS0 to its default value in case it gets overwritten.
+ - Store tmds_char_rate in the dw_hdmi_qp struct in atomic_enable
+ - Clear tmds_char_rate in atomic_disable and only write registers when
+   tmds_char_rate is not 0.
+ - Do not use connector_state duplicates
+
+Changes since v1:
+ - Remove useless audio_mutex (was used downstream for multiple drivers access
+   to audio functions)
+ - Let hdmi_codec build and setup audio infoframes
+ - Only access audio registers when connector is connected
+ - Rebased on master branch
+
+Detlev Casanova (2):
+  arm64: dts: rockchip: Add HDMI audio outputs for rk3588 SoC
+  arm64: dts: rockchip: Enable HDMI audio outputs for Rock 5B
+
+Sugar Zhang (1):
+  drm/bridge: synopsys: Add audio support for dw-hdmi-qp
+
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  17 +
+ .../arm64/boot/dts/rockchip/rk3588-extra.dtsi |  17 +
+ .../boot/dts/rockchip/rk3588-rock-5b.dts      |  16 +
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c  | 489 ++++++++++++++++++
+ 4 files changed, 539 insertions(+)
+
+-- 
+2.48.1
 
