@@ -1,133 +1,126 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D626B21B8FE;
-	Mon, 17 Feb 2025 12:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635D821C17E;
+	Mon, 17 Feb 2025 12:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797154; cv=none; b=MGGeBWFkIGCiZYMsB1WWm0BkVjxBQmKSqJI1+kuVI2McJvwcjg8K1AhffjWj8FGCAbaPuduNa6eq/ft6zVSfWTF1MtkreMaj33fj3GESYRlrStmKdnKYpVeBC/E8TKmyA/09FNX732zD+plYlBodKPBV14yGBL08a9Q729RWZCI=
+	t=1739797172; cv=none; b=MV9BY1m9syv/fPD227jxSTuFa9XlzKXWNFLjSNfE4l7VDw6xSGHIngupJ9aeN+dbXGrfNkVL29R7klKBHChkIAbdX36pY3DwU+7FTcV+Gc/QDQlIO234o2oQSR8fw/mZ3Qqm68VGvo6dVGJp1zAw6v4DX/HXvkxy9Ay8C6eAIC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797154; c=relaxed/simple;
-	bh=i+N2nth154zGkAult6jW7Vlqawpmm2vMrGQqF2gKW00=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vBNAL9+WrWWrzd66/k14dLgJl1R/yb0UZAjGTsnHAJrj4rSdMDsSDT7AUBDWaKGucphZpgYz9X51iGFgNeJXCSEyoaQ/IG2mlKUcgsUnAuZIq0BJaNbHqXsK5etVxNLkSJEpPP3/fRlvCDulvTgkrk5JFc1grTtRyQpnS8t0SKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=RaLMBegg; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+	s=arc-20240116; t=1739797172; c=relaxed/simple;
+	bh=w4qUqGu+pnae/CodpYx0ogkuKuGj2dZyD24Fd0C1thM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qePrcFIU5gHLBhenAvU5p/XKERszJshwNerTxpfN04sVIorVHJmY7LoQd/Kfrl+HzQ7lTTGQA+JUGPWiU+NUNnFeIf9kPOy5+WMRuR7mxSOohOaW/dKoLOZIpw+D0F3UeY/ZfsxxfupA7V+OCzwUebPBY3XHMV8HWh8Bm1113fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=qjVZpAJv; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="RaLMBegg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=crn1rBRCBq9NeaYIfa5zc62UtYSOR+W5jBXVKOJnYzE=; b=RaLMBegg3btEsFm0frqsfkJNTd
-	x+sEC64wp6y8JWfSatJP8P3Gs0B839+YWcpFlgDxJu7Vs/+XkZszFggc+cOaOeu7wB2kS7X9xT6La
-	1hGQNQJXvd/5eOEMFBuK8bfqFvwl38d4Lur3Lqx7/FDWt5uL3cUj/Z3XvgoS7Crhqzqo=;
-Received: from p5b206ef1.dip0.t-ipconnect.de ([91.32.110.241] helo=nf.local)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1tk0hx-006HRj-0H;
-	Mon, 17 Feb 2025 13:58:45 +0100
-Message-ID: <7932cd23-571e-4646-b5dd-467ec8106695@nbd.name>
-Date: Mon, 17 Feb 2025 13:58:44 +0100
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="qjVZpAJv"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HA0AP7030330;
+	Mon, 17 Feb 2025 07:59:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=NDHtPjXfrkrLO78RC509HQt7UeV
+	gB+a/yBdbiL+s/rU=; b=qjVZpAJv8d5dy02jovx0OawjPSnJXSB9JuKlOEBw5Tc
+	Y58WFUGAe9cRvutXeU2+yNvmVLhew/KDnNCYf+kksShsdUpYZyQl61cFy5hhB+N3
+	2R5W4lJR68gV4vf/ZVp6FVjhhy12ysL0r4q+3rSKBCvjUtgWJvRqnnCh5umIjccs
+	L2QexyeTXRbWT/8tK3/yBH4cOgPGV0k3emTZvGjY1Bt7ZU4+S6ryKGqoeBB3LohY
+	/3Dj8o7KNr6Woh9zKwUP+lXRRL02nRHZgDqnK/hlP0aJKZ+nuBAzrlWtGjhfszP1
+	hslswiNAXmnJr6v03brxeZDxJTIw9osXW9A940wbixQ==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 44v2ysrkub-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 07:59:15 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 51HCxEp4012185
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 17 Feb 2025 07:59:14 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 17 Feb 2025 07:59:14 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 17 Feb 2025 07:59:14 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 17 Feb 2025 07:59:14 -0500
+Received: from desktop-robi.ad.analog.com ([10.48.65.85])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51HCx3Eq018359;
+	Mon, 17 Feb 2025 07:59:05 -0500
+From: Robert Budai <robert.budai@analog.com>
+To: Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich
+	<Michael.Hennerich@analog.com>,
+        Nuno Sa <nuno.sa@analog.com>,
+        "Ramona
+ Gradinariu" <ramona.gradinariu@analog.com>,
+        Antoniu Miclaus
+	<antoniu.miclaus@analog.com>,
+        Robert Budai <robert.budai@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+        "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+Subject: [RESEND PATCH v8 0/6] Add support for ADIS16550
+Date: Mon, 17 Feb 2025 12:57:44 +0200
+Message-ID: <20250217105753.605465-1-robert.budai@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: bridge: locally receive all multicast packets if
- IFF_ALLMULTI is set
-To: Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
- Roopa Prabhu <roopa@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: bridge@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250217112621.66916-1-nbd@nbd.name>
- <37bf04ee-954e-461f-9e37-210a8c5a790a@blackwall.org>
-Content-Language: en-US
-From: Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
- cL98efvrjdstUfTCP2pfetyN
-In-Reply-To: <37bf04ee-954e-461f-9e37-210a8c5a790a@blackwall.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: USUwmwpAzYaJI1JtDR4r62nDSNRUELh1
+X-Proofpoint-ORIG-GUID: USUwmwpAzYaJI1JtDR4r62nDSNRUELh1
+X-Authority-Analysis: v=2.4 cv=ELj800ZC c=1 sm=1 tr=0 ts=67b332a3 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=TpNKFGk_wJGFTPuD7poA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_05,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=1 clxscore=1015 bulkscore=1 phishscore=0 suspectscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502170113
 
-On 17.02.25 12:54, Nikolay Aleksandrov wrote:
-> On 2/17/25 13:26, Felix Fietkau wrote:
->> If multicast snooping is enabled, multicast packets may not always end up on
->> the local bridge interface, if the host is not a member of the multicast
->> group. Similar to how IFF_PROMISC allows all packets to be received locally,
->> let IFF_ALLMULTI allow all multicast packets to be received.
->> 
->> Signed-off-by: Felix Fietkau <nbd@nbd.name>
->> ---
->>  net/bridge/br_input.c | 2 ++
->>  1 file changed, 2 insertions(+)
->> 
->> diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
->> index 232133a0fd21..7fa2da6985b5 100644
->> --- a/net/bridge/br_input.c
->> +++ b/net/bridge/br_input.c
->> @@ -155,6 +155,8 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
->>  			pkt_type = BR_PKT_MULTICAST;
->>  			if (br_multicast_rcv(&brmctx, &pmctx, vlan, skb, vid))
->>  				goto drop;
->> +			if (br->dev->flags & IFF_ALLMULTI)
->> +				local_rcv = true;
->>  		}
->>  	}
->>  
-> 
-> This doesn't look like a bug fix, IMO it should be for net-next.
-> 
-> Also you might miss a mcast stat increase, see the multicast code
-> below, the only case that this would cover is the missing "else"
-> branch of:
->                         if ((mdst && mdst->host_joined) ||
->                              br_multicast_is_router(brmctx, skb)) {
->                                  local_rcv = true;
->                                  DEV_STATS_INC(br->dev, multicast);
->                          }
-> 
-> So I'd suggest to augment the condition and include this ALLMULTI check there,
-> maybe with a comment to mention that all other cases are covered by the current
-> code so people are not surprised.
-Will do, thanks.
+The ADIS16550 is a complete inertial system that includes a triaxis gyroscope
+and a triaxis accelerometer. Each inertial sensor in the ADIS16550 combines
+industry leading MEMS only technology with signal conditioning that optimizes
+dynamic performance. The factory calibration characterizes each sensor for
+sensitivity, bias, and alignment. As a result, each sensor has its own dynamic
+compensation formulas that provide accurate sensor measurements.
 
-> By the way what is the motivation for supporting this flag? I mean you can
-> make the bridge mcast router and it will receive all mcast anyway.
+Robert Budai (6):
+  iio: imu: adis: Add custom ops struct
+  iio: imu: adis: Add reset to custom ops
+  iio: imu: adis: Add DIAG_STAT register
+  dt-bindings: iio: Add adis16550 bindings
+  iio: imu: adis16550: add adis16550 support
+  docs: iio: add documentation for adis16550 driver
 
-OpenWrt uses a user space daemon for DHCPv6/RA/NDP handling, and in 
-relay mode it sets the ALLMULTI flag in order to receive all relevant 
-queries on the network.
-This works for normal network interfaces and non-snooping bridges, but 
-not snooping bridges (unless, as you pointed out, multicast routing is 
-enabled).
+ .../bindings/iio/imu/adi,adis16550.yaml       |   74 ++
+ Documentation/iio/adis16550.rst               |  376 ++++++
+ Documentation/iio/index.rst                   |    1 +
+ MAINTAINERS                                   |   10 +
+ drivers/iio/imu/Kconfig                       |   13 +
+ drivers/iio/imu/Makefile                      |    1 +
+ drivers/iio/imu/adis.c                        |   35 +-
+ drivers/iio/imu/adis16550.c                   | 1149 +++++++++++++++++
+ include/linux/iio/imu/adis.h                  |   34 +-
+ 9 files changed, 1680 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
+ create mode 100644 Documentation/iio/adis16550.rst
+ create mode 100644 drivers/iio/imu/adis16550.c
 
-- Felix
+-- 
+2.34.1
+
