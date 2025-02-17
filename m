@@ -1,166 +1,260 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2066.outbound.protection.outlook.com [40.107.95.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC51199FA4;
-	Mon, 17 Feb 2025 07:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739777254; cv=fail; b=QfllNcKBlegTJ5M242Q/g5crgGyk5583OQma8LUObJeCSuUjzW/OEYd/l/lKN/vpMUQA8QB1KPlHkGBDzi7SgAiCGbMCkUJ8Cn6YzyPFA5ZLBlpYqZfRHu4a6OA4PEP+6rhsoLa+Sx4OrBSodFeINsJjpJVah/BgKzcBZT0gBtQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739777254; c=relaxed/simple;
-	bh=kekPsNfeXeBTThid7KrZ+PqSYfGAYiI7KUcXZWUcn0M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TF4MwyKQK2UbbSViHrXbFI5RwdxfiZwQwRZkRTyOScnLi68cbg9NQPjo3LJIJ0kpYPgW26hSJn7rnMHGmPANVmibI8+58fqA9poV3lWiR9xacTohOmdmF6ET98p2gnwyK3pNmLJqQN+RBdMBfSZPBUNUqSjasXNAMrCRFPFTnP8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OVcgxI1n; arc=fail smtp.client-ip=40.107.95.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OVcgxI1n"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bU27oe4cTr+Lb4yaxiedXPciWNnOyCQ/LB3feu4F75EpVleoNq5ICYxg6hUqqo85c0wVM0PQSj0NI3C/o7bR41iGxg8sZHlELqQB8b3rQOpJ4ziWun9xuDYjv6Hj2c0p7WTGZB/xfy8Vb4PTDhf60TvKgnDcgU/5fK1bbzuDpOE/36qZnxGxTxJSF3Ja/C/NY7+Q+YgG46jfN2GvnlNHGVtv1rAwXDib6Z5w5wErDZ0aQUioynyXeU+flubr4uhLiguVxF838yNaUzdki9ma9LwbiasETfN00DNkAY293wvnFoZ+EBAQeSXlBErw52LBv+Jq7+MYfN8873/lm3DfIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iuTziXkqYRhGVr9DD+rTC4/VG/2DwiQZ//dlfznXFqw=;
- b=sKC9t1EFsOzRk2Zd+/h3Wi86MzNLIpjsqFUoog8cDiYzszYJp7rKRoV/5GFxecP99/xYymDvN6dNTULh3uKKu8IlQsN3uuhF6zZyExNykBxh0sDzNWIp8DLc7NeX70H9IAII5wxOGGXb7KATpYTISpuHkj9567pfD7BLcp6wrmaDKJ4V0AK7LdSYFf1IqC9scL6ZI7epObdE3Qbjsf86BkwrWcwvUFNgttlQVkTN4qtWhaUmJd4hyLFbRJgt3XYYBUpCSvzBTksafGIFOY+B4hxEgLzP8FN1kKjWAXeCJfqJ9VPw35oL4FBwcmcjprXZS0vwFSZ0Vf2TTnwkQCvsxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iuTziXkqYRhGVr9DD+rTC4/VG/2DwiQZ//dlfznXFqw=;
- b=OVcgxI1n3gpkNjvVvGFgwXQ8jQudoO8VAJuvceZVwwZTX82jg2DN3sJhpKTVS77+xMfcaXep4zw82ZcmgJOQnsyGrvU/j8dRt09RHTmQDoLjlekojsWd3dkKsLn7E2htPdjS8QGMJSWqYwK/SE5ZMsLHdJaL62fGh0Wqv6JDYw4=
-Received: from SA9PR13CA0166.namprd13.prod.outlook.com (2603:10b6:806:28::21)
- by CH3PR12MB7497.namprd12.prod.outlook.com (2603:10b6:610:153::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
- 2025 07:27:28 +0000
-Received: from SA2PEPF00001504.namprd04.prod.outlook.com
- (2603:10b6:806:28:cafe::e4) by SA9PR13CA0166.outlook.office365.com
- (2603:10b6:806:28::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.8 via Frontend Transport; Mon,
- 17 Feb 2025 07:27:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SA2PEPF00001504.mail.protection.outlook.com (10.167.242.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Mon, 17 Feb 2025 07:27:28 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Feb
- 2025 01:27:24 -0600
-Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 17 Feb 2025 01:27:21 -0600
-From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, Thippeswamy Havalige
-	<thippeswamy.havalige@amd.com>, Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3 1/2] dt-bindings: PCI: xilinx-cpm: Add compatible string for CPM5NC Versal Net host
-Date: Mon, 17 Feb 2025 12:57:12 +0530
-Message-ID: <20250217072713.635643-2-thippeswamy.havalige@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250217072713.635643-1-thippeswamy.havalige@amd.com>
-References: <20250217072713.635643-1-thippeswamy.havalige@amd.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FDD219D8A0;
+	Mon, 17 Feb 2025 07:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739777259; cv=none; b=WwUWjrMuc1EC/TAaYkojscIAiertN7UfzF0xij5lZP5kxNmbiyV7/DhuU6QYO3sBRrxIFs2PkhY0kdApF2JalllkgBILQh7YRH1knv3ii4OziCy7fpiDTw09rMfXZ626HODfWzm9ai6jvS/QxeQdDh7aOhC8SeV6JxtdUOx3zsQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739777259; c=relaxed/simple;
+	bh=UeWwVPWbzIIAgtLdrtpQdDnl7IKv66IredifQ9C1934=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fw65lCVq56SOQFBNSEjKWltpz8qG45BYepzFiLSk4UboINYamDnkGuUjopvZ/IVnAgEuDqNF2KRuK8plPk02G/OKQE1beyvCtghPUnhjDn42UuYc6uXT8G8V8PLRUAEuh3R1+DqLvEPMFCtlrZ+S3TrdsY2gRZM/Ko7DRCLshuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD608FEC;
+	Sun, 16 Feb 2025 23:27:55 -0800 (PST)
+Received: from [10.162.41.27] (K4MQJ0H1H2.blr.arm.com [10.162.41.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A61563F6A8;
+	Sun, 16 Feb 2025 23:27:23 -0800 (PST)
+Message-ID: <021f76c6-f9d5-4685-814f-4d6c573b22e6@arm.com>
+Date: Mon, 17 Feb 2025 12:57:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: thippeswamy.havalige@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001504:EE_|CH3PR12MB7497:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e61153a-ad2d-44a8-ec57-08dd4f248883
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?X551SdLTcNeX3rjhe9qCP9T9N99fA5rx2pMR8qvvT4RoEUFaFzCCZzv6pu52?=
- =?us-ascii?Q?gSlsEufT373IAioVYGwxpZ/46Zk/buOxanSDgLKEqZKABAj7lhStAmLZvpsl?=
- =?us-ascii?Q?9QP5OoP0KtWTjgXi1c0rccuwlgXNEqvCD32010c89sQgNxwKB7bM7NBrbPvz?=
- =?us-ascii?Q?nT/8FTJ5yNtvBlGHmmIMfkBMVshpIT50rqkjBg1DN6IsOtO4u+a1hDjnoaXx?=
- =?us-ascii?Q?OClAIfqU0jRnWpXujKQbSXaQRStBUO+RsP1i4GVdZpI1WpTpENSYcaDGUBX6?=
- =?us-ascii?Q?19zgATPuZ2/y594KHqRFprwbrTfHl6vMBki2mybysoHbFI/3EsuTqCN02IhL?=
- =?us-ascii?Q?RAE4Q/Ld2RLJkoYEw6t5mzMrKCZ/m71q2YXuTblW9CDLaP2QXMcdCn4qCJ7o?=
- =?us-ascii?Q?uLfQ2feUM77AWEKprTfRgE1cAnWwaDgCm9PJJ7Et5wrqsEEOVaYtaSovLPdG?=
- =?us-ascii?Q?VPvo+onuCtuH/Q8EXQi7j9NLskgNRFw0TLa7U5M25rG5S/umxwgPBhiivPxz?=
- =?us-ascii?Q?uk4ERzGNYC9d7S7Xfp1zZjjF/RZB9SNixvfQ67eCTgzOEHbv8QQxpSzD61W/?=
- =?us-ascii?Q?dmqFkAkEO2ktfJp1LBTfBRaUaSBIZLDFim7f4vwjwu1ifASNaMu3X5J96Oqd?=
- =?us-ascii?Q?PwLYIm1EfILWbMRPQLvS42FrmBXeb1Fb4qr30Dq8+qQdlaf+pZKb9BxzVoIm?=
- =?us-ascii?Q?uQLOT4/TbZGhMoa0u+jACe3Jwf1vj3WAdecXJsKKvApYlEOMfSG61SybYLdQ?=
- =?us-ascii?Q?LlPuivKuRS76bx+8bud9MA9IqFijLiZaNd7dSExyhAcw3Zpdd6X+7wcnF8WH?=
- =?us-ascii?Q?0ukcjpk3CirQ0DcpKfLejPRVC02qT1erl3V8HgJ/ccajPTFCULKZOcyN5gx/?=
- =?us-ascii?Q?YLKtUkk6Rh70gv3UoFq/bisJ09GRc0/wdRi/NXkytlrulC1aaphLk2c46EWh?=
- =?us-ascii?Q?WCoU8GXreX2OqOy8g1f4GRU7MZpnZQFenh7IxTTPzPHbO+7uGj8mWGGfhUDV?=
- =?us-ascii?Q?SgwDTsNPkV6BUmAU4I642BIC0PrNahFJhuB2mI+1zgy4juA2vwdaWODLXuKV?=
- =?us-ascii?Q?IDBsPnWtvOwUP6uwisrZotH1lrDf3WjoY+gJcCHv1l1Mvb0xzTj3QoUnkTzU?=
- =?us-ascii?Q?Zo+3i6pHaKoQ1Eox/slV28lFvAqPxDOx0flJIbbi8t4qjpEpZr0frUw+mCWp?=
- =?us-ascii?Q?pcGLbozCq47HVZbN29yrn0cHxFVK+E5j2cjdr/d+/BMi65mvQZzYGMoml0H7?=
- =?us-ascii?Q?G4T3373be3szfxQ19nvOKzfZkFkhMnLpEB0dbjF4hp44pBPL+Z40IoCVisfQ?=
- =?us-ascii?Q?+bRRNujCtDBXD2MuNEkSBP4DIzcAomSMwsdHF/ty2b8h8wXT19XkqoGswc28?=
- =?us-ascii?Q?WH8CWiPsCiIW5tMfb96LV8pCrA+ru6/6bEYtVHGh8nDUqqeAaeBrjIZHd61s?=
- =?us-ascii?Q?vY69G6kdY3J/XYawPA4RvX08BtHBjFunZggOOyKjH0BgSYM4XSuFaJXCyWrn?=
- =?us-ascii?Q?tih3+AWI8fR6pFA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 07:27:28.3461
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e61153a-ad2d-44a8-ec57-08dd4f248883
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001504.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7497
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 6/9] khugepaged: introduce khugepaged_scan_bitmap for
+ mTHP support
+To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
+ dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
+ jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
+ hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
+ peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ziy@nvidia.com, jglisse@google.com, surenb@google.com,
+ vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
+ jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
+ raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
+ audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <20250211003028.213461-7-npache@redhat.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250211003028.213461-7-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The Xilinx Versal Net series has Coherency and PCIe Gen5 Module
-Next-Generation compact (CPM5NC) block which supports Root Port
-controller functionality at Gen5 speed.
 
-Error interrupts are handled CPM5NC specific interrupt line and
-INTx interrupt is not support.
 
-Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
-Changes in v2:
-- Update commit message to INTx
-Changes in v3:
-- None
----
- Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On 11/02/25 6:00 am, Nico Pache wrote:
+> khugepaged scans PMD ranges for potential collapse to a hugepage. To add
+> mTHP support we use this scan to instead record chunks of fully utilized
+> sections of the PMD.
+> 
+> create a bitmap to represent a PMD in order MTHP_MIN_ORDER chunks.
+> by default we will set this to order 3. The reasoning is that for 4K 512
+> PMD size this results in a 64 bit bitmap which has some optimizations.
+> For other arches like ARM64 64K, we can set a larger order if needed.
+> 
+> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
+> that represents chunks of utilized regions. We can then determine what
+> mTHP size fits best and in the following patch, we set this bitmap while
+> scanning the PMD.
+> 
+> max_ptes_none is used as a scale to determine how "full" an order must
+> be before being considered for collapse.
+> 
+> If a order is set to "always" lets always collapse to that order in a
+> greedy manner.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>   include/linux/khugepaged.h |  4 ++
+>   mm/khugepaged.c            | 89 +++++++++++++++++++++++++++++++++++---
+>   2 files changed, 86 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+> index 1f46046080f5..1fe0c4fc9d37 100644
+> --- a/include/linux/khugepaged.h
+> +++ b/include/linux/khugepaged.h
+> @@ -1,6 +1,10 @@
+>   /* SPDX-License-Identifier: GPL-2.0 */
+>   #ifndef _LINUX_KHUGEPAGED_H
+>   #define _LINUX_KHUGEPAGED_H
+> +#define MIN_MTHP_ORDER	3
+> +#define MIN_MTHP_NR	(1<<MIN_MTHP_ORDER)
+> +#define MAX_MTHP_BITMAP_SIZE  (1 << (ilog2(MAX_PTRS_PER_PTE * PAGE_SIZE) - MIN_MTHP_ORDER))
+> +#define MTHP_BITMAP_SIZE  (1 << (HPAGE_PMD_ORDER - MIN_MTHP_ORDER))
+>   
+>   extern unsigned int khugepaged_max_ptes_none __read_mostly;
+>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 3776055bd477..c8048d9ec7fb 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -94,6 +94,11 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
+>   
+>   static struct kmem_cache *mm_slot_cache __ro_after_init;
+>   
+> +struct scan_bit_state {
+> +	u8 order;
+> +	u16 offset;
+> +};
+> +
+>   struct collapse_control {
+>   	bool is_khugepaged;
+>   
+> @@ -102,6 +107,15 @@ struct collapse_control {
+>   
+>   	/* nodemask for allocation fallback */
+>   	nodemask_t alloc_nmask;
+> +
+> +	/* bitmap used to collapse mTHP sizes. 1bit = order MIN_MTHP_ORDER mTHP */
+> +	DECLARE_BITMAP(mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
+> +	DECLARE_BITMAP(mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
+> +	struct scan_bit_state mthp_bitmap_stack[MAX_MTHP_BITMAP_SIZE];
+> +};
+> +
+> +struct collapse_control khugepaged_collapse_control = {
+> +	.is_khugepaged = true,
+>   };
+>   
+>   /**
+> @@ -851,10 +865,6 @@ static void khugepaged_alloc_sleep(void)
+>   	remove_wait_queue(&khugepaged_wait, &wait);
+>   }
+>   
+> -struct collapse_control khugepaged_collapse_control = {
+> -	.is_khugepaged = true,
+> -};
+> -
+>   static bool khugepaged_scan_abort(int nid, struct collapse_control *cc)
+>   {
+>   	int i;
+> @@ -1112,7 +1122,8 @@ static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
+>   
+>   static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   			      int referenced, int unmapped,
+> -			      struct collapse_control *cc)
+> +			      struct collapse_control *cc, bool *mmap_locked,
+> +				  u8 order, u16 offset)
+>   {
+>   	LIST_HEAD(compound_pagelist);
+>   	pmd_t *pmd, _pmd;
+> @@ -1130,8 +1141,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   	 * The allocation can take potentially a long time if it involves
+>   	 * sync compaction, and we do not need to hold the mmap_lock during
+>   	 * that. We will recheck the vma after taking it again in write mode.
+> +	 * If collapsing mTHPs we may have already released the read_lock.
+>   	 */
+> -	mmap_read_unlock(mm);
+> +	if (*mmap_locked) {
+> +		mmap_read_unlock(mm);
+> +		*mmap_locked = false;
+> +	}
+>   
+>   	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED)
+> @@ -1266,12 +1281,71 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   out_up_write:
+>   	mmap_write_unlock(mm);
+>   out_nolock:
+> +	*mmap_locked = false;
+>   	if (folio)
+>   		folio_put(folio);
+>   	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result);
+>   	return result;
+>   }
+>   
+> +// Recursive function to consume the bitmap
+> +static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long address,
+> +			int referenced, int unmapped, struct collapse_control *cc,
+> +			bool *mmap_locked, unsigned long enabled_orders)
+> +{
+> +	u8 order, next_order;
+> +	u16 offset, mid_offset;
+> +	int num_chunks;
+> +	int bits_set, threshold_bits;
+> +	int top = -1;
+> +	int collapsed = 0;
+> +	int ret;
+> +	struct scan_bit_state state;
+> +
+> +	cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +		{ HPAGE_PMD_ORDER - MIN_MTHP_ORDER, 0 };
+> +
+> +	while (top >= 0) {
+> +		state = cc->mthp_bitmap_stack[top--];
+> +		order = state.order + MIN_MTHP_ORDER;
+> +		offset = state.offset;
+> +		num_chunks = 1 << (state.order);
+> +		// Skip mTHP orders that are not enabled
+> +		if (!test_bit(order, &enabled_orders))
+> +			goto next;
+> +
+> +		// copy the relavant section to a new bitmap
+> +		bitmap_shift_right(cc->mthp_bitmap_temp, cc->mthp_bitmap, offset,
+> +				  MTHP_BITMAP_SIZE);
+> +
+> +		bits_set = bitmap_weight(cc->mthp_bitmap_temp, num_chunks);
+> +		threshold_bits = (HPAGE_PMD_NR - khugepaged_max_ptes_none - 1)
+> +				>> (HPAGE_PMD_ORDER - state.order);
+> +
+> +		//Check if the region is "almost full" based on the threshold
+> +		if (bits_set > threshold_bits
+> +			|| test_bit(order, &huge_anon_orders_always)) {
+> +			ret = collapse_huge_page(mm, address, referenced, unmapped, cc,
+> +					mmap_locked, order, offset * MIN_MTHP_NR);
+> +			if (ret == SCAN_SUCCEED) {
+> +				collapsed += (1 << order);
+> +				continue;
+> +			}
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index b63a759ec2d7..d674a24c8ccc 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -18,6 +18,7 @@ properties:
-       - xlnx,versal-cpm-host-1.00
-       - xlnx,versal-cpm5-host
-       - xlnx,versal-cpm5-host1
-+      - xlnx,versal-cpm5nc-host
- 
-   reg:
-     items:
--- 
-2.43.0
+If collapse_huge_page() fails due to hugepage_vma_revalidate() or 
+find_pmd_or_thp_or_none(), you should exit.
+
+
+> +		}
+> +
+> +next:
+> +		if (state.order > 0) {
+> +			next_order = state.order - 1;
+> +			mid_offset = offset + (num_chunks / 2);
+> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +				{ next_order, mid_offset };
+> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +				{ next_order, offset };
+> +			}
+> +	}
+> +	return collapsed;
+> +}
+> +
+>   static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   				   struct vm_area_struct *vma,
+>   				   unsigned long address, bool *mmap_locked,
+> @@ -1440,7 +1514,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   	pte_unmap_unlock(pte, ptl);
+>   	if (result == SCAN_SUCCEED) {
+>   		result = collapse_huge_page(mm, address, referenced,
+> -					    unmapped, cc);
+> +					    unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
+>   		/* collapse_huge_page will return with the mmap_lock released */
+>   		*mmap_locked = false;
+>   	}
+> @@ -2856,6 +2930,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>   	mmdrop(mm);
+>   	kfree(cc);
+>   
+> +
+>   	return thps == ((hend - hstart) >> HPAGE_PMD_SHIFT) ? 0
+>   			: madvise_collapse_errno(last_fail);
+>   }
 
