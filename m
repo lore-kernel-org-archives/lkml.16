@@ -1,37 +1,37 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD28149E16
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 15:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DB02253E3
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 15:46:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807166; cv=none; b=aGz0bCQGN5vFXJfVK6vwoZD+pPOQPZQZxY1rwD2SLK1JTBGSXrN8Vixbn4G+0cVn3xRIKSucaT+C6+ASPPghXoIv17C8FgE7cy8reQ/F2O4CEq2CdsCt+CzflpKXG5Qi2SBCybvq9AGWB567RRFG74t1zWfktA0ldFwFx8dcwP4=
+	t=1739807167; cv=none; b=YFdT7zvOXIOltM7lH0/ymkK6OMoB7g/qKtccKtfl/WbMK1Lhs0DFaHH8QiE7abzFJKyPVojlXQSK3C6SPPn8OmgQEKemTATac1n0JMjZgOI0WqsvJCAdV6rugszs5eDhMdr2+p9h7OWoli+ZR2Ja31QDEHUTfTjgzc3YtOuoSIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739807166; c=relaxed/simple;
-	bh=/uqOeds0M0ID5ri9rEbpAmZsjCMNziSxoN+UzQFuIgs=;
+	s=arc-20240116; t=1739807167; c=relaxed/simple;
+	bh=4v7Zg1rPLNlp0Up7AEF242+X8SEmJUSbJ2jx53n/788=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nc4AlBDPqw+S3PEqrXeGNkzWJL1ZJRYnSn6gtN5JhRU8q8pP+pLUxOn207TyIS6wY9JSb6pPby5/hZKoFHVFRjlRy1qIFhxtN4kwSdq2aelE/ExO0JjINz2+jpyqB+oB+n/EpWx8IRb31Cp2X3zEW9tOtC32Oadabg2p+u+a0/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Rb8ndbKK; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:Content-Type; b=ls4BZRmKrUgTr/dgCSh9PVERCaeEZNRrPyqdALV0R6OoV0Uk5v9UfUiwP06PxEJ4oJQV7gnlxnKUQss6Fjtg4ryAbH0OaIk+/QA2+YOfpKHO2ATfOPcSmqOibTQnWFSsbPaAccEVGq7Uw3SRPAzPSv54+IxFr0N6lTdqLjgpxlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kQcEgj3e; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Rb8ndbKK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DFB7744339;
-	Mon, 17 Feb 2025 15:46:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kQcEgj3e"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 096404433B;
+	Mon, 17 Feb 2025 15:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739807162;
+	t=1739807164;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s3yUAotaIJfeVwD8zWHiueTUD05e9jcuB1jgWdvIKew=;
-	b=Rb8ndbKKE/ceqgKHcXmOm+XWT8Ka8La+njCQO2xceNovIyS3+pNX62JbqrQOg11oqXn+vE
-	FQVvsrMr4U0gDWIRX/v3l0ZMpjpLbrho0zwjQQVjEJxiFtClSW/lW9N7GSVa1NHAQ+bRFz
-	oNqgi/nqm8jUWuhJ5pZ+ZiNe9tnCv7S7PexxKfNOf82aNZiUecPwl0koiNh2ux1X9ry2Pa
-	HOrRrefwiU8Oy7FUavxZv46CK0ZgejyaVtjJdc1iAgWlUByMC3ButRyCrfSvlS4rSYrRqd
-	2008liNTRcBWfpjVgoymoWo553sX6YclOYdLcLQlgpjZaukxl182Ab1B3N76Pw==
-Message-ID: <09d7235e-d81d-4f40-9ad5-1f414fbb0c54@bootlin.com>
-Date: Mon, 17 Feb 2025 16:45:38 +0100
+	bh=3+rynXNCggtvNCMqRoAahZ4Kw2h8tKJhTLOP9j1alYI=;
+	b=kQcEgj3eE2obgzKEjF60pAE1EUaO3hywPpFXvUJaIcooVnnjm2b4mBkQjQ7YG8uzS0pCRC
+	KEeWQjMiCygsGZYkIrlOqYdGdJyC/LmooVxxKHK+fh7aF4MHQBvS99X27ouqM+OIEyYKo3
+	/UWISTDO35YFCBJ6mw6qjn6KIH+cI8sLXuTW4k9YBUyRD+h/4Sm2n62u94z19n7G19D5YM
+	5KNELd+IZ9/7oH6BYHPYFhYsFh/3IJbFSXEu5LEGFXUaWVvpsDTaV3AxDanCwOTwJll6Xi
+	kUanBf+ztP9g/taljnZUIi4lPeaa2O7qT/UIGHRVOQEoUl1tYZpl97nqK1pidA==
+Message-ID: <246a570c-7e43-468d-9c07-a18aef40925f@bootlin.com>
+Date: Mon, 17 Feb 2025 16:45:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,14 +39,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/14] drm/vkms: Allow to configure multiple CRTCs
+Subject: Re: [PATCH v3 12/14] drm/vkms: Allow to attach encoders and CRTCs
 To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
 Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
  maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
  airlied@gmail.com, dri-devel@lists.freedesktop.org,
  linux-kernel@vger.kernel.org
 References: <20250217100120.7620-1-jose.exposito89@gmail.com>
- <20250217100120.7620-10-jose.exposito89@gmail.com>
+ <20250217100120.7620-13-jose.exposito89@gmail.com>
 Content-Language: en-US
 From: Louis Chauvet <louis.chauvet@bootlin.com>
 Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
@@ -103,7 +103,7 @@ Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
  PdjUMWb5Ld21PSyCrtGc/hTKwxMoHsOZPy6UB8YJ5omZdsavcjKMrDpybguOfxUmGYs2H3MJ
  ghIUQMMOe0267uQcmMNDPRueGWTLXcuyz0Tpe62Whekc3gNMl0JrNz6Gty8OBb/ETijfSHPE
  qGHYuyAZJo9A/IazHuJ+4n+gm4kQl1WLfxoRMzYHCA==
-In-Reply-To: <20250217100120.7620-10-jose.exposito89@gmail.com>
+In-Reply-To: <20250217100120.7620-13-jose.exposito89@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
@@ -115,49 +115,20 @@ X-GND-Sasl: louis.chauvet@bootlin.com
 
 
 Le 17/02/2025 à 11:01, José Expósito a écrit :
-> Add a list of CRTCs to vkms_config and helper functions to add and
-> remove as many CRTCs as wanted.
+> Add a list of possible CRTCs to the encoder configuration and helpers to
+> attach and detach them.
 > 
-> For backwards compatibility, add one CRTC to the default configuration.
-> 
-> A future patch will allow to attach planes and CRTCs, but for the
-> moment there are no changes in the way the output is configured.
+> Now that the default configuration has its encoder and CRTC correctly
+> attached, configure the output following the configuration.
 > 
 > Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> ---
->   .clang-format                                 |  1 +
->   drivers/gpu/drm/vkms/tests/vkms_config_test.c | 73 ++++++++++++++++-
->   drivers/gpu/drm/vkms/vkms_config.c            | 63 ++++++++++++++-
->   drivers/gpu/drm/vkms/vkms_config.h            | 80 +++++++++++++++++++
->   4 files changed, 212 insertions(+), 5 deletions(-)
-> 
-> diff --git a/.clang-format b/.clang-format
-> index c585d2a5b395..e7a901c3617d 100644
-> --- a/.clang-format
-> +++ b/.clang-format
-> @@ -690,6 +690,7 @@ ForEachMacros:
->     - 'v4l2_m2m_for_each_src_buf'
->     - 'v4l2_m2m_for_each_src_buf_safe'
->     - 'virtio_device_for_each_vq'
-> +  - 'vkms_config_for_each_crtc'
->     - 'vkms_config_for_each_plane'
->     - 'while_for_each_ftrace_op'
->     - 'xa_for_each'
-> diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-> index fe6f079902fd..6a89361601a0 100644
-> --- a/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-> +++ b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-> @@ -25,6 +25,7 @@ static void vkms_config_test_empty_config(struct kunit *test)
->   	KUNIT_EXPECT_STREQ(test, vkms_config_get_device_name(config), "test");
->   
->   	KUNIT_EXPECT_TRUE(test, list_empty(&config->planes));
-> +	KUNIT_EXPECT_TRUE(test, list_empty(&config->crtcs));
 
-Ditto, with this modification:
 Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 
+Thanks,
+Louis Chauvet
 -- 
 Louis Chauvet, Bootlin
 Embedded Linux and Kernel engineering
