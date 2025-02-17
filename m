@@ -1,71 +1,127 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9C6224AE4;
-	Mon, 17 Feb 2025 14:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B48333F7;
+	Mon, 17 Feb 2025 14:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739804282; cv=none; b=rJiLFY8n23BjYDSObeCD2PBarfXB7nX/WEs9Y8quYZH19pE4eOU8IgtgukVMkGC1ldeP+sJp8OWc12SECgOAJJjPxWavTXz+CTm9/p/VZNHIA5XqQFhperVwO09sBgtfYtCOhWDPmV6f8Z1VlQ960tT+pOPvw9R/CE1zBwdQy78=
+	t=1739804348; cv=none; b=SaUVw/k0t9nkoV9ts9jNCRcKPL9EFytOVU4ss9U1UtgCFqsitlop7EsPBVxn5EG/Op7KOWhRFbrkbJkU/ZVOOwF7dkbqD1/WKVsTG7ja60FhfW9yTu0M505Z8rtY1mtlGvzCLwvzorrOONsKsryUMJAuugQkcxcpOrAiJ6hxPro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739804282; c=relaxed/simple;
-	bh=oFREPRNZa45E3UdEZrVYc6OmAJuZkoV5lwsXCtv0TpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n1QtQCp580xlWflcPC/ZzUFUCunoUEH71jAVv8iPRKMGjyNnCqG0YMxj5CgXnYleIZs/Pi+NmsAIH1K/Jz3EQj7lwLDvbulvcZ6jmJtd2YJ3pCdKA4FnIL87bC7vGfbnz9qV8zCU8yMUwKoRCAz7j49PWAK17fk+YWrFlEvRDbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ihS6qqtz; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1739804348; c=relaxed/simple;
+	bh=ERnk50qO8ESnP0PF7hrTKoSofKjNzmyUIRNoPQMEOnM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wa8EBw09vr1IwhKs032Pvtn7lVi4njCLzqqM8jjmBrZDNWx2Rf65vbozS0fE/hBKltaAgKiEGa4XDiNblHvdSy6F9EQcH/o0wTQuOFw+uHO52Uqs01SdK/f34CO+gMgrh+KGyP8iJ2a4omG6VJiImsYNJ4pmC5LppDKktyawsSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DeXF8cOQ; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ihS6qqtz"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 9F86D1F956;
-	Mon, 17 Feb 2025 15:57:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1739804271;
-	bh=/J0M76EHLwXF8izY2or6AGdmLcAi2R2p1SP1NPe54No=; h=From:To:Subject;
-	b=ihS6qqtzYLa/4UrM8vEANaKhv1K7W1vu7YaxW8dYNBgTwm2rKEoIclP+vhsPulaic
-	 kRnr2LMnwa2np2SKRJ9s+YxpxV2uexOEOv2XZr7KNXYPwH8S0auBu6tK8bbvKo4TtH
-	 AFLHOixqW3ZR7DDS8fNw0IbqJoHUkEZEalN9U7P+jCCrSrJ1dht4ol0S0LeYlwkY9r
-	 lg3Ug4pPzMvuDMcmkkHHlTxIkBx60RRWJIXirXPiIF06ypLffwE6Zx8l7powv5rVTu
-	 wtVwouWalc1KBJWXJygaaIgcoX/U+sec1UjJktIzd5wERFd7NGfXsFYUm2GihJI5wH
-	 zsN9rwUu82//Q==
-Date: Mon, 17 Feb 2025 15:57:46 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Stefan Eichenberger <eichest@gmail.com>
-Cc: nm@ti.com, vigneshr@ti.com, kristo@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, jai.luthra@linux.dev,
-	francesco.dolcini@toradex.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62-verdin-dahlia: add Microphone
- Jack to sound card
-Message-ID: <20250217145746.GA55060@francesco-nb>
-References: <20250217144643.178222-1-eichest@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeXF8cOQ"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e02eba02e8so3304495a12.0;
+        Mon, 17 Feb 2025 06:59:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739804345; x=1740409145; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V3nen2ZQWjVU3j6z5FoLCBIj9fu+yhn4VYwilHW5oo4=;
+        b=DeXF8cOQeISpsJuQBWMbZUhOpVZb2UrtRgP1Rbz7/e88hxrS0PTGb7T5gjdPuIegvP
+         GYoWxQ93Akd1WsSlxMCPBt48Uf2H26Fw9/E5T9DmLxt6yjSPXsokMjv2qWO4rzBPqGxJ
+         6dYl53r8zjW+tsM9H0DWuZe0sYoihLlrzM2TkyazbDW57X1+zBj8u85XMonvjifiMgqc
+         hylOGkNqNR8r8wnn1yufFBb3PYDUducn+c0OWlpr6IwJHfB5qv8xyiBEGAPPC/W8OuI7
+         vNE2PHfAJ3/exmgmTrdS4e78uheRAxwOERQsyrtZn2cVO/BQUVJskT6IDLrG4KocK5nP
+         pFRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739804345; x=1740409145;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V3nen2ZQWjVU3j6z5FoLCBIj9fu+yhn4VYwilHW5oo4=;
+        b=Y1nawCb7WP+aZ+qMbPFLQKiCeo12jg9ZXJavJdJR1KfpZCvoWoRmPKfsElFtYtEPMX
+         Jecu9YhfigleE1ezbMy94ZJ/KyPK0UYr4/gJt+dA0Z88G5dqB5yQLw9HGrf2xInKwExz
+         NrPbH+m+xTufQXqAq1hzFYZIc+lEf+wVQM2OZZcojiMgnRb79HzAbl9YCdCsAZVmOEWk
+         81bR2vvp/nCqjCgeE7U9DfAj8sSchPb8mYIMhusNAm6RxlPRkGCO3gyzvm+kXvPzNB2A
+         +P6xI7i1otHgkTWkrP1l6eziYggT2teD/yLTM0gozreI4Uq7RLtMBlJMzH1au8KDEQ/P
+         aL9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVPETRCeQyUbFkKjAiJzzpwDrEkK51yTc2O64KUhR7FoKNJ9BDFuCbC27aUaygadCao5YCgAAi6kGl5YBxK7vUn@vger.kernel.org, AJvYcCVe4wGqAm9lZq9EcDKWymsDw4Pq8KFgyJFgSgUPezoVurTUvuuYtioNoSDfP2qpFzlC/sHYvBFL0fOMtJHw@vger.kernel.org, AJvYcCVg4v/oPqVORtlkHhGECd3lDBxfv1KJHzia3kspjR0D2vkUoUHXif50Wdr/UJAbVd+LxhlEkC2la/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3v6xGtE9/RKngydLCvjfyukVEp7lj9ETRvhwUcTPwKmdLPr4u
+	Bm/ncFR8Qr3M//KI81LH0eHIZRSEc7xh9uTRIhOb3oRYckqIU6la
+X-Gm-Gg: ASbGncsfDlhAliFVb2As1hAuP84BdpjgQitT7GiXxxTMzKtjJPea/Ybt3Nyhsr1KpDQ
+	fqBz6FPLlvMsDe70Zrp2JluyjRSEpfN9KsNj7u/zIi59cPiOQrXgfnxSUOtq6lmf3cXcWCSwAcd
+	EQEGvz/c3jx1O0pjcnB7sjgu5+rk9q4gA/ZkwoYyJlLxmdLS/W1xvCP6oPM2LuaRfc2jHAFb2zn
+	FamKfrRy2lU7d5K/n9IyiYS1eh5mdH+Sr1dKZx/zwFPV1pr7Op/OzQVPtzqJ5Ut75l70yceKOdl
+	bccizY/asdIfvDhL2Ea/YOIpe8Lj8ZIdA6xMjx3NeN38gV+YZcDuY3Mw+8TEww==
+X-Google-Smtp-Source: AGHT+IHnTe7KbjcGi7WwFaMqNdoMpfbMfKQ+td8TFe4oH2WZRF5Wq21aBNuVyz43A+JwkZE5XJcgAQ==
+X-Received: by 2002:a05:6402:2114:b0:5de:bdbd:6f19 with SMTP id 4fb4d7f45d1cf-5e036171605mr9768671a12.27.1739804344242;
+        Mon, 17 Feb 2025 06:59:04 -0800 (PST)
+Received: from ?IPV6:2a03:83e0:1126:4:fb:39c9:9a24:d181? ([2620:10d:c092:500::7:6466])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e05168c467sm2448555a12.48.2025.02.17.06.59.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 06:59:03 -0800 (PST)
+Message-ID: <c4d7c1e0-e83b-4666-8bfb-1220b59251c2@gmail.com>
+Date: Mon, 17 Feb 2025 14:59:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217144643.178222-1-eichest@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 1/5] mm: defer THP insertion to khugepaged
+To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org
+Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
+ dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
+ jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
+ hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
+ peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ziy@nvidia.com, jglisse@google.com, surenb@google.com,
+ vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
+ jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
+ raquini@redhat.com, dev.jain@arm.com, sunnanyong@huawei.com,
+ audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, tiwai@suse.de,
+ baolin.wang@linux.alibaba.com, corbet@lwn.net, shuah@kernel.org
+References: <20250211004054.222931-1-npache@redhat.com>
+ <20250211004054.222931-2-npache@redhat.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <20250211004054.222931-2-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 17, 2025 at 03:46:04PM +0100, Stefan Eichenberger wrote:
-> From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
-> 
-> The simple-audio-card's microphone widget currently connects to the
-> headphone jack. Routing the microphone input to the microphone jack
-> allows for independent operation of the microphone and headphones.
-> 
-> This resolves the following boot-time kernel log message, which
-> indicated a conflict when the microphone and headphone functions were
-> not separated:
->   debugfs: File 'Headphone Jack' in directory 'dapm' already present!
-> 
-> Fixes: f5bf894c865b ("arm64: dts: ti: verdin-am62: dahlia: add sound card")
-> Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-Cc:stable@vger.kernel.org
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Francesco
+On 11/02/2025 00:40, Nico Pache wrote:
+> setting /transparent_hugepages/enabled=always allows applications
+> to benefit from THPs without having to madvise. However, the pf handler
+> takes very few considerations to decide weather or not to actually use a
+> THP. This can lead to a lot of wasted memory. khugepaged only operates
+> on memory that was either allocated with enabled=always or MADV_HUGEPAGE.
+> 
+> Introduce the ability to set enabled=defer, which will prevent THPs from
+> being allocated by the page fault handler unless madvise is set,
+> leaving it up to khugepaged to decide which allocations will collapse to a
+> THP. This should allow applications to benefits from THPs, while curbing
+> some of the memory waste.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  include/linux/huge_mm.h | 15 +++++++++++++--
+>  mm/huge_memory.c        | 31 +++++++++++++++++++++++++++----
+>  2 files changed, 40 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 93e509b6c00e..fb381ca720ea 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -44,6 +44,7 @@ enum transparent_hugepage_flag {
+>  	TRANSPARENT_HUGEPAGE_UNSUPPORTED,
+>  	TRANSPARENT_HUGEPAGE_FLAG,
+>  	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> +	TRANSPARENT_HUGEPAGE_DEFER_PF_INST_FLAG,
+
+No strong preference, but maybe just TRANSPARENT_HUGEPAGE_DEFER_FLAG might be better?
+
