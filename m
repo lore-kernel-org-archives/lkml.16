@@ -1,214 +1,194 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17ED1531DC
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF9C2253A9
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739810490; cv=none; b=Ez0EyPHjLopJqHEvNJYe9cUtBfrq3ebfkfps4IDinQdKwJ+XwOe3dItlokVF/En9jbq1KGCGFTDm0RBtxyUZdPsYcb0zS4ad5QZaA1jShjB8pRBlvLKSrsWfZiwZSGutz2nUK1FCZtqd4r6jnMCbwzxDqPx9YnBpg3NMxYfobLI=
+	t=1739810507; cv=none; b=civ5eLtW3MFYxmWuV8UqFuhK6CC3LjMniTQ2cduwq1/Nm0+OU+s1q7l+hytKFssbOyl66XIGEyKoxRnUe9vlGqexcK1IKShNAfGdHoQ2TVodAI/iEYQFa5yGnWFY4jDYVOSpNJLb9pm54BcuW2JcwVzb1DHadTAUt/aLDR6TDZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739810490; c=relaxed/simple;
-	bh=ECuRb0IYed9gtOKCSY+Zrhi/7eDVXqMMGoPWlLKABTA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgDyy7n+1jnmSiKUrJiQHbuBe/NaGIl9i3lgYmopSL6xabTpkpIi20VQ498mpOvePB58Hf1V6we/1XgE21I56dSO0o1xsN5rXE1bQiLnZSErYrqj8rl5OYmMiqu2z0L2W09K4I7DltLZL/LdSno72dTWTRkfkx9zb1laz+UGFt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=VZbUldbW; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1739810507; c=relaxed/simple;
+	bh=4GpjtyPhX2tIp7jKFxe8+OhXpy9WD8kHJbcuRQ6OQrE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Xigw1rTuS1u9OE/VFkARgGMj0kCrszHBjD8EIVFj1+KwnSzPijFUfOiI1XOPqqIKq64KYguFFVSV5C7lA+n77S+YuwC4nUHiPZhkK+g2tFKmJsJlMi2KZ5i300IpcQeYcRL/+18ywXUy1SdihzBTgKWaQca1DHuCMJSScIwnKus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UvTZhrf9; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VZbUldbW"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4398e839cd4so2747185e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:41:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UvTZhrf9"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e02e77ea3cso325058a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:41:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1739810487; x=1740415287; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GH7dByoQjATcMtRNPRz1qJqOaKrEwLdFgaeAEJKWfqY=;
-        b=VZbUldbW2OnaNp0UjmMg//hj7VnQmkeIDUQ7RPSUGI/Z64vlrx7HteJs15HQbPNAk3
-         vo80jecoof94YGjJCLT6CWIA5Fgz4XBi3j+P/7AkGV4QyQm4flNACbVk3C/uo80QgVTV
-         PKab1r9v6ov+ru8QPr8o995VOYHwVgTgL5df0=
+        d=linaro.org; s=google; t=1739810504; x=1740415304; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tl1qk986xZ9hRS1Mx9gWyhQ2tNCZt95h0ZGTwuGdgzE=;
+        b=UvTZhrf9VfYKLukqhkHdj6jGZ73OtoZLG/DyJHH3J8qP7dksB7w5TjVcH/DkS+XBm9
+         HcwZST8jKWPuQwdk6715mZzbV7YNQ9b8Gyuv2iXb6/E7Vd9Y00R7BtEdm/U4/yBechPH
+         0BeU6ISnMumsnaTiPqbMjheyLZfLcRXvlYP9a8f+S59LWVL2ulHqwC1MlpL75E7DKeMw
+         rs28EOB1Cz7xexwe6z/FDe1dsDbz2IH6ygQqwfLCayAOyIpvVM8MUYS0g2fnKLMN2WO4
+         2rS3FCkNZCtWPmzjFIiLw7W4dBtYvleqNVmP4pY7hMFcA+HgELv9NJN+4eRjs+UkGv+r
+         gLOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739810487; x=1740415287;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GH7dByoQjATcMtRNPRz1qJqOaKrEwLdFgaeAEJKWfqY=;
-        b=Kct6fKW5Tdry56knhG+eJ7frRe84dcC7xPBGjnIycO7GlC8DZ4LfsOuEIofG2y0Kqf
-         RrEQW0DQOpygt8vRP85VCVMwhNa4eq8c02w/xQVVPVSLKU+0C9ETBADrKTfKFxf0Eb3v
-         ELDEu5Yj0L0mptvN7GvgBy35UMGmgNKFmU2GNh0TprV/2acL0yaG4G53PC8gXk6+oMfb
-         XK1CGaMjFuTBYqwKjEycqXMb/XLc+d1CVuvj0RVtECQt7IW+XPBvtbMbovnnzaFvJegT
-         pPHTHp/MD3qv6gx6VyFXPULNHcIAmmOXbE1nFSCJLjyF+kP5wCCXkdzDkmY/6tXw4xV+
-         3Z6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVfojE5hGXBq+SQBt6WYb78V1/RaIORGw1NTnRLMH+GVZRCIw3Os3RMN6lFzZHyVbFpLttZ+fiQLb7+r6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHuhyeUALSn1v0847n1pkYqPuNu40yoT3t7FzaLFBzU5eSMx3x
-	rJP/QpqQdsETJ5dW4bFiFOHGRm9X71jtvnGnXnb6yT5HD2F8IEYNu6HaTtmeJck=
-X-Gm-Gg: ASbGnctmxqvw5fm1d4HwPuliO6CxLWRttpq/8t7B6uo/JOGq0KAt+lqIClCldoStUWb
-	Vqer7BuxApblgwYbZYqflB6loyhqLTuz/KNJrzC6ZoWQ8ibgE0+qwOvAYnaBYaGrvgtxqaWH00S
-	7GuCnWXi/K9cj4OYY74Y/1SlSaX6NVgDAowLy8Lq5gVH2/7rdENUs3MjUlCVMDK+Gix5sbJVOhQ
-	/zaIkfdoN78eLgewXAcTFsgeMHUoi2SH6S7/B3DZYxUoGQYGHLmARtUAVWr7qJKIZ/efrXyScrO
-	ucvsVJ/wwyaMgfGmTUJU9JJlSyY=
-X-Google-Smtp-Source: AGHT+IFRhKctt5xCG+FRKWC52l+K41KeexQa204yjGmhr/2wp4/LnFs1TbG9nQwuRUmQ3E8RWifHQw==
-X-Received: by 2002:a05:600c:2d03:b0:439:7ef0:a112 with SMTP id 5b1f17b1804b1-4397ef0a282mr45449985e9.10.1739810486832;
-        Mon, 17 Feb 2025 08:41:26 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4491sm12453272f8f.7.2025.02.17.08.41.25
+        d=1e100.net; s=20230601; t=1739810504; x=1740415304;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tl1qk986xZ9hRS1Mx9gWyhQ2tNCZt95h0ZGTwuGdgzE=;
+        b=avzTkaJrD4rxWWZH/KW5VQhKLDouhSY1UsFBM6KAr1vl1bXT4vBertB0lZ0wbZrlZF
+         CE9/LHEsrvPfj8aR4I8jaliI5m1lMmXXqflx8yLJkGwvQFAvp8zDTMn8ErN6qyjNfq27
+         oqzhkgT58k504iauVf/5Odj5hvqSHgRrI+4066KBHOEUPODiWf/Dy38P9hv04Jxop1I8
+         TuF4Fzc1KHoKlgQBBm00WyGiigzTDiiaDbRZTXQZlJ9rQnAlJH/4bAIICPocSVUkvPwe
+         ReXV7baDlQyZX2mO6/BBx5k4Ljvs/nb8/NWV2x/pRN8gv5ihv61z8MzNEzR8k7ocakYy
+         HS/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV/fHuVzcAgTFYry17c3DmfbNc5Yko9L4dWkARIkOAQXxiV5m4fFNwpDn73jlZ0/lT5JQrUKOYDY9/Cu7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzhB97pTJeNA88VEiFqieTMUxMMjg1qqJulx7jFiR4fkMYWti3
+	im/hrk1IGrMCMo6B5wltPjom9AqztOhDH+kz1BeoUPYVqHxhqmm06PBFlPnouIc=
+X-Gm-Gg: ASbGncsm+859OtVXYk5iC9xYEelGUtw9sJ5FTWibC0ydOeIx4xjV9TyEttsRRtO6eIc
+	WPyeKgLwTAQ+FiAaCgzozscgtNtHNqyQZQwfBz2Pem6aA2+7ROYRPTFUjQOHKaeAEUrvY+GAl7d
+	VrMaj0znkzZveTNe2MwJcDwJbAd4GqBBmDJXSacQYCTxMq5uPTgZgSV6kln4X9V8Bmr1S4prMHF
+	fiuYfu/0weckhPtGl/XQiUlrPie9QWAuNZZBZ5hD6pj1YoEgptHLQRlJZ1Hx/tjphjhMYdomdMr
+	aEoFW6VvWDX+vNKseyfQ32VGXS948/4=
+X-Google-Smtp-Source: AGHT+IFcQeNVHnsKf9IkLIKYVAi4SxUUfp260hQPfDzut6VqqPWdr13KL6UsKqTMH8NkbWY8oez30A==
+X-Received: by 2002:a17:906:6a03:b0:ab7:425d:1fa2 with SMTP id a640c23a62f3a-abb70d95991mr424723366b.10.1739810503738;
+        Mon, 17 Feb 2025 08:41:43 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbac781b78sm82647966b.60.2025.02.17.08.41.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 08:41:26 -0800 (PST)
-Date: Mon, 17 Feb 2025 17:41:24 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 31/37] drm/bridge: Provide pointers to the connector
- and crtc in bridge state
-Message-ID: <Z7NmtF83adILfasi@phenom.ffwll.local>
-Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org>
- <20250213-bridge-connector-v3-31-e71598f49c8f@kernel.org>
+        Mon, 17 Feb 2025 08:41:43 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 00/16] drm/msm: Add support for SM8750
+Date: Mon, 17 Feb 2025 17:41:21 +0100
+Message-Id: <20250217-b4-sm8750-display-v2-0-d201dcdda6a4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-bridge-connector-v3-31-e71598f49c8f@kernel.org>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALFms2cC/32NQQ6DIBBFr2Jm3WkAoVRXvUfjAhV0EisGGlJju
+ HupB+jyveS/f0C0gWyEtjog2ESR/FpAXCoYZrNOFmksDIIJxThrsJcYX3etGI4Ut8XseLNG1Vo
+ raRyHstuCdfQ5m8+u8Ezx7cN+XiT+s/9qiSPDvnZcOePk0OjHQqsJ/urDBF3O+QvwbVf7swAAA
+ A==
+X-Change-ID: 20250109-b4-sm8750-display-6ea537754af1
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+ Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Srini Kandagatla <srinivas.kandagatla@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3920;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=4GpjtyPhX2tIp7jKFxe8+OhXpy9WD8kHJbcuRQ6OQrE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBns2a03lqV9dIyHRAwlUHltfCOEPr1IiF36ellm
+ Mlcs/X8ZX2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ7NmtAAKCRDBN2bmhouD
+ 14NnD/9a4pjkt2J6S54Y+zsdMes7Q8++B4dMo0E+BAcDVAIW+FD7aMnvRQY+gsH8ZrDSV8wrXWa
+ Zt+3ARMZ+s6bjYynoZ3saHvO8tYiCPojMUn6UPnpBQ/jAJZ7KGvukfWJ6IKN2geKNqyy4FZPaH6
+ U7ARb55Vt/7KAbdceUn1TaNEMFlzZeFWPu5jM1o1Hc+4XjrdsCfQ7lfDIFqCPJIMp7q1di1RH3n
+ sWxrXBfcEv93aAQJUj24Vf+oaq61tMLVRp+N1EN6k/n7WYcP7RCpQaEIaN6f9XKJfBeg1UIGhWY
+ slvUnjub3z53iIgvdtLYuz5/EGqm+ChSCL9fQ3o08gh62U3DgpRTJ3kddlqR8QmxJPK9Q2qMCAp
+ xvSz8WYJnLAA128U4V78rc3RVgN14inNw5LJOfa15BNYLdfRDdznWN+ol5A5EWgMlCm80EU/vUI
+ 2V+NH+57BieX1jEWvb7jE8dYiwOZuDNAJ0pBsApZaCX1J80jV5IG6gndFpyKisLY3HnH9xfy0Ci
+ AWMdNov83jiCl6ZI42MYxqPzvyO8j6gGtVTb30BoDJRz+PuWlcuR69etka/UnwBk0Pdil0fX8bK
+ JBwFHSG/eu3ORZDfeFyROJrnpQZaxdQvfIOt2uPHx+BsMpOsTlIPRvHhkBB5IX4GXt6u4nb7p2W
+ rQQJXEiVe/CnP8Q==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Thu, Feb 13, 2025 at 03:43:50PM +0100, Maxime Ripard wrote:
-> Now that connectors are no longer necessarily created by the bridges
-> drivers themselves but might be created by drm_bridge_connector, it's
-> pretty hard for bridge drivers to retrieve pointers to the connector and
-> CRTC they are attached to.
-> 
-> Indeed, the only way to retrieve the CRTC is to follow the drm_bridge
-> encoder field, and then the drm_encoder crtc field, both of them being
-> deprecated.
+Hi,
 
-Eh, this isn't quite how this works. So unless bridges have become very
-dynamic and gained flexible routing the bridge(->bridge->...)->encoder
-chain is static. And the crtc for an encoder you find by walking the
-connector states in a drm_atomic_state, finding the right one that points
-at your encoder, and then return the ->crtc pointer from that connector
-state.
+Dependency / Rabased on top of:
+https://lore.kernel.org/all/20241214-dpu-drop-features-v1-0-988f0662cb7e@linaro.org/
 
-It's a bit bonkers, but I think it's better to compute this than adding
-more pointers that potentially diverge. Unless there's a grand plan here,
-but then I think we want some safety checks that all the pointers never
-get out of sync here.
--Sima
+Changes in v2:
+- Implement LM crossbar, 10-bit alpha and active layer changes:
+  New patch: drm/msm/dpu: Implement new v12.0 DPU differences
+- New patch: drm/msm/dpu: Add missing "fetch" name to set_active_pipes()
+- Add CDM
+- Split some DPU patch pieces into separate patches:
+  drm/msm/dpu: Drop useless comments
+  drm/msm/dpu: Add LM_7, DSC_[67], PP_[67] and MERGE_3D_5
+  drm/msm/dpu: Add handling of LM_6 and LM_7 bits in pending flush mask
+- Split DSI and DSI PHY patches
+- Mention CLK_OPS_PARENT_ENABLE in DSI commit
+- Mention DSI PHY PLL work:
+  https://patchwork.freedesktop.org/patch/542000/?series=119177&rev=1
+- DPU: Drop SSPP_VIG4 comments
+- DPU: Add CDM
+- Link to v1: https://lore.kernel.org/r/20250109-b4-sm8750-display-v1-0-b3f15faf4c97@linaro.org
 
-> 
-> And for the connector, since we can have multiple connectors attached to
-> a CRTC, we don't really have a reliable way to get it.
-> 
-> Let's provide both pointers in the drm_bridge_state structure so we
-> don't have to follow deprecated, non-atomic, pointers, and be more
-> consistent with the other KMS entities.
-> 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  drivers/gpu/drm/drm_atomic_state_helper.c |  5 +++++
->  drivers/gpu/drm/drm_bridge.c              |  5 +++++
->  include/drm/drm_atomic.h                  | 14 ++++++++++++++
->  3 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/drm_atomic_state_helper.c
-> index 519228eb109533d2596e899a57b571fa0995824f..66661dca077215b78dffca7bc1712f56d35e3918 100644
-> --- a/drivers/gpu/drm/drm_atomic_state_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_state_helper.c
-> @@ -777,10 +777,15 @@ EXPORT_SYMBOL(drm_atomic_helper_bridge_duplicate_state);
->   * that don't subclass the bridge state.
->   */
->  void drm_atomic_helper_bridge_destroy_state(struct drm_bridge *bridge,
->  					    struct drm_bridge_state *state)
->  {
-> +	if (state->connector) {
-> +		drm_connector_put(state->connector);
-> +		state->connector = NULL;
-> +	}
-> +
->  	kfree(state);
->  }
->  EXPORT_SYMBOL(drm_atomic_helper_bridge_destroy_state);
->  
->  /**
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index b6d24092674c8fa33d9b6ebab9ece0f91fb8f8ea..db2e9834939217d65720ab7a2f82a9ca3db796b0 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -812,10 +812,15 @@ static int drm_atomic_bridge_check(struct drm_bridge *bridge,
->  		bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
->  							       bridge);
->  		if (WARN_ON(!bridge_state))
->  			return -EINVAL;
->  
-> +		bridge_state->crtc = crtc_state->crtc;
-> +
-> +		drm_connector_get(conn_state->connector);
-> +		bridge_state->connector = conn_state->connector;
-> +
->  		if (bridge->funcs->atomic_check) {
->  			ret = bridge->funcs->atomic_check(bridge, bridge_state,
->  							  crtc_state, conn_state);
->  			if (ret)
->  				return ret;
-> diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
-> index 4c673f0698fef6b60f77db980378d5e88e0e250e..293e2538a428bc14013d7fabea57a6b858ed7b47 100644
-> --- a/include/drm/drm_atomic.h
-> +++ b/include/drm/drm_atomic.h
-> @@ -1216,10 +1216,24 @@ struct drm_bridge_state {
->  	/**
->  	 * @bridge: the bridge this state refers to
->  	 */
->  	struct drm_bridge *bridge;
->  
-> +	/**
-> +	 * @crtc: CRTC the bridge is connected to, NULL if disabled.
-> +	 *
-> +	 * Do not change this directly.
-> +	 */
-> +	struct drm_crtc *crtc;
-> +
-> +	/**
-> +	 * @connector: The connector the bridge is connected to, NULL if disabled.
-> +	 *
-> +	 * Do not change this directly.
-> +	 */
-> +	struct drm_connector *connector;
-> +
->  	/**
->  	 * @input_bus_cfg: input bus configuration
->  	 */
->  	struct drm_bus_cfg input_bus_cfg;
->  
-> 
-> -- 
-> 2.48.0
-> 
+Description:
+=============
+I got modetest writeback working, but DSI panel on MTP8750 still shows
+darkness.
 
+Best regards,
+Krzysztof
+
+---
+Krzysztof Kozlowski (16):
+      dt-bindings: display/msm: dsi-controller-main: Combine if:then: entries
+      dt-bindings: display/msm: dsi-controller-main: Add missing minItems
+      dt-bindings: display/msm: dsi-phy-7nm: Add SM8750
+      dt-bindings: display/msm: dsi-controller-main: Add SM8750
+      dt-bindings: display/msm: dp-controller: Add SM8750
+      dt-bindings: display/msm: qcom,sm8650-dpu: Add SM8750
+      dt-bindings: display/msm: qcom,sm8750-mdss: Add SM8750
+      drm/msm/dpu: Drop useless comments
+      drm/msm/dpu: Add LM_7, DSC_[67], PP_[67] and MERGE_3D_5
+      drm/msm/dpu: Add handling of LM_6 and LM_7 bits in pending flush mask
+      drm/msm/dsi/phy: Add support for SM8750
+      drm/msm/dsi: Add support for SM8750
+      drm/msm/dpu: Add support for SM8750
+      drm/msm/dpu: Add missing "fetch" name to set_active_pipes()
+      drm/msm/dpu: Implement new v12.0 DPU differences
+      drm/msm/mdss: Add support for SM8750
+
+ .../bindings/display/msm/dp-controller.yaml        |   4 +
+ .../bindings/display/msm/dsi-controller-main.yaml  | 124 +++---
+ .../bindings/display/msm/dsi-phy-7nm.yaml          |   1 +
+ .../bindings/display/msm/qcom,sm8650-dpu.yaml      |   1 +
+ .../bindings/display/msm/qcom,sm8750-mdss.yaml     | 460 +++++++++++++++++++
+ .../drm/msm/disp/dpu1/catalog/dpu_12_0_sm8750.h    | 496 +++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           |  59 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  12 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  35 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     |   1 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         |  71 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |  19 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          | 210 ++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h          |  18 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h        |   6 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 +
+ drivers/gpu/drm/msm/dsi/dsi.h                      |   2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c                  |  25 ++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h                  |   1 +
+ drivers/gpu/drm/msm/dsi/dsi_host.c                 |  80 ++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c              |   2 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h              |   1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          |  79 +++-
+ drivers/gpu/drm/msm/msm_mdss.c                     |  33 ++
+ drivers/gpu/drm/msm/msm_mdss.h                     |   1 +
+ .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  |  14 +
+ 26 files changed, 1655 insertions(+), 101 deletions(-)
+---
+base-commit: 44ddcc7604ae61eadc748ccc6156bf4b98697978
+change-id: 20250109-b4-sm8750-display-6ea537754af1
+
+Best regards,
 -- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
