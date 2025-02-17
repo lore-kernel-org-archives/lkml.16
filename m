@@ -1,124 +1,132 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E342136349
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AF418FDC9
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739779678; cv=none; b=MKW9T9SggdPCllaK/9VFmBhGI9TRvHy0o6L8d91pYdbD7onUUKmyxiWUyRvTLV0DqfyX9PHNXIhTN3EK2jW+F7PpMMk9tlxCMLSNO10Z90zIB7b9XUSGrma0Q6xnO9LNrdI3Xkp/W7LUkoVDIys422rl7kvYoJNsHSEe0ff6Y8M=
+	t=1739779688; cv=none; b=YqorwCqVtUpurxkvllgNzYurblKgB32PzqwDlix1O0/aSz8kYlXkV1+DpIl0Z7pccFAbBKrRF7jnqjVqfN0Dnu5F+kyGZoiFon7bwfZ+l2ecA7oDrtYz0vBX9BbzeI69Z6RgXAzU8VcL1uaeZ/az+vlcRu0Kzq8GFi+dqGllhfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739779678; c=relaxed/simple;
-	bh=EQaw+cJURb/KBsY9Tf8T8aOUrILzNG++0oOiRHgT/JU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RVo44f9AhSKuatav/M1gUkl88YNcXWdpIjC1hyPn0bv2Hp06OsvHRDRWt0Ux+AxuXH15u9fgIIE+YTAz9+voX2N1HGd0vbPcoZ3AOhx/o1jCSi74ubsXuCCdVEP6Gj/um5zGt9mEgNZyegMuAmfw42X3aqBRAKZR7pxEf8ouga8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YxFXw2mFXz2JYY6;
-	Mon, 17 Feb 2025 16:04:00 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 765EE1A0188;
-	Mon, 17 Feb 2025 16:07:52 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 17 Feb 2025 16:07:50 +0800
-Message-ID: <e1d2affb-5c6b-00b5-8209-34bbca36f96b@huawei.com>
-Date: Mon, 17 Feb 2025 16:07:49 +0800
+	s=arc-20240116; t=1739779688; c=relaxed/simple;
+	bh=rsho1jtu2mE/C0fXdcJoK81YtLdyywLTxubxvvs4+S0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WUDlYdoFBypAlpwJ5PNYseNMcguBuh+VHm5cjOKlJUH4KNiqBikC9X0ASho/m5YLnkmoKlujoU7nPa59Kmop+iAI8NCpLuJsv8iergE6M8zg37OdKXPXAi5/KEswZ0uEn8M50OL405pUxpoURRG2Bn0iq2G52IDgNUrCuST73v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so42262465e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 00:08:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739779683; x=1740384483;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m2wFYX8dgaktOSAgfZPyadoLd/GGU3mSBDrqYC4o1Vc=;
+        b=vjU2vbx0AX2/WpEUB43pZfeKhs1rfoVm8d5si4nRSg6/Wd6oMZsiDf0lxNTy/XoVFG
+         kk4vgAi+YiNO86SCMU/79T3T90A5DLCH7tr/86IIQwxbJKsoLP2oAlJ5r+dSEC44Vo/R
+         w72L+B8GQJNAZtnpbaKQJtr2ZvbC665md17kHFZ/Kkuijj2AlQElkCmhGPvJ51hBcyxa
+         R0eVRxVZrjWhh1To9Fei0nfd0Ww6mOcW2tYwex9V3LB7HUdjVGVmvtb8gQzeto4hwR/c
+         ZT9wqZBbz2dLoAlL5VHGGNjnxqN5WH3FT5z+UlUVv7PntjeCA4nqAor/lJgKT0xhpjr6
+         83uA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4XarUfWeGCwvqRtSinK6E3Qp1LatDrZIc+4pvgqPhcx6Qa5dwNRPNClRwg0/TTZExbuO7YHqICzl2GQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0F5rsBDdnsgvGrajwYMCY3bAqiRbKBTvcaHrSeWSXiKfgsOGD
+	oFuJPxdI0ZS8NTVFV5apzP2ye4IeylxTi5rnkWBge9H6RRi7QMjA
+X-Gm-Gg: ASbGnct2A9ivT7DJRjNhSwa8ZnX+bRlW/L0IENmXm8XGIKwgmaXIRgw3I2e6SGgNxH3
+	SxT8v7J5OwZSURt23LZLZI7VjC3UzjqmsmCWsM0vUa0y489q0gf5Q/KyRp38D7lXxadHsiQraHX
+	jF1QgUIFRK8cMFz9j+YwuU+Pjg39QTjf7y+ujgJud2zwE71D1glZZRSUnaVlfeR8+4Devrp8Qdf
+	mjdrzSKLolZHGPkLqirhe9oGhVilzRfBZuvYMlUQMSr2BN+8Nt1LlMBZKzCMMrPF0Wdj0e3caJk
+	z3w6ZtB2gWo0NlerYOCiLfFo90oyJ3/TpGLqk67n49Vwi4hDCcm5kcAJWw==
+X-Google-Smtp-Source: AGHT+IFNcTDOkaZQlTyUplPUqQ21ZWQqF0+0Rp/O3wOz3kPHGdMVBsJAT9nt0R2HPDY5n8OxJZJKPQ==
+X-Received: by 2002:adf:ed48:0:b0:38f:2a3e:870c with SMTP id ffacd0b85a97d-38f33f38891mr8801531f8f.16.1739779683530;
+        Mon, 17 Feb 2025 00:08:03 -0800 (PST)
+Received: from [10.50.4.206] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4314sm11408949f8f.9.2025.02.17.00.08.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 00:08:03 -0800 (PST)
+Message-ID: <ea0e6445-9770-4df9-91bd-80f44cd0388e@grimberg.me>
+Date: Mon, 17 Feb 2025 10:08:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v13 4/5] arm64: support copy_mc_[user]_highpage()
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Mauro Carvalho Chehab
-	<mchehab+huawei@kernel.org>, Will Deacon <will@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, James Morse <james.morse@arm.com>, Robin Murphy
-	<robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
- Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
-	<glider@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Aneesh
- Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
-	<naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<kasan-dev@googlegroups.com>, <wangkefeng.wang@huawei.com>, Guohanjun
-	<guohanjun@huawei.com>
-References: <20241209024257.3618492-1-tongtiangen@huawei.com>
- <20241209024257.3618492-5-tongtiangen@huawei.com> <Z6zWSXzKctkpyH7-@arm.com>
- <69955002-c3b1-459d-9b42-8d07475c3fd3@huawei.com> <Z698SFVqHjpGeGC0@arm.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <Z698SFVqHjpGeGC0@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme: remove multipath module parameter
+To: John Meneghini <jmeneghi@redhat.com>, kbusch@kernel.org, hch@lst.de
+Cc: bmarzins@redhat.com, Bryan Gurney <bgurney@redhat.com>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Marco Patalano <mpatalan@redhat.com>, axboe@kernel.dk
+References: <20250204211158.43126-1-bgurney@redhat.com>
+ <7c588344-f019-4939-8a93-0a450481d4bc@redhat.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <7c588344-f019-4939-8a93-0a450481d4bc@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-在 2025/2/15 1:24, Catalin Marinas 写道:
-> On Fri, Feb 14, 2025 at 10:49:01AM +0800, Tong Tiangen wrote:
->> 在 2025/2/13 1:11, Catalin Marinas 写道:
->>> On Mon, Dec 09, 2024 at 10:42:56AM +0800, Tong Tiangen wrote:
->>>> Currently, many scenarios that can tolerate memory errors when copying page
->>>> have been supported in the kernel[1~5], all of which are implemented by
->>>> copy_mc_[user]_highpage(). arm64 should also support this mechanism.
->>>>
->>>> Due to mte, arm64 needs to have its own copy_mc_[user]_highpage()
->>>> architecture implementation, macros __HAVE_ARCH_COPY_MC_HIGHPAGE and
->>>> __HAVE_ARCH_COPY_MC_USER_HIGHPAGE have been added to control it.
->>>>
->>>> Add new helper copy_mc_page() which provide a page copy implementation with
->>>> hardware memory error safe. The code logic of copy_mc_page() is the same as
->>>> copy_page(), the main difference is that the ldp insn of copy_mc_page()
->>>> contains the fixup type EX_TYPE_KACCESS_ERR_ZERO_MEM_ERR, therefore, the
->>>> main logic is extracted to copy_page_template.S. In addition, the fixup of
->>>> MOPS insn is not considered at present.
->>>
->>> Could we not add the exception table entry permanently but ignore the
->>> exception table entry if it's not on the do_sea() path? That would save
->>> some code duplication.
->>
->> I'm sorry, I didn't catch your point, that the do_sea() and non do_sea()
->> paths use different exception tables?
-> 
-> No, they would have the same exception table, only that we'd interpret
-> it differently depending on whether it's a SEA error or not. Or rather
-> ignore the exception table altogether for non-SEA errors.
 
-You mean to use the same exception type (EX_TYPE_KACCESS_ERR_ZERO) and
-then do different processing on SEA errors and non-SEA errors, right?
+On 13/02/2025 22:37, John Meneghini wrote:
+> Keith, Christoph and Sagi,
+>
+> This patch has been fully tested and analyzed by Red Hat's QA group 
+> and no
+> unexpected side effects or regressions have been found. Both NVMe/FC 
+> and NVMe/TCP
+> have been tested. Our QE engineer has asked me to report this upstream.
+>
+> Tested-by: Marco Patalano <mpatalan@redhat.com>
+>
+> Fixes: 32acab3181c7 ("nvme: implement multipath access to nvme 
+> subsystems")
+>
+> As discussed in previous email threads, the nvme.core_multipath 
+> parameter was included
+> by Christoph in the original implementation of nvme/host/multipath.c 
+> back in 2017
+> at the request of Red Hat. At that time Red Hat was only supporting 
+> DMMP multipath
+> with NVMe and we needed a way to disable core native nvme multipathing 
+> without
+> reconfiging the kernel.
+>
+> The nvme.core_multipath parameter has been used by Red Hat, together 
+> with some additional
+> out-of-tree changes to nvme/host/core.c, to support DMMP multipath 
+> with NVMe since RHEL-8.
+> However, the plan all along has been to deprecate and remove support 
+> for DMMP multipath with NVMe
+> in RHEL and to remove this parameter. This change has been advertised 
+> and communicated to our
+> customers and partners, beginning with RHEL-9, through release notes 
+> and other communications.
+>
+> In RHEL-9 we changed the default setting of this parameter from "N" to 
+> "Y" to match the upstream
+> kernel and the move our customers to native nvme multipath. DMMP 
+> multipath w/NVMe was deprecated
+> in RHEL-9 but still supported. Customers were still able to optionally 
+> enabled DMMP multipath
+> with NVMe if they wanted, by changing this parameter, and many of them 
+> do.
+>
+> In the (soon to be released) RHEL-10 release DMMP multipath is longer 
+> supported with NVMe and
+> the out-of-tree patches needed to support DMMP multipath with NVMe 
+> have been removed.
+>
+> Red Hat is proposing this patch to remove nvme.core_multipath 
+> parameter from the kernel as we believe
+> leaving this non-supported parameter in the kernel for future releases 
+> will only lead to confusion.
+>
+> We plan to ship this patch with RHEL-10. So it would be really good if 
+> we could get this
+> change accepted and merged upstream, perhaps into v6.15.
 
-If so, some instructions of copy_page() did not add to the exception
-table will be added to the exception table, and the original logic will
-be affected.
+Hey John,
 
-For example, if an instruction is not added to the exception table, the
-instruction will panic when it triggers a non-SEA error. If this
-instruction is added to the exception table because of SEA processing,
-and then a non-SEA error is triggered, should we fix it?
-
-Thanks,
-Tong.
-
-> 
->> My understanding is that the
->> exception table entry problem is fine. After all, the search is
->> performed only after a fault trigger. Code duplication can be solved by
->> extracting repeated logic to a public file.
-> 
-> If the new exception table entries are only taken into account for SEA
-> errors, why do we need a duplicate copy_mc_page() function generated?
-> Isn't the copy_page() and copy_mc_page() code identical (except for the
-> additional labels to jump to for the exception)?
-> 
+This looks fine to me, I'm assuming this was also tested with 
+CONFIG_NVME_MULTIPATH=n ?
