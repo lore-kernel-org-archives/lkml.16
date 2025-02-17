@@ -1,74 +1,123 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9287821C186;
-	Mon, 17 Feb 2025 14:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F66A216E29
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739802301; cv=none; b=vGYirYEqCf8pMbvIElJXPBcpVvxFYGiJkveZrTGm03mCo9Am0caIUGfE7t/Kqw2tbPRub3XtpvU4ICKv9eEj1pDaK4NNJdMuZTjXbVIxf2U18U5KEPV2bpJUozG4+Q9lorjr1sGqMBqqTr1CGue8TKdDuat6Nn90Yc8eRsEN2Zw=
+	t=1739802354; cv=none; b=NY7qJI6WVqrg3C6Vz5gz2MtgaGNu7C9MgsIi+2J3lZOFTIOLNqlGhXNrh6uR1ln4yOllse91NqM7GbmOf6kv2OCQUOomfbRoQWgo+s593vT/X4XvOtamUxOYDVK306YIIp95IjAg4OvINxCJOnDIlcI9fE6Ho693BfJ7quL6mpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739802301; c=relaxed/simple;
-	bh=4O6pUbxU9WhZLQgMK95/BrypKre2S+YKMb4hZtOiXFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nQF+gx1KX9WS5k0ELAJaan0dbOMeTTbFcMnpjGlou5XYt+QcPAjNsw3fXW4DJugJaSFhVyiBR4ZTHoGMGqCU8WU7F66DVZmNOF67k0r13PblEUZA+ha4bj0tonEKx8/ksJAaG0FtGoORKrM7+uRoJ19hdyXT2ksPTmBGAhADkoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IhGT9vNn; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739802354; c=relaxed/simple;
+	bh=GUAxZImZWtamppr8zlI/A9rVG2tyYKU95DwC2jGXbBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D/1c5XMMqvKdm2y+T5yBMnZUtcbMKtVXUiBSkcXvlQC6a3VOmYfKQXUNgU4/85sqWwrRkzNB4cQd6wURqm95PIss78CG8AzMaA8F+dsaOMFFzY2D2Jdv5jculg3IB2cdqGvaxg8/xPfurPUqKxII2wIvwuh/yylhyXPU8XLUIsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mJOE/RVj; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IhGT9vNn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MTfZEpj9A3ZPs39PczkqPfdLk2kt/FXHPcDnQdLDiQ4=; b=IhGT9vNnq7KY3wiwOFVEaFUuGD
-	TWu3bhkXjnhGHNkSUzOjccXBymT68+AhQiCUCEYr0XIfRquHjvKRLHFjvpjapYQUqemDg1J0+Uo0R
-	6JZomK7FBkaITfGoa+Gzk0C3XGa1fxOOzfFf8z37dXKEmqlLLtB6vtIavXa4PkKkZOxh+Z0yiAxPa
-	5926D4pPM4fQuJlCD+IR93c6Jc4f79rQqcRxeP9JyG9/cxNvpEVhkK6dMv51S991J3eTt5C2nUknA
-	9ybw4r+Sz0UEpnDe20c3pDeuwgbFL2cIuUtwKUWU9D/Do6CGXRQvAp6IcngwuHLw+F2ufd0C4oU8x
-	72/UXRGQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tk23C-00000001N3V-3H2B;
-	Mon, 17 Feb 2025 14:24:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B16C83002C7; Mon, 17 Feb 2025 15:24:45 +0100 (CET)
-Date: Mon, 17 Feb 2025 15:24:45 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	eranian@google.com, irogers@google.com, jolsa@kernel.org,
-	bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, santosh.shukla@amd.com,
-	ananth.narayan@amd.com, sandipan.das@amd.com
-Subject: Re: [RESEND][PATCH v3 0/7] perf/amd/ibs: Add Zen5 support
-Message-ID: <20250217142445.GA2076@noisy.programming.kicks-ass.net>
-References: <20250205060547.1337-1-ravi.bangoria@amd.com>
- <65818316-434e-4468-9ead-2e55c15b62eb@amd.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mJOE/RVj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739802350;
+	bh=GUAxZImZWtamppr8zlI/A9rVG2tyYKU95DwC2jGXbBg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mJOE/RVj3wNsVYObyE/oZbGXxop1evH9WUwdJoZUmA8+53sjNIBAVNW6klqDyio4L
+	 OxQv+iqv5Lq/tD7aiwNo5rmA7a9FChrl45oo143dGcKIVxMJIufdV2b8IzE6eG2TWH
+	 IOuxuElpbrjwjmuRzMIebMsDLB0+nPNVYi8E2wV18dZ/io13aQjFEGoD2I1bjiEzAw
+	 A+oSCGd6CjFfz2+UbqZG7FY5oSdyn5PEp4sDFcEdQ4hJ4h0jh65WUMQGaFMjQ2lysj
+	 t2Wz3yY13uQUyKxGnvd0YichLhTjV3Y98R/FBkIFgdlRQTk/ONx9VRx4SFGd+lHCG4
+	 9UY81byDPryCQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D4D4117E0F86;
+	Mon, 17 Feb 2025 15:25:49 +0100 (CET)
+Message-ID: <041ffe38-ca24-4e05-90c1-e37f9323c7cf@collabora.com>
+Date: Mon, 17 Feb 2025 15:25:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65818316-434e-4468-9ead-2e55c15b62eb@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] drm/mediatek: Change main display path to support PQ
+ for MT8196
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+ =?UTF-8?B?U3VubnkgU2hlbiAo5rKI5aeN5aeNKQ==?= <Sunny.Shen@mediatek.com>
+Cc: =?UTF-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>,
+ "treapking@chromium.org" <treapking@chromium.org>,
+ Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ =?UTF-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ =?UTF-8?B?UGF1bC1wbCBDaGVuICjpmbPmn4/pnJYp?= <Paul-pl.Chen@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>
+References: <20250211025317.399534-1-sunny.shen@mediatek.com>
+ <20250211025317.399534-6-sunny.shen@mediatek.com>
+ <b3a6afa2e818d31dc60632615215a88449fb78bf.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <b3a6afa2e818d31dc60632615215a88449fb78bf.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 17, 2025 at 02:00:14PM +0530, Ravi Bangoria wrote:
-> On 05-Feb-25 11:35 AM, Ravi Bangoria wrote:
-> > IBS on Zen5:
-> > - introduced Load Latency filtering capability.
-> > - shows DTLB and page size information differently from prior generations.
-> > 
-> > Incorporate these changes into IBS kernel driver as well as perf tool.
-> > Also include a perf unit-test to test IBS sample period constraints.
-> > 
-> > Patches are prepared on peterz/queue/perf/core (cffa473a06d2).
+Il 17/02/25 07:06, CK Hu (胡俊光) ha scritto:
+> On Tue, 2025-02-11 at 10:52 +0800, Sunny Shen wrote:
+>> Due to the path mux design of the MT8196, the following components
+>> need to be added to support Picture Quality (PQ) in the main display
+>> path: CCORR0, CCORR1, DITHER0, GAMMA0, MDP_RSZ0, POSTMASK0, TDSHP0.
 > 
-> Ingo, Peter, gentle ping!
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> 
+>>
+>> Signed-off-by: Sunny Shen <sunny.shen@mediatek.com>
+>> ---
+>>   drivers/gpu/drm/mediatek/mtk_drm_drv.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+>> index b810a197f58b..1c97dc46ae70 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+>> @@ -242,6 +242,13 @@ static const unsigned int mt8196_mtk_ddp_ovl0_main[] = {
+>>   
+>>   static const unsigned int mt8196_mtk_ddp_disp0_main[] = {
 
-First 3 patches are in queue/perf/core, assuming the robots be happy,
-I'll push it into tip/perf/core.
+If you build the display controller path with an OF graph, you don't need to
+introduce any mt8196_mtk_ddp_disp0_main, at all.
+
+Since all this work was done and upstreamed, and was done because hardcoding
+the display pipeline for each board is only bloating the driver (and wrong),
+just express the pipeline with a graph in the devicetree.
+
+The driver doesn't need that array, not anymore.
+
+Regards,
+Angelo
+
+>>   	DDP_COMPONENT_DLI_ASYNC0,
+>> +	DDP_COMPONENT_MDP_RSZ0,
+>> +	DDP_COMPONENT_TDSHP0,
+>> +	DDP_COMPONENT_CCORR0,
+>> +	DDP_COMPONENT_CCORR1,
+>> +	DDP_COMPONENT_GAMMA0,
+>> +	DDP_COMPONENT_POSTMASK0,
+>> +	DDP_COMPONENT_DITHER0,
+>>   	DDP_COMPONENT_DLO_ASYNC1,
+>>   };
+>>   
+> 
 
 
-Thanks!
+
