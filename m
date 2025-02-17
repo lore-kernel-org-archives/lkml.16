@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA0B1DE4F6;
-	Mon, 17 Feb 2025 22:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A0D1DED67;
+	Mon, 17 Feb 2025 22:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739830067; cv=none; b=XJISSWc2PsUJfUnXy3UJ41Gjs9FwLVKpOi67k5UoVRxkp2zXwpUUDegRU5/CXq7w//6FQI4JWWisUtR2zu/07f+Q28LjbeeHsh2gPmgn8nYEsoDOKpsTxQTeA6NHlygcpAYi3FTwa7eIbo9AWngpxk1NG1LBii53QijjXSzHPKI=
+	t=1739830068; cv=none; b=IESjyOONmqT2MFELSNyAZ8A3xF5ax1RAavSpzQb+ah+Zio4ZUyH4rg5SThCdsmigvO8rp69YpDbtTsEZxhN3Lu5e8TQzIyR2V/KZKA1BnBzYXIrnrq0z5eqZ3+7yvbL62JfBPDrPiCY5JKw3k7FPxpKIo3aptW/iKX9rMihGZm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739830067; c=relaxed/simple;
-	bh=la8u9QF1Jfg+PUuHvqM9VlVDImBp13gGudt2jl5/rKo=;
+	s=arc-20240116; t=1739830068; c=relaxed/simple;
+	bh=/KzC6QnSkHJXGzPy7CJR/30bx9FgiwFxum2njUVEEt8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IhJ8fscwcP3760CoLSJfAfc6p5LX/VBh/Toy+pk/KznHAyID0D+h/ZOuLNGW3hg/rBbAB8834bJlaVA8rfsWPim1v9kd8pES4ed9qIhJGrfODpGDY28zi1ZNkwIplkuLXtQ3V6IQWKeHZPj6EWqOahCBIJXt2GniBc5r+I5GCqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XD/dEuMu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=T13UCxGaD6SPDb5U1FlygHQWPSUzryze4LTegJHcB7DObFJw5hCnA0xzs6Ylv7JD7Gf937SDa1s3JmS7L/4k9jM/jaS7yKusngKJKEdUV7MapQJwhv6UYDZy4ajmfHEfYkWmJhzTcYl8IsvFTcybQ9PUjoj6LrZ7rEcPpEmB/LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuOg9QE9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XD/dEuMu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5EEDC4CEE2;
-	Mon, 17 Feb 2025 22:07:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuOg9QE9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4933C4CEE8;
+	Mon, 17 Feb 2025 22:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739830066;
-	bh=la8u9QF1Jfg+PUuHvqM9VlVDImBp13gGudt2jl5/rKo=;
+	s=k20201202; t=1739830068;
+	bh=/KzC6QnSkHJXGzPy7CJR/30bx9FgiwFxum2njUVEEt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XD/dEuMuv9bPa08ZojCmP5BNd/3PXE73NlA0EbJayg8TSZb+b9cQFlZAsLncOEl1s
-	 Ci38kGamBqR7eBMEEHtIMOa7elQtf3EZXK9GTLj2R2GVQX1RJPvmf0wGh0k7t8J98C
-	 nCRaY0yyEgB+TjEBpHhHOBtwAf5Hs0zYTckZKEcXyrpeyRUBctOBgtzTpCpJJUP17/
-	 0FA5ro1ua46k/oOnsJ2M+R+z4/h5o/kUWmZKPHOdp30qcwQYO1/QfzQ0vWn2dxIyIN
-	 kHvESrsGHfpwX+fr0ef7Jl1kq+Ijgwr4H9Wkp5poL666ct6T0hc9wnlQXfTFdW2rsY
-	 jtyY6tqaxb4dA==
+	b=LuOg9QE9FFu7G4yDZhJV5Jfv3/Gl3TZm+YVGr1angAGiCPO6a1ZOiw03ZzzbxYs8M
+	 GxveMxJS6b5qXBLQOWXVabmS+6HQk1WF4X/KjUi0XqXx9ehHNexKbW2T3nT+SnVvl6
+	 rFi3wKQW1ZCHM9hj5sgnbPnOThDL5JzNk1RUBA/d9v3bhoRb8UcFtk9tW4bjJG/HJM
+	 ehjnyDlXG/uzFRFh448752BaGjZKc4mfDXzPSXd5Bp8kPmbGLt4G4UuRmZgmNK9dCr
+	 aenK8uOceyq9KPrGS5iWSmQLVgwI3u2xtEcaRFCLu0buDSfl5cqjEdBeGBqZekIQ5x
+	 IGbHrUMAgoJhg==
 From: Mario Limonciello <superm1@kernel.org>
 To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
 	Perry Yuan <perry.yuan@amd.com>
@@ -34,9 +34,9 @@ Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
 	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
 	Mario Limonciello <mario.limonciello@amd.com>,
 	Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Subject: [PATCH v3 13/18] cpufreq/amd-pstate: Cache CPPC request in shared mem case too
-Date: Mon, 17 Feb 2025 16:07:02 -0600
-Message-ID: <20250217220707.1468365-14-superm1@kernel.org>
+Subject: [PATCH v3 15/18] cpufreq/amd-pstate: Update cppc_req_cached for shared mem EPP writes
+Date: Mon, 17 Feb 2025 16:07:04 -0600
+Message-ID: <20250217220707.1468365-16-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250217220707.1468365-1-superm1@kernel.org>
 References: <20250217220707.1468365-1-superm1@kernel.org>
@@ -50,63 +50,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Mario Limonciello <mario.limonciello@amd.com>
 
-In order to prevent a potential write for shmem_update_perf()
-cache the request into the cppc_req_cached variable normally only
-used for the MSR case.
-
-This adds symmetry into the code and potentially avoids extra writes.
+On EPP only writes update the cached variable so that the min/max
+performance controls don't need to be updated again.
 
 Reviewed-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
 Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/cpufreq/amd-pstate.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/cpufreq/amd-pstate.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 2c8f6e92ec8a8..4eb3ba6dfdbd9 100644
+index eb54960f313be..1f4c9d7fe28f5 100644
 --- a/drivers/cpufreq/amd-pstate.c
 +++ b/drivers/cpufreq/amd-pstate.c
-@@ -496,6 +496,8 @@ static int shmem_update_perf(struct amd_cpudata *cpudata, u8 min_perf,
- 			     u8 des_perf, u8 max_perf, u8 epp, bool fast_switch)
+@@ -336,6 +336,7 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
  {
+ 	struct amd_cpudata *cpudata = policy->driver_data;
  	struct cppc_perf_ctrls perf_ctrls;
-+	u64 value, prev;
-+	int ret;
++	u64 value;
+ 	int ret;
  
- 	if (cppc_state == AMD_PSTATE_ACTIVE) {
- 		int ret = shmem_set_epp(cpudata, epp);
-@@ -504,11 +506,29 @@ static int shmem_update_perf(struct amd_cpudata *cpudata, u8 min_perf,
- 			return ret;
+ 	if (trace_amd_pstate_epp_perf_enabled()) {
+@@ -362,6 +363,11 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
  	}
+ 	WRITE_ONCE(cpudata->epp_cached, epp);
  
-+	value = prev = READ_ONCE(cpudata->cppc_req_cached);
-+
-+	value &= ~(AMD_CPPC_MAX_PERF_MASK | AMD_CPPC_MIN_PERF_MASK |
-+		   AMD_CPPC_DES_PERF_MASK | AMD_CPPC_EPP_PERF_MASK);
-+	value |= FIELD_PREP(AMD_CPPC_MAX_PERF_MASK, max_perf);
-+	value |= FIELD_PREP(AMD_CPPC_DES_PERF_MASK, des_perf);
-+	value |= FIELD_PREP(AMD_CPPC_MIN_PERF_MASK, min_perf);
++	value = READ_ONCE(cpudata->cppc_req_cached);
++	value &= ~AMD_CPPC_EPP_PERF_MASK;
 +	value |= FIELD_PREP(AMD_CPPC_EPP_PERF_MASK, epp);
-+
-+	if (value == prev)
-+		return 0;
-+
- 	perf_ctrls.max_perf = max_perf;
- 	perf_ctrls.min_perf = min_perf;
- 	perf_ctrls.desired_perf = des_perf;
- 
--	return cppc_set_perf(cpudata->cpu, &perf_ctrls);
-+	ret = cppc_set_perf(cpudata->cpu, &perf_ctrls);
-+	if (ret)
-+		return ret;
-+
 +	WRITE_ONCE(cpudata->cppc_req_cached, value);
 +
-+	return 0;
+ 	return ret;
  }
  
- static inline bool amd_pstate_sample(struct amd_cpudata *cpudata)
 -- 
 2.43.0
 
