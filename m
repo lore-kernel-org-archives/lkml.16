@@ -1,147 +1,209 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB7C2185A8;
-	Mon, 17 Feb 2025 12:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D822185A8;
+	Mon, 17 Feb 2025 12:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739794188; cv=none; b=KhEIxiJ5sIUieVUoVjX6wXkRvFL7m/E8Sn1RaOuxxKKANvjxJ5kB3AytmRzxF4us4XJG/KAZTEOVZwmvRQ8MG+9Y+gCxalLXjWwl9x9fyswvhYwmUaZOr/gsE0xt+2m8+gk88KzT3aOmRi3fmqDVRamEyoCyUxMRXP//8WQ5sTE=
+	t=1739794380; cv=none; b=pz57ANKm9F1crhq+0NOXUVHdsf0Ul/n6MEjGZFoMBnII0lat23HWI/ZqicglecMnxJHXZthLtCy9YMlpDgV+L/i9ydtibeYR/jfZlqJBIm8LWZhDFsWWxPFMOG6xTdjsILi9DBgxKu2reLdWYmAuknKvfPxOH9msChS523mn3Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739794188; c=relaxed/simple;
-	bh=Inc0DYizA8KNQ76TznDJ4jYBwtNttsUa637XXQe72zE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nSFNwQYg3Gi8QVszkcs52y9sVSKLBwE55+DJGeu/1hdbn9O6SPV5zEyEFULhguUAKE5vG2C4xs94JTS/BEaFw7xmt5SrXTYWjJolgNTV8MTZYKrMlQsyH76Fg5E525qZM2+lRLlsQHMDQrnbMwqC7R/5RC9Sn0DCRWmPltx+N3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W267dJ6j; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739794380; c=relaxed/simple;
+	bh=VJNVrcvoIcKGWBC4m+wwvcuEU2F2sV9NM4ZPEjdhRA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ti2g6STouqN97krAphPnZVywqT2hHIOAfayGT837V90l9BOIjuYlCdJ7AqXf/9YKmpXzBFnXGy3k8/rptlw6vMsxfjueEk0C8FcdU6mY1Q/rc53zOt8FV8HaSgCdCggZbWgDfXrjfrQsgHOw9OoRoIES/J0qaJz2kfXDFEVEfqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sF2WsCXn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W267dJ6j"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38dd9b3419cso2241312f8f.0;
-        Mon, 17 Feb 2025 04:09:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739794185; x=1740398985; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eSFQgbvq+nNgV7Pls+43YmrvimRl0VvsXoAHq2jrYgw=;
-        b=W267dJ6jRpk4INEYYLmNDUkAmeD4bA1PwAp8dcm+kXnJ3Q73MYS5TEepJIhqP5Ge3g
-         paVhAS4SEzsqzL9ITYeaHNdgPTCgJybin8oBu9WDEaJLIfCQ3J0iWYLTbj9GlKjENI4h
-         yehkXSv3TqnJQVinaubyAQ+Xr+vhujMhxn7eHOASpYln0qOLX8XnWangUv4A1Ajaln9C
-         RJFrVHC4R4lOv6jQf206DPB3QtqeLwSY+uNFcTpXyZBkKhxSvdMPIO2PiKYhHbQIE2NW
-         NzW9KayTHIp0c1JaOOo8HFfxgXCxR0wrCMccMz2OdWTnDoFLilYiN1eot+mvX1m0kS9G
-         JmIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739794185; x=1740398985;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eSFQgbvq+nNgV7Pls+43YmrvimRl0VvsXoAHq2jrYgw=;
-        b=gOJLm3e5uybz//qkwsFqDVB31C04SGk9TJO3v2fNEfgGuPb6JitjuoFe7X4mhVni6c
-         jBv21lOG9R0YMMem/ZrHZctRJSf9Z8LpLciPzzuJjjQbnhi6V5k25YyJlubYTMwbq+RL
-         gVrMbM8D1TzHP4RwDasbMI07CfnNB9tIL/yCZrJEF0RNQR4t4d+0Bkz2lYcNCoh2Yb5x
-         qbb8sUbGdOzD9p2R8n45uMd+azJpC5TzZLtJI71wGbFT6P6w8BLS1aIwSzU89nO5lKeU
-         OwDC536eN8pyfp6MvoIvn9rcZjzPGzB/tf4ZmYwKJXdz5/v8hXBDwKysMmE6uNwMH22g
-         kQJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ/Czgs1augz1PGsBvaILjwzGmq9VzaqqBpOcZMCat8+1aDnFZoV1Y4WYzoAqtqSQ14JHlDnk4rpGx@vger.kernel.org, AJvYcCVo65O9eStms4zeMo/bC2gJOUBMZb8DvgFgkPK6r5MEffcBX0pWTv8EIsZKF+QBFai4f562fqCy@vger.kernel.org, AJvYcCWCfqM6MnpkMOkJIuaOmtQzIH0H+s+2AHnmj2mFD6276K7CMvLkNvgfA13vIZq/XVqhaK0=@vger.kernel.org, AJvYcCWlmTaR4ZLYdKUqAC8HHiy+qBAT7pcFp2Ii7gVJyehiXewnZHKvoJBpi3Z4BNkYJ9PuIgme5u13SLg/rm2KzuGr9+Bj@vger.kernel.org, AJvYcCX2BntPeE8SlbwiSZUkFb5+6Qhjyx7ndduRRKqNFf8WYXUFUa/OXmEYh2c7Lwm3LBwsGFkkGWmb8U57oAqZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2PN3l99oyryJsSoulngZ8NuA/9ASr24/TP4lAbG7nv1TEGMGZ
-	nGMIQHbdN77CfsFjFXmZ4+6yGrDf75MAlnEv68bWAWPAMq660uHJ
-X-Gm-Gg: ASbGncvfbo93rb81GUqfbASB4e5VoIeEn9qh+wNJvH/xJb4sW1/sDy356cgrMl31uI4
-	tgisXpS6ULgKZH+m6WFSH4XusBW4/YGppQRlw7azCSJVYXW2mmRiFUfQeXA5lKTgIYqNEhPVE4J
-	Z9HHZL96cOqhbpTTw5hDqfyDJmJiIQBHnIBNXllLlqhzpGTV1OGISkvkI44n5j5z1uM53B4BZYT
-	2ePHM+LMdvsn1BDUQITq+QRHQp1U6DjEM6b6H2KfwxLseMpqo0QZmiKP8encqNPIXho4w3rSN2D
-	h3GsYhwi6ECy/YD4X3Doi142MNgJ/vo=
-X-Google-Smtp-Source: AGHT+IGUXM3M95eG2ye29Yd/3FfkwlIr6guJPzqgoVosGmixd8/VUD2KiN9iIXdlnRjIK3DBW5mXIw==
-X-Received: by 2002:a05:6000:2c8:b0:38f:277a:4eb3 with SMTP id ffacd0b85a97d-38f33f1199amr7927742f8f.8.1739794185289;
-        Mon, 17 Feb 2025 04:09:45 -0800 (PST)
-Received: from krava (ip4-95-82-160-96.cust.nbox.cz. [95.82.160.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dd5acsm12253193f8f.35.2025.02.17.04.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 04:09:44 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 17 Feb 2025 13:09:43 +0100
-To: Andy Lutomirski <luto@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eyal Birger <eyal.birger@gmail.com>, stable@vger.kernel.org,
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	x86@kernel.org, bpf@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Deepak Gupta <debug@rivosinc.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCHv3 perf/core] uprobes: Harden uretprobe syscall trampoline
- check
-Message-ID: <Z7MnB3yf2u9eR1yp@krava>
-References: <20250212220433.3624297-1-jolsa@kernel.org>
- <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
- <Z623ZcZj6Wsbnrhs@krava>
- <CALCETrVt=N-QG3zGyPspNCF=8tA4icC75RVVe70-DvJfsh7Sww@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sF2WsCXn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FC7C4CED1;
+	Mon, 17 Feb 2025 12:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739794379;
+	bh=VJNVrcvoIcKGWBC4m+wwvcuEU2F2sV9NM4ZPEjdhRA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sF2WsCXnNO2Mq09ZP8eSrQmmecWEJZ6QCZhrPgk69AgUzET9dlUqjJDIWCzUCPaXi
+	 XgYLSeUO/aw0P3rJE8SbUet5UGF3b7SZFuw72dDnFbVXzCZXFmW7Cc4cXokrYIRKpJ
+	 nni21nwzpaC1ZBEzhUMsTfl59HQ6Gc3+ZOkz35+gE+RRIUl10OF3Xhso+ULq/JLgCE
+	 aP0VHmM27BR2OcELOO6pHlSLkKQcTPctahl1VztCZON8O1G2PIokz75s6hbUPjk3bE
+	 0H2a1ekaqdCVSNMvyc9F3QB1b/UiWwaqe1WXhvTvcwhirt15WONul4o3b642kNFsH/
+	 cBdb+gVEj0FEg==
+Date: Mon, 17 Feb 2025 13:12:52 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Matthew Wilcox <willy@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
+Message-ID: <Z7MnxKSSNY7IyExt@cassiopeiae>
+References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
+ <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALCETrVt=N-QG3zGyPspNCF=8tA4icC75RVVe70-DvJfsh7Sww@mail.gmail.com>
+In-Reply-To: <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
 
-On Thu, Feb 13, 2025 at 09:58:29AM -0800, Andy Lutomirski wrote:
-> On Thu, Feb 13, 2025 at 1:16 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Wed, Feb 12, 2025 at 05:37:11PM -0800, Andy Lutomirski wrote:
-> > > On Wed, Feb 12, 2025 at 2:04 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > > Jann reported [1] possible issue when trampoline_check_ip returns
-> > > > address near the bottom of the address space that is allowed to
-> > > > call into the syscall if uretprobes are not set up.
-> > > >
-> > > > Though the mmap minimum address restrictions will typically prevent
-> > > > creating mappings there, let's make sure uretprobe syscall checks
-> > > > for that.
-> > >
-> > > It would be a layering violation, but we could perhaps do better here:
-> > >
-> > > > -       if (regs->ip != trampoline_check_ip())
-> > > > +       /* Make sure the ip matches the only allowed sys_uretprobe caller. */
-> > > > +       if (unlikely(regs->ip != trampoline_check_ip(tramp)))
-> > > >                 goto sigill;
-> > >
-> > > Instead of SIGILL, perhaps this should do the seccomp action?  So the
-> > > logic in seccomp would be (sketchily, with some real mode1 mess):
-> > >
-> > > if (is_a_real_uretprobe())
-> > >     skip seccomp;
-> >
-> > IIUC you want to move the address check earlier to the seccomp path..
-> > with the benefit that we would kill not allowed caller sooner?
+On Fri, Feb 07, 2025 at 08:58:25AM -0500, Tamir Duberstein wrote:
+> Allow implementors to specify the foreign pointer type; this exposes
+> information about the pointed-to type such as its alignment.
 > 
-> The benefit would be that seccomp users that want to do something
-> other than killing a process (returning an error code, getting
-> notified, etc) could retain that functionality without the new
-> automatic hole being poked for uretprobe() in cases where uprobes
-> aren't in use or where the calling address doesn't match the uprobe
-> trampoline.  IOW it would reduce the scope to which we're making
-> seccomp behave unexpectedly.
-
-Kees, any thoughts about this approach?
-
-thanks,
-jirka
-
-
+> This requires the trait to be `unsafe` since it is now possible for
+> implementors to break soundness by returning a misaligned pointer.
 > 
-> >
-> > jirka
-> >
-> > >
-> > > where is_a_real_uretprobe() is only true if the nr and arch match
-> > > uretprobe *and* the address is right.
-> > >
-> > > --Andy
-> >
+> Encoding the pointer type in the trait (and avoiding pointer casts)
+> allows the compiler to check that implementors return the correct
+> pointer type. This is preferable to directly encoding the alignment in
+> the trait using a constant as the compiler would be unable to check it.
+> 
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+
+I know that Andreas also asked you to pick up the RBs from [1], but - without
+speaking for any of the people above - given that you changed this commit after
+you received all those RBs you should also consider dropping them. Especially,
+since you do not mention the changes you did for this commit in the version
+history.
+
+Just to be clear, often it is also fine to keep tags for minor changes, but then
+you should make people aware of them in the version history, such that they get
+the chance to double check.
+
+[1] https://lore.kernel.org/rust-for-linux/20250131-configfs-v1-1-87947611401c@kernel.org/
+
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  rust/kernel/alloc/kbox.rs | 38 ++++++++++++++++++++------------------
+>  rust/kernel/miscdevice.rs |  7 ++++++-
+>  rust/kernel/pci.rs        |  2 ++
+>  rust/kernel/platform.rs   |  2 ++
+>  rust/kernel/sync/arc.rs   | 21 ++++++++++++---------
+>  rust/kernel/types.rs      | 46 +++++++++++++++++++++++++++++++---------------
+>  6 files changed, 73 insertions(+), 43 deletions(-)
+> 
+> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
+> index e14433b2ab9d..f1a081dd64c7 100644
+> --- a/rust/kernel/miscdevice.rs
+> +++ b/rust/kernel/miscdevice.rs
+> @@ -225,13 +225,15 @@ impl<T: MiscDevice> VtableHelper<T> {
+>          Ok(ptr) => ptr,
+>          Err(err) => return err.to_errno(),
+>      };
+> +    let ptr = ptr.into_foreign();
+> +    let ptr = ptr.cast();
+
+I still think that it's unnecessary to factor this out, you can just do it
+inline as you did in previous versions of this patch and as this code did
+before.
+
+>  
+>      // This overwrites the private data with the value specified by the user, changing the type of
+>      // this file's private data. All future accesses to the private data is performed by other
+>      // fops_* methods in this file, which all correctly cast the private data to the new type.
+>      //
+>      // SAFETY: The open call of a file can access the private data.
+> -    unsafe { (*raw_file).private_data = ptr.into_foreign() };
+> +    unsafe { (*raw_file).private_data = ptr };
+>  
+>      0
+>  }
+> @@ -246,6 +248,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+>  ) -> c_int {
+>      // SAFETY: The release call of a file owns the private data.
+>      let private = unsafe { (*file).private_data };
+> +    let private = private.cast();
+>      // SAFETY: The release call of a file owns the private data.
+>      let ptr = unsafe { <T::Ptr as ForeignOwnable>::from_foreign(private) };
+>  
+> @@ -267,6 +270,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+>  ) -> c_long {
+>      // SAFETY: The ioctl call of a file can access the private data.
+>      let private = unsafe { (*file).private_data };
+> +    let private = private.cast();
+>      // SAFETY: Ioctl calls can borrow the private data of the file.
+>      let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
+>  
+> @@ -316,6 +320,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+>  ) {
+>      // SAFETY: The release call of a file owns the private data.
+>      let private = unsafe { (*file).private_data };
+> +    let private = private.cast();
+>      // SAFETY: Ioctl calls can borrow the private data of the file.
+>      let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
+>      // SAFETY:
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index 6c3bc14b42ad..eb25fabbff9c 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -73,6 +73,7 @@ extern "C" fn probe_callback(
+>          match T::probe(&mut pdev, info) {
+>              Ok(data) => {
+>                  let data = data.into_foreign();
+> +                let data = data.cast();
+
+Same here and below, see also [2].
+
+I understand you like this style and I'm not saying it's wrong or forbidden and
+for code that you maintain such nits are entirely up to you as far as I'm
+concerned.
+
+But I also don't think there is a necessity to convert things to your preference
+wherever you touch existing code.
+
+I already explicitly asked you not to do so in [3] and yet you did so while
+keeping my ACK. :(
+
+(Only saying the latter for reference, no need to send a new version of [3],
+otherwise I would have replied.)
+
+[2] https://lore.kernel.org/rust-for-linux/Z7MYNQgo28sr_4RS@cassiopeiae/
+[3] https://lore.kernel.org/rust-for-linux/20250213-aligned-alloc-v7-1-d2a2d0be164b@gmail.com/
+
+>                  // Let the `struct pci_dev` own a reference of the driver's private data.
+>                  // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
+>                  // `struct pci_dev`.
+> @@ -88,6 +89,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
+>          // SAFETY: The PCI bus only ever calls the remove callback with a valid pointer to a
+>          // `struct pci_dev`.
+>          let ptr = unsafe { bindings::pci_get_drvdata(pdev) };
+> +        let ptr = ptr.cast();
+>  
+>          // SAFETY: `remove_callback` is only ever called after a successful call to
+>          // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
+> diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+> index dea104563fa9..53764cb7f804 100644
+> --- a/rust/kernel/platform.rs
+> +++ b/rust/kernel/platform.rs
+> @@ -64,6 +64,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
+>          match T::probe(&mut pdev, info) {
+>              Ok(data) => {
+>                  let data = data.into_foreign();
+> +                let data = data.cast();
+>                  // Let the `struct platform_device` own a reference of the driver's private data.
+>                  // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
+>                  // `struct platform_device`.
+> @@ -78,6 +79,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
+>      extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
+>          // SAFETY: `pdev` is a valid pointer to a `struct platform_device`.
+>          let ptr = unsafe { bindings::platform_get_drvdata(pdev) };
+> +        let ptr = ptr.cast();
+>  
+>          // SAFETY: `remove_callback` is only ever called after a successful call to
+>          // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
+
