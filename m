@@ -1,256 +1,168 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9160149E00
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 01:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C8913C8EA;
+	Mon, 17 Feb 2025 01:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739757179; cv=none; b=NKKLcEf0wTOf5Lxmuup6l2VBVgLAbsKLrVB7uB1hmO6OZ4vnCu6Il9u7J9VKnOQPo0o8DdzQObutXSakNgOgIAXRVgAECx3WTKQMry5kWbyzRzch+/4LnFBs5Tf+7l23VRav5sNjxhnyAnSJqDKdu0Cgg7mbNK8bOfCjV96PimI=
+	t=1739757547; cv=none; b=aH5SiWMNr7KAk+xgn9To8vrB4J1ldeyNpanvCQDK6cY0ovwltuxjn1Je1ghbFxVntcgBfn5EGJV7Z6+E4K5o3Q2HoHXAQvvRaYFzYuevIkTdkV7HnVK6mhK/oSYIiidkihVaOpxplD2jKFO75J0vsDL/OYQ/A9D1sc4ZEzWa3ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739757179; c=relaxed/simple;
-	bh=q9jbMPlarU7oJg9mEj5aj3sjg4ret6lxK4pjJehmmsE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ISEQGH6qYpjUQTjDg4nsRz51pYBi8QJmrQnPiw4sE/MMg2iQElwKmQBNQLoKy0Y/KrFx/j7gWsDNPLBHwmFC65xHinaMPjteYiVOH0iKnNlyJXYXtKVhAO1l/A+59Vn0Ju9kONZmpCPgS+HAMnNsCGRVXUYtSYMpVUgwZ++YEHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Yx5Gv64C1z11P4m;
-	Mon, 17 Feb 2025 09:51:19 +0800 (CST)
-Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id E67D51A0171;
-	Mon, 17 Feb 2025 09:52:47 +0800 (CST)
-Received: from huawei.com (10.175.124.71) by kwepemg100017.china.huawei.com
- (7.202.181.58) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 17 Feb
- 2025 09:52:47 +0800
-From: Wupeng Ma <mawupeng1@huawei.com>
-To: <akpm@linux-foundation.org>, <david@redhat.com>, <osalvador@suse.de>,
-	<nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <mhocko@suse.com>
-CC: <mawupeng1@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/3] mm: memory-failure: update ttu flag inside unmap_poisoned_folio
-Date: Mon, 17 Feb 2025 09:43:27 +0800
-Message-ID: <20250217014329.3610326-2-mawupeng1@huawei.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250217014329.3610326-1-mawupeng1@huawei.com>
-References: <20250217014329.3610326-1-mawupeng1@huawei.com>
+	s=arc-20240116; t=1739757547; c=relaxed/simple;
+	bh=qrBdUUzn/c2+kWZP64lRZLW82I3fxEupV0fKMARD7Rc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H+UUw50Aw8vfK3BaQrshfmhFKkg3iKSmL9syroepzXKRZQzHv7B4vRfk/Mopq9Bvh3RQqhklDNr0Grux9yECUpfaAIISRPhWn0qY+Xf0ysNWrZygcitfUhCtt3hTOtIGdoPrk6btNDSV/xtFWTbQwFf/Jf3kA0Qnmmgz96aOPgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EvmUCB+u; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvmUCB+u"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54529eeb38aso2634207e87.2;
+        Sun, 16 Feb 2025 17:59:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739757543; x=1740362343; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tUoXJmnwLpnmj3OOHz3frrmLOV1F7Z9/EcBY2hSMhlY=;
+        b=EvmUCB+uv4mKfQT5f5bjsXUzo0KJQQ6FcyaBaNcM37CHFuE7X0qqDuQ6vTg7xvVl7P
+         DZJmJUJZ1t8aloIJopogah2HLwPcf6E2N1LouMOXFmn7gxd1IKVx1tLyrD9lyw0JVGz9
+         XXmUJ9ndfICen2PiZQhxVvfY5IzukNBqzfin1hGBTFwsuQnayJO7GiTN+0KJq+A4iOTm
+         zTSBMDSPNo7GA3jezM/HvBJloeIrVK2/V8c0q7XtN+8uZqn0ScQe8AwJSh/ZPrzb5lTX
+         d20jGe+1G1ooVfVpQagXAU42MjxIT3yIi7R9dklDffyVirYGhExkBN03Xt5L/iZLWzhz
+         Rkmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739757543; x=1740362343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tUoXJmnwLpnmj3OOHz3frrmLOV1F7Z9/EcBY2hSMhlY=;
+        b=r6ahyUrPMoLLFm+voaCm0Rp4WleZWVbUnwVykV7FsQgN9aykSgtJVVHQf1s5X1C8D/
+         Lv6WooFW+Kz2xUGDxaZ5rs4Wh2DZN3wPHMysEVuFFFmmYLTgizCVj66ux8e6ClLOJOh5
+         biiDZZHmTJO7NlJlgHg88rWwo+/YS7bVdgx9uwRcCxfyDGFgJEgLYw7LdMrsfZMabyoV
+         5BN8TU+Q8G005Osgyx7xXO8WFktYLocJkT8LGR+22jD9pE8bRf/VV5KX/ovscoeSWonB
+         2O4HKM9L2FgQblxt4PX4UB86tPpoQf3MVhOpGsCNx4PKvxjwKahpOXBzxtN7ZXZz5Y9q
+         TcxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDyRi7TWLAWx1528yS/mm3WDAeEVBYbyOdNBAISoxsiT1V80XBF2UJ+r0iPaoPka6a212mhUjd6AYo@vger.kernel.org, AJvYcCUQi4CM/xl1QjfQ24D1rGQdsk3DIhpFX2fi8GiZ3Zmjq/CH9D27Ev/5+Ssm3h6pe7LIXpeaUJCna0dI02uU@vger.kernel.org, AJvYcCVgmig8TKBzWgacJRWwO7b7XgTW/mUPWGWq6cpqwcQJXxkhnHUefN3yuZbS+ASdUP955nVUnYNWqYsUmrPE@vger.kernel.org, AJvYcCXVO4SlqeA61nlG5puLdtZ4zvamWJXEHKaUhKZO2H4IYgDVcxPvNInhZ4/34ALht4fK6NOgr/j1BA5p+ChJZCU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUnlFsNuDgImN8tJqrZ+XNJhtfId94kvBf1qbTXPHbYvPxHJu2
+	yao4qZhpt11Cgy0PsG4LTARrPkz1SACmRDM5+XVhsLTigvtD5R8kPFq5CzZwQc89tgHxtbwCu8c
+	IjStvtVSigQpRwaDO++Iz4/TPFKE=
+X-Gm-Gg: ASbGnctUzsM3ywNVuCc268ANlfeIPaqznHgo/wPBnG8IUKJkWOE2CwZcif9GUz2xEsR
+	7IbAbL5cIgI8pPsdXWBms6ESgtUnqfEc2Db18lN65P1ZSeyaUKYy89PUqQVdG18LTLWjiKHA53E
+	D7wfTOMdInzGL9W11r7P3+gd7pRTNLxlk=
+X-Google-Smtp-Source: AGHT+IEoMShy52NGy3PEC2IwHz3gdRZDwYYZFVffmPGxVRYp7qsQCGC6Djl7RsJDcz7ap48T1sRdL7Fb8Uoid41YSj4=
+X-Received: by 2002:a05:6512:1194:b0:545:102f:8788 with SMTP id
+ 2adb3069b0e04-5452fe485d4mr2399912e87.19.1739757543185; Sun, 16 Feb 2025
+ 17:59:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg100017.china.huawei.com (7.202.181.58)
+References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
+ <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com> <96d799a7-ec70-4d3f-951b-52c56b545255@proton.me>
+In-Reply-To: <96d799a7-ec70-4d3f-951b-52c56b545255@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 16 Feb 2025 20:58:27 -0500
+X-Gm-Features: AWEUYZl7QPySmiOwtQ3cZuVsbg9zM2Ta3RU49N3UwfR8ssyiFeRahnKYhUoPDy4
+Message-ID: <CAJ-ks9nemf0XbVhEMeDVRq0SBcdMRUJn3Pmfotbx5CJBj7QTTQ@mail.gmail.com>
+Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ma Wupeng <mawupeng1@huawei.com>
+On Sun, Feb 16, 2025 at 8:39=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On 07.02.25 14:58, Tamir Duberstein wrote:
+> > Allow implementors to specify the foreign pointer type; this exposes
+> > information about the pointed-to type such as its alignment.
+> >
+> > This requires the trait to be `unsafe` since it is now possible for
+> > implementors to break soundness by returning a misaligned pointer.
+> >
+> > Encoding the pointer type in the trait (and avoiding pointer casts)
+> > allows the compiler to check that implementors return the correct
+> > pointer type. This is preferable to directly encoding the alignment in
+> > the trait using a constant as the compiler would be unable to check it.
+> >
+> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> > Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> >  rust/kernel/alloc/kbox.rs | 38 ++++++++++++++++++++------------------
+> >  rust/kernel/miscdevice.rs |  7 ++++++-
+> >  rust/kernel/pci.rs        |  2 ++
+> >  rust/kernel/platform.rs   |  2 ++
+> >  rust/kernel/sync/arc.rs   | 21 ++++++++++++---------
+> >  rust/kernel/types.rs      | 46 +++++++++++++++++++++++++++++++--------=
+-------
+> >  6 files changed, 73 insertions(+), 43 deletions(-)
+>
+> When compiling this (on top of rust-next), I get the following error:
+>
+>     error[E0308]: mismatched types
+>        --> rust/kernel/miscdevice.rs:300:62
+>         |
+>     300 |     let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(=
+private) };
+>         |                           ---------------------------------- ^^=
+^^^^^ expected `*mut <<T as MiscDevice>::Ptr as ForeignOwnable>::PointedTo`=
+, found `*mut c_void`
+>         |                           |
+>         |                           arguments to this function are incorr=
+ect
+>         |
+>         =3D note: expected raw pointer `*mut <<T as MiscDevice>::Ptr as F=
+oreignOwnable>::PointedTo`
+>                    found raw pointer `*mut c_void`
+>         =3D help: consider constraining the associated type `<<T as MiscD=
+evice>::Ptr as ForeignOwnable>::PointedTo` to `c_void` or calling a method =
+that returns `<<T as MiscDevice>::Ptr as ForeignOwnable>::PointedTo`
+>         =3D note: for more information, visit https://doc.rust-lang.org/b=
+ook/ch19-03-advanced-traits.html
+>     note: associated function defined here
+>        --> rust/kernel/types.rs:98:15
+>         |
+>     98  |     unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> Self::Bo=
+rrowed<'a>;
+>         |               ^^^^^^
+>
+>     error: aborting due to 1 previous error
+>
+> Can anyone reproduce?
+>
+> ---
+> Cheers,
+> Benno
+>
 
-Commit 6da6b1d4a7df ("mm/hwpoison: convert TTU_IGNORE_HWPOISON to
-TTU_HWPOISON") introduce TTU_HWPOISON to replace TTU_IGNORE_HWPOISON
-in order to stop send SIGBUS signal when accessing an error page after
-a memory error on a clean folio. However during page migration, anon
-folio must be set with TTU_HWPOISON during unmap_*(). For pagecache
-we need some policy just like the one in hwpoison_user_mappings to
-set this flag. So move this policy from hwpoison_user_mappings to
-unmap_poisoned_folio to handle this warning properly.
+Looks like this code is behind #[cfg(CONFIG_COMPAT)] and I missed
+updating it. It is fixed by
 
-Warning will be produced during unamp poison folio with the following log:
+diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
+index f1a081dd64c7..004dc87f441f 100644
+--- a/rust/kernel/miscdevice.rs
++++ b/rust/kernel/miscdevice.rs
+@@ -296,6 +296,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+ ) -> c_long {
+     // SAFETY: The compat ioctl call of a file can access the private data=
+.
+     let private =3D unsafe { (*file).private_data };
++    let private =3D private.cast();
+     // SAFETY: Ioctl calls can borrow the private data of the file.
+     let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
 
-  ------------[ cut here ]------------
-  WARNING: CPU: 1 PID: 365 at mm/rmap.c:1847 try_to_unmap_one+0x8fc/0xd3c
-  Modules linked in:
-  CPU: 1 UID: 0 PID: 365 Comm: bash Tainted: G        W          6.13.0-rc1-00018-gacdb4bbda7ab #42
-  Tainted: [W]=WARN
-  Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
-  pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-  pc : try_to_unmap_one+0x8fc/0xd3c
-  lr : try_to_unmap_one+0x3dc/0xd3c
-  Call trace:
-   try_to_unmap_one+0x8fc/0xd3c (P)
-   try_to_unmap_one+0x3dc/0xd3c (L)
-   rmap_walk_anon+0xdc/0x1f8
-   rmap_walk+0x3c/0x58
-   try_to_unmap+0x88/0x90
-   unmap_poisoned_folio+0x30/0xa8
-   do_migrate_range+0x4a0/0x568
-   offline_pages+0x5a4/0x670
-   memory_block_action+0x17c/0x374
-   memory_subsys_offline+0x3c/0x78
-   device_offline+0xa4/0xd0
-   state_store+0x8c/0xf0
-   dev_attr_store+0x18/0x2c
-   sysfs_kf_write+0x44/0x54
-   kernfs_fop_write_iter+0x118/0x1a8
-   vfs_write+0x3a8/0x4bc
-   ksys_write+0x6c/0xf8
-   __arm64_sys_write+0x1c/0x28
-   invoke_syscall+0x44/0x100
-   el0_svc_common.constprop.0+0x40/0xe0
-   do_el0_svc+0x1c/0x28
-   el0_svc+0x30/0xd0
-   el0t_64_sync_handler+0xc8/0xcc
-   el0t_64_sync+0x198/0x19c
-  ---[ end trace 0000000000000000 ]---
-
-Fixes: 6da6b1d4a7df ("mm/hwpoison: convert TTU_IGNORE_HWPOISON to TTU_HWPOISON")
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
-Acked-by: David Hildenbrand <david@redhat.com>
----
- mm/internal.h       |  5 ++--
- mm/memory-failure.c | 61 +++++++++++++++++++++++----------------------
- mm/memory_hotplug.c |  3 ++-
- 3 files changed, 36 insertions(+), 33 deletions(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index 9826f7dce607..c9186ca8d7c2 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1102,7 +1102,7 @@ static inline int find_next_best_node(int node, nodemask_t *used_node_mask)
-  * mm/memory-failure.c
-  */
- #ifdef CONFIG_MEMORY_FAILURE
--void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu);
-+int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill);
- void shake_folio(struct folio *folio);
- extern int hwpoison_filter(struct page *p);
- 
-@@ -1125,8 +1125,9 @@ unsigned long page_mapped_in_vma(const struct page *page,
- 		struct vm_area_struct *vma);
- 
- #else
--static inline void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
-+static inline int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill)
- {
-+	return -EBUSY;
- }
- #endif
- 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index a7b8ccd29b6f..b5212b6e330a 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1556,8 +1556,34 @@ static int get_hwpoison_page(struct page *p, unsigned long flags)
- 	return ret;
- }
- 
--void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
-+int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill)
- {
-+	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
-+	struct address_space *mapping;
-+
-+	if (folio_test_swapcache(folio)) {
-+		pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
-+		ttu &= ~TTU_HWPOISON;
-+	}
-+
-+	/*
-+	 * Propagate the dirty bit from PTEs to struct page first, because we
-+	 * need this to decide if we should kill or just drop the page.
-+	 * XXX: the dirty test could be racy: set_page_dirty() may not always
-+	 * be called inside page lock (it's recommended but not enforced).
-+	 */
-+	mapping = folio_mapping(folio);
-+	if (!must_kill && !folio_test_dirty(folio) && mapping &&
-+	    mapping_can_writeback(mapping)) {
-+		if (folio_mkclean(folio)) {
-+			folio_set_dirty(folio);
-+		} else {
-+			ttu &= ~TTU_HWPOISON;
-+			pr_info("%#lx: corrupted page was clean: dropped without side effects\n",
-+				pfn);
-+		}
-+	}
-+
- 	if (folio_test_hugetlb(folio) && !folio_test_anon(folio)) {
- 		struct address_space *mapping;
- 
-@@ -1572,7 +1598,7 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
- 		if (!mapping) {
- 			pr_info("%#lx: could not lock mapping for mapped hugetlb folio\n",
- 				folio_pfn(folio));
--			return;
-+			return -EBUSY;
- 		}
- 
- 		try_to_unmap(folio, ttu|TTU_RMAP_LOCKED);
-@@ -1580,6 +1606,8 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
- 	} else {
- 		try_to_unmap(folio, ttu);
- 	}
-+
-+	return folio_mapped(folio) ? -EBUSY : 0;
- }
- 
- /*
-@@ -1589,8 +1617,6 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
- static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
- 		unsigned long pfn, int flags)
- {
--	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
--	struct address_space *mapping;
- 	LIST_HEAD(tokill);
- 	bool unmap_success;
- 	int forcekill;
-@@ -1613,29 +1639,6 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
- 	if (!folio_mapped(folio))
- 		return true;
- 
--	if (folio_test_swapcache(folio)) {
--		pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
--		ttu &= ~TTU_HWPOISON;
--	}
--
--	/*
--	 * Propagate the dirty bit from PTEs to struct page first, because we
--	 * need this to decide if we should kill or just drop the page.
--	 * XXX: the dirty test could be racy: set_page_dirty() may not always
--	 * be called inside page lock (it's recommended but not enforced).
--	 */
--	mapping = folio_mapping(folio);
--	if (!(flags & MF_MUST_KILL) && !folio_test_dirty(folio) && mapping &&
--	    mapping_can_writeback(mapping)) {
--		if (folio_mkclean(folio)) {
--			folio_set_dirty(folio);
--		} else {
--			ttu &= ~TTU_HWPOISON;
--			pr_info("%#lx: corrupted page was clean: dropped without side effects\n",
--				pfn);
--		}
--	}
--
- 	/*
- 	 * First collect all the processes that have the page
- 	 * mapped in dirty form.  This has to be done before try_to_unmap,
-@@ -1643,9 +1646,7 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
- 	 */
- 	collect_procs(folio, p, &tokill, flags & MF_ACTION_REQUIRED);
- 
--	unmap_poisoned_folio(folio, ttu);
--
--	unmap_success = !folio_mapped(folio);
-+	unmap_success = !unmap_poisoned_folio(folio, pfn, flags & MF_MUST_KILL);
- 	if (!unmap_success)
- 		pr_err("%#lx: failed to unmap page (folio mapcount=%d)\n",
- 		       pfn, folio_mapcount(folio));
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index c43b4e7fb298..3de661e57e92 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1806,7 +1806,8 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 			if (WARN_ON(folio_test_lru(folio)))
- 				folio_isolate_lru(folio);
- 			if (folio_mapped(folio))
--				unmap_poisoned_folio(folio, TTU_IGNORE_MLOCK);
-+				unmap_poisoned_folio(folio, pfn, false);
-+
- 			continue;
- 		}
- 
--- 
-2.43.0
-
+I'll include that in the next version.
