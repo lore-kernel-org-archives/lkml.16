@@ -1,151 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1988A2165E2;
-	Mon, 17 Feb 2025 10:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA4C8BE8;
+	Mon, 17 Feb 2025 11:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739789998; cv=none; b=diOnjcY+FHZduw6UNGM/gnZ5xmQrdNjqHfUMAVsysMelHVxRuIj5BgH4VaOFycdrG1KG/23tBk4E4OjABMW+Iwa4eRROddTRXbWdx9WwbWvGxuchvR+6AdTcsi1a9LyANRCbr81p7IPLE/OKePouo3KFDsf13vUrxYFa6qs23EQ=
+	t=1739790012; cv=none; b=XgZu+nhlTFo4sc5bLO4GsEF+1x4LW4G9WFFu5sGI/UyzRkoJEe0MIGAYtRj6m7gZZdhqwTy67OTY2VwYUbcDF7X9r7eIuJCkQBy9C893tMo/HeXXBedg3QquupISL4IsR/Ab9rEvjjhFLYBH+pPkGltkE96jZKz0uo7akSAINrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739789998; c=relaxed/simple;
-	bh=ZF5/FtNJqQYUzLXezQqrfcgLga0oCwWgRODIlTj730s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nZ+4Eq5rYylNNxyXwk7jA8ovZktc5ZxKSyGAJL1TNFn61owYBxFLqZPfrV+ZycOUn9iCWedp7dHF+NYsF1t3vPXDLb3Nq5MTzK/wBD6xKnuHOVGotZANd5QgpKKA/W65WN/22dduokA0y/cpIvHvgiEW9nC2pUfRFq6fFFA+tCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enH4Wm1e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739790012; c=relaxed/simple;
+	bh=ZNHUleisOdHmYgANtMeSyIY1VUuxlx4cRdm40fYq/UY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eydOhJis/SbtykondvUhIA0TwV25eg1clex3WepiRSzxKXOj3AcYoQ8wGYZkCPCEZhOw3mqKalXP6AYWOt1r0d6J5QlbnltXtAX/7buPoILg6QcsxYdJO2IrgM3q1Byq2y2hUxSyEc4dLBGRXvyyPLIpKwsqLseZu1lWXzpebUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dLkmnCY2; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enH4Wm1e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46DF8C4CED1;
-	Mon, 17 Feb 2025 10:59:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739789997;
-	bh=ZF5/FtNJqQYUzLXezQqrfcgLga0oCwWgRODIlTj730s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=enH4Wm1e9AVNFYdTnvGwXNJkRvcLP/21gPwifBRBhUkdqB+fjWMMU2Zr5uSpwfrYL
-	 ISfXv/utxiMZVRsAXKFGnGM78RO8NjYn55CpXHzoP+Op15Q5hqEMQk07NVYwzD4gcO
-	 8iqMvKmqXniTYrOg4dtM36BNVsHQOQuh6uYPcIq0G6G1W+c7lMRr3nrT3EuMXX0FRQ
-	 xsTLL6OwgwColBFDU8r2Fu69UeYCffzRlARG380kHvXQ/THjMpmtjQs+eZpaFuG8Bq
-	 iYVlmygHab/bOu8+4iKT0UP1wK+uvsOf5xQPeRxbI6ZYoFsmc+63coiXDOoaxH/6Mj
-	 XXiJDX30KcvPA==
-Message-ID: <15729df921fa8718ee173963132a370de6aae9af.camel@kernel.org>
-Subject: Re: [PATCH] virtio: console: Prepare for making REMOTEPROC modular
-From: Amit Shah <amit@kernel.org>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
-	 <gregkh@linuxfoundation.org>, virtualization@lists.linux.dev, 
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dLkmnCY2"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BCC7240E01A1;
+	Mon, 17 Feb 2025 10:59:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Eg6h8LvNyXZ6; Mon, 17 Feb 2025 10:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739789993; bh=4mcW+ftRRHHKwN2CsGFMs2T5+lHfpSf2xypFj9o/BQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dLkmnCY2DFgr6nl3bV6xDkdAKoKSqK32yJR7932Px4Ps9OcFhbVypQSU7Ii0C/cV2
+	 u3U4L8PHI/pVA7lMJmcDVNShl8l72rA3VEYCi0ikAGHoFAXQLNoEOxFG4GDtIYSh8u
+	 fh4dyarpzp+u/c/+nSJfEhIQY2pkrwTwuWWVSY8IZ2DXlFk4e9pLjhkQN20BPl3KIW
+	 3RbUpl5wB6UQBc+jt9SH6dC90WzWH5P3HGu0+8ETlDAJqONSCi95NDlrcBlcbWPF2D
+	 894Ux2CUX+mWmxUF23dWNVwXm9npUkze9r8Yue5cGl7nKnxK1GjcKbCc1k46/qvTmE
+	 iOt5HvgbgrvwC3z/zIR1IWJA2tTZY86rTSnlRadlAf5orGSifYOic2dPmfiiklMTS4
+	 D0DR/jC68gStN7EavqSvc4vEMA/0g4iB4jshaAuHrZrZxhxXzyiWE2x75ZdIiiv3ax
+	 9bZyFBEM2KtXbR07M/n4aW8NuHXLaQJJD9G8snEn+igPSa9AxODLzav+9JillEitZi
+	 JMKE4jZJ6oLGAvi6dBtkdciaFkTZ99KBQZ8Iu37nFsIP1m8sPCrQc7HjwueBNw8DAl
+	 TW3wQtLqhiU8nlO4SNoD6j0wNHhSrYmrg5Cw1IXdbdjYWoRCBg6SeYWIsoYr7FYVFE
+	 hl4bn4qXJ1S+w49qUDhdb/0A=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8BCD940E0176;
+	Mon, 17 Feb 2025 10:59:43 +0000 (UTC)
+Date: Mon, 17 Feb 2025 11:59:37 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Date: Mon, 17 Feb 2025 11:59:53 +0100
-In-Reply-To: <2c676a9910c2d5b1332bb9baa999cdd16763a730.camel@kernel.org>
-References: <20250213115517.82975-2-u.kleine-koenig@baylibre.com>
-		 <34cb36503dae7a2d0ba94d1c367004a2d901e13b.camel@kernel.org>
-		 <uo3h33wijb7mhjwgugpkjhqg7wusz6tpkh5u5fxbsxp3kzpq75@ggsdroemmdmj>
-		 <558f3faa22e5717872bf53acfe6007dc3118f17d.camel@kernel.org>
-		 <k72vfex6qy53xrunz5ohe24c2upfjcdwofozszi4l3k3rm6dou@bd6swzi3v5ng>
-		 <606b16787920ff5e1807e4f8450add5889fdd1cb.camel@kernel.org>
-		 <dard24qyuwm6plnswtz4to36w3fynb553aohf5i7u4ln37nhbk@pgrvhqwvwuzp>
-		 <6d48bcfd0c6030c92f6a5a4a91c9b62f926b3b16.camel@kernel.org>
-		 <535ivi67jdmcuhns5q4r36fjpqde3clnqq7hr26gmg33jwoxyb@ahvuhhaewh3u>
-	 <2c676a9910c2d5b1332bb9baa999cdd16763a730.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+Subject: Re: [PATCH RESEND v2 1/3] x86/cpu: Create helper to parse clearcpuid
+ param
+Message-ID: <20250217105937.GGZ7MWmb4eTtRaN72e@fat_crate.local>
+References: <20250129-force-cpu-bug-v2-0-5637b337b443@google.com>
+ <20250129-force-cpu-bug-v2-1-5637b337b443@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250129-force-cpu-bug-v2-1-5637b337b443@google.com>
 
-On Mon, 2025-02-17 at 11:53 +0100, Amit Shah wrote:
-> On Fri, 2025-02-14 at 18:47 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > On Fri, Feb 14, 2025 at 05:55:41PM +0100, Amit Shah wrote:
-> > > On Fri, 2025-02-14 at 17:52 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > > Hello Amit,
-> > > >=20
-> > > > On Fri, Feb 14, 2025 at 05:37:52PM +0100, Amit Shah wrote:
-> > > > > I'm thinking of the two combinations of interest:
-> > > > > REMOTEPROC=3Dm,
-> > > > > VIRTIO_CONSOLE can be y or m.=C2=A0 Say virtcons_probe() happens
-> > > > > when
-> > > > > the
-> > > > > remoteproc module isn't yet loaded.=C2=A0 Even after later loadin=
-g
-> > > > > remoteproc, virtio console won't do anything interesting with
-> > > > > remoteproc.
-> > > >=20
-> > > > Where does the interesting thing happen if remoteproc is
-> > > > already
-> > > > loaded
-> > > > at that time? I'm not seeing anything interesting in that case
-> > > > either
-> > > > ...
-> > >=20
-> > > The code I pointed to,
-> > >=20
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/drivers/char/virtio_console.c#n1993
-> > >=20
-> > > either enables remoteproc if the module is present; or it enables
-> > > multiport, but not both at the same time.=C2=A0 If remoteproc isn't
-> > > present
-> > > when this probe routine is executed, multiport might get
-> > > enabled.=C2=A0
-> > > And
-> > > then there's no chance for remoteproc to get enabled.
-> >=20
-> > The only case where there is a difference between IS_REACHABLE and
-> > IS_ENABLED is:
-> >=20
-> > 	CONFIG_REMOTEPROC=3Dm
-> > 	CONFIG_VIRTIO_CONSOLE=3Dy
->=20
-> Well, also if CONFIG_VIRTIO_CONSOLE=3Dm; and virtio_console.ko is
-> loaded
-> before remoteproc.ko.
->=20
-> > Iff in this case you never want to test for MULTIPORT (even though
-> > the
-> > remoteproc module might never get loaded), then my patch is wrong.
-> >=20
-> > When creating the patch I thought there is a hard dependency on
-> > remoteproc (like calling a function that is provided by
-> > CONFIG_REMOTEPROC). I don't understand how the remoteproc stuff
-> > interacts with the virtio_console driver, is this something in
-> > userspace
-> > which then would also autoload the remoteproc module?
->=20
-> What's happening is that multiport and remoteproc are mutually
-> exclusive in the virtio_console code.
->=20
-> And, I'm also not sure of how remoteproc loads and configures itself.
-> Does loading remoteproc cause a load of virtio_console?=C2=A0 How?
->=20
-> So - based on our discussions, I think your assumptions are:
->=20
-> 1. remoteproc will load virtio_console when remoteproc is required
-> 2. virtio_console will never be loaded by itself
-> 3. General virtio_console functionality (including tty and multiport)
-> is never used when remoteproc is used
->=20
-> I think at least 3 needs more thought/justification why it's a valid
-> assumption.=C2=A0 Documenting it in the commit msg is fine.
->=20
-> At least assumptions 1 and 2 will cause remoteproc to not function
-> correctly with virtio_console, despite both of them being loaded
-> (because they can be loaded in the unexpected order -- virtio_console
-> before remoteproc).=C2=A0 Do you want to adjust the code so that
-> remoteproc
-> queries for already-existing virtio_console.ko, triggers the code
-> that
-> would otherwise be not triggered in virtcons_probe(), and makes
-> remoteproc functional in that case?
+On Wed, Jan 29, 2025 at 03:35:39PM +0000, Brendan Jackman wrote:
+> +/*
+> + * We parse cpu parameters early because fpu__init_system() is executed
 
-... I just saw that virtcons_probe() doesn't have any setup in case of
-rproc.  So this last paragraph doesn't apply.
+While at it:
 
-So maybe just adding some notes in the commit log about why this will
-end up working, and why rproc usage and tty+multiport usage are
-mutually exclusive (and fine) will help.
+s/We parse cpu parameters/Parse CPU parameters/
 
-Thanks,
+> + * before parse_early_param().
+> + */
+> +static void __init cpu_parse_early_param(void)
+> +{
+> +	char arg[128];
+> +	int arglen;
+> +
+> +#ifdef CONFIG_X86_32
+> +	if (cmdline_find_option_bool(boot_command_line, "no387"))
+> +#ifdef CONFIG_MATH_EMULATION
+> +		setup_clear_cpu_cap(X86_FEATURE_FPU);
+> +#else
+> +		pr_err("Option 'no387' required CONFIG_MATH_EMULATION enabled.\n");
+> +#endif
+> +
+> +	if (cmdline_find_option_bool(boot_command_line, "nofxsr"))
+> +		setup_clear_cpu_cap(X86_FEATURE_FXSR);
+> +#endif
+> +
+> +	if (cmdline_find_option_bool(boot_command_line, "noxsave"))
+> +		setup_clear_cpu_cap(X86_FEATURE_XSAVE);
+> +
+> +	if (cmdline_find_option_bool(boot_command_line, "noxsaveopt"))
+> +		setup_clear_cpu_cap(X86_FEATURE_XSAVEOPT);
+> +
+> +	if (cmdline_find_option_bool(boot_command_line, "noxsaves"))
+> +		setup_clear_cpu_cap(X86_FEATURE_XSAVES);
+> +
+> +	if (cmdline_find_option_bool(boot_command_line, "nousershstk"))
+> +		setup_clear_cpu_cap(X86_FEATURE_USER_SHSTK);
+> +
+> +	/* Minimize the gap between FRED is available and available but disabled. */
+> +	arglen = cmdline_find_option(boot_command_line, "fred", arg, sizeof(arg));
+> +	if (arglen != 2 || strncmp(arg, "on", 2))
+> +		setup_clear_cpu_cap(X86_FEATURE_FRED);
+> +
+> +	arglen = cmdline_find_option(boot_command_line, "clearcpuid", arg, sizeof(arg));
+> +	if (arglen <= 0)
+> +		return;
 
-		Amit
+Newline here.
+
+> +	parse_clearcpuid(arg);
+>  }
+>  
+>  /*
+> 
+> -- 
+> 2.48.1.262.g85cc9f2d1e-goog
+> 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
