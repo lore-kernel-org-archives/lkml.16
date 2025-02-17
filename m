@@ -1,110 +1,101 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430C91E515
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A751E515;
+	Mon, 17 Feb 2025 13:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739799099; cv=none; b=fEPpoXfK+eS88ajgny271208C5Q6ZnFtEkxXPLEz1Y7hIHnLpL1S3aB1efm4TiGPpe9Zk+1fb2zcf0DQMjyHMjf24Y7JIi84284UbHmO8wgzQYnLokUSMb10OLHV4guPQGfrB06mveOtbKNJxsksG8euqY1GDM4qC/PIuNbWZLw=
+	t=1739799165; cv=none; b=lSaFvVLCVjrv0Ifnk08DIJnr9gCFGJXRmMltzIAjnxrqpLM+i6K1S8hZ34hKBE2LdyRbVuf0FQ6yd9+GqQVCqdlQNCC6sm10MBiWxAjGz8R5bX7mElDXbf5uT3CuefWSXi680r0827W/a8DBXCZWPmlroZNjFqb5nSuLwkJpJ+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739799099; c=relaxed/simple;
-	bh=pfta4Pm4pk5IpJlxB0EEt/X0m5YBmHer64jfAMzh9PI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6jkZd2XGI6zYGXsW+TL0GVn8KTd9fCZPifnB36mZQuqxwiMzyoCXYN0fEaJ6LxBSxOgTFT0JxuEBR2He4N4l/zpTwrfiDIDGsMu38jTli6oI2IXah1krl0zCx9ljiAqPKLeyEUgV6syR0wVR9x0mwlQazAtelgAurXVdTBUrq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xO+aqqle; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739799165; c=relaxed/simple;
+	bh=O+xf4Pjh0FmkOANa2TdynZ4baqKl4IxACwdRgqvC/gA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ox76VY/vXe1mOlPMMGrD2Weq/tVoVLon4vlZTUNJVUgdHJZrEQt+vxg+KePjmRixNx2Ei11jR1RQvC3saMFQ33/R7lZeDWkOBE0TjAeyJswecOxyKdmo3AYKY5QI7zi7+EbNzBqZcav4qhNTFBNd0Nsph0NEjkKV9SjDU0sbHlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=cCGwRXxh; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xO+aqqle"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5ded46f323fso5462101a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 05:31:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739799095; x=1740403895; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HePxZ4NzY+6vqhU8FtuMDirnS9ZXHHg6wU/jN8842aw=;
-        b=xO+aqqle/xNfjq6cUmiYRqqW/iUdU6Jvo1QbF8RX26d5i55gM/OxCPFH3VVsdcssoZ
-         TFxQ+prhTMBcXH6XwiXJSdRCPZbrLV3+EE7JFamCPxYE392MpXQgAbzASj8PKlFMZPrf
-         E7pFp43wOquABKiiKxzNPdmGqKXkPXub0GYNYRS7hCbBqKP6KPmlg0mRmdLNIsL6a4u6
-         KIeZQUp7brDUxjpLcgS6ZUIVaI9hHDylVHPApjDDFiW+arw/eXKheGbDJ19BQm162oRU
-         x/b6jzmYbIbRbdnfJEzol4nMSB7bAnuenlZjBdE6kKLa0R1HXc3H0bxzxiEjCL6SaFKD
-         tf/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739799095; x=1740403895;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HePxZ4NzY+6vqhU8FtuMDirnS9ZXHHg6wU/jN8842aw=;
-        b=ZmXBDxJsuFDAsjEo8dj/m39eghQ3QVMLA2E+8JTM/Ni6QBUJi2bfXsnbB5b7gzw7sx
-         ufPFfjI8IhgU4MY8snj1VNMN+G/70zL/D/h91hmKHFncZ2vmlFoPDuxKiXv3EUxa0R9w
-         Et3+hR08WMUe5NRsVPjDvZVEoUUhjf4/sUHAR2IC8aXTg12J5jzLj56r76MEJgQve0Gt
-         WRDUiSo24vAHEMMdIw0EYXoBQRR7cZYLLKyCnOc6iPfP+uwEtIUuF/3ZxvEhsB+7It1u
-         /GIgSXTRRwTSQE22G9bJodzVaDGfvDv0XvTYdskdMvjv57pcUsKimSl1oFKlGb+/rNp3
-         ewBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQRw4abxHSr3N9M+jPx+Tui8WBWvcbFBqt+ZwLapacw13WbewDkZRcZQU72sMYJ+CrvJcUd1MhoNfdKls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvnVnw1QNMtljKAAdiJt2bmx5lqX3Frtxpic403UdGHk+7xhMp
-	QnYUIsft80RJY0y/bmkiEbtm0S9H0KARMh7DmYuUL10yKYXUKkNzZwRdcn1C80Y=
-X-Gm-Gg: ASbGncszZ5qmiIuL9Y49LnHc/3n//g+1zzQatip4hpJzIi1UmZ8hP2EoTwlhgbx2Krv
-	B8LckSkeLXHmbvXJMRlW8dulVHoEsCklqqwBD8XpH5GPjZRukJLp7494I6iMKw5oM3GS/wND0jN
-	Y31W/3+alqEbTwuwe6Y2nkT1B8OReft9zJxeBAY3QQV8Wm9o9Uh4QEFmemM+CbvAYEuRZ670c2P
-	SSAvTUJiFQYoUpQ8IAZHeA2mbpYELFxvVGVJeJ2pLtJbkLOyia3Ie0D1p6jCnvbbUgOo0tky0le
-	0NcF3zTQec6+u9wI0WL+
-X-Google-Smtp-Source: AGHT+IFh9Z5T9/NZ6mle03lBLTwxdm39QVeknchTQU0+AZJXPlmONlIdxst1Xno5kyJLM8pO7oAAVQ==
-X-Received: by 2002:a17:907:7842:b0:ab7:63fa:e48f with SMTP id a640c23a62f3a-abb70bcb84emr885152766b.26.1739799095507;
-        Mon, 17 Feb 2025 05:31:35 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abb9751553fsm241554166b.86.2025.02.17.05.31.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 05:31:35 -0800 (PST)
-Date: Mon, 17 Feb 2025 16:31:31 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ravi Kumar kairi <kumarkairiravi@gmail.com>
-Cc: dpenkler@gmail.com, gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kuba@kernel.org, rmk+kernel@armlinux.org.uk
-Subject: Re: [PATCH v3 2/4] [PATCH V2 2/4] staging:gpib:agilent_82350b:
- Removed commented out code
-Message-ID: <629f57dc-d6c7-48ca-8b05-f1d0169eb454@stanley.mountain>
-References: <20250217103046.54294-1-kumarkairiravi@gmail.com>
- <20250217103046.54294-3-kumarkairiravi@gmail.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="cCGwRXxh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ndDFacYqo5RlTSgmq7eZGeOr8WEe1xcV2iL6qYnhkrE=; b=cCGwRXxhPT/Kf39s2YVR7YONeg
+	DUjXMFm+GU+MNTda+Ruwv0wcfnNUaRFNS6fEHBnLDcGwv7EbAMn7rfj7y4Psk+xAix4/siVOtAOUS
+	+USCwJaGlB+e2kdVur85YofNjhqhJiSjmwzLS05FaV3pTefw6E/cCiNys3V8bIP2rVjGIFPzRlsAF
+	R+x140EZSeBTROIyYGkIeHsEOZIxGSiiLJASOQSgt3mHp+MsbL2YNPfkAOyvRkUtYGQxogUtxUz3U
+	MEiUoXpl4HFeDTojscGUKxSZG+X8QVgwLBemYpo287W8m23rsRgJViWC8DFSGRNW9v1FcJzKNiMwu
+	xnjt8CUw==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tk1EW-006AK9-26; Mon, 17 Feb 2025 14:32:29 +0100
+From: Luis Henriques <luis@igalia.com>
+To: Miklos Szeredi <miklos@szeredi.hu>,
+	Bernd Schubert <bschubert@ddn.com>
+Cc: Dave Chinner <david@fromorbit.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Matt Harvey <mharvey@jumptrading.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luis Henriques <luis@igalia.com>
+Subject: [PATCH v6 1/2] vfs: export invalidate_inodes()
+Date: Mon, 17 Feb 2025 13:32:27 +0000
+Message-ID: <20250217133228.24405-2-luis@igalia.com>
+In-Reply-To: <20250217133228.24405-1-luis@igalia.com>
+References: <20250217133228.24405-1-luis@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217103046.54294-3-kumarkairiravi@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 17, 2025 at 04:00:36PM +0530, Ravi Kumar kairi wrote:
-> From: Ravi Kumar Kairi <kumarkairiravi@gmail.com>
-> 
-> Removed commented out debugging code to make code look cleaner as
-> spcified by TODO
-> 
-> Signed-off-by: Ravi Kumar Kairi <kumarkairiravi@gmail.com>
-> ---
->  drivers/staging/gpib/agilent_82350b/agilent_82350b.c | 9 ---------
->  1 file changed, 9 deletions(-)
-> 
-> diff --git a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-> index 5a74a22015..7936c7285d 100644
-> --- a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-> +++ b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-> @@ -176,7 +176,6 @@ static int agilent_82350b_accel_write(gpib_board_t *board, uint8_t *buffer, size
->  
->  	event_status = read_and_clear_event_status(board);
->  
-> -	//pr_info("ag_ac_wr: event status 0x%x tms state 0x%lx\n", event_status, tms_priv->state);
->  
+Signed-off-by: Luis Henriques <luis@igalia.com>
+---
+ fs/inode.c         | 1 +
+ fs/internal.h      | 1 -
+ include/linux/fs.h | 1 +
+ 3 files changed, 2 insertions(+), 1 deletion(-)
 
-Same comments as for v2.
-
-You're not supposed to mix delete comments with delete duplicate blank
-lines but at the same time, you can't introduce NEW double blank line
-warnings.
-
-regards,
-dan carpenter
-
+diff --git a/fs/inode.c b/fs/inode.c
+index 5587aabdaa5e..88387ecb2c34 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -939,6 +939,7 @@ void invalidate_inodes(struct super_block *sb)
+ 
+ 	dispose_list(&dispose);
+ }
++EXPORT_SYMBOL(invalidate_inodes);
+ 
+ /*
+  * Isolate the inode from the LRU in preparation for freeing it.
+diff --git a/fs/internal.h b/fs/internal.h
+index e7f02ae1e098..7cb515cede3f 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -207,7 +207,6 @@ bool in_group_or_capable(struct mnt_idmap *idmap,
+  * fs-writeback.c
+  */
+ extern long get_nr_dirty_inodes(void);
+-void invalidate_inodes(struct super_block *sb);
+ 
+ /*
+  * dcache.c
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 2c3b2f8a621f..ff016885646e 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3270,6 +3270,7 @@ extern void discard_new_inode(struct inode *);
+ extern unsigned int get_next_ino(void);
+ extern void evict_inodes(struct super_block *sb);
+ void dump_mapping(const struct address_space *);
++extern void invalidate_inodes(struct super_block *sb);
+ 
+ /*
+  * Userspace may rely on the inode number being non-zero. For example, glibc
