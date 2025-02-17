@@ -1,293 +1,143 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6139522069E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32C821B1BC;
+	Mon, 17 Feb 2025 14:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739802526; cv=none; b=eqatYFcmeOFmx3BL7uofKN6HjdqD9Fo0lSKSGA0w74UMUj1OkntmpiRqLiDiUIDf18mmkRddreI8akh+PtyRgQmD7ruvOiJztpABbzrm/P8sftB8eNFa7ERYplwJSjOxenAvns5l9s5JHQnd7INllxvGCvuC6FTKYHjTNyBkafE=
+	t=1739802590; cv=none; b=MAtXva0FYxapptScZg1JV3ZFUl2ujG7J5YIVNhIptpoDvl8n3V0T05q3JQt+i8RexvVp5/ffyAejyiGhqF+uJ2GgscyutpdjW39L+LrhDpZoc/jM+AL2cse0Oe9h/vXvo39fNGMPA/FuixJWthHGnDpW/bbparT8fGxJPt5jPNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739802526; c=relaxed/simple;
-	bh=QAOA908gNel3y1R7ETsRu2jzdhf2WxIWOfoFCHcP9qo=;
+	s=arc-20240116; t=1739802590; c=relaxed/simple;
+	bh=O++yBq3XyAqa+qJzl/qmVIimVxIt9ejBcHQx6tKw0CY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ErFCr4rlCRQL8ybGlVbNyPhbwOR/M8gcJ7zQ8F6I/BKqfv33iBIWpkFYW6b2JfJQn24by612zbl3a2FcvSlAbou0iAmPaAEpFrX6R/+hU2M/QBiEoCjE+beVO96AcI2bD6Mu4BcY3ZAXsORF5EzOZXfo3HmtryAeAfQd7x+uZaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=vqpNbX0E; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	 MIME-Version:Content-Type; b=YYLQHRCm3oKMnfRdxX2cdp9pDFgYbmdIrulEcnOI6tBfRC2/yJnQ+7hjpuSTszusfQv6bY07CnwYTNuTaS0TOu9oriquENTPxnSOc0WMPK3a5PVoP/jgeyCWv/WjRkiqu4wmAp2ZRhSL2dJ6Q5gSKQNHcROGb/vPYw5YDQr70wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=j8rkKC9x; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="vqpNbX0E"
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 4FCA63F87A
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739802516;
-	bh=N0Kj1d8MdTe6Cku6k8Y4hSRN1wAEicDaX3HkzkoJuyo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version;
-	b=vqpNbX0EXF3dfHvlUf6RHWbVQokG1i9p5dJJNybC4tcmSyJFGUzMe2CxQPM+cFZ9A
-	 n5Uv7KSt/EJ3i1FTGYtqoRYquE41OHrOX+YrWhwWFxg1QVMw+OcCGdNkSim+3SQ2I9
-	 FloTz/JEsCxSy6tEWAumKSZKjLlk0Z3qsaK1Zf9usOfF4zqEoW3UxM6kitebWhYtZq
-	 RDClP1mUe0/0K4zd/e7/rhUmXWaahp+pu1TNTO86UM/tiMf9g1gYRQhItH4Vvy3HbU
-	 MtnbRxMR1yWDV3PvQTLRChFlGQtJ4fQtuRh0jP2/OAIch87yqnL1VcQ/fupOIPkjW0
-	 V06Kt9j1Q7AVg==
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22119b07d52so22046715ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:28:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739802515; x=1740407315;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N0Kj1d8MdTe6Cku6k8Y4hSRN1wAEicDaX3HkzkoJuyo=;
-        b=Hb4PYde9hWOzAwgkkF4VwrwbecONmRWOBX+fGeUHxiNhU5L1f+8wxR/W7lUZYMdmb8
-         25HQP2WL9dAEO9B5d1bOBnPzDXv/cz8dNfNhCDgDxzt2QgupStK3Fv306XJvUmHu5eEz
-         EZLNOoLxI9KoMgg218cMY664kVIRK06x6Du2dHhTm/u7fkxLEe81XKQK9mmJJhks90cd
-         hZHQKhLBAKvW7uWdCc2AL7o5LUf7EdNJlUMbSIoFDO8HZN2gxxAIKig3KVD8PR4y5h+y
-         z8HHOjdypgw4Us41tLEK4AoNy6VG2wLwFajS4Ez3jliMkxKGXADOGO1ZlFC6xru595Vw
-         iHaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2qB9P/VZWN9KyZx3c8PBaRx6azIG5Ur3oyimG7wM0OCTcgF0TJprVTpzUS6aVVF4CXHRCLNtUZQupNBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW3KB1OCW+B05+RUZoaTG9w41JqyxpMReowdEkzEb3uMz3eTcA
-	Pf5NV3K6DJ6AXNOEe3Zl1oJoLcCx0a+3JUezRfpwvsAuAghmcGDuDbVbaO/98QvHH2iMrxNnMPx
-	y9o8yK/JZOA+DZvjeOJNHUzN5JmDukkV6Opq4qtRsHMGPx4TbE/JdVsYnw0ymxmcCNMxe3jY3FD
-	0hZw==
-X-Gm-Gg: ASbGncuWOepjypSoovrFAUXlDVrvsqrDOqRwMhGrkqs9SFhdZ/E1MVSRy/NQ/H+w7Vd
-	WddvMqZ6ML0Y2sTuEulc/ebZoSDhR7MmRFQ9vwhYLp6St18/CQ5qF4BgbSU1/90IUILtoUUowUW
-	73RdxrqzsRy//flnd/bNZ3FSNRC/HL2GMQ9zEbS/s1ZSIKBCwszaRMtsAl+gBPqo841IcgFwgV6
-	zmui1sWxXcqgzvhTd5QsIIeNkLBM4RkNl+BrSGfv8mYSZUzC7kn3NV5nYzXBwhFQB6kpEGfsxr2
-	yWP7fHA/FFQRhOyCO71KG9k=
-X-Received: by 2002:a17:902:db0c:b0:215:9bc2:42ec with SMTP id d9443c01a7336-221040cf223mr132238855ad.47.1739802514816;
-        Mon, 17 Feb 2025 06:28:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG5xd3Qyn15GPhq2F9COyGUha2ugih5t2tEudHBsZMRrSSf0N606HwzeDlINRsrUnYXl5l86A==
-X-Received: by 2002:a17:902:db0c:b0:215:9bc2:42ec with SMTP id d9443c01a7336-221040cf223mr132238595ad.47.1739802514474;
-        Mon, 17 Feb 2025 06:28:34 -0800 (PST)
-Received: from localhost.localdomain ([240f:74:7be:1:a6da:1fd8:6ba3:4cf3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55916c7sm72237735ad.243.2025.02.17.06.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 06:28:34 -0800 (PST)
-From: Koichiro Den <koichiro.den@canonical.com>
-To: linux-gpio@vger.kernel.org
-Cc: brgl@bgdev.pl,
-	geert+renesas@glider.be,
-	linus.walleij@linaro.org,
-	maciej.borzecki@canonical.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] gpio: sim: convert to use gpio-pseudo utilities
-Date: Mon, 17 Feb 2025 23:27:57 +0900
-Message-ID: <20250217142758.540601-3-koichiro.den@canonical.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250217142758.540601-1-koichiro.den@canonical.com>
-References: <20250217142758.540601-1-koichiro.den@canonical.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="j8rkKC9x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739802551;
+	bh=5x13ILjKbZvnJDQ7oramjw2SJGmPYZ+Zd80ZaIfxWcY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=j8rkKC9x8GZa1TeTHyegzwnZTjcASUb30UO4EcNFSRVGRwAVJSGQZNE2pVMtn5WIo
+	 DdrLb5/8DoW0Z3ZhOKGQXd/wje2jmexreZDcsJTeEywy2COBXwx5gcBcoa6+tacvzt
+	 bAu1iiorfvX/DeHlrlLtccERefYGUFCL/Mru204E=
+X-QQ-mid: bizesmtpip2t1739802540tspjgaf
+X-QQ-Originating-IP: WOK1g5x7S35CU0oDn6xnBn3c6ds7Y9bSRJSl+maPMWg=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 17 Feb 2025 22:28:58 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7336593324735201871
+From: WangYuli <wangyuli@uniontech.com>
+To: wangyuli@uniontech.com
+Cc: chenlinxuan@uniontech.com,
+	guanwentao@uniontech.com,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	macro@orcam.me.uk,
+	masahiroy@kernel.org,
+	niecheng1@uniontech.com,
+	tsbogend@alpha.franken.de,
+	zhanjun@uniontech.com
+Subject: [PATCH v3 1/2] MIPS: dec: Only check -msym32 when need compiler
+Date: Mon, 17 Feb 2025 22:28:56 +0800
+Message-ID: <69EBF163CEC09696+20250217142857.49414-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <8ABBF323414AEF93+20250217142541.48149-1-wangyuli@uniontech.com>
+References: <8ABBF323414AEF93+20250217142541.48149-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MLdygLUfuE5JhtQmmWqZlvS0BSzx/t30FXCLOOLYAy2i9o20mF6ZHo9j
+	qLEUeTlGD+jv9PtJl/roYdlNpqtpod/vxUM38uIgXH0bEeZythuuG1ZT9dfOHN9Z5pJfBJj
+	ZMN5PtuANIRgvumpztLu3CfenK52JELdZz2lH7hlwWFeknwtKSt8Wk48Inu/frch/PAfQ1g
+	F2XfZHKMFAI2aGLFLOtXY11I9S9SZT6F7f5PJu6LoX3iY/JE7El1WhuCdH877kmduRdiXyJ
+	XfyJQrmy4KSD3JladBzCyI0MUb7ZdPLWEmB3PmmcEVDOML4gQfrhUBO7DALYBvd5gDg4Uwr
+	bKF5jfbAu/H32hwrm4+244a6uoX+CzEwKQPLCwVahG6rKTFEXgIeQqwlwZuWwLWJ7q6spEr
+	4bMhTEOe9mhoZWmhqiRwl3OqrPNa2yaTZm/YUd/cuew74/hWU5ez677AKngM2/uj5AGRUwA
+	B/6EuZrcynmwRtwo7owQeBMFGAhd7Dh/SkDqfpm/16TqOVwDSERvT54B2Y+eBsyN8RbV+X3
+	6HDXIng+WO8YGMwlWyloR2QYyZFogB8lbuq3MYIKxtGfGTDa7vtay4iPL7Vf+IEaOfdPMQj
+	3zF7krCTKuRJvZpuW7LjIO4vL/KQrTcqkXSEWoD9DR+Fl4WmP9Vlj1h+k2/1I2hFs6PUguR
+	Hd5iJWdU4IzXZuZj+Q5/kpemsOHQupi4XAIe8Jbfjn0a/yhWuqlbA/YZB+dMcuEWd3zodvc
+	/XYkgJi3En0u2vcQA/4fJ6rTKjfLZn2/1I4HwoiJz38ZPXBly9mts3eSDD8epuvF4yhxbqs
+	vyR3FAiLlVFuy+JSfmm72EC3tx8P9oJVKHuhrjLqJvVRDeKU0ediJnIqot5qGjqVrejzYTm
+	RFBmt77BQc91Qcg36Nq0l+PbEL9cGOtsTIDBgxgmDtY3zufiZnTPiGSI7ZEAJxYc8tIn5ss
+	alPIAKwZqs7JADWH5pXjoT7gvT6pG0P90BfBL/RN/41nWei7N5zEMvewsmV3uZVdzOuMEtP
+	h5YHi9V9EufqfgnYDTq9VS9M9ab1nrjXIurEO/pu+TozZiIpmAqBvu7P58G/vr5o2/7MqQC
+	fBBuYtAA7ykFGC3hUll0/YThZhgFmABZ+RgF2F9z+hjFOnpQX4qKVITNNcWrsEnCw4GssLm
+	4XA6I2Ub6wmhaPc=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-Update gpio-sim to use the new gpio-pseudo helper functions for
-synchronized platform device creation, reducing code duplication.
+During 'make modules_install', the need-compiler variable becomes
+null, so Makefile.compiler isn't included.
 
-No functional change.
+This results in call cc-option-yn returning nothing.
 
-Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+For more technical details on why need-compiler is null during
+‘make modules_install’ and why no compiler invocation is actually
+needed at this point, please refer to commit 4fe4a6374c4d ("MIPS:
+Only fiddle with CHECKFLAGS if need-compiler") and commit
+805b2e1d427a ("kbuild: include Makefile.compiler only when compiler
+is needed").
+
+Commit a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS
+`modules_install' regression") tried to fix the same issue but it
+caused a compile error on clang compiler because it doesn't support
+'-msym32'. Then, commit 18ca63a2e23c ("MIPS: Probe toolchain support
+of -msym32") fixed it but reintroduced the CONFIG_CPU_DADDI_WORKAROUNDS
+`modules_install' regression.
+
+Wrapping this entire code block with #ifdef need-compiler to avoid
+all issues is the best solution for now.
+
+To get rid of spurious "CONFIG_CPU_DADDI_WORKAROUNDS unsupported
+without -msym32" error.
+
+Link: https://lore.kernel.org/all/alpine.DEB.2.21.2502120612000.65342@angie.orcam.me.uk/
+Link: https://lore.kernel.org/all/alpine.DEB.2.21.2307180025120.62448@angie.orcam.me.uk/
+Fixes: a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS `modules_install' regression")
+Reported-by: Maciej W. Rozycki <macro@orcam.me.uk>
+Closes: https://lore.kernel.org/all/alpine.DEB.2.21.2501030535080.49841@angie.orcam.me.uk/
+Co-developed-by: Chen Linxuan <chenlinxuan@uniontech.com>
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- drivers/gpio/Kconfig    |  1 +
- drivers/gpio/gpio-sim.c | 84 ++++++-----------------------------------
- 2 files changed, 13 insertions(+), 72 deletions(-)
+ arch/mips/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1e2c95e03a95..c482e3494bac 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1913,6 +1913,7 @@ config GPIO_SIM
- 	tristate "GPIO Simulator Module"
- 	select IRQ_SIM
- 	select CONFIGFS_FS
-+	select GPIO_PSEUDO
- 	help
- 	  This enables the GPIO simulator - a configfs-based GPIO testing
- 	  driver.
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index a086087ada17..45dbf16bee12 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -10,7 +10,6 @@
- #include <linux/array_size.h>
- #include <linux/bitmap.h>
- #include <linux/cleanup.h>
--#include <linux/completion.h>
- #include <linux/configfs.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -37,6 +36,8 @@
- #include <linux/sysfs.h>
- #include <linux/types.h>
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index be8cb44a89fd..89928d6d4b5b 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -288,6 +288,7 @@ entry-y				= $(shell $(objtree)/arch/mips/tools/elf-entry vmlinux)
+ cflags-y			+= -I$(srctree)/arch/mips/include/asm/mach-generic
+ drivers-$(CONFIG_PCI)		+= arch/mips/pci/
  
-+#include "gpio-pseudo.h"
-+
- #define GPIO_SIM_NGPIO_MAX	1024
- #define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
- #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
-@@ -541,14 +542,9 @@ static struct platform_driver gpio_sim_driver = {
- };
++ifdef need-compiler
+ #
+ # Automatically detect the build format. By default we choose
+ # the elf format according to the load address.
+@@ -308,7 +309,8 @@ ifdef CONFIG_64BIT
+       $(error CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32)
+     endif
+   endif
+-endif
++endif # CONFIG_64BIT
++endif # need-compiler
  
- struct gpio_sim_device {
-+	struct pseudo_gpio_common common;
- 	struct config_group group;
- 
--	/*
--	 * If pdev is NULL, the device is 'pending' (waiting for configuration).
--	 * Once the pointer is assigned, the device has been created and the
--	 * item is 'live'.
--	 */
--	struct platform_device *pdev;
- 	int id;
- 
- 	/*
-@@ -562,46 +558,11 @@ struct gpio_sim_device {
- 	 */
- 	struct mutex lock;
- 
--	/*
--	 * This is used to synchronously wait for the driver's probe to complete
--	 * and notify the user-space about any errors.
--	 */
--	struct notifier_block bus_notifier;
--	struct completion probe_completion;
--	bool driver_bound;
--
- 	struct gpiod_hog *hogs;
- 
- 	struct list_head bank_list;
- };
- 
--/* This is called with dev->lock already taken. */
--static int gpio_sim_bus_notifier_call(struct notifier_block *nb,
--				      unsigned long action, void *data)
--{
--	struct gpio_sim_device *simdev = container_of(nb,
--						      struct gpio_sim_device,
--						      bus_notifier);
--	struct device *dev = data;
--	char devname[32];
--
--	snprintf(devname, sizeof(devname), "gpio-sim.%u", simdev->id);
--
--	if (!device_match_name(dev, devname))
--		return NOTIFY_DONE;
--
--	if (action == BUS_NOTIFY_BOUND_DRIVER)
--		simdev->driver_bound = true;
--	else if (action == BUS_NOTIFY_DRIVER_NOT_BOUND)
--		simdev->driver_bound = false;
--	else
--		return NOTIFY_DONE;
--
--	complete(&simdev->probe_completion);
--
--	return NOTIFY_OK;
--}
--
- static struct gpio_sim_device *to_gpio_sim_device(struct config_item *item)
- {
- 	struct config_group *group = to_config_group(item);
-@@ -708,7 +669,7 @@ static bool gpio_sim_device_is_live(struct gpio_sim_device *dev)
- {
- 	lockdep_assert_held(&dev->lock);
- 
--	return !!dev->pdev;
-+	return !!dev->common.pdev;
- }
- 
- static char *gpio_sim_strdup_trimmed(const char *str, size_t count)
-@@ -730,7 +691,7 @@ static ssize_t gpio_sim_device_config_dev_name_show(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	pdev = dev->pdev;
-+	pdev = dev->common.pdev;
- 	if (pdev)
- 		return sprintf(page, "%s\n", dev_name(&pdev->dev));
- 
-@@ -939,7 +900,6 @@ static int gpio_sim_device_activate(struct gpio_sim_device *dev)
- {
- 	struct platform_device_info pdevinfo;
- 	struct fwnode_handle *swnode;
--	struct platform_device *pdev;
- 	struct gpio_sim_bank *bank;
- 	int ret;
- 
-@@ -981,31 +941,13 @@ static int gpio_sim_device_activate(struct gpio_sim_device *dev)
- 	pdevinfo.fwnode = swnode;
- 	pdevinfo.id = dev->id;
- 
--	reinit_completion(&dev->probe_completion);
--	dev->driver_bound = false;
--	bus_register_notifier(&platform_bus_type, &dev->bus_notifier);
--
--	pdev = platform_device_register_full(&pdevinfo);
--	if (IS_ERR(pdev)) {
--		bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
--		gpio_sim_remove_hogs(dev);
--		gpio_sim_remove_swnode_recursive(swnode);
--		return PTR_ERR(pdev);
--	}
--
--	wait_for_completion(&dev->probe_completion);
--	bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
--
--	if (!dev->driver_bound) {
--		/* Probe failed, check kernel log. */
--		platform_device_unregister(pdev);
-+	ret = pseudo_gpio_register(&dev->common, &pdevinfo);
-+	if (ret) {
- 		gpio_sim_remove_hogs(dev);
- 		gpio_sim_remove_swnode_recursive(swnode);
--		return -ENXIO;
-+		return ret;
- 	}
- 
--	dev->pdev = pdev;
--
- 	return 0;
- }
- 
-@@ -1015,11 +957,10 @@ static void gpio_sim_device_deactivate(struct gpio_sim_device *dev)
- 
- 	lockdep_assert_held(&dev->lock);
- 
--	swnode = dev_fwnode(&dev->pdev->dev);
--	platform_device_unregister(dev->pdev);
-+	swnode = dev_fwnode(&dev->common.pdev->dev);
-+	pseudo_gpio_unregister(&dev->common);
- 	gpio_sim_remove_hogs(dev);
- 	gpio_sim_remove_swnode_recursive(swnode);
--	dev->pdev = NULL;
- }
- 
- static void
-@@ -1117,7 +1058,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
- 	guard(mutex)(&dev->lock);
- 
- 	if (gpio_sim_device_is_live(dev))
--		return device_for_each_child(&dev->pdev->dev, &ctx,
-+		return device_for_each_child(&dev->common.pdev->dev, &ctx,
- 					     gpio_sim_emit_chip_name);
- 
- 	return sprintf(page, "none\n");
-@@ -1558,8 +1499,7 @@ gpio_sim_config_make_device_group(struct config_group *group, const char *name)
- 	mutex_init(&dev->lock);
- 	INIT_LIST_HEAD(&dev->bank_list);
- 
--	dev->bus_notifier.notifier_call = gpio_sim_bus_notifier_call;
--	init_completion(&dev->probe_completion);
-+	pseudo_gpio_init(&dev->common);
- 
- 	return &no_free_ptr(dev)->group;
- }
+ # When linking a 32-bit executable the LLVM linker cannot cope with a
+ # 32-bit load address that has been sign-extended to 64 bits.  Simply
 -- 
-2.45.2
+2.47.2
 
