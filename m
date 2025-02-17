@@ -1,116 +1,168 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD277223328;
-	Mon, 17 Feb 2025 14:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739803936; cv=pass; b=aIEv1DqKBFg/8h747xEu/mOq+ezC3WzXREHsTbuUAzWXuYVOZBBw/n9UKewWSe4fShDeN917tNojKFYJDnib+9w/zcc/20I2KBfI2KsGReSvY3HLxDSak0zMAWW1n25LvbyQ4qK0EaUk60ABS/QEpT0s2Eq0aGeVMQCuQyv9ycU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739803936; c=relaxed/simple;
-	bh=RiB1oXhMD5rMP5CbSPhagMBU8X4ZPgknYiSKpVbHubI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KsuO1ZCjYWcRIFya3rxRG0aKomd6CCZaDQMUWJw5PEyO14VHylRxVfeJ7+l676IJXxgqVhiIaviVlr+9RjXWZtKQ9YI1kLWZHS1py53b5m/EikAre070Ini/ueZQHD8l0ULJqQDvzBrlpYmarBD9010awnXibJSyW9UNSz7hfI0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=drISJy0h; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A127C2248AC
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739803943; cv=none; b=l1vTZjX2F/WLPhOj/PFJ2nT6y6li9wIJXr3yfy/gRbwjgGZ5wKtYAqWEf7jliP8DJVdH3ViiI1YwAFX/4Lf/2p19Ms32YzZssZ/jVQ9FDQbW4xfE3pLc4WqSCqVuyYUtYNAmTb53adaPhSclvcPxovEKzGu0pWTUjqrygp4Bj7o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739803943; c=relaxed/simple;
+	bh=BzzPH2vmywHmqMj2cNHtgj0bNaw6qpjGJ4ryviyDMIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jwKpW227zDNo9nSHFERVO4giDsr2XVtoRk/wlEOCgaoEzzyrjSgNsBBvM7eP1NMdFp1nZQMt+3MlQgtE620xotucBS14ksHjxFDLDTiwpazZoZ9ZM8b3KwaGbnrPau9VCDq+6FHDkdHHZemTX2+qwZSkZieiGKldfxcRMVyp3Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ki9qLwQ2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="drISJy0h"
-ARC-Seal: i=1; a=rsa-sha256; t=1739803789; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=OEyDTQFE3PL/rMaep9wLKOvMx09kC1ebYIqwkfEFs5q/PyoohyLk3+W866ie3l2vNyceWc0N5A+86vO0bkUgZX+KP4VO51G6KfDxqr88BSXiTKNKuwyN/FPZAK/38QAMEACBX3xwHhZI96VR7qIxK4KuQJHYgYmKBkyqNBSFYoE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739803789; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=fwSLwPfrZMT8HZvx/0S2Jc6bVi6NXmFLmVbTwY6Loqo=; 
-	b=YvJgL18afOj35blO2UZyfTByg+7cyNRntg8ni8b0dSFZFNT/y7lIk/IKbRT3tBQXSMO7iKoiQVRQM3TwTZclW6vTxCi5C7yQ/UhZkRanDARI9yTFVRcCqfASMqiN1Ucpax/etrss0CsA22l6tkYdCMKERqHKPA5l6CqHHDY5Bwk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739803789;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=fwSLwPfrZMT8HZvx/0S2Jc6bVi6NXmFLmVbTwY6Loqo=;
-	b=drISJy0hhCXcxT/bnL634+Gju9y3gQzTDTaT5UiJXwPULhlRJh3FeN/QRxuURNG+
-	zJ/37drqtVrBCnH6n6LQLyujKkCjhNMGbc0FYcLDts68+LV5EAbFf9pLcCazfvE5zEY
-	oQV3FMm9r29gcoChEXkq2I08i0FrtdVujNCRsHJU=
-Received: by mx.zohomail.com with SMTPS id 173980378657025.23360537786118;
-	Mon, 17 Feb 2025 06:49:46 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 6/7] cxl/region: Drop goto pattern in cxl_dax_region_alloc()
-Date: Mon, 17 Feb 2025 22:48:27 +0800
-Message-Id: <20250217144828.30651-7-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217144828.30651-1-ming.li@zohomail.com>
-References: <20250217144828.30651-1-ming.li@zohomail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ki9qLwQ2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739803940;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n62JfojyMxlNviTaSrgFR+47IrUK3Jnf+u30cXg6IU8=;
+	b=Ki9qLwQ2rO6sjEDxW5o3zSehLVUdfcgLny+UPz0CpCfWdLJ63ASQZMAJYa69z0E12MGH3n
+	Wdr1Ose6Z2/kBq9YUYkC2DMlULji5ahq1J+wcIkNtRG/DDvRcRjIrLVSMimobTaUgm0NZ1
+	aa2aFdBZGfCnC4VD9UrgEMWnT8RqEl8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-589-JYB3-b6mPTGS3KlVMu7tew-1; Mon, 17 Feb 2025 09:52:18 -0500
+X-MC-Unique: JYB3-b6mPTGS3KlVMu7tew-1
+X-Mimecast-MFC-AGG-ID: JYB3-b6mPTGS3KlVMu7tew_1739803938
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f4cce15c8so339224f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:52:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739803938; x=1740408738;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n62JfojyMxlNviTaSrgFR+47IrUK3Jnf+u30cXg6IU8=;
+        b=wFJDFZl6ItcGmWFsjclz7cwAS9w/l0WWMAPb+snF81rPj3IgdrWbBgRzeHBWt+9xck
+         hpEEJK2cLQHWBZiPT8Ot+At6FQxFx4UGyzhXk28nYPtduYZL2fkgYJJfrSInM4/c6pDd
+         YszQSlhF1r576JSC2j9El3RjpNfG4O1Vc43nZo+lLxEIk0fmdr4cZy5wMNPyc0+w+pmX
+         GbdDHWHKA8BX76y5Nd762eZQZ3dvTJvGL+XUwndEzykPfjJsIXURI0mj3J5QuB23InY8
+         MdFBq8k8SgjEJZCCtT5Ss27R25XYjrnzPaZ2Y6qGmW4mYehAr6oBYlLAXPjeBBC56Saw
+         E3Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtBO+/bcvL7MxXc0gboMmCgeyXRyP7XXa0CeHiFj6+M3g4XKfeO9v/IzDsViEi3y9wLxXSGv67vYQXr28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnsw/lwnQjXqR+FXO4wGD3o34hP1bA71TESqqTvRK5/ZZN2BZI
+	iQyicr2HTcf6xtyYiDORAehnnFYSROI2JSTMAKTrDoYLdpWsoCEa848JzY22TTbCrCrZyYlO0ZG
+	jjGEyDFzFAZ3mSRtks/Xkxitg9LkSt49wgThHvz6B6DcvuWoMqSkPCOCwXKDGuQ==
+X-Gm-Gg: ASbGncusFDodfqtgbsQaYXLYq7uxZ0nU+7Xv4EqGX7rmUiwmXQwZFl/qONLYykSN03m
+	64pSCQ5psHDqagD9qDa6TA+786dkllgH2lGQtN/X8pU24An3gGYDAJDPQjqqIOZhVWPtJdn5k0v
+	iZaCmVenBsDllQFgjNsqLmpGNv+cj62IIY0gXSq4cs0EPb7gj80t87mlZehaAffrkxPvoTnuwSD
+	puugkCSua93C8Zi0A1RqWgQLgBCYadu8fbMpocnGSltFByLdx3WqNRgl7rgN7V/JYa8AkG71Yo5
+	mnfMRKD79S68iIWnjMH2LSZJHNuVSH2xjA==
+X-Received: by 2002:adf:e387:0:b0:38f:2113:fba0 with SMTP id ffacd0b85a97d-38f34171386mr7355535f8f.50.1739803937760;
+        Mon, 17 Feb 2025 06:52:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHTVdSBHOISJ5tDzp41H2vIhrlfxz3GOda5fRJNmab4HtNRj85X8u3+oM45gnUlcyd4iGxLMA==
+X-Received: by 2002:adf:e387:0:b0:38f:2113:fba0 with SMTP id ffacd0b85a97d-38f34171386mr7355505f8f.50.1739803937339;
+        Mon, 17 Feb 2025 06:52:17 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f2580fe7dsm12482708f8f.0.2025.02.17.06.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 06:52:16 -0800 (PST)
+Date: Mon, 17 Feb 2025 15:52:14 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Aashish Sharma <shraash@google.com>,
+	Shin Kawamura <kawasin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+Message-ID: <Z7NNHmGgrEF666W_@jlelli-thinkpadt14gen4.remote.csb>
+References: <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
+ <5a36a2e8-bd78-4875-9b9e-814468ca6692@arm.com>
+ <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
+ <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
+ <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
+ <dbd2af63-e9ac-44c8-8bbf-84358e30bf0b@arm.com>
+ <Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb>
+ <285a43db-c36d-400e-8041-0566f089a482@arm.com>
+ <Z62PPUOY5DClYo1A@jlelli-thinkpadt14gen4.remote.csb>
+ <20250216163340.ttwddti5pzuynsj5@airbuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112272c5dc6440b0446e6588a766f00001b0dec5e1aa36b1ef08c2fff4b5f878ab81e8eaf7d6b074e9a:zu080112274dfe11115d82755fbbbc9214000048773d70501f33f8ddf947b8ee4fad21aac94e977a758c942a:rf0801122d0813314a8608b029609f6c1f000018e4b981a75ca902e9d6f3e6e096f74db99aaab4175851196d58a21a24b9b5:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250216163340.ttwddti5pzuynsj5@airbuntu>
 
-In cxl_dax_region_alloc(), there is a goto pattern to release the rwsem
-cxl_region_rwsem when the function returns, the down_read() and up_read
-can be replaced by a guard(rwsem_read) then the goto pattern can be
-removed.
+On 16/02/25 16:33, Qais Yousef wrote:
+> On 02/13/25 07:20, Juri Lelli wrote:
+> > On 12/02/25 19:22, Dietmar Eggemann wrote:
+> > > On 11/02/2025 11:42, Juri Lelli wrote:
+> > 
+> > ...
+> > 
+> > > > What about we actually ignore them consistently? We already do that for
+> > > > admission control, so maybe we can do that when rebuilding domains as
+> > > > well (until we find maybe a better way to deal with them).
+> > > > 
+> > > > Does the following make any difference?
+> > > 
+> > > It at least seems to solve the issue. And like you mentioned on irc, we
+> > > don't know the bw req of sugov anyway.
+> > > 
+> > > So with this change we start with 'dl_bw->total_bw = 0' even w/ sugov tasks.
+> > > 
+> > > dl_rq[0]:
+> > >   .dl_nr_running                 : 0
+> > >   .dl_bw->bw                     : 996147
+> > >   .dl_bw->total_bw               : 0       <-- !
+> > > 
+> > > IMHO, people who want to run serious DL can always check whether there
+> > > are already these infrastructural DL tasks or even avoid schedutil.
+> > 
+> > It definitely not ideal and admittedly gross, but not worse than what we
+> > are doing already considering we ignore sugovs at AC and the current
+> > bandwidth allocation its there only to help with PI. So, duck tape. :/
+> > 
+> > A more proper way to work with this would entail coming up with sensible
+> > bandwidth allocation for sugovs, but that's most probably hardware
+> > specific, so I am not sure how we can make that general enough.
+> 
+> I haven't been following the problem closely, but one thing I was considering
+> and I don't know if it makes sense to you and could help with this problem too.
+> Shall we lump sugov with stopper class or create a new sched_class (seems
+> unnecessary, I think stopper should do)? With the consolidate cpufreq update
+> patch I've been working on Vincent raised issues with potential new ctx switch
+> and to improve that I needed to look at improving sugov wakeup path. If we
+> decouple it from DL I think that might fix your problem here and could allow us
+> to special case it for other problems like the ones I faced more easily without
+> missing up with DL.
+> 
+> Has the time come to consider retire the simple solution of making sugov a fake
+> DL task?
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/region.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+Problem is that 'ideally' we would want to explicitly take sugovs into
+account when designing the system. We don't do that currently as a
+'temporary solution' that seemed simpler than a proper approach (started
+wondering if it's indeed simpler). So, not sure if moving sugovs outside
+DL is something we want to do.
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index d8a71f9f9fa5..320a3f218131 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3038,17 +3038,13 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	struct cxl_dax_region *cxlr_dax;
- 	struct device *dev;
- 
--	down_read(&cxl_region_rwsem);
--	if (p->state != CXL_CONFIG_COMMIT) {
--		cxlr_dax = ERR_PTR(-ENXIO);
--		goto out;
--	}
-+	guard(rwsem_read)(&cxl_region_rwsem);
-+	if (p->state != CXL_CONFIG_COMMIT)
-+		return ERR_PTR(-ENXIO);
- 
- 	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
--	if (!cxlr_dax) {
--		cxlr_dax = ERR_PTR(-ENOMEM);
--		goto out;
--	}
-+	if (!cxlr_dax)
-+		return ERR_PTR(-ENOMEM);
- 
- 	cxlr_dax->hpa_range.start = p->res->start;
- 	cxlr_dax->hpa_range.end = p->res->end;
-@@ -3061,8 +3057,6 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	dev->parent = &cxlr->dev;
- 	dev->bus = &cxl_bus_type;
- 	dev->type = &cxl_dax_region_type;
--out:
--	up_read(&cxl_region_rwsem);
- 
- 	return cxlr_dax;
- }
--- 
-2.34.1
+Thanks,
+Juri
 
