@@ -1,127 +1,109 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9413521C9EA;
-	Mon, 17 Feb 2025 13:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB8A21CA19;
+	Mon, 17 Feb 2025 13:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739798627; cv=none; b=uevP0MTteBy0rqC+lVf3tHi4ln+MnoQno8TA5+pDIiDA4qMuN5xC1vM2WsNxmxYLmcdmoafk/u54yL59ekA3liuYdWBXbdqbKUMF5cc5b7M2Iq1rZJ/uPU/XMtSDpdYP0gDwx4282CzDJ7IqUbWwYAn8ONvYsI6UU4FZV5s39ng=
+	t=1739798631; cv=none; b=lSZDjcSR8JKRc9+pnvNGw1D1cFPmAiJ3mjHFpv0V+6ZlwMXpDWgS1abYVsBanW9UXzjGrPzmisNNofXJihMwy/rmzAENnZ0wfESRV0pZe+LsbgEdqVjWuJ4Hr4wNBYqwTVpV7RdNh3Vf/y6YwBMwfxeiydDDiSFtyHoOqpIQzd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739798627; c=relaxed/simple;
-	bh=kt/K5przm46mL2H8Okc3eEm+BVm/V5KSx7283IGAhU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JmDTjomMgL5rqlU6g72Y9JYGN+nbbvOti/uSID2MKGfA0X4MCTn34oXe2Icv0rmwZbqkhDEzlRKJc23pRxciltnx7GNpgqUxNYuVWhivifyeZvAVsL0Dv2K8YkdoF1rJeD7Ogvv8KF6+AFGEveWYnU+ppGVPromElCunhBGM68Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XKxRCQ2Q; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739798631; c=relaxed/simple;
+	bh=5jI7yAwfnD29sHW7cjA1e58vatW5I20of910rii2ypU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGINllIBWoQtfinMewLZ6qNBdnURhl20LWV1vabIpcW/3a6gl3C4Bgl13Jl0kF/UsqliH6FcGpuvf7FQSRqzb4heb2qp25P4jgZMkyUcKLl1AUJ9QVaNO6p3j+IV8Clp+U5v18jzNdufvY9KeKJRCPquVKPOIwp316Ew+GfMVfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EAjCxV3U; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKxRCQ2Q"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-216513f8104so9081065ad.2;
-        Mon, 17 Feb 2025 05:23:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739798625; x=1740403425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yBj0h8f4FM1FBb+FMFSuMLsKQtkdRR7R06+FZTQQ6jk=;
-        b=XKxRCQ2QrghVAWzc7JW9Km0EO7NDYXH1osozDFy9ED1BThFJEG/159WG4FCwkX91xJ
-         ypOpM5rF0MTxLEZkVS9+W2YfetBL5GRXogD6OfZuj267vr9O9LomUOn+HE0j1aCQWa3E
-         qa3szQwzHL6QnjhG8yywarFLbMcS/6yuSCxF/niPPop/uZlTTRYp7URVatV/S+dwiYCD
-         yP8Lrmy7mq/RrR6vmu753Njblt/QCUpFQ1D6Ry01aNlFj4hGNfxubRDF6CtrnqIOlsMZ
-         oh1nqObp/gHHDqVnj/YdnSotkqoH7hGjdzq3k8pnBT43fgqf3JdrIBugFmL1TbeYPMsL
-         U3Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739798625; x=1740403425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yBj0h8f4FM1FBb+FMFSuMLsKQtkdRR7R06+FZTQQ6jk=;
-        b=b+IxyfllcMwXSvcbFMqvp4HtuSLGlAtCtRfYKWkinfNpui02JASNvvimyrJfGuMIxy
-         z/0gyARySFvDrCktT5XVsJQLtES3dituR3+LoRoevcTDMztlXKPIL6ezEvYLCT1uOoqv
-         /aUtGcwpA9RLTcZofhYBPQZ0uUl3OZ3rgYMS7ZRlnjMH/VoHZ104ruZ50S35qixUYg7u
-         piTVos/eMu4kRVU5ZjwX3E89eSii7ZwJSDJyYIcsCwPGHf2tqpahKn+5nxxVBwponNL9
-         oFjJGxIyS6zoqfG5/BBEOzpIJ0H4YcJyGs5BNDMjetJHggopIoeqUTGgrJ372tWlcmyu
-         mYAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBrK5kfRmWDl/Y++dA6/5tlJwqSeo4VaF3QSSucQZVxghNNcXAsUm7hLUNmXbndxC6X3ahZzSDME85r3B0HZw=@vger.kernel.org, AJvYcCWb1dRKm0z14O0fgG5Hshoca/N1yac+Y8DRhgVT+CAlgQqcEgNYpfE0OmWDXGvID8YOQDpN/Uql+BrDNUU=@vger.kernel.org, AJvYcCXVFaVvTSvBlBHtmpQZxBG3xRWF5Ek6URWJYxy9rOtdiwJ2lwEKJ1eGL3oB99FHGGVGJrtte3JoErpINeT+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHnnmpLmLZQNV0HZEUjwKJ7eJD6G8n24OODWzWnAroh3EA8qAL
-	J9+jvccpiEzk22k32mmKk3okqqGztYUQkO3/cJ7J8yj12+mbr+GyF0lafOiYtEXuhL8WW3f+TB2
-	HcybjUxzcIrmH3tzbiqaju1h/5nI=
-X-Gm-Gg: ASbGnctA9SC3ikjUwveGeVSjqvKyOk9iWNlklF8htWPi3rg+Kpr1Hh6Zir9ozw64ZEl
-	QiqJaavq2zS3CEtFDbkzC07Xa/3017jSWgYOLTi3G8lisTbibsJp4FmBM0n5cC7HtgjNZQrfj
-X-Google-Smtp-Source: AGHT+IEF2AmyB4qFalTyuT+96mQHIf4HLj5D4oC3auklR/J0qUGpWNF/G8ASHHj7MI3eLorFnXVP76TvfTwC3mkYoKA=
-X-Received: by 2002:a17:903:3d04:b0:21b:d105:26a7 with SMTP id
- d9443c01a7336-2210401a440mr58843155ad.6.1739798623888; Mon, 17 Feb 2025
- 05:23:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EAjCxV3U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739798630; x=1771334630;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5jI7yAwfnD29sHW7cjA1e58vatW5I20of910rii2ypU=;
+  b=EAjCxV3U/YuenkFW+m17C/DRreYggzzzolC5xsuLJi9jKCiJzEWw4hvE
+   0yavNJbYbcyABioRVzJmTqjLDw3w2wCCWclXkWPi3tKPVBMDk9msqD7ew
+   wyAdFf8zTbJlAKO7pUNxTiOPKaFJlYHXVTGWoHMbziIHUshKYilGk/D55
+   3dkveDGTogWUrbbf9w7Os1zBbEVEU75gyMe6CaQ6VHPar04JDNlcHRPuQ
+   5l5UgHmYLXFKrcUO6vfxQZo2ukdMaDC8IdFv747uPEA5AxkAtsfKe1uWR
+   8biTpPT4N23bYGk7mi12lWHj5+UZKDl6ny8cX5uXEC+Xh+xmMx9J6OQoT
+   A==;
+X-CSE-ConnectionGUID: efiP2CjQTfyPlVXCi4Dguw==
+X-CSE-MsgGUID: MUUIoKuXSu2kg/fKtpN0zQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44407675"
+X-IronPort-AV: E=Sophos;i="6.13,293,1732608000"; 
+   d="scan'208";a="44407675"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 05:23:49 -0800
+X-CSE-ConnectionGUID: dravQctqRiSK8gousaJ5GQ==
+X-CSE-MsgGUID: itWmg63nSVmT3xLBpY/ocw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,293,1732608000"; 
+   d="scan'208";a="119123696"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 05:23:46 -0800
+Date: Mon, 17 Feb 2025 14:20:05 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, ioana.ciornei@nxp.com,
+	yangbo.lu@nxp.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net 2/8] net: enetc: correct the tx_swbd statistics
+Message-ID: <Z7M3heKHsQBvIRBi@mev-dev.igk.intel.com>
+References: <20250217093906.506214-1-wei.fang@nxp.com>
+ <20250217093906.506214-3-wei.fang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-rust-path-remap-v1-1-021c48188df1@weissschuh.net>
-In-Reply-To: <20250210-rust-path-remap-v1-1-021c48188df1@weissschuh.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 17 Feb 2025 14:23:31 +0100
-X-Gm-Features: AWEUYZl_xoW-q_Uo1mBzKspdAgUlp5rPZusT5g_C-77oKHze5Aq-wQBZJQ9o7Aw
-Message-ID: <CANiq72mcpVL1YXyDFi-PrbQ2Uh0WUA_VNqLZaOeqQnpY5HnX8Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild, rust: use -fremap-path-prefix to make paths relative
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Ben Hutchings <ben@decadent.org.uk>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Urgau <urgau@numericable.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217093906.506214-3-wei.fang@nxp.com>
 
-On Mon, Feb 10, 2025 at 6:11=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@weisss=
-chuh.net> wrote:
->
-> Remap source path prefixes in all output, including compiler
-> diagnostics, debug information, macro expansions, etc.
+On Mon, Feb 17, 2025 at 05:39:00PM +0800, Wei Fang wrote:
+> When creating a TSO header, if the skb is VLAN tagged, the extended BD
+> will be used and the 'count' should be increased by 2 instead of 1.
+> Otherwise, when an error occurs, less tx_swbd will be freed than the
+> actual number.
+> 
+> Fixes: fb8629e2cbfc ("net: enetc: add support for software TSO")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> ---
+>  drivers/net/ethernet/freescale/enetc/enetc.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+> index f7bc2fc33a76..0a1cea368280 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+> @@ -759,6 +759,7 @@ static int enetc_lso_hw_offload(struct enetc_bdr *tx_ring, struct sk_buff *skb)
+>  static int enetc_map_tx_tso_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb)
+>  {
+>  	struct enetc_ndev_priv *priv = netdev_priv(tx_ring->ndev);
+> +	bool ext_bd = skb_vlan_tag_present(skb);
+>  	int hdr_len, total_len, data_len;
+>  	struct enetc_tx_swbd *tx_swbd;
+>  	union enetc_tx_bd *txbd;
+> @@ -792,7 +793,7 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb
+>  		csum = enetc_tso_hdr_csum(&tso, skb, hdr, hdr_len, &pos);
+>  		enetc_map_tx_tso_hdr(tx_ring, skb, tx_swbd, txbd, &i, hdr_len, data_len);
+>  		bd_data_num = 0;
+> -		count++;
+> +		count += ext_bd ? 2 : 1;
 
-Hmm... We don't do all the cases in the C side -- the docs ask to use
-`KCFLAGS` when one wants to remove them in the debug info:
+Looks fine, beside you need to fix the unroll like in patch 1.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-    https://docs.kernel.org/kbuild/reproducible-builds.html#absolute-filena=
-mes
 
-I am not sure if there is a reason not to cover all cases in C (Cc'ing Ben)=
-.
-
-If there is a reason to not do it for the debug info by default (or if
-we want to make it consistent with C even if there is no reason), then
-I think we would need `-Zremap-path-scope=3D...` too, which is still
-unstable, sadly (Cc'ing Urgau who implemented it for Rust 1.75.0):
-
-    https://doc.rust-lang.org/nightly/unstable-book/compiler-flags/remap-pa=
-th-scope.html
-    https://github.com/rust-lang/rust/issues/111540
-
-In such case, we would also need probably to mention in the
-`reproducible-builds` docs how to achieve the same as in C (e.g.
-passing an extra `-Zremap-path-scope=3Ddebug`, since it aggregates with
-the previous ones, according to compiler flag docs).
-
->  # change __FILE__ to the relative path to the source directory
-
-Perhaps we could add a note to this comment with what we do in the Rust sid=
-e.
-
-> +KBUILD_RUSTFLAGS +=3D $(call rustc-option,--remap-path-prefix=3D$(srcroo=
-t)/=3D)
-
-I don't think we need `rustc-option`, since the flag is available
-since a long time ago (Rust 1.26.0).
-
-So we should be able to just do:
-
-    KBUILD_RUSTFLAGS +=3D --remap-path-prefix=3D$(srcroot)/=3D
-
-Cheers,
-Miguel
+>  
+>  		while (data_len > 0) {
+>  			int size;
+> -- 
+> 2.34.1
