@@ -1,297 +1,1547 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2137.outbound.protection.outlook.com [40.107.117.137])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECE23D68;
-	Mon, 17 Feb 2025 02:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.137
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739758328; cv=fail; b=ibZtJhOSVKzmfjS0NMDbaz5hBVVJW2AHSANJUqsqfnxs0usgYOhiZQKwu+P0KsiOp6V35DpbRtbLISYHmKK/fseJiAdPyQtF0+j20E2dhF4MJAtjre5of9kSjRBK8fiRbogpeayIWpreBXPn/EbMfX0eqWj8RDdccXAiZjKxiq8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739758328; c=relaxed/simple;
-	bh=IJmjC8UVjmc37vfAyXSJvM9SlwJ/7ONQHicSVkei4s0=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VPTObSDfM4pUR11uYwD1xywmpsH5VVLBvMhg1j1f0ukREhVVOq2vYpzpK32m/S+NL23oSaw6JMhF0QFPqbIJO2abOln5onwvZ2v3Hmj4xxqvHgO1FrkihWG11V3fFScSopS8rBNEfeGb8kihZJdGZ01jh0UJRUYB+YcBy4yg7Ds=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=njK/GZc+; arc=fail smtp.client-ip=40.107.117.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F7623BB
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 02:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739758649; cv=none; b=QnZunPoFSdV/y1KWZKGYrUax1/gwGc+xAt6Q85hmFOE3fMoE5MRzoPs88cB4Ug+QVdSx247hNxPnYLGwySFhIENwOhbOXL017hkD2irRdSrnc8KFLiNeP0EZPFb//UjmskP+ZPB1VdeIagng/aK8VgxN+XDhrAFwQRh0zBdKsDc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739758649; c=relaxed/simple;
+	bh=fcS+Mgpg+oMbNy7iqMYaVnBrGOridb/VFkpjgvpSpSs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dD5jcvtu7WU4ixBY62C1DxwoqVoZ88/bXf0dWeIWlAmR/6qYub3y+zdSdhvGEZ4O9gikZTPmlLLM1JLcXgbVL/c7jOmPpQi8Kge7Y2O5Vdw3XxnAil+NbmZc5X2nt0uZSmSMjHo54oZvxfsxXZKUunTM34+EmA33kGoqwCLmndg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=VINPNNsd; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="njK/GZc+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KLZ6vYK2q07Sfvp67ksm+r+u4eed0NVY1l4cbdrHptfO/iWM780aT31a3UcImlj+vw6wxM9BA/OjtT186g8AmFcbFziKs4ZenIXBjAnc/A0TH8YAMl2F1d+AX+6PYgPKMs3ADTNd/QsH9jioJRqN4qCILbzT1XKug8NbcBgkDXXyrHQGppMK+9NkUJdU7yVEFnf7Wy60lqeAS0rA2HISNfdijcBsA+ePx4wfA4GxZRryc7FcJEEC6oZuSfWfPwxmMnf/opOVKEY3zOxrEEeL4YKeGfSiDYr+tbeS7ZUWUGQzedVy6dzTKIQGfG5RMYJSyGca1a7WWDNorY0XZ3f0UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IJmjC8UVjmc37vfAyXSJvM9SlwJ/7ONQHicSVkei4s0=;
- b=giEA+ehKUP4/kZKH/R0rTuifKtbX4Ip3f7Uamo4bwCudUHabfhKGSmAAgH6Tkl6XOEABVlaSNhKOm1+8tFyr6C7xepnhihW8TYBIV+sgqXMH1njxJyMQPz5dBEugeD+a0vD7xr4Qxa7kYyv9DYqsd9rS+tVrMFjoxAmIV4jgE5fSED6V4IXalfuwQEEFf0YLMx83eSQUqguqVRTSSdJqI9pOg5YFKo+VJP0UKUYvIEsVJDorL+XwtRI7EazzKK7vEKoJwMM/e2xS3WwSKDoDBjxYghucNWxdfOaHN7Jjq0DQXdFnHZ1T/LOC/ZKfNPuebE9jbIMkOXtlewOSOkjaSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IJmjC8UVjmc37vfAyXSJvM9SlwJ/7ONQHicSVkei4s0=;
- b=njK/GZc+gsXvuGG8Nox/Dfw6Kgq9CdYoVB1BiJivSXItEVBD3lA46vO9Li6KlxjcuRkyJfNxnD89DMnjYHMQARCSGtg6eF6Iyv5L/5wkFF9Fx69zr6NXluY0L3MTlGa31T0SAN+4haE1l39Oz8O+dd1HcIsD6c9UdYUl2eaa/1wMFIrx/6GDdVEZH2OV69KECqbg6lq3mFvpQq/VKJ5mC+ldIfAqjBYU8nY49wj9kShnEGaCC8pKKN4qEl5ByatS2XhjCyC7TSliXzhTZcb3J6CaO++8KjReCZiXU3ql56WBw9aFd4q5A2fbZ9Vw52v9Oohgzo5DkJgp7wssuDSvxg==
-Received: from TYZPR06MB6568.apcprd06.prod.outlook.com (2603:1096:400:45f::6)
- by SEYPR06MB6083.apcprd06.prod.outlook.com (2603:1096:101:d8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.9; Mon, 17 Feb
- 2025 02:11:57 +0000
-Received: from TYZPR06MB6568.apcprd06.prod.outlook.com
- ([fe80::72b8:dce5:355b:e84b]) by TYZPR06MB6568.apcprd06.prod.outlook.com
- ([fe80::72b8:dce5:355b:e84b%3]) with mapi id 15.20.8466.009; Mon, 17 Feb 2025
- 02:11:57 +0000
-From: Jammy Huang <jammy_huang@aspeedtech.com>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, "eajames@linux.ibm.com"
-	<eajames@linux.ibm.com>, "mchehab@kernel.org" <mchehab@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>, "andrew@aj.id.au" <andrew@aj.id.au>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6] media: dt-bindings: aspeed,video-engine: Convert to
- json schema
-Thread-Topic: [PATCH v6] media: dt-bindings: aspeed,video-engine: Convert to
- json schema
-Thread-Index: AQHbgNJmQf9IQHJjkkayHDxz0NYcHrNKvj4w
-Date: Mon, 17 Feb 2025 02:11:57 +0000
-Message-ID:
- <TYZPR06MB656841B1071626B0B684B49AF1FB2@TYZPR06MB6568.apcprd06.prod.outlook.com>
-References: <20250213015338.3243171-1-jammy_huang@aspeedtech.com>
- <31c7189bc04ed8c5cce463951b717bed6a2ccf9a.camel@codeconstruct.com.au>
-In-Reply-To:
- <31c7189bc04ed8c5cce463951b717bed6a2ccf9a.camel@codeconstruct.com.au>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR06MB6568:EE_|SEYPR06MB6083:EE_
-x-ms-office365-filtering-correlation-id: 876f8931-3fc3-48cd-c26c-08dd4ef874ea
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?utf-8?B?cDNvMXpkZjY5amZsREU0dnZib1pMNmp6N1c3VHcvZFN5QnVvc3M3WnpkTStn?=
- =?utf-8?B?QnNzZ21ZUWdpNmtkVWxJQ2lnUGxOYmozR21zcXEvTUFoWEFHOGVWQlV4b0JI?=
- =?utf-8?B?ZC9pMGIvb1lSeDg1RFE5MnBOMW9Qd2t0L2pNNVFKblNDaHpkLzk2L2psYmt4?=
- =?utf-8?B?TUNaNTRWdE1INkkrdjVTZEF2aG5CUktMRDY4Qi9BVTdFMUVVeExxbVV0ekxC?=
- =?utf-8?B?QXpjR1lHci9CMzZBOVNscXcrVHUwL25nWmVsMGVDVG42UWdNWUpUamEvd0xP?=
- =?utf-8?B?NTYzdExocUxTZ0p2QXlCZGpDWkRFMmZ0aThlZlRIdGdLNmNNd0tqNDRvVFIv?=
- =?utf-8?B?a0I2MjZjRWczRWdzdkpqdmJKdVQyNktqZ0MxMDN4cjgzYUtkMnpVdms2T3g3?=
- =?utf-8?B?VWZBWUFMRG5JMUwwV3A5UFRJZnhmTndiWDMvaGVYRzUxNVRZMG5lRHJvQ0JS?=
- =?utf-8?B?aldqbjJnU0VwUVlCYnhSYll2dUhPNzYybDBJbm9sZkhHU0NSNlVDaDRkcXBt?=
- =?utf-8?B?WFRoMFY0RWdNb3UwOXBibm5iTU5rRktWdjVZV0M4MDNiWmNtTmN2b2FZRFZj?=
- =?utf-8?B?T2VsWnlsMVRNWEpyTnE4YmNDR1Jndk44cHFIZmduZHpkR3JaRWl5Tjh4Q3BP?=
- =?utf-8?B?enV4NmVGdmtyNURQbUFlWG9rUkRYOEJ2aGo1NXNOWUpzQytjWUNFVk4wN09M?=
- =?utf-8?B?Z0lhYW9EMFVsUi82Tkord2NJWlgwMlNYN01zbFgwQ21oZitCWHo3TDltclNp?=
- =?utf-8?B?N3J4VmFqdU1vM0pjc1VZZlg5WEczT0tGM29FU3FlRE52azFjdllqR3hEaWdF?=
- =?utf-8?B?S0V0c3VUblp2MTRnMDdzZW02VHpGbTVyTWJWRUpDME1wOEx2TWVGT01rUUdn?=
- =?utf-8?B?clBqSkN2ZXdOMTl5bjE2bEZvM2RmT3ArTHdGSE1lYUdVQjR2YUJ1TktRbkUr?=
- =?utf-8?B?R3JyMG1KSERydVN1aGh4NXRmUE1OcUJCUmdIUnFEUk1lZE90bjlRNElPRmJv?=
- =?utf-8?B?R3FjSnd6aGt1dTBkVmlmRmpqb2xoLzZBU0g3aUMzaTJqMGQ3STNsWklZT2NV?=
- =?utf-8?B?TXJad1M5aGdDRklzTHZlbndFajFtRWhSWFFCY3BlL2V5OXVtTUJ3WTVWWDdP?=
- =?utf-8?B?M0hTelFDZks5QXNxWFBYREdkVCtQN1dCYXc2N2wyekpUQTJwK0ZBU3hWcGl3?=
- =?utf-8?B?c0Z3SWJjUlEyeVN6WnYrdmNaV0s3Z2NWem1iMUJLSmJBWjNpaW4waklXOFJO?=
- =?utf-8?B?b3Fpc0YvQUVnVWptZTIwYy9CTXRYYVRFcDFXL0prQ21ERk1aWkN2VWIvbExr?=
- =?utf-8?B?UGJwbzJaY1JJMENwa25PL3ltT0RCOUsyZStNdDQ3cjV6bHV3TG43ZENvR3Ur?=
- =?utf-8?B?WElqSFp1SlE5Z2VnZThMNVEybWFXbnlncFhhNXJrSDFlaERISzkrWjJPMU9o?=
- =?utf-8?B?UDU3bC9wNUo1MElyUnJxcGJRZ0ZnVFByYktjcHZhWXJ0K1R2K3FNQ1Y2aGh2?=
- =?utf-8?B?U3gvb1M5ZlY0S0Z1dEovTDN3VjNWT3ZRcGx0VWFvaERFUHlHVEU4MU5qZ0xB?=
- =?utf-8?B?M2k4aGE3aEUxYUxneldDdlN3aS9rVlFWR0dackZvVnhhQm84OFlKam8vUGx2?=
- =?utf-8?B?Wjc2bXp3NXpJSU1IOUZQK2NuSFRSOFZKZSt4ajdxVkltL25QWWxUZWpMVTlo?=
- =?utf-8?B?cU9FVDNhL0Jrd2MydWdtSkFHdEErSGF6UlVzWFpUY3NOOEdUWFFURnNCeCt0?=
- =?utf-8?B?aW9OWnVtSEpkc0NReGw0dEZERVM2bzA2MEkzRUFlS3pZNEEyc0g1Y0lqRWJD?=
- =?utf-8?B?QzBrR3Jhd0pkcjJGWXhmaVRPTVcvQzdpODlOZmJSUmZSVDNqRkpDTFMxVnIv?=
- =?utf-8?B?dHZRSzNMMHYyMzdTRTNvMDRCNEFGL1NDVzBFazd1bU52THZZSWh0S1R2VmR3?=
- =?utf-8?Q?IFU0JXKH12g=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6568.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?MTRKU29obnNzdnVVcGM4V1RTQ0lqZERkdkdaeHhFSXNXcStqN1lyVnBOZkF6?=
- =?utf-8?B?WVVBRjhGM0hnZ1VlMEFVL2RZazZzUDU0Tjk4SHFYMmI0a3hmdEhhdHArblVl?=
- =?utf-8?B?Z1IyNEJQNDlnMUxDZVNqWGxWcjJJU08xMFZaTm9JYk9XM1l3VTh6Y21iNWFS?=
- =?utf-8?B?a1Jpckwvb0FjZXN1L01RNVlWaERzWEtpYXpYVFYyS1dQZ2VWMVhwaWRiSEtP?=
- =?utf-8?B?M05KR05GcWRpR0lobS9CalZPL2RyL0JoYW1ySHFBT3FWMGgxR1RXWjlBcjds?=
- =?utf-8?B?QURsTzdxYi9iYm9pdWtUTFgzQ2hyMlZYVUQrSGNBdnBzTVdiWG91OU80TXRR?=
- =?utf-8?B?Q1BkSmR2Zk1pbWpRZjNPdTdpTUMyNzlRMFhGOFN0MXlNL0tCL3FMNHpvbG5T?=
- =?utf-8?B?TGRLemU3L3BVLzAzdHZ1SmpCYjhtZy9vYW5vbHpjN0FGN0FzRDNiYnYxK2Zi?=
- =?utf-8?B?Ui9LQUtieVQyTlZ2VWk3elpyWWV4Y0U4b3hrVmpsMjFhaWVwdysrWCtvL0JS?=
- =?utf-8?B?Ti9RM2hKZTMwMTI2bjRWZDdXbUl3TkJEUkpiMGtWd01JT2RWUEhOeDM5b0F0?=
- =?utf-8?B?M24vL2swWmMyNmJlTzJUTXQrSUpQR3hiQmNOZk5rRlZmVG9haFRGZXM0K0Ru?=
- =?utf-8?B?aUkxVndoa2FFd0Y0SjFWTW9pOVY4d3JydlJFUzR4Yjd2VTlnajJabkxzcmFB?=
- =?utf-8?B?bFdTZk5uNnl2NHJrT2FMejFLK294SGppQ0JpcHpZVDBMS3Z0VEJTaDRZODN2?=
- =?utf-8?B?Y3lhd1hoOGNlbURaaHBIdjYwVkRFK29Qb0J3MzlNWUxleGJjckZ4Nll1ZWtI?=
- =?utf-8?B?ejR0N3VnL0twdUtUenFyaEZEZkFrUHlTNy9ML0g1MTlZNTExbjR5cnBPc0d5?=
- =?utf-8?B?VXZMZ0RRTXllT0wyZUQ1akVVdnN1WjZRUkJhcmFsQ0QyMnkva3lBSjc3ZnN2?=
- =?utf-8?B?RnIyZnp1TGVFYU1Zd0thZ0dNRkVPMGF0M1FCaW1VRnFFSzM3RFFFME5HTGZj?=
- =?utf-8?B?Y0ZKQWtkSzNRL0JXTlk4b1JSTjhPSlZDTXVTNzZPOFA5RER5ejRJakRPZkhO?=
- =?utf-8?B?MmhHUDduYndWZkpWdE44cVNHZ1pjUTV3aWpONFUza09ObzhyYlpEZC9iOWZy?=
- =?utf-8?B?b1N1bHQyQkhjTjFXeldQR2tIMEdYN0l4OENYcGpHRTlUTUN1NTlMTDhKcjVm?=
- =?utf-8?B?ZE1sSEduV21yUWljZml5SXY4VmdLQ2tZc2hxUzl4TWN5ajRKU0RGWHhQaHlx?=
- =?utf-8?B?NTVjY1I0azhCMFdkUTBzZ0ZOUFFleHBTN01SUUtUbHBNdG5DTGZtSVlnZzFs?=
- =?utf-8?B?UXF1eC9nMlNkRi9qUDJvcU9McGUxV3JjQjB6d0dYejNua0xnZ3k0Q25vK3kr?=
- =?utf-8?B?cmxleUYvOUk4VExTNzRoRmdnMTZYakFRQlNFcW1TQkhqdHlWRFZTTVkwdVFX?=
- =?utf-8?B?Z2N5YXcwVmZpNmhxRVMyVk9aVFZxYlVpSU1idWhZVG5WNTAzR25lbDRKaDll?=
- =?utf-8?B?dkpmb0tpeVNoSGpUREpmblFDbHR5R0NPYkloSnd4ZG1xRzkzVWJGSXp2VDh4?=
- =?utf-8?B?Yld2d0kycXpVRnlFK0pzS2VrL0FBR2N1TFkzQU9ZRUtFengyMHcyTEJ5Y0hR?=
- =?utf-8?B?aWFpdktPczY1d1M4c3R5Sm1JMjdSZFVHZ0h5UnRJK3RMaUlGUjEvQTdjbXZs?=
- =?utf-8?B?UFIzYWdDSWVQR0ZucDJMTjJETGZqLzRGRDlocWY2ZDRtQ1Vqd25sMEtKMEc4?=
- =?utf-8?B?RHBqTXBORVhQWU5mUWRFOGhoVktJL1NrZjFzbmZIVVBtT3JYZjFIbGk4d3JY?=
- =?utf-8?B?ZlFLaUl1ekFtUVRUSm9Td0xVbndmNHI2cVFNMTNDcjJ0NmNUNXRLeXB3amc2?=
- =?utf-8?B?WTZUYlJyZFFJRTFxRnZDdVdBNXBNMHU5YWF4V295RDN5VENYNEN6blBVN2Jk?=
- =?utf-8?B?RjR4NzlFdEszdS9YMjlGWVpwOUlldTV1QUVlUnFSbjFrU2dZS0tkaCthVnB6?=
- =?utf-8?B?RlROV1lKeHJuVm8xMWdlcGd1c0JzdE13eGVEVG1YK3FoUEtockRZTnNwb25I?=
- =?utf-8?B?Y1ZhZ01NWXZBZHA5VmYvYTYyRVNrOVNyV0ExRHh3ZHZ5cmVLL2dpaytPUHVS?=
- =?utf-8?B?QjFaZkVZOXZxQm9RRktxNTh5SmRqVEZkTkJWUTZ6Z2ZoLzVwd0QwZytCcVMz?=
- =?utf-8?B?R3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="VINPNNsd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1739758641; x=1740017841;
+	bh=utaOgUkLbXBuqW3vs0AA1GuT20FAYEqATd7DI9YGjcM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=VINPNNsdSTL+poe5JwNjgoQXyhSw3giJ3ywLM2hRMl1v9C/+At2NhJg7R+RyUiolo
+	 MhyBuApPGQqSf6IDgiYyzV5KbWN9lwEnh+gRMtMMQ9l7KETq3a4ZJSAYNbhL7H89uV
+	 cG6HzUvBmth9WNNIIRyeCDXPbcge6Km/AcBtqy+8+b23RZkXQus07WO1KVkaJ8mdvy
+	 U5VPOGRrqv2XvN6LS16l3pqcJjkT6rHiIcscBgvGzCgyLNjscvK4/GgGs4Wd5wLe8r
+	 JA9rRRSIPSaRjEv+kIfmYTMWTqJi/ll0O8KMT8+iiWuTpbGyQwsKY3Wi88KWOPtItK
+	 kx3kzJgJ7TO9w==
+Date: Mon, 17 Feb 2025 02:17:16 +0000
+To: Andreas Hindborg <a.hindborg@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, Charalampos Mitrodimas <charmitro@posteo.net>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] rust: configfs: introduce rust support for configfs
+Message-ID: <dd63fcde-ba4c-4a6e-9bde-1af5af37e91b@proton.me>
+In-Reply-To: <20250207-configfs-v2-2-f7a60b24d38e@kernel.org>
+References: <20250207-configfs-v2-0-f7a60b24d38e@kernel.org> <20250207-configfs-v2-2-f7a60b24d38e@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: a8aab86dfbf8209180fd47da4e0174a8e02d9ff5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6568.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 876f8931-3fc3-48cd-c26c-08dd4ef874ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2025 02:11:57.6419
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dTuvOtKxx+wrTJ5FHNzWiiMwUIqEnzr/lelpKvlaWQjOTrhhYEimGqCtFv9IIlDU92zYyA1D0WAzDI6kMV9yLbMPdEC6mTbQtH1se/yHa0o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6083
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-SGkgQW5kcmV3LA0KDQpUaGFua3MgZm9yIHlvdXIgZmVlZGJhY2ssIHBsZWFzZSBmaW5kIG15IGV4
-cGxhbmF0aW9uIGJlbG93Lg0KDQo+IA0KPiBPbiBUaHUsIDIwMjUtMDItMTMgYXQgMDk6NTMgKzA4
-MDAsIEphbW15IEh1YW5nIHdyb3RlOg0KPiA+IENvbnZlcnQgYXNwZWVkLXZpZGVvLnR4dCB0byB5
-YW1sIGZvcm1hdC4NCj4gPiBVcGRhdGUgYXNwZWVkLXZpZGVvLnR4dCB0byBhc3BlZWQsdmlkZW8t
-ZW5naW5lLnlhbWwgaW4gTUFJTlRBSU5FUiBmaWxlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-SmFtbXkgSHVhbmcgPGphbW15X2h1YW5nQGFzcGVlZHRlY2guY29tPg0KPiA+IC0tLQ0KPiA+IMKg
-djY6DQo+ID4gwqAgLSBSZW1vdmUgbmV3IHByb3BlcnRpZXMgaW4gZXhhbXBsZS4NCj4gPg0KPiA+
-IMKgdjU6DQo+ID4gwqAgLSBEb24ndCBwdXQgYWRkaXRpb25hbCBjaGFuZ2VzIGluIHRoaXMgY29t
-bWl0Lg0KPiA+DQo+ID4gwqB2NDoNCj4gPiDCoCAtIEtlZXAgfCBhZnRlciBwaGFuZGxlIGRlc2Ny
-aXB0aW9uIHRvIGZpeCBkdF9iaW5kaW5nX2NoZWNrIGVycm9yLg0KPiA+DQo+ID4gwqB2MzoNCj4g
-PiDCoCAtIEFkZCBBZGRpdGlvbmFsIGNoYW5nZXMgaW50byBjb21tZW50cy4NCj4gPiDCoCAtIFJl
-bW92ZSB8IGFmdGVyIHBoYW5kbGUgZGVzY3JpcHRpb24NCj4gPg0KPiA+IMKgdjI6DQo+ID4gwqAg
-LSBVcGRhdGUgcGF0Y2ggc3ViamVjdA0KPiA+IMKgIC0gQWRkIE5PVEUgZm9yIGZhbHNlIHBvc2l0
-aXZlIHdhcm5pbmcNCj4gPiAtLS0NCj4gPiDCoC4uLi9iaW5kaW5ncy9tZWRpYS9hc3BlZWQsdmlk
-ZW8tZW5naW5lLnlhbWzCoMKgIHwgNzANCj4gPiArKysrKysrKysrKysrKysrKysrDQo+ID4gwqAu
-Li4vYmluZGluZ3MvbWVkaWEvYXNwZWVkLXZpZGVvLnR4dMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwg
-MzMgLS0tLS0tLS0tDQo+ID4gwqBNQUlOVEFJTkVSU8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAyDQo+ICstDQo+
-ID4gwqAzIGZpbGVzIGNoYW5nZWQsIDcxIGluc2VydGlvbnMoKyksIDM0IGRlbGV0aW9ucygtKQ0K
-PiA+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21lZGlhL2FzcGVlZCx2aWRlby1lbmdpbmUueWFtbA0KPiA+IMKgZGVsZXRlIG1vZGUg
-MTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2FzcGVl
-ZC12aWRlby50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9hc3BlZWQsdmlkZW8tZW5naW5lLnlhbWwNCj4gPiBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9hc3BlZWQsdmlkZW8tZW5naW5l
-LnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4u
-NjgyYmJhMjA3NzhjDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9hc3BlZWQsdmlkZW8tZW5naW5lLnlhbWwNCj4gPiBA
-QCAtMCwwICsxLDcwIEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4w
-LW9ubHkgT1IgQlNELTItQ2xhdXNlKSAlWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0
-cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbWVkaWEvYXNwZWVkLHZpZGVvLWVuZ2luZS55YW1s
-Iw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUu
-eWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBBU1BFRUQgVmlkZW8gRW5naW5lDQo+ID4gKw0KPiA+
-ICttYWludGFpbmVyczoNCj4gPiArwqAgLSBFZGRpZSBKYW1lcyA8ZWFqYW1lc0BsaW51eC5pYm0u
-Y29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246DQo+ID4gK8KgIFRoZSBWaWRlbyBFbmdpbmUg
-KFZFKSBlbWJlZGRlZCBpbiB0aGUgQVNQRUVEIFNPQ3MgY2FuIGJlIGNvbmZpZ3VyZWQNCj4gPiAr
-dG8NCj4gPiArwqAgY2FwdHVyZSBhbmQgY29tcHJlc3MgdmlkZW8gZGF0YSBmcm9tIGRpZ2l0YWwg
-b3IgYW5hbG9nIHNvdXJjZXMuDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICvCoCBjb21w
-YXRpYmxlOg0KPiA+ICvCoMKgwqAgZW51bToNCj4gPiArwqDCoMKgwqDCoCAtIGFzcGVlZCxhc3Qy
-NDAwLXZpZGVvLWVuZ2luZQ0KPiA+ICvCoMKgwqDCoMKgIC0gYXNwZWVkLGFzdDI1MDAtdmlkZW8t
-ZW5naW5lDQo+ID4gK8KgwqDCoMKgwqAgLSBhc3BlZWQsYXN0MjYwMC12aWRlby1lbmdpbmUNCj4g
-PiArDQo+ID4gK8KgIHJlZzoNCj4gPiArwqDCoMKgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICvC
-oCBjbG9ja3M6DQo+ID4gK8KgwqDCoCBtYXhJdGVtczogMg0KPiA+ICsNCj4gPiArwqAgY2xvY2st
-bmFtZXM6DQo+ID4gK8KgwqDCoCBpdGVtczoNCj4gPiArwqDCoMKgwqDCoCAtIGNvbnN0OiB2Y2xr
-DQo+ID4gK8KgwqDCoMKgwqAgLSBjb25zdDogZWNsaw0KPiA+ICsNCj4gPiArwqAgcmVzZXRzOg0K
-PiA+ICvCoMKgwqAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gK8KgIGludGVycnVwdHM6DQo+ID4g
-K8KgwqDCoCBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArwqAgbWVtb3J5LXJlZ2lvbjoNCj4gPiAr
-wqDCoMKgIG1heEl0ZW1zOiAxDQo+ID4gK8KgwqDCoCBkZXNjcmlwdGlvbjogfA0KPiA+ICvCoMKg
-wqDCoMKgIFBoYW5kbGUgdG8gdGhlIHJlc2VydmVkIG1lbW9yeSBub2RlcyB0byBiZSBhc3NvY2lh
-dGVkIHdpdGggdGhlDQo+ID4gK8KgwqDCoMKgwqAgVkUuIFZFIHdpbGwgYWNxdWlyZXMgbWVtb3J5
-IHNwYWNlIGZvciAzIHB1cnBvc2VzOg0KPiA+ICvCoMKgwqDCoMKgwqDCoCAxLiBKUEVHIGhlYWRl
-cg0KPiA+ICvCoMKgwqDCoMKgwqDCoCAyLiBDb21wcmVzc2VkIHJlc3VsdA0KPiA+ICvCoMKgwqDC
-oMKgwqDCoCAzLiBUZW1wb3JhcnkgdHJhbnNmb3JtZWQgaW1hZ2UgZGF0YQ0KPiA+ICsNCj4gPiAr
-cmVxdWlyZWQ6DQo+ID4gK8KgIC0gY29tcGF0aWJsZQ0KPiA+ICvCoCAtIHJlZw0KPiA+ICvCoCAt
-IGNsb2Nrcw0KPiA+ICvCoCAtIGNsb2NrLW5hbWVzDQo+ID4gK8KgIC0gaW50ZXJydXB0cw0KPiAN
-Cj4gVGhpcyBzaG91bGQgbGlzdCBgcmVzZXRzYCBhcyB3ZWxsLCBhcyB0aGF0IHdhc24ndCBvcHRp
-b25hbCBpbiB0aGUgdGV4dCBiaW5kaW5nLg0KPiANCidyZXNldHMnIGlzIG5vdCBsaXN0ZWQgYXMg
-cmVxdWlyZWQgaGVyZSBpcyBiZWNhdXNlIEFTUEVFRCBoYW5kbGUgcmVzZXQgaW4gdGhlIGNsb2Nr
-IGRyaXZlcg0KaW4gYXN0MjYwMC9hc3QyNTAwLy4uLiwgZXRjLiBTbyBJIGtlZXAgdGhpcyBwYXJ0
-IGlkZW50aWNhbCBhcyBwcmV2aW91cyBhc3BlZWQtdmlkZW8udHh0Lg0KDQo+ID4gKw0KPiA+ICth
-ZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICvC
-oCAtIHwNCj4gPiArwqDCoMKgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
-bGxlci9hcm0tZ2ljLmg+DQo+ID4gK8KgwqDCoCAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2sv
-YXN0MjYwMC1jbG9jay5oPg0KPiA+ICsNCj4gPiArwqDCoMKgIHZpZGVvQDFlNzAwMDAwIHsNCj4g
-PiArwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjYwMC12aWRlby1lbmdp
-bmUiOw0KPiANCj4gSSBndWVzcyBpdCdzIG5vdCBtdWNoIG9mIGEgY29uY2VybiB0aGF0IHRoZSBl
-eGFtcGxlIGlzIGRpZmZlcmVudC4uLg0KPiANCj4gQW5kcmV3DQo+IA0KPiA+ICvCoMKgwqDCoMKg
-wqDCoCByZWcgPSA8MHgxZTcwMDAwMCAweDEwMDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoCBjbG9j
-a3MgPSA8JnN5c2NvbiBBU1BFRURfQ0xLX0dBVEVfVkNMSz4sDQo+ID4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIDwmc3lzY29uIEFTUEVFRF9DTEtfR0FURV9FQ0xLPjsNCj4gPiAr
-wqDCoMKgwqDCoMKgwqAgY2xvY2stbmFtZXMgPSAidmNsayIsICJlY2xrIjsNCj4gPiArwqDCoMKg
-wqDCoMKgwqAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+
-ID4gK8KgwqDCoCB9Ow0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVkaWEvYXNwZWVkLXZpZGVvLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21lZGlhL2FzcGVlZC12aWRlby50eHQNCj4gPiBkZWxldGVkIGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiBpbmRleCBkMmNhMzI1MTIyNzIuLjAwMDAwMDAwMDAwMA0KPiA+IC0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9hc3BlZWQtdmlkZW8u
-dHh0DQo+ID4gKysrIC9kZXYvbnVsbA0KPiA+IEBAIC0xLDMzICswLDAgQEANCj4gPiAtKiBEZXZp
-Y2UgdHJlZSBiaW5kaW5ncyBmb3IgQXNwZWVkIFZpZGVvIEVuZ2luZQ0KPiA+IC0NCj4gPiAtVGhl
-IFZpZGVvIEVuZ2luZSAoVkUpIGVtYmVkZGVkIGluIHRoZSBBc3BlZWQgQVNUMjQwMC8yNTAwLzI2
-MDAgU09Dcw0KPiA+IGNhbiAtY2FwdHVyZSBhbmQgY29tcHJlc3MgdmlkZW8gZGF0YSBmcm9tIGRp
-Z2l0YWwgb3IgYW5hbG9nIHNvdXJjZXMuDQo+ID4gLQ0KPiA+IC1SZXF1aXJlZCBwcm9wZXJ0aWVz
-Og0KPiA+IC0gLSBjb21wYXRpYmxlOsKgwqDCoMKgwqDCoMKgwqDCoCJhc3BlZWQsYXN0MjQwMC12
-aWRlby1lbmdpbmUiIG9yDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAiYXNwZWVkLGFzdDI1MDAtdmlkZW8tZW5naW5lIiBvcg0KPiA+IC3CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImFzcGVlZCxhc3QyNjAwLXZp
-ZGVvLWVuZ2luZSINCj4gPiAtIC0gcmVnOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoGNvbnRhaW5zIHRoZSBvZmZzZXQgYW5kIGxlbmd0aCBvZg0KPiB0aGUN
-Cj4gPiBWRSBtZW1vcnkgcmVnaW9uDQo+ID4gLSAtIGNsb2NrczrCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoGNsb2NrIHNwZWNpZmllcnMgZm9yIHRoZSBzeXNjb24gY2xvY2tzDQo+ID4gYXNzb2Np
-YXRlZCB3aXRoDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqB0aGUgVkUgKG9yZGVyaW5nIG11c3QgbWF0Y2ggdGhlDQo+IGNsb2NrLW5hbWVzDQo+ID4g
-cHJvcGVydHkpDQo+ID4gLSAtIGNsb2NrLW5hbWVzOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgInZjbGsiIGFuZCAiZWNsayINCj4gPiAtIC0gcmVzZXRzOsKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgcmVzZXQgc3BlY2lmaWVyIGZvciB0aGUgc3lzY29uIHJlc2V0DQo+ID4gYXNzb2Np
-YXRlZCB3aXRoDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqB0aGUgVkUNCj4gPiAtIC0gaW50ZXJydXB0czrCoMKgwqDCoMKgwqDCoMKgwqB0aGUgaW50
-ZXJydXB0IGFzc29jaWF0ZWQgd2l0aCB0aGUgVkUgb24gdGhpcw0KPiA+IHBsYXRmb3JtDQo+ID4g
-LQ0KPiA+IC1PcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+IC0gLSBtZW1vcnktcmVnaW9uOg0KPiA+
-IC3CoMKgwqDCoMKgwqDCoHBoYW5kbGUgdG8gYSBtZW1vcnkgcmVnaW9uIHRvIGFsbG9jYXRlIGZy
-b20sIGFzIGRlZmluZWQgaW4NCj4gPiAtDQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Jlc2VydmVkLW1lbW9yeS9yZXNlcnZlZC1tZW1vcnkudHh0DQo+ID4gLQ0KPiA+IC1F
-eGFtcGxlOg0KPiA+IC0NCj4gPiAtdmlkZW8tZW5naW5lQDFlNzAwMDAwIHsNCj4gPiAtwqDCoMKg
-IGNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtdmlkZW8tZW5naW5lIjsNCj4gPiAtwqDCoMKg
-IHJlZyA9IDwweDFlNzAwMDAwIDB4MjAwMDA+Ow0KPiA+IC3CoMKgwqAgY2xvY2tzID0gPCZzeXNj
-b24gQVNQRUVEX0NMS19HQVRFX1ZDTEs+LCA8JnN5c2Nvbg0KPiA+IEFTUEVFRF9DTEtfR0FURV9F
-Q0xLPjsNCj4gPiAtwqDCoMKgIGNsb2NrLW5hbWVzID0gInZjbGsiLCAiZWNsayI7DQo+ID4gLcKg
-wqDCoCByZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfVklERU8+Ow0KPiA+IC3CoMKgwqAg
-aW50ZXJydXB0cyA9IDw3PjsNCj4gPiAtwqDCoMKgIG1lbW9yeS1yZWdpb24gPSA8JnZpZGVvX2Vu
-Z2luZV9tZW1vcnk+OyAtfTsgZGlmZiAtLWdpdA0KPiA+IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJ
-TkVSUyBpbmRleCA4OTZhMzA3ZmEwNjUuLjdlNTlkYWExZTg5ZA0KPiAxMDA2NDQNCj4gPiAtLS0g
-YS9NQUlOVEFJTkVSUw0KPiA+ICsrKyBiL01BSU5UQUlORVJTDQo+ID4gQEAgLTM1NDksNyArMzU0
-OSw3IEBAIE06wqDCoMKgwqDCoMKgwqDCoEVkZGllIEphbWVzDQo+IDxlYWphbWVzQGxpbnV4Lmli
-bS5jb20+DQo+ID4gwqBMOsKgwqDCoMKgwqBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcNCj4g
-PiDCoEw6wqDCoMKgwqDCoG9wZW5ibWNAbGlzdHMub3psYWJzLm9yZ8KgKG1vZGVyYXRlZCBmb3Ig
-bm9uLXN1YnNjcmliZXJzKQ0KPiA+IMKgUzrCoMKgwqDCoMKgTWFpbnRhaW5lZA0KPiA+IC1GOsKg
-wqDCoMKgwqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvYXNwZWVkLXZp
-ZGVvLnR4dA0KPiA+ICtGOg0KPiA+ICtEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWVkaWEvYXNwZWVkLHZpZGVvLWVuZ2luZS55YW1sDQo+ID4gwqBGOsKgwqDCoMKgwqBkcml2ZXJz
-L21lZGlhL3BsYXRmb3JtL2FzcGVlZC8NCj4gPg0KPiA+IMKgQVNVUyBFQyBIQVJEV0FSRSBNT05J
-VE9SIERSSVZFUg0KPiA+DQo+ID4gYmFzZS1jb21taXQ6IDIwMTRjOTVhZmVjZWUzZTc2Y2E0YTU2
-OTU2YTkzNmUyMzI4M2YwNWINCg0K
+On 07.02.25 15:41, Andreas Hindborg wrote:
+> This patch adds a rust API for configfs, thus allowing rust modules to us=
+e
+> configfs for configuration. The implementation is a shim on top of the C
+> configfs implementation allowing safe use of the C infrastructure from
+> rust.
+>=20
+> The patch enables the `const_mut_refs` feature on compilers before rustc
+> 1.83. The feature was stabilized in rustc 1.83 and is not required to be
+> explicitly enabled on later versions.
+>=20
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>=20
+> ---
+>=20
+> This patch is a direct dependency for `rnull`, the rust null block driver=
+.
+> ---
+>  rust/bindings/bindings_helper.h |   1 +
+>  rust/helpers/mutex.c            |   5 +
+>  rust/kernel/configfs.rs         | 860 ++++++++++++++++++++++++++++++++++=
+++++++
+>  rust/kernel/lib.rs              |   2 +
+>  samples/rust/Kconfig            |  11 +
+>  samples/rust/Makefile           |   1 +
+>  samples/rust/rust_configfs.rs   | 186 +++++++++
+
+Can you move the sample into its own patch?
+
+>  7 files changed, 1066 insertions(+)
+>=20
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
+per.h
+> index 55354e4dec14e..d115a770306f6 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -10,6 +10,7 @@
+>  #include <linux/blk-mq.h>
+>  #include <linux/blk_types.h>
+>  #include <linux/blkdev.h>
+> +#include <linux/configfs.h>
+>  #include <linux/cred.h>
+>  #include <linux/errname.h>
+>  #include <linux/ethtool.h>
+> diff --git a/rust/helpers/mutex.c b/rust/helpers/mutex.c
+> index 06575553eda5c..3e9b910a88e9b 100644
+> --- a/rust/helpers/mutex.c
+> +++ b/rust/helpers/mutex.c
+> @@ -17,3 +17,8 @@ void rust_helper_mutex_assert_is_held(struct mutex *mut=
+ex)
+>  {
+>  =09lockdep_assert_held(mutex);
+>  }
+> +
+> +void rust_helper_mutex_destroy(struct mutex *lock)
+> +{
+> +=09mutex_destroy(lock);
+> +}
+> diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
+> new file mode 100644
+> index 0000000000000..9d4b381b9df89
+> --- /dev/null
+> +++ b/rust/kernel/configfs.rs
+> @@ -0,0 +1,860 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! `configfs` interface.
+> +//!
+> +//! `configfs` is an in-memory pseudo file system for configuration of k=
+ernel
+> +//! modules. Please see the [C documentation] for details and intended u=
+se of
+> +//! `configfs`.
+> +//!
+> +//! This module does not support the following `configfs` features:
+> +//!
+> +//! - Items. All group children are groups.
+> +//! - Symlink support.
+> +//! - `disconnect_notify` hook.
+> +//! - Default groups.
+
+For lists like this, I usually end items except the last one with a
+comma instead of a period.
+
+> +//!
+> +//! See the [rust_configfs.rs] sample for a full example use of this mod=
+ule.
+
+It could also be useful to just put the example directly here into the
+docs instead of/additionally to having it as a sample.
+
+> +//!
+> +//! C header: [`include/linux/configfs.h`](srctree/include/linux/configf=
+s.h)
+> +//!
+> +//! [C documentation]: srctree/Documentation/filesystems/configfs.rst
+> +//! [rust_configfs.rs]: srctree/samples/rust/rust_configfs.rs
+> +
+> +use crate::alloc::flags;
+> +use crate::container_of;
+> +use crate::page::PAGE_SIZE;
+> +use crate::prelude::*;
+> +use crate::str::CString;
+> +use crate::sync::Arc;
+> +use crate::types::ForeignOwnable;
+> +use crate::types::Opaque;
+> +use core::cell::UnsafeCell;
+> +use core::marker::PhantomData;
+> +use core::ptr::addr_of;
+> +use core::ptr::addr_of_mut;
+
+I usually would import this like so:
+
+    use crate::{
+        alloc::flags,
+        container_of,
+        page::PAGE_SIZE,
+        prelude::*,
+        str::CString,
+        sync::Arc,
+        types::{ForeignOwnable, Opaque},
+    };
+    use core::{
+        cell::UnsafeCell,
+        marker::PhantomData,
+        ptr::{addr_of, addr_of_mut},
+    };
+
+To me this is more readable.
+
+> +
+> +/// A `configfs` subsystem.
+> +///
+> +/// This is the top level entrypoint for a `configfs` hierarchy. To regi=
+ster
+> +/// with configfs, embed a field of this type into your kernel module st=
+ruct.
+> +#[pin_data(PinnedDrop)]
+> +pub struct Subsystem<Data> {
+
+Usually, we don't have multi-character generics, any specific reason
+that you chose `Data` here over `T` or `D`?
+
+> +    #[pin]
+> +    subsystem: Opaque<bindings::configfs_subsystem>,
+> +    #[pin]
+> +    data: Data,
+> +}
+> +
+> +// SAFETY: We do not provide any operations on `Subsystem`.
+> +unsafe impl<Data> Sync for Subsystem<Data> {}
+> +
+> +// SAFETY: Ownership of `Subsystem` can safely be transferred to other t=
+hreads.
+> +unsafe impl<Data> Send for Subsystem<Data> {}
+> +
+> +impl<Data> Subsystem<Data> {
+> +    /// Create an initializer for a [`Subsystem`].
+> +    ///
+> +    /// The subsystem will appear in configfs as a directory name given =
+by
+> +    /// `name`. The attributes available in directory are specified by
+> +    /// `item_type`.
+> +    pub fn new(
+> +        name: &'static CStr,
+> +        item_type: &'static ItemType<Subsystem<Data>, Data>,
+> +        data: impl PinInit<Data, Error>,
+> +    ) -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {
+> +            subsystem <- kernel::init::zeroed().chain(
+> +                |place: &mut Opaque<bindings::configfs_subsystem>| {
+> +                    // SAFETY: All of `place` is valid for write.
+> +                    unsafe {
+> +                        addr_of_mut!((*place.get()).su_group.cg_item.ci_=
+name )
+> +                            .write(name.as_ptr().cast_mut().cast())
+> +                    };
+> +                    // SAFETY: All of `place` is valid for write.
+> +                    unsafe {
+> +                        addr_of_mut!((*place.get()).su_group.cg_item.ci_=
+type)
+> +                            .write(item_type.as_ptr())
+> +                    };
+> +                    // SAFETY: We initialized the required fields of `pl=
+ace.group` above.
+> +                    unsafe { bindings::config_group_init(&mut (*place.ge=
+t()).su_group) };
+> +                    // SAFETY: `place.su_mutex` is valid for use as a mu=
+tex.
+> +                    unsafe { bindings::__mutex_init(
+> +                        &mut (*place.get()).su_mutex,
+> +                        kernel::optional_name!().as_char_ptr(),
+> +                        kernel::static_lock_class!().as_ptr())
+
+Formatting for this code is weird.
+
+(since this is inside of the `try_pin_init!` macro, rustfmt doesn't
+format it, since `<-` isn't part of rust syntax, so it doesn't know what
+to do. I usually fix this by replacing all `<-` with `:`, format and
+then change things back)
+
+Also, is there no function in C that does all of this initialization for
+you?
+
+> +                    }
+> +                    Ok(())
+> +                }),
+> +            data <- data,
+> +        })
+> +        .pin_chain(|this| {
+> +            crate::error::to_result(
+> +                // SAFETY: We initialized `this.subsystem` according to =
+C API contract above.
+> +                unsafe { bindings::configfs_register_subsystem(this.subs=
+ystem.get()) },
+> +            )
+> +        })
+> +    }
+> +}
+> +
+> +#[pinned_drop]
+> +impl<Data> PinnedDrop for Subsystem<Data> {
+> +    fn drop(self: Pin<&mut Self>) {
+> +        // SAFETY: We registered `self.subsystem` in the initializer ret=
+urned by `Self::new`.
+> +        unsafe { bindings::configfs_unregister_subsystem(self.subsystem.=
+get()) };
+> +        // SAFETY: We initialized the mutex in `Subsystem::new`.
+> +        unsafe { bindings::mutex_destroy(addr_of_mut!((*self.subsystem.g=
+et()).su_mutex)) };
+> +    }
+> +}
+> +
+> +/// Trait that allows offset calculations for structs that embed a
+> +/// `bindings::config_group`.
+> +///
+> +/// Users of the `configfs` API should not need to implement this trait.
+> +///
+> +/// # Safety
+> +///
+> +/// - Implementers of this trait must embed a `bindings::config_group`.
+> +/// - Methods must be implemented according to method documentation.
+> +pub unsafe trait HasGroup<Data> {
+> +    /// Return the address of the `bindings::config_group` embedded in `=
+Self`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// - `this` must be a valid allocation of at least the size of `Sel=
+f`.
+> +    unsafe fn group(this: *const Self) -> *const bindings::config_group;
+> +
+> +    /// Return the address of the `Self` that `group` is embedded in.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// - `group` must point to the `bindings::config_group` that is emb=
+edded in
+> +    ///   `Self`.
+> +    unsafe fn container_of(group: *const bindings::config_group) -> *con=
+st Self;
+> +}
+> +
+> +// SAFETY: `Subsystem<Data>` embeds a field of type `bindings::config_gr=
+oup`
+> +// within the `subsystem` field.
+> +unsafe impl<Data> HasGroup<Data> for Subsystem<Data> {
+> +    unsafe fn group(this: *const Self) -> *const bindings::config_group =
+{
+> +        // SAFETY: By impl and function safety requirement this projecti=
+on is in bounds.
+> +        unsafe { addr_of!((*(*this).subsystem.get()).su_group) }
+> +    }
+> +
+> +    unsafe fn container_of(group: *const bindings::config_group) -> *con=
+st Self {
+> +        // SAFETY: By impl and function safety requirement this projecti=
+on is in bounds.
+> +        let c_subsys_ptr =3D unsafe { container_of!(group, bindings::con=
+figfs_subsystem, su_group) };
+> +        let opaque_ptr =3D c_subsys_ptr.cast::<Opaque<bindings::configfs=
+_subsystem>>();
+> +        // SAFETY: By impl and function safety requirement, `opaque_ptr`=
+ and the
+> +        // pointer it returns, are within the same allocation.
+> +        unsafe { container_of!(opaque_ptr, Subsystem<Data>, subsystem) }
+> +    }
+> +}
+> +
+> +/// A `configfs` group.
+> +///
+> +/// To add a subgroup to `configfs`, pass this type as `ctype` to
+> +/// [`crate::configfs_attrs`] when creating a group in [`GroupOperations=
+::make_group`].
+> +#[pin_data]
+> +pub struct Group<Data> {
+
+Same question about the generic name here.
+
+> +    #[pin]
+> +    group: Opaque<bindings::config_group>,
+> +    #[pin]
+> +    data: Data,
+> +}
+> +
+> +impl<Data> Group<Data> {
+> +    /// Create an initializer for a new group.
+> +    ///
+> +    /// When instantiated, the group will appear as a directory with the=
+ name
+> +    /// given by `name` and it will contain attributes specified by `ite=
+m_type`.
+> +    pub fn new(
+> +        name: CString,
+> +        item_type: &'static ItemType<Group<Data>, Data>,
+> +        data: impl PinInit<Data, Error>,
+> +    ) -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {
+> +            group <- kernel::init::zeroed().chain(|v: &mut Opaque<bindin=
+gs::config_group>| {
+> +                let place =3D v.get();
+> +                let name =3D name.as_bytes_with_nul().as_ptr();
+> +                // SAFETY: It is safe to initialize a group once it has =
+been zeroed.
+> +                unsafe {
+> +                    bindings::config_group_init_type_name(place, name as=
+ _, item_type.as_ptr())
+
+Can you replace the `as _` cast with a `.cast()`?
+
+> +                };
+> +                Ok(())
+> +            }),
+> +            data <- data,
+> +        })
+> +    }
+> +}
+> +
+> +// SAFETY: `Group<Data>` embeds a field of type `bindings::config_group`
+> +// within the `group` field.
+> +unsafe impl<Data> HasGroup<Data> for Group<Data> {
+> +    unsafe fn group(this: *const Self) -> *const bindings::config_group =
+{
+> +        Opaque::raw_get(
+> +            // SAFETY: By impl and function safety requirements this fie=
+ld
+> +            // projection is within bounds of the allocation.
+> +            unsafe { addr_of!((*this).group) },
+> +        )
+> +    }
+> +
+> +    unsafe fn container_of(group: *const bindings::config_group) -> *con=
+st Self {
+> +        let opaque_ptr =3D group.cast::<Opaque<bindings::config_group>>(=
+);
+> +        // SAFETY: By impl and function safety requirement, `opaque_ptr`=
+ and
+> +        // pointer it returns will be in the same allocation.
+> +        unsafe { container_of!(opaque_ptr, Self, group) }
+> +    }
+> +}
+> +
+> +/// # Safety
+> +///
+> +/// `this` must be a valid pointer.
+> +///
+> +/// If `this` does not represent the root group of a `configfs` subsyste=
+m,
+> +/// `this` must be a pointer to a `bindings::config_group` embedded in a
+> +/// `Group<Parent>`.
+> +///
+> +/// Otherwise, `this` must be a pointer to a `bindings::config_group` th=
+at
+> +/// is embedded in a `bindings::configfs_subsystem` that is embedded in =
+a
+> +/// `Subsystem<Parent>`.
+> +unsafe fn get_group_data<'a, Parent>(this: *mut bindings::config_group) =
+-> &'a Parent {
+> +    // TODO
+
+Missed this todo?
+
+> +    // SAFETY: `this` is a valid pointer.
+> +    let is_root =3D unsafe { (*this).cg_subsys.is_null() };
+> +
+> +    if !is_root {
+> +        // SAFETY: By C API contact, `this` is a pointer to a
+> +        // `bindings::config_group` that we passed as a return value in =
+from
+> +        // `make_group`. Such a pointer is embedded within a `Group<Pare=
+nt>`.
+> +        unsafe { &(*Group::<Parent>::container_of(this)).data }
+> +    } else {
+> +        // SAFETY: By C API contract, `this` is a pointer to the
+> +        // `bindings::config_group` field within a `Subsystem<Parent>`.
+> +        unsafe { &(*Subsystem::container_of(this)).data }
+> +    }
+> +}
+> +
+> +struct GroupOperationsVTable<Parent, Child>(PhantomData<(Parent, Child)>=
+)
+
+Generic names?
+
+> +where
+> +    Parent: GroupOperations<Child =3D Child>;
+
+No need to put this where bound on the struct definition (it is only
+needed if the struct impls `Drop`).
+
+> +
+> +impl<Parent, Child> GroupOperationsVTable<Parent, Child>
+> +where
+> +    Parent: GroupOperations<Child =3D Child>,
+> +    Child: 'static,
+> +{
+> +    /// # Safety
+> +    ///
+> +    /// `this` must be a valid pointer.
+> +    ///
+> +    /// If `this` does not represent the root group of a `configfs` subs=
+ystem,
+> +    /// `this` must be a pointer to a `bindings::config_group` embedded =
+in a
+> +    /// `Group<Parent>`.
+> +    ///
+> +    /// Otherwise, `this` must be a pointer to a `bindings::config_group=
+` that
+> +    /// is embedded in a `bindings::configfs_subsystem` that is embedded=
+ in a
+> +    /// `Subsystem<Parent>`.
+> +    ///
+> +    /// `name` must point to a null terminated string.
+> +    unsafe extern "C" fn make_group(
+> +        this: *mut bindings::config_group,
+> +        name: *const kernel::ffi::c_char,
+> +    ) -> *mut bindings::config_group {
+> +        // SAFETY: By function safety requirements of this function, thi=
+s call
+> +        // is safe.
+> +        let parent_data =3D unsafe { get_group_data(this) };
+> +
+> +        let group_init =3D match Parent::make_group(
+> +            parent_data,
+> +            // SAFETY: By function safety requirements, name points to a=
+ null
+> +            // terminated string.
+> +            unsafe { CStr::from_char_ptr(name) },
+> +        ) {
+> +            Ok(init) =3D> init,
+> +            Err(e) =3D> return e.to_ptr(),
+> +        };
+> +
+> +        let child_group =3D <Arc<Group<Child>> as InPlaceInit<Group<Chil=
+d>>>::try_pin_init(
+> +            group_init,
+> +            flags::GFP_KERNEL,
+> +        );
+> +
+> +        match child_group {
+> +            Ok(child_group) =3D> {
+> +                let child_group_ptr =3D child_group.into_foreign();
+> +                // SAFETY: We allocated the pointee of `child_ptr` above=
+ as a
+> +                // `Group<Child>`.
+> +                unsafe { Group::<Child>::group(child_group_ptr) }.cast_m=
+ut()
+> +            }
+> +            Err(e) =3D> e.to_ptr(),
+> +        }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// If `this` does not represent the root group of a `configfs` subs=
+ystem,
+> +    /// `this` must be a pointer to a `bindings::config_group` embedded =
+in a
+> +    /// `Group<Parent>`.
+> +    ///
+> +    /// Otherwise, `this` must be a pointer to a `bindings::config_group=
+` that
+> +    /// is embedded in a `bindings::configfs_subsystem` that is embedded=
+ in a
+> +    /// `Subsystem<Parent>`.
+> +    ///
+> +    /// `item` must point to a `bindings::config_item` within a
+> +    /// `bindings::config_group` within a `Group<Child>`.
+> +    unsafe extern "C" fn drop_item(
+> +        this: *mut bindings::config_group,
+> +        item: *mut bindings::config_item,
+> +    ) {
+> +        // SAFETY: By function safety requirements of this function, thi=
+s call
+> +        // is safe.
+> +        let parent_data =3D unsafe { get_group_data(this) };
+> +
+> +        // SAFETY: By function safety requirements, `item` is embedded i=
+n a
+> +        // `config_group`.
+> +        let c_child_group_ptr =3D
+> +            unsafe { kernel::container_of!(item, bindings::config_group,=
+ cg_item) };
+> +        // SAFETY: By function safety requirements, `c_child_group_ptr` =
+is
+> +        // embedded within a `Group<CHLD>`.
+> +        let r_child_group_ptr =3D unsafe { Group::<Child>::container_of(=
+c_child_group_ptr) };
+> +
+> +        if Parent::HAS_DROP_ITEM {
+> +            Parent::drop_item(
+> +                parent_data,
+> +                // SAFETY: We called `into_foreign` to produce `r_child_=
+group_ptr` in
+> +                // `make_group`. There are not other borrows of this poi=
+nter in existence.
+> +                unsafe {
+> +                    <Arc<Group<Child>> as ForeignOwnable>::borrow(r_chil=
+d_group_ptr.cast_mut())
+> +                },
+> +            );
+> +        }
+> +
+> +        // SAFETY: By C API contract, we are required to drop a refcount=
+ on
+> +        // `item`.
+> +        unsafe { bindings::config_item_put(item) };
+> +    }
+> +
+> +    const VTABLE: bindings::configfs_group_operations =3D bindings::conf=
+igfs_group_operations {
+> +        make_item: None,
+> +        make_group: Some(Self::make_group),
+> +        disconnect_notify: None,
+> +        drop_item: Some(Self::drop_item),
+> +        is_visible: None,
+> +        is_bin_visible: None,
+> +    };
+> +}
+> +
+> +struct ItemOperationsVTable<Container, Data>(PhantomData<(Container, Dat=
+a)>);
+> +
+> +impl<Data> ItemOperationsVTable<Group<Data>, Data>
+> +where
+> +    Data: 'static,
+> +{
+> +    /// # Safety
+> +    ///
+> +    /// `this` must be a pointer to a `bindings::config_group` embedded =
+in a
+> +    /// `Group<Parent>`.
+> +    ///
+> +    /// This function will destroy the pointee of `this`. The pointee of=
+ `this`
+> +    /// must not be accessed after the function returns.
+> +    unsafe extern "C" fn release(this: *mut bindings::config_item) {
+> +        // SAFETY: By function safety requirements, `this` is embedded i=
+n a
+> +        // `config_group`.
+> +        let c_group_ptr =3D unsafe { kernel::container_of!(this, binding=
+s::config_group, cg_item) };
+> +        // SAFETY: By function safety requirements, `c_group_ptr` is
+> +        // embedded within a `Group<Data>`.
+> +        let r_group_ptr =3D unsafe { Group::<Data>::container_of(c_group=
+_ptr) };
+> +
+> +        // SAFETY: We called `into_foreign` on `r_group_ptr` in
+> +        // `make_group`.
+> +        let pin_self =3D
+> +            unsafe { <Arc<Group<Data>> as ForeignOwnable>::from_foreign(=
+r_group_ptr.cast_mut()) };
+> +        drop(pin_self);
+> +    }
+> +
+> +    const VTABLE: bindings::configfs_item_operations =3D bindings::confi=
+gfs_item_operations {
+> +        release: Some(Self::release),
+> +        allow_link: None,
+> +        drop_link: None,
+> +    };
+> +}
+> +
+> +impl<Data> ItemOperationsVTable<Subsystem<Data>, Data> {
+> +    const VTABLE: bindings::configfs_item_operations =3D bindings::confi=
+gfs_item_operations {
+> +        release: None,
+> +        allow_link: None,
+> +        drop_link: None,
+> +    };
+> +}
+> +
+> +/// Operations implemented by `configfs` groups that can create subgroup=
+s.
+> +///
+> +/// Implement this trait on structs that embed a [`Subsystem`] or a [`Gr=
+oup`].
+> +#[vtable]
+> +pub trait GroupOperations {
+> +    /// The parent data object type.
+> +    ///
+> +    /// The implementer of this trait is this kind of data object. Shoul=
+d be set
+> +    /// to `Self`.
+> +    type Parent;
+
+If it should be set to `Self`, why does this even exist? If there are
+cases where it isn't supposed to be `Self`, it would be good to put them
+into the docs.
+
+> +
+> +    /// The child data object type.
+> +    ///
+> +    /// This group will create subgroups (subdirectories) backed by this=
+ kind of
+> +    /// object.
+> +    type Child: 'static;
+> +
+> +    /// The kernel will call this method in response to `mkdir(2)` in th=
+e
+> +    /// directory representing `this`.
+
+This doesn't really read like a first line description of this function,
+how about putting "Creates a new subgroup." as the first line?
+
+> +    ///
+> +    /// To accept the request to create a group, implementations should
+> +    /// instantiate a `CHLD` and return a `CPTR` to it. To prevent creat=
+ion,
+
+Is there a typo in `CHLD`? What do you mean by "return a `CPTR` to it"?
+
+> +    /// return a suitable error.
+> +    fn make_group(
+> +        this: &Self::Parent,
+> +        name: &CStr,
+> +    ) -> Result<impl PinInit<Group<Self::Child>, Error>>;
+> +
+> +    /// The kernel will call this method before the directory representi=
+ng
+> +    /// `_child` is removed from `configfs`.
+
+Same thing about the one-line description, how about (with the name
+changed below): "Prepares the given group for removal from configfs.".
+
+> +    ///
+> +    /// Implementations can use this method to do house keeping before
+> +    /// `configfs` drops its reference to `Child`.
+> +    fn drop_item(
+
+`drop` doesn't really fit here, I think something like `unlink_item`
+fits better, since the child isn't actually dropped after this function
+returns.
+
+> +        _this: &Self::Parent,
+> +        _child: <Arc<Group<Self::Child>> as ForeignOwnable>::Borrowed<'_=
+>,
+
+Just write ArcBorrow<'_, Group<Self::Child>> instead of the above?
+
+> +    ) {
+> +        kernel::build_error!(kernel::error::VTABLE_DEFAULT_ERROR)
+> +    }
+> +}
+> +
+> +/// A `configfs` attribute.
+> +///
+> +/// An attribute appear as a file in configfs, inside a folder that repr=
+esent
+
+Typo: appear -> appears
+
+> +/// the group that the attribute belongs to.
+> +#[repr(transparent)]
+> +pub struct Attribute<const ID: u64, O, Data> {
+> +    attribute: Opaque<bindings::configfs_attribute>,
+> +    _p: PhantomData<(O, Data)>,
+> +}
+> +
+> +// SAFETY: We do not provide any operations on `Attribute`.
+> +unsafe impl<const ID: u64, O, Data> Sync for Attribute<ID, O, Data> {}
+> +
+> +// SAFETY: Ownership of `Attribute` can safely be transferred to other t=
+hreads.
+> +unsafe impl<const ID: u64, O, Data> Send for Attribute<ID, O, Data> {}
+> +
+> +impl<const ID: u64, O, Data> Attribute<ID, O, Data>
+> +where
+> +    O: AttributeOperations<ID, Data =3D Data>,
+> +{
+> +    /// # Safety
+> +    ///
+> +    /// `item` must be embedded in a `bindings::config_group`.
+> +    ///
+> +    /// If `item` does not represent the root group of a `configfs` subs=
+ystem,
+> +    /// the group must be embedded in a `Group<Data>`.
+> +    ///
+> +    /// Otherwise, the group must be a embedded in a
+> +    /// `bindings::configfs_subsystem` that is embedded in a `Subsystem<=
+Data>`.
+> +    ///
+> +    /// `page` must point to a writable buffer of size at least [`PAGE_S=
+IZE`].
+> +    unsafe extern "C" fn show(
+> +        item: *mut bindings::config_item,
+> +        page: *mut kernel::ffi::c_char,
+> +    ) -> isize {
+> +        let c_group: *mut bindings::config_group =3D
+> +        // SAFETY: By function safety requirements, `item` is embedded i=
+n a
+> +        // `config_group`.
+> +            unsafe { container_of!(item, bindings::config_group, cg_item=
+) }.cast_mut();
+> +
+> +        // SAFETY: The function safety requirements for this function sa=
+tisfy
+> +        // the conditions for this call.
+> +        let data: &Data =3D unsafe { get_group_data(c_group) };
+> +
+> +        // SAFETY: By function safety requirements, `page` is writable f=
+or `PAGE_SIZE`.
+> +        let ret =3D O::show(data, unsafe { &mut *(page as *mut [u8; PAGE=
+_SIZE]) });
+> +
+> +        match ret {
+> +            Ok(size) =3D> size as isize,
+> +            Err(err) =3D> err.to_errno() as isize,
+> +        }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// `item` must be embedded in a `bindings::config_group`.
+> +    ///
+> +    /// If `item` does not represent the root group of a `configfs` subs=
+ystem,
+> +    /// the group must be embedded in a `Group<Data>`.
+> +    ///
+> +    /// Otherwise, the group must be a embedded in a
+> +    /// `bindings::configfs_subsystem` that is embedded in a `Subsystem<=
+Data>`.
+> +    ///
+> +    /// `page` must point to a readable buffer of size at least `size`.
+> +    unsafe extern "C" fn store(
+> +        item: *mut bindings::config_item,
+> +        page: *const kernel::ffi::c_char,
+> +        size: usize,
+> +    ) -> isize {
+> +        let c_group: *mut bindings::config_group =3D
+> +        // SAFETY: By function safety requirements, `item` is embedded i=
+n a
+> +        // `config_group`.
+> +            unsafe { container_of!(item, bindings::config_group, cg_item=
+) }.cast_mut();
+> +
+> +        // SAFETY: The function safety requirements for this function sa=
+tisfy
+> +        // the conditions for this call.
+> +        let data: &Data =3D unsafe { get_group_data(c_group) };
+> +
+> +        let ret =3D O::store(
+> +            data,
+> +            // SAFETY: By function safety requirements, `page` is readab=
+le
+> +            // for at least `size`.
+> +            unsafe { core::slice::from_raw_parts(page.cast(), size) },
+> +        );
+> +
+> +        match ret {
+> +            Ok(()) =3D> size as isize,
+> +            Err(err) =3D> err.to_errno() as isize,
+> +        }
+> +    }
+> +
+> +    /// Create a new attribute.
+> +    ///
+> +    /// The attribute will appear as a file with name given by `name`.
+> +    pub const fn new(name: &'static CStr) -> Self {
+> +        Self {
+> +            attribute: Opaque::new(bindings::configfs_attribute {
+> +                ca_name: name as *const _ as _,
+> +                ca_owner: core::ptr::null_mut(),
+> +                ca_mode: 0o660,
+> +                show: Some(Self::show),
+> +                store: if O::HAS_STORE {
+> +                    Some(Self::store)
+> +                } else {
+> +                    None
+> +                },
+> +            }),
+> +            _p: PhantomData,
+> +        }
+> +    }
+> +}
+> +
+> +/// Operations supported by an attribute.
+> +///
+> +/// Implement this trait on type and pass that type as generic parameter=
+ when
+> +/// creating an [`Attribute`]. The type carrying the implementation serv=
+e no
+> +/// purpose other than specifying the attribute operations.
+> +#[vtable]
+> +pub trait AttributeOperations<const ID: u64 =3D 0> {
+> +    /// The type of the object that contains the field that is backing t=
+he
+> +    /// attribute for this operation.
+> +    type Data;
+> +
+> +    /// This function is called by the kernel to read the value of an at=
+tribute.
+
+"Reads the value of an attribute.".
+
+> +    ///
+> +    /// Implementations should write the rendering of the attribute to `=
+page`
+> +    /// and return the number of bytes written.
+> +    fn show(data: &Self::Data, page: &mut [u8; PAGE_SIZE]) -> Result<usi=
+ze>;
+
+Why is this not named `read` or `load`? If the C equivalent is `show`,
+then it's fine, but otherwise I wouldn't understand why it's show/store
+as opposed to load/store or read/write.
+
+> +
+> +    /// This function is called by the kernel to update the value of an =
+attribute.
+
+Again first line doc here.
+
+> +    ///
+> +    /// Implementations should parse the value from `page` and update in=
+ternal
+> +    /// state to reflect the parsed value. Partial writes are not suppor=
+ted and
+> +    /// implementations should expect the full page to arrive in one wri=
+te
+> +    /// operation.
+
+I don't understand what you're trying to say with the last sentence.
+
+> +    fn store(_data: &Self::Data, _page: &[u8]) -> Result {
+> +        kernel::build_error!(kernel::error::VTABLE_DEFAULT_ERROR)
+> +    }
+> +}
+> +
+> +/// A list of attributes.
+> +///
+> +/// This type is used to construct a new [`ItemType`]. It represents a l=
+ist of
+> +/// [`Attribute`] that will appear in the directory representing a [`Gro=
+up`].
+> +/// Users should not directly instantiate this type, rather they should =
+use the
+> +/// [`kernel::configfs_attrs`] macro to declare a static set of attribut=
+es for a
+> +/// group.
+> +#[repr(transparent)]
+> +pub struct AttributeList<const N: usize, Data>(
+> +    UnsafeCell<[*mut kernel::ffi::c_void; N]>,
+> +    PhantomData<Data>,
+> +);
+> +
+> +// SAFETY: Ownership of `AttributeList` can safely be transferred to oth=
+er threads.
+> +unsafe impl<const N: usize, Data> Send for AttributeList<N, Data> {}
+> +
+> +// SAFETY: We do not provide any operations on `AttributeList` that need=
+ synchronization.
+> +unsafe impl<const N: usize, Data> Sync for AttributeList<N, Data> {}
+> +
+> +impl<const N: usize, Data> AttributeList<N, Data> {
+> +    #[doc(hidden)]
+
+I normally put attributes after the documentation.
+
+> +    /// # Safety
+> +    ///
+> +    /// This function can only be called by expanding the `configfs_attr=
+s`
+
+s/expanding//
+
+> +    /// macro.
+> +    pub const unsafe fn new() -> Self {
+> +        Self(UnsafeCell::new([core::ptr::null_mut(); N]), PhantomData)
+> +    }
+> +
+> +    #[doc(hidden)]
+> +    /// # Safety
+> +    ///
+> +    /// This function can only be called by expanding the `configfs_attr=
+s`
+
+s/expanding//
+
+> +    /// macro.
+> +    pub const unsafe fn add<
+> +        const I: usize,
+> +        const ID: u64,
+> +        O: AttributeOperations<ID, Data =3D Data>,
+> +    >(
+> +        &'static self,
+> +        attribute: &'static Attribute<ID, O, Data>,
+> +    ) {
+> +        if I >=3D N - 1 {
+> +            kernel::build_error!("Invalid attribute index");
+> +        }
+> +
+> +        // SAFETY: This function is only called through `configfs_attrs`=
+. This
+
+s/through `configfs_attrs`/through the `configfs_attrs` macro/
+
+> +        // ensures that we are evaluating the function in const context =
+when
+> +        // initializing a static. As such, the reference created below w=
+ill be
+> +        // exclusive.
+> +        unsafe {
+> +            (&mut *self.0.get())[I] =3D (attribute as *const Attribute<I=
+D, O, Data>)
+> +                .cast_mut()
+> +                .cast()
+> +        };
+> +    }
+> +}
+> +
+> +/// A representation of the attributes that will appear in a [`Group`] o=
+r
+> +/// [`Subsystem`].
+> +///
+> +/// Users should not directly instantiate objects of this type. Rather, =
+they
+> +/// should use the [`kernel::configfs_attrs`] macro to statically declar=
+e the
+> +/// shape of a [`Group`] or [`Subsystem`].
+> +#[pin_data]
+> +pub struct ItemType<Container, Data> {
+> +    #[pin]
+> +    item_type: Opaque<bindings::config_item_type>,
+> +    _p: PhantomData<(Container, Data)>,
+> +}
+> +
+> +// SAFETY: We do not provide any operations on `ItemType` that need sync=
+hronization.
+> +unsafe impl<Container, Data> Sync for ItemType<Container, Data> {}
+> +
+> +// SAFETY: Ownership of `ItemType` can safely be transferred to other th=
+reads.
+> +unsafe impl<Container, Data> Send for ItemType<Container, Data> {}
+> +
+> +macro_rules! impl_item_type {
+> +    ($tpe:ty) =3D> {
+> +        impl<Data> ItemType<$tpe, Data> {
+> +            #[doc(hidden)]
+> +            pub const fn new_with_child_ctor<const N: usize, Child>(
+> +                owner: &'static ThisModule,
+> +                attributes: &'static AttributeList<N, Data>,
+> +            ) -> Self
+> +            where
+> +                Data: GroupOperations<Child =3D Child>,
+> +                Child: 'static,
+> +            {
+> +                Self {
+> +                    item_type: Opaque::new(bindings::config_item_type {
+> +                        ct_owner: owner.as_ptr(),
+> +                        ct_group_ops: (&GroupOperationsVTable::<Data, Ch=
+ild>::VTABLE as *const _)
+> +                            as *mut _,
+> +                        ct_item_ops: (&ItemOperationsVTable::<$tpe, Data=
+>::VTABLE as *const _)
+> +                            as *mut _,
+> +                        ct_attrs: attributes as *const _ as _,
+> +                        ct_bin_attrs: core::ptr::null_mut(),
+> +                    }),
+> +                    _p: PhantomData,
+> +                }
+> +            }
+> +
+> +            #[doc(hidden)]
+> +            pub const fn new<const N: usize>(
+> +                owner: &'static ThisModule,
+> +                attributes: &'static AttributeList<N, Data>,
+> +            ) -> Self {
+> +                Self {
+> +                    item_type: Opaque::new(bindings::config_item_type {
+> +                        ct_owner: owner.as_ptr(),
+> +                        ct_group_ops: core::ptr::null_mut(),
+> +                        ct_item_ops: (&ItemOperationsVTable::<$tpe, Data=
+>::VTABLE as *const _)
+> +                            as *mut _,
+> +                        ct_attrs: attributes as *const _ as _,
+> +                        ct_bin_attrs: core::ptr::null_mut(),
+> +                    }),
+> +                    _p: PhantomData,
+> +                }
+> +            }
+> +        }
+> +    };
+> +}
+> +
+> +impl_item_type!(Subsystem<Data>);
+> +impl_item_type!(Group<Data>);
+> +
+> +impl<Container, Data> ItemType<Container, Data> {
+> +    fn as_ptr(&self) -> *const bindings::config_item_type {
+> +        self.item_type.get()
+> +    }
+> +}
+> +
+> +/// Define a list of configfs attributes statically.
+> +#[macro_export]
+> +macro_rules! configfs_attrs {
+
+I see you've joined the dark side of declarative macros!
+
+This seems like a prime candidate for replacing with a proc-macro when
+we have syn :)
+
+> +    (
+> +        container: $container:ty,
+> +        data: $data:ty,
+> +        attributes: [
+> +            $($name:ident: $attr:literal,)*
+
+This syntax always requires a trailing comma. Most (IIRC all, but not
+100% sure) Rust syntax allows you to omit it, so it would be odd if it
+were not the case here. You can have an optional trailing comma via:
+
+    $($name:ident: $attr:literal),* $(,)?
+
+But as soon as you give the tokens off to the internals of the macro, I
+would recommend sticking to always having a trailing comma or no
+trailing comma.
+
+> +        ],
+> +    ) =3D> {
+> +        $crate::configfs_attrs!(
+> +            count:
+> +            @container($container),
+> +            @data($data),
+> +            @child(),
+> +            @no_child(x),
+> +            @attrs($($name $attr)*),
+> +            @eat($($name $attr,)*),
+> +            @assign(),
+> +            @cnt(0usize),
+> +        )
+> +    };
+> +    (
+> +        container: $container:ty,
+> +        data: $data:ty,
+> +        child: $child:ty,
+> +        attributes: [
+> +            $($name:ident: $attr:literal,)*
+
+Ditto.
+
+> +        ],
+> +    ) =3D> {
+> +        $crate::configfs_attrs!(
+> +            count:
+> +            @container($container),
+> +            @data($data),
+> +            @child($child),
+> +            @no_child(),
+> +            @attrs($($name $attr)*),
+> +            @eat($($name $attr,)*),
+> +            @assign(),
+> +            @cnt(0usize),
+> +        )
+> +    };
+> +    (count:
+> +     @container($container:ty),
+> +     @data($data:ty),
+> +     @child($($child:ty)?),
+> +     @no_child($($no_child:ident)?),
+> +     @attrs($($aname:ident $aattr:literal)*),
+> +     @eat($name:ident $attr:literal, $($rname:ident $rattr:literal,)*),
+> +     @assign($($assign:block)*),
+> +     @cnt($cnt:expr),
+> +    ) =3D> {
+> +        $crate::configfs_attrs!(
+> +            count:
+> +            @container($container),
+> +            @data($data),
+> +            @child($($child)?),
+> +            @no_child($($no_child)?),
+> +            @attrs($($aname $aattr)*),
+> +            @eat($($rname $rattr,)*),
+> +            @assign($($assign)* {
+> +                const N: usize =3D $cnt;
+> +                // SAFETY: We are expanding `configfs_attrs`.
+
+This safety comment is doing a lot of heavy lifting, since it is not at
+all obvious what the below unsafe function will resolve to... Seems also
+a hassle to put a full comment here explaining that
+`[< $data:upper _ATTRS >]` is defined by the macro below and that it is
+of type `AttributeList` etc... But maybe we should.
+
+> +                unsafe {
+> +                    $crate::macros::paste!( [< $data:upper _ATTRS >])
+> +                        .add::<N, $attr, _>(
+> +                            & $crate::macros::paste!( [< $data:upper _ $=
+name:upper _ATTR >])
+> +                        )
+> +                };
+> +            }),
+
+You can merge the two `paste!` invocations into one:
+
+    @assign($($assign)* {
+        const N: usize =3D $cnt;
+        $crate::macros::paste! {
+            // SAFETY: see above comment
+            unsafe {
+                [< $data:upper _ATTRS >].add::<N, $attr, _>(
+                    &[< $data:upper _ $name:upper _ATTR >]
+                );
+            }
+        }
+    }),
+
+> +            @cnt(1usize + $cnt),
+> +        )
+> +    };
+> +    (count:
+> +     @container($container:ty),
+> +     @data($data:ty),
+> +     @child($($child:ty)?),
+> +     @no_child($($no_child:ident)?),
+> +     @attrs($($aname:ident $aattr:literal)*),
+> +     @eat(),
+> +     @assign($($assign:block)*),
+> +     @cnt($cnt:expr),
+> +    ) =3D>
+> +    {
+> +        $crate::configfs_attrs!(
+> +            final:
+> +            @container($container),
+> +            @data($data),
+> +            @child($($child)?),
+> +            @no_child($($no_child)?),
+> +            @attrs($($aname $aattr)*),
+> +            @assign($($assign)*),
+> +            @cnt($cnt),
+> +        )
+> +    };
+> +    (final:
+> +     @container($container:ty),
+> +     @data($data:ty),
+> +     @child($($child:ty)?),
+> +     @no_child($($no_child:ident)?),
+> +     @attrs($($name:ident $attr:literal)*),
+> +     @assign($($assign:block)*),
+> +     @cnt($cnt:expr),
+> +    ) =3D>
+> +    {
+> +        {
+> +            $(
+> +                $crate::macros::paste!{
+
+Again you can coalesce all of the `paste!` invocations into a single one
+spanning the entire output of this macro branch.
+
+> +                    // SAFETY: We are expanding `configfs_attrs`.
+> +                    static [< $data:upper _ $name:upper _ATTR >]:
+> +                      $crate::configfs::Attribute<$attr, $data, $data> =
+=3D
+> +                        unsafe {
+> +                            $crate::configfs::Attribute::new(c_str!(::co=
+re::stringify!($name)))
+> +                        };
+> +                }
+> +            )*
+> +
+> +
+> +            const N: usize =3D $cnt + 1usize;
+
+Why do we need an additional copy? To have a zero entry at the end for C
+to know it's the end of the list? If so, a comment here would be very
+helpful.
+
+> +            $crate::macros::paste!{
+> +                // SAFETY: We are expanding `configfs_attrs`.
+> +                static [< $data:upper _ATTRS >]:
+> +                  $crate::configfs::AttributeList<N, $data> =3D
+> +                    unsafe { $crate::configfs::AttributeList::new() };
+> +            }
+> +
+> +            $($assign)*
+> +
+> +            $(
+> +                $crate::macros::paste!{
+> +                    const [<$no_child:upper>]: bool =3D true;
+> +                };
+> +
+> +                $crate::macros::paste!{
+> +                    static [< $data:upper _TPE >] : $crate::configfs::It=
+emType<$container, $data>  =3D
+> +                        $crate::configfs::ItemType::<$container, $data>:=
+:new::<N>(
+> +                            &THIS_MODULE, &[<$ data:upper _ATTRS >]
+> +                        );
+> +                }
+> +            )?
+> +
+> +            $(
+> +                $crate::macros::paste!{
+> +                    static [< $data:upper _TPE >]:
+> +                      $crate::configfs::ItemType<$container, $data>  =3D
+> +                        $crate::configfs::ItemType::<$container, $data>:=
+:new_with_child_ctor::
+> +                    <N, $child>(
+> +                        &THIS_MODULE, &[<$ data:upper _ATTRS >]
+> +                    );
+> +                }
+> +            )?
+> +
+> +            &$crate::macros::paste!( [< $data:upper _TPE >] )
+> +        }
+> +    };
+> +
+> +}
+
+I tested if multiple invocations of this macro can shadow each other and
+the answer is no. So wrapping a const with `{}` makes it inaccessible to
+the outside which is exactly what we need here.
+The macro looks quite good!
+
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 496ed32b0911a..ec84653ab8c7a 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -40,6 +40,8 @@
+>  pub mod block;
+>  #[doc(hidden)]
+>  pub mod build_assert;
+> +#[cfg(CONFIG_CONFIGFS_FS)]
+> +pub mod configfs;
+>  pub mod cred;
+>  pub mod device;
+>  pub mod device_id;
+> diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+> index 918dbead2c0b4..2f97bf9a7b4cc 100644
+> --- a/samples/rust/Kconfig
+> +++ b/samples/rust/Kconfig
+> @@ -10,6 +10,17 @@ menuconfig SAMPLES_RUST
+>=20
+>  if SAMPLES_RUST
+>=20
+> +config SAMPLE_RUST_CONFIGFS
+> +=09tristate "Configfs sample"
+> +=09depends on CONFIGFS_FS
+> +=09help
+> +=09  This option builds the Rust configfs sample.
+> +
+> +=09  To compile this as a module, choose M here:
+> +=09  the module will be called rust_configfs.
+> +
+> +=09  If unsure, say N.
+> +
+>  config SAMPLE_RUST_MINIMAL
+>  =09tristate "Minimal"
+>  =09help
+> diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+> index 5a8ab0df0567c..72122f010cafc 100644
+> --- a/samples/rust/Makefile
+> +++ b/samples/rust/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)=09=09+=3D rust_misc=
+_device.o
+>  obj-$(CONFIG_SAMPLE_RUST_PRINT)=09=09=09+=3D rust_print.o
+>  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)=09=09+=3D rust_driver_pci.o
+>  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)=09+=3D rust_driver_platform.o
+> +obj-$(CONFIG_SAMPLE_RUST_CONFIGFS)=09=09+=3D rust_configfs.o
+>=20
+>  rust_print-y :=3D rust_print_main.o rust_print_events.o
+>=20
+> diff --git a/samples/rust/rust_configfs.rs b/samples/rust/rust_configfs.r=
+s
+> new file mode 100644
+> index 0000000000000..fe896e66efb41
+> --- /dev/null
+> +++ b/samples/rust/rust_configfs.rs
+> @@ -0,0 +1,186 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Rust configfs sample.
+> +
+> +use kernel::alloc::flags;
+> +use kernel::c_str;
+> +use kernel::configfs;
+> +use kernel::configfs_attrs;
+> +use kernel::new_mutex;
+> +use kernel::prelude::*;
+> +use kernel::sync::Mutex;
+
+Would merge the imports here too (rust-analyzer has a code-action for
+that btw).
+
+> +
+> +module! {
+> +    type: RustConfigfs,
+> +    name: "rust_configfs",
+> +    author: "Rust for Linux Contributors",
+> +    description: "Rust configfs sample",
+> +    license: "GPL",
+> +}
+> +
+> +#[pin_data]
+> +struct RustConfigfs {
+> +    #[pin]
+> +    config: configfs::Subsystem<Configuration>,
+> +}
+> +
+> +#[pin_data]
+> +struct Configuration {
+> +    message: &'static CStr,
+> +    #[pin]
+> +    bar: Mutex<(KBox<[u8; 4096]>, usize)>,
+> +}
+> +
+> +impl Configuration {
+> +    fn new() -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {
+> +            message: c_str!("Hello World\n"),
+> +            bar <- new_mutex!((KBox::new([0;4096], flags::GFP_KERNEL)?,0=
+)),
+
+s/;/; /
+s/,0/, 0/
+
+---
+Cheers,
+Benno
+
+> +        })
+> +    }
+> +}
+> +
+> +impl kernel::InPlaceModule for RustConfigfs {
+> +    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
+> +        pr_info!("Rust configfs sample (init)\n");
+> +
+> +        let item_type =3D configfs_attrs! {
+> +            container: configfs::Subsystem<Configuration>,
+> +            data: Configuration,
+> +            child: Child,
+> +            attributes: [
+> +                message: 0,
+> +                bar: 1,
+> +            ],
+> +        };
+> +
+> +        try_pin_init!(Self {
+> +            config <- configfs::Subsystem::new(
+> +                kernel::c_str!("rust_configfs"), item_type, Configuratio=
+n::new()
+> +            ),
+> +        })
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::GroupOperations for Configuration {
+> +    type Parent =3D Self;
+> +    type Child =3D Child;
+> +
+> +    fn make_group(
+> +        _this: &Self,
+> +        name: &CStr,
+> +    ) -> Result<impl PinInit<configfs::Group<Child>, Error>> {
+> +        let tpe =3D configfs_attrs! {
+> +            container: configfs::Group<Child>,
+> +            data: Child,
+> +            child: GrandChild,
+> +            attributes: [
+> +                baz: 0,
+> +            ],
+> +        };
+> +
+> +        Ok(configfs::Group::new(name.try_into()?, tpe, Child::new()))
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<0> for Configuration {
+> +    type Data =3D Configuration;
+> +
+> +    fn show(container: &Configuration, page: &mut [u8; 4096]) -> Result<=
+usize> {
+> +        pr_info!("Show message\n");
+> +        let data =3D container.message;
+> +        page[0..data.len()].copy_from_slice(data);
+> +        Ok(data.len())
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<1> for Configuration {
+> +    type Data =3D Configuration;
+> +
+> +    fn show(container: &Configuration, page: &mut [u8; 4096]) -> Result<=
+usize> {
+> +        pr_info!("Show bar\n");
+> +        let guard =3D container.bar.lock();
+> +        let data =3D guard.0.as_slice();
+> +        let len =3D guard.1;
+> +        page[0..len].copy_from_slice(&data[0..len]);
+> +        Ok(len)
+> +    }
+> +
+> +    fn store(container: &Configuration, page: &[u8]) -> Result {
+> +        pr_info!("Store bar\n");
+> +        let mut guard =3D container.bar.lock();
+> +        guard.0[0..page.len()].copy_from_slice(page);
+> +        guard.1 =3D page.len();
+> +        Ok(())
+> +    }
+> +}
+> +
+> +#[pin_data]
+> +struct Child {}
+> +
+> +impl Child {
+> +    fn new() -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {})
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::GroupOperations for Child {
+> +    type Parent =3D Self;
+> +    type Child =3D GrandChild;
+> +
+> +    fn make_group(
+> +        _this: &Self,
+> +        name: &CStr,
+> +    ) -> Result<impl PinInit<configfs::Group<GrandChild>, Error>> {
+> +        let tpe =3D configfs_attrs! {
+> +            container: configfs::Group<GrandChild>,
+> +            data: GrandChild,
+> +            attributes: [
+> +                gc: 0,
+> +            ],
+> +        };
+> +
+> +        Ok(configfs::Group::new(
+> +            name.try_into()?,
+> +            tpe,
+> +            GrandChild::new(),
+> +        ))
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<0> for Child {
+> +    type Data =3D Child;
+> +
+> +    fn show(_container: &Child, page: &mut [u8; 4096]) -> Result<usize> =
+{
+> +        pr_info!("Show baz\n");
+> +        let data =3D c"Hello Baz\n".to_bytes();
+> +        page[0..data.len()].copy_from_slice(data);
+> +        Ok(data.len())
+> +    }
+> +}
+> +
+> +#[pin_data]
+> +struct GrandChild {}
+> +
+> +impl GrandChild {
+> +    fn new() -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {})
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<0> for GrandChild {
+> +    type Data =3D GrandChild;
+> +
+> +    fn show(_container: &GrandChild, page: &mut [u8; 4096]) -> Result<us=
+ize> {
+> +        pr_info!("Show baz\n");
+> +        let data =3D c"Hello GC\n".to_bytes();
+> +        page[0..data.len()].copy_from_slice(data);
+> +        Ok(data.len())
+> +    }
+> +}
+>=20
+> --
+> 2.47.0
+>=20
+>=20
+
