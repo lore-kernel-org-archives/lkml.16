@@ -1,113 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFFD21C197;
-	Mon, 17 Feb 2025 13:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254FB21C188;
+	Mon, 17 Feb 2025 13:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739798118; cv=none; b=jAppIedOYtCHiIlAm6pDgQzaxeOTv2UbH+MAPrK7ynz7MtwUP9bfu5kX96rgJlQ32XICF6n7WXdBwzUxyYVgv6St120eK88JRlY6X6UY3KwuvhD38AzvCry9u9veNdRmITs6jJgPO01wTLPTOc+VPpvfSj4qqWbDZpZQf5SC3Zk=
+	t=1739798195; cv=none; b=oajJYQZQom1AesrPGnFTTghQOC3KWScjxz+dbhW1nL6u3WiMhShGA4BaKPf6XSfCf6p6YZLuGyksX5BXjVHykVaP5td+thDkvxPgB+wMqYp6tUNPHBGXP/SJcaUskzYui0XbmU+zOGq/ufxWWPRlN6G5sNnCfrLvpTA7O+ZR6Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739798118; c=relaxed/simple;
-	bh=RXP5X417yTlCiBf+xrfyXIDd3TLnHV3EUYKREgUrLKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RH5JNqad42h027Ksx/ALbpEG9RaJwe8rc8EWa7o92BmTOI5JTOUDxaCmVmlc1z6P3Bg+M3Ar+23KIYYkRr7Rra6t13bT/OXokL80pzp5eyetOinQ2x7VtN76h7Z5DEd78c2Iz2oGRGSBHmHAnalSdLIxRUxwutqHFxZYzP8pVtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e4rMo0xK; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739798195; c=relaxed/simple;
+	bh=wyxvqAZpVxqQZ+urKOWQ+0EqdnJ4IB5u0lshrjFkqAw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QLzMqAgkKdG1VCySr4WAY4HbUllTdEUhEX4KVnd7ZrGzu3XJ9NnLxGF3sy9TylYMP1OBNQy1zDBVN9NSpumRzvaSnxmnCAVQW7QbWZ5jGq+a5bkwiqOijKq8k9HZ7+IlnGVsy49Ls3clHYPnQ0BnltezoWNU0sP3XLRPr6SuOA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MYTv89Ja; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nhnlbg3r; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e4rMo0xK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739798117; x=1771334117;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RXP5X417yTlCiBf+xrfyXIDd3TLnHV3EUYKREgUrLKU=;
-  b=e4rMo0xKSOuDWVDHEwTsGHm1UkEhJsDWxpGj7alFPnpduashFErkdCW3
-   gR9RZPtRFMQc7uYfef6QjS0kvXSKsQDoHN/HsYFnE/q/nuyfNEBWcOR31
-   EDm9U2EYDZDhJdFY1R95elaRlRYxUZmeJyKR4YPN5T/AoqrmtubnjiFW8
-   ckqGc0QBcld9ujDiHFW+9id4/X1mx+T3Fee02cCbc15fcNYqpUir4fIRq
-   JKbFlLXQnx2Yy3YMsKZCcIgOMGCrTORG3ghwCavUTYwLBck1doM7nIDLm
-   GdJzA0yXj3TqIzknJCRSYP++fh05gvgmtM1zSPpOOJeHAI1XDSo2N0ydV
-   Q==;
-X-CSE-ConnectionGUID: 6NRj06+tR0Cyoe2wD+EI0A==
-X-CSE-MsgGUID: SIOyrkrLQzqs9QGcbFnUCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="40344735"
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="40344735"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 05:15:16 -0800
-X-CSE-ConnectionGUID: qYKS6OdJS+2s7cDaSWruOg==
-X-CSE-MsgGUID: vOK7AQiKSFimzZKPW3N2kw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="114041454"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 05:15:13 -0800
-Date: Mon, 17 Feb 2025 14:11:33 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, ioana.ciornei@nxp.com,
-	yangbo.lu@nxp.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH net 1/8] net: enetc: fix the off-by-one issue in
- enetc_map_tx_buffs()
-Message-ID: <Z7M1hQIYZGWAZsOT@mev-dev.igk.intel.com>
-References: <20250217093906.506214-1-wei.fang@nxp.com>
- <20250217093906.506214-2-wei.fang@nxp.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MYTv89Ja";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nhnlbg3r"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739798191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hbzeR8+Y7kYNnpEhwXuG2o0ayidVAVXDLH2xJ++sFq0=;
+	b=MYTv89JaLWwTZ4hqEsQ65a3p8WL38z2EgzHOFTBQUgpGy0HrA6Vs1LwodIHPhkXDF7NUhc
+	V8DGXyvNtuQmAPfEeCiooWf2I4QNw/r0Tkue4XoFcc4ffVzddVf87c+Lxa7Ev/YtIQffy2
+	TP+WBevURyfeW6nUqxjk1G6kYcohn7BfIxZNNw0nSkugf0hFkbleDLFvRMi5BPCHwZMy+y
+	FQJ6zd4wMmlmsfTW1e8RYt1ShyB8QHN+ohqsvu7zoJbe4wLyyoDyfWb8jh0QrwpXFvTuE9
+	t0LPvm4mMSSO7Yugr2TXaxoYb+ehMquBD4gzOM1o5jniTWCFJQCxijqXZI4CQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739798191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hbzeR8+Y7kYNnpEhwXuG2o0ayidVAVXDLH2xJ++sFq0=;
+	b=nhnlbg3rrME/McneTBlNPVXjK2e2zMfvWMeY7kjBlShSXXD2ZqTobgx0Aml1TDArIvvxmu
+	MDWkImDjbtw80lAA==
+Date: Mon, 17 Feb 2025 14:16:12 +0100
+Subject: [PATCH] tracing/user_events: Don't use %pK through printk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217093906.506214-2-wei.fang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250217-restricted-pointers-trace-v1-1-bbe9ea279848@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAJs2s2cC/x3MQQrDIBBG4auEWXdAhUbIVUoXVv8kszFhRkpBc
+ vdIl9/ivU4GFRgtUyfFV0yOOuAfE+U91Q0sZZiCC08XfGSFNZXcUPg8pDaocdOUwcmtHx+iiyn
+ PNPpTscrv/369r+sGfoClOWsAAAA=
+X-Change-ID: 20250217-restricted-pointers-trace-a0fb12707ac6
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739798191; l=1287;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=wyxvqAZpVxqQZ+urKOWQ+0EqdnJ4IB5u0lshrjFkqAw=;
+ b=r/RcJt5aXygEOq0CjtIFIXiehHHKoVjtu7JXI7aBsbaIYYQRlJKgkBeAfl3dKOEiuEUXKwjlW
+ apHuprJr5oQALJnPJYhMHz2Do8HvvdaBADzKQSr/efP+GBMNB92Z+jw
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Mon, Feb 17, 2025 at 05:38:59PM +0800, Wei Fang wrote:
-> When the DMA mapping error occurs, it will attempt to free 'count + 1'
-> tx_swbd instead of 'count', so fix this off-by-one issue.
-> 
-> Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> ---
->  drivers/net/ethernet/freescale/enetc/enetc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-> index 6a6fc819dfde..f7bc2fc33a76 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-> @@ -372,13 +372,13 @@ static int enetc_map_tx_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb)
->  dma_err:
->  	dev_err(tx_ring->dev, "DMA map error");
->  
-> -	do {
-> +	while (count--) {
->  		tx_swbd = &tx_ring->tx_swbd[i];
->  		enetc_free_tx_frame(tx_ring, tx_swbd);
->  		if (i == 0)
->  			i = tx_ring->bd_count;
->  		i--;
-> -	} while (count--);
-> +	};
+Restricted pointers ("%pK") are not meant to be used through printk().
+It can unintentionally expose security sensitive, raw pointer values.
 
-In enetc_lso_hw_offload() this is fixed by --count instead of changing
-to while and count--, maybe follow this scheme, or event better call
-helper function to fix in one place.
+Use regular pointer formatting instead.
 
-The same problem is probably in enetc_map_tx_tso_buffs().
+Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ kernel/trace/trace_events_user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Michal
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 97325fbd62836f4fb477c4a2b2936eff544291ec..3effc6fce20e65a8077de5221eb69db04fb1a775 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -455,7 +455,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
+ 	if (ret && ret != -ENOENT) {
+ 		struct user_event *user = enabler->event;
+ 
+-		pr_warn("user_events: Fault for mm: 0x%pK @ 0x%llx event: %s\n",
++		pr_warn("user_events: Fault for mm: 0x%p @ 0x%llx event: %s\n",
+ 			mm->mm, (unsigned long long)uaddr, EVENT_NAME(user));
+ 	}
+ 
 
->  
->  	return 0;
->  }
-> -- 
-> 2.34.1
-> 
+---
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+change-id: 20250217-restricted-pointers-trace-a0fb12707ac6
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
