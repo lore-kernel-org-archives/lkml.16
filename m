@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC672218EA8;
-	Mon, 17 Feb 2025 11:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67198218EBD;
+	Mon, 17 Feb 2025 11:00:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739790043; cv=none; b=h9cOrm7GmtNJ33pY3JF+scJX7U2ja074WXGLu7+7FqYg2hEGgXmmCVDQv2AV6jfOgOCPR1i62Jl3jm/hsXKIVurPHPpxxUn5q5vBUV9HNi3E9Qr0puymmkVPb5yrO960aEqu2DydlZTMs1dKfZ4SCHtpStBIZ3l80LS3vTStUY4=
+	t=1739790044; cv=none; b=PryJ/5kv0580kFOBIUr+AvOjg9/RVWFqE6QdgLTzw+FiZNb4iX8A26dO3K+hL4X/etT+lGyE0TOT9XKsnKE1Baq85gez99R5It9SnwxBdZs/B+GE0V1Ow/sybsjvZU2XuysAeO5czG2XI6BYXP8R4ugjXIHuhlsI4cWNrKoWRYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739790043; c=relaxed/simple;
-	bh=CpCkmbMgLBYAXvposf48tXlYf7KsrlXSlYBVTNHhQME=;
+	s=arc-20240116; t=1739790044; c=relaxed/simple;
+	bh=QSToQJrmgzvhx32HA99kjUNyTCDnqIfjc/O6b1byB3M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T8xU5ylDVbwQ0oiyzxW6Rdxs1EMeKF7HB6RLH7ZskD52tJG8U6RxEuQmk0XEiXwH1QItheVutNvtWVoDLWxCgNdEU8G9qMWomddw+Q4WbxVKWaRCa+kMBmCYLDBmku6wbeCfen7mX/TBu06jxjKGCahtfMhV0B86BuO40bIJjO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gLDHBea2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sq0417x/; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=NNvqV60I5VZN8u/eSVPqvNsa/ic8jZz825wZClZ+QMUlM4dpyjeCPc/VeKJO6v5iTp44YAgVCTfYeICqjfVPrkzIJQ87s+Nm0iz3CcKQkVGEWqx0Nw2Y7b2K/dBbq3zffTqKq1xL9P4ztvFsOGXe5k0rJr0D+c7WzunRRTcW1U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mgjg6+C6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3EThwlS5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gLDHBea2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sq0417x/"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mgjg6+C6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3EThwlS5"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739790038;
+	s=2020; t=1739790039;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OYMG4AG4faj0loSjPiu926YoV/r7OSKMUw1XHgOOtZk=;
-	b=gLDHBea2ysl3TC+ewqGA5xFrhH9SipjP6LFwmwpbhRVKWHztb+eC91f7Ixn7S862nN3waP
-	M8laN1Ofvc/VbK3MMeBphg2KmC4QrSmqnieQ2cnmDGWr5jLY38IANQGuUJux9op7ew0UUR
-	XmFIk+tAkOC9EsUVe5bO0SJ3SDWOCvICe7PMNBcauz1TVRdcVYZpnUlv3AUPgPuvgVUOfe
-	ptH1cvSoz3L54YnDRd0jQLdqlNeVIBWmzlBwY9p9vJr4H/IV7SfhRoi1lKjPtgPz0SIOdh
-	v3/O4pcFD2Uge5DjfVVLZv4paOC1YlAF/s2/DjFZOxBj2sVS+Uny4UsEevyrig==
+	bh=/+mxFxM2jcpIj0KVa01PU02wcB6HkTDPMz+vQ79lotg=;
+	b=mgjg6+C6CcEYmfehS7JOdY27EvkY3Ygj3nFY672voUoRCn0l1jlF23G+P06Y1EO4gVjNae
+	WHI5JWC0gnG1HcWZAxp0xLOi2S0EqxOHFNiLsaG9mEH7SzUFQPuNY4i8SxrYxa3U+N+1ev
+	gu2jMTA7ftPiNU/MrWzDMv4jEmxhiC7tJFFjHwoNAXGNPX4Ul9RWdVhuIWiuWjtWkefv17
+	x2idUcqKhGtYl4vhZjD+HIaKtbDzz6lBJKgv2WxtlkgdSKi99vg1NYdSBm9Dg+mRY3JurP
+	NuQUUKC5lcgaODPIs9DsjFrDo/PeK4zbQkWH6wPXxB53Ehe1CL55ZS/HBQ9R1A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739790038;
+	s=2020e; t=1739790039;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OYMG4AG4faj0loSjPiu926YoV/r7OSKMUw1XHgOOtZk=;
-	b=sq0417x/xJvOEkI0o+EEixKYBcDtm6SUNU3ttvCc1Y3iwBhgTLnax9u7OmZEK39vqGH6nI
-	UyPUGXaV0d24s0Bg==
-Date: Mon, 17 Feb 2025 11:59:25 +0100
-Subject: [PATCH 05/12] kbuild: introduce blob framework
+	bh=/+mxFxM2jcpIj0KVa01PU02wcB6HkTDPMz+vQ79lotg=;
+	b=3EThwlS5kt8uRbM9qAs4lq9EklT1ExC+BU9a6ycJR3+APB3TVhNlBQv83VtI6IErud6GWK
+	V17mJ1TKAY2y/sCA==
+Date: Mon, 17 Feb 2025 11:59:27 +0100
+Subject: [PATCH 07/12] kunit: tool: Don't overwrite test status based on
+ subtest counts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250217-kunit-kselftests-v1-5-42b4524c3b0a@linutronix.de>
+Message-Id: <20250217-kunit-kselftests-v1-7-42b4524c3b0a@linutronix.de>
 References: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
 In-Reply-To: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
@@ -63,151 +64,70 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  linux-doc@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739790034; l=4689;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739790034; l=2733;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=CpCkmbMgLBYAXvposf48tXlYf7KsrlXSlYBVTNHhQME=;
- b=tlNTx5n5HmBXjGzUDgzCIRB0T2czuInanv8C4uglwv6pqewahSisRFz5CjKNPGiwZn4vsO6nr
- mx8gaXotG+5ASt4wWwvy32sQBcHwRifuEbvL9i9UJTmqvOsNDFZ/KK8
+ bh=QSToQJrmgzvhx32HA99kjUNyTCDnqIfjc/O6b1byB3M=;
+ b=x2bbfjpZ1pSrt8YBRroAEOw1vAHGxDyF1NaVgE3cAU3Vq3Jj/+c+NYXvHkD/Mw7P4m2wGRptu
+ kvvpqVIwD/IASFctTBP/f7/N2Nhr4Hmv/P0PPwZHbeFB4JlSsy/4k48
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Various subsystems embed non-code build artifacts into the kernel,
-for example the initramfs, /proc/config.gz, vDSO image, etc.
-Currently each user has their own implementation for that.
-
-Add a common "blob" framework to provide this functionality.
-It provides standard kbuild and C APIs to embed and later access non-code build
-artifacts into the kernel image or modules.
+If a subtest itself reports success, but the outer testcase fails,
+the whole testcase should be reported as a failure.
+However the status is recalculated based on the test counts,
+overwriting the outer test result.
+Synthesize a failed test in this case to make sure the failure is not
+swallowed.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
 ---
-This is currently lacking a MAINTAINERS entry.
-Due to its closeness to kbuild I would tend to add it there.
-But I can also maintain it on its own.
----
- include/linux/blob.h   | 21 +++++++++++++++++++++
- scripts/Makefile.blobs | 19 +++++++++++++++++++
- scripts/Makefile.build |  6 ++++++
- scripts/Makefile.clean |  2 +-
- scripts/blob-wrap.c    | 27 +++++++++++++++++++++++++++
- 5 files changed, 74 insertions(+), 1 deletion(-)
+ tools/testing/kunit/kunit_parser.py                                  | 5 +++++
+ tools/testing/kunit/kunit_tool_test.py                               | 2 +-
+ tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log | 3 +++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/blob.h b/include/linux/blob.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..5749c364f7e9c93eb32a6d8870621e3d6df0683c
---- /dev/null
-+++ b/include/linux/blob.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_BLOB_H
-+#define _LINUX_BLOB_H
-+
-+#include <linux/compiler_types.h>
-+#include <linux/types.h>
-+
-+struct blob {
-+	const char *const path;
-+	const u8 *data;
-+	const u8 __private *end;
-+};
-+
-+#define DECLARE_BLOB(_symbol)	extern const struct blob _symbol
-+
-+static inline size_t blob_size(const struct blob *blob)
-+{
-+	return ACCESS_PRIVATE(blob, end) - blob->data;
-+}
-+
-+#endif /* _LINUX_BLOB_H */
-diff --git a/scripts/Makefile.blobs b/scripts/Makefile.blobs
-new file mode 100644
-index 0000000000000000000000000000000000000000..fd20ebb41c1d6509750debf7896a08a143d28759
---- /dev/null
-+++ b/scripts/Makefile.blobs
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Build linkable blobs
-+#
-+
-+blobs	:= $(addprefix $(obj)/, $(blobs))
-+
-+blob-stem = $(subst -,_,$(subst .blob,,$(basename $(patsubst $(obj)/%,%,$@))))
-+blob-symbol = $(or $($(target-stem)-symbol),$(blob-stem))
-+
-+blob-flags = -DBLOB_SYMBOL="$(blob-symbol)" -DBLOB_INPUT=$<
-+
-+quiet_cmd_blob = BLOB    $@
-+      cmd_blob = $(CC) $(c_flags) $(blob-flags) -c -o $@ $(srctree)/scripts/blob-wrap.c
-+
-+$(blobs): $(obj)/%.blob.o: $(obj)/% $(srctree)/scripts/blob-wrap.c FORCE
-+	$(call if_changed_dep,blob)
-+
-+targets += $(blobs)
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 993708d1187459f3678d68ec81ef005e6f51d470..def9791523d718552617ef6ef752c1852d40d996 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -440,6 +440,12 @@ ifneq ($(need-dtbslist)$(dtb-y)$(dtb-)$(filter %.dtb %.dtb.o %.dtbo.o,$(targets)
- include $(srctree)/scripts/Makefile.dtbs
- endif
+diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+index 29fc27e8949bd4732448fdd96024624e5350a728..8f597a244b9866528ffb3850e876acb487f3bbd4 100644
+--- a/tools/testing/kunit/kunit_parser.py
++++ b/tools/testing/kunit/kunit_parser.py
+@@ -686,6 +686,11 @@ def bubble_up_test_results(test: Test) -> None:
+ 		counts.add_status(status)
+ 	elif test.counts.get_status() == TestStatus.TEST_CRASHED:
+ 		test.status = TestStatus.TEST_CRASHED
++	if not test.ok_status():
++		for t in subtests:
++			if not t.ok_status():
++				counts.add_status(t.status)
++				break
  
-+# $(sort ...) is used here to remove duplicated words and excessive spaces.
-+blobs := $(sort $(blobs))
-+ifneq ($(blobs),)
-+include $(srctree)/scripts/Makefile.blobs
-+endif
-+
- # Build
- # ---------------------------------------------------------------------------
+ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest: bool, printer: Printer) -> Test:
+ 	"""
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index e71ce88682e137676be49ea9854a5ddaff0dc259..aab38aa0664655c84d633ab15e4818f818b0ce47 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -170,7 +170,7 @@ class KUnitParserTest(unittest.TestCase):
+ 		with open(nested_log) as file:
+ 			result = kunit_parser.parse_run_tests(file.readlines(), stdout)
+ 		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
+-		self.assertEqual(result.counts.failed, 2)
++		self.assertEqual(result.counts.failed, 3)
+ 		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[0].status)
+ 		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[1].status)
  
-diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
-index 6ead00ec7313b3e4330a8de5f1342f2da1d6eb84..536972b0a528d117e17296da9936825c3903af6e 100644
---- a/scripts/Makefile.clean
-+++ b/scripts/Makefile.clean
-@@ -25,7 +25,7 @@ subdir-ymn	:= $(addprefix $(obj)/,$(subdir-ymn))
- # directory
- 
- __clean-files	:= \
--	$(clean-files) $(targets) $(hostprogs) $(userprogs) \
-+	$(clean-files) $(targets) $(hostprogs) $(userprogs) $(blobs) \
- 	$(extra-y) $(extra-m) $(extra-) \
- 	$(always-y) $(always-m) $(always-) \
- 	$(hostprogs-always-y) $(hostprogs-always-m) $(hostprogs-always-) \
-diff --git a/scripts/blob-wrap.c b/scripts/blob-wrap.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..715d6981fa94bee309c693c2b937899c982e27b4
---- /dev/null
-+++ b/scripts/blob-wrap.c
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/args.h>
-+#include <linux/blob.h>
-+#include <linux/stringify.h>
-+
-+#define BLOB_SYMBOL_DATA	CONCATENATE(_blob_data_, BLOB_SYMBOL)
-+#define BLOB_SYMBOL_END		CONCATENATE(_blob_end_, BLOB_SYMBOL)
-+
-+asm (
-+"	.pushsection .rodata, \"a\"			\n"
-+"	.global " __stringify(BLOB_SYMBOL_DATA) "	\n"
-+ __stringify(BLOB_SYMBOL_DATA) ":			\n"
-+"	.incbin \"" __stringify(BLOB_INPUT) "\"		\n"
-+"	.global " __stringify(BLOB_SYMBOL_END) "	\n"
-+ __stringify(BLOB_SYMBOL_END) ":			\n"
-+"	.popsection					\n"
-+);
-+
-+extern const u8 BLOB_SYMBOL_DATA;
-+extern const u8 BLOB_SYMBOL_END;
-+
-+const struct blob BLOB_SYMBOL = {
-+	.path	= __stringify(BLOB_INPUT),
-+	.data	= &BLOB_SYMBOL_DATA,
-+	.end	= &BLOB_SYMBOL_END,
-+};
+diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
+index 835816e0a07715a514f5f5afab1b6250037feaf4..cd9033c464792e6294905a5676346684182874ad 100644
+--- a/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
++++ b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
+@@ -1,5 +1,8 @@
+ KTAP version 1
+ 1..2
++    KTAP version 1
++    1..1
++        ok 1 test 1
+ not ok 1 subtest 1
+     KTAP version 1
+     1..1
 
 -- 
 2.48.1
