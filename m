@@ -1,122 +1,111 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17320215F5E;
-	Mon, 17 Feb 2025 18:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739816233; cv=pass; b=fxKdZSkk6XS0UPbgC3VqAYcaIwMS30U5LkHyVXnFO0xgyPaXcDb12JtnutCjrUR38K4GGEgyfdFF/o3Vw93PikDAIbIvcWx8+c0VK/o1iACsPjjKSfPo7pvBLPhKAcvm3lZ59o2p0lTJbCL1qFXlkyJQOv0UNYkmM3UL4vkV+rw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739816233; c=relaxed/simple;
-	bh=NUqQknZpg2LliGTzyKHfciU1oNwwa+2zKooTZkcKwpo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oiAZ2Yqb3O3QTdl/OI52tOFuIvTdUhwNPC04DWLtEobOzShBtmSMnLNEhdCvsNj7q7c63FpSq6Da6Tcr4A4Kt4mnmamIV+pHoJVS6D81Bnb8oUZ8mgq1UAm5b4PswaLop33PXhCr0NRxt2gORr5dU442RqmSYDitCJceOgD3LSE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=gbWOKyv0; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="gbWOKyv0"
-ARC-Seal: i=1; a=rsa-sha256; t=1739816173; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ijxtj4U8Q8R7wF2cKrBvAlztwsF7BHKE9ppJN+H5P+dWjGidAuFnAINvHWu1ugpr1KKFjNOgD/BL58cpHHg++bIB3cgTGtd+138I0XmM/pVkAuBePh6asJxzZZMGGMoyhMupfIuxXSd/uLFYhu5zZvFe8thfq19iLR86rB7HSy4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739816173; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dW0tidsgp/Ub4s++qsOhA6oRQ1/t0kgWfjgFSGuKGjs=; 
-	b=VWX3H4OTkoH1XaxjU+7vO6RIlxGvOjomnJz7kotKI1KEc0niNqCmLO+6ZU3/FRYcWsEPh1MFGezrCeZCWkkI0kHDH8Ri/Dd39HFKoKhZDdiT9/iFRNqKihl3JLRPEOdW3P4yIC2RNb4XD9pLIy6+810nBWMZQZicB/G9SR0mRQQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739816173;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=dW0tidsgp/Ub4s++qsOhA6oRQ1/t0kgWfjgFSGuKGjs=;
-	b=gbWOKyv05QL9Uq1RX9ObrSEFjSLUUYqJL4UkEvlwp9CkWJ0/PcKYAAYsm3/0jTeq
-	QCuyxQNT+HnCsGpH5M8FTziAhyx0CZ9H4Skf6c8CzlGWVneXBUkOCtOgEHE+KW8ITKN
-	vhrnDpCyr+AuRER+kPYRZehu6lb+gDzTSWXIDSmA=
-Received: by mx.zohomail.com with SMTPS id 1739816172379218.1983866353495;
-	Mon, 17 Feb 2025 10:16:12 -0800 (PST)
-Message-ID: <6638b286-2e5e-4861-bb85-2e29556b0b02@collabora.com>
-Date: Mon, 17 Feb 2025 21:16:06 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF654229B18;
+	Mon, 17 Feb 2025 18:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739816408; cv=none; b=kIk9F1djGtTMiqT0wTH25HcSxZzlq9M693gFOmYVlR7QRVEemX6N4PQIoXCyg/hUS8+FfCNOGHYH4Pn3Rxm+W6l6zgatmwuyLkfSgfYnSRbHtYX3OHWVbWiz05mvN6fEN7dmbQ4adt05WIBIqqRQdbP00UU9RaJQyahYZEMAAlo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739816408; c=relaxed/simple;
+	bh=7v9JiuvwjKhG5Dg3ZHjNC2SWZm0sNugydy6hsXZgOqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uX1803TV6yNk71bjPyMSQ2CVHdc4oYZmZ2cKR6VsJOsKM+WOS17FuKm2pTSYoBSOHcoEYWo9qfjKooM4rKl3mGPB25AYEcmlYdsPiN+nJeVhaJ77CfEBuv8NtYUHAFA+419D7ZXaJFByfvYWS45olks8gYZR7nu4TQShkle9LTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C0DC4CED1;
+	Mon, 17 Feb 2025 18:20:03 +0000 (UTC)
+Date: Mon, 17 Feb 2025 18:20:01 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Ionela Voinescu <ionela.voinescu@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Beata Michalska <beata.michalska@arm.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org, will@kernel.org, viresh.kumar@linaro.org,
+	sumitg@nvidia.com, yang@os.amperecomputing.com,
+	vanshikonda@os.amperecomputing.com, lihuisong@huawei.com,
+	zhanjie9@hisilicon.com, ptsm@linux.microsoft.com,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Phil Auld <pauld@redhat.com>,
+	x86@kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v10 2/4] cpufreq: Introduce an optional cpuinfo_avg_freq
+ sysfs entry
+Message-ID: <Z7N90XZTICfLZCm_@arm.com>
+References: <20250131162439.3843071-1-beata.michalska@arm.com>
+ <20250131162439.3843071-3-beata.michalska@arm.com>
+ <CAJZ5v0g+yax=pT4m_2MTd9kUwbk5VBp2wkctTYJpFRU3myEjPQ@mail.gmail.com>
+ <Z7NOcd3IamyMTjbH@arm.com>
+ <Z7NQrBvnfYwXva1W@arm.com>
+ <Z7NeTrorAqDxa8QM@bogus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/6] Add Synopsys DesignWare HDMI RX Controller
-To: Hans Verkuil <hverkuil@xs4all.nl>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>
-References: <20250215210417.60074-1-dmitry.osipenko@collabora.com>
- <0218c59c-ed97-4315-9306-041636462293@xs4all.nl>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <0218c59c-ed97-4315-9306-041636462293@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7NeTrorAqDxa8QM@bogus>
 
-On 2/17/25 11:34, Hans Verkuil wrote:
-> Hi Dmitry,
+On Mon, Feb 17, 2025 at 04:05:34PM +0000, Sudeep Holla wrote:
+> On Mon, Feb 17, 2025 at 03:07:24PM +0000, Ionela Voinescu wrote:
+> > On Monday 17 Feb 2025 at 14:57:53 (+0000), Catalin Marinas wrote:
+> > > On Mon, Feb 17, 2025 at 12:52:44PM +0100, Rafael J. Wysocki wrote:
+> > > > On Fri, Jan 31, 2025 at 5:25 PM Beata Michalska <beata.michalska@arm.com> wrote:
+> > > > >
+> > > > > Currently the CPUFreq core exposes two sysfs attributes that can be used
+> > > > > to query current frequency of a given CPU(s): namely cpuinfo_cur_freq
+> > > > > and scaling_cur_freq. Both provide slightly different view on the
+> > > > > subject and they do come with their own drawbacks.
+> > > > >
+> > > > > cpuinfo_cur_freq provides higher precision though at a cost of being
+> > > > > rather expensive. Moreover, the information retrieved via this attribute
+> > > > > is somewhat short lived as frequency can change at any point of time
+> > > > > making it difficult to reason from.
+> > > > >
+> > > > > scaling_cur_freq, on the other hand, tends to be less accurate but then
+> > > > > the actual level of precision (and source of information) varies between
+> > > > > architectures making it a bit ambiguous.
+> > > > >
+> > > > > The new attribute, cpuinfo_avg_freq, is intended to provide more stable,
+> > > > > distinct interface, exposing an average frequency of a given CPU(s), as
+> > > > > reported by the hardware, over a time frame spanning no more than a few
+> > > > > milliseconds. As it requires appropriate hardware support, this
+> > > > > interface is optional.
+> > > > >
+> > > > > Note that under the hood, the new attribute relies on the information
+> > > > > provided by arch_freq_get_on_cpu, which, up to this point, has been
+> > > > > feeding data for scaling_cur_freq attribute, being the source of
+> > > > > ambiguity when it comes to interpretation. This has been amended by
+> > > > > restoring the intended behavior for scaling_cur_freq, with a new
+> > > > > dedicated config option to maintain status quo for those, who may need
+> > > > > it.
+> > > > 
+> > > > In case anyone is waiting for my input here
+> > > > 
+> > > > Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> > > > 
+> > > > for this and the previous patch and please feel free to route them
+> > > > both through ARM64.
+> > > 
+> > > Thanks Rafael. I indeed plan to take them through the arm64 tree.
+> > 
+> > Just a mention that this set depends on the patch that Beata linked at
+> > [6]. That patch applies cleanly on next-20250217 and it still
+> > builds/boots/works as expected.
 > 
-> On 15/02/2025 22:04, Dmitry Osipenko wrote:
->> This series implements support for the Synopsys DesignWare
->> HDMI RX Controller, being compliant with standard HDMI 1.4b
->> and HDMI 2.0.
->>
->> Features that are currently supported by the HDMI RX driver
->> have been tested on rock5b board using a HDMI to micro-HDMI cable.
->> It is recommended to use a good quality cable as there were
->> multiple issues seen during testing the driver.
->>
->> Please note the below information :-
->> * HDMIRX driver now only works with the opensource TF-A.
->> * We have tested the working of OBS studio with HDMIRX driver and
->> there were no issues seen.
->> * We tested and verified the support for interlaced video.
->> * We tested capturing of YUV formats.
->>
->> To test the HDMI RX Controller driver, following example commands can be used :-
->>
->> root@debian-rockchip-rock5b-rk3588:~# v4l2-ctl --verbose -d /dev/video0 \
->> --set-fmt-video=width=1920,height=1080,pixelformat='BGR3' --stream-mmap=4 \
->> --stream-skip=3 --stream-count=100 --stream-to=/home/hdmiin4k.raw --stream-poll
-> 
-> This looks a bit odd. This commandline should work just as well:
-> 
-> v4l2-ctl --stream-mmap --stream-count=100 --stream-to=/home/hdmiin4k.raw
-> 
-> v4l2-ctl will call QUERY_DV_TIMINGS, then (if a valid signal is found) S_DV_TIMINGS.
-> That in turn updates the v4l2_format. So there is no need to set the video format,
-> it should happen automatically.
+> Ah I see it is indeed dependent. Just responded on the other thread before
+> reading this. So it is better if Catalin picks up [6] as well. Sorry for
+> the confusion.
 
-Your cmdline works fine, setting format isn't necessary.
+I picked that one as well. I'll do some tests and push them out later
+today or tomorrow morning.
 
-> Also, why skip the first three frames? And why select --stream-poll?
-> 
-> It could be that these are just left-overs from previous attempts, but it's
-> weird.
-
-It's indeed the left-overs, will edit the cover letter in v7.
-
-> I also commented on the debugfs InfoFrame code in patch 4/6, that's not
-> correct.
-
-Thanks for the thorough review! :)
-
-Additional note: I'm going to finish upstreaming of the driver because
-Shreeya is currently busy. She will be maintaining driver afterwards.
+Thanks.
 
 -- 
-Best regards,
-Dmitry
+Catalin
