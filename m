@@ -1,95 +1,143 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679B721B1BC;
-	Mon, 17 Feb 2025 14:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AEB21D58E;
+	Mon, 17 Feb 2025 14:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739802002; cv=none; b=sy94bP6kO6pPr0Lr5TNs40DV6RiIOEdCT/d9DwdnOOpHgWdranV0Y2W5NdZZAY1D+/mOiNO4ENIh8U/Xu77PQbAJ+kmNZE1/6Jll4u4rDD2cZaXF1nIWjY4o5GHBp/QUpWeH05aZ3tKLVZJJ1qWPefOKgz61dcUCBpknHrE0Fjw=
+	t=1739802037; cv=none; b=ghsJ84JJbvEjn1pLraskZUSay2mICNNiCKpMoxG6QGKQmfxNSBCqsz4p3XJMdz6KGmJsYXSnJeiJH4TAJCOiuZYoYxlKCUOwEp66Gq+zUWFsgOV6gZn6HeLMV4fRdCl3nknSeeMSekCO1FkF2p2YzL0rdb2ZXMJqVMF40umH+QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739802002; c=relaxed/simple;
-	bh=F5Fq4V08KjRjvKMrLulUhqT0/eJwNG0iacCf2irg2mw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9zKiDDglWL+9oHUi+rUi5HqOgebsTfrrFYzDFPhkI6bjz1VlN/g8TS9BY4cxf6SQp47BPbje04tIsw/r6ZE84019b+WWwWuHAku/7o491zlRyJkuIGXajeUoC7vpvVbjSeQrfssMTIQgyIfqxjAMj9g6eomMOTVPFI0off01hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n/5qO8KR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DTx3N+0p; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739802037; c=relaxed/simple;
+	bh=WoX4rkGG8IX4/MIvEe5QvsSw6rLdg3EL18aXO3EDuMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qZ3eUv5hWzJmHKKKMuxTxfvBfCUACdOQ/pdFazMuqDdub/1mIedZ+/SV1/0KV8V1ZZozEsTlCHdyaFPqQlj3rxeGX7xUle0OJxLRfY5RWlEg7efpQtuuI2k2s6nai05iiNmpuHNBdAeReJVXi2LDCtopGY17PYZOoM0o2F/pzas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNMisclN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n/5qO8KR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DTx3N+0p"
-Date: Mon, 17 Feb 2025 15:19:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739801998;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uyo5k+GprhxLkM9w+L8CKX8UCCowCbgz4V8rWU94hrg=;
-	b=n/5qO8KRcWA5TDw7mzbASwa8PTTRlvWJeskMNFDCEY1LSP2GJcqN8Xo1OhZF1NlPR5CKrt
-	o5iJ4Pgw07grRwEtIpkKmQYLoFpYpOWbXk7D6qhiC/pnfmjrNoc/YXqKUOZPqpKcQhyRue
-	1wfytWALSZLDIvwFOv1Y3erUq7+NY6ncvL1sMzLTUNe59tdKah/JevsF59wm5TYF4bqYnb
-	wWjYVL/r9TowTYkJqqZU4nx1LyPGtLH6K9X90WpeFkGGQGs3UmFe8odwUWd+ee0XBtOaLZ
-	mXKb3mOJoEEX8IaIl6Hm/Lu/EvJpmPfTwmVBTaP+i/OEnkAvYCNrcWnlkfpPxg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739801998;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uyo5k+GprhxLkM9w+L8CKX8UCCowCbgz4V8rWU94hrg=;
-	b=DTx3N+0ptr7aSyabWFl3/dtr/ABDwRBuekFvwkohqTkrN6CilHfXC3uuPCRqMS5DQPaUAH
-	tiATJ0uyVQn/OUCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Suren Baghdasaryan <surenb@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Christoph Lameter <cl@linux.com>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	maple-tree@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH RFC v2 03/10] locking/local_lock: Introduce
- localtry_lock_t
-Message-ID: <20250217141956._01BcsrG@linutronix.de>
-References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
- <20250214-slub-percpu-caches-v2-3-88592ee0966a@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNMisclN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B73C4CED1;
+	Mon, 17 Feb 2025 14:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739802036;
+	bh=WoX4rkGG8IX4/MIvEe5QvsSw6rLdg3EL18aXO3EDuMU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SNMisclN05MapFH/wKCmpUrZeGa+QVxql7qMOrY0rIxLL5MMys4qWhoV8ypiOpsbi
+	 px1sxpeIRv8w+8fMbwvJh7HxHdMoxBVrWlpAEnnuLZCtZ5yHT12xmPlmqWAuryVV45
+	 RUBNyy7pz8AHu9IpL8O50oIFhbwaaZMuMz61GRPI+z+i8O7maWjReDJmqqJWpA3lhM
+	 G6hiidczzudm0qnpPLr5OYuVtp8rpcmGIdF7QoEYQpLNPrAVDiCkdxWJEtvHxTHXnE
+	 X2bZM7D/qdyHIoWm+8H9wd04aXRdKlqPPTRN7CtZUWs6acrGOL80Z8Yedk+QBAn3dz
+	 wdueL70DUbZ7g==
+Date: Mon, 17 Feb 2025 14:20:24 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: David Heidelberg <david@ixit.cz>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, Matti Vaittinen
+ <mazziesaccount@gmail.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Emil Gedenryd
+ <emil.gedenryd@axis.com>, Arthur Becker <arthur.becker@sentec.com>, Mudit
+ Sharma <muditsharma.info@gmail.com>, Per-Daniel Olsson
+ <perdaniel.olsson@axis.com>, Subhajit Ghosh
+ <subhajit.ghosh@tweaklogic.com>, Ivan Orlov <ivan.orlov0322@gmail.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] iio: light: Add support for AL3000a illuminance
+ sensor
+Message-ID: <20250217142024.1a7bea7e@jic23-huawei>
+In-Reply-To: <CAPVz0n2s1mxuheAadhFMHnmm6DtdMYzLHaBQDB_TEF--tWktrw@mail.gmail.com>
+References: <20250215103159.106343-1-clamor95@gmail.com>
+	<20250215103159.106343-3-clamor95@gmail.com>
+	<1597453a-31fc-49eb-8b69-efeb8805c67a@ixit.cz>
+	<CAPVz0n1T_jXXDhm6gF7gDDqZ=b6abR1Tqk=5kLo=Ws4FF2EVJw@mail.gmail.com>
+	<20250216144436.70ff78c3@jic23-huawei>
+	<CAPVz0n2s1mxuheAadhFMHnmm6DtdMYzLHaBQDB_TEF--tWktrw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250214-slub-percpu-caches-v2-3-88592ee0966a@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-02-14 17:27:39 [+0100], Vlastimil Babka wrote:
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> In !PREEMPT_RT local_lock_irqsave() disables interrupts to protect
-> critical section, but it doesn't prevent NMI, so the fully reentrant
-> code cannot use local_lock_irqsave() for exclusive access.
-> 
-> Introduce localtry_lock_t and localtry_lock_irqsave() that
-> disables interrupts and sets acquired=1, so localtry_lock_irqsave()
-> from NMI attempting to acquire the same lock will return false.
-> 
-> In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
-> Map localtry_lock_irqsave() to preemptible spin_trylock().
-> When in hard IRQ or NMI return false right away, since
-> spin_trylock() is not safe due to PI issues.
+On Sun, 16 Feb 2025 16:47:52 +0200
+Svyatoslav Ryhel <clamor95@gmail.com> wrote:
 
-spin_trylock() is not safe due to explicit locking in the underneath
-rt_spin_trylock() implementation. Removing this explicit locking and
-attempting only "trylock" is undesired due to PI implications.
+> =D0=BD=D0=B4, 16 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 16:44 Jo=
+nathan Cameron <jic23@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+> >
+> > =20
+> > > > > +
+> > > > > +static int al3000a_read_raw(struct iio_dev *indio_dev,
+> > > > > +                         struct iio_chan_spec const *chan, int *=
+val,
+> > > > > +                         int *val2, long mask)
+> > > > > +{
+> > > > > +     struct al3000a_data *data =3D iio_priv(indio_dev);
+> > > > > +     int ret, gain;
+> > > > > +
+> > > > > +     switch (mask) {
+> > > > > +     case IIO_CHAN_INFO_RAW:
+> > > > > +             ret =3D regmap_read(data->regmap, AL3000A_REG_DATA,=
+ &gain);
+> > > > > +             if (ret < 0)
+> > > > > +                     return ret;
+> > > > > +
+> > > > > +             *val =3D lux_table[gain & AL3000A_GAIN_MASK]; =20
+> > > >
+> > > > Why did you chosen to do post-processing in the RAW channel instead
+> > > > doing it in INFO_SCALE (same as al3010 does)?
+> > > > =20
+> > >
+> > > From my observation INFO_SCALE will just perform multiplication of RAW
+> > > to SCALE. In this case values which are read are not actual raw values
+> > > of illumination. Next is my assumption (since there is no datasheet),
+> > > but values obtained from register are similar to values from adc
+> > > thermal sensors, they need be converted via reference table to get
+> > > actual data. =20
+> >
+> > Please add a comment somewhere here to say that we don't know the
+> > relationship of these values to illuminance hence providing
+> > _RAW and _SCALE would not be helpful.
+> > =20
+>=20
+> We do know relationship of these values to illuminance thanks to
+> conversion table provided.
 
-> Note there is no need to use local_inc for acquired variable,
-> since it's a percpu variable with strict nesting scopes.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Then convention is treat them not as IIO_LIGHT but as IIO_INTENSITY
+which is unit free.  IIO_LIGHT is only for when we know the value
+we are providing to userspace is illuminance and measured in Lux.
 
-Other than that, thank you two ;)
+Jonathan
 
-Sebastian
+
+>=20
+> > > =20
+> > > > Except this, LGTM.
+> > > >
+> > > > Documentation and DT patch:
+> > > >
+> > > > Reviewed-by: David Heidelberg <david@ixit.cz> =20
+> > > > > +
+> > > > > +             return IIO_VAL_INT;
+> > > > > +     case IIO_CHAN_INFO_SCALE:
+> > > > > +             *val =3D 1;
+> > > > > + =20
+> >
+> > Don't do this.  The above lack of known relationship has to be
+> > expressed by not providing the _scale attribute.
+> > =20
+> > > > > +             return IIO_VAL_INT;
+> > > > > +     default:
+> > > > > +             return -EINVAL;
+> > > > > +     }
+> > > > > +}
+> > > > > +
+> > > > > +static const struct iio_info al3000a_info =3D {
+> > > > > +     .read_raw       =3D al3000a_read_raw,
+> > > > > +}; =20
+> >
+> > =20
+
