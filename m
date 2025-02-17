@@ -1,104 +1,154 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13726222596;
-	Mon, 17 Feb 2025 14:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739803778; cv=pass; b=ARoT0Hg2Aoygc8lAh61ig7Y85NsI2O4uS/BQ/jpI8cXvQ5LAdZofaM5k7ZlB3yLgv41cNE28bmRT2tigpBIWShjqW8SHn2QInz+TknKZ2mXYCDHxD7kLSaHnbezvVv9xikRlj8nbY5sNwhCs9yagsWzY01hHKmUR479nyaELWss=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739803778; c=relaxed/simple;
-	bh=at+D77xhBCQv3TXVg3YLeQXMmx8vzJzFzSGSD7CTzIE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fQ+I3Dn/sBGMGj+ksZXHcNq07AKAdv8omx5Kwzwl/eWqNJh3vintpBeTMWy0wzqueRjcf7oHWT69iWgDAD4b/F6LTpwa4TV6M4uKMZAevjWN1H2y6x6x5Yo8QTS9UreNuZyka17hymgjk91WWGxqagAWUrA7vNCvDiEotZ+/PeA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=bNdp1imx; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11528223324;
+	Mon, 17 Feb 2025 14:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739803782; cv=none; b=jO+TDoeabCgusOW1QBc3FvVKW6Wq7uEtS1BJUmwbQuGA0iBLdJ09uoSfiL7S78jsPKSzzhkPI72hvMdYUeiBaaKLIcvwPH0ItPntZUuXp29pDj6hNxUP+zVCe02zLHaUfJq25oUy/v43r3fT9Wq+H6JNrshdAj6PLcgYRI7RR0c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739803782; c=relaxed/simple;
+	bh=noBWesDhIHu2UKaR18tw6XBMmfBZeqYD391YNtBjELo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NPxJ3CPMev7TwTi0X2hg75EaLEP4pXpJdPlRczduxu9yY/7Of3khN+34zcK30tvotYBSgkeWv6E5dowT9e2Sh1iGctAk+hwjxoEgCFSZLSy38dgzKtQUf11CKv/7cpELtTwJ7PDu3SDJumcrruE2oYfUM48s8u2qC9HvW1+F0T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FuKbJGTP; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="bNdp1imx"
-ARC-Seal: i=1; a=rsa-sha256; t=1739803757; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=V5BDFT1m32CLMmL2uq1SctHV+ctx1pz2nANZZHfn51LJRBbDZ2hS2Mzk6zuORwHSGzRK5FjfqQBy4nb0NbkImk7ey1M81WU9Ypyzl6KmJWCJE5blyuDjhuNc0tCdBZJWhdokS+KCjR4NyEXRB5AkPdPNvEbUsiGHiVR044dmqd0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739803757; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vZ4AbqtxvA/XdTRpEb45TpkQeirAJecUksAnhpHB9mU=; 
-	b=apiD/FBNNZcXgNr4ig2iF2Ap66d7NMDcWhis/DTr/ZRGnwzIBJhd3nDLCnZGU4mAYov/EMnZq6pugTuxm1gECIEWfGhVMZevByQ1ox6G1Xq/aBE3vdnvylqksBozxe8TvtQL3a87x+J2vYjanBBtayfBA99WUHJZqw7nItjNiYY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739803757;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=vZ4AbqtxvA/XdTRpEb45TpkQeirAJecUksAnhpHB9mU=;
-	b=bNdp1imxWypUPvISKAjv47gOIXN2DA7avYWQ6P1ABGAetlmQpf7ttz7AD9YTch/7
-	fFD15H+DaBnH9V+bFSg7hggAfMT7HT4HeWSPL0rPG7TDcLneYOd24vKYGi4e7evUrPK
-	9QjcP3fpY80ZEYjYiXGNXjqMW/6fbb1kVMWMmFuo=
-Received: by mx.zohomail.com with SMTPS id 1739803754315852.1927748164743;
-	Mon, 17 Feb 2025 06:49:14 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 3/7] cxl/memdev: cxl_memdev_ioctl() cleanup
-Date: Mon, 17 Feb 2025 22:48:24 +0800
-Message-Id: <20250217144828.30651-4-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217144828.30651-1-ming.li@zohomail.com>
-References: <20250217144828.30651-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FuKbJGTP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 64A4A44430;
+	Mon, 17 Feb 2025 14:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739803777;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PCSw3bmWjwYwuAQWl8doOYDVdqtoYKvVbYaoog5r6cI=;
+	b=FuKbJGTPideoR9c6VeuSbGxTWhWv12fvminuJ8DDMWnRMjtEVQxnV/c1g4jtSw+pBHf3A6
+	RQBlVhGKexKMWaPV/8ju+UkrJ4fsyEhpPDWgeSW8hNw3tJkQRjPC9cU+sOxOlNvfA/by7C
+	h3P+/mW1/rFJ8UnPvJzgZHg52sj3CdJtWQc0TXqfKYgM0+7f+eZZ+hqZV5jTXhMHl06IU3
+	Ln8wHc7cu4kdYfBxzCeKT2Wd5Puw1/vFTMCGyOSWgqfOOP2CXY5j0yg5IO3/FFnlK0npwb
+	jvf1FZ3mskLOe3QP0WqZIcWoA2+0A9b1MUBCanwxV9yTMgSLsDf+eYpxkyErmA==
+Date: Mon, 17 Feb 2025 15:49:34 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>, Daniel Golle <daniel@makrotopia.org>,
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>, Sean Anderson
+ <seanga2@gmail.com>
+Subject: Re: [PATCH net-next v4 05/15] net: phy: Create a phy_port for
+ PHY-driven SFPs
+Message-ID: <20250217154934.76ec03e5@fedora.home>
+In-Reply-To: <Z7NF6ciz4RHMaGo6@shell.armlinux.org.uk>
+References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
+	<20250213101606.1154014-6-maxime.chevallier@bootlin.com>
+	<Z7DjfRwd3dbcEXTY@shell.armlinux.org.uk>
+	<20250217092911.772da5d0@fedora.home>
+	<Z7NF6ciz4RHMaGo6@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227957a81ebafd8ad2a52fb16fd00005d60d321eec5b6b4b9de04752d26e218e0e90f7e314d9a022e:zu08011227f8fed950e5bf5fe4bba566e700002b786b09415c7703ff58fedac56f79fdd79bfa2d332be5a5b8:rf0801122d215f26e1822a2759fb9c516800003e0f8b3723fc842170562d19aea6a0c8c35fccf454f63726b48dd5a8c568d6:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkeeikecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefuddprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdro
+ hhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-In cxl_memdev_ioctl(), the down_read(&cxl_memdev_rwsem) and
-up_read(&cxl_memdev_rwsem) can be replaced by a
-guard(rwsem_read)(&cxl_memdev_rwsem), it helps to remove the open-coded
-up_read(&cxl_memdev_rwsem). Besides, the local var 'rc' can be also
-removed to make the code more cleaner.
+On Mon, 17 Feb 2025 14:21:29 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/memdev.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> On Mon, Feb 17, 2025 at 09:29:11AM +0100, Maxime Chevallier wrote:
+> > Hello Russell,
+> > 
+> > On Sat, 15 Feb 2025 18:57:01 +0000
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> >   
+> > > On Thu, Feb 13, 2025 at 11:15:53AM +0100, Maxime Chevallier wrote:  
+> > > > Some PHY devices may be used as media-converters to drive SFP ports (for
+> > > > example, to allow using SFP when the SoC can only output RGMII). This is
+> > > > already supported to some extend by allowing PHY drivers to registers
+> > > > themselves as being SFP upstream.
+> > > > 
+> > > > However, the logic to drive the SFP can actually be split to a per-port
+> > > > control logic, allowing support for multi-port PHYs, or PHYs that can
+> > > > either drive SFPs or Copper.
+> > > > 
+> > > > To that extent, create a phy_port when registering an SFP bus onto a
+> > > > PHY. This port is considered a "serdes" port, in that it can feed data
+> > > > to anther entity on the link. The PHY driver needs to specify the
+> > > > various PHY_INTERFACE_MODE_XXX that this port supports.
+> > > > 
+> > > > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>    
+> > > 
+> > > With this change, using phy_port requires phylink to also be built in
+> > > an appropriate manner. Currently, phylink depends on phylib. phy_port
+> > > becomes part of phylib. This patch makes phylib depend on phylink,
+> > > thereby creating a circular dependency when modular.
+> > > 
+> > > I think a different approach is needed here.  
+> > 
+> > That's true.
+> > 
+> > One way to avoid that would be to extract out of phylink/phylib all the
+> > functions for linkmode handling that aren't tied to phylink/phylib
+> > directly, but are about managing the capabilities of each interface,
+> > linkmode, speed, duplex, etc. For phylink, that would be :
+> > 
+> > phylink_merge_link_mode
+> > phylink_get_capabilities
+> > phylink_cap_from_speed_duplex
+> > phylink_limit_mac_speed
+> > phylink_caps_to_linkmodes
+> > phylink_interface_max_speed
+> > phylink_interface_signal_rate
+> > phylink_is_empty_linkmode
+> > phylink_an_mode_str
+> > phylink_set_port_modes
+> > 
+> > For now all these are phylink internal and that makes sense, but if we want
+> > phy-driven SFP support, stackable PHYs and so on, we'll need some ways for
+> > the PHY to expose its media-side capabilities, and we'd reuse these.
+> > 
+> > These would go into linkmode.c/h for example, and we'd have a shared set
+> > of helpers that we can use in phylink, phylib and phy_port.
+> > 
+> > Before I go around and rearrange that, are you OK with this approach ?  
+> 
+> I'm not convinced. If you're thinking of that level of re-use, you're
+> probably going to miss out on a lot of logic that's in phylink. Maybe
+> there should be a way to re-use phylink in its entirety between the
+> PHY and SFP.
+> 
+> Some of the above (that deal only with linkmodes) would make sense
+> to move out though.
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 98c05426aa4a..6f90dcd626f9 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -668,15 +668,13 @@ static long cxl_memdev_ioctl(struct file *file, unsigned int cmd,
- {
- 	struct cxl_memdev *cxlmd = file->private_data;
- 	struct cxl_dev_state *cxlds;
--	int rc = -ENXIO;
- 
--	down_read(&cxl_memdev_rwsem);
-+	guard(rwsem_read)(&cxl_memdev_rwsem);
- 	cxlds = cxlmd->cxlds;
- 	if (cxlds && cxlds->type == CXL_DEVTYPE_CLASSMEM)
--		rc = __cxl_memdev_ioctl(cxlmd, cmd, arg);
--	up_read(&cxl_memdev_rwsem);
-+		return __cxl_memdev_ioctl(cxlmd, cmd, arg);
- 
--	return rc;
-+	return -ENXIO;
- }
- 
- static int cxl_memdev_open(struct inode *inode, struct file *file)
--- 
-2.34.1
+Yeah I'm thinking about moving only stuff that is phylink-independent
+and only deals with linkmodes indeed. I'll spin a quick series to see
+what it looks like then :)
+
+Thanks,
+
+Maxime
 
