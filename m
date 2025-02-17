@@ -1,124 +1,76 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx2.mythic-beasts.com (mx2.mythic-beasts.com [46.235.227.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72255218842;
-	Mon, 17 Feb 2025 12:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E862218842;
+	Mon, 17 Feb 2025 12:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739795126; cv=none; b=VSnl/PNqFAlkVKRMhQGGoJUsSGjJg+FEKCQz0j9dxkPkYHepJ0Rwb+n+mt6XfWnhzwzbprtNKSi7e/hRhlHJOr7aHT+WQq3A/4GAdUSDTLt5Iw8uoeKX1hR2b2i0z807bMnqoFk3rbs9CErkvASe5S09F5kmrA11iBZ7NsphIEg=
+	t=1739795158; cv=none; b=A4+vpsN6AJIZPlvtCQQ8UdlSX3T8KYMSP2Y7ytl8GbV/ryHLuzyzjx3regxhbkpBkXyWNpnE1VlKG0TpzAGUk7KdcUlL1GexXMScHeUZ8ai2T+ErDZKdM3w5BVwyr2uwQNorPPyQJZkDWGL7+p2fX2vZVWnI5ja7/B+cTDoRWZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739795126; c=relaxed/simple;
-	bh=8EsnnAExLIbmkwz6a9yiUKwK1x2zuwj8e5URNlsIZ30=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pR6hgqZYquXlC56jyhKK0ko5Qjy/x8zJ+tkkDV5yM36j6FM7gb11BBV+nR5QuiLUq2JV4D5a3dCM01aiPXQQntX6CzNXb/cgBnbAveHDNW2/mKJCHlJX/dGsf63L41vNvF0QiM6o2I1+9z5h4do4IPvgjUViJUa0VxdOobTDK+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4be707fffbcso15975137.0;
-        Mon, 17 Feb 2025 04:25:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739795122; x=1740399922;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bEdtyBK7UfY7e+VMYAhKXbR5/lho4BcZPMg1z6On5mg=;
-        b=Ht9bObPxfDi3UhB6XqxB4uDk3z1F5CB/cdMnsKyyTBE/bzDHoZLyoUMTN9pEeqRoua
-         Butmrg5XBoPkNoLPPEjFkprOUlg5fSK7sDD0qH7CTjpffFMH8k6/lTgN6yb0tmkPCMrV
-         Oi4QS13LWBXlYtWvO2Z7hf9lhfTBr14usIEYIYG3WSLO4xaZNEIM/s3PU6qPU0vF1kZi
-         VAgy3au5IwYAQ7q3XB0ze/6GL7kijFo8j+HR2zKdHUl/ZvzymaTfkRE/yIDJsTaoakzt
-         1QAUg3UJvyyDi5fumeQnZcZyJDdqYyaB2ZIeeCuW+9MFf7AjvgHNdm1z5bpeBv4Xh3eG
-         nSSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVV0MKexn1x+hQRwtXpi3gGclLXbub38PMssLZQXshE+oNUGVU/nY/a4OmHLJgCLbLBDq8FXLUoAwzFD677@vger.kernel.org, AJvYcCVXyAZEUZPb0kd5287Fsu3buvOFHIOlOUQf+txewUCWFXlmxUKzE69zXXFNd8OaoOe/FV6uPN787axf@vger.kernel.org, AJvYcCWZGkGLQT+cYCZSSN3uCyT80LH66r5SiUS8/eHb7jZt/Mufh98vlOfVRRKmY7E4iUGY6Uj6l4ujjAPKTPgzbdBxLlg=@vger.kernel.org, AJvYcCXdUFpM1z3Z8fJmwvdutzHCtqMLX3xM8YaAOhovUTX7sAcizT/dvmKqgpGnZZVpkXY6n8YnbnDBIcsR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAOfhMWOwkIewF8t2uRr+0qS7gJedB5LiJbFaAd0zeVR3X+2tZ
-	uI4ElmOpiw6Oix3Zei4hAiG4SuQeUKo33GoV2Ssi7oZQwoOmeaAGlrIiwCQs
-X-Gm-Gg: ASbGnctyudZ89pHL+Ki1KBCQLm7kJyY0Z/9oVMmHQ2SHVKJ4BXed0APMvR1X8KtR8NK
-	gl4b+PCmFGEMvYfg3pqE705zEi111Awbv3tJ37yLyN9D/0PFZv9mV42w1R1j+rUoBAbF6sO5Fwn
-	SEDbqqQvbM9iVhTAHzWiOdC3DYlWS7bNlCiBKrLQl4Vboz9xK3rgletEfEb/k45A2wlhHg2M/tf
-	mgkjTwv0W9MOmYoruD96ELaf7B8E74busaHrK7sG9N1EFMh7J+daeA0yPPqnbiQRpr+tZmIGdQI
-	8OdSIRuNhC7czJiXkC95ivKjwPL6P0JOqgCHm5tj1oNUD1zJzJJX3Q==
-X-Google-Smtp-Source: AGHT+IE6V22RxoJTvqpVsArlX0GgX8+ONmFxYb0F9J3/nu4Ea0Xp5vfgpnXvNR+k6XkkwK0c5MwY1w==
-X-Received: by 2002:a05:6102:419e:b0:4bb:bf49:9088 with SMTP id ada2fe7eead31-4bd3fe85bacmr4042638137.16.1739795122664;
-        Mon, 17 Feb 2025 04:25:22 -0800 (PST)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-520be32e8c0sm356107e0c.38.2025.02.17.04.25.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 04:25:22 -0800 (PST)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4be5033a2cbso625964137.1;
-        Mon, 17 Feb 2025 04:25:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVNndBZlTn3FXDbV645BlM+s49cRRrBaPPdYSDgZT81HmMzB0a4Qw6bIVe8lVF3zV6PH/9zH9g3PK66@vger.kernel.org, AJvYcCVdyR6tOyRYMHsZ83WjH1hcoyLMpMP+tT+EjeCqNUmepzoRxkBPizzNMhND3KOnvwYjPhIusigjosJrkF7a@vger.kernel.org, AJvYcCVmWS5xJUUAnwid9NfU+bi5uWb4d009I7D0dpgycwr/a5E+mHxzdOOkB+/PD35luNJH/sNA63lgWpuu@vger.kernel.org, AJvYcCXMgoDdtVyGwu+De2MrXRbtBwAmHKCbfc34cLmv+2+enuC3PLuYvGFim8hDmCySbNfeZeuXEqsKj4JScmUNzA5Z7Qo=@vger.kernel.org
-X-Received: by 2002:a05:6102:3748:b0:4ba:9abf:800f with SMTP id
- ada2fe7eead31-4bd3fd491f7mr3336947137.6.1739795122029; Mon, 17 Feb 2025
- 04:25:22 -0800 (PST)
+	s=arc-20240116; t=1739795158; c=relaxed/simple;
+	bh=lFJsXlgEY82n+SX5Ibkp2jyxFTxnjgwhZlkrhHi3tzc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=l84grobQbuVKX7IZP7Y3xHVMxboVi70iTIxknLE9keCmlpcElEcJ/T9AEPHVW63RXixhueo7v04V+MSioLY4MqhtcqKMNCotexZY/eWvzIwxnmF8MSJqcvSVKr0KbdHGKc2JI+YWWqsvsE6zqSDagibC7/7Pp9JGIwtJ3myPouM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pelago.org.uk; spf=pass smtp.mailfrom=pelago.org.uk; dkim=pass (2048-bit key) header.d=pelago.org.uk header.i=@pelago.org.uk header.b=EY5mGSWv; arc=none smtp.client-ip=46.235.227.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pelago.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pelago.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pelago.org.uk header.i=@pelago.org.uk header.b="EY5mGSWv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=pelago.org.uk; s=mythic-beasts-k1; h=To:Subject:From:Date;
+	bh=CviyWBmyPdnlT0TjppgyZxk7v9bpeFzOVnWOqtTK928=; b=EY5mGSWv+YCfGvTHU/IXarZcEY
+	Au0oDEgJ5aPk3Zop3VG4pnVNJWNIEAeT9QZkMK3rw4S7s8oEopKqz9Vj2bRAB4/H7hT1bQwtItQD7
+	JVLj0yxsU8zZI+90M4dKYyT1mFU5/Jg8TUlWqv923esjM+9pOWYur1EJQYH+alwO3D/dnSkA3iXYo
+	W/LQQYtCYhBm2OaceFdmG9WHHyOjvJW7ExC2P7Z1mRocy0a5oA00ursKWzQQ8v7PGkolg6x41uBuf
+	6SzofvjELAk4BhGamfVrCKtIKB47WAyWVq/imvHzsGf0Usjmx+AaDSLXkW+GSRLUvg4eoeWoc+TaA
+	8ejpt/rg==;
+Received: by mailhub-hex-d.mythic-beasts.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <john-linux@pelago.org.uk>)
+	id 1tk0CA-0057lr-AK; Mon, 17 Feb 2025 12:25:54 +0000
+Message-ID: <690b6c31-67b3-42c5-86a0-0efe3640724e@pelago.org.uk>
+Date: Mon, 17 Feb 2025 12:25:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217105354.551788-1-thierry.bultel.yh@bp.renesas.com> <20250217105354.551788-3-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250217105354.551788-3-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 17 Feb 2025 13:25:10 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU_rw30Qnqzxb4cmEsPs4FBXzqG7+BQtztx3=XMMnE6wg@mail.gmail.com>
-X-Gm-Features: AWEUYZnGIe1bslYNmy-rEq37IhcV1Co9ygTyuYFINdfTDxCoBelELzNKvBlVgCM
-Message-ID: <CAMuHMdU_rw30Qnqzxb4cmEsPs4FBXzqG7+BQtztx3=XMMnE6wg@mail.gmail.com>
-Subject: Re: [PATCH v2 02/13] dt-bindings: clock: Add cpg for the Renesas
- RZ/T2H SoC
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: John Veness <john-linux@pelago.org.uk>
+Subject: [PATCH v3] ALSA: hda/conexant: Add quirk for HP ProBook 450 G4 mute
+ LED
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-sound@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-BlackCat-Spam-Score: 0
 
-Hi Thierry,
+Allows the LED on the dedicated mute button on the HP ProBook 450 G4
+laptop to change colour correctly.
 
-On Mon, 17 Feb 2025 at 11:54, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> Document RZ/T2H (a.k.a r9a09g077) cpg-mssr (Clock Pulse Generator) binding.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: John Veness <john-linux@pelago.org.uk>
 
-Thanks for your patch!
+---
+Re-submitted with correct stable CC'ing method hopefully! Sorry, I'm
+still new to this.
 
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-> @@ -52,6 +52,7 @@ properties:
->        - renesas,r8a779f0-cpg-mssr # R-Car S4-8
->        - renesas,r8a779g0-cpg-mssr # R-Car V4H
->        - renesas,r8a779h0-cpg-mssr # R-Car V4M
-> +      - renesas,r9a09g077-cpg-mssr # RZ/T2H
->
->    reg:
->      maxItems: 1
-> diff --git a/include/dt-bindings/clock/r9a09g077-cpg-mssr.h b/include/dt-bindings/clock/r9a09g077-cpg-mssr.h
-> new file mode 100644
-> index 000000000000..27c9cdcdf7c8
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/r9a09g077-cpg-mssr.h
+ sound/pci/hda/patch_conexant.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Please include a "renesas,"-prefix in new binding definition headers.
-
-> @@ -0,0 +1,49 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_RENESAS_R9A09G077_CPG_H__
-> +#define __DT_BINDINGS_CLOCK_RENESAS_R9A09G077_CPG_H__
-
-Ah, here you do have the prefix; good!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 4985e72b9..34874039a 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -1090,6 +1090,7 @@ static const struct hda_quirk cxt5066_fixups[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x814f, "HP ZBook 15u G3", CXT_FIXUP_MUTE_LED_GPIO),
+ 	SND_PCI_QUIRK(0x103c, 0x8174, "HP Spectre x360", CXT_FIXUP_HP_SPECTRE),
+ 	SND_PCI_QUIRK(0x103c, 0x822e, "HP ProBook 440 G4", CXT_FIXUP_MUTE_LED_GPIO),
++	SND_PCI_QUIRK(0x103c, 0x8231, "HP ProBook 450 G4", CXT_FIXUP_MUTE_LED_GPIO),
+ 	SND_PCI_QUIRK(0x103c, 0x828c, "HP EliteBook 840 G4", CXT_FIXUP_HP_DOCK),
+ 	SND_PCI_QUIRK(0x103c, 0x8299, "HP 800 G3 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x829a, "HP 800 G3 DM", CXT_FIXUP_HP_MIC_NO_PRESENCE),
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.48.1
