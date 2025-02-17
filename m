@@ -1,145 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285A8218585
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8782A217727
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739790016; cv=none; b=frqzBuGrt5pHScnuAZtQ96il0T0bs7LGKixb2MUE5Br0+xmLkQY8uJzC/MIIwrfOJv56NmbUKrVZ1SafG5MNd0zHp+FMAbKO1f+B6y/6Yon/NcuwdUFlnPIRzk35c5bWEy84AsUHYOiBlSlWkdV8eyXJQyAUhNdk7+w6ZZSgmbU=
+	t=1739790026; cv=none; b=TEoUFiqljOQ4KgerbBvdG2ISNzXqi8u9KDPqK0Pi3Fm0FdOrHNzb6eG3ZE7PKOMHqHra+I1bmirwFdESLClx0So3UltNJKugYvgFBkcdJ0cY/CE2fBwsFKJWQEcB0ipqykARXYr+p9xemgBRdMuIJftBnQ3nkYxRDwE99U2kPC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739790016; c=relaxed/simple;
-	bh=dR+rep/57L3EWMjPfigCxhlyG9swRKpij/Px8i1KymU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omfmcFOXYSE/g1fHMug/caHpmafkr5qnyVJmeNHlMDO9W8a1m3T5nG+JsQyVkjGUsyFC4zmAw0QvnO2b2Pzs0t3Lds0FP6Nw5xLZq47riuOmG4uFvhSuuAxKmULAVL2rauhLBoG6fgRecZOGK/gqPsbHrVFENFv0dMpkf429oGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XMxQKzGr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739790026; c=relaxed/simple;
+	bh=Fqcakq8Z4dK0KW6FqfXsROW5Ca3rxcnHIn+rj3eCIe8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aYh19OzGPX91KTeE1nyn99kaB6GUMHwEw0As6LCnIUxiKarRRYKEthJKIiLMAF3G2jgyVARdtuItdGjCbJKZAwpHjeKw8rZVNMlVmndcsOOfKzILLoEmVsJOcmBH/poxKg1pxU5Ylgf7L/5oHQWQvkrF2vA64LiE637Z3IUwank=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OQa3vEUO; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XMxQKzGr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739790012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YqQYFCaTchuW6lwmeMd3sJwEjkrnpuASKdjJ1fvZwRE=;
-	b=XMxQKzGrFzfPk1/aGeIeIuJrV9hPxGsKIrf85yOIn4b8JR1fE7QTrXH1ZYCcxI8UduP34L
-	4xQarnSPn2/xRcMh0CbLruipE+NjLCcnQyO72P4heInOo6WP6Cd5zq0bbbltC6RCBaR5IG
-	d4Q7nygeIZglRXVzwFiJH6rLDBRmCAg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-18-MBnihD0DPNq7FgqQe6sdIA-1; Mon, 17 Feb 2025 06:00:10 -0500
-X-MC-Unique: MBnihD0DPNq7FgqQe6sdIA-1
-X-Mimecast-MFC-AGG-ID: MBnihD0DPNq7FgqQe6sdIA_1739790009
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f44be93a8so418444f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:00:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OQa3vEUO"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394944f161so3009925e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:00:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739790023; x=1740394823; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SaV2pSSvbrWhPVnao95hj5C2ZKd6wNQfe6jtbM1LUYU=;
+        b=OQa3vEUOABZ8AHxsXHJfuBGLIipPYlV4CETqi7Ykg+QW7xZHgGdBo9Cm0hdRogUnxV
+         AlsDJ5e6hYethiIfIrr5yAgsPo9j4WRgSzgAABTyisSfd6mDwxH7HB/g0foQ5g/ssya+
+         ku1Q1Or4v6FBzqsyJQZbuhsFSGnkeFL2rYPp+JFkEvD1u5g/OAgUKsjuqYpv9Qdour1M
+         d7fLBgVddCrXweECZ8pVLKJRxNXvJsCuoMIgexCbHPsOzmDGkgepOWukcBPn6RxCsrg3
+         6D1U8bUW8wjPsY0BlSKM9NWJqjBS0815s8PHfksZjNkUfi1sH3G5BNUVeJT5Zoa4RWdV
+         6vaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739790009; x=1740394809;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YqQYFCaTchuW6lwmeMd3sJwEjkrnpuASKdjJ1fvZwRE=;
-        b=idnOw5sT6wjdwOdP3ZHHBCNGwnHGqM995Uu3dqDdIctkC5Vfo6+1oiwhv9l6ZOQjiP
-         5oSCbznpdM20a87yRtyGRXCXh/FcJMFMmrcGGdsEwZFcvbHuK5hBQLP0AEtgB7KbWiKM
-         DYyb4bq7dwaMQlXaEDKJqUfsorTQnzfM/HP1qWn5eF+8KXDUmIayFdkVF5OCuEJ+B5Aw
-         T0P35iGY2r4b+z2ofP4mjfdjTE7Unw6yHhD+33qjLr1XsQyGI8danITDt/LOo1G6v5LR
-         Td5PxYyiW3QvXhdFMWSmIzdZE4HO+XMPNZXzZzG8HZX/3JYfqVhBGOzcKjCkeaVOn+0l
-         ccuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlVVwDwmEtpzPNcxq+y44to4LBTVgArN6MASluRu6nggDNj+VETl6iP2BBCh2tsaaFSKOgladZ+o+087w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiIcxieqVeB6KJhgHUzUd2eaWRiD9TVcCSrqn6WUKPbfDJxMXt
-	bXJP1SDp0d6PsHtltL6pgByxT8cGiepT1TLGCwNrOFOioMzIjnLrzyRBoFZX6JcDIJ/JduUCSKh
-	cTKPWFKe2pIGoB7X+lfCFH5p8ug/KKt7i66TIF/0zRhAWMwTpJaVYqfrU7rxKAg==
-X-Gm-Gg: ASbGncspmED/dnum7Kj1q5JkXdU1WsSKwe1I/268hoYh+yHNhES/Ilt/mHmYP0H9Pvd
-	wqEntazYoK5DOTHsVur+9h3ZomUgMDPPdW9FxMrfQW6T7WkwaSmhgIdSdWhcqnCyymwLBeTCnQB
-	iJCOYG0/Xpy0uKKd1wp8DGXIWmzTIfY5oVVWF/swJfuOUX5Y850/OYslGZBTKSK4oBxIdCw7rS6
-	aF2AQoQdQaZQ8dXbl1RK3ZRouYm17wALQXOhj+GI9Ul/LxQsTicODIeTlrWmPpdmbp4J9P6S01u
-	Ssr6/ke9nYKCx2BWUKxG0GFFJqWfThQzALDNDC04Hbv7UrDTzqULZA==
-X-Received: by 2002:a5d:6dae:0:b0:38f:3b41:c944 with SMTP id ffacd0b85a97d-38f3b41cb92mr4017220f8f.11.1739790009186;
-        Mon, 17 Feb 2025 03:00:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHfTNMRvG7FzvFEHCD6J1+67oFasR/KEYRPfOfLOQYRJI8pdpwKgXLv4Rl4Qdj++N4APKt7UQ==
-X-Received: by 2002:a5d:6dae:0:b0:38f:3b41:c944 with SMTP id ffacd0b85a97d-38f3b41cb92mr4017163f8f.11.1739790008461;
-        Mon, 17 Feb 2025 03:00:08 -0800 (PST)
-Received: from sgarzare-redhat (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5b40sm12047690f8f.68.2025.02.17.03.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 03:00:07 -0800 (PST)
-Date: Mon, 17 Feb 2025 11:59:48 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: John Fastabend <john.fastabend@gmail.com>, 
-	Jakub Sitnicki <jakub@cloudflare.com>, Eric Dumazet <edumazet@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Bobby Eshleman <bobby.eshleman@bytedance.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net 2/4] vsock/bpf: Warn on socket without transport
-Message-ID: <ygqdky4py42soj6kovk5z3l65h6xpglcse4mp37jsmlm6rjwzu@dcntngtsygj3>
-References: <20250213-vsock-listen-sockmap-nullptr-v1-0-994b7cd2f16b@rbox.co>
- <20250213-vsock-listen-sockmap-nullptr-v1-2-994b7cd2f16b@rbox.co>
+        d=1e100.net; s=20230601; t=1739790023; x=1740394823;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SaV2pSSvbrWhPVnao95hj5C2ZKd6wNQfe6jtbM1LUYU=;
+        b=l0r/g6MUwgvUL9+9Gcr/XZpPSKqRcrxc5o4t5QOlvSz/p3JjAhoG08VH/MgSt4n2d2
+         fzF/WZbRk/6J/UB3aoe4QJnCf5mv2hUot5y5q7PCSIaOrY7jv1QnF501olWiRNOxp4J7
+         PJJ9FZ2cyVl43vCGnL+pTCd6qlQRJPa+xqojdcUBJU9EUqYGnEs2VD+Jlxljly6IG6qg
+         YgySfnAT0Lp4uuyGg0mkHkqPhFwf62kmcBYdJLl9MkA0eMSSIclKpKPBtRwQGzxWT29M
+         ZbeA3zqd8Sr9EIx5Bn09yk9DEE4MqG2xflcARTjkaSnJtpCfrQTTreUWUonPjuRmcDJB
+         XKeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeJMSmOLknLMEeIaSotRFJlnO5BBzJNLEwqPVmutPHSeEkRXGhHj60E6jQEAAIv8Sy0C+DtfHwELUoZSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbbFY9P3gqCkd8/++F1mLXRcsQzZZblZDox7VAPtlSN3QMlQrY
+	esQ3wc9YQ2SfjvqVl8p7lBvGOdjS0h6TDR10hdNBam/FfkfoJnLuNmZ6KmuxzAQ=
+X-Gm-Gg: ASbGncsJeRJsnKLtfC2vNGxJYhBfDLB8e8V8oBHeI2HKhgwobPAUhoOlHEuNAzPHBBf
+	OEFzg4y6GcKjRdvQBVCY8fE2aK+pdoxSBiloqasPMjHD9iK6/1FVh6Rt5RMAW/zeSMrCWerq4m3
+	oQ6EvG+YQVdTcBnK4dvJyjizvUjSJhWdHbM59IoyEveFQ5ajpvuSsFg8Q1paLcKD/7Ba8WIqhu7
+	2Lt8VP7NXIEM/aeu/SlYeiAk5q4T01WJyPGRgz6VFyZat52F1rouy51yiMi0bKvh6A5K7ZMvG7h
+	0u0/h6AI2l02i6rXp/PiKMDP6T8pwS7rC1E=
+X-Google-Smtp-Source: AGHT+IFZ19beHrXuXE+3JKJUMi/evXHnARTOJfyIdfMhErwnEvP2mj3vLMi08stQSyqfnrfgDg2CXw==
+X-Received: by 2002:a05:600c:4611:b0:439:8c80:6af3 with SMTP id 5b1f17b1804b1-4398c806dcamr3468915e9.8.1739790022762;
+        Mon, 17 Feb 2025 03:00:22 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5655sm11902818f8f.77.2025.02.17.03.00.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 03:00:21 -0800 (PST)
+Message-ID: <e7d33579-d58e-48b7-b0c4-bb77ea1bd788@linaro.org>
+Date: Mon, 17 Feb 2025 12:00:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250213-vsock-listen-sockmap-nullptr-v1-2-994b7cd2f16b@rbox.co>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] docs: kconfig: Mention IS_REACHABLE as way for
+ optional dependency
+To: Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Jonathan Corbet <corbet@lwn.net>, linux-kbuild@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250215131739.220629-1-krzysztof.kozlowski@linaro.org>
+ <eda7d555-d34d-4418-8fc4-a874dcca91fa@app.fastmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <eda7d555-d34d-4418-8fc4-a874dcca91fa@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 13, 2025 at 12:58:50PM +0100, Michal Luczaj wrote:
->In the spirit of commit 91751e248256 ("vsock: prevent null-ptr-deref in
->vsock_*[has_data|has_space]"), armorize the "impossible" cases with a
->warning.
->
->Fixes: 634f1a7110b4 ("vsock: support sockmap")
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
-> net/vmw_vsock/af_vsock.c  | 3 +++
-> net/vmw_vsock/vsock_bpf.c | 2 +-
-> 2 files changed, 4 insertions(+), 1 deletion(-)
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 53a081d49d28ac1c04e7f8057c8a55e7b73cc131..7e3db87ae4333cf63327ec105ca99253569bb9fe 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -1189,6 +1189,9 @@ static int vsock_read_skb(struct sock *sk, skb_read_actor_t read_actor)
-> {
-> 	struct vsock_sock *vsk = vsock_sk(sk);
->
->+	if (WARN_ON_ONCE(!vsk->transport))
->+		return -ENODEV;
->+
-> 	return vsk->transport->read_skb(vsk, read_actor);
-> }
->
->diff --git a/net/vmw_vsock/vsock_bpf.c b/net/vmw_vsock/vsock_bpf.c
->index f201d9eca1df2f8143638cf7a4d08671e8368c11..07b96d56f3a577af71021b1b8132743554996c4f 100644
->--- a/net/vmw_vsock/vsock_bpf.c
->+++ b/net/vmw_vsock/vsock_bpf.c
->@@ -87,7 +87,7 @@ static int vsock_bpf_recvmsg(struct sock *sk, struct msghdr *msg,
-> 	lock_sock(sk);
-> 	vsk = vsock_sk(sk);
->
->-	if (!vsk->transport) {
->+	if (WARN_ON_ONCE(!vsk->transport)) {
-> 		copied = -ENODEV;
-> 		goto out;
-> 	}
+On 17/02/2025 08:51, Arnd Bergmann wrote:
+> On Sat, Feb 15, 2025, at 14:17, Krzysztof Kozlowski wrote:
+>> Several drivers express optional Kconfig dependency with FOO || !FOO,
+>> but for many choices this is neither suitable (lack of stubs for !FOO
+>> like in HWMON) nor really needed and driver can be built in even if FOO
+>> is the module.  This is achieved with IS_REACHABLE, so move earlier
+>> section from "imply" chapter to "Optional dependencies" and grow the
+>> description.
+>>
+>> Cc: Masahiro Yamada <masahiroy@kernel.org>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> I think this needs to be more strongly worded to heavy discourage
+> the use of IS_REACHABLE(). In most cases, anyone trying this has
+> just given up on writing correct dependencies and works around
+> it in a user-hostile way.
+> 
 
-I'm not a sockmap expert, so I don't understand why here print an
-error.
+Ack
 
-Since there was already a check, I expected it to be a case that can 
-happen, but instead calling `rcvmsg()` on a socket not yet connected is 
-impossible?
+>> +1. If pre-processor can discard entire optional code or module BAR does not
+>> +   provide !BAR stubs then call can be guarded with IS_REACHABLE()::
+>> +
+>> +	foo_init()
+>> +	{
+>> +		if (IS_REACHABLE(CONFIG_BAR))
+>> +			bar_register(&foo);
+>> +		...
+>> +	}
+>> +
+>> +   Drawback: this might lead to run-time debugging, when looking why
+>> +   bar_register() was not called.
+> 
+> From this description, I wouldn't expect most readers to understand
+> what you mean with "run-time debugging". The behavior that users
+> are going to see is just a bug -- they turned on CONFIG_BAR=m because
+> they wanted to use BAR, but then it doesn't work.
 
-Thanks,
-Stefano
+Ack
 
+
+Best regards,
+Krzysztof
