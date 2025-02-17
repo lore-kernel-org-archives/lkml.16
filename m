@@ -1,109 +1,149 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB5D219E9E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 12:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF152F5B;
+	Mon, 17 Feb 2025 12:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797014; cv=none; b=Jg1YXVtK52CNTJQvMnKNmxfcjiD1vNfQK4MaCNAWTkB9V2Q/DcZqJTDGl3/LQI845oxeGSmmhikmqZYVWMkjqE7AeAXsChn7cVWD7zu/XbdU1ZCi47T27ci+81LLSdTndT5EoL88jgUvZJ32VPR9wg/4W9hav5vf7CimltwWa0w=
+	t=1739797107; cv=none; b=HGZzMWOBDk4HAt7cDQD/ryLYjfrd+AtSUq2Xw9uaURQnULcBvA7QkXGX3Z/dzRa+folAuftl54Etcm9fZweNJWzDEfWxuc/j9zZMcJZHLp0wkZkL16Em0FisogX9AT9FzY3/yqdOAE8j0LPmhrjVeQCGqsBQXD2S7ULbAf31F1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797014; c=relaxed/simple;
-	bh=Tj1MUtrrHYN3dtuh02om2PeXmRrh4rBT8jyqsExbAhg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=prruqRkabfFmWRwBFLHbHHWWNXk67KkyHPt5ZDB5FXOXR4pQlzNiZJc9XLxGvDa/BwvR2+7e66ERXaB1vXj9ZtwNF81i9kYIbKDyf/V2Xnz+U0QanaZ5jW8SWNHk/E3tbu9JhrUi5S9EwJ+Jba/rUwAtH2kmUuMfGgZwDG3Cw/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3ld8TPW; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3ld8TPW"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-219f8263ae0so75941955ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 04:56:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739797012; x=1740401812; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iqT+HtUapWQjxJsoaklq/LsDFIgfZnyX69Um1q4t73o=;
-        b=D3ld8TPWGpXs3FAAk88sMig97W15NoCKXJD1MqLML9u4gnk/hC3t41Ml7iKtGIYulY
-         N+8yaYHHfohL8hTh4CfG2vk+ZxhR3gb5CieW/JKKV/V4B4ZCkzh/0iGE9ZIi0e1aMUwv
-         GxulbNRQNomgnbKiRAyqwIjWXazj8ehO0ogFB2dnlawHqzhh3+YxSe3s6+znYKiZ3cxW
-         kmhtEs3btqS6vH2dDZvflQLB/7GVIv1WswuXUcaT+/KwbVeqbEgtNTDYRXw48q0Ac34O
-         +veTVtzG03ZdQkZ6WytM6NA20JfLDdcnFwH/XUq78OUXljro2n2rFyEmCfy3KPBxq/bV
-         9K+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739797012; x=1740401812;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iqT+HtUapWQjxJsoaklq/LsDFIgfZnyX69Um1q4t73o=;
-        b=PaXcbFnf12O2A0SzsfYuSYYC1pO5VDwe6EKHNqwH/yhTIQkZFLWUE93Qys0+8SyZbI
-         BQKXye3u1mXF6tB0r+jQPpmcvG/JHMtCUZE2lyQTIlyOKs3zgjVfRB/uMNoKhGmHruPr
-         yusEkIA+RFFGVjUEYrfN62EDbZv6xycD7DliU6UYYM382ooE4QK0NN1ujejr5Ik7XwoM
-         9G4d6RUExMvZuZQ7JeCTVok2/G4NrE9Dh1uUr49LHrqPzWHZKrRbExNEXRL3cFaZAkB4
-         ddB2I5eAkr6baGoL9z0g/X9ztJXZHE0sXwCCY6XvS7mm9oBBMy504znk4PV5Vs46PvTQ
-         vrvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWM7iZK9ZVXm2hKUWHnU2HhLcimoyoczTExF+yIVWRebd6gw6h7Ktlmr9X3Xodo0nDHhEqsfMasZnvg+Eo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiyLZR1xyDL1W98ZRqT2X/G/pAvZ5M+l3+JYP4dnW7/Lskjgwc
-	mE2X5vyKyW1HfAprnLKf1UmZYNnaBxoArIUdkzmi2S3CwVX3pWcL
-X-Gm-Gg: ASbGncsJbfzT1Mj+nQpz9roguNwRnacWHQOG5ZNf2PC2SJnF0mToY0+YVZ3pXV/IDAt
-	rO/mq8JFR+pN//O8JsjFb27wvYv5PPmnhDkjOSE3qPRIv1l/lYiyfA5XqyXa18i20g1eH/qFzSO
-	SqAlg8pj52QWLRjmbxVtO6+FZtPLMCi8XUt6W7HLHxsqxldz3xY2RxSllhybMqmBv06htUT3HiS
-	vzCGXRFfbAGIPbNI0TIEVXgdxb/ZX3uGDD/7j99a9H0PayFa8O6KiHupO+mK02YUdy6VL1eYTQp
-	fRhkrJhBLPBhEdgrPBtg
-X-Google-Smtp-Source: AGHT+IFQsDLLICtZTwp1fHa3MkySuBKcyWhJhsaW31e/cQmIMTsA8p9xCDYokjLDXm1wveuKaXpjdg==
-X-Received: by 2002:a17:902:e54e:b0:220:ff3f:6cc5 with SMTP id d9443c01a7336-221040bf806mr162699635ad.35.1739797011931;
-        Mon, 17 Feb 2025 04:56:51 -0800 (PST)
-Received: from localhost ([2409:4066:d04:319e:1d76:db25:b6bf:4f52])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d556d45dsm71102925ad.168.2025.02.17.04.56.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 04:56:51 -0800 (PST)
-From: Ravi Kumar kairi <kumarkairiravi@gmail.com>
-To: dpenkler@gmail.com,
-	gregkh@linuxfoundation.org,
-	kuba@kernel.org,
-	rmk+kernel@armlinux.org.uk,
-	broonie@kernel.org
-Cc: arnd@arndb.de,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ravi Kumar Kairi <kumarkairiravi@gmail.com>
-Subject: [PATCH 2/2] [PATCH 2/2] staging:glib:hp_82335: Refactor kzalloc size calculation to use pointer dereference
-Date: Mon, 17 Feb 2025 18:26:17 +0530
-Message-ID: <b3358e0d2c50a7d0777dd11d6e34ed9a52c00377.1739794938.git.kumarkairiravi@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1739794938.git.kumarkairiravi@gmail.com>
-References: <cover.1739794938.git.kumarkairiravi@gmail.com>
+	s=arc-20240116; t=1739797107; c=relaxed/simple;
+	bh=q1aOfZVqMDouNDrWuVaUzkfmmvEdkbfTZjyFQLgn1Sw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hEyGlt9LYciEl/MfgV5Nn1pAmze3M8D5HHhHgBh450W3rFGBXfILCZcvusgGIxCutO6e2DL+aB/UGHmZ/Kf4jIC9O2CkmLn2JVNMoszFwm6srj4pkkmlaoDN2r7RGGyMGqqD6TY5xn2mfki8jnQF1SZg8nGv7AX4B4hfdVVGnXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 78B4A343069;
+	Mon, 17 Feb 2025 12:58:18 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v5 0/5] riscv: spacemit: add gpio support for K1 SoC
+Date: Mon, 17 Feb 2025 20:57:43 +0800
+Message-Id: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEcys2cC/2XPQW6DMBAF0Ksgr+tqZmxsnFXvUXUB9phYVXACF
+ LWKuHsdolZBWf6R3tefq5h4TDyJQ3UVIy9pSnkooX6phD+2Q88yhZIFAWloqJGg5CfK/pyyNNh
+ FR9GBIi8KOI8c0/dW9v5xzyNfvkrnfD+Krp1Y+nw6pflQqWApGFBtbC2V7hqQHVjDHAwy1AqVc
+ hwbces6pmnO48+2c8GtbJvkQD9OWlCCNGCJO2bfMrz1PMw5v+ax33oW+rdI6HaWiqVGax0DEfr
+ wZNWDpXpn1c3arrOd1hgMPVn9Z8ubhDtbPpDaaPSu9oBO7+y6rr9SpKuxpQEAAA==
+X-Change-ID: 20240828-03-k1-gpio-61bf92f9032c
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>, 
+ Jesse Taube <mr.bossman075@gmail.com>, 
+ Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3376; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=q1aOfZVqMDouNDrWuVaUzkfmmvEdkbfTZjyFQLgn1Sw=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnszJW6w/KgwwZgBNmPAPOycUH2Qxkc+3vi3ZaP
+ JSoRcMNBXyJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ7MyVl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277WEhEACLcAfqpL5B6tHAOl
+ U14SGmtOnMlrgKiBr4fNU2zuSjN604606hKfN8LRHBk+6KMdrix0adaP9K0Ik7f9IrSAf56/Grm
+ gBti9Cz4M2DD020XPJC1KkftX9YGozwz0J7/PHkTCMel2ydfCbauBl7jIH1f7MvscDFwRDchQ3Y
+ W6a+bgC0+tJBUP76FaL5uGaHaRknoSTCJMSluILFRTCnMAKG3R4Z+qFYPxDvEs1BDC+ip+xL8w9
+ 2qsxh6d42BHtFrHxtBrRPNsf2O67d8Bon1P3uk1e7WMltFjExyNOJhYiPYmzRWPxStrPinBmTKu
+ g/6u00SoRYWoAH3jvUmVEVgpk2md8X8qU2mrof611Ou7ctYGtXWTFPc5EAv7YmBPjULYlDkk8Xe
+ 6QyybGmNKX1cahNNn5Z2cqGjvGxHe02j0hLUSGXPgZ+COKuWZ7NfRP+JfzZtbOU6wBEs2Q03ZY1
+ jCSjISoyAqD2e5LsJ/wceOaWvGdGNU4CJJYVqHzZYZNaJwMucL4wAApMBXKSe9E5HfaQWd7w44a
+ Xi4dYmAhnm1ta0/lfqh/l+lZAEhxT+byyPBKd5QXQLrPiKemIx+Ei1bwzVdgzIMOJOKMZ0vOx1E
+ gZSSWY/v7ogbrSAy+aPbbk6l4TYjRO740JhbVhZt1okVQ698A5llZd15h45/mt6nQffg==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-From: Ravi Kumar Kairi <kumarkairiravi@gmail.com>
+The gpio controller of K1 support basic GPIO functions,
+which capable of enabling as input, output. It can also be used
+as GPIO interrupt which able to detect rising edge, falling edge,
+or both. There are four GPIO ports, each consisting of 32 pins and
+has indepedent register sets, while still sharing IRQ line and clocks.
 
-Replaced sizeof(struct hp82335_priv) with sizeof(*board->private_data)
-*as checkpatch* suggested.
+The GPIO controller request the clock source from APBC block,
+In this series, I haven't added the clock support, but plan
+to fix it after clock driver is merged.
 
-Signed-off-by: Ravi Kumar Kairi <kumarkairiravi@gmail.com>
+Due to first three GPIO ports has interleave register settings, some
+resources (IRQ, clock) are shared by all pins.
+
+The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
+
+Note, this patch is rebased to v6.14-rc1.
+
+This patch series has been tested on Bananapi-F3 board,
+with following GPIO cases passed:
+ 1) gpio input
+ 2) gpio output - set to high, low
+ 3) gpio interrupt - rising trigger, falling trigger, both edge trigger
+
+This version should resolve DT related concern in V4, and register each bank as
+indepedent gpio chip in driver, no more sub children gpio DT node needed.
+
+Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
+Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
+Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
- drivers/staging/gpib/hp_82335/hp82335.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v5:
+- export add_pin_range() from gpio core, support to add custom version
+- change to 3 gpio cells, model to <bank number>, <bank offset>, <gpio flag>
+- fold children DT nodes into parent
+- Link to v4: https://lore.kernel.org/r/20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org
 
-diff --git a/drivers/staging/gpib/hp_82335/hp82335.c b/drivers/staging/gpib/hp_82335/hp82335.c
-index f1c2045570..66557d6964 100644
---- a/drivers/staging/gpib/hp_82335/hp82335.c
-+++ b/drivers/staging/gpib/hp_82335/hp82335.c
-@@ -205,7 +205,7 @@ static gpib_interface_t hp82335_interface = {
- 
- static int hp82335_allocate_private(gpib_board_t *board)
- {
--	board->private_data = kzalloc(sizeof(struct hp82335_priv), GFP_KERNEL);
-+	board->private_data = kzalloc(sizeof(*board->private_data), GFP_KERNEL);
- 	if (!board->private_data)
- 		return -1;
- 	return 0;
+Changes in v4:
+- gpio: re-construct gpio as four independent ports, also leverage gpio mmio API
+- gpio interrupt: convert to generic gpio irqchip
+- Link to v3: https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
+
+Changes in v3:
+- dt: drop ranges, interrupt-names property
+- Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
+
+Changes in v2:
+- address dt-bindings comments, simplify example
+- rebase to 6.13-rc3 
+- Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
+
+---
+Yixun Lan (5):
+      gpio: of: support to add custom add pin range function
+      dt-bindings: gpio: spacemit: add support for K1 SoC
+      gpio: spacemit: add support for K1 SoC
+      riscv: dts: spacemit: add gpio support for K1 SoC
+      riscv: dts: spacemit: add gpio LED for system heartbeat
+
+ .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |  81 +++++
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  11 +
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   3 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  15 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-spacemit-k1.c                    | 376 +++++++++++++++++++++
+ drivers/gpio/gpiolib-of.c                          |   5 +-
+ include/linux/gpio/driver.h                        |   7 +
+ 9 files changed, 506 insertions(+), 1 deletion(-)
+---
+base-commit: 3d72d603afa72082501e9076eed61e0531339ef8
+change-id: 20240828-03-k1-gpio-61bf92f9032c
+
+Best regards,
 -- 
-2.48.1
+Yixun Lan
 
