@@ -1,146 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B90168B1
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D45118A92D;
+	Mon, 17 Feb 2025 08:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739782405; cv=none; b=sSgsxO7yMFa43DCghMyWpQf/CmeaQ3qaUYdPa8LYmnOVi7snE7KXR9Fd4aAXUWxbGHRjuyZQ7CH7QG2KLtSLiCwGZIbwcB9XOZVcbiLNNnTf9B+Wl8kKxSSFvVGTL6KZOMsctXQ9Nh0b8xGUZp8sTrS21A1LehloHqxgfU80x8M=
+	t=1739782407; cv=none; b=Z9sqju3WnLpCyAmFb/PznUSyrG/30tDrDqnXRgchABy97/L5rsAR07uxCqskPggr7k9qHChL4RRyAfLmTDH5qo2VhDE1rho2LXDoLFMFIY3xXHymWm9CzFaEGq6NdxBB//SU91BKRpdhmRd6cfgadSYwyHizqabFwWh3txknRN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739782405; c=relaxed/simple;
-	bh=qu/3K+SbsA9VLOzbSKu1qsZ3WdSo3ICrFa2oxsGDqmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jSubi4xPmnwIdAF6mej6a2naUeRyV+pqsLReWZBlqNm4WFRST5sewV5V4v4t0Wh9j0W0DmzB/sROLZYQXF1aIpW+M6T0LBrTjb540CRj0FnyiiTQfLgX1Tth7eQldf19mqRC3XS6Mipi5BD08cbAYTgMCREDEP5nEOGoZGamXSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jESugXih; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739782407; c=relaxed/simple;
+	bh=x7loA1XH8SHyLqAH2pxq8JzwHfMv7gVzwJRQfsmvagA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SqHY/OdoMZWvmngLmO+9DPuqNvwACW+XYeN8ciGjv2brUVhmOUuPrwtc5bPXLHSA+1VVkLUzQ0SSbEbWmLLATyYYqm4qmgcTEuY/AfkeocOwWDgpptAdudAIV0X9QsKB9RPjvuAc4tGfc4KvofXoM55sd8jnmVYv7ACj/JSttk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Ade+iUFl; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jESugXih"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739782404; x=1771318404;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qu/3K+SbsA9VLOzbSKu1qsZ3WdSo3ICrFa2oxsGDqmw=;
-  b=jESugXihqP7Os1do+loLZxdHIKdQi0pOStoZ6+WJ6qLinTJnUwNxbgaw
-   unPb3atyE+CGDmT1poQxNqvu2qCOPR6QaYrApQu8diOVfHgBIs6pWcHu5
-   BbOwJJV+r5Nuggx1iz/mdlHoXHqLDQFyZtAvktMCO4Fw4ywi6Rbb0jv8k
-   6MJKa7Q3fx8yqFDIx/UMCrSY8SFKm3x5Y1YlBuHZVHcMVPPD0qtqxVay0
-   t6TBBZmfoVcdF6xcljGrmSjLcVg79Pig09qUYBOZwZnGE2exSekf1mKN8
-   ZrK0o6tyQY+mEeP9Xqu/nwaf66ulQWuz+e8RuHwUblyrZCxIwTjSDCan3
-   g==;
-X-CSE-ConnectionGUID: LixetzCKRIygM6hB9pzBVA==
-X-CSE-MsgGUID: lM2et9slRuCvbXVKPr8ALw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="40720404"
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="40720404"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 00:53:23 -0800
-X-CSE-ConnectionGUID: AB6Kyz33RRGIBYcHbav3Sg==
-X-CSE-MsgGUID: D/mb9oHATf6FOT1t0Epeng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="119072773"
-Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.245.97.15])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 00:53:21 -0800
-Date: Mon, 17 Feb 2025 09:53:13 +0100
-From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Wentong Wu <wentong.wu@intel.com>, Jason Chen <jason.z.chen@intel.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mei: vsc: Use "wakeuphostint" when getting the host
- wakeup GPIO
-Message-ID: <Z7L4+YJcUaaz1kyG@linux.intel.com>
-References: <20250214212425.84021-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Ade+iUFl"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51GNjhcL006916;
+	Mon, 17 Feb 2025 00:53:15 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=CU69piWw3bhgFgIDFnnBqaI
+	afBgawzTiJhuZoTIVa18=; b=Ade+iUFla2CcE/5P1Y5+ShH/0oczVuveHl/68ve
+	BXdltL8K9O5PNMC+guqfE5qst+cf+maZR/l9TsnvbBCGVKQL/bpTKXagpOfsKDMp
+	uI6SXptnbBW0N4wGB4rwHZxy+/9OUaHIBe+nreSkOZL2amYTM/oOH9Y9OcOvHN4Q
+	P6d32HHUR/f4kh2ZgA5yKPrNgQ4xRid4XcRc2IW/gmhuUoPPiea3CYOqdHMhWYoB
+	5SwYzmupqvTRGASNAR5urcJFxWkGEzHcVuuCCC86po7AD+iW0raxjLt5PYTWEGzd
+	IQP+41M9fg1CnF/PSjSCykJMNgwzmd03vonZR7ThGA8EeXg==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 44u5rdj4r5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 00:53:14 -0800 (PST)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 17 Feb 2025 00:53:14 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 17 Feb 2025 00:53:14 -0800
+Received: from hyd1425.marvell.com (unknown [10.29.37.152])
+	by maili.marvell.com (Postfix) with ESMTP id 86EBF3F706D;
+	Mon, 17 Feb 2025 00:53:09 -0800 (PST)
+From: Sai Krishna <saikrishnag@marvell.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>,
+        <gakula@marvell.com>, <lcherian@marvell.com>, <jerinj@marvell.com>,
+        <hkelam@marvell.com>, <sbhatta@marvell.com>, <andrew+netdev@lunn.ch>,
+        <kalesh-anakkur.purayil@broadcom.com>
+CC: Sai Krishna <saikrishnag@marvell.com>
+Subject: [net-next PATCH v10 0/6] CN20K silicon with mbox support
+Date: Mon, 17 Feb 2025 14:22:51 +0530
+Message-ID: <20250217085257.173652-1-saikrishnag@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214212425.84021-1-hdegoede@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: lAv29F1FrY-GfFsMo7oAAIO3sXm2Om-r
+X-Proofpoint-GUID: lAv29F1FrY-GfFsMo7oAAIO3sXm2Om-r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_04,2025-02-13_01,2024-11-22_01
 
-Hi Hans,
+CN20K is the next generation silicon in the Octeon series with various
+improvements and new features.
 
-Thanks for working on this, this issue annoyed lots of people.
+Along with other changes the mailbox communication mechanism between RVU
+(Resource virtualization Unit) SRIOV PFs/VFs with Admin function (AF) has
+also gone through some changes.
 
-On Fri, Feb 14, 2025 at 10:24:25PM +0100, Hans de Goede wrote:
-> The _CRS ACPI resources table has 2 entries for the host wakeup GPIO,
-> the first one being a regular GpioIo () resource while the second one
-> is a GpioInt () resource for the same pin.
-> 
-> The acpi_gpio_mapping table used by vsc-tp.c maps the first Gpio ()
-> resource to "wakeuphost-gpios" where as the second GpioInt () entry
-> is mapped to "wakeuphostint-gpios".
-> 
-> Using "wakeuphost" to request the GPIO as was done until now, means
-> that the gpiolib-acpi code does not know that the GPIO is active-low
-> as that info is only available in the GpioInt () entry.
-> 
-> Things were still working before due to the following happening:
-> 
-> 1. Since the 2 entries point to the same pin they share a struct gpio_desc
-> 2. The SPI core creates the SPI device vsc-tp.c binds to and calls
->    acpi_dev_gpio_irq_get(). This does use the second entry and sets
->    FLAG_ACTIVE_LOW in gpio_desc.flags .
-> 3. vsc_tp_probe() requests the "wakeuphost" GPIO and inherits the
->    active-low flag set by acpi_dev_gpio_irq_get()
-> 
-> But there is a possible scenario where things do not work:
-> 
-> 1. - 3. happen as above
-> 4. After requesting the "wakeuphost" GPIO, the "resetfw" GPIO is requested
->    next, but its USB GPIO controller is not available yet, so this call
->    returns -EPROBE_DEFER.
-> 5. The gpio_desc for "wakeuphost" is put() and during this the active-low
->    flag is cleared from gpio_desc.flags .
-> 6. Later on vsc_tp_probe() requests the "wakeuphost" GPIO again, but now it
->    is not marked active-low.
-> 
-> The difference can also be seen in /sys/kernel/debug/gpio, which contains
-> the following line for this GPIO:
-> 
->  gpio-535 (                    |wakeuphost          ) in  hi IRQ ACTIVE LOW
-> 
-> If the second scenario is hit the "ACTIVE LOW" at the end disappears and
-> things do not work.
-> 
-> Fix this by requesting the GPIO through the "wakeuphostint" mapping instead
-> which provides active-low info without relying on acpi_dev_gpio_irq_get()
-> pre-populating this info in the gpio_desc.
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2316918
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Some of those changes are
+- Separate IRQs for mbox request and response/ack.
+- Configurable mbox size, default being 64KB.
+- Ability for VFs to communicate with RVU AF instead of going through
+  parent SRIOV PF.
 
-The problem explanation and the fix looks good to me.
+Due to more memory requirement due to configurable mbox size, mbox memory
+will now have to be allocated by
+- AF (PF0) for communicating with other PFs and all VFs in the system.
+- PF for communicating with it's child VFs.
 
-Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+On previous silicons mbox memory was reserved and configured by firmware.
 
-Regards
-Stanislaw
+This patch series add basic mbox support for AF (PF0) <=> PFs and
+PF <=> VFs. AF <=> VFs communication and variable mbox size support will
+come in later.
 
-> ---
->  drivers/misc/mei/vsc-tp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-> index 35d349fee769..7be1649b1972 100644
-> --- a/drivers/misc/mei/vsc-tp.c
-> +++ b/drivers/misc/mei/vsc-tp.c
-> @@ -502,7 +502,7 @@ static int vsc_tp_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> -	tp->wakeuphost = devm_gpiod_get(dev, "wakeuphost", GPIOD_IN);
-> +	tp->wakeuphost = devm_gpiod_get(dev, "wakeuphostint", GPIOD_IN);
->  	if (IS_ERR(tp->wakeuphost))
->  		return PTR_ERR(tp->wakeuphost);
->  
-> -- 
-> 2.48.1
-> 
+Patch #1 Supported co-existance of bit encoding PFs and VFs in 16-bit
+         hardware pcifunc format between CN20K silicon and older octeon
+         series. Also exported PF,VF masks and shifts present in mailbox
+         module to all other modules.
+
+Patch #2 Added basic mbox operation APIs and structures to support both
+         CN20K and previous version of silicons.
+
+Patch #3 This patch adds support for basic mbox infrastructure
+         implementation for CN20K silicon in AF perspective. There are
+         few updates w.r.t MBOX ACK interrupt and offsets in CN20k.
+         
+Patch #4 Added mbox implementation between NIC PF and AF for CN20K.
+
+Patch #5 Added mbox communication support between AF and AF's VFs.
+
+Patch #6 This patch adds support for MBOX communication between NIC PF and
+         its VFs.
+
+
+Sai Krishna (5):
+  octeontx2-af: CN20k basic mbox operations and structures
+  octeontx2-af: CN20k mbox to support AF REQ/ACK functionality
+  octeontx2-pf: CN20K mbox REQ/ACK implementation for NIC PF
+  octeontx2-af: CN20K mbox implementation for AF's VF
+  octeontx2-pf: CN20K mbox implementation between PF-VF
+
+Subbaraya Sundeep (1):
+  octeontx2: Set appropriate PF, VF masks and shifts based on silicon
+
+---
+v10 changes:
+	Fixed compilation issue reported by kernel test robot.
+
+v9 changes:
+	Addressed review comments given by Jakub Kicinski
+	 1. Removed macro indirections and converted PF func mask, shift macros
+	 usage into helper APIs and used the same in different modules.
+
+v8 changes:
+	No changes, re-posting, as the previous patchset got deferred.
+
+v7 changes:
+	Addressed review comments given by Jakub Kicinski
+	1. Fixed few clang warnings of enum conversion related to the patchset.
+
+v6 changes:
+	Addressed review comments given by Jakub Kicinski
+	1. Fixed minor line alignment issue to fit in 80 char.
+	2. Jakub also suggested to convert macros from patch1 into helper APIs.
+	   Since this will result in lot of changes (at >100 places across
+	   multiple drivers), will submit that patch as a separate cleanup
+	   patch.
+
+v5 changes:
+	No changes, re-posting.
+
+v4 changes:
+	Addressed minor conflits suggested by Jakub Kicinski
+        1. This V4 version of patch set is just a rebase of V3 on top of
+	net-next to address some minor conflicts.
+
+v3 changes:
+	Addressed review comments given by Jakub Kicinski, Simon Horman
+        1. Fixed sparse errors, warnings.
+        2. Fixed a comment mistake, inline with kernel-doc format.
+        3. Removed un-necessary type casting to honor Networking code format.
+
+v2 changes:
+	Addressed review comments given by Kalesh Anakkur Purayil
+        1. Optimized code in parts of patches, removed redundant code
+        2. Fixed sparse warning
+        3. Removed debug log.
+
+ .../marvell/octeontx2/otx2_cpt_common.h       |   5 +-
+ .../marvell/octeontx2/otx2_cptpf_mbox.c       |  13 +-
+ .../marvell/octeontx2/otx2_cptpf_ucode.c      |   4 +-
+ .../marvell/octeontx2/otx2_cptvf_mbox.c       |   6 +-
+ .../ethernet/marvell/octeontx2/af/Makefile    |   2 +-
+ .../ethernet/marvell/octeontx2/af/cn20k/api.h |  34 ++
+ .../marvell/octeontx2/af/cn20k/mbox_init.c    | 421 ++++++++++++++++++
+ .../ethernet/marvell/octeontx2/af/cn20k/reg.h |  81 ++++
+ .../marvell/octeontx2/af/cn20k/struct.h       |  40 ++
+ .../ethernet/marvell/octeontx2/af/common.h    |   2 +-
+ .../net/ethernet/marvell/octeontx2/af/mbox.c  | 106 ++++-
+ .../net/ethernet/marvell/octeontx2/af/mbox.h  |   8 +
+ .../marvell/octeontx2/af/mcs_rvu_if.c         |   6 +-
+ .../net/ethernet/marvell/octeontx2/af/rvu.c   | 226 +++++++---
+ .../net/ethernet/marvell/octeontx2/af/rvu.h   |  81 +++-
+ .../ethernet/marvell/octeontx2/af/rvu_cgx.c   |  68 +--
+ .../ethernet/marvell/octeontx2/af/rvu_cn10k.c |   4 +-
+ .../ethernet/marvell/octeontx2/af/rvu_cpt.c   |   4 +-
+ .../marvell/octeontx2/af/rvu_debugfs.c        |  22 +-
+ .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  54 +--
+ .../ethernet/marvell/octeontx2/af/rvu_npc.c   |   8 +-
+ .../marvell/octeontx2/af/rvu_npc_hash.c       |  16 +-
+ .../marvell/octeontx2/af/rvu_npc_hash.h       |   4 +-
+ .../ethernet/marvell/octeontx2/af/rvu_rep.c   |  13 +-
+ .../ethernet/marvell/octeontx2/af/rvu_sdp.c   |  10 +-
+ .../marvell/octeontx2/af/rvu_struct.h         |   6 +-
+ .../marvell/octeontx2/af/rvu_switch.c         |   8 +-
+ .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +-
+ .../ethernet/marvell/octeontx2/nic/cn10k.c    |  18 +-
+ .../ethernet/marvell/octeontx2/nic/cn10k.h    |   1 +
+ .../marvell/octeontx2/nic/cn10k_ipsec.c       |   2 +-
+ .../marvell/octeontx2/nic/cn10k_ipsec.h       |   2 +-
+ .../ethernet/marvell/octeontx2/nic/cn20k.c    | 252 +++++++++++
+ .../ethernet/marvell/octeontx2/nic/cn20k.h    |  17 +
+ .../marvell/octeontx2/nic/otx2_common.c       |  10 +-
+ .../marvell/octeontx2/nic/otx2_common.h       |  35 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 173 +++++--
+ .../ethernet/marvell/octeontx2/nic/otx2_reg.h |  49 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_tc.c  |   3 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  44 +-
+ .../net/ethernet/marvell/octeontx2/nic/rep.c  |   7 +-
+ include/linux/soc/marvell/silicons.h          |  25 ++
+ 42 files changed, 1574 insertions(+), 318 deletions(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/api.h
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/mbox_init.c
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/reg.h
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/struct.h
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
+ create mode 100644 include/linux/soc/marvell/silicons.h
+
+-- 
+2.25.1
+
