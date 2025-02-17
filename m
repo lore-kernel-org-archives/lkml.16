@@ -1,140 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96313433A8
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 05:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAE9433A8;
+	Mon, 17 Feb 2025 05:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739771631; cv=none; b=Uzl063AuxCWwuwhe85vEi0oklFOIuftgP2f/BC7KpVFQYdzl8UEFutLCdR1Z7yiqQ6TieZ/E7z0zTjlKtrM3g02P8uAIyI9wYKoh/iM/rK8tFdS+knmzGgd44ZRKGa+mAw9wDXlIdbMm8Iby+K9Nu9yAJTcQMnTgUi5Tyqh/XyU=
+	t=1739771769; cv=none; b=F2Bkp8SfL11mq/lmkzwtW0T0TDlaadeeqacXhCtizuaBS1mGa53IVorV818miUn5lkBxKKKnwYM1GcKAQXwlWSqxhy8SwTON2jVsXqXzz3mGyAhMRAlfyfaAVqi2KTipUcWwn3126RdHBzg5V609o0og+ccLrFNirQOwvJyk+10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739771631; c=relaxed/simple;
-	bh=wZ+K4PWEj9jhYIVyuQBlA9/Si8EkTZ1I9vdP9JNp4As=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SxjXuqJkmDCcFrMg+7vWpI6oDjsTIut/WoIk9+DtBO2EvHhpgf2ejt8GTvv2MqLQPSsQpNuON12IKNeOTRGiycmiYpduVRwGzP8lM+pDP6MvkfwjcE8QG5QS2TUwJRHafHtt6Uei68/1qmxYQXhb5fN5/gGhFZMS7Lqd6XcMhns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dw51M1Jt; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739771769; c=relaxed/simple;
+	bh=b+8hriF469cfb+t94uCSbE5w+P/WRPLJmthYrEtAgr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gJZZozqS+kIWA0xYr/339G1Ug4PslyoH/8QI64mOIePDgGTPiOAUWHtGtrTwG5gAOHz4fEhQJDn1q7G2QRAcXIUuwkCOFhy0IcF8BhYiHmypsgbRf6rgK581E9GDOaCZ1Iq+Gnp9I6wna1hUdPde6TCjrDOW+LeFgEfW1+ZtBI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j6YEceJO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dw51M1Jt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739771630; x=1771307630;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wZ+K4PWEj9jhYIVyuQBlA9/Si8EkTZ1I9vdP9JNp4As=;
-  b=dw51M1JtkH/LtEO4pbY6D3ff42zp3WnF3p4puhuy/t95XL5tRWs8jl8R
-   FxE7AZzcATo0NYyD+hfD2QLmcR6Wayl18F83UqmQ1byBPcTmoIckwF0Wa
-   uyUoxpKI7gRFw93UE6QebMHOE3LzF1pxJVmb3LVwtuo/xfOpM4ARf/ZZp
-   /iHAl6ynZRc4y1lnplMFS4yVYCnVqm3dw6PxoS6bOc65LVOZjTgNJixTY
-   qq+gfG5DiYmNxiEhOTE3ivIpnZ8lps1WA0NbrRxCi1VxFIbreVN6jRgd6
-   BjL2iZYHstF4GE20jXgL1oHeUyo1T9iCeEkvwgdnXwN9ek1PuBoahuEiZ
-   g==;
-X-CSE-ConnectionGUID: wvTCb4iJQyqktZnpbTYuew==
-X-CSE-MsgGUID: VZJwToF+S5a0lAngBjrhLg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="62912661"
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="62912661"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 21:53:49 -0800
-X-CSE-ConnectionGUID: 1EWIo1gsSjuzmPCxmV+VWA==
-X-CSE-MsgGUID: 5+uQE1YtTZa+RQGYADmjIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="144941033"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 16 Feb 2025 21:53:47 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tju4f-001CeT-1i;
-	Mon, 17 Feb 2025 05:53:45 +0000
-Date: Mon, 17 Feb 2025 13:53:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Carlos Maiolino <cem@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Subject: fs/xfs/xfs_buf.c:1534 xfs_buf_submit_bio() warn: unsigned '_x' is
- never less than zero.
-Message-ID: <202502171326.j4Xd3I0j-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j6YEceJO"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H031RR018869;
+	Mon, 17 Feb 2025 05:55:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eHguWXkBimmyRN92Oh4qZPvucUjc1G+/2HYqq30agk0=; b=j6YEceJO0uy52dyl
+	7YvsPWT/lH4EWYRC5BKXLRWbkBzY+IZ/2I/cQbyjX2WhHmKCurvz/1MZCWeBrcoE
+	0lOXYA7TN2/HZsxvtPFawBVGDp9SZNXuEgYqB9/NMS/mloTlFpuRDN5qwadNYLaZ
+	YpItCCc5ReHO/c+FGXcTA77UXXLJdB5oV1gEFtYELkCSoRFN0NhvAPbkniOagtk3
+	nNyDGIqhGTk5ULK2MUZJM2/4EENxRvgTqeZvdFwDcyQzjBcFG4Uvip0GwOyFDNYu
+	PXlnigXU3JhZ4juw9kp4H7LA2OMYLUuNC3s/MLjDDGj3K/myBYaKL/MTqXEYXqWq
+	oefQig==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7srku3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 05:55:41 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51H5tf5M026998
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 05:55:41 GMT
+Received: from [10.151.36.43] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 16 Feb
+ 2025 21:55:36 -0800
+Message-ID: <80746729-2b32-9a13-93f5-8d5c222ce4d8@quicinc.com>
+Date: Mon, 17 Feb 2025 11:25:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [GIT PULL] mtd: topic branch for spi with Qcom changes
+To: Mark Brown <broonie@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <richard@nod.at>,
+        <vigneshr@ti.com>, <manivannan.sadhasivam@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        "Tudor
+ Ambarus" <Tudor.Ambarus@linaro.org>,
+        Frieder Schrempf
+	<frieder.schrempf@kontron.de>,
+        Michael Walle <michael@walle.cc>,
+        "Pratyush
+ Yadav" <pratyush@kernel.org>, <quic_srichara@quicinc.com>,
+        <quic_varada@quicinc.com>
+References: <87jzbp9hnt.fsf@bootlin.com> <87bjwkoxwh.fsf@bootlin.com>
+ <96bdefb1-4607-4a4a-8bed-b4d9b5971171@sirena.org.uk>
+Content-Language: en-US
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <96bdefb1-4607-4a4a-8bed-b4d9b5971171@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: jgdh1FUKxTE_jVPzebr2GOblQCrCd6wj
+X-Proofpoint-ORIG-GUID: jgdh1FUKxTE_jVPzebr2GOblQCrCd6wj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_03,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 spamscore=0 clxscore=1011
+ mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502170049
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0ad2507d5d93f39619fc42372c347d6006b64319
-commit: fac69ec8cd743f509129deb5feae9e3f9ebc2cc8 xfs: simplify buffer I/O submission
-date:   5 weeks ago
-config: riscv-randconfig-r073-20250213 (https://download.01.org/0day-ci/archive/20250217/202502171326.j4Xd3I0j-lkp@intel.com/config)
-compiler: riscv32-linux-gcc (GCC) 14.2.0
+Hi Mark,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502171326.j4Xd3I0j-lkp@intel.com/
+On 1/6/2025 9:06 PM, Mark Brown wrote:
+> On Mon, Jan 06, 2025 at 02:49:18PM +0100, Miquel Raynal wrote:
+>> On 24/12/2024 at 17:20:38 +01, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+>>> I'm merging the Qcom series, in case you need a topic branch to apply
+>>> the spi bits (binding and driver), here it is.
+> 
+>> There is a breakage on x86 with this series, I'm applying another patch
+>> from Md Sadre Alam on top, so I'd suggest to not merge this branch and
+>> wait for the next cycle to take the spi bits if you're happy with them.
+> 
+> Thanks for the heads up - I didn't pull it yet so as you suggest I can
+> just leave it and pick things up from mainline.
+The QPIC raw nand patches are available in the linux-next. could you 
+please pick the QPIC SPI NAND patches [1]
+[1] 
+https://lore.kernel.org/all/20241120091507.1404368-7-quic_mdalam@quicinc.com/
 
-New smatch warnings:
-fs/xfs/xfs_buf.c:1534 xfs_buf_submit_bio() warn: unsigned '_x' is never less than zero.
-
-Old smatch warnings:
-fs/xfs/xfs_linux.h:283 kmem_to_page() warn: unsigned '_x' is never less than zero.
-fs/xfs/xfs_buf.c:761 xfs_buf_get_map() error: we previously assumed 'bp' could be null (see line 743)
-arch/riscv/include/asm/atomic.h:218 arch_atomic_fetch_add_unless() warn: inconsistent indenting
-
-vim +/_x +1534 fs/xfs/xfs_buf.c
-
-  1518	
-  1519	static void
-  1520	xfs_buf_submit_bio(
-  1521		struct xfs_buf		*bp)
-  1522	{
-  1523		unsigned int		size = BBTOB(bp->b_length);
-  1524		unsigned int		map = 0, p;
-  1525		struct blk_plug		plug;
-  1526		struct bio		*bio;
-  1527	
-  1528		bio = bio_alloc(bp->b_target->bt_bdev, bp->b_page_count,
-  1529				xfs_buf_bio_op(bp), GFP_NOIO);
-  1530		bio->bi_private = bp;
-  1531		bio->bi_end_io = xfs_buf_bio_end_io;
-  1532	
-  1533		if (bp->b_flags & _XBF_KMEM) {
-> 1534			__bio_add_page(bio, virt_to_page(bp->b_addr), size,
-  1535					bp->b_offset);
-  1536		} else {
-  1537			for (p = 0; p < bp->b_page_count; p++)
-  1538				__bio_add_page(bio, bp->b_pages[p], PAGE_SIZE, 0);
-  1539			bio->bi_iter.bi_size = size; /* limit to the actual size used */
-  1540	
-  1541			if (xfs_buf_is_vmapped(bp))
-  1542				flush_kernel_vmap_range(bp->b_addr,
-  1543						xfs_buf_vmap_len(bp));
-  1544		}
-  1545	
-  1546		/*
-  1547		 * If there is more than one map segment, split out a new bio for each
-  1548		 * map except of the last one.  The last map is handled by the
-  1549		 * remainder of the original bio outside the loop.
-  1550		 */
-  1551		blk_start_plug(&plug);
-  1552		for (map = 0; map < bp->b_map_count - 1; map++) {
-  1553			struct bio	*split;
-  1554	
-  1555			split = bio_split(bio, bp->b_maps[map].bm_len, GFP_NOFS,
-  1556					&fs_bio_set);
-  1557			split->bi_iter.bi_sector = bp->b_maps[map].bm_bn;
-  1558			bio_chain(split, bio);
-  1559			submit_bio(split);
-  1560		}
-  1561		bio->bi_iter.bi_sector = bp->b_maps[map].bm_bn;
-  1562		submit_bio(bio);
-  1563		blk_finish_plug(&plug);
-  1564	}
-  1565	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Alam.
