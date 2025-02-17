@@ -1,335 +1,285 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03FD22083;
-	Mon, 17 Feb 2025 14:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EDD21CC5C;
+	Mon, 17 Feb 2025 14:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739800937; cv=none; b=LZ/Imtb5cDt1xDsGpvjPUJHs7hhcLSdbjvE/YNEOWXqelyVP8i3KAEyLR/XwfAlXM7Pbd4rJeuubmjca4UZeG1aZOPDedh5OGEC2ngRrkIAad+1LE6pBQU51/1RqS0hC0Wwvg9giB/bggqrUqwiksd+KHWRoXrXnuJeEqZLKmdw=
+	t=1739800973; cv=none; b=iPH2hGWdSm9rsI1D0RY1s22HEg49Tgy8QS8YAvmo6dzsfsLTn58YYLT+nYigd7tJGDtWj3Bp8hJfcX+TIRILxy+tx1QCchaqSYzIl8eunca16mrYPeezUbZeAps/Z87bd03/AxyhOggR/sxDjqrFphqLGbiGZHoglgxCGbcdcYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739800937; c=relaxed/simple;
-	bh=7ZOePsI7De/wftuySY2eADs4tnzDsDXtA3MspwmGjj4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E+Fo8wzcXyDKYD9UaUlQjsS21RRt6go8dYs/ddRut+DPs5Lajz4tORM67yIlcQE/CUtTNPgQ3F2h5t8K++7YkLhIYjzqxSxi3jDU/qVM893zxVfbvmWFKUF8/oOmw4mT5OdTiB7w3hBlWz3p+695dQgUhp1jjAwdEgap7qLyaak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=XvR7+GZ4; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1739800973; c=relaxed/simple;
+	bh=eEMWVYsOAYZ5uEDaJWBhOQ2RhdPc8B5M1UPQRCMnI2Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rQh40oZFV9kTKpi7SHcElVuOZ0Eu/AIvOklNteO0faPDsIRa8vdSnp8GJij2qHUXnu/Ws9rh9b5k0u3TIgUKuN0ZkGvkuPaJ+1ilY7vkGr5CQER6qFbeHy2aIr+96q61asf5tGePeDnN/RFH9lSWU2iYi9GtM6kVHoTfhhYgaMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSkZQWmm; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XvR7+GZ4"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H7w1b1014998;
-	Mon, 17 Feb 2025 08:02:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=keDMlI0CFLvxS0/n6pF3Tl+h1Y2iZaJHdl1G3lfgYes=; b=
-	XvR7+GZ4BI6J414NaMukqwRbRUWiQR1dDvfTrH5tpBB28g8CsLcgeXR6qmQN5zAq
-	wACRa469UyzmafVBcz1xq27JR4ZwDKXmqtvRckVJgLp24H+KjuoRWTm9u3InT7+A
-	6dJOHPC/z9DObiLBj+QtdZRsqnce5PC6xNv68dahncSkT8Eopwyc0qyFgp9/hoXP
-	UpF1ZvhjPnLDfSowH7RUrT7Ty4wcpf+iqZ8PHfT4bLVUyziu14JKvxkPlBiXEIKE
-	ceRbhYn3KE2Do/tdW/KugDBnrcyUxGx9mZXQnhaAKcCxV87Of2Hg4t2RdLZvbkJc
-	6oqTRsqU0+7WPdAJiZjqgg==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44uwg18x32-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 08:02:01 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 17 Feb
- 2025 14:01:59 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Mon, 17 Feb 2025 14:01:59 +0000
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id D09DA822566;
-	Mon, 17 Feb 2025 14:01:59 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <peter.ujfalusi@linux.intel.com>,
-        <yung-chuan.liao@linux.intel.com>, <pierre-louis.bossart@linux.dev>,
-        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>
-Subject: [PATCH 2/4] ASoC: SDCA: Add generic regmap SDCA helpers
-Date: Mon, 17 Feb 2025 14:01:57 +0000
-Message-ID: <20250217140159.2288784-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250217140159.2288784-1-ckeepax@opensource.cirrus.com>
-References: <20250217140159.2288784-1-ckeepax@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSkZQWmm"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30a2f240156so9564201fa.3;
+        Mon, 17 Feb 2025 06:02:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739800969; x=1740405769; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X1pq5eOfFzbGkYYPHO93ioyqJ39kYDVLWG64lfsmouk=;
+        b=WSkZQWmmALFTD/+/WFUzJkzAp4D2Opm3cGrNMqFmiLhu7QDt+jVjWV8nUnbCG26ggw
+         RHq1fXy6r801v/uq3YwarNE6iWwE46kDHaMydLjbQx8nuApfjgB76NwNnhLeGzWKjIHJ
+         vTSeEtgVrqEJcH4Dgh2mLEZd5yEH3oekBZb9K2wpc2WwjU4GSmXHMA293SKoY/pB67nO
+         BD8cJObIBBnCTm5Tt7a+XfY0HIYQKtvKP/r8cjL8sLpGP5tptnhavZtBfN+RcOfa+PT5
+         BNnwGHDcO1hBSvu+7aj531iMhtPhyX/tSLKuucekc2AWU4JXUjDy0oGzTsIHIEtVgahX
+         sMgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739800969; x=1740405769;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X1pq5eOfFzbGkYYPHO93ioyqJ39kYDVLWG64lfsmouk=;
+        b=AFlGa6nVOgFZ8NqQufIzo+GOdpF7UE13G8SSQ0mEDb4jfFPU0WqfALIumDY5+w86A5
+         YettGjmoHoEBiBR2KcI66NgekuO2pRhZAR/+DWiIVYNjnVrGtcL+51fvky3/T/VcKlKZ
+         77uWGVe1mbSFbPJM4Rj5+oRdEXB+c4PQSOVvPTmCXPqdq2oxkJ3sC/PaBliPIqazzW3B
+         9wt8B0jZNPZKegqaQRlKV5ZAybu9HGpkDwHpxfC7L8qrweDhRRuYQQX1Cq7W+nW03c3V
+         blmAj3idi8gf1E+52A03nlPv9UlKi0f+71e4cmyBG53MDmP0U52ATTVl3FT3OxjjjfZA
+         xP2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU5Ie/3x6UX0KfItv1hk9Eq+c+i+D/fftW+kR3E5KKBpDeEg4aQJ11m3idJjZyFTBoMGmTvzZWDhDz+I2zPGUo=@vger.kernel.org, AJvYcCUuAEGpaLzavwwjDEHt5hrvaUkIEe8GvxCOq1ScdJJwpnEHFNUUHs/keHdifYiKGJ4H/V+ud4PPt+i/LnCl@vger.kernel.org, AJvYcCW6LqsKUiFkahj23Tzbh/HT2/0WG+NvzmuhP8j5mVHONhkgfLDnIL5m/hKG34450+KIO4FMObInQviL@vger.kernel.org, AJvYcCXJMLuTIQPdTPzC8Mh92Ue8ohoRQOZ6uTINo4a2tDyVeW+bC1E1vdxs46xhFsHJVQOmK8YmOj/bAsISikxz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTE55VhPI3yKrl2OvFB/8BxqjKfjaDnXiF9lMMecgk8sanDpa4
+	gQS5Z8hSiJzQwcgZxcNiN3wLCRCaxj/NXZXll5/J2ZyIIfKrUXnra4K1ewAOw4Nw9o+OKcgSAy2
+	XFvHmM5OADO1OnBZaljMCFdv83E4=
+X-Gm-Gg: ASbGnctaGJWusOuxO4yBXSKVuhTKmlyzssMcKeaDN8r5uiZ4xRqLgRUHkO6ycfROAWQ
+	hsFdz+KJiPYUNyK9dF99GafuqHPaNy4dWUmLJ1I/cqHlDoxnkKgNZSxLGBfNK6CwWRrh3xQFpF9
+	vobB9+5Sn1CXN6na5qRmlusk+wAciiKYE=
+X-Google-Smtp-Source: AGHT+IEhkQ8vlPjxvWHqrNDBF9jeXmjjfygC4xb6m+LKgmu7d8IhleJvuR7WydA+Upe6fEKOlXBsUaJ15zQJv6ENE00=
+X-Received: by 2002:a2e:8890:0:b0:309:2000:4902 with SMTP id
+ 38308e7fff4ca-30927afe770mr23568901fa.36.1739800968510; Mon, 17 Feb 2025
+ 06:02:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 5nRYVmbENNeb9vbaPsqqBLYo6xAGe0yZ
-X-Proofpoint-ORIG-GUID: 5nRYVmbENNeb9vbaPsqqBLYo6xAGe0yZ
-X-Authority-Analysis: v=2.4 cv=CYzy5Krl c=1 sm=1 tr=0 ts=67b34159 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=KJT-RnjOAAAA:8 a=w1d2syhTAAAA:8 a=Jel_ZZRJdv7A84t5tSwA:9 a=HE_01F9_QflCRFonrIQr:22
- a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-Spam-Reason: safe
+References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
+ <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com> <Z7MnxKSSNY7IyExt@cassiopeiae>
+In-Reply-To: <Z7MnxKSSNY7IyExt@cassiopeiae>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 17 Feb 2025 09:02:12 -0500
+X-Gm-Features: AWEUYZlDYjYosA2ATuHScCNvNkvNJsoxbcnMNjsXryQL_RCrO2ZrK-WfuAXE8fI
+Message-ID: <CAJ-ks9=OG2zPPPPfZd5KhGKgNsv3Qm9iHr2eWXFeL7Zv16QVdw@mail.gmail.com>
+Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>, 
+	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add helper functions that SDCA drivers can use to calculate the
-properties of SDCA Controls (registers) specified through DisCo.
-Most of these are fairly obvious from the SDCA Access Modes.
+On Mon, Feb 17, 2025 at 7:13=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> On Fri, Feb 07, 2025 at 08:58:25AM -0500, Tamir Duberstein wrote:
+> > Allow implementors to specify the foreign pointer type; this exposes
+> > information about the pointed-to type such as its alignment.
+> >
+> > This requires the trait to be `unsafe` since it is now possible for
+> > implementors to break soundness by returning a misaligned pointer.
+> >
+> > Encoding the pointer type in the trait (and avoiding pointer casts)
+> > allows the compiler to check that implementors return the correct
+> > pointer type. This is preferable to directly encoding the alignment in
+> > the trait using a constant as the compiler would be unable to check it.
+> >
+> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> > Reviewed-by: Fiona Behrens <me@kloenk.dev>
+>
+> I know that Andreas also asked you to pick up the RBs from [1], but - wit=
+hout
+> speaking for any of the people above - given that you changed this commit=
+ after
+> you received all those RBs you should also consider dropping them. Especi=
+ally,
+> since you do not mention the changes you did for this commit in the versi=
+on
+> history.
+>
+> Just to be clear, often it is also fine to keep tags for minor changes, b=
+ut then
+> you should make people aware of them in the version history, such that th=
+ey get
+> the chance to double check.
 
-DisCo Constants, values which are specified in the ACPI rather than on
-the device, are handled as unreadable and unwritable registers. The
-intention is these will be populated in the register defaults table
-allowing drivers to read them normally. This means the drivers can be
-agnostic as to which values are DisCo Constants.
+I will drop their RBs.
 
-Finally, support for SDCA Dual Ranked Controls is currently limited
-here, at the moment the current value will be used directly. Writing
-the current value directly is valid as per the specification
-although the synchronicity of updates across multiple registers is
-lost. Support for this will probably need to be added later. But its a
-fairly hard problem and doesn't need to be solved immediately.
+> [1] https://lore.kernel.org/rust-for-linux/20250131-configfs-v1-1-8794761=
+1401c@kernel.org/
+>
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> >  rust/kernel/alloc/kbox.rs | 38 ++++++++++++++++++++------------------
+> >  rust/kernel/miscdevice.rs |  7 ++++++-
+> >  rust/kernel/pci.rs        |  2 ++
+> >  rust/kernel/platform.rs   |  2 ++
+> >  rust/kernel/sync/arc.rs   | 21 ++++++++++++---------
+> >  rust/kernel/types.rs      | 46 +++++++++++++++++++++++++++++++--------=
+-------
+> >  6 files changed, 73 insertions(+), 43 deletions(-)
+> >
+> > diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
+> > index e14433b2ab9d..f1a081dd64c7 100644
+> > --- a/rust/kernel/miscdevice.rs
+> > +++ b/rust/kernel/miscdevice.rs
+> > @@ -225,13 +225,15 @@ impl<T: MiscDevice> VtableHelper<T> {
+> >          Ok(ptr) =3D> ptr,
+> >          Err(err) =3D> return err.to_errno(),
+> >      };
+> > +    let ptr =3D ptr.into_foreign();
+> > +    let ptr =3D ptr.cast();
+>
+> I still think that it's unnecessary to factor this out, you can just do i=
+t
+> inline as you did in previous versions of this patch and as this code did
+> before.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- include/sound/sdca_regmap.h  |  21 ++++
- sound/soc/sdca/Makefile      |   2 +-
- sound/soc/sdca/sdca_regmap.c | 192 +++++++++++++++++++++++++++++++++++
- 3 files changed, 214 insertions(+), 1 deletion(-)
- create mode 100644 include/sound/sdca_regmap.h
- create mode 100644 sound/soc/sdca/sdca_regmap.c
+I will do as you ask here.
 
-diff --git a/include/sound/sdca_regmap.h b/include/sound/sdca_regmap.h
-new file mode 100644
-index 000000000000..11826f4f0726
---- /dev/null
-+++ b/include/sound/sdca_regmap.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * The MIPI SDCA specification is available for public downloads at
-+ * https://www.mipi.org/mipi-sdca-v1-0-download
-+ *
-+ * Copyright (C) 2025 Cirrus Logic, Inc. and
-+ *                    Cirrus Logic International Semiconductor Ltd.
-+ */
-+
-+#ifndef __SDCA_REGMAP_H__
-+#define __SDCA_REGMAP_H__
-+
-+struct sdca_function_data;
-+
-+bool sdca_regmap_readable(struct sdca_function_data *function, unsigned int reg);
-+bool sdca_regmap_writeable(struct sdca_function_data *function, unsigned int reg);
-+bool sdca_regmap_volatile(struct sdca_function_data *function, unsigned int reg);
-+bool sdca_regmap_deferrable(struct sdca_function_data *function, unsigned int reg);
-+int sdca_regmap_mbq_size(struct sdca_function_data *function, unsigned int reg);
-+
-+#endif // __SDCA_REGMAP_H__
-diff --git a/sound/soc/sdca/Makefile b/sound/soc/sdca/Makefile
-index 5d1ddbbfbf62..dddc3e694256 100644
---- a/sound/soc/sdca/Makefile
-+++ b/sound/soc/sdca/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--snd-soc-sdca-y	:= sdca_functions.o sdca_device.o
-+snd-soc-sdca-y	:= sdca_functions.o sdca_device.o sdca_regmap.o
- 
- obj-$(CONFIG_SND_SOC_SDCA)	+= snd-soc-sdca.o
-diff --git a/sound/soc/sdca/sdca_regmap.c b/sound/soc/sdca/sdca_regmap.c
-new file mode 100644
-index 000000000000..ae6358f0fc26
---- /dev/null
-+++ b/sound/soc/sdca/sdca_regmap.c
-@@ -0,0 +1,192 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2025 Cirrus Logic, Inc. and
-+//                    Cirrus Logic International Semiconductor Ltd.
-+
-+/*
-+ * The MIPI SDCA specification is available for public downloads at
-+ * https://www.mipi.org/mipi-sdca-v1-0-download
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
-+#include <linux/soundwire/sdw_registers.h>
-+#include <linux/types.h>
-+#include <sound/sdca_function.h>
-+#include <sound/sdca_regmap.h>
-+
-+static struct sdca_entity *
-+function_find_entity(struct sdca_function_data *function, unsigned int reg)
-+{
-+	int i;
-+
-+	for (i = 0; i < function->num_entities; i++)
-+		if (SDW_SDCA_CTL_ENT(reg) == function->entities[i].id)
-+			return &function->entities[i];
-+
-+	return NULL;
-+}
-+
-+static struct sdca_control *
-+entity_find_control(struct sdca_entity *entity, unsigned int reg)
-+{
-+	int i;
-+
-+	for (i = 0; i < entity->num_controls; i++) {
-+		if (SDW_SDCA_CTL_CSEL(reg) == entity->controls[i].sel)
-+			return &entity->controls[i];
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct sdca_control *
-+function_find_control(struct sdca_function_data *function, unsigned int reg)
-+{
-+	struct sdca_entity *entity;
-+
-+	entity = function_find_entity(function, reg);
-+	if (!entity)
-+		return NULL;
-+
-+	return entity_find_control(entity, reg);
-+}
-+
-+/**
-+ * sdca_regmap_readable - return if a given SDCA Control is readable
-+ * @function: Pointer to the Function information.
-+ * @reg: Register address/Control to be processed.
-+ *
-+ * Return: Returns true if the register is readable.
-+ */
-+bool sdca_regmap_readable(struct sdca_function_data *function, unsigned int reg)
-+{
-+	struct sdca_control *control;
-+
-+	if (!SDW_SDCA_VALID_CTL(reg))
-+		return false;
-+
-+	control = function_find_control(function, reg);
-+	if (!control)
-+		return false;
-+
-+	switch (control->mode) {
-+	case SDCA_ACCESS_MODE_RW:
-+	case SDCA_ACCESS_MODE_RO:
-+	case SDCA_ACCESS_MODE_DUAL:
-+	case SDCA_ACCESS_MODE_RW1S:
-+	case SDCA_ACCESS_MODE_RW1C:
-+		/* No access to registers marked solely for device use */
-+		return control->layers & ~SDCA_ACCESS_LAYER_DEVICE;
-+	default:
-+		return false;
-+	}
-+}
-+EXPORT_SYMBOL_NS(sdca_regmap_readable, "SND_SOC_SDCA");
-+
-+/**
-+ * sdca_regmap_writeable - return if a given SDCA Control is writeable
-+ * @function: Pointer to the Function information.
-+ * @reg: Register address/Control to be processed.
-+ *
-+ * Return: Returns true if the register is writeable.
-+ */
-+bool sdca_regmap_writeable(struct sdca_function_data *function, unsigned int reg)
-+{
-+	struct sdca_control *control;
-+
-+	if (!SDW_SDCA_VALID_CTL(reg))
-+		return false;
-+
-+	control = function_find_control(function, reg);
-+	if (!control)
-+		return false;
-+
-+	switch (control->mode) {
-+	case SDCA_ACCESS_MODE_RW:
-+	case SDCA_ACCESS_MODE_DUAL:
-+	case SDCA_ACCESS_MODE_RW1S:
-+	case SDCA_ACCESS_MODE_RW1C:
-+		/* No access to registers marked solely for device use */
-+		return control->layers & ~SDCA_ACCESS_LAYER_DEVICE;
-+	default:
-+		return false;
-+	}
-+}
-+EXPORT_SYMBOL_NS(sdca_regmap_writeable, "SND_SOC_SDCA");
-+
-+/**
-+ * sdca_regmap_volatile - return if a given SDCA Control is volatile
-+ * @function: Pointer to the Function information.
-+ * @reg: Register address/Control to be processed.
-+ *
-+ * Return: Returns true if the register is volatile.
-+ */
-+bool sdca_regmap_volatile(struct sdca_function_data *function, unsigned int reg)
-+{
-+	struct sdca_control *control;
-+
-+	if (!SDW_SDCA_VALID_CTL(reg))
-+		return false;
-+
-+	control = function_find_control(function, reg);
-+	if (!control)
-+		return false;
-+
-+	switch (control->mode) {
-+	case SDCA_ACCESS_MODE_RO:
-+	case SDCA_ACCESS_MODE_RW1S:
-+	case SDCA_ACCESS_MODE_RW1C:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+EXPORT_SYMBOL_NS(sdca_regmap_volatile, "SND_SOC_SDCA");
-+
-+/**
-+ * sdca_regmap_deferrable - return if a given SDCA Control is deferrable
-+ * @function: Pointer to the Function information.
-+ * @reg: Register address/Control to be processed.
-+ *
-+ * Return: Returns true if the register is deferrable.
-+ */
-+bool sdca_regmap_deferrable(struct sdca_function_data *function, unsigned int reg)
-+{
-+	struct sdca_control *control;
-+
-+	if (!SDW_SDCA_VALID_CTL(reg))
-+		return false;
-+
-+	control = function_find_control(function, reg);
-+	if (!control)
-+		return false;
-+
-+	return control->deferrable;
-+}
-+EXPORT_SYMBOL_NS(sdca_regmap_deferrable, "SND_SOC_SDCA");
-+
-+/**
-+ * sdca_regmap_mbq_size - return size in bytes of a given SDCA Control
-+ * @function: Pointer to the Function information.
-+ * @reg: Register address/Control to be processed.
-+ *
-+ * Return: Returns the size in bytes of the Control.
-+ */
-+int sdca_regmap_mbq_size(struct sdca_function_data *function, unsigned int reg)
-+{
-+	struct sdca_control *control;
-+
-+	if (!SDW_SDCA_VALID_CTL(reg))
-+		return -EINVAL;
-+
-+	control = function_find_control(function, reg);
-+	if (!control)
-+		return false;
-+
-+	return clamp_val(control->nbits / BITS_PER_BYTE, sizeof(u8), sizeof(u32));
-+}
-+EXPORT_SYMBOL_NS(sdca_regmap_mbq_size, "SND_SOC_SDCA");
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SDCA library");
--- 
-2.39.5
+>
+> >
+> >      // This overwrites the private data with the value specified by th=
+e user, changing the type of
+> >      // this file's private data. All future accesses to the private da=
+ta is performed by other
+> >      // fops_* methods in this file, which all correctly cast the priva=
+te data to the new type.
+> >      //
+> >      // SAFETY: The open call of a file can access the private data.
+> > -    unsafe { (*raw_file).private_data =3D ptr.into_foreign() };
+> > +    unsafe { (*raw_file).private_data =3D ptr };
+> >
+> >      0
+> >  }
+> > @@ -246,6 +248,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+> >  ) -> c_int {
+> >      // SAFETY: The release call of a file owns the private data.
+> >      let private =3D unsafe { (*file).private_data };
+> > +    let private =3D private.cast();
+> >      // SAFETY: The release call of a file owns the private data.
+> >      let ptr =3D unsafe { <T::Ptr as ForeignOwnable>::from_foreign(priv=
+ate) };
+> >
+> > @@ -267,6 +270,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+> >  ) -> c_long {
+> >      // SAFETY: The ioctl call of a file can access the private data.
+> >      let private =3D unsafe { (*file).private_data };
+> > +    let private =3D private.cast();
+> >      // SAFETY: Ioctl calls can borrow the private data of the file.
+> >      let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(private=
+) };
+> >
+> > @@ -316,6 +320,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+> >  ) {
+> >      // SAFETY: The release call of a file owns the private data.
+> >      let private =3D unsafe { (*file).private_data };
+> > +    let private =3D private.cast();
+> >      // SAFETY: Ioctl calls can borrow the private data of the file.
+> >      let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(private=
+) };
+> >      // SAFETY:
+> > diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> > index 6c3bc14b42ad..eb25fabbff9c 100644
+> > --- a/rust/kernel/pci.rs
+> > +++ b/rust/kernel/pci.rs
+> > @@ -73,6 +73,7 @@ extern "C" fn probe_callback(
+> >          match T::probe(&mut pdev, info) {
+> >              Ok(data) =3D> {
+> >                  let data =3D data.into_foreign();
+> > +                let data =3D data.cast();
+>
+> Same here and below, see also [2].
 
+You're the maintainer, so I'll do what you ask here as well. I did it
+this way because it avoids shadowing the git history with this change,
+which I thought was the dominant preference.
+
+> I understand you like this style and I'm not saying it's wrong or forbidd=
+en and
+> for code that you maintain such nits are entirely up to you as far as I'm
+> concerned.
+>
+> But I also don't think there is a necessity to convert things to your pre=
+ference
+> wherever you touch existing code.
+
+This isn't a conversion, it's a choice made specifically to avoid
+touching code that doesn't need to be touched (in this instance).
+
+> I already explicitly asked you not to do so in [3] and yet you did so whi=
+le
+> keeping my ACK. :(
+>
+> (Only saying the latter for reference, no need to send a new version of [=
+3],
+> otherwise I would have replied.)
+>
+> [2] https://lore.kernel.org/rust-for-linux/Z7MYNQgo28sr_4RS@cassiopeiae/
+> [3] https://lore.kernel.org/rust-for-linux/20250213-aligned-alloc-v7-1-d2=
+a2d0be164b@gmail.com/
+
+I will drop [2] and leave the `as _` casts in place to minimize
+controversy here.
+
+> >                  // Let the `struct pci_dev` own a reference of the dri=
+ver's private data.
+> >                  // SAFETY: By the type invariant `pdev.as_raw` returns=
+ a valid pointer to a
+> >                  // `struct pci_dev`.
+> > @@ -88,6 +89,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pc=
+i_dev) {
+> >          // SAFETY: The PCI bus only ever calls the remove callback wit=
+h a valid pointer to a
+> >          // `struct pci_dev`.
+> >          let ptr =3D unsafe { bindings::pci_get_drvdata(pdev) };
+> > +        let ptr =3D ptr.cast();
+> >
+> >          // SAFETY: `remove_callback` is only ever called after a succe=
+ssful call to
+> >          // `probe_callback`, hence it's guaranteed that `ptr` points t=
+o a valid and initialized
+> > diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+> > index dea104563fa9..53764cb7f804 100644
+> > --- a/rust/kernel/platform.rs
+> > +++ b/rust/kernel/platform.rs
+> > @@ -64,6 +64,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::pla=
+tform_device) -> kernel::ff
+> >          match T::probe(&mut pdev, info) {
+> >              Ok(data) =3D> {
+> >                  let data =3D data.into_foreign();
+> > +                let data =3D data.cast();
+> >                  // Let the `struct platform_device` own a reference of=
+ the driver's private data.
+> >                  // SAFETY: By the type invariant `pdev.as_raw` returns=
+ a valid pointer to a
+> >                  // `struct platform_device`.
+> > @@ -78,6 +79,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::pla=
+tform_device) -> kernel::ff
+> >      extern "C" fn remove_callback(pdev: *mut bindings::platform_device=
+) {
+> >          // SAFETY: `pdev` is a valid pointer to a `struct platform_dev=
+ice`.
+> >          let ptr =3D unsafe { bindings::platform_get_drvdata(pdev) };
+> > +        let ptr =3D ptr.cast();
+> >
+> >          // SAFETY: `remove_callback` is only ever called after a succe=
+ssful call to
+> >          // `probe_callback`, hence it's guaranteed that `ptr` points t=
+o a valid and initialized
+>
