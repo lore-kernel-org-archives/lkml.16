@@ -1,59 +1,73 @@
-Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317CF847B;
-	Mon, 17 Feb 2025 01:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8847B33DF
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 01:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739756088; cv=none; b=q+y/DGfZoLhcfJJZmbYte1fCSjAJpVoim83Eg7Fy7w8lD5WgCnFBXZiW6tlPlEZMETQoITfqTDf3oFhLur44FWgguFY8zB+ARVhgjZTYxM7KScUOxweszXTuxH4YgBdfb0bZN7L5tBYGnwHjHUoEobWBYaAmSvmu1H6PrbMWKVo=
+	t=1739756246; cv=none; b=TeV1YnJ09L7WgX/r5Fpc8RsPechnws/RZUVRYJCKrDZwyUd4Ky8O8xQ8JqpisBuAgxjFcyDiaD+qtEA+qzPuGbpniUz4qGB/zGrum6rlswIrbsbtWEAVQLKMgOvjRsYGchwBuN8UK+7e0jBOjiMfBn33Ijxdbx0WgaEVmb2DQN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739756088; c=relaxed/simple;
-	bh=e4/AAbisHJachlaK+66eVdcu+K5OGrjNBbTmBBovcOQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=pSWFIM/ILbnYaYXhNbGLUE9ONxhFvTI19QfshTUsroHa+ROIPKLbxgvw95+9ndMUGTEJlP1rKbf4O0G4pR3vIuMFV8YKG2O1nhciqCRePAC4ciePSAN0MgCucqaBQkzY9IbhAwb35ZN9Om73mkJYpgA28oz9+TWEHrMItGEAtyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Z7sUvIgT; arc=none smtp.client-ip=203.205.221.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1739756246; c=relaxed/simple;
+	bh=eLVSF+w4PvW+9xUeDykBSTZYRdr2YQtbOzBbRR4a2P4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=soP3SpO80/d5RNlkdgw1alp7aT7mKfITsnHeVidhACYws2sHiSwUq0o1LkoimMshwLdgxxqRVZr210Ofgi0oXY/cqTYmXCE6VS6YliidaG4fATftt9RWo6MMEVnFhDKT1wSAAlttgG6IYzJS6N52SwTARaHcUCAiPjfZX5G+tnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aX8+r1ll; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Z7sUvIgT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1739755773;
-	bh=pP07imU1yRZo5VJuVB+0B4Te8JSt7A3ydHeyAZRXe2k=;
-	h=From:To:Cc:Subject:Date;
-	b=Z7sUvIgT4e3HJIYcHrL6/0jBGEFDVgmv/+mHAeGKSyryBNUQ2jMh8AyPAxWV8NQaV
-	 S1iFe1z/2jJaTUg2zPg2hzFLwG9ruWCe6NE+0GMHeKSqJNWgxt9ZGUZc65RREljTDA
-	 WfdUrI2QYmoszWvnD8iuP+hoQHi99H9NWA+FIcO4=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 75F9AABE; Mon, 17 Feb 2025 09:29:31 +0800
-X-QQ-mid: xmsmtpt1739755771trd9me21x
-Message-ID: <tencent_30122FBA93E93911578208176E68AA00C807@qq.com>
-X-QQ-XMAILINFO: M0yQCYO1Pk4BQK9MwsPiXqLGdYYZSCLOPPfcpbnW81QswNSiwoPu1fQRPn7F4g
-	 Mydr584M1QsAx8p9vJW2dNlaGgSs9qjxzUQoqGMgEXOKNDptenroPhnIdT7wOUzWwiCRjhyfexyk
-	 TfYjGCNFByNDY6+DQ68CGxbWvmgRgPbVmxef1Yh3jlTSixjrFchIAGSh6SaHI14zkLLM3m5I+/Kh
-	 ZQbL6/7GqFUrphyQwokQVvJkqsh1oRCKJz6klboLy/nEMeQhd7Q4icPHtOy4bXoMvMHrq6pfGkWg
-	 ImYQA7TkTp+/IVwx8k7vJLN2yRL6HAj/DXjzr3oao5WcMkc12OFmm8OY4fIffYrNtNpl6Yg5WLzz
-	 yk6y0BkDvpFi7hN2FllxQ2WHuWFl1fi29fC2vi2XKycICaR17lRkskAhDBE3F9Mk0wglksHagyU6
-	 FB8NjSuJzycDlj2INNuygQBkdFTwRj9ApcHaLMyasP1Iqd0hGrKRd9OUTodpMSAlZkF1NBEXH1Nv
-	 ymbMLU2prsmupp2Rq3wqCkA9aupjiejnS7QaUy5VO0grngJJoZfWJyeSRJMC8WLVHE1vigZ91ez2
-	 GYHGccGvDCW5WpLW2fIPGSX+7Uoc4NMhNZqCUXfFbvAAgNmdsc3EuyphnzemUi6UrI7BDRxUSZ++
-	 lOPyhTidGDJ5IrDdHWly5ByE4VPXNT7coAzK9926lFvsy8MqYS0sRTdCaC4MyYUxzH7zmYDcf+99
-	 qMVY3fT7gcmgRUEqxaoKA0k/oGVrQwB1dessQJ4A34X93QMKQNxPZZxwyHNNtOG8GCxOD7kxnQAZ
-	 CxwEIzKlVS5C/c6TRERMAQ6SK1XRdzsEmR1Fgy8XwJ1vp9gFSZscNiZeUNHdDtVK30/1s14ouo4J
-	 p8EheVKqazUI0RO3xJHOSNook+sCdapEXcuTDEjTslQlXx1l866VpYw4r9KxpXXx9ty88vwRblqw
-	 S3aqY4Miq4Snich5DAvT97+HhukaXt526TtBBLBgJIAq9yfTIGlw==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: xiaopeitux@foxmail.com
-To: andrew+netdev@lunn.ch,
-	maxime.chevallier@bootlin.com,
-	netdev@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH V2] net: freescale: ucc_geth: make ugeth_mac_ops be static const
-Date: Mon, 17 Feb 2025 09:29:30 +0800
-X-OQ-MSGID: <05ccd0ec9dda47a7bb26b78ef41fea2f2ce675c8.1739755552.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aX8+r1ll"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220c665ef4cso56424935ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 17:37:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739756245; x=1740361045; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uV4L5jUISNpRr6ROGYxEb4g1bNSE7HH22+hTjn/R0r8=;
+        b=aX8+r1llAGLtLVC6md78y1DqwLWgQz1H06ef3d7ykcDVgCfHUFWe5NzQ5soclgYkHn
+         qY57ehvvbQLBWxHPCdUQMVICr5Kvqz+k27og0hEVntCDXbKjGC7Xg076ZfADzYfk4grd
+         7Qb/4154Ag+NRMqsiAiOoAt5+5jERybSEzX0tT9WiLJSqZYO5TxRqnb+hgiQah2yrUrN
+         9RW/qB7a/ZxY0490nNO/KmGkwtJn6vPgMLn66vzmzYDpJWwzSCuiGrlhtC0rknIxxRws
+         LnPl/f784QzyZJP69NQbHdk2/VPz5Xacb/I70/nexgJwt/DnhvzcKOktVYDP0RjiTFZi
+         6I0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739756245; x=1740361045;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uV4L5jUISNpRr6ROGYxEb4g1bNSE7HH22+hTjn/R0r8=;
+        b=N+F3pukPvasdqsL8c95sx+gCr4vrPh1y31BX+pW8VwHwZ3UKRSxpB+s3vM2aHcY7kz
+         tawB6hyAuJM2NnNgC3YMmQH6PPv1EmSUrgQoAOQPeXjUqBfGYaE/wASTMl0Jw3dpKqkC
+         BE68/HEdJMSKK/ly8RTZ4rKQS+l9Se65hf82is/dwi2qcZjK6X0FNpQxLGu1dUZmCx9b
+         PvTGwSAdxl98u8MNOpu7GSElO2J0Q5hdiSe9CJhEd7b2/jR1N2vwXYeq+ZGMuVSb04dr
+         JyySbTLeXogkE8KKDhGoKI7/Cy/3Ag5g6WKoCQnlvd2LFrUMvfGQ3QawAH4e+LCPLIjD
+         H6ew==
+X-Forwarded-Encrypted: i=1; AJvYcCU0lNdfQLpqPs2bg0qXKJygiD4JyEMaAQiCYq4fug3J6DFDdTqC7pKxn+7ylt0h/D8nNbJLvcwXjrOyoew=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm7Q0JOB+TmtI34laEt7gLAFQbEk2olzEykf2PlHn97G+Eb8hu
+	zlgl35/BkRvhXE41fwv/2GsKdrRW/17t0+mv0hxxrWUub2K2ucw/
+X-Gm-Gg: ASbGnct3hwzw0YaaBs1IKDLcKgIkBkpcSXdtKTWD+WVfnY7nB1umI0cp2beOFqeb0ab
+	wB2MzrAfszKUDn4rwxZkw42y42qlwtscfve7CyzkaqiCqqgNBven2rCOdKfBySxeaQocX2GOouj
+	L5DXxQoRRbSPYE5cSSB4PTWAARvFuT0pAvn3VxWCDDVTYyKFK0caus8UxqE2qms37aTWKLkLJ9g
+	ONKGFaG/QiVm6uqsKogaEG+qAz7YLvWDeIONlqRabN/necKJITh4Jk81DGW8qvRFDF5+h3hxBC5
+	s6qKhlQsM0nVmkvtUQS46cs8YYVDHxYGBFflisDDVcMdsQ==
+X-Google-Smtp-Source: AGHT+IEc3R7zwoSDQnuMy8iXmbawDrNUKkHjCWCg51IKpm6c13c/5MWkj3/6lYaWg28BLnY8gooisQ==
+X-Received: by 2002:a17:903:2286:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-2211c551bdcmr71159795ad.23.1739756244671;
+        Sun, 16 Feb 2025 17:37:24 -0800 (PST)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220f8682181sm38167335ad.209.2025.02.16.17.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2025 17:37:24 -0800 (PST)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: jserv@ccns.ncku.edu.tw,
+	eleanor15x@gmail.com,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [RFC PATCH] riscv: Optimize gcd() performance by selecting CPU_NO_EFFICIENT_FFS
+Date: Mon, 17 Feb 2025 09:37:08 +0800
+Message-Id: <20250217013708.1932496-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,39 +76,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Pei Xiao <xiaopei01@kylinos.cn>
+When the Zbb extension is not supported, ffs() falls back to a software
+implementation instead of leveraging the hardware ctz instruction for
+fast computation. In such cases, selecting CPU_NO_EFFICIENT_FFS
+optimizes the efficiency of gcd().
 
-sparse warning:
-    sparse: symbol 'ugeth_mac_ops' was not declared. Should it be
-static.
+The implementation of gcd() depends on the CPU_NO_EFFICIENT_FFS option.
+With hardware support for ffs, the binary GCD algorithm is used.
+Without it, the odd-even GCD algorithm is employed for better
+performance.
 
-Add static to fix sparse warnings and add const. phylink_create() will
-accept a const struct.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202502141128.9HfxcdIE-lkp@intel.com/
-Fixes: 53036aa8d031 ("net: freescale: ucc_geth: phylink conversion")
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
-
-changlog:
-V2:change to add 'const' suggestion from Andrew Lunn's review.
+Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 ---
- drivers/net/ethernet/freescale/ucc_geth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Although selecting NO_EFFICIENT_FFS seems reasonable without ctz
+instructions, this patch hasn't been tested on real hardware. We'd
+greatly appreciate it if someone could help test and provide
+performance numbers!
 
-diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
-index f47f8177a93b..ed4f57701485 100644
---- a/drivers/net/ethernet/freescale/ucc_geth.c
-+++ b/drivers/net/ethernet/freescale/ucc_geth.c
-@@ -3408,7 +3408,7 @@ static int ucc_geth_parse_clock(struct device_node *np, const char *which,
- 	return 0;
- }
- 
--struct phylink_mac_ops ugeth_mac_ops = {
-+static const struct phylink_mac_ops ugeth_mac_ops = {
- 	.mac_link_up = ugeth_mac_link_up,
- 	.mac_link_down = ugeth_mac_link_down,
- 	.mac_config = ugeth_mac_config,
+ arch/riscv/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 7612c52e9b1e..2dd3699ad09b 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -91,6 +91,7 @@ config RISCV
+ 	select CLINT_TIMER if RISCV_M_MODE
+ 	select CLONE_BACKWARDS
+ 	select COMMON_CLK
++	select CPU_NO_EFFICIENT_FFS if !RISCV_ISA_ZBB
+ 	select CPU_PM if CPU_IDLE || HIBERNATION || SUSPEND
+ 	select EDAC_SUPPORT
+ 	select FRAME_POINTER if PERF_EVENTS || (FUNCTION_TRACER && !DYNAMIC_FTRACE)
 -- 
-2.25.1
+2.34.1
 
