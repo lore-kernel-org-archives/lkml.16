@@ -1,153 +1,103 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F2E148FE6;
-	Mon, 17 Feb 2025 15:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739806712; cv=pass; b=UPZ8NecVXybQZTHgzosbm9KHofHynEjnXrJbw9ektbc285/yvk4gPLwU/HYhZRyJORvCA+q63BTBj6htCdVl1vIa+V1P7s2f26lyeGCyPw7dDH8r7m0ugGz5epN4Oj6ziPq0/RCxNSmW4DxAQl4phDljezISeYmlQJXt3m4Hy+0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739806712; c=relaxed/simple;
-	bh=FxP2NJGW8IKb8On5/Rt5ho1+D6LTtLfpxLtWMQyluac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rZetrQpjegsLrB2RMCRsBODXx5MVoe1oFn2Mni6DZ0NaPjaqMUNvN1RIJOJ78x5kw2id6BbJaPvFA3B+ty20AxAfcMMpcsPotj9HfHKIvSMmOQSEb/c1JgPw4KXAEcEXJc40pbhfZPZw7QVP3ytXT6uHPsFP3QM8N66W5Mifi0U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=fSWAuBxn; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="fSWAuBxn"
-ARC-Seal: i=1; a=rsa-sha256; t=1739806625; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=U5dOO/B20cbaS6mc5vlDkgll/xMS9rbnN1ODcBfyAvrw1Jb4sFsNwAVheem87ob3aTly3IH7xB/BnCY/LbZWN1jFXWoWtzjyNRb+O1PU90w9PNqlSg03Yuiuk34pFU7E3HMzlV19xXYGlrXfktVWHucO2IWKe1j5AUQ9VFUZUUM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739806625; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oyaLc7ouQgrclKFXXRsc/O0tx1PN1BYemSd7LjEmjmk=; 
-	b=BJMfU8wLusVoJqMqSRaUpUvR/ystx6kc+bLiEevs/AbYOlsSC3eLR0MqhOSrHEOXkYOD5Z6LCkyjLj4QfOX5toVP0hdgp1aSXjYfGIeO6/EVL2Wx7t/JNjLl+YsRdDOrn/OP/GKVRVdt4T95Ci7d8Q9/Ru2V3V6AAQRIHELE9Ok=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739806625;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=oyaLc7ouQgrclKFXXRsc/O0tx1PN1BYemSd7LjEmjmk=;
-	b=fSWAuBxnkdi+Ek3h2Bvc2L9HvjKgG/Fbhdhh6BuZPGOu8zmTyeddLjYZ8LOnyMyz
-	ucTtiWmgVm7WLZtPzahICPHDgxqF8yM7q8oN2GY5sw/dkAOd+VTEcA1ltN5au38ECDw
-	Cr1Fn+UAYYn+tmIYUpi6WN4EEcDsdmFs17bH8cwk=
-Received: by mx.zohomail.com with SMTPS id 1739806622732599.8439504742172;
-	Mon, 17 Feb 2025 07:37:02 -0800 (PST)
-Message-ID: <3d4b1c45-cc00-4714-8582-0848e38c2ec4@collabora.com>
-Date: Mon, 17 Feb 2025 18:36:56 +0300
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88D56224AF9
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 15:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739806772; cv=none; b=CWLwLtkRTQxlK7emljgsSY97Z/DZ72wrwloiPM5akrVZ7pJ+JI9r8n6WPCdkq3OxLlwtVUudxjPwSKpEJcV9mHvo1ao6ydzL1L5hvBa1T7y6ZGR+8K/qo2hr2CWWwJ2lQI2KyAAYIk24qqtp+KrwXywlSPnTJWwM7b7A4Yu+XDA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739806772; c=relaxed/simple;
+	bh=tJtJ+iZ/RH0kV6E8FVz8GWyFPWw0X5nxEmvPF+pyVpA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To; b=MT+R/HZQioBFcz8btsoIsBM4GnAxnhd4/MGP1xy9ZZ/TsMN0Lq825GXprVALmnsCr02QZg1lez2GE3lnJRyFg++ZCnH143XlU4nCjTS9P6kPoFvY227zg4MYqtLkRfjeJlxS2mLjiyQ4mQ4MeNPjvEBERW7xohuuRXLoPwG7Cfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A3EC1692;
+	Mon, 17 Feb 2025 07:39:49 -0800 (PST)
+Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25D243F6A8;
+	Mon, 17 Feb 2025 07:39:29 -0800 (PST)
+From: Sudeep Holla <sudeep.holla@arm.com>
+Date: Mon, 17 Feb 2025 15:38:42 +0000
+Subject: [PATCH v3 01/19] firmware: arm_ffa: Replace SCMI by FF-A in the
+ macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/6] media: platform: synopsys: Add support for HDMI
- input driver
-To: Hans Verkuil <hverkuil@xs4all.nl>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>
-References: <20250215210417.60074-1-dmitry.osipenko@collabora.com>
- <20250215210417.60074-5-dmitry.osipenko@collabora.com>
- <110db742-25a0-4f0c-9620-1af8885d6e1c@xs4all.nl>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <110db742-25a0-4f0c-9620-1af8885d6e1c@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Message-Id: <20250217-ffa_updates-v3-1-bd1d9de615e7@arm.com>
+References: <20250217-ffa_updates-v3-0-bd1d9de615e7@arm.com>
+In-Reply-To: <20250217-ffa_updates-v3-0-bd1d9de615e7@arm.com>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1599; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=tJtJ+iZ/RH0kV6E8FVz8GWyFPWw0X5nxEmvPF+pyVpA=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBns1gtXHWnKMr9WB5CJdIm1VEcTqqQjHoG8va+Y
+ X+57qiPKpOJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ7NYLQAKCRAAQbq8MX7i
+ mC22EACTJ1oYJdI/jH3Mk8BIbelop4SG8s08yql/bZfcv1x+PDI8uqU+FBC/c//aJVpOaNmDPXf
+ BKFVqR3r5o9svjC82IAsKRD6ZW4JjGrUsn6QGJxHKS4eW+LGaNEduPnr+mb8GHT1YzDju2ZLDDh
+ 97OQ/j4mVz5CVJdtlmcgAXHjVY/W15F2iE/PkRfVgVlsVeLdKuNGH5TSIyLZGSempxZvHHukxIT
+ fPSopQAPDGFWZchtSzzA4TW50gevDU46kEYa54iqa2uVw2H+ne9qvXuXzesc+ddUGLFfqeF6oCD
+ pjPw8F544ZDRfw3zMiqprjyD+bIE4WWpOfpu/iUJZ+rUMkUiMJdCYZbed6QMswj9r5iNTL2pCcO
+ /t0jRtiUWkGaAjONSI2j2KJDWaFuqNNTkBXCnkniam5UQe85P9xfVPMHlbSMQo9pCl8/igVHNS9
+ 23sfDJt0Qjw79Cdw6Rgzqu1Ps5KyO9o++c5QlvrYrUz7+jGim5GuLX5LtduNWUtAG4Dc3wzruFE
+ qFhD9LokcPbKVyMTErbDonSV07AwRli6OFuAvYhMoZ/bkgpSN8onj2HbjGWJTrDk+D7fXcBgraY
+ RLACo93enHMMfIutecbjQ8q7c5jIGTeZGlDtGAGqY/K90z3qI6yt1OA6DXlYOc4b94ASxJ4u8bR
+ OB0SxNn84EAe9BQ==
+X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
+ fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-On 2/17/25 11:31, Hans Verkuil wrote:
-> On 15/02/2025 22:04, Dmitry Osipenko wrote:
->> From: Shreeya Patel <shreeya.patel@collabora.com>
->>
->> Add initial support for the Synopsys DesignWare HDMI RX
->> Controller Driver used by Rockchip RK3588. The driver
->> supports:
->>  - HDMI 1.4b and 2.0 modes (HDMI 4k@60Hz)
->>  - RGB888, YUV422, YUV444 and YCC420 pixel formats
->>  - CEC
->>  - EDID configuration
->>
->> The hardware also has Audio and HDCP capabilities, but these are
->> not yet supported by the driver.
->>
->> Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
->> Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
->> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
->> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->> ---
->>  drivers/media/platform/Kconfig                |    1 +
->>  drivers/media/platform/Makefile               |    1 +
->>  drivers/media/platform/synopsys/Kconfig       |    3 +
->>  drivers/media/platform/synopsys/Makefile      |    2 +
->>  .../media/platform/synopsys/hdmirx/Kconfig    |   27 +
->>  .../media/platform/synopsys/hdmirx/Makefile   |    4 +
->>  .../platform/synopsys/hdmirx/snps_hdmirx.c    | 2715 +++++++++++++++++
->>  .../platform/synopsys/hdmirx/snps_hdmirx.h    |  394 +++
->>  .../synopsys/hdmirx/snps_hdmirx_cec.c         |  284 ++
->>  .../synopsys/hdmirx/snps_hdmirx_cec.h         |   44 +
->>  10 files changed, 3475 insertions(+)
->>  create mode 100644 drivers/media/platform/synopsys/Kconfig
->>  create mode 100644 drivers/media/platform/synopsys/Makefile
->>  create mode 100644 drivers/media/platform/synopsys/hdmirx/Kconfig
->>  create mode 100644 drivers/media/platform/synopsys/hdmirx/Makefile
->>  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
->>  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
->>  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx_cec.c
->>  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx_cec.h
->>
-> 
-> <snip>
-> 
->> +static ssize_t
->> +hdmirx_debugfs_if_read(u32 type, void *priv, struct file *filp,
->> +		       char __user *ubuf, size_t count, loff_t *ppos)
->> +{
->> +	struct snps_hdmirx_dev *hdmirx_dev = priv;
->> +	u8 aviif[3 + 7 * 4];
->> +	int len;
->> +
->> +	if (type != V4L2_DEBUGFS_IF_AVI)
->> +		return 0;
->> +
->> +	hdmirx_read_avi_infoframe(hdmirx_dev, aviif);
->> +
->> +	len = simple_read_from_buffer(ubuf, count, ppos,
->> +				      aviif, ARRAY_SIZE(aviif));
->> +
->> +	return len < 0 ? 0 : len;
->> +}
-> 
-> Have you tested this with 'edid-decode -c -I /path/to/avi'? Also test that it is
-> empty if there is no AVI InfoFrame (e.g. when there is no incoming video). I don't see
-> a test for that in the code.
-> 
-> I also see no sanity check regarding the length of the InfoFrame, it just outputs
-> the full array, meaning you get padding as well since the AVI InfoFrame is smaller
-> than ARRAY_SIZE(aviif). In fact, edid-decode will fail about that if the -c option
-> is used.
-> 
-> See tc358743_debugfs_if_read of how this is typically handled.
+Commit 22779149e93d ("firmware: arm_ffa: Emit modalias for FF-A devices")
+added modalias for FF-A devices. However the macro added used SCMI
+incorrectly. Replace the reference to SCMI by FF-A and update the macro.
+(i.e. s/SCMI/FFA/)
 
-I've tested with 'edid-decode -I /path/to/avi', including the empty AVI
-InfoFrame. But without the '-c option'. I'd expect that debugfs should
-provide a full-sized raw InfoFrame data, rather than a parsed version.
-The parsed data isn't much useful for debugging purposes, IMO. I
-intentionally removed the size check that tc358743_debugfs_if_read does
-because it appeared wrong to me. Will re-check with '-c option', thanks!
+No functional change.
+
+Tested-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/firmware/arm_ffa/bus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/firmware/arm_ffa/bus.c b/drivers/firmware/arm_ffa/bus.c
+index dfda5ffc14db7208e8b622cdd648194c9cb1ef34..52b1f09209a0e51e321cd23a69aa7e4c4daa8dd1 100644
+--- a/drivers/firmware/arm_ffa/bus.c
++++ b/drivers/firmware/arm_ffa/bus.c
+@@ -15,7 +15,7 @@
+ 
+ #include "common.h"
+ 
+-#define SCMI_UEVENT_MODALIAS_FMT	"arm_ffa:%04x:%pUb"
++#define FFA_UEVENT_MODALIAS_FMT	"arm_ffa:%04x:%pUb"
+ 
+ static DEFINE_IDA(ffa_bus_id);
+ 
+@@ -68,7 +68,7 @@ static int ffa_device_uevent(const struct device *dev, struct kobj_uevent_env *e
+ {
+ 	const struct ffa_device *ffa_dev = to_ffa_dev(dev);
+ 
+-	return add_uevent_var(env, "MODALIAS=" SCMI_UEVENT_MODALIAS_FMT,
++	return add_uevent_var(env, "MODALIAS=" FFA_UEVENT_MODALIAS_FMT,
+ 			      ffa_dev->vm_id, &ffa_dev->uuid);
+ }
+ 
+@@ -77,7 +77,7 @@ static ssize_t modalias_show(struct device *dev,
+ {
+ 	struct ffa_device *ffa_dev = to_ffa_dev(dev);
+ 
+-	return sysfs_emit(buf, SCMI_UEVENT_MODALIAS_FMT, ffa_dev->vm_id,
++	return sysfs_emit(buf, FFA_UEVENT_MODALIAS_FMT, ffa_dev->vm_id,
+ 			  &ffa_dev->uuid);
+ }
+ static DEVICE_ATTR_RO(modalias);
 
 -- 
-Best regards,
-Dmitry
+2.34.1
+
