@@ -1,161 +1,95 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703212163B5;
-	Mon, 17 Feb 2025 09:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739786039; cv=fail; b=cjIbumK7TBH4PXJCo6k1nonzGFT6M3kcOBvSDcl22tjXV+0lAh84mpHCJTzEf8StJXQi5Lzg15+TggM060OVifeUNRfYL+CCA00ly+vIttSpy/7xri2U2dbfsa1eLjEcQCoyr7/Zbr4uA37bv7WFFqD2Hzyr+BkFhLQe8vwBrJc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739786039; c=relaxed/simple;
-	bh=YcTAihBIjQ6JnXB2nvgiBZnEc63u7hwfSzLJHeElnkw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=orgAbwtyGvGzc9auSp7Uy6HImMhdVdgqMyd4HVxi0bmPByGZRW6LtTBFf4N+zKsTQ90tQeiSEqa3MgonKM/depifQatqhRYLnNlq/3mMgm1oClpXc+zLjR/Q8hzB6uzSmYMVbGfdVK1ROdqO74JZuV5GNq6kzQ5pFZ9zPvRA7IE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=z6cLmWKV; arc=fail smtp.client-ip=40.107.93.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6549212B3A;
+	Mon, 17 Feb 2025 09:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739786136; cv=none; b=n9ansA518ThKcgYvj6uoII1S+GcvrOrat6YYlQomLXZ3xBXoriCGhKHoC7IERSuZwpxtO7O8tIWcaIOG5p/1qcd0oG8Kh5Y3FU8mHqGjsOhPCr0rjVCIRMYiGL37oxFQLPN0Hdd9wfYRTgXtSFA1BG7BCrg6g4exeQNVG+zTbK4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739786136; c=relaxed/simple;
+	bh=tpn46eI2tbdNHKTRTV+W9UMHPv4VKyZwIxuF36MkbTY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCP2xUcuZXGw0zMSzLaqZWgftdbY8EKga5Z9wpAasvEH8TNLelpmjKT5jDAorS4RrOfqSrPzSkLrbKxk8llhOfVOoMd/9fDH67BykNFSPGdPSN9vop8Mwozmyd418A7ABG4nll/loCxwcUMgGRGr7ambVO7ads034Zuzxh5XMbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=fccD9gij; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="z6cLmWKV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Brq2t8O0WMLJ+QR/rECDEAMH59X9zvB2cHELPtoepGgKgjLxbUFuNf7/PWtCgQpTTfOaWmx7kTz+c0b0S8HtPhWfDIRgrqlIdE93AZz2vdNDzjv21JmNL8Ad8emiRZsxKA6RTcFSjZ38uIci7I0YlBc1voLnKWjjwwa+FQJjDl7vVe012FjPgiYlaT0vJz+6F3nBcFvjM+5D0mdd32QT8N13vssnXs8y73CFKOzCb1fI47VroYk8+u9WC5RW9PEQEpsbLDjZXI4uiBWlUJ8Isn6SFqhXjG4S7af+cSY+lWFfTmFEkwjteq7w0rSxA4FXGozjm+L+IGnv0YHUXPnp9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0YxsblgvyhPceRn9CV3F5txUITBVLC+2fUBTAYKfjRI=;
- b=AHWawrIZyV4nCXYamqSb6ngPqPk0GQLLnok0Ao2MFBIHSwGKXqBf18YfrvRO7WFiq32SzKoO1+bxfM/IbrbUfHhyaobObGQtg8Tk9rI6bA30B/2nDbWNVJpHDK6fe0abAkZukUTmkK3xK/586zUG5zKEJATKOikdxNccdHQtmtI3T6RtdzPG+ZpEVQH1QK9lSzQcsOoXqLVyWVU422mZdhHH66Q2hYVjsGz+URl6itUtGUdJZW7n8AN0tOYjqA3EndddmuSjnSDIpBGMgPViQFrsfRdOjwkjTPqPszCB0HGe6NDpXLtCeR2B8Ds7Tzw7LgmDFbwE66v/Voyh8ClQzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0YxsblgvyhPceRn9CV3F5txUITBVLC+2fUBTAYKfjRI=;
- b=z6cLmWKVtZnxAHNNB7cqCK3l9lJRlu4sEPcx+jsxjQhfI1dVWFac3EOv0iH4zx2yYcV5KGX5G7jVvuO31f11FYyNNzINLx99iMNNvaB+RiGsgnM7L7D51TZFvgKAim1gzn9CRrCM32wCJ+ZmoLqLzC4E/xDBTkUEXjoOibCndj0=
-Received: from PH0PR07CA0082.namprd07.prod.outlook.com (2603:10b6:510:f::27)
- by SJ2PR12MB9243.namprd12.prod.outlook.com (2603:10b6:a03:578::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
- 2025 09:53:52 +0000
-Received: from CY4PEPF0000EDD1.namprd03.prod.outlook.com
- (2603:10b6:510:f:cafe::65) by PH0PR07CA0082.outlook.office365.com
- (2603:10b6:510:f::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.17 via Frontend Transport; Mon,
- 17 Feb 2025 09:53:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD1.mail.protection.outlook.com (10.167.241.197) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Mon, 17 Feb 2025 09:53:51 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Feb
- 2025 03:53:51 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Feb
- 2025 03:53:49 -0600
-Received: from xhdshubhraj40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 17 Feb 2025 03:53:47 -0600
-From: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Michal Simek <michal.simek@amd.com>, <linux-pm@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <git@amd.com>, Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-Subject: [PATCH] dt-bindings: power: reset: xilinx: Make "interrupts" property optional
-Date: Mon, 17 Feb 2025 15:22:26 +0530
-Message-ID: <20250217095226.12606-1-shubhrajyoti.datta@amd.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="fccD9gij"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H7w1P0014998;
+	Mon, 17 Feb 2025 03:55:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=aQZC45YarKjbG9j7IH
+	XW7Lik11BDu7BTcIDKLkWl8xo=; b=fccD9gij8k0kcf6X7bFaxsWA6YnkyoOWJs
+	64vtOydWn4lyYi0+KSB9/QqFRjFQ6o937A5TtyaxyB58ZZ+0S77alT4wuDqzAkFl
+	rcz0LHQhdPrW+VzSOJ+k/451OdTzZpz5mVeDDHAlEaE5XQeKGhh1+aQj8ZyDxmdj
+	i3g1GgWw7Y9UQ+1XwB8WsRJ8mWmQ62zgPOgNFbejbH/1DuysleH6DZPiNFNGYBv9
+	JaUlVRSe8S2nSOlcwN0G73gf7PRZ+/fQf9xt1XTvoM1HW1j1c+aL5XyFPB4VDGsb
+	uENdEtuH8+20GDIJoyUyhb++Z7jc3XmmNXDtYyzoWo82RM13cJ1w==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44uwg18har-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 03:55:02 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 17 Feb
+ 2025 09:55:01 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Mon, 17 Feb 2025 09:55:01 +0000
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 14DB2822561;
+	Mon, 17 Feb 2025 09:55:01 +0000 (UTC)
+Date: Mon, 17 Feb 2025 09:55:00 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        <patches@opensource.cirrus.com>,
+        Ernest Van Hoecke
+	<ernest.vanhoecke@toradex.com>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Francesco
+ Dolcini" <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v1 1/5] of: Add of_property_read_u16_index
+Message-ID: <Z7MHdLahL9x+uB6l@opensource.cirrus.com>
+References: <20250206163152.423199-1-francesco@dolcini.it>
+ <20250206163152.423199-2-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD1:EE_|SJ2PR12MB9243:EE_
-X-MS-Office365-Filtering-Correlation-Id: e40f48e0-e215-4a1d-5e04-08dd4f38fc09
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ukk2D6JmChjmxVv267/CAnSOS/0yc5rpljo44X9Wa/iMfCSxIy77Guv5YvW9?=
- =?us-ascii?Q?e120eXxr/0qk3ysWNWFQZXEwQX/S1iALHewRVFkrZQUIY7Zr86qSnkF/Cvfr?=
- =?us-ascii?Q?JJoLfHzNDM7+q45OGT9Z33+EYiVRw8WXIWvLg9GZO0cHG2a/3+G2PKkuzaCI?=
- =?us-ascii?Q?oh+BDpck8FElu3xQSYHkdXpVL9pXeXD3rT5qZmcsDs54o1oPfBUzLKBTmM/y?=
- =?us-ascii?Q?NGhT86m8AOsRtN/ItQiD/ykNAKSKHJLTWFgXK7C6Y4wzPfcayFy78dRUM71h?=
- =?us-ascii?Q?f+cmfGGn1y7W6UMC7w82cri0ZY8bIiz7QHISPdcB9YAd2j1x/iQtd6ARKHPP?=
- =?us-ascii?Q?eNNfzVUoHMmBNW4rxjAlRE+wMpccdwztrKQ7twlfMEU+Lzebw48yCrnz/kS+?=
- =?us-ascii?Q?1t3h36rdIjs2x+ksAECA0zFtgXEKqpk+gu32MyAqnlQbSZSCtKH/17NaKS5v?=
- =?us-ascii?Q?4VKwmhd3dyLKLDR1+HQSZB2nczLXRB5H0QbmsXYnaUDZZeW9Kd5mdWkSHwYp?=
- =?us-ascii?Q?fBWtX1ekuoBewRhf5NLoylKFR/5htKBxtEAZH7jM9lR2mX5zEfwRpFNCIZGh?=
- =?us-ascii?Q?YxJtBsMWZeCUwozb5FR+JjdSzs4O1H9tpprVSor3xDGx4zAmKItNTuQymhGo?=
- =?us-ascii?Q?3jCBiAEqvTgvbm5fMjmcKLlBGf6hhj/KgwSoDU25rMcgns4wwaR+iqrkA/zP?=
- =?us-ascii?Q?GcKcdJKibEtPQ8IHsP57/ZvhySRcz6gTgsfxfF0CX+sxTxWKqbtD2vj2zxEQ?=
- =?us-ascii?Q?yqqi4WFXRhI0WM/rPiHjJG3xqEr0zPgWppPw7Y2IvhrWyZsTmBVrn1ss+TBR?=
- =?us-ascii?Q?7KKJxjdYtTurcONHJycKdxvrJdu8H9MKvLHf2of8C3THNMyCsrpyeYQB4FWx?=
- =?us-ascii?Q?XZZqgXZsvEpghRRcOY/tRUbun+PUBy6e+lvGuYZve10qVNyk/QZJLWcblNOj?=
- =?us-ascii?Q?kd7enDn0l+z9cgqsvEOcJ4pBeyrrne3qHCV+hdSQKczAGcPSd0ZBhAwhMHBo?=
- =?us-ascii?Q?G+Pbz+GvfsM/2+JRSqqjm32H0Uy5s3GGTGV//vCI7UcSN4YsKz/wQo7xEnWe?=
- =?us-ascii?Q?Pp5P1naqhn2Bgv436XGopiTwClNgq59l5XWYutM3bCYJRir1FlVuJdC+qEzt?=
- =?us-ascii?Q?0VjYHmGTWv5VseRQh74OGRCZaDa1+uNnE8oUuY8OPUOUzR2vNKsGoY2W24TC?=
- =?us-ascii?Q?uXlJb3u0KU1ASONmRlRofgCjgW7ihXmAjAy03EQCixzW/pq1IoiX5kC0gg8U?=
- =?us-ascii?Q?3XMeGXAtEfAnUjUtnE6ZHvIFDsf8iNZ4Fmi8tC54teDcKkF7vVtbNAe5DiK2?=
- =?us-ascii?Q?CzdgXLA0SilruOs/MMLWZayca5sp0EEeHw4ESWjtYVVaNsx/9oaFlxrRtUvP?=
- =?us-ascii?Q?DXC3LCAXbANIxZC5p5o9K+WA70J6kibvAz/reglPSPjlmsAfeTg/N3hw/z+h?=
- =?us-ascii?Q?nboghxL0cfe2/SgTy7NQdmW0Ma2/ei3QTbAShjvufsC7jHcBSMxpN4FFmHrF?=
- =?us-ascii?Q?ViwayYn2wOpOj8A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 09:53:51.9994
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e40f48e0-e215-4a1d-5e04-08dd4f38fc09
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9243
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250206163152.423199-2-francesco@dolcini.it>
+X-Proofpoint-GUID: L0XwHZrnUsgiAFk3R-4fCOqm38TuouL_
+X-Proofpoint-ORIG-GUID: L0XwHZrnUsgiAFk3R-4fCOqm38TuouL_
+X-Authority-Analysis: v=2.4 cv=CYzy5Krl c=1 sm=1 tr=0 ts=67b30776 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=kj9zAlcOel0A:10 a=T2h4t0Lz3GQA:10 a=m8ToADvmAAAA:8 a=w1d2syhTAAAA:8 a=a5Ts1rH5jafQVb_QePAA:9 a=CjuIK1q_8ugA:10
+ a=kCrBFHLFDAq2jDEeoMj9:22 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-Spam-Reason: safe
 
-The "interrupts" property in the ZynqMP power/reset binding was previously
-marked as required. However, there are multiple mechanisms for
-handling power/reset events, including:
--Event management registration,
--Mailbox (mboxes),
--Interrupts (interrupts).
+On Thu, Feb 06, 2025 at 05:31:48PM +0100, Francesco Dolcini wrote:
+> From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+> 
+> There is an of_property_read_u32_index and of_property_read_u64_index.
+> This patch adds a similar helper for u16.
+> 
+> Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> ---
 
-When event management support is available (default on Versal SoC), the
-"interrupts" property is not used hence not required.
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
----
-
- .../devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml       | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
-index 799831636194..079ad977b907 100644
---- a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
-+++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
-@@ -46,7 +46,6 @@ properties:
- 
- required:
-   - compatible
--  - interrupts
- 
- additionalProperties: false
- 
--- 
-2.17.1
-
+Thanks,
+Charles
