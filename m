@@ -1,62 +1,62 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBAF21D595;
-	Mon, 17 Feb 2025 14:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D75221575;
+	Mon, 17 Feb 2025 14:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739801040; cv=none; b=cYZzYtn+CQR8h/OuqxMhRC+Jw3l1bG52DYP/ZZq3v+1QsxNY2pYay10Ydd0KDFLlGyXjLh60UHkDYt16172FiS4QSmPT7cN+UKglD0ShVu6fKMkoOxpL17HVJtAYQE7/wSAwSLWVMvEQs7oBUAQSGHajHXqO8BriWEh2zRr+zrI=
+	t=1739801044; cv=none; b=SnC9jrSSs+2T7cr+GYrCeIqM6UquDutmTHmVFyi3ayxWuu19bzPBIy9iHmNaKoi0w0IVzmFp4xZ5Vq3vkCRiZ12XMCMx505Hs4vcb++cedfZ7i9fxESPXIe6Iep96jnwBMOgizoEypM56HKmzY/qYEk9Gf6X0++7coHEGp6PJlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739801040; c=relaxed/simple;
-	bh=YWbWWsIv3mMI03pwpX5IuXVcOxaKbV7lgKMiX7Ez3lA=;
+	s=arc-20240116; t=1739801044; c=relaxed/simple;
+	bh=9aREkL79Xsxr+96x5qn8It6s9YMe1H0v50kaLPRH6JQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nDVeFWAwHf4oCneDG7SsLXj7buTuouOxXqsIU+Ca1F/8fyXlw5egldsyrYABwzVwWD5HQNtIj1fEEriGGceE0uLBtZWcxk7ZiLk34Dx3YjoXJkKWmUmoZv/1BnMFUf2PnnxaoCbvwBdT6MjPVCOdeJF12MCkOjaNF28328haWOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hOVQcTj3; arc=none smtp.client-ip=209.85.208.182
+	 MIME-Version; b=d2sBy5pqrFQAgqMc2J17aTza+2xQtfHKVxfFP2oS1HocVZvOqsd1dqPxK1zFF6ZO514MTLX63Nrm5npcUZ+L6VOAZ0jIYb0T5OFoM+2K7D0HpE6J8HIni/6yFBdzIfLxaEiKrWOGBZ4EXESru08W+dg0a7Ub+JGCu3DliZTY9kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zdv2T8vQ; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hOVQcTj3"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30918c29da2so34000321fa.0;
-        Mon, 17 Feb 2025 06:03:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zdv2T8vQ"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5452ed5b5b2so2704842e87.0;
+        Mon, 17 Feb 2025 06:04:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739801037; x=1740405837; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739801040; x=1740405840; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L330aLnl7KlKZL4XMYjiJT58mG5vZbDUVYOzSIQvANU=;
-        b=hOVQcTj3YU1Eh2JgxYRhO3QUspzuJBJhrRZ/Q/CSe+BwnZL2uDl/A5lDPPCIzjsaS1
-         P8i3iCaClq8Vb3kF3Y7y/IBWlTEpWe171fuP1/R2RyoIZAAu//eEv1p2VusMdYAhZ5DI
-         poY6eU2O1q8Be83W2+pYpzr5WFxPUHhnQqnewWcoEfcmtqxblG9foSO1FlIA9E+Cqqcr
-         SupoZtBBuziG6qvRPuUDkRbiXOfSK6WePXlsfi+Uz3GAPy9DIPrtigevlWHvp4ecgeSB
-         +4wMgAJbrvGulOmxSyMElGaKJYB9beqRphJI4YMtwUYrd0kGgtic1v4us6mKPGOVpnjw
-         Hqlw==
+        bh=4wiMhV2MLOmdVTuzdxdM8/it2VeMkuWUBOlinnhDCGM=;
+        b=Zdv2T8vQ6g+vXjX0iy+U1eFUmxp9Y+lbt5r6+ynbQV90PfBWJfkGo0p+w/X+cjGVCC
+         rvcY1gEi6o1I7WRYpxSMkKkyHMAJ9r/9HaF4YGFMt4NziK7MIr7GZJKjuAm79aZmSoAX
+         IbQft953fpDb0Idhu1/sLzQv8Pehw24ukJ8CxzUX0UEjyAgV7pSI50seyRAZB6RvDv2U
+         Dddlht+gTrn1IUNEI20qS6XRxI0RnYi+2ckMBfxfG5sk3lFimXb0dqePfrNtOmyuJoNa
+         foyOgSlVpQky8hMWTodNUVYjJu7746EXB1Qp700c8ma3hul7bVZwxLtPC0F5QRc2ab8K
+         7Ktw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739801037; x=1740405837;
+        d=1e100.net; s=20230601; t=1739801040; x=1740405840;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L330aLnl7KlKZL4XMYjiJT58mG5vZbDUVYOzSIQvANU=;
-        b=Qs5WhWhZds5EYWj5Aqe8/mu7eCC4HZXWoc6/wtVOp88cvWqqadl5EXsmZVa98WJYrD
-         3Of/1cZb0dqQu5VVzYVHSSsZQ3e27zX2vl5OTRzKy3GHGTN7Ku6u66hH+x2nsEhRIULc
-         KPRLeQfcVZdDyxWzOt2T7kifQT1/Vq4Bsik8Gi5svmJPxSgbdB+F+wBi6HXNDQ72wTp7
-         0WrMqewATX8oWWD25pYOglTo62QFJTz+Dm1Ar58sjN4VuMgbJTMugO6D9WvAtc80anNM
-         nsm6oqshOf6ZtOCcf1V38PWYQik+G297SCJDJBtBi4sW2UnyCh/TS7RTv4DeeU55bNfY
-         fuRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/fIKMHkQEcQypH2LJdDWYLg0vEiiLPeKgzqSP4Yl0kJ3hIcrMCmFm7RWAnwqWJDSw1w8NorWuolQByGhR@vger.kernel.org, AJvYcCWVPBqHAbn+LJEAqVd8uArIygAE3dCM9xjRLRBkeZ7PPazCpZXhXXmEQxTvPZfXH9XT//bxA0V4r0OWuk8=@vger.kernel.org, AJvYcCXs8RkNf+9F/xHiK5rGy7MyOFrQKB4Zfthg5a0cXmhsvhMfn+UVCcDj6Iv+7ldrU7pyCq2bl49jWlay@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV2NGUc0t89gNr8SlLs0nCijasfnAjnLTu6rd4FSmXhduCriWw
-	zE1xhRtEV2rhdKcQ9GFpQyIe2Px51ed+UEk6ympZaSLEMH1Zc7mR
-X-Gm-Gg: ASbGncsstBP8888RCWEZwlieS2y3BggAK8To8a+oQmDDHhjvuxORDT+82ne26/QHvgu
-	UwJAvVdXN9uYINFUmwVaB+E4huTXOgcaXr+gXRSI41NNf9luRZmIQaijuh1akKGFvWO/0QwoYtO
-	EG8R4qPlSHekXEYd0liCIqq+UWE4UHhBW2Ol2K9IH6PKvhzHgCa33+LA1Sx1a9+fSOYnj/L0zSM
-	xiP+o0W06MkDIVAOsQOwegAHPSiIFca42jaxqjWWArcNoCjXm4+AzhOkeNftd+o2aOTG2CQSfZB
-	4PIvFws=
-X-Google-Smtp-Source: AGHT+IGaKgYSMl7JQLwIHAeBKkZ7tsfcjhptrf7X4G05WhrboNQv37tJOvqTiq0zoMsVWI1Ylmln4Q==
-X-Received: by 2002:a2e:9ac2:0:b0:308:ec9d:d9c3 with SMTP id 38308e7fff4ca-30927afdb64mr29329161fa.26.1739801036238;
-        Mon, 17 Feb 2025 06:03:56 -0800 (PST)
+        bh=4wiMhV2MLOmdVTuzdxdM8/it2VeMkuWUBOlinnhDCGM=;
+        b=nBIiJaIwRxWK79+GpnJ0k1hIiBd9yrmFepGPopW4GFji8713mouLz9n2hlyPvNmjCK
+         fF6LG6f79BAtXtbPKAqfoyoS2+mr50gRj+3655WOlkaTBOmfYa7Fn/H8+i/SJ2IHyYK2
+         IAwkdMmfZ8kEHm9EYAJQJkjYRh1MVoJgpy0BE4Qe6j/uXTKY9bb4/YA/6CPZfgzRs4vl
+         IjJsh05bi9P/N9SZ5MqmNzZ1DjbRI+mtyTisod1ym7WPB3zrVaw7/TnlZD3aMvfEsHl3
+         61NM85QnhIX0z5M/NxIgAN/sUd8UQglnmCTnzMHhaM5z7gOEtg/+asL/Rp0oj2sIG13M
+         sQ4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUFfY8bVWh/JQWjCOacgQ/EtTgrgr6I0t0Rcr6heIDJOebJKe81qEnIrGKvFQdPr6KIkW8z4u2VG8kH@vger.kernel.org, AJvYcCWeSbf5k3poEfrkQbSFRqoKcR+bK7dTjYHV3bZiwl9rB7djvCF1mPD0TCKsgfpVrHk3v3NtbI1G3wJzyIo=@vger.kernel.org, AJvYcCXQ1hZM4V46gyNuNWyoujBLC1rRRyMVFfKi4W0dLEET93mMSI4dajubFsrL2WKBLBkKW2ltHNLO0sX79MGL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6dPbqWewTkwa3umw9f99SpP1L+KxE2lui4FwcVK7oy5kgBILc
+	i9npU+06pnUAdIEQTLODqC82MuC/oEt/Ki5sl0fft2QUsCR6LhXH
+X-Gm-Gg: ASbGncuxkYcajfWlDGA7p2gu6tLIKs+XhtFWZP6LsTwxOMxrmf5f+LQE0LCbvOuaHJv
+	augYgkH1tY2T8WTI4C9Ko5AzRoFHmUP12nRWlUm2W7yKLXVx0VA+0KX8WAmErtwP/ODJsl/HA8O
+	2Kdy12wc38hezeoI7eA/guWeDyTImmefgPnec9JEyPRe9i24dj67WyWrQCr8zjcgawY6HM+nrFd
+	eL40jxSDGthZlrp5imYXtqGJNB9N66wPt0l7U9pS3ocWqaRNEGKyAFD9I2b02Dqhj00ZKzBqmKg
+	H+s2vww=
+X-Google-Smtp-Source: AGHT+IE2I2XaCaDXYttBWppjwztZE3XPtmV+/ckyma+vkI0gasU124OBkpUB+WCyZpcQozD76oi6mg==
+X-Received: by 2002:a05:6512:b12:b0:545:ea9:1a24 with SMTP id 2adb3069b0e04-5452fe2e78cmr2849929e87.14.1739801040284;
+        Mon, 17 Feb 2025 06:04:00 -0800 (PST)
 Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309306d5f48sm8919601fa.57.2025.02.17.06.03.54
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309306d5f48sm8919601fa.57.2025.02.17.06.03.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 06:03:55 -0800 (PST)
+        Mon, 17 Feb 2025 06:03:59 -0800 (PST)
 From: Svyatoslav Ryhel <clamor95@gmail.com>
 To: Jonathan Cameron <jic23@kernel.org>,
 	Lars-Peter Clausen <lars@metafoo.de>,
@@ -80,9 +80,9 @@ Cc: linux-iio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-tegra@vger.kernel.org
-Subject: [PATCH v4 1/3] dt-bindings: iio: light: al3010: add al3000a support
-Date: Mon, 17 Feb 2025 16:03:34 +0200
-Message-ID: <20250217140336.107476-2-clamor95@gmail.com>
+Subject: [PATCH v4 3/3] ARM: tegra: tf101: Add al3000a illuminance sensor node
+Date: Mon, 17 Feb 2025 16:03:36 +0200
+Message-ID: <20250217140336.107476-4-clamor95@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250217140336.107476-1-clamor95@gmail.com>
 References: <20250217140336.107476-1-clamor95@gmail.com>
@@ -94,38 +94,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-AL3000a is an ambient light sensor quite closely related to
-exising AL3010 and can reuse exising schema for AL3010.
+Bind al3000a illuminance sensor found in ASUS TF101
 
+Tested-by: Robert Eckelmann <longnoserob@gmail.com>
+Tested-by: Antoni Aloy Torrens <aaloytorrens@gmail.com>
 Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-Reviewed-by: David Heidelberg <david@ixit.cz>
 ---
- .../devicetree/bindings/iio/light/dynaimage,al3010.yaml     | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/nvidia/tegra20-asus-tf101.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/dynaimage,al3010.yaml b/Documentation/devicetree/bindings/iio/light/dynaimage,al3010.yaml
-index a3a979553e32..f1048c30e73e 100644
---- a/Documentation/devicetree/bindings/iio/light/dynaimage,al3010.yaml
-+++ b/Documentation/devicetree/bindings/iio/light/dynaimage,al3010.yaml
-@@ -4,14 +4,16 @@
- $id: http://devicetree.org/schemas/iio/light/dynaimage,al3010.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/nvidia/tegra20-asus-tf101.dts b/arch/arm/boot/dts/nvidia/tegra20-asus-tf101.dts
+index 975ec24195ca..fcf3d6dd64a2 100644
+--- a/arch/arm/boot/dts/nvidia/tegra20-asus-tf101.dts
++++ b/arch/arm/boot/dts/nvidia/tegra20-asus-tf101.dts
+@@ -1123,6 +1123,17 @@ smart-battery@b {
+ 				sbs,poll-retry-count = <10>;
+ 				power-supplies = <&mains>;
+ 			};
++
++			/* Dynaimage ambient light sensor */
++			light-sensor@1c {
++				compatible = "dynaimage,al3000a";
++				reg = <0x1c>;
++
++				interrupt-parent = <&gpio>;
++				interrupts = <TEGRA_GPIO(Z, 2) IRQ_TYPE_LEVEL_HIGH>;
++
++				vdd-supply = <&vdd_1v8_sys>;
++			};
+ 		};
+ 	};
  
--title: Dyna-Image AL3010 sensor
-+title: Dyna-Image AL3000a/AL3010 sensor
- 
- maintainers:
-   - David Heidelberg <david@ixit.cz>
- 
- properties:
-   compatible:
--    const: dynaimage,al3010
-+    enum:
-+      - dynaimage,al3000a
-+      - dynaimage,al3010
- 
-   reg:
-     maxItems: 1
 -- 
 2.43.0
 
