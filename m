@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5779021B8E0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5773521B1B4;
 	Mon, 17 Feb 2025 13:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797692; cv=none; b=EHN6TQ+TY11jbqh57+djbC+Z3o4M8TEx0KiPspRFNMsOYDBBy04rt0jxfmsU1gH2CeHYnlLkmkgs3PkurRnXhqK4A6pSb8bXiNoSRy3At9k83YwDmV8QUS39zcfFo6BcH2aNEVYzqBO1TzreNk4vK3yDW9BwZZGZ4Yf6C4zKSdA=
+	t=1739797692; cv=none; b=NEohMgEb4/J4x+dO4QjU4BLAI3CUj99IOXmfFs+AIos0xo8DjGisytU+URUALjTIRwKCCqHa+ugjY7Bp4WjsrgpdbiGSjHZt1HaAGadKQNVfFvnyzHA/aixYCFePtswGZ/XtQI+oHuqo/PdznS3ckqe1Owd3tP+KBZBDlpnp+U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739797692; c=relaxed/simple;
-	bh=BodtHJ757N8P2h1BykC4Mk8zepWOwp559FjBvN7beiQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=laz5EcM2F1k9zkk8f/PCzajp26ObmBg83CZEFRh3Tox/EJUU/3L7CDE8ZOySvvnkoBtFFgh5OS8t9BA37pvuTrZqSLLHlAHcCfsM4lUmBNQ41nKJjp5pxLirH2d8CnknBDn+KTxsekAJQEwH/gCrQGK8AMYkcyPI1A7RiwkPkac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxbNDskE; arc=none smtp.client-ip=10.30.226.201
+	bh=50LXAdQ5iCgOH6wLijxYspU9uZxYNQjnh5u8g8wSwJI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iRNZbUJuhRvNxiAsLx62R4gscRgcnrnbs0s9VjYjTKohL7QAYM0Asyt9GqGFpH4jQHZ1e5eCpQUy+zVRGQFb6tq3+j2a03iCFHeiaf7LxhL3sqIHEtDBrI/DTTNtE2TM+592D0IPMNeEXBQlkGOIpxok7vy3cbS0gXZRnMfLUEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQ3TKYm7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxbNDskE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EC53BC4CEE8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQ3TKYm7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CAF83C4CED1;
 	Mon, 17 Feb 2025 13:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739797692;
-	bh=BodtHJ757N8P2h1BykC4Mk8zepWOwp559FjBvN7beiQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=pxbNDskEbuqE+53ni6AJuIq0kIYzIh4MjrP/m311Kl04vUcO27X87AM9bsdhehkO0
-	 uMgxqkJiABV/efCmtUxyPW/Rbf3ZbYMxMnQLALYAFVy+8iJB+AB7kyHBZgiKcLoOQ9
-	 Z5S3ndLIPrjBaR8omJ/VT03fHdT6cHrH440q00JrcPRubCpYotXjfRHPgcYMywUjQh
-	 PSwmiLAcLLX4Fm5bTB5DIMDhAWP5CBF2i7CMsJAepPlgIlXd1xJP6mRDA2o9lEqU00
-	 HuCFLLPDlvxxxOuMCbAr9nE8XNC5YbBHDty1KIdMbX6KwCq8pfkqo+N0uZC3eWk4i0
-	 kfxHRbqY0YT8A==
+	s=k20201202; t=1739797691;
+	bh=50LXAdQ5iCgOH6wLijxYspU9uZxYNQjnh5u8g8wSwJI=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=eQ3TKYm7WXmT8oeqSyW5qhlP3NjUJ3YAL7CytsOWGuNrWC/gmuz2Rp8lh9MOehT51
+	 d1DuoiPT8Y0JfV871+wq2okIbFmUOlVT1ig6pMSzYcSg1rNWNFUkCPudv7lYJda0mz
+	 R6TF5SZN8mCu6lCZ7z5HUgdikAlA7NRTF0n1RVcrHC8Pn/MwYfiqw/fReYqvmWdKmM
+	 nfn+4t384mKOLx1ulJBsMcTAVp9YaE40H71fIqKHjTEZCrc8Z2SaeARx5dfz6y8WCF
+	 BABa9ssBzToxnEsiKw58qs4Jo12fZfPJV5hJ+qaakZ4oZ5K5+y3y6fLnz5eTEG5pjf
+	 w11ETvsc0Uc9Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E28C021AD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE261C021AA;
 	Mon, 17 Feb 2025 13:08:11 +0000 (UTC)
 From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
-Date: Mon, 17 Feb 2025 14:07:52 +0100
-Subject: [PATCH 2/2] dt-bindings: gpio: Add support for PCF8574T.
+Subject: [PATCH 0/2] Add support for the PCF8574T I/O expander.
+Date: Mon, 17 Feb 2025 14:07:50 +0100
+Message-Id: <20250217-gpio-pcf8574t-v1-0-137e140df5fc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250217-gpio-pcf8574t-v1-2-137e140df5fc@gmail.com>
-References: <20250217-gpio-pcf8574t-v1-0-137e140df5fc@gmail.com>
-In-Reply-To: <20250217-gpio-pcf8574t-v1-0-137e140df5fc@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAKY0s2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0Nz3fSCzHzdguQ0C1NzkxJdU0vzJEtDSzMzY8tEJaCegqLUtMwKsHn
+ RsbW1ADoLLbFfAAAA
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -52,11 +52,11 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, 
  =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739797690; l=668;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739797690; l=688;
  i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
- bh=B6J4izNH3fp6JISZ2syXUSUwyTFFQEArfTvkcwoUcp4=;
- b=yLBLbSdGcT6u1xG8ikX06I9UIbLWAP3E3AI1PGayeGeSFpL5P9PNIvj/yFxJSFXOVzE7nyU/d
- 4Ls+m2twM8GAr6xHtu7zw43GjKDEDNiTOWiXl1ULWXqvRSQzEMZVvxA
+ bh=50LXAdQ5iCgOH6wLijxYspU9uZxYNQjnh5u8g8wSwJI=;
+ b=GNuwei57M4SHpZgsMdxN2IXvdgxcY6iaK+hI0/kedLn39n/2hueWxNDkFXyWwWyrnnapYX93K
+ HqHANwueWJjDuVZE5Wo86nA7FxxTWSxyKS6ilvcibW3pj9BtMSYrTBB
 X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
  pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
 X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
@@ -64,29 +64,25 @@ X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
 X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
 Reply-To: gomba007@gmail.com
 
-From: Tóth János <gomba007@gmail.com>
-
-Add the necessary documentation for PCF8574T.
+This patch series adds the driver support and the documentation for the
+PCF8574T I2C I/O expander.
 
 Signed-off-by: Tóth János <gomba007@gmail.com>
 ---
+Tóth János (2):
+      drivers: gpio: Add support for PCF8574T.
+      dt-bindings: gpio: Add support for PCF8574T.
+
  Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/Kconfig                                    | 2 +-
+ drivers/gpio/gpio-pcf857x.c                             | 2 ++
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+---
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+change-id: 20250217-gpio-pcf8574t-597b9196639a
 
-diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-index 3718103e966a..cbe4cf96e942 100644
---- a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-+++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-@@ -34,6 +34,7 @@ properties:
-       - nxp,pca9675
-       - nxp,pcf8574
-       - nxp,pcf8574a
-+      - nxp,pcf8574t
-       - nxp,pcf8575
- 
-   reg:
-
+Best regards,
 -- 
-2.34.1
+Tóth János <gomba007@gmail.com>
 
 
