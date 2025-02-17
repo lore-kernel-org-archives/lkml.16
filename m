@@ -1,377 +1,285 @@
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896481AA795
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 09:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE21D1A264A;
+	Mon, 17 Feb 2025 09:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739783461; cv=none; b=oT8GVNSwfADqNXbFAZ3wX7L2A3jen5gaDi7/EXr5wILW+CwDdiVW8nmgnZFYGqJ7bTYmIQmTKoMVNR6k51ah1aAKcg33qL+YikQouOHCt1YPKLJ2oTsDxxOd02uG7GFHNGc2fDno6YdCwhCWSkJxTCPewAi/0E4ymz3/3H/m0AQ=
+	t=1739783482; cv=none; b=rltI4Rtz9xNjrJYMMkUXBDd+ipW1GS87T6L5MiGP8AnZKDQ8epi166fkEHl6WQWljzJIf+a/dXQWpTxwUcr4t31YxJAOlHlAEGoARWwBo86rfOgDi3Wz1NEtK6Zqf+VyGqwQKWo/nZa/JdQVjfubHIOIgq9RbiHp2A4j3apMb2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739783461; c=relaxed/simple;
-	bh=hmgzYqSY7ZUj7xwhJfZLrqeFNzIl5ULqpfVe99JPcSc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fMPsIEr7AndHL+ghCHh1E+x+S09N+t8c1O2B5fJX7eepXBowscKeKEtN+XAq0voP25Lv10Yl72totE3f811rOMuVIz23kO2UCkPLjlnCSTSPFpchuKVOQYf1L1e76ovpbLrdAZji0jG73fUt91aaeDslgWzL6rzXLelhZ+RRHrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from unicom145.biz-email.net
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id PDC00146;
-        Mon, 17 Feb 2025 17:10:46 +0800
-Received: from localhost.localdomain (10.94.7.142) by
- jtjnmail201608.home.langchao.com (10.100.2.8) with Microsoft SMTP Server id
- 15.1.2507.39; Mon, 17 Feb 2025 17:10:45 +0800
-From: Bo Liu <liubo03@inspur.com>
-To: <xiang@kernel.org>, <chao@kernel.org>
-CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH] erofs: get rid of erofs_kmap_type
-Date: Mon, 17 Feb 2025 04:10:44 -0500
-Message-ID: <20250217091044.2311-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.18.2
+	s=arc-20240116; t=1739783482; c=relaxed/simple;
+	bh=i/mv86q/EEkpO+5vvH8tZGjrQa/WXUHTfjDzQ+Vh+Cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Sa5hDZXDDgmC+BpDUbal8mfWWsVQZcYNm1u8+7y4SrCMERZZgQQIyRlyLaLYSBjWgaIuX9h4GKwWa9Zm83EsHMynHDHIPs94Pnd97L0VvagZYMW+eq/iWY744ebpk99j9sn105NLnA1/TbXke5blbtuvksyn4BQuM+M8m6C81lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id D532372C90B;
+	Mon, 17 Feb 2025 12:11:18 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id C5F157CCB3A; Mon, 17 Feb 2025 11:11:18 +0200 (IST)
+Date: Mon, 17 Feb 2025 11:11:18 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Renzo Davoli <renzo@cs.unibo.it>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	strace-devel@lists.strace.io, linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org
+Subject: [PATCH v6 5/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO request
+Message-ID: <20250217091118.GF18175@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-tUid: 2025217171046b57aed6327a5fafa8d14ae8cb344db2d
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217090834.GA18175@strace.io>
 
-Since EROFS_KMAP_ATOMIC is no longer valid, get rid of erofs_kmap_type too.
+PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
+PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
+system calls the tracee is blocked in.
 
-Signed-off-by: Bo Liu <liubo03@inspur.com>
+This API allows ptracers to obtain and modify system call details in a
+straightforward and architecture-agnostic way, providing a consistent way
+of manipulating the system call number and arguments across architectures.
+
+As in case of PTRACE_GET_SYSCALL_INFO, PTRACE_SET_SYSCALL_INFO also
+does not aim to address numerous architecture-specific system call ABI
+peculiarities, like differences in the number of system call arguments
+for such system calls as pread64 and preadv.
+
+The current implementation supports changing only those bits of system call
+information that are used by strace system call tampering, namely, syscall
+number, syscall arguments, and syscall return value.
+
+Support of changing additional details returned by PTRACE_GET_SYSCALL_INFO,
+such as instruction pointer and stack pointer, could be added later if
+needed, by using struct ptrace_syscall_info.flags to specify the additional
+details that should be set.  Currently, "flags" and "reserved" fields of
+struct ptrace_syscall_info must be initialized with zeroes; "arch",
+"instruction_pointer", and "stack_pointer" fields are currently ignored.
+
+PTRACE_SET_SYSCALL_INFO currently supports only PTRACE_SYSCALL_INFO_ENTRY,
+PTRACE_SYSCALL_INFO_EXIT, and PTRACE_SYSCALL_INFO_SECCOMP operations.
+Other operations could be added later if needed.
+
+Ideally, PTRACE_SET_SYSCALL_INFO should have been introduced along with
+PTRACE_GET_SYSCALL_INFO, but it didn't happen.  The last straw that
+convinced me to implement PTRACE_SET_SYSCALL_INFO was apparent failure
+to provide an API of changing the first system call argument on riscv
+architecture.
+
+ptrace(2) man page:
+
+long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+...
+PTRACE_SET_SYSCALL_INFO
+       Modify information about the system call that caused the stop.
+       The "data" argument is a pointer to struct ptrace_syscall_info
+       that specifies the system call information to be set.
+       The "addr" argument should be set to sizeof(struct ptrace_syscall_info)).
+
+Link: https://lore.kernel.org/all/59505464-c84a-403d-972f-d4b2055eeaac@gmail.com/
+Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+Reviewed-by: Alexey Gladkov <legion@kernel.org>
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Eugene Syromiatnikov <esyr@redhat.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 ---
- fs/erofs/data.c     | 16 ++++++++--------
- fs/erofs/dir.c      |  2 +-
- fs/erofs/fileio.c   |  2 +-
- fs/erofs/fscache.c  |  2 +-
- fs/erofs/inode.c    |  6 +++---
- fs/erofs/internal.h | 10 ++--------
- fs/erofs/namei.c    |  2 +-
- fs/erofs/super.c    |  8 ++++----
- fs/erofs/xattr.c    | 12 ++++++------
- fs/erofs/zdata.c    |  4 ++--
- fs/erofs/zmap.c     |  6 +++---
- 11 files changed, 32 insertions(+), 38 deletions(-)
+ include/uapi/linux/ptrace.h |   7 ++-
+ kernel/ptrace.c             | 121 +++++++++++++++++++++++++++++++++++-
+ 2 files changed, 126 insertions(+), 2 deletions(-)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 0cd6b5c4df98..386e312de8c0 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -26,7 +26,7 @@ void erofs_put_metabuf(struct erofs_buf *buf)
- }
- 
- void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset,
--		  enum erofs_kmap_type type)
-+				bool need_kmap)
- {
- 	pgoff_t index = offset >> PAGE_SHIFT;
- 	struct folio *folio = NULL;
-@@ -43,10 +43,10 @@ void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset,
- 			return folio;
- 	}
- 	buf->page = folio_file_page(folio, index);
--	if (!buf->base && type == EROFS_KMAP)
--		buf->base = kmap_local_page(buf->page);
--	if (type == EROFS_NO_KMAP)
-+	if (!need_kmap)
- 		return NULL;
-+	if (!buf->base)
-+		buf->base = kmap_local_page(buf->page);
- 	return buf->base + (offset & ~PAGE_MASK);
- }
- 
-@@ -65,10 +65,10 @@ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
- }
- 
- void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
--			 erofs_off_t offset, enum erofs_kmap_type type)
-+			 erofs_off_t offset, bool need_kmap)
- {
- 	erofs_init_metabuf(buf, sb);
--	return erofs_bread(buf, offset, type);
-+	return erofs_bread(buf, offset, need_kmap);
- }
- 
- static int erofs_map_blocks_flatmode(struct inode *inode,
-@@ -135,7 +135,7 @@ int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
- 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize +
- 		    vi->xattr_isize, unit) + unit * chunknr;
- 
--	kaddr = erofs_read_metabuf(&buf, sb, pos, EROFS_KMAP);
-+	kaddr = erofs_read_metabuf(&buf, sb, pos, true);
- 	if (IS_ERR(kaddr)) {
- 		err = PTR_ERR(kaddr);
- 		goto out;
-@@ -312,7 +312,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
- 
- 		iomap->type = IOMAP_INLINE;
--		ptr = erofs_read_metabuf(&buf, sb, mdev.m_pa, EROFS_KMAP);
-+		ptr = erofs_read_metabuf(&buf, sb, mdev.m_pa, true);
- 		if (IS_ERR(ptr))
- 			return PTR_ERR(ptr);
- 		iomap->inline_data = ptr;
-diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
-index c3b90abdee37..1d3bb8746ab1 100644
---- a/fs/erofs/dir.c
-+++ b/fs/erofs/dir.c
-@@ -58,7 +58,7 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
- 		struct erofs_dirent *de;
- 		unsigned int nameoff, maxsize;
- 
--		de = erofs_bread(&buf, dbstart, EROFS_KMAP);
-+		de = erofs_bread(&buf, dbstart, true);
- 		if (IS_ERR(de)) {
- 			erofs_err(sb, "fail to readdir of logical block %u of nid %llu",
- 				  erofs_blknr(sb, dbstart), EROFS_I(dir)->nid);
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index 0ffd1c63beeb..bec4b56b3826 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -112,7 +112,7 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
- 			void *src;
- 
- 			src = erofs_read_metabuf(&buf, inode->i_sb,
--						 map->m_pa + ofs, EROFS_KMAP);
-+						 map->m_pa + ofs, true);
- 			if (IS_ERR(src)) {
- 				err = PTR_ERR(src);
- 				break;
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index ce3d8737df85..9c9129bca346 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -276,7 +276,7 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
- 		size_t size = map.m_llen;
- 		void *src;
- 
--		src = erofs_read_metabuf(&buf, sb, map.m_pa, EROFS_KMAP);
-+		src = erofs_read_metabuf(&buf, sb, map.m_pa, true);
- 		if (IS_ERR(src))
- 			return PTR_ERR(src);
- 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index d4b89407822a..4936bd43c438 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -42,7 +42,7 @@ static int erofs_read_inode(struct inode *inode)
- 	blkaddr = erofs_blknr(sb, inode_loc);
- 	ofs = erofs_blkoff(sb, inode_loc);
- 
--	kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), EROFS_KMAP);
-+	kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), true);
- 	if (IS_ERR(kaddr)) {
- 		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
- 			  vi->nid, PTR_ERR(kaddr));
-@@ -82,8 +82,8 @@ static int erofs_read_inode(struct inode *inode)
- 				goto err_out;
- 			}
- 			memcpy(copied, dic, gotten);
--			kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr + 1),
--						   EROFS_KMAP);
-+			kaddr = erofs_read_metabuf(&buf, sb,
-+					erofs_pos(sb, blkaddr + 1), true);
- 			if (IS_ERR(kaddr)) {
- 				erofs_err(sb, "failed to get inode payload block (nid: %llu), err %ld",
- 					  vi->nid, PTR_ERR(kaddr));
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 686d835eb533..f955793146f4 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -199,11 +199,6 @@ enum {
- 	EROFS_ZIP_CACHE_READAROUND
+diff --git a/include/uapi/linux/ptrace.h b/include/uapi/linux/ptrace.h
+index 72c038fc71d0..5f8ef6156752 100644
+--- a/include/uapi/linux/ptrace.h
++++ b/include/uapi/linux/ptrace.h
+@@ -74,6 +74,7 @@ struct seccomp_metadata {
  };
  
--enum erofs_kmap_type {
--	EROFS_NO_KMAP,		/* don't map the buffer */
--	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
--};
--
- struct erofs_buf {
- 	struct address_space *mapping;
- 	struct file *file;
-@@ -387,11 +382,10 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
- 			  erofs_off_t *offset, int *lengthp);
- void erofs_unmap_metabuf(struct erofs_buf *buf);
- void erofs_put_metabuf(struct erofs_buf *buf);
--void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset,
--		  enum erofs_kmap_type type);
-+void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap);
- void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb);
- void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
--			 erofs_off_t offset, enum erofs_kmap_type type);
-+			 erofs_off_t offset, bool need_kmap);
- int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *dev);
- int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- 		 u64 start, u64 len);
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-index c94d0c1608a8..f7cf4f41af28 100644
---- a/fs/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -100,7 +100,7 @@ static void *erofs_find_target_block(struct erofs_buf *target,
- 		struct erofs_dirent *de;
+ #define PTRACE_GET_SYSCALL_INFO		0x420e
++#define PTRACE_SET_SYSCALL_INFO		0x4212
+ #define PTRACE_SYSCALL_INFO_NONE	0
+ #define PTRACE_SYSCALL_INFO_ENTRY	1
+ #define PTRACE_SYSCALL_INFO_EXIT	2
+@@ -81,7 +82,8 @@ struct seccomp_metadata {
  
- 		buf.mapping = dir->i_mapping;
--		de = erofs_bread(&buf, erofs_pos(dir->i_sb, mid), EROFS_KMAP);
-+		de = erofs_bread(&buf, erofs_pos(dir->i_sb, mid), true);
- 		if (!IS_ERR(de)) {
- 			const int nameoff = nameoff_from_disk(de->nameoff, bsz);
- 			const int ndirents = nameoff / sizeof(*de);
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 827b62665649..3dc86d931ef1 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -94,7 +94,7 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
- 	int len, i, cnt;
+ struct ptrace_syscall_info {
+ 	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
+-	__u8 pad[3];
++	__u8 reserved;
++	__u16 flags;
+ 	__u32 arch;
+ 	__u64 instruction_pointer;
+ 	__u64 stack_pointer;
+@@ -98,6 +100,7 @@ struct ptrace_syscall_info {
+ 			__u64 nr;
+ 			__u64 args[6];
+ 			__u32 ret_data;
++			__u32 reserved2;
+ 		} seccomp;
+ 	};
+ };
+@@ -142,6 +145,8 @@ struct ptrace_sud_config {
+ 	__u64 len;
+ };
  
- 	*offset = round_up(*offset, 4);
--	ptr = erofs_bread(buf, *offset, EROFS_KMAP);
-+	ptr = erofs_bread(buf, *offset, true);
- 	if (IS_ERR(ptr))
- 		return ptr;
++/* 0x4212 is PTRACE_SET_SYSCALL_INFO */
++
+ /*
+  * These values are stored in task->ptrace_message
+  * by ptrace_stop to describe the current syscall-stop.
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 22e7d74cf4cd..75a84efad40f 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -944,7 +944,10 @@ ptrace_get_syscall_info_seccomp(struct task_struct *child, struct pt_regs *regs,
+ 	ptrace_get_syscall_info_entry(child, regs, info);
+ 	info->seccomp.ret_data = child->ptrace_message;
  
-@@ -110,7 +110,7 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
- 	for (i = 0; i < len; i += cnt) {
- 		cnt = min_t(int, sb->s_blocksize - erofs_blkoff(sb, *offset),
- 			    len - i);
--		ptr = erofs_bread(buf, *offset, EROFS_KMAP);
-+		ptr = erofs_bread(buf, *offset, true);
- 		if (IS_ERR(ptr)) {
- 			kfree(buffer);
- 			return ptr;
-@@ -141,7 +141,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
- 	struct erofs_deviceslot *dis;
- 	struct file *file;
+-	/* ret_data is the last field in struct ptrace_syscall_info.seccomp */
++	/*
++	 * ret_data is the last non-reserved field
++	 * in struct ptrace_syscall_info.seccomp
++	 */
+ 	return offsetofend(struct ptrace_syscall_info, seccomp.ret_data);
+ }
  
--	dis = erofs_read_metabuf(buf, sb, *pos, EROFS_KMAP);
-+	dis = erofs_read_metabuf(buf, sb, *pos, true);
- 	if (IS_ERR(dis))
- 		return PTR_ERR(dis);
+@@ -1016,6 +1019,118 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
+ 	write_size = min(actual_size, user_size);
+ 	return copy_to_user(datavp, &info, write_size) ? -EFAULT : actual_size;
+ }
++
++static int
++ptrace_set_syscall_info_entry(struct task_struct *child, struct pt_regs *regs,
++			      struct ptrace_syscall_info *info)
++{
++	unsigned long args[ARRAY_SIZE(info->entry.args)];
++	int nr = info->entry.nr;
++	int i;
++
++	/*
++	 * Check that the syscall number specified in info->entry.nr
++	 * is either a value of type "int" or a sign-extended value
++	 * of type "int".
++	 */
++	if (nr != info->entry.nr)
++		return -ERANGE;
++
++	for (i = 0; i < ARRAY_SIZE(args); i++) {
++		args[i] = info->entry.args[i];
++		/*
++		 * Check that the syscall argument specified in
++		 * info->entry.args[i] is either a value of type
++		 * "unsigned long" or a sign-extended value of type "long".
++		 */
++		if (args[i] != info->entry.args[i])
++			return -ERANGE;
++	}
++
++	syscall_set_nr(child, regs, nr);
++	/*
++	 * If the syscall number is set to -1, setting syscall arguments is not
++	 * just pointless, it would also clobber the syscall return value on
++	 * those architectures that share the same register both for the first
++	 * argument of syscall and its return value.
++	 */
++	if (nr != -1)
++		syscall_set_arguments(child, regs, args);
++
++	return 0;
++}
++
++static int
++ptrace_set_syscall_info_seccomp(struct task_struct *child, struct pt_regs *regs,
++				struct ptrace_syscall_info *info)
++{
++	/*
++	 * info->entry is currently a subset of info->seccomp,
++	 * info->seccomp.ret_data is currently ignored.
++	 */
++	return ptrace_set_syscall_info_entry(child, regs, info);
++}
++
++static int
++ptrace_set_syscall_info_exit(struct task_struct *child, struct pt_regs *regs,
++			     struct ptrace_syscall_info *info)
++{
++	long rval = info->exit.rval;
++
++	/*
++	 * Check that the return value specified in info->exit.rval
++	 * is either a value of type "long" or a sign-extended value
++	 * of type "long".
++	 */
++	if (rval != info->exit.rval)
++		return -ERANGE;
++
++	if (info->exit.is_error)
++		syscall_set_return_value(child, regs, rval, 0);
++	else
++		syscall_set_return_value(child, regs, 0, rval);
++
++	return 0;
++}
++
++static int
++ptrace_set_syscall_info(struct task_struct *child, unsigned long user_size,
++			const void __user *datavp)
++{
++	struct pt_regs *regs = task_pt_regs(child);
++	struct ptrace_syscall_info info;
++
++	if (user_size < sizeof(info))
++		return -EINVAL;
++
++	/*
++	 * The compatibility is tracked by info.op and info.flags: if user-space
++	 * does not instruct us to use unknown extra bits from future versions
++	 * of ptrace_syscall_info, we are not going to read them either.
++	 */
++	if (copy_from_user(&info, datavp, sizeof(info)))
++		return -EFAULT;
++
++	/* Reserved for future use. */
++	if (info.flags || info.reserved)
++		return -EINVAL;
++
++	/* Changing the type of the system call stop is not supported yet. */
++	if (ptrace_get_syscall_info_op(child) != info.op)
++		return -EINVAL;
++
++	switch (info.op) {
++	case PTRACE_SYSCALL_INFO_ENTRY:
++		return ptrace_set_syscall_info_entry(child, regs, &info);
++	case PTRACE_SYSCALL_INFO_EXIT:
++		return ptrace_set_syscall_info_exit(child, regs, &info);
++	case PTRACE_SYSCALL_INFO_SECCOMP:
++		return ptrace_set_syscall_info_seccomp(child, regs, &info);
++	default:
++		/* Other types of system call stops are not supported yet. */
++		return -EINVAL;
++	}
++}
+ #endif /* CONFIG_HAVE_ARCH_TRACEHOOK */
  
-@@ -255,7 +255,7 @@ static int erofs_read_superblock(struct super_block *sb)
- 	void *data;
- 	int ret;
+ int ptrace_request(struct task_struct *child, long request,
+@@ -1234,6 +1349,10 @@ int ptrace_request(struct task_struct *child, long request,
+ 	case PTRACE_GET_SYSCALL_INFO:
+ 		ret = ptrace_get_syscall_info(child, addr, datavp);
+ 		break;
++
++	case PTRACE_SET_SYSCALL_INFO:
++		ret = ptrace_set_syscall_info(child, addr, datavp);
++		break;
+ #endif
  
--	data = erofs_read_metabuf(&buf, sb, 0, EROFS_KMAP);
-+	data = erofs_read_metabuf(&buf, sb, 0, true);
- 	if (IS_ERR(data)) {
- 		erofs_err(sb, "cannot read erofs superblock");
- 		return PTR_ERR(data);
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index df2777e05661..9cf84717a92e 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -81,7 +81,7 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 	it.pos = erofs_iloc(inode) + vi->inode_isize;
- 
- 	/* read in shared xattr array (non-atomic, see kmalloc below) */
--	it.kaddr = erofs_bread(&it.buf, it.pos, EROFS_KMAP);
-+	it.kaddr = erofs_bread(&it.buf, it.pos, true);
- 	if (IS_ERR(it.kaddr)) {
- 		ret = PTR_ERR(it.kaddr);
- 		goto out_unlock;
-@@ -102,7 +102,7 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 	it.pos += sizeof(struct erofs_xattr_ibody_header);
- 
- 	for (i = 0; i < vi->xattr_shared_count; ++i) {
--		it.kaddr = erofs_bread(&it.buf, it.pos, EROFS_KMAP);
-+		it.kaddr = erofs_bread(&it.buf, it.pos, true);
- 		if (IS_ERR(it.kaddr)) {
- 			kfree(vi->xattr_shared_xattrs);
- 			vi->xattr_shared_xattrs = NULL;
-@@ -183,7 +183,7 @@ static int erofs_xattr_copy_to_buffer(struct erofs_xattr_iter *it,
- 	void *src;
- 
- 	for (processed = 0; processed < len; processed += slice) {
--		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
-+		it->kaddr = erofs_bread(&it->buf, it->pos, true);
- 		if (IS_ERR(it->kaddr))
- 			return PTR_ERR(it->kaddr);
- 
-@@ -286,7 +286,7 @@ static int erofs_getxattr_foreach(struct erofs_xattr_iter *it)
- 
- 	/* 2. handle xattr name */
- 	for (processed = 0; processed < entry.e_name_len; processed += slice) {
--		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
-+		it->kaddr = erofs_bread(&it->buf, it->pos, true);
- 		if (IS_ERR(it->kaddr))
- 			return PTR_ERR(it->kaddr);
- 
-@@ -330,7 +330,7 @@ static int erofs_xattr_iter_inline(struct erofs_xattr_iter *it,
- 	it->pos = erofs_iloc(inode) + vi->inode_isize + xattr_header_sz;
- 
- 	while (remaining) {
--		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
-+		it->kaddr = erofs_bread(&it->buf, it->pos, true);
- 		if (IS_ERR(it->kaddr))
- 			return PTR_ERR(it->kaddr);
- 
-@@ -367,7 +367,7 @@ static int erofs_xattr_iter_shared(struct erofs_xattr_iter *it,
- 	for (i = 0; i < vi->xattr_shared_count; ++i) {
- 		it->pos = erofs_pos(sb, sbi->xattr_blkaddr) +
- 				vi->xattr_shared_xattrs[i] * sizeof(__le32);
--		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
-+		it->kaddr = erofs_bread(&it->buf, it->pos, true);
- 		if (IS_ERR(it->kaddr))
- 			return PTR_ERR(it->kaddr);
- 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index d771e06db738..ad674eee400a 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -832,7 +832,7 @@ static int z_erofs_pcluster_begin(struct z_erofs_frontend *fe)
- 	} else {
- 		void *mptr;
- 
--		mptr = erofs_read_metabuf(&map->buf, sb, map->m_pa, EROFS_NO_KMAP);
-+		mptr = erofs_read_metabuf(&map->buf, sb, map->m_pa, false);
- 		if (IS_ERR(mptr)) {
- 			ret = PTR_ERR(mptr);
- 			erofs_err(sb, "failed to get inline data %d", ret);
-@@ -967,7 +967,7 @@ static int z_erofs_read_fragment(struct super_block *sb, struct folio *folio,
- 	buf.mapping = packed_inode->i_mapping;
- 	for (; cur < end; cur += cnt, pos += cnt) {
- 		cnt = min(end - cur, sb->s_blocksize - erofs_blkoff(sb, pos));
--		src = erofs_bread(&buf, pos, EROFS_KMAP);
-+		src = erofs_bread(&buf, pos, true);
- 		if (IS_ERR(src)) {
- 			erofs_put_metabuf(&buf);
- 			return PTR_ERR(src);
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 689437e99a5a..75daac513050 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -31,7 +31,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
- 	struct z_erofs_lcluster_index *di;
- 	unsigned int advise;
- 
--	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, EROFS_KMAP);
-+	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, true);
- 	if (IS_ERR(di))
- 		return PTR_ERR(di);
- 	m->lcn = lcn;
-@@ -146,7 +146,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
- 	else
- 		return -EOPNOTSUPP;
- 
--	in = erofs_read_metabuf(&m->map->buf, m->inode->i_sb, pos, EROFS_KMAP);
-+	in = erofs_read_metabuf(&m->map->buf, m->inode->i_sb, pos, true);
- 	if (IS_ERR(in))
- 		return PTR_ERR(in);
- 
-@@ -561,7 +561,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		goto out_unlock;
- 
- 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize + vi->xattr_isize, 8);
--	h = erofs_read_metabuf(&buf, sb, pos, EROFS_KMAP);
-+	h = erofs_read_metabuf(&buf, sb, pos, true);
- 	if (IS_ERR(h)) {
- 		err = PTR_ERR(h);
- 		goto out_unlock;
+ 	case PTRACE_SECCOMP_GET_FILTER:
 -- 
-2.31.1
-
+ldv
