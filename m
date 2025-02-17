@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B651DF24B;
-	Mon, 17 Feb 2025 22:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37111DFE0C;
+	Mon, 17 Feb 2025 22:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739830069; cv=none; b=X8OQzAd9qqHsWAd+uU+LHSLl1gbRSRzlPp52VLGE1rttjfkwq7KLv8fcff1uUrnoMLUvR/GUcIpRIx4p8S5ICf5VbHZKUKsWpxpHkPeH4OHRbIrgRLXU5NkFCE0jZgUAtyxcPVvnzqzdubMx22ICubrEnWdOtJqV515knI+BTQk=
+	t=1739830072; cv=none; b=usOiig4xn6l0Zfm6sc5TqZG7gezWBKyy1V0vo6ouZ9EpvHmS9yBQdbdDg6Ysw4LX01TMhMDxnwGgCG/gGOEb2tLGCfZPHE1xEvPtkaUStTKUZMNAK1MH39HI/OQFkYYZj8Nr1iVfW3kBBF6nQPnXxzCo9d0sd11GaXzkdkirvDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739830069; c=relaxed/simple;
-	bh=XB8H1wjb48jXgguiXOM2q3McwxHjzVCURinUHtPIn+4=;
+	s=arc-20240116; t=1739830072; c=relaxed/simple;
+	bh=4+EsuSMFzTIZV2rxHQ6HUvxk96Xy8TbFkE5Q3qjs4jE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z2OnopINM7cwmZtgpDQpfzWEMQXhc6siQvEnFV1RAX3Nac/JYcVlI69DnB7CPeJvEFvIwqyA4T2gg4r7MFmsaGCf01ff0TtoQELJheOhIGMQh3di7Vqdt6JH9XcsidHSZI+VKYfS0JYg/ZUatKGOS8QGqxfjBCF5vBWFhgmvXJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkBTEfLE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FVyhd8/qZLgW9YBBRshyzEhu7wjQmNpNmHdZqRiGryA35zjNIbYRAl2KLbykmpPANmFUyPUeV0QbXSZocn3WEpuOx+edO1On3SEIVsJGnzL2w0zd0LcvlvBeAj0C7N/xBMxgZRb8lCDQMol/abKYiate1/DfyoWzeyu/3ODoRIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ISTODcCf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkBTEfLE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6CB3C4CEE4;
-	Mon, 17 Feb 2025 22:07:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ISTODcCf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B717DC4CEE2;
+	Mon, 17 Feb 2025 22:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739830069;
-	bh=XB8H1wjb48jXgguiXOM2q3McwxHjzVCURinUHtPIn+4=;
+	s=k20201202; t=1739830071;
+	bh=4+EsuSMFzTIZV2rxHQ6HUvxk96Xy8TbFkE5Q3qjs4jE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kkBTEfLE2nHSp7d5OxYCF1Cdu35QVP8IrrmCKL3RQ8WavLTtmlHBRVFEQt+5Om6IE
-	 +AxSZZx2La8fXHWl3LLuTNlqz9Lc0nJcn3tgdL7AY6jEtg7ZaGM4lN0JmlZLa5cjj2
-	 GkFeOBGmyAlMyCJRhirktiy5Q6HfUKEwybhApOqpajdEUSsq4cVSjmsZeNU1mq4ffC
-	 c7hlJwANf4qfPhMSk/15cYELYwxchffy64gJqzSW5p9fzr1U8Jsrd9Hh7+vFn4SPGs
-	 gIIzoGr9NpuZfR9HxrJ09dXfnknRufa8wV5YKrg8ItR7N2Mcda9p6drW/GdjZWAPlR
-	 Wzwm+MtCm5M/w==
+	b=ISTODcCfT3+LXIpktjC4BHK0QpysWBO1ZrlTYxBnFi3+Q9kjYi05Z5uDkz66MgJAs
+	 LVwH5vJ+4PezW6S3p2Yukqr8g45Gq4wghqDiT3M7S1743ptkL2vENSakipKBfUfntL
+	 unqGuWfMF5fB96czgT3nNGd8TeWctPET9UFPJTwYC6CtIg+IU5MGQklAKrFw4PR5F0
+	 QuIQwz4TZwfZIh5SOvNYzUjKZ6s/7Sdhap2FBkO/WG1rJRc4y9Z9t0vOxD25Dp+tvv
+	 XoTxCWkqU9DYXgxuY1zamQ2XeTwTHigPDVH6UmhSFD96yEK/fIO/6qspxsDtqJRaCu
+	 7UG49967Ku9QA==
 From: Mario Limonciello <superm1@kernel.org>
 To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
 	Perry Yuan <perry.yuan@amd.com>
@@ -34,9 +34,9 @@ Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
 	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
 	Mario Limonciello <mario.limonciello@amd.com>,
 	Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Subject: [PATCH v3 16/18] cpufreq/amd-pstate: Drop debug statements for policy setting
-Date: Mon, 17 Feb 2025 16:07:05 -0600
-Message-ID: <20250217220707.1468365-17-superm1@kernel.org>
+Subject: [PATCH v3 18/18] cpufreq/amd-pstate: Stop caching EPP
+Date: Mon, 17 Feb 2025 16:07:07 -0600
+Message-ID: <20250217220707.1468365-19-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250217220707.1468365-1-superm1@kernel.org>
 References: <20250217220707.1468365-1-superm1@kernel.org>
@@ -50,41 +50,136 @@ Content-Transfer-Encoding: 8bit
 
 From: Mario Limonciello <mario.limonciello@amd.com>
 
-There are trace events that exist now for all amd-pstate modes that
-will output information right before programming to the hardware.
+EPP values are cached in the cpudata structure per CPU. This is needless
+though because they are also cached in the CPPC request variable.
 
-This makes the existing debug statements unnecessary remaining
-overhead.  Drop them.
+Drop the separate cache for EPP values and always reference the CPPC
+request variable when needed.
 
 Reviewed-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/cpufreq/amd-pstate.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/cpufreq/amd-pstate.c | 27 ++++++++++++++-------------
+ drivers/cpufreq/amd-pstate.h |  1 -
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 1f4c9d7fe28f5..9985edf9d0d55 100644
+index 4660dd3f04796..48ec5e6527c68 100644
 --- a/drivers/cpufreq/amd-pstate.c
 +++ b/drivers/cpufreq/amd-pstate.c
-@@ -667,7 +667,6 @@ static int amd_pstate_verify(struct cpufreq_policy_data *policy_data)
+@@ -268,8 +268,6 @@ static int msr_update_perf(struct cpufreq_policy *policy, u8 min_perf,
  	}
  
- 	cpufreq_verify_within_cpu_limits(policy_data);
--	pr_debug("policy_max =%d, policy_min=%d\n", policy_data->max, policy_data->min);
+ 	WRITE_ONCE(cpudata->cppc_req_cached, value);
+-	if (epp != cpudata->epp_cached)
+-		WRITE_ONCE(cpudata->epp_cached, epp);
  
  	return 0;
  }
-@@ -1633,9 +1632,6 @@ static int amd_pstate_epp_set_policy(struct cpufreq_policy *policy)
- 	if (!policy->cpuinfo.max_freq)
- 		return -ENODEV;
+@@ -318,7 +316,6 @@ static int msr_set_epp(struct cpufreq_policy *policy, u8 epp)
+ 	}
  
--	pr_debug("set_policy: cpuinfo.max %u policy->max %u\n",
--				policy->cpuinfo.max_freq, policy->max);
+ 	/* update both so that msr_update_perf() can effectively check */
+-	WRITE_ONCE(cpudata->epp_cached, epp);
+ 	WRITE_ONCE(cpudata->cppc_req_cached, value);
+ 
+ 	return ret;
+@@ -335,9 +332,12 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
+ {
+ 	struct amd_cpudata *cpudata = policy->driver_data;
+ 	struct cppc_perf_ctrls perf_ctrls;
++	u8 epp_cached;
+ 	u64 value;
+ 	int ret;
+ 
++
++	epp_cached = FIELD_GET(AMD_CPPC_EPP_PERF_MASK, cpudata->cppc_req_cached);
+ 	if (trace_amd_pstate_epp_perf_enabled()) {
+ 		union perf_cached perf = cpudata->perf;
+ 
+@@ -348,10 +348,10 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
+ 					  FIELD_GET(AMD_CPPC_MAX_PERF_MASK,
+ 						    cpudata->cppc_req_cached),
+ 					  policy->boost_enabled,
+-					  epp != cpudata->epp_cached);
++					  epp != epp_cached);
+ 	}
+ 
+-	if (epp == cpudata->epp_cached)
++	if (epp == epp_cached)
+ 		return 0;
+ 
+ 	perf_ctrls.energy_perf = epp;
+@@ -360,7 +360,6 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
+ 		pr_debug("failed to set energy perf value (%d)\n", ret);
+ 		return ret;
+ 	}
+-	WRITE_ONCE(cpudata->epp_cached, epp);
+ 
+ 	value = READ_ONCE(cpudata->cppc_req_cached);
+ 	value &= ~AMD_CPPC_EPP_PERF_MASK;
+@@ -1203,9 +1202,11 @@ static ssize_t show_energy_performance_preference(
+ 				struct cpufreq_policy *policy, char *buf)
+ {
+ 	struct amd_cpudata *cpudata = policy->driver_data;
+-	u8 preference;
++	u8 preference, epp;
++
++	epp = FIELD_GET(AMD_CPPC_EPP_PERF_MASK, cpudata->cppc_req_cached);
+ 
+-	switch (cpudata->epp_cached) {
++	switch (epp) {
+ 	case AMD_CPPC_EPP_PERFORMANCE:
+ 		preference = EPP_INDEX_PERFORMANCE;
+ 		break;
+@@ -1568,7 +1569,7 @@ static int amd_pstate_epp_update_limit(struct cpufreq_policy *policy)
+ 	if (cpudata->policy == CPUFREQ_POLICY_PERFORMANCE)
+ 		epp = 0;
+ 	else
+-		epp = READ_ONCE(cpudata->epp_cached);
++		epp = FIELD_GET(AMD_CPPC_EPP_PERF_MASK, cpudata->cppc_req_cached);
+ 
+ 	perf = READ_ONCE(cpudata->perf);
+ 
+@@ -1604,22 +1605,22 @@ static int amd_pstate_epp_cpu_online(struct cpufreq_policy *policy)
+ 	struct amd_cpudata *cpudata = policy->driver_data;
+ 	union perf_cached perf = READ_ONCE(cpudata->perf);
+ 	int ret;
++	u8 epp;
++
++	epp = FIELD_GET(AMD_CPPC_EPP_PERF_MASK, cpudata->cppc_req_cached);
+ 
+ 	pr_debug("AMD CPU Core %d going online\n", cpudata->cpu);
+ 
+ 	ret = amd_pstate_cppc_enable(policy);
+ 	if (ret)
+ 		return ret;
 -
- 	cpudata->policy = policy->policy;
+-
+-	ret = amd_pstate_update_perf(policy, 0, 0, perf.highest_perf, cpudata->epp_cached, false);
++	ret = amd_pstate_update_perf(policy, 0, 0, perf.highest_perf, epp, false);
+ 	if (ret)
+ 		return ret;
  
- 	ret = amd_pstate_epp_update_limit(policy);
+ 	cpudata->suspended = false;
+ 
+ 	return 0;
+-
+ }
+ 
+ static int amd_pstate_epp_cpu_offline(struct cpufreq_policy *policy)
+diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
+index 1a52582dbac9d..13918853f0a82 100644
+--- a/drivers/cpufreq/amd-pstate.h
++++ b/drivers/cpufreq/amd-pstate.h
+@@ -100,7 +100,6 @@ struct amd_cpudata {
+ 	bool	hw_prefcore;
+ 
+ 	/* EPP feature related attributes*/
+-	u8	epp_cached;
+ 	u32	policy;
+ 	bool	suspended;
+ 	u8	epp_default;
 -- 
 2.43.0
 
