@@ -1,140 +1,121 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72ADE215F49;
-	Mon, 17 Feb 2025 13:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576CD215F49;
+	Mon, 17 Feb 2025 13:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797612; cv=none; b=Km2BKqIHOkvdycGF7fIei6jyphauagyLNpqdX3O/yn52nxbfhFswJAAxJuzBBkFEjQbXyof9cHzJ7sAwCH6JdF52PvtCxUZcY035dBr0WUjV+1V/sMWi/9a5AKNawpZWOPvautdRcB7yhfI/FOPTxe0gRNPU94Z0ORMSBlvJCCU=
+	t=1739797692; cv=none; b=F5wDGWtRWytb+SDfkVn/PMcG/C7iBDf2Dupj1wX9Ngj2kVc7CASvAbYS+WDQHzJqzfAx+z4N5meW/ncYThKbxAnZ9XoRZr7kqqMEkJ1s0WlT9ICLLbQnohLhQ2Ui2Dovq3bNWhcF0c7wDsXj6iR2gAxpVrL7Lq9ql/tN4qVxyg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797612; c=relaxed/simple;
-	bh=nN4o3P1mouOHENLPIOBJJsndTSO4QsgADBehLhpRlW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oNmQ/wR8Y3BaMXlbC+OQn67HLpVQRtFsTaHuUUswSy+8hdb0xqMs4HMXbwtWPx8irPQMmtDpslFii7LKQTzc9njVypckkDVO0VX74Us259zueBvi0lx5NrqeOJxHrdwEbzqcXqvMeRfhDH4GIUI9/8xnzcDCiAd7scFccPO9AyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 51HCjfgB011690;
-	Mon, 17 Feb 2025 06:45:41 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 51HCjcjw011689;
-	Mon, 17 Feb 2025 06:45:38 -0600
-Date: Mon, 17 Feb 2025 06:45:38 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: James Morris <jmorris@namei.org>
-Cc: linux-security-module@vger.kernel.org,
-        Linux Security Summit Program Committee <lss-pc@lists.linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        linux-integrity@vger.kernel.org, lwn@lwn.net
-Subject: Re: [Announce] Linux Security Summit North America 2025 CfP
-Message-ID: <20250217124538.GA11605@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <35b17495-427f-549f-6e46-619c56545b34@namei.org>
+	s=arc-20240116; t=1739797692; c=relaxed/simple;
+	bh=TRuesCIASsENowkyLfM2C67vODr26gLW9azX9UwdM3c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LoMIZMtUvwO35VGCcjf7fGi/hK+5302mMOWyjynKkHTcFssrvRr5ZMOb4YlyijidULsn8dnLNA4VHTl2NWhjjXdP6tcy//3adsBjp5nktEyjuNZ9VPHM5Vb6+5K/dSXvF2jOglwKyWIRJITkEtQzMQBmNOU7nsW91QYRS86cYpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8RXlzdF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8RXlzdF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E0138C4CEE2;
+	Mon, 17 Feb 2025 13:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739797692;
+	bh=TRuesCIASsENowkyLfM2C67vODr26gLW9azX9UwdM3c=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=k8RXlzdFhbS1/8QLQFRhux/AppJcJ6966iFhCyNP69b8K21nF1ZWolxY7zRYIgxrL
+	 MNEcwbDqeAb5m+dsBNRJ/IAfa7MTYsip3eFs1D9jHZSGSDDrxu0kINyIrokYJa2klJ
+	 1H3/99MDVSLUHPeYydA+bpe2YmDy8QQ16r5eNPw9kKxc7epbPCLV4kYizc7MB4qkuS
+	 Kw6l06vJoN3xQ9Ezq2CtsumlrmWjCkgdedUgAfykGA/QmT7zIV3Mp3wJOB/E4JVhba
+	 fqLPFMkZ8+TSv690LKNHObopWDorkslZcRsIytAJolY9G9F78HHfD8UKHnmJuQdSL4
+	 Pwc7lQ3cNJidA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA7C021A9;
+	Mon, 17 Feb 2025 13:08:11 +0000 (UTC)
+From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
+Date: Mon, 17 Feb 2025 14:07:51 +0100
+Subject: [PATCH 1/2] drivers: gpio: Add support for PCF8574T.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35b17495-427f-549f-6e46-619c56545b34@namei.org>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 17 Feb 2025 06:45:41 -0600 (CST)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250217-gpio-pcf8574t-v1-1-137e140df5fc@gmail.com>
+References: <20250217-gpio-pcf8574t-v1-0-137e140df5fc@gmail.com>
+In-Reply-To: <20250217-gpio-pcf8574t-v1-0-137e140df5fc@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, 
+ =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739797690; l=1707;
+ i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
+ bh=NOilr3HjpQ2oJwKALY56/6mHBbZIdGAWuyLI56+xsUI=;
+ b=sKvDFTQlBO+NeSz7z25NPSzCWoyS+E5DMNcVsDhEZ2ucbeo25xuwX7zPYjlCj2BtSTvp9VAlo
+ wTn92AND2faCHsd5CjQONktugAJCSsLWoG7NodqPsx3MhLfrSobWM27
+X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
+ pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
+X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
+ auth_id=60
+X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+Reply-To: gomba007@gmail.com
 
-On Mon, Feb 10, 2025 at 01:03:02PM -0800, James Morris wrote:
+From: Tóth János <gomba007@gmail.com>
 
-Good morning, I hope the week is starting well for everyone.
+Add support for the PCF8574T 8-bit I2C I/O expander.
 
-> The Call for Participation for the 2025 Linux Security Summit North 
-> America (LSS-NA) is now open.
-> 
-> LSS-NA 2025 is a technical forum for collaboration between Linux 
-> developers, researchers, and end-users. Its primary aim is to foster 
-> community efforts in deeply analyzing and solving Linux operating system 
-> security challenges, including those in the Linux kernel. Presentations 
-> are expected to focus deeply on new or improved technology and how it 
-> advances the state of practice for addressing these challenges.
->
-> Key dates:
-> 
->     - CFP Closes:  Monday, March 10 at 11:59 PM MDT / 10:59 PM PDT
->     - CFP Notifications: Monday, March 31
->     - Schedule Announcement: Wednesday, April 2
->     - Presentation Slide Due Date: Tuesday, June 24
->     - Event Dates: Thursday, June 26 ??? Friday, June 27
-> 
-> Location: Denver, Colorado, USA (co-located with OSS).
+The driver is tested with:
+	+ tools/lsgpio
+	+ tools/gpio-hammer
+	+ some LEDs
 
-I reflected a great deal before responding to this note and finally
-elected to do so.  Given the stated desire of this conference to
-'focus deeply on new or improved technologies' for advancing the state
-of practice in addressing the security challenges facing Linux, and
-presumably by extension, the technology industry at large.
+[1] https://www.nxp.com/docs/en/data-sheet/PCF8574_PCF8574A.pdf
 
-I'm not not sure what defines membership in the Linux 'security
-community'.  I first presented at the Linux Security Summit in 2015,
-James you were moderating the event and sitting in the first row.
+Signed-off-by: Tóth János <gomba007@gmail.com>
+---
+ drivers/gpio/Kconfig        | 2 +-
+ drivers/gpio/gpio-pcf857x.c | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-If there is a desire by the Linux Foundation to actually promote
-security innovation, it would seem the most productive use of
-everyone's time would be to have a discussion at this event focusing
-on how this can best be accomplished in the context of the current
-Linux development environment.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 98b4d1633b25..d7cdc3cc1b00 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1193,7 +1193,7 @@ config GPIO_PCF857X
+ 	  Most of these parts are from NXP, though TI is a second source for
+ 	  some of them.  Compatible models include:
+ 
+-	  8 bits:   pcf8574, pcf8574a, pca8574, pca8574a,
++	  8 bits:   pcf8574, pcf8574a, pcf8574t, pca8574, pca8574a,
+ 	            pca9670, pca9672, pca9674, pca9674a,
+ 	            max7328, max7329
+ 
+diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+index 7c57eaeb0afe..2464c527a4e8 100644
+--- a/drivers/gpio/gpio-pcf857x.c
++++ b/drivers/gpio/gpio-pcf857x.c
+@@ -20,6 +20,7 @@
+ static const struct i2c_device_id pcf857x_id[] = {
+ 	{ "pcf8574", 8 },
+ 	{ "pcf8574a", 8 },
++	{ "pcf8574t", 8 },
+ 	{ "pca8574", 8 },
+ 	{ "pca9670", 8 },
+ 	{ "pca9672", 8 },
+@@ -38,6 +39,7 @@ MODULE_DEVICE_TABLE(i2c, pcf857x_id);
+ static const struct of_device_id pcf857x_of_table[] = {
+ 	{ .compatible = "nxp,pcf8574", (void *)8 },
+ 	{ .compatible = "nxp,pcf8574a", (void *)8 },
++	{ .compatible = "nxp,pcf8574t", (void *)8 },
+ 	{ .compatible = "nxp,pca8574", (void *)8 },
+ 	{ .compatible = "nxp,pca9670", (void *)8 },
+ 	{ .compatible = "nxp,pca9672", (void *)8 },
 
-If we have done nothing else with our Quixote/TSEM initiative, I
-believe we have demonstrated that Linux security development operates
-under the 'omniscient maintainer' model, a concept that is the subject
-of significant discussion in other venues of the Linux community:
+-- 
+2.34.1
 
-https://lore.kernel.org/lkml/CAEg-Je9BiTsTmaadVz7S0=Mj3PgKZSu4EnFixf+65bcbuu7+WA@mail.gmail.com/
 
-I'm not here to debate whether that is a good or bad model.  I do
-believe, that by definition, it constrains the innovation that can
-successfully emerge to something that an 'omniscient' maintainer
-understands, feels comfortable with or is not offended by.
-
-It should be lost on no one that the history of the technology
-industry has largely been one of disruptive innovation that is
-completely missed by technology incumbents.
-
-The future may be the BPF/LSM, although no one has yet publically
-demonstrated the ability to implement something on the order of
-SeLinux, TOMOYO or Apparmor through that mechanism.  It brings as an
-advantage the ability to innovate without constraints as to would be
-considered 'acceptable' security.
-
-Unfortunately, a careful review of the LSM mailing list would suggest
-that the BPF/LSM, as a solution, is not politically popular in some
-quarters of the Linux security community.  There have been public
-statements that there isn't much concern if BPF breaks, as the concept
-of having external security policy is not something that should be
-supported.
-
-We took an alternative approach with TSEM, but after two years of
-submissions, no code was ever reviewed.  I'm not here to bitch about
-that, however, the simple fact is that two years with no progress is
-an eternity in the technology industry, particularly security, and
-will serve to drive security innovation out of the kernel.
-
-One can make a reasoned and informed argument that has already
-happened.  One of the questions worthy of debate at a conference with
-the objectives stated above.
-
-I apologize if these reflections are less than popular but they are
-intended to stimulate productive discussion, if the actual intent of
-the conference organizers is to focus deeply on new and improved
-security technology.
-
-There is far more technology potentially available than there are good
-answers to the questions as to how to effectively exploit it.
-
-> James Morris
-> <jmorris@namei.org>
-
-Best wishes for a productive week.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
