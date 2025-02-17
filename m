@@ -1,209 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D822185A8;
-	Mon, 17 Feb 2025 12:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933BD2185A8;
+	Mon, 17 Feb 2025 12:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739794380; cv=none; b=pz57ANKm9F1crhq+0NOXUVHdsf0Ul/n6MEjGZFoMBnII0lat23HWI/ZqicglecMnxJHXZthLtCy9YMlpDgV+L/i9ydtibeYR/jfZlqJBIm8LWZhDFsWWxPFMOG6xTdjsILi9DBgxKu2reLdWYmAuknKvfPxOH9msChS523mn3Ag=
+	t=1739794446; cv=none; b=kVN9AfpO+CkcIJyMuhsWjNqjrCLUC0LGvVBr9DYuFU6XuBby8X1wUvATYEehDizf8bISA9beiDZI6TcdZuR930VabyV0LY+/FbJD2zdVtvwyiVd3ks918k0z6Va47MQNbLMGA01aruoFrycvB+US0JYvJ6LQiHiveaJL/dPjW1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739794380; c=relaxed/simple;
-	bh=VJNVrcvoIcKGWBC4m+wwvcuEU2F2sV9NM4ZPEjdhRA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ti2g6STouqN97krAphPnZVywqT2hHIOAfayGT837V90l9BOIjuYlCdJ7AqXf/9YKmpXzBFnXGy3k8/rptlw6vMsxfjueEk0C8FcdU6mY1Q/rc53zOt8FV8HaSgCdCggZbWgDfXrjfrQsgHOw9OoRoIES/J0qaJz2kfXDFEVEfqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sF2WsCXn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739794446; c=relaxed/simple;
+	bh=HBsy5RTo5q+NJaeKSFcGgHYgGChfcYKkWDMlY/qvf1w=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V3QpFP2kSoN8Jvl+Lberye2FnT1WIprQz71a5pC5/nKDfJAz10iNxX15Uo9uR0ooFIGfFFusYFq7aQ7J3zNMiJu15g6KHe2JlAe73NrdZsqaHSpMVLwt5ZVm3lGZBFpdu4T6burLTutRuAFtt9pR6w/nS7LiJXDz/NpcPkzm/yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=zosBcGvf; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sF2WsCXn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FC7C4CED1;
-	Mon, 17 Feb 2025 12:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739794379;
-	bh=VJNVrcvoIcKGWBC4m+wwvcuEU2F2sV9NM4ZPEjdhRA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sF2WsCXnNO2Mq09ZP8eSrQmmecWEJZ6QCZhrPgk69AgUzET9dlUqjJDIWCzUCPaXi
-	 XgYLSeUO/aw0P3rJE8SbUet5UGF3b7SZFuw72dDnFbVXzCZXFmW7Cc4cXokrYIRKpJ
-	 nni21nwzpaC1ZBEzhUMsTfl59HQ6Gc3+ZOkz35+gE+RRIUl10OF3Xhso+ULq/JLgCE
-	 aP0VHmM27BR2OcELOO6pHlSLkKQcTPctahl1VztCZON8O1G2PIokz75s6hbUPjk3bE
-	 0H2a1ekaqdCVSNMvyc9F3QB1b/UiWwaqe1WXhvTvcwhirt15WONul4o3b642kNFsH/
-	 cBdb+gVEj0FEg==
-Date: Mon, 17 Feb 2025 13:12:52 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Matthew Wilcox <willy@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
-Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
-Message-ID: <Z7MnxKSSNY7IyExt@cassiopeiae>
-References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
- <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="zosBcGvf"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HA0CYV030466;
+	Mon, 17 Feb 2025 07:13:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=xZQbkymXR6jaKSMYeUzs3gXZo8/
+	3BkzsN2CDrGajyBw=; b=zosBcGvf5FoBcBUu3YCuAElvjfZ5VJMe4wE20pkEnVr
+	RLLgn5PqA1ExLeKSJpVgRd3whtfs2DpuwVxJtWfXLvIUUieKl1VNSQj8+WWpCfPC
+	6rzoLcWZG1CGLPMhpGj9FJji0gr4fksoy7OoJ2nbnY1Mi1xEkVmS6Gu4YtKqT6Ox
+	GYmCvD2mlSoxHu3Tapm0nVfBB23CBtAlS46vw4LcL/8gCmWioIuKlHn0YEm4PuOG
+	XUiMdnAFhjmszGmbhlxESLDSpi1YQhTK9mAoALv+lw0TXAfemsrklmoCyTr2Rlmp
+	YtMe8pepVGoaPjfxcYD9Pb5EipGVDi2vpEm2EA2dE4A==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 44v2ysrffx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 07:13:49 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 51HCDmHB010512
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 17 Feb 2025 07:13:48 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 17 Feb 2025 07:13:48 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 17 Feb 2025 07:13:48 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 17 Feb 2025 07:13:48 -0500
+Received: from desktop-robi.ad.analog.com ([10.48.65.85])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51HCDZMO016764;
+	Mon, 17 Feb 2025 07:13:37 -0500
+From: Robert Budai <robert.budai@analog.com>
+To: Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich
+	<Michael.Hennerich@analog.com>,
+        Nuno Sa <nuno.sa@analog.com>,
+        "Ramona
+ Gradinariu" <ramona.gradinariu@analog.com>,
+        Antoniu Miclaus
+	<antoniu.miclaus@analog.com>,
+        Robert Budai <robert.budai@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+        "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+Subject: [PATCH v8 0/6] Add support for ADIS16550
+Date: Mon, 17 Feb 2025 12:12:13 +0200
+Message-ID: <20250217101221.600898-1-robert.budai@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: bl9QxCyc62VrUsqekd_H_lWbcXZtVGjj
+X-Proofpoint-ORIG-GUID: bl9QxCyc62VrUsqekd_H_lWbcXZtVGjj
+X-Authority-Analysis: v=2.4 cv=ELj800ZC c=1 sm=1 tr=0 ts=67b327fd cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=TpNKFGk_wJGFTPuD7poA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_05,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=1 clxscore=1015 bulkscore=1 phishscore=0 suspectscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502170107
 
-On Fri, Feb 07, 2025 at 08:58:25AM -0500, Tamir Duberstein wrote:
-> Allow implementors to specify the foreign pointer type; this exposes
-> information about the pointed-to type such as its alignment.
-> 
-> This requires the trait to be `unsafe` since it is now possible for
-> implementors to break soundness by returning a misaligned pointer.
-> 
-> Encoding the pointer type in the trait (and avoiding pointer casts)
-> allows the compiler to check that implementors return the correct
-> pointer type. This is preferable to directly encoding the alignment in
-> the trait using a constant as the compiler would be unable to check it.
-> 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+The ADIS16550 is a complete inertial system that includes a triaxis gyroscope
+and a triaxis accelerometer. Each inertial sensor in the ADIS16550 combines
+industry leading MEMS only technology with signal conditioning that optimizes
+dynamic performance. The factory calibration characterizes each sensor for
+sensitivity, bias, and alignment. As a result, each sensor has its own dynamic
+compensation formulas that provide accurate sensor measurements.
 
-I know that Andreas also asked you to pick up the RBs from [1], but - without
-speaking for any of the people above - given that you changed this commit after
-you received all those RBs you should also consider dropping them. Especially,
-since you do not mention the changes you did for this commit in the version
-history.
 
-Just to be clear, often it is also fine to keep tags for minor changes, but then
-you should make people aware of them in the version history, such that they get
-the chance to double check.
+Robert Budai (6):
+  iio: imu: adis: Add custom ops struct
+  iio: imu: adis: Add reset to custom ops
+  iio: imu: adis: Add DIAG_STAT register
+  dt-bindings: iio: Add adis16550 bindings
+  iio: imu: adis16550: add adis16550 support
+  docs: iio: add documentation for adis16550 driver
 
-[1] https://lore.kernel.org/rust-for-linux/20250131-configfs-v1-1-87947611401c@kernel.org/
+ .../bindings/iio/imu/adi,adis16550.yaml       |   74 ++
+ Documentation/iio/adis16550.rst               |  376 ++++++
+ Documentation/iio/index.rst                   |    1 +
+ MAINTAINERS                                   |   10 +
+ drivers/iio/imu/Kconfig                       |   13 +
+ drivers/iio/imu/Makefile                      |    1 +
+ drivers/iio/imu/adis.c                        |   35 +-
+ drivers/iio/imu/adis16550.c                   | 1149 +++++++++++++++++
+ include/linux/iio/imu/adis.h                  |   34 +-
+ 9 files changed, 1680 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
+ create mode 100644 Documentation/iio/adis16550.rst
+ create mode 100644 drivers/iio/imu/adis16550.c
 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  rust/kernel/alloc/kbox.rs | 38 ++++++++++++++++++++------------------
->  rust/kernel/miscdevice.rs |  7 ++++++-
->  rust/kernel/pci.rs        |  2 ++
->  rust/kernel/platform.rs   |  2 ++
->  rust/kernel/sync/arc.rs   | 21 ++++++++++++---------
->  rust/kernel/types.rs      | 46 +++++++++++++++++++++++++++++++---------------
->  6 files changed, 73 insertions(+), 43 deletions(-)
-> 
-> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-> index e14433b2ab9d..f1a081dd64c7 100644
-> --- a/rust/kernel/miscdevice.rs
-> +++ b/rust/kernel/miscdevice.rs
-> @@ -225,13 +225,15 @@ impl<T: MiscDevice> VtableHelper<T> {
->          Ok(ptr) => ptr,
->          Err(err) => return err.to_errno(),
->      };
-> +    let ptr = ptr.into_foreign();
-> +    let ptr = ptr.cast();
-
-I still think that it's unnecessary to factor this out, you can just do it
-inline as you did in previous versions of this patch and as this code did
-before.
-
->  
->      // This overwrites the private data with the value specified by the user, changing the type of
->      // this file's private data. All future accesses to the private data is performed by other
->      // fops_* methods in this file, which all correctly cast the private data to the new type.
->      //
->      // SAFETY: The open call of a file can access the private data.
-> -    unsafe { (*raw_file).private_data = ptr.into_foreign() };
-> +    unsafe { (*raw_file).private_data = ptr };
->  
->      0
->  }
-> @@ -246,6 +248,7 @@ impl<T: MiscDevice> VtableHelper<T> {
->  ) -> c_int {
->      // SAFETY: The release call of a file owns the private data.
->      let private = unsafe { (*file).private_data };
-> +    let private = private.cast();
->      // SAFETY: The release call of a file owns the private data.
->      let ptr = unsafe { <T::Ptr as ForeignOwnable>::from_foreign(private) };
->  
-> @@ -267,6 +270,7 @@ impl<T: MiscDevice> VtableHelper<T> {
->  ) -> c_long {
->      // SAFETY: The ioctl call of a file can access the private data.
->      let private = unsafe { (*file).private_data };
-> +    let private = private.cast();
->      // SAFETY: Ioctl calls can borrow the private data of the file.
->      let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
->  
-> @@ -316,6 +320,7 @@ impl<T: MiscDevice> VtableHelper<T> {
->  ) {
->      // SAFETY: The release call of a file owns the private data.
->      let private = unsafe { (*file).private_data };
-> +    let private = private.cast();
->      // SAFETY: Ioctl calls can borrow the private data of the file.
->      let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
->      // SAFETY:
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 6c3bc14b42ad..eb25fabbff9c 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -73,6 +73,7 @@ extern "C" fn probe_callback(
->          match T::probe(&mut pdev, info) {
->              Ok(data) => {
->                  let data = data.into_foreign();
-> +                let data = data.cast();
-
-Same here and below, see also [2].
-
-I understand you like this style and I'm not saying it's wrong or forbidden and
-for code that you maintain such nits are entirely up to you as far as I'm
-concerned.
-
-But I also don't think there is a necessity to convert things to your preference
-wherever you touch existing code.
-
-I already explicitly asked you not to do so in [3] and yet you did so while
-keeping my ACK. :(
-
-(Only saying the latter for reference, no need to send a new version of [3],
-otherwise I would have replied.)
-
-[2] https://lore.kernel.org/rust-for-linux/Z7MYNQgo28sr_4RS@cassiopeiae/
-[3] https://lore.kernel.org/rust-for-linux/20250213-aligned-alloc-v7-1-d2a2d0be164b@gmail.com/
-
->                  // Let the `struct pci_dev` own a reference of the driver's private data.
->                  // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
->                  // `struct pci_dev`.
-> @@ -88,6 +89,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
->          // SAFETY: The PCI bus only ever calls the remove callback with a valid pointer to a
->          // `struct pci_dev`.
->          let ptr = unsafe { bindings::pci_get_drvdata(pdev) };
-> +        let ptr = ptr.cast();
->  
->          // SAFETY: `remove_callback` is only ever called after a successful call to
->          // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
-> diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-> index dea104563fa9..53764cb7f804 100644
-> --- a/rust/kernel/platform.rs
-> +++ b/rust/kernel/platform.rs
-> @@ -64,6 +64,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
->          match T::probe(&mut pdev, info) {
->              Ok(data) => {
->                  let data = data.into_foreign();
-> +                let data = data.cast();
->                  // Let the `struct platform_device` own a reference of the driver's private data.
->                  // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
->                  // `struct platform_device`.
-> @@ -78,6 +79,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
->      extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
->          // SAFETY: `pdev` is a valid pointer to a `struct platform_device`.
->          let ptr = unsafe { bindings::platform_get_drvdata(pdev) };
-> +        let ptr = ptr.cast();
->  
->          // SAFETY: `remove_callback` is only ever called after a successful call to
->          // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
+-- 
+2.34.1
 
