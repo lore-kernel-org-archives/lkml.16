@@ -1,83 +1,64 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB5D21ADD3;
-	Mon, 17 Feb 2025 16:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C8CC21ADD3
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739808072; cv=none; b=aeYhG3S17bXZ8bK2BhFSYMntCfsu9FO+TEo5t7TIhVhFK7GnKtdjyUx9DvcS1R9tr6H0DdbL3R5i2pLfRCOeLewLk+Khy40A3ZYuFJUcOSMCBPHfOTiR0OLIc2+F6EDkERDTXwetMV4CcAKP7JmLLpj7QeYXx2yBB6zUXYHeCkY=
+	t=1739808086; cv=none; b=RwcfYhGdTdrt8ikDiNf9dUVJnvC0cY+aQFVMqVJa0iW4w38nu6um1U/dZA1a5B20HwUHGR7p/4IjGIWcfZuoPUSVsorvW/RhLSaPfkOjlAISEYjx24bW+fz/Qyw5xfBidaOjLRBY5CTiVrWVK6hva4z1pNcesLp72r0lj3q0pfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739808072; c=relaxed/simple;
-	bh=a9L1iRTJAGeYLsPNdHi5448kzMlviGufO4uA3zEzNmU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UmRuGy+e237X0sxLwwcp813BM0flPUOYi/riQmctTl8Vg0XDBgBGZ42cayPqWvXnA2hlYYWMy9V7KQobcBftj9AQg62qReZGTvqIIoogxQ1hCIY/RGI3d4bbFTNue/nWVCiYNtHI0rFqfGI1q9DASA9CRcI8ET1icCl5jr2zYB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ARlezlZR; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ARlezlZR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=g3on1
-	gNZIaw9/zrdoIKx6bUBSXJCPFOMbC1oZWieC3w=; b=ARlezlZRDBcAG68jLlqBH
-	jMYMDZL1JvwefdvBPA4EvS2X1hafuT/nwjaLf8Ik5JHDoGm6cFdDhJ/TnWdjAY3N
-	vX3l4WENt5erU51REra/Spv94i8YEDNZWnvJdmm2WJzuOy8X7vZWZTWhzsBmn5LP
-	qrgXr/SDpEmfc7EXIbnRdY=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgCHjVcTXbNnyxM4EQ--.1900S4;
-	Tue, 18 Feb 2025 00:00:20 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: sammy@sammy.net,
-	geert@linux-m68k.org,
-	zhengqi.arch@bytedance.com,
-	akpm@linux-foundation.org,
-	dave.hansen@linux.intel.com,
-	kevin.brodsky@arm.com
-Cc: linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] m68k: sun3: Add check for __pgd_alloc()
-Date: Tue, 18 Feb 2025 00:00:17 +0800
-Message-Id: <20250217160017.2375536-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739808086; c=relaxed/simple;
+	bh=r0QIMlwoya25c+HjOjrYyIAvdoQ1xo2/pvGD2Bvp+Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZRgyoVzjGYS9RUlc87L9p554iaNEMdyfiSfs19I7BmsCsTJWlcbSXmzctYURsSN/XT25BrQ58un67Kdd0Q+C/uUiNtItSKVKcKZ21i90BfIeyYDxGBQaZ2KWIb2+J8i60Pmcr4vZdkG0ihOUpsaTMoEMFFj4QMAG98N/ieppdaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5133C152B;
+	Mon, 17 Feb 2025 08:01:43 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 677C03F5A1;
+	Mon, 17 Feb 2025 08:01:22 -0800 (PST)
+Date: Mon, 17 Feb 2025 16:01:19 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Ionela Voinescu <ionela.voinescu@arm.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<catalin.marinas@arm.com>, <vincent.guittot@linaro.org>,
+	<beata.michalska@arm.com>, <rafael@kernel.org>,
+	<viresh.kumar@linaro.org>, <dietmar.eggemann@arm.com>,
+	<pierre.gondois@arm.com>
+Subject: Re: [PATCH] arch_topology: init capacity_freq_ref to 0
+Message-ID: <Z7NdT2OBJPRveDHQ@bogus>
+References: <20240827154818.1195849-1-ionela.voinescu@arm.com>
+ <Z7NPEic3jxLAQBTd@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgCHjVcTXbNnyxM4EQ--.1900S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JF43uw4kurWktr4fKw18AFb_yoWDCFcEk3
-	Z2kws3CrykXrW8Jr18Aa13WF90gw1kWr95Zr1Svw43Ar98Xrs5Zw4DKr1rAr429anxZrWk
-	uFZ0yrW5trnFqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRRAwI3UUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqBr2bmezPf2FDwADs3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7NPEic3jxLAQBTd@arm.com>
 
-Add check for the return value of __pgd_alloc() in
-pgd_alloc() to prevent null pointer dereference.
+On Mon, Feb 17, 2025 at 03:01:23PM +0000, Ionela Voinescu wrote:
+> Hi folks,
+> 
+> I just wanted to mention that this patch still applies cleanly on
+> next-20250217 as well, and it still builds/boots/works as expected.
+> 
+> I've rechecked it given that the patches at [1] seem ready to be picked
+> up, and those patches depend on this one.
+>
 
-Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
- arch/m68k/include/asm/sun3_pgalloc.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Is there a dependency on [1] ?
 
-diff --git a/arch/m68k/include/asm/sun3_pgalloc.h b/arch/m68k/include/asm/sun3_pgalloc.h
-index f1ae4ed890db..80afc3a18724 100644
---- a/arch/m68k/include/asm/sun3_pgalloc.h
-+++ b/arch/m68k/include/asm/sun3_pgalloc.h
-@@ -44,8 +44,10 @@ static inline pgd_t * pgd_alloc(struct mm_struct *mm)
- 	pgd_t *new_pgd;
- 
- 	new_pgd = __pgd_alloc(mm, 0);
--	memcpy(new_pgd, swapper_pg_dir, PAGE_SIZE);
--	memset(new_pgd, 0, (PAGE_OFFSET >> PGDIR_SHIFT));
-+	if (likely(new_pgd != NULL)) {
-+		memcpy(new_pgd, swapper_pg_dir, PAGE_SIZE);
-+		memset(new_pgd, 0, (PAGE_OFFSET >> PGDIR_SHIFT));
-+	}
- 	return new_pgd;
- }
- 
--- 
-2.25.1
+Either way, if Catalin is happy to pick it up along with [1], that would
+be best and easiest.
 
+If not and there are not dependencies, then we can ask Greg to pick up.
+Which means you need to repost with him cc-ed ? Lets wait and see if
+Catalin is happy to pick up before reposting though.
+
+--
+Regards,
+Sudeep
