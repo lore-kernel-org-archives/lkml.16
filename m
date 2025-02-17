@@ -1,88 +1,122 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E124C38FB0
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 18:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739816206; cv=none; b=kqyS4fmS36iINnV61urfXKmNrsXH7kR5TFWrJjQUOU/LcDH3T7Wz8Vu0AZKKganbr9+DPNGSHzZcGtSpBh3lM/PSOIhaT+TLl2jozenW3Ds/O3W4ihG206r+uVsgoOL00FwRcETRaIq564cvxOVqeGwuezQoPV4KT2N/VRhq0mc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739816206; c=relaxed/simple;
-	bh=M3aNmsZjJZLYUGS3ElWTUS/mfTa/4pNcn72ELrVEzHo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=TZr1w3lhZVpxXv4BwcUNTlDcOdtJtPm+8OX7hAXYvh0slvBS2eqbUnO2SGG3gnkQppEQAxtbIcikd4AxJVhTNcg9RVPxzMmukb1mEymfNh2GwjZS2PMDKpAJTI62yrXi4+sSgbVxzI6HJgpXgzxVgWN/u6cc/qjw2GZgC1L6vQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2a1d6747aso5419175ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 10:16:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739816204; x=1740421004;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MfUM4i3woVf0UXugrGrKwiS5qCUgW9J4SSBSO0ly1Js=;
-        b=Ag1IAXfEdJAuVoRQ5U2JxWz+wgQOa81sHjsGJnt5hM7mfAMHr6/afQwRaiZNE9YdmN
-         qTy1Ly8VEF/rrDnNWdivSON8Z/8EVqjajiAnHrg4JNpZhn2qzfS7nAOkEwffE5euUtlb
-         ozrsVSaIUcFZcYZkBavJ9/5I0P+sZXKgzcufsFSji6dSfqGgvIoh1SRx59eJEy14Mph/
-         1uRwnzQSYGhTRg619qYrG7lOWQhWqeIO7mD3UEfzUCU7PEwS4iqcmr5feZY/jHCcW317
-         lQsR1AJ0oqIfBr5jC8ZoWCVqVUMJGtQxHKCkCpJX0Sgnf1RGAg/lv2a1gLOP2xsSVpQn
-         5oBw==
-X-Gm-Message-State: AOJu0YygPPx8LdpXUkpzo7bgPbzKNHJb3XVxh6jukbkzW+fW0Zj7Yg8P
-	KW99JSNQPqwOJPIPiT2JdEeoqSchIWIxjGqEpa++l7kvvN5Zx8qSfPsF1COtnZ/F6WndqoWQFT4
-	tU57k6ujq+xjQo9H2KtUBba/cqvMpiwpRvWFzT+ikHmjgQtJuombDXzA=
-X-Google-Smtp-Source: AGHT+IFOkXEYq/drTj63U7Tzdfzj0HJgcb8Kmb6pZ9Jfbh5QgBn1dZ9wzEuuF9irlON4YpQVJ4TEn9YQB762hSZUgrc4O31VPT0B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17320215F5E;
+	Mon, 17 Feb 2025 18:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739816233; cv=pass; b=fxKdZSkk6XS0UPbgC3VqAYcaIwMS30U5LkHyVXnFO0xgyPaXcDb12JtnutCjrUR38K4GGEgyfdFF/o3Vw93PikDAIbIvcWx8+c0VK/o1iACsPjjKSfPo7pvBLPhKAcvm3lZ59o2p0lTJbCL1qFXlkyJQOv0UNYkmM3UL4vkV+rw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739816233; c=relaxed/simple;
+	bh=NUqQknZpg2LliGTzyKHfciU1oNwwa+2zKooTZkcKwpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oiAZ2Yqb3O3QTdl/OI52tOFuIvTdUhwNPC04DWLtEobOzShBtmSMnLNEhdCvsNj7q7c63FpSq6Da6Tcr4A4Kt4mnmamIV+pHoJVS6D81Bnb8oUZ8mgq1UAm5b4PswaLop33PXhCr0NRxt2gORr5dU442RqmSYDitCJceOgD3LSE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=gbWOKyv0; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="gbWOKyv0"
+ARC-Seal: i=1; a=rsa-sha256; t=1739816173; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ijxtj4U8Q8R7wF2cKrBvAlztwsF7BHKE9ppJN+H5P+dWjGidAuFnAINvHWu1ugpr1KKFjNOgD/BL58cpHHg++bIB3cgTGtd+138I0XmM/pVkAuBePh6asJxzZZMGGMoyhMupfIuxXSd/uLFYhu5zZvFe8thfq19iLR86rB7HSy4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739816173; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=dW0tidsgp/Ub4s++qsOhA6oRQ1/t0kgWfjgFSGuKGjs=; 
+	b=VWX3H4OTkoH1XaxjU+7vO6RIlxGvOjomnJz7kotKI1KEc0niNqCmLO+6ZU3/FRYcWsEPh1MFGezrCeZCWkkI0kHDH8Ri/Dd39HFKoKhZDdiT9/iFRNqKihl3JLRPEOdW3P4yIC2RNb4XD9pLIy6+810nBWMZQZicB/G9SR0mRQQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739816173;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=dW0tidsgp/Ub4s++qsOhA6oRQ1/t0kgWfjgFSGuKGjs=;
+	b=gbWOKyv05QL9Uq1RX9ObrSEFjSLUUYqJL4UkEvlwp9CkWJ0/PcKYAAYsm3/0jTeq
+	QCuyxQNT+HnCsGpH5M8FTziAhyx0CZ9H4Skf6c8CzlGWVneXBUkOCtOgEHE+KW8ITKN
+	vhrnDpCyr+AuRER+kPYRZehu6lb+gDzTSWXIDSmA=
+Received: by mx.zohomail.com with SMTPS id 1739816172379218.1983866353495;
+	Mon, 17 Feb 2025 10:16:12 -0800 (PST)
+Message-ID: <6638b286-2e5e-4861-bb85-2e29556b0b02@collabora.com>
+Date: Mon, 17 Feb 2025 21:16:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b08:b0:3d0:26a5:b2c with SMTP id
- e9e14a558f8ab-3d281fe0962mr59564755ab.8.1739816203976; Mon, 17 Feb 2025
- 10:16:43 -0800 (PST)
-Date: Mon, 17 Feb 2025 10:16:43 -0800
-In-Reply-To: <67b323a4.050a0220.173698.002b.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b37d0b.050a0220.173698.003a.GAE@google.com>
-Subject: Re: [syzbot] [PATCH] can: ucan: Correct the size parameter
-From: syzbot <syzbot+d7d8c418e8317899e88c@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/6] Add Synopsys DesignWare HDMI RX Controller
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+ Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
+ <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
+ nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
+ nicolas.dufresne@collabora.com,
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>
+References: <20250215210417.60074-1-dmitry.osipenko@collabora.com>
+ <0218c59c-ed97-4315-9306-041636462293@xs4all.nl>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <0218c59c-ed97-4315-9306-041636462293@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On 2/17/25 11:34, Hans Verkuil wrote:
+> Hi Dmitry,
+> 
+> On 15/02/2025 22:04, Dmitry Osipenko wrote:
+>> This series implements support for the Synopsys DesignWare
+>> HDMI RX Controller, being compliant with standard HDMI 1.4b
+>> and HDMI 2.0.
+>>
+>> Features that are currently supported by the HDMI RX driver
+>> have been tested on rock5b board using a HDMI to micro-HDMI cable.
+>> It is recommended to use a good quality cable as there were
+>> multiple issues seen during testing the driver.
+>>
+>> Please note the below information :-
+>> * HDMIRX driver now only works with the opensource TF-A.
+>> * We have tested the working of OBS studio with HDMIRX driver and
+>> there were no issues seen.
+>> * We tested and verified the support for interlaced video.
+>> * We tested capturing of YUV formats.
+>>
+>> To test the HDMI RX Controller driver, following example commands can be used :-
+>>
+>> root@debian-rockchip-rock5b-rk3588:~# v4l2-ctl --verbose -d /dev/video0 \
+>> --set-fmt-video=width=1920,height=1080,pixelformat='BGR3' --stream-mmap=4 \
+>> --stream-skip=3 --stream-count=100 --stream-to=/home/hdmiin4k.raw --stream-poll
+> 
+> This looks a bit odd. This commandline should work just as well:
+> 
+> v4l2-ctl --stream-mmap --stream-count=100 --stream-to=/home/hdmiin4k.raw
+> 
+> v4l2-ctl will call QUERY_DV_TIMINGS, then (if a valid signal is found) S_DV_TIMINGS.
+> That in turn updates the v4l2_format. So there is no need to set the video format,
+> it should happen automatically.
 
-***
+Your cmdline works fine, setting format isn't necessary.
 
-Subject: [PATCH] can: ucan: Correct the size parameter
-Author: zoo868e@gmail.com
+> Also, why skip the first three frames? And why select --stream-poll?
+> 
+> It could be that these are just left-overs from previous attempts, but it's
+> weird.
 
-According to the comment, the size parameter is only required when
-@dst is not an array, or when the copy needs to be smaller than
-sizeof(@dst). Since the source is a `union ucan_ctl_payload`, the
-correct size should be sizeof(union ucan_ctl_payload).
+It's indeed the left-overs, will edit the cover letter in v7.
 
-#syz test
+> I also commented on the debugfs InfoFrame code in patch 4/6, that's not
+> correct.
 
-Signed-off-by: Matt Jan <zoo868e@gmail.com>
----
- drivers/net/can/usb/ucan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the thorough review! :)
 
-diff --git a/drivers/net/can/usb/ucan.c b/drivers/net/can/usb/ucan.c
-index 39a63b7313a4..1ccef00388ae 100644
---- a/drivers/net/can/usb/ucan.c
-+++ b/drivers/net/can/usb/ucan.c
-@@ -1533,7 +1533,7 @@ static int ucan_probe(struct usb_interface *intf,
- 	if (ret > 0) {
- 		/* copy string while ensuring zero termination */
- 		strscpy(firmware_str, up->ctl_msg_buffer->raw,
--			sizeof(union ucan_ctl_payload) + 1);
-+			sizeof(union ucan_ctl_payload));
- 	} else {
- 		strcpy(firmware_str, "unknown");
- 	}
+Additional note: I'm going to finish upstreaming of the driver because
+Shreeya is currently busy. She will be maintaining driver afterwards.
+
 -- 
-2.25.1
-
+Best regards,
+Dmitry
