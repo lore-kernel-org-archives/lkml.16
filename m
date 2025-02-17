@@ -1,163 +1,147 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C27028E8;
-	Mon, 17 Feb 2025 04:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6B542A96
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 04:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739765814; cv=none; b=Sy+zUiKeeq43fjB7D8CMJ1J5Sbuyj5oRAULdhzjyGL+hnLn2S8+Fl2ttOFuzCagU4uvCU6po0qMD5niBeIln1JP2nN0Vjg1G2yLSbkpgAcN/pjDgr5nOFcqnCecG/d20jUySeiFlB1LEfGoDgrtSd5zWOpA2g8XF9JJji8kXVL4=
+	t=1739765862; cv=none; b=r9TuNYLNk9U6k5cl5i84a/3+Fro/C8BfE74WiEqy2EeERNy/OqHmiVrxcdzFeV85htllhYfe81XvkpLCxfC5j+K4OcKashhYEY4ehdCxYyuE7DFy6aFLsfQfoGc4jUQbndEeybiYSYpXv+/+CVFqQVRa6Hw8otsDMwQkTPSdM2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739765814; c=relaxed/simple;
-	bh=N86/h7l83+47tvxTpYCMDfgo8tnXcSE6ua8ZwDv94HA=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=hk8+KyfTdUYE7+bVQXxf1tyVVGAi1NiVTzt6kRQguHX+MQaBEhBvJoqPjRtWXRb9e91g1z/tIAA+K4wLtIKIZhUo/qzieoSVnMV1ISk/Z9hllVqpNyW384ppkh8C/KlFwYBWkBUIkRW4NWGFfnQ2r9xjc5d+giZV3zWh5rA4wzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CQmMTmQE; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739765862; c=relaxed/simple;
+	bh=qgUDd3/F1tTTTB6/od9suhzDHm1xNMQRc9pKyrhCIFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GHDG1C8J/d6fcF2VehORoRdyR1NfrLRIqWGhzleDbWeS2gfaiN19nuxHnCME1OtRkwCNtKWCABjiyVKWEvpS8RJD5sZvgRiSugesWr6U05h6JR9+hAPeMPcvG1wn/GGEKmVJK1l9h6uFybodwKfmtE06i24MO6cdXbvO903arzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YlytBlLW; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQmMTmQE"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fa7465baceso8020725a91.0;
-        Sun, 16 Feb 2025 20:16:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739765812; x=1740370612; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VZVssffNqWNjzTU9TTGkv9mNAMtzHUOrTJpj7IuOEXk=;
-        b=CQmMTmQEKnkSYZ5kWTcsvdOcjqGmzicir/Oxsy63uJN8FLcFQiXuKRjnDbL05iYlJI
-         x1wmuf0Qs106BXOL49BvTYQj6ed2z2p7l2mXUayydUmSJNodebshlDX5VryBuaTfOJ+7
-         woh2VnyTiNpfxI/uZJz2pooNzTDXWxVAFyghAeufvQChR3FcyywCsvd/OXpq4ID0NLyO
-         f2exAqXps5+2QEQGiM8FKrHjFixdLBQ53y+fg6w3zdcJ5NtYDLi6pn7o0LWiWnD2YJ6j
-         mqB2aeE2XnZEkre1TgJdgcdMQE5N51E2AT0bZ7S0I9wuYesu3ZvCjgtrNNosGuttq2nz
-         SK6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739765812; x=1740370612;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VZVssffNqWNjzTU9TTGkv9mNAMtzHUOrTJpj7IuOEXk=;
-        b=nmISTqnEq0j/WDRLWE21+NieBUEdoFH/GH4ofHelXakO8CFmbn8/SLWZ2Y2zCbwTTS
-         U13MAUP4kAWNo9iiJBS2bfQ/d1JT632wB2tsbI5o0DYuZ0Nj5ykkVygtaPO/M1w7BHxG
-         c36i4F0h+ndvo/u0hVSse9/80KO0ujgz5m5IJjDChxwsDUZgKmVxYB76VaphmD0LkqFF
-         Pe+x4XQP3UVq6W8NLhxgnofXsXzzyMcI7PzXJPZ6Nr3v5KvpNyCJXyjZ08BvU1KkY0so
-         gu1TOlgEp4GVE1YsnJWX8o1CF/yJyqHNyDbPf1JLKGn8UUzGBeSSFt95cwDVb/qp2CHo
-         u/7w==
-X-Forwarded-Encrypted: i=1; AJvYcCV3e+yeDLyNqrYlh5X+NZe9y7amaMpy2v6OGK85HZYr4P2VS5nqQtozhYyeTXYC+JuC73u1@vger.kernel.org, AJvYcCWEw5Ok0vlShO5F/n3QS6n1pKst/CN1bd43BPsJKvFV0XbecNCnA4aQHWrUWuGgNmfzRQ58k26wvnWBYSWM@vger.kernel.org, AJvYcCWhFTOcB5s85uENbRKxia25Aswh6fXYU1Se0kW0i4GaL5ftZ1jGhxVXtt6XZ2JXDgOGNASxboJU@vger.kernel.org, AJvYcCXlVUla3ToZEaBxHjFdpoqbEwWo6takuJAckjVzS13lRZK67zvTWtt8ypaNSXTYKuAfdJCipgBB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg3bQP7DwpTd0qnaEnP6pmfM+7rHRV2/E2qT6BlXbXUja2vwEC
-	5nieNvRGj+YRn+OoOfRTtr5syligdl6QmGKQecxzOXHErYrLWPO+WhU4HABg
-X-Gm-Gg: ASbGncu6QWNOaHl1gKueoDE0pAMmGUkqRKn805/cpHiHjUVrvs4R36e8arCfa1puEcx
-	1s6OiG9va+2rqYE+ykM03aOG4mkvap2X6FoqCM4BGvFHWMFGHGICMZpYcgporevuKElfJkS1gzb
-	YTsAMTiVBsu0bLWDyKgosOALxix93czC4ASsi3G/gSjBfH2w657d1HnxSOSvRaWmng/W2kYOSNh
-	9txh6Sq81Zjwrk+9LuSKwuYE/unKIL7xDzGXXeiHBTvLpwVj3eKGtbZFW0S+1uo3ytTgwnFSwnN
-	0mhK1swL
-X-Google-Smtp-Source: AGHT+IGB5lOheIDXmi3sWf655bfcf3YqTTKwUkHEUPhH7vLLYB3KzpSLLyEceBcoqQHonVYqV8aYkg==
-X-Received: by 2002:a17:90b:384d:b0:2ee:74a1:fba2 with SMTP id 98e67ed59e1d1-2fc40f21e20mr12741959a91.20.1739765811865;
-        Sun, 16 Feb 2025 20:16:51 -0800 (PST)
-Received: from dw-tp ([171.76.86.194])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf5b93282sm4910089a91.1.2025.02.16.20.16.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 20:16:51 -0800 (PST)
-From: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-To: Amit Machhiwal <amachhiw@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: Amit Machhiwal <amachhiw@linux.ibm.com>, Vaibhav Jain <vaibhav@linux.ibm.com>, Shivaprasad G Bhat <sbhat@linux.ibm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: PPC: Enable CAP_SPAPR_TCE_VFIO on pSeries KVM guests
-In-Reply-To: <20250129094033.2265211-1-amachhiw@linux.ibm.com>
-Date: Mon, 17 Feb 2025 09:30:51 +0530
-Message-ID: <8734gdqky4.fsf@gmail.com>
-References: <20250129094033.2265211-1-amachhiw@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YlytBlLW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739765860; x=1771301860;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=qgUDd3/F1tTTTB6/od9suhzDHm1xNMQRc9pKyrhCIFA=;
+  b=YlytBlLWjBIvcNmCottaY8bC6fli4FQo2FY89N3n4uVi6N02AYlMzVI8
+   8o8vvMVCeUK7HXLuyWIFBAjwiGnHN6n1EopTN6jnvDzfVOHxl+uI3K/yh
+   o9WddsVrd0IyLJSt8gb0Bmmh9CylTHXqOCcplS+yPSqu5WUJBILIv6hcW
+   ITBJQ7rLO40S/SZGBuklqqt3xiiRRURrxBAJhQL/BBo6hhxPv4D0e8m4R
+   YVj1ORfCLnrr8+awkvCh6kORbzZcpk5h7vxekhWw6yYg5xdnKut1/qnyD
+   lgcVo+MZNNH3KPCr9C3Tyhizn6qQ+E763ef/GI/agjmn6WLNRQt5wnCaF
+   g==;
+X-CSE-ConnectionGUID: ytDdWahDTFaQ0zuTxEDZuQ==
+X-CSE-MsgGUID: T663hgeIQ6GNUaB5ThG0VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="51419579"
+X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
+   d="scan'208";a="51419579"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 20:17:40 -0800
+X-CSE-ConnectionGUID: 2u3BgYT1Q1CQjcYUjIXnXQ==
+X-CSE-MsgGUID: NkhhI3KwTbCpvtYA/t1TZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
+   d="scan'208";a="113748802"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 16 Feb 2025 20:17:38 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tjsZb-001CaF-2S;
+	Mon, 17 Feb 2025 04:17:35 +0000
+Date: Mon, 17 Feb 2025 12:17:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shay Drory <shayd@nvidia.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>
+Subject: drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:48:34: warning:
+ '%s' directive argument is null
+Message-ID: <202502171213.m2F5fqWs-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Amit Machhiwal <amachhiw@linux.ibm.com> writes:
+Hi Shay,
 
-> Currently on book3s-hv, the capability KVM_CAP_SPAPR_TCE_VFIO is only
-> available for KVM Guests running on PowerNV and not for the KVM guests
-> running on pSeries hypervisors. This prevents a pSeries L2 guest from
-> leveraging the in-kernel acceleration for H_PUT_TCE_INDIRECT and
-> H_STUFF_TCE hcalls that results in slow startup times for large memory
-> guests.
->
-> Fix this by enabling the CAP_SPAPR_TCE_VFIO on the pSeries hosts as well
-> for the nested PAPR guests. With the patch, booting an L2 guest with
-> 128G memory results in an average improvement of 11% in the startup
-> times.
->
-> Fixes: f431a8cde7f1 ("powerpc/iommu: Reimplement the iommu_table_group_ops for pSeries")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
-> ---
-> Changes since v1:
->     * Addressed review comments from Ritesh
->     * v1: https://lore.kernel.org/all/20250109132053.158436-1-amachhiw@linux.ibm.com/
+FYI, the error/warning still remains.
 
-Thanks Amit for v2. However we still didn't answer one important
-question regarding the context / background of this patch asked here [2]
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   0ad2507d5d93f39619fc42372c347d6006b64319
+commit: 71e084e26414b0f27d8befa1c30b74d39d9cb2a1 net/mlx5: Allocating a pool of MSI-X vectors for SFs
+date:   3 years, 8 months ago
+config: mips-randconfig-r015-20230807 (https://download.01.org/0day-ci/archive/20250217/202502171213.m2F5fqWs-lkp@intel.com/config)
+compiler: mips64el-linux-gcc (GCC) 12.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250217/202502171213.m2F5fqWs-lkp@intel.com/reproduce)
 
-[2]: https://lore.kernel.org/linuxppc-dev/87r059vpmi.fsf@gmail.com/
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502171213.m2F5fqWs-lkp@intel.com/
 
-<copy paste from v1>
-    IIUC it was said here [1] that this capability is not available on
-    pSeries, hence it got removed. Could you please give a background on
-    why this can be enabled now for pSeries? Was there any additional
-    support added for this? 
-    [1]:
-    https://lore.kernel.org/linuxppc-dev/20181214052910.23639-2-sjitindarsingh@gmail.com/
+All warnings (new ones prefixed by >>):
 
-    ... Ohh thinking back a little, are you saying that after the patch...
-    f431a8cde7f1 ("powerpc/iommu: Reimplement the iommu_table_group_ops for pSeries")
-    ...we can bring back this capability for kvm guest running on pseries
-    as well. Because all underlying issues in using VFIO on pseries were
-    fixed. Is this understanding correct? 
+   In file included from include/linux/topology.h:33,
+                    from include/linux/irq.h:19,
+                    from include/asm-generic/hardirq.h:17,
+                    from arch/mips/include/asm/hardirq.h:16,
+                    from include/linux/hardirq.h:11,
+                    from include/linux/interrupt.h:11,
+                    from drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:4:
+   include/linux/mmzone.h: In function '__nr_to_section':
+   include/linux/mmzone.h:1320:13: warning: the comparison will always evaluate as 'true' for the address of 'mem_section' will never be NULL [-Waddress]
+    1320 |         if (!mem_section[SECTION_NR_TO_ROOT(nr)])
+         |             ^
+   include/linux/mmzone.h:1306:27: note: 'mem_section' declared here
+    1306 | extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
+         |                           ^~~~~~~~~~~
+   In file included from include/linux/printk.h:409,
+                    from include/linux/kernel.h:17,
+                    from include/linux/interrupt.h:6:
+   In function 'irq_pool_alloc',
+       inlined from 'irq_pools_init' at drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:332:19,
+       inlined from 'mlx5_irq_table_create' at drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:437:8:
+>> drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:48:34: warning: '%s' directive argument is null [-Wformat-overflow=]
+      48 |         dev_dbg((__dev)->device, "%s:%d:(pid %d): " format,             \
+         |                                  ^~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:134:29: note: in definition of macro '__dynamic_func_call'
+     134 |                 func(&id, ##__VA_ARGS__);               \
+         |                             ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:166:9: note: in expansion of macro '_dynamic_func_call'
+     166 |         _dynamic_func_call(fmt,__dynamic_dev_dbg,               \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:123:9: note: in expansion of macro 'dynamic_dev_dbg'
+     123 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:123:30: note: in expansion of macro 'dev_fmt'
+     123 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                              ^~~~~~~
+   drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:48:9: note: in expansion of macro 'dev_dbg'
+      48 |         dev_dbg((__dev)->device, "%s:%d:(pid %d): " format,             \
+         |         ^~~~~~~
+   drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:307:9: note: in expansion of macro 'mlx5_core_dbg'
+     307 |         mlx5_core_dbg(dev, "pool->name = %s, pool->size = %d, pool->start = %d",
+         |         ^~~~~~~~~~~~~
 
 
-Please also update the commit message with the required context of why we can
-enable this capability now while it was explicitely marked as disabled
-earlier in [1].
+vim +48 drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
 
-But looks good otherwise. With that addressed in the commit message,
-please feel free to add - 
+e126ba97dba9ed Eli Cohen    2013-07-07  46  
+5a7883989b1c57 Eli Cohen    2015-10-08  47  #define mlx5_core_dbg(__dev, format, ...)				\
+27b942fbbd3107 Parav Pandit 2019-04-29 @48  	dev_dbg((__dev)->device, "%s:%d:(pid %d): " format,		\
+9e5b2fc1d39b31 Kamal Heib   2016-12-06  49  		 __func__, __LINE__, current->pid,			\
+1a91de28831a1b Joe Perches  2014-05-07  50  		 ##__VA_ARGS__)
+e126ba97dba9ed Eli Cohen    2013-07-07  51  
 
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+:::::: The code at line 48 was first introduced by commit
+:::::: 27b942fbbd3107d4e969ece133925cd646239ef4 net/mlx5: Get rid of storing copy of device name
 
--ritesh
+:::::: TO: Parav Pandit <parav@mellanox.com>
+:::::: CC: Saeed Mahameed <saeedm@mellanox.com>
 
->
->  arch/powerpc/kvm/powerpc.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-> index ce1d91eed231..a7138eb18d59 100644
-> --- a/arch/powerpc/kvm/powerpc.c
-> +++ b/arch/powerpc/kvm/powerpc.c
-> @@ -543,26 +543,23 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->  		r = !hv_enabled;
->  		break;
->  #ifdef CONFIG_KVM_MPIC
->  	case KVM_CAP_IRQ_MPIC:
->  		r = 1;
->  		break;
->  #endif
->
->  #ifdef CONFIG_PPC_BOOK3S_64
->  	case KVM_CAP_SPAPR_TCE:
-> +		fallthrough;
->  	case KVM_CAP_SPAPR_TCE_64:
-> -		r = 1;
-> -		break;
->  	case KVM_CAP_SPAPR_TCE_VFIO:
-> -		r = !!cpu_has_feature(CPU_FTR_HVMODE);
-> -		break;
->  	case KVM_CAP_PPC_RTAS:
->  	case KVM_CAP_PPC_FIXUP_HCALL:
->  	case KVM_CAP_PPC_ENABLE_HCALL:
->  #ifdef CONFIG_KVM_XICS
->  	case KVM_CAP_IRQ_XICS:
->  #endif
->  	case KVM_CAP_PPC_GET_CPU_CHAR:
->  		r = 1;
->  		break;
->  #ifdef CONFIG_KVM_XIVE
->
-> base-commit: 6d61a53dd6f55405ebcaea6ee38d1ab5a8856c2c
-> -- 
-> 2.48.1
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
