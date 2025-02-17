@@ -1,117 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A0221CC63;
-	Mon, 17 Feb 2025 13:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD20D21C16D
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:14:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739798054; cv=none; b=g74rUHhxv7Kss244l66wl5eGFqIhajsPJ8C+AcnjHfPNkraDZjZTLJ8ZtNf7WFrOka7d9H/8bN7sz2oS1KZ4+JCYRDx9s4SNHzFWhaIlIyeBPXCLZ72TC4QEjAJ2phg72KBNnxAmP2tQbUZTEpoyLXdFji/Ve35fqJe4Ca8nTk4=
+	t=1739798093; cv=none; b=Cx/eIYE+t5wF1vyjVwJf2BCQXnbx0AZbqxELcGC+m0x6ZPuHkhL58Qhu8KbYA10iETPdfvh4IEhMDWAYjYa9/to+BU7fgwmE+fjLJK3fWDsugt1n1mIzRAsDqhDSPArmosAo1eKiIukQfr8Zdzn3XUOqeaW/b0JVy3W6oxQQjoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739798054; c=relaxed/simple;
-	bh=ySqiz0pjBVTXrwnEWcMGf3+QUDYTSHcCYNOVUDsh4CA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HyulnYv1qT1TJtkbWq5sujU1lCro1DvvPS/1GKSKS4Qoo59Kmaol0WkETKnYt1DpHHk6C8I2uBhxDao1KcnY0mqDYF39E++Isd4bGfY3k1BZgsGGBpr/GI5AE4OvF77KyRayXk0OZvJDphlzmyyd/ZcmJ9GWLOv6AS+JsQ3a99Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNEOQQQN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739798093; c=relaxed/simple;
+	bh=13SPp22CZVN6xo7eWbjLFTp4tb5+gOXnGjqBpfPpjO4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=o+yNbY5shyHhTQH8YOlyouJTNUuFbkLMMB7YORYkG1GH6ItEkYyDG/CgGExyac5a5CHx2YnxOadRZ/Bt9b9HgF58lgp26JxyyqdTxH3Jspl+rdgiXHNiogEzMxvWJm7Q+356qg/JFwddRsEsShNLood9bDG2C+1OPYeQA/H9TWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/0oSzGg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNEOQQQN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF74C4CEE2;
-	Mon, 17 Feb 2025 13:14:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/0oSzGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A3FC4CED1;
+	Mon, 17 Feb 2025 13:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739798053;
-	bh=ySqiz0pjBVTXrwnEWcMGf3+QUDYTSHcCYNOVUDsh4CA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZNEOQQQN4Z94Xe+g+xxcrlNGxcPvJGgF7c2BIhXRdGEMWDQYT+XNCnN9dJrSMgKi9
-	 0QzGryUCtGeygMS7sASgyjgTNCz1OwrlVSmhORJki57jxwSMlMbz1OAyYNUXQeVsjC
-	 yLRLE6qCksg72TAGGfb878xfvtLpUmC4R0lgIptGDNQVhFqpNkl6NQSU51ATinprz4
-	 91hY71WHL2CQmudWVxTelWNFGxJ7RwsdocHJFTbIthFQfk2irOrDikCHtk5SfjF+Fu
-	 zMS5I5v9Sjj8E3r46oiutMt7/FaJa3bd5lOigRjD8zJpHqj8Oyw6p5JY5KuXVfOMGs
-	 6g0Qg+fzZnRbA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Dave Penkler <dpenkler@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Nihar Chaithanya <niharchaithanya@gmail.com>,
-	Rohit Chavan <roheetchavan@gmail.com>,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] [v2] staging: gpib: comment out pnp_device_id tables
-Date: Mon, 17 Feb 2025 14:13:36 +0100
-Message-Id: <20250217131356.3759347-2-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250217131356.3759347-1-arnd@kernel.org>
-References: <20250217131356.3759347-1-arnd@kernel.org>
+	s=k20201202; t=1739798093;
+	bh=13SPp22CZVN6xo7eWbjLFTp4tb5+gOXnGjqBpfPpjO4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=U/0oSzGgoTnI9k06MhPJaHbBvs2FoX445vtnucfIyVQbPLR/+GhQis54mxIHZ/rOx
+	 YWeY/JHgHAxM2ByitJ5DML0s04ByPBxMVo5M7Dr+rgrYJOXBHeoTP6aIMg0GZe3Rud
+	 wYhNYQ2jAGAjfRxcOrJryrFUNfBHVw+neugbJV5sJpNlxLHVonm143OABc+JcbJFOa
+	 +SEQDUnmoSyo7oDoqU3xN9s9e5sCeZt7fteyeKjHoX+NuSa6Iw4bnixQayBGdMLXVL
+	 SpPcauyMFgJ9sbPLtLMmlmMcK+98RImLjxSdL8RNfjBD7dFTToIF9Xm0aVEKlZhpXg
+	 dkJfaPwQBe+kw==
+From: Robert Foss <rfoss@kernel.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Vitalii Mordan <mordan@ispras.ru>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Sui Jingfeng <sui.jingfeng@linux.dev>, 
+ Aleksandr Mishin <amishin@t-argos.ru>, Al Viro <viro@zeniv.linux.org.uk>, 
+ Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, 
+ Quentin Schulz <quentin.schulz@free-electrons.com>, 
+ Swapnil Jakhade <sjakhade@cadence.com>, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Fedor Pchelkin <pchelkin@ispras.ru>, 
+ Alexey Khoroshilov <khoroshilov@ispras.ru>, 
+ Vadim Mutilin <mutilin@ispras.ru>, lvc-project@linuxtesting.org
+In-Reply-To: <20250214154632.1907425-1-mordan@ispras.ru>
+References: <20250214154632.1907425-1-mordan@ispras.ru>
+Subject: Re: [PATCH v3] gpu: cdns-mhdp8546: fix call balance of mhdp->clk
+ handling routines
+Message-Id: <173979808601.704013.18168573749410463976.b4-ty@kernel.org>
+Date: Mon, 17 Feb 2025 14:14:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, 14 Feb 2025 18:46:32 +0300, Vitalii Mordan wrote:
+> If the clock mhdp->clk was not enabled in cdns_mhdp_probe(), it should not
+> be disabled in any path.
+> 
+> The return value of clk_prepare_enable() is not checked. If mhdp->clk was
+> not enabled, it may be disabled in the error path of cdns_mhdp_probe()
+> (e.g., if cdns_mhdp_load_firmware() fails) or in cdns_mhdp_remove() after
+> a successful cdns_mhdp_probe() call.
+> 
+> [...]
 
-This variable is not referenced in either of these two drivers driver,
-causing a warning when they are built-in and W=1 warnings are enabled
-with gcc:
+Applied, thanks!
 
-drivers/staging/gpib/tnt4882/tnt4882_gpib.c:1507:35: error: 'tnt4882_pnp_table' defined but not used [-Werror=unused-const-variable=]
- 1507 | static const struct pnp_device_id tnt4882_pnp_table[] = {
-      |                                   ^~~~~~~~~~~~~~~~~
-drivers/staging/gpib/hp_82341/hp_82341.c:811:35: error: 'hp_82341_pnp_table' defined but not used [-Werror=unused-const-variable=]
-  811 | static const struct pnp_device_id hp_82341_pnp_table[] = {
+[1/1] gpu: cdns-mhdp8546: fix call balance of mhdp->clk handling routines
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/f65727be3fa5
 
-The MODULE_DEVICE_TABLE() entry does have the effect of loading
-the module when the PNP device is detected, so it is still needed
-for the modular case.
 
-Ideally the drivers should be converted to pnp_register_driver(),
-which would lead to the ID table actually being used.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/staging/gpib/hp_82341/hp_82341.c    | 3 +++
- drivers/staging/gpib/tnt4882/tnt4882_gpib.c | 3 +++
- 2 files changed, 6 insertions(+)
+Rob
 
-diff --git a/drivers/staging/gpib/hp_82341/hp_82341.c b/drivers/staging/gpib/hp_82341/hp_82341.c
-index cf5cd1edc41d..72a91228ea36 100644
---- a/drivers/staging/gpib/hp_82341/hp_82341.c
-+++ b/drivers/staging/gpib/hp_82341/hp_82341.c
-@@ -809,11 +809,14 @@ static void hp_82341_detach(gpib_board_t *board)
- 	hp_82341_free_private(board);
- }
- 
-+#if 0
-+/* unused, will be needed when the driver is turned into a pnp_driver */
- static const struct pnp_device_id hp_82341_pnp_table[] = {
- 	{.id = "HWP1411"},
- 	{.id = ""}
- };
- MODULE_DEVICE_TABLE(pnp, hp_82341_pnp_table);
-+#endif
- 
- static int __init hp_82341_init_module(void)
- {
-diff --git a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-index 2e1c3cbebaca..df92e9959fe1 100644
---- a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-+++ b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-@@ -1390,11 +1390,14 @@ static struct pci_driver tnt4882_pci_driver = {
- 	.probe = &tnt4882_pci_probe
- };
- 
-+#if 0
-+/* unused, will be needed when the driver is turned into a pnp_driver */
- static const struct pnp_device_id tnt4882_pnp_table[] = {
- 	{.id = "NICC601"},
- 	{.id = ""}
- };
- MODULE_DEVICE_TABLE(pnp, tnt4882_pnp_table);
-+#endif
- 
- #ifdef GPIB_PCMCIA
- static gpib_interface_t ni_pcmcia_interface;
--- 
-2.39.5
 
