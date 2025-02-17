@@ -1,179 +1,128 @@
-Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020117.outbound.protection.outlook.com [52.101.191.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDE823642E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 20:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739822959; cv=fail; b=a7O/BAdCIJMDur3yVYBVLVTdZQjrarVXkWLAokkta0N0SFe4CFINAQqDOiYz1zuRh892sn3iOB4w0pjx3KI0Y20gZ0FmuRFwWUzrj7qLqEnw7st4xBZOZXuaEPPxRcsdbji4Grs6WXPlChi9q7W/3a1VDmSkNhLKAZM5MORGTyE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739822959; c=relaxed/simple;
-	bh=0dcXSOU7z7DK1PmWqQ2+PjKoJyHqOyoOH4E2GPZE1Xc=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=foQ+hD70ls+mnqAUDZya4y7VLlkvzCpTHJ9pnCdLqy/dFLqoXRvGtUlEnAJqkdQ+JwKW27Ds30jL8lPlBajrbKNSDoY2HP3DLozkGui6RDiXVK+ze48lqG1X+4hxOF7Pqr6O0bv6JarhechoMTSX3W0vm9yFIdBswJ3EOOk9HJk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=SlqENjSe; arc=fail smtp.client-ip=52.101.191.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41415149C41
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 20:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739823331; cv=none; b=VuVOVT8h48Ljb3FzGgUFM9UtdfyQw4+NCbxByM86wQmvN2JF+l/vzWNlYWsoqTyXW4tF37Usjvt1xn2VjRa2BwHChaLZKsoafdRcOMdYKitJJRaYM0ur64Tj28ZmoIEt3ZQwiK2MysGuIqL33pypx2fK6V0CE+ydpF1+LV8y2Do=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739823331; c=relaxed/simple;
+	bh=8hgtSq+DKZ5LHKar18MniLjf8PSgDafS9oaF0lbKPmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfET469Kipv2xYovCvzge+7Dtcqllpn+wdTiYnUcwwJ40PceKGuvwiw6nFuW+YaMHwlWKnFqiu8am4sI5uAUJSHilXH8AFtoRSv+OBQITDpxGh9bY7Udg/khiCWGqj0txYH+Af3rGYEb0X1gUjLqR3XzZVRb9zaFGzwF5M7hur0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U3TLBvo+; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="SlqENjSe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=J7iOglT20VObYUybYMCFvpMuR3+7uwzO3lyeQITuPTd7s5xVjIbb0CZUqxp9FJ12+vE8G5TihifjZPpKZOXq0ykUqCo45EufYRARgHfHocUxhf9Em4ztrxF0WatS63VDHj9XmSy+hwVQQTGuj+fftgPdudsV8RF6bsLnACLTVXdP9yTN8LE33LmG+G08/guVlYSBM3W3OCkCTjmyR9tmG4ELdSsedOgfL8mkq8MS2ubvDb9tYCWY3bKp9lPP0nbHNltwJaZgUoAodjVl8/HK2BiviKb8en4n48cdEG4gVunrOkQPnOpU0Oyy9c2LJomyl7ItgF+uD1mMqasocXZduw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Eh0xr/u40NdfM/TGujvlUfAhTRr8cELUH2e8Y1SITg=;
- b=OJgQibQ77PexrqQ5isoPdKxefCh4FcJtfGNSDPUBrutoHs7XsrEhcgSlofloEiS1HXS/OkmltozWe0O8j2BgQlXELruxd6vVYEfIPQoTSrp4m5tFGQiALQCmucZ2kIsBKyvI+UpJ1tyOqphI1pYxAK0kNxGgwlFfTn6LGe2tK598PH6liIGFfLwC+hWhli33X85Ygjv85lFGO8GIzzeuOwUmvXcMgTJ3mv+HEBxeI/ak8mH5zZ+LOUmsA5+ReUx8uKOf52YasMYmWIK3oSjT68Hmh8z3TnnsfKfZM73wsAnGky5UuZQf1IBBCZeYo4+nG2gfdbQBSkLmXfxQra5SjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Eh0xr/u40NdfM/TGujvlUfAhTRr8cELUH2e8Y1SITg=;
- b=SlqENjSev++wJMwff20sK4vA6mkdSAwaZGCZ0SbCZE743ZJg3/oLxHkOhJeaeV1oYbmSpuqet0MRYilNByiICbySZ2ZKHluA85m+1QfSRQ/4Dg/izIg+pkhVFh/HMqOyXK65wzL1kNnkGUH5cj7//9FZDe3mVRZsLiSOu1bf87Sa1RfjxrDqRnnlXlDHGnAoABCIjI7f8D3GvlPC36NjhUGV36kJ62YZPuXYICV0mIP8/NSu/NpoG71cx0Zx11l+3mlHgp0TeTN8+w/rhaNwPZYXVp874EWw7IeXCF+3wLM+pHGXmCFiGTyugF6p+rR0A//Rvgp2LdSGKu/jPPT1tA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YQBPR01MB10625.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:74::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
- 2025 20:09:14 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8445.017; Mon, 17 Feb 2025
- 20:09:14 +0000
-Message-ID: <4caee61b-2214-4ae8-a9e1-2c1ff0efd7ef@efficios.com>
-Date: Mon, 17 Feb 2025 15:09:13 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] pkeys: add API to switch to permissive pkey register
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Dmitry Vyukov <dvyukov@google.com>, peterz@infradead.org,
- boqun.feng@gmail.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com,
- elver@google.com
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1739790300.git.dvyukov@google.com>
- <ffd123bb0c73df5cdd3a5807b360bd390983150b.1739790300.git.dvyukov@google.com>
- <9e866a2c-ef36-4008-a3f9-c476161f64c7@efficios.com>
-Content-Language: en-US
-In-Reply-To: <9e866a2c-ef36-4008-a3f9-c476161f64c7@efficios.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQBPR0101CA0266.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:68::31) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U3TLBvo+"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54622940ef7so1358132e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 12:15:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739823327; x=1740428127; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eRkHg5Ucp6RGHWusT3IEAggViQD31EKhbXy2GP0vglI=;
+        b=U3TLBvo+Yr5tVxjsHUdnQFTP+C02TPJLU5VRJZNiEWxLiKUUwHLrOBhigjOFQljk9x
+         jLXhiL0dIhDHWOdJDnidHL4Q9BoM4De1YwT7FtiN/8pDbfh6fOxA/RT8MupG8jxpMgXo
+         kiVxMpEpSbxWD42TAbbdnAzE+kTRaWQXVbNvip5JxYRyZrBd8jGJG7+3G1c9y11cednk
+         Xilbmswl+xsHEs8Z83ZWRbxnjD7+4A9c1QfM9gnwUw2KvkgbKHjzawMVoCVgktwycuNC
+         Z8Q7F5dupYg+lrZzfQy+sn3SA9QsCsZwY6fAx6sk6mmXl0ONoZZ3tFibj61i3GRFCEkG
+         ryMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739823327; x=1740428127;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eRkHg5Ucp6RGHWusT3IEAggViQD31EKhbXy2GP0vglI=;
+        b=qNmqe+0TlXooSWWTV78X7WGCmtOJQR0LSIfAxxCtwQC6qFXK+xo2p16era8Lf8Nmdk
+         nIUvfcz4zMULec6UyOKwg/YCpCW/AG1/YEOr54lJOchTap52eoW2TgvTw5vgjfEPppU8
+         39ematbk+xmmM10tnpN2xfV7F5sCxF4Ue7VhHo7XoPFUXi5svMcvvzT20ZaNZDNb79Fy
+         t3QVfVMG2h9Vtex8P76XhJI/gEI9+ieChg7wAcWIrFtadbzistT0q4B2esGPcdmKxZLo
+         GaLCzvfg0nY/8Bs2IlNxk6qXHu+u0bPMDA1F2Q0eB5n+hG3FibBfyLqIJCL6e9LYiW9Q
+         hJ6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWJfUXOPTrt47eIfdIPkO7nPnwCxhvrzi9XHGvPG4fRH5xKVBMw9kd9LF854r8gAhGt7oLJpJj8M0k7y8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL9IQ44/YD0FsxkJcy5sbvfUWsQe8PymbyA2mhbhAooVjZigDl
+	8BExlCUPtkZFfONiBJ0+VHjANU7VFQ5cjNXSL5KNGUc37vYFy9Y6JlikSS2M8jc=
+X-Gm-Gg: ASbGnctgfgntAoyYtst+SL6M/iuUB4btfTxPm++Ljq7CvljyyRxc5VYd09NvUeZTpks
+	qwPzYcuOS1FW4I5eOdOcqYdtJEwROtIjYIXbOXWb3bLyF6jT9Hgs/rZtylWDqQ1GB6HH8reSxUX
+	Y1r5lP+ohW8+OhsR4GfoYG7E5iRjuoapt2rBc4mVO5rarRwi4I0aXRtNQYxkp5pWd+v7EgA8SBW
+	IVBThpFPfxFsDd9EU7Yc/loy/kEsq2tNYk1ds4pC+svOIiszAYJnVF9Wi74oRGmHKFQ40PZL6Kl
+	jBuZs6XClC8r864v8M8qUmEPRIcwoQ7bVrLIcv90/0cRgrrrXrUsPfzeViN1sQK0i/RGvAI=
+X-Google-Smtp-Source: AGHT+IHN4TQQDcSOwXKpfuPORhrxQ9cJeq7yFtgX9iUm7RPvnEU4xWfa1ad7OdRTHhcIA1rKUqRDiA==
+X-Received: by 2002:a05:6512:3ba9:b0:545:1233:d4f9 with SMTP id 2adb3069b0e04-5452fe66b4fmr2845657e87.30.1739823327250;
+        Mon, 17 Feb 2025 12:15:27 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54620544eacsm565555e87.136.2025.02.17.12.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 12:15:25 -0800 (PST)
+Date: Mon, 17 Feb 2025 22:15:23 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Vishal Sagar <vishal.sagar@amd.com>, 
+	Anatoliy Klymenko <anatoliy.klymenko@amd.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 06/11] drm/fourcc: Add DRM_FORMAT_XVUY2101010
+Message-ID: <bdpw2g65uor77tijlhpabodog7haqvdcemnr3wzqkooerzuib5@hfdn5zsrbkgg>
+References: <20250212-xilinx-formats-v3-0-90d0fe106995@ideasonboard.com>
+ <20250212-xilinx-formats-v3-6-90d0fe106995@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YQBPR01MB10625:EE_
-X-MS-Office365-Filtering-Correlation-Id: c252ecfc-afe3-4e23-0101-08dd4f8ef333
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?azFlL2crLzNKSkZubmFUeXBCUVhxVE1sLzJWVWZycXJtY3YveTBzSWorNHpp?=
- =?utf-8?B?anl3YnJMRE8ySngrVEZacHpxMkpYMVA5dGdzZUJvQWUvb2NHbkk1ay9LS3ZI?=
- =?utf-8?B?NTliUVZsVE0xRVd6bGFjV0ZXR3hPcTV5ZmdNeEc1d004MldnRG5URFZUbjRp?=
- =?utf-8?B?QUNOT1JaZ1h6UnlkZzZmdzhQUGZmRXY5ZThmb0dkZlNLOThwWWs2ZFoyOVM5?=
- =?utf-8?B?Q3dtSzhHWUs3RkF1TWVOV0N0OGkxQ1pHRks2c2wxK3V2a1UvZ0d3WkpRYmRj?=
- =?utf-8?B?QVBnZDhTUCs0TUVqeUpNelZQNEM0Z1NGOEh3a0xHYmN5R0R1bXcxMjI5VzV5?=
- =?utf-8?B?UlNiOTgrWldnYXhyeEh2ZTZEUjZiYWZ4NG40N3RhU0thbVNweWhUSzJXVzVC?=
- =?utf-8?B?OU5lNjI5N05kSTVYdlZ0NVdIK0FDZFJGbEwrakh2bCtDOXh0aFJiUlRLY20w?=
- =?utf-8?B?d3V3MS9OcVc4cDJIYmo2NGdnOUZISXUwM09jREwzTjZsWU5UM1VialA4SEha?=
- =?utf-8?B?TGZCN1pITkk0OHRNRGNPYnFVZXRFalRsUjR6QUNqZUpCaUJ2ZkFkRW5ZWFJT?=
- =?utf-8?B?bkdTcjArQmRsN2V5Q05lcy96TCt4NUJ6R0VpeUNqZytnUnFUWG5QZ0p1QkZX?=
- =?utf-8?B?SnA4NTFCVFl0aHhvaDVvRTF2c0ExekRzeHZWSW5rYUtoV012bCtpM0VMamk2?=
- =?utf-8?B?L1puWFcvMUJ3ZERNV2J3eFZPenFoQzN5M0thNFFRc1UybUJzZmU0OWZOV3ll?=
- =?utf-8?B?cXpXaVZHOElteS9OZjJwK0J0SHlXVkFVbTNSeVJmeXM5angzVjVvL2NjTkw0?=
- =?utf-8?B?UHBIUXc1cUFHZXF5OElJOEoveTlOQ2VRSUtwbjYxeVFJby95QTdVanBxKzRh?=
- =?utf-8?B?bTNYcEVZdXpMZjFLQjdQbGlwR25JUG1NdTMzVE5UM3NzN0paVjFSOEpma0dj?=
- =?utf-8?B?SHZscmR2VEVaVXhhYjFDRTBCdDYwSTFqai9BVS83V0IxNHVHb3hDTGpQVjQ4?=
- =?utf-8?B?cWtNdkNyTVR4bkpDRkVpZ2w4N3ptK01OUlZYbmpzei90VkhURTlzOWJLVjAz?=
- =?utf-8?B?eUVqMlhlTVhseVUzc1U5YzdFU3l2dGR2UnhOTEw0Z3JhcE1hRVozRlNKemgv?=
- =?utf-8?B?WVcyK1p1ZXhUbWpNZFcwRldNd1R4V2dJYVpGTVltQTJ1RFVwVHo4WCt6dDdv?=
- =?utf-8?B?Y3c1VlZQbDNKK0xMQmdSNVNRRjBUNU94TGVBS2FnNS9keTFrYjlMYWtKZFgy?=
- =?utf-8?B?TnU1SU5DbThmZzVuWUFteXNBbmdQYXdnZzVxaXgxUUF5dDNkMlpsN2hrb0Ns?=
- =?utf-8?B?YTVrb0FZdzBsaWNvN0UxVHpVZmMyYlhSYnh5RjIzd3d4My91OGdEd1F0ZU1X?=
- =?utf-8?B?VTcvWHExVnhKc2lHaUNMdmdUL3I3dFUvZEROTlpUZndaY2tLa0JiQ2JyLzRk?=
- =?utf-8?B?dW8zMUp0clo1SnRIM0ZzazZCSDJvK2NUclRBZ3Y2c3Z4cFVGcTFTQ01zTjhD?=
- =?utf-8?B?Zi9ZSEh4OHpIcjBoeUJtTHdrazdVc1NGK0lYamxscUVGY2hEM0NleVJxVHFo?=
- =?utf-8?B?blU2bnh3ZGkzck1tUmNmWlFYQ2xlWGR1ZVZ3ZnBEK1gvZWIyRzgrZDNvWGQ2?=
- =?utf-8?B?SUhYdUhYVXREb1hBYThCeTl1VFJvOVBSejJXSUJ0S2g3WVY2TlJSdGt4eFkz?=
- =?utf-8?B?WkxhVmZSeC9VcmQyN25yQWNvOXRFZXZYZWFWc3FJNFR3c1A2MHk2eUNmb3BH?=
- =?utf-8?B?OTNTK2trR2JWWUMyQ2JMUEYyYzB6SE9kM0tVM3BwLzFSNW1tcUpmU0RKdEdC?=
- =?utf-8?B?TWhLWndmRkh0M296c1BVK00xSFJhUTAvUExENzM5T1JhQk42MGxqUE5yYjJB?=
- =?utf-8?Q?arT1HTdlHgzBs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bG9mU0VaVGVGbkNHUDV1MzNEWVhrRTYrQVdMUlhBU0JieWhkaTJSdGxrY1Jx?=
- =?utf-8?B?ZkxROStRclRXVTd3OWk4QnV5WXJXbGZha21YOGtaNjVyUU5zNEZKeGNES3pj?=
- =?utf-8?B?bm0yR1QreFk5QWRpQUdHS1JiS0dQRm5JL2dTME1KSUhxMWhSdzhyMVNxMW5l?=
- =?utf-8?B?SU5TYko1SU5xYnN2MW9saW9ueDZyR1l2ZXpXMUF3d2plYzNMbVQ5MHc0UVY1?=
- =?utf-8?B?TWloN0lCN0RLalAvTzRjWXFsNjJ2alIwTmlHSXRJM1o0dmRrSFNCQ2hSQ21h?=
- =?utf-8?B?b09LaVJleHhCbVpPZVUwN0JlSWtaOVA1dTlKYlppQk9IWWx5RWJnemIza1Y2?=
- =?utf-8?B?czJBSmpjNis1eEYxTmZ5MXEvUHRlZFNrTDVMRzZQWE9OdVI5aHNqa3diK2tY?=
- =?utf-8?B?ZlR1UFFVUkFQeGdsN1Y1N2QxWHhmYkZ6RVJtQ3BUT2IzbkRxcmYyM3BtWkVU?=
- =?utf-8?B?cE9PMnJWSnkyVjZGbE5sVlNTTVo2YTY5R0ZTK1E0ZElHM0VOMk5hNmFKNXkz?=
- =?utf-8?B?Q3JoSnRVVGN1ZUpVNXB4bG9YQWpUdnNXbXltazRKVXFLRklRMmxKcHl2M0NJ?=
- =?utf-8?B?VUkwTUNOVlIxMHI3K25vejBtYnNDbDhMRzc3QVFqRnh4RGl0VitXWDhnSTIy?=
- =?utf-8?B?ZGI3a1dKUllmZWtQVnlUNW1PcFIwNHM2VWlTVDRZZUg0ZksxSkx5WmU5Zkpr?=
- =?utf-8?B?UXB5d2tFaDIwcGxNRUZjWHNuWnJrVkJKck5jVUczZXZVdmVKY25CNUgzdWM2?=
- =?utf-8?B?Wk5rcFNoVXRKWXpMZFYrZkRFdVFFNHBKbGJuWkFQRTJDSW9xYTNhallsNmhE?=
- =?utf-8?B?aGZ5azh4NDJBQnZ5YWFEaFU3a3hjUmhTNFBFcTJzN0dsNHFzS1ArUmxWOUZu?=
- =?utf-8?B?TmZ4dnN6MjAzQ01XczI0RWc4RmJGZGNiVm8yZ3B4Q2hLSXhpR21JMzg0azR2?=
- =?utf-8?B?RkZZRHNOYVVCbGdsZFhsYUZVUEdpTitrem45UDFmOURJaC9EengveXdKaCsx?=
- =?utf-8?B?blo4eVdTNDZLcStlajlUekZLRzlpYWdCa2NPT3U0c2pnMGZUV1BHc0VvZFpQ?=
- =?utf-8?B?RVdBWmMybWsxMCtzU2YzeDB3bVlRdVB0VEJEcStRc0ZrTThkejcvNlhyVjN3?=
- =?utf-8?B?R1BuZ01uNzJ2b2ZLWVJlVFltaitlaHo0NW96S0tpbzYrenVQZDhEMGs3NzZH?=
- =?utf-8?B?NDRITC9aS0RQSVU2U21Hd2JEb2RBM1VLV1pCajV6RkFyUG81d0FNZ1o3Ny9r?=
- =?utf-8?B?YTBMaUZpb2k0S1kvSXFnczA5dHRvck5RS09xTzEyc296NzZKRllaeVFVdXpG?=
- =?utf-8?B?dGNHMmV2K0x6NTdNWTQvOTVCdFhaSDYvalVVNzFzL2ZFS2YvSGdlMWowTGph?=
- =?utf-8?B?ZHpOZkg2ZXZaSU1lQ3JrdS9wcE5yVkJ1UkVSV0p0U2trMU9GWFIxcFpXMDN5?=
- =?utf-8?B?TGxYMjFkOGNCNXE5SGZ5U01Jb1NnbElya3V5dTNXTmQybHpaVHVBUmh2dEt4?=
- =?utf-8?B?WTM5aFJsT1B0UU9OM0pIL2NrR01EZlNibm9ZcXpTMGpISWxOQnJNcEhpY2Jt?=
- =?utf-8?B?NnJVNXZKZDVzRmcwaGQ2N2hQZ2d6UXdhV2hRL0Y5TVM2MksrbXJKdCt0ZXVE?=
- =?utf-8?B?V25Kek80NENqWWFZNzg2OWxsTnpCM3RXWXdOTVd5QmlWUkwyMWh6N2dwd054?=
- =?utf-8?B?T2lFYmEwb0xBbTlPcWMzS3VJQndsLzhrbHRPejVrWkoybDE3eWlwbDI0MXZm?=
- =?utf-8?B?M2FnNkdQSWtscGIzWUhsZjh2N2EyMDZ4akVhWm9GYkg0MlI1MG5UVEZiWURm?=
- =?utf-8?B?SUNWR0J0UVRlZWh1T21kc0Y2STZxSGNQREU0TStOQUZnM0JTeG9RNUo3dURu?=
- =?utf-8?B?YWh0NStxdmlqck55T2orTXVXRXkxdUxEV0VFUWdzTzRnbm5HRldCc09tU3Rv?=
- =?utf-8?B?THRnd20vdkdtVkxyNTBmbWdTVThhRTNQUlNzVmNvZzdIZ2pLYzNObnBtekhS?=
- =?utf-8?B?a01MVGttRzJWdERNdlg5dGRyVXFiYStLWklUVHJPTmxnYSs0WGFyZmhEek5M?=
- =?utf-8?B?cG0xTFYrWk96SkNyRDhpYjR1TkZJNFcxMVBoSHpFekxTSEhoWXJFZEgrc1Z0?=
- =?utf-8?B?ZXVtcDl1OUxKV2xHdURVNFdBMGhLZTZrSzU3U0JQMHE2TU1MNHJFeXBIYVpT?=
- =?utf-8?Q?K/rksffPchQc1lDjqc0bKtg=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c252ecfc-afe3-4e23-0101-08dd4f8ef333
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 20:09:14.1515
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6sqR8yiDGdQaxvwDCB/aDjt/5m9fRJJbWTi7K9/pqFD9CWDhLvCTh5op1UsaVh9nW4W8Erx6sWa9Qr6FqZwjWHmGYtWk5SJsNovT8J+106w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR01MB10625
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212-xilinx-formats-v3-6-90d0fe106995@ideasonboard.com>
 
-On 2025-02-17 15:08, Mathieu Desnoyers wrote:
-> On 2025-02-17 06:07, Dmitry Vyukov wrote:
->> The API allows to switch to permissive pkey register that allows accesses
->> to all PKEYs. This is functionality is already used in x86 signal 
->> delivery,
->> and will be needed for rseq.
+On Wed, Feb 12, 2025 at 04:56:10PM +0200, Tomi Valkeinen wrote:
+> Add XVUY2101010, a 10 bits per component YCbCr format in a 32 bit
+> container.
+
+Is there a more common name for this format? Otherwise googling for it
+reveals only your series.
+
 > 
-> Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-
-Sorry for double-review, I'll jump to the next patch.
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/drm_fourcc.c  | 1 +
+>  include/uapi/drm/drm_fourcc.h | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+> index cc7e1ef4ef21..07b03b0fe9ad 100644
+> --- a/drivers/gpu/drm/drm_fourcc.c
+> +++ b/drivers/gpu/drm/drm_fourcc.c
+> @@ -280,6 +280,7 @@ const struct drm_format_info *__drm_format_info(u32 format)
+>  		{ .format = DRM_FORMAT_VYUY,		.depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_XYUV8888,	.depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_VUY888,          .depth = 0,  .num_planes = 1, .cpp = { 3, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
+> +		{ .format = DRM_FORMAT_XVUY2101010,     .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_AYUV,		.depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_Y210,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_Y212,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index f936cac2aebc..7e8aa3bd52b9 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -246,6 +246,7 @@ extern "C" {
+>  #define DRM_FORMAT_XVUY8888	fourcc_code('X', 'V', 'U', 'Y') /* [31:0] X:Cr:Cb:Y 8:8:8:8 little endian */
+>  #define DRM_FORMAT_VUY888	fourcc_code('V', 'U', '2', '4') /* [23:0] Cr:Cb:Y 8:8:8 little endian */
+>  #define DRM_FORMAT_VUY101010	fourcc_code('V', 'U', '3', '0') /* Y followed by U then V, 10:10:10. Non-linear modifier only */
+> +#define DRM_FORMAT_XVUY2101010	fourcc_code('X', 'Y', '3', '0') /* [31:0] x:Cr:Cb:Y 2:10:10:10 little endian */
+>  
+>  /*
+>   * packed Y2xx indicate for each component, xx valid data occupy msb
+> 
+> -- 
+> 2.43.0
+> 
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+With best wishes
+Dmitry
