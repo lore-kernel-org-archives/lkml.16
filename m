@@ -1,99 +1,82 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C283418BC1D
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B35614D2A0;
+	Mon, 17 Feb 2025 06:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739773943; cv=none; b=G85oS2tjYDJzWyIQ12DfOV1wcmlO9TBtpNvV/arG8aUIL17Ifhk5KF1DPmn816/6Vf6kObz5bBo4vjY2i5FTZ3nTTNZ97r1CER04BKUwqg6VTJCuQbU6XhX2Coogqavu3e+YMIZArkQwUavBMoGT9i3zIkozGwgGtSG5qwdYXVw=
+	t=1739774026; cv=none; b=jIIKCkVyDZwEoxQc+zNtoZ1gkU7j8rUxD5r624Jn2jwl+VMJbilIF9Sxs8AUujd86n/SPC/+/1x+FF6DBPhXgnZNdvnDsAqjNEj2Bd0MX9tShmQlM9iztww5loJCZ3CpOhrnkZkxiZhTq61DW6Y6OaZZIoXghIcu/N4Kgq1J8Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739773943; c=relaxed/simple;
-	bh=A7IRtN8hL7QiRgZjNciVRBb2qAyw0QTuXI/KIuAzjG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U5/f5PFPuYW9B4BW9mckDG//Iymker8BuexmQpHtOknVWhLkMfwIl5f8f8w3htDNH7nZ71gIoIwxzy3oON8ji9IPDChGXUVWiOfaCvKFfGypF5GyJ7GylwfCOfJRqjLWForvK9puK9Qu1/ZEdTOfgfBtjGv8HmBoup4kY7l4qGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ifibiV0g; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1739774026; c=relaxed/simple;
+	bh=gQS7lE6aR1pvIvgjR1Y3fZI8Acds0U8IcKCYS4/p84k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NJ8VKlKr/Q+6McimzZ7o2etO6mkf1BM18xSuEPnQkELrreSWt6nzpHd9kGEa0fe5xexfilh6OChoy5TfiJQRNj4iDYT/dLJeMdHjKeBDARJPbklWHHPaNoXHodK/scby/90Xr0+TWk/g9aGRiNIyy6c4EeQgPWSqvgmlktyQkbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=G/FjIkAH; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ifibiV0g"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaecf50578eso784996366b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 22:32:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1739773940; x=1740378740; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A7IRtN8hL7QiRgZjNciVRBb2qAyw0QTuXI/KIuAzjG0=;
-        b=ifibiV0g7bJdkgvAiqF8DYCIgCCATfz1J8pdpRbm8999AT0/lYIa1XReZqzBjjvPRC
-         pIDgAmqzPPDvVmvxg4lrrepY8LIfhdEnoKqim6CFo6NYZX4vMrG6cO5sQ33L+B2/swFR
-         lSy6FbUWvHoegAsZsZTA0xk8q7Sk2By6UzSghtOIvTalgSfKfXaUd/lhCzLqVILH+9OX
-         SBexvFT3a9QRnUk1Qp2gaVka9nrzUHtnDF34Qek8DBanYc85/nnoLKZeMLOX8zJ7iyef
-         OIlIxnRND7e9iwBVoPvR7CZXqxAesyKJVvl1DwbvaRc/zP6tH2ZwEyu3GUmN/TZlKfUN
-         2vvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739773940; x=1740378740;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A7IRtN8hL7QiRgZjNciVRBb2qAyw0QTuXI/KIuAzjG0=;
-        b=VNoAME8nJrSxxmu5bHPs82bgRLL5CkmIs1d5iUtxSiEhOxEq6bt22MMdeh5V2IZSpW
-         Tee8NcMRP7Y63iAVIVNMwTxVbOtWDDjES8AeQe7wzt/Gcu5ifHRZkw8oKjeSv3IQ1I2V
-         PAa7gtpSF6D5r4XKAfgQ/p0tL01jy8dkTlLc8yOmhlGssTwmkE/lbRHMkwFRWQWUpxXe
-         Gd7cC9obEHxymrU85x1o6bkBmZzBEKTvoF03n4tNeRpPyuBb+Y8qqZi2L7uVCVPAZYmf
-         sTjpKheK4RQ0bF2fjUnNWsQgPiVw+l5zXmEENAPThQBXsTji+csjtmc6C+AzaVIYK6Ac
-         pKZw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/8rBJXkf6+VM/1rXr6BD8qZBWfNbLe+VcKS+4IkQw802khbZdYcUW1nP1GsjonoOPglGP1Oe6/6z6BAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGc6ZeJEVbsADkxMr0eiDynlR63ivlDO+O41DPKZEEHEFNA4mZ
-	f9S5KFBeWsFl2lqbZEX8wS3E1dBVbWN6Rm2LUrq8tm52H684G7Ecybmlxt1PNv4=
-X-Gm-Gg: ASbGncsEiWyck2GYe9DSJKhAmbeNwxh7EhYQYVsGjcMEpBo7hZgeQbDRwakIaEghyZc
-	+Ui4KhoZSgS5+cqy955jVpW0zcgdNBrLINtsyW/9lbExDPBP7ROmtIcqjMbA4D2Jr259ifQBkCp
-	suF14QuNk1uW0BJS7hQXj+clULQscKB558fXTyXKKtnFNh1M0YDuLfoNZ211G8RdPUkF92WIjzX
-	6x5B1g2SdrfLsGxfDJJBGb76I7f6gpe5H/q7EV5ygIJIupVudbMR3OJNd5x4T5JMvRVr4Apnwgt
-	U1Rtt8Q4ykBSbz/wJ9Z+X8U=
-X-Google-Smtp-Source: AGHT+IHc3CgKCuw/Tn4up00Ngrqvc2HyPAuBwXc68KPmWOuZltnaa+t67OP6B/OZ8Mij+qQs5NbX4Q==
-X-Received: by 2002:a17:906:c154:b0:ab7:d10b:e1de with SMTP id a640c23a62f3a-abb70a957aamr879561366b.13.1739773939801;
-        Sun, 16 Feb 2025 22:32:19 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.25])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb86c9320csm315074866b.55.2025.02.16.22.32.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Feb 2025 22:32:19 -0800 (PST)
-Message-ID: <75a6f8b9-bcfe-44fa-897f-6b800000ef10@tuxon.dev>
-Date: Mon, 17 Feb 2025 08:32:18 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="G/FjIkAH"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739774021; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=bq0U27NFG8TdcE9f/ikRqDiyjfIWEAdUTwz5YbwhJro=;
+	b=G/FjIkAHdtoE4pIMsp/BLl7mYccI1HS8ALP0uEgJvmh2GTePuty86DKWN5yDqBDKG+RR9CFlSdkM75GJZTq6kw4mDciVxhrHM3MO7j8RGoXCyn9P9WYQ53CRN4QNzqMckmFGwUmqYt2DV4ldOTa3ytLAOEmHJ3tfElhkGKs/sf8=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPb1mPM_1739774018 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Feb 2025 14:33:39 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: tony.luck@intel.com,
+	bp@alien8.de,
+	nao.horiguchi@gmail.com
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linmiaohe@huawei.com,
+	akpm@linux-foundation.org,
+	peterz@infradead.org,
+	jpoimboe@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	baolin.wang@linux.alibaba.com,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v2 2/5] x86/mce: dump error msg from severities
+Date: Mon, 17 Feb 2025 14:33:32 +0800
+Message-ID: <20250217063335.22257-3-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
+References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: microchip: sam9x60: Add missing address/size
- cells for spi nodes
-To: Alexander Dahl <ada@thorsis.com>, devicetree@vger.kernel.org
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:ARM/Microchip (AT91) SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250110144159.379344-1-ada@thorsis.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250110144159.379344-1-ada@thorsis.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi, Alexander,
+The message in severities is useful for identifying the type of MCE that
+has occurred; dump it if it is valid.
 
-On 10.01.2025 16:41, Alexander Dahl wrote:
-> Complies with generic spi-controller and atmel,at91rm9200-spi bindings.
-> Fixes dtc warnings, when actually adding spi target device nodes on
-> board dts files including this soc dtsi.
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+ arch/x86/kernel/cpu/mce/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This is already covered by commit:
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index f2e730d4acc5..c1b945dbccdf 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1456,6 +1456,8 @@ static void queue_task_work(struct mce_hw_err *err, char *msg, void (*func)(stru
+ 	if (count > 1)
+ 		return;
+ 
++	if (msg)
++		pr_err("%s\n", msg);
+ 	task_work_add(current, &current->mce_kill_me, TWA_RESUME);
+ }
+ 
+-- 
+2.39.3
 
-f0127f66528f ("ARM: dts: microchip: sam9x60: Add address/size to
-spi-controller nodes")
-
-Thank you,
-Claudiu
