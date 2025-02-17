@@ -1,148 +1,200 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D922153C7;
-	Mon, 17 Feb 2025 09:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC61F155316;
+	Mon, 17 Feb 2025 09:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739784989; cv=none; b=YCB730vEHbCKOyKDqler9THsodglalNj2jmcCV7gNkx0iToVK5vvMM6Yn/ypRrZOToPg6SNsHuGqSdQY+hPSSO6/a+fxiLKhIRhFgU3bgm+Di1o9cT2B97/Qv/VZQEFmsNHfD7gjZ9NVnFLoqehYq2bCtUOuoFSny3Bz8orK3U4=
+	t=1739785050; cv=none; b=eOF57wjaWMud+R4I8GvA+yfMyNkrVfsCUOG6HniS3v7yzZ0Qy+ZK3y1wu60UFNrYVspc2OFWnc8uirjvDGt/slQKHr3Poo6kljfgS0VURWhOWVm4CCSScWbA5OTYHqU5n9JAqo99vkskuryHKP+rV4efEA5J5AxxCJKMIhACTAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739784989; c=relaxed/simple;
-	bh=2hbBuhR12HCknxy3ZpWFC8nk41wqAjEyvCv4koA/gaw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S+DrqJQy//sQUx8To5Xf1/Rs3Ur/LmlQh+ivGdL0PjSiXSoOw8OuRsz5YfqNcTwJWTA9pudV/LrPU3+6WEWVJTJv4g3pBnyspFHKk0m1hrcAEd00wk2AIJUp+w3b3IEuEKZR/8w3bGCnhVhUO/XysMLOqZKmFrz4j6G9wMtorH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AVfnMh7L; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739785050; c=relaxed/simple;
+	bh=AZCs5g8Mralms5Xjea2hMqxAgz+/0HZ4sntHHhpsj9s=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=en1YhjzqeLj/lQXy1IEnSLUv/WjdvMeHQd/A3O0FCY90x+3vJndO6y9PuLORmxh+dp9vrFEo084no5JoJTr+mV7lWfGvps1yQjOL9C1+IKo3pWySoJMUycQCllC6KuUWt+41vbet5DsGFq3V1aNIBvTnx9L+9b3XeIXZdyqFuSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RH6llmNi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AVfnMh7L"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H03U77025733;
-	Mon, 17 Feb 2025 09:36:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	n5s+flF43R133QAlfIXrz56WnUrn/DbnTJQG3zWrhNo=; b=AVfnMh7LT7LTskBD
-	URfQ4+hGDxqSclGuEEkyuvnZy9MoOug7wHb9H+i8uXk28HXbUk/j0M8xOx023KJp
-	DKPQtTdBiXfgisBJz/TJFBUlv7wLMlPm8n8/TGR1jyh3uVjWAq+n+DovNHmNFg4I
-	usLIWV/GAzR5tnYG5MTzGiaGnT3byehaBDFODYJN9uB26TSv+6uPSl07LYzOFDK5
-	oYTZm065p3ItZt/xKc0IZOwQINcuitXFXCfT/e0ObYrim6P/hTF1/0wiwayDRUNm
-	YXlyfXAHp9EcDaYkEdUpaHJ0QZCFWaAdFxsbbes3FiHj8yEJufYu2yrFPwaDQ3xP
-	cZ/nUw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7vs62q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 09:36:08 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51H9V3er018668
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 09:31:03 GMT
-Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 17 Feb 2025 01:30:58 -0800
-From: Jie Gan <quic_jiegan@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v12 3/7] Coresight: Use coresight_etm_get_trace_id() in traceid_show()
-Date: Mon, 17 Feb 2025 17:30:20 +0800
-Message-ID: <20250217093024.1133096-4-quic_jiegan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
-References: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RH6llmNi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 258C1C4CED1;
+	Mon, 17 Feb 2025 09:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739785049;
+	bh=AZCs5g8Mralms5Xjea2hMqxAgz+/0HZ4sntHHhpsj9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RH6llmNifW/GIp1YLSH29+A+9o7u8I2E0W3EyKFXLU1MKdiVZlTSttctViCPDEaJo
+	 MSIIzZbfDvaacMB1GK9oIeii0mbPtrcxYzLiAZOaZRSZdWUnyLm4ByZd3t4CH+U7CU
+	 gsoVw7xBdahqHquX6A0YTxXvsgT5mSVnTGO5uyb0C+aqHQtt8njJ8vi+P6XBxPbAkR
+	 3dgdnwqQ2dQ3CXZDE9IHiEV50BsIu6jt2W/y2pWE6six45KfPb7KAShqDFWq6JNn2L
+	 zlKe+Av4bNn/RPTMlp6lUbfdyMM0xMJxjueXRziyc6atx+8Ki923PlfQ97JSRVrDI7
+	 gl3zTX1ukcHkA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tjxZ8-004zmI-N1;
+	Mon, 17 Feb 2025 09:37:26 +0000
+Date: Mon, 17 Feb 2025 09:37:26 +0000
+Message-ID: <86h64ssyi1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 00/27] KVM: arm64: Implement support for SME in non-protected guests
+In-Reply-To: <Z69dsGn1JVWPCqAi@finisterre.sirena.org.uk>
+References: <20250214-kvm-arm64-sme-v4-0-d64a681adcc2@kernel.org>
+	<86pljkswuk.wl-maz@kernel.org>
+	<Z69dsGn1JVWPCqAi@finisterre.sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ipFT_UIcbzjZFom6hem5sdX6eh0bJ2Yc
-X-Proofpoint-ORIG-GUID: ipFT_UIcbzjZFom6hem5sdX6eh0bJ2Yc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-17_04,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- phishscore=0 spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 mlxscore=0 mlxlogscore=723
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502170083
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: broonie@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, catalin.marinas@arm.com, suzuki.poulose@arm.com, will@kernel.org, pbonzini@redhat.com, corbet@lwn.net, shuah@kernel.org, Dave.Martin@arm.com, tabba@google.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: James Clark <james.clark@linaro.org>
+On Fri, 14 Feb 2025 15:13:52 +0000,
+Mark Brown <broonie@kernel.org> wrote:
+> 
+> On Fri, Feb 14, 2025 at 09:24:03AM +0000, Marc Zyngier wrote:
+> > Mark Brown <broonie@kernel.org> wrote:
+> 
+> > Just to be clear: I do not intend to review a series that doesn't
+> > cover the full gamut of KVM from day 1. Protected mode is an absolute
+> > requirement. It is the largest KVM deployment, and Android phones the
+> > only commonly available platform with SME. If CCA gets merged prior to
+> > SME support, supporting it will also be a requirement.
+> 
+> OK, no problem.  This is a new requirement and I'd been trying to
+> balance the concerns people have with the size of serieses like this
+> with the need to get everything in, my plan had been to follow up as
+> soon as possible with pKVM.
 
-Use the new API, coresight_etm_get_trace_id, to read the traceid of the ETM
-device when call traceid_show via sysfs node.
+If size is an issue, split the UAPI from the core code. But don't
+fragment the overall world switch and exception handling, because
+that's a sure way to end-up with the same sort of problems we ended up
+fixing in SVE. pKVM has a direct influence on what you track, where
+you track it, and implementing it as an afterthought is a very bad
+idea.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
----
- drivers/hwtracing/coresight/coresight-etm3x-sysfs.c | 3 +--
- drivers/hwtracing/coresight/coresight-etm4x-sysfs.c | 4 ++--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+> 
+> > > Access to the floating point registers follows the architecture:
+> 
+> > >  - When both SVE and SME are present:
+> > >    - If PSTATE.SM == 0 the vector length used for the Z and P registers
+> > >      is the SVE vector length.
+> > >    - If PSTATE.SM == 1 the vector length used for the Z and P registers
+> > >      is the SME vector length.
+> > >  - If only SME is present:
+> > >    - If PSTATE.SM == 0 the Z and P registers are inaccessible and the
+> > >      floating point state accessed via the encodings for the V registers. 
+> > >    - If PSTATE.SM == 1 the vector length used for the Z and P registers
+> > >  - The SME specific ZA and ZT0 registers are only accessible if SVCR.ZA is 1.
+> 
+> > > The VMM must understand this, in particular when loading state SVCR
+> > > should be configured before other state.
+> 
+> > Why SVCR? This isn't a register, just an architected accessor to
+> > PSTATE.{ZA,SM}. Userspace already has direct access to PSTATE, so I
+> > don't understand this requirement.
+> 
+> Could you be more explicit as to what you mean by direct access to
+> PSTATE here?  The direct access to these PSTATE fields is in the form of
+> SVCR register accesses, or writes via SMSTART or SMSTOP instructions
+> when executing code - is there another access mechanism I'm not aware of
+> here?  They don't appear in SPSR.  Or is this a terminology issue with
+> referring to SVCR as the mechanism for configuring PSTATE.{SM,ZA}
+> without explicitly calling out that that's what's happening?
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-index 68c644be9813..b9006451f515 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-@@ -1190,10 +1190,9 @@ static DEVICE_ATTR_RO(cpu);
- static ssize_t traceid_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
--	int trace_id;
- 	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
- 
--	trace_id = etm_read_alloc_trace_id(drvdata);
- 	if (trace_id < 0)
- 		return trace_id;
- 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-index c767f8ae4cf1..e5216c0f60da 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -4,6 +4,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
- 
-+#include <linux/coresight.h>
- #include <linux/pid_namespace.h>
- #include <linux/pm_runtime.h>
- #include <linux/sysfs.h>
-@@ -2402,10 +2403,9 @@ static ssize_t trctraceid_show(struct device *dev,
- 			       struct device_attribute *attr,
- 			       char *buf)
- {
--	int trace_id;
- 	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
- 
--	trace_id = etm4_read_alloc_trace_id(drvdata);
- 	if (trace_id < 0)
- 		return trace_id;
- 
+I'm painfully aware of the architecture limitations.
+
+However, I don't get your mention of SPSR here. The architecture is
+quite clear that PSTATE is where these bits are held, that they are
+not propagated anywhere else, and that's where userspace should expect
+to find them.
+
+The fact that SW must use SVCR to alter PSTATE.{ZA,SM} doesn't matter.
+We save/restore registers, not accessors. If this means we need to
+play a dance when the VMM accesses PSTATE to reconciliate KVM's
+internal view with the userspace view, so be it.
+
+It probably means you need to obtain a clarification of the
+architecture to define *where* these bits are stored in PSTATE,
+because that's not currently defined.
+
+>
+> > Isn't it that there is simply a dependency between restoring PSTATE
+> > and any of the vector stuff? Also, how do you preserve the current ABI
+> > that do not have this requirement?
+> 
+> Yes, that's the dependency - I'm spelling out explicitly what changes in
+> the register view when PSTATE.{SM,ZA} are restored.  This ABI is what
+> you appeared to be asking for the last time we discussed this.
+> Previously I had also proposed either:
+> 
+>  - Exposing the streaming mode view of the register state as separate
+>    registers, selecting between the standard and streaming views for
+>    load/save based on the mode when the guest runs and clearing the
+>    inactive registers on userspace access.
+> 
+>  - Always presenting userspace with the largest available vector length,
+>    zero padding when userspace reads and discarding unused high bits
+>    when loading into the registers for the guest.  This ends up
+>    requiring rewriting between VLs, or to/from FPSIMD format, around
+>    periods of userspace access since when normally executing and context
+>    switching the guest we want to store the data in the native format
+>    for the current PSTATE.SM for performance.
+> 
+> both of which largely avoid the ordering requirements but add complexity
+> to the implementation, and memory overhead in the first case.  I'd
+> originally implemented the second case, that seems the best of the
+> available options to me.  You weren't happy with these options and said
+> that we should not translate register formats and always use the current
+> mode for the vCPU, but given that changing PSTATE.SM changes the
+> register sizes that ends up creating an ordering requirement.  You
+> seemed to agree that it was reasonable to have an ordering requirement
+> with PSTATE.SM so long as it only came when SME had been explicitly
+> enabled.
+> 
+> Would you prefer:
+> 
+>  - Changing the register view based on the current value of PSTATE.SM.
+>  - Exposing streaming mode Z and P as separate registers.
+>  - Exposing the existing Z and P registers with the maximum S?E VL.
+> 
+> or some other option?
+
+My take on this hasn't changed. I want to see something that behaves
+*exactly* like the architecture defines the expected behaviour of a
+CPU.
+
+But you still haven't answered my question: How is the *current* ABI
+preserved? Does it require *not* selecting SME? Does it require
+anything else? I'm expecting simple answers to simple questions, not a
+wall of text describing something that is not emulating the
+architecture.
+
+	M.
+
 -- 
-2.34.1
-
+Without deviation from the norm, progress is not possible.
