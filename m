@@ -1,114 +1,228 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93471188A3B;
-	Mon, 17 Feb 2025 18:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1403188A3B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 18:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739817577; cv=none; b=jmPQo+JxPXr51WvXimPyX414pnTPu5u42jHv+yj7jy+ZnW+AHKtEjGi1ZpyFLssk8fIDDsltBNjhybbwjrkk4KCjiY17Fh6gmANwF6nP8pPQVFGON509D4fQvZ6yI60ZkJfqKdfPElVwcZ2pv2RULUewEKY7O6tfT58LwkamVaI=
+	t=1739817803; cv=none; b=lt1gLpw6zHdPX6lBTYgDBaNff97lXqtMJV1ksqM1awlDuu3goZo7kOa0K5sSOcij37AiajRsF1jroXpHOYKP8WwGJC6bGFwoP8qaf+BWycsTQmcrfazFpWubYCY9e4Vg+riSL2PnPzCSnU1uZVTWiqCubDtbS1knEGPUC7SgVCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739817577; c=relaxed/simple;
-	bh=ibeLQkqGZnHUGDV4imgix8149aTc0doBQb1jJhxFPpI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t/u5JQ+tliqIXMpka/+oA6TTygGHlNSZOYIJBVn3boZeW1i7smSEZfjOxuq/t9cSxvDvieqXceNIG5ZBVtUDxIFKmbJ0B+93jT9kWkYC+7y6MUXWDQ8OLo+qAG4u/8AnqFwpFig4sem/ddOI8wydk0mJnNOLVgRXKZ/Twz6t+tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VpzMSWlk; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739817803; c=relaxed/simple;
+	bh=aQ8/F+Lh2P9Vy2jF93ARw99yi6bnud3ngrkQ+wzhoGk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=odmSsempe+lByc65wYGo5BUkRnoiAzvEqTTZhT4v+j/e2FJPTo5K8AyPDwtaUP1md6MKgpvyGzpiSf7tU1JCMj7tRjhxIsFWpeglsBSSm6ExYyUVW3tkI0ksgfzPlJ4/Qy7eeKnhTfUbSbwCumrVGSVuW7lt0ZZxC1++wWI6MHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=fail smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MmCGamMB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=c3h1eEAL; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rQGTzicH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jYy7YrY6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpzMSWlk"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso51486215e9.1;
-        Mon, 17 Feb 2025 10:39:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739817574; x=1740422374; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rjNjpm7nad/tLGA41YlKQjUrQeFd8i+8MRCd6+CzP/8=;
-        b=VpzMSWlk2UD8ReX1wS9AafF0n0OoyznTrSrnE0G6w3fjC3NZ13aa7F+oAZLU2sngBv
-         sr0zsSu+UxU0V4Vl0ylFNXpuM1wFNfAbpXs1UqqE9W2QWtE1TG3JZ6aMlemP1w8bfmP2
-         BkNXlwjRiIt1fz2Po0jJNxYC31f45RiUyJfexuR/zjsKNAX7lhjGW6eTOOjmhhsPVbEB
-         7yYc96wuELvmncFAY1wC7qoOuJ/8PQh8IlnysOTmkN20TDW9f2SGnM4ePbD6f8Nqqca2
-         DaphyWfbRZt+MbNJkwskqk5NygI3uPLxc65Ee1r+XHDp2xzkzywqQc/M5U0ehJOFO9ZC
-         bx+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739817574; x=1740422374;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rjNjpm7nad/tLGA41YlKQjUrQeFd8i+8MRCd6+CzP/8=;
-        b=C1PdmgOBKNB6XwoVrymOJ/yRCleNLCkZjGh1bLF1B/IjKo4vO1Efg7EXQAJU7u1O5w
-         HkNajcf9QByf7QsbkZJaGweHBqTQbuOMQgyL/DDxGY6oIR5lahTxeJh+/3O0AztuGpWl
-         WtLu1bEMm3awEaxMILkhhNCWqcFhvm1uW6+pPhkwKBjfWjR+q9N12mKJk1FiQfYBQvpw
-         hN2xcqTdiqZtPz+e7uZK2gBKfSeEvIOQZ+Za6C8vi+2gQtD2fvtBWozVRqn1L6L5hSxq
-         JyxCCEGm4IYQt6XxgNy0Zc+mXjcsOByGDuuIIwIwJCfuYQDVFB/wHqNoyBk6b/SVjcX/
-         AUQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1Q9sfmmxtwO0d5Gh80ajE9jUJozFumMTB/vxMe9bUT3MN8FxO2Na8ubE5pLqsCq4Tw6n1fz6qUYFfQjg=@vger.kernel.org, AJvYcCVQYOvjTP0Yy0gA53ihX6ROVV45QBFxqoF2lSBxAPvLXAFox08jV8HoPH7qy+V5st+lEq/3duYhZ/JyDQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye4K1uXsPgjvp+0t8ZJ1hPr3w1RecACXlMf6CB9EUwqPv1AYGc
-	9c7E4U/xEl/TIPp2cTD8C0WXyzb31CQ0L+/bY6dhAi9HPIr5eMBB
-X-Gm-Gg: ASbGncsLNIefH+uJtRnrwEOhEsJAafKpzrsVhNqSXoBmnX/I1ab/spoWgMzgSQurT8t
-	R0E+xI0A9fPGBHrO6Ficz84dEYCotApJi7M47xJuulav0mG0jdUFFRjvtZS7UmbeqnxpkV251vd
-	3XccI155zp3G+3VZLaGVmwnRsk2vYyu8g9hQbeRhi/XsnuzUGyUQ5NlroqK6v57rBJFWNDqdTBe
-	Qs3F4uptCplse7OK7jWvX2gLDq/i50BHiNfzjZw/je1q2dUTShJYXN2HxPJjQ05c5heAbRnlbJv
-	C+RVdn09rmOwQFWOdw==
-X-Google-Smtp-Source: AGHT+IFy2DKmv5AimZPDn79UVjPBJtoJqNpgKNKnT1JmYQ4gXVlOFt00P5a94eu6EJnw/XHRnqTPPQ==
-X-Received: by 2002:a05:600c:a384:b0:439:88bb:d023 with SMTP id 5b1f17b1804b1-43988bbd481mr46336695e9.11.1739817573545;
-        Mon, 17 Feb 2025 10:39:33 -0800 (PST)
-Received: from [10.176.235.56] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43987088ecbsm28775975e9.31.2025.02.17.10.39.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 10:39:32 -0800 (PST)
-Message-ID: <1fdfb9221f1cab04881d91e1e2d56ba97054a580.camel@gmail.com>
-Subject: Re: [PATCH] scsi: ufs: core: Fix memory crash in case arpmb command
- failed
-From: Bean Huo <huobean@gmail.com>
-To: Arthur Simchaev <arthur.simchaev@sandisk.com>, martin.petersen@oracle.com
-Cc: avri.altman@sandisk.com, Avi.Shchislowski@sandisk.com,
- beanhuo@micron.com,  linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, bvanassche@acm.org
-Date: Mon, 17 Feb 2025 19:39:30 +0100
-In-Reply-To: <20250217164330.245612-1-arthur.simchaev@sandisk.com>
-References: <20250217164330.245612-1-arthur.simchaev@sandisk.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MmCGamMB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="c3h1eEAL";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rQGTzicH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jYy7YrY6"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E5EE421172;
+	Mon, 17 Feb 2025 18:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739817800; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=V5lZynmEUR+YeywYZpcWxhoHhkH//bvz+HMMgYXLssE=;
+	b=MmCGamMB4yR/kMGuOav/oCZgNlsKbej/iEDivKWQAfphN4rpAwvJjh0aMh0UotpiBHvvQ9
+	FhhfvkfMMIL17X2+0o7iuGnjk4vSrZluie8HPcc4RjRvEwBA15Y4CerLh/8IJQhIgtGHqF
+	nHNgiCs3lbKg4xNmpImZKHWb0dbg6jE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739817800;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=V5lZynmEUR+YeywYZpcWxhoHhkH//bvz+HMMgYXLssE=;
+	b=c3h1eEALIj4xQAPDWcBAgSJvcYNpeaT6PY9xlGPfCUw2ArR70RKQbR6NXIkrwqj5RqU+Tt
+	mZMoTpLQVD8g+pAA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739817799; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=V5lZynmEUR+YeywYZpcWxhoHhkH//bvz+HMMgYXLssE=;
+	b=rQGTzicHaa/o0iyUdHK+ki7RUOjPeW4cWuYz0nOYWCsmNX0bYf13T/OpDlytCaAkLQjrHu
+	2ZA8ZK4/QXcm5zbDs/xEUN0qxJiRERNdbNZbVfV+ItUXWTuN2C2fIREcco8D1YUFxbXb9A
+	ObiZXjcHCn15wZhjpfnnTOOUcKN+CiY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739817799;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=V5lZynmEUR+YeywYZpcWxhoHhkH//bvz+HMMgYXLssE=;
+	b=jYy7YrY6o22q+HHXYv7P8SMXq/tc3qerKhB7voZpijM+bmV7KAR/SKXMr0Oyy289/o6pQ6
+	ozhIswbbCIwhMrBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BBF6D13485;
+	Mon, 17 Feb 2025 18:43:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lMyELUeDs2fOegAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 17 Feb 2025 18:43:19 +0000
+Message-ID: <b4a2bf18-c1ec-4ccd-bed9-671a2fd543a9@suse.cz>
+Date: Mon, 17 Feb 2025 19:43:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v1] neighbour: Replace kvzalloc() with kzalloc()
+ when GFP_ATOMIC is specified
+Content-Language: en-US
+To: Kohei Enju <enjuk@amazon.com>, edumazet@google.com
+Cc: davem@davemloft.net, gnaaman@drivenets.com, horms@kernel.org,
+ joel.granados@kernel.org, kohei.enju@gmail.com, kuba@kernel.org,
+ kuniyu@amazon.com, linux-kernel@vger.kernel.org, lizetao1@huawei.com,
+ netdev@vger.kernel.org, pabeni@redhat.com, cl@linux.com, penberg@kernel.org,
+ rientjes@google.com, iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+ roman.gushchin@linux.dev, 42.hyeyoo@gmail.com
+References: <CANn89i+ap-8BB_XKfcjMnXLR0ae+XV+6s_jacPLUd8rqSgyayA@mail.gmail.com>
+ <20250217165229.87240-1-enjuk@amazon.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20250217165229.87240-1-enjuk@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[davemloft.net,drivenets.com,kernel.org,gmail.com,amazon.com,vger.kernel.org,huawei.com,redhat.com,linux.com,google.com,lge.com,linux-foundation.org,linux.dev];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On Mon, 2025-02-17 at 18:43 +0200, Arthur Simchaev wrote:
-> In case the device doesn't support arpmb, the kernel get memory crash
-> due to copy user data in bsg_transport_sg_io_fn level. So in case
-> ufshcd_send_bsg_uic_cmd returned error, do not change the job's
-> reply_len.
->=20
-> Memory crash backtrace:
-> 3,1290,531166405,-;ufshcd 0000:00:12.5: ARPMB OP failed: error code -
-> 22
+On 2/17/25 17:52, Kohei Enju wrote:
+> + SLAB ALLOCATOR maintainers and reviewers
+> 
+>> > From: Kohei Enju <enjuk@amazon.com>
+>> > Date: Mon, 17 Feb 2025 01:30:16 +0900
+>> > > Replace kvzalloc()/kvfree() with kzalloc()/kfree() when GFP_ATOMIC is
+>> > > specified, since kvzalloc() doesn't support non-sleeping allocations such
+>> > > as GFP_ATOMIC.
+>> > >
+>> > > With incompatible gfp flags, kvzalloc() never falls back to the vmalloc
+>> > > path and returns immediately after the kmalloc path fails.
+>> > > Therefore, using kzalloc() is sufficient in this case.
+>> > >
+>> > > Fixes: 41b3caa7c076 ("neighbour: Add hlist_node to struct neighbour")
+>> >
+>> > This commit followed the old hash_buckets allocation, so I'd add
+>> >
+>> >   Fixes: ab101c553bc1 ("neighbour: use kvzalloc()/kvfree()")
+>> >
+>> > too.
+>> >
+>> > Both commits were introduced in v6.13, so there's no difference in terms
+>> > of backporting though.
+>> >
+>> > Also, it would be nice to CC mm maintainers in case they have some
+>> > comments.
+>> 
+>> Oh well, we need to trigger neigh_hash_grow() from a process context,
+>> or convert net/core/neighbour.c to modern rhashtable.
+> 
+> Hi all, thanks for your comments.
+> 
+> kzalloc() uses page allocator when size is larger than 
+> KMALLOC_MAX_CACHE_SIZE, so I think what commit ab101c553bc1 ("neighbour: 
+> use kvzalloc()/kvfree()") intended could be achieved by using kzalloc().
 
+Indeed, kzalloc() should be equivalent to pre-ab101c553bc1 code. kvmalloc()
+would only be necessary if you need more than order-3 page worth of memory
+and don't want it to fail because of fragmentation (but indeed it's not
+supported in GFP_ATOMIC context). But since you didn't need such large
+allocations before, you probably don't need them now too?
 
-It is Advanced RPMB access and not related to the UIC command,=C2=A0
+> As mentioned, when using GFP_ATOMIC, kvzalloc() only tries the kmalloc 
+> path, since the vmalloc path doesn't support the flag.
+> In this case, kvzalloc() is equivalent to kzalloc() in that neither try 
+> the vmalloc path, so there is no functional change between this patch and 
+> either commit ab101c553bc1 ("neighbour: use kvzalloc()/kvfree()") or 
 
-If the deivce didn't support advanced rpmb, got return -EINVAL(-22).=C2=A0
+Agreed.
 
-In this case, in bsg_transport_sg_io_fn,=C2=A0
+> commit 41b3caa7c076 ("neighbour: Add hlist_node to struct neighbour").
+> 
+> Actually there's no real bug in the current code so the Fixes tag was not 
+> appropriate. I shall remove the tag.
 
-if (job->result < 0) {
-	job->reply_len =3D sizeof(u32);=20
+True, the code is just more clear.
 
-then:
+Thanks,
+Vlastimil
 
- int len =3D min(hdr->max_response_len, job->reply_len);=20
-	if (copy_to_user(uptr64(hdr->response), job->reply, len))
+> Regards,
+> Kohei
 
-
-It looks like you didn't initialize the correct response buffer from
-user space.
-
-Could you rephrase your commit message, add a Fixes tag, and resubmit?
-
-
-Kind regards,
-Bean
