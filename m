@@ -1,130 +1,89 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B16F16C850
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 12:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D51C16C850;
+	Mon, 17 Feb 2025 12:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739795022; cv=none; b=HAM8MZGySShpO6ffIkGdsBuX3s35VmQi9Zli/mc9iQx3bzCskWgVfB+7+YuWln25Wtdcqc8LAlZCVEzHtLYeIVaGx1mYe+sCtG4bRkk2Ds3IBuSehObFnrHQPiJLNOGbyvVn+o4OAAwvzdsxVsC+/8LrPxSB9HZ2Oqi7hwXXhWw=
+	t=1739795068; cv=none; b=WZV3lODtBwwSVPdL6dOULPbw+AHk7AfejHCCbJn4428nLpAUElI9fkzNLIqd/r7uTi11k/1dqRrotf8py89UQ3SJ07zvsvToWDfy1kIe17uXkqrn+wrZGPy9A8SfdsMAA1/r/SDQcgZ3LdahLP0taY4HCUj4oNdITZdIA1Z0TN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739795022; c=relaxed/simple;
-	bh=U7SBjO10ecJ12NM0oWnQnrtXlYgDDEGT/pTV7YpPlqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZM5LqSWwV+28q/AActpZ1FkCx91mdxaAU9lV3vjJ/b7SZ+g4FT20TOrQPCPvvt6aG7xAGFh7AIHJ6jVbeg9QdJNufQ/oFIbmagdVsOZuYnhtoQRTvgL9c/FaLt9VuACiQhpRzAYqad2jeR7Fw5BRmwWXPVAFSgUz9OG97LOWj4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5AA054419E;
-	Mon, 17 Feb 2025 12:23:29 +0000 (UTC)
-Message-ID: <199526de-4351-4fd7-8f6a-9e8dbf05c184@ghiti.fr>
-Date: Mon, 17 Feb 2025 13:23:28 +0100
+	s=arc-20240116; t=1739795068; c=relaxed/simple;
+	bh=TJYEevfjJhbZc3qn+igox9ieijgb5voH+UahcAHp2sQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KB7Jp4Ycx+s4J/WDqRHtGK37fcvmXLT+2xLZ/QJ2COo3Y/sbh5ShbW7FvfwXC7n4fcdWYDexPsA59euzlIzK9gTxrbmCd1qJuM5xqBFosaS6NZ9T8xMqDWcmGTJSu9efGbS2Mu1lHef6nQXd0YGYXqrZnpLInO1DPlay8fdr9FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpQ50d5h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EpQ50d5h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DCC7C4CED1;
+	Mon, 17 Feb 2025 12:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739795067;
+	bh=TJYEevfjJhbZc3qn+igox9ieijgb5voH+UahcAHp2sQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=EpQ50d5hscsOE0Mv4QRUAC0NqvA4X69TVieE9LcTkTbnJWv4xMJDBFDpfUA11Ylve
+	 EHnNrEBnZIVxoX8eRoZP6Kkd257eVQjAfUPF+pQZlChsSdwu7eBy5M1FaW8mWPRTRe
+	 mweuQ5r4oHGuYRJojkE+XrpLyuQPvRwYNJBooHdULvt00PvhNPBdURzl591Ho7M7vo
+	 BfYVNqJ2NRDiNMWiQidEr5A7Wx6CQYuAN8bcAgoPcdPNcf5cCgZEuxc9ytkPkEyqCa
+	 ovaCZve7OyecQpYl28rdMKjB3rnbf0xGTeFy7kumPZq4mb1Ww2DlS6n715heyZFcEE
+	 ocRLBWot9rJxQ==
+From: Mark Brown <broonie@kernel.org>
+To: Varshini Rajendran <varshini.rajendran@microchip.com>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, linux-spi@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Durai Manickam KR <durai.manickamkr@microchip.com>, 
+ Alexander Dahl <ada@thorsis.com>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+In-Reply-To: <20250207122145.162183-2-csokas.bence@prolan.hu>
+References: <20250207122145.162183-2-csokas.bence@prolan.hu>
+Subject: Re: [PATCH resubmit2] spi: atmel-quadspi: remove references to
+ runtime PM on error path
+Message-Id: <173979506523.23527.7426002054333724142.b4-ty@kernel.org>
+Date: Mon, 17 Feb 2025 12:24:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: select DMA_DIRECT_REMAP by RISCV_ISA_SVPBMT and
- ERRATA_THEAD_MAE
-Content-Language: en-US
-To: Sergey Matyukevich <geomatsi@gmail.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
- Heiko Stuebner <heiko@sntech.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Conor Dooley <conor.dooley@microchip.com>,
- Robin Murphy <robin.murphy@arm.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Christoph Hellwig <hch@lst.de>
-References: <20250116172950.1989748-1-geomatsi@gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250116172950.1989748-1-geomatsi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkeeflecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepvdeludfgleffteekgfelheetvdeugffgiedtueetgedtfeefleeileehieekvddunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemleelvgehmehfrgdtsgemjeeivdgumedusggsfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemleelvgehmehfrgdtsgemjeeivdgumedusggsfhdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemleelvgehmehfrgdtsgemjeeivdgumedusggsfhgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepghgvohhmrghtshhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdpr
- hgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehhvghikhhosehsnhhtvggthhdruggvpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopegrlhgvgihghhhithhisehrihhvohhsihhntgdrtghomh
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-Hi Sergey,
+On Fri, 07 Feb 2025 13:21:45 +0100, Bence Csókás wrote:
+> There is no need to call runtime PM put APIs on error path of
+> `atmel_qspi_sama7g5_transfer()` as the caller (`atmel_qspi_exec_op()`)
+> of it will take care of this if needed.
+> 
+> 
 
-On 16/01/2025 18:29, Sergey Matyukevich wrote:
-> Select DMA_DIRECT_REMAP for the RISC-V extensions that allow to set
-> page-based memory types in PTEs according to the requested DMA
-> attributes. This is the purpose of Svpbmt or XTheadMae extensions.
-> Zicbom or XTheadCmo serve a different purpose, providing instructions
-> to flush/invalidate cache blocks.
->
-> Fixes: 381cae169853 ("riscv: only select DMA_DIRECT_REMAP from RISCV_ISA_ZICBOM and ERRATA_THEAD_PBMT")
->
-> Signed-off-by: Sergey Matyukevich <geomatsi@gmail.com>
-> ---
->   arch/riscv/Kconfig        | 2 +-
->   arch/riscv/Kconfig.errata | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index d4a7ca0388c0..a5dabb744009 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -603,6 +603,7 @@ config RISCV_ISA_SVPBMT
->   	depends on 64BIT && MMU
->   	depends on RISCV_ALTERNATIVE
->   	default y
-> +	select DMA_DIRECT_REMAP
+Applied to
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
- From what I read, DMA_DIRECT_MAP relies on the ability to map pages 
-uncached (pgprot_dmacoherent() here 
-https://elixir.bootlin.com/linux/v6.13.2/source/kernel/dma/pool.c#L104). 
-But CONFIG_RISCV_ISA_SVPBMT does not guarantee that the underlying 
-platform supports svpbmt so to me it is wrong to select DMA_DIRECT_MAP, 
-we would need some runtime check instead.
+Thanks!
 
+[1/1] spi: atmel-quadspi: remove references to runtime PM on error path
+      commit: 99e6ea912340d6a262a60d5dd0c87c5e7b2d6ff2
 
->   	help
->   	   Adds support to dynamically detect the presence of the Svpbmt
->   	   ISA-extension (Supervisor-mode: page-based memory types) and
-> @@ -787,7 +788,6 @@ config RISCV_ISA_ZICBOM
->   	depends on RISCV_ALTERNATIVE
->   	default y
->   	select RISCV_DMA_NONCOHERENT
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-And in the same way, we should not enable RISCV_DMA_NONCOHERENT since 
-CONFIG_RISCV_ISA_ZICBOM does guarantee the presence of zicbom. Because 
-then in mm/dma-noncoherent.c, the cache flush operations are nops.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Or am I missing something?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-Alex
-
-
-> -	select DMA_DIRECT_REMAP
->   	help
->   	   Adds support to dynamically detect the presence of the ZICBOM
->   	   extension (Cache Block Management Operations) and enable its
-> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
-> index 2acc7d876e1f..3bcae5bd3231 100644
-> --- a/arch/riscv/Kconfig.errata
-> +++ b/arch/riscv/Kconfig.errata
-> @@ -86,6 +86,7 @@ config ERRATA_THEAD_MAE
->   	bool "Apply T-Head's memory attribute extension (XTheadMae) errata"
->   	depends on ERRATA_THEAD && 64BIT && MMU
->   	select RISCV_ALTERNATIVE_EARLY
-> +	select DMA_DIRECT_REMAP
->   	default y
->   	help
->   	  This will apply the memory attribute extension errata to handle the
-> @@ -96,7 +97,6 @@ config ERRATA_THEAD_MAE
->   config ERRATA_THEAD_CMO
->   	bool "Apply T-Head cache management errata"
->   	depends on ERRATA_THEAD && MMU
-> -	select DMA_DIRECT_REMAP
->   	select RISCV_DMA_NONCOHERENT
->   	select RISCV_NONSTANDARD_CACHE_OPS
->   	default y
