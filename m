@@ -1,77 +1,146 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168B41AA1EC
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B90168B1
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739782325; cv=none; b=cq5j+1ZEp/Du8BSo2lwbMVxL6f4Ft/JxWD5MaFtyKeMI1RpaNZV0fWX4fKlVLZ2UPC2sis2gJhzWRPZiTUc4lcwhHHrkEPtpByRwIJqVxAawyvgAz06v3gm90im8k/o94cQXt5fuw4xxb0vlI43EQeKriRAh413lzWOLmV5RaRs=
+	t=1739782405; cv=none; b=sSgsxO7yMFa43DCghMyWpQf/CmeaQ3qaUYdPa8LYmnOVi7snE7KXR9Fd4aAXUWxbGHRjuyZQ7CH7QG2KLtSLiCwGZIbwcB9XOZVcbiLNNnTf9B+Wl8kKxSSFvVGTL6KZOMsctXQ9Nh0b8xGUZp8sTrS21A1LehloHqxgfU80x8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739782325; c=relaxed/simple;
-	bh=pTKM4ONs5xdJ/zoEznz6Tt7sfINMDFv0eJ7Qdu+k/w8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=nznnteEuJwasD6IJudg93K0N2HIBMUdVSPmjPtruvptOGI0y6PktCC5ag2Vi2E8kQcfvUy8wkue8RhUoCpevw1Jqp9lmHkrRGP4/N8cVdZ9Zaej3+ewwEUGNpH28n1O/Q5yU21OJVM1+ec2QKAoqKaNqG5vXusLkyF/nkFDSuBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d16acfdddaso73990385ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 00:52:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739782323; x=1740387123;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v7dkqt5TNcfumetUYnVjyG/hBirM8FVc1r3s0VKr1EU=;
-        b=XgR2g/wkMnaKqFFWfQAhyyqLI/1/eqFKwSLn3cn9EWGvIcjazCZ/9XO51UAruZ1ny7
-         VbkgDdNeFDeW9qNiCWi2QN0rpM3qQqwo9RVhXq4i2lZnCgtLT/KYC3Ve6xwJCMbrmHSx
-         uLAtSNsEYqIX4RcyIdp4f8ZuvEV1D+DUQrxHN1EK0lXFCkBqN5b0l8YyUiKs0baOYqbW
-         9iaXrIEnwD2SZjs8puNQidUI6qToAmAQHIPiZoKPkVdVWKYHY3ZlBtNVgG9qt+j/77wu
-         9bm7oZt9nJ1gyG49SCNKSiB4xiOmpMjLo3uqbLi1BCJyQ/llP0c0XkabTEvp3pZQRlzC
-         OxLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVduBQykBpo7BMGNWd+4lRbhUDfEM1y6YTmoqva8njUSpm10GFWmjy/6Cnyig8rHEKzCN5R7NYdGJYL3D0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrR7wgQ6aEUEgRKaVh4QLwVYkBfWys725KW4iVIYr+JOplTVs+
-	IzAXhOLtaFz4mUq1pyv8HkBzHAqOEnG66ZUfXiJPMcP6aXO7PGZN64bCmWKwl7VZOUSt6vuLP8+
-	KykbTDc8Q2ufezUmtvG8UFxBNwxa9jQTZRoNUtmsSmz+T1DYvPZlW0Mk=
-X-Google-Smtp-Source: AGHT+IFadkoA3rneb+/gRE8ngOLHkiIC8pgXB6U7bDf3vvzatGshGE1p8RJ8nI2S7qTrxqPWueCsvZB2taQHwL2K7O4VLxN/2L4b
+	s=arc-20240116; t=1739782405; c=relaxed/simple;
+	bh=qu/3K+SbsA9VLOzbSKu1qsZ3WdSo3ICrFa2oxsGDqmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSubi4xPmnwIdAF6mej6a2naUeRyV+pqsLReWZBlqNm4WFRST5sewV5V4v4t0Wh9j0W0DmzB/sROLZYQXF1aIpW+M6T0LBrTjb540CRj0FnyiiTQfLgX1Tth7eQldf19mqRC3XS6Mipi5BD08cbAYTgMCREDEP5nEOGoZGamXSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jESugXih; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jESugXih"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739782404; x=1771318404;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qu/3K+SbsA9VLOzbSKu1qsZ3WdSo3ICrFa2oxsGDqmw=;
+  b=jESugXihqP7Os1do+loLZxdHIKdQi0pOStoZ6+WJ6qLinTJnUwNxbgaw
+   unPb3atyE+CGDmT1poQxNqvu2qCOPR6QaYrApQu8diOVfHgBIs6pWcHu5
+   BbOwJJV+r5Nuggx1iz/mdlHoXHqLDQFyZtAvktMCO4Fw4ywi6Rbb0jv8k
+   6MJKa7Q3fx8yqFDIx/UMCrSY8SFKm3x5Y1YlBuHZVHcMVPPD0qtqxVay0
+   t6TBBZmfoVcdF6xcljGrmSjLcVg79Pig09qUYBOZwZnGE2exSekf1mKN8
+   ZrK0o6tyQY+mEeP9Xqu/nwaf66ulQWuz+e8RuHwUblyrZCxIwTjSDCan3
+   g==;
+X-CSE-ConnectionGUID: LixetzCKRIygM6hB9pzBVA==
+X-CSE-MsgGUID: lM2et9slRuCvbXVKPr8ALw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="40720404"
+X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
+   d="scan'208";a="40720404"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 00:53:23 -0800
+X-CSE-ConnectionGUID: AB6Kyz33RRGIBYcHbav3Sg==
+X-CSE-MsgGUID: D/mb9oHATf6FOT1t0Epeng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
+   d="scan'208";a="119072773"
+Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.245.97.15])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 00:53:21 -0800
+Date: Mon, 17 Feb 2025 09:53:13 +0100
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Wentong Wu <wentong.wu@intel.com>, Jason Chen <jason.z.chen@intel.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mei: vsc: Use "wakeuphostint" when getting the host
+ wakeup GPIO
+Message-ID: <Z7L4+YJcUaaz1kyG@linux.intel.com>
+References: <20250214212425.84021-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b4b:b0:3d0:e6c:e9c5 with SMTP id
- e9e14a558f8ab-3d280974ff4mr90204965ab.21.1739782323278; Mon, 17 Feb 2025
- 00:52:03 -0800 (PST)
-Date: Mon, 17 Feb 2025 00:52:03 -0800
-In-Reply-To: <679fb3a5.050a0220.163cdc.0030.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b2f8b3.050a0220.173698.0026.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs] general protection fault in bioset_exit (2)
-From: syzbot <syzbot+76f13f2acac84df26aae@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214212425.84021-1-hdegoede@redhat.com>
 
-syzbot has bisected this issue to:
+Hi Hans,
 
-commit 14152654805256d760315ec24e414363bfa19a06
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Mon Nov 25 05:21:27 2024 +0000
+Thanks for working on this, this issue annoyed lots of people.
 
-    bcachefs: Bad btree roots are now autofix
+On Fri, Feb 14, 2025 at 10:24:25PM +0100, Hans de Goede wrote:
+> The _CRS ACPI resources table has 2 entries for the host wakeup GPIO,
+> the first one being a regular GpioIo () resource while the second one
+> is a GpioInt () resource for the same pin.
+> 
+> The acpi_gpio_mapping table used by vsc-tp.c maps the first Gpio ()
+> resource to "wakeuphost-gpios" where as the second GpioInt () entry
+> is mapped to "wakeuphostint-gpios".
+> 
+> Using "wakeuphost" to request the GPIO as was done until now, means
+> that the gpiolib-acpi code does not know that the GPIO is active-low
+> as that info is only available in the GpioInt () entry.
+> 
+> Things were still working before due to the following happening:
+> 
+> 1. Since the 2 entries point to the same pin they share a struct gpio_desc
+> 2. The SPI core creates the SPI device vsc-tp.c binds to and calls
+>    acpi_dev_gpio_irq_get(). This does use the second entry and sets
+>    FLAG_ACTIVE_LOW in gpio_desc.flags .
+> 3. vsc_tp_probe() requests the "wakeuphost" GPIO and inherits the
+>    active-low flag set by acpi_dev_gpio_irq_get()
+> 
+> But there is a possible scenario where things do not work:
+> 
+> 1. - 3. happen as above
+> 4. After requesting the "wakeuphost" GPIO, the "resetfw" GPIO is requested
+>    next, but its USB GPIO controller is not available yet, so this call
+>    returns -EPROBE_DEFER.
+> 5. The gpio_desc for "wakeuphost" is put() and during this the active-low
+>    flag is cleared from gpio_desc.flags .
+> 6. Later on vsc_tp_probe() requests the "wakeuphost" GPIO again, but now it
+>    is not marked active-low.
+> 
+> The difference can also be seen in /sys/kernel/debug/gpio, which contains
+> the following line for this GPIO:
+> 
+>  gpio-535 (                    |wakeuphost          ) in  hi IRQ ACTIVE LOW
+> 
+> If the second scenario is hit the "ACTIVE LOW" at the end disappears and
+> things do not work.
+> 
+> Fix this by requesting the GPIO through the "wakeuphostint" mapping instead
+> which provides active-low info without relying on acpi_dev_gpio_irq_get()
+> pre-populating this info in the gpio_desc.
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2316918
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=171a52e4580000
-start commit:   224e74511041 Merge tag 'kbuild-fixes-v6.14-2' of git://git..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=149a52e4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=109a52e4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e55cabe422b4fcaf
-dashboard link: https://syzkaller.appspot.com/bug?extid=76f13f2acac84df26aae
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e8b5a4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1155a898580000
+The problem explanation and the fix looks good to me.
 
-Reported-by: syzbot+76f13f2acac84df26aae@syzkaller.appspotmail.com
-Fixes: 141526548052 ("bcachefs: Bad btree roots are now autofix")
+Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Regards
+Stanislaw
+
+> ---
+>  drivers/misc/mei/vsc-tp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
+> index 35d349fee769..7be1649b1972 100644
+> --- a/drivers/misc/mei/vsc-tp.c
+> +++ b/drivers/misc/mei/vsc-tp.c
+> @@ -502,7 +502,7 @@ static int vsc_tp_probe(struct spi_device *spi)
+>  	if (ret)
+>  		return ret;
+>  
+> -	tp->wakeuphost = devm_gpiod_get(dev, "wakeuphost", GPIOD_IN);
+> +	tp->wakeuphost = devm_gpiod_get(dev, "wakeuphostint", GPIOD_IN);
+>  	if (IS_ERR(tp->wakeuphost))
+>  		return PTR_ERR(tp->wakeuphost);
+>  
+> -- 
+> 2.48.1
+> 
