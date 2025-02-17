@@ -1,149 +1,206 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2079.outbound.protection.outlook.com [40.107.243.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F14A2248B6
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739801861; cv=none; b=tvzXNwK7lCzwSdmGct/nX7vBNf9xu5cApUZZ/kQZOClPEDFb8Qvx14BCzViZp51a/JeZR2sbBsvWghJhPK8pc+t7S4Ag9E0pHnzdS/6iXnUlbolMGSrMRhFWvRiyXMrmv+jC40ZbHk1qSaVd64QqASkA9Od3mWsw/cumPbpTv8M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9F52248B8;
+	Mon, 17 Feb 2025 14:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739801861; cv=fail; b=jPGuIdI3WpAWC1B1b1rkuGFNMM/NxpovEusvqmlVHhk3uoEP906rKMsjOd3uR/VYdqXHw+e+ducAwQCE41Sx1/0F8ZxwT04/vt3voyfBBuPJxwAtOY+bMJ3JIGduUL4c1oUlB2zQK33xnLjLwiNcdFP2v9hcjyAeF2JORicdP2Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739801861; c=relaxed/simple;
-	bh=CYxXjoGPBo4uvT8jsEkwbX8WYPTbGIdNFxJtu3SWxQs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hebfKp9jJg1KH4jnT4ej2N/aOXuDDK+LuAaQsE0if53amYkPmB22Cnij0Wu/Py5UN7TyMEi2MbngMOm8oBV1Cxtx2svA5qLEQGjxti1avAfjF0ASDIOzCeemHEQTsJMPl3MGqWl0NTEOKvdroBno1zMHIsUyxvplxJ8Zq+eeIgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aZpO8Pfd; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=ZlXBKTaH2prEpfSOLt7Hf6vKw4J88knM00OFqR6jndA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OIHkydGOzFeBuTb1cAwVoS+/dcBINr6NsjHR70aP4FSyer6lOK7hEXPONGrSktH72bw8PGfy1VbzWM/OEXSDnvyhpePsyyIavVqpz5CdfsMcN03UxRMDUewy18JRQl/4hW9v0CQbk6rL9vYoQT35Qi9J9TXGaSJPnvA1uMNTvBo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1bbx0K0/; arc=fail smtp.client-ip=40.107.243.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aZpO8Pfd"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220c8f38febso79148015ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739801858; x=1740406658; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qYqL5aquEf9QP1MU+9dPpzn37KZ182hWurvxtiyryKc=;
-        b=aZpO8PfdHWfAIpTDMz7pSPW45NbknS/sp02Id+rEJVr42jeDJlBuc3vCOCekm9Kf2F
-         58OoxZX94Y92XRKTD87C6EYm7U4VgK75D59o4LZSnJWeJMakjzc1FpeV2W5tuAlvSPeI
-         9E6gQCZ6Et+YUA0p5Qt51puwOjVYgrG8GKNmAr9CDTpB/Vsj/MEttL4jqFvLjv3t94E8
-         XQWTm6QIRFtyzySMO4If6poc2URtzeKDZ1CaFlsu2zO2aa8j/pwdKUz13TSBy4ypYTms
-         /74Kv2atG/GlV9gcfbdGOc1xyK21hOe6yHEbYdLr2CLqzClZ8FkYlerT0GJRptp4acw9
-         L9vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739801858; x=1740406658;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qYqL5aquEf9QP1MU+9dPpzn37KZ182hWurvxtiyryKc=;
-        b=TqZ5e/BkljZDgomXNRbC5UQNSudhwC6b3yhgsS0aRy4b3cf4HAxYWHl0BDd22mv24L
-         EeOfiC0L9m0F6wYRD+CQBUFbr57fxjQzNzwzkurcqTp0xyfTWLqsaKWcdppTveJbUcvB
-         WSQRIKjilH7vOef7CLXbdQwyrOnLQtTIkpbBf5fBRSqJjj4xrzkOUHWCB2i3DJBq7uDi
-         8R6RRLYBk8QnKnXA3n/OfSzF/kiQxy87QOGT3+yxtGIodXsSwTNBoJj0Kzi0K4w7RHef
-         wk4PwCQvhstSTYOkA5LD4KaiMkOJ0wbWxFeZnEIYPs8/B3RZFHhGBUOOJf6R9GabxY+f
-         1ZVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBgpzj53TuZYmh8RCMUciy1niSnu4pUfhKNsAQUYGhIyF7RcJji17TJxwHSTBP6TpGdzZd6TDL//K8jfs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKuJarShDrPZKASRhsV3Q9JX54VthbfFE7yseygMJiQsDLyyzu
-	8mMI1LOUciUV4Rc1AV3juHFcm+aNSZstmgaX7rIV4KtCUXYvdbEslMiSvojSI2aWY7lPHxyydy4
-	VhNJE6Q==
-X-Gm-Gg: ASbGncuOYuc7pQeRSdLNg8wl9zAh/G+wQyPaslQq3g4PsAEReN3G4V01QnxfTkfh0Me
-	GyCCUPaqMG/xk0SBw5PPTtKTbuW/JgpPD+Ep632MpKl5dvsWFzsMWJEX0RMn0jSWYEjvISbs2Kv
-	RkzDdhMP3JOnr5HMK7AcnIbEcrMRvCgiB8MLM3D5YnR0CKuw2WyvUtY1cNfB+vOSSpDrS80Ce9v
-	/Kqx9ezw6B7u+N8G5kxGbbStYADklsx2LvPBb0kDTVmUYzC0bphtZfJPrY0M6l7oOcqiRfV4xTZ
-	R3W+4xaCBtge
-X-Google-Smtp-Source: AGHT+IFS0jCADQX2AcgQY79NodGJN5uJRBAzhISMBvHFJ/ExxIfY5jpXxhVRd14EYRwV6Ijl2nRmvA==
-X-Received: by 2002:a17:902:e88a:b0:220:cd13:d0ec with SMTP id d9443c01a7336-221040cf8admr179662625ad.48.1739801858618;
-        Mon, 17 Feb 2025 06:17:38 -0800 (PST)
-Received: from [127.0.1.1] ([112.65.12.217])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5366984sm71900845ad.60.2025.02.17.06.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 06:17:38 -0800 (PST)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Mon, 17 Feb 2025 22:15:58 +0800
-Subject: [PATCH v6 09/15] drm/msm/dpu: Add pipe as trace argument
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1bbx0K0/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q6lEuKfybCUqU9dqEhyc7EI9iSP+3szQM5LmAKtsTBzxOj7BmM4hAhGAzb2iAEH1gv8XSY1Ijs46aPb6DdDfldzs8NSPGDrjjUcA7mQ+noFsXj+Mdv3BUH3x702eu9/nGrx8y+gxii8yxVSm/NTlhNtoqj1KKCRQMinn6dHNKKup3PGl1RGxFmL94WEvlMgOc4dNYTrveFxuk4qyAzp3Qh/zQ6oThpwJgzu7uPqklSQG4074pdFUFc2PFY5oj9CRZqYoLbL86FwZ9C++g2FG0S2ZxwhH9MYLfy5DTajta2Oa0vdpy38TTlyexYZOl9mPD5pJnqkDPfD/1m8tb8i34Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j8Kxo6dwf9o1jOghj03ftVwukh1enuZrZpKNeMphC+g=;
+ b=afykQQITQzE2v9fZ0UGwwWHa8s7i/QmGa5ef13bdorYVjBvbareAJ0GXr5GM4SWIPCdHMEdx/GtdpZA5qxzAvqsm/wsSLMGFturcah68rY3GAq5ljEoJr6fB2xC+xEbILW0KjOXGmIGIxLOJ9qzlG2qTHcgnC1slwc6mLx/fuoYX31EjxtIM6cwd8EoNPGlitkV8OWYGXSoWqd6XSPSqnY/v/CUrSDuZ4zPjTSd3rAe12I/fFOHtwMoIuhhH20/dMQ75eJkrF/oWb7zuA6HO3NJQTRXbj49ZcXsMVDQ7AizQrX7/lr16Cr7b0sGLENHu3bzAsN68dRHVyGx+zENnPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j8Kxo6dwf9o1jOghj03ftVwukh1enuZrZpKNeMphC+g=;
+ b=1bbx0K0/2++y5WFlgWroWtLvtQWfBXcqGsfdxbn9RG5WXKseKSawBrJkDTZNtX+wKNc/wwymEe1q0GHbaLQGP+IVCFTaaLPtU6ak662za69xO70UkId53o4Xn0FT8I2AypVheDAx3kptQ1SxnYRd00Nfz6+jdkgt16o7Rc0ymvI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB6354.namprd12.prod.outlook.com (2603:10b6:208:3e2::11)
+ by CYXPR12MB9427.namprd12.prod.outlook.com (2603:10b6:930:d6::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
+ 2025 14:17:37 +0000
+Received: from IA1PR12MB6354.namprd12.prod.outlook.com
+ ([fe80::baf9:26a2:9fab:4514]) by IA1PR12MB6354.namprd12.prod.outlook.com
+ ([fe80::baf9:26a2:9fab:4514%4]) with mapi id 15.20.8445.019; Mon, 17 Feb 2025
+ 14:17:37 +0000
+Date: Mon, 17 Feb 2025 09:17:33 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "Luck, Tony" <tony.luck@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"Smita.KoralahalliChannabasappa@amd.com" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v2 03/16] x86/mce/amd: Remove smca_banks_map
+Message-ID: <20250217141733.GD591070@yaz-khff2.amd.com>
+References: <20250213-wip-mca-updates-v2-0-3636547fe05f@amd.com>
+ <20250213-wip-mca-updates-v2-3-3636547fe05f@amd.com>
+ <CY8PR11MB713439C32E76A85C09C666BB89FB2@CY8PR11MB7134.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CY8PR11MB713439C32E76A85C09C666BB89FB2@CY8PR11MB7134.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BL0PR02CA0126.namprd02.prod.outlook.com
+ (2603:10b6:208:35::31) To IA1PR12MB6354.namprd12.prod.outlook.com
+ (2603:10b6:208:3e2::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-9-c11402574367@linaro.org>
-References: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org>
-In-Reply-To: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739801787; l=2487;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=CYxXjoGPBo4uvT8jsEkwbX8WYPTbGIdNFxJtu3SWxQs=;
- b=B2USM0nmUXZxmqrKZovzuB8XerL0erfBe62Y10I49/1MRvp8nQlfAn9jo+PNTNYpWx/cQbM9w
- MOQC7Hp3220AdrYMGUqOjjWj8+fDjbOvDxW51kieS9V1hjiBg5SSetp
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6354:EE_|CYXPR12MB9427:EE_
+X-MS-Office365-Filtering-Correlation-Id: f82cd989-bf60-4ec5-5a7a-08dd4f5dd432
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?KzIzVXBTTWZLU240OHFnVjVxNkE1VFY5OW40UDd6MFQ0dEg5cVdYMjdDSStK?=
+ =?utf-8?B?WjJXYys4T2ZQc2hMMTQ5YVIxZDNzSlZaMlh0MDFHUGduYXhCa0dEQzE0RUlF?=
+ =?utf-8?B?b2w5VURDVmt6Yis5b2VDMURNYVlmL2VwMEI1QkRncWtSNkdkVE4xM1hpUGJ4?=
+ =?utf-8?B?NUJkR1dncGU3c3VmbW9mbUlSNDJyYjlGckVmb1lMUE1QY2dqZkdyMlhoMkN2?=
+ =?utf-8?B?Z2l2RFNMNFRTRDJES1JwcnFQa3JmQXUwaXFOYi9sRlpqb05XdWZ3elpmVzhM?=
+ =?utf-8?B?dUZKbFE2dFZoeEtTMnVUV1I2Nm1INlBqaUUzOU5JdDlTUEROOXpTNnRKRkJm?=
+ =?utf-8?B?bzZrbXZ5VU5HbDNWOFJmYnN0bFB4TGlPaSs5cHJhQlYwWWRvSkxyWi9RdXl3?=
+ =?utf-8?B?L0U5dmdONFNzR3dLS0RvM3VZRzJtRzlnc1NGMHJnTWkvVGJkMUhRcDdzR2FE?=
+ =?utf-8?B?YjBTOUpFVGh0a1V0WFNyT1IveVRjZUdDOG5wYW9KWHJJOTBUeGNBdHNzSjRv?=
+ =?utf-8?B?Y1o4RzVtQ0pXNXhTeUtJdlRIcm0rNUl0azNGOVFKNFY2ZkJ4NlJEcVlqdjQ0?=
+ =?utf-8?B?Y0xmeVY1RTRKT2h0b3NwQzRKZ1lSQnA3M3RidGU3a1hONVo5R2FzczJqWmhG?=
+ =?utf-8?B?cDQ4Wkg0WGlwWnlKeTFEKy9xMFZvYVUxaDJZZkVUOGh2alRTWjNEN01FZVgz?=
+ =?utf-8?B?cUl3UDhvODFKVlZsNnBxb0JEZy9yVEUyMHBESjR6aWoxNCtkNWxCSmR0UnhB?=
+ =?utf-8?B?U3kzUlE3UW9JYWo4LytEQ1V0MDBIQ3YzdGkyZnJLV1ZRMFZ5Y2laeVIrblpQ?=
+ =?utf-8?B?LzNXQ0pQMWhIN2xxVlJsQlNKRFNYeEFsdzhkYXh3d1ZDVW5IS2tMQThFV0dT?=
+ =?utf-8?B?UHF3a0dnVGtzVTRWczlpWlptdENjSytFdndOWHp2T0xXcE1meEY0M1F5RHM3?=
+ =?utf-8?B?TFdIK1Jqc2g1UFdKUmp0emtIOHhaNjZHOXNpaGhpTnFYZlVsaG9ubWJlY3Fj?=
+ =?utf-8?B?L09xTFJoZFBkcjc1b0xSQk1vMGYyL0kvSmxDS3BjMWJTQW9TNzJTZGl3S21W?=
+ =?utf-8?B?Q2F2V0p0d1BmK0VGYkhNUWRRZEZKZEdRUmZGTEZzNXZ3a1BaZmEvaFQyM0F4?=
+ =?utf-8?B?YW5zLzA5Zi91Wi8zVGdTTDdCWFhuaEFBeDhscmVtaCtpVldyUS9HUnNTbm50?=
+ =?utf-8?B?M255Q2wyeWdoSEptcThyT21FWlcrZ2xsbGErNmZGWW9PMGUvNWx0ZzFZOGpk?=
+ =?utf-8?B?dGdEc0U3Rm1WckVlcXZ3K3VDTzFzWTlIQTZYUUZUTzEwQ3JTbjJyWkpxZ2dN?=
+ =?utf-8?B?S3dtT0lkUUlCQ2pwbS9xbk95OS9YM2s3NGtkV1dWSEtMRWM0Nk8vR3dxcm9t?=
+ =?utf-8?B?S1NSem53a2p0MWtiUXNJWXg5SUNXd3d1WENpUGVaMDFJMU5CcG9ud3pteVVE?=
+ =?utf-8?B?SFUxcW81M3RpTU5jeXBUSzEwMjBTbGQxcHhCQWszOG1oMm9rbFB5RFQvZkI3?=
+ =?utf-8?B?Y1F6WFhGQmZrZHB2eVNob1kwUkNvM3VmZy9vc3Z3T2JTNjBWOTNUQTE0WHI1?=
+ =?utf-8?B?MEc1allla3l2bi9iaWJPRkRKQU9JM1R0Nk9NY0U3ZUJ4Tmx5cUZlamhHNnA5?=
+ =?utf-8?B?V01neGQxUlBoRUw0b1NvTWpnVEQxODVxYmE1NUQzeUI0WjFvdW5vUThFeFZa?=
+ =?utf-8?B?UUt1UkgyNE1BejZUaDZkekdyc1dWMkRiVXVKUHcyalZwMkhRakk4RUxmWWZM?=
+ =?utf-8?B?cnI2a2NSQTRYcWEvRzRETUZEc0NvT2drTktaeWZ4dXBOTTM2dWlOb25ZaXhW?=
+ =?utf-8?B?aVV2WWNlNHc2QmtJWG03Zz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6354.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aStkdVdZcGJTR0YzUU0zbnEwV0lsOVVQaEh3VmdrVjZ3clNjNDdIRUtjV3Y0?=
+ =?utf-8?B?T2R6OG43T2tUWXVaN3dpYXhzdWF3czY4eXQwNFBtdGtqOCtET3JYM1ZxSmtD?=
+ =?utf-8?B?bjhEUHhNQVJrSzZwclZVRHpuWHdYOTc3OVB0NWRnMlBjRUI1SEFadmQvVGdZ?=
+ =?utf-8?B?YzhQZmtMWlY0K2ZIUk1qQkp2Y3FVMnA3QVpHbWMvOE1MdFQ3SW9rYWljd05w?=
+ =?utf-8?B?L09qcWJVYWRaTlNHbU5wbDJWaEdoTndYdlV6YUxtQ0dYS2h2eGtUcTIzYTI0?=
+ =?utf-8?B?VFBGVzV2L0xFQXB0OHBNN1dWZWxRVEJmdUFrSUFJN29zQlIrUGEycC9qSG1B?=
+ =?utf-8?B?OTVKVlNFOVdnWFVhS3VKajRGZGYrNlZxV0UvSGZDRXdJWkJaOU5vRWZSVWJM?=
+ =?utf-8?B?dnlYUzNORmNsdzlsZytlT3YvdkJhQWRkck1ueURPc25oS2lqNGlFQlFIN282?=
+ =?utf-8?B?MTRBdU1TZUV0cW5jd0RhamlpMUNaeHRBSUErSFlPcjdId2ZmejJqc1J5ckk1?=
+ =?utf-8?B?cGl3VmtQbGg1SGdPRERtdzMvTmp6UGdnblFHRTFFVlpiblhEZmNlNEpQUWNi?=
+ =?utf-8?B?SVNVa0E3YUw4bUs3SmZGUHdaMkNtY0x0ZzlXd0lpTE1LN0dqRkJIVlJ0dVU2?=
+ =?utf-8?B?ZVJBYUxXZG9EWXl3MWdQTmRkc0Z5c2MyVzZuK2R5emREd3FqZXY2dWx3K1Iy?=
+ =?utf-8?B?SzU4MGh3NFBPbEJ6SHhzRXZNdUdTWjc5RWlSektNUjdVLzVHOFB3OTU3bitu?=
+ =?utf-8?B?c1pxaHVsTSs2YnJOcXJ5dWVoQ1cwSHU0ZDBUZVJDSXBkM0RlNzBzL2RpOG1I?=
+ =?utf-8?B?dk4wQkYzQVE4VXZReVpNRzE1U3lEWFhyKzNkZURGcGs1elpVUExXVm1HNEgw?=
+ =?utf-8?B?WnNleUhUenFIR0cwRTZRNDJNaFFzRUpIRDltaU1RWWdpUnZjM3VNekFDTkJ0?=
+ =?utf-8?B?ZzNsM1ZEZkhQcXJwZFdUQnFHZzJlTzh2YThYNDI3KzdUa3RHWFd1ZEVsN3Vo?=
+ =?utf-8?B?VXJBWUplU29VemUrMVFwQng2Y21ucmpJU1ZReC9TSnpYWWp3KzRaMmwxV3Zk?=
+ =?utf-8?B?dXd3NjduMFNZWkw3eUJ6dDlXdDNobzhmRmYyUVRDWGxYY0JOWVk1WFZZSWFt?=
+ =?utf-8?B?QTNDellQaW9nc3J2cWEvMHpuQWk5dFN0bzlydXg5S21ObUhzWFpoWElzbjRm?=
+ =?utf-8?B?ait2K3lMSlM1VGl3RTRXWnFCN0tVeE1uL2ZRTEZSZ0lFVW5CYmN3NGJ2MUFD?=
+ =?utf-8?B?KzBuTmFTQlBtWVhkOVI2bU5xb2lmbmE0RjEranYrWWZBSkNSV09MTHc4eERW?=
+ =?utf-8?B?Zk9nV21LSEZSRnJNQnlGZHFsa2FCTGwwRkJhTTVTb2huWVZjV0grS2ZaN1pB?=
+ =?utf-8?B?N3ZXOERUc2xIcUxlc1UydE91S1plRlFucTJVK2FRYURwWjR5bHJnQlI0Vndz?=
+ =?utf-8?B?Y3hCZDE1SWdLaFp3dUhiMGdXU0RqS29RQTh6ME1VQzc4L3ZMeHFGUit0RlpF?=
+ =?utf-8?B?bnd0cWZwS2V0WENNaDI5U0Q4RERGN1BpWU9zaGZwdFExWjVVTjE5VkIyd0RL?=
+ =?utf-8?B?RUpKWWZCeDdSMmQzbjI0S21RQUdEOG5LZW1yVW5UQjRQR2RlSVZnbHpuZGdq?=
+ =?utf-8?B?ZHNtNmtFQmJSM2c3YmJpS0xibzJkdzVVTmliMmdiTGZDcExFd0ZDUFZUeFlq?=
+ =?utf-8?B?aXJES0xPaU5ZWFJRY3lJZlU1TVE4bm1TekFQUWxVNFZDTVp4QURrdUkyREtw?=
+ =?utf-8?B?bmkwb1F6WXlEQzZHWUVuVTYzMDR2WGRVay9uY3d3SmxjMW9nd01mbWRsUVkr?=
+ =?utf-8?B?TFlsSkFkd1lVeHUvNDhXb2JIOWFoU2dpdEw3TGgrMWF2eDVlQzZrL2taL2F1?=
+ =?utf-8?B?MDN3R2JNbFh6NWEweFVSYlpaWldhdUplMlJSc3ovYUtRSXJtbDZzMkh3QVRj?=
+ =?utf-8?B?bnUyWDVwV245L0h2dWU5M2hlREo4R2dZVWZ6Z3ZYa25mZjRSOFFvZ3lwaHFY?=
+ =?utf-8?B?YkRoRUJRa3BJQlJtaUdiWjI2TWgza2hWQ1FWaGpta0V1SlBWbDQvK2V4Z2d3?=
+ =?utf-8?B?Ym5UcmJUM3hFTERpZlRCN1g4VkNaNnlwRGdpWmJqZWZYSmVjSzVUakdwRnZF?=
+ =?utf-8?Q?IEAsu1gamxpJS0xgz14aYWuD2?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f82cd989-bf60-4ec5-5a7a-08dd4f5dd432
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6354.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 14:17:36.9603
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bEAhvilmV9SOmAe947Sp99Fr/K8Fmi21MLmvEeQdiPdkfIhV91eaamRHT4zlh967eh6NGtMZ2c6caYirR4CT6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9427
 
-Add pipe as trace argument in trace_dpu_crtc_setup_mixer() to ease
-converting pipe into pipe array later.
+On Mon, Feb 17, 2025 at 07:57:47AM +0000, Zhuo, Qiuxu wrote:
+> > From: Yazen Ghannam <yazen.ghannam@amd.com>
+> > Sent: Friday, February 14, 2025 12:46 AM
+> > To: x86@kernel.org; Luck, Tony <tony.luck@intel.com>
+> > Cc: linux-kernel@vger.kernel.org; linux-edac@vger.kernel.org;
+> > Smita.KoralahalliChannabasappa@amd.com; Yazen Ghannam
+> > <yazen.ghannam@amd.com>
+> > Subject: [PATCH v2 03/16] x86/mce/amd: Remove smca_banks_map
+> > 
+> > The MCx_MISC0[BlkPtr] field was used on legacy systems to hold a register
+> > offset for the next MCx_MISC* register. In this way, an implementation-
+> > specific number of registers can be discovered at runtime.
+> > 
+> > The MCAX/SMCA register space simplifies this by always including the
+> > MCx_MISC[1-4] registers. The MCx_MISC0[BlkPtr] field is used to indicate
+> > (true/false) whether any MCx_MISC[1-4] registers are present.
+> > But it does not indicate which ones nor how many. Therefore, all the registers
+> 
+> s/nor/or     (suggested by AI 😊)
+> OR
+> s/does not indicate/indicates neither
+> 
 
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  |  2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Hmm, okay, I think the second one.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 41c9d3e3e3c7c0c74ac9007a1ea6dcdde0b05f97..05abe2d05d8d81fbaac58cf0b298abb8d2164735 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -411,7 +411,7 @@ static void _dpu_crtc_blend_setup_pipe(struct drm_crtc *crtc,
- 
- 	trace_dpu_crtc_setup_mixer(DRMID(crtc), DRMID(plane),
- 				   state, to_dpu_plane_state(state), stage_idx,
--				   format->pixel_format,
-+				   format->pixel_format, pipe,
- 				   modifier);
- 
- 	DRM_DEBUG_ATOMIC("crtc %d stage:%d - plane %d sspp %d fb %d multirect_idx %d\n",
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
-index 5307cbc2007c5044c5b897c53b44a8e356f1ad0f..cb24ad2a6d8d386bbc97b173854c410220725a0d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
-@@ -651,9 +651,9 @@ TRACE_EVENT(dpu_crtc_setup_mixer,
- 	TP_PROTO(uint32_t crtc_id, uint32_t plane_id,
- 		 struct drm_plane_state *state, struct dpu_plane_state *pstate,
- 		 uint32_t stage_idx, uint32_t pixel_format,
--		 uint64_t modifier),
-+		 struct dpu_sw_pipe *pipe, uint64_t modifier),
- 	TP_ARGS(crtc_id, plane_id, state, pstate, stage_idx,
--		pixel_format, modifier),
-+		pixel_format, pipe, modifier),
- 	TP_STRUCT__entry(
- 		__field(	uint32_t,		crtc_id		)
- 		__field(	uint32_t,		plane_id	)
-@@ -676,9 +676,9 @@ TRACE_EVENT(dpu_crtc_setup_mixer,
- 		__entry->dst_rect = drm_plane_state_dest(state);
- 		__entry->stage_idx = stage_idx;
- 		__entry->stage = pstate->stage;
--		__entry->sspp = pstate->pipe.sspp->idx;
--		__entry->multirect_idx = pstate->pipe.multirect_index;
--		__entry->multirect_mode = pstate->pipe.multirect_mode;
-+		__entry->sspp = pipe->sspp->idx;
-+		__entry->multirect_idx = pipe->multirect_index;
-+		__entry->multirect_mode = pipe->multirect_mode;
- 		__entry->pixel_format = pixel_format;
- 		__entry->modifier = modifier;
- 	),
+  "But it indicates neither which ones nor how many".
 
--- 
-2.34.1
+I guess this falls under "Using 'nor' without a correlative pair".
+https://www.learngrammar.net/a/how-to-use-nor-properly-in-a-sentence
 
+:)
+
+> > are accessed and their bits are checked.
+> > 
+> > AMD systems generally enforce a Read-as-Zero/Writes-Ignored policy for
+> > unused registers. Therefore, there is no harm to read an unused register. This
+> > is already done in practice for most of the MCx_MISC registers.
+> > 
+> > Remove the smca_banks_map variable as it is effectively redundant.
+> > 
+> > Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> 
+> Aside from the small nit above,
+> 
+>     Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com> 
+
+Thanks,
+Yazen
