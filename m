@@ -1,219 +1,165 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36134C70;
-	Mon, 17 Feb 2025 07:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27231155322
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 07:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739775772; cv=none; b=ujlGtydeIR6G6rLTTkGAo9ruGLJfVkEqCdYCLMQJX/JrBKNKOZMhP4fYIggRMzlrYpkKuVDSCyYHhJmqQ1W0C4YqlRrA9EhcwlwPS3J1WoZLCBe/KcWNhEzLy4YJy/v8O78GQUy0f5rBAWHiQ3deLEIGvAp/m9hOY+H+jhppFFo=
+	t=1739775788; cv=none; b=Jb/rPj49FDSFXs+NPTjFq8Sz1d7Mufh6FxwsPuPvvCXNBq64jkJ65976OZt4Z++uhwA/F8eINYXWiwWgXD66IyCYPsB4QalxGVWCEYcQ7kuTCRlQ1oKmIrZi3Fd39VxPkKZSiDPZSLweXnXEKjQ7ruuSuWK933lxLCZVxkfSHzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739775772; c=relaxed/simple;
-	bh=CnMACyq8fVyIC6o/qW1rsSrblNpgU9XLuyA5xGMStqo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XtM0aiPF9juWN1JqxoEBPh73aFJ7g4eh62KvQrVdhOTbOvIdlSheG2n6LT2OInOLeFD3cgpCNpyBEBgmfkZ2b8viGUF5/2NbOoMRSw7I8wrpY/57rwadAIWhcFl6uoLsgi0cJVwCaruTlmLliGtUUD9x6lTXZyOkQXMb2oUCqYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=qPK+yJh3; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739775788; c=relaxed/simple;
+	bh=I4lEzRs8HaSxRTcYMtIiIHlNRjL2s8WF7AH/tHfWmV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=LzqyjaDO84wWwsTCuQ2Lm+gBSyjweuuzmheDnb0e8ZJ9GdlXW6KhhMkGwRfdEEFuTUgDI66vtrnmE2QxER1GzMHQVL6wnR0VG6Xdgf2I0l1cfcqA2bVltkHQrOpCOsXNePFkGfLhtE5gutA5SJ5UjzUkYNgzI6O/qnhD3iwNK8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OujwgcgJ; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="qPK+yJh3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739775724;
-	bh=tEaf1fdlKHQ41IMwoFr6kAyWu7BQC3uaiiT0Z+Tp1vk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=qPK+yJh3VI328ujJERmfE0AbHl0xq7idc6Cu/wtEllCf+vaueYRadZsV/agWa4on4
-	 PmsR/hK3LQsjw9s5zOn/8js02rsCa9ppghL16ar2Lg5mw7fy6m1enVuVlQ7slPQOs2
-	 dTGS52qt1hGJ8GQk5A+oWbr5KwHq2CcFDHa6SBBY=
-X-QQ-mid: bizesmtpip3t1739775691t5lavpw
-X-QQ-Originating-IP: TBtoORpur2h6g4UaoSd3UoAbLMVGet+CdXOJtAvKbqw=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 17 Feb 2025 15:01:29 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6567153048782771633
-From: WangYuli <wangyuli@uniontech.com>
-To: cassel@kernel.org
-Cc: chenhuacai@kernel.org,
-	chenhuacai@loongson.cn,
-	dlemoal@kernel.org,
-	jiaxun.yang@flygoat.com,
-	kernel@xen0n.name,
-	linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	WangYuli <wangyuli@uniontech.com>,
-	Jie Fan <fanjie@uniontech.com>,
-	Erpeng Xu <xuerpeng@uniontech.com>
-Subject: Re: Re: [PATCH] ahci: Marvell controllers prefer DMA for ATAPI
-Date: Mon, 17 Feb 2025 15:01:20 +0800
-Message-ID: <36B40EDC960C005C+20250217070120.666907-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <Zt6l6DVeDGzb5W7N@ryzen.lan>
-References: <Zt6l6DVeDGzb5W7N@ryzen.lan>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OujwgcgJ"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250217070304epoutp0177fce6c616c3f427d79f1f107452c581~k7NuhMePg0745707457epoutp019
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 07:03:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250217070304epoutp0177fce6c616c3f427d79f1f107452c581~k7NuhMePg0745707457epoutp019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739775784;
+	bh=IcdTsF592wys3NuB9zAJMtMjdRMai5MPVdBZ+r76j1Y=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=OujwgcgJn22zsXLzH554wkeMP7lz42mV+A6AfXnQci0Ows+UJa0Xu/heGx7mGZs+P
+	 yKwYlqTI9FcM1f3sjvZpHTlDO5/S9VzbU2KncymkTHnpKYoEFuqJUwlhpwDEi08hEh
+	 adVYR0e5yUQ0up4Tuhm3s650PQOjGUSFeSP2eHR4=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250217070303epcas5p4058a8462b30780bdb2133a3c6a56b75f~k7NuEguY00604406044epcas5p4H;
+	Mon, 17 Feb 2025 07:03:03 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4YxDBb4G3Sz4x9QH; Mon, 17 Feb
+	2025 07:03:03 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250217065002epcas5p4e223a794dc8151ec3234eac68c6e60ba~k7CWLpeQQ2915729157epcas5p48;
+	Mon, 17 Feb 2025 06:50:02 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250217065002epsmtrp1f8f4370f80ebf35f6144154f8fa3f0b5~k7CWKimJc2260922609epsmtrp1j;
+	Mon, 17 Feb 2025 06:50:02 +0000 (GMT)
+X-AuditID: b6c32a2a-bca3124000004a05-ce-67b2dc199438
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	08.DB.18949.91CD2B76; Mon, 17 Feb 2025 15:50:01 +0900 (KST)
+Received: from [107.122.5.126] (unknown [107.122.5.126]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250217064959epsmtip178990626cda7c2b2fce40cb5e9ac6f73~k7CTujbzv3238732387epsmtip1B;
+	Mon, 17 Feb 2025 06:49:59 +0000 (GMT)
+Message-ID: <1997287019.61739775783590.JavaMail.epsvc@epcpadp2new>
+Date: Mon, 17 Feb 2025 12:19:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] usb: xhci: Fix unassigned variable 'bcdUSB' in
+ xhci_create_usb3x_bos_desc()
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mathias.nyman@intel.com, WeitaoWang-oc@zhaoxin.com,
+	Thinh.Nguyen@synopsys.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jh0801.jung@samsung.com,
+	dh10.jung@samsung.com, naushad@samsung.com, akash.m5@samsung.com,
+	h10.kim@samsung.com, eomji.oh@samsung.com, alim.akhtar@samsung.com,
+	thiagu.r@samsung.com, muhammed.ali@samsung.com, pritam.sutar@samsung.com,
+	cpgs@samsung.com, stable@vger.kernel.org
+Content-Language: en-US
+From: Selvarasu Ganesan <selvarasu.g@samsung.com>
+In-Reply-To: <2025021402-cruelty-dumpster-57cc@gregkh>
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: Ob+TdET2B71e5ulmgkXCW/ALvBh1Qk50Fw2/F7D0yEfDpn7hXosZRLzi
-	aWC5Ga/PoseFquZrV/AeJTJYlnZPJNDae1z6DRTewKSkQYWz8FxxMU0bnGjp3atFGVqsi5g
-	tJF7LjZ1ncLl40hE3JJk7O6mW2mreplYRCSshyHo5o3C7Pe6qJZwFzB9wfZS09hDNOwsxqk
-	iL6tvLgEe5eamt6bahbeFobaVo0qx4UVM1g0VGjRFB//nwoAIgoap7oetkDLBvk+NAy5erF
-	h/DGW2iD7nduCe2PF5nT7hQN+AWc0pgOrAhqYb+/sJhHeiwZdkzINbcRl0/Dt03GahqnuyZ
-	N80S5+zwgWoOsYxEXOsqNCgg1hmYnRuEVtJOv9GXZ4aQSmJTDyavaBLANITyBi0d9YOK3sx
-	rypBHIFoF2DYPYQBfL4omu6bEeyXYclAFhMWx3WxhSZUFE2OC0W9RX7NKWgKs88kVv9tIVa
-	sDWhYDull3GaoREvOtddWkitpLwG4/z25FhB62n+EKczOSVoJlinIzh6i9AkKM3656CCa7w
-	eOGd9k5nbUOvBlJQ9adq+10VzU63CbznGhOPXpuTV4zxnAy2t5CSYJBjrMx2Y37Rpcl3LkN
-	MP+owCu/aJ1QWfcusixGVNQfzlxyq5WAcwDtc+epJyrFaF/z7nC9OturBTLnArGRE+C4FTo
-	aIcHEjmqzN8y3ACUN4Gj1h0E8mn2D5CsLnAnmXcNiVpxYcaP+uiWpj6bK/MYdZ6IEsB5bkU
-	5NVp/kH5nC8pH9/tUfnDDsDssGBt36bWOdTbNguPeJ+GiFnXL43JKYGLzw9Y5v578arZGZA
-	iS9yT7qGOBOSG+7CIaHmAeai/7cKS7rIxQqjZ/NhyiPKQGyNrBMoJd8ND/In1UJFLDSCIGz
-	ENJ8tK1+8M/Kt7hgZ8u0Q+3/YqFUVytcwQsiuogPRnuiR9I4PRc9d34+b6sXysQef19oMfr
-	vLz3z9ZQdvPNC6iMTxeHWbENPEityy79z0i8TWGZMi9gkMA==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
-
-Reported-by: WangYuli <wangyuli@uniontech.com>
-
-Hi all,
-
-During testing, we observed that reading CDs on an INSPUR CE3000F desktop
-computer (with a Phytium FT2000/4 processor [1]) running deepin 23 [2]
-distribution is very slow, taking over a minute.
-
-Further testing revealed that mounting the device from the command line is
-fast.
-  e.g., executing "time mount /dev/sr0 /mnt" returns a value of only 0.898s.
-
-However, deepin's dde-file-manager reads more than just mounting when opening
-the optical drive; it also reads disc information (such as capacity, etc.).
-
-After using udisksctl to first mount and then unmount the disc to reset its
-state, and then using the cd_sessions tool to read disc information, we used
-strace to monitor system calls, testing commands are as follows:
-  udisksctl mount -b /dev/sr0
-  udisksctl unmount -b /dev/sr0
-  strace -Ttt cd_sessions /dev/sr0
-and found that openat was blocked for 42 seconds, and at this point, the
-process had entered kernel space.
-
-[1]. https://www.phytium.com.cn/homepage/production/6/
-[2]. https://cdimage.deepin.com/releases/23/arm64/deepin-desktop-community-23-arm64.iso
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIIsWRmVeSWpSXmKPExsWy7bCSnK7knU3pBvf6bCzeXF3FavFg3jY2
+	i5eHNC3uLJjGZHFq+UImi+bF69ks/t6+yGpx9+EPFovLu+awWSxa1sps0bxpCqvF+RddrBaf
+	jv5ntXh2bwWbxYKNjxgtVjQDZVctOMBu8ejnXCYHIY/Fe14yeeyfu4bdo2/LKkaPLfs/M3p8
+	3iTn8evWLZYAtigum5TUnMyy1CJ9uwSujL87t7IUzBeouHVqNnMDYw9vFyMnh4SAicSdgztZ
+	uhi5OIQEdjNKHD88mQUiIS3xelYXI4QtLLHy33N2iKLXjBItazaygSR4Bewkbp/cDlbEIqAq
+	carjAgtEXFDi5MwnYLaogLzE/Vsz2EFsYYFMiUU/boLZIgIaEi+P3gKrYRZYySyxtLsMxBYS
+	+MQocWiCO0RcXOLWk/lMXYwcHGwChhLPTtiAhDkFzCR2vnrHCFFiJtG1tQvKlpdo3jqbeQKj
+	0CwkV8xCMmkWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQIjlUtrR2M
+	e1Z90DvEyMTBeIhRgoNZSYT3UNeGdCHelMTKqtSi/Pii0pzU4kOM0hwsSuK83173pggJpCeW
+	pGanphakFsFkmTg4pRqYlhSXPhFjfM6mo2brdrDV6uPk7ZbyXYJWsxepW2spP/f6c2V56Ke8
+	JX/Ti522zJ8u05rqWvRzvcrhjMB1c36dYY5oePn0/5agRIu7SgVz5zUx+rsutIq6NNtYMYJt
+	g3tuleOm4+qrPoVaaFRUyawJ+sfzz2mb36nZr/OZjk08enypXx7jldLQKZt+fdO8aOB1/VKh
+	n2xP7YzFP7MCPf5Z3GywOiV3JDr25WKmTa8kry39UXo1k6N450RnuX8fNC2OMe/kO/ZEZeqz
+	Lp2Z86+7q3Ln/+C8c90iOPz4j9114ru9D82S3ZfybaOvsOa3vynNPY5bj5yYzLhb4uSHiSLJ
+	bb4JR0u1Dv69ucKl3GBVqRJLcUaioRZzUXEiAEa15nJEAwAA
+X-CMS-MailID: 20250217065002epcas5p4e223a794dc8151ec3234eac68c6e60ba
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250213042240epcas5p3c1ac4f97ebf36054abdccc962329273d
+References: <20250213042130.858-1-selvarasu.g@samsung.com>
+	<CGME20250213042240epcas5p3c1ac4f97ebf36054abdccc962329273d@epcas5p3.samsung.com>
+	<158453976.61739422383216.JavaMail.epsvc@epcpadp2new>
+	<2025021402-cruelty-dumpster-57cc@gregkh>
 
 
-TEST REPORT:
+On 2/14/2025 1:35 PM, Greg KH wrote:
+> On Thu, Feb 13, 2025 at 09:51:26AM +0530, Selvarasu Ganesan wrote:
+>> Fix the following smatch error:
+>> drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
+> That really doesn't say what is happening here at all.  Please provide a
+> lot more information as the response from a tool could, or could not, be
+> a real issue, how are we supposed to know?
+>
+> And "unassigned" really isn't the bug that is being fixed here, please
+> describe it better.
+>
+> Same for patch 2 of the series.
+>
+> Also, your 0/2 email was not threaded with these patches, something odd
+> happened in your email setup, you might want to look into that.
+>
+> thanks,
+>
+> greg k-h
+>
 
-For this patch, before its introduction, with original system-integrated optical
-drives capable of recognizing discs, the total execution time for cd_sessions was
-92.4 seconds, including 31.6 seconds for openat and 60.6 seconds for ioctl.
+Hi Greg,
 
-With LITE-ON optical drives, under the same condition of disc recognition, the
-total execution time for cd_sessions was 108.2 seconds, with openat taking 45.4
-seconds and ioctl taking 62.9 seconds.
+I understand your concern about whether the response from the tool could 
+be a real issue or not. However, please check the provided code, I 
+believe there is an issue worth considering.
+In both conditions of the code snippet, the logical check is not valid 
+because the 'bcdUSB' variable has not been assigned any value initially. 
+Therefore, we believe that the tool is correctly identifying this problem.
 
-With RITEK optical drives, also when discs were recognizable, the total
-cd_sessions execution time was 98.2 seconds, with openat at 36.7 seconds and ioctl
-at 60.8 seconds.
-
-After the patch was introduced, the time to read disc information (using cd_sessions)
-with all optical drives was reduced to less than 0.5 seconds.
-
-I've tried different pairings of optical drives and SATA controllers, and the test
-results were consistent across the board. The Marvell 88SE9215 controller consistently
-emerges as the source of the problem, no matter the optical drive tested.
-
-Devices lists are as follow:
-
-
-CD-ROM DRIVER LIST:
-  1. original system-integrated optical drive
-           *-cdrom
-                description: DVD writer
-                product: DVD A  DH16AFSH
-                vendor: ATAPI
-                physical id: 0
-                bus info: scsi@2:0.0.0
-                logical name: /dev/cdrom
-                logical name: /dev/sr0
-                version: DC2M
-                capabilities: removable audio cd-r cd-rw dvd dvd-r
-                configuration: ansiversion=5 status=ready
-              *-medium
-                   physical id: 0
-                   logical name: /dev/cdrom
-  2. a LITE-ON optical drive
-           *-cdrom
-                description: DVD writer
-                product: DVD-RW DH16AFSH
-                vendor: PLDS
-                physical id: 0
-                bus info: scsi@2:0.0.0
-                logical name: /dev/cdrom
-                logical name: /dev/sr0
-                version: DL3M
-                capabilities: removable audio cd-r cd-rw dvd dvd-r
-                configuration: ansiversion=5 status=nodisc
-  3. a RITEK optical drive
-           *-cdrom
-                description: DVD writer
-                product: DH-16AFSH SUPDRV
-                vendor: RIDATA
-                physical id: 0
-                bus info: scsi@2:0.0.0
-                logical name: /dev/cdrom
-                logical name: /dev/sr0
-                version: NWDN
-                capabilities: removable audio cd-r cd-rw dvd dvd-r
-                configuration: ansiversion=5 status=nodisc
+If you do not consider it an issue, we can ignore this commit.
 
 
-SATA Controllers LIST:
-  1. INSPUR CE3000F
-        *-sata
-             description: SATA controller
-             product: 88SE9215 PCIe 2.0 x1 4-port SATA 6 Gb/s Controller
-             vendor: Marvell Technology Group Ltd.
-             physical id: 0
-             bus info: pci@0000:03:00.0
-             logical name: scsi2
-             logical name: scsi3
-             version: 11
-             width: 32 bits
-             clock: 33MHz
-             capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
-             configuration: driver=ahci latency=0
-             resources: irq:43 ioport:2020(size=8) ioport:2030(size=4) ioport:2028(size=8) ioport:2034(size=4) ioport:2000(size=32) memory:58140000-581407ff memory:58100000-5813ffff
-  2. Maxsun MS-WS W680 D4
-             Hardware Class: storage
-             Model: "Intel SATA controller"
-             Vendor: pci 0x8086 "Intel Corporation"
-             Device: pci 0x7ae2 
-             Revision: 0x11
-             Driver: "ahci"
-             Driver Modules: "ahci"
-             Memory Range: 0x82100000-0x82101fff (rw,non-prefetchable)
-             Memory Range: 0x82102800-0x821028ff (rw,non-prefetchable)
-             Memory Range: 0x82102000-0x821027ff (rw,non-prefetchable)
-             IRQ: 166 (no events)
-             Module Alias: "pci:v00008086d00007AE2sv00000000sd00000000bc01sc06i01"
-             Driver Info #0:
-               Driver Status: ahci is active
-               Driver Activation Cmd: "modprobe ahci"
-             Config Status: cfg=new, avail=yes, need=no, active=unknown
+Please find the relevant portion of the code below:
+
+========================================================================
+u16                             bcdUSB;
+...
+...
+/* Create the descriptor for port with the highest revision */
+for (i = 0; i < xhci->num_port_caps; i++) {
+     ..
+     ..
+*  if (i == 0 || bcdUSB < rev) { *
+         bcdUSB = rev;
+         port_cap = &xhci->port_caps[i];
+     }
+}
+..
+..
+*if (bcdUSB >= 0x0310) {* //*Logically invalid to check bcdUSB without 
+assigning a valuewhere above **xhci->num_port_caps become NULL*.
+     if (port_cap->psi_count) {
+
+         u8 num_sym_ssa = 0;
+
+=======================================================================
 
 
-Tested-by: Jie Fan <fanjie@uniontech.com>
-Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
-Tested-by: WangYuli <wangyuli@uniontech.com>
+yeah some issue in ouremail setup. We will fix it.
 
-Currently, due to the limited hardware I have access to, I'm unsure if this is a Marvell
-88SE9215's specific issue or a general Marvell SATA controller problem.
 
-So, I think it's reasonable to add a quirk to handle this for the Marvell 88SE9215 now.
-
-Thanks,
---
-WangYuli
