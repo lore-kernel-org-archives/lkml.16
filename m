@@ -1,178 +1,115 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEF121CA0C;
-	Mon, 17 Feb 2025 15:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D7C224AF0;
+	Mon, 17 Feb 2025 15:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807313; cv=none; b=X/5TMVS1lol476UE5YoX6FcVHBDvGZrwBzQHjZnMM9komyaPN2O7wTbeUBikiUjT+F5QbXok92Xs4EYgT2JotP/tqOh79v+XoDw1NvjqnkVgBNJKoSz0aZjfTpZMO2iCK1lBcpoWsFsALHkmTToaTc7YjFFXyMSCzOHv4BO6+kk=
+	t=1739807361; cv=none; b=OqaT+kZ9YyvMMJXUaN0xCkeRgD9prG9FOyY2eP8XfP75xzKs0kM4p5MwPuOcDfusuq8waasGNvR2ttbN3DlR3IawZx37PbxaXip0uS8DDtJzv8DPxtm0hFjYRqfvfBtsGP1KIXsIXf4o2kKLE5du/rjRD7NJ5+p7kolJqQYTgvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739807313; c=relaxed/simple;
-	bh=06+HsNBqZbxG8SrKyC7xwIUS/afQ5IoCNqI5xrOzpH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d2VTnYJ3nvyNwtGGz7S3vEu4+1NdQhtXGDhnnMMvxGaTP6pp6W1WNQUadK98JJBVlEKVU2zISLdH2m/1ciPaQSlv3bLcR3eK/tEdS7xw01xmcqRgkTlEKRl/2J5XQUVLsR/zlGm2RKOkfE1KvKcgDLYBLX1mwDM/DeBJQHhLfKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5452c1daabeso2531663e87.1;
-        Mon, 17 Feb 2025 07:48:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739807308; x=1740412108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oT48PO3HfIeDjSDux1vBuhE4VoEwoL5q99u+4AwOVE8=;
-        b=X7juZwg0Vaf1j8zTR16m290a06EOcRnUKmriK3MMYU1H6pMXJUwMEH8XlR1Acs1jec
-         i7/sT9U/GkOsjkYcBT8oA0Y/8PibZi7VAh4WhQfDpCubTLUy7+BxvM7R9JQGkvfn2q/L
-         y8Rm5dhMLB5wztVEhWob37beCnAUg+IwRDS4D7aUmkZ/MlMoVRzs7DUGxKo1BwaBekJZ
-         jocH9+2k2+BVdXQZ+rtMv/8IfQeNlMHDI7PH5QXX+QRrSsbBJS2pqXIaql/WeezbPEB1
-         Wu3oBs83TlQCPZKICIz3BDycOeVyZl0qkUr/xax3KXx7fIbF5XbW8lkj3xlRxQ5tCcCZ
-         tAPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrYb8OMYSE/hm9IT6YrgQW2+t7yFTRUR76zKqnOLSw8WHT6Ltkcjb89vrPiqvHkvZzfYp9AbrPxydQ@vger.kernel.org, AJvYcCWIK+/ulHVGj/RLxGpTVH2OksK4CS5INhFH0pc6WxN4FmX55SCxi4OjaCZEBs84L0y3YJrT/wMdY33+LA==@vger.kernel.org, AJvYcCXaIbzjsSnEaMELfLOckhQvnKNuMhcMz/8MU1kzx6CLkoAQC13IsGvnNL5l1TzoNNnwmn+o8DIFwaxNcWy9@vger.kernel.org
-X-Gm-Message-State: AOJu0YytvXEEyVpsn1cQr/dhwyXZ9kC7Y0GVgng9E9kBkcFz855dTzif
-	oL5m3UHS/xFz5iMhnMeBjmVoO3o9pM+i6t4p2zqQvOijqpXdkCj9eky4fvwO
-X-Gm-Gg: ASbGnctdd8HaDm385ZAVStlwPRqsd5QfhHl8tsFevryGy3tgkbTIRMvI1gaoJnO7QYm
-	+OBUbyaAlCmQcVnY2vMM6WxvlgRd3S1Rsp2cAPbasSVNH9o6rkyuFOF3CPT+96qlpNd5beSBncq
-	tfp/uKkk2hJPtA1UGTTwbZzoeEDPdFn/NHnDPNiN+DFLmoiiFyB25Z/KFwcegZRvqFEBbKCpF8E
-	1lmJ2Lw+HxXVyss896pctQKOT1B6S4T/iyNMEGy0RAs4/22DnjkaXuUtoUr3E28k/OieAzwBIG+
-	sHzo557jbYaogkuOn5NWWRiOGxayjQ+y60luhpmqeEKeC8FO
-X-Google-Smtp-Source: AGHT+IHMveMYalbAPmdQk9lzdqMIps0nEuh8cCGZlsvDS6WBd+8FZ+G1TeR4yhJAG+jCdayImAkKWw==
-X-Received: by 2002:a05:6512:3b0b:b0:542:29b6:9c26 with SMTP id 2adb3069b0e04-5452fe95c7emr2982660e87.47.1739807307816;
-        Mon, 17 Feb 2025 07:48:27 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545f60c18bcsm785589e87.2.2025.02.17.07.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 07:48:26 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30a2dfcfd83so11116301fa.1;
-        Mon, 17 Feb 2025 07:48:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU4dib4Sfex2DNoK7Dzi4bh7caniCpvGZJoLgWm2lLqGabG5Y8dQY0YwW2MGjLMtT5N0xjyog6i3vQZBnHf@vger.kernel.org, AJvYcCVUxW6pFEMT50XS3+0MROUODSrZwXQPSBL9RbAXrZuhrPIt0aQlMYNc9ZZ8pdf0Z3qilUUOTdNP8QEMfg==@vger.kernel.org, AJvYcCWbL4hVeP8IIvNVrcX2/QGJRPqomii4TvbYGzVyDLI3CyYAcYiKtgrNxrMfb3RTylIzFZZ1QuTSdolo@vger.kernel.org
-X-Received: by 2002:a2e:88c9:0:b0:309:2012:cc5d with SMTP id
- 38308e7fff4ca-30927ad64e9mr23653441fa.24.1739807306250; Mon, 17 Feb 2025
- 07:48:26 -0800 (PST)
+	s=arc-20240116; t=1739807361; c=relaxed/simple;
+	bh=YnISh4jCKj5RvCRPO4FOY64fZFaH/88c95wVwwI/RPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ULYxnreKy7bWLov9HtyAXq+9kTEB4DiZmLRQGwWt+uSbBeaBghXBKXakobx27NRalQWvhGtIT21tX3Y7twxS9mZHS+BxihvYIxriajYmk4cmoRcS7gh/ZjYGkZV/EeVFLxa/IZcKouAh1Q0zIy6qvDTXRITkRg1JqiNdxyY+6R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LyHPu8Up; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LyHPu8Up"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739807358;
+	bh=YnISh4jCKj5RvCRPO4FOY64fZFaH/88c95wVwwI/RPM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LyHPu8UpBvUa4S921UrcsdHfhh8rtVgaACU3H1TE81dR2UuDYXCOZtr8q+7r0Wbdk
+	 urP5n6IfYUz3lPMGpmH4s/krvm4N4KmIcJLvm0cYVS89Xzj/njscMkAYUNAipbW0xH
+	 nA1DwBK/Xgw/AN9eTPYF9PiTerHa03Ma+mzM6wLzZB6TEPJSNeXM1lAPGXVrZb9i9h
+	 m4TsNRXp0cpwnyaPK78VpYKz/Hf2ogK5iHMyPUbPs76ZMp1bp6xzcaF1TwaqwDyxh2
+	 JYctiOT2FyB+pfCT6LccCGWLW22AqfnAODMj3aKETxTwUUyUiCiRxYIqaT54pVr12T
+	 QBDemsG/bEO7w==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B36B817E0F86;
+	Mon, 17 Feb 2025 16:49:16 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: chunkuang.hu@kernel.org
+Cc: p.zabel@pengutronix.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	ck.hu@mediatek.com,
+	jitao.shi@mediatek.com,
+	jie.qiu@mediatek.com,
+	junzhi.zhao@mediatek.com,
+	dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@collabora.com,
+	dmitry.baryshkov@linaro.org,
+	lewis.liao@mediatek.com,
+	ives.chenjh@mediatek.com,
+	tommyyl.chen@mediatek.com,
+	jason-jh.lin@mediatek.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 01/43] dt-bindings: display: mediatek: dpi: Add MT8195 and MT8188 compat
+Date: Mon, 17 Feb 2025 16:47:54 +0100
+Message-ID: <20250217154836.108895-2-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
+References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214003734.14944-1-andre.przywara@arm.com> <20250214003734.14944-5-andre.przywara@arm.com>
-In-Reply-To: <20250214003734.14944-5-andre.przywara@arm.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 17 Feb 2025 23:48:13 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67V7PAOC8MLVzE5SwwvpogN_WLNhQnRVD2pikGVDHtJjA@mail.gmail.com>
-X-Gm-Features: AWEUYZlCDWHC9MbTz92hd57HNQUJnNXRSXbL_QnKKWLChMmYjVCum1sff3H_yMQ
-Message-ID: <CAGb2v67V7PAOC8MLVzE5SwwvpogN_WLNhQnRVD2pikGVDHtJjA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] pinctrl: sunxi: support moved power configuration registers
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 14, 2025 at 8:40=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
-com> wrote:
->
-> The Allwinner pincontroller IP features some registers to control the
-> withstand voltage of each pin group. So far those registers were always
-> located at the same offset, but the A523 SoC has moved them (probably to
-> accommodate all eleven pin banks).
->
-> Add a flag to note this feature, and use that to program the registers
-> either at offset 0x340 or 0x380. So far no pincontroller driver uses
-> this flag, but we need it for the upcoming A523 support.
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 15 +++++++++++----
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  7 +++++--
->  2 files changed, 16 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunx=
-i/pinctrl-sunxi.c
-> index 83a031ceb29f2..a1057122272bd 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> @@ -736,9 +736,9 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi=
-_pinctrl *pctl,
->                 val =3D uV > 1800000 && uV <=3D 2500000 ? BIT(bank) : 0;
->
->                 raw_spin_lock_irqsave(&pctl->lock, flags);
-> -               reg =3D readl(pctl->membase + PIO_POW_MOD_CTL_REG);
-> +               reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset);
->                 reg &=3D ~BIT(bank);
-> -               writel(reg | val, pctl->membase + PIO_POW_MOD_CTL_REG);
-> +               writel(reg | val, pctl->membase + pctl->pow_mod_sel_offse=
-t);
->                 raw_spin_unlock_irqrestore(&pctl->lock, flags);
->
->                 fallthrough;
-> @@ -746,9 +746,12 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunx=
-i_pinctrl *pctl,
->                 val =3D uV <=3D 1800000 ? 1 : 0;
->
->                 raw_spin_lock_irqsave(&pctl->lock, flags);
-> -               reg =3D readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-> +               reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset +
-> +                           PIO_POW_MOD_SEL_OFS);
->                 reg &=3D ~(1 << bank);
-> -               writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL=
-_REG);
-> +               writel(reg | val << bank,
-> +                      pctl->membase + pctl->pow_mod_sel_offset +
-> +                      PIO_POW_MOD_SEL_OFS);
->                 raw_spin_unlock_irqrestore(&pctl->lock, flags);
->                 return 0;
->         default:
-> @@ -1520,6 +1523,10 @@ int sunxi_pinctrl_init_with_flags(struct platform_=
-device *pdev,
->                 pctl->pull_regs_offset =3D PULL_REGS_OFFSET;
->                 pctl->dlevel_field_width =3D DLEVEL_FIELD_WIDTH;
->         }
-> +       if (flags & SUNXI_PINCTRL_ELEVEN_BANKS)
-> +               pctl->pow_mod_sel_offset =3D PIO_11B_POW_MOD_SEL_REG;
-> +       else
-> +               pctl->pow_mod_sel_offset =3D PIO_POW_MOD_SEL_REG;
->
->         pctl->irq_array =3D devm_kcalloc(&pdev->dev,
->                                        IRQ_PER_BANK * pctl->desc->irq_ban=
-ks,
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunx=
-i/pinctrl-sunxi.h
-> index 6cf721876d89d..a93385e456a57 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> @@ -87,9 +87,11 @@
->  #define SUNXI_PINCTRL_VARIANT_MASK     GENMASK(7, 0)
->  #define SUNXI_PINCTRL_NEW_REG_LAYOUT   BIT(8)
->  #define SUNXI_PINCTRL_PORTF_SWITCH     BIT(9)
-> +#define SUNXI_PINCTRL_ELEVEN_BANKS     BIT(10)
->
-> -#define PIO_POW_MOD_SEL_REG    0x340
-> -#define PIO_POW_MOD_CTL_REG    0x344
-> +#define PIO_POW_MOD_SEL_REG            0x340
-> +#define PIO_11B_POW_MOD_SEL_REG                0x380
-> +#define PIO_POW_MOD_SEL_OFS            0x004
+Add compatibles for the Digital Parallel Interface (DPI) block
+found in the MT8195 and MT8188 SoCs: inside of the chip, this one
+is directly connected to the HDMI block.
 
-Shouldn't this be PIO_POW_MOD_CTL_OFS instead?
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../devicetree/bindings/display/mediatek/mediatek,dpi.yaml   | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-ChenYu
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+index 0f1e556dc8ef..5670715efa5c 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+@@ -27,6 +27,7 @@ properties:
+           - mediatek,mt8188-dp-intf
+           - mediatek,mt8192-dpi
+           - mediatek,mt8195-dp-intf
++          - mediatek,mt8195-dpi
+       - items:
+           - enum:
+               - mediatek,mt6795-dpi
+@@ -35,6 +36,10 @@ properties:
+           - enum:
+               - mediatek,mt8365-dpi
+           - const: mediatek,mt8192-dpi
++      - items:
++          - enum:
++              - mediatek,mt8188-dpi
++          - const: mediatek,mt8195-dpi
+ 
+   reg:
+     maxItems: 1
+-- 
+2.48.1
 
->
->  #define PIO_BANK_K_OFFSET              0x500
->
-> @@ -173,6 +175,7 @@ struct sunxi_pinctrl {
->         u32                             bank_mem_size;
->         u32                             pull_regs_offset;
->         u32                             dlevel_field_width;
-> +       u32                             pow_mod_sel_offset;
->  };
->
->  #define SUNXI_PIN(_pin, ...)                                   \
-> --
-> 2.46.3
->
