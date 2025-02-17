@@ -1,36 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E8218DB39;
-	Mon, 17 Feb 2025 06:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAA4191F62;
+	Mon, 17 Feb 2025 06:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739772794; cv=none; b=G3EM+TZIG51sUI3JBFFirHbeZ6TX3tr2DshD4ivaW8U0Oe6kFHiSVMMBYr5pqJWiWgYZLY2QQ2bypgRIDgkrnnDLPjCkFUvPTPDyCtcPuvhPN8wMB5FAQDjRvSlxUAR3w3j4gIOe0DrS4Vf2Iv4ECLD+wzEzAuiEcrdiIIRPt+o=
+	t=1739772799; cv=none; b=J8AuCn2GxKZ9RycFBZ32wYvvm+9lVvTo7/qhTWd/20066DnDQuKqxcIJVlu3hLoAt/DJODUr6/S6ZCEfDYdFJ41B7KDNTKT3n+uEpTpTrFClNloImni91GSxbB/W8vTrNckx33h/WOufmkCRZZ8xiw2EiXD4DFM1suWSAbYVVjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739772794; c=relaxed/simple;
-	bh=HHMbgpNeEzDZ7ORYxSAbQ1Gijr8bxwEMUpfHHov6srE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V0xS62j67VzTuIPvkdWadAvDwJOsquRh6sk594xRQ0GCIExRba7mMKePL9qb2l0MdIgbhYe/BKTElD3anEGMVMI+N0lc7lXr+sLbR7+fd7tXRDk5hqFsFz7HzwbzOCzfZSzyu6/8lnTPp286J3xdrRljm6A8eS3ejmDCrLKrVxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=cSrwkAd9; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1739772799; c=relaxed/simple;
+	bh=58xzbLCdhNCilxabqnQbn6q6tobvOe7G9WeMgslUdXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CVpSbEXvZmd4Y8Br3vOvS5T7JK4jUBhDTVW+BTEzGFaRfFB8h4umwYeKeNWAnQ4vmVCBNLqoE/FPRp9fz3FVm87vaOXc2DvIqWqqg12pzT1ij7Jg3D+20g9ncpgKS2ANnxzkULeHHywB77VBjvZ12mS9QHRvFwBbu9Q6kTLcWe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=BfG3D5WK; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="cSrwkAd9"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="BfG3D5WK"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 9029C25B74;
-	Mon, 17 Feb 2025 07:13:03 +0100 (CET)
+	by disroot.org (Postfix) with ESMTP id 1482625B74;
+	Mon, 17 Feb 2025 07:13:15 +0100 (CET)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id IRIx5wKWMOLU; Mon, 17 Feb 2025 07:13:02 +0100 (CET)
+ id h3J08wnY5d9p; Mon, 17 Feb 2025 07:13:14 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1739772782; bh=HHMbgpNeEzDZ7ORYxSAbQ1Gijr8bxwEMUpfHHov6srE=;
-	h=From:To:Cc:Subject:Date;
-	b=cSrwkAd9nQ9/f7hytK2sLC/Yq52BOidLYDL4/zjPakiRnY+Ko8IGseGBqzrEWGTmg
-	 /YubN+MdiNjAsYaRpDlTNFxP4MPkMrbAZ8+hGVCxrKh/RS5SX1uB2kihn2WLd9eMB6
-	 wRzYsY+PSPRlkSQngYnlp0QbahuNvqgQdJY4vMx3TzIFVQq6LtQSYq7wR5X5tLZy8N
-	 v7OyD+nf0xfigG1RXhlSXn3w/aeB5nPgC0CuJWOW23IGj3O3D1QAhfo8PHDrLfMk2r
-	 8YrzORKjnAPpk1ukkWaRWzcHueLFzFaoyvGcWTI8QHG4nyzCLrhZlWmOuwzVBHVAWZ
-	 2z03ghVdwzV/A==
+	t=1739772794; bh=58xzbLCdhNCilxabqnQbn6q6tobvOe7G9WeMgslUdXY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=BfG3D5WKvdopBWufa82rVui6rj7ZIjL2eUJDRKkmBYPFAc/wgD7+TLBOUQom9Jcaf
+	 2hXqZbX2n5qNh1UOhZkl163Uj8vxa/NDDYOl2jJA7maBA57IVZCne6YNs8oFhrvrQn
+	 GE3jLCHEJcTpio82h5H4J78npXOKXIPKq7dH4o25ARDjkNw1s2XI15rphcskVeib+/
+	 IrCDVzUQF0JzOkupWHAkJ1hQTC7yDiiilCNSYWF+Q+7mynmDN+Cj4nebUNULAi/nRl
+	 8d1IbOSJfCi8KKEGbVfzc1Vc/Me8QnjdMzt8F4jQsBRe7HBTyXdTEVc/v337gr8XTR
+	 iKCs9SEM4ecZQ==
 From: Yao Zi <ziyao@disroot.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -45,9 +46,11 @@ Cc: linux-clk@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v3 0/5] Support clock and reset unit of Rockchip RK3528
-Date: Mon, 17 Feb 2025 06:11:41 +0000
-Message-ID: <20250217061142.38480-5-ziyao@disroot.org>
+Subject: [PATCH v3 2/5] clk: rockchip: Add PLL flag ROCKCHIP_PLL_FIXED_MODE
+Date: Mon, 17 Feb 2025 06:11:43 +0000
+Message-ID: <20250217061142.38480-7-ziyao@disroot.org>
+In-Reply-To: <20250217061142.38480-5-ziyao@disroot.org>
+References: <20250217061142.38480-5-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,62 +59,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Similar to previous Rockchip SoCs, reset controller on RK3528 shares
-MMIO region with clock controller, combined as CRU. They're represented
-as a single node in dt.
+RK3528 comes with a new PLL variant: its "PPLL", which mainly generates
+clocks for the PCIe controller, operates in normal mode only. Let's
+describe it with flag ROCKCHIP_PLL_FIXED_MODE and handle it in code.
 
-For the reset controller, only bindings are included in this series
-because it's hard to test the reset controller without support for some
-peripherals (e.g. pinctrl). I'd like to first make dt and basic
-peripherals available, then submit the driver.
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ drivers/clk/rockchip/clk-pll.c | 10 ++++++----
+ drivers/clk/rockchip/clk.h     |  2 ++
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-This is tested on Radxa E20C board. With some out-of-tree drivers, I've
-successfully brouhgt up UART, pinctrl/gpio and I2C. A clock dump could
-be obtained from [1].
-
-[1]: https://gist.github.com/ziyao233/032961d1eebeecb9a41fea2d690e8351
-
-Changed from v2
-- dt-bindings:
-  - drop redundant assigned-clocks and assigned-clock-rates properties
-  - improve description of input clock gmac0
-- Link to v2: https://lore.kernel.org/all/20250108114605.1960-2-ziyao@disroot.org/
-
-Changed from v1
-- dt-bindings:
-  - relicense binding headers as GPL-2.0-only OR MIT
-  - use gapless integers starting from 0 for binding IDs
-  - make input clocks essential, add corresponding description
-  - rename the input clock that is generated by phy module as "gmac0"
-  - style fixes
-- driver:
-  - format in the common Rockchip driver style
-  - drop initializing code of the reset controller, as it'll not be
-    supported in this series
-- Link to v1: https://lore.kernel.org/linux-rockchip/20241001042401.31903-2-ziyao@disroot.org/
-
-Yao Zi (5):
-  dt-bindings: clock: Document clock and reset unit of RK3528
-  clk: rockchip: Add PLL flag ROCKCHIP_PLL_FIXED_MODE
-  clk: rockchip: Add clock controller driver for RK3528 SoC
-  arm64: dts: rockchip: Add clock generators for RK3528 SoC
-  arm64: dts: rockchip: Add UART clocks for RK3528 SoC
-
- .../bindings/clock/rockchip,rk3528-cru.yaml   |   64 +
- arch/arm64/boot/dts/rockchip/rk3528.dtsi      |   68 +-
- drivers/clk/rockchip/Kconfig                  |    7 +
- drivers/clk/rockchip/Makefile                 |    1 +
- drivers/clk/rockchip/clk-pll.c                |   10 +-
- drivers/clk/rockchip/clk-rk3528.c             | 1114 +++++++++++++++++
- drivers/clk/rockchip/clk.h                    |   22 +
- .../dt-bindings/clock/rockchip,rk3528-cru.h   |  453 +++++++
- .../dt-bindings/reset/rockchip,rk3528-cru.h   |  241 ++++
- 9 files changed, 1975 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3528-cru.yaml
- create mode 100644 drivers/clk/rockchip/clk-rk3528.c
- create mode 100644 include/dt-bindings/clock/rockchip,rk3528-cru.h
- create mode 100644 include/dt-bindings/reset/rockchip,rk3528-cru.h
-
+diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
+index fe76756e592e..2c2abb3b4210 100644
+--- a/drivers/clk/rockchip/clk-pll.c
++++ b/drivers/clk/rockchip/clk-pll.c
+@@ -204,10 +204,12 @@ static int rockchip_rk3036_pll_set_params(struct rockchip_clk_pll *pll,
+ 	rockchip_rk3036_pll_get_params(pll, &cur);
+ 	cur.rate = 0;
+ 
+-	cur_parent = pll_mux_ops->get_parent(&pll_mux->hw);
+-	if (cur_parent == PLL_MODE_NORM) {
+-		pll_mux_ops->set_parent(&pll_mux->hw, PLL_MODE_SLOW);
+-		rate_change_remuxed = 1;
++	if (!(pll->flags & ROCKCHIP_PLL_FIXED_MODE)) {
++		cur_parent = pll_mux_ops->get_parent(&pll_mux->hw);
++		if (cur_parent == PLL_MODE_NORM) {
++			pll_mux_ops->set_parent(&pll_mux->hw, PLL_MODE_SLOW);
++			rate_change_remuxed = 1;
++		}
+ 	}
+ 
+ 	/* update pll values */
+diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
+index 9b37d44b9e5d..460de5a67faf 100644
+--- a/drivers/clk/rockchip/clk.h
++++ b/drivers/clk/rockchip/clk.h
+@@ -444,6 +444,7 @@ struct rockchip_pll_rate_table {
+  * Flags:
+  * ROCKCHIP_PLL_SYNC_RATE - check rate parameters to match against the
+  *	rate_table parameters and ajust them if necessary.
++ * ROCKCHIP_PLL_FIXED_MODE - the pll operates in normal mode only
+  */
+ struct rockchip_pll_clock {
+ 	unsigned int		id;
+@@ -461,6 +462,7 @@ struct rockchip_pll_clock {
+ };
+ 
+ #define ROCKCHIP_PLL_SYNC_RATE		BIT(0)
++#define ROCKCHIP_PLL_FIXED_MODE		BIT(1)
+ 
+ #define PLL(_type, _id, _name, _pnames, _flags, _con, _mode, _mshift,	\
+ 		_lshift, _pflags, _rtable)				\
 -- 
 2.48.1
 
