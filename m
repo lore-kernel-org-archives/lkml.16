@@ -1,37 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A27D216600;
-	Mon, 17 Feb 2025 15:49:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7508C224B1F;
+	Mon, 17 Feb 2025 15:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807360; cv=none; b=QKUYKDKumYmIHPR2CqfgNgwyzgw61VRErbVmpLwYLwNNZlu2Sz9/LRHeM5yr/1n1bkqh2UQSWQgkLSVE7aBna3Gt4GOVGPhYteWOra6+2KFhGBjdd7yz8DaY20NaEZKNEMZnLBHOK8ggE2tvs4TIwtnjba5HjqMOv4BPilMjh2Q=
+	t=1739807363; cv=none; b=PJGc1dHgyLB73m0c9mTTzctb0kz7w6LCKJdiru+jX9iWQ778aiASFI/lyQELcZl2uQD80U3xjQtBA21Eo9nnxiKqVvKPkhx1VNbkFSFYJWG1Q13gt/NXxP9GRhK3R/IoUoabh4EDVpRyUy4s3NATi7mZXWJ3n9y1C3gMbSeBqvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739807360; c=relaxed/simple;
-	bh=o71HN95JK1WP9+8kh/L5l6WVVRJdHdkM4Iw6m9dljnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L+5hj0Bs+gG72eS8yZjojTQ/oCR52iNO7u+GDhXSc227oBLITJ9rMN4HbQVQW8Db5dWufV2n5ZqUCSh37dZljxDOOARr6hJ/kW2aLcNrrTHhlgTsxDdFAFTrygBGk2cn84SCFWfgM/1X1ChvZcFZ3eIwyszyq3Iq6WkddlWnzTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lolPkVDA; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1739807363; c=relaxed/simple;
+	bh=uaAALFJVjaAfoYWZ5VhGUqcok73clxTF6XnEep9JE7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BAjzQI5VEAssR9GTt4MwoTz+XxdSWzH2lLgZiV2pT/BRfdQB5chM8AYd6z8nDKQycCmXAyxa9SXFSD7XvLakgsXHEZfiDmw257MAZzx7tp3EHQOH7WtPbC2+NwotMNSKO1sNkGg9E1vLvZoyHzaPeWl/BoQlTp/h/e4ujyeQ7w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ReeUPJBY; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lolPkVDA"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ReeUPJBY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739807356;
-	bh=o71HN95JK1WP9+8kh/L5l6WVVRJdHdkM4Iw6m9dljnA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lolPkVDAJi9ktcqzaedQiyNG70i4hMLfi4eIDfTbqk9PzlmlC5oucpXrMLGcgkWHa
-	 2W1FSf1rEAzu+GirY9MDZ1ZccOtoc/cBwX1zobB922gdLDlKzf7LnWtHA6lmmPEslj
-	 JOCVSmvMPYUkPUcK41HNOZDrBlbxgiZNrgBMljiTzpyDgLtgJcDJy0dhEHs15WM8Fa
-	 hizTl9SuL5Kv1u9fgRxS33doCQCYP3Ov629/3WnOLpcuye7Yrkpu4jb+1IFNrJfYfu
-	 /tZ8wrweIXclbuemBd9EptrVEY46e+jn736gN0h5S8F+CbM9OBT4IYiTb0Px0IKjMp
-	 jpa4rSORy/GTw==
+	s=mail; t=1739807359;
+	bh=uaAALFJVjaAfoYWZ5VhGUqcok73clxTF6XnEep9JE7A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ReeUPJBYcNPj37eRgYWz8gh+mjSo31filW7RUpL3DOHPrtyOawmBvv14B86KAPLzq
+	 4xzNeMB+zASitMFxGKvFykrtM5eTn66Bg+JsNQuy58kSm/18w1a5YvgqFp7Nxbp+jj
+	 DwLV74lC0y6ZSZ2362K+endZViwUvOapZg7KNwdfSENmY9v/DYpdMvKfTNSDxv2AEj
+	 Z1PwjMTEeS0H90GWe/lwvhZhWu1748WogOZVYGV0L7SgFX4NR9t0ztVoDjCYcJJ7b0
+	 z69g3Cwx0yAwb9yL1qEr4itnGcqf1wybOzGtBth1RuDfg5JkLF6ZFi4qW6Q3lsjcOE
+	 /8L4tlfKUy2Vw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 32B3A17E0CA2;
-	Mon, 17 Feb 2025 16:49:15 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 46EF317E14E7;
+	Mon, 17 Feb 2025 16:49:18 +0100 (CET)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: p.zabel@pengutronix.de,
@@ -60,10 +61,12 @@ Cc: p.zabel@pengutronix.de,
 	ives.chenjh@mediatek.com,
 	tommyyl.chen@mediatek.com,
 	jason-jh.lin@mediatek.com
-Subject: [PATCH v7 00/43] Add support for MT8195/88 DPI, HDMIv2 and DDCv2
-Date: Mon, 17 Feb 2025 16:47:53 +0100
-Message-ID: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v7 02/43] drm/mediatek: mtk_dpi: Add support for Pattern Generator in debugfs
+Date: Mon, 17 Feb 2025 16:47:55 +0100
+Message-ID: <20250217154836.108895-3-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
+References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,207 +75,197 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v7:
- - Split more patches as requested by CK
- - Changed the order of the interlaced variable addition as requested
- - Cleanups in DDCv2 as requested by CK
- - Removed comment from
-   drm/mediatek: mtk_hdmi: Move output init to mtk_hdmi_register_audio_driver()
-   as that was forgotten from reintroduction of print in v5
- - Some more small nitpicks as pointed out by CK here and there
+This IP includes a Pattern Generator which is useful for debugging
+and testing purposes: add the relevant register and bits to the
+mtk_dpi_regs.h header, and implement support for it in mtk_dpi.
 
-Changes in v6:
- - Split the TVD clock enable/disable calls in a different commit
- - Changed `is_internal_hdmi` to two different variables, one for
-   DPI input clock from HDMI, and one for AFIFO 1T1P output and
-   conversion (mtk_dpi)
-   - Clarified why MT8195/88 HDMI-reserved DPI1 is different
- - Moved `input_2p_en` bit to platform data to cleanup DPI vs DPINTF
-   - 1T2P enable bit is different between DPI and DPINTF, but usage
-     is actually the same
- - Cleaned up headers inclusion in mtk_hdmi_v2.c, mtk_hdmi_ddc_v2.c
-   - Removed some unused headers, added missing bitfield.h header
- - Split some prints cleanup commits as requested by CK
- - Split the introduction of mtk_hdmi_conf as requested by CK
- - Split commit to make CEC optional as requested by CK
- - Reintroduced forgotten no_capture_mute in codec_pdata (mtk_hdmi_common)
- - Reintroduced error print for audio clocks enablement failure (mtk_hdmi)
- - Added cleanup syscon_regmap_lookup_by_phandle commit from Krzysztof K
+Adding this required to introduce a .debugfs_init() callback for
+the DPI bridge, which creates a "dpi_test_pattern" file in the
+directory of the appropriate connector.
 
-Changes in v5:
- - Rebased over next-20250113
- - Resolved merge issues with next-20250113
- - Added bitfield.h inclusion in mtk_dpi in commit [02/33] to resolve
-   build issue from 0day CI
- - Removed .atomic_check callback from mtk_hdmi_v2 as it is now part
-   of drm_bridge_connector as pointed out by Dmitry B
- - Removed call to pm_runtime_disable() as the driver uses devm
- - Tested again :-)
+The pattern generator can generate various internal patterns and
+this submission includes support for:
+ - 256 or 1024 shades of gray in a Vertical or Horizontal Pattern
+ - Vertical Color Bars
+ - Frame border
+ - Dot Moire
 
-Changes in v4:
- - DDCv2 binding erroneously dropped in v3 is included again (oops!)
- - Added reference to dai-common.yaml in HDMIv2 binding
- - Dropped pinctrl entries from HDMIv2 binding
- - Fixed required list in HDMIv2 binding and changed node name to
-   'hdmi' instead of 'hdmi-tx'
- - Fixed issue in mtk_hdmi derived from wrong commit splitting action
-   from version 3
- - Exported necessary symbols and added namespaces for those
- - Fixed module build for both HDMIv1 and HDMIv2
- - Other cleanups
+This generator also supports filling the entire screen with one
+custom color, but support for that is not included in this commit.
 
-Changes in v3:
- - Added hpd_enable() and hpd_disable() callbacks as suggested by Dmitry B
- - Removed audio mute call in bridge_enable() as suggested by CK
- - Reworked commonization commits for mtk_hdmi/mtk_hdmi_common and split
-   out debugfs/abist implementation as suggested by CK
- - Removed .mode_valid() callback as it is now provided by the bridge
-   API in drm_bridge_connector_helper_funcs
- - A bit of cleanups here and there
- - Tested again on HW especially for new hpd_enable/disable callbacks.
+Enabling and disabling this generator can be done by sending a
+string to the dpi_test_pattern debugfs file; the pattern is
+expected to be formatted as follows:
 
-Changes in v2:
- - Merged series "Add support for MT8195/8188 and Pattern Generator"
-   and "drm/mediatek: Add support for HDMIv2 and DDCv2 IPs" in one
-   as they are directly related, as requested by CK Hu
- - More commonization: moved some audio functions to mtk_hdmi_common
- - Fixed a bug in DDCv2 driver to allow sending a message with len=1
- - Renamed some functions in HDMIv2 to consistently use the prefix
-   mtk_hdmi_v2_ across the driver
- - Added .mode_valid() callback to HDMIv2
- - Added .atomic_check() callback to HDMIv2
- - Reordered drm_bridge_funcs in HDMIv2 driver
- - Rewritten .edid_read() callback in HDMIv2 to move checking audio
-   availability to bridge_pre_enable() stage, and to stop using the
-   drm_edid_read_ddc() in favor of drm_edid_read()
- - Added support for API provided HDMI Helpers
- - Added .tmds_char_rate_valid() callback to HDMIv2 for HDMI helpers
- - Added .hdmi_{read,write}_infoframe() callback to HDMIv2 for helpers
- - Added support for Vendor infoframes in HDMIv2
- - Added missing audio-dai-cells to HDMIv2 binding to fix check error
- - Added more information to the HDMIv2 binding for clocks and PHY
- - Added some comments to the HDMIv2 code to clarify why the controller
-   is preconfigured in bridge_pre_enable() instead of bridge_enable()
- - Added a mention of the differences in HPD between v1 and v2 to the
-   commit introducing the v2 driver (v2 is not using CEC for HPD)
- - ...and tested again on HW! :-)
+         <enable (1) or disable (0)> <pattern number>
 
+where the pattern number can be a number from 0 to 7, excluding 5.
 
-This series adds support for the HDMI-TX v2 Encoder and DDCv2, and for
-the direct connection DPI as found in MT8195, MT8188 and their variants.
+Of course 5 is excluded because that activates custom color fill
+which, again, is not supported in this commit.
 
-Tested on Genio 700 EVK:
- - ABIST ON: ok, pattern generated internally from HDMI is shown on
-   HDMI screen at the correct resolution;
- - ABIST OFF + DPI Pattern Generator ON: ok, pattern coming from DPI is
-   shown on HDMI screen at the correct resolution;
- - Can negotiate up to 4k60
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/gpu/drm/mediatek/mtk_dpi.c      | 108 ++++++++++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_dpi_regs.h |   4 +
+ 2 files changed, 112 insertions(+)
 
-and on MT8395 Radxa NIO 12L:
- - ABIST ON: ok, pattern generated internally from HDMI is shown on
-   HDMI screen at the correct resolution;
- - ABIST OFF + DPI Pattern Generator ON: ok, pattern coming from DPI is
-   shown on HDMI screen at the correct resolution;
- - Dual screen usecase validated (DSI + HDMI 3840x2160p 60Hz)
- - Can negotiate up to 4k60
-
-Please note that this submission does *not* include support for HDCP
-nor for CECv2, as I want this to be upstream before implementing
-additional features which are not strictly required for simple
-HDMI output.
-
-Bonus in this series is the addition of support for the Pattern Generator
-found in the DPI HW: since I needed this for debugging during development,
-I had to code in the actual support bits and it looked like a waste of
-time to just remove it.
-I instead decided to clean it up and upstream it, as this will anyway come
-handy for multiple things, of which the most important (imo) are:
- - Adding support for new SoCs in the future will be less time consuming
-   as this driver already has the pattern generator in;
- - CI Testing might be able to make use of this to validate that the
-   data that comes out is not garbled (so, to help testing display
-   support in an automated manner).
-
-AngeloGioacchino Del Regno (41):
-  dt-bindings: display: mediatek: dpi: Add MT8195 and MT8188 compat
-  drm/mediatek: mtk_dpi: Add support for Pattern Generator in debugfs
-  drm/mediatek: mtk_dpi: Use an array for pixclk factor calculation
-  drm/mediatek: mtk_dpi: Move pixel clock setting flow to function
-  drm/mediatek: mtk_dpi: Add checks for reg_h_fre_con existence
-  drm/mediatek: mtk_dpi: Move the input_2p_en bit to platform data
-  drm/mediatek: mtk_dpi: Add support for DPI input clock from HDMI
-  drm/mediatek: mtk_dpi: Support AFIFO 1T1P output and conversion
-  drm/mediatek: mtk_dpi: Explicitly manage TVD clock in power on/off
-  drm/mediatek: Add support for MT8195 Digital Parallel Interface
-  dt-bindings: display: mediatek: Add binding for HDMIv2 DDC
-  dt-bindings: display: mediatek: Add binding for MT8195 HDMI-TX v2
-  drm/mediatek: mtk_cec: Switch to register as module_platform_driver
-  drm/mediatek: mtk_hdmi_ddc: Switch to register as
-    module_platform_driver
-  drm/mediatek: mtk_hdmi: Convert to module_platform_driver macro
-  drm/mediatek: mtk_hdmi: Compress of_device_id array entries
-  drm/mediatek: mtk_hdmi: Unregister audio platform device on failure
-  drm/mediatek: mtk_hdmi: Fix typo for aud_sampe_size member
-  drm/mediatek: mtk_hdmi: Disgregate function mtk_hdmi_audio_set_param()
-  drm/mediatek: mtk_hdmi: Move audio params selection to new function
-  drm/mediatek: mtk_hdmi: Move plugged_cb/codec_dev setting to new
-    function
-  drm/mediatek: mtk_hdmi: Move N/CTS setting to new function
-  drm/mediatek: mtk_hdmi: Move vendor/product strings to drm_bridge
-  drm/mediatek: mtk_hdmi: Use dev_err_probe() in
-    mtk_hdmi_dt_parse_pdata()
-  drm/mediatek: mtk_hdmi: Move CEC device parsing in new function
-  drm/mediatek: mtk_hdmi: Remove unused members of struct mtk_hdmi
-  drm/mediatek: mtk_hdmi: Move output init to
-    mtk_hdmi_register_audio_driver()
-  drm/mediatek: mtk_hdmi: Use devm managed version of drm_bridge_add
-  drm/mediatek: mtk_hdmi: Remove ifdef for CONFIG_PM_SLEEP
-  drm/mediatek: mtk_hdmi: Remove goto in mtk_hdmi_clk_enable_audio()
-  drm/mediatek: mtk_hdmi: Remove driver bound to HDMI print
-  drm/mediatek: mtk_hdmi: Cleanup function mtk_hdmi_resume()
-  drm/mediatek: mtk_hdmi: Improve mtk_hdmi_get_all_clk() flexibility
-  drm/mediatek: mtk_hdmi: Add HDMI IP version configuration to pdata
-  drm/mediatek: mtk_hdmi: Split driver and add common probe function
-  drm/mediatek: mtk_hdmi_common: Make CEC support optional
-  drm/mediatek: mtk_hdmi_common: Assign DDC adapter pointer to bridge
-  drm/mediatek: mtk_hdmi_common: Add OP_HDMI if helper funcs assigned
-  drm/mediatek: mtk_hdmi_common: Add var to enable interlaced modes
-  drm/mediatek: Introduce HDMI/DDC v2 for MT8195/MT8188
-  drm/mediatek: mtk_hdmi_v2: Add debugfs ops and implement ABIST
-
-Guillaume Ranquet (1):
-  drm/mediatek: hdmi: Use regmap instead of iomem for main registers
-
-Krzysztof Kozlowski (1):
-  drm/mediatek/hdmi: Use syscon_regmap_lookup_by_phandle_args
-
- .../display/mediatek/mediatek,dpi.yaml        |    5 +
- .../mediatek/mediatek,mt8195-hdmi-ddc.yaml    |   41 +
- .../mediatek/mediatek,mt8195-hdmi.yaml        |  151 ++
- drivers/gpu/drm/mediatek/Kconfig              |   18 +-
- drivers/gpu/drm/mediatek/Makefile             |   11 +-
- drivers/gpu/drm/mediatek/mtk_cec.c            |    7 +-
- drivers/gpu/drm/mediatek/mtk_dpi.c            |  323 +++-
- drivers/gpu/drm/mediatek/mtk_dpi_regs.h       |   10 +
- drivers/gpu/drm/mediatek/mtk_drm_drv.c        |    2 +
- drivers/gpu/drm/mediatek/mtk_hdmi.c           |  803 ++-------
- drivers/gpu/drm/mediatek/mtk_hdmi.h           |   14 -
- drivers/gpu/drm/mediatek/mtk_hdmi_common.c    |  435 +++++
- drivers/gpu/drm/mediatek/mtk_hdmi_common.h    |  198 +++
- drivers/gpu/drm/mediatek/mtk_hdmi_ddc.c       |    2 +-
- drivers/gpu/drm/mediatek/mtk_hdmi_ddc_v2.c    |  385 +++++
- drivers/gpu/drm/mediatek/mtk_hdmi_regs_v2.h   |  263 +++
- drivers/gpu/drm/mediatek/mtk_hdmi_v2.c        | 1475 +++++++++++++++++
- 17 files changed, 3347 insertions(+), 796 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,mt8195-hdmi-ddc.yaml
- create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,mt8195-hdmi.yaml
- delete mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi.h
- create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.c
- create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.h
- create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_ddc_v2.c
- create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_regs_v2.h
- create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
-
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+index 1864eb02dbf5..fc937490feda 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+@@ -4,8 +4,10 @@
+  * Author: Jie Qiu <jie.qiu@mediatek.com>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/component.h>
++#include <linux/debugfs.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/media-bus-format.h>
+@@ -166,6 +168,18 @@ static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
+ 	writel(tmp, dpi->regs + offset);
+ }
+ 
++static void mtk_dpi_test_pattern_en(struct mtk_dpi *dpi, u8 type, bool enable)
++{
++	u32 val;
++
++	if (enable)
++		val = FIELD_PREP(DPI_PAT_SEL, type) | DPI_PAT_EN;
++	else
++		val = 0;
++
++	mtk_dpi_mask(dpi, DPI_PATTERN0, val, DPI_PAT_SEL | DPI_PAT_EN);
++}
++
+ static void mtk_dpi_sw_reset(struct mtk_dpi *dpi, bool reset)
+ {
+ 	mtk_dpi_mask(dpi, DPI_RET, reset ? RST : 0, RST);
+@@ -767,6 +781,99 @@ mtk_dpi_bridge_mode_valid(struct drm_bridge *bridge,
+ 	return MODE_OK;
+ }
+ 
++static int mtk_dpi_debug_tp_show(struct seq_file *m, void *arg)
++{
++	struct mtk_dpi *dpi = m->private;
++	bool en;
++	u32 val;
++
++	if (!dpi)
++		return -EINVAL;
++
++	val = readl(dpi->regs + DPI_PATTERN0);
++	en = val & DPI_PAT_EN;
++	val = FIELD_GET(DPI_PAT_SEL, val);
++
++	seq_printf(m, "DPI Test Pattern: %s\n", en ? "Enabled" : "Disabled");
++
++	if (en) {
++		seq_printf(m, "Internal pattern %d: ", val);
++		switch (val) {
++		case 0:
++			seq_puts(m, "256 Vertical Gray\n");
++			break;
++		case 1:
++			seq_puts(m, "1024 Vertical Gray\n");
++			break;
++		case 2:
++			seq_puts(m, "256 Horizontal Gray\n");
++			break;
++		case 3:
++			seq_puts(m, "1024 Horizontal Gray\n");
++			break;
++		case 4:
++			seq_puts(m, "Vertical Color bars\n");
++			break;
++		case 6:
++			seq_puts(m, "Frame border\n");
++			break;
++		case 7:
++			seq_puts(m, "Dot moire\n");
++			break;
++		default:
++			seq_puts(m, "Invalid selection\n");
++			break;
++		}
++	}
++
++	return 0;
++}
++
++static ssize_t mtk_dpi_debug_tp_write(struct file *file, const char __user *ubuf,
++				      size_t len, loff_t *offp)
++{
++	struct seq_file *m = file->private_data;
++	u32 en, type;
++	char buf[6];
++
++	if (!m || !m->private || *offp || len > sizeof(buf) - 1)
++		return -EINVAL;
++
++	memset(buf, 0, sizeof(buf));
++	if (copy_from_user(buf, ubuf, len))
++		return -EFAULT;
++
++	if (sscanf(buf, "%u %u", &en, &type) != 2)
++		return -EINVAL;
++
++	if (en < 0 || en > 1 || type < 0 || type > 7)
++		return -EINVAL;
++
++	mtk_dpi_test_pattern_en((struct mtk_dpi *)m->private, type, en);
++	return len;
++}
++
++static int mtk_dpi_debug_tp_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, mtk_dpi_debug_tp_show, inode->i_private);
++}
++
++static const struct file_operations mtk_dpi_debug_tp_fops = {
++	.owner = THIS_MODULE,
++	.open = mtk_dpi_debug_tp_open,
++	.read = seq_read,
++	.write = mtk_dpi_debug_tp_write,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++static void mtk_dpi_debugfs_init(struct drm_bridge *bridge, struct dentry *root)
++{
++	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
++
++	debugfs_create_file("dpi_test_pattern", 0640, root, dpi, &mtk_dpi_debug_tp_fops);
++}
++
+ static const struct drm_bridge_funcs mtk_dpi_bridge_funcs = {
+ 	.attach = mtk_dpi_bridge_attach,
+ 	.mode_set = mtk_dpi_bridge_mode_set,
+@@ -779,6 +886,7 @@ static const struct drm_bridge_funcs mtk_dpi_bridge_funcs = {
+ 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+ 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+ 	.atomic_reset = drm_atomic_helper_bridge_reset,
++	.debugfs_init = mtk_dpi_debugfs_init,
+ };
+ 
+ void mtk_dpi_start(struct device *dev)
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi_regs.h b/drivers/gpu/drm/mediatek/mtk_dpi_regs.h
+index 62bd4931b344..a0b1d18bbbf7 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi_regs.h
++++ b/drivers/gpu/drm/mediatek/mtk_dpi_regs.h
+@@ -235,4 +235,8 @@
+ #define MATRIX_SEL_RGB_TO_JPEG		0
+ #define MATRIX_SEL_RGB_TO_BT601		2
+ 
++#define DPI_PATTERN0		0xf00
++#define DPI_PAT_EN			BIT(0)
++#define DPI_PAT_SEL			GENMASK(6, 4)
++
+ #endif /* __MTK_DPI_REGS_H */
 -- 
 2.48.1
 
