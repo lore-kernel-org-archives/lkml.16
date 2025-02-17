@@ -1,510 +1,130 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F505218E81
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 10:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF06217648
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 10:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739786506; cv=none; b=lANtXR9jjzYbUKByYj/FpD+Fbv3fII0N09mFg6W9n00R3xa1luK7pFOz3nljqrKZ/Oa4jmuz3ncVXP42T04X9kp0eIuPfKUozgKHdPxezZjaph+J/27+KU50cQl1gDCjWGeGt+SKoUMZ1hRJfwaMq4zyI6WBaPuzP74NcFRTQ+Q=
+	t=1739786517; cv=none; b=RpVVlYbVnbGQNHAbPeNG24edCwyg7Ij+jPgLXv2FeBxeqThtWs8j+H5uNeDdvFD2S4lVPcSb+M1XiXGcM7GpRnDdXvy4AfyM5wUc5NTKtuEOTdJJjKmintG7NArtXEHdixvFwhoi1+mBoAZpj8ryVGrkdoK3h50qCob4ubhvgfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739786506; c=relaxed/simple;
-	bh=+7DRr0dOGwJswWy4T6TBMdLBk8iBhRPVJU/ZL321n4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c5IgDkZ+UlXlza7zacEQ7NtYDh2SVrOwEq/fnLKRXNChHz1qynV5nZl1GLknbrnW/HlmCMvuJ44FPoK9LThbemRH7sV9Vmf9utcqlRidIYwVz7lar5Hrm9U5wkJtldYmftY6aDxrruR/sfPSH75xjQoqMW2DZkomYkBLFviuayg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IK6GY/BP; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739786517; c=relaxed/simple;
+	bh=0ik/x5gdQpwFxGRve4EoCIoEDYncm6E5QaBZIZs4S6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qYvKakZ23Js/bZV31LIRmHJ8ftO3//6IFNV6RcdPgVE2mH5wJyHT6pvKh6T/61KulwW68XWYlQk147MbcHs91zfHwdcz8n/O1xv87p15JyQ4R30IQTdQLb0RX1Oqh5SEZ1s3KSPDtm2BJMJDU/IXKTENaF7k5YVogxyp53KtkM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BzctW2vf; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK6GY/BP"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4396424d173so39457355e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 02:01:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BzctW2vf"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abb7aecd39fso280057766b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 02:01:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739786501; x=1740391301; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V2z90w2fCLpTI8+G020nwpC9EGaGHD873RtNRgO7sTs=;
-        b=IK6GY/BP65n7vFct+e6+WN9OAbaftHQJb2IyPs4Wy2oPp/R+aJHDaGxBMkRNouhyd1
-         zwuVR5Se9O5ByoNVIiweZ8o/opOBqF3S3kOh/8sry8aVuizsily7osAqawZMKYmUHhT9
-         20DrB6pTLpQ4AIIbTUzdeSFHpm6fFYaqLlFib+UtVSJrC6xguysowwMTKPnrBQ8vEHgB
-         vaSxP9xS5R51DtsMyd1yi4Sy2yppjSTzrlPbiG9/3SZdAlEp5Tgtl2qqfR2bv5v2s/7Y
-         1Fu/EcfLaq6WR+ZRbRpQ4KTm/+D1uZmPx3bSAJyWiWNQqg7ysF30274q2MZxcdJZa9GR
-         MaYQ==
+        d=suse.com; s=google; t=1739786514; x=1740391314; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JMV/tUWTTBpA4vW8CyRHWlBAGTTrRPmL8N3P3dHOplQ=;
+        b=BzctW2vfgtn45ApKHXnWpJSM7Igcq76rrn+DHxiudaphAZCSp7ttjquyj8PPBZlQyx
+         M9qYOfcumE2zVI7mEPVege2xKSeYbbqO/BOeMpZ6pgIh/yBTy/wQAf2LTREg8jBjiWoC
+         4H1Mo0nrCIZoOTVVekYG2tKWH3JXBscDwCywKvuitjfDWbL+aM4oGqL+eyuAa/O7Py/s
+         AUsvJVHCBYP8YsSv8HMAXk0XKqxjWhkkCDpw0baerQKEGByswhAiEiHq63129uD5Jzkd
+         UdGGXIAALHZ/TbX0V3lh8W7+R9hBix4ipRmtq1wC7lkRcQ0afkJvgLRd8ZZaK+rBJPdH
+         hq1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739786501; x=1740391301;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V2z90w2fCLpTI8+G020nwpC9EGaGHD873RtNRgO7sTs=;
-        b=nHQZ0jfEprpCIit7xh+bpxd7eLlW8deg1Z7ofmR58zaAgm0PP9RarLtRbzIkIG+Za8
-         n/LUzXaUHlv1UooGK22xDaQEshkZZ0Y194H/5dwX7l6gGs2uqorEy0QiOSyzlFRhkona
-         7OyQ3Lgg2EDAn4oMYGJBFl4fO9gjsKrBw+0W5bhMewBIwUZbv8nPSE51FN+mIIQ/Kn8d
-         FiRalVDwRHg01E0uWWRCcgm3dnMDsSpEOONNyBHNowaozsfHsvhta/j6mb7QhNLsk+tr
-         3ZZmMQgmzXJHm5K8vgIQlDrY8ZSgT2NYwdC5crpS5wAPXolr0NREOCipIpufGZg7eAdn
-         PvkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYzOojO9J3g2zcpaJhN850nHE8ibwyZBTPgmkCNRyC0d04LCW88AY2duMG+QCEUIcgoh0ia57/KfTdmCo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCdPWUptDwjAXEe9PCs/7W8iKZ48iVkhjo24WFa1NLApKQP3Ex
-	aJe1m0EtSfWtx3NOoc9h6ozVK8E52FZZBSruzMfsHwWXw4UkJWJc
-X-Gm-Gg: ASbGncs8/wtXuXvEaQsJ6hUljSYvucYFr7PWdMZdkQOSrLZMAZ93sqQYAApfXMVSNDc
-	pW8hwoHcEchndm+/aqXSDtph69M9UxRa+XeZzxRqn983qMjmmISPr7UI6OsXsdRIuil8qtF+jOo
-	P+eTONdsFxj1w1hXAdLrNozdmpSKRPNhJFtqOU7Z5OFpoWxOa8XtsQaK1gN7yy/AQ2UpZeR+Bto
-	VmsJ9vnqH6LNummdqsBfTQdXSR0usPBXxO9QqKvOS24B/8J1mE3KwiOVGTnSQTzcyv9rcwuZ69L
-	6//QMlKBsCMixFGp1A==
-X-Google-Smtp-Source: AGHT+IF+Qm5zq9bzDlKVIp6rJDOjwCR2Kk0QNvXvDTzENRvNaSBvN02UJtyivFoTKFswNi0sfHXdtg==
-X-Received: by 2002:a05:600c:19c7:b0:439:4c86:9c32 with SMTP id 5b1f17b1804b1-4396e6aa021mr81717905e9.8.1739786500440;
-        Mon, 17 Feb 2025 02:01:40 -0800 (PST)
-Received: from fedora.. ([213.94.27.232])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f7fe6sm11591901f8f.86.2025.02.17.02.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 02:01:40 -0800 (PST)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: louis.chauvet@bootlin.com
-Cc: hamohammed.sa@gmail.com,
-	simona@ffwll.ch,
-	melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v3 14/14] drm/vkms: Allow to attach connectors and encoders
-Date: Mon, 17 Feb 2025 11:01:20 +0100
-Message-ID: <20250217100120.7620-15-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250217100120.7620-1-jose.exposito89@gmail.com>
-References: <20250217100120.7620-1-jose.exposito89@gmail.com>
+        d=1e100.net; s=20230601; t=1739786514; x=1740391314;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JMV/tUWTTBpA4vW8CyRHWlBAGTTrRPmL8N3P3dHOplQ=;
+        b=OOCNP6WAADZtBvoRETTsu9z6Pc7L9W185oGU+1Rr+km5lVnfjKlvERowQYLP+/5Q+y
+         6sXjNZErN659l+6xP08gQ2JE40GtaxZETmrWhVAycccD6+U14xUZbSaxcQNxBIVNoQeQ
+         vaeM4dlZxqNu/wwAW1Pn939b+GQv1d3cb5YFpCd4L47mkQVJvjEENsVMC+HrErNtjq/R
+         73KeiMLzFa6/DeZDsK0PH3XmmZnbMdfmQe2PlU1jThHLVUXGjJI6LPDu5OoqwEqIkE7Y
+         ah2QEh0/8fsTgkIxnRY/BHhbdwoX8D/7GLQEvSSlqeVhaqsxTntv+WBEY/MoUWhaRs21
+         0raw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKSYppKMJtDtJ+ZTkAZC1vsUnRwYA6Pij7tZj03i3eeOR++fq9utnKGDbPrFKbVHNocxyHuRxQa91ZN2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJV3SWbPMD5Wxyw9/bAlwll/QHliBtrUOWvVm7uROHBVpBcpk6
+	Q4OWOsCxul6rfXlA01fY1QbkUChWPC/4cehh2P7mfKAa0u+/cw50F5adZ347GS7SbQw0wDyHBBB
+	q
+X-Gm-Gg: ASbGncs7tBTEUtBUkIulMnLHMxRq75sKuPTgZSP8uld1z3QlOA2KNiRMCFkCbnO9KKg
+	gT64cdnPkNkaGZsk7+4AtClNzFkohldM17jIV6TibZvKlFdKVokg2pBP4L7F2FlTDLWxXfCnx6g
+	nSoMfOKL7ZzymFXbaxWf7JT5y7/8pcR6hz0/gAxillffLn3TczAQYBYd9gZ7uAhrkhlz7XR0vSy
+	QnQQM7F2Fa9HsqamtDPtv51NAE++S1lOQUjqfJk+RCvvKmz+1Su5xTZw674R7s1ByJGL1Hh+yE/
+	7P/DCIYcJWBXS5H0CuA6WZcZ8ewirUhy/iZhWhQG7Lk=
+X-Google-Smtp-Source: AGHT+IFVSN5gkXJhtCi/O+DcvMndotLeH1zglHLdeZ85L2r1nGGgQtQnfumGzJ0IxDgCKsF8Du92fQ==
+X-Received: by 2002:a17:907:8e8c:b0:aba:e585:42fa with SMTP id a640c23a62f3a-abae5854477mr976618666b.5.1739786513881;
+        Mon, 17 Feb 2025 02:01:53 -0800 (PST)
+Received: from [192.168.0.20] (nborisov.ddns.nbis.net. [109.121.142.137])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9b187203sm175736766b.61.2025.02.17.02.01.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 02:01:53 -0800 (PST)
+Message-ID: <8cce2725-9efe-44e8-b071-f921874d7649@suse.com>
+Date: Mon, 17 Feb 2025 12:01:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] x86/mce/inject: Remove call to mce_notify_irq()
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ tony.luck@intel.com
+References: <20250210154707.114219-1-nik.borisov@suse.com>
+ <20250210154707.114219-2-nik.borisov@suse.com>
+ <20250216161050.GBZ7IOCofLUUelomR4@fat_crate.local>
+Content-Language: en-US
+From: Nikolay Borisov <nik.borisov@suse.com>
+In-Reply-To: <20250216161050.GBZ7IOCofLUUelomR4@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add a list of possible encoders to the connector configuration and
-helpers to attach and detach them.
 
-Now that the default configuration has its connector and encoder
-correctly, configure the output following the configuration.
 
-Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- .clang-format                                 |   1 +
- drivers/gpu/drm/vkms/tests/vkms_config_test.c | 104 ++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_config.c            |  64 +++++++++++
- drivers/gpu/drm/vkms/vkms_config.h            |  29 +++++
- drivers/gpu/drm/vkms/vkms_output.c            |  33 +++---
- 5 files changed, 218 insertions(+), 13 deletions(-)
+On 16.02.25 г. 18:10 ч., Borislav Petkov wrote:
+> On Mon, Feb 10, 2025 at 05:47:04PM +0200, Nikolay Borisov wrote:
+>> The call is actually a noop because when the MCE is raised the early
+>> notifier is the only call site that correctly calls mce_notify_irq()
+>> because it also sets mce_need_notify. Remove this call and as a result
+>> make mce_notify_irq() static
+>>
+>> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
+>> ---
+>>   arch/x86/include/asm/mce.h       |  2 --
+>>   arch/x86/kernel/cpu/mce/core.c   | 44 ++++++++++++++++----------------
+>>   arch/x86/kernel/cpu/mce/inject.c |  1 -
+>>   3 files changed, 22 insertions(+), 25 deletions(-)
+> 
+> So what you're looking at are the remnants of the old soft-inject of MCE
+> errors. And it seems that we lost some of that functionality along the way and
+> no one has noticed because, well, it seems no one uses it anymore.
+> 
+> In order to understand how this thing was supposed to work, checkout
+> 
+> ea149b36c7f5 ("x86, mce: add basic error injection infrastructure")
 
-diff --git a/.clang-format b/.clang-format
-index ca49832993c5..7630990aa07a 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -694,6 +694,7 @@ ForEachMacros:
-   - 'vkms_config_for_each_crtc'
-   - 'vkms_config_for_each_encoder'
-   - 'vkms_config_for_each_plane'
-+  - 'vkms_config_connector_for_each_possible_encoder'
-   - 'vkms_config_encoder_for_each_possible_crtc'
-   - 'vkms_config_plane_for_each_possible_crtc'
-   - 'while_for_each_ftrace_op'
-diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-index 0034f922713e..a5d63e00cc1f 100644
---- a/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-+++ b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-@@ -511,12 +511,34 @@ static void vkms_config_test_invalid_connector_number(struct kunit *test)
- 	vkms_config_destroy(config);
- }
- 
-+static void vkms_config_test_valid_connector_possible_encoders(struct kunit *test)
-+{
-+	struct vkms_config *config;
-+	struct vkms_config_encoder *encoder_cfg;
-+	struct vkms_config_connector *connector_cfg;
-+
-+	config = vkms_config_default_create(false, false, false);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-+
-+	encoder_cfg = list_first_entry(&config->encoders,
-+				       typeof(*encoder_cfg), link);
-+	connector_cfg = list_first_entry(&config->connectors,
-+					 typeof(*connector_cfg), link);
-+
-+	/* Invalid: Connector without a possible encoder */
-+	vkms_config_connector_detach_encoder(connector_cfg, encoder_cfg);
-+	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
-+	vkms_config_destroy(config);
-+}
-+
- static void vkms_config_test_attach_different_configs(struct kunit *test)
- {
- 	struct vkms_config *config1, *config2;
- 	struct vkms_config_plane *plane_cfg1, *plane_cfg2;
- 	struct vkms_config_crtc *crtc_cfg1, *crtc_cfg2;
- 	struct vkms_config_encoder *encoder_cfg1, *encoder_cfg2;
-+	struct vkms_config_connector *connector_cfg1, *connector_cfg2;
- 	int err;
- 
- 	config1 = vkms_config_create("test1");
-@@ -528,10 +550,12 @@ static void vkms_config_test_attach_different_configs(struct kunit *test)
- 	plane_cfg1 = vkms_config_create_plane(config1);
- 	crtc_cfg1 = vkms_config_create_crtc(config1);
- 	encoder_cfg1 = vkms_config_create_encoder(config1);
-+	connector_cfg1 = vkms_config_create_connector(config1);
- 
- 	plane_cfg2 = vkms_config_create_plane(config2);
- 	crtc_cfg2 = vkms_config_create_crtc(config2);
- 	encoder_cfg2 = vkms_config_create_encoder(config2);
-+	connector_cfg2 = vkms_config_create_connector(config2);
- 
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane_cfg1);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane_cfg2);
-@@ -539,6 +563,8 @@ static void vkms_config_test_attach_different_configs(struct kunit *test)
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_cfg2);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, encoder_cfg1);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, encoder_cfg2);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, connector_cfg1);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, connector_cfg2);
- 
- 	err = vkms_config_plane_attach_crtc(plane_cfg1, crtc_cfg2);
- 	KUNIT_EXPECT_NE(test, err, 0);
-@@ -550,6 +576,11 @@ static void vkms_config_test_attach_different_configs(struct kunit *test)
- 	err = vkms_config_encoder_attach_crtc(encoder_cfg2, crtc_cfg1);
- 	KUNIT_EXPECT_NE(test, err, 0);
- 
-+	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg2);
-+	KUNIT_EXPECT_NE(test, err, 0);
-+	err = vkms_config_connector_attach_encoder(connector_cfg2, encoder_cfg1);
-+	KUNIT_EXPECT_NE(test, err, 0);
-+
- 	vkms_config_destroy(config1);
- 	vkms_config_destroy(config2);
- }
-@@ -743,6 +774,77 @@ static void vkms_config_test_encoder_get_possible_crtcs(struct kunit *test)
- 	vkms_config_destroy(config);
- }
- 
-+static void vkms_config_test_connector_get_possible_encoders(struct kunit *test)
-+{
-+	struct vkms_config *config;
-+	struct vkms_config_connector *connector_cfg1, *connector_cfg2;
-+	struct vkms_config_encoder *encoder_cfg1, *encoder_cfg2;
-+	struct vkms_config_encoder *possible_encoder;
-+	unsigned long idx = 0;
-+	int n_encoders = 0;
-+	int err;
-+
-+	config = vkms_config_create("test");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-+
-+	connector_cfg1 = vkms_config_create_connector(config);
-+	connector_cfg2 = vkms_config_create_connector(config);
-+	encoder_cfg1 = vkms_config_create_encoder(config);
-+	encoder_cfg2 = vkms_config_create_encoder(config);
-+
-+	/* No possible encoders */
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
-+							possible_encoder)
-+		KUNIT_FAIL(test, "Unexpected possible encoder");
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
-+							possible_encoder)
-+		KUNIT_FAIL(test, "Unexpected possible encoder");
-+
-+	/* Connector 1 attached to encoders 1 and 2 */
-+	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg1);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg2);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
-+							possible_encoder) {
-+		n_encoders++;
-+		if (possible_encoder != encoder_cfg1 &&
-+		    possible_encoder != encoder_cfg2)
-+			KUNIT_FAIL(test, "Unexpected possible encoder");
-+	}
-+	KUNIT_ASSERT_EQ(test, n_encoders, 2);
-+	n_encoders = 0;
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
-+							possible_encoder)
-+		KUNIT_FAIL(test, "Unexpected possible encoder");
-+
-+	/* Connector 1 attached to encoder 1 and connector 2 to encoder 2 */
-+	vkms_config_connector_detach_encoder(connector_cfg1, encoder_cfg2);
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
-+							possible_encoder) {
-+		n_encoders++;
-+		if (possible_encoder != encoder_cfg1)
-+			KUNIT_FAIL(test, "Unexpected possible encoder");
-+	}
-+	KUNIT_ASSERT_EQ(test, n_encoders, 1);
-+	n_encoders = 0;
-+
-+	err = vkms_config_connector_attach_encoder(connector_cfg2, encoder_cfg2);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
-+							possible_encoder) {
-+		n_encoders++;
-+		if (possible_encoder != encoder_cfg2)
-+			KUNIT_FAIL(test, "Unexpected possible encoder");
-+	}
-+	KUNIT_ASSERT_EQ(test, n_encoders, 1);
-+
-+	vkms_config_destroy(config);
-+}
-+
- static struct kunit_case vkms_config_test_cases[] = {
- 	KUNIT_CASE(vkms_config_test_empty_config),
- 	KUNIT_CASE_PARAM(vkms_config_test_default_config,
-@@ -758,10 +860,12 @@ static struct kunit_case vkms_config_test_cases[] = {
- 	KUNIT_CASE(vkms_config_test_invalid_encoder_number),
- 	KUNIT_CASE(vkms_config_test_valid_encoder_possible_crtcs),
- 	KUNIT_CASE(vkms_config_test_invalid_connector_number),
-+	KUNIT_CASE(vkms_config_test_valid_connector_possible_encoders),
- 	KUNIT_CASE(vkms_config_test_attach_different_configs),
- 	KUNIT_CASE(vkms_config_test_plane_attach_crtc),
- 	KUNIT_CASE(vkms_config_test_plane_get_possible_crtcs),
- 	KUNIT_CASE(vkms_config_test_encoder_get_possible_crtcs),
-+	KUNIT_CASE(vkms_config_test_connector_get_possible_encoders),
- 	{}
- };
- 
-diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
-index fbbdee6068ce..a1df5659b0fb 100644
---- a/drivers/gpu/drm/vkms/vkms_config.c
-+++ b/drivers/gpu/drm/vkms/vkms_config.c
-@@ -95,6 +95,9 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
- 	if (IS_ERR(connector_cfg))
- 		goto err_alloc;
- 
-+	if (vkms_config_connector_attach_encoder(connector_cfg, encoder_cfg))
-+		goto err_alloc;
-+
- 	return config;
- 
- err_alloc:
-@@ -279,6 +282,22 @@ static bool valid_connector_number(const struct vkms_config *config)
- 	return true;
- }
- 
-+static bool valid_connector_possible_encoders(const struct vkms_config *config)
-+{
-+	struct drm_device *dev = config->dev ? &config->dev->drm : NULL;
-+	struct vkms_config_connector *connector_cfg;
-+
-+	vkms_config_for_each_connector(config, connector_cfg) {
-+		if (xa_empty(&connector_cfg->possible_encoders)) {
-+			drm_info(dev,
-+				 "All connectors must have at least one possible encoder\n");
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
- bool vkms_config_is_valid(const struct vkms_config *config)
- {
- 	struct vkms_config_crtc *crtc_cfg;
-@@ -306,6 +325,9 @@ bool vkms_config_is_valid(const struct vkms_config *config)
- 	if (!valid_encoder_possible_crtcs(config))
- 		return false;
- 
-+	if (!valid_connector_possible_encoders(config))
-+		return false;
-+
- 	return true;
- }
- EXPORT_SYMBOL_IF_KUNIT(vkms_config_is_valid);
-@@ -513,6 +535,11 @@ EXPORT_SYMBOL_IF_KUNIT(vkms_config_create_encoder);
- void vkms_config_destroy_encoder(struct vkms_config *config,
- 				 struct vkms_config_encoder *encoder_cfg)
- {
-+	struct vkms_config_connector *connector_cfg;
-+
-+	vkms_config_for_each_connector(config, connector_cfg)
-+		vkms_config_connector_detach_encoder(connector_cfg, encoder_cfg);
-+
- 	xa_destroy(&encoder_cfg->possible_crtcs);
- 	list_del(&encoder_cfg->link);
- 	kfree(encoder_cfg);
-@@ -561,6 +588,7 @@ struct vkms_config_connector *vkms_config_create_connector(struct vkms_config *c
- 		return ERR_PTR(-ENOMEM);
- 
- 	connector_cfg->config = config;
-+	xa_init_flags(&connector_cfg->possible_encoders, XA_FLAGS_ALLOC);
- 
- 	list_add_tail(&connector_cfg->link, &config->connectors);
- 
-@@ -570,7 +598,43 @@ EXPORT_SYMBOL_IF_KUNIT(vkms_config_create_connector);
- 
- void vkms_config_destroy_connector(struct vkms_config_connector *connector_cfg)
- {
-+	xa_destroy(&connector_cfg->possible_encoders);
- 	list_del(&connector_cfg->link);
- 	kfree(connector_cfg);
- }
- EXPORT_SYMBOL_IF_KUNIT(vkms_config_destroy_connector);
-+
-+int __must_check vkms_config_connector_attach_encoder(struct vkms_config_connector *connector_cfg,
-+						      struct vkms_config_encoder *encoder_cfg)
-+{
-+	struct vkms_config_encoder *possible_encoder;
-+	unsigned long idx = 0;
-+	u32 encoder_idx = 0;
-+
-+	if (connector_cfg->config != encoder_cfg->config)
-+		return -EINVAL;
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg, idx,
-+							possible_encoder) {
-+		if (possible_encoder == encoder_cfg)
-+			return -EEXIST;
-+	}
-+
-+	return xa_alloc(&connector_cfg->possible_encoders, &encoder_idx,
-+			encoder_cfg, xa_limit_32b, GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_IF_KUNIT(vkms_config_connector_attach_encoder);
-+
-+void vkms_config_connector_detach_encoder(struct vkms_config_connector *connector_cfg,
-+					  struct vkms_config_encoder *encoder_cfg)
-+{
-+	struct vkms_config_encoder *possible_encoder;
-+	unsigned long idx = 0;
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg, idx,
-+							possible_encoder) {
-+		if (possible_encoder == encoder_cfg)
-+			xa_erase(&connector_cfg->possible_encoders, idx);
-+	}
-+}
-+EXPORT_SYMBOL_IF_KUNIT(vkms_config_connector_detach_encoder);
-diff --git a/drivers/gpu/drm/vkms/vkms_config.h b/drivers/gpu/drm/vkms/vkms_config.h
-index 73562c894102..0118e3f99706 100644
---- a/drivers/gpu/drm/vkms/vkms_config.h
-+++ b/drivers/gpu/drm/vkms/vkms_config.h
-@@ -99,6 +99,7 @@ struct vkms_config_encoder {
-  *
-  * @link: Link to the others connector in vkms_config
-  * @config: The vkms_config this connector belongs to
-+ * @possible_encoders: Array of encoders that can be used with this connector
-  * @connector: Internal usage. This pointer should never be considered as valid.
-  *             It can be used to store a temporary reference to a VKMS connector
-  *             during device creation. This pointer is not managed by the
-@@ -108,6 +109,8 @@ struct vkms_config_connector {
- 	struct list_head link;
- 	struct vkms_config *config;
- 
-+	struct xarray possible_encoders;
-+
- 	/* Internal usage */
- 	struct vkms_connector *connector;
- };
-@@ -164,6 +167,16 @@ struct vkms_config_connector {
- #define vkms_config_encoder_for_each_possible_crtc(encoder_cfg, idx, possible_crtc) \
- 	xa_for_each(&(encoder_cfg)->possible_crtcs, idx, (possible_crtc))
- 
-+/**
-+ * vkms_config_connector_for_each_possible_encoder - Iterate over the
-+ * vkms_config_connector possible encoders
-+ * @connector_cfg: &struct vkms_config_connector pointer
-+ * @idx: Index of the cursor
-+ * @possible_encoder: &struct vkms_config_encoder pointer used as cursor
-+ */
-+#define vkms_config_connector_for_each_possible_encoder(connector_cfg, idx, possible_encoder) \
-+	xa_for_each(&(connector_cfg)->possible_encoders, idx, (possible_encoder))
-+
- /**
-  * vkms_config_create() - Create a new VKMS configuration
-  * @dev_name: Name of the device
-@@ -405,4 +418,20 @@ struct vkms_config_connector *vkms_config_create_connector(struct vkms_config *c
-  */
- void vkms_config_destroy_connector(struct vkms_config_connector *connector_cfg);
- 
-+/**
-+ * vkms_config_connector_attach_encoder - Attach a connector to an encoder
-+ * @connector_cfg: Connector to attach
-+ * @encoder_cfg: Encoder to attach @connector_cfg to
-+ */
-+int __must_check vkms_config_connector_attach_encoder(struct vkms_config_connector *connector_cfg,
-+						      struct vkms_config_encoder *encoder_cfg);
-+
-+/**
-+ * vkms_config_connector_detach_encoder - Detach a connector from an encoder
-+ * @connector_cfg: Connector to detach
-+ * @encoder_cfg: Encoder to detach @connector_cfg from
-+ */
-+void vkms_config_connector_detach_encoder(struct vkms_config_connector *connector_cfg,
-+					  struct vkms_config_encoder *encoder_cfg);
-+
- #endif /* _VKMS_CONFIG_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index 8920d6b5d105..8d7ca0cdd79f 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -8,10 +8,10 @@
- int vkms_output_init(struct vkms_device *vkmsdev)
- {
- 	struct drm_device *dev = &vkmsdev->drm;
--	struct vkms_connector *connector;
- 	struct vkms_config_plane *plane_cfg;
- 	struct vkms_config_crtc *crtc_cfg;
- 	struct vkms_config_encoder *encoder_cfg;
-+	struct vkms_config_connector *connector_cfg;
- 	int ret;
- 	int writeback;
- 
-@@ -83,22 +83,29 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 		}
- 	}
- 
--	connector = vkms_connector_init(vkmsdev);
--	if (IS_ERR(connector)) {
--		DRM_ERROR("Failed to init connector\n");
--		return PTR_ERR(connector);
--	}
-+	vkms_config_for_each_connector(vkmsdev->config, connector_cfg) {
-+		struct vkms_config_encoder *possible_encoder;
-+		unsigned long idx = 0;
- 
--	/* Attach the encoder and the connector */
--	vkms_config_for_each_encoder(vkmsdev->config, encoder_cfg) {
--		ret = drm_connector_attach_encoder(&connector->base, encoder_cfg->encoder);
--		if (ret) {
--			DRM_ERROR("Failed to attach connector to encoder\n");
--			return ret;
-+		connector_cfg->connector = vkms_connector_init(vkmsdev);
-+		if (IS_ERR(connector_cfg->connector)) {
-+			DRM_ERROR("Failed to init connector\n");
-+			return PTR_ERR(connector_cfg->connector);
-+		}
-+
-+		vkms_config_connector_for_each_possible_encoder(connector_cfg,
-+								idx,
-+								possible_encoder) {
-+			ret = drm_connector_attach_encoder(&connector_cfg->connector->base,
-+							   possible_encoder->encoder);
-+			if (ret) {
-+				DRM_ERROR("Failed to attach connector to encoder\n");
-+				return ret;
-+			}
- 		}
- 	}
- 
- 	drm_mode_config_reset(dev);
- 
--	return ret;
-+	return 0;
- }
--- 
-2.48.1
+
+The original code in  ea149b36c7f5 was setting the notify_user bit via
+
+raise_mce()->machine_check_poll()->mce_log(),
+  mce_notify_user() - consumes notify_user set in mce_log above.
+
+
+  subsequently in 011d82611172 ("RAS: Add a Corrected Errors Collector") 
+you factored out the code from mce_log() mce_first_notifier, where the 
+bit setting remains to this day, but since it's been removed from 
+mce_log() it made the call in raise_local() defunct.
+
+
+Considering that no one complained about this after all these years and 
+that the dev-mcelog is deprecated I think it still makes sense to make 
+mce_notify_irq() private
+
+> 
+> and follow what raise_mce() does and pay attention to notify_user which is
+> what mce_need_notify was called back then.
+> 
+> Remember to have fun :-P
+> 
 
