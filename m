@@ -1,140 +1,115 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF2E13D51E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED0E14830A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739761416; cv=none; b=IHc8xTtb4bGJdDEip93qNo+FuGYgWpytpLhTeLuDPQhfHq2kshJ+M3MrTZDRUeGT+im8vVSrjxUiPapyOErmYlfdykIMi781lKpIz94Y0DmL4jFtGleZ1L88Q607ZQL/YVH08Ixo93t0RMWmGAvKit996oCHthvZuSXR1vJRWc0=
+	t=1739761750; cv=none; b=aeRnBKwwVNDyxYMNVPjIuq+8IZxhppwyjd6X6azA9FwqvM0pFlX8FeHpKXewnrX411dT50RYA2jmJbWFN87vLb2lyBsv88R18uido77Er0gBjfoMOVPnUt84u0GPuWWYoxSP2T/54txu0omigeXEbn606tb52JMPjY12h4OgY+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739761416; c=relaxed/simple;
-	bh=7rEn55U0ZdgPfLGcvK/xdhIvQ2V/IWflEuV3Jk766z0=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=YKRQvZVDcPwwSogCHO4zL2ArxfpJOauRWkaWflYsoQMgLDgj6TKP4jwJmev7zoMm5K68d+Xah0PYdA2iywhAE/9F4t6MS4MZLsqDcNgtHe/PISbTdmXZWBBANt4+m+2D7UrfKbkJbY3+NWkTGRa5XU0H78h5xpkfZHJ+y+F3/DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=EI7Ctg8e; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="EI7Ctg8e"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739761404; h=Message-ID:Subject:Date:From:To;
-	bh=zE3PvSp3X2aonXMiOvGA+6M5i7UY66TkNmLjcndbkA8=;
-	b=EI7Ctg8eoveBK12cqXrWOJKbG7pSEtoKBJ/qehqXfeE+nEKyzP+a4dqnYvBY51HvmqPG8g7y7YXkBL0vi9ke2Mj7KuQf1+emZ8YFRhKWnLyeEhsm/SfHBPOYDb+yl9zgcc0Bz8TO11HFtBsNBl8/8Rm1qPEN0I08pwbD8SE8Z+k=
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WPYJKFW_1739761403 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 17 Feb 2025 11:03:23 +0800
-Message-ID: <1739761322.950906-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: drivers/net/virtio_net.c:1227 xsk_append_merge_buffer() warn: unsigned '_x' is never less than zero.
-Date: Mon, 17 Feb 2025 11:02:02 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- Jakub Kicinski <kuba@kernel.org>
-References: <202502161158.KmluxANz-lkp@intel.com>
-In-Reply-To: <202502161158.KmluxANz-lkp@intel.com>
+	s=arc-20240116; t=1739761750; c=relaxed/simple;
+	bh=mnxv4uruKG94OeYTxTdEXWKkc0IoPegk3ozmrk4bw9U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SeT9yOxN1J7I2QyYRSSmCPi9tMz/VyvWJcEy1Nw7XnU7YI5GCiBVbgBJg22tfsvX8pbBOT/d+G3iq8XjrbNVAQt3DfswRIFT8+Gez87esqFz0hgn6AOaX1iJtxaJd4CxW3XUoVWtJkkQ2EMPM82q2ucSTS6NvEhcgjhdhyKgsl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Yx6xB3STfz22sww;
+	Mon, 17 Feb 2025 11:06:06 +0800 (CST)
+Received: from kwepemf100008.china.huawei.com (unknown [7.202.181.222])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5A7A21A0188;
+	Mon, 17 Feb 2025 11:09:04 +0800 (CST)
+Received: from huawei.com (10.175.103.91) by kwepemf100008.china.huawei.com
+ (7.202.181.222) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 17 Feb
+ 2025 11:09:03 +0800
+From: Zeng Heng <zengheng4@huawei.com>
+To: <Dave.Martin@arm.com>, <james.morse@arm.com>
+CC: <bobo.shaobowang@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH mpam mpam/snapshot/v6.14-rc1 0/5] arm_mpam: Introduce the Narrow-PARTID feature for MPAM driver
+Date: Mon, 17 Feb 2025 11:18:47 +0800
+Message-ID: <20250217031852.2014939-1-zengheng4@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemf100008.china.huawei.com (7.202.181.222)
 
-On Sun, 16 Feb 2025 11:13:14 +0800, kernel test robot <lkp@intel.com> wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   496659003dac5d08ea292c44fce9dfb36fa34691
-> commit: 99c861b44eb1fb9dfe8776854116a6a9064c19bb virtio_net: xsk: rx: support recv merge mode
-> date:   7 months ago
-> config: riscv-randconfig-r073-20250213 (https://download.01.org/0day-ci/archive/20250216/202502161158.KmluxANz-lkp@intel.com/config)
-> compiler: riscv32-linux-gcc (GCC) 14.2.0
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202502161158.KmluxANz-lkp@intel.com/
->
-> New smatch warnings:
-> drivers/net/virtio_net.c:1227 xsk_append_merge_buffer() warn: unsigned '_x' is never less than zero.
+The patch set is applied for mpam/snapshot/v6.14-rc1 branch of
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git
+repository.
 
-This seems to be in the mm system.
+The narrow-partid feature in MPAM allows for a more efficient use of
+PARTIDs by enabling a many-to-one mapping of reqpartids (requested PARTIDs)
+to intpartids (internal PARTIDs). This mapping reduces the number of unique
+PARTIDs needed, thus allowing more tasks or processes to be monitored and
+managed with the available resources.
 
-Thanks.
+For a mixture of MSCs system, for MSCs that do not support narrow-partid,
+we use the PARTIDs exceeding the number of closids as reqPARTIDs for
+expanding the monitoring groups.
 
+In order to keep the existing resctrl API interface, the rmid contains both
+req_idx and PMG information instead of PMG only under the MPAM driver. The
+req_idx represents the req_idx-th sub-monitoring group under the control
+group. The new rmid would be like:
 
->
-> Old smatch warnings:
-> include/linux/mm.h:1311 virt_to_head_page() warn: unsigned '_x' is never less than zero.
-> include/linux/scatterlist.h:189 sg_set_buf() warn: unsigned '_x' is never less than zero.
-> drivers/net/virtio_net.c:1934 build_skb_from_xdp_buff() error: uninitialized symbol 'nr_frags'.
-> drivers/net/virtio_net.c:2016 virtnet_build_xdp_buff_mrg() error: uninitialized symbol 'shinfo'.
-> drivers/net/virtio_net.c:5096 virtnet_update_settings() error: uninitialized symbol 'virtio_cread_v'.
-> drivers/net/virtio_net.c:5804 virtnet_config_changed_work() error: uninitialized symbol 'virtio_cread_v'.
-> drivers/net/virtio_net.c:5808 virtnet_config_changed_work() error: uninitialized symbol 'v'.
->
-> vim +/_x +1227 drivers/net/virtio_net.c
->
->   1184
->   1185	static int xsk_append_merge_buffer(struct virtnet_info *vi,
->   1186					   struct receive_queue *rq,
->   1187					   struct sk_buff *head_skb,
->   1188					   u32 num_buf,
->   1189					   struct virtio_net_hdr_mrg_rxbuf *hdr,
->   1190					   struct virtnet_rq_stats *stats)
->   1191	{
->   1192		struct sk_buff *curr_skb;
->   1193		struct xdp_buff *xdp;
->   1194		u32 len, truesize;
->   1195		struct page *page;
->   1196		void *buf;
->   1197
->   1198		curr_skb = head_skb;
->   1199
->   1200		while (--num_buf) {
->   1201			buf = virtqueue_get_buf(rq->vq, &len);
->   1202			if (unlikely(!buf)) {
->   1203				pr_debug("%s: rx error: %d buffers out of %d missing\n",
->   1204					 vi->dev->name, num_buf,
->   1205					 virtio16_to_cpu(vi->vdev,
->   1206							 hdr->num_buffers));
->   1207				DEV_STATS_INC(vi->dev, rx_length_errors);
->   1208				return -EINVAL;
->   1209			}
->   1210
->   1211			u64_stats_add(&stats->bytes, len);
->   1212
->   1213			xdp = buf_to_xdp(vi, rq, buf, len);
->   1214			if (!xdp)
->   1215				goto err;
->   1216
->   1217			buf = napi_alloc_frag(len);
->   1218			if (!buf) {
->   1219				xsk_buff_free(xdp);
->   1220				goto err;
->   1221			}
->   1222
->   1223			memcpy(buf, xdp->data - vi->hdr_len, len);
->   1224
->   1225			xsk_buff_free(xdp);
->   1226
-> > 1227			page = virt_to_page(buf);
->   1228
->   1229			truesize = len;
->   1230
->   1231			curr_skb  = virtnet_skb_append_frag(head_skb, curr_skb, page,
->   1232							    buf, len, truesize);
->   1233			if (!curr_skb) {
->   1234				put_page(page);
->   1235				goto err;
->   1236			}
->   1237		}
->   1238
->   1239		return 0;
->   1240
->   1241	err:
->   1242		xsk_drop_follow_bufs(vi->dev, rq, num_buf, stats);
->   1243		return -EINVAL;
->   1244	}
->   1245
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+    rmid = (req_idx << shift | pmg).
+
+The new conversion relationship between closid/rmid and (req)PARTID/PMG is:
+
+    (req)PARTID = (rmid.req_idx * n) + closid
+    PMG = rmid.pmg
+
+Each intPARTID has m reqPARTIDs, which are used to expand the number of
+monitoring groups under one control group. Therefore, the number of
+monitoring groups is no longer limited by the range of MPAM PMG, which
+enhances the extensibility of the system's monitoring capabilities.
+
+---
+Compared with RFC-v4:
+  - Rebase the patch set on the v6.14-rc1 branch.
+
+Compared with RFC-v3:
+  - Add limitation of the Narrow-PARTID feature (See Patch 2).
+  - Remove redundant reqpartid2closid() and reqpartid_pmg2rmid().
+  - Refactor closid_rmid2reqpartid() partially.
+  - Merge the PARTID conversion-related patches into a single patch for
+    bisectability.
+  - Skip adaptation of resctrl_arch_set_rmid() which is going to be
+    removed.
+
+Compared with RFC-v2:
+  - Refactor closid/rmid pair translation
+  - Simplify the logic of synchronize configuration
+  - Remove reqPARTID source bitmap
+
+Compared with RFC-v1:
+  - Rebase this patch set on latest MPAM driver of the v6.12-rc1 branch.
+---
+
+Dave Martin (1):
+  arm_mpam: Set INTERNAL as needed when setting MSC controls
+
+Zeng Heng (4):
+  arm_mpam: Introduce the definitions of intPARTID and reqPARTID
+  arm_mpam: Add limitation for the Narrow-PARTID feature
+  arm_mpam: Provide conversion method for new closid/rmid pairs
+  arm_mpam: Automatically synchronize the configuration of all
+    sub-monitoring groups
+
+ drivers/platform/arm64/mpam/mpam_devices.c  |  61 ++++++--
+ drivers/platform/arm64/mpam/mpam_internal.h |   5 +
+ drivers/platform/arm64/mpam/mpam_resctrl.c  | 157 ++++++++++++++------
+ 3 files changed, 172 insertions(+), 51 deletions(-)
+
+--
+2.25.1
+
