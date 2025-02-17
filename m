@@ -1,104 +1,124 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C057C18DB23
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E342136349
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739779572; cv=none; b=pMp+4USt7Jm87TsivGHjOHR7F3YJAIOeRwoC2rtUemgcZ23c6MNfLN9PROupYNLLJ1PykcHlwiZ/5CTx5iwO15RivXXqIkKxVklooLzU2J5ABlhYtEXdWuKOtk35BP2YYDkOy2JdBiUIrSrM1O/0Xo6iNjllhCiWs1yLaL4GVBM=
+	t=1739779678; cv=none; b=MKW9T9SggdPCllaK/9VFmBhGI9TRvHy0o6L8d91pYdbD7onUUKmyxiWUyRvTLV0DqfyX9PHNXIhTN3EK2jW+F7PpMMk9tlxCMLSNO10Z90zIB7b9XUSGrma0Q6xnO9LNrdI3Xkp/W7LUkoVDIys422rl7kvYoJNsHSEe0ff6Y8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739779572; c=relaxed/simple;
-	bh=vPMO9PqP4rX/Oy3q+jLqKiaClpW7niNkGlZcUNnvXRA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Uh8Oh0jCQNsAsBuLp6wXquxoUWIO9vbGWDLP91R7y/es2uaQ2TbUOQz15I5Wmb4waawvrTfiTxL4uGRrm5Timm71SSqgEACRdnVELtwQhEYZCjmDOwrbGRlOgmwoMryqElRCLIdwyx5WPGxEzUnnD32gzpV944avWEnEY3Hp4hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wVRwTHu+; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wVRwTHu+"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739779566; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=sfNxgtmB0/jz3pq8TzZXhfYQ6DAYL0BO+1v9NrYYgkg=;
-	b=wVRwTHu+FRVv4H8nQQW7aCKdtvCw/flOnjuASjmdsixqLcUIi6Jl9gvAXx82tWNYM+Irj6nx99sgaa9CbshpWRi5KLm/gUBIikSQpUKwa5e4V1ZdBCXEbZP420CPQD+RuUZQCjLisqk7KxtJjL+pgSW9KFQkI97A1W1ozVK9NzM=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WPc6v4i_1739779561 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 17 Feb 2025 16:06:03 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Bharata B Rao <bharata@amd.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Raghavendra K T
- <raghavendra.kt@amd.com>,  linux-mm@kvack.org,  akpm@linux-foundation.org,
-  lsf-pc@lists.linux-foundation.org,  gourry@gourry.net,
-  nehagholkar@meta.com,  abhishekd@meta.com,  nphamcs@gmail.com,
-  hannes@cmpxchg.org,  kbusch@meta.com,  Hasan.Maruf@amd.com,
-  sj@kernel.org,  david@redhat.com,  willy@infradead.org,
-  k.shutemov@gmail.com,  mgorman@techsingularity.net,  vbabka@suse.cz,
-  hughd@google.com,  rientjes@google.com,  shy828301@gmail.com,
-  liam.howlett@oracle.com,  peterz@infradead.org,  mingo@redhat.com,
-  nadav.amit@gmail.com,  shivankg@amd.com,  ziy@nvidia.com,
-  jhubbard@nvidia.com,  AneeshKumar.KizhakeVeetil@arm.com,
-  linux-kernel@vger.kernel.org,  jon.grimm@amd.com,
-  santosh.shukla@amd.com,  Michael.Day@amd.com,  riel@surriel.com,
-  weixugc@google.com,  leesuyeon0506@gmail.com,  honggyu.kim@sk.com,
-  leillc@google.com,  kmanaouil.dev@gmail.com,  rppt@kernel.org,
-  dave.hansen@intel.com, feng.tang@linux.alibaba.com
-Subject: Re: [LSF/MM/BPF TOPIC] Unifying sources of page temperature
- information - what info is actually wanted?
-In-Reply-To: <f091e09a-1f39-48ee-8968-8f616d8102a6@amd.com> (Bharata B. Rao's
-	message of "Mon, 17 Feb 2025 09:40:36 +0530")
-References: <20250123105721.424117-1-raghavendra.kt@amd.com>
-	<20250131122803.000031aa@huawei.com>
-	<20250131130901.00000dd1@huawei.com> <87h64u2xkh.fsf@DESKTOP-5N7EMDA>
-	<f091e09a-1f39-48ee-8968-8f616d8102a6@amd.com>
-Date: Mon, 17 Feb 2025 16:06:01 +0800
-Message-ID: <874j0t2dxy.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1739779678; c=relaxed/simple;
+	bh=EQaw+cJURb/KBsY9Tf8T8aOUrILzNG++0oOiRHgT/JU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RVo44f9AhSKuatav/M1gUkl88YNcXWdpIjC1hyPn0bv2Hp06OsvHRDRWt0Ux+AxuXH15u9fgIIE+YTAz9+voX2N1HGd0vbPcoZ3AOhx/o1jCSi74ubsXuCCdVEP6Gj/um5zGt9mEgNZyegMuAmfw42X3aqBRAKZR7pxEf8ouga8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YxFXw2mFXz2JYY6;
+	Mon, 17 Feb 2025 16:04:00 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id 765EE1A0188;
+	Mon, 17 Feb 2025 16:07:52 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 17 Feb 2025 16:07:50 +0800
+Message-ID: <e1d2affb-5c6b-00b5-8209-34bbca36f96b@huawei.com>
+Date: Mon, 17 Feb 2025 16:07:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v13 4/5] arm64: support copy_mc_[user]_highpage()
+To: Catalin Marinas <catalin.marinas@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Mauro Carvalho Chehab
+	<mchehab+huawei@kernel.org>, Will Deacon <will@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, James Morse <james.morse@arm.com>, Robin Murphy
+	<robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
+	<glider@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Aneesh
+ Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<kasan-dev@googlegroups.com>, <wangkefeng.wang@huawei.com>, Guohanjun
+	<guohanjun@huawei.com>
+References: <20241209024257.3618492-1-tongtiangen@huawei.com>
+ <20241209024257.3618492-5-tongtiangen@huawei.com> <Z6zWSXzKctkpyH7-@arm.com>
+ <69955002-c3b1-459d-9b42-8d07475c3fd3@huawei.com> <Z698SFVqHjpGeGC0@arm.com>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <Z698SFVqHjpGeGC0@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-Bharata B Rao <bharata@amd.com> writes:
 
-> On 16-Feb-25 12:19 PM, Huang, Ying wrote:
+
+在 2025/2/15 1:24, Catalin Marinas 写道:
+> On Fri, Feb 14, 2025 at 10:49:01AM +0800, Tong Tiangen wrote:
+>> 在 2025/2/13 1:11, Catalin Marinas 写道:
+>>> On Mon, Dec 09, 2024 at 10:42:56AM +0800, Tong Tiangen wrote:
+>>>> Currently, many scenarios that can tolerate memory errors when copying page
+>>>> have been supported in the kernel[1~5], all of which are implemented by
+>>>> copy_mc_[user]_highpage(). arm64 should also support this mechanism.
 >>>>
->>>> 1) Give me up to X hotish pages from a slow tier (greater than a specific measure
->>>> of temperature)
->> Because the hot pages may be available upon page accessing (such
->> PROT_NONE
->> page fault), the interface may be "push" style instead of "pull" style,
->> e.g.,
->> int register_hot_page_handler(void (*handler)(struct page *hot_page,
->> int temperature));
->
-> Yes, push model appears natural to me given that there are producers
-> who are themselves consumers as well.
->
-> Let's take an example of access being detected by PTE scan by DAMON
-> first and LRU and hot page promotion subsystems have registered
-> handlers for hot page info.
->
-> Now if hot page promotion handler gets called first and if it promotes
-> the page, calling LRU registered handler still makes sense? May be not
-> I suppose.
->
-> On the other hand if LRU subsystem handler gets first and it
-> adjusts/modifies the hot page's list, it would still make sense to
-> activate the hot page promotion handler to check for possible
-> promotion.
->
-> Is this how you are envisioning the different consumers of hot page
-> access info could work/cooperate?
+>>>> Due to mte, arm64 needs to have its own copy_mc_[user]_highpage()
+>>>> architecture implementation, macros __HAVE_ARCH_COPY_MC_HIGHPAGE and
+>>>> __HAVE_ARCH_COPY_MC_USER_HIGHPAGE have been added to control it.
+>>>>
+>>>> Add new helper copy_mc_page() which provide a page copy implementation with
+>>>> hardware memory error safe. The code logic of copy_mc_page() is the same as
+>>>> copy_page(), the main difference is that the ldp insn of copy_mc_page()
+>>>> contains the fixup type EX_TYPE_KACCESS_ERR_ZERO_MEM_ERR, therefore, the
+>>>> main logic is extracted to copy_page_template.S. In addition, the fixup of
+>>>> MOPS insn is not considered at present.
+>>>
+>>> Could we not add the exception table entry permanently but ignore the
+>>> exception table entry if it's not on the do_sea() path? That would save
+>>> some code duplication.
+>>
+>> I'm sorry, I didn't catch your point, that the do_sea() and non do_sea()
+>> paths use different exception tables?
+> 
+> No, they would have the same exception table, only that we'd interpret
+> it differently depending on whether it's a SEA error or not. Or rather
+> ignore the exception table altogether for non-SEA errors.
 
-Sorry, I have no idea about what is the right behavior now.  It appears
-hard to coordinate different consumers.
+You mean to use the same exception type (EX_TYPE_KACCESS_ERR_ZERO) and
+then do different processing on SEA errors and non-SEA errors, right?
 
-In theory, we can promote the hottest pages while activate (in LRU
-lists) the warm pages.
+If so, some instructions of copy_page() did not add to the exception
+table will be added to the exception table, and the original logic will
+be affected.
 
----
-Best Regards,
-Huang, Ying
+For example, if an instruction is not added to the exception table, the
+instruction will panic when it triggers a non-SEA error. If this
+instruction is added to the exception table because of SEA processing,
+and then a non-SEA error is triggered, should we fix it?
+
+Thanks,
+Tong.
+
+> 
+>> My understanding is that the
+>> exception table entry problem is fine. After all, the search is
+>> performed only after a fault trigger. Code duplication can be solved by
+>> extracting repeated logic to a public file.
+> 
+> If the new exception table entries are only taken into account for SEA
+> errors, why do we need a duplicate copy_mc_page() function generated?
+> Isn't the copy_page() and copy_mc_page() code identical (except for the
+> additional labels to jump to for the exception)?
+> 
