@@ -1,133 +1,121 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AE9A41;
-	Mon, 17 Feb 2025 00:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FAB372;
+	Mon, 17 Feb 2025 00:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739750666; cv=none; b=MsXkPsDsnyg7EaX8CnPAN/kBMssqcBbpo4c+dmprciOMNJnVn0L+nI0FRE1XlS7riF/czV6+OxOpDLCJj1iJa5BYHLXWOyFolOrGM1YPI1ftccg1dcVbqNtREaOUmH4Pnu2UW4KCILH2tH0naLnY0cuUBqJ9Wb1vJ4C+nNLHuvs=
+	t=1739751021; cv=none; b=bmTvjXIU20hT0JsDaSovLurPoFPgUdIJpUb9MExlInfUfPhMAHyKqirpJ8JaIaXJCh+zRPR2wnjdtVk/lGRHuyWZic1btWKY0qGcfncN/LrDUj8WexlfEYWcnpIFbt/738rVRe0EstBwi35xPwvbjQWRwnH/ZnsCV2Prv8aeJ84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739750666; c=relaxed/simple;
-	bh=WcwwYqXch6QV/PhVm4Vn7dF66DiUSx5U7MGHrLCNvyw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H/B4v3oV5H5MMHohQwL3laB63zhr6bRvGGxjDorS3w7pfCD0OUVBx2HZ99WsnDyhjHwFMCaw81P9QFBvlvc5gPHZhEPOJlg/zh2wNwUSrfm7ReOczt2zAqViJEJV8dQzGfzBQ1xWs3nt6M9Jl6zEyewoY190ina4AGHLEtx2++c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=XG8sok2p; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1739751021; c=relaxed/simple;
+	bh=3cbz5T9dWjwcE8bACWKVwDdL67Jyo8olEYlqpTmJe60=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=njq5edk3A1BwX/atZ1iUnFM7073Xkr0Z9eN2MqhOcShRLzs31ndiJ+5slkaE+MSOoxhNCy3dnbl+qBZ69MgIK2jT4K4lM/XVgItCi2/0acuETyssg9c48JsRIrej6dhRJ6kO2DO2Uxf0mgbyzMvO0Bt7ecPrSncranaV/F4c6OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kQegHQV6; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="XG8sok2p"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 45D6820496;
-	Sun, 16 Feb 2025 23:57:27 +0000 (UTC)
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.102])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id A9EFF260EB;
-	Sun, 16 Feb 2025 23:57:17 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay1.mymailcheap.com (Postfix) with ESMTPS id 9F97C3E939;
-	Sun, 16 Feb 2025 23:57:09 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id A3B0F4023E;
-	Sun, 16 Feb 2025 23:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1739750228; bh=WcwwYqXch6QV/PhVm4Vn7dF66DiUSx5U7MGHrLCNvyw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XG8sok2p80qBXIoQ91t+ESJlpumx2vB7wGIhARCY5ph8gw9ubH7pF54BJJ0TAO2M3
-	 jSzrYOFW0u6P/hl157Ib8r0El2aoU1o8N2aP/qdPGQY8tyhbdWf3LxhhHVxSaorFqd
-	 fkwVReZmINsF3ytVyalzDAJo54ia5xvTsssc6Zak=
-Received: from [198.18.0.1] (unknown [58.32.17.244])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 6D5E04086E;
-	Sun, 16 Feb 2025 23:57:03 +0000 (UTC)
-Message-ID: <2327a312-8b1a-4fde-9fa5-1aec5498bfdb@aosc.io>
-Date: Mon, 17 Feb 2025 07:57:00 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQegHQV6"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fbffe0254fso7065473a91.3;
+        Sun, 16 Feb 2025 16:10:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739751019; x=1740355819; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YOyckpAB1M5l9vVDvm7vTiKfe8H6EV3gsz1q0DN3TFA=;
+        b=kQegHQV6lFPmm+gfoZaOFtzKHR2QpomQMEGBj1AHX9VM7r1ZeMrnvFHlawVD9zodaY
+         iHdN+B1no2lbSjou5sUid17HM82NPFpLooNhNLjiQ9rnKTYppjBrrQ3xJvlEyKyMC4ia
+         YiqYfAOpBbwO77sydXMp/ZcQG0i+jZznmDY8Eq7VwOhCZoeaaYz1fWKVZBK/8PtjrVJK
+         2v3EC4jB+uuS4qt+RcYjYq0fDOYy8DQ/Ca8tlVlZfHO2FEci0cB91V3vmvIVK2yDzSA1
+         KsBq3A0+TnN9dx9KWypgDMxvRx78EYewH03GSmg6d2G6K6+Zv+FbmqumH3NLATf+PARa
+         VGFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739751019; x=1740355819;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YOyckpAB1M5l9vVDvm7vTiKfe8H6EV3gsz1q0DN3TFA=;
+        b=CTtP+UDrGWxlSlcZMLtFDnOTOoM5SupvdEd/WX/7KFpGV+x438cMeJqh4dMDYxzzNs
+         IhVO1jynDYxFvdtj8cjjJzTMIo6/LQd0vrxVamvTN5w5mgWpDeyeuYo0CKRkaXYCmMEw
+         X+19sI8ORI2HyQmNbahTb83NsAKZrGZm+OVlJmwNm6uDnQCCR2w1hSgyxskE6rp52ucl
+         ninp+eAg00naHVZJjZrTD5vZKRg93rVrB5tLDSr0v9ERYO0DSeEpGRG0O3C/NPm3vgob
+         WlG7ZnjQlLtQmZ0yIwryg6+KePOaUKO+b1PLtdHnynALKjIHV7HszeAD3zzDkJ251nij
+         TCCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjq61v/Tf78EOzyHGEtKdB+Zt4F8a/K3KwNfNHh2ZLvrFvEItygCPqofaOxdavDb1I0bK6o5PMBHQeycPMNVs=@vger.kernel.org, AJvYcCWzzvI7LTPtL5OGXXPCEMhQ1Cl0J1aqmtHIPMZEp8yoe4j/cq26kDvnow5z0MCL1rysLp9zHbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBFSx390R63NA/qgHhLyAVUScaIQDuXrOhqIeFpdPDrH6rml/K
+	68gcgSEBu8NPvD3pMskZaJlRf2tfmLkTSSUunVl4Ffh3GVZvmSOg
+X-Gm-Gg: ASbGncvoE67pQU28CUcJA4XA5aT8cFqaoUayow/sM9/uB/oU1xnDuvrMLoh79kEtH63
+	X0S9vuDPAsXOKwyyfPRaOPhcqweVL9vDouy0uY4XEBj3C+J3YdOWO4m++RLuthh+2KMgx0ZfsTG
+	a3DxJhmdggLcIv1J5mGWDbsGSSpK8+JCltBeDdNuucIOEmNCcPAz9kia04HIE8iAAvmRQQLpeD1
+	aBPF0fKS8exCURWkvWMebFaFh3s1Efn3hdbw07L4GKd04XnqNGkp1+XLvicmPc75YvdVeIC9wKk
+	lYmIHprRDqG885rzXnxZqSxrmEue34o6JcMZ6Z00qbc1Uc42ha3x5196cYVnfiHfjNBNo3lP
+X-Google-Smtp-Source: AGHT+IEovMlmLAtfgVM28puXaF5TqCZBfp6QtFyYhKBd0gbsDSkEfXrSTPFBNlYbyjCfuM/3623nwA==
+X-Received: by 2002:a17:90b:510c:b0:2ee:53b3:3f1c with SMTP id 98e67ed59e1d1-2fc40d14c1emr11723123a91.5.1739751018763;
+        Sun, 16 Feb 2025 16:10:18 -0800 (PST)
+Received: from localhost (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98d05cesm8870850a91.18.2025.02.16.16.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2025 16:10:18 -0800 (PST)
+Date: Mon, 17 Feb 2025 09:10:08 +0900 (JST)
+Message-Id: <20250217.091008.1729482605084144345.fujita.tomonori@gmail.com>
+To: anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
+ jstultz@google.com, sboyd@kernel.org
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+ tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, arnd@arndb.de,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ tgunders@redhat.com, me@kloenk.dev
+Subject: Re: [PATCH v10 6/8] MAINTAINERS: rust: Add TIMEKEEPING and TIMER
+ abstractions
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <20250207132623.168854-7-fujita.tomonori@gmail.com>
+References: <20250207132623.168854-1-fujita.tomonori@gmail.com>
+	<20250207132623.168854-7-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Thunderbird Daily
-Subject: Re: [PATCH 6.13 000/442] 6.13.3-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250215075925.888236411@linuxfoundation.org>
-Content-Language: en-US
-From: Kexy Biscuit <kexybiscuit@aosc.io>
-In-Reply-To: <20250215075925.888236411@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Queue-Id: A3B0F4023E
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.41 / 10.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	BAYES_SPAM(0.00)[20.06%];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	RCVD_COUNT_ONE(0.00)[1];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[kexybiscuit.aosc.io:server fail];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	FREEMAIL_CC(0.00)[lists.linux.dev,vger.kernel.org,linux-foundation.org,roeck-us.net,kernel.org,kernelci.org,lists.linaro.org,denx.de,nvidia.com,gmail.com,sladewatkins.net,gmx.de,microsoft.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
 
-On 2/15/2025 4:00 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.3 release.
-> There are 442 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri,  7 Feb 2025 22:26:21 +0900
+FUJITA Tomonori <fujita.tomonori@gmail.com> wrote:
+
+> Add Rust TIMEKEEPING and TIMER abstractions to the maintainers entry
+> respectively.
 > 
-> Responses should be made by Mon, 17 Feb 2025 07:57:54 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.3-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c8d9e8187eb0..987a25550853 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10353,6 +10353,7 @@ F:	kernel/time/sleep_timeout.c
+>  F:	kernel/time/timer.c
+>  F:	kernel/time/timer_list.c
+>  F:	kernel/time/timer_migration.*
+> +F:	rust/kernel/time/delay.rs
+>  F:	tools/testing/selftests/timers/
+>  
+>  HIGH-SPEED SCC DRIVER FOR AX.25
+> @@ -23852,6 +23853,7 @@ F:	kernel/time/timeconv.c
+>  F:	kernel/time/timecounter.c
+>  F:	kernel/time/timekeeping*
+>  F:	kernel/time/time_test.c
+> +F:	rust/kernel/time.rs
+>  F:	tools/testing/selftests/timers/
 
-All tests passed.
+TIMERS and TIMEKEEPING maintainers,
 
-amd64       (kernel arch: x86)
-   building passed, smoke testing passed on 9 test systems
-arm64       (kernel arch: arm64)
-   building passed, smoke testing passed on 2 test systems
-loongarch64 (kernel arch: loongarch)
-   building passed, smoke testing passed on 2 test systems
-loongson3   (kernel arch: mips)
-   building passed, smoke testing passed on 1 test system
-ppc64el     (kernel arch: powerpc)
-   building passed
-riscv64     (kernel arch: riscv)
-   building passed
-
-Tested-by: Kexy Biscuit <kexybiscuit@aosc.io>
-
-https://github.com/AOSC-Dev/aosc-os-abbs/pull/9696
-
--- 
-Best Regards,
-Kexy Biscuit
+You would prefer to add rust files to a separate entry for Rust? Or
+you prefer a different option?
