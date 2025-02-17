@@ -1,200 +1,232 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC43383
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 09:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687841A2381;
+	Mon, 17 Feb 2025 09:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739783218; cv=none; b=p7Q3cP5QQgnNNgmxzkdmszFcmV5n7laAWDdCLdZSpraurc7+qFJZQlYhgW48T4vrFgAFrSVyh7F7lHdplfz+RSSEmk0H2JDmh/eWhrzJNd55MbZuZr3WF/vnf3orakqvXIpjljqiXIbS2VdcL5n+wlI2vO66Ek6fRBMi9NdNh/Q=
+	t=1739783324; cv=none; b=KEZcKnqIUAmK76dV2zh+Od2jBZ3B28+ZYBsYK9LLZOSdLUrtK19f2j/Kpw1heT8AjaHKHePWqPyXjq36zMjh//jQryXek0dk9ROALC270tsWZlph8sHQk5t6n8Xced8+NdXhERxpRZMgISG3XFftwHke75/eNnjMxGDBCulqxUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739783218; c=relaxed/simple;
-	bh=alRT004aA1an9rMoksap0nHiftoY/xNVo/qrlUgCVm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cq3hdhYzgXm8hUaEnGoH4W0hn1DpTihK08K5qDQ4GHWOf+7q8Bl6qgwYD6FlhzCcAP9vrzpWPbp1WPSbNrUM9BCM/+ccVV7sWC3N9chnqaIo3txm39M/Z+6talVEjxsCnf/x0PpWvpt76/1/ptFOVSYCOAmoztmMDVt66ZaFi9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ch4A4q/n; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ch4A4q/n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739783214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pXntm0L6k/PIYOFzvzsINuBz10BEYwHVc6P+DDqahOk=;
-	b=ch4A4q/niAx1zZdJ66abxU6cPiqiOI4Z8YCxjMvs5ioc7NREwIy/7gKnfbOgsrl08XJC/H
-	IfQsRXhqfMNTmWZAj73NB+QKEUwwpvQcNYb8f+IhAHyt4o3VqHUzFbj9qZHwnJq5PMfGxi
-	40BmZ1RvuNI/cP1aU8NCRCEKiBATmy0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-nQgjttI7MR6HgzjkNN8XKg-1; Mon, 17 Feb 2025 04:06:53 -0500
-X-MC-Unique: nQgjttI7MR6HgzjkNN8XKg-1
-X-Mimecast-MFC-AGG-ID: nQgjttI7MR6HgzjkNN8XKg_1739783212
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abafbdf4399so211680166b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 01:06:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739783211; x=1740388011;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pXntm0L6k/PIYOFzvzsINuBz10BEYwHVc6P+DDqahOk=;
-        b=BK0OpdF/mb3M9x01VSZaOn7hQiJg37w8eFwStYL2yFYSiKl14eX6OI0KX3oBFZ2JT8
-         wQ1EMvV5z6wRnelsGpuljOrDKSJccmccwb9tzipSmHvyWkRTKs4rLv2UH43j+TVUfRAZ
-         0ni60T7QAiK/1vgB1OjTePGYtyIK/jx66h/gBGV2/nAVVKR5upA2yfPB2M1BLFE4HoYI
-         tng04ge1LFl/kbSqfgfIImOH3MGuiF5chFvYrN56urBlVAofICGxS+CLemJhuNWWn/Ou
-         vbptuYLWfQsKFmXhtLk/SoaosFmeVbMzMlRSvXwQpcu2q+Nkwkbe1hYemHDz1Pryi4a9
-         OLSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvfENKiF0GVsIf67Voc0NKI6HaVmZZ3LZEbTEcD+kLO3oafWT2VzbZoWQff/Y6v5IKKOlN3m8o+RGJXzA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbMhqMwZZx008EwZxLDXfl31TS0NHTwwN7E0fh48e96zqa+5IZ
-	EdXaO2S7omy8fjC7eGNT4bdjM54BVoAFconccwexM9YXUUppIDvto/cvdqEBKsCBaDx1xMAKwER
-	fM5MX51+NT16PInZjEQsmpMDE1pjTMwKBbvHh56xcH1/M8JTu0zjnusQr1GsZeNQPRHNfFQ==
-X-Gm-Gg: ASbGncvW+mVXA89UkC4o2Ar0BDU2lcGGdtBOI2jOhgcD887t2Frg7zQJXA6GX8SNZ3k
-	emLWub0Wn03OMJksTfyyJD5t/jNmKLct8wUQzFgk22DiW7/O3qewh2DE/XHPajCKRLDcVh6JBmV
-	589N6yI5MFOMvYKS0uGP/PjG99WCqciGom6Qyv84nkkTQx9fBOCCN9QxMxncVMb4ja88sNs+Zw8
-	lcC6W5sV79kZLFvI48CVV55MmZJ1dzKeTpfrHFw+vp5h6d7NY2mOG0+LSQ4neiUu9P4ZjQs6EfL
-	33Z/0QSi
-X-Received: by 2002:a17:906:308f:b0:ab6:504a:4c03 with SMTP id a640c23a62f3a-abb70c7a410mr628298966b.24.1739783211379;
-        Mon, 17 Feb 2025 01:06:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHdcpuZ1e2YUYp06wmEX3pq3ghaYcS+GrxFZqLBvkbOGGCo50nss/rZN2y999J6hvM330Ybug==
-X-Received: by 2002:a17:906:308f:b0:ab6:504a:4c03 with SMTP id a640c23a62f3a-abb70c7a410mr628297166b.24.1739783210877;
-        Mon, 17 Feb 2025 01:06:50 -0800 (PST)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339d7bfsm854591166b.141.2025.02.17.01.06.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 01:06:50 -0800 (PST)
-Message-ID: <8c626c45-cab0-405f-8418-f36883fc7a38@redhat.com>
-Date: Mon, 17 Feb 2025 10:06:49 +0100
+	s=arc-20240116; t=1739783324; c=relaxed/simple;
+	bh=Zd4LudBCTLZtCJNCuNHW0WvZdqo2L6YsrNB7rYQdj4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ewRYQEPBdgdJW5Atu6G7+WtO7+vCPJ4miuEt089U7wutKLzwjiv3qdgPRphDyOQGTtZMwyUKgKmrdDFLiQ50XNFFG0H+9BgzwyYwuHgJHJf9GmODM6QfdMGSrIwecr0X2dhjTRgN0snc3hTg9qPWryCZspHPJW0fnbDtmoBtYR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 0DDC972C8F5;
+	Mon, 17 Feb 2025 12:08:35 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id D896B7CCB3A; Mon, 17 Feb 2025 11:08:34 +0200 (IST)
+Date: Mon, 17 Feb 2025 11:08:34 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Renzo Davoli <renzo@cs.unibo.it>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, strace-devel@lists.strace.io,
+	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-api@vger.kernel.org
+Subject: [PATCH v6 0/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
+Message-ID: <20250217090834.GA18175@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mei: vsc: Use "wakeuphostint" when getting the host
- wakeup GPIO
-To: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Cc: Wentong Wu <wentong.wu@intel.com>, Jason Chen <jason.z.chen@intel.com>,
- Alexander Usyskin <alexander.usyskin@intel.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-kernel@vger.kernel.org
-References: <20250214212425.84021-1-hdegoede@redhat.com>
- <Z7L4+YJcUaaz1kyG@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Z7L4+YJcUaaz1kyG@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Stanislaw,
+PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
+PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
+system calls the tracee is blocked in.
 
-On 17-Feb-25 09:53, Stanislaw Gruszka wrote:
-> Hi Hans,
-> 
-> Thanks for working on this, this issue annoyed lots of people.
+This API allows ptracers to obtain and modify system call details in a
+straightforward and architecture-agnostic way, providing a consistent way
+of manipulating the system call number and arguments across architectures.
 
-You're welcome. Note I'm not convinced that this actually fixes all cases
-of the vsc-tp -ETIMEOUT error. Normally the GPIO part of the LJCA USB-io
-expander will become available before the SPI part and then we do not hit
-this.
+As in case of PTRACE_GET_SYSCALL_INFO, PTRACE_SET_SYSCALL_INFO also
+does not aim to address numerous architecture-specific system call ABI
+peculiarities, like differences in the number of system call arguments
+for such system calls as pread64 and preadv.
 
-Could still be a rare race where we do hit this though.
+The current implementation supports changing only those bits of system call
+information that are used by strace system call tampering, namely, syscall
+number, syscall arguments, and syscall return value.
 
-Also as I mentioned in the bugzilla:
-https://bugzilla.redhat.com/show_bug.cgi?id=2316918
+Support of changing additional details returned by PTRACE_GET_SYSCALL_INFO,
+such as instruction pointer and stack pointer, could be added later if
+needed, by using struct ptrace_syscall_info.flags to specify the additional
+details that should be set.  Currently, "flags" and "reserved" fields of
+struct ptrace_syscall_info must be initialized with zeroes; "arch",
+"instruction_pointer", and "stack_pointer" fields are currently ignored.
 
-If I force hitting the race my XPS 9320 recovers after a simple reboot,
-where as for other users the VSC seems to get in some stuck state.
+PTRACE_SET_SYSCALL_INFO currently supports only PTRACE_SYSCALL_INFO_ENTRY,
+PTRACE_SYSCALL_INFO_EXIT, and PTRACE_SYSCALL_INFO_SECCOMP operations.
+Other operations could be added later if needed.
 
-Anyways lets continue discussing this in:
-https://bugzilla.redhat.com/show_bug.cgi?id=2316918
+Ideally, PTRACE_SET_SYSCALL_INFO should have been introduced along with
+PTRACE_GET_SYSCALL_INFO, but it didn't happen.  The last straw that
+convinced me to implement PTRACE_SET_SYSCALL_INFO was apparent failure
+to provide an API of changing the first system call argument on riscv
+architecture [1].
 
-where I have also written down some more observations from my ivsc debugging
-session.
+ptrace(2) man page:
 
-Regards,
+long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+...
+PTRACE_SET_SYSCALL_INFO
+       Modify information about the system call that caused the stop.
+       The "data" argument is a pointer to struct ptrace_syscall_info
+       that specifies the system call information to be set.
+       The "addr" argument should be set to sizeof(struct ptrace_syscall_info)).
 
-Hans
+[1] https://lore.kernel.org/all/59505464-c84a-403d-972f-d4b2055eeaac@gmail.com/
+
+Notes:
+    v6:
+    * mips: Submit mips_get_syscall_arg() o32 fix via mips tree
+      to get it merged into v6.14-rc3
+    * Rebase to v6.14-rc3
+    * v5: https://lore.kernel.org/all/20250210113336.GA887@strace.io/
+
+    v5:
+    * ptrace: Extend the commit message to say that the new API does not aim
+      to address numerous architecture-specific syscall ABI peculiarities
+    * selftests: Add a workaround for s390 16-bit syscall numbers
+    * Add more Acked-by
+    * v4: https://lore.kernel.org/all/20250203065849.GA14120@strace.io/
+
+    v4:
+    * Split out syscall_set_return_value() for hexagon into a separate patch
+    * s390: Change the style of syscall_set_arguments() implementation as
+      requested
+    * Add more Reviewed-by
+    * v3: https://lore.kernel.org/all/20250128091445.GA8257@strace.io/
+
+    v3:
+    * powerpc: Submit syscall_set_return_value() fix for "sc" case separately
+    * mips: Do not introduce erroneous argument truncation on mips n32,
+      add a detailed description to the commit message of the
+      mips_get_syscall_arg() change
+    * ptrace: Add explicit padding to the end of struct ptrace_syscall_info,
+      simplify obtaining of user ptrace_syscall_info,
+      do not introduce PTRACE_SYSCALL_INFO_SIZE_VER0
+    * ptrace: Change the return type of ptrace_set_syscall_info_* functions
+      from "unsigned long" to "int"
+    * ptrace: Add -ERANGE check to ptrace_set_syscall_info_exit(),
+      add comments to -ERANGE checks
+    * ptrace: Update comments about supported syscall stops
+    * selftests: Extend set_syscall_info test, fix for mips n32
+    * Add Tested-by and Reviewed-by
+
+    v2:
+    * Add patch to fix syscall_set_return_value() on powerpc
+    * Add patch to fix mips_get_syscall_arg() on mips
+    * Add syscall_set_return_value() implementation on hexagon
+    * Add syscall_set_return_value() invocation to syscall_set_nr()
+      on arm and arm64.
+    * Fix syscall_set_nr() and mips_set_syscall_arg() on mips
+    * Add a comment to syscall_set_nr() on arc, powerpc, s390, sh,
+      and sparc
+    * Remove redundant ptrace_syscall_info.op assignments in
+      ptrace_get_syscall_info_*
+    * Minor style tweaks in ptrace_get_syscall_info_op()
+    * Remove syscall_set_return_value() invocation from
+      ptrace_set_syscall_info_entry()
+    * Skip syscall_set_arguments() invocation in case of syscall number -1
+      in ptrace_set_syscall_info_entry() 
+    * Split ptrace_syscall_info.reserved into ptrace_syscall_info.reserved
+      and ptrace_syscall_info.flags
+    * Use __kernel_ulong_t instead of unsigned long in set_syscall_info test
+
+Dmitry V. Levin (6):
+  hexagon: add syscall_set_return_value()
+  syscall.h: add syscall_set_arguments()
+  syscall.h: introduce syscall_set_nr()
+  ptrace_get_syscall_info: factor out ptrace_get_syscall_info_op
+  ptrace: introduce PTRACE_SET_SYSCALL_INFO request
+  selftests/ptrace: add a test case for PTRACE_SET_SYSCALL_INFO
+
+ arch/arc/include/asm/syscall.h                |  25 +
+ arch/arm/include/asm/syscall.h                |  37 ++
+ arch/arm64/include/asm/syscall.h              |  29 +
+ arch/csky/include/asm/syscall.h               |  13 +
+ arch/hexagon/include/asm/syscall.h            |  21 +
+ arch/loongarch/include/asm/syscall.h          |  15 +
+ arch/m68k/include/asm/syscall.h               |   7 +
+ arch/microblaze/include/asm/syscall.h         |   7 +
+ arch/mips/include/asm/syscall.h               |  46 ++
+ arch/nios2/include/asm/syscall.h              |  16 +
+ arch/openrisc/include/asm/syscall.h           |  13 +
+ arch/parisc/include/asm/syscall.h             |  19 +
+ arch/powerpc/include/asm/syscall.h            |  20 +
+ arch/riscv/include/asm/syscall.h              |  16 +
+ arch/s390/include/asm/syscall.h               |  21 +
+ arch/sh/include/asm/syscall_32.h              |  24 +
+ arch/sparc/include/asm/syscall.h              |  22 +
+ arch/um/include/asm/syscall-generic.h         |  19 +
+ arch/x86/include/asm/syscall.h                |  43 ++
+ arch/xtensa/include/asm/syscall.h             |  18 +
+ include/asm-generic/syscall.h                 |  30 +
+ include/uapi/linux/ptrace.h                   |   7 +-
+ kernel/ptrace.c                               | 179 +++++-
+ tools/testing/selftests/ptrace/Makefile       |   2 +-
+ .../selftests/ptrace/set_syscall_info.c       | 519 ++++++++++++++++++
+ 25 files changed, 1141 insertions(+), 27 deletions(-)
+ create mode 100644 tools/testing/selftests/ptrace/set_syscall_info.c
 
 
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
 
-> 
-> On Fri, Feb 14, 2025 at 10:24:25PM +0100, Hans de Goede wrote:
->> The _CRS ACPI resources table has 2 entries for the host wakeup GPIO,
->> the first one being a regular GpioIo () resource while the second one
->> is a GpioInt () resource for the same pin.
->>
->> The acpi_gpio_mapping table used by vsc-tp.c maps the first Gpio ()
->> resource to "wakeuphost-gpios" where as the second GpioInt () entry
->> is mapped to "wakeuphostint-gpios".
->>
->> Using "wakeuphost" to request the GPIO as was done until now, means
->> that the gpiolib-acpi code does not know that the GPIO is active-low
->> as that info is only available in the GpioInt () entry.
->>
->> Things were still working before due to the following happening:
->>
->> 1. Since the 2 entries point to the same pin they share a struct gpio_desc
->> 2. The SPI core creates the SPI device vsc-tp.c binds to and calls
->>    acpi_dev_gpio_irq_get(). This does use the second entry and sets
->>    FLAG_ACTIVE_LOW in gpio_desc.flags .
->> 3. vsc_tp_probe() requests the "wakeuphost" GPIO and inherits the
->>    active-low flag set by acpi_dev_gpio_irq_get()
->>
->> But there is a possible scenario where things do not work:
->>
->> 1. - 3. happen as above
->> 4. After requesting the "wakeuphost" GPIO, the "resetfw" GPIO is requested
->>    next, but its USB GPIO controller is not available yet, so this call
->>    returns -EPROBE_DEFER.
->> 5. The gpio_desc for "wakeuphost" is put() and during this the active-low
->>    flag is cleared from gpio_desc.flags .
->> 6. Later on vsc_tp_probe() requests the "wakeuphost" GPIO again, but now it
->>    is not marked active-low.
->>
->> The difference can also be seen in /sys/kernel/debug/gpio, which contains
->> the following line for this GPIO:
->>
->>  gpio-535 (                    |wakeuphost          ) in  hi IRQ ACTIVE LOW
->>
->> If the second scenario is hit the "ACTIVE LOW" at the end disappears and
->> things do not work.
->>
->> Fix this by requesting the GPIO through the "wakeuphostint" mapping instead
->> which provides active-low info without relying on acpi_dev_gpio_irq_get()
->> pre-populating this info in the gpio_desc.
->> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2316918
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> The problem explanation and the fix looks good to me.
-> 
-> Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-> 
-> Regards
-> Stanislaw
-> 
->> ---
->>  drivers/misc/mei/vsc-tp.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
->> index 35d349fee769..7be1649b1972 100644
->> --- a/drivers/misc/mei/vsc-tp.c
->> +++ b/drivers/misc/mei/vsc-tp.c
->> @@ -502,7 +502,7 @@ static int vsc_tp_probe(struct spi_device *spi)
->>  	if (ret)
->>  		return ret;
->>  
->> -	tp->wakeuphost = devm_gpiod_get(dev, "wakeuphost", GPIOD_IN);
->> +	tp->wakeuphost = devm_gpiod_get(dev, "wakeuphostint", GPIOD_IN);
->>  	if (IS_ERR(tp->wakeuphost))
->>  		return PTR_ERR(tp->wakeuphost);
->>  
->> -- 
->> 2.48.1
->>
-> 
-
+-- 
+ldv
