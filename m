@@ -1,288 +1,236 @@
-Received: from outbound-ip168a.ess.barracuda.com (outbound-ip168a.ess.barracuda.com [209.222.82.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1318B672;
-	Mon, 17 Feb 2025 00:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=209.222.82.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739753146; cv=fail; b=sXGZIOGdGQ4b7dsw+A2Dj28v3ZE2vjpHsRUUo5zohLXhlGp2QyBBxfKW/ODTiNbucmUcf0eSawoykOVCTbdUPVCXL/Zd4z9FHOWDdMT0QyX+WfH+z3fxbLWPmZadjNe73GuMHSQ+tF6Hs/JmCy/987jKQeEBnT0ersyuefgLjMc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739753146; c=relaxed/simple;
-	bh=iYtd1r1XLtDtR3BPEbjR585GNtbHHHLn7/nOtlNsV7w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=oqbUSv1gkt9Z84Gfv8qQrFRkGI3FIU+s42MHkOQjRjFJ6nJpvK32plJuB2TDIfXmZ5b60olI+3PzqjOSrdtOI5BWPtYPYB3IhuL0q6lwOjLU1DIabCGXP5Rqvs1dgkKj2Ohnb0Vw+7aV/ePtnD5ybojcD1bv3HY27lKYt1rL60w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ddn.com; spf=pass smtp.mailfrom=ddn.com; dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b=dkgQdio0; arc=fail smtp.client-ip=209.222.82.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ddn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ddn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0805A2581
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 00:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739753295; cv=none; b=OfLmYaxt8R4BXTf+VD8Rzo71WpE0Ww9203BOUt3I74AIpewpaLvaDVHDnabyDOfh3ozBnqQg9fm/TH3azIwDPpBaD/eqKYFeQAUhF8R9ks+UyhLdV9P+YkD+F5NHL1MVYv70MjnhD0E+ApDDbqvxjoH/7P2IEakadGBJxAxWl10=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739753295; c=relaxed/simple;
+	bh=eCvLy50k9fOPmroPraS8tsBbrd6h4Cvr978MhURjtew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YJFStWAYEcl33VKWOXbRcSp3E+MVfntZIUnxJz/O/550UBcWTlNX5Z6Ns8vlX0uZYUq4jc9ujE9V1ZCEB34sVO8UgSQ708+Tl1/E9xAu2oPQ8d6PI0uJjEIK2GygYb1N4DE4cXOucqat+nEmWgY1G13HtKOhl28D7jIHRsslIac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fV5LIySg; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b="dkgQdio0"
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2173.outbound.protection.outlook.com [104.47.55.173]) by mx-outbound-ea41-28.us-east-2c.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Mon, 17 Feb 2025 00:45:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DQusfoeXdIC2/172AVF3M5BusddskOcPjvNKI6B3EzhsesthKq3sFlb4mJXSHeM1CVCLZ5c9TJsVDgBNQStkhkWIIHU5NWpjrsP6C0Mj9QgCj7KWTOHnSD74iAr2sIPbZmBM/oJaMeN6rpkjMdrl5uGK61Wj/3mXm3k7tzvrtiucpGgKDOLea4ONjaGszHqao6Ei0TnhMlNeUXsothn0wIsnFppXRNq+Du2tvC2XGxnJU3GY2q8sfutP5Vgw0NEEVgXhwjSQ9UtwqkHZqbDsaSbBOWmuQDj431oVhRPZqHDBmKmI/MBRdY65HG+vBDWlhYEIf2aMJMl7nBZKAsbbdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dLZXDTHk3vK0Ai4Akb24AXjXn53eh11wbT4EMjqtnsk=;
- b=av8L8PMAL7ggO360c4wBveGSSrzTCLiyEFWuM29bPwqbY3TnyXN6W0orxlwpNRlKN+i8eDTF2nwQnZxAUiPQb9JdJVQ1fEaDakHuv4cyS1mN3NdUrR4x9zuHkyBGALaWXtaMD5lEuEyU37PlAmZ8UnYaRrNiV1U6snpkCNKbxtSUnGWsQkHXDMMnGhtHwmhecY6+44Js0A4yWcO53man06+1iPGCj9OvXxLQkxPcOX6dPwFs9quUev6YYlBuImSr2MhbTkX5o2fxnKsiymA/WnpK5GmqB120FjBRhbMCP7B20gSOal9IJK10NM0W1ZA7INglnxeVFDl2qrHJYZNmEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
- header.d=ddn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dLZXDTHk3vK0Ai4Akb24AXjXn53eh11wbT4EMjqtnsk=;
- b=dkgQdio0U2lmtA2SnHBid7chFsP6nQHuzERDM0np+wcC5g7hcEKQ/pu3uGo/j7LiimrHrCPSHdSBmj715iT4PA3xv+j8xIR5ldq0R0OaLWCnDBscpNiyysFVdcULylJZEoB6iwbm0XHD/PPzraszy6ho9uixOG7BqXVoDq0FVPM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ddn.com;
-Received: from MN2PR19MB3872.namprd19.prod.outlook.com (2603:10b6:208:1e8::8)
- by PH7PR19MB7533.namprd19.prod.outlook.com (2603:10b6:510:27c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Mon, 17 Feb
- 2025 00:40:11 +0000
-Received: from MN2PR19MB3872.namprd19.prod.outlook.com
- ([fe80::739:3aed:4ea0:3911]) by MN2PR19MB3872.namprd19.prod.outlook.com
- ([fe80::739:3aed:4ea0:3911%5]) with mapi id 15.20.8445.017; Mon, 17 Feb 2025
- 00:40:11 +0000
-Message-ID: <3fac8c84-2c41-461d-92f1-255903fc62a9@ddn.com>
-Date: Mon, 17 Feb 2025 01:40:06 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] fuse: add new function to invalidate cache for all
- inodes
-To: Luis Henriques <luis@igalia.com>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: Dave Chinner <david@fromorbit.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matt Harvey <mharvey@jumptrading.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250216165008.6671-1-luis@igalia.com>
- <20250216165008.6671-3-luis@igalia.com>
-From: Bernd Schubert <bschubert@ddn.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <20250216165008.6671-3-luis@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PR3P251CA0010.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:102:b5::17) To MN2PR19MB3872.namprd19.prod.outlook.com
- (2603:10b6:208:1e8::8)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fV5LIySg"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6f6ca9a3425so32876967b3.2
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 16:48:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739753291; x=1740358091; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jiE7dDyQpEcuMgGEFZxqBiwxreB1F7LNocjU7g22r7Y=;
+        b=fV5LIySgv5oWA6oMgOCmPPsaYlacjwOgzJOeS5tTloiMazIzI4h7VQpvjQZZB2597o
+         QWYCBd9VEZQmpXlXaH+9d8fag2XWEEAhVfsIoe19LcMa5bivxdp58ky4uidwsX680sMq
+         C3E44Wneh3IHAhTIz1I9Do9n2A2oLVnlDMzzAKE4knhVHnPWROWJ4sLPw1+EW1xpE6Dh
+         xd7HsTtPLHKiUCrcQPkgzGLJC+SjCJ073ptM2pwLYqatMDTX9wGNyscJM/Mv7Je5snEg
+         cQaTYIvcJ6dVz1CbUkOtR7n07BRnJ5zKf0AWrre62yYwTVsKiMxO4VppTNHzVpf+FBO2
+         j7zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739753291; x=1740358091;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jiE7dDyQpEcuMgGEFZxqBiwxreB1F7LNocjU7g22r7Y=;
+        b=dJh2532KFmFPWu7SXxsLSRQ+vMNWWO3hHCUR0bdsBEjLh9Ombd6wrIkb9vY0bXMoMj
+         2MuA0jcRZ6Kx+5QhfRNwQLUz4rPeb3GtZ0xrZLGuAi3vxYUeVZk/ltPGBFEfiirgxLIU
+         0yLpLD5bXBub19brxB/x4qOurOXUYiSxufx2YZU3Yic4fa2TQbWrFVQck1oHGgWOCHrx
+         hsQC1uRxsfGF956eTpgtqPNqm7/lw3F40xvLI3lLB+doiHIoT0m2W/GAP7MiZ0S/ftaq
+         SHWs8asq05BSYtK2JQKuOaEAsf6vDwCOT44JPLZq61Bl31PtnqgelNbzL9InKvGKcoaj
+         4D1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXagnED/pMn08aAMBLGoaS1f9yPkrF/q9ZoDck+lEVI766MULJh85EVUBmvj9JBgj+eSGRWDx304r7ky3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/6aPMg+kfoDQK+zS8wl6QK8H7BRrKMY8nYt9twDbL7pYwoUF4
+	k6Tj1gPf246UqlAa7B7t4phSa8NUiiwFIVKin4HSRw7UghRUhdtEDI/DiVEJ9DwZn3j1gJszd8U
+	zJ9WroFWqK2M5Ef/qkOn14KlB1uVIi2aCzrALUQggYwadXg3s
+X-Gm-Gg: ASbGncv8FGLcmQhixhmkxkIABVivp+i1I/pJnkV7Pa3DhL+wUyg/ybxoBDTBj0znhmQ
+	tDpyJCErG86AeVA0Liazk9uwfC8qJwBwYjm+vd6ZUL0jtC7vUgRArhwgpqMW9uTjBM8MS3/8nmP
+	bJfTlcIssDZOGHp1NQQgkWo+kttkZW
+X-Google-Smtp-Source: AGHT+IEMhSRFHPDYkw5GeVrG2kqJaVOkuZfxzT78iT6QhZXjbf5bNidkqWZ4fujnyRRGkAao4NrfMknk7hZDlpY2vkc=
+X-Received: by 2002:a05:690c:6e0a:b0:6ef:5097:5daa with SMTP id
+ 00721157ae682-6fb5835b290mr64408277b3.34.1739753290871; Sun, 16 Feb 2025
+ 16:48:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR19MB3872:EE_|PH7PR19MB7533:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c04fb82-13b6-4a93-2ba1-08dd4eeba224
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|10070799003|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Z0dleEx3S3VZT0VJeTJ5cHhpUG1mNEdZV1pqRTFUckZNdlVKS3JWZjFmVjMw?=
- =?utf-8?B?VEVEL1dpVWpmTDIxQTJBQ1JpOVdwZnd2Vnh0MVZaZC9neDRuNXZ6STlZVkM1?=
- =?utf-8?B?Q1pIbHR1cTBReXFoUk1XcXpjcEhDaGhrcUpMVnZHd3NQTHA1WGY2SFRMd0No?=
- =?utf-8?B?U1NYckQ4RVp2dWZaRUZvaXpURTVwYmhCcVlwWHpaZUtndUF3ZXc2ZGM4SmxI?=
- =?utf-8?B?UXp0Rjl1TmNHalI1LytGN05hYnk5Nk1nNElhQUs3VHdIcnp6NnpQQVB4TTB1?=
- =?utf-8?B?bzR0THdQS0h4QnIzcnhUUWQ0M1ErVlV3YjdwcDByOHNOUTNjRmxVZmlFS1Av?=
- =?utf-8?B?ZWc1RWRxcnBNT3VIK1NMZHhtbkVtdHRiWTEweGNubjlzWGRQZW1ackw2Y21W?=
- =?utf-8?B?QkZOZGdpY0tveUlIOWhNZVkwT1JGOHNpY0daV0NqZGRaN3BUdW9qUlY0RXdt?=
- =?utf-8?B?V2sxdmtJWXhuSUlabDRUNTcrTlBUbXlBeS9DVkhJTFNZZGdLNzl4UEM2SkdE?=
- =?utf-8?B?K25Ed3FrdzhITGh4M0ZLRFQrMlV0S2RjZXlaWlViR1VWNndQQjk0ZCtiWkdE?=
- =?utf-8?B?K01MYkkxdWt5UGRwOVkyVG9nZzlYQWVrMmQwaUc3UUt0MzB1QWdNZ0ZWVnlt?=
- =?utf-8?B?UzZmNHQ2aExWVSt5T2FnaUswclRQZm5FQjJsNkhnRkE0cXJUem1vSEtvUUcy?=
- =?utf-8?B?Zmtsd3hLSkJqTTZDTi9SbGptRG13QkkzZlQvVzdGdUh2TGdRclVCNjlONStn?=
- =?utf-8?B?Qjl4ekFIZEtOM3dDMjViZ3BFQXVHMFRSNCs0RVg4R0VJUXEzYVRHWTZsVzh2?=
- =?utf-8?B?NEZJMWJ6SFFQeEhvWGsxVXdIQmpuN1NvSWFsWTdrRTM2SXVaZnRtRkFYdVJ6?=
- =?utf-8?B?V0N3S01ZYnFJY2dhdjJpQnRCT3AyNWRhUXFQTHVZSlZRVVJLSzZhRTE3cnBq?=
- =?utf-8?B?TU5CU29ZRkhSZ1E0UlFONXdpY2VKZy9EbVN5SFp4VzVwejJjZVU5cjQ0VlJV?=
- =?utf-8?B?elJMUnNhanRHNmdOOTB4dFRCZFRoVXhpVUJ1amt6VmdZVjhFeWl5ZmVwRlNx?=
- =?utf-8?B?VDcvdDBESXJKbGFqeVB5Tm80cmtVMCtaZVJHOHl4ZjkzL1Zpd2FxWFVLWGRF?=
- =?utf-8?B?MUREZEZXTU5MeGpPYnlVODNEUGY5Njd5Y1A5U0E3ZkV2aDc2QVZ5N0I3cGht?=
- =?utf-8?B?SndKaXNSRzY5Z2ZSOEJVU1lDVmJnaXluYUNyTU12WWpHM2p3Vzc5VGpaSlQ0?=
- =?utf-8?B?Mi83K3BLOFB6am5lbk5IL3hmdlhSQVNWS0MvRnR3WGd1eitNWFVBVGhSK1Nl?=
- =?utf-8?B?aUkyTDNnVlRraFJmUmYwWitsUzZNZ1ZvZE5QUGRQMjF1OENyT0V3dzkzVnUv?=
- =?utf-8?B?Y2FOc29YelJUb3F1SjNCTWFVajk2L1ZCSWVuUXhBeGcwOVZpT3psM0xBT2Zm?=
- =?utf-8?B?N1VINEZ0QTNGQTRoRFZsQVR4TmdFZW9JQ2xrUmJTUmwybldtZjE5b2hSTjV3?=
- =?utf-8?B?cEtxMWNGTkRWdS9GY2lRSkdrNS9kM3M5MkVMUVk1L1Y5N1BEWDR4eDJXZnFu?=
- =?utf-8?B?a09qNzh4VzBIN1dsMXg5QThCMEdjaU1CTUNPeXVSUG93aW9TVmh0YnpVekpI?=
- =?utf-8?B?M0hXcnJ3Skg3MmVTQmF6T3MzcFJRdm1aa0xJeCtKNUtMRUZ2ckRjL2pyYlFy?=
- =?utf-8?B?MFVrbW5LZXVxMUpHelJLZ1h6NTMrb0psS1orNnZEdUIvTk5jUjJJRFJWVHcw?=
- =?utf-8?B?M0kyb1pjQ0tJRm9YTjB6azdPTFIvQXBxdjU2TFpjenJzU1ZqdGVXMENyTkRs?=
- =?utf-8?B?QW5kcDdzOUZRZDNaZkdubHpLRHgvcGhMS2dwVFJJMlNuS1dMaDdiL3hSRENM?=
- =?utf-8?Q?inj0aWBhfW/Kl?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR19MB3872.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(10070799003)(376014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SE5NeUJaTWRkQnFzQTdvZmRuRk5TTDNQNnFYc3dPYWdCck5UMTRJRlhFUWdY?=
- =?utf-8?B?cC9tMkFlMGtRZ0UyQWJKdXl4RmVZdVZZUlB1alUreU9RVXZGajRqbmJkbkhP?=
- =?utf-8?B?M001dE5qaU81TUhNVmlXTFBOZ0p6V2pkT0tWcHI4N20vVEJNN2ZXNWxHN2k2?=
- =?utf-8?B?UVEyVkY4MzZFNjJiWW9uNXB0Uk5aMEtpS054Wk9OdWVDMExtRUx3YytmM29R?=
- =?utf-8?B?K3M5NUVXNGRET0J3b1hwczU0NnU4MFVJb1VQcndXaG5VbnQwR3haRFI2M3Fz?=
- =?utf-8?B?YTNoZTRKMG9DRk9rOGdnMi8zQkxkbUZzcHZkcTZIZVBwdkJRNGk1aUE5Zld2?=
- =?utf-8?B?NGlzVWNjaVVVMDZUdXl2QXViczc1QUFJYVk1OWZSL1k4L3BQS1NSY2d3V0Qz?=
- =?utf-8?B?QVRsWnNJWjNEbCs4MVlqSldwaVlPM0dOSFVzRWJxb3VTOFJ5RXNralBSbCta?=
- =?utf-8?B?UGpCVGhwYkM2WFZ2U2ltdWZFbmpZZ21kUVU1TXNtb1NrajJkRWtjT0FjTmYy?=
- =?utf-8?B?YmxXTHNkaE9yMzc1SHV4UXk3SFZHUk51ajd3N1k1Z2c5UkI3SG5ITGsyaVFz?=
- =?utf-8?B?dHF6anJqSlJHV3UrdUNiQ1hsYU5FY1FmV3ZBS0t5a0EvZHFkVG1hSWlXdU5W?=
- =?utf-8?B?azk4OVJnZ2RMYmY4Q25nMVllYWxPWFhqbG96cEdMVWd0TGxPRG5PWXNKb1ZS?=
- =?utf-8?B?b1IyNlFRR1FPK2ZZY0YwY2JTK2p4NHExS2RVMEdJTkhyOGFxZ1FHNjBaOHlv?=
- =?utf-8?B?bWVzWUQrWVhlNDFsL1BDSlNidEJacEk2SkthLzRUTm5IVlQ0YzcxaXA3OXNL?=
- =?utf-8?B?NEZlNWMyVm1ZNVRiUUlPOHNwbU5hL2tOY3NxM0F0YTBDdkluVWgzM1kwei9u?=
- =?utf-8?B?dks5RjZmMkVxVmJxMGlyaUF2eTlvNjlaUWVxNWdMMWVFdzFFam8vL3JtbFVm?=
- =?utf-8?B?alFvajNpVjVLVERpbzcwenBVTHlTaFVDUzZxOW5yd085bnJaYUMydTYvMWUv?=
- =?utf-8?B?dkhVWDZIaUtTKzl2Zkd1ZDhpV0djSzg3Q21UQ29jTDVuWDRFdktLZW5SV2Vu?=
- =?utf-8?B?bEVoeXUwYlRERDdLMXFON210L2tUbnpqL1BoUTRBcWxPOHpRcjZ5ZTBUZXlh?=
- =?utf-8?B?cTh6RWxkL3M3R0VUTHZyVnlIM0Rub3lHRE1oWURJV3c4QmQxTnFyRC94aVhq?=
- =?utf-8?B?VEdzbjZ3UHRJMkxGNzd2RTVySlRBejlhTDFsc29iUXczaG9TeXZ1MGRXVE1a?=
- =?utf-8?B?Sll2dEI4RDFianBHMk9Ray9KVm9DV240RWVCVlNqaXEzdUQ4K0VUWTBxRHFu?=
- =?utf-8?B?U3NhMUdRVVNmVVp0YTBtc3VmSDhJb1dod2NKTVlaRnUrNXRIMndrT3NLTWxn?=
- =?utf-8?B?UXIxaEZOVWVNaG9QQTdpUkJlcERoZExFaDgxOEdiZGRYbXpTMm5HUk5teVhH?=
- =?utf-8?B?eXpsRGhxS0E5cTZyclM0SnQ0b1JhSHBLY0hxWC9MT1JQcjRKRTNrbTRlSTFF?=
- =?utf-8?B?eUR2SEpLVHoyd0gyR2ppVUd1TWQwQVV0RU50NXZydXhESWttL25FNGhyK1hU?=
- =?utf-8?B?N1RKN3lOMXlDK1RqVUJZaTBjTk1hSFE2S0JLaC9ZVEl0d1dzMDUzdlZIZGNo?=
- =?utf-8?B?VWk4bmJYdlVjQUVkcG0rbUhnZGRqbjE1SFVTK0NnTTE5SllXeUpFdFNXVThD?=
- =?utf-8?B?ajBKYWxtZkhNSG03Y1BQenQzaDlYbW0yUVN4SW5FK29oVHl5U29BcFFOYmkr?=
- =?utf-8?B?NCtQZDVzNi94anczQVY5NUJjUVhTOVd3aXNSNXIxblJoUTJMYktqREdiaStO?=
- =?utf-8?B?OTN2Skl3bllnc2RtS1Q5Nzh6VkMzZEZybG5icndFWldRV21raGp1OVdFaFRL?=
- =?utf-8?B?SHI3NnFGME93ZmNJbDU0bFQ3SmliVXRIdUc5ckcwOGhXUGt4Qm5yTy9JQVVJ?=
- =?utf-8?B?aWRrQzh3aDFFRWI5eVVnczVQam4wMnU0elFhNmhDdHBUOHJTMTlCMFJaenNI?=
- =?utf-8?B?THdYTGw3ZGpwZjVZZGgrWHdaWG82NVVHWjZEQkMvZjdwUTFMRlU5MHpyL0I3?=
- =?utf-8?B?OUJab0pib0w0aVQxb3BHL1MyQzhNZDZjTk5yeGlxSVNyQVVJdG1uVU9Yd2N4?=
- =?utf-8?B?MHpyTkxoMTQwVEFVWXpjMlNNc0hOR0x0N0txdWxsWDhuZEd5UkNqRlR2SWNj?=
- =?utf-8?Q?jyy/BCp0oUI/0AmwxFSFChSchA1pYgvzwbS66XVIpHvs?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	B7YbnlKIztfS3YqIel0gnQi0seZR0x5XqyP+nhrG0GD3dZ0bxDNr7tmQZ7r0LaP1v4ip2uhSPsY4HBgwiW6dr5wCMSS4nsp99qxwWh9/LEPoxwK7k78DZo+VJmNUir8MwOyBm+sKnl3mftniXvhwHzj7vOaB2vN5FoN2ip/H+HdJkaEwy4QA7iUOkvyTa7XaAH0NS631bWiXEFa03XabtbOLfcKbgQpQi70A2HOYoJ0ek2GpLXODshQEoXenUVl5uGhzztAPsO+MZ6CtkgqWxSu8qPDRwId+0Ko3n00oKefnEbwMy3NPfqZ8wQdGe10f861dR/XkYNcSZgTd1HkOR/zy1qhNHLCFueRTaCLzE3UkOIo1+OLPMz4hnPYr0T+fXaI/5lTw9/a1zE/COAGg783eZ9Bo3vXqPAHLTbE0ux8YmWHOK/uK1gqllz0uhh98lGXMao9CZ+wUtdED4T3yp9LoOJGmxFx6bpxMYU130VWnwnxHRxxsTZJDVu0TBJm/D0SjfmQbEXrW0V1278iGen9GQwDgMKMxm+ManZAjFd71yUtyxAPCrrBu8l98QDY/hzaMX1x8LtN+G5hCSswZQ/KgYj/ZY9N8eDEq/Ta9ce0nTKYO6n5vs/mYtGkdNusA/vtwgVCSVUSNfb6S6othWw==
-X-OriginatorOrg: ddn.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c04fb82-13b6-4a93-2ba1-08dd4eeba224
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR19MB3872.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 00:40:11.2160
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dqyv7byHptrA15Z0P73JLcWPGvJrBELI9HOWso9mbbHx2d2dpl7QBqcfFfA0gTK3u+ATOr1ZCE8sHCodMBgZzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB7533
-X-BESS-ID: 1739753119-110524-3255-40378-1
-X-BESS-VER: 2019.3_20250210.2243
-X-BESS-Apparent-Source-IP: 104.47.55.173
-X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUioBkjpK+cVKVsZAAGRlAAUNkk2NUkzTUkzSzM
-	ySk4B0sqlJqlliYqJFSqqBmbGhUm0sAJc/5lNBAAAA
-X-BESS-Outbound-Spam-Score: 0.00
-X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.262567 [from 
-	cloudscan21-86.us-east-2b.ess.aws.cudaops.com]
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------
-	0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
-X-BESS-Outbound-Spam-Status: SCORE=0.00 using account:ESS124931 scores of KILL_LEVEL=7.0 tests=BSF_BESS_OUTBOUND
-X-BESS-BRTS-Status:1
+References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
+ <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-2-9a60184fdc36@somainline.org>
+ <nzm3tokbvho3hxz3e5vblp5ndagfcv5ah3j7gtkqjmt7ynr6f3@v36juvu73i5v>
+ <vsxfi43d7rxh5xxc7ctivjslf6w4yy5iprqpqid3u3diylrtwd@wayafjlgzz7v>
+ <x4jced57uhdfnq4d7tdqsozxbdosu2fcmsjlqtuuvh25ltx2rc@2eqsa7e4vcdv>
+ <c5503020-0224-428a-9452-f8d668b47caf@quicinc.com> <ca80bd37-3b3f-48d3-a57d-2440d20d0c6c@quicinc.com>
+ <hvwpqzvdoeosz34ptbksc44ad7ohi6uwioy6o7qc4ewwcvx4d4@g3kksn3rwk6j> <xtcwuscf3nz6o6qhv4lerpeoxep34iloj6kvxxuad7yoqsus22@tmuv2jqvfpo7>
+In-Reply-To: <xtcwuscf3nz6o6qhv4lerpeoxep34iloj6kvxxuad7yoqsus22@tmuv2jqvfpo7>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 17 Feb 2025 02:48:00 +0200
+X-Gm-Features: AWEUYZnr5JEM_NzM6_fTTLE79Hxcuewl699FSlC_aTSNnkIVaJZXXU_BNMa4HAc
+Message-ID: <CAA8EJppoeuO-JWPzG=OB_HQXKokf_aj-JOW4GDfgGF1r3n+u=g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] drm/msm/dsi: Set PHY usescase (and mode) before
+ registering DSI host
+To: Marijn Suijten <marijn.suijten@somainline.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, Rob Clark <robdclark@gmail.com>, 
+	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Jordan Crouse <jordan@cosmicpenguin.net>, 
+	~postmarketos/upstreaming@lists.sr.ht, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Martin Botka <martin.botka@somainline.org>, Jami Kettunen <jami.kettunen@somainline.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+
+On Mon, 17 Feb 2025 at 01:06, Marijn Suijten
+<marijn.suijten@somainline.org> wrote:
+>
+> On 2025-02-13 04:13:06, Dmitry Baryshkov wrote:
+> > On Wed, Feb 12, 2025 at 05:13:08PM -0800, Abhinav Kumar wrote:
+> > > Hi Marijn
+> > >
+> > > On 2/10/2025 2:17 PM, Abhinav Kumar wrote:
+> > > >
+> > > >
+> > > > On 2/10/2025 6:24 AM, Dmitry Baryshkov wrote:
+> > > > > On Mon, Feb 10, 2025 at 01:54:29PM +0100, Marijn Suijten wrote:
+> > > > > > On 2025-02-10 01:11:59, Dmitry Baryshkov wrote:
+> > > > > > > On Sun, Feb 09, 2025 at 10:42:53PM +0100, Marijn Suijten wrote:
+> > > > > > > > Ordering issues here cause an uninitialized (default STANDALONE)
+> > > > > > > > usecase to be programmed (which appears to be a MUX) in some cases
+> > > > > > > > when msm_dsi_host_register() is called, leading to the slave PLL in
+> > > > > > > > bonded-DSI mode to source from a clock parent (dsi1vco) that is off.
+> > > > > > > >
+> > > > > > > > This should seemingly not be a problem as the actual
+> > > > > > > > dispcc clocks from
+> > > > > > > > DSI1 that are muxed in the clock tree of DSI0 are way
+> > > > > > > > further down, this
+> > > > > > > > bit still seems to have an effect on them somehow and causes the right
+> > > > > > > > side of the panel controlled by DSI1 to not function.
+> > > > > > > >
+> > > > > > > > In an ideal world this code is refactored to no longer have such
+> > > > > > > > error-prone calls "across subsystems", and instead model the "PLL src"
+> > > > > > > > register field as a regular mux so that changing the clock parents
+> > > > > > > > programmatically or in DTS via `assigned-clock-parents` has the
+> > > > > > > > desired effect.
+> > > > > > > > But for the avid reader, the clocks that we *are* muxing into DSI0's
+> > > > > > > > tree are way further down, so if this bit turns out to be a simple mux
+> > > > > > > > between dsiXvco and out_div, that shouldn't have any effect as this
+> > > > > > > > whole tree is off anyway.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> > > > > > > > ---
+> > > > > > > >   drivers/gpu/drm/msm/dsi/dsi_manager.c | 30
+> > > > > > > > ++++++++++++++++++ +-----------
+> > > > > > > >   1 file changed, 19 insertions(+), 11 deletions(-)
+> > > > > > >
+> > > > > > >
+> > > > > > > Fixes: 57bf43389337 ("drm/msm/dsi: Pass down use case to PHY")
+> > > > > >
+> > > > > > I'm not exactly confident about that.  Abhinav pointed out in
+> > > > > > https://gitlab.freedesktop.org/drm/msm/-/issues/41#note_2375646 that
+> > > > > > msm_dsi_host_register() was not supposed to be enabling the PHY, which I
+> > > > > > provided a counter-stacktrace for to show that is indeed the case.
+> > > > > >
+> > > > > > Either this was always a problem that's only become visible now
+> > > > > > (and it's an
+> > > > > > issue with that patch), or a different change causes
+> > > > > > msm_dsi_host_register()
+> > > > > > to enable the PHY and program the usecase too early?
+> > > > >
+> > > > > As currently usecase is being programmed after the DSI host being
+> > > > > registered, there might be a race condition between panel driver probe
+> > > > > _and_ usecase programming.
+> > > > >
+> > > > > >
+> > > > > > What do you think?
+> > > > > >
+> > > > > > - Marijn
+> > > > > >
+> > > >
+> > > > Yes I agree with Dmitry's explanation. The race condition between the
+> > > > two can cause this. Hence I am also fine with this change.
+> > > >
+> > > > > > > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > > >
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> > > > > > > > b/drivers/gpu/ drm/msm/dsi/dsi_manager.c
+> > > > > > > > index a210b7c9e5ca281a46fbdb226e25832719a684ea..b93205c034e4acc73d536deeddce6ebd694b4a80
+> > > > > > > > 100644
+> > > > > > > > --- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> > > > > > > > +++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> > > > > > > > @@ -74,17 +74,33 @@ static int dsi_mgr_setup_components(int id)
+> > > > > > > >       int ret;
+> > > > > > > >       if (!IS_BONDED_DSI()) {
+> > > > > > > > +        /* Set the usecase before calling
+> > > > > > > > msm_dsi_host_register(), which would
+> > > > > > > > +         * already program the PLL source mux based on
+> > > > > > > > a default usecase.
+> > > > > > > > +         */
+> > > > > > > > +        msm_dsi_phy_set_usecase(msm_dsi->phy,
+> > > > > > > > MSM_DSI_PHY_STANDALONE);
+> > > > > > > > +        msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> > > > > > > > +
+> > > > > > > >           ret = msm_dsi_host_register(msm_dsi->host);
+> > > > > > > >           if (ret)
+> > > > > > > >               return ret;
+> > > > > > > > -
+> > > > > > > > -        msm_dsi_phy_set_usecase(msm_dsi->phy,
+> > > > > > > > MSM_DSI_PHY_STANDALONE);
+> > > > > > > > -        msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> > > > > > > >       } else if (other_dsi) {
+> > > > > > > >           struct msm_dsi *master_link_dsi = IS_MASTER_DSI_LINK(id) ?
+> > > > > > > >                               msm_dsi : other_dsi;
+> > > > > > > >           struct msm_dsi *slave_link_dsi = IS_MASTER_DSI_LINK(id) ?
+> > > > > > > >                               other_dsi : msm_dsi;
+> > > > > > > > +
+> > > > > > > > +        /* PLL0 is to drive both DSI link clocks in bonded DSI mode.
+> > > > > > > > +         *
+> > > > > > > > +        /* Set the usecase before calling
+> > > > > > > > msm_dsi_host_register(), which would
+> > > > > > > > +         * already program the PLL source mux based on
+> > > > > > > > a default usecase.
+> > > > > > > > +         */
+> > >
+> > > My compiler is throwing a warning here
+> > >
+> > > drivers/gpu/drm/msm/dsi/dsi_manager.c: In function
+> > > 'dsi_mgr_setup_components':
+> > > drivers/gpu/drm/msm/dsi/dsi_manager.c:94:3: warning: "/*" within comment
+> > > [-Wcomment]
+> > >    /* Set the usecase before calling msm_dsi_host_register(), which would
+> > >    ^
+> > > drivers/gpu/drm/msm/dsi/dsi_manager.c: At top level:
+> > >
+> > > Can you pls address this one so that I can pick this one up?
+>
+> Whoops, that looks like copy-paste mistake when copying the comment from
+> !IS_BONDED_DSI() and merging it with the original comment about PLL0.
+> Will resend when I understand Dmitry's question below;
+>
+> >
+> > While you are at it, Marijn, could you please also fix the first comment
+> > to be properly formatted?
+>
+> What exactly do you need to be reformatted about the first comment?  It's
+> exactly the same in both branches.  No multiline comments in dsi_manager.c
+> start with a newline after the first /*.  Anything I'm missing?
+
+Yes. But those, I think, are older comments. Please use proper
+formatting for new comments.
+
+>
+> - Marijn
+>
+> > --
+> > With best wishes
+> > Dmitry
 
 
 
-On 2/16/25 17:50, Luis Henriques wrote:
-> Currently userspace is able to notify the kernel to invalidate the cache
-> for an inode.  This means that, if all the inodes in a filesystem need to
-> be invalidated, then userspace needs to iterate through all of them and do
-> this kernel notification separately.
-> 
-> This patch adds a new option that allows userspace to invalidate all the
-> inodes with a single notification operation.  In addition to invalidate
-> all the inodes, it also shrinks the sb dcache.
-> 
-> Signed-off-by: Luis Henriques <luis@igalia.com>
-> ---
->  fs/fuse/inode.c           | 33 +++++++++++++++++++++++++++++++++
->  include/uapi/linux/fuse.h |  3 +++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index e9db2cb8c150..01a4dc5677ae 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -547,6 +547,36 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
->  	return NULL;
->  }
->  
-> +static int fuse_reverse_inval_all(struct fuse_conn *fc)
-> +{
-> +	struct fuse_mount *fm;
-> +	struct inode *inode;
-> +
-> +	inode = fuse_ilookup(fc, FUSE_ROOT_ID, &fm);
-> +	if (!inode || !fm)
-> +		return -ENOENT;
-> +
-> +	/* Remove all possible active references to cached inodes */
-> +	shrink_dcache_sb(fm->sb);
-> +
-> +	/* Remove all unreferenced inodes from cache */
-> +	invalidate_inodes(fm->sb);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Notify to invalidate inodes cache.  It can be called with @nodeid set to
-> + * either:
-> + *
-> + * - An inode number - Any pending writebacks within the rage [@offset @len]
-> + *   will be triggered and the inode will be validated.  To invalidate the whole
-> + *   cache @offset has to be set to '0' and @len needs to be <= '0'; if @offset
-> + *   is negative, only the inode attributes are invalidated.
-> + *
-> + * - FUSE_INVAL_ALL_INODES - All the inodes in the superblock are invalidated
-> + *   and the whole dcache is shrinked.
-> + */
->  int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
->  			     loff_t offset, loff_t len)
->  {
-> @@ -555,6 +585,9 @@ int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
->  	pgoff_t pg_start;
->  	pgoff_t pg_end;
->  
-> +	if (nodeid == FUSE_INVAL_ALL_INODES)
-> +		return fuse_reverse_inval_all(fc);
-> +
->  	inode = fuse_ilookup(fc, nodeid, NULL);
->  	if (!inode)
->  		return -ENOENT;
-> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> index 5e0eb41d967e..e5852b63f99f 100644
-> --- a/include/uapi/linux/fuse.h
-> +++ b/include/uapi/linux/fuse.h
-> @@ -669,6 +669,9 @@ enum fuse_notify_code {
->  	FUSE_NOTIFY_CODE_MAX,
->  };
->  
-> +/* The nodeid to request to invalidate all inodes */
-> +#define FUSE_INVAL_ALL_INODES 0
-> +
->  /* The read buffer is required to be at least 8k, but may be much larger */
->  #define FUSE_MIN_READ_BUFFER 8192
->  
-
-
-I think this version might end up in 
-
-static void fuse_evict_inode(struct inode *inode)
-{
-	struct fuse_inode *fi = get_fuse_inode(inode);
-
-	/* Will write inode on close/munmap and in all other dirtiers */
-	WARN_ON(inode->i_state & I_DIRTY_INODE);
-
-
-if the fuse connection has writeback cache enabled.
-
-
-Without having it tested, reproducer would probably be to run
-something like passthrough_hp (without --direct-io), opening
-and writing to a file and then sending FUSE_INVAL_ALL_INODES.
-
-
-
-Thanks,
-Bernd
-
+-- 
+With best wishes
+Dmitry
