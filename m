@@ -1,120 +1,139 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174BB183CBB;
-	Mon, 17 Feb 2025 04:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C79188904
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 04:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739765289; cv=none; b=CaLr9dd6mIZWNg0xwXmzsuM51wnSGAYwSqHaqdiHM2zt4F5KSsF9UqBnWg/IXmEhmbMl7eeD61rRn/EXoXowuCKQRc03qfDg/8W9WjUAzlmxbrNsCHbTssp5OublxNEqN21BqY9y3QmM55UUFYt2ZiL5Bx5yRXTC3n7evbqKuw4=
+	t=1739765295; cv=none; b=aRte7O4b8z90WT/q4zpUHEK3Kaj39rMvnpuEn/cRQwj2hFCZd77GhEEznrbvTknH0QidolzjvhnykBQwaznkpvBcjLNngcXwnoHprvw9Neda7GgRleDsqnzUQf1p96w4TM1zS8d5L5dCzcowiUV+Q4Sp4K3biWtjT6qBBjjZq7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739765289; c=relaxed/simple;
-	bh=RLUrjXEZhDGki/Pjxx6XNvFMLKuYY0/Z5oalpjyhVtg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QI8pLnylpJObu7mOSTl52VNc+8x+fDQ4p3jLycxQhE7M5LI3lx/8zLwjR5isz1f2rwZ0bOL1uMSOghXJY69yp5JrmLAIpoz/Fk/YnhXg/LBnHWdDaBliRe2mTX4jYlYse2Us7m2rhmEP7Cde+sFeQRP6XZ/E1ToJYRTwMKSfkm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hx2qeKRh; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739765295; c=relaxed/simple;
+	bh=i/PwgKMCBCZLfEHQsGsntQ1fEhhQoS94549m2nz6EA4=;
+	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
+	 Content-Type:References; b=HRfDbeQs3qvGJZsa9LRUMscBTeXTtNAx96igNcLGEm4ZHXzVz2nsMKReLLqseoQ+zkZZpnoJUiVHpZdN9S1OmM+9bFCxn+zw60F9iFzuiWQJ1C9qcd2E41Z8RXQJSDoRu1tFgr4fPh9QNImzXQjbkROki6Wa5idJ7ErQQ3+7ucE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=THB3WQuR; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hx2qeKRh"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c0818add57so288600985a.3;
-        Sun, 16 Feb 2025 20:08:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739765286; x=1740370086; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fo3zhZXJ/GxhiVMRgC/sUpGvGabIKgXyUMS9I6R5PMM=;
-        b=hx2qeKRhiwjTsETHl/ERd9Z/U+50xx9sk5lMnYz2+6FhqkmrD3DVYhPG2zFpQMgWj/
-         OjSCtxrJCajCmsvgnXZmcx9iEwkOm+OWHElAnjlXCOI6UpHPxT096+8SpoC7QYrf47pN
-         MykvCyHJTdAdPldTiJGTfAiVf6lKYTH4a4aK72UKcM+B+t5QCitVoW3tjl82GFDCIb6c
-         IE/Ztk1XqJEiKHAqMCVUSudKXVy6DGzgj262JASj4U8XyaSjK8Fvuyl9XJaynDgr2vdT
-         PO7r0qFAX1PHu5g2mmlLCl97g10eoQ1VKzEJMZ/Fcie+AUL7CCgDAMfkPO42rrcXrKsT
-         l9dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739765286; x=1740370086;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fo3zhZXJ/GxhiVMRgC/sUpGvGabIKgXyUMS9I6R5PMM=;
-        b=wrp/746eG5iEY66bGHUk3VfYH0lad0WPVoZX8hfW1fj2Ri+sWB9ztJsNbwAZpdRbuK
-         2aljjvyq+3hL20OSzSh4Vg98R0pzCjayQaroxY2hIh35mPVm0P5M/JPGP6Bp4pFP9LQr
-         JBQreGOD7fq1ZkVnKKiQzaf8m26R/IfGILA0QQUggiMy6N7o6SodmR08l+czNxOUrcdB
-         AaRj0Jamlu14JSdnBMeTN6Uzt7XlZOVvamxaR3AJIytOq5GrrcDbIcoC2PxZc+ooUQJ+
-         ie6s0DfqDPmey0ly6awCGyzzWeJE58T2VRhMzeMN2TXC6/5TiF/KWKOgzAKSs1H9ZVbZ
-         kD+A==
-X-Forwarded-Encrypted: i=1; AJvYcCW4vzNhfJx9XGDH1YQfd2tFr1R6Cjn2naWKM5GO6zlsnxKtJNZ4Fu7t5vItCuwGeK+kVc+JPpmSevCBhWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh3hDwy0HbaEKYGHqEqWOr+4b6JBxKxphht5mRravrlDk1XCzR
-	P/sz+iL4ooHr+HZGu36fpUbnK1mJnvTYD14AGySTX21v5/ri/fGwMssGp6dJ
-X-Gm-Gg: ASbGnct36l93JfLfESN3XNB6Fm+qjyrIIxNY1R0WU93fIAw5wzRy8OgDYBrAOxJbbTV
-	ZUVPFoCa+meTUnyZoXhar4rM2X4kpl93yOVjCflgpg2FBVuMu1UVXzeMZpscmKgFriM+9/ucQ9x
-	bFzUehPJi5BEm7eH3xHHn1K1FMyGsiDR9+ekTqKDBvH6AhgxjCEIQa9zK/DvSTjsZaJMFeO5NsE
-	bgjS5Dkjxgn2QljEVL6Xlin9EMK6doWdfLftJTXJ6oMvx5V6UU/Pun3gO40CcGuoCJ/D9o2enha
-	TvK4ODgJMm0kD216FGqmXcUPbGGbZY0pi3LlzvODrvgttEMDgbR6hQ==
-X-Google-Smtp-Source: AGHT+IE3L6dhYZ7OhRr0jAVQ8rAZvgYg5WBzscoQSsbMWLe45VPcaPMJKhv6zmE5DjcHRhxrpZxX7w==
-X-Received: by 2002:a05:620a:4105:b0:7c0:7f7d:8c36 with SMTP id af79cd13be357-7c08aaa913cmr862475285a.42.1739765286268;
-        Sun, 16 Feb 2025 20:08:06 -0800 (PST)
-Received: from nerdopolis2.mynetworksettings.com ([2600:4040:5e66:a800:3bda:f60d:1567:d3d0])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c07c861537sm488465085a.67.2025.02.16.20.08.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 20:08:05 -0800 (PST)
-From: adamsimonelli@gmail.com
-To: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Adam Simonelli <adamsimonelli@gmail.com>
-Subject: [PATCH v2 2/2] tty: Change order of ttynull to be loaded sooner.
-Date: Sun, 16 Feb 2025 23:07:48 -0500
-Message-ID: <20250217040748.2017975-3-adamsimonelli@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250217040748.2017975-1-adamsimonelli@gmail.com>
-References: <20250217040748.2017975-1-adamsimonelli@gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="THB3WQuR"
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250217040803epoutp020f4e60ad7b637930343efdddc7f80598~k407SdHSW2975229752epoutp02C
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 04:08:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250217040803epoutp020f4e60ad7b637930343efdddc7f80598~k407SdHSW2975229752epoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739765283;
+	bh=q4FEvnHmy+mB9MbRC/88U70doteoss0rejRbFKfqfQk=;
+	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+	b=THB3WQuRNek7ifCXOT8QGTh0l7OeOwTmw2+XSDdbKXaCrq8lZ84tsfB2yJvSy6DTg
+	 P8ZMjqjBSo6UirKm7A4dq2j5a4Af3G7J1uiPpikrn4VOvHWrIrVQIZktiMZZZQKAOs
+	 aKC+tWmXQVvi9g0QK5oL40QsKuiAxWcgrHPmybV0=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20250217040803epcas2p4bf4912fef65c350a72e533852c54683c~k4060pky53087230872epcas2p4G;
+	Mon, 17 Feb 2025 04:08:03 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4Yx8Jg1dbtz4x9Pv; Mon, 17 Feb
+	2025 04:08:03 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Subject: RE:(2) [PATCH] scsi: ufs: Fix incorrect bit assignment for
+ temperature notifications
+Reply-To: keosung.park@samsung.com
+Sender: Keoseong Park <keosung.park@samsung.com>
+From: Keoseong Park <keosung.park@samsung.com>
+To: Avri Altman <Avri.Altman@sandisk.com>, Keoseong Park
+	<keosung.park@samsung.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "avri.altman@wdc.com" <avri.altman@wdc.com>,
+	"bvanassche@acm.org" <bvanassche@acm.org>, "beanhuo@micron.com"
+	<beanhuo@micron.com>, "linux@roeck-us.net" <linux@roeck-us.net>, Daejun Park
+	<daejun7.park@samsung.com>
+CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Bao D .
+ Nguyen" <quic_nguyenb@quicinc.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <PH7PR16MB61965AFF2D91331975BBD24EE5FE2@PH7PR16MB6196.namprd16.prod.outlook.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <1891546521.01739765283208.JavaMail.epsvc@epcpadp2new>
+Date: Mon, 17 Feb 2025 11:39:00 +0900
+X-CMS-MailID: 20250217023900epcms2p6d07e63f7ede68a88b53daf7a17f4062a
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250214105219epcms2p3a60810a14e6181092cb397924ce36019
+References: <PH7PR16MB61965AFF2D91331975BBD24EE5FE2@PH7PR16MB6196.namprd16.prod.outlook.com>
+	<1891546521.01739535602406.JavaMail.epsvc@epcpadp1new>
+	<CGME20250214105219epcms2p3a60810a14e6181092cb397924ce36019@epcms2p6>
 
-From: Adam Simonelli <adamsimonelli@gmail.com>
+> + Bao
+>
+>> According to the UFS specification, the bit positions for
+>> `UFS_DEV_HIGH_TEMP_NOTIF` and `UFS_DEV_LOW_TEMP_NOTIF` were
+>> incorrectly assigned. This patch corrects the bit assignment to align wi=
+th the
+>> specification.
+>>=20
+>> If this issue is not fixed, devices that support both high and low tempe=
+rature
+>> notifications may function correctly, but devices that support only one =
+of
+>> them may fail to trigger the corresponding exception event.
+>>=20
+>> Fixes: e88e2d32200a ("scsi: ufs: core: Probe for temperature notificatio=
+n
+>> support")
+>> Signed-off-by: Keoseong Park <keosung.park@samsung.com>
+> Already noticed by Bao D. Nguyen - see https://protect2.fireeye.com/v1/ur=
+l?k=3D81dbf2a5-e050e79f-81da79ea-74fe4860008a-0424961c73a03c70&q=3D1&e=3Dfc=
+fc99c7-cb2b-4f68-8ef4-e2760c685fec&u=3Dhttps%3A%2F%2Fwww.spinics.net%2Flist=
+s%2Flinux-scsi%2Fmsg202162.html
+>
+> Thanks,
+> Avri
+>
 
-If CONFIG_NULL_TTY_CONSOLE is enabled, and CONFIG_VT is disabled, ttynull
-will become the default primary console device, based on the load order.
-Users and distributions that are migrating away from CONFIG_VT will
-benefit from this as /dev/console would not suddenly become /dev/ttyS0
-which could otherwise cause some user space behavior changes, namely the
-TCGETS ioctl failing, which causes libc's isatty() to incorrectly return
-false when /dev/ttyS0 is disabled, and will prevent a device that is
-connected to a user's /dev/ttyS0 to suddenly start getting kernel log
-messages.
+Hi Avri,
 
-Signed-off-by: Adam Simonelli <adamsimonelli@gmail.com>
----
- drivers/tty/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thank you for the update. I wasn=E2=80=99t aware that Bao D. Nguyen=E2=80=
+=99s patch had already been applied. =20
+I appreciate the heads-up, and I=E2=80=99ll make sure to check the latest p=
+atches more carefully next time. =20
 
-diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
-index 07aca5184a55..03bb47e11e1c 100644
---- a/drivers/tty/Makefile
-+++ b/drivers/tty/Makefile
-@@ -11,6 +11,8 @@ obj-$(CONFIG_N_HDLC)		+= n_hdlc.o
- obj-$(CONFIG_N_GSM)		+= n_gsm.o
- 
- obj-y				+= vt/
-+obj-$(CONFIG_NULL_TTY)		+= ttynull.o
-+
- obj-$(CONFIG_HVC_DRIVER)	+= hvc/
- obj-y				+= serial/
- obj-$(CONFIG_SERIAL_DEV_BUS)	+= serdev/
-@@ -20,7 +22,6 @@ obj-$(CONFIG_AMIGA_BUILTIN_SERIAL) += amiserial.o
- obj-$(CONFIG_MOXA_INTELLIO)	+= moxa.o
- obj-$(CONFIG_MOXA_SMARTIO)	+= mxser.o
- obj-$(CONFIG_NOZOMI)		+= nozomi.o
--obj-$(CONFIG_NULL_TTY)	        += ttynull.o
- obj-$(CONFIG_SYNCLINK_GT)	+= synclink_gt.o
- obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
- obj-$(CONFIG_GOLDFISH_TTY)	+= goldfish.o
--- 
-2.45.2
+Best Regards,
+Keoseong
 
+>> ---
+>>  include/ufs/ufs.h | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/include/ufs/ufs.h b/include/ufs/ufs.h index
+>> d335bff1a310..8a24ed59ec46 100644
+>> --- a/include/ufs/ufs.h
+>> +++ b/include/ufs/ufs.h
+>> @@ -385,8 +385,8 @@ enum {
+>>=20
+>>  /* Possible values for dExtendedUFSFeaturesSupport */  enum {
+>> -=09UFS_DEV_LOW_TEMP_NOTIF=09=09=3D BIT(4),
+>> -=09UFS_DEV_HIGH_TEMP_NOTIF=09=09=3D BIT(5),
+>> +=09UFS_DEV_HIGH_TEMP_NOTIF=09=09=3D BIT(4),
+>> +=09UFS_DEV_LOW_TEMP_NOTIF=09=09=3D BIT(5),
+>>  =09UFS_DEV_EXT_TEMP_NOTIF=09=09=3D BIT(6),
+>>  =09UFS_DEV_HPB_SUPPORT=09=09=3D BIT(7),
+>>  =09UFS_DEV_WRITE_BOOSTER_SUP=09=3D BIT(8),
+>> --
+>> 2.25.1
+>>=20
+>>=20
+>
