@@ -1,135 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5D91CFBC
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 01:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E963479D2;
+	Mon, 17 Feb 2025 01:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739756911; cv=none; b=ipeYS+K5PVZNQxZrFHyxO5SjQFkp8SibvIjQrRPp/SKG6eyls1SupY1xMZ1x2GuXkLtVZHU0YlwGTQaSFCdpubsev6S9L1P/jc8XO2GfydeWeBLsDOeJEQsUi4rYUuBUVRqoXVFj+8Ft1q+8r6wAM/XXFy4RSkgChM+6ZrIfOdk=
+	t=1739757098; cv=none; b=r4TnItJWcyKqvrzDp19YsQ3x6E7PTHJA00ZJEPrYhJDQtF228I6OeeIUYcCyLDo9DP0UUkjkAp0c3KKMkTxDuharfuwRpTp3T6LNgRMxNs40k4E+i7cuzATlY+23qRqTmEU9n1qBBm7+ndw6ZuKK0wWqfn7xO94ZxtCvUgw06ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739756911; c=relaxed/simple;
-	bh=2GwrQAvpI+du66jAl7ybJ2vRX2ga2dva4adjZ6Ub7XM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DXI+RrAeIH0mMpeIG2XmZZKfgkju8MOzIppo3mtlHKHNCSa7VEnUw+ogOImjQr536t6pqL2/v/vgNXaT9yXT0lRm6CkzYQepGUUcUkqPyz+l6LEsE3lK5ECAsPP7i5201eMMxWqakifDquoZfCgcoGAtmM5n9LJpM6wUUcZ9b04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NWwTB9L3; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739757098; c=relaxed/simple;
+	bh=i2y9NCKAA5mf0lCCR4CE06BpzZ/tWFLaANF1MitbJQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fa/DKk1htYdHE4WXMfwVxXQ/Y44k9Ae3OPdEm56UVMhWGTkCubSqm7n4vyetTphwy5t3JxsygMD/Py2yR7f7ElLEqT9IiDk636dmX3uednz07V1UD0dOFSlcRUdPGTnm30Wsk3WM7KckgmkJ27xnmywrDOq9XH/9dj2z8clP15s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UiO1YXE7; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NWwTB9L3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739756909; x=1771292909;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2GwrQAvpI+du66jAl7ybJ2vRX2ga2dva4adjZ6Ub7XM=;
-  b=NWwTB9L3l9dgIMjPpFyk+apmLSUDpvfFjcF+VOrg+t2uNeVRAWYEaV5Y
-   jHdvf9s+SRV/aHiA0xz4a7CoZ/yJgG7PVvC/IPFRkAqTbFZEOX3DepnuX
-   mRQNEYKW8ho7mdNMfoO0e8U3zL9ylSpnANBKLdQlxRrq2z25AzgfA7AUo
-   sQrYxwfyOnPNXmNwOVX1zYUQ2pUPy7glrrHMUdXeq4b7qz+chcdD3Chk2
-   iyXLhD/9xZCHaLCXgcL9IaI3nQemhjZOGrmNeSoTVtSIxSs4+C0Td7F97
-   QoeQv8n8meeVAKdqveiWxbIMnGrTPX7ztDHcWPEyaBGZcMJaZ1bSG5HEt
-   g==;
-X-CSE-ConnectionGUID: kUxdssxwQw+JghZQeD1lmQ==
-X-CSE-MsgGUID: KX7+G0MsRmK+EBGpHL7eJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51856125"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51856125"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 17:48:28 -0800
-X-CSE-ConnectionGUID: ePYr3PJcSLCXvJq2ubhrkA==
-X-CSE-MsgGUID: xjwPS82HT+SVi3vgaGRq/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,291,1732608000"; 
-   d="scan'208";a="113932110"
-Received: from zhiquan-linux-dev.bj.intel.com ([10.238.156.102])
-  by orviesa006.jf.intel.com with ESMTP; 16 Feb 2025 17:48:25 -0800
-From: Zhiquan Li <zhiquan1.li@intel.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	kirill.shutemov@linux.intel.com
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	zhiquan1.li@intel.com
-Subject: [PATCH v2 RESEND] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo
-Date: Mon, 17 Feb 2025 10:24:35 +0800
-Message-Id: <20250217022435.4056776-1-zhiquan1.li@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiO1YXE7"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-46fa7678ef3so43238751cf.1;
+        Sun, 16 Feb 2025 17:51:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739757096; x=1740361896; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=HqwamwawLH6bGg8Wb3IGxPf64cClhyn1gpuzpHxM+RM=;
+        b=UiO1YXE7uJUV0+KC0vAI/sww3B5odZSldl0TK6In2WIkh/qPOVJzw+CmVBWfqSD0Ke
+         oQQxUURlB6E+16LxHHU4Vyg5TRH2aOFcKmQy9YXAtGecF+AcS84epLXOo6FZ7AFLo8Pi
+         PuBhlo02zv3WpoxXcj2AX2rOl6+KkGcEmuxACzIYXNt0Ku/zarnTY2t+qrtHSOp2zrrH
+         +SXNN8OHwLYLPeAGPZXcTMFfjCKRbgAhCZhTPZ9fqc2J10USHF6M+Qv3lqExJuEDEE2i
+         gMgoVbZNk8w8h7K9NZXAwKxJByWbrdZjtDe19OBArHdQXcvKCp6S+RlRY+msGtWTqDo2
+         UrWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739757096; x=1740361896;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HqwamwawLH6bGg8Wb3IGxPf64cClhyn1gpuzpHxM+RM=;
+        b=I8QzAfOQCb1WUauFslwGDCQS3Zwf/60ByZIGKTPVMF7AxKztyQtFnDBKOQln+wXmpQ
+         +erS4JwOCsc999yyh9Oi22fl3v9WtZlSCAYI3EPXGH7oBX+gLQ2jx4C9/RuLnavWnmzZ
+         YL9dFVdRiuCZqqmc85Q/oer2zFOlANOqKcExZfM8r2ziqQ5BHJRmYhKnhUSOw/WYxTXd
+         VDbSkKSW9ALNnrvKP1QZ3OqDwgPB3LtD52vSHzI/K3Ohaos4sXMjK4EH5JmRLoMmXcu1
+         QPryjGO0HtcGg2MZ/Q6M90WF4rh2oBQ/eqXdy25kOPLiVthps913wXjYzcWryXo24ZPW
+         IYEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkbxHtpqPpqQ4I+oIHVtsL8bI5wrscQlojA0+Ol0Ae/D+lDmAVuA4zWJdb6RTQkGfid+Zu1MCZ@vger.kernel.org, AJvYcCVzQBEANXWCKnCnvcLH0pPO1IaFn01arJ/fzuznyNAUQbfx6TnKUKxma44qVBVHyyB98sJLrChoUWeVdhUZsf4=@vger.kernel.org, AJvYcCXy7P1LRSEVSKj2XKf0gwbZtT4Fw0SFdk+oYN9tT4YxJ+kNPrCqCp6EZeZ5v7mO63LBM2ggbT/jh8FM2To=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7o7uI61rS2KaP2Ccy/21KRuRjHtGK7h3bTqebHfHPKHPXbfJM
+	AM0MUHaoW8fCap0EvHUBfsVx6rEBGVxxM9fD03eTeO7gRXg3nKNI
+X-Gm-Gg: ASbGncvDxFUG8KkUchNlQ7ME6K0hUZpfez7jpqRkP8uX4Zmp3dUTiXFqdrAeNHffOhC
+	bjQXi2ljmi2uCxZ1/Orrn4qrvKFpbhbor4owKCv8ODPWm8Z5J565/hFmuh2L+tiUBrt85ktxuau
+	BM5WcgrKDNP2issULOb9iA7uZk7c9Sw6bLldlAgE1rmlEtWiauG/eQHjR1Bq/2rb9Q4BmIhWv2/
+	O/G2AEYp9SoT4IYIro/RP0osypkUleAJ3T/zRL0/yuF9PtBqC7+Fb+5eNwQ1TvBN06+05+cahoe
+	Jfjw7O7kEBMiI3nfe8xlvozng0PWrAs5QPn5BSna94LVveySxHZvvKxL8eS6w3fjdaR9Q8lPTdc
+	XQTi6mA==
+X-Google-Smtp-Source: AGHT+IFCe3muZ9N1jrtvkc2NqYvORhIIhHsHMZGjyqrd+lG1J5/kWyY6Pb4fw2mxowJVBIQrrXEfBQ==
+X-Received: by 2002:a05:622a:28a:b0:471:d67d:fe54 with SMTP id d75a77b69052e-471dbe9fc70mr119764401cf.49.1739757095695;
+        Sun, 16 Feb 2025 17:51:35 -0800 (PST)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471f5a75cc3sm570451cf.25.2025.02.16.17.51.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2025 17:51:35 -0800 (PST)
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6292B1200068;
+	Sun, 16 Feb 2025 20:51:34 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Sun, 16 Feb 2025 20:51:34 -0500
+X-ME-Sender: <xms:JpayZzFgb2jBnzWRzWFU2fivVlcG5-_0KHx-qWnWXQ0UUEMw9a_phQ>
+    <xme:JpayZwUX-voj6J-w-aQsptM-_Mw-tjCXz0B17Qn5UDEAGAejF5APfyJV_kcdDxzD6
+    vVa8_qrd-StjYv_5A>
+X-ME-Received: <xmr:JpayZ1KjJhNYjOyaGesCeH_cxDViqCR-COo5DFMaabkVQU7AIXuwB2yWlQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehjedtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeevgffhueevkedutefgveduuedujeefledt
+    hffgheegkeekiefgudekhffggeelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepfeefpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvg
+    drtghomhdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmhgrihhlrdgt
+    ohhmpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrdhlihhnuhigsehgmhgrihhlrd
+    gtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrg
+    hllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhmghhrohhsshesuhhm
+    ihgthhdrvgguuh
+X-ME-Proxy: <xmx:JpayZxGiqs5OO17IPWI7TIMB_hzDJu2B6YNPFL4mJEUow_V4mowfmw>
+    <xmx:JpayZ5ULMq7zlP-BMYv9BX17MMdbCtMvSVggKGychMxfbSTBFn6g2Q>
+    <xmx:JpayZ8No-YWyGu2LfnlTAlJIAh31kSAAdH2dkWITYkNgDsmAllau9w>
+    <xmx:JpayZ41esj_Gf6Nx7SxvO7jSrBECSmct0M4zfJOz9IJUkjTWHzvAcw>
+    <xmx:JpayZ-W8kdh1uvgTEd6sUZhNdz6ZNhJB9eo9kjpMfKvbJXMuV6XL-xgT>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 16 Feb 2025 20:51:33 -0500 (EST)
+Date: Sun, 16 Feb 2025 17:51:32 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	david.laight.linux@gmail.com, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, netdev@vger.kernel.org,
+	andrew@lunn.ch, hkallweit1@gmail.com, tmgross@umich.edu,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, anna-maria@linutronix.de,
+	frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
+	jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
+	peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, tgunders@redhat.com, me@kloenk.dev
+Subject: Re: [PATCH v10 1/8] sched/core: Add __might_sleep_precision()
+Message-ID: <Z7KWJGc-Dji3Kacu@Mac.home>
+References: <20250207132623.168854-1-fujita.tomonori@gmail.com>
+ <20250207132623.168854-2-fujita.tomonori@gmail.com>
+ <20250207181258.233674df@pumpkin>
+ <20250208.120103.2120997372702679311.fujita.tomonori@gmail.com>
+ <CAH5fLgiDCNj3C313JHGDrBS=14K1COOLF5vpV287pT9TM6a4zQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgiDCNj3C313JHGDrBS=14K1COOLF5vpV287pT9TM6a4zQ@mail.gmail.com>
 
-On Intel TDX guest, unaccepted memory is unusable free memory which is
-not managed by buddy, until it's accepted by guest.  Before that, it
-cannot be accessed by the first kernel as well as the kexec'ed kernel.
-The kexec'ed kernel will skip these pages and fill in zero data for the
-reader of vmcore.
+On Mon, Feb 10, 2025 at 10:41:00AM +0100, Alice Ryhl wrote:
+> On Sat, Feb 8, 2025 at 4:01 AM FUJITA Tomonori
+> <fujita.tomonori@gmail.com> wrote:
+> >
+> > On Fri, 7 Feb 2025 18:12:58 +0000
+> > David Laight <david.laight.linux@gmail.com> wrote:
+> >
+> > >>  static void print_preempt_disable_ip(int preempt_offset, unsigned long ip)
+> > >>  {
+> > >>      if (!IS_ENABLED(CONFIG_DEBUG_PREEMPT))
+> > >> @@ -8717,7 +8699,8 @@ static inline bool resched_offsets_ok(unsigned int offsets)
+> > >>      return nested == offsets;
+> > >>  }
+> > >>
+> > >> -void __might_resched(const char *file, int line, unsigned int offsets)
+> > >> +static void __might_resched_precision(const char *file, int len, int line,
+> > >
+> > > For clarity that ought to be file_len.
+> >
+> > Yeah, I'll update.
+> >
+> > >> +                                  unsigned int offsets)
+> > >>  {
+> > >>      /* Ratelimiting timestamp: */
+> > >>      static unsigned long prev_jiffy;
+> > >> @@ -8740,8 +8723,10 @@ void __might_resched(const char *file, int line, unsigned int offsets)
+> > >>      /* Save this before calling printk(), since that will clobber it: */
+> > >>      preempt_disable_ip = get_preempt_disable_ip(current);
+> > >>
+> > >> -    pr_err("BUG: sleeping function called from invalid context at %s:%d\n",
+> > >> -           file, line);
+> > >> +    if (len < 0)
+> > >> +            len = strlen(file);
+> > >
+> > > No need for strlen(), just use a big number instead of -1.
+> > > Anything bigger than a sane upper limit on the filename length will do.
+> >
+> > Ah, that's right. Just passing the maximum precision (1<<15-1) works.
+> >
+> > The precision specifies the maximum length. vsnprintf() always
+> > iterates through a string until it reaches the maximum length or
+> > encounters the null terminator. So strlen() here is useless.
+> >
+> > Alice and Boqun, the above change is fine? Can I keep the tags?
+> 
+> I'd probably like a comment explaining the meaning of this constant
+> somewhere, but sure ok with me.
+> 
 
-The dump tool like makedumpfile creates a page descriptor (size 24
-bytes) for each non-free page, including zero data page, but it will not
-create descriptor for free pages.  If it is not able to distinguish
-these unaccepted pages with zero data pages, a certain amount of space
-will be wasted in proportion (~1/170).  In fact, as a special kind of
-free page the unaccepted pages should be excluded, like the real free
-pages.
+Agreed. The code should be fine but need some comments.
 
-Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
-that dump tool can identify whether a page is unaccepted.
+Regards,
+Boqun
 
-Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
-
-Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-
----
-V2 RESEND note:
-- No changes on this, just rebasd to v6.14-rc3.
-
-V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
-
-Changes since V1:
-- Rebase to v6.14-rc3.
-- Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
-  suggestion.
-- Add Kirill's Reviewed-by tag.
----
- Documentation/admin-guide/kdump/vmcoreinfo.rst | 2 +-
- kernel/vmcore_info.c                           | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 0f714fc945ac..3b47916f1856 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -331,7 +331,7 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
- Page attributes. These flags are used to filter various unnecessary for
- dumping pages.
- 
--PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-+PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
- -----------------------------------------------------------------------------
- 
- More page attributes. These flags are used to filter various unnecessary for
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index 1fec61603ef3..e066d31d08f8 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
- #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
- 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
-+#ifdef CONFIG_UNACCEPTED_MEMORY
-+#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
-+	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
-+#endif
- 
- #ifdef CONFIG_KALLSYMS
- 	VMCOREINFO_SYMBOL(kallsyms_names);
-
-base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
--- 
-2.25.1
-
+> Alice
