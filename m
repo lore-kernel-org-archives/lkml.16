@@ -1,82 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD20D21C16D
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFFD21C197;
+	Mon, 17 Feb 2025 13:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739798093; cv=none; b=Cx/eIYE+t5wF1vyjVwJf2BCQXnbx0AZbqxELcGC+m0x6ZPuHkhL58Qhu8KbYA10iETPdfvh4IEhMDWAYjYa9/to+BU7fgwmE+fjLJK3fWDsugt1n1mIzRAsDqhDSPArmosAo1eKiIukQfr8Zdzn3XUOqeaW/b0JVy3W6oxQQjoQ=
+	t=1739798118; cv=none; b=jAppIedOYtCHiIlAm6pDgQzaxeOTv2UbH+MAPrK7ynz7MtwUP9bfu5kX96rgJlQ32XICF6n7WXdBwzUxyYVgv6St120eK88JRlY6X6UY3KwuvhD38AzvCry9u9veNdRmITs6jJgPO01wTLPTOc+VPpvfSj4qqWbDZpZQf5SC3Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739798093; c=relaxed/simple;
-	bh=13SPp22CZVN6xo7eWbjLFTp4tb5+gOXnGjqBpfPpjO4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=o+yNbY5shyHhTQH8YOlyouJTNUuFbkLMMB7YORYkG1GH6ItEkYyDG/CgGExyac5a5CHx2YnxOadRZ/Bt9b9HgF58lgp26JxyyqdTxH3Jspl+rdgiXHNiogEzMxvWJm7Q+356qg/JFwddRsEsShNLood9bDG2C+1OPYeQA/H9TWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/0oSzGg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739798118; c=relaxed/simple;
+	bh=RXP5X417yTlCiBf+xrfyXIDd3TLnHV3EUYKREgUrLKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RH5JNqad42h027Ksx/ALbpEG9RaJwe8rc8EWa7o92BmTOI5JTOUDxaCmVmlc1z6P3Bg+M3Ar+23KIYYkRr7Rra6t13bT/OXokL80pzp5eyetOinQ2x7VtN76h7Z5DEd78c2Iz2oGRGSBHmHAnalSdLIxRUxwutqHFxZYzP8pVtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e4rMo0xK; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/0oSzGg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A3FC4CED1;
-	Mon, 17 Feb 2025 13:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739798093;
-	bh=13SPp22CZVN6xo7eWbjLFTp4tb5+gOXnGjqBpfPpjO4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=U/0oSzGgoTnI9k06MhPJaHbBvs2FoX445vtnucfIyVQbPLR/+GhQis54mxIHZ/rOx
-	 YWeY/JHgHAxM2ByitJ5DML0s04ByPBxMVo5M7Dr+rgrYJOXBHeoTP6aIMg0GZe3Rud
-	 wYhNYQ2jAGAjfRxcOrJryrFUNfBHVw+neugbJV5sJpNlxLHVonm143OABc+JcbJFOa
-	 +SEQDUnmoSyo7oDoqU3xN9s9e5sCeZt7fteyeKjHoX+NuSa6Iw4bnixQayBGdMLXVL
-	 SpPcauyMFgJ9sbPLtLMmlmMcK+98RImLjxSdL8RNfjBD7dFTToIF9Xm0aVEKlZhpXg
-	 dkJfaPwQBe+kw==
-From: Robert Foss <rfoss@kernel.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Vitalii Mordan <mordan@ispras.ru>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Sui Jingfeng <sui.jingfeng@linux.dev>, 
- Aleksandr Mishin <amishin@t-argos.ru>, Al Viro <viro@zeniv.linux.org.uk>, 
- Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, 
- Quentin Schulz <quentin.schulz@free-electrons.com>, 
- Swapnil Jakhade <sjakhade@cadence.com>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Fedor Pchelkin <pchelkin@ispras.ru>, 
- Alexey Khoroshilov <khoroshilov@ispras.ru>, 
- Vadim Mutilin <mutilin@ispras.ru>, lvc-project@linuxtesting.org
-In-Reply-To: <20250214154632.1907425-1-mordan@ispras.ru>
-References: <20250214154632.1907425-1-mordan@ispras.ru>
-Subject: Re: [PATCH v3] gpu: cdns-mhdp8546: fix call balance of mhdp->clk
- handling routines
-Message-Id: <173979808601.704013.18168573749410463976.b4-ty@kernel.org>
-Date: Mon, 17 Feb 2025 14:14:46 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e4rMo0xK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739798117; x=1771334117;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RXP5X417yTlCiBf+xrfyXIDd3TLnHV3EUYKREgUrLKU=;
+  b=e4rMo0xKSOuDWVDHEwTsGHm1UkEhJsDWxpGj7alFPnpduashFErkdCW3
+   gR9RZPtRFMQc7uYfef6QjS0kvXSKsQDoHN/HsYFnE/q/nuyfNEBWcOR31
+   EDm9U2EYDZDhJdFY1R95elaRlRYxUZmeJyKR4YPN5T/AoqrmtubnjiFW8
+   ckqGc0QBcld9ujDiHFW+9id4/X1mx+T3Fee02cCbc15fcNYqpUir4fIRq
+   JKbFlLXQnx2Yy3YMsKZCcIgOMGCrTORG3ghwCavUTYwLBck1doM7nIDLm
+   GdJzA0yXj3TqIzknJCRSYP++fh05gvgmtM1zSPpOOJeHAI1XDSo2N0ydV
+   Q==;
+X-CSE-ConnectionGUID: 6NRj06+tR0Cyoe2wD+EI0A==
+X-CSE-MsgGUID: SIOyrkrLQzqs9QGcbFnUCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="40344735"
+X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
+   d="scan'208";a="40344735"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 05:15:16 -0800
+X-CSE-ConnectionGUID: qYKS6OdJS+2s7cDaSWruOg==
+X-CSE-MsgGUID: vOK7AQiKSFimzZKPW3N2kw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
+   d="scan'208";a="114041454"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 05:15:13 -0800
+Date: Mon, 17 Feb 2025 14:11:33 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, ioana.ciornei@nxp.com,
+	yangbo.lu@nxp.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net 1/8] net: enetc: fix the off-by-one issue in
+ enetc_map_tx_buffs()
+Message-ID: <Z7M1hQIYZGWAZsOT@mev-dev.igk.intel.com>
+References: <20250217093906.506214-1-wei.fang@nxp.com>
+ <20250217093906.506214-2-wei.fang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217093906.506214-2-wei.fang@nxp.com>
 
-On Fri, 14 Feb 2025 18:46:32 +0300, Vitalii Mordan wrote:
-> If the clock mhdp->clk was not enabled in cdns_mhdp_probe(), it should not
-> be disabled in any path.
+On Mon, Feb 17, 2025 at 05:38:59PM +0800, Wei Fang wrote:
+> When the DMA mapping error occurs, it will attempt to free 'count + 1'
+> tx_swbd instead of 'count', so fix this off-by-one issue.
 > 
-> The return value of clk_prepare_enable() is not checked. If mhdp->clk was
-> not enabled, it may be disabled in the error path of cdns_mhdp_probe()
-> (e.g., if cdns_mhdp_load_firmware() fails) or in cdns_mhdp_remove() after
-> a successful cdns_mhdp_probe() call.
+> Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> ---
+>  drivers/net/ethernet/freescale/enetc/enetc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> [...]
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+> index 6a6fc819dfde..f7bc2fc33a76 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+> @@ -372,13 +372,13 @@ static int enetc_map_tx_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb)
+>  dma_err:
+>  	dev_err(tx_ring->dev, "DMA map error");
+>  
+> -	do {
+> +	while (count--) {
+>  		tx_swbd = &tx_ring->tx_swbd[i];
+>  		enetc_free_tx_frame(tx_ring, tx_swbd);
+>  		if (i == 0)
+>  			i = tx_ring->bd_count;
+>  		i--;
+> -	} while (count--);
+> +	};
 
-Applied, thanks!
+In enetc_lso_hw_offload() this is fixed by --count instead of changing
+to while and count--, maybe follow this scheme, or event better call
+helper function to fix in one place.
 
-[1/1] gpu: cdns-mhdp8546: fix call balance of mhdp->clk handling routines
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/f65727be3fa5
+The same problem is probably in enetc_map_tx_tso_buffs().
 
+Thanks
+Michal
 
-
-Rob
-
-
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+> 
