@@ -1,141 +1,235 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786D522333E;
-	Mon, 17 Feb 2025 14:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739803629; cv=pass; b=C588M22o8QkksIT4ZRbP0DIQud9ahry8+dq/DTq4FHckm6rWIyeRSpsMF9knXovfO/0f0OTpX+OjpD3aPSt0PHTIQFpXenL7H3w9J0t/wnLY92tO24mQNIhRcF3jbELs3GhTMQyYCpIfiP+zZZatNh0SXp+vY4UIvXMP0qhAPhU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739803629; c=relaxed/simple;
-	bh=2kDeGFPRU5ySinR8BTj8CnBGsOS8PfC/VAHys1rOVcY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IT981AIV8m9+L6j6TeZFkRN3PoZjVKRDyaAqRCmc1ZMkFapLe5fL2UMHSYBHdgOK5ODDBqKSIGOyLe4UiCBdtU6tHgH9zGPuOwxu1iuRIwrML5zU7HlJ1l/rSeDiEB5eJXfBMBXPqprPaHK+kW7MsYUc0IqS5R7ew9ybxr/ZwVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b=Jk4cR9Mg; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177BD21CA0E;
+	Mon, 17 Feb 2025 14:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739803674; cv=none; b=MNtHTYNttW6viCCa4KZjWsZ8UYLdU6plZdmJEbdKdAdTFY3iSAP3QmakZAbLyiv15xdIFbP65uXlBCAbg6amVAbmoODDwYpcEJuJHc3mVZbzpBjCPpJ6heAh37JE1A9V6F/b+dAFq03U9Ds/Xy55rv9Lb7YEQqCrIvo1fB0qLPg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739803674; c=relaxed/simple;
+	bh=oGq1HKEXRFild7cOOV4DLkmQbmFmQNwy9jzM7RkUz1Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sxjml+QtFqbZd3wmi/L339wHC9hxoe4SYqxrzFch2Wr9mAER0b30YLgqvIFnHZrTiGT8mjf3tGHvpWBou/SanfTNTsmM6LW4Bvv+8+Ss864MeBlTmRa74v+cUVAkiG8C6GuOiaUIjQB60rx+tED1XOeEbbWKM9OIOvhtRPyfEHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k3KXwgO4; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b="Jk4cR9Mg"
-ARC-Seal: i=1; a=rsa-sha256; t=1739803585; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NEiXNyaUnQNcDD/3M4HGswGeK0aiNIzEyaWOD6OYcRY1Yts/ZsNBlZqI1PO6/+qd8CiVf4Z74LgxrxFt3ZF0o3hsbwJDQmDozybkQpJee9Nwu47MoEgmeKx4c9xvzVpIZkK7u9z5anSaKDvOwNXfBizqJVviGJ70SZmSxM2yOE4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739803585; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Syb9XStZ74dZ9UjkC86uQY//S07l8lYvVVc6rFRliac=; 
-	b=Y7F3obk5zEMPYG69EUQKtLKHfFAfVASqIZjhH5YZKxp5eAzlhTDMdDi5QVxIDp+WmsQxpuvdbbG5Z/C4wRbSn6/xCYqrEZrucRkG0yfuz3slp4vmmcseN7KwwvdCeS398IMF112dSYBnOV4I8XZdBcYR32R87RDuJZW+/sGueVU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=kingxukai@zohomail.com;
-	dmarc=pass header.from=<kingxukai@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739803585;
-	s=zm2022; d=zohomail.com; i=kingxukai@zohomail.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Feedback-ID:Reply-To;
-	bh=Syb9XStZ74dZ9UjkC86uQY//S07l8lYvVVc6rFRliac=;
-	b=Jk4cR9Mg/3Brb4Q4WEgmjUc/b3sScSv5n9wvSP6XEhPg+qYsH+5RFXwGfIthcrT7
-	ZsbOGl7AbQJu/dTzbSfsyXUuOSrVYuHg2IJbpZeIKlDpvlVKq9+3XXvaoheRrwSg/D3
-	QuESQ9xGxEzTH+wIIL028D4y2RTMUp4LaVv2NQMk=
-Received: by mx.zohomail.com with SMTPS id 1739803582319344.185427226967;
-	Mon, 17 Feb 2025 06:46:22 -0800 (PST)
-From: Xukai Wang <kingxukai@zohomail.com>
-Date: Mon, 17 Feb 2025 22:45:18 +0800
-Subject: [PATCH v4 3/3] riscv: dts: canaan: Add clock initial support for
- K230
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3KXwgO4"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-307c13298eeso45645971fa.0;
+        Mon, 17 Feb 2025 06:47:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739803671; x=1740408471; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yelQ8r3ymkQjfm9j6D5BGBZ62JnuLjJsnUbfmnDTfxs=;
+        b=k3KXwgO4xbI6b81EZxlhqLxh4Z9b3auGIYjpLx+xsNImFH1LgVAbOLNzufM+3PNxNO
+         oi/tsgDjOel+srO7MJzYVsexnwPHia5zxCrcXJSclH4r5mBW7jg0pFLJXsjyS2DJ50+C
+         30/CilJM5FRvdoNmTqNCPY6ERVHLr+XvZOtmBVYe0PNPCDANnnFZxj+b4+BjBZwPbwVa
+         DjLCs0rDmkbKAVtDewNyIiskgYlbt4/4+BNlPK8dAlLQlZ/G2nJY4zFUE7h/SxOUdBxl
+         OIuUpvkGOH4Rkk35yXVtj+5F9ckyD8gtv4IOYxs57CBBpGeKtVtd7d/OV/YRDsSgevhC
+         /LXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739803671; x=1740408471;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yelQ8r3ymkQjfm9j6D5BGBZ62JnuLjJsnUbfmnDTfxs=;
+        b=Yh+Frr6aDiPqWeMreKnai34p+IgNrnDgMg9Z0LLXpgp4puxbV6lAqQDuaIxk4b2uKR
+         DhE4a8jeFx1AhvKWbX8Ed/kkhStQPWmQDGEIA9k65EsS0npLrXj5v/crwPhnDraRH12s
+         xCy7x6aCkAt5vEVBSHcs+zItb3j+BvjcGbTXNFcqFmEOKyX/CrBE/uXpFboHIS9ZfB9T
+         QHgtfoOa54poKR75FpRbb56ZNq8Ni2SmFjWwpcdI8ooy+nBishbDAts0osRbAceoLXP0
+         S8+pBepNVvc4BMysvhxplZ8HAgxP0KnxvazdAXKOVGqpucFqzVsPrM/hOr8SglGqaOoI
+         kLqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUF1WWDnNt11sPyk7cl0Bd3gciE6WXcD9ELQgtQnkNXuJCTCrProco/1PWl3SPG3LfyIODT6UCOTHLQ2KPYLlU=@vger.kernel.org, AJvYcCUFSKwfFdGnU92D9FCD8ZQsMS8O7vcWw4QYVZR4UKWwZgDW5myLYEDOHCw8I5JkZmqnVrPgacW+X3DW@vger.kernel.org, AJvYcCUqGBtHdVOnAdPQMZA3i4lHcAmJ4CbOTKT7atxhjRCLpN2aC7oQiF9zUSKh0sp3RYbpiu3ilk8GUXJEFrnU@vger.kernel.org, AJvYcCW21XsBBritXjPMxxWLkYyo4b7XtPIBBKlQHuuHEg8VBK7/d+CqAZbZv48gttrjyhqhhp2kW4nsDTA/vMxT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhvZC+t229EB7RqOjN22kgkJ7czAQZmL5TnEaF3YcbA4p/tS0p
+	qTlhFOuif/G6CL/fweWpHNF231Me6sl6gSif/BWFnnZrRhZNfKZNPOYhRJFjfMdoPBDpSCq4Mkc
+	Cf3bfpFaXfvuMRXemcWW4y2oruipREws7
+X-Gm-Gg: ASbGncuXcABGXAf5zhF4D5x9FaeDo6njD1F+2IwiJDrLqzWuO+0s/ckqjHpxC0NrSlA
+	qzo4L1jEJ7WfJ9bTftw0wAB19FFCJvNdO8mSCn5LvjvjYxrfe3pdzBcPPnVp6BNJdomjk0pFOXC
+	PRlqKWG9JgUUrOVbeOojFy49K436XZDNQ=
+X-Google-Smtp-Source: AGHT+IGl++F9JEix/3p1S41cUUJSot7kHwy5rdU0vrT8bdI4ZQwvTDealantGSf3uQMwjqLGEtdxinx7X645sIp0jn0=
+X-Received: by 2002:a2e:9e1a:0:b0:302:49b6:dfaf with SMTP id
+ 38308e7fff4ca-30928b7454emr23551951fa.20.1739803670897; Mon, 17 Feb 2025
+ 06:47:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-b4-k230-clk-v4-3-5a95a3458691@zohomail.com>
-References: <20250217-b4-k230-clk-v4-0-5a95a3458691@zohomail.com>
-In-Reply-To: <20250217-b4-k230-clk-v4-0-5a95a3458691@zohomail.com>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Xukai Wang <kingxukai@zohomail.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Conor Dooley <conor@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Troy Mitchell <TroyMitchell988@gmail.com>
-X-Mailer: b4 0.14.2
-Feedback-ID: rr080112272ae0dc6991c3de45d50b17cb0000fc8b1965e0e7c7867f8ee55a8061aab85b70c5ab7e4b8db1fe:zu08011227fc2bc9e2965e4fdb2f0c4b990000037bfd554c706be2b262157e58b81390c7fde98544147a77b5:rf0801122c6a9a65707d9fb9f7c57d64af0000a1040f8a940d2f1b116a7e43e5239e46863e3323289a3158bed9cc3d6397:ZohoMail
-X-ZohoMailClient: External
+References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
+ <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
+ <Z7MnxKSSNY7IyExt@cassiopeiae> <CAJ-ks9=OG2zPPPPfZd5KhGKgNsv3Qm9iHr2eWXFeL7Zv16QVdw@mail.gmail.com>
+ <Z7NEZfuXSr3Ofh1G@cassiopeiae> <CAJ-ks9=TrFHiLFkRfyawNquDY2x6t3dwGi6FxnfgFLvQLYwc+A@mail.gmail.com>
+ <Z7NJugCD3FThZpbI@cassiopeiae>
+In-Reply-To: <Z7NJugCD3FThZpbI@cassiopeiae>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 17 Feb 2025 09:47:14 -0500
+X-Gm-Features: AWEUYZkhjWnndzObhnnMYKIbIRqYFHcYPrkL6t02LpCr5aboeg3gLJ8FDP7cjDg
+Message-ID: <CAJ-ks9mcRffgyMWxYf=anoP7XWCA1yzc74-NazLZCXdjNqZSfg@mail.gmail.com>
+Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>, 
+	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch provides basic support for the K230 clock, which does not
-cover all clocks.
+On Mon, Feb 17, 2025 at 9:37=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> On Mon, Feb 17, 2025 at 09:21:00AM -0500, Tamir Duberstein wrote:
+> > On Mon, Feb 17, 2025 at 9:15=E2=80=AFAM Danilo Krummrich <dakr@kernel.o=
+rg> wrote:
+> > >
+> > > On Mon, Feb 17, 2025 at 09:02:12AM -0500, Tamir Duberstein wrote:
+> > > > > > diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> > > > > > index 6c3bc14b42ad..eb25fabbff9c 100644
+> > > > > > --- a/rust/kernel/pci.rs
+> > > > > > +++ b/rust/kernel/pci.rs
+> > > > > > @@ -73,6 +73,7 @@ extern "C" fn probe_callback(
+> > > > > >          match T::probe(&mut pdev, info) {
+> > > > > >              Ok(data) =3D> {
+> > > > > >                  let data =3D data.into_foreign();
+> > > > > > +                let data =3D data.cast();
+> > > > >
+> > > > > Same here and below, see also [2].
+> > > >
+> > > > You're the maintainer,
+> > >
+> > > This isn't true. I'm the original author, but I'm not an official mai=
+ntainer of
+> > > this code. :)
+> > >
+> > > > so I'll do what you ask here as well. I did it
+> > > > this way because it avoids shadowing the git history with this chan=
+ge,
+> > > > which I thought was the dominant preference.
+> > >
+> > > As mentioned in [2], if you do it the other way around first the "rus=
+t: types:
+> > > add `ForeignOwnable::PointedTo`" patch and then the conversion to cas=
+t() it's
+> > > even cleaner and less code to change.
+> >
+> > This is true for the two instances of `as _`,
+>
+> Yes, those are the ones I talk about.
+>
+> > but not for all the
+> > other instances where currently there's no cast, but one is now
+> > needed.
+> >
+> > > >
+> > > > > I understand you like this style and I'm not saying it's wrong or=
+ forbidden and
+> > > > > for code that you maintain such nits are entirely up to you as fa=
+r as I'm
+> > > > > concerned.
+> > > > >
+> > > > > But I also don't think there is a necessity to convert things to =
+your preference
+> > > > > wherever you touch existing code.
+> > > >
+> > > > This isn't a conversion, it's a choice made specifically to avoid
+> > > > touching code that doesn't need to be touched (in this instance).
+> > >
+> > > See above.
+> >
+> > This doesn't address my point. I claim that
+> >
+> > @@ -246,6 +248,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+> >  ) -> c_int {
+> >      // SAFETY: The release call of a file owns the private data.
+> >      let private =3D unsafe { (*file).private_data };
+> > +    let private =3D private.cast();
+> >      // SAFETY: The release call of a file owns the private data.
+> >      let ptr =3D unsafe { <T::Ptr as ForeignOwnable>::from_foreign(priv=
+ate) };
+> >
+> > is a better diff than
+> >
+> > @@ -245,7 +245,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+> >      file: *mut bindings::file,
+> >  ) -> c_int {
+> >      // SAFETY: The release call of a file owns the private data.
+> > -    let private =3D unsafe { (*file).private_data };
+> > +    let private =3D unsafe { (*file).private_data }.cast();
+> >      // SAFETY: The release call of a file owns the private data.
+> >      let ptr =3D unsafe { <T::Ptr as ForeignOwnable>::from_foreign(priv=
+ate) };
+> >
+> > because it doesn't acquire the git blame on the existing line.
+>
+> I disagree with the *rationale*, because it would also mean that if I hav=
+e
+>
+>   let result =3D a + b;
+>
+> and it turns out that we're off by one later on, it'd be reasonable to ch=
+ange it
+> to
+>
+>   let result =3D a - b;
+>   let result =3D result + 1;
+>
+> in order to not acquire the git blame of the existing line.
 
-The clock tree of the K230 SoC consists of OSC24M,
-PLLs and sysclk.
+Like anything, it depends. If something changes from being 0-indexed
+to 1-indexed then I'd say what you have there is perfectly reasonable:
+the 1-bias is logically separate from `a - b`. That's a fine analogy
+for what's happening in this patch.
 
-Co-developed-by: Troy Mitchell <TroyMitchell988@gmail.com>
-Signed-off-by: Troy Mitchell <TroyMitchell988@gmail.com>
-Signed-off-by: Xukai Wang <kingxukai@zohomail.com>
----
- arch/riscv/boot/dts/canaan/k230.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+> >
+> > > >
+> > > > > I already explicitly asked you not to do so in [3] and yet you di=
+d so while
+> > > > > keeping my ACK. :(
+> > > > >
+> > > > > (Only saying the latter for reference, no need to send a new vers=
+ion of [3],
+> > > > > otherwise I would have replied.)
+> > > > >
+> > > > > [2] https://lore.kernel.org/rust-for-linux/Z7MYNQgo28sr_4RS@cassi=
+opeiae/
+> > > > > [3] https://lore.kernel.org/rust-for-linux/20250213-aligned-alloc=
+-v7-1-d2a2d0be164b@gmail.com/
+> > > >
+> > > > I will drop [2] and leave the `as _` casts in place to minimize
+> > > > controversy here.
+> > >
+> > > As mentioned I think the conversion to cast() is great, just do it af=
+ter this
+> > > one and keep it a single line -- no controversy. :)
+> >
+> > The code compiles either way, so I'll leave it untouched rather than
+> > risk being scolded for sneaking unrelated changes.
+>
+> Again, I never did that, but as already mentioned if it came across this =
+way,
+> please consider that I tell you now, that it wasn't meant to be.
 
-diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi b/arch/riscv/boot/dts/canaan/k230.dtsi
-index 95c1a3d8fb1192e30113d96d3e96329545bc6ae7..e50ba03c2c21597e5f7d04a652db08f84101cbfb 100644
---- a/arch/riscv/boot/dts/canaan/k230.dtsi
-+++ b/arch/riscv/boot/dts/canaan/k230.dtsi
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-  */
- 
-+#include <dt-bindings/clock/canaan,k230-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- /dts-v1/;
-@@ -65,6 +66,13 @@ apb_clk: apb-clk-clock {
- 		#clock-cells = <0>;
- 	};
- 
-+	osc24m: clock-24m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "osc24m";
-+		#clock-cells = <0>;
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&plic>;
-@@ -138,5 +146,29 @@ uart4: serial@91404000 {
- 			reg-shift = <2>;
- 			status = "disabled";
- 		};
-+
-+		sysclk: clock-controller@91102000 {
-+			compatible = "canaan,k230-clk";
-+			reg = <0x0 0x91102000 0x0 0x1000>,
-+			      <0x0 0x91100000 0x0 0x1000>;
-+			clocks = <&osc24m>;
-+			clock-output-names = "CPU0_ACLK", "CPU0_PLIC", "CPU0_NOC_DDRCP4",
-+					     "CPU0_PCLK", "PMU_PCLK", "HS_HCLK_HIGH_SRC",
-+					     "HS_HCLK_HIGH_GATE", "HS_HCLK_SRC",
-+					     "HS_SD0_HS_AHB_GAT", "HS_SD1_HS_AHB_GAT",
-+					     "HS_SSI1_HS_AHB_GA", "HS_SSI2_HS_AHB_GA",
-+					     "HS_USB0_HS_AHB_GA", "HS_USB1_HS_AHB_GA",
-+					     "HS_SSI0_AXI", "HS_SSI1", "HS_SSI2",
-+					     "HS_QSPI_AXI_SRC", "HS_SSI1_ACLK_GATE",
-+					     "HS_SSI2_ACLK_GATE", "HS_SD_CARD_SRC",
-+					     "HS_SD0_CARD_TX", "HS_SD1_CARD_TX",
-+					     "HS_SD_AXI_SRC", "HS_SD0_AXI_GATE",
-+					     "HS_SD1_AXI_GATE", "HS_SD0_BASE_GATE",
-+					     "HS_SD1_BASE_GATE", "HS_OSPI_SRC",
-+					     "HS_USB_REF_51M", "HS_SD_TIMER_SRC",
-+					     "HS_SD0_TIMER_GATE", "HS_SD1_TIMER_GATE",
-+					     "HS_USB0_REFERENCE", "HS_USB1_REFERENCE";
-+			#clock-cells = <1>;
-+		};
- 	};
- };
+Wasn't my intention to imply that this was something you did. It was
+meant as a general observation.
 
--- 
-2.34.1
+> You're free to do the change (I encourage that), but that's of course up =
+to you.
 
+I'll create a "good first issue" for it in the RfL repository.
+
+> Subsequently, I kindly ask you though to abstain from saying that I accus=
+ed you
+> of something or do scold you. Thanks!
+
+Certainly. I'll point out, as you did, that I never said that.
