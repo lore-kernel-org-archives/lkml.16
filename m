@@ -1,222 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320DB4C70
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 07:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739775703; cv=fail; b=T0pUQPNxtSOC/q6mol9pB8Es3Qzw82YAusTQvtOFh0p+PTw2P8Qk51hxBOHF68WinZXpAST9F/UxYzGGq/TvEclgOxUvarkeNl4OepepIkSD8x3O4Cx4utmnxnN8uKLP2qLdtgTuolla1OQowznraW6i3698AkbqnElqiJGwlNU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739775703; c=relaxed/simple;
-	bh=1ayfZ1YuX+UQdfuJzl1X72oRdqusFzuWIYQ/2r4+Esg=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=EWJRbjuzKF8NySedgqqzGaoFvN9HhPqvbfmHdobcu1IXQLhBuucq0oXP43ZDvBnKES/7fzUrxuKOTujnjhwRSwZ1GZj8FdKkZJTbzzA0tGqUw31uKE/lwTiSK5zGvpKj4H1xf3Z9gwaKyDbZPvZDRFHaxciBdiaKbcHVchEn2hQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cwIu6DRO; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B75B178372
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 07:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739775713; cv=none; b=H8ZKITXdT9d2u+JB3vvjzLSSJ6BsFrhuzYm47+9HDjVoRXI6tvCxJjg2FTcc2SBij5I1RK9+AqS63spXiOfQJvgvZ8fNQX186V+LeDU2jrG5Ts2MWn7p3wXkh8Qnzmi03B3+Mp2GJ/6kUgUF95qD/rjQLNKA33dNKlJECRP6Qkw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739775713; c=relaxed/simple;
+	bh=7r4qKklENyXgmD6E9tdOwGRFPxJqo1t1y7v4KhLhWfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RRQJxx74Hmvm+GkuBXHoMbAmSSOlGSjckqg/8oY66bQu/KQuT+HzMrafRRdtHz4QaCApfccSOh31WjhPR4zSuXNVOziAYQOenykZuGy2AK1aICa9XxuRCiVS8uKn/UxJT0JjyXWcGoURff7pzJWU1UpOjFic4MzTSzfo1caWMfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ps4gzYvH; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cwIu6DRO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739775702; x=1771311702;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=1ayfZ1YuX+UQdfuJzl1X72oRdqusFzuWIYQ/2r4+Esg=;
-  b=cwIu6DROVZsGJgTEcFbl0nWcWeWG+f1N1HtkVD/IsKO1wPZPGz8lZjZu
-   ficH+l9epj9VJ+aFc+xsHh3oMQU6jWDnfP7DtZkbDKFJ/W1lenE40TbTq
-   bM3la0lNAbTP5Sb65F9ovswo+VqFMx8MXu5UdGdmkYza0+VlScm9zQxYC
-   wT4FaX6X4GwjcCf77ifgZMJgXXBbPZ1+lNvlwd6qsQ1XAtEWJBSIOj+yq
-   3GA6M1CmLkO3SA/iXxPOWtxbdOp1mR0f/wS8vAL9C/lbWdRk1y3iIpxJp
-   QHKHsTB5qCg+t4RQGC+O9E6Q8RYjvtqWlrXjsw1Muh7npxN48+ir6V8u6
-   A==;
-X-CSE-ConnectionGUID: 1NL2a5iXS6GL94cIBgrNYg==
-X-CSE-MsgGUID: fAzzuisbS1yT7h9068wFZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="44207587"
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="44207587"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 23:01:41 -0800
-X-CSE-ConnectionGUID: db1hQdvoRtyskOH4jS4oJg==
-X-CSE-MsgGUID: MiJb5tLbS72l/Ve6w0r5Rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="113779817"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Feb 2025 23:01:41 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Sun, 16 Feb 2025 23:01:40 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Sun, 16 Feb 2025 23:01:40 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.45) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Sun, 16 Feb 2025 23:01:39 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x79BrUMXvx2WbD0iRNDdMk1jnTBbmRaBQ52a4pf6j8s9zOgWuAUOY466pEJmk3JY8efexpOAy8x8c9OizrocCOkXW1X9ZnQTIXLkRe+9SC04mIhzpg9SHBTVNG16xPGU8IfuUg2GpnuCqZSNGAj56y9GAmwhjcvg9T5LpS9h0IZpAycRcNHTAZTDwRAfCuZs2FuE5p29h/ndTsLYlQH6aZkWZclGEF0Ce6Uzj+qC3mVzIGzB0Nd5j8rZNcdlCQH/kxseOHFEgE9i+3wbKdJPa4GsdfIavLQJVdqzYcSRfKx4wXS+CyU1KdJa87gBgzmQgftF3jSzOziQR0RQS0U2Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TZ5eOrDCHhTNHlNKlXono5UirOZBMKZI7uVRBo8syhg=;
- b=sVqxJc8x849wuRXDVJKiVqZPKthAQcajr/fQhcL7zybxd7Of1w7ox8JyEVJtc0nDlH+qDzTXMY8BKs2MlwzcoDKF0Wsun6ooLRgYIClcgMq5UhrCClOkiCa346hlGEWfyQjf5HnN4i/jPIf8Tqi13O9YdUXFQxnn4nK2VXmvN8etmMXuoah5fHzmQJtgY1gAAO/eM/vOLib/Rylq3AVsjL1woQpbaJuAGJPj4jkhAudgcfDTwy6KTEJxy/yO2LUXxHncqt5dRZJvqGIinahB2bXD3N4CCKuAlSrnTGu1xG+PBoSs/bWzTyzs7Juhb5DkP5aOZxX7sBC2VzSkslR5mA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by SJ2PR11MB7473.namprd11.prod.outlook.com (2603:10b6:a03:4d2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Mon, 17 Feb
- 2025 07:01:33 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8445.017; Mon, 17 Feb 2025
- 07:01:33 +0000
-Date: Mon, 17 Feb 2025 15:01:23 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: SeongJae Park <sj@kernel.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
-	<damon@lists.linux.dev>, <linux-mm@kvack.org>, <oliver.sang@intel.com>
-Subject: [linus:master] [mm/damon/sysfs]  9a5aa3349b:
- kernel-selftests.damon.damos_quota_goal.py.fail
-Message-ID: <202502171423.b28a918d-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SI2PR02CA0041.apcprd02.prod.outlook.com
- (2603:1096:4:196::20) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ps4gzYvH"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220e989edb6so74166665ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 23:01:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739775711; x=1740380511; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=u49MZ7ckUjks0G4rUJJF3Jdne3nRn7VDLa3q0SficI4=;
+        b=ps4gzYvH3F+T++8bq5spR0D4mU9HduNNqSUtBYykKd4L86gv4v1wf/taEEslyw8y9L
+         tyeQ7a7erOoeRcX25l70FdjkSbh9me7xkpAXwPVCASljvsTRXEDcLyhuQNtZmVeNozDY
+         XDYOtHwELiJTi9ln8GNFQtgl15lv/TJ/L/3l9MHf+we280+6WI1MBYQYdzS58Aw7Ysgw
+         UkdmqruFGbGq3v5y1OcFZjZxV9eR/eAvkcAuUKSwfwMvhNbPBmrWN4RxQ3u+IdW8VQEU
+         fPB6sSKbcSTDFrc7SL/BwzYKVCvmT5d0FpC2VwXwJ7ZEYAibg0Zz7b5BzE7RMmiPOpFk
+         EA1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739775711; x=1740380511;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u49MZ7ckUjks0G4rUJJF3Jdne3nRn7VDLa3q0SficI4=;
+        b=GIjjI9/mBFsGFnQYSONaDGJ/XwSNzotNiuwsEi3VHSlEZ0WP+DS65yiyxtd3pvCxT+
+         O+7OLab48mmF8vPWtdlcz8QhrX4thc/caMEqlEW/vplyxuRh+dCQKN+Lmxq9Ablnv8hk
+         TvtH9ReBxidGAdImQW+PCmWsm71JKkZBlRFwC/FzWOsvl2RA67PZf8Iahom/CXcolEcU
+         XicuUOeEIlbuRMACgFhcT/lWioSryA7/4KBOAs32SYKTK0Xkm8EFObGPI37fiiDBvICE
+         REgzeWweLrXj061l2lAuYYbMCFxGCP271UaqUvFyC3zXRb5ZRCGmiFmCzwU7ddBKyndQ
+         3A2w==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Ld8B7pvNGBSkY8GrvwQtjs7nJH3TRRI1T9boVxtZppw+WNVr7+O7JxmqUe9Wttdd28R7dtNOO7rKuKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWOmAdwUai5PK1h9A6ZNOpwDMd6kEU593B+eb8onszcY0ZpG2J
+	Dgt3ML1rBirnfL3cr68NrlsWpmoKmgdpw7mEF5hsklO0Z/b2kGsV2MZGATp+E7u9TllZ32XxtoZ
+	p2oKWJuVZLXqEnAsWEQxMAMXPXGfKdxn/s3lc
+X-Gm-Gg: ASbGnctYYU9W7n1vb9jQAbkg5iopFqMPKNmYD0ZwMTIpXl9qjDJg55qkea6zkdoBzrP
+	R4NAwiGl59Z7VQ9iE3p1cCYiIVyzjCXoRuT0acsBBCY+CaqR6Hiu3IS9z/vl+iG+LbaPCuf+JdX
+	dxcJxfqmHOKYpZ0i5ZAQJgdFNasll8
+X-Google-Smtp-Source: AGHT+IFWeRyJtkvClRvrsWaquwaeI1lrqbnBhDHjEWuXWIRcFBofwpVQo+CUyulA1nqe9sELux2HQzrj7rguLgLFLu8=
+X-Received: by 2002:a17:902:fc4e:b0:21f:71b4:d2aa with SMTP id
+ d9443c01a7336-22103efeebcmr156092895ad.5.1739775711051; Sun, 16 Feb 2025
+ 23:01:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SJ2PR11MB7473:EE_
-X-MS-Office365-Filtering-Correlation-Id: fbc7ef27-6774-418d-bf32-08dd4f20e95b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?vqHix3ANli/SCNo9fufn9tSjRGwIFVqXYg2v/IYL0TUDxEDVU/weRBzqdhA+?=
- =?us-ascii?Q?8JFLxXGDCqVIRuqrcm2IVmKPprUUsD5wE0O+TDIBAqs0ArwPRemWe7mxH8YO?=
- =?us-ascii?Q?EF9u6tKTbHXTHOsKMGC0+4oqvJd8bLwBjW1GqqIunNb1uQCNlfkvB+HP106U?=
- =?us-ascii?Q?5p5brVN9gQd9S9RHy2Zj7RJZlZF0IRSuy/8XaboZ9reiIu8if+p91X4seOPY?=
- =?us-ascii?Q?vX8tTJAHldw7ZWyDEIGl0tTVnz7UrHNbYldLQ93AOPG/imKwab28TTuIogcM?=
- =?us-ascii?Q?hb4B2DUgZfC0zNzQfxTdQ4uxBIGROLmXYHs2CFH6ozmtO6cHuVaY7dfMM572?=
- =?us-ascii?Q?3f0N6h7b2raisVBNJS+IFJ03RXed4H6XqvCKbNRqfxd8AneHckDl0akkxu91?=
- =?us-ascii?Q?FErVGzKUjluvgCeofJbq7AiMch1nFeVn/0ArXEygPeCrgMitS/cG5FtTQsPM?=
- =?us-ascii?Q?YbU1QZQwnyS9w25ekWQpjPAhJf3i9o0OYaoWlDnaZAlFfjf2H8ts9ih+4pLr?=
- =?us-ascii?Q?BcyhlNDGkx+IOWTpbnEHsxaskGt8PtXDIr4aq9z4GLokeHKfuS9yCvgX4KNC?=
- =?us-ascii?Q?QLcaF9C6JypQkOkQripeJzrHYsnELoJVS8jO8a82T49owZjrmfpDFUB7I+rl?=
- =?us-ascii?Q?VgLtZ2vSl8GQtCJqtNUVQyovAOO8WBmkNHBLngmx6ph+P2gCRS3zqiYxqZYE?=
- =?us-ascii?Q?jLcCxnQ6uZcrUd9Fm/gtnC3MV/EkXURjFW4zEh3T0ae94klqkdsp9Nl10vNl?=
- =?us-ascii?Q?rNFvxPaCMND1owxINcrd5/M9oleNy9BYzYTNP8Jv1r7LI0i2ZTzmb6vlT8K5?=
- =?us-ascii?Q?NO7PepbTOcqqcZZYji35BNlAIBpOlsHwnb9KxoFXZD4rH8V4Rz8nO5bl8pHq?=
- =?us-ascii?Q?gj3AFPVoDITWcX1l11RJ1T+ddl6ZGIKcZHVVto3P0UQXXBhmN3MEkN+1R4uB?=
- =?us-ascii?Q?/5gXt6laXCG2SRboesEFNUCxTLiEhIhz8TIVwX29rtcDsmfGW99rnAdzrNz4?=
- =?us-ascii?Q?xGQ8JxVlpzijFzcmHq5JnBNfKENZsBAwlH4SeE/sQtM9fG0fJ+VmWYgev1Eb?=
- =?us-ascii?Q?kbu+qxE3BFdhJIqNw3Yrdzv3QmrituMmTwXcjbLRVGYPKg6Wlm0epa3CF1pK?=
- =?us-ascii?Q?6Y3fYA8XdVBwYPH0ew0NVfZwp95vlmPvMlRf70rT3dded2aI3e9bfD/jAy/I?=
- =?us-ascii?Q?B47t9uV6u/g1QU9f3qiw2q78wnsrFyqs0rlbpK3J9FNsZZk4A7NEaZtxjp3r?=
- =?us-ascii?Q?wrLQXsy32dFCIWiMZcRE2yJc+lPG2x0TFso1NnPh+uy9gtnAh3LMU+vauKDf?=
- =?us-ascii?Q?g9b0Qq5UvBSsI1yaNFbTufRjpsC6E4Dar/9v2zWlBynxuw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jF4G7ZsF0ujmkx8pZ5WJPHmWlJNP8zL/F/5V9UuNp6IABhKAtszvboLs6/Vg?=
- =?us-ascii?Q?nBJJL1qav/hJdwDrdvCPdhYNMgHp+1GcpmTTZ48KTpwUI1ZX51AHg25k8tfz?=
- =?us-ascii?Q?OxgM44LKsZE8BAf5PsqoW6klUZH85jYUdbX0GtX0DO2JIWPClwoKHViVNWYi?=
- =?us-ascii?Q?xP+TWNTFbjz/kXlTQ1nZI2zyTb3EQYda3xQVBRhXCeJrXCN1k7sAtxe2Bf5G?=
- =?us-ascii?Q?AeCkgicG6VHaOvA+jI83iItz7S9kgGcC1ZvMVp+cLwDphe1qizOK5SlwD9ND?=
- =?us-ascii?Q?HWXEDij9wQbRVIhnjccuBROJSHswkdtHsYLL8SSRNi9GzLM39RFRBDvfclGh?=
- =?us-ascii?Q?ktIT2F29DftwT7BOLKLqn1O/9kJRlSTSBc+p7Hp8qpRnB3bv1nP5eftW7V6X?=
- =?us-ascii?Q?3d58RCZyIawE/QfNusDcuQGp0oeRvU0XGawmDEQbQ6jv7oD4UkmBJm/wQNRf?=
- =?us-ascii?Q?ss2nkSCaLb44SzzOVWLQ/4UISrs95rg4KJNmi9oFVOlRpfxWgrH8o15lppi1?=
- =?us-ascii?Q?sbgjkMZQuGumnG/MMj6rWWe7lIBGnalj9HIqV164OprsyyUIEjdtJLadJIah?=
- =?us-ascii?Q?PHS0PwDsXW1TUwh7B7ehOx7Scu2qSIEymmQzHAyYZLveBoKbMs5Ftt70M8id?=
- =?us-ascii?Q?dXuGH5RNvUDqpUZw11eG65OTwGOQC+SZk3qJfl3NLNPRDuLAfxbn+IaJ+CpN?=
- =?us-ascii?Q?v7A22GPp50ljS+0EGqctyzCFQhCHrQwQesXso7nCyqbRDp/2mTQtKHipiST7?=
- =?us-ascii?Q?kFIh8vnYxDoRtecLTauvk5X9/uiUlwLs9wQO3en7BANzZTXnC1pQSSsRy9V3?=
- =?us-ascii?Q?ESXl+pwzR6ZxBaB3b87EFjJgrnT/jGiqMU+f04NPfHyUbBjbBdfJWpPwy3OK?=
- =?us-ascii?Q?Cd3HBViWbhFglgU4/dPESLS/2SqgqtkQ46OmhSLA4bAYHAVvrB0RBzBxKSke?=
- =?us-ascii?Q?/p0IrAV/1gaw4DBqGKElw100uHBS/A8wWvXVXL1/I/oFipxvBGmfEGsTHj12?=
- =?us-ascii?Q?SJVVJZ7uvfVne6cyM0/a/b1TT42VrNh6p2l2B8Wz/72gxS6TtotxHa6MjdZT?=
- =?us-ascii?Q?UeZrOv/cnn3PtCBKqEFY7/2heccsOWeNHqSzB8u6MjNy1ykwmAFbbZ6FnyN4?=
- =?us-ascii?Q?Ow4UpYo6h7ximoRrtY+wLZiv0CPL6/uCXUtwpODNM6DDKQtuQ48T5/sbNY1/?=
- =?us-ascii?Q?9eyNFpyWIzQjUFflJAJFoUkHsNbJUx/fvxI/ty78esxfoTm1SgXvUIbuZVTi?=
- =?us-ascii?Q?ArrT8oqFMWHimhJbVtYbRGeyOmFZj2rdGd8a9ICt6+NJr6Nk66ouHL724ZD2?=
- =?us-ascii?Q?cYjLAucVkzjQMxZQP2NV1acV5vfyjZRd0jWhPE+0AQH9Ja9HvdH36CyL7Cjm?=
- =?us-ascii?Q?tb+1t5SunNg29NP+qahCed2ChIN4CWFJCOHyB2YRSLN76wOw3YJN7sVeTzrd?=
- =?us-ascii?Q?lw4aJw9S0SSwN8xH0nJOwRQ3eC3OK9hmrFKlv0lbyMJfKGLwC31VCabR1/3F?=
- =?us-ascii?Q?5426k3L7wYKidtp3FkJJWfFjM1/qYE77SS3TAOB1cVe/uM765Lbmc61AwnKW?=
- =?us-ascii?Q?aDjkQzTWPWPM6ny53cJrhyyIwWXv9QoCAyn8k+LVeJwWYaSfxrDGZBRT2/Fz?=
- =?us-ascii?Q?Rg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc7ef27-6774-418d-bf32-08dd4f20e95b
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 07:01:32.9987
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tt5e41ps5fsg4TkN1rCh7ttjVLhens4Zg7nMfooFCdFQNTjRghqpgtyM26JkDdvKKCn0VsQlvlZ4gR2Tz3oYmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7473
-X-OriginatorOrg: intel.com
+References: <20250213200228.1993588-1-longman@redhat.com> <20250213200228.1993588-4-longman@redhat.com>
+In-Reply-To: <20250213200228.1993588-4-longman@redhat.com>
+From: Marco Elver <elver@google.com>
+Date: Mon, 17 Feb 2025 08:00:00 +0100
+X-Gm-Features: AWEUYZmwE5--6gxi63zdBnPmPq2kP11LV4_YCuAvaNLPtiVGpigxkVLu7uW9PZs
+Message-ID: <CANpmjNPRZNTX2BKufHU16ybfcCvDaJmOSgihP7d0r9bgNZtGaQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] locking/lockdep: Disable KASAN instrumentation of lockdep.c
+To: Waiman Long <longman@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Will Deacon <will.deacon@arm.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 13 Feb 2025 at 21:02, Waiman Long <longman@redhat.com> wrote:
+>
+> Both KASAN and LOCKDEP are commonly enabled in building a debug kernel.
+> Each of them can significantly slow down the speed of a debug kernel.
+> Enabling KASAN instrumentation of the LOCKDEP code will further slow
+> thing down.
+>
+> Since LOCKDEP is a high overhead debugging tool, it will never get
+> enabled in a production kernel. The LOCKDEP code is also pretty mature
+> and is unlikely to get major changes. There is also a possibility of
+> recursion similar to KCSAN.
+>
+> To evaluate the performance impact of disabling KASAN instrumentation
+> of lockdep.c, the time to do a parallel build of the Linux defconfig
+> kernel was used as the benchmark. Two x86-64 systems (Skylake & Zen 2)
+> and an arm64 system were used as test beds. Two sets of non-RT and RT
+> kernels with similar configurations except mainly CONFIG_PREEMPT_RT
+> were used for evaulation.
+>
+> For the Skylake system:
+>
+>   Kernel                        Run time            Sys time
+>   ------                        --------            --------
+>   Non-debug kernel (baseline)   0m47.642s             4m19.811s
+>
+>   [CONFIG_KASAN_INLINE=y]
+>   Debug kernel                  2m11.108s (x2.8)     38m20.467s (x8.9)
+>   Debug kernel (patched)        1m49.602s (x2.3)     31m28.501s (x7.3)
+>   Debug kernel
+>   (patched + mitigations=off)   1m30.988s (x1.9)     26m41.993s (x6.2)
+>
+>   RT kernel (baseline)          0m54.871s             7m15.340s
+>
+>   [CONFIG_KASAN_INLINE=n]
+>   RT debug kernel               6m07.151s (x6.7)    135m47.428s (x18.7)
+>   RT debug kernel (patched)     3m42.434s (x4.1)     74m51.636s (x10.3)
+>   RT debug kernel
+>   (patched + mitigations=off)   2m40.383s (x2.9)     57m54.369s (x8.0)
+>
+>   [CONFIG_KASAN_INLINE=y]
+>   RT debug kernel               3m22.155s (x3.7)     77m53.018s (x10.7)
+>   RT debug kernel (patched)     2m36.700s (x2.9)     54m31.195s (x7.5)
+>   RT debug kernel
+>   (patched + mitigations=off)   2m06.110s (x2.3)     45m49.493s (x6.3)
+>
+> For the Zen 2 system:
+>
+>   Kernel                        Run time            Sys time
+>   ------                        --------            --------
+>   Non-debug kernel (baseline)   1m42.806s            39m48.714s
+>
+>   [CONFIG_KASAN_INLINE=y]
+>   Debug kernel                  4m04.524s (x2.4)    125m35.904s (x3.2)
+>   Debug kernel (patched)        3m56.241s (x2.3)    127m22.378s (x3.2)
+>   Debug kernel
+>   (patched + mitigations=off)   2m38.157s (x1.5)     92m35.680s (x2.3)
+>
+>   RT kernel (baseline)           1m51.500s           14m56.322s
+>
+>   [CONFIG_KASAN_INLINE=n]
+>   RT debug kernel               16m04.962s (x8.7)   244m36.463s (x16.4)
+>   RT debug kernel (patched)      9m09.073s (x4.9)   129m28.439s (x8.7)
+>   RT debug kernel
+>   (patched + mitigations=off)    3m31.662s (x1.9)    51m01.391s (x3.4)
+>
+> For the arm64 system:
+>
+>   Kernel                        Run time            Sys time
+>   ------                        --------            --------
+>   Non-debug kernel (baseline)   1m56.844s             8m47.150s
+>   Debug kernel                  3m54.774s (x2.0)     92m30.098s (x10.5)
+>   Debug kernel (patched)        3m32.429s (x1.8)     77m40.779s (x8.8)
+>
+>   RT kernel (baseline)           4m01.641s           18m16.777s
+>
+>   [CONFIG_KASAN_INLINE=n]
+>   RT debug kernel               19m32.977s (x4.9)   304m23.965s (x16.7)
+>   RT debug kernel (patched)     16m28.354s (x4.1)   234m18.149s (x12.8)
+>
+> Turning the mitigations off doesn't seems to have any noticeable impact
+> on the performance of the arm64 system. So the mitigation=off entries
+> aren't included.
+>
+> For the x86 CPUs, cpu mitigations has a much bigger
+> impact on performance, especially the RT debug kernel with
+> CONFIG_KASAN_INLINE=n. The SRSO mitigation in Zen 2 has an especially
+> big impact on the debug kernel. It is also the majority of the slowdown
+> with mitigations on. It is because the patched ret instruction slows
+> down function returns. A lot of helper functions that are normally
+> compiled out or inlined may become real function calls in the debug
+> kernel.
+>
+> With CONFIG_KASAN_INLINE=n, the KASAN instrumentation inserts a
+> lot of __asan_loadX*() and __kasan_check_read() function calls to memory
+> access portion of the code. The lockdep's __lock_acquire() function,
+> for instance, has 66 __asan_loadX*() and 6 __kasan_check_read() calls
+> added with KASAN instrumentation. Of course, the actual numbers may vary
+> depending on the compiler used and the exact version of the lockdep code.
+>
+> With the Skylake test system, the parallel kernel build times reduction
+> of the RT debug kernel with this patch are:
+>
+>  CONFIG_KASAN_INLINE=n: -37%
+>  CONFIG_KASAN_INLINE=y: -22%
+>
+> The time reduction is less with CONFIG_KASAN_INLINE=y, but it is still
+> significant.
+>
+> Setting CONFIG_KASAN_INLINE=y can result in a significant performance
+> improvement. The major drawback is a significant increase in the size
+> of kernel text. In the case of vmlinux, its text size increases from
+> 45997948 to 67606807. That is a 47% size increase (about 21 Mbytes). The
+> size increase of other kernel modules should be similar.
+>
+> With the newly added rtmutex and lockdep lock events, the relevant
+> event counts for the test runs with the Skylake system were:
+>
+>   Event type            Debug kernel    RT debug kernel
+>   ----------            ------------    ---------------
+>   lockdep_acquire       1,968,663,277   5,425,313,953
+>   rtlock_slowlock            -            401,701,156
+>   rtmutex_slowlock           -                139,672
+>
+> The __lock_acquire() calls in the RT debug kernel are x2.8 times of the
+> non-RT debug kernel with the same workload. Since the __lock_acquire()
+> function is a big hitter in term of performance slowdown, this makes
+> the RT debug kernel much slower than the non-RT one. The average lock
+> nesting depth is likely to be higher in the RT debug kernel too leading
+> to longer execution time in the __lock_acquire() function.
+>
+> As the small advantage of enabling KASAN instrumentation to catch
+> potential memory access error in the lockdep debugging tool is probably
+> not worth the drawback of further slowing down a debug kernel, disable
+> KASAN instrumentation in the lockdep code to allow the debug kernels
+> to regain some performance back, especially for the RT debug kernels.
+>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
+Reviewed-by: Marco Elver <elver@google.com>
 
-Hello,
-
-kernel test robot noticed "kernel-selftests.damon.damos_quota_goal.py.fail" on:
-
-commit: 9a5aa3349b9428ae451b22c331d0d9a9cfc7ac90 ("mm/damon/sysfs: use damon_call() for update_schemes_effective_quotas")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-[test failed on linus/master      0ad2507d5d93f39619fc42372c347d6006b64319]
-[test failed on linux-next/master 0ae0fa3bf0b44c8611d114a9f69985bf451010c3]
-
-in testcase: kernel-selftests
-version: kernel-selftests-x86_64-7ff71e6d9239-1_20250215
-with following parameters:
-
-	group: damon
-
-
-
-config: x86_64-dcg_x86_64_defconfig-kselftests
-compiler: gcc-12
-test machine: 36 threads 1 sockets Intel(R) Core(TM) i9-10980XE CPU @ 3.00GHz (Cascade Lake) with 32G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202502171423.b28a918d-lkp@intel.com
-
-
-
-# timeout set to 300
-# selftests: damon: damos_quota_goal.py
-# score: 0, effective quota: 0 -> 16 (-1.000x)
-# score: 15000, effective quota: 16 -> 1 (0.062x)
-# score: 5000, effective quota: 1 -> 5 (5.000x)
-# score: 18000, effective quota: 1 -> 1 (1.000x)
-# efective bytes not changed: 1
-not ok 7 selftests: damon: damos_quota_goal.py # exit=1
-
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250217/202502171423.b28a918d-lkp@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+> ---
+>  kernel/locking/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+> index 0db4093d17b8..a114949eeed5 100644
+> --- a/kernel/locking/Makefile
+> +++ b/kernel/locking/Makefile
+> @@ -5,7 +5,8 @@ KCOV_INSTRUMENT         := n
+>
+>  obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
+>
+> -# Avoid recursion lockdep -> sanitizer -> ... -> lockdep.
+> +# Avoid recursion lockdep -> sanitizer -> ... -> lockdep & improve performance.
+> +KASAN_SANITIZE_lockdep.o := n
+>  KCSAN_SANITIZE_lockdep.o := n
+>
+>  ifdef CONFIG_FUNCTION_TRACER
+> --
+> 2.48.1
+>
