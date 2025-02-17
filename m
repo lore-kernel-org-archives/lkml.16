@@ -1,284 +1,143 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156D7217647;
-	Mon, 17 Feb 2025 09:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7639E216393;
+	Mon, 17 Feb 2025 09:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739784704; cv=none; b=rMmhM38NLQgEq/N+18YGaDH/8vqOp6MXq07D1ZbtdbkbLeSaxUiQOmK7/PoRV+MqRWSjL9EfvAdner8QkOdlj3M9QNEk6Ir+JRIeHidO+cwDV2DY6SQCB7PLv6yn5PzAqnXPJlYM5JfYYm6CJjyo2KSVrBPDcII3NoerZlrDBgg=
+	t=1739784711; cv=none; b=MwK6VIy5yNuJNGacxck3q4wrVGblDUQSCHBnpd8Zyo3Hf3uVj+MRor/JFiCeLV9DgL+arVOTJBDBVe2qCeUqWDsb4KCwDEt3J6ctZQI8ioyfrqtPsaNNymTCZ4oA4PHCi9Dvsmzdc95gaeExTSFjCaUdkz4fw6WeNqW8NQgyAgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739784704; c=relaxed/simple;
-	bh=tYFvJAC+E6lq1I465BOU8f0pSMGntQzDYaPmWQtwSuc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nXcdG27zuH5QIc8RZC0YbWX3cmCqRx4Qx3AQI6Zccf8nA6HPLr8LldiBamshTVon0+qKiljQjG310Uy0WdVR7c3Nk9NDcmRqqvoK7+oHAz5Hh8hXsWty7MJWUYFNMl011Hgc5X6PpQCvZcCZq5EkadrIW7oH6eemf/5/+us8u6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=m/yW/JPf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739784711; c=relaxed/simple;
+	bh=qwwfQspqK1CIaepn5O3N48Xj/62KJzh4txop3uOMjDc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=chTNivSwqLwR5/3x6ZH7tX7xwhMAQ40YfO0l4amueTiViafZ5OtscfJML6KzWX/ev561uTV//4/filAo6gLLB1lssDAYFBr/QlaOD3Fm/kRqtd4BXtJr2OOkxt7gnDN8AA0nt2lAlI6n7wy9Trxyb77009LSjYfNX4sJfMSHags=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qgo4L2Ww; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m/yW/JPf"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H02vmu026153;
-	Mon, 17 Feb 2025 09:31:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FrWpXWtpt+ZULEbiR2Up6sVFlN84+mzhnBc7WKp2O/Q=; b=m/yW/JPf8x3mGRTj
-	v6VXYHcgo/B59IMZ4RIm1kYaFLYVSQaGQkxG4ESFFc5Rpq6gd+A1+TfIcQTj9Mu+
-	lKm/gve0/+/eFmBOAHUhORtphEy5DllVceoGEOMzWVI8T3aipDmmA0hmZQMBsV2p
-	CAbVYs4UoM40HZ27/7SToHW4n7Ew7ifOLKI39Tf0kEdUCWruR8aA4n1f52tKKkYV
-	QmUtKHfFrSV/GM7ZzwoaXjwtVyt+UGA+ENVJUQ/WWl/Swan/+4ETfu/iIH5DzVSh
-	jPUM3Y4ciP/Tq2nqCjwSkgtVmHXGAkrSmAReFhG03TqAxBR2VCAr7m25jTWRP8C6
-	vGyiVA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7sh5tr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 09:31:27 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51H9VQOd024650
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 09:31:26 GMT
-Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 17 Feb 2025 01:31:20 -0800
-From: Jie Gan <quic_jiegan@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v12 7/7] arm64: dts: qcom: sa8775p: Add CTCU and ETR nodes
-Date: Mon, 17 Feb 2025 17:30:24 +0800
-Message-ID: <20250217093024.1133096-8-quic_jiegan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
-References: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qgo4L2Ww"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso615422566b.3;
+        Mon, 17 Feb 2025 01:31:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739784708; x=1740389508; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qwwfQspqK1CIaepn5O3N48Xj/62KJzh4txop3uOMjDc=;
+        b=Qgo4L2WwhX7vWcVUGZ1DzQicBwRJuBsoC+tuYs9WiR8y/KBF6byNaAUgx38YNqo3FX
+         dNNVrd+ivRzKttSSN1hsikdg2tGuZH+ZWMhmXZcT/4K4gRUk2RJYZUHxcyMfPxJrMiPy
+         EamgI6VG9CkcK4S4uShN2u1Dn160vBo+kE4mu7oSnPrvGvEm+X3s7A+TtzjbPWT41cm+
+         vYXwkXY71eiX6pxKJkJO2N4EsPjig3pAKVPe9ORWoVftJGB1x5955pSO/Cr2ZYar+Vyp
+         tSJDFvffLQBp0k4+AgIjf3/p6KAMqaT8EkpYFYVsTs4DU/Ygw+0und4dbMzrXb6wtFlv
+         SArQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739784708; x=1740389508;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qwwfQspqK1CIaepn5O3N48Xj/62KJzh4txop3uOMjDc=;
+        b=U4Q6Nlfy2lEKwHf6N1mWoPZzd4Qpz9suWifVoTIiMRvdWh5nuC9s299LyhqWOJJ83d
+         PEh+qf0y0cnUVCdV0cJ4/EjoJ/t1Jpn8q1MA6AdmwrjqepRlNNNl6omwNfrTA+aUXBFt
+         vqV6AgXR6CXprVK2jeAGDt78lYrMn2Mvc+8TBVv3EyrXVi1c5omqInPJ8YNzzdEJNtG9
+         rRaoldBJ8bT332SniBd61lwv5ELhunORcBc55FQj0nwJNj0N0NMne11ZuZw8wjTe+UAF
+         ltI+Z8Hah/2ObD1NuTycFJDB6MQ4lGD1flGIlO586FImEAxvJImrA0RflPvbWPM7Rx4g
+         IBnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUz3+BJOhKwf9gYyE2u9OOHNKx+DiPZyAuje2Ihk+Ms3M1e/T36UttMNFa4HdU3msVQagMceLWpuxqB@vger.kernel.org, AJvYcCVKkQpBeOgIGD8mJApjiEpg1A6jrlRIwYeoq6uoL+PrRnvGOHb4nJAINYD03rzSocjahd0F3l2m2c68@vger.kernel.org, AJvYcCVwzKVHenWfxSeV1xqOAE/F7dQudMUvlj4A79MiUthe47qRlmjkctaNu59Fv8ixUL5z8Fv5koLRBmbO+jYr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO96En12Dtl7AiffaYNE0V0tFN8nY3rDKCBA0szY+lKafXUNPM
+	Alz8H7g9fC6WrvjnwdR3pt4R+D6opiPCnYe4ZSPDrNBcJ4Q+I19N
+X-Gm-Gg: ASbGnctlQk9jGzvtD+dAKCjv4f6VyxFBVW/65zjFJdT7Ts7n4xTpR2YObmoJwbuAhET
+	YNOr3nKjXc5DpzbbQ9mPbj+axXxUP+uHQBHdntplKswo/AAmOHZ4X2gys2XxYjLX/CYDQjpZvsi
+	TFCnfeojGiTcD2vH6UjQL4I9USSEYZXtUYh6GV3HYBeFO1G6ku4ai7e5MGpXUGgZL1LZABT50U+
+	8PzFnCsvFVZHgAlE1qwOEDCrIjuDUhgLissIuat7b4GQMlOhkaifimMvWfJZxX/iU7QorKLQS2i
+	oHPSW/KY4oZbH1C14zM9zYUhUO88X3RE
+X-Google-Smtp-Source: AGHT+IF19rIOBPRe3FreKmfKhGzofepgR2PC8/BYqtWn5SXsysFWGgg87ztwsvGb53f3Baqru+RpWg==
+X-Received: by 2002:a17:907:3d8e:b0:ab7:4641:a72d with SMTP id a640c23a62f3a-abb70de28admr913177666b.51.1739784707261;
+        Mon, 17 Feb 2025 01:31:47 -0800 (PST)
+Received: from giga-mm.home ([2a02:1210:861b:6f00:82ee:73ff:feb8:99e3])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abba64fbabfsm75995966b.172.2025.02.17.01.31.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 01:31:46 -0800 (PST)
+Message-ID: <3ba76f2162841ab91ef823315e7ce4b5b7526984.camel@gmail.com>
+Subject: Re: [PATCH v11 1/3] dt-bindings: rtc: sophgo: add RTC support for
+ Sophgo CV1800 series SoC
+From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To: Chen Wang <unicorn_wang@outlook.com>, Jingbao Qiu
+	 <qiujingbao.dlmu@gmail.com>
+Cc: Inochi Amaoto <inochiama@gmail.com>, alexandre.belloni@bootlin.com, 
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	inochiama@outlook.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, dlan@gentoo.org, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ devicetree@vger.kernel.org, 	linux-riscv@lists.infradead.org,
+ linux-rtc@vger.kernel.org
+Date: Mon, 17 Feb 2025 10:31:43 +0100
+In-Reply-To: <MA0PR01MB567164E6BE03750F2200CBDBFEFB2@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+References: <20250213215655.2311793-1-alexander.sverdlin@gmail.com>
+	 <20250213215655.2311793-2-alexander.sverdlin@gmail.com>
+	 <MA0PR01MB567164E6BE03750F2200CBDBFEFB2@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HJ18KJtG6EEUDCfFcuBVxTDMlPXxl0Qt
-X-Proofpoint-ORIG-GUID: HJ18KJtG6EEUDCfFcuBVxTDMlPXxl0Qt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-17_04,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 adultscore=0 spamscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502170083
 
-Add CTCU and ETR nodes in DT to enable related functionalities.
+Hi Chen!
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 153 ++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
+On Mon, 2025-02-17 at 17:26 +0800, Chen Wang wrote:
+> > Add RTC devicetree binding for Sophgo CV1800 SoC.
+> >=20
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> > ---
+> > =C2=A0=C2=A0 .../bindings/rtc/sophgo,cv1800-rtc.yaml=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 53 +++++++++++++++++++
+> > =C2=A0=C2=A0 1 file changed, 53 insertions(+)
+> > =C2=A0=C2=A0 create mode 100644 Documentation/devicetree/bindings/rtc/s=
+ophgo,cv1800-rtc.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/rtc/sophgo,cv1800-rtc.ya=
+ml b/Documentation/devicetree/bindings/rtc/sophgo,cv1800-rtc.yaml
+> > new file mode 100644
+> > index 000000000000..b36b51a69166
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/sophgo,cv1800-rtc.yaml
+> > @@ -0,0 +1,53 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/rtc/sophgo,cv1800-rtc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Real Time Clock of the Sophgo CV1800 SoC
+> > +
+> > +description:
+> > +=C2=A0 Real Time Clock (RTC) is an independently powered module
+> > +=C2=A0 within the chip, which includes a 32KHz oscillator and a
+> > +=C2=A0 Power On Reset/POR submodule. It can be used for time display
+> > +=C2=A0 and timed alarm generation. In addition, the hardware state
+> > +=C2=A0 machine provides triggering and timing control for chip
+> > +=C2=A0 power on, off, and reset.
+> > +
+> > +maintainers:
+> > +=C2=A0 - Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+>=20
+> I guess Jingbao will not take this role. If he doesn't raise any=20
+> objections, please just change this.
+>=20
+> Jingbao, do you have any comment on this?
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 3394ae2d1300..31aa94d2a043 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -2429,6 +2429,35 @@ crypto: crypto@1dfa000 {
- 			interconnect-names = "memory";
- 		};
- 
-+		ctcu@4001000 {
-+			compatible = "qcom,sa8775p-ctcu";
-+			reg = <0x0 0x04001000 0x0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb";
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ctcu_in0: endpoint {
-+						remote-endpoint = <&etr0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ctcu_in1: endpoint {
-+						remote-endpoint = <&etr1_out>;
-+					};
-+				};
-+			};
-+		};
-+
- 		stm: stm@4002000 {
- 			compatible = "arm,coresight-stm", "arm,primecell";
- 			reg = <0x0 0x4002000 0x0 0x1000>,
-@@ -2633,6 +2662,122 @@ qdss_funnel_in1: endpoint {
- 			};
- 		};
- 
-+		replicator@4046000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0x0 0x04046000 0x0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			in-ports {
-+				port {
-+					qdss_rep_in: endpoint {
-+						remote-endpoint = <&swao_rep_out0>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					qdss_rep_out0: endpoint {
-+						remote-endpoint = <&etr_rep_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		tmc_etr: tmc@4048000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0x0 0x04048000 0x0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			iommus = <&apps_smmu 0x04c0 0x00>;
-+
-+			arm,scatter-gather;
-+
-+			in-ports {
-+				port {
-+					etr0_in: endpoint {
-+						remote-endpoint = <&etr_rep_out0>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					etr0_out: endpoint {
-+						remote-endpoint = <&ctcu_in0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@404e000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0x0 0x0404e000 0x0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			in-ports {
-+				port {
-+					etr_rep_in: endpoint {
-+						remote-endpoint = <&qdss_rep_out0>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					etr_rep_out0: endpoint {
-+						remote-endpoint = <&etr0_in>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					etr_rep_out1: endpoint {
-+						remote-endpoint = <&etr1_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		tmc_etr1: tmc@404f000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0x0 0x0404f000 0x0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			iommus = <&apps_smmu 0x04a0 0x40>;
-+
-+			arm,scatter-gather;
-+			arm,buffer-size = <0x400000>;
-+
-+			in-ports {
-+				port {
-+					etr1_in: endpoint {
-+						remote-endpoint = <&etr_rep_out1>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					etr1_out: endpoint {
-+						remote-endpoint = <&ctcu_in1>;
-+					};
-+				};
-+			};
-+		};
-+
- 		funnel@4b04000 {
- 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 			reg = <0x0 0x4b04000 0x0 0x1000>;
-@@ -2708,6 +2853,14 @@ out-ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
-+				port@0 {
-+					reg = <0>;
-+
-+					swao_rep_out0: endpoint {
-+						remote-endpoint = <&qdss_rep_in>;
-+					};
-+				};
-+
- 				port@1 {
- 					reg = <1>;
- 					swao_rep_out1: endpoint {
--- 
-2.34.1
+New version will look rather like this:
+https://lore.kernel.org/linux-devicetree/20250216180924.2506416-1-alexander=
+.sverdlin@gmail.com/
+
+But I'll be happy to take you suggestion and replace my name in the
+new version with someone more afiliated with Sophgo ;-)
+
+--=20
+Alexander Sverdlin.
 
