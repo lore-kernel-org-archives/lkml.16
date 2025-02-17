@@ -1,109 +1,102 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1E02376EA
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A510372
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739821880; cv=none; b=VP1QQ3nqmeVEqbx+6lAZhdnNuHrI+hS4ORLcQuq/2MuydnCtJG5Oa6lW3CGy0vR1i+RuMKEFDdVw92kQjjqU+eYhnwrbYzkkcp6X2bGvDlgItuhcz1CH8tMfYFKHtSXlxKaCOmTO11satM3ryphbs3QUx2j61LigjDJQv7J1y5o=
+	t=1739821920; cv=none; b=pCRSX8iYwpbz85//+t4jufzxLpNDVteTahxsDgvZU9cC98tlDRx0RARk9qUUVffN5UXKR8TFuaj9iDKmA1GLhHMHPifyqi+EwdWbxczAxIZHLlR7aOOSxh0qDjLlxxW0JP3WDQDQFFQ4AQ6RSEyw5y4/ffFsg6uiQ06C8Uk+qI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739821880; c=relaxed/simple;
-	bh=5JCtn3HaQ2Y42IOCz0vVF5B+3fj19u+R4j7L/gr3zkI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qsRh8ROHUQcitVzKH9dIoqSRYW5oq4x7Bk6xaooQFho8Q6YZP2fDmyaQGh+knZrctMDCuJQQPa3t6uclrbtck6Lx1xih5yQtWWYtCinV6k5Tosaiwc+fAC/2KeL5M9+oSb9Onn8uwMH0dB2uznV2smqxU+s4u+ZGyouxpOWT51M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UBuFN/UL; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739821920; c=relaxed/simple;
+	bh=Z1UnWnZLxSNI4+SbOFhsVv3Rm88k1kFKTLG4c6e3yk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lWjALyJjoSF1Pk0S5HMkl+qZEi96SFXnkvRONj54jtNymdrBzk06dYcScD+MgJzivYFaPm/pOW6RTybLymW7KBRpmm/BEbjHli6rTGp9nkzjcy8t4geecpoDot9SBY8s7h9NNRzqFP+Rz52DVQy+HpVz61E3vqWYFnlqIeEn5Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R1VlwnEC; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBuFN/UL"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-21c2f1b610dso118812505ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:51:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R1VlwnEC"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30761be8fa8so51283161fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:51:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739821877; x=1740426677; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x+OA47VmynX7pepNmjGGlDQZM/5yLns+ASpEva8XVu8=;
-        b=UBuFN/ULn8me4XBC7IVnNisuhjVmJAZPiXgMT9RUww0JuZ6LN7iHryLuC09+f0Nz7P
-         ZncgiEvjqlOrNNq4Epfme4Bowfbsc7ZR0xX2dTIen35DkRf+yffZhwO9dYXtNZvtBZdK
-         qhbbZux6nEPBOk/87r52bs1TxwE2NVWddSlGxvI5ki1WPIMZwj6yo3DVz7RnVmPUEiv9
-         D7s1pa5E96+Oew0gaPDTXD4aTNIC9BfFtnmyGcCFM5kCJGRmcjcX2p+g9NgQpVYzCWMg
-         T4IjpeQeUyracRzrNlr2I6H4RVhpeezyn2FtVR1UeCfdW5ft6UgOI1qgB28aZaUvUBtA
-         fDtw==
+        d=linaro.org; s=google; t=1739821916; x=1740426716; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=du441ZCOQupNPXiNMHUbWNZp53UAbJ7rrRkJ3qKot/U=;
+        b=R1VlwnECBrhCRuXmeyHvFwN46B0J/+4gGVtdIXkWKvCZX8cPK9T5OmPEtOouLOC0oh
+         80K41066YSt/0HPIAvvHDQgOFERDmiIqhkEgkCVCPv7Z3s33OOJLf7SrZ7um0L1kVlRY
+         kPMvrLc8BuwaCFeEZowfi8Qn3KYnhS7ymfMmG4+Bk310Rs2M+ZNACjABz/6IL3DrGE/+
+         Rcg4umSrjYQjPaYw0LxAv5shPxlDusCYIwNQ2R4m+ekLfHRNXJO+ITAOdvgy7AUr7n/Q
+         i6gEw0vnGuP4lN9xPXbNchwktMPjFdAxcGNTsPWpvdz327ORCF6gBu8k1cGQYk55Fg8P
+         mURA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739821877; x=1740426677;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x+OA47VmynX7pepNmjGGlDQZM/5yLns+ASpEva8XVu8=;
-        b=Nsg3+w1TtnasXpS3GvAI7UUqEO94Y4DcvTLWF3AolSttMaDJJakYftbapTpP8VyFIu
-         T+4gRbyiwmLkqWn5ZpP5iFBErQKJVmwlZWtgN1ZvfaAofWy6x8UswEeFEutrZ4vCguhy
-         /y/B4AwDmSoo9nHUYGOSATXIJGUGhx4NOxAjGL6CmppgPsVaCp4vw2lY1ifNv6liqfIu
-         ziWdKDzC9AM0Kc4X/AxsY4LNLBUtUwuzNdHdxr8xC9KXUlJhJ2IBVOHodFAU8coOSDSa
-         02Bi5z6hG487uH/pZjVRB9HIPp/A71e84YYkpYIxvYiZZkiTTdAswOkeTPKRWEIGN413
-         Fqxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFOxkj51uPcdNfSW4DCNAPxK/rtuUZeXS0d0CrtKan8HrljCmBtivqzWZ9C1AOJNxGTfPvtspDYEbjGN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv19YpHW6kblMIRUZJgSKVM9+ZXQFZ+YvlaB++/J1m+zOMJ445
-	6YTrIxdbOPFqCT5aVcW5dLlFglFAFvkhX6YVXhCkYmAbgUlld20A
-X-Gm-Gg: ASbGnctjaaQpV2lHuAscrwVNc9ehLnAllBMsRTvrY/B2nOjLGzD2Q3j9B+MeBqumR2I
-	a5yk9YH2+C8omAhPHBOIMe6qOGXCSxg5sh5QFSV0zHszjhnDYAFyZSRnUv9i5TLK6OPxrjZ9T2z
-	eESqhm01kp24i6OmmNpMQb1zb0APXj2yoxVfZcCY+b1IonHfTlaxXrP7eKmlegz1osMMlmBOR53
-	0rR3JY9jTx9ha65yq7na6DIKwIs4JMU8PhXjLZps2keXRZ/yYVyW55AbuZHWAFsGYXemUM5V6Iq
-	YOzwuY+CP2HNhELup7Wp
-X-Google-Smtp-Source: AGHT+IGX/PqH4IdF45LylRY13MTSCdLLYKcQkYQNdNSp6Anjsr80DZAfOnbZoTKi4sYfhLlThW8VjA==
-X-Received: by 2002:a05:6a00:1256:b0:730:91fc:f9c9 with SMTP id d2e1a72fcca58-732618b0b1dmr18138986b3a.16.1739821876633;
-        Mon, 17 Feb 2025 11:51:16 -0800 (PST)
-Received: from localhost ([2409:4066:d04:319e:1d76:db25:b6bf:4f52])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73278d09228sm2811898b3a.117.2025.02.17.11.51.15
+        d=1e100.net; s=20230601; t=1739821916; x=1740426716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=du441ZCOQupNPXiNMHUbWNZp53UAbJ7rrRkJ3qKot/U=;
+        b=gSzbFNNBa5nHG1nnLRwj0MMUWJc0k5L7T5c5ybnig5IMfEjpGpDImgCwv4msI9Dxrv
+         xXna+f+yti8hNyY3Frsw3juSaRAtp2GXqxdX1507JQKfGJT1HbCdHG9CtVRFAwCNdgFG
+         k65nH+QyxVC7sj8iffLNI9EOYuYAUoD2tmNb8D68nEm4N7aUGNLwFWjcXP9Ll3aYTpGl
+         dRk0sA60Kqj1k5UxqW7knR3eZbOtdqUy8/oisvAA/7ssIIKzyy7u8hdE04QGgwS6+iez
+         bV9gCokl0DP/vw8PmBLWLu0EG7h0+esIfhG98mWNVY1SAx3KbNsfJVsy0JYwLbCvTc79
+         Cckg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXDmrs8bAFvzwmFIt5kwUumxKY7YraVrdPNti208KCbY1KmKzLs6nD6vjaih85fz7/BY/1GVT1rsXcdAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA1zGV2BuLwpvRgnal3tGzxxUTvLM9bIR+yB1eItKzggw1g6l7
+	s+O+q8Pn1i6R6RTuytmCjDzeU2u+uitBFwCR7FTTZSUQOogrldHJO5TxFnuX+Go=
+X-Gm-Gg: ASbGncvazbVt3GkIwkixHLvyYID70kSZsWxtjeBcbxFMSawprs7GI/THwgPjFB8w5CT
+	rQvbCpaYTT/qd4GRt+O73n+Xc7O5Mdj1FyTqHZXIPr2EuNer6Md/6AEHXKPvIzTArNY7XszUjC5
+	bDY0luQglAplxCyOCIBZpzeR1i3N5VppdkUVTxpmZhVRcrDViw2OfqvG3HV/+A6sVvIPU3Faedj
+	QU0FRJZ8xIRfu9qx9F15wzXAyME6DJORCPev3yrKnoSj9nI4zKT0mfR0axSGrvHl1XRBGMyezoo
+	b16FSojyE/fqVMhoxy2xsbcqTqW3f+DNTvGRpLZQ9m5PfFwGgzLoRc1rSFbv8UgLa59pJjU=
+X-Google-Smtp-Source: AGHT+IH1cgaF5tU76THnhAXO4GxVx1EqnJgKWJ8zkZhai7T85xKUgyK77lVetaexQtb3yZ7M3uAvow==
+X-Received: by 2002:a2e:8657:0:b0:2ff:df01:2b43 with SMTP id 38308e7fff4ca-30927a6f5bfmr35430101fa.18.1739821916381;
+        Mon, 17 Feb 2025 11:51:56 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a3a6d3dcesm1478471fa.67.2025.02.17.11.51.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 11:51:16 -0800 (PST)
-From: Ravi Kumar kairi <kumarkairiravi@gmail.com>
-To: dpenkler@gmail.com
-Cc: gregkh@linuxfoundation.org,
-	kuba@kernel.org,
-	dan.carpenter@linaro.org,
-	rmk+kernel@armlinux.org.uk,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ravi Kumar Kairi <kumarkairiravi@gmail.com>
-Subject: [PATCH v5 3/3] staging:gpib:agilent_82350b.c: removed braces from a single if statement
-Date: Tue, 18 Feb 2025 01:20:50 +0530
-Message-ID: <20250217195050.117167-4-kumarkairiravi@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250217195050.117167-1-kumarkairiravi@gmail.com>
-References: <20250217195050.117167-1-kumarkairiravi@gmail.com>
+        Mon, 17 Feb 2025 11:51:55 -0800 (PST)
+Date: Mon, 17 Feb 2025 21:51:53 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Jun Nie <jun.nie@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 06/15] drm/msm/dpu: fix mixer number counter on
+ allocation
+Message-ID: <2gpvg22nvrmcm5ln3ft4oovt3xy5uedvw5oehb3odf74mvvhkn@hz7wwy7jf6cn>
+References: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org>
+ <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-6-c11402574367@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-6-c11402574367@linaro.org>
 
-From: Ravi Kumar Kairi <kumarkairiravi@gmail.com>
+On Mon, Feb 17, 2025 at 10:15:55PM +0800, Jun Nie wrote:
+> Current code only supports usage cases with one pair of mixers at
+> most. To support quad-pipe usage case, two pairs of mixers need to
+> be reserved. The lm_count for all pairs is cleared if a peer
+> allocation fails in current implementation. Reset the current lm_count
+> to an even number instead of completely clearing it. This prevents all
+> pairs from being cleared in cases where multiple LM pairs are needed.
+> 
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
 
-removed brances from a single line od 'if' block
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Signed-off-by: Ravi Kumar Kairi <kumarkairiravi@gmail.com>
----
- drivers/staging/gpib/agilent_82350b/agilent_82350b.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-index af1bf6e893..0c07745649 100644
---- a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-+++ b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-@@ -205,9 +205,8 @@ static int agilent_82350b_accel_write(gpib_board_t *board, uint8_t *buffer, size
- 		}
- 		writeb(ENABLE_TI_TO_SRAM, a_priv->gpib_base + SRAM_ACCESS_CONTROL_REG);
- 
--		if (agilent_82350b_fifo_is_halted(a_priv)) {
-+		if (agilent_82350b_fifo_is_halted(a_priv))
- 			writeb(RESTART_STREAM_BIT, a_priv->gpib_base + STREAM_STATUS_REG);
--		}
- 
- 		retval = wait_event_interruptible(board->wait,
- 						  ((event_status =
 -- 
-2.48.1
-
+With best wishes
+Dmitry
