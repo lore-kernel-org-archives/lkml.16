@@ -1,119 +1,100 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5711AC882
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2069168B1
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739781918; cv=none; b=Caq+x2ALPMK6bloNEHQ02rk0/IdIgbiKJdUYpLbPc4hQnOaIhRAR89pMwL/lhOrplGh5ImDcDuzzWxQ0pL/JpU6T8PXRaoVZ8t19lqzrSG7ktAUwbwgh9VMYqhnVoNf07FqIQ0cOtY6y+CwNnm6rHDmdNid7qE0gf+hd8Tbr7uY=
+	t=1739782049; cv=none; b=f52G0XBdmK7L1iU/Qmau/1xFiCU4FKQjZWNmW55CqBU9+4WX0Z72nlikX/oi459+hXfKMcQP1Xd/WMMoW78SZOaIxPiWlgTnSqjTUCPTXALjcyolP5txUQA3XGCaYng+VCi1djX7hHUEj8LSPWBJszMOQsmjWe/g0gQOBb320i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739781918; c=relaxed/simple;
-	bh=4KWL7WT4m2P9Gzuj6XBNp3VWAe3nw+1IhcUCc4X7DHc=;
+	s=arc-20240116; t=1739782049; c=relaxed/simple;
+	bh=Ue4Ul6Y05UncZ32MPE2fSbcYWky4wxO0AMGYilnHknY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EzEFioBMInTKhe2KuA6JsTHPQUcRqFY3UWbr+nOPLaW+CnP1CGWjZLfScZoOKTkKgIg9VOtGc6r7IVStEIUFKv9H30o2oxjrmtrf6NwnwXNR4CRCz7m49XrQynrHn9Ww5FYHJamTZhvOqb5EAS27avG+Oh4JCMHXD1DpZFCHUxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=CxbrPuFE; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 MIME-Version:Content-Type; b=uG5pgG4isymwMstx30L+9rLe5OtPXArXAO83OJfZwqT0voz7eHEOUYYVm18VWCHRANniKG3EtFDMUx5fFo9OzxjATk09SvEwe8kYUKZJFeIioPn07PeOWK0F2EUpUdqBUkScRKd9Hn8VcJcugH2i09Ag2xFRDLA5vIhuMyRIFLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=iX7aPyVh; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="CxbrPuFE"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f31f7732dso1285300f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 00:45:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="iX7aPyVh"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-439714a799aso15434235e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 00:47:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1739781914; x=1740386714; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739782046; x=1740386846; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tUiohrMXynF4IhELzrFmGh0geLQ0Ng2lOgwpKuwejQg=;
-        b=CxbrPuFE5cerjU+oX0UCAN6SJlWfaT4dtNFADNy9//P0fK8FV1y/bzJntSwlQD9wSt
-         Yl34LsKS91cH8ma9PYaSo1qsY99yz9TPxslCvW0ZaJU3tWX+eRV2pIHwqLkLT9VGmaYH
-         molh6ZwTLG2WPSnjSJbsTiB2ZBvuQqac0i12lE478Uj6Edvf2pZa8wuE70P2kRRy3RPu
-         n2s+igJ6YDEQvEHa9XDlFGXE0K2VkE3tnOynClSCw+FKiObkJi+vf2xIpkETdo7VY1qR
-         vgtNcK2o0bgvVTuweXHt9cHvGH1lZHOVSVhtp9040a1hL95uO/mBuf1IovF8qoWs5mCE
-         3MKQ==
+        bh=Bb3lhINEgDY+UoXToETIm0EmKe9d2I5IoG0cLpEt09A=;
+        b=iX7aPyVh7SDwG8IIbYyY5pw8Lq6883K0paGK83O1vRV6iCOLRQn9ggHdBPD3K0hDJs
+         qJs0JTnkO+NnTZyBLniSevmx/Y+cZBejdJpY3IWH3xjmS0+gSfEK5Je8oX0XYjzF+vEH
+         2hfpHHDHd3WBEMsPcnv1LTmAbLarJF2BbYvrspJu4Moy1rPnkl+RXbOtW2vSlc9mw9r5
+         MoYOqfkdNenccUiL6WwtfUpe2zq6lWbyssQM8u/AMNzYG5ivKHCx2iv8dMfBjXJL/x+I
+         PB65AerbS7Jlh36x4IjI6y3V+NHQr758DQ+SYT2hQp6rnxGKzlzVCIw3TKYtvIeG4BY7
+         pq+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739781914; x=1740386714;
+        d=1e100.net; s=20230601; t=1739782046; x=1740386846;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tUiohrMXynF4IhELzrFmGh0geLQ0Ng2lOgwpKuwejQg=;
-        b=NwAKD3ct1AlRXIkUqCh/fA8IF46bGJMNzPfTVSnU6d4HXYyXGtvP1WbThPfjv4JeGo
-         xRbCkqAHLG7VYl4SLqcq+gmPkRcsKn74oY3UhBYYUNncltMOuL2MFJUAgWsJI2guBt7w
-         gFCwDthvREP0LX7IkIajKpdiw3ZSZjrzPLj2RXPqGZVEwQeMVCZXo9xoy4UG/GMvoYVw
-         IAjqIDUlV2JnwCyV3MqnccD1FmGhZ1lhcPdfETr417MCFnxM62m7yhZUjcyiL0vPUn3N
-         6pxnEh9loT6vuT06U7TRNP9C1/msXqc3Tifwd1rXJ9+BxPmNcU4Z2h3hu9AA8Kw/AK9j
-         FNYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNFct5XHysseOvJ/qv8s7HGgK5Bp9AGmv87ltmX2tb7sS7UhJQqCdOTSIQmmJ2+RVhsU/65MZkOJKSoCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIU4U8bVr1eRpLPz8JA7W5o7Y46WLGW5vuVzmLpX0yWpwH2rfa
-	/Xq1IJAy1AxTloxnnir2X+TIxEbFOl5+My2qK7BbnWnHXZE607xLB+p50wRlbjI=
-X-Gm-Gg: ASbGncsml7pgohSbtNpV/mbKbFApL9priE283T8kerN6gA7JLlPbwp7FFtI6E0TAYP4
-	yyMJaPIMHSI+Ig4VTkQny+tZSZshF7KjmfFamKEPR9kpaaN/XwQUvHwG6K2Yg+ZsCMTT9ujYTst
-	30Pvi+WZR1sWdZKfVU8+uQx6Lklvvkv9H2yxO2jd2fxpK+P5ymMjpMUM/i3SlXGADMWpTKWl/nL
-	lVJfwr7w2+rAxovqsgW/kBJu53qebHxL5geGZ6mZxfRpu+tpGmOzvJyP0xuMXty3mvNjBZ0e1JM
-	gCA=
-X-Google-Smtp-Source: AGHT+IELeloq+YGu7jeWFNzVErrIwYQyO3BkZOQqDo2NauOC4G+f26bXlMmY85lR2Dzf3d+ItLp71w==
-X-Received: by 2002:a5d:64a7:0:b0:38d:ae1e:2f3c with SMTP id ffacd0b85a97d-38f33c2886emr8174108f8f.25.1739781914336;
-        Mon, 17 Feb 2025 00:45:14 -0800 (PST)
-Received: from localhost ([2a02:8308:a00c:e200::766e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4491sm11387499f8f.7.2025.02.17.00.45.13
+        bh=Bb3lhINEgDY+UoXToETIm0EmKe9d2I5IoG0cLpEt09A=;
+        b=KVwuej0onRqgkEy6RIhw5djKGB5HTjNGOK24vePIk4qDR+GJUZK3zHbIuyNmo9TW6w
+         tWdrQuI1Kak0jXEV4zLX5Lgu/q5ozPKBDnJoyCimWtdlaopQmTpm0HMtzJ3KXk/I/w/x
+         1Q0k3tlQmEhTaB65xAmV9BZrVTcd8Re1LXGJXBhTcxdJxbnCDsm5919jnm6JwYVOfql0
+         Bogi4jgxzBJVIRdTaUvqtzyOIOG95/RAoQ0GW6XMVFHwjTDVvDHC7mdd9Oyq5oMjsrYp
+         j6k6D0LTnGSEtol2Pr5Y7YH94U/SVvvCchOcztHBHIqGxgKAab2LWSlG2Wax0Ap4XJQm
+         JODg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrhDbmXeDd3p5k7yexlrTwtn6v5iYg1JDDbE5gs3l2Ol9kSMDuM7K4DYuJFysl+BijWE80F2phj32iCjE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh1Qr0pOxMhikbjBZz0TroV1w4bcrQae8q47t9xQgU1tMH8j1E
+	kJ/uJe6+ffNXPRM0maTZOhEhzRHMfdSkm6XJbAad/WoysqwaE6B9hpbd4+CA2hc=
+X-Gm-Gg: ASbGnctp3hM2Tva7c/XciiXv1zGJx4r38h98PwUvo+nZIo0b1UayQjdUfDHf0yRfkiZ
+	O2HfQZ4qwzSEiLx1c6uImPnkO9en5Oe1ZxLDyOF8K7f+NKTpq1/Edk8RQER+ck7znfhhmUIKzeY
+	gtA1uSBLrtFUU0K3123T/bQw86TAskPebFZY/gq+K6wYz3GsE6jN6CABZ/nGLE+HLduCncozU+e
+	4i4o19mvXl1bcgIJx36AbQjY5SvEOKtZR50mqlE/OS5Ap9iIUWuM+eY6iXw1eSE6iImKqKfKfdy
+	BPwBZRbzciOv
+X-Google-Smtp-Source: AGHT+IFT+lMKOU/deB2J2ddGkT3HluOwPLwaMtnkgEjYGq7pMKOAsYx3SgC5Rv9p/UAiTeKw5JF2Bw==
+X-Received: by 2002:a05:600c:3b1c:b0:439:64eb:67cf with SMTP id 5b1f17b1804b1-4396e6c18d4mr79637545e9.13.1739782046008;
+        Mon, 17 Feb 2025 00:47:26 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8707:ccd:3679:187])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43987396d3dsm13992455e9.36.2025.02.17.00.47.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 00:45:14 -0800 (PST)
-From: Andrew Jones <ajones@ventanamicro.com>
-To: kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
+        Mon, 17 Feb 2025 00:47:25 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: anup@brainfault.org,
-	atishp@atishpatra.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	cleger@rivosinc.com
-Subject: [PATCH 5/5] riscv: KVM: Fix SBI sleep_type use
-Date: Mon, 17 Feb 2025 09:45:12 +0100
-Message-ID: <20250217084506.18763-12-ajones@ventanamicro.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250217084506.18763-7-ajones@ventanamicro.com>
-References: <20250217084506.18763-7-ajones@ventanamicro.com>
+Subject: Re: [PATCH 1/2] gpio: latch: use generic device properties
+Date: Mon, 17 Feb 2025 09:47:24 +0100
+Message-ID: <173978204242.97470.9398094804481647954.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250211120847.42437-1-brgl@bgdev.pl>
+References: <20250211120847.42437-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The spec says sleep_type is 32 bits wide and "In case the data is
-defined as 32bit wide, higher privilege software must ensure that it
-only uses 32 bit data." Mask off upper bits of sleep_type before
-using it.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Fixes: 023c15151fbb ("RISC-V: KVM: Add SBI system suspend support")
-Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
----
- arch/riscv/kvm/vcpu_sbi_system.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kvm/vcpu_sbi_system.c b/arch/riscv/kvm/vcpu_sbi_system.c
-index 5d55e08791fa..bc0ebba89003 100644
---- a/arch/riscv/kvm/vcpu_sbi_system.c
-+++ b/arch/riscv/kvm/vcpu_sbi_system.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/kvm_host.h>
-+#include <linux/wordpart.h>
- 
- #include <asm/kvm_vcpu_sbi.h>
- #include <asm/sbi.h>
-@@ -19,7 +20,7 @@ static int kvm_sbi_ext_susp_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 
- 	switch (funcid) {
- 	case SBI_EXT_SUSP_SYSTEM_SUSPEND:
--		if (cp->a0 != SBI_SUSP_SLEEP_TYPE_SUSPEND_TO_RAM) {
-+		if (lower_32_bits(cp->a0) != SBI_SUSP_SLEEP_TYPE_SUSPEND_TO_RAM) {
- 			retdata->err_val = SBI_ERR_INVALID_PARAM;
- 			return 0;
- 		}
+On Tue, 11 Feb 2025 13:08:46 +0100, Bartosz Golaszewski wrote:
+> Replace calls to OF-specific interface with generic device property
+> getters. This is good practice and also drops implicit run-time
+> dependency on CONFIG_OF.
+> 
+> 
+
+Applied, thanks!
+
+[1/2] gpio: latch: use generic device properties
+      commit: 3c998af7ceae2c86b4b0e128d5e47b3c1e1f8f05
+[2/2] gpio: latch: store the address of pdev->dev in a helper variable
+      commit: 80bcee25b592b018203be1ddb20ede8d207a552a
+
+Best regards,
 -- 
-2.48.1
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
