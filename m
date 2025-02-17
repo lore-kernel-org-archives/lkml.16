@@ -1,97 +1,102 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB6421ADAF
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 12:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944C31FCD09
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 12:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739796259; cv=none; b=MJe4ctPIpAt+0t9QC2asNlOwJ5dU4N+WWXX3sArtkE1FY9GAYjUHYenmKCfliWOb5aSKBdAY5dRIAdM5diRbgSAQ38SEgjP991Aq95ROuRWZxsxh5JVe6xRRc66Kh5q5fdHPvwdVQeRe0Hwjpj1LrfYNLMTL3EGdfMCsOo5Ce+g=
+	t=1739796372; cv=none; b=rsdHJi3NXow50bILyWPS5OxnxfVul6uPt612NMyLeHYFK1j8VQswYmS9acJrznevtj9TYqR//4lrO76v2Vu2rLkEfbjG0XCUTJQ0Nl2WhULOrATDeDRTBChulQDX6+q+4L7F/rSioE4rDbO1GSbZsIVjHVE0jbHTymPYNeXm+cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739796259; c=relaxed/simple;
-	bh=aejBspab98kEMu3idWjPVw2s5cEoKFhrIZKkhW31lLo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tohJKwkn2yvGdUy45HIWA6xcFyRP5hsm/XAvz23RbCVfsEzwt0v7Ly3FP8mq24OF+jesrM4ueOcXlPv+ZcTmgEVucKOaVdsY4H0BqJdoRyeerVy55YtFbU44upxORKIKSAkhc5mdHxp81XShmnWJ086+4LigdwjcVqxhLuKaAO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d143a42980so28494115ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 04:44:18 -0800 (PST)
+	s=arc-20240116; t=1739796372; c=relaxed/simple;
+	bh=WzkMpLwgZbZ/aW+9gub5iOXsySgmY1VT4Ax4KZ+L30A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=YBnBEcUiaz3T65Hc83LBjxeRgxCkvXy5rGLt37EGfpvMFQam/G2/ahbNisjWnpwDWvZSyvNdY7m0XFt9gWDQ5QOZvBLZ6DfTe5sMorAWTU8bRrK8KZ/WykBRU0XOV7T22JGjjJVgQrY0rsW1IqecRx3ME4LearAGe3D4xPSwML8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=v1URe8uT; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="v1URe8uT"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d191bfeafbso16623455ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 04:46:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1739796368; x=1740401168; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8bNS0FjTwJ6SMd4nioB5wMEX5T9yYEM2Nyv0ek9XFpg=;
+        b=v1URe8uT6w764mIOYQLp4BjEBriRRHHWHfvqu8tUSQZxJE3yvJeztI1xGzgGSv2qbn
+         mQ77msszRHJ0+IGZB2lH0W6/L1C4A9I1InMJujKD14RTRSoSn1JiZ6OYcOvkVpC3UHY5
+         D8CCvhUG08dtnDwdcgLhsC9QOv5lTW/J2mRYegxbw7eN95Z94lR2TyLcfFtlziy3eyfT
+         j747xzrHiB62vdPcg0+uEPW4H6Oiro5NdKm2GP4fmCYR0BtPZUpC4+AxbIerxGRSM2iB
+         U6mlOzaKeAfsXfpOocC25rirkpxRQhScraosAOiRdt8W6mCVq9+zMJHITm+Z0W09Wr/i
+         7A8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739796257; x=1740401057;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KKIOjDj7Gj5x+iyQAQD3IBIaAOD34KuOpgNlpMmspaY=;
-        b=xP9htuUVT7aja+EOrOXVinRoaLy1eaX78loD6+B7eE9oAYbRvqWIm+OEwkmuuK7NTh
-         g/Z/YWUwnD9mAysaLDf/dAxp/fXIlBdTYonfBZgpVXo3Or4S6cuChoWHx+TFUAShiKfC
-         uJNLfAN0Irl6e0tLYYrXvR9KZi4FuYkUIG4dG4zg5YQ7uwEuSQqLwFfdjxJ8JO16DtSv
-         txTB2NjgzXyPNXraPL0yk2nZ3YFp1COl1zocJ0xbkWUl2Y83lIQm/Wh8Zu+uL3BkSlcg
-         IfZzW6UoPSrvWB9cg737HOg6GdOTUtdhkBkP4poFfjlkgzhfbTNJobttvk83gjle4CQz
-         /lMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWbgoDfxlvCFZdya6hEsiBlQhO9X9Kt3w+laq0M+Ol64rykUhnN7wDgk+gWSNPBCpbar5P/ETdJZNNz1IQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVT6aTp/XrsOU91+7wq9uwCERNmnLp4fVex9Zez7jCuZrH6gMA
-	qdBPYoPjww7FNQkmMmLZFdHPclce0OJ9P1Sbmz1QvHKMILYBX5nLELaUvvdlZo1LkoWTyaaSyv4
-	iZql466SJK0W0kTb4rG9vpcecEl/FHgZVopO86Nr4AQDG+es5deL5gVg=
-X-Google-Smtp-Source: AGHT+IEhwCub75T21RkKxTH2EPpAzGzMTmnjrPf2VUr+FPlZpsEHrImG3Tns7WMllPdPHD6sg4u/jRxUWEiYKutCdCb+1u10EG0E
+        d=1e100.net; s=20230601; t=1739796368; x=1740401168;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8bNS0FjTwJ6SMd4nioB5wMEX5T9yYEM2Nyv0ek9XFpg=;
+        b=qgYdQ5IzH0ofuZCxu1JJE4ACWjL1ZfcY9hFjS3TuKUcYuUpxX7q/dSVN0TKahtY1ev
+         3I1KwmyePYg/CEl4WVdTqpPDyvNce6AS8SqgKTFSO7zH//c8sQWSnFo1awA9CSJMBRhB
+         pusLVQBU0LYS9B0R5uA0whpgH9HYZ8NiPDi41djyZy9wn0bRr+dyHxd0fuvSJTVuGmyB
+         VVBpxN0rWhQzD8yxFQBY/o5RnCo4UWPSBogsj1zqWrH4K9gLTHyuTrTAqzRhLMBwt2DJ
+         5TxPG59OeTcLGKS7ZnUeEiuezHrPmET6c0CWu7pCgHlNxlrE2lUiQK4HMvBXieryBibc
+         2HuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRHYZnhdNJIagfry7qGxcXnHvF7+Sdg+QjACRZSHjYa3StE6NUFxsNkYBXAbjvOuvQddpfjfqfJGmHFho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcgQ57jxr7//9cac6ABX3bLOEedhfz7XN3QyZZ1MaQeiLsTBAv
+	7QT9Ezt69HUjWKg8vQeVLgvHWDZCgxYLA30nco3itSa2uhh8QJPyqkGCLrk02gM=
+X-Gm-Gg: ASbGncukiTp9nRX70CZKd+/LLYhYyh82lOasGvV8dPUkbCScSWhFQ/E4/fpt98greBJ
+	hzfTv+0TNQZsTKIF2z8gJEQJZskyiPWgVe4MlWtVWK4vLHCbhMh7vmQdU5+wwOu5TFPf+nueQvx
+	caRPgceCmGiUo2BI5ygvxfpqDDiFSwPDjM/Cjx72WnM0rkFeNVyJMTPxmQwf/kWVthLAhFxrvpj
+	ks3HkDEY8bOlSzoaSV19/FUs1oS3WvAxJbBVwWVcdrwjpewwSGbPbZMIOGvP3Xm9Yy/+g6b4zJP
+	qSNWewc=
+X-Google-Smtp-Source: AGHT+IEaa0F1D+BEXNyGvpeYbIUoErtzcPoM1QWVnN2aAi4+nV83Sy5/0J39XasoQ/EEFqFiIqVd5Q==
+X-Received: by 2002:a05:6e02:378e:b0:3d0:23f6:2eed with SMTP id e9e14a558f8ab-3d2807b0595mr54037885ab.11.1739796368011;
+        Mon, 17 Feb 2025 04:46:08 -0800 (PST)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ee81857773sm1247159173.66.2025.02.17.04.46.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 04:46:07 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Pavel Begunkov <asml.silence@gmail.com>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250216225900.1075446-1-csander@purestorage.com>
+References: <20250216225900.1075446-1-csander@purestorage.com>
+Subject: Re: [PATCH] io_uring/rsrc: avoid NULL check in io_put_rsrc_node()
+Message-Id: <173979636710.644986.8096661613228249151.b4-ty@kernel.dk>
+Date: Mon, 17 Feb 2025 05:46:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c24d:0:b0:3cf:c8ec:d390 with SMTP id
- e9e14a558f8ab-3d2807707b2mr87834055ab.4.1739796257588; Mon, 17 Feb 2025
- 04:44:17 -0800 (PST)
-Date: Mon, 17 Feb 2025 04:44:17 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b32f21.050a0220.173698.0033.GAE@google.com>
-Subject: [syzbot] Monthly serial report (Feb 2025)
-From: syzbot <syzbot+list67224c95d908c00ce68e@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-14bd6
 
-Hello serial maintainers/developers,
 
-This is a 31-day syzbot report for the serial subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/serial
+On Sun, 16 Feb 2025 15:58:59 -0700, Caleb Sander Mateos wrote:
+> Most callers of io_put_rsrc_node() already check that node is non-NULL:
+> - io_rsrc_data_free()
+> - io_sqe_buffer_register()
+> - io_reset_rsrc_node()
+> - io_req_put_rsrc_nodes() (REQ_F_BUF_NODE indicates non-NULL buf_node)
+> 
+> Only io_splice_cleanup() can call io_put_rsrc_node() with a NULL node.
+> So move the NULL check there.
+> 
+> [...]
 
-During the period, 2 new issues were detected and 0 were fixed.
-In total, 19 issues are still open and 44 have already been fixed.
+Applied, thanks!
 
-Some of the still happening issues:
+[1/1] io_uring/rsrc: avoid NULL check in io_put_rsrc_node()
+      commit: 496f56bf9f1acf11ce14489f34d81ba6e4023f42
 
-Ref  Crashes Repro Title
-<1>  758     Yes   KMSAN: uninit-value in n_tty_receive_buf_standard
-                   https://syzkaller.appspot.com/bug?extid=559c7fe4b8bac56d38c2
-<2>  570     No    INFO: task hung in console_callback (5)
-                   https://syzkaller.appspot.com/bug?extid=1fb20cf68d15e7c2388d
-<3>  177     Yes   INFO: task can't die in show_free_areas
-                   https://syzkaller.appspot.com/bug?extid=8f41dccfb6c03cc36fd6
-<4>  164     Yes   KASAN: stack-out-of-bounds Read in sched_show_task
-                   https://syzkaller.appspot.com/bug?extid=8d2757d62d403b2d9275
-<5>  104     Yes   KASAN: slab-use-after-free Read in tty_write_room (2)
-                   https://syzkaller.appspot.com/bug?extid=2a81fdd5c6ddffee3894
-<6>  66      Yes   KMSAN: uninit-value in n_tty_receive_buf_closing (3)
-                   https://syzkaller.appspot.com/bug?extid=dd514b5f0cf048aec256
-<7>  44      Yes   possible deadlock in tty_buffer_flush (3)
-                   https://syzkaller.appspot.com/bug?extid=52cf91760dcb1dac6376
-<8>  19      No    KMSAN: uninit-value in gsmld_receive_buf
-                   https://syzkaller.appspot.com/bug?extid=2f64914d6a3a8ce91bdd
-<9>  15      No    general protection fault in n_tty_receive_buf_common (2)
-                   https://syzkaller.appspot.com/bug?extid=2dda672e146ff12ccb02
-<10> 6       Yes   INFO: task hung in paste_selection (2)
-                   https://syzkaller.appspot.com/bug?extid=275e275bd3f536725dd8
+Best regards,
+-- 
+Jens Axboe
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
