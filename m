@@ -1,93 +1,95 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC40225A2B;
-	Mon, 17 Feb 2025 16:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30911226522
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739811257; cv=none; b=T89vF0+D3BDbl6M+iCViGje/WqiuYiGg9Kkcb7Xf1FNNDwtoOK6mgJUY6ZhvHsMNIz8BsID3NavbZ8Zu/mdqq8AzdRceMK2xFzDQjl8v9VAOd9jUNVM6Fj8WGGLt5VtZZbN0WA/n2sB8493oRGMMiwPEbHX/9C2RZtkJ/82HCjc=
+	t=1739811406; cv=none; b=ODbIDfjIi0/G0s6C8pbzG850XGvcteMsAv1sguyrFvWEAIDV5W5RuIQJos4M+3pl2+HMfBz1KIzTwrAtUReNQ/6uDnsCeAi94JGuQyBJ+ohQ5RIIUryzTM0zZP3/UDbbfi0brV1TnH4vn+no2fSLlrOC96OgHUeKgo2N/8Flrzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739811257; c=relaxed/simple;
-	bh=5D/fG4ZjzKd3+HWvMQKBTbyUXZfiHa7kNagq5sB0SaA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pLIIBLsrMCvye543w4IO/j7pZUtK90hPWbkUsVVfb8+/mmg57JdLr2QTis4IJUhjX7A2CYVwsERfWmXCLX3Zh5MvBY0sUqSCkKM3lrgkZA0F87b/E/p1IaN5WfzfMM9kQP+O2uTJrpy3jCjgyCXfCJydQ08H+cnVAFyqcr/Ew4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ltGJKeGg; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739811406; c=relaxed/simple;
+	bh=+1QvmTeltNCy0ewISfLGnEHCX0liAeBHZC9vjnmbvGs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JlpVkBqPYEIcvwP9BqE7oe4TwOt7Md9toOt3qabP26Dro65RqHDgyHwJjkJHuByYlF9Fep8FnnosHLgeBW595QMULZmwCfgXPrqbuTCOdrY18YCXD9T153OkOQzIyXscoauyCEZie3jKXoOZf9aZWf1gwqaD8lXIvj5LfrmUUBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RFhTmS3X; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltGJKeGg"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f3f8906c45so556658b6e.2;
-        Mon, 17 Feb 2025 08:54:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RFhTmS3X"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-471fbfe8b89so88661cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:56:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739811254; x=1740416054; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XfkHaioxJkT7EUDNRCAMw8vIe1lKe4biHbzBWeQ03dE=;
-        b=ltGJKeGgyqN5Kz5Q4GzxDNzni8cbRoQv7BmJSl/Di3ZvLFxcEHEOzjNffhsgdB4KQ0
-         gy3ObEVodZL/XBtWADCR2aoeiT4PvHioT196/C12R/Wuee/OWhefMxPwYohppeNP1SUy
-         FvwYDqkjR5W+K5ibugJJJHMd1aSqDE7J9QJglqFpHhnPxkRCbxts2FkA45sp991DWSJr
-         xs+XI9q41mQApKm68eIioeVvVbQVaoxIcCIiJa84w4H6oJB+3IJCYRaSmSHQ1kBoxk3n
-         5FR8/KxX+18yjdbyORD2X/G7NUgQaYpmvPCIH1ugoq+WGdLE2xfd4X9bqcTdWJpel1DR
-         2v4Q==
+        d=google.com; s=20230601; t=1739811404; x=1740416204; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/qSRpBN359hHX+cCE/TztrmjJSk1+HscqPfr/QXbduM=;
+        b=RFhTmS3XyGNNFtKnyy7CBpgAD4vGAWzQbfz3Lv7wF+ULUyiSAi7GMglIlUhD61JK0T
+         9r0/2hoR4i6gnqPZHLT9rhVJ2kuKcE49Ho5innQO42sOf3xoxDlc3u98aqWYh1bubqCf
+         h48CSx2YY5hDfRcl+umICAH+aGLQAGrPObiZnahHGDquBdeR/9O6lvJzJxGYQP/kDXIn
+         1jUP0DjYX2RZYpfnkKhjza4JIXePNBEGWLze2MC0x5/HjRtAgIKYkM6qVyD5Z71YfquM
+         dYFkkqVRLVT05jwjVVax28cZrVzbI/Elh8SwYT8ykxwkVSNAsotZ1+wxe8NDh+lvUVJU
+         ZlZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739811254; x=1740416054;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XfkHaioxJkT7EUDNRCAMw8vIe1lKe4biHbzBWeQ03dE=;
-        b=OpUqPKn40ORvHkbD7xGpsAo+11TZgHgs2b9QfTzn/HUoVWyzaRrEwuMskT5sZX3C6B
-         hbGTEpHNPSuLTUiBV7VXf0o15WFIwavhg4KyTlQW/DC863pj6x7tTtFca17Br+olgu60
-         N6pHwTTDe8URgeJCkDf0JYtrH/xoQ2mgil/sWlmIQoiurY0jv22phOHFzFFuKvdiJ8H0
-         HPMHP/MAXQFW06A1zJ49xKLmcr2YUA8QP4/jIDDpBbUoUhadPP9OYErqdzZAZag0eN75
-         1KC2mSTVmZKWbBe53zhQeNyaZkSpNpOrfG0OZpbIuGNS60M2gAe+qdm5khQPSTt+v7IU
-         gWsg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ippo0nSiELgva+AfPgJPLB/Jg1qgL3jNEe0J1FcOyGKjpOPfz4W3lzwIl6n2DNU8zH94UAkAqAcbnAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjG+1LnX967HM0K1OdgPzpQFadx6bKQoai2cJziLXK0IpiWXDF
-	TiSTZUHPRnM1csUGVsMWX5XwtgJ3InCh3udcuFyZrCbVyWCUAOZPxBRul4fPyDV1d9vFs8j5Ddw
-	Bw4+HeA/ErPb45dWFVX9ITQbBQ6XgSnVxXD4qAw==
-X-Gm-Gg: ASbGncuzyg5KMd14alTlWk6ZwcKn5EKKc94KrCIA/cESSu13kYwGg/TajXvbXaiijYZ
-	oIt5FhaGRtScxfIqqH+QXmNgtx6CFrZWzOqUn6SJ8RW+rvrWOd/YULbbULKy/4NcShhuG+X0=
-X-Google-Smtp-Source: AGHT+IFjuJOL5PoNWhsga7Pb5rKsRqndy3lYvUnfhP6yMunEXDlb4VnolyLJdIOIy+/tKfm6SZy19JOq/XYQ/TENPgA=
-X-Received: by 2002:a05:6808:3195:b0:3ea:f809:44d0 with SMTP id
- 5614622812f47-3f3eb158d93mr7508443b6e.35.1739811254077; Mon, 17 Feb 2025
- 08:54:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739811404; x=1740416204;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/qSRpBN359hHX+cCE/TztrmjJSk1+HscqPfr/QXbduM=;
+        b=cozJ/hpnE2fPHVfAjbWTdq1lUEpEPi+5zM/tY7yFviOFRj3vKixvgBawD4w5n7Q4HH
+         ReBh3EvbABTaBBVTo8IQtkzZclJcbaxATART8Ta1do8mxhwIltL93i1ZsFLlOH0CZ6lZ
+         MZmLXyFUcwl1KsZC28Tqkk44mzinrMqaJGZDsLxZRSDCNsSx5Ms0yRG2oLl/iRa0F+YR
+         CuwIq18YaZJVwgushR4L4sjrgTkFOQimww8WHDJPjCz2ZNWO0j8UBXKv4NLO9+aVRq/m
+         yBrHqyXo/GVhkGjT9C8RrlCcROvViuVR8sUZvu3RcjKpb+klPpZXR5ZzlE/370P0tn34
+         fGwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAyiZf/nN8ubVgbF/v56C7qwxDdq+5hNJM1p5NGO68BvleL+Sh6Oi8NTd/o7esi1fIZo1NdC9HNmNd7us=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1hP+Va0fbVGbcw9/zwkb5o9j/23OUy7CRnRXo7LaBjmoxYfIe
+	p7QZp6QII8TI9buRsEsUGJhLfcvdHNVzHE4wOKPEjpfFWlsQ7pESs4BiVx20CiaiEGMVfZhWk3v
+	mppy0ACfeQVh0IyQe48uNDs9PgaXT+7DdrlZs
+X-Gm-Gg: ASbGncsC29H+4Z/PgYloHOoDxweo28+0IzHETBM/Mnn96526QQlphL2LqWWNtZlsa1U
+	Unlx9f3yjGNSAsBNmpX9Ezt6a3Yrog2GcxCVkpoCGyP5oJKJJ3qIcVJrmJGlSGWQG0onwBxjdiz
+	GgXTsIxTHP89BkOajbQvne1DrYGb4=
+X-Google-Smtp-Source: AGHT+IHCtMfDw98unx789UAqr8x+szvL570MR31u78p51rZTiegX2ScDlDe+ywsfBL4Sg33XW0YMbvVNgXrwIIoDMqc=
+X-Received: by 2002:a05:622a:54e:b0:471:badd:bd2f with SMTP id
+ d75a77b69052e-471dc6602d2mr7637521cf.0.1739811403868; Mon, 17 Feb 2025
+ 08:56:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Suchit K <suchitkarunakaran@gmail.com>
-Date: Mon, 17 Feb 2025 22:24:03 +0530
-X-Gm-Features: AWEUYZn6JKqZSJ7ECKNJ35xDHo17HDqJBr83XFL6hIs-ZrQ4R901HdJ44r7L4z0
-Message-ID: <CAO9wTFgtDGMxgE0QFu7CjhsMzqOm0ydV548j4ZjYz+SCgcRY3Q@mail.gmail.com>
-Subject: [PATCH] net: dev_addr_list: add address length validation in
- __hw_addr_insert function
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, Suchit K <suchitkarunakaran@gmail.com>
+References: <20250129-force-cpu-bug-v2-0-5637b337b443@google.com>
+ <20250129-force-cpu-bug-v2-3-5637b337b443@google.com> <20250217111029.GIZ7MZJUGJRoeiScgn@fat_crate.local>
+In-Reply-To: <20250217111029.GIZ7MZJUGJRoeiScgn@fat_crate.local>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Mon, 17 Feb 2025 17:56:32 +0100
+X-Gm-Features: AWEUYZl87gmBfs2wNkKiO_BAOR84Ep0eGh95DvqtW1gZo2AtnCOxVeh-iiek0-Y
+Message-ID: <CA+i-1C3fetiBYVbfpAbQEAnogzdza25pu2DosCiTT9YkXwt0yw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 3/3] x86/cpu: Enable modifying bug flags with {clear,set}puid
+To: Borislav Petkov <bp@alien8.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add validation checks for hardware address length in
-__hw_addr_insert() to prevent problems with invalid lengths.
+On Mon, 17 Feb 2025 at 12:10, Borislav Petkov <bp@alien8.de> wrote:
+> > @@ -1492,7 +1492,8 @@ static inline void parse_set_clear_cpuid(char *arg, bool set)
+> >
+> >               /*
+> >                * Handle naked numbers first for feature flags which don't
+> > -              * have names.
+> > +              * have names. It doesn't make sense for a bug not to have a
+> > +              * name so don't handle bug flags here.
+> >                */
+> >               if (!kstrtouint(opt, 10, &bit)) {
+> >                       if (bit < NCAPINTS * 32) {
+>
+> It did but after
+>
+>   7583e8fbdc49 ("x86/cpu: Remove X86_FEATURE_NAMES")
+>
+> this chunk can be whacked now. Please do that in a pre-patch.
 
-Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
----
- net/core/dev_addr_lists.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/net/core/dev_addr_lists.c b/net/core/dev_addr_lists.c
-index 90716bd73..b6b906b2a 100644
---- a/net/core/dev_addr_lists.c
-+++ b/net/core/dev_addr_lists.c
-@@ -21,6 +21,9 @@
- static int __hw_addr_insert(struct netdev_hw_addr_list *list,
-      struct netdev_hw_addr *new, int addr_len)
- {
-+ if (!list || !new || addr_len <= 0 || addr_len > MAX_ADDR_LEN)
-+ return -EINVAL;
-+
-  struct rb_node **ins_point = &list->tree.rb_node, *parent = NULL;
-  struct netdev_hw_addr *ha;
-
--- 
-2.48.1
+Er, hold on, what chunk can be whacked? Do you mean delete the ability
+to set clearcpuid by number? There are still features with no name.
