@@ -1,100 +1,94 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C0D237713
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6352322B8BC
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739821838; cv=none; b=hYF7JwsC5yMI5lXSSTDQtl8kgKyXDTLfTbebHKbH5OdzO6c5Fr0h1pzVcK/WuAxEudu1NUREwp7o5wO9IKBoN8AFV78scdBAEUwh5yeStAGhts3ncMr6/QQ/z1m6LoScLm6ZolFxICm/ga5OyA4nSTsseKYmGy+/5nvBRIAn80Y=
+	t=1739821861; cv=none; b=bD+ntrNWdGoD77S8M+x/dwROhlSPS5n572zRKH2m2mzw7S1MX5irQ56Qey/QTPORia8XEBVnjj7g6jJyygX57OE8qHUCwFLk8X2ZlFSeSOcnsZQZjMiaRnEhcLZ14Xjy6OhARIr7CCYn7M+ZHQidIlPBJrTDWooAYL0YOcYNmr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739821838; c=relaxed/simple;
-	bh=OtQGjZibfaoAgSCWyYg6KTXMKcn/tqRoYLIaZ14cr7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/hbG/prrj2uRAPpzNjawBXQGybAXDAyttYu1s36Exx48q10CblVRoqe7iydpeKfvSgOpDKcvSA/jyNhXpTAi3W0iSCt3Veta/yOytEifpe3x/12UB3aMccTyNd3XyoMvYTfB+v201/ZUMNtNSrcVAbOYs5l5J2yfAd+/eq4bOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DHZOkN+6; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739821861; c=relaxed/simple;
+	bh=8djotlyOow3U6WpdapdKdiyo3bMweGbclUeA8Uvft7E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TcvxARcT4vrgPazNQxwhn3vffJ6eNyeMwJudqEOGejgmW883Kv+ZfIQXpeOlUe8X2rIfXs2IwN5D+7k6QLqrZk7uBcVi5skZoPIVyGcNYhS4La8/xXrI4YtAUYm6duIfBCbJaEWZuNg6TTMLCpwmHsxhlwTSrE0jhaqYOqu8ShQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VegPp5T9; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DHZOkN+6"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5452c2805bcso3498304e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:50:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VegPp5T9"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-22104c4de96so36109415ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:51:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739821834; x=1740426634; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b7XMMxmB25I7aAKLMKpG9EtSe+ebYBtU0fhxbENZPlY=;
-        b=DHZOkN+6j4g1JB2ZqNIdmdqxxEnDt3S3x4OS3nQuRRYoCn3Qc0uOtIZsf710fFLMx5
-         uguIm4xXeaeg2VI4zzn7UQgP+FYNfghQ+wSoSTdHw3ILdyWCAD4ykXIXtOzfCyTaYm8F
-         RTW6RhptQrDFfgzaBugi2mgAKm3syyJfGKpGTqNxUQaNZrP0hHPDFtRtHi/XshvzBaV1
-         0+I+ik5xB1vBH9zN+Xq71eK46ONniwCnnok2Qps2NA6FVtPmIcoR0HbimYyeSxySJQo+
-         Wv+V6+VmK8Oxh2225P2N9pxdJcA7Sf2uj1xubqiZ46Yv9mk9ITPxESEjud/LIXAaFFVt
-         +NqQ==
+        d=gmail.com; s=20230601; t=1739821860; x=1740426660; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1MqTA0vRxn2Uf7ysEV4axwxSXNlJYZ63FyMvrvWVGdU=;
+        b=VegPp5T92mntyc01toXmxEtM1WuWnVIWMTAc5LPyssqkWxBIchJEljktTEsu4ZTDsK
+         UQWwIHbfCrA3ecgNCN6Mk+vf6GFeNX5dYOu3VZVwjUpJslKwY2u++xDkbQ4ioocWlYk8
+         pJd5fYN8M4ZJZnj/vW2DaQ1bqT1oYPH6ajBup6riiSPOOOkckdUCu27Hqt+JuHfUB+Rd
+         bBGS1s9X7/PrS2hzckX04Je5+OmKnbZAyzUXZqPrUNv6gBgaIOpdCnmbhifz3qg/WyLA
+         TFBL4QaMAyOC8xDG0CqrqZZFS42lDFOlgcoS1dal7LwTORMox4l7vNMjHdZBHNMCDFkp
+         h2fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739821834; x=1740426634;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b7XMMxmB25I7aAKLMKpG9EtSe+ebYBtU0fhxbENZPlY=;
-        b=ph7rsJWYWRvqoB/gUcroMOXSnXAlEQV+yORWFvxi8F/OArp+AmcaML2eYeiEeIpwkR
-         kSPbE4wz46nCBSSou/zru89hSUhpo2X0g5UqjSUiYIX05FVe0KKEwj8y2QmKHhEzeATo
-         /dY3QxUsKj3PY3E2esHqiMIJllY5nHuOSP3wz6f63MeLTu+BM1CQQ9WiyDbzjn32reQp
-         LtvYS/Q5TgS1bRoHIwFFBZKUXIKT0PFIvBWmzJqGXjn3f47Q4TiMcSnb27UGuiGQPM/C
-         kBqLZkwWSMV4URv7Sh6TMuhuMjzEQDvrVJmCTxiSHEW2zhkAaxclF2FfXuMUFB+TbpDJ
-         oH3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVn9VR4MZUM6pljTZ4UEmsVc9hNlPgDktx1E2aBUFDrlR29iqc6Jfs6h+E3FJ+/KQzEUAF6Yc+3OYIfn/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYO8Tb7ocgday122XXoFgUjYcUkEWLzKxpFv3uvRyVOiw7NoBR
-	94AQ+S7ZOBlZej6e5yj2zvzgEstDfmQ9Fcbzl4EUKa5wZufy8uGGjBjHrr15G2g=
-X-Gm-Gg: ASbGnct/XVDrBKlzyj1Nd0/MwvEP1jGTp/btnffIKyQjV+vaZ5rkFw/UiHSR4UtoFlR
-	rH6vbvOlGoc9dC+CPkIyibHCOujvUO+mfL//TsWCpSRSIQHv/K+QzS2rTScQnve5lnI4ZIQaigW
-	kaVnf/cTPWNeqFkdBry12Y3scHMBJKNJB1faMiEh8uWTBEfQkaxjzQm7DUbDZ9vIWhQQs3Lnflh
-	lcluecSzI9fBMGIBGheLlOD5ZFZ2Eab3r57hm413SVj/k9GXGDKoksZMMcrL3kXRZhHBAJ2Jt7f
-	Hbc0+xF34oJS5ebBcVKAJiFexgZQcapPw8jx07ITq1ryrG0sLbpoSvfpZAMvYUQybmhiNZ4=
-X-Google-Smtp-Source: AGHT+IFEnXuT2usVcSoMTmal4BeyQztiA9BaCKYabRMQm3dIpVeX4YHZzzAuOaY3bq5cOJl0zMdGsg==
-X-Received: by 2002:a05:6512:1194:b0:545:ff1:bcd4 with SMTP id 2adb3069b0e04-5452fe2e442mr3602142e87.3.1739821833664;
-        Mon, 17 Feb 2025 11:50:33 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54522858229sm1504623e87.4.2025.02.17.11.50.31
+        d=1e100.net; s=20230601; t=1739821860; x=1740426660;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1MqTA0vRxn2Uf7ysEV4axwxSXNlJYZ63FyMvrvWVGdU=;
+        b=P7/reC9i3zQVCZpXpXKqOYtGGU9y5w7oEHB/eNK9LUo1fILuuHi0gC0jSX+OJlGEg2
+         DOMzWSlvy78zJa8X7yAdzEzApFvIBa4qw432UWlBKsEfxcGQs9IDse/L7O1qcRKXDz+S
+         7zZERxylRSmQAxEgaI5ADrpxuNJsEsvL5Vqj3O9pLbRXRWmCNL0UL4v/MVYfUlhjcxpz
+         /COXBi+fc/wvujsQQv/wMFhRI27Rl5tu/KbViQS0bqjjpZUEQpeyEj8gAxvQ1ZddR4GB
+         FdCH6eQEc760OjBYTFKt2i/TUJ00wAOu5L3kt+cW0ofqwGNRbI0o23RWxQP5sKcUdZ/M
+         GjNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtg4FShJSvZHrY/Gd1J9B1ld/p/J9NUGMUslrrcYnSJnMWIeZy6ua0Ef/gkMyne+ZuOYp9UPWt8hEeijE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFcL9wIi/dVYHjRJlfd6bKKpPbt7UHWo0iqGFpNuldKXNKqpJz
+	CFvgcHnpJv/IR783i2LQu6tz1ILb+boufC6xLzII8wn2kM8reSpIiP7z0dVfNuI=
+X-Gm-Gg: ASbGnctLnYL48n7wac3yPkMVom5xl7Monk2NUdldZcnu7HUH6R82B2vBQwyjXXl3mcy
+	JriJalhCmlsVUyeCvX4HJ51VO0jfc71+a/Lxcg8SFQYBvtxZXK1h9l6K49hZWpMBn8aF+AY47O6
+	3YjztTLt5NMX23jyy0jGcB8xzTdHmzNwpHyhps4ltL5FUSSX9phbss0eHnp4+e99E/hYeeOd94c
+	Oy1J1HAAoJeNcwG6WNcyCkRU182FtYgtTR9gCK3Uu7V0dm+slkQA44SXpuXqba/iIOj6C6/rPph
+	KNfUJTdIxx+3VqjzpT3I
+X-Google-Smtp-Source: AGHT+IFQqlyGGnwP1AKUpdQjn6VhX+4WnkPIk9II4OV70FotBJjNMX3/QzGFqNNsrzKLYgtOZkRjGg==
+X-Received: by 2002:a17:902:e890:b0:21f:6885:2b0b with SMTP id d9443c01a7336-221040697ecmr172506445ad.26.1739821859667;
+        Mon, 17 Feb 2025 11:50:59 -0800 (PST)
+Received: from localhost ([2409:4066:d04:319e:1d76:db25:b6bf:4f52])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-adb5aa216f2sm7856362a12.69.2025.02.17.11.50.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 11:50:32 -0800 (PST)
-Date: Mon, 17 Feb 2025 21:50:30 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jun Nie <jun.nie@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 01/15] drm/msm/dpu: check every pipe per capability
-Message-ID: <sd3u2l4epms4ttytoc2bqrzsqfxnphqkutwkxremjon22ven72@3rohlpaxhryr>
-References: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org>
- <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-1-c11402574367@linaro.org>
+        Mon, 17 Feb 2025 11:50:59 -0800 (PST)
+From: Ravi Kumar kairi <kumarkairiravi@gmail.com>
+To: dpenkler@gmail.com
+Cc: gregkh@linuxfoundation.org,
+	kuba@kernel.org,
+	dan.carpenter@linaro.org,
+	rmk+kernel@armlinux.org.uk,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Ravi Kumar Kairi <kumarkairiravi@gmail.com>
+Subject: [PATCH v5 0/3] staging:gpib: typo fix and cleam up
+Date: Tue, 18 Feb 2025 01:20:47 +0530
+Message-ID: <20250217195050.117167-1-kumarkairiravi@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-1-c11402574367@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 17, 2025 at 10:15:50PM +0800, Jun Nie wrote:
-> The capability stored in sblk and pipe_hw_caps is checked only for
-> SSPP of the first pipe in the pair with current implementation. That
-> of the 2nd pipe, r_pipe, is not checked and may violate hardware
-> capability. Move requirement check to dpu_plane_atomic_check_pipe()
-> for the check of every pipe.
-> 
-> Fixes: ("dbbf57dfd04e6 drm/msm/dpu: split dpu_plane_atomic_check()")
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 71 ++++++++++++++++---------------
->  1 file changed, 36 insertions(+), 35 deletions(-)
-> 
+From: Ravi Kumar Kairi <kumarkairiravi@gmail.com>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+minor typo fix and cleanup
+
+Ravi Kumar Kairi (3):
+  staging:gpib:agilent_82350b.c: fixed a typo
+  staging:gpib:agilent_82350b.c: cleaned commented out code
+  staging:gpib:agilent_82350b.c: removed braces from a single if
+    statement
+
+ .../gpib/agilent_82350b/agilent_82350b.c      | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.48.1
+
