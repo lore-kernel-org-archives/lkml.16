@@ -1,108 +1,104 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D76194C8B;
-	Mon, 17 Feb 2025 11:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777C8218ADD;
+	Mon, 17 Feb 2025 11:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739792280; cv=none; b=fAqwRPQKY42nIwu/mOAJA9g9sY6ngM07ahOegCgm2+Tj0tLsn529XMbudC2wmTqSujcKExkLKqzzMn5ru83p+Qo8IYvNSm37xgtSKY2XwUVqRX9K7+tHvki/VLixvF8pTkP1fHQShLtoh2zdefUPWOJF+We807Zs5v1jf1TEPpQ=
+	t=1739792296; cv=none; b=udMJXlxvINM8NXZ8yEzKW1RHyCfm3FpGb51yropK/kxrFIW8EgpSGgVRqqhkNwCvA4SiGkAnrsWytK5p2978EDXSKSdbQBxYkVqmjGo6Gimy0mcqhZeKYtlblKxSG3lhciPTUbtyk/+VaMxuPmSSxzqzyHijKBIYC6KWIykdapY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739792280; c=relaxed/simple;
-	bh=/ACTGZEmOGEMJW+VSLUpRkaXoC8ByG57LGhsF7zKvIk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V+eq2URgXKVxZsFH7ecZg4Bk1YdcGufAEyJFoGoJ+UGAv7qYfleoixGAEHJa2KOdtfGvQ3MEIG1xBOflJOhfQhm40VYQ6L52GO5TzU01RiQDW6miqglNBlTcwt6NNzt7sqXLZ6nIIYVKLPXYGFXrnsr2/ZfgtxohFqhz3JrVNoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=FVnEflPk; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739792296; c=relaxed/simple;
+	bh=vJ4rRARvHvI+TqMh5YEfuph2abkuxCb70so77AF6Lp0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UXQenFjnhMigUH4z6rE0w3yqOEVMFH0xEBti8kasmeBu/g2v2T7bvV5VZSl6fWCKSBb7bcmgMfz0l8ubiJMIIS5c5KRpbAqSwcticm/nzYjliWsIln7jun3zawCreLN5sDm41NqdHG9YIc3FYEAIzA/OHCtXP0yqGpuRbiUyA/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLgkTqAj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FVnEflPk"
-X-UUID: 9de83a4ced2311efaae1fd9735fae912-20250217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=DbjxxvFUSINuD+GS4bDK4+YmMPoBQQThSlhkpsMhcDg=;
-	b=FVnEflPk2PsDj3/N4oTcnyRQvjt03qjd/n959qEcD7g4Gah8BsrzVdYsyUSk3mO9WIFFrV/km6GaAL9pxcyuoFWPIg6OYS3SocNCed0Fx448rQODp0sAFfNVh412/x9tv5pWQMT1KTLD2tMW+ItstL4BT6YCe9FiMJSockubjmA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:93bd6619-0b0a-41c0-8175-b2a69cd78ad1,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:c2c37f88-f9ab-4ac1-951b-e3a689bed90c,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 9de83a4ced2311efaae1fd9735fae912-20250217
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <macpaul.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 856791141; Mon, 17 Feb 2025 19:37:50 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 17 Feb 2025 19:37:48 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Mon, 17 Feb 2025 19:37:48 +0800
-From: Macpaul Lin <macpaul.lin@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, Alexandre Mergnat
-	<amergnat@baylibre.com>
-CC: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
-	Macpaul Lin <macpaul.lin@mediatek.com>, Macpaul Lin <macpaul@gmail.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<linux-usb@vger.kernel.org>, Sen Chu <sen.chu@mediatek.com>, Chris-qj chen
-	<chris-qj.chen@mediatek.com>
-Subject: [PATCH v3] arm64: dts: mediatek: mt6359: fix dtbs_check error for audio-codec
-Date: Mon, 17 Feb 2025 19:37:36 +0800
-Message-ID: <20250217113736.1867808-1-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLgkTqAj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1EC47C4CEEB;
+	Mon, 17 Feb 2025 11:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739792296;
+	bh=vJ4rRARvHvI+TqMh5YEfuph2abkuxCb70so77AF6Lp0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=aLgkTqAjZvP6rN/OTvl7AfhLcg/jEkj9q1r29l6LwmspKJtdguR1u1WeqG+IyJcgs
+	 IQD3Lh8xaGWNdvD4uHWKsRHL3oEKpkhnr1xzRvf/QPe0q9JbdoLX4wlG+6a7wUZtih
+	 TDk1GsVEru93sIyGt8zDZbJiwbBLWe+ZiZnNMiDx59huz5KWVPpFyMxOSz3athl4XQ
+	 bjnRWu0wsuifYo/CPrFntpcpv3Nc5J8MyHqMtf9CztyNnvdNNrVOOYwikBNZCaZ0lS
+	 10O+Pv5MjwSWUGFCHVEODRHdA92Y/SFjc8bVz9mDSE4tg7fxA+ZXG06bQnUe71oqdE
+	 owT3QCsheT8JQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10369C021AC;
+	Mon, 17 Feb 2025 11:38:16 +0000 (UTC)
+From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
+Date: Mon, 17 Feb 2025 12:38:04 +0100
+Subject: [PATCH RESEND v6 4/4] MAINTAINERS: Add entries for Apple Z2
+ touchscreen driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250217-z2-v6-4-c2115d6e5a8f@gmail.com>
+References: <20250217-z2-v6-0-c2115d6e5a8f@gmail.com>
+In-Reply-To: <20250217-z2-v6-0-c2115d6e5a8f@gmail.com>
+To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+ Neal Gompa <neal@gompa.dev>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739792294; l=1303;
+ i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
+ bh=InMRbHicu7oJRHDFwDtDafdNISTi0qP6MkyrWoUFJQU=;
+ b=q/IU4spImyU4lkrTPb1Sg0FrX7UxOiEvj7DS7BBtsryr0q42cLnwkhNA5/D9LZTElpkvjdxf7
+ Sf/fJJw00D5DXJdrOZdae6HPsK1n21+QpsFYjh7tgj2I4MP95rCxFKl
+X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
+ pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
+X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
+ auth_id=283
+X-Original-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Reply-To: fnkl.kernel@gmail.com
 
-This change fixes these dtbs_check errors for audio-codec:
-1. pmic: 'mt6359codec' does not match any of the regexes: 'pinctrl-[0-9]+'
- - Replace device node name to generic 'audio-codec'
-2. pmic: regulators: 'compatible' is a required property
- - Add 'mediatek,mt6359-codec' to compatible.
+From: Sasha Finkelstein <fnkl.kernel@gmail.com>
 
-Fixes: 3b7d143be4b7 ("arm64: dts: mt6359: add PMIC MT6359 related nodes")
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Add the MAINTAINERS entries for the driver
+
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Acked-by: Sven Peter <sven@svenpeter.dev>
+Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 ---
- arch/arm64/boot/dts/mediatek/mt6359.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes for v2:
- - No change. Because the 2/3 patch has been dropped from the v1 patch.
-   Hence the new patch set v2 needs to be updated.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a87ddad78e26f28ffd0f3433560d6db1518f9f95..8b3776eb748e128f87c44886b117e0652447fb37 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2191,6 +2191,7 @@ F:	Documentation/devicetree/bindings/clock/apple,nco.yaml
+ F:	Documentation/devicetree/bindings/cpufreq/apple,cluster-cpufreq.yaml
+ F:	Documentation/devicetree/bindings/dma/apple,admac.yaml
+ F:	Documentation/devicetree/bindings/i2c/apple,i2c.yaml
++F:	Documentation/devicetree/bindings/input/touchscreen/apple,z2-multitouch.yaml
+ F:	Documentation/devicetree/bindings/interrupt-controller/apple,*
+ F:	Documentation/devicetree/bindings/iommu/apple,dart.yaml
+ F:	Documentation/devicetree/bindings/iommu/apple,sart.yaml
+@@ -2211,6 +2212,7 @@ F:	drivers/dma/apple-admac.c
+ F:	drivers/pmdomain/apple/
+ F:	drivers/i2c/busses/i2c-pasemi-core.c
+ F:	drivers/i2c/busses/i2c-pasemi-platform.c
++F:	drivers/input/touchscreen/apple_z2.c
+ F:	drivers/iommu/apple-dart.c
+ F:	drivers/iommu/io-pgtable-dart.c
+ F:	drivers/irqchip/irq-apple-aic.c
 
-Changes for v3:
- - Add "Reviewed-by:" tag. Thanks!.
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt6359.dtsi b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-index 8e1b8c85c6ed..98a4aaac7911 100644
---- a/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-@@ -14,7 +14,8 @@ pmic_adc: adc {
- 			#io-channel-cells = <1>;
- 		};
- 
--		mt6359codec: mt6359codec {
-+		mt6359codec: audio-codec {
-+			compatible = "mediatek,mt6359-codec";
- 		};
- 
- 		regulators {
 -- 
-2.45.2
+2.48.1
+
 
