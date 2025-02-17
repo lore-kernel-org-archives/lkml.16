@@ -1,110 +1,159 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7DC21CC79;
-	Mon, 17 Feb 2025 13:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10169193084;
+	Mon, 17 Feb 2025 13:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797312; cv=none; b=Nc4DW6S9D71XphmA7PHEMKx7/6vUtYqkO5iGn9W22T8gGzJUzDx5AmeHcRF2AnsqivcqoTCyc4lpSlCtDIVhqv5XhxxADEOh9hQz86LGyJaOJWmmx+6KW+gwos0IRnuYPgZ2JlUxSB8gFajhv/gw/pkdWhmeiAUHzSGUtoOEGS4=
+	t=1739797388; cv=none; b=LdmwTV3tOVjUdweHqXJw9Vn8B+XYgci0ZgTCv4I8+5buKidTzSFSOzkrAaGvtqLQMjg7n5GSR6XHe81F51XaclYlU23wzPIgELW+YdahOO+1qHDoC7FlQMTBWVEcOpoIIKN8BL/XJ7eE4HuUwOIKN2DHHTuDP33U3u5G9xz1inE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797312; c=relaxed/simple;
-	bh=2jD9QuN6VW28G8GTwlxHKo4MVefLSMtcuuBQ7ppj4Do=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=jlcA+8vWuG+twyo7o2udT3Z+yScAO21j8RqaWYjjPFwsGGmAUz4/fWdNxyEGwve7OsBpgSK5HeatNwWkfA4E/kYvnh2Gxag6u/hguFlMry+zLjjfPJIFAlMQKk3dWyQoG409XQPZ4OrcHBTAdUh9ePrl2ef1Sj9zb1xqjuOTuPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=m7ovJ0Cq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=p/oNoCF6; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="m7ovJ0Cq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p/oNoCF6"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3B76B138098A;
-	Mon, 17 Feb 2025 08:01:49 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Mon, 17 Feb 2025 08:01:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1739797309;
-	 x=1739883709; bh=fGA+ofvv0mZ+MkkWUzOVgJmFJURib3VnJcpnpL+ZHus=; b=
-	m7ovJ0CqOB+FGXNyWezZXR56R+dUPXg6y5/SjLuu+Z77Eyw6oLdhktPa22dnJyAq
-	yZszsehsAJibdRlQQ3b0hBWrx4Aekp6tOEm/kBarmM8x+58Ewc8I8T5vhjgiqP+d
-	Tkyh+51baL+h+SmlorvlQWJ+hb5nceMOegTiO2rCFxMR262XQgLMyuW17leo8SgK
-	u7e9bU4WIs9ldGbq8om4mnP8TWzwzXTp4hGfEvQ27uIQldcwqoG6H55c0LUQIN+I
-	CF+sHtRpHpEGtZMhAO+Wwsdsa81317GPh7ODhe2X5A6m1DUcmvLwdiR9/L8bCwLk
-	vwXymEPs4zjaLRZP2YfNSA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1739797309; x=1739883709; bh=f
-	GA+ofvv0mZ+MkkWUzOVgJmFJURib3VnJcpnpL+ZHus=; b=p/oNoCF6+AG2rsT1U
-	oJoNbzjA2pwiZ6qSDsPpAm+UG3XX0E0me0IOaLb1y4QZes7coe/crzQCAJCjYgAi
-	O3kpT2OHrLtN3uwDpNVAgG+2hf5tT8b+EJpNI/LSJITAOahD9YngzVNtTjIeIqsD
-	CaHug9xQA7KtlZGvP+356t9HYT5JqetoOCu2PY/YKxGp6yAOQcrQSwo8uErfo/pS
-	lMkw7vWWyTnhMsmbUyXokhNnbAIhUq+mwmCMBumUFu2eO0bQfmTy2yRLzY0Cr7w2
-	RQCZR6bPUgd63iTX1s8YizTYbH1u4vjPtKGTtZM7Oa4957KmcSz42QMIKkjG3Adp
-	E3m1g==
-X-ME-Sender: <xms:PDOzZ0DdmgvgEDBJ02HcqB5xjLCi2S8W_eUnp2wxItsJbI8HXsmU3w>
-    <xme:PDOzZ2jQrdI42GeBUxtyjyxZrLXR4Gd2erb7mIdYo-Ex9f9-BucKlU92SiMqn2qff
-    YoRjXlK-eNYE1AQzbU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkeegiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfekledtffefhffghfetteehuefhgfetgefhtdeu
-    feduueeltefghedtjeeifffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepkedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhhitgholhgrshesfhhjrghslhgvrd
-    gvuhdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriiihshiith
-    hofhdrkhhoiihlohifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheptghorhgs
-    vghtsehlfihnrdhnvghtpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhksghuihhlugesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:PDOzZ3mEfyRqMpos6wPvm0i6GQM0gnYE6rb5Tp63W4Op0L_RT3cCRw>
-    <xmx:PDOzZ6yJv22itZ9lTlorwR4ohb5cZzUIOVnxhKUYz7xpV3o1XsrRMg>
-    <xmx:PDOzZ5TqER8X68IL5Ie85fbeuYGpYQVjqbrSNqWWClkNNHLtETjKwA>
-    <xmx:PDOzZ1Z1uGxPWPR6N3eSKIWV8P7Brtd0Bo6s6a9IRoo3dLUYzxywCw>
-    <xmx:PTOzZ6RETDtBvsZ3WkggEr3Qf7EgZ8b5emkQCq69NMl3ro4FQU6xVbZ3>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 830D72220073; Mon, 17 Feb 2025 08:01:48 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1739797388; c=relaxed/simple;
+	bh=qrmOkaVLkCWivZRjK6eeyFEaTtgFT3AnfYzGBM29WPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FjoBHalo7tO3fTSNOEJkNoq/9bKm5Bd6Hg7o5OPCwXyskAj08LQXzDkA8calSgtoXOW1XIKlx35EbSi9qJH/OddeGMcKzlWs1LJH+a9mk87Vsg17o60xQnw9GEzun4JuOsfnyuMBkmkBHSnbdzW/uR38qoVbBuZ/ygDs//lzZvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BD9413D5;
+	Mon, 17 Feb 2025 05:03:24 -0800 (PST)
+Received: from [10.1.35.42] (e127648.arm.com [10.1.35.42])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABE313F6A8;
+	Mon, 17 Feb 2025 05:03:03 -0800 (PST)
+Message-ID: <4ccf81b2-fa1e-479d-91f4-1c518594f877@arm.com>
+Date: Mon, 17 Feb 2025 13:03:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 17 Feb 2025 14:01:28 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas@fjasle.eu>, "Jonathan Corbet" <corbet@lwn.net>,
- linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <b1667246-d6e3-46cb-9b76-997e6d6fe052@app.fastmail.com>
-In-Reply-To: <20250217113153.161476-1-krzysztof.kozlowski@linaro.org>
-References: <20250217113153.161476-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v3] docs: kconfig: Mention IS_REACHABLE as way for optional
- dependency
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT][PATCH v1 2/5] cpuidle: menu: Use one loop for average and
+ variance computations
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+References: <1916668.tdWV9SEqCh@rjwysocki.net>
+ <3339073.aeNJFYEL58@rjwysocki.net>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <3339073.aeNJFYEL58@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 17, 2025, at 12:31, Krzysztof Kozlowski wrote:
-> Several drivers express optional Kconfig dependency with FOO || !FOO,
-> but for many choices this is not suitable: lack of stubs for !FOO
-> like in HWMON.  Describe the second, less favorable way of optional
-> dependency with IS_REACHABLE by moving the code from "imply" chapter to
-> "Optional dependencies".
->
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On 2/6/25 14:24, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Use the observation that one loop is sufficient to compute the average
+> of an array of values and their variance to eliminate one of the loops
+> from get_typical_interval().
+> 
+> While at it, make get_typical_interval() consistently use u64 as the
+> 64-bit unsigned integer data type and rearrange some white space and the
+> declarations of local variables in it (to make them follow the reverse
+> X-mas tree pattern).
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpuidle/governors/menu.c |   61 +++++++++++++++++----------------------
+>  1 file changed, 28 insertions(+), 33 deletions(-)
+> 
+> --- a/drivers/cpuidle/governors/menu.c
+> +++ b/drivers/cpuidle/governors/menu.c
+> @@ -116,49 +116,45 @@
+>   */
+>  static unsigned int get_typical_interval(struct menu_device *data)
+>  {
+> -	int i, divisor;
+> -	unsigned int max, thresh, avg;
+> -	uint64_t sum, variance;
+> -
+> -	thresh = INT_MAX; /* Discard outliers above this value */
+> +	unsigned int max, divisor, thresh = INT_MAX;
+> +	u64 avg, variance, avg_sq;
+> +	int i;
+>  
+>  again:
+> -
+> -	/* First calculate the average of past intervals */
+> +	/* Compute the average and variance of past intervals. */
+>  	max = 0;
+> -	sum = 0;
+> +	avg = 0;
+> +	variance = 0;
+>  	divisor = 0;
+>  	for (i = 0; i < INTERVALS; i++) {
+>  		unsigned int value = data->intervals[i];
+> -		if (value <= thresh) {
+> -			sum += value;
+> -			divisor++;
+> -			if (value > max)
+> -				max = value;
+> -		}
+> +
+> +		/* Discard data points above the threshold. */
+> +		if (value > thresh)
+> +			continue;
+> +
+> +		divisor++;
+> +
+> +		avg += value;
+> +		variance += (u64)value * value;
+> +
+> +		if (value > max)
+> +			max = value;
+>  	}
+>  
+>  	if (!max)
+>  		return UINT_MAX;
+>  
+> -	if (divisor == INTERVALS)
+> -		avg = sum >> INTERVAL_SHIFT;
+> -	else
+> -		avg = div_u64(sum, divisor);
+> -
+> -	/* Then try to determine variance */
+> -	variance = 0;
+> -	for (i = 0; i < INTERVALS; i++) {
+> -		unsigned int value = data->intervals[i];
+> -		if (value <= thresh) {
+> -			int64_t diff = (int64_t)value - avg;
+> -			variance += diff * diff;
+> -		}
+> -	}
+> -	if (divisor == INTERVALS)
+> +	if (divisor == INTERVALS) {
+> +		avg >>= INTERVAL_SHIFT;
+>  		variance >>= INTERVAL_SHIFT;
+> -	else
+> +	} else {
+> +		do_div(avg, divisor);
+>  		do_div(variance, divisor);
+> +	}
+> +
+> +	avg_sq = avg * avg;
+> +	variance -= avg_sq;
+>  
+>  	/*
+>  	 * The typical interval is obtained when standard deviation is
+> @@ -173,10 +169,9 @@
+>  	 * Use this result only if there is no timer to wake us up sooner.
+>  	 */
+>  	if (likely(variance <= U64_MAX/36)) {
+> -		if ((((u64)avg*avg > variance*36) && (divisor * 4 >= INTERVALS * 3))
+> -							|| variance <= 400) {
+> +		if ((avg_sq > variance * 36 && divisor * 4 >= INTERVALS * 3) ||
+> +		    variance <= 400)
+>  			return avg;
+> -		}
+>  	}
+>  
+>  	/*
+> 
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+
