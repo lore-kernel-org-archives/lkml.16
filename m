@@ -1,155 +1,377 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31DE71A5BA5
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 09:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896481AA795
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 09:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739783461; cv=none; b=QwsoWftUAk7AR/G7/lX2tCpq420pHRNnQ4PhggATiDkYe2F+fzkOEhwD1znnL8wGrBlZF/BeQ54wKucwTqFL52rDUBcmAuK95bncDR3z3sSn4/Rp5kGho5j5xzqTzdzUyY025erAyGcf3r/P8rRE6WXmiZDDQXSVfLXz86f0ZMw=
+	t=1739783461; cv=none; b=oT8GVNSwfADqNXbFAZ3wX7L2A3jen5gaDi7/EXr5wILW+CwDdiVW8nmgnZFYGqJ7bTYmIQmTKoMVNR6k51ah1aAKcg33qL+YikQouOHCt1YPKLJ2oTsDxxOd02uG7GFHNGc2fDno6YdCwhCWSkJxTCPewAi/0E4ymz3/3H/m0AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739783461; c=relaxed/simple;
-	bh=q9uPqLTY23wTOJPd4l5UeTu14FuWmA115jTfrX5akA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=U1XluVsJexwEQMzpicAib3JRMh0dps8HS2pxK1Zd0gdwrY85fcl40s+MHpcuXO/FeubAuxEu3ugkWjY7BNZKAEcCKA1kAGLUC1S1AROOM3ivfYQPosStCzDiWuBqn7hQV6O/Q6wMUFlTeVEd0GLHxmEWhZz7wKCdLHOCckI2TUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id F160472C8F5;
-	Mon, 17 Feb 2025 12:10:57 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id E080B7CCB3A; Mon, 17 Feb 2025 11:10:57 +0200 (IST)
-Date: Mon, 17 Feb 2025 11:10:57 +0200
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Mike Frysinger <vapier@gentoo.org>,
-	Renzo Davoli <renzo@cs.unibo.it>,
-	Davide Berardi <berardi.dav@gmail.com>,
-	strace-devel@lists.strace.io, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 4/6] ptrace_get_syscall_info: factor out
- ptrace_get_syscall_info_op
-Message-ID: <20250217091057.GE18175@strace.io>
+	bh=hmgzYqSY7ZUj7xwhJfZLrqeFNzIl5ULqpfVe99JPcSc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fMPsIEr7AndHL+ghCHh1E+x+S09N+t8c1O2B5fJX7eepXBowscKeKEtN+XAq0voP25Lv10Yl72totE3f811rOMuVIz23kO2UCkPLjlnCSTSPFpchuKVOQYf1L1e76ovpbLrdAZji0jG73fUt91aaeDslgWzL6rzXLelhZ+RRHrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from unicom145.biz-email.net
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id PDC00146;
+        Mon, 17 Feb 2025 17:10:46 +0800
+Received: from localhost.localdomain (10.94.7.142) by
+ jtjnmail201608.home.langchao.com (10.100.2.8) with Microsoft SMTP Server id
+ 15.1.2507.39; Mon, 17 Feb 2025 17:10:45 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <xiang@kernel.org>, <chao@kernel.org>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
+	<liubo03@inspur.com>
+Subject: [PATCH] erofs: get rid of erofs_kmap_type
+Date: Mon, 17 Feb 2025 04:10:44 -0500
+Message-ID: <20250217091044.2311-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217090834.GA18175@strace.io>
+Content-Type: text/plain
+tUid: 2025217171046b57aed6327a5fafa8d14ae8cb344db2d
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-Move the code that calculates the type of the system call stop
-out of ptrace_get_syscall_info() into a separate function
-ptrace_get_syscall_info_op() which is going to be used later
-to implement PTRACE_SET_SYSCALL_INFO API.
+Since EROFS_KMAP_ATOMIC is no longer valid, get rid of erofs_kmap_type too.
 
-Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
- kernel/ptrace.c | 58 +++++++++++++++++++++++++++++--------------------
- 1 file changed, 34 insertions(+), 24 deletions(-)
+ fs/erofs/data.c     | 16 ++++++++--------
+ fs/erofs/dir.c      |  2 +-
+ fs/erofs/fileio.c   |  2 +-
+ fs/erofs/fscache.c  |  2 +-
+ fs/erofs/inode.c    |  6 +++---
+ fs/erofs/internal.h | 10 ++--------
+ fs/erofs/namei.c    |  2 +-
+ fs/erofs/super.c    |  8 ++++----
+ fs/erofs/xattr.c    | 12 ++++++------
+ fs/erofs/zdata.c    |  4 ++--
+ fs/erofs/zmap.c     |  6 +++---
+ 11 files changed, 32 insertions(+), 38 deletions(-)
 
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index d5f89f9ef29f..22e7d74cf4cd 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -921,7 +921,6 @@ ptrace_get_syscall_info_entry(struct task_struct *child, struct pt_regs *regs,
- 	unsigned long args[ARRAY_SIZE(info->entry.args)];
- 	int i;
- 
--	info->op = PTRACE_SYSCALL_INFO_ENTRY;
- 	info->entry.nr = syscall_get_nr(child, regs);
- 	syscall_get_arguments(child, regs, args);
- 	for (i = 0; i < ARRAY_SIZE(args); i++)
-@@ -943,7 +942,6 @@ ptrace_get_syscall_info_seccomp(struct task_struct *child, struct pt_regs *regs,
- 	 * diverge significantly enough.
- 	 */
- 	ptrace_get_syscall_info_entry(child, regs, info);
--	info->op = PTRACE_SYSCALL_INFO_SECCOMP;
- 	info->seccomp.ret_data = child->ptrace_message;
- 
- 	/* ret_data is the last field in struct ptrace_syscall_info.seccomp */
-@@ -954,7 +952,6 @@ static unsigned long
- ptrace_get_syscall_info_exit(struct task_struct *child, struct pt_regs *regs,
- 			     struct ptrace_syscall_info *info)
- {
--	info->op = PTRACE_SYSCALL_INFO_EXIT;
- 	info->exit.rval = syscall_get_error(child, regs);
- 	info->exit.is_error = !!info->exit.rval;
- 	if (!info->exit.is_error)
-@@ -965,19 +962,8 @@ ptrace_get_syscall_info_exit(struct task_struct *child, struct pt_regs *regs,
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 0cd6b5c4df98..386e312de8c0 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -26,7 +26,7 @@ void erofs_put_metabuf(struct erofs_buf *buf)
  }
  
- static int
--ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
--			void __user *datavp)
-+ptrace_get_syscall_info_op(struct task_struct *child)
+ void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset,
+-		  enum erofs_kmap_type type)
++				bool need_kmap)
  {
--	struct pt_regs *regs = task_pt_regs(child);
--	struct ptrace_syscall_info info = {
--		.op = PTRACE_SYSCALL_INFO_NONE,
--		.arch = syscall_get_arch(child),
--		.instruction_pointer = instruction_pointer(regs),
--		.stack_pointer = user_stack_pointer(regs),
--	};
--	unsigned long actual_size = offsetof(struct ptrace_syscall_info, entry);
--	unsigned long write_size;
--
- 	/*
- 	 * This does not need lock_task_sighand() to access
- 	 * child->last_siginfo because ptrace_freeze_traced()
-@@ -988,18 +974,42 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
- 	case SIGTRAP | 0x80:
- 		switch (child->ptrace_message) {
- 		case PTRACE_EVENTMSG_SYSCALL_ENTRY:
--			actual_size = ptrace_get_syscall_info_entry(child, regs,
--								    &info);
--			break;
-+			return PTRACE_SYSCALL_INFO_ENTRY;
- 		case PTRACE_EVENTMSG_SYSCALL_EXIT:
--			actual_size = ptrace_get_syscall_info_exit(child, regs,
--								   &info);
--			break;
-+			return PTRACE_SYSCALL_INFO_EXIT;
-+		default:
-+			return PTRACE_SYSCALL_INFO_NONE;
- 		}
--		break;
- 	case SIGTRAP | (PTRACE_EVENT_SECCOMP << 8):
--		actual_size = ptrace_get_syscall_info_seccomp(child, regs,
--							      &info);
-+		return PTRACE_SYSCALL_INFO_SECCOMP;
-+	default:
-+		return PTRACE_SYSCALL_INFO_NONE;
-+	}
-+}
-+
-+static int
-+ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
-+			void __user *datavp)
-+{
-+	struct pt_regs *regs = task_pt_regs(child);
-+	struct ptrace_syscall_info info = {
-+		.op = ptrace_get_syscall_info_op(child),
-+		.arch = syscall_get_arch(child),
-+		.instruction_pointer = instruction_pointer(regs),
-+		.stack_pointer = user_stack_pointer(regs),
-+	};
-+	unsigned long actual_size = offsetof(struct ptrace_syscall_info, entry);
-+	unsigned long write_size;
-+
-+	switch (info.op) {
-+	case PTRACE_SYSCALL_INFO_ENTRY:
-+		actual_size = ptrace_get_syscall_info_entry(child, regs, &info);
-+		break;
-+	case PTRACE_SYSCALL_INFO_EXIT:
-+		actual_size = ptrace_get_syscall_info_exit(child, regs, &info);
-+		break;
-+	case PTRACE_SYSCALL_INFO_SECCOMP:
-+		actual_size = ptrace_get_syscall_info_seccomp(child, regs, &info);
- 		break;
+ 	pgoff_t index = offset >> PAGE_SHIFT;
+ 	struct folio *folio = NULL;
+@@ -43,10 +43,10 @@ void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset,
+ 			return folio;
  	}
+ 	buf->page = folio_file_page(folio, index);
+-	if (!buf->base && type == EROFS_KMAP)
+-		buf->base = kmap_local_page(buf->page);
+-	if (type == EROFS_NO_KMAP)
++	if (!need_kmap)
+ 		return NULL;
++	if (!buf->base)
++		buf->base = kmap_local_page(buf->page);
+ 	return buf->base + (offset & ~PAGE_MASK);
+ }
  
+@@ -65,10 +65,10 @@ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
+ }
+ 
+ void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
+-			 erofs_off_t offset, enum erofs_kmap_type type)
++			 erofs_off_t offset, bool need_kmap)
+ {
+ 	erofs_init_metabuf(buf, sb);
+-	return erofs_bread(buf, offset, type);
++	return erofs_bread(buf, offset, need_kmap);
+ }
+ 
+ static int erofs_map_blocks_flatmode(struct inode *inode,
+@@ -135,7 +135,7 @@ int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
+ 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize +
+ 		    vi->xattr_isize, unit) + unit * chunknr;
+ 
+-	kaddr = erofs_read_metabuf(&buf, sb, pos, EROFS_KMAP);
++	kaddr = erofs_read_metabuf(&buf, sb, pos, true);
+ 	if (IS_ERR(kaddr)) {
+ 		err = PTR_ERR(kaddr);
+ 		goto out;
+@@ -312,7 +312,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ 		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+ 
+ 		iomap->type = IOMAP_INLINE;
+-		ptr = erofs_read_metabuf(&buf, sb, mdev.m_pa, EROFS_KMAP);
++		ptr = erofs_read_metabuf(&buf, sb, mdev.m_pa, true);
+ 		if (IS_ERR(ptr))
+ 			return PTR_ERR(ptr);
+ 		iomap->inline_data = ptr;
+diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+index c3b90abdee37..1d3bb8746ab1 100644
+--- a/fs/erofs/dir.c
++++ b/fs/erofs/dir.c
+@@ -58,7 +58,7 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 		struct erofs_dirent *de;
+ 		unsigned int nameoff, maxsize;
+ 
+-		de = erofs_bread(&buf, dbstart, EROFS_KMAP);
++		de = erofs_bread(&buf, dbstart, true);
+ 		if (IS_ERR(de)) {
+ 			erofs_err(sb, "fail to readdir of logical block %u of nid %llu",
+ 				  erofs_blknr(sb, dbstart), EROFS_I(dir)->nid);
+diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+index 0ffd1c63beeb..bec4b56b3826 100644
+--- a/fs/erofs/fileio.c
++++ b/fs/erofs/fileio.c
+@@ -112,7 +112,7 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
+ 			void *src;
+ 
+ 			src = erofs_read_metabuf(&buf, inode->i_sb,
+-						 map->m_pa + ofs, EROFS_KMAP);
++						 map->m_pa + ofs, true);
+ 			if (IS_ERR(src)) {
+ 				err = PTR_ERR(src);
+ 				break;
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index ce3d8737df85..9c9129bca346 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -276,7 +276,7 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
+ 		size_t size = map.m_llen;
+ 		void *src;
+ 
+-		src = erofs_read_metabuf(&buf, sb, map.m_pa, EROFS_KMAP);
++		src = erofs_read_metabuf(&buf, sb, map.m_pa, true);
+ 		if (IS_ERR(src))
+ 			return PTR_ERR(src);
+ 
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index d4b89407822a..4936bd43c438 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -42,7 +42,7 @@ static int erofs_read_inode(struct inode *inode)
+ 	blkaddr = erofs_blknr(sb, inode_loc);
+ 	ofs = erofs_blkoff(sb, inode_loc);
+ 
+-	kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), EROFS_KMAP);
++	kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), true);
+ 	if (IS_ERR(kaddr)) {
+ 		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
+ 			  vi->nid, PTR_ERR(kaddr));
+@@ -82,8 +82,8 @@ static int erofs_read_inode(struct inode *inode)
+ 				goto err_out;
+ 			}
+ 			memcpy(copied, dic, gotten);
+-			kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr + 1),
+-						   EROFS_KMAP);
++			kaddr = erofs_read_metabuf(&buf, sb,
++					erofs_pos(sb, blkaddr + 1), true);
+ 			if (IS_ERR(kaddr)) {
+ 				erofs_err(sb, "failed to get inode payload block (nid: %llu), err %ld",
+ 					  vi->nid, PTR_ERR(kaddr));
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 686d835eb533..f955793146f4 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -199,11 +199,6 @@ enum {
+ 	EROFS_ZIP_CACHE_READAROUND
+ };
+ 
+-enum erofs_kmap_type {
+-	EROFS_NO_KMAP,		/* don't map the buffer */
+-	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
+-};
+-
+ struct erofs_buf {
+ 	struct address_space *mapping;
+ 	struct file *file;
+@@ -387,11 +382,10 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
+ 			  erofs_off_t *offset, int *lengthp);
+ void erofs_unmap_metabuf(struct erofs_buf *buf);
+ void erofs_put_metabuf(struct erofs_buf *buf);
+-void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset,
+-		  enum erofs_kmap_type type);
++void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap);
+ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb);
+ void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
+-			 erofs_off_t offset, enum erofs_kmap_type type);
++			 erofs_off_t offset, bool need_kmap);
+ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *dev);
+ int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+ 		 u64 start, u64 len);
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+index c94d0c1608a8..f7cf4f41af28 100644
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -100,7 +100,7 @@ static void *erofs_find_target_block(struct erofs_buf *target,
+ 		struct erofs_dirent *de;
+ 
+ 		buf.mapping = dir->i_mapping;
+-		de = erofs_bread(&buf, erofs_pos(dir->i_sb, mid), EROFS_KMAP);
++		de = erofs_bread(&buf, erofs_pos(dir->i_sb, mid), true);
+ 		if (!IS_ERR(de)) {
+ 			const int nameoff = nameoff_from_disk(de->nameoff, bsz);
+ 			const int ndirents = nameoff / sizeof(*de);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 827b62665649..3dc86d931ef1 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -94,7 +94,7 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
+ 	int len, i, cnt;
+ 
+ 	*offset = round_up(*offset, 4);
+-	ptr = erofs_bread(buf, *offset, EROFS_KMAP);
++	ptr = erofs_bread(buf, *offset, true);
+ 	if (IS_ERR(ptr))
+ 		return ptr;
+ 
+@@ -110,7 +110,7 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
+ 	for (i = 0; i < len; i += cnt) {
+ 		cnt = min_t(int, sb->s_blocksize - erofs_blkoff(sb, *offset),
+ 			    len - i);
+-		ptr = erofs_bread(buf, *offset, EROFS_KMAP);
++		ptr = erofs_bread(buf, *offset, true);
+ 		if (IS_ERR(ptr)) {
+ 			kfree(buffer);
+ 			return ptr;
+@@ -141,7 +141,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 	struct erofs_deviceslot *dis;
+ 	struct file *file;
+ 
+-	dis = erofs_read_metabuf(buf, sb, *pos, EROFS_KMAP);
++	dis = erofs_read_metabuf(buf, sb, *pos, true);
+ 	if (IS_ERR(dis))
+ 		return PTR_ERR(dis);
+ 
+@@ -255,7 +255,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	void *data;
+ 	int ret;
+ 
+-	data = erofs_read_metabuf(&buf, sb, 0, EROFS_KMAP);
++	data = erofs_read_metabuf(&buf, sb, 0, true);
+ 	if (IS_ERR(data)) {
+ 		erofs_err(sb, "cannot read erofs superblock");
+ 		return PTR_ERR(data);
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index df2777e05661..9cf84717a92e 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -81,7 +81,7 @@ static int erofs_init_inode_xattrs(struct inode *inode)
+ 	it.pos = erofs_iloc(inode) + vi->inode_isize;
+ 
+ 	/* read in shared xattr array (non-atomic, see kmalloc below) */
+-	it.kaddr = erofs_bread(&it.buf, it.pos, EROFS_KMAP);
++	it.kaddr = erofs_bread(&it.buf, it.pos, true);
+ 	if (IS_ERR(it.kaddr)) {
+ 		ret = PTR_ERR(it.kaddr);
+ 		goto out_unlock;
+@@ -102,7 +102,7 @@ static int erofs_init_inode_xattrs(struct inode *inode)
+ 	it.pos += sizeof(struct erofs_xattr_ibody_header);
+ 
+ 	for (i = 0; i < vi->xattr_shared_count; ++i) {
+-		it.kaddr = erofs_bread(&it.buf, it.pos, EROFS_KMAP);
++		it.kaddr = erofs_bread(&it.buf, it.pos, true);
+ 		if (IS_ERR(it.kaddr)) {
+ 			kfree(vi->xattr_shared_xattrs);
+ 			vi->xattr_shared_xattrs = NULL;
+@@ -183,7 +183,7 @@ static int erofs_xattr_copy_to_buffer(struct erofs_xattr_iter *it,
+ 	void *src;
+ 
+ 	for (processed = 0; processed < len; processed += slice) {
+-		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
++		it->kaddr = erofs_bread(&it->buf, it->pos, true);
+ 		if (IS_ERR(it->kaddr))
+ 			return PTR_ERR(it->kaddr);
+ 
+@@ -286,7 +286,7 @@ static int erofs_getxattr_foreach(struct erofs_xattr_iter *it)
+ 
+ 	/* 2. handle xattr name */
+ 	for (processed = 0; processed < entry.e_name_len; processed += slice) {
+-		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
++		it->kaddr = erofs_bread(&it->buf, it->pos, true);
+ 		if (IS_ERR(it->kaddr))
+ 			return PTR_ERR(it->kaddr);
+ 
+@@ -330,7 +330,7 @@ static int erofs_xattr_iter_inline(struct erofs_xattr_iter *it,
+ 	it->pos = erofs_iloc(inode) + vi->inode_isize + xattr_header_sz;
+ 
+ 	while (remaining) {
+-		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
++		it->kaddr = erofs_bread(&it->buf, it->pos, true);
+ 		if (IS_ERR(it->kaddr))
+ 			return PTR_ERR(it->kaddr);
+ 
+@@ -367,7 +367,7 @@ static int erofs_xattr_iter_shared(struct erofs_xattr_iter *it,
+ 	for (i = 0; i < vi->xattr_shared_count; ++i) {
+ 		it->pos = erofs_pos(sb, sbi->xattr_blkaddr) +
+ 				vi->xattr_shared_xattrs[i] * sizeof(__le32);
+-		it->kaddr = erofs_bread(&it->buf, it->pos, EROFS_KMAP);
++		it->kaddr = erofs_bread(&it->buf, it->pos, true);
+ 		if (IS_ERR(it->kaddr))
+ 			return PTR_ERR(it->kaddr);
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index d771e06db738..ad674eee400a 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -832,7 +832,7 @@ static int z_erofs_pcluster_begin(struct z_erofs_frontend *fe)
+ 	} else {
+ 		void *mptr;
+ 
+-		mptr = erofs_read_metabuf(&map->buf, sb, map->m_pa, EROFS_NO_KMAP);
++		mptr = erofs_read_metabuf(&map->buf, sb, map->m_pa, false);
+ 		if (IS_ERR(mptr)) {
+ 			ret = PTR_ERR(mptr);
+ 			erofs_err(sb, "failed to get inline data %d", ret);
+@@ -967,7 +967,7 @@ static int z_erofs_read_fragment(struct super_block *sb, struct folio *folio,
+ 	buf.mapping = packed_inode->i_mapping;
+ 	for (; cur < end; cur += cnt, pos += cnt) {
+ 		cnt = min(end - cur, sb->s_blocksize - erofs_blkoff(sb, pos));
+-		src = erofs_bread(&buf, pos, EROFS_KMAP);
++		src = erofs_bread(&buf, pos, true);
+ 		if (IS_ERR(src)) {
+ 			erofs_put_metabuf(&buf);
+ 			return PTR_ERR(src);
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 689437e99a5a..75daac513050 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -31,7 +31,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+ 	struct z_erofs_lcluster_index *di;
+ 	unsigned int advise;
+ 
+-	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, EROFS_KMAP);
++	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, true);
+ 	if (IS_ERR(di))
+ 		return PTR_ERR(di);
+ 	m->lcn = lcn;
+@@ -146,7 +146,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	else
+ 		return -EOPNOTSUPP;
+ 
+-	in = erofs_read_metabuf(&m->map->buf, m->inode->i_sb, pos, EROFS_KMAP);
++	in = erofs_read_metabuf(&m->map->buf, m->inode->i_sb, pos, true);
+ 	if (IS_ERR(in))
+ 		return PTR_ERR(in);
+ 
+@@ -561,7 +561,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		goto out_unlock;
+ 
+ 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize + vi->xattr_isize, 8);
+-	h = erofs_read_metabuf(&buf, sb, pos, EROFS_KMAP);
++	h = erofs_read_metabuf(&buf, sb, pos, true);
+ 	if (IS_ERR(h)) {
+ 		err = PTR_ERR(h);
+ 		goto out_unlock;
 -- 
-ldv
+2.31.1
+
