@@ -1,28 +1,29 @@
-Received: from relay01.th.seeweb.it (relay01.th.seeweb.it [5.144.164.162])
+Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1354212B3E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A250216E3E
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739791083; cv=none; b=ZuzFIDNkjlBOzWsGPxjL4lHn3T/XXRA0lPsGBPlGy+C+ERK7o81PsXpqcW1xLEoTRT5CLQ81bOL0lfbsaANaRTVSn281RL2z8O+7PqqVkqrUQ8Gl5+mSwVwxE7M4fW03LVTNDi9HM5N4HFE9tvqeOFU901KaNEdmg3eyIsaFOds=
+	t=1739791085; cv=none; b=MRvroY1BVIhm3bYa6yi2yC8BxScy0fG4/xjU0uTqevRxKlBGdLQMDVjJ2JHpfmFbzR4Skg+8BsEFQTOQhAydCdQZNrhvAEZk3RDsiwfi1Lf0VV3pJeb4uAq5LzS6gMPnYoB/AaBcEdh0k2pHgHWdZ92fq8ljgATSnHmaxLv1tY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739791083; c=relaxed/simple;
-	bh=XlYKleX94y6B66dSSrT2H1qCHvUu0eQ2CYD3wdZHzm4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qC3Aa2UpQOdflsRsGaQJeixZPjEcYF1FuEKNDHY4dM7bFYOw1/W6mlcM0A8TN5YDXTAc9BWGN1uRS4SByX5AAojto97asHnUYdDIBqh0hs7XveDl5ziBUdtMtJJcXqdc/wWDJoe4JQg11OoYsUU2VEYHgvGbBznSIAylXr/paWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.162
+	s=arc-20240116; t=1739791085; c=relaxed/simple;
+	bh=MgMGnmZBZiiXwg/TOFHX7DTi1si89IdnuyFW3h892yg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Bzr+ocmMy68N+XxkkmbnNI4XEDGRNmJidz7M78Fe97bxcCE57DF1/cBqHp99mjbi+/FtDm7BaWLFPDfu4R8K15EjstqyLo1ALst5Vn2FpCBQ7XZIbJngojaO4ygdJ10TezRxyhk3kRFRlTuuk8E3NOD8bAsR7ulk5E7s6YdL7qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
 Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 664A71F784;
-	Mon, 17 Feb 2025 12:17:52 +0100 (CET)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 7C5931F8F2;
+	Mon, 17 Feb 2025 12:17:55 +0100 (CET)
 From: Marijn Suijten <marijn.suijten@somainline.org>
-Subject: [PATCH v3 0/3] drm/msm: Initial fixes for DUALPIPE (+DSC) topology
-Date: Mon, 17 Feb 2025 12:17:40 +0100
-Message-Id: <20250217-drm-msm-initial-dualpipe-dsc-fixes-v3-0-913100d6103f@somainline.org>
+Date: Mon, 17 Feb 2025 12:17:43 +0100
+Subject: [PATCH v3 3/3] drm/msm/dpu: Remove arbitrary limit of 1 interface
+ in DSC topology
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,13 +32,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANQas2cC/43QzW7DIAwH8FeJOM8TEL4STdPeY9qBBtMihZBBG
- q2q+u4jqXrZLr1hLP1s/6+kYA5YSN9cScY1lJCmWrQvDRlOdjoiBFdrwikXVDAFLkeIJUKYwhL
- sCO5sxznMCK4M4MMPFmg91UweaHvwglRozrg3qvP5VetTKEvKl33myrbfB6+f4VcGFLSx2CJ2V
- nX6o6RowzSGCV9TPpJtxsofrqScdk+5vLoVpMwI74ZW/XNv92Myfp9rUMv9IhKxFLsH1Tdv+0D
- GObj5DIwxWNKcxnS8bDwDSSV2slPC+u4P/75FdbAFYUgxhqVv0EnjGG1ROcukFYJ7b7RU2nRGK
- 1NXtErVZ13s9gu/pSb2yQEAAA==
-X-Change-ID: 20240416-drm-msm-initial-dualpipe-dsc-fixes-3f0715b03bf4
+Message-Id: <20250217-drm-msm-initial-dualpipe-dsc-fixes-v3-3-913100d6103f@somainline.org>
+References: <20250217-drm-msm-initial-dualpipe-dsc-fixes-v3-0-913100d6103f@somainline.org>
+In-Reply-To: <20250217-drm-msm-initial-dualpipe-dsc-fixes-v3-0-913100d6103f@somainline.org>
 To: Rob Clark <robdclark@gmail.com>, 
  Abhinav Kumar <quic_abhinavk@quicinc.com>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
@@ -55,88 +52,71 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  Marijn Suijten <marijn.suijten@somainline.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3328;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2058;
  i=marijn.suijten@somainline.org; h=from:subject:message-id;
- bh=XlYKleX94y6B66dSSrT2H1qCHvUu0eQ2CYD3wdZHzm4=;
- b=owEBbQKS/ZANAwAIAfFi0jHH5IZ2AcsmYgBnsxrfcr9CYslQNi/zZFAiBjHbrUr4GF+oa/EUK
- iAVRzHzeCyJAjMEAAEIAB0WIQROiwG5pb6la1/WZxbxYtIxx+SGdgUCZ7Ma3wAKCRDxYtIxx+SG
- duhXD/4gXtpsLfvjMzmOIHqN/Zv2OqY0dRVcboIQIYcdpzRrMREfIwRUyqqkBzwf+qsjgNnBlvH
- YoGrVBOWgoNMscgxFGV1FQDtzqb7h50V6JI2ojvBvBag4IoByJwPMvuIZ9nzcn93BbcteHSUek8
- Wz09Ks4EgC5pXQwH7MC5ZIjfPazGP1CqvHDrGAv6u5Fgmofk+G5pqaCS7GvUEQ09riEtrPLh04l
- lBdC1MjREMk1qCXFVzdCWRG1K7eaIX6tSahgdI07VzCqYb3zCrNPSZ9ZFA7WMNFEvDesWh2bYgx
- yIsTrvThd/FFX8GQ2NNS+da+Yk9CCRyMJvrIOzQZC/qLelstds+D8dik/NL4TmNL2sNnvcoqBfV
- 0vGGAQlgJh1NLXJ7fQkiNAU+cPKFBPebtmmtt5ENjS9xZvkt6C6MQ7x4a2pEaCcUjgE14KQi4i6
- jdEiSitQJc1oDBIl5gVQ9rIibD7djr4cTD6xIVPektqkum9ReXwe2pKOIZTrPw+d4N8xQoxwWAZ
- cwpMHt40AaXIlk4BSbDShyGHj0A2b6K7SL6JT+8+hP8h/45ldHWb17JWK52bbQrWMAylFGKzUX6
- 1XLIknD3t13ZJ4iehPlsnsWSQg/jgZJhbM00zNfEMe6QK0L4joa4opzELj9mChTJU7MyWBFARml
- Ft/t1hSHSQYORTg==
+ bh=MgMGnmZBZiiXwg/TOFHX7DTi1si89IdnuyFW3h892yg=;
+ b=owEBbQKS/ZANAwAIAfFi0jHH5IZ2AcsmYgBnsxrgGM6TmLIP+Y8pCQpDj7IdZUB4VzZ8riqFj
+ a30QyrxqXOJAjMEAAEIAB0WIQROiwG5pb6la1/WZxbxYtIxx+SGdgUCZ7Ma4AAKCRDxYtIxx+SG
+ dtN8EACFtQBw8cwzIfeyB/OhAWSC/pSEkfkYf0pCMHdtroktRTzvlw52AvGnd0yLBCTEBdnCPDt
+ Et09anMQ9iA/Qi0jsDMDNnhXvANL6WuG8DDXlDzX6QyVWSKJWIFR3Kh8xBeLs8IQpZMAMjFVwzz
+ 10nFpVjFuedGsh8hVVD7Qg6DPqtbzagtRcg1AIJqwuynUJawrA9yrlW9GzdtYV4p5dZYdTiBHS5
+ 4eCHQn5l6q4XA+1WmfJVR+z5+4IA0fZB+IUmbocm1R9no8/X5l11eey6SDDNn+wW4ov5D0SLR3A
+ 9IQdf6Ma2bG8RgmJLwFYPOGHsk9zmR6BPzUO6VX1gQ/O9cxillPLO8/Uw6UVplCdFTiO1WcoJ84
+ sllqEh1oNh9aerRb8iLUhPnr3bYl2XYmb2eHECTQLTBTuRol1126PIkFLUbSUXh48wzuSlXaz0S
+ 7r/JP5zWgHYPf+yY+Y8CNCf0+b8CXwpb6cEg+XCkHD9XnWycsbaLqFvbTsltis8FzAoPvEFe+9m
+ FRmydy7vYSeR9DqBhmvpMKjMidKc2ZiMfI/UWKzuO/EBAt97vOJVt/ypptZjfsfd5gLbWXMvz4g
+ 17+cFQW/oYBfFth0DJMdJUTUb+oC/aKAK4rWqpTHASATUakVY8s4DlsZ26PxNqkQxjmdDG6pbDP
+ MZoMDLeTEgEPqEg==
 X-Developer-Key: i=marijn.suijten@somainline.org; a=openpgp;
  fpr=4E8B01B9A5BEA56B5FD66716F162D231C7E48676
 
-This series covers a step-up towards supporting the DUALPIPE DSC
-topology, also known as 2:2:2 topology (on active-CTL hardware).  It
-involves 2 layer mixers, 2 DSC compression encoders, and 2 interfaces
-(on DSI, this is called bonded-DSI) where bandwidth constraints (e.g. 4k
-panels at 120Hz) require two interfaces to transmit pixel data.
+When DSC is enabled the number of interfaces is forced to be 1, and
+documented that it is a "power-optimal" layout to use two DSC encoders
+together with two Layer Mixers.  However, the same layout (two DSC
+hard-slice encoders with two LMs) is also used when the display is
+fed with data over two instead of one interface (common on 4k@120Hz
+smartphone panels with Dual-DSI).  Solve this by simply removing the
+num_intf = 1 assignment as the count is already calculated by computing
+the number of physical encoders within the virtual encoder.
 
-Enabling this topology will be hard(er) than downstream as hacking a
-layout type in DTS won't be describing the hardware, but "dynamically"
-determining it at runtime may pose some of a challenge that is left to a
-future series.  Such changes will also involve the 1:1:1 topology needed
-for constrained hardware like the Fairphone 5 on SC7280 with access to
-only one DSC encoder and thus ruled out of the current 2:2:1 topology.
-
-Likewise, the patches and discussions around improving active-CTL
-configuration to support bonded interfaces (that share a single CTL
-block) are still in full swing and hence elided from this series, apart
-from one patch to fix the ACTIVE_DSC register coding to support updates,
-so that it is not forgotten about.
-
-This issue and successful resolution of all the problems is discussed
-and demonstrated in https://gitlab.freedesktop.org/drm/msm/-/issues/41.
-
+Fixes: 7e9cc175b159 ("drm/msm/disp/dpu1: Add support for DSC in topology")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
 ---
-Changes in v3:
-- Removed start of multiline comment inside another comment
-  (editor detritus from merging two comments in v2);
-- Inserted empty newline after the start of multi-line comments (per
-  kernel coding style).
-- Link to v2: https://lore.kernel.org/r/20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Changes in v2:
-- Dropped patches that were applied;
-- dsi_mgr_setup_components() now sets both the usecase and phy_mode
-  prior to calling msm_dsi_host_register(), and for non-bonded too;
-- Added patch to remove a forced num_intf = 1 when DSC is enabled;
-- Reworked hdisplay/2 "fix" when calculating "DSC timing" to instead use
-  dsc->slice_count, allowing us to remove msm_dsc_get_slices_per_intf()
-  entirely;
-- Link to v1: https://lore.kernel.org/r/20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-0-78ae3ee9a697@somainline.org
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index d67127f67a4492f30329ee15267369ca7540288a..1b092fa45b1dadbeb06b5c086c7638556bd313dd 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -686,20 +686,21 @@ static struct msm_display_topology dpu_encoder_get_topology(
+ 
+ 	if (dsc) {
+ 		/*
+-		 * Use 2 DSC encoders and 2 layer mixers per single interface
++		 * Use 2 DSC encoders, 2 layer mixers and 1 or 2 interfaces
+ 		 * when Display Stream Compression (DSC) is enabled,
+ 		 * and when enough DSC blocks are available.
+ 		 * This is power-optimal and can drive up to (including) 4k
+ 		 * screens.
+ 		 */
+-		if (dpu_kms->catalog->dsc_count >= 2) {
++		WARN(topology.num_intf > 2,
++		     "DSC topology cannot support more than 2 interfaces\n");
++		if (intf_count >= 2 || dpu_kms->catalog->dsc_count >= 2) {
+ 			topology.num_dsc = 2;
+ 			topology.num_lm = 2;
+ 		} else {
+ 			topology.num_dsc = 1;
+ 			topology.num_lm = 1;
+ 		}
+-		topology.num_intf = 1;
+ 	}
+ 
+ 	return topology;
 
-Depends on:
-- https://lore.kernel.org/linux-arm-msm/20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org/
-  (only to prevent conflicts with the patch that removes a hardcoded
-   num_intf = 1;).
-
----
-Marijn Suijten (3):
-      drm/msm/dsi: Use existing per-interface slice count in DSC timing
-      drm/msm/dsi: Set PHY usescase (and mode) before registering DSI host
-      drm/msm/dpu: Remove arbitrary limit of 1 interface in DSC topology
-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  7 ++++---
- drivers/gpu/drm/msm/dsi/dsi_host.c          |  8 ++++----
- drivers/gpu/drm/msm/dsi/dsi_manager.c       | 32 +++++++++++++++++++----------
- drivers/gpu/drm/msm/msm_dsc_helper.h        | 11 ----------
- 4 files changed, 29 insertions(+), 29 deletions(-)
----
-base-commit: ed58d103e6da15a442ff87567898768dc3a66987
-change-id: 20240416-drm-msm-initial-dualpipe-dsc-fixes-3f0715b03bf4
-prerequisite-message-id: <20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org>
-prerequisite-patch-id: 9ed44ae089b173f452a6603e6739b0b3bf2d9274
-
-Best regards,
 -- 
-Marijn Suijten <marijn.suijten@somainline.org>
+2.48.1
 
