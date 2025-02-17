@@ -1,84 +1,95 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB76B223316;
-	Mon, 17 Feb 2025 14:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679B721B1BC;
+	Mon, 17 Feb 2025 14:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739801976; cv=none; b=UbZhghi152GRZkbn7U4psKInQMOJwyB8z42+DQ61bvNWPF4Fasu64S2PINuyNCG8R/EAKCs6OljriG/E48zqZDAZjGEpXDekZPmNgZli+AGS7WMxZlU69CK6Wc++t6oWTV+xzjuvRn7vPWvoZbgjfhrzIbGNxBIPQcwjDD29AoE=
+	t=1739802002; cv=none; b=sy94bP6kO6pPr0Lr5TNs40DV6RiIOEdCT/d9DwdnOOpHgWdranV0Y2W5NdZZAY1D+/mOiNO4ENIh8U/Xu77PQbAJ+kmNZE1/6Jll4u4rDD2cZaXF1nIWjY4o5GHBp/QUpWeH05aZ3tKLVZJJ1qWPefOKgz61dcUCBpknHrE0Fjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739801976; c=relaxed/simple;
-	bh=V9hqS+AXY7AiYLWCPLmQNTLAQOyoxIH0VR7ObxKpZ5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bJQbrtJN/WqSmXaJV8dtjVVG9Rd/htzyGXvyY7b69XXEDJ1UbPoLv3yCbeKaNudH6m8AazWXpwcMil0YksWG+EwLf8oG1XpuuS8ea8rVicLhMfLT1/iuwGsbEt0mhg2Rn0qa0CW+xPqYzk0qpusQUGBXfMZSvYdDW9eHF/Klzes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AInv2E/P; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1739802002; c=relaxed/simple;
+	bh=F5Fq4V08KjRjvKMrLulUhqT0/eJwNG0iacCf2irg2mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D9zKiDDglWL+9oHUi+rUi5HqOgebsTfrrFYzDFPhkI6bjz1VlN/g8TS9BY4cxf6SQp47BPbje04tIsw/r6ZE84019b+WWwWuHAku/7o491zlRyJkuIGXajeUoC7vpvVbjSeQrfssMTIQgyIfqxjAMj9g6eomMOTVPFI0off01hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n/5qO8KR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DTx3N+0p; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AInv2E/P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=KwLwX
-	O1E7gDZUNC+t9Rm7/a/828TjhQi7X77bBqPp5s=; b=AInv2E/P462zuHdfTxN0Z
-	6rIEtL1CSmGx3d9Ty/nExnq9NmoUhqxaqIwIFhMK+sfvJm/9NXwcoldMh6S421Xc
-	ygxj3wi5siBWs9VRSlQFfrGpNgddyBNTb/Rc2GZUPTGO7s9LzX65+WiHTbdaH8GV
-	Xb3ikicxjgmCWuZc1KjhLE=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3H+xARbNnCmVpMw--.21229S4;
-	Mon, 17 Feb 2025 22:18:41 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: kuba@kernel.org,
-	louis.peens@corigine.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	haoxiang_li2024@163.com,
-	qmo@kernel.org,
-	daniel@iogearbox.net
-Cc: bpf@vger.kernel.org,
-	oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] nfp: bpf: Add check for nfp_app_ctrl_msg_alloc()
-Date: Mon, 17 Feb 2025 22:18:37 +0800
-Message-Id: <20250217141837.2366663-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n/5qO8KR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DTx3N+0p"
+Date: Mon, 17 Feb 2025 15:19:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739801998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uyo5k+GprhxLkM9w+L8CKX8UCCowCbgz4V8rWU94hrg=;
+	b=n/5qO8KRcWA5TDw7mzbASwa8PTTRlvWJeskMNFDCEY1LSP2GJcqN8Xo1OhZF1NlPR5CKrt
+	o5iJ4Pgw07grRwEtIpkKmQYLoFpYpOWbXk7D6qhiC/pnfmjrNoc/YXqKUOZPqpKcQhyRue
+	1wfytWALSZLDIvwFOv1Y3erUq7+NY6ncvL1sMzLTUNe59tdKah/JevsF59wm5TYF4bqYnb
+	wWjYVL/r9TowTYkJqqZU4nx1LyPGtLH6K9X90WpeFkGGQGs3UmFe8odwUWd+ee0XBtOaLZ
+	mXKb3mOJoEEX8IaIl6Hm/Lu/EvJpmPfTwmVBTaP+i/OEnkAvYCNrcWnlkfpPxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739801998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uyo5k+GprhxLkM9w+L8CKX8UCCowCbgz4V8rWU94hrg=;
+	b=DTx3N+0ptr7aSyabWFl3/dtr/ABDwRBuekFvwkohqTkrN6CilHfXC3uuPCRqMS5DQPaUAH
+	tiATJ0uyVQn/OUCQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	maple-tree@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH RFC v2 03/10] locking/local_lock: Introduce
+ localtry_lock_t
+Message-ID: <20250217141956._01BcsrG@linutronix.de>
+References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
+ <20250214-slub-percpu-caches-v2-3-88592ee0966a@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3H+xARbNnCmVpMw--.21229S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7XFy3tr48Zw43Gry7AF4kCrg_yoWfCwbEkF
-	129Fn3C395Kr1Ykr4jgw4avry3trn0qryruFW3KrWSvryUJr48Xr9Y9ryrAF9rWF4xAa9r
-	X3s7JryxAa42qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNvtCUUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0gz2bmey5vIHlQADsW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250214-slub-percpu-caches-v2-3-88592ee0966a@suse.cz>
 
-Add check for the return value of nfp_app_ctrl_msg_alloc() in
-nfp_bpf_cmsg_alloc() to prevent null pointer dereference.
+On 2025-02-14 17:27:39 [+0100], Vlastimil Babka wrote:
+> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> 
+> In !PREEMPT_RT local_lock_irqsave() disables interrupts to protect
+> critical section, but it doesn't prevent NMI, so the fully reentrant
+> code cannot use local_lock_irqsave() for exclusive access.
+> 
+> Introduce localtry_lock_t and localtry_lock_irqsave() that
+> disables interrupts and sets acquired=1, so localtry_lock_irqsave()
+> from NMI attempting to acquire the same lock will return false.
+> 
+> In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
+> Map localtry_lock_irqsave() to preemptible spin_trylock().
+> When in hard IRQ or NMI return false right away, since
+> spin_trylock() is not safe due to PI issues.
 
-Fixes: ff3d43f7568c ("nfp: bpf: implement helpers for FW map ops")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
- drivers/net/ethernet/netronome/nfp/bpf/cmsg.c | 3 +++
- 1 file changed, 3 insertions(+)
+spin_trylock() is not safe due to explicit locking in the underneath
+rt_spin_trylock() implementation. Removing this explicit locking and
+attempting only "trylock" is undesired due to PI implications.
 
-diff --git a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
-index 2ec62c8d86e1..09ea1bc72097 100644
---- a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
-+++ b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
-@@ -20,6 +20,9 @@ nfp_bpf_cmsg_alloc(struct nfp_app_bpf *bpf, unsigned int size)
- 	struct sk_buff *skb;
- 
- 	skb = nfp_app_ctrl_msg_alloc(bpf->app, size, GFP_KERNEL);
-+	if (!skb) {
-+		return NULL;
-+	}
- 	skb_put(skb, size);
- 
- 	return skb;
--- 
-2.25.1
+> Note there is no need to use local_inc for acquired variable,
+> since it's a percpu variable with strict nesting scopes.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
+Other than that, thank you two ;)
+
+Sebastian
