@@ -1,117 +1,108 @@
-Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC90922DFBF
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D393F22B8BC
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739819200; cv=none; b=WmveaceCiOTiJnrBzr02QcPqMd+6n89NjMyfNT2UbnNHryxw1HMfF/pSQbg0+/4HUI/VRybchWMkJDQi2OYQ6fjucEzmOk2vKVbh4HmbfqX7y4RQybHwm/lL5VIX4oi19/fulPgxyzUqsZF7EpMezMhRYS99WFr+mzaNrZXuRvU=
+	t=1739819273; cv=none; b=OsmuN583xeWED4zwdD1mSmZpZARDxAkXI/WD7Pz4gV2DcN/uj827MHxGbsZOFdW+NYV8F5YC3nDJ26p7H6JeGqxcugI8403aahCFAtMmxjjzAaOaQWpHjSbuJd+YEpFG1/EY+GwehZiyO5Cme5f0M+MdBBx0fpWnqQaJk6qvbN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739819200; c=relaxed/simple;
-	bh=ExVaCUBzcNC+wkHRkApsOynmUd07dvbz0C9qAwKk5Qg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S9lXVilQlUMQ6Vj9/UYlZhiVQ+5cnH+iierjqPZoLaQ6FnfAyWU5I+yx9dZV+72/BnUDVqYYbR0dE8tIK9nbdZLDx+fRtiOm/Ool5NNONZavKYNpz/F3k4iNWhyrWZLMVjbxmf9kTFnizRJ3TRgToB7I3lSZ7I3z5UJRp+CHzIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=gEabBLK4; arc=none smtp.client-ip=34.202.193.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
+	s=arc-20240116; t=1739819273; c=relaxed/simple;
+	bh=wDoCAtbEmJJG08E/A5bz+I3lGd68ANOK5k7c8qV1X0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=la+cOMi9WuhPafgKB+ayk7hXPrjLmKUF1KRiXJaw6SVnDBgMY7Q3y9FTr1Gc7b7fkLITwDdSRfK5lqixeKIzhv/s8qan6ziNJEYZLs4i9o/IYyCMVjZD8vUR2z9qeJJG+SSQoBTDzZH4WmiVM9/+OIB+DapThVqfFMrZkkHvC4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X6rpn9R4; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="gEabBLK4"
-Authentication-Results: purelymail.com; auth=pass
-DKIM-Signature: a=rsa-sha256; b=gEabBLK4/OW9lEl+1Pr1HTKx6Hj3IzZhsCCbDu3V6Y6hfw9uvxvbexfvobOgE8xgDizX9/PfVRefb5BN5HCS7P5u9eHT/zFz3JMpCVm1MLOg1xjWqvFROWo4wjM7fXeFJd+9VW39qF6DCqeovJrcA4FHdXqYvG8hIbcvy3oPnZR4K3LmXA75xw4o4V6ts5aGp/FjhiHCLQQF5vmmrZjc78Zzy6JT+hC9tU+bu8LJY2y7Zww5uvVJHY0UnnyWBCNTGo/G4aLWRDMSFbCLMfXs78evUtYpzREZo8Um0Z+htB8xxix4CFqMQS54pCHFa2z2a4cQLbksX+STb8V3d+hM+w==; s=purelymail3; d=purelymail.com; v=1; bh=ExVaCUBzcNC+wkHRkApsOynmUd07dvbz0C9qAwKk5Qg=; h=Feedback-ID:Received:From:Date:Subject:To;
-Feedback-ID: 68247:10037:null:purelymail
-X-Pm-Original-To: linux-kernel@vger.kernel.org
-Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1350358103;
-          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-          Mon, 17 Feb 2025 19:05:53 +0000 (UTC)
-From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-Date: Mon, 17 Feb 2025 20:05:19 +0100
-Subject: [PATCH 1/2] dt-bindings: watchdog: samsung-wdt: Add exynos990-wdt
- compatible
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X6rpn9R4"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30738a717ffso41663941fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:07:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739819270; x=1740424070; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ObUne2yQMezeKiKaLoIvFCZpEHW3DUQ78CPgFXgb8A=;
+        b=X6rpn9R49Vjpq0jaVvzteTRrIWYheZIL/LVbS2UfB9zQ8pi8rDFoC6JSqktjY+IFp4
+         Luy71uKLqapYzFcqzFK0q7B+bxis4X4hyiWXPkcIfsflB3umIUnlU23i51mFiFRtI5vC
+         pg8b17ivlV5CuxArz7DHTg+TSYdp/NXGCqvhB2gIJEmyFxVGRNHvJihkT1pDWpS8xYTq
+         EuzkXE89kusFktslV+Sl04CPAgLmKxiKTq+Kbf9JYUjsWERTgQnJmoUgc8RVr1MoVX5X
+         maqDs5+jjBI0BeFXL3QRG4ox1McyvqV2oryOh9ElOorijK7UOs+XSBQi0X8QeYUXbmRo
+         ZnaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739819270; x=1740424070;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9ObUne2yQMezeKiKaLoIvFCZpEHW3DUQ78CPgFXgb8A=;
+        b=YdM4iC2ILRCQzP3Zod+F9HOqBKMYvb48oprhnNUG3sWqRojbp7y8nCgjSgF32eF/vi
+         A65FdKiL+KRbZ4OC+AF4gU0mc3Sqf4bujyCj5F9dYc/e94GXYUlgLH095XgamFK9AX7H
+         3YesT7+i+6BZpJh1usFO/98xZ6/jfEO4JAGzdp1j7p0ivRG6xbYoOpZtKHpo3Y61Tfmj
+         h9xh2+hekln9TBmm8mUfptJR+CdJj83D8r9TOO9xd5xWc4Ee62I5Fxp0InbQ4Gg6Yt15
+         01PL7Mr3M+rOELAZMfrWJUJXux3OQXIaUUIdvPfoEa13zPVWdZ+582LxCr1XdZKxIw2F
+         wmnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXK4/YOmoKKz53Yrj6ACewhaLoS00Zpou+rmyy/KMf0WRFxViewaQ7Kmum50qAChCWp6ObW146E6izhqfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws8NyuxBSjQAVxtadiuLycGQBIf/xkvZfnGhGXJMJMv3Smp9Nt
+	DF6efIjs5mK3zEFP22MRmBVD/bJwzmcwOv+RtbPWBSU+c7vrDq7mN1BDotqiKe0=
+X-Gm-Gg: ASbGncs4LBiSZ0tUg1NUDA7gK/4SDvYyf8mg+YWOAiJsZGLffCcr7lyaqhvnWSnPs3+
+	pCrYTHGNWll7nqOESw+rsOFhzB5t85j+Yt2J6+tUquIzPlXBQ/O+x6rxXPXKxnGFdaVIijcXscf
+	hMI9IUIsgdS1IE+AlAvL9ItBnR5aSNvsCCDwRMKVuEWpEpLwOzeN7LAmK4Mp1fuiAosdwXRJQzY
+	Jua3K/HitDtdUGGebkSnsXDDMXdwAiil9d83RcjTayeXYionbE+ei9OVWeTC7hnh9AybJL1wlFt
+	UjVasi6bFWreF0F20kvyRI1MJY+L5aaVYy23MIGD+YFNyIvu62456lhXPzp84ZOYRxI8thY=
+X-Google-Smtp-Source: AGHT+IG9DynPxWNwdOmU6ii3AvcgWu++/3DPvh1LUYd7jp9CBTvIMdEBiRwbV324OAhQ4qab/et7NQ==
+X-Received: by 2002:a05:6512:308b:b0:545:25c6:d6f5 with SMTP id 2adb3069b0e04-5452fe96673mr2812097e87.53.1739819269896;
+        Mon, 17 Feb 2025 11:07:49 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5461ee8341fsm612141e87.133.2025.02.17.11.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 11:07:48 -0800 (PST)
+Date: Mon, 17 Feb 2025 21:07:46 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+	Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 13/16] drm/msm/dpu: Add support for SM8750
+Message-ID: <qfbynkd3d5uqlzcgvcsfoi3muoij4ap3kkkwug5yd3ggxbhiic@6epod27ux5ai>
+References: <20250217-b4-sm8750-display-v2-0-d201dcdda6a4@linaro.org>
+ <20250217-b4-sm8750-display-v2-13-d201dcdda6a4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-exynos990-wdt-v1-1-9b49df5256b0@mentallysanemainliners.org>
-References: <20250217-exynos990-wdt-v1-0-9b49df5256b0@mentallysanemainliners.org>
-In-Reply-To: <20250217-exynos990-wdt-v1-0-9b49df5256b0@mentallysanemainliners.org>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-watchdog@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- Igor Belwon <igor.belwon@mentallysanemainliners.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739819149; l=2481;
- i=igor.belwon@mentallysanemainliners.org; s=20241206;
- h=from:subject:message-id; bh=ExVaCUBzcNC+wkHRkApsOynmUd07dvbz0C9qAwKk5Qg=;
- b=mRkJpujMaWtYA215YBhSum3Q3+AFasnoTKmdWZixH/WWoYNb5mwvZeJo5hqxbqv0/xSMMiEtf
- M+WhVBsl/ZqDEKKLNTpStdiPv6c9fwSWBzXeGvHQ1sQaSV2zg9nPTvY
-X-Developer-Key: i=igor.belwon@mentallysanemainliners.org; a=ed25519;
- pk=qKAuSTWKTaGQM0vwBxV0p6hPKMN4vh0CwZ+bozrG5lY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217-b4-sm8750-display-v2-13-d201dcdda6a4@linaro.org>
 
-Add a dt-binding compatible for the Exynos990 Watchdog timer.
-This watchdog is compatible with the GS101/Exynos850 design, as
-such it requires the cluster-index and syscon-phandle properties
-to be present.
+On Mon, Feb 17, 2025 at 05:41:34PM +0100, Krzysztof Kozlowski wrote:
+> Add DPU version v12.0 support for the Qualcomm SM8750 platform.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Changes in v2:
+> 1. Add CDM
+> ---
+>  .../drm/msm/disp/dpu1/catalog/dpu_12_0_sm8750.h    | 496 +++++++++++++++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  29 ++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     |   1 +
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 +
+>  4 files changed, 527 insertions(+)
+> 
 
-Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
----
- Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-index d175ae9683366d33b1f9d9d820501d1e7c5964bd..e36f87830ea8a185a1543e62fdeebd97fb9a8abb 100644
---- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-@@ -25,6 +25,7 @@ properties:
-           - samsung,exynos5420-wdt                # for Exynos5420
-           - samsung,exynos7-wdt                   # for Exynos7
-           - samsung,exynos850-wdt                 # for Exynos850
-+          - samsung,exynos990-wdt                 # for Exynos990
-           - samsung,exynosautov9-wdt              # for Exynosautov9
-           - samsung,exynosautov920-wdt            # for Exynosautov920
-       - items:
-@@ -49,14 +50,14 @@ properties:
-   samsung,cluster-index:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description:
--      Index of CPU cluster on which watchdog is running (in case of Exynos850
--      or Google gs101).
-+      Index of CPU cluster on which watchdog is running (in case of Exynos850,
-+      Exynos990 or Google gs101).
- 
-   samsung,syscon-phandle:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
-       Phandle to the PMU system controller node (in case of Exynos5250,
--      Exynos5420, Exynos7, Exynos850 and gs101).
-+      Exynos5420, Exynos7, Exynos850, Exynos990 and gs101).
- 
- required:
-   - compatible
-@@ -77,6 +78,7 @@ allOf:
-               - samsung,exynos5420-wdt
-               - samsung,exynos7-wdt
-               - samsung,exynos850-wdt
-+              - samsung,exynos990-wdt
-               - samsung,exynosautov9-wdt
-               - samsung,exynosautov920-wdt
-     then:
-@@ -89,6 +91,7 @@ allOf:
-             enum:
-               - google,gs101-wdt
-               - samsung,exynos850-wdt
-+              - samsung,exynos990-wdt
-               - samsung,exynosautov9-wdt
-               - samsung,exynosautov920-wdt
-     then:
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-2.47.2
-
+With best wishes
+Dmitry
