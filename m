@@ -1,107 +1,151 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5741D224B0C
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B250E2248B6
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739809705; cv=none; b=a532C+ie1374DabJppREV5UT9alfrBktmgXxBDMaiM4/TzF5PVB4mrLL/1hFfHg6AsK3RPlk4rHfSB902szSKGVQycYB2vuSrVmUpUnKyKnlDZoU92D/+NWYDpzE6QMrc4SclTau46m3K3tXbya3xGiKAA0T04DUjzfC+QVuQpM=
+	t=1739809738; cv=none; b=GKzlPlrzAu3TCixvqm/0Z5NYEfnsHm2J6UE8BCTi3T+FlOIdXWMsYEr5d25I3ww2YNzvaUTNI/OTEb5xYc6rh/b8BntpWuYWb/iOalZt0JbBYztN9hwKtrDo8qGrmaoSNKSwVyZ3SBJo0Fx2XtrIUFcejTQofNfbu1RJid0xKRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739809705; c=relaxed/simple;
-	bh=xsLMSfj1VEdYuqIej3x3D6/4UOd70zugyUhuwJwli4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pxmMlDLsYTRT2d7hAZ2FD4C39d5XxrKivSanaHSo+oQ4dBUHWLOszeHBcrzH6NLgbD9IS8htsPNL7QrVLpTUHpU0XnX4qfBSGE/Ei4Z4TR582eZqZbcgq7LaH+6/ycLG8+QKOLZ8/b51hjjOpdi/Gs+BQLMCcD+TtAEL28tCQJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AlW1oC44; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739809738; c=relaxed/simple;
+	bh=1dZjLA99dFw5X8YnsZGjN3xV4yjbzsmIuRCG3ozKqwE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=uCXRY3vEAGnFmD5gixxAWUyDdMXsf9wpWuO9qUGz/5nmtyhN8N6FJLeugP5XEu3VdC+QhaLwneDaBRZrXUdzEPL5qmVbFsTqPbc+07w8Ha9SqndNClm8ymKZaGG2QrgkbQBGSgcAB8YWtmkY7oOm6PpvnXJuN8TVIl0rMxwfO50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ua7qIs9e; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AlW1oC44"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-471fbfe8b89so76401cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:28:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ua7qIs9e"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38f325ddbc2so1955833f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 08:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739809703; x=1740414503; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=95spON9hLuQ6bBnBVCFPCtuSrKFhHu45XBLog4+BEpk=;
-        b=AlW1oC44iSA4x3crV1oLTWNFkEZzzmIAdRP5u9nPqusl29Ih+L7jdR00oH7FKH1Rca
-         O1d0ZLbl/39ydLcRi2lIlcnbQG4YEHdwaoY5MekalpaLG2kqW2h6FJiPz7Pk9W3Ff/lT
-         rSSwI+S3KpOCunEixHw4YAYY7NO2UydLeX0YUuCUSQcBS0ORQhH1wlga9l/qY0/lJfJN
-         sqfAC48GeotoPzJb/pgS0aolOiyodDntLCcHptpudvoI79MIlV9nxKT9DZJ3pBT/iUm1
-         gB06wR+KepDdDMEspxXmO+9M8Uih0xhaTEgfhXkEDkZn/0t/hFfyYbr3E5LLHlexdJX1
-         4Npg==
+        d=linaro.org; s=google; t=1739809734; x=1740414534; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RZGgBpcp8HuoDdnVbyjD6nbTX5PiNpopNc/IO+zHmIo=;
+        b=Ua7qIs9eNfY8EGqW3P050US1ROL7uqThw5HggVZ4Ku2sL6IV1UUGIYX4cfK75o59TE
+         Z7y57REb1g/t9+ksCa6X7sDvRam2IkfXbZYrBCUcd1dES7pOf5cN7gpGBpxJWOSiqygK
+         6xqhFnNV1e+8e+RuXpMDTFlvZJOnJs6MaHBHF9gKfCxRc1LmST7fs6UdM2sLgXnREvtO
+         d3shc5T89yltl7RGW8EqYpiIxerTOyIu9kltt6vCMrSXFy2lmdwB2m3sWN53SwZj/xBU
+         2KYnYWRNLYAG627NJJU0Z8pgTLnF8ov5H1cURmqAO/sylYfZJYmaqiCGhExW5g/yfgwS
+         PSYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739809703; x=1740414503;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=95spON9hLuQ6bBnBVCFPCtuSrKFhHu45XBLog4+BEpk=;
-        b=YO9bFhDxSMmjH/Q/hMT8uKW/ltV3GW3pJq9bRFwcMQOyXmP24NVXFv2/iaRn4B7OEB
-         hlnuNVDhJfiADNsxH/xHKBOg0T3TgUd/wJl7ekpCLCXrGGghy/V5ZsYirn1djOHzjwMy
-         tEBehmxhNn5eGB7WJbRW7ZZOWoog6vsBoRvQBMqRvhFY3zJZivHH139vIAclOqNCX88n
-         Sozlnj8+11V2gzMR7XXGYLpaDMwODmu6r2BNzvSBVjcvYDsaJkmR1F835g/o0fx+ccge
-         TEzo+1S9bCKfN9xoMjF6dHCZhQ9NDt7ETcTea9Tze/ijLBu490+w6Qjk0BRJBqso6EI7
-         ug5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWGUiW5vg3AChSUDrGD5UdlgBFL1TcOGiAvCF1ObMs1hy2BwKZ014+nEGKZyM3N0uUorSce/52egMtmyAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpRnm4OBW0/vEOX509za6AXPBL8qB+bpWJZiXCf2Hk3+c9Pvd6
-	QI1nN/UE/v0K2hJfrbmefN6hoNVXVHvvVHDcKA85WcYYpdotjtt+VDRcq8mRElUhwT4Mi5KfTxj
-	Wq5k8skgC+HPY+l+AFbxLWb/hyoxDQY4I0hzE
-X-Gm-Gg: ASbGncvl4qzty7ZuW/udJC1Yj2jtRp+bj9PkBu916ciRP2daraDUbAcgvOkOC5or630
-	6I1g/qbOCjTZJ0VNT1wOGrVX4wde9oBEJRV2X2bDnJhqodVIvg1id3Bww/CFPwQdC4u80HqFE
-X-Google-Smtp-Source: AGHT+IE3N2cLiQ7+cf8WqSfpU/XsS4YJ3qwsjZ2stHnaJgNWkUogcNcG2SHfhhTQq6WriNXafqqvbkY1HHOKSZPy1fQ=
-X-Received: by 2002:a05:622a:4287:b0:471:be43:a534 with SMTP id
- d75a77b69052e-471dc777033mr6796511cf.12.1739809702916; Mon, 17 Feb 2025
- 08:28:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739809734; x=1740414534;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RZGgBpcp8HuoDdnVbyjD6nbTX5PiNpopNc/IO+zHmIo=;
+        b=GgCAUiP6AnEfYce9mrxrmQCkVHtbhiZMLqkrUuFhygGH9AqNddWXC7WNs3Rt5rx7wI
+         eschBZZ6RCBJ7yn5u2b/lHRy+BtYyvTzN/uUR0DWxO7aY9J4rA8urlNqRI+tRiJCNI3f
+         lGhqJZ9Ijd1Z2B1RO20SsJgPvS21yMyrm9sk43npWIv7IKUhBj6udupmI3Ki25pR5sTv
+         1d2PF28+YDWALcuslDIuGvauHBkdIIozJlDvFdBBXEDrSN+EgkM9Odgex/qeWfA1Trdl
+         k46Ca/c5A4Al+cYNpOc9Xxku/Hf7CqwigpfG6h8EvzGWTdU7++UTzD8YrfoJ5lgvqBGW
+         Vmlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDehNF1L4/68rb5X+55u1yTIowCVZjq7D2WecDsOkDTpP9Tip0B2XgLK3g5tlbo6D4QVQsi/DyFOfGJT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHKFTHctJ2F2zTuUlixLoNCMDVYcb2KYEaMhKOYAcXD/Smh8y/
+	JQycBsLALk+OloPjjBmBZLd3YKNLJsBsyJuDQM9R87vk1uRqBTgjGN+8jaVSga4pVi6LrXpc3vF
+	1pfo=
+X-Gm-Gg: ASbGncu0UyWFC/q812SKKibWZP9AnEQtuHx1lbgvvwlXGfKpxK+iG6o95bPwVWlhP/i
+	74q514EJLYwdXFMQOYkxC3lXDFFsUD2e3M6aouyJHQJ73R8RzeGuwKuhhFBGb5MdgO/sAHUOA56
+	+yBu/E3tVpAmfv66rVUXj8ARbY6VT231k3j9jfHLlEafy/PxVXkWljwbgJu4Lv2VXtVRYQG12U1
+	4a6tkESYkeGEA6GzY3iLW3mEdPZCngi9DNY5LMM2H0JuE8pVe+MtKnDgHv3tc88nuaayRHwqStN
+	yCYmE3ymlroHrU7yO3IDq78liA==
+X-Google-Smtp-Source: AGHT+IHuH77s0Gc3jaj6SvUYPZ9P8VnXHclSL5deuIzHmW+q14rWha9t/xkM04tw0RHHjunQ1PBdgA==
+X-Received: by 2002:adf:e6ce:0:b0:385:f6b9:e762 with SMTP id ffacd0b85a97d-38f340676a5mr8093772f8f.36.1739809733997;
+        Mon, 17 Feb 2025 08:28:53 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258cccd3sm12655932f8f.23.2025.02.17.08.28.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 08:28:53 -0800 (PST)
+Message-ID: <cd0c08e2-351c-43fb-863c-85a405714284@linaro.org>
+Date: Mon, 17 Feb 2025 16:28:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217171018.7b4f5e2e@canb.auug.org.au>
-In-Reply-To: <20250217171018.7b4f5e2e@canb.auug.org.au>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 17 Feb 2025 08:28:11 -0800
-X-Gm-Features: AWEUYZkmdEfemTZ21_DYBZC8hQT35KQVP-KXKmgcVnRAgnEGvAIvv-8AeqTVC28
-Message-ID: <CAJuCfpEJO+pd8BUSCaa+qawnoKzFCT0+sDr3u3H4BGoqOn30mQ@mail.gmail.com>
-Subject: Re: linux-next: build warnings after merge of the mm tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/11] perf script: Refactor branch flags for Arm SPE
+To: Leo Yan <leo.yan@arm.com>
+References: <20250214111936.15168-1-leo.yan@arm.com>
+Content-Language: en-US
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Mike Leach <mike.leach@linaro.org>, Graham Woodward
+ <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250214111936.15168-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 16, 2025 at 10:10=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.or=
-g.au> wrote:
->
-> Hi all,
->
-> After merging the mm tree, today's linux-next build (htmldocs) produced
-> these warnings:
->
-> Documentation/core-api/refcount-vs-atomic.rst:90: WARNING: Title underlin=
-e too short.
->
-> case 2) - non-"Read/Modify/Write" (RMW) ops with release ordering
-> ------------------------------------------- [docutils]
-> Documentation/core-api/refcount-vs-atomic.rst:142: WARNING: Title underli=
-ne too short.
->
-> case 6) - increment-based RMW ops with acquire ordering that return a val=
-ue
-> ----------------------------------------------------- [docutils]
->
-> Introduced by commit
->
->   03b412c8b184 ("refcount: provide ops for cases when object's memory can=
- be reused")
 
-Fix is posted at
-https://lore.kernel.org/all/20250217161645.3137927-1-surenb@google.com/
-Thanks!
 
->
-> --
-> Cheers,
-> Stephen Rothwell
+On 14/02/2025 11:19 am, Leo Yan wrote:
+> This patch series refactors branch flags for support Arm SPE.  The patch
+> set is divided into two parts, the first part is for refactoring common
+> code and the second part is for enabling Arm SPE.
+> 
+> For refactoring branch flags, the sample flaghs are classified as branch
+> types and events.  A program branch type can be conditional branch,
+> function call, return or expection taken.  A branch event happens when
+> taking a branch.  This series combines branch types and the associated
+> events to present a sample flag.
+> 
+> The second part is to enable Arm SPE's sample flags for expressing
+> branch types and events, and support branch stack.
+> 
+> Patches 01 - 03 are to refactor branch types and branch events.
+> Patches 04, 05 extend to support not-taken event.
+> 
+> Patches 06 - 09 enables branch flags in Arm SPE.  This allows to print
+> out sample flags for samples.
+> 
+> Patch 10 supports branch stack for Arm SPE.  Patch 11 is an enhancement
+> for PBT feature.
+> 
+> Changes from v1:
+> - For patch 05, changed to append the 'not_taken' bit in the branch_flags.
+>    This can avoid altering bit layout and cause breakage.
+> - Added Ian's review tags.
+> 
+> 
+> Leo Yan (11):
+>    perf script: Make printing flags reliable
+>    perf script: Refactor sample_flags_to_name() function
+>    perf script: Separate events from branch types
+>    perf script: Add not taken event for branches
+>    perf script: Add not taken event for branch stack
+>    perf arm-spe: Extend branch operations
+>    perf arm-spe: Decode transactional event
+>    perf arm-spe: Fill branch operations and events to record
+>    perf arm-spe: Set sample flags with supplement info
+>    perf arm-spe: Add branch stack
+>    perf arm-spe: Support previous branch target (PBT) address
+> 
+>   tools/perf/builtin-script.c                   |  30 ++--
+>   .../util/arm-spe-decoder/arm-spe-decoder.c    |  23 ++-
+>   .../util/arm-spe-decoder/arm-spe-decoder.h    |  11 +-
+>   .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  14 +-
+>   .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  12 +-
+>   tools/perf/util/arm-spe.c                     | 135 ++++++++++++++++++
+>   tools/perf/util/branch.h                      |   3 +-
+>   tools/perf/util/event.h                       |  12 +-
+>   tools/perf/util/trace-event-scripting.c       | 116 +++++++++++----
+>   tools/perf/util/trace-event.h                 |   2 +
+>   10 files changed, 307 insertions(+), 51 deletions(-)
+> 
+
+Just one potential issue on patch 8, with that fixed:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
