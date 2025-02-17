@@ -1,96 +1,111 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE31D1891A8
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95137DA8C
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739761755; cv=none; b=l47O1jGrBHPZYMmF6syesjsJIlqiXVkiAlYvzd3H1XBRU+RdTQ75D0kHaVV5FCyofhUPXwORBvb0BUE3W8Gmfh9mA96HXjnVGr5XgbX+N6UZ0tRV/dIA6M08kRS2FdEikbiwaW33J27C9P0kVGa+nybekfHEy0d1WZZI+6hlCDo=
+	t=1739762035; cv=none; b=fshIIKTHojJvgZB45DU0JYXDI4R8OSN9KUJhbiz0zf3Sc3laPvVrov40sEBqBZeif4x8QuKuOcAkUndB2fg6Id2ANVY44jq9NmlMhAstrq7tSofP85Gl6snIvi3HUhxoU+Drzm2FeKvn9rwroR1nBwLuddN3Nw8CTVcEKd2PC3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739761755; c=relaxed/simple;
-	bh=kqiJAhMLa9R2vxhmokjZSt78eF1fFQFqNttKXTgYYd0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y1M5dC6j33/qdFipA0p/c+JJDLAoXxKwve0Yx2L/zvl5w7tiCwus+QKIA7lzc/HLX7WIUnjdUAlxpeSVK0jb4z/t8pe4wszmxbQRpRGqhlHSY2rRGEb7InLfIHGqhroMjnoR9f2/cV6z+3sv15vU34sgWJ+FbFy6/rZNNZSlfYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Yx6vN4T9xz1Y1q7;
-	Mon, 17 Feb 2025 11:04:32 +0800 (CST)
-Received: from kwepemf100008.china.huawei.com (unknown [7.202.181.222])
-	by mail.maildlp.com (Postfix) with ESMTPS id A50F11800EC;
-	Mon, 17 Feb 2025 11:09:05 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by kwepemf100008.china.huawei.com
- (7.202.181.222) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 17 Feb
- 2025 11:09:04 +0800
-From: Zeng Heng <zengheng4@huawei.com>
-To: <Dave.Martin@arm.com>, <james.morse@arm.com>
-CC: <bobo.shaobowang@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH mpam mpam/snapshot/v6.14-rc1 2/5] arm_mpam: Add limitation for the Narrow-PARTID feature
-Date: Mon, 17 Feb 2025 11:18:49 +0800
-Message-ID: <20250217031852.2014939-3-zengheng4@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250217031852.2014939-1-zengheng4@huawei.com>
-References: <20250217031852.2014939-1-zengheng4@huawei.com>
+	s=arc-20240116; t=1739762035; c=relaxed/simple;
+	bh=pAyuXlE9n0iPIhV0i94vEhmyYjpu9Z6Gs9XjgJKObMU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dThoo+ZEcxGdJfszw5itetkL0WtVSieEpqOiEvMCDpEhUhrr4Pnqg0wNIT8BdtOEVMXjncJyIEv2hxDYO0R3x/bhjb5aBnppHhwJuXCIQ5bCWvqClSQVNEKdWm9mTboCZm/jjvtrEPHwLnJ0pIg8GFxjUd9pdUxRVE32LkEoUyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcsmt+1D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcsmt+1D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43AEBC4CEE8
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 03:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739762035;
+	bh=pAyuXlE9n0iPIhV0i94vEhmyYjpu9Z6Gs9XjgJKObMU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bcsmt+1D2s7i/BD/AKkNAhMn9l6KLBp9fffzVlbTZqvRhi0texFb6Kg2y/Ar48Wch
+	 9PJDine34K28X4ZoZVYZzVbVV9ZqEwcE+ggmcjya1Qc9ztCdrZS6Zc9i5j+jsGmWQg
+	 d0t18Ki33P/1uNuv9G/VJaQyrgAahvrn+ka+GDk/euWOSINkZ8chE0B+S7u7oawq2r
+	 0qQmnCAmCOI9IFTZ4Kmk5sK92tGvF807tJ16nufNe0TIKAO+1kzfMCeESLzmgDIqN8
+	 dC5ID6OeeBBJQmRG9UDhUv7T+KuE4CxgLDpqCow3DZJvrsNigBtzDclhPcV/ONGPXS
+	 PqRFOmE4BtmAw==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ab7c07e8b9bso658961866b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2025 19:13:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVPmmkgeiLOs8lQ112y/p5MiMFvdQa1pZ9Nbdq2dDSyn6DL6v7Lc2m2An391rnC/OMmxhp4I08mDJX3L0A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZtlWpeidj82w21dT6s398NstgTglVloIAwY9fvHCFExkppK2N
+	z7xFJ1c6hS8R1yIl5ZRuYzDw8NF1UPJiNgeQXcZE7svsTh7QazcEBjX4Ajx9fYm/v3RbILsIv7/
+	Bf8xxigpvTBNTZO8LzS3lveQZAYk=
+X-Google-Smtp-Source: AGHT+IE+lCxd/VN0cFWcgSvPgk7Nu3WrmBw9zHE0Olw6SOhdkJGmzxd7XkXEOYSYzwMWE4/pbWbtUHzEsFxBtaHqNSs=
+X-Received: by 2002:a17:907:7854:b0:ab7:c1d5:14f9 with SMTP id
+ a640c23a62f3a-abb70931a60mr796940066b.10.1739762033809; Sun, 16 Feb 2025
+ 19:13:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemf100008.china.huawei.com (7.202.181.222)
+References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+ <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
+ <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
+ <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
+ <20250211233056.q47mp5askk7qrxcp@jpoimboe> <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
+ <20250213025108.svqgj5nzseqs6qox@jpoimboe>
+In-Reply-To: <20250213025108.svqgj5nzseqs6qox@jpoimboe>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 17 Feb 2025 11:13:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5mYGnxHPxAeXkHo2XBvi-RtPjDQRBnDiDyKVtFv-ZBBQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnerjRjGiFDoG8vssKUp_r7uyi3vq83RlWmu1DWGBTmDSKGJJGP4uNTOm4
+Message-ID: <CAAhV-H5mYGnxHPxAeXkHo2XBvi-RtPjDQRBnDiDyKVtFv-ZBBQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Because it needs to support mixed systems that include MSCs with and
-without Narrow-PARTID support, there are the following incompatible
-control issues.
+On Thu, Feb 13, 2025 at 10:51=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.or=
+g> wrote:
+>
+> On Wed, Feb 12, 2025 at 03:22:45PM +0800, Huacai Chen wrote:
+> > > The new series now has 7 patches:
+> > >
+> > > Tiezhu Yang (7):
+> > >   objtool: Handle various symbol types of rodata
+> > >   objtool: Handle different entry size of rodata
+> > >   objtool: Handle PC relative relocation type
+> > >   objtool/LoongArch: Add support for switch table
+> > >   objtool/LoongArch: Add support for goto table
+> > >   LoongArch: Enable jump table for objtool
+> > >   LoongArch: Convert unreachable() to BUG()
+> > >
+> > > I was planning on queueing all 7.
+> > >
+> > > In particular, patch 6 should stay with the objtool patches since
+> > > they're directly related.
+> > >
+> > > But I was also just going to grab 7 as well.
+> > >
+> > > Please let me know if you disagree.
+> > What about you merge the first 5 patches, and then I merge the last 2
+> > to the loongarch tree? (I prefer to merge the whole series to the
+> > loongarch tree with your acked-by, but that may be inconvenient to
+> > you).
+>
+> I want the first 5 patches to go through the -tip tree because we'll
+> have other patches depending on them.
+>
+> I'll go ahead and take the first 5.
+>
+> If you take in patches 6 & 7 separately, that might introduce a lot of
+> warnings.  But it's up to you.
+>
+> For patches 6 & 7:
+>
+> Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+OK, please take the first 5 patches, I will merge your objtool/core to
+the loongarch tree and then apply the last 2 to avoid build warnings.
 
-If an MSC does not support Narrow-PARTID and its control method is not of
-the "partition bitmap" type, then delivering the resctrl control group
-configuration across multiple PARTIDs will change the user's expected
-behavior.
+Huacai
 
-Currently, there is no way to solve this problem by programming different
-control values simply, so here decide to restrict the usage scenarios of
-this feature. When we find that the MATA MSC does not support the
-Narrow-PARTID feature, the driver will disable the feature, which means
-get_num_reqpartid() directly returns the number of intPARTIDs.
-
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
----
- drivers/platform/arm64/mpam/mpam_resctrl.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/platform/arm64/mpam/mpam_resctrl.c b/drivers/platform/arm64/mpam/mpam_resctrl.c
-index eedd308d9c88..f3f8fb0ff421 100644
---- a/drivers/platform/arm64/mpam/mpam_resctrl.c
-+++ b/drivers/platform/arm64/mpam/mpam_resctrl.c
-@@ -168,6 +168,21 @@ u32 resctrl_arch_get_num_closid(struct rdt_resource *ignored)
- 
- static u32 get_num_reqpartid(void)
- {
-+	struct mpam_resctrl_res *res;
-+	struct rdt_resource *r_mba;
-+	struct mpam_props *cprops;
-+
-+	r_mba = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
-+	res = container_of(r_mba, struct mpam_resctrl_res, resctrl_res);
-+	cprops = &res->class->props;
-+
-+	/*
-+	 * If the MBA does not support Narrow-PARTID,
-+	 * then the feature should be disabled at the system level.
-+	 */
-+	if (!mpam_has_feature(mpam_feat_partid_nrw, cprops))
-+		return resctrl_arch_get_num_closid(NULL);
-+
- 	return mpam_partid_max + 1;
- }
- 
--- 
-2.25.1
-
+>
+> --
+> Josh
