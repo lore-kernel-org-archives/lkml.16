@@ -1,405 +1,147 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE92918DB1C
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 10:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFC923CE
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 10:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739787874; cv=none; b=CRgZxlgdBoBfdrKRIcQfqssir4qP+YYSXuKOoXTlzAf8s4LXA9MAZHklq16/5GGYjfbji7V7UcoFNgnDGPrJjCKpl4ozAAuxxg4VLyu4G4TsD6xejBhuq+bNkLCLs/YgDV22A8KI42RX9Iqb7UxOBvAGT/l7dnDYwoaHyb8Pvfo=
+	t=1739788025; cv=none; b=nQB//A3BwqBkmUFCdWxVxIpRwnqgUhTx+9+oYhJYbrFwhW/Y8KRRFWUrQlOnHGFaA7zRQPxLGv2Uure+LdxIUTra++1gUi0szsHts1BZFyZ0vMhUP7L+1e98kkM6MFX0EhM/yCPSXc1OaxM5jF3iH3lWkgwHthfHH17tp2avgAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739787874; c=relaxed/simple;
-	bh=Oa/be5s3xggDuaX9fvCMIZruPgSM0aIozNLh1Fs2UjA=;
+	s=arc-20240116; t=1739788025; c=relaxed/simple;
+	bh=9k3Ley5on6cNS3Um6E7fX7FSbKjsfoF3+qaejyNgr8E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VT99Z795tvBbuf2y6JIO9JW1fQWQ+GJh+QhsD8O5e/bSdgEMNCKQDzogahRwz5Qy/Avhm/yGgUdmQkMJU2b1TZKeX4LuwImLxhy0FpkbonYz6sCnloG1QaYr7F74iL0iIGToN5qHs6gjgRUN2QHSYDFyjkC8S9pxbuCXnhlMysk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZZd+oiON; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=Av9IhPTl6wpfieR9JR5snusokWr4lHWGQAYSpqCa1EqGOsT6ArLiFGsQ8T75i/T3tFklY62tYSMNgXDtRBfyfFHmb1CE5H/QLRKpGKpcPX+Wi5gyrfacIeiXltUsCZ4iE9vg9jwd4TYyTR87FsgOpquQm3J8FMqZ3zaGu5tOQSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ojEc8Eh3; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZZd+oiON"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5452c1daabeso2263650e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 02:24:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ojEc8Eh3"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dc89df7eccso7641493a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 02:27:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739787869; x=1740392669; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739788022; x=1740392822; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d1DlyzfZPCWK55pzxX6TJoiWYHgMaXFWIiyI9xAGPgI=;
-        b=ZZd+oiONYVTKkKFeRljDGZh2LIbzVuhJ6z7UwMT0BfmorYqwNRcqRlfX7FRJQzF8PN
-         t4ljcwuyWjqzp6ffPd477pmDdhgmungnKHca7WKxDP0ltz2Xrae3t/q3YLXs6dLsxrsu
-         5AExsZ7yqeQ9MI1YjaGtM9owl+eIjDI0tTZx0=
+        bh=9k3Ley5on6cNS3Um6E7fX7FSbKjsfoF3+qaejyNgr8E=;
+        b=ojEc8Eh3sW9bRQsx7XVj8s74mPFoVsBbPj8bMb9Nb8LznBcXe/l4E03YzsLDfIP5Ok
+         moE6QykfPVp/7T+7bZombbz7QaZRUKuu6vk89cRSFtHL1alJPcMTmWV2zvjnHdU5l1pk
+         glsAZNb3rw9T5jlv59kt7WEVzPh60iEh8sIWyA3I6BKuQcV/rTNfXo4WxMYS8WrO/IES
+         d7rPou/f4S7GEKMqcMHQ85fJkmdyG0ev78iczSSYMP1GpTSIcFx/Z0RXfrwPW1h2Yq7P
+         3NQx2z2voNYpiyuDEtQbR9I08QBOPw6H17domXG+BuxXw9zYD/ro2QDpQ5MLNcfqEPWT
+         EXgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739787869; x=1740392669;
+        d=1e100.net; s=20230601; t=1739788022; x=1740392822;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d1DlyzfZPCWK55pzxX6TJoiWYHgMaXFWIiyI9xAGPgI=;
-        b=w9b8I/mpPzIs3XDaBHxfdn78k3QMB/Kh4C4apGQsjCJ+87tOk3K52fYdNDeptNPijy
-         jNmIs68X1NMUITPdIOHlAUnDdc3bYy3/K9zKSiBwdcZ9b7SgcQo7Wc3l5nvAbjcwkhlG
-         HhgqWnZlShDxV6xkRqJWxUTJt2wxNnE1LPvif/jxl+CHRWMyErJ0r5d8hShVzUn3GCdd
-         anv0W66jxLGdevJcUng46CIRYBkRjN1lyDjEwcVLjcbFLySSzeOaVG2Y5T4e3Ov9GYi6
-         fxhFtBBeNQJGBeScIFYZlw9K4DZUnDIU19ZKhFqlsuT9HLk0XMeygbpdWB409LhRKIi5
-         nsHQ==
-X-Gm-Message-State: AOJu0YxqydPnr30tIsS7DB0Ti5Nt8w0V23OrZTq7uCzkTmvPJ2yva7DT
-	BSf4eNfrRajyKZCy6t4nIYZe+tSfmAgQoAP2878M5kU+oiGN5Q3nIa5XuuZolGhg9H8Vnzdguci
-	dXHN4Oq+ZExzIOy933vRN0xLLDcF/NJemKKn4
-X-Gm-Gg: ASbGncuyKVK5cimsZr8+AbVjUc5qvEXke5G5QGYKakuRp6hmcjTEH43D60CDT8LXql7
-	XDASO+w9keOc18L+FXwT/Ra8RRvvs4PTntz4M0Nvml8YCSqk3s1uRDMSRPkNmWpV4BaLWbO440V
-	oHMX4js4zJ53vln06eLJAGYfjK
-X-Google-Smtp-Source: AGHT+IE3i0Mznvv4AsHVZT8Dj/f1n9k/WLI0IP0WQ84pkRHFqFusZH4zNFJ+0GmwxW5RsHUWiqkpQfCi3IN0/dhZ7xI=
-X-Received: by 2002:a05:6512:1155:b0:545:296e:ac1d with SMTP id
- 2adb3069b0e04-5452fe95f54mr2682853e87.51.1739787868862; Mon, 17 Feb 2025
- 02:24:28 -0800 (PST)
+        bh=9k3Ley5on6cNS3Um6E7fX7FSbKjsfoF3+qaejyNgr8E=;
+        b=SlQbeRuXMWNWvNV65wkwxWQyDYW9pT1r3EIxoQntuCV86IGXz3lBA+T6QmCz/2pCP3
+         Y2slSKv3AXzscYdqNTHp1zz29emuoYdiPPitdCgLpXCW9JuVyIMcRzBBWIZB+ljaSii+
+         TQ/Da2i4rcNVJcgw0d2wOXLXw0HFanCJqpSvIV3j/fQ91HMTS8ZbEckxx3oGkZueU5M+
+         Oxk7KATq6yOKam1XbHxNS4QnnYC1lsSzaPI8TcHjv8ShbbVh38tZIoozCFmfLMPmmF6L
+         EzPRdFvQ6y3vI7UFXxbE5aILG2pLScyjYrxZ6mhIK9IhVmC540ZMsAL3U7MFwAfFMHWu
+         WzJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdrsI7ckmvpEe/TGXmwkVnqMFIi3UURazhPTndcYSRt5ZEfUe1ayRpARDe+PVIjl/M3AuO2BCVrLCgI5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLngMzXV2tafEH6ZJ8gWXdpychfrRIXa41etho9/ytdI8st204
+	hlrXW/FIJPdoU8SSOgSQdbRjUtjKTqgxInwCBjaIc4mJpzXyTi1QOPtvNWavMy1CtAYYTm++Y3A
+	/tp25fviqA+tck5nbPBNsqWEWwk3otlgP6iYs
+X-Gm-Gg: ASbGnctEg9myUNFCvuzg8KmRH6VSyi+vITaiRjHnKQ+hhL0hDlc8J5fSZLz2ONlax0R
+	GlgZJAic0un7350SHINTKpW4FpaoYTV0s0lykJBcMRko7Rpcd+VYg+PD/7HHtdc4YgYRA+qqfVl
+	PvyrQmudG4kQXtKQQ3a5zAfzWyfVI=
+X-Google-Smtp-Source: AGHT+IGg1IvKUUc/p89hI5JmJHNwGjCIidYUwflNrBdFIe9/jBuy8aomXpodWq0ngM1ox2M+sGMDDJ33W91g3uOhF/M=
+X-Received: by 2002:a17:907:9494:b0:aba:6385:b46d with SMTP id
+ a640c23a62f3a-abb711c8145mr868876766b.50.1739788021652; Mon, 17 Feb 2025
+ 02:27:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115063555.32492-1-ot_cathy.xu@mediatek.com>
- <20250115063555.32492-2-ot_cathy.xu@mediatek.com> <nmyxygrya6cpalmirsunvkx32uox3kjxd4l5ggdhjtj7edyizz@yodolm5ktboo>
- <f7ba63c8afcef1d1925d51e35e4b81f0d0e773ff.camel@mediatek.com>
- <d04bc250-2104-4e02-9bf8-5785f4444c8d@kernel.org> <d11076d3eb2f92018fd3e26cae665a47f71ca838.camel@mediatek.com>
- <b212d05d-de3b-41b2-bc48-c6b79ae54a8b@kernel.org> <bec17d1e215a11daa1fdede78c8070c8e1763c72.camel@mediatek.com>
- <e7d49bda-8aaa-4897-8117-ab889fb27be0@collabora.com> <8ca2e369be804697ef71491dfd366cf6afcca9bd.camel@mediatek.com>
- <CAGXv+5EYMM=hn8nKig3iHqD3KhxHVQyteweL-OiSoCV8mD2iew@mail.gmail.com> <81368f21fabb9d6a6ee29bba0542e921b3636016.camel@mediatek.com>
-In-Reply-To: <81368f21fabb9d6a6ee29bba0542e921b3636016.camel@mediatek.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Mon, 17 Feb 2025 18:24:17 +0800
-X-Gm-Features: AWEUYZm4KUwGawqhHvCsHclABlWLLfJKFpFZMVEY_E4rBjH-DyVCVrr2frjLpEs
-Message-ID: <CAGXv+5FSj-FY87Zo7EFec87fLHszO7776dZiinYP-iZm+Hry9w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: mediatek: add support for mt8196
-To: =?UTF-8?B?Q2F0aHkgWHUgKOiuuOWNjuWptyk=?= <ot_cathy.xu@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, 
-	=?UTF-8?B?TGVpIFh1ZSAo6Jab56OKKQ==?= <Lei.Xue@mediatek.com>, 
-	"krzk@kernel.org" <krzk@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	=?UTF-8?B?V2VuYmluIE1laSAo5qKF5paH5b2sKQ==?= <Wenbin.Mei@mediatek.com>, 
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>, 
-	=?UTF-8?B?R3VvZG9uZyBMaXUgKOWImOWbveagiyk=?= <Guodong.Liu@mediatek.com>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"robh@kernel.org" <robh@kernel.org>, "sean.wang@kernel.org" <sean.wang@kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+References: <cover.1737577229.git.babu.moger@amd.com> <Z6zeXby8ajh0ax6i@e133380.arm.com>
+ <9e849476-7c4b-478b-bd2a-185024def3a3@intel.com> <Z64tw2NbJXbKpLrH@e133380.arm.com>
+ <76b02daf-1b45-473e-9d75-5988a11c6887@intel.com> <8ef51f28-e01a-4a7d-ba86-059437edb60b@amd.com>
+ <a07fca4c-c8fa-41a6-b126-59815b9a58f9@intel.com>
+In-Reply-To: <a07fca4c-c8fa-41a6-b126-59815b9a58f9@intel.com>
+From: Peter Newman <peternewman@google.com>
+Date: Mon, 17 Feb 2025 11:26:50 +0100
+X-Gm-Features: AWEUYZkJWWlGFJQHM3ION9s69WbN6z7O8hPgk5lTi1q7GZyVgca9f_VULlmwWfM
+Message-ID: <CALPaoCh7WpohzpXhSAbumjSZBv1_+1bXON7_V1pwG4bdEBr52Q@mail.gmail.com>
+Subject: Re: [PATCH v11 00/23] x86/resctrl : Support AMD Assignable Bandwidth
+ Monitoring Counters (ABMC)
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: "Moger, Babu" <bmoger@amd.com>, Dave Martin <Dave.Martin@arm.com>, Babu Moger <babu.moger@amd.com>, 
+	corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, tony.luck@intel.com, x86@kernel.org, 
+	hpa@zytor.com, paulmck@kernel.org, akpm@linux-foundation.org, 
+	thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com, 
+	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com, 
+	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com, 
+	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com, 
+	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com, 
+	mario.limonciello@amd.com, james.morse@arm.com, tan.shaopeng@fujitsu.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maciej.wieczor-retman@intel.com, eranian@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 17, 2025 at 5:45=E2=80=AFPM Cathy Xu (=E8=AE=B8=E5=8D=8E=E5=A9=
-=B7) <ot_cathy.xu@mediatek.com> wrote:
->
-> On Tue, 2025-01-21 at 18:03 +0800, Chen-Yu Tsai wrote:
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >
-> >
-> > On Tue, Jan 21, 2025 at 5:58=E2=80=AFPM Cathy Xu (=E8=AE=B8=E5=8D=8E=E5=
-=A9=B7) <
-> > ot_cathy.xu@mediatek.com> wrote:
-> > >
-> > > On Mon, 2025-01-20 at 13:42 +0100, AngeloGioacchino Del Regno
-> > > wrote:
-> > > > External email : Please do not click links or open attachments
-> > > > until
-> > > > you have verified the sender or the content.
-> > > >
-> > > >
-> > > > Il 20/01/25 10:17, Cathy Xu (=E8=AE=B8=E5=8D=8E=E5=A9=B7) ha scritt=
-o:
-> > > > > On Thu, 2025-01-16 at 11:20 +0100, Krzysztof Kozlowski wrote:
-> > > > > > External email : Please do not click links or open
-> > > > > > attachments
-> > > > > > until
-> > > > > > you have verified the sender or the content.
-> > > > > >
-> > > > > >
-> > > > > > On 16/01/2025 09:18, Cathy Xu (=E8=AE=B8=E5=8D=8E=E5=A9=B7) wro=
-te:
-> > > > > > > On Thu, 2025-01-16 at 08:28 +0100, Krzysztof Kozlowski
-> > > > > > > wrote:
-> > > > > > > > External email : Please do not click links or open
-> > > > > > > > attachments
-> > > > > > > > until
-> > > > > > > > you have verified the sender or the content.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > On 16/01/2025 03:20, Cathy Xu (=E8=AE=B8=E5=8D=8E=E5=A9=B7)=
- wrote:
-> > > > > > > > > > > +          bias-pull-down:
-> > > > > > > > > > > +            oneOf:
-> > > > > > > > > > > +              - type: boolean
-> > > > > > > > > > > +              - enum: [100, 101, 102, 103]
-> > > > > > > > > > > +                description: mt8196 pull down
-> > > > > > > > > > > PUPD/R0/R1
-> > > > > > > > > > > type
-> > > > > > > > > > > define value.
-> > > > > > > > > > > +              - enum: [200, 201, 202, 203, 204,
-> > > > > > > > > > > 205,
-> > > > > > > > > > > 206,
-> > > > > > > > > > > 207]
-> > > > > > > > > > > +                description: mt8196 pull down RSEL
-> > > > > > > > > > > type
-> > > > > > > > > > > define
-> > > > > > > > > > > value.
-> > > > > > > > > >
-> > > > > > > > > > Not much improved.
-> > > > > > > > >
-> > > > > > > > >    I have removed the content related to 'resistance
-> > > > > > > > > value', we
-> > > > > > > > > use
-> > > > > > > > > 'RSEL' instead of 'resistance value'.
-> > > >
-> > > > This is wrong.
-> > >
-> > >   Sorry, I think I may not have expressed myself clearly. What I
-> > > meant
-> > > is that the attribute 'mediatek,rsel-resistance-in-si-unit' is not
-> > > supported. In the dts, can write the resistance value, for example:
-> > > bias-pull-up=3D<1000>, but can't use 'mediatek,rsel-resistance-in-si-
-> > > unit
-> > > =3D <xxx>'.
-> >
-> > `mediatek,rsel-resistance-in-si-unit` is supported in
-> > drivers/pinctrl/mediatek/pinctrl-paris.c
-> >
-> > Angelo is requesting that you continue that support and make it
-> > exclusive, i.e. not support the RSEL macro magic numbers, and
-> > _only_ support ohm values, in the device tree.
-> >
-> > ChenYu
->
->   Thank you for your response. Can I understand that in next version, I
-> should remove the RSEL macro magic numbers and add `mediatek,rsel-
-> resistance-in-si-unit`?
+Hi Reinette,
 
-You should remove the RSEL macro magic numbers, and add an option to
-|struct mtk_pin_soc| so that the argument to "bias-pull-up" are always
-treated as values in SI units as if "mediatek,rsel-resistance-in-si-unit"
-was set in the DT.
-
-ChenYu
-
-> >
-> > > > > > > >
-> > > > > > > > So the value in Ohms was removed? I assume above do not
-> > > > > > > > have
-> > > > > > > > known
-> > > > > > > > value
-> > > > > > > > in Ohms?
-> > > > > > >
-> > > > > > >    Yes, value in Ohns was removed, no code have knowm
-> > > > > > > value.
-> > > > > >
-> > > > > > Does the hardware have known value in Ohms?
-> > > >
-> > > > It does.
-> > > >
-> > > > >
-> > > > >    What do you mean by 'hardware'? When writing to the rsel
-> > > > > register,
-> > > > > the value written is 0-7.
-> > > > >
-> > > >
-> > > > Hardware means "the pin controller of the mt8196 SoC" :-)
-> > > >
-> > > > Anyway.
-> > > >
-> > > > The RSEL registers' function is to select a specific resistance
-> > > > value
-> > > > to
-> > > > pullup/down a pin, or a group of pins.
-> > > >
-> > > > Devicetree bindings require to specify values in known units, so
-> > > > in
-> > > > device tree
-> > > > you *need* to specify the RSEL resistance in Ohms.
-> > > >
-> > > > You cannot specify RSEL register value in device-tree. That's
-> > > > unacceptable.
-> > > >
-> > > > Regards,
-> > > > Angelo
-> > >
-> > >  Yes, I understand what you mean. However, I was referring to
-> > > writing
-> > > the rsel register in the driver, not in dts.
-> > >
-> > > >
-> > > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > > +            description: |
-> > > > > > > > > > > +              For pull down type is normal, it
-> > > > > > > > > > > doesn't
-> > > > > > > > > > > need
-> > > > > > > > > > > add
-> > > > > > > > > > > RSEL & R1R0.
-> > > > > > > > > > > +              For pull down type is PUPD/R0/R1
-> > > > > > > > > > > type,
-> > > > > > > > > > > it
-> > > > > > > > > > > can
-> > > > > > > > > > > add
-> > > > > > > > > > > R1R0 define to
-> > > > > > > > > > > +              set different resistance. It can
-> > > > > > > > > > > support
-> > > > > > > > > > > "MTK_PUPD_SET_R1R0_00" &
-> > > > > > > > > > > +              "MTK_PUPD_SET_R1R0_01" &
-> > > > > > > > > > > "MTK_PUPD_SET_R1R0_10"
-> > > > > > > > > > > &
-> > > > > > > > > > > +              "MTK_PUPD_SET_R1R0_11" define in
-> > > > > > > > > > > mt8196.
-> > > > > > > > > > > +              For pull down type is PD/RSEL, it
-> > > > > > > > > > > can
-> > > > > > > > > > > add
-> > > > > > > > > > > RSEL
-> > > > > > > > > > > define to set
-> > > > > > > > > > > +              different resistance. It can support
-> > > > > > > > > > > +              "MTK_PULL_SET_RSEL_000" &
-> > > > > > > > > > > "MTK_PULL_SET_RSEL_001" &
-> > > > > > > > > > > +              "MTK_PULL_SET_RSEL_010" &
-> > > > > > > > > > > "MTK_PULL_SET_RSEL_011" &
-> > > > > > > > > > > +              "MTK_PULL_SET_RSEL_100" &
-> > > > > > > > > > > "MTK_PULL_SET_RSEL_101" &
-> > > > > > > > > > > +              "MTK_PULL_SET_RSEL_110" &
-> > > > > > > > > > > "MTK_PULL_SET_RSEL_111"
-> > > > > > > > > > > define in
-> > > > > > > > > > > +              mt8196.
-> > > > > > > > > > > diff --git a/include/dt-bindings/pinctrl/mt8196-
-> > > > > > > > > > > pinfunc.h
-> > > > > > > > > > > b/include/dt-bindings/pinctrl/mt8196-pinfunc.h
-> > > > > > > > > > > new file mode 100644
-> > > > > > > > > > > index 000000000000..bf0c8374407c
-> > > > > > > > > > > --- /dev/null
-> > > > > > > > > > > +++ b/include/dt-bindings/pinctrl/mt8196-pinfunc.h
-> > > > > > > > > > > @@ -0,0 +1,1572 @@
-> > > > > > > > > > > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-
-> > > > > > > > > > > Clause
-> > > > > > > > > > > */
-> > > > > > > > > > > +/*
-> > > > > > > > > > > + * Copyright (C) 2025 Mediatek Inc.
-> > > > > > > > > > > + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
-> > > > > > > > > > > + */
-> > > > > > > > > > > +
-> > > > > > > > > > > +#ifndef __MT8196_PINFUNC_H
-> > > > > > > > > > > +#define __MT8196_PINFUNC_H
-> > > > > > > > > > > +
-> > > > > > > > > > > +#include <dt-bindings/pinctrl/mt65xx.h>
-> > > > > > > > > > > +
-> > > > > > > > > > > +#define PINMUX_GPIO0__FUNC_GPIO0 (MTK_PIN_NO(0) |
-> > > > > > > > > > > 0)
-> > > > > > > > > > > +#define PINMUX_GPIO0__FUNC_DMIC1_CLK
-> > > > > > > > > > > (MTK_PIN_NO(0) |
-> > > > > > > > > > > 1)
-> > > > > > > > > > > +#define PINMUX_GPIO0__FUNC_SPI3_A_MO
-> > > > > > > > > > > (MTK_PIN_NO(0) |
-> > > > > > > > > > > 3)
-> > > > > > > > > > > +#define PINMUX_GPIO0__FUNC_FMI2S_B_LRCK
-> > > > > > > > > > > (MTK_PIN_NO(0)
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > 4)
-> > > > > > > > > > > +#define PINMUX_GPIO0__FUNC_SCP_DMIC1_CLK
-> > > > > > > > > > > (MTK_PIN_NO(0) |
-> > > > > > > > > > > 5)
-> > > > > > > > > > > +#define PINMUX_GPIO0__FUNC_TP_GPIO14_AO
-> > > > > > > > > > > (MTK_PIN_NO(0)
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > 6)
-> > > > > > > > > >
-> > > > > > > > > > I do not see how you resolved my comment from v1. In
-> > > > > > > > > > v2 I
-> > > > > > > > > > reminded
-> > > > > > > > > > about
-> > > > > > > > > > it, so you responded that yopu will change something,
-> > > > > > > > > > but
-> > > > > > > > > > I
-> > > > > > > > > > do
-> > > > > > > > > > not
-> > > > > > > > > > see
-> > > > > > > > > > any changes.
-> > > > > > > > > >
-> > > > > > > > > > So explain: how did you resolve my comment?
-> > > > > > > > > >
-> > > > > > > > > > These two examples where you claim you will change
-> > > > > > > > > > something,
-> > > > > > > > > > but
-> > > > > > > > > > send
-> > > > > > > > > > the same. I skipped the rest of the patch.
-> > > > > > > > >
-> > > > > > > > >    Thank you for your patient response, here is my
-> > > > > > > > > explanation
-> > > > > > > > > for
-> > > > > > > > > you
-> > > > > > > > > question:
-> > > > > > > > >
-> > > > > > > > >    In v1, I undertand that you meant I didn't sent a
-> > > > > > > > > real
-> > > > > > > > > binding,
-> > > > > > > > > and
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > The comment is under specific lines, so I said these
-> > > > > > > > defines
-> > > > > > > > are
-> > > > > > > > not
-> > > > > > > > a
-> > > > > > > > real binding. You sent them again, but they are still not
-> > > > > > > > bindings,
-> > > > > > > > because they are not used in the driver. Maybe the usage
-> > > > > > > > is
-> > > > > > > > convoluted,
-> > > > > > > > so which part of implementation are these connecting with
-> > > > > > > > DTS?
-> > > > > > > > IOW,
-> > > > > > > > which part of driver relies on the binding?
-> > > > > > >
-> > > > > > >    I got you. This binding define many macros, which will
-> > > > > > > be
-> > > > > > > used
-> > > > > > > for
-> > > > > > > 'pinmux' setting in the DTS. The usage like this:
-> > > > > > >
-> > > > > > >    adsp_uart_pins: adsp-uart-pins {
-> > > > > > >                  pins-tx-rx {
-> > > > > > >                          pinmux =3D
-> > > > > > > <PINMUX_GPIO35__FUNC_O_ADSP_UTXD0>,
-> > > > > > >                                   <PINMUX_GPIO36__FUNC_I1_A
-> > > > > > > DSP_
-> > > > > > > URXD0
-> > > > > > > > ;
-> > > > > > >
-> > > > > > >                  };
-> > > > > > >          };
-> > > > > >
-> > > > > >
-> > > > > > That's DTS, not driver, so not a binding. Drop the header
-> > > > > > from
-> > > > > > bindings.
-> > > > >
-> > > > >    Sorry, I don't quite understand the relationship between
-> > > > > binding
-> > > > > and
-> > > > > driver. Driver will parse this macro to get gpio number and
-> > > > > function.
-> > > > >
+On Fri, Feb 14, 2025 at 8:18=E2=80=AFPM Reinette Chatre
+<reinette.chatre@intel.com> wrote:
 >
-> ************* MEDIATEK Confidentiality Notice
->  ********************
-> The information contained in this e-mail message (including any
-> attachments) may be confidential, proprietary, privileged, or otherwise
-> exempt from disclosure under applicable laws. It is intended to be
-> conveyed only to the designated recipient(s). Any use, dissemination,
-> distribution, printing, retaining or copying of this e-mail (including it=
-s
-> attachments) by unintended recipient(s) is strictly prohibited and may
-> be unlawful. If you are not an intended recipient of this e-mail, or beli=
-eve
+> Hi Babu,
 >
-> that you have received this e-mail in error, please notify the sender
-> immediately (by replying to this e-mail), delete any and all copies of
-> this e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank you!
+> On 2/14/25 10:31 AM, Moger, Babu wrote:
+> > On 2/14/2025 12:26 AM, Reinette Chatre wrote:
+> >> On 2/13/25 9:37 AM, Dave Martin wrote:
+> >>> On Wed, Feb 12, 2025 at 03:33:31PM -0800, Reinette Chatre wrote:
+> >>>> On 2/12/25 9:46 AM, Dave Martin wrote:
+> >>>>> On Wed, Jan 22, 2025 at 02:20:08PM -0600, Babu Moger wrote:
+>
+> (quoting relevant parts with goal to focus discussion on new possible syn=
+tax)
+>
+> >>>> I see the support for MPAM events distinct from the support of assig=
+nable counters.
+> >>>> Once the MPAM events are sorted, I think that they can be assigned w=
+ith existing interface.
+> >>>> Please help me understand if you see it differently.
+> >>>>
+> >>>> Doing so would need to come up with alphabetical letters for these e=
+vents,
+> >>>> which seems to be needed for your proposal also? If we use possible =
+flags of:
+> >>>>
+> >>>> mbm_local_read_bytes a
+> >>>> mbm_local_write_bytes b
+> >>>>
+> >>>> Then mbm_assign_control can be used as:
+> >>>> # echo '//0=3Dab;1=3Db' >/sys/fs/resctrl/info/L3_MON/mbm_assign_cont=
+rol
+> >>>> # cat /sys/fs/resctrl/mon_data/mon_L3_00/mbm_local_read_bytes
+> >>>> <value>
+> >>>> # cat /sys/fs/resctrl/mon_data/mon_L3_00/mbm_local_bytes
+> >>>> <sum of mbm_local_read_bytes and mbm_local_write_bytes>
+> >>>>
+> >>>> One issue would be when resctrl needs to support more than 26 events=
+ (no more flags available),
+> >>>> assuming that upper case would be used for "shared" counters (unless=
+ this interface is defined
+> >>>> differently and only few uppercase letters used for it). Would this =
+be too low of a limit?
+>
+> As mentioned above, one possible issue with existing interface is that
+> it is limited to 26 events (assuming only lower case letters are used). T=
+he limit
+> is low enough to be of concern.
+
+The events which can be monitored by a single counter on ABMC and MPAM
+so far are combinable, so 26 counters per group today means it limits
+breaking down MBM traffic for each group 26 ways. If a user complained
+that a 26-way breakdown of a group's MBM traffic was limiting their
+investigation, I would question whether they know what they're looking
+for.
+
+-Peter
