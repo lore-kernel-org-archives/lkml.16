@@ -1,63 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE89921B1B4;
-	Mon, 17 Feb 2025 13:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF1721B1B4
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797888; cv=none; b=GzxWQBlSRrEmjeztLKRvmDM1ZMgwsrNImyX97Yry5J09ztxwzb/JMX+6t6IRPnj68YXGtdWDzKv6oE+duCzceDucZF07FNBspDWVNPWIWpSt5wl6bS1o0v0Kdmqiz4NsbKwNmmUT1IUeZXzItL1qwHWBES1bXWGoMH6vSro10uU=
+	t=1739797928; cv=none; b=f6io/6DoN9rfr8y7S6q+rhqDfkpCyD8BNNXvSCDSC4D90oEVEWSj2yQwKiKqmRzDqMwnVeZSzD1dAgOepSD1Eib/7WCsv0Ocn9wG9bDAnBeRmCwY/lPGV8MOG1o/BaOiKlz/CKmu96KwDtu1k1n0W+HBKTwAJoNhWAOrYq+6wpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797888; c=relaxed/simple;
-	bh=1PiBDGXviXFsoAeEznRpjkJuqVWjReFh5mfoR8+tPJo=;
+	s=arc-20240116; t=1739797928; c=relaxed/simple;
+	bh=MRAFcY9ayAng/g+VDNI+8agAhkl6MiiLqZ85TtSKkcc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HzyIOBOT0PbYJe+ILGoJ48YZHiqhF2QMfDa7B8OoWKk+hXxIUMx2sAqHQwUaopJj0pyq57ShR6dhce0MmOZs+s6JLuSTfO3opIe7IJtF8MtCjRrpD6IhB973Nd0av49jcaRFYM37E8yv4uRaJbD4SOP8ocglDOqroeWpRxFLgfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLtC95GD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=eu8zDDxwo2JNJuFgUdMmIN7UWWpgktbWYdEyesuR5FhbHlT91iJHWTq3D/j+n/WsZqEwDTvY4RKMNvkP73MYshAMQZmBOrxg01gKm2THywLQDMfx0u/KkykGDEHvB+57IP2IWTr+l7KL3G9QCux1EHFGgK6OXTI8eOlNEl9WLdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4vPYzpR; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLtC95GD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E40C3C4CED1;
-	Mon, 17 Feb 2025 13:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739797887;
-	bh=1PiBDGXviXFsoAeEznRpjkJuqVWjReFh5mfoR8+tPJo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WLtC95GDNZ/X0s+hfQucYzO3kU+Rh5UgXxg+E6+ek+M4ridMVG6kAEleF01gndwVH
-	 8kbjGK8bw3shQpq+zR5Sq5mTGyLenbNNTpk6vPcSBAERAm/YqIrevEy6deAw2gYd51
-	 +6Z0P/gt6AH2RWzUjQCrhRXFdo7ErlgscBvdmNbqoywYjXZQybziAkfobxVGYS3OxT
-	 5cOCBqcqHwvqlDolpX+gjqdLDpktZKKuSPwD6bYWh/ueX9jKkMRNJsJfc3krmttNSP
-	 0x5gToctYLmU18WiDPJ6s/4/w8DzpdAuT9WEgRG5brTf7wwxDY2ymWUYBFwU8gqN7U
-	 PmtYI/xK+DYfA==
-Date: Mon, 17 Feb 2025 13:11:10 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij
- <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, Geert
- Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
- Abraham I <kishon@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, David
- Lechner <dlechner@baylibre.com>, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, Jonathan
- Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add
- gpiod_multi_set_value_cansleep
-Message-ID: <20250217131110.5803b68b@jic23-huawei>
-In-Reply-To: <CAMRc=Meq639NMz6TuOw=xQ_A8VDwA5OXoXU47JNt7x0C7jDtGQ@mail.gmail.com>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
-	<173952845012.57797.11986673064009251713.b4-ty@linaro.org>
-	<CAHp75VcjAFEdaDQAMXVMO96uxwz5byWZvybhq2fdL9ur4WP3rg@mail.gmail.com>
-	<CAMRc=MefPRs-REL=OpuUFJe=MVbmeqqodp+wCxLCE8CQqdL4gQ@mail.gmail.com>
-	<20250216142313.743af564@jic23-huawei>
-	<CAMRc=Meq639NMz6TuOw=xQ_A8VDwA5OXoXU47JNt7x0C7jDtGQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4vPYzpR"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4397e5d5d99so6488615e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 05:12:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739797925; x=1740402725; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dbv6tZxsXHhtGn9KFBS5fucmEZ2CZu7fW3YyX0NKPZI=;
+        b=P4vPYzpRcyJUAiZpIAmVqN3xVsfZCpjijIZ72SVZCjey5SN5STX8gX/I94bhtrDmMY
+         7aMlL9igyXmu9wQn7M+xfmZ/M5OGfSi7RaqTvFTIkstXiyB7qPbriCg+JQPJ7EZMgF1l
+         cMLHOqUe+w8N+91SeCfvIA6ZDnR8yRWwVfP9/bNvYm9LsjCnkQWM+cwNjXMajs3gz0ip
+         1BYXCQUO/K5cmF5v2YgEg4kozbd83BXmQ58Oc1Yl9bLXuMMjcHeg0MKTE7jvdI3lazER
+         yRoFHZ6gLle7WYjwUaxlq0SwEPvX0RLADlmSx83GiyUuAWssbTvOokN50yp1zN2Fwslj
+         W2/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739797925; x=1740402725;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dbv6tZxsXHhtGn9KFBS5fucmEZ2CZu7fW3YyX0NKPZI=;
+        b=C9hl6HZHLQBVMx+E5lViuI1Vt17ya4sLgezV/BY3Quwr9HMH75UqQviGzuxzmiGmVN
+         imr0ExyE1ONfOEXi1LcIfDtWs3qBucWTI+6E8NkKtcPUryVRPVLCDj2RSJS6UZ1mCysc
+         9hnUYQA6unOt0m1aRXVyh2TwS3NYHfBEfpkAKCurBU7Yw41MNCams2fCRXjOOCK7aROI
+         HwgMgGUoQT48EiNeh0BagpCLVtINkzb75wT0KEnUFZfgLDJf/EiDBiUmyJceFeLoxNuV
+         a3WmWAZP3tINFBq8TPQg3mPrKUSmMxgsm5y1bUOKx5jWQbOcyjk7SG/hAszKyAxtbJYR
+         y2xw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7add/Icrd2OWi87Wfc0qqq26tcIFFPaHllSm77kMvKakxeW9Evi9Plqb01lW+4QSkhDP7EEJcU+6K2c0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMN4CfAwHX5Zflas9ipz5KU3z7+zZpyD+sjHV6r3rschabO21z
+	YNv3pMFHT/7v2xyNK01K0MFNYq/0IqjgUehVwjp3K7JDLqGNBAE27KSQGA==
+X-Gm-Gg: ASbGnctyrcGbWgJfav8dRSZGUr7PCtFj6Tl9w6NUZB4uDe8ZHC9bmjQR6Sq6dlwyyhe
+	4m3XEghr08jDeY9158PQQtUeWDDZH5PkFlKR3/kzbqcSiptWT/UV8dBQjxeDgyiQ72KJNj6s7mq
+	ZicKZBLVWa4Se2P+iT+/qi2XGSXCE4AyeleOEr+6mtRUfnCoQuIy3NPb0/TOvovG4S+JkkJT+qq
+	9OwNTESS0/qRBw4QvlM+dn4ug4DkG044IAaEJgupZGPd09u0Gpbo6fGF5AVF/orTRB0EhLQ5Kni
+	2TMHSMzsIdOamLxi3NcammAXIUhhV70d1W40M+yZbbteu2r8iCnwjA==
+X-Google-Smtp-Source: AGHT+IGI8Y+1gHpNEIL5sYVZymnBYx2kGRoduPMaxMSQCJyc4mjJ84MG14TVAegnNK2lJjDu/Lbf2Q==
+X-Received: by 2002:a5d:59a7:0:b0:38f:3224:6615 with SMTP id ffacd0b85a97d-38f33f374bcmr8372027f8f.7.1739797924909;
+        Mon, 17 Feb 2025 05:12:04 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f85c2sm12639181f8f.91.2025.02.17.05.12.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 05:12:04 -0800 (PST)
+Date: Mon, 17 Feb 2025 13:12:03 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Christoph Hellwig <hch@lst.de>, kernel test robot <lkp@intel.com>,
+ oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, Carlos
+ Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ linux-riscv@lists.infradead.org
+Subject: Re: fs/xfs/xfs_buf.c:1534 xfs_buf_submit_bio() warn: unsigned '_x'
+ is never less than zero.
+Message-ID: <20250217131203.2657cc4b@pumpkin>
+In-Reply-To: <a14347d2-6189-49bc-a1cc-e5959e76e6c2@ghiti.fr>
+References: <202502171326.j4Xd3I0j-lkp@intel.com>
+	<20250217092445.GA29568@lst.de>
+	<a14347d2-6189-49bc-a1cc-e5959e76e6c2@ghiti.fr>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,63 +81,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 16 Feb 2025 16:55:04 +0100
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Mon, 17 Feb 2025 13:06:49 +0100
+Alexandre Ghiti <alex@ghiti.fr> wrote:
 
-> On Sun, Feb 16, 2025 at 3:23=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
-g> wrote:
-> >
-> > On Fri, 14 Feb 2025 15:37:48 +0100
-> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > =20
-> > > On Fri, Feb 14, 2025 at 3:35=E2=80=AFPM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote: =20
-> > > >
-> > > > On Fri, Feb 14, 2025 at 12:21=E2=80=AFPM Bartosz Golaszewski <brgl@=
-bgdev.pl> wrote: =20
-> > > > > On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote: =20
-> > > > > > This series was inspired by some minor annoyance I have experie=
-nced a
-> > > > > > few times in recent reviews. =20
-> > > >
-> > > > ...
-> > > > =20
-> > > > > [07/15] iio: adc: ad7606: use gpiod_multi_set_value_cansleep
-> > > > >         commit: 8203bc81f025a3fb084357a3d8a6eb3053bc613a
-> > > > > [08/15] iio: amplifiers: hmc425a: use gpiod_multi_set_value_cansl=
-eep
-> > > > >         commit: e18d359b0a132eb6619836d1bf701f5b3b53299b
-> > > > > [09/15] iio: resolver: ad2s1210: use gpiod_multi_set_value_cansle=
-ep
-> > > > >         commit: 7920df29f0dd3aae3acd8a7115d5a25414eed68f
-> > > > > [10/15] iio: resolver: ad2s1210: use bitmap_write
-> > > > >         commit: a67e45055ea90048372066811da7c7fe2d91f9aa =20
-> > > >
-> > > > FWIW, Jonathan usually takes care of patch queue on weekends.
-> > > > But whatever, it's not my business after all :-)
-> > > > =20
-> > >
-> > > Too many conflicting suggestions. I just picked up all Acked patches.=
- =C2=AF\_(=E3=83=84)_/=C2=AF =20
-> >
-> > Resolution of any issues 'should' be easy enough. Let's keep an eye on =
-how
-> > it goes as other series hit Linux next.  Might be a little work to be d=
-one there
-> > and by Linus in next merge window.
-> >
-> > Jonathan
-> > =20
+> Hi Christoph,
 >=20
-> I'm totally fine with removing the iio commits from my queue if you
-> prefer to take them.
+> On 17/02/2025 10:24, Christoph Hellwig wrote:
+> > On Mon, Feb 17, 2025 at 01:53:08PM +0800, kernel test robot wrote: =20
+> >> New smatch warnings:
+> >> fs/xfs/xfs_buf.c:1534 xfs_buf_submit_bio() warn: unsigned '_x' is neve=
+r less than zero. =20
+> > Looks like this is an issue in the riscv virt_to_page implementation
+> > which also shows up in various other places.  Any chance this could get
+> > fixed in the riscv code? =20
 >=20
-Hi Bartosz,
+>=20
+> To me, the only test that could give rise to this warning is the last=20
+> part of:
+>=20
+> #define is_linear_mapping(x) \
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ((x) >=3D PAGE_OFFSET && (!IS=
+_ENABLED(CONFIG_64BIT) || (x) <=20
+> PAGE_OFFSET + KERN_VIRT_SIZE))
+>=20
+> But given that the config is a 32-bit config, it should not be evaluated=
+=20
+> at all.
+>=20
+> Could that be a false-positive and then an issue in smatch?
 
-That's probably going to prove slightly less painful, so please do.
-I'll merge in that immutable tag and pick them up once you've dropped them.
+Why is smatch even looking.
+The equivalent check in gcc has been moved to -W2 because of all false posi=
+tives.
 
-Jonathan
-
-> Bartosz
-
+	David
