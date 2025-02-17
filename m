@@ -1,119 +1,69 @@
-Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3DC22A4E8;
-	Mon, 17 Feb 2025 17:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBA821A421;
+	Mon, 17 Feb 2025 17:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739813989; cv=none; b=QoYbCsgjTriOiOs7BvnMlFV1xTEcUIpPBHONaN0MkCj8vHm1308o60akzBxBWkK8b7LeJyTYHFfQArfQig2waTLFVyf15DLFIjZ6pwak2PMTnEsGhs+K26cAPWxv/MTgB6cHIfMxVvnoOM9b21+npzHfRRc0HyR97QRdaqr67uk=
+	t=1739814034; cv=none; b=gL4KI6eUclRn/g9+M9k87/I2g9tur3lrVPQ30zd+7ikED2Qpj8vKeID9T3TtiTM/ZAryaQ4YH6FM4TFQehMaw3do1KNwv53feZ1JWz26doNc+kerPkMAYKfILrTACucHkXQuSaVRblpBcA8Y+IAofylUWEwAwEdazgMvxfd25LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739813989; c=relaxed/simple;
-	bh=PRTZbIsGA8Nc0ATeWU+MuKCsNsmGvZmADdAnNmIhl7k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lpti0uX467h21SK2NlrlI+qmCWG7LYlCrS4ELrU0DjfJWMByYsZjNMDR5TT84YSIPM5OGFxJqlo7/MTb6CnjIISVqHytqvDzk4neb7JdYe2s70UQlzdhTg/cE54WTVZGhxjiJeLS6MrfsWi2NwKr4rbttwsMr8PhbO4tSyY5S5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tk4pt-0001we-HZ; Mon, 17 Feb 2025 18:23:13 +0100
-Received: from [78.47.5.107] (helo=sdn-nic-test01..)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tk4pt-000Opa-0r;
-	Mon, 17 Feb 2025 18:23:13 +0100
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-To: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: willemdebruijn.kernel@gmail.com,
-	jasowang@redhat.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mykolal@fb.com,
-	shuah@kernel.org,
-	hawk@kernel.org,
-	marcus.wichelmann@hetzner-cloud.de
-Subject: [PATCH bpf-next v2 0/6] XDP metadata support for tun driver
-Date: Mon, 17 Feb 2025 17:23:02 +0000
-Message-ID: <20250217172308.3291739-1-marcus.wichelmann@hetzner-cloud.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1739814034; c=relaxed/simple;
+	bh=Dy/0GI1ft/U44yuy4Q2Na9V/ddLvYKKyiIq0KGW5S+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f82uCrWp5lFK0a9jz/UaUyuRRQ9PbrtW43dUNq15WlX/dHShmdAwnM76CzxMrb+mPdCIlkX2y9w+KaLaVePqq1HcKCVRhIdr3FE9zPiWxI4bCoWGI9UehgVlNihEEp4fxUmAKnd4meavwQ4S3ocnSm7BuP2vxYARaZcyLM+p7Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNhfr3gv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNhfr3gv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31ECAC4CED1;
+	Mon, 17 Feb 2025 17:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739814033;
+	bh=Dy/0GI1ft/U44yuy4Q2Na9V/ddLvYKKyiIq0KGW5S+c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WNhfr3gvbgG7kEediEzqfjJ61dCny56DanKCmNYmeojo/ibXqv4tJuMGMZ+0jGf0J
+	 wIhL0GJ+DU21zwz6EzFpJmP9FuZosVt4FztCzQ4rdkupYgOuCc6rXFrIcxyn6RYf49
+	 i+kWLBaZYC2gEc5toYkq/WxuDabqk2BGBotwlrn7MTMX3JwV3pSoYhPF0xDuNQR9jy
+	 0S1NHGCu3f6hB2wm9kg7OQZ7Wm68Ix6eQ97fFfwtB4O/zCqcmAKWHLo5iZ2NNDQagc
+	 55814Y2qdrlL0XnmVoIWz0+cdSuQXmAznp1zvJAolcTdxfUYCatEYdwBBPcmn+jh4q
+	 P75nMbAfJef3w==
+Date: Mon, 17 Feb 2025 09:40:32 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Eric Biggers <ebiggers@kernel.org>, fsverity@lists.linux.dev,
+ linux-crypto@vger.kernel.org, dm-devel@lists.linux.dev, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ard
+ Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Mikulas Patocka
+ <mpatocka@redhat.com>, David Howells <dhowells@redhat.com>,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH v8 0/7] Optimize dm-verity and fsverity using
+ multibuffer hashing
+Message-ID: <20250217094032.3cbe64c7@kernel.org>
+In-Reply-To: <Z7FM9rhEA7n476EJ@gondor.apana.org.au>
+References: <20250212154718.44255-1-ebiggers@kernel.org>
+	<Z61yZjslWKmDGE_t@gondor.apana.org.au>
+	<20250213063304.GA11664@sol.localdomain>
+	<20250215090412.46937c11@kernel.org>
+	<Z7FM9rhEA7n476EJ@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27552/Mon Feb 17 10:47:21 2025)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Sun, 16 Feb 2025 10:27:02 +0800 Herbert Xu wrote:
+> On Sat, Feb 15, 2025 at 09:04:12AM -0800, Jakub Kicinski wrote:
+> > Can confirm, FWIW. I don't know as much about IPsec, but for TLS
+> > lightweight SW-only crypto would be ideal.  
+> 
+> Please note that while CPU-only crypto is the best for networking,
+> it actually operates in asynchronous mode on x86.  This is because
+> RX occurs in softirq context, which may not be able to use SIMD on
+> x86.
 
-Thank you for your review comments. Here is an updated patch series with
-the requested changes.
-
-To add a selftest for the metadata support of the tun driver, I refactored
-an existing "xdp_context_functional" test which already tested something
-similar but for the veth driver. I made the testing logic behind it more
-reusable so that it also works for the tun driver and possibly other
-drivers in the future.
-
-The last patch ("fix file descriptor assertion in open_tuntap helper")
-fixes an assertion in an existing helper function that I just moved and
-reused. Somehow the file descriptor for /dev/net/tun turned out to be 0
-when running in the BPF kernel-patches GitHub CI, so the assert condition
-needed adjustment:
-https://github.com/kernel-patches/bpf/actions/runs/13339140896
-
-Successful pipeline:
-https://github.com/kernel-patches/bpf/actions/runs/13372306548
-
----
-
-v2:
-- submit against bpf-next subtree
-- split commits and improved commit messages
-- remove redundant metasize check and add clarifying comment instead
-- use max() instead of ternary operator
-- add selftest for metadata support in the tun driver
-
-v1: https://lore.kernel.org/all/20250130171614.1657224-1-marcus.wichelmann@hetzner-cloud.de/
-
-Marcus Wichelmann (6):
-  net: tun: enable XDP metadata support
-  net: tun: enable transfer of XDP metadata to skb
-  selftests/bpf: move open_tuntap to network helpers
-  selftests/bpf: refactor xdp_context_functional test and bpf program
-  selftests/bpf: add test for XDP metadata support in tun driver
-  selftests/bpf: fix file descriptor assertion in open_tuntap helper
-
- drivers/net/tun.c                             |  24 ++-
- tools/testing/selftests/bpf/network_helpers.c |  28 ++++
- tools/testing/selftests/bpf/network_helpers.h |   3 +
- .../selftests/bpf/prog_tests/lwt_helpers.h    |  29 ----
- .../bpf/prog_tests/xdp_context_test_run.c     | 152 +++++++++++++++---
- .../selftests/bpf/progs/test_xdp_meta.c       |  56 ++++---
- 6 files changed, 215 insertions(+), 77 deletions(-)
-
--- 
-2.43.0
-
+Yes, that's true for tunnels and for IPsec.
+TLS does crypto in sendmsg/recvmsg, process context.
