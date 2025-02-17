@@ -1,139 +1,161 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4481B212B3A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703212163B5;
 	Mon, 17 Feb 2025 09:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739786036; cv=none; b=S9scDuVO74uyu1STWe9ppvufgt+zWxdEa1qZpL0yOpAtkx/o5bJjd2zUkfBB1tP3UOocV+ep3My08/GhXBsld5fWleENuJOrZQ4IVAKaQVzRspJwU/x8twqVIuSibgOOuvH9Z8ALTDs8JwvWpY9efUYhjZRL/s9LB7GN80sm60I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739786036; c=relaxed/simple;
-	bh=gQmGV+kn9fXoyJgSNZ5yNLGTOGnhxeIlafZzMM8kSJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AiwxjN0FdlH2aZq5hZaC07qtDCf77JUDJkIcvSh0Cm9+h09z+yCKl+ycUkKvDBw3GPYUYW4MqkoxXhxfO+oBTke1jF6oqkfMoIhTDNjIVmOrgjLX7ZDtp2nkM1q511t9ZPBO7Yd9yNp6hdksfkheoUmNSsMXTT/NSnlpFsJx220=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HhSF2S0m; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739786039; cv=fail; b=cjIbumK7TBH4PXJCo6k1nonzGFT6M3kcOBvSDcl22tjXV+0lAh84mpHCJTzEf8StJXQi5Lzg15+TggM060OVifeUNRfYL+CCA00ly+vIttSpy/7xri2U2dbfsa1eLjEcQCoyr7/Zbr4uA37bv7WFFqD2Hzyr+BkFhLQe8vwBrJc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739786039; c=relaxed/simple;
+	bh=YcTAihBIjQ6JnXB2nvgiBZnEc63u7hwfSzLJHeElnkw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=orgAbwtyGvGzc9auSp7Uy6HImMhdVdgqMyd4HVxi0bmPByGZRW6LtTBFf4N+zKsTQ90tQeiSEqa3MgonKM/depifQatqhRYLnNlq/3mMgm1oClpXc+zLjR/Q8hzB6uzSmYMVbGfdVK1ROdqO74JZuV5GNq6kzQ5pFZ9zPvRA7IE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=z6cLmWKV; arc=fail smtp.client-ip=40.107.93.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhSF2S0m"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4396a24118dso26333625e9.0;
-        Mon, 17 Feb 2025 01:53:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739786033; x=1740390833; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CvYjEMSsQkQBSc5nAfPUda644OnnC5/ncK3yD6+VkrU=;
-        b=HhSF2S0mVAa9ipjtJXVJ7g6OVjg/JFs48ycC8QTFuP+LRmHUYch2AjJdJOljvyLXoA
-         keB7+LpExcJE4MAFeOQ3ZPF4Vl1CFlKqVhK/SmzBqkk0iieuGg2C740MhJn1XF1mJ8d0
-         XTNagg5y9aro3T9B6dHfduVLjDN548ru+1s/7q4WX9pt/D8nh1NCd3cAce6vEumVyif1
-         HEKpGjx7tYOUVxzJrWh7/VkAPPanrwbzamlIIrgYR4oEnAd/zpzK3njrWvGh6Wfrw+Z+
-         JoRKx2FrAvQM16fs1eWT1VAhCb3GzsXulbIo68esBiFcbzj6hx+1EUm/CO3luVAOTwhe
-         /wRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739786033; x=1740390833;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CvYjEMSsQkQBSc5nAfPUda644OnnC5/ncK3yD6+VkrU=;
-        b=MJ+dB4qNmkHPRv0w2o0F3J1tV3jfXiTOaWAZ+PXHYqa/VXycmBXmQMmWZ1UuCORuI+
-         6Fp8LhW3xjyCx+XismNcPnZgLBxOzH2dhOZwL1e/ZAdw/8n0+7PCAnLPjp/WS1wY2aw2
-         7Xao0IR6nYqOkAWZuDwP4DDa30PkoUnGJZUeCN/B9ChM+d7cCvYOXitwEczREz+N1Kny
-         BRyx0hBDBVPmzwADAc/tLGAAUUDSf1AQPSswCRpROHNEZs50k65vTnVei6K3SQXzKVJU
-         eQsnKbtCz22OwXG4I+pAhwXtSsbzajBCmyR4fAg03I22tdeluwWOeUw+h/iM+y94Ywsg
-         rpfg==
-X-Forwarded-Encrypted: i=1; AJvYcCW07O9zzTlyQcIBV1Ibtr7ovXZaYJV/KaPZBerdF7fEwANqwNP+uQqS3EpxLmODZu6H9d1NFHOFZyfxG2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztOhaJhxbag2xNkfjfuGSJ/O6E90g8k7e26v5T81LTjXhIcPC0
-	al4aW4+Tx76cTGauPbJO2pTNDFS2oEHKHTbu+6D54RKBgOspqokh
-X-Gm-Gg: ASbGncs3XFiBQztqlv8cuptXc1Osw1GsyYtFcxcz2OfhehmU8K+Lzn945r02WuuXXhJ
-	qtHUrtzkLM4oceirAG21KEQ1+Cc/EhMTsAo49qaE3cGjxFCpjxD2hd4Pxya5ZN5UM4MCqShAxQs
-	1etw2WLMS8iD6IuDM8xj3WjcHTS+urhvWqEGJ1SijS2t+l0DXEndPznFBQKeb+NwA35QthzY2xE
-	/L8RE1Md9r6HTyNlaGomSVlde89aRtd9Am636VBNe4vdQUO2XQreab6mYzA7M3qEfB+961fkB+R
-	oVoNou+uXSZs3162
-X-Google-Smtp-Source: AGHT+IEVl4GpzgQ45gGVZiMJl31oCUggGlRZvE8AqWl93V+B3xcv35Ou1jGbrhoUWP+6dZJA3C4Onw==
-X-Received: by 2002:a05:600c:5247:b0:439:5f38:7ca with SMTP id 5b1f17b1804b1-4396e70c718mr67407475e9.20.1739786033270;
-        Mon, 17 Feb 2025 01:53:53 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43989087517sm13265865e9.8.2025.02.17.01.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 01:53:52 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Jun Lei <jun.lei@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amd/display: Fix spelling mistake "oustanding" -> "outstanding"
-Date: Mon, 17 Feb 2025 09:53:25 +0000
-Message-ID: <20250217095325.392152-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="z6cLmWKV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Brq2t8O0WMLJ+QR/rECDEAMH59X9zvB2cHELPtoepGgKgjLxbUFuNf7/PWtCgQpTTfOaWmx7kTz+c0b0S8HtPhWfDIRgrqlIdE93AZz2vdNDzjv21JmNL8Ad8emiRZsxKA6RTcFSjZ38uIci7I0YlBc1voLnKWjjwwa+FQJjDl7vVe012FjPgiYlaT0vJz+6F3nBcFvjM+5D0mdd32QT8N13vssnXs8y73CFKOzCb1fI47VroYk8+u9WC5RW9PEQEpsbLDjZXI4uiBWlUJ8Isn6SFqhXjG4S7af+cSY+lWFfTmFEkwjteq7w0rSxA4FXGozjm+L+IGnv0YHUXPnp9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0YxsblgvyhPceRn9CV3F5txUITBVLC+2fUBTAYKfjRI=;
+ b=AHWawrIZyV4nCXYamqSb6ngPqPk0GQLLnok0Ao2MFBIHSwGKXqBf18YfrvRO7WFiq32SzKoO1+bxfM/IbrbUfHhyaobObGQtg8Tk9rI6bA30B/2nDbWNVJpHDK6fe0abAkZukUTmkK3xK/586zUG5zKEJATKOikdxNccdHQtmtI3T6RtdzPG+ZpEVQH1QK9lSzQcsOoXqLVyWVU422mZdhHH66Q2hYVjsGz+URl6itUtGUdJZW7n8AN0tOYjqA3EndddmuSjnSDIpBGMgPViQFrsfRdOjwkjTPqPszCB0HGe6NDpXLtCeR2B8Ds7Tzw7LgmDFbwE66v/Voyh8ClQzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0YxsblgvyhPceRn9CV3F5txUITBVLC+2fUBTAYKfjRI=;
+ b=z6cLmWKVtZnxAHNNB7cqCK3l9lJRlu4sEPcx+jsxjQhfI1dVWFac3EOv0iH4zx2yYcV5KGX5G7jVvuO31f11FYyNNzINLx99iMNNvaB+RiGsgnM7L7D51TZFvgKAim1gzn9CRrCM32wCJ+ZmoLqLzC4E/xDBTkUEXjoOibCndj0=
+Received: from PH0PR07CA0082.namprd07.prod.outlook.com (2603:10b6:510:f::27)
+ by SJ2PR12MB9243.namprd12.prod.outlook.com (2603:10b6:a03:578::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
+ 2025 09:53:52 +0000
+Received: from CY4PEPF0000EDD1.namprd03.prod.outlook.com
+ (2603:10b6:510:f:cafe::65) by PH0PR07CA0082.outlook.office365.com
+ (2603:10b6:510:f::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.17 via Frontend Transport; Mon,
+ 17 Feb 2025 09:53:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EDD1.mail.protection.outlook.com (10.167.241.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8466.11 via Frontend Transport; Mon, 17 Feb 2025 09:53:51 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Feb
+ 2025 03:53:51 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Feb
+ 2025 03:53:49 -0600
+Received: from xhdshubhraj40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 17 Feb 2025 03:53:47 -0600
+From: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>, <linux-pm@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <git@amd.com>, Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+Subject: [PATCH] dt-bindings: power: reset: xilinx: Make "interrupts" property optional
+Date: Mon, 17 Feb 2025 15:22:26 +0530
+Message-ID: <20250217095226.12606-1-shubhrajyoti.datta@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD1:EE_|SJ2PR12MB9243:EE_
+X-MS-Office365-Filtering-Correlation-Id: e40f48e0-e215-4a1d-5e04-08dd4f38fc09
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ukk2D6JmChjmxVv267/CAnSOS/0yc5rpljo44X9Wa/iMfCSxIy77Guv5YvW9?=
+ =?us-ascii?Q?e120eXxr/0qk3ysWNWFQZXEwQX/S1iALHewRVFkrZQUIY7Zr86qSnkF/Cvfr?=
+ =?us-ascii?Q?JJoLfHzNDM7+q45OGT9Z33+EYiVRw8WXIWvLg9GZO0cHG2a/3+G2PKkuzaCI?=
+ =?us-ascii?Q?oh+BDpck8FElu3xQSYHkdXpVL9pXeXD3rT5qZmcsDs54o1oPfBUzLKBTmM/y?=
+ =?us-ascii?Q?NGhT86m8AOsRtN/ItQiD/ykNAKSKHJLTWFgXK7C6Y4wzPfcayFy78dRUM71h?=
+ =?us-ascii?Q?f+cmfGGn1y7W6UMC7w82cri0ZY8bIiz7QHISPdcB9YAd2j1x/iQtd6ARKHPP?=
+ =?us-ascii?Q?eNNfzVUoHMmBNW4rxjAlRE+wMpccdwztrKQ7twlfMEU+Lzebw48yCrnz/kS+?=
+ =?us-ascii?Q?1t3h36rdIjs2x+ksAECA0zFtgXEKqpk+gu32MyAqnlQbSZSCtKH/17NaKS5v?=
+ =?us-ascii?Q?4VKwmhd3dyLKLDR1+HQSZB2nczLXRB5H0QbmsXYnaUDZZeW9Kd5mdWkSHwYp?=
+ =?us-ascii?Q?fBWtX1ekuoBewRhf5NLoylKFR/5htKBxtEAZH7jM9lR2mX5zEfwRpFNCIZGh?=
+ =?us-ascii?Q?YxJtBsMWZeCUwozb5FR+JjdSzs4O1H9tpprVSor3xDGx4zAmKItNTuQymhGo?=
+ =?us-ascii?Q?3jCBiAEqvTgvbm5fMjmcKLlBGf6hhj/KgwSoDU25rMcgns4wwaR+iqrkA/zP?=
+ =?us-ascii?Q?GcKcdJKibEtPQ8IHsP57/ZvhySRcz6gTgsfxfF0CX+sxTxWKqbtD2vj2zxEQ?=
+ =?us-ascii?Q?yqqi4WFXRhI0WM/rPiHjJG3xqEr0zPgWppPw7Y2IvhrWyZsTmBVrn1ss+TBR?=
+ =?us-ascii?Q?7KKJxjdYtTurcONHJycKdxvrJdu8H9MKvLHf2of8C3THNMyCsrpyeYQB4FWx?=
+ =?us-ascii?Q?XZZqgXZsvEpghRRcOY/tRUbun+PUBy6e+lvGuYZve10qVNyk/QZJLWcblNOj?=
+ =?us-ascii?Q?kd7enDn0l+z9cgqsvEOcJ4pBeyrrne3qHCV+hdSQKczAGcPSd0ZBhAwhMHBo?=
+ =?us-ascii?Q?G+Pbz+GvfsM/2+JRSqqjm32H0Uy5s3GGTGV//vCI7UcSN4YsKz/wQo7xEnWe?=
+ =?us-ascii?Q?Pp5P1naqhn2Bgv436XGopiTwClNgq59l5XWYutM3bCYJRir1FlVuJdC+qEzt?=
+ =?us-ascii?Q?0VjYHmGTWv5VseRQh74OGRCZaDa1+uNnE8oUuY8OPUOUzR2vNKsGoY2W24TC?=
+ =?us-ascii?Q?uXlJb3u0KU1ASONmRlRofgCjgW7ihXmAjAy03EQCixzW/pq1IoiX5kC0gg8U?=
+ =?us-ascii?Q?3XMeGXAtEfAnUjUtnE6ZHvIFDsf8iNZ4Fmi8tC54teDcKkF7vVtbNAe5DiK2?=
+ =?us-ascii?Q?CzdgXLA0SilruOs/MMLWZayca5sp0EEeHw4ESWjtYVVaNsx/9oaFlxrRtUvP?=
+ =?us-ascii?Q?DXC3LCAXbANIxZC5p5o9K+WA70J6kibvAz/reglPSPjlmsAfeTg/N3hw/z+h?=
+ =?us-ascii?Q?nboghxL0cfe2/SgTy7NQdmW0Ma2/ei3QTbAShjvufsC7jHcBSMxpN4FFmHrF?=
+ =?us-ascii?Q?ViwayYn2wOpOj8A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 09:53:51.9994
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e40f48e0-e215-4a1d-5e04-08dd4f38fc09
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EDD1.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9243
 
-There is a spelling mistake in max_oustanding_when_urgent_expected,
-fix it.
+The "interrupts" property in the ZynqMP power/reset binding was previously
+marked as required. However, there are multiple mechanisms for
+handling power/reset events, including:
+-Event management registration,
+-Mailbox (mboxes),
+-Interrupts (interrupts).
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+When event management support is available (default on Versal SoC), the
+"interrupts" property is not used hence not required.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
 ---
- .../dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c      | 6 +++---
- .../dc/dml2/dml21/src/dml2_core/dml2_core_shared_types.h    | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
-index 87e53f59cb9f..243d02050e01 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
-@@ -5058,7 +5058,7 @@ static void CalculateExtraLatency(
- 	double HostVMInefficiencyFactorPrefetch,
- 	unsigned int HostVMMinPageSize,
- 	enum dml2_qos_param_type qos_type,
--	bool max_oustanding_when_urgent_expected,
-+	bool max_outstanding_when_urgent_expected,
- 	unsigned int max_outstanding_requests,
- 	unsigned int request_size_bytes_luma[],
- 	unsigned int request_size_bytes_chroma[],
-@@ -5106,7 +5106,7 @@ static void CalculateExtraLatency(
- 	if (qos_type == dml2_qos_param_type_dcn4x) {
- 		*ExtraLatency_sr = dchub_arb_to_ret_delay / DCFCLK;
- 		*ExtraLatency = *ExtraLatency_sr;
--		if (max_oustanding_when_urgent_expected)
-+		if (max_outstanding_when_urgent_expected)
- 			*ExtraLatency = *ExtraLatency + (ROBBufferSizeInKByte * 1024 - max_outstanding_requests * max_request_size_bytes) / ReturnBW;
- 	} else {
- 		*ExtraLatency_sr = dchub_arb_to_ret_delay / DCFCLK + RoundTripPingLatencyCycles / FabricClock + ReorderingBytes / ReturnBW;
-@@ -5121,7 +5121,7 @@ static void CalculateExtraLatency(
- 	dml2_printf("DML::%s: qos_type=%u\n", __func__, qos_type);
- 	dml2_printf("DML::%s: hostvm_mode=%u\n", __func__, hostvm_mode);
- 	dml2_printf("DML::%s: Tex_trips=%u\n", __func__, Tex_trips);
--	dml2_printf("DML::%s: max_oustanding_when_urgent_expected=%u\n", __func__, max_oustanding_when_urgent_expected);
-+	dml2_printf("DML::%s: max_outstanding_when_urgent_expected=%u\n", __func__, max_outstanding_when_urgent_expected);
- 	dml2_printf("DML::%s: FabricClock=%f\n", __func__, FabricClock);
- 	dml2_printf("DML::%s: DCFCLK=%f\n", __func__, DCFCLK);
- 	dml2_printf("DML::%s: ReturnBW=%f\n", __func__, ReturnBW);
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared_types.h b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared_types.h
-index dfe54112a9c6..4e502f0a6d20 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared_types.h
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared_types.h
-@@ -1571,7 +1571,7 @@ struct dml2_core_calcs_CalculateWatermarksMALLUseAndDRAMSpeedChangeSupport_param
- 	unsigned int *DSTYAfterScaler;
- 	bool UnboundedRequestEnabled;
- 	unsigned int CompressedBufferSizeInkByte;
--	bool max_oustanding_when_urgent_expected;
-+	bool max_outstanding_when_urgent_expected;
- 	unsigned int max_outstanding_requests;
- 	unsigned int max_request_size_bytes;
- 	unsigned int *meta_row_height_l;
+ .../devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml       | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
+index 799831636194..079ad977b907 100644
+--- a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
++++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
+@@ -46,7 +46,6 @@ properties:
+ 
+ required:
+   - compatible
+-  - interrupts
+ 
+ additionalProperties: false
+ 
 -- 
-2.47.2
+2.17.1
 
