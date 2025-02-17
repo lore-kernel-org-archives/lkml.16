@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B93F21858A;
-	Mon, 17 Feb 2025 11:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6710D218EBA;
+	Mon, 17 Feb 2025 11:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739790041; cv=none; b=aYNd2HWG1C4CMviRgpSjPrJR3XVVabGj4hxOO+7wLe48bkNbr1pQDo3T5jGOaDf0u2RhsvQviQvtbNKtmysZuRv6q3aVVLWzBs0RkNN7qMt7PtVVtZbtDL70PQK/tzSuaQDT9zWxsrgAKssCOG1RZwQU1VDXqNQF5kdgz5dU9A4=
+	t=1739790043; cv=none; b=ODxboLlDR8feEk4ZNEUfgKQ4pRC0dGJHYrNvc/Ix6sFzCJJBqw20rmfHkGvl9ZlA8d0oFO8qkIXRKJi0cx8ndnIKf2y4LehZig9uv80mtupAolihrq04N4E3yIq9I9VKBuJbSiozeNeXspHN8D9pFLJ8na5ZYRngDQHVbKIHVKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739790041; c=relaxed/simple;
-	bh=HWe5DWDc72q/BUdcqdWY+r3rAD8bWdOAs1/PuV4Pfm0=;
+	s=arc-20240116; t=1739790043; c=relaxed/simple;
+	bh=uKV9D/kbwA/0w24XM1UIPsvE/argHIoOFRx9p2whBgg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UZN8NHPfV5ArzrBKwmoHlKjMJkf8y1pIhuH5vS2tilnqkD7EEzUfbzQ/R2daBYs5A9oWlfce6hYHwrwWil7yglH8H0dqfBTB49hTd2cX0UmQjZcqCE2uh7/BVcWkOD3d/DdORJcarRvHiujS1Se11DcVW/TPfCVJQDsWbFVUjnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zSkADrC5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6gweMfS6; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=icNGTEGDp3SuEeq9jWnu2S2Fkco6JN+Y0GZikKNHxy8R+8sTz91/FrRj8voCXKJEW51Zj3B1+4/RNwaRBRDzlzPXi/KoTS+94VRWaO3AJXruWuL6B8WxyDrQDlT9W45iZ33zHbn+ik0JMgYh7SduYe/e7clwHUOgeIsg14tp7JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k0GsZCca; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c1V2aLsn; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zSkADrC5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6gweMfS6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k0GsZCca";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c1V2aLsn"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739790037;
+	s=2020; t=1739790038;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=B3mOz7h/METJtenXacdJtpoIbaKepOmdU2Mg3BGzeKc=;
-	b=zSkADrC5IegnOX7SsPv69/QD6W6GOarq3AZlGer2Qv1/IxrTtAGj2tHYBeO6AoL8R52hwu
-	v1pKuK4TXPwDc6b42hUCnztyomq1HFMCAXvRO5bVhyHSvETW7JOwi8SDSyyYmuPiXmKiI8
-	vVY6BbZbTxpCAGg1cIdbRoDkRtYwjmqFilm+V3q73t1MfY3l0VIpmkaOW8ysxR4ks17WuB
-	Ix37y36ExVBWoHFAL3K6SDPMVtAuemIM5NrZw6X1WMQssSByCBtLqbbXoOudIc9Uwq3GFx
-	MwZcY1FiIP8RBc1bfmCtdOY96UjDvQ+T9pxTR8at6qj3jrEUZIxgd+A2/Jtseg==
+	bh=fY3Dlya9onvQQYursAe4ang3UMW+faOqytZ9fehqmJg=;
+	b=k0GsZCcaz215C+ourChEgCyjdgIKXMeo8ECynEQH6g8/NnEneTzgiRy7SghbZbJRjnryns
+	SoBG2FqBVcbMkLa45cGOiwEEoEsQ/tj0Dgn+j62YRpiso4TUgQroHcmiQteJiUrDfpmU8C
+	croYmBLcv/CzE2GowLkfTYim5fHIHs8dzvHEYvU2CwzR0ku3h/TFTckh6myQt4FvjWMoRh
+	jGIZa/Hkdom0uAQxrLD3tfU/eiRRSm0Qa2InIiSo/nhreC/cd7A5//EddalmDMc/QPTrQW
+	XVWfIdOBlIoSecRr+/5FfiqjVbg4Oab0Ukwcn4MOSPsaFh6aUCdHiyAbmlUzMA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739790037;
+	s=2020e; t=1739790038;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=B3mOz7h/METJtenXacdJtpoIbaKepOmdU2Mg3BGzeKc=;
-	b=6gweMfS6ZDrqvYxW6P8kn4DX8lRS85SUqJxdBpaUapk4rbYjuI/Wlm1NY3BR05bAsJEHZZ
-	xziR9bz1jt/IYNCA==
-Date: Mon, 17 Feb 2025 11:59:24 +0100
-Subject: [PATCH 04/12] kbuild: userprogs: add nolibc support
+	bh=fY3Dlya9onvQQYursAe4ang3UMW+faOqytZ9fehqmJg=;
+	b=c1V2aLsn3710N2XZq0Bm1ImYDJixu+em9+9qaDUd6Bda1VmD/BdDXrY2kK81QajtZxp/tt
+	hdqBoTgAn42Y1UDw==
+Date: Mon, 17 Feb 2025 11:59:26 +0100
+Subject: [PATCH 06/12] kunit: tool: Add test for nested test result
+ reporting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250217-kunit-kselftests-v1-4-42b4524c3b0a@linutronix.de>
+Message-Id: <20250217-kunit-kselftests-v1-6-42b4524c3b0a@linutronix.de>
 References: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
 In-Reply-To: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
@@ -63,83 +64,57 @@ Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  linux-doc@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739790034; l=3223;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739790034; l=2070;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=HWe5DWDc72q/BUdcqdWY+r3rAD8bWdOAs1/PuV4Pfm0=;
- b=j5buKJ4rrEz2ldxRKjQ4EpttQPLf4EfeYRomTllmD/oqWMo/iVu0yTAc2Tf5lDPH8vBmMsjnS
- qzB/K2tGoJbA6hjQS2M1Crs3OrfPQM77o1deNu9AecBT5pNvHEKXahl
+ bh=uKV9D/kbwA/0w24XM1UIPsvE/argHIoOFRx9p2whBgg=;
+ b=CqSl6E8Ye9PLDXfeE8wknykLcu+PIhCAS/QBUETQmpdCUzOb02DxXMc27kI6BxAW/GGnPX8FA
+ WkhMrs80BBAAGgV147MC0lId4tqHso/iEIvijP3qivtciZ5qG82sDcA
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Userprogs are built with the regular kernel compiler $CC.
-A kernel compiler does not necessarily contain a libc which is required
-for a normal userspace application.
-However the kernel tree does contain a minimal libc implementation
-"nolibc" which can be used to build userspace applications.
-
-Introduce support to build userprogs against nolibc instead of the
-default C of the compiler, which may not exist.
+Currently there is no test validating the result reporting from nested
+tests. Add one, it will also be used to validate upcoming changes to the
+nested test parsing.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
 ---
-This could probably be moved out of the generic kbuild makefiles.
-I think the ergonimics would suffer and this functionality could be
-used by other users of userprogs.
----
- Documentation/kbuild/makefiles.rst | 12 ++++++++++++
- scripts/Makefile.userprogs         | 14 +++++++++++---
- 2 files changed, 23 insertions(+), 3 deletions(-)
+ tools/testing/kunit/kunit_tool_test.py                           | 9 +++++++++
+ .../kunit/test_data/test_is_test_passed-failure-nested.log       | 7 +++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index d36519f194dc0d18b72a6f3ce7f3649f7c1b5637..cb859dc58b579def4995a5aa2efb45ab4ba3c93f 100644
---- a/Documentation/kbuild/makefiles.rst
-+++ b/Documentation/kbuild/makefiles.rst
-@@ -959,6 +959,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index 0bcb0cc002f8a7c24b119d59b3e996efc953c626..e71ce88682e137676be49ea9854a5ddaff0dc259 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -165,6 +165,15 @@ class KUnitParserTest(unittest.TestCase):
+ 		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
+ 		self.assertEqual(result.counts.errors, 0)
  
- From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
- 
-+Bulding userprogs against nolibc
-+--------------------------------
++	def test_parse_failed_nested_tests_log(self):
++		nested_log = test_data_path('test_is_test_passed-failure-nested.log')
++		with open(nested_log) as file:
++			result = kunit_parser.parse_run_tests(file.readlines(), stdout)
++		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
++		self.assertEqual(result.counts.failed, 2)
++		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[0].status)
++		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[1].status)
 +
-+Not all kernel toolchains provide a libc.
-+Simple userprogs can be built against a very simple libc call "nolibc" provided
-+by the kernel source tree.
-+
-+Example::
-+
-+  # lib/kunit/Makefile
-+  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
-+
- When userspace programs are actually built
- ------------------------------------------
- 
-diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-index debbf083bcfa01c89c204a322a1b17e2bdbe95a1..e94f3f2250f531dadbe00f5f5ee6f780bee22487 100644
---- a/scripts/Makefile.userprogs
-+++ b/scripts/Makefile.userprogs
-@@ -16,10 +16,18 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
- user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
- user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
- 
-+user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
-+		      -ffreestanding $(call cc-option,-mstack-protector-guard=global) \
-+		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
-+user_nolibc_ldflags := -nostdlib -nostdinc -static
-+user_nolibc_ldlibs  := $(call cc-option,-lgcc)
-+
- user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
--			$($(target-stem)-userccflags)
--user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
--user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
-+			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
-+user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
-+			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
-+user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
-+			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
- 
- ifdef CONFIG_WERROR
- KBUILD_USERCFLAGS += -Werror
+ 	def test_no_header(self):
+ 		empty_log = test_data_path('test_is_test_passed-no_tests_run_no_header.log')
+ 		with open(empty_log) as file:
+diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
+new file mode 100644
+index 0000000000000000000000000000000000000000..835816e0a07715a514f5f5afab1b6250037feaf4
+--- /dev/null
++++ b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
+@@ -0,0 +1,7 @@
++KTAP version 1
++1..2
++not ok 1 subtest 1
++    KTAP version 1
++    1..1
++        not ok 1 test 1
++not ok 2 subtest 2
 
 -- 
 2.48.1
