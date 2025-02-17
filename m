@@ -1,93 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E31F921C9E3;
-	Mon, 17 Feb 2025 13:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89AD21CC59;
+	Mon, 17 Feb 2025 13:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797722; cv=none; b=QShD1iGkKV5mC1sp51+KCT4r1oslf52rWCNCG+MfGIpuHJEfDuow9BcYCdButv6rLpTupUFHSoXTxtz4NUZT0HiTBqr3gxkUY9P3TnK0DHJaSLSSNfUbK2Dt8ogCTX+1c0l8rU238/X5WVcFtH9iQlXdMUHN2KZ3Fh09BJrOQGQ=
+	t=1739797725; cv=none; b=OC/X6sZrVzJFeQprXR/eXmV8mLaRHmejbfVNq1CQPOWThVG7b7wSfKXHp0wiuBUdPnXDK3tXeJC9BVoqFRkWVEMsd9UDDrlqzZpMJqQQgVN+O8Y/7F3BO/6dpI/RfYVeRmSMTdzea/trIZTcSsNBmHZeZtLo/jgbsc/sf5bfDDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797722; c=relaxed/simple;
-	bh=NT0HD0OzFevfLE2gDviP3hodCw4MjieThR7YtJxsnXQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ngB/5v5Q+c+4D1rTkngVd5PXbNMZ32/PiczDtREPsCg0uebDfvR4RA88Q4TvHapZ1eGjW2jYL1UAX7kH7WpW9L1JubHQsZByPnsEutMhBBUTr01eHrf0fry/xzT0jeiHuMN6npOrkrJbazHwppb9f7qtFWpaMZD79dKzVf+yxgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3E3B13D5;
-	Mon, 17 Feb 2025 05:08:57 -0800 (PST)
-Received: from [10.1.35.42] (e127648.arm.com [10.1.35.42])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B48AA3F6A8;
-	Mon, 17 Feb 2025 05:08:37 -0800 (PST)
-Message-ID: <6dbc4f0a-4bcf-4539-bd39-5cc9d31a5bcf@arm.com>
-Date: Mon, 17 Feb 2025 13:08:35 +0000
+	s=arc-20240116; t=1739797725; c=relaxed/simple;
+	bh=9itlMG4VipCqg34LawzjG8hG6gTShShEatPS4xcWCdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MFLKJ6BcnBnTaUQ6t1Aau+rDe6aU6GIwh4JpzPQO0mRc2gH3HOgMXtIkKLb8XMZ1iOfx2RIHQ4A1MBlk290LME/ydGLbpH+SM3RenO6lhzpCF4Z+xNOHhugzmycNpvOzr/sT7lxOBEghYlXdzZnCMofIiFKNlUUuRZxCvUtAlk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so3130353a12.0;
+        Mon, 17 Feb 2025 05:08:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739797721; x=1740402521;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MsQsq0G6kuOvD9LC5dEILUwIa70vql8OQQH1JFjxz2c=;
+        b=RU0/icB1pWaYNs3sEXDRkkncuEa3wf4MVPVOaXdN/eeD2YtSub1amfCH2J41Iknntw
+         DyyGHeWFcQB5WbEWYny0fYrva/FHtqTjZ9rFhmKRG4cjpEGSeIhPRmfvvybyorCDALZM
+         mA+7WljjnGFNBHF6lMihRbBQYbX08s0OfI+Mr9u/JfV/MdcIVOy4lfLwGQEKp4nWcCAe
+         LTxZ3FBFFGBsk8Ww03yEoD4TvZ4pZ1KZdJOflHQytRB1GiNV4+aE3jwC+nJ4avjq99ca
+         M30fEm88zxnWjPf7OPsgo0yoP9XhBZkNWzOK4BG0B3wfwUzs8xb8/8v5OJIJYLDJmhcY
+         WFjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQlubsV/7RbGYayYaW2pbrRVw5Fq64R3jFeNfCQi02sbknSBFraekpEHKb0RmGhVV+UBe2KZU2NtNl+aM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxciYy2vSejVo1UL+1KxTt3gu4cGGC79dDXaPOWuhPnetfmvjP
+	swh8t8jz7Hi8oHjdhCSJFJsLBpyfDRlZPbPCoweH4SWWFfbNIgnQKDdVdLeIc1w=
+X-Gm-Gg: ASbGncttI18GDvJt7EE6VFUVoFx7aNZggx0p2AtVv3+lN+WKrWoEhzzB5tDWrkoCA8u
+	m+YCG6JIIIZpAtlKOiq38qSM0pMCLDCx8zkbPF9YNQVVhfnzyPQpwQ7c5slyfrlVsgJPbUuHuP6
+	8Hz8GWaKpNTcp9nnqLMcz/cwPqpegPV7fb4VQY/hWhR977O34+2uoynmQCEmCZvmc+CVm6reBQW
+	5xhSuQfa2muDSgZ8fAd0nFt3p7LNKm6kT5PAn2xFYVQCA3j7AcfWds8sFSCxslXBkRKpGkgP9L/
+	V5vH3TsBaEQK3fKmmzTPIkUCXdmh0suxLVbDO2HmaCQyRS1cQ4yssg==
+X-Google-Smtp-Source: AGHT+IFvlPB05okv2zu7w/TQpvCyUhsivVACxjX6U6oRWRXGSZTIGl42nOueR6xqiwreWKhS0VE6Jg==
+X-Received: by 2002:a17:906:c153:b0:ab7:c3d4:2551 with SMTP id a640c23a62f3a-abb70dde461mr1014877766b.33.1739797721038;
+        Mon, 17 Feb 2025 05:08:41 -0800 (PST)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9c9b653bsm185902966b.166.2025.02.17.05.08.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 05:08:36 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e05780509dso1563050a12.2;
+        Mon, 17 Feb 2025 05:08:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXg8BqgLRrjJ+UXB/NOryQ+NmgLFd32dnME7qrIkdbSUpqagTxt6EUyjR1TV/qBUfybUs0XeunLOuqBjbU=@vger.kernel.org
+X-Received: by 2002:a17:906:3895:b0:abb:b209:aba6 with SMTP id
+ a640c23a62f3a-abbb20a31e7mr6274866b.3.1739797715966; Mon, 17 Feb 2025
+ 05:08:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFT][PATCH v1 3/5] cpuidle: menu: Tweak threshold use in
- get_typical_interval()
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>
-References: <1916668.tdWV9SEqCh@rjwysocki.net>
- <8490144.T7Z3S40VBb@rjwysocki.net>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <8490144.T7Z3S40VBb@rjwysocki.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250216125816.14430-1-koichiro.den@canonical.com> <20250216125816.14430-11-koichiro.den@canonical.com>
+In-Reply-To: <20250216125816.14430-11-koichiro.den@canonical.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Feb 2025 14:08:21 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUZ54GJupQc2nz2nh7Myh6eUdwJw1+90smRuVyuJx9PPQ@mail.gmail.com>
+X-Gm-Features: AWEUYZn1fYz8cb1I-zBku3cHDH6DyyJZWaZ8UgZkRlG7QVDNpRfE_L-suKnzX8Q
+Message-ID: <CAMuHMdUZ54GJupQc2nz2nh7Myh6eUdwJw1+90smRuVyuJx9PPQ@mail.gmail.com>
+Subject: Re: [PATCH v3 10/13] gpio: aggregator: rename 'name' to 'key' in aggr_parse()
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/6/25 14:25, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> To prepare get_typical_interval() for subsequent changes, rearrange
-> the use of the data point threshold in it a bit and initialize that
-> threshold to UINT_MAX which is more consistent with its data type.
-> 
-> No intentional functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/cpuidle/governors/menu.c |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> --- a/drivers/cpuidle/governors/menu.c
-> +++ b/drivers/cpuidle/governors/menu.c
-> @@ -116,7 +116,7 @@
->   */
->  static unsigned int get_typical_interval(struct menu_device *data)
->  {
-> -	unsigned int max, divisor, thresh = INT_MAX;
-> +	unsigned int max, divisor, thresh = UINT_MAX;
->  	u64 avg, variance, avg_sq;
->  	int i;
->  
-> @@ -129,8 +129,8 @@
->  	for (i = 0; i < INTERVALS; i++) {
->  		unsigned int value = data->intervals[i];
->  
-> -		/* Discard data points above the threshold. */
-> -		if (value > thresh)
-> +		/* Discard data points above or at the threshold. */
-> +		if (value >= thresh)
->  			continue;
->  
->  		divisor++;
-> @@ -186,7 +186,7 @@
->  	if ((divisor * 4) <= INTERVALS * 3)
->  		return UINT_MAX;
->  
-> -	thresh = max - 1;
-> +	thresh = max;
->  	goto again;
->  }
->  
+On Sun, 16 Feb 2025 at 13:58, Koichiro Den <koichiro.den@canonical.com> wrote:
+> Rename the local variable 'name' in aggr_parse() to 'key' because struct
+> gpio_aggregator_line now uses the 'name' field for the custom line name
+> and the local variable actually represents a 'key'. This change prepares
+> for the next but one commit.
+>
+> No functional change.
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 
-Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+My
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+is still valid.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
