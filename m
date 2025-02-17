@@ -1,112 +1,135 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1FF20DF4;
-	Mon, 17 Feb 2025 01:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5D91CFBC
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 01:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739756391; cv=none; b=FsfujZHnXE8VGdJ90dcx4jxIcNwEKyGfTnn/iCN+MZcU1aKbNsg6Vmq9bzZx83hFPiKhxmYl2EQ+78BuxezRrVECSRkPS5IR7yYS7fr3zqaOMtYAhq1Vxg7f/T+ppGHWKdC6AHgEtaH0WDuzTdpSkEHRTnw/CvVcrJqb6hbw5+k=
+	t=1739756911; cv=none; b=ipeYS+K5PVZNQxZrFHyxO5SjQFkp8SibvIjQrRPp/SKG6eyls1SupY1xMZ1x2GuXkLtVZHU0YlwGTQaSFCdpubsev6S9L1P/jc8XO2GfydeWeBLsDOeJEQsUi4rYUuBUVRqoXVFj+8Ft1q+8r6wAM/XXFy4RSkgChM+6ZrIfOdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739756391; c=relaxed/simple;
-	bh=BuQYXFVdDJPPhv1pziXzthdB75Ya4reXuJeQX0zuavI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGl9Q50oziwfcz25j9+jJq2d2YwOpWt0/Rvy9FneXde3UZKkZvDkCvdYO4SJTq38KYqm3oLwxCiDrCiRF2MYJFg/YYD7QBuyRKr6t8jYe08QrY2yBmx0JGUpsXQobRJyiFg7peNf+etLug3/pyv7GGHbYpdrmFAY38r509/ZnZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=lG3nEJqN; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1739756911; c=relaxed/simple;
+	bh=2GwrQAvpI+du66jAl7ybJ2vRX2ga2dva4adjZ6Ub7XM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DXI+RrAeIH0mMpeIG2XmZZKfgkju8MOzIppo3mtlHKHNCSa7VEnUw+ogOImjQr536t6pqL2/v/vgNXaT9yXT0lRm6CkzYQepGUUcUkqPyz+l6LEsE3lK5ECAsPP7i5201eMMxWqakifDquoZfCgcoGAtmM5n9LJpM6wUUcZ9b04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NWwTB9L3; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="lG3nEJqN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1739756387; x=1740015587;
-	bh=LNKYDRqDPh1bV1rGmlu4ASajTHrQBDpcbKn79N6aAqs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=lG3nEJqNEfBjTDUxCWnBqj/hJTGFDXPKfruXfQmni+zvYFDHOF5FhOa006u42lSoo
-	 J8ZfqnfJ6A1aZid5svRtTyL9V0LYBURORD5GWbfauiEkissoO/e3tPTfDxAJrzdP+C
-	 LA1hiK9QSIRV+igFN4a44vyMI9yhyTuBGqeA8hGjkGd67hALji1JDCOPgPC8QGLWju
-	 iLH46Ac8dL9+M3smESf7FVjLreryjQ3yMuEYoTINpyD1fol/oMqucC4tOtPUynLscy
-	 PO4zynOWUwWH0mpU1yRzXqyyPQHnh9gSUxE/He/3HTKuWtkT/bs7Z89zek+JR6PVFb
-	 lQ6fzc7jld4Iw==
-Date: Mon, 17 Feb 2025 01:39:40 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: =?utf-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
-Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
-Message-ID: <96d799a7-ec70-4d3f-951b-52c56b545255@proton.me>
-In-Reply-To: <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
-References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com> <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 74555bcf96b0441dbbd7381c1fe15a43bf637c32
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NWwTB9L3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739756909; x=1771292909;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2GwrQAvpI+du66jAl7ybJ2vRX2ga2dva4adjZ6Ub7XM=;
+  b=NWwTB9L3l9dgIMjPpFyk+apmLSUDpvfFjcF+VOrg+t2uNeVRAWYEaV5Y
+   jHdvf9s+SRV/aHiA0xz4a7CoZ/yJgG7PVvC/IPFRkAqTbFZEOX3DepnuX
+   mRQNEYKW8ho7mdNMfoO0e8U3zL9ylSpnANBKLdQlxRrq2z25AzgfA7AUo
+   sQrYxwfyOnPNXmNwOVX1zYUQ2pUPy7glrrHMUdXeq4b7qz+chcdD3Chk2
+   iyXLhD/9xZCHaLCXgcL9IaI3nQemhjZOGrmNeSoTVtSIxSs4+C0Td7F97
+   QoeQv8n8meeVAKdqveiWxbIMnGrTPX7ztDHcWPEyaBGZcMJaZ1bSG5HEt
+   g==;
+X-CSE-ConnectionGUID: kUxdssxwQw+JghZQeD1lmQ==
+X-CSE-MsgGUID: KX7+G0MsRmK+EBGpHL7eJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51856125"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51856125"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 17:48:28 -0800
+X-CSE-ConnectionGUID: ePYr3PJcSLCXvJq2ubhrkA==
+X-CSE-MsgGUID: xjwPS82HT+SVi3vgaGRq/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,291,1732608000"; 
+   d="scan'208";a="113932110"
+Received: from zhiquan-linux-dev.bj.intel.com ([10.238.156.102])
+  by orviesa006.jf.intel.com with ESMTP; 16 Feb 2025 17:48:25 -0800
+From: Zhiquan Li <zhiquan1.li@intel.com>
+To: bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com,
+	kirill.shutemov@linux.intel.com
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	zhiquan1.li@intel.com
+Subject: [PATCH v2 RESEND] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo
+Date: Mon, 17 Feb 2025 10:24:35 +0800
+Message-Id: <20250217022435.4056776-1-zhiquan1.li@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 07.02.25 14:58, Tamir Duberstein wrote:
-> Allow implementors to specify the foreign pointer type; this exposes
-> information about the pointed-to type such as its alignment.
->=20
-> This requires the trait to be `unsafe` since it is now possible for
-> implementors to break soundness by returning a misaligned pointer.
->=20
-> Encoding the pointer type in the trait (and avoiding pointer casts)
-> allows the compiler to check that implementors return the correct
-> pointer type. This is preferable to directly encoding the alignment in
-> the trait using a constant as the compiler would be unable to check it.
->=20
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  rust/kernel/alloc/kbox.rs | 38 ++++++++++++++++++++------------------
->  rust/kernel/miscdevice.rs |  7 ++++++-
->  rust/kernel/pci.rs        |  2 ++
->  rust/kernel/platform.rs   |  2 ++
->  rust/kernel/sync/arc.rs   | 21 ++++++++++++---------
->  rust/kernel/types.rs      | 46 +++++++++++++++++++++++++++++++----------=
------
->  6 files changed, 73 insertions(+), 43 deletions(-)
+On Intel TDX guest, unaccepted memory is unusable free memory which is
+not managed by buddy, until it's accepted by guest.  Before that, it
+cannot be accessed by the first kernel as well as the kexec'ed kernel.
+The kexec'ed kernel will skip these pages and fill in zero data for the
+reader of vmcore.
 
-When compiling this (on top of rust-next), I get the following error:
+The dump tool like makedumpfile creates a page descriptor (size 24
+bytes) for each non-free page, including zero data page, but it will not
+create descriptor for free pages.  If it is not able to distinguish
+these unaccepted pages with zero data pages, a certain amount of space
+will be wasted in proportion (~1/170).  In fact, as a special kind of
+free page the unaccepted pages should be excluded, like the real free
+pages.
 
-    error[E0308]: mismatched types
-       --> rust/kernel/miscdevice.rs:300:62
-        |
-    300 |     let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(pr=
-ivate) };
-        |                           ---------------------------------- ^^^^=
-^^^ expected `*mut <<T as MiscDevice>::Ptr as ForeignOwnable>::PointedTo`, =
-found `*mut c_void`
-        |                           |
-        |                           arguments to this function are incorrec=
-t
-        |
-        =3D note: expected raw pointer `*mut <<T as MiscDevice>::Ptr as For=
-eignOwnable>::PointedTo`
-                   found raw pointer `*mut c_void`
-        =3D help: consider constraining the associated type `<<T as MiscDev=
-ice>::Ptr as ForeignOwnable>::PointedTo` to `c_void` or calling a method th=
-at returns `<<T as MiscDevice>::Ptr as ForeignOwnable>::PointedTo`
-        =3D note: for more information, visit https://doc.rust-lang.org/boo=
-k/ch19-03-advanced-traits.html
-    note: associated function defined here
-       --> rust/kernel/types.rs:98:15
-        |
-    98  |     unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> Self::Borr=
-owed<'a>;
-        |               ^^^^^^
-   =20
-    error: aborting due to 1 previous error
+Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
+that dump tool can identify whether a page is unaccepted.
 
-Can anyone reproduce?
+Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
+
+Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 ---
-Cheers,
-Benno
+V2 RESEND note:
+- No changes on this, just rebasd to v6.14-rc3.
+
+V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
+
+Changes since V1:
+- Rebase to v6.14-rc3.
+- Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
+  suggestion.
+- Add Kirill's Reviewed-by tag.
+---
+ Documentation/admin-guide/kdump/vmcoreinfo.rst | 2 +-
+ kernel/vmcore_info.c                           | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 0f714fc945ac..3b47916f1856 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -331,7 +331,7 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
+ Page attributes. These flags are used to filter various unnecessary for
+ dumping pages.
+ 
+-PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
++PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
+ -----------------------------------------------------------------------------
+ 
+ More page attributes. These flags are used to filter various unnecessary for
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index 1fec61603ef3..e066d31d08f8 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
+ #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
+ 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
++#ifdef CONFIG_UNACCEPTED_MEMORY
++#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
++	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
++#endif
+ 
+ #ifdef CONFIG_KALLSYMS
+ 	VMCOREINFO_SYMBOL(kallsyms_names);
+
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+-- 
+2.25.1
 
