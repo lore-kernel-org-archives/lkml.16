@@ -1,71 +1,71 @@
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A2F21D59D
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A92B22068E
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:28:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739802525; cv=none; b=mbYaftLcFRQ+F4ywwzQuBtI2mExCQgLKUOA0FHfWxSGwDB/10KoMuamVTuI5xJDuhw7R/CILpZe6dq7q/brD5lYyEmqY717dGSiO9M0QczSPbnZGVQoor8DzM7vS5B93zk94CrZLaZ5T/ukAWcwwYg/TBfvmammFeNRv+9/CBn8=
+	t=1739802525; cv=none; b=R0ftZ6z6CpVeRLY7+yYJBFX0gFsO4AMXJKdhALNYGoyDzp+SpB0DvoK5tgDp/TFZLlCSGj+lYNS5nQ3+ztTPhLKwm4DLnTIVtOR9lY6N55cIFM4l4U4EJNFyv7h4MWmHGXqYczpj4f1sI0mKdtVu/FpYieNqeehtxUi0f5Fl7Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739802525; c=relaxed/simple;
-	bh=rEnR6g5dONAt30j589RxgJPlKFdaeKR/MdU4AsEK4Sg=;
+	bh=kgTHhR4YUfUQvLTcLHSzDC9nY3pfgiRlMVx62VhpKuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jlPsp54JyIfnf4XQ2JBQ4Kv7mCd6DdRAYUvLNVy1RCEGfW509b1t19A//GrqrvQMgtpx74lBOoC6WS6idvksPuSFF+Nas6X8eWkt+KNp9Wjq+VINyCAta0WJStINTTEfH25TqFdNeRuA3FoGmP7HaNEvyN/ZQpKS40CtjWkibn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Xi2inA43; arc=none smtp.client-ip=185.125.188.122
+	 MIME-Version; b=VcYEva4HncoISKFc2b1tlUHx7zVGBOah3/Yb2Hrz0/NQ0TDgLC51yfdl/xd1UnXaQ0jYCNayMglUSlKVV6o3oSzwywST0HHMJA1hJugCYr7IQffdt2KaShvJIi744zSFOZpsXsfP4ZUGHEE5oNuvMenHA0ZxdtYfJGKnAU2jBpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=kb90MKhK; arc=none smtp.client-ip=185.125.188.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Xi2inA43"
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kb90MKhK"
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 4BA6E3F164
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:28:33 +0000 (UTC)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 85D0D3F880
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 14:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739802513;
-	bh=YWbOsm+CZ0rP8EEsqBCFAU6ijhi7ERtYl/4TbSEKuvk=;
+	s=20210705; t=1739802520;
+	bh=ejmbjvPRmedRPsWRD+UddjAoJvDsol1360tkb/DZqGw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version;
-	b=Xi2inA437d+n6yMq1bKW+E1Et8lECJdTkHTKAkdJBEGWMROdbjute6lHCX+PgZo1V
-	 JyPsxH4oNUL6UDi+KBVWbgO0QZrsCUxaZz1/c8dM2NblcQ7X2qn5myDInKlO1FMogg
-	 QeKMpA5AfyzCEvyWzs0qDKaIBjUlPmsl/gk/d86F9ef0lWnE2MJm1tKG4vZlUT9WD3
-	 MVhgmy2FtScHg0vWCOVPTGQwhbBPgzCTML8OsZ2Ap+1yYFW/o3fz5czlZ8nhwNu7HR
-	 VmPjlA6tWdJTWsWsHyJodg07ZCulKnEgdBY8IZnQagGWtRWUGtmbXEcMxieJenR1+Z
-	 MZAOHrYnMpXzQ==
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-220ff7d7b67so52237625ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:28:33 -0800 (PST)
+	b=kb90MKhK+WhvhhswF/4a24OUY6Xkh+iL0t0CMOkHD97+juu2OY85dYAlSrFYj8YXA
+	 z3l8dsaAtYbCBC8CviNWknPk6z8B5W8EvvUJGpi1DNrrvxgxHwb2eyQ50awtNlVqmW
+	 BRIUAgTw7JgCUqbgGqTnP4RM79EEVp8h0WyG66fNPTQvcJpqqvWOKjQ/iOqxjll7Qd
+	 RnzsF+ZPuTrm0ptIJ5xBedHRXOy/oFiRRqwqZ4YTLyCtM8V88UYTUYb+2aHCkCi46s
+	 VSbWWmZ+uAgwZkV7qmJ5dRj48FP3rZbXEDxyoflkVC3JKS534jF9VXPIvtspH9LeFA
+	 TH+KOAH6dnZjA==
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22101839788so50124605ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:28:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739802512; x=1740407312;
+        d=1e100.net; s=20230601; t=1739802518; x=1740407318;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YWbOsm+CZ0rP8EEsqBCFAU6ijhi7ERtYl/4TbSEKuvk=;
-        b=XL6+a7ZvkluWlQ7GA7nnltSPphbC5dhFcR9m4zoMOy9TawlBe1rhOnCAgFeXP60hn5
-         j5Oa9NQe29ivowpwd0yUT7PW8PAbC4UczsZwRfl57tnklq3vLvffSvjwLxCfy61wNALd
-         28rkgTCQwZQ4kJ3lRuhY+x2iRqwzqgWOzB0qtitSpH7+1vwKsBXNXXuxEXauLJ782vZu
-         WToxIp03RdxE8MnKlCNMg8gZYKFyR+yLUBM8313Mnl5k39ULSSDiZkk0CVV0jR2vWKcE
-         zfA7QTH1IXGdoyyZryp/+fxxbcx8/QoQEezXrqeABAjAqocxVnbrNCSa47hp6Q21QdBk
-         NhQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNzh7rmKZ8CuWChpKyl/o9TPspp5E490f9oiQfTEVNayjg44FNHBGfaEXzlRgGpArtppfUeSbzZBMc8Mw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvSsv0sb2YmQ++5z9d4WlMRkCPxpYUB0tfTCIM8rWt3a5mNG4+
-	oi4xR6UbDBHG8NGDiqJt/YgG5tdUfY7Gopmd67629Vq131AUDA/UldRtP8Bg2b8wh8yzIpaTofs
-	bk417+5eIsW3SuYv0cxk7mFDlgLWjsNY82l8AxAYCy5q84rPGOK+n9E1qm6K7/on8UZq/nbAkRa
-	8YOA==
-X-Gm-Gg: ASbGnct6CZuK7eW2Gi8BQeC+sN+te41+9oB0YfCgRnTzRLASy54iGldLILOET2Be5tV
-	PRmanChG/j5fwKC3yPBbZymKBy6eKEdxJLgmmU90sUNOGzO5AaOsZdyEiw0cEIhwAXGEtUoRVnX
-	hzlR7bqKtMU9Ebm2Y4WusQrTLi/k7ECpSKwuNk3RLEEdAvV51I5sinv45w8phwtilXKIgMRdJcD
-	GnaUTguDW1AZcZUlVZGZ/DCcsDH6JcJMmcb61mfkbVjugdMiUDpSJ01o/aesUMa8sgayVzO6mG2
-	rELMFQjTcdDswXepd6Nzkhw=
-X-Received: by 2002:a17:902:e88a:b0:220:cd13:d0ec with SMTP id d9443c01a7336-221040cf8admr180261635ad.48.1739802511900;
-        Mon, 17 Feb 2025 06:28:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFfZIRJAzO+xxCEyVz/n4jHiqUmLNlcKx8CpuXtume9GjbD9zD5G5cZZIXe92Y7wYgNUOjqnA==
-X-Received: by 2002:a17:902:e88a:b0:220:cd13:d0ec with SMTP id d9443c01a7336-221040cf8admr180261235ad.48.1739802511583;
-        Mon, 17 Feb 2025 06:28:31 -0800 (PST)
+        bh=ejmbjvPRmedRPsWRD+UddjAoJvDsol1360tkb/DZqGw=;
+        b=ScuG1Be9cY9Hq++xC7zLvqwME79xySY2t5KD8BY2+uakRnJ3wC6LZt0mE3acw7dU6a
+         iuFEz6zNQ3mrIwkCSxmklWlzZgPgodEHKhtMQXk9xK4bqWurjgE2eQy0ClwY6r8TLIzu
+         ZUpw3+v9cAz6i7VGrikxZ0Q1cfojyVtpZAgsB+Cw6eP7I9q4Iow/jxKtpZKnspiqPnTS
+         uWeOVilWjHbKbKQOons2IzX9qDWvxmJXhlGAAjWjncX8lbcCpFg/ozbZe6EGS2dlW6q5
+         BFpfGFJgWe1GS6oOinQvDvnCqbVhrzY+bnXoZiCouZPTXK+tgjzcHKuBfeb1DMdCVjyz
+         Z5AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7e9nU3YfmTz/tibwmE8ys/YLnqtluFc2Qi3HgKvXC3CpFJPe4dznG5ki6D23vb4F4TuSMqBQJqMfDPc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9lEa6+gJbjMMOR9JbhVqxEyrlMDqlIDNrsOxznlGIBgaD4AvD
+	NMwDqT1lHsSJhM55QyYk65vWHT75y+5kNifdZQB8DbW+jTPtLRbWSD9Wy7kJGUxcyBeyUOzs7S1
+	Qsz19KJ7iq7kpKzzvlIVoZV7n/mPPANFYTn6mVHnzhXM/Ofb4y4b3D2152OS8FW16I10tbBkUU8
+	vd4GvBj5Bypg==
+X-Gm-Gg: ASbGncs5psb7Bpv2t8T63ETqfPrYgOkhX8Lb2Oh0Sd6skY4fhfBDTzAb8qxY3S3wmQk
+	sg58+9Q9IeJo2qism3ONaa48GqL1RA1vQNL6/mZQTgLQXfshEVqeoH988iSF/SGW4g40eIVhS/U
+	wmWmGLxEdkXm4WRU6jOz0tEpRHw+mzHIYeZ0Neis+Et8oNNCtoL8JQ3kXpdiUn/UoNNtcgySLS/
+	OCF6ysNNFcZ7fG+wRpmYRwcDX9IeGcr3uSBc0HxSR1+EmmZ8+FVWUVHPLSmtIOL9mPxCMUGjBdR
+	+ceD9teJFGbOTLikLs1go+g=
+X-Received: by 2002:a17:902:f612:b0:21f:9c7:2d2e with SMTP id d9443c01a7336-221040bdb68mr172681185ad.40.1739802517930;
+        Mon, 17 Feb 2025 06:28:37 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHOgk8p2bSJvuLs/oEyFap3MbF7dqcx6MlSiZYeTYQTftD3iALVIhnHNeIrILA8yaAsNNn1Bg==
+X-Received: by 2002:a17:902:f612:b0:21f:9c7:2d2e with SMTP id d9443c01a7336-221040bdb68mr172680895ad.40.1739802517600;
+        Mon, 17 Feb 2025 06:28:37 -0800 (PST)
 Received: from localhost.localdomain ([240f:74:7be:1:a6da:1fd8:6ba3:4cf3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55916c7sm72237735ad.243.2025.02.17.06.28.28
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55916c7sm72237735ad.243.2025.02.17.06.28.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 06:28:31 -0800 (PST)
+        Mon, 17 Feb 2025 06:28:37 -0800 (PST)
 From: Koichiro Den <koichiro.den@canonical.com>
 To: linux-gpio@vger.kernel.org
 Cc: brgl@bgdev.pl,
@@ -73,9 +73,9 @@ Cc: brgl@bgdev.pl,
 	linus.walleij@linaro.org,
 	maciej.borzecki@canonical.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] gpio: pseudo: common helper functions for pseudo gpio devices
-Date: Mon, 17 Feb 2025 23:27:56 +0900
-Message-ID: <20250217142758.540601-2-koichiro.den@canonical.com>
+Subject: [PATCH 3/3] gpio: virtuser: convert to use gpio-pseudo utilities
+Date: Mon, 17 Feb 2025 23:27:58 +0900
+Message-ID: <20250217142758.540601-4-koichiro.den@canonical.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250217142758.540601-1-koichiro.den@canonical.com>
 References: <20250217142758.540601-1-koichiro.den@canonical.com>
@@ -87,175 +87,185 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Both gpio-sim and gpio-virtuser share a mechanism to instantiate a
-platform device and wait synchronously for probe completion.
-With gpio-aggregator adopting the same approach in a later commit for
-its configfs interface, it's time to factor out the common code.
-
-Add gpio-pseudo.[ch] to house helper functions used by all the pseudo
-GPIO device implementations.
+Update gpio-virtuser to use the new gpio-pseudo helper functions for
+synchronized platform device creation, reducing code duplication.
 
 No functional change.
 
 Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 ---
- drivers/gpio/Kconfig       |  4 ++
- drivers/gpio/Makefile      |  1 +
- drivers/gpio/gpio-pseudo.c | 86 ++++++++++++++++++++++++++++++++++++++
- drivers/gpio/gpio-pseudo.h | 24 +++++++++++
- 4 files changed, 115 insertions(+)
- create mode 100644 drivers/gpio/gpio-pseudo.c
- create mode 100644 drivers/gpio/gpio-pseudo.h
+ drivers/gpio/Kconfig         |  1 +
+ drivers/gpio/gpio-virtuser.c | 73 +++++-------------------------------
+ 2 files changed, 11 insertions(+), 63 deletions(-)
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 56c1f30ac195..1e2c95e03a95 100644
+index c482e3494bac..d8fede07149f 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -1863,6 +1863,10 @@ config GPIO_MPSSE
+@@ -1942,6 +1942,7 @@ config GPIO_VIRTUSER
+ 	select DEBUG_FS
+ 	select CONFIGFS_FS
+ 	select IRQ_WORK
++	select GPIO_PSEUDO
+ 	help
+ 	  Say Y here to enable the configurable, configfs-based virtual GPIO
+ 	  consumer testing driver.
+diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
+index e89f299f2140..a825edc6fbc5 100644
+--- a/drivers/gpio/gpio-virtuser.c
++++ b/drivers/gpio/gpio-virtuser.c
+@@ -11,7 +11,6 @@
+ #include <linux/atomic.h>
+ #include <linux/bitmap.h>
+ #include <linux/cleanup.h>
+-#include <linux/completion.h>
+ #include <linux/configfs.h>
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
+@@ -37,6 +36,8 @@
+ #include <linux/string_helpers.h>
+ #include <linux/types.h>
  
- endmenu
- 
-+# This symbol is selected by some pseudo gpio device implementations
-+config GPIO_PSEUDO
-+	bool
-+
- menu "Virtual GPIO drivers"
- 
- config GPIO_AGGREGATOR
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index af3ba4d81b58..5eb54147a1ab 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -136,6 +136,7 @@ obj-$(CONFIG_GPIO_PISOSR)		+= gpio-pisosr.o
- obj-$(CONFIG_GPIO_PL061)		+= gpio-pl061.o
- obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+= gpio-pmic-eic-sprd.o
- obj-$(CONFIG_GPIO_POLARFIRE_SOC)	+= gpio-mpfs.o
-+obj-$(CONFIG_GPIO_PSEUDO)		+= gpio-pseudo.o
- obj-$(CONFIG_GPIO_PXA)			+= gpio-pxa.o
- obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
- obj-$(CONFIG_GPIO_RC5T583)		+= gpio-rc5t583.o
-diff --git a/drivers/gpio/gpio-pseudo.c b/drivers/gpio/gpio-pseudo.c
-new file mode 100644
-index 000000000000..6e3da05440d8
---- /dev/null
-+++ b/drivers/gpio/gpio-pseudo.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Helper functions for Pseudo GPIOs
-+ *
-+ * Copyright 2025 Canonical Ltd.
-+ */
-+
 +#include "gpio-pseudo.h"
 +
-+static int pseudo_gpio_notifier_call(struct notifier_block *nb,
-+				     unsigned long action,
-+				     void *data)
-+{
-+	struct pseudo_gpio_common *common;
-+	struct device *dev = data;
-+
-+	common = container_of(nb, struct pseudo_gpio_common, bus_notifier);
-+	if (!device_match_name(dev, common->name))
-+		return NOTIFY_DONE;
-+
-+	switch (action) {
-+	case BUS_NOTIFY_BOUND_DRIVER:
-+		common->driver_bound = true;
-+		break;
-+	case BUS_NOTIFY_DRIVER_NOT_BOUND:
-+		common->driver_bound = false;
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	complete(&common->probe_completion);
-+	return NOTIFY_OK;
-+}
-+
-+void pseudo_gpio_init(struct pseudo_gpio_common *common)
-+{
-+	memset(common, 0, sizeof(*common));
-+	init_completion(&common->probe_completion);
-+	common->bus_notifier.notifier_call = pseudo_gpio_notifier_call;
-+}
-+EXPORT_SYMBOL_GPL(pseudo_gpio_init);
-+
-+int pseudo_gpio_register(struct pseudo_gpio_common *common,
-+			 struct platform_device_info *pdevinfo)
-+{
-+	struct platform_device *pdev;
-+	char *name;
-+
-+	name = kasprintf(GFP_KERNEL, "%s.%u", pdevinfo->name, pdevinfo->id);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	common->driver_bound = false;
-+	common->name = name;
-+	reinit_completion(&common->probe_completion);
-+	bus_register_notifier(&platform_bus_type, &common->bus_notifier);
-+
-+	pdev = platform_device_register_full(pdevinfo);
-+	if (IS_ERR(pdev)) {
-+		bus_unregister_notifier(&platform_bus_type, &common->bus_notifier);
-+		kfree(common->name);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	wait_for_completion(&common->probe_completion);
-+	bus_unregister_notifier(&platform_bus_type, &common->bus_notifier);
-+
-+	if (!common->driver_bound) {
-+		platform_device_unregister(pdev);
-+		kfree(common->name);
-+		return -ENXIO;
-+	}
-+
-+	common->pdev = pdev;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pseudo_gpio_register);
-+
-+void pseudo_gpio_unregister(struct pseudo_gpio_common *common)
-+{
-+	platform_device_unregister(common->pdev);
-+	kfree(common->name);
-+	common->pdev = NULL;
-+}
-+EXPORT_SYMBOL_GPL(pseudo_gpio_unregister);
-diff --git a/drivers/gpio/gpio-pseudo.h b/drivers/gpio/gpio-pseudo.h
-new file mode 100644
-index 000000000000..093112b6cce5
---- /dev/null
-+++ b/drivers/gpio/gpio-pseudo.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef GPIO_PSEUDO_H
-+#define GPIO_PSEUDO_H
-+
-+#include <linux/completion.h>
-+#include <linux/platform_device.h>
-+
-+struct pseudo_gpio_common {
-+	struct platform_device *pdev;
-+	const char *name;
-+
-+	/* Synchronize with probe */
-+	struct notifier_block bus_notifier;
-+	struct completion probe_completion;
-+	bool driver_bound;
-+};
-+
-+void pseudo_gpio_init(struct pseudo_gpio_common *common);
-+int pseudo_gpio_register(struct pseudo_gpio_common *common,
-+			 struct platform_device_info *pdevinfo);
-+void pseudo_gpio_unregister(struct pseudo_gpio_common *common);
-+
-+#endif /* GPIO_PSEUDO_H */
+ #define GPIO_VIRTUSER_NAME_BUF_LEN 32
+ 
+ static DEFINE_IDA(gpio_virtuser_ida);
+@@ -973,49 +974,17 @@ static struct platform_driver gpio_virtuser_driver = {
+ };
+ 
+ struct gpio_virtuser_device {
++	struct pseudo_gpio_common common;
+ 	struct config_group group;
+ 
+-	struct platform_device *pdev;
+ 	int id;
+ 	struct mutex lock;
+ 
+-	struct notifier_block bus_notifier;
+-	struct completion probe_completion;
+-	bool driver_bound;
+-
+ 	struct gpiod_lookup_table *lookup_table;
+ 
+ 	struct list_head lookup_list;
+ };
+ 
+-static int gpio_virtuser_bus_notifier_call(struct notifier_block *nb,
+-					   unsigned long action, void *data)
+-{
+-	struct gpio_virtuser_device *vdev;
+-	struct device *dev = data;
+-	char devname[32];
+-
+-	vdev = container_of(nb, struct gpio_virtuser_device, bus_notifier);
+-	snprintf(devname, sizeof(devname), "gpio-virtuser.%d", vdev->id);
+-
+-	if (!device_match_name(dev, devname))
+-		return NOTIFY_DONE;
+-
+-	switch (action) {
+-	case BUS_NOTIFY_BOUND_DRIVER:
+-		vdev->driver_bound = true;
+-		break;
+-	case BUS_NOTIFY_DRIVER_NOT_BOUND:
+-		vdev->driver_bound = false;
+-		break;
+-	default:
+-		return NOTIFY_DONE;
+-	}
+-
+-	complete(&vdev->probe_completion);
+-	return NOTIFY_OK;
+-}
+-
+ static struct gpio_virtuser_device *
+ to_gpio_virtuser_device(struct config_item *item)
+ {
+@@ -1029,7 +998,7 @@ gpio_virtuser_device_is_live(struct gpio_virtuser_device *dev)
+ {
+ 	lockdep_assert_held(&dev->lock);
+ 
+-	return !!dev->pdev;
++	return !!dev->common.pdev;
+ }
+ 
+ struct gpio_virtuser_lookup {
+@@ -1369,7 +1338,7 @@ gpio_virtuser_device_config_dev_name_show(struct config_item *item,
+ 
+ 	guard(mutex)(&dev->lock);
+ 
+-	pdev = dev->pdev;
++	pdev = dev->common.pdev;
+ 	if (pdev)
+ 		return sprintf(page, "%s\n", dev_name(&pdev->dev));
+ 
+@@ -1478,7 +1447,6 @@ gpio_virtuser_device_activate(struct gpio_virtuser_device *dev)
+ {
+ 	struct platform_device_info pdevinfo;
+ 	struct fwnode_handle *swnode;
+-	struct platform_device *pdev;
+ 	int ret;
+ 
+ 	lockdep_assert_held(&dev->lock);
+@@ -1499,31 +1467,12 @@ gpio_virtuser_device_activate(struct gpio_virtuser_device *dev)
+ 	if (ret)
+ 		goto err_remove_swnode;
+ 
+-	reinit_completion(&dev->probe_completion);
+-	dev->driver_bound = false;
+-	bus_register_notifier(&platform_bus_type, &dev->bus_notifier);
+-
+-	pdev = platform_device_register_full(&pdevinfo);
+-	if (IS_ERR(pdev)) {
+-		ret = PTR_ERR(pdev);
+-		bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
++	ret = pseudo_gpio_register(&dev->common, &pdevinfo);
++	if (ret)
+ 		goto err_remove_lookup_table;
+-	}
+-
+-	wait_for_completion(&dev->probe_completion);
+-	bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
+-
+-	if (!dev->driver_bound) {
+-		ret = -ENXIO;
+-		goto err_unregister_pdev;
+-	}
+-
+-	dev->pdev = pdev;
+ 
+ 	return 0;
+ 
+-err_unregister_pdev:
+-	platform_device_unregister(pdev);
+ err_remove_lookup_table:
+ 	gpio_virtuser_remove_lookup_table(dev);
+ err_remove_swnode:
+@@ -1539,11 +1488,10 @@ gpio_virtuser_device_deactivate(struct gpio_virtuser_device *dev)
+ 
+ 	lockdep_assert_held(&dev->lock);
+ 
+-	swnode = dev_fwnode(&dev->pdev->dev);
+-	platform_device_unregister(dev->pdev);
++	swnode = dev_fwnode(&dev->common.pdev->dev);
++	pseudo_gpio_unregister(&dev->common);
+ 	gpio_virtuser_remove_lookup_table(dev);
+ 	fwnode_remove_software_node(swnode);
+-	dev->pdev = NULL;
+ }
+ 
+ static void
+@@ -1772,8 +1720,7 @@ gpio_virtuser_config_make_device_group(struct config_group *group,
+ 				    &gpio_virtuser_device_config_group_type);
+ 	mutex_init(&dev->lock);
+ 	INIT_LIST_HEAD(&dev->lookup_list);
+-	dev->bus_notifier.notifier_call = gpio_virtuser_bus_notifier_call;
+-	init_completion(&dev->probe_completion);
++	pseudo_gpio_init(&dev->common);
+ 
+ 	return &no_free_ptr(dev)->group;
+ }
 -- 
 2.45.2
 
