@@ -1,121 +1,128 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A916216E1B;
-	Mon, 17 Feb 2025 10:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16BB12163B6;
+	Mon, 17 Feb 2025 10:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739789661; cv=none; b=gr6u8bNfHx9DB9e1sPZ7Od7CGmOHOADiTT/PktY7OtuB3/whldSfn36nun94okBQnJUCM/hCPx9lEiaO9B3ndBektipzjWIyCjwBFaknumWTipVHHqENLp/+5m2agcF0bbiwdG/9MgcR/qs3NnXTT1g4R/AClTeyT3yH5o/TnNI=
+	t=1739789679; cv=none; b=FAVSrpQgVtR6OCKNlSArhP6nuVjrJ6uWGNdpEq2xuCrpyMVcpnbpWOGkoCDz7mau19FvKOBg/9BT32azBbutlBX1qeKHCS2CTZjtTC0siyysIKoCW6k/SS7vMkOLP0L78xQjx9t7RvhMcZMbqiEEJypZEImFKq/e7zN1bwr1TAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739789661; c=relaxed/simple;
-	bh=FLV6psWylR8njShJdM0jNzmDsgfHMmGF37Pv4HRIQNA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S3k3VeY/s4DqCdRItp2D7bjH1w0EaVZiJ3mePwl/tP0EWXHaiMbJJpagd+q/hoLIk1JrCg0SPMYXL5xpJvKXwpwKy1Qpc/hfSJtymbmrh4wdIkA0tcpy1IGtyAWOjEnpqvtoGdrUTkYakO3AymEhjmc139dbolb1fWtvAnKfWCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bcb/K9dS; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bcb/K9dS"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abb9709b5b5so178703366b.2;
-        Mon, 17 Feb 2025 02:54:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739789658; x=1740394458; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jcji6zvbpo9vFZ47dnV7L58ocmgj3T9wLoXyVIiguBw=;
-        b=Bcb/K9dSAOBU2Bt6da33GhOORErdX1QPfDAqAtpx2lxX6UoxEePGO9yGOPDEtxF9Dv
-         iFgLu/S89+gJJeIeSRobHZCY2fC1Xf+uWtuuwk+en4S4+mivzxXeKEw2BL27+h7awTtJ
-         3vdT8220rDGpYc/ZRvbplS+5GdpT4jp46Xj1fy0Z9FYaN1Yu4iq6vYb3zmKC6uo4eyGR
-         lvoTeJMye/mvbCH5iKrlDwp/yhTYdl0ypU1nz7Zju7CXTpnumhGqbDM7DQrieewVHkaM
-         z0zmWM7wDjuAXhpHJCOhKAVyQCyVhlzDAEO8kMHoRdPDyoIpWnspueLtJ6clG0V4Itsd
-         tg0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739789658; x=1740394458;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jcji6zvbpo9vFZ47dnV7L58ocmgj3T9wLoXyVIiguBw=;
-        b=wcW/DTvI9VBnoKtqQz76mlwj07OC2oqmWX5YmEGpcxitfPBsT2OtVhDKDrZY3tIA3A
-         gIcIQ8bh20EWYlK7Fe1xRWpNFONoAJRq/M2Wh4SotHOV+h4lMsYd7msgfv10dxjKnkVY
-         SiNG6tsboe9FKeLUr8u7+jNvlXvX9ApfNtCNh0MEqtHiWhchPUWx82aLlF7fXw0EPyUQ
-         WAj9RUCR89a8uBfYtz/D938wlPmrH3g1Zmb2ctegL9FdUjekM/2UDcDY6PdXZQnA5jrg
-         a8L8nMhlMq6JjS1DVA4nLmFEG/CINbKVO8kzIJ7lWMCV7nvmKcUCD5gNHTyrqN0nEcaz
-         76bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlGaW/leURF8iFE39aAths7DEztTUaD7fDjncAOj0kzUE1dnZFbi2BH7hVzwL4Zw4/bHqmi3rBcg4q7/22@vger.kernel.org, AJvYcCWG83wwU/rtEYVkg8g+5u6eYgESdKBgisNryzcDGtWMn+KOQTIuhW9v6apmPVsToYD1JRNUUNVKv5yBzg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YycUXj/3Z4Bf/VxYPWMkLbdALjdfxMTZtiRgg/qTeYDcn+cwlqv
-	f1eaHd3/+zvtwi/ur6lQemYln5gcsAtExurw3kpfDsieHeWD0b8U7UD1jlbFywnA9hme2+Fifxi
-	fZG8sX4frT7DIxtUirbEXnG5et+9eh+iKK08=
-X-Gm-Gg: ASbGncucO5Cqth6jAR/vUjy1ngLLfcrco53RseMEvmPtqOCfBFUGo7pKloScxeOnEtW
-	8RXi0ssly1IOmJJ6XJ0Z640iupBZ7SnhUHK62jLlQrxFaxUyUPOAH+BFaSru8Il+Aai/WUojcrg
-	==
-X-Google-Smtp-Source: AGHT+IEC+NbT4E5MWrj2goW4uS/lXva/MPJztFSzDofNfjfg+EbIiSanisxYd8OGyCYJ8gseWW6pONvqcwNmCTUpeIU=
-X-Received: by 2002:a17:907:9716:b0:aba:519b:f7c5 with SMTP id
- a640c23a62f3a-abb70c412b1mr1014656966b.4.1739789657615; Mon, 17 Feb 2025
- 02:54:17 -0800 (PST)
+	s=arc-20240116; t=1739789679; c=relaxed/simple;
+	bh=aZTht+TSWw8f5DrTjGvycp3e+AZMQiHqsfpC/jdp7d4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gK5ZjrxbwBEz3IZX4vR8vZpNMoRmkglT6ZCSmfCb9sdn1OAoAbymE9b8FaOrjWZncFRhDkd2qD8HO/Y7226lLZXIwddX0uCXyeH61TDtzAPaoWkbOVdyODhIo2FyeoVasEKxZn5Lu4262MFnKge3inDJI3AIQq/wkzGt44OeYG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: PD6Kg1XiQ3u0mN2pRoz2YA==
+X-CSE-MsgGUID: O1J+Ij7FQKiQapk+JOdWEg==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Feb 2025 19:54:30 +0900
+Received: from superbuilder.administration.lan (unknown [10.226.93.254])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id E44BB428055E;
+	Mon, 17 Feb 2025 19:54:25 +0900 (JST)
+From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+To: thierry.bultel@linatsea.fr,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 02/13] dt-bindings: clock: Add cpg for the Renesas RZ/T2H SoC
+Date: Mon, 17 Feb 2025 11:52:03 +0100
+Message-ID: <20250217105354.551788-3-thierry.bultel.yh@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250217105354.551788-1-thierry.bultel.yh@bp.renesas.com>
+References: <20250217105354.551788-1-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250216170748.2258-1-linmag7@gmail.com> <20250216170748.2258-2-linmag7@gmail.com>
- <20250216171741.GG1977892@ZenIV>
-In-Reply-To: <20250216171741.GG1977892@ZenIV>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Mon, 17 Feb 2025 11:54:05 +0100
-X-Gm-Features: AWEUYZkJyJbp5XaLg_moRE3httrT6T5YfsSFP-_B8ALCnIWt5co6aHHP9Dew2H0
-Message-ID: <CA+=Fv5TwwXiAdqUuUOPnwHTWz15Bj2UsGP=7+SQRM0MDXKnopg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] alpha: Fix pte_swp_exclusive on alpha
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: richard.henderson@linaro.org, mattst88@gmail.com, 
-	glaubitz@physik.fu-berlin.de, ink@unseen.parts, kees@kernel.org, 
-	arnd@arndb.de, linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Document RZ/T2H (a.k.a r9a09g077) cpg-mssr (Clock Pulse Generator) binding.
 
-Making pte_swp_exclusive return bool is a neat solution! As Al pointed out,
-it will better reflect how pte_swp_exclusive is actually used in the code.
-I assume we would want this for all architectures implementing
-pte_swp_exclusive? This implies that this change will have a wider
-impact and not be an alpha specific fix.
-I can prepare and post a v2 of this patch using this approach.
+Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+---
+ .../bindings/clock/renesas,cpg-mssr.yaml      |  1 +
+ .../dt-bindings/clock/r9a09g077-cpg-mssr.h    | 49 +++++++++++++++++++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r9a09g077-cpg-mssr.h
 
-Magnus
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+index 77ce3615c65a..5649dee7178a 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+@@ -52,6 +52,7 @@ properties:
+       - renesas,r8a779f0-cpg-mssr # R-Car S4-8
+       - renesas,r8a779g0-cpg-mssr # R-Car V4H
+       - renesas,r8a779h0-cpg-mssr # R-Car V4M
++      - renesas,r9a09g077-cpg-mssr # RZ/T2H
+ 
+   reg:
+     maxItems: 1
+diff --git a/include/dt-bindings/clock/r9a09g077-cpg-mssr.h b/include/dt-bindings/clock/r9a09g077-cpg-mssr.h
+new file mode 100644
+index 000000000000..27c9cdcdf7c8
+--- /dev/null
++++ b/include/dt-bindings/clock/r9a09g077-cpg-mssr.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++ *
++ * Copyright (C) 2025 Renesas Electronics Corp.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_RENESAS_R9A09G077_CPG_H__
++#define __DT_BINDINGS_CLOCK_RENESAS_R9A09G077_CPG_H__
++
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++
++/* R9A09G077 CPG Core Clocks */
++#define R9A09G077_CA55C0		0
++#define R9A09G077_CA55C1		1
++#define R9A09G077_CA55C2		2
++#define R9A09G077_CA55C3		3
++#define R9A09G077_SDHIHS		4
++#define R9A09G077_CLK_PLL1_ETH_PHY	5
++#define R9A09G077_CLK_OSC_ETH_PHY	6
++#define R9A09G077_CLK_ETHPHY		7
++#define R9A09G077_PCLKAH		8
++#define R9A09G077_PCLKAM		9
++#define R9A09G077_PCLKAL		10
++#define R9A09G077_CLK_SEL_ETH_PHY	11
++#define R9A09G077_DFI			12
++#define R9A09G077_PCLKH			13
++#define R9A09G077_PCLKM			14
++#define R9A09G077_PCLKL			15
++#define R9A09G077_PCLKGPTL		16
++#define R9A09G077_PCLKSHOST		17
++#define R9A09G077_PCLKRTC		18
++#define R9A09G077_USB			19
++#define R9A09G077_SPI0			20
++#define R9A09G077_SPI1			21
++#define R9A09G077_SPI2			22
++#define R9A09G077_SPI3			23
++#define R9A09G077_ETCLKA		24
++#define R9A09G077_ETCLKB		25
++#define R9A09G077_ETCLKC		26
++#define R9A09G077_ETCLKD		27
++#define R9A09G077_ETCLKE		28
++#define R9A09G077_ETHCLKE		29
++#define R9A09G077_ETHCLK_EXTAL		30
++#define R9A09G077_ETH_REFCLK		31
++#define R9A09G077_LCDC_CLKA		32
++#define R9A09G077_LCDC_CLKP		33
++#define R9A09G077_CA55			34
++#define R9A09G077_LCDC_CLKD		35
++
++#endif /* __DT_BINDINGS_CLOCK_RENESAS_R9A09G077_CPG_H__ */
+-- 
+2.43.0
 
-On Sun, Feb 16, 2025 at 6:17=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> w=
-rote:
->
-> On Sun, Feb 16, 2025 at 06:04:53PM +0100, Magnus Lindholm wrote:
-> > Function pte_swp_exclusive() checks if _PAGE_SWP_EXCLUSIVE bit is set i=
-n
-> > PTE but returns lower 32-bits only. Shift bits right by 32 to return up=
-per
-> > 32-bits of PTE which contain the _PAGE_SWP_EXCLUSIVE bit. On alpha this=
- is
-> > bit 39 but on most other architectures this bit already resides somewhe=
-re
-> > in the first 32-bits and hence a shift is not necessary on those archs.
->
-> Just make it return bool and be done with that - all users are either
-> if (pte_swp_exclusive(...)) or if (!pte_swp_exclusive(...)) or assignment=
-s
-> to bool variable.
->
-> No need to shift anything - compiler probably will figure out that
->         if ((int)((x & (1UL<<39)>>32)))
-> is equivalent to
->         if (x & (1UL<<39))
-> but why bother with such convolutions in the first place?
->
-> Seriously, just make it
->
-> bool pte_swp_exclusive(pte_t pte)
-> {
->         return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
-> }
->
-> and that's it - conversion from arithmetical types to bool will do the ri=
-ght thing.
