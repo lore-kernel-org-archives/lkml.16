@@ -1,74 +1,75 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AD9232378
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F54187858
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 19:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739822251; cv=none; b=gjBvIJKdHlrdhGvVsj8FozJfoDzwdAFJ2oNxjcUJ30IU651v1BroD2bdgtoKe3B4L95ZEz5LevPr+P8+HV/ANg+hbCzEbPs+27tecWANmbn8azkQZhjrZhGiG2M+cpdUGLZ+GwHNcJkHOtuAxJ0glQPrqXVc3eDnmuPwkCXJwY8=
+	t=1739822305; cv=none; b=cimTCI8w/Uhg3HXJCOnrd1e9YiCBJ+NMMegKDSvMQRWmf1ReFn3efyYEGqacOo0dHfs17GP4C3ozxMPs9QYjdEfcOob+6IqshGUn6jyC3Vojh1WVJxcl0j8MgX3l7F1EfrIX5ZSWCuXx+01J4YNYffSuyEy/P4sLfUKqgwPokyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739822251; c=relaxed/simple;
-	bh=uxosyCl70LpiSt1WhJu3o8EZgk1aMrkeBZvPkx2TuyQ=;
+	s=arc-20240116; t=1739822305; c=relaxed/simple;
+	bh=uaKoGsnASt/b7lakAj7suu8kYLHtfanSP9LWcSikxR0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJyDcIV+8qCwuru+FS710RHPEbhkOcWd4zoyPaAGzlm2vHbbvCkiSTCzJk0QdZ94NvlOhPgkT5tY8AhNA3/p6+Wkj7sOgXPVEBJ57LgxzBG5MVbkoi8KhQv3GwES2PFzXv/AtN47t4lxY2aNWBp7DXAV+fVrOLI8TshEhR989FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h9YGrElv; arc=none smtp.client-ip=209.85.208.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=SxTyDKzAI+khCSxFm0s3EEu8u+C7+U8G6RxeWmN5ANoN/e8C6iSSY/kxVWLolW/Rl4l1K4niUHvlZeSfURhmFVueMjqdJC3TzOhDSdi66+zNLTlsFu8RV4KnuvqDbMmKTBNcy8qC/G+3yul7iu+LOnSH5/Zc3zzZ0f+vD8kS78o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WCFwr28u; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h9YGrElv"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30761be8fcfso46014051fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:57:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WCFwr28u"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5452c2805bcso3504512e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 11:58:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739822248; x=1740427048; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739822302; x=1740427102; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xMGI211LrxE7ViIhzCm1kjlvh1GVYdKtuIIj0ObyhHo=;
-        b=h9YGrElv3RhlZn7j45I/L2TfFtufsmqzf8Gknr7PRjUCjpUDn+fYcXWZB/iWbz8fHf
-         Q/qZHDelwu5PJ3I2jwSaPQ+IhEhPi9BT1JXZsZB/X0O1TcxdEJyUE2eofMVAwx/BZ/6j
-         fNBCkzlM9FbMAiAcDtZTS05g1FU58Q6ZM293r4Fu933mEoQvvmILgfGwGRDWqA96SBMU
-         SEkuuuYGwfFScs035tHbGBrVjS5eFFu/gnK7MmJXi6mHmdLtdnSVUEdS2P2DEmz62I3/
-         VB99XHQJhN923r/hqr6R4Ib2PC437/M5sttKuEVUmHZt8XZnI3IF1mVEcaStCTP7EiJp
-         eHSA==
+        bh=+eM01ELy6RFiGkjcxOpb1cojVzPpVE9t9t3LF3deNmc=;
+        b=WCFwr28uaC77Ol847StJbwqNnjk2Mj7VUsk+ABqm08dJImK4Ov/NgTsCrWzKe92pN7
+         laq3nBhxYPDT+gDGLz+wATOS4V+LzozLroIm9ydMxbK8JDRemPxxw80KRAu6XXC0Y0N+
+         Oj/vcyiFB1hhiZS2NUPgbe3qUfg909qyzMDMOohSdYvNFGdrIjsP7TNjp2rEoWG16vVI
+         8alkwMcVq83kbcwZzjtOBH22CMW3/IrQe1i0EU635bWKdKGsF4cRNMIGH6mg+C+aYoN0
+         1K0cAMTLfulciV0FogWsvwr+lVk22zMWKhvZzzPKU3zp8NcH3ZxOosB2Kp8mTpRFIWop
+         Dr/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739822248; x=1740427048;
+        d=1e100.net; s=20230601; t=1739822302; x=1740427102;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xMGI211LrxE7ViIhzCm1kjlvh1GVYdKtuIIj0ObyhHo=;
-        b=r4Gtbmrcp/tdCiLlx0AJ5aerF9e4Z4PTT9MpOyt2LUt4tvBwIv+E9rmgrTQ3chBWUS
-         KUYqGEN7y0bKRforXHAoYGpd655xrNcyWhnbgJ7NXPcLhoH6egota0+3faxBA+E2RNxY
-         6SvWYhpF1VRhnkPjybqJ1I0yfsobjPzR9YxcQVUtSgAGHxNTvyhj4ykRYHpVATrKzi1G
-         0DJmw/4ZTuXb1noQ6oH+IB2gLz/sgrTTSt5CetGabJc1fQUUrEgaBLQImkGQTkm7jn7E
-         zaTs3y1INhvMiY78Ldt4YL6+HWHPhzVxN9P56kh6Km2q0hoMf1QzmCEmIUnzX/rvTkVA
-         txnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWz7/Hm175BzXaa8QoTKvxnk7yR/BwkIogDNOR0qkxSbVnBiIyYnWnYhz+pmvKX83t0e5ULdFxGwuyIsgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0puw8JLNFuX4140oGpfVciHd6ivna3P8t1BLe8qL5GDFZND71
-	o5fYJ/IJv48cs5KzSC+v9vsv+FwFhFubhH4ayXoSb9umtk9Nvso6ZKu2IsqgO4w=
-X-Gm-Gg: ASbGncsjUBH+XDmBKya+909+Nku72efoZPT2J8NCQqT8oEbTO+q1AWB+qpN9hKRmfb7
-	s4z7SBILUvFxM8C4nrnnN6w4u+I86CFdo4IC98jJJikqglhhO/CR4wpLehVWFV8/vGrsuo3VYK2
-	aLO+qYHXDkVBV5W9glf3C3T4tw2qpY9Mkf5kZIli9ZBn27hGpaK7rGvKn6QcoyKP/j+3/Vz/Mu8
-	eJjL5ePKoqxPw831xXbB4NEomBMnvZc0n7vln7Wb72WFzW2nwBbxchawQswCdUuQnByG484mtdv
-	j3fQvJfgtZQhVWTSGpCqd5r1y4vCFMvoHztG5U+Q/R7oFvpGq0ux651LoE95GMPk0dE9rQ4=
-X-Google-Smtp-Source: AGHT+IHWktoREaaIkncp+ihbbZRuJV4rft7CykmfmlbEHdRBo5ws85YTHgTILXgtZzP9D8cAmBMh+Q==
-X-Received: by 2002:a05:6512:108a:b0:545:d72:95f0 with SMTP id 2adb3069b0e04-5452fe5bd70mr4139939e87.24.1739822247806;
-        Mon, 17 Feb 2025 11:57:27 -0800 (PST)
+        bh=+eM01ELy6RFiGkjcxOpb1cojVzPpVE9t9t3LF3deNmc=;
+        b=KoQSnpChjW/4PQxOaMfDdnNOnPDXnXUCMmZ5G563dghJBrmwAn2wNy1b5BdiCzJt42
+         z84bNxQGN8fi21cS3UVJa0pUQcFE5kossbhxErjzw9feqdG0xMBY2f8Bi2SArCdQfgj3
+         sKdcMaF3vXEtJUirvuVCIGgnCliqpRInLId3CxzysrDNZoTUtxXkshzuheRqTiOkr014
+         us6iPiPPr9yg+unp9cpKvZcbeE4T7v/TlzDt2dIB/7eFiw/YssaxD84KS7CIp5y5uXdH
+         lfKjtRcTqSdn11XYySQWCLattxs1FI9ROJlndHQuIdEG+LWEidCR12ebjdkIJ+Pi0DI0
+         7dhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeiNZRowLcawTQRXVomDqwmfoP8yvVfakNhAiiKeca439FDP6Rrkh2QhaJ+qSKb0ni/T22yPTZf/LiBY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6CXsnTIE1UHfxANgOylc6vTTUqR2cN5XK4EFS1mYgz83eaOQ0
+	EaWDb0AurMY5Ek0g6sqxkyO+9gxtUBA9aW9EBunRnJ2vfjKHObMZOSD3VRxb1Q0=
+X-Gm-Gg: ASbGncu0wXWQbPzHr933DcUg1buO6Jg95PKTqaCyLKHDGYE5gXH5To3KVNK+CP1wmmS
+	ptrgyUwr97BKs817Qcx4m0UYyZ6uRXhCMdhj3NeylIQ1KpxkjBDkAOeZ1DVd+Wjv/GHsY01qxLe
+	3bV8dLnqi/89Im8Ire5dtgfCXNpxnsBoc+ayxNvaxVcR7mcs342eFzjF8qEf/AzMPu5qqEIO39L
+	uX57WGR4fqVHeO5vw/AZme4BLOGzeSTp7xWBNajmw6C2ATmF4My7nDFGN4lhIChnYZnVoYp/j6P
+	U0ySkaUVVGf95awCU8g/OLLHBfOmzVE7ID2AG8QTKmtctcSZJ9SsRF036wipLXxSa3yqr0U=
+X-Google-Smtp-Source: AGHT+IEbKDaSdPLHIMQ9eXv6L5J9v69avK8N05Xy7KhfzTpN1ljeSBVhl0WhGYyS/jPkWJgZWNtb/A==
+X-Received: by 2002:a05:6512:2823:b0:545:4cb:b25d with SMTP id 2adb3069b0e04-5452fe37326mr3210895e87.13.1739822302051;
+        Mon, 17 Feb 2025 11:58:22 -0800 (PST)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54530993e36sm1035359e87.3.2025.02.17.11.57.25
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452b496aafsm1288648e87.29.2025.02.17.11.58.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 11:57:26 -0800 (PST)
-Date: Mon, 17 Feb 2025 21:57:23 +0200
+        Mon, 17 Feb 2025 11:58:20 -0800 (PST)
+Date: Mon, 17 Feb 2025 21:58:18 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jun Nie <jun.nie@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 12/15] drm/msm/dpu: blend pipes per mixer pairs config
-Message-ID: <qrwo5jtdj64vu27jn3v2wwyuxu25bjqrybj5jjfc5ifiotgzit@6vx2km46j7b3>
-References: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org>
- <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-12-c11402574367@linaro.org>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Vishal Sagar <vishal.sagar@amd.com>, 
+	Anatoliy Klymenko <anatoliy.klymenko@amd.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <lzzp5cgsh3qegxtctttys3tvtr2j2ciurm2jnmmm3d6cgjei5z@rzu4p5afxf6f>
+References: <20250212-xilinx-formats-v3-0-90d0fe106995@ideasonboard.com>
+ <20250212-xilinx-formats-v3-3-90d0fe106995@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,87 +78,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-12-c11402574367@linaro.org>
+In-Reply-To: <20250212-xilinx-formats-v3-3-90d0fe106995@ideasonboard.com>
 
-On Mon, Feb 17, 2025 at 10:16:01PM +0800, Jun Nie wrote:
-> Currently, only 2 pipes are used at most for a plane. A stage structure
-> describes the configuration for a mixer pair. So only one stage is needed
-> for current usage cases. The quad-pipe case will be added in future and 2
-> stages are used in the case. So extend the stage to an array with array size
-> STAGES_PER_PLANE and blend pipes per mixer pair with configuration in the
-> stage structure.
+On Wed, Feb 12, 2025 at 04:56:07PM +0200, Tomi Valkeinen wrote:
+> Add greyscale Y8 format.
 > 
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 > ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 45 +++++++++++++++++++----------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h |  1 +
->  2 files changed, 30 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index 81474823e6799132db71c9712046d359e3535d90..50acaf25a3ffcc94354faaa816fe74566784844c 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -401,7 +401,7 @@ static void _dpu_crtc_blend_setup_pipe(struct drm_crtc *crtc,
->  				       struct dpu_hw_stage_cfg *stage_cfg
->  				      )
->  {
-> -	uint32_t lm_idx;
-> +	uint32_t lm_idx, lm_in_pair;
->  	enum dpu_sspp sspp_idx;
->  	struct drm_plane_state *state;
->  
-> @@ -426,7 +426,8 @@ static void _dpu_crtc_blend_setup_pipe(struct drm_crtc *crtc,
->  	stage_cfg->multirect_index[stage][stage_idx] = pipe->multirect_index;
->  
->  	/* blend config update */
-> -	for (lm_idx = 0; lm_idx < num_mixers; lm_idx++)
-> +	lm_in_pair = num_mixers > 1 ? 2 : 1;
-> +	for (lm_idx = 0; lm_idx < lm_in_pair; lm_idx++)
->  		mixer[lm_idx].lm_ctl->ops.update_pending_flush_sspp(mixer[lm_idx].lm_ctl, sspp_idx);
+>  drivers/gpu/drm/drm_fourcc.c  | 1 +
+>  include/uapi/drm/drm_fourcc.h | 3 +++
+>  2 files changed, 4 insertions(+)
 
-I almost missed this. Why is this necessary?
+My 2c is that it's useful to have YUV (well, Y-only) grayscale formats.
 
->  }
->  
 
-[...]
+Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-> @@ -535,8 +543,13 @@ static void _dpu_crtc_blend_setup(struct drm_crtc *crtc)
->  			mixer[i].mixer_op_mode,
->  			ctl->idx - CTL_0);
->  
-> +		/*
-> +		 * call dpu_hw_ctl_setup_blendstage() to blend layers per stage cfg.
-> +		 * There are 4 mixers at most. The first 2 are for the left half, and
-> +		 * the later 2 are for the right half.
-> +		 */
-
-The comment is invalid until you introduce quad pipe, currently there
-are 2 mixers at most. However you can just say something like 'stage
-data is shared between PIPES_PER_STAGE pipes'.
-
->  		ctl->ops.setup_blendstage(ctl, mixer[i].hw_lm->idx,
-> -			&stage_cfg);
-> +			&stage_cfg[i / PIPES_PER_STAGE]);
->  	}
->  }
->  
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> index 5f010d36672cc6440c69779908b315aab285eaf0..64e220987be5682f26d02074505c5474a547a814 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> @@ -34,6 +34,7 @@
->  #define DPU_MAX_PLANES			4
->  #endif
->  
-> +#define STAGES_PER_PLANE		2
->  #define PIPES_PER_PLANE			2
->  #define PIPES_PER_STAGE			2
->  #ifndef DPU_MAX_DE_CURVES
-> 
-> -- 
-> 2.34.1
-> 
 
 -- 
 With best wishes
