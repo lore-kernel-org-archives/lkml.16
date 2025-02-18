@@ -1,199 +1,85 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C4A262811
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 15:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA50722AE4E;
+	Tue, 18 Feb 2025 15:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739893089; cv=none; b=AesswdcSxcxeHbO9zl4q3xs0ibRPCljrAy/7Cjta608QkqornCru1CJYSOkqtgIU3VXDk+7gxn9BIXbxS4ZqJuvAkLrgZdrOEXCv2g01GMt/hWDZG8feOKBQc5w49HRzi0UwmB13Wdt61pvgHyZ2ThRCFx6QFFu8ZVl9pvla2Js=
+	t=1739893097; cv=none; b=OfY8VQicqL2caDx0HEaVnp4swgFKw9EvYuDhK8VChwZ4mTZ0vO8NB5feQcta0V4zcSg/duLc6OJZLalXOkXZsaczEKFK4NKYGSu45Xble2kbAz2eGkOmYSFV0VK+3CWLiDJ+du3YM+bm0Rntt2Ob6RTrDjPt1YkyLh5nPBX4yyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739893089; c=relaxed/simple;
-	bh=0aD6ufK/vC5tUbx+0/mu6k4fhbXKSczIRmW2JTUH1Vg=;
+	s=arc-20240116; t=1739893097; c=relaxed/simple;
+	bh=iDa2j8gYKzA+VuCfPgSgSD5Xf2DBFwZpDYLdLk9+2mc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Py+qp9rpsUWFCh4tdeTDGlWlZtFAJotmFXZImRxANXfUKw5svUb4IJGbeWd2+RoT1bi005A6w9uv1puW+d8KHHkrks3V6f0LGFOH5ovSqvXQf3W1sF0KKCFdDdkuMb2ouoaqla0lFaPp8w2U5xydSWr1A2yqmLzLR1sbMmx471A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nXqiVTDN; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=EfE7lE5jCIz10oPTEevjfJzZmh37XLz1hjOlUAtmMwmyxoIXwZfbaJeYKiSr3YJwa+1xp+8D/vIUfGdYdwMsajNtbfNdNhzS/eaR86vmuc5Bz7Wd14IHeQaHt4WuzMLfSNQuCeYbjVLehst0uWacOfR7IPmSakwkrjBs91VB4/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nS2Gd5Me; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nXqiVTDN"
-Date: Tue, 18 Feb 2025 21:07:31 +0530
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739893076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NhAs/+alc8iOs1QMRuJFdglVREAEu5m/W/RgQbql3+k=;
-	b=nXqiVTDNSQwRJUS6oQyCJjjCvqgFPeh581yPRfXMfaW6dEhwuEZ7resmRcaG6VyJ1fxAKA
-	osrk0LTmA16VdgqgyQy2GQrmMvGSOYpbUYWSWapsGIFzLsp5ybTIbZBTgZ1aHIjPhm7v4a
-	zYFrtiL5GrkI4CZJVnLcU00SHZ0FXEc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Jai Luthra <jai.luthra@linux.dev>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>, 
-	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-Cc: "mripard@kernel.org" <mripard@kernel.org>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, 
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "devarsht@ti.com" <devarsht@ti.com>, 
-	"vaishnav.a@ti.com" <vaishnav.a@ti.com>, "r-donadkar@ti.com" <r-donadkar@ti.com>, 
-	"u-kumar1@ti.com" <u-kumar1@ti.com>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjIgMS8yXSBkdC1iaW5kaW5nczog?=
- =?utf-8?Q?media?= =?utf-8?Q?=3A?= cdns,csi2rx.yaml: Add optional interrupts
- for cdns-csi2rx
-Message-ID: <swqtud4ohcsjjt4ofgrovsa5h7koriuvpmxb3hdemnndwems2a@nwiny4dvuzwg>
-X-PGP-Key: http://jailuthra.in/files/public-key.asc
-References: <20250217130013.2802293-1-y-abhilashchandra@ti.com>
- <20250217130013.2802293-2-y-abhilashchandra@ti.com>
- <m6ijg5colbev6lyhiobblecb4wlvwezpccibnso26gd3dadrfh@twgul4eel6hg>
- <ZQ0PR01MB13022FE965643879D8794733F2FAA@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nS2Gd5Me"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=x6cdc3EOFmuE/ocv+AEgGlvMbeb+bF1Ao362JvuWKD4=; b=nS2Gd5MeVkcl8dmpRFhJ/6Y1XE
+	xG5eGjx0BJFP+GmqXr7xKxx9sewQAeNTemWXsvm6jk4xDVoiJpWrjHFKErs/j00XJbqMxUZJWYC0x
+	d4PIC9ZMSkx4+9MyQieXJ/o6XOstjt4SmBKREv85D9JApvdDsM4pPF6htb4ZHysKKabU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tkPfb-00FKza-4y; Tue, 18 Feb 2025 16:37:59 +0100
+Date: Tue, 18 Feb 2025 16:37:59 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Tariq Toukan <ttoukan.linux@gmail.com>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <36ab1f42-b492-497f-a1dc-34631f594da6@lunn.ch>
+References: <Z6GCJY8G9EzASrwQ@kspp>
+ <4e556977-c7b9-4d37-b874-4f3d60d54429@embeddedor.com>
+ <8d06f07c-5bb4-473d-90af-5f57ce2b068f@gmail.com>
+ <7ce8d318-584f-42c2-b88a-2597acd67029@embeddedor.com>
+ <5f2ca37f-3f6d-44d2-9821-7d6b0655937d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ngdnlsgngwdiatpe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZQ0PR01MB13022FE965643879D8794733F2FAA@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <5f2ca37f-3f6d-44d2-9821-7d6b0655937d@gmail.com>
+
+On Tue, Feb 18, 2025 at 11:49:14AM +0200, Tariq Toukan wrote:
+> 
+> 
+> On 18/02/2025 10:14, Gustavo A. R. Silva wrote:
+> > Hi all,
+> > 
+> > Friendly ping: who can take this, please?
+> > 
+> > Thanks
+> > -- 
+> > Gustavo
+> > 
+> 
+> net-next maintainers, please pick it.
+> I provided the Reviewed-by tag.
+
+The alternative patch was not formally submitted, it is just embedded
+in the discussion. It needs posting as an actual patch for merging.
+
+    Andrew
+
+---
+pw-bot: cr
 
 
---ngdnlsgngwdiatpe
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjIgMS8yXSBkdC1iaW5kaW5nczog?=
- =?utf-8?Q?media?= =?utf-8?Q?=3A?= cdns,csi2rx.yaml: Add optional interrupts
- for cdns-csi2rx
-MIME-Version: 1.0
-
-On Tue, Feb 18, 2025 at 09:35:50AM +0000, Changhuang Liang wrote:
-> Hi Jai, Abhilash
->=20
-> > Hi Abhilash,
-> >=20
-> > On Mon, Feb 17, 2025 at 06:30:12PM +0530, Yemike Abhilash Chandra wrote:
-> > > The Cadence CSI2RX IP exposes 3 interrupts [0] 12.7 camera subsystem.
-> > > Enabling these interrupts will provide additional information about a
-> > > CSI packet or an individual frame. So, add support for optional
-> > > interrupts and interrupt-names properties.
-> > >
-> > > [0]: http://www.ti.com/lit/pdf/spruil1
-> > >
-> > > Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> > > ---
-> > >
-> > > Changes in v2:
-> > > - Address Krzysztof's review comment to remove flexibility while addi=
-ng
-> > >   interrupts.
-> > >
-> > >  .../devicetree/bindings/media/cdns,csi2rx.yaml         | 10
-> > ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
-> > > b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
-> > > index 2008a47c0580..f335429cbde9 100644
-> > > --- a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
-> > > @@ -24,6 +24,16 @@ properties:
-> > >    reg:
-> > >      maxItems: 1
-> > >
-> > > +  interrupts:
-> > > +    minItems: 3
-> > > +    maxItems: 3
-> > > +
-> > > +  interrupt-names:
-> > > +    items:
-> > > +      - const: info
-> > > +      - const: error
-> > > +      - const: monitor
-> > > +
-> >=20
-> > How many interrupt lines are actually exposed by the Cadence IP?
->=20
-> I only see that the Cadence IP exposes two interrupt lines: irq and err_i=
-rq. If there are any mistakes,=20
-> please help correct them.
->=20
-
-Thank you Changhuang for the quick confirmation.
-This seems to match CSI_ERR_IRQ and CSI_IRQ in TI's integration.
-
-> > It is not clear to me from the TRM [0]. From the "Table 12-1524. CSI_RX=
-_IF
-> > Hardware Requests" it looks like there are three separate interrupt lin=
-es
-> > CSI_ERR_IRQ, CSI_IRQ and CSI_LEVEL, which are routed to the Arm core/GI=
-C.
-> > And four lines for the ASF submodule (?) that are not routed to GIC.
-> >=20
-
-Abhilash,
-
-What is unclear to me is where the third CSI_LEVEL interrupt line is coming=
-=20
-=66rom?
-
-The TRM description of the CSI_LEVEL interrupt says it is for PSI_L overflo=
-w=20
-or VP0/VP1 frame/line mismatch, both of which are outside the Cadence CSI2R=
-X,=20
-instead belonging to the TI wrapper hardware, which has its own driver.
-
-> > This does not match with the error, info and monitor line names mention=
-ed
-> > here.
-> >=20
-> > In my understanding which interrupt lines are actually integrated will =
-vary
-> > from SoC to SoC, so please check what are the actual interrupt line nam=
-es
-> > exposed by the Cadence IP. Maybe Maxime knows more.
-> >=20
-> > But I don't think it is correct to make all 3 mandatory together, as so=
-me
-> > vendors may only integrate the error interrupt ignoring the rest.
->=20
-> Agreed.
->=20
-
-I think by default there should only be two optional interrupt lines for=20
-cdns-csi2rx, "irq" and "err_irq" which is common across vendors.
-
-If this third TI-specific CSI_LEVEL interrupt *has* to be handled by=20
-cdns-csi2rx driver, it would be better to create conditional bindings and=
-=20
-match data in the driver such that the irq is only requested if=20
-"ti,j721e-csi2rx" compatible is present.
-
-> Best Regards,
-> Changhuang
-
-Thanks,
-Jai
-
---ngdnlsgngwdiatpe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAme0qTsACgkQQ96R+SSa
-cUV6YxAAhNSjyeqRNGXC5vnrDW2XCuer0HIH05/FELfhTHKMJ1j+iLVI4G27/76Z
-ZqPiLRl06wAG1IBx1sG4HqA/JLRCDx8UNAXkmulIqD9esZ7/aEglJlqwUv8qYcok
-L663Ie+8JS699GyKEsJd55atAJgE4s7Sez4kPBYq7PxOn8saSlHYPpExaWDwfrxI
-48m2uAQV6K7oUKiScFvZ73e2Spp6bHs8kzfZ1nVG3mGjSpfvxzsWQfgLhsXLwCbr
-9NMY3JNwC++0xNS/koraurUyTLQEH7N+7hFsY7vWz5FGSobyK1PPCMSHA7hl3T1I
-2OxiQ5ZIcdGB/lgjaucZ+DdFrM5Vh4ZYdjnNKcHNfGx8rUtZ00O7DJybbUKeUzoS
-sXLWVCbE7TUg6WT22FWOZZDV5cbMoIBTcY3sxnSWDYs3Rny9mOTr3SuVcX0YkC8J
-L6pOmUUShpq8wy6AUSK0OKoMK/7z+H6j2/EyCdJlIRn52jK0bO/XDZrdeXrKEjWT
-HpiVm1wOhdK3D3LPg60etT0JH/P4nLcUdeiZcE5knVZO6hwCLI3Hb1CISWFaxiwd
-baTbG+54Fh08aIH+2peyYN00X+PYWXSujVs9OM4wzytOZw0bqtjD5albJT5IOJVy
-oqXPkXawH87SbNOTbIbuHQLqRbv82SERtacdnsVAjf7gKhHE/eM=
-=ZqEt
------END PGP SIGNATURE-----
-
---ngdnlsgngwdiatpe--
