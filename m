@@ -1,99 +1,90 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D411E51ED;
-	Tue, 18 Feb 2025 19:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21381E520D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739905623; cv=none; b=owzjUMe0RWCctVLImta9WBEvGKF+9Kgs8oTpC4KZ2TVWjvveh3+xB/fgMY4VkqdwPY6wBtCWaCOzUtl96ZYPaJXaoeLOgvDR+gpCIbe9CRIVHh53Wjzzv+EBBlbSQ4uc6DNFWlZUQ83PwiUedxnuzCasw7xHlasO7mWXgHwkVBQ=
+	t=1739905693; cv=none; b=dB3zyXdpj5aot9/iiBa4Oc5+1N0TyjKkDddxQvhmjEHqNMFdZ1vMhEdK8k4BfG6j+qdGm6mJb2K8cSngp/wp1Rck86fpj7LTiEFHpCYtbUWrdbNSQ7jlwUcX7q6MvWPz9pU1R2fmoqsNeQrF4fh9UDNQY1wiKhr6CakLf9hOj/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739905623; c=relaxed/simple;
-	bh=Hs/qnoFpXT5mzrFh3FYSbmqblVEDjKUtya7k9IFqpzY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NNMryRmaxOsziSxfneM6ipNenOhVJlCWjmKCl3WJH6zn34y9D7+JYmOYnOwN7jw0v474ylgERJq3boMhpde3U4hssJ8+rLnmuGVjENg7QEauh8MFmfobZOqILzQMhvOcS2JOde4ExDzBb1Q2AeQTYS+R1Mbb6jZOMs9vHkJb14Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XmdHKDkF; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739905693; c=relaxed/simple;
+	bh=qYAZTiqzP1po9iMBaj0lHNXjlSX1F1TWryWziMbjTVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJ3aJTiltIg6e1wro4+JjUrfyS22g1H3neQJd2E9sibgTYJqYTYh830pEXjXj6T+ow54CNQ9EUavEXS42yY2mhLx6IbM9+MzkUKH3gEf8zNzU5xlhuXTYoc5XJOyzs04ZoynDcqB1tN4Yk2oLyedE/MA5d6z9APnwkEqRLo415s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g7tRfZmX; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmdHKDkF"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f1e8efe84so2087013f8f.1;
-        Tue, 18 Feb 2025 11:07:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g7tRfZmX"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e05780509dso4021558a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:08:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739905619; x=1740510419; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hs/qnoFpXT5mzrFh3FYSbmqblVEDjKUtya7k9IFqpzY=;
-        b=XmdHKDkFDQhYx821L5E/7NoKYwAN+oUnamBPfpc8y1riZ3i6oyTfxRTAtGPSfxr6fJ
-         mnufgi8T2bO2DWJCZAk4vAdPJihYdjAJvPLOAf9bctZscQUB+5W45fO6Pxa6J/P9ZK9b
-         vqoxs+tstCgpCrT4ctvEhJ28IcuArzsCiV4rkmw6j/ANYRNPuxwnSCSTDggZelW1FynN
-         8BLlZQMD2NSGnLVA53fKfRGJ5lxCjktVMgioZJ/Qc1+N4hip9qFPUCG8k+QgpWoQNvD4
-         KW85IKjeJ+SqYxGb0EdGejO39oh7a+XPb590xQqqszbPxc0kSP8zo/v8L8yWj4Hw/91z
-         P4zA==
+        d=linaro.org; s=google; t=1739905690; x=1740510490; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rNsBxEX1Tk64WX5P1Q2cqgd6NAXQLvCCopiRfOs8H1Q=;
+        b=g7tRfZmXQU2D748U1SumVD+ZYfFUS7ND4alUtIn0tttFxBQWv/V19rgYggvLEi59q2
+         DLpUKTXOgLyqy7HQ8g3azS2xdRBjijJgp5euwZQqdq/uHvgZ4wLCMaV4y7z0aWoinny6
+         6muwik33Js2WiPjA2wrRdgFy3GzqSkCVoLcVd3mZyQ1t2kLWE3dS2ALGrql/i2xVPxTS
+         g328WK9r3Ejd6qzIiIF+KhwWUDr5ly6LEGgGxU0OSsfKMH1p1cOp8D8VwOn+rjwYSzzG
+         mKayVRuxSGq0POnDrwft3mjIDpZmA/HBHR/0anM7a2Egdn98AmUQ75oWAutoIPqYTyud
+         aLVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739905619; x=1740510419;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hs/qnoFpXT5mzrFh3FYSbmqblVEDjKUtya7k9IFqpzY=;
-        b=KFjp8+gyyJNkZHUQ3N1CsBaPfWhFkfBB8wQH6zPJ4zNl4Z+9Hes+KqShD/WuXM539s
-         M0BZ0H6fwoHk75LQ9SAT6prTceLP1oqPSjon6H4ugZQKpU6gl5So/mGCwWtuo5gsvN4/
-         Bv9irgIh1vJ0zk5QtONQqLCWoAokXJanhwQd552uHN4zNl372N3/8EfJinnje76Gl6hF
-         509SoVmWzIWYkttjHDd9AUFCrHwnpX3TlTy2mPJwHqz+D5mLJNnvpy54qX3sTWuX23//
-         h2UDUplHK1k8zAS97D3iNiFuI4i+L9osjcjmnPVI4hleKjUHhCd5QYtglmsbBX7hAVaq
-         RXmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8VvCh/6dVNVEWNmGiviA9s/x6aesTB54rjUPLCIXt1upVkb5T260aMIFtvR3jrOJ5YVsgI6riWE+1@vger.kernel.org, AJvYcCUNHAqMu1s+jatE8k+ET/33QYidWebt4kn07NVNi6pIIAb0l4sTFy1mDU7sH9aMIQbgOLql13d06O9G@vger.kernel.org, AJvYcCXPgJ8kGfa6vgdC6sI8B4Yz+lI3VWYkl8iiwkXhkxHR/32xPgjXv0V7pgzCtLVr2A4589kyqxQtWmZyuaQF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLcC00PenVwcPuUohKJbQGI07GkuhE4e6v6HwWWyJNJYIhmeJk
-	WmR2iRZEkPqeynXCtQxHsabb0FtOm/xFWTkkIJExXfC4HSbyZU4x
-X-Gm-Gg: ASbGnctQcKsUCw2905XO2r695FEARCXeQRyxJa+5nEMkzJuLfXYanakaMm7VK7yntj3
-	Yg7xC0X9kvtrZGhhceMzxtRRfvLenGBYSrrYLtVjvyqQIrrGsWXOOc4cc6V/JX4MYXsFqC6dxNs
-	kBE5Un/n7qhytA6mKLsEvDbT/QzMX6aMU64ltMLB7AvjKbjqmVlHCv+8+GuwnZ1phV56Z9gsOX9
-	SyJPC0CGffBh3Jn8hkUGZ+/6Y6QeqCZMmnDhErpFmBm2PRUi8VUYhylFuuFTmt74l+bmArPDlsQ
-	edfMwkk0DeffmldViJ+B4v/o+gQroliyrh/BSuy7KwlRiJWHGScC04j+qtLYsQMwDJ4=
-X-Google-Smtp-Source: AGHT+IE4Ztj3fqoFCu3fT1sr18ZtU3QldzSJQ2PYy4jRgkP/zHxGfnGiNxC0aElqmtmZKg2tXOMIXA==
-X-Received: by 2002:a5d:6481:0:b0:38f:31fe:6d23 with SMTP id ffacd0b85a97d-38f33f2e91cmr13677516f8f.23.1739905619006;
-        Tue, 18 Feb 2025 11:06:59 -0800 (PST)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43991c84fa4sm36268225e9.39.2025.02.18.11.06.57
+        d=1e100.net; s=20230601; t=1739905690; x=1740510490;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rNsBxEX1Tk64WX5P1Q2cqgd6NAXQLvCCopiRfOs8H1Q=;
+        b=c7DaCQ4EupC388qxFMn2tsUL8of4hqBhAMohTRQEcxiLFPL9RNR0IHOphZ9Bdrza0q
+         AGa+9ac7flVIPXkQwXeoSsIZcc96q5hD/llZ/6fArjmBzxiVxKV5yApiNlekhEzVF9L/
+         XNBtH3xSkUy6jTxRySBs5CIasXwSFr43VQLNJ/qYY6O7uNKSAk2D8zvODXu5fkjwfmGD
+         ocm35rgT2CzkvZlYfsIt6BlttpqB/4uaA7p7CMm3w+DGjrfPkyI4FLeIhhNCH0ImT0o/
+         We6ifQFDPGO4BqziewhtfjDKTOjJWjRmRM8MrOBJdzWZibSlBso3cSRF9L1Xtrt4NgiS
+         m3Og==
+X-Forwarded-Encrypted: i=1; AJvYcCVHl2QniUWgr7dZbIaE1GNYqtcBukAGB55kU7bjeAz1//aTTYoHZY7jVqWIHmq8um7Qid/bqGMd6NMkIBY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS7UAht9AeHBKHQSWTjV1QoklVKJKvA0JHvRIinOKnQXico54w
+	0jj7AF3B6S7/8hgn2jkwSUvatp0903UkSO8IaFrExJ+0vPkfx63f2PtUus1t4iU=
+X-Gm-Gg: ASbGncsA5cjtXcXjOzfBY4k9pvqpVXYG1aaJWJUypLKINkUlkE9d4ungRfwZ3f2as2U
+	7Jvz0ICaJZfPusGDSk2SyOcQpPsjVu3lI2BsUFS6v7HSjiMJIhYZl7FCa0eKrC7gbqAAmzhEjDW
+	FU3qqi2zDrKnSe6s4xTX9FvGFaf4K9NFLC9lNtA9XGx3fKo2IfI+9mrkNtbTJH4PjX9fESh7xQh
+	r5oyA7ka+/vgm1KEtgnGZHS0ADbLjKpmbjIPuPUZQEj6w02xMXOFAbr4/xAqQNr5UTu8rBkL4wh
+	Hsc5S4YtHUgDY/Rjrdj1
+X-Google-Smtp-Source: AGHT+IFlziriHnAKD1HuHccq2KQBzmgCVFxrmvHg/JF2Df2oa6sJkUNmECTIl18g14D0PF+iOjDlAQ==
+X-Received: by 2002:a17:906:26d3:b0:abb:b1a4:b0fe with SMTP id a640c23a62f3a-abbb1a529b3mr486697566b.1.1739905690148;
+        Tue, 18 Feb 2025 11:08:10 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abbb0fb63ecsm244309466b.115.2025.02.18.11.08.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 11:06:58 -0800 (PST)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
- Andre Przywara <andre.przywara@arm.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/15] clk: sunxi-ng: a523: Add support for bus clocks
-Date: Tue, 18 Feb 2025 20:06:56 +0100
-Message-ID: <10610758.nUPlyArG6x@jernej-laptop>
-In-Reply-To: <20250214125359.5204-7-andre.przywara@arm.com>
-References:
- <20250214125359.5204-1-andre.przywara@arm.com>
- <20250214125359.5204-7-andre.przywara@arm.com>
+        Tue, 18 Feb 2025 11:08:09 -0800 (PST)
+Date: Tue, 18 Feb 2025 22:08:05 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Madhur Kumar <madhurkumar004@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: sm750fb: Fix CamelCase issues across multiple
+ files
+Message-ID: <6259457a-3a44-4b02-bc83-19eb1fc05e49@stanley.mountain>
+References: <20250218184343.20585-1-madhurkumar004@gmail.com>
+ <20250218184343.20585-2-madhurkumar004@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218184343.20585-2-madhurkumar004@gmail.com>
 
-Dne petek, 14. februar 2025 ob 13:53:50 Srednjeevropski standardni =C4=8Das=
- je Andre Przywara napisal(a):
-> Add the basic bus clocks for the Allwinner A523 and T527 SoCs.
-> This covers the AHB, APB0 and APB1 clocks. Linux is not supposed to
-> change those clocks, but they are needed as parents for many other mod
-> clocks.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+On Wed, Feb 19, 2025 at 12:13:43AM +0530, Madhur Kumar wrote:
+> Signed-off-by: Madhur Kumar <madhurkumar004@gmail.com>
+> ---
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Quite a few issues...  Take your time.  There is no rush.
 
-Best regards,
-Jernej
+https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
 
+regards,
+dan carpenter
 
