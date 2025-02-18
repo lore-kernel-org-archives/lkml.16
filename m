@@ -1,144 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from 001.mia.mailroute.net (001.mia.mailroute.net [199.89.3.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB0B1DE4FE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 22:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6961828629B;
+	Tue, 18 Feb 2025 22:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739917363; cv=none; b=lwxyzg/LjTvIhwT9A7Ay9BrYNY+XhZgG3lfob1gAGOtTcPTynJB+2tgc+q2ilhIcpn5mqJFsTS0mVkWgXEW11n6S67umVBnzj1/gBc/D0avbVO9rXcCXLe8WjpjDC9EQAB/8V+YAloSjEtoYuKF0S275ZwHx3ZygAF3tvHozIWI=
+	t=1739917471; cv=none; b=aYHt5sUdqGzkMwMbevG67vKfP+GZgrUHu3bvjwDttADS3F/eP6qguzONgG+egLcI4AVettq2p2OEysjoJk1r3j4/6skTBlVydRT/06O9JF+3ScPUGtDC0KsOwm3BJhYQEdTGIjDBLzfIVgimNnLvLNyvAgUwo1nBDhs7aCT0jxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739917363; c=relaxed/simple;
-	bh=I0ZdTj8BmgqXnptu5DqBvvj81DWasr9opqmNnG45eSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cssyN0sBDljDg6JbKr/9nGsrOuVzF/jPj0bHsJDC0lR5W3IsiKqkTrvSABULWjUOu7ppWM6RtJScsuIGPy7pDkFnfzwqsWvHWgLp+QcCEV0y3G+waFXXfz7+ks3F9zJBHf3kv0ag0qKb1eBEUqjpg/K9IZePB9kgbapuhjLEXA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fpkB22U9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739917471; c=relaxed/simple;
+	bh=kCmoXvGtdX3xHMk0kwjR6YvFtUveRkTB815tpRMtgh8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uD+01zke7IaNkwlmoih6f/EdEKtEfcZ8U0Ka24EyDSbPfQivHPR39U+SOClyfUoK1lyK9DZw0a6Z5fxNDeqK0KWnoOwxZCqP61R2thxt/atcQiS3TukWkka/N4YS06ToSR9mULPEPQHcW+PrSq2+/C7y12DphbjJLjZUkIn2lEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=Y7AGmSlW; arc=none smtp.client-ip=199.89.3.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fpkB22U9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739917360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jnx3EEunpJZjox9YHzpXUDwmXWPi4uIum6tx1nb7cx0=;
-	b=fpkB22U9LHdm2TreR3Bo/vOrEax0x1Y9Bm66le9G0X3ZEI8uLOoBFsquax6wB/Xa9ISVol
-	agDEHVjnDLAneyWvcwoj33k5gwFale7OTm03RJYpiUzR4VHvqSykBP6Xs7SE+bEaCDFRry
-	d7qgFmA90XYi0LeewOuwiUy48bM7t4M=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-681-y8fXHio6OM-KxVoJCnyMDA-1; Tue,
- 18 Feb 2025 17:22:37 -0500
-X-MC-Unique: y8fXHio6OM-KxVoJCnyMDA-1
-X-Mimecast-MFC-AGG-ID: y8fXHio6OM-KxVoJCnyMDA_1739917356
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="Y7AGmSlW"
+Received: from localhost (localhost [127.0.0.1])
+	by 001.mia.mailroute.net (Postfix) with ESMTP id 4YyDXV2skrz1Xb877;
+	Tue, 18 Feb 2025 22:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1739917321; x=1742509322; bh=92vphjxGRpPWF2H9SmmPDtnz
+	qLQ6gEb/VnixK6UxtKA=; b=Y7AGmSlWBV+nVckc93MaUSUv0WI2aieQ3NCSG4eJ
+	/QhqBHYtcS0MyoAVVAvC47nka+evFaz+R9Wq2C6rkyipXZIULk1j9OJo6PrNO+NL
+	/c6gnXAXQRNILRzCY3xAVns3eoUXqyo682yPgefivVBaQzI197B8q+wfeaus2wlZ
+	qwtXEsa89Qo0Zm3+9mmvLZC0Az3ct/V2hkQP74o4qv1VS+9JSwY0XH/w3wOO/0bn
+	ioynKAZfSgw3ZYdluSAuGmOAWSlajuSu2ArOwWk2E6ZfMuStL1OA+hPxKPukjMGE
+	3hfYpBeQaufZZJOIYTjVR4iY67IzjgwGvCpSmQc9Ue247w==
+X-Virus-Scanned: by MailRoute
+Received: from 001.mia.mailroute.net ([127.0.0.1])
+ by localhost (001.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 3K0IWF3JI-4B; Tue, 18 Feb 2025 22:22:01 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72AA21800877;
-	Tue, 18 Feb 2025 22:22:36 +0000 (UTC)
-Received: from omen.home.shazbot.org (unknown [10.22.88.77])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 280D4300019F;
-	Tue, 18 Feb 2025 22:22:33 +0000 (UTC)
-From: Alex Williamson <alex.williamson@redhat.com>
-To: alex.williamson@redhat.com
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	peterx@redhat.com,
-	mitchell.augustin@canonical.com,
-	clg@redhat.com,
-	jgg@nvidia.com,
-	willy@infradead.org
-Subject: [PATCH v2 6/6] vfio/type1: Use mapping page mask for pfnmaps
-Date: Tue, 18 Feb 2025 15:22:06 -0700
-Message-ID: <20250218222209.1382449-7-alex.williamson@redhat.com>
-In-Reply-To: <20250218222209.1382449-1-alex.williamson@redhat.com>
-References: <20250218222209.1382449-1-alex.williamson@redhat.com>
+	(Authenticated sender: bvanassche@acm.org)
+	by 001.mia.mailroute.net (Postfix) with ESMTPSA id 4YyDXM4Dqfz1XY6MG;
+	Tue, 18 Feb 2025 22:21:54 +0000 (UTC)
+Message-ID: <6c3d81f0-aee5-4619-82c4-3ce72bdce317@acm.org>
+Date: Tue, 18 Feb 2025 14:21:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: set bi_vcnt when cloning bio
+To: John Garry <john.g.garry@oracle.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Oliver Mangold <oliver.mangold@pm.me>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250215-clone-bi_vcnt-v1-1-5d00c95fd53a@kernel.org>
+ <KP4HxjAbrINQTT05XxqLFD7bPj5ONsT3hTQJYUyXtoHBYc7-xFNDZUN3R8pWT-Cd1Q5fguKy97Oy8UJv5Nj1Cw==@protonmail.internalid>
+ <f4f4fff4-5055-47f7-9f24-6b1780920f4d@oracle.com> <87r03vfpkm.fsf@kernel.org>
+ <464bc3f5-aef2-4e6b-b7cb-035077d1e3f4@oracle.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <464bc3f5-aef2-4e6b-b7cb-035077d1e3f4@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-vfio-pci supports huge_fault for PCI MMIO BARs and will insert pud and
-pmd mappings for well aligned mappings.  follow_pfnmap_start() walks the
-page table and therefore knows the page mask of the level where the
-address is found and returns this through follow_pfnmap_args.pgmask.
-Subsequent pfns from this address until the end of the mapping page are
-necessarily consecutive.  Use this information to retrieve a range of
-pfnmap pfns in a single pass.
+On 2/18/25 9:12 AM, John Garry wrote:
+> On 18/02/2025 11:40, Andreas Hindborg wrote:
+>> But I am genuinely curious if there is a reason for not setting
+>> `bi_vcnt` during a clone.
+> 
+> I think that it came from commit 59d276fe0 (with the addition of 
+> bio_clone_fast()), where we assume that the cloned bio is not having the 
+> bio_vec touched and so does not need to know bi_vcnt (or bi_max_vecs). 
+> And it is inefficient to needlessly set bi_vcnt then.
 
-With optimal mappings and alignment on systems with 1GB pud and 4KB
-page size, this reduces iterations for DMA mapping PCI BARs by a
-factor of 256K.  In real world testing, the overhead of iterating
-pfns for a VM DMA mapping a 32GB PCI BAR is reduced from ~1s to
-sub-millisecond overhead.
+Hmm ... I prefer paying the very small performance hit caused by copying
+bi_vcnt rather than having to deal with the inconsistency caused by not
+copying that data structure member.
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+Thanks,
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index ce661f03f139..0ac56072af9f 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -520,7 +520,7 @@ static void vfio_batch_fini(struct vfio_batch *batch)
- 
- static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
- 			    unsigned long vaddr, unsigned long *pfn,
--			    bool write_fault)
-+			    unsigned long *addr_mask, bool write_fault)
- {
- 	struct follow_pfnmap_args args = { .vma = vma, .address = vaddr };
- 	int ret;
-@@ -544,10 +544,12 @@ static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
- 			return ret;
- 	}
- 
--	if (write_fault && !args.writable)
-+	if (write_fault && !args.writable) {
- 		ret = -EFAULT;
--	else
-+	} else {
- 		*pfn = args.pfn;
-+		*addr_mask = args.addr_mask;
-+	}
- 
- 	follow_pfnmap_end(&args);
- 	return ret;
-@@ -590,15 +592,22 @@ static long vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
- 	vma = vma_lookup(mm, vaddr);
- 
- 	if (vma && vma->vm_flags & VM_PFNMAP) {
--		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
-+		unsigned long addr_mask;
-+
-+		ret = follow_fault_pfn(vma, mm, vaddr, pfn, &addr_mask,
-+				       prot & IOMMU_WRITE);
- 		if (ret == -EAGAIN)
- 			goto retry;
- 
- 		if (!ret) {
--			if (is_invalid_reserved_pfn(*pfn))
--				ret = 1;
--			else
-+			if (is_invalid_reserved_pfn(*pfn)) {
-+				unsigned long epfn;
-+
-+				epfn = (*pfn | (~addr_mask >> PAGE_SHIFT)) + 1;
-+				ret = min_t(long, npages, epfn - *pfn);
-+			} else {
- 				ret = -EFAULT;
-+			}
- 		}
- 	}
- done:
--- 
-2.48.1
-
+Bart.
