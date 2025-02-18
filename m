@@ -1,168 +1,157 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2089.outbound.protection.outlook.com [40.107.100.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE5C269AFA;
-	Tue, 18 Feb 2025 13:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885119; cv=fail; b=Tj4MXNaJ3pgfyZA2w/RwwfybckiWYKmwVA9fcOZTQ97/qPQmtMP1d3ExeiUJm+BA5GrfCWBhjdFFr2BTaDBHOHWnO2J6c4hbZWj88Bz56Kh3PZu54/avfT3kAuMPVbOnxPM8XPBR9rsmiociL/kU3YGT0/kod6gWYMgphJ5rD0o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885119; c=relaxed/simple;
-	bh=aU/c9k0N5UFcDvOICAk1rD1tXKIvrqfbBGl4+gPhnAs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EshOcRrj+TcgLdIl8bjlHLU7YgmLbfbD4MYRp4nj+sVgECraTEFqKz0PRB7GeCmyzU5lrgNidom4VGw6pBz3WMp1Vr1LRRnIAm7OStqsfc0vpUgP9gjBjswjaAV5pJiRseML97EcnDlMXG27H5xLIbaLAADJq7ErZQrCcJkxVHs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rQxg8vBt; arc=fail smtp.client-ip=40.107.100.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rQxg8vBt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZkvZE4HSNrGLlx1QDuwxWPDy94akrgv8gnNYHtaMpbz9VGEl7m0dc3+xEc1H3uGehkHMWUmYZo5sQsMCVm+42JTP/EE1sKAyaU7JzhP+645bWFTkMYF1yZgL5kKegY89VOKZ2M324hcGGdn2skgXueQqbQGz5GDruESjpCY2Epv//XFNUh1/r53XbI1Acv7m4PCo3jKA8ke7p7OaZGx4YtEPvqUqxsWhYH4+pUp9M9MSA/LSiWHCK6NCP6JjhX135Dp3ieTIWrKAVX06Yr+xwotpVR0w2Zis5vVV0JJnnYo/7ttkGOcz73PQjBZFf90eVckCC7XSc7dMAzVEtwkv5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/znQZvuXVmyTN6MVnXKDkzuuWCouvPrWHmKx67mR3qw=;
- b=ejGZSlY0PBQtkf2kkNRc4k+w49VPyvknQ9sEsxqPk8bhYUllNgGiwnRvnefXjf0IwHNrEkPp1yOX638ow5AbL+rTT4WzRTrrpJ41YOZi2aKuHoTvBbRzyLtZhjk6dKH2wNvH7LILj6sj9WbAZHtmrwNFR5jCWp/CTd2bf6Y8D3gPVvmb+81/YeW2e7LB+8QkL761TJlPPH5dcWMhlSO2gfNDz8QBpfMEpt0hY+1n66Fq1gk1m0fkyKp/Z7bc2Nle+lDN8dQIniFGxvd4peRJuMS2qTVobBVL4CQeNdeQ05PF/5j+uKj8GRQfpYJp+pm/+4gR+SaKL4Mhh+U5iaVsXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/znQZvuXVmyTN6MVnXKDkzuuWCouvPrWHmKx67mR3qw=;
- b=rQxg8vBt5uOg2zxAAXRaLnw3cJTbpcHWwV9qxaBOS5jEEeGx8qMEQNAYglXewS7uDP0H1VpIrKhxPTcguoT3R3LGknt90paodF44IsZnQNw74PHndiInJ1gVJ6mpAIdJ4b1URwvULHemjviFrayKtRCHTC65G6xbkDQ/fGwuQ/c=
-Received: from MN2PR05CA0053.namprd05.prod.outlook.com (2603:10b6:208:236::22)
- by DS5PPF922753E5F.namprd12.prod.outlook.com (2603:10b6:f:fc00::65a) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Tue, 18 Feb
- 2025 13:25:15 +0000
-Received: from BL02EPF00021F6C.namprd02.prod.outlook.com
- (2603:10b6:208:236:cafe::fb) by MN2PR05CA0053.outlook.office365.com
- (2603:10b6:208:236::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.13 via Frontend Transport; Tue,
- 18 Feb 2025 13:25:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF00021F6C.mail.protection.outlook.com (10.167.249.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Tue, 18 Feb 2025 13:25:15 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Feb
- 2025 07:25:12 -0600
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: [PATCH v2 12/15] cxl/region: Lock decoders that need address translation
-Date: Tue, 18 Feb 2025 14:23:53 +0100
-Message-ID: <20250218132356.1809075-13-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250218132356.1809075-1-rrichter@amd.com>
-References: <20250218132356.1809075-1-rrichter@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77499269B0A
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739885126; cv=none; b=YgtZNLGSYN7C2e/k3a/yP8rlPoa1Aq5/JTx4w9idyOvqJ+k5Lh65E6zs/nFNCAwG/iP+7RV9PmGsWisni3+CYCL5NVxm4+Ylw3WC24X56YmBCdXUQl9yMdrInJr9rbcxbf58/hvDu6ga+rE8poXTV44F2MImdyG2Xu28f4SGNuw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739885126; c=relaxed/simple;
+	bh=3ZNa4ZrGhk5MBbV0uH5n9LxtqBxX7sXsiPWe+IqaZbs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=f4iTzWKSombgHpK4rFvduT4Qn/PXli8rsiAjSCM4EulWkIQ2g+KQSdXH/EDD3rULxIS+6ReMXsFAeeND18LRsO+QGN0r3pRqXBPWQOHgj1ZmRMsfK+QnCtVMHzhQLdMM6EE/B3qlV3EfIEENXjH6uZzSRjzMr1g6V1aQUNwX/Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d2a6ead92fso19087435ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:25:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739885123; x=1740489923;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G+7/q1jM1Bvz9DI85BsMkac8Pe2d6tQdTj4wf8JkTzY=;
+        b=DkHyTMZ0CIKXvpKOTHMGc1t8iz4An5rOyCddRD912T+fipizDFw7FQ5YDZUEETLxaC
+         /syu57UQKVn6aPQ3SSkY/KzwgexHB8qZtSAlNzBw/0s//z4lG8EG6/pjqau7aRgQwUNr
+         WDT4+RiwaIKFR5TrIuRGCyGI9/nBVPi4iEdNxWD6Fgj02HbrBOYGqB+5GYSh6pblywCi
+         R7X9FS2KzXTwhj0twdSmgrPgbNQMN5s3iB0OOWuJX9hwEjz4KOwsnLlRSMqEdtm+PBUE
+         Xat3nf8I61zpcp8v04ONy8DFuWXYP6M36k8FGOuSC2d4GHvL6rwHMRPYOsI7lja+Mw1O
+         pe/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXdjqK5CmuYWJcA9gcmHoHjOhQk2XYXXt499nNFiNqiW/lXBrM0yD3Qe+ldk7KRHBmu7fTZn0VBbRwr/yU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSNu65KVvJFikR2+DQ01WmcaDcnD9pNGfq72r2s0ddqkw/ioe8
+	p3Tz74G6oH5kGxzKIxKRT+UDkiIO7UxjjMBH64M71XhqXRxVZD0LSO/hSe1PnGhcPmxln74BBlM
+	sjUIMG38iVotkvCBF6QSbs09HjYYticxhMPffQrX8hPiHNJRGZYdV4rw=
+X-Google-Smtp-Source: AGHT+IHtu/68U23foJWFnuOE2J2caAS5yJ4zrsjwodgLGFo04BYktL8Hu3M9iEvfi/Unm894kHuC2gTA/Tl2NnTI7w40QqMopTz2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF00021F6C:EE_|DS5PPF922753E5F:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0ab2aa52-e6fe-454b-d465-08dd501fae63
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XNsWv3mDl6c4hnH803oz6fNguMMwQfcwepBcNZvB7tr9h48vD0lTOEmzWK63?=
- =?us-ascii?Q?any8bI9ur8CV8wTmamoQRLZthKiz/6/b5rfmo7/tQ7GEaC21z/1BMCIb37ci?=
- =?us-ascii?Q?IBfx4EaVG5ji+gRk8uYMs/UoLTDNKRHqBJqWIDV3GtqF5BrtK6cZPSpOGXAA?=
- =?us-ascii?Q?OnGq+kz6QOnhlMPbGNnKXHx+6gw35b1LkrLLaRtr1BB4GjIHSWwPbX17Wa5J?=
- =?us-ascii?Q?TDKqqQty0zIW743GySPjCG+YqpOSZ+CiVPJQgrZ/yLeNoLOqgnhVUCPFTmoC?=
- =?us-ascii?Q?xFZZzxSU2C2fc4TrYNf9ZFxkDW92dZTvyQMxznktqL05W53jsUGYS1474V8h?=
- =?us-ascii?Q?JK1Bya1B1nnKZh2zZ8jiKYuBIodAYPgig2baqhgMX/gqbMbpUMx1cLW4l7ZP?=
- =?us-ascii?Q?NGDr/++6Fpb18r0+hGwf0djg5ITAc0LDyBWsWt9cYqy4cp+BOBew4nHN4Q6J?=
- =?us-ascii?Q?9K8LTjbQpcVfLpeEcV+8SgmV532+w8hWYI2r74PkHFkoPbKcLZDLNKSMFTq2?=
- =?us-ascii?Q?Zo2fk3xqKHz1IYDQWlGW1xwM6xQf/u9Um42QntbljYM7LESV4LOtvZ/IGSJ4?=
- =?us-ascii?Q?TR0FzUJQt9tNm5dXcBboumzWWzW2An/9L6fhAmLl6rav+x1Adj+fkqWn7y/9?=
- =?us-ascii?Q?UW2BpRe5Dy/xkmBYzr9bwbU/ToYqLusamw1Jie/8WKdj4uyBYObB6o2pRFvb?=
- =?us-ascii?Q?9s/jAbIPXv+K8Ywksg1Zj/ycivWOf3VGridhsLyispkppMEf95ZwNyS0ACqN?=
- =?us-ascii?Q?QYncYADKSY7pY7IDdokYNRZDn4TDbBl5lX4RBdlw9Hoc6an7sJ20eSMxtIrr?=
- =?us-ascii?Q?WHhJZAhUZbrXJwLpFAgx+UmdOV5P12EDV8Lch2vublE+Zuhrg0aey3v8pJkb?=
- =?us-ascii?Q?tyx3ouW4BMhRL+EG0hpy+T3E4ZKxFbEJ+DrPsAcrN558U0cQd/vO4M5qec1Q?=
- =?us-ascii?Q?+lNqUqYX5FuU5/QcJp0V2AaDmGOBsiTAEtKMVkDvF+b9kVb9H1s6L6P0Mm1o?=
- =?us-ascii?Q?watQRoc+CP9ubL1ScrCHzMPUuebQSmEW/pCguDBpLPHVDYq0n8Nd1Ak6Nyoq?=
- =?us-ascii?Q?m2fBJZnEw+TTronlKZPSx7kiizoHvmidWC0PsBe0iA10/B0D34gZDeYzxIwi?=
- =?us-ascii?Q?Fsrh4sB7rkftk1yp9iYvQWwkSr0vdXZTkIa+z1zwNSJb14YInv26L7co5VqH?=
- =?us-ascii?Q?NhkFnTfd8zelBLlgYs6lMtA/pwQflOEpUs63eJ82qBWOY+sN1rB5mKK62VOp?=
- =?us-ascii?Q?sCVu4PM97MeUItnZNanqS63ooN1e6sLWZ5/QG6one+FciT9G0k1LKkpzBT88?=
- =?us-ascii?Q?aVTvgkc1vE93dkwFWTvhoNzPs066jp8U3Z6OwyF90q98POXFyFrk2i+NEHeu?=
- =?us-ascii?Q?X0NofjrKTDgyY17yS/N62hn5CI6sxj5iG8nwsUwHsLbp8Bmxg0VT+S496i4Y?=
- =?us-ascii?Q?A8hF90chNlCS/aFdQA9UGHjHKN2eI+4Q36+KWBZFgf5n6kChCXrLxNBS2Ksk?=
- =?us-ascii?Q?ebuVAUe8qCCkj+o=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 13:25:15.5996
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ab2aa52-e6fe-454b-d465-08dd501fae63
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF00021F6C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF922753E5F
+X-Received: by 2002:a05:6e02:1c0f:b0:3d0:f31:3657 with SMTP id
+ e9e14a558f8ab-3d2796b6803mr122202265ab.0.1739885123611; Tue, 18 Feb 2025
+ 05:25:23 -0800 (PST)
+Date: Tue, 18 Feb 2025 05:25:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b48a43.050a0220.173698.0062.GAE@google.com>
+Subject: [syzbot] [ocfs2?] kernel BUG in __ocfs2_rotate_tree_left
+From: syzbot <syzbot+7508211c42e6e7c9f2f8@syzkaller.appspotmail.com>
+To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
+	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-There is only support to translate from the endpoint to its parent
-port, but not in the opposite direction from the parent to the
-endpoint. Thus, the endpoint address range cannot be determined and
-setup manually. If the parent implements the ->to_hpa() callback and
-needs address translation, forbid reprogramming of the decoders and
-lock them.
+Hello,
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
+syzbot found the following issue on:
+
+HEAD commit:    2408a807bfc3 Merge tag 'vfs-6.14-rc4.fixes' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12261898580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
+dashboard link: https://syzkaller.appspot.com/bug?extid=7508211c42e6e7c9f2f8
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-2408a807.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f62d1e4db390/vmlinux-2408a807.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/eb24d3a710ff/bzImage-2408a807.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7508211c42e6e7c9f2f8@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 32768 to 0
+------------[ cut here ]------------
+kernel BUG at fs/ocfs2/alloc.c:2721!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5326 Comm: syz.0.0 Not tainted 6.14.0-rc3-syzkaller-00012-g2408a807bfc3 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:ocfs2_rotate_subtree_left fs/ocfs2/alloc.c:2721 [inline]
+RIP: 0010:__ocfs2_rotate_tree_left+0x2fd5/0x3010 fs/ocfs2/alloc.c:2977
+Code: fe 90 0f 0b e8 cc 7e 0b fe 90 0f 0b e8 c4 7e 0b fe 90 0f 0b e8 bc 7e 0b fe 90 0f 0b e8 b4 7e 0b fe 90 0f 0b e8 ac 7e 0b fe 90 <0f> 0b 48 8b 0c 24 80 e1 07 80 c1 03 38 c1 0f 8c 8c fd ff ff 48 8b
+RSP: 0018:ffffc9000d4b6500 EFLAGS: 00010283
+RAX: ffffffff83b63be4 RBX: 0000000000000000 RCX: 0000000000100000
+RDX: ffffc9000edbb000 RSI: 0000000000001224 RDI: 0000000000001225
+RBP: ffffc9000d4b68d0 R08: ffffffff83b6241d R09: ffffffff83b62036
+R10: 0000000000000006 R11: ffff88800024a440 R12: ffff8880544c6700
+R13: 1ffff92001a96ccc R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007f16019f56c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000010 CR3: 00000000339fc000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ocfs2_rotate_tree_left+0x326/0xdc0 fs/ocfs2/alloc.c:3229
+ ocfs2_truncate_rec+0x1547/0x1c90 fs/ocfs2/alloc.c:5502
+ ocfs2_remove_extent+0x106f/0x26f0 fs/ocfs2/alloc.c:5581
+ ocfs2_remove_btree_range+0xfde/0x1860 fs/ocfs2/alloc.c:5770
+ ocfs2_remove_inode_range+0xff3/0x29c0 fs/ocfs2/file.c:1907
+ ocfs2_reflink_remap_extent fs/ocfs2/refcounttree.c:4534 [inline]
+ ocfs2_reflink_remap_blocks+0xcd4/0x1f30 fs/ocfs2/refcounttree.c:4681
+ ocfs2_remap_file_range+0x5fa/0x8d0 fs/ocfs2/file.c:2740
+ vfs_copy_file_range+0xc07/0x14f0 fs/read_write.c:1584
+ __do_sys_copy_file_range fs/read_write.c:1670 [inline]
+ __se_sys_copy_file_range+0x3fa/0x600 fs/read_write.c:1637
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f160558cde9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f16019f5038 EFLAGS: 00000246 ORIG_RAX: 0000000000000146
+RAX: ffffffffffffffda RBX: 00007f16057a6080 RCX: 00007f160558cde9
+RDX: 0000000000000005 RSI: 0000000000000000 RDI: 000000000000000c
+RBP: 00007f160560e2a0 R08: fffffbffa003e45c R09: 0700000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f16057a6080 R15: 00007ffd149b49b8
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:ocfs2_rotate_subtree_left fs/ocfs2/alloc.c:2721 [inline]
+RIP: 0010:__ocfs2_rotate_tree_left+0x2fd5/0x3010 fs/ocfs2/alloc.c:2977
+Code: fe 90 0f 0b e8 cc 7e 0b fe 90 0f 0b e8 c4 7e 0b fe 90 0f 0b e8 bc 7e 0b fe 90 0f 0b e8 b4 7e 0b fe 90 0f 0b e8 ac 7e 0b fe 90 <0f> 0b 48 8b 0c 24 80 e1 07 80 c1 03 38 c1 0f 8c 8c fd ff ff 48 8b
+RSP: 0018:ffffc9000d4b6500 EFLAGS: 00010283
+RAX: ffffffff83b63be4 RBX: 0000000000000000 RCX: 0000000000100000
+RDX: ffffc9000edbb000 RSI: 0000000000001224 RDI: 0000000000001225
+RBP: ffffc9000d4b68d0 R08: ffffffff83b6241d R09: ffffffff83b62036
+R10: 0000000000000006 R11: ffff88800024a440 R12: ffff8880544c6700
+R13: 1ffff92001a96ccc R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007f16019f56c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055bc228e30b8 CR3: 00000000339fc000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/cxl/core/region.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 2ca24565757a..dab059ee26ef 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3410,6 +3410,17 @@ static int cxl_endpoint_decoder_initialize(struct cxl_endpoint_decoder *cxled)
- 		if (rc < 0)
- 			return rc;
- 
-+		/*
-+		 * There is only support to translate from the endpoint to its
-+		 * parent port, but not in the opposite direction from the
-+		 * parent to the endpoint. Thus, the endpoint address range
-+		 * cannot be determined and setup manually. If the address range
-+		 * was translated and modified, forbid reprogramming of the
-+		 * decoders and lock them.
-+		 */
-+		if (rc)
-+			cxld->flags |= CXL_DECODER_F_LOCK;
-+
- 		/* Convert interleave settings to next port upstream. */
- 		rc = cxl_port_calc_interleave(iter, &ctx);
- 		if (rc < 0)
--- 
-2.39.5
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
