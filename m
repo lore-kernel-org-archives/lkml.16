@@ -1,122 +1,141 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B48241108
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529C818E743;
+	Tue, 18 Feb 2025 12:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739882745; cv=none; b=eHiXgiLl1EB45S7aR72CR1t8In6kOcOsl9x7hPWGzeyrde0Fyi7OGBCHUbGXV1bNYJXsg+mbPDzWTa79R7feYOMZDz3JlGYp4I/85kEyiSBM+vabSyI76hlFy0MrzB1AshLJOap4qJGkNCptEcV5x6mr/qgDY1u5srxdTlvXK3Y=
+	t=1739882944; cv=none; b=np68FjvYkO/74mlloOEUug1SY4waSj93XGWoNKKCObJuBBM+kdF8DFyBTOe/LiGvy1bYj/ZWbgiy40i2Rhd1H+6i2Q96jBKeXdsN2ODNSzwZ9KLzhXmTPPwMHjUIqSG+jTjT32IzsnjxNtjYBSKzY5cNvkh617zS5H3mbtQnYvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739882745; c=relaxed/simple;
-	bh=RavdE/UlQvRgShqHGge32zjyJ+SYqS72qfeGAshiLRs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BooBmZvrAkmQi1QDoWeuibS47tPTaL1rRhG0m6Csx3bkOTWsHEy2K88isXlxSCmEARO+Z/XPJtsdbAIRT0QtVuV1HX29YI/dT/XAhpM7H0ptvBG58mAlWtnG9iTXkc2s6L7pNyRxpfktetksU66t4PQFX4tY1m+QVl5mayd722Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MkUS4ir7; arc=none smtp.client-ip=209.85.208.177
+	s=arc-20240116; t=1739882944; c=relaxed/simple;
+	bh=3MTAPX7BbYroUzgDrT3TI2XCGXe5QTbsIEpvN1L+HL0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZKPfHpTYxdMDxQRRzQh9kSakib4mzqmE/2lfCIuePwL+XK9yeWSWOo88CWLLL+g2h7Vyueu9MeNAhIMMGr3UdAYuyi1gLn39eOCHe+wDrfyxxXPgZ2ikWD3DpjQtbfMpW+85ptfvY1bqh7y65u90s+300WPG8UicdjW2Ts43t4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LufKjvml; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkUS4ir7"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30920855d5bso42032871fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 04:45:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LufKjvml"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4396424d173so54426125e9.0;
+        Tue, 18 Feb 2025 04:49:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739882741; x=1740487541; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BjM/WutdghfOa1rqYy4L0lCjsN+xham0bipKmB62Pf4=;
-        b=MkUS4ir7m+6XKgARQxZhSntv5f//M+3bJzDqGKE4tnKsdFadrqvVj6Vw1LMiMroWZm
-         +x1hq4uKZ28jE3x9hQiHfJQHg1Dmt43vQ6kaNksw5grLVZiQL3aq4/k2/7nKgJqrsM3X
-         TiGjAOyCQU4vMt66z8/2qqUHLAUCWjNsRwmsGZEQghHOs25e9Y3z8dME+NtoUb1MrCS1
-         kTBTC3R/qP/swbMQrAQdLX93j0SPfPV30j3lFPYDc7B1L1yVGWRzB7QLqmf7EliidzSJ
-         AxzXLGyh7psbRy8MvWSRVhvo1yKdGUKb7Md9ZtYDIsXxquRIN2IwbUxhfDnHyGg4TVsA
-         Dj8A==
+        d=gmail.com; s=20230601; t=1739882941; x=1740487741; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xHMEUUgzJ5Lepuax0T+IdRjsT3yoJrxVgzW4e4ftDcQ=;
+        b=LufKjvmlDUVmfLvbIZx+lAUYODeSytD9mQKXxcFDFP8oUuf8jmD/5ssOoiAqKBnaEt
+         /cAO1rIP/2294mF9rCyKQGFxl4AXl9HhSE61aQhEjMWFJT7SPN0HqU6G/j2TG9t6Wrak
+         kO19wGRrtOUnHzDyU646zQWWqVAFbJqUrP+f5lyzp2nTJ+VJfjC4kwS7mK+nuisJzdFG
+         C1HJQdwodtBerH8yNhsKldgmnk8lmtpJD0W+uSKhzi/zIqt1aFbdRb9dhyfuapBnvbaR
+         oFxHanqQmiTln0ra3zqqlUg/MzganTwGG2lM183KhlaOl2d9bNtTdKhA/Ixgio71Sev2
+         UA6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739882741; x=1740487541;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BjM/WutdghfOa1rqYy4L0lCjsN+xham0bipKmB62Pf4=;
-        b=s+hhR678IsT+XWC5j9Pl8Bv5EiGZk8Y0ZKEXiuQRexnxcUXthyItl8Ze/4iO2BNUDs
-         oEesT8LKOHM3h6SBCgX6z8cPYokHKG0rj91QgZLy6VdwLP24E+Dv6gnXCbs3GYZDWAmj
-         oGHHXlXqXwBiJoTa21pryw9REGxq4f94EK9NECDsWZ6b/p0WllPTjOojzRF0m6PmEyBY
-         YEUt4ohyKC62YeuQm5eTaj34bkbiuMh7KyGCXXlsWbLU0CYAxKiO5PkrfuM4jFV9DNWw
-         gHL+qgin8KfvHb6d4nvxmgR+mD3tWFb6h0cNyp3BlHAdWOLzwJU6dxLcw0K1QAt6TLo4
-         nCLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFnEDCMwYVj3D+eEUejqrhzKKdugsprAtWAHBz+41Hp7/njnWPJaYx5sfT89yQUzpLy5+lG/UFpoNfYK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGZsT3yx7r2T7Fg6LFP8oFHwauf6q1qbKIhDxem/ua9e2Pd378
-	29YXfE/20KTFMiKj5U2NQXxoTx8/rJ2yOcN040i6DB1Dt1ntUrV2iCPf73InC2WP6Q==
-X-Gm-Gg: ASbGnctfComrVfjtXRhoOhh7sQ/78E1SKPXmIIpo/kK9/2XDsNEax05o6mw3O/MPPC2
-	oxQhcIexoqfyyQPcQp3yMAcGtoLhCukwbg8QmmCz3B93q3s1M0yg+v+pdHM3l0iPKMSdBQIY1SI
-	Gv6QtSxAUO6TI+slBnYDFIHIbUy7f8B6KoBe0Xlde1FDuppkfxzjZS2Pdv5NkGsmQuBUIpCDJ0t
-	OuoFYfmni5QkyqiPCysIqredus/uG0KcfKTwtTBLrRb6OT3pyCG6rTmmKnaorqBBtoXS0+oren7
-	lFkBZ/0BSDlVwfYZadpfNsU6AO3apH+0/FebvOlQF4EUqX+htY4/d0SJFQ==
-X-Google-Smtp-Source: AGHT+IENyW2umSDB5pOJx7840FOiWwuBpfLSj8lgmLXbWx7P6AbWicT9TJtBU9iAjWywalwJYLCE5A==
-X-Received: by 2002:a2e:918e:0:b0:308:e9ae:b5b1 with SMTP id 38308e7fff4ca-309288dd513mr39040061fa.9.1739882740962;
-        Tue, 18 Feb 2025 04:45:40 -0800 (PST)
-Received: from rand-ubuntu-development.dl.local (mail.confident.ru. [85.114.29.218])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309259213e0sm14449281fa.58.2025.02.18.04.45.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 04:45:40 -0800 (PST)
-From: Rand Deeb <rand.sec96@gmail.com>
-To: Dave Kleikamp <shaggy@kernel.org>,
-	jfs-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: deeb.rand@confident.ru,
-	lvc-project@linuxtesting.org,
-	voskresenski.stanislav@confident.ru,
-	Rand Deeb <rand.sec96@gmail.com>
-Subject: [PATCH 5.10.y] fs/jfs: Prevent integer overflow in AG size calculation
-Date: Tue, 18 Feb 2025 15:44:28 +0300
-Message-Id: <20250218124428.1638816-1-rand.sec96@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1739882941; x=1740487741;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xHMEUUgzJ5Lepuax0T+IdRjsT3yoJrxVgzW4e4ftDcQ=;
+        b=A9GxgLKrKrfjwVh3WEMwxAeWDah+G26/diR1kdhkX4IhhcznFJHwF6cAQiTKotRu+a
+         iMFjfKg3BJzPdpG/PXc4SuB5OjfB/Y/OzjtBuCsE42BuOzUN1wDgxEf4FT8Gbs5OptAU
+         w3a0F5t9E5IC6ZH7jm0sKZ9kEAgQJ5OKBZ1/FeQnZnLbb620mRjjraAVxkHCzRw/GZnP
+         oJ/ChhqrjMk3QlAUpFWrchEMuofhiORwIKjqFmDDVgd3xS93Pg/pM4xa5DgsDjWVlbaC
+         7Sx0t2rnCg52saR6bj3hWw18pM3qlBGJ7PtH7F4+9qHCn8PtnyFGkLW+xWqpPtgkKTlu
+         TvIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWI1V/gr800+022JwuP8Zqd4fqHMpQ7+qxCBrISFTGWkU5rJfY0dLUXjD44foV+yw4muKGlofDr6YsQ@vger.kernel.org, AJvYcCWxiDG9Q2Kdrqw9k4FC/koHCJ8qyktO13pFfLNGiFGaoMDHqCVEAhSllZwLKJ44+9usstdi2jNOb6sH6HG+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcQGsh56iGvzsomZYNseSDOmtDW4SpP2DUotAlMF25sBspLpIg
+	+i32ATtNM2J+5yQxZ4KL+eMPcAtngYz59+0NG7xITnTmYWBM0kXcZGfX+KkBl6QtLZBfNnJug6a
+	BdDp0b608RTHrXI2QAVe38+tQMvY=
+X-Gm-Gg: ASbGnctNFJOwl2yHoKR6u/aOtcd9kA1jzpBfzv4sJwDSjN3ntburJGNu5792bTq4E3m
+	hs/L0r9J/wLwx6EI8s2i/48vEwtkMZEWoHWkJc7MsE0gEvLKMevr90M3AiczKSEZpFl0BC2FZgw
+	==
+X-Google-Smtp-Source: AGHT+IG+4guV9zL2bAZNHMObNNITOjYzmm8gBHf04+Fx5knp80glZYkRGDTbsirq+bKDuplePjSR8kzavUyBoBLNCGo=
+X-Received: by 2002:adf:fa08:0:b0:38f:2a99:b377 with SMTP id
+ ffacd0b85a97d-38f33f57459mr12091977f8f.53.1739882940549; Tue, 18 Feb 2025
+ 04:49:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217140910.108175-1-clamor95@gmail.com> <c19bd9b3-86c4-4f1a-beb9-b6aed32b3ef5@suse.de>
+In-Reply-To: <c19bd9b3-86c4-4f1a-beb9-b6aed32b3ef5@suse.de>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Tue, 18 Feb 2025 14:48:48 +0200
+X-Gm-Features: AWEUYZknhrRerz9466maOIJ-JIcnOjmCvbeJ_Q4ULJO_5cv5VSDkdN2CrbigW9c
+Message-ID: <CAPVz0n0WG1Q51SONb4fmkzi4q7Q0sZ_aKSLrLnGboNNya6nO+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] drm: bridge: add ssd2825 RGB/DSI bridge support
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Javier Martinez Canillas <javierm@redhat.com>, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The JFS filesystem calculates allocation group (AG) size using 1 << 
-l2agsize in dbExtendFS(). When l2agsize exceeds 31 (possible with >2TB 
-aggregates on 32-bit systems), this 32-bit shift operation causes undefined
-behavior and improper AG sizing.
+=D0=B2=D1=82, 18 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 14:36 Thom=
+as Zimmermann <tzimmermann@suse.de> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+> (cc'ing Javier)
+>
+> Hi
+>
+> Am 17.02.25 um 15:09 schrieb Svyatoslav Ryhel:
+> > Solomon SSD2825 is a RGB to MIPI DSI bridge used in LG Optimus 4D P880
+> > and LG Optimus Vu P895
+>
+> There's a driver for Solomon 13xx displays in drm/solomon. Did you check
+> that this new driver isn't just an extension of the existing code?
+>
 
-On 32-bit architectures:
-- Left-shifting 1 by 32+ bits results in 0 due to integer overflow
-- This creates invalid AG sizes (0 or garbage values) in 
-sbi->bmap->db_agsize
-- Subsequent block allocations would reference invalid AG structures
-- Could lead to: 
-  - Filesystem corruption during extend operations
-  - Kernel crashes due to invalid memory accesses
-  - Security vulnerabilities via malformed on-disk structures
+Definitely no, ssd2825 is a RGB to DSI bridge in a pure form. While
+13xx as you have said are display controllers family.
 
-Fix by casting to s64 before shifting:
-bmp->db_agsize = (s64)1 << l2agsize;
-
-This ensures 64-bit arithmetic even on 32-bit architectures. The cast 
-matches the data type of db_agsize (s64) and follows similar patterns in 
-JFS block calculation code.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
----
- fs/jfs/jfs_dmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
-index ef220709c7f5..eedea23d70ff 100644
---- a/fs/jfs/jfs_dmap.c
-+++ b/fs/jfs/jfs_dmap.c
-@@ -3465,7 +3465,7 @@ int dbExtendFS(struct inode *ipbmap, s64 blkno,	s64 nblocks)
- 	oldl2agsize = bmp->db_agl2size;
- 
- 	bmp->db_agl2size = l2agsize;
--	bmp->db_agsize = 1 << l2agsize;
-+	bmp->db_agsize = (s64)1 << l2agsize;
- 
- 	/* compute new number of AG */
- 	agno = bmp->db_numag;
--- 
-2.34.1
-
+> Best regards
+> Thomas
+>
+> >
+> > ---
+> > Changes on switching from v1 to v2:
+> > - added description for clock
+> > - removed clock-names
+> > - added boundries for hs-zero-delay-ns and hs-prep-delay-ns
+> > - added mutex lock for host transfers
+> > - converted to atomic ops
+> > - get drm_display_mode mode with atomic helpers
+> > - parameterized INTERFACE_CTRL_REG_6 configuration
+> > - added video mode validation and fixup
+> > - removed clock name
+> > - switched to devm_regulator_bulk_get_const
+> > - added default timings
+> > ---
+> >
+> > Svyatoslav Ryhel (2):
+> >    dt-bindings: display: bridge: Document Solomon SSD2825
+> >    drm: bridge: Add support for Solomon SSD2825 RGB/DSI bridge
+> >
+> >   .../display/bridge/solomon,ssd2825.yaml       | 141 +++
+> >   drivers/gpu/drm/bridge/Kconfig                |  14 +
+> >   drivers/gpu/drm/bridge/Makefile               |   1 +
+> >   drivers/gpu/drm/bridge/ssd2825.c              | 824 +++++++++++++++++=
++
+> >   4 files changed, 980 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/display/bridge/s=
+olomon,ssd2825.yaml
+> >   create mode 100644 drivers/gpu/drm/bridge/ssd2825.c
+> >
+>
+> --
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstrasse 146, 90461 Nuernberg, Germany
+> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> HRB 36809 (AG Nuernberg)
+>
