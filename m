@@ -1,73 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780411B6D11
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D95014A614;
+	Tue, 18 Feb 2025 08:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739868909; cv=none; b=IpYhnYTIvKx9xNvWn+yoTEChozCrGlprSCO6j7fOOqkmK9AAS6MskKwOy2TbnQeMzOmZ1UuKCxU/xKuGs1mhZ6cVtLOvccSA+xctKKqA0SOqUr0MKu2I3UgSaI6ayTm4fIKax2MvoWHScs+hxJTwWNcug4fd4VvYVPODRApe2ro=
+	t=1739869034; cv=none; b=ZOwVq6pn1llofnaJishSzH8p8fKye32ep1qrpocbssPpeKQYHC5OQKClRbOvWO3CUk7XX9qU1eoCifJe/oq/VHIqh8E0aDSyp/njB8CvZrpxxmEf+MgD31tOUo1oYaq7bYJGBcPBLZSUsw7Cksx7L8ui8SVrYz6IEqwQG6mL0SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739868909; c=relaxed/simple;
-	bh=wyo+DNeKX24yPz86D8zPeOTVB8dbEtWhhX1F/yV8fvE=;
+	s=arc-20240116; t=1739869034; c=relaxed/simple;
+	bh=2vE8L5fJp+dtJyWdQbSVt0omOCEQO0xF00KJ3QonoKI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRdaL3uYHErTvTriv0Lh2gSC/FmlVhjOBPQyYM4+drjVk5UI4NnQnF4AaEr/0QCR2HQxICUCtqwlEo7EToU3oPzBaIcmF8Y8gW0QAEF2fu+Xp91ry0ySsoeu1Y4DTr1xzbT/2miRGj1Q97r4XWSKXK/8ffVsRA/0nsjU2ewPe+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KK8GUIT+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=qKShPg/mfNy7ZFoCjVh2l/+xuGS2M+f4N/rxZVbuEZzlG0kuYSJQsB22JCxVoZzxSHBgsDuzIqRH09Mx4f/IGMEgGdeB5FJHYENuVVwA9dBXiLvBrUrjIHWLEm0fQ0YYeyBEiMGXK6PTE4wUYdiFpx+7PgkirP6n5rS+8yIEz10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HTLwXxO+; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KK8GUIT+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739868906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UFFus1oWqoyUZPw3Xk0cZbDYX9MY4kd682Ycm0D9p7E=;
-	b=KK8GUIT+TDvYKytwrFxQlye2xiB026yI1yCiZ+Iuya9JvtHfUqcAUCQtsHfR18IOj1kdCN
-	lfNOhYtLAYgOtughg2HCdagefNN7Szd7eMfzV9Ho9c/FpvwHdXw1J67Besb8jBIodCq9BZ
-	drvGoFkO9iebI8JFz9LGSsMpg0eph9E=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-195-kmwZVigDPP2WMO1GNCsymw-1; Tue, 18 Feb 2025 03:55:04 -0500
-X-MC-Unique: kmwZVigDPP2WMO1GNCsymw-1
-X-Mimecast-MFC-AGG-ID: kmwZVigDPP2WMO1GNCsymw_1739868904
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f28a4647eso2832696f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:55:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739868903; x=1740473703;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UFFus1oWqoyUZPw3Xk0cZbDYX9MY4kd682Ycm0D9p7E=;
-        b=PbPyXxGc2HOaN3UvK27EGVEVIuxNTwCmHaeKKQKtTgVIxZ5uq6JmUMRA1rCo7fVv0Y
-         hrSgYR2p+jLyHOhkHYgRGTr6rNCb3sy8IO+7DPKQSbKyUlLv1Pn7qPkHSZAHg0VcKMh5
-         kQctOYidZlHKmS+H9Mroq8YI5DOmc7cyW/ZLFuNQ4DR8FfId7Bo0VvL9o6MX9sbPSA8E
-         190FQ96gItzPehGMV/Lscj5PohOr3u80r2EUjiKt/LT7aK3FOxC7J8Pue6ZYIX9Dcv3q
-         N3FNFBsfjo9RAYg0GGu87Z0QN8/AZZJhHmDO/Qeeiu16CIi2o6zJYbQXGr9JJzibImNu
-         JD8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWA+at6xuuvSfRmuUlfu9+E8k5AaKE3nFn3okzf8g5fSOEsFKyRkb67mPP76vsfdq01FriqmKwJoOzZVQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy31cf2Kp5fgQrmXjKeVxZna1Jw3hK5ht+EQE6R07OpYeE1GIpb
-	/z+FH4FtZv8Kr0Uu6IpFeoWR5Z1WrkSl9E+/5x1RxetCLextx8M0glNBe3EM9ap2jNV9YW8tTgb
-	pygLW3Uy1GjoNIpOqNGEGh6xBb8BXfhihcTTXtyqhU3k2NZpcu/rNlmn6sAHA+ZRehoXKPEON
-X-Gm-Gg: ASbGncvhnq0vrzXxUofiOvAuu62MuAe04iz9mUcf8ietVbiRjjsIpuqMoSIWY022zbm
-	zU5VeriXAOcCwIzmBAOBh2ir/jmAoTqCfS9z8e4NzQB7J75MKvgniez6oxgaKFHM6x6/bDM3TCz
-	X4T+JLXtGoGrsc9Eallu8yN9YIaGHOwU6ZYbTJLYHPtbSKy0JAdhQ8IlVQpAj4opzviprSSkMcx
-	Hg5iarbWuddVTeKQtCE/GNR65uRxECSMPOOiY0tt9JSkqgI30wu8iVNLEg50yXNPwLqtq9v/xi7
-	DN4kEO+vdb52Zrx9elFIpUtFAPNprt2B+/y+qtrhFVoFYQwq4FU72aRzZQ1q/lEflUsRTvMCh7p
-	W7i5zcxxMhdYc4Afgh0inJd/J3iNlF/Jn
-X-Received: by 2002:a05:6000:1569:b0:38f:5057:5810 with SMTP id ffacd0b85a97d-38f50575957mr2623381f8f.25.1739868903637;
-        Tue, 18 Feb 2025 00:55:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEapAOSzbnTgE8PHXgWNcoR8rGw241hTyspFAst+fDNiZHY4OwVZpwEEqz1inQFu8uRiveKoQ==
-X-Received: by 2002:a05:6000:1569:b0:38f:5057:5810 with SMTP id ffacd0b85a97d-38f50575957mr2623352f8f.25.1739868903272;
-        Tue, 18 Feb 2025 00:55:03 -0800 (PST)
-Received: from ?IPV6:2003:cb:c70d:fb00:d3ed:5f44:1b2d:12af? (p200300cbc70dfb00d3ed5f441b2d12af.dip0.t-ipconnect.de. [2003:cb:c70d:fb00:d3ed:5f44:1b2d:12af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f85c2sm14872740f8f.91.2025.02.18.00.55.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 00:55:02 -0800 (PST)
-Message-ID: <2d0b01c5-a736-41d5-a0f7-db0da065d049@redhat.com>
-Date: Tue, 18 Feb 2025 09:55:00 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HTLwXxO+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739869030;
+	bh=2vE8L5fJp+dtJyWdQbSVt0omOCEQO0xF00KJ3QonoKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HTLwXxO+GyF1AD8FucYG29B1fK/lOd5HKGq+eU7n3INbr/PXWBliw6JzFvF7421MN
+	 hVl6i6IzO7bTIAGbQBFDLUT7fwRd+wMWhA/ik1ULEcoU3kUkh93PXjephjguDhySuM
+	 CmC+GdxgZnokHX8UesfiDF5xgtbjPcm7Dj2nL+pPVXXNToAMwvbGnC/mHMXLUMjw8u
+	 sVlYbD3RVIg1eNGMndq6XgRtwqk6xqPJRO1XiSfd4/M1Msj0oMhtB8QKotY/eBsEOs
+	 cgA1/9SBpKX7ROGTANvw32SiSHRG3t7JX+9w7gTTqKUzm1M2HpOYcQxaYqZlbcmcX9
+	 qN67gFS9gcYog==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E178217E0657;
+	Tue, 18 Feb 2025 09:57:09 +0100 (CET)
+Message-ID: <b26294cf-c751-4507-ae01-4f510cb4834a@collabora.com>
+Date: Tue, 18 Feb 2025 09:57:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,129 +42,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: wait for hugepage folios to be freed
-To: Ge Yang <yangge1116@126.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
- osalvador@suse.de, liuzixing@hygon.cn
-References: <1739514729-21265-1-git-send-email-yangge1116@126.com>
- <37363b17-88b0-4ccc-a115-8c9f1d83a1b5@redhat.com>
- <d043bdd2-a978-4a09-869e-b6e43f5ce409@126.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: usb: mtk-xhci: add support mt8196
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+References: <20250215100615.808-1-chunfeng.yun@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <d043bdd2-a978-4a09-869e-b6e43f5ce409@126.com>
+In-Reply-To: <20250215100615.808-1-chunfeng.yun@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 15.02.25 06:50, Ge Yang wrote:
+Il 15/02/25 11:06, Chunfeng Yun ha scritto:
+> There are three USB controllers on mt8196, each controller's wakeup
+> control is different, add some specific versions for them, and add
+> a new compatilbe for mt8196.
 > 
-> 
-> 在 2025/2/14 16:08, David Hildenbrand 写道:
->> On 14.02.25 07:32, yangge1116@126.com wrote:
->>> From: Ge Yang <yangge1116@126.com>
->>>
->>> Since the introduction of commit b65d4adbc0f0 ("mm: hugetlb: defer
->>> freeing
->>> of HugeTLB pages"), which supports deferring the freeing of HugeTLB
->>> pages,
->>> the allocation of contiguous memory through cma_alloc() may fail
->>> probabilistically.
->>>
->>> In the CMA allocation process, if it is found that the CMA area is
->>> occupied
->>> by in-use hugepage folios, these in-use hugepage folios need to be
->>> migrated
->>> to another location. When there are no available hugepage folios in the
->>> free HugeTLB pool during the migration of in-use HugeTLB pages, new
->>> folios
->>> are allocated from the buddy system. A temporary state is set on the
->>> newly
->>> allocated folio. Upon completion of the hugepage folio migration, the
->>> temporary state is transferred from the new folios to the old folios.
->>> Normally, when the old folios with the temporary state are freed, it is
->>> directly released back to the buddy system. However, due to the deferred
->>> freeing of HugeTLB pages, the PageBuddy() check fails, ultimately leading
->>> to the failure of cma_alloc().
->>>
->>> Here is a simplified call trace illustrating the process:
->>> cma_alloc()
->>>       ->__alloc_contig_migrate_range() // Migrate in-use hugepage
->>>           ->unmap_and_move_huge_page()
->>>               ->folio_putback_hugetlb() // Free old folios
->>>       ->test_pages_isolated()
->>>           ->__test_page_isolated_in_pageblock()
->>>                ->PageBuddy(page) // Check if the page is in buddy
->>>
->>> To resolve this issue, we have implemented a function named
->>> wait_for_hugepage_folios_freed(). This function ensures that the hugepage
->>> folios are properly released back to the buddy system after their
->>> migration
->>> is completed. By invoking wait_for_hugepage_folios_freed() following the
->>> migration process, we guarantee that when test_pages_isolated() is
->>> executed, it will successfully pass.
->>
->> Okay, so after every successful migration -> put of src, we wait for the
->> src to actually get freed.
->>
->> When migrating multiple hugetlb folios, we'd wait once per folio.
->>
->> It reminds me a bit about pcp caches, where folios are !buddy until the
->> pcp was drained.
->>
-> It seems that we only track unmovable, reclaimable, and movable pages on
-> the pcp lists. For specific details, please refer to the
-> free_frozen_pages() function.
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-It reminded me about PCP caches, because we effectively also have to 
-wait for some stuck folios to properly get freed to the buddy.
-
--- 
-Cheers,
-
-David / dhildenb
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
