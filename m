@@ -1,286 +1,214 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AFF2500CD;
-	Tue, 18 Feb 2025 14:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739888316; cv=fail; b=sNJD0JPDrdOAhbqOW5Ay4O2l3V/YctbIrFygGTwDhY7Y2HqUwchrU1MIKHU2Xs12mPZzAX3RR3TYoIAd0z7rLRUh/jEtKvc5tK+fzNGfa3bXVhAZ4lE/tXIulrKeHZZdlpS1cbU+nuhbvdUTx64NixsupAAzUya5AO7ICwAx+WY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739888316; c=relaxed/simple;
-	bh=CW8HCo6D8TJSjrmGPXC7rPtAoNonJ5w6o0B2kFpPrrE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rbXZm6xsSpxORLp1MukKI1Hnm+Um22IIX8Og6FLqzq+z4RRGwT1AENYhAD3LMK9iLhhFc1Y2kdi+vJkkokai1wcJxoA6u6DwN4PMals7m9WDfdiV1QmXgHkj4nraZEgx/3Sl9b0il0naMT/LOOpXTvfRxmPzBEnN3wB0+hccogs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kBIJZj/r; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=sZLB5UsO; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01A2269D1B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739888327; cv=none; b=uDzHK5XGgnw7HFHhesgOOIbQ0aWlrrYY7BCkiIsdhz0m89/gxOqDKuYMJaNyZhlZhEbvRUZUC/uu7Yt2Wm7wCKQKx8Ad3pI0UeNrnXP613FntDAEg8ZQmkoeV5PJD3Hs6Sm+2qB7kALmr8EukPCoVMIT1T7ii+VEqmH151zPGOA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739888327; c=relaxed/simple;
+	bh=Ylh6BzLP55i04wVfiFq0UdGu/ctOqdofDLlmv68+FsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZgTrphHSJAnf2s3rFsczQMuhUDJescQj9t7u2Hpfuae2rZUEoNwOeKhIcS+hk5FEslgGoGyBQMzo2HU0mDU3Eq6kTY8WaiXcErGcozWkWzCwuGLzg1zWsWJqFcijgrATa7PWs+4R8AD/BOFE2i33jCEyLDo9zrshX1Ul3kCM4Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bRXlK96h; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kBIJZj/r";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="sZLB5UsO"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IEHpKw009051;
-	Tue, 18 Feb 2025 14:17:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=; b=
-	kBIJZj/rhJKfA4ZKGFmMOFPILVJ+tuMYguP8BrVsLi1ehOlBcHSwrBflSjCZSoye
-	FjobQKh75mseWs9b05an5NSJ46aiDKU4EH5hkD4bDaJvuX2qEV1RU45zQ+uHLLEN
-	TXtkrFtXJ6H60WUoCFnQso5BTm0Ywm2IZBUQ51yQO1RAvhISmtWkelOJ1rDr91r2
-	olGvnAvhb2d3GwuykByUEuMWCBMc3Oohw5eA7V3kgyaw1UgaUgptfqnN682PsXg/
-	oG1AC+aytFYspMMmXRAwoOH8Ha/wN/dk7Mv3LtAEmapCZx2fa1J6sR+g9wpVkDS+
-	IGjZZ1FQPyX0dyTYP5sAOQ==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44thq2prb2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Feb 2025 14:17:51 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51ICmuBx036727;
-	Tue, 18 Feb 2025 14:17:43 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2047.outbound.protection.outlook.com [104.47.70.47])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44thc9349v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Feb 2025 14:17:42 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SYz1U77tPRDbVjXjVca23nx5gVd5JxWIlnfbXKKmwMTQkb1gXl2oxo3FNQVF4lbSGoTH8VTx9ZKg7q12/g497spzNcJUCk3wQCRnxXApSOR28lR1uARuqKA2HXkdM+vBItsSw7wS3CEnUgOFD0tyG+mzuofwiLUzPpLNMypAJ48qXd3qOiZ8Cu9I75ufVVO60ldHJWGR/kBww91tGYeZEttTimk+b+E7bJ1DbQHM3hHZttHghhqpIYjz4TmIbZ5ME7LGzJy9Er4CNH1Wp/REEUDjuLHHf1xGWe7ZQ0hV1kcmDSC3ENxACO2CkS9J5/Wt/Wv+PPMjxaZeIZ8oKglxEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=;
- b=YDRgMRtUXuS/9M5uq2LhdvendzgEHfr9Tqivvfp8Ghlv/VmDGRwEeLtSfcHKO1ow4rtJOb6V9GbFFm4zlQ7ZHX9/7pLV/CIFGUvm9EIh9XXBdWccTjjtmrmZtw8CZHPhHxodh0EtdrbkkWw2yBodVAFzy9b0iruDgumBR2fllc5R4CQa2pytSI7ZsF2Jbf+OWFCh9IctCY0QVeaFFM/AULDCGf9UeC8YhS+J2Lj/5XtTD8oWQwNC9OSh8qWiOD1KaD/4cEVIa3Xjakd9UZJQl2KXebrK3263E0pf6HQ2k+MLHg8qV6ZxrtfLGRNjJrxidDDxoc2hIDaGWmsoxlsOJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=;
- b=sZLB5UsO/p5Phb+Oz/k/KBFpjEUS3ZLmZq2/Xy7Ctm2P0iNlC3XYwN+4CFZkFv7eyrkU/bWcWoxZ3uRsXwTnpT7kHCUKwlrA/upouSUzBAzuGwLmnwlsofxuxj8holx2N7z/Hhj9lXCv2PSBu+SovJreskTEzEQdrbbCbjL/VOE=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MN2PR10MB4175.namprd10.prod.outlook.com (2603:10b6:208:1d9::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Tue, 18 Feb
- 2025 14:17:40 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
- 14:17:40 +0000
-Message-ID: <7b7492c0-a3a7-470b-b7aa-697ac790a94b@oracle.com>
-Date: Tue, 18 Feb 2025 09:17:35 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
- NULL elements
-To: Yunsheng Lin <linyunsheng@huawei.com>, Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>
-Cc: Luiz Capitulino <luizcap@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-References: <20250217123127.3674033-1-linyunsheng@huawei.com>
- <abc3ae0b-620a-4e4a-8dd8-f8e7d3764b3a@oracle.com>
- <cc6fc730-e5f4-485b-b0b6-ec70374b3ab1@huawei.com>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <cc6fc730-e5f4-485b-b0b6-ec70374b3ab1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH5PR04CA0017.namprd04.prod.outlook.com
- (2603:10b6:610:1f4::17) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bRXlK96h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739888324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DBhsPO91wIOuIx7V5POaYr34tBMgM6YIQ+GqBqORH08=;
+	b=bRXlK96hUDR5bzmcPbOPpjiXxn2RIpXJlb7bM/p0Aw9YMVXB5V7wKn2n7KRKLLyp7INYLY
+	dLpBojmaqZ6GdarV6hRZRp0DqixPpddOWnv5vUkc7SSFfurS4uPzPiVOWTI+qY2IA/U1OQ
+	6lRdEjDAmB1rWZbJI3caa+lXYHaBzd4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-568-RNr94hMnPU6g3ntB6LjTUQ-1; Tue, 18 Feb 2025 09:18:43 -0500
+X-MC-Unique: RNr94hMnPU6g3ntB6LjTUQ-1
+X-Mimecast-MFC-AGG-ID: RNr94hMnPU6g3ntB6LjTUQ_1739888322
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-439385b08d1so48560445e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:18:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739888322; x=1740493122;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DBhsPO91wIOuIx7V5POaYr34tBMgM6YIQ+GqBqORH08=;
+        b=MWEpbaid4FeHZSxSX0oHqU6zyqGXBLTH4AY/ZPcACUasyvPnmU5ZrarNDbrcW8MshS
+         0Ow9LK9vF/XWlnG4AjAwSjT8f02xFl2jC4QdPc42yFlEShqpx1E3FolrZs+jTurLs2sT
+         EpZZRA9V3RL8ww24nHxu8s/1AXnIDnUz00cubrtEKIw+x+AdqIC2YmzNxjgKflsTGWKM
+         sp2y5aQDzUpPb6vVX+c+/WJgTtrhttp6WIoEOvPvIus9JXpcojLZrHIpwKgOfBo3GhCz
+         pgjoFFy/3+StqzpO8EpNpkC+9ljKs7/NTsqjK+ZyJp7MFf8MnmREmdn6WpzPrYbcRbha
+         qUWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLQJKWNyunHMau4lJpz/pf9CqVnkI6SYcOaTeT+CvoaZ/yhTp9nCc3YLz0byuvAc07p+4N31c76i9noIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqxLLAgaln734jelWf3RSNJtK6LnDtvIoVp/Xe8YY0+psfbuPa
+	k7Ezb26sH17WykWrT4HdVf+TaFRlp0aEzbbydATIfN8svVNBWHn20LDcuv/sAggi+yyupwmWwv2
+	v0i2Kcm8cEputSuzzl3DnhOvmCVgTBNpoKofImga9GRlX8lf20O0cfIECiBlkeg==
+X-Gm-Gg: ASbGncvdcdSE2RwbUzflyDisQb5rgtpWN93GGrcRZqMB3l1N0CWVZMi/5nPFXy3b6yD
+	RF3kxN4rjfu4U040ehvMg5aaL2r/9YeFO4nCZQTKn+OabAceTCqhvVOKK0sdUaFcwo4FC95lh4F
+	0633uW8IUT4BM0my0nI1kvlpDzcAKH/TrzVjuAYiMYMdg9LOHD99p6OR8S7dtbpWuIMKXBm1uKA
+	ihZydMrIWEqPVhzisMd1vbNXGO50sLybX3yEh+z14i7H5I1br1KKXJ6JraI02cGI9RwbKAnB8Es
+	Ho8/LPFaIUCgnQfLZjP41CWUsE76qiXOTg==
+X-Received: by 2002:a05:600c:4f03:b0:438:a240:c63 with SMTP id 5b1f17b1804b1-4396e6978f1mr108096635e9.2.1739888321808;
+        Tue, 18 Feb 2025 06:18:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHz+8srgi2drXTmMyM1NYHrwhlKtyRHpPGxtjZL4L3zCFR0eLaPU7DhmwvLMH2MoF6LIUl/tw==
+X-Received: by 2002:a05:600c:4f03:b0:438:a240:c63 with SMTP id 5b1f17b1804b1-4396e6978f1mr108096425e9.2.1739888321363;
+        Tue, 18 Feb 2025 06:18:41 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a1b8471sm185070475e9.37.2025.02.18.06.18.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 06:18:40 -0800 (PST)
+Date: Tue, 18 Feb 2025 15:18:38 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Aashish Sharma <shraash@google.com>,
+	Shin Kawamura <kawasin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+Message-ID: <Z7SWvr86RXlBbJlw@jlelli-thinkpadt14gen4.remote.csb>
+References: <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
+ <dbd2af63-e9ac-44c8-8bbf-84358e30bf0b@arm.com>
+ <Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb>
+ <78f627fe-dd1e-4816-bbf3-58137fdceda6@nvidia.com>
+ <Z62ONLX4OLisCLKw@jlelli-thinkpadt14gen4.remote.csb>
+ <30a8cda5-0fd0-4e47-bafe-5deefc561f0c@nvidia.com>
+ <151884eb-ad6d-458e-a325-92cbe5b8b33f@nvidia.com>
+ <Z7Ne49MSXS2I06jW@jlelli-thinkpadt14gen4.remote.csb>
+ <Z7RZ4141H-FnoQPW@jlelli-thinkpadt14gen4.remote.csb>
+ <d7cc3a3c-155e-4872-a426-cbd239d79cac@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MN2PR10MB4175:EE_
-X-MS-Office365-Filtering-Correlation-Id: 657a4f68-d01b-4ae6-85bd-08dd50270086
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?M0pob29vVEFhTjU5YkZXeWFRVGxQZFdrWkpuN1Y0UGZsdG9GRmh0UnRDL1Nw?=
- =?utf-8?B?MFpPbEJhSWo2c2NoK2Uxc2xza3B5bG1WZnV5QVMzeEVQQVlNZVR0c3hYRHhP?=
- =?utf-8?B?V3BuQTB1MjFEUVVzQVBCMlEyTUozMVczVHZpTUV2U3JkUkU3RzNiMUNYS2sy?=
- =?utf-8?B?MER1YWF4TnpTVTYzaGZkb1VvUnRuYjZqWCs0TjM4MGhBNzJXVXVGYVEzdkVF?=
- =?utf-8?B?aTUydUFVclNISjdPNWlHa1B2VnVua1cxakpwSncwUkYxMEZFTUlNNUdOZW9Y?=
- =?utf-8?B?VHRPdkpHN0VHclVoUFIwTlZXSm93VUhieHVkc05ReFc2NWZuVkdJU256RERV?=
- =?utf-8?B?SW42K2Z1dzdaQmlWdVNRRjU1ZlNEUnI0alNqYmZ2TTlzLzBBczh0R09JcXNy?=
- =?utf-8?B?dU81L0h0MlBFWDNhUTRkTHoxSkUvWWhhQlAvSStSeFZKNSsvMk9LRnkzQTdo?=
- =?utf-8?B?eVh5TXNQcWlidlhhR2loOGY1VDNhR2tWb0Z2OW9VWmFmdjE1TG1KUWpVeDk2?=
- =?utf-8?B?M0JOZG9CandOSnJGdVZzbG9YQTVoTmYycnZ0eWNzeUpPd084ZXl0Y2QzNDVa?=
- =?utf-8?B?dWozQ1AxUW01RjlWbzdLZXJmOHh3SkVsU1I1T0EzTWhTY2h6TW1scUtKUlJY?=
- =?utf-8?B?M3pvamFhanNZdDRwVFMrdE42U3YxMkxHTGxMYWJPM1FwVTY0Yk9sajIxVTU3?=
- =?utf-8?B?cVpTd3gvbGw2R0Z4YmEvQ2NKMFNnMjhrYkZUQUFhZkxKeERqR1VEcGp0a2Vz?=
- =?utf-8?B?YlMwTS90bXZHL0RDWGl4Ly8wcWxxY0FwUEdYQUZjQWpZdGhDaEtZTXhuNzZj?=
- =?utf-8?B?RmVMakEwdkZZNEZvMElGZ0w5SmpDdnYwTEFyMHZEMFh4SXBOREdtazBPUjJY?=
- =?utf-8?B?Vjl1Zm9GS2p3RC8rbGNjRkZIL21FY05qV3EySGRiTlFSNHIvZnIvcVJnVFBu?=
- =?utf-8?B?SlYvZ1gzaVlhalUyRkxzM2FyVlNkTEYrQzFKYmJJM2x1TzdBUDl4SXg1NTRV?=
- =?utf-8?B?MU92RFBQUUlOd0FiQzhsVENqTVU2UEI3bnMxNkFlbHhIbjQrWkNUTEpNcXF1?=
- =?utf-8?B?b1EvTkozMWFDN2FTdE9BNWpzbittRlFpYXBaa3h1UjNVZld6bWJqYlpMbWlw?=
- =?utf-8?B?Q01uZEM1a2FSa3ZyMXkvakhjbDhBUWFQNDRzYXhtcnFTR2E5YlFkdENBdThm?=
- =?utf-8?B?Y3p6MkdYSk52eWJybnIrQWoyaDBUN1M2aHlhVmVWN0NieHZOK3crYmJsSXZG?=
- =?utf-8?B?SFZYb3VtQXRtOU9UY05nK1JSRWlDaWVjZE9vWktTaTBRUHhFRnk2a2pvWHg0?=
- =?utf-8?B?aWJNZUhwVEJlYlBJZEpTZ0UyRnB2N2c1ckl2R2FHQ2szcmtRSzBGZEZlc21x?=
- =?utf-8?B?aDE2SlJ5eDV1eXI3OGNKMGZFOVo3NUZrMzJQVDZrc0wzQkprQi9Qd05RejQ3?=
- =?utf-8?B?dU5sVy9mMkxKNzc5V1lFZ1V1bWQ2Tmt3OEF2Tk4zNHBMSUtTTnZEOHVHZjBs?=
- =?utf-8?B?ZTU3UWRub3BPUUNwc0NKNHQrWkM2NTdicVJpSzU0S0JURXFUTmNuZWhTYVk0?=
- =?utf-8?B?TGM2K05xWDBGdkhqNDZzbVlRbG5aS3B3WXJXZ0pRdDRKMHFPSVgxRzhKUklm?=
- =?utf-8?B?S05YbWg2VnJuSHVReVkvTmRsN2tPTVFSQTF2NzVwd3VNNVBIKzFubWF4eFRE?=
- =?utf-8?B?KzVXNGRSYlZXOTRMNkxlYkJnRUZRZDgxWVFweTBteGcxd2lWY0F3bVBCS3p5?=
- =?utf-8?B?ZVdxbzhQM1NXOFlZZVNiUVJiV0xLWVJHYkFIZGVHNVNSMitiQ0xSVFZPeWpJ?=
- =?utf-8?B?K1dLcWRqKy9uZkkwWWdPYmpRS3NGbzR4QTZ1Yk5idWRlcXZvRWt0NWRUdGdU?=
- =?utf-8?B?UW85WUZPemNQcUJnY29OUjB2bzZlTG5zNXBKK0V1Nm50WGZ1bS9yK1NjckZH?=
- =?utf-8?Q?M6IZkcs2BMM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K0R1RlYrYW9La3g5MGtEbUpGQnJxYklMV01tbko3Mmtka0h4QlhLQ3JPVlA1?=
- =?utf-8?B?cDg1TndIaXFKUXI1RWYzTW5zaHM5bXp1YjZHRjJNUTduOXJ5Rm1DTlM4Sy8y?=
- =?utf-8?B?c3h4cUNSQ3FkT1YxUEc2Mi9uN3pXQ3ZHeFM3dVdTNTZFeWFaRjZGaGlGbDBJ?=
- =?utf-8?B?U2JaZkRUWG5hS0o2QjQ4TGQxUXQ2NGhZQXhLSlhsQjlKR1FjdTRsbkRSYlJq?=
- =?utf-8?B?bjgwSU10ZXBRZzlaTjhUVHZ6TUowSXVRK3NxZllCako5UEdONUE5VHRkZ1U1?=
- =?utf-8?B?SlJ6K0lRU2R2NjFxeHVwVnpsMEJEbk1LOHBIckF6TUhTMDlaTFJacEh6N1JH?=
- =?utf-8?B?cFdlSXJCWHdlTUVtWVlHUkt3dEtFK1ZlYVdrQ3E0cStWUDRCaURyUzBaa0VK?=
- =?utf-8?B?RzdnWjErcWxqOVBpdit5bEZSN1FER0lFY0gvUEgvVHFXRU9MYllFR25LMitt?=
- =?utf-8?B?ZlNxR0NLMWJwOC90OTUwSzhobFlob3JZSk92OTlteU5oangwRVJ2bVF5KzA1?=
- =?utf-8?B?T3JHTmtmRHNHRFpSUW1hc3JNaXMrYmlBTWtyaTQ3bE1FczVuZGhCYVl0RVZ2?=
- =?utf-8?B?SW4rTTNFZjRjZWZGdXM0cWFDVzBabThsOCtkUktScldlcVMzWlV1akh3Snh1?=
- =?utf-8?B?Q3BzTWY0c2pqNGoyaXU2dTZxb2EyUkJSOE5xOHkyQUluVll1WXFReHphU3Nx?=
- =?utf-8?B?MEREbFRva1BlU2E1cXJ4ZGRQc1paVzBSbGpCTyt3RFlIbTYxMmdVU1FtYVV4?=
- =?utf-8?B?bFF3eCt1ZUVlcDdoc3VKT1ZVb2xpcmx3Rml2T0dIUWRiakpMVHRlTHllUGpn?=
- =?utf-8?B?ZnpYL0ttbXFaaFJ4Tk81Ni9xQmNOQzJyMUY4a1FpY1Y4QVVyYUpONC9lREQ0?=
- =?utf-8?B?VDdCQ1JOVmdOQ1JpbUI2K1JmVTZmOVRzVmxabmtsbjJHYzhTSmw5VjFhTzY1?=
- =?utf-8?B?NGxJbkZKWDFiZndzRktTZGxDRnRNcElKNlFsWncvYzNERjk5NzU4bDVQbSt4?=
- =?utf-8?B?OGNiMXdFVitOSjc0UVViZ042WlZjcHFhandianpGYzNUMlFTaFhyTk5UTGM2?=
- =?utf-8?B?bG9ZTU9ZRThPSlFYbEZBY1EzQzc2aGoxMGxPQWVIaWhoaFg4ekh3d1RwcU9k?=
- =?utf-8?B?RzVqOUhFRmZNVzc4TVFLUjVDZ2pNNCtuUkVkWmJpKzNOTW13dFpyQTJxZHlB?=
- =?utf-8?B?NmZ3cjErT3ZzN0JVampiQXNjMXRHTVdJMXRoVWxZMWxQZGlud3hqZDR1SXp2?=
- =?utf-8?B?OEphU2IwRFdpeHFQNkFJcnZNQ2lHKzA3V3lrclVPc2FMbzZmSWZPZmVyb2lD?=
- =?utf-8?B?OE1vTnJpUzhkOTNrQUxJY05QSkdmVWpPQjdaTGtUT0hnMkg0LytDMkRwRndD?=
- =?utf-8?B?Q0hBeDMycGFDeU5tN3dENFNWYTNCRlZHanRVSVUrR1BFdW9qb1pQV2I5dE5V?=
- =?utf-8?B?eXA4WEJHL2sxZmd1QksvSGNlai9ScGdYMDJtQmNWVk1BRHZQQVlBajJJWG1m?=
- =?utf-8?B?UzhvUGZOa0o5Tnk4Ty92RW1JRCtndnRnWVJnT1pIUzQ2Z0xEWFlvU2MxekZB?=
- =?utf-8?B?aTczVVdnamI5L0FNbzJ0UnBYYVkyN2o0NTFJZm9xWHYzUHQ4QVdoV004cTg3?=
- =?utf-8?B?Si90RytZaFNPbHJFQVRyaGFtcGJsVmtYS21zSE9EZ1BhK3FnVm92UDhzRDZC?=
- =?utf-8?B?Nm1JcEVoMjdPZnl2U0NyMnRlVGJpNjdrTytIREhMQVMvNXZ6SnpialVyU2VR?=
- =?utf-8?B?dVl5MmVvcjdOVE1jUEh4d2RNSjkxL1k3UzdmQWMxY0tKV2poVGFIQWFNV1hu?=
- =?utf-8?B?M0N1dXRTbEM2anVkbXlJOWNoWTNublJ1NW50TUtZd2F3azlXM2J1cnRhakJp?=
- =?utf-8?B?ZXgzZEErak8wS3FXK1ptdFVQUFJ1a2drVjhIZmVVZVpoTlg5YWhXc0kwR2Z4?=
- =?utf-8?B?bzdOTmFMdlBSbWRadFN0M0N5Y3dVbDB1Y3NtclZ0eWJiUFN3bFVDRFNMOCtk?=
- =?utf-8?B?KzVmWU9VWnVsTGFQa0k2czE2Q1RlY0RkYWV4V3htclU5cmozMTV1bExYaUJL?=
- =?utf-8?B?cllCeVluRmVudUV0RzRCWWVHYlAxTjd6NjhsbUdmSXZUZFcrSHc2dG1Hcjlm?=
- =?utf-8?Q?2mlF+MEhNzMiKdTf4lHlktU7J?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	zH1rtrLYUO9kfVUlDLACMMIqs7TxmPvWp0y9X82snWEqTTgSSg9Z0mpJwMrbgBE680JUNjLJgJjevu9nE33GEFZeY5ngAWMtbHVetuC7YEPpn3j7ZJSwp6P0p3pfopPcLvm+J3GDG/XDvjfKCqPTwKHZPxKNY8IBPHCRzuF546iipH68Gwr2fR2QigXBJM0CHOOpOTgnRHxZ3wALqgYloFkqUdbXxKh/zP2pzQbQNRgMJB8aUS9PV9thXt/hDsObHPCLBLLOiMv0kN2vt5PK9fRJHDNbrYw4DKnVUdTO2kyswLuZ/9uc+hVVGGOzc/HXBnru7EWsWvIeeQW24Oq/9QhgqSJYQOqM8IhUeEfk8341FCzvebcvkA6nsIfalkNSjctL3si/tzLhtqX0zTTR8q1KYzHbyOF9912Ll97Vo57oNZjnA2ZHdFPix5pUnXvkN3EPb1zRi/fv1P3gGldlGvu/LQntwXWv6+nAvws/KEbgcxf5uc7i4zeRpiAznF681pmtQ7/og/EaJ3hKlnoz7pRZE4g47ahzVaCzVXLJsFlJe46oN07D3juEA/YghLcT+MvWfrbr+vYkvxFgWWuVYVf7n4j96d0uGBiVrEff7Bc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 657a4f68-d01b-4ae6-85bd-08dd50270086
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 14:17:40.0840
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vAjHVCU6oTuoGS8/WcqmWhtj9cXlvIn2MuFVJT4QCQM9ByAXyahiEoADNFKpEjWaa4XCq/7oUev+Fi9iPmpz0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4175
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-18_07,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
- definitions=main-2502180108
-X-Proofpoint-ORIG-GUID: KRjixLD1fAdMJ0NS3dDvWbHrlcF_0kHJ
-X-Proofpoint-GUID: KRjixLD1fAdMJ0NS3dDvWbHrlcF_0kHJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7cc3a3c-155e-4872-a426-cbd239d79cac@arm.com>
 
-On 2/18/25 4:16 AM, Yunsheng Lin wrote:
-> On 2025/2/17 22:20, Chuck Lever wrote:
->> On 2/17/25 7:31 AM, Yunsheng Lin wrote:
->>> As mentioned in [1], it seems odd to check NULL elements in
->>> the middle of page bulk allocating,
->>
->> I think I requested that check to be added to the bulk page allocator.
->>
->> When sending an RPC reply, NFSD might release pages in the middle of
+On 18/02/25 15:12, Dietmar Eggemann wrote:
+> On 18/02/2025 10:58, Juri Lelli wrote:
+> > Hi!
+> > 
+> > On 17/02/25 17:08, Juri Lelli wrote:
+> >> On 14/02/25 10:05, Jon Hunter wrote:
+> > 
+> > ...
+> > 
+> >> At this point I believe you triggered suspend.
+> >>
+> >>> [   57.290150] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+> >>> [   57.335619] tegra-xusb 3530000.usb: Firmware timestamp: 2020-07-06 13:39:28 UTC
+> >>> [   57.353364] dwc-eth-dwmac 2490000.ethernet eth0: Link is Down
+> >>> [   57.397022] Disabling non-boot CPUs ...
+> >>
+> >> Offlining CPU5.
+> >>
+> >>> [   57.400904] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4 type=DYN span=0,3-5
+> >>> [   57.400949] CPU0 attaching NULL sched-domain.
+> >>> [   57.415298] span=1-2
+> >>> [   57.417483] __dl_sub: cpus=3 tsk_bw=52428 total_bw=157284 span=0,3-5 type=DYN
+> >>> [   57.417487] __dl_server_detach_root: cpu=0 rd_span=0,3-5 total_bw=157284
+> >>> [   57.417496] rq_attach_root: cpu=0 old_span=NULL new_span=1-2
+> >>> [   57.417501] __dl_add: cpus=3 tsk_bw=52428 total_bw=157284 span=0-2 type=DEF
+> >>> [   57.417504] __dl_server_attach_root: cpu=0 rd_span=0-2 total_bw=157284
+> >>> [   57.417507] CPU3 attaching NULL sched-domain.
+> >>> [   57.454804] span=0-2
+> >>> [   57.456987] __dl_sub: cpus=2 tsk_bw=52428 total_bw=104856 span=3-5 type=DYN
+> >>> [   57.456990] __dl_server_detach_root: cpu=3 rd_span=3-5 total_bw=104856
+> >>> [   57.456998] rq_attach_root: cpu=3 old_span=NULL new_span=0-2
+> >>> [   57.457000] __dl_add: cpus=4 tsk_bw=52428 total_bw=209712 span=0-3 type=DEF
+> >>> [   57.457003] __dl_server_attach_root: cpu=3 rd_span=0-3 total_bw=209712
+> >>> [   57.457006] CPU4 attaching NULL sched-domain.
+> >>> [   57.493964] span=0-3
+> >>> [   57.496152] __dl_sub: cpus=1 tsk_bw=52428 total_bw=52428 span=4-5 type=DYN
+> >>> [   57.496156] __dl_server_detach_root: cpu=4 rd_span=4-5 total_bw=52428
+> >>> [   57.496162] rq_attach_root: cpu=4 old_span=NULL new_span=0-3
+> >>> [   57.496165] __dl_add: cpus=5 tsk_bw=52428 total_bw=262140 span=0-4 type=DEF
+> >>> [   57.496168] __dl_server_attach_root: cpu=4 rd_span=0-4 total_bw=262140
+> >>> [   57.496171] CPU5 attaching NULL sched-domain.
+> >>> [   57.532952] span=0-4
+> >>> [   57.535143] rq_attach_root: cpu=5 old_span= new_span=0-4
+> >>> [   57.535147] __dl_add: cpus=5 tsk_bw=52428 total_bw=314568 span=0-5 type=DEF
+> >>
+> >> Maybe we shouldn't add the dl_server contribution of a CPU that is going
+> >> to be offline.
+> > 
+> > I tried to implement this idea and ended up with the following. As usual
+> > also pushed it to the branch on github. Could you please update and
+> > re-test?
+> > 
+> > Another thing that I noticed is that in my case an hotplug operation
+> > generating a sched/root domain rebuild ends up calling dl_rebuild_
+> > rd_accounting() (from partition_and_rebuild_sched_domains()) which
+> > resets accounting for def and dyn domains. In your case (looking again
+> > at the last dmesg you shared) I don't see this call, so I wonder if for
+> > some reason related to your setup we do the rebuild by calling partition_
+> > sched_domains() (instead of partition_and_rebuild_) and this doesn't
+> > call dl_rebuild_rd_accounting() after partition_sched_domains_locked() -
+> > maybe it should? Dietmar, Christian, Peter, what do you think?
 > 
-> It seems there is no usage of the page bulk allocation API in fs/nfsd/
-> or fs/nfs/, which specific fs the above 'NFSD' is referring to?
-
-NFSD is in fs/nfsd/, and it is the major consumer of
-net/sunrpc/svc_xprt.c.
-
-
->> the rq_pages array, marking each of those array entries with a NULL
->> pointer. We want to ensure that the array is refilled completely in this
->> case.
->>
+> Yeah, looks like suspend/resume behaves differently compared to CPU hotplug.
 > 
-> I did some researching, it seems you requested that in [1]?
-> It seems the 'holes are always at the start' for the case in that
-> discussion too, I am not sure if the case is referring to the caller
-> in net/sunrpc/svc_xprt.c? If yes, it seems caller can do a better
-> job of bulk allocating pages into a whole array sequentially without
-> checking NULL elements first before doing the page bulk allocation
-> as something below:
+> On my Juno [L b b L L L]
+>                 ^^^
+>                 isolcpus=[2,3]
 > 
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -663,9 +663,10 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->                 pages = RPCSVC_MAXPAGES;
->         }
+> # ps2 | grep DLN
+>    98    98 S 140      0   - DLN sugov:0
+>    99    99 S 140      0   - DLN sugov:1
 > 
-> -       for (filled = 0; filled < pages; filled = ret) {
-> -               ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
-> -               if (ret > filled)
-> +       for (filled = 0; filled < pages; filled += ret) {
-> +               ret = alloc_pages_bulk(GFP_KERNEL, pages - filled,
-> +                                      rqstp->rq_pages + filled);
-> +               if (ret)
->                         /* Made progress, don't sleep yet */
->                         continue;
-> 
-> @@ -674,7 +675,7 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->                         set_current_state(TASK_RUNNING);
->                         return false;
->                 }
-> -               trace_svc_alloc_arg_err(pages, ret);
-> +               trace_svc_alloc_arg_err(pages, filled);
->                 memalloc_retry_wait(GFP_KERNEL);
->         }
->         rqstp->rq_page_end = &rqstp->rq_pages[pages];
+> # taskset -p 98; taskset -p 99
+> pid 98's current affinity mask: 39
+> pid 99's current affinity mask: 6
 > 
 > 
-> 1. https://lkml.iu.edu/hypermail/linux/kernel/2103.2/09060.html
+> [   87.679282] partition_sched_domains() called
+> ...
+> [   87.684013] partition_sched_domains() called
+> ...
+> [   87.687961] partition_sched_domains() called
+> ...
+> [   87.689419] psci: CPU3 killed (polled 0 ms)
+> [   87.689715] __dl_bw_capacity() mask=2-5 cap=1024
+> [   87.689739] dl_bw_cpus() cpu=6 rd->span=2-5 cpu_active_mask=0-2 cpus=1
+> [   87.689757] dl_bw_manage: cpu=2 cap=0 fair_server_bw=52428
+> total_bw=209712 dl_bw_cpus=1 type=DEF span=2-5
+> [   87.689775] dl_bw_cpus() cpu=6 rd->span=2-5 cpu_active_mask=0-2 cpus=1
+> [   87.689789] dl_bw_manage() cpu=2 cap=0 overflow=1 return=-16
+> [   87.689864] Error taking CPU2 down: -16                       <-- !!!
+> ...
+> [   87.690674] partition_sched_domains() called
+> ...
+> [   87.691496] partition_sched_domains() called
+> ...
+> [   87.693702] partition_sched_domains() called
+> ...
+> [   87.695819] partition_and_rebuild_sched_domains() called
+> 
 
-I still don't see what is broken about the current API.
+Ah, OK. Did you try with my last proposed change?
 
-Anyway, any changes in svc_alloc_arg() will need to be run through the
-upstream NFSD CI suite before they are merged.
-
-
--- 
-Chuck Lever
