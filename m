@@ -1,211 +1,249 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CC3267B94
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66F326A0CF
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889328; cv=none; b=Gk4LcgTFr/QzFqbkNd10nM9C30yiZS5QK4FshGTyRdotaoIb03xzp5DuqDm6hbdCt+LRFN2ZfZnhc/YgkARrVgTpN5m54JwCoFYZft3GLYuhQ2hQotxdKbVTTr1J1tL36EBj8CaLpftmiUKG4cdVzfUqr7++0tvFUTCkH8tKBSs=
+	t=1739889340; cv=none; b=cudQ2wWWE2LAYFGyIRLmTCNRrynL2ehyfdV0zSB16/2DMyhGw4fH47lec5HN1sYVPHzB+/+8wcJ0P49PGVQYlAiFCq296PaVtbj4Vz2fh8lZcV4IozT19O0kj62C/mI3pRx6/Bbg8kJ/1VR+V4uGE9VYh2jXgnXhA18qc/Od/xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889328; c=relaxed/simple;
-	bh=BZJVcic6DcAWJNzoMClc6kls9c2veIURLxuU379/2dA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pK25bQ7SiWaZPKqVYG6yOqEnr4RF5D+Lzx3lMYloaXXw5scIiffIJykkwEgopN7NuHiiAzCXiTx3tSFSwdG4rfhXWKQxCqgTfr/NjE77ZXATVJbb44aFUo3MICdqGuQcY6LEDrI+2qq9bZy2iguKo+K44YOAhZOKH3B/wc8DMQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O4ICD+62; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739889340; c=relaxed/simple;
+	bh=DLOTCTjf45nQqFcmb7h5CGPAeoemenMqu1PjlYG9EIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PQftYIo7CZ5Rdk9dP16KWAoqaFceOEK0X+KKZ92hxdLGkISqO80AwcXiKIDz1Bf8vIZDoJNEb5Wp+5vsS8/YMyCzAsUaQ3iU+x9AeWooz/oQwBtddz7+4IYMnL5S8ZUtSseqIf1BV2ekjj2efUx1OV1epuaDPDR+yTyJt8WUOSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n/BdXIxU; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O4ICD+62"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739889325;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2BBgcXRJrBgS4bqLk6IB+Bu0JRKwgATueMPPbzZjJrI=;
-	b=O4ICD+62XP5+5+BJGGJ0EuxF3CM5/9JTzkT9MqpfJOPbUKFN+npxSaQK5fo0QPQF0s+YtD
-	ZvLdTgp3j/2Vsb1pW+NmkwYwXzidwAjY4eGH0kWYtR08mYWPZK3TIil2fUt2480d4CXPGs
-	TPV2vQgO8eNd7nJVpj3hQo3JVI3i4M8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-44-R5kqbmCJPSKPlcB6x5RnWA-1; Tue, 18 Feb 2025 09:35:24 -0500
-X-MC-Unique: R5kqbmCJPSKPlcB6x5RnWA-1
-X-Mimecast-MFC-AGG-ID: R5kqbmCJPSKPlcB6x5RnWA_1739889323
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38f45a86efdso1205237f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:35:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/BdXIxU"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30a2cdb2b98so23306761fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:35:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739889336; x=1740494136; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MWFT9m6GN4GxrZYX8Rpent2wFQfA0PjR3otNOfevNYU=;
+        b=n/BdXIxUvlmP98v3IhgoT0V5JEEl7vJ+OOWYqFjI6FFsN2ToRQX/sCTCh7vzZeMSbt
+         uH0mt2muhx3UNYDuLs8WNz/16uhYb8UIJ4jxkoQqkYJQ331nSPZ7Rx2xuc4uTCYCPiB+
+         Qnp/o2gjthukhr3iPxVRRox8WkxWSU0qP8+HZi82gy9VBJg7YdGHswE0VRxkGR5m0MlP
+         +JbXHqf2MEtTu5nekIzYzIA6O8ZuBx/+iEupr4UfChksc8kt1xFU8KRn88B8hYJdZ0RR
+         dHY5neFTWRkLwP7A+YeqwcaxfXvE9jeQA2Bw8XDkT7QvhLKmvXg4NyYhZwyhohYOp1ff
+         BKYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739889323; x=1740494123;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2BBgcXRJrBgS4bqLk6IB+Bu0JRKwgATueMPPbzZjJrI=;
-        b=uVoKRrrDHo+wl5rfR45RRn1Cs0iOwBye40kwHcu5+rp5upN3WN6K6/iqvCagPOU4zX
-         IG/504OxyiC1digQIPdXHk/9876in1/zxPgVrAudbSV3tJFyPASHBB4u0F91/Yg6Qkbj
-         M2jHoR3L5kOR3vfacJ5s6FdK16v1QC+xahyKmsprUyLMPxO2r8qNihaSVBfG0c+tRK8c
-         u2qqcFZAinvRy63m4FsJJQcsEG7rqRqUrhG79HhvZzcpqrtfe/E8KeQv28XjvR/U4pCk
-         aolzPsg8fanmtBVR5RFswFImettdsomWiiKwMiiqpdepCfYSmF3Db4n/zFgeXUCMvWv1
-         wjAw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3NLxavk5Pot1J3Ayt0ayqHB+HAIACSTkPcy7P87aRXnoS9M/m3e/X2TmeFqTN97aa3m0LzLFnkl6QiMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbxcINmw/+WPBsziPYxP9rB0s8fiTTUq5y8xnP43PQYe4Q0w1n
-	TltGw6LLTRK8in8sGaY4eg9OCrmSzBJuY1UsjhjgyJYTq2QtcJ8o7EUjDGAFdFUOGS8x4MFlxnr
-	DGOetwo5hScKdGRkpiJdFy9LKy4O6C5tdDBM9RyYxi9/uGvUJ7ymNzTL7QdDx2A==
-X-Gm-Gg: ASbGncs7aC5S895G5qkIJEawui8XTy80L1icaff9zqcoR5s4ru5Eb0r4xp9Vk7sA8wb
-	jUS3MoD72rRN7XIKezpoFBfDfmaY0inOA1SfutkWAGmzKDjYROQS3l7JkRWPGE5zvrcpmd1ZscM
-	9lC0/sukMIgR+OJF05t+OCOW8zIKNneAXlePocpWaV+oFTg16uT7fBzrJGw+hPL4Rp/MEnMffKu
-	AcjY7xL51jqEt6qzBT/OlF/bo4Rz/sem3g0fpJx3xlQosFdf4VwIgW0D4ZU5USo5XpxAoOY+xrl
-	OD5AKV4nALKwn0Zg0GPu5O9GTMAJVIHH2ZDy58yu8p0A59+dnu7fBVy5NloODfiLTgs2P8aDHxP
-	lUuRbYu92OdYWvzKjIDFQj7tygP4jSwfD
-X-Received: by 2002:a5d:64c2:0:b0:38f:452f:9f89 with SMTP id ffacd0b85a97d-38f452fa26cmr7672910f8f.50.1739889322680;
-        Tue, 18 Feb 2025 06:35:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IECohohAOqe4JhXJYwDCfx/E8JPPIGDkcaVLHfskcflyFiuSiy2JNsExexnSee00wptapNfFA==
-X-Received: by 2002:a5d:64c2:0:b0:38f:452f:9f89 with SMTP id ffacd0b85a97d-38f452fa26cmr7672875f8f.50.1739889322290;
-        Tue, 18 Feb 2025 06:35:22 -0800 (PST)
-Received: from ?IPV6:2003:cb:c70d:fb00:d3ed:5f44:1b2d:12af? (p200300cbc70dfb00d3ed5f441b2d12af.dip0.t-ipconnect.de. [2003:cb:c70d:fb00:d3ed:5f44:1b2d:12af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5655sm15145789f8f.77.2025.02.18.06.35.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 06:35:21 -0800 (PST)
-Message-ID: <37b606be-f1ef-4abf-83ff-c1f34567568e@redhat.com>
-Date: Tue, 18 Feb 2025 15:35:19 +0100
+        d=1e100.net; s=20230601; t=1739889336; x=1740494136;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MWFT9m6GN4GxrZYX8Rpent2wFQfA0PjR3otNOfevNYU=;
+        b=P+DFpAKuX32zy7JRndb3CsLl9kKUHMi+9Xw6/z2zHqX4U6TKa1YuB2fO/kr2DF2aFz
+         2pddZkK04xE9xP8vYMN9kX8wpeZ29VVZNIv1qklzxsv6FuMvfAb4kMfLoguRWzeYnDgn
+         H2Kb21XPZaoBMnonDvdCklCBrw+CMEvUn7LDv51u/Zznyx5CWunnu7WcWPmGvmKL6F4E
+         hJMI2B75vKHWTgae8KIE3zMCg9e85bcq7dqJRljzjYlkC8Q+7QHvLdjQmSxjb1VUDMrQ
+         nfTGEGaUQpObufzwDhw6UyCi+N0R1HNgzBqS6FMGVYSsgvS1i3QJDQOHdDzYevlX6IOD
+         sc5Q==
+X-Gm-Message-State: AOJu0Yz4vTe2O1vyLu/t6CHwd3R0L4UyVytl+mSicxaJU/n2YKRIpNsu
+	O34tZbnOHV6TZphtXhoKSv6rgxbfU9UdTNHY2Kp5xduXm30Q0OVUAqOcx3eoj7m2O5VDH3RLcyg
+	B
+X-Gm-Gg: ASbGncsLf8b5f9pMuZam85pmKmDeFdE9EQUjJ7BPKH8YBlQw0ou9Sgk9re4iCNicIwA
+	tOs5AmnH7OtyIHzEIXyo1XRT4Tv0v/QSk1YFJQsG3iHyYcxaGNDjm9a4k+XdjwDvGMw3xslE5VC
+	uUx+bHDyInepeTX5BFeC85nyzJpgKOExIZWd/nIEqlE60Xx95glHnvB9e0rBFLZtXf/dJknJ5Or
+	MO3jnw9nAQzno64KtND0YzveticlYGKAoBXmsLE0ORJ/gNUWmvnNmZaeK3pxAbQLpjo95sH1jNl
+	EP12hu80tNJcO51Erb7wmiDYIzS7LcA58zMZArXS99VPdEpZT2KAa0ry9OdUjZyBC0Od
+X-Google-Smtp-Source: AGHT+IGRQRyenVlztaodJXNdRWoqSHnEiV6CAyLZN/0VHpW+LYtybqKnx2XoHGvKGUJTmzr2eF8qRg==
+X-Received: by 2002:a2e:885a:0:b0:309:251a:df12 with SMTP id 38308e7fff4ca-30927aa59ecmr37278251fa.19.1739889336018;
+        Tue, 18 Feb 2025 06:35:36 -0800 (PST)
+Received: from rayden.urgonet (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309311777a8sm12360831fa.25.2025.02.18.06.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 06:35:34 -0800 (PST)
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v5 0/7] TEE subsystem for restricted dma-buf allocations
+Date: Tue, 18 Feb 2025 15:34:49 +0100
+Message-ID: <20250218143527.1236668-1-jens.wiklander@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] mm: permit guard regions for file-backed/shmem
- mappings
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Suren Baghdasaryan <surenb@google.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Matthew Wilcox <willy@infradead.org>, "Paul E . McKenney"
- <paulmck@kernel.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org,
- John Hubbard <jhubbard@nvidia.com>, Juan Yescas <jyescas@google.com>,
- Kalesh Singh <kaleshsingh@google.com>
-References: <cover.1739469950.git.lorenzo.stoakes@oracle.com>
- <fbfae348-909b-48fa-9083-67696b02f15e@suse.cz>
- <8d643393-ddc0-490d-8fad-ad0b2720afb1@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <8d643393-ddc0-490d-8fad-ad0b2720afb1@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 18.02.25 14:05, Lorenzo Stoakes wrote:
-> On Tue, Feb 18, 2025 at 01:12:05PM +0100, Vlastimil Babka wrote:
->> On 2/13/25 19:16, Lorenzo Stoakes wrote:
->>> The guard regions feature was initially implemented to support anonymous
->>> mappings only, excluding shmem.
->>>
->>> This was done such as to introduce the feature carefully and incrementally
->>> and to be conservative when considering the various caveats and corner
->>> cases that are applicable to file-backed mappings but not to anonymous
->>> ones.
->>>
->>> Now this feature has landed in 6.13, it is time to revisit this and to
->>> extend this functionality to file-backed and shmem mappings.
->>>
->>> In order to make this maximally useful, and since one may map file-backed
->>> mappings read-only (for instance ELF images), we also remove the
->>> restriction on read-only mappings and permit the establishment of guard
->>> regions in any non-hugetlb, non-mlock()'d mapping.
->>
->> Do you plan to address mlock later too? I guess somebody might find use for
->> those. Is there some fundamental issue or just that we need to define some
->> good semantics for corner cases? (i.e. if pages are already populated in the
->> mlocked area, discarding them by replacing with guard pte's goes against
->> that, so do we allow it or not?).
-> 
-> Yeah that's the fundamental issue with mlock, it does not interact with the
-> zapping part of MADV_GUARD_INSTALL, and that is why we disallow it (but not so
-> for MADV_GUARD_REMOVE, as if a VMA that contains guard regions is locked
-> _afterwards_ there will be no zapping).
-> 
-> We could potentially expose an equivalent, as there are for other flags, a
-> _LOCKED variant of the madvise() flag, like MADV_GUARD_INSTALL_LOCKED to make
-> this explicit.
-> 
-> That is probably the most sensible option, if there is a need for this!
+Hi,
 
-mlock is weird, because it assumes that memory will be faulted in in the whole VMA.
+[Now with a Gstreamer demo, see below.]
 
-You'd likely have to populate + mlock the page when removing the guard.
-Also not sure what happens if one does an mlock()/mlockall() after
-already installing PTE markers.
+This patch set allocates the restricted DMA-bufs via the TEE subsystem.
 
-__mm_populate() would skip whole VMAs in case populate_vma_page_range()
-fails. And I would assume populate_vma_page_range() fails on the first
-guard when it triggers a page fault.
+The TEE subsystem handles the DMA-buf allocations since it is the TEE
+(OP-TEE, AMD-TEE, TS-TEE, or perhaps a future QCOMTEE) which sets up the
+restrictions for the memory used for the DMA-bufs.
 
-OTOH, supporting the mlock-on-fault thingy should be easy. That's precisely where
-MADV_DONTNEED_LOCKED originates from:
+I've added a new IOCTL, TEE_IOC_RSTMEM_ALLOC, to allocate the restricted
+DMA-bufs. This IOCTL reaches the backend TEE driver, allowing it to choose
+how to allocate the restricted physical memory.
 
-commit 9457056ac426e5ed0671356509c8dcce69f8dee0
-Author: Johannes Weiner <hannes@cmpxchg.org>
-Date:   Thu Mar 24 18:14:12 2022 -0700
+TEE_IOC_RSTMEM_ALLOC takes in addition to a size and flags parameters also
+a use-case parameter. This is used by the backend TEE driver to decide on
+allocation policy and which devices should be able to access the memory.
 
-     mm: madvise: MADV_DONTNEED_LOCKED
-     
-     MADV_DONTNEED historically rejects mlocked ranges, but with MLOCK_ONFAULT
-     and MCL_ONFAULT allowing to mlock without populating, there are valid use
-     cases for depopulating locked ranges as well.
+Three use-cases (Secure Video Playback, Trusted UI, and Secure Video
+Recording) has been identified so far to serve as examples of what can be
+expected. More use-cases can be added in userspace ABI, but it's up to the
+backend TEE drivers to provide the implementation.
+
+Each use-case has it's own restricted memory pool since different use-cases
+requires isolation from different parts of the system. A restricted memory
+pool can be based on a static carveout instantiated while probing the TEE
+backend driver, or dynamically allocated from CMA and made restricted as
+needed by the TEE.
+
+This can be tested on a RockPi 4B+ with the following steps:
+repo init -u https://github.com/jenswi-linaro/manifest.git -m rockpi4.xml \
+        -b prototype/sdp-v5
+repo sync -j8
+cd build
+make toolchains -j$(nproc)
+make all -j$(nproc)
+# Copy ../out/rockpi4.img to an SD card and boot the RockPi from that
+# Connect a monitor to the RockPi
+# login and at the prompt:
+gst-launch-1.0 videotestsrc ! \
+        aesenc key=1f9423681beb9a79215820f6bda73d0f \
+                iv=e9aa8e834d8d70b7e0d254ff670dd718 serialize-iv=true ! \
+        aesdec key=1f9423681beb9a79215820f6bda73d0f ! \
+        kmssink
+
+The aesdec module has been hacked to use an OP-TEE TA to decrypt the stream
+into restricted DMA-bufs which are consumed by the kmssink.
+
+The primitive QEMU tests from previous patch set can be tested on RockPi
+in the same way with:
+xtest --sdp-basic
+
+The primitive test are tested on QEMU with the following steps:
+repo init -u https://github.com/jenswi-linaro/manifest.git -m qemu_v8.xml \
+        -b prototype/sdp-v5
+repo sync -j8
+cd build
+make toolchains -j$(nproc)
+make SPMC_AT_EL=1 all -j$(nproc)
+make SPMC_AT_EL=1 run-only
+# login and at the prompt:
+xtest --sdp-basic
+
+The SPMC_AT_EL=1 parameter configures the build with FF-A and an SPMC at
+S-EL1 inside OP-TEE. The parameter can be changed into SPMC_AT_EL=n to test
+without FF-A using the original SMC ABI instead. Please remember to do
+%rm -rf ../trusted-firmware-a/build/qemu
+for TF-A to be rebuilt properly using the new configuration.
+
+https://optee.readthedocs.io/en/latest/building/prerequisites.html
+list dependencies needed to build the above.
+
+The tests are pretty basic, mostly checking that a Trusted Application in
+the secure world can access and manipulate the memory. There are also some
+negative tests for out of bounds buffers etc.
+
+Thanks,
+Jens
+
+Changes since V4:
+* Adding the patch "tee: add TEE_IOC_RSTMEM_FD_INFO" needed by the
+  GStreamer demo
+* Removing the dummy CPU access and mmap functions from the dma_buf_ops
+* Fixing a compile error in "optee: FF-A: dynamic restricted memory allocation"
+  reported by kernel test robot <lkp@intel.com>
+
+Changes since V3:
+* Make the use_case and flags field in struct tee_shm u32's instead of
+  u16's
+* Add more description for TEE_IOC_RSTMEM_ALLOC in the header file
+* Import namespace DMA_BUF in module tee, reported by lkp@intel.com
+* Added a note in the commit message for "optee: account for direction
+  while converting parameters" why it's needed
+* Factor out dynamic restricted memory allocation from
+  "optee: support restricted memory allocation" into two new commits
+  "optee: FF-A: dynamic restricted memory allocation" and
+  "optee: smc abi: dynamic restricted memory allocation"
+* Guard CMA usage with #ifdef CONFIG_CMA, effectively disabling dynamic
+  restricted memory allocate if CMA isn't configured
+
+Changes since the V2 RFC:
+* Based on v6.12
+* Replaced the flags for SVP and Trusted UID memory with a u32 field with
+  unique id for each use case
+* Added dynamic allocation of restricted memory pools
+* Added OP-TEE ABI both with and without FF-A for dynamic restricted memory
+* Added support for FF-A with FFA_LEND
+
+Changes since the V1 RFC:
+* Based on v6.11
+* Complete rewrite, replacing the restricted heap with TEE_IOC_RSTMEM_ALLOC
+
+Changes since Olivier's post [2]:
+* Based on Yong Wu's post [1] where much of dma-buf handling is done in
+  the generic restricted heap
+* Simplifications and cleanup
+* New commit message for "dma-buf: heaps: add Linaro restricted dmabuf heap
+  support"
+* Replaced the word "secure" with "restricted" where applicable
+
+Jens Wiklander (7):
+  tee: add restricted memory allocation
+  tee: add TEE_IOC_RSTMEM_FD_INFO
+  optee: account for direction while converting parameters
+  optee: sync secure world ABI headers
+  optee: support restricted memory allocation
+  optee: FF-A: dynamic restricted memory allocation
+  optee: smc abi: dynamic restricted memory allocation
+
+ drivers/tee/Makefile              |   1 +
+ drivers/tee/optee/Makefile        |   1 +
+ drivers/tee/optee/call.c          |  10 +-
+ drivers/tee/optee/core.c          |   1 +
+ drivers/tee/optee/ffa_abi.c       | 179 +++++++++++++-
+ drivers/tee/optee/optee_ffa.h     |  27 ++-
+ drivers/tee/optee/optee_msg.h     |  65 ++++-
+ drivers/tee/optee/optee_private.h |  75 ++++--
+ drivers/tee/optee/optee_smc.h     |  71 +++++-
+ drivers/tee/optee/rpc.c           |  31 ++-
+ drivers/tee/optee/rstmem.c        | 389 ++++++++++++++++++++++++++++++
+ drivers/tee/optee/smc_abi.c       | 215 +++++++++++++++--
+ drivers/tee/tee_core.c            |  69 +++++-
+ drivers/tee/tee_private.h         |   4 +
+ drivers/tee/tee_rstmem.c          | 188 +++++++++++++++
+ drivers/tee/tee_shm.c             |   2 +
+ drivers/tee/tee_shm_pool.c        |  69 +++++-
+ include/linux/tee_core.h          |  15 ++
+ include/linux/tee_drv.h           |   2 +
+ include/uapi/linux/tee.h          |  71 +++++-
+ 20 files changed, 1409 insertions(+), 76 deletions(-)
+ create mode 100644 drivers/tee/optee/rstmem.c
+ create mode 100644 drivers/tee/tee_rstmem.c
 
 
-Adding support for that would be indeed nice.
-
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
