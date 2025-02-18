@@ -1,111 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F0B286A1;
-	Tue, 18 Feb 2025 17:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7D726FA66;
+	Tue, 18 Feb 2025 17:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739899750; cv=none; b=HIofuxIQGNHdvjhFvFUpw/rc7AnS+9kEHuhg3oZuuO/2TOS8uo/JESapIIeuDONVOB/jR66cPnrgyzquOpe3o1JMwhCpG1bitp5m+kGOvDYI63A8gr6JjmxLEXOKu3kDgmzQk4p649VnvfYoiXFErw5E42lqf9AUKIzcX+6gjLE=
+	t=1739899796; cv=none; b=ANrSIfzf3Uo/S1qzX3cqQqPKNDHeabbzPnPweMyOGHQgpYvNjGG4jMWkGbs3xCBRS0x9I484GEgyhOcFaMn3Nap/+fEUxSfSgCzy0NLJa5Oo/2ppAO13edYl/b7BbQgtbelaoWn11zR9+SYeavVlOs9zLEO+fdu63eg4x/qauIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739899750; c=relaxed/simple;
-	bh=MxI8M2wbkcp+37wHzG/RfF0zP5KTWHkSheAyaIx5QBc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=fztfSzBaPfn0vvSqXyxVRlWC4ruUN0jpTkND8DIZjWdn2BblhxACIaIV2RId/q+E0C15gTSPfnlZJLSt6Ru4QOCXliMplNzMsnlGn1PpODuJlTEzHeU0yaS2nIbw63WW4edwNOgW/l2hwTf/TZ29W/JfSV2d+atI+iphgZwfko4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EDxbiW07; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3eED4nZl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739899796; c=relaxed/simple;
+	bh=emS3jjUdRxAkZX0/Wg/p0kV5/i72KFjYTYkDUpcXmW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J3qGVMPYpYYqL83uyP6acavrNPtd/OImTH+4sDhUC9pcfj53cNcR45fosJv4Dc4Hn5j04DTqT8IYZiZ36oOLwFYjBRhEfB63l1gHLpoVd9NdoKi7qphN7Md6KQ0yfHkEf0qzA/Wdo4ATy3B4i1enPO9SbUnA6o985jfc4yV/GEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+vFfbbw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EDxbiW07";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3eED4nZl"
-Date: Tue, 18 Feb 2025 17:29:00 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739899746;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RqKHgAVf+wjocvxnCDI3yCoH+0U6NFgRgYV5Thtzqgg=;
-	b=EDxbiW07sfLsM2zRbeJKV+abjbTSOligQj94eHCU+9WJCLknDSe57VtrDGeHC/bMyWbPhY
-	BX+TLMK2iqnbLCwSfPcV9DsGl2WD9+XMuc+mNFzOtOsDx88eUsCLnR+dIEGO+pInDnzTer
-	DScAiBEovUGX2xMjVO4rQaBUroo5fAHMS6wQZUjVqCNYY2x1aFroV1BiIGI+c6kfG7ozbL
-	Tfv9y9pZle4eNN0LXs2KKitTgMYf1U1v+LO5b8E6vZPTsHG83jQ1B4z+tdNrvc5JnJ7KZg
-	W2frGZJ+66tYYo13obUAN40fl04HaLLcT/6lZVTlu5J21IkTN16xSMJBoU8eQQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739899746;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RqKHgAVf+wjocvxnCDI3yCoH+0U6NFgRgYV5Thtzqgg=;
-	b=3eED4nZlsIOa8aVCrI0mJzE3zhEp/lTu0rgJFX212Sn1zQl7TUPCwJRoIG5dWKyFTSJRM6
-	et84OWvgLjllCaCA==
-From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/misc] x86/amd_node: Add a smn_read_register() helper
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250217231747.1656228-2-superm1@kernel.org>
-References: <20250217231747.1656228-2-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+vFfbbw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26F7C4CEE2;
+	Tue, 18 Feb 2025 17:29:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739899795;
+	bh=emS3jjUdRxAkZX0/Wg/p0kV5/i72KFjYTYkDUpcXmW0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=s+vFfbbwo9m1fZgTAeijqNdnoXzw+R8VMVeiuUaxWN+leCTtyn20NI8cbpv2TtRaL
+	 56SlzZZOYpHIo8Kef0J68Ejk1XHOcJYHmawd/KanOR6d8PqS7xdGyjiGUk42EaZXgA
+	 YPucXca5ekgoXdG3JdiQOQAF7E2E2i4NDeys0y2oyGIhEdxA51AgfqQrnWZv+4y1Po
+	 BsEJhrP8Mfrxek4ZTHb4Agze0O9pWvBlU4FXLiqUP9Vc7kt+XaTCyeVOwH4uoMA7w2
+	 hjIhEyA0PYIdnzfkhC2oVIPYCvUNtYfIPz4jJWURFia7eVxHtZ9qxTqKel33W40QIL
+	 V0GcIE9S993UQ==
+Message-ID: <23b98c23-c408-40b8-bab2-cae0fe8455d4@kernel.org>
+Date: Tue, 18 Feb 2025 11:29:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173989974292.10177.3977427168807711894.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] Adjust all AMD audio drivers to use AMD_NODE
+To: Borislav Petkov <bp@alien8.de>, Mark Brown <broonie@kernel.org>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ "open list:AMD NODE DRIVER" <linux-kernel@vger.kernel.org>,
+ "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..."
+ <linux-sound@vger.kernel.org>,
+ "moderated list:SOUND - SOUND OPEN FIRMWARE (SOF) DRIVERS"
+ <sound-open-firmware@alsa-project.org>
+References: <20250217231747.1656228-1-superm1@kernel.org>
+ <Z7SjI-NIZbMEgz2y@finisterre.sirena.org.uk>
+ <b2876489-7bd5-4c38-b1f8-2d2fcb5a9aba@kernel.org>
+ <20250218152649.GKZ7SmubM_YWhDqaPo@fat_crate.local>
+ <f037a5a9-7e5a-4582-9a35-90e8442c6ed6@kernel.org>
+ <20250218172650.GOZ7TC2mHXJdO7_iAd@fat_crate.local>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250218172650.GOZ7TC2mHXJdO7_iAd@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/misc branch of tip:
+On 2/18/2025 11:26, Borislav Petkov wrote:
+> On Tue, Feb 18, 2025 at 09:33:03AM -0600, Mario Limonciello wrote:
+>> Yeah; please get that ready and I'll rebase the series and send out a v2 on
+>> that branch.
+> 
+> There it is:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/misc
+> 
 
-Commit-ID:     c893ee3f95f16fcb98da934d61483d0b7d8ed568
-Gitweb:        https://git.kernel.org/tip/c893ee3f95f16fcb98da934d61483d0b7d8ed568
-Author:        Mario Limonciello <mario.limonciello@amd.com>
-AuthorDate:    Mon, 17 Feb 2025 17:17:41 -06:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 18 Feb 2025 18:14:29 +01:00
+Thanks.
 
-x86/amd_node: Add a smn_read_register() helper
+Mark,
 
-Some of the ACP drivers will poll registers through SMN using
-read_poll_timeout() which requires returning the result of the register read
-as the argument.
+I confirmed that a test merge of tip/x86/misc into ASoC/for-next and 
+then applying the remaining 6 patches worked properly, so you can pick 
+up and do that.
 
-Add a helper to do just that.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20250217231747.1656228-2-superm1@kernel.org
----
- arch/x86/include/asm/amd_node.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/x86/include/asm/amd_node.h b/arch/x86/include/asm/amd_node.h
-index 002c3af..23fe617 100644
---- a/arch/x86/include/asm/amd_node.h
-+++ b/arch/x86/include/asm/amd_node.h
-@@ -46,4 +46,15 @@ static inline int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *val
- }
- #endif /* CONFIG_AMD_NODE */
- 
-+/* helper for use with read_poll_timeout */
-+static inline int smn_read_register(u32 reg)
-+{
-+	int data, rc;
-+
-+	rc = amd_smn_read(0, reg, &data);
-+	if (rc)
-+		return rc;
-+
-+	return data;
-+}
- #endif /*_ASM_X86_AMD_NODE_H_*/
+Thanks,
