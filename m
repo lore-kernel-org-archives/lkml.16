@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3BB22D4F0;
-	Tue, 18 Feb 2025 09:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40627E1;
+	Tue, 18 Feb 2025 09:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869439; cv=none; b=bhjUnHOXPD1koOXqhn/GqsaDDcbjlEtTHPfWv6fu/BXvtGK2ShQwyja40UmwmJhnF7rC4CW6I+aTRS78Ek5QGL/qog4BVlr5R8VWjZUxO8NNmguswylvM5j8tP65cym1HCH+pjuy4EyAekZodtYmpxIcVm5dWtX+fEQoGXt9BEA=
+	t=1739869437; cv=none; b=ZCiRVE7gf97MguUY67Q213jrE8cIi6eT0tQtUIgwQfWfsRM+L4+mkQtNywpWgVtgvwj2tp5rprrGLa5AcDlA/zrn3BsCzXuCVOdyvkHYWAyUQvnWdiZtPw7WvC9iAcoXP0yQ6G2Qwi3D4A4caATn56nxOe2xeztFLPMHyFugwIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869439; c=relaxed/simple;
-	bh=N2KeRYtp/cIiPIJp5NR4WJdPIy8ipfp3Jn4SgdCXUb0=;
+	s=arc-20240116; t=1739869437; c=relaxed/simple;
+	bh=0Rd/x6adob5tpx2PaR0pGi/tc38KWrhnPKcC+GUuOPQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=YUNVw+1jXRg/i6SsSdnpqv5jha0iuWC4vxDfy3XtlR22QTULpyTRQBiXGizmRtD/uEGaszYKrGPuCDz/2DZBWVyUHh5cqa0OGG/ZzjcXc2Jd9VQoZtMI/YhmPwiOSwa+K/GcWVB1Q7tyK+uwqN3QsYqYSKeh6HN8MXothmVI/hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BubPV88K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bSzjEyPJ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=r3EhmmtJyrNdY7pjXXZ+OGRRCTCgdRAI/ZLAi1X/SkqJo/LgpFVAYeSapNDE0VSh0RIKGN2s4AjwO/lIW12hVJ4dWTRVTyNWofojj3AnAHOTvpMPZR8Z3Od7c/Uf1NxW7RlyuSKt10yNMS82zA0fMYUNYxN5crJr0PMePr6qqOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o8pd0In0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FqnHF9S4; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BubPV88K";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bSzjEyPJ"
-Date: Tue, 18 Feb 2025 09:03:55 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o8pd0In0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FqnHF9S4"
+Date: Tue, 18 Feb 2025 09:03:46 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739869435;
+	s=2020; t=1739869434;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ULI5gyTZ/Hxkjid/EGyckD8YhgblvPNJuNOO6f5Cexo=;
-	b=BubPV88KWECEXsT/f0F+3KY5t1R80b6+YUuLZPefmtPujUtc+TEm/EyooQK3XDDUtHCZJL
-	Rn8hxC/23kQmKoarV6V4ScdbeHn6aorWKGjN7t39urR2tsvSN1n6ynLrEkIJqEOxPhXwMX
-	59PXNUxC58cKEvNw1BpRBlYkrnVDEWksgI9CQ0FKg15y8McvGjlP1Brj/nJNfzuOQWg+Sm
-	mNyZvd47VGcikskJ77Cfxqa0FJwOV4dXowFdljAVTzQ185FLrPdpJFiSBjz7PtIC0U9j2u
-	/VsxnRO6e9neyZXokVHvqSJblWLVmI1pD/tknzskgiRPNVNld6m9pBROtVj7eA==
+	bh=SBu1iWwAD6XiMvBuMeL5Ur5b805UdX3Z2R1EKfPTfDw=;
+	b=o8pd0In0y/Ihr2SAJj4tRQfzDbAj1gqJHuCCGJuyCs9RkIZNBX3YZjz1A3ThvWaVVTXCvW
+	HWNj9sq+eU3SUpKCGNVDxbZbqhCgHhs8sUQ3nXRYtFs69LX2XsbxujjyQ4WjCXKP/7AtAe
+	Mx2UHem/yAr/ad5oOwTrWoTHF8VyU2eUBDxZUa50TNNo5hLoe2UmTZAk0fjwdysj1bqbv/
+	9LjytWNb2sMvsEesocprVC4N4qRUL7L4SPKcLikrgMzwSG0AYUBYzm+M6Ja8CbdrWn0dkk
+	h7kl8bmHp75+Aju0KMa6XZkL8irm/BxJ5RziSBvrcHnfses25ldjpnsbwdfWHw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739869435;
+	s=2020e; t=1739869434;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ULI5gyTZ/Hxkjid/EGyckD8YhgblvPNJuNOO6f5Cexo=;
-	b=bSzjEyPJkVtXR3GlEgTp3R0WZ/s1Q0Tc9OlWGI13vmBsiufVdixaJk5Yh/ZiYhJLRitL/K
-	d1Phyb/Ly196rjBw==
+	bh=SBu1iWwAD6XiMvBuMeL5Ur5b805UdX3Z2R1EKfPTfDw=;
+	b=FqnHF9S4rptqEP2fc0ffBtYvInqiSv9TWaUx5V1SC43jNwH9FfksAqxgdc9ZceNHZADmO2
+	1d63477zMaQqpeDw==
 From: "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/drivers] genirq: Introduce irq_can_move_in_process_context()
+Subject: [tip: irq/drivers] irqchip/riscv-imsic: Separate next and previous
+ pointers in IMSIC vector
 Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250217085657.789309-6-apatel@ventanamicro.com>
-References: <20250217085657.789309-6-apatel@ventanamicro.com>
+In-Reply-To: <20250217085657.789309-8-apatel@ventanamicro.com>
+References: <20250217085657.789309-8-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173986943528.10177.13292434775859832792.tip-bot2@tip-bot2>
+Message-ID: <173986942609.10177.4836478239443953090.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,72 +67,273 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/drivers branch of tip:
 
-Commit-ID:     01cbc389161fe5a679cc87cc8011a41342e94aaf
-Gitweb:        https://git.kernel.org/tip/01cbc389161fe5a679cc87cc8011a41342e94aaf
+Commit-ID:     9ce2dd6677c262880b0cbca53819aec2acc55c8e
+Gitweb:        https://git.kernel.org/tip/9ce2dd6677c262880b0cbca53819aec2acc55c8e
 Author:        Anup Patel <apatel@ventanamicro.com>
-AuthorDate:    Mon, 17 Feb 2025 14:26:51 +05:30
+AuthorDate:    Mon, 17 Feb 2025 14:26:53 +05:30
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 09:51:01 +01:00
 
-genirq: Introduce irq_can_move_in_process_context()
+irqchip/riscv-imsic: Separate next and previous pointers in IMSIC vector
 
-Interrupt controller drivers which enable CONFIG_GENERIC_PENDING_IRQ
-require to know whether an interrupt can be moved in process context or not
-to decide whether they need to invoke the work around for non-atomic MSI
-updates or not.
+Currently, there is only one "move" pointer in struct imsic_vector so
+during vector movement the old vector points to the new vector and new
+vector points to itself.
 
-This information can be retrieved via irq_can_move_pcntxt(). That helper
-requires access to the top-most interrupt domain data, but the driver which
-requires this is usually further down in the hierarchy.
+To support forced cleanup of the old vector, add separate "move_next" and
+"move_prev" pointers to struct imsic_vector, where during vector movement
+the "move_next" pointer of the old vector points to the new vector and the
+"move_prev" pointer of the new vector points to the old vector.
 
-Introduce irq_can_move_in_process_context() which retrieves that
-information from the top-most interrupt domain data.
-
-[ tglx: Massaged change log ]
+Both "move_next" and "move_prev" pointers are cleared separately by
+__imsic_local_sync() with a restriction that "move_prev" on the new
+CPU is cleared only after the old CPU has cleared "move_next".
 
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250217085657.789309-6-apatel@ventanamicro.com
----
- include/linux/irq.h    |  2 ++
- kernel/irq/migration.c | 10 ++++++++++
- 2 files changed, 12 insertions(+)
+Link: https://lore.kernel.org/all/20250217085657.789309-8-apatel@ventanamicro.com
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 56f6583..dd5df1e 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -615,6 +615,7 @@ extern int irq_affinity_online_cpu(unsigned int cpu);
- #endif
+---
+ drivers/irqchip/irq-riscv-imsic-early.c |  8 +-
+ drivers/irqchip/irq-riscv-imsic-state.c | 96 ++++++++++++++++--------
+ drivers/irqchip/irq-riscv-imsic-state.h |  7 +-
+ 3 files changed, 78 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
+index c5c2e69..b5def62 100644
+--- a/drivers/irqchip/irq-riscv-imsic-early.c
++++ b/drivers/irqchip/irq-riscv-imsic-early.c
+@@ -77,6 +77,12 @@ static void imsic_handle_irq(struct irq_desc *desc)
+ 	struct imsic_vector *vec;
+ 	unsigned long local_id;
  
- #if defined(CONFIG_SMP) && defined(CONFIG_GENERIC_PENDING_IRQ)
-+bool irq_can_move_in_process_context(struct irq_data *data);
- void __irq_move_irq(struct irq_data *data);
- static inline void irq_move_irq(struct irq_data *data)
- {
-@@ -623,6 +624,7 @@ static inline void irq_move_irq(struct irq_data *data)
- }
- void irq_move_masked_irq(struct irq_data *data);
- #else
-+static inline bool irq_can_move_in_process_context(struct irq_data *data) { return true; }
- static inline void irq_move_irq(struct irq_data *data) { }
- static inline void irq_move_masked_irq(struct irq_data *data) { }
- #endif
-diff --git a/kernel/irq/migration.c b/kernel/irq/migration.c
-index e110300..147cabb 100644
---- a/kernel/irq/migration.c
-+++ b/kernel/irq/migration.c
-@@ -127,3 +127,13 @@ void __irq_move_irq(struct irq_data *idata)
- 	if (!masked)
- 		idata->chip->irq_unmask(idata);
- }
-+
-+bool irq_can_move_in_process_context(struct irq_data *data)
-+{
 +	/*
-+	 * Get the top level irq_data in the hierarchy, which is optimized
-+	 * away when CONFIG_IRQ_DOMAIN_HIERARCHY is disabled.
++	 * Process pending local synchronization instead of waiting
++	 * for per-CPU local timer to expire.
 +	 */
-+	data = irq_desc_get_irq_data(irq_data_to_desc(data));
-+	return irq_can_move_pcntxt(data);
++	imsic_local_sync_all(false);
++
+ 	chained_irq_enter(chip, desc);
+ 
+ 	while ((local_id = csr_swap(CSR_TOPEI, 0))) {
+@@ -120,7 +126,7 @@ static int imsic_starting_cpu(unsigned int cpu)
+ 	 * Interrupts identities might have been enabled/disabled while
+ 	 * this CPU was not running so sync-up local enable/disable state.
+ 	 */
+-	imsic_local_sync_all();
++	imsic_local_sync_all(true);
+ 
+ 	/* Enable local interrupt delivery */
+ 	imsic_local_delivery(true);
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
+index b97e6cd..1aeba76 100644
+--- a/drivers/irqchip/irq-riscv-imsic-state.c
++++ b/drivers/irqchip/irq-riscv-imsic-state.c
+@@ -124,10 +124,11 @@ void __imsic_eix_update(unsigned long base_id, unsigned long num_id, bool pend, 
+ 	}
+ }
+ 
+-static void __imsic_local_sync(struct imsic_local_priv *lpriv)
++static bool __imsic_local_sync(struct imsic_local_priv *lpriv)
+ {
+ 	struct imsic_local_config *mlocal;
+ 	struct imsic_vector *vec, *mvec;
++	bool ret = true;
+ 	int i;
+ 
+ 	lockdep_assert_held(&lpriv->lock);
+@@ -143,35 +144,75 @@ static void __imsic_local_sync(struct imsic_local_priv *lpriv)
+ 			__imsic_id_clear_enable(i);
+ 
+ 		/*
+-		 * If the ID was being moved to a new ID on some other CPU
+-		 * then we can get a MSI during the movement so check the
+-		 * ID pending bit and re-trigger the new ID on other CPU
+-		 * using MMIO write.
++		 * Clear the previous vector pointer of the new vector only
++		 * after the movement is complete on the old CPU.
+ 		 */
+-		mvec = READ_ONCE(vec->move);
+-		WRITE_ONCE(vec->move, NULL);
+-		if (mvec && mvec != vec) {
++		mvec = READ_ONCE(vec->move_prev);
++		if (mvec) {
++			/*
++			 * If the old vector has not been updated then
++			 * try again in the next sync-up call.
++			 */
++			if (READ_ONCE(mvec->move_next)) {
++				ret = false;
++				continue;
++			}
++
++			WRITE_ONCE(vec->move_prev, NULL);
++		}
++
++		/*
++		 * If a vector was being moved to a new vector on some other
++		 * CPU then we can get a MSI during the movement so check the
++		 * ID pending bit and re-trigger the new ID on other CPU using
++		 * MMIO write.
++		 */
++		mvec = READ_ONCE(vec->move_next);
++		if (mvec) {
+ 			if (__imsic_id_read_clear_pending(i)) {
+ 				mlocal = per_cpu_ptr(imsic->global.local, mvec->cpu);
+ 				writel_relaxed(mvec->local_id, mlocal->msi_va);
+ 			}
+ 
++			WRITE_ONCE(vec->move_next, NULL);
+ 			imsic_vector_free(&lpriv->vectors[i]);
+ 		}
+ 
+ skip:
+ 		bitmap_clear(lpriv->dirty_bitmap, i, 1);
+ 	}
++
++	return ret;
+ }
+ 
+-void imsic_local_sync_all(void)
++#ifdef CONFIG_SMP
++static void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
++{
++	lockdep_assert_held(&lpriv->lock);
++
++	if (!timer_pending(&lpriv->timer)) {
++		lpriv->timer.expires = jiffies + 1;
++		add_timer_on(&lpriv->timer, smp_processor_id());
++	}
 +}
++#else
++static inline void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
++{
++}
++#endif
++
++void imsic_local_sync_all(bool force_all)
+ {
+ 	struct imsic_local_priv *lpriv = this_cpu_ptr(imsic->lpriv);
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&lpriv->lock, flags);
+-	bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
+-	__imsic_local_sync(lpriv);
++
++	if (force_all)
++		bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
++	if (!__imsic_local_sync(lpriv))
++		__imsic_local_timer_start(lpriv);
++
+ 	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
+ }
+ 
+@@ -190,12 +231,7 @@ void imsic_local_delivery(bool enable)
+ #ifdef CONFIG_SMP
+ static void imsic_local_timer_callback(struct timer_list *timer)
+ {
+-	struct imsic_local_priv *lpriv = this_cpu_ptr(imsic->lpriv);
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&lpriv->lock, flags);
+-	__imsic_local_sync(lpriv);
+-	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
++	imsic_local_sync_all(false);
+ }
+ 
+ static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int cpu)
+@@ -216,14 +252,11 @@ static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int cpu
+ 	 */
+ 	if (cpu_online(cpu)) {
+ 		if (cpu == smp_processor_id()) {
+-			__imsic_local_sync(lpriv);
+-			return;
++			if (__imsic_local_sync(lpriv))
++				return;
+ 		}
+ 
+-		if (!timer_pending(&lpriv->timer)) {
+-			lpriv->timer.expires = jiffies + 1;
+-			add_timer_on(&lpriv->timer, cpu);
+-		}
++		__imsic_local_timer_start(lpriv);
+ 	}
+ }
+ #else
+@@ -278,8 +311,9 @@ void imsic_vector_unmask(struct imsic_vector *vec)
+ 	raw_spin_unlock(&lpriv->lock);
+ }
+ 
+-static bool imsic_vector_move_update(struct imsic_local_priv *lpriv, struct imsic_vector *vec,
+-				     bool new_enable, struct imsic_vector *new_move)
++static bool imsic_vector_move_update(struct imsic_local_priv *lpriv,
++				     struct imsic_vector *vec, bool is_old_vec,
++				     bool new_enable, struct imsic_vector *move_vec)
+ {
+ 	unsigned long flags;
+ 	bool enabled;
+@@ -289,7 +323,10 @@ static bool imsic_vector_move_update(struct imsic_local_priv *lpriv, struct imsi
+ 	/* Update enable and move details */
+ 	enabled = READ_ONCE(vec->enable);
+ 	WRITE_ONCE(vec->enable, new_enable);
+-	WRITE_ONCE(vec->move, new_move);
++	if (is_old_vec)
++		WRITE_ONCE(vec->move_next, move_vec);
++	else
++		WRITE_ONCE(vec->move_prev, move_vec);
+ 
+ 	/* Mark the vector as dirty and synchronize */
+ 	bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
+@@ -322,8 +359,8 @@ void imsic_vector_move(struct imsic_vector *old_vec, struct imsic_vector *new_ve
+ 	 * interrupt on the old vector while device was being moved
+ 	 * to the new vector.
+ 	 */
+-	enabled = imsic_vector_move_update(old_lpriv, old_vec, false, new_vec);
+-	imsic_vector_move_update(new_lpriv, new_vec, enabled, new_vec);
++	enabled = imsic_vector_move_update(old_lpriv, old_vec, true, false, new_vec);
++	imsic_vector_move_update(new_lpriv, new_vec, false, enabled, old_vec);
+ }
+ 
+ #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
+@@ -386,7 +423,8 @@ struct imsic_vector *imsic_vector_alloc(unsigned int hwirq, const struct cpumask
+ 	vec = &lpriv->vectors[local_id];
+ 	vec->hwirq = hwirq;
+ 	vec->enable = false;
+-	vec->move = NULL;
++	vec->move_next = NULL;
++	vec->move_prev = NULL;
+ 
+ 	return vec;
+ }
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.h b/drivers/irqchip/irq-riscv-imsic-state.h
+index 391e442..f02842b 100644
+--- a/drivers/irqchip/irq-riscv-imsic-state.h
++++ b/drivers/irqchip/irq-riscv-imsic-state.h
+@@ -23,7 +23,8 @@ struct imsic_vector {
+ 	unsigned int				hwirq;
+ 	/* Details accessed using local lock held */
+ 	bool					enable;
+-	struct imsic_vector			*move;
++	struct imsic_vector			*move_next;
++	struct imsic_vector			*move_prev;
+ };
+ 
+ struct imsic_local_priv {
+@@ -74,7 +75,7 @@ static inline void __imsic_id_clear_enable(unsigned long id)
+ 	__imsic_eix_update(id, 1, false, false);
+ }
+ 
+-void imsic_local_sync_all(void);
++void imsic_local_sync_all(bool force_all);
+ void imsic_local_delivery(bool enable);
+ 
+ void imsic_vector_mask(struct imsic_vector *vec);
+@@ -87,7 +88,7 @@ static inline bool imsic_vector_isenabled(struct imsic_vector *vec)
+ 
+ static inline struct imsic_vector *imsic_vector_get_move(struct imsic_vector *vec)
+ {
+-	return READ_ONCE(vec->move);
++	return READ_ONCE(vec->move_prev);
+ }
+ 
+ void imsic_vector_move(struct imsic_vector *old_vec, struct imsic_vector *new_vec);
