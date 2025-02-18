@@ -1,129 +1,128 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEEF1EB5DB
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AF72356CE;
+	Tue, 18 Feb 2025 18:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739903250; cv=none; b=Gz2b9veIv03ShTLMfy1A6Z3fwmWBYWghw1mo78juaZ3EDEYMc+yiuanNG6kkkUBNe/4QzLYq2y49vlZxBAfNnR8utWUlRk4YnLgBqOJ3hdE38ERTkfe+1dR0FJsRJJblfO/v/2zGDKVDTjsl0APn0X+UvOXLlhMO2YgksMCWNZo=
+	t=1739903271; cv=none; b=IRTrOmTjcRejMDqiXdotJBMT2dh3n16XLF6C8dZ1jm3XC3IHTm1rM1Q/V3AXNN95veZQFOtYBYO49tig7ZU45qBVDDAM0Ggv5KbpCtPhKqvd24mK6GR+7Zj4UOWdgE45bq1U5tU+TPTlFr6ItQDEf8ojEpBzO/e0aWrwbUtaQ20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739903250; c=relaxed/simple;
-	bh=zNE/DNv8Rppeo9YS/X0VZcm7JvRezuQoHrQ8Y+6T7r0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pfR85G4x/NYN38qNBvqL6pCcdLjQcfyXh7jUm4taxiK/Omtx1BRgG/GLbIDxHgVWwKDKbk6/gUQplS536c+vT5DxvIN1X/njFaJ8VAnEO9W9khO58QXNbu4qhN/ikeMdsbO4liMoTUD0oT1iljLe2q2RkKP/19d9esULVn5Z6PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tkSIy-0006Bf-13; Tue, 18 Feb 2025 19:26:48 +0100
-Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tkSIx-001dVA-1V;
-	Tue, 18 Feb 2025 19:26:47 +0100
-Received: from localhost ([::1] helo=dude05.red.stw.pengutronix.de)
-	by dude05.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tkSIx-00A9Hm-1B;
-	Tue, 18 Feb 2025 19:26:47 +0100
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Date: Tue, 18 Feb 2025 19:26:41 +0100
-Subject: [PATCH v4 1/6] dt-bindings: clock: imx8m: document
- nominal/overdrive properties
+	s=arc-20240116; t=1739903271; c=relaxed/simple;
+	bh=HxKuZoG5faLYpcvIYAbnKZghPB+UgsCntvdpKFyaRVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hjzexPmM5T4q1Zv+TweQQm0003k//y0Ex2LCagLU0sm6yqK78wNR6yD9T8yNGkUlpHFK0bq2uy8XJst5lOb4Pw9DobfMAcx+m7Nyn/skImLVwtJCWm55a/YH5h70kZ2nHnyjg1ZAgOIJGVTYDnUaeAYyrD3coM2x/yrJFD+SeEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDGuJ7Hq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDGuJ7Hq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37FA9C4CEEB;
+	Tue, 18 Feb 2025 18:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739903271;
+	bh=HxKuZoG5faLYpcvIYAbnKZghPB+UgsCntvdpKFyaRVI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qDGuJ7HqZuBQ1yLpk4Ai0UgteucDUpqqe7VMhU1iwDeu75i9PA0j6KW4vJEzzz/cL
+	 xOApKilis9FKt6GwXUV0m4w2HgJP6ogCLn06mvGzxTn5t+8if3HHN1OB203iGoIA83
+	 sYPSHDOgo0wU2jcLepJpKfbkLjayPM8RT2E+v8dYVbZC48MxLsP5MhXJ56K5ELMT4T
+	 dy+eqAUn1tmJr2gQaX+oI5/TtrLZ6ipL/DuayiKr7kKj2NpiZZKVGhV+bBuQwp0hMp
+	 STfOOoTDrrkvhPEV/MlmPzIY5H/sMvXmoq0qsvm+PyOsAOk/ZEqurFniSshjX3ZMw2
+	 7RAbfcs2Em15Q==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3f410506043so24253b6e.0;
+        Tue, 18 Feb 2025 10:27:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX3MTB8CEuVrjT+fhtdR1CrnREUBVgiAfXmCweg3Ac5eL4yACS6UbBb3xcuJW9gbyj6sP9WcvjQyxU9ro8a@vger.kernel.org, AJvYcCXtYmImuWE1wgd1qgEQ2txrUXjf98HUxSm1W8xbDGeWVofuQVIGJy7dDV/DvtaPi4SF2CrHnqrKgkn8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzshei+bD9VwgEfNBaTIYkugjf1nnZRLJF+8GO8i5I25QPdDP1M
+	1maqPR/bTppDqcDYKmo0J0sJF8vN7Yx9p4/b+CcAebgPoaqhqfzM0AKDroRcUfymsl9TrWhvUb7
+	moP5HVmG2IAcGTR29EyiXaj9LPJU=
+X-Google-Smtp-Source: AGHT+IGa7BMO7Wkfm+DYBVltpZHxVEi/pMSUuEhYVJBWRL3zo0/I7MHgntiQBtOfww2TxxblD8B73EqqL6D3Uln52fo=
+X-Received: by 2002:a05:6808:3847:b0:3f1:c7ab:480 with SMTP id
+ 5614622812f47-3f3eb1216admr9373364b6e.27.1739903270509; Tue, 18 Feb 2025
+ 10:27:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-imx8m-clk-v4-1-b7697dc2dcd0@pengutronix.de>
-References: <20250218-imx8m-clk-v4-0-b7697dc2dcd0@pengutronix.de>
-In-Reply-To: <20250218-imx8m-clk-v4-0-b7697dc2dcd0@pengutronix.de>
-To: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, Frank Li <Frank.li@nxp.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Abel Vesa <abel.vesa@linaro.org>, 
- Marek Vasut <marex@denx.de>
-Cc: linux-clk@vger.kernel.org, imx@lists.linux.dev, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Ahmad Fatoum <a.fatoum@pengutronix.de>
-X-Mailer: b4 0.14.2
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250212193058.32110-1-kuurtb@gmail.com> <9a8a5084-589d-4c45-a011-5bf4d0dfc8ba@app.fastmail.com>
+ <CAJZ5v0hv3frfZCLgANBi-Kn8LCiuoWFSMcjDSipXQyycS5i1rw@mail.gmail.com> <D7VS189559P4.BKIIWBE7VCPE@gmail.com>
+In-Reply-To: <D7VS189559P4.BKIIWBE7VCPE@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 18 Feb 2025 19:27:39 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0i_wU-6tgZDtAJg=ypP=xM7dc3JCPf9AP0G6SDMEYS2og@mail.gmail.com>
+X-Gm-Features: AWEUYZmIH4kksHN7xPu6G9ilXGAe2VNdbu1Qhwb6Gk7Al_4r1vKARswXQUJj8Q0
+Message-ID: <CAJZ5v0i_wU-6tgZDtAJg=ypP=xM7dc3JCPf9AP0G6SDMEYS2og@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: platform_profile: Fix memory leak in profile_class_is_visible()
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	Len Brown <lenb@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"Limonciello, Mario" <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>, Gergo Koteles <soyer@irl.hu>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The imx8m-clock.yaml binding covers the clock controller inside all
-of the i.MX8M Q/M/N/P SoCs. All of them have in common that they
-support two operating modes: nominal and overdrive mode.
+On Tue, Feb 18, 2025 at 7:18=E2=80=AFPM Kurt Borja <kuurtb@gmail.com> wrote=
+:
+>
+> On Tue Feb 18, 2025 at 1:07 PM -05, Rafael J. Wysocki wrote:
+> > On Sat, Feb 15, 2025 at 3:18=E2=80=AFAM Mark Pearson <mpearson-lenovo@s=
+quebb.ca> wrote:
+> >>
+> >>
+> >> On Wed, Feb 12, 2025, at 2:30 PM, Kurt Borja wrote:
+> >> > If class_find_device() finds a device it's reference count is
+> >> > incremented. Call put_device() to drop this reference before returni=
+ng.
+> >> >
+> >> > Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI
+> >> > platform profile")
+> >> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> >> > ---
+> >> >  drivers/acpi/platform_profile.c | 8 +++++++-
+> >> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >> >
+> >> > diff --git a/drivers/acpi/platform_profile.c
+> >> > b/drivers/acpi/platform_profile.c
+> >> > index fc92e43d0fe9..2ad53cc6aae5 100644
+> >> > --- a/drivers/acpi/platform_profile.c
+> >> > +++ b/drivers/acpi/platform_profile.c
+> >> > @@ -417,8 +417,14 @@ static int profile_class_registered(struct devi=
+ce
+> >> > *dev, const void *data)
+> >> >
+> >> >  static umode_t profile_class_is_visible(struct kobject *kobj, struc=
+t
+> >> > attribute *attr, int idx)
+> >> >  {
+> >> > -     if (!class_find_device(&platform_profile_class, NULL, NULL,
+> >> > profile_class_registered))
+> >> > +     struct device *dev;
+> >> > +
+> >> > +     dev =3D class_find_device(&platform_profile_class, NULL, NULL,
+> >> > profile_class_registered);
+> >> > +     if (!dev)
+> >> >               return 0;
+> >> > +
+> >> > +     put_device(dev);
+> >> > +
+> >> >       return attr->mode;
+> >> >  }
+> >> >
+> >> >
+> >> > base-commit: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
+> >> > --
+> >> > 2.48.1
+> >> Good find. Looks good to me.
+> >> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> >
+> > Applied as 6.15 material, thanks!
+>
+> Hi Rafael,
+>
+> Thank you!
+>
+> I believe this should be merged as a fix for v6.14-rc4 before
+> commit 77be5cacb2c2 hits stable.
 
-While the overdrive mode allows for higher frequencies for many IPs,
-the nominal mode needs a lower SoC voltage, thereby reducing
-heat generation and power usage.
+I can queue it up for 6.14-rc, but that may not prevent 77be5cacb2c2
+from going into -stable before it.
 
-As increasing clock rates beyond the maximum permitted by the supplied
-SoC voltage can lead to difficult to debug issues, device tree consumers
-would benefit from knowing what mode is active to enforce the clock rate
-limits that come with it.
-
-To facilitate this, extend the clock controller bindings with an
-optional fsl,operating-mode property. This intentionally allows the
-absence of the property, because there is no default suitable for all
-boards:
-
-For i.MX8M Mini and Nano, the kernel SoC DTSIs has assigned-clock-rates
-that are all achievable in nominal mode. For i.MX8MP, there are some
-rates only validated for overdrive mode.
-
-But even for the i.MX8M Mini/Nano boards, we don't know what rates they
-may configure at runtime, so it has not been possible so far to infer from
-just the device tree what the mode is.
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
- Documentation/devicetree/bindings/clock/imx8m-clock.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-index c643d4a814786a1fc7e559140fe58911990f71bb..4fec558327027faa0a8d2a15699c03713da2deae 100644
---- a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-@@ -43,6 +43,13 @@ properties:
-       ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx8m-clock.h
-       for the full list of i.MX8M clock IDs.
- 
-+  fsl,operating-mode:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [nominal, overdrive]
-+    description:
-+      The operating mode of the SoC. This affects the maximum clock rates that
-+      can safely be configured by the clock controller.
-+
- required:
-   - compatible
-   - reg
-@@ -109,6 +116,7 @@ examples:
-                  <&clk_ext3>, <&clk_ext4>;
-         clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
-                       "clk_ext3", "clk_ext4";
-+        fsl,operating-mode = "nominal";
-     };
- 
-   - |
-
--- 
-2.39.5
-
+Thanks!
