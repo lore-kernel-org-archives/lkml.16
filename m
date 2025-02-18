@@ -1,59 +1,35 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27F8286A1;
-	Tue, 18 Feb 2025 14:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A1226AAAF;
+	Tue, 18 Feb 2025 14:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889601; cv=none; b=pRoEi0HvtTnu8jQs74imEKD8IHJCl1iNzJcSLLWp2K+NlF/nmcSevxG1qRa/Z5OCilCUyPCWIYOQZih3q5b/F+ZfTZXRxE2XxkbQXwn7otGIH6oGwdyLaWPI5YMOhyS/nftBgFY0c6Ggd0Nsuvt5eMbSJu4GdmXhHe2XPcErYKI=
+	t=1739889603; cv=none; b=dTmAotCT8ZNHAYgZSieuz3kqH9anuxJOpBeI4eGzq53atVvO6IJDT/gU8mJB3PlGYcUw5NSXYxR7hRqlgGfE8+sWdvsRyE9wyjJkzB6kPz3ZOsMUzzt4oZ67Wg2DZjmIbKaeVoMRGvchW75DHAE8BCEVOHPNP+TR+eoiSmm90UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889601; c=relaxed/simple;
-	bh=Ee9P6EhDUoFPXug91QeqALw1knWAZkKxsmgqWLX3oJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uuMhr31rMpQ4gZj24LgQZiSpcVGuciLjArN9z7P4kj52YEphouE5Mb9E70+yBi4J7Ze0vXlA92z1v+fYN7/1jdlxdM6gQe+zX3DC5+Hc7Wx3fqCo5oDP7lyanQV2D4sKutN00l0L73OHajwm2urXySVQe+JMQwvWUVfIdEK/1JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=K8zv11Px; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739889603; c=relaxed/simple;
+	bh=NMy4Gw6L5rQhTIwdvCQIzp6p8eCeHC82U8qXljvChfs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=c6H+LGHsZv2D5zLwU43HiwIFrEGfD92O5SitSJa9PehTab25B2OsS3/fY0pYeoHUrye6O2zXTCCsoCdnpkiTcFats5NEk7BYLHF98s0fIwx1TrstJyBbqtAcLoo870hRd1SyN/QLtFqdsvfoU6HFs3VPVMQPhbPZeDW9iTlOC/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjlXTsY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="K8zv11Px"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739889597;
-	bh=Ee9P6EhDUoFPXug91QeqALw1knWAZkKxsmgqWLX3oJ8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=K8zv11PxDk6e2NkrzoE7sN9oT/97HPZbAZPTquwQyyq10STWUcM2J6K8rm6F4/xoH
-	 DFPajFGCkhlx90hpAy3uCIN3L8nEsjO+SAytrqNUaGdq7MTb0nY84HlvJaxUhd1+Bq
-	 RdsCXtITrY9CW+d3pngFJQP9Eq4ROZ4udy5KCEUlp/hDcUcr5tShT5ZIYwX9bK0ZbX
-	 2UY6dowfR02DPE/1uaJNJN+mDTBZl3Bhs20E4Dl0jvTbNy0f5KMJ/dHAifDjUl7jPA
-	 vgQdMYJpi6av1VGBOP3HUl6CefY094hgX2sL4FEGQ35bIxVs5VtS273o2lAsmTsxxf
-	 tlgLZ/OHS6MFQ==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E505217E0391;
-	Tue, 18 Feb 2025 15:39:56 +0100 (CET)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: neil.armstrong@linaro.org
-Cc: quic_jesszhan@quicinc.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	angelogioacchino.delregno@collabora.com,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com,
-	pablo.sun@mediatek.com,
-	christophe.jaillet@wanadoo.fr
-Subject: [PATCH v2 0/2] Add driver for Himax HX8279 DriverIC panels
-Date: Tue, 18 Feb 2025 15:39:50 +0100
-Message-ID: <20250218143952.84261-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjlXTsY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84454C19425;
+	Tue, 18 Feb 2025 14:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739889602;
+	bh=NMy4Gw6L5rQhTIwdvCQIzp6p8eCeHC82U8qXljvChfs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=EjlXTsY/f75fOFP1F1VMK1N60yLPerLAdq/bSx6B4+T26Er7+a2dw2tZgHGsjphI/
+	 IQJm+jZDlXXd0jSwrZDWyTa3wPBNAIolbsgty8u2NGktD6fJ0D6f/czJlgmBO7R4NG
+	 XkQFR+fCyigzjppM0tbsWx3YGM/oAdBGSes9DIVAwbz6/uz3VJLeKorFHWmz9mLTQb
+	 xC8jfiboBYf6LvsHOaiaLZ8lFiTCl/Imr/B46JSuod193mnVcTkrHhPzIo+1CSugS6
+	 9c0+ObQUukvYbu3wjS0bYjK6j/W7X4vLQ9R6pPELm0YFyMWPpzlqZRzcYxNfBAjvRw
+	 0CkuQUl6QHWDg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB979380AAE9;
+	Tue, 18 Feb 2025 14:40:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,36 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] trace: tcp: Add tracepoint for
+ tcp_cwnd_reduction()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173988963251.4107754.12885780180593326493.git-patchwork-notify@kernel.org>
+Date: Tue, 18 Feb 2025 14:40:32 +0000
+References: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
+In-Reply-To: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, davem@davemloft.net, dsahern@kernel.org,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, ncardwell@google.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
 
-Changes in v2:
- - Removed unneeded mipi_dsi_device_unregister() call for secondary
-   DSI: as the driver is using devm, that's not necessary (CJ)
- - Removed superfluous if branch as pointed out by CJ
+Hello:
 
-This series adds a driver for DSI panels using the Himax HX8279 and
-HX8279-D DriverICs, and introduces one panel using such a configuration,
-the Startek KX070FHFID078.
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-This panel is found on the latest hardware revisions of some MediaTek
-Genio Evaluation Kits, and specifically, at least:
- - Genio 510 EVK
- - Genio 700 EVK
- - Genio 1200 EVK
+On Fri, 14 Feb 2025 09:07:11 -0800 you wrote:
+> Add a lightweight tracepoint to monitor TCP congestion window
+> adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
+> of:
+> - TCP window size fluctuations
+> - Active socket behavior
+> - Congestion window reduction events
+> 
+> [...]
 
-This driver was tested on all of the aforementioned boards.
+Here is the summary with links:
+  - [net-next,v2] trace: tcp: Add tracepoint for tcp_cwnd_reduction()
+    https://git.kernel.org/netdev/net-next/c/8e677a466145
 
-AngeloGioacchino Del Regno (2):
-  dt-bindings: display: panel: Add Himax HX8279/HX8279-D
-  drm: panel: Add driver for Himax HX8279 and Startek KD070FHFID078
-
- .../bindings/display/panel/himax,hx8279.yaml  |  74 ++
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-himax-hx8279.c    | 905 ++++++++++++++++++
- 4 files changed, 991 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/himax,hx8279.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-himax-hx8279.c
-
+You are awesome, thank you!
 -- 
-2.48.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
