@@ -1,231 +1,140 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AB027FE7A;
-	Tue, 18 Feb 2025 18:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575C02356BA;
+	Tue, 18 Feb 2025 18:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904622; cv=none; b=afAJPQLI5FUYQfrR765G74EfCIxUYH8CP8nqpW4rflbP6qDRuf9Y01SZYXd8gCf5H5GGPzzvP4pNPJXFNGi9JRA8XENpD3fi2ZqqVaKKIKiJAHCn95PdCylTg2pMqveavp0xbEBYWL0bgbzEazDiWgPOT3Ak8KN2j5rXIUL9Dwo=
+	t=1739904653; cv=none; b=tFELqTjIjT0U3lkog8sxuA+1wuv9Gs3jy9+CKnxmEOpMR5hgA/KHtwjUWA86O8dYr3Vhn8IEDOxiCbXYoZ4w+1fZ8vmiItDksB4Ms/qZ1icEnG1FavQsICCV2rUsFSVLQzEW2hD0x6r//rSQBfVINWAcyOBY9DYdTNZy5n0/NSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904622; c=relaxed/simple;
-	bh=Q77I+WId1ggdOtVL6oVeAYgVRafhG81DcixwfX7EWsk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SB1mHZScxlKtsBRIv+//MLUBFRc/9wPI+LAwDMWQitpdKkjPJJ7Nxcpmcc/CLNGxbXCVPP0M4yThVU8r0gEJHazCdXXZhtJV7SOQnvz3ym3yHHEyUkUi8C8/9dUok0ebb1cULyWZNy6MCv95z98zMbhJFW7PUQJjTq+JfghTOZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=PwDHwzDe; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1739904653; c=relaxed/simple;
+	bh=lsflQrO1N48O+jshUWxiHl8d7dgJUl8JR7UUofGDcOU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cxLRRPWfNs1eDBZf4J5Ka3GEJaUZagSF5/lczajNGB286tetBTcnO5p9xq0he00jHSicJHOh2czX9trtOjqRuQXA/L/Ei2HZG0JFjDUe0O+RC8aGx+4hhzaLa8zcALQUajtBv2bL8Ftxbsafs9dcqjeIAo0YgpszIdtIHawdcSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DZt7UW1l; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="PwDHwzDe"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id D844825F1C;
-	Tue, 18 Feb 2025 19:50:18 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id TTdkNxrO6dxx; Tue, 18 Feb 2025 19:50:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1739904614; bh=Q77I+WId1ggdOtVL6oVeAYgVRafhG81DcixwfX7EWsk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=PwDHwzDebn5ADsLsgpOmeU5Wcj/y1PL88v+aLY9Eh3sIq5QvA3VDMJHkCFnFtfrW4
-	 pjumJtfLBtnrxAanFmr8el2bcUMY/Tm2wWppegsCHWWaH2Cs/17Ph2yulfzQ4Yy/5Z
-	 TTQCpJmtmmeeID66UQVRGk+xNag83AftWY3kP18gpxDD737mwPUqbhZa27WMrcrLwe
-	 n0g67SxByWW22ToHP49XvNATndQWNf2sStdTeQn++954Alx7vwEk5CTizEMosidvei
-	 KarBrfZMA3ZdUN2Al4H+0lgKcu9olKQyE8EZ8fmFctccn1nJoWT4yyQrhAwt+ISKHX
-	 iw8MCkwVlWLJw==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Wed, 19 Feb 2025 00:19:51 +0530
-Subject: [PATCH v2 3/3] regulator: s2mps11: Add support for S2MPU05
- regulators
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DZt7UW1l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1739904651; x=1771440651;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=/1XY/m7rlHy9RJvp29NIT0p6dcrQvEcQVV1BnoOoOvg=;
+  b=DZt7UW1l/2ky4722t3/PIRud+K7BivymcsD91nyw+va21WNfHR7A9Jh6
+   onz6NuouVBzoE9hxQOJdUENIUeUqIOqs+cDhBU5j/Eje51bFlrT34i3ov
+   ODI/+xY9COHTi7OEzVhV/0IvuI0CkbODdssUehXFUPSfGNKbp3noewquj
+   A=;
+X-IronPort-AV: E=Sophos;i="6.13,296,1732579200"; 
+   d="scan'208";a="494971099"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 18:50:46 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:49314]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.115:2525] with esmtp (Farcaster)
+ id ad366e28-5030-4d80-9ae4-2708614bf9a9; Tue, 18 Feb 2025 18:50:45 +0000 (UTC)
+X-Farcaster-Flow-ID: ad366e28-5030-4d80-9ae4-2708614bf9a9
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Tue, 18 Feb 2025 18:50:44 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.36) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 18 Feb 2025 18:50:41 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <purvayeshi550@gmail.com>
+CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<linux-ppp@vger.kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
+	<skhan@linuxfoundation.org>,
+	<syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] ppp: Prevent out-of-bounds access in ppp_sync_txmunge
+Date: Tue, 18 Feb 2025 10:50:33 -0800
+Message-ID: <20250218185033.26399-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <1e906059-83c7-4f29-a026-76cd73d8b6fa@gmail.com>
+References: <1e906059-83c7-4f29-a026-76cd73d8b6fa@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-exynos7870-pmic-regulators-v2-3-1ea86fb332f7@disroot.org>
-References: <20250219-exynos7870-pmic-regulators-v2-0-1ea86fb332f7@disroot.org>
-In-Reply-To: <20250219-exynos7870-pmic-regulators-v2-0-1ea86fb332f7@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739904598; l=6589;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=Q77I+WId1ggdOtVL6oVeAYgVRafhG81DcixwfX7EWsk=;
- b=Z2m6jbQIHGzCziALJ8kymrEr2++Bu7FESjSDeDOug9V0bbFCCERQIUhTdwD61GAVmgjAg5+pE
- IMd49CPaxCjDwPaC14ob0JYY5EocinpCkN9X8/4l5brmE+BqkTSsk8T
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D039UWB001.ant.amazon.com (10.13.138.119) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-S2MPU05 is a PMIC by manufactured by Samsung, particularly used in
-Exynos7870 based devices. Add driver support for controlling its 21 LDO
-and 5 BUCK regulators.
+From: Purva Yeshi <purvayeshi550@gmail.com>
+Date: Tue, 18 Feb 2025 11:58:17 +0530
+> On 18/02/25 02:46, Kuniyuki Iwashima wrote:
+> > From: Purva Yeshi <purvayeshi550@gmail.com>
+> > Date: Sun, 16 Feb 2025 11:34:46 +0530
+> >> Fix an issue detected by syzbot with KMSAN:
+> >>
+> >> BUG: KMSAN: uninit-value in ppp_sync_txmunge
+> >> drivers/net/ppp/ppp_synctty.c:516 [inline]
+> >> BUG: KMSAN: uninit-value in ppp_sync_send+0x21c/0xb00
+> >> drivers/net/ppp/ppp_synctty.c:568
+> >>
+> >> Ensure sk_buff is valid and has at least 3 bytes before accessing its
+> >> data field in ppp_sync_txmunge(). Without this check, the function may
+> >> attempt to read uninitialized or invalid memory, leading to undefined
+> >> behavior.
+> >>
+> >> To address this, add a validation check at the beginning of the function
+> >> to safely handle cases where skb is NULL or too small. If either condition
+> >> is met, free the skb and return NULL to prevent processing an invalid
+> >> packet.
+> >>
+> >> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+> >> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
+> >> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+> >> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> >> ---
+> >>   drivers/net/ppp/ppp_synctty.c | 6 ++++++
+> >>   1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
+> >> index 644e99fc3..e537ea3d9 100644
+> >> --- a/drivers/net/ppp/ppp_synctty.c
+> >> +++ b/drivers/net/ppp/ppp_synctty.c
+> >> @@ -506,6 +506,12 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
+> >>   	unsigned char *data;
+> >>   	int islcp;
+> >>   
+> >> +	/* Ensure skb is not NULL and has at least 3 bytes */
+> >> +	if (!skb || skb->len < 3) {
+> > 
+> > When is skb NULL ?
+> 
+> skb pointer can be NULL in cases where memory allocation for the socket 
+> buffer fails, or if an upstream function incorrectly passes a NULL 
+> reference due to improper error handling.
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-Acked-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/Kconfig   |  4 +-
- drivers/regulator/s2mps11.c | 92 ++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 93 insertions(+), 3 deletions(-)
+Which caller passes NULL skb ?
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 39297f7d8177193e51c99bc2b360c6d9936e62fe..e47ef257696e2ff3745affa1a403a29f086a2833 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -1330,10 +1330,10 @@ config REGULATOR_S2MPA01
- 	 via I2C bus. S2MPA01 has 10 Bucks and 26 LDO outputs.
- 
- config REGULATOR_S2MPS11
--	tristate "Samsung S2MPS11/13/14/15/S2MPU02 voltage regulator"
-+	tristate "Samsung S2MPS11/13/14/15/S2MPU02/05 voltage regulator"
- 	depends on MFD_SEC_CORE || COMPILE_TEST
- 	help
--	 This driver supports a Samsung S2MPS11/13/14/15/S2MPU02 voltage
-+	 This driver supports a Samsung S2MPS11/13/14/15/S2MPU02/05 voltage
- 	 output regulator via I2C bus. The chip is comprised of high efficient
- 	 Buck converters including Dual-Phase Buck converter, Buck-Boost
- 	 converter, various LDOs.
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 7dcf92af8f15e63fb634d978fba41df0ca09fd65..b54f9bba21a9c9af7d72449529e74e1445f7d455 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -21,6 +21,7 @@
- #include <linux/mfd/samsung/s2mps14.h>
- #include <linux/mfd/samsung/s2mps15.h>
- #include <linux/mfd/samsung/s2mpu02.h>
-+#include <linux/mfd/samsung/s2mpu05.h>
- 
- /* The highest number of possible regulators for supported devices. */
- #define S2MPS_REGULATOR_MAX		S2MPS13_REGULATOR_MAX
-@@ -254,6 +255,9 @@ static int s2mps11_regulator_enable(struct regulator_dev *rdev)
- 		else
- 			val = rdev->desc->enable_mask;
- 		break;
-+	case S2MPU05:
-+		val = rdev->desc->enable_mask;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1118,6 +1122,86 @@ static const struct regulator_desc s2mpu02_regulators[] = {
- 	regulator_desc_s2mpu02_buck7(7),
- };
- 
-+#define regulator_desc_s2mpu05_ldo_reg(num, min, step, reg) {	\
-+	.name		= "LDO"#num,				\
-+	.id		= S2MPU05_LDO##num,			\
-+	.ops		= &s2mpu02_ldo_ops,			\
-+	.type		= REGULATOR_VOLTAGE,			\
-+	.owner		= THIS_MODULE,				\
-+	.min_uV		= min,					\
-+	.uV_step	= step,					\
-+	.n_voltages	= S2MPU05_LDO_N_VOLTAGES,		\
-+	.vsel_reg	= reg,					\
-+	.vsel_mask	= S2MPU05_LDO_VSEL_MASK,		\
-+	.enable_reg	= reg,					\
-+	.enable_mask	= S2MPU05_ENABLE_MASK,			\
-+	.enable_time	= S2MPU05_ENABLE_TIME_LDO		\
-+}
-+
-+#define regulator_desc_s2mpu05_ldo(num, reg, min, step) \
-+	regulator_desc_s2mpu05_ldo_reg(num, min, step, S2MPU05_REG_L##num##reg)
-+
-+#define regulator_desc_s2mpu05_ldo1(num, reg) \
-+	regulator_desc_s2mpu05_ldo(num, reg, S2MPU05_LDO_MIN1, S2MPU05_LDO_STEP1)
-+
-+#define regulator_desc_s2mpu05_ldo2(num, reg) \
-+	regulator_desc_s2mpu05_ldo(num, reg, S2MPU05_LDO_MIN1, S2MPU05_LDO_STEP2)
-+
-+#define regulator_desc_s2mpu05_ldo3(num, reg) \
-+	regulator_desc_s2mpu05_ldo(num, reg, S2MPU05_LDO_MIN2, S2MPU05_LDO_STEP2)
-+
-+#define regulator_desc_s2mpu05_ldo4(num, reg) \
-+	regulator_desc_s2mpu05_ldo(num, reg, S2MPU05_LDO_MIN3, S2MPU05_LDO_STEP2)
-+
-+#define regulator_desc_s2mpu05_buck(num, which) {	\
-+	.name		= "BUCK"#num,			\
-+	.id		= S2MPU05_BUCK##num,		\
-+	.ops		= &s2mpu02_buck_ops,		\
-+	.type		= REGULATOR_VOLTAGE,		\
-+	.owner		= THIS_MODULE,			\
-+	.min_uV		= S2MPU05_BUCK_MIN##which,	\
-+	.uV_step	= S2MPU05_BUCK_STEP##which,	\
-+	.n_voltages	= S2MPU05_BUCK_N_VOLTAGES,	\
-+	.vsel_reg	= S2MPU05_REG_B##num##CTRL2,	\
-+	.vsel_mask	= S2MPU05_BUCK_VSEL_MASK,	\
-+	.enable_reg	= S2MPU05_REG_B##num##CTRL1,	\
-+	.enable_mask	= S2MPU05_ENABLE_MASK,		\
-+	.enable_time	= S2MPU05_ENABLE_TIME_BUCK##num	\
-+}
-+
-+#define regulator_desc_s2mpu05_buck123(num) regulator_desc_s2mpu05_buck(num, 1)
-+#define regulator_desc_s2mpu05_buck45(num) regulator_desc_s2mpu05_buck(num, 2)
-+
-+static const struct regulator_desc s2mpu05_regulators[] = {
-+	regulator_desc_s2mpu05_ldo4(1, CTRL),
-+	regulator_desc_s2mpu05_ldo3(2, CTRL),
-+	regulator_desc_s2mpu05_ldo2(3, CTRL),
-+	regulator_desc_s2mpu05_ldo1(4, CTRL),
-+	regulator_desc_s2mpu05_ldo1(5, CTRL),
-+	regulator_desc_s2mpu05_ldo1(6, CTRL),
-+	regulator_desc_s2mpu05_ldo2(7, CTRL),
-+	regulator_desc_s2mpu05_ldo3(8, CTRL),
-+	regulator_desc_s2mpu05_ldo4(9, CTRL1),
-+	regulator_desc_s2mpu05_ldo4(10, CTRL),
-+	/* LDOs 11-24 are used for CP. They aren't documented. */
-+	regulator_desc_s2mpu05_ldo2(25, CTRL),
-+	regulator_desc_s2mpu05_ldo3(26, CTRL),
-+	regulator_desc_s2mpu05_ldo2(27, CTRL),
-+	regulator_desc_s2mpu05_ldo3(28, CTRL),
-+	regulator_desc_s2mpu05_ldo3(29, CTRL),
-+	regulator_desc_s2mpu05_ldo2(30, CTRL),
-+	regulator_desc_s2mpu05_ldo3(31, CTRL),
-+	regulator_desc_s2mpu05_ldo3(32, CTRL),
-+	regulator_desc_s2mpu05_ldo3(33, CTRL),
-+	regulator_desc_s2mpu05_ldo3(34, CTRL),
-+	regulator_desc_s2mpu05_ldo3(35, CTRL),
-+	regulator_desc_s2mpu05_buck123(1),
-+	regulator_desc_s2mpu05_buck123(2),
-+	regulator_desc_s2mpu05_buck123(3),
-+	regulator_desc_s2mpu05_buck45(4),
-+	regulator_desc_s2mpu05_buck45(5),
-+};
-+
- static int s2mps11_pmic_probe(struct platform_device *pdev)
- {
- 	struct sec_pmic_dev *iodev = dev_get_drvdata(pdev->dev.parent);
-@@ -1159,6 +1243,11 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
- 		regulators = s2mpu02_regulators;
- 		BUILD_BUG_ON(S2MPS_REGULATOR_MAX < ARRAY_SIZE(s2mpu02_regulators));
- 		break;
-+	case S2MPU05:
-+		rdev_num = ARRAY_SIZE(s2mpu05_regulators);
-+		regulators = s2mpu05_regulators;
-+		BUILD_BUG_ON(S2MPS_REGULATOR_MAX < ARRAY_SIZE(s2mpu05_regulators));
-+		break;
- 	default:
- 		dev_err(&pdev->dev, "Invalid device type: %u\n",
- 				    s2mps11->dev_type);
-@@ -1228,6 +1317,7 @@ static const struct platform_device_id s2mps11_pmic_id[] = {
- 	{ "s2mps14-regulator", S2MPS14X},
- 	{ "s2mps15-regulator", S2MPS15X},
- 	{ "s2mpu02-regulator", S2MPU02},
-+	{ "s2mpu05-regulator", S2MPU05},
- 	{ },
- };
- MODULE_DEVICE_TABLE(platform, s2mps11_pmic_id);
-@@ -1245,5 +1335,5 @@ module_platform_driver(s2mps11_pmic_driver);
- 
- /* Module information */
- MODULE_AUTHOR("Sangbeom Kim <sbkim73@samsung.com>");
--MODULE_DESCRIPTION("Samsung S2MPS11/S2MPS14/S2MPS15/S2MPU02 Regulator Driver");
-+MODULE_DESCRIPTION("Samsung S2MPS11/14/15/S2MPU02/05 Regulator Driver");
- MODULE_LICENSE("GPL");
+If it's really possible, you'll see null-ptr-deref at
 
--- 
-2.48.1
+  data = skb->data;
 
+below instead of KMSAN's uninit splat.
+
+
+> 
+> Additionally, skb->len being less than 3 can occur if the received 
+> packet is truncated or malformed, leading to out-of-bounds memory access 
+> when attempting to read data[2].
+> 
+> > 
+> > 
+> >> +		kfree_skb(skb);
+> >> +		return NULL;
+> >> +	}
+> >> +
+> >>   	data  = skb->data;
+> >>   	proto = get_unaligned_be16(data);
+> >>   
+> >> -- 
+> >> 2.34.1
