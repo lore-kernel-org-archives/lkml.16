@@ -1,88 +1,35 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF1E243364
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D0D243382;
+	Tue, 18 Feb 2025 11:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739879981; cv=none; b=hsRxZh9/Ih0umXNwva2KgwYyFgD65ik4jU8/j3nAM8t63asDi2vPPHxVLhxv6ZtUtPfNUKU1hVvAxLnq63X998E4SG8aDYX5rTgV4WAFoKs5Rrzf8Kwdff9g5UpBZVIp7dT6/VzCgjsP4G54kmDsalKhUBNjax51aJ/KLL1XisI=
+	t=1739879984; cv=none; b=EkFhutx064XDjHTiWNk+iteavOh5V9bavj9VB2M0aKjeOmBw7trV2FmnfBqBEoEhW9toU1+HWm+9QDGRncjTDScs0r4vREm9aTDkaIW0K0D8iB+rVl/Sg1wSO2Hiy7s4ccTv9ZpQQp05qkHIkVG7Um/qfBlERrI3RSr8NzCrx3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739879981; c=relaxed/simple;
-	bh=uvY12ll0+h1JvJ9Mw86EYSrYQTnm9N8kMKjrmKSQxcI=;
+	s=arc-20240116; t=1739879984; c=relaxed/simple;
+	bh=1D33RCtmi7vCn2j9HDe8yb+48Ne+e3YQjNztgt08SfU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HnmCjZWVProJ5DzDD6ydw0lEYOsCeaMZHWQUFoeQbocu50M9Y5kIjwE5y/hVZGh1xv3kUqvAGYk26Pvsh2zSE1AWOaEGQKPhnZzlgda2iohs/bok6cR+b78VHyV2T67N38xTRHXrleQYAE8iK1y2L8LfDANU6oHXt61vrxJh2Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=fail smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TAREbrzY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lnAnKXVx; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TAREbrzY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lnAnKXVx; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TAREbrzY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lnAnKXVx";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TAREbrzY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lnAnKXVx"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B9A262116B;
-	Tue, 18 Feb 2025 11:59:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739879977; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ol1flL+Hvau9bpFE3r/g/0SVaK1xls8DuJbRXxcnKyk=;
-	b=TAREbrzYm/GkYrsT1QJamu5iMjt/5xUwjoQMEnqqkYt99T3jWyJW/a2BfUCTrz6A+A4owJ
-	CsIqQaiW6JklmDANH9sGL5vkOdAo1Kb0Lq1sLZAAkM+hDusehlZFsd58dwvT3fR+0Vtdl3
-	sN6YdRKQW76ikT/EzRbPc5wc5PHXlOA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739879977;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ol1flL+Hvau9bpFE3r/g/0SVaK1xls8DuJbRXxcnKyk=;
-	b=lnAnKXVxNA5uaLoLaae5n43I9hPNQyiNrcMlhJt/y8XH6rax9tMuDzihEOBd/SJfoWWgx1
-	k4TNWjgqSEtA73BA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=TAREbrzY;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=lnAnKXVx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739879977; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ol1flL+Hvau9bpFE3r/g/0SVaK1xls8DuJbRXxcnKyk=;
-	b=TAREbrzYm/GkYrsT1QJamu5iMjt/5xUwjoQMEnqqkYt99T3jWyJW/a2BfUCTrz6A+A4owJ
-	CsIqQaiW6JklmDANH9sGL5vkOdAo1Kb0Lq1sLZAAkM+hDusehlZFsd58dwvT3fR+0Vtdl3
-	sN6YdRKQW76ikT/EzRbPc5wc5PHXlOA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739879977;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ol1flL+Hvau9bpFE3r/g/0SVaK1xls8DuJbRXxcnKyk=;
-	b=lnAnKXVxNA5uaLoLaae5n43I9hPNQyiNrcMlhJt/y8XH6rax9tMuDzihEOBd/SJfoWWgx1
-	k4TNWjgqSEtA73BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE9F2132C7;
-	Tue, 18 Feb 2025 11:59:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QASgKil2tGfrKgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 18 Feb 2025 11:59:37 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 76231A08B5; Tue, 18 Feb 2025 12:59:37 +0100 (CET)
-Date: Tue, 18 Feb 2025 12:59:37 +0100
-From: Jan Kara <jack@suse.cz>
-To: Luis Henriques <luis@igalia.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	Dave Chinner <david@fromorbit.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matt Harvey <mharvey@jumptrading.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] vfs: export invalidate_inodes()
-Message-ID: <ze23goaoxiryaczmik3y66p23c35tf3ipfw27prlozrqciqlap@6lmpmsx7xsy3>
-References: <20250216165008.6671-1-luis@igalia.com>
- <20250216165008.6671-2-luis@igalia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=h5N+ClYU5WLp9VYI/59DgKtIN4I6xtfZimD/QkIL/scdzHcwnsAEWJSoJICmTmxJXbrLb2vmXXXaZ7hpX54hG2ywsGBhPHLElm8sSEuzkzX6+MoIRVOzjkLzWTBg0D10e/32+DEpdCM+3SYj3s0vb1zNcMEI2sHY3uMRGY2zfiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1tkMGA-0003sS-00; Tue, 18 Feb 2025 12:59:30 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 7D1DAC0135; Tue, 18 Feb 2025 12:59:22 +0100 (CET)
+Date: Tue, 18 Feb 2025 12:59:22 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v2 1/1] MIPS: Fix idle VS timer enqueue
+Message-ID: <Z7R2GqWOufd8l6NZ@alpha.franken.de>
+References: <20250218090203.43137-1-marco.crivellari@suse.com>
+ <20250218090203.43137-2-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,88 +38,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250216165008.6671-2-luis@igalia.com>
-X-Rspamd-Queue-Id: B9A262116B
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,igalia.com:email];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250218090203.43137-2-marco.crivellari@suse.com>
 
-On Sun 16-02-25 16:50:07, Luis Henriques wrote:
-> Signed-off-by: Luis Henriques <luis@igalia.com>
-
-Please use evict_inodes(). It is already exported and does exactly the same
-these days. We should really merge the patch deleting invalidate_inodes()
-:)
-
-									Honza
-
-> ---
->  fs/inode.c         | 1 +
->  fs/internal.h      | 1 -
->  include/linux/fs.h | 1 +
->  3 files changed, 2 insertions(+), 1 deletion(-)
+On Tue, Feb 18, 2025 at 10:02:03AM +0100, Marco Crivellari wrote:
+> MIPS re-enables interrupts on its idle routine and performs
+> a TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
 > 
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 5587aabdaa5e..88387ecb2c34 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -939,6 +939,7 @@ void invalidate_inodes(struct super_block *sb)
+> The IRQs firing between the check and the 'wait' instruction may set the
+> TIF_NEED_RESCHED flag. In order to deal with this possible race, IRQs
+> interrupting __r4k_wait() rollback their return address to the
+> beginning of __r4k_wait() so that TIF_NEED_RESCHED is checked
+> again before going back to sleep.
+> 
+> However idle IRQs can also queue timers that may require a tick
+> reprogramming through a new generic idle loop iteration but those timers
+> would go unnoticed here because __r4k_wait() only checks
+> TIF_NEED_RESCHED. It doesn't check for pending timers.
+> 
+> Fix this with fast-forwarding idle IRQs return address to the end of the
+> idle routine instead of the beginning, so that the generic idle loop
+> handles both TIF_NEED_RESCHED and pending timers.
+> 
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> ---
+>  arch/mips/kernel/genex.S | 39 +++++++++++++++++++++------------------
+>  arch/mips/kernel/idle.c  |  1 -
+>  2 files changed, 21 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+> index a572ce36a24f..9747b216648f 100644
+> --- a/arch/mips/kernel/genex.S
+> +++ b/arch/mips/kernel/genex.S
+> @@ -104,25 +104,27 @@ handle_vcei:
 >  
->  	dispose_list(&dispose);
->  }
-> +EXPORT_SYMBOL(invalidate_inodes);
+>  	__FINIT
 >  
->  /*
->   * Isolate the inode from the LRU in preparation for freeing it.
-> diff --git a/fs/internal.h b/fs/internal.h
-> index e7f02ae1e098..7cb515cede3f 100644
-> --- a/fs/internal.h
-> +++ b/fs/internal.h
-> @@ -207,7 +207,6 @@ bool in_group_or_capable(struct mnt_idmap *idmap,
->   * fs-writeback.c
->   */
->  extern long get_nr_dirty_inodes(void);
-> -void invalidate_inodes(struct super_block *sb);
->  
->  /*
->   * dcache.c
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 2c3b2f8a621f..ff016885646e 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3270,6 +3270,7 @@ extern void discard_new_inode(struct inode *);
->  extern unsigned int get_next_ino(void);
->  extern void evict_inodes(struct super_block *sb);
->  void dump_mapping(const struct address_space *);
-> +extern void invalidate_inodes(struct super_block *sb);
->  
->  /*
->   * Userspace may rely on the inode number being non-zero. For example, glibc
+> -	.align	5	/* 32 byte rollback region */
+> +	.align	5
+>  LEAF(__r4k_wait)
+>  	.set	push
+>  	.set	noreorder
+> -	/* start of rollback region */
+> -	LONG_L	t0, TI_FLAGS($28)
+> -	nop
+> -	andi	t0, _TIF_NEED_RESCHED
+> -	bnez	t0, 1f
+> -	 nop
+> -	nop
+> -	nop
+> -#ifdef CONFIG_CPU_MICROMIPS
+> -	nop
+> -	nop
+> -	nop
+> -	nop
+> -#endif
+
+My quick search didnn't find the reason for the extra NOPs on MICROMIPS, but
+they are here for a purpose. I might still need them...
+
+> +	/* start of idle interrupt region */
+> +	MFC0	t0, CP0_STATUS
+> +	/* Enable Interrput */
+> +	ori 	t0, 0x1f
+> +	xori	t0, 0x1e
+> +	MTC0	t0, CP0_STATUS
+> +	_ssnop
+> +	_ssnop
+> +	_ssnop
+
+instead of handcoded hazard nops, use __irq_enable_hazard for that
+
+>  	.set	MIPS_ISA_ARCH_LEVEL_RAW
+> +	/*
+> +	 * If an interrupt lands here, between enabling interrupts above and
+> +	 * going idle on the next instruction, we must *NOT* go idle since the
+> +	 * interrupt could have set TIF_NEED_RESCHED or caused a timer to need
+> +	 * resched. Fall through -- see rollback_handler below -- and have
+> +	 * the idle loop take care of things.
+> +	 */
+>  	wait
+>  	/* end of rollback region (the region size must be power of two) */
+>  1:
+> @@ -136,9 +138,10 @@ LEAF(__r4k_wait)
+>  	.set	push
+>  	.set	noat
+>  	MFC0	k0, CP0_EPC
+> -	PTR_LA	k1, __r4k_wait
+> -	ori	k0, 0x1f	/* 32 byte rollback region */
+> -	xori	k0, 0x1f
+> +	PTR_LA	k1, 1b
+> +	/* 32 byte idle interrupt region */
+> +	ori 	k0, 0x1f
+> +	daddiu	k0, 1
+
+/local/tbogendoerfer/korg/linux/arch/mips/kernel/genex.S: Assembler messages:
+/local/tbogendoerfer/korg/linux/arch/mips/kernel/genex.S:151: Error: opcode not supported on this processor: mips32r2 (mips32r2) `daddiu $26,1'
+/local/tbogendoerfer/korg/linux/arch/mips/kernel/genex.S:271: Error: opcode not supported on this processor: mips32r2 (mips32r2) `daddiu $26,1'
+
+looks like you haven't compiled this code for 32bit. Use PTR_ADDIU, which
+will use the correct instuction for 32 and 64bit.
+
+But I doubt this works, because the wait instruction is not aligned to
+a 32 byte boundary, but the code assuemes this, IMHO.
+
+Thomas.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
