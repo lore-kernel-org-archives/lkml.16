@@ -1,206 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA7822CBC6;
-	Tue, 18 Feb 2025 08:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6000822CBD8;
+	Tue, 18 Feb 2025 08:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866691; cv=none; b=Jy3pVCgPWh3fDiBwXtUHcwLiKlKhM3PgFNx3fcqw/yEsZ/Mz6OtuhA9mmfTlXJIN/XwJcVRkX+01RDOT8DEPj/u3bfRIwYT6F8CHBCZkkQPUnHI5O9DpK5lADrT39JwDlPR3MbbD4ARB/Fk5O6ShMHHd6lTB5RX349/j40wX10Y=
+	t=1739866703; cv=none; b=B3rrk27w4eyUJVMrvL8dkcqZlIQIu9PS/iOwDPnNIPgI09jRcZUIQOfKkJIvpSkzwdWFdlYneOxUP22q8bMvVkPPKJM0n1Pr/2hbyC1uNytoD0jkQrEH9z2SBgdKzFjoZDB4bFeOln6DN3unlvkFO0K4uuCQKyT4HEg3Tbkpsr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866691; c=relaxed/simple;
-	bh=1nix+N5DUro8RwKo5+pglZtqohhVbR1ohGEV2E0y1dM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=roc3jblZQmBJ+bBz5XCBRB3htU4B4rEy4hchO8gXd+waaDCA6OxOB+LQ7xgQQps4E0FJ8AFS5jDf6zoH6lERj3iyzoiM/FRMQFZ8gU5aN/8sjGQ0eMLuBow/8dry1EAJHJjgdAI+a6FzAsmNXBqiHWBLWLR7EdV1Vj9CuCNNN1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h7RIXWs9; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h7RIXWs9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866690; x=1771402690;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1nix+N5DUro8RwKo5+pglZtqohhVbR1ohGEV2E0y1dM=;
-  b=h7RIXWs9C3Q2Ww6+ob/dtrkvP+6oiEWdjkyvVJnAirgS+BiushHVhr1H
-   4KRogAyLYSlWWQQx12hDgBqipDrUsAqXzg45Fiu45f6/TOtdxwE52GDFr
-   AV2MTeWsqYK1wZE2sS3+nvtncvIW97er1yfDIJWJttPrYuIxJ8JNsjJ9b
-   jz2px6xs0BUN2QQZI30O7G1AL31dIo5f8mcnv2D+cRp4ROzpbet4gkGQO
-   uIWfBJ9z9V0gPimf6XLAprbpnh/5q1oGjIAEWj+MZ3kbI7iDHz9OKuniK
-   2SwCqIh4gLd2covVwE4+xHLqV4XDV5XWIn3l110HJBwYf1QwHDLs7zRQm
-   A==;
-X-CSE-ConnectionGUID: iQV6Vt5dR5C13BEH566fiQ==
-X-CSE-MsgGUID: C5AZ34PQRZqMYq2kxu7zzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="28150240"
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="28150240"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:18:10 -0800
-X-CSE-ConnectionGUID: CUmazHzUQ3u+x4JDYFIJPA==
-X-CSE-MsgGUID: v51nsDBYQWmIf8M/s1m01w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="119247639"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.245.49])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:17:49 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: kees@kernel.org,
-	julian.stecklina@cyberus-technology.de,
-	kevinloughlin@google.com,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	justinstitt@google.com,
-	catalin.marinas@arm.com,
-	wangkefeng.wang@huawei.com,
-	bhe@redhat.com,
-	ryabinin.a.a@gmail.com,
-	kirill.shutemov@linux.intel.com,
-	will@kernel.org,
-	ardb@kernel.org,
-	jason.andryuk@amd.com,
-	dave.hansen@linux.intel.com,
-	pasha.tatashin@soleen.com,
-	ndesaulniers@google.com,
-	guoweikang.kernel@gmail.com,
-	dwmw@amazon.co.uk,
-	mark.rutland@arm.com,
-	broonie@kernel.org,
-	apopple@nvidia.com,
-	bp@alien8.de,
-	rppt@kernel.org,
-	kaleshsingh@google.com,
-	richard.weiyang@gmail.com,
-	luto@kernel.org,
-	glider@google.com,
-	pankaj.gupta@amd.com,
-	andreyknvl@gmail.com,
-	pawan.kumar.gupta@linux.intel.com,
-	kuan-ying.lee@canonical.com,
-	tony.luck@intel.com,
-	tj@kernel.org,
-	jgross@suse.com,
-	dvyukov@google.com,
-	baohua@kernel.org,
-	samuel.holland@sifive.com,
-	dennis@kernel.org,
-	akpm@linux-foundation.org,
-	thomas.weissschuh@linutronix.de,
-	surenb@google.com,
-	kbingham@kernel.org,
-	ankita@nvidia.com,
-	nathan@kernel.org,
-	maciej.wieczor-retman@intel.com,
-	ziy@nvidia.com,
-	xin@zytor.com,
-	rafael.j.wysocki@intel.com,
-	andriy.shevchenko@linux.intel.com,
-	cl@linux.com,
-	jhubbard@nvidia.com,
-	hpa@zytor.com,
-	scott@os.amperecomputing.com,
-	david@redhat.com,
-	jan.kiszka@siemens.com,
-	vincenzo.frascino@arm.com,
-	corbet@lwn.net,
-	maz@kernel.org,
-	mingo@redhat.com,
-	arnd@arndb.de,
-	ytcoode@gmail.com,
-	xur@google.com,
-	morbo@google.com,
-	thiago.bauermann@linaro.org
-Cc: linux-doc@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v2 06/14] x86: Add arch specific kasan functions
-Date: Tue, 18 Feb 2025 09:15:22 +0100
-Message-ID: <7099fb189737db12ab5ace5794080458d7a14638.1739866028.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
-References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+	s=arc-20240116; t=1739866703; c=relaxed/simple;
+	bh=2VBYXOW5In6lit0F1gJahtZuGAfHYPipCEI5SAdDqvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cQqwTwUSIoBH/dBPpKWRgH4y2KpU5/y7/ur/kuAbv8qoAh+xVcgIGEP8dRYbX+xPWrKsslLyBma7+Q5b3TDLxn1SLDZMQWFTjp8iRbLN0gkqYdLx+EclT60NXuylmLjn6P5tC+Kt6TiDHbx5GOvWNv5oVIF68ZFL2Nca7a3E8rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-521b5bd2268so410444e0c.0;
+        Tue, 18 Feb 2025 00:18:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739866700; x=1740471500;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VT68uUFOtiLM/j4EB1RwnCT+0lIJjD9PLyVD0uYr2cM=;
+        b=pJYalHd/seZz6JgzSYgsmXApfk9VN20SFUDI0hGFVENQJs/R8Hwxq6WsZe8xyAAA9q
+         +XVb/rppSptyshrtiEtBujNdzBuIyxFfNHmIXTMNaj5/slP5Mn6hQc0uRXk6V8Vy1jv2
+         YmCbQthT/xmG2DCc0hnFxvg5foEwOFPrPWMWpRjNAIgtmvrWfU9GMs7vLc4CEtSWtC5c
+         33w/PVPhK16BX06jkMTJxvzNb1dK6QaxYE74D9sK0JeO+ZHUo6sJDBut0X4ouiZwVQlw
+         yEi2izSyMh6luD5OOi4sbT4OHqrcyDHzzqJNqEKgDyICI0WheRXv+vWmGCOiG3Ku+qIN
+         0xiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8f5MiYQUDKuR+A+gm4VNgBlCrU6syJEkZ80qkkCQ+DtILXyafAxiPla3VQ8ysFLYEQCH6cvxdyRF7n3U=@vger.kernel.org, AJvYcCWeqDrnXiKAZv4ifaO6EgfII4dMhyzlUukW755UdCDxAktB01j6+BnF1/6RbBLUR6/IgUJvVBYJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+uukBYrQeT9VdoAgVROyWwfBUB71/Hhjy4fbJmsf4nVr8pfM4
+	DTL4oBubPKXedyS3XzjVDDl2nBdjL8AJGaK9eCBkvP9H6D+88yTDuElfpNcqFfo=
+X-Gm-Gg: ASbGnctPpI7xK4qQRmjNayIWD9aXQcLMVErzfpCL4I1KxIDils6Q/PYccotqcNw9ZwO
+	LSby5vHMvWpKYNHOo7LCt5Kjr8XJAqAF3Z98BtcBl5PXm0rQAuRYvpIzdu2W+YmrMI/TeY7WgIz
+	arnfMIdb24Z+cbHiVw+nQHSOC8Sp5Kk5HuFF4P5vCrXFInKUabqQwM+Xe/oYHv1sHv7fbmcoico
+	w9WiC6yU7X5SnYd7w2R4d4Z694+aFo5qtroQqgBSoPmLw35kyo1vsDhLTPy7y0GkLZap5MSF3rM
+	8rZvyJnamnkNdPlY7thV84tDTL0+LseookPkFEyu0Ff+xCdsMyS0sg==
+X-Google-Smtp-Source: AGHT+IGMgwpf+kYRAPr7XkyvWrb+UmLfkmdXvlkoGgf+GRltx16IBJkg0+LVFD+bPb17sWsfv10Dxg==
+X-Received: by 2002:a05:6122:2a56:b0:520:59ee:8197 with SMTP id 71dfb90a1353d-5209dcccf61mr6069911e0c.8.1739866699899;
+        Tue, 18 Feb 2025 00:18:19 -0800 (PST)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-868e8599598sm2092279241.15.2025.02.18.00.18.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 00:18:19 -0800 (PST)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4bd3c887545so2357738137.1;
+        Tue, 18 Feb 2025 00:18:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVxcUNr2MIRsG7425tbBNIiFKCpVgUDQTyET6myPSk1NpDDlyWE2ZCnqzxcyvgkNki3dCfKfjE6@vger.kernel.org, AJvYcCWudjV5gnNEsHldn8Z3/d9968nHXHJfaVYsdc0o4nUW35SpaTSpUcnypIwNNQjReWtTQcPKBvH17tMUSJg=@vger.kernel.org
+X-Received: by 2002:a67:e7c3:0:b0:4b1:1eb5:8ee5 with SMTP id
+ ada2fe7eead31-4bd40001d6amr6978606137.25.1739866699350; Tue, 18 Feb 2025
+ 00:18:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217160017.2375536-1-haoxiang_li2024@163.com>
+In-Reply-To: <20250217160017.2375536-1-haoxiang_li2024@163.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Feb 2025 09:18:07 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUs_2mB5RFga8Dv7xPp5VFMaXqykJShndTW-_Q8hgUYfw@mail.gmail.com>
+X-Gm-Features: AWEUYZlXeXLAPjROcl_yxFn5h2lk18a3_Wom0kri1EP69xrAxJlcBNWCh-TcD_A
+Message-ID: <CAMuHMdUs_2mB5RFga8Dv7xPp5VFMaXqykJShndTW-_Q8hgUYfw@mail.gmail.com>
+Subject: Re: [PATCH] m68k: sun3: Add check for __pgd_alloc()
+To: Haoxiang Li <haoxiang_li2024@163.com>
+Cc: sammy@sammy.net, zhengqi.arch@bytedance.com, akpm@linux-foundation.org, 
+	dave.hansen@linux.intel.com, kevin.brodsky@arm.com, 
+	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-KASAN's software tag-based mode needs multiple macros/functions to
-handle tag and pointer interactions - mainly to set and retrieve tags
-from the top bits of a pointer.
+On Mon, 17 Feb 2025 at 17:00, Haoxiang Li <haoxiang_li2024@163.com> wrote:
+> Add check for the return value of __pgd_alloc() in
+> pgd_alloc() to prevent null pointer dereference.
+>
+> Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
 
-Mimic functions currently used by arm64 but change the tag's position to
-bits [60:57] in the pointer.
+As akpm has already taken this:
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
- arch/x86/include/asm/kasan.h | 32 ++++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/arch/x86/include/asm/kasan.h b/arch/x86/include/asm/kasan.h
-index de75306b932e..8829337a75fa 100644
---- a/arch/x86/include/asm/kasan.h
-+++ b/arch/x86/include/asm/kasan.h
-@@ -3,6 +3,8 @@
- #define _ASM_X86_KASAN_H
- 
- #include <linux/const.h>
-+#include <linux/kasan-tags.h>
-+#include <linux/types.h>
- #define KASAN_SHADOW_OFFSET _AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
- #define KASAN_SHADOW_SCALE_SHIFT 3
- 
-@@ -24,8 +26,33 @@
- 						  KASAN_SHADOW_SCALE_SHIFT)))
- 
- #ifndef __ASSEMBLY__
-+#include <linux/bitops.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+
-+#define arch_kasan_set_tag(addr, tag)	__tag_set(addr, tag)
-+#define arch_kasan_reset_tag(addr)	__tag_reset(addr)
-+#define arch_kasan_get_tag(addr)	__tag_get(addr)
-+
-+#ifdef CONFIG_KASAN_SW_TAGS
-+
-+#define __tag_shifted(tag)		FIELD_PREP(GENMASK_ULL(60, 57), tag)
-+#define __tag_reset(addr)		(sign_extend64((u64)(addr), 56))
-+#define __tag_get(addr)			((u8)FIELD_GET(GENMASK_ULL(60, 57), (u64)addr))
-+#else
-+#define __tag_shifted(tag)		0UL
-+#define __tag_reset(addr)		(addr)
-+#define __tag_get(addr)			0
-+#endif /* CONFIG_KASAN_SW_TAGS */
- 
- #ifdef CONFIG_KASAN
-+
-+static inline const void *__tag_set(const void *addr, u8 tag)
-+{
-+	u64 __addr = (u64)addr & ~__tag_shifted(KASAN_TAG_KERNEL);
-+	return (const void *)(__addr | __tag_shifted(tag));
-+}
-+
- void __init kasan_early_init(void);
- void __init kasan_init(void);
- void __init kasan_populate_shadow_for_vaddr(void *va, size_t size, int nid);
-@@ -34,8 +61,9 @@ static inline void kasan_early_init(void) { }
- static inline void kasan_init(void) { }
- static inline void kasan_populate_shadow_for_vaddr(void *va, size_t size,
- 						   int nid) { }
--#endif
- 
--#endif
-+#endif /* CONFIG_KASAN */
-+
-+#endif /* __ASSEMBLY__ */
- 
- #endif
+                        Geert
+
 -- 
-2.47.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
