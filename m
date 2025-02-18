@@ -1,165 +1,229 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6D21465A1
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F631465A1
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739861862; cv=none; b=nqXLrKmWkslDZQg/g3NxUhztcvWQylySDer91jpx/3h4YKdf5/jTw8UmvO9GRCQ1Uggl0QEPmm6k1yuSWonUeSyPMYXLlId58PXyXETp2Q5h5j5Wk/lOZVZVAuqxgNyVRjCGzOTG2/EltaA+vWXIRRCg9cfF3Y6Hh9EjZRrP2cY=
+	t=1739861950; cv=none; b=ujljgQ2f4Ng2+CwlAlor5muj6l155ACB6mq+DaZsPJw9voTKJMYiuyjBgxYgtAEyKe8+MuVK1RnIlAeDkYhQ/tPq6wpJOZ3nHZTjh6EkdVfoLOUF6Gvdv7phGsWS5t307xm1Hz40M09IzU8Es3bfs7wF0FbmLweqz9cGNKrGbIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739861862; c=relaxed/simple;
-	bh=XQ/NVnfVE7NNvDTmpfLLDpqgGlSMILACTRheTT216ng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nq7WFUAI8qpJMycvpSg9nYb3bWEQwl+8hvKlA496XWIlxc1JnLBskYNNhIUxNw3inFaq0B2s6RUKOwPUilqg9fd9CeAY4ZzEYc3tb3nliFViP48yzFI0kvqWgiU493nQAZoyfAF8nbksqkHHK2hIzcKiKMSUrVLP7PGm6T2+OHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nHuA3w+b; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739861950; c=relaxed/simple;
+	bh=1k9BCUkbzWXoR++auGEENP1hdbsmmSYBGTZt+PC2E2g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bg06IeDtMrkXm/anI1t4I7dG5yQpmG09hOJ4nd8pUxFms1j1FeKPIrdMm0RK9hXcAaFHL3eBYQ09nRPvUNp0BeIntY/RNYMspQqw7r6uP0WrDvIuEIjM2dOfYVNYLPfwLRjlCPk9/8bF/A0CGJ0FkDEqj5lNcSEEHIUahMqtROw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GMWFFY7C; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHuA3w+b"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30613802a04so53937361fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 22:57:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739861858; x=1740466658; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iRBSYqRtQX5z3bqMamdRSkx7Zu9m86472PmcDCtWIMo=;
-        b=nHuA3w+bWD4Zhj5/+Vb6V6f3mX05RPbcoEiPe2gn/Ntt5ldbUicwEZNBVCq3jjl2CD
-         LR2WpTtLFi47/ggs5ICsiszMl6VU1zMDMUi7Rp26Hf1lxuCJ0PKhSdLgmjxvCPGaK3yl
-         09rC5KlWO7+6QKdNFNU5UEwhVgYTHQk0keTCd14SbM4rRcPuXxmf4ackvYdZDcRojCoT
-         7jiji9bg/CkDqvmpQjSqHPVtbrQY7FDpHBdcIxxryxLaTsIWqx6yMylkVZh0DZcT7TGT
-         oVQiLuQflp9P+Tif80xJ0V5i7ibrOOw7QClRZzSaefIrY1QOp5GH+idK6fwRRvLcJzAx
-         mYzw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GMWFFY7C"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51I1e6DX025455
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:59:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=sPShBOsY5VLSNLF1J4MNJY
+	N36AkDL1uBQgmSPpIg7MQ=; b=GMWFFY7C8RrOBTI7ZtJN+d+xoTl80XO1xDU0Fo
+	wJDu9fnLEUZ9hT20NgLojmoxVGlbWuU+cc0SvxVcBjbVVaGPI37LIjfeIiCLdj8I
+	H8LkNZ6+JlTnUhovckO8g1tJeCmyPaskgcdUQodVJJ6istQAqz4fKpVYRtDlRLQj
+	D+/mLiJptJTcjENg8qNp9OcjGOqn+R4VRmFNvIG2SYfyPwcP0CHRLQx3bYjGtKKm
+	r5cMxld3CnDJE2RH5m04mqCsWsM5egqqJH89ygI1KrwvwgLh7YuBXsyqsQOch4sH
+	U3Jut82l957S5b3MHo4+Rg1e8C5cF7J62YPBmBTNvDY9eVWg==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7vux8d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:59:07 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-220e1593b85so89732165ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 22:59:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739861858; x=1740466658;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1739861946; x=1740466746;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iRBSYqRtQX5z3bqMamdRSkx7Zu9m86472PmcDCtWIMo=;
-        b=srD2L715vQlfIZLzwgQRU7EuN60JWZjsz5Zjh7Y49IgKW/opNBxtPDFGl5rHdqoy4O
-         9ortLGGCiOULJIClxf7QvS6+kt/L11FyYcoFR/BhIIF5RiqwSvYsztGioeuWoU1th8PQ
-         KbyFhI+p54LJe3yOjWWHqt/4gkGDtMRSOUEsdqS5h5DtGMkLNhU63IJ4OdLT931jLyOU
-         h7InWDNjy3ffDQwkw8mTs15DLLVdf/d87uiCfpmoAL7eLrZhg3P97dufRmwz+I5CeAJp
-         mKu9KG9u1t2KizarC4iEKBQHYho8wn+jhFkmSTYCv/SD2Dytc1An9+y9036YLqC5hoeb
-         ikHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBEJdMNBIFK/YWyReyQFJCdKoyFNQ+r29pk/MI4N/TiTB6DqOTG8E9TXzS2deJOhuOCOUWdGPr/3tRxLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwakBtWqEHSSAcQxzHIbtiHkDbyhG8qGz+Is/DU6vh0yksQta22
-	vcczFIzokKuOAKhJhpy5lUvhT87KhgY1H6H7VjOAKKOfXeM1vvccpiMpbbHgY7CBc0+cLCYS3Iy
-	6E/zRHnJy0cDltKol9Y8sKzb8sqQ=
-X-Gm-Gg: ASbGncvjr8coMW8OGwAhDvQw7mP6SK0oLCB+31uFHnx5905jBbhwldioP6KEshqzKOV
-	3P4G4o0ACUZzuOhz/nPysG8w5es5vMv2U+8+A4WZ/LpwyEqDb11LkOy/+GmUyRaJQrRN95QJg
-X-Google-Smtp-Source: AGHT+IER7wjl6f9njeMck7m0ivCclnh4kfcs7yKY0+I1guG8f5sYgtFMtdPO/1a8VTFbDz5EyQv2cPIiaAaMAZBQ268=
-X-Received: by 2002:a05:6512:a8f:b0:545:576:cbca with SMTP id
- 2adb3069b0e04-5452fe2ef99mr3503855e87.8.1739861858234; Mon, 17 Feb 2025
- 22:57:38 -0800 (PST)
+        bh=sPShBOsY5VLSNLF1J4MNJYN36AkDL1uBQgmSPpIg7MQ=;
+        b=tJQmGtWwTyyAvVtzsd/Z7eCWeqk5kxAsIjKRbteWj/8DuyL7GYUMK2hqH1LGb5ja9D
+         D8MpQv1yFL934Zk9afrxxo3fmuPewDo8qZcmKzpPNWuP+7R//0/TdP2HiOCuvae4PZr8
+         Nf9yyKbvf5zes/3XgHlG2Ae0LWDWPy784Hc5fHfU5iznpIsGB9PLU/FjIZd9udXSUnXL
+         SkkGsmkyTqMVDcurTcsvX6HnV6c50IUYLIIXPOYitjwxRkS4uM9QYOQtQk+xV6wU/j2y
+         Xq3NhgwOHRAwX1KLVJRMDJAh5/TiIVpkYUJKlvpMK2skrVcbw2xBFajp+9E8BE2Fzvyi
+         9aCw==
+X-Forwarded-Encrypted: i=1; AJvYcCX30Lvq4H1954xsK/bxkb8uwU17ATpxRlCCfBjgnQWl27N2k5y+RJqHssF/UuZui1fgheZLk0RcDcqMosE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC8wcQEnTFUtih7QGUtaaMcH8bCGXIZ8siPkm29vZMzN7aO6Ia
+	97JOryB/Eutifk/C6sK7tcN+mSA8lMajuqLg6JXN1Y6v9USNgLnQ4HXX4/Ac7OmN67TODMzag8o
+	NK/bkx+7HTGvFKY0Rf8SIWzqz6/3z4BOaokmA1KUBItDkvqRbbiLkVv6aEYOIqTg=
+X-Gm-Gg: ASbGncsZHBlhPu4uRhP4DT/ZU5qbCzQMIUfQaAo4SzZGRq0nePmrlBmNuT7JHWOd02K
+	5M3WrvasYpWq780UzN+go/w0mxfD17RknznkbzfGCXcN3fxAEJhC0iIown6B2HS8Q1jhanPiZe/
+	QihgN0ZmmwfHz9DqKmJyRbEWSTRmLDuchJ7KGNKzqOdlV+e+49P7Y+FYJtM6B5iI1Kibe1nWVHO
+	eo0tEmdzm33JEDjWsV95kRxTc2EwKi1DD7qTTYlPbrTBQ/B6RseDjcffIsyNg/32f0O0Ia/q7lo
+	S6JieIoJecCL7qxcV5k=
+X-Received: by 2002:a17:902:ce0d:b0:21f:61a5:67a5 with SMTP id d9443c01a7336-221040b1342mr207349745ad.42.1739861945775;
+        Mon, 17 Feb 2025 22:59:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHqYOO4wAMcDFAf+d9a59DE0KSOadLoeto01ufkmNN6EUdIvlPkaMu/Hx2gS8aJoeu1AQFQhQ==
+X-Received: by 2002:a17:902:ce0d:b0:21f:61a5:67a5 with SMTP id d9443c01a7336-221040b1342mr207349575ad.42.1739861945423;
+        Mon, 17 Feb 2025 22:59:05 -0800 (PST)
+Received: from [10.213.103.17] ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d556dc4bsm82065915ad.188.2025.02.17.22.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 22:59:05 -0800 (PST)
+From: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Date: Tue, 18 Feb 2025 12:28:55 +0530
+Subject: [PATCH] arm64: dts: qcom: sm8750: Fix cluster hierarchy for idle
+ states
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217040928.34561-1-chunjie.zhu@cloud.com>
-In-Reply-To: <20250217040928.34561-1-chunjie.zhu@cloud.com>
-From: =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date: Tue, 18 Feb 2025 07:57:25 +0100
-X-Gm-Features: AWEUYZnV-Lx0KP6OYcQcbVwoe36BP9Dfghup5ZWfXQ0Y3N-qXvk2GRJ-CxLSgXM
-Message-ID: <CAHpGcMK0vez+c0NT-U40=JYy+_X-rtfR50KEZXiFXuA6E-tUmQ@mail.gmail.com>
-Subject: Re: [PATCH] fix gfs2 umount timeout bug
-To: Chunjie Zhu <chunjie.zhu@cloud.com>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-sm8750_cluster_idle-v1-1-5529df00f642@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAK4vtGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0ML3eJcC3NTg/jknNLiktSi+MyUnFRds7RUY1OL1CSLZPNUJaDOgqL
+ UtMwKsKnRsbW1AA5NFPplAAAA
+X-Change-ID: 20250218-sm8750_cluster_idle-6fe358eb8c7e
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jishnu Prakash <quic_jprakash@quicinc.com>,
+        Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Melody Olvera <quic_molvera@quicinc.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_lsrao@quicinc.com,
+        Maulik Shah <maulik.shah@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739861941; l=3606;
+ i=maulik.shah@oss.qualcomm.com; s=20240109; h=from:subject:message-id;
+ bh=1k9BCUkbzWXoR++auGEENP1hdbsmmSYBGTZt+PC2E2g=;
+ b=IVJFvD/M+jTTLQ1DOtvVjF5uoKRqWb4MxF3dlQOEaU6YLqTctjvdxJEz+3264GsnLhxHJ9as5
+ XqhwyCNi8CqA7ui4jxh5fwejc5DuqVHzTWTaCT/uX0S2VxaAjWslA1c
+X-Developer-Key: i=maulik.shah@oss.qualcomm.com; a=ed25519;
+ pk=bd9h5FIIliUddIk8p3BlQWBlzKEQ/YW5V+fe759hTWQ=
+X-Proofpoint-GUID: 8hYvRQDBNHkZTM7Mcit2bU_w9JVfZ_MY
+X-Proofpoint-ORIG-GUID: 8hYvRQDBNHkZTM7Mcit2bU_w9JVfZ_MY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_02,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ phishscore=0 spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 mlxscore=0 mlxlogscore=696
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502180052
 
-Hello,
+SM8750 have two different clusters. cluster0 have CPU 0-5 as child and
+cluster1 have CPU 6-7 as child. Each cluster requires its own idle state
+and power domain in order to achieve complete domain sleep state.
 
-Am Mo., 17. Feb. 2025 um 05:10 Uhr schrieb Chunjie Zhu <chunjie.zhu@cloud.com>:
->   If there are heavy lock contenions between nodes in a cluster, at
->   fs umount time,
->
->           node 1                           node 2
->             |                                |
->             |                                |
->      iopen glock lock    -->       iopen glock go_callback
->             |                                |
->             |                                |
->          EAGAIN                       try evict failure
->             |                                |
->             |                                |
->        DLM_ECANCEL                           |
->             |                                |
->             |                                |
->       glock complete                         |
->             |                                |
->             |                                |
->     umount(clear_glock)                      |
->             |                                |
->             |                                |
->  cannot free iopen glock                     |
->             |                                |
->             |                                |
->     umount timeout (*)                       |
->             |                                |
->             |                                |
->       umount complete                        |
->                                              |
->                                              |
->                                        umount succeed
+However only single cluster idle state is added mapping CPU 0-7 to the
+same power domain. Fix this by correctly mapping each CPU to respective
+cluster power domain and add domain idle state for cluster1.
 
-Thank you for your bug report. I'm having a hard time following what
-you are trying to say, and the patch itself doesn't look right to me.
-If there was a reference counting problem like the patch suggests, we
-would probably see regular left-over glocks at unmount time, but I'm
-not aware of any such problems. So you ld you please explain in a bit
-more detail what you think the problem is? Do you get any messages in
-the syslog? The file checksum in the patch refers to commit
-bb25b97562e5 ("gfs2: remove dead code in add_to_queue") from 2023.
-What exact kernel version are you running?
+Fixes: 068c3d3c83be ("arm64: dts: qcom: Add base SM8750 dtsi")
+Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/sm8750.dtsi | 36 +++++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-Thanks,
-Andreas
+diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+index 3bbd7d18598ee0a3a0d5130c03a3166e1fc14d82..3af928be5b68b47988dd55f4add8e3712f07d5ab 100644
+--- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+@@ -178,7 +178,15 @@ cluster1_c4: cpu-sleep-1 {
+ 		};
+ 
+ 		domain-idle-states {
+-			cluster_cl5: cluster-sleep-0 {
++			cluster0_cl5: cluster-sleep-0 {
++				compatible = "domain-idle-state";
++				arm,psci-suspend-param = <0x01000054>;
++				entry-latency-us = <2150>;
++				exit-latency-us = <1983>;
++				min-residency-us = <9144>;
++			};
++
++			cluster1_cl5: cluster-sleep-1 {
+ 				compatible = "domain-idle-state";
+ 				arm,psci-suspend-param = <0x01000054>;
+ 				entry-latency-us = <2150>;
+@@ -233,55 +241,61 @@ psci {
+ 
+ 		cpu_pd0: power-domain-cpu0 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster0_pd>;
+ 			domain-idle-states = <&cluster0_c4>;
+ 		};
+ 
+ 		cpu_pd1: power-domain-cpu1 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster0_pd>;
+ 			domain-idle-states = <&cluster0_c4>;
+ 		};
+ 
+ 		cpu_pd2: power-domain-cpu2 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster0_pd>;
+ 			domain-idle-states = <&cluster0_c4>;
+ 		};
+ 
+ 		cpu_pd3: power-domain-cpu3 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster0_pd>;
+ 			domain-idle-states = <&cluster0_c4>;
+ 		};
+ 
+ 		cpu_pd4: power-domain-cpu4 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster0_pd>;
+ 			domain-idle-states = <&cluster0_c4>;
+ 		};
+ 
+ 		cpu_pd5: power-domain-cpu5 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster0_pd>;
+ 			domain-idle-states = <&cluster0_c4>;
+ 		};
+ 
+ 		cpu_pd6: power-domain-cpu6 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster1_pd>;
+ 			domain-idle-states = <&cluster1_c4>;
+ 		};
+ 
+ 		cpu_pd7: power-domain-cpu7 {
+ 			#power-domain-cells = <0>;
+-			power-domains = <&cluster_pd>;
++			power-domains = <&cluster1_pd>;
+ 			domain-idle-states = <&cluster1_c4>;
+ 		};
+ 
+-		cluster_pd: power-domain-cluster {
++		cluster0_pd: power-domain-cluster0 {
++			#power-domain-cells = <0>;
++			domain-idle-states = <&cluster0_cl5>;
++			power-domains = <&system_pd>;
++		};
++
++		cluster1_pd: power-domain-cluster1 {
+ 			#power-domain-cells = <0>;
+-			domain-idle-states = <&cluster_cl5>;
++			domain-idle-states = <&cluster1_cl5>;
+ 			power-domains = <&system_pd>;
+ 		};
+ 
 
-> Signed-off-by: Chunjie Zhu <chunjie.zhu@cloud.com>
-> ---
->  fs/gfs2/glock.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-> index 4a280be229a6..bf2445f0afa9 100644
-> --- a/fs/gfs2/glock.c
-> +++ b/fs/gfs2/glock.c
-> @@ -2120,6 +2120,23 @@ static void thaw_glock(struct gfs2_glock *gl)
->         gfs2_glock_queue_work(gl, 0);
->  }
->
-> +/**
-> + * IOPEN glock might be a zombie glock instance due to lock contention
-> + * between nodes in the cluster during fs umount, then it causes umount
-> + * timeout
-> + */
-> +
-> +static int is_zombie_glock(struct gfs2_glock *gl)
-> +{
-> +       if (test_bit(GLF_LOCK, &gl->gl_flags) &&
-> +               test_bit(GLF_DEMOTE, &gl->gl_flags) &&
-> +               test_bit(GLF_BLOCKING, &gl->gl_flags) &&
-> +               (gl->gl_name.ln_type == LM_TYPE_IOPEN) &&
-> +               list_empty(&gl->gl_holders))
-> +               return 1;
-> +       return 0;
-> +}
-> +
->  /**
->   * clear_glock - look at a glock and see if we can free it from glock cache
->   * @gl: the glock to look at
-> @@ -2132,7 +2149,8 @@ static void clear_glock(struct gfs2_glock *gl)
->
->         spin_lock(&gl->gl_lockref.lock);
->         if (!__lockref_is_dead(&gl->gl_lockref)) {
-> -               gl->gl_lockref.count++;
-> +               if (!is_zombie_glock(gl))
-> +                       gl->gl_lockref.count++;
->                 if (gl->gl_state != LM_ST_UNLOCKED)
->                         handle_callback(gl, LM_ST_UNLOCKED, 0, false);
->                 __gfs2_glock_queue_work(gl, 0);
-> --
-> 2.34.1
->
->
+---
+base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
+change-id: 20250218-sm8750_cluster_idle-6fe358eb8c7e
+
+Best regards,
+-- 
+Maulik Shah <maulik.shah@oss.qualcomm.com>
+
