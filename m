@@ -1,150 +1,165 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CA323FC46
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABAC23C8DC;
+	Tue, 18 Feb 2025 11:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878919; cv=none; b=FbTj4F6RXJMXX1b78QG629TN3rVFZNFRfvgbuW6wWd7zoMxw27l3cr9H0T1pnyaDygr1+KXG/gPyX3DG4fy25KZIYDkDs42NGW0fiEyZ4L/kSadL/MKO0ZEQSAWKyl8SUaYyHVmywdFMHv1/PMG3JPiqGq/Doe/HLjTbdI9Pccc=
+	t=1739878971; cv=none; b=GPeRzhouFloOldRcSsaj0nuVkzGh7eL3/LWrU0KLCV1mxG23feUdO7FbnTleAdIqxtLYDGP50MVcBRjE2+xOrmvjHYH7GaE/jdrI4OkVCRLTt6W02xrXeIWl59+aWO0bnS496hiwVt4+krLhy72IxixfD+P436Ray+1pbtNGN5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878919; c=relaxed/simple;
-	bh=qetabGxYbS2Xn9VVfPXOuzSTSZeCSKTs2TYqNLNDv8U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UKFnpBPD6CAd2PYQ03W2wlF4ZgCfB+rgf0m2f03G8hLqqeZU7xX9TrupTkpISTf1WxUaeijNLAb9WEJTudn1qZDDJz2c1n0QebU1+tmuBYqUgt11u8/4BqPgUImC8Yujkh+CD8aMND+Qf56drzbM1pAZEIaQUstf54c3IMS4dN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=fLzPseWo; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1739878971; c=relaxed/simple;
+	bh=bBNT4QlzZXKhd7EQ9JV5YlXy79pcFJ/hqJ3SE6SkiKg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=oI0YShNL59Ooq1Al9Bv36eTembA3skm1sD3uH6FHIpGuZrPfWEeYaPA3KuVVUu6uX3gryBsMf88c6Ji4hz9+Gvz5+/gLh0tkfQRk2BSd+PB7Yck5AqCJ0+m7En9mOdaeqzLCMApsFZa2Nh7aA8D/9qiJso7Y+4/UADVG2FfDRx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Ouss9I8F; arc=none smtp.client-ip=117.135.210.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="fLzPseWo"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab78e6edb99so810065066b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 03:41:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1739878915; x=1740483715; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8aKmlMmkGK0UfyeuqhRhT99w4TL2OYZoP6ekSWwvJ0Q=;
-        b=fLzPseWoH2hHIdsJvFm5EYZJ5fe2BQ2oyyryYNXQlkSZHNxxgBhMrCzgkN0n3FGmc/
-         TCYlHYeRKhydcmYvbb1WAHRpODulIpLojkkwbiw6IWSzqUqUr1J/TXZihfmpMCei/8KG
-         3dnuVsojDWrJYJ24vI/5sI9u7vyI9aSPSpQih0ULu7y1cWWide6ZG73jl012J4VQwMdW
-         PMNzuG2XGRHLAASQFJSNmN/kyLkmKndyhhJlzr7DKJ4XCpNgg+XGdS3nFBPx//EpVcvm
-         rF7cerWXZjrZyvnaBWIoA+De5bTAaZWTuW8CABQytJ5zrrvJP77+XmNk8u52doe+YeZW
-         lhKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739878915; x=1740483715;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8aKmlMmkGK0UfyeuqhRhT99w4TL2OYZoP6ekSWwvJ0Q=;
-        b=U/rr59ba2KpiqE58end+kvRhw5Wp1YihjjsUp4o6XbSVW9BOq9fXOl4y0exYYUxoLf
-         lGyyWSFKHuvbGXnKXFirmxJ/QEJyqLgrQTmF0bswvI3jIA46RHJ5IM9+mn1ndNLRLbQm
-         XFpQJYb1mQPyr/POvLxg97XzxSgAp2yN/k/mWzpcEcnINX3QCQtVDlbepVKF2TEW0bfE
-         tLVNsQTViPDNsYfwQ2AqlpBCmv9uoNyXw2665tFi09W3kcbTWUjXsAdSv6ZgsJrUKAW1
-         I6ieZLHUnesZmNzZYJFLkhstZfxuBVSo66vo6awQoCiwRLciI8T3pcY1QGNz1JxlpK+o
-         2BUg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2cmM8V/gOUx4gWI6tIdTY4QmWFAYuMMgE7+vruX0OcfjsZ0FczhL0jl6+9dBKbFY8JeTwZhmPtvuZAqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4q38uV8lCv2bfNQmDU/bg2Uh77JRFDzhPRhpXcULn4nlTYE/+
-	Af0EfpCSA9lIyDAisAig7LbxW08FtDW5oa45set+oIwbZk8e2am/XAcWTIVZ41wXhEOonfH9QR9
-	enzFKcLM6yrSXIuCf9exqS4i8q/vSqMlUPfEzBw==
-X-Gm-Gg: ASbGnctufo3b5h//3iZPuVrV0dMRbCq3fG8Fgz9dzjLcEaH5Kev03YNjrYWS3mX8CF1
-	ANmKqRJu37VxkhkNeu30/HgQP8uV4zPFx83cJjkrvyW2KUcnJhbWsq5H04MlQlkEvvKifgcmN
-X-Google-Smtp-Source: AGHT+IEPNee71mSksjXSeSsWHrS2KAR9wIT4sz1ud5v06geo9drLnl7hEt7tvSIgJJ+4DJzXS69UPDMhP8dla+sJ57w=
-X-Received: by 2002:a17:907:c1f:b0:ab7:86af:9e19 with SMTP id
- a640c23a62f3a-abb70db8274mr1197625166b.43.1739878915362; Tue, 18 Feb 2025
- 03:41:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Ouss9I8F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=KkHPLPhS/lcvXv2PGW
+	47P5xHPzK/OHNmih6dbHFhbrA=; b=Ouss9I8Fc4R4KkbIlN1YgVgbUZ9QDDLzp7
+	LBabT84KOv4vz0grUvIk/SJUAIjYP2QFgcip731TZfNOB/sxSN9aTFCAC+8YmvoN
+	B3FJePlnfcoha1dN0QXxr5We+uUP1LmEoS1n4wGwzEX5hZjawI5P4wOmzXDg++x7
+	tPvWiIre4=
+Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDnD9StcbRn5BnwAw--.45758S2;
+	Tue, 18 Feb 2025 19:40:30 +0800 (CST)
+From: yangge1116@126.com
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	21cnbao@gmail.com,
+	david@redhat.com,
+	baolin.wang@linux.alibaba.com,
+	muchun.song@linux.dev,
+	osalvador@suse.de,
+	liuzixing@hygon.cn,
+	Ge Yang <yangge1116@126.com>
+Subject: [PATCH V3] mm/hugetlb: wait for hugetlb folios to be freed
+Date: Tue, 18 Feb 2025 19:40:28 +0800
+Message-Id: <1739878828-9960-1-git-send-email-yangge1116@126.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID:_____wDnD9StcbRn5BnwAw--.45758S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXryrZr43Gw13Cw48Cw45KFg_yoWrur4rpF
+	yUKr13GayDJr9akrn7AwsYyr12y3ykZFWjkrWIqw45ZFnxJas7KFy2vwn0v3y8Ar93CFWx
+	ZrWqqrWDuF1UZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR0JmUUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifgP3G2e0TMW1YgABsd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
- <20250213171435.1c2ce376@bootlin.com> <a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
- <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
- <821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch> <CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
- <20250213195304.3a2df02c@bootlin.com> <CAMEGJJ0kGCj=tjM6KswbG_+ZFkzMwPY+06BXCU0qSnbBKz0=ug@mail.gmail.com>
- <20250213220639.373da07b@bootlin.com> <CAMEGJJ2_HVKfsE3P22baadbzxSDAX=yTr=m76YuXa5A2cJsJig@mail.gmail.com>
- <20250217165306.3f055b94@bootlin.com> <CAMEGJJ13476pKJb441o5X0Y+rbfromj5-3V-j2KZiOt326OL4A@mail.gmail.com>
- <20250217185559.2e56bd75@bootlin.com>
-In-Reply-To: <20250217185559.2e56bd75@bootlin.com>
-From: Phil Elwell <phil@raspberrypi.com>
-Date: Tue, 18 Feb 2025 11:41:43 +0000
-X-Gm-Features: AWEUYZmepFe2lsLe25Me9NjAHmXEX0-yOAHWU0twEqpljxZQoXOSSXs2uoT9kzs
-Message-ID: <CAMEGJJ2m+Qjk4L5xFJZk+X7XSiop_63BH9gsrykLwz3+VMAQfA@mail.gmail.com>
-Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using
- a DT overlay
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>, 
-	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com, brgl@bgdev.pl, 
-	Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com, 
-	devicetree@vger.kernel.org, dragan.cvetic@amd.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org, kw@linux.com, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, lpieralisi@kernel.org, 
-	luca.ceresoli@bootlin.com, manivannan.sadhasivam@linaro.org, 
-	masahiroy@kernel.org, Michael Turquette <mturquette@baylibre.com>, 
-	Rob Herring <robh@kernel.org>, saravanak@google.com, Stephen Boyd <sboyd@kernel.org>, 
-	thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, 
-	Will Deacon <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 17 Feb 2025 at 17:56, Herve Codina <herve.codina@bootlin.com> wrote:
->
-> On Mon, 17 Feb 2025 17:03:34 +0000
-> Phil Elwell <phil@raspberrypi.com> wrote:
->
+From: Ge Yang <yangge1116@126.com>
 
-<snip>
+Since the introduction of commit c77c0a8ac4c52 ("mm/hugetlb: defer freeing
+of huge pages if in non-task context"), which supports deferring the
+freeing of hugetlb pages, the allocation of contiguous memory through
+cma_alloc() may fail probabilistically.
 
-> > The job of the nexus node would be to translate a generic request for
-> > a numbered resource to a specific request for an RP1 resource with
-> > arbitrary properties. The arbitrary properties could be GPIO offsets,
-> > which are board specific, while the node supplying the resource is
-> > provided by the overlay. This means that an entry in the table,
-> > described by a single property, could have contributions from the base
-> > DT and the overlay, which is not possible since overlays overwrite
-> > whole properties.
->
-> Hum, I am a bit lost.
-> Some DT example (base and overlay) could help me to understand.
+In the CMA allocation process, if it is found that the CMA area is occupied
+by in-use hugetlb folios, these in-use hugetlb folios need to be migrated
+to another location. When there are no available hugetlb folios in the
+free hugetlb pool during the migration of in-use hugetlb folios, new folios
+are allocated from the buddy system. A temporary state is set on the newly
+allocated folio. Upon completion of the hugetlb folio migration, the
+temporary state is transferred from the new folios to the old folios.
+Normally, when the old folios with the temporary state are freed, it is
+directly released back to the buddy system. However, due to the deferred
+freeing of hugetlb pages, the PageBuddy() check fails, ultimately leading
+to the failure of cma_alloc().
 
-I could, but I think it is becoming a distraction.
+Here is a simplified call trace illustrating the process:
+cma_alloc()
+    ->__alloc_contig_migrate_range() // Migrate in-use hugetlb folios
+        ->unmap_and_move_huge_page()
+            ->folio_putback_hugetlb() // Free old folios
+    ->test_pages_isolated()
+        ->__test_page_isolated_in_pageblock()
+             ->PageBuddy(page) // Check if the page is in buddy
 
-<snip>
+To resolve this issue, we have implemented a function named
+wait_for_freed_hugetlb_folios(). This function ensures that the hugetlb
+folios are properly released back to the buddy system after their migration
+is completed. By invoking wait_for_freed_hugetlb_folios() before calling
+PageBuddy(), we ensure that PageBuddy() will succeed.
 
-> > I think I can see how that could be made to work for GPIOs. It looks
-> > as though the GPIO subsystem is the only one making use of
-> > of_parse_phandle_with_args_map. Interrupts seem to have an open-coded
-> > equivalent, and iommus. What about I2C and PWM?
->
-> Support for PWM has been recently accepted.
->   https://lore.kernel.org/all/ufl4kwrjyp4zid4muvghefevqc6hk3zyvxnsu72fxd4f46fzg6@hufkci2dzjid/
->
-> For i2c, nexus node is not suitable.
->
-> Nexus node works well when resources are indexed (gpio line in a gpio chip
-> for instance). For bus controller there is no index.
-> I mean we never refer a i2c bus controller using <&i2c-ctrl 12>.
->
-> For i2c, I proposed i2c bus extension:
->   https://lore.kernel.org/all/20250205173918.600037-1-herve.codina@bootlin.com/
+Fixes: c77c0a8ac4c52 ("mm/hugetlb: defer freeing of huge pages if in non-task context")
+Signed-off-by: Ge Yang <yangge1116@126.com>
+Cc: <stable@vger.kernel.org>
+---
 
-I don't see in principle why an address-cells of 0 should cause a
-problem - it's a degenerate case, but it's still conceptually valid.
+V3:
+- adjust code and message suggested by Muchun and David
 
-However, we seem to be having to invent a lot of new infrastructure -
-some of it already supported by the kernel, some of it not - because
-we have made the mistake of using a discoverable bus for a
-point-to-point link on a PCB. I don't see how this is fundamentally
-different to the USB-attached Ethernet controller on e.g. the Pi 3B.
-Despite the fact that the Ethernet interface is discoverable, it has a
-Device Tree declaration (see
-arch/arm/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi) in order that
-the firmware can supply a MAC address. Yes, the RP1 DT declaration is
-significantly larger, but size shouldn't matter for what seems to be
-objections based on tenets.
+V2:
+- flush all folios at once suggested by David
 
-Phil
+ include/linux/hugetlb.h |  5 +++++
+ mm/hugetlb.c            |  5 +++++
+ mm/page_isolation.c     | 10 ++++++++++
+ 3 files changed, 20 insertions(+)
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 6c6546b..0c54b3a 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -697,6 +697,7 @@ bool hugetlb_bootmem_page_zones_valid(int nid, struct huge_bootmem_page *m);
+ 
+ int isolate_or_dissolve_huge_page(struct page *page, struct list_head *list);
+ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn);
++void wait_for_freed_hugetlb_folios(void);
+ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+ 				unsigned long addr, bool cow_from_owner);
+ struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
+@@ -1092,6 +1093,10 @@ static inline int replace_free_hugepage_folios(unsigned long start_pfn,
+ 	return 0;
+ }
+ 
++static inline void wait_for_freed_hugetlb_folios(void)
++{
++}
++
+ static inline struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+ 					   unsigned long addr,
+ 					   bool cow_from_owner)
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 30bc34d..b4630b3 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2955,6 +2955,11 @@ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
+ 	return ret;
+ }
+ 
++void wait_for_freed_hugetlb_folios(void)
++{
++	flush_work(&free_hpage_work);
++}
++
+ typedef enum {
+ 	/*
+ 	 * For either 0/1: we checked the per-vma resv map, and one resv
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index 8ed53ee0..b2fc526 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -615,6 +615,16 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+ 	int ret;
+ 
+ 	/*
++	 * Due to the deferred freeing of hugetlb folios, the hugepage folios may
++	 * not immediately release to the buddy system. This can cause PageBuddy()
++	 * to fail in __test_page_isolated_in_pageblock(). To ensure that the
++	 * hugetlb folios are properly released back to the buddy system, we
++	 * invoke the wait_for_freed_hugetlb_folios() function to wait for the
++	 * release to complete.
++	 */
++	wait_for_freed_hugetlb_folios();
++
++	/*
+ 	 * Note: pageblock_nr_pages != MAX_PAGE_ORDER. Then, chunks of free
+ 	 * pages are not aligned to pageblock_nr_pages.
+ 	 * Then we just check migratetype first.
+-- 
+2.7.4
+
