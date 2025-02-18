@@ -1,454 +1,94 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE0B22AE4E
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 15:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5D726AA9B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 15:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739890969; cv=none; b=UDOu8rUhrS/+OWSIKt16I31uN3DVk26Dpu38yaQP54Gt0X+s7aHf9BspDbKzHdTDdkSPMb0vhWGbq8+oX4Z9vhejId/7OMtO3G8z4ZGC/QP2lgLrwI/rW2zMB7eBwzKtH79kMF3jQoTleA0f6+CLtivpNPXzkBUygutxtvQdWzs=
+	t=1739891077; cv=none; b=Gfzzbpax13EWOsl5ZYdgbRUB2xWxQnZQw/4JEc6PujjIEfak73XQ39us1+bHFzXWvkpfdbP0h8LklTWv5HRQaeHubj9wKcBEgNr2nQp0Wg3NYWky1A4cZ00m21wMKujw2N6JzV1X45C/bMzixa1koQK8d39FnLVjS30q1DLczB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739890969; c=relaxed/simple;
-	bh=IJqDsCY7HJfENXpaqjfftAGCHoVZB5afzR2gtzOaUlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r91CF1FdhetKuxQz9pz6wVW7opxHqyxS5350ZpOCZ8YtJ1Xfa8H5jSNSX1wUe0g+cuRrCr4jN7rJa8JLu8CwjwP+lYmyzaiHdaDarMjJPzbN5MvLTEkRUpXslnaajnZfKsUUID9vQZfjQ54hlSJTJysEL08XUamwQs+pZpNpu5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qCc+Uo4U; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739891077; c=relaxed/simple;
+	bh=I899cDCtzrLN27Unv61LFQINIpMMYCQTO3vzchKPTV8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jlSsmS2dk4sKPNnQKwkDYUpSsEr+H4k+W0jvXpNb/ZNsK6DlqPe7C4MOfuGU9naZstNioRMyRjHmeJF/Sb1GFprYgxJ37CUkZuqryr/v/v4ba1dEf8URiBECT2aJeQr8OXFv3b9k6eCHOLE++9KM6zlSKx25McipIxfA/TZGLyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JWJYmu4t; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCc+Uo4U"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2210d92292eso81227155ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 07:02:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JWJYmu4t"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220e62c4f27so124971415ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 07:04:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739890966; x=1740495766; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jWcJBMztVJPnjv77fK+NPeNY4keL9ty0/4Tf67Wb3BE=;
-        b=qCc+Uo4UPB3hH9e0vQOIFG2HLivcdFqhqd3u+lKL1gjgR0Z4EL7Cvp7NmNk24T7F3i
-         It0k+x5FLwgxg91NAnRzWbq/s0aXdhX6iAwNrfJIajZNz1Ly5kN922OBEUnyzDKsqca7
-         w0e69UYPYFPx6qdpAc7oqMZtX0fXzm1eQohaDB2WYY2eDeO9aS3DCOzMSDTxEbH00QyF
-         2h8PMqCxF1g9QzRaTUL7JsOlSKTc3w6sfMSRuZFcN4WVKkJw8YkFU5xl+fnUrPK7OyQn
-         7RhUEP7ux64wopV9bRy+nI8pPIBIFQX27bx7qaZn2QNbNK7/H4xQ9/s5aeUtJ5A5AxdQ
-         QiNQ==
+        d=google.com; s=20230601; t=1739891074; x=1740495874; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2knpZyBZj3T0QsRG2HDCFcc/2ipgVgDbXPlB+2nkirM=;
+        b=JWJYmu4tAG+Iy607hcvs46XQbbfpO7Psf6uhLE38VWCbS3+Luw5QwCzvUTCvFPqf3w
+         P3oT2umOgdXQHJsphV0e4uPcjlvlkZcyU1DWLKODpdwX12TfIKOz8RADuqjQglKlkgn6
+         B67l86ptccjHkeA8MFxW6GvT2dCcC45yOaO5ZS98DSPyT6TtHpaTewjonErgbUrhQkPO
+         XWVK/FZCbXAQ60syyXd74tghEgPNtYPd9+6gb0c7ea3NfoJffJpj47eiHS6wIlKZpbLn
+         ORR8hzqkxKCpSwnbiM/5wHv06LuFs6+7su7J5nte6OysHkaNlOJ6h0rFGw8hGd+4D0y7
+         7dNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739890966; x=1740495766;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jWcJBMztVJPnjv77fK+NPeNY4keL9ty0/4Tf67Wb3BE=;
-        b=HRJCTHmU82xmZ05CGsNwZUt8orGHxrKgf0cqgMiqAXMtDr0BqFFyMLOvRhoxFwR8sQ
-         F0uagSBBMkJ2C2J2JbR6ZG5DsZolWc9i7+zaURCLsUGbeoBzHIiGfeaty1MKLzl3D2gM
-         GVS91LQu857nJZ8SkbZwbOXORZ8EjCfBeNoxr8SmdvbAb5UTnpqTlKX4KFrTmSV0AtyK
-         p0a/fwh0JoGBCPM8W3H6c/bVBofmKXQJByMoFtS7pkhd4PEdkRFbVf3VMN6Ac+ww7IS5
-         T5wUmCK7Oq8A6RuMGfagQuKp613Sma7Rq/dHlbXKNCdjaUzdtorZPWVf5PlhP3KYbNXT
-         Or2w==
-X-Gm-Message-State: AOJu0Yw4OkNu/y8e7APVksLbfgz0wHg9YWqW3rx4t8n9WMbfKvqIarYX
-	zQ9ZwVvSIDQRM06Y069w2/L1ijQK7axQ6P6UiU6R/h7424CbjhCShsBpdRNzoA==
-X-Gm-Gg: ASbGncudCURj7auX7nYSXWgN45slYo1JB5W7EYXioNLn9XHC5td0Gz9Dwn9j4o463Nx
-	9Forgi0rOGk2wkwaKWCGxinf/D9d9iZmveJrpkB3ssEIlZusrs1cMZ4LG6l9RzdS8nOCZv8ngTN
-	ABotHzeTyhMY0GNhuNftC08XwbgTirmpDqoJfYDq5n/MZc3jHwQQ8mhPporafAgFFXHXrYIAEo2
-	4lVTjGO/YnI6LS6hn08vEonr24fU4bwhoTtnWcaTqaqcV4i7CbiXxoX0tEGaUrisWbJAR6+0/5F
-	6N0l71p5KXPsSZShvhZDek4vcRk=
-X-Google-Smtp-Source: AGHT+IF+vWFeQAwC0HTJEP2zVCzr9RvYcRojW9qsaHZE9h4rXSus+Sx1wVii57C3PhSK5l9G3L3+IA==
-X-Received: by 2002:a05:6a21:9999:b0:1ee:66f6:87e6 with SMTP id adf61e73a8af0-1ee8cbbba1amr25798990637.31.1739890966357;
-        Tue, 18 Feb 2025 07:02:46 -0800 (PST)
-Received: from thinkpad ([120.56.197.245])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324273e318sm10548970b3a.96.2025.02.18.07.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 07:02:45 -0800 (PST)
-Date: Tue, 18 Feb 2025 20:32:39 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@Huawei.com, fan.ni@samsung.com,
-	nifan.cxl@gmail.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	quic_nitegupt@quicinc.com, quic_krichai@quicinc.com,
-	gost.dev@samsung.com
-Subject: Re: [PATCH v6 2/4] Add debugfs based silicon debug support in DWC
-Message-ID: <20250218150239.mnylvhyfnw6dtzag@thinkpad>
-References: <20250214105007.97582-1-shradha.t@samsung.com>
- <CGME20250214105341epcas5p11ea07dba0a55700bc098077eb53e79b8@epcas5p1.samsung.com>
- <20250214105007.97582-3-shradha.t@samsung.com>
+        d=1e100.net; s=20230601; t=1739891074; x=1740495874;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2knpZyBZj3T0QsRG2HDCFcc/2ipgVgDbXPlB+2nkirM=;
+        b=Ca+eyz+1164cAYGJRhMM7XuBKcvqVdf77xpozpW7nWOps9Qw0+BP5el0+1x9GgWdNs
+         n9SuTbW2efMNrcjZMua6uFWCvEcTm6bRY7hI8w5HgQ505OcSei8U1n3XH37y3MsSLATQ
+         wXwO4bIyBd8c0qOCWRPR4YKBgmIPDlmZgdkEOWupzTwwD4w3uJTURjiIECk3djNiY2/M
+         yxyJomLY5f/T8fBVfbSY8X+4O/ZqMvekSbZJCNJnzFxIYRGjwNiQDdnsuvMNbAMOGy+I
+         Ri308wx1io+9Y1QHGlP8i8SnDB6hKJw8a1SJnksv79meVI18HptxJQx2rsLLaUvrUOuX
+         p9UA==
+X-Forwarded-Encrypted: i=1; AJvYcCVp7RB/V56YK7WgR1WpsKkfXATdC8M5tx/ZhQy3AciMr5orKoQF5bYtXBwVsj5s07w33VXj1APDsghzbe8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjr9K17xjx9uXvoEL/cO10AsmbUuXMqK0SrAiZkYYBWLdjYvYO
+	C4LNXryOCwu41DJNiHh/EPxA/ZaiV4fLS0wXwdnPnMQGTIx+UFSYNfWW/ks6pqb4QCaaTfV//rk
+	zuA==
+X-Google-Smtp-Source: AGHT+IEQM/K6moISqV33XPWsPZzBljK/WoSuhYmU5iaE5Q5tbSVOXX7pggels/AhXSwuZfgpgUZ1nTGnfS0=
+X-Received: from pfbga8.prod.google.com ([2002:a05:6a00:6208:b0:725:e4b6:901f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a21:b0:1e1:9f57:eaaf
+ with SMTP id adf61e73a8af0-1ee8caab754mr24825593637.6.1739891074053; Tue, 18
+ Feb 2025 07:04:34 -0800 (PST)
+Date: Tue, 18 Feb 2025 07:04:32 -0800
+In-Reply-To: <28dcae5c-4fb7-46a8-9f37-a4f9f59b45a2@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250214105007.97582-3-shradha.t@samsung.com>
+Mime-Version: 1.0
+References: <20240914101728.33148-1-dapeng1.mi@linux.intel.com>
+ <20240914101728.33148-8-dapeng1.mi@linux.intel.com> <Z6-wmhr5JDNuDC7D@google.com>
+ <28dcae5c-4fb7-46a8-9f37-a4f9f59b45a2@linux.intel.com>
+Message-ID: <Z7ShgKYeSqpGUXGl@google.com>
+Subject: Re: [kvm-unit-tests patch v6 07/18] x86: pmu: Fix potential out of
+ bound access for fixed events
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
+	Xiong Zhang <xiong.y.zhang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
+	Like Xu <like.xu.linux@gmail.com>, Jinrong Liang <cloudliang@tencent.com>, 
+	Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Feb 14, 2025 at 04:20:05PM +0530, Shradha Todi wrote:
-> Add support to provide silicon debug interface to userspace. This set
-> of debug registers are part of the RASDES feature present in DesignWare
-> PCIe controllers.
+On Tue, Feb 18, 2025, Dapeng Mi wrote:
 > 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->  Documentation/ABI/testing/debugfs-dwc-pcie    |  13 ++
->  drivers/pci/controller/dwc/Kconfig            |  10 +
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  .../controller/dwc/pcie-designware-debugfs.c  | 207 ++++++++++++++++++
->  .../pci/controller/dwc/pcie-designware-ep.c   |   5 +
->  .../pci/controller/dwc/pcie-designware-host.c |   6 +
->  drivers/pci/controller/dwc/pcie-designware.h  |  20 ++
->  7 files changed, 262 insertions(+)
->  create mode 100644 Documentation/ABI/testing/debugfs-dwc-pcie
->  create mode 100644 drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> On 2/15/2025 5:07 AM, Sean Christopherson wrote:
+> > On Sat, Sep 14, 2024, Dapeng Mi wrote:
+> >> @@ -744,6 +753,12 @@ int main(int ac, char **av)
+> >>  	printf("Fixed counters:      %d\n", pmu.nr_fixed_counters);
+> >>  	printf("Fixed counter width: %d\n", pmu.fixed_counter_width);
+> >>  
+> >> +	fixed_counters_num = MIN(pmu.nr_fixed_counters, ARRAY_SIZE(fixed_events));
+> >> +	if (pmu.nr_fixed_counters > ARRAY_SIZE(fixed_events))
+> >> +		report_info("Fixed counters number %d > defined fixed events %ld. "
+> > Doesn't compile on 32-bit builds.  Easiest thing is to cast ARRAY_SIZE, because
+> > size_t is different between 32-bit and 64-bit.
 > 
-> diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
-> new file mode 100644
-> index 000000000000..e8ed34e988ef
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/debugfs-dwc-pcie
-> @@ -0,0 +1,13 @@
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_debug/lane_detect
-> +Date:		Feburary 2025
+> But ARRAY_SIZE() should return same value regardless of 32-bit or 64-bit,
+> right?
 
-Please align these fields
-
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	(RW) Write the lane number to be checked for detection.	Read
-> +		will return whether PHY indicates receiver detection on the
-> +		selected lane. The default selected lane is Lane0.
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_debug/rx_valid
-> +Date:		Feburary 2025
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	(RW) Write the lane number to be checked as valid or invalid. Read
-> +		will return the status of PIPE RXVALID signal of the selected lane.
-> +		The default selected lane is Lane0.
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index b6d6778b0698..48a10428a492 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -6,6 +6,16 @@ menu "DesignWare-based PCIe controllers"
->  config PCIE_DW
->  	bool
->  
-> +config PCIE_DW_DEBUGFS
-> +	default y
-> +	depends on DEBUG_FS
-> +	depends on PCIE_DW_HOST || PCIE_DW_EP
-> +	bool "DWC PCIe debugfs entries"
-> +	help
-> +	  Enables debugfs entries for the DW PCIe Controller. These entries
-> +	  provide all debug features related to DW controller including the RAS
-> +	  DES features to help in debug, error injection and statistical counters.
-> +
->  config PCIE_DW_HOST
->  	bool
->  	select PCIE_DW
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index a8308d9ea986..54565eedc52c 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_PCIE_DW) += pcie-designware.o
-> +obj-$(CONFIG_PCIE_DW_DEBUGFS) += pcie-designware-debugfs.o
->  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> new file mode 100644
-> index 000000000000..fe799d36fa7f
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> @@ -0,0 +1,207 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Synopsys DesignWare PCIe controller debugfs driver
-> + *
-> + * Copyright (C) 2025 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * Author: Shradha Todi <shradha.t@samsung.com>
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +#define SD_STATUS_L1LANE_REG		0xb0
-> +#define PIPE_RXVALID			BIT(18)
-> +#define PIPE_DETECT_LANE		BIT(17)
-> +#define LANE_SELECT			GENMASK(3, 0)
-> +
-> +#define DWC_DEBUGFS_BUF_MAX		128
-> +
-> +struct dwc_pcie_vsec_id {
-> +	u16 vendor_id;
-> +	u16 vsec_id;
-> +	u8 vsec_rev;
-> +};
-> +
-> +/*
-> + * VSEC IDs are allocated by the vendor, so a given ID may mean different
-> + * things to different vendors. See PCIe r6.0, sec 7.9.5.2.
-> + */
-> +static const struct dwc_pcie_vsec_id dwc_pcie_vsec_ids[] = {
-> +	{ .vendor_id = PCI_VENDOR_ID_ALIBABA,
-> +		.vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{ .vendor_id = PCI_VENDOR_ID_AMPERE,
-> +		.vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{ .vendor_id = PCI_VENDOR_ID_QCOM,
-> +		.vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{ .vendor_id = PCI_VENDOR_ID_SAMSUNG,
-> +		.vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{} /* terminator */
-
-This should go into the common include file as I proposed in my series:
-https://lore.kernel.org/linux-pci/20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org/
-
-> +};
-> +
-> +/**
-> + * struct dwc_pcie_rasdes_info - Stores controller common information
-> + * @ras_cap_offset: RAS DES vendor specific extended capability offset
-> + * @reg_lock: Mutex used for RASDES shadow event registers
-
-If this is not used by all register accesses, please rename it as such. Like,
-reg_event_lock.
-
-> + *
-> + * Any parameter constant to all files of the debugfs hierarchy for a single controller
-> + * will be stored in this struct. It is allocated and assigned to controller specific
-> + * struct dw_pcie during initialization.
-> + */
-> +struct dwc_pcie_rasdes_info {
-> +	u32 ras_cap_offset;
-> +	struct mutex reg_lock;
-> +};
-> +
-> +static ssize_t lane_detect_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dw_pcie *pci = file->private_data;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t off = 0;
-
-Not required. See below.
-
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG);
-> +	val = FIELD_GET(PIPE_DETECT_LANE, val);
-> +	if (val)
-> +		off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "Lane Detected\n");
-
-I don't understand why you want to add 'off' which was initialized to 0. Also
-this just prints single string.
-
-> +	else
-> +		off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "Lane Undetected\n");
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, off);
-> +}
-> +
-> +static ssize_t lane_detect_write(struct file *file, const char __user *buf,
-> +				 size_t count, loff_t *ppos)
-> +{
-> +	struct dw_pcie *pci = file->private_data;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	u32 lane, val;
-> +
-> +	val = kstrtou32_from_user(buf, count, 0, &lane);
-> +	if (val)
-> +		return val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG);
-> +	val &= ~(LANE_SELECT);
-> +	val |= FIELD_PREP(LANE_SELECT, lane);
-> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG, val);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t rx_valid_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dw_pcie *pci = file->private_data;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t off = 0;
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG);
-> +	val = FIELD_GET(PIPE_RXVALID, val);
-> +	if (val)
-> +		off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "RX Valid\n");
-
-Same here.
-
-> +	else
-> +		off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "RX Invalid\n");
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, off);
-> +}
-> +
-> +static ssize_t rx_valid_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	return lane_detect_write(file, buf, count, ppos);
-> +}
-> +
-> +#define dwc_debugfs_create(name)			\
-> +debugfs_create_file(#name, 0644, rasdes_debug, pci,	\
-> +			&dbg_ ## name ## _fops)
-> +
-> +#define DWC_DEBUGFS_FOPS(name)					\
-> +static const struct file_operations dbg_ ## name ## _fops = {	\
-> +	.open = simple_open,				\
-> +	.read = name ## _read,				\
-> +	.write = name ## _write				\
-> +}
-> +
-> +DWC_DEBUGFS_FOPS(lane_detect);
-> +DWC_DEBUGFS_FOPS(rx_valid);
-> +
-> +static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
-> +{
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +
-> +	mutex_destroy(&rinfo->reg_lock);
-> +}
-> +
-> +static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
-> +{
-> +	struct dentry *rasdes_debug;
-> +	struct dwc_pcie_rasdes_info *rasdes_info;
-> +	const struct dwc_pcie_vsec_id *vid;
-> +	struct device *dev = pci->dev;
-> +	int ras_cap;
-> +
-> +	for (vid = dwc_pcie_vsec_ids; vid->vendor_id; vid++) {
-> +		ras_cap = dw_pcie_find_vsec_capability(pci, vid->vendor_id,
-> +							vid->vsec_id);
-> +		if (ras_cap)
-> +			break;
-> +	}
-> +	if (!ras_cap) {
-> +		dev_dbg(dev, "no rasdes capability available\n");
-> +		return -ENODEV;
-> +	}
-
-This will also go inside a new API, dw_pcie_find_rasdes_capability(pci).
-
-> +
-> +	rasdes_info = devm_kzalloc(dev, sizeof(*rasdes_info), GFP_KERNEL);
-> +	if (!rasdes_info)
-> +		return -ENOMEM;
-> +
-> +	/* Create subdirectories for Debug, Error injection, Statistics */
-> +	rasdes_debug = debugfs_create_dir("rasdes_debug", dir);
-
-_debug prefix is not needed since the directory itself belongs to debugfs.
-
-> +
-> +	mutex_init(&rasdes_info->reg_lock);
-> +	rasdes_info->ras_cap_offset = ras_cap;
-> +	pci->debugfs->rasdes_info = rasdes_info;
-> +
-> +	/* Create debugfs files for Debug subdirectory */
-> +	dwc_debugfs_create(lane_detect);
-> +	dwc_debugfs_create(rx_valid);
-> +
-> +	return 0;
-> +}
-> +
-> +void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
-> +{
-> +	dwc_pcie_rasdes_debugfs_deinit(pci);
-> +	debugfs_remove_recursive(pci->debugfs->debug_dir);
-> +}
-> +
-> +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
-> +{
-> +	char dirname[DWC_DEBUGFS_BUF_MAX];
-> +	struct device *dev = pci->dev;
-> +	struct debugfs_info *debugfs;
-> +	struct dentry *dir;
-> +	int ret;
-> +
-> +	/* Create main directory for each platform driver */
-> +	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> +	dir = debugfs_create_dir(dirname, NULL);
-> +	if (IS_ERR(dir))
-> +		return PTR_ERR(dir);
-
-debugfs creation is not supposed to fail. So you should remove the error check.
-
-> +
-> +	debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
-> +	if (!debugfs)
-> +		return -ENOMEM;
-> +
-> +	debugfs->debug_dir = dir;
-> +	pci->debugfs = debugfs;
-> +	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> +	if (ret)
-> +		dev_dbg(dev, "rasdes debugfs init failed\n");
-
-RASDES
-
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index f3ac7d46a855..a87a714bb472 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -642,6 +642,7 @@ void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
-> +	dwc_pcie_debugfs_deinit(pci);
->  	dw_pcie_edma_remove(pci);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_ep_cleanup);
-> @@ -813,6 +814,10 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->  
->  	dw_pcie_ep_init_non_sticky_registers(pci);
->  
-> +	ret = dwc_pcie_debugfs_init(pci);
-> +	if (ret)
-> +		goto err_remove_edma;
-> +
->  	return 0;
->  
->  err_remove_edma:
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d2291c3ceb8b..6b03ef7fd014 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -524,6 +524,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  	if (ret)
->  		goto err_remove_edma;
->  
-> +	ret = dwc_pcie_debugfs_init(pci);
-> +	if (ret)
-> +		goto err_remove_edma;
-> +
-
-Why can't you move it to the end of the function?
-
->  	if (!dw_pcie_link_up(pci)) {
->  		ret = dw_pcie_start_link(pci);
->  		if (ret)
-> @@ -571,6 +575,8 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
->  
->  	dw_pcie_stop_link(pci);
->  
-> +	dwc_pcie_debugfs_deinit(pci);
-> +
-
-This should be moved to the start of the function.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Yep.  The value is the same, but the type "returned" by sizeof() is different.
+On 32-bit, it's an "unsigned int"; on 64-bit, it's an unsigned long.  I.e. the
+size of sizeof() is different (sorry, couldn't resist).
