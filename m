@@ -1,122 +1,110 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCFA1F5844;
-	Tue, 18 Feb 2025 18:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904586; cv=pass; b=L0/gfouQ8pgSZ3/qtiUdqLyNTow8TKDiWXSNJK4oBhGoH11VJI+QbYtUyNoZs0xYiB48jKtv8W4ClXjZKYrss0dIA9tNXLLdvCTEeoUlou/8Q7jcBk8fZUFrLaNKXP1cpzYunMr5DMeWt6oKzVJeKvM7Xj9kmp9alRtG5jNKRxc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904586; c=relaxed/simple;
-	bh=9e1rDRhjtWx8RcwMZlExf40SAo2UlhVvfwW0sy8Zjso=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YCWxE9DC0eZPyfbzq72OhMplTjdzh+nHQTcxgMzEjRh+rd4JSlsF6P0yBC2raU2pw6wp4kGJ1zvdYKjwa1O4tHD4kNKcxlHYZ7HaJ4pNaT1fYJvjeODlOMnk0QIitocE6+tk9Dt1ejEoSLRhDSTQPUwNN0ej4K6qlZxjJXoeueM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=KezsOagY; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347B02698A0;
+	Tue, 18 Feb 2025 18:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739904609; cv=none; b=j7pT7EnRSa2qBNOdpGYRHrL29+4L6p+VeTtlDwGQdIB6vdVzXqImBw4bwSOD3wHL1QnE52E51TVcr5yxbnx8E/HWGz0ZUbVeT1kgcaOnLZs96MRqCEM8Gqis9fpJlhBgw6jjwmteacVdMZqHH+cMGpKMS6HAnwfgtK3Pqxm++ps=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739904609; c=relaxed/simple;
+	bh=Z6tA0s3/rcDzY/zbXHPV6C/z8wYbhUS1zy4lXjuXOjU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XQ1cgPe5QBBpDqevH2+YZvyPAjR5PDTR9i0wQ+PngFxaHU+11MebpTjLeHMKpkhhQG1JOIelMSkfsXiMHz7VkpjCRTacgGaU5GQ45++ncsUywO8xGiMF9AjqzmdVOZQz/9UNFNW/+NWYCd2bidSlq8c2N0dcb4tEeR9ORdS23no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=CIuURwlM; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="KezsOagY"
-ARC-Seal: i=1; a=rsa-sha256; t=1739904470; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SFbINEkgfo/EjRGQA6rv/e6E1w9SnSqlY7gHYKVzwjXjoKhCAcJbqcmPdIJwEjH2LxH7lfJ9xsBXS7WhCDHzW4t4p1k3HyQF0zdd0gRKvlix4G/kFo8IAh5iZCfs3PbJEMy+tW2awjmbzM+3lreQll+qP9qdOvwQD58BzaXAFrc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739904470; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iIPCjPu2+AmsIf/cCFUaH7Ayf0dQa1TgmFz1djm75zk=; 
-	b=BiLA6n50tNn0Zy0UCuq87cnay53sIAfZ9w3a4Hm7HJGd6Tp0IaOxtzNyiQTwinfP870IuN8rtpTTjHJphfv6NEdtmwtZ/T15tVADzqGc0M6KG6uxfGdslPxUYrEL6Knbv2VN5VYoweBkmCtrHBTQ23Qd1sKH3MuxTfKGyFyFYAU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739904470;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=iIPCjPu2+AmsIf/cCFUaH7Ayf0dQa1TgmFz1djm75zk=;
-	b=KezsOagYRIjDGPaa1ukaoWCC2dtYDxmSDpWhwWA+H1kw7wgty8GgsOiWva7N1STj
-	++uhbfis2YHydYUJ26OanC+6H9blUdIJSRIpzBMO1CCWiGI/lN/3zMiIgnuMR4RKkpy
-	Ynw+JvEGvLrJzkCmedkocIzP8sGHsriB10kKOfOE=
-Received: by mx.zohomail.com with SMTPS id 173990446851452.29048163591244;
-	Tue, 18 Feb 2025 10:47:48 -0800 (PST)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	jose.abreu@synopsys.com,
-	nelson.costa@synopsys.com,
-	shawn.wen@rock-chips.com,
-	nicolas.dufresne@collabora.com,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Tim Surber <me@timsurber.de>
-Subject: [PATCH v7 6/6] arm64: dts: rockchip: Enable HDMI receiver on rock-5b
-Date: Tue, 18 Feb 2025 21:44:39 +0300
-Message-ID: <20250218184439.28648-7-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
-References: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="CIuURwlM"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id AEBBB25238;
+	Tue, 18 Feb 2025 19:50:06 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id pqNBLzJZ-af0; Tue, 18 Feb 2025 19:50:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1739904602; bh=Z6tA0s3/rcDzY/zbXHPV6C/z8wYbhUS1zy4lXjuXOjU=;
+	h=From:Subject:Date:To:Cc;
+	b=CIuURwlMAnI4LHLQOCghRCUhFobwmwRYPbgogIq3bt/KWv/z/z3G4uhOOLOh9Z3Yw
+	 iynYHslSe9rXr/1s6aNKUvi0RX1+UJjKj9xdxVBcufrOKJTnE5aCKEO4dqaoEdltTM
+	 WxNrlLWtHdweo1j0eYbPoLe2P5DxlqqolBIbszoeKNsmGSo+x9bNd0Q2yqy6ZXzvgY
+	 SovkgWgm3IYawx8eYcVIa4RfmDVVs2IPMa0e/7itT5oqsyTh6pH7knsSOEX3eyRhWF
+	 bOrp1qu7FN9pYlW0OaxQmOxLISsFQrFjcReou4v+xLcfssQzsP1q+u1SyuU/LuoLoE
+	 pt+Poyj/tlyAg==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v2 0/3] Introduce support for Exynos7870's S2MPU05 PMIC and
+ its regulators
+Date: Wed, 19 Feb 2025 00:19:48 +0530
+Message-Id: <20250219-exynos7870-pmic-regulators-v2-0-1ea86fb332f7@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEzWtGcC/33NTQ6CMBCG4auQrh3TDiI/K+9hWBQ6wiRKSQcJh
+ HB3K4lbl++XyTObEgpMoqpkU4FmFvZDDDwlqu3t0BGwi61QY6ZRp0DLOnjJi1zD+OIWAnXvp51
+ 8EMBrZrDJS4tloyIwBnrwcuD3OnbPEu/W49dsvuuPvfxjZwMadGaddWlhNLY3xxK8n84+dKre9
+ /0DjfNZCMYAAAA=
+X-Change-ID: 20250203-exynos7870-pmic-regulators-26512b79a29b
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739904598; l=1997;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=Z6tA0s3/rcDzY/zbXHPV6C/z8wYbhUS1zy4lXjuXOjU=;
+ b=WX+GYybD+lkrd6SrUHT/zIir4chjbu+ccKT/j5V7FmTGWYJ2jw4BXHx7QdaWgu9ebx90xluiQ
+ td9+X3lIZ6nBSC2h62TTmF9iWyNms7F9q8h21r7NpjfnnBZWXJWEW1P
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Exynos7870 devices use Samsung S2MPU05 as its primary PMIC. Add support
+for it in the existing PMIC driver. Additionally, also add support for
+voltage regulators which can be accessed and controlled from the PMIC
+itself.
 
-The Rock 5B has a Micro HDMI port, which can be used for receiving
-HDMI data. This enables support for it.
+Patches from two subsystems have been placed in a single series here as
+header files and documentation YAML references have been shared.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+This patch series is a part of Exynos7870 upstreaming.
+
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
- .../arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Changes in v2:
+- Drop applied [PATCH 2/4] from v1.
+- Added myself as maintainer in s2mpu05-pmic DT docs.
+- Edited LDO description to explain missing LDOs.
+- Added all missing regulator control registers intended for CP.
+- Modify regulator_desc_s2mpu05_ldo* macros to allow choosing register
+  suffixes (CTRL, CTRL1, etc).
+- Take over ownership of patches by the co-author, upon their request.
+- Link to v1: https://lore.kernel.org/r/20250204-exynos7870-pmic-regulators-v1-0-05adad38102c@disroot.org
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-index d597112f1d5b..377824e69e20 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-@@ -220,6 +220,18 @@ hdmi0_out_con: endpoint {
- 	};
- };
- 
-+&hdmi_receiver_cma {
-+	status = "okay";
-+};
-+
-+&hdmi_receiver {
-+	status = "okay";
-+	hpd-gpios = <&gpio1 RK_PC6 GPIO_ACTIVE_LOW>;
-+	pinctrl-0 = <&hdmim1_rx_cec &hdmim1_rx_hpdin &hdmim1_rx_scl &hdmim1_rx_sda &hdmirx_hpd>;
-+	pinctrl-names = "default";
-+	memory-region = <&hdmi_receiver_cma>;
-+};
-+
- &hdptxphy_hdmi0 {
- 	status = "okay";
- };
-@@ -377,6 +389,12 @@ &pcie3x4 {
- };
- 
- &pinctrl {
-+	hdmirx {
-+		hdmirx_hpd: hdmirx-5v-detection {
-+			rockchip,pins = <1 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	hym8563 {
- 		hym8563_int: hym8563-int {
- 			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+---
+Kaustabh Chakraborty (3):
+      regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
+      mfd: sec: add support for S2MPU05 PMIC
+      regulator: s2mps11: Add support for S2MPU05 regulators
+
+ .../bindings/regulator/samsung,s2mpu05.yaml        |  47 ++++++
+ drivers/mfd/sec-core.c                             |  12 ++
+ drivers/mfd/sec-irq.c                              |  34 ++++
+ drivers/regulator/Kconfig                          |   4 +-
+ drivers/regulator/s2mps11.c                        |  92 ++++++++++-
+ include/linux/mfd/samsung/core.h                   |   1 +
+ include/linux/mfd/samsung/irq.h                    |  44 +++++
+ include/linux/mfd/samsung/s2mpu05.h                | 183 +++++++++++++++++++++
+ 8 files changed, 414 insertions(+), 3 deletions(-)
+---
+base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
+change-id: 20250203-exynos7870-pmic-regulators-26512b79a29b
+
+Best regards,
 -- 
-2.48.1
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
