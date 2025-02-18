@@ -1,645 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA79269D0C;
-	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889418; cv=none; b=hjRNY9khXs1KNoOwiD4PRmRWnHbu9eNbVOIZQdmDtgD5MsgDSv1ZwTKRaUL4Tsw371cNxFOtjBXFU6Uzekr0Fi+BhGhZuLIco6NGcYAzhMTVWg208UQPuqQZcTjMJ1ZCbJVmwyIe9kts7FJndxautErblJt6tMT8OM6R9850zog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889418; c=relaxed/simple;
-	bh=XvXJ1MQzZf8WxpV47LK31HmkCLpKbYI67sP8fyugYhg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YMRNuKsDGNw4Q/EllK4CdYJk3y9ukelYLtoqo3DIt/vfme/fqxHRP0m5dl+5Qf14JRFAMRzEmp47TaaMnRUd5PqXgXUohEWJO13LKkY2owJ62JacYx4Y8jTUZoJdtDGxnOURV5Ef5z/MQ83JFuCPb9VS2xONB3y+ZRrE1ci9/zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WR1AOBvU; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A317269AF2
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739889464; cv=fail; b=nsyDr3aSuh+Xl8OOzy5d8RFAuEs86NG3GOH6aMRJ3uim51B04XoGPxAIJmPwAso04yZVS+oPMjnXjd0LIXXHO9MWwVAThJp1+dLQ/+T85mTmKFtR7yQy9rNmhSy9VMf2JEZKvfSzmcxjT3jEzFdpmz74lr5qSfh54GXIzLoJYAk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739889464; c=relaxed/simple;
+	bh=VnT7i4eGdYhoSvIa5cqYuGssisvjUM/4L1EF0RVPwYw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N2jMWVVxrmxNNwcG5ASQSMk92yb2GOUjYineiiG5TuInHkqR4wMS6IXp9/tV0eCUezd0mvyaBtWxtdxYNaHAw8zDQlJEWuflFZB0815SyxResjp7kVHjXGBWwVwjBeHpikkBvXYLn81t2NtLshYb4UTo0vpdKH7J1C/Qj7Eg3gs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ho9rR4tb; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ElcB23/f; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WR1AOBvU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B148C4AF0C;
-	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739889418;
-	bh=XvXJ1MQzZf8WxpV47LK31HmkCLpKbYI67sP8fyugYhg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=WR1AOBvU62L8mEO2I+7eZI9gdzc7wzHtWF8rZpJj/bBw7dEKac093v+Qyq7O+KAIO
-	 4FndUZ4/MSroaLq9epWCYD3iS9akQkKxm2NJsLLy/ReXoddpAzHkuGgWbtwUI+fHsU
-	 O5iCiosREJ1ZUQSUzvtnty0WZr/cXSGe0AggSWRU1KRCK66TfMK1nR62CkWzddx39c
-	 aEDXYWJGmU2LXOZwYvT5ImGEzAb1enmC8LKohLzk0YS+obcjAwjGlK3KyT5D/5Eyfy
-	 c+kbvPGo16c0XszRieHCgfOW/vViRw8EmStZEAxlCSH9/9PqUyT0t0ABYccG9MKd1f
-	 AerMrl+GLQY+w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5688FC021AA;
-	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Tue, 18 Feb 2025 20:06:42 +0530
-Subject: [PATCH 3/4] PCI: dwc: Add sysfs support for PTM
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ho9rR4tb";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ElcB23/f"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IEIAgL024118;
+	Tue, 18 Feb 2025 14:37:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=rHpEz1rZHwEA4PYg6I/VZibPxudOmq5OGyZwQuFWGXg=; b=
+	Ho9rR4tb/TctAB2f5iHAQYZW0cQlvjFXtIW5TV3Y9Vmt7blUhbfWAo0AqR3ogNou
+	fhUgM5r/SohhwA4/1NpuOan94W1NGVmg3CyST2H29XbCTYlYvNJJ4cGwDo6nw928
+	/JHWk8YXWf9BNbi74zXVbZht/7eap7S+bW9TpSAIeNBuiKNEadV0iBK0w4a6AGdA
+	Rx/A6jV8z19DHuvLt/mxx/22nqyXhu4dWKmmZbMsqC2iymXYZHKrgYSB2doNS6q+
+	pjVN/wu0LTvTSfNsegRjRR76tDcSwWSUs3ZKWypXzflaEw5h2YM8D8pJe5NrzH8R
+	SRbXfQFpQuVZ9f6/pyAtZw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44tjhsenyf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 14:37:41 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51IEP02S038705;
+	Tue, 18 Feb 2025 14:37:40 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2175.outbound.protection.outlook.com [104.47.55.175])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44thc93w97-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 14:37:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B1SGQ1XrU1cKSuC1IoEi5rLWlmeuoEM3LXsiTnbZTX4yUDJmeTTNqR1H2dr9zqxSW9NFwB5CqYjunbbTMYKrGUJXKUqMUwDMSx2mYJ6zm/SL3jNGmhfd+8nYGLIsDHpr96sqMOutKVOa1Ggrv1M78YSiKJzrpJ7yJbd9yV1P/F4csCXTkDWsUKy6OvnkQ3X6AXstuvREPGfDAl1PaVm2jtMc7EK1OL8BWg/4Ed+jlfyEwtAwxkU5bi/JIchdvg0D3Nzg6fpSZBU3AtUyuC2YY4ufW3OKB6YK2Ne8CwOPq8WrH8MU3/n5A/NHntxZJJZQCz9XJVH3GSA2tP7IfJl0YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rHpEz1rZHwEA4PYg6I/VZibPxudOmq5OGyZwQuFWGXg=;
+ b=tl4PgP9nKaVw3FYOt5RjOLy0Tm2tBG06o/hpwHqipfYwZ6PFhQzUVAu0RfU1YfN+IHFwbgHCDeRDLULseGGBxr9j/w0Z+2k9ozHMyapmmlMKZBSWhKY+8jI2KH6mRT/Qir3cg/Oz3q1D9fT4Tlkj8tx0PN0dpAdMggtlM7tHkHRycgv+Pb/ajklIBTAboND8dXbJUVhdnrBk81wkqoQfR7MlJErKWMgdY/9hsbyQsU49dHHBx4RwKgIKLYUpJD5awcxT9Bye5vIMNPsIB8w8ZllTdPLbh4jIGpWwN/39HJcQYkJAstD5GHA4jsco3GyDE4nz/KCjfh44Y3mKfckIbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rHpEz1rZHwEA4PYg6I/VZibPxudOmq5OGyZwQuFWGXg=;
+ b=ElcB23/fa1R1TaCrV5IdDVSD5Wu8e1QdNYpmo9BZ8Gje26pU4Z7vbOYLi30TPax4HHNLHxj0MksmF4qixjx04EAyUcMye3jnkVHMFZiKqix/GiBGMOC0bYLSxvF5wQu9SWRyIa5NJPi1L8jLb8djfN5XYRC9VYPkVAlPCa4402c=
+Received: from PH0PR10MB5563.namprd10.prod.outlook.com (2603:10b6:510:f2::13)
+ by DS7PR10MB7251.namprd10.prod.outlook.com (2603:10b6:8:da::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Tue, 18 Feb
+ 2025 14:37:37 +0000
+Received: from PH0PR10MB5563.namprd10.prod.outlook.com
+ ([fe80::1917:9c45:4a41:240]) by PH0PR10MB5563.namprd10.prod.outlook.com
+ ([fe80::1917:9c45:4a41:240%5]) with mapi id 15.20.8445.016; Tue, 18 Feb 2025
+ 14:37:37 +0000
+From: Siddh Raman Pant <siddh.raman.pant@oracle.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] CVE-2024-56642: Fix wrong fixes tag.
+Date: Tue, 18 Feb 2025 20:07:31 +0530
+Message-ID: <20250218143732.11095-1-siddh.raman.pant@oracle.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <2025021831-sixfold-geography-c6e8@gregkh>
+References: <2025021831-sixfold-geography-c6e8@gregkh>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BM1PR01CA0146.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::16) To PH0PR10MB5563.namprd10.prod.outlook.com
+ (2603:10b6:510:f2::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-pcie-qcom-ptm-v1-3-16d7e480d73e@linaro.org>
-References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
-In-Reply-To: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, 
- Jing Zhang <renyu.zj@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>
-Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=18987;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=5we3kVgHWg7M829Zle66KXOdTLPGMfu81moqV1JyCok=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBntJsH1hJHIthERT3CmHc7DQfD24GuSgnn+YKwl
- QFloS1dmIuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ7SbBwAKCRBVnxHm/pHO
- 9bfTB/4z8ICBL4dTx6r5zP2lqPDngG11R9h1mGrYDdE0evxxnhKo/KR0YzvLC5tpz6KsJfyb39N
- Cky7bgtkL6PvLeHpv5eTdNOQ0qPfEM8xsySnDo+Uzt8S2SItrzaw036GDRfirPN7p+hE0KIwazw
- ddJsVeRebV7+kEynVOsI5o9csVAllEtg0S0PKkOW6dQXAhmxraD32/BEd2NuaVMmSn3ONa7ANFW
- 17lCNcUj4UjQTCQniDfCfeE4nAffXTA6VLJl3A1yaI6OZOpXNjWg8manT2M8wKbsGuRu9JbZ2PV
- xQxLeoHJzFywJ9sBrnhGhFN0NImcN9sWxtsSdr5UFDYu9Vpn
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@linaro.org/default with auth_id=185
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reply-To: manivannan.sadhasivam@linaro.org
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5563:EE_|DS7PR10MB7251:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8f9ef585-4032-413e-0c84-08dd5029ca4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rIwHdvCj9GRMhhOFn2+TSpg80e5RFzIx4cY9JpW62EXprkfm5qEeXLA5DG7a?=
+ =?us-ascii?Q?yKHDVr7ZKE3HXzQmr1/zyCPCZNVIZMk9/knXxtrn5EFKrx0FTJRPcr6ORDm5?=
+ =?us-ascii?Q?q0HzLtyFvYUSTH75rNvqLmNDv3UG+YNZ90Brm77u/IKsqQ2+w0FX53zRDsSJ?=
+ =?us-ascii?Q?N8Dg5dIa5mc2BGqrxGZgm4JHNHTwVqLUeOqycbDgd1EY5ygE+RBmgP9r5T1o?=
+ =?us-ascii?Q?uowFe1PFV5WOd2djVShR8VQzrXBtEVBUygnrPkZz+E+UafiV8QzfqZflGyQJ?=
+ =?us-ascii?Q?GxESnZOqHiQKmr3s/yivmZNZ1p9o6zi6QLmInYqzugL2lrD9FIIsrp1VPvNH?=
+ =?us-ascii?Q?Pj2CW63yiQCuaom9051EJQqBh9VXnJxIkgUYPtQJGt9aT9NbbAy75SI35skp?=
+ =?us-ascii?Q?po7mzci3xsP0GZAXal2PGTVf/zyFfKhviJLFuPo41/6orKx19PTbCMKeMIlT?=
+ =?us-ascii?Q?hA9AaUXRXWBmUnbONGPiCaq7y8cCBwRdDQpk182Uk0nVJx5u2wQiUXi5zFVL?=
+ =?us-ascii?Q?CarnerNlMIvgS4ioWJQ0dmuBJh5Rfbh6Gew+pChXmV1JTNcyeiWBXA5bJbya?=
+ =?us-ascii?Q?bHG8GSWN9IDxRkhlpNx2Klm0JxMYT7b2Op8NYaZ2KxKFyze6j85Rzpr+qDaX?=
+ =?us-ascii?Q?gAUkHVFhdRKbvta5Ar5L5w814EjcKQ4kIld+X8gSNrUfXgBCNVq//aDC3CMV?=
+ =?us-ascii?Q?cdX0X9fmrk9vajLkKjJ13mP/s0R9jaGncO2NoGux0TUsKiUftCveUF6IeDHp?=
+ =?us-ascii?Q?zs+rZr3jU2pPM0p9bjX0Izgl/TiX927hZqH+kGs7dUcZSyFYV9hBtiAzoO0S?=
+ =?us-ascii?Q?ATfy4DrOEuJmXILPgyz5/UeV1iai0VRTrxxfpa7N5IVwpZwAF8vxCn8MMiWK?=
+ =?us-ascii?Q?ykwVcYt62jl0DX3EuMPspzbvOLb/iW6vS0NxEUMXouLk8USBF+p/7wqIKp6g?=
+ =?us-ascii?Q?edKcpD7zjoP03MJX0eoPUFFlyJPQWWSvnTk0aMmeMze6+s2IAAfdpwiU6/TT?=
+ =?us-ascii?Q?e4PCASWKbrtRxxU8KPX4MNfZi6X+En++sQfjvn45XGV2Vj838m8LSX67eWpv?=
+ =?us-ascii?Q?QiVaqtDSXLXPcq0skMo9q66yA7nlJTIC5olqnTCAuwWNuqNxX2qVYCtTWIqf?=
+ =?us-ascii?Q?G2fO0+M2+phyxBTgHcR+wkPZG5MuTsmFgIGtC3JtKPRmwUozn3fXAm/fsLnR?=
+ =?us-ascii?Q?6zxDfFTHocqKR9Lzp2H4oR8ImJst1A15nTcSdh64yvf4mpmZSLwgOYmVue7G?=
+ =?us-ascii?Q?/HXMNjH3e/yQvrdbTD7BJ2ZBPlDh+Ym05j5h4swFROdlXMGOzJ17O8IArL+M?=
+ =?us-ascii?Q?YslgxYf+EiSy0lCTMP8ISds1z2Gznp1jgt3xVxsw5JVgtRWs5YR5uCuBLdxT?=
+ =?us-ascii?Q?XMiWXUDO9DBEglgzGw/gXOld/l0g?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5563.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?I8ylf0ksVsXhh9GP0if4KNHrUuDmZP6J8ijlYnzBT4YT32uBAfvfuK2hMV5j?=
+ =?us-ascii?Q?5o21NWiMZ5+z3k5kWA69j3mX8Lz5BKdrrjVfLs6WRm5uGpsZZ+dxq66HVcDQ?=
+ =?us-ascii?Q?T6qBA76pL/1YrI48z2rg38/OK+t4yT7+gHn6GdqaPGLLubAkZsE5hklDLeJ0?=
+ =?us-ascii?Q?f17EfW6UHNdNFR486dnquA99yq/dvdGmbfMtmuOJzCQSfpHGKcXkSANtmZOI?=
+ =?us-ascii?Q?WyvEHL7rcg8zLcgmqJWA9//Pm0dvK91OOxfbt20MLhUQjhlow9oXhFkY+q7q?=
+ =?us-ascii?Q?9IyKQNL5pmzMWWYOBDF8O2eFcVraOO/Vl8DyXLzQMYWU3EQZahA37IbEMRoc?=
+ =?us-ascii?Q?8w8ZStbY3uqnjXdEoNmkoD1PbzeHk9X9aq/BrpVsynx2evfTtgc0zROXHcqv?=
+ =?us-ascii?Q?NJpyrwKT84pyHs2s41+TFZktl16vfRP9yUBSrghTS5ukowSlrIqDegr0Khc3?=
+ =?us-ascii?Q?Iq67fUSfr6hxOOVus9ctA8iVMaXIAaLIBPF8FA8hM8Pe0CF7YJd10s6aAWou?=
+ =?us-ascii?Q?zHnfhwnJVH3/4WDD2i3qXGERy8a+CExfqExw0k3LFqerWin+pR1S6ZObZeRP?=
+ =?us-ascii?Q?AUfybg52nrh2KsuMigl/HJbaXY+1fq5lGoZDCVq3F2pDljWmAOQsW9Tz2tJB?=
+ =?us-ascii?Q?eYc5qN6sI0U2ljsox1w9P2pzOC1VE8DPTnjXPLyg4SW10RKwramAOB90G0Pd?=
+ =?us-ascii?Q?+31zLOpHtHAEG/qR+8+yfjPdvMUH73/lPVBFq2uNFJxJcfZHxGjUht5WbxC7?=
+ =?us-ascii?Q?kzgPv/Vsa06LoDBBffHYM/RVFqSUqCMgp5C1gm4e3jLN7sCMr7bIyPyRXRYU?=
+ =?us-ascii?Q?35sWNyPozuRNJ8xQbAzP8L5ILAvMT/n/y1CvkVv6syPlSQl4uz6XzoK0FG8T?=
+ =?us-ascii?Q?fM7J+qiX/6ZxQST9zzlSVaDCHDpsb6BKZMLpna72OVRZ/p0c44tqnJDELGu5?=
+ =?us-ascii?Q?jeJJy89oQJ5AHdtIvBcOptG3pHD+MgrPQ7sSG064xdXDjKnWPyqeJ3/84rPE?=
+ =?us-ascii?Q?TZlauDcOOj3xZnFPuJte/GgJXubSJ7XO7L6m8IrSnzpZhQIFEXIioIDp+ByC?=
+ =?us-ascii?Q?6yPF/h/aG1ayxxvKONUcU1sRqC2qO7btoSFCW3qy8qf2k5D2Gj44IAnUu2vR?=
+ =?us-ascii?Q?g99ounHYMCawhEJWZUWBcrf5k+Xg9bbPPWBKUE3h4L/cSxyt8i9/aTH8PfJF?=
+ =?us-ascii?Q?Cl2S9eowdEkp/Sytuh9Ffy+3GTXU4zy3uDFpmjMtsZTSvvf9XN7bp6mzNP5d?=
+ =?us-ascii?Q?/sWWfoLnH5N3ry6ndQyIRb4VQuVe2W/m5237wD0yaUWUOfJpHVseG7LsosS4?=
+ =?us-ascii?Q?ZzpOxASZyinDTyDsTKv+pwBNaYOmkkN4JSgg4j4Hw9gCUdv5GuYZiVGHSaf9?=
+ =?us-ascii?Q?5+bXjGeaoDkxW5/BgvvTTendBjphiAn2Z6tZwwKkVk/uvL+aP3uxi9bCDUlP?=
+ =?us-ascii?Q?HSvT/2VMd1h1RHnXHTuaCippYQFbz4/YxR6nG8/3Kq0k6ju5XT9CIPXCAcfK?=
+ =?us-ascii?Q?SHLsTDNhRu+Zt6JbqGDiScZ/14Lh2aX/MtT7WfivQtc7DDa6vFB6LoC9l2nI?=
+ =?us-ascii?Q?DtSLcCSyV3dkRm27+fVSe5zTjRf4DEJAe4vKfVLcR4iAqqEXalAgqsnVjjWw?=
+ =?us-ascii?Q?JA0E0O4PTeEdNMHK0LkBPWigSBzI+ed3VxDHieiqFuErThMmJR7c5WXMtg1r?=
+ =?us-ascii?Q?fZoODw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	TGhoXlSRySLHgOt1A43IGWio03NHRZzMZu0V5v6prYe3JXgRR26pQKIRBD21oJO8oUA6Hw4CYCYBirT2iEpfL1wBeKCGd+7A8+siTcS4x4dM/njgCJVa1q5T0jZBpNpYwyPYhaakzHo5yzimW34gmItSMFng40tuWvplJaTB9sbrRuHn1ThUpSRnY7+j/6vZv7h7lWDru0iApXCLyJBFk0K2K9w8C67XBG5ehjXH19vEB2+3kjaCFjPFzfLxL28DOdupItu1BCAG9BPlDloaxBVXgq2EZNtJyly2cNrUHRJ80oQJ4VnardI2dz0AmWuVaziSX5lQUKXduFLv/n6Vfa8098l9nLTaGsMmU2rj8+G72cPBzH+tOSolUA0uDjClO0STHZfuQfq53hqsxwsLon8z4IvBKm6rg1oQSohIsM2dHrherAbNSux+rrEdZ7XOeByX13IqGxFBgFfocLci37cw1Z15WcxOWpLO3TjsLWVGsuD/ywLxKh6s5PC0VceqS3EWQaCdSbGNZxeEb4bV0KCycFw09EInbClX4cWOpY94cgoGD8LQdjHopNd7/6c0uhKbjNyRIAPu8m92QxDW7gAkQ19w/XFgE49KLIIMd2o=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f9ef585-4032-413e-0c84-08dd5029ca4c
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5563.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 14:37:37.6092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6eid9DKBHig06zIeB1oM3SACrk2AtrltMa+qDKm5OJgLAYFtRD1TOZgTrgtosu1GwS/P6rHB12oAtDdJp14EBsvdTYhWnudXp3ROnQMmyZA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7251
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_07,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
+ definitions=main-2502180109
+X-Proofpoint-GUID: B8MDJ5RQiJ5EIHZUiSRJQIYlOEYN9PEr
+X-Proofpoint-ORIG-GUID: B8MDJ5RQiJ5EIHZUiSRJQIYlOEYN9PEr
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+The fixes tag in the commit message is incorrect. It should be the
+commit which adds the counter, which is:
 
-Precision Time Management (PTM) mechanism defined in PCIe spec r6.0,
-sec 6.22 allows precise coordination of timing information across multiple
-components in a PCIe hierarchy with independent local time clocks.
+04c26faa51d1 ("tipc: wait and exit until all work queues are done")
 
-While the PTM support itself is indicated by the presence of PTM Extended
-Capability structure, Synopsys Designware IPs expose the PTM context
-(timing information) through Vendor Specific Extended Capability (VSEC)
-registers.
-
-Hence, add the sysfs support to expose the PTM context information to
-userspace from both PCIe RC and EP controllers. Below PTM context are
-exposed through sysfs:
-
-PCIe RC
-=======
-
-1. PTM Local clock
-2. PTM T2 timestamp
-3. PTM T3 timestamp
-4. PTM Context valid
-
-PCIe EP
-=======
-
-1. PTM Local clock
-2. PTM T1 timestamp
-3. PTM T4 timestamp
-4. PTM Master clock
-5. PTM Context update
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Siddh Raman Pant <siddh.raman.pant@oracle.com>
 ---
- Documentation/ABI/testing/sysfs-platform-dwc-pcie  |  70 ++++++
- MAINTAINERS                                        |   1 +
- drivers/pci/controller/dwc/Makefile                |   2 +-
- drivers/pci/controller/dwc/pcie-designware-ep.c    |   3 +
- drivers/pci/controller/dwc/pcie-designware-host.c  |   4 +
- drivers/pci/controller/dwc/pcie-designware-sysfs.c | 278 +++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.c       |   6 +
- drivers/pci/controller/dwc/pcie-designware.h       |  22 ++
- include/linux/pcie-dwc.h                           |   8 +
- 9 files changed, 393 insertions(+), 1 deletion(-)
+ cve/published/2024/CVE-2024-56642.vulnerable | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 cve/published/2024/CVE-2024-56642.vulnerable
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-dwc-pcie b/Documentation/ABI/testing/sysfs-platform-dwc-pcie
+diff --git a/cve/published/2024/CVE-2024-56642.vulnerable b/cve/published/2024/CVE-2024-56642.vulnerable
 new file mode 100644
-index 000000000000..6b429108cd09
+index 000000000000..75eac70bd13b
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-dwc-pcie
-@@ -0,0 +1,70 @@
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_local_clock
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RO) PTM local clock in nanoseconds. Applicable for both Root
-+		Complex and Endpoint mode.
-+
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_master_clock
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RO) PTM master clock in nanoseconds. Applicable only for
-+		Endpoint mode.
-+
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_t1
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RO) PTM T1 timestamp in nanoseconds. Applicable only for
-+		Endpoint mode.
-+
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_t2
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RO) PTM T2 timestamp in nanoseconds. Applicable only for
-+		Root Complex mode.
-+
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_t3
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RO) PTM T3 timestamp in nanoseconds. Applicable only for
-+		Root Complex mode.
-+
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_t4
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RO) PTM T4 timestamp in nanoseconds. Applicable only for
-+		Endpoint mode.
-+
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_context_update
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RW) Control the PTM context update mode. Applicable only for
-+		Endpoint mode.
-+
-+		Following values are supported:
-+
-+		* auto = PTM context auto update trigger for every 10ms
-+
-+		* manual = PTM context manual update. Writing 'manual' to this
-+			   file triggers PTM context update (default)
-+
-+What:		/sys/devices/platform/*/dwc/ptm/ptm_context_valid
-+Date:		February 2025
-+Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+Description:
-+		(RW) Control the PTM context validity (local clock timing).
-+		Applicable only for Root Complex mode. PTM context is
-+		invalidated by hardware if the Root Complex enters low power
-+		mode or changes link frequency.
-+
-+		Following values are supported:
-+
-+		* 0 = PTM context invalid (default)
-+
-+		* 1 = PTM context valid
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b4d09d52a750..1c3e21cfbc6e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18120,6 +18120,7 @@ M:	Jingoo Han <jingoohan1@gmail.com>
- M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-platform-dwc-pcie
- F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
- F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
- F:	drivers/pci/controller/dwc/*designware*
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a8308d9ea986..3a962971249d 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_PCIE_DW) += pcie-designware.o
-+obj-$(CONFIG_PCIE_DW) += pcie-designware.o pcie-designware-sysfs.o
- obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
- obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
- obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 8e07d432e74f..4bb7fd5d2fb0 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -666,6 +666,7 @@ void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
-+	pcie_designware_sysfs_exit(pci);
- 	dw_pcie_edma_remove(pci);
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_cleanup);
-@@ -837,6 +838,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
- 
- 	dw_pcie_ep_init_non_sticky_registers(pci);
- 
-+	pcie_designware_sysfs_init(pci, DW_PCIE_EP_TYPE);
-+
- 	return 0;
- 
- err_remove_edma:
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index ffaded8f2df7..bd3195de923c 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -548,6 +548,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (pp->ops->post_init)
- 		pp->ops->post_init(pp);
- 
-+	pcie_designware_sysfs_init(pci, DW_PCIE_RC_TYPE);
-+
- 	return 0;
- 
- err_stop_link:
-@@ -572,6 +574,8 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 
-+	pcie_designware_sysfs_exit(pci);
-+
- 	pci_stop_root_bus(pp->bridge->bus);
- 	pci_remove_root_bus(pp->bridge->bus);
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-sysfs.c b/drivers/pci/controller/dwc/pcie-designware-sysfs.c
-new file mode 100644
-index 000000000000..1ba41163cf58
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-designware-sysfs.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2025 Linaro Ltd.
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+
-+#include "pcie-designware.h"
-+
-+static ssize_t ptm_context_update_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	if (sysfs_streq(buf, "auto")) {
-+		val = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL);
-+		val |= PTM_REQ_AUTO_UPDATE_ENABLED;
-+		dw_pcie_writel_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL, val);
-+	} else if (sysfs_streq(buf, "manual")) {
-+		val = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL);
-+		val &= ~PTM_REQ_AUTO_UPDATE_ENABLED;
-+		val |= PTM_REQ_START_UPDATE;
-+		dw_pcie_writel_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL, val);
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t ptm_context_update_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	val = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL);
-+	if (FIELD_GET(PTM_REQ_AUTO_UPDATE_ENABLED, val))
-+		return sysfs_emit(buf, "auto\n");
-+
-+	/*
-+	 * PTM_REQ_START_UPDATE is a self clearing register bit. So if
-+	 * PTM_REQ_AUTO_UPDATE_ENABLED is not set, then it implies that
-+	 * manual update is used.
-+	 */
-+	return sysfs_emit(buf, "manual\n");
-+}
-+
-+static ssize_t ptm_context_valid_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	unsigned long arg;
-+	u32 val;
-+
-+	if (kstrtoul(buf, 0, &arg) < 0)
-+		return -EINVAL;
-+
-+	if (!!arg) {
-+		val = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL);
-+		val |= PTM_RES_CCONTEXT_VALID;
-+		dw_pcie_writel_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL, val);
-+	} else {
-+		val = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL);
-+		val &= ~PTM_RES_CCONTEXT_VALID;
-+		dw_pcie_writel_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL, val);
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t ptm_context_valid_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	val = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_RES_REQ_CTRL);
-+
-+	return sysfs_emit(buf, "%u\n", !!FIELD_GET(PTM_RES_CCONTEXT_VALID, val));
-+}
-+
-+static ssize_t ptm_local_clock_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 msb, lsb;
-+
-+	do {
-+		msb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_LOCAL_MSB);
-+		lsb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_LOCAL_LSB);
-+	} while (msb != dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_LOCAL_MSB));
-+
-+	return sysfs_emit(buf, "%llu\n", ((u64) msb) << 32 | lsb);
-+}
-+
-+static ssize_t ptm_master_clock_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 msb, lsb;
-+
-+	do {
-+		msb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_MASTER_MSB);
-+		lsb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_MASTER_LSB);
-+	} while (msb != dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_MASTER_MSB));
-+
-+	return sysfs_emit(buf, "%llu\n", ((u64) msb) << 32 | lsb);
-+}
-+
-+static ssize_t ptm_t1_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 msb, lsb;
-+
-+	do {
-+		msb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T1_T2_MSB);
-+		lsb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T1_T2_LSB);
-+	} while (msb != dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T1_T2_MSB));
-+
-+	return sysfs_emit(buf, "%llu\n", ((u64) msb) << 32 | lsb);
-+}
-+
-+static ssize_t ptm_t2_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 msb, lsb;
-+
-+	do {
-+		msb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T1_T2_MSB);
-+		lsb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T1_T2_LSB);
-+	} while (msb != dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T1_T2_MSB));
-+
-+	return sysfs_emit(buf, "%llu\n", ((u64) msb) << 32 | lsb);
-+}
-+
-+static ssize_t ptm_t3_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 msb, lsb;
-+
-+	do {
-+		msb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T3_T4_MSB);
-+		lsb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T3_T4_LSB);
-+	} while (msb != dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T3_T4_MSB));
-+
-+	return sysfs_emit(buf, "%llu\n", ((u64) msb) << 32 | lsb);
-+}
-+
-+static ssize_t ptm_t4_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+	u32 msb, lsb;
-+
-+	do {
-+		msb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T3_T4_MSB);
-+		lsb = dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T3_T4_LSB);
-+	} while (msb != dw_pcie_readl_dbi(pci, pci->ptm_vsec_offset + PTM_T3_T4_MSB));
-+
-+	return sysfs_emit(buf, "%llu\n", ((u64) msb) << 32 | lsb);
-+}
-+
-+static DEVICE_ATTR_RW(ptm_context_update);
-+static DEVICE_ATTR_RW(ptm_context_valid);
-+static DEVICE_ATTR_RO(ptm_local_clock);
-+static DEVICE_ATTR_RO(ptm_master_clock);
-+static DEVICE_ATTR_RO(ptm_t1);
-+static DEVICE_ATTR_RO(ptm_t2);
-+static DEVICE_ATTR_RO(ptm_t3);
-+static DEVICE_ATTR_RO(ptm_t4);
-+
-+static struct attribute *ptm_attrs[] = {
-+	&dev_attr_ptm_context_update.attr,
-+	&dev_attr_ptm_context_valid.attr,
-+	&dev_attr_ptm_local_clock.attr,
-+	&dev_attr_ptm_master_clock.attr,
-+	&dev_attr_ptm_t1.attr,
-+	&dev_attr_ptm_t2.attr,
-+	&dev_attr_ptm_t3.attr,
-+	&dev_attr_ptm_t4.attr,
-+	NULL
-+};
-+
-+static umode_t ptm_attr_visible(struct kobject *kobj, struct attribute *attr,
-+				int n)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct dw_pcie *pci = dev_get_drvdata(dev);
-+
-+	/* RC only needs local, t2 and t3 clocks and context_valid */
-+	if ((attr == &dev_attr_ptm_t1.attr && pci->mode == DW_PCIE_RC_TYPE) ||
-+	    (attr == &dev_attr_ptm_t4.attr && pci->mode == DW_PCIE_RC_TYPE) ||
-+	    (attr == &dev_attr_ptm_master_clock.attr && pci->mode == DW_PCIE_RC_TYPE) ||
-+	    (attr == &dev_attr_ptm_context_update.attr && pci->mode == DW_PCIE_RC_TYPE))
-+		return 0;
-+
-+	/* EP only needs local, master, t1, and t4 clocks and context_update */
-+	if ((attr == &dev_attr_ptm_t2.attr && pci->mode == DW_PCIE_EP_TYPE) ||
-+	    (attr == &dev_attr_ptm_t3.attr && pci->mode == DW_PCIE_EP_TYPE) ||
-+	    (attr == &dev_attr_ptm_context_valid.attr && pci->mode == DW_PCIE_EP_TYPE))
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group ptm_attr_group = {
-+	.name = "ptm",
-+	.attrs = ptm_attrs,
-+	.is_visible = ptm_attr_visible,
-+};
-+
-+static const struct attribute_group *dwc_pcie_attr_groups[] = {
-+	&ptm_attr_group,
-+	NULL,
-+};
-+
-+static void pcie_designware_sysfs_release(struct device *dev)
-+{
-+	kfree(dev);
-+}
-+
-+void pcie_designware_sysfs_init(struct dw_pcie *pci,
-+				    enum dw_pcie_device_mode mode)
-+{
-+	struct device *dev;
-+	int ret;
-+
-+	/* Check for capabilities before creating sysfs attrbutes */
-+	ret = dw_pcie_find_ptm_capability(pci);
-+	if (!ret) {
-+		dev_dbg(pci->dev, "PTM capability not present\n");
-+		return;
-+	}
-+
-+	pci->ptm_vsec_offset = ret;
-+	pci->mode = mode;
-+
-+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return;
-+
-+	device_initialize(dev);
-+	dev->groups = dwc_pcie_attr_groups;
-+	dev->release = pcie_designware_sysfs_release;
-+	dev->parent = pci->dev;
-+	dev_set_drvdata(dev, pci);
-+
-+	ret = dev_set_name(dev, "dwc");
-+	if (ret)
-+		goto err_free;
-+
-+	ret = device_add(dev);
-+	if (ret)
-+		goto err_free;
-+
-+	pci->sysfs_dev = dev;
-+
-+	return;
-+
-+err_free:
-+	put_device(dev);
-+}
-+
-+void pcie_designware_sysfs_exit(struct dw_pcie *pci)
-+{
-+	if (pci->sysfs_dev)
-+		device_unregister(pci->sysfs_dev);
-+}
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index a7c0671c6715..30825ec0648e 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -323,6 +323,12 @@ static u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci,
- 	return 0;
- }
- 
-+u16 dw_pcie_find_ptm_capability(struct dw_pcie *pci)
-+{
-+	return dw_pcie_find_vsec_capability(pci, dwc_pcie_ptm_vsec_ids);
-+}
-+EXPORT_SYMBOL_GPL(dw_pcie_find_ptm_capability);
-+
- int dw_pcie_read(void __iomem *addr, int size, u32 *val)
- {
- 	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 501d9ddfea16..7d3cbdce37c8 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -260,6 +260,21 @@
- 
- #define PCIE_RAS_DES_EVENT_COUNTER_DATA		0xc
- 
-+/* PTM register definitions */
-+#define PTM_RES_REQ_CTRL		0x8
-+#define PTM_RES_CCONTEXT_VALID		BIT(0)
-+#define PTM_REQ_AUTO_UPDATE_ENABLED	BIT(0)
-+#define PTM_REQ_START_UPDATE		BIT(1)
-+
-+#define PTM_LOCAL_LSB			0x10
-+#define PTM_LOCAL_MSB			0x14
-+#define PTM_T1_T2_LSB			0x18
-+#define PTM_T1_T2_MSB			0x1c
-+#define PTM_T3_T4_LSB			0x28
-+#define PTM_T3_T4_MSB			0x2c
-+#define PTM_MASTER_LSB			0x38
-+#define PTM_MASTER_MSB			0x3c
-+
- /*
-  * The default address offset between dbi_base and atu_base. Root controller
-  * drivers are not required to initialize atu_base if the offset matches this
-@@ -439,6 +454,7 @@ struct dw_pcie_ops {
- 
- struct dw_pcie {
- 	struct device		*dev;
-+	struct device		*sysfs_dev;
- 	void __iomem		*dbi_base;
- 	resource_size_t		dbi_phys_addr;
- 	void __iomem		*dbi_base2;
-@@ -464,6 +480,8 @@ struct dw_pcie {
- 	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
- 	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
- 	struct gpio_desc		*pe_rst;
-+	u16			ptm_vsec_offset;
-+	enum			dw_pcie_device_mode mode;
- 	bool			suspended;
- };
- 
-@@ -478,6 +496,7 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
- 
- u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
- u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
-+u16 dw_pcie_find_ptm_capability(struct dw_pcie *pci);
- 
- int dw_pcie_read(void __iomem *addr, int size, u32 *val);
- int dw_pcie_write(void __iomem *addr, int size, u32 val);
-@@ -499,6 +518,9 @@ void dw_pcie_setup(struct dw_pcie *pci);
- void dw_pcie_iatu_detect(struct dw_pcie *pci);
- int dw_pcie_edma_detect(struct dw_pcie *pci);
- void dw_pcie_edma_remove(struct dw_pcie *pci);
-+void pcie_designware_sysfs_init(struct dw_pcie *pci,
-+				enum dw_pcie_device_mode mode);
-+void pcie_designware_sysfs_exit(struct dw_pcie *pci);
- 
- static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
- {
-diff --git a/include/linux/pcie-dwc.h b/include/linux/pcie-dwc.h
-index 261ae11d75a4..13835896290a 100644
---- a/include/linux/pcie-dwc.h
-+++ b/include/linux/pcie-dwc.h
-@@ -31,4 +31,12 @@ static const struct dwc_pcie_vsec_id dwc_pcie_pmu_vsec_ids[] = {
- 	{} /* terminator */
- };
- 
-+static const struct dwc_pcie_vsec_id dwc_pcie_ptm_vsec_ids[] = {
-+	{ .vendor_id = PCI_VENDOR_ID_QCOM, /* EP */
-+	  .vsec_id = 0x03, .vsec_rev = 0x1 },
-+	{ .vendor_id = PCI_VENDOR_ID_QCOM, /* RC */
-+	  .vsec_id = 0x04, .vsec_rev = 0x1 },
-+	{ }
-+};
-+
- #endif /* LINUX_PCIE_DWC_H */
-
++++ b/cve/published/2024/CVE-2024-56642.vulnerable
+@@ -0,0 +1 @@
++04c26faa51d1e2fe71cf13c45791f5174c37f986
 -- 
-2.25.1
-
+2.47.2
 
