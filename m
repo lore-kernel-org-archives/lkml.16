@@ -1,123 +1,318 @@
-Received: from cockroach.ash.relay.mailchannels.net (cockroach.ash.relay.mailchannels.net [23.83.222.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5820818E743;
-	Tue, 18 Feb 2025 12:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739882961; cv=pass; b=j+M/aZeBxxbrEDMN7YOsJocJd3mv/Cty8vOaz1V9g6XBcLrFrOxw0hS6S04d+O0PkCSqkS3URgIJ+nPqiBHhs9P3NbF7+lQGqNU/fQBnkdofozC937dlwpz5U0UXTh2fhPI4UK6dJhWIQoBuJ2AprbvQetrR0FHnGM7mnsEvb3Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739882961; c=relaxed/simple;
-	bh=oyws2QiZFuIt6DrRqRZ1qQHGzM+sDSzFBEXrjGhiuAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UvtpLXMrZo4px93R9MdIInyT4TzaUsLfmDR7cgfNlWl0WPKF0r993FsWMLm/BLXwmw6stTPa1Ts+A9978ag45MPOPubuZB6IJeqIDn57t6/IZwH+YLK51NU3bai8uw4jHF964dUzhiiXeFEWl2esOIIeKH7SmXRbjtTR6dN6uMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=K6AzvimS; arc=pass smtp.client-ip=23.83.222.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AA425A35C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739882975; cv=none; b=VUynIZ9Xv97J8vsEtGnQwzpuBgNe75nPrPtkIU/h7aT0kRtF0HrgU9yla0O/axb1VNn5OILZkwsqDLqyVOuQvMocl6L/smPq9Vqf45G5Mn7VFwMMHhLQ+NPNvQr+v1B6pySGoM+1lp7AtC4RMvPp5Z8iIT45yR8S2Zp1j8Gv2Bk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739882975; c=relaxed/simple;
+	bh=4c34Pl9V9oAv5pnu9ClgVRb05vmvT9zIOa3MRXeK69s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cUB0r39HwKQ7MB+HIZro3if7mEzcsQkxGcL0PbNJbZ4WZ5tKwMbLdMyF+/SUPxHxNBDc5ujmkrP5p/uVN23YSu2fxzdJhk5u8gVjBfJSBjDjYmFY6zHRFuRZP6K0oQhzHMYnbHwxYwn9ISppNaVMkM+BjzqRdMWrgneF28D2/Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wLUpja4b; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="K6AzvimS"
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 5E36F9016F6;
-	Tue, 18 Feb 2025 12:41:40 +0000 (UTC)
-Received: from pdx1-sub0-mail-a208.dreamhost.com (trex-8.trex.outbound.svc.cluster.local [100.101.191.136])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id C301A903245;
-	Tue, 18 Feb 2025 12:41:39 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739882500; a=rsa-sha256;
-	cv=none;
-	b=9EAQpInMEG6JT796LTMao/zvnCOtU226t9GVmJ1LcDuEn5xeDKQk2iaSUDh6vWjOBnb8To
-	GigI3GTRnWY+kbZ+FHKc0ECPpXovteIfnafdaOuDm6QTTKtHRmH4Yrjb5VHQQJnWAIPJAw
-	9S/ey5gyl2j6ip86/7WCe8w2eTD/hwfIXHMs/uDzd5W7cmpElry1/bH86og+gkGvckVAQ9
-	7xp2iqHuVJyrLNjkXB483wVffKAel+5WofG2pbAnVP7a2a0gUsrAHsacsQf0X0C2w8EzhN
-	Ohpwk2tTJBpj27UHbJIptSCS24Q8yiGU+gxVPZW8/EAcKqSlccpog3E1E2IHfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1739882500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=BF/VLSC721a0M3yVlQ6Nld3atgt9dPOXgqi8DHEfHuU=;
-	b=XmwBnSgAjjBzUB0KDkpvgbBXWnTIibicKMCbdTIOsgZBbn1bhfi/iwBos3wpCzzkpr8weP
-	VNHSNeC0wq6OrfwMu4ntgpz1dvNsLPTIQnSE5XXA6c7ybLRF2/wJV+mqNO5nmz5jB0iXQX
-	00ncGKHUZcG8vrG17lu46raODhScT5mkHmDg5jeQSPWdMmEmaTOOVP8Gox/gWvcvYEbX+O
-	HVzrwStnRGsdmvNJTTozqFTdzs8fdwV8+OPzTOt2WdgFGf3wkej0ZagnBrnIB1qFCHjGcI
-	gIHwxzxUR8J3JcjRYLd5QJHPZ+UQhhTtQ/CCHvwRyiKYQdhaFw2q1R1k3FBJgA==
-ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-bzqsf;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
-X-MailChannels-Auth-Id: dreamhost
-X-Harbor-Imminent: 4d4fb9c841e32c0c_1739882500220_1183222984
-X-MC-Loop-Signature: 1739882500220:2903814765
-X-MC-Ingress-Time: 1739882500220
-Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.191.136 (trex/7.0.2);
-	Tue, 18 Feb 2025 12:41:40 +0000
-Received: from [172.16.32.88] (unknown [198.232.126.202])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rob@landley.net)
-	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4Yxzfp4vVXzLJ;
-	Tue, 18 Feb 2025 04:41:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
-	s=dreamhost; t=1739882499;
-	bh=BF/VLSC721a0M3yVlQ6Nld3atgt9dPOXgqi8DHEfHuU=;
-	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-	b=K6AzvimS8+QAmV2ySs+wM8dN97OaV5qTjV8Ye1QNAPV0yFQFP5DjOt4u2SFGjTuCr
-	 Pj7sS7GFBVWvRdHwyxGT4ywW9/53nG0gzOwidmv1m77KWB/jqOurznF+TfDk+KvOuf
-	 pxqz/cJI/8ko54KM12V6Cphx0ZkSXWAIQIY9RLq5dZaqOkj9feCK+g65WslyCcErcl
-	 mbPB/Y0k2Ho+PhIQkea50ia6a/V6CX0vv5Oe+KwPGzBgevsGUQAgmKL7ct2AMipiVr
-	 TrIg89QLK6ZMIIb+fPBSfZe7UFxKVq37p02DtMuVovRhjMIhlE/OwNOudIEpBQj5vj
-	 9QR19EGC93FaA==
-Message-ID: <52c7d318-434c-4d1d-abd6-86b11e854ab7@landley.net>
-Date: Tue, 18 Feb 2025 06:41:37 -0600
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wLUpja4b"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e5dd164f03fso2345375276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 04:49:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739882971; x=1740487771; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KFFzr8bI2A+xFNJr0YO4ppktmUAC80FDXNawfppZ3YM=;
+        b=wLUpja4bT030NAOBXzMAAFIZ4dcIHYZK8x35N8/bxQSyJI+c69nL6SKzOCY0P5AtO7
+         phUbIj42ZdZQbDcm6kvU1gk3Vqygbnpwby4DwpplXbI1XkLKWPiOYzLhJtNsedYuOxcF
+         TOOl1DiXR/kgL2zAHK23TR4jaFpiSLKj1zpxQDIlEhPHNyPxXdJFZXuzVGlt5iZAas48
+         YqRQhyBI/cjF4Fi8uZoB8zKNgjcdohM/pyE/HmGZPqjYivmHZzhIZ/z8FkQJ1XDoquRT
+         hjvYwo2k7r+AcMyKdw8q2ZPGEK7vGZ8JaPLcknzqxzsFVmZ1la3iGtSS68vGFJAKc5oh
+         Dayg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739882971; x=1740487771;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KFFzr8bI2A+xFNJr0YO4ppktmUAC80FDXNawfppZ3YM=;
+        b=B/TGjDhTvJjWyxxy4WN8dSOxHrE4ZAaWwkqswf17UmVooI96tLZpGNRJI/lhqT9O98
+         4gRrXuI65wFOY2TJ3xp74AvGz9xTcml4zBjvl3GS9VXeTzwmQ4kSCng4wQr6NlPnRLhD
+         SjIKd7Qf/TxLu6BinbIEcMmRS43LaZ+bdJH1LCiWyTL5/irVc/tRBHsFtZinJo8+M094
+         cJYIwqdqlTyhvJN7KiDCpx9uLMN3dbnPx62O4rKSTAhs9uYvA8JEan0wxfUj9DuC/6Ek
+         TREposB2pylDKcJdoOTfbCpqJv+7keCU7yHGKI9lfVKGOLzan29N/8oA8w2UC4Jfi+27
+         9TmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiq3P9Xd8omg6nfyM7E5fJ0Kr3WecFfN0E80VJuu2nf/V9b4N+dhABgQFGICA+mfalJRllq+z0C1bPXqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6M+jDCXnFcMJxN48lvK4TL6TS/pE8XNCFu6BcjBECGawCKvxX
+	Cf+oWjrH0yIdwpI6CQ7hGNtkGhF+XoDURvAGLfBpKX1RN1JHnOhssGzFr/cOQv8jLUaJ5QzcE0K
+	z2J0uLx9HlfUMBUR7ybMwHn6gcNC55kTBJIB0Jg==
+X-Gm-Gg: ASbGncvgdmSaSe3mrjg72KAWgkcpP/tEwU0GIAIkBtZ7gU4JPfiXeNqgVyanqOJksOF
+	545toObMmvLNxS7JI1h686jAm4XMnbsp1BvrLlkLmRxoUCZoPV9EccOHjqDm4eBZ1KEYS4fDgKw
+	==
+X-Google-Smtp-Source: AGHT+IGsgdIc+lrg0uaYthxDbjuu2RqLkOGypGT4hi5o7axf12/WwRJRBOA2dkTImuNSHrVtpIgEHz+zzrRbpfPSKhw=
+X-Received: by 2002:a05:6902:1086:b0:e5d:dcdb:18ed with SMTP id
+ 3f1490d57ef6-e5ddcdb1badmr6881189276.32.1739882971297; Tue, 18 Feb 2025
+ 04:49:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] sh: align .bss section padding to 8-byte boundary
-To: Artur Rojek <contact@artur-rojek.eu>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- "D . Jeff Dionne" <jeff@coresemi.io>, linux-sh@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250216175545.35079-1-contact@artur-rojek.eu>
- <20250216175545.35079-2-contact@artur-rojek.eu>
-Content-Language: en-US
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <20250216175545.35079-2-contact@artur-rojek.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <4966939.GXAFRqVoOG@rjwysocki.net> <2000822.PYKUYFuaPT@rjwysocki.net>
+In-Reply-To: <2000822.PYKUYFuaPT@rjwysocki.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 18 Feb 2025 13:48:54 +0100
+X-Gm-Features: AWEUYZl2e3wuU09rOhy0fKyxgy2Cy7-O9CxX1TT4Fs9bV1RChSBGopUjoJ_6AZU
+Message-ID: <CAPDyKFoB0fQCabahYpx=A_Ns7vJgWYdK=rxuHk+XHVv35cFvWQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jon Hunter <jonathanh@nvidia.com>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/16/25 11:55, Artur Rojek wrote:
-> J2 based devices expect to find a devicetree blob at the end of the bss
-> section. As of a77725a9a3c5, libfdt enforces 8-byte alignment for the
-> dtb, causing J2 devices to fail early in sh_fdt_init.
-> 
-> As J2 loader firmware calculates the dtb location based on the kernel
-> image .bss section size, rather than the __bss_stop symbol offset, the
-> required alignment can't be enforced with BSS_SECTION(0, PAGE_SIZE, 8).
-> Instead, inline modified version of the above macro, which grows .bss
-> by the required size.
-> 
-> While this change affects all existing SH boards, it should be benign on
-> platforms which don't need this alignment.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
++ Saravana
 
-Tested-by: Rob Landley <rob@landley.net>
+On Mon, 17 Feb 2025 at 21:19, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> A recent discussion has revealed that using DPM_FLAG_SMART_SUSPEND
+> unconditionally is generally problematic because it may lead to
+> situations in which the device's runtime PM information is internally
+> inconsistent or does not reflect its real state [1].
+>
+> For this reason, change the handling of DPM_FLAG_SMART_SUSPEND so that
+> it is only taken into account if it is consistently set by the drivers
+> of all devices having any PM callbacks throughout dependency graphs in
+> accordance with the following rules:
+>
+>  - The "smart suspend" feature is only enabled for devices whose drivers
+>    ask for it (that is, set DPM_FLAG_SMART_SUSPEND) and for devices
+>    without PM callbacks unless they have never had runtime PM enabled.
+>
+>  - The "smart suspend" feature is not enabled for a device if it has not
+>    been enabled for the device's parent unless the parent does not take
+>    children into account or it has never had runtime PM enabled.
+>
+>  - The "smart suspend" feature is not enabled for a device if it has not
+>    been enabled for one of the device's suppliers taking runtime PM into
+>    account unless that supplier has never had runtime PM enabled.
+>
+> Namely, introduce a new device PM flag called smart_suspend that is only
+> set if the above conditions are met and update all DPM_FLAG_SMART_SUSPEND
+> users to check power.smart_suspend instead of directly checking the
+> latter.
+>
+> At the same time, drop the power.set_active flage introduced recently
+> in commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status
+> of parents and children") because it is now sufficient to check
+> power.smart_suspend along with the dev_pm_skip_resume() return value
+> to decide whether or not pm_runtime_set_active() needs to be called
+> for the device.
+>
+> Link: https://lore.kernel.org/linux-pm/CAPDyKFroyU3YDSfw_Y6k3giVfajg3NQGwNWeteJWqpW29BojhQ@mail.gmail.com/  [1]
+> Fixes: 7585946243d6 ("PM: sleep: core: Restrict power.set_active propagation")
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/acpi/device_pm.c  |    6 +---
+>  drivers/base/power/main.c |   63 +++++++++++++++++++++++++++++++++++-----------
+>  drivers/mfd/intel-lpss.c  |    2 -
+>  drivers/pci/pci-driver.c  |    6 +---
+>  include/linux/pm.h        |    2 -
+>  5 files changed, 55 insertions(+), 24 deletions(-)
+>
+> --- a/drivers/acpi/device_pm.c
+> +++ b/drivers/acpi/device_pm.c
+> @@ -1161,8 +1161,7 @@
+>   */
+>  int acpi_subsys_suspend(struct device *dev)
+>  {
+> -       if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> -           acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
+> +       if (!dev->power.smart_suspend || acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
 
-Rob
+Nitpick: Rather than checking the dev->power.smart_suspend flag
+directly here, perhaps we should provide a helper function that
+returns true when dev->power.smart_suspend is set? In this way, it's
+the PM core soley that operates on the flag.
+
+>                 pm_runtime_resume(dev);
+>
+>         return pm_generic_suspend(dev);
+> @@ -1320,8 +1319,7 @@
+>   */
+>  int acpi_subsys_poweroff(struct device *dev)
+>  {
+> -       if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> -           acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
+> +       if (!dev->power.smart_suspend || acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
+>                 pm_runtime_resume(dev);
+>
+>         return pm_generic_poweroff(dev);
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -656,15 +656,13 @@
+>          * so change its status accordingly.
+>          *
+>          * Otherwise, the device is going to be resumed, so set its PM-runtime
+> -        * status to "active" unless its power.set_active flag is clear, in
+> +        * status to "active" unless its power.smart_suspend flag is clear, in
+>          * which case it is not necessary to update its PM-runtime status.
+>          */
+> -       if (skip_resume) {
+> +       if (skip_resume)
+>                 pm_runtime_set_suspended(dev);
+> -       } else if (dev->power.set_active) {
+> +       else if (dev->power.smart_suspend)
+>                 pm_runtime_set_active(dev);
+> -               dev->power.set_active = false;
+> -       }
+>
+>         if (dev->pm_domain) {
+>                 info = "noirq power domain ";
+> @@ -1282,14 +1280,8 @@
+>               dev->power.may_skip_resume))
+>                 dev->power.must_resume = true;
+>
+> -       if (dev->power.must_resume) {
+> -               if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
+> -                       dev->power.set_active = true;
+> -                       if (dev->parent && !dev->parent->power.ignore_children)
+> -                               dev->parent->power.set_active = true;
+> -               }
+> +       if (dev->power.must_resume)
+>                 dpm_superior_set_must_resume(dev);
+> -       }
+>
+>  Complete:
+>         complete_all(&dev->power.completion);
+> @@ -1797,6 +1789,49 @@
+>         return error;
+>  }
+>
+> +static void device_prepare_smart_suspend(struct device *dev)
+> +{
+> +       struct device_link *link;
+> +       int idx;
+> +
+> +       /*
+> +        * The "smart suspend" feature is enabled for devices whose drivers ask
+> +        * for it and for devices without PM callbacks unless runtime PM is
+> +        * disabled and enabling it is blocked for them.
+> +        *
+> +        * However, if "smart suspend" is not enabled for the device's parent
+> +        * or any of its suppliers that take runtime PM into account, it cannot
+> +        * be enabled for the device either.
+> +        */
+> +       dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
+> +               dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
+> +               !pm_runtime_blocked(dev);
+> +
+> +       if (!dev->power.smart_suspend)
+> +               return;
+> +
+> +       if (dev->parent && !pm_runtime_blocked(dev->parent) &&
+> +           !dev->parent->power.ignore_children && !dev->parent->power.smart_suspend) {
+> +               dev->power.smart_suspend = false;
+> +               return;
+> +       }
+> +
+> +       idx = device_links_read_lock();
+> +
+> +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+> +               if (!(link->flags | DL_FLAG_PM_RUNTIME))
+> +                       continue;
+> +
+> +               if (!pm_runtime_blocked(link->supplier) &&
+> +                   !link->supplier->power.smart_suspend) {
+
+This requires device_prepare() for all suppliers to be run before its
+consumer. Is that always the case?
+
+> +                       dev->power.smart_suspend = false;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       device_links_read_unlock(idx);
+
+From an execution overhead point of view, did you check if the above
+code had some measurable impact on the latency for dpm_prepare()?
+
+> +}
+> +
+>  /**
+>   * device_prepare - Prepare a device for system power transition.
+>   * @dev: Device to handle.
+> @@ -1858,6 +1893,7 @@
+>                 pm_runtime_put(dev);
+>                 return ret;
+>         }
+> +       device_prepare_smart_suspend(dev);
+>         /*
+>          * A positive return value from ->prepare() means "this device appears
+>          * to be runtime-suspended and its state is fine, so if it really is
+> @@ -2033,6 +2069,5 @@
+>
+>  bool dev_pm_skip_suspend(struct device *dev)
+>  {
+> -       return dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) &&
+> -               pm_runtime_status_suspended(dev);
+> +       return dev->power.smart_suspend && pm_runtime_status_suspended(dev);
+>  }
+> --- a/drivers/mfd/intel-lpss.c
+> +++ b/drivers/mfd/intel-lpss.c
+> @@ -480,7 +480,7 @@
+>
+>  static int resume_lpss_device(struct device *dev, void *data)
+>  {
+> -       if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
+> +       if (!dev->power.smart_suspend)
+>                 pm_runtime_resume(dev);
+>
+>         return 0;
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -812,8 +812,7 @@
+>          * suspend callbacks can cope with runtime-suspended devices, it is
+>          * better to resume the device from runtime suspend here.
+>          */
+> -       if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> -           pci_dev_need_resume(pci_dev)) {
+> +       if (!dev->power.smart_suspend || pci_dev_need_resume(pci_dev)) {
+>                 pm_runtime_resume(dev);
+>                 pci_dev->state_saved = false;
+>         } else {
+> @@ -1151,8 +1150,7 @@
+>         }
+>
+>         /* The reason to do that is the same as in pci_pm_suspend(). */
+> -       if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> -           pci_dev_need_resume(pci_dev)) {
+> +       if (!dev->power.smart_suspend || pci_dev_need_resume(pci_dev)) {
+>                 pm_runtime_resume(dev);
+>                 pci_dev->state_saved = false;
+>         } else {
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -680,8 +680,8 @@
+>         bool                    syscore:1;
+>         bool                    no_pm_callbacks:1;      /* Owned by the PM core */
+>         bool                    async_in_progress:1;    /* Owned by the PM core */
+> +       bool                    smart_suspend:1;        /* Owned by the PM core */
+>         bool                    must_resume:1;          /* Owned by the PM core */
+> -       bool                    set_active:1;           /* Owned by the PM core */
+>         bool                    may_skip_resume:1;      /* Set by subsystems */
+>  #else
+>         bool                    should_wakeup:1;
+>
+>
+>
+
+Kind regards
+Uffe
