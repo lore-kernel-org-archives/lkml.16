@@ -1,122 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3872356A8;
-	Tue, 18 Feb 2025 18:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604F12356B8
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739903193; cv=none; b=MyAE7Bdc0knZSWyzM6TDlmIA13brSKfG6q/O6tTmPX5i/YRMTVSg6rRrOd+UYj1JgEka4MYr0guoMtLl5gqdft4+/3NdEfI+kOc4udB1R5mVTLsyBIj9vhdSEvFd9yPANYl5HIWI9mtEJBwcDcnUr2YbDK8aCED5IgyxWdjEEAg=
+	t=1739903223; cv=none; b=ckXo0X+L8b6qMJsMOn+1xMoxjl6DFRIK7ZmKOWLW3ULEVJNeVNUH/3GqrXqI4fcFN/b6lrxV3sSflkZhPqaQf3vIP8k/fo3rqDJkHWBwziMyq5fbUITT1dhauUeEkZQdmaY8udXrIXv3zcCIIiaH/nx3kVecFvO840TeK4oDp/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739903193; c=relaxed/simple;
-	bh=gFWPA467fFhdrxcjz8YmJO5wpVcMCxyFzJOhdv74iJQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eASAMKNZeTwaipCdZlQ9nGEaIPaSAQ9lOFHvLGkxMi8UGEX5GwQS1gahnI6P/SvXgUH6Ytrps76W9RvP6/xmAH+Vygq4OADxO1OEUBiHJF56gpO6uIS/YMie2Zvw76wJOZBnthdcUXYNDxX4BfNsdM3EksdpkdGi3oRnpDIoPo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8Z+jwDM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8Z+jwDM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1402C4CEE4;
-	Tue, 18 Feb 2025 18:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739903192;
-	bh=gFWPA467fFhdrxcjz8YmJO5wpVcMCxyFzJOhdv74iJQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q8Z+jwDMftXQ30oDa75WpBjkYwQU/B6hSvtzqeMcJKLr/29D60MM+Gmc75e3dLtII
-	 3fu161KB0OKHpCU1I20ytqCYZhgD1CgWv4NjgSuW2Im/Oaq/p4VVqACtPC0LEi6fYL
-	 17zPNR+GRLm3vwoSGS2YyRX8qgTRWJMw4ZI+airDPGlkOM5t6e7lB0tTemULKrblTD
-	 If0MYpoMD+utUwXLOHqluF0+ClMlu8q6x4d9iL6zCQ5SHVmog0qV6zqvtQMJlfhyBX
-	 f1owRj597J6Qr4xQYwMqaNcpjDCKWrOdFQjtzTqOfarZvf1LcCa5xblSX4S8spuw/l
-	 7KUot/tWGVYfA==
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3f405e2c761so756912b6e.1;
-        Tue, 18 Feb 2025 10:26:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUBhTtnXI13Q5pY/09YIh6b58Q39CKwYaTyjLoaAWor9C3VvI5Y+VdPzpYuWJgGaUVLEQe5b4GYzD2I@vger.kernel.org, AJvYcCVWYzz4HHHgd9civBp5rLu76TeYeDt9K3bVhuADS7baVll/7qfuMDn3b+lv9VKCBqgid9VHZDpSAPX5Cl29@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuxvPMQSoF6uGXMZpxiZmBPM47qiWI+YmTBrdbXEkRYFwJNJU9
-	85CuKFj4zHGODrpS0qVOKMtZgVHJz2BVRxp9m+QcLyLxG8OeZYRrJ1MHGcpuyf5/6hgwWWjE2MF
-	gSKz9jckVVLWzOUV40ih9OR7hy0E=
-X-Google-Smtp-Source: AGHT+IEtPSsv1kpfazgkvUXQ/rk/DfLvbYdLEOQIpbLBOwhPffIIamBCRZosp2SHVFVXB/b5zgBE+kurnVhlh8adRTc=
-X-Received: by 2002:a05:6808:10c5:b0:3f3:be96:5113 with SMTP id
- 5614622812f47-3f40f1f8b0amr530337b6e.22.1739903192105; Tue, 18 Feb 2025
- 10:26:32 -0800 (PST)
+	s=arc-20240116; t=1739903223; c=relaxed/simple;
+	bh=Juc2Akbil/KjIj7GVAhkfHO1s/KyIG4/hSAIW20NKvo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YagSDcPnA2jPfZSWCte14UoGLO4z0FYcoiu6u6D0sPmLwFLS2g7Vhkrzj4TIgXyKtQlmjySFBo93svaZKaMCTeMFQUQCnCgtK0GjoUV6Nce1uVt+g5hWB/91N0k/BKA2/kFuR5Gr5hYARF/2qqDvv+I0ZgbE7YgF61reASSCH4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tkSIy-0006Bk-0v; Tue, 18 Feb 2025 19:26:48 +0100
+Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tkSIx-001dVB-1e;
+	Tue, 18 Feb 2025 19:26:47 +0100
+Received: from localhost ([::1] helo=dude05.red.stw.pengutronix.de)
+	by dude05.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tkSIx-00A9Hm-1C;
+	Tue, 18 Feb 2025 19:26:47 +0100
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Date: Tue, 18 Feb 2025 19:26:42 +0100
+Subject: [PATCH v4 2/6] arm64: dts: imx8mp: Add optional nominal drive mode
+ DTSI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212063408.927666-1-tanxiaofei@huawei.com>
-In-Reply-To: <20250212063408.927666-1-tanxiaofei@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 18 Feb 2025 19:26:21 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hK4fB2oh14L=_qqBAL9vhar-4WuvP1bmnF9XwRrG9+NQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkuAJqmehZnM1wNSSYOgZwMIZcVcCTNW6JrX6wMkKScIQmx0gmwSd65mFY
-Message-ID: <CAJZ5v0hK4fB2oh14L=_qqBAL9vhar-4WuvP1bmnF9XwRrG9+NQ@mail.gmail.com>
-Subject: Re: [PATCH v4] ACPI: HED: Always initialize before evged
-To: Xiaofei Tan <tanxiaofei@huawei.com>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jonathan.cameron@huawei.com, 
-	mchehab+huawei@kernel.org, roberto.sassu@huawei.com, shiju.jose@huawei.com, 
-	prime.zeng@hisilicon.com, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-imx8m-clk-v4-2-b7697dc2dcd0@pengutronix.de>
+References: <20250218-imx8m-clk-v4-0-b7697dc2dcd0@pengutronix.de>
+In-Reply-To: <20250218-imx8m-clk-v4-0-b7697dc2dcd0@pengutronix.de>
+To: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Frank Li <Frank.li@nxp.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Abel Vesa <abel.vesa@linaro.org>, 
+ Marek Vasut <marex@denx.de>
+Cc: linux-clk@vger.kernel.org, imx@lists.linux.dev, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>
+X-Mailer: b4 0.14.2
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2025 at 7:41=E2=80=AFAM Xiaofei Tan <tanxiaofei@huawei.com>=
- wrote:
->
-> When the module HED is built-in, the module HED init is behind EVGED
-> as the driver are in the same initcall level, then the order is determine=
-d
-> by Makefile order. That order violates expectations. Because RAS records
-> can't be handled in the special time window that EVGED has initialized
-> while HED not.
->
-> If the number of such RAS records is more than the APEI HEST error source
-> number, the HEST resources could be occupied all, and then could affect
-> subsequent RAS error reporting.
->
-> Change the initcall level of HED to subsys_init to fix the issue. If buil=
-d
-> HED as a module, the problem remains. To solve this problem completely,
-> change the ACPI_HED from tristate to bool.
->
-> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-> ---
->  -v4: Fix register HED device twice issue found by Nathan, and change
-> patch name following Rafael's advice.
-> ---
->  drivers/acpi/Kconfig | 2 +-
->  drivers/acpi/hed.c   | 7 ++++++-
->  2 files changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index d81b55f5068c..7f10aa38269d 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -452,7 +452,7 @@ config ACPI_SBS
->           the modules will be called sbs and sbshc.
->
->  config ACPI_HED
-> -       tristate "Hardware Error Device"
-> +       bool "Hardware Error Device"
->         help
->           This driver supports the Hardware Error Device (PNP0C33),
->           which is used to report some hardware errors notified via
-> diff --git a/drivers/acpi/hed.c b/drivers/acpi/hed.c
-> index 7652515a6be1..3499f86c411e 100644
-> --- a/drivers/acpi/hed.c
-> +++ b/drivers/acpi/hed.c
-> @@ -80,7 +80,12 @@ static struct acpi_driver acpi_hed_driver =3D {
->                 .remove =3D acpi_hed_remove,
->         },
->  };
-> -module_acpi_driver(acpi_hed_driver);
-> +
-> +static int __init acpi_hed_driver_init(void)
-> +{
-> +       return acpi_bus_register_driver(&acpi_hed_driver);
-> +}
-> +subsys_initcall(acpi_hed_driver_init);
->
->  MODULE_AUTHOR("Huang Ying");
->  MODULE_DESCRIPTION("ACPI Hardware Error Device Driver");
-> --
+Unlike the i.MX8MM and i.MX8MN SoCs added earlier, the device tree for
+the i.MX8MP configures some clocks at frequencies that are only validated
+for overdrive mode, i.e. when VDD_SOC is 950 mV.
 
-Applied as 6.15 material with changelog edits, thanks!
+Boards may want to run their SoC at the lower voltage of 850 mV though
+to reduce heat generation and power usage. For this to work, clock rates
+need to adhere to the limits of the nominal drive mode.
+
+Add an optional DTSI file which can be included by various boards to run
+in this mode.
+
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+---
+ arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi | 63 +++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi
+new file mode 100644
+index 0000000000000000000000000000000000000000..f9a82a663033a1dfb72163eebb62e4aee66cee2f
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2024 Pengutronix, Ahmad Fatoum <kernel@pengutronix.de>
++ */
++
++&clk {
++	assigned-clocks = <&clk IMX8MP_CLK_A53_SRC>,
++			  <&clk IMX8MP_CLK_A53_CORE>,
++			  <&clk IMX8MP_SYS_PLL3>,
++			  <&clk IMX8MP_CLK_NOC>,
++			  <&clk IMX8MP_CLK_NOC_IO>,
++			  <&clk IMX8MP_CLK_GIC>;
++	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_800M>,
++				 <&clk IMX8MP_ARM_PLL_OUT>,
++				 <0>,
++				 <&clk IMX8MP_SYS_PLL1_800M>,
++				 <&clk IMX8MP_SYS_PLL3_OUT>,
++				 <&clk IMX8MP_SYS_PLL1_800M>;
++	assigned-clock-rates = <0>, <0>,
++			       <600000000>,
++			       <800000000>,
++			       <600000000>,
++			       <400000000>;
++};
++
++&pgc_hdmimix {
++	assigned-clocks = <&clk IMX8MP_CLK_HDMI_AXI>,
++			  <&clk IMX8MP_CLK_HDMI_APB>;
++	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_800M>,
++				 <&clk IMX8MP_SYS_PLL1_133M>;
++	assigned-clock-rates = <400000000>, <133000000>;
++};
++
++&pgc_hsiomix {
++	assigned-clocks = <&clk IMX8MP_CLK_HSIO_AXI>;
++	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_800M>;
++	assigned-clock-rates = <400000000>;
++};
++
++&pgc_gpumix {
++	assigned-clocks = <&clk IMX8MP_CLK_GPU_AXI>,
++			  <&clk IMX8MP_CLK_GPU_AHB>;
++	assigned-clock-parents = <&clk IMX8MP_SYS_PLL3_OUT>,
++				 <&clk IMX8MP_SYS_PLL3_OUT>;
++	assigned-clock-rates = <600000000>, <300000000>;
++};
++
++&media_blk_ctrl {
++	assigned-clocks = <&clk IMX8MP_CLK_MEDIA_AXI>,
++			  <&clk IMX8MP_CLK_MEDIA_APB>,
++			  <&clk IMX8MP_CLK_MEDIA_DISP1_PIX>,
++			  <&clk IMX8MP_CLK_MEDIA_DISP2_PIX>,
++			  <&clk IMX8MP_CLK_MEDIA_ISP>,
++			  <&clk IMX8MP_VIDEO_PLL1>;
++	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_800M>,
++				 <&clk IMX8MP_SYS_PLL1_800M>,
++				 <&clk IMX8MP_VIDEO_PLL1_OUT>,
++				 <&clk IMX8MP_VIDEO_PLL1_OUT>,
++				 <&clk IMX8MP_SYS_PLL1_800M>;
++	assigned-clock-rates = <400000000>, <200000000>,
++			       <0>, <0>, <400000000>,
++			       <1039500000>;
++};
+
+-- 
+2.39.5
+
