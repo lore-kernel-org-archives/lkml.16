@@ -1,79 +1,203 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta0.mxroute.com (mail-108-mta0.mxroute.com [136.175.108.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172CF1714C0;
-	Tue, 18 Feb 2025 03:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1CE74040
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 03:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.0
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739850179; cv=none; b=PyZqbBuxUtjw2XAZMle0GWPl3fpewGkTKKrciAv1rjGfkP45sncEclHnO3SqzGSPXQ5PulMCLzepnO06/Fz11Qq5i6CZQi5/eZR2n7bPL4v+lc25+o0YC3VdqH409oYpgSy8O/Spd7g/hvGZERLwGNId7BTmW9AjEc8T4hQUDmM=
+	t=1739850336; cv=none; b=tI1XQimjc1X3ivcCofVDQfwxz2lowkXLO1sIbUZOPVNYlY+BIDcBz0d/2efhPuP/20usNlGNviXh8zyu+bwgkcqYIznnUb1SvmwlddSR+E5y8l3AmeaySipYSYHVstEhgIQkwcEyTIUcGFjWPmEG7CvUQ7l8f8pMRyXC4QujgZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739850179; c=relaxed/simple;
-	bh=oxnmzV0u7YLeSdOMcjT0XG/CoG1KcOL8BTBtJhEF4gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QieapwRs1szyLapSnfN0Tt9JcuiRQCNC2kcSa3BasVGINOD5/k/Pp2coWsR//6kNElfMv5JIOX0ZdMltwhnPUnpLQuwbKyXK39LbnB7R1ZtcFSQuTV/V7bJa6jN6VbfUcoPqP/nNLIBxlw1KoNxa099L0hv8lIHVym0R+WWVRqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=aFOI1FU6; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1739850336; c=relaxed/simple;
+	bh=Z/LHmpug6mo4aeB94Ypuiu6MxuP5hkW76yjodYvxPcY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=N2ThM/86vwYwdeYyY7OT3iftQdLvjOxcD6tQC60ARh4+yDawltcwg3FOVZR+WTyuxEtSbsI8LR6CH5LHqNAqhRQofYVlgGjLMZgLQfsQe64wmD6rD+wyhXOKipWoLAWjawjwFfAXXQ9Y20a+fX/ytyerf48YyR9bVCYIQmiA83o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org; spf=pass smtp.mailfrom=damenly.org; dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b=V88Qynw7; arc=none smtp.client-ip=136.175.108.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damenly.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="aFOI1FU6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b="V88Qynw7"
+Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta0.mxroute.com (ZoneMTA) with ESMTPSA id 19517248a3e000310e.007
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Tue, 18 Feb 2025 03:40:25 +0000
+X-Zone-Loop: b412b0f20f6490980fd52aed3b914108e12a7f473481
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=damenly.org
+	; s=x; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:
+	References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=vyRhLFHRB6fmclm1Piz9ZAXQjUujdHyc/1CCpu4kda0=; b=aFOI1FU6shtJerIQ7DxiFI+Ewt
-	neYE/ji6PhieKsTYzsfnrOIyHGle3ecc8D/lsYZjcRB3ZTlju51sq+UzE1cNTkIUNAWD9aJX0aHU6
-	FkCq5fgTjmknPu6V+aWzQ4nimBemr84uYqb4SNiODjzJAQggytL4AXm5q6Ujdz5pGb3sJbrfhT5Pj
-	QNBUo/kShIgx7+0rrhrOQxr8Ndt+m7t9dT9Ye7skKBgUpGiN9gH5qvrCyJolhV3Yr8WO694bOTNf2
-	cdqRkjUXjZXH47/5bas+iIhxf0+HsIuyEIjs78jtZKjjPxHIQ2Dz7TYfZUmvATqV1uj7lY6kx8yoq
-	2Z09xE0g==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tkEIa-0018pK-04;
-	Tue, 18 Feb 2025 11:42:49 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 18 Feb 2025 11:42:48 +0800
-Date: Tue, 18 Feb 2025 11:42:48 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Eric Biggers <ebiggers@kernel.org>, fsverity@lists.linux.dev,
-	linux-crypto@vger.kernel.org, dm-devel@lists.linux.dev,
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	David Howells <dhowells@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH v8 0/7] Optimize dm-verity and fsverity using multibuffer
- hashing
-Message-ID: <Z7QBuIvr4Asiezgc@gondor.apana.org.au>
-References: <20250212154718.44255-1-ebiggers@kernel.org>
- <Z61yZjslWKmDGE_t@gondor.apana.org.au>
- <20250213063304.GA11664@sol.localdomain>
- <20250215090412.46937c11@kernel.org>
- <Z7FM9rhEA7n476EJ@gondor.apana.org.au>
- <20250217094032.3cbe64c7@kernel.org>
+	bh=d24NILsFbm5QEOjhOdI0kZQA7pO2m1fI1x27Z+Eryls=; b=V88Qynw7M1t27hMhlyFvTDccXj
+	k81RcP3UWajvLVNeA7B8iGu8kpiNE4rD4SQ42kozeLysFctPG/LRYp5xQkj33Eu4e+bG0SmaVlQJq
+	NZrHl7wdBjWhLWeQbMXSGDDaP2r/EkCH6oIgbF8mA4SpGg7ON6zK9IcbtbIijzAtNYxtdlVjWGHt7
+	iSsZvy9i/dKyqhaOdB7FpwC+P4LZL8/DHt/tskfAWabLJxIyx51vXq+7Ub+/u5soCl4jUUKHOl/EH
+	NQQa73xWMesyWxvetglyInYWHrIIZqpAjgulflysP6wJyemgksTGOuATExgY0VVqBME+WlobyGZ9u
+	B2BYpryA==;
+From: Su Yue <l@damenly.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Glass Su <glass.su@suse.com>,  song@kernel.org,
+  linux-raid@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  yi.zhang@huawei.com,  yangerkun@huawei.com,  "yukuai (C)"
+ <yukuai3@huawei.com>
+Subject: Re: [PATCH md-6.15 2/7] md: only include md-cluster.h if necessary
+In-Reply-To: <c8cd970f-8b2a-bb7c-b0ad-4e11fd6bae9d@huaweicloud.com> (Yu Kuai's
+	message of "Tue, 18 Feb 2025 10:40:55 +0800")
+References: <20250215092225.2427977-1-yukuai1@huaweicloud.com>
+	<20250215092225.2427977-3-yukuai1@huaweicloud.com>
+	<E136E905-430C-40B4-B69A-7FC9B8CF3C47@suse.com>
+	<c8cd970f-8b2a-bb7c-b0ad-4e11fd6bae9d@huaweicloud.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 18 Feb 2025 11:40:16 +0800
+Message-ID: <h64r6hun.fsf@damenly.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217094032.3cbe64c7@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Authenticated-Id: l@damenly.org
 
-On Mon, Feb 17, 2025 at 09:40:32AM -0800, Jakub Kicinski wrote:
+On Tue 18 Feb 2025 at 10:40, Yu Kuai <yukuai1@huaweicloud.com>=20
+wrote:
+
+> Hi,
 >
-> Yes, that's true for tunnels and for IPsec.
-> TLS does crypto in sendmsg/recvmsg, process context.
+> =E5=9C=A8 2025/02/17 18:20, Glass Su =E5=86=99=E9=81=93:
+>>
+>>> On Feb 15, 2025, at 17:22, Yu Kuai <yukuai1@huaweicloud.com>=20
+>>> wrote:
+>>>
+>>> From: Yu Kuai <yukuai3@huawei.com>
+>>>
+>>> md-cluster is only supportted by raid1 and raid10, there is no=20
+>>> need to
+>>> include md-cluster.h for other personalities.
+>>>
+>>> Also move APIs that is only used in md-cluster.c from md.h to
+>>> md-cluster.h.
+>>>
+>>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> Reviewed-by: Su Yue <glass.su@suse.com>
+>
+> Thanks for the review! Any ideas for the remaining patches?
+>
+Just did slight tests for md cluster. Sent RVB for remaining=20
+patches.
+Thanks for taking care of md cluster.
 
-OK that's good to know.  So whether SIMD is always allowed or
-not won't impact TLS at least.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+Su
+> Kuai
+>
+>>> ---
+>>> drivers/md/md-bitmap.c  | 2 ++
+>>> drivers/md/md-cluster.h | 7 +++++++
+>>> drivers/md/md.h         | 7 -------
+>>> drivers/md/raid1.c      | 1 +
+>>> drivers/md/raid10.c     | 1 +
+>>> 5 files changed, 11 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+>>> index 23c09d22fcdb..71aa7dc80e26 100644
+>>> --- a/drivers/md/md-bitmap.c
+>>> +++ b/drivers/md/md-bitmap.c
+>>> @@ -29,8 +29,10 @@
+>>> #include <linux/buffer_head.h>
+>>> #include <linux/seq_file.h>
+>>> #include <trace/events/block.h>
+>>> +
+>>> #include "md.h"
+>>> #include "md-bitmap.h"
+>>> +#include "md-cluster.h"
+>>>
+>>> #define BITMAP_MAJOR_LO 3
+>>> /* version 4 insists the bitmap is in little-endian order
+>>> diff --git a/drivers/md/md-cluster.h b/drivers/md/md-cluster.h
+>>> index 470bf18ffde5..6c7aad00f5da 100644
+>>> --- a/drivers/md/md-cluster.h
+>>> +++ b/drivers/md/md-cluster.h
+>>> @@ -35,4 +35,11 @@ struct md_cluster_operations {
+>>> void (*update_size)(struct mddev *mddev, sector_t=20
+>>> old_dev_sectors);
+>>> };
+>>>
+>>> +extern int register_md_cluster_operations(const struct=20
+>>> md_cluster_operations *ops,
+>>> + struct module *module);
+>>> +extern int unregister_md_cluster_operations(void);
+>>> +extern int md_setup_cluster(struct mddev *mddev, int nodes);
+>>> +extern void md_cluster_stop(struct mddev *mddev);
+>>> +extern void md_reload_sb(struct mddev *mddev, int raid_disk);
+>>> +
+>>> #endif /* _MD_CLUSTER_H */
+>>> diff --git a/drivers/md/md.h b/drivers/md/md.h
+>>> index def808064ad8..c9bc70e6d5b4 100644
+>>> --- a/drivers/md/md.h
+>>> +++ b/drivers/md/md.h
+>>> @@ -19,7 +19,6 @@
+>>> #include <linux/wait.h>
+>>> #include <linux/workqueue.h>
+>>> #include <trace/events/block.h>
+>>> -#include "md-cluster.h"
+>>>
+>>> #define MaxSector (~(sector_t)0)
+>>>
+>>> @@ -845,11 +844,6 @@ static inline void safe_put_page(struct=20
+>>> page *p)
+>>>
+>>> extern int register_md_personality(struct md_personality *p);
+>>> extern int unregister_md_personality(struct md_personality=20
+>>> *p);
+>>> -extern int register_md_cluster_operations(const struct=20
+>>> md_cluster_operations *ops,
+>>> - struct module *module);
+>>> -extern int unregister_md_cluster_operations(void);
+>>> -extern int md_setup_cluster(struct mddev *mddev, int nodes);
+>>> -extern void md_cluster_stop(struct mddev *mddev);
+>>> extern struct md_thread *md_register_thread(
+>>> void (*run)(struct md_thread *thread),
+>>> struct mddev *mddev,
+>>> @@ -906,7 +900,6 @@ extern void md_idle_sync_thread(struct=20
+>>> mddev *mddev);
+>>> extern void md_frozen_sync_thread(struct mddev *mddev);
+>>> extern void md_unfrozen_sync_thread(struct mddev *mddev);
+>>>
+>>> -extern void md_reload_sb(struct mddev *mddev, int raid_disk);
+>>> extern void md_update_sb(struct mddev *mddev, int force);
+>>> extern void mddev_create_serial_pool(struct mddev *mddev,=20
+>>> struct md_rdev *rdev);
+>>> extern void mddev_destroy_serial_pool(struct mddev *mddev,
+>>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+>>> index 9d57a88dbd26..e55db07e43d4 100644
+>>> --- a/drivers/md/raid1.c
+>>> +++ b/drivers/md/raid1.c
+>>> @@ -36,6 +36,7 @@
+>>> #include "md.h"
+>>> #include "raid1.h"
+>>> #include "md-bitmap.h"
+>>> +#include "md-cluster.h"
+>>>
+>>> #define UNSUPPORTED_MDDEV_FLAGS \
+>>> ((1L << MD_HAS_JOURNAL) | \
+>>> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+>>> index efe93b979167..3df39b2399b2 100644
+>>> --- a/drivers/md/raid10.c
+>>> +++ b/drivers/md/raid10.c
+>>> @@ -24,6 +24,7 @@
+>>> #include "raid10.h"
+>>> #include "raid0.h"
+>>> #include "md-bitmap.h"
+>>> +#include "md-cluster.h"
+>>>
+>>> /*
+>>>   * RAID10 provides a combination of RAID0 and RAID1=20
+>>>   functionality.
+>>> -- 2.39.2
+>>>
+>>>
+>> .
+>>
