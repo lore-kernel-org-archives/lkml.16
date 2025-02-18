@@ -1,35 +1,47 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D0D243382;
-	Tue, 18 Feb 2025 11:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B36E2417FA;
+	Tue, 18 Feb 2025 12:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739879984; cv=none; b=EkFhutx064XDjHTiWNk+iteavOh5V9bavj9VB2M0aKjeOmBw7trV2FmnfBqBEoEhW9toU1+HWm+9QDGRncjTDScs0r4vREm9aTDkaIW0K0D8iB+rVl/Sg1wSO2Hiy7s4ccTv9ZpQQp05qkHIkVG7Um/qfBlERrI3RSr8NzCrx3c=
+	t=1739880013; cv=none; b=e9Kv3t1IAjedkDFX5jNOw6s6BZ/DQvrn+ljXsla/1t+4QcuiaJOeAWFDRjRWbbdy+bLxIPw4JHfupkonqOxjq+uHwDyDKqGuw0cjriuSXxjI2Ic2iDNJGBwiNCPCRvC0aKMlaYQI3w6JtLl1G1Pnirz+oa1XGr/4ESrKqIULkCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739879984; c=relaxed/simple;
-	bh=1D33RCtmi7vCn2j9HDe8yb+48Ne+e3YQjNztgt08SfU=;
+	s=arc-20240116; t=1739880013; c=relaxed/simple;
+	bh=9lsqb3KzQdXtJP11Em4GvATQ9hJVRCwBkO2a5mLLxC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5N+ClYU5WLp9VYI/59DgKtIN4I6xtfZimD/QkIL/scdzHcwnsAEWJSoJICmTmxJXbrLb2vmXXXaZ7hpX54hG2ywsGBhPHLElm8sSEuzkzX6+MoIRVOzjkLzWTBg0D10e/32+DEpdCM+3SYj3s0vb1zNcMEI2sHY3uMRGY2zfiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tkMGA-0003sS-00; Tue, 18 Feb 2025 12:59:30 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 7D1DAC0135; Tue, 18 Feb 2025 12:59:22 +0100 (CET)
-Date: Tue, 18 Feb 2025 12:59:22 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v2 1/1] MIPS: Fix idle VS timer enqueue
-Message-ID: <Z7R2GqWOufd8l6NZ@alpha.franken.de>
-References: <20250218090203.43137-1-marco.crivellari@suse.com>
- <20250218090203.43137-2-marco.crivellari@suse.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwNeFVjC8FHXSUlDxQh/zvTHaZkRYMVaS8GraVR3CZx6+FjXMVF4nNVw8ZgAygPezPschvqp/cDwADha4KmrKmWifL4cfWBOCUSLa+m57JtO6inz0xbE1sExqcHPYf2qMTkKMS8GKlY/gofuLph4Np57NsjUkSkcLkBoAKIGOI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=0vIasmSy; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="0vIasmSy"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id 611F11F8BD;
+	Tue, 18 Feb 2025 13:00:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1739880007;
+	bh=Mj3PztAnvD9vDz6xP2L4dDXDamq37tJkkDcB9UoW23A=; h=From:To:Subject;
+	b=0vIasmSyAYoHCecFVq8qfDEAKDf5y8zcgzKEgmSf4SnjZUhpdWkZy9p3GuieOjyRD
+	 iDV89X9ERnCVMIZRnHABwQQOGCkPs8AG+tpupDCqLnV0qj+xsF9jwzTiZvWafig1SK
+	 usqZmaBUTHQVPknMUVysdLDgSU/PylBZFlYh0GK92wWbJbM9M1qeny8DsiuRRjPtUC
+	 e9+kCupqf02xuhszS1x6QARjQXfmlBwP49yQSoHj4FSJEAr5jXM9rPdu+U+gYbkvXR
+	 oBT7KCh11h9tz2B4YIEmpkgxB0y5mTW6zaxFvbp1eEzJgeWx8NKh8cVVCBreoZ/lMX
+	 Ztyk/MSWmcV2A==
+Date: Tue, 18 Feb 2025 13:00:02 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, francesco.dolcini@toradex.com,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: Re: [PATCH v1 1/2] arm64: dts: freescale: imx8mp-verdin-dahlia: add
+ Microphone Jack to sound card
+Message-ID: <20250218120002.GA15270@francesco-nb>
+References: <20250217145744.179213-1-eichest@gmail.com>
+ <20250217145744.179213-2-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,111 +50,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218090203.43137-2-marco.crivellari@suse.com>
+In-Reply-To: <20250217145744.179213-2-eichest@gmail.com>
 
-On Tue, Feb 18, 2025 at 10:02:03AM +0100, Marco Crivellari wrote:
-> MIPS re-enables interrupts on its idle routine and performs
-> a TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
+On Mon, Feb 17, 2025 at 03:56:40PM +0100, Stefan Eichenberger wrote:
+> From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 > 
-> The IRQs firing between the check and the 'wait' instruction may set the
-> TIF_NEED_RESCHED flag. In order to deal with this possible race, IRQs
-> interrupting __r4k_wait() rollback their return address to the
-> beginning of __r4k_wait() so that TIF_NEED_RESCHED is checked
-> again before going back to sleep.
+> The simple-audio-card's microphone widget currently connects to the
+> headphone jack. Routing the microphone input to the microphone jack
+> allows for independent operation of the microphone and headphones.
 > 
-> However idle IRQs can also queue timers that may require a tick
-> reprogramming through a new generic idle loop iteration but those timers
-> would go unnoticed here because __r4k_wait() only checks
-> TIF_NEED_RESCHED. It doesn't check for pending timers.
+> This resolves the following boot-time kernel log message, which
+> indicated a conflict when the microphone and headphone functions were
+> not separated:
+>   debugfs: File 'Headphone Jack' in directory 'dapm' already present!
 > 
-> Fix this with fast-forwarding idle IRQs return address to the end of the
-> idle routine instead of the beginning, so that the generic idle loop
-> handles both TIF_NEED_RESCHED and pending timers.
-> 
-> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
-> ---
->  arch/mips/kernel/genex.S | 39 +++++++++++++++++++++------------------
->  arch/mips/kernel/idle.c  |  1 -
->  2 files changed, 21 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-> index a572ce36a24f..9747b216648f 100644
-> --- a/arch/mips/kernel/genex.S
-> +++ b/arch/mips/kernel/genex.S
-> @@ -104,25 +104,27 @@ handle_vcei:
->  
->  	__FINIT
->  
-> -	.align	5	/* 32 byte rollback region */
-> +	.align	5
->  LEAF(__r4k_wait)
->  	.set	push
->  	.set	noreorder
-> -	/* start of rollback region */
-> -	LONG_L	t0, TI_FLAGS($28)
-> -	nop
-> -	andi	t0, _TIF_NEED_RESCHED
-> -	bnez	t0, 1f
-> -	 nop
-> -	nop
-> -	nop
-> -#ifdef CONFIG_CPU_MICROMIPS
-> -	nop
-> -	nop
-> -	nop
-> -	nop
-> -#endif
+> Fixes: 874958916844 ("arm64: dts: freescale: verdin-imx8mp: dahlia: add sound card")
+> Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-My quick search didnn't find the reason for the extra NOPs on MICROMIPS, but
-they are here for a purpose. I might still need them...
+Cc:stable@vger.kernel.org
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-> +	/* start of idle interrupt region */
-> +	MFC0	t0, CP0_STATUS
-> +	/* Enable Interrput */
-> +	ori 	t0, 0x1f
-> +	xori	t0, 0x1e
-> +	MTC0	t0, CP0_STATUS
-> +	_ssnop
-> +	_ssnop
-> +	_ssnop
-
-instead of handcoded hazard nops, use __irq_enable_hazard for that
-
->  	.set	MIPS_ISA_ARCH_LEVEL_RAW
-> +	/*
-> +	 * If an interrupt lands here, between enabling interrupts above and
-> +	 * going idle on the next instruction, we must *NOT* go idle since the
-> +	 * interrupt could have set TIF_NEED_RESCHED or caused a timer to need
-> +	 * resched. Fall through -- see rollback_handler below -- and have
-> +	 * the idle loop take care of things.
-> +	 */
->  	wait
->  	/* end of rollback region (the region size must be power of two) */
->  1:
-> @@ -136,9 +138,10 @@ LEAF(__r4k_wait)
->  	.set	push
->  	.set	noat
->  	MFC0	k0, CP0_EPC
-> -	PTR_LA	k1, __r4k_wait
-> -	ori	k0, 0x1f	/* 32 byte rollback region */
-> -	xori	k0, 0x1f
-> +	PTR_LA	k1, 1b
-> +	/* 32 byte idle interrupt region */
-> +	ori 	k0, 0x1f
-> +	daddiu	k0, 1
-
-/local/tbogendoerfer/korg/linux/arch/mips/kernel/genex.S: Assembler messages:
-/local/tbogendoerfer/korg/linux/arch/mips/kernel/genex.S:151: Error: opcode not supported on this processor: mips32r2 (mips32r2) `daddiu $26,1'
-/local/tbogendoerfer/korg/linux/arch/mips/kernel/genex.S:271: Error: opcode not supported on this processor: mips32r2 (mips32r2) `daddiu $26,1'
-
-looks like you haven't compiled this code for 32bit. Use PTR_ADDIU, which
-will use the correct instuction for 32 and 64bit.
-
-But I doubt this works, because the wait instruction is not aligned to
-a 32 byte boundary, but the code assuemes this, IMHO.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
