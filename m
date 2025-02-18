@@ -1,104 +1,117 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8324D22F155;
-	Tue, 18 Feb 2025 13:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02949230D2F;
+	Tue, 18 Feb 2025 13:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739884704; cv=none; b=PdKyNB+OO48QfT1d0T+q33/6Jd5iwK908xxDvE9139PbN8tGcvmBtk0T2Pu5fLf+jljKdQrghPyqRqqflKeUzvRl2dYhipW1Jehjf4e7UjXV18uE8eptTEgVhUcn3WgIKWrKgrtxxboB527ep81aKFDNKCWQv3k6U/Ayq+vOGzA=
+	t=1739884721; cv=none; b=W8Jbe6VbQjNj2ff2pPfdZndF/e/s6g7kcnfYQkYT4N8+skXQ/mjtLy57h8ahMSA9UOfNQlONttTVnJapiBPrSSD845utoFE7FUsfBBqcGbTJqkU6UuJbojeQstdB9wlTdtPvwkjTEzUyPeLdGXqpr7Rr4cBviVXcqiGucDBQcx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739884704; c=relaxed/simple;
-	bh=kA2fNkwc5OPwz2/SzwDsSIfywB8B4X2oTdGgdzJp50M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=teyXKR6Jex/Ojtkp6ORhCZEe4mPpv1+egRbXjnV3sBp7B6GvbZzE4Nmg9wIFi7YNA2OUzk/k8qiAgnb50AT5HWFdcj2VUvyn0tyKj+XapDpe/UvxwlW6dty8YqCOR+hyoeId07u/Rnvwpuznvb2f2dz0c+k1RsB9zU08JPA3API=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=LVJB6exv; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1739884721; c=relaxed/simple;
+	bh=FPWHPpu0oh2a3YB49PZMeRnbaB9j7/2z74Gs213PxMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NZ3lEe7ArruhPWzB8UEIIdSPZLmyo+S9CqJ/9945MbPu5Qw+YebHP+WBO0OK7iqEwOcG35HUwzOno9LNCyvLdVLEDqKn+CU1pXwOXmUsD9KdojYI/18bNIhfZNHzsumNGDleOeUWgatMCS9+02noIDAPczMV1k2EChTXG8JGXu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AYpRsrYd; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="LVJB6exv"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 29EF840E0176;
-	Tue, 18 Feb 2025 13:18:20 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 8jD86xlP2WPL; Tue, 18 Feb 2025 13:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739884695; bh=Yk6zcbDKLG3prX/xnIegA4Rq9Tk3/+CrjBLDfzcnems=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LVJB6exvo+MT16YysdP91iU2FZ0VWnfLJXQAD4cEzMW9B4T10f441F3zItxv9+yDt
-	 iCyjFo+bRq630mvyVn5DzdEC2UzvDYdi6Ad69e0XmUY428vUEQycMFpyzU3QcYyQUK
-	 vHBaWQo/KgIJUVS5hwC93VJkQWajSnjkpzxvehebjzj5r8lTThwAxXaAsN22w5DN4b
-	 EjT/gd4cRJZ5i9AUOZubsX4m6ytFxx40BQJL5O0t8piYeLxJvN5BTtR9lnP7tYWS21
-	 fs0e9uzlMzrUumi7jRaJKQBTYA2g+IuAHus7JULZCBFrypI+xZTjQv5xqMl4Z3Brgl
-	 KckUF1PktjfbqT54m3IlqAMD4c0p70hM1bQ/tDTnLUxN7/DPo6/xOFP6+/nOvuBaZc
-	 DlQmXVg1Ef+/w9pRMqTcU5In/KdZZ77agV12OLj/Aj1kD9Uq/aBVybCaoWbJO8ucAN
-	 qg54WoavkVj/V2OR2B8cgPzGIhGJRtkbfOkgw71Y8oPlx1MrLgc7hovwlaUot1PPut
-	 3ni0H4vPGpvVn/XG0StcbggJxvP8zyAia3esp2ErlDWfCUonCvIvYI15JcEYkzeHjY
-	 AI4taU2lAMMmZOizUYEMOMhGwGDCLsOYeNMfxuRwZtKwgldtyzOvTAKtaGqXss3F59
-	 jEHZ8Cx0gmdsmXeIuN0ALbfE=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AYpRsrYd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739884718;
+	bh=FPWHPpu0oh2a3YB49PZMeRnbaB9j7/2z74Gs213PxMM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AYpRsrYdp8B3SpEganL2jKb8Bs73o8Tn+ptsaTezupvmkOLsCMRb0NJW+Qy6PiEwE
+	 OqyREqyyT7zX7wl/QvPmk2ihB0UqByW6nErSSkS4sRhEp9aiJPPWtxyFfnf+UqLsi8
+	 YC7oePKC9WKeq3bZI7VphNuCq0mYxBFjZlNOqNasFpnnSryDt1KK3o4r0wquxiB+v5
+	 Gg2/Zkuzk6Ii9d4MWQyxwlErJjxsVvzwepBA/tVJaQzpXa9DNe8rIickZG79CkQOPK
+	 Qc5MGaavU0xUguPKekofn8VFtZCjUpwnkeDzvHSD2BiU4ZAbSiWkaON3VDXkN6BE3f
+	 DcjsGH6vLF4Xw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6707640E01A1;
-	Tue, 18 Feb 2025 13:17:58 +0000 (UTC)
-Date: Tue, 18 Feb 2025 14:17:53 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: tony.luck@intel.com, nao.horiguchi@gmail.com, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, linmiaohe@huawei.com, akpm@linux-foundation.org,
-	peterz@infradead.org, jpoimboe@kernel.org,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, baolin.wang@linux.alibaba.com,
-	tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v2 0/5] mm/hwpoison: Fix regressions in memory failure
- handling
-Message-ID: <20250218131753.GIZ7SIgRZBJokysBeX@fat_crate.local>
-References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
- <20250218082727.GCZ7REb7OG6NTAY-V-@fat_crate.local>
- <7393bcfb-fe94-4967-b664-f32da19ae5f9@linux.alibaba.com>
- <20250218122417.GHZ7R78fPm32jKYUlx@fat_crate.local>
- <02164ab7-c65b-4b2e-8686-5539bdcb8f43@linux.alibaba.com>
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1EC9017E0657;
+	Tue, 18 Feb 2025 14:18:37 +0100 (CET)
+Message-ID: <0ec8b0a5-d9b0-4090-a6b0-22537f449176@collabora.com>
+Date: Tue, 18 Feb 2025 14:18:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <02164ab7-c65b-4b2e-8686-5539bdcb8f43@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/13] ASoC: mediatek: mt6359-accdet: Add compatible
+ property
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Sen Chu <sen.chu@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Macpaul Lin <macpaul.lin@mediatek.com>,
+ Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-pm@vger.kernel.org, Andrew Perepech <andrew.perepech@mediatek.com>
+References: <20250214-mt6359-accdet-dts-v1-0-677a151b9b4c@collabora.com>
+ <20250214-mt6359-accdet-dts-v1-4-677a151b9b4c@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250214-mt6359-accdet-dts-v1-4-677a151b9b4c@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 09:08:25PM +0800, Shuai Xue wrote:
-> Yes, the poison is found on user pages.
+Il 14/02/25 18:18, Nícolas F. R. A. Prado ha scritto:
+> Add a compatible property and add it to the module device table for the
+> mt6359-accdet platform driver to allow automatic module loading and
+> probing when the compatible is present in DT.
 > 
-> Form commit log, the mechanism is added by Tony and suggested by you.
-> https://lkml.kernel.org/r/20210818002942.1607544-3-tony.luck@intel.com
-
-I'm not talking about how it is detected - I'm asking about *what* you're
-doing exactly. I want to figure out what and why you're doing what you're
-doing.
-
-> It's the same as with real issue. There's no magic to it.
-
-Magic or not, doesn't matter. The only question is whether this can happen in
-real life and it is not just you using some tools and "fixing" things that
-ain't broke.
-
-> > What do futexes have to do with copying user memory?
+> Co-developed-by: Andrew Perepech <andrew.perepech@mediatek.com>
+> Signed-off-by: Andrew Perepech <andrew.perepech@mediatek.com>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+>   sound/soc/codecs/mt6359-accdet.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
 > 
-> Return -EFAULT to userspace.
+> diff --git a/sound/soc/codecs/mt6359-accdet.c b/sound/soc/codecs/mt6359-accdet.c
+> index ed34cc15b80e856356c07fd53af22207124e0d19..6f07db879c6a56ce4843954f51bb9602373e4aa5 100644
+> --- a/sound/soc/codecs/mt6359-accdet.c
+> +++ b/sound/soc/codecs/mt6359-accdet.c
+> @@ -1047,9 +1047,19 @@ static int mt6359_accdet_probe(struct platform_device *pdev)
+>   	return ret;
+>   }
+>   
+> +const struct of_device_id accdet_of_match[] = {
+> +	{
+> +		.compatible = "mediatek,mt6359-accdet",
+> +	}, {
+> +		/* sentinel */
+> +	},
 
-This doesn't even begin to answer my question so I'll ask again:
+Compress that stuff please...
 
-"What do futexes have to do with copying user memory?"
+	{ .compatible .. },
+	{ /* sentinel */ }
+};
 
--- 
-Regards/Gruss,
-    Boris.
+after which:
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+> +};
+> +MODULE_DEVICE_TABLE(of, accdet_of_match);
+> +
+>   static struct platform_driver mt6359_accdet_driver = {
+>   	.driver = {
+>   		.name = "pmic-codec-accdet",
+> +		.of_match_table = accdet_of_match,
+>   	},
+>   	.probe = mt6359_accdet_probe,
+>   };
+> 
+
+
+
