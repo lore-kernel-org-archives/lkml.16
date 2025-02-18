@@ -1,169 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0DD22CBC4;
-	Tue, 18 Feb 2025 08:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25FA22DFB9;
+	Tue, 18 Feb 2025 08:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866431; cv=none; b=mQJBbakU2f726m5pJgtQ/qr/uya7YuQPNGRIpQbH999HtEl5zKwgTZwNgkQKw4bLNBTdkGKojENl8VYjKQ9f/tAGkJpmLUnPXklKEm9KftgMctBIBlJiIm3MIuR8iKorl5k1x5NHOSILOzPt10E4Xa60JYYa8R6TJMSElm/7hhU=
+	t=1739866434; cv=none; b=TqDxJEKls1tfB8TI1dI42XNWE/PafjvIl0IYQFqtdtl4vYVeRGw/jP42ZjuwQ1YecG9y6nZukXXxIf04vaRi/+ht4l8xp3uv90eMqk5CBjUIcrkVLZxX22B+uk/cl0uODLH55lshHZHi729eaMVN1oSci4/mXIQIBFLJzzAxcQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866431; c=relaxed/simple;
-	bh=sgEegrbQf/CBHE4IwX9MdWf9d+svlyypkB81b5XV78c=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SBiIoEBbsSv79F38AsofB+hzCtGB+C2g0AoH30wYyswab2QCxEyGbQbfcDL9c86jYMjLWp0D9voSLStys63RH8+gDNfb8kBwQJz6pz2clriSZNiNyRVYAr6SFXNaPq7h+Y9dnqMq2xRTlvX7BziPsZBLyCvFTgmIeMFcslEKW+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LL/6esbm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O8tfACOg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739866434; c=relaxed/simple;
+	bh=Uut365/ciFBvWZ+DR4kLzryNCuCzRyMVrUTrk247BYA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kWdInzi8yAqLAaiRC/OIAdgkkQhSbgiR2mtvER23zhKZnRYPyX6Y6OpMU84yh6weCrw0j5R476VBG1J9UTFZj9VfUraQPIM2SoaS1RN1u2hWUsNA4yOmY48dTsj6jujWs/ZCkUzaPn90P4GlnDkSk1WjLYMz7XB1UcfCkcSMZyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUlT4cK+; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LL/6esbm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O8tfACOg"
-Date: Tue, 18 Feb 2025 08:13:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739866427;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zf6uLIgDl5RWDC+L93h12b9VqTONU8ASXKjx+MpGE3I=;
-	b=LL/6esbm5xwjTlyfu6mjP19Q2FdmjjfZ4Npof7lTAJ/iHX3YvgfraYQtDntOs0IhQ/BCF5
-	jntuzh45WYXBJgghr2mOqfhdXDskKhbGPhuqUjqi4qs2Elhv/Y2CfWxVHYYuxUMnwh2qTQ
-	xOfCzRvaY8tB5WP/y37sDs0AjYBzTiCDjrGeifkR7s4P2yFxyFGk93erJ13b2Pod0JOO0P
-	5X8hZKk1DeTD0y4Eq8sdUotlekMHVQYtaMQSppXd+hpxY8F+CdvS43AbaFzejrujK1fwrF
-	PP1mTQCKUhkILcXr8EaSS+WsHkhKqRcDhWyptvJW/5Tr8Jj/Qa7zaT8KSkIc+Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739866427;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zf6uLIgDl5RWDC+L93h12b9VqTONU8ASXKjx+MpGE3I=;
-	b=O8tfACOgxiy+etAS/Thnzyv3G6fNOD2hC85aytaa46VFYNakE/ezjne7uNmq9X8CRs6kDK
-	TEUIVFKv/Hgz+1AQ==
-From: "tip-bot2 for Fabrizio Castro" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/drivers] irqchip/renesas-rzg2l: Use local dev pointer in
- rzg2l_irqc_common_init()
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250212182034.366167-2-fabrizio.castro.jz@renesas.com>
-References: <20250212182034.366167-2-fabrizio.castro.jz@renesas.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUlT4cK+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739866434; x=1771402434;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Uut365/ciFBvWZ+DR4kLzryNCuCzRyMVrUTrk247BYA=;
+  b=dUlT4cK++sFQjsicIhfknIQ1dPml5WPyw/oO1YRGcMEyz0qO3YYRsEGU
+   mV5NxK7SA1h6ccvVjGrpKCecche0ParVfcG4Y5/y5M8hbFqxYUvoBWRDB
+   q75WsYOAv/Ax0CtoXkbyWFoKE6dDze9QW4UnGYfPZ+LGbO1La7+wSgFzs
+   IRxN7y6M7CI7kZpnHSJulRm2K9A9O7rSv+4RAMO+wj3fCJQEBCIwETOGp
+   eWyaGbv81B4y2yaLLS0rdqS9I4hAG9+ptNmthwi0rAChHV9qMrfMFjjWL
+   tBh1t5GAhLLhauiGoa/yk0tOw0WQpb9BG1bfzczYXdgJkMU8bD4NOpg1Q
+   w==;
+X-CSE-ConnectionGUID: rmdXl/9RRtuGDkv/Wl7OFA==
+X-CSE-MsgGUID: SHvstu0RQGWeitrI/2b8FA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200721"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208,223";a="44200721"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:13:54 -0800
+X-CSE-ConnectionGUID: pNRWhCyyTruyIsZKlHVrww==
+X-CSE-MsgGUID: BimNziPCT1uzqqwjG5+GUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208,223";a="145166109"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:13:50 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 03/24] perf/x86/intel: Add PMU support for Clearwater Forest
+Date: Tue, 18 Feb 2025 15:27:57 +0000
+Message-Id: <20250218152818.158614-4-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173986642660.10177.10289558755083978145.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the irq/drivers branch of tip:
+From PMU's perspective, Clearwater Forest is similar to the previous
+generation Sierra Forest.
 
-Commit-ID:     dd4e17c309445eeecb8e0252ef9a519505035c27
-Gitweb:        https://git.kernel.org/tip/dd4e17c309445eeecb8e0252ef9a519505035c27
-Author:        Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-AuthorDate:    Wed, 12 Feb 2025 18:20:29 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 18 Feb 2025 09:03:51 +01:00
+The key differences are the ARCH PEBS feature and the new added 3 fixed
+counters for topdown L1 metrics events.
 
-irqchip/renesas-rzg2l: Use local dev pointer in rzg2l_irqc_common_init()
+The ARCH PEBS is supported in the following patches. This patch provides
+support for basic perfmon features and 3 new added fixed counters.
 
-Replace direct references to `&pdev->dev` with the local `dev` pointer
-in rzg2l_irqc_common_init() to avoid redundant dereferencing.
-
-Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Link: https://lore.kernel.org/all/20250212182034.366167-2-fabrizio.castro.jz@renesas.com
-
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- drivers/irqchip/irq-renesas-rzg2l.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/x86/events/intel/core.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-index 99e27e0..a7c3a3c 100644
---- a/drivers/irqchip/irq-renesas-rzg2l.c
-+++ b/drivers/irqchip/irq-renesas-rzg2l.c
-@@ -542,40 +542,40 @@ static int rzg2l_irqc_common_init(struct device_node *node, struct device_node *
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 936711db9b32..7521e1e55c0e 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2230,6 +2230,18 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
+ 	EVENT_EXTRA_END
+ };
  
- 	parent_domain = irq_find_host(parent);
- 	if (!parent_domain) {
--		dev_err(&pdev->dev, "cannot find parent domain\n");
-+		dev_err(dev, "cannot find parent domain\n");
- 		return -ENODEV;
- 	}
++EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_skt,        "event=0x9c,umask=0x01");
++EVENT_ATTR_STR(topdown-retiring,       td_retiring_skt,        "event=0xc2,umask=0x02");
++EVENT_ATTR_STR(topdown-be-bound,       td_be_bound_skt,        "event=0xa4,umask=0x02");
++
++static struct attribute *skt_events_attrs[] = {
++	EVENT_PTR(td_fe_bound_skt),
++	EVENT_PTR(td_retiring_skt),
++	EVENT_PTR(td_bad_spec_cmt),
++	EVENT_PTR(td_be_bound_skt),
++	NULL,
++};
++
+ #define KNL_OT_L2_HITE		BIT_ULL(19) /* Other Tile L2 Hit */
+ #define KNL_OT_L2_HITF		BIT_ULL(20) /* Other Tile L2 Hit */
+ #define KNL_MCDRAM_LOCAL	BIT_ULL(21)
+@@ -6802,6 +6814,18 @@ __init int intel_pmu_init(void)
+ 		name = "crestmont";
+ 		break;
  
--	rzg2l_irqc_data = devm_kzalloc(&pdev->dev, sizeof(*rzg2l_irqc_data), GFP_KERNEL);
-+	rzg2l_irqc_data = devm_kzalloc(dev, sizeof(*rzg2l_irqc_data), GFP_KERNEL);
- 	if (!rzg2l_irqc_data)
- 		return -ENOMEM;
- 
- 	rzg2l_irqc_data->irqchip = irq_chip;
- 
--	rzg2l_irqc_data->base = devm_of_iomap(&pdev->dev, pdev->dev.of_node, 0, NULL);
-+	rzg2l_irqc_data->base = devm_of_iomap(dev, dev->of_node, 0, NULL);
- 	if (IS_ERR(rzg2l_irqc_data->base))
- 		return PTR_ERR(rzg2l_irqc_data->base);
- 
- 	ret = rzg2l_irqc_parse_interrupts(rzg2l_irqc_data, node);
- 	if (ret) {
--		dev_err(&pdev->dev, "cannot parse interrupts: %d\n", ret);
-+		dev_err(dev, "cannot parse interrupts: %d\n", ret);
- 		return ret;
- 	}
- 
--	resetn = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-+	resetn = devm_reset_control_get_exclusive(dev, NULL);
- 	if (IS_ERR(resetn))
- 		return PTR_ERR(resetn);
- 
- 	ret = reset_control_deassert(resetn);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed to deassert resetn pin, %d\n", ret);
-+		dev_err(dev, "failed to deassert resetn pin, %d\n", ret);
- 		return ret;
- 	}
- 
--	pm_runtime_enable(&pdev->dev);
--	ret = pm_runtime_resume_and_get(&pdev->dev);
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_resume_and_get(dev);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "pm_runtime_resume_and_get failed: %d\n", ret);
-+		dev_err(dev, "pm_runtime_resume_and_get failed: %d\n", ret);
- 		goto pm_disable;
- 	}
- 
-@@ -585,7 +585,7 @@ static int rzg2l_irqc_common_init(struct device_node *node, struct device_node *
- 					      node, &rzg2l_irqc_domain_ops,
- 					      rzg2l_irqc_data);
- 	if (!irq_domain) {
--		dev_err(&pdev->dev, "failed to add irq domain\n");
-+		dev_err(dev, "failed to add irq domain\n");
- 		ret = -ENOMEM;
- 		goto pm_put;
- 	}
-@@ -606,9 +606,9 @@ static int rzg2l_irqc_common_init(struct device_node *node, struct device_node *
- 	return 0;
- 
- pm_put:
--	pm_runtime_put(&pdev->dev);
-+	pm_runtime_put(dev);
- pm_disable:
--	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_disable(dev);
- 	reset_control_assert(resetn);
- 	return ret;
- }
++	case INTEL_ATOM_DARKMONT_X:
++		intel_pmu_init_skt(NULL);
++		intel_pmu_pebs_data_source_cmt();
++		x86_pmu.pebs_latency_data = cmt_latency_data;
++		x86_pmu.get_event_constraints = cmt_get_event_constraints;
++		td_attr = skt_events_attrs;
++		mem_attr = grt_mem_attrs;
++		extra_attr = cmt_format_attr;
++		pr_cont("Darkmont events, ");
++		name = "darkmont";
++		break;
++
+ 	case INTEL_WESTMERE:
+ 	case INTEL_WESTMERE_EP:
+ 	case INTEL_WESTMERE_EX:
+-- 
+2.40.1
+
