@@ -1,194 +1,95 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047AA2673A9
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBDE2673A9;
+	Tue, 18 Feb 2025 13:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739884226; cv=none; b=TsjrKW2qDhpdkce8OrfD2eSc/ctryXThvPBG6EdLGwNnUUn0hPj6y76LIRuNBOepMhZ6Wp1Q6Vk9esefIT2xMe0PbHOTDbbLpwjLqeRGSATLPwe9usNJmo9OjutOeqW5qx0U2jDFWOLMwSpdZ0JFNyCItYQIoyFhrLzgr0wSbsM=
+	t=1739884244; cv=none; b=mXYTo5c3atik+yd50SOXi5wriLtFeYzszG8qLMeMYYRdEUutReIIUKRkgfyFyUHbAVLha5Biwx2VNos0peA7BC2OBJVPjvNsnc8Z+7hXRDLzKgR71KkXB47uZDIXVzGPzYrQAmUxqND7u/s1fdGhfymDih5CcxTpK8SQMpBJ3rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739884226; c=relaxed/simple;
-	bh=2NX/soq7o1lmsjPfkOJXZgeMODahB3el6IQKzgFoXO4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=moz+Fo7v+j5wx/xFntxyLIAhGW7xP2tkfEnUEjPgq6J9wItAEEMYDIJD5LJ5PWJZ70rgOfFhCJFRasIFXgOzSACFnYY/GTkjJ8Fr9hwpMZKcMcOZU5vhPCZTvRPRJmXokm2HZih5gqM6mSODBdvkiA22y4iiQBBJKz1XY+lsFtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mEoZZXjW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739884244; c=relaxed/simple;
+	bh=zeUTGsaNbP48jDpGJJxMyCS/5rb77E4H2ZuUqgrfnj4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R327ZFQpbd9Q5jpbsBgioDFGwwuwPdZtbguj+0qdD4FsSnpcDsxMQvmpeqEtDyAyGNjsdOwqhK5T3kZS8jTvLO29TK5dkAOfZHEbG9kaDqI1b0sFr27BKqUEvPuFPBNT2JF68LlGFkZI2XWXRXHYDE8hbgf3shomn6aLF9o4YPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSKGguFo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mEoZZXjW"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IAe5UF007528
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:10:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bu+FrAFzuDjPYs9/S2U5VhFeI0pxwHRuzCoCg2u+mJE=; b=mEoZZXjW7wH3BjfN
-	YKr3q5FdUFJ3ZqTs9IwtJrNR6FG02i6BLnvctz7xfoNniEoWj4qckmhSJxoonNy7
-	f2/rX0+5aMNQddbBiBthfxW5XxPRcKsIoQ4l49uvyg495dLwUz2Z1PSJy4J+WEAm
-	gu73UxuzwMLKHDyX8dTz/pQ0J+eY+d5PVXAPl98GpN39wy3vadaabvlxSFPCnfHv
-	si3f9M6QCpy8Zo1V6SjCFSae9JiV3ha0JzMFK5oBR0zFbKMEqnnG3kOnAMh/rh6f
-	vsnZWHEy8PJ6KdUBnpkzf+/yDP3RS/+dMkZ1OgWeriAtrIiFCZrAO0wQQ9lanW09
-	FhZLuA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vrne0cr8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:10:23 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e65eae5a26so8953866d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:10:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739884222; x=1740489022;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bu+FrAFzuDjPYs9/S2U5VhFeI0pxwHRuzCoCg2u+mJE=;
-        b=TweaBwELTd7i3cZLfLG5FYW+yQFu1tz1T1WAAgvvxoRBwEPTy860GAEHc9LWOMtEqs
-         fvpY33DOT2KusKCSNf3bzh5B5SSAEowmUXhkFdwrfIu5CZP7DRL3QH+vrvU7+htR6+jf
-         BpS4rIKyMoriiKvdFWtlgeqOpqETKRFqN7yGjKmodmDEKM+JB3Zgmy0VqMo+OI8CkgZf
-         HIErITKGTMdDcJIKRzZixOADLI6GNjROJGQ7kj/28LjO+qpsfRLYNtY60d8RohD21ahF
-         2TKdS58kre/D4Y8r2Ro6euRbotIWHgZu5o3gkFrvEFSQaP2i+0i7ekLsQU2zkbBjl3ib
-         60DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUD4iK6+Bqywrpe/8kcxLBtqfH4fjxoOHwogdvTOZ2YTNZLC7nyfxC3S3PicFAf2q1sYfx59ok0DcdlFq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlABNtfcfuMeT9ZCTRvTu4tmc3g6rINLDVWCEYYTiR3NCtLXG9
-	CwgPv8zocatk6QY9FLPzR4/THWBKqVGWT4zNVdUgu9ir4FEY8jkmy8U7vA3Y5PHFsMp/4svv3S/
-	WBSdZLfZvkqk4oBupSnFfDlXk83GQx1pKBcdihTo8ukmMRrzlK05Lf2Ldk4JFB2M=
-X-Gm-Gg: ASbGncs5neZDrlXnkf80jCFoIRaFSTSZ0zZwDougY5mEA1+InyBb9ypyK6Q1d6XLvWe
-	Ugu/SDg3+93+uwwJQhptsGosIJVvIgn/9qE4sAnsbg4VhrFagNUwVi+cK3o8s9RSWd4CjYgc2hq
-	1PwymVCYERUSkM7Z4sQFECfZKloHHXktq9z5cBUJubiYp6vma7+hFO6v2DcQNfLPgk4/C4C6Qf+
-	+rM+pky1bAgabkri0yv8SqpHFObitoIILUmb8jjWWQ3VCGLhd1V7fqFy1Bca1SIHY9Cba2KizBN
-	3VBbLL51CiMRWlwu9jFkLopttdv1klEsjVP2Ykm9fvPb/LAxxe6EwARlz+o=
-X-Received: by 2002:a05:6214:20c2:b0:6d8:a091:4f52 with SMTP id 6a1803df08f44-6e66cd087f1mr65192506d6.7.1739884222602;
-        Tue, 18 Feb 2025 05:10:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFPVrEvTNH6ixtQsdRndhLJ8B4JHgPLPktdDd05jwA+9wZRDTdteTM3DAb60xvi3qVRSo9nWw==
-X-Received: by 2002:a05:6214:20c2:b0:6d8:a091:4f52 with SMTP id 6a1803df08f44-6e66cd087f1mr65192196d6.7.1739884222252;
-        Tue, 18 Feb 2025 05:10:22 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb95cc7451sm436932366b.92.2025.02.18.05.10.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 05:10:21 -0800 (PST)
-Message-ID: <39efdf43-1f42-4361-85ed-f41df8347471@oss.qualcomm.com>
-Date: Tue, 18 Feb 2025 14:10:18 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSKGguFo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 532F9C4CEE2;
+	Tue, 18 Feb 2025 13:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739884244;
+	bh=zeUTGsaNbP48jDpGJJxMyCS/5rb77E4H2ZuUqgrfnj4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=RSKGguFoGbyTWnrkPEjFbsRmB3TMpDwakbuvgSg6iJ/DQOFRlcAVKUDL06JN8rSz5
+	 IMFiESO2rrv+HfOnozvrTAfYfxAHq2v4+ZLJTMxU2SpD3BZH4X4rRq63O4HMYb4479
+	 bL7HhRz8ubqP6th9YME5GjhGpvVXXjDdXSy7tUcUeJ7CCktK/9sXQ2JNWANZV+0+Qx
+	 9ojIIlvf4KHaPqEKbkojfbT713JaQkWljQEl1Y5vBhV51hwYueRvOBWJWzVyM92bEN
+	 lgsAbex1VfDRN544EOAGlL0ZWMAQCRdaNXa7xexk+52fK4/soP/X8prviCRDpMkFxE
+	 akomelMLb5G4w==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Benno Lossin" <benno.lossin@proton.me>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Joel Becker" <jlbec@evilplan.org>,
+  "Christoph Hellwig" <hch@lst.de>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Ingo Molnar" <mingo@redhat.com>,  "Will Deacon"
+ <will@kernel.org>,  "Waiman Long" <longman@redhat.com>,  "Fiona Behrens"
+ <me@kloenk.dev>,  "Charalampos Mitrodimas" <charmitro@posteo.net>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] rust: configfs: introduce rust support for configfs
+In-Reply-To: <Z7SEeBFJT7fRtvVN@pollux> (Danilo Krummrich's message of "Tue, 18
+	Feb 2025 14:00:40 +0100")
+References: <20250207-configfs-v2-0-f7a60b24d38e@kernel.org>
+	<20250207-configfs-v2-2-f7a60b24d38e@kernel.org>
+	<S6DKlLVx4KKevl_q2zrW69Z7oS0jwyX4DXpDZrFiIy1lKo4VYHM52aDiV82c2yf52Ecr7t9FayuqBUPR9onvZA==@protonmail.internalid>
+	<dd63fcde-ba4c-4a6e-9bde-1af5af37e91b@proton.me>
+ <87h64su8ux.fsf@kernel.org>
+	<Xowyi45vSJACPiAQ_Ek_CcwuixiZ-oAEK126Z887VLUeR30Dq8FN7gpKbpcYQtgGtCGslezkJeh2DNk-hnU4eg==@protonmail.internalid>
+	<Z7SEeBFJT7fRtvVN@pollux>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 18 Feb 2025 14:10:29 +0100
+Message-ID: <87frkbflfe.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] arm64: dts: qcom: sar2130p: add PCIe EP device nodes
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250217-sar2130p-pci-v1-0-94b20ec70a14@linaro.org>
- <20250217-sar2130p-pci-v1-5-94b20ec70a14@linaro.org>
- <17aa47df-1daf-4ec2-8f6a-48c3bc375dd3@oss.qualcomm.com>
- <qafwztwsn3eiz76ot4ej7uv3ahprrri7u6x5jt3tvkx4j7xu34@5yeaj2d5a535>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <qafwztwsn3eiz76ot4ej7uv3ahprrri7u6x5jt3tvkx4j7xu34@5yeaj2d5a535>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: vub5OMB3u1W7Ml4JoOnF1PQfH6BdF_l3
-X-Proofpoint-GUID: vub5OMB3u1W7Ml4JoOnF1PQfH6BdF_l3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-18_05,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- mlxlogscore=858 lowpriorityscore=0 clxscore=1015 impostorscore=0
- spamscore=0 suspectscore=0 adultscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502180100
+Content-Type: text/plain
 
-On 18.02.2025 4:11 AM, Dmitry Baryshkov wrote:
-> On Mon, Feb 17, 2025 at 08:23:28PM +0100, Konrad Dybcio wrote:
->> On 17.02.2025 7:56 PM, Dmitry Baryshkov wrote:
->>> On the Qualcomm AR2 Gen1 platform the second PCIe host can be used
->>> either as an RC or as an EP device. Add device node for the PCIe EP.
->>>
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>> ---
->>>  arch/arm64/boot/dts/qcom/sar2130p.dtsi | 53 ++++++++++++++++++++++++++++++++++
->>>  1 file changed, 53 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sar2130p.dtsi b/arch/arm64/boot/dts/qcom/sar2130p.dtsi
->>> index dd832e6816be85817fd1ecc853f8d4c800826bc4..7f007fad6eceebac1b2a863d9f85f2ce3dfb926a 100644
->>> --- a/arch/arm64/boot/dts/qcom/sar2130p.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sar2130p.dtsi
->>> @@ -1474,6 +1474,59 @@ pcie@0 {
->>>  			};
->>>  		};
->>>  
->>> +		pcie1_ep: pcie-ep@1c08000 {
->>> +			compatible = "qcom,sar2130p-pcie-ep";
->>> +			reg = <0x0 0x01c08000 0x0 0x3000>,
->>> +			      <0x0 0x40000000 0x0 0xf1d>,
->>> +			      <0x0 0x40000f20 0x0 0xa8>,
->>> +			      <0x0 0x40001000 0x0 0x1000>,
->>> +			      <0x0 0x40200000 0x0 0x1000000>,
->>> +			      <0x0 0x01c0b000 0x0 0x1000>,
->>> +			      <0x0 0x40002000 0x0 0x2000>;
->>> +			reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
->>> +				    "mmio", "dma";
->>
->> vertical list, please
-> 
-> Ack
-> 
->>
->>> +
->>> +			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
->>> +				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
->>> +				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
->>> +				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
->>> +				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
->>> +				 <&gcc GCC_DDRSS_PCIE_SF_CLK>,
->>> +				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>,
->>> +				 <&gcc GCC_CFG_NOC_PCIE_ANOC_AHB_CLK>,
->>> +				 <&gcc GCC_QMIP_PCIE_AHB_CLK>;
->>
->> please make sure this one is actually required
-> 
-> Hmm, this one seems to be present in pcie0 and pcie1 RC, but in the EP
-> deivice (in the vendor DT). Are you saying that it is not used for the
-> EP? I think I just c&p'ed RC clocks here.
+"Danilo Krummrich" <dakr@kernel.org> writes:
 
-QMIP clocks did something special. I don't recall what clock ops are
-translated to, but I suppose keeping them online makes sense..
-
+> On Mon, Feb 17, 2025 at 12:08:22PM +0100, Andreas Hindborg wrote:
+>> "Benno Lossin" <benno.lossin@proton.me> writes:
 >>
->>> +			clock-names = "aux",
->>> +				      "cfg",
->>> +				      "bus_master",
->>> +				      "bus_slave",
->>> +				      "slave_q2a",
->>> +				      "ddrss_sf_tbu",
->>> +				      "aggre_noc_axi",
->>> +				      "cnoc_sf_axi",
->>> +				      "qmip_pcie_ahb";
->>> +
->>> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
->>> +				     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
->>> +				     <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
->>> +			interrupt-names = "global", "doorbell", "dma";
+>> > On 07.02.25 15:41, Andreas Hindborg wrote:
+
+[...]
+
+>> >> +    /// Implementations can use this method to do house keeping before
+>> >> +    /// `configfs` drops its reference to `Child`.
+>> >> +    fn drop_item(
+>> >
+>> > `drop` doesn't really fit here, I think something like `unlink_item`
+>> > fits better, since the child isn't actually dropped after this function
+>> > returns.
 >>
->> and here
-> 
-> This is used for the eDMA implementation. Unlike the vendor kernel,
-> there is no separate device for eDMA.
+>> Yea, I know. But the function is called `drop_item` on the C side of
+>> things. Usually we keep the C names.
+>
+> I agree C names should be kept as possible.
+>
+> To me it seems obvious from the context, but maybe it'd still makes sense to add
+> a brief note that this callback's name is not related to 'drop' in the sense of
+> Rust?
 
-Sorry, I wrote this before looking at the clocks, I meant please make
-interrupt-names a vertical list, too
+Yes, good idea. I'll get than in for v4.
 
-Konrad
+
+Best regards,
+Andreas Hindborg
+
+
