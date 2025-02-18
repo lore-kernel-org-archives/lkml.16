@@ -1,138 +1,284 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFEF246320
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48454246351
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739881906; cv=none; b=rSxoGlrAdahiz2D7EA9InQbiaRfG9qfd3gmN+a+QLkc/3rNldwN3dJ+eocSQC7Hsv3iXPDOS3y0rlghy5hOTqoZ8WaFZr++FAMuznLU3uLN8dGbG2aJXIoq9PEthjsrG9NXrKrq13sDq3gIu4JGaI5R6tTuUsAIMJ/tNR6I3vpM=
+	t=1739881910; cv=none; b=t0+Y0VZ0UPRc4uI4m6MwrPOIGz4zIssAsjUzmjGtDkJVE0QnBPg1bPzReUs4udjkOWJ9QGvR/4yugTq1ag4TsWTRSS8yF08/PkORn5PK5vbVybN9Unw9IVWfeAFrD3K8qGe3wYRw1qdgfS/20poOYPf0Qzk36/MDyMusavuyOSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739881906; c=relaxed/simple;
-	bh=mo8Lero/PMWKh6/jJes2kVTOcUZSoBd2IMLZN9mT3kM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rZL9JdIB4hJnbsSHzfXfrR7AlMeYJZajmvLQmuCXxQcNnogu/Xn233PV7H2SP+3GyqXyRbK9PAtdApv8ijm+wKC/iwWYF4rP6gbPxCei59U+BfpOM9Yui59Jj7mg8MdoNjzDSKP5LUyE6y727j9770PKf5V72mByvAlH1b50clY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A8MP29FK; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1739881910; c=relaxed/simple;
+	bh=GwbcZmPcMl8ev0qKZuB0/b3ynFB7xsAGgn8R8xAevQI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sv5H7g//iB4XcBqDV4SGo7txggH3EQcYIoKBXH9sSoiOimmkLlQ0W10p/IJYZgCR6+1tA+hAzT18Re/w+UwSLOWs2q2MHu2Z8zN2Guup9P8AjPISK1ekekDmjkuNugRX0rALBj9Q7aMt3O/hH7ljVmKTzaLjtZiEH07CAFOLIqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NBFoRXrW; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A8MP29FK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NBFoRXrW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739881903;
+	s=mimecast20190719; t=1739881907;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Vpbns3ed9kgVrptgMa++JNWIuHOqPUJv9ijZsvk+Wfs=;
-	b=A8MP29FKw0DIdB6v5M8w5MsIvc7yk2+0XPKCFiNjNa8FZhguB2ptSYR72Sjo4R4Y8E0fBL
-	Hq1XSXqro89lVz4vE4uOcK7A2UOVTd/4+/ROe87oXC8K0uqzALcmZVITaDoulvTs1cqrcU
-	k8Uqfguj6XUoWbbHQ4C2+MGglTLDD8s=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-255-jKoxacS1Nf6PZkKpDK2dJQ-1; Tue, 18 Feb 2025 07:31:42 -0500
-X-MC-Unique: jKoxacS1Nf6PZkKpDK2dJQ-1
-X-Mimecast-MFC-AGG-ID: jKoxacS1Nf6PZkKpDK2dJQ_1739881901
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43935bcec79so32353425e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 04:31:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739881901; x=1740486701;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vpbns3ed9kgVrptgMa++JNWIuHOqPUJv9ijZsvk+Wfs=;
-        b=cERwq9Z5q5XpbmZgV+fV8YgFShEeg6EKzpNFlSJ876gk2MpPn32843fc4KK4r7nLs+
-         NBGuHq30N1IrXPnTATVjvyELSiEwt0o7n6m+Epl3Z2vT2O4so0skE/QTRsFih83IrhsC
-         OKrFnN2b777wv5ODKMGy8cWZzhBxHRu2obvtHWFEYddkVNf21Q6+KU1wgT6n51JoUAyw
-         R9TAjZ9Kcy4DdPi6xqzxFk9VgI0EzLaUzyI3/4DsuoQM/jNheAPeKlsE+fp7mw3jDGJi
-         HIkRpu6y8WJ+drOc18HVhinK9KtGVPc0SGs+1yzvny++dT5knaV2kQDEdHH0etGJiLZI
-         bcfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlc5Yl+GKHd2zgPmxt5iuzOwnPoTpjfJkhWvsOnJhX3fNye4mpFf7fc//42J3EcHyuwp2GSMhlrRshGKw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfxlrrJPGOoQOD24EI+4lmf4ha56KBFtz04w3wX2piiOpHlCNS
-	mlzQwANX7XCjA32GVd99k9QQ5KXEt6A+DvmEIIigOnwjj90Iwn6GwlMI+zVcBhT6NfhAFh8++mr
-	KQyDlHZTg/bsH3PM447XCUXHV9a8Oj7q4dx6jc/I6Ksw5fozN6OSfGvdlvfu4Bw==
-X-Gm-Gg: ASbGncsjg4oLUP1h3rHg19eYmAON5GUhqYOFqKyjIBjtmFixgveHK44NkXW81A3cnbH
-	ueCHTUyWFQoTcrSCUDnC4mi4c2PpOiW3wZJv74ziUazSbZd3Ah9GRYkkd156sZy5Zq4RoMImXy+
-	OZO5NnwNtsqzs2yUek2YAJKXVmOGWDtELl1za/rGEshl2YqJTLzlPNIiyfKyB+Z9K+DYa5/4xGh
-	RVA0MZ91WpYXH05O7hrZ9FAkn/hIzRWgZCtWzPHO8o1FfZTgIf2os6RKMJWL3q/xkydb1vb2Ft0
-	aEx0wKwLlG5Uki6F72uvdNJvZtERv9Fw+m8=
-X-Received: by 2002:a05:600c:470e:b0:439:6741:ed98 with SMTP id 5b1f17b1804b1-4396e5bbc88mr148435735e9.0.1739881900655;
-        Tue, 18 Feb 2025 04:31:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFDFKLpx8JwArBLTq7YvuKzHM9reL5OjH0AnpIyarnMelJJVplspL1UkuPUExc/hTNjjyvEUA==
-X-Received: by 2002:a05:600c:470e:b0:439:6741:ed98 with SMTP id 5b1f17b1804b1-4396e5bbc88mr148435275e9.0.1739881900273;
-        Tue, 18 Feb 2025 04:31:40 -0800 (PST)
-Received: from [192.168.88.253] (146-241-89-107.dyn.eolo.it. [146.241.89.107])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43984dd042fsm56283195e9.12.2025.02.18.04.31.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 04:31:39 -0800 (PST)
-Message-ID: <6fb9612f-b049-427f-a643-e1123a7478c7@redhat.com>
-Date: Tue, 18 Feb 2025 13:31:38 +0100
+	bh=K7BfzxZdF2n/AW1o4yrQFOJYDhT0XqAvcVnMvvQMiw8=;
+	b=NBFoRXrWQeHL15BEl4a4jCviIPO5zWWAY4FKyaAj3zkvSAfSP79CeUlBQVAufAvctMYoFt
+	hk/0wmqudVi3uYCL1I+xSjKewPvdPg6rrBJMoNlnFS/rSY0Mg9nGPxggJlkMi0VutZ7r83
+	9zgrpxThWhkrPGzz85Q++NJsIWGnko4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-320-4hO1rIU5Na2FIG2nrnXJtw-1; Tue,
+ 18 Feb 2025 07:31:43 -0500
+X-MC-Unique: 4hO1rIU5Na2FIG2nrnXJtw-1
+X-Mimecast-MFC-AGG-ID: 4hO1rIU5Na2FIG2nrnXJtw_1739881902
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 893F318E6952;
+	Tue, 18 Feb 2025 12:31:42 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.33.84])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC0661800352;
+	Tue, 18 Feb 2025 12:31:38 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v4 03/11] sched: Add sched tracepoints for RV task model
+Date: Tue, 18 Feb 2025 13:31:08 +0100
+Message-ID: <20250218123121.253551-4-gmonaco@redhat.com>
+In-Reply-To: <20250218123121.253551-1-gmonaco@redhat.com>
+References: <20250218123121.253551-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] hexdump: Implement macro for converting large buffers
-To: Nick Child <nnac123@linux.ibm.com>
-Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, haren@linux.ibm.com, ricklind@us.ibm.com,
- nick.child@ibm.com, jacob.e.keller@intel.com,
- David Laight <david.laight.linux@gmail.com>
-References: <20250214162436.241359-1-nnac123@linux.ibm.com>
- <20250214162436.241359-2-nnac123@linux.ibm.com>
- <20250215163612.GR1615191@kernel.org> <20250215174039.20fbbc42@pumpkin>
- <20250215174635.3640fb28@pumpkin> <20250216093204.GZ1615191@kernel.org>
- <20250216112430.29c725c5@pumpkin>
- <Z7NRLmcWJFNkyHGN@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <Z7NRLmcWJFNkyHGN@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 2/17/25 4:09 PM, Nick Child wrote:
-> Thank you David and Simon for testing and review!
-> 
-> On Sun, Feb 16, 2025 at 11:24:30AM +0000, David Laight wrote:
->>
->> I just changed the prototypes (include/linux/printk.h) to make both
->> rowsize and groupsize 'unsigned int'.
->> The same change in lib/hexdump.c + changing the local 'i, linelen, remaining'
->> to unsigned int and it all compiled.
->>
->> FWIW that hexdump code is pretty horrid (especially if groupsize != 1).
->>
-> 
-> Given this discussion and my own head-scratching, I think I will take a
-> closer look at hex_dump_to_buffer.
-> 
-> I was trying to avoid editing this function due the number of callers it
-> has across the kernel. But I think we can get away with keeping the
-> API (but change args to uint's) and editing the body of the function
-> to always iterate byte-by-byte, addding space chars where necessary. At the
-> cost of a few more cycles, this will allow for more dynamic values
-> for rowsize and groupsize and shorten the code up a bit. This would also
-> address the "Side question" in my cover letter. Will send a v3
-> regardless if I can figure that out or not.
-> 
-> The return value of hex_dump_to_buffer on error still irks me a bit but
-> I don't think that can easily be changed.
+Add the following tracepoints:
+* sched_entry(bool preempt, ip)
+    Called while entering __schedule
+* sched_exit(bool is_switch, ip)
+    Called while exiting __schedule
+* sched_set_state(task, curr_state, state)
+    Called when a task changes its state (to and from running)
 
-For the new versions, please:
+These tracepoints are useful to describe the Linux task model and are
+adapted from the patches by Daniel Bristot de Oliveira
+(https://bristot.me/linux-task-model/).
 
-- respect the 24h grace period:
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ include/linux/rv.h                 |  2 +-
+ include/linux/sched.h              | 16 ++++++++++++++++
+ include/trace/events/sched.h       | 13 +++++++++++++
+ kernel/sched/core.c                | 23 ++++++++++++++++++++++-
+ tools/verification/rv/include/rv.h |  2 +-
+ 5 files changed, 53 insertions(+), 3 deletions(-)
 
-https://elixir.bootlin.com/linux/v6.11.8/source/Documentation/process/maintainer-netdev.rst#L15
-
-- add the target tree in the subj prefix (in this case 'net-next')
-
-- ensure all the patches in the series have consistent subj prefix,
-otherwise patchwork will be fooled.
-
-I think it would be better to avoid modifying hex_dump_to_buffer(), if
-not necessary, and I think you could do so either changing the type used
-in patch 2 or even dropping such patch.
-
-/P
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 8883b41d88ec4..55d458be53a4c 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -7,7 +7,7 @@
+ #ifndef _LINUX_RV_H
+ #define _LINUX_RV_H
+ 
+-#define MAX_DA_NAME_LEN	24
++#define MAX_DA_NAME_LEN	32
+ 
+ #ifdef CONFIG_RV
+ /*
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9632e3318e0d6..d09405ed06f2f 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -46,6 +46,7 @@
+ #include <linux/rv.h>
+ #include <linux/livepatch_sched.h>
+ #include <linux/uidgid_types.h>
++#include <linux/tracepoint-defs.h>
+ #include <asm/kmap_size.h>
+ 
+ /* task_struct member predeclarations (sorted alphabetically): */
+@@ -186,6 +187,12 @@ struct user_event_mm;
+ # define debug_rtlock_wait_restore_state()	do { } while (0)
+ #endif
+ 
++#define trace_set_current_state(state_value)                     \
++	do {                                                     \
++		if (tracepoint_enabled(sched_set_state_tp))      \
++			__trace_set_current_state(state_value); \
++	} while (0)
++
+ /*
+  * set_current_state() includes a barrier so that the write of current->__state
+  * is correctly serialised wrt the caller's subsequent test of whether to
+@@ -226,12 +233,14 @@ struct user_event_mm;
+ #define __set_current_state(state_value)				\
+ 	do {								\
+ 		debug_normal_state_change((state_value));		\
++		trace_set_current_state(state_value);			\
+ 		WRITE_ONCE(current->__state, (state_value));		\
+ 	} while (0)
+ 
+ #define set_current_state(state_value)					\
+ 	do {								\
+ 		debug_normal_state_change((state_value));		\
++		trace_set_current_state(state_value);			\
+ 		smp_store_mb(current->__state, (state_value));		\
+ 	} while (0)
+ 
+@@ -247,6 +256,7 @@ struct user_event_mm;
+ 									\
+ 		raw_spin_lock_irqsave(&current->pi_lock, flags);	\
+ 		debug_special_state_change((state_value));		\
++		trace_set_current_state(state_value);			\
+ 		WRITE_ONCE(current->__state, (state_value));		\
+ 		raw_spin_unlock_irqrestore(&current->pi_lock, flags);	\
+ 	} while (0)
+@@ -282,6 +292,7 @@ struct user_event_mm;
+ 		raw_spin_lock(&current->pi_lock);			\
+ 		current->saved_state = current->__state;		\
+ 		debug_rtlock_wait_set_state();				\
++		trace_set_current_state(TASK_RTLOCK_WAIT);		\
+ 		WRITE_ONCE(current->__state, TASK_RTLOCK_WAIT);		\
+ 		raw_spin_unlock(&current->pi_lock);			\
+ 	} while (0);
+@@ -291,6 +302,7 @@ struct user_event_mm;
+ 		lockdep_assert_irqs_disabled();				\
+ 		raw_spin_lock(&current->pi_lock);			\
+ 		debug_rtlock_wait_restore_state();			\
++		trace_set_current_state(TASK_RUNNING);			\
+ 		WRITE_ONCE(current->__state, current->saved_state);	\
+ 		current->saved_state = TASK_RUNNING;			\
+ 		raw_spin_unlock(&current->pi_lock);			\
+@@ -327,6 +339,10 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
+ 
++/* wrapper function to trace from this header file */
++DECLARE_TRACEPOINT(sched_set_state_tp);
++extern void __trace_set_current_state(int state_value);
++
+ /**
+  * struct prev_cputime - snapshot of system and user cputime
+  * @utime: time spent in user mode
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 9ea4c404bd4ef..90545125c9031 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -824,6 +824,19 @@ DECLARE_TRACE(sched_compute_energy_tp,
+ 		 unsigned long max_util, unsigned long busy_time),
+ 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
+ 
++DECLARE_TRACE(sched_entry_tp,
++	TP_PROTO(bool preempt, unsigned long ip),
++	TP_ARGS(preempt, ip));
++
++DECLARE_TRACE(sched_exit_tp,
++	TP_PROTO(bool is_switch, unsigned long ip),
++	TP_ARGS(is_switch, ip));
++
++DECLARE_TRACE_CONDITION(sched_set_state_tp,
++	TP_PROTO(struct task_struct *tsk, int state),
++	TP_ARGS(tsk, state),
++	TP_CONDITION(!!(tsk->__state) != !!state));
++
+ #endif /* _TRACE_SCHED_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9aecd914ac691..8294bf49b62b1 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -491,6 +491,16 @@ sched_core_dequeue(struct rq *rq, struct task_struct *p, int flags) { }
+ 
+ #endif /* CONFIG_SCHED_CORE */
+ 
++/* need a wrapper since we may need to trace from modules */
++EXPORT_TRACEPOINT_SYMBOL(sched_set_state_tp);
++
++/* Call via the helper macro trace_set_current_state. */
++void __trace_set_current_state(int state_value)
++{
++	trace_sched_set_state_tp(current, state_value);
++}
++EXPORT_SYMBOL(__trace_set_current_state);
++
+ /*
+  * Serialization rules:
+  *
+@@ -5307,6 +5317,12 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
+ 	 */
+ 
+ 	finish_task_switch(prev);
++	/*
++	 * This is a special case: the newly created task has just
++	 * switched the context for the first time. It is returning from
++	 * schedule for the first time in this path.
++	 */
++	trace_sched_exit_tp(true, CALLER_ADDR0);
+ 	preempt_enable();
+ 
+ 	if (current->set_child_tid)
+@@ -6650,12 +6666,15 @@ static void __sched notrace __schedule(int sched_mode)
+ 	 * as a preemption by schedule_debug() and RCU.
+ 	 */
+ 	bool preempt = sched_mode > SM_NONE;
++	bool is_switch = false;
+ 	unsigned long *switch_count;
+ 	unsigned long prev_state;
+ 	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int cpu;
+ 
++	trace_sched_entry_tp(preempt, CALLER_ADDR0);
++
+ 	cpu = smp_processor_id();
+ 	rq = cpu_rq(cpu);
+ 	prev = rq->curr;
+@@ -6723,7 +6742,8 @@ static void __sched notrace __schedule(int sched_mode)
+ 	rq->last_seen_need_resched_ns = 0;
+ #endif
+ 
+-	if (likely(prev != next)) {
++	is_switch = prev != next;
++	if (likely(is_switch)) {
+ 		rq->nr_switches++;
+ 		/*
+ 		 * RCU users of rcu_dereference(rq->curr) may not see
+@@ -6768,6 +6788,7 @@ static void __sched notrace __schedule(int sched_mode)
+ 		__balance_callbacks(rq);
+ 		raw_spin_rq_unlock_irq(rq);
+ 	}
++	trace_sched_exit_tp(is_switch, CALLER_ADDR0);
+ }
+ 
+ void __noreturn do_task_dead(void)
+diff --git a/tools/verification/rv/include/rv.h b/tools/verification/rv/include/rv.h
+index 770fd6da36107..0cab1037a98f7 100644
+--- a/tools/verification/rv/include/rv.h
++++ b/tools/verification/rv/include/rv.h
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #define MAX_DESCRIPTION 1024
+-#define MAX_DA_NAME_LEN	24
++#define MAX_DA_NAME_LEN	32
+ 
+ struct monitor {
+ 	char name[MAX_DA_NAME_LEN];
+-- 
+2.48.1
 
