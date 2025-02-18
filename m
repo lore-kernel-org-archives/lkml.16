@@ -1,85 +1,79 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9E20F082;
-	Tue, 18 Feb 2025 08:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA322116E1;
+	Tue, 18 Feb 2025 08:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739865620; cv=none; b=ABiNNhcE2HvBT+IE8MC6g9+IRPWO7+bB0DMitNgXtpsPS/M7iREY0S12aSzIg3id/6eCtiFyEcoOvIhDDo6uOrCHM5n8wOHjSjyldq+zNWMXWj28QmTlLNM7i4mEWJPld16+J7kcHVYK+qOScKfKB7u8YUBFnzelSUCiK3uMsyQ=
+	t=1739865631; cv=none; b=Jy9bDcl/w/jREkEw4LC7Q/Q0MeMSdJefrDh2337X8xRCzZK4TJHcUxoqqYh19OXumqEi/53b7SX4maewB3DKyxyD3V26cvMrbFGOfIiBPxjlgS6yXwd1qugAaqv4/hVncxtXgwOo+mTSbS6dClAyFuM5qs8StKFjUIgGe2OhVRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739865620; c=relaxed/simple;
-	bh=BIBoLdAaz+syXSP2Bq+NI3t7QHXsMK1JKWwPblX5Opk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=f1TSmvr6DPdSvCXGPpuv0oaIhSWk/n959FHKy8dDcP4+2amPr8q8s/SZFdoBxtjWlhTW0Oto3ojATI8365Uz2QSR31eSD4KA1WmC/uVmJ1tpmjeYKzZw4WD8fuwHMbGuJDKTsWuJWoOIDcNmPwgjCowZoZ/k5GCvDtxgEwWjRP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lzcJk7wG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4EK+CtiQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739865631; c=relaxed/simple;
+	bh=I0anOcqDiwGFt5l5mdb8VFHWp2/hmtNYihzDNh8vqno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lhopy2MR/qsaMXiMkTZYjkF8Bcttjxy79Dv2YdStZRsCPYQlBpQ/X3fd8liQR2Zu3RUkx8UwxkcUKtsds6dpPNbI8DS3J4VbT0cEfTwuIx9mw4r5rOnYNcpovQxRa7o/LxPQ5pPZHgKu6NIsBJjDLvaejat7JnfhcszCnX8Nsy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QBPxIjEc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lzcJk7wG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4EK+CtiQ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739865617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1VopzplUY31yktOMEeJ7DZO4lbiNm+WmseWdkp9vwaE=;
-	b=lzcJk7wGfDSoswY5b6fXLF8WXUqdt6HvIakiQw//oL9GTTJ+QWsT0/Y9VU5kyBqaZl/AeY
-	xM6L8l7IIhUqYsnsNHf0nVsN6VlYITV2W/yVImUaynppDxYIUHivitxc8gzY9a2qCDInCq
-	eOuOl4psopZyNjJUqS50bwF9BTfWPNMu2qh7VZMev/mZ/7WdXtVsbPehvCXuCKmxDvStjg
-	jq9gD+KMQd9pPqFL/+JSlE0s6F9hf44j8fZQgOlDPe/qeLOf3WHo17JcFzESAimmIrn6q/
-	qhmz6mzijUyLd1irQmridL5XTcJ1WdVUgek0E6PYp0Y/G0a3cNxKwB2YKS0yNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739865617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1VopzplUY31yktOMEeJ7DZO4lbiNm+WmseWdkp9vwaE=;
-	b=4EK+CtiQ827ZYkXO6ioIZHJZXMvjyNhbA1ri+Y0EMk6EiaNNuX+ltmB4o/kxm7FO5BicXx
-	bH5M61qxoHHAJVCA==
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Geert Uytterhoeven
- <geert+renesas@glider.be>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, Lad
- Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] irqchip/renesas-rzv2h: Add
- rzv2h_icu_register_dma_req_ack
-In-Reply-To: <20250212221305.431716-5-fabrizio.castro.jz@renesas.com>
-References: <20250212221305.431716-1-fabrizio.castro.jz@renesas.com>
- <20250212221305.431716-5-fabrizio.castro.jz@renesas.com>
-Date: Tue, 18 Feb 2025 09:00:16 +0100
-Message-ID: <87a5ajk7hr.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QBPxIjEc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C91ACC4CEE2;
+	Tue, 18 Feb 2025 08:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739865630;
+	bh=I0anOcqDiwGFt5l5mdb8VFHWp2/hmtNYihzDNh8vqno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QBPxIjEcSlpIhsKX+E+R//HjzDtL6p90hNkOiPLPpXiu88Tbbi2Cuz2BEKoj85Pin
+	 74y3WLPGRuwmBz10Kyk+r6XISwVkHP/lrmIWbCWqd0rJHJUk2YfFKfQ+Q9SLvPC5rV
+	 hz3EZncYapJBVcHir4zYpJUbAFYohOWsS0dB/GEo=
+Date: Tue, 18 Feb 2025 09:00:27 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Trilok Soni <quic_tsoni@quicinc.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] usb: typec: Add support for Parade PS8830 Type-C
+ Retimer
+Message-ID: <2025021807-equipment-ignition-017f@gregkh>
+References: <20250206-x1e80100-ps8830-v6-0-60b1e49cfa8d@linaro.org>
+ <20250206-x1e80100-ps8830-v6-2-60b1e49cfa8d@linaro.org>
+ <Z68EUTlHcm6TxjlY@hovoldconsulting.com>
+ <Z7Q8xwcfeE3tcBLL@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7Q8xwcfeE3tcBLL@hovoldconsulting.com>
 
-On Wed, Feb 12 2025 at 22:13, Fabrizio Castro wrote:
-> On the Renesas RZ/V2H(P) family of SoCs, DMAC IPs are connected
-> to the Interrupt Control Unit (ICU).
-> For DMA transfers, a request number and an ack number must be
-> registered with the ICU, which means that the DMAC driver has
-> to be able to instruct the ICU driver with the registration of
-> such ids.
->
-> Export rzv2h_icu_register_dma_req_ack so that the DMA driver
-> can register both ids in one go.
+On Tue, Feb 18, 2025 at 08:54:47AM +0100, Johan Hovold wrote:
+> On Fri, Feb 14, 2025 at 09:52:33AM +0100, Johan Hovold wrote:
+> > On Thu, Feb 06, 2025 at 11:28:28AM +0200, Abel Vesa wrote:
+> > > The Parade PS8830 is a USB4, DisplayPort and Thunderbolt 4 retimer,
+> > > controlled over I2C. It usually sits between a USB/DisplayPort PHY
+> > > and the Type-C connector, and provides orientation and altmode handling.
+> 
+> Turns out Greg had picked this one up 20 minutes before I sent my
+> comments. I did see Heikki's ack the day before and realised time was
+> short but was not able to drop everything and review the last revision
+> due to meetings that afternoon.
+> 
+> Well, well, I guess you can say I only have myself to blame for not
+> reviewing within a week of the last revision being posted.
 
-Please denote functions in the subject and change log body as fun()
-according to documentation:
+I can revert it if you want me to, or an incremental fix, your call.
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#function-references-in-changelogs
+thanks,
 
-With that fixed:
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-
-under the assumption that this will be merged via the dmaengine tree.
-
-Thanks,
-
-        tglx
+greg k-h
