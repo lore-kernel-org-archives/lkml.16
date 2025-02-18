@@ -1,253 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDB326B97A;
-	Tue, 18 Feb 2025 14:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8726AA98
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889610; cv=none; b=dcIUEzAAmvi5GoolcZo1ccqrQ0z/QOiKvnLeDgLOj0t22VeHqvpkIidsNfIs3YQdJhhrpgo6iulXq+ns6Hj8S1IaDZb1WDrALM3ieNpDGxLjov5t4U9AdlJc484mgf9lV2p7xFkP8mgroGVJ2mURuXcSVQJX6CdYhpUZweyE8IE=
+	t=1739889628; cv=none; b=BNk/IVSP2K6He0zxjN5aPRHt6BlrXu58NCN7nT/4Mpj/m4tPolzsAeeD0hDgO4NhuOG4EtFxniqwD9TPXY5XN7j40zQihwUL7AdtOfqaCv+LiJTNqwClM/wpR2DNuQkUYX32j6/r2o+cxw3S5sECxDO3SqylYJVGCRMP5fTeA08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889610; c=relaxed/simple;
-	bh=vdD04g8DbxrW9E/m9FPFo+hn524y5DCK+6sqKYPsuXY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j9aWMfDXhyC4sV6gzbL92IKQTnyk9wFtLbq+RblFtWLTSvw7Lbsnd2L0Ytn6quoPWJgKRfDfMMNGW60GCUB0Ucl5M9F1wRS+A2DXDpRR5mm4wjcdYWpZGfFB1YJ0AlcmBC3yYMX1SkQdvHxwjJYTSDW6rurLHknJ18V34/mreAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ly0gdxIP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739889628; c=relaxed/simple;
+	bh=mr+2Jhhmfhv+3seL9n1mB+VOznYBvn3lX+NZfQylTqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=St0RUHjBgUhE1AI2jK70xXOvnfsNFluIbmcOlZd6U12BVu29wDp3ewb3YB14irdWqqdaYssWXAc5YNX4nqKgq8sdMnHFfDAnduNNxzLfsRSMseE54fRg1qp1fewJsH2GGlVpjlJfBvvZ3WPKsNVdeiC3ECMx9iDd3/9RaKD0pbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yzS9Jomi; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ly0gdxIP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0D05C4CEEB;
-	Tue, 18 Feb 2025 14:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739889610;
-	bh=vdD04g8DbxrW9E/m9FPFo+hn524y5DCK+6sqKYPsuXY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ly0gdxIPP7Epro72hhc+sXNdh019Hy65n7BkHHtFHGrwfoi4oOnzCOZA3xb9Uy9EW
-	 CCLN4wSwMVz0LoSvfX1doEVQThYaq3qvUuTqMXjgddN8b/35so+Orku/wb9r/NkvMJ
-	 T9s9GaAMD9Uk62owD1obeNwiPDsxwWQfeF3lPzasJMmT4Pi9sLSW5uuL3zS249jR++
-	 eeTNalUbEfHeOHVBXoC8RbC5gu+lX9GXQkMRblgVm+VYGkC6Vu/qNnFSAYA/oL12bS
-	 /lMWDdv4KNzz26g0QxCeBeWs1Hf5jlyDZgPHq8rQ7DtqwiCYp1nGhRCoM2Zi+7qMsV
-	 3Ol0pONg9A06g==
-Message-ID: <8afc09d0728c4b71397d6b055dc86ab12310c297.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: decrease cl_cb_inflight if fail to queue cb_work
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Li Lingfeng
- <lilingfeng3@huawei.com>, 	neilb@suse.de, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, 	linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Tue, 18 Feb 2025 09:40:07 -0500
-In-Reply-To: <9cea3133-d17c-48c5-8eb9-265fbfc5708b@oracle.com>
-References: <20250218135423.1487309-1-lilingfeng3@huawei.com>
-	 <0ae8a05272c2eb8a503102788341e1d9c49109dd.camel@kernel.org>
-	 <04ed0c70b85a1e8b66c25b9ad4d0aa4c2fb91198.camel@kernel.org>
-	 <9cea3133-d17c-48c5-8eb9-265fbfc5708b@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzS9Jomi"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e587cca1e47so5006139276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:40:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739889624; x=1740494424; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2wkeEEWV1t+jTfGMDjVEd0UQWJSursxJ+qu65t0oVks=;
+        b=yzS9JomiL+1VCRq5xGA/LVJBda1hD0LHa+tIsrOwo+8YCI4bbA8FZadK/V/4waPQQH
+         9aFpqNh/ia1C10WgvRzuB5wF2U66/lYcRX0QP2L1I3eQBf6yiuSOHZmFx2d7MpQ/D7zY
+         U4ZFcDr7s9T1qxzTzHpwAigz1L8lTWxIO0rcZsWkoNBRq0D4NxcLBiCyVoniZJywJJ7s
+         xsWKhTGX/urMFShw+xctToQ4jo4bUdGFKRL2aGJPp513TUp5dN5+B1OYXD4C9f+yFbaw
+         RGlT0VlSjnEtn1qTEGgF0XzOGk/xU6ENK+5wByLpc0RPumM9RquuK4enTt/nGOnnii8s
+         FbRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739889624; x=1740494424;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2wkeEEWV1t+jTfGMDjVEd0UQWJSursxJ+qu65t0oVks=;
+        b=VRNMitzCJwsEkjk6OCZ5QTgrD/GMr25TF6UetSe2BEF26K7ikK/RHPE74CVZeFrnNR
+         zUvD/hWtZwUVJkJjkkJbPYpDH3p8di9jG5rrJiTBIDKQpNSmD/Ik3LKWDJVS2yOfVenA
+         zZMgnorv2XT0v1/zl7OZnlu3FtezcxW0BLaolU0AE/ZWs0vCL9yAIVmsdcYe7EGcoDk6
+         LK7IM+B/x35zjusSGcV0qAdbzDgect9Ew7JZEB4AZoeRrkWlWiPIToDFNw/warKdTOe9
+         poTuTGQUTQ8YsiYF2UX85UyvbjJPtR5Jh6VeSKIskHTcBWe0OfyHkE+5ohU4fEdb76kf
+         W+Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCWySJdSstIPwcGuCzdV4kaM4jxxwwcTiz+kA3LJSOsNLYE27gh/AeWAnjQbg6/hsSARl8M1k0TKaBSujwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc2nenSrD1GVfTzYzr6nwHuKi7+tEx43lG844bX354uhEhGaXG
+	XpqKi6QTkwuVwCha6qtupzwB9LoTkqcHUCY0BxZDTyA6hiCEkPfwrvmN9W5+Are8D4pz7qdNjOP
+	NBjfwZzu1gUPwtw/MRGz9rXBzO1kye849Q6hcAg==
+X-Gm-Gg: ASbGncvuLpm+Uj4SD137uEKebSzsd1XDwTGIurz/Swqo6KkJl1hrCi8QCbdw0i9uwFm
+	wjxMr0U6jry+jKUPPtO2vKThALa77dWdB5vYUopT6KynCoXFOuR+45L5GR6+rQfx6jU9Yz1A7Hg
+	==
+X-Google-Smtp-Source: AGHT+IGc7tsTon1APxRniRGgusdip7zanYIlI5kyK12K1ApVdClP0yClUsQd8ZYL07bK78dVmjWR+9yq+z6BP2esIog=
+X-Received: by 2002:a05:6902:15c4:b0:e20:25bb:7893 with SMTP id
+ 3f1490d57ef6-e5dc9305520mr9687881276.46.1739889623851; Tue, 18 Feb 2025
+ 06:40:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <4966939.GXAFRqVoOG@rjwysocki.net> <2000822.PYKUYFuaPT@rjwysocki.net>
+ <CAPDyKFoB0fQCabahYpx=A_Ns7vJgWYdK=rxuHk+XHVv35cFvWQ@mail.gmail.com> <CAJZ5v0iHsOw4_UbEWGk_-jPpc3q2K3fUXBs4T3JCooPGV10CHQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iHsOw4_UbEWGk_-jPpc3q2K3fUXBs4T3JCooPGV10CHQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 18 Feb 2025 15:39:47 +0100
+X-Gm-Features: AWEUYZkUeOWjKpfEpylPzwUgMmhW5JCtP7D9lSJ8wjRrv-WgzsAF82ls-gYur34
+Message-ID: <CAPDyKFqshaVNzHPe0KL3HRTpiuzyKVJ-LuDsaAne5PawFLMJow@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2025-02-18 at 09:31 -0500, Chuck Lever wrote:
-> On 2/18/25 9:29 AM, Jeff Layton wrote:
-> > On Tue, 2025-02-18 at 08:58 -0500, Jeff Layton wrote:
-> > > On Tue, 2025-02-18 at 21:54 +0800, Li Lingfeng wrote:
-> > > > In nfsd4_run_cb, cl_cb_inflight is increased before attempting to q=
-ueue
-> > > > cb_work to callback_wq. This count can be decreased in three situat=
-ions:
-> > > > 1) If queuing fails in nfsd4_run_cb, the count will be decremented
-> > > > accordingly.
-> > > > 2) After cb_work is running, the count is decreased in the exceptio=
-n
-> > > > branch of nfsd4_run_cb_work via nfsd41_destroy_cb.
-> > > > 3) The count is decreased in the release callback of rpc_task =E2=
-=80=94 either
-> > > > directly calling nfsd41_cb_inflight_end in nfsd4_cb_probe_release, =
-or
-> > > > calling nfsd41_destroy_cb in 	.
-> > > >=20
-> > > > However, in nfsd4_cb_release, if the current cb_work needs to resta=
-rt, the
-> > > > count will not be decreased, with the expectation that it will be r=
-educed
-> > > > once cb_work is running.
-> > > > If queuing fails here, then the count will leak, ultimately causing=
- the
-> > > > nfsd service to be unable to exit as shown below:
-> > > > [root@nfs_test2 ~]# cat /proc/2271/stack
-> > > > [<0>] nfsd4_shutdown_callback+0x22b/0x290
-> > > > [<0>] __destroy_client+0x3cd/0x5c0
-> > > > [<0>] nfs4_state_destroy_net+0xd2/0x330
-> > > > [<0>] nfs4_state_shutdown_net+0x2ad/0x410
-> > > > [<0>] nfsd_shutdown_net+0xb7/0x250
-> > > > [<0>] nfsd_last_thread+0x15f/0x2a0
-> > > > [<0>] nfsd_svc+0x388/0x3f0
-> > > > [<0>] write_threads+0x17e/0x2b0
-> > > > [<0>] nfsctl_transaction_write+0x91/0xf0
-> > > > [<0>] vfs_write+0x1c4/0x750
-> > > > [<0>] ksys_write+0xcb/0x170
-> > > > [<0>] do_syscall_64+0x70/0x120
-> > > > [<0>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
-> > > > [root@nfs_test2 ~]#
-> > > >=20
-> > > > Fix this by decreasing cl_cb_inflight if the restart fails.
-> > > >=20
-> > > > Fixes: cba5f62b1830 ("nfsd: fix callback restarts")
-> > > > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> > > > ---
-> > > >  fs/nfsd/nfs4callback.c | 10 +++++++---
-> > > >  1 file changed, 7 insertions(+), 3 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > > > index 484077200c5d..8a7d24efdd08 100644
-> > > > --- a/fs/nfsd/nfs4callback.c
-> > > > +++ b/fs/nfsd/nfs4callback.c
-> > > > @@ -1459,12 +1459,16 @@ static void nfsd4_cb_done(struct rpc_task *=
-task, void *calldata)
-> > > >  static void nfsd4_cb_release(void *calldata)
-> > > >  {
-> > > >  	struct nfsd4_callback *cb =3D calldata;
-> > > > +	struct nfs4_client *clp =3D cb->cb_clp;
-> > > > +	int queued;
-> > > > =20
-> > > >  	trace_nfsd_cb_rpc_release(cb->cb_clp);
-> > > > =20
-> > > > -	if (cb->cb_need_restart)
-> > > > -		nfsd4_queue_cb(cb);
-> > > > -	else
-> > > > +	if (cb->cb_need_restart) {
-> > > > +		queued =3D nfsd4_queue_cb(cb);
-> > > > +		if (!queued)
-> > > > +			nfsd41_cb_inflight_end(clp);
-> > > > +	} else
-> > > >  		nfsd41_destroy_cb(cb);
-> > > > =20
-> > > >  }
-> > >=20
-> > > Good catch!
-> > >=20
-> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > >=20
-> >=20
-> > Actually, I think this is not quite right. It's a bit more subtle than
-> > it first appears. The problem of course is that the callback workqueue
-> > jobs run in a different task than the RPC workqueue jobs, so they can
-> > race.
-> >=20
-> > cl_cb_inflight gets bumped when the callback is first queued, and only
-> > gets released in nfsd41_destroy_cb(). If it fails to be queued, it's
-> > because something else has queued the workqueue job in the meantime.
-> >=20
-> > There are two places that can occur: nfsd4_cb_release() and
-> > nfsd4_run_cb(). Since this is occurring in nfsd4_cb_release(), the only
-> > other option is that something raced in and queued it via
-> > nfsd4_run_cb().
->=20
-> What would be the "something" that raced in?
->=20
+[...]
 
-I think we may be able to get there via multiple __break_lease() calls
-on the same layout or delegation. That could mean multiple calls to the
-->lm_break operation on the same object.
+> > >
+> > > +static void device_prepare_smart_suspend(struct device *dev)
+> > > +{
+> > > +       struct device_link *link;
+> > > +       int idx;
+> > > +
+> > > +       /*
+> > > +        * The "smart suspend" feature is enabled for devices whose drivers ask
+> > > +        * for it and for devices without PM callbacks unless runtime PM is
+> > > +        * disabled and enabling it is blocked for them.
+> > > +        *
+> > > +        * However, if "smart suspend" is not enabled for the device's parent
+> > > +        * or any of its suppliers that take runtime PM into account, it cannot
+> > > +        * be enabled for the device either.
+> > > +        */
+> > > +       dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
+> > > +               dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
+> > > +               !pm_runtime_blocked(dev);
+> > > +
+> > > +       if (!dev->power.smart_suspend)
+> > > +               return;
+> > > +
+> > > +       if (dev->parent && !pm_runtime_blocked(dev->parent) &&
+> > > +           !dev->parent->power.ignore_children && !dev->parent->power.smart_suspend) {
+> > > +               dev->power.smart_suspend = false;
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       idx = device_links_read_lock();
+> > > +
+> > > +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+> > > +               if (!(link->flags | DL_FLAG_PM_RUNTIME))
+> > > +                       continue;
+> > > +
+> > > +               if (!pm_runtime_blocked(link->supplier) &&
+> > > +                   !link->supplier->power.smart_suspend) {
+> >
+> > This requires device_prepare() for all suppliers to be run before its
+> > consumer. Is that always the case?
+>
+> Yes, it is by design.
 
->=20
-> > That will have incremented cl_cb_inflight() an extra
-> > time and so your patch will make sense for that.
-> >=20
-> > Unfortunately, the slot may leak in that case if nothing released it
-> > earlier. I think this probably needs to call nfsd41_destroy_cb() if the
-> > job can't be queued. That might, however, race with the callback
-> > workqueue job running.
-> >=20
-> > I think we might need to consider adding some sort of "this callback is
-> > running" atomic flag: do a test_and_set on the flag in nfsd4_run_cb()
-> > and only queue the workqueue job if that comes back false. Then, we can
-> > clear the bit in nfsd41_destroy_cb().
-> >=20
-> > That should ensure that you never fail to queue the workqueue job from
-> > nfsd4_cb_release().
-> >=20
-> > Thoughts?
->=20
->=20
+Okay! I was worried that fw_devlink could mess this up.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+>
+> > > +                       dev->power.smart_suspend = false;
+> > > +                       break;
+> > > +               }
+> > > +       }
+> > > +
+> > > +       device_links_read_unlock(idx);
+> >
+> > From an execution overhead point of view, did you check if the above
+> > code had some measurable impact on the latency for dpm_prepare()?
+>
+> It didn't on my systems.
+>
+> For the vast majority of devices the overhead is just checking
+> power.no_pm_callbacks and DPM_FLAG_SMART_SUSPEND.  For some,
+> pm_runtime_blocked() needs to be called which requires grabbing a
+> spinlock and there are only a few with power.smart_suspend set to
+> start with.
+>
+> I'm wondering why you didn't have this concern regarding other changes
+> that involved walking suppliers or consumers, though.
+
+Well, the concern is mostly generic from my side. When introducing
+code that potentially could impact latency during system
+suspend/resume, we should at least check it.
+
+That said, I think the approach makes sense, so no objections from my side!
+
+Feel free to add:
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
