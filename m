@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A47237163;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC34F237168;
 	Tue, 18 Feb 2025 10:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874407; cv=none; b=X1PNXrAOLB7XODpFCk/IeId1vovGyTIdZT4Cw6XUuUF7su4Rolo/r+hCBaCFYKavYrq1Mp7wewdf7NG2rW0tmvQOe4NZO1lCHFQZ/BXwPF7ApjuBHimqOTMQnl6mZZDGwpdpA5A3ErzkM+V4+aOtRlg2LlWmQVoKgJkbJTh1KnA=
+	t=1739874407; cv=none; b=CqZwzFFJTn7E73+sJS1wBSsafBTmcqUudNCJFsGOixdjKi2/EPNfQ3gym+IezRNiMmbVeY/iKkUeNHKUyKobUZxo9QHNVVNPYwPMxXU9eyP6qOjEG/g3aF4WzbdtCD6guaMtozApCZ6RidrXn/3BSu93xEqXd8LMIXC0bG2k9hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739874407; c=relaxed/simple;
-	bh=YcdHH9wy7gUPsqCgJ46EbEWGZgcdjcQpF440RGp3KqI=;
+	bh=X9ba10SMTmZ5zLLzkqqvr+rgMlY9CdvHFd17KFo6RKQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=dE572Uuotp4u2hRYNu3Bb6taPdQ+e64EK35+gvc6fiGZchHLIP6mKt4fJa9locEmHUhSb5R3uuhI3dfyq4hiLy8mAEONgR9Z0t7XXdLkfZRmJGkIS9CoRjZOWVO2s055Mwvd3VsKJvXFijDOIUY4iOPauCilo1HkQDpsoIkUb+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bjFzDlOm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oMhZcKcU; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=IL3H4anZDd/49YatxeG3gIJqLCI0Z10DC2sZZPNGGt3DmPF9lPU+LutgYlpdqxreJKTXcWGLxZt57RNpzK58ebqu6VCMM3cNhIu1IrD+DccjjTEstqwxRTr5o5I9TbC9W8gDlR1KiKCc+6JyLzq41/fiEA9A7MVkLrAT+qbOYBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xQgWIuat; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+cPK3F4+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bjFzDlOm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oMhZcKcU"
-Date: Tue, 18 Feb 2025 10:26:43 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xQgWIuat";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+cPK3F4+"
+Date: Tue, 18 Feb 2025 10:26:44 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739874404;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OYOQEXzM3yWGdjmqp8aRfQl88HV2JaQ2Hi/FtYG6Qo0=;
-	b=bjFzDlOmrLy0hvUtutVVckK382E+tDtLQ9yac9QhxWBbprJxPy7pgKNwkjABAfWGq1E4+z
-	3lUmkSRvj8M2e/DJlYt0OkEgIp3DblQsnyr4APZmVDIYJi1+33KKMeEr4c0WQExJw6/Bsb
-	PzwyScZO/9GIuql6ozQGUK0ZMlZl/tro0MO1UvfIGIGeV90YNpEZklPQ1jHG3eYjRmLYE2
-	H2gH8BT1x9OWLPHq5RTEBOsUjU1ZwB7HSW2iF0WpaFkKt9zkismoiRCTvcCMk/Jf9nwbLk
-	ujJ8xmZYm9izVADxhZrMbikEjRrNisZwp4QJnyFUTJ5PMnMWLX5OCDVGf58TnQ==
+	bh=fzL35jOq4W8JcbvDiMDKkBYfi7+FBV5i1UxQK3s/Ep4=;
+	b=xQgWIuat5t/oB/fytMga6aZ9rL2hGnH2VUgFg4IkE0xj6Kh6nji4u8xzzMZv0ygcEzMBS1
+	27x8XrlCeTwsbxykpEKicWIe+SuiAYjL+uh+3xVnJagNxFvK4+bU+3XblgOAiZNBRYU3US
+	YnEdM9X/La57fKpWsna/2/p7GrlL57twtwHqqwdxsVOW6JUplYDXJ89iTeANcsf6Edrr7s
+	sLQkbpUVAb876/mKudlz22MciOhywR3Yx3oLF3eKG/L9UHJfvsURmLOy8poKGJdZI6Sh6g
+	lcNFd0RABbEva1FLGIOTkflayHlv+AckX3va8Fq+BAo8YnaAqTnwlAJLKP26UQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739874404;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,20 +38,21 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OYOQEXzM3yWGdjmqp8aRfQl88HV2JaQ2Hi/FtYG6Qo0=;
-	b=oMhZcKcU9e/JU9G2HgpxG7q+caRR/gakISQaJJUBATbfU/gGm/7nuqiRcpcXn6BEIMKHpv
-	ntNo8cfpz8JUfgDg==
+	bh=fzL35jOq4W8JcbvDiMDKkBYfi7+FBV5i1UxQK3s/Ep4=;
+	b=+cPK3F4+m4ii7lXBm7HTra8/s4S20jSf8xCMma1Zx0htnwm4kcwY/vw36vttimsR39sf9q
+	pk//xYA9oa5CxVBA==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] serial: 8250: Switch to use hrtimer_setup()
+Subject:
+ [tip: timers/cleanups] usb: typec: tcpm: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
  Zack Rusin <zack.rusin@broadcom.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C991926d130cc272df30d226760d5d74187991669=2E17387?=
+In-Reply-To: =?utf-8?q?=3C7fd2a1f72b3833e1fb36f56f2b28a08c1e64f47e=2E17387?=
  =?utf-8?q?46904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C991926d130cc272df30d226760d5d74187991669=2E173874?=
+References: =?utf-8?q?=3C7fd2a1f72b3833e1fb36f56f2b28a08c1e64f47e=2E173874?=
  =?utf-8?q?6904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,7 +60,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987440343.10177.10544898710297369369.tip-bot2@tip-bot2>
+Message-ID: <173987440403.10177.6340130315822872245.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,14 +70,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     6bf9bb76b3af17f1fbfe76e8d70528e939511801
-Gitweb:        https://git.kernel.org/tip/6bf9bb76b3af17f1fbfe76e8d70528e939511801
+Commit-ID:     9fdf17c5aa2ccd9f7e6cf23c01f79a1541a9f932
+Gitweb:        https://git.kernel.org/tip/9fdf17c5aa2ccd9f7e6cf23c01f79a1541a9f932
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:45:56 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:45:55 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 11:19:02 +01:00
 
-serial: 8250: Switch to use hrtimer_setup()
+usb: typec: tcpm: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -89,45 +90,36 @@ Patch was created by using Coccinelle.
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://lore.kernel.org/all/991926d130cc272df30d226760d5d74187991669.1738746904.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/7fd2a1f72b3833e1fb36f56f2b28a08c1e64f47e.1738746904.git.namcao@linutronix.de
 
 ---
- drivers/tty/serial/8250/8250_bcm7271.c |  3 +--
- drivers/tty/serial/8250/8250_port.c    | 10 ++++------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ drivers/usb/typec/tcpm/tcpm.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_bcm7271.c b/drivers/tty/serial/8250/8250_bcm7271.c
-index d0b1835..742004d 100644
---- a/drivers/tty/serial/8250/8250_bcm7271.c
-+++ b/drivers/tty/serial/8250/8250_bcm7271.c
-@@ -1056,8 +1056,7 @@ static int brcmuart_probe(struct platform_device *pdev)
- 	}
- 
- 	/* setup HR timer */
--	hrtimer_init(&priv->hrt, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
--	priv->hrt.function = brcmuart_hrtimer_func;
-+	hrtimer_setup(&priv->hrt, brcmuart_hrtimer_func, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
- 
- 	up.port.shutdown = brcmuart_shutdown;
- 	up.port.startup = brcmuart_startup;
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 442967a..c57f448 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -566,12 +566,10 @@ static int serial8250_em485_init(struct uart_8250_port *p)
- 	if (!p->em485)
- 		return -ENOMEM;
- 
--	hrtimer_init(&p->em485->stop_tx_timer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL);
--	hrtimer_init(&p->em485->start_tx_timer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL);
--	p->em485->stop_tx_timer.function = &serial8250_em485_handle_stop_tx;
--	p->em485->start_tx_timer.function = &serial8250_em485_handle_start_tx;
-+	hrtimer_setup(&p->em485->stop_tx_timer, &serial8250_em485_handle_stop_tx, CLOCK_MONOTONIC,
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 6bf1a22..9c455f0 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -7721,14 +7721,14 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	kthread_init_work(&port->event_work, tcpm_pd_event_handler);
+ 	kthread_init_work(&port->enable_frs, tcpm_enable_frs_work);
+ 	kthread_init_work(&port->send_discover_work, tcpm_send_discover_work);
+-	hrtimer_init(&port->state_machine_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	port->state_machine_timer.function = state_machine_timer_handler;
+-	hrtimer_init(&port->vdm_state_machine_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	port->vdm_state_machine_timer.function = vdm_state_machine_timer_handler;
+-	hrtimer_init(&port->enable_frs_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	port->enable_frs_timer.function = enable_frs_timer_handler;
+-	hrtimer_init(&port->send_discover_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	port->send_discover_timer.function = send_discover_timer_handler;
++	hrtimer_setup(&port->state_machine_timer, state_machine_timer_handler, CLOCK_MONOTONIC,
 +		      HRTIMER_MODE_REL);
-+	hrtimer_setup(&p->em485->start_tx_timer, &serial8250_em485_handle_start_tx, CLOCK_MONOTONIC,
++	hrtimer_setup(&port->vdm_state_machine_timer, vdm_state_machine_timer_handler,
++		      CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_setup(&port->enable_frs_timer, enable_frs_timer_handler, CLOCK_MONOTONIC,
 +		      HRTIMER_MODE_REL);
- 	p->em485->port = p;
- 	p->em485->active_timer = NULL;
- 	p->em485->tx_stopped = true;
++	hrtimer_setup(&port->send_discover_timer, send_discover_timer_handler, CLOCK_MONOTONIC,
++		      HRTIMER_MODE_REL);
+ 
+ 	spin_lock_init(&port->pd_event_lock);
+ 
