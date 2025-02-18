@@ -1,199 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20AB26A08A;
-	Tue, 18 Feb 2025 13:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1172526F479;
+	Tue, 18 Feb 2025 13:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885337; cv=none; b=qyDSmNBvvCUnAW4YHSRd1XR2Y2PI2KPq9wsUQn6jUsLZ6GY3aS49bHKk/p0mQ0Dfmnrs5vmmW/8XG18nDKFCOXbDFcX00WzYJngJ6tztCjEuNhZtQGsRWTC1zkIFxun1aSg+MvTsFLwV2BzI+Rv050xYDHCE1roTTYKZNamMpPc=
+	t=1739885341; cv=none; b=R6NOuO+w2YkuNsWWDT7HZKalE8vinEPaiFLbjawDtQlb90QxMJ7MzI5DoiFph3/D1TvoYIs9R/Z1324bSY/n4f2bhlWPih/TDX5PDvVMqtJqk970b31LmlH12uG4rp/qvqkCdwptomUo/dOy9mmK+/kJmao+6XnOmBm1Juu5D5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885337; c=relaxed/simple;
-	bh=dsJMGL8Vy5ZK8N2dXrkHVY1AwzDKsAsYWk8CdjvAtOU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ckKVZkUjMMHqUj1AA2zdxWUWelP2476ZLmkwGc1h4/fjtjk2Ns6QG1Zmc04xWu6xGkmlC2wd/EAv25rxra25JMdA6yikqjG2+DqNe14LeebhC4zQvZkTGStHV7OQrvYWwyCFL3JKnYSFyhuRVuUL/pXIap+IidViVXswRhCr51E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lj3RfYk3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739885341; c=relaxed/simple;
+	bh=iw/SPrbXn98cADc38nK9IqPnmrHPqixHtVWli1zCfVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9NR5q1LHobrIE2mUTy0HX7idXTuwrIGnDyhIWW8SLZNmygNDFGWzRupajm4LPvd5TuDmEOKMrJDdjp3VyGoPDHFlNjNycHKqw79m/rTuTqA6ULscQnaoUAdqGHvk7JtMJVDvShR5cP/BXbhV7tmjalI0i5RqW7dVDVWOf/RTJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bWZZTJk7; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lj3RfYk3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFE7C4CEE2;
-	Tue, 18 Feb 2025 13:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739885337;
-	bh=dsJMGL8Vy5ZK8N2dXrkHVY1AwzDKsAsYWk8CdjvAtOU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lj3RfYk36xYBq2iN6O13H0x1mXEbGhBjIL0s72A7LUUw0TfaEvmHXr7OTeBU/wgjw
-	 yIDzdkld5GXeFG5km4+MVBRKQaZ04ZWJToxm3bzJGvsIbpFl9HAwtCuewaeofF+eNw
-	 hKvqPiWM2tqLc+qNIPEW+xmpW2a+Ci/SGqXT74ApFbsvDADAhTgVxF+nVXnN4EnMk+
-	 mcPHJFiQGKsP4kHqvFNOoI+LAf3fTLN3PIiqNclhpZtjnckuEZ3pRbaKKJrhfJdpPq
-	 d+q+qE6Bi6mnx/kLN3ltuJZ2pOkSI0ijzAk9DkvKrsUniHhwYaQBujTdluKkOj0+C8
-	 nTT485Y3KuPZg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 18 Feb 2025 14:27:13 +0100
-Subject: [PATCH v8 08/14] rust: hrtimer: implement `UnsafeHrTimerPointer`
- for `Pin<&T>`
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bWZZTJk7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=R/o1iYOuTnHdhQ5dQpONUa+xtnc26ne1K/lxsZiqLlE=; b=bWZZTJk7HG6EUCdOIuwtQ31mF1
+	y3H28+JyOq58NxaxEzH+37aZDlVv2j4Zbsz6TJm0ImcqOxrtVka/Hr2QhJSF7n2saSxRmTVOYsunA
+	fWv0oRN1aFkicZUgFGE3ssWnQ4ZFqh7FQ9XDS9cJm94kS0rNI/+WNeKx3dAQiHrq7ZwtzL/+eCAXu
+	xJmCQ5Fj9eW6GbxBHwop3ReqPZ6Z//V6u9cCx3nS9MO0WTeijNcCzTXYlzuROWt4jI31IwGK8es30
+	RC377zVtYk8kRGuAI48MfMPMpTrcEmzbG13qvlEHQ8jdgB9LFy4zAvHKxjLHVhdZgm0jBgpLSCqIP
+	+Rd1dU3A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tkNei-000000030UP-19lA;
+	Tue, 18 Feb 2025 13:28:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2341230066A; Tue, 18 Feb 2025 14:28:55 +0100 (CET)
+Date: Tue, 18 Feb 2025 14:28:55 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: ERROR: modpost: "kmsan_handle_dma"
+ [drivers/virtio/virtio_ring.ko] undefined!
+Message-ID: <20250218132855.GE40464@noisy.programming.kicks-ass.net>
+References: <202502150634.qjxwSeJR-lkp@intel.com>
+ <20250218114857.oBuLvPYs@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-hrtimer-v3-v6-12-rc2-v8-8-48dedb015eb3@kernel.org>
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
-In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
- Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4040; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=dsJMGL8Vy5ZK8N2dXrkHVY1AwzDKsAsYWk8CdjvAtOU=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIq2B+VeCZle6Hpm68NBzkhYeYXvs9yGkVwyx
- QFd6y0xY3WJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SKtgAKCRDhuBo+eShj
- d21vD/kB8mENb+jhiLrI06aJfIMC0nN/65vxIyMtor8H/LwuUdhNlRyrIjAThff3Z2NHffsnlon
- hlINGL3pGS8Hr1chIOfaeEBE25pc2EAgdpuJ+qJ3C1E4izU2ZpeEB/TO1N8wF0/9mnCKqLUG+yB
- Wyiemcslwspsgb/4ZJ5u2BIpmmS8+sf04pnFvSAS/JJBAYsIBeOfNiN888ctwbl7SqczX+IWc6x
- gn31a/bm0kowBDE18g4U+AeHyNvtKHQevDhzRwXh5/mS6B5F/n8hE0tKYNqrGTkwYWMm0XWpAns
- ht17qdtOmct0jGAOjNduen5OQV/gR+JYpHksGQkihFxcdsdJt1hUtpJoLJiDZIBQPiarNhjhYCv
- Lq5iNgy8grhUUrpyt6Wpft14R9Mc9J7GBTuVYN9LjIOsJASxQYNgnUaGQCll2ytsZLTE/NvooKm
- KbN7nfPiOJUcd/zGwCV5Z1VW1XknWOJjAt9h8p1Flpdioz93git8L+lMC6oOJisGXMrcpPO43/A
- 26XmTMQ5lKiQpisJgauCtYHuzyk6zYnsIe4XgZbjNRcBBYct1LoQBn6SoHDp/5WCkZ1j6HGP19E
- M5aVj3BvMz66LgzDUO+jCH3QvxwDC09/fjJT3wHWmMFq1zu7pW0k7GRB3YF16e6CwuL8LNfBPXx
- 0GDg7LGA9iyR2nQ==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250218114857.oBuLvPYs@linutronix.de>
 
-Allow pinned references to structs that contain a `HrTimer` node to be
-scheduled with the `hrtimer` subsystem.
+On Tue, Feb 18, 2025 at 12:48:57PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2025-02-15 06:42:36 [+0800], kernel test robot wrote:
+> > >> arch/x86/kvm/cpuid.o: warning: objtool: do_cpuid_func+0x2428: undefined stack state
+> 
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/time/hrtimer.rs     |  2 +
- rust/kernel/time/hrtimer/pin.rs | 95 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+)
+> From the assembly it seems to make sense:
+> |   110ae:       49 89 e0                mov    %rsp,%r8
+> stash for later
+> |   110b1:       48 85 db                test   %rbx,%rbx
+> |   110b4:       c7 00 00 00 00 00       movl   $0x0,(%rax)
+> |   110ba:       45 89 7e 14             mov    %r15d,0x14(%r14)
+> |   110be:       0f 85 40 01 00 00       jne    11204 <do_cpuid_func+0x22f4>
+> …
+> |   11204:       44 8b 74 24 38          mov    0x38(%rsp),%r14d
+> |   11209:       44 89 f7                mov    %r14d,%edi
+> |   1120c:       4d 89 c7                mov    %r8,%r15
+> 
+> mov rsp to r15
 
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 666bcd6e46a11..3228ed916b4fe 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -402,3 +402,5 @@ unsafe fn raw_get_timer(ptr: *const Self) ->
- 
- mod arc;
- pub use arc::ArcHrTimerHandle;
-+mod pin;
-+pub use pin::PinHrTimerHandle;
-diff --git a/rust/kernel/time/hrtimer/pin.rs b/rust/kernel/time/hrtimer/pin.rs
-new file mode 100644
-index 0000000000000..ecab39118662e
---- /dev/null
-+++ b/rust/kernel/time/hrtimer/pin.rs
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+use super::HasHrTimer;
-+use super::HrTimer;
-+use super::HrTimerCallback;
-+use super::HrTimerHandle;
-+use super::RawHrTimerCallback;
-+use super::UnsafeHrTimerPointer;
-+use crate::time::Ktime;
-+use core::pin::Pin;
-+
-+/// A handle for a `Pin<&HasHrTimer>`. When the handle exists, the timer might be
-+/// running.
-+pub struct PinHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    pub(crate) inner: Pin<&'a T>,
-+}
-+
-+// SAFETY: We cancel the timer when the handle is dropped. The implementation of
-+// the `cancel` method will block if the timer handler is running.
-+unsafe impl<'a, T> HrTimerHandle for PinHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    fn cancel(&mut self) -> bool {
-+        let self_ptr: *const T = self.inner.get_ref();
-+
-+        // SAFETY: As we got `self_ptr` from a reference above, it must point to
-+        // a valid `T`.
-+        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
-+
-+        // SAFETY: As `timer_ptr` is derived from a reference, it must point to
-+        // a valid and initialized `HrTimer`.
-+        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
-+    }
-+}
-+
-+impl<'a, T> Drop for PinHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    fn drop(&mut self) {
-+        self.cancel();
-+    }
-+}
-+
-+// SAFETY: We capture the lifetime of `Self` when we create a `PinHrTimerHandle`,
-+// so `Self` will outlive the handle.
-+unsafe impl<'a, T> UnsafeHrTimerPointer for Pin<&'a T>
-+where
-+    T: Send + Sync,
-+    T: HasHrTimer<T>,
-+    T: HrTimerCallback<CallbackTarget<'a> = Self>,
-+{
-+    type TimerHandle = PinHrTimerHandle<'a, T>;
-+
-+    unsafe fn start(self, expires: Ktime) -> Self::TimerHandle {
-+        // Cast to pointer
-+        let self_ptr: *const T = <Self as core::ops::Deref>::deref(&self);
-+
-+        // SAFETY: As we derive `self_ptr` from a reference above, it must point
-+        // to a valid `T`.
-+        unsafe { T::start(self_ptr, expires) };
-+
-+        PinHrTimerHandle { inner: self }
-+    }
-+}
-+
-+impl<'a, T> RawHrTimerCallback for Pin<&'a T>
-+where
-+    T: HasHrTimer<T>,
-+    T: HrTimerCallback<CallbackTarget<'a> = Self>,
-+    T: HrTimerCallback<CallbackTargetParameter<'a> = Self>,
-+{
-+    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
-+        // `HrTimer` is `repr(C)`
-+        let timer_ptr = ptr as *mut HrTimer<T>;
-+
-+        // SAFETY: By the safety requirement of this function, `timer_ptr`
-+        // points to a `HrTimer<T>` contained in an `T`.
-+        let receiver_ptr = unsafe { T::timer_container_of(timer_ptr) };
-+
-+        // SAFETY: By the safety requirement of this function, `timer_ptr`
-+        // points to a `HrTimer<T>` contained in an `T`.
-+        let receiver_ref = unsafe { &*receiver_ptr };
-+
-+        // SAFETY: `receiver_ref` only exists as pinned, so it is safe to pin it
-+        // here.
-+        let receiver_pin = unsafe { Pin::new_unchecked(receiver_ref) };
-+
-+        T::run(receiver_pin).into()
-+    }
-+}
+This, objtool doesn't track this one. It only does:
 
--- 
-2.47.0
+ mov %rsp, reg
 
+ mov reg, %rsp
 
+I'm not entirely sure how painful it would be to teach objtool about
+this case. Horrible code it is :/
+
+> |   1120f:       e8 00 00 00 00          call   11214 <do_cpuid_func+0x2304>
+> |                        11210: R_X86_64_PLT32   __msan_chain_origin-0x4
+> |   11214:       89 c7                   mov    %eax,%edi
+> |   11216:       e8 00 00 00 00          call   1121b <do_cpuid_func+0x230b>
+> |                        11217: R_X86_64_PLT32   __msan_warning-0x4
+> |   1121b:       44 89 f7                mov    %r14d,%edi
+> |   1121e:       e8 00 00 00 00          call   11223 <do_cpuid_func+0x2313>
+> |                        1121f: R_X86_64_PLT32   __msan_chain_origin-0x4
+> |   11223:       89 c7                   mov    %eax,%edi
+> |   11225:       e8 00 00 00 00          call   1122a <do_cpuid_func+0x231a>
+> |                        11226: R_X86_64_PLT32   __msan_warning-0x4
+> |   1122a:       44 89 f7                mov    %r14d,%edi
+> |   1122d:       e8 00 00 00 00          call   11232 <do_cpuid_func+0x2322>
+> |                        1122e: R_X86_64_PLT32   __msan_chain_origin-0x4
+> |   11232:       89 c7                   mov    %eax,%edi
+> |   11234:       e8 00 00 00 00          call   11239 <do_cpuid_func+0x2329>
+> |                        11235: R_X86_64_PLT32   __msan_warning-0x4
+> |   11239:       44 89 f7                mov    %r14d,%edi
+> |   1123c:       e8 00 00 00 00          call   11241 <do_cpuid_func+0x2331>
+> |                        1123d: R_X86_64_PLT32   __msan_chain_origin-0x4
+> |   11241:       89 c7                   mov    %eax,%edi
+> |   11243:       e8 00 00 00 00          call   11248 <do_cpuid_func+0x2338>
+> |                        11244: R_X86_64_PLT32   __msan_warning-0x4
+> |   11248:       4c 89 ef                mov    %r13,%rdi
+> |   1124b:       48 8b 74 24 20          mov    0x20(%rsp),%rsi
+> |   11250:       4c 89 e2                mov    %r12,%rdx
+> |   11253:       48 8b 4c 24 08          mov    0x8(%rsp),%rcx
+> |   11258:       4c 89 fc                mov    %r15,%rsp
+> 
+> restore rsp. I just don't see how rsp is destroyed but this could be
+> related to paravirt's xxl clobbing in__cpuid().
+> 
+> I miss 1120c in my output. I don't understand how it jumps from 110ae to
+> 1124b. It misses the assignments in between but this might not be goal
+> here…
+> 
+> gcc does not cause objtool to produce the warning but then gcc does
+> shuffle rsp as much as llvm does.
+> 
+> Sebastian
