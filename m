@@ -1,78 +1,140 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F256241122;
-	Tue, 18 Feb 2025 08:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B057E24111C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866527; cv=none; b=qsQypNVAQBvWGFVwhM7AW4zvEXGq2t7k/SmObbmXDrcuANdDz5r6C5icl1moxh2krDOu9AYgYbp5DGSqNh0YxSTvX1e7vS0BCcd07uPv3qi82Cbu+7iK4QvjiofAEoLNH9EN35BJU3rvu4YrWFV9q9jAeFSLf3R39W9YGJJ3kIU=
+	t=1739866528; cv=none; b=C+LFaWdwmRdemuqucMiuitnyooK3vK0VAkBI66TWnFlBqym8T2sTlYke4yG6gFmS39BduVZ48EpUKPLcYRQoElCvWHL4oSHEoaX2DvZrh7Uu301SUq1ihCi8eoPL/pkOig/iDeXEUVcI5K7e2K+X/Arr7bBUIopnzB63UqcImWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866527; c=relaxed/simple;
-	bh=kIzCi96nV3/q5JwgPyMeC5hhqR1+he9F7aU3vXLhIJg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZDIto8KfuxXsbkhEeeri6rt0mT1RtGuY4QE+l+WYLOYvNHKVRcD2PTaR/vcRyRDj7i3xkHyUimpVZd/04NsIch3JSqnlZSBhTmTakV3iXCyTjkXx5aWEr2GJ24/qsM91YzOblaJwJQ5wb3+g1gf1QfQkIG+mI91t2+oliELj21I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=fOjh5k2v; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1739866528; c=relaxed/simple;
+	bh=4d7dH4tkF8IEZWbA351ohEadRAb/aWdFd9TsfF1l29s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i3kslu8qQJ4DUkn8229S305UE1AKKlxRu9hpDvuROL9w+UJpJtpZHAZjQE+0mc8Kpt3IMH+C3RBaDi1cVgAlurYHH5CSC0s4eAVxQo2kap4oGrQUiNrMx3iRT7l1XN+DyV09yDLK1Z/YjYw8MA0FQykgX5shA69cFihFbWWiAm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RhRxyWMa; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="fOjh5k2v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=72etSD4IW1fdoCqIDb0MAOspZxQRpcvYAHDUFcZyj8M=;
-	t=1739866526; x=1741076126; b=fOjh5k2vwuLnhfGIpqmLuB2M2Od+0kK9+kemXTGaWyMFPdg
-	67SDUfqQWHyf0U/vvqcE7ABYEvg2IFMAR0ABNB9M5NoYvnsVRfWNuBwfB7c1sEDmkDH9vo8Lw+/VZ
-	T8pVDaSBZSDrgC+irJ/zkdWiIhEJ0oh44x8u/DpoEJtMiPX0eZXuUOIGtt6ypgcu+oHxxyETX+kyV
-	LDUqikhcDfs9t5nBc6tceVebCKXpsf6tik2LJmafVMnKwO00k1uR84CpArv4ZlwV+XwC1Dt7fEdst
-	HR3KW0SE3K4sx7mTur+fUL3QzKd9cAIydNCahAtsOoqyVEN5bP2vd/DlP0yoN1Ww==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tkIlF-00000001HxQ-1ViY;
-	Tue, 18 Feb 2025 09:15:21 +0100
-Message-ID: <6a5eb58c06cc1d5bdeb67fe877ef3a98520627ed.camel@sipsolutions.net>
-Subject: Re: unknow Network controller: Intel Corporation Device 093c (rev
- 3a)
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>, kvalo@kernel.org, 
-	linux-wireless@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Date: Tue, 18 Feb 2025 09:15:16 +0100
-In-Reply-To: <Z7N7AvQvv8k4OY-o@Red>
-References: <Z7N7AvQvv8k4OY-o@Red>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RhRxyWMa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739866524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j7GHXQVLFtRp3ANseK6eUERZ/mhzkiAQmFxjXulM8Zo=;
+	b=RhRxyWMaM65FtzQrxLUok/49M8x1YzGhY2bZ4OQYRzY5Nfj2kHctyfRtICRj9A/aSwdWVE
+	yotv4SjV6ysjMlpX7d8Kol+Nd+ekePO5Xt/frt2GgIG0srLVhxBdKzLbr25zHwDQINdb/Y
+	ZjPNr/L/5/Uq+Ag/ilQ14otQc+gzCio=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-167--_okUePiPFqwvoJH35MK9w-1; Tue, 18 Feb 2025 03:15:20 -0500
+X-MC-Unique: -_okUePiPFqwvoJH35MK9w-1
+X-Mimecast-MFC-AGG-ID: -_okUePiPFqwvoJH35MK9w_1739866520
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2fc2e648da3so7536547a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:15:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739866520; x=1740471320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j7GHXQVLFtRp3ANseK6eUERZ/mhzkiAQmFxjXulM8Zo=;
+        b=LC71bc3N8hrsVvs4NWEjZxxNkDkBskgI1ngsG3WvrfoZ7GKDD4dnKu78lJIvI+YJOT
+         1gd06VSOj8QseSHzWNjH7ZWX1qWorX7WEQsJOhcH9zNqph8fcG+tf9SkNuLU3X9M4C9w
+         eW1tbVCE0ghye5OWSTNufkei3tPV9oFyv5iLNyIQW0Y7caZHap0Hlqig7z6lhJjgFoRN
+         DacN5MKklc/EfoSSdMB1tahkFKb7mjKeJauD3Xj7LxUtV9QsTQbzYmKL+UyXoGDRH+Y+
+         ctXv/KiWZvoOHNfs1A/tD7ZFHXITGsxfh9xE4gZaR8FwosL6m8z1Olx8FdCO5r3LHhQf
+         b1TA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+fJwss7oVZ56egxSSVFQUNQaWbkhn6HdKCUN1UiSR6+ZkVxSaJ1djezmrwhB67QvjgGKOUriyvmFEHTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjpj6FXhIW0fN/NKDzQ0GpnBKj8vmTP8y+fv+UZO6J2Y9q+CsZ
+	lstjtisG4Xn+MontlweVj9AhERjiPCUU/0SqiezlIBbGIj5XriGEomffwfOwVOXgP3Ua76D44W+
+	ZUOegzSZc/TCxnJSrfbu6G0NY4JO1E7Jvfcvo1IyY/sid81Y2drVK8wJqzb9z2QqRYgYcKa+DD1
+	W3BxrgrLkWK+RdKcffkKAqouX3AQGTxE4jrSYA
+X-Gm-Gg: ASbGncvFMhHKoVPrbegNA9Ly+xi1Xl+KeJuMswXovOU58UgEP7ls15TaLnY9XFEsHpl
+	JA5HRmHUr+C7Pgp1lFgxR/Sn5MstWzVSpsGJrf0KszKZrGde+O6RHlzrDzEqH
+X-Received: by 2002:a17:90b:4a81:b0:2f6:539:3cd8 with SMTP id 98e67ed59e1d1-2fc40f22d0fmr23359644a91.18.1739866519778;
+        Tue, 18 Feb 2025 00:15:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE8sG5MmJpDjalMTr/uoLqJmCBZKgB65yw39zpNwpvQ/c1ljw+ptNbDRRyVCRGv34rDLEx/rjtyse/nlYZVsWo=
+X-Received: by 2002:a17:90b:4a81:b0:2f6:539:3cd8 with SMTP id
+ 98e67ed59e1d1-2fc40f22d0fmr23359607a91.18.1739866519456; Tue, 18 Feb 2025
+ 00:15:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <20250217194443.145601-1-dtatulea@nvidia.com>
+In-Reply-To: <20250217194443.145601-1-dtatulea@nvidia.com>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Tue, 18 Feb 2025 09:14:43 +0100
+X-Gm-Features: AWEUYZlSb2AcHmrjElPSu3z2kApA0bfKQBoGNMw34RhkdhIFFmh1ojpHP4uAaK8
+Message-ID: <CAJaqyWcXcW9U7a1bMAngG-eEjw6t5T3XPUdn_hai5OWWTQW85Q@mail.gmail.com>
+Subject: Re: [PATCH vhost] vdpa/mlx5: Fix oversized null mkey longer than 32bit
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, virtualization@lists.linux.dev, 
+	Jason Wang <jasowang@redhat.com>, Si-Wei Liu <si-wei.liu@oracle.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Gal Pressman <gal@nvidia.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-02-17 at 19:08 +0100, Corentin Labbe wrote:
-> Hello
->=20
-> I have a thinkpad t460s laptop with an unknow network device.
+On Mon, Feb 17, 2025 at 8:45=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.com=
+> wrote:
+>
+> From: Si-Wei Liu <si-wei.liu@oracle.com>
+>
+> create_user_mr() has correct code to count the number of null keys
+> used to fill in a hole for the memory map. However, fill_indir()
+> does not follow the same to cap the range up to the 1GB limit
+> correspondinly.
 
-According to ifixit teardown images, that came with an 8260 WiFi NIC.
+s/correspondinly/correspondingly/g
 
-> Since the laptop does not have wifi, I suspect it is the wifi card.
->=20
-> The laptop is running Debian bookworm, and I tried to update pci.ids, no =
-more information.
->=20
-> lspci -vx give:
-> 03:00.0 Network controller: Intel Corporation Device 093c (rev 3a)
-> 	Subsystem: Intel Corporation Device 2181
+Sounds to me the logic can be merged in a helper?
 
-But that doesn't match at all, not even close.
+Either way,
 
-I cannot find any record for WiFi of these numbers, so either the device
-is not WiFi or is malfunctioning. You could try to open it up, take a
-picture so we can see what the WiFi NIC is, and also maybe re-seat the
-NIC while at is, occasionally that fixes such issues.
+Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
 
-johannes
+Thanks!
+
+> Fill in more null keys for the gaps in between,
+> so that null keys are correctly populated.
+>
+> Fixes: 94abbccdf291 ("vdpa/mlx5: Add shared memory registration code")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Si-Wei Liu <si-wei.liu@oracle.com>
+> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+> ---
+>  drivers/vdpa/mlx5/core/mr.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/vdpa/mlx5/core/mr.c b/drivers/vdpa/mlx5/core/mr.c
+> index 8455f08f5d40..61424342c096 100644
+> --- a/drivers/vdpa/mlx5/core/mr.c
+> +++ b/drivers/vdpa/mlx5/core/mr.c
+> @@ -190,9 +190,12 @@ static void fill_indir(struct mlx5_vdpa_dev *mvdev, =
+struct mlx5_vdpa_mr *mkey, v
+>                         klm->bcount =3D cpu_to_be32(klm_bcount(dmr->end -=
+ dmr->start));
+>                         preve =3D dmr->end;
+>                 } else {
+> +                       u64 bcount =3D min_t(u64, dmr->start - preve, MAX=
+_KLM_SIZE);
+> +
+>                         klm->key =3D cpu_to_be32(mvdev->res.null_mkey);
+> -                       klm->bcount =3D cpu_to_be32(klm_bcount(dmr->start=
+ - preve));
+> -                       preve =3D dmr->start;
+> +                       klm->bcount =3D cpu_to_be32(klm_bcount(bcount));
+> +                       preve +=3D bcount;
+> +
+>                         goto again;
+>                 }
+>         }
+> --
+> 2.43.0
+>
+
