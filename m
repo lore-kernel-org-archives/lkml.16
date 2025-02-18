@@ -1,80 +1,113 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E241A83E6
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC551174EE4;
+	Tue, 18 Feb 2025 10:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739875279; cv=none; b=GZpf1GmvD0K6gR4Xa3nyKHeN0D1spDqHuqEZALI8YsdkkGQnZKs/Wox8ue9h9ToMDrw2q2DBrg1UhWpePDJUmZ4DBociYEIbfS+Co2FNf/yIbGTDPxOeCvSrER2pu1Hyo1iEgNUAHUT71IkYboC8Up2IkTH4X51vdsn8xMt9NwQ=
+	t=1739875307; cv=none; b=iJ/rkHHyp5mNP6TWM46PgpqvXeAFt6gHjpCb+X7PB/4FDDmcpW2YlUm1ATfgmuSQ9LH1lfZn9GZNMvWhawu9cnLrcsT4o+nfRCGx89EE6mZxA0cFsYYpSRitmaDgGeoLNY17R9ok2ZDSI8j34REgq2SwP9GwsRRgttoB+DhwfyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739875279; c=relaxed/simple;
-	bh=um5V+wPJbcZy5/duhKrjfbJ/N0p9R/g1eF+9GZJvmwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NoiM9Y9E3a4iC8gO/g91kg+nRNEL0VxNgkMgOteHjoLg1xpgMnTXWK7R/xkorfQJjM1XRyqduysWHBLeIwdYyuS08Ra1MtM3vltsnlnV1Ct80hJcxihJ5e6hHeFK0XHhLTUjnggDGFuJRXrhIZHcYiiXT20l/9qnKNNUS8xJiU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o77uuRVL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QgESSf/V; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739875307; c=relaxed/simple;
+	bh=D0GdTdYNu5L2ksDF1ryOKiqlJ0F3Vhq7y7mplxbdGLE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=G9bcTGtlRak6OEIYh9M9j32cCbntDmHVCPvSvQn5RUwFxlMKNCbPcoEMfpiDAZMnoHfZlYCE89ILRbIqZ2W2BEAlq+o4HgflxMJ31Kr72ULkdas5LBlkjcgR5A777v4MSs4Z5flAzqhJstEpgXl/Gcn5Gy5PAtE09hy9B1+7kSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=APp4fQxu; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o77uuRVL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QgESSf/V"
-Date: Tue, 18 Feb 2025 11:41:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739875275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oEIAK/m7WrZyrJSsVGS/iVZPONh0zjc3OTiph0Kbp0o=;
-	b=o77uuRVLd3jCKh9qnoWx+GZW8rCqIFvnPoihABC+skfI9jhfxYy09zZ3i2TcFHx8sRChuj
-	h8Rkdo/h63UwxrAs0M0nM+5AMa2nFKATUXCF5C3vUM97myBGgnZ4loMI0P8YhsucM2PFut
-	FbkTe8Kj4QfNFoLoqCowjH8V9z5O+MTUJ+iv+97fzrx8Qvw256gYQBUUxX+RVrbdLTzLlG
-	9NC0PH+WRRLjT79lb199DxoEsn4YImsN/Zt3w5ym41bjYoouYgDg3ktVvF9ICeyYEX5B33
-	8UHVkGWoSlPM7g6d+YFOegxixkqgxCkZ1NEwpP8kma7wbA+L/+Z7kXl23Kl7Bw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739875275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oEIAK/m7WrZyrJSsVGS/iVZPONh0zjc3OTiph0Kbp0o=;
-	b=QgESSf/Vee7lFLhMaetXJnky79AZ5lNHVJbAcxvK03G6+Sh444nQuHkAtbnv6bH7IiLclg
-	Fh2Wk5W+vKwj6HAg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: mm: Don't use %pK through printk
-Message-ID: <20250218113329-baca2d3d-5b2f-4f0a-8953-75fbba9bce71@linutronix.de>
-References: <20250217-restricted-pointers-arm-v1-1-aaa0fb22e18c@linutronix.de>
- <Z7RgpaLeIPMQ7kgp@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="APp4fQxu"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IAdTCW012257;
+	Tue, 18 Feb 2025 11:41:28 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	V4eYCNtATnwN1ZIKmyX0+Wk2XGtLI3NIn3i0ikesTwU=; b=APp4fQxusozWDrY6
+	juXOk6kxHRZCNbdFr2OT91Sr8enp6bZGWGhFyTEGIAte+D8JGCKboLnN71ZQb639
+	dohF5cO7IsMWw+dIWHuixxSkC/C0ZEFj+TeQdt13h1rw+kdQFv8iLnfCd7rbm8R8
+	gqvNoOand5i3pxQFGHFlpwZMmuzJE0tEQSz0QgYdxjbQDDj0W1JHZ58xrgz45lCb
+	o+FPDATKCjr2lRFJhxKeaUdWYIf/1PpGMxt2sdHEEHCtLYRGHQ3sqE5QVtwgN49B
+	3J+xOkyEjxOmpXh/uUoRFVdcpjTbHyNIl504sjtgZcQSetZo79h9BJ0k3rovVpdn
+	9it76w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44tm1uba39-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 11:41:28 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1EA4340047;
+	Tue, 18 Feb 2025 11:40:09 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4E91E3BE6A5;
+	Tue, 18 Feb 2025 11:39:04 +0100 (CET)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Feb
+ 2025 11:39:02 +0100
+Message-ID: <d2a2feed-a2f0-430d-a872-23d22afd937a@foss.st.com>
+Date: Tue, 18 Feb 2025 11:39:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z7RgpaLeIPMQ7kgp@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/8] Add STM32MP25 SPI NOR support
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <christophe.kerello@foss.st.com>
+References: <20250210131826.220318-1-patrice.chotard@foss.st.com>
+ <20250213-lush-rainbow-moth-0f5e18@krzk-bin>
+Content-Language: en-US
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <20250213-lush-rainbow-moth-0f5e18@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_04,2025-02-18_01,2024-11-22_01
 
-On Tue, Feb 18, 2025 at 10:27:49AM +0000, Russell King (Oracle) wrote:
-> On Mon, Feb 17, 2025 at 08:38:37AM +0100, Thomas Weißschuh wrote:
-> > Restricted pointers ("%pK") are not meant to be used through printk().
-> > It can unintentionally expose security sensitive, raw pointer values.
-> > 
-> > Use regular pointer formatting instead.
+
+
+On 2/13/25 08:56, Krzysztof Kozlowski wrote:
+> On Mon, Feb 10, 2025 at 02:18:18PM +0100, patrice.chotard@foss.st.com wrote:
+>> From: Patrice Chotard <patrice.chotard@foss.st.com>
+>>
+>> This series adds SPI NOR support for STM32MP25 SoCs from STMicroelectronics,
+>> for that it adds support for:
+>>   - Octo Memory Manager driver.
+>>   - Octo SPI driver.
+>>   - yaml schema for Octo Memory Manager and Octo SPI drivers.
+>>
 > 
-> ... which means that the warning is pointless because no one can debug
-> it when someone reports that this has fired.
+> You combined three different subsystems in one patchset and nothing here
+> explains why and what is the merging intention. Either split your work
+> or explain dependencies/merging.
 
-For the most common setups which using the default kptr_restrict=0,
-%pK is already the same as %p.
+Ok i will add an explaination about OMM and OSPI relationship.
 
-> While I get the security issue, changing this is severely harmful to
-> fixing problems should this warning fire.
+Thanks
+Patrice
 
-My next goal is to get rid of the easy to misuse %pK.
-If the address is really always important then %px can be used.
-
-
-Thomas
+> 
+> Best regards,
+> Krzysztof
+> 
