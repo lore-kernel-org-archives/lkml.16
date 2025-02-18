@@ -1,62 +1,62 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74E923956D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF0323BFA3
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739873550; cv=none; b=tWbauNGNm1GhzDK2jz40sEap0vNTYO5g50SyMAY1U+o5tPzpLdOG6+HONkRY/P/8DCJ7Dd/vhf0vKoycQ6FEzKj9E8db+6z46UpyZdIO+eCXrfiUr+fyWkH25yPVQLwbZVWig/b7w8m2ufLgvd17k9DMEhLa1FyGnXFe/udvkns=
+	t=1739873552; cv=none; b=k03lVChn61aO+KtGl1Nv/of0tNRXNr2wn5oGi0u/3MqmOBK6rcUbheMIbn+/PAMG525EU0f1pkLXHGNgLEGG4ZkumNG1TUXSAFhU4VZZvAMTb6XPGyrj12dtH+IodbT7hxZkwykhmb9rIlZw0cfB2atT8DoeY32Jl7ecVeq8914=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739873550; c=relaxed/simple;
-	bh=ECz5X7I3+CKYQXuInRYoI309iDJXr8+oXd0YASKhnBw=;
+	s=arc-20240116; t=1739873552; c=relaxed/simple;
+	bh=ezbRlCRRih7ztNQfSrHs4WhtoVlP3GIc2Vb1QT7R4sI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NctWA0Z0qBHi1cj2ycIHTZHUEwSwYapNfmwc5QTk0/qbPy0u0bKw+Z8LYTaoeV0gCnpmY7rH2XPA17OSwIuw5aryGGw3HZENtoQHfyztcQ76GzAGlW0bjqHtmhh0FSPBvGj5+ulgMSYk1ZVTgMjbvO8BaEsIwV7M/VHZga+W9Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SupFqq6R; arc=none smtp.client-ip=209.85.221.44
+	 MIME-Version:Content-Type; b=f3877hCaHTe7Is/Ba311asjUek7gCBkAAjSioSS9z6vdwSffzSeAqz9OF+BMt4Injt1KIkP0GxiJRQZNB5HFoy/U6nPXmXAXAInXWqsc3sy2Iy1GPbaqVCVkq+sHwNRH1v2X1tJNybNyd4mFizK3QmwxLzx4vHWdiFj5pij21LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mkuhy+09; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SupFqq6R"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f3486062eso2252178f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 02:12:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mkuhy+09"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38f325ddbc2so2476403f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 02:12:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739873547; x=1740478347; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739873548; x=1740478348; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=an4ZlObHhfs530zfnSQ9jtNvfBOIXbJcmgdk2xLIJkM=;
-        b=SupFqq6RzZ1VqyY40ipA5RnBExCJUC24BJK0JBkECQxElRnCzwIfJmryKeYgnIl6FE
-         1DiqwrsffTLOp3J2G1okJmjcj3Z8HscLQxh3yZN+uALH23DMIHjp/bo5bUkhzPhU1Ust
-         SRNyKhKsU0X6Xng8TIewNrnARYdX5oeoJJIW3DuSqzINWzfFIJSku3qmOW7cYza+nnha
-         vyBVo1x4uTkrLZSLJsog2rcOvh2cgNiUMVE8W60QDunY3FvH3uhb03AHEip6hvkAbfiJ
-         Rxq37fT8/KZ9699Me+mmp7C5TtASSlKGah7WjR1GREkDaOSfqhe5f0/BxRifJ8gez/Ie
-         XCwA==
+        bh=vG84qkV7BJECjcnd+fwOr4EF0zkS6sxDafqd+tmcLZs=;
+        b=Mkuhy+094D2Gcr/p8q9NNFuZl7JHGzKHA1pmzOOLaM4BWPelZ05eP4/ri+00QqwB42
+         EqOqPp8btyPdUWMUsG104CmPQ+hsAR1CpTB0FpDIoUDyeJJf4VdbepPYiB3CSgf4D+D0
+         ozb1zEg/5IZRy/ZUw06T+7/lISKhcE+co5lnAaLiFND8NHPqVP6Ua88t3BUrO0WfMTLd
+         4OtMaRs4cNvMUQi1nfcAseyQwvpCxk0PswRYmFNvnEwl/Twpis7tpDaVkPIn+lEVqfsn
+         ND/3tvIVnTrlOxxYX92WVsXDZxe+4uh12w5ZIns9dIsm2KWhqdr/fo1jTIudLZKnkAg8
+         THRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739873547; x=1740478347;
+        d=1e100.net; s=20230601; t=1739873548; x=1740478348;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=an4ZlObHhfs530zfnSQ9jtNvfBOIXbJcmgdk2xLIJkM=;
-        b=KJeO/yow41zWjkwpvHwrZGWuKBoYcTLxUq/bWle1SNuW6VDaFvXj/hKSWy5qqrVQYK
-         tigxH2TG5RhP5XkkYvjnxdxRT60/p9LVeIzm9YWO3iKWEZUFHLFqRiZpQPL+Xvpi/5/F
-         Qki/6s27yDP8GMtPGz1ZFwTKhj1xWM0N+x/MZlgbPmf5EbqO/ImITLMqBIg6yhoNsbEA
-         niIRr79m3N8bb4NMq3mjKMAx5kEIL2002p94pIVeeXaQzaUvOlBzOF4AnqGuxLy9D8Fd
-         NQnY7pEMdSJdzQ5uVpS5aio6jGrUUlDYBD2Vrvfe6CGRLPNIgc809w73CH7SpBNL+Yz7
-         RjnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWI9g3z+AjhkaE3eSZx8rPqoxnSXG2ZkpzBSkOIsccmpuhIDK0EFbK86pCxaXTxedaHxSRc+rZbDJ9GS4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpYauEIbsYHQ7aeKGMWDflWa+zn8ADIpDBPvrJXqwjcs9ZhCPM
-	QxMSXbT8OyAj6eb1aTLx6J3zo32D2R+D/YUd/iAEQOW8d4tQ8q4sOYPWfc7k
-X-Gm-Gg: ASbGnctaEDeYGcz/Nisjb0Eno1r/1DRCjrE0lu1825kZaiKCMATJ+OWR0RQ0j/553UF
-	baEje2JnUkugMNIFxV2WodOsJn1RsRptBiRKaYc9blQG9BPszvO1ygsw7B81iusqlLEc1DGU2z9
-	Kyw8uysPTeLPndRX8YUmkxZcId1I2ElCag7sgrmYqYgj5KMSIOevQIdAi8x3uefQ3ABNsxHIKMp
-	MV4Hr+J0xj396NUuSBd+2c3pJD4ABEanypgpYujTdycps44HqJJEyGfYvMZ5X1lf0T4B9P6XbtD
-	lSOgWuUf65EpdfkBGQ==
-X-Google-Smtp-Source: AGHT+IGJxHESmAAuUrG/TzfS69sJTg+tzboHhcOfguDL/BJgytBJbYzlmkjBEB91eQfNa8ZNIOKnVA==
-X-Received: by 2002:a5d:64c2:0:b0:38f:470c:932e with SMTP id ffacd0b85a97d-38f470c9576mr5637822f8f.29.1739873546478;
-        Tue, 18 Feb 2025 02:12:26 -0800 (PST)
+        bh=vG84qkV7BJECjcnd+fwOr4EF0zkS6sxDafqd+tmcLZs=;
+        b=VnW9jnKjx4UCTiJmjINMzaJeYob62AmebLQ7zh/7zg/JMwUO3uC1Ud7qouGH/sbuN/
+         KZnFlMWW8Idf9vNl+TstPCcoH6lhdfCw6hYb5Z41HdhvXTm45ubwnakhR5KUJI75pSSW
+         CrdptOOSqLUBZJg0K8S2qcQnWVStElaGqpb1H0h6jSGvC4Gvue2hlFcJs3sAN2RRLJXG
+         GA1rOqQhBJNLDET4S21awWXRMbsFGl584BQ3oZaqJBjsZkM4DDdEcDelorJaIM9ah2HV
+         Ir0zR5ULCAUq+9r0jghjuPuQThlIfWQDwmrH+uI0PX/kQvwf4lJkWwzcFAUXup012IsK
+         tYCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUZYGpbv6sJ9onEU/3iWay/ieiENvZ2uOglbXJgfrKDdeTvDkUI7jxYavZc2VW4inlRk+7Ul5d+/qdMy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdJolcXjr8phgAgT6nmbj5xUVfRta8+/GiodPRBmCmJEPacK1V
+	DOHY7NHrgCEv3xlMTdp9OEK/mNLCwyFD7Zt4VdwNP4tz9p6ncVQd
+X-Gm-Gg: ASbGncuClNvzLr74+RiJbL9oaJmlqJMQfqmBxOCYWP3kHXqEPVLeuBx5ZUPSFDc/q5I
+	Q/0mDV6W+AZbqfhHVjODBYr+twtf1XLfLdGWe9DvAKOLF3ZZsjt5qK85geTIlAWiXv/oaVJDm19
+	bkwzTD+6VA94TdHakM35ZruAp4TgHlaRYVWSiYbMIn6NZM88b8nOsb/Hw1x0jOND+h3F9RAqExO
+	SxKDNsElXrunFM7YZP8+vIj9agJEuZTg8gxHUdsIw2EgYSxhDv4nS96I632z7UMVDH3QcwYP/y4
+	CPNL+JmElfRTDQ4k+w==
+X-Google-Smtp-Source: AGHT+IFbaa0meB3wBm+TDHc5jyul6WCWSeakV99m+tb4BZHPtJ5c4WpsT4IWxy5+wWc8KfJM1qrkAw==
+X-Received: by 2002:a5d:64a3:0:b0:38f:50bd:ad11 with SMTP id ffacd0b85a97d-38f50bdadd5mr2178759f8f.5.1739873548145;
+        Tue, 18 Feb 2025 02:12:28 -0800 (PST)
 Received: from fedora.. ([213.94.27.232])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e92sm14749720f8f.66.2025.02.18.02.12.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e92sm14749720f8f.66.2025.02.18.02.12.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 02:12:25 -0800 (PST)
+        Tue, 18 Feb 2025 02:12:27 -0800 (PST)
 From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
 To: louis.chauvet@bootlin.com
 Cc: hamohammed.sa@gmail.com,
@@ -69,9 +69,9 @@ Cc: hamohammed.sa@gmail.com,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v4 05/14] drm/vkms: Move default_config creation to its own function
-Date: Tue, 18 Feb 2025 11:12:05 +0100
-Message-ID: <20250218101214.5790-6-jose.exposito89@gmail.com>
+Subject: [PATCH v4 07/14] drm/vkms: Add a validation function for VKMS configuration
+Date: Tue, 18 Feb 2025 11:12:07 +0100
+Message-ID: <20250218101214.5790-8-jose.exposito89@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250218101214.5790-1-jose.exposito89@gmail.com>
 References: <20250218101214.5790-1-jose.exposito89@gmail.com>
@@ -84,152 +84,90 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Extract the initialization of the default configuration to a function.
-Refactor, no functional changes.
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+
+As the configuration will be used by userspace, add a validator to avoid
+creating a broken DRM device.
+
+For the moment, the function always returns true, but rules will be
+added in future patches.
 
 Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Co-developed-by: José Expósito <jose.exposito89@gmail.com>
 Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 ---
- drivers/gpu/drm/vkms/tests/vkms_config_test.c | 38 +++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_config.c            | 18 +++++++++
- drivers/gpu/drm/vkms/vkms_config.h            | 14 +++++++
- drivers/gpu/drm/vkms/vkms_drv.c               |  6 +--
- 4 files changed, 71 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/vkms/tests/vkms_config_test.c |  2 ++
+ drivers/gpu/drm/vkms/vkms_config.c            |  6 ++++++
+ drivers/gpu/drm/vkms/vkms_config.h            | 10 ++++++++++
+ drivers/gpu/drm/vkms/vkms_output.c            |  3 +++
+ 4 files changed, 21 insertions(+)
 
 diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-index a7060504f3dc..d8644a1e3e18 100644
+index 92798590051b..6e07139d261c 100644
 --- a/drivers/gpu/drm/vkms/tests/vkms_config_test.c
 +++ b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-@@ -6,6 +6,12 @@
+@@ -54,6 +54,8 @@ static void vkms_config_test_default_config(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, config->writeback, params->enable_writeback);
+ 	KUNIT_EXPECT_EQ(test, config->overlay, params->enable_overlay);
  
- MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
- 
-+struct default_config_case {
-+	bool enable_cursor;
-+	bool enable_writeback;
-+	bool enable_overlay;
-+};
++	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
 +
- static void vkms_config_test_empty_config(struct kunit *test)
- {
- 	struct vkms_config *config;
-@@ -16,8 +22,40 @@ static void vkms_config_test_empty_config(struct kunit *test)
  	vkms_config_destroy(config);
  }
  
-+static struct default_config_case default_config_cases[] = {
-+	{ false, false, false },
-+	{ true, false, false },
-+	{ true, true, false },
-+	{ true, false, true },
-+	{ false, true, false },
-+	{ false, true, true },
-+	{ false, false, true },
-+	{ true, true, true },
-+};
-+
-+KUNIT_ARRAY_PARAM(default_config, default_config_cases, NULL);
-+
-+static void vkms_config_test_default_config(struct kunit *test)
-+{
-+	const struct default_config_case *params = test->param_value;
-+	struct vkms_config *config;
-+
-+	config = vkms_config_default_create(params->enable_cursor,
-+					    params->enable_writeback,
-+					    params->enable_overlay);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-+
-+	KUNIT_EXPECT_EQ(test, config->cursor, params->enable_cursor);
-+	KUNIT_EXPECT_EQ(test, config->writeback, params->enable_writeback);
-+	KUNIT_EXPECT_EQ(test, config->overlay, params->enable_overlay);
-+
-+	vkms_config_destroy(config);
-+}
-+
- static struct kunit_case vkms_config_test_cases[] = {
- 	KUNIT_CASE(vkms_config_test_empty_config),
-+	KUNIT_CASE_PARAM(vkms_config_test_default_config,
-+			 default_config_gen_params),
- 	{}
- };
- 
 diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
-index 42caa421876e..0af8e6dc0a01 100644
+index 9fb08d94a351..d1947537834c 100644
 --- a/drivers/gpu/drm/vkms/vkms_config.c
 +++ b/drivers/gpu/drm/vkms/vkms_config.c
-@@ -20,6 +20,24 @@ struct vkms_config *vkms_config_create(void)
+@@ -51,6 +51,12 @@ void vkms_config_destroy(struct vkms_config *config)
  }
- EXPORT_SYMBOL_IF_KUNIT(vkms_config_create);
+ EXPORT_SYMBOL_IF_KUNIT(vkms_config_destroy);
  
-+struct vkms_config *vkms_config_default_create(bool enable_cursor,
-+					       bool enable_writeback,
-+					       bool enable_overlay)
++bool vkms_config_is_valid(const struct vkms_config *config)
 +{
-+	struct vkms_config *config;
-+
-+	config = vkms_config_create();
-+	if (IS_ERR(config))
-+		return config;
-+
-+	config->cursor = enable_cursor;
-+	config->writeback = enable_writeback;
-+	config->overlay = enable_overlay;
-+
-+	return config;
++	return true;
 +}
-+EXPORT_SYMBOL_IF_KUNIT(vkms_config_default_create);
++EXPORT_SYMBOL_IF_KUNIT(vkms_config_is_valid);
 +
- void vkms_config_destroy(struct vkms_config *config)
+ static int vkms_config_show(struct seq_file *m, void *data)
  {
- 	kfree(config);
+ 	struct drm_debugfs_entry *entry = m->private;
 diff --git a/drivers/gpu/drm/vkms/vkms_config.h b/drivers/gpu/drm/vkms/vkms_config.h
-index ced10f56a812..d0868750826a 100644
+index fcaa909fb2e0..31c758631c37 100644
 --- a/drivers/gpu/drm/vkms/vkms_config.h
 +++ b/drivers/gpu/drm/vkms/vkms_config.h
-@@ -31,6 +31,20 @@ struct vkms_config {
-  */
- struct vkms_config *vkms_config_create(void);
+@@ -67,6 +67,16 @@ vkms_config_get_device_name(struct vkms_config *config)
+ 	return config->dev_name;
+ }
  
 +/**
-+ * vkms_config_default_create() - Create the configuration for the default device
-+ * @enable_cursor: Create or not a cursor plane
-+ * @enable_writeback: Create or not a writeback connector
-+ * @enable_overlay: Create or not overlay planes
++ * vkms_config_is_valid() - Validate a configuration
++ * @config: Configuration to validate
 + *
 + * Returns:
-+ * The default vkms_config or an error. Call vkms_config_destroy() to free the
-+ * returned configuration.
++ * Whether the configuration is valid or not.
++ * For example, a configuration without primary planes is not valid.
 + */
-+struct vkms_config *vkms_config_default_create(bool enable_cursor,
-+					       bool enable_writeback,
-+					       bool enable_overlay);
++bool vkms_config_is_valid(const struct vkms_config *config);
 +
  /**
-  * vkms_config_destroy() - Free a VKMS configuration
-  * @config: vkms_config to free
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index 37de0658e6ee..582d5825f42b 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -211,14 +211,10 @@ static int __init vkms_init(void)
- 	int ret;
- 	struct vkms_config *config;
+  * vkms_config_register_debugfs() - Register a debugfs file to show the device's
+  * configuration
+diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
+index 068a7f87ecec..414cc933af41 100644
+--- a/drivers/gpu/drm/vkms/vkms_output.c
++++ b/drivers/gpu/drm/vkms/vkms_output.c
+@@ -16,6 +16,9 @@ int vkms_output_init(struct vkms_device *vkmsdev)
+ 	int writeback;
+ 	unsigned int n;
  
--	config = vkms_config_create();
-+	config = vkms_config_default_create(enable_cursor, enable_writeback, enable_overlay);
- 	if (IS_ERR(config))
- 		return PTR_ERR(config);
- 
--	config->cursor = enable_cursor;
--	config->writeback = enable_writeback;
--	config->overlay = enable_overlay;
--
- 	ret = vkms_create(config);
- 	if (ret) {
- 		vkms_config_destroy(config);
++	if (!vkms_config_is_valid(vkmsdev->config))
++		return -EINVAL;
++
+ 	/*
+ 	 * Initialize used plane. One primary plane is required to perform the composition.
+ 	 *
 -- 
 2.48.1
 
