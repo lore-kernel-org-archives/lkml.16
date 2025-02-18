@@ -1,97 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337BF242919
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5021D23958C;
+	Tue, 18 Feb 2025 14:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739888173; cv=none; b=F0RvmiMJZsDf2yfHEJP5O+LtA/SdQPi8QcSvfpUgKYz4Y8yQ/YYT7iiZCChVYPPhV8tyzuSi3lnI4t5D8CIq9dAGug5PUnH1bceqo6XXUPacqkzW384UcpPAotE52/FjQiuBuGCkgy3GP0+oEDIFGq6CNcxtpjqlGdVyCzShJR8=
+	t=1739888198; cv=none; b=K6+swqSUDbLhO1330Y4bR05ftvnNDfNOzJUoyz1ljHbCmozOqhosgxm0pw7ecihYfEzX0MMUOs5dMiHn20bXgOOMNvu/tSpwbav3UQUV3u2jv/PCHQUznW+WX8UvOuDI0nxKFY7Du/I6nPRiFYS2Lr/M22zS5LqIY3uPPH+66Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739888173; c=relaxed/simple;
-	bh=rhaIXTwu4dNGqWS2BYHrULqE711doIom9SkTjNRwSF4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YcIiMSOE8PdAq4LQFjaCyjVuJh8FnbTe3/BsjcykiUjRObCU8hYyk7WzZbr1Cx8tYKvcjdJ6x6JfizVEikTK7doGNKbecuSf612P0WKTgEavBTPqB+/ep5pkWyYwmqePUUq14PzzQUG97EZpUsOI51K23BT+VZSkzmcUlEiYzlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pPnRnlx5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rZ8zjyHL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739888198; c=relaxed/simple;
+	bh=Q0z9FjYXWyIXtaEzCZf6FVqFshEIJPiN8uoO6wxcv3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ku/eALEeUqoAGr3dlUt2QtsYCMIiZpJ55ajEDkd9Mxjj5ANxI7D0jLO3JVb/gBBinT+KFGnrVbhqGf4dXic/JObSUI7oNbxMuFKiMvxxLLiIaVhW5iQA7pA9vq+Vpx08+J0AGmcKZgQCQlQhcrY31KE0i/FfpWLaLKfL80eP1r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hhCMfjPi; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pPnRnlx5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rZ8zjyHL"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739888169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=se6qGXj7AH9bepHz6V1+xi31b6bghMv56/WLOfDjDek=;
-	b=pPnRnlx5w8GXL2338u/sIKlRx3Q2MTOmpAQZ2uhzAglIF2MZYqXMgdd4aS7CAYuLuajKE1
-	HDLunAB5KJViHIVZAGfFFzVepv8OILBrMTeJf4cQTWH/6wK5Rj3m/0AFKsFVdmi+sFtJVz
-	DPPu/lO059u52hsZeJQzDxyYCAfDtNKOXl3UeZXpnRfIQcsp2LTcXNaTkctT/OYPwjsLYF
-	P46mBOW00gu1Y4EU1fVr2WiI/EEKfsSAPKlaJVVFoQ84v79YVff7PP18KFo+MgRj8CIsAy
-	rAnKJyiUEE/PCnwLZbsLxLqRTowmrZHhF+96WgJs5duXhJmjvLv7ViiLl5NQRQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739888169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=se6qGXj7AH9bepHz6V1+xi31b6bghMv56/WLOfDjDek=;
-	b=rZ8zjyHL8af3JeZdBsL4PDzgRuMydzBsl2vqQ9G7wkpeOGaOFIb12CsefvcA0I4GfQnzMm
-	D8IDZ+WGBCKxsjAg==
-To: Eric Dumazet <edumazet@google.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Segall
- <bsegall@google.com>, Eric Dumazet <eric.dumazet@gmail.com>, Eric Dumazet
- <edumazet@google.com>, Andrey Vagin <avagin@openvz.org>, Pavel Tikhomirov
- <ptikhomirov@virtuozzo.com>, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] posix-timers: Use RCU in posix_timer_add()
-In-Reply-To: <87o6z0jrx6.ffs@tglx>
-References: <87o6z0jrx6.ffs@tglx>
-Date: Tue, 18 Feb 2025 15:16:09 +0100
-Message-ID: <87zfijibiu.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhCMfjPi"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso4300542276.3;
+        Tue, 18 Feb 2025 06:16:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739888196; x=1740492996; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J0llu5YB8AGoFH0I5kYKDvWCJis6mleBIejl0Ej5nZM=;
+        b=hhCMfjPiUmDEY+2ZCO96T9B9qhUzydJakDElk/DhcE0Q7lCMdIi38Hl94ngq99mnvb
+         ihRiuOmk7L90a7cpSrkD8CE/34j73q9J1mx0E4Orc2Bbg4PICFXTCKTyWQFe0c3qmgnc
+         L0ZJzJz1x5d8+UwKUQVF6SNNxCta/hfEw7wNizsq8a8Grddo5fTZ0ucnZkiWgdQSrhiO
+         MouXcMb4VkAPovJFBLZU566GpKNA68jIrKKD4pIRLU8VqBQ5N7mD4w5QtaWtNKGJ6v7k
+         VfkpZ1vQVurOQXljP+baKjzMcO88DRfNgMWHFb2UGyOT9mofdVZAGZCV3fnLrqGL7+SB
+         ENng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739888196; x=1740492996;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J0llu5YB8AGoFH0I5kYKDvWCJis6mleBIejl0Ej5nZM=;
+        b=R6VHrZzF1vv5QJA5KPBZh4swih06X0QwanoDVWNvCeAm4IcSXv6g1j35S5QL6lzcU3
+         l/aLrpjiC+4GICfDjaEJwReleIFkPY8goNmVlJZISiCHKHOJhkZw7oM0HDM2G6it5m8f
+         PxF+EgudwWZ2hY5h3yzfOyBIAPB5yE6r3O/uBcUS/Ou/AkHtt7Kk+0lxxWiLIoVSa5xM
+         NuEA4/WgarsWE4smUPRDrSnzsyJDv/OeBcaafQ5n1rXgXjjc1KJWmtyE/+IgsJLM1c8E
+         SdDMlnW+WHbMKLkjlcR0whhIQ/SLvWjiKZCVElLWBI3KCBsiPw+B6c7KtJv54zAKZrST
+         jDoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAUPeZFUAuJ8m9keVEecKSgwZ6OJs3KsxT69EpKsSFCBxdVzNqYw3SasaHuD2wadquz1Lawf3XhUF16aE=@vger.kernel.org, AJvYcCV4FMIasTopKhsNBiW/zlBusrtd31I8NA2z8lHSh7a2XzkE7ZQhNyhOL+Sb1QSqJCMd5ShddKSF16yhyg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPO7sDdibAsZ40yu1uL0YnCp2A38oHt82Mkx0QbwOLekHbs7T+
+	vwmYZ4Lmsz9MLA+Xeu7yFSLIxy3XzvjnH2c3rNQ0M1p5oDxNUwccNrAXsSa3
+X-Gm-Gg: ASbGncs4T/BNokxUi5wF/uPV1+ltaqenIahaKINhHJtlzpGyjF7m9D7gbtPbPBwqL5z
+	qJ/aLeexZUuyOLfdQvnMDe311CQoX51VjzkF+08+n3M0IRHZEPvGz7dNX79IKabshl9eKrTbiZ7
+	0/c61VkP0d6U0Ac05k9UvN7FO3DzLvxKMLmq/DSCAoSYyBsGsxV/xaYPCV54N6WOAhOKj0ibjtw
+	ySTYiouCUmC2rdS9Mvfb93lTO5Yy568VMvwZejKuD3YOBGEmI6BI4erDX2z2MAJDi6nFzJS/THt
+	nN83spE8ZlwllbnhH2vM0wloZgtHhWMcEdEOZPNMw2C+Mbk6k54=
+X-Google-Smtp-Source: AGHT+IH7nd0t1Q3cNhxJjwGpKDAwBG18APeeJ3x8AEDKf8Pz6YQOczjRk4Y46gYPIsBPF8/G2jt/PA==
+X-Received: by 2002:a05:6902:1a4a:b0:e5d:afe5:8c2b with SMTP id 3f1490d57ef6-e5dc9045af8mr11419017276.13.1739888195864;
+        Tue, 18 Feb 2025 06:16:35 -0800 (PST)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dadea63d6sm3040662276.13.2025.02.18.06.16.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 06:16:35 -0800 (PST)
+Date: Tue, 18 Feb 2025 09:16:34 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Beata Michalska <beata.michalska@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the bitmap tree
+Message-ID: <Z7SWQoO2Upm_sNNx@thinkpad>
+References: <20250218160742.49d6ab76@canb.auug.org.au>
+ <Z7RiVtunqI9edfK4@arm.com>
+ <20250219004934.46ace766@canb.auug.org.au>
+ <Z7SU0THZ6bSG9BKT@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7SU0THZ6bSG9BKT@arm.com>
 
-On Mon, Feb 17 2025 at 20:24, Thomas Gleixner wrote:
-> On Fri, Feb 14 2025 at 13:59, Eric Dumazet wrote:
->> @@ -112,7 +112,19 @@ static int posix_timer_add(struct k_itimer *timer)
->>  
->>  		head = &posix_timers_hashtable[hash(sig, id)];
->>  
->> +		rcu_read_lock();
->> +		if (__posix_timers_find(head, sig, id)) {
->> +			rcu_read_unlock();
->> +			cond_resched();
->> +			continue;
->> +		}
->> +		rcu_read_unlock();
->>  		spin_lock(&hash_lock);
->> +		/*
->> +		 * We must perform the lookup under hash_lock protection
->> +		 * because another thread could have used the same id.
->
-> Hmm, that won't help and is broken already today as timer->id is set at
-> the call site after releasing hash_lock.
->
->> +		 * This is very unlikely, but possible.
->
-> Only if the process is able to install INT_MAX - 1 timers and the stupid
-> search wraps around (INT_MAX loops) on the other thread and ends up at
-> the same number again. But yes, theoretically it's possible. :)
->
-> So the timer ID must be set _before_ adding it to the hash list, but
-> that wants to be a seperate patch.
+On Tue, Feb 18, 2025 at 02:10:25PM +0000, Catalin Marinas wrote:
+> Hi Stephen,
+> 
+> On Wed, Feb 19, 2025 at 12:49:34AM +1100, Stephen Rothwell wrote:
+> > On Tue, 18 Feb 2025 11:35:02 +0100 Beata Michalska <beata.michalska@arm.com> wrote:
+> > > I'm currently testing a proper fix for that one.
+> > > Should I just send it over as a diff to apply or rather a proper 'fixes' patch?
+> > 
+> > Maybe a proper 'fixes' patch, please, if easy - otherwise a diff is
+> > fine.
+> 
+> I just talked to Beata off-list. I think she'll try to use the current
+> for_each_cpu_wrap() API and avoid conflicts with the cpumask_next_wrap()
+> API change.
 
-It's even worse. __posix_timers_find() checks for both timer->it_id and
-timer->it_signal, but the latter is only set when the timer is about to
-go live. I have an idea, but that might be a bad one :)
+Hi,
+
+Yes, for_each() loops are always preferable over opencoded iterating.
+Please feel free to CC me in case I can help.
 
 Thanks,
-
-        tglx
-
-
+Yury
