@@ -1,111 +1,95 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FA8274244
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0452F17A2E0;
+	Tue, 18 Feb 2025 18:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739902716; cv=none; b=gLiz/p7MO5OHpCt++xZXmmP3fGDET0jtLg/izwO4XapRvJ9M4BhadqjjULXBfpJQRTBxJlUXhAGxIDb/tbFeHfdfRDkoBzJFdmxcH313+SEYrvW88V+jX/k0QVGPSg3mtNSGd08VqbfXgPH+9qSU/5tr9+2Tds+j/NgzX4vkMgs=
+	t=1739902823; cv=none; b=ZIkUl9eUMXkz1u2BY83RZ6KxVn1+7hXB08Yu8qRBLaJkKzc1raVxshQMgtD1373rDTTeeS3Pm63TdEOHcUeRVqr0TVaBG2MrU/R3RL7RSyiW0f4qARhDAixGPjhe59psUbn0xCmeZ3q1/Goxvjzj9f91oD+xicdksXGwT/OBf38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739902716; c=relaxed/simple;
-	bh=hfzZdfOKpQbXFbOoMsaUFV2yirnnitYfWgxWHNz+MGA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pz4oSO8Hc20GICS+0PMnNvQgcYoeCeluUp8hAozpN+twazmSXI70ls+0UCZBSS4dFYF/3Il1nwee6OAGQXMoJki/qiADrXHkJAQfdhWfxw8p8dYjCSw6ojEOW/5BpzI1+O5wtRw0jCfVuQllWF2UX8TvAfgJAKadZxtLKFFl2t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=sooZ/3QH; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739902823; c=relaxed/simple;
+	bh=i7uUtXNMjRRNoE/sjgLWfCiLhOArRyzd5/y7ZwlSfj4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RKyqRvJUTD2ouKTDVZdkI3u5ADzV780nRfm8VvnktsfTmHCwzRif2NmoSSanjbFq04flDbRAeUanFIGXonet9OEqa+bfTfOM33tlXJk0SzP+s5vSibCpilLxnBNUXfzw1lx79fLNWlOs16oHvD0zuBJwNxrfWjAmIO46q37U4Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgGuMCdm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="sooZ/3QH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=wLZah36tLm4xOWwJU55Pxm/enxSsJZjr9oUwxC7JWZg=; b=sooZ/3QHQye4tgIwF7EprYtpTw
-	QfZjyavNYFnQTwhE2F5c9qB8uGoSIwJYwl1ADhN8au46xyjeCB96YDChy0F1hzlEPTcwm/MQYP7VE
-	SxkC8Pg8mmz4KS492SepYPEs2SI+msvtk7fwBdtcni/DPIkhcJS1eWHXuWc5rPEbK7Nch7uPVuNJD
-	fRFw28flOpN9HXNa8azfYnezZChgSLgYtKyu/7hNQsZZUtrRnQ+aPfapTnYUrdyb0vCxLJJFx3xJQ
-	idc0J7D0IWV3RzLbGz+hLFQMTYrojQdbik78Kcep0okhgnoVNMOsERQ0TgJs7KL5EHO5NjAcmX+Me
-	pjCVP2nA==;
-Received: from [90.241.98.187] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tkSAj-00BPDZ-4t; Tue, 18 Feb 2025 19:18:23 +0100
-Message-ID: <3c7da108-4692-4456-ad23-7e5d51f0f606@igalia.com>
-Date: Tue, 18 Feb 2025 18:18:21 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgGuMCdm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76440C4CEE2;
+	Tue, 18 Feb 2025 18:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739902822;
+	bh=i7uUtXNMjRRNoE/sjgLWfCiLhOArRyzd5/y7ZwlSfj4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KgGuMCdmekrrFynqBUDp1X5Q9NtJeSK02ZZNNDaJdCAbFbHAkoj0sPqbKLttEmOOp
+	 s8XKsQbwT11tCFcQWPMKqvou9HudFfgK7xJR9zufjeiRnt+Xo2QdchF4tIhAD8uICm
+	 0AV36YNFydtvK4lGWt4a0FB9qGc1YatXESm1W/aEbq28paLxFGcy6CKs9WCCiKpqVF
+	 6+HuMeN3wsbpNaQ7RGsxZiDR/caGUnrTsiB95ZDqAF9J2wWbzHD4xXyqMTgKegMBt2
+	 kh+6d5SeCfrgIBjvQlNHtwrvgH2w9jWPqY+mT1L3IPclBt19w1sdOQeX2IJrEPcdYD
+	 y8Y44dkXsRARw==
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3cf8e017abcso17706135ab.1;
+        Tue, 18 Feb 2025 10:20:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVB5KNB5kJHYJYGJqB1zQOB/Ge8xOZMMA4g1gUpI4VHEML9nrx12Rm5hD7uBgYXpSZ005ljGi2GIDmqeAr9QJEdXA==@vger.kernel.org, AJvYcCWQAK06vczp9+l5ccsMHScF0f/sDND8+hwcc7TVPEKymIjafT9VEJNmhnddnR9X/3oeAE1y/lJpSaTUtFE6yw==@vger.kernel.org, AJvYcCXzyadJt56X+r3SQj8QFmjNLelHpuX1S4pH+RkTIh2tyye1lA3w7ikEqJT/hkrXMLkoAHqHebepEfQ5zAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2Se8Tn2izN4qTCm4aYcNHgdTzIso4yDkpgySXChviTWIj/fv1
+	TU4YmgP84y4LmiN44sdf41qHW943OAO+LYIwqmLezDAvarppFfuS+i61t72ssLid94mkHQBpu6M
+	FhXFfRWOMZv3mNJIJ+CZfgE7h7sE=
+X-Google-Smtp-Source: AGHT+IG4FlnOX9Ql40omkJN+vWGOP3w/LrBrVI6Sr0U3JqnUmjReG7wWo0B7SUJhaMSh92+XkCiuQ91zPpqQH/rpcXM=
+X-Received: by 2002:a05:6e02:2408:b0:3d0:4e2b:9bbb with SMTP id
+ e9e14a558f8ab-3d2809580eemr158857095ab.21.1739902821943; Tue, 18 Feb 2025
+ 10:20:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] drm/sched: Fix preprocessor guard
-To: Philipp Stanner <phasta@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250218124149.118002-2-phasta@kernel.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <20250218124149.118002-2-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250213024507.mvjkalvyqsxihp54@jpoimboe> <CAPhsuW4iDuTBfZowJRhxLFyK=g=s+-pK2Eq4+SNj9uL99eNkmw@mail.gmail.com>
+ <mb61py0yaz3qq.fsf@kernel.org> <CAPhsuW7dV7UR3PsGVx_DLBH5-95DAmLMGTPuY0NfUwWLZMSTrQ@mail.gmail.com>
+ <20250214080848.5xpi2y2omk4vxyoj@jpoimboe> <CAPhsuW6dxPtgqZaHrZEVhQXwm2+sETreZnGybZXVKYKfG9H6tg@mail.gmail.com>
+ <20250214193400.j4hp45jlufihv5eh@jpoimboe> <CAPhsuW6q+yhn0pGQb0K+RhXHYDkjEgomZ2pu3P_MEeX+xNRe0g@mail.gmail.com>
+ <20250214232342.5m3hveygqb2qafpp@jpoimboe> <CAPhsuW48h11yLuU7uHuPgYNCzwaxVKG+TaGOZeT7fR60+brTwA@mail.gmail.com>
+ <20250218063702.e2qrpjk4ylhnk5s7@jpoimboe>
+In-Reply-To: <20250218063702.e2qrpjk4ylhnk5s7@jpoimboe>
+From: Song Liu <song@kernel.org>
+Date: Tue, 18 Feb 2025 10:20:10 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnvvDqTb1fovYfGDRE0ySlLJoOtPvngjhwXWpFfc6v9eHqvdMBDZzElWF0
+Message-ID: <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>, Weinan Liu <wnliu@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, 
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Josh,
 
-On 18/02/2025 12:41, Philipp Stanner wrote:
-> When writing the header guard for gpu_scheduler_trace.h, a typo,
-> apparently, occurred.
-> 
-> Fix the typo and document the scope of the guard.
-> 
-> Fixes: 353da3c520b4 ("drm/amdgpu: add tracepoint for scheduler (v2)")
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
-> I just discovered this. But I have little understanding of what is going
-> on in this header in the first place, so I kindly ask for comments on
-> this entire guard line with its logical or ||
-> 
-> The code hasn't been touched since 2015. So it seems it at least didn't
-> cause bugs.
+On Mon, Feb 17, 2025 at 10:37=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.or=
+g> wrote:
+>
+> On Mon, Feb 17, 2025 at 08:38:22PM -0800, Song Liu wrote:
+> > On Fri, Feb 14, 2025 at 3:23=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel=
+.org> wrote:
+> > > Poking around the arm64 module code, arch/arm64/kernel/module-plts.c
+> > > is looking at all the relocations in order to set up the PLT.  That a=
+lso
+> > > needs to be done for klp relas, or are your patches already doing tha=
+t?
+> >
+> > I don't think either version (this set and my RFC) added logic for PLT.
+> > There is some rela logic on the kpatch-build side. But I am not sure
+> > whether it is sufficient.
+>
+> The klp relas looked ok.  I didn't see any signs of kpatch-build doing
+> anything wrong.  AFAICT the problem is that module-plts.c creates PLT
+> entries for regular relas but not klp relas.
 
-No other header includes so it never caused a problem.
+In my tests (with printk) module-plts.c processes the .
+klp.rela.vmlinux..text.copy_process section just like any other .rela.*
+sections. Do we need special handling of the klp.rela.* sections?
 
-> P.
-> ---
->   drivers/gpu/drm/scheduler/gpu_scheduler_trace.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> index c75302ca3427..f56e77e7f6d0 100644
-> --- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> +++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> @@ -21,7 +21,7 @@
->    *
->    */
->   
-> -#if !defined(_GPU_SCHED_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#if !defined(_GPU_SCHED_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
->   #define _GPU_SCHED_TRACE_H_
->   
->   #include <linux/stringify.h>
-> @@ -106,7 +106,7 @@ TRACE_EVENT(drm_sched_job_wait_dep,
->   		      __entry->seqno)
->   );
->   
-> -#endif
-> +#endif /* _GPU_SCHED_TRACE_H_ */
->   
->   /* This part must be outside protection */
->   #undef TRACE_INCLUDE_PATH
-
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-
-Regards,
-
-Tvrtko
-
+Thanks,
+Song
