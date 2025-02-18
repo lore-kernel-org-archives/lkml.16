@@ -1,90 +1,126 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7BF270EC3
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F52D22E401;
+	Tue, 18 Feb 2025 18:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739901662; cv=none; b=jPTeoDssRiZJIOrg84erCqfmpbWymmqSjizVKFcFztEu5ttlZJMFZtJk3my+nVe9LxxplmptSGm/3Dmbxw5LYCeyg042LOPWMNwYu2oO2uEuaVWDxYyb2aaxBpL04jNsIZMH2BazAbHGRRSKyXSwp0ByLqJLGYsCS1UN2gseFq0=
+	t=1739901686; cv=none; b=BdFG/Y7T9PfUKRw1Om4+Mwy/WR447nkWWLX1+KRpBNs8b2wVArJo6LMnYzw10clyVB93n7zZyUZ3p9us9Yvq2fprwLzLlGu7FrRlUI/BKwH2qr3QaIyfDr3YiJ11jhKn6FfohqZTTTJdVagWKy4I984lrjqFEr3cob3cs7pX2iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739901662; c=relaxed/simple;
-	bh=rMKsWQGXl7eEGPt6QOL/QkxMN7VGEOhjQxgkh5pLurQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bM4DWlehSMlF2DR4hquTCdKmuy2YYH7+3k1kQ4limMkvOnMfqiiVnR79OXMJACCTVdGaCykmrXrp9HfcyF9Lyb75nT0nmW6sirjeur9P0cxhJ6g4CUovlKw8fqFMq+adXCVekxX1vueKoOnch7njK1PRaBWjX2/nHuHoPdSfkmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tkRte-000000003Qj-2e40;
-	Tue, 18 Feb 2025 13:00:38 -0500
-Message-ID: <724d17ce3fbe07d1d9404f8f32ba518071bcfa4a.camel@surriel.com>
-Subject: Re: [PATCH v11 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-From: Rik van Riel <riel@surriel.com>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Dave Hansen <dave.hansen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, 	x86@kernel.org, linux-kernel@vger.kernel.org,
- bp@alien8.de, 	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, 	thomas.lendacky@amd.com, kernel-team@meta.com,
- linux-mm@kvack.org, 	akpm@linux-foundation.org, jackmanb@google.com,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
- Shukla	 <Manali.Shukla@amd.com>
-Date: Tue, 18 Feb 2025 13:00:38 -0500
-In-Reply-To: <Z6_3O75TzANMFrKN@google.com>
-References: <20250213161423.449435-1-riel@surriel.com>
-	 <20250213161423.449435-7-riel@surriel.com>
-	 <ab55a809-e0d2-4364-84ce-917a40ee299a@intel.com>
-	 <20250214194013.GA2198@noisy.programming.kicks-ass.net>
-	 <c42c314c-3c1b-4e4a-803a-ecf31685d4cc@intel.com>
-	 <3e26626aa1c01aaa5d1e7b42d3ffbd632c3264fb.camel@surriel.com>
-	 <Z6_3O75TzANMFrKN@google.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1739901686; c=relaxed/simple;
+	bh=Bnq3fL80Xbs1mEN0tqq7aCS+2kwWkMlF4aMDYCfT4qk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qa+SKZEqtJWYwjfjeSo+8KcAEDlbvQWV37L0Z6fX4x2MZtVoVfFLxJPBBKIRn4jGBDLxrPVkWi95J8jKXKqsaO09kPH9F6RQvAKm77mU37HlG77AUJjXRjOJd+Bc0/b+mW9nQVBbAxLVNFiAkkwfqh5dN/o+pB6rz0K0qK8sZX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kgs45BdP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kgs45BdP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C787CC4CEE4;
+	Tue, 18 Feb 2025 18:01:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739901685;
+	bh=Bnq3fL80Xbs1mEN0tqq7aCS+2kwWkMlF4aMDYCfT4qk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kgs45BdPtWlapAqhfVHCd/RksJaQiMQ9vYZpgc9S46LF+RbHUKM6njGogTdMnzG3N
+	 +BQS68NgNAO8NPss79qyarPctp6lRA75fxsYY6floW+mxb2BmXI0NLEhdDxAmJIW+4
+	 SPgRbkyTZ5BynGzoiZxT1BVwP6QWGuosA3EzIxs2LW9cy0kfeqrgSsCuuXbNi3nGzl
+	 Mzy4z64LP9pk5Nc90f+epj+Jabghb/ucADOHUDYUYbSXeFpyrKH/lgGsUvWvfgwrhw
+	 kXdgj+a7SrRdrUN4uLmsc7L57nfsA9fZArAISRdom2Awxb0a0ohfXblhLeUBU5yRON
+	 s6XA3OcCJsydg==
+Date: Tue, 18 Feb 2025 18:01:20 +0000
+From: Simon Horman <horms@kernel.org>
+To: Roger Quadros <rogerq@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Md Danish Anwar <danishanwar@ti.com>, srk@ti.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH net-next 1/5] net: ethernet: ti: am65-cpsw: remove
+ am65_cpsw_nuss_tx_compl_packets_2g()
+Message-ID: <20250218180120.GC1615191@kernel.org>
+References: <20250217-am65-cpsw-zc-prep-v1-0-ce450a62d64f@kernel.org>
+ <20250217-am65-cpsw-zc-prep-v1-1-ce450a62d64f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217-am65-cpsw-zc-prep-v1-1-ce450a62d64f@kernel.org>
 
-On Sat, 2025-02-15 at 02:08 +0000, Yosry Ahmed wrote:
->=20
-> So I think what Dave wants (and I agree) is:
-> 	if (!broadcast_kernel_range_flush(info))
-> 		ipi_kernel_range_flush(info)
->=20
-> Where ipi_kernel_range_flush() contains old_thing1() and oldthing2().
+On Mon, Feb 17, 2025 at 09:31:46AM +0200, Roger Quadros wrote:
+> The only difference between am65_cpsw_nuss_tx_compl_packets_2g() and
+> am65_cpsw_nuss_tx_compl_packets() is the usage of spin_lock() and
+> netdev_tx_completed_queue() + am65_cpsw_nuss_tx_wake at every packet
+> in the latter.
+> 
+> Insted of having 2 separate functions for TX completion, merge them
 
-I like this idea. I changed the code to add that
-for the next version! Thank you.
+nit, in case there is a v2 for some other reason: Instead
 
---=20
-All Rights Reversed.
+> into one. This will reduce code duplication and make maintenance easier.
+> 
+> Signed-off-by: Roger Quadros <rogerq@kernel.org>
+
+...
+
+> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+
+...
+
+> @@ -1533,23 +1538,35 @@ static int am65_cpsw_nuss_tx_compl_packets(struct am65_cpsw_common *common,
+>  		if (buf_type == AM65_CPSW_TX_BUF_TYPE_SKB) {
+>  			skb = am65_cpsw_nuss_tx_compl_packet_skb(tx_chn, desc_dma);
+>  			ndev = skb->dev;
+> -			total_bytes = skb->len;
+> +			pkt_len = skb->len;
+>  			napi_consume_skb(skb, budget);
+>  		} else {
+>  			xdpf = am65_cpsw_nuss_tx_compl_packet_xdp(common, tx_chn,
+>  								  desc_dma, &ndev);
+> -			total_bytes = xdpf->len;
+> +			pkt_len = xdpf->len;
+>  			if (buf_type == AM65_CPSW_TX_BUF_TYPE_XDP_TX)
+>  				xdp_return_frame_rx_napi(xdpf);
+>  			else
+>  				xdp_return_frame(xdpf);
+>  		}
+> +
+> +		total_bytes += pkt_len;
+>  		num_tx++;
+>  
+> -		netif_txq = netdev_get_tx_queue(ndev, chn);
+> +		if (!single_port) {
+> +			/* as packets from multi ports can be interleaved
+> +			 * on the same channel, we have to figure out the
+> +			 * port/queue at every packet and report it/wake queue.
+> +			 */
+> +			netif_txq = netdev_get_tx_queue(ndev, chn);
+> +			netdev_tx_completed_queue(netif_txq, 1, pkt_len);
+> +			am65_cpsw_nuss_tx_wake(tx_chn, ndev, netif_txq);
+> +		}
+> +	}
+>  
+> +	if (single_port) {
+> +		netif_txq = netdev_get_tx_queue(ndev, chn);
+>  		netdev_tx_completed_queue(netif_txq, num_tx, total_bytes);
+> -
+>  		am65_cpsw_nuss_tx_wake(tx_chn, ndev, netif_txq);
+>  	}
+
+Maybe it's not worth it, but it seems that a helper could
+avoid duplication of the netif_txq handling immediately above (twice).
+
+Regardless, this looks good to me.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+...
