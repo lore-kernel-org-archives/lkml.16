@@ -1,136 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15588233155
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043FD1AED5C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878689; cv=none; b=jPfQIU/Ohn7GZNaexDKkC1V71d07gytZar/Qz/o38SPBX7qjABeKQH9EmbkE9vqVZvWIurXZytYLSs4fn25Qbgej47sP05MF2q0K+XaJAkaIoSgACyhxZsT9KWfcohPAYh14Z61IQV9RqzIivBYo7eNmBoMkdpPeN/KCul1DLDI=
+	t=1739878801; cv=none; b=jRGZiwFzGM1bp+QmA0BuYi5IxNomL6d04pSwQkazf1gaIH+sqwBs/l1sHS8FZ5SMe7dBJl9Oci5rDS3AsPhUVbkykqK0bEuuqUK2VHGUYS6fsnScHxssDuNPVx30iI/aEleN/rL8UtOdF9JlDFqkC1ZHp6Qvvk0NB1qabXb2SS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878689; c=relaxed/simple;
-	bh=6q1iXsSRhhA5iraUx9/TlIOcuAXc4FlVkywxBcBWo7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ARc1h9uS9MbmoYCmMd04cpTL/xgtarv5+uJX+uczY34mkuicc/PfTW6aSCBXeaUwbP4hZBOLcCaAL7shZKAUp1RSkoFliOOV4/wdLVSwu0u1HB80Q4Bd2/Dgy0pqIyi4GQUVTHbnm6hznPpOhjVTYljBXePu7RSXVfedEVFwhEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3j1GjpD; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739878801; c=relaxed/simple;
+	bh=YAOhoExo9uFyUTnaMmDU9LC8Sh+3aQK5UBcgWoh1V7c=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FHHpbQyK8GNbtOB15E6NnC2ocJhzUFtm0X+Njc3yClYVJqNlb1bwFSbKUf9v4cxuxeUU3jaKkGwywfmxGEukaMjVEtEAEiJxZxDZjagdQB595IEGnd2w5xdXje5h3fKd5wK5EzPBGHw/baDXwIDgtD6jUimKKthZ9MEv8Uhtd5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=teE0M/Wb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZZxwPXdv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=teE0M/Wb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZZxwPXdv; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3j1GjpD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739878688; x=1771414688;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6q1iXsSRhhA5iraUx9/TlIOcuAXc4FlVkywxBcBWo7A=;
-  b=I3j1GjpDcD2CkCBASPmEwxxiROQds5ve0bd8/DuTEN8xEku1/VbHXgir
-   pkDeNlm2Lcn4WkGwvuH4Wf5mhH3UaICeK1FM2DZHP/85Vynt6/C17zKEg
-   0RlEnAo2NrGpVZm44ev5xGSazwNGBv1p8etI20kWXt6yWffRWJZUqjUbM
-   OAajp7wdqx0nkI9I8IMNSxayFWyhdJNNHk1nnoGRtnhi99VVTkA6C17A2
-   0ZvtSVG4pIcSJrHq5tTx7vB3fX2iAydkQ/IZr05H/57mvoU9WVhPhlzjp
-   FuLttcgk2qwvXHS0CIuvbe1fgmDCbBRRyJM6O2kWtbEWUFyv5iNBbB9MJ
-   Q==;
-X-CSE-ConnectionGUID: GQ4jMjCpQZqG4zFQwEp/GA==
-X-CSE-MsgGUID: mGlVdeZiRCGt1X5rm1X2Iw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52000405"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="52000405"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 03:38:07 -0800
-X-CSE-ConnectionGUID: 1PPprSuYTq+skJ95hig4nQ==
-X-CSE-MsgGUID: oX3/9mneSNWk1zRt4ot+YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="119298528"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 03:38:05 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tkLvO-0000000ChkY-3myE;
-	Tue, 18 Feb 2025 13:38:02 +0200
-Date: Tue, 18 Feb 2025 13:38:02 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH next 1/1] lib: Optimise hex_dump_to_buffer()
-Message-ID: <Z7RxGlCkQG9M4AeM@smile.fi.intel.com>
-References: <20250216201901.161781-1-david.laight.linux@gmail.com>
- <Z7JO9eutvu3KBEbc@smile.fi.intel.com>
- <20250216223715.734fedc8@pumpkin>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="teE0M/Wb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZZxwPXdv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="teE0M/Wb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZZxwPXdv"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 142761F396;
+	Tue, 18 Feb 2025 11:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739878797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGp9Y7QBbTCowpC82AAZ/8SUfWBJRStkalWWx8EvBpg=;
+	b=teE0M/Wb7L2BCJg8MGl0eUB//LPUS+q84uAuNWNQGlLBavX5CJzvnLJ+88Z9Jm5+8Daor4
+	g72YDr3UU6omHTDvWKMICFGq4VptFmN4YTk6Xi37CAJ2DLPHY9SfOu0eZMknCYzzE64Bfb
+	C78uAstL7T6IUGGwpt4IWks6WDBw0f4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739878797;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGp9Y7QBbTCowpC82AAZ/8SUfWBJRStkalWWx8EvBpg=;
+	b=ZZxwPXdvwamMZcycvcamXZ0075s/Y3JzUrqtM56xqZnJfz7mcgdDTBoLbTWlipc/CZaQqn
+	whtbG4mprzORLMAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739878797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGp9Y7QBbTCowpC82AAZ/8SUfWBJRStkalWWx8EvBpg=;
+	b=teE0M/Wb7L2BCJg8MGl0eUB//LPUS+q84uAuNWNQGlLBavX5CJzvnLJ+88Z9Jm5+8Daor4
+	g72YDr3UU6omHTDvWKMICFGq4VptFmN4YTk6Xi37CAJ2DLPHY9SfOu0eZMknCYzzE64Bfb
+	C78uAstL7T6IUGGwpt4IWks6WDBw0f4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739878797;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGp9Y7QBbTCowpC82AAZ/8SUfWBJRStkalWWx8EvBpg=;
+	b=ZZxwPXdvwamMZcycvcamXZ0075s/Y3JzUrqtM56xqZnJfz7mcgdDTBoLbTWlipc/CZaQqn
+	whtbG4mprzORLMAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8084F13A1D;
+	Tue, 18 Feb 2025 11:39:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id q1jHG4xxtGcGJAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 18 Feb 2025 11:39:56 +0000
+Date: Tue, 18 Feb 2025 12:39:55 +0100
+Message-ID: <87h64r5vn8.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: John Keeping <jkeeping@inmusicbrands.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Takashi Iwai <tiwai@suse.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [BUG] ALSA: usb-audio: drain may fail with multi-port close race
+In-Reply-To: <Z7RnUwatOnxYxNfI-jkeeping@inmusicbrands.com>
+References: <20250217111647.3368132-1-jkeeping@inmusicbrands.com>
+	<8734gc8prr.wl-tiwai@suse.de>
+	<Z7OCJ2DikMvhAxVf-jkeeping@inmusicbrands.com>
+	<87zfij65hd.wl-tiwai@suse.de>
+	<Z7RnUwatOnxYxNfI-jkeeping@inmusicbrands.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250216223715.734fedc8@pumpkin>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Score: -3.30
+X-Spam-Flag: NO
 
-On Sun, Feb 16, 2025 at 10:37:15PM +0000, David Laight wrote:
-> On Sun, 16 Feb 2025 22:47:49 +0200
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Sun, Feb 16, 2025 at 08:19:01PM +0000, David Laight wrote:
-
-...
-
-> > > +extern size_t hex_dump_to_buffer(const void *buf, size_t len, size_t rowsize,
-> > > +			      size_t groupsize, char *linebuf,
-> > > +			      size_t linebuflen, bool ascii);  
-> > 
-> > Looking at another thread where upper layer function wants to have unsigned
-> > long flags instead of bool ascii, I would also do the new API, that takes flags
-> > and leave the old one as a simple wrapper with all restrictions being applied.
+On Tue, 18 Feb 2025 11:56:19 +0100,
+John Keeping wrote:
 > 
-> I can't imagine any code relying on the rowsize being converted to 16.
-> And (elsewhere) I've definitely needed to do hexdumps with strange numbers
-> of bytes/line.
-
-I didn't get how this is related to my comment.
-
-...
-
-> > > +			dst[0] = hex_asc_hi(ch);
-> > > +			dst[1] = hex_asc_lo(ch);  
+> On Tue, Feb 18, 2025 at 09:07:26AM +0100, Takashi Iwai wrote:
+> > On Mon, 17 Feb 2025 19:38:31 +0100,
+> > John Keeping wrote:
+> > > 
+> > > On Mon, Feb 17, 2025 at 06:06:16PM +0100, Takashi Iwai wrote:
+> > > > On Mon, 17 Feb 2025 12:16:46 +0100,
+> > > > John Keeping wrote:
+> > > > > 
+> > > > > I'm seeing a bug where data sometimes fails to send on USB MIDI devices
+> > > > > with multiple ports which seems to be a result of a race around closing
+> > > > > ports introduced by commit 0125de38122f0 ("ALSA: usb-audio: Cancel
+> > > > > pending work at closing a MIDI substream").
+> > > > > 
+> > > > > The scenario is essentially this program:
+> > > > > 
+> > > > > 	snd_rawmidi_t *port0, *port1;
+> > > > > 	snd_rawmidi_open(NULL, &port0, "hw:0,0,0", 0);
+> > > > > 	snd_rawmidi_open(NULL, &port1, "hw:0,0,1", 0);
+> > > > > 
+> > > > > 	snd_rawmidi_write(port0, data, len);
+> > > > > 
+> > > > > 	snd_rawmidi_close(port1);
+> > > > > 	snd_rawmidi_close(port0);
+> > > > > 
+> > > > > What happens seems to be the following:
+> > > > > 
+> > > > > 	write(port0)
+> > > > > 	`- snd_usbmidi_output_trigger
+> > > > > 	   `- queue_work()
+> > > > >         close(port1)
+> > > > > 	`- snd_usbmidi_output_close
+> > > > > 	   `- cancel_work_sync()	# Work has not yet started here
+> > > > > 	close(port0)
+> > > > > 	`- snd_rawmidi_drain_output
+> > > > > 	   # Times out because nothing is processing outbound data!
+> > > > > 
+> > > > > The two ports interact like this because they are on the same endpoint,
+> > > > > so should the work only be cancelled when the last endpoint is closed?
+> > > > 
+> > > > How about the following patch work?
+> > > > It's a band-aid, but should suffice.  The callback is already
+> > > > protected with rawmidi open_mutex.
+> > > 
+> > > Yes, this patch fixes it and is
+> > > 
+> > > Tested-by: John Keeping <jkeeping@inmusicbrands.com>
 > > 
-> > We have hex_pack_byte() or so
-> 
-> At least some versions of gcc have generated better code if you don't
-> use *ptr++ but do the increment afterwards.
-> It is also what the old version used.
-
-Do we really care? What versions, btw, are you talk about?
-
-> Not to mention being another wrapper you need to look up to work out
-> what the code is doing.
-
-That's not an issue. We use a lot of wrappers in the Linux kernel.
-Without a skill to quickly find this information it would be very
-hard to develop the kernel code without reinventing a wheel.
-
-...
-
-> > > -		linebuf[lx++] = (isascii(ch) && isprint(ch)) ? ch : '.';
-> > > +		*dst++ = ch >= ' ' && ch < 0x7f ? ch : '.';  
+> > Thank you for quick testing!
 > > 
-> > Please also add a test case for this to make sure it has no changes.
+> > Looking at the code again, I think the suggested fix isn't right.
+> > It still allows some pending work accessing the freed object.
+> > 
+> > Could you test the following one-liner instead?
 > 
-> Well isascii() usually checks for the 0x80 bit being clear and isprint()
-> rejects control characters and 'del' (0x7f).
-> I'm not sure what isascii() does for EBCDIC type charsets - but I don't
-> expect Linux runs on any of those so who cares.
+> Tested-by: John Keeping <jkeeping@inmusicbrands.com>
+> 
+> The patch below also fixes the issue.  Thanks!
 
-Still, it's good to have a test cases for this change.
-
-> Oh, and isprint() seems to be based on a memory lookup in an _ctype[] array.
-> Very 1970s.
-
-With enough CPU (data) caches it's quite effective.
-
--- 
-With Best Regards,
-Andy Shevchenko
+OK, I'm going to submit and merge the proper patch.
 
 
+thanks,
+
+Takashi
