@@ -1,225 +1,210 @@
-Received: from mail-lf1-f74.google.com (mail-lf1-f74.google.com [209.85.167.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2057.outbound.protection.outlook.com [40.107.21.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B3526F447
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 16:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739894707; cv=none; b=PiPbHXa1W3xJMNSySSEr+pZu71k7gsSIp6AHSqv3GWh7vnbDXxzPOfTnP0kxjTlYdMyQ/mCDFSbURbAUGJ2mzq+oTCKKJW2BjmXJ6S/YPIniuUdK70nVT8fcOYiI+lQEuJn3+xGvJYQVjx/SiQogJJDnrV5zTbyWzcpqeJxvhJM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739894707; c=relaxed/simple;
-	bh=+86Ks27emKBEUdAR/yquXOZ5pX01/bsLm7oyTQMlGko=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qdFN3NxEd+53KRWx1da2XLovNjJcIkzZWaPoD2KHmrEIrahDXMwChyainN0J/BHkh4obeLp/frmCuWPIgCAE8RH3aqlXh2apLfA5HcMNuaG1uqk/QX3HxyeSszl9LfwVc4a+ZCibeADRGf0EQ7tQjzD2+rCi6YyiixyqadNntZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0i7Kor5K; arc=none smtp.client-ip=209.85.167.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CA426B2D3;
+	Tue, 18 Feb 2025 16:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739894764; cv=fail; b=ZrzwVWDacV82ZMUem5S32FiXCg/dTCoTnkAlUCEirujj5fCwpN05XpFDFQucp3gob9RMI9mit9VukX2l0QFOmv3M8pmaE7q3duqPBB1Eq2VUtrwKm1PR6VEJKsIq31+RM4udQEj6Hc+knudUlftW+42pguWusBmZn5vOu1gAYOg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739894764; c=relaxed/simple;
+	bh=YGDv1jroqLi1hP5OoV6veN50xqLZThyLA4f6YaRjtqk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kQMpbVsRoQVTjEC8cQoAlUAPu8Sg+VZVKPDC4e5YIpkccFyw3VEqiarWMrsbTwefqTg/lg6DDGWAxulXSdGWwLDeT9+QCPr3Flf7YB/p19r0k29JGt8x9ee+lW9GiAyeCuZdK/Sh5XARmWVnEeDFhrROjSa8bgdN92zJ0km/CH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=W+CkiXFz; arc=fail smtp.client-ip=40.107.21.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0i7Kor5K"
-Received: by mail-lf1-f74.google.com with SMTP id 2adb3069b0e04-545314fc413so1820329e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:05:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739894704; x=1740499504; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g1PhhXFGFFLjKCOlfG2U0IWT7jUTa2le5EkO7OmJarM=;
-        b=0i7Kor5K1IXp7NSUtc0DLvxiSs5NLBZZ4tWHD/7KzUqWmQaq5zT4q2RVM/tYyXBopr
-         OpEYSOQiV4Iw8e3VJ2MskqYQuncnjDdHSMKFprNTPM+n0ypUH+ao0QMgwTSPlsm55RYm
-         +uv88zG4k4cMvowcjfqNVthS8tTKUMvZ0AK/l5xg7zb8zMAQYA7NHC++OzIPST+UPsX7
-         9CaN14VK/3Dg3Ls1G2MxB15dw/HQ8dwR/3FYtZJARvIvCahSP03Rl1+LlIR8j5MdGmmm
-         FpDMZ+YKUy/0tpiujsj0irlxia50BOtpdq+budDKFbM68eSy3BG+Njvlbpl5QX+2kvTY
-         JC9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739894704; x=1740499504;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g1PhhXFGFFLjKCOlfG2U0IWT7jUTa2le5EkO7OmJarM=;
-        b=aNxU14sdkxnTS9pUGuBZtkKSrImceB9u3XtWqNYHEoAjb2kEv/zjXOBN0ou0zLGLCq
-         I53B1R4+83mksGid7C/eZRDab3Rokf6tWZpKuxrCTrkFJIpyZbnM0DKZOGpR1K4fNvPR
-         58geYedRW5vShY54lW+SMQPVkwnyyHhS8MRO6ElUNONtB9LxE77xSRle9+TbG5g6xOMP
-         fplho4JMbmBIMuHyuG2r8Q8E0ieof9OCpnws42EeZekGq2nRdX6tf0FaxdT3U+6t43XD
-         pOTGjbDc7qBq59MSBr/QiTYkSSORC+e3nk0YWJICcLB4D6uKe6BUPqLQqFAOkYdN+CG3
-         b6ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVNy8ANURmUcj28PDdi1YVHQC7NfCDUCQ13SWxGEytqEXoh21c1i5HTcfQjEqA8g+H86im7Jmyi8/GY6zM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8ZVLuFXxXPi2byZFp/jUNrOrzBynH4iqt3ZyhlalUbs5e3bR5
-	JYsYns/Zs2EwsDyMbCjq79U1R8ToZn2CDr87UnPX5/1Nq0ozHDq/7ngjBYrno1pOedfdIJW52ji
-	Bl/6/SA==
-X-Google-Smtp-Source: AGHT+IFQ5r0iX9btAy5iAzFYlowkpYrALsekY1SW7hZ60mqrsvMAnxluXmZE8RUjYs8fdVUXLOQUP62cXnRH
-X-Received: from ejchw12.prod.google.com ([2002:a17:907:a0cc:b0:abb:a168:b6d9])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6512:238a:b0:545:4d1:64c0
- with SMTP id 2adb3069b0e04-5452fe63376mr5840413e87.27.1739894703816; Tue, 18
- Feb 2025 08:05:03 -0800 (PST)
-Date: Tue, 18 Feb 2025 17:04:36 +0100
-In-Reply-To: <cover.1739894594.git.dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="W+CkiXFz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rNYOI3vpJWWn8pNZRkVI9r7QnNxjCWu81Ooxqg7dDO6IeSSCNr7o622+K77Rfq3ednrkj5UgU90tQUzAEyOIjcqChzNAIbxx7GoMrppWWzRRo6yxL7aRZTt4f9eLGZCJb/5o2IyHDSonkB36Rz+09chelQcaDlS3X+Nu47daIl7mSy9yx8su79fG7dl47HiiFUnMyzZzUqNh2pzNOCMiHIYVSHlD4TV8Z71/sF/tQUQHm6rMV2XpAKAHdozsZJNSqnX0aj8MXsg6niCzcvawy4o6P0/36I6g6ReUt+OeZiW9dqiTTUDGo6YblS1mq0tW4emjhRCQPwQjTwhVIF0tGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pdi1gpQdp/VPeunAIWhSCkktV0o0RleoUaEN5RjJBWw=;
+ b=ndkQcMg1rKzXeKJYHuJDKmctPTR3LvxyeFCXuI0AjOuQZaW6/WZa+vgjtaV1PKMQvcbvQtfBHhN+NeUV9Kb1nrl8sGMiMM87B5KyCBy+2tqzvQpt53PRo2S0d+RkbKQVOuHm973Q/bgc67Rj/7BukNeRcl+YSEGLfYvdk2zWVGCtUXU6ANo3YpIUvPgoS4xhqwD4kjm8Y8XBjy0aCzL5HSq4GC+wNa1yEkLpbdiN5YtCvLM9yRUyDeIxX8oN2roAdDO3PcrN2Yu7nYG18LWpiU7s8gBjKnrjL90v0TZkT61PaD5pDgoUsYzJ0G/P/eV37yeR6hRLsiFPvkKOZRYD7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pdi1gpQdp/VPeunAIWhSCkktV0o0RleoUaEN5RjJBWw=;
+ b=W+CkiXFz8g+Nm0MVSCsqt+sZLPg7TsbON1ZgMLL3mzCcZIZgJymCKmdEi8fNvVYyyaXUiLvrsPzRKcI/TtLsuKGF/ab0M4u+kqc5SLHJpANsj2BqsS15sff/u2FM5FytImOJWlRk7l0yPoZ2KUvTqco2OWGq+6pu2BWVeMsBda8ANZKcqrdsxR3etKrdDAk273QoQFZIYfbQ/gc6R3mL9OJmq5KoPi1RIgJ7Umqsuh0QUPykM20O6FvXDXbw5nkPxQcBVAZ3TP5z7fVTx56bTPCARRXR2Ailp5nFoh0VDRxMsKXSTowm/Rlk/tSAZsjeoLJtDZDajmytaukRAXEfqw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM9PR04MB8259.eurprd04.prod.outlook.com (2603:10a6:20b:3e4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Tue, 18 Feb
+ 2025 16:05:59 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
+ 16:05:59 +0000
+Date: Tue, 18 Feb 2025 11:05:51 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>, Marek Vasut <marex@denx.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-clk@vger.kernel.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: clock: imx8mp: add axi clock
+Message-ID: <Z7Sv3yawaYdKFYxi@lizhi-Precision-Tower-5810>
+References: <20250217165718.74619-1-laurentiumihalcea111@gmail.com>
+ <20250217165718.74619-2-laurentiumihalcea111@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217165718.74619-2-laurentiumihalcea111@gmail.com>
+X-ClientProxiedBy: SJ0PR05CA0110.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::25) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1739894594.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <5e105b1382cd43d05f1d3a80958e4f50f32144c8.1739894594.git.dvyukov@google.com>
-Subject: [PATCH 3/3] selftests: Extend syscall_user_dispatch test to check
- allowed range
-From: Dmitry Vyukov <dvyukov@google.com>
-To: krisman@collabora.com, tglx@linutronix.de, luto@kernel.org, 
-	peterz@infradead.org, keescook@chromium.org, gregory.price@memverge.com
-Cc: Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8259:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8fe707b1-aae1-43b6-acba-08dd50362241
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+pV7sEQDE2zhhAU3y4StpkEP4ejp1Ky1Ag4DNofrW2qk6+fGn8ZoDr/NSQaJ?=
+ =?us-ascii?Q?X6e3Epqq8GNZWXtAt0QOrLXI8CPVHYc3FwyE6+O/j1UKdEcz8wizAOXh8TF0?=
+ =?us-ascii?Q?Eh2xOlb+UF7w7jHFULI1iEUzxuENXpoUq4aie65nW+pHWXbyl0DOWQCwjVJn?=
+ =?us-ascii?Q?EFu9Vl/nmN9ge5hOxAgs4AvXFCfqlOiPoo3jkbpXaMrxaZy2BlSm5zcWv651?=
+ =?us-ascii?Q?r0QYS3GKpHZPVh7vd1KJu8bxM59B4n7Ckb7TNfy/GXk/xVXpD376z8DFtQAd?=
+ =?us-ascii?Q?cFMixtBqh2a35m5hGq0BQNK/ooQnxhEN/WC7SB4nTpaMQn7GByER/aqRPNys?=
+ =?us-ascii?Q?3yfocjwElwHNZv523esT+lA6zCAFEcYnmGtUZxLEEJmIn74O6YImxIWIY9IU?=
+ =?us-ascii?Q?6lK16+MJkFEIsJZK0KFpUXydZv+CdcFzYHLMgG95yJxoPE1q+CkICu09JqJd?=
+ =?us-ascii?Q?CPlFbV8VfHt1OqWD0vQRbQ32I7uGt1kTI1unm6eCaduL5SQDSlRbGToir2sl?=
+ =?us-ascii?Q?yjSZS1kxfCL9RvsLefQwZguNU6jV5+mI9neWpK8iFne8njfUrTGTAXyiC/ll?=
+ =?us-ascii?Q?pCbqpJp0u1oSKs8J1y95OKPwGhLilfKZPeQ6tmChbjql+JD5fUeg8q0Y2Wcn?=
+ =?us-ascii?Q?UCiPYRWdP5A/fGr7HvwrVOwWKhiuoZC8jpMENzPoh4cQPVNL5WFVTL8mO6af?=
+ =?us-ascii?Q?jAIVRXu3ay6x6QdIb8tYFV6kEDaNO4DcO7Bg69FkGBVsx9eVnVnoQY7nwS7E?=
+ =?us-ascii?Q?gHWjfn/9FBZ+H5VcEuwsyH8qeKS9Y1hYTXfNuQ1RLVlsDExggHa/RyLUwXh6?=
+ =?us-ascii?Q?Me5vLyhSvwWhihyrx4Y2T0JD9AARFEUypCYqRSi0iPRHCmDKPLX4A6WiQN90?=
+ =?us-ascii?Q?p1GvYxUe87eZmcvH1J2jDNz6Mqr9IPsOeFk3uF09/fNCYFDnns4RWE7A9ri0?=
+ =?us-ascii?Q?TXr+wuqDzs1yggtt+XH7fzlu2iuoZMzVcQ1c9U7lkFPdeGkv09/skRQperAM?=
+ =?us-ascii?Q?Yb+aaYGY9ct7YJ3X7h4jLk0LxADHBHDXWWmcFWrgtxsYjdvUSW1d9HjsoZfT?=
+ =?us-ascii?Q?27Ja98aVGeo93iEc3R0B+hWjU0S3bBnasa7KElgNLRuTzLpER1CDKgMwGCaz?=
+ =?us-ascii?Q?X8xe/pluRFj+WqvJxOdw8zZ+rJf6H+DoD4Qf0e8Hq+j44/bhPQqLH7RT2nHq?=
+ =?us-ascii?Q?wguChAdhFWxtnwXktE0Vnz/iz5oC7xLvJ5jIYPzfHphCQMWyJDi65TeAgD+E?=
+ =?us-ascii?Q?BJCLiWY9nquDqf90zOwJgOpBkStWipAHxuYRtKcPSIqLN9PsHYhnRsp4FQlr?=
+ =?us-ascii?Q?CYv90scZZJlRWAdhv5DTsm2tRTvsBV7IwmlUU0YbPIT8dBS7Rw5pdHXwmMZb?=
+ =?us-ascii?Q?013eR/r7gXp7mf3AjTHSvOBJMhR9vhxAwUSbD5ZfYSepPbFRPjKREAh4PERr?=
+ =?us-ascii?Q?R49q8uPGOXjpK3QD61/Jb+OwAcL/sm7j?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?DzoAeYBV2DErUGHPdh7tqfNaYrhlKOWlr7S95iit6evyt9gHAAuDqLYhc+5n?=
+ =?us-ascii?Q?XGezFeIuV5FGSR4zByXPcxD9VWHE9jlDe44rglyxwuqgOFggHxQrSoXSFvXz?=
+ =?us-ascii?Q?EqHy8oK8sGwp0EBj2wYPVt2yrxDpSl+7LCCjWrCqPDCqCbq7cppP+X/5SGpg?=
+ =?us-ascii?Q?l6qOKwslMHl1/INw7G4IS3wrxnxL/+CrF5LSzcYFotgUH4pDp/TUoLMfTvWc?=
+ =?us-ascii?Q?ePXDKIPYh9yU5SMn02q/qsBF6Y15xYuI0I1uyff/iwxhvItJJT/F8ZTPmYLt?=
+ =?us-ascii?Q?6tDucqvAHXZDJ78zj2sO4DQm7egcpARpZimdLQ0xKq8OokDD1UXf1ULqah2h?=
+ =?us-ascii?Q?//oMVYt8KE7oIP60/AHqZu1o7X8NBxFnSJBGbj2i50raX2q8ihQ6OkfIjTPy?=
+ =?us-ascii?Q?jPXY+ATUsHMsd/ZtsEOj45fICFh/IzVf2ZWTovKrmaJLDp7We/uIIo7Iscwv?=
+ =?us-ascii?Q?BWq/ioFhxd7p+rrT6iZUm+SZWFcTnNTuSNbOweeBuPVB6P2jX88YH3iTO7LD?=
+ =?us-ascii?Q?oOJJPXTSFZFr8Nt+jx+r2ff8oKJUJQJNdJJbuyfr/FfyyMGCQINq7SRRWAUc?=
+ =?us-ascii?Q?uMupTL//kSm2NP6jBLPVmrAfGxjh9K8xm4+03lJQ4um15Paoyb6fRDUtHQA5?=
+ =?us-ascii?Q?eC6ZsRt5KzqgHFpnPKCyhiPJTbi7z1UMzGP+uINCtzVDXAI+JN4jiPEmLUP8?=
+ =?us-ascii?Q?QRceuy5shpuZcbsg1XvUGiXSUC0RseXqkvi56vIN1yJYBPEXpmD4fYOFGm9x?=
+ =?us-ascii?Q?bFZn+x/AiwlF1t7pzzugkIDrRzglsmfwPJ5beoFsklO4oeuOJ5m2OHNpGqW+?=
+ =?us-ascii?Q?o+G3jyDS/W7+e2R0ieyfL30bcEyshnBvA7zfFzu9ZUMcYLbQtC66RCvV+83J?=
+ =?us-ascii?Q?HHFbZtAHshz75dClXgeXFwiDngfi802FdkTR91YNLCfMYc9aP0okQfNUUS5I?=
+ =?us-ascii?Q?NOjW7HUrW0TKeHegtQFwPX5owgPr8I8XsbSIz8DxP555tNoMShMgl93/mjO2?=
+ =?us-ascii?Q?frWxpA2TPm4jjHk1sYjCs55uLDwjWhZ0q5k+5nWaV3XqKdb06aB5HLW2Bqka?=
+ =?us-ascii?Q?p0/zdBw9AHY2r4AF5GY9nQyc4mbGejM/dd47PBIKTIet6QqOm8tEd1sQ6rXT?=
+ =?us-ascii?Q?RN8VBnySxl2fVtg8WUDSVEBNBQKAb95IWJ1GLKlKK5ByoR4CUF7jxneI7Tw3?=
+ =?us-ascii?Q?5gBbYsItHn3lboyCkvnzj9LgrgDu1sM431T4OKtcsx+Weg7vSXsNnZV6h0Yf?=
+ =?us-ascii?Q?ERxOiWPOOpTs/pvhcHOddqBaUJU/BRATSi7Vj/CFL85ewS5bfwkQzdCANaoo?=
+ =?us-ascii?Q?nyQM6zSM0x6GWPtpl8vIX6Dy2VqEZj0aOi8gLc8t4AmtoeTiCRfnz3gHc6GH?=
+ =?us-ascii?Q?SWeAhhu72XYOXMlG7sKAFC8mFLrlfkKafJwjiy5Mcm1R+tHdsWFaNB9JhWxN?=
+ =?us-ascii?Q?YnhDGq+XXsV/kVvANqOB9FgnC9EC8ec6NNItWdxcQk8JjKuU34+JSCwFQHCx?=
+ =?us-ascii?Q?QLIejxCgbOx82QWr7n0K8QPcn/RnR7LCkI0XPPjw5Sf4V7VGuMzGfFnX3vFS?=
+ =?us-ascii?Q?1QekkujY3qbFXcbc71Kj9czi4l4r5dHRNLd+ZlrA?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fe707b1-aae1-43b6-acba-08dd50362241
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 16:05:59.1794
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y8Erxub9cmOuayKMZ1UyC0y9sAyjVO0g8MJMryTTdR7OwVVaC9XgaauNtLOV7Jp+TB3+WsSHh+7JoncE++VN7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8259
 
-Add a test that ensures that PR_SET_SYSCALL_USER_DISPATCH respects
-the specified allowed PC range. The test includes both a continuous
-range and a wrap-around range.
+On Mon, Feb 17, 2025 at 11:57:15AM -0500, Laurentiu Mihalcea wrote:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>
+> The AUDIOMIX clock provider takes an additional clock: AUDIO_AXI_CLK_ROOT.
+>
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/imx8mp-audiomix.yaml     | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> index 6588a17a7d9a..0272c9527037 100644
+> --- a/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> +++ b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> @@ -24,8 +24,8 @@ properties:
+>      maxItems: 1
+>
+>    clocks:
+> -    minItems: 7
+> -    maxItems: 7
+> +    minItems: 8
+> +    maxItems: 8
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Gregory Price <gregory.price@memverge.com>
-Cc: Marco Elver <elver@google.com>
-Cc: linux-kernel@vger.kernel.org
----
- .../syscall_user_dispatch/sud_test.c          | 79 +++++++++++--------
- 1 file changed, 48 insertions(+), 31 deletions(-)
+Are you sure clock axi is mandatory or optional clock?
 
-diff --git a/tools/testing/selftests/syscall_user_dispatch/sud_test.c b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-index b0969925ec64c..fa40e46e6d3e9 100644
---- a/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-+++ b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-@@ -10,6 +10,7 @@
- #include <sys/sysinfo.h>
- #include <sys/syscall.h>
- #include <signal.h>
-+#include <stdbool.h>
- 
- #include <asm/unistd.h>
- #include "../kselftest_harness.h"
-@@ -110,31 +111,15 @@ TEST(bad_prctl_param)
- 	/* PR_SYS_DISPATCH_ON */
- 	op = PR_SYS_DISPATCH_ON;
- 
--	/* Dispatcher region is bad (offset > 0 && len == 0) */
--	EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0x0, &sel));
--	EXPECT_EQ(EINVAL, errno);
--	EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, -1L, 0x0, &sel));
--	EXPECT_EQ(EINVAL, errno);
-+	/* All ranges are allowed */
-+	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0x0, &sel));
-+	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, -1L, 0x0, &sel));
-+	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 1, -1L, &sel));
-+	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, -1L, 0x1, &sel));
- 
- 	/* Invalid selector */
- 	EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x1, (void *) -1));
- 	EXPECT_EQ(EFAULT, errno);
--
--	/*
--	 * Dispatcher range overflows unsigned long
--	 */
--	EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 1, -1L, &sel));
--	EXPECT_EQ(EINVAL, errno) {
--		TH_LOG("Should reject bad syscall range");
--	}
--
--	/*
--	 * Allowed range overflows usigned long
--	 */
--	EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, -1L, 0x1, &sel));
--	EXPECT_EQ(EINVAL, errno) {
--		TH_LOG("Should reject bad syscall range");
--	}
- }
- 
- /*
-@@ -145,11 +130,13 @@ char glob_sel;
- int nr_syscalls_emulated;
- int si_code;
- int si_errno;
-+unsigned long syscall_addr;
- 
- static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
- {
- 	si_code = info->si_code;
- 	si_errno = info->si_errno;
-+	syscall_addr = (unsigned long)info->si_call_addr;
- 
- 	if (info->si_syscall == MAGIC_SYSCALL_1)
- 		nr_syscalls_emulated++;
-@@ -172,26 +159,29 @@ static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
- #endif
- }
- 
--TEST(dispatch_and_return)
-+int setup_sigsys_handler(void)
- {
--	long ret;
- 	struct sigaction act;
- 	sigset_t mask;
- 
--	glob_sel = 0;
--	nr_syscalls_emulated = 0;
--	si_code = 0;
--	si_errno = 0;
--
- 	memset(&act, 0, sizeof(act));
- 	sigemptyset(&mask);
--
- 	act.sa_sigaction = handle_sigsys;
- 	act.sa_flags = SA_SIGINFO;
- 	act.sa_mask = mask;
-+	return sigaction(SIGSYS, &act, NULL);
-+}
- 
--	ret = sigaction(SIGSYS, &act, NULL);
--	ASSERT_EQ(0, ret);
-+TEST(dispatch_and_return)
-+{
-+	long ret;
-+
-+	glob_sel = 0;
-+	nr_syscalls_emulated = 0;
-+	si_code = 0;
-+	si_errno = 0;
-+
-+	ASSERT_EQ(0, setup_sigsys_handler());
- 
- 	/* Make sure selector is good prior to prctl. */
- 	SYSCALL_DISPATCH_OFF(glob_sel);
-@@ -321,4 +311,31 @@ TEST(direct_dispatch_range)
- 	}
- }
- 
-+bool test_range(unsigned long offset, unsigned long length)
-+{
-+	nr_syscalls_emulated = 0;
-+	if (prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, offset, length, &glob_sel))
-+		return false;
-+	SYSCALL_DISPATCH_ON(glob_sel);
-+	return syscall(MAGIC_SYSCALL_1) == MAGIC_SYSCALL_1 && nr_syscalls_emulated == 1;
-+}
-+
-+TEST(dispatch_range)
-+{
-+	ASSERT_EQ(0, setup_sigsys_handler());
-+	ASSERT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel));
-+	SYSCALL_DISPATCH_ON(glob_sel);
-+	ASSERT_EQ(MAGIC_SYSCALL_1, syscall(MAGIC_SYSCALL_1));
-+	TH_LOG("syscall_addr=0x%lx", syscall_addr);
-+	EXPECT_FALSE(test_range(syscall_addr, 1));
-+	EXPECT_FALSE(test_range(syscall_addr-100, 200));
-+	EXPECT_TRUE(test_range(syscall_addr+1, 100));
-+	EXPECT_TRUE(test_range(syscall_addr-100, 100));
-+	/* Wrap-around tests for everything except for a single PC. */
-+	EXPECT_TRUE(test_range(syscall_addr+1, -1));
-+	EXPECT_FALSE(test_range(syscall_addr, -1));
-+	EXPECT_FALSE(test_range(syscall_addr+2, -1));
-+	SYSCALL_DISPATCH_OFF(glob_sel);
-+}
-+
- TEST_HARNESS_MAIN
--- 
-2.48.1.601.g30ceb7b040-goog
+If it is mandatory, you need update dts also, otherwise, there will many
+DTB_CHECK warning.
 
+If it is optional, minItems should be 7.
+
+Please run CEHCK_DTB for arm64/dts/boot/freescale, make sure no new warning
+added.
+
+Frank
+>
+>    clock-names:
+>      items:
+> @@ -36,6 +36,7 @@ properties:
+>        - const: sai5
+>        - const: sai6
+>        - const: sai7
+> +      - const: axi
+>
+>    '#clock-cells':
+>      const: 1
+> @@ -72,10 +73,11 @@ examples:
+>                   <&clk IMX8MP_CLK_SAI3>,
+>                   <&clk IMX8MP_CLK_SAI5>,
+>                   <&clk IMX8MP_CLK_SAI6>,
+> -                 <&clk IMX8MP_CLK_SAI7>;
+> +                 <&clk IMX8MP_CLK_SAI7>,
+> +                 <&clk IMX8MP_CLK_AUDIO_AXI_ROOT>;
+>          clock-names = "ahb",
+>                        "sai1", "sai2", "sai3",
+> -                      "sai5", "sai6", "sai7";
+> +                      "sai5", "sai6", "sai7", "axi";
+>          power-domains = <&pgc_audio>;
+>      };
+>
+> --
+> 2.34.1
+>
