@@ -1,106 +1,73 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF2723AE7E;
-	Tue, 18 Feb 2025 09:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2770322FAFD;
+	Tue, 18 Feb 2025 09:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872346; cv=none; b=Ri0jAB+eb1tyB0bgRfGik8z8pw9yugdOqofnUtIJtLjBRgppYWk4mxTkpOWcgIAS6jrHv+Y4IK2oq6LLeVXJuBtPKVkLIpa8xyg4YSZZOLQFlwL/lIbaUBc8SrVvSxrfADwanq4ziW+oVZE9xPHG7btPtx4OkeyoLVDqbFWSmtE=
+	t=1739872389; cv=none; b=BmRvbkvIYMIvSPCtu76EgpJhkrApVSKb1MzSusOweQ2NEIsYzn3EPr5xX0QAKg9aaK2GRki+vyEY7lyWPE9zcMut6+J5yva0URfMY5sXcZy26PN8U18jmcdNgGPb5jgq3U8nCIx388GcNkX/VAHXyLYNNr0s3k+LcSrG9RD29TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872346; c=relaxed/simple;
-	bh=kXE7lzO8tAK+W+95G0EGctHj7HaDXe4ZOUjtDp40SHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c4eX+3vtXIjAQCy14oydBs81/ixrB3zi1uOfiervRDkxfuwu/hyEyhQO6Aad8ABFmMiZEz4nllYOFZGZrL++8B2HWLI8el3GSqPHJHUkyDz+aVdfpoIezWIqPd5fKkpLMTz2DEEGNr2VjtnOZDZgy7TDtSgJxr2S6NAqeJizIEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WzZAYZ5D; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739872389; c=relaxed/simple;
+	bh=h+2PNpWdm302meQLu62UOxtxhiKhPwOHpiRCly9oUCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A42q/6Zo9P3KTQ2g1H9uvgcguZR16vGSCfMiif0AwOo+02wlKgB5GyFT7t3RsurAy0LwYjUtYtfRFIhxdo0FfoC4YGSWLG/t/O3mfRUgIs0LSUe4rubkv1X5lAQF335utIkQUOamtxkjmVDN3VezJ+3PF+zs1JoK+rUovpA6IWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=N5zQMtti; arc=none smtp.client-ip=220.197.32.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzZAYZ5D"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-218c8ac69faso10699095ad.3;
-        Tue, 18 Feb 2025 01:52:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739872344; x=1740477144; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kXE7lzO8tAK+W+95G0EGctHj7HaDXe4ZOUjtDp40SHU=;
-        b=WzZAYZ5DH5EuJ8L96HElxvHkGex3Bx6xkZlJcZidaRXvcAo6TUVw6bXCcxv71CKZMw
-         FqBqw7lJ8Ioa5aVx3nUZC23obfQUH2wVgevqHgOkoL1tMympDdUz6ImMy4ESw7GBQQuC
-         thAMGRdZgemg+k6F605wHBbSrRVk8+qwhIv/I9kH0PO/OhGWp5DPSZ3qfqUI/rKQPPyv
-         A634SfD+es0+7QK9FjhdlvoQPtvch4KNBq9qEi70eHL8rSdFwq5P/AHfHHJRHR/rwstQ
-         AEY+lcGzvsTnBhKyngvHtq3Z9K5JVUHABZXpUeChpITVTbqPdcHvjXipUtCe8MTLzWCE
-         yWpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739872344; x=1740477144;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kXE7lzO8tAK+W+95G0EGctHj7HaDXe4ZOUjtDp40SHU=;
-        b=j4rvTiF21Smj3xiORd9i4YXzSPsTZI5kyBnoRjUEBvXt82Lo/2i3sE6GrUF4kw/Jvx
-         C8ePtJPKtt5C+WC1EIxjdDqVzpQnt0RKcvvOddeVMfdIn16LVMnpO5i3uh3KFPU572f7
-         vn7er/yK4EeVlqSBUQNGJGQ2XQhUrq3FQ5Bw3INOWs4/yhgZnANQqCHhu60KdCKTl0dO
-         Ip6ArTCVKMz4trWMbpZ6A9j4nt8o3erC8kQMaAbZGtnNwKb+RY9Bb6bOCZsDXiXI7xne
-         nUQURYJ+Nj8NgIbZt3bFRhgHFBT1GJEzEfXMqIXPCgFvf4Finw6weFqgP9jJGY1rzuj9
-         fYZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXld1a2asvN3FHTQej7xdvsc0DjwHzkUHc5tI0iNPDMOlMxNmextBMdMohRQrJVI77uqgukvYBoh0c/yTBa@vger.kernel.org, AJvYcCXxIuzWX2wtOzVBp/zE0/iBiGlqPY9SKd2UJ8ZGRiRWX8v3h3bUeaIJpkdr/CfqQ+XAK+cAFlRi2dyM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/Wd2ffVu5IV6epwO9jqRum1dnhjh3m/3o8G9pEL108Yh/wiiM
-	ns4XouBq6MlB3ebx9xamjVTgvwNYa8HqashDUF5Nfh0fa9iD10dG
-X-Gm-Gg: ASbGncsBw2M2FW6xWjjQonpp21aipQbKQdvkmqS4Y3TkMsWUSS2LD/pcXKXXlk3v51X
-	oOoLeT20REYwet3UWcDJz2ahuaecdxx6wqvxpgCwW4ooT3YO72xtjVeoB1Wc8viCJg43sK4pxDQ
-	q5Zn9JMBjnlfqjiYp8yjQzL8b4EW9q4+U+fA9mChXF3JDZLzj19DTGgVX6CRLUgJCqFa0EvhCrn
-	ohXSzpf0yVg6LMROYNwUkdQb+EsGNVEQR5md/aylqzcDojK/PLkiWa3jMPjEzul0vVDEc9+e5VT
-	4hR/tCHsqHvJuxGdzG3x
-X-Google-Smtp-Source: AGHT+IHMok0RZ+xEpPKwmA/x6p5MJpbMNsZxQZEpx8+bc1wEOXS9InOWhw+MuPI9x2Y6TY782k+mrw==
-X-Received: by 2002:a05:6a21:998d:b0:1ed:ac86:8f94 with SMTP id adf61e73a8af0-1ee8caac786mr8600343637.1.1739872343886;
-        Tue, 18 Feb 2025 01:52:23 -0800 (PST)
-Received: from rock-5b.. ([221.220.131.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324276171fsm10031640b3a.144.2025.02.18.01.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 01:52:23 -0800 (PST)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: cristian.ciocaltea@collabora.com
-Cc: airlied@gmail.com,
-	andy.yan@rock-chips.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	heiko@sntech.de,
-	hjc@rock-chips.com,
-	kernel@collabora.com,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="N5zQMtti"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=alsVGP82I8tUPKjw6ZLez29MzizoXC6KfuvyinlS+/4=;
+	b=N5zQMtti6LqtMCrUtZFWLRifSuyRdSq9eUreMR1Y+Nib9dyJtawrjwWt23acGj
+	15+xFh2eZH73lC3RLBFpVlRo5nzw8QGSZWvD1iXBUg0mxiXnpU+noyFNirFZ9kT2
+	+zHn1d2pPwmFQ5YuVCWmy70Z/Ju7lYlijete4/UdU/Z+I=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgBXDlplWLRnXD06CQ--.18498S3;
+	Tue, 18 Feb 2025 17:52:39 +0800 (CST)
+Date: Tue, 18 Feb 2025 17:52:37 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, max.krummenacher@toradex.com,
+	francesco.dolcini@toradex.com, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	liujianfeng1994@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	robh@kernel.org,
-	simona@ffwll.ch,
-	tzimmermann@suse.de
-Subject: Re: [PATCH 3/4] arm64: dts: rockchip: Add HDMI1 PHY PLL clock source to VOP2 on RK3588
-Date: Tue, 18 Feb 2025 17:52:16 +0800
-Message-ID: <20250218095216.1253498-1-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <1b3234ce-4526-4735-b9c0-c242e6cc3cf0@collabora.com>
-References: <1b3234ce-4526-4735-b9c0-c242e6cc3cf0@collabora.com>
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] ARM: dts: imx6qdl-apalis: Fix poweroff on Apalis iMX6
+Message-ID: <Z7RYZbBagvnMdy0i@dragon>
+References: <20250110151846.214234-1-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250110151846.214234-1-eichest@gmail.com>
+X-CM-TRANSID:Mc8vCgBXDlplWLRnXD06CQ--.18498S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF1xZr4ruF4xZFWUuryUJrb_yoW3CFc_Ga
+	48CF1xJw4fGF4UCw1qkF4a9r1S93y7Jr47XrZ2gFWav343Awn5AF1ktFy8Zr17J3yfZFWD
+	Was8JwsrAF1fujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8H5lUUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEhL3ZWe0S-IzFwAAsc
 
-Hi Cristian,
+On Fri, Jan 10, 2025 at 04:18:29PM +0100, Stefan Eichenberger wrote:
+> From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> 
+> The current solution for powering off the Apalis iMX6 is not functioning
+> as intended. To resolve this, it is necessary to power off the
+> vgen2_reg, which will also set the POWER_ENABLE_MOCI signal to a low
+> state. This ensures the carrier board is properly informed to initiate
+> its power-off sequence.
+> 
+> The new solution uses the regulator-poweroff driver, which will power
+> off the regulator during a system shutdown.
+> 
+> CC: stable@vger.kernel.org
+> Fixes: 4eb56e26f92e ("ARM: dts: imx6q-apalis: Command pmic to standby for poweroff")
+> Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-No matter one or two hdmi ports the rk3588 boards have, most of
-devicetrees in mainline kernel only have hdmi0 supported. After applying
-this patch their hdmi0 support is broken.
+Applied, thanks!
 
-So I recommend moving the vop clk part to board level devicetree.
-Then support of hdmi0 won't be broken, and board maintainers can add
-HDMI1 PHY PLL clk when they are adding hdmi1 support. I can add support
-for orangepi 5 max and armsom w3 for reference by other developers.
-
-Best regards,
-Jianfeng
