@@ -1,121 +1,62 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850A2343D4;
-	Tue, 18 Feb 2025 09:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EB88233D9C;
+	Tue, 18 Feb 2025 09:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739871994; cv=none; b=dPXNRQC0LdwkKRF89G/hie869WAZ9uv07p2fE35OjDsxFjti6UzAc31zgqXha4FYXHBMtuqBnTTsRjLM1i6ouFqZaNxK8JWpdCavmlx9MfLNsyx4aySvPM5z7fXinIDM8C99WC6ZXeT5UvLL/zBiT1HtWtTVMyeSn/A2R2HXNh0=
+	t=1739871995; cv=none; b=pBumqiDGSLcadz+ASQU+q+7mQgOrQw72I9o59TgbamGTDaICe8HH4SHyNcIapYorHpoYevRk4X7sgwb9G09fzkBkAkB7URm62/RImWN/lin2VnNQXe/pdLurJQLcm7Jn1RcCxAAU190v7SXy0qYxC9ngyfkEskGDFzww9dPuC64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739871994; c=relaxed/simple;
-	bh=ZRK9DkGAdWHaLVW2FmS2uFw8+3RShiT5gWi20wgEjP4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IYbDbuNh69BzKVi9Vg0897R+fPCO7Q2JzRA60rpxjEvaVHMueypmLAtxpdmlHDMAsmyTimBty4zh+5FuOtoteTwSJxztTtlZ2wi0QSYJvgEuCv6OPsYilGh7y+9eLxxHDXJq7iZgfjuXK2hVwlicwPLUb26VHrpQGR4TOx9lAKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L29lIKjk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F80oRI5i; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739871995; c=relaxed/simple;
+	bh=9ADUzIlkRmx6sq0bOKHim7EKMOadjQ/9CTWIOLtvEYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QxZFq5lIxMIUW3YHTFt1Q73tlMW6oE7aBMruELmPPE/XnsHjNCTH4pD9XfP5i23+i2PmqJ/PfcMEgUCfMJZZz+nLGX47bX2xkZpAwVc1NKhZwWfrpoi5de6KXGwXpF35UQBqj5onfEXUPtEDZdapXx/N62svej3QcQAaR11H+7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=JRYbGWXN; arc=none smtp.client-ip=220.197.32.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L29lIKjk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F80oRI5i"
-Date: Tue, 18 Feb 2025 09:46:30 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739871991;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n3/vNErZjl0gewE84wnG96tfUOdnxBJenFzfpO6G/Ec=;
-	b=L29lIKjkIZxuN8QxhDyh4nmY+m4k5Z87aKdUPhIsESf3fApDHZJT0+Jnz7ZfaOnSvyzhAY
-	0IWPUDL9mmI2yjLXnBIJAw00qdxmQ2DIzejqnEQve9PW1hms2bf7yx2CIRyBfIEiiXiGJA
-	dXXhfj5EAO19f/AAiZJFcdrJLc5fV4PMLZTMkdALm+AlG27OgTqaMEvdHthGyjbYvBN4j5
-	T2YTPWQ50LPKotAIHIR1famAfx0nkYsQvZSIFKPhm4k2NAqmnO16NfhgKUR32g6mh/+6Em
-	i7qKxb0zDL+VkozFqS+QruEVRptZUFuur2RSArIx4fSAhrr92djUN34BlNh7bA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739871991;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n3/vNErZjl0gewE84wnG96tfUOdnxBJenFzfpO6G/Ec=;
-	b=F80oRI5iZHbXHWuOiGiSVR4oL4g0O64dm4Ii5ckhwKudTErWfEBqlNZqqs+YPJcpjdMmuq
-	sQ3sHv4pnnmRTHAA==
-From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] tracing/osnoise: Switch to use hrtimer_setup()
-Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
- "Steven Rostedt (Google)" <rostedt@goodmis.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cff8e6e11df5f928b2b97619ac847b4fa045376a1=2E17387?=
- =?utf-8?q?46821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3Cff8e6e11df5f928b2b97619ac847b4fa045376a1=2E173874?=
- =?utf-8?q?6821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="JRYbGWXN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=onm1rS1mxSV1bJWjghMpBfWA93PUl1xrcbo/qJEavTA=;
+	b=JRYbGWXNxNTc3fQD3n1Nod4sZvyt7wZlNtAe/m1AmszDqyjzw8m6DK6d156Y/F
+	oxdLYsPezw+v0qyX429aucWeOhcoQjlkk6JCMRarWykIkIA3lniM00lTYm6xgEHl
+	osLY2DhfEW0At1JLJOwMdP6kKdxaEHW0IYfsKdjLc2Ny0=
+Received: from dragon (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id Ms8vCgBnKqjhVrRnFZhhCQ--.20238S3;
+	Tue, 18 Feb 2025 17:46:11 +0800 (CST)
+Date: Tue, 18 Feb 2025 17:46:09 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Martyn Welch <martyn.welch@collabora.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, kernel@collabora.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 RESEND] arm64: dts: ls1028a-rdb: Add iio-hwmon
+ compatibility table
+Message-ID: <Z7RW4WK0qYs7Vo9l@dragon>
+References: <20250109112457.553169-1-martyn.welch@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987199076.10177.13770385401042617924.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250109112457.553169-1-martyn.welch@collabora.com>
+X-CM-TRANSID:Ms8vCgBnKqjhVrRnFZhhCQ--.20238S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUsco2UUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEQ33ZWe0S+AuKwAAsz
 
-The following commit has been merged into the timers/cleanups branch of tip:
+On Thu, Jan 09, 2025 at 11:24:57AM +0000, Martyn Welch wrote:
+> Add an iio-hwmon map to utilise the iio framework and access power
+> information via the hwmon framework at the same time.
+> 
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
 
-Commit-ID:     19fec9c4434f86bce6b7227ee70b8d9a2b3c9035
-Gitweb:        https://git.kernel.org/tip/19fec9c4434f86bce6b7227ee70b8d9a2b3c9035
-Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:39:08 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 18 Feb 2025 10:32:33 +01:00
+I do not quite understand "compatibility table" in the subject.  Could
+you elaborate a bit?
 
-tracing/osnoise: Switch to use hrtimer_setup()
+Shawn
 
-hrtimer_setup() takes the callback function pointer as argument and
-initializes the timer completely.
-
-Replace hrtimer_init() and the open coded initialization of
-hrtimer::function with the new setup mechanism.
-
-Patch was created by using Coccinelle.
-
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/all/ff8e6e11df5f928b2b97619ac847b4fa045376a1.1738746821.git.namcao@linutronix.de
-
----
- kernel/trace/trace_osnoise.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index f3a2722..1599953 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -1901,8 +1901,7 @@ static int timerlat_main(void *data)
- 	tlat->count = 0;
- 	tlat->tracing_thread = false;
- 
--	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
--	tlat->timer.function = timerlat_irq;
-+	hrtimer_setup(&tlat->timer, timerlat_irq, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 	tlat->kthread = current;
- 	osn_var->pid = current->pid;
- 	/*
-@@ -2456,8 +2455,7 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 	tlat = this_cpu_tmr_var();
- 	tlat->count = 0;
- 
--	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
--	tlat->timer.function = timerlat_irq;
-+	hrtimer_setup(&tlat->timer, timerlat_irq, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 
- 	migrate_enable();
- 	return 0;
