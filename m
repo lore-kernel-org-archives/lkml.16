@@ -1,140 +1,228 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37C822FDE2;
-	Tue, 18 Feb 2025 08:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7659F22FAF4
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869041; cv=none; b=oxSw5vEXTWWh92VchL2kLFnHqL2dQi5viX+HeGen0GCu7koz+01lN+DwO+/siRRFNI0TdkEU2OeaUj0rjzGjDFMUraYWBi62dmY/SG0qjExSYxbsBfmTcRJVGtuKQ5avUBUPZjmlIpYgDQiNMiVdHKt6gUmsxkeBlaNF1RO+d9M=
+	t=1739869040; cv=none; b=F4EnXHKSpnC+rWrI6F1cr8lv6kn5B97zT8/RhoTXt882Z4jpMJhi7Lf7x+KDYWAIBS/k3/HKtEsgAYtQ95pYkpi22yk6t2GWI/+Zh3aW4cuLg9lau4SC0TuDIhTeu9xH1W08AoXh/yRoulh4kZJO6FDy+UZ1SQpvSUP8MC2bhG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869041; c=relaxed/simple;
-	bh=mhaR2Trnlsu8FfYdF9a/LlPy376WKizOyZDhx/r8OTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XVpQxKZHGWlo5juTpeQb+XuGJD76vk8+sgmUefT3BOcDKzVj0wLXCFeRJp9aGKY7+2rBvb3Aooozzt2JoggdQDkqJkJMXwJ723eMQLYsuMs6qBubg9LVQWZhYC+PhySUJK2KdXxEGcREhKIZ+s0x21XhDGggz4w/pMzRf6kpNQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FERSaw+w; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739869040; c=relaxed/simple;
+	bh=hlErsFV9V7vbfjbxZQu67cLb5ITsC3CKvDimUBSUYxc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bK4leQano1vXulRZ0xSDd/+o54Y4A0X2GWv9LD2pXzters3Y3RgqJ+dXDhHnM2AnnmPvQN3CGTFr6/Evx0Q2Pk1vAEl0Y594L2BCEqRxOd/GVRPdQocddqUKB8+gdS8lfamTYbk3p6vhT0xQlew4w3MQYSWmD7jwx+PLN+1kX3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=d6HdmiVZ; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FERSaw+w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739869033;
-	bh=mhaR2Trnlsu8FfYdF9a/LlPy376WKizOyZDhx/r8OTY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FERSaw+wUWOJgkTZm1leH65FcMticAx2ZDEkReE80eTRzAVt9txumwGUCAKfspNmc
-	 C7NTo7l5jcGXmclVLKA82mcoI9NhdambccpMm6NoxeGrBSWIjXXqnJvodIo8Zlqvdl
-	 kJGFbw6dkqivDA7MHQDyPm+tbw67VX4q/JFzzS4+N34JS6krZhHcoEgcLtASxkGi/G
-	 iN68mETOMiboV58T8sC8CJtWImg/gj+22aU39j2m/hu65ldnzLP2Dlb2c2j84xIcRj
-	 YUxcmNcGkgFA191chGVGDoM8uzYl/kdzIonJjEbp9vKidJMvFwWLJfeBNc2Yahw5y3
-	 qPgbOc9Auxzgw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 329F417E1562;
-	Tue, 18 Feb 2025 09:57:13 +0100 (CET)
-Message-ID: <7804ef70-efe7-476b-ae5e-bf665bfb4a47@collabora.com>
-Date: Tue, 18 Feb 2025 09:57:13 +0100
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="d6HdmiVZ"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30613802a59so54595281fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:57:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739869036; x=1740473836; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hlErsFV9V7vbfjbxZQu67cLb5ITsC3CKvDimUBSUYxc=;
+        b=d6HdmiVZf4LqzxiA17GacLhqDeoZKeHjBYckuFRwoJRYbxOv9H7oxK+wdfosbgD7to
+         EjPvB6RRk0VQfaIem7U1Qbybd5EiFr4B+gXeVZUf3e66krZuKL2rzRQcgZFcDxMQjztA
+         YFBWemTxjZJaZz3S2dahsMbOjv0dzISwWCw+Xr4SZOeXh1/YOwBK+ByCCF1cASE3wJ1Q
+         dHhKYS+NLeTO7slojfC1+iSJE7sWSSDq5a0p/1FEKX/hQNvYcSEANcb9aSSzvSlnAOWM
+         ArUWR0QWY4lM8ztNV3ccwm1t/Nd+EyP7wCS2OZLe6Sn6PBsGXOioV18NUOmS+XOvqN2S
+         CXew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739869036; x=1740473836;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hlErsFV9V7vbfjbxZQu67cLb5ITsC3CKvDimUBSUYxc=;
+        b=nviHHg9aFJ64y7JhGQwijmLYPxG9r6j0tV+uyAcWkCZusIReiHKTR24gRv8MA6SRub
+         eI5moCOOsngJ3BSv9xQ94oC6Kpip849adfnvwxgJvaGFvzRaJgie+qo02IvCjhxSaSsP
+         ydFAWDaEO4MCF89YyrTMrRkjkAw+o4lWVsPlCv6pS3ZKRMSYRtWgm3urpydmPhrcdN7K
+         XQUlSZuJqzZhXt/b3Ay9WSnlt72+boS9Gb/pHsNWvXx5fwQo3+4WKW2oO5E5jE5miyCX
+         PmpfWwu1UXBg44kuHZz5gyxDZpRoAtcKfqU0GCMbgNzoChvaeAk9DHTxVjLeq/eBSmOs
+         O+bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+vSsYXpl8NaW4YpHOpSaAOT0gca9Ffj7UIg7JkQFV8MQUV7j22k92uCm9/4SCzHdHbYVPUboaFSh3Blo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9J4cUZKawOGGI4oV2Ym5KD1kTRC56Rk5uOat9nzGHFJ8Awgls
+	53+CfuJ7f54sNgm0tFA2yInWmERrE0n0uUSL43OQcO6UI63tWzQgA/oxcXeA0mIrR1wVi4BNw+i
+	r3ZW9bkhYUsZVYRiEiEARMm0cbHBF2fRIookYAg==
+X-Gm-Gg: ASbGncuyK2b2GZCIAiAbz7pwZAt1TXcUQB9U25T0nEOKG4By1ILqLSvPCnl9319q626
+	6aO+G71g69CZPRMHu87In3BgRMljW2L10mpWLjevl7JCJJuWlrgviCGM5Piw0IGqZ6Zrm0s0Ze8
+	3Dx5BOrkwWhmgNQY3y7LAnvuVHrFD1
+X-Google-Smtp-Source: AGHT+IFAY6Xns+/Ob9unwK3yUiO5P96UI8GY5KEOai6Gz8IDG+X5xZzrb4DaYRMJSIXmR6ytPjyR2Hb7Fmg8G2ZxrWs=
+X-Received: by 2002:a05:6512:104e:b0:545:c23:9a94 with SMTP id
+ 2adb3069b0e04-5452fea6dcemr4513084e87.48.1739869036236; Tue, 18 Feb 2025
+ 00:57:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] usb: mtk-xhci: add support remote wakeup of mt8196
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>,
- linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250215100615.808-1-chunfeng.yun@mediatek.com>
- <20250215100615.808-3-chunfeng.yun@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250215100615.808-3-chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250217142758.540601-1-koichiro.den@canonical.com>
+ <20250217142758.540601-2-koichiro.den@canonical.com> <CAMRc=McB0bcG4jERmUyrQ=eTP+kcfLBBAOaT7mCMKbgUB1W5nw@mail.gmail.com>
+ <d2qdoq3f3jk6gzgsjeqszgaqk7z523r7cfnopxfq4ghsbsqgp3@zjw67ewqzi5u>
+ <uogv4ckqo2e2byspffvfayu44v6fl46sxtu7eudweoye62sofi@5iwsumpttpca>
+ <CAMRc=MdNtDW_Gbd6dsG345110SCWe1vD_rNd_QaWBYRApHBoxQ@mail.gmail.com> <saszavmizjwhzechspy6otune2xwtgjjygaitxminzclgj7zep@ofwfb5jdfcam>
+In-Reply-To: <saszavmizjwhzechspy6otune2xwtgjjygaitxminzclgj7zep@ofwfb5jdfcam>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 18 Feb 2025 09:57:05 +0100
+X-Gm-Features: AWEUYZlXaLy29umfWhy-dvc45_tPOq-Fj9punVFoIZsBxonlMFUOsDQYUkbAzxU
+Message-ID: <CAMRc=MdDi6_neGThU3wq_uq2VA=DUHzTwvrv_wivj26ksNSnNA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: pseudo: common helper functions for pseudo gpio devices
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 15/02/25 11:06, Chunfeng Yun ha scritto:
-> There are three USB controllers on mt8196, each controller's wakeup
-> control is different, add some specific versions for them.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+On Tue, Feb 18, 2025 at 6:01=E2=80=AFAM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
+> On Mon, Feb 17, 2025 at 06:29:27PM GMT, Bartosz Golaszewski wrote:
+> > On Mon, Feb 17, 2025 at 5:21=E2=80=AFPM Koichiro Den <koichiro.den@cano=
+nical.com> wrote:
+> > >
+> > > On Tue, Feb 18, 2025 at 01:12:17AM GMT, Koichiro Den wrote:
+> > > > On Mon, Feb 17, 2025 at 04:46:30PM GMT, Bartosz Golaszewski wrote:
+> > > > > On Mon, Feb 17, 2025 at 3:28=E2=80=AFPM Koichiro Den <koichiro.de=
+n@canonical.com> wrote:
+> > > > > >
+> > > > > > Both gpio-sim and gpio-virtuser share a mechanism to instantiat=
+e a
+> > > > > > platform device and wait synchronously for probe completion.
+> > > > > > With gpio-aggregator adopting the same approach in a later comm=
+it for
+> > > > > > its configfs interface, it's time to factor out the common code=
+.
+> > > > > >
+> > > > > > Add gpio-pseudo.[ch] to house helper functions used by all the =
+pseudo
+> > > > > > GPIO device implementations.
+> > > > > >
+> > > > > > No functional change.
+> > > > > >
+> > > > > > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> > > > > > ---
+> > > > >
+> > > >
+> > > > Thanks for the review.
+> > > >
+> > > > > Looking at this patch now, I've realized that there is nothing
+> > > > > GPIO-specific here. It's a mechanism for synchronous platform dev=
+ice
+> > > > > probing. I don't think its place is in drivers/gpio/ if we're mak=
+ing
+> > > > > it a set of library functions. Can I suggest moving it to lib/ an=
+d
+> > > > > renaming the module as pdev_sync_probe or something else that's
+> > > > > expressive enough to tell users what it does? You can make me the
+> > > > > maintainer of that module if you wish (feel free to add yourself
+> > > > > too!).
+> > > >
+> > > > I had vaguely envisioned that this might eventually contain some
+> > > > GPIO-specific code for some reason, and also it's just a tiny utili=
+ty to
+> > > > reduce code duplication, which is why I placed it in the neighborho=
+od,
+> > > > drivers/gpio/. However, of course you=E2=80=99re right, there=E2=80=
+=99s nothing
+> > > > GPIO-specific here, so moving it to lib/ makes sense.
+> > > >
+> > > > I'm not really sure if this method for synchronous platform device =
+probing
+> > > > can be broadly accepted as a general solution, but I have no object=
+ions to
+> > > > making the change. I'll move it as you suggested and send v2, setti=
+ng you
+> > > > as its maintainer.
+> > >
+> > > Regarding this series, I feel that it might make discussions smoother=
+ if
+> > > you submit it directly. So if you're okay with it, please go ahead. I=
+n
+> > > that case, there's even no need to mention me or CC me - I can track =
+it on
+> > > ML :)
+> >
+> > I'm not sure I'm following. Why would I submit it myself? You did most
+> > of the work already. If you want the changes to gpio-aggregator
+> > merged, then I think that it's time to refactor this code before we do
+> > that because repeating it three times is just bad programming. I
+> > probably wouldn't have done it otherwise at this point.
+>
+> As I mentioned earlier, I'm not really sure if this particular usage of
+> platform devices will be generally acceptable. gpio-pseudo was intended
+> solely to reduce code duplication in methods already accepted by the GPIO
+> subsystem. Moving it to lib/ would shift the approach, effectively trying
+> to promote this method as a standard solution.
+>
 
-Since all of the USB controllers of the MT8196 SoC are behind MTU3, and
-since the wakeup control for all of them will be handled by the MTU3 driver
-and *not* by the xhci-mtk driver....
+Promote it as a solution for this specific use-case - the need to
+probe "faux" platform devices synchonously.
 
-NACK!
+> For example, if for any reason drivers_autoprobe is set to 0 on the
+> platform bus, the synchronous mechanism might be blocked indefinitely.
+> Moreover, in the first place, I'm not sure whether employing the platform
+> bus in this way is appropriate.
+>
 
-Please drop this commit.
+It's sketchy, I know. Back in the day I was advised by Greg to use the
+auxiliary bus but I realized very fast that if I want to support
+device-tree too, then I would end up reimplementing all the code that
+already exists for supporting the platform bus. He eventually agreed
+that it's better to use the platform bus. We had the same issue with
+PCI pwrctrl recently and also ended up using the platform bus.
 
-Cheers,
-Angelo
+> For drivers like gpio-virtuser, which we can define virtual GPIO consumer=
+s
+> via DT, or for gpio-aggregator, which we can use as a generic GPIO driver=
+,
+> the expectation is to use the platform bus/device mechanism as usual. In
+> those cases, adding a synchronous mechanism via the platform bus notifier
+> to piggyback on the existing platform bus probe implementation is
+> understandable and obviously has already been accepted in the GPIO
+> subsystem. However, moving just the synchronous mechanism into lib/ can
+> potentially be perceived as an abuse of the platform device concept?
 
-> ---
-> v3: no changes
-> v2: modify marcos name
-> ---
->   drivers/usb/host/xhci-mtk.c | 26 ++++++++++++++++++++++++++
->   1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index 904831344440..3f8e37b25322 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -113,6 +113,14 @@
->   #define WC1_IS_P_95		BIT(12)
->   #define WC1_IS_EN_P0_95		BIT(6)
->   
-> +/* mt8196 */
-> +#define PERI_WK_CTRL0_8196	0x08
-> +#define WC0_IS_EN_P0_96		BIT(0)
-> +#define WC0_IS_EN_P1_96		BIT(7)
-> +
-> +#define PERI_WK_CTRL1_8196	0x10
-> +#define WC1_IS_EN_P2_96		BIT(0)
-> +
->   /* mt2712 etc */
->   #define PERI_SSUSB_SPM_CTRL	0x0
->   #define SSC_IP_SLEEP_EN	BIT(4)
-> @@ -129,6 +137,9 @@ enum ssusb_uwk_vers {
->   	SSUSB_UWK_V1_4,		/* mt8195 IP1 */
->   	SSUSB_UWK_V1_5,		/* mt8195 IP2 */
->   	SSUSB_UWK_V1_6,		/* mt8195 IP3 */
-> +	SSUSB_UWK_V1_7,		/* mt8196 IP0 */
-> +	SSUSB_UWK_V1_8,		/* mt8196 IP1 */
-> +	SSUSB_UWK_V1_9,		/* mt8196 IP2 */
->   };
->   
->   /*
-> @@ -381,6 +392,21 @@ static void usb_wakeup_ip_sleep_set(struct xhci_hcd_mtk *mtk, bool enable)
->   		msk = WC0_IS_EN_P3_95 | WC0_IS_C_95(0x7) | WC0_IS_P_95;
->   		val = enable ? (WC0_IS_EN_P3_95 | WC0_IS_C_95(0x1)) : 0;
->   		break;
-> +	case SSUSB_UWK_V1_7:
-> +		reg = mtk->uwk_reg_base + PERI_WK_CTRL0_8196;
-> +		msk = WC0_IS_EN_P0_96;
-> +		val = enable ? msk : 0;
-> +		break;
-> +	case SSUSB_UWK_V1_8:
-> +		reg = mtk->uwk_reg_base + PERI_WK_CTRL0_8196;
-> +		msk = WC0_IS_EN_P1_96;
-> +		val = enable ? msk : 0;
-> +		break;
-> +	case SSUSB_UWK_V1_9:
-> +		reg = mtk->uwk_reg_base + PERI_WK_CTRL1_8196;
-> +		msk = WC1_IS_EN_P2_96;
-> +		val = enable ? msk : 0;
-> +		break;
->   	case SSUSB_UWK_V2:
->   		reg = mtk->uwk_reg_base + PERI_SSUSB_SPM_CTRL;
->   		msk = SSC_IP_SLEEP_EN | SSC_SPM_INT_EN;
+That's actually a good point. I guess this code could be reworked to
+work with any bus (that would be specified by the user).
 
+>
+> Incidentally, Greg K-H=E2=80=99s faux bus work was recently merged into m=
+ainline:
+> commit 35fa2d88ca94 ("driver core: add a faux bus for use when a simple
+> device/bus is needed").
+>
 
+Thanks for bringing this to my attention, I wasn't aware this existed.
+However it's not useful here - I still want to support OF.
 
+> Correct me where I'm wrong. And I'd appreciate if you could share your
+> thoughts.
+>
+
+I don't want to block the aggregator work but I also don't want to
+have code triplication under drivers/gpio/. Let's do the following: I
+don't like the sound of the word "gpio-pseudo" in this context. Let's
+keep it under drivers/gpio/ but rename the module already to
+"dev-sync-probe.c" and use the
+dev_sync_probe_init/register/unregister/data naming scheme. Stick to
+supporting platform devices exclusively for now. I don't have the time
+just yet but maybe in the next release cycle, I'll try to make it more
+generic (work for all device types) and move it out of drivers/gpio/.
+How does it sound?
+
+Bartosz
+
+> Koichiro
+>
+> >
+> > The code looks good other than that, just put it under lib/, rename
+> > functions to pdev_sync_probe_init/register/unregister() and send it to
+> > the list as usual. With that it's good to go. Just make sure to
+> > mention to Andrew Morton the need for this to go through the GPIO
+> > tree, I don't think he'll mind.
+> >
+> > Bart
