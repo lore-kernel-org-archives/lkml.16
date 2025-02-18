@@ -1,133 +1,80 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E57F2475F2;
-	Tue, 18 Feb 2025 12:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7490B2500B5;
+	Tue, 18 Feb 2025 12:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739882617; cv=none; b=Tq2nCe8wY0Zwh0ObyGFGYXxV5+Y7EMyTMwwP+73py7hZW1u5BOgsJS9V8BFxQOSTb9Gh3ytRaPqB4m5CHbFAwYYGncdhpnzerDmRXdNMMW3YrvH059Oo/dxtIGgaXS12J5Fz1Wily9+N6gI2VLQMjnVijfU91zmbgZUa45Jj4OE=
+	t=1739882697; cv=none; b=C0ElD3ROcY2UqyfCkRi4/kdJegEJlVMb+Rcsilu59tSmzt0yb5ZMxfcBcLMNLQPphImuTV1PkHuVl0CKaz7ikoHYaZc2hdFJU1ApSVsNheW8xCoTrm+HY20o+rgruxUkpp8YuZMYUBNR4J3Mj4VGfccfJ87fZbTStm35U3fC5+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739882617; c=relaxed/simple;
-	bh=PPfx+qN+r3fsPzBvaolV7hOKBn7l6DYQD6YgdMuZ/SI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=as0wjBgkdgwtiyq7Z+pE+F/+nbmp4MIKCWFZsx68XrS8cFp8kkkcs38afGqxKPgLeVyRBgqBYv1B1/hmm9/6XJmO/NAZACR7/j5VlIQMSqy0tO2FHj85c5mDoOUL7Bj5LaG11Jkt9WznCNI60TMdK9lZwNotOi3mglzAofilXss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ZNx5BYbL; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ZNx5BYbL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=q3sgjaww3zf6jjt5pzlzd6ux3u.protonmail; t=1739882607; x=1740141807;
-	bh=8nsvnyARfLGt6tPfX961veuIV9VExo8yct+FDPP2mDI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=ZNx5BYbL9RA91zzUIBpyXgcwhSHUGEJJ62FPKJ/ni2mbVu4fDzxJ+3N608wx+Z4VV
-	 wyhDLZXIS5LPCGmcQDzVA3kHiRJBukQ5IZFZUjQEttI9uXG69wnHBAVW+5yiAFoXU/
-	 j7Hsm3yjfJpTSA2bECMDKUMWh1IAD1Hg364bn2XnQ+1+t01Bw99HBnRirfBVh+0KHE
-	 921f5TtLBtG6vv5RRw+jhBuqsnOoG/r4C7j8hSlIOe9I2oSPBb+esjkXgPubAPeCtk
-	 W7uLhY/SrY5HMUq+K4zK/fXV2D6DtT7KGDY59IXXohyoBmZwBiYrzw6Ap7YT8FvxGg
-	 7vk6JAU8w7NYA==
-Date: Tue, 18 Feb 2025 12:43:21 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>, Gary Guo <gary@garyguo.net>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Luis Chamberlain <mcgrof@kernel.org>, Trevor Gross <tmgross@umich.edu>, Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, Greg KH <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org
-Subject: Re: [PATCH v6 2/6] rust: str: implement `Index` for `BStr`
-Message-ID: <86474714-24a5-49ff-9767-23e25afee7d3@proton.me>
-In-Reply-To: <87wmdnfqt0.fsf@kernel.org>
-References: <20250211-module-params-v3-v6-0-24b297ddc43d@kernel.org> <20250211-module-params-v3-v6-2-24b297ddc43d@kernel.org> <kW0CDyK5M8DuLPr_1HwIXcnVP4x8evlFoq0BOjldchTZqkGiqzNJ-dtpV7s5QHLbbmm6cW529GeDTo_GoDKfdQ==@protonmail.internalid> <20250211164004.6de768c3@eugeo> <87lduc44c3.fsf@kernel.org> <2m_bB1GvgxV0DoM1PIggnkJD83g9AA6EeW5bgH1JmfZBG1P8D_DE966KAg53gCK8KmWgjpdCUPU6T-5xuZ-FYg==@protonmail.internalid> <20250212090914.6ef7e83b@eugeo> <87wmdnfqt0.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 7deb9b54b3c5e867e75199ddc60dac1ad16802d2
+	s=arc-20240116; t=1739882697; c=relaxed/simple;
+	bh=SLEG1NMoLrdX1Aw1CSXmVF23VQoV4gcupTERGEEsR/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uD5SPhTFJr1rI1v9hlDiWT/x7TqhKgEBT/VUFfM+8yYMIfcfN9IVE/NAbg/laPaBDPMJYOOQDGIZ+jGb/a/FhWwskb8D28fSRD5FhWwTTzD+mjMegj2XwO/J7b3dX5GYVFD7xpRpbmdCNP267lsDz0aIEqMjPFqLdaUnuK/WaDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62068152B;
+	Tue, 18 Feb 2025 04:45:14 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E4BB3F59E;
+	Tue, 18 Feb 2025 04:44:53 -0800 (PST)
+Message-ID: <60701cf8-f00e-4f95-a89a-b1970775f868@arm.com>
+Date: Tue, 18 Feb 2025 12:44:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 2/3] rust: add dma coherent allocator abstraction.
+To: Daniel Almeida <daniel.almeida@collabora.com>,
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, dakr@kernel.org, aliceryhl@google.com,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+References: <20250123104333.1340512-1-abdiel.janulgue@gmail.com>
+ <20250123104333.1340512-3-abdiel.janulgue@gmail.com>
+ <633274AD-E55C-4A90-AB72-33D3E176176F@collabora.com>
+ <dd57c3ba-246e-414d-a9c1-eb2cff032d83@arm.com>
+ <2b019479-2d32-433f-af78-c3378dee4e2b@gmail.com>
+ <E4FEFE5F-77C4-4ADB-AEFA-2580CA75BCFD@collabora.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <E4FEFE5F-77C4-4ADB-AEFA-2580CA75BCFD@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 18.02.25 12:14, Andreas Hindborg wrote:
-> "Gary Guo" <gary@garyguo.net> writes:
->=20
->> On Tue, 11 Feb 2025 21:24:44 +0100
->> Andreas Hindborg <a.hindborg@kernel.org> wrote:
+On 18/02/2025 12:19 pm, Daniel Almeida wrote:
+> Hi Abdiel,
+> 
+>> On 18 Feb 2025, at 06:58, Abdiel Janulgue <abdiel.janulgue@gmail.com> wrote:
 >>
->>> "Gary Guo" <gary@garyguo.net> writes:
->>>
->>>> On Tue, 11 Feb 2025 16:57:36 +0100
->>>> Andreas Hindborg <a.hindborg@kernel.org> wrote:
->>>>
->>>>> The `Index` implementation on `BStr` was lost when we switched `BStr`=
- from
->>>>> a type alias of `[u8]` to a newtype. This patch adds back `Index` by
->>>>> implementing `Index` for `BStr` when `Index` would be implemented for
->>>>> `[u8]`.
->>>>>
->>>>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->>>>> ---
->>>>>  rust/kernel/str.rs | 11 +++++++++++
->>>>>  1 file changed, 11 insertions(+)
->>>>>
->>>>> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
->>>>> index 002dcddf7c768..1eb945bed77d6 100644
->>>>> --- a/rust/kernel/str.rs
->>>>> +++ b/rust/kernel/str.rs
->>>>> @@ -114,6 +114,17 @@ fn eq(&self, other: &Self) -> bool {
->>>>>      }
->>>>>  }
->>>>>
->>>>> +impl<Idx> Index<Idx> for BStr
->>>>> +where
->>>>> +    Idx: core::slice::SliceIndex<[u8], Output =3D [u8]>,
->>>>
->>>> I think I'd prefer
->>>>
->>>> =09[T]: Index<Idx>,
->>>
->>> Is that equivalent?
+>> Hi Robin,
 >>
->> Sorry, I meant `[u8]: Index<Idx>`. This makes more semantic sense that
->> "what ever can index a byte slice, it can also index BStr". This is
->> also how our CStr and the array primitive type implements its Index
->> operation.
+>> On 17/02/2025 15:52, Robin Murphy wrote:
+>>> FWIW we've been wanting to steer away from relying on the default mask in new code, so it would be quite neat to actually enforce that allocations fail if dma_coherent_mask hasn't been explicitly set (assuming it's sufficiently cheap to keep a flag in the Device handle or something like that - it's not the end of the world if it isn't practical).
 >>
->> They should be equivalent as libcore does
+>> I just had a quick look on how to possible approach this and indeed would refactor the Device binding a bit. If it is okay with you this could go in a follow-up patch? I was hoping to upstream the initial support first - at least with the dma_set_mask/dma_set_coherent_mask put in place already.
 >>
->> =09impl<T, I> Index<I> for [T] where I: SliceIndex<[T]> { ... }
+>> Thanks!
+>> /Abdiel
 >>
->=20
-> What I originally wrote is `Idx` must be usable as an index for `[u8]`,
-> yielding `[u8]` when indexing.
->=20
-> The new one you suggest, I parse as `[u8]` should be indexable by `Idx`.
-> This is less info. The compiler will also complain about the missing info=
-:
->=20
-> error[E0308]: mismatched types
->    --> /home/aeh/src/linux-rust/module-params/rust/kernel/str.rs:141:26
->     |
-> 141 |         BStr::from_bytes(&self.0[index])
->     |         ---------------- ^^^^^^^^^^^^^^ expected `&[u8]`, found `&<=
-[u8] as Index<Idx>>::Output`
->     |         |
->     |         arguments to this function are incorrect
->     |
->     =3D note: expected reference `&[u8]`
->                found reference `&<[u8] as Index<Idx>>::Output`
->     =3D help: consider constraining the associated type `<[u8] as Index<I=
-dx>>::Output` to `[u8]`
->=20
-> If I constrain the output it's all fine again:
->=20
->     [u8]: Index<Idx, Output =3D [u8]>,
->=20
->=20
-> But as I said, I don't think it matters which direction we put this?
+> 
+> FYI: I don’t mind a follow-up patch.
 
-I think it's better to depend on `Index` compared to `SliceIndex`.
+Agreed, as I say it's far from critical anyway - being able to make the 
+correct dma_set_coherent_mask() call at all is the only thing we need 
+for sure. I just see a slightly selfish opportunity here, that if the 
+binding layer could make it impossible to call the API incorrectly then 
+hopefully I should never have to review any of its users :D
 
----
 Cheers,
-Benno
-
+Robin.
