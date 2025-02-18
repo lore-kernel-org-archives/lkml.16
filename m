@@ -1,302 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631CC1E0E13;
-	Tue, 18 Feb 2025 20:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033561D63CC;
+	Tue, 18 Feb 2025 20:25:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910343; cv=none; b=mOeOrXDajttmwPGq6G9ulsJZpk+aK4ZWB9GYN73GSLvF4R5Md5gospQAZgCJVbj13sdtA7HVoT64HQ567jIkk5HgyLFm7fDHuwdaEbIJVxAl2Nq5eN9aYAkQPbBWUXkYv5QIOpJuS7G4SLovLcSwsUhLLM07MpIyTNyGFfvlIfc=
+	t=1739910348; cv=none; b=FE3DRTTc7KJZSBdauVcmrOfN5elSKBLeJsAK2wx6RD4XUXI0p8y+6kF19c45oprBabRHvzL3YfiThBrr5unxHyBpzdZfzSbwZ46pADGwIT2qDUX6kc0TtjqgH0zD8tcmdyj5X+6ztqsR6U2YCKkzLy9H7hX0WH9GH9hC1f+z1A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910343; c=relaxed/simple;
-	bh=WNNhE2WjWbugSWpUig/VINXaGNZcKMK+I1LbSf73fRg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aYyAU0CikYyGKneRUTZZU55WlHHutvlQ5DECM5hvyLT4Q2wXaajKGgOLE3STghs4FPwv+SdJTVgnoe+r85h7FjZzqVDJanx7Wc5Y8alFqJ7MRbKDj/4AB/3jf4wJjIKridwg85rNdoZ4941XBdwFm16c9HYQR/Mp1kxZbMX2rwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCKedpD9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739910348; c=relaxed/simple;
+	bh=RLervQf979kstkgoUrYWN04RQ6hrfhFVnDHU20XRDZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=sG1vtIPZzZF/ZC461R7gjDXAiilx5oM+DiWyEq0LsrQ8K18bL8UL+sXC/wr3CGiYpsY5jy2qGEUY8R6zJwjMvLPaCsvrzwVUx2wrmXHoEfNiyTCznAefOhXXw2EhUlPRqVL0EQjd1OTvAh70Ua8iewzNI8ZS//fJCgf8Mzz+SGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpEU+jCM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCKedpD9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFACBC4CEE2;
-	Tue, 18 Feb 2025 20:25:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpEU+jCM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFD6C4CEE4;
+	Tue, 18 Feb 2025 20:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739910342;
-	bh=WNNhE2WjWbugSWpUig/VINXaGNZcKMK+I1LbSf73fRg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kCKedpD9m4rr3pf1059Ig+n1XBs5Iorr5ZbU0Lr385hc0BUS7MQZ+M8tRge/DAa4q
-	 c0JLuyV6rLxcOdUelSbuxRwwddywYvDS93L7mee9RvpcRlQeis1BOAqzqqEpHdwU4S
-	 1YcL5wKx0qyM6vWaO3rzZ2qCX+2vLNRfKQPlXGRHMNHT4HRqwTD/ERWxFUFGyVaNNl
-	 F6R0SJnnQFuj5PkZfDusnYMuGflsK7X8EN8zZ9uKQcBUudicEl1gf26aNCdlnLbXuN
-	 F5oqR3/Ex4Trrs+PYcIOJ3KjARt5ThKRgydcljcOBk38luDXKoigZzESeUzSm9RU1j
-	 vBl84fHFcR2pw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Richard Weinberger <richard@nod.at>,
-	Sasha Levin <sashal@kernel.org>,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	benjamin.berg@intel.com,
-	thehajime@gmail.com,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.13 23/31] um: convert irq_lock to raw spinlock
-Date: Tue, 18 Feb 2025 15:24:43 -0500
-Message-Id: <20250218202455.3592096-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250218202455.3592096-1-sashal@kernel.org>
-References: <20250218202455.3592096-1-sashal@kernel.org>
+	s=k20201202; t=1739910347;
+	bh=RLervQf979kstkgoUrYWN04RQ6hrfhFVnDHU20XRDZo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cpEU+jCMGRMpzZ2LsCrYuDeOQr8uj/u/3r/DxNIWyPabKIAVhqs3CanHpl/261VjX
+	 XJ5sLxzJWt+ZCDBK2kUoTv2hNRPNWQkS67F/PP6pg2bCgB2fZsh4cRRK0k1Lk0tM9F
+	 LmqM2gPZ8SftTUPw9sETiM8HuNaZgfM/VVg7y5d49Hr8WF2V+v67WQTnkn8VkOhrsq
+	 7Es9mVR/u9JmmCQvr0eFZ3gO3W7D8V6exoIIYASGUwYGcjAquNIG0ZNA78GYRpD2/9
+	 ZuP8PKYBRxQzzyYRDIXlPoldtjrVhmsDv2Qlz8e2cEIp5ZdMWtkL5FGVdUnGTWMxxO
+	 WKI9clUXzmDow==
+Date: Tue, 18 Feb 2025 14:25:45 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Subject: Re: [PATCH] PCI: Update Resizable BAR Capability Register fields
+Message-ID: <20250218202545.GA177904@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250218064003.238868-1-daizhiyuan@phytium.com.cn>
 
-From: Johannes Berg <johannes.berg@intel.com>
+[+cc Christian]
 
-[ Upstream commit 96178631c3f53398044ed437010f7632ad764bf8 ]
+On Tue, Feb 18, 2025 at 02:40:03PM +0800, Zhiyuan Dai wrote:
+> This commit modifies the Resizable BAR Capability Register fields to better
+> support varying BAR sizes. Additionally, the function `pci_rebar_get_possible_sizes`
+> has been updated with a more detailed comment to clarify its role in querying
+> and returning the supported BAR sizes.
+> 
+> For more details, refer to PCI Express庐 Base Specification Revision 5.0, Section 7.8.6.2.
 
-Since this is deep in the architecture, and the code is
-called nested into other deep management code, this really
-needs to be a raw spinlock. Convert it.
+Wrap to fit in 75 columns.
 
-Link: https://patch.msgid.link/20250110125550.32479-8-johannes@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/um/kernel/irq.c | 79 ++++++++++++++++++++++++++------------------
- 1 file changed, 47 insertions(+), 32 deletions(-)
+Drop "庐" above.
 
-diff --git a/arch/um/kernel/irq.c b/arch/um/kernel/irq.c
-index 338450741aac5..a4991746f5eac 100644
---- a/arch/um/kernel/irq.c
-+++ b/arch/um/kernel/irq.c
-@@ -52,7 +52,7 @@ struct irq_entry {
- 	bool sigio_workaround;
- };
- 
--static DEFINE_SPINLOCK(irq_lock);
-+static DEFINE_RAW_SPINLOCK(irq_lock);
- static LIST_HEAD(active_fds);
- static DECLARE_BITMAP(irqs_allocated, UM_LAST_SIGNAL_IRQ);
- static bool irqs_suspended;
-@@ -257,7 +257,7 @@ static struct irq_entry *get_irq_entry_by_fd(int fd)
- 	return NULL;
- }
- 
--static void free_irq_entry(struct irq_entry *to_free, bool remove)
-+static void remove_irq_entry(struct irq_entry *to_free, bool remove)
- {
- 	if (!to_free)
- 		return;
-@@ -265,7 +265,6 @@ static void free_irq_entry(struct irq_entry *to_free, bool remove)
- 	if (remove)
- 		os_del_epoll_fd(to_free->fd);
- 	list_del(&to_free->list);
--	kfree(to_free);
- }
- 
- static bool update_irq_entry(struct irq_entry *entry)
-@@ -286,17 +285,19 @@ static bool update_irq_entry(struct irq_entry *entry)
- 	return false;
- }
- 
--static void update_or_free_irq_entry(struct irq_entry *entry)
-+static struct irq_entry *update_or_remove_irq_entry(struct irq_entry *entry)
- {
--	if (!update_irq_entry(entry))
--		free_irq_entry(entry, false);
-+	if (update_irq_entry(entry))
-+		return NULL;
-+	remove_irq_entry(entry, false);
-+	return entry;
- }
- 
- static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- 		       void (*timetravel_handler)(int, int, void *,
- 						  struct time_travel_event *))
- {
--	struct irq_entry *irq_entry;
-+	struct irq_entry *irq_entry, *to_free = NULL;
- 	int err, events = os_event_mask(type);
- 	unsigned long flags;
- 
-@@ -304,9 +305,10 @@ static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- 	if (err < 0)
- 		goto out;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	irq_entry = get_irq_entry_by_fd(fd);
- 	if (irq_entry) {
-+already:
- 		/* cannot register the same FD twice with the same type */
- 		if (WARN_ON(irq_entry->reg[type].events)) {
- 			err = -EALREADY;
-@@ -316,11 +318,22 @@ static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- 		/* temporarily disable to avoid IRQ-side locking */
- 		os_del_epoll_fd(fd);
- 	} else {
--		irq_entry = kzalloc(sizeof(*irq_entry), GFP_ATOMIC);
--		if (!irq_entry) {
--			err = -ENOMEM;
--			goto out_unlock;
-+		struct irq_entry *new;
-+
-+		/* don't restore interrupts */
-+		raw_spin_unlock(&irq_lock);
-+		new = kzalloc(sizeof(*irq_entry), GFP_ATOMIC);
-+		if (!new) {
-+			local_irq_restore(flags);
-+			return -ENOMEM;
- 		}
-+		raw_spin_lock(&irq_lock);
-+		irq_entry = get_irq_entry_by_fd(fd);
-+		if (irq_entry) {
-+			to_free = new;
-+			goto already;
-+		}
-+		irq_entry = new;
- 		irq_entry->fd = fd;
- 		list_add_tail(&irq_entry->list, &active_fds);
- 		maybe_sigio_broken(fd);
-@@ -339,12 +352,11 @@ static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- #endif
- 
- 	WARN_ON(!update_irq_entry(irq_entry));
--	spin_unlock_irqrestore(&irq_lock, flags);
--
--	return 0;
-+	err = 0;
- out_unlock:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- out:
-+	kfree(to_free);
- 	return err;
- }
- 
-@@ -358,19 +370,20 @@ void free_irq_by_fd(int fd)
- 	struct irq_entry *to_free;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	to_free = get_irq_entry_by_fd(fd);
--	free_irq_entry(to_free, true);
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	remove_irq_entry(to_free, true);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
-+	kfree(to_free);
- }
- EXPORT_SYMBOL(free_irq_by_fd);
- 
- static void free_irq_by_irq_and_dev(unsigned int irq, void *dev)
- {
--	struct irq_entry *entry;
-+	struct irq_entry *entry, *to_free = NULL;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		enum um_irq_type i;
- 
-@@ -386,12 +399,13 @@ static void free_irq_by_irq_and_dev(unsigned int irq, void *dev)
- 
- 			os_del_epoll_fd(entry->fd);
- 			reg->events = 0;
--			update_or_free_irq_entry(entry);
-+			to_free = update_or_remove_irq_entry(entry);
- 			goto out;
- 		}
- 	}
- out:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
-+	kfree(to_free);
- }
- 
- void deactivate_fd(int fd, int irqnum)
-@@ -402,7 +416,7 @@ void deactivate_fd(int fd, int irqnum)
- 
- 	os_del_epoll_fd(fd);
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	entry = get_irq_entry_by_fd(fd);
- 	if (!entry)
- 		goto out;
-@@ -414,9 +428,10 @@ void deactivate_fd(int fd, int irqnum)
- 			entry->reg[i].events = 0;
- 	}
- 
--	update_or_free_irq_entry(entry);
-+	entry = update_or_remove_irq_entry(entry);
- out:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
-+	kfree(entry);
- 
- 	ignore_sigio_fd(fd);
- }
-@@ -546,7 +561,7 @@ void um_irqs_suspend(void)
- 
- 	irqs_suspended = true;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		enum um_irq_type t;
- 		bool clear = true;
-@@ -579,7 +594,7 @@ void um_irqs_suspend(void)
- 				!__ignore_sigio_fd(entry->fd);
- 		}
- 	}
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- }
- 
- void um_irqs_resume(void)
-@@ -588,7 +603,7 @@ void um_irqs_resume(void)
- 	unsigned long flags;
- 
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		if (entry->suspended) {
- 			int err = os_set_fd_async(entry->fd);
-@@ -602,7 +617,7 @@ void um_irqs_resume(void)
- 			}
- 		}
- 	}
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- 
- 	irqs_suspended = false;
- 	send_sigio_to_self();
-@@ -613,7 +628,7 @@ static int normal_irq_set_wake(struct irq_data *d, unsigned int on)
- 	struct irq_entry *entry;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		enum um_irq_type t;
- 
-@@ -628,7 +643,7 @@ static int normal_irq_set_wake(struct irq_data *d, unsigned int on)
- 		}
- 	}
- unlock:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- 	return 0;
- }
- #else
--- 
-2.39.5
+Update spec citation to r6.x.
 
+Spec r6.0 defines BAR size up to 8 EB (2^63 bytes), but supporting
+anything bigger than 128TB requires changes to
+pci_rebar_get_possible_sizes() to read the additional Capability bits
+from the Control register.
+
+> Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
+> ---
+>  drivers/pci/pci.c             | 2 +-
+>  include/uapi/linux/pci_regs.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 661f98c6c63a..03fe5e6e1d72 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3752,7 +3752,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
+>   * @bar: BAR to query
+>   *
+>   * Get the possible sizes of a resizable BAR as bitmask defined in the spec
+> - * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizable.
+> + * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
+>   */
+>  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+>  {
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 1601c7ed5fab..ce99d4f34ce5 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1013,7 +1013,7 @@
+>  
+>  /* Resizable BARs */
+>  #define PCI_REBAR_CAP		4	/* capability register */
+> -#define  PCI_REBAR_CAP_SIZES		0x00FFFFF0  /* supported BAR sizes */
+> +#define  PCI_REBAR_CAP_SIZES		0xFFFFFFF0  /* supported BAR sizes */
+>  #define PCI_REBAR_CTRL		8	/* control register */
+>  #define  PCI_REBAR_CTRL_BAR_IDX		0x00000007  /* BAR index */
+>  #define  PCI_REBAR_CTRL_NBAR_MASK	0x000000E0  /* # of resizable BARs */
+> -- 
+> 2.43.0
+> 
