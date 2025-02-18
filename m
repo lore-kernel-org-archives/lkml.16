@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C62626B96C;
-	Tue, 18 Feb 2025 15:21:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB26926B941;
+	Tue, 18 Feb 2025 15:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739892114; cv=none; b=XHV4RsiOYDvdgTk/U3txFcqRXFlB8lLq6uYpMfNxFOWGyGFPoLCw1NoO8Hr6VNvhWvpeoVSPc0OhPyiw4ofrCBYXaLr+q1cXydasuuETWzKWw5L9NCxL54lNZqtsaGLwLhbC0WpZj3PoLFoyov+E8pbNnrBXU2LhXu+QsObt5Bc=
+	t=1739892143; cv=none; b=r+cMIywKMhJdG8gTDkSxM/t8AP9hS0f16Z6kT1U0u373gLIo2+eWiA6qqvtw/NEig7VN366sg3BC6NuUICOOQ2rDo+u1F4qgSjFWEoU1ejesjcYPoTev7fgihF/rA7Ue+pcMQH6TOFHCc8yjBgz2jJXIIpyUWPjC06wuhwIV+2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739892114; c=relaxed/simple;
-	bh=1e91/4T4pLHM7/YrlYoghOCDAsiiKI99JxZ9OE0ImT4=;
+	s=arc-20240116; t=1739892143; c=relaxed/simple;
+	bh=CphACLAqvIflXYcAv3QKKAHMG/CZ8j6uTUMma5nm02U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCXFmaD7QITRFjdAZ6bWn8a4+nY6Gxe2k4wvAmVrb1Svjh7/vtaaDRRmKgOpN0Am1x2mNza7P1yKwXU/mD25J+7oHLImVk9clQJZ2/3AjUfzSzy7xdOGiQFR4YP/RwjepV9+ZaAvuK3MKe6DB2HZzn5fz428VliwC0pdA93ZTv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEFYOcMg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cyzqeU8pB729yoZxiwNA9NaN9r+9cttAiwJ3TZAQy4BzDYkZj5vrYL0de8NH02y/HaEYJwiJtOt6IzYYjRqgbibf+PpbE+4tOX/ewnudMalUeHRyD4GiFQiXjCe3Z8MdwnPhQrsm0PktVrRje1eGjzgwW9XJv4rn0pktm33txT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4nEi1cY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEFYOcMg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55289C4CEE2;
-	Tue, 18 Feb 2025 15:21:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4nEi1cY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD4A7C4CEE2;
+	Tue, 18 Feb 2025 15:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739892114;
-	bh=1e91/4T4pLHM7/YrlYoghOCDAsiiKI99JxZ9OE0ImT4=;
+	s=k20201202; t=1739892143;
+	bh=CphACLAqvIflXYcAv3QKKAHMG/CZ8j6uTUMma5nm02U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oEFYOcMgHdSETCQfuCwiTOEQO7TON1XRCCxMuQLcO1Y8zgfu4r3fS6SrJMXI8GxYh
-	 cMD94yvDSSqKsrDNHcph8pDvPiMIIEO34JDWLZLZlj1oqjhADvbEE5EqYQAS8t0qIQ
-	 2knWi5wmYmkCBFCoUA+UF9ZJNcbC5ygf7IChXTrhtDL1apK8LikMnO6r04DNgm1ctL
-	 R9XShi/rFZOiY7+3OX3rJkFX+3viOnYxpLGxm6URCxXwPVHmgX0BuUlaGTB4TYmXIl
-	 p6/Pw+oz5fxSWwB8rNQJgru2CWykp4b7J3aP66FXnk6rav9lBCM8H75iJGSgfQ81u8
-	 RNDbt3IqI97cw==
-Date: Tue, 18 Feb 2025 15:21:50 +0000
+	b=Z4nEi1cYRufTXj05gej7K+ULv4chRcbJ68967+ViNhFmanT9xtJJHTIBXU+WQUsOh
+	 Sugd0EfHNEsLxJsHCYUjSbD6rwl6z4IHZARjP77ohoWUi3RoEAZSfCwr/BidoJSwMd
+	 CyJZA1lUQCrwOv8U++AFWuoGDZz10Tmxj7TnXMYO3Y4TLxGLSPwoXhsT3beTQvDPn/
+	 CDkrIun0fLUTO1vyubCZGKSMX4pChXtVcd5nxHVpJc5CGvb23Ndw4n8Kc8+XafoBPL
+	 jNcHgXgT3y4CqP4AL3GGq2ONIk0KU+0nbc7cK70W8r9q56JAcQ2ARzZ3/FL4K0/2KU
+	 418wc93C68PIQ==
+Date: Tue, 18 Feb 2025 15:22:19 +0000
 From: Mark Brown <broonie@kernel.org>
 To: James Calligeros <jcalligeros99@gmail.com>
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
@@ -44,10 +44,10 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	asahi@lists.linux.dev, linux-hwmon@vger.kernel.org,
 	Neal Gompa <neal@gompa.dev>
-Subject: Re: [PATCH v2 12/29] ASoC: tas2764: Raise regmap range maximum
-Message-ID: <Z7SljtZYqDzsUbN1@finisterre.sirena.org.uk>
+Subject: Re: [PATCH v2 13/29] ASoC: tas2770: Export 'die_temp' to sysfs
+Message-ID: <Z7Slq3BQY7S5REPy@finisterre.sirena.org.uk>
 References: <20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com>
- <20250218-apple-codec-changes-v2-12-932760fd7e07@gmail.com>
+ <20250218-apple-codec-changes-v2-13-932760fd7e07@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,40 +55,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4wG70ouX0Ob+MHpP"
+	protocol="application/pgp-signature"; boundary="gLFGwsPnElS71BpA"
 Content-Disposition: inline
-In-Reply-To: <20250218-apple-codec-changes-v2-12-932760fd7e07@gmail.com>
+In-Reply-To: <20250218-apple-codec-changes-v2-13-932760fd7e07@gmail.com>
 X-Cookie: Editing is a rewording activity.
 
 
---4wG70ouX0Ob+MHpP
+--gLFGwsPnElS71BpA
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 18, 2025 at 06:35:46PM +1000, James Calligeros wrote:
+On Tue, Feb 18, 2025 at 06:35:47PM +1000, James Calligeros wrote:
 > From: Martin Povi=C5=A1er <povik+lin@cutebit.org>
 >=20
-> Reviewed-by: Neal Gompa <neal@gompa.dev>
-> Signed-off-by: Martin Povi=C5=A1er <povik+lin@cutebit.org>
-> Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
+> Export a file for the readout of die temperature measurements.
+> As per the datasheet, the temperature can be calculated by
+> dividing the register value by 16 and then subtracting 93.
 
-Because...?  At least some changelog would be nice - why are we doing
-this, why does the new value make sense?
+Please don't ignore review comments, people are generally making them
+for a reason and are likely to have the same concerns if issues remain
+unaddressed.  Having to repeat the same comments can get repetitive and
+make people question the value of time spent reviewing.  If you disagree
+with the review comments that's fine but you need to reply and discuss
+your concerns so that the reviewer can understand your decisions.
 
---4wG70ouX0Ob+MHpP
+--gLFGwsPnElS71BpA
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme0pY0ACgkQJNaLcl1U
-h9ALkwf8CvfVKY0yAYKH/w5fgopumQXFZR1LuUZ5TioWg3gBTHN7/LtRSnB/FcMv
-Puixl+umIeEJGyACae5KFclXRc8fOBSlDRJTnaxMbUSIgK4l9tzqqhciKqcLes7C
-FAMGRNLEXkjYDnSrbTBm4QQcQvklYrP6sF0bgQLo1QmUQpjpzdn4OSudjotyTIre
-e8krBytUN+0b7AqaiUrZMQ0vPO1NZUmPqWcIu9eNpV1dhcpr+KuWhg1r5YodHATI
-tKqrk6eAYabW5GwVQT7U7hKpGkAsZ7jvULsGe83r/S3iE9uVBqyhVhoJkMiKR+RG
-+gZEmeNleE0aiVtbtcGME2xS+zRiDQ==
-=wHwz
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme0paoACgkQJNaLcl1U
+h9DDJAf+JFf0wYxVTABeL8XV4Dgi3VAJTcYK5vbEnWYyk3QVfdFY/xhugPSm08OL
+9CJ/VGbsmn1dOaey46o7EAAdUFoxIf4k0swg86TM/E8P70c+YuaFjnauYC34kqnj
+3mlHbK1yKK4W8GTd+GWJF16DLhaz9y87mEM/BO94RcBPkc3lSOGLxEktpdRfA/jS
+sP3TjPb2/Zh7O2VvjmCskrsGbc6nT3cqWDJDD/5npuTX06WtOSZDBFiP75gU15mB
+OGL6sa65zUYmNeVdAPYkTJDWJy/2HAP8R+fLvB2socWQqsKUaCQB8omfQTj7CiAK
+9vyU4osjCsyKwVFO4Y4nyUhC2R5QkA==
+=yqb3
 -----END PGP SIGNATURE-----
 
---4wG70ouX0Ob+MHpP--
+--gLFGwsPnElS71BpA--
