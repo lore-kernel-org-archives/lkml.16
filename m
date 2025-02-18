@@ -1,192 +1,203 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A5713AD26;
-	Tue, 18 Feb 2025 02:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404F013AD26
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 02:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739846471; cv=none; b=Jj+7ct0mvrYVwRzSutOpidiMEqficE9+EW+r+Mvkryxu06NDwtroXjeMy1HRWHzQC7xhBze1srAjnP2t2MTmnPQFF5hLUCA+gYwaEWqm3YZPyhe4MM29/XMNd1rd/RV4BRXNe1qiydh2rdrKpRQ5EiuMpHtCTRg6LpTXEAXbujg=
+	t=1739846702; cv=none; b=bFVs0nt9W0kKF4mZXZqbUPiJfm7nD90gWXrMExQqsZ8NGlLQKJGgrQR5O+q6xCflRP9/OCChMZm/fkN4wCZNLrjv38Wgo881Wfq5CW+9FJbjz0TPLq5YOzs3spbDITtQ5+TRzzNdBzuIHt2HkkSg+HpSnWA3fj31G55JfX/nwvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739846471; c=relaxed/simple;
-	bh=ddB4Ie1Thyo7pC2LluU7FJXKvtLAu7a/2Z0RXaTzPa4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ER5wWiOPVMsfQrm0jjTp6iEHP/nX4Ibr4FOZherlz8O3BvB4GchUUaqyOVOoiMQaSExeWcS1LlHW9TplxQGSg9ZLQIxNlMCVH3bJi42HPbve9FpjyzF6JZb1ay/KAaYqamFutsUlLsYYavW9xwhiXggCVhBaLawgvpn+Qccs5nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YxkKN5qX5z4f3jqM;
-	Tue, 18 Feb 2025 10:40:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 124931A06D7;
-	Tue, 18 Feb 2025 10:40:57 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgD3Wl8387Nnae2lEA--.14875S3;
-	Tue, 18 Feb 2025 10:40:56 +0800 (CST)
-Subject: Re: [PATCH md-6.15 2/7] md: only include md-cluster.h if necessary
-To: Glass Su <glass.su@suse.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: song@kernel.org, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250215092225.2427977-1-yukuai1@huaweicloud.com>
- <20250215092225.2427977-3-yukuai1@huaweicloud.com>
- <E136E905-430C-40B4-B69A-7FC9B8CF3C47@suse.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <c8cd970f-8b2a-bb7c-b0ad-4e11fd6bae9d@huaweicloud.com>
-Date: Tue, 18 Feb 2025 10:40:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1739846702; c=relaxed/simple;
+	bh=Ym1JDMYuKzjV3+T6wzOukggNQMRUdIrIEe97T9H/oXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=So+jzMxWvBnviZlGy1Pf9yvP3MxxNJTtNoP3Hs7EcAkldeTznmZEpedlmNu/iORWuUJAIR19RrGCxJO3xwF2DOusDXU7QCo+4nGJVp9QtGL1tyL6KJN3UdpEP7tMOcGmjep9JF2qI8liI8GHZ4DagRiYrzMtVf0u1u2OygsKd/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hN3PtV6X; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hN3PtV6X"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220e6028214so81207455ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 18:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1739846700; x=1740451500; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yLvnSIK09nWkECua8eCu00goZQFUlng1rcFuhm/cYJQ=;
+        b=hN3PtV6X2q8BTrO/gPWHDqMiQ3cjyLZ25wGeKTfo6/fCpoD/VlWXOBjYUV84PGqMxB
+         fX14FcI424NlDAn08DQYdEyyiHW7hmQSVmp3gXB73PSDFToDfcQw4xlhcWrysmF3fZUs
+         +2SZGqKXCD4oOSAppVQJSwntCCNbP1OCB+HWU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739846700; x=1740451500;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yLvnSIK09nWkECua8eCu00goZQFUlng1rcFuhm/cYJQ=;
+        b=sbJulr3lrpnJJHATIVYWTkRtg2g3z4AWFOA9jQXg1k4z6tPAzYPEzY8fWGlB4L307D
+         /edRfn5CiWLYWGWbyrgccn+Prf/6okVrs1Hi5fpN1DbxA+CIruieVVQExBSInLDuWwOx
+         OHKviPaToi/qiTl/t6ggAc3t1PQVYNq8rrZSDSNvpDLKudv5zzc27U+Gom36jxA3d0rE
+         SSDOcQlIWXh3Kgwx9g5QW965hWziIV1UF4gd9GvvdnFTKcMl8Fjlb2nmNJ49yele+Teq
+         n1HPuolzSjALZ361QOh1ybH1pZnYaqGxALlunDhc5V8nFklcyGmUdrr46uN+xLAt4Srt
+         pndQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2NkTfNgzbS6VPp0LWYrM/mIbRfgsGodyLdZdtN08qWTLOW22BoJTrVMqrSC0WwGf/6peVp09FTBL4lms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUkLnDHoPVs7gfheimXqQ6BsaFqIIMIxI5sZlibdbnjLenN8ci
+	avxr+7qCMX+Tm2nAT+8P6IQUwJP/BY4Alk00+YjVnIXvXQvwNFmWI3FCa1Eeu0I+UcQIPHEWsDl
+	d5NxTquilNZJPYbfoxUbjW0N0GCIb2c//Qvzj
+X-Gm-Gg: ASbGncsh5SK8kpCp/I/NYCbkPuneHLUmI4H6fvLb6TbgwIfvSkBMwrXT1A5EQ03yWaK
+	vZppeg1+LbLYQ0fyJQ/RxTIV5dBGCKPjliDOakD7849P5jLZ/FPY/hGODMIRfPIAt1RR1bBUE2A
+	==
+X-Google-Smtp-Source: AGHT+IHsgCgSm6nNg/txskIzPw5zW0u+BpByI87vZVJqw2vjhWcaYVR+RDYdoxGsO9EBsPszjEqfbHys3Yw2z0rS43E=
+X-Received: by 2002:a05:6a21:6da7:b0:1ee:5d05:a18f with SMTP id
+ adf61e73a8af0-1ee8cc25a7cmr22275576637.35.1739846700487; Mon, 17 Feb 2025
+ 18:45:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <E136E905-430C-40B4-B69A-7FC9B8CF3C47@suse.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3Wl8387Nnae2lEA--.14875S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxArWfuF1fKrW7Zw18ArW8JFb_yoWrCF15pa
-	1qya45Cw45JrWUWw1UZF9rZa45K3s3KrW0kryfJ34SvF9IgF9rGF4qgF98Cr1DCFW3GFnF
-	v3Wjg3Z8urnYqrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
-	73UjIFyTuYvjfUYCJmUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20250218011744.2397726-1-haoxiang_li2024@163.com>
+In-Reply-To: <20250218011744.2397726-1-haoxiang_li2024@163.com>
+From: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
+Date: Tue, 18 Feb 2025 08:14:49 +0530
+X-Gm-Features: AWEUYZmy3Rk5IKS-p-8AmZQjs7wZFdI2edboezs4Z5so68a2cH5u9tcTn-tnvmc
+Message-ID: <CAH-L+nP5w7hRbONxPNG7NJtJzb-A0JOEMSq1hKNepM9GpFkt-g@mail.gmail.com>
+Subject: Re: [PATCH v2] nfp: bpf: Add check for nfp_app_ctrl_msg_alloc()
+To: Haoxiang Li <haoxiang_li2024@163.com>
+Cc: kuba@kernel.org, louis.peens@corigine.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, qmo@kernel.org, 
+	daniel@iogearbox.net, bpf@vger.kernel.org, oss-drivers@corigine.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000090caa7062e61a0e1"
 
-Hi,
+--00000000000090caa7062e61a0e1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ÔÚ 2025/02/17 18:20, Glass Su Ð´µÀ:
-> 
-> 
->> On Feb 15, 2025, at 17:22, Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> md-cluster is only supportted by raid1 and raid10, there is no need to
->> include md-cluster.h for other personalities.
->>
->> Also move APIs that is only used in md-cluster.c from md.h to
->> md-cluster.h.
->>
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> 
-> Reviewed-by: Su Yue <glass.su@suse.com>
+On Tue, Feb 18, 2025 at 6:49=E2=80=AFAM Haoxiang Li <haoxiang_li2024@163.co=
+m> wrote:
+>
+> Add check for the return value of nfp_app_ctrl_msg_alloc() in
+> nfp_bpf_cmsg_alloc() to prevent null pointer dereference.
+>
+> Fixes: ff3d43f7568c ("nfp: bpf: implement helpers for FW map ops")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+> ---
+> Changes in v2:
+> - remove the bracket for one single-statement. Thanks, Guru!
+> ---
+>  drivers/net/ethernet/netronome/nfp/bpf/cmsg.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c b/drivers/net/=
+ethernet/netronome/nfp/bpf/cmsg.c
+> index 2ec62c8d86e1..b02d5fbb8c8c 100644
+> --- a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+> +++ b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+> @@ -20,6 +20,8 @@ nfp_bpf_cmsg_alloc(struct nfp_app_bpf *bpf, unsigned in=
+t size)
+>         struct sk_buff *skb;
+>
+>         skb =3D nfp_app_ctrl_msg_alloc(bpf->app, size, GFP_KERNEL);
+> +       if (!skp)
+> +               return NULL;
+It looks like you did not compile this change.
 
-Thanks for the review! Any ideas for the remaining patches?
+Also, next time you push a new version, please modify the subject as:
+"[PATCH net v3] xxxx"
+>         skb_put(skb, size);
+>
+>         return skb;
+> --
+> 2.25.1
+>
+>
 
-Kuai
 
->> ---
->> drivers/md/md-bitmap.c  | 2 ++
->> drivers/md/md-cluster.h | 7 +++++++
->> drivers/md/md.h         | 7 -------
->> drivers/md/raid1.c      | 1 +
->> drivers/md/raid10.c     | 1 +
->> 5 files changed, 11 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
->> index 23c09d22fcdb..71aa7dc80e26 100644
->> --- a/drivers/md/md-bitmap.c
->> +++ b/drivers/md/md-bitmap.c
->> @@ -29,8 +29,10 @@
->> #include <linux/buffer_head.h>
->> #include <linux/seq_file.h>
->> #include <trace/events/block.h>
->> +
->> #include "md.h"
->> #include "md-bitmap.h"
->> +#include "md-cluster.h"
->>
->> #define BITMAP_MAJOR_LO 3
->> /* version 4 insists the bitmap is in little-endian order
->> diff --git a/drivers/md/md-cluster.h b/drivers/md/md-cluster.h
->> index 470bf18ffde5..6c7aad00f5da 100644
->> --- a/drivers/md/md-cluster.h
->> +++ b/drivers/md/md-cluster.h
->> @@ -35,4 +35,11 @@ struct md_cluster_operations {
->> void (*update_size)(struct mddev *mddev, sector_t old_dev_sectors);
->> };
->>
->> +extern int register_md_cluster_operations(const struct md_cluster_operations *ops,
->> + struct module *module);
->> +extern int unregister_md_cluster_operations(void);
->> +extern int md_setup_cluster(struct mddev *mddev, int nodes);
->> +extern void md_cluster_stop(struct mddev *mddev);
->> +extern void md_reload_sb(struct mddev *mddev, int raid_disk);
->> +
->> #endif /* _MD_CLUSTER_H */
->> diff --git a/drivers/md/md.h b/drivers/md/md.h
->> index def808064ad8..c9bc70e6d5b4 100644
->> --- a/drivers/md/md.h
->> +++ b/drivers/md/md.h
->> @@ -19,7 +19,6 @@
->> #include <linux/wait.h>
->> #include <linux/workqueue.h>
->> #include <trace/events/block.h>
->> -#include "md-cluster.h"
->>
->> #define MaxSector (~(sector_t)0)
->>
->> @@ -845,11 +844,6 @@ static inline void safe_put_page(struct page *p)
->>
->> extern int register_md_personality(struct md_personality *p);
->> extern int unregister_md_personality(struct md_personality *p);
->> -extern int register_md_cluster_operations(const struct md_cluster_operations *ops,
->> - struct module *module);
->> -extern int unregister_md_cluster_operations(void);
->> -extern int md_setup_cluster(struct mddev *mddev, int nodes);
->> -extern void md_cluster_stop(struct mddev *mddev);
->> extern struct md_thread *md_register_thread(
->> void (*run)(struct md_thread *thread),
->> struct mddev *mddev,
->> @@ -906,7 +900,6 @@ extern void md_idle_sync_thread(struct mddev *mddev);
->> extern void md_frozen_sync_thread(struct mddev *mddev);
->> extern void md_unfrozen_sync_thread(struct mddev *mddev);
->>
->> -extern void md_reload_sb(struct mddev *mddev, int raid_disk);
->> extern void md_update_sb(struct mddev *mddev, int force);
->> extern void mddev_create_serial_pool(struct mddev *mddev, struct md_rdev *rdev);
->> extern void mddev_destroy_serial_pool(struct mddev *mddev,
->> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
->> index 9d57a88dbd26..e55db07e43d4 100644
->> --- a/drivers/md/raid1.c
->> +++ b/drivers/md/raid1.c
->> @@ -36,6 +36,7 @@
->> #include "md.h"
->> #include "raid1.h"
->> #include "md-bitmap.h"
->> +#include "md-cluster.h"
->>
->> #define UNSUPPORTED_MDDEV_FLAGS \
->> ((1L << MD_HAS_JOURNAL) | \
->> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
->> index efe93b979167..3df39b2399b2 100644
->> --- a/drivers/md/raid10.c
->> +++ b/drivers/md/raid10.c
->> @@ -24,6 +24,7 @@
->> #include "raid10.h"
->> #include "raid0.h"
->> #include "md-bitmap.h"
->> +#include "md-cluster.h"
->>
->> /*
->>   * RAID10 provides a combination of RAID0 and RAID1 functionality.
->> -- 
->> 2.39.2
->>
->>
-> 
-> .
-> 
+--=20
+Regards,
+Kalesh AP
 
+--00000000000090caa7062e61a0e1
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBWowggRSoAMCAQICDDfBRQmwNSI92mit0zANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODI5NTZaFw0yNTA5MTAwODI5NTZaMIGi
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xHzAdBgNVBAMTFkthbGVzaCBBbmFra3VyIFB1cmF5aWwxMjAw
+BgkqhkiG9w0BCQEWI2thbGVzaC1hbmFra3VyLnB1cmF5aWxAYnJvYWRjb20uY29tMIIBIjANBgkq
+hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnv1Reaeezfr6NEmg3xZlh4cz9m7QCN13+j4z1scrX+b
+JfnV8xITT5yvwdQv3R3p7nzD/t29lTRWK3wjodUd2nImo6vBaH3JbDwleIjIWhDXLNZ4u7WIXYwx
+aQ8lYCdKXRsHXgGPY0+zSx9ddpqHZJlHwcvas3oKnQN9WgzZtsM7A8SJefWkNvkcOtef6bL8Ew+3
+FBfXmtsPL9I2vita8gkYzunj9Nu2IM+MnsP7V/+Coy/yZDtFJHp30hDnYGzuOhJchDF9/eASvE8T
+T1xqJODKM9xn5xXB1qezadfdgUs8k8QAYyP/oVBafF9uqDudL6otcBnziyDBQdFCuAQN7wIDAQAB
+o4IB5DCCAeAwDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZC
+aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJj
+YTIwMjAuY3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3Iz
+cGVyc29uYWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcC
+ARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNV
+HR8EQjBAMD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNp
+Z24yY2EyMDIwLmNybDAuBgNVHREEJzAlgSNrYWxlc2gtYW5ha2t1ci5wdXJheWlsQGJyb2FkY29t
+LmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGP
+zzAdBgNVHQ4EFgQUI3+tdStI+ABRGSqksMsiCmO9uDAwDQYJKoZIhvcNAQELBQADggEBAGfe1o9b
+4wUud0FMjb/FNdc433meL15npjdYWUeioHdlCGB5UvEaMGu71QysfoDOfUNeyO9YKp0h0fm7clvo
+cBqeWe4CPv9TQbmLEtXKdEpj5kFZBGmav69mGTlu1A9KDQW3y0CDzCPG2Fdm4s73PnkwvemRk9E2
+u9/kcZ8KWVeS+xq+XZ78kGTKQ6Wii3dMK/EHQhnDfidadoN/n+x2ySC8yyDNvy81BocnblQzvbuB
+a30CvRuhokNO6Jzh7ZFtjKVMzYas3oo6HXgA+slRszMu4pc+fRPO41FHjeDM76e6P5OnthhnD+NY
+x6xokUN65DN1bn2MkeNs0nQpizDqd0QxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYD
+VQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25h
+bFNpZ24gMiBDQSAyMDIwAgw3wUUJsDUiPdpordMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
+AQkEMSIEIOJYaTfb/q6TQz9E0jZB6K1GoH+C3oW4TtVP2hbSJtLpMBgGCSqGSIb3DQEJAzELBgkq
+hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDIxODAyNDUwMFowaQYJKoZIhvcNAQkPMVwwWjAL
+BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
+9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAl3iTWxMLr
+qU7RGfuZzuM/pGrUT5NZbyX83GtqUbLz6kOlyeYfa+i+vv3W6N+fRJUkFaotJ9Y/kxWrV6s/wt/f
+60YMPLEL+zDpDRsDSz+ORHhqHsLqHh9lMxgfUdOMVNP85MEtZPb4d+6HXA3XV21M/JH6vHYzylzx
+vzxKbmxuixHCsQo1pkRXrwyLhSImaLXVLnPTGKKRMfxBsfcv+bJJCWOu1Jg/yK/8Apu2B2zkLnVs
+BznEqB97n265GQvJZpC1jcu9TSHkTauv/Sz73j0l0ntdqf6wHhnTECBBHTMKH91j3UhNiogZ0HpJ
+EIVReC+14wZOzV/nIPl3MdjDccoz
+--00000000000090caa7062e61a0e1--
