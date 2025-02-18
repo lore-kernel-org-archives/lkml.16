@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818D01A2C27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4F62356B4
 	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739903901; cv=none; b=LTq0MMFvALo+JUoRfkNOhS7ypd7aHP7OFKBXpXEHoMlKt2PjVaIIhPfleEMh94UAnqGhRVbdSi4Bi60iBg8fo+AB8J+Z3o8h2H6qfumQ4Zb3R32ONyo7g/CIYwDs8OKo+lbgmf2rPsSfV0JqiBZr15x+Dp/8O4uCm5Th2Avwcek=
+	t=1739903901; cv=none; b=hgKgCpdE0F8ejuJotHP2V2JXmZAX11KmfnLtxHXq85SL2aTl46+nZXVB0nCiuuaTxV5+drIGSphq9g0h9LQMzVqINyaOSMJdwsNoI5k4RnIZXg2IqmL3X9DaEUN7rR7DwPLB4wFZ7DkQG9Nj6Yxl6K25xLoLz3cjaQsXHcn+oeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739903901; c=relaxed/simple;
-	bh=cpweuWgxiS61FjEy/a/e/EZroYgZJXsoVlHjLj5oLeM=;
+	bh=nDigmMKsLqqtRVybf6IRhKNNkKN2XNvrzWiiS4TffQc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hpraI46XmktSLW1TQ6Dj2IVZubAMO1wbj4kSlF1zHP/r1WZ+cmZS8HXzvPZQ8iGL8sbFJtkBTs2dRl2V7eyuKLJnIFOGo6cmuBQ+i34m14DidfcZt1rt8YFZPgTau4+dB+EAm82Dm5BEyfBdqO+8JgPojB0v17Ip/anzqWJ83rk=
+	 In-Reply-To:To:Cc; b=Hlgbo95N8xBePsbxYSAp3pxwSgipUt1wSMU7woNmkkUMv+S49NXDf0cbh7hGMoRq2CUTOR3PLieT2hK02aH0Yur5dWw7Iwlvk2wD+qlQS+qi6EuQAF+5UbpPXOHSEnBnBnz2zPmZPkX3C2zK47gsFbSZx7gANE4EiizZHLuqhGg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,22 +18,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tkSU2-0000Gy-P7; Tue, 18 Feb 2025 19:38:14 +0100
+	id 1tkSU2-0000Gx-Ox; Tue, 18 Feb 2025 19:38:14 +0100
 Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tkSU2-001dak-1M;
+	id 1tkSU2-001dam-1L;
 	Tue, 18 Feb 2025 19:38:14 +0100
 Received: from localhost ([::1] helo=dude05.red.stw.pengutronix.de)
 	by dude05.red.stw.pengutronix.de with esmtp (Exim 4.96)
 	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tkSU2-00AL9G-12;
+	id 1tkSU2-00AL9G-14;
 	Tue, 18 Feb 2025 19:38:14 +0100
 From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Date: Tue, 18 Feb 2025 19:38:14 +0100
-Subject: [PATCH v2 2/6] arm64: dts: imx8mp-skov: add basic board as
- fallback
+Date: Tue, 18 Feb 2025 19:38:16 +0100
+Subject: [PATCH v2 4/6] arm64: dts: imx8mp-skov: describe I2C bus recovery
+ for all controllers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-skov-imx8mp-new-boards-v2-2-4040379742ea@pengutronix.de>
+Message-Id: <20250218-skov-imx8mp-new-boards-v2-4-4040379742ea@pengutronix.de>
 References: <20250218-skov-imx8mp-new-boards-v2-0-4040379742ea@pengutronix.de>
 In-Reply-To: <20250218-skov-imx8mp-new-boards-v2-0-4040379742ea@pengutronix.de>
 To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
@@ -51,7 +51,6 @@ To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
  Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- Oleksij Rempel <o.rempel@pengutronix.de>, 
  Ahmad Fatoum <a.fatoum@pengutronix.de>
 X-Mailer: b4 0.14.2
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,52 +58,123 @@ X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+I2C bus recovery can be used to recover when SCL/SDA are stuck low.
+To be able to use it, add the necessary GPIO and pinctrl entries.
 
-All Skov i.MX8MP boards share the same baseboard (modulo revisions)
-and are booted with the same bootloader image, which samples some
-strapping pins at startup and determines which kernel device tree
-to use.
-
-For use as bootloader device tree and as fallback, when no matching
-device tree has been found, add a basic variant that doesn't configure
-any variant-specific peripherals like displays.
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 ---
- arch/arm64/boot/dts/freescale/Makefile              |  1 +
- arch/arm64/boot/dts/freescale/imx8mp-skov-basic.dts | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ .../arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi | 48 ++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 839432153cc7ae15d3c1e668c0cb192d5563b996..ea4da899b44be0aaac745f6a0503bed3bb8ba20c 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -193,6 +193,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-nitrogen-smarc-universal-board.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-phyboard-pollux-rdk.dtb
- imx8mp-phyboard-pollux-rdk-no-eth-dtbs += imx8mp-phyboard-pollux-rdk.dtb imx8mp-phycore-no-eth.dtbo
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-phyboard-pollux-rdk-no-eth.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-basic.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revb-hdmi.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revb-lt6.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revb-mi1010ait-1cp1.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-skov-basic.dts b/arch/arm64/boot/dts/freescale/imx8mp-skov-basic.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..5a2629f3567c6ce664ddad9a49f51829b3f54bd5
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-skov-basic.dts
-@@ -0,0 +1,10 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi
+index b1dfd8eb7062ae5e736146458833a11c4d37eb7b..63742d88c3c69276f19c508779a3dbd572ed2c42 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi
+@@ -240,8 +240,11 @@ &flexcan2 {
+ 
+ &i2c1 {
+ 	clock-frequency = <100000>;
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "gpio";
+ 	pinctrl-0 = <&pinctrl_i2c1>;
++	pinctrl-1 = <&pinctrl_i2c1_gpio>;
++	scl-gpios = <&gpio5 14 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++	sda-gpios = <&gpio5 15 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 	status = "okay";
+ 
+ 	pmic@25 {
+@@ -332,14 +335,20 @@ reg_nvcc_sd2: LDO5 {
+ };
+ 
+ &i2c2 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "gpio";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
++	pinctrl-1 = <&pinctrl_i2c2_gpio>;
++	scl-gpios = <&gpio5 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++	sda-gpios = <&gpio5 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ };
+ 
+ &i2c3 {
+ 	clock-frequency = <400000>;
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "gpio";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
++	pinctrl-1 = <&pinctrl_i2c3_gpio>;
++	scl-gpios = <&gpio5 18 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++	sda-gpios = <&gpio5 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 	status = "okay";
+ 
+ 	i2c_rtc: rtc@51 {
+@@ -354,8 +363,11 @@ i2c_rtc: rtc@51 {
+ 
+ &i2c4 {
+ 	clock-frequency = <380000>;
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "gpio";
+ 	pinctrl-0 = <&pinctrl_i2c4>;
++	pinctrl-1 = <&pinctrl_i2c4_gpio>;
++	scl-gpios = <&gpio5 20 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++	sda-gpios = <&gpio5 21 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 	status = "okay";
+ 
+ 	switch: switch@5f {
+@@ -567,6 +579,13 @@ MX8MP_IOMUXC_I2C1_SDA__I2C1_SDA				0x400001c2
+ 		>;
+ 	};
+ 
++	pinctrl_i2c1_gpio: i2c1gpiogrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_I2C1_SCL__GPIO5_IO14			0x400001c2
++			MX8MP_IOMUXC_I2C1_SDA__GPIO5_IO15			0x400001c2
++		>;
++	};
 +
-+/dts-v1/;
+ 	pinctrl_i2c2: i2c2grp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_I2C2_SCL__I2C2_SCL				0x400001c2
+@@ -574,6 +593,13 @@ MX8MP_IOMUXC_I2C2_SDA__I2C2_SDA				0x400001c2
+ 		>;
+ 	};
+ 
++	pinctrl_i2c2_gpio: i2c2gpiogrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_I2C2_SCL__GPIO5_IO16			0x400001c2
++			MX8MP_IOMUXC_I2C2_SDA__GPIO5_IO17			0x400001c2
++		>;
++	};
 +
-+#include "imx8mp-skov-reva.dtsi"
+ 	pinctrl_i2c3: i2c3grp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_I2C3_SCL__I2C3_SCL				0x400001c2
+@@ -581,6 +607,13 @@ MX8MP_IOMUXC_I2C3_SDA__I2C3_SDA				0x400001c2
+ 		>;
+ 	};
+ 
++	pinctrl_i2c3_gpio: i2c3gpiogrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_I2C3_SCL__GPIO5_IO18			0x400001c2
++			MX8MP_IOMUXC_I2C3_SDA__GPIO5_IO19			0x400001c2
++		>;
++	};
 +
-+/ {
-+	model = "SKOV IMX8MP CPU basic/fallback";
-+	compatible = "skov,imx8mp-skov-basic", "fsl,imx8mp";
-+};
+ 	pinctrl_i2c4: i2c4grp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_I2C4_SCL__I2C4_SCL				0x400001c3
+@@ -588,6 +621,13 @@ MX8MP_IOMUXC_I2C4_SDA__I2C4_SDA				0x400001c3
+ 		>;
+ 	};
+ 
++	pinctrl_i2c4_gpio: i2c4gpiogrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_I2C4_SCL__GPIO5_IO20			0x400001c3
++			MX8MP_IOMUXC_I2C4_SDA__GPIO5_IO21			0x400001c3
++		>;
++	};
++
+ 	pinctrl_pmic: pmicirqgrp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_GPIO1_IO03__GPIO1_IO03			0x41
 
 -- 
 2.39.5
