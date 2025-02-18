@@ -1,61 +1,41 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6266D154C12;
-	Tue, 18 Feb 2025 09:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F601EB1A6;
+	Tue, 18 Feb 2025 09:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869475; cv=none; b=ZsfOzxwCRmJWKM9m3lGA9y12IHmyeJkypLxTvOb3qbJ0HFjnj7Pk6QFiPp7TtCbA/oqd2+CHtZtCp5FJ4Xa5qwc489joc/YokDDFAvVnYczMjInYn0EvQWz0j5KhsSDqfeWY4dIWRd7fkgABmCbeeuYsHD1/g22XiRKmdiL8Sok=
+	t=1739869584; cv=none; b=SW0CpUqI/k9vw5Cmnnq2qfZtEfLNMYZc5b/OtPV8GLM16nVvXUeahJnokPcSfJ92SqJg/rntBHoiyS8089s5Vi0xfa33bH41lpoyBvWcLFaWSQ54/OlE8vLgDsmxjL59DfpJ+zsZLi3CQ8oek6t1mAUc+Z55BrHp3pd0BQZmn50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869475; c=relaxed/simple;
-	bh=IoSrMv71ID9ekjkacGKInTn1Qnx2Ah1BUMPVIHvGazY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NSuNFyXzkCXurejO1Q9KqDB+t2hzYWSE+yzGBKumIMTBjUij4d4dqnwsZP0DQSh/bzJl/kpLyHoE3YUoBfc81o5V+FHEQU929P9Q4epQjbqpA6m7+bQuW3pPyNL+h3XSmrZAflqeAdYq8Nf4dkyUAvsXFdmILBrv43/atF99CDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WijSGcAC; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WijSGcAC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739869471;
-	bh=IoSrMv71ID9ekjkacGKInTn1Qnx2Ah1BUMPVIHvGazY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WijSGcACUlEnBBBHl8nT/4Mfk4xzfBSRXR9zDgaGaZAuN+hz5zIunMgnkpZxb6KzL
-	 2hsGGvmV9bxvViftYTpmr1oaVMM2GEhSn+0Hd1BuK+Hn6KwmhjjICZMwp9qQbkq/Ez
-	 4IaGG6UYhQcfcuxWOgL+fxElV6KG/pDFZEsVwlrpaTFfFdoliFJWGAdPuSxIPTo+xC
-	 EiNpnrIdrdjKgbUoKTiCaEPuOc9RKl8+LR5mQCvh7gB2mG1zDydpBrdxhCGf100yVv
-	 pp6clctCSE9HALXCRLZ7/H3cjLILN+m3VVgNMoSti06dTFSZ+CD0nRHPITe8/+AIuM
-	 qc2Qkrlwgc1Zw==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 90FDC17E154A;
-	Tue, 18 Feb 2025 10:04:30 +0100 (CET)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com,
-	pablo.sun@mediatek.com
-Subject: [PATCH] dt-bindings: display: mediatek: dsc: Add MT8188 compatible
-Date: Tue, 18 Feb 2025 10:04:27 +0100
-Message-ID: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1739869584; c=relaxed/simple;
+	bh=HW1cKeUppOYj7zZ3UrGYK50X+pAOl67uFRhyYb1lTqc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tvkGOTVTJjyq37ytGqme0naG+QxMXW3Cv/cWYQXnTovnmAGf4gzRDtc6U2oL2MCqtsvuABegNYcMkl3H5fbsbVxrTERBaQlSmohxfk3ewqvxxz8Xia38I/VsWvKG3FhyOY7P47rj672MRqNTr6p5wXKVKJnzLEa2PPQCYFRuo1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Yxtnv0DYnzkXTn;
+	Tue, 18 Feb 2025 17:02:27 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0329E1800ED;
+	Tue, 18 Feb 2025 17:06:06 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 18 Feb 2025 17:06:05 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
+CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
+	<liuyonglong@huawei.com>, <chenhao418@huawei.com>, <sudongming1@huawei.com>,
+	<xujunsheng@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
+Subject: [PATCH v2 net-next 0/6] Support some enhances features for the HIBMCGE driver
+Date: Tue, 18 Feb 2025 16:58:23 +0800
+Message-ID: <20250218085829.3172126-1-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,31 +43,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-Add compatible for Display Stream Compression (DSC) IP found in
-the display controller of the MT8188 SoC.
+In this patch set, we mainly implement some enhanced features.
+It mainly includes the statistics, diagnosis, and ioctl to
+improve fault locating efficiency,
+abnormal irq and MAC link exception handling feature
+to enhance driver robustness,
+and rx checksum offload feature to improve performance 
+(tx checksum feature has been implemented).
 
-This IP is fully compatible with the one found on MT8195.
-
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dsc.yaml     | 3 +++
- 1 file changed, 3 insertions(+)
+ChangeLog:
+v1 -> v2:
+  - Remove self_test patch from this series, suggested by Andrew.
+  - Use phy_do_ioctl() to simplify ioctl code, suggested by Andrew.
+  - Replace phy_reset() with phy_stop() and phy_start(), suggested by Andrew.
+  - Recalculate the interval for the scheduled task to update statistics,
+    suggested by Andrew.
+  - Use !! to convert integer to boolean, suggested by Simon Horman.
+  v1: https://lore.kernel.org/all/20250213035529.2402283-1-shaojijie@huawei.com/
+---
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml
-index 846de6c17d93..a5b88eb97e3b 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml
-@@ -22,6 +22,9 @@ properties:
-     oneOf:
-       - enum:
-           - mediatek,mt8195-disp-dsc
-+      - items:
-+          - const: mediatek,mt8188-disp-dsc
-+          - const: mediatek,mt8195-disp-dsc
- 
-   reg:
-     maxItems: 1
+Jijie Shao (6):
+  net: hibmcge: Add dump statistics supported in this module
+  net: hibmcge: Add rx checksum offload supported in this module
+  net: hibmcge: Add abnormal irq handling feature in this module
+  net: hibmcge: Add mac link exception handling feature in this module
+  net: hibmcge: Add BMC diagnose feature in this module
+  net: hibmcge: Add ioctl supported in this module
+
+ .../net/ethernet/hisilicon/hibmcge/Makefile   |   2 +-
+ .../ethernet/hisilicon/hibmcge/hbg_common.h   | 122 ++++++
+ .../ethernet/hisilicon/hibmcge/hbg_debugfs.c  |   7 +-
+ .../ethernet/hisilicon/hibmcge/hbg_diagnose.c | 348 ++++++++++++++++++
+ .../ethernet/hisilicon/hibmcge/hbg_diagnose.h |  11 +
+ .../net/ethernet/hisilicon/hibmcge/hbg_err.c  |  58 +++
+ .../net/ethernet/hisilicon/hibmcge/hbg_err.h  |   1 +
+ .../ethernet/hisilicon/hibmcge/hbg_ethtool.c  | 298 +++++++++++++++
+ .../ethernet/hisilicon/hibmcge/hbg_ethtool.h  |   5 +
+ .../net/ethernet/hisilicon/hibmcge/hbg_hw.c   |  20 +
+ .../net/ethernet/hisilicon/hibmcge/hbg_irq.c  |  55 +--
+ .../net/ethernet/hisilicon/hibmcge/hbg_main.c | 110 ++++++
+ .../net/ethernet/hisilicon/hibmcge/hbg_mdio.c |  20 +
+ .../net/ethernet/hisilicon/hibmcge/hbg_mdio.h |   2 +
+ .../net/ethernet/hisilicon/hibmcge/hbg_reg.h  | 105 ++++++
+ .../net/ethernet/hisilicon/hibmcge/hbg_txrx.c | 176 ++++++++-
+ 16 files changed, 1314 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/net/ethernet/hisilicon/hibmcge/hbg_diagnose.c
+ create mode 100644 drivers/net/ethernet/hisilicon/hibmcge/hbg_diagnose.h
+
 -- 
-2.48.1
+2.33.0
 
