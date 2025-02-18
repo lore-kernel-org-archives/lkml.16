@@ -1,70 +1,87 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91FE728373;
-	Tue, 18 Feb 2025 03:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C6017A5BD;
+	Tue, 18 Feb 2025 03:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739848368; cv=none; b=EoBb02drsLsZ1BnalHYNZuUO3gPKeA9sGS03pLmI7G+ph8Kn25E9hA2Lq5O0UuFiWv4Icpf/arxsYpeqyZpstn+e9S+lH6u675Zjxm0U/OQplthvShCP6ylZnAKV8//B4qWlPN8zzKP9h0oKI0YNhGOPzIpYMSk4CSKJ1oCksDE=
+	t=1739848433; cv=none; b=NzVicNk1LiB/9lv1TefXtZjpajP7fij9ojrkPbKbL/nbZiFhFNEqz1JkfnZ91S6NhzFD1QK4dVpVCA3hHH62x38AwKde3XyluNrXf1RDIAYTsWRj+mXPr3vlCH65ftaQWp/ZWohRoECLjt/wn9UkeKnT8sMUm/9OrOvm1WnTTDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739848368; c=relaxed/simple;
-	bh=IaYak8ZAhTWiVDW7+X3d5puGKle3mrD6/+6DIpb8/6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RLyRM2Dp+6cBfdzWeoEAI98Yh+6sWNnnhoHEvafLub8Vjz8R6duJAqOUvZoQixuXGPYGBa8BSlsSo64XfTdUT92MVXWKqeAmcimRUsusxu1uxFLRp1Bx156Yh5+NYqMPAa6LPstKVrj7x1E0wKK+kRC1q2HOS5XGKjdvTY3QCnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=qWlCq4FO; arc=none smtp.client-ip=1.95.21.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1739848433; c=relaxed/simple;
+	bh=Kgg9d4zpWG5aQiJcx1+NcYfQN3fATmHUIBQ9SeORSuA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=txGUvT78QXF/H2Q/Qx1eQ3LSdgX5mF5UzMUa087t3uwHM+rNVVtRs7BG5wkyFW9W60Yfe5mJ7zhyGq5nPfbntsGbFoGW3VNKnRKVGSjyHQSebSLhoLypeTMFILVZhFXipyK1ioB2l7FuF3usePVAtrxiryQPxYbjQiW/BvzE1gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bvFCvDvG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="qWlCq4FO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=I5sXNENN0HCvQl/q8XCRMfovXIba4uIDzB7gZ/fD00M=;
-	b=qWlCq4FOF1aeWHSc1agaVeuZ90eACl8USQx0ppHIlNKGbHQom/nahJfLuArRyx
-	VgqWYYAFnE1WsZqydOzVM0XJQREqs7MBkCy4wPXuFrHeHwKJ/vqUMp/zxeP6ooJt
-	daAtaVv42FBAtYBNdGA4uka5aUenVyJ2QkWya+rEOaKCI=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDHalpZ+rNnj3Q0CQ--.18186S3;
-	Tue, 18 Feb 2025 11:11:23 +0800 (CST)
-Date: Tue, 18 Feb 2025 11:11:20 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frieder Schrempf <frieder@fris.de>
-Cc: linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>,
-	Conor Dooley <conor@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Frieder Schrempf <frieder.schrempf@kontron.de>, imx@lists.linux.dev,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Robin Gong <yibin.gong@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, Bo Liu <liubo03@inspur.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-	Joy Zou <joy.zou@nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v3 0/9] Use correct LDO5 control registers for PCA9450
-Message-ID: <Z7P6WBMxes7X5glY@dragon>
-References: <20241218152842.97483-1-frieder@fris.de>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bvFCvDvG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 838FBC4CED1;
+	Tue, 18 Feb 2025 03:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1739848432;
+	bh=Kgg9d4zpWG5aQiJcx1+NcYfQN3fATmHUIBQ9SeORSuA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bvFCvDvGwjhK1bqLysdZpbWxrPf+zUMo22+IJ0Rn8J1oJQYzEwqbUalud9GdrM14T
+	 dTcuOehBuie3jS5zN+ZxCwZ0nJBEyjtys/YlAcjk2FD/xLF2npSenBpjf/DPZVef2H
+	 6HZGStknwpqLzNP+acWCwkoWAzCnYfJAfhYBRGaM=
+Date: Mon, 17 Feb 2025 19:13:51 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Colin King (gmail)" <colin.i.king@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+ kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] mm/mincore: improve performance by adding an
+ unlikely hint
+Message-Id: <20250217191351.0003a6f07d017d80762fae41@linux-foundation.org>
+In-Reply-To: <08e4a7fc-bd06-4c8c-96e2-84991c4ce891@gmail.com>
+References: <20250217170934.457266-1-colin.i.king@gmail.com>
+	<Z7N4tLUpRA1EKfDm@casper.infradead.org>
+	<08e4a7fc-bd06-4c8c-96e2-84991c4ce891@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241218152842.97483-1-frieder@fris.de>
-X-CM-TRANSID:Mc8vCgDHalpZ+rNnj3Q0CQ--.18186S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUVf-BDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAgz3ZWez6b5ivgAAsD
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 18, 2024 at 04:27:23PM +0100, Frieder Schrempf wrote:
-> Frieder Schrempf (9):
->   arm64: dts: imx8mp-skov-reva: Use hardware signal for SD card VSELECT
-...
->   arm64: dts: imx8mm-kontron: Add support for reading SD_VSEL signal
->   arm64: dts: imx93-kontron: Fix SD card IO voltage control
->   arm64: dts: imx8mp-kontron: Add support for reading SD_VSEL signal
+On Mon, 17 Feb 2025 18:00:22 +0000 "Colin King (gmail)" <colin.i.king@gmail.com> wrote:
 
-Applied all 4 DTS patches, thanks!
+> fOn 17/02/2025 17:58, Matthew Wilcox wrote:
+> > On Mon, Feb 17, 2025 at 05:09:34PM +0000, Colin Ian King wrote:
+> >> Adding an unlikely() hint on the masked start comparison error
+> >> return path improves run-time performance of the mincore system call.
+> >>
+> >> Benchmarking on an i9-12900 shows an improvement of 7ns on mincore calls
+> >> on a 256KB mmap'd region where 50% of the pages we resident.
+> >>
+> >> Results based on running 20 tests with turbo disabled (to reduce
+> >> clock freq turbo changes), with 10 second run per test and comparing
+> >> the number of mincores calls per second. The % standard deviation of
+> >> the 20 tests was ~0.10%, so results are reliable.
+> > 
+> > I think you've elided _just_ enough information here that nobody can
+> > judge whether your stats skills are any good ;-)  You've told us 7ns
+> > (per call, presumably) and you've told us 0.10% standard deviation,
+> > but you haven't told us how long the syscall takes, so nobody can tell
+> > whether 7ns is within 0.10% or not ;-)
+> 
+> Ugh, my bad.
+> 
+> Improvement was from ~970 down to 963 ns, so small ~0.7% improvement.
+> 
 
+It actually doesn't change the generated code:
+
+hp2:/usr/src/25> diff -u mm/mincore.lst.old mm/mincore.lst 
+--- mm/mincore.lst.old	2025-02-17 19:11:34.093727411 -0800
++++ mm/mincore.lst	2025-02-17 19:12:59.797009056 -0800
+@@ -1563,7 +1563,7 @@
+ 	start = untagged_addr(start);
+ 
+ 	/* Check the start address: needs to be page-aligned.. */
+-	if (start & ~PAGE_MASK)
++	if (unlikely(start & ~PAGE_MASK))
+      b27:	31 ff                	xor    %edi,%edi
+ 	asm (ALTERNATIVE("",
+      b29:	90                   	nop
