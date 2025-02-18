@@ -1,382 +1,274 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263C5269AE6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07669269AE5;
 	Tue, 18 Feb 2025 13:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885112; cv=none; b=i8pFd3vnrWLiVlRiEmbWTdE9HyULAcjkkyixA5VNmoZ6IZ3ipKnpz3b52+TB1y/7CEoc+pCKwJhIhIwfWK73msSgObE0tofRkQFzU/Sy7+04rWgdQV3/d2FAUXXKLO0Hc8sCt4WEWShN3drjaRWyf47SVAI/I33QCKSBqVNfCSg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885112; c=relaxed/simple;
-	bh=VrIjIZAZz8Rl4bMr2G6NPAiEWAu5uVe7sTfVpxCKLL0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BjXHtstz317psaPPQfWl+CWkSjiczAGw5IiTg1UdB4QGawjLfusPKE3oSzq/YJ9BsdnGLdtJmznMfYdAiCTbAnh0Zvz291muleKyIDXywdMUIOVwap3tx2KsAum83Ym7Q7+QyDo9iBY+xbYMbEgNkaHA25iYXc6RbIAdBF0nQpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjAcgSt4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739885113; cv=fail; b=Es3DzGZaW7zxW7Cu+Xdyf40REcVSeQviQGTja0DRjNRbGoPxbKCHGPal/8BgQ6AEFiSc2ccKAfE+vzoed+1y69ri57XXGiWqJE7xumRbeEw9ORarXDAiWEZkg1B5nINL3NIJGz9IC+Bhsj268qUyHeCSg6mOhdTUHljsOxLGQ4M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739885113; c=relaxed/simple;
+	bh=ok2cuMGBEC/QhbJb7/0tOIctVxfWuLNz1LJyGV5kUyY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ir3+bNcg87Yeh4GNDIqlxW5x0GRFMNRYaupQg4epH/lTRYBXk6WcSRLQEzNOccpV81pJmQSysKCa5OX0rPBD+5D91F2BRhrBeXz27aqiB1/Ft00FyHgwcLeaUOGEQoh2WAdeZ7/UGZ1djhsPOIaUnL5UyNcOLyhMKuJdCA2rFi8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5bHxbJuP; arc=fail smtp.client-ip=40.107.93.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZjAcgSt4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BCAFC4CEE2;
-	Tue, 18 Feb 2025 13:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739885111;
-	bh=VrIjIZAZz8Rl4bMr2G6NPAiEWAu5uVe7sTfVpxCKLL0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ZjAcgSt4Jvg4lIspq3tbpmD4X9/NZQD/eBebeQVzJ5aRTkSUqdFqH1Ce1pI3xi+PY
-	 LlZvDb3pLGR1vFGhg/PhFuoKGsemdF7dL8+VTXOcqoiltAberwN2BgVA4F/151hxCW
-	 SWAnAGSyIOjwKlWmlJYxNIGaqAYKNV3EsRpCY+LVuwTFVki9oZgP796pqeoKNRSwmB
-	 KH7eDXTZWDHOrJr5K6/r63R9HbJ07YQtuU2nqiGGZbzwL+yCwXF9HrNliuR/m2vc1D
-	 O8MPbAAVxYiFD32Sd2TZ4L+KLnocUaCoaZ6ukBMrd8IP/ZwJcokm6UI5SlLpSChPEq
-	 F8RiPsDOyl/mg==
-Message-ID: <855e6fd0ed0ef303d7bb2b515726699d280183b4.camel@kernel.org>
-Subject: Re: [PATCH 2/3] nfs: change mkdir inode_operation to return
- alternate dentry if needed.
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Christian Brauner <brauner@kernel.org>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 18 Feb 2025 08:25:09 -0500
-In-Reply-To: <20250217053727.3368579-3-neilb@suse.de>
-References: <20250217053727.3368579-1-neilb@suse.de>
-	 <20250217053727.3368579-3-neilb@suse.de>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5bHxbJuP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LvcyeC4OVUISok7ENW6X2NQnm7CFzvq/bS9UXwc0cNORItweke9y43URQfnIHlBDlBicrjFXcPvk+/FyZ8Sd5onREd2zTdTpchBqYGdGiX2L5/PfJPD5YgdO+mqYQMbk78FDRv/j9LtD+tDtVVW+/Fv3m6mXNeYbj44M3nwlpm4mbbTUZPFPwPO7kByUxuMgHgDspiYZ5cV2ilNhktaDqTrKkr2IHiX+7ZPh4ejcdUAHZCdBHF4U8piDjZb1mQuTG7y6+YM2Ti33RL4ZZvBzHs2mkY/K+WCSPSYvxvfpfu99LF5RoZ/+oWBb1T++RgSw9IBtlx2XJtl0aPrV4OBODA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xJEacDxdfnPhaakE52v4IMjph04nIaYEpH10KSsoOjs=;
+ b=CgErhE2KvxmawUTbuji7kZ8vandwE8hvvHNsgXyCaRwciNUGozV/4JRa1jlx23QZTBh58SfwdBv34szEQ/xDlM4Dpepf3E2/HwTxvT+jB+ZmKeR7Ib3q09YCKrjsCxL6URmY9jNJTzMXGr4Xp/uURvinUJxrvX1/uewh7katKmzcTMuRz8kqIIwZGp1FA0bC1mDJCaCjl7Ov1UlF0GUDlCjwQ4zwDqtnIMEzELwiIZLbORhESPI5EYjw2MpQ2rgzagwaQV1WBeO3XId5pdCqZOediX7m7zYq0+0HYyqRhN2BhyhXAcExISxBKhmcoZoisUvf7vr7X61jyRO9cvTGVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xJEacDxdfnPhaakE52v4IMjph04nIaYEpH10KSsoOjs=;
+ b=5bHxbJuPLF0/aVqcCnJjhy+ZRLo50sFVUELLxZcpulcsqODBI0lzfPWhTgctHjzuoVEDJUhEmAcYNHuS1jGKEFFK63TMp2O5oyOlfl42LsuNezGQwIDvpuiqiuX1gJRDp3YPgQ+/raq74hLoXOfXLrwMHnMn1NXqDqDYGwR5b50=
+Received: from BL1P221CA0009.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::24)
+ by SN7PR12MB6741.namprd12.prod.outlook.com (2603:10b6:806:26f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Tue, 18 Feb
+ 2025 13:25:08 +0000
+Received: from BL02EPF00021F6D.namprd02.prod.outlook.com
+ (2603:10b6:208:2c5:cafe::6d) by BL1P221CA0009.outlook.office365.com
+ (2603:10b6:208:2c5::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.19 via Frontend Transport; Tue,
+ 18 Feb 2025 13:25:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00021F6D.mail.protection.outlook.com (10.167.249.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8466.11 via Frontend Transport; Tue, 18 Feb 2025 13:25:08 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Feb
+ 2025 07:25:05 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	Robert Richter <rrichter@amd.com>
+Subject: [PATCH v2 10/15] cxl/region: Use root decoders interleaving parameters to create a region
+Date: Tue, 18 Feb 2025 14:23:51 +0100
+Message-ID: <20250218132356.1809075-11-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250218132356.1809075-1-rrichter@amd.com>
+References: <20250218132356.1809075-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F6D:EE_|SN7PR12MB6741:EE_
+X-MS-Office365-Filtering-Correlation-Id: f78bab60-0709-4954-fa3f-08dd501faa0d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4EsrNdpZsEH3rJCf8A1PMwPMrWtokBN+V9T6c0y+7oge7CTN30Y0HdQuZw2p?=
+ =?us-ascii?Q?K2uEe3jqwfLVy99pbhYrjZLxnZarDchtUERi1NWHkUeiCRhsCbsBlel1rrD/?=
+ =?us-ascii?Q?oyLKmmVFXzeIIzvlEDD4TbAcjm+bIg7PgP1a+NDR7BdwKOT/bHU1ayXMpSRc?=
+ =?us-ascii?Q?1HpUIWVm8VDJm6YjZP2A7zQ9lHdrZZCSm41ndv+MDe07reqTeqUmCMIpAOHe?=
+ =?us-ascii?Q?LppQTIo6wXKlzYFEpHmiBxH7PKFKQTButCY3dh7bslAddBS/f7ihbOi49TMl?=
+ =?us-ascii?Q?p43MR2sJ3BR+ARcILppWL9IlxBEkBtsA8i09ki3yO8OcomYeaAfZdWDvoRsY?=
+ =?us-ascii?Q?HGzK8pPnCMSHz+2r7dhJle38ZsdeYEqdMWRZtwDcuq3so6HwPdXzQkEglkkW?=
+ =?us-ascii?Q?zE8B+5EHx2FlVkxnEGWH4tvwzTFzlktvwIq2p6L6pE7Fp9qpNUHfAguaZRN/?=
+ =?us-ascii?Q?nbVVeOHrlNm8Vb0twJ+gbsTNc5k50Fjzbm1t7/zF2+fd8DWr/yPYgHmXJuZZ?=
+ =?us-ascii?Q?TpPF+i702fkFzR5sga6zXDof9va74BWak4o/cfGFScWUio8xngkEZ4hnDBTW?=
+ =?us-ascii?Q?lU7Lu41mX4AVlqdMpqNvAhK4XvJIDSwwwLeZKDq5WpssIyIlLpZ1mRQsn3sd?=
+ =?us-ascii?Q?lDryOLInNePnz5ccfeyr84oDk+oWBqyu6MOlK9ZwOzs/rQMG/tixr1rYtKZC?=
+ =?us-ascii?Q?bIO1w+TNIwHyZ2f7j5ZB5ElcHg4uFcbA2Xa3JzEnHhtPVYdnsBch5Hwy90YC?=
+ =?us-ascii?Q?SrFF+1lSdwfmkLTSQGlKMBuwkoD1net3UZ5nWX1DWE98b/+c0oe6YPaKjxUb?=
+ =?us-ascii?Q?FHrUxwbOR7ln4mU4+58z0lDsgIPEcHBRaXoC582ajEXKojoaJqLkHDQCKvlH?=
+ =?us-ascii?Q?LfS9f/q0gygCE58vCeLqR4OsweHJOA0daJBqO0OBP8IGafJOmrj4bvuXeLAJ?=
+ =?us-ascii?Q?BE8I45tyMJ2rIC/h5x5EDUPqT7AbHhnA30KLcjGAcA4Fy5Ltq7LV44Esg+v7?=
+ =?us-ascii?Q?eXoE/qHuaBhFbHcuV89AYR3Ews9hwVc+s76C6dllIi0QPkSVccFFwyWhX/H+?=
+ =?us-ascii?Q?Puottco9U0Vp/MTEMmrPPBwBm9ifkKWVTgN86VbiQNlP6WWqnc4sn4ItIlGp?=
+ =?us-ascii?Q?DreuG88IkKp3zdQHAsScpnmLAJy3aQX+zxlj1IixtZOlyNCdI78cwBNiK/LE?=
+ =?us-ascii?Q?/RZNlDj4a3c3nsfxPGjEu4GohGPZqagJXitszCU1quzD7Z2eGH3X/szV8tGW?=
+ =?us-ascii?Q?qloS7nlvTv27LriZYPI6jqasYlEigFEI6/Naxg+27vrxjrTT+jsnaKUcSgor?=
+ =?us-ascii?Q?Hj2j6PepCWNlr6ireLvqRoeYBRNO0XDkmPdWbdAS07dyYjL2fOLJjHeyzTva?=
+ =?us-ascii?Q?OwMfZ0LzJOx6FwZW3OmBF6Te05VepWjeOi7H5FvRPEcYcJ3gPM+OjjDtQnEe?=
+ =?us-ascii?Q?isNHpdWkFqUsXS9s2m5+TYdvuEzfgy/8HJl1QDcdDuUeorgLhBQllyos6oGX?=
+ =?us-ascii?Q?dKhAZS7O2w//apc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 13:25:08.3260
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f78bab60-0709-4954-fa3f-08dd501faa0d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F6D.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6741
 
-On Mon, 2025-02-17 at 16:30 +1100, NeilBrown wrote:
-> mkdir now allows a different dentry to be returned which is sometimes
-> relevant for nfs.
->=20
-> This patch changes the nfs_rpc_ops mkdir op to return a dentry, and
-> passes that back to the caller.
->=20
-> The mkdir nfs_rpc_op will return NULL if the original dentry should be
-> used.  This matches the mkdir inode_operation.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfs/dir.c            | 16 ++++++---------
->  fs/nfs/nfs3proc.c       |  7 ++++---
->  fs/nfs/nfs4proc.c       | 43 +++++++++++++++++++++++++++++------------
->  fs/nfs/proc.c           | 12 ++++++++----
->  include/linux/nfs_xdr.h |  2 +-
->  5 files changed, 50 insertions(+), 30 deletions(-)
->=20
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 5700f73d48bc..afb1afe0af8e 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -2426,7 +2426,7 @@ struct dentry *nfs_mkdir(struct mnt_idmap *idmap, s=
-truct inode *dir,
->  			 struct dentry *dentry, umode_t mode)
->  {
->  	struct iattr attr;
-> -	int error;
-> +	struct dentry *ret;
-> =20
->  	dfprintk(VFS, "NFS: mkdir(%s/%lu), %pd\n",
->  			dir->i_sb->s_id, dir->i_ino, dentry);
-> @@ -2435,15 +2435,11 @@ struct dentry *nfs_mkdir(struct mnt_idmap *idmap,=
- struct inode *dir,
->  	attr.ia_mode =3D mode | S_IFDIR;
-> =20
->  	trace_nfs_mkdir_enter(dir, dentry);
-> -	error =3D NFS_PROTO(dir)->mkdir(dir, dentry, &attr);
-> -	trace_nfs_mkdir_exit(dir, dentry, error);
-> -	if (error !=3D 0)
-> -		goto out_err;
-> -	/* FIXME - ->mkdir might have used an alternate dentry */
-> -	return NULL;
-> -out_err:
-> -	d_drop(dentry);
-> -	return ERR_PTR(error);
-> +	ret =3D NFS_PROTO(dir)->mkdir(dir, dentry, &attr);
-> +	trace_nfs_mkdir_exit(dir, dentry, PTR_ERR_OR_ZERO(ret));
+Endpoints requiring address translation might not be aware of the
+system's interleaving configuration. Instead, interleaving can be
+configured on an upper memory domain (from an endpoint view) and thus
+is not visible to the endpoint. For region creation this might cause
+an invalid interleaving config that does not match the CFMWS entries.
 
-FWIW, this should be fine even since the old dentry should have the
-same d_name as the one in ret, if one is returned.
-=20
-> +	if (IS_ERR(ret))
-> +		d_drop(dentry);
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(nfs_mkdir);
-> =20
-> diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-> index 0c3bc98cd999..cccb12ba19dc 100644
-> --- a/fs/nfs/nfs3proc.c
-> +++ b/fs/nfs/nfs3proc.c
-> @@ -578,7 +578,7 @@ nfs3_proc_symlink(struct inode *dir, struct dentry *d=
-entry, struct folio *folio,
->  	return status;
->  }
-> =20
-> -static int
-> +static struct dentry *
->  nfs3_proc_mkdir(struct inode *dir, struct dentry *dentry, struct iattr *=
-sattr)
->  {
->  	struct posix_acl *default_acl, *acl;
-> @@ -613,14 +613,15 @@ nfs3_proc_mkdir(struct inode *dir, struct dentry *d=
-entry, struct iattr *sattr)
-> =20
->  	status =3D nfs3_proc_setacls(d_inode(dentry), acl, default_acl);
-> =20
-> -	dput(d_alias);
->  out_release_acls:
->  	posix_acl_release(acl);
->  	posix_acl_release(default_acl);
->  out:
->  	nfs3_free_createdata(data);
->  	dprintk("NFS reply mkdir: %d\n", status);
-> -	return status;
-> +	if (status)
-> +		return ERR_PTR(status);
-> +	return d_alias;
->  }
-> =20
->  static int
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index df9669d4ded7..164c9f3f36c8 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5135,9 +5135,6 @@ static int nfs4_do_create(struct inode *dir, struct=
- dentry *dentry, struct nfs4_
->  				    &data->arg.seq_args, &data->res.seq_res, 1);
->  	if (status =3D=3D 0) {
->  		spin_lock(&dir->i_lock);
-> -		/* Creating a directory bumps nlink in the parent */
-> -		if (data->arg.ftype =3D=3D NF4DIR)
-> -			nfs4_inc_nlink_locked(dir);
->  		nfs4_update_changeattr_locked(dir, &data->res.dir_cinfo,
->  					      data->res.fattr->time_start,
->  					      NFS_INO_INVALID_DATA);
-> @@ -5147,6 +5144,25 @@ static int nfs4_do_create(struct inode *dir, struc=
-t dentry *dentry, struct nfs4_
->  	return status;
->  }
-> =20
-> +static struct dentry *nfs4_do_mkdir(struct inode *dir, struct dentry *de=
-ntry,
-> +				    struct nfs4_createdata *data)
-> +{
-> +	int status =3D nfs4_call_sync(NFS_SERVER(dir)->client, NFS_SERVER(dir),=
- &data->msg,
-> +				    &data->arg.seq_args, &data->res.seq_res, 1);
-> +
-> +	if (status)
-> +		return ERR_PTR(status);
-> +
-> +	spin_lock(&dir->i_lock);
-> +	/* Creating a directory bumps nlink in the parent */
-> +	nfs4_inc_nlink_locked(dir);
-> +	nfs4_update_changeattr_locked(dir, &data->res.dir_cinfo,
-> +				      data->res.fattr->time_start,
-> +				      NFS_INO_INVALID_DATA);
-> +	spin_unlock(&dir->i_lock);
-> +	return nfs_add_or_obtain(dentry, data->res.fh, data->res.fattr);
-> +}
-> +
->  static void nfs4_free_createdata(struct nfs4_createdata *data)
->  {
->  	nfs4_label_free(data->fattr.label);
-> @@ -5203,32 +5219,34 @@ static int nfs4_proc_symlink(struct inode *dir, s=
-truct dentry *dentry,
->  	return err;
->  }
-> =20
-> -static int _nfs4_proc_mkdir(struct inode *dir, struct dentry *dentry,
-> -		struct iattr *sattr, struct nfs4_label *label)
-> +static struct dentry *_nfs4_proc_mkdir(struct inode *dir, struct dentry =
-*dentry,
-> +				       struct iattr *sattr,
-> +				       struct nfs4_label *label)
->  {
->  	struct nfs4_createdata *data;
-> -	int status =3D -ENOMEM;
-> +	struct dentry *ret =3D ERR_PTR(-ENOMEM);
-> =20
->  	data =3D nfs4_alloc_createdata(dir, &dentry->d_name, sattr, NF4DIR);
->  	if (data =3D=3D NULL)
->  		goto out;
-> =20
->  	data->arg.label =3D label;
-> -	status =3D nfs4_do_create(dir, dentry, data);
-> +	ret =3D nfs4_do_mkdir(dir, dentry, data);
-> =20
->  	nfs4_free_createdata(data);
->  out:
-> -	return status;
-> +	return ret;
->  }
-> =20
-> -static int nfs4_proc_mkdir(struct inode *dir, struct dentry *dentry,
-> -		struct iattr *sattr)
-> +static struct dentry *nfs4_proc_mkdir(struct inode *dir, struct dentry *=
-dentry,
-> +				      struct iattr *sattr)
->  {
->  	struct nfs_server *server =3D NFS_SERVER(dir);
->  	struct nfs4_exception exception =3D {
->  		.interruptible =3D true,
->  	};
->  	struct nfs4_label l, *label;
-> +	struct dentry *alias;
->  	int err;
-> =20
->  	label =3D nfs4_label_init_security(dir, dentry, sattr, &l);
-> @@ -5236,14 +5254,15 @@ static int nfs4_proc_mkdir(struct inode *dir, str=
-uct dentry *dentry,
->  	if (!(server->attr_bitmask[2] & FATTR4_WORD2_MODE_UMASK))
->  		sattr->ia_mode &=3D ~current_umask();
->  	do {
-> -		err =3D _nfs4_proc_mkdir(dir, dentry, sattr, label);
-> +		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label);
-> +		err =3D PTR_ERR_OR_ZERO(alias);
->  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
->  		err =3D nfs4_handle_exception(NFS_SERVER(dir), err,
->  				&exception);
->  	} while (exception.retry);
->  	nfs4_label_release_security(label);
-> =20
-> -	return err;
-> +	return alias;
->  }
-> =20
->  static int _nfs4_proc_readdir(struct nfs_readdir_arg *nr_arg,
-> diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-> index 77920a2e3cef..63e71310b9f6 100644
-> --- a/fs/nfs/proc.c
-> +++ b/fs/nfs/proc.c
-> @@ -446,13 +446,14 @@ nfs_proc_symlink(struct inode *dir, struct dentry *=
-dentry, struct folio *folio,
->  	return status;
->  }
-> =20
-> -static int
-> +static struct dentry *
->  nfs_proc_mkdir(struct inode *dir, struct dentry *dentry, struct iattr *s=
-attr)
->  {
->  	struct nfs_createdata *data;
->  	struct rpc_message msg =3D {
->  		.rpc_proc	=3D &nfs_procedures[NFSPROC_MKDIR],
->  	};
-> +	struct dentry *alias =3D NULL;
->  	int status =3D -ENOMEM;
-> =20
->  	dprintk("NFS call  mkdir %pd\n", dentry);
-> @@ -464,12 +465,15 @@ nfs_proc_mkdir(struct inode *dir, struct dentry *de=
-ntry, struct iattr *sattr)
-> =20
->  	status =3D rpc_call_sync(NFS_CLIENT(dir), &msg, 0);
->  	nfs_mark_for_revalidate(dir);
-> -	if (status =3D=3D 0)
-> -		status =3D nfs_instantiate(dentry, data->res.fh, data->res.fattr);
-> +	if (status =3D=3D 0) {
-> +		alias =3D nfs_add_or_obtain(dentry, data->res.fh, data->res.fattr);
-> +		status =3D PTR_ERR_OR_ZERO(alias);
-> +	} else
-> +		alias =3D ERR_PTR(status);
->  	nfs_free_createdata(data);
->  out:
->  	dprintk("NFS reply mkdir: %d\n", status);
-> -	return status;
-> +	return alias;
->  }
-> =20
->  static int
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index 9155a6ffc370..d66c61cbbd1d 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -1802,7 +1802,7 @@ struct nfs_rpc_ops {
->  	int	(*link)    (struct inode *, struct inode *, const struct qstr *);
->  	int	(*symlink) (struct inode *, struct dentry *, struct folio *,
->  			    unsigned int, struct iattr *);
-> -	int	(*mkdir)   (struct inode *, struct dentry *, struct iattr *);
-> +	struct dentry *(*mkdir)   (struct inode *, struct dentry *, struct iatt=
-r *);
->  	int	(*rmdir)   (struct inode *, const struct qstr *);
->  	int	(*readdir) (struct nfs_readdir_arg *, struct nfs_readdir_res *);
->  	int	(*mknod)   (struct inode *, struct dentry *, struct iattr *,
+Use the interleaving configuration of the root decoders to create a
+region which bases on CFMWS entries. This always matches the system's
+interleaving configuration and is independent of the underlying memory
+topology.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Robert Richter <rrichter@amd.com>
+---
+ drivers/cxl/core/region.c | 39 ++++++++++++++++++++++++++++++++++-----
+ drivers/cxl/cxl.h         |  2 ++
+ 2 files changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6e0434eee6df..3afcc9ca06ae 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1749,6 +1749,15 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
+ 		}
+ 	}
+ 
++	if (p->interleave_ways != cxled->interleave_ways ||
++	    p->interleave_granularity != cxled->interleave_granularity ) {
++		dev_dbg(&cxlr->dev, "interleaving config mismatch with %s: ways: %d:%d granularity: %d:%d\n",
++			dev_name(&cxled->cxld.dev), p->interleave_ways,
++			cxled->interleave_ways, p->interleave_granularity,
++			cxled->interleave_granularity);
++		return -ENXIO;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1852,7 +1861,7 @@ static int match_switch_decoder_by_range(struct device *dev,
+ }
+ 
+ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+-			     int *pos, int *ways)
++			     int *pos, int *ways, int *granularity)
+ {
+ 	struct cxl_switch_decoder *cxlsd;
+ 	struct cxl_port *parent;
+@@ -1873,6 +1882,7 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+ 	}
+ 	cxlsd = to_cxl_switch_decoder(dev);
+ 	*ways = cxlsd->cxld.interleave_ways;
++	*granularity = cxlsd->cxld.interleave_granularity;
+ 
+ 	for (int i = 0; i < *ways; i++) {
+ 		if (cxlsd->target[i] == port->parent_dport) {
+@@ -1896,6 +1906,8 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+ struct cxl_interleave_context {
+ 	struct range *hpa_range;
+ 	int pos;
++	int interleave_ways;
++	int interleave_granularity;
+ };
+ 
+ /**
+@@ -1914,13 +1926,17 @@ struct cxl_interleave_context {
+  * the topology from the endpoint to the root decoder and iteratively
+  * applying the function for each port.
+  *
++ * Calculation of interleaving ways:
++ *
++ *    interleave_ways = interleave_ways * parent_ways;
++ *
+  * Return: position >= 0 on success
+  *	   -ENXIO on failure
+  */
+ static int cxl_port_calc_interleave(struct cxl_port *port,
+ 				    struct cxl_interleave_context *ctx)
+ {
+-	int parent_ways = 0, parent_pos = 0;
++	int parent_ways = 0, parent_pos = 0, parent_granularity = 0;
+ 	int rc;
+ 
+ 	/*
+@@ -1955,12 +1971,23 @@ static int cxl_port_calc_interleave(struct cxl_port *port,
+ 	if (is_cxl_root(port))
+ 		return 0;
+ 
+-	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways);
++	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways,
++			&parent_granularity);
+ 	if (rc)
+ 		return rc;
+ 
+ 	ctx->pos = ctx->pos * parent_ways + parent_pos;
+ 
++	if (ctx->interleave_ways)
++		ctx->interleave_ways *= parent_ways;
++	else
++		ctx->interleave_ways = parent_ways;
++
++	if (ctx->interleave_granularity)
++		ctx->interleave_granularity *= ctx->interleave_ways;
++	else
++		ctx->interleave_granularity = parent_granularity;
++
+ 	return ctx->pos;
+ }
+ 
+@@ -3407,6 +3434,8 @@ static int cxl_endpoint_decoder_initialize(struct cxl_endpoint_decoder *cxled)
+ 	cxled->cxlrd = to_cxl_root_decoder(&cxld->dev);
+ 	cxled->spa_range = hpa;
+ 	cxled->pos = ctx.pos;
++	cxled->interleave_ways = ctx.interleave_ways;
++	cxled->interleave_granularity = ctx.interleave_granularity;
+ 
+ 	return 0;
+ }
+@@ -3508,8 +3537,8 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 	}
+ 
+ 	p->res = res;
+-	p->interleave_ways = cxled->cxld.interleave_ways;
+-	p->interleave_granularity = cxled->cxld.interleave_granularity;
++	p->interleave_ways = cxled->interleave_ways;
++	p->interleave_granularity = cxled->interleave_granularity;
+ 	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
+ 
+ 	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 7303aec1c31c..31afd71c3c8e 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -399,6 +399,8 @@ struct cxl_endpoint_decoder {
+ 	enum cxl_decoder_state state;
+ 	int part;
+ 	int pos;
++	int interleave_ways;
++	int interleave_granularity;
+ };
+ 
+ /**
+-- 
+2.39.5
+
