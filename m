@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BE623FC68;
-	Tue, 18 Feb 2025 10:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0958241122;
+	Tue, 18 Feb 2025 10:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874394; cv=none; b=AQDYJMRKiEvevoqdPMXB0a0EfepfjYB1s66Yz7Lnz7VVg+x7mtZDmGTMusLjpj9NfC/RUrIZUqvY4Nfli7yuMUwA1fAXjoXjX7DWO1xk1ih9dPaqNOuQFfVrwJmYp6VuV4YFU7huboRNRAGIDjXtaNJta3G039KdXbX0RKL/b1w=
+	t=1739874395; cv=none; b=hynUkhaO+6+L/EdcpS97LTSbxk/s+9troO24Ir/+WdY1Dc9eCvgqG1wvBvG42DeMZLw2BVvqXhSa9/Pdy6HbufNoGSsa5J79F59/Po+ShTcBPtHSRtHZJbkK9PkbukZvGMVwWKfF6iD3dofaTaOy977zwWlXK0Wa1ZkCBKKL3rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739874394; c=relaxed/simple;
-	bh=RCDhEjWEafLxjpVJv09ne53kNV/XN/8yUn0PG43cISE=;
+	s=arc-20240116; t=1739874395; c=relaxed/simple;
+	bh=qlm8hEMLxXdQx/C4sz0YaIRrqSlsMCGhp4WdzYOSbc0=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=rbZxQpXuKaM2EGMxe8+gY7DvCORGJVEEMIfgFMouWIUAAW+6/8//b5B7RTbu/2cTa6qYKGV/uydcP/ir06/a0ZQIIJjX1ZY3255YJa7g77OD1gsGt84apOK8jqCPS7V3OiKnRIvErhR9VTtSGzSPmznuTupVkW61tR23r2BKwKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nAsdMoFT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XwXzZAQO; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=dwia8mi6ngkIDGj912sae56z4bE+WCLHe/apI8v7sp93t1W855zHXA+FAryr9brlYbhJoufGRkhPo+7MN2aE4c3a5lLKiKxuRqc2P7X3KGPm84wf3BVmzYfyB1hdoo1TA1/vcKrqm1nSHbvd5mYA0fVHpyJ0cj3B/jHR5rNMjKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W1SyQc8L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mVE5+ACP; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nAsdMoFT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XwXzZAQO"
-Date: Tue, 18 Feb 2025 10:26:30 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W1SyQc8L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mVE5+ACP"
+Date: Tue, 18 Feb 2025 10:26:31 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739874391;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mx7s6HEnNPWWs8sb1AXQK21MApsLPEGtTD190uZydto=;
-	b=nAsdMoFT38oP9HI6FDQdshQk64lpy2duvGkedEOkDU9JXlqDewD5kXWD9y1WQf7cBqXPFY
-	U/T7i6rU+UkxH8nY2bg3Yb0u38Ff6NBZ73lG56Q8SQjEdsnBfV4ocK4JufZktOOT4AQt9s
-	54pR7XeSrDucA6bh9d2M/a9QvsNGcEtRNkTjlhr2loS+pCPHcmXNxl8zgrMbmnM9ZX71xS
-	gX0y+ys/5U23K7uNV7abDxXMhky4PyiWGJ55soC8GpDjXstPseN+IwfgbsJZiHCruUHzip
-	b4OGZNVAuIdA3UvyJkTXLMRANoQDSp9Gq3DpztOg1Buk8KeKlSIsF/eLkLdKZg==
+	bh=PMwiofBha6NPZ5ejUzGSgPFXmW/fOmFq0lNogG2BIZw=;
+	b=W1SyQc8L7hNHz02sjvMpZot0Z0iBB6IB9JghpOZRytGtO1zNhHCNL7x2MO0Gd9MAMWtLTo
+	XGRM5R7jWixsg/9e6aThxI+Ot1g+zVPoqttzWLd2bsFF5t6XJL0FLLs6/hY4pWkOvyXmHt
+	H5WfA8lOykpx9IhWUwflghXR1gAR9nDBmymMEjyYlKUNvfdC9OgIDFDLufVRwRNFJhpwIe
+	ajeAEOH99j8gt16F5dF5HEdazuNe7JH/SBWcA4z2lW2bkK9ckCKg5zUzd4dJwQhQTGAHS5
+	CbbO/KEdibuT/SkU187IZTTTvqnjA6TOze4xQ9qxskho5Lv9WANrNWEKXmJ3SQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739874391;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,21 +38,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mx7s6HEnNPWWs8sb1AXQK21MApsLPEGtTD190uZydto=;
-	b=XwXzZAQO4s32VpYz3WBAO1I5Aap0SBi8RpXGOTIAnQCFQ1H9NOjsVLzqzydwAkVwUgfjT8
-	OrXMDicCSqpmUMCw==
+	bh=PMwiofBha6NPZ5ejUzGSgPFXmW/fOmFq0lNogG2BIZw=;
+	b=mVE5+ACPN6VarngMKoPpnRrnNXURI6F/bMQPTvcLzcB5P9h7Mi3oQPncBLizXwL6tcc1k3
+	iv97HDUFs4YSoTDA==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/cleanups] stm class: heartbeat: Switch to use hrtimer_setup()
+Subject: [tip: timers/cleanups] i2c: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
  Zack Rusin <zack.rusin@broadcom.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cc822671342e6ca0437b25f8e24935f09821e389f=2E17387?=
+In-Reply-To: =?utf-8?q?=3C6a0d31244560b76cc7e76954bf68dbe14a4761e3=2E17387?=
  =?utf-8?q?46904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3Cc822671342e6ca0437b25f8e24935f09821e389f=2E173874?=
+References: =?utf-8?q?=3C6a0d31244560b76cc7e76954bf68dbe14a4761e3=2E173874?=
  =?utf-8?q?6904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,7 +59,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987439076.10177.17971478658593844194.tip-bot2@tip-bot2>
+Message-ID: <173987439135.10177.15569548246627518878.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     c6be6eafd6200327d6c7952275c042785dccbb96
-Gitweb:        https://git.kernel.org/tip/c6be6eafd6200327d6c7952275c042785dccbb96
+Commit-ID:     f1061c1442c1eddd71a25fe86516ee346ff4b7aa
+Gitweb:        https://git.kernel.org/tip/f1061c1442c1eddd71a25fe86516ee346ff4b7aa
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:46:17 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:46:16 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 11:19:05 +01:00
 
-stm class: heartbeat: Switch to use hrtimer_setup()
+i2c: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -90,26 +89,24 @@ Patch was created by using Coccinelle.
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://lore.kernel.org/all/c822671342e6ca0437b25f8e24935f09821e389f.1738746904.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/6a0d31244560b76cc7e76954bf68dbe14a4761e3.1738746904.git.namcao@linutronix.de
 
 ---
- drivers/hwtracing/stm/heartbeat.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-imx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/stm/heartbeat.c b/drivers/hwtracing/stm/heartbeat.c
-index e9496fe..495eb1d 100644
---- a/drivers/hwtracing/stm/heartbeat.c
-+++ b/drivers/hwtracing/stm/heartbeat.c
-@@ -81,10 +81,8 @@ static int stm_heartbeat_init(void)
- 		stm_heartbeat[i].data.type	= STM_USER;
- 		stm_heartbeat[i].data.link	= stm_heartbeat_link;
- 		stm_heartbeat[i].data.unlink	= stm_heartbeat_unlink;
--		hrtimer_init(&stm_heartbeat[i].hrtimer, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_ABS);
--		stm_heartbeat[i].hrtimer.function =
--			stm_heartbeat_hrtimer_handler;
-+		hrtimer_setup(&stm_heartbeat[i].hrtimer, stm_heartbeat_hrtimer_handler,
-+			      CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index ee0d25b..9e5d454 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -1723,8 +1723,8 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 		ret = stm_source_register_device(NULL, &stm_heartbeat[i].data);
- 		if (ret)
+ 	spin_lock_init(&i2c_imx->slave_lock);
+-	hrtimer_init(&i2c_imx->slave_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+-	i2c_imx->slave_timer.function = i2c_imx_slave_timeout;
++	hrtimer_setup(&i2c_imx->slave_timer, i2c_imx_slave_timeout, CLOCK_MONOTONIC,
++		      HRTIMER_MODE_ABS);
+ 
+ 	match = device_get_match_data(&pdev->dev);
+ 	if (match)
