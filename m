@@ -1,155 +1,134 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E09C26E152;
-	Tue, 18 Feb 2025 13:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D17269D19;
+	Tue, 18 Feb 2025 13:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885329; cv=none; b=kh6BzbRSr8RJHTRZCrxtdtQS/lP83zHtN2/tP37+1nRcCkssKPJzIcWOUuYbZygUeqykJByhmXVdsjOjQRqmpV8i+XpM/h0FnsN17RH04KROBPqtVJfpZ0Rv5O8BEaQZpM3sDZDQ2m/TPij6f9fGlUcSkrpfLby0tJdHrbIBKpQ=
+	t=1739885333; cv=none; b=Dee82EgUTlwQWLzxOMcuNGM5/q5A37GTK5hcIVB59tiYCzqj6snJ2itS917o7QL+MdI6YvZyXaN2VWr0d6t6EftMFD1l7bnldCqCqm5E4Tc508nYveWAFXJdlPP/Z3D9+2Z7j9/wvFcCFaAPJVpyM6FUHYmK2fAKJgGbx4lgp4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885329; c=relaxed/simple;
-	bh=hU3cyUTbcCnOC4Ck5W+EqPKAWf9MZ2HjG3H3gIuscbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJ4UyEyXRFaUoKtM04KnkkIylDxt5lzH6uVlPmsbfCq9S3uxl6g1gFwMPce9OFaRrwsWxZuys6apnFLoZm+CoJN7Hd/pTbEkKg6ICswy81EO399RbEnr8TvTubATRKacY7F4KymBC9AGQ2UvquQ+GcnVt4fULC2b8LgiIl18Yls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=uwF7svuu; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1739885333; c=relaxed/simple;
+	bh=eG4ncH1UpYgaVh2bHTMXHYfnt6y7lXx/vhY2bJebvmk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fGlLWJ/D5EJJSlQpzM4Mq3KXPIKl4YgbcKOoDo0jIuxkWDPSYxwDZeCBJreoDGq/1lkfPRvaYOno6l5DIRg76iiOWxA9obSG0OZ7liV6HU+OsyBx+kk5xQjINcoFVHKv1HfmG+iXyfEY7YeiLOg2DDGjDu46Yv1S/rG0IUJnkRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8AWdgWl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="uwF7svuu"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739885317; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Y5AyiJ/PFt2OYj7VTelaJEhdAfegG77Q/50N6RHUleo=;
-	b=uwF7svuu1Jde0U6ruCv/NcbMWPtPF1G6RKA6kZGGIG3HZFxEnwik09jAv2+eb2IEIEcigKS0wr2XdTlmz7NKNhVdyqJF+YuRFYa8c3rlzqFc5HznHlnlPeNDCrYdxMJ8DCjc1k+eO77685Zd+egpddlJBP0u3rZH2RHaJzgYKrw=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPlxWAh_1739885314 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 18 Feb 2025 21:28:35 +0800
-Message-ID: <1ff716d3-eb3d-477e-ae30-1abe97eee01b@linux.alibaba.com>
-Date: Tue, 18 Feb 2025 21:28:33 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8AWdgWl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26F4BC4CEE6;
+	Tue, 18 Feb 2025 13:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739885332;
+	bh=eG4ncH1UpYgaVh2bHTMXHYfnt6y7lXx/vhY2bJebvmk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=n8AWdgWllC23AxEpooosl8nepwYudG4h/jaEXTBcBOuXt6fDKmSeL3hvCzPD9F/s+
+	 LNxoYmbgG6BMJAIhXA8bHI4tFaz6pkYeCocHAV1GUe8Hgs4PUZgux+rVWIZ2ffVVXk
+	 rEylj9vo1P0mDMtLv5zjRBkyzRLlorbCFsrHWwOzIX825CKLq5Lybu+jckvky9OAEX
+	 YDlj/LxRpdmeiP1eNiZxLq8gK+cdmIbaeSBW2i6gqtoqx/IblzlI+FTiyWEpmnnV/6
+	 O+iTGaR7SXRIC7FHdjfrJf7r9qvq9LTKiHE4dPj7WaEqQSkNrN7337Tftv89hZ8AWX
+	 N+Hj6rnEPqPGA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Tue, 18 Feb 2025 14:27:12 +0100
+Subject: [PATCH v8 07/14] rust: hrtimer: add
+ `hrtimer::ScopedHrTimerPointer`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] x86/mce: add EX_TYPE_EFAULT_REG as in-kernel
- recovery context to fix copy-from-user operations regression
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: tony.luck@intel.com, bp@alien8.de, nao.horiguchi@gmail.com,
- tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, linmiaohe@huawei.com,
- akpm@linux-foundation.org, jpoimboe@kernel.org, linux-edac@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- baolin.wang@linux.alibaba.com, tianruidong@linux.alibaba.com
-References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
- <20250217063335.22257-4-xueshuai@linux.alibaba.com>
- <20250218125408.GD40464@noisy.programming.kicks-ass.net>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250218125408.GD40464@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-hrtimer-v3-v6-12-rc2-v8-7-48dedb015eb3@kernel.org>
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
+ Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2039; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=eG4ncH1UpYgaVh2bHTMXHYfnt6y7lXx/vhY2bJebvmk=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIq1p6ks8VywJik0hkPMD6Zjviq3fHfnEQsuG
+ 3qg5YdiekyJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SKtQAKCRDhuBo+eShj
+ d9V3EAC2FtW1buWNFpDSd6arpX4//wpy/ItGaUM0JT6r5yJ3JTz3F3KO7s0jRTny/bM61WNlLGS
+ xn32/hNxfRQ+vFQn4UIji+8+p+ljGOio9u4IKktdY+6BB9GxAgJwMii5G3PCnrQkx+t3c+MFUip
+ 2IgwnNytRJasVeZV3LlLiJHktaVFIx7sVybAPj9GdiRtt+wZ+5z9IKlc7q3040Gvvm0ZPZEySJN
+ mptiNGci8KHkG2c1CKR+v0m0diECzaSVwKZKVS0s0yioqyKJMDYPpz1AwXb5c8Eq6jll3NA3Cvi
+ HqNoqkYhBdWNWUye/b53A0Gbz2Y7XP0SOTcriy09yCqimRFujymS86pGqXmnqVga0dtmuKCKvZU
+ xri+qOBxyi1mJNoXawpDMSBzyQVRFJphcPhnDTUgG7gyP7cL+l5xJPpYHGlsBdnlDPMnYJN9dMe
+ IMbS9d35vSJc/wYz41aAinzUg2f7GBUG0X4JCCBS536El91ay9fwrFp6E++xKhQScREj1VPUYCM
+ Nk4Rt2cG/rJgO+iuQi8npNAT7pGjtCSSzkjmJ1V9Tj5UybbcAzW2Ix6SMiXxKvGItxIFs56xJ4h
+ stCS07wBzMCguKc3dB7vtEKhv2DdmZA7BmOAAPDMNgmZ20ZZsX9LepSmF5BIlRPC+ikfcDyLhCG
+ 4OHIfGyOIlj4ufA==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Hi, Peter
+Add the trait `ScopedHrTimerPointer` to allow safe use of stack allocated
+timers. Safety is achieved by pinning the stack in place while timers are
+running.
 
-在 2025/2/18 20:54, Peter Zijlstra 写道:
-> On Mon, Feb 17, 2025 at 02:33:33PM +0800, Shuai Xue wrote:
-> 
->> diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
->> index dac4d64dfb2a..14c2d71c3ce1 100644
->> --- a/arch/x86/kernel/cpu/mce/severity.c
->> +++ b/arch/x86/kernel/cpu/mce/severity.c
->> @@ -16,6 +16,7 @@
->>   #include <asm/traps.h>
->>   #include <asm/insn.h>
->>   #include <asm/insn-eval.h>
->> +#include <linux/extable.h>
->>   
->>   #include "internal.h"
->>   
->> @@ -285,7 +286,8 @@ static bool is_copy_from_user(struct pt_regs *regs)
->>    */
->>   static noinstr int error_context(struct mce *m, struct pt_regs *regs)
->>   {
->> -	int fixup_type;
->> +	const struct exception_table_entry *e;
->> +	int fixup_type, imm;
->>   	bool copy_user;
->>   
->>   	if ((m->cs & 3) == 3)
->> @@ -294,9 +296,14 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
->>   	if (!mc_recoverable(m->mcgstatus))
->>   		return IN_KERNEL;
->>   
->> +	e = search_exception_tables(m->ip);
->> +	if (!e)
->> +		return IN_KERNEL;
-> 
-> You didn't actually build this, did you? Or did you ignore the extra
-> noinstr warnings?
+Implement the trait for all types that implement `UnsafeHrTimerPointer`.
 
-I did build and test this patch set on it. But I did not find any warnings.
-Could you provide more details?
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ rust/kernel/time/hrtimer.rs | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-> 
->>   	/* Allow instrumentation around external facilities usage. */
->>   	instrumentation_begin();
->> -	fixup_type = ex_get_fixup_type(m->ip);
->> +	fixup_type = FIELD_GET(EX_DATA_TYPE_MASK, e->data);
->> +	imm  = FIELD_GET(EX_DATA_IMM_MASK,  e->data);
->>   	copy_user  = is_copy_from_user(regs);
->>   	instrumentation_end();
->>   
->> @@ -304,9 +311,13 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
->>   	case EX_TYPE_UACCESS:
->>   		if (!copy_user)
->>   			return IN_KERNEL;
->> -		m->kflags |= MCE_IN_KERNEL_COPYIN;
->> -		fallthrough;
->> -
->> +		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
->> +		return IN_KERNEL_RECOV;
->> +	case EX_TYPE_IMM_REG:
->> +		if (!copy_user || imm != -EFAULT)
->> +			return IN_KERNEL;
->> +		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
->> +		return IN_KERNEL_RECOV;
-> 
-> Maybe I'm justnot understanding things, but what's wrong with something
-> like the below; why do we care about the ex-type if we know its a MOV
-> reading from userspace?
-> 
-> The less we muck about with the extable here, the better.
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index 196794089f033..666bcd6e46a11 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -188,6 +188,39 @@ pub unsafe trait UnsafeHrTimerPointer: Sync + Sized {
+     unsafe fn start(self, expires: Ktime) -> Self::TimerHandle;
+ }
+ 
++/// A trait for stack allocated timers.
++///
++/// # Safety
++///
++/// Implementers must ensure that `start_scoped` does not return until the
++/// timer is dead and the timer handler is not running.
++pub unsafe trait ScopedHrTimerPointer {
++    /// Start the timer to run after `expires` time units and immediately
++    /// after call `f`. When `f` returns, the timer is cancelled.
++    fn start_scoped<T, F>(self, expires: Ktime, f: F) -> T
++    where
++        F: FnOnce() -> T;
++}
++
++// SAFETY: By the safety requirement of [`UnsafeHrTimerPointer`], dropping the
++// handle returned by [`UnsafeHrTimerPointer::start`] ensures that the timer is
++// killed.
++unsafe impl<T> ScopedHrTimerPointer for T
++where
++    T: UnsafeHrTimerPointer,
++{
++    fn start_scoped<U, F>(self, expires: Ktime, f: F) -> U
++    where
++        F: FnOnce() -> U,
++    {
++        // SAFETY: We drop the timer handle below before returning.
++        let handle = unsafe { UnsafeHrTimerPointer::start(self, expires) };
++        let t = f();
++        drop(handle);
++        t
++    }
++}
++
+ /// Implemented by [`HrTimerPointer`] implementers to give the C timer callback a
+ /// function to call.
+ // This is split from `HrTimerPointer` to make it easier to specify trait bounds.
 
-We need to make sure that we have register a fixup handler for the copy_user
-case.  If no fixup handler found, the PC accessing posion will trigger #MCE
-again and again resulting a hardlock up.
+-- 
+2.47.0
 
-> 
-> ---
-> diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
-> index dac4d64dfb2a..cb021058165f 100644
-> --- a/arch/x86/kernel/cpu/mce/severity.c
-> +++ b/arch/x86/kernel/cpu/mce/severity.c
-> @@ -300,13 +300,12 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
->   	copy_user  = is_copy_from_user(regs);
->   	instrumentation_end();
->   
-> -	switch (fixup_type) {
-> -	case EX_TYPE_UACCESS:
-> -		if (!copy_user)
-> -			return IN_KERNEL;
-> -		m->kflags |= MCE_IN_KERNEL_COPYIN;
-> -		fallthrough;
-> +	if (copy_user) {
-> +		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_COPYIN;
-> +		return IN_KERNEL_RECOV
-> +	}
->   
-> +	switch (fixup_type) {
->   	case EX_TYPE_FAULT_MCE_SAFE:
->   	case EX_TYPE_DEFAULT_MCE_SAFE:
->   		m->kflags |= MCE_IN_KERNEL_RECOV;
 
-Thanks.
-Shuai
