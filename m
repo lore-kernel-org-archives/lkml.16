@@ -1,59 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638902356BA;
-	Tue, 18 Feb 2025 18:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904486; cv=none; b=et2xPfkAqcgkXOIsqYFRAZFeUUTwzD6ll4yM6fmJY6nWuSuB/CiTa04qWPd06ozur+Sp1VNA9A8REYVHhi8izRSMpv9hzs6D3eIwBb0zGgtLeamQOm6xhJCoiBVpf9+ZlNCtMz76HxVBA3uDO/d+SdDqHKCaL/Pd13JRYWfsqiQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904486; c=relaxed/simple;
-	bh=eQku/ltOrPfhbzsZOdgcUSqfg47tSUXUyWsAxYA3rZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKvYLpFmUyUANLAZNO8iseqJBxfYWddHOHG5prul/23IRaxWlFHvuCXAreyoJHpUgihzlbLejEl5e0nC48HiiAKt8a6nciFAQ538Zz502Bi08xMUmblQRkAW8qiMwLg/A807arZ/NmKhpvdJ/8AIZSbNjhRPoOC8Xo+tRF3UO68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jRy8tA/q; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C261C1ACEB0;
+	Tue, 18 Feb 2025 18:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739904496; cv=pass; b=BuybBi//Fx0kcvaXViOeWKvsyvty2BTkEopEchGvD5CFG1C56di7byeo02Z1DQHdOjrccJqoyzEbLuAnLVlwOVcmPn8yXRfnt36HkfUrtWoHirnty1tUy/0UFEWefg7kK/faUH/GuDY1gbtRvrvWSVNH2dJEtk98h0daH2n5C0s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739904496; c=relaxed/simple;
+	bh=WxxWe/SRgjLbSzh+/BpmkeZlFI7ldA0Gj/w3eci1ER8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=piXBruJ3RrWzXl5CHYrOMWES70f1INu87xdDt3eT9syI22jjO8wE2dVKCRwkUgB6DjfsNKVJDYESOMRjVHJ7N6xQYPX7GLkjVyQy2iYFoz9A2PpYAAX3lkH/bTtwkDUsssmQUADGLuQA3ddCXarqp9NdFIoJC2veKiUt8Uysbqs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Vht+SBE1; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jRy8tA/q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F6AC4CEE2;
-	Tue, 18 Feb 2025 18:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739904485;
-	bh=eQku/ltOrPfhbzsZOdgcUSqfg47tSUXUyWsAxYA3rZo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jRy8tA/qSZVnwOZRRQgd556dMJkJJ9fFKmaPxIsj7CPf9WEZvMyIbqHIYF+1UEIOd
-	 XIDJ9mrmL2CMft7Zod1J/3XR459taQb1/F03PkKdv5WB1P3CKbrqiwxPwVA+zlucel
-	 ddla6NAAohMlSjZuP1Lap1NhH6TFOJGU/jCY7+ws=
-Date: Tue, 18 Feb 2025 19:48:02 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Madhur Kumar <madhurkumar004@gmail.com>
-Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: sm750fb: Fix CamelCase and remove volatile
- warnings
-Message-ID: <2025021843-subsector-decipher-e7cf@gregkh>
-References: <20250218184343.20585-1-madhurkumar004@gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Vht+SBE1"
+ARC-Seal: i=1; a=rsa-sha256; t=1739904446; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=RN74za/4lskP274Ucw0gMqVYpcBxnFDgLVHKc1oXFVq/MBhC4ElkJaGzWums0WqWyQa/Igo0HljG80oS/y+RbGM3Qr4d204NFCsITHzl1a/UK3DnRkgGMSKYxIZvdXgLLOJAsk2ZtmwmvhBOKnhLkkenjo7AL33ED69Q4nPghwE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739904446; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/EEGxG3a0Mq8W+NTwKBGr/iFZzT32KAE3KrCrz4Dud0=; 
+	b=YDFMxW+++axipzrlxn8r11uXORogk3CI1hRhLKF02dxFCHZg1idc/LxkZFJmFVhLNVPhPTt0TmLchsA9I9Ts5BY03J5nb2L6oId45kxfitr9yf30CRcAQHgQ7xH/N7VAdYPkxHzDctcTwLG9oAOET9TIHWgNllAaOwlGi+IuwJw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739904446;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=/EEGxG3a0Mq8W+NTwKBGr/iFZzT32KAE3KrCrz4Dud0=;
+	b=Vht+SBE1hy8yaapcnywCwDGqYeOkCf4ykAUDfUEoKO9aPPBnc7ZOC7NZsMlzrbup
+	q02muUi8DCSps8ueYEZXw99vD/WdCAh3ZK1FbiSU+WFeqnIfi54ODJmnyiCVAnaCK4C
+	NxrY1qUG4JVqs3vp35qquGPk7GmBP0GkrMSssVvM=
+Received: by mx.zohomail.com with SMTPS id 1739904444113537.1827373653718;
+	Tue, 18 Feb 2025 10:47:24 -0800 (PST)
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+To: Shreeya Patel <shreeya.patel@collabora.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	jose.abreu@synopsys.com,
+	nelson.costa@synopsys.com,
+	shawn.wen@rock-chips.com,
+	nicolas.dufresne@collabora.com,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Tim Surber <me@timsurber.de>
+Subject: [PATCH v7 1/6] MAINTAINERS: Add entry for Synopsys DesignWare HDMI RX Driver
+Date: Tue, 18 Feb 2025 21:44:34 +0300
+Message-ID: <20250218184439.28648-2-dmitry.osipenko@collabora.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
+References: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218184343.20585-1-madhurkumar004@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Wed, Feb 19, 2025 at 12:13:42AM +0530, Madhur Kumar wrote:
-> Fixed multiple coding style issues in sm750fb:
-> - Replaced CamelCase variable names with snake_case.
-> - Removed incorrect use of volatile in memory-mapped IO.
-> 
-> Signed-off-by: Madhur Kumar <madhurkumar004@gmail.com>
-> ---
+From: Shreeya Patel <shreeya.patel@collabora.com>
 
-For some reason you sent this out again and ignored my bot's previous
-review?
+Add an entry for Synopsys DesignWare HDMI Receiver Controller
+Driver.
 
-confused,
+Reviewed-by: Christopher Obbard <chris.obbard@collabora.com>
+Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-greg k-h
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa065..d73ddb317b11 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22942,6 +22942,14 @@ F:	drivers/net/pcs/pcs-xpcs.c
+ F:	drivers/net/pcs/pcs-xpcs.h
+ F:	include/linux/pcs/pcs-xpcs.h
+ 
++SYNOPSYS DESIGNWARE HDMI RX CONTROLLER DRIVER
++M:	Shreeya Patel <shreeya.patel@collabora.com>
++L:	linux-media@vger.kernel.org
++L:	kernel@collabora.com
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.yaml
++F:	drivers/media/platform/synopsys/hdmirx/*
++
+ SYNOPSYS DESIGNWARE I2C DRIVER
+ M:	Jarkko Nikula <jarkko.nikula@linux.intel.com>
+ R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+-- 
+2.48.1
+
