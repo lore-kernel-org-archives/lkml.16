@@ -1,137 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E641A8404;
-	Tue, 18 Feb 2025 05:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A671B21B8
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739857730; cv=none; b=bb4qMICyQ5wYm2Liq7X+RO6MmX697WYJgF1HY+JkN4uCYxlqqRKwk7yEJ9W0szZ6J1vqeg9aBEiTtIN3YwJDmVGYKMjNVy0V9h1ddiPoXY7oM7MsRkUv5hZYCxz7EKCKSGXCCd2tkXoFZ4VueQOiN0nP8p14ZGwRBz9PxvaV56o=
+	t=1739857974; cv=none; b=iDw43efgEcryjkpnuExtBgqbjkccwkV41mg47UMukl1ZWgwkDSW7wbbfHmrEGAvsCSuPZnZ8Kc8RW0UEAMlecTr1Epp/X3BNByW93rbzprUrNa49OCVFcceDMezSYzBksKzbBvl/0JpULE6KHMqGenxTacrI0TbOvRYWXPtFmbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739857730; c=relaxed/simple;
-	bh=EhfoyfiV3/TQJjfLSsDlj14YQBGN85M2TkPc7w3M1ms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vC7Ip+ABM9+panIcFtCO4F8mM05JVGbS8j8GEFol/Txp1E0oS8jiuInKVMKyqxJWKYptpQq1byxhKIqS0cOD7P0sDruYUhaA162hg6DSOEuyt0G2nnkCtF7f7hp0T3voaeMJRm1gJt36fWS8iBCNzyZE7NgJL3EVYzY7is+s/SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CDO97Bn+; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739857974; c=relaxed/simple;
+	bh=OUNgeBG9Yaj+w1qNJC8+eYpKidf1r39gmgSZpgb8UuI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=S+KNLsBtRua+tHAMW2R1w+d2/+Z27eIrN7iF3hB1rVWKrWixe1hXpIki8QxFvlC3VYNvITVKFnr09N2fwbmiaDMRrgR309x/De4g5MOHsFeb1T+d7a/fZx6H6KmswUW5xp0S5seEsvQA5PC+M/RWA3/XmKa/9Uq8JZBtEJ16XNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FnIx+RHE; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CDO97Bn+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739857728; x=1771393728;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EhfoyfiV3/TQJjfLSsDlj14YQBGN85M2TkPc7w3M1ms=;
-  b=CDO97Bn+ERJ/ZxhD8/CV5IDtIOhRzocdshPnQZkdC4DOKDnFl3u7I9uN
-   KeGQ0Ji6yeGPEPmKaVQER0IHTb4tZMV+ijsoyotZCpoICbPQXiA6eF+Ep
-   8U8HkHMjZ2Msa9RIuyWuIa2N1eSi9BhrvqzGoqwdaHNSEvDUkVdy8Dfut
-   hErCTxCSh502Uc8igbjWuIfWMrahlrSOCYi6wcz1LvbJCKQgJyapGiM/X
-   wFN+9yqPaPS96y0+L7576PLKXPD5wz6EGAzcrFlq+2/g2z2Pd0wxIWV++
-   s5qkWmz28yg/08p4F+ZtaIfcG1nNIdAOADJ6L5MqKVHDVpPdBug41BXtV
-   g==;
-X-CSE-ConnectionGUID: z5tyUbxuRdqy1/UQrS8Shw==
-X-CSE-MsgGUID: 8zdWfL/jRb6Wfcj13c+hHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="65896414"
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="65896414"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 21:48:47 -0800
-X-CSE-ConnectionGUID: OP7CRnalRXSD+cNsV3OJ6Q==
-X-CSE-MsgGUID: hUD85pdNRkms9PlrASST4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="119392439"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 21:48:43 -0800
-Date: Tue, 18 Feb 2025 06:45:02 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	"Y.B. Lu" <yangbo.lu@nxp.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH net 1/8] net: enetc: fix the off-by-one issue in
- enetc_map_tx_buffs()
-Message-ID: <Z7QeXnBE0iBNFQYL@mev-dev.igk.intel.com>
-References: <20250217093906.506214-1-wei.fang@nxp.com>
- <20250217093906.506214-2-wei.fang@nxp.com>
- <Z7M1hQIYZGWAZsOT@mev-dev.igk.intel.com>
- <PAXPR04MB8510AA1D5B596B4382873A9F88FA2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FnIx+RHE"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51I2Hivm027323
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:52:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=8y/PCaTCRg8VuI/K8qxbSF
+	0ICUfYwKH3o2vnyNihc+M=; b=FnIx+RHErlZr+3VgJrn0odKWnHTkOGvqsjnbYZ
+	jmfr18Hrn8mG6nsgWysEnJe/OSpaj6+DaRHm1Q2OP9pOtn54lb80JFzv2Ykngg0x
+	gyUDfu6tc+GXYI56xwUVXXMlN9uZ7Tr4JquEX876pLdsQlzD48Tahra5EE9ojHcQ
+	R5fY/UXB7BdGyy6jl2NDH1radTw3x1ZXG1K93IyrJYeG1afcPHqPsiFarSmADvXk
+	fCuZu8LScruZB3ZWYoKcGTJ+L2b4fPKgQ38hYQwWVCk/ur+rbcQTBOOnhij9x40E
+	2nHez7CuAxBd5FFpbnyFkELEpClVvyrmraVGzz4JS9khfXBQ==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7skrvf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:52:51 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fbfa786a1aso16075307a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 21:52:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739857963; x=1740462763;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8y/PCaTCRg8VuI/K8qxbSF0ICUfYwKH3o2vnyNihc+M=;
+        b=nXXONCifHcK86VrR+JfvLk9XvUXSu7Tv5W1+Z8tpbgs8ZPMRs5FAiDXAjglPHIEHvp
+         9TXAcqVLupiEB2K8fi7MQWjQvx03QhgAbD/2T3qR8WOdpUEaA6CTYrZZ/HirDr4jc4Za
+         1uk7eG1apctIR1kAMcKqNfqWhHROFRIm906FZ3X4rEAv0TPnOu/dSjnOTIE18raPH4/G
+         O6tD6V5EaeWbZEJGnX2Sx4TuJ8XbHF9tAvqy5I6A0OozAoWTeEtoH7dghWU3DkR6JMOm
+         It3O0WWVSptR6A7CsbFPr6KEAG22HrHt/CkXMz2N9oicqob4uvmmmq+ZBZB8t3gnlmfv
+         iLUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUj2Zx3r4i063lD+oOj3mCaai3+w9M0wlQTrslGcsk9qimqITXEJMpXa3Ux4KEjQrx9lTN7jXFUk6hznh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhGeVCnVHorUphpXNeDB8ynRZ8ghgNsoduh9Y/KWI3A4e9Mg6n
+	vrbIQFJhrJ+2UxSNLPrv6Gn6OwqdvEcqNic1/zeCxNuWd2b0psqmKQWgrQEeU6DhGvnnE08Ei1d
+	tn0gwWp1zIlYmp2xVA90M76KZygS5RnDtzYCbi2Vm/C7eve0d+qpaM+lRUHtPCnS+w8jryyI=
+X-Gm-Gg: ASbGncvzMVXZZ+MCxJLuvaJohGhbU6G8gtLmoAVGqMC8nq2JhteK8If5ZYs9Blxv24m
+	S7qKlKu1IqZuPsR98gAlxpXB1F9hSuVJ+AVCZb3k+4FtZbnqTfkN5iraOXUGgthiGSz7GxPWAru
+	eILt6GS9eVE9/vaUCv2fCFuXemEHxgfAhzSCA6z4sxd+SCSYGMlF03n4amaMoFHdiuTQ17XVCKr
+	BR6S2xiEm4cn/QeAuiXEWQ2hz0OdSeGz4DZgoojcJBw1mz003jwz7AOBoZ3GW1Jcad0cz3nJ/pV
+	VsSusTPCaK44iME/e2o=
+X-Received: by 2002:a17:90b:3ec5:b0:2ee:d63f:d77 with SMTP id 98e67ed59e1d1-2fc40f0e8a3mr19003257a91.9.1739857963333;
+        Mon, 17 Feb 2025 21:52:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFrPhFKUnWnGuRnxsogYFBCvCkW8IkxawKxO8olNqU7YqWZjZGaLhP0OfZuR3+wWGio5vXsyg==
+X-Received: by 2002:a17:90b:3ec5:b0:2ee:d63f:d77 with SMTP id 98e67ed59e1d1-2fc40f0e8a3mr19003223a91.9.1739857962891;
+        Mon, 17 Feb 2025 21:52:42 -0800 (PST)
+Received: from [10.213.103.17] ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc13ab07d6sm9145057a91.2.2025.02.17.21.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 21:52:42 -0800 (PST)
+From: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Date: Tue, 18 Feb 2025 11:21:48 +0530
+Subject: [PATCH] arm64: dts: qcom: sm8750: Add RPMh sleep stats
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8510AA1D5B596B4382873A9F88FA2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-sm8750_stats-v1-1-8902e213f82d@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAPMftGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0Nz3eJcC3NTg/jiksSSYl2jVIMU8yRDy2QjYxMloJaCotS0zAqwcdG
+ xtbUAtCO2x14AAAA=
+X-Change-ID: 20250217-sm8750_stats-2e0d7b19c234
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_lsrao@quicinc.com,
+        Maulik Shah <maulik.shah@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739857959; l=1001;
+ i=maulik.shah@oss.qualcomm.com; s=20240109; h=from:subject:message-id;
+ bh=OUNgeBG9Yaj+w1qNJC8+eYpKidf1r39gmgSZpgb8UuI=;
+ b=yTIGDrwcxGB+ErvGVYneeBSikR3BaiY7iLOf1Obb7uKOzIhCLdxh7HtRZq3Ik3D7YsTkcDunO
+ 4eDjWFm76JYCXT1A/8m1UHAlN4Q/LWfRwE+M2Wh6NseDfkYeb8hVtnd
+X-Developer-Key: i=maulik.shah@oss.qualcomm.com; a=ed25519;
+ pk=bd9h5FIIliUddIk8p3BlQWBlzKEQ/YW5V+fe759hTWQ=
+X-Proofpoint-GUID: yvSkdeVDNgoaki6EcbHNexhmSOdh6Aal
+X-Proofpoint-ORIG-GUID: yvSkdeVDNgoaki6EcbHNexhmSOdh6Aal
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_02,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=714
+ clxscore=1011 priorityscore=1501 adultscore=0 spamscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502180043
 
-On Tue, Feb 18, 2025 at 02:11:12AM +0000, Wei Fang wrote:
-> > > Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet
-> > drivers")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> > > ---
-> > >  drivers/net/ethernet/freescale/enetc/enetc.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c
-> > b/drivers/net/ethernet/freescale/enetc/enetc.c
-> > > index 6a6fc819dfde..f7bc2fc33a76 100644
-> > > --- a/drivers/net/ethernet/freescale/enetc/enetc.c
-> > > +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-> > > @@ -372,13 +372,13 @@ static int enetc_map_tx_buffs(struct enetc_bdr
-> > *tx_ring, struct sk_buff *skb)
-> > >  dma_err:
-> > >  	dev_err(tx_ring->dev, "DMA map error");
-> > >
-> > > -	do {
-> > > +	while (count--) {
-> > >  		tx_swbd = &tx_ring->tx_swbd[i];
-> > >  		enetc_free_tx_frame(tx_ring, tx_swbd);
-> > >  		if (i == 0)
-> > >  			i = tx_ring->bd_count;
-> > >  		i--;
-> > > -	} while (count--);
-> > > +	};
-> > 
-> > In enetc_lso_hw_offload() this is fixed by --count instead of changing
-> > to while and count--, maybe follow this scheme, or event better call
-> > helper function to fix in one place.
-> 
-> The situation is slightly different in enetc_map_tx_buffs(), the count
-> may be 0 when the error occurs. But in enetc_lso_hw_offload(), the
-> count will not be 0 when the error occurs.
+Add RPMh stats to read low power statistics for various subsystem
+and SoC sleep modes.
 
-Right, didn't see that, sorry.
+Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/sm8750.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> 
-> > 
-> > The same problem is probably in enetc_map_tx_tso_buffs().
-> > 
-> 
-> I think there is no such problem in enetc_map_tx_tso_buffs(),
-> because the index 'i' has been increased before the error occurs,
-> but the count is not increased, so the actual 'count' is count + 1.
->
+diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+index 3bbd7d18598ee0a3a0d5130c03a3166e1fc14d82..7b692e1798496292b2f457ab61c63d3b0bb648af 100644
+--- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+@@ -1978,6 +1978,11 @@ pdc: interrupt-controller@b220000 {
+ 			interrupt-controller;
+ 		};
+ 
++		sram@c3f0000 {
++			compatible = "qcom,rpmh-stats";
++			reg = <0x0 0x0c3f0000 0x0 0x400>;
++		};
++
+ 		spmi_bus: spmi@c400000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0x0 0x0c400000 0x0 0x3000>,
 
-But you can reach the error code jumping to label "err_chained_bd" where
-both i and count is increased. Isn't it a problem?
+---
+base-commit: 0ae0fa3bf0b44c8611d114a9f69985bf451010c3
+change-id: 20250217-sm8750_stats-2e0d7b19c234
 
-BTW, not increasing i and count in one place looks like unnecessary
-complication ;) .
+Best regards,
+-- 
+Maulik Shah <maulik.shah@oss.qualcomm.com>
 
-Thanks,
-Michal
