@@ -1,141 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB64022FAFD;
-	Tue, 18 Feb 2025 09:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7973B22AE7F;
+	Tue, 18 Feb 2025 09:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872554; cv=none; b=nRR25zBr8KSkd/Y8TumVuPZCCbqPoWNnnr1nJgUbVEwgFx/BLR3jtwfhsgbmkXOKbQmjjhgCinh6blEuC7aFTpj2ozHIpCjitaR5qVh3Kvu5lmK82H945tr8vDN45UQC6UW95i7WgjLYQNVoDReEBvHChJbv1hczd0P+A0xiH9s=
+	t=1739872587; cv=none; b=jhFs2p01OVlBWyiqnEbxrwApmFkd2slmyY9P9aRhuedKGIIK4SN5ErCBAbgVXHwFRS7FkJODn++wb57UW9ib/gNxlnngmuGjWw0noZIZyviXEOCAiqyV6KDTX3DrrbOlmpaS68Nh4QCxzQJuvMBPQmcjcpJESMv3t464+HOv/pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872554; c=relaxed/simple;
-	bh=rvj0t9+tjvO+0OV9PLc5srj+NlKLO440nNkbXNyfhZs=;
+	s=arc-20240116; t=1739872587; c=relaxed/simple;
+	bh=qdz6v5u9AENOho3Z4k20JoDNSJyrhwjpfVmj3CQVAIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmaA84n4f0qh/pH/7ClCDspjNpp6oznnxQsNSvuQN44rmnd2VfGLMchXKNcaMLUtpuxmiAE/oeviABBzvmkNuiK3Fh7Eb2dggQJ7bpVznyHqKqKRRnpI7uij6v9jMBij6gqICtDQpkGjXnNV7aJwCVq7tfs1utxEY6KAoC8XwZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqmhkQo2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GFmgtKgxR3V+Vt8Gpn1KPoj7UH0p9MbY+Xw8tKLKxUP8Of9MykzLW8Wx4KHF47YWLneT79u0QfEoHlgtDEDOs9UyoWsRowqr9SkJIT+JQ6W4loZd7IAkqHDvF9AHUNcXJ2snePLYVMB2sEm9zksISnMkK+aHVgu6UTsU4GCA2pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iJDuIZOT; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqmhkQo2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E337C4CEE4;
-	Tue, 18 Feb 2025 09:55:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739872552;
-	bh=rvj0t9+tjvO+0OV9PLc5srj+NlKLO440nNkbXNyfhZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nqmhkQo21p/IwHWW1vn6ppeNmvxU5hEUr+tROAL+/McFaDG+sFe50Rj+/GsweYbuB
-	 gHc1Qd2npna0pnZlbEdqGy9oZVqyYcxOJz21wdqMdBDwmwcdD/s92xKnORETlpD8dr
-	 u5DO1okXMmLpey9ba08Ua9Tu87nuk1H1kptFxzY3xCKA2sYE8uYt7vzFpy6egMcCw4
-	 fJqGWmP8vQNKs0fl7mtBmAL6nEi1XTaeuCHgucvpJpyJub97Yyl9CJz9InOUApmYsa
-	 ZjUuo1/rYIWGaDejRZLeEIqT4CizQMTrKrZmRJ+i2A7IAwTMtuL53BqCNg2+K7zvyJ
-	 D23FMuv2ArjBA==
-Date: Tue, 18 Feb 2025 10:55:49 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Joel Selvaraj <jo@jsfamily.in>, 
-	Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, 
-	Jianhua Lu <lujianhua000@gmail.com>, Robert Chiras <robert.chiras@nxp.com>, 
-	Artur Weber <aweber.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Tejas Vipin <tejasvipin76@gmail.com>
-Subject: Re: [PATCH 00/20] drm/panel: Move to using mipi_dsi_*_multi()
- variants when available
-Message-ID: <20250218-fabulous-agile-corgi-9a5ee0@houat>
-References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
- <CAD=FV=Vyx8vAeRohw3W11Tuv26_-zi-GV__G2cXFxF+e76MJkw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iJDuIZOT"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739872581; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=N8XCSr1gSHReK69ZBra+oD3DdxbDjt85CctNSIF9ow4=;
+	b=iJDuIZOTAF+XyqadtpgzMq8vVjFaHbtFxJd40J7DvyGFxheehZwizAjcXkNEhuYhC+9ZU4+eBcIO96hzaKHWhSpYYaSPNICLW5hwXARAPmaUViiZm/l15crEp+lHGfzRCih3FLnaFfl1E7n/P4V8FMXiZ0X9RsCk11vZI3xypao=
+Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0WPlRUKM_1739872578 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 18 Feb 2025 17:56:19 +0800
+Date: Tue, 18 Feb 2025 17:56:17 +0800
+From: YinFengwei <fengwei_yin@linux.alibaba.com>
+To: Changbin Du <changbin.du@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, Hui Wang <hw.huiwang@huawei.com>
+Subject: Re: [RESEND PATCH v6 0/8] perf: Support searching local debugging
+ vdso or specify vdso path in cmdline
+Message-ID: <lytsbawzokllz3nh36at3bi6322sk5br3vrqp5lr75eiwdqqj3@ozmbwylc5gdg>
+References: <20240816105811.1812897-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="726nfthqf5wfkq3l"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=Vyx8vAeRohw3W11Tuv26_-zi-GV__G2cXFxF+e76MJkw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240816105811.1812897-1-changbin.du@huawei.com>
+
+Hi Changbin,
+
+On Fri, Aug 16, 2024 at 06:58:03PM +0800, Changbin Du wrote:
+> The vdso dumped from process memory (in buildid-cache) lacks debugging
+> info. To annotate vdso symbols with source lines we need a debugging
+> version.
+> 
+> For x86, we can find them from your local build as
+> 'arch/x86/entry/vdso/vdso{32,64}.so.dbg'. Or they may resides in
+> '/lib/modules/<version>/vdso/vdso{32,64}.so' on Ubuntu. But notice that the
+> builid has to match.
+> 
+> If user doesn't specify the path, perf will search them internally as long
+> as vmlinux when recording samples. The searched debugging vdso will add to
+> buildid cache as ~/.debug/[vdso]/debug.
+> 
+> Below samples are captured on my local build kernel. perf succesfully
+> find debugging version vdso and we can annotate with source without
+> specifying vdso path.
+> 
+> $ sudo perf record -a
+> $ sudo perf report --objdump=llvm-objdump
+> 
+> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
+> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
+> Percent│       movq    -48(%rbp),%rsi
+>        │       testq   %rax,%rax
+>        │     ;               return vread_hvclock();
+>        │       movq    %rax,%rdx
+>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
+>        │     ↑ js      eb
+>        │     ↑ jmp     74
+>        │     ;               ts->tv_sec = vdso_ts->sec;
+>   0.02 │147:   leaq    2(%rbx),%rax
+>        │       shlq    $4, %rax
+>        │       addq    %r10,%rax
+>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
+>   9.38 │152:   movl    (%r10),%ecx
+> 
+> When doing cross platform analysis, we need to specify the vdso path manually if
+> we are interested in its symbols, because they are not installed on local
+> machine. At most two vdso can be given. Also you can pack your buildid cache with
+> perf-archive if the debugging vdso can be found on the sampled machine.
+> 
+> $ sudo perf report --objdump=llvm-objdump \
+>       --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
+With latest upstream kernel, I still can't annotate symbols in vdso.
+With your patch and this --vdso command, it works great on x86 and arm64
+platform. So
+   Tested-by: Yin Fengwei <fengwei_yin@linux.alibaba.com>
 
 
---726nfthqf5wfkq3l
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 00/20] drm/panel: Move to using mipi_dsi_*_multi()
- variants when available
-MIME-Version: 1.0
+Regards
+Yin, Fengwei
 
-On Fri, Feb 14, 2025 at 08:26:02AM -0800, Doug Anderson wrote:
-> Hi,
->=20
-> On Thu, Feb 13, 2025 at 12:44=E2=80=AFPM Anusha Srivatsa <asrivats@redhat=
-=2Ecom> wrote:
-> >
-> > A lot of mipi API are deprecated and have a _multi() variant
-> > which is the preferred way forward. This covers  TODO in the
-> > gpu Documentation:[1]
-> >
-> > An incomplete effort was made in the previous version
-> > to address this[2]. It removed on the mipi_dsi_dcs_write_seq()
-> > and mipi_dsi_generic_write_seq_multi() with the respective
-> > replacemts and not the rest of the API.
->=20
-> You didn't seem to take most of the suggestions I gave in response to
-> your v1 [3]. Specifically:
->=20
-> a) I asked that you CC Tejas. I've added him again.
->=20
-> b) I asked that you CC me on the whole patch series, which you didn't
-> do. I can find them, but I'd find it convenient in this case for them
-> to be in my Inbox.
->=20
-> The first patch conflicts with what Tejas already landed in
-> drm-misc-next. See commit 8025f23728e9 ("drm/panel:
-> xinpeng-xpp055c272: transition to mipi_dsi wrapped functions"). The
-> second patch _also_ conflicts with what Tejas already landed. See
-> commit f4dd4cb79f9e ("drm/panel: visionox-r66451: transition to
-> mipi_dsi wrapped functions"). Later patches also also conflict. See
-> commit 0d6c9edf9e5b ("drm/panel: ebbg-ft8719: transition to mipi_dsi
-> wrapped functions"), commit ce8c69ec90ca ("drm/panel:
-> samsung-s6e88a0-ams452ef01: transition to mipi_dsi wrapped
-> functions"), and commit 7e3bf00047cd ("drm/panel: sharp-ls060t1sx01:
-> transition to mipi_dsi wrapped functions"). Maybe you should sync up
-> with drm-misc-next before submitting.
+> 
+> I also improved perf-buildid-cache command to recognize vdso when adding files,
+> then place it at correct place.
+> 
+> $ sudo perf buildid-cache --add /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
 
-Yes, you should definitely work from drm-misc-next there, and sync with
-Tejas.
-
-> I also questioned whether this really made sense to try to do with a
-> Coccinelle script and I still don't think so. It looks like Dmitry has
-> already reviewed the first few of your patches and has repeated my
-> advice. If you want to help with the effort of addressing this TODO
-> item then that's great, but I'll stop reviewing (and start silently
-> deleting) any future submissions of yours that say that they're done
-> entirely with a Coccinelle script unless you address this point and
-> convince me that your Coccinelle script is really smart enough to
-> handle all the corner cases. I'll also assert that you should review
-> Tejas's submissions to see how these conversions are expected to go.
-
-I couldn't find that in your first answer though. What corner cases do
-you have in mind, and why do you think coccinelle can't handle them?
-
-Also, why do you think ignoring a contributor after a second mistake is
-a reasonable reaction?
-
-Anusha, most of those comments aren't the end of the discussion though.
-If you feel like something's not clear enough or ambiguous, feel free to
-ask for more details and keep the discussion going.
-
-Maxime
-
---726nfthqf5wfkq3l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ7RZIQAKCRAnX84Zoj2+
-dnx1AYDvs65FcAkxFl9bq1N9OH/nVRFJIYjxboyBi8+tMU6haF4kZySHcec5o4jC
-5PoRUdIBgJqfgW9bYI6cos8FSWZOiPd2kShBBomX9tuNO0LB8BStQui7Vr/uAw9h
-kErY8M7ARw==
-=Z1aQ
------END PGP SIGNATURE-----
-
---726nfthqf5wfkq3l--
