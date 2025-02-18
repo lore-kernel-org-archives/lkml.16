@@ -1,113 +1,129 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B9A246326;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46A0175BF;
 	Tue, 18 Feb 2025 13:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885830; cv=none; b=ivbczuF+UUgYgV3GxwEmM7J8CnL+Wt27pETfr7dNT64jjZjDpyxiyZOe7wpDVtCUrErUgZs/bPd5zt6B0+GpHu7igZrjs7JXDxwOVGWccT47dW7x1pwYlRP7kduQA7CErgK8gvKfLfoI+Z8HuF6dnNiEJlen07BI5QGkysOwmYc=
+	t=1739885830; cv=none; b=O8DLgUwetoZtaAcgjpG1O0GyenVM+NxdFNK1jgbn7qPlHCUSftTeCE+T3iUqEvc2GrJ5PJn+gzVtgfMess36Qf93Q726XnIAvCgkQ1Gk/eZCNcqc7pneOHa5swlOwpGH+fiKQQ+ShrEBxVcXcEIcwwo+KT9HQDYLRUelTxeyol0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739885830; c=relaxed/simple;
-	bh=RgZzlg6Ld/avdXkpvLKLeXpzWvHVcfkymWlll9vVukw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SBXFU2IwzkacvfMN3N1SZsnVIg+Uqtjs541b/acbak3ZaeicsqnUHJlo8WVAA0yhu0cLQcLzoZTTkWKHR0zGCTfW9vY+8UbcCHcvWd73V/h0OwvTuU9if0gaGQg7/aSG0zCR3sBKo7QMApVB85Rzsy+/eHjVNDi1YyjY7mCH/kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Yy0ps3l8lzhZtG;
-	Tue, 18 Feb 2025 21:33:41 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id B37EC1800DB;
-	Tue, 18 Feb 2025 21:37:04 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 18 Feb
- 2025 21:37:03 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
-	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] nfsd: decrease cl_cb_inflight if fail to queue cb_work
-Date: Tue, 18 Feb 2025 21:54:23 +0800
-Message-ID: <20250218135423.1487309-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	bh=eEHGfn31I8CnhhzVB7iBU6gchtyan8J3HLDDVcsgx2k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nz2SiQQ5bhCcb7g7Uvi7pZqqG1JUQXr0QZTJXYpiqwQQuGmkLIF7WaDEYCZS6ZghOP2hoXzY6kjTQWaJopA8IfA+D7XjRIZY5DWy84dI5COZe6KXCH4wpUeG29Fn6eeizAgoRGn7kp5GYEMFSBRNGihokwIWM/NLLHXBPXnjR9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SaDeKty/; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaDeKty/"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2212a930001so54933185ad.0;
+        Tue, 18 Feb 2025 05:37:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739885828; x=1740490628; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8jdDVOKHqYOsG0zTYeRIb762+LRWCt+s5e6AAnN87iM=;
+        b=SaDeKty/hqqfeQjXibaiMm2GieF5+0FE9XEZ1Vd8G3eKM4RnB6HWuiLgkLpGaesgre
+         AJOlHPPeDAGJ1AfbrlAT37EoL0KgPpT9xNcu4oOgRJd32tGY4JFO5OSDUkvnXznPm9ZR
+         o3Wkf5Oapa92BpZTgZDvZg9DB/mFnIzzL/x8zVt0T/3b5jGM0mpb7aD6qOpBlb2mTvhG
+         TdM4F+pkmHKeVdh4EHofAHwYc07DRQ+16hVICTGyFEAIMEzKOTGRTpWVKzxhUiY36iXT
+         fDYBwkDGTKJUcy1GighuZUEHb02vDT5O+uVo4cEjRg8JD0EaCNnIqQ91ZZDR02J68+hZ
+         uiZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739885828; x=1740490628;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8jdDVOKHqYOsG0zTYeRIb762+LRWCt+s5e6AAnN87iM=;
+        b=wBS7WvTG368OQc++NH60zsn9BuFHUfuXRQU6wFzoB4Hf+5GgGmPoHCXlMPHOw8vuIc
+         WP91TUgZHZ72O1k9TvX8XGXvBKZsS0FHaZ51a+Kru76e8ueMYiA1kvmb2dnwTedtKhYs
+         t7tCafQFEjTVrm2Z5jVERDb4fzmucfYzPCtbzbsPmq7pdwgRwU3IXkCdBt6fL+rJgg2W
+         DVBrhjvxsAr2SiYrjYCRgQ1Rp3wMlNqc4EpIImNbBBiBwLWxYLVde6+vPRQEo8cGTsIS
+         3Xac7s2PruW6hOEuYITuvN3QyHcTOw0XbMdGCQlj0kuev+s51U3a4eL2MEnwp/rHJ/8y
+         TXAg==
+X-Forwarded-Encrypted: i=1; AJvYcCULi4lZsPdKgBNQwjFhpoShn1ehNVithpFa66pxEQqHXZAlNfYODFo2b7UPXHd8EHs6mSz+9jqL@vger.kernel.org, AJvYcCW8uT0sHyjxjt8lJPb7PRrg5a5IApKwrm0K+6DZqSgqBCt4dtVCRwRmJDNBqpCGm6llFrpQxkBa8kxN3aY=@vger.kernel.org, AJvYcCWAuQcCWWa2Blk61NDwVSI02sysnqZbe5oRmN2n2M2ipjoz6wqSAa4wDt6vTvopDEvDTFxMwDV/PHNk9wJn@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCKNi8BgNuq+ELKPptpVpCb/BioBt4Tq/4usV0lbRtlhyiJeya
+	9Ntp1rU6bjq7emteNumRXyNdTR8DSI5NinQapJvexx1769dn8Juo
+X-Gm-Gg: ASbGnctmL9mqYZQJyx8wv0E7DbZzrm/Pc6EpTBdSnSdcbjRMkFEx3YEUwpASb5th+CE
+	XJN0dMDqyCob7UZH8pNG1/nQ0tttg9a9bg2AD11N44xWFnomnT2OJbvVwA06dBu9ifK/+oyqNmh
+	ZZ2K2FFJlCGXtW1ihmyfQ05s2idBd/2duanv7dsU6i/4Rujqxy0PKSQHGy869a+zlh/T44W71RA
+	biFBDQHsuRSc1uLO6yL3vessvBO/vL3c/QO4VL//vQSrPvsnxVqDK0I6D9n3PD5EHZfbhiga7q1
+	ltv6FSgdBswojEciT9Qa1p+yCpTM8a10WEytqSgDVZk4iHUgcKjONBATN3ntVggrz6DD
+X-Google-Smtp-Source: AGHT+IFAYv6dxLs8ydLkGWmiyk2TMBMKqMexuJxecoTUNnPqX7xuJaDjkSEiNhPja+6i+N766Hr0jg==
+X-Received: by 2002:a05:6a20:e30b:b0:1ee:7fa1:9160 with SMTP id adf61e73a8af0-1ee8cb0c9e5mr25573150637.6.1739885827908;
+        Tue, 18 Feb 2025 05:37:07 -0800 (PST)
+Received: from ?IPV6:2409:4040:eb3:5fa4:b097:c3d6:9ee9:156c? ([2409:4040:eb3:5fa4:b097:c3d6:9ee9:156c])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ade80053bf9sm4374585a12.29.2025.02.18.05.37.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 05:37:07 -0800 (PST)
+Message-ID: <0dcf0f9d-6ced-4fdd-9dc0-083ff161354f@gmail.com>
+Date: Tue, 18 Feb 2025 19:07:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] af_unix: Fix undefined 'other' error
+To: Simon Horman <horms@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, skhan@linuxfoundation.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, linux-sparse@vger.kernel.org
+References: <20250210075006.9126-1-purvayeshi550@gmail.com>
+ <20250215172440.GS1615191@kernel.org>
+ <4fbba9c0-1802-43ec-99c4-e456b38b6ffd@stanley.mountain>
+ <20250217111515.GI1615191@kernel.org>
+ <bbf51850-814a-4a30-8165-625d88f221a5@stanley.mountain>
+ <20250218132123.GT1615191@kernel.org>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <20250218132123.GT1615191@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In nfsd4_run_cb, cl_cb_inflight is increased before attempting to queue
-cb_work to callback_wq. This count can be decreased in three situations:
-1) If queuing fails in nfsd4_run_cb, the count will be decremented
-accordingly.
-2) After cb_work is running, the count is decreased in the exception
-branch of nfsd4_run_cb_work via nfsd41_destroy_cb.
-3) The count is decreased in the release callback of rpc_task — either
-directly calling nfsd41_cb_inflight_end in nfsd4_cb_probe_release, or
-calling nfsd41_destroy_cb in nfsd4_cb_release.
+On 18/02/25 18:51, Simon Horman wrote:
+> On Mon, Feb 17, 2025 at 05:14:14PM +0300, Dan Carpenter wrote:
+>> On Mon, Feb 17, 2025 at 11:15:15AM +0000, Simon Horman wrote:
+>>> So, hypothetically, Smatch could be enhanced and there wouldn't be any
+>>> locking warnings with this patch applied?
+>>
+>> Heh.  No.  What I meant to say was that none of this has anything to do
+>> with Smatch.  This is all Sparse stuff.  But also I see now that my email
+>> was wrong...
+>>
+>> What happened is that we changed unix_sk() and that meant Sparse couldn't
+>> parse the annotations and prints "error: undefined identifier 'other'".
+>> The error disables Sparse checking for the file.
+>>
+>> When we fix the error then the checking is enabled again.  The v1 patch
+>> which changes the annotation is better than the v2 patch because then
+>> it's 9 warnings vs 11 warnings.
+>>
+>> The warnings are all false positives.  All old warnings are false
+>> positives.  And again, these are all Sparse warnings, not Smatch.  Smatch
+>> doesn't care about annotations.  Smatch has different bugs completely.
+>> ;)
+> 
+> Thanks for clarifying :)
+> 
+> Based on the above I'd advocate accepting the code changes in v2 [*].
+> And live with the warnings.
+> 
+> Which I think is to say that Iwashima-san was right all along.
+> 
+> Reviewed-by: Simon Horman <horms@kernel.org>
+> 
+> [*] Purva, please post a v3 that updates the commit message as per
+>      Jakub's request elsewhere in this thread:
+>      https://lore.kernel.org/all/20250212104845.2396abcf@kernel.org/
+> 
 
-However, in nfsd4_cb_release, if the current cb_work needs to restart, the
-count will not be decreased, with the expectation that it will be reduced
-once cb_work is running.
-If queuing fails here, then the count will leak, ultimately causing the
-nfsd service to be unable to exit as shown below:
-[root@nfs_test2 ~]# cat /proc/2271/stack
-[<0>] nfsd4_shutdown_callback+0x22b/0x290
-[<0>] __destroy_client+0x3cd/0x5c0
-[<0>] nfs4_state_destroy_net+0xd2/0x330
-[<0>] nfs4_state_shutdown_net+0x2ad/0x410
-[<0>] nfsd_shutdown_net+0xb7/0x250
-[<0>] nfsd_last_thread+0x15f/0x2a0
-[<0>] nfsd_svc+0x388/0x3f0
-[<0>] write_threads+0x17e/0x2b0
-[<0>] nfsctl_transaction_write+0x91/0xf0
-[<0>] vfs_write+0x1c4/0x750
-[<0>] ksys_write+0xcb/0x170
-[<0>] do_syscall_64+0x70/0x120
-[<0>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
-[root@nfs_test2 ~]#
+Thanks for the review and clarification! I'll prepare v3 with no 
+trailing double spaces and a more detailed description.
 
-Fix this by decreasing cl_cb_inflight if the restart fails.
-
-Fixes: cba5f62b1830 ("nfsd: fix callback restarts")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfsd/nfs4callback.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 484077200c5d..8a7d24efdd08 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1459,12 +1459,16 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- static void nfsd4_cb_release(void *calldata)
- {
- 	struct nfsd4_callback *cb = calldata;
-+	struct nfs4_client *clp = cb->cb_clp;
-+	int queued;
- 
- 	trace_nfsd_cb_rpc_release(cb->cb_clp);
- 
--	if (cb->cb_need_restart)
--		nfsd4_queue_cb(cb);
--	else
-+	if (cb->cb_need_restart) {
-+		queued = nfsd4_queue_cb(cb);
-+		if (!queued)
-+			nfsd41_cb_inflight_end(clp);
-+	} else
- 		nfsd41_destroy_cb(cb);
- 
- }
--- 
-2.31.1
-
+Best regards,
+Purva
