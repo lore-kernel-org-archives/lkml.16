@@ -1,93 +1,151 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from mail-b.studer.dev (mail-b.studer.dev [3.21.136.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5412B29D05;
-	Tue, 18 Feb 2025 02:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FD31EEE6;
+	Tue, 18 Feb 2025 02:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.21.136.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739845004; cv=none; b=ARU6/ylvr5MQkntcHxHb0DSRC7LzV8RzUhz2gcEbwopAOdTEQorQ6ZzXihOxjgWbBtbuEMLVQIP6c6yhj5eiz3zDnnY90BVgYj5/rSBZkNkjUWJfGOmFpaDFpoefFQDpeXM8z3rueuO6lcNHfoSSNSZFUlDz9Cjg2NSGagjgxEE=
+	t=1739845021; cv=none; b=DTAf3DiL04yTD1871ahpGyCm6QvzpB1yEfxHmcCPoORTRFL9Jh7A77mn4FATOWICTJMoNinS3v7CvjTVzjidwe761rjP+53pilEDaceczz6ftmL9lMWEY8XMc3qyLxKkCRt2TQNnWQ0/F3osJuOmp68wri+e8epSO4vyJaR2rho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739845004; c=relaxed/simple;
-	bh=KSIKrqgUfcQc3XIwuDOIL69wUlOQnzOwboxFHLMyJUc=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cdheoJgYbFqnvIduMNEJRSFbL2QRvyrj5fr1QxVQG4q7RASPNu22lsUTX66A8QcMpvzFS/BhdGMFhl5T+c0qdVyJzpMdDZHpA6SuaSHCheM8KPIqWEg6M40He3b/je02L6GEg0jXCvYwa1+tTb/1N1So1bR22uxdVEI6CBNADo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Yxjp83fwlz17LYC;
-	Tue, 18 Feb 2025 10:17:04 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id E75AE1A016C;
-	Tue, 18 Feb 2025 10:16:33 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 10:16:32 +0800
-Message-ID: <14b562d6-7006-4fe0-be61-48fe1abebe49@huawei.com>
-Date: Tue, 18 Feb 2025 10:16:32 +0800
+	s=arc-20240116; t=1739845021; c=relaxed/simple;
+	bh=1JXVA2sVlnhfQcgr028+qseD4GYQ502lyjwFC65z7iA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EeeNnH9jseCD8ekaOmCF5TemrME3xyuz6XCVTfq3vn6475A6WEYTi2rKlpRzKm+IJ+yBkApTLpTYfl2/w0aZQi6kw7hWoem6gM7Hslb6TFVb428Qa/O4eALCPx7/0fxdPZGtOLb/V+fzvTrKWRT4hCaiPESypdDq9DkeIO6+r30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=studer.dev; spf=pass smtp.mailfrom=studer.dev; dkim=pass (2048-bit key) header.d=studer.dev header.i=@studer.dev header.b=pJHRuUoi; arc=none smtp.client-ip=3.21.136.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=studer.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=studer.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=studer.dev header.i=@studer.dev header.b="pJHRuUoi"
+Received: from mail.studer.dev (mail.studer.dev [168.62.161.121])
+	by mail-b.studer.dev (Postfix) with ESMTPSA id 0913840028;
+	Tue, 18 Feb 2025 02:08:58 +0000 (UTC)
+dkim-signature: v=1; a=rsa-sha256; d=studer.dev; s=hmail;
+	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Transfer-Encoding;
+	bh=5AA+a4IxbsmGiRmLLlpgl3OVaLWtMwq00DaT2+GNKdU=;
+	b=pJHRuUoirhakSXgBVi1wAqvRu8P4O5UhqKep0hqV2Xm+WPpeDjpMf3G2SiBDyTQhaAaDOfdFtTYMEPzp399MtvTka7gVjb6ZBsbCbBJaMrgKXEXbAGHz0hAhcftTB8Xud/hBqZeqB073X/MIdu4SF8SNzXmNiQ0do5RANUV+/rJkWqsCAuskK5ao+8lcCEQFsUQS3wWnBNUzP5CGZttjyshujt4jXO4/rfTzMVM/tuGw+Sw7BGTlPw0AH2
+	lHGT6PIWkXU98F36Tl8JlhswCK38SkV9nb58J1kGjYtkq8+iQ6II+Dc441In2meOCQfjINh3wYQSJ1yFwKP4iRZMbXmA==
+Received: from alex-framework.mynetworksettings.com (pool-68-239-44-167.bstnma.fios.verizon.net [68.239.44.167])
+	by mail.studer.dev with ESMTPSA
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
+	; Tue, 18 Feb 2025 02:08:55 +0000
+From: Alex Studer <alex@studer.dev>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Alex Studer <alex@studer.dev>
+Subject: [PATCH] riscv: dts: allwinner: d1: Add CPU thermal sensor and zone
+Date: Mon, 17 Feb 2025 21:06:29 -0500
+Message-ID: <20250218020629.1476126-1-alex@studer.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
-	<shenjian15@huawei.com>, <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <sudongming1@huawei.com>, <xujunsheng@huawei.com>,
-	<shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/7] net: hibmcge: Add rx checksum offload
- supported in this module
-To: Simon Horman <horms@kernel.org>
-References: <20250213035529.2402283-1-shaojijie@huawei.com>
- <20250213035529.2402283-4-shaojijie@huawei.com>
- <20250217154028.GM1615191@kernel.org>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <20250217154028.GM1615191@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Transfer-Encoding: 8bit
+
+The sun20i THS (built in CPU thermal sensor) is supported in code, but
+was never added to the device tree. So, add it to the device tree,
+along with a thermal zone for the CPU.
+
+Signed-off-by: Alex Studer <alex@studer.dev>
+---
+ arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi | 31 +++++++++++++++++++
+ .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    | 16 ++++++++++
+ 2 files changed, 47 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi b/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
+index 6367112e6..bdde82aa8 100644
+--- a/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
++++ b/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
+@@ -3,6 +3,8 @@
+ 
+ #define SOC_PERIPHERAL_IRQ(nr)	(nr + 16)
+ 
++#include <dt-bindings/thermal/thermal.h>
++
+ #include "sunxi-d1s-t113.dtsi"
+ 
+ / {
+@@ -115,4 +117,33 @@ pmu {
+ 			<0x00000000 0x0000000e 0xffffffff 0xffffffff 0x00010000>,
+ 			<0x00000000 0x0000000f 0xffffffff 0xffffffff 0x00020000>;
+ 	};
++
++	thermal-zones {
++		cpu-thermal {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths>;
++
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++
++			trips {
++				cpu_alert: cpu-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++	};
+ };
+diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
+index e4175adb0..fcfcaf06c 100644
+--- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
++++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
+@@ -426,6 +426,10 @@ sid: efuse@3006000 {
+ 			reg = <0x3006000 0x1000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
++
++			ths_calibration: thermal-sensor-calibration@14 {
++				reg = <0x14 0x8>;
++			};
+ 		};
+ 
+ 		crypto: crypto@3040000 {
+@@ -934,5 +938,17 @@ rtc: rtc@7090000 {
+ 			clock-names = "bus", "hosc", "ahb";
+ 			#clock-cells = <1>;
+ 		};
++
++		ths: thermal-sensor@2009400 {
++			compatible = "allwinner,sun20i-d1-ths";
++			reg = <0x2009400 0x100>;
++			interrupts = <SOC_PERIPHERAL_IRQ(58) IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_THS>;
++			clock-names = "bus";
++			resets = <&ccu RST_BUS_THS>;
++			nvmem-cells = <&ths_calibration>;
++			nvmem-cell-names = "calibration";
++			#thermal-sensor-cells = <0>;
++		};
+ 	};
+ };
+-- 
+2.48.1
 
 
-on 2025/2/17 23:40, Simon Horman wrote:
-> On Thu, Feb 13, 2025 at 11:55:25AM +0800, Jijie Shao wrote:
->> This patch implements the rx checksum offload feature
->> including NETIF_F_IP_CSUM NETIF_F_IPV6_CSUM and NETIF_F_RXCSUM
->>
->> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-> ...
->
->> diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c
->> index 8c631a9bcb6b..aa1d128a863b 100644
->> --- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c
->> +++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c
->> @@ -202,8 +202,11 @@ static int hbg_napi_tx_recycle(struct napi_struct *napi, int budget)
->>   }
->>   
->>   static bool hbg_rx_check_l3l4_error(struct hbg_priv *priv,
->> -				    struct hbg_rx_desc *desc)
->> +				    struct hbg_rx_desc *desc,
->> +				    struct sk_buff *skb)
->>   {
->> +	bool rx_checksum_offload = priv->netdev->features & NETIF_F_RXCSUM;
-> nit: I think this would be better expressed in a way that
->       rx_checksum_offload is assigned a boolean value (completely untested).
->
-> 	bool rx_checksum_offload = !!(priv->netdev->features & NETIF_F_RXCSUM);
-
-Okay, I'll modify it in v2.
-
-Thanks
-Jijie Shao
-
->
->> +
->>   	if (likely(!FIELD_GET(HBG_RX_DESC_W4_L3_ERR_CODE_M, desc->word4) &&
->>   		   !FIELD_GET(HBG_RX_DESC_W4_L4_ERR_CODE_M, desc->word4)))
->>   		return true;
