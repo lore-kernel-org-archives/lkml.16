@@ -1,27 +1,28 @@
-Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
+Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1986239563;
-	Tue, 18 Feb 2025 11:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1BE23F29D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739879381; cv=none; b=mAcH6DNioEeSUSiQjPQB74/NBNL9M8PzFDPOkTAJMu9sFVcDUM/+vTgrbv40Tf5OeAv4yriW2iuXIQvGDxl29OSj6hps9oT99ze9P9GBr18JocUmC038CdREg2EdjeDB1ZGHdKIm5K/R6XvpLFEOTfDvwN2h+p/qdIcvZ9JHSL8=
+	t=1739879382; cv=none; b=kuaBsuPwzrQzMyzDo10Z5H5JDG/zvSZwbeBe0UyHOPLtEcPMAiRsn41/vv3DDvny3kVmPJ6K62M5ju2nO+JQYAVphL1i4bhXcyEnvA0dVb5CTefQTRIxo1DowbfaKYGBgR1iYKLNPgitnSjh1fsxhKvopwzaOvi26A45+ouJryE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739879381; c=relaxed/simple;
-	bh=Ol3PdG7TXSBGTvdUg7iseCBh1c9B8ysNU1Mvm04nl1Q=;
+	s=arc-20240116; t=1739879382; c=relaxed/simple;
+	bh=Njmh6w0VHxoSuWfvFkvMfNbSLEezZKnKOjqp+SRdGL4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uE8MfR/cVGNW/KJkv0EmE0Op1TBlA5/UUt5mMvU4f9FlEtqXx3MGFNkGEKjwHue8UVDxLuEm/YE4LLEtyMYyYoVUORc9YbiHuhF2Li4j02/DeZPs6QL5+eR1tkoxIIWJgguHQMne7CByPTjSbIr/Yg+WvbYuk/2PCZyChcVTGHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=83.166.143.168
+	 In-Reply-To:To:Cc; b=ZDmih3Uu8Le3nGfC7S5x1QxBUoQXFxfDaro1QUfXSS2TyCCiBpTWUs2xXvjRyql3LDHbyvss25QR6/mhpyEuymgy0GxizpBJctKVM/CnxhXskh8EKYPgfhl/bBUPISSDSjOYcZFHR+10QnWbpDp4K7FlQ546KrrEOG2k/oQWeFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
 Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YxyVg2sRSz6J3;
-	Tue, 18 Feb 2025 12:49:31 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YxyVf6L2mzkNs;
-	Tue, 18 Feb 2025 12:49:30 +0100 (CET)
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YxyVj3NHhz4mn;
+	Tue, 18 Feb 2025 12:49:33 +0100 (CET)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YxyVh6mK1zkLh;
+	Tue, 18 Feb 2025 12:49:32 +0100 (CET)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Tue, 18 Feb 2025 12:49:15 +0100
-Subject: [PATCH 4/9] arm64: dts: rockchip: disable I2C6 on Puma DTSI
+Date: Tue, 18 Feb 2025 12:49:19 +0100
+Subject: [PATCH 8/9] arm64: dts: rockchip: enable I2C3 in Haikou
+ carrierboard, not Ringneck DTSI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,7 +31,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-tsd-align-haikou-v1-4-5c44d1dd8658@cherry.de>
+Message-Id: <20250218-tsd-align-haikou-v1-8-5c44d1dd8658@cherry.de>
 References: <20250218-tsd-align-haikou-v1-0-5c44d1dd8658@cherry.de>
 In-Reply-To: <20250218-tsd-align-haikou-v1-0-5c44d1dd8658@cherry.de>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -43,29 +44,44 @@ X-Infomaniak-Routing: alpha
 
 From: Quentin Schulz <quentin.schulz@cherry.de>
 
-The bus is only exposed on Q7 Camera FFC connector which accepts
-external adapters such as Q7 Camera Demo.
-
-The enabling of I2C6 should therefore be done in the adapter Device Tree
-Overlay and not in the SoM DTSI, so let's disable it by default.
+PX30 Ringneck only exposes I2C3 as LVDS_BLC_CLK/DAT on Q7 golden fingers
+but nothing is on that bus on the SoM itself. Therefore, let's enable
+the I2C3 bus where it makes sense, in the Haikou carrierboard DTS.
 
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts | 2 ++
+ arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi       | 4 ----
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index f398a55408ee2c8259085cf2325da97cdce3e4de..548bd7b486c185c80be87d433f149c3fac65ae8a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -395,7 +395,6 @@ &hdmi {
- 
- &i2c6 {
- 	clock-frequency = <400000>;
--	status = "okay";
+diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
+index e4517f47d519cc08ec9ee705a6f51a740687f6df..16996cc6b8b62fb4f87ab5cff7e86ba751af1794 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
++++ b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
+@@ -154,6 +154,8 @@ sgtl5000: codec@a {
  };
  
- &i2c7 {
+ &i2c3 {
++	status = "okay";
++
+ 	eeprom@50 {
+ 		reg = <0x50>;
+ 		compatible = "atmel,24c01";
+diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi b/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
+index ae050cc6cd050f730fb8fd7e3971a166d234d408..c166a9e3cc1c30bba3ab9b6a5ce3e1f67566ee8c 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
+@@ -325,10 +325,6 @@ rtc_twi: rtc@6f {
+ 	};
+ };
+ 
+-&i2c3 {
+-	status = "okay";
+-};
+-
+ &i2s0_8ch {
+ 	rockchip,trcm-sync-tx-only;
+ 
 
 -- 
 2.48.1
