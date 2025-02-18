@@ -1,72 +1,66 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167A01E5208
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FCA1E51E2;
+	Tue, 18 Feb 2025 19:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739905489; cv=none; b=BWwqB21DVDl309ME47DapwCiYVDK81No3ut+DFg7ctomQ/c4sDxBGTu9Z/j3jBKuuLZvQliyPr6Q8Z+qkuSlKav22cY+5EQxLtLrzSfYsiiHV9tr+Ob2Y3SdrPKOLRzhAQFFy445kTrmq2L0pr1PLhFp2oysKN96Co3a0gZM2qY=
+	t=1739905598; cv=none; b=BEYeKGvTWnnfsQimpEBlAOBd4oSrfhkrnE6evy6g3EdQjvl5P6rq7q9JRVdOn1hNglYCCula6hQd/Zc/ebQOOhN8PQgq6wpxbohtoeHuaf4YqtjRvlFu2Za7cKDq1Dyctgx5aj/OyjFWMZCyoGv7nN2c1Vej4Y9dRDJPvXiImtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739905489; c=relaxed/simple;
-	bh=GNdtyBbz/LV+z6jyn5+URU3RPTpf1mcxjNHdnsoCj3w=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=h2NTlTVvxTzcpsbY5sGkrP3th8QDnPdbwlYdspTpyAYWvam63HUr4y5IGMux+UjYOjadDJ8Uu4jqLYka4vd4+OOiLgjBgeLEdbEFpqJUMdaX/G4M4c1ANcdWd2xNX3+NQPc81eRCWLsMxVvEpSOzMvM++0qLKU6bD3yPYIBkOWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=xnPsxEH+; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="xnPsxEH+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1739905485; x=1740164685;
-	bh=1BW6AC+MBhVxcWnxpRWVhNXG8mF2nKclxbj5Bvymv3U=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=xnPsxEH+abgQSY8oTy1ELt8RaP66FRg2IQDrArZC6vl7b0gKVFcfGSaMHfA+wnA9F
-	 KwbUI7vns/70Y2q7qH1xLvdeSMJ9BLPBtlxLs6fVoqHjuwo7Xu6T41AJ481qeTwHpq
-	 MVL3qNTJm9TdjMNguuahPV6lYAL2HPbj5j/wdweextdHQyzp6C6DnI4M1UoA7AL46+
-	 Ai/QJsConcmcSVAvubGmqXMbga1S18Wh5pjdxvdaXdmNXTmfyN6VwCOjtu37lcc/Ps
-	 a3Q/d+u9hpz1/5wAyheGsdKYypuR/+jhOOkamSuY0LKE99wZvrkNfEdxjFWqSK9o77
-	 Ou2MetmNdtFrA==
-Date: Tue, 18 Feb 2025 19:04:39 +0000
-To: akpm@linux-foundation.org
-From: =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
-Cc: linux-kernel@vger.kernel.org, =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
-Subject: [PATCH] lockref: Remove spaces before tab
-Message-ID: <20250218190400.99284-1-dominik.karol.piatkowski@protonmail.com>
-Feedback-ID: 117888567:user:proton
-X-Pm-Message-ID: 4a1be9c662b9a9418b31697c32ea5f4af7dbf9c0
+	s=arc-20240116; t=1739905598; c=relaxed/simple;
+	bh=qB7LjZjgc6S0n6KRFzoDp+AoaWa0KYgVL3/gchYovO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bgMkLvGI7B3pBPO0erD1QetIkcHYn/6QcNXwFX14Ueg3J0Ul85ohdEcEEL9K7pQwdNjtdn2k2Qc3Vygy97nRlj0p803OGXODJAKjLgy9gv99AkB+7m00pwaJn0RHQYginV1g+t8pPWHq/JH20uFHcWnHBSSlkxsZRsFx2cJk43E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90369C4CEE2;
+	Tue, 18 Feb 2025 19:06:35 +0000 (UTC)
+Date: Tue, 18 Feb 2025 19:06:33 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>, Mark Brown <robh@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Eric Auger <eric.auger@redhat.com>, kvmarm@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH V2 0/7] arm64/boot: Enable EL2 requirements for
+ FEAT_PMUv3p9
+Message-ID: <Z7TaOUcjP0kME5ly@arm.com>
+References: <20250203050828.1049370-1-anshuman.khandual@arm.com>
+ <173990541533.375660.5963781767181928314.b4-ty@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173990541533.375660.5963781767181928314.b4-ty@arm.com>
 
-Remove spaces before tab from one of the CMPXCHG_LOOP lines.
+On Tue, Feb 18, 2025 at 07:03:49PM +0000, Catalin Marinas wrote:
+> On Mon, 03 Feb 2025 10:38:21 +0530, Anshuman Khandual wrote:
+> > This series adds fine grained trap control in EL2 required for FEAT_PMUv3p9
+> > registers like PMICNTR_EL0, PMICFILTR_EL0, and PMUACR_EL1 which are already
+> > being used in the kernel. This is required to prevent their EL1 access trap
+> > into EL2.
+> > 
+> > PMZR_EL0 register trap control i.e HDFGWTR2_EL2.nPMZR_EL0 remains unchanged
+> > for now as it does not get accessed in the kernel, and there is no plan for
+> > its access from user space.
+> > 
+> > [...]
+> 
+> Applied to arm64 (for-next/el2-enable-feat-pmuv3p9), thanks!
+> 
+> [7/7] arm64/boot: Enable EL2 requirements for FEAT_PMUv3p9
+>       https://git.kernel.org/arm64/c/f134bbc054ae
 
-Signed-off-by: Dominik Karol Pi=C4=85tkowski <dominik.karol.piatkowski@prot=
-onmail.com>
----
- lib/lockref.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+"b4 ty" ignored the other patches. I applied the sysreg ones to the
+arm64 for-next/sysreg branch in case they need to get pulled into other
+trees (e.g. KVM). The above patch is on top of the other sysreg patches.
 
-diff --git a/lib/lockref.c b/lib/lockref.c
-index 5d8e3ef3860e..4d0c7eb22e1b 100644
---- a/lib/lockref.c
-+++ b/lib/lockref.c
-@@ -13,7 +13,7 @@
- =09struct lockref old;=09=09=09=09=09=09=09\
- =09BUILD_BUG_ON(sizeof(old) !=3D 8);=09=09=09=09=09=09\
- =09old.lock_count =3D READ_ONCE(lockref->lock_count);=09=09=09\
--=09while (likely(arch_spin_value_unlocked(old.lock.rlock.raw_lock))) {  =
-=09\
-+=09while (likely(arch_spin_value_unlocked(old.lock.rlock.raw_lock))) {=09\
- =09=09struct lockref new =3D old;=09=09=09=09=09\
- =09=09CODE=09=09=09=09=09=09=09=09\
- =09=09if (likely(try_cmpxchg64_relaxed(&lockref->lock_count,=09=09\
---=20
-2.34.1
-
-
+-- 
+Catalin
