@@ -1,35 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB59913D51E;
-	Tue, 18 Feb 2025 10:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AD9234969;
+	Tue, 18 Feb 2025 10:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739875807; cv=none; b=p3At9qfW3WdakmnV8mwGivYNDNKQ05cOdjMVtDzw4PcblsxKv2Gm+vnG9SLKp0ylm3I9cIJBvyZorAvTrMpQXFW+0M0WGokf+PBLvkb7o0BpPiINbcjMNWCM+7WCJQEIUvpxtgpyGbGmS5BiElALkJIVOH8Gt/WKuxKZvWpnA98=
+	t=1739875832; cv=none; b=pbTLAmF0txn+nommnpAmENl81NQVgi/6cwCfoWN/JhwXgIksEjCJWl3Tf4xIVmwZceTl6ID66sc1eAeJC09S7tGbd5RZpVnuJ63LwfkMUv7x914JcmxEsw2+A+cOoPPX58wyd+AhwpU0xz5R++I698e3/JcE+bzoCsLvo9gno6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739875807; c=relaxed/simple;
-	bh=0ta9iRqvOL/XyCbfOk5/m0s+WL02GRT3CgMUuEb8Y2A=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=EpQ3ylAsyzrPJwGpuknQvEDM1y8BOq/4wY62O0fOfjl/gN7xzxOhd+QtTk2hNALi0mN+bDJ9OiiRW8b2ZSpd66r3vLwJ7/1KBFmwaYl6TC37VLCiyri4Elry2MG1TJf86tBC1Zn9J04POOOT4pC6Zan8rBu9JsjmT0FQGJoACVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIxcbpYC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739875832; c=relaxed/simple;
+	bh=lonkTfpE1uQpQfUotzgaBcpisRPmw8aacZS0KCdpj0A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h1u3kZlzUdnwx6o2tmi3/1nB1V4UWh3lgeRNwVqovTOCC+0qlcHWNByPQy9+Bg3iVflWhuKnDCrtddnkkVukDCh8MI4oEVvkr8swbjyLXvylSg0mRGccx9Xs/IX64D8/xSryhNivr3ukPpH9YQnrP1lHbCCNVhfu0ddvE/3D2dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nLuhSvoa; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIxcbpYC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11FDFC4CEE2;
-	Tue, 18 Feb 2025 10:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739875805;
-	bh=0ta9iRqvOL/XyCbfOk5/m0s+WL02GRT3CgMUuEb8Y2A=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fIxcbpYCIDGn3q2a5S2PyQ2TbijgrIPq+T0vunKI52/8Xnl0DRBv1gAWtUGBUhz2A
-	 D/qHkQ/1X6NlGIjkm3/zN1aa3RU9WpcKP9s8Z+uFuwg1RXbrkxOzh0AZ6b/TbdSkqk
-	 nhHErV+inkIK9/lLX5O4LTnMLfLHpna6X5qHGy59QlquCQkCquvDeceJG2QUOqM5js
-	 osgliYXLHRsAqnKI4XvO6pSVfDtwcP3na3CLOpIKwzKrpjqiQDQ4BT47b8c+LLS38J
-	 x7kf5QoyFVSerSJBh30TQfO1rY13FjsajbGdT5jnpmbnCquHOO7p5ri3Uam7sx31bP
-	 SN0b7i3GqS9+A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 714B8380AA7E;
-	Tue, 18 Feb 2025 10:50:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nLuhSvoa"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51IAoOJb695914
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 04:50:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739875824;
+	bh=LgtPkOuGwto4QmwQu9EsTlAOQD0tMlHHoIxO+LBkwwA=;
+	h=From:To:CC:Subject:Date;
+	b=nLuhSvoawCSpM7my3AxNUAbNB0swHgaD2YN5jG9JSosYyPBj9dQCB3eMtgD8kdN3+
+	 5LTtZcPTNgac4ZJ8mKTRxzlSvmyz6mAcYJq0yLwVS2jXLGTtfMtCbiu5MOLFRx+AW4
+	 j/qRvSJD1S4LTm+TcAyi+fVv2y+FN/Ba3H0TLA+I=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51IAoO0B031586
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 18 Feb 2025 04:50:24 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
+ Feb 2025 04:50:24 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 18 Feb 2025 04:50:24 -0600
+Received: from pratham-Workstation-PC (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51IAoNTk094644;
+	Tue, 18 Feb 2025 04:50:24 -0600
+From: T Pratham <t-pratham@ti.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller"
+	<davem@davemloft.net>
+CC: T Pratham <t-pratham@ti.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Kamlesh Gurudasani <kamlesh@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>
+Subject: [PATCH RFC 0/2] Add support for hashing algorithms in TI DTHE V2
+Date: Tue, 18 Feb 2025 16:19:41 +0530
+Message-ID: <20250218104943.2304730-1-t-pratham@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,54 +61,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next PATCH v6 0/6] Add af_xdp support for cn10k
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173987583526.4038826.3171177356659390982.git-patchwork-notify@kernel.org>
-Date: Tue, 18 Feb 2025 10:50:35 +0000
-References: <20250213053141.2833254-1-sumang@marvell.com>
-In-Reply-To: <20250213053141.2833254-1-sumang@marvell.com>
-To: Suman Ghosh <sumang@marvell.com>
-Cc: horms@kernel.org, sgoutham@marvell.com, gakula@marvell.com,
- sbhatta@marvell.com, hkelam@marvell.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, lcherian@marvell.com,
- jerinj@marvell.com, john.fastabend@gmail.com, bbhushan2@marvell.com,
- hawk@kernel.org, andrew+netdev@lunn.ch, ast@kernel.org, daniel@iogearbox.net,
- bpf@vger.kernel.org, larysa.zaremba@intel.com
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello:
+This adds supoprt for the hashing algorithms SHA224/256/384/512 and MD5
+for the hashing engine of Texas Instruments DTHE V2 crypto accelerator
+driver.
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+This patch series depends on the following previous series:
+[1] [PATCH RFC 0/3] Add support for Texas Instruments DTHE V2 crypto accelerator
+https://lore.kernel.org/all/20250206-dthe-v2-aes-v1-0-1e86cf683928@ti.com/
 
-On Thu, 13 Feb 2025 11:01:35 +0530 you wrote:
-> This patchset includes changes to support AF_XDP for cn10k chipsets. Both
-> non-zero copy and zero copy will be supported after these changes. Also,
-> the RSS will be reconfigured once a particular receive queue is
-> added/removed to/from AF_XDP support.
-> 
-> Patch #1: octeontx2-pf: use xdp_return_frame() to free xdp buffers
-> 
-> [...]
+As with the previous series [1], the hardware spec is still to be
+updated in the public TRM. It will be shared in a later series when it
+is made available.
 
-Here is the summary with links:
-  - [net-next,v6,1/6] octeontx2-pf: use xdp_return_frame() to free xdp buffers
-    https://git.kernel.org/netdev/net-next/c/94c80f748873
-  - [net-next,v6,2/6] octeontx2-pf: Add AF_XDP non-zero copy support
-    https://git.kernel.org/netdev/net-next/c/b4164de5041b
-  - [net-next,v6,3/6] octeontx2-pf: AF_XDP zero copy receive support
-    https://git.kernel.org/netdev/net-next/c/efabce290151
-  - [net-next,v6,4/6] octeontx2-pf: Reconfigure RSS table after enabling AF_XDP zerocopy on rx queue
-    https://git.kernel.org/netdev/net-next/c/25b07c1a8694
-  - [net-next,v6,5/6] octeontx2-pf: Prepare for AF_XDP
-    https://git.kernel.org/netdev/net-next/c/c5c2398eb88b
-  - [net-next,v6,6/6] octeontx2-pf: AF_XDP zero copy transmit support
-    https://git.kernel.org/netdev/net-next/c/53616af09b5a
+Signed-off-by: T Pratham <t-pratham@ti.com>
+---
+T Pratham (2):
+  crypto: ti: Add support for SHA224/256/384/512 in DTHE V2 driver
+  crypto: ti: Add support for MD5 in DTHE V2 Hashing Engine driver
 
-You are awesome, thank you!
+ drivers/crypto/ti/Kconfig  |   3 +
+ drivers/crypto/ti/dthev2.c | 920 ++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 912 insertions(+), 11 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
