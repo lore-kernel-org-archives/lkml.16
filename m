@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E561A26B2A8;
-	Tue, 18 Feb 2025 13:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D4A269CE2;
+	Tue, 18 Feb 2025 13:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885293; cv=none; b=YBqYvyagKRV5SiKlelVHorjkV6HROiajPzeJmhwPxd96zsxnpRP53ZKaerZkdafTFNpnFP2nPlQD6Ga00bef01Mx8Pks2JdtUOFjkGOIQ05ZhH89Zk0IQ168so8hhfpVIOyPQ/BfukxgS9dA5mEuv/BqN+dtZn5MYqZpdY7IBh0=
+	t=1739885298; cv=none; b=TNflHzADui5W6V5pO6Qqcg1BZ7Lo5kZdNXrZQxTi6DRE5f+D+cr1mwDKhGpRIc6HwnIFunMpTR+lKX2HYRzgMwWibvGvQ4ZfKbvQktcRlE6yIjLaB+gYB2AABkVXBUBn2beIL7EKrTSrkSwOMaAWQ6H78Eoc9yCq4VO0n4tPOQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885293; c=relaxed/simple;
-	bh=3m8fQyyEUwu/wXRv42ZRgQGKOJiZ2h/DVDw/+PrbPak=;
+	s=arc-20240116; t=1739885298; c=relaxed/simple;
+	bh=ROEeOJKEp/vl6zYT9awrPNL+gZGZt1QW/GbDdFhlY5g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pTxy25DdGyQ3SCphdhgNBhS1sbSF4fF9QxJ/D54H0VWUGx5SthTcR0EbCgsC6D2K9L43F0ZUERMoeaFmLBKH/V6t6KyhEo6EerdRmdvq0M9ydpKMnfQdOLP7UtVyjTCBVavhHsZwfhRNxs0f4hz7VmGLWSZXTy3UjcPK1AIVXYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oojFB0Up; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=MLeqg4etG6thvAR3f6DcknjZ5QzLQ5MMR40IP9CR/dI/TdCE7nwizPaGp3Kd9P2Nw5v4RP+HzqfKeNe2bhu6v5IYpEy3DtJ+fj82TMwFIAAXpNepI/B+owy707Y5kc1IRm3AnROvC7cgnsaFJIkL85BC/ov5Fy+HGfDtdPoCmfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TCuZ/Yyo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oojFB0Up"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A26E2C4CEE9;
-	Tue, 18 Feb 2025 13:28:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TCuZ/Yyo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74997C4CEE2;
+	Tue, 18 Feb 2025 13:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739885292;
-	bh=3m8fQyyEUwu/wXRv42ZRgQGKOJiZ2h/DVDw/+PrbPak=;
+	s=k20201202; t=1739885297;
+	bh=ROEeOJKEp/vl6zYT9awrPNL+gZGZt1QW/GbDdFhlY5g=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=oojFB0Up4YkV669kWHdw7XaNbThpcKkyKlJyjcKvq3DJzGWz6w1sI2k25Nd39ovaf
-	 NLTm2x7jMNWgBw5gW6lDCyxdvBHIFP/dB95AicR5XCmFiiux8JrJiZR68wmC0oFhtw
-	 h4Q+9+09TIJvDSXcNUDtHKMdgtsmI1xZoYb3lnQKYkiokfdwc0wWdwkt1DK+E0deVF
-	 mc2apgBOgsIdwRVJG1nAnr2lNDJMC541Z5KiGyGKfoJDOY/nYbN+jJKhxvvR3tQ6Mp
-	 ui/cIWfHJB9F+q58M+Qigf/AeohH1Yp9AZOo+54tG6/1qDlqb5hEgXq2QMquktcLaO
-	 1w2sn5fTXHq2A==
+	b=TCuZ/Yyo4F1StrSNGFI6vYgUjFSiZ6G5J2/jvPN0Y1oAkaiEuWLM8eVJdtZJGfynr
+	 2bro+jcsi7dc+QAqqeLr9FigdB38DM459TIS0q+blW9kuMOgrLyi/QbGqsNAl/xNqx
+	 AdTDnR81aJ+LRi2ByV9UZjoMJZvsxUvPxQkks5RwBBQ90rOPbiKmvtCUjphci0ntXS
+	 isFMYn6YdKnhVOFYMgAh3W+8KLFc9DSMLoQGS+Foq4POPWpTI1dcfxy40+aPQC6JPb
+	 ZVT5O25Q0H5+m6UhRLweJqMyj7JLzi0SvAoAzXUxP0JUAU/y2fsSdNW+ZNWK3c4pYW
+	 cJjug/phqEblw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 18 Feb 2025 14:27:10 +0100
-Subject: [PATCH v8 05/14] rust: hrtimer: allow timer restart from timer
- handler
+Date: Tue, 18 Feb 2025 14:27:19 +0100
+Subject: [PATCH v8 14/14] rust: hrtimer: add maintainer entry
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-hrtimer-v3-v6-12-rc2-v8-5-48dedb015eb3@kernel.org>
+Message-Id: <20250218-hrtimer-v3-v6-12-rc2-v8-14-48dedb015eb3@kernel.org>
 References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
 In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>, 
@@ -55,94 +54,53 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
  Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2433; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=3m8fQyyEUwu/wXRv42ZRgQGKOJiZ2h/DVDw/+PrbPak=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIqz2gUH5s8VTdU5zwWYcKc8wrTt/Am6FW7RL
- b6BHWOfanaJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SKswAKCRDhuBo+eShj
- d6lFD/9kF0CQioS0AzCQ9jYv5jIoGEJvPRrKkhsRm1QwQG/uSoszsFnhiCdya1B1XY15vO00wjA
- zuv67CLDNLj4eWPrWwbV4ViQAKrARkvFgSeUNsFP39NXs+44fcVlEjBnYF9XFvZOqDXygdjs0A/
- iEzxqMWJQJXPACbgWIc1tGFtz41UPdw4p+yII6EVM05IobbNEipKyW69dqf0j2fAuSZmCvasL9o
- TLNmASsydn64aOnS5bJV2jCwTgmn4udV064wojl3Yk/x2hQRXpj6ZmZGCuE2DT6gs2SyKH4Sbvm
- W7UMwJvIQJSRa3TKJcWxr+odpUOL5oFkDPCBx8TsCNNrojk/WGTpNV/6U9hXWpjHPOdYD6QaYYH
- 2p4wq1H9AkN3r+/ItqxCPbvqwE8/6iMkW9z1A8muWsZmly/kVYV6S25uvnDqZkCaAqd1GnDTAK6
- ukUJCJuPuCNSb8NGlLX0V1HTtRqyke+3GtEvSueyy7XsChep/JwLXTmLEyDdIObYFhPqqQsnU18
- T4Ll6dSvPKQwJt2+K2Rd51bvpYSJGTXRcUmFXjIqrNlpY/1lXD0+Z8F46stRAheZ69v/47Nvjsq
- c2IIx+Zr6Fj1lReB4QQKQyagO6auqmLr+/CdK1lFDnyneRfEeMwNWEr/PDJkM+bPPJbpcuwItZg
- KX8LgXebRjkpd6Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=941; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=ROEeOJKEp/vl6zYT9awrPNL+gZGZt1QW/GbDdFhlY5g=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIq8VlMF5pCTBVJzMb9uAqKb9vLeY9xbRZk2y
+ RAZM1TR1b+JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SKvAAKCRDhuBo+eShj
+ d+OOEACswkOIH7Rxy/sQgKUNHkHQilMWXxyBxWIyu8Uxz9oEY3O49b/NZnojP3xsUMgBrpNeQUg
+ TtKk2bxfLepdZ08/HJhPPQV3BVXm9ITWHblU855Z/5C5mS3k7p+2XZGx3N7lJ4OM5JI/wbpMG8i
+ Im6oYotBYKmU0ZgpScNF2Iq4cvqGQv8vbmDVFiVL0luwI/bIcf2YaK+iwwiUYcL7YVCdoxRYNI7
+ mpQfe5ZedKEm1oOotUto/gEQP76T/CNxJTkBwVV1dJInnkhVJ5nlMVarWIirwj4oriv8lMk0Oaz
+ X00hbleDGdyCyG6sX+nnnSJF7PlzY8lwb653toSE0QB5V5ArXoHGZrNDUCrAqBfOwSeOiLRjeBs
+ aymbE55AxVGDD29bqq8J0Cus5Sgje54BaEWNyAU0TzVsQROkEyVPqAUfEp6iBui7ghmbe9KqHIO
+ VuJgIUTPt7/ivVAM5i/1xs/cTg65ZPPg49ExJcxwwDEqa41NeP5JwTiA3wYKGATG4g1fU7iTlly
+ 3+9zQI8eYzMBCA/BLnj/4wNvz/OlrZZ4Xt06EC2TrBEJXx43fGmEA5qg1FfbrXEzohdbVJ+W/s+
+ sP2me97AkMFN7ay93mOiwfHuqJkRPfHyIHK/2amiEWAw/HSPi2Ax6QUDy1Z5G1qbeY5pJFljUQU
+ ZBfoNtjr/Y62rPQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-This patch allows timer handlers to report that they want a timer to be
-restarted after the timer handler has finished executing.
-
-Also update the `hrtimer` documentation to showcase the new feature.
+Add Andreas Hindborg as maintainer for Rust `hrtimer` abstractions. Also
+add Boqun Feng as reviewer.
 
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- rust/kernel/time/hrtimer.rs     | 28 +++++++++++++++++++++++++++-
- rust/kernel/time/hrtimer/arc.rs |  4 +---
- 2 files changed, 28 insertions(+), 4 deletions(-)
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index b2a3130bc21d7..e342193f985eb 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -183,7 +183,7 @@ pub trait HrTimerCallback {
-     type CallbackTargetParameter<'a>;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa0654..60fa77c41b3fb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10355,6 +10355,16 @@ F:	kernel/time/timer_list.c
+ F:	kernel/time/timer_migration.*
+ F:	tools/testing/selftests/timers/
  
-     /// Called by the timer logic when the timer fires.
--    fn run(this: Self::CallbackTargetParameter<'_>)
-+    fn run(this: Self::CallbackTargetParameter<'_>) -> HrTimerRestart
-     where
-         Self: Sized;
- }
-@@ -278,6 +278,32 @@ unsafe fn start(self_ptr: *const Self, expires: Ktime) {
-     }
- }
- 
-+/// Restart policy for timers.
-+pub enum HrTimerRestart {
-+    /// Timer should not be restarted.
-+    NoRestart,
-+    /// Timer should be restarted.
-+    Restart,
-+}
++HIGH-RESOLUTION TIMERS [RUST]
++M:	Andreas Hindborg <a.hindborg@kernel.org>
++R:	Boqun Feng <boqun.feng@gmail.com>
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++W:	https://rust-for-linux.com
++B:	https://github.com/Rust-for-Linux/linux/issues
++F:	rust/kernel/time/hrtimer.rs
++F:	rust/kernel/time/hrtimer/
 +
-+impl From<bindings::hrtimer_restart> for HrTimerRestart {
-+    fn from(value: u32) -> Self {
-+        match value {
-+            bindings::hrtimer_restart_HRTIMER_NORESTART => Self::NoRestart,
-+            _ => Self::Restart,
-+        }
-+    }
-+}
-+
-+impl From<HrTimerRestart> for bindings::hrtimer_restart {
-+    fn from(value: HrTimerRestart) -> Self {
-+        match value {
-+            HrTimerRestart::NoRestart => bindings::hrtimer_restart_HRTIMER_NORESTART,
-+            HrTimerRestart::Restart => bindings::hrtimer_restart_HRTIMER_RESTART,
-+        }
-+    }
-+}
-+
- /// Use to implement the [`HasHrTimer<T>`] trait.
- ///
- /// See [`module`] documentation for an example.
-diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
-index d1c90631d0036..109eded0e73be 100644
---- a/rust/kernel/time/hrtimer/arc.rs
-+++ b/rust/kernel/time/hrtimer/arc.rs
-@@ -82,8 +82,6 @@ impl<T> RawHrTimerCallback for Arc<T>
-         // timer. This `T` is contained in an `Arc`.
-         let receiver = unsafe { ArcBorrow::from_raw(data_ptr) };
- 
--        T::run(receiver);
--
--        bindings::hrtimer_restart_HRTIMER_NORESTART
-+        T::run(receiver).into()
-     }
- }
+ HIGH-SPEED SCC DRIVER FOR AX.25
+ L:	linux-hams@vger.kernel.org
+ S:	Orphan
 
 -- 
 2.47.0
