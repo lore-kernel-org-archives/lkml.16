@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976FB265CB7;
-	Tue, 18 Feb 2025 10:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CC4266F01;
+	Tue, 18 Feb 2025 10:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874408; cv=none; b=QRsZ1+plAYsGrMi3pMD3j0QCebgMSj0urUSPDxPQBUrsymSX3L8FLrMOCluUboUvDTF2RxFEd/K7hI45dNQTVLtZ56wq6hz/9UP+zqN9PUWERvp3rdC4Ge4jeSpQmvbJcbcReo5xNUAMSPabMfb1qTrUAGSFN+d0CPY9FdUnmFs=
+	t=1739874408; cv=none; b=Y24Q4b+bM+1HjDxvsU3R+pltPMz+ZkI61lkNWoOhxb6SB7B8cYoFLESuWjIgTGFIH5M08vjISBfS+XZ+fbnspJ24Y/meWWG4mdgKPwLTqcEqKN0XsGl/cS9Kl3ydF+C1fCv3P+6HFQLwufKhmUCZ+dmWTNAijQK4vPlRWiFha9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739874408; c=relaxed/simple;
-	bh=cu6JxsEI6EBhcEx+BGNCsXBrsW3oWINSfBxQZgaO0hc=;
+	bh=YWrD2yW4NudFttmFaZsICgFjG2kpcyTl48y+8PVA+AE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=sarV37Z2EGyrhchI1SnP50O/A33rzisNL/InUlly4KscZv9WUBwTyexenKKRojvdnwHzCh+aWIw3U3xnMEIW14bbnYAri4y4q+d80MQSGjhizes8PvBl0vqERKFzLih7e7xh9Gm/NLtoazSLhuqt9a8Lvlv/NNwK7axD9xivQ4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rBAjCmnj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nja8l0EO; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=jL/xz9R+JC6ISbwsFn285Uh1DfzJtDXARrgheN31Up4Cg5xxxavqfxoDREt6AO18X9D19rw8H9FuZ0clpFNOn6J0Qt+MUXRFWFe+XTcFT/RE6EQsdJylWooA6WgZ2IyrcND8HzmrOoNs+iNRZBUhkke6sY2bHfWBoQLQhzV/fqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zbr8HeNg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qamVwC2/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rBAjCmnj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nja8l0EO"
-Date: Tue, 18 Feb 2025 10:26:44 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zbr8HeNg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qamVwC2/"
+Date: Tue, 18 Feb 2025 10:26:45 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739874405;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ai3fcYtiESrN6GpSrrZkya0K5nuKKEMZeejiXvgzDOY=;
-	b=rBAjCmnj2Vyi8/a/1xyDfqSv29xTBewscScmF2r+8mjbg2KVjLOcZNJzfBNqFYT232kIh/
-	oGqK+tfmaRs6S+Ok8W2yR2tAkSiH1jx0g5/Tfm/aB5pdeKCJQphYaku5cUPNj+V0xQWZZJ
-	5GpzKVzMBm2JwCtzTudMW32p4IDeYYzzp7nedryrYnaB2wRt+jTVEncEu19m6ZOJmCjMPC
-	JDV8BljtBtbOI7hvfkjGWMSrYUGOykupV41n0w5njZY4hl93G6n2j5FXQSgeFPPXgv0odF
-	HfPNww7WaE9au1zjYRynVUjlXSWMtzBPtHc7D/dt9ztwwWHe+s/vaNhslBv79g==
+	bh=E0nXoCysE3gn28vavsBAgJDHpHzIM9f71ZWXMZfkw0Q=;
+	b=Zbr8HeNgencx3gfhvoD1/V2LmNXohufDxHTuQROx9B5y7kOx7mv3StlG4WvtPfXqzzDee4
+	Ir3YjQpnRfppyLMUKAuzfvR+hFqwi2ciHmRqqJ2ez46Fg2HM7lPSMAkLZc1MX4HFrowvPS
+	90vYZUIejqZ7N5JOGpmeXfyZEMAU+fivcPj6dvorkwOkx3JNW41CE35Ddo2ebiLfBn2KVd
+	TUOjPzBARdgkdq4OXK+lEakc/+as+s0DmbWIMgm7bg+1nBmBc5DzpzkeUrZLwUJYBKaoKp
+	XYIZcZV8HBfhItlJyCixRwgzfEdLKVgwO3bZZazf/I2i8V7wUa5vUCMKCYhxlA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739874405;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,21 +38,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ai3fcYtiESrN6GpSrrZkya0K5nuKKEMZeejiXvgzDOY=;
-	b=Nja8l0EOfydluSf/cH05YQhyki7YZyQMmeOOOYMOD1p46EvcPDnXvGWIzD+G5/rT/9F8zD
-	CX+oY82xOPIF9/Bw==
+	bh=E0nXoCysE3gn28vavsBAgJDHpHzIM9f71ZWXMZfkw0Q=;
+	b=qamVwC2/zO3EApikrHitH4DoAHugE8TRzWtdHLVhtWuUnmCUSw6HwN6bjh4Tot3sdfl2hL
+	UPrQPaMdb0K/QoDg==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/cleanups] usb: musb: cppi41: Switch to use hrtimer_setup()
+Subject: [tip: timers/cleanups] usb: ehci: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
  Zack Rusin <zack.rusin@broadcom.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C80d59a56c76c76ace982417e4dc8ddd37a5441d7=2E17387?=
+In-Reply-To: =?utf-8?q?=3Cd703731ba61d1901c97758a60ccc3c209d21de0e=2E17387?=
  =?utf-8?q?46904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C80d59a56c76c76ace982417e4dc8ddd37a5441d7=2E173874?=
+References: =?utf-8?q?=3Cd703731ba61d1901c97758a60ccc3c209d21de0e=2E173874?=
  =?utf-8?q?6904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,7 +59,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987440469.10177.14006280430079596452.tip-bot2@tip-bot2>
+Message-ID: <173987440533.10177.4149448053395346010.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     8073d9dfe2ef1a8b1959cc3ae7ef1db6239e53e5
-Gitweb:        https://git.kernel.org/tip/8073d9dfe2ef1a8b1959cc3ae7ef1db6239e53e5
+Commit-ID:     da4f28741b905ad1aded9e699b5db6223245d3c4
+Gitweb:        https://git.kernel.org/tip/da4f28741b905ad1aded9e699b5db6223245d3c4
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:45:54 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:45:53 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 11:19:02 +01:00
 
-usb: musb: cppi41: Switch to use hrtimer_setup()
+usb: ehci: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -90,24 +89,23 @@ Patch was created by using Coccinelle.
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://lore.kernel.org/all/80d59a56c76c76ace982417e4dc8ddd37a5441d7.1738746904.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/d703731ba61d1901c97758a60ccc3c209d21de0e.1738746904.git.namcao@linutronix.de
 
 ---
- drivers/usb/musb/musb_cppi41.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/host/ehci-hcd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/musb/musb_cppi41.c b/drivers/usb/musb/musb_cppi41.c
-index 9589243..4cde3ab 100644
---- a/drivers/usb/musb/musb_cppi41.c
-+++ b/drivers/usb/musb/musb_cppi41.c
-@@ -760,8 +760,8 @@ cppi41_dma_controller_create(struct musb *musb, void __iomem *base)
- 	if (!controller)
- 		goto kzalloc_fail;
+diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+index 6de79ac..6d1d190 100644
+--- a/drivers/usb/host/ehci-hcd.c
++++ b/drivers/usb/host/ehci-hcd.c
+@@ -466,8 +466,7 @@ static int ehci_init(struct usb_hcd *hcd)
+ 	 */
+ 	ehci->need_io_watchdog = 1;
  
--	hrtimer_init(&controller->early_tx, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	controller->early_tx.function = cppi41_recheck_tx_req;
-+	hrtimer_setup(&controller->early_tx, cppi41_recheck_tx_req, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL);
- 	INIT_LIST_HEAD(&controller->early_tx_list);
+-	hrtimer_init(&ehci->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+-	ehci->hrtimer.function = ehci_hrtimer_func;
++	hrtimer_setup(&ehci->hrtimer, ehci_hrtimer_func, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+ 	ehci->next_hrtimer_event = EHCI_HRTIMER_NO_EVENT;
  
- 	controller->controller.channel_alloc = cppi41_dma_channel_allocate;
+ 	hcc_params = ehci_readl(ehci, &ehci->caps->hcc_params);
