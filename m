@@ -1,15 +1,16 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ED91B87F2;
-	Tue, 18 Feb 2025 07:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8082C1CEAD3;
+	Tue, 18 Feb 2025 07:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739864565; cv=none; b=Y0bsS0JzFawAEm3E3h2i46z0kqa44yo2Yp/14eShbqY2pkx4XGvxC5XbCH3arc3+aKk2DHzkEc68L24pJJOvVMoVLFtHkmTN6nMKxyGBGtg/4hYh027tFi4lUPB8HCjg7GXktinGLyXN8nTeGwQI2zCLf18OylvfHB/j9cx7jE0=
+	t=1739864569; cv=none; b=QerN3YW1+G0rpjdJQNMcG/XIy5muFeEQigFSSvK9k0hx/WAOQj5WbuxNUWsQvZlFnSv/3FUqLi80YNpB5XwvOm/JaCF5hDQKzwfZchBPftGpYub1bXVwS9AyT4I+/qAo76oXtB1DYv6A5S3zpwLbnTYDxx31ahsUZwZX0pvA424=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739864565; c=relaxed/simple;
-	bh=Sv7OpvWVnoTbdrLqgyozPjPevDJINMfc5S0difeF9MY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sb4X5Jxf0ldQZwZnHd5l0HB7JOsZI4i6H1OwCIFC7M4+Dwn7JZ0C16CGldrJBMiRFZ0jONUhT5eHnPdvHNmoKsKhQgraXfbiewDG/FlgI7M/NMaD3mrnJdLHVJo7uur/MexFEF8B6bPveLXDpNZ3jPZGZ7Q31XPhbmgheeTBa78=
+	s=arc-20240116; t=1739864569; c=relaxed/simple;
+	bh=0DXTL1IPm6qXY4ykIm4VAQ4Aa8K1rUuptSLtaYfs968=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pEGzVLyEPmZ9UOac3xLYHvLF2heBFBRsrcfVYS4YU3gcWvmZJcdGFxsV6cUBXddRTl4tnBcbN9EHPl4VPi3i7hG3nTmusH84arKxxlpDtZ7B0kU7gU/2cYhwtRPHdZY/q2V46lry2O1hOzTDDzcCQrCcQh1nAVf+NBnhlSsvNMY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
@@ -17,8 +18,8 @@ Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:52604 helo=and-HP-Z
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <andrej.picej@norik.com>)
-	id 1tkIFc-00G0MD-30;
-	Tue, 18 Feb 2025 08:42:40 +0100
+	id 1tkIFi-00G0MD-1a;
+	Tue, 18 Feb 2025 08:42:46 +0100
 From: Andrej Picej <andrej.picej@norik.com>
 To: shawnguo@kernel.org,
 	s.hauer@pengutronix.de,
@@ -32,10 +33,12 @@ Cc: imx@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v3 00/15] Update PHYTEC's i.MX8MM DTSs
-Date: Tue, 18 Feb 2025 08:41:41 +0100
-Message-Id: <20250218074156.807214-1-andrej.picej@norik.com>
+Subject: [PATCH v3 05/15] arm64: dts: imx8mm-phycore-som: add descriptions to nodes
+Date: Tue, 18 Feb 2025 08:41:46 +0100
+Message-Id: <20250218074156.807214-6-andrej.picej@norik.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250218074156.807214-1-andrej.picej@norik.com>
+References: <20250218074156.807214-1-andrej.picej@norik.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,75 +57,49 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-Hi all,
+From: Yannic Moog <y.moog@phytec.de>
 
-these patches aim to get PHYTEC downstream kernel device-tree changes
-into the mainline for the phyCORE-i.MX8MM SoM and boards (phyBOARD-Polis
-and phyGATE-Tauri-L).
+Add missing EEPROM and RTC descriptions. Also use eMMC with
+lower-case "e".
 
-Changes mainly fix suspending/resuming with different wakeup-sources and
-add missing regulators. Last 4 patches add additional overlays. Some are
-meant to be used with PHYTEC's "option tree" to add/disable optional SoM
-components (idea behind it is outlined in [1]).
+Signed-off-by: Yannic Moog <y.moog@phytec.de>
+Signed-off-by: Andrej Picej <andrej.picej@norik.com>
+---
+Changes in v3:
+- no change
+---
+ arch/arm64/boot/dts/freescale/imx8mm-phycore-som.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/all/4e7dd467-20be-43ce-936d-200ede6d511b@phytec.de/
-
-v1 at: https://lore.kernel.org/all/20241125081814.397352-1-andrej.picej@norik.com/
-v2 at: https://lore.kernel.org/all/20241202072052.2195283-1-andrej.picej@norik.com/
-
-Change log in corresponding patches (the only notable v3 change is in
-- [PATCH 13/15] arm64: dts: imx8mm-phycore-som: Add overlay for rproc 
-where we fixed DTS check warning. Other changes just updated overlays copyright
-year to 2025.
-
-Best regards,
-Andrej
-
-Andrej Picej (3):
-  arm64: dts: imx8mm-phycore-som: Fix bluetooth wakeup source
-  arm64: dts: imx8mm-phyboard-polis: Set RTC as wakeup-source
-  arm64: dts: imx8mm-phygate-tauri-l: Set RTC as wakeup-source
-
-Dominik Haller (1):
-  arm64: dts: imx8mm-phycore-som: Add overlay for rproc
-
-Janine Hagemann (1):
-  arm64: dts: imx8mm-phyboard-polis: Add overlay for PEB-EVAL-01
-
-Teresa Remmet (5):
-  arm64: dts: imx8mm-phycore-som: Keep LDO3 on in suspend
-  arm64: dts: imx8mm-phycore-som: Remove magic-packet property
-  arm64: dts: imx8mm-phyboard-polis: Add support for PEB-AV-10
-  arm64: dts: imx8mm-phycore-som: Add no-eth phy overlay
-  arm64: dts: imx8mm-phycore-som: Add overlay to disable SPI NOR flash
-
-Yannic Moog (3):
-  arm64: dts: imx8mm-phycore-som: add descriptions to nodes
-  arm64: dts: imx8mm-phyboard-polis: add RTC description
-  arm64: dts: imx8mm: move bulk of rtc properties to carrierboards
-
-Yashwanth Varakala (2):
-  arm64: dts: imx8mm-phycore-som: Assign regulator for dsi to lvds
-    bridge
-  arm64: dts: imx8mm-phyboard-polis: Assign missing regulator for
-    bluetooth
-
- arch/arm64/boot/dts/freescale/Makefile        |  13 +
- .../imx8mm-phyboard-polis-peb-av-10.dtso      | 237 ++++++++++++++++++
- .../imx8mm-phyboard-polis-peb-eval-01.dtso    |  72 ++++++
- .../freescale/imx8mm-phyboard-polis-rdk.dts   |  17 +-
- .../dts/freescale/imx8mm-phycore-no-eth.dtso  |  12 +
- .../freescale/imx8mm-phycore-no-spiflash.dtso |  16 ++
- .../dts/freescale/imx8mm-phycore-rpmsg.dtso   |  58 +++++
- .../dts/freescale/imx8mm-phycore-som.dtsi     |  22 +-
- .../dts/freescale/imx8mm-phygate-tauri-l.dts  |  11 +
- 9 files changed, 442 insertions(+), 16 deletions(-)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-phyboard-polis-peb-av-10.dtso
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-phyboard-polis-peb-eval-01.dtso
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-phycore-no-eth.dtso
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-phycore-no-spiflash.dtso
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-phycore-rpmsg.dtso
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-phycore-som.dtsi
+index 7e859c65317a..cced82226c6d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-phycore-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-phycore-som.dtsi
+@@ -290,6 +290,7 @@ sn65dsi83: bridge@2d {
+ 		status = "disabled";
+ 	};
+ 
++	/* EEPROM */
+ 	eeprom@51 {
+ 		compatible = "atmel,24c32";
+ 		pagesize = <32>;
+@@ -297,6 +298,7 @@ eeprom@51 {
+ 		vcc-supply = <&reg_vdd_3v3_s>;
+ 	};
+ 
++	/* RTC */
+ 	rv3028: rtc@52 {
+ 		compatible = "microcrystal,rv3028";
+ 		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+@@ -307,7 +309,7 @@ rv3028: rtc@52 {
+ 	};
+ };
+ 
+-/* EMMC */
++/* eMMC */
+ &usdhc3 {
+ 	assigned-clocks = <&clk IMX8MM_CLK_USDHC3_ROOT>;
+ 	assigned-clock-rates = <400000000>;
 -- 
 2.34.1
 
