@@ -1,47 +1,46 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B260A155753;
-	Tue, 18 Feb 2025 03:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E406518E1F;
+	Tue, 18 Feb 2025 03:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739848676; cv=none; b=TplOHRXiOlabiJOmo8F4m+i5kBXW7q7HbX5F1rNztYLJxt5h7Xcu5S+yuMckXMdJW18bJK73dooOrHsdutLi2HoAOvU4ozXhNn7d7u00ZWiwOVoHQmOIFqkgZ3fw6US9OOYt2bqHXr6WsDzIHDGrmrLkTmuDFfX1UjszrzBJHcQ=
+	t=1739849051; cv=none; b=gQx1WoyVW0VgUf58NrTDz0ZfPJ4g/jF/MuqLsA1inKodOtzyVp2fjZPZZYj0P8hvxN6QrP3WJzCfydCal59IStfh3ExyvzdzLwYl6ZEO865+YsCW/dru3nNeYKqgBpsIRtXiZuRy3D45ImHqxoLDMtPluKB49na7VH9RExs/CoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739848676; c=relaxed/simple;
-	bh=i0mcyA/psOENHr4FwscNmeu4Dzf11VVAzwN3AbAihK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YOO/gIaaQBaQ5NnetElFNeS0ODVnoyyDGaEDG2GvCn9rhzMZikGilZ3v0qFpiGrhFDmJ3D6Kh/lyWXrQTQ8VghHA2CMktwwK66xj4iJxCzUlhEFh0IWR9E12qtJFZTSbPymDG+iyU8s/pT4ucPuC+B9ylbejvPzx7Cpv09L1NJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mPNYOxDI; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1739849051; c=relaxed/simple;
+	bh=YJwQ56MevDZ9ZYQuremXiyKEvKkBRGC/R9BJu26M0XA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ESAyEPAnZDTusW7Nei/a7auGgDguZfF3SNSw7+E5rsnvGwjrtQTSKCN4uDxfXir0MLKcsQ2uPmUs+9zwCsoLcqxgPuy2xQdwmoH1lXSJMd4rD9dwM8MjxMBMIeTs+cyCKeX8RRmnpybl45Xnz2EdQ9ZEI0INN9tyLu7Qs1//rgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=IKbx/RJI; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mPNYOxDI"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739848670; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=qcI8nIfaXpTXXB2w65+9gPwAA9jaOdswF4r0vXF6+pw=;
-	b=mPNYOxDIJrukUsRl/ewnCfuJ85DAp9aUL9HhYMZLOpEPvmX4Pnwl8efBZTaWTLYV/zdKxwCJk3VKJ1a4wEKWJKJhnTie/gu/qrqJlYmqSpW/uSTrJ6wxcQcJAT1Jgi1VziI4Xjlxo6s7prxvuNpoTDH70CZph23MP+NdoJrf9Gk=
-Received: from 03382176d5c3.tbsite.net(mailfrom:guoheyi@linux.alibaba.com fp:SMTPD_---0WPk8Nyz_1739848648 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 18 Feb 2025 11:17:49 +0800
-From: Heyi Guo <guoheyi@linux.alibaba.com>
-To: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IKbx/RJI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=KZodN
+	t1cshXHiodAWx+wxQbRKgFIgZ9m7uvCtiXcJJE=; b=IKbx/RJIr1lOZEmhCFPJ+
+	DH9xFT5fnjrR9j8hXz207W03amCloB5BGfwKjYVffNRJZnf5F1raTuSPJU8N+8QZ
+	EvHM5ULfRqZAkkDHGr+ez1LKv2VNlhL8LQh+4kbzcXyU8m+gZCWoWM7NzlfIXhjz
+	is31BLssGgpO4yOioSMySo=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCHm36q+LNn2wt_MQ--.33774S4;
+	Tue, 18 Feb 2025 11:04:12 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: kuba@kernel.org,
+	louis.peens@corigine.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	haoxiang_li2024@163.com,
+	qmo@kernel.org,
+	daniel@iogearbox.net
+Cc: bpf@vger.kernel.org,
+	oss-drivers@corigine.com,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: Heyi Guo <guoheyi@linux.alibaba.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Subject: [PATCH 2/2] ARM: dts: aspeed: aspeed-g6.dtsi: enable IRQ for watchdogs
-Date: Tue, 18 Feb 2025 11:16:59 +0800
-Message-ID: <20250218031709.103823-2-guoheyi@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250218031709.103823-1-guoheyi@linux.alibaba.com>
-References: <20250218031709.103823-1-guoheyi@linux.alibaba.com>
+	stable@vger.kernel.org
+Subject: [PATCH net v3] nfp: bpf: Add check for nfp_app_ctrl_msg_alloc()
+Date: Tue, 18 Feb 2025 11:04:09 +0800
+Message-Id: <20250218030409.2425798-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,52 +48,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCHm36q+LNn2wt_MQ--.33774S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7XFy3tr48Zw43Gry7Kw17Wrg_yoWDZFgEkF
+	129Fnak3yrKr1Ykr4jgw4avr9Iywn0qryruF9xKrZa9ry3Cr18Xr95ur95ZF9rWF4xAa9r
+	X3s7try7Aa42qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNCJmUUUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0gP3bmez8hDUbwAAsF
 
-To finally enable watchdog pretimeout function.
+Add check for the return value of nfp_app_ctrl_msg_alloc() in
+nfp_bpf_cmsg_alloc() to prevent null pointer dereference.
 
-Signed-off-by: Heyi Guo <guoheyi@linux.alibaba.com>
-
-Cc: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
+Fixes: ff3d43f7568c ("nfp: bpf: implement helpers for FW map ops")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
 ---
- arch/arm/boot/dts/aspeed/aspeed-g6.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes in v3:
+- modify a spell error. Thanks, Kalesh!
+Changes in v2:
+- remove the bracket for one single-statement. Thanks, Guru!
+---
+ drivers/net/ethernet/netronome/nfp/bpf/cmsg.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-index 8ed715bd53aa..ef7ced285c44 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-@@ -538,23 +538,27 @@ uart5: serial@1e784000 {
- 			wdt1: watchdog@1e785000 {
- 				compatible = "aspeed,ast2600-wdt";
- 				reg = <0x1e785000 0x40>;
-+				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 			};
+diff --git a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+index 2ec62c8d86e1..59486fe2ad18 100644
+--- a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
++++ b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+@@ -20,6 +20,8 @@ nfp_bpf_cmsg_alloc(struct nfp_app_bpf *bpf, unsigned int size)
+ 	struct sk_buff *skb;
  
- 			wdt2: watchdog@1e785040 {
- 				compatible = "aspeed,ast2600-wdt";
- 				reg = <0x1e785040 0x40>;
-+				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+ 	skb = nfp_app_ctrl_msg_alloc(bpf->app, size, GFP_KERNEL);
++	if (!skb)
++		return NULL;
+ 	skb_put(skb, size);
  
- 			wdt3: watchdog@1e785080 {
- 				compatible = "aspeed,ast2600-wdt";
- 				reg = <0x1e785080 0x40>;
-+				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			wdt4: watchdog@1e7850c0 {
- 				compatible = "aspeed,ast2600-wdt";
- 				reg = <0x1e7850C0 0x40>;
-+				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
+ 	return skb;
 -- 
-2.43.0
+2.25.1
 
