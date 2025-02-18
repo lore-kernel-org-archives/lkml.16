@@ -1,65 +1,61 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C33B1EEA30;
-	Tue, 18 Feb 2025 07:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54E92066C1;
+	Tue, 18 Feb 2025 07:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739865573; cv=none; b=I7AClUV4XG5LAsuyphFH45xARjY1/OV7sUhBK3i5DBdsCRrBvF/9NGVn2K9HzOeu33sXErRUu2NlYydAfnTD2GmjYeYjxmPpZ/yPyM/ujwvg1DpB5cgT/JJkb+TE5mP08m2EFbxUfP3BBWgRpUmbgO/EePKXuA38vjFP7rMf6HU=
+	t=1739865601; cv=none; b=iCoIC1QSamjsV6BLoWpcZTGRxqrnqRtPuSPQRfyB7WPeM2wWjiFqBk7ONzLq8qDYYylPzRW6bHysS+YeEzSvnfo770HI1xHnOslIF57WhNgipxFTYiBJ4TJpxdxKfBZSXD/TPF0shhecAl7/0Eu73srp+HJ8T0cLniBW2dtWgxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739865573; c=relaxed/simple;
-	bh=qGtiHyXODS5M/qLlBpOFQRYkyWWrYLh3zsYeNYFP0qs=;
+	s=arc-20240116; t=1739865601; c=relaxed/simple;
+	bh=ziEzK7wRUsoPk34tXG4PKX0kfZMyG09T1TuFOZsMGH8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B244td+UJAXtN7IaaBiy9C+EWfewKfnk4FaarXgCTBDiGlLofRLHtyh/zafr/0mzgGfA4hd/k8M9tuoHVc4Q5UgN+eXf94JHow68YypC9SYqSITvdp6ONwtSJRVuu0lIqhNfKjLOTE/vSNbO86s/kIGlj/gVODeJ5h8HVSeZ1Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gucWHkHv; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTJSiNOJNkR/EYZaVn6qto2a4fck2ZNFv4RdWMlTjtfm8+JSwwNYM9CsBHYM/A3kkm0tJbZk76P1tTs8VdV3pW0B/88Op4Frpn2qMDZ6+zAkyrRWIP0POsv1pCP1bczpSTh46JY4hiQE7IgI61eh9v1+v77wlbZoBQc4c4ejIEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Il8DsjEP; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gucWHkHv"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 81CF940E0212;
-	Tue, 18 Feb 2025 07:59:26 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id gQrTBomRItDm; Tue, 18 Feb 2025 07:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739865562; bh=fKnAU/KEF7MFmyqTMzT8Xecp54gHhgt1Av8J7B4+x8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gucWHkHvSldV2Ggctopr4jGimaqrR3MK9VEo6eOnFu0C8Z5MxqhiJn1PS5T6CRF0t
-	 r1pZLliZLk7JWUwB31b+HBNL4oWQpvOktGYEm2lFQ/dx3d+8FXVBbSE0UDGenVKJ8G
-	 HU15damPO97VjzSf4gjxGs4FwjwP+FZXXzGdc8VKc7//Z/UR1aEKvzqrtv4MHjSwau
-	 PywKfc3Jc0W/Dld+/7rFBl2cGlY/vFmSC+nDbtS9507L8P+T+HqZzB2LFhFqsw4hLv
-	 tgcK6lAuQ2UgBuPiRcRFZXu1cEx1/Ob2eQXg9iuNvkBCFChwBFOnklCdDVtpbSuAa+
-	 tmnPFSQXwLPPZgbDqB+UEMhNhxsyxNJtjSvKrcPRyy38koyCFgXDDUu+ujxkdffomG
-	 tsIXYbiDzvQXc0sjcnXqQTi0ImfmpvETZLaAESZ6DbMDP1zdwGe17fdrlYaNHCBRyZ
-	 Z39al1oD7Vqsn44UCQTwuoRCw59eFnIiub0+fFg6/jqvbFsqGw98OFaEo4p5AzV2ls
-	 C9KtNZu2NMa7F5D8x4tXZZwBF6jQ0pH0fQznD4QwGhvAOubp4VnHjrACfdzGu9WbLx
-	 m9825snpbUITnCKZZ/tRqgzoxB5ujbLm04ZaElgiqF3SaKGAi5X+nDxzsN9xi8kwYX
-	 LKogMSFQphEd4EIlPLrEN2MA=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2AF4A40E020E;
-	Tue, 18 Feb 2025 07:59:05 +0000 (UTC)
-Date: Tue, 18 Feb 2025 08:58:58 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: tony.luck@intel.com, nao.horiguchi@gmail.com, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, linmiaohe@huawei.com, akpm@linux-foundation.org,
-	peterz@infradead.org, jpoimboe@kernel.org,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, baolin.wang@linux.alibaba.com,
-	tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v2 1/5] x86/mce: Collect error message for severities
- below MCE_PANIC_SEVERITY
-Message-ID: <20250218075858.GAZ7Q9wp_WQUsjq2AW@fat_crate.local>
-References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
- <20250217063335.22257-2-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Il8DsjEP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739865600; x=1771401600;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ziEzK7wRUsoPk34tXG4PKX0kfZMyG09T1TuFOZsMGH8=;
+  b=Il8DsjEPYt8gsPOdIAdONGzNkYRwugGkyXiYyVfUpRQdSY8vuF4fAlC2
+   lW34dlDaC169qW646ZxZXME7hK1FNXJP2wFWtDM5xPmil9+GERQM9ylUh
+   fHq1TawIPHqS4tTlzUC2DYDK+InYAUjhrc0rbA/t+cHcMAiT20ggUkJtF
+   /hKJdhGxx7don89No1qKBzJc7Oawv4rTj37aleK8432ctKqF6VskmWVLf
+   kU/SkLPcwos2lIfrFg1eReSBQQLw2LTJ40Nitf68fE71UgvIL/jDe1ZcR
+   CDArJCMT0G5zkyc/QViocClFOlylukjvRvs1Z3eDzW/wQbzqrhU0968v1
+   w==;
+X-CSE-ConnectionGUID: Kep8qXXcS+KckG0knDufkw==
+X-CSE-MsgGUID: FRseRXI1QY6uqmVjGOl5mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="57954571"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="57954571"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 23:59:59 -0800
+X-CSE-ConnectionGUID: wQGNfdpkTraGbuexWoXZ6w==
+X-CSE-MsgGUID: In4y45QdQsCSaspdTULcUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="119419175"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 23:59:55 -0800
+Date: Tue, 18 Feb 2025 08:56:16 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
+Cc: Haoxiang Li <haoxiang_li2024@163.com>, kuba@kernel.org,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	qmo@kernel.org, daniel@iogearbox.net, bpf@vger.kernel.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] nfp: bpf: Add check for nfp_app_ctrl_msg_alloc()
+Message-ID: <Z7Q9ILUfC90Vd490@mev-dev.igk.intel.com>
+References: <20250218011744.2397726-1-haoxiang_li2024@163.com>
+ <CAH-L+nP5w7hRbONxPNG7NJtJzb-A0JOEMSq1hKNepM9GpFkt-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,25 +64,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250217063335.22257-2-xueshuai@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH-L+nP5w7hRbONxPNG7NJtJzb-A0JOEMSq1hKNepM9GpFkt-g@mail.gmail.com>
 
-On Mon, Feb 17, 2025 at 02:33:31PM +0800, Shuai Xue wrote:
-> Currently, mce_no_way_out() only collects error messages when the error
-> severity is equal to `MCE_PANIC_SEVERITY`. To improve diagnostics,
-> modify the behavior to also collect error messages when the severity is
-> less than `MCE_PANIC_SEVERITY`.
+On Tue, Feb 18, 2025 at 08:14:49AM +0530, Kalesh Anakkur Purayil wrote:
+> On Tue, Feb 18, 2025 at 6:49 AM Haoxiang Li <haoxiang_li2024@163.com> wrote:
+> >
+> > Add check for the return value of nfp_app_ctrl_msg_alloc() in
+> > nfp_bpf_cmsg_alloc() to prevent null pointer dereference.
+> >
+> > Fixes: ff3d43f7568c ("nfp: bpf: implement helpers for FW map ops")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+> > ---
+> > Changes in v2:
+> > - remove the bracket for one single-statement. Thanks, Guru!
+> > ---
+> >  drivers/net/ethernet/netronome/nfp/bpf/cmsg.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+> > index 2ec62c8d86e1..b02d5fbb8c8c 100644
+> > --- a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+> > +++ b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
+> > @@ -20,6 +20,8 @@ nfp_bpf_cmsg_alloc(struct nfp_app_bpf *bpf, unsigned int size)
+> >         struct sk_buff *skb;
+> >
+> >         skb = nfp_app_ctrl_msg_alloc(bpf->app, size, GFP_KERNEL);
+> > +       if (!skp)
+> > +               return NULL;
+> It looks like you did not compile this change.
+> 
+> Also, next time you push a new version, please modify the subject as:
+> "[PATCH net v3] xxxx"
 
-That function is literally called "no way out" as in, is the error severe
-enough so that there is no way out.
+Yeah, you need to send v3 (skp -> skb). Fix looks fine, other call to
+nfp_app_ctrl_msg_alloc() is checking returned value as here.
 
-Now you went and stomped all over that to "improve diagnostics". What
-diagnostsics? Your commit messages need to explain in detail why exactly
-a patch exists.
+Feel free to add my RB tag in v3.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-So nope.
+> >         skb_put(skb, size);
+> >
+> >         return skb;
+> > --
+> > 2.25.1
+> >
+> >
+> 
+> 
+> -- 
+> Regards,
+> Kalesh AP
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
