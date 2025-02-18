@@ -1,159 +1,137 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB51A26F464;
-	Tue, 18 Feb 2025 17:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B18426F457
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 17:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739898432; cv=none; b=bZszXXowE0+8XNp8LJRpRvme2epU/6fAxjS46iS0/H2AVRSIWlAf23Oujt9V5CxDqiaYsy9TgrGohffC4qYAkaROJar/LWDUqi6vsoN5GknKpR8pSlEEojhY37Uu+3UPYh2kBdEI4c1YosL07lTC4dsE0Nwag3voIeCm71FVQA0=
+	t=1739898498; cv=none; b=ueMcMRLRCMNzzWFAXpphfFZ/6zqzbv81xEZy+UOvMLGY/VQkw1Fnq+dKZFDH3PssBa7f8XXPQc9uo1UV0a3E1OqEGOUbJBOb/mTSxQg5XuRKV1VbyNVqMbD7zv285qdMyRRHBE3HepLSI2Ji0aXhBDs4M67xLWqw4rwTu2LZFIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739898432; c=relaxed/simple;
-	bh=z2W1klaC4NrqrdesRaJJCmZ5n84Sqox4d0Ii0u9BNx8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cPg8XuLq1jR4JF/OghlZZdk/PmVQODmUv/G1YKGpYgqBGFofvyMefx9XcQalOTBimyMKOeOBFISYFew02IR6enHrLf2Kej8LhbDgfq6Z1hdF/vrQiWIXm0cplPFrM36vxEnadKQfHFYU3FjgR1lJLclBxbq/G5YlsfmXa3u/Dy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=OqWu0HRh; arc=none smtp.client-ip=52.95.49.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1739898498; c=relaxed/simple;
+	bh=jOGVzx0B5armIJs+uY25Q2Q336m0m5Toe/PBYNpttxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r5kpYF7LTyZkBvLUdSJVUL1uJn7z8L/EIGuOFQlodEYh73GqSvDdZ2s4gBbLld5LPnFBJ64HRd157A1V5hkFzO7tqvRIpGbcHm54hTWPnq/LMcVRuu+8544hYUkpyXKXd3AqekA/sgMSGQiFEv0eVsxzvXRm64oGkGHbUiHuxaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OCCZ8f7e; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OqWu0HRh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCCZ8f7e"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4396424d173so58936145e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:08:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739898432; x=1771434432;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=EkRdFMxzr88qlSnaM0L16SDNRKu0/9NO/91zT99To3c=;
-  b=OqWu0HRhii20JUcXd6ERwSAtOC6ZpOwPkyi4ccQqkUHr3KaruVjrXTBe
-   uCOVNYpwt8D0RisR/N6GwiHldP3kEKGUQYiXQGy8rHq4t/5Py8/mDWltJ
-   slGLx+K2M3r2xyMA4ICUfqnFSGDF6ZZCQqIVZEr1BgEr0yDnaR2jFLWJp
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.13,296,1732579200"; 
-   d="scan'208";a="473228396"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 17:07:06 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:52643]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.23.222:2525] with esmtp (Farcaster)
- id b9484c5d-2f40-4fcd-8dcf-fd02932115e9; Tue, 18 Feb 2025 17:07:04 +0000 (UTC)
-X-Farcaster-Flow-ID: b9484c5d-2f40-4fcd-8dcf-fd02932115e9
-Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Tue, 18 Feb 2025 17:07:02 +0000
-Received: from [192.168.22.162] (10.106.83.18) by
- EX19D022EUC002.ant.amazon.com (10.252.51.137) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 18 Feb 2025 17:07:02 +0000
-Message-ID: <5078ebfd-c81e-4f2f-95a8-5da48c659dc2@amazon.com>
-Date: Tue, 18 Feb 2025 17:07:01 +0000
+        d=gmail.com; s=20230601; t=1739898495; x=1740503295; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uL6cYtME81OabMEvJHb4zln7D1CzFUsjB88Lba9wNjg=;
+        b=OCCZ8f7e4QJjB3osF1Hmwxu6/PrEKWFERa0UskghSj4a4+s01Y4Y5GlRl0qGBTyP3Z
+         YTxTQXz6S4gA+F6xX2QplhTcA4t0StDK82xZuuKIFl5kDn14U++jPkNgJxaIFdXnZunw
+         iEbdCdvxtP3rZDwXHjbK7tLGOrdD4jDtU7o27NCwYXrSZPb/pHW07Yr6Qo6jvEwFt5yC
+         5PW+TJhoFYhftRnuOw2YYYNwlbv8yQny0G7kmf0MTgJYamQ23d2Z4dzy+xHu1YTIOJEW
+         x6SuW2MVuAismvUn8RAtthFfLjP0MY2xdwhWSeFTZLTopr15wKoFCqEVLxZcoPxgSocr
+         eO9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739898495; x=1740503295;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uL6cYtME81OabMEvJHb4zln7D1CzFUsjB88Lba9wNjg=;
+        b=bcFNVmRnVRUP49/fnYmN+RgUPhUkrT8wNZ/x4wPMEtCZq/Gd8HCl/ViHwnGotQJr7J
+         QfBgxKdWwhWbFpVbLNdrgtSPK/BV1SzucKqE4pjFu9FYpqhDXiZKQ+Cw//u4P+BKIo7r
+         SwMI3Ml459ilXPZcnGLC0ThVyFQ/6q+aEo57RpvOJ2wg3jnxn4EkuxfiFGD6KWz3FAZm
+         96M6+Gk0I2U37jMuBRhe3p+BP5iKFwC4DqIOZtS1gC8Lr9Uql5sJghEfon3Y5vliykiM
+         sKzpYkoP1VuajZ2QSJl80eza6mNjNWjnxumVxc40QEC+ex9o7DxT0QHwKx7lu7N0ldY8
+         COXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWKzj+4fSaMrEiFEL78w1eFBIzH5FHkLUUEG2DkXBPdO2TPl3ncS47js7gIHW4AQTPi7dMJjQ7ugjDdFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQUnpoNNuDkdkADFTknVfMxbc9Rnf57jDbVsEb4LCmUKqR7t2F
+	D1uMiOaa6u6bBVbjk60oVh2rDnZ4cXbx5iLpzSC/ffRG1MaJ9o+X
+X-Gm-Gg: ASbGncuh+lkfOuYGENgx0bL1rPEdlshOeOljlvKynPnG3o0/3Z66oZ3hg03RhsaDX6e
+	gbGreixyDKDiYnYY0TtK5P4zxKZ3WS6fCaaQrlNthb1rY3V+mLMJNBeVNAMjgDJ2jt6ZMbo5ewX
+	0IIkRNujFb2L3QAksRDTAEViqHbwgRgjLeHYUhrk8S44Cx/NYPPY4m2/kufZw9OM2KIMm+cklvf
+	ZNiR/Oi4nu4UK+4nx27xqzGmURA8RapCbeOukb73ZFmkzxJGPWlBcpK8d7mxqaRcggxkcID1MU8
+	gRC4sEdSZwfO9kD5Lw==
+X-Google-Smtp-Source: AGHT+IF44VIn/rxhr0e48RyjAhlq5WyDUp5UN4pEKUc0N1DwkqpoyhaBjR6V+hO1E+VpZZ3N93vboQ==
+X-Received: by 2002:a05:600c:4fce:b0:439:3d5c:8c19 with SMTP id 5b1f17b1804b1-4396e717094mr127675585e9.24.1739898493749;
+        Tue, 18 Feb 2025 09:08:13 -0800 (PST)
+Received: from fedora.. ([213.94.27.232])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439941bd54bsm24680135e9.11.2025.02.18.09.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 09:08:13 -0800 (PST)
+From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To: louis.chauvet@bootlin.com
+Cc: hamohammed.sa@gmail.com,
+	simona@ffwll.ch,
+	melissa.srw@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH 01/16] drm/vkms: Expose device creation and destruction
+Date: Tue, 18 Feb 2025 18:07:53 +0100
+Message-ID: <20250218170808.9507-2-jose.exposito89@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250218170808.9507-1-jose.exposito89@gmail.com>
+References: <20250218170808.9507-1-jose.exposito89@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [PATCH 1/2] KVM: x86: async_pf: remove support for
- KVM_ASYNC_PF_SEND_ALWAYS
-To: Sean Christopherson <seanjc@google.com>, Vitaly Kuznetsov
-	<vkuznets@redhat.com>
-CC: <pbonzini@redhat.com>, <corbet@lwn.net>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <xiaoyao.li@intel.com>,
-	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <roypat@amazon.co.uk>, <xmarcalx@amazon.com>
-References: <20241127172654.1024-1-kalyazin@amazon.com>
- <20241127172654.1024-2-kalyazin@amazon.com> <Z6ucl7U79RuBsYJt@google.com>
- <87frkcrab8.fsf@redhat.com> <Z7SkfSRsE5hcsrRe@google.com>
-Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <Z7SkfSRsE5hcsrRe@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D005EUB001.ant.amazon.com (10.252.51.12) To
- EX19D022EUC002.ant.amazon.com (10.252.51.137)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+In preparation for configfs support, expose vkms_create() and
+vkms_destroy().
 
+Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+---
+ drivers/gpu/drm/vkms/vkms_drv.c | 4 ++--
+ drivers/gpu/drm/vkms/vkms_drv.h | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-On 18/02/2025 15:17, Sean Christopherson wrote:
-> On Mon, Feb 17, 2025, Vitaly Kuznetsov wrote:
->> Sean Christopherson <seanjc@google.com> writes:
->>
->>> On Wed, Nov 27, 2024, Nikita Kalyazin wrote:
->>>> 3a7c8fafd1b42adea229fd204132f6a2fb3cd2d9 ("x86/kvm: Restrict
->>>> ASYNC_PF to user space") stopped setting KVM_ASYNC_PF_SEND_ALWAYS in
->>>> Linux guests.  While the flag can still be used by legacy guests, the
->>>> mechanism is best effort so KVM is not obliged to use it.
->>>
->>> What's the actual motivation to remove it from KVM?  I agreed KVM isn't required
->>> to honor KVM_ASYNC_PF_SEND_ALWAYS from a guest/host ABI perspective, but that
->>> doesn't mean that dropping a feature has no impact.  E.g. it's entirely possible
->>> removing this support could negatively affect a workload running on an old kernel.
->>>
->>> Looking back at the discussion[*] where Vitaly made this suggestion, I don't see
->>> anything that justifies dropping this code.  It costs KVM practically nothing to
->>> maintain this code.
->>>
->>> [*] https://lore.kernel.org/all/20241118130403.23184-1-kalyazin@amazon.com
->>>
->>
->> How old is old? :-)
->>
->> Linux stopped using KVM_ASYNC_PF_SEND_ALWAYS in v5.8:
-> 
-> 5.8 is practically a baby.  Maybe a toddler :-)
-> 
->> commit 3a7c8fafd1b42adea229fd204132f6a2fb3cd2d9
->> Author: Thomas Gleixner <tglx@linutronix.de>
->> Date:   Fri Apr 24 09:57:56 2020 +0200
->>
->>      x86/kvm: Restrict ASYNC_PF to user space
->>
->> and I was under the impression other OSes never used KVM asynchronous
->> page-fault in the first place (not sure about *BSDs though but certainly
->> not Windows). As Nikita's motivation for the patch was "to avoid the
->> overhead ... in case of kernel-originated faults" I suggested we start
->> by simplifyign the code to not care about 'send_user_only' at all.
-> 
-> In practice, I don't think it's a meaningful simplification.  There are other
-> scenarios where KVM shouldn't inject an async #PF, so kvm_can_deliver_async_pf()
-> itself isn't going anywhere.
-> 
-> AFAICT, what Nikita actually wants is a way to disable host-side async #PF, e.g.
-
-That's correct.  Just wanted to say that the main intention was to do 
-that for async PF user [1] where the difference in performance is 
-noticeable (at least in my setup).  I'm totally ok with the status quo 
-in the async PF kernel.  If however the mechanism to achieve that turns 
-out to be generic, it's better to support for both, I guess.
-
-[1]: 
-https://lore.kernel.org/kvm/20241118123948.4796-1-kalyazin@amazon.com/T/
-
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f97d4d435e7f..d461e1b5489c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -13411,7 +13411,8 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
->                       kvm_is_exception_pending(vcpu)))
->                  return false;
-> 
-> -       if (kvm_hlt_in_guest(vcpu->kvm) && !kvm_can_deliver_async_pf(vcpu))
-> +       if ((kvm_hlt_in_guest(vcpu->kvm) || kvm_only_pv_async_pf(vcpu->kvm)) &&
-> +           !kvm_can_deliver_async_pf(vcpu))
->                  return false;
-> 
->          /*
-> 
->> We can keep the code around, I guess, but with no plans to re-introduce
->> KVM_ASYNC_PF_SEND_ALWAYS usage to Linux I still believe it would be good
->> to set a deprecation date.
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index a24d1655f7b8..23817c7b997e 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -146,7 +146,7 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
+ 	return vkms_output_init(vkmsdev);
+ }
+ 
+-static int vkms_create(struct vkms_config *config)
++int vkms_create(struct vkms_config *config)
+ {
+ 	int ret;
+ 	struct platform_device *pdev;
+@@ -229,7 +229,7 @@ static int __init vkms_init(void)
+ 	return 0;
+ }
+ 
+-static void vkms_destroy(struct vkms_config *config)
++void vkms_destroy(struct vkms_config *config)
+ {
+ 	struct platform_device *pdev;
+ 
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index a74a7fc3a056..0fe08cd0c461 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -223,6 +223,10 @@ struct vkms_device {
+ #define to_vkms_plane_state(target)\
+ 	container_of(target, struct vkms_plane_state, base.base)
+ 
++/* VKMS device */
++int vkms_create(struct vkms_config *config);
++void vkms_destroy(struct vkms_config *config);
++
+ /**
+  * vkms_crtc_init() - Initialize a CRTC for VKMS
+  * @dev: DRM device associated with the VKMS buffer
+-- 
+2.48.1
 
