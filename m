@@ -1,111 +1,120 @@
-Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CCC270EBF;
-	Tue, 18 Feb 2025 17:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739901274; cv=pass; b=X5vnzcfcjaIi2JWFLQKptXmo2gkZUnR2SUQCu9pUCIPBvbvBrvDeo8OJXsWjt/3XPgS9U9UmFLllwnSCdIuv2dOjBmqtOQO0wwgutHJZpU9J5D+boT3gjNTTGontb0D0ix0/5RCMNbPoY7905G8jZwhbkR6re069WAxEn78F0eM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739901274; c=relaxed/simple;
-	bh=EXlnmm98gVz4H22ygJFIiFPd9A+akx/jzNMXZ6VZSFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUpWPGCwvAamvJXZxwMTb+ZS7D2F+sN0OzYlKpHkdOT+w2o2ZCCoIBhs+9eLHbvL40PcZPDW4YZfEPCarCqs9XtJJqYbNxoTU285M94ACWqPC2trjVKLyzXh99ThId1Rr9ykXKCNemnHkIbhYFk7YvIaoHde5Cz5Zz13nSlFXSI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=c1djtRmN; arc=pass smtp.client-ip=23.83.212.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E5D270EB3
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 17:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739901378; cv=none; b=Xaua9YQbkfWsbxVB8wHHJSFbH2XOCUKvvrbLFH7o+0npUfzoBEd+gAB3LagXxH+Lglpt9o9GzBBrcM0nfZGZG4R/4qXmmO8+FXSbz153M0Kmxk2bZf4tc8jf3AtarPzdTZDCh1QsLPO8Mk7xfxKAuQ0IkLfttp/5lh1T3GvcJl8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739901378; c=relaxed/simple;
+	bh=oTjuUiXvhzJTYfdkErAeQEBerMb8kTrvk9je9AIL49A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=CguRQqmigvGvsDv/GJNgAY0eJKSi/jwZ8LtzmHWUgqYq7esPP2iN75kE2PIjx3iQ9xk75A7K64SXd7aZfUTx8mQvGnYvgzRyOeHwdoaBkIeCOTmXZTihgrvwkALve7VnO8F3ZplPuVJ8//EZStPJ0zoLm864/IG2C5lF0aFd8cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=maBnwhyN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="c1djtRmN"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id B12FE21815;
-	Tue, 18 Feb 2025 17:54:31 +0000 (UTC)
-Received: from pdx1-sub0-mail-a238.dreamhost.com (trex-4.trex.outbound.svc.cluster.local [100.101.208.230])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 480D2232DE;
-	Tue, 18 Feb 2025 17:54:31 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739901271; a=rsa-sha256;
-	cv=none;
-	b=i2g2u3kCQdFjZ4K7HtYNrVOzxUFDLbNP01R3JdM+zBKXu9GjTS311zQyYuAn4DHJvFLY4Q
-	4VFdscz7daBh9CvgwuBFQ2wm0yY0RpzUZQIq/fBCj5oI9UXqkzNq2eENNVlISrzgPWVXT9
-	rFa3gFPXp+eF+mHwclJ0nrjjuHCYpRCavII8jLa2xXJ77Icl+ChhdCD/Kpc9vlenfXP/E1
-	qpNX9Qjp9xreOjg0bETILZl62VRGOZe0XlCEngU6EVLfKHPO6lTIdRvyzW4gnOIX8JPLIu
-	4JlXAEzkl4pseNdQmgpWk75EQHMEQBOxVWiFwq71KCDe0LgTd+O3zIOjMB3Nfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1739901271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=EXlnmm98gVz4H22ygJFIiFPd9A+akx/jzNMXZ6VZSFc=;
-	b=iL+v+xHUSMJkaXpBKKx/iFK+Ip9GEFs7Trsf2/rWelYo63Q8nd5ZJgMZdsxRIXstkHWKch
-	RiBoRdS6zNxaXa0Onjh9ctnkE6mJIPhgAlkVI8k/e5aMU59bRSTtyPw5lx2UVoD+MOPsOQ
-	bCfJH21qDl+6OqGg9W79UetFvScNh5WfaVF7tydRuCX0zHYP6aoWXBgln+6k6TtIZFnLUG
-	Ez0r99h/W9AvtpBd4ZNqZMrgfzGg8OCvs8ffS50sepX3AsRDthmV4i7SHwltCLiXTYo+HI
-	4nwOU7wHtcXf0mXryI5Sfaab4AvZNpCum4uWWeV0FA2B23dCgplEMWP0/dILcA==
-ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-2km2b;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Illustrious-Occur: 3958d16b4ec81d63_1739901271571_2723353521
-X-MC-Loop-Signature: 1739901271571:1401287282
-X-MC-Ingress-Time: 1739901271571
-Received: from pdx1-sub0-mail-a238.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.208.230 (trex/7.0.2);
-	Tue, 18 Feb 2025 17:54:31 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a238.dreamhost.com (Postfix) with ESMTPSA id 4Yy6bp3sjhzK5;
-	Tue, 18 Feb 2025 09:54:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1739901271;
-	bh=EXlnmm98gVz4H22ygJFIiFPd9A+akx/jzNMXZ6VZSFc=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=c1djtRmNEQWXB5gkXrAf7d+ir/R7ZAFaHwrNrOAqZb29xF2u+AVTYYp6Zs1GU9JVU
-	 u07aviKr+2BVBo158K9xg8bFMNfL+OhDroB1z8qeBO1i+a1flUrSj/v2kCFhqPkkbU
-	 t006bXCjLzEtNLc+oEx8zE+BuJy+6xMzPjFGRQl5Fp11nw86unbRdSF1PTUwL5F29k
-	 h32aYNr0gue6efvKwrmr0wmuLvg5BQpZfY2KqIRfps0/PiTPUY/Z+9oIZNeA9Dvp4h
-	 zJxQ5jLZDsLmwAC7RgiooPWqrttmyoRsZrkHqSDsv0gfKFvzJp7iyEKgXnVcF52TSX
-	 wx8TIBXEYbGdA==
-Date: Tue, 18 Feb 2025 09:54:27 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Li Ming <ming.li@zohomail.com>
-Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] Use guard() instead of rwsem locking
-Message-ID: <20250218175427.qlmunbgkjhrroc2r@offworld>
-References: <20250217144828.30651-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="maBnwhyN"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IBUkgL007902
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 17:56:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5MZEcgITSiiKIsZylFwsENK2tYufFg6kig8Md0m03l0=; b=maBnwhyNo4vyavOI
+	3qYJlKMw4oixT5ZXQ12wvrrJ8n48BTX4bMntxD7JOvvb3DQrVnPiuCHb5Bhskv+7
+	c3QB1jED8ltc3AQeBNJagJpsLjNj9/TikfnKQVMD7Y5ZEpsIHfzezgks76us3eZ5
+	vtjkZ0lfXIuPUHDpnYI/LN964F27tQzJ9XlRMgCO2wPegvmraveJR1Kg8vVMs+Rv
+	Cqa4VX6HiR4vMAuHb5seMEOaBtfx5y8hpRCcN4rrFU7pxWNlBSUFHLHXrs8SviTE
+	N7fR07kLTvXIyRzmLYhs2LSgpQMyIb3+0aTvhh3V6aZFE5x2nA4wYmZeF1hdZ835
+	os4w9Q==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7wwpbq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 17:56:15 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2fc4dc34291so5693396a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:56:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739901374; x=1740506174;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5MZEcgITSiiKIsZylFwsENK2tYufFg6kig8Md0m03l0=;
+        b=qw3pqDqSCVk/XovCh9j167X7gpb4bui7BnW6en/65j8m0Vb8FHDMzkqAMpK8xqdnFk
+         iIyDZs1JUmFmQKmdcbc099AX04n6zY3ZHk9J8cCK8tz6YBl0+Tr74d0UA8mboengMAi+
+         tUS1zZ6cVz3fIlGwIXPudiN7wJWhStREJXSz+5H3Tnqc+CO8CqRZaGu8pjuNkF6Bfgz/
+         kvvCnC41JRmVNrNJHLM3fU+a4TrIhwtqkaNkNU4MgxpzXkkkeCW1/nxXIgNDVQ0ZCWtt
+         CTwkIbCsBCeTGgv1pTjQkcoWCKxPVPny4E23DcSbK09MBOX8BNwR7zarvddwuXmJ1KFP
+         qHsA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3+jqbrVCZwc85SfODUm4gm1yJnXo0adOEFykTExnbcCjJfwHrBEFL4bITe1DOPN5Ts7WHzYf7wy2wLaA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK1WlP9icPN87teQqsQCVmUeuoM0jJKFZQFNn27rSMs4YYFUIS
+	LPu2ACiUEp6IhCmI5F04lvEp6awRoiqYfeRrR5hf+XM2k9P2Vm3Sjw8vHEMGSMUSVUo6AwBWbPU
+	loAhk0cr4L+pqg3CPHk1Pd9XxJeAeZFMwXQeqUfDxwZ/r01Rtouw0p1gPxtjTUAM=
+X-Gm-Gg: ASbGncvxOCLV0g0bc/01G85BqEsEOmuuNEOYtsgHctva+MKfG6kNndifGgkgL8TfEYK
+	20rECQIt/OEjrNWaBUhqDfjyyATX9TENicIUnebqrEOiOlFkKXNIdR/OkrV6YQZl9HT01ZjVRZX
+	OX/jt5fS/k/cIF36ehdYv+YhCp4THuaUAIIYJBlEyyZEY2bUa9xH0HuvMTFPY6as83MmF6MZ/Op
+	T+6K2tfVmrXOAfBeDkTuGWWW5qOfzthezt8uP0FW2Q4wteK0x/TEvec2L8VYfNbT97zzqFdruGj
+	3+w9JXUqWyY6LDYr7wXLT+psdfF/0shESsCPAfOGbA==
+X-Received: by 2002:a17:90a:ec8d:b0:2fc:3264:3666 with SMTP id 98e67ed59e1d1-2fc41153decmr20652823a91.30.1739901374468;
+        Tue, 18 Feb 2025 09:56:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHHRnoQUBRepGyq2OMwaJX32opGFnz5QDIQdI91vfH8K801jeMK8U9QrNGbTTdrdnvAPHaa+w==
+X-Received: by 2002:a17:90a:ec8d:b0:2fc:3264:3666 with SMTP id 98e67ed59e1d1-2fc41153decmr20652787a91.30.1739901374048;
+        Tue, 18 Feb 2025 09:56:14 -0800 (PST)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98f698dsm12342252a91.28.2025.02.18.09.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 09:56:13 -0800 (PST)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+To: Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
+        Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        Harshitha Prem <quic_hprem@quicinc.com>,
+        Kalle Valo <quic_kvalo@quicinc.com>, linux-wireless@vger.kernel.org,
+        ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+In-Reply-To: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
+References: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
+Subject: Re: [PATCH v2] wifi: ath12k: cleanup ath12k_mac_mlo_ready()
+Message-Id: <173990137296.1304166.12952412255986592297.b4-ty@oss.qualcomm.com>
+Date: Tue, 18 Feb 2025 09:56:12 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250217144828.30651-1-ming.li@zohomail.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
+X-Proofpoint-GUID: nowLT7q68QoxDXmBA6Fcydn2lzMaO91r
+X-Proofpoint-ORIG-GUID: nowLT7q68QoxDXmBA6Fcydn2lzMaO91r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_08,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 malwarescore=0
+ bulkscore=0 mlxlogscore=451 spamscore=0 adultscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502180126
 
-On Mon, 17 Feb 2025, Li Ming wrote:
 
->Use scoped resource management to replace open-coded locking operation
->is recommended. CXL subsystem still remains some down_read()/up_read()
->and down_write()/up_write() which can be replaced by guard() simply.
->
->This patchset includes simply using guard() instead of some
->down_read()/up_read() and down_write()/up_write() cases. Besides, it
->also includes some function code cleanup after using guard().
+On Mon, 10 Feb 2025 21:49:41 -0500, Ethan Carter Edwards wrote:
+> There is a possibility for an uninitialized *ret* variable to be
+> returned in some code paths.
+> 
+> This explicitly returns 0 without an error. Also removes goto that
+> returned *ret* and simply returns in place.
+> 
+> 
+> [...]
 
-For the series, feel free to add my:
+Applied, thanks!
 
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
+[1/1] wifi: ath12k: cleanup ath12k_mac_mlo_ready()
+      commit: ceb3b35f5ef4a0c490f54eb8b53075fd83a97d11
+
+Best regards,
+-- 
+Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+
