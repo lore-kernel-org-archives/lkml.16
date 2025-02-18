@@ -1,111 +1,312 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785FF280A35
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392F4280A49;
+	Tue, 18 Feb 2025 18:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904671; cv=none; b=qkzVYzmw9BwF9Ef5JIDStkx8z+UVQhdxHMKkIgaO11YGV1EfHby1r5iv9qxwrzNA5poC51AZPO3C619YBGjQb/AdsYQkeoL5x6MzuvKMjEqceVBpy9qu4oELjQovbhpces0+9oX4RBA1b20HKQxS41zzPDBSFaG7hFFauu0VDJs=
+	t=1739904674; cv=none; b=iLg/wD4zMct8Ak62o30NKfYfcGrcX6Oj4AZTux4DnnBVZDf+0ucoIbZWBjKySPd+AbSd5zMz2ScJQ0RynD7UoHg940zBo0oUICgz0bqQ72MNEPKIPAWajOasfD2T6d74LVPyyLlXRHjHqgQQpMVoPn01aFO06QLHVSYjhftre/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904671; c=relaxed/simple;
-	bh=MoO/m337yGrtN/rDuUa+yPCfHoVc7loFFqayxFZslPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s7S900X1PyY8oXy92QpyFgZzuftlGXa+jDPXjOTpvZhQY1QyilpCNDULF18ofDz7Girl7AcYDETMVspCUD1PkyhEJFQy3LW1dk0F4SwTI0etFkOXlJWJiRkrLKeQ5YIgcoFLAGkUTeLxUXGU5zc0ZP8pLYS6dzjsCtHDun3u/GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ot2Z+cxe; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739904674; c=relaxed/simple;
+	bh=/aS0ew2+QW+26E+AGGAFKefl9VuK6gHDnbpmIW/wiaY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ubEnSeoHQrj1Sn+0WJM6K8N4tP2CocSwB4VLghmpv98uCLK+p+PIA2hxVYV2uFXMUjYqWwl/cnperPWl8p5J6pj6y7jCX1CUDnrRT4T8DtZV6+vR8+we+V562+Ee6dxW3T/r3w9P3bolM9+DzL9PT5xEyrjf3i9lJAWJoJlWpmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=BKrFT2rN; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ot2Z+cxe"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f378498c9so3183352f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:51:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739904667; x=1740509467; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J2kLFupIIGJ1/RHSRRNvz/y3ILtkw1UuLgcN/irDm3o=;
-        b=Ot2Z+cxe2KPTWucxmt9j5VoLNgsLicyCTipf+BIfC/4vRWQV9X7spfF8A9G9qLez2K
-         x3SoKf+BWNdIWLENBXTu/LK6bJKb6w3pVXyU206iFtyl4vLde9wKLKMly2zjLVi03O72
-         voAIjx7hJGIenJLEvs/2e5xcnOsjlFsqZVngj3pU+1spSsavKwBBNFTxCG/Sd0Hm9gG/
-         ZyxfmV3u2YyPtD2gOKxl6t5M2usxAKyElt7x/cCHcTw8CkYYhhnFn1ZT8qG7tiwumrED
-         PRI5+qDW8ps6IYKoNpg06P4lp8Dr8wbT7YeSr/n3esLeS+BjGYsGzQp+bxmtzqNODBp2
-         9g+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739904667; x=1740509467;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J2kLFupIIGJ1/RHSRRNvz/y3ILtkw1UuLgcN/irDm3o=;
-        b=dM38nsrdz1HnPghOLb6VB//4ddR+pux1+PFDSLbasqDWpa63flqX7YkirLC3pmC5dl
-         MRE5ArW0KRwFfk4ldATH0rhwV2XwPZyIb7rtNqFJ+9O1Q2i9W8L9VlFwN1FZsdg/LJRU
-         TsQL/UjhUqiNbkk2PL8U/xYcyY3+PeCm16au3ge5J35BW4N/OEZfBdeKN/AUPS5rxIhQ
-         xRsYEs03RMRknuq8JbGH7+8Rie6bOsx+yq1Ek+lSw6pV5nlJgyLpWc8Ly+sJwG6wYwZh
-         9rqkxFWTwSMqUY/OLVmhQ1fkQ5UfmkQsQfGwNWq05wqABPVldb4q0rYVqph8xVJKjAad
-         g4Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVDUJvCK0PQPMB7dHAQTDe5lamHZ/6dzVV6vcARRUp85s7jyTQhURyuNZEXntP8rMw1m0863lua9r7tO7Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq6i7pJ0EnINpmjCIJp8x8AhMNKUUsk/pH3N2Jqjdm+L+n4MHS
-	BpZS7d6dw1osjnqhZLSlpAgmRmaEH6lbR+TOhHulIJDTtT4A9PHWZ5AOO2A5Josr3VQ+7Xhi0rw
-	v5cE=
-X-Gm-Gg: ASbGnct18nKg8NrVTx9T0R6T26R2RB7Aq7uN7wlu1Ldh+8lYIrNIl/sJBlPhXmFqu/V
-	j6OwXi/TyWc8JcWTfDNBPIm8mZ3TSnryyFxKDLLGy5MhMiYjAyRGCJvasBT0BCCI23udZGtMNwn
-	B5FryuccaPsKCjyV+GZDEdoUqAFogg6K/R3Ocn3VBKfIVHIrS+SnOkHXp8o5+jn/lq+a4LAMgLg
-	Fv6q0qF5CXVKksQmsf5i3squ79fvlDQ7SJn1sXbXsgc3I39rK5F2HJkghbdkunC815u3jqBwTVq
-	szxOsN5BaMQHFxThNOzTGuTMH1Bwu4oNwqU9g5F93IW+fvvRILOWuUg=
-X-Google-Smtp-Source: AGHT+IGWiGnjxl9amPWMtpBg/TTVGWv0w0/3DeUvonXPRwth4gPx2Sx4xPYck/WL22fVGRawD9RD9A==
-X-Received: by 2002:a5d:6d01:0:b0:38f:4e30:6bbb with SMTP id ffacd0b85a97d-38f4e30bc4amr8481365f8f.25.1739904666800;
-        Tue, 18 Feb 2025 10:51:06 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38f259d5e92sm15924221f8f.66.2025.02.18.10.51.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 10:51:06 -0800 (PST)
-Message-ID: <5f7f39b9-5cf8-4ebe-816f-d56e52bc7408@linaro.org>
-Date: Tue, 18 Feb 2025 19:51:05 +0100
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="BKrFT2rN"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A2B87234ED;
+	Tue, 18 Feb 2025 19:51:10 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 72V-OccThic6; Tue, 18 Feb 2025 19:51:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1739904666; bh=/aS0ew2+QW+26E+AGGAFKefl9VuK6gHDnbpmIW/wiaY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=BKrFT2rNZYjIHzc7PD2whkFF/u0LhnlUTTGuzhQaT4RmFGmchJrDvL/kCNdYWmiem
+	 F0RueQL8t6tnNQhMkR9hvIuk6z66HeFjMuax1ujf9A70bes+/tEM592oZMs8AQkEcH
+	 piKvDo8UJleSkf/WFDmsFcO5ENL7CVsjzfv4l8fIsNial6KBjrJ7OoqgLGwo8q1U5E
+	 pyWjd913VbRjNh2nHAZkY1FQTa3TFRMEmsWb+e6xaUHw64DsblJoFQcnDLVEEy9W+a
+	 Vr174edutfJ+SY40hwAs9bkIONubmOwjJxyN3OJBR2trpjxltKpaaOEX+tqLXJsrCa
+	 yhSYIbn0Zt/wg==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Date: Wed, 19 Feb 2025 00:20:29 +0530
+Subject: [PATCH v3 2/5] dt-bindings: clock: document exynos7870 clock
+ driver CMU bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] thermal/drivers/qoriq: Use dev_err_probe()
- simplify the code
-To: Frank Li <Frank.li@nxp.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>,
- "open list:THERMAL" <linux-pm@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-References: <20241209164859.3758906-1-Frank.Li@nxp.com>
- <Z5EULLr7hsk1RIZy@lizhi-Precision-Tower-5810>
- <8693bf83-9878-404e-b609-dcaf758d485c@linaro.org>
- <Z7TEGQQ/JM/q454F@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <Z7TEGQQ/JM/q454F@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250219-exynos7870-pmu-clocks-v3-2-0d1e415e9e3a@disroot.org>
+References: <20250219-exynos7870-pmu-clocks-v3-0-0d1e415e9e3a@disroot.org>
+In-Reply-To: <20250219-exynos7870-pmu-clocks-v3-0-0d1e415e9e3a@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739904648; l=7253;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=/aS0ew2+QW+26E+AGGAFKefl9VuK6gHDnbpmIW/wiaY=;
+ b=+Lyc/A2h3/9C9yxWDWVwaVMGg+SgTAsUG9v+CgydR/PcsW33cg++5jbUImBwFeY7qrP7S6C8+
+ vacLd62/+LLCF2JjzrRyHHgziqXHtD699MeflyCnoYZjKDroHpHgoMu
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On 18/02/2025 18:32, Frank Li wrote:
-> On Wed, Jan 22, 2025 at 06:41:22PM +0100, Daniel Lezcano wrote:
->> Hi Frank,
->>
->> On 22/01/2025 16:52, Frank Li wrote:
->>> On Mon, Dec 09, 2024 at 11:48:58AM -0500, Frank Li wrote:
->>>> Use dev_err_probe() and devm_clk_get_optional_enabled() to simplify the
->>>> code.
->>>>
->>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
->>
->> I applied the patches, thanks
->>
-> 
-> Thanks, I have not seen at linux-next/master. Anything missed?
+Provide dt-schema documentation for Exynos7870 SoC clock controller.
 
-No, it is in the thermal/bleeding-edge ATM and will go through 
-thermal/linux-next tomorrow.
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+ .../bindings/clock/samsung,exynos7870-clock.yaml   | 227 +++++++++++++++++++++
+ 1 file changed, 227 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/samsung,exynos7870-clock.yaml b/Documentation/devicetree/bindings/clock/samsung,exynos7870-clock.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..9361723f4f880de0b7127e6ab8f770990c9720e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/samsung,exynos7870-clock.yaml
+@@ -0,0 +1,227 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/samsung,exynos7870-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos7870 SoC clock controller
++
++maintainers:
++  - Kaustabh Chakraborty <kauschluss@disroot.org>
++
++description: |
++  Exynos7870 clock controller is comprised of several CMU units, generating
++  clocks for different domains. Those CMU units are modeled as separate device
++  tree nodes, and might depend on each other. The root clock in that root tree
++  is an external clock: OSCCLK (26 MHz). This external clock must be defined
++  as a fixed-rate clock in dts.
++
++  Each clock is assigned an identifier and client nodes can use this identifier
++  to specify the clock which they consume. All clocks available for usage
++  in clock consumer nodes are defined as preprocessor macros in
++  'dt-bindings/clock/exynos7870.h' header.
++
++properties:
++  compatible:
++    enum:
++      - samsung,exynos7870-cmu-mif
++      - samsung,exynos7870-cmu-dispaud
++      - samsung,exynos7870-cmu-fsys
++      - samsung,exynos7870-cmu-g3d
++      - samsung,exynos7870-cmu-isp
++      - samsung,exynos7870-cmu-mfcmscl
++      - samsung,exynos7870-cmu-peri
++
++  clocks:
++    minItems: 1
++    maxItems: 10
++
++  clock-names:
++    minItems: 1
++    maxItems: 10
++
++  "#clock-cells":
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - "#clock-cells"
++  - clocks
++  - clock-names
++  - reg
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos7870-cmu-mif
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++
++        clock-names:
++          items:
++            - const: oscclk
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos7870-cmu-dispaud
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: CMU_DISPAUD bus clock (from CMU_MIF)
++            - description: DECON external clock (from CMU_MIF)
++            - description: DECON vertical clock (from CMU_MIF)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: bus
++            - const: decon_eclk
++            - const: decon_vclk
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos7870-cmu-fsys
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: CMU_FSYS bus clock (from CMU_MIF)
++            - description: USB20DRD clock (from CMU_MIF)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: bus
++            - const: usb20drd_refclk
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos7870-cmu-g3d
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: G3D switch clock (from CMU_MIF)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: switch
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos7870-cmu-isp
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: ISP camera clock (from CMU_MIF)
++            - description: ISP clock (from CMU_MIF)
++            - description: ISP VRA clock (from CMU_MIF)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: cam
++            - const: isp
++            - const: vra
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos7870-cmu-mfcmscl
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: MSCL clock (from CMU_MIF)
++            - description: MFC clock (from CMU_MIF)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: mfc
++            - const: mscl
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos7870-cmu-peri
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: CMU_PERI bus clock (from CMU_MIF)
++            - description: SPI0 clock (from CMU_MIF)
++            - description: SPI1 clock (from CMU_MIF)
++            - description: SPI2 clock (from CMU_MIF)
++            - description: SPI3 clock (from CMU_MIF)
++            - description: SPI4 clock (from CMU_MIF)
++            - description: UART0 clock (from CMU_MIF)
++            - description: UART1 clock (from CMU_MIF)
++            - description: UART2 clock (from CMU_MIF)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: bus
++            - const: spi0
++            - const: spi1
++            - const: spi2
++            - const: spi3
++            - const: spi4
++            - const: uart0
++            - const: uart1
++            - const: uart2
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/exynos7870.h>
++
++    cmu_peri: clock-controller@101f0000 {
++      compatible = "samsung,exynos7870-cmu-peri";
++      reg = <0x101f0000 0x1000>;
++      #clock-cells = <1>;
++
++      clock-names = "oscclk", "bus", "spi0", "spi1", "spi2",
++                    "spi3", "spi4", "uart0", "uart1", "uart2";
++      clocks = <&oscclk>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_BUS>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI0>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI1>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI2>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI3>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI4>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_UART0>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_UART1>,
++               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_UART2>;
++    };
++
++...
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.48.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
