@@ -1,302 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D582139C4;
-	Tue, 18 Feb 2025 20:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262091DE2B9;
+	Tue, 18 Feb 2025 20:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910429; cv=none; b=Su5lkSmrcDoJ7g9s7zsoIhu8X2q1M26YjMkwoIAhzIPhPU8x31djKLhiZftUdA0stvoe0iCvmDQYEnySx7Qrt8t4l3qpYXkgEE6WgTXo/U1Vm82THWPi09VonXIDyRiEmhUfr6esDLujPTiNRRgzxDKMEC8QXoLkjmd/qUWqIHg=
+	t=1739910431; cv=none; b=AUqIIcuBJnOwDQjU6zgsufLp188jaIDc3qanC8+jb+TfGJ738Ujqnp0B30AMqzO9jUUa65OIBGPvMudd250lo7M0xRZTU5LsFMITyKeDBk/m/9e9XsG4IgwQYHvCugU1ItiEYLoGXyYRaMWQ+qfNjqyR+qIfn4bukDwTJlEGvZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910429; c=relaxed/simple;
-	bh=2sohyi4xEaTC1NwXXc7Lqb9YoGirX8UCnEFaPIM4CvM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ov5PouKVh1FBASFhdkHNyaqUJnAZhyRXg3mJyDNRBIOJbWXsKeOK6uM9gMYt9zNsx914nxgiHkN+Izz4zRVZdOm+omqNjmpVSnrkRZFFIsrsTCdnjUHKTEIw+ua05FnaKr83eTXV1h7XR7cOfm7wfoNPa5hlkCxhfvHZ7S0pJQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMVYB0No; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739910431; c=relaxed/simple;
+	bh=3de8aP+eKUaiXgy4IvoYG4PKo51UnJ/CXdIDrpzv854=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ke9zcEsta5xL6yF6VuDW5aAYiW5CW/tWy7OCDCxf54uExz7/sk4TRXvqeguClym9+QxhfYterFgqOs/eBQsKcrgD+Oea+XeEQAjPYjj8SrT0WR5Bx/Mk/hdEPGiyNu1bY75N//KHkayl9ga97xiGUk1tAiL7E5HsZfgRmOP6QaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=nqxbP0nA; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMVYB0No"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4626C4CEE2;
-	Tue, 18 Feb 2025 20:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739910428;
-	bh=2sohyi4xEaTC1NwXXc7Lqb9YoGirX8UCnEFaPIM4CvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bMVYB0No8vuUs/c2IoJS1UPeFhxRLp+5e/+5RrmW7OYTxf1RFCnm57ILm3Cs4eK0q
-	 y/iai5Q7uMI2HiFAL/c4dY1I4sCQTvkNFYzKaHicdsiEvw07kqar895v5Pa65dQIK2
-	 lUOM8HAQdKA9SZm7lOF+ujOGYvXPiaHEMAmBIOjWiXoamlurGkhnQqgTIuuLG7hAYM
-	 dk+pkrtEf0KWWafhQEskDx8bbb9UCQ1wlIm/CCAHPtv+bDKFZQnftdkaNgd5YCA2HD
-	 y0YinMNdqA2SLtPUykm3noJCMLc5wzg1lChDCjbwtrZ0xEVdfckbNbV8DfW6yJzKji
-	 zIyjWAqscnp1A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Richard Weinberger <richard@nod.at>,
-	Sasha Levin <sashal@kernel.org>,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	benjamin.berg@intel.com,
-	thehajime@gmail.com,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 23/31] um: convert irq_lock to raw spinlock
-Date: Tue, 18 Feb 2025 15:26:09 -0500
-Message-Id: <20250218202619.3592630-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250218202619.3592630-1-sashal@kernel.org>
-References: <20250218202619.3592630-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nqxbP0nA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1739910430; x=1771446430;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=UA7rd2+7E7E1EZQdxivdBtDuy5hSlsFld3c3zvaH5Do=;
+  b=nqxbP0nA7FtVbrtesoyI42pvcZGFu4xZV5g66t54PlHrWz9D0t4pE0LA
+   7KyiPlPN+HcnpXqSy1JxEANWz+Lclxag27vwWp6rVDjSmH021Lz3QBUwu
+   PtCD5BxzKqQBeXh7qZ4vGaNGp9qmOO9LBgDr6SJu3fCorx/EfkC47sYu/
+   I=;
+X-IronPort-AV: E=Sophos;i="6.13,296,1732579200"; 
+   d="scan'208";a="463706639"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 20:27:07 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.10.100:15387]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.2.102:2525] with esmtp (Farcaster)
+ id 0fd69873-b657-487e-899c-6f013894b1e5; Tue, 18 Feb 2025 20:27:06 +0000 (UTC)
+X-Farcaster-Flow-ID: 0fd69873-b657-487e-899c-6f013894b1e5
+Received: from EX19D003EUB001.ant.amazon.com (10.252.51.97) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Tue, 18 Feb 2025 20:27:05 +0000
+Received: from u5934974a1cdd59.ant.amazon.com (10.146.13.227) by
+ EX19D003EUB001.ant.amazon.com (10.252.51.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 18 Feb 2025 20:27:00 +0000
+From: Fernand Sieber <sieberf@amazon.com>
+To: <sieberf@amazon.com>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>, "Paolo
+ Bonzini" <pbonzini@redhat.com>, <x86@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
+Subject: [RFC PATCH 2/3] kvm/x86: Add support for gtime halted
+Date: Tue, 18 Feb 2025 22:26:02 +0200
+Message-ID: <20250218202618.567363-3-sieberf@amazon.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250218202618.567363-1-sieberf@amazon.com>
+References: <20250218202618.567363-1-sieberf@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.15
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D031UWA002.ant.amazon.com (10.13.139.96) To
+ EX19D003EUB001.ant.amazon.com (10.252.51.97)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+The previous commit introduced the concept of guest time halted to allow
+the hypervisor to track real guest CPU activity (halted cyles) with
+mwait/hlt/pause pass through enabled.
 
-[ Upstream commit 96178631c3f53398044ed437010f7632ad764bf8 ]
-
-Since this is deep in the architecture, and the code is
-called nested into other deep management code, this really
-needs to be a raw spinlock. Convert it.
-
-Link: https://patch.msgid.link/20250110125550.32479-8-johannes@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This commits implements it for the x86 architecture. We track the number of
+actual cycles executed by the guest by taking two reads on MSR_IA32_MPERF,
+one before vcpu enter and the other after vcpu exit. These two reads happen
+immediately before and after guest_timing_enter/exit_irqoff which are the
+architecture independent points for gtime accounting. The difference between
+the reads corresponds to the number of unhalted cycles. We get the number
+of halted cycles by using the tsc difference with the unhalted cycles and
+tolerate slight approximations.
 ---
- arch/um/kernel/irq.c | 79 ++++++++++++++++++++++++++------------------
- 1 file changed, 47 insertions(+), 32 deletions(-)
+ arch/x86/include/asm/tsc.h |  1 +
+ arch/x86/kernel/tsc.c      | 13 +++++++++++++
+ arch/x86/kvm/x86.c         | 26 ++++++++++++++++++++++++++
+ 3 files changed, 40 insertions(+)
 
-diff --git a/arch/um/kernel/irq.c b/arch/um/kernel/irq.c
-index 534e91797f892..ebf8012bbec45 100644
---- a/arch/um/kernel/irq.c
-+++ b/arch/um/kernel/irq.c
-@@ -52,7 +52,7 @@ struct irq_entry {
- 	bool sigio_workaround;
- };
- 
--static DEFINE_SPINLOCK(irq_lock);
-+static DEFINE_RAW_SPINLOCK(irq_lock);
- static LIST_HEAD(active_fds);
- static DECLARE_BITMAP(irqs_allocated, UM_LAST_SIGNAL_IRQ);
- static bool irqs_suspended;
-@@ -257,7 +257,7 @@ static struct irq_entry *get_irq_entry_by_fd(int fd)
- 	return NULL;
+diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
+index 94408a784c8e..00ad09e7268e 100644
+--- a/arch/x86/include/asm/tsc.h
++++ b/arch/x86/include/asm/tsc.h
+@@ -37,6 +37,7 @@ extern void mark_tsc_async_resets(char *reason);
+ extern unsigned long native_calibrate_cpu_early(void);
+ extern unsigned long native_calibrate_tsc(void);
+ extern unsigned long long native_sched_clock_from_tsc(u64 tsc);
++extern unsigned long long cycles2ns(unsigned long long cycles);
+
+ extern int tsc_clocksource_reliable;
+ #ifdef CONFIG_X86_TSC
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 34dec0b72ea8..80bb12357148 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -144,6 +144,19 @@ static __always_inline unsigned long long cycles_2_ns(unsigned long long cyc)
+ 	return ns;
  }
- 
--static void free_irq_entry(struct irq_entry *to_free, bool remove)
-+static void remove_irq_entry(struct irq_entry *to_free, bool remove)
- {
- 	if (!to_free)
- 		return;
-@@ -265,7 +265,6 @@ static void free_irq_entry(struct irq_entry *to_free, bool remove)
- 	if (remove)
- 		os_del_epoll_fd(to_free->fd);
- 	list_del(&to_free->list);
--	kfree(to_free);
- }
- 
- static bool update_irq_entry(struct irq_entry *entry)
-@@ -286,17 +285,19 @@ static bool update_irq_entry(struct irq_entry *entry)
- 	return false;
- }
- 
--static void update_or_free_irq_entry(struct irq_entry *entry)
-+static struct irq_entry *update_or_remove_irq_entry(struct irq_entry *entry)
- {
--	if (!update_irq_entry(entry))
--		free_irq_entry(entry, false);
-+	if (update_irq_entry(entry))
-+		return NULL;
-+	remove_irq_entry(entry, false);
-+	return entry;
- }
- 
- static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- 		       void (*timetravel_handler)(int, int, void *,
- 						  struct time_travel_event *))
- {
--	struct irq_entry *irq_entry;
-+	struct irq_entry *irq_entry, *to_free = NULL;
- 	int err, events = os_event_mask(type);
- 	unsigned long flags;
- 
-@@ -304,9 +305,10 @@ static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- 	if (err < 0)
- 		goto out;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	irq_entry = get_irq_entry_by_fd(fd);
- 	if (irq_entry) {
-+already:
- 		/* cannot register the same FD twice with the same type */
- 		if (WARN_ON(irq_entry->reg[type].events)) {
- 			err = -EALREADY;
-@@ -316,11 +318,22 @@ static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- 		/* temporarily disable to avoid IRQ-side locking */
- 		os_del_epoll_fd(fd);
- 	} else {
--		irq_entry = kzalloc(sizeof(*irq_entry), GFP_ATOMIC);
--		if (!irq_entry) {
--			err = -ENOMEM;
--			goto out_unlock;
-+		struct irq_entry *new;
+
++unsigned long long cycles2ns(unsigned long long cyc)
++{
++       struct cyc2ns_data data;
++       unsigned long long ns;
 +
-+		/* don't restore interrupts */
-+		raw_spin_unlock(&irq_lock);
-+		new = kzalloc(sizeof(*irq_entry), GFP_ATOMIC);
-+		if (!new) {
-+			local_irq_restore(flags);
-+			return -ENOMEM;
- 		}
-+		raw_spin_lock(&irq_lock);
-+		irq_entry = get_irq_entry_by_fd(fd);
-+		if (irq_entry) {
-+			to_free = new;
-+			goto already;
-+		}
-+		irq_entry = new;
- 		irq_entry->fd = fd;
- 		list_add_tail(&irq_entry->list, &active_fds);
- 		maybe_sigio_broken(fd);
-@@ -339,12 +352,11 @@ static int activate_fd(int irq, int fd, enum um_irq_type type, void *dev_id,
- #endif
- 
- 	WARN_ON(!update_irq_entry(irq_entry));
--	spin_unlock_irqrestore(&irq_lock, flags);
--
--	return 0;
-+	err = 0;
- out_unlock:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- out:
-+	kfree(to_free);
- 	return err;
- }
- 
-@@ -358,19 +370,20 @@ void free_irq_by_fd(int fd)
- 	struct irq_entry *to_free;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	to_free = get_irq_entry_by_fd(fd);
--	free_irq_entry(to_free, true);
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	remove_irq_entry(to_free, true);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
-+	kfree(to_free);
- }
- EXPORT_SYMBOL(free_irq_by_fd);
- 
- static void free_irq_by_irq_and_dev(unsigned int irq, void *dev)
++       cyc2ns_read_begin(&data);
++       ns = mul_u64_u32_shr(cyc, data.cyc2ns_mul, data.cyc2ns_shift);
++       cyc2ns_read_end();
++
++       return ns;
++}
++EXPORT_SYMBOL(cycles2ns);
++
+ static void __set_cyc2ns_scale(unsigned long khz, int cpu, unsigned long long tsc_now)
  {
--	struct irq_entry *entry;
-+	struct irq_entry *entry, *to_free = NULL;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		enum um_irq_type i;
- 
-@@ -386,12 +399,13 @@ static void free_irq_by_irq_and_dev(unsigned int irq, void *dev)
- 
- 			os_del_epoll_fd(entry->fd);
- 			reg->events = 0;
--			update_or_free_irq_entry(entry);
-+			to_free = update_or_remove_irq_entry(entry);
- 			goto out;
- 		}
- 	}
- out:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
-+	kfree(to_free);
+ 	unsigned long long ns_now;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 02159c967d29..46975b0a63a5 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10688,6 +10688,19 @@ static void kvm_vcpu_reload_apic_access_page(struct kvm_vcpu *vcpu)
+ 	kvm_x86_call(set_apic_access_page_addr)(vcpu);
  }
- 
- void deactivate_fd(int fd, int irqnum)
-@@ -402,7 +416,7 @@ void deactivate_fd(int fd, int irqnum)
- 
- 	os_del_epoll_fd(fd);
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	entry = get_irq_entry_by_fd(fd);
- 	if (!entry)
- 		goto out;
-@@ -414,9 +428,10 @@ void deactivate_fd(int fd, int irqnum)
- 			entry->reg[i].events = 0;
+
++static bool needs_halted_accounting(struct kvm_vcpu *vcpu)
++{
++	return (vcpu->kvm->arch.mwait_in_guest ||
++			vcpu->kvm->arch.hlt_in_guest ||
++			vcpu->kvm->arch.pause_in_guest) &&
++		boot_cpu_has(X86_FEATURE_APERFMPERF);
++}
++
++static long long get_unhalted_cycles(void)
++{
++	return __rdmsr(MSR_IA32_MPERF);
++}
++
+ /*
+  * Called within kvm->srcu read side.
+  * Returns 1 to let vcpu_run() continue the guest execution loop without
+@@ -10697,6 +10710,8 @@ static void kvm_vcpu_reload_apic_access_page(struct kvm_vcpu *vcpu)
+ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
++	unsigned long long cycles, cycles_start = 0;
++	unsigned long long unhalted_cycles, unhalted_cycles_start = 0;
+ 	bool req_int_win =
+ 		dm_request_for_irq_injection(vcpu) &&
+ 		kvm_cpu_accept_dm_intr(vcpu);
+@@ -10968,6 +10983,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		set_debugreg(0, 7);
  	}
- 
--	update_or_free_irq_entry(entry);
-+	entry = update_or_remove_irq_entry(entry);
- out:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
-+	kfree(entry);
- 
- 	ignore_sigio_fd(fd);
- }
-@@ -546,7 +561,7 @@ void um_irqs_suspend(void)
- 
- 	irqs_suspended = true;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		enum um_irq_type t;
- 		bool clear = true;
-@@ -579,7 +594,7 @@ void um_irqs_suspend(void)
- 				!__ignore_sigio_fd(entry->fd);
- 		}
- 	}
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- }
- 
- void um_irqs_resume(void)
-@@ -588,7 +603,7 @@ void um_irqs_resume(void)
- 	unsigned long flags;
- 
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		if (entry->suspended) {
- 			int err = os_set_fd_async(entry->fd);
-@@ -602,7 +617,7 @@ void um_irqs_resume(void)
- 			}
- 		}
- 	}
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- 
- 	irqs_suspended = false;
- 	send_sigio_to_self();
-@@ -613,7 +628,7 @@ static int normal_irq_set_wake(struct irq_data *d, unsigned int on)
- 	struct irq_entry *entry;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&irq_lock, flags);
-+	raw_spin_lock_irqsave(&irq_lock, flags);
- 	list_for_each_entry(entry, &active_fds, list) {
- 		enum um_irq_type t;
- 
-@@ -628,7 +643,7 @@ static int normal_irq_set_wake(struct irq_data *d, unsigned int on)
- 		}
- 	}
- unlock:
--	spin_unlock_irqrestore(&irq_lock, flags);
-+	raw_spin_unlock_irqrestore(&irq_lock, flags);
- 	return 0;
- }
- #else
--- 
-2.39.5
+
++	if (needs_halted_accounting(vcpu)) {
++		cycles_start = get_cycles();
++		unhalted_cycles_start = get_unhalted_cycles();
++	}
+ 	guest_timing_enter_irqoff();
+
+ 	for (;;) {
+@@ -11060,6 +11079,13 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	 * acceptable for all known use cases.
+ 	 */
+ 	guest_timing_exit_irqoff();
++	if (needs_halted_accounting(vcpu)) {
++		cycles = get_cycles() - cycles_start;
++		unhalted_cycles = get_unhalted_cycles() -
++			unhalted_cycles_start;
++		if (likely(cycles > unhalted_cycles))
++			current->gtime_halted += cycles2ns(cycles - unhalted_cycles);
++	}
+
+ 	local_irq_enable();
+ 	preempt_enable();
+--
+2.43.0
+
+
+
+
+Amazon Development Centre (South Africa) (Proprietary) Limited
+29 Gogosoa Street, Observatory, Cape Town, Western Cape, 7925, South Africa
+Registration Number: 2004 / 034463 / 07
 
