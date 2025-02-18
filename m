@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1950F1E8354
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035EC1EFF94
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739906597; cv=none; b=QkGxGdFLEr8+kjWOH0A6Zm2P14M/F0WiZUG65aFx0qHP14V5DL3/5ln/i6ca7KELTDdzGwXdG0xZYSchq/KBHdaq/kOOtbABaCBEsYOPCBkkz+ybC6NnGHgn4afkBDKWkGeJn8tby9G75k6VUUxclddvW5kGM42JWyjc8WxgbWs=
+	t=1739906600; cv=none; b=FoM+zyADdEzfOw4A59VpJusYb/9AWJEbd6+RKUULeFe4MJhN/fty5etKmzOVoS6GJbUJTiptn8FHUMvB1rbWgSHpCaOuMo9LTVSIFHMZV0bmiKuIMPsUaYP4MMcElrWQxE9kZCHBi54ipcZpuCKdJcm1gBtfKa+HYvK0MtVon/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739906597; c=relaxed/simple;
-	bh=54+1wSTWK34HQr0H/R006mkjjB9f/D+FONo/jgiEPf8=;
+	s=arc-20240116; t=1739906600; c=relaxed/simple;
+	bh=wtEOdGs2YSi6iCFHbcNdsyGHm5cwYWHaRiJS1CB7fE4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZxlU3NO1pAyN/Pf/Q0fTUQktVU52oRaGSNws8sj2TLqyGbuieQR9a7i62W+IY4T7g68LfJDbPss4zA4ts6aqrXh/r6KtWIFfKhofBAo9CgbtR0vA9PbFDVM5WT8JfG5WIKLeeQvOtBWJl7VZtK/cP2zlxl1x+s02RO/GOQ7f7P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gL69YOsH; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=hdKzby8/AR1mcGslkH6wsU9dW6pI4CO4CZ0HsPxuJ0fi63tjP94fKYSFfF5Dg488cUcZydIF1guyo3sB0cCiOtp0by8ehVEARZSG8T9U3ihqooE85uoybDEUH+aTzGf4lZ9Y+jp6GXXHSiz7kJoucxvvxZsHQN3Vj1MJ3iEwcAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RtqqBsyD; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gL69YOsH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RtqqBsyD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739906593;
+	s=mimecast20190719; t=1739906598;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3BBat5EO7Q9cBS+sJTTtoikXXonGuQ1MFgftGhda40Q=;
-	b=gL69YOsHR67z9qNb5iaqfFeqYRlhQQnj+yE7g8EustvVxvuN0tK/xic9dQTaoq67zAiYyu
-	GX5u3W0oOkUxIJfIsdS+pvi/aO6E/MxJnJijeMeXItPVC3LWhXld4DumdvrdxfYnAS3umD
-	xgHbCBQHurIFqcSlEk+h0afa5EJy1Iw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=qtAxVvogmmtKwzUjDbJVTd9fTHTMk8w5vttE1KliMWs=;
+	b=RtqqBsyDqGLvAw2qHoVBiaU5euR66VZGKTrO5+TaLCjh4/op+7TOZTwX36NcC6jgQyqQP4
+	bkn8rLmn7K4tiA6vy3ujnW98sXR7P9K7MrC1OrXtOdGu88yl0XFmD5I6SKh4P4wBIA/wii
+	dQ1la9z9e/VcZALg0Un+KB7r06A8rQI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-22pJpuW7PPuXM6-9ovXNoA-1; Tue,
- 18 Feb 2025 14:23:06 -0500
-X-MC-Unique: 22pJpuW7PPuXM6-9ovXNoA-1
-X-Mimecast-MFC-AGG-ID: 22pJpuW7PPuXM6-9ovXNoA_1739906585
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-128-0Js32PwMORKdOl2voEhkFQ-1; Tue,
+ 18 Feb 2025 14:23:15 -0500
+X-MC-Unique: 0Js32PwMORKdOl2voEhkFQ-1
+X-Mimecast-MFC-AGG-ID: 0Js32PwMORKdOl2voEhkFQ_1739906593
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45F4F19783B7;
-	Tue, 18 Feb 2025 19:23:05 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9175D1801A22;
+	Tue, 18 Feb 2025 19:23:13 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.9])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D8D8D180034D;
-	Tue, 18 Feb 2025 19:23:01 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C51D7180034D;
+	Tue, 18 Feb 2025 19:23:10 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: netdev@vger.kernel.org
 Cc: David Howells <dhowells@redhat.com>,
@@ -53,9 +53,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-afs@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net 2/5] rxrpc: peer->mtu_lock is redundant
-Date: Tue, 18 Feb 2025 19:22:45 +0000
-Message-ID: <20250218192250.296870-3-dhowells@redhat.com>
+Subject: [PATCH net 4/5] afs: Fix the server_list to unuse a displaced server rather than putting it
+Date: Tue, 18 Feb 2025 19:22:47 +0000
+Message-ID: <20250218192250.296870-5-dhowells@redhat.com>
 In-Reply-To: <20250218192250.296870-1-dhowells@redhat.com>
 References: <20250218192250.296870-1-dhowells@redhat.com>
 Precedence: bulk
@@ -67,21 +67,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The peer->mtu_lock is only used to lock around writes to peer->max_data -
-and nothing else; further, all such writes take place in the I/O thread and
-the lock is only ever write-locked and never read-locked.
+When allocating and building an afs_server_list struct object from a VLDB
+record, we look up each server address to get the server record for it -
+but a server may have more than one entry in the record and we discard the
+duplicate pointers.  Currently, however, when we discard, we only put a
+server record, not unuse it - but the lookup got as an active-user count.
 
-In a couple of places, the write_seqcount_begin() is wrapped in
-preempt_disable/enable(), but not in all places.  This can cause lockdep to
-complain:
+The active-user count on an afs_server_list object determines its lifetime
+whereas the refcount keeps the memory backing it around.  Failing to reduce
+the active-user counter prevents the record from being cleaned up and can
+lead to multiple copied being seen - and pointing to deleted afs_cell
+objects and other such things.
 
-WARNING: CPU: 0 PID: 1549 at include/linux/seqlock.h:221 rxrpc_input_ack_trailer+0x305/0x430
-...
-RIP: 0010:rxrpc_input_ack_trailer+0x305/0x430
+Fix this by switching the incorrect 'put' to an 'unuse' instead.
 
-Fix this by just getting rid of the lock.
+Without this, occasionally, a dead server record can be seen in
+/proc/net/afs/servers and list corruption may be observed:
 
-Fixes: eeaedc5449d9 ("rxrpc: Implement path-MTU probing using padded PING ACKs (RFC8899)")
+    list_del corruption. prev->next should be ffff888102423e40, but was 0000000000000000. (prev=ffff88810140cd38)
+
+Fixes: 977e5f8ed0ab ("afs: Split the usage count on struct afs_server")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: Jakub Kicinski <kuba@kernel.org>
@@ -92,77 +97,22 @@ cc: Simon Horman <horms@kernel.org>
 cc: linux-afs@lists.infradead.org
 cc: netdev@vger.kernel.org
 ---
- net/rxrpc/ar-internal.h | 1 -
- net/rxrpc/input.c       | 2 --
- net/rxrpc/peer_event.c  | 9 +--------
- net/rxrpc/peer_object.c | 1 -
- 4 files changed, 1 insertion(+), 12 deletions(-)
+ fs/afs/server_list.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 5e740c486203..a64a0cab1bf7 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -360,7 +360,6 @@ struct rxrpc_peer {
- 	u8			pmtud_jumbo;	/* Max jumbo packets for the MTU */
- 	bool			ackr_adv_pmtud;	/* T if the peer advertises path-MTU */
- 	unsigned int		ackr_max_data;	/* Maximum data advertised by peer */
--	seqcount_t		mtu_lock;	/* Lockless MTU access management */
- 	unsigned int		if_mtu;		/* Local interface MTU (- hdrsize) for this peer */
- 	unsigned int		max_data;	/* Maximum packet data capacity for this peer */
- 	unsigned short		hdrsize;	/* header size (IP + UDP + RxRPC) */
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 9047ba13bd31..24aceb183c2c 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -810,9 +810,7 @@ static void rxrpc_input_ack_trailer(struct rxrpc_call *call, struct sk_buff *skb
- 	if (max_mtu < peer->max_data) {
- 		trace_rxrpc_pmtud_reduce(peer, sp->hdr.serial, max_mtu,
- 					 rxrpc_pmtud_reduce_ack);
--		write_seqcount_begin(&peer->mtu_lock);
- 		peer->max_data = max_mtu;
--		write_seqcount_end(&peer->mtu_lock);
- 	}
+diff --git a/fs/afs/server_list.c b/fs/afs/server_list.c
+index 7e7e567a7f8a..d20cd902ef94 100644
+--- a/fs/afs/server_list.c
++++ b/fs/afs/server_list.c
+@@ -97,8 +97,8 @@ struct afs_server_list *afs_alloc_server_list(struct afs_volume *volume,
+ 				break;
+ 		if (j < slist->nr_servers) {
+ 			if (slist->servers[j].server == server) {
+-				afs_put_server(volume->cell->net, server,
+-					       afs_server_trace_put_slist_isort);
++				afs_unuse_server(volume->cell->net, server,
++						 afs_server_trace_put_slist_isort);
+ 				continue;
+ 			}
  
- 	max_data = umin(max_mtu, peer->max_data);
-diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
-index bc283da9ee40..7f4729234957 100644
---- a/net/rxrpc/peer_event.c
-+++ b/net/rxrpc/peer_event.c
-@@ -130,9 +130,7 @@ static void rxrpc_adjust_mtu(struct rxrpc_peer *peer, unsigned int mtu)
- 			peer->pmtud_bad = max_data + 1;
- 
- 		trace_rxrpc_pmtud_reduce(peer, 0, max_data, rxrpc_pmtud_reduce_icmp);
--		write_seqcount_begin(&peer->mtu_lock);
- 		peer->max_data = max_data;
--		write_seqcount_end(&peer->mtu_lock);
- 	}
- }
- 
-@@ -408,13 +406,8 @@ void rxrpc_input_probe_for_pmtud(struct rxrpc_connection *conn, rxrpc_serial_t a
- 	}
- 
- 	max_data = umin(max_data, peer->ackr_max_data);
--	if (max_data != peer->max_data) {
--		preempt_disable();
--		write_seqcount_begin(&peer->mtu_lock);
-+	if (max_data != peer->max_data)
- 		peer->max_data = max_data;
--		write_seqcount_end(&peer->mtu_lock);
--		preempt_enable();
--	}
- 
- 	jumbo = max_data + sizeof(struct rxrpc_jumbo_header);
- 	jumbo /= RXRPC_JUMBO_SUBPKTLEN;
-diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
-index 0fcc87f0409f..2ddc8ed68742 100644
---- a/net/rxrpc/peer_object.c
-+++ b/net/rxrpc/peer_object.c
-@@ -235,7 +235,6 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp,
- 		peer->service_conns = RB_ROOT;
- 		seqlock_init(&peer->service_conn_lock);
- 		spin_lock_init(&peer->lock);
--		seqcount_init(&peer->mtu_lock);
- 		peer->debug_id = atomic_inc_return(&rxrpc_debug_id);
- 		peer->recent_srtt_us = UINT_MAX;
- 		peer->cong_ssthresh = RXRPC_TX_MAX_WINDOW;
 
