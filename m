@@ -1,113 +1,156 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7973B22AE7F;
-	Tue, 18 Feb 2025 09:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECDD22D7B1;
+	Tue, 18 Feb 2025 09:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872587; cv=none; b=jhFs2p01OVlBWyiqnEbxrwApmFkd2slmyY9P9aRhuedKGIIK4SN5ErCBAbgVXHwFRS7FkJODn++wb57UW9ib/gNxlnngmuGjWw0noZIZyviXEOCAiqyV6KDTX3DrrbOlmpaS68Nh4QCxzQJuvMBPQmcjcpJESMv3t464+HOv/pE=
+	t=1739872606; cv=none; b=frNBt1snvwtD7qCCUyKs58FEpKvaVjg0wYBedHhGNajJYxkF4vXA244IxQmw6meXsg91lzFcSNEVtGpdVHyB9KzJdof4+zd60sU4Srtok93CbAVh9x+PVIUQgePyRPYl7jAjlxvVNOhO3zOV/pnwa+a9oXIQ9WTnFeI/f6FY/ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872587; c=relaxed/simple;
-	bh=qdz6v5u9AENOho3Z4k20JoDNSJyrhwjpfVmj3CQVAIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GFmgtKgxR3V+Vt8Gpn1KPoj7UH0p9MbY+Xw8tKLKxUP8Of9MykzLW8Wx4KHF47YWLneT79u0QfEoHlgtDEDOs9UyoWsRowqr9SkJIT+JQ6W4loZd7IAkqHDvF9AHUNcXJ2snePLYVMB2sEm9zksISnMkK+aHVgu6UTsU4GCA2pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iJDuIZOT; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1739872606; c=relaxed/simple;
+	bh=bNOhzTe2prG7ApNrzEgxiz1fkHFIuGiO+IoM7HFyf6g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=F1JQvZg5vUGYq8EtPa601mG+2IsAqiVj9qsFJFTbaBvHD5687HKx+zFyczTyNZ8a5ED0roakpivsP/fgJhSKr7yF7f/JoLSf5s4PYxo1EmtmSpJKGJ/iz8nKNDTEmT97/BbV+8elWuHHaLGYwW4W1WlEFJrBdYmHVsu31Vvevcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tg0r8JyG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iJDuIZOT"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739872581; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=N8XCSr1gSHReK69ZBra+oD3DdxbDjt85CctNSIF9ow4=;
-	b=iJDuIZOTAF+XyqadtpgzMq8vVjFaHbtFxJd40J7DvyGFxheehZwizAjcXkNEhuYhC+9ZU4+eBcIO96hzaKHWhSpYYaSPNICLW5hwXARAPmaUViiZm/l15crEp+lHGfzRCih3FLnaFfl1E7n/P4V8FMXiZ0X9RsCk11vZI3xypao=
-Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0WPlRUKM_1739872578 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 18 Feb 2025 17:56:19 +0800
-Date: Tue, 18 Feb 2025 17:56:17 +0800
-From: YinFengwei <fengwei_yin@linux.alibaba.com>
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, Hui Wang <hw.huiwang@huawei.com>
-Subject: Re: [RESEND PATCH v6 0/8] perf: Support searching local debugging
- vdso or specify vdso path in cmdline
-Message-ID: <lytsbawzokllz3nh36at3bi6322sk5br3vrqp5lr75eiwdqqj3@ozmbwylc5gdg>
-References: <20240816105811.1812897-1-changbin.du@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tg0r8JyG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BDC74C4AF0B;
+	Tue, 18 Feb 2025 09:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739872605;
+	bh=bNOhzTe2prG7ApNrzEgxiz1fkHFIuGiO+IoM7HFyf6g=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Tg0r8JyGfalSHtuPxOPpDJOJd/eVr2t83fDrx8ZUQS/AcUBxpr+MEZDisVIhSqUA0
+	 BLCJjHTRX13/9Wm+utObTLrcG9wYvanaPzmsHSvdE5kIKaWwYrRcXwPhW5+RRNKsIN
+	 zAjbs2OuuiUBfg8NB+olJY6MkxyC6mkrpsw4mDi8pghzg362Sy9QSR7/S0jEU9JwJl
+	 Fhct8cHfRFFiMeWxyY28IayLd2FUWpxQK0n/TgBZQ60JR2ixwnd0Bg0XCE5hxg99Kg
+	 e4Qy1bRWa6HHn1C91PTFeY4clmfzPchKss9YKmtBZCKxMNBLolfBoLyaMykcKOKfF/
+	 EFZ8TyXOobPrA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1F4C021AD;
+	Tue, 18 Feb 2025 09:56:45 +0000 (UTC)
+From: Joel Granados <joel.granados@kernel.org>
+Date: Tue, 18 Feb 2025 10:56:18 +0100
+Subject: [PATCH 2/8] signal: Move signal ctl tables into signal.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240816105811.1812897-1-changbin.du@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-jag-mv_ctltables-v1-2-cd3698ab8d29@kernel.org>
+References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
+In-Reply-To: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
+To: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Len Brown <lenb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, Joel Granados <joel.granados@kernel.org>
+X-Mailer: b4 0.15-dev-64da2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1782;
+ i=joel.granados@kernel.org; h=from:subject:message-id;
+ bh=bNOhzTe2prG7ApNrzEgxiz1fkHFIuGiO+IoM7HFyf6g=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGe0WVePspv5KFWYMyxxLrq5NdT/+kjWQWT00
+ rb5ohuXmdhRRYkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJntFlXAAoJELqXzVK3
+ lkFP/xwL/iWUKDAOOAgg2CCZDNJ/yTk7qhzst2m5RCQY9Y9zkZd8qKFneoSuZFOUv47OcPnifVs
+ PRXUs74ZHqQKYph9Cc+Lxv1aQ/ur/PUH9bxmz2ZaXGaLF7WrOymkU8yQJf+YHZLE8RAxjeOL6rt
+ cYouRwqv6R4TQUOt947+voVAO/nYSGPzQ6gce4vukbpBnEou2q05GRROklOEs7HtAuAKQ8LL9sz
+ s9LunTmFGywtFwEXwfxl8tgrWi88kRV6TKTLhCCwwHVh5lW8g0Ee24SvTIDuvQqwYib7KBtXlyI
+ J6XG8Puogwm2gxIEuR+whFOP9c9prA/d6sLn5ItTocmOUzF7oKb1a4HFtpoxjI7nNVNWye1z7LR
+ AzxihVlvEG6A8lpIx7lxKdbaD7DOkbbSTLfARmcA9nl4C2cakCWzx8hI57bcJUrJmDRqMolX+qm
+ LmCj5YMEOQfmswhrtpm6mEpxZElhKQ/QruoIC34NUUc5tQkBqW7VxMxIEX7kTXV63PjbIzceDX8
+ I8=
+X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
+ auth_id=239
 
-Hi Changbin,
+Move print-fatal-signals into its own const ctl table array in
+kernel/signal.c. This is part of a greater effort to move ctl tables
+into their respective subsystems which will reduce the merge conflicts
+in kerenel/sysctl.c.
 
-On Fri, Aug 16, 2024 at 06:58:03PM +0800, Changbin Du wrote:
-> The vdso dumped from process memory (in buildid-cache) lacks debugging
-> info. To annotate vdso symbols with source lines we need a debugging
-> version.
-> 
-> For x86, we can find them from your local build as
-> 'arch/x86/entry/vdso/vdso{32,64}.so.dbg'. Or they may resides in
-> '/lib/modules/<version>/vdso/vdso{32,64}.so' on Ubuntu. But notice that the
-> builid has to match.
-> 
-> If user doesn't specify the path, perf will search them internally as long
-> as vmlinux when recording samples. The searched debugging vdso will add to
-> buildid cache as ~/.debug/[vdso]/debug.
-> 
-> Below samples are captured on my local build kernel. perf succesfully
-> find debugging version vdso and we can annotate with source without
-> specifying vdso path.
-> 
-> $ sudo perf record -a
-> $ sudo perf report --objdump=llvm-objdump
-> 
-> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
-> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
-> Percent│       movq    -48(%rbp),%rsi
->        │       testq   %rax,%rax
->        │     ;               return vread_hvclock();
->        │       movq    %rax,%rdx
->        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
->        │     ↑ js      eb
->        │     ↑ jmp     74
->        │     ;               ts->tv_sec = vdso_ts->sec;
->   0.02 │147:   leaq    2(%rbx),%rax
->        │       shlq    $4, %rax
->        │       addq    %r10,%rax
->        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
->   9.38 │152:   movl    (%r10),%ecx
-> 
-> When doing cross platform analysis, we need to specify the vdso path manually if
-> we are interested in its symbols, because they are not installed on local
-> machine. At most two vdso can be given. Also you can pack your buildid cache with
-> perf-archive if the debugging vdso can be found on the sampled machine.
-> 
-> $ sudo perf report --objdump=llvm-objdump \
->       --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
-With latest upstream kernel, I still can't annotate symbols in vdso.
-With your patch and this --vdso command, it works great on x86 and arm64
-platform. So
-   Tested-by: Yin Fengwei <fengwei_yin@linux.alibaba.com>
+Signed-off-by: Joel Granados <joel.granados@kernel.org>
+---
+ kernel/signal.c | 11 +++++++++++
+ kernel/sysctl.c |  8 --------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 875e97f6205a..347b74800f92 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -4962,9 +4962,20 @@ static const struct ctl_table signal_debug_table[] = {
+ #endif
+ };
+ 
++static const struct ctl_table signal_table[] = {
++	{
++		.procname	= "print-fatal-signals",
++		.data		= &print_fatal_signals,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++};
++
+ static int __init init_signal_sysctls(void)
+ {
+ 	register_sysctl_init("debug", signal_debug_table);
++	register_sysctl_init("kernel", signal_table);
+ 	return 0;
+ }
+ early_initcall(init_signal_sysctls);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 7759b1ed7221..6514c13800a4 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -25,7 +25,6 @@
+ #include <linux/slab.h>
+ #include <linux/sysctl.h>
+ #include <linux/bitmap.h>
+-#include <linux/signal.h>
+ #include <linux/printk.h>
+ #include <linux/proc_fs.h>
+ #include <linux/security.h>
+@@ -1626,13 +1625,6 @@ static const struct ctl_table kern_table[] = {
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+ #endif
+-	{
+-		.procname	= "print-fatal-signals",
+-		.data		= &print_fatal_signals,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+ #ifdef CONFIG_SPARC
+ 	{
+ 		.procname	= "reboot-cmd",
 
-Regards
-Yin, Fengwei
+-- 
+2.44.2
 
-> 
-> I also improved perf-buildid-cache command to recognize vdso when adding files,
-> then place it at correct place.
-> 
-> $ sudo perf buildid-cache --add /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
 
