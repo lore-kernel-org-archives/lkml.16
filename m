@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB756243957;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB542475C0;
 	Tue, 18 Feb 2025 12:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739880716; cv=none; b=SjmcGK5u4BqrrlGhk8m5CzWRxHvxqv1lYEvliSeJ36BhtvCJ5gTT2aC4+lOOBS/ZLR8xb6YQDeHQR8p6z7yQ74dCENQv2KsEExTDM5ve8fB/sMZ1i10RiOKFttmwTX4DnkNe51/hURV49UdG6S6H+0giiFKS5FKI4Bb7q1aBQ/c=
+	t=1739880716; cv=none; b=sEdqMm2A9RnVKea/U7cgiNYhcs8wM0MjKrFyQP5FYb6E7lrcSmISL0AhMzr+SwmByU4fzgPdtuF66joNCB80ASaW8i8XTjSxnmKY48O6xIeZ80NFnjP9Zr6+7887frJtlWRwsuxO1exG4OOrJLBQHqU+2edr6ep2HaJKruDMtFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739880716; c=relaxed/simple;
-	bh=mN9/XLD7QHX0dbGj9xtAM0pkwuC99gv+9b7tq+ZxAqM=;
+	bh=6r1OG4cv+l2tiAtJOLWK6AnaR/G2EY/dQamBQieHGWM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Z9YQddSW0+eOl31HXt7H/2hDrrl2JuJJnan2DbOtK++1sp7gvxm2DkEQ9qHkGC4ZSc8jF/4D7WFhbhMWD7KsUmHYbrmLgrnLp+GwoiAfWDAcJuRpP8qf3h6dOaQy9XEI/D7Frj0SMXOnvsoLs+u6YFjD9fVTnExTOJlFRrI5qd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N2VaU+r6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xbsOj1MB; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=jAO6M9JtMjCwshjqRLyTqVHx8qxa1msLtfZdmuPuuxhe3NNS0yOmqOBRrn0eHNqufPQm0WWEyFqkZl8DazNVtqSCX+Kb+ZzFtXPeldF5fVt51iaSiwjYj1QfSSon8jfaMtS8E8jD2fl2bzzxmcARlP7j/d329NR7GZGwYOsMjGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JAFjcnvS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yh1BDozC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N2VaU+r6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xbsOj1MB"
-Date: Tue, 18 Feb 2025 12:11:53 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JAFjcnvS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yh1BDozC"
+Date: Tue, 18 Feb 2025 12:11:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739880713;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GWh5wbGu5dyNhZNzjbsfnxt5GGJjwr3OBGad+7rNLAg=;
-	b=N2VaU+r6R4eZUrJ0h95gdmHuCD4s6hotgmomGRpRY7wgLS16TvcDinHJHbixUQ3Ya8o2PH
-	hIFZt2EMQbPq/84sOdLmWcTuFx44A9FBdxufeR4VDAA2QQvaBx2aaBQiJ5tf+7Xcd5WQv0
-	51hnyA4M6dSTySqhErVvCkLtMe6MDbp9dRYp1rO+0TlwkMAIzDL6MSBsMEqqZz2PsiDIdc
-	V4VHT6k1zmDPpvrBebLW6Yhnu5uVfno9L31XinmkLUJgNeciTQBEjtlN0fVf6t898uKO1q
-	7GMH+3/iNh5NlOH7uZQHzwQ5U4IqOhSUXfqze5vxi8vCJAhu5lr4xaCEJSK33w==
+	bh=Wv/AJB3TM9sqQ71+9ZoEE2PznDeki+snkWj5vhXbRIg=;
+	b=JAFjcnvSjzTVWDXZxYlOIKj0r/7DEEgYg1CjE/ywXHFASrfMQXWwbwhV3wHxWXRWI1V2pZ
+	evChzWXQDAazeDqp9C64ArSOO0HSPupCowdxz7l4waMyS8i/6SXFxJRDuxlyoHzppu/iwr
+	ETLHwaIcQLMUWEWJEJ1LhqWDbkGqbwTIUCAgrjC2CHcrnCN5C8a78NaHi66DXbkDO/htm2
+	1QcJKAbsMIbTk6C9r6xyicAxX3gS9Mn1+1DP/votCaauUZJRs2/Wgt7vgGH954DxHuUopJ
+	FO/z22bUbxLGkE0519YMfxRo6NLhh1DjBMcO+oCwfpRyIoQRAiqEAI16j4E5oA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739880713;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GWh5wbGu5dyNhZNzjbsfnxt5GGJjwr3OBGad+7rNLAg=;
-	b=xbsOj1MBVRmYq86gnJK+TaOMlKWG6FAFcrrRl/kG+e9Gr0jvi9Q9uFzFJU7PW5Z4bwSdbT
-	ZTZEn+EmSskszzBw==
+	bh=Wv/AJB3TM9sqQ71+9ZoEE2PznDeki+snkWj5vhXbRIg=;
+	b=yh1BDozC0TGDjJedwfegC6Rl53FT+i0f7OdGj9tRoUkMfs0fsr016divXRHT3uDyf/HWmh
+	RBfxjVWqDS9XGxAg==
 From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/boot: Disable stack protector for early boot code
+Subject: [tip: x86/asm] x86/pvh: Use fixed_percpu_data for early boot GSBASE
 Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
  Ard Biesheuvel <ardb@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250123190747.745588-4-brgerst@gmail.com>
-References: <20250123190747.745588-4-brgerst@gmail.com>
+In-Reply-To: <20250123190747.745588-5-brgerst@gmail.com>
+References: <20250123190747.745588-5-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173988071310.10177.13642802755066548423.tip-bot2@tip-bot2>
+Message-ID: <173988071267.10177.6022560317987318542.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,43 +68,57 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     a9a76b38aaf577887103e3ebb41d70e6aa5a4b19
-Gitweb:        https://git.kernel.org/tip/a9a76b38aaf577887103e3ebb41d70e6aa5a4b19
+Commit-ID:     f58b63857ae38b4484185b799a2759274b930c92
+Gitweb:        https://git.kernel.org/tip/f58b63857ae38b4484185b799a2759274b930c92
 Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Thu, 23 Jan 2025 14:07:35 -05:00
+AuthorDate:    Thu, 23 Jan 2025 14:07:36 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 18 Feb 2025 10:14:51 +01:00
+CommitterDate: Tue, 18 Feb 2025 10:14:59 +01:00
 
-x86/boot: Disable stack protector for early boot code
+x86/pvh: Use fixed_percpu_data for early boot GSBASE
 
-On 64-bit, this will prevent crashes when the canary access is changed
-from %gs:40 to %gs:__stack_chk_guard(%rip).  RIP-relative addresses from
-the identity-mapped early boot code will target the wrong address with
-zero-based percpu.  KASLR could then shift that address to an unmapped
-page causing a crash on boot.
-
-This early boot code runs well before user-space is active and does not
-need stack protector enabled.
+Instead of having a private area for the stack canary, use
+fixed_percpu_data for GSBASE like the native kernel.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250123190747.745588-4-brgerst@gmail.com
+Link: https://lore.kernel.org/r/20250123190747.745588-5-brgerst@gmail.com
 ---
- arch/x86/kernel/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/platform/pvh/head.S | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index b43eb7e..84cfa17 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -44,6 +44,8 @@ KCOV_INSTRUMENT_unwind_orc.o				:= n
- KCOV_INSTRUMENT_unwind_frame.o				:= n
- KCOV_INSTRUMENT_unwind_guess.o				:= n
+diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
+index 4733a5f..723f181 100644
+--- a/arch/x86/platform/pvh/head.S
++++ b/arch/x86/platform/pvh/head.S
+@@ -173,10 +173,15 @@ SYM_CODE_START(pvh_start_xen)
+ 1:
+ 	UNWIND_HINT_END_OF_STACK
  
-+CFLAGS_head32.o := -fno-stack-protector
-+CFLAGS_head64.o := -fno-stack-protector
- CFLAGS_irq.o := -I $(src)/../include/asm/trace
+-	/* Set base address in stack canary descriptor. */
+-	mov $MSR_GS_BASE,%ecx
+-	leal canary(%rip), %eax
+-	xor %edx, %edx
++	/*
++	 * Set up GSBASE.
++	 * Note that on SMP the boot CPU uses the init data section until
++	 * the per-CPU areas are set up.
++	 */
++	movl $MSR_GS_BASE,%ecx
++	leaq INIT_PER_CPU_VAR(fixed_percpu_data)(%rip), %rdx
++	movq %edx, %eax
++	shrq $32, %rdx
+ 	wrmsr
  
- obj-y			+= head_$(BITS).o
+ 	/* Call xen_prepare_pvh() via the kernel virtual mapping */
+@@ -238,8 +243,6 @@ SYM_DATA_START_LOCAL(gdt_start)
+ SYM_DATA_END_LABEL(gdt_start, SYM_L_LOCAL, gdt_end)
+ 
+ 	.balign 16
+-SYM_DATA_LOCAL(canary, .fill 48, 1, 0)
+-
+ SYM_DATA_START_LOCAL(early_stack)
+ 	.fill BOOT_STACK_SIZE, 1, 0
+ SYM_DATA_END_LABEL(early_stack, SYM_L_LOCAL, early_stack_end)
