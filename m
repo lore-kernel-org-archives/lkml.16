@@ -1,191 +1,100 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323E51F583E;
-	Tue, 18 Feb 2025 18:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904501; cv=pass; b=U6RI7Xxn5XeQ57z3ZuLz3BOfuWz0bzkBnxhhRtIVUUtxhL3qMbL+e00zGYojO0lj/WAFBMV+qrAirVn0VjcTDRH11kb6YTQddehxSpb5eLVkKU/5vq609ibvPMId1in8aI+h/fL41Uhvs9dmZTMYAYkan+8tEVJk0SR6b5ilXUM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904501; c=relaxed/simple;
-	bh=45EZu9kkzl5OwUmwDGaw6JS8EitUKF1mOe5bkbmhpS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CxMPXua9eWrIJC/WJVqsLm9zGT1VpsM8WA0bENXqxxXLdywf9PbXie86rNu1lcSgWVi8JUfECRs5rdq+T8MubdfkJpGF/eN9DLsZ7MKjDGTrKebmowmwsJDXRzQbQz1G3jUpMhxe8CJ1Wzd1hIESVaNdR6iQpDeEggQ5H4H+/To=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=E8fHwT9U; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4912356BA;
+	Tue, 18 Feb 2025 18:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739904523; cv=none; b=Y/j4TOLZtM7fZdZ6uVZrXCA7uoCaTIDqcRjmQnq1bpArPfgBY9uhhPUUk2b9LJ+ILuk4G9EGvvgBbSiOn4eoC46TEvcB3/EKBITeQtd071ixhN3y2jCinIizo9CmADppzbkyc0gba50ET7nwJUqCyb0X/g7j+8yNb9pVljRB2Wg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739904523; c=relaxed/simple;
+	bh=YMTJWxXHh330br82br0etxC3kz7eh2nyIwBII22BIRg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=drCMeISNWQQdB5F4FrYo+zvl2Tyz1ZL3rYmeEvEAVbKZoyZRG1wzlnpWTAvCpKkRIUUWm40BoC2GhuU2V6/+PSQ2yXeAb2aOUNy9bVM6d9QklcQAA2zgxLZaDhfho9TOIE2O0NDU6fXoC8sZxWqv6aGx9WGEFFNT6gt+JWqZqzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=T0CsyKyQ; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="E8fHwT9U"
-ARC-Seal: i=1; a=rsa-sha256; t=1739904454; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cmMKDRpnEpm41H4DPOLk5BsYUnNBNwNMNaDxvOw7YjSRtXy/3xi24OU0paLkZu9g8IIvwAh74IxMR7c4pq2MMUnRIFovxOvJDl7dTjU7AEq2WlVHNiPe8UVNeAl6CXDg13Y1Y5eYHoJBCqkhcctH5J7FdSeSeEoE6Nhq4fnt4Lg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739904454; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wx0i2BTQEV+R7NoKsDdzMKdh9jqK1pOVfRv5zU5IOEA=; 
-	b=lvvgOtUA3JyBcf2xylqIFzE5M6a3XvQVCg1RLK1Y1rtFmWO7I3W9DHTnLLNsCffP1eUJqN22mwzZQrEmq+/w5d9HXM77e9mayGIpCIbbexIb7q8699tpmMobFcN4yEG3FrW0JoEGzp2i/xnD8NtcnzFhjhqttUJzh78QU6hkOSo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739904454;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=wx0i2BTQEV+R7NoKsDdzMKdh9jqK1pOVfRv5zU5IOEA=;
-	b=E8fHwT9U3edBu91+uU8e1qUbXPD8rfF0tTOMSypg3ojiKcJkDfZYSj8WtPA/7m+R
-	8oE5W5AJU1nzONqi3yfONRpi59IzWyDkkEygpzqfJGUDsP7xb5yioIMoeCnREM64vkC
-	Ed+/HWmRSvyrdVrbrgjeigoLyQv1pEQxE1osbpvA=
-Received: by mx.zohomail.com with SMTPS id 1739904453636849.5332346273472;
-	Tue, 18 Feb 2025 10:47:33 -0800 (PST)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	jose.abreu@synopsys.com,
-	nelson.costa@synopsys.com,
-	shawn.wen@rock-chips.com,
-	nicolas.dufresne@collabora.com,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Tim Surber <me@timsurber.de>
-Subject: [PATCH v7 3/6] arm64: dts: rockchip: Add device tree support for HDMI RX Controller
-Date: Tue, 18 Feb 2025 21:44:36 +0300
-Message-ID: <20250218184439.28648-4-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
-References: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="T0CsyKyQ"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 4A15B25B65;
+	Tue, 18 Feb 2025 19:48:33 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id YTEc64bV_CrT; Tue, 18 Feb 2025 19:48:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1739904512; bh=YMTJWxXHh330br82br0etxC3kz7eh2nyIwBII22BIRg=;
+	h=From:Subject:Date:To:Cc;
+	b=T0CsyKyQz5J0X18a0h/L2r9JpQBQ9dSb3Buwpn/I2t+BHgx/HbyiIBHNRaC0uyLCW
+	 eLtM7XxUZ+6H0dwkZv1D0VbEM3YWMMdU/lioM7PzaEzPm26nyMrGwbYtvVQD0RBV1Y
+	 j4R7q2jmQ4RqmI+GlKklaj3viHSTzYYmZehubCAwram4QPjAcggyufwv3nQywn3cq0
+	 ma4BQlasjNdpgdwGOYLcpiD2QDpQnYnrRFAhDJ4OGu8u2igCRxNM2JuZjSTbL5T5/d
+	 M7jDvs2rHfzPErekjpqqTDT9Ub9CaF0E2OdA0fOjJluf0IWM91hxXVe7jpp67di0iY
+	 IhbDt5IIhpnmw==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v2 0/3] Introduce DW MMC support for Exynos7870
+Date: Wed, 19 Feb 2025 00:17:46 +0530
+Message-Id: <20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANPVtGcC/13MQQqDMBCF4avIrJsSY2xCV96juNBx1FmYlESCI
+ t69qdBNl/+D9x0QKTBFeBYHBEoc2bsc6lYAzp2bSPCQG5RUtVSyErTtzkdjjRTLgsLUfYe1rdA
+ +NOTTO9DI2wW+2twzx9WH/fJT+V1/lP6nUimkQGtwRKN60l0zcAzer3cfJmjP8/wAsEEUxa4AA
+ AA=
+X-Change-ID: 20250203-exynos7870-mmc-75bac583c864
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-mmc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739904507; l=1253;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=YMTJWxXHh330br82br0etxC3kz7eh2nyIwBII22BIRg=;
+ b=LZPho8AvHLw3wEQKSAqT37sfbjzg/HU7eUsKTXf8nEcvsTjTTnCilhT8CRmn1576PNG64Mnco
+ jJWN2rpJhc1Aa8CzVfZUXxM57Y7EhyZiteNSLIeS/o74LQuhm3lGYre
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-From: Shreeya Patel <shreeya.patel@collabora.com>
+This series adds support for SMU and non-SMU variants of Exynos7870 DW
+MMC controllers.
 
-Add device tree support for Synopsys DesignWare HDMI RX
-Controller.
+Some DW MMC controllers require two 32-bit r/w from a 64-bit FIFO,
+the series implements that feature as well.
 
-Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
-Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
-Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+This patch series is a part of Exynos7870 upstreaming.
+
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
- .../dts/rockchip/rk3588-base-pinctrl.dtsi     | 14 +++++
- .../arm64/boot/dts/rockchip/rk3588-extra.dtsi | 57 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
+Changes in v2:
+- Take over ownership of patches by the co-author, upon their request.
+- Link to v1: https://lore.kernel.org/r/20250204-exynos7870-mmc-v1-0-c87cfc72be4a@disroot.org
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi
-index 7f874c77410c..2d4b9986a177 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi
-@@ -594,6 +594,20 @@ hdmim0_tx1_hpd: hdmim0-tx1-hpd {
- 				/* hdmim0_tx1_hpd */
- 				<1 RK_PA6 5 &pcfg_pull_none>;
- 		};
-+
-+		/omit-if-no-ref/
-+		hdmim1_rx: hdmim1-rx {
-+			rockchip,pins =
-+				/* hdmim1_rx_cec */
-+				<3 RK_PD1 5 &pcfg_pull_none>,
-+				/* hdmim1_rx_scl */
-+				<3 RK_PD2 5 &pcfg_pull_none_smt>,
-+				/* hdmim1_rx_sda */
-+				<3 RK_PD3 5 &pcfg_pull_none_smt>,
-+				/* hdmim1_rx_hpdin */
-+				<3 RK_PD4 5 &pcfg_pull_none>;
-+		};
-+
- 		/omit-if-no-ref/
- 		hdmim1_rx_cec: hdmim1-rx-cec {
- 			rockchip,pins =
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-index 4a950907ea6f..b7d06f93c8ce 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-@@ -7,6 +7,30 @@
- #include "rk3588-extra-pinctrl.dtsi"
- 
- / {
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * The 4k HDMI capture controller works only with 32bit
-+		 * phys addresses and doesn't support IOMMU. HDMI RX CMA
-+		 * must be reserved below 4GB.
-+		 * The size of 160MB was determined as follows:
-+		 * (3840 * 2160 pixels) * (4 bytes/pixel) * (2 frames/buffer) / 10^6 = 66MB
-+		 * To ensure sufficient support for practical use-cases,
-+		 * we doubled the 66MB value.
-+		 */
-+		hdmi_receiver_cma: hdmi-receiver-cma {
-+			compatible = "shared-dma-pool";
-+			alloc-ranges = <0x0 0x0 0x0 0xffffffff>;
-+			size = <0x0 (160 * 0x100000)>; /* 160MiB */
-+			alignment = <0x0 0x40000>; /* 64K */
-+			no-map;
-+			status = "disabled";
-+		};
-+	};
-+
- 	usb_host1_xhci: usb@fc400000 {
- 		compatible = "rockchip,rk3588-dwc3", "snps,dwc3";
- 		reg = <0x0 0xfc400000 0x0 0x400000>;
-@@ -135,6 +159,39 @@ i2s10_8ch: i2s@fde00000 {
- 		status = "disabled";
- 	};
- 
-+	hdmi_receiver: hdmi_receiver@fdee0000 {
-+		compatible = "rockchip,rk3588-hdmirx-ctrler", "snps,dw-hdmi-rx";
-+		reg = <0x0 0xfdee0000 0x0 0x6000>;
-+		power-domains = <&power RK3588_PD_VO1>;
-+		rockchip,grf = <&sys_grf>;
-+		rockchip,vo1-grf = <&vo1_grf>;
-+		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "cec", "hdmi", "dma";
-+		clocks = <&cru ACLK_HDMIRX>,
-+			 <&cru CLK_HDMIRX_AUD>,
-+			 <&cru CLK_CR_PARA>,
-+			 <&cru PCLK_HDMIRX>,
-+			 <&cru CLK_HDMIRX_REF>,
-+			 <&cru PCLK_S_HDMIRX>,
-+			 <&cru HCLK_VO1>;
-+		clock-names = "aclk",
-+			      "audio",
-+			      "cr_para",
-+			      "pclk",
-+			      "ref",
-+			      "hclk_s_hdmirx",
-+			      "hclk_vo1";
-+		resets = <&cru SRST_A_HDMIRX>, <&cru SRST_P_HDMIRX>,
-+			 <&cru SRST_HDMIRX_REF>, <&cru SRST_A_HDMIRX_BIU>;
-+		reset-names = "axi", "apb", "ref", "biu";
-+		memory-region = <&hdmi_receiver_cma>;
-+		pinctrl-0 = <&hdmim1_rx>;
-+		pinctrl-names = "default";
-+		status = "disabled";
-+	};
-+
- 	pcie3x4: pcie@fe150000 {
- 		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
- 		#address-cells = <3>;
+---
+Kaustabh Chakraborty (3):
+      dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
+      mmc: dw_mmc: add a quirk for accessing 64-bit FIFOs in two halves
+      mmc: dw_mmc: add exynos7870 DW MMC support
+
+ .../bindings/mmc/samsung,exynos-dw-mshc.yaml       |  2 +
+ drivers/mmc/host/dw_mmc-exynos.c                   | 41 +++++++++-
+ drivers/mmc/host/dw_mmc.c                          | 94 +++++++++++++++++++++-
+ drivers/mmc/host/dw_mmc.h                          | 27 +++++++
+ 4 files changed, 161 insertions(+), 3 deletions(-)
+---
+base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
+change-id: 20250203-exynos7870-mmc-75bac583c864
+
+Best regards,
 -- 
-2.48.1
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
