@@ -1,162 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10171EFF9C;
-	Tue, 18 Feb 2025 19:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21A41EFF8B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739905757; cv=none; b=Uph5lVCfZ/ZDZx0A+Or1zvUr0vhmsPRj2hdDTx5p9LYCAENc8M73J+QE1WjbTxXH5Y2BEO3g4N1gnC5q/GYxSCIQ5Nnn138208XH7VtTVdkqOvv/t5P+6ZF0oEZLRNZDZJLN9lgPKfQQhZsDhDnm7+60rEET4PT0ScfWUFdk/8M=
+	t=1739905758; cv=none; b=vFjq75u+Mw+9uf2yrfg0Bgudv6hc8XdP+9WieiT1hlKTugBUSNoVPrxND/irSXTGNKSirO+lvjBqOcWlwm1xq71D3bOH6ihYDH+PfNwIeqloLSvpvZa9y2VKXmJ/9YFf191KAwyzEz9uxEl4QP7cgsJ8LYaooghnF48NfjDA6I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739905757; c=relaxed/simple;
-	bh=5tqtTKe1lqiBpYBvved5ezJFmx7RjdV4hMjpw3suVTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n2x1d82X9gn3fhzC7v8j8PbKTOJKosbq5uTjCRZjBMjHU+nNh+hZ61OMaXh52+qGtn+40rmhuzJXuFJfCu/QwHL7/7StvSfQ2L0NwLMpn//e04R0FWNLDlMd9faZblqu9kjq/yYYh0TJEjA3GhaqkKuvQPKs2r1MYjIMKboYbrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyiiETFR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739905758; c=relaxed/simple;
+	bh=vtkAZPDRpeVOssKKtc3/ZBtyBpcNLoSSRXvVxehsrIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LDYZDBOK+94ADU6NzWGuYICzV/W7SVft3giqf8wYdKmjs6osZZ06nfxyQe4tk6vUrUSYeyWd01E12Fg2+g1MYjDiow8Hamn5qsQaZPzvJods3a9iOQwatUVPCaA13/y3bx2CLWgen5dZpVg6XMnom+CveICewX9UtfTamuFBLko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yQ8+PFAY; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyiiETFR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519D7C4CEE9;
-	Tue, 18 Feb 2025 19:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739905755;
-	bh=5tqtTKe1lqiBpYBvved5ezJFmx7RjdV4hMjpw3suVTk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tyiiETFRaKcaoJQl/R1X4oOg3uJimyVxjlG8636VT9ZAeFE7YYa0PSU7ORdtkbkdM
-	 noymckPMHYpTiivADmqXWs0hWEEYiHBn52vwQNxDdjo2o3DB4QQCVWhon3FDU9sBJL
-	 /zC6mUL0iq7T0fTZHdiz9hWQBmZLpCBsFXnU5t79nFICRrmxria3CtXAlaYUKbTJ3B
-	 sD4G0Kw4c99VU9kGE9xLN7NEmGoqtWcyW5K9qvne8O+vcgMM3F0+eygTp5hqsYiMHp
-	 KwEvU/ZdwOcI7Ls/YZ/n3BsDoLdmAWE6z8ESajOfOCt2V9Gk0IPG3ADqIbiwhzsePm
-	 i3KTmpYSOVV/Q==
-From: Mario Limonciello <superm1@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Huang Rui <ray.huang@amd.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	platform-driver-x86@vger.kernel.org (open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER),
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-pm@vger.kernel.org (open list:AMD PSTATE DRIVER)
-Subject: [PATCH v8 12/13] platform/x86/amd: hfi: Add debugfs support
-Date: Tue, 18 Feb 2025 13:08:21 -0600
-Message-ID: <20250218190822.1039982-13-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250218190822.1039982-1-superm1@kernel.org>
-References: <20250218190822.1039982-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yQ8+PFAY"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abbae92be71so198598966b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:09:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739905753; x=1740510553; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xsPSNeOLOsrs5K++JmVDCL05j90mUH/WwZrpY1dTXqk=;
+        b=yQ8+PFAYU3EoFFe1afTQxcs9M5Tm46BhjXE+Ni49exR70aDh5k8D1+468WlAofxgzc
+         l199bW8uI7z8hMSdXZxfu063NSXKygNu5eeMQagj8PDwFHH7pFXjhN1b614X1NsVr4tY
+         zaseVLNxi50yxk2Hxwc7+xBmHj6ZLGoEDW2ggNcB/yhAZ65f/qoENuHZh5mzUmbIGMMN
+         tlYi9U/4YcMOEfcaVSQQ9VAUOp8xrij9kMmiipdhe5aJaN2YLO50v6pZHDDc+UB1K5We
+         IYim5GOOnK6Bj0aNEGrRC6m1s3fyAUYcn4Dca1GWWioP8LwcN1xqxbwGfv+ubXm4cAlt
+         HrBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739905753; x=1740510553;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xsPSNeOLOsrs5K++JmVDCL05j90mUH/WwZrpY1dTXqk=;
+        b=KK8qAVd1BEExo85qOACxrPXSVvn7Zqmc5Kow3IBJfsLRGtfxf/YW133qCKE3J33wMG
+         o8bwaXk+Dk+4OovFq3ukp0ePna47vNGJfsN69+9h9OHkCbeAZr5AnEbCU5ER5LpFp3pU
+         s7EWK6TLB44i/0x/HVTp19O2JP/H9bVNNO3PB9BrIfl2oWhwbWZHUYGuD+a6eNexCYkO
+         kVtsEUmC5YCUc3ZymBTfVIqDlZ1MsYD1P9n8gjOaNtfydz+0+xyDdQ0TNU9XxCXtIZF9
+         lSCL6+OABM2KGgLHbGw7LmTLikso7Br31nXyni/NmemczpqHJhmr6TIzwNGaOZd/azA1
+         7jNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNHG40xyKYfQA0KxHt5hWXKbULEfAqzyYgbgpKzhwo3UlfjWdzTJ2JOyOQAD7+rbwJilH/nl3swEKdJWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfp0Epfvv/IAvAWvN/r956vLfKRLVmAR5rdiGMHprlaYiqh8Dw
+	vhr6sgf+3gD9kcSLHbAxPh6K05hLICWgwEng0CJB3BMs9/9F1S66tdcrQxRJOjg=
+X-Gm-Gg: ASbGncsGGDpF4BJ6zpi7/KmHJ1zaMLxWaoRRSc2tAReOc1sIJlDAP5y5tEn7Ls8l8t/
+	HPNq8mtPvzmRjI1nRk9Z76Gv2QYmVq6J1m23882gAexU1GVRVbpTcG8sgFSMM5TQn5WUrft7XYK
+	XtlFzuQBd2B/4ubsrDPW5wnVdA78ye/gIXMNruS5P5DuAXQKYoKu9p+nH/65miSZ2LrYSk07X6D
+	TLQ9y4E5+07AR5PUkSDccuZb/NdaFWrajIwP87Q5s9cJwPT9k5jlfy2hUkT7Or0Wo1f6GRyI92i
+	aeohiS1V8KbBmrEJXT22
+X-Google-Smtp-Source: AGHT+IECzgx+wcz5EbHNUv+RuNV/8qTPAQ4z0nfTNLzDceNq6d1mjgLqh6ZvP2PHnq3FwjFOEYPEyw==
+X-Received: by 2002:a05:6402:42cc:b0:5de:4a8b:4c9c with SMTP id 4fb4d7f45d1cf-5e03618aa7emr37791483a12.32.1739905752903;
+        Tue, 18 Feb 2025 11:09:12 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5dece1d369esm9063291a12.37.2025.02.18.11.09.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 11:09:12 -0800 (PST)
+Date: Tue, 18 Feb 2025 22:09:08 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Madhur Kumar <madhurkumar004@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] staging: sm750fb: Remove unnecessary volatile
+ qualifiers from the file
+Message-ID: <fc80577a-2dfc-467f-bb92-db9e0cc7151c@stanley.mountain>
+References: <20250218185749.22144-3-madhurkumar004@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218185749.22144-3-madhurkumar004@gmail.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Wed, Feb 19, 2025 at 12:27:48AM +0530, Madhur Kumar wrote:
+> Signed-off-by: Madhur Kumar <madhurkumar004@gmail.com>
+> ---
 
-Add a dump of the class and capabilities table to debugfs to assist
-with debugging scheduler issues.
+No commit message.  No v2.  Etc.
 
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v8:
- * s,for_each_present_cpu,for_each_possible_cpu,
-v3:
- * Move idx to earlier line
----
- drivers/platform/x86/amd/hfi/hfi.c | 35 ++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-index 14378a0e09e21..79d065d7b6441 100644
---- a/drivers/platform/x86/amd/hfi/hfi.c
-+++ b/drivers/platform/x86/amd/hfi/hfi.c
-@@ -13,6 +13,7 @@
- #include <linux/acpi.h>
- #include <linux/cpu.h>
- #include <linux/cpumask.h>
-+#include <linux/debugfs.h>
- #include <linux/gfp.h>
- #include <linux/init.h>
- #include <linux/io.h>
-@@ -74,6 +75,8 @@ struct amd_hfi_data {
- 	void __iomem		*pcc_comm_addr;
- 	struct acpi_subtable_header	*pcct_entry;
- 	struct amd_shmem_info	*shmem;
-+
-+	struct dentry *dbgfs_dir;
- };
- 
- /**
-@@ -235,6 +238,13 @@ static int amd_hfi_alloc_class_data(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void amd_hfi_remove(struct platform_device *pdev)
-+{
-+	struct amd_hfi_data *dev = platform_get_drvdata(pdev);
-+
-+	debugfs_remove_recursive(dev->dbgfs_dir);
-+}
-+
- static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *hfi_cpuinfo, int cpu)
- {
- 	for (int i = 0; i < hfi_cpuinfo->nr_class; i++)
-@@ -389,6 +399,26 @@ static int amd_hfi_metadata_parser(struct platform_device *pdev,
- 	return ret;
- }
- 
-+static int class_capabilities_show(struct seq_file *s, void *unused)
-+{
-+	int cpu, idx;
-+
-+	seq_puts(s, "CPU #\tWLC\tPerf\tEff\n");
-+	for_each_possible_cpu(cpu) {
-+		struct amd_hfi_cpuinfo *hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, cpu);
-+
-+		seq_printf(s, "%d", cpu);
-+		for (idx = 0; idx < hfi_cpuinfo->nr_class; idx++) {
-+			seq_printf(s, "\t%d\t%d\t%d\n", idx,
-+				   hfi_cpuinfo->amd_hfi_classes[idx].perf,
-+				   hfi_cpuinfo->amd_hfi_classes[idx].eff);
-+		}
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(class_capabilities);
-+
- static int amd_hfi_pm_resume(struct device *dev)
- {
- 	int ret, cpu;
-@@ -468,6 +498,10 @@ static int amd_hfi_probe(struct platform_device *pdev)
- 
- 	schedule_work(&sched_amd_hfi_itmt_work);
- 
-+	amd_hfi_data->dbgfs_dir = debugfs_create_dir("amd_hfi", arch_debugfs_dir);
-+	debugfs_create_file("class_capabilities", 0644, amd_hfi_data->dbgfs_dir, pdev,
-+			    &class_capabilities_fops);
-+
- 	return 0;
- }
- 
-@@ -479,6 +513,7 @@ static struct platform_driver amd_hfi_driver = {
- 		.acpi_match_table = ACPI_PTR(amd_hfi_platform_match),
- 	},
- 	.probe = amd_hfi_probe,
-+	.remove = amd_hfi_remove,
- };
- 
- static int __init amd_hfi_init(void)
--- 
-2.43.0
+regards,
+dan carpenter
 
