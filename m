@@ -1,95 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3BC22B8AA;
-	Tue, 18 Feb 2025 08:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B1A22B8AA;
+	Tue, 18 Feb 2025 08:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866627; cv=none; b=j2kc/HZgStDjPy/wlcuWENQOeGDQo4InqA/bEJaIRlxR+Py0B/rLi3v1HpBYnIi+8kxZ88NJ4FHkg1KyOXajVTnhDybQrkamutBj+D1bQgyHBvqNPmzfj0A6A/3k/5YuwPZUPGfvUNKqN49U82ZpqzHWcUDusc2DrXI4ThJ2dDk=
+	t=1739866632; cv=none; b=L6Y8RC2MCt8khTuwfptYH6Eih8ql3O/Q2fu5DuojkqVqJTHMHxlq4TDu15mkJZIPOPy1BzusM2MDdEuexnFz2Cy4LjJPD8ixlSB+9lopoRebH9sRQzNs74TEvoNGvv4E9FfvadLFc+arn9oe5rsegBQFCJwU0njfPVNVvV4xzsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866627; c=relaxed/simple;
-	bh=unAtoMZ/6LB+ku15iDriUMC7ier19fz8oDz6eJJnpjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F8wS1WHb3meBewYeI7ufU0pjVwM5Z8FU251HuWgsQheBbAp75ixSB++7KHjI9OtPWkXb37puWqpC4op9qG+uF22CxYzjs5TIjLFIViYyDvu0tPzNMQGRPsagHoPD7M5t04UePkSWQWIpaE3UWmFyLfrMlCLKyBKFhYVdHD4JyYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8/27QDN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739866632; c=relaxed/simple;
+	bh=bXO9RjmvEI/gGPfc1eFRDuxO1uk/Wq+sbi65zILen0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=V7FbDnaFPxDpPg+g9dAHrcH9C3T0C/J6xwhSOI+dAaNHEI6fv5ffluZKMGOid/XA2GKFBl70dkdQOEw5MeyEMNHJLnGsgdfaD8bML7IAs1tDju7MVlt0t/Ms/Ob9Nst0+na4F/8kdxGIXv6NJ92/K6C6L/7V9Z/h96NEl/vSPiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jxwnY7hL; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8/27QDN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97349C4CEE2;
-	Tue, 18 Feb 2025 08:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739866626;
-	bh=unAtoMZ/6LB+ku15iDriUMC7ier19fz8oDz6eJJnpjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W8/27QDN9jps1nyShhUPWS3f5RCyhj0k3K7aVVPA4GxyepEwMBiyAwv/VBChpTdhA
-	 /wE5ZLeiJpqRVyoMvLLdG0IT1IJitAcKhTjPght7fqvhd2w9Zdbu1zIqSz6ui40/xM
-	 RHpJHSr4qGf5xRsxmYJHahQoeiKXQ0hgHzZS2wCRcX28q1xt1CTQizsn7jU3tFnr0B
-	 wXg5KMM7PAwuT8aJ6PZwzcQ6ty1RUQX2RSvW0tCip2d3axeAeypUufgF0XyAo7T1qf
-	 HWPi47RJIcozlOD4W/Lv3zqNF3I2zI0/0tWwxecdXQnRmMPcg3xx4xrv3Ua3b0XySp
-	 VT8QUDvfqaByg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tkIn2-000000001v6-4ALR;
-	Tue, 18 Feb 2025 09:17:13 +0100
-Date: Tue, 18 Feb 2025 09:17:12 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Abel Vesa <abel.vesa@linaro.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] usb: typec: Add support for Parade PS8830 Type-C
- Retimer
-Message-ID: <Z7RCCF58RTsyr-eN@hovoldconsulting.com>
-References: <20250206-x1e80100-ps8830-v6-0-60b1e49cfa8d@linaro.org>
- <20250206-x1e80100-ps8830-v6-2-60b1e49cfa8d@linaro.org>
- <Z68EUTlHcm6TxjlY@hovoldconsulting.com>
- <Z7Q8xwcfeE3tcBLL@hovoldconsulting.com>
- <2025021807-equipment-ignition-017f@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jxwnY7hL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739866631; x=1771402631;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=bXO9RjmvEI/gGPfc1eFRDuxO1uk/Wq+sbi65zILen0w=;
+  b=jxwnY7hLXuHxZPdupZWqAMiRDDrtq7PdETdOABTGS1zO3GywvTfeIVos
+   F4wZpo4+hFxfmROOJsSP9E6Py0VivkO5VPyuclWbcYb/2vJvnpeTR00gZ
+   NL4yq1qsYQcQMtyo7PPjSkMnbVg+yjXA4YqEflI4p0AwY/J8PIMKr79dy
+   sqk5hPfsAMJxj6cmPz9NUN8co09z35vxyBGTpwaVz6eoI3pX0coW3h7mK
+   ghpriLdgB58O2J6N90/33Rb9IgIyGbD2kak+gHfmd9+0kYTpGPLnaZFci
+   Iz8VI55bM7SnVrxN+hlXWqNS3vy8K9ic4NMmKxKoIDMTXNH0bzf137ycF
+   w==;
+X-CSE-ConnectionGUID: 1cLuA88WSjSG2nwpCnVEag==
+X-CSE-MsgGUID: g59I/MRCSsm+9+jGW3NBXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="28150092"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="28150092"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:17:09 -0800
+X-CSE-ConnectionGUID: +HOO78zjQVWglPzSMQGDaA==
+X-CSE-MsgGUID: iC+fl3UpTo2a4V5pAf6vOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="119247460"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.245.49])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:16:49 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: kees@kernel.org,
+	julian.stecklina@cyberus-technology.de,
+	kevinloughlin@google.com,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	justinstitt@google.com,
+	catalin.marinas@arm.com,
+	wangkefeng.wang@huawei.com,
+	bhe@redhat.com,
+	ryabinin.a.a@gmail.com,
+	kirill.shutemov@linux.intel.com,
+	will@kernel.org,
+	ardb@kernel.org,
+	jason.andryuk@amd.com,
+	dave.hansen@linux.intel.com,
+	pasha.tatashin@soleen.com,
+	ndesaulniers@google.com,
+	guoweikang.kernel@gmail.com,
+	dwmw@amazon.co.uk,
+	mark.rutland@arm.com,
+	broonie@kernel.org,
+	apopple@nvidia.com,
+	bp@alien8.de,
+	rppt@kernel.org,
+	kaleshsingh@google.com,
+	richard.weiyang@gmail.com,
+	luto@kernel.org,
+	glider@google.com,
+	pankaj.gupta@amd.com,
+	andreyknvl@gmail.com,
+	pawan.kumar.gupta@linux.intel.com,
+	kuan-ying.lee@canonical.com,
+	tony.luck@intel.com,
+	tj@kernel.org,
+	jgross@suse.com,
+	dvyukov@google.com,
+	baohua@kernel.org,
+	samuel.holland@sifive.com,
+	dennis@kernel.org,
+	akpm@linux-foundation.org,
+	thomas.weissschuh@linutronix.de,
+	surenb@google.com,
+	kbingham@kernel.org,
+	ankita@nvidia.com,
+	nathan@kernel.org,
+	maciej.wieczor-retman@intel.com,
+	ziy@nvidia.com,
+	xin@zytor.com,
+	rafael.j.wysocki@intel.com,
+	andriy.shevchenko@linux.intel.com,
+	cl@linux.com,
+	jhubbard@nvidia.com,
+	hpa@zytor.com,
+	scott@os.amperecomputing.com,
+	david@redhat.com,
+	jan.kiszka@siemens.com,
+	vincenzo.frascino@arm.com,
+	corbet@lwn.net,
+	maz@kernel.org,
+	mingo@redhat.com,
+	arnd@arndb.de,
+	ytcoode@gmail.com,
+	xur@google.com,
+	morbo@google.com,
+	thiago.bauermann@linaro.org
+Cc: linux-doc@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH v2 03/14] kasan: sw_tags: Support outline stack tag generation
+Date: Tue, 18 Feb 2025 09:15:19 +0100
+Message-ID: <20f64170c0b59cb5185cfe02c4bc833073a2ebe6.1739866028.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025021807-equipment-ignition-017f@gregkh>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 09:00:27AM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Feb 18, 2025 at 08:54:47AM +0100, Johan Hovold wrote:
-> > On Fri, Feb 14, 2025 at 09:52:33AM +0100, Johan Hovold wrote:
-> > > On Thu, Feb 06, 2025 at 11:28:28AM +0200, Abel Vesa wrote:
-> > > > The Parade PS8830 is a USB4, DisplayPort and Thunderbolt 4 retimer,
-> > > > controlled over I2C. It usually sits between a USB/DisplayPort PHY
-> > > > and the Type-C connector, and provides orientation and altmode handling.
-> > 
-> > Turns out Greg had picked this one up 20 minutes before I sent my
-> > comments. I did see Heikki's ack the day before and realised time was
-> > short but was not able to drop everything and review the last revision
-> > due to meetings that afternoon.
-> > 
-> > Well, well, I guess you can say I only have myself to blame for not
-> > reviewing within a week of the last revision being posted.
-> 
-> I can revert it if you want me to, or an incremental fix, your call.
+From: Samuel Holland <samuel.holland@sifive.com>
 
-Thanks, but I think Abel should be able to test the
-not-enabled-by-boot-firmware case and if needed amend the binding these
-next few weeks.
+This allows stack tagging to be disabled at runtime by tagging all
+stack objects with the match-all tag. This is necessary on RISC-V,
+where a kernel with KASAN_SW_TAGS enabled is expected to boot on
+hardware without pointer masking support.
 
-I'll just send an incremental fix for the error handling for now.
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+---
+ mm/kasan/kasan.h   | 2 ++
+ mm/kasan/sw_tags.c | 9 +++++++++
+ 2 files changed, 11 insertions(+)
 
-And sorry about the rant, just needed to vent some frustration with the
-never ending stream of interruptions and unscheduled work...
+diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+index 129178be5e64..2fb26f74dff9 100644
+--- a/mm/kasan/kasan.h
++++ b/mm/kasan/kasan.h
+@@ -636,6 +636,8 @@ void *__asan_memset(void *addr, int c, ssize_t len);
+ void *__asan_memmove(void *dest, const void *src, ssize_t len);
+ void *__asan_memcpy(void *dest, const void *src, ssize_t len);
+ 
++u8 __hwasan_generate_tag(void);
++
+ void __hwasan_load1_noabort(void *);
+ void __hwasan_store1_noabort(void *);
+ void __hwasan_load2_noabort(void *);
+diff --git a/mm/kasan/sw_tags.c b/mm/kasan/sw_tags.c
+index b9382b5b6a37..94465a8a3640 100644
+--- a/mm/kasan/sw_tags.c
++++ b/mm/kasan/sw_tags.c
+@@ -71,6 +71,15 @@ u8 kasan_random_tag(void)
+ 	return (u8)(state % (KASAN_TAG_MAX + 1));
+ }
+ 
++u8 __hwasan_generate_tag(void)
++{
++	if (!kasan_enabled())
++		return KASAN_TAG_KERNEL;
++
++	return kasan_random_tag();
++}
++EXPORT_SYMBOL(__hwasan_generate_tag);
++
+ bool kasan_check_range(const void *addr, size_t size, bool write,
+ 			unsigned long ret_ip)
+ {
+-- 
+2.47.1
 
-Johan
