@@ -1,145 +1,80 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3520821B9DF
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C617217A316
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739906469; cv=none; b=CZ189l2U1X/mnA5q4vDtu27heYyXKEWZ0FJTm7tbueKarS/YPqYip7VMRvNciuPxCIj8UIWKfrdZ060+ucg6Ej9zy2cZE5rMDswOlpGzWi38vUT/gZQ1ZXa3FGfD2aSEj+zUtBuYRG3GdSEdHDHaaNdoZ/h1VtweRrsUtKb03Ko=
+	t=1739906479; cv=none; b=t0eRT9PGi7E5TIv57W6P916iLCyplIWNhiYbfTFuJBymwXmn7dnO7Im6DGqcyMEVM4EkKDcUY/EjbXAaIcPnP4BWOSz7cvGfeN8eujyhryWs9YWtf+5bJX4Z/sUxkFWe0TIcrC5WtIMuXrfwuBXqHqT9t7uH3uBrqwETVs8lvfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739906469; c=relaxed/simple;
-	bh=ycHpgNXBROG4geZcA2CLnVbCmLIr1ttO94m1bwrYxR0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D5KdgWm2dM2hkPJClMKtNo+YSfx7azCUPF8d9PC7A84MaZLeG+CmO5sTjXRW3fseyxN4eZ7o7aKDYOu1wNiia+6ZSTT6R4Hk5nAykCtKWdcFcp0W9SgaLRsfBaZGVpoUkyxbKQIhKH+SGn/lqaP9BdwiHfXAaeAhicOaEHtqobk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=NfGQ9oh4; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+	s=arc-20240116; t=1739906479; c=relaxed/simple;
+	bh=A3ESgJ41derz8AXMorRdi10dEEcFuyL3g1FcUWdqVV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ibnXUTZU0B4YgSI63rF5L7xe1A4fBpt+o+wHE8Db8DULvNjRRTtB4FIwAkn1yEmiZOpAYu5Yz/KBwyQEtNMsPVv/Ljurx6MySi2bw3ce6ExauOsWPiAdQ6eI33zNR4dwpCu6nigmUiWG9BhuzYD+O707ECGjpk2Pb58XPi/WxjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBmWdgaT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="NfGQ9oh4"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-219f8263ae0so108389745ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:21:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1739906466; x=1740511266; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=StJPYwiHJgYBwwR4mAHQTkJhRCTzPfRYD9Ve0/q5EKM=;
-        b=NfGQ9oh4G2rrb4i+8BV0jibf/R2LBoks35U2wFnhPd+BoazsPTpUJ29YFnTVUGt2wx
-         zf+rUtCMDIH2fXdq1F3TvgCh0gzjI+X3xN5DizVhOuZjAim0rjoM4oQXUaL0PBVM046S
-         8/Xzvlewz5OgPCxueZ6RSoC5SOL51G6/seaXBXa8SFol7d0upRbmqYQ/ML6X4bHGSbKM
-         Qut7rSRy9P12puBQEODd3fShO0FsXPu5MwzIlKRx3k1iGPDpSo8yFUUN2+vYATLmwZVH
-         JvbNfhSGqjNxKWanYxm3XuUqx3M9ZtIVQjLYhyH0x9cORsJQFaXAobHFgl6BQ0FJQ0Ru
-         xO/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739906466; x=1740511266;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=StJPYwiHJgYBwwR4mAHQTkJhRCTzPfRYD9Ve0/q5EKM=;
-        b=sF1CkBMtbrbaqXqgLPyNgPXIyYcWQte7KXtOq/Unf0mkTA9mEjLz9TACVtdDfmv8px
-         AFrwzF0yOFgkvS4QafHQbhytir5fHfMUyxq7x16tYZX9GMCcLQZIxjpL45TAbvFhHodl
-         7GsjrK2Ymau1RsbDQnCV5g5r/CzPcZeVcrjWk/uJ66d9HFQyPQw7aWJG1bmCUEKQNKkz
-         dNhAnoENma8YbylCINuYNBhcMz2ItdYBdPmVpyubcZpCc/durACtqyyDPoAiDHLpidoM
-         gs1NgblT9ptY7ytumQD3OWlPxrxSIBzd0dwhok+pIyydGj30NlB6N8VaDXx/XHRkaKxQ
-         1BAg==
-X-Forwarded-Encrypted: i=1; AJvYcCXHhM2AwSITHryH2OULgifBCNE19ZkFNDBvae6LwDm8rK057YD1QDvyYxJNLxwyaRkm7gYpmGJ5G1OPSIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziAp/qqlz/kj6CfL4mS/bgnrDRqCF8espLU2nni3cu20ZRIJdf
-	OslSrkrFcQyJDiRQm2avzxJxsdCFVCAGmgfegGeyH0ElSmIFPKQqUvoxAKOt8g==
-X-Gm-Gg: ASbGncv9y9jP56Gsz2ucuUSlSr6giuXFNZW1hS7D8zcUlUWbNuMpKc+3ffTbZZNqikU
-	/z5H0DKFv7FyOEQo6xNaCF8sjenIvbzSymvN8aJjw+sNOBdApjar3cB6G8saJwsx172seIoOcm/
-	i+n3ThCLIB13Kb1QtR99zBbjATaGDxnBJJ4CcQgAdH7CPKbZ7s/Rv/Z2BbYVwq0YoiXUV+uj6uO
-	Oyd+1v+0DJbCySKeedO/AinpK3IC58AUxffcKpLG6t1g9BjiIpgd2tp4ESmCwB+yBRe5jIDCzUI
-	zAueiTAN8yBg7sk20ROsLTO4eDXrgQLbPVU=
-X-Google-Smtp-Source: AGHT+IFxUEDUhzAApZkHHX/oSC4gIXTNX1cKTIHtfqrqyFyEKSK0fwJXuNzMhtQUMc6tGwezwQKFLQ==
-X-Received: by 2002:a05:6a00:124e:b0:732:23ed:9470 with SMTP id d2e1a72fcca58-73261901144mr21327160b3a.23.1739906466396;
-        Tue, 18 Feb 2025 11:21:06 -0800 (PST)
-Received: from [10.140.24.106] ([38.104.138.51])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-732427801a8sm10451078b3a.167.2025.02.18.11.21.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 11:21:05 -0800 (PST)
-Message-ID: <c85e1ddc-71b6-4537-a80f-cd37f61ab6dd@tenstorrent.com>
-Date: Tue, 18 Feb 2025 11:21:04 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBmWdgaT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3720AC4CEE4;
+	Tue, 18 Feb 2025 19:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739906479;
+	bh=A3ESgJ41derz8AXMorRdi10dEEcFuyL3g1FcUWdqVV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KBmWdgaTXjJ0cUlvYWGHpasiUPDRR1+PuCQajh8r9iMaD6u8TR3v1DXEJ1n5a7fdi
+	 tqrS/6WirPSsrN58EbJzgrze5ZuomngBdBCUAmCFYu6A53OgQL5s7IMtJ8iKtUWMZC
+	 bkea2w9hef//n8nnEXlUpo3VHv7aGRWYu3eopz9aK8GVA+9BeE83Wt5BzkS5hu1TTT
+	 pgLmXer9G9AaWsrdkJb7VfxOLXx4iuyYr6ab6EmJNoCB7GzIa4A9XuE6UiFnRlp0jb
+	 GiYdzF7mUhf3OecJVPcFFcibzPkpb7VrJ6pQL0UNoLGWgvdk7wq52M7bcyMgdym9wO
+	 xFWLPVTEXzryA==
+Date: Tue, 18 Feb 2025 09:21:18 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: syzbot <syzbot+ecccecbc636b455f9084@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] kernfs: Drop kernfs_rwsem while invoking
+ lookup_positive_unlocked().
+Message-ID: <Z7TdrqJPJh1efhld@slm.duckdns.org>
+References: <67b45276.050a0220.173698.004f.GAE@google.com>
+ <20250218163938.xmvjlJ0K@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] riscv: implement user_access_begin and families
-To: Ben Dooks <ben.dooks@codethink.co.uk>,
- Charlie Jenkins <charlie@rivosinc.com>
-Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Jisheng Zhang <jszhang@kernel.org>
-References: <20241118230112.2872978-1-cyrilbur@tenstorrent.com>
- <20241118230112.2872978-2-cyrilbur@tenstorrent.com> <Z4rl8BgoV8tygCn9@ghost>
- <b45aab1e-6d37-4027-9a15-4fa917d806b9@codethink.co.uk>
- <e4a4c688-b78c-468b-8196-68d2df980167@tenstorrent.com>
- <a994e94c-3211-4bb4-ab41-71a2c1abebd4@codethink.co.uk>
-Content-Language: en-US
-From: Cyril Bur <cyrilbur@tenstorrent.com>
-In-Reply-To: <a994e94c-3211-4bb4-ab41-71a2c1abebd4@codethink.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218163938.xmvjlJ0K@linutronix.de>
 
-
-
-On 14/2/2025 3:16 am, Ben Dooks wrote:
-> On 13/02/2025 17:07, Cyril Bur wrote:
->>
->>
->> On 6/2/2025 1:08 am, Ben Dooks wrote:
->>> On 17/01/2025 23:21, Charlie Jenkins wrote:
->>>> On Mon, Nov 18, 2024 at 11:01:09PM +0000, Cyril Bur wrote:
->>>>> From: Jisheng Zhang <jszhang@kernel.org>
->>>>>
->>>>> Currently, when a function like strncpy_from_user() is called,
->>>>> the userspace access protection is disabled and enabled
->>>>> for every word read.
->>>>>
->>>>> By implementing user_access_begin and families, the protection
->>>>> is disabled at the beginning of the copy and enabled at the end.
->>>>>
->>>>> The __inttype macro is borrowed from x86 implementation.
->>>>>
->>>>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
->>>>> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
->>>
->>> If we're doing this, then saving the STATUS.SUM flag is going to
->>> be more important than before. We had this discussion when the
->>> initial user-access with syzbot stress testing turned up.
->>>
->>> We partially fixed this by rewriting the ordering in the __put_user
->>> function to stop the 'x' argument being evaluated inside the area
->>> where SUM is enabled, but this is going to make the window of
->>> opportunity of a thread switch much bigger and the bug will just
->>> come back and bite harder.
->>>
->>> If you want I can look at re-doing my original patch and resubmitting.
->>
->> Oh! Could you please link the patch? I haven't seen it and can't seem 
->> to find it now.
+On Tue, Feb 18, 2025 at 05:39:38PM +0100, Sebastian Andrzej Siewior wrote:
+> syzbot reported two warnings:
+> - kernfs_node::name was accessed outside of a RCU section so it created
+>   warning. The kernfs_rwsem was held so it was okay but it wasn't seen.
 > 
-> https://lore.kernel.org/linux-riscv/20210318151010.100966-1- 
-> ben.dooks@codethink.co.uk/
-
-I agree we want this patch. Or at least we want clarity around calling 
-schedule inside SUM enabled sections.
-
-Other arches are stricter about not calling schedule at all. I'm not 
-really going to advocate for one way or the other right now but I 
-believe your patch would solve the problem.
-
-Cyril
-
+> - While kernfs_rwsem was held invoked lookup_positive_unlocked()->
+>   kernfs_dop_revalidate() which acquired kernfs_rwsem.
 > 
->> Thanks.
->>
->>>
->>>
->>
->>
+> kernfs_rwsem was both acquired as a read lock so it can be acquired
+> twice. However if a writer acquires the lock after the first reader then
+> neither the writer nor the second reader can obtain the lock so it
+> deadlocks.
 > 
+> The reason for the lock is to ensure that kernfs_node::name remain
+> stable during lookup_positive_unlocked()'s invocation. The function can
+> not be invoked within a RCU section because it may sleep.
 > 
+> Make a temporary copy of the kernfs_node::name under the lock so
+> GFP_KERNEL can be used and use this instead.
+> 
+> Reported-by: syzbot+ecccecbc636b455f9084@syzkaller.appspotmail.com
+> Fixes: 5b2fabf7fe8f ("kernfs: Acquire kernfs_rwsem in kernfs_node_dentry().")
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
+Acked-by: Tejun Heo <tj@kernel.org>
+
+Thanks.
+
+-- 
+tejun
