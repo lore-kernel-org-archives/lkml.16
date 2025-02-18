@@ -1,215 +1,254 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6831DE3DE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E3222B5A6;
+	Tue, 18 Feb 2025 08:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866420; cv=none; b=dMz4NfvJbVgp+37mNoqjBlaIfEfj40TQzekj9au/uQkWq25gzhIxVL5y440DMOOKBeLJMXLpkNTVq4R4UZh9qZwtVc2jIzL9AKelgZFQSADtkAm7bj2KW6UY4f+TDuIEiaQm5W2ZM2z7AOZ3Q6nr1Fcfbw0ItXgw1RhmF104JAg=
+	t=1739866425; cv=none; b=B8YxLpC5rUlrDgFdSkGXwu9LqGuyAuZMk0r0zJUnMaq8fB5FNlWj0NT4SmBxHhwqxlQBF6FmnDOgSh4fuIlzxGpehphsOretBT+FejSh/GP5hmR6f2OKcN9rP5MaOUD+mAdKvMzQh1imaKW8xWcYF54DVimSno5OC1tLwPWJlBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866420; c=relaxed/simple;
-	bh=FeDPXmXTmYh9CxP7c2GGmkAgMjeQEUgtNcK3TPj56PQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=birvNtk4SkMKwSSw9hs3BOldCZkV2JvxzsqOWeBrd7sB09LwhTGMxK4K+VgQKyBJVadGRZ33uMdrEU3TR5FZSKMGxQ6hzNU0iLJEoiYzV22UfKlg733BLrmaF0Kzearzfd3oO/Gh+WHCdsuCYvWgFXsvW9gpA5id2HFPVXPU1rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GpweTvwy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739866425; c=relaxed/simple;
+	bh=xu0GUm83JyShHEqFmSwpkaZGPFW88VwKlL9uutQEx3w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n3vXsL2Dg2x+kapWTVRWM45p62M/ayQr3I8+XBwilAfS1qlvmWkncisoaa6uVLz6sx/VR3yXr+XX63Rk/HTtWwclExGq5YR+uCXwJkGesiDYDz1YhnVOiDD0boADFwpUmDCxvrZVLB5qkUBscECKC/8MfETowY1/l2iCcPA5d/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iRwy/V4g; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpweTvwy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739866416;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FeDPXmXTmYh9CxP7c2GGmkAgMjeQEUgtNcK3TPj56PQ=;
-	b=GpweTvwynn7FwZqddfuOc4QfHhUYbi7cAYFislvq11QprvSRvdgGuxAvu8Dy58NzcsDWze
-	8fQ91lHwNw3s00gsmfU9yvQZHy2bWhI6/R2tkpCRBh8Hw8Ejzvvkn6EeNTPpem4nOdd/mN
-	tgY1VXBojky6ut5KJJLQhjAgXcjOZ48=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-37-3OgLRZtaMFycGYZO_roe8g-1; Tue, 18 Feb 2025 03:13:35 -0500
-X-MC-Unique: 3OgLRZtaMFycGYZO_roe8g-1
-X-Mimecast-MFC-AGG-ID: 3OgLRZtaMFycGYZO_roe8g_1739866414
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-438e180821aso28344155e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:13:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739866414; x=1740471214;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FeDPXmXTmYh9CxP7c2GGmkAgMjeQEUgtNcK3TPj56PQ=;
-        b=EmZGLi8t4CV6JGKdjazYb+sEuysVFhw2A1lgaghCz1rjqRLWO5vz9bf6ZIT2VuPEru
-         5L6QEpIw+MUMI3YoJ3hVtIesJpnOAcngMNZiDgLqAJ/LgwJirgnvcYoZv5v186E1FMn/
-         p/9gnB+W2q2mBI1Erse8MyNO1DalcuHQnVddSMZtdY3o8nn/4SKpgtonI5rM2t5Ktf5C
-         ceBUTX4KsBfSci/vmiL+RWKLQf5LO6+45KjSu06OtK2wY2WEkYTLGFzc0z8LRoeQXI2E
-         ChGqvrOi5X0mGS31mF9M7zGcjuMvvKbcs1Pk3z/+e0AyQiIhLj3I8W+UiNmJgkPAVf3t
-         FGTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWK+498mh80+Y9JTOF1Y3/8ofR7wjxzLNEP66fVdJHpLoC5RArMFLHq1cN7P/tIdA0WCCTUm6RZnqyi0yg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHFimj148a/+/NksDFZso96it7o2t7a9+oSzXThqwgBlexrYbh
-	VyzQhWfeJSr8TUd1Gi1PyprrIQMGNLbVSPeLuqJz/EoJ+zLKCIBaA0tVajhMymNS5TBF9n3PxaB
-	GPLpYGwfQ31CYMvKXVC720q/jl6eK9WF45P0p7GdyH/cCqKN+scIBDRfYGZ82sw==
-X-Gm-Gg: ASbGncsE4+zWfx9VRAmj2gLHnNDnn3JBKaNbKqz5sGRsqgJwmTRPr6rfZO8rlYqCLac
-	nY3j5UTGi7t3wWMS5kcxrHfB0L16HleQ0J9TvDKLQYtn7mb9NydJIxKvg2bOjA7UaI/I4cRtQho
-	ET4EZ9Gb68eaNzOrurLRZ2LKy/1d6thmWHWkuGwsdbU/EU49ep2nGsEKHewzS6xR2XN2dtY35X6
-	GPGXvY5qiBWY3Jjvgv+/2Bninqyc+VeAugubrLsxwd8drogNzndgGy3+OY4mixo43FobQdZ9N25
-	0T4itYKhxzGcr9V5UyYBU3R2N6ZF1rE=
-X-Received: by 2002:a05:600c:4f46:b0:436:e3ea:4447 with SMTP id 5b1f17b1804b1-4396e779e07mr116394235e9.30.1739866413761;
-        Tue, 18 Feb 2025 00:13:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFrAP6Lr5EnvBOX+TNpgY2fuT1PM1qaT+TtmaVcIXhRMIV8CzzlxMCmGOLAUMb8R8zxH9NVgA==
-X-Received: by 2002:a05:600c:4f46:b0:436:e3ea:4447 with SMTP id 5b1f17b1804b1-4396e779e07mr116393905e9.30.1739866413333;
-        Tue, 18 Feb 2025 00:13:33 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4396b296afesm93839365e9.0.2025.02.18.00.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 00:13:32 -0800 (PST)
-Message-ID: <e9ef4c7b2b979aec73f948cab33b5b4c0af4a804.camel@redhat.com>
-Subject: Re: [PATCH 2/2] rseq/selftests: Add test for mm_cid compaction
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- "Paul E. McKenney"
-	 <paulmck@kernel.org>
-Date: Tue, 18 Feb 2025 09:13:31 +0100
-In-Reply-To: <822a9d2b-a9f3-45b4-8cad-077489015301@efficios.com>
-References: <20250217112317.258716-1-gmonaco@redhat.com>
-	 <20250217112317.258716-3-gmonaco@redhat.com>
-	 <822a9d2b-a9f3-45b4-8cad-077489015301@efficios.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iRwy/V4g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739866424; x=1771402424;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xu0GUm83JyShHEqFmSwpkaZGPFW88VwKlL9uutQEx3w=;
+  b=iRwy/V4gJt0IO2bH1oToYqGViF1XrQbVpeuTVQeiCVc6p2/rGXoQCXvr
+   o3bYvOzL2rILiUufp5XxAVu54UyPEujxak+QAhViF8CGUT0iRWYb3XYPH
+   LCa8sS44CtkWOJCKc6bTawnY1CF7NKhChZGrKr9Y0UEW1XorFypa681fe
+   zIVFcFkhzl5Vz/HlPOEhLnq4kZAYURKFsX6H3uXeRRjB/Znlm6LqjLmjP
+   H4P+MW+2gQ9UWjmTlm52LjQDJCMjfXDRsgeivPZLKX5rKabpTMxLqb2BD
+   FWQ2YzSU5n4ZkHzwjDCBb/Uliulv/Ce+KacWVUod0eb5XuJF5+eS9KkZG
+   A==;
+X-CSE-ConnectionGUID: dJ7q2oqkT2Kp3LVTeqrd5w==
+X-CSE-MsgGUID: Lk7yldyXQxSmDqcN/gKvAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200667"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="44200667"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:13:44 -0800
+X-CSE-ConnectionGUID: fXcKE2DmSdSc2Qy3bIAJjw==
+X-CSE-MsgGUID: KQp3vMk7S32t+ZQ3GULzgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="145166061"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:13:40 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 00/24] Arch-PEBS and PMU supports for Clearwater Forest and Panther Lake
+Date: Tue, 18 Feb 2025 15:27:54 +0000
+Message-Id: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+This v2 patch series is based on latest perf/core tree "1623ced247f7
+(x86/events/amd/iommu: Increase IOMMU_NAME_SIZE)" + extra first two
+patches of patch set "Cleanup for Intel PMU initialization"[1].
+
+Changes:
+
+  v1 -> v2:
+    * Add Panther Lake PMU support (patch 02/24)
+    * Add PEBS static calls to avoid introducing too much
+      x86_pmu.arch_pebs checks (patch 07~08/24)
+    * Optimize PEBS constraints base on Kan's dynamic constranit patch
+      (patch 13/24)
+    * Split perf tools patch of supporting more vector registers to
+      several small patches (patch 20~22/24)
+
+Tests:
+
+  * Run below tests on Clearwater Forest and no issue is found. Please
+    notice nmi_watchdog is disabled when running the tests.
+
+  a. Basic perf counting case.
+    perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}' sleep 1
+
+  b. Basic PMI based perf sampling case.
+    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}' sleep 1
+
+  c. Basic PEBS based perf sampling case.
+    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}:p' sleep 1
+
+  d. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
+    perf record -e branches:p -Iax,bx,ip,ssp,xmm0,ymmh0 -b -c 10000 sleep 1
+
+  e. PEBS sampling case with auxiliary (memory info) group
+    perf mem record sleep 1
+
+  f. PEBS sampling case with counter group
+    perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
+
+  g. Perf stat and record test
+    perf test 95; perf test 119
+
+  h. perf-fuzzer test
 
 
+  * Run similar tests on Panther Lake P-cores and E-cores and no issue
+    is found. CPU 0 is P-core and CPU 9 is E-core. nmi_watchdog is
+    disabled as well.
 
-On Mon, 2025-02-17 at 14:59 -0500, Mathieu Desnoyers wrote:
-> On 2025-02-17 06:23, Gabriele Monaco wrote:
-> > A task in the kernel (task_mm_cid_work) runs somewhat periodically
-> > to
-> > compact the mm_cid for each process. Add a test to validate that it
-> > runs
-> > correctly and timely.
-> >=20
-> > The test spawns 1 thread pinned to each CPU, then each thread,
-> > including
-> > the main one, runs in short bursts for some time. During this
-> > period, the
-> > mm_cids should be spanning all numbers between 0 and nproc.
-> >=20
-> > At the end of this phase, a thread with high enough mm_cid (>=3D
-> > nproc/2)
-> > is selected to be the new leader, all other threads terminate.
-> >=20
-> > After some time, the only running thread should see 0 as mm_cid, if
-> > that
-> > doesn't happen, the compaction mechanism didn't work and the test
-> > fails.
-> >=20
-> > Since mm_cid compaction is less likely for tasks running in short
-> > bursts, we increase the likelihood by just running a busy loop at
-> > every
-> > iteration. This compaction is a best effort work and this behaviour
-> > is
-> > currently acceptable.
->=20
-> I'm wondering what we can do to make this compaction scheme more
-> predictable.
->=20
-> The situation here is caused by the fact that the CID compaction
-> only happens on scheduler tick. If the workload is periodic and
-> runs in short bursts, chances are that the scheduler tick never
-> issue task_tick_mm_cid() for a given process, so no compaction.
->=20
-> So task_tick_mm_cid() basically does:
->=20
-> void task_tick_mm_cid(struct rq *rq, struct task_struct *curr)
-> {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct callback_head *wo=
-rk =3D &curr->cid_work;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long now =3D ji=
-ffies;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!curr->mm || (curr->=
-flags & (PF_EXITING | PF_KTHREAD))
-> ||
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-work->next !=3D work)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (time_before(now, REA=
-D_ONCE(curr->mm->mm_cid_next_scan)))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* No page allocation un=
-der rq lock */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 task_work_add(curr, work=
-, TWA_RESUME | TWAF_NO_ALLOC);
-> }
->=20
-> So typically we have a "time_before()" check that is hit and
-> paces the execution of this task_work every 100ms or so.
->=20
-> If we have periodic tasks, that means those tasks are necessarily
-> preempted so they are not current when the tick happens. If the
-> task cares about compaction of mm_cid, it means it has returned
-> to userspace after that preemption.
->=20
-> Sooo, we happen to have code in kernel/rseq.c called exactly at
-> that point:
->=20
-> __rseq_handle_notify_resume()
->=20
-> I wonder if we could perhaps just call task_tick_mm_cid() (or a
-> version
-> of it renamed to something more meaningful) from
-> __rseq_handle_notify_resume() ? By combining time_before() checks
-> from
-> the scheduler tick and at return to userspace after preemption, AFAIU
-> we'd be handling the periodic workload correctly, and therefore this
-> test for mm_cid compaction could check for more robust guarantees.
->=20
-> Thoughts ?
+  P-core:
 
-Alright,=C2=A0that seems better, since the task work already runs there
-(resume_user_mode_work), it's only set as pending once we get the tick,
-I agree that seems a bit redundant.
+  a. Basic perf counting case.
+    perf stat -e '{cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/cycles/,cpu_core/instructions/,cpu_core/ref-cycles/,cpu_core/slots/}' taskset -c 0 sleep 1
 
-In this case I'd see calling the task_mm_cid_work where
-rseq_handle_notify_resume is called and not the task_tick_mm_cid.
+  b. Basic PMI based perf sampling case.
+    perf record -e '{cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/cycles/,cpu_core/instructions/,cpu_core/ref-cycles/,cpu_core/slots/}' taskset -c 0 sleep 1
 
-The way I see it, rseq_handle_notify_resume is behaving essentially
-like a task_work with TWA_RESUME (setting TIF_NOTIFY_RESUME on its own
-at syscalls, task switches and migrations). task_mm_cid_work, instead
-sets TIF_NOTIFY_RESUME on ticks (via the task_work API). This last bit
-could change, conceptually I mean, we probably don't want to use
-task_work at all in such contexts.
+  c. Basic PEBS based perf sampling case.
+    perf record -e '{cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/cycles/,cpu_core/instructions/,cpu_core/ref-cycles/,cpu_core/slots/}:p' taskset -c 0 sleep 1
 
-Does this make sense to you?
+  d. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
+    perf record -e branches:p -Iax,bx,ip,ssp,xmm0,ymmh0 -b -c 10000 taskset -c 0 sleep 1
+
+  e. PEBS sampling case for user space registers
+    perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 taskset -c 0 sleep 1
+
+  f. PEBS sampling case with auxiliary (memory info) group
+    perf mem record taskset -c 0 sleep 1
+
+  g. PEBS sampling case with counter group
+    perf record -e '{branches:p,branches,cycles}:S' -c 10000 taskset -c 0 sleep 1
+
+  h. Perf stat and record test
+    perf test 95; perf test 119
+
+  E-core:
+
+  a. Basic perf counting case.
+    perf stat -e '{cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/cycles/,cpu_atom/instructions/,cpu_atom/ref-cycles/,cpu_atom/topdown-bad-spec/,cpu_atom/topdown-fe-bound/,cpu_atom/topdown-retiring/}' taskset -c 9 sleep 1
+
+  b. Basic PMI based perf sampling case.
+    perf record -e '{cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/cycles/,cpu_atom/instructions/,cpu_atom/ref-cycles/,cpu_atom/topdown-bad-spec/,cpu_atom/topdown-fe-bound/,cpu_atom/topdown-retiring/}' taskset -c 9 sleep 1
+  c. Basic PEBS based perf sampling case.
+    perf record -e '{cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/cycles/,cpu_atom/instructions/,cpu_atom/ref-cycles/,cpu_atom/topdown-bad-spec/,cpu_atom/topdown-fe-bound/,cpu_atom/topdown-retiring/}:p' taskset -c 9 sleep 1
+
+  d. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
+    perf record -e branches:p -Iax,bx,ip,ssp,xmm0,ymmh0 -b -c 10000 taskset -c  sleep 1
+
+  e. PEBS sampling case for user space registers
+    perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 taskset -c 9 sleep 1
+
+  f. PEBS sampling case with auxiliary (memory info) group
+    perf mem record taskset -c 9 sleep 1
+
+  g. PEBS sampling case with counter group
+    perf record -e '{branches:p,branches,cycles}:S' -c 10000 taskset -c 9 sleep 1
+
+History:
+  v1: https://lore.kernel.org/all/20250123140721.2496639-1-dapeng1.mi@linux.intel.com/
+
+Ref:
+  [1]: https://lore.kernel.org/all/20250129154820.3755948-1-kan.liang@linux.intel.com/
 
 
-However, I'm still not particularly fond of running stuff there at all.
-If a periodic task needs to run now, it preempts everything else and
-should be on its way as soon as possible. A task work is always going
-to delay this, although by a tiny bit.
+Dapeng Mi (22):
+  perf/x86/intel: Add PMU support for Clearwater Forest
+  perf/x86/intel: Parse CPUID archPerfmonExt leaves for non-hybrid CPUs
+  perf/x86/intel: Decouple BTS initialization from PEBS initialization
+  perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
+  perf/x86/intel: Introduce pairs of PEBS static calls
+  perf/x86/intel: Initialize architectural PEBS
+  perf/x86/intel/ds: Factor out common PEBS processing code to functions
+  perf/x86/intel: Process arch-PEBS records or record fragments
+  perf/x86/intel: Factor out common functions to process PEBS groups
+  perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
+  perf/x86/intel: Update dyn_constranit base on PEBS event precise level
+  perf/x86/intel: Setup PEBS data configuration and enable legacy groups
+  perf/x86/intel: Add SSP register support for arch-PEBS
+  perf/x86/intel: Add counter group support for arch-PEBS
+  perf/core: Support to capture higher width vector registers
+  perf/x86/intel: Support arch-PEBS vector registers group capturing
+  perf tools: Support to show SSP register
+  perf tools: Enhance arch__intr/user_reg_mask() helpers
+  perf tools: Enhance sample_regs_user/intr to capture more registers
+  perf tools: Support to capture more vector registers (x86/Intel)
+  perf tools/tests: Add vector registers PEBS sampling test
+  perf tools: Fix incorrect --user-regs comments
 
-Again, for now I cannot think of a better way without bringing
-workqueues into the picture, and in this specific case we have a valid
-workaround to reduce the latency.
+Kan Liang (2):
+  perf/x86: Add dynamic constraint
+  perf/x86/intel: Add Panther Lake support
 
-Thanks,
-Gabriele
+ arch/arm/kernel/perf_regs.c                   |   6 +
+ arch/arm64/kernel/perf_regs.c                 |   6 +
+ arch/csky/kernel/perf_regs.c                  |   5 +
+ arch/loongarch/kernel/perf_regs.c             |   5 +
+ arch/mips/kernel/perf_regs.c                  |   5 +
+ arch/powerpc/perf/perf_regs.c                 |   5 +
+ arch/riscv/kernel/perf_regs.c                 |   5 +
+ arch/s390/kernel/perf_regs.c                  |   5 +
+ arch/x86/events/core.c                        | 105 ++-
+ arch/x86/events/intel/bts.c                   |   6 +-
+ arch/x86/events/intel/core.c                  | 330 +++++++-
+ arch/x86/events/intel/ds.c                    | 722 ++++++++++++++----
+ arch/x86/events/intel/lbr.c                   |   2 +-
+ arch/x86/events/perf_event.h                  |  69 +-
+ arch/x86/include/asm/intel_ds.h               |  10 +-
+ arch/x86/include/asm/msr-index.h              |  28 +
+ arch/x86/include/asm/perf_event.h             | 145 +++-
+ arch/x86/include/uapi/asm/perf_regs.h         |  87 ++-
+ arch/x86/kernel/perf_regs.c                   |  55 +-
+ include/linux/perf_event.h                    |   3 +
+ include/linux/perf_regs.h                     |  10 +
+ include/uapi/linux/perf_event.h               |  11 +
+ kernel/events/core.c                          |  53 +-
+ tools/arch/x86/include/uapi/asm/perf_regs.h   |  90 ++-
+ tools/include/uapi/linux/perf_event.h         |  14 +
+ tools/perf/arch/arm/util/perf_regs.c          |   8 +-
+ tools/perf/arch/arm64/util/perf_regs.c        |  11 +-
+ tools/perf/arch/csky/util/perf_regs.c         |   8 +-
+ tools/perf/arch/loongarch/util/perf_regs.c    |   8 +-
+ tools/perf/arch/mips/util/perf_regs.c         |   8 +-
+ tools/perf/arch/powerpc/util/perf_regs.c      |  17 +-
+ tools/perf/arch/riscv/util/perf_regs.c        |   8 +-
+ tools/perf/arch/s390/util/perf_regs.c         |   8 +-
+ tools/perf/arch/x86/util/perf_regs.c          | 112 ++-
+ tools/perf/builtin-record.c                   |   2 +-
+ tools/perf/builtin-script.c                   |  23 +-
+ tools/perf/tests/shell/record.sh              |  55 ++
+ tools/perf/util/evsel.c                       |  36 +-
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/parse-regs-options.c          |  23 +-
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |  90 +++
+ tools/perf/util/perf_regs.c                   |   8 +-
+ tools/perf/util/perf_regs.h                   |  20 +-
+ tools/perf/util/record.h                      |   4 +-
+ tools/perf/util/sample.h                      |   6 +-
+ tools/perf/util/session.c                     |  29 +-
+ tools/perf/util/synthetic-events.c            |   6 +-
+ 47 files changed, 1966 insertions(+), 308 deletions(-)
+
+-- 
+2.40.1
 
