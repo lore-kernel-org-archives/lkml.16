@@ -1,80 +1,225 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8E661FF2;
-	Tue, 18 Feb 2025 13:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6E73208;
+	Tue, 18 Feb 2025 13:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885885; cv=none; b=ZQuxkZSsPzVuTfzwI1X7dE6H+MlkwnWx+mb3UEWQc9ikcR6DatfcFts4FtuxwpvDg759BpCaDv2pEev1TKlxUm30uoufb88Lb90vt6/OfJqS2ClmzKuCsmZHNHr5RlWlQwAXBwnHE3vz91oUZyOtka4GSUvUTa42entCdO2QMUQ=
+	t=1739885975; cv=none; b=k2Zk1kJXFr0ngmRasIYpjEL16NjaWijb3uD0Wl9Md/SsqAannkGQ8B1uSDPKey6z1UNh4hI7vRuZIk2EC3lQkzqgqYUvNACyL30TvBrQbIFqP32yQZd+Feoi1SwAVqkPmsFYwyBYwZAx38MmEcjUQitX6W4ArvxWCtWC7k823AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885885; c=relaxed/simple;
-	bh=TwgMB7T3xrklH/XcTQFISwEV9IVITK4a2JBNyBtOMhw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CJyXeO0rJinETh3G/7qSkhgn2uxtx66g/CYnk3vySvcdGijStq/5iVgLBl89bS/pybWowc0OLj5NzSnnKXOgCSLQCNhH1Fm/APnnNdH+95zfLf9jS83CS4sSquNPDjmar5445Xm6WUDHG2L/NH6yOYP+0c6duDQ5+xsrI9p0TDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=RbheBNR7; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1739885975; c=relaxed/simple;
+	bh=4aZFQRyNcuHGjYgpFRj5Ggul4g+o5DqQfEc9fBej+1A=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Qk4VMD+TvjZbnZuOR0Ss7f3IjyZJDbe704joxC/VbUmQATCO0VSd8Li3w11INTuFti+JSocKLDxTrCgeWl5lq292Yayp5P3gIHikymF/OOoOYwEcEsmQaANkcAMRJ8UCnla6BabX1OFXG6xJ83MaGtfbx7JU7Vtltj5O8VaNtmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ul/o6fEH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AqaeAla1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="RbheBNR7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Ij4g2
-	0YFPTl6kiG9pCgMNJFmTxK0iuXkJSFpOeNRl70=; b=RbheBNR7r6JBhK/A9ltUr
-	pYtrYXZ+0pA9IhRZPgHCdQinKQvzxbxyvBy1u4EN0OxsfPwQLipILaKnAtFjI/WH
-	aSf/vCCRCPBJ7l/lFJBXz5V/YtoUzU6WJ7wXgq2P6AKMoTGaKJJH8HSOrjpNe2Aa
-	kKqiwxMh+7imtsGrrCyV3g=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3r6q2jLRnc3EEMg--.34170S4;
-	Tue, 18 Feb 2025 21:35:51 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: marcel@holtmann.org,
-	johan.hedberg@gmail.com,
-	luiz.dentz@gmail.com,
-	mm@semihalf.com,
-	rad@semihalf.com,
-	acz@semihalf.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] bluetooth: Add check for mgmt_alloc_skb()
-Date: Tue, 18 Feb 2025 21:35:48 +0800
-Message-Id: <20250218133548.2564549-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ul/o6fEH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AqaeAla1"
+Date: Tue, 18 Feb 2025 13:39:23 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739885966;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jLwKPkAVbUS5KGtf6+OUJyrFeBygRv1lS3gLbewkoh8=;
+	b=ul/o6fEH1KGloTXrnD2qR2hbf0WzqDmBKnsogX/MC45NPF9/ERvrj9RvVL0W1bwS2U2+zj
+	Y5WD9BdL5M/c7u4w+p5xF8JXWZDwHckIUEsDFqhht3mFz8pWXqgVP/8qSo9cCLiKa/qU7x
+	7mOfHcfQKFilt8sBcVmM288CQ7S3UDEQRv8GBc48N06x4CFECjkVrkfM+iw7iOPQsCQnt2
+	LY2J9CcjF7x0x+YLkxgt7P0K9ZNrECqims8DN+GSpXXWQGWTw/OMc27LbwkquBNsrUyqrG
+	tJdkAu6Qvhzfu8aoGbL0oMdJJmDhrwxACbK9dnxPVGeIyuy31MntSeBLnVz9QA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739885966;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jLwKPkAVbUS5KGtf6+OUJyrFeBygRv1lS3gLbewkoh8=;
+	b=AqaeAla1HE9eTFAoawTMzi/ZE6iKwGXXs90MoXZdSjkBgtPEkGv3Czfc9MLHiZzNRvJLiT
+	o26ebTqffNZxMDCg==
+From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/misc] x86/amd_node: Add support for debugfs access to SMN registers
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250130-wip-x86-amd-nb-cleanup-v4-3-b5cc997e471b@amd.com>
+References: <20250130-wip-x86-amd-nb-cleanup-v4-3-b5cc997e471b@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3r6q2jLRnc3EEMg--.34170S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr15JrW5Zry5XrWUGryUKFg_yoWftFcEgF
-	1Iv34fuFWUJFyDAFs8uFW7WwnIkw1rAF1IgF4a9F93ZrZ8Ww1UJr18urnxA397W3WUCrWx
-	CFWDCFs5Za10qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNtxhDUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbBkAb3bme0hTGQpAAAsc
+Message-ID: <173988596320.10177.17094469239617982499.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Add check for the return value of mgmt_alloc_skb() in
-mgmt_remote_name() to prevent null pointer dereference.
+The following commit has been merged into the x86/misc branch of tip:
 
-Fixes: ba17bb62ce41 ("Bluetooth: Fix skb allocation in mgmt_remote_name() & mgmt_device_connected()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+Commit-ID:     6b06755af6679fd7c98ebc017ac31c8a74127538
+Gitweb:        https://git.kernel.org/tip/6b06755af6679fd7c98ebc017ac31c8a74127538
+Author:        Mario Limonciello <mario.limonciello@amd.com>
+AuthorDate:    Thu, 30 Jan 2025 19:48:57 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 17 Feb 2025 10:09:56 +01:00
+
+x86/amd_node: Add support for debugfs access to SMN registers
+
+There are certain registers on AMD Zen systems that can only be accessed
+through SMN.
+
+Introduce a new interface that provides debugfs files for accessing SMN.  As
+this introduces the capability for userspace to manipulate the hardware in
+unpredictable ways, taint the kernel when writing.
+
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20250130-wip-x86-amd-nb-cleanup-v4-3-b5cc997e471b@amd.com
 ---
- net/bluetooth/mgmt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/amd_node.c |  99 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 99 insertions(+)
 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index f53304cb09db..8383e5ae95be 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -10413,7 +10413,8 @@ void mgmt_remote_name(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 link_type,
+diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
+index ac57194..b670fa8 100644
+--- a/arch/x86/kernel/amd_node.c
++++ b/arch/x86/kernel/amd_node.c
+@@ -8,6 +8,7 @@
+  * Author: Yazen Ghannam <Yazen.Ghannam@amd.com>
+  */
  
- 	skb = mgmt_alloc_skb(hdev, MGMT_EV_DEVICE_FOUND,
- 			     sizeof(*ev) + (name ? eir_precalc_len(name_len) : 0));
--
-+	if (!skb)
-+		return;
- 	ev = skb_put(skb, sizeof(*ev));
- 	bacpy(&ev->addr.bdaddr, bdaddr);
- 	ev->addr.type = link_to_bdaddr(link_type, addr_type);
--- 
-2.25.1
-
++#include <linux/debugfs.h>
+ #include <asm/amd_node.h>
+ 
+ /*
+@@ -192,6 +193,87 @@ int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write
+ }
+ EXPORT_SYMBOL_GPL(amd_smn_hsmp_rdwr);
+ 
++static struct dentry *debugfs_dir;
++static u16 debug_node;
++static u32 debug_address;
++
++static ssize_t smn_node_write(struct file *file, const char __user *userbuf,
++			      size_t count, loff_t *ppos)
++{
++	u16 node;
++	int ret;
++
++	ret = kstrtou16_from_user(userbuf, count, 0, &node);
++	if (ret)
++		return ret;
++
++	if (node >= amd_num_nodes())
++		return -ENODEV;
++
++	debug_node = node;
++	return count;
++}
++
++static int smn_node_show(struct seq_file *m, void *v)
++{
++	seq_printf(m, "0x%08x\n", debug_node);
++	return 0;
++}
++
++static ssize_t smn_address_write(struct file *file, const char __user *userbuf,
++				 size_t count, loff_t *ppos)
++{
++	int ret;
++
++	ret = kstrtouint_from_user(userbuf, count, 0, &debug_address);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static int smn_address_show(struct seq_file *m, void *v)
++{
++	seq_printf(m, "0x%08x\n", debug_address);
++	return 0;
++}
++
++static int smn_value_show(struct seq_file *m, void *v)
++{
++	u32 val;
++	int ret;
++
++	ret = amd_smn_read(debug_node, debug_address, &val);
++	if (ret)
++		return ret;
++
++	seq_printf(m, "0x%08x\n", val);
++	return 0;
++}
++
++static ssize_t smn_value_write(struct file *file, const char __user *userbuf,
++			       size_t count, loff_t *ppos)
++{
++	u32 val;
++	int ret;
++
++	ret = kstrtouint_from_user(userbuf, count, 0, &val);
++	if (ret)
++		return ret;
++
++	add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
++
++	ret = amd_smn_write(debug_node, debug_address, val);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++DEFINE_SHOW_STORE_ATTRIBUTE(smn_node);
++DEFINE_SHOW_STORE_ATTRIBUTE(smn_address);
++DEFINE_SHOW_STORE_ATTRIBUTE(smn_value);
++
+ static int amd_cache_roots(void)
+ {
+ 	u16 node, num_nodes = amd_num_nodes();
+@@ -239,6 +321,15 @@ static int reserve_root_config_spaces(void)
+ 	return 0;
+ }
+ 
++static bool enable_dfs;
++
++static int __init amd_smn_enable_dfs(char *str)
++{
++	enable_dfs = true;
++	return 1;
++}
++__setup("amd_smn_debugfs_enable", amd_smn_enable_dfs);
++
+ static int __init amd_smn_init(void)
+ {
+ 	int err;
+@@ -259,6 +350,14 @@ static int __init amd_smn_init(void)
+ 	if (err)
+ 		return err;
+ 
++	if (enable_dfs) {
++		debugfs_dir = debugfs_create_dir("amd_smn", arch_debugfs_dir);
++
++		debugfs_create_file("node",	0600, debugfs_dir, NULL, &smn_node_fops);
++		debugfs_create_file("address",	0600, debugfs_dir, NULL, &smn_address_fops);
++		debugfs_create_file("value",	0600, debugfs_dir, NULL, &smn_value_fops);
++	}
++
+ 	return 0;
+ }
+ 
