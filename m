@@ -1,157 +1,208 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77499269B0A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885126; cv=none; b=YgtZNLGSYN7C2e/k3a/yP8rlPoa1Aq5/JTx4w9idyOvqJ+k5Lh65E6zs/nFNCAwG/iP+7RV9PmGsWisni3+CYCL5NVxm4+Ylw3WC24X56YmBCdXUQl9yMdrInJr9rbcxbf58/hvDu6ga+rE8poXTV44F2MImdyG2Xu28f4SGNuw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885126; c=relaxed/simple;
-	bh=3ZNa4ZrGhk5MBbV0uH5n9LxtqBxX7sXsiPWe+IqaZbs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=f4iTzWKSombgHpK4rFvduT4Qn/PXli8rsiAjSCM4EulWkIQ2g+KQSdXH/EDD3rULxIS+6ReMXsFAeeND18LRsO+QGN0r3pRqXBPWQOHgj1ZmRMsfK+QnCtVMHzhQLdMM6EE/B3qlV3EfIEENXjH6uZzSRjzMr1g6V1aQUNwX/Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d2a6ead92fso19087435ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:25:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739885123; x=1740489923;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G+7/q1jM1Bvz9DI85BsMkac8Pe2d6tQdTj4wf8JkTzY=;
-        b=DkHyTMZ0CIKXvpKOTHMGc1t8iz4An5rOyCddRD912T+fipizDFw7FQ5YDZUEETLxaC
-         /syu57UQKVn6aPQ3SSkY/KzwgexHB8qZtSAlNzBw/0s//z4lG8EG6/pjqau7aRgQwUNr
-         WDT4+RiwaIKFR5TrIuRGCyGI9/nBVPi4iEdNxWD6Fgj02HbrBOYGqB+5GYSh6pblywCi
-         R7X9FS2KzXTwhj0twdSmgrPgbNQMN5s3iB0OOWuJX9hwEjz4KOwsnLlRSMqEdtm+PBUE
-         Xat3nf8I61zpcp8v04ONy8DFuWXYP6M36k8FGOuSC2d4GHvL6rwHMRPYOsI7lja+Mw1O
-         pe/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXdjqK5CmuYWJcA9gcmHoHjOhQk2XYXXt499nNFiNqiW/lXBrM0yD3Qe+ldk7KRHBmu7fTZn0VBbRwr/yU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSNu65KVvJFikR2+DQ01WmcaDcnD9pNGfq72r2s0ddqkw/ioe8
-	p3Tz74G6oH5kGxzKIxKRT+UDkiIO7UxjjMBH64M71XhqXRxVZD0LSO/hSe1PnGhcPmxln74BBlM
-	sjUIMG38iVotkvCBF6QSbs09HjYYticxhMPffQrX8hPiHNJRGZYdV4rw=
-X-Google-Smtp-Source: AGHT+IHtu/68U23foJWFnuOE2J2caAS5yJ4zrsjwodgLGFo04BYktL8Hu3M9iEvfi/Unm894kHuC2gTA/Tl2NnTI7w40QqMopTz2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD7F26AAB3;
+	Tue, 18 Feb 2025 13:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739885125; cv=fail; b=mUNjCyjYwZFheHKr0ter5+EFjPGp5Okn97iTYrkV/8DlUBoN0iph5NOR+s91lLe3rZlCEsfUvhrffE+VcfPZ3iv3xeyiXREBHasXkzoyNpypCpJUiMpkQIjEjzZEhX6btUxn8RHrjd2MpJ8gVxd66aQDZfJn6zcfezM2eS3Cjm0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739885125; c=relaxed/simple;
+	bh=fa5c7xBPLAfEWNSGl+prHVcVGECpVcLCCb1EkkfnH+8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VOqpXxd2LDnUzVYOTZttPszCCqZDaHdRS/7D4D+J043lFliwLY8IMLlE43qUz/vjDuHH+3qNI/dqhvFfMr9LQNP+elECD7KTCBnqDihYKqSMo57oka57PL8IWaAs88zjr7PExoAKt9yKIExYWYu/amMmISnovV4a8PZqVYQdX1E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=m8nxQ2vj; arc=fail smtp.client-ip=40.107.243.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="m8nxQ2vj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q92Vmrixa4FDxs5liQrw8vnyCNmExBRvzllU4thz7AlZhveuf/ZtznS60ZhkDwtCEjx/f2C7W1JDLznkBnM9OOLIAfVTH7dAtm3LZxLh/RTr+X4kIVradiAVZxzqp8Ky8EyhfhpLZfQNuEVTUrR+DpwYfePP6i5KwW13cYNOTOwLsRPQctOA6bpu6P1P0buzUTZzzdeSPAyPM9eFWH2Lr3WPoryIvbWwmEZZLcwtd0hbEHa0WGEyyT/Od7BL5iwDgkgjfWrnar4DgUzFs2EYzPndnU79r7d/BXlVkpQXyJtyft0srTzkflOKonVhQ58LUXySdk+s4Ofvexv7f7vpQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tTPNWHIrm8GI+xXV4wqa3RQvunVrAS5lhvwzBYGzJkA=;
+ b=yHQ+qGi3oxmzbvAV9t4tbN9+RgTPLhWbJx0ZMUSSXd/qzT5LECMFhhLpmrCA/cKlLTULfk/j+9a1KqmQQ6ekm6My0cbxBNw3+/at4bEnoMWSvps7xqqcZ9VYrQ1itdc2MBECVR29QcQGkGB95RAKwd6kfvN8GhEMbc0mBX3xx85FA8Vu/hrtkItm/f0eYT/+BRE6io1Y7lp0NVar6AUZA3mQ3ntVzHtYfs1ZM/21EH1mYVWYgU/1p8/XtiTduQuo6uPzLlkVPFDs2OjHdIvlCfEZoOe/sDsJjs3RoNb0t1dZcxdETp8hyhBB8RMF+LGAZ/6Iu41a4P9sW6o2BGvleg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tTPNWHIrm8GI+xXV4wqa3RQvunVrAS5lhvwzBYGzJkA=;
+ b=m8nxQ2vjZptOuxWI//HFFqokN4RCQqvzcdHmuvfq6GANZZ+FgARsbS61PAr+En1XijFT5VTPPoyLpweml6703nBQHgFXJc0D8CU0m8/qbOy5kwsjOfQu/hnnRsen3I1j50z6LagYxSzPPGZ9vShR5EG0R34fajhMgED6ZRIjmME=
+Received: from BN1PR12CA0013.namprd12.prod.outlook.com (2603:10b6:408:e1::18)
+ by CH3PR12MB9432.namprd12.prod.outlook.com (2603:10b6:610:1c7::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.20; Tue, 18 Feb
+ 2025 13:25:20 +0000
+Received: from BL02EPF00021F68.namprd02.prod.outlook.com
+ (2603:10b6:408:e1:cafe::26) by BN1PR12CA0013.outlook.office365.com
+ (2603:10b6:408:e1::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Tue,
+ 18 Feb 2025 13:25:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00021F68.mail.protection.outlook.com (10.167.249.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8466.11 via Frontend Transport; Tue, 18 Feb 2025 13:25:20 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Feb
+ 2025 07:25:17 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	Robert Richter <rrichter@amd.com>
+Subject: [PATCH v2 13/15] cxl/x86: Prepare for architectural platform setup
+Date: Tue, 18 Feb 2025 14:23:54 +0100
+Message-ID: <20250218132356.1809075-14-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250218132356.1809075-1-rrichter@amd.com>
+References: <20250218132356.1809075-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c0f:b0:3d0:f31:3657 with SMTP id
- e9e14a558f8ab-3d2796b6803mr122202265ab.0.1739885123611; Tue, 18 Feb 2025
- 05:25:23 -0800 (PST)
-Date: Tue, 18 Feb 2025 05:25:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b48a43.050a0220.173698.0062.GAE@google.com>
-Subject: [syzbot] [ocfs2?] kernel BUG in __ocfs2_rotate_tree_left
-From: syzbot <syzbot+7508211c42e6e7c9f2f8@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F68:EE_|CH3PR12MB9432:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9632fd2-e973-402a-977c-08dd501fb112
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|7416014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0RLuPwYnNzZw6Gob5nWZeWPgZe+oHbtMUBp3/QTDh3leGex2CGOoIBICUz29?=
+ =?us-ascii?Q?VGE84hDLo99zE2EtEOb4RFc6iitfLZusc8HhhOLUxF7ONAHR6kC4ma+yGOJ/?=
+ =?us-ascii?Q?VfSuiUEPV9xVu4LqFxAv1BgafmJk/Fhgp1U8/4VyQctaW21CqP3dgGZjtWrN?=
+ =?us-ascii?Q?N3KqvMZR03AjYGPLpA9iZ81f+VIwhGxsXL0lHhul/VhrlfNfnXFG36lxYNZZ?=
+ =?us-ascii?Q?MxcDzU0xdxX8zFgjeNgMoWVKfkq35ax6NeUH9Y6MnpYRy7Cp5XBijqj5gaLg?=
+ =?us-ascii?Q?BWXiPO0ZTE2p+v0kG5BLYw7yzky+QuwLAn722iojckTJRuZ3mAxDETFEcCr1?=
+ =?us-ascii?Q?sca9l3jWcEFTblG6jj6u9i2Cz7EanieXt/qucIlyPW15i+JBRasjWoIUchal?=
+ =?us-ascii?Q?6ds9v0kVEsOHeBQGxrv5yATu1qAOFtkFT0wfxFeX2FZpiAN2R2ru+4P+pAW8?=
+ =?us-ascii?Q?9UKg8jwRRWw83pwkLKq7sAo1vAdIzjK+/0WiZvh6baQ0Eqmp6ly7FqBN4Wm6?=
+ =?us-ascii?Q?piusgrkAkzgdFGmfWydy+JOmaomILubjq0H0YRb6deD2BMBWwK9reCa8dTvM?=
+ =?us-ascii?Q?pDbRtJppMUZ0NIGNBnRirRF1SD9JC1eNwNzh44O7Fcg/XHrWRzwGA1UncWFn?=
+ =?us-ascii?Q?Ahv8IsLWucX0RbkC4dLZCck+D7axzOD4bxdm1NprnadG0VG7wyP9YtRAnoBR?=
+ =?us-ascii?Q?OyoK/wUwkiWeHUFBH1od4MW0lqDwteHve1WHeAH0K+zKglJRsw6/jpIpLcME?=
+ =?us-ascii?Q?iZg/O2ftDzPzvItjoYTTu1BvUDIu8JJgvTuOE0lbfrXXqbhhjwKQGjCjFmLc?=
+ =?us-ascii?Q?6xOI9EACkVL7kZx1Ss4eavTcwSyWj90TvKCh66S30AlEgZm6kj8wyiCBXJGr?=
+ =?us-ascii?Q?fLfVMg2/6kLcM/OKff/Y9HDAZj31g0kmwo87i1bn+calDOZHiDMHJ+mUkjqP?=
+ =?us-ascii?Q?U3ySBUX2pyEOP9vXUG7gKyy/YXcedIneBHydFmoA0zvHMzMcjCDf6YTbKqy4?=
+ =?us-ascii?Q?9YPsFZjlx4e4MSB10p98vPTvtVyYNFtazG+cOnN5SgisOcDFgmWkB3B9eBb3?=
+ =?us-ascii?Q?VOtGn4GI1FmyYxbFrfCo/suDhQmY9ppLwYIkPikE7s8ph4gQfw7WS9A0pmBb?=
+ =?us-ascii?Q?hR12rdwrQwHtWpN9vBlgGyQhncWqT6q4dsjOpEauhzbwX+HqdgqDk3s4Z1yQ?=
+ =?us-ascii?Q?wBpeLyXnaJsEfHk4jrURytGc5/Xjo3yCc9EmdmyCT8d6Mbjb4ZDRUyxw/dGZ?=
+ =?us-ascii?Q?Bl2GDli+2XkIpJa+E1FXtKO+2mTWHSkfYMhQd2aokDspWlOGZkzv6UnI3iG6?=
+ =?us-ascii?Q?VeS9Dqy1andcta0sHSRfWAYwfL9xyaHTFffltWhmeytc5k6xsGhR6QmcTBVF?=
+ =?us-ascii?Q?dw2t4gFiyEHXjmj1yfwmWaf1f6PI9s/W34KxhU4AJAGCFO7iwLg1BiE7FDc0?=
+ =?us-ascii?Q?h6poVf5nDwoaof+MehEnrZOhw9+qQ0HLYiu24Tc76O3n4JrA5pGIvlknkBiY?=
+ =?us-ascii?Q?yuGHHvo+BREIIO0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 13:25:20.1159
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9632fd2-e973-402a-977c-08dd501fb112
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F68.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9432
 
-Hello,
+In preparation of an architectural, vendor and platform specific port
+setup, add a function arch_cxl_port_platform_setup() that can be used
+to handle and implement architecture and platform specific code.
 
-syzbot found the following issue on:
-
-HEAD commit:    2408a807bfc3 Merge tag 'vfs-6.14-rc4.fixes' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12261898580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
-dashboard link: https://syzkaller.appspot.com/bug?extid=7508211c42e6e7c9f2f8
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-2408a807.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f62d1e4db390/vmlinux-2408a807.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/eb24d3a710ff/bzImage-2408a807.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7508211c42e6e7c9f2f8@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 32768 to 0
-------------[ cut here ]------------
-kernel BUG at fs/ocfs2/alloc.c:2721!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 5326 Comm: syz.0.0 Not tainted 6.14.0-rc3-syzkaller-00012-g2408a807bfc3 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:ocfs2_rotate_subtree_left fs/ocfs2/alloc.c:2721 [inline]
-RIP: 0010:__ocfs2_rotate_tree_left+0x2fd5/0x3010 fs/ocfs2/alloc.c:2977
-Code: fe 90 0f 0b e8 cc 7e 0b fe 90 0f 0b e8 c4 7e 0b fe 90 0f 0b e8 bc 7e 0b fe 90 0f 0b e8 b4 7e 0b fe 90 0f 0b e8 ac 7e 0b fe 90 <0f> 0b 48 8b 0c 24 80 e1 07 80 c1 03 38 c1 0f 8c 8c fd ff ff 48 8b
-RSP: 0018:ffffc9000d4b6500 EFLAGS: 00010283
-RAX: ffffffff83b63be4 RBX: 0000000000000000 RCX: 0000000000100000
-RDX: ffffc9000edbb000 RSI: 0000000000001224 RDI: 0000000000001225
-RBP: ffffc9000d4b68d0 R08: ffffffff83b6241d R09: ffffffff83b62036
-R10: 0000000000000006 R11: ffff88800024a440 R12: ffff8880544c6700
-R13: 1ffff92001a96ccc R14: 0000000000000000 R15: dffffc0000000000
-FS:  00007f16019f56c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000010 CR3: 00000000339fc000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ocfs2_rotate_tree_left+0x326/0xdc0 fs/ocfs2/alloc.c:3229
- ocfs2_truncate_rec+0x1547/0x1c90 fs/ocfs2/alloc.c:5502
- ocfs2_remove_extent+0x106f/0x26f0 fs/ocfs2/alloc.c:5581
- ocfs2_remove_btree_range+0xfde/0x1860 fs/ocfs2/alloc.c:5770
- ocfs2_remove_inode_range+0xff3/0x29c0 fs/ocfs2/file.c:1907
- ocfs2_reflink_remap_extent fs/ocfs2/refcounttree.c:4534 [inline]
- ocfs2_reflink_remap_blocks+0xcd4/0x1f30 fs/ocfs2/refcounttree.c:4681
- ocfs2_remap_file_range+0x5fa/0x8d0 fs/ocfs2/file.c:2740
- vfs_copy_file_range+0xc07/0x14f0 fs/read_write.c:1584
- __do_sys_copy_file_range fs/read_write.c:1670 [inline]
- __se_sys_copy_file_range+0x3fa/0x600 fs/read_write.c:1637
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f160558cde9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f16019f5038 EFLAGS: 00000246 ORIG_RAX: 0000000000000146
-RAX: ffffffffffffffda RBX: 00007f16057a6080 RCX: 00007f160558cde9
-RDX: 0000000000000005 RSI: 0000000000000000 RDI: 000000000000000c
-RBP: 00007f160560e2a0 R08: fffffbffa003e45c R09: 0700000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f16057a6080 R15: 00007ffd149b49b8
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:ocfs2_rotate_subtree_left fs/ocfs2/alloc.c:2721 [inline]
-RIP: 0010:__ocfs2_rotate_tree_left+0x2fd5/0x3010 fs/ocfs2/alloc.c:2977
-Code: fe 90 0f 0b e8 cc 7e 0b fe 90 0f 0b e8 c4 7e 0b fe 90 0f 0b e8 bc 7e 0b fe 90 0f 0b e8 b4 7e 0b fe 90 0f 0b e8 ac 7e 0b fe 90 <0f> 0b 48 8b 0c 24 80 e1 07 80 c1 03 38 c1 0f 8c 8c fd ff ff 48 8b
-RSP: 0018:ffffc9000d4b6500 EFLAGS: 00010283
-RAX: ffffffff83b63be4 RBX: 0000000000000000 RCX: 0000000000100000
-RDX: ffffc9000edbb000 RSI: 0000000000001224 RDI: 0000000000001225
-RBP: ffffc9000d4b68d0 R08: ffffffff83b6241d R09: ffffffff83b62036
-R10: 0000000000000006 R11: ffff88800024a440 R12: ffff8880544c6700
-R13: 1ffff92001a96ccc R14: 0000000000000000 R15: dffffc0000000000
-FS:  00007f16019f56c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055bc228e30b8 CR3: 00000000339fc000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/cxl/core/Makefile     |  2 ++
+ drivers/cxl/core/core.h       |  1 +
+ drivers/cxl/core/port.c       |  4 ++++
+ drivers/cxl/core/x86/common.c | 12 ++++++++++++
+ 4 files changed, 19 insertions(+)
+ create mode 100644 drivers/cxl/core/x86/common.c
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 9259bcc6773c..db1d16d39037 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -16,3 +16,5 @@ cxl_core-y += pmu.o
+ cxl_core-y += cdat.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
++
++cxl_core-$(CONFIG_X86)		+= x86/common.o
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index a20ea2b7d1a4..e2955f91fd98 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -118,5 +118,6 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
+ 					struct access_coordinate *c);
+ 
+ int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port);
++void arch_cxl_port_platform_setup(struct cxl_port *port);
+ 
+ #endif /* __CXL_CORE_H__ */
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index d19930c009ce..e94671ea8455 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -841,6 +841,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ 			    &cxl_einj_inject_fops);
+ }
+ 
++void __weak arch_cxl_port_platform_setup(struct cxl_port *port) { }
++
+ static int cxl_port_add(struct cxl_port *port,
+ 			resource_size_t component_reg_phys,
+ 			struct cxl_dport *parent_dport)
+@@ -878,6 +880,8 @@ static int cxl_port_add(struct cxl_port *port,
+ 			return rc;
+ 	}
+ 
++	arch_cxl_port_platform_setup(port);
++
+ 	rc = device_add(dev);
+ 	if (rc)
+ 		return rc;
+diff --git a/drivers/cxl/core/x86/common.c b/drivers/cxl/core/x86/common.c
+new file mode 100644
+index 000000000000..eeb9bdadb26d
+--- /dev/null
++++ b/drivers/cxl/core/x86/common.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Advanced Micro Devices, Inc.
++ */
++
++#include <cxl.h>
++
++#include "../core.h"
++
++void arch_cxl_port_platform_setup(struct cxl_port *port)
++{
++}
+-- 
+2.39.5
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
