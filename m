@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB542475C0;
-	Tue, 18 Feb 2025 12:11:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854182475D1;
+	Tue, 18 Feb 2025 12:11:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739880716; cv=none; b=sEdqMm2A9RnVKea/U7cgiNYhcs8wM0MjKrFyQP5FYb6E7lrcSmISL0AhMzr+SwmByU4fzgPdtuF66joNCB80ASaW8i8XTjSxnmKY48O6xIeZ80NFnjP9Zr6+7887frJtlWRwsuxO1exG4OOrJLBQHqU+2edr6ep2HaJKruDMtFs=
+	t=1739880718; cv=none; b=Ynq/zdGNQrJn3VPqy2CnAIgMeKgbpoD4fKr1YpUrcJgYj1Vmo9rF7WUh8jxnWVfsHv0itVFa+Fqb2KFJMK5m7udSa2p/DM3NaOnNKH4NrTPIBoMO2A8dLtCW2oGenAW645s3ax41dzTnNv2ozRd65FKY5qbxIbEROCr17BEtMto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739880716; c=relaxed/simple;
-	bh=6r1OG4cv+l2tiAtJOLWK6AnaR/G2EY/dQamBQieHGWM=;
+	s=arc-20240116; t=1739880718; c=relaxed/simple;
+	bh=H1ti9BI1hF1QTtQajZc+ss+E3kGneL2wPoDc++YUjZ4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jAO6M9JtMjCwshjqRLyTqVHx8qxa1msLtfZdmuPuuxhe3NNS0yOmqOBRrn0eHNqufPQm0WWEyFqkZl8DazNVtqSCX+Kb+ZzFtXPeldF5fVt51iaSiwjYj1QfSSon8jfaMtS8E8jD2fl2bzzxmcARlP7j/d329NR7GZGwYOsMjGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JAFjcnvS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yh1BDozC; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=AsbgvtuOSaZWIrRx9KzJFLOOpWiHDcJ4OAcaq44m/p7VoOgvv5cxZmJVL5Rja7oqnNq6g0jxGg8QXxU86Q6AR2VAtJKh38fSOGY8xLNQNJWIkEm0b4gsqdfqW4qzGcIiKbipXoeKB6BIvWH9CVy2EUqEcn8dgIkKWLEc9kFqw1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Eieo8wSs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=37Rdd34W; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JAFjcnvS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yh1BDozC"
-Date: Tue, 18 Feb 2025 12:11:52 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Eieo8wSs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="37Rdd34W"
+Date: Tue, 18 Feb 2025 12:11:54 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739880713;
+	s=2020; t=1739880714;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wv/AJB3TM9sqQ71+9ZoEE2PznDeki+snkWj5vhXbRIg=;
-	b=JAFjcnvSjzTVWDXZxYlOIKj0r/7DEEgYg1CjE/ywXHFASrfMQXWwbwhV3wHxWXRWI1V2pZ
-	evChzWXQDAazeDqp9C64ArSOO0HSPupCowdxz7l4waMyS8i/6SXFxJRDuxlyoHzppu/iwr
-	ETLHwaIcQLMUWEWJEJ1LhqWDbkGqbwTIUCAgrjC2CHcrnCN5C8a78NaHi66DXbkDO/htm2
-	1QcJKAbsMIbTk6C9r6xyicAxX3gS9Mn1+1DP/votCaauUZJRs2/Wgt7vgGH954DxHuUopJ
-	FO/z22bUbxLGkE0519YMfxRo6NLhh1DjBMcO+oCwfpRyIoQRAiqEAI16j4E5oA==
+	bh=gVgN5KA0uitqu6TcIX+iselgyEA/p2zluCADQUw1PH0=;
+	b=Eieo8wSsKyTVMQk3PGCB2A3Jwib83kFuGuphfo/068SWcxHxdXXJqmGlfYzTI1chSEXXpb
+	UDPXmHQu28gb2csEzDXoE7S0cbvI1FQtiz911XdrQzmx9+wBVeg/KxnxSMtWqX96neFutm
+	LDssDn4AYdPyjQqW4jf6Xi92fSg2jmA3kRq1cwrgZz3/ypUe0RA0WMvuHSzVLJPgvL8gBo
+	hsNwFLMo45XY4qQKlwEHEs13F1JJWmzgssclGkUw1OOUh3dt+vX8nJkmp0pgy3uafKCLpq
+	LQJmtSMNsJ+VRAJAxhGwJARo5/LHb7DH1nDgFepEDHvC8sQJDYfs9u4hAI0n8g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739880713;
+	s=2020e; t=1739880714;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wv/AJB3TM9sqQ71+9ZoEE2PznDeki+snkWj5vhXbRIg=;
-	b=yh1BDozC0TGDjJedwfegC6Rl53FT+i0f7OdGj9tRoUkMfs0fsr016divXRHT3uDyf/HWmh
-	RBfxjVWqDS9XGxAg==
+	bh=gVgN5KA0uitqu6TcIX+iselgyEA/p2zluCADQUw1PH0=;
+	b=37Rdd34WUtfTdUMA7CTFimgoaMtn97aszEC3p9PAsGd0VL4FApcUiXjGXkiLC3dEWKfiwB
+	p6YdyIZAwhIXLoCA==
 From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/pvh: Use fixed_percpu_data for early boot GSBASE
+Subject: [tip: x86/asm] x86/build: Raise the minimum GCC version to 8.1
 Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
  Ard Biesheuvel <ardb@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250123190747.745588-5-brgerst@gmail.com>
-References: <20250123190747.745588-5-brgerst@gmail.com>
+In-Reply-To: <20250123190747.745588-2-brgerst@gmail.com>
+References: <20250123190747.745588-2-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173988071267.10177.6022560317987318542.tip-bot2@tip-bot2>
+Message-ID: <173988071431.10177.9680149445111094327.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,57 +68,43 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     f58b63857ae38b4484185b799a2759274b930c92
-Gitweb:        https://git.kernel.org/tip/f58b63857ae38b4484185b799a2759274b930c92
+Commit-ID:     a3e8fe814ad15c16735cdf394454a8bd96eb4d56
+Gitweb:        https://git.kernel.org/tip/a3e8fe814ad15c16735cdf394454a8bd96eb4d56
 Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Thu, 23 Jan 2025 14:07:36 -05:00
+AuthorDate:    Thu, 23 Jan 2025 14:07:33 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 18 Feb 2025 10:14:59 +01:00
+CommitterDate: Tue, 18 Feb 2025 10:14:40 +01:00
 
-x86/pvh: Use fixed_percpu_data for early boot GSBASE
+x86/build: Raise the minimum GCC version to 8.1
 
-Instead of having a private area for the stack canary, use
-fixed_percpu_data for GSBASE like the native kernel.
+Stack protector support on 64-bit currently requires that the percpu
+section is linked at absolute address 0, because older compilers fixed
+the location of the canary value relative to the GS segment base.
+
+GCC 8.1 introduced options to change where the canary value is located,
+allowing it to be configured as a standard per-CPU variable.  This has
+already been done for 32-bit.  Doing the same for 64-bit will enable
+removing the code needed to support zero-based percpu.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250123190747.745588-5-brgerst@gmail.com
+Link: https://lore.kernel.org/r/20250123190747.745588-2-brgerst@gmail.com
 ---
- arch/x86/platform/pvh/head.S | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ scripts/min-tool-version.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
-index 4733a5f..723f181 100644
---- a/arch/x86/platform/pvh/head.S
-+++ b/arch/x86/platform/pvh/head.S
-@@ -173,10 +173,15 @@ SYM_CODE_START(pvh_start_xen)
- 1:
- 	UNWIND_HINT_END_OF_STACK
- 
--	/* Set base address in stack canary descriptor. */
--	mov $MSR_GS_BASE,%ecx
--	leal canary(%rip), %eax
--	xor %edx, %edx
-+	/*
-+	 * Set up GSBASE.
-+	 * Note that on SMP the boot CPU uses the init data section until
-+	 * the per-CPU areas are set up.
-+	 */
-+	movl $MSR_GS_BASE,%ecx
-+	leaq INIT_PER_CPU_VAR(fixed_percpu_data)(%rip), %rdx
-+	movq %edx, %eax
-+	shrq $32, %rdx
- 	wrmsr
- 
- 	/* Call xen_prepare_pvh() via the kernel virtual mapping */
-@@ -238,8 +243,6 @@ SYM_DATA_START_LOCAL(gdt_start)
- SYM_DATA_END_LABEL(gdt_start, SYM_L_LOCAL, gdt_end)
- 
- 	.balign 16
--SYM_DATA_LOCAL(canary, .fill 48, 1, 0)
--
- SYM_DATA_START_LOCAL(early_stack)
- 	.fill BOOT_STACK_SIZE, 1, 0
- SYM_DATA_END_LABEL(early_stack, SYM_L_LOCAL, early_stack_end)
+diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
+index 91c9120..06c4e41 100755
+--- a/scripts/min-tool-version.sh
++++ b/scripts/min-tool-version.sh
+@@ -19,6 +19,8 @@ binutils)
+ gcc)
+ 	if [ "$ARCH" = parisc64 ]; then
+ 		echo 12.0.0
++	elif [ "$SRCARCH" = x86 ]; then
++		echo 8.1.0
+ 	else
+ 		echo 5.1.0
+ 	fi
