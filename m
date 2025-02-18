@@ -1,300 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE331D5ADD;
-	Tue, 18 Feb 2025 22:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7422A1ACEC7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 22:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739917213; cv=none; b=HhLmeBgg0jblWRJGqtmqyJa2e6xJjryTR16iOB8u0XiRDkkLFN1oQp5hPjopTpiKQ3HzvjU9vRMGQD6xrWflTK4vw2p6YPoHg+a9qL0yzbUZ4t73c4p/DmVQA8lEZY4jBLKLcG5KrXi/pyTS+5m3qf5IGms9rcAp2gDbEEgapFI=
+	t=1739917351; cv=none; b=eUBUerNiY6fmZ0UhYWC68skgRDfGs/Jpr7X5nyqd4f5ZBlmAKCQaBBWnb7ZufdGfdFczylq0B4pUURJ+p53tdG7n1+gPDebm8LL7A/3exDQQF/a0r0LIq3RlwZaSdcfUo5uJ41IjzUYOk7S0ehlGP3lx0pYIiHQ1KnqCJVMbrXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739917213; c=relaxed/simple;
-	bh=I0IiWl4AnootTxUzZoy1+8cUWjBHZs4frbwCdopXAg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QoFnd4+ntOnlpOFIJDt6ETw09+4Yk5wCkcRdjSeRFMGwWs062sOGtIC6gH85pg7rEXgUwHAI7vIq7/9D9JcibTNvpmHzOPn8JmcfnaLK59ghzToz+yjruEVjHZ1aIZdgwsSUtL3JwSUOlSoZRO0aXMFyoAIYAqMZ8Lg/iRLbZC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrps7Z44; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739917351; c=relaxed/simple;
+	bh=wz3yzYejx/8v4irersUarogzfJY+Deu6ePxVH2PlB2M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qrYqi/a8gWdAo87m64WCvO0d9h+Eytv/Xu3FAHySGhcRR3N55Mriwdz1zRir9+Z6Mpjv+mc2rONfxcQezF34BhcCQdFVzPaDP1aFl0agGWLCJZu36af6NB30M7eiyZU2LSUdT+Kia0c1OoeV7r6HTfM3u6wjU9tdtKdlcmVXjqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FdckphZu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrps7Z44"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279B0C4CEE2;
-	Tue, 18 Feb 2025 22:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739917213;
-	bh=I0IiWl4AnootTxUzZoy1+8cUWjBHZs4frbwCdopXAg0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Rrps7Z44DLlKlKnb0wY8EJKfdtd8Ey5K0Qqk8Ge0taW+FQve+1T9LZzmfk7v4ka2K
-	 tsMa+sH8sjsEnjNF9HrryaytVI/lCPW0U3GsE17MBnOJD4jjN3C93dAAVwJ0POGFzB
-	 59AJrJj8Bi+ceGQADfBOT2ylJZNWJkItUn0c4CyRCc7sZKIQbvToiumo5KTgRwb/8p
-	 8ZARjP57ZlY4xgM4cyeArBDoiW924fvbn89JCYBXcksyAbjFiDz82w6JYE9tMDAAa/
-	 hgzWOFs8/ZMEFBH9p4pCpvLLV1uOcuoisXe/FCJMlR79dp0EnCdsF9TU+2yaCayCix
-	 js8svsniGh+TA==
-Date: Tue, 18 Feb 2025 16:20:11 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Johan Hovold <johan@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 3/4] PM: sleep: Use DPM_FLAG_SMART_SUSPEND
- conditionally
-Message-ID: <20250218222011.GA196831@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FdckphZu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739917347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PDNwQ6cJzqO/P0dW5wK2COewyumLqAUhMRnX8cwH+GU=;
+	b=FdckphZu5cvP7m15690Ax4lPU1jGN8Jcg/lkWE45u5SNEfkprfrBo7Nn4KBQrBqWviPFe3
+	FK5YyF9CIkKpT6fFuF4/7rYWFOQ+idBiZH+qBl9xzEsYL734TMmCPUBWrStpU3zyCZ1ENn
+	nblXWKSxuivv25So9zXx0XoG/0YLo20=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-cTjyOuWhM3StQl89hVlG0w-1; Tue,
+ 18 Feb 2025 17:22:26 -0500
+X-MC-Unique: cTjyOuWhM3StQl89hVlG0w-1
+X-Mimecast-MFC-AGG-ID: cTjyOuWhM3StQl89hVlG0w_1739917345
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F397B1800874;
+	Tue, 18 Feb 2025 22:22:24 +0000 (UTC)
+Received: from omen.home.shazbot.org (unknown [10.22.88.77])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 08A9830001A5;
+	Tue, 18 Feb 2025 22:22:22 +0000 (UTC)
+From: Alex Williamson <alex.williamson@redhat.com>
+To: alex.williamson@redhat.com
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	peterx@redhat.com,
+	mitchell.augustin@canonical.com,
+	clg@redhat.com,
+	jgg@nvidia.com
+Subject: [PATCH v2 2/6] vfio/type1: Convert all vaddr_get_pfns() callers to use vfio_batch
+Date: Tue, 18 Feb 2025 15:22:02 -0700
+Message-ID: <20250218222209.1382449-3-alex.williamson@redhat.com>
+In-Reply-To: <20250218222209.1382449-1-alex.williamson@redhat.com>
+References: <20250218222209.1382449-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1914558.tdWV9SEqCh@rjwysocki.net>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, Feb 18, 2025 at 09:16:48PM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> A recent discussion has revealed that using DPM_FLAG_SMART_SUSPEND
-> unconditionally is generally problematic because it may lead to
-> situations in which the device's runtime PM information is internally
-> inconsistent or does not reflect its real state [1].
-> 
-> For this reason, change the handling of DPM_FLAG_SMART_SUSPEND so that
-> it is only taken into account if it is consistently set by the drivers
-> of all devices having any PM callbacks throughout dependency graphs in
-> accordance with the following rules:
-> 
->  - The "smart suspend" feature is only enabled for devices whose drivers
->    ask for it (that is, set DPM_FLAG_SMART_SUSPEND) and for devices
->    without PM callbacks unless they have never had runtime PM enabled.
-> 
->  - The "smart suspend" feature is not enabled for a device if it has not
->    been enabled for the device's parent unless the parent does not take
->    children into account or it has never had runtime PM enabled.
-> 
->  - The "smart suspend" feature is not enabled for a device if it has not
->    been enabled for one of the device's suppliers taking runtime PM into
->    account unless that supplier has never had runtime PM enabled.
-> 
-> Namely, introduce a new device PM flag called smart_suspend that is only
-> set if the above conditions are met and update all DPM_FLAG_SMART_SUSPEND
-> users to check power.smart_suspend instead of directly checking the
-> latter.
-> 
-> At the same time, drop the power.set_active flage introduced recently
-> in commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status
-> of parents and children") because it is now sufficient to check
-> power.smart_suspend along with the dev_pm_skip_resume() return value
-> to decide whether or not pm_runtime_set_active() needs to be called
-> for the device.
-> 
-> Link: https://lore.kernel.org/linux-pm/CAPDyKFroyU3YDSfw_Y6k3giVfajg3NQGwNWeteJWqpW29BojhQ@mail.gmail.com/  [1]
-> Fixes: 7585946243d6 ("PM: sleep: core: Restrict power.set_active propagation")
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+This is a step towards passing the structure to vaddr_get_pfns()
+directly in order to provide greater distinction between page backed
+pfns and pfnmaps.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Reviewed-by: "Mitchell Augustin" <mitchell.augustin@canonical.com>
+Tested-by: "Mitchell Augustin" <mitchell.augustin@canonical.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-> ---
-> 
-> v1 -> v2:
->    * Add helper function for reading power.smart_suspend() (Ulf), add the R-by.
->    * Rearrange conditionals in device_prepare_smart_suspend() so that the checks
->      involving locking are done last.
-> 
-> ---
->  drivers/acpi/device_pm.c  |    4 +-
->  drivers/base/power/main.c |   63 +++++++++++++++++++++++++++++++++++-----------
->  drivers/mfd/intel-lpss.c  |    2 -
->  drivers/pci/pci-driver.c  |    6 +---
->  include/linux/device.h    |    5 +++
->  include/linux/pm.h        |    2 -
->  6 files changed, 60 insertions(+), 22 deletions(-)
-> 
-> --- a/drivers/acpi/device_pm.c
-> +++ b/drivers/acpi/device_pm.c
-> @@ -1161,7 +1161,7 @@
->   */
->  int acpi_subsys_suspend(struct device *dev)
->  {
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> +	if (!dev_pm_smart_suspend(dev) ||
->  	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
->  		pm_runtime_resume(dev);
->  
-> @@ -1320,7 +1320,7 @@
->   */
->  int acpi_subsys_poweroff(struct device *dev)
->  {
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> +	if (!dev_pm_smart_suspend(dev) ||
->  	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
->  		pm_runtime_resume(dev);
->  
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -656,15 +656,13 @@
->  	 * so change its status accordingly.
->  	 *
->  	 * Otherwise, the device is going to be resumed, so set its PM-runtime
-> -	 * status to "active" unless its power.set_active flag is clear, in
-> +	 * status to "active" unless its power.smart_suspend flag is clear, in
->  	 * which case it is not necessary to update its PM-runtime status.
->  	 */
-> -	if (skip_resume) {
-> +	if (skip_resume)
->  		pm_runtime_set_suspended(dev);
-> -	} else if (dev->power.set_active) {
-> +	else if (dev_pm_smart_suspend(dev))
->  		pm_runtime_set_active(dev);
-> -		dev->power.set_active = false;
-> -	}
->  
->  	if (dev->pm_domain) {
->  		info = "noirq power domain ";
-> @@ -1282,14 +1280,8 @@
->  	      dev->power.may_skip_resume))
->  		dev->power.must_resume = true;
->  
-> -	if (dev->power.must_resume) {
-> -		if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
-> -			dev->power.set_active = true;
-> -			if (dev->parent && !dev->parent->power.ignore_children)
-> -				dev->parent->power.set_active = true;
-> -		}
-> +	if (dev->power.must_resume)
->  		dpm_superior_set_must_resume(dev);
-> -	}
->  
->  Complete:
->  	complete_all(&dev->power.completion);
-> @@ -1797,6 +1789,49 @@
->  	return error;
->  }
->  
-> +static void device_prepare_smart_suspend(struct device *dev)
-> +{
-> +	struct device_link *link;
-> +	int idx;
-> +
-> +	/*
-> +	 * The "smart suspend" feature is enabled for devices whose drivers ask
-> +	 * for it and for devices without PM callbacks unless runtime PM is
-> +	 * disabled and enabling it is blocked for them.
-> +	 *
-> +	 * However, if "smart suspend" is not enabled for the device's parent
-> +	 * or any of its suppliers that take runtime PM into account, it cannot
-> +	 * be enabled for the device either.
-> +	 */
-> +	dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
-> +		dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
-> +		!pm_runtime_blocked(dev);
-> +
-> +	if (!dev_pm_smart_suspend(dev))
-> +		return;
-> +
-> +	if (dev->parent && !dev_pm_smart_suspend(dev->parent) &&
-> +	    !dev->parent->power.ignore_children && !pm_runtime_blocked(dev->parent)) {
-> +		dev->power.smart_suspend = false;
-> +		return;
-> +	}
-> +
-> +	idx = device_links_read_lock();
-> +
-> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
-> +		if (!(link->flags | DL_FLAG_PM_RUNTIME))
-> +			continue;
-> +
-> +		if (!dev_pm_smart_suspend(link->supplier) &&
-> +		    !pm_runtime_blocked(link->supplier)) {
-> +			dev->power.smart_suspend = false;
-> +			break;
-> +		}
-> +	}
-> +
-> +	device_links_read_unlock(idx);
-> +}
-> +
->  /**
->   * device_prepare - Prepare a device for system power transition.
->   * @dev: Device to handle.
-> @@ -1858,6 +1893,7 @@
->  		pm_runtime_put(dev);
->  		return ret;
->  	}
-> +	device_prepare_smart_suspend(dev);
->  	/*
->  	 * A positive return value from ->prepare() means "this device appears
->  	 * to be runtime-suspended and its state is fine, so if it really is
-> @@ -2033,6 +2069,5 @@
->  
->  bool dev_pm_skip_suspend(struct device *dev)
->  {
-> -	return dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) &&
-> -		pm_runtime_status_suspended(dev);
-> +	return dev_pm_smart_suspend(dev) && pm_runtime_status_suspended(dev);
->  }
-> --- a/drivers/mfd/intel-lpss.c
-> +++ b/drivers/mfd/intel-lpss.c
-> @@ -480,7 +480,7 @@
->  
->  static int resume_lpss_device(struct device *dev, void *data)
->  {
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
-> +	if (!dev_pm_smart_suspend(dev))
->  		pm_runtime_resume(dev);
->  
->  	return 0;
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -812,8 +812,7 @@
->  	 * suspend callbacks can cope with runtime-suspended devices, it is
->  	 * better to resume the device from runtime suspend here.
->  	 */
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> -	    pci_dev_need_resume(pci_dev)) {
-> +	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
->  		pm_runtime_resume(dev);
->  		pci_dev->state_saved = false;
->  	} else {
-> @@ -1151,8 +1150,7 @@
->  	}
->  
->  	/* The reason to do that is the same as in pci_pm_suspend(). */
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> -	    pci_dev_need_resume(pci_dev)) {
-> +	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
->  		pm_runtime_resume(dev);
->  		pci_dev->state_saved = false;
->  	} else {
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1025,6 +1025,11 @@
->  	return !!(dev->power.driver_flags & flags);
->  }
->  
-> +static inline bool dev_pm_smart_suspend(struct device *dev)
-> +{
-> +	return dev->power.smart_suspend;
-> +}
-> +
->  static inline void device_lock(struct device *dev)
->  {
->  	mutex_lock(&dev->mutex);
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -680,8 +680,8 @@
->  	bool			syscore:1;
->  	bool			no_pm_callbacks:1;	/* Owned by the PM core */
->  	bool			async_in_progress:1;	/* Owned by the PM core */
-> +	bool			smart_suspend:1;	/* Owned by the PM core */
->  	bool			must_resume:1;		/* Owned by the PM core */
-> -	bool			set_active:1;		/* Owned by the PM core */
->  	bool			may_skip_resume:1;	/* Set by subsystems */
->  #else
->  	bool			should_wakeup:1;
-> 
-> 
-> 
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 119cf886d8c0..2e95f5f4d881 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -471,12 +471,12 @@ static int put_pfn(unsigned long pfn, int prot)
+ 
+ #define VFIO_BATCH_MAX_CAPACITY (PAGE_SIZE / sizeof(struct page *))
+ 
+-static void vfio_batch_init(struct vfio_batch *batch)
++static void __vfio_batch_init(struct vfio_batch *batch, bool single)
+ {
+ 	batch->size = 0;
+ 	batch->offset = 0;
+ 
+-	if (unlikely(disable_hugepages))
++	if (single || unlikely(disable_hugepages))
+ 		goto fallback;
+ 
+ 	batch->pages = (struct page **) __get_free_page(GFP_KERNEL);
+@@ -491,6 +491,16 @@ static void vfio_batch_init(struct vfio_batch *batch)
+ 	batch->capacity = 1;
+ }
+ 
++static void vfio_batch_init(struct vfio_batch *batch)
++{
++	__vfio_batch_init(batch, false);
++}
++
++static void vfio_batch_init_single(struct vfio_batch *batch)
++{
++	__vfio_batch_init(batch, true);
++}
++
+ static void vfio_batch_unpin(struct vfio_batch *batch, struct vfio_dma *dma)
+ {
+ 	while (batch->size) {
+@@ -730,7 +740,7 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
+ static int vfio_pin_page_external(struct vfio_dma *dma, unsigned long vaddr,
+ 				  unsigned long *pfn_base, bool do_accounting)
+ {
+-	struct page *pages[1];
++	struct vfio_batch batch;
+ 	struct mm_struct *mm;
+ 	int ret;
+ 
+@@ -738,7 +748,9 @@ static int vfio_pin_page_external(struct vfio_dma *dma, unsigned long vaddr,
+ 	if (!mmget_not_zero(mm))
+ 		return -ENODEV;
+ 
+-	ret = vaddr_get_pfns(mm, vaddr, 1, dma->prot, pfn_base, pages);
++	vfio_batch_init_single(&batch);
++
++	ret = vaddr_get_pfns(mm, vaddr, 1, dma->prot, pfn_base, batch.pages);
+ 	if (ret != 1)
+ 		goto out;
+ 
+@@ -757,6 +769,7 @@ static int vfio_pin_page_external(struct vfio_dma *dma, unsigned long vaddr,
+ 	}
+ 
+ out:
++	vfio_batch_fini(&batch);
+ 	mmput(mm);
+ 	return ret;
+ }
+-- 
+2.48.1
+
