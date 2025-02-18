@@ -1,35 +1,35 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB831ABEC5;
-	Tue, 18 Feb 2025 16:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A5D26E622
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 16:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739895361; cv=none; b=Yp26J+jbHrVFs4KCuPopvgUFqgRu7D7jhUYYdwC/z49DjDjx9pdiHcafGRHqJz6H7hg45FcdOWNSolo65hmhMr+YL/emMN+1UzGy/zIz7SgLoy3Sn3N0rlIwIfEaODZlUj1uDnEWA9nW2phJ35jMj3emQcZIX+7fp8rX4H2UYoU=
+	t=1739895363; cv=none; b=sQBVo8czFfCS4m6EPJt3lsPs2baD/NPJNm/fZkUGCL8E11w5Zk1dd8nqP1i0UHbKHZdV2Rm46PTze5B7Z1lDBITD5M/eVfXFohDrManHu43P4Jm+6wYl6GwkD5/YTCOBqHFpC/UcAU8twIvrogwb3Xrj5HLVw/f1vjssRQ8M/O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739895361; c=relaxed/simple;
-	bh=xm1LX+Al9kkNJP4WHSG1A4aBX5Q0NSz2MZYYWtl1FHA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M8GVhpLNmdt+fd8Ldx8nmJ7UHUvFWPPUl6UOMC9xO7pBsRG5gOgv8YJeCjAfoo8RK6BXMac6AzSOz1pSbWazeTyb+3ncXt1silWlnspzHOzZ+CSQrzU7f58jrxC3i3KjSUmmLDvWjD4DuGNPtxMx/A1DhpgBjF6Vo4aeifux9I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=t2AoU1Tn; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739895363; c=relaxed/simple;
+	bh=SrrHl35kose8Uo9GxNf/Ij5PATQZEPvWJEFn6FxpRko=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=s/IKzjyrxThFbThcGeCPLncUr6LgkOrxDc/FakDn128xv22HkSAXflZSA8o2MjXl60ehJTScTJ68ErEO/T6E0/GQTqi/FhDJt6fVbDOfrISrkRd5cAFyymqr6c6nFyq2hXw05zf42dvZ+vMNKLNOlj4zttyYTxAo21L22uXjj9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=Z/XFcAxu; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="t2AoU1Tn"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4966763F;
-	Tue, 18 Feb 2025 17:14:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739895269;
-	bh=xm1LX+Al9kkNJP4WHSG1A4aBX5Q0NSz2MZYYWtl1FHA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=t2AoU1TnXCJyIOSUffiwdbRpyxXGzdwiQg1kqxAOWp4tEUGMp9apbLbp98jg56JCm
-	 P7QXS3ag5jRgQozzblEhHDi1O+iHpHZCwQkKsxbTr2nMknhWLagfbKyu1KPSh40/2e
-	 qR3hBOqUSkJVTRwSp/m0//7T+btxj1ksmcFZrbJk=
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Tue, 18 Feb 2025 18:15:43 +0200
-Subject: [PATCH 1/3] media: subdev: Add v4l2_get_frame_desc_passthrough
- helper
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="Z/XFcAxu"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1739895359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pZ7ABL2SNUiOCskWAI6jo53q67GpeDFRnPk2vd5ITGA=;
+	b=Z/XFcAxuyGuvWQEvH3RtQFP9yao9pfJWp8JnTTU7cO9xUyY2vtZ2xuyZFifK2B2Rr03hsY
+	cMDG4DQwMcS4f03Yto0FYi1AaIjG7QdYvNDSd79QvpeALNv4WWtOO2hhKjYirCJrGH5+2F
+	Oox/AzWSi9Fx/TMMnMWBXpIEnjU6F39q73Yo3gWuciOFn2RKVWNZ4+gINGVGPUyB5pgh/0
+	ip8jM1u/57pJuofDGiYpWUItaLg4YfXJj72zlrDM0kDx7paKOFYR7P9CjIWb/etX8NP/Ck
+	PHplFuEOGc8K4r7j+eELpM3psfhohfqHzafZq/37MvYYAyu0OtoEg2k2fQKauQ==
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Tue, 18 Feb 2025 11:15:54 -0500
+Subject: [PATCH] drm: add modifiers for Apple twiddled layouts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,183 +38,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-frame-desc-passthrough-v1-1-a32458f53714@ideasonboard.com>
-References: <20250218-frame-desc-passthrough-v1-0-a32458f53714@ideasonboard.com>
-In-Reply-To: <20250218-frame-desc-passthrough-v1-0-a32458f53714@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4815;
- i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=xm1LX+Al9kkNJP4WHSG1A4aBX5Q0NSz2MZYYWtl1FHA=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBntLI19ZAUPpNwW08wW7t26oiO+kPyaU0APgQq2
- tKLQgg7+GmJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ7SyNQAKCRD6PaqMvJYe
- 9WyxD/9ywjre62km7nzShd7wd2p/76C37ufemY+je01FsD7WCKT/sBMayDugvFQsq+cUFb+LyUu
- 7RVbTnrXyLMavZXfmO0TWEZKQgQjObDkuxjfAQt22NVpgajvfd9HbS3Ghy4J37Za+RheDBbtVRU
- d2mZtgFVDm4hiEXioCWCAin5LbgWSU0UkOzsH3hcvUdmY5b6CInSXOmo2oNHCq8aykyNrpmOPPc
- cbI0eQyOrYyoPNesO9sAu/ZjniQ/rKbaR4giVNzsDEWEu/4pXIylExvTh/i8QaA8YtXcuxZTe2G
- d1yqyYl+ZZSqzWsymxslbBmDPMiIeFVprpQ8kzq8xDagrS3teXqaq0K+ml0m4TxIxgYFrQct8YS
- Nkq4/dWjfhk3St+4CtD+iqlXDEZokoCb0YkEu27O7mS0cnnCFecHs+0KB8EjWuxRtvw2/web+od
- k8Wuv+268bz/a29IGQcbiCcinV5ha1fNVnI78L9/VbatuFJ8D+hjlzBuG9KaoNtmxk00F7R3o4h
- 72IUZqz0+3gngC/pb5RM1mKGqsItAiifMvkv1TRcqRztg0mpEXni40+VJObC51qysQhsOmeB7WP
- yaOb7Zs6/QJE9v46iEqIAsDY0iSZq0wF6AcENlriViJOJ8L+Sp+49pVFeiVxW43R7KNk/K7Lfza
- zfJGFAt5SlR7eDw==
-X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+Message-Id: <20250218-apple-twiddled-modifiers-v1-1-8551bab4321f@rosenzweig.io>
+X-B4-Tracking: v=1; b=H4sIADmytGcC/x3MywqDMBBG4VeRWTuQpFZKX0VcBOePHfASEtGC+
+ O4Gl9/inJMykiLTtzopYdes61Jg64qGn19GsEoxOePextkP+xgn8HaoyATheRUNipQ5CKxvQ/M
+ yZqCSx4Sg/2fd9dd1A6GTTK9qAAAA
+X-Change-ID: 20250218-apple-twiddled-modifiers-fde1a6f4300c
+To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ asahi@lists.linux.dev, Alyssa Rosenzweig <alyssa@rosenzweig.io>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2801; i=alyssa@rosenzweig.io;
+ h=from:subject:message-id; bh=SrrHl35kose8Uo9GxNf/Ij5PATQZEPvWJEFn6FxpRko=;
+ b=owEBbQKS/ZANAwAIAf7+UFoK9VgNAcsmYgBntLI9x9v5oGkUkxK4VSfK+AsF5c9UiDp6aY/AB
+ v5U1QvOm9qJAjMEAAEIAB0WIQRDXuCbsK8A0B2q9jj+/lBaCvVYDQUCZ7SyPQAKCRD+/lBaCvVY
+ DVeJD/9dSefpR/l7B4fG9didQ/l563IPyYlgcVGgklM6f8nlUnDbmH70wu6VgV5tc4ixtG+ze9g
+ zU1LSWnge6iSb9QhcOb7Z4NsYq0oqvi7XloUICfwJk8cIwtOM7MhHRVg7rOA7Zxu+wD9gIPFD/I
+ UBfXRMFmMYZkorqCGGg85xd0jXi7MsbwVAUfJB/417IC8DD3uawSNUD1nrEgzWCkNNWJ7WXDeEN
+ CpE4kmp+WE9FjsrDLs2klHNZ0i4aqGRh7GfTHTElg2h9L2LEiHC6FjFWS1fRyjyAaxJXtUGICBA
+ JUq6DOzwecZhX1U6qwLpUg/zRLt6wSWRWCu8YVBr0d+sAOk6Bq/gRTAc4tx0cYEmmZPxfBKHMPk
+ 6289LKKFbsiFaZR5N56hJuBHzuF88jBFbxdamlhMfpgR86oi85sJYkXSExMO4cHnWKBIPBBXPBq
+ 5u1wvmCGeFW47e8ONF8ROF8o8nsHMNF2LWksg8Ljo/AWSA1HpL476CEgM27MmQoHJIOWW0KwVV8
+ fLkEL8evpFniPxgv91qNz/RK14VDp/vTOFCyR6U6coBfGmhnwSXr+Sf8be8NSQRIz9DpxjhYNj7
+ rIRDceyWQxF9eOdffLpsWWbbQhNMRiwGKpkQdFpfWie+cykRba3ZTwy+uniM6QvDGA+6m46ILkc
+ l/SU5ZJA+W69aiw==
+X-Developer-Key: i=alyssa@rosenzweig.io; a=openpgp;
+ fpr=435EE09BB0AF00D01DAAF638FEFE505A0AF5580D
+X-Migadu-Flow: FLOW_OUT
 
-Add a helper for v4l2_subdev_pad_ops.v4l2_get_frame_desc operation. The
-helper can be used when the subdevice directly passes through the
-streams.
+Apple supports a few image layouts across the SoC. To begin, add
+modifiers for the "twiddled" and "twiddled + compressed" layouts. These
+are the two "standard" layouts used on the GPU. Mesa requires these
+modifiers to share non-linear buffers across processes, but no other
+userspace or kernel support is required/expected.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+These layouts are notably not used for interchange across hardware
+blocks (e.g. with the display controller). There are other layouts for
+those but we don't support them either in userspace or kernelspace yet
+(even downstream), so we're not adding them here.
+
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 ---
- drivers/media/v4l2-core/v4l2-subdev.c | 96 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-subdev.h           | 21 ++++++++
- 2 files changed, 117 insertions(+)
+ include/uapi/drm/drm_fourcc.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index cde1774c9098..f04de851d777 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -2500,6 +2500,102 @@ int v4l2_subdev_s_stream_helper(struct v4l2_subdev *sd, int enable)
- }
- EXPORT_SYMBOL_GPL(v4l2_subdev_s_stream_helper);
+diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+index e41a3cec6a9ed18760f3b0c88ba437c9aba3dd4f..6c289fc172c099ab32bf539a1698dabb93f9a0d2 100644
+--- a/include/uapi/drm/drm_fourcc.h
++++ b/include/uapi/drm/drm_fourcc.h
+@@ -422,6 +422,7 @@ extern "C" {
+ #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
+ #define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
+ #define DRM_FORMAT_MOD_VENDOR_MTK     0x0b
++#define DRM_FORMAT_MOD_VENDOR_APPLE   0x0c
  
-+int v4l2_get_frame_desc_passthrough(struct v4l2_subdev *sd, unsigned int pad,
-+				    struct v4l2_mbus_frame_desc *fd)
-+{
-+	struct v4l2_subdev_route *route;
-+	struct v4l2_subdev_state *state;
-+	int ret;
-+	const struct media_pad *pads = sd->entity.pads;
-+	struct media_pad *local_sink_pad;
-+
-+	if (WARN_ON(!(pads[pad].flags & MEDIA_PAD_FL_SOURCE)))
-+		return -EINVAL;
-+
-+	state = v4l2_subdev_lock_and_get_active_state(sd);
-+
-+	/* Iterate over sink pads */
-+	media_entity_for_each_pad(&sd->entity, local_sink_pad) {
-+		struct v4l2_mbus_frame_desc source_fd;
-+		bool have_source_fd = false;
-+
-+		if (!(local_sink_pad->flags & MEDIA_PAD_FL_SINK))
-+			continue;
-+
-+		/*
-+		 * Copy frame desc entries for the streams going from the sink
-+		 * pad to the requested pad
-+		 */
-+		for_each_active_route(&state->routing, route) {
-+			struct v4l2_mbus_frame_desc_entry *source_entry = NULL;
-+			unsigned int i;
-+			struct media_pad *remote_source_pad;
-+			struct v4l2_subdev *remote_sd;
-+
-+			if (route->source_pad != pad ||
-+			    route->sink_pad != local_sink_pad->index)
-+				continue;
-+
-+			if (!have_source_fd) {
-+				remote_source_pad = media_pad_remote_pad_unique(local_sink_pad);
-+				if (!remote_source_pad) {
-+					ret = -EINVAL;
-+					goto out_unlock;
-+				}
-+
-+				remote_sd = media_entity_to_v4l2_subdev(remote_source_pad->entity);
-+				if (!remote_sd) {
-+					ret = -EINVAL;
-+					goto out_unlock;
-+				}
-+
-+				ret = v4l2_subdev_call(remote_sd, pad,
-+						       get_frame_desc,
-+						       remote_source_pad->index,
-+						       &source_fd);
-+				if (ret)
-+					goto out_unlock;
-+
-+				have_source_fd = true;
-+
-+				if (fd->num_entries == 0) {
-+					fd->type = source_fd.type;
-+				} else if (fd->type != source_fd.type) {
-+					ret = -EPIPE;
-+					goto out_unlock;
-+				}
-+			}
-+
-+			for (i = 0; i < source_fd.num_entries; i++) {
-+				if (source_fd.entry[i].stream == route->sink_stream) {
-+					source_entry = &source_fd.entry[i];
-+					break;
-+				}
-+			}
-+
-+			if (!source_entry) {
-+				dev_err(sd->dev,
-+					"Failed to find stream %u from source frame desc\n",
-+					route->sink_stream);
-+				ret = -EPIPE;
-+				goto out_unlock;
-+			}
-+
-+			fd->entry[fd->num_entries] = *source_entry;
-+
-+			fd->entry[fd->num_entries].stream = route->source_stream;
-+
-+			fd->num_entries++;
-+		}
-+	}
-+
-+out_unlock:
-+	v4l2_subdev_unlock_state(state);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_get_frame_desc_passthrough);
-+
- #endif /* CONFIG_VIDEO_V4L2_SUBDEV_API */
+ /* add more to the end as needed */
  
- #endif /* CONFIG_MEDIA_CONTROLLER */
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index 2f2200875b03..d42fb3f55515 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -1746,6 +1746,27 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
-  */
- int v4l2_subdev_s_stream_helper(struct v4l2_subdev *sd, int enable);
+@@ -1494,6 +1495,36 @@ drm_fourcc_canonicalize_nvidia_format_mod(__u64 modifier)
+ /* alias for the most common tiling format */
+ #define DRM_FORMAT_MOD_MTK_16L_32S_TILE  DRM_FORMAT_MOD_MTK(MTK_FMT_MOD_TILE_16L32S)
  
-+/**
-+ * v4l2_get_frame_desc_passthrough() - Helper to implement the subdev
-+ *	v4l2_get_frame_desc operation in simple passthrough cases
-+ * @sd: The subdevice
-+ * @pad: The source pad index
-+ * @fd: The mbus frame desc
++/*
++ * Apple twiddled layout.
 + *
-+ * Subdevice drivers that only pass through the streams can use this helper
-+ * to implement the &v4l2_subdev_pad_ops.v4l2_get_frame_desc operation.
++ * This is the most "general" image layout supported on Apple GPUs.
 + *
-+ * The helper will call get_frame_desc on the subdevice's sources, create a new
-+ * frame desc which contains only the streams on the given source pad. The data
-+ * for each frame desc entry is copied directly from the data provided from the
-+ * calls to the subdevice's sources, with the exception of the 'stream' field
-+ * which is set according to the subdevice's routing table.
++ * Twiddled images are divided into tiles. Tiles are always 16KiB, with
++ * dimensions depending on the base-format. Within a tile, pixels are fully
++ * interleaved (Morton order). Tiles themselves are raster-order.
 + *
-+ * Return: 0 on success, or a negative error code otherwise.
++ * Images must be 16-byte aligned.
++ *
++ * For more information see
++ * https://docs.mesa3d.org/drivers/asahi.html#image-layouts
 + */
-+int v4l2_get_frame_desc_passthrough(struct v4l2_subdev *sd, unsigned int pad,
-+				    struct v4l2_mbus_frame_desc *fd);
++#define DRM_FORMAT_MOD_APPLE_TWIDDLED fourcc_mod_code(APPLE, 1)
 +
- #endif /* CONFIG_VIDEO_V4L2_SUBDEV_API */
- 
- #endif /* CONFIG_MEDIA_CONTROLLER */
++/*
++ * Apple twiddled and compressed layout.
++ *
++ * This is the main lossless image compression layout supported by Apple GPUs.
++ *
++ * The image is divided into tiles that are internally twiddled.  In addition to
++ * the body, there is also a metadata section containing 8 bytes for each 16x16
++ * compression subtile. By convention, the metadata immediately follows the
++ * body, after padding to 128-bytes.
++ *
++ * Images must be 16-byte aligned.
++ */
++#define DRM_FORMAT_MOD_APPLE_TWIDDLED_COMPRESSED fourcc_mod_code(APPLE, 2)
++
+ /*
+  * AMD modifiers
+  *
 
+---
+base-commit: 0ed1356af8f629ae807963b7db4e501e3b580bc2
+change-id: 20250218-apple-twiddled-modifiers-fde1a6f4300c
+
+Best regards,
 -- 
-2.43.0
+Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
