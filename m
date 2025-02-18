@@ -1,196 +1,184 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2066.outbound.protection.outlook.com [40.107.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C78422DFAF;
-	Tue, 18 Feb 2025 08:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869061; cv=none; b=QFEQye5w/PPua2tZ6BRJan26VlBy+h00IjZzsLMbVpy0B4lKkEBeolmeGemVIPSVUo7hE6CmR78i0p+hkYZ/d7hh8gf0wcsZvztbW3bi7eLTc28pDXZoqq8oAghDdAQdob7DplXgDm7TbygYml88uP6ZesITLXE8Rf9cWG+tEV8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869061; c=relaxed/simple;
-	bh=7n8w+ERA8pojz2++WaPBKwjwqZFE9/DbJNIdVjRs0gE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SGgrrFsaPnrCLikJXf5WdIK/TpWK2pL2A92db4qa9nOxbVBm0c2bgaATgshiYnZYP6KQqg49pgw/R4s+9XW585YFQC2ljAJ3jI3ATqCnTPuFjkLw6aYsZrSCnGwC3SsRasUw5VONDpxIARhPD1TQMrrhlcaZ7ZwN54G8/t55sMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FUkJ67Mh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IjnGMBZ1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E61B22AE42;
+	Tue, 18 Feb 2025 08:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739869080; cv=fail; b=QeaxuK1FQ2tQ7A4SReBaYgOI+ZXTG34W4hcmNiZVjnIauHGa3t7JBmxjLgGwyLw5Mtqc4zYOdyO/BqynMQ5I9uahUJCGxTUG8VM810YOusFIAtTgBYAIM+DdyTfrXQBPk9fi8z86q4e3mO1yPvt2q/E8kejBpvcAjS5mSXA0uPw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739869080; c=relaxed/simple;
+	bh=0IfsGUbynYycHq2Ym7PK/GM+inwyZ5uq3VKXip2T01Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=s72IPXkDazUk3Y/6ekGs9TSZRHU+u+vLZp0eJKVJ8lx2SDLc1SOQcMJc6vhmy36OWRHJ92uZJrFd/ep4ynuHpVvNLEJyTKjVpwwdBvaY9YMyqew7sFL7iWV2q+pzIfHLyOsklvEeAiQxlufVeHtLNFQfAcMSfPt2udY+WL9mBYU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=aJ9KC/tT; arc=fail smtp.client-ip=40.107.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FUkJ67Mh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IjnGMBZ1"
-Date: Tue, 18 Feb 2025 09:57:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739869057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qi00sFeb7intGV58iU7h9IRHzK7AVG7qi/qdH2z0KQQ=;
-	b=FUkJ67MhPasq8kvXjD/bsAI2FDmaN5qca6uZhURZGkoRKaE3rjjTB+2G+9MQipu9bP24rH
-	5zraI2X4z3gbbV5AAMS28pCNApEGpUEMQKh3amivMb+6PfKkkuSETG9N1g+QoY9T5K6sjL
-	U0pHyPkodErZ7cWF8fcQtolIY5tGm1smQJ8UlhgYv0M5/xroFcGaUFQ7yKNY7N/XHvLGaf
-	UkkgvtX9f6QKIiONuXuY6tf/zB+jYtoPT+aUK2xv4UdkWsOLC/qYoXOsVWPFtR03b7awWD
-	rZmU3F3stUIZKF7OQy1NOf38b9tbtbuP+gOmUHnjxENq6RHDbvjS74K76MC+2g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739869057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qi00sFeb7intGV58iU7h9IRHzK7AVG7qi/qdH2z0KQQ=;
-	b=IjnGMBZ17v3aCASnhhz+y8ps26+DBt8gRKH6JNDsUUZehTAkI0aiHpImiua79+zsGbKPT+
-	BiXUzimJpXTAQrBg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: David Gow <davidgow@google.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 00/12] kunit: Introduce UAPI testing framework
-Message-ID: <20250218093333-04552bed-4a2e-445d-9966-e1732a1f8b21@linutronix.de>
-References: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
- <CABVgOSn5tGDj5rnR=a133ntv3GeoXQLnHRBg9HRf86hWve7T1w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="aJ9KC/tT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sVyDTGF07qLVJ8kAPYAhOKPUCF0X4Pk+ZZkwvCk8ExdOiWx3PlBZ1VGcFI1PXx/D8fVhdiU54uXHrt7tpFRA2xSqxv7oVZC6gWyJBLapeTvzvqWmKaV1SLVqr5gJy4Ypuoeq8RQTMGzdoKVS2wgo5vhk1/jvPI5PxTRWCFC+ZgWRvOZ/fKTxSs716k4h34R8l0JFD3dBzfFnhbUu24c59I7EYoCDcoKWUXLLTCTepTFDUDT2Ur7tU+Lg2F2bKR0Y9MQynFjWdbZ8KU/KZrY3UKhITrisFM9UmQXlGRgHNuFJLkMdnPSOt/gus4/yue+/YZ9tUXq4IueSpGHjiTEAZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ub8KcIaInEqrO393sFZTZsgayzH1hLqO0x6G8f1wUhE=;
+ b=JmZWZ/1EVxrxu3Sb5FH+HUUrIe5ambWXMq972cWWmhvGoszcKw7dk6DNVlYXPGn3LURyepPqQULmn4UyweubbX5WT+QONpzZq2EmYNQmcb1DvqDXTX8BWT6UdZPefp96BRZS3iC6q7P/TSVCXlTU3L080FGVDl/i0PiuZBrDZtsqFxFt2s295dXrfWY3UzzTP1n+rC1OgPCPGb6+s3UhYmtlEPFjcbLIy8fRf+8uW+0q/JppQBSayeQ254jyf8nhjU6Zw/QJeFqfljiKgsjM1q6p9reTCj+8EOzKx+FV+ulxoZNCjAbBrssr4fE2LVc3t60LoqyViCW2e1q6635ZzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ub8KcIaInEqrO393sFZTZsgayzH1hLqO0x6G8f1wUhE=;
+ b=aJ9KC/tTmShmFyrJ/wf0eBXwRGkNoxNilg13ulNhkmS0wVP/ejpqI/rtkcq53t4dwfuYiSbfpj7XEQ6vsQjal/uW9ik4UdV9J5S8Jf/ihIlG6rPjbOz2FzxPT6zqx7igkm+0FEf3V8rPS9aBu5wAcQ8Q3iJqQU89cToXlZzbK0h9BwLdMl70xLfC83d9pqsGBrU+1wvrE0dbibkD0DLwH6/Ga3hphCSHG4Lk7YhunPhkq7qOgXZ+1bMETAlmSSH55iiCoxVFPxfDD3MIcGia/0kT0ThzwP88uXaUYr33Eoi0hW3+H/Yz6iVU6buRHQ9lGLmEaGgy00h7Bwtv1cP7Tw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com (2603:10a6:20b:3f2::13)
+ by AS5PR04MB10057.eurprd04.prod.outlook.com (2603:10a6:20b:67d::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Tue, 18 Feb
+ 2025 08:57:55 +0000
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6]) by AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6%5]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
+ 08:57:55 +0000
+From: Daniel Baluta <daniel.baluta@nxp.com>
+To: p.zabel@pengutronix.de,
+	shawnguo@kernel.org,
+	mathieu.poirier@linaro.org
+Cc: s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	andersson@kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	iuliana.prodan@nxp.com,
+	laurentiu.mihalcea@nxp.com,
+	shengjiu.wang@nxp.com,
+	Frank.Li@nxp.com,
+	krzk@kernel.org,
+	Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/5] imx8mp: Add support to Run/Stall DSP via reset API
+Date: Tue, 18 Feb 2025 10:57:07 +0200
+Message-Id: <20250218085712.66690-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: VI1PR07CA0286.eurprd07.prod.outlook.com
+ (2603:10a6:800:130::14) To AS8PR04MB8247.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3f2::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABVgOSn5tGDj5rnR=a133ntv3GeoXQLnHRBg9HRf86hWve7T1w@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8247:EE_|AS5PR04MB10057:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93cc3163-9342-43b8-4f67-08dd4ffa5541
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?e6aAbeXg22VHAyDBwMDWf4bAT27ZcQImq1Q9EYNFV1hI0JUwp9l6BVaubmaP?=
+ =?us-ascii?Q?QWtpKdGsVh10Qk/XEeGzzQK7gbXBYv9ZjqEpnzvFctAtOeIJKW5XswVwzBEc?=
+ =?us-ascii?Q?S6cCpos7aTHg4BhNKwaAmnJSsOFrn9GgYuOzZDL49MITLwzF+UHJckH3+XBB?=
+ =?us-ascii?Q?QrOKYkTeJZN2poAgReM7htIhQdN1inI055fSnZznyhf8OZhqLFKTuO9JLvl4?=
+ =?us-ascii?Q?+PWtjofE47bNsqDFVS4XGFa12flEZBi6RonKzIvqhew/MMrddeRm0NKOjbPX?=
+ =?us-ascii?Q?tDa3WblZKrYunBePymtVPYT9BEDPMknEI++xiJT8fnLr620LHZnExt6A7uFh?=
+ =?us-ascii?Q?Gqwn7TGEPUZBGo7NKwu+2VOXtIPHWCrypxZBJYERB0HjWeP9I+T1pn+BUNcJ?=
+ =?us-ascii?Q?M7eX3VVfP+4uocbW9exFmsOGBUIA55Y5TLQ8YEmoL2LF9tJ64kpN9goRSN5J?=
+ =?us-ascii?Q?nkEO26eoEGKPG6/CB326NX2NIR+fUKdT8WNq+l18c5r9vaJf7rAFd5XrMJTp?=
+ =?us-ascii?Q?BoLb+LSzvYH8RuHOjsRrzcUvjXX5DEWEvqKJt4sEyZI/f0c3sj55QWRPYAy8?=
+ =?us-ascii?Q?LpPqAdy5RvrzznsUnvsTRlp8rrdtGkFfseVzG8fp2qZaGIVPhXNy4Mx4TvbW?=
+ =?us-ascii?Q?QhZcHu6sfqqExN3YaZD1EUfxSiTS3vzgn9MWxtysGLV9gPnlVDuNtlSaDFpY?=
+ =?us-ascii?Q?T/AYxhoUtpYE9ACUX4y+VDg8bVxOnFzoEiT8m07P/Cs6dkHrwMWgteXbS2jN?=
+ =?us-ascii?Q?GSMCF2fLE7g8pMLEEQPEn7iYki+nNjoEQZvxZrXNulNu+FBOubrltI1RhGXB?=
+ =?us-ascii?Q?0OENNVQt4yX1HO+2MJLTDhO+jbPZ6sjKfDAxHsWQGUuk1yzYWUVyx+WjVkAJ?=
+ =?us-ascii?Q?jVcGAQqot2t3lvJGb36aygMKViPU3MUL8ylSAYqXSKAmK+VBKfEelYWLzWZr?=
+ =?us-ascii?Q?IrjWxFxtfLfh4wo0sXxZqEe4zxDPa+23yWIF+nlzPAAuOrQLiGEvWmMV72cO?=
+ =?us-ascii?Q?s8fvhe8d0pAQ5wpxko1cDGtmgCgRoN4WhsBaupS0Ss4/rEiBBS7btdnHS3PJ?=
+ =?us-ascii?Q?wGOJjiLvhionMtWMr5G4GgY6L+xhH6S9wV9zywFAeYVbdstNYbIfml2KZHmU?=
+ =?us-ascii?Q?J2vxfsQ+tlBCtirfaTTD3tpDXuSNOvuM8sZHJFgcRQXjIHHMGQ4cSliBtSbk?=
+ =?us-ascii?Q?MbWhywrFwkyBuTVPKw7T8nGzJlXXgYzSyR8/oyi0siiFJjWXbVbu6YjMunhh?=
+ =?us-ascii?Q?3wC0dKFoaFaMYFuWwxbmi7Y2Uj35ExxtR0tQoEyQk+kp/bLValj6UnqpRRiZ?=
+ =?us-ascii?Q?NrgT02I3Q4YNbZT2qLdcdfr+vVqRozU+imXTa2zO1YqPzy4M+chAKdt0y36X?=
+ =?us-ascii?Q?+JBrU/UfKYyvkxn5v6DfM3XGzX0T?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8247.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SDSIPGLbuGd6zjhkDmOnyAdXjdGmvKFV+dowooX4CsJa26vVLUM87NMoZPTe?=
+ =?us-ascii?Q?9WYEgDT9S9s9ZuFORZucJ99xJYwyLNtju75sqxwJyKjD9d+DxixhMLM4KWZE?=
+ =?us-ascii?Q?NZ5QX8VKA8bTiC9EXaFctTtFPxt330kX6A9kswSo7fFfZZXIQDgX03qdQLZ9?=
+ =?us-ascii?Q?KWCxVzEopP45lpJZ5iYH/q+6RLRZw5ENR4toGbUQxURkIH1RQY0FwdFxNArD?=
+ =?us-ascii?Q?uknXydZ+2B1pL/QAwRU2Ibyp6e62pOt4aAi46DbTufel65L7X68GMeLTRFGQ?=
+ =?us-ascii?Q?hXq6vylFBo9fl3DJhHGYWZ1LxkweAi1Egy4hZ+lrYqGib1jqfWStotX302vL?=
+ =?us-ascii?Q?1fXosFQuc47ZuHUB02FLC7KW1R3vGnQVPJodS+ySlwAjpJzPgdEqqAvthO4L?=
+ =?us-ascii?Q?hKG5Bqwz09a6E8EaXl/EHf203u8GBTq3RplBmEKzjSZ988A+i9SqjJqEiHrV?=
+ =?us-ascii?Q?UTbR81p9KZAb1T4EUneN5jscPmNG1QhGSZfaerVc9hIC+FYuVJjGIRT9g8Z0?=
+ =?us-ascii?Q?MvnLFgRoc46EP+WdgG/+KUAnJerMSTD2lrOM946hQazQipthp/8aA1b4dHBI?=
+ =?us-ascii?Q?v4ikUBCkwrVA/UAryauuJSg1+jjP+1aXNVtB1ODzMu5QsCgdilnww0qpEIW5?=
+ =?us-ascii?Q?o4jFjqCKqcPtkyXEVWgqZg2+Psw/sabcWI4cCZVS5f06fWo6T+VbYIA4rsp2?=
+ =?us-ascii?Q?GB9e65ix0zjAUR+TV1OeCZmF5sGQ9IU80VwFsDnsxLlEIOs5XDXq/Vjd7eOD?=
+ =?us-ascii?Q?FK10tKGQuzwabM8wQ0E9dhGtkH/m92IqWoQxaABeiLSxJdDFOXIA8r1DZzDF?=
+ =?us-ascii?Q?Uqcz2j6jQIcwv17KsjvnbYT7uOG5RZSBWSEYVqcHKOevu+SP9AhacJwWjmmk?=
+ =?us-ascii?Q?8QMSoSn6EVneVt+HgraZGTW1nXIjjXqfsPwTHBcqi9XN55T9mlcSzqpR5+hG?=
+ =?us-ascii?Q?Xs3PMFkQ/ERYTh6FPWMc/pKR831CmzHyHTQM5uL7Bb79zXr8xsgNN3VBH20z?=
+ =?us-ascii?Q?alBedtji7My/9JD2KP6BbVJsjMb1Xs1O6N1xJgZoq9KpRHF5F/wXtaNj0+cJ?=
+ =?us-ascii?Q?TtE5Hnm/WX/QaXH7kPf5ospvV3vymaRp+3+ryyec9kT6RAegm0oBtF9w2s6W?=
+ =?us-ascii?Q?tvliDP51JadWM9DEAo0lroFAMpTRL0xGQ7f2XHqN/nBgRomNeJ4SlBzUONKg?=
+ =?us-ascii?Q?WOmMZdwJzIjaSa8/NnBALMODUtEe9cgCdAAXiCJHmaqZYLmwmf0yXuDq61cd?=
+ =?us-ascii?Q?PU7XDcRgtxK8TH+w6wGhU2kULohXVc6p8xAWl9cS+YcVoKsqtboiH5OKsNut?=
+ =?us-ascii?Q?tshtk7BMZZVllir3/tMNypH8UL9bv7dDQEouNUnusj3uFMZbHNyZmJEbyARy?=
+ =?us-ascii?Q?rOzTjqI323FF6VttWVtCS6zlwDNxh8C/A2u2fFOjkG2ozvq9tUoaiy3S7Zxg?=
+ =?us-ascii?Q?vvcDsLt4giIOhjBYzlc3NEwyndIOtfZoeoqjtBYcxFlw7Ba5q/TUYKdW7kLK?=
+ =?us-ascii?Q?ZzfSfzgggFBJjO/g/2b6mEh1F9pJecOP8kqM1mjSKtQXqoJ507oNDY8OFgUr?=
+ =?us-ascii?Q?77/kkiwBs1mWnS0fsQllfiY3xs8vC5deJQoPpekxk8mY9wywIwI2iwPIAiwx?=
+ =?us-ascii?Q?sJW5NDyQyxN7pCPMHAgUQfe8vavFGaj7Qr1OuEVNOszW9jy5ilKq8cvEEmsu?=
+ =?us-ascii?Q?zEw+Tw=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93cc3163-9342-43b8-4f67-08dd4ffa5541
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8247.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 08:57:54.9662
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FSe+efnQvksgzWOJn8CVHA3XiXJooPPuZEaBmD8yt2Zh4tbY6oit41Q6UJ5mH0uNAA5jzxEyQWeAo+tPvXdSFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB10057
 
-On Tue, Feb 18, 2025 at 04:20:06PM +0800, David Gow wrote:
-> On Mon, 17 Feb 2025 at 19:00, Thomas Weißschuh
-> <thomas.weissschuh@linutronix.de> wrote:
-> >
-> > Currently testing of userspace and in-kernel API use two different
-> > frameworks. kselftests for the userspace ones and Kunit for the
-> > in-kernel ones. Besides their different scopes, both have different
-> > strengths and limitations:
-> >
-> > Kunit:
-> > * Tests are normal kernel code.
-> > * They use the regular kernel toolchain.
-> > * They can be packaged and distributed as modules conveniently.
-> >
-> > Kselftests:
-> > * Tests are normal userspace code
-> > * They need a userspace toolchain.
-> >   A kernel cross toolchain is likely not enough.
-> > * A fair amout of userland is required to run the tests,
-> >   which means a full distro or handcrafted rootfs.
-> > * There is no way to conveniently package and run kselftests with a
-> >   given kernel image.
-> > * The kselftests makefiles are not as powerful as regular kbuild.
-> >   For example they are missing proper header dependency tracking or more
-> >   complex compiler option modifications.
-> >
-> > Therefore kunit is much easier to run against different kernel
-> > configurations and architectures.
-> > This series aims to combine kselftests and kunit, avoiding both their
-> > limitations. It works by compiling the userspace kselftests as part of
-> > the regular kernel build, embedding them into the kunit kernel or module
-> > and executing them from there. If the kernel toolchain is not fit to
-> > produce userspace because of a missing libc, the kernel's own nolibc can
-> > be used instead.
-> > The structured TAP output from the kselftest is integrated into the
-> > kunit KTAP output transparently, the kunit parser can parse the combined
-> > logs together.
-> 
-> Wow -- this is really neat! Thanks for putting this together.
-> 
-> I haven't had a chance to play with it in detail yet, but here are a
-> few initial / random thoughts:
-> - Having support for running things from userspace within a KUnit test
-> seems like it's something that could be really useful for testing
-> syscalls (and maybe other mm / exec code as well).
+This patch series adds support to Run/Stall DSP found on i.MX8MP via the
+reset controller API.
 
-That's the target :-)
+Patches 1-4 apply to reset-imx8mp-audiomix (should go via reset
+controller tree)
+ * refactor code, introduce active_low configuration option and then
+   add support to Run/Stall DSP.
 
-I'm also looking for more descriptive naming ideas.
+Patch 5 applies to imx_dsp_rproc driver (should go via REMOTEPROC tree)
+ * use reset controller API to control the DSP instead of directly
+   touching the audiomix registers via a syscon.
 
-> - I don't think we can totally combine kselftests and KUnit for all
-> tests (some of the selftests definitely require more complicated
-> dependencies than I think KUnit would want to reasonably support or
-> require).
+Using reset controller API was suggested by Frank Li and Krzysztof
+Kozlowski in the following discussion thread:
 
-Agreed, though I somewhat expect that some complex selftests would be
-simplified to work with this scheme as it should improve test coverage
-from the bots.
+https://patchwork.kernel.org/project/imx/patch/20241210125338.104959-6-daniel.baluta@nxp.com/
 
-> - The in-kernel KUnit framework doesn't have any knowledge of the
-> structure or results of a uapi test. It'd be nice to at least be able
-> to get the process exit status, and bubble up a basic
-> 'passed'/'skipped'/'failed' so that we're not reporting success for
-> failed tests (and so that simple test executables could run without
-> needing to output their own KTAP if they only run one test).
+Daniel Baluta (5):
+  reset: imx8mp-audiomix: Add prefix for internal macro
+  reset: imx8mp-audiomix: Prepare the code for more reset bits
+  reset: imx8mp-audiomix: Introduce active_low configuration option
+  reset: imx8mp-audiomix: Add support for DSP run/stall
+  imx_dsp_rproc: Use reset controller API to control the DSP
 
-Currently any exitcode != 0 fails the test.
-I'll add some proper handling for exit(KSFT_SKIP).
+ drivers/remoteproc/imx_dsp_rproc.c    | 25 +++++---
+ drivers/remoteproc/imx_rproc.h        |  2 +
+ drivers/reset/reset-imx8mp-audiomix.c | 86 ++++++++++++++++++++-------
+ 3 files changed, 83 insertions(+), 30 deletions(-)
 
-> - Equally, for some selftests, it's probably a pain to have to write a
-> kernel module if there's nothing that needs to be done in the kernel.
-> Maybe such tests could still be built with nolibc and a kernel
-> toolchain, but be triggered directly from the python tooling (e.g. as
-> the 'init' process).
+-- 
+2.25.1
 
-Some autodiscovery based on linker sections could be done.
-However that would not yet define how to group them into suites.
-Having one explicit reference in a module makes everything easier
-to understand. What about a helper macro for the test case definition:
-KUNIT_CASE_UAPI(symbol)?
-
-All UAPI tests of a subsystem can share the same module,
-so the overhead should be limited.
-I'd like to keep it usable without needing the python tooling.
-
-Note in case it was not clear:
-All test executables are available as normal files in the build directory
-and can also be executed from there.
-
-> - There still seems to be some increased requirements over plain KUnit
-> at the moment: I'm definitely seeing issues from not having the right
-> libgcc installed for all architectures. (Though it's working for most
-> of them, which is very neat!)
-
-I'll look into that.
-
-> - This is a great example of how having standardised result formats is useful!
-
-Indeed, it was surprisingly compatible.
-
-> - If this is going to change or blur the boundary between "this is a
-> ksefltest" and "this is a kunit test", we probably will need to update
-> Documentation/dev-tools/testing-overview.rst -- it probably needs some
-> clarifications there _anyway_, so this is probably a good point to
-> ensure everyone's on the same page.
-
-Agreed.
-
-> Do you have a particular non-example test you'd like to either write
-> or port to use this? I think it'd be great to see some real-world
-> examples of where this'd be most useful.
-
-I want to use it for the vDSO selftests.
-To be usable for that another series is necessary[0].
-I tested the whole thing locally with one selftest and promptly found
-a bug in the selftests [1].
-
-> Either way, I'll keep playing with this a bit over the next few days.
-> I'd love to hear what Shuah and Rae think, as well, as this involves
-> kselftest and KTAP a lot.
-
-Thanks!
-I'm also looking forward to their feedback.
-
-
-Thomas
-
-<snip>
-
-[0] https://lore.kernel.org/lkml/20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de/
-[1] https://lore.kernel.org/lkml/20250217-selftests-vdso-s390-gnu-hash-v2-1-f6c2532ffe2a@linutronix.de/
