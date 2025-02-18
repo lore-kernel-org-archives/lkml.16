@@ -1,378 +1,286 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E158622DF85
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33200239570;
+	Tue, 18 Feb 2025 08:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866824; cv=none; b=h4mrSJtsGUHI9qWuQaabIrATDgf9IsErYdL2QrAOq/AZIPN0d4AGRqZ4xlnmqhBMylS/wUBoSYWjeqQ+z3YL5Gl9DbAji2jIwALw9+6/0h97L5PBQv8eLcFWXRWOwOj2rT2/kb5epKi62PECQlMa5GtgsGbAwlGsJOFobuVDOl4=
+	t=1739866827; cv=none; b=dDR8lAxgh5gJy8qpQAnxRr+mr7auybnTCWmly9goHmPvypirdpDGkpeHeN7JlfmRAYMenX/mKf4Y864RIGHAkRZTbyDerQmCIrtKd83NWzi9S+48mFpWj+Sy5B54tI4ue9LcUy+ZcaFkgGJHpB272vjkNlwY9ykP5d53ztd/HPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866824; c=relaxed/simple;
-	bh=aj5HeYZk5SQBs+cRLnyR/tfncQ/1zsQRkxoHy0Kn60g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uyVL3z27HpYnvSN1Vx1RlZZvCJHNUYFfIYPDE6sQhhILOiPXpBMHAj/FThn9JEOC9Su9em5jnWDJVm1bvLC821QdvxF5FkMQ9Qcpg77I45B0qQi7PDeyL6mXVTBhrOHc9PYVlCPX+jZmEMjOSrBl6laXrrkZhSSxI83wrywk5DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b0FK7x2H; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739866827; c=relaxed/simple;
+	bh=tLFNi6QiCcH4XS9SXJrys5meLjBaYY7ZaQ2eE4lAVKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LIzGojlIh3cUCbgwcd6dw+TGydT56bYceVxsvD7SxRLT3Dme30H4DhFT3Tv+5nxqc29mSQrEDZnL3w1Jgvvlm3VG0Ds1qdwkjyL1Y2nVwE5qa10GRagc9UYcikPer2VVJ7y06ZGHjlT0zGebFS5ldLJtinNpX1UHLgx4E5s5QqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KM5EmLHG; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b0FK7x2H"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e677921db0so16400556d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:20:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739866820; x=1740471620; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uYpS4lgTY+N2mWDzXAzMYR5w4pYxjQSolJFTVQsywyg=;
-        b=b0FK7x2H65rrQpCXfB729qSQuFSYkSN/CuWyu2QbEimUOx48sZw0XoALKPJ/L/1MDQ
-         Ko04RZXQvzyv6iNNI0ULTKl6IRdOqI9YuXjs5HAqB1Mubd1JNYwd5ihEmEqd9FUueYSE
-         87zy1Tj2mBmoenD6DsG4q++ypCdHZXj6wQEksyuoSYI42myuECJqCcFHpbwhHEJ9Bu22
-         2vTSgRsF53binUqNNRVlBdXUoVvixPCwXIJ0nkrkpguWfx28KfhE4h8FYKT737Sv2LDe
-         BzijQNEfinieDZTGbsqru3bNmllBFr8f7PKXCxl8t08vuHW4Hl6jBSRts/IOPkaGjpfr
-         0jzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739866820; x=1740471620;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uYpS4lgTY+N2mWDzXAzMYR5w4pYxjQSolJFTVQsywyg=;
-        b=DHq4piQGBUKq1lL1ZRf2BgbVPLkE57sHIqiyQSu2RYhkuL4IxRcipt5mRYdCogxPfY
-         ba18W1w9xIqdTdPIbF/tL1stDjpu0eZGO9WdYdtYu7AhYDsylw9KBSexBJpLYxuKqAtT
-         cZOerZicZLwu+dj+qh+IbCpIrRkbvKdIhx6vce4P15nKVMdD/nYEN0gO2iD4VPAiDAQy
-         Iz6VFbvJ35r/Q1jsN3CtoRpWClyBri4zM9R5JuBNajPUOJ99EENXuMHUVBJR4DS/2oA/
-         Xpwxd/biXGR8D7W+L34zJCcxh/WhQNL3BBDuKVIVCqR57Gh4YozgwmGlzP5adZ5+hqf9
-         d8zw==
-X-Forwarded-Encrypted: i=1; AJvYcCV49xNnvDev0FkcpAbLaKghuI/MViQfTO6FaW4HJBTPmCfkfiaHJlAwGBT2ts6pfpSPY1FX6TVzUEOxAHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6BbFiIcAxyPLbmerPf8VeSseY05Alp9zH7bUAVhxwuUIef64b
-	rUrvQmRY49qm2VvpgWenvm1xukejrPqn1uu9EoYjQigSP0LxUslumedZR2o0NRfIGHAR/pqKf8Y
-	kw7dFgOETJ/n37fjqoms1kHe5uTSdx0aGxEmg0Y+cF+f+hhfIkw==
-X-Gm-Gg: ASbGnctHSF+ZRCUhgfapfqxTUh9VGoWGvLEVmE4yI6JzChT12bCLFZWrCBbHXyps2KP
-	LMBVHbDdzT04D4zZuLxCLsQs8Q3SsPhJMZOHdvyg3bt2wiORJn7lIPA4JdAOrONmqn258WVo53g
-	==
-X-Google-Smtp-Source: AGHT+IFUJfybEUXPvrsW87DgsnIvE+HQJ5a6+pzrlrCs1oeh+20Y0GTMrQexFX4rmjjFLGXQ/rxrdP5vqnXW/+QABmc=
-X-Received: by 2002:a05:6214:5019:b0:6e6:5ec3:868e with SMTP id
- 6a1803df08f44-6e66cd19b75mr215529066d6.31.1739866819538; Tue, 18 Feb 2025
- 00:20:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KM5EmLHG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739866826; x=1771402826;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tLFNi6QiCcH4XS9SXJrys5meLjBaYY7ZaQ2eE4lAVKI=;
+  b=KM5EmLHGK5CBB6ScVmq+T26fn6rPezRWRAA/3x8CkK2J+zntSFylkuoC
+   cj/4t1fgZY2BbHGIxgXAszJ8cZEul8R4KTjYblXSs4NciUVg21fIg6Out
+   4vEwnrGL3pigJQsQbYnPC+LYo5tNsddHveo99hS61aOvmRI0vv7dZz9Fr
+   Tmut3ifiMCMsWp8k2oXPpzaxh9PnqET6ox5PQr2Kz8cDjFvqSsHaKqowr
+   ylmNWf4nBD3UK2quSki/Nvgz02W8tAksNioqCGxEd5gq7B+sknpQ94Bv/
+   Rh7zqyZ72OA46x14kOES0O+V6rcGooQ8/oB9sIZL0LiNLJl/7+6hzArJi
+   A==;
+X-CSE-ConnectionGUID: PnQHCi8PSHCCnOsKfikMKA==
+X-CSE-MsgGUID: 4AAnf1/iTUuTU49vhsL+8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="28150554"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="28150554"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:20:25 -0800
+X-CSE-ConnectionGUID: ZBHrRLDGSHmtBzW5XHTLlA==
+X-CSE-MsgGUID: DOPqudHOR6e9SmDmLLK9pQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="119248027"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.245.49])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:20:07 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: kees@kernel.org,
+	julian.stecklina@cyberus-technology.de,
+	kevinloughlin@google.com,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	justinstitt@google.com,
+	catalin.marinas@arm.com,
+	wangkefeng.wang@huawei.com,
+	bhe@redhat.com,
+	ryabinin.a.a@gmail.com,
+	kirill.shutemov@linux.intel.com,
+	will@kernel.org,
+	ardb@kernel.org,
+	jason.andryuk@amd.com,
+	dave.hansen@linux.intel.com,
+	pasha.tatashin@soleen.com,
+	ndesaulniers@google.com,
+	guoweikang.kernel@gmail.com,
+	dwmw@amazon.co.uk,
+	mark.rutland@arm.com,
+	broonie@kernel.org,
+	apopple@nvidia.com,
+	bp@alien8.de,
+	rppt@kernel.org,
+	kaleshsingh@google.com,
+	richard.weiyang@gmail.com,
+	luto@kernel.org,
+	glider@google.com,
+	pankaj.gupta@amd.com,
+	andreyknvl@gmail.com,
+	pawan.kumar.gupta@linux.intel.com,
+	kuan-ying.lee@canonical.com,
+	tony.luck@intel.com,
+	tj@kernel.org,
+	jgross@suse.com,
+	dvyukov@google.com,
+	baohua@kernel.org,
+	samuel.holland@sifive.com,
+	dennis@kernel.org,
+	akpm@linux-foundation.org,
+	thomas.weissschuh@linutronix.de,
+	surenb@google.com,
+	kbingham@kernel.org,
+	ankita@nvidia.com,
+	nathan@kernel.org,
+	maciej.wieczor-retman@intel.com,
+	ziy@nvidia.com,
+	xin@zytor.com,
+	rafael.j.wysocki@intel.com,
+	andriy.shevchenko@linux.intel.com,
+	cl@linux.com,
+	jhubbard@nvidia.com,
+	hpa@zytor.com,
+	scott@os.amperecomputing.com,
+	david@redhat.com,
+	jan.kiszka@siemens.com,
+	vincenzo.frascino@arm.com,
+	corbet@lwn.net,
+	maz@kernel.org,
+	mingo@redhat.com,
+	arnd@arndb.de,
+	ytcoode@gmail.com,
+	xur@google.com,
+	morbo@google.com,
+	thiago.bauermann@linaro.org
+Cc: linux-doc@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH v2 13/14] x86: runtime_const used for KASAN_SHADOW_END
+Date: Tue, 18 Feb 2025 09:15:29 +0100
+Message-ID: <2a2f08bc8118b369610d34e4d190a879d44f76b8.1739866028.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
-In-Reply-To: <20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de>
-From: David Gow <davidgow@google.com>
-Date: Tue, 18 Feb 2025 16:20:06 +0800
-X-Gm-Features: AWEUYZmvtT093vpdYvvuHuiOHYbXlWuuoZDfhVK3Xg7QvvIfkc59Z_7-vUrHOoI
-Message-ID: <CABVgOSn5tGDj5rnR=a133ntv3GeoXQLnHRBg9HRf86hWve7T1w@mail.gmail.com>
-Subject: Re: [PATCH 00/12] kunit: Introduce UAPI testing framework
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000c4d4c7062e664f2f"
+Content-Transfer-Encoding: 8bit
 
---000000000000c4d4c7062e664f2f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On x86, generic KASAN is setup in a way that needs a single
+KASAN_SHADOW_OFFSET value for both 4 and 5 level paging. It's required
+to facilitate boot time switching and it's a compiler ABI so it can't be
+changed during runtime.
 
-On Mon, 17 Feb 2025 at 19:00, Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> Currently testing of userspace and in-kernel API use two different
-> frameworks. kselftests for the userspace ones and Kunit for the
-> in-kernel ones. Besides their different scopes, both have different
-> strengths and limitations:
->
-> Kunit:
-> * Tests are normal kernel code.
-> * They use the regular kernel toolchain.
-> * They can be packaged and distributed as modules conveniently.
->
-> Kselftests:
-> * Tests are normal userspace code
-> * They need a userspace toolchain.
->   A kernel cross toolchain is likely not enough.
-> * A fair amout of userland is required to run the tests,
->   which means a full distro or handcrafted rootfs.
-> * There is no way to conveniently package and run kselftests with a
->   given kernel image.
-> * The kselftests makefiles are not as powerful as regular kbuild.
->   For example they are missing proper header dependency tracking or more
->   complex compiler option modifications.
->
-> Therefore kunit is much easier to run against different kernel
-> configurations and architectures.
-> This series aims to combine kselftests and kunit, avoiding both their
-> limitations. It works by compiling the userspace kselftests as part of
-> the regular kernel build, embedding them into the kunit kernel or module
-> and executing them from there. If the kernel toolchain is not fit to
-> produce userspace because of a missing libc, the kernel's own nolibc can
-> be used instead.
-> The structured TAP output from the kselftest is integrated into the
-> kunit KTAP output transparently, the kunit parser can parse the combined
-> logs together.
+Software tag-based mode doesn't tie shadow start and end to any linear
+addresses as part of the compiler ABI so it can be changed during
+runtime. This notion, for KASAN purposes, allows to optimize out macros
+such us pgtable_l5_enabled() which would otherwise be used in every
+single KASAN related function.
 
-Wow -- this is really neat! Thanks for putting this together.
+Use runtime_const infrastructure with pgtable_l5_enabled() to initialize
+the end address of KASAN's shadow address space. It's a good choice
+since in software tag based mode KASAN_SHADOW_OFFSET and
+KASAN_SHADOW_END refer to the same value and the offset in
+kasan_mem_to_shadow() is a signed negative value.
 
-I haven't had a chance to play with it in detail yet, but here are a
-few initial / random thoughts:
-- Having support for running things from userspace within a KUnit test
-seems like it's something that could be really useful for testing
-syscalls (and maybe other mm / exec code as well).
-- I don't think we can totally combine kselftests and KUnit for all
-tests (some of the selftests definitely require more complicated
-dependencies than I think KUnit would want to reasonably support or
-require).
-- The in-kernel KUnit framework doesn't have any knowledge of the
-structure or results of a uapi test. It'd be nice to at least be able
-to get the process exit status, and bubble up a basic
-'passed'/'skipped'/'failed' so that we're not reporting success for
-failed tests (and so that simple test executables could run without
-needing to output their own KTAP if they only run one test).
-- Equally, for some selftests, it's probably a pain to have to write a
-kernel module if there's nothing that needs to be done in the kernel.
-Maybe such tests could still be built with nolibc and a kernel
-toolchain, but be triggered directly from the python tooling (e.g. as
-the 'init' process).
-- There still seems to be some increased requirements over plain KUnit
-at the moment: I'm definitely seeing issues from not having the right
-libgcc installed for all architectures. (Though it's working for most
-of them, which is very neat!)
-- This is a great example of how having standardised result formats is usef=
-ul!
-- If this is going to change or blur the boundary between "this is a
-ksefltest" and "this is a kunit test", we probably will need to update
-Documentation/dev-tools/testing-overview.rst -- it probably needs some
-clarifications there _anyway_, so this is probably a good point to
-ensure everyone's on the same page.
+Setup KASAN_SHADOW_END values so that they're aligned to 4TB in 4-level
+paging mode and to 2PB in 5-level paging mode. Also update x86 memory
+map documentation.
 
-Do you have a particular non-example test you'd like to either write
-or port to use this? I think it'd be great to see some real-world
-examples of where this'd be most useful.
+Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+---
+Changelog v2:
+- Change documentation kasan start address to non-dense values.
 
-Either way, I'll keep playing with this a bit over the next few days.
-I'd love to hear what Shuah and Rae think, as well, as this involves
-kselftest and KTAP a lot.
+ Documentation/arch/x86/x86_64/mm.rst |  6 ++++--
+ arch/x86/Kconfig                     |  3 +--
+ arch/x86/include/asm/kasan.h         | 14 +++++++++++++-
+ arch/x86/kernel/vmlinux.lds.S        |  1 +
+ arch/x86/mm/kasan_init_64.c          |  5 ++++-
+ 5 files changed, 23 insertions(+), 6 deletions(-)
 
-Cheers,
--- David
+diff --git a/Documentation/arch/x86/x86_64/mm.rst b/Documentation/arch/x86/x86_64/mm.rst
+index f2db178b353f..5014ec322e19 100644
+--- a/Documentation/arch/x86/x86_64/mm.rst
++++ b/Documentation/arch/x86/x86_64/mm.rst
+@@ -60,7 +60,8 @@ Complete virtual memory map with 4-level page tables
+    ffffe90000000000 |  -23    TB | ffffe9ffffffffff |    1 TB | ... unused hole
+    ffffea0000000000 |  -22    TB | ffffeaffffffffff |    1 TB | virtual memory map (vmemmap_base)
+    ffffeb0000000000 |  -21    TB | ffffebffffffffff |    1 TB | ... unused hole
+-   ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory
++   ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory (generic mode)
++   fffff40000000000 |   -8    TB | fffffc0000000000 |    8 TB | KASAN shadow memory (software tag-based mode)
+   __________________|____________|__________________|_________|____________________________________________________________
+                                                               |
+                                                               | Identical layout to the 56-bit one from here on:
+@@ -130,7 +131,8 @@ Complete virtual memory map with 5-level page tables
+    ffd2000000000000 |  -11.5  PB | ffd3ffffffffffff |  0.5 PB | ... unused hole
+    ffd4000000000000 |  -11    PB | ffd5ffffffffffff |  0.5 PB | virtual memory map (vmemmap_base)
+    ffd6000000000000 |  -10.5  PB | ffdeffffffffffff | 2.25 PB | ... unused hole
+-   ffdf000000000000 |   -8.25 PB | fffffbffffffffff |   ~8 PB | KASAN shadow memory
++   ffdf000000000000 |   -8.25 PB | fffffbffffffffff |   ~8 PB | KASAN shadow memory (generic mode)
++   ffe0000000000000 |   -6    PB | fff0000000000000 |    4 PB | KASAN shadow memory (software tag-based mode)
+   __________________|____________|__________________|_________|____________________________________________________________
+                                                               |
+                                                               | Identical layout to the 47-bit one from here on:
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 6df7779ed6da..f4ef64bf824a 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -400,8 +400,7 @@ config AUDIT_ARCH
+ 
+ config KASAN_SHADOW_OFFSET
+ 	hex
+-	depends on KASAN
+-	default 0xdffffc0000000000
++	default 0xdffffc0000000000 if KASAN_GENERIC
+ 
+ config HAVE_INTEL_TXT
+ 	def_bool y
+diff --git a/arch/x86/include/asm/kasan.h b/arch/x86/include/asm/kasan.h
+index a75f0748a4b6..4bfd3641af84 100644
+--- a/arch/x86/include/asm/kasan.h
++++ b/arch/x86/include/asm/kasan.h
+@@ -5,7 +5,7 @@
+ #include <linux/const.h>
+ #include <linux/kasan-tags.h>
+ #include <linux/types.h>
+-#define KASAN_SHADOW_OFFSET _AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
++
+ #define KASAN_SHADOW_SCALE_SHIFT 3
+ 
+ /*
+@@ -14,6 +14,8 @@
+  * for kernel really starts from compiler's shadow offset +
+  * 'kernel address space start' >> KASAN_SHADOW_SCALE_SHIFT
+  */
++#ifdef CONFIG_KASAN_GENERIC
++#define KASAN_SHADOW_OFFSET _AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
+ #define KASAN_SHADOW_START      (KASAN_SHADOW_OFFSET + \
+ 					((-1UL << __VIRTUAL_MASK_SHIFT) >> \
+ 						KASAN_SHADOW_SCALE_SHIFT))
+@@ -24,12 +26,22 @@
+ #define KASAN_SHADOW_END        (KASAN_SHADOW_START + \
+ 					(1ULL << (__VIRTUAL_MASK_SHIFT - \
+ 						  KASAN_SHADOW_SCALE_SHIFT)))
++#endif
++
+ 
+ #ifndef __ASSEMBLY__
++#include <asm/runtime-const.h>
+ #include <linux/bitops.h>
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
+ 
++#ifdef CONFIG_KASAN_SW_TAGS
++extern unsigned long KASAN_SHADOW_END_RC;
++#define KASAN_SHADOW_END	runtime_const_ptr(KASAN_SHADOW_END_RC)
++#define KASAN_SHADOW_OFFSET	KASAN_SHADOW_END
++#define KASAN_SHADOW_START	(KASAN_SHADOW_END - ((UL(1)) << (__VIRTUAL_MASK_SHIFT - KASAN_SHADOW_SCALE_SHIFT)))
++#endif
++
+ #define arch_kasan_set_tag(addr, tag)	__tag_set(addr, tag)
+ #define arch_kasan_reset_tag(addr)	__tag_reset(addr)
+ #define arch_kasan_get_tag(addr)	__tag_get(addr)
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 0deb4887d6e9..df6c85f8f48f 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -353,6 +353,7 @@ SECTIONS
+ 
+ 	RUNTIME_CONST_VARIABLES
+ 	RUNTIME_CONST(ptr, USER_PTR_MAX)
++	RUNTIME_CONST(ptr, KASAN_SHADOW_END_RC)
+ 
+ 	. = ALIGN(PAGE_SIZE);
+ 
+diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+index 299a2144dac4..5ca5862a5cd6 100644
+--- a/arch/x86/mm/kasan_init_64.c
++++ b/arch/x86/mm/kasan_init_64.c
+@@ -358,6 +358,9 @@ void __init kasan_init(void)
+ 	int i;
+ 
+ 	memcpy(early_top_pgt, init_top_pgt, sizeof(early_top_pgt));
++	unsigned long KASAN_SHADOW_END_RC = pgtable_l5_enabled() ? 0xfff0000000000000 : 0xfffffc0000000000;
++
++	runtime_const_init(ptr, KASAN_SHADOW_END_RC);
+ 
+ 	/*
+ 	 * We use the same shadow offset for 4- and 5-level paging to
+@@ -372,7 +375,7 @@ void __init kasan_init(void)
+ 	 * bunch of things like kernel code, modules, EFI mapping, etc.
+ 	 * We need to take extra steps to not overwrite them.
+ 	 */
+-	if (pgtable_l5_enabled()) {
++	if (pgtable_l5_enabled() && !IS_ENABLED(CONFIG_KASAN_SW_TAGS)) {
+ 		void *ptr;
+ 
+ 		ptr = (void *)pgd_page_vaddr(*pgd_offset_k(KASAN_SHADOW_END));
+-- 
+2.47.1
 
->
-> Further room for improvements:
-> * Call each test in its completely dedicated namespace
-> * Handle additional test files besides the test executable through
->   archives. CPIO, cramfs, etc.
-> * Compatibility with kselftest_harness.h (in progress)
-> * Expose the blobs in debugfs
-> * Provide some convience wrappers around compat userprogs
-> * Figure out a migration path/coexistence solution for
->   kunit UAPI and tools/testing/selftests/
->
-> Output from the kunit example testcase, note the output of
-> "example_uapi_tests".
->
-> $ ./tools/testing/kunit/kunit.py run --kunitconfig lib/kunit example
-> ...
-> Running tests with:
-> $ .kunit/linux kunit.filter_glob=3Dexample kunit.enable=3D1 mem=3D1G cons=
-ole=3Dtty kunit_shutdown=3Dhalt
-> [11:53:53] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D example=
- (10 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [11:53:53] [PASSED] example_simple_test
-> [11:53:53] [SKIPPED] example_skip_test
-> [11:53:53] [SKIPPED] example_mark_skipped_test
-> [11:53:53] [PASSED] example_all_expect_macros_test
-> [11:53:53] [PASSED] example_static_stub_test
-> [11:53:53] [PASSED] example_static_stub_using_fn_ptr_test
-> [11:53:53] [PASSED] example_priv_test
-> [11:53:53] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D exam=
-ple_params_test  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [11:53:53] [SKIPPED] example value 3
-> [11:53:53] [PASSED] example value 2
-> [11:53:53] [PASSED] example value 1
-> [11:53:53] [SKIPPED] example value 0
-> [11:53:53] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] example=
-_params_test =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [11:53:53] [PASSED] example_slow_test
-> [11:53:53] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D (4 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> [11:53:53] [PASSED] procfs
-> [11:53:53] [PASSED] userspace test 2
-> [11:53:53] [SKIPPED] userspace test 3: some reason
-> [11:53:53] [PASSED] userspace test 4
-> [11:53:53] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] exam=
-ple_uapi_test =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [11:53:53] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D [PASSED] example =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> [11:53:53] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [11:53:53] Testing complete. Ran 16 tests: passed: 11, skipped: 5
-> [11:53:53] Elapsed time: 67.543s total, 1.823s configuring, 65.655s build=
-ing, 0.058s running
->
-> Based on v6.14-rc1 and the series
-> "tools/nolibc: compatibility with -Wmissing-prototypes" [0].
-> For compatibility with LLVM/clang another series is needed [1].
->
-> [0] https://lore.kernel.org/lkml/20250123-nolibc-prototype-v1-0-e1afc5c19=
-99a@weissschuh.net/
-> [1] https://lore.kernel.org/lkml/20250213-kbuild-userprog-fixes-v1-0-f255=
-fb477d98@linutronix.de/
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
-> Thomas Wei=C3=9Fschuh (12):
->       kconfig: implement CONFIG_HEADERS_INSTALL for Usermode Linux
->       kconfig: introduce CONFIG_ARCH_HAS_NOLIBC
->       kbuild: userprogs: respect CONFIG_WERROR
->       kbuild: userprogs: add nolibc support
->       kbuild: introduce blob framework
->       kunit: tool: Add test for nested test result reporting
->       kunit: tool: Don't overwrite test status based on subtest counts
->       kunit: tool: Parse skipped tests from kselftest.h
->       kunit: Introduce UAPI testing framework
->       kunit: uapi: Add example for UAPI tests
->       kunit: uapi: Introduce preinit executable
->       kunit: uapi: Validate usability of /proc
->
->  Documentation/kbuild/makefiles.rst                 |  12 +
->  Makefile                                           |   5 +-
->  include/kunit/uapi.h                               |  17 ++
->  include/linux/blob.h                               |  21 ++
->  init/Kconfig                                       |   2 +
->  lib/Kconfig.debug                                  |   1 -
->  lib/kunit/Kconfig                                  |   9 +
->  lib/kunit/Makefile                                 |  17 +-
->  lib/kunit/kunit-example-test.c                     |  17 ++
->  lib/kunit/kunit-uapi-example.c                     |  58 +++++
->  lib/kunit/uapi-preinit.c                           |  61 +++++
->  lib/kunit/uapi.c                                   | 250 +++++++++++++++=
-++++++
->  scripts/Makefile.blobs                             |  19 ++
->  scripts/Makefile.build                             |   6 +
->  scripts/Makefile.clean                             |   2 +-
->  scripts/Makefile.userprogs                         |  18 +-
->  scripts/blob-wrap.c                                |  27 +++
->  tools/include/nolibc/Kconfig.nolibc                |  18 ++
->  tools/testing/kunit/kunit_parser.py                |  13 +-
->  tools/testing/kunit/kunit_tool_test.py             |   9 +
->  .../test_is_test_passed-failure-nested.log         |  10 +
->  .../test_data/test_is_test_passed-kselftest.log    |   3 +-
->  22 files changed, 584 insertions(+), 11 deletions(-)
-> ---
-> base-commit: 20e952894066214a80793404c9578d72ef89c5e0
-> change-id: 20241015-kunit-kselftests-56273bc40442
->
-> Best regards,
-> --
-> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
->
-
---000000000000c4d4c7062e664f2f
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIUqgYJKoZIhvcNAQcCoIIUmzCCFJcCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-NjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMKR2xvYmFsU2lnbjAeFw0xNDEyMTAwMDAw
-MDBaFw0zNDEyMTAwMDAwMDBaMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFI2MRMw
-EQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMIICIjANBgkqhkiG9w0BAQEF
-AAOCAg8AMIICCgKCAgEAlQfoc8pm+ewUyns89w0I8bRFCyyCtEjG61s8roO4QZIzFKRvf+kqzMaw
-iGvFtonRxrL/FM5RFCHsSt0bWsbWh+5NOhUG7WRmC5KAykTec5RO86eJf094YwjIElBtQmYvTbl5
-KE1SGooagLcZgQ5+xIq8ZEwhHENo1z08isWyZtWQmrcxBsW+4m0yBqYe+bnrqqO4v76CY1DQ8BiJ
-3+QPefXqoh8q0nAue+e8k7ttU+JIfIwQBzj/ZrJ3YX7g6ow8qrSk9vOVShIHbf2MsonP0KBhd8hY
-dLDUIzr3XTrKotudCd5dRC2Q8YHNV5L6frxQBGM032uTGL5rNrI55KwkNrfw77YcE1eTtt6y+OKF
-t3OiuDWqRfLgnTahb1SK8XJWbi6IxVFCRBWU7qPFOJabTk5aC0fzBjZJdzC8cTflpuwhCHX85mEW
-P3fV2ZGXhAps1AJNdMAU7f05+4PyXhShBLAL6f7uj+FuC7IIs2FmCWqxBjplllnA8DX9ydoojRoR
-h3CBCqiadR2eOoYFAJ7bgNYl+dwFnidZTHY5W+r5paHYgw/R/98wEfmFzzNI9cptZBQselhP00sI
-ScWVZBpjDnk99bOMylitnEJFeW4OhxlcVLFltr+Mm9wT6Q1vuC7cZ27JixG1hBSKABlwg3mRl5HU
-Gie/Nx4yB9gUYzwoTK8CAwEAAaNjMGEwDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
-HQYDVR0OBBYEFK5sBaOTE+Ki5+LXHNbH8H/IZ1OgMB8GA1UdIwQYMBaAFK5sBaOTE+Ki5+LXHNbH
-8H/IZ1OgMA0GCSqGSIb3DQEBDAUAA4ICAQCDJe3o0f2VUs2ewASgkWnmXNCE3tytok/oR3jWZZip
-W6g8h3wCitFutxZz5l/AVJjVdL7BzeIRka0jGD3d4XJElrSVXsB7jpl4FkMTVlezorM7tXfcQHKs
-o+ubNT6xCCGh58RDN3kyvrXnnCxMvEMpmY4w06wh4OMd+tgHM3ZUACIquU0gLnBo2uVT/INc053y
-/0QMRGby0uO9RgAabQK6JV2NoTFR3VRGHE3bmZbvGhwEXKYV73jgef5d2z6qTFX9mhWpb+Gm+99w
-MOnD7kJG7cKTBYn6fWN7P9BxgXwA6JiuDng0wyX7rwqfIGvdOxOPEoziQRpIenOgd2nHtlx/gsge
-/lgbKCuobK1ebcAF0nu364D+JTf+AptorEJdw+71zNzwUHXSNmmc5nsE324GabbeCglIWYfrexRg
-emSqaUPvkcdM7BjdbO9TLYyZ4V7ycj7PVMi9Z+ykD0xF/9O5MCMHTI8Qv4aW2ZlatJlXHKTMuxWJ
-U7osBQ/kxJ4ZsRg01Uyduu33H68klQR4qAO77oHl2l98i0qhkHQlp7M+S8gsVr3HyO844lyS8Hn3
-nIS6dC1hASB+ftHyTwdZX4stQ1LrRgyU4fVmR3l31VRbH60kN8tFWk6gREjI2LCZxRWECfbWSUnA
-ZbjmGnFuoKjxguhFPmzWAtcKZ4MFWsmkEDCCBeQwggPMoAMCAQICEAHAzCnLVtRkCgyqhFEoeKYw
-DQYJKoZIhvcNAQELBQAwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2Ex
-KjAoBgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMzAeFw0yNTAxMTAxODI1
-MTFaFw0yNTA3MDkxODI1MTFaMCQxIjAgBgkqhkiG9w0BCQEWE2RhdmlkZ293QGdvb2dsZS5jb20w
-ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCoH0MspP58MiGTPha+mn1WzCI23OgX5wLB
-sXU0Br/FkQPM9EXOhArvxMOyFi0Sfz0HX20qlaIHxviaVNYpVMgmQO8x3Ww9zBVF9wpTnF6HSZ8s
-ZK7KHZhg43rwOEmRoA+3JXcgbmZqmZvLQwkGMld+HnQzJrvuFwXPlQt38yzNtRjWR2JmNn19OnEH
-uBaFE7b0Pl93kJE60o561TAoFS8AoP4rZFUSqtCL7LD2JseW1+SaJcUhJzLxStodIIc6hQbzOQ/f
-EvWDWbXF7nZWcQ5RDe7KgHIqwT8/8zsdCNiB2WW7SyjRRVL1CuoqCbhtervvgZmB3EXbLpXyNsoW
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgKWvTIDzDKHvkh+HzIVVioiaeUqrb
-vD6Az0VCNvZDpikwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MjE4MDgyMDIwWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
-BAIBMA0GCSqGSIb3DQEBAQUABIIBAB+x+32dQJe+HlV23ej672XPDnZVY91JzcJlA2p5Vgm0kjJN
-IS4bc+kSgNEMfPiMPF6ttC+8DKxpHw2lW9/rh/B0HyPLTfM0NmCBBe9ic62C7NsuHEpN6KDWtUJg
-+7dDkMbA7t5bPLFIAlkGjqRNHaUhA+igRefxt8OEKYoOkjJzayQfeKLaMAoQNIQVC8exnxifmwr4
-jXoVKbVUBVgEsvhk0JWK2oRDu+IzxTFco9CvO4VEGzZHLVsXdBk8CB61DCEhu5WOslZh0YNtBjVE
-lx6uAd/+UR8s7SkDC+Xps0DT4jF+w1co0B/DEMTVWAvHESBy6hO+GiL9b3QpLgsFyNM=
---000000000000c4d4c7062e664f2f--
