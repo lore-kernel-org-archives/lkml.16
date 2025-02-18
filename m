@@ -1,78 +1,80 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C28C22D7B1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B5B22DFFA
 	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869431; cv=none; b=TEpQ3HuoPHwGR+cKozgASQm9E0X8UlDCyazOpuEJnxIotPshzWxeJ/BIe2iiHat5C7hhhIRdgaEqvpnHoe232Jodh5/rmcbt0cCOwiNM2sflA1nWZ2ZWe90RogWVHjVlap1bZtIhiCXfg5OLSQ2wcfgFZ+VCZB/3k6js7W7Ikjc=
+	t=1739869432; cv=none; b=vAgJSuFuEceheZUCFnZXDc3HyqJC3Cyt3DzBG1hmULEEXN33k+U1V69g7DBT70wXlS++SmFSZS0/XZoH8XmIK1dFWHGAQsrvEiqpiBtQtQ80C7n0IUF7b78FqrectaGcruIqK+ekPPs3RSKKiBdWSGxikzf/kvZmSACPT7r8gkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869431; c=relaxed/simple;
-	bh=A8M5OIt1A8haL0ANfazcjwGDE5o5/zvzY33OU08iPqo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rHdCaJuYeaCadiz0DrKkUwEhBD8rrPnM6RMy0EYackQOqV7XspDMZuoBLbyBj8naEAmPaAxYQTzsWt5XSTAF2v5fsd2H5szJhqtruDipb0NXSVYgs62TRypPlWBp6LS/vUpzRlZHzbuKgJcPd+BDFQmJlcY88x+Lj+f7q2ZmlFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DUtEnXkQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zfTQVk84; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DUtEnXkQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zfTQVk84"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739869427;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YleaTUFwb+U28EVqnF7wPDY8Ikwa5wlJUueP+F/3THg=;
-	b=DUtEnXkQ+lQw54IJaF9ZxrG+5GMaVXVaUYr2TxSaNVPmW3Za6neVU8A6OqJ6uuXIunKgT7
-	qmKuAoh7qrZT8z4gyCltCJUy67QLPuozeNrCJI+TY4zK+dg8jzLnVgCGGSZ7Vuuu24E+Ev
-	0C14Gc151lHunt1MqUmJRqz3+2CngOuJ7AYXanM63ah86WTPomA3YkZ/T8GKIcS4Kzuoyc
-	0C8kunD5nAAej93WbTo9e03/VKT5UHpjqK8ajpPuWOQ5r1EKfMEABPXAmt7EdS4hhPxt/l
-	GLClpAHFbKqAGrzgm/EeiX/lsKnd6zD7rH0naZFv1PKRovqk39JbDsIiRGUyUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739869427;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YleaTUFwb+U28EVqnF7wPDY8Ikwa5wlJUueP+F/3THg=;
-	b=zfTQVk84O+lnDFxlOaFy7UzXujCSD+zqdx24vBSCWRcYUaU1CZnNTmen7gQEKnCXr9+ZBg
-	HaJsh6BSar1QlRDA==
-To: Benjamin Segall <bsegall@google.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
- linux-kernel@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] posix-timers: cond_resched() during exit_itimers()
-In-Reply-To: <xm2634gg2n23.fsf@google.com>
-References: <xm2634gg2n23.fsf@google.com>
-Date: Tue, 18 Feb 2025 10:03:47 +0100
-Message-ID: <877c5nk4jw.ffs@tglx>
+	s=arc-20240116; t=1739869432; c=relaxed/simple;
+	bh=Rb/oEzPquB0AN3zNExVOUPkHhu2SKGcn8YilK2l8ikA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cLR0LGc4g3lNqJHhH1qGyVtvvQBT9HUApRUkNnRjLRvISUdJA8FbkpKgmklwU39VpXtYJn/VWir5i8k7G3Yd9Ys3hNJWsJ3siPkSnZCBHmZN1z5qu3xLuf0MwUUecO0ckuxSrJQElVagU2IlNHodvjh9WWT/pEF2PxO8rfuu/u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tkJVw-0005iJ-9J; Tue, 18 Feb 2025 10:03:36 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tkJVv-001YXQ-2k;
+	Tue, 18 Feb 2025 10:03:35 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tkJVv-0002g6-2W;
+	Tue, 18 Feb 2025 10:03:35 +0100
+Message-ID: <15bbca6567ff640fdcfbe1a9525989887a94732c.camel@pengutronix.de>
+Subject: Re: [PATCH v2] media: verisilicon: Fix AV1 decoder clock frequency
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>, Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Heiko Stuebner <heiko@sntech.de>, Hans Verkuil
+ <hverkuil@xs4all.nl>
+Cc: linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, kernel@collabora.com,  stable@vger.kernel.org
+Date: Tue, 18 Feb 2025 10:03:35 +0100
+In-Reply-To: <20250217-b4-hantro-av1-clock-rate-v2-1-e179fad52641@collabora.com>
+References: 
+	<20250217-b4-hantro-av1-clock-rate-v2-1-e179fad52641@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14 2025 at 14:12, Benjamin Segall wrote:
-> exit_itimers() loops through every timer in the process to delete it.
-> This requires taking the system-wide hash_lock for each of these locks,
-> and contends with other processes trying to create or delete timers.
-> When a process creates hundreds of thousands of timers, and then exits
-> while other processes contend with it, this can trigger softlockups on
-> CONFIG_PREEMPT=n.
->
-> Ideally this will some day be better solved by eliminating the global
-> hashtable, but until that point mitigate the issue by doing
-> cond_resched in that loop.
+On Mo, 2025-02-17 at 16:46 -0500, Nicolas Dufresne wrote:
+> The desired clock frequency was correctly set to 400MHz in the device tre=
+e
+> but was lowered by the driver to 300MHz breaking 4K 60Hz content playback=
+.
+> Fix the issue by removing the driver call to clk_set_rate(), which reduce
+> the amount of board specific code.
+>=20
+> Fixes: 003afda97c65 ("media: verisilicon: Enable AV1 decoder on rk3588")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 
-It won't help for a PREEMPT_NONE kernel because the loop will be equally
-long as before. Only the hash lock contention will be smaller, but that
-does not mean that mopping up 100k timers won't be able to take ages.
+I was going to ask whether there might be any device trees without the
+assigned-clock-rates around that this patch could break, but the DT
+node was introduced with 400 MHz clock setting in the initial commit
+dd6dc0c4c126 ("arm64: dts: rockchip: Add AV1 decoder node to rk3588s").
 
-We really need to get this PREEMPT_LAZY thing going and kill all of this
-cond_resched() nonsense.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Thanks,
-
-        tglx
+regards
+Philipp
