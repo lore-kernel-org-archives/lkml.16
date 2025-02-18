@@ -1,156 +1,139 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49953280A52
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A40D271293
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739902647; cv=none; b=hVi6VyCc76hEhjIgvZmVoxxtdGC0qZibW+sbiHYYkVLoBahWC423Yp3iawtFPwflhYDbrqQ2GFQrcIlWpk8rKjROBottv53Y6A1Wcxq475NV43OnZ4xJ/Mp3m+PZg/EJrxd4+iZx48+lqoorrwRorcI05iI/FsEX35CHPTHP3bs=
+	t=1739902650; cv=none; b=aqEjJhHhSQuv8IG8nRE8xTn6PBzCiT7b3BYMgYe1mXTAzY8ONR5zR/EqxFjSQF+EAoA3EnBlXyqW/M15k2v0TtT36poPZz+2b/DsCc6K3ilbPT7grfuMNhVtONnxsGKHsnMNjcxXrtXAffP41n7+7jWh+2JcQK7dA04ZvSPZj/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739902647; c=relaxed/simple;
-	bh=vn7EyvyBDrgba+MbpgDvq7UiFKPU4I81xdjXm4x8dEA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=V6SCRIoheBRqmEY/8ha62WuNHFobgBsD10t3FNMuTNIU1RRC++X3s2v5Qd9ZPfuI0QQdgbdsL2g04pf2kYU3cFbZaBwjCerux4SdmU+5nT+7J7jdhDvgGqqyLSPIca0R71f4SSl65rjwovA46YUzZ1jLdNrxd2AZQD3DXfNLqq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b0fHqhLL; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1739902650; c=relaxed/simple;
+	bh=BOUyx5EsWWjCZqwoILlVSGflf8blEnkgIikzItCUqP0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1GLD6yByPAJLDNi44sa/5EkTVQcXJ2auP4cFR0PzE6BFjALIzsRh41RiMfZKs5gt0/z3wsDcoC5s69bot9EWoh5p8fZVXtGgm/w4Rl1Hp6aanaOTy14hkfAeiNR06s8e+sbQmIl3b+5DzmULmy7MknCoTbCXDMzhJ3EaYCyWaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IEDDKPwm; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b0fHqhLL"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220d8599659so99368745ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:17:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IEDDKPwm"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220e0575f5bso490435ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:17:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739902646; x=1740507446; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OvfAfabT3FOQzTKFA/T5HKTcXvHT3pHZFdKCEk/uJyk=;
-        b=b0fHqhLLGW/zvZxydNkph2IWUk31ggQFGM+su83dQJPKbCwqV4RXuELcBNyc0TSkhp
-         Qg6S5N+VI8J8MUiy0ofc2uztRomZ/Se2SHzWhJAoRrv+X6GyKfd6I7iBSXkCazu/tK3d
-         B7Lh1tA+EU+03gPWl/MJdw/SS0HvysFQEA/H0i+61BPC6F7huFsNOlk6NSdvNMlopA9O
-         RD5ByjZn6DbVtqO+h2DDEIeSNWU5rykBU3wnQJ2ILmVpPEKoMX66e7G9kVKS7NJPSYXx
-         IbL1hIeMZ8kb8vqocTGZ1wy936QDMRogqvHmNtTAy6RqCADTp7R7fsdFv7ylvW0eg+N7
-         IrmQ==
+        d=google.com; s=20230601; t=1739902647; x=1740507447; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M89M9SRzWTrfxkPQChi6cYghdfRxV0Kb26Fn5pPvW98=;
+        b=IEDDKPwmsCnXzgsxU9UFmcPy9nb+59LDcji7VEN+uObYIwhYLLVTegfR4cPukphh3i
+         n26LIz5uFbOfM/CNOEVdgY4wc+WQR/0qKhZQKofkElSAsQrxpASu4a3Mm1l7JKF3mmDT
+         s/NQ2BIxdDPNuCxdxg1g7iomKKMTBrPho1/0geaO1qyOtRU2lhMQTVJf+XvQLCh6bfJ+
+         JLqpFqvteKZlzmUfHQ2FFM4npwJoSf3EFM93FUNU9T4II+4/eFE0eCPZF1+11hUGrKPK
+         UcQkj1neNFdFBgJQfaNO635F4y3UqCvwiTx+nyUw2/RAme0lKoGug97pV1DZ7CuAWt8h
+         Wo9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739902646; x=1740507446;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OvfAfabT3FOQzTKFA/T5HKTcXvHT3pHZFdKCEk/uJyk=;
-        b=Xrrw590SWSt1NLU6bICCTLrqOXNGOzyRnrNqcoU+e9O5xT79weMnphdIeJunivgtUC
-         TGcT+6mEFpVvowWXf21ax7RpjT2az2DFjEKpyGEP41IqspUBpj5Io5675S6K0naB9sA9
-         7nEeQSVOh3ZYuC0zHEhpDjfk45VIvXXmL+0wQyrspiPSrSTlO8mljS5weo6SRS4oYwBr
-         izBsEkuggOtX0yNVcXq4cnmyEA9tGhYMxe0jcqvGIJu2THdHdmk7eL8+Y3hrgeMdLyw2
-         eSMAvGyb/QR4Tgmad0pxXPA8DlT0fCtG0kgto38raVQKhpd/k2PTjGlqgo20bwgqq5ET
-         a6MA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrrSfYqeeNP94UsSNW8CGQFOfr+O3V+AK2IaduFIAwgmz6aPxAX1zotI1HpmXO6t+5qr3G6Bz8vApwLaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx5Fa74FC6z9/bQLq6vjhrHHx30x6zsHF71gNsTOZYGwf6P/uh
-	5swvpLZmvuxDcAZ3lfkB0UGWVXR0+7zZB5WfK51sBarIWFK3rzNq5yzcbROgMo3FbUQArg==
-X-Google-Smtp-Source: AGHT+IFvSNPdBbepKEoVoWi1qQOaCYkORgQpakxpUeNt43f5okQM/hLmZPRepQHlQe973YIHv4a3xcRy
-X-Received: from pgbda5.prod.google.com ([2002:a05:6a02:2385:b0:ad7:38bc:1096])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:999e:b0:1ee:764b:ae2b
- with SMTP id adf61e73a8af0-1eed4ff48b2mr424330637.27.1739902645700; Tue, 18
- Feb 2025 10:17:25 -0800 (PST)
-Date: Tue, 18 Feb 2025 18:16:40 +0000
-In-Reply-To: <20250218181656.207178-1-fvdl@google.com>
+        d=1e100.net; s=20230601; t=1739902647; x=1740507447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M89M9SRzWTrfxkPQChi6cYghdfRxV0Kb26Fn5pPvW98=;
+        b=nY6ry9zAebNqQIO4pstjVDSQ+kXd/brtkcQTRNBGvj4qJCxfr/jrYpInBr1DFbX4lu
+         VWcX5ayxWlgju6EhhunBuJA+cDrZ0zOAOcyxYEHayGgl5VoVwpt4JKvdtJ5xVCNsGAAe
+         v6lxP/KaBO+rfBVJ80OMtVk9FcRO9oQ6dgqINCarFtyQX0QejGpXugmDMD/gKJBghYY6
+         phXbQHyRULbAkPTdLQDJIeEKMsm0EjdMhFurkJQAC6esOTKMH1VdXF2tuizwcyDVpNYH
+         8PzzRZgBf2hUimtc+ADIFRqtuKeZWSVeN+6kx/sIw9y0vEL8g3kJRL7x2qBqD120YGOL
+         CmCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLBSWRLq73XrvAxawfzbAHSUN9clCfnrvFzNrWY/E2QRyLrA+jNHkoq5bWdj96hWY/PWD/p7Q4ol5Euc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9rb5sWWTSr5NyG7NqUtBwRBzSUL4hdKyDBOgGrnMMwEgDO8dv
+	9NepZkGj/G089YOwIifqOwmQ6K/XfdsyTHHau8kizg92VC43OaDuQ6pR49oEyw==
+X-Gm-Gg: ASbGncvynfEz5n250LQVlfXnPjtIqGz2Gbj9zZ1sOgRRi8dRHIIuOfoKHQXM0yy9YYP
+	xfQiC6a7GqrWHO3PsfTZr9dmFUbGCdLmtBrJ4A+ZP8zFlSUF786E4usRt5uf3YR/1OnOSov+GZR
+	h8rFdbuI9GXFtgzI3bUcuQkiczWGA+7cgC76MvHEFe0WlzjXj8x5xqwEYV0YjL8KU4dN6jw6rcD
+	n12p6r2tkIDRqEZ4QC8xD8R0TSgNE2YmDrTUwpWUFLTnfP2k6tYH4TksghG2AAwDWdb4b9Il5ZV
+	ld13AHJjapIxRDKjR/lROvnP6P3yfnBO5Emv4fvCCD1WCg7/v+xE
+X-Google-Smtp-Source: AGHT+IFkiHL5TTpaBclB/MgmM3kcQbDHYVWCGmPRDpeRclWjC4Poa8aWW8CJbN/ySGXple0OccOeRQ==
+X-Received: by 2002:a17:902:fc4e:b0:216:48d4:b3a8 with SMTP id d9443c01a7336-22104c939afmr7012905ad.16.1739902646969;
+        Tue, 18 Feb 2025 10:17:26 -0800 (PST)
+Received: from google.com (169.224.198.35.bc.googleusercontent.com. [35.198.224.169])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55960ecsm91516115ad.253.2025.02.18.10.17.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 10:17:26 -0800 (PST)
+Date: Tue, 18 Feb 2025 18:17:15 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"will@kernel.org" <will@kernel.org>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"eric.auger@redhat.com" <eric.auger@redhat.com>,
+	"jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+	"mdf@kernel.org" <mdf@kernel.org>,
+	"mshavit@google.com" <mshavit@google.com>,
+	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>,
+	"smostafa@google.com" <smostafa@google.com>,
+	"ddutile@redhat.com" <ddutile@redhat.com>,
+	"Liu, Yi L" <yi.l.liu@intel.com>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>
+Subject: Re: [PATCH v6 14/14] iommu/arm-smmu-v3: Set MEV bit in nested STE
+ for DoS mitigations
+Message-ID: <Z7TOq-gIGPY_ztW7@google.com>
+References: <cover.1737754129.git.nicolinc@nvidia.com>
+ <436ac2021bb3d75114ca0e45f25a6a8257489d3b.1737754129.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276291C74E2DF0C8821BE718CFA2@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250218181656.207178-1-fvdl@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250218181656.207178-13-fvdl@google.com>
-Subject: [PATCH v4 12/27] mm: define __init_reserved_page_zone function
-From: Frank van der Linden <fvdl@google.com>
-To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com, 
-	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB5276291C74E2DF0C8821BE718CFA2@BN9PR11MB5276.namprd11.prod.outlook.com>
 
-Sometimes page structs must be unconditionally initialized
-as reserved, regardless of DEFERRED_STRUCT_PAGE_INIT.
+On Tue, Feb 18, 2025 at 05:24:08AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Saturday, January 25, 2025 8:31 AM
+> > 
+> > There is a DoS concern on the shared hardware event queue among devices
+> > passed through to VMs, that too many translation failures that belong to
+> > VMs could overflow the shared hardware event queue if those VMs or their
+> > VMMs don't handle/recover the devices properly.
+> 
+> This statement is not specific to the nested configuration.
+> 
+> > 
+> > The MEV bit in the STE allows to configure the SMMU HW to merge similar
+> > event records, though there is no guarantee. Set it in a nested STE for
+> > DoS mitigations.
+> 
+> Is MEV available only in nested mode? Otherwise it perhaps makes
+> sense to turn it on in all configurations in IOMMUFD paths...
 
-Define a function, __init_reserved_page_zone, containing
-code that already did all of the work in init_reserved_page,
-and make it available for use.
+MEV is available at all times (if an implemented by the HW) and doesn't
+depend on the nested mode. As per the Arm SMMUv3 spec (section 3.5.5):
 
-Signed-off-by: Frank van der Linden <fvdl@google.com>
----
- mm/internal.h |  1 +
- mm/mm_init.c  | 38 +++++++++++++++++++++++---------------
- 2 files changed, 24 insertions(+), 15 deletions(-)
+Events can be merged where all of the following conditions are upheld:
+ - The event types and all fields are identical, except fields explicitly
+indicated in section 7.3 Event records.
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 109ef30fee11..57662141930e 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1448,6 +1448,7 @@ static inline bool pte_needs_soft_dirty_wp(struct vm_area_struct *vma, pte_t pte
- 
- void __meminit __init_single_page(struct page *page, unsigned long pfn,
- 				unsigned long zone, int nid);
-+void __meminit __init_reserved_page_zone(unsigned long pfn, int nid);
- 
- /* shrinker related functions */
- unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 9f1e41c3dde6..925ed6564572 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -650,6 +650,28 @@ static inline void fixup_hashdist(void)
- static inline void fixup_hashdist(void) {}
- #endif /* CONFIG_NUMA */
- 
-+/*
-+ * Initialize a reserved page unconditionally, finding its zone first.
-+ */
-+void __meminit __init_reserved_page_zone(unsigned long pfn, int nid)
-+{
-+	pg_data_t *pgdat;
-+	int zid;
-+
-+	pgdat = NODE_DATA(nid);
-+
-+	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
-+		struct zone *zone = &pgdat->node_zones[zid];
-+
-+		if (zone_spans_pfn(zone, pfn))
-+			break;
-+	}
-+	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
-+
-+	if (pageblock_aligned(pfn))
-+		set_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_MOVABLE);
-+}
-+
- #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
- static inline void pgdat_set_deferred_range(pg_data_t *pgdat)
- {
-@@ -708,24 +730,10 @@ defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
- 
- static void __meminit init_reserved_page(unsigned long pfn, int nid)
- {
--	pg_data_t *pgdat;
--	int zid;
--
- 	if (early_page_initialised(pfn, nid))
- 		return;
- 
--	pgdat = NODE_DATA(nid);
--
--	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
--		struct zone *zone = &pgdat->node_zones[zid];
--
--		if (zone_spans_pfn(zone, pfn))
--			break;
--	}
--	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
--
--	if (pageblock_aligned(pfn))
--		set_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_MOVABLE);
-+	__init_reserved_page_zone(pfn, nid);
- }
- #else
- static inline void pgdat_set_deferred_range(pg_data_t *pgdat) {}
--- 
-2.48.1.601.g30ceb7b040-goog
+ - If present, the Stall field is 0. Stall fault records are not merged.
 
+I'm not sure to what extent, but I think *trying* to merge similar event
+should reduce some chances of overflowing the hw eventq.
+
+> Is MEV available only in nested mode? Otherwise it perhaps makes
+> sense to turn it on in all configurations in IOMMUFD paths...
+
+I think the arm-smmu-v3's iommufd implementation only supports nested
+which could be the reason.
+
+Thanks,
+Praan
