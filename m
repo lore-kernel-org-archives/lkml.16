@@ -1,214 +1,227 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BFD2356D6;
-	Tue, 18 Feb 2025 18:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0922356D6;
+	Tue, 18 Feb 2025 18:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739903959; cv=none; b=o6DzHMW/V/9jzvCNlpmBi9j4FDTgU1mhJrCRof10IZyb2CHbfeoRy+w6LTPQ/tUWdvAVOd+XM9a62UgcGpk1nPBivCfw7fsLlVWjwrPTqJCgsdW8oRtBLQPRWwUl1aOHHKgCOZGEYeF8WaVhtcydI3hTy1v5O43dCtKl6u5Jj08=
+	t=1739903984; cv=none; b=hcsQZQ/7S3x0RcmmGN7CtUfQwSymljFba9mQppFTvGTyl+5dO5xY/+uu/hircyZo7A+cfm4/GiaGe6M/fkIf4FsCep76/39OOKkJjOVLvrCQEhnT0AW9Cm9RMWkSm0o0/aWpXbS4kyVWTjoWFBm0tyLkt4npPIJUUEdKMsbkNG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739903959; c=relaxed/simple;
-	bh=oEi8+DJ1Od9anjCSCDXHxWN91goXMv9PGcjFAatOkQw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=IpdNs5w+gGfPKy8DBhOCwNQxlocDvqfBfhGMDAEk7EPZbCJhNYZK2pXkRTSSSxYx4KlUoeWMHlKm/YYCin+kKP1YY9i9DmatRUhah3B0K+EWoKqn+A/TvaIqCVumKZXVNG6ryDsqi3pH8IKg9cHpTyLi3j5FnBW0uwaazAVphd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMjf4+94; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739903984; c=relaxed/simple;
+	bh=Ou8KiLZLHzNrLWIVPdXFzquRxMgMgDClrgJgKs9eQE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=miK+t550iztEXXaXYIqBlcKm3EtDDul/datYPxGO3FxmQbEwm/u00ldIfpd+R7wtIUZDhvOnXKXMBAhCPWLnbAPv8tBgGR8/OVvCTEx759HaELmc8sRGjbYKjOgL+hUuuoSipLPkKp74GDTgXP3EtNzChMwYgn5weHi49NVfiWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIkr4LKr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMjf4+94"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5dcc3b0c77so2866592276.0;
-        Tue, 18 Feb 2025 10:39:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739903955; x=1740508755; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A602ukX61G8SHfGgV9Mfn3RDCkXOuF+pNpwRiPxAdqk=;
-        b=RMjf4+94YQO9sV1NMSnJO6So3XEnUiJHICbP3k//rk+BKlGrEyBmVdjfUOaOKoP/40
-         xfVLWd+75luQpFucA7jyzVUhuJ4K4fAuHI8Avf5tIxpQjBeqM4hAV1EG2H5myssJdpfS
-         8rFztHjEG+tXpRNI8JZYpt/+vusd9fHrQ3tvberfOglVc4bEWaTJIwMPXcAWZ9gbomBF
-         y4gdvPEQ+4T6ffyhBpP2KQu4yKWDk8H0nNHtqk4jA0MP6NDAh7gyrxeWc86pJ586D3mu
-         5KYq1QioRuG6/I9GUmPiB9+VI8SAhtjiNEzgr/wenqSpF7Qrc0IQg0cBHvgK26X6a0xt
-         3hkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739903955; x=1740508755;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A602ukX61G8SHfGgV9Mfn3RDCkXOuF+pNpwRiPxAdqk=;
-        b=PVYFC9qm26pIcq6BS54SGSH3Zm4Y0ONoX20J/MwGfRcpTzoh0GcFWggS/guDb3ATnB
-         Qfeg89lrRr2ySHeiiWV2dWxrtKTIb07f/3azldBT+m7LjOR9E1Sh+KUFKgekAj7UcumA
-         0FS7vaZSM1u7dYIS3Cc5ZNRGaI3E59ksW6cExUKf0aI9gSluM/1OdZrlGJjVPE2txFcS
-         rcDMSHWxj0MkRPn9pMhQnTFlGKD8jBDqpNPFJdm3JJAStBUSmtNhGUiRWfGC8ORGCHfQ
-         JvMtlL2ptGEh74AgZcNb4ZEES1D66+D2pioLaMupvNHLfsSMnuD5ESwD2eLuGalTNkEh
-         1Edw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+PJYf0iMH+WPVKwDn7LnZDHUz/0CC1wc/4q/F2oRKr+BKP7P04T+729/PVpNJ0qUAQM8JoFdvV3iSNoKtCAf9N1breA==@vger.kernel.org, AJvYcCW88FE6JX1sfQFtfLSVNjZP021Qt6da+MJ87Zjzl8SuCxs9QK6Enmo2/wrvQ4QkW4jpSXXbfZVBCgeNA7g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW8MLkK3oI9140PJyX0lKySoNKeMdUzNVtQedaZSNCXlk0sQfw
-	V2yMD7P/jPhOVze3MyyoxhA/UT4X9Onbehfw7e3i2OXNn+pHVGfa
-X-Gm-Gg: ASbGncu4FYbuKMObrqCySrzAd5gftRkpAPVQ10QEB7Za/i9x/3XE7+pnoK8rcGAiUT9
-	gJxQDXUi+ml2LovGER2q3NH7NKHkriR39ygNU8E/U/MQ7GvcLLFRrRv3sYUy+Mu47Zq9aepgVZJ
-	ADvdfoy8l31vc15jZmDblhkik3YkxnO4nuCTYrDgYr4QzAvUSQbA06o/CuoWttGlFiWNTG+zhI+
-	v/IFEwk7Z6LLmtfZvKDr3PRS7NVBa40rFzT/GbewKkg4fJB5iR1i8bsK8SqNwSP5j0uqMSaPvFj
-	XAjfYRk=
-X-Google-Smtp-Source: AGHT+IF305OorZ6/B8Lr9PTjWCJ+kGoRs7RrVraUg+lZw/ZCLTQLJPtD1mmjf6z1EbXKxty6ICpHdg==
-X-Received: by 2002:a05:6902:108e:b0:e5d:d6b8:2317 with SMTP id 3f1490d57ef6-e5e0a1400admr641263276.44.1739903954958;
-        Tue, 18 Feb 2025 10:39:14 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dae0d9f25sm3289866276.36.2025.02.18.10.39.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 10:39:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIkr4LKr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7189AC4CEE2;
+	Tue, 18 Feb 2025 18:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739903984;
+	bh=Ou8KiLZLHzNrLWIVPdXFzquRxMgMgDClrgJgKs9eQE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vIkr4LKr95n1sgWF9eEKIJtFMEX2I2pw8roaOiQU1XD153ZTLXDZ/mxRjmNnouq8f
+	 hCJAs1u7Lcmk1DsOmrf5X9sqrHdn6+BqgSxvoB9xQ48YhhDZVUkd095jxxSj64Q2A/
+	 dE3jGIV9Deg1JrO11Pjdtednrud/M5DAzOcVuvzGlWsSFobWfDsfA609icoCTjThG5
+	 H/5ftZ/mejgknk5xj8NRzZnmoBZ5pOHD/RKFznLFZlPXb0HoCZZWt/f/eqU1XMqgJh
+	 Ws4wCzl1lxD2gu5weFETthkXl8KvnCMevgDaweHSnsnVdtPAmnXTW9MWORDWIHj5bF
+	 MHI/IZhPoLTIw==
+Date: Tue, 18 Feb 2025 19:39:40 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+Message-ID: <Z7TT7Jw5QDx2G81v@x1>
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost>
+ <Z6JksXDRh8OSAh-u@google.com>
+ <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
+ <Z6Khl1rHIAb7wOXw@ghost>
+ <CAEf4Bza5nKk6_fVY2vmJjZgPb40zB+R3REy8==ZLc98eg1iHTA@mail.gmail.com>
+ <Z6pF5pkH_bqvDwMK@ghost>
+ <CAEf4BzYqOtfOiYcHWRP44rwkrdzi3aMkjgD1-Td5DVAOLV=2kA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 18 Feb 2025 13:39:12 -0500
-Message-Id: <D7VSH5I5ERDG.2QR7V6W3JX2LM@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Henrique de Moraes Holschuh"
- <hmh@hmh.eng.br>, <ibm-acpi-devel@lists.sourceforge.net>,
- "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Move HWMON
- initialization to tpacpi_hwmon_pdriver's probe
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250215000302.19753-1-kuurtb@gmail.com>
- <20250215000302.19753-3-kuurtb@gmail.com>
- <9a98e10c-dd14-45a9-96ec-6ebca8b68616@app.fastmail.com>
-In-Reply-To: <9a98e10c-dd14-45a9-96ec-6ebca8b68616@app.fastmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYqOtfOiYcHWRP44rwkrdzi3aMkjgD1-Td5DVAOLV=2kA@mail.gmail.com>
 
-Hi Mark,
+On Mon, Feb 10, 2025 at 04:23:49PM -0800, Andrii Nakryiko wrote:
+> On Mon, Feb 10, 2025 at 10:31 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >
+> > On Wed, Feb 05, 2025 at 05:28:19PM -0800, Andrii Nakryiko wrote:
+> > > On Tue, Feb 4, 2025 at 3:24 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > >
+> > > > On Tue, Feb 04, 2025 at 11:02:42PM +0000, Alexei Starovoitov wrote:
+> > > > > On Tue, Feb 4, 2025 at 7:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >
+> > > > > > Hello,
+> > > > > >
+> > > > > > On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
+> > > > > > > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
+> > > > > > > > On Tue, Feb 4, 2025 at 12:10 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > > > > > > >
+> > > > > > > > > The quiet infrastructure was moved out of Makefile.build to accomidate
+> > > > > > > > > the new syscall table generation scripts in perf. Syscall table
+> > > > > > > > > generation wanted to also be able to be quiet, so instead of again
+> > > > > > > > > copying the code to set the quiet variables, the code was moved into
+> > > > > > > > > Makefile.perf to be used globally. This was not the right solution. It
+> > > > > > > > > should have been moved even further upwards in the call chain.
+> > > > > > > > > Makefile.include is imported in many files so this seems like a proper
+> > > > > > > > > place to put it.
+> > > > > > > > >
+> > > > > > > > > To:
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > > > > > > ---
+> > > > > > > > > Charlie Jenkins (2):
+> > > > > > > > >       tools: Unify top-level quiet infrastructure
+> > > > > > > > >       tools: Remove redundant quiet setup
+> > > > > > > > >
+> > > > > > > > >  tools/arch/arm64/tools/Makefile           |  6 -----
+> > > > > > > > >  tools/bpf/Makefile                        |  6 -----
+> > > > > > > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+> > > > > > > > >  tools/bpf/bpftool/Makefile                |  6 -----
+> > > > > > > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> > > > > > > > >  tools/bpf/runqslower/Makefile             |  5 +---
+> > > > > > > > >  tools/build/Makefile                      |  8 +-----
+> > > > > > > > >  tools/lib/bpf/Makefile                    | 13 ----------
+> > > > > > > >
+> > > > > > > > Nack.
+> > > > > > > > libbpf and bpftool are synced independently to github
+> > > > > > > > and released from there.
+> > > > > > > > This change breaks it.
+> > > > > >
+> > > > > > Sorry, I overlooked this part and merged a change that touched the
+> > > > > > common files into the perf tree.
+> > > > > >
+> > > > > > f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Makefile.perf")
+> > > > > >
+> > > > > > Unfortunately, it's already in v6.14-rc1.
+> > > > > >
+> > > > > > >
+> > > > > > > Can you explain how it breaks it? Currently bpftool and resolve_btfids
+> > > > > > > don't build quietly so this was an attempt to fix that.
+> > > > > >
+> > > > > > So I think you will need something like this for v6.14.  Again, sorry
+> > > > > > about the trouble.
+> > > > >
+> > > > > Just revert f2868b1a66d4f40f that created this mess.
+> > > >
+> > > > Why are you opposed to unifying this helpers among the various projects
+> > > > in tools? Can you explain what about this breaks the Github syncing flow
+> > > > and why it cannot be resolved? It doesn't make sense to duplicate "Q="
+> > > > in every Makefile anybody ever wants to add to tools just because bpf
+> > > > syncing isn't robust.
+> > >
+> > > Alexei's concern about Github mirrors of bpftool and libbpf isn't
+> > > valid. Github versions of those projects use their own independent
+> > > Makefiles anyways, so your change doesn't break that aspect.
+> > >
+> > > But your change *does* break both libbpf's and bpftool's make output
+> > > *in the kernel repo*. With this patch we basically don't have "quiet"
+> > > mode anymore:
+> > >
+> > > $ git co f2868b1a66d4f40f07e985b0beead606b2753602
+> > > HEAD is now at f2868b1a66d4 perf tools: Expose quiet/verbose variables
+> > > in Makefile.perf
+> > > $ git log --oneline -n1
+> > > f2868b1a66d4 (HEAD) perf tools: Expose quiet/verbose variables in Makefile.perf
+> > > $ pwd
+> > > /home/andriin/linux/tools/lib/bpf
+> > > $ make
+> > >   gcc -Wp,-MD,/data/users/andriin/linux/tools/lib/bpf/staticobjs/.libbpf.o.d
+> > > -Wp,-MT,/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o -g
+> > > -O2 -std=gnu89 -Wbad-function-cast -Wdeclaration-after-statement
+> > > -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations
+> > > -Wmissing-prototypes -Wnested-externs -Wno-system-headers
+> > > -Wold-style-definition -Wpacked -Wredundant-decls -Wstrict-prototypes
+> > > -Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat
+> > > -Wno-type-limits -Wstrict-aliasing=3 -Wshadow -Wno-switch-enum -Werror
+> > > -Wall -I/data/users/andriin/linux/tools/lib/bpf/
+> > > -I/data/users/andriin/linux/tools/include
+> > > -I/data/users/andriin/linux/tools/include/uapi
+> > > -I/data/users/andriin/linux/tools/arch/x86/include -fvisibility=hidden
+> > > -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D"BUILD_STR(s)=#s" -c -o
+> > > /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o libbpf.c
+> > > ^Cmake[2]: *** [/data/users/andriin/linux/tools/build/Makefile.build:86:
+> > > /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o] Interrupt
+> > > make[1]: *** [Makefile:165:
+> > > /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf-in.o]
+> > > Interrupt
+> > > make: *** [Makefile:143: all] Interrupt
+> > >
+> > > $ git co HEAD~
+> > > Previous HEAD position was f2868b1a66d4 perf tools: Expose
+> > > quiet/verbose variables in Makefile.perf
+> > > HEAD is now at e9cbc854d8b1 perf config: Add a function to set one
+> > > variable in .perfconfig
+> > > $ make
+> > >   CC      /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o
+> > > ^C
+> > >
+> > > So, can you please check and fix?
+> >
+> > I think I am misunderstanding what you are saying. The patch that we are
+> > discussing on is the patch to fix this? You are showing the output from
+> > the patch that is being fixed in this series.
+> 
+> Ah, it's me getting confused. It was the earlier perf commit that
+> broke all this, makes sense. I just double-checked with your patches
+> applied locally. It indeed fixes the issue, LGTM.
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-On Tue Feb 18, 2025 at 11:50 AM -05, Mark Pearson wrote:
-> Hi Kurt,
->
-> On Fri, Feb 14, 2025, at 7:03 PM, Kurt Borja wrote:
->> Let the driver core manage the lifetime of the HWMON device, by
->> registering it inside tpacpi_hwmon_pdriver's probe and using
->> devm_hwmon_device_register_with_groups().
->>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->>  drivers/platform/x86/thinkpad_acpi.c | 44 +++++++++++-----------------
->>  1 file changed, 17 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c=20
->> b/drivers/platform/x86/thinkpad_acpi.c
->> index ad9de48cc122..a7e82157bd67 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -367,7 +367,6 @@ static struct {
->>  	u32 beep_needs_two_args:1;
->>  	u32 mixer_no_level_control:1;
->>  	u32 battery_force_primary:1;
->> -	u32 sensors_pdrv_registered:1;
->>  	u32 hotkey_poll_active:1;
->>  	u32 has_adaptive_kbd:1;
->>  	u32 kbd_lang:1;
->> @@ -11815,12 +11814,10 @@ static void thinkpad_acpi_module_exit(void)
->>  {
->>  	tpacpi_lifecycle =3D TPACPI_LIFE_EXITING;
->>=20
->> -	if (tpacpi_hwmon)
->> -		hwmon_device_unregister(tpacpi_hwmon);
->> -	if (tp_features.sensors_pdrv_registered)
->> +	if (tpacpi_sensors_pdev) {
->>  		platform_driver_unregister(&tpacpi_hwmon_pdriver);
->> -	if (tpacpi_sensors_pdev)
->>  		platform_device_unregister(tpacpi_sensors_pdev);
->> +	}
->>=20
->>  	if (tpacpi_pdev) {
->>  		platform_driver_unregister(&tpacpi_pdriver);
->> @@ -11891,6 +11888,17 @@ static int __init tpacpi_pdriver_probe(struct=
-=20
->> platform_device *pdev)
->>  	return ret;
->>  }
->>=20
->> +static int __init tpacpi_hwmon_pdriver_probe(struct platform_device *pd=
-ev)
->> +{
->> +	tpacpi_hwmon =3D devm_hwmon_device_register_with_groups(
->> +		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
->> +
->> +	if (IS_ERR(tpacpi_hwmon))
->> +		pr_err("unable to register hwmon device\n");
->> +
->> +	return PTR_ERR_OR_ZERO(tpacpi_hwmon);
->> +}
->> +
->>  static int __init thinkpad_acpi_module_init(void)
->>  {
->>  	const struct dmi_system_id *dmi_id;
->> @@ -11964,37 +11972,19 @@ static int __init thinkpad_acpi_module_init(vo=
-id)
->>  		return ret;
->>  	}
->>=20
->> -	tpacpi_sensors_pdev =3D platform_device_register_simple(
->> -						TPACPI_HWMON_DRVR_NAME,
->> -						PLATFORM_DEVID_NONE, NULL, 0);
->> +	tpacpi_sensors_pdev =3D platform_create_bundle(&tpacpi_hwmon_pdriver,
->> +						     tpacpi_hwmon_pdriver_probe,
->> +						     NULL, 0, NULL, 0);
->>  	if (IS_ERR(tpacpi_sensors_pdev)) {
->>  		ret =3D PTR_ERR(tpacpi_sensors_pdev);
->>  		tpacpi_sensors_pdev =3D NULL;
->> -		pr_err("unable to register hwmon platform device\n");
->> +		pr_err("unable to register hwmon platform device/driver bundle\n");
->>  		thinkpad_acpi_module_exit();
->>  		return ret;
->>  	}
->>=20
->>  	tpacpi_lifecycle =3D TPACPI_LIFE_RUNNING;
->>=20
->> -	ret =3D platform_driver_register(&tpacpi_hwmon_pdriver);
->> -	if (ret) {
->> -		pr_err("unable to register hwmon platform driver\n");
->> -		thinkpad_acpi_module_exit();
->> -		return ret;
->> -	}
->> -	tp_features.sensors_pdrv_registered =3D 1;
->> -
->> -	tpacpi_hwmon =3D hwmon_device_register_with_groups(
->> -		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
->> -	if (IS_ERR(tpacpi_hwmon)) {
->> -		ret =3D PTR_ERR(tpacpi_hwmon);
->> -		tpacpi_hwmon =3D NULL;
->> -		pr_err("unable to register hwmon device\n");
->> -		thinkpad_acpi_module_exit();
->> -		return ret;
->> -	}
->> -
->>  	return 0;
->>  }
->>=20
->> --=20
->> 2.48.1
->
-> Thanks for doing this.
+Thanks, b4 didn't pick this one, probably because you provided the Ack
+for a previous version of this series, but the patch in it is the same
+as in v2, so I'm keeping it, ok?
 
-Glad to help :)
+Also since you applied the patches and tested it, can I promote the tag
+to Tested-by you?
 
->
-> For the series - all looks good and I tested on a X1 Carbon 12 and confir=
-med the Thinkpad devices are there under /sys/devices/thinkpad_acpi and /sy=
-s/class/hwmon. Didn't find any issues.
->
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Humm, there is a slight difference, checking that in the e-mails
+thread...
 
-Thank you! Making changes to this driver is a bit scary.
++  quiet = quiet_
++  Q = @
 
---=20
- ~ Kurt
+The above doesn´t  have spaces surrounding the = sign, lemme see...
 
->
-> Mark
-
+- Arnaldo
