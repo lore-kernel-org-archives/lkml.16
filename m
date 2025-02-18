@@ -1,81 +1,108 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6836017A313;
-	Tue, 18 Feb 2025 20:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE00E1B041F
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 20:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910725; cv=none; b=OGlfrLebEsKiiHG7X/eKySrEZDljWSeflD/zNmrFZbKO8/7p6V4C6AC3RZq/14K/OYrD1MaBkYi1QD1PjgxYgtY1L9y2O3/kd/NIGR27HIPR6jo5mbaKIbanJzCs9HEGCvqPVQsTq2vld6i48FkhsQCbH66uqIe7S+KvX46N4h8=
+	t=1739910878; cv=none; b=J55V3Wai1ZHaaVnVPp7xNXzUzJuFcYwyClEcfsd3Ol8aqCYAy/ARqwf0TyJYVK5TkpD/uP+Ag+mCW8KZOnNfEpPooxX1zRm7CqflRMiyVa7Fttj34hTQhkC06OMXRmHNw4+c86SLSp372FurUBVljxEhDMjAXQYx2f4RUTtUgZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910725; c=relaxed/simple;
-	bh=38iCzgyTFznwlQu/it3NDkH9y4ipGroHGb/uCkNizGc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HNYbgjqkepslRcvqX/B+PAaVAr50/26um3D8ajonfgCbRzvj/obDqR2CY8CAua7y3tOQyegNwE/zgVUExrs6Nwi1KplA9qNGouTxnfzyeLci0BbkeKzOLrECyyxde+RwdF/+38j8Fwpv09kWND5HNz0VINNXvrU1p02QPLVGHI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=dVwwM/Nm; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1739910878; c=relaxed/simple;
+	bh=YVI5exqhXtTK6AnQzPNoWRQDD3V/AhCHKs/nyX3bdIg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uTJkcdd/8x4DIGQ/iJaJf3bxU8tOJOt+oRC4hirntQfTRYoMWX1LsEwjYznx/qG8H5BefyeK4HKbkH6x3HOuNDV7z3KHiNyOtMkeDcW6qPSs2ZH5lU1OnqKheJFWHukDrD6sq5rHH9kEtBCkvHD48ZpO+bBWndI0ZnNDUAJVhVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=XFz2QqZG; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="dVwwM/Nm"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 92DB0411AF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1739910723; bh=ZeMpIwiNJkaqVN2VlEPNKfjRBKw3/WouIDf+tqsA8h0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dVwwM/NmOgvZ2pfyMZ5xQXyevDf7tBqOOGiwmM26ZWL+JndUPwloCbOjPSvAph1pK
-	 GD95Hp71PpXQVyFlBlghbEkuyaweAok+/6w+KhBOqmNfU2xRi/eAdHEGJMl6cewyP2
-	 7BwScQbQ3M1WLt0vy6oIsaXKULOCv8rEK/eEkOsCJxFabOe+T8ZD5EAVjehVNc4W1e
-	 hNOwBrPiPXyZ+ZNhA8EzmrjTVPyW2MAbnUMegmFmNLeagxSXAnFnlNd/jI+rNk302k
-	 IWWSZrsGZGPxRIhf+dskLl8HNo1pG46skyKW7lFtaohCD2+JQsh8nrEMFr1V8UOUi1
-	 wOMBazgtJ66fg==
-Received: from localhost (unknown [IPv6:2601:280:4600:2d7f::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 92DB0411AF;
-	Tue, 18 Feb 2025 20:32:03 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Yu-Chun Lin <eleanor15x@gmail.com>, akpm@linux-foundation.org,
- visitorckw@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- jserv@ccns.ncku.edu.tw, Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH] Documentation/core-api: min_heap: update for variable
- types change
-In-Reply-To: <20250215155421.2010336-1-eleanor15x@gmail.com>
-References: <20250215155421.2010336-1-eleanor15x@gmail.com>
-Date: Tue, 18 Feb 2025 13:32:02 -0700
-Message-ID: <87h64rnge5.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="XFz2QqZG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1739910441;
+	bh=YVI5exqhXtTK6AnQzPNoWRQDD3V/AhCHKs/nyX3bdIg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=XFz2QqZGXPNEBUB9cMN1Yi/BFhCh/ELD75YfUtW7mq13eBDBc+NSXT40rme2mIGjW
+	 SP+qAbHTq5/Lr/a6lKdRKxl2xry2ZEOE/YCNqRXBlZPGvs5/nnMgT9/44/plzNLojc
+	 mWdqj/WYxMyW+PxZGEnMTCVGvtObgaHO8wY29NEceOHhubsd0othXg98p1UglBFUJZ
+	 5b+KxgHbkLSszBF9CO34djoKEGtrrNvgp6+Pjpgmml8UV945ZKFw8nxV6mmcOi5Ztz
+	 0G/PnyS44l5q2As9sqRvEKQ8ZBYsbaZP3ny0fEC1StVHl44KvSzTi1qawoIV0nJ5lJ
+	 a9aTDkakeoEAA==
+Received: from smtpout01.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4YyB091DLFzwhg;
+	Tue, 18 Feb 2025 15:27:21 -0500 (EST)
+Received: from laptop-kstewart.internal.efficios.com (laptop-kstewart.internal.efficios.com [172.16.0.60])
+	by smtpout01.internal.efficios.com (Postfix) with ESMTP id DEA352A4B6;
+	Tue, 18 Feb 2025 15:27:20 -0500 (EST)
+From: Kienan Stewart <kstewart@efficios.com>
+Date: Tue, 18 Feb 2025 15:26:39 -0500
+Subject: [PATCH v2] kbuild: Add missing $(objtree) prefix to powerpc
+ crtsavres.o artifact
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-buildfix-extmod-powerpc-v2-1-1e78fcf12b56@efficios.com>
+X-B4-Tracking: v=1; b=H4sIAP7stGcC/4WNTQ6CMBCFr0Jm7Rim5ce48h6GBZSpTCK0aRExh
+ LtbuYDL7+W9720QOQhHuGYbBF4kipsSqFMGZminB6P0iUHlqsxJ1di95NlbWZHXeXQ9evfm4A2
+ 2dVEwaU32oiGtfeDUOsz3JvEgcXbhcxwt9Ev/OxdCwqLMU6mjSlX6xtaKERfPxo3Q7Pv+BYxLi
+ nrBAAAA
+X-Change-ID: 20250127-buildfix-extmod-powerpc-a744e1331f83
+To: Masahiro Yamada <masahiroy@kernel.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>
+Cc: linux-build@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-kernel@vger.kernel.org, Nicolas Schier <n.schier@avm.de>, 
+ Kienan Stewart <kstewart@efficios.com>
+X-Mailer: b4 0.14.2
 
-Yu-Chun Lin <eleanor15x@gmail.com> writes:
+In the upstream commit 214c0eea43b2ea66bcd6467ea57e47ce8874191b
+("kbuild: add $(objtree)/ prefix to some in-kernel build artifacts")
+artifacts required for building out-of-tree kernel modules had
+$(objtree) prepended to them to prepare for building in other
+directories.
 
-> Update the documentation to reflect the change in variable types of
-> 'nr' and 'size' from 'int' to 'size_t', ensuring consistency with
-> commit dec6c0aac4fc ("lib min_heap: Switch to size_t").
->
-> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> ---
->  Documentation/core-api/min_heap.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/core-api/min_heap.rst b/Documentation/core-api/min_heap.rst
-> index 683bc6d09f00..9f57766581df 100644
-> --- a/Documentation/core-api/min_heap.rst
-> +++ b/Documentation/core-api/min_heap.rst
-> @@ -47,8 +47,8 @@ Example:
->  
->      #define MIN_HEAP_PREALLOCATED(_type, _name, _nr)
->      struct _name {
-> -        int nr;         /* Number of elements in the heap */
-> -        int size;       /* Maximum number of elements that can be held */
-> +        size_t nr;         /* Number of elements in the heap */
-> +        size_t size;       /* Maximum number of elements that can be held */
->          _type *data;    /* Pointer to the heap data */
+When building external modules for powerpc,
+arch/powerpc/lib/crtsavres.o is required for certain
+configurations. This artifact is missing the prepended $(objtree).
 
-Applied, thanks.
+Fixes: 13b25489b6f8 ("kbuild: change working directory to external module directory with M=")
+Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nicolas Schier <n.schier@avm.de>
+Tested-by: Nicolas Schier <n.schier@avm.de>
+Signed-off-by: Kienan Stewart <kstewart@efficios.com>
+---
+Changes in v2:
+- Added Review-by/Tested-by/Fixes/Acked-By
+- Removed mention of possible work-around for external modules (while
+the build will pass, `make modules_install` will fail)
+- Link to v1: https://lore.kernel.org/r/20250127-buildfix-extmod-powerpc-v1-1-450012b16263@efficios.com
+---
+ arch/powerpc/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-jon
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index f3804103c56ccfdb16289468397ccaea71bf721e..9933b98df69d7f7b9aaf33d36155cc61ab4460c7 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -58,7 +58,7 @@ ifeq ($(CONFIG_PPC64)$(CONFIG_LD_IS_BFD),yy)
+ # There is a corresponding test in arch/powerpc/lib/Makefile
+ KBUILD_LDFLAGS_MODULE += --save-restore-funcs
+ else
+-KBUILD_LDFLAGS_MODULE += arch/powerpc/lib/crtsavres.o
++KBUILD_LDFLAGS_MODULE += $(objtree)/arch/powerpc/lib/crtsavres.o
+ endif
+ 
+ ifdef CONFIG_CPU_LITTLE_ENDIAN
+
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250127-buildfix-extmod-powerpc-a744e1331f83
+
+Best regards,
+-- 
+Kienan Stewart <kstewart@efficios.com>
+
