@@ -1,199 +1,260 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 391411DE2BF;
-	Tue, 18 Feb 2025 22:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739919314; cv=none; b=gfiY37CSfyI0XAmMzV+QBoubrctto4cauCvupIEgDGXR6jqICZAWj3JFGdktmTQUq+ux+2QYWoVk8yA7kKF3DM23XhA95dmzpYyJ+Zhft1GoFfH3+EyWsYiOgrZ+43aqczq2d7QXqAM4gG/Aq8SEtlA1lwgMUjb3ZE6cezAz8yg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739919314; c=relaxed/simple;
-	bh=2XAWyiBN9IiFUNfzUgQBGsUZzgXR0fx/zFlIySOXX1c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D1vvru5H4yz3od6bmf5aItfWqPe6xlOUaXrjO2pl0Sl2ctIBY1vXOCv41jeXmFxfRmWS1DukOVBak+9I61PeEUr1jiWA3IuiP/HRL0K777pasardKqq37D+7ePlPm+kk+JIheQjW/oe1eS+3Xwl5nCMO6hZhkzjEDB5/NHu6EFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Jtl3+Rcc; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2077.outbound.protection.outlook.com [40.107.237.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F5D1D5AAE
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 22:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739919370; cv=fail; b=f+50Efb0b+IE0mnFCa1u/sD11HNka0gQTzjvsgoQrzxGr/45+2+sr618n5lgs9+YiTqcsKUEOi9L+8rnrs/eI101otMas/Wd+yxQuit1CrP/MZKqMd7QzyXnAGzEl+j+6uHt6B5VcYnArT73G0en1zBweWgsBwnaCpmBttj4qqA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739919370; c=relaxed/simple;
+	bh=cKjKwYeeIFZePcUeQNc3bxeKy3C2RPLWqh1N9jtlPXg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IwxJMl7NGoN+AeEKmO7J8rapx/DbHL7LUId1Vku0B+dcxy5N57+ROwOQN5JuJGTfpmeP938XNnkmCKlztUt58r4jjuU6lfgnOmh0T7L/wI2IusT1j7DhKG26uoAUBbnKfiqh8/jz5jwe1GfIqKthJoivTplItbEzRQBJZMFVQGc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qyvRYIjN; arc=fail smtp.client-ip=40.107.237.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Jtl3+Rcc"
-Received: from localhost.localdomain (unknown [167.220.59.4])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8F6BF20376F1;
-	Tue, 18 Feb 2025 14:55:10 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8F6BF20376F1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739919310;
-	bh=yEQ6D0jPp3L3J2bEINRUhp9tW2ZdTFCKcOsBECh74EQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jtl3+RccFqa9UF7YP8AJDZGr66/0lcz9LQptypNuOYSfF9axKxwnYH/OzlZqAd4H9
-	 aZEDef1xyjWWDhxfiY7aI6t7RDl46xxHgoxlMcRHq8j+5YZvMMuZ8nSX8v31emrUHs
-	 7wg4AyaFvTRVw5vm0fY94iWWo0oufUQdxgQ5+Ok4=
-From: steven chen <chenste@linux.microsoft.com>
-To: zohar@linux.ibm.com,
-	stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com,
-	ebiederm@xmission.com,
-	paul@paul-moore.com,
-	code@tyhicks.com,
-	bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: [PATCH v8 5/7] ima: kexec: move IMA log copy from kexec load to execute
-Date: Tue, 18 Feb 2025 14:55:00 -0800
-Message-Id: <20250218225502.747963-6-chenste@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250218225502.747963-1-chenste@linux.microsoft.com>
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qyvRYIjN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rDLxiIKarwt3cpaZ+tNeMN3RqYjG3c/8yvg/ABGFYK/WXCOxZ5X/m5gjUraRNJSLJ6X+/J+P/ntlPVQkzIhV4O/oyWGxdKZCqceU/iHMapVCdxMnxqM3Jjzi/fBAsqjmrXRyRJTuyUoRhGLt39aOK8i1GXRyZpY8zVVxxIullBDnMAPCCO/xjlJoCkfCfPR/bc61FQlqimZh1GaKkso9WtP/gErP6rPkDZP21sHU5M2Nn0HoBuA6TxPSUDWFTdCvdMbqKMOrtQfqrv9aCC9FqRj2o+hZrh6FaRQhuEGHXXfxSxMdVAScdDWJiMMQOJe6psHEkTZijxJ2QQW83Jo3bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=stKeqAwqtTskc0sL4ZUl8qh2+DC2bQQPFFZ6QaX3dH8=;
+ b=mM6h+JF2s17YSDJchi5YPF5wa/aPHFa7sR8ah1IHIarTt81tiJ+uKXKoWTWWw3lmUIKSdn8tBJ8my0gsxscsWdkXyStxco6myikN4onwGSiGSrtH/D8ynCMcM+JQQ8+U6HRP2H1snl5X54ENnE5uzDmjplwX1HYaaGLoGzuquCfWFN/GkTRYAO+FuQJ7Pq7zTonRTvzNmuRjPFLQGnf421f525uz0kV9HulzVx+mIPxJKImVk6ZPbhkizbTpOK8H6NzEkUUv7n5uvzPa178uZNbkEqv/M8VMzGLTTeU3gKQFaUAPbB2lM0EE9nnZajpMB6g6c3WnPLPRkBSd8SMPcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=stKeqAwqtTskc0sL4ZUl8qh2+DC2bQQPFFZ6QaX3dH8=;
+ b=qyvRYIjN5Fsb4uDsrbNhhp4/dVag7U3EIZJBSgu7kAeqp0trN+apLjt8ZRWpmpcLuxWxnVaRO3ZrxLuESXCwvmQ2PBqbbq9xelmiXNJvtdVf9zB3GwHDz0P2Da5MHmuuhtJ0w6E2FSnUynz5JgnWvTay1l1IhyN3zZDfW6iYpbp8ND89TY0fj7qQ4PmqqB/3PIAbM4cdnlrWjWFMGUnN7kmEW3SVoO187/Sj4fFMGtW6k1e8u6qVdpCccOrxLtJ9DqyQkZxgxOJKjYNoEjiwTKN7U8nk+0wq9Zsp2JvGS5Z6b9k/ZdG1Azwo2Gl7gurY3tbFkHVcHPJSHxmYINTo2w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ MN0PR12MB6367.namprd12.prod.outlook.com (2603:10b6:208:3d3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Tue, 18 Feb
+ 2025 22:56:01 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%5]) with mapi id 15.20.8445.016; Tue, 18 Feb 2025
+ 22:56:00 +0000
+Message-ID: <94b6f4fa-8a92-47a1-8938-b838ce19d122@nvidia.com>
+Date: Tue, 18 Feb 2025 14:55:57 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/12] dmaengine: idxd: Remove unnecessary
+ IOMMU_DEV_FEAT_IOPF
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Vinod Koul <vkoul@kernel.org>, Zhangfei Gao <zhangfei.gao@linaro.org>,
+ Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250214061104.1959525-1-baolu.lu@linux.intel.com>
+ <20250214061104.1959525-10-baolu.lu@linux.intel.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250214061104.1959525-10-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR06CA0065.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::42) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|MN0PR12MB6367:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66645076-e87d-46e2-a9e2-08dd506f69a4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bGxpUEN2Y2hNNzB1eG1tcnRTaDN6aVNHa0g3N0tYS1hDelp4MEZTd3ZCZzV5?=
+ =?utf-8?B?aXF3ZU03UnhRblN1alNVN1oyN2pJVmphbjFxU0prL2hXVlBPcWlyb1FaUXRv?=
+ =?utf-8?B?cWR2VjhnVlRaQ09rSk91MjBwY0ZidFpLT0xzSnR2RVZWeU83dC9EMmZNOW1Y?=
+ =?utf-8?B?cmFxbm5aUFBFLzQ5YVk1QjZxYUZ5S2FjVkNkNlN4Wm00dUpTelA4SUdsUGd5?=
+ =?utf-8?B?Sy9Kcjl2MSszMlBybzFKUDZNamsvSTRLNWFVdytxOWVZeE5Xc1dRZExUdHNS?=
+ =?utf-8?B?Y2VrUVlMSTVhSnZWTVVWb3Y0dkVaMEJBMGJyM2RrK29HOXlKTlIxNXoyU3BD?=
+ =?utf-8?B?cWZoemJyaGZiNjRURElDbWtPRjVadEtwTXgvRmZnNG1lc011UXlJK1VJWVl4?=
+ =?utf-8?B?WjRDY2pFZ3lSa002NlVYc29NWW5mWjhIU2tBeER5SEozOHJ2TWhiRXBzdXRm?=
+ =?utf-8?B?Uzd5ZExjQzAvNWd6MlBFajRPNS96ellNRFFHUjRtUElYT0xZMmdxNVdZcnZU?=
+ =?utf-8?B?SUM5SXI2ME5lcGJDcWs4amF6Nmh6cXRtenpGYnF2SWxmZWlPMlNhNEtxZXdm?=
+ =?utf-8?B?NE13UkQxaTBHbW0xUm5Qb3U0Z3RucXRDbllBWi8zUWZBclBacWI4NE9rbUFN?=
+ =?utf-8?B?ZzVvZ1BSeFRsM21EWENocXo3bGZ2MFNWQTl2bXlPUXQ5QXBhd010M0wxb0kv?=
+ =?utf-8?B?Q3Qxb016UXFpZUZoVGF3cGZlaitUNEJ3UXkwUEpzMkJNbFhDZTNDR0VFWG82?=
+ =?utf-8?B?R0J2WC9BSk9GaXFnbDMyeTIwMmhKYUpPd08rck4yTHZvMHFiYUVXVWlzT3ZP?=
+ =?utf-8?B?eU41dXp2SU9OZHhOS1JxZ2crSDRXVTFIWGRVSVFkYm43N0k2VXVOc3dsZHh3?=
+ =?utf-8?B?RDVMQ04zb3BsWWcwVy85QVpRQ3A5N1BUYml3TXlmejEvVmk2MlBBdjN4cWF1?=
+ =?utf-8?B?VWp1WWxGazBISEMwcm5OMmRXYWtnNzNmNzI0VzJmbysrZkNCQlFNdTJxcW9S?=
+ =?utf-8?B?MXdzMGlFT2ZvdEdTekJvY0RtdmcweXpPMFNBMW5aOVEwQzhNaW9tWHozU1NU?=
+ =?utf-8?B?c3c2WU1NM3BBZHYxOHF3U2ZSV3QrOE16SUFyRGVTdlRrbWpHVUhvVGV2T2tt?=
+ =?utf-8?B?VHlMM1A2UVJ3dHNqeTVpVWdTdHRsUzlwVjlsMit5bzdkVnl0T1RuVlRnVGtZ?=
+ =?utf-8?B?UndxWE1lSDBTbVJwN0MwSFhuOW94cTBNbE1iKzRFSFZSZnBPVzZsRzJOQk9q?=
+ =?utf-8?B?NWNZVTdGVyt0VzJqaXgxVDc0dXVNTFR0WERqN3lQUGg4NzB6UzR6eWE2Z25I?=
+ =?utf-8?B?NWJaVkc3cVJwYTVqVmpuMmw2YzNwLzBXY0hjNlk4ZlUzZ3plU0VaUkRjcGV3?=
+ =?utf-8?B?Vlo0WVBCNDRhekZxSU9CQUdIRThTTCs1anFyMndyK2E4ZnpwWnVhaHZkRlE4?=
+ =?utf-8?B?SVZSSndvYm5PVzZBY3RZbWxwMitnZzRFbUtYRTNGZG5KUWY4REh4QUV5d3Nm?=
+ =?utf-8?B?YnBvOHd1WjJrR282TkJucmRSWlBaZ0xJMFNybk04aU9DdHorRkxnZ0twRXFn?=
+ =?utf-8?B?Y3QzeGdsVm0wc2MxTDJEaDRhc2IwRi95RUNRanhhSnpHMFJEV255Y0c5Y1lo?=
+ =?utf-8?B?RkxNT3FkQytGYUF2N3lKRExGRTliWTRFcE9YeGwwMTN4M1lKd1ZvcG9vOXBF?=
+ =?utf-8?B?YnE5ckdMWXlhd3RwZHRvUnpCVjVURitBNngvbEcwWDdaV0pCQjZtUy8vWmYw?=
+ =?utf-8?B?VnhCaHZBZHRsalpPNno0MGpHMGpUWU9mRUltbmQxclljZzdhdDd2U2w2U0tI?=
+ =?utf-8?B?U1lKd1JBNG1vZzVMNElUY2NKRXBlYldFL1JtZGoxK0YrU1lKVjdKdDVObW15?=
+ =?utf-8?Q?FfDBBnW+If0f8?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dG9KNm9zbkl0b2F4U1NEMW14RFMxUXZvUHltLzV3U3ljMm5YUUU1eWNGQzBE?=
+ =?utf-8?B?NVVXaUlOelV2eUc1T0JTWVN1eDZybmdLT2FoRE04ZEYzV2JGM2dkaW1tS1lo?=
+ =?utf-8?B?TEpFaDE2QTV5MVBYYWtQQnNidUpZbEdIc0dwZ0YvK0dydHNzdUdMb2tsSzE0?=
+ =?utf-8?B?Um9oZ0ZYK0luK2xUcW9RWXM1TTlnSktkM2tYZCswVWRsV3VhY3BUOE5Ga3VC?=
+ =?utf-8?B?b3VrTUcwaUVaUTNPZnAxS2ZwN0NZZFZLWW1zZmxGSzhOUDJCcWs1VW1XTzk4?=
+ =?utf-8?B?UnZOMTNtMjROMFd0b01USUc1VzdhbFd2QnVEd01VOEpDWkI1NU5nRm5Ua1Jj?=
+ =?utf-8?B?SldYMXhLbkFBT2ZOT0dtLzFYZmVzOUxpR2l1TXV3R1dQblcyTU4yOU5BYWN1?=
+ =?utf-8?B?bE5JNjRTTUhVZElXaGMycVJtWXV3MUdmdmtnTGN1L0VmSVc5VWZ1R0FSc25w?=
+ =?utf-8?B?L2JFbVZNckZCZ1ZvaHA5NU9GZkl0ekhKcGdFa3lQMCs5S1pyNmhRdm1PMGRx?=
+ =?utf-8?B?Y3dzMHdhazNTRXRBRzMwcTR6Ym1EK3VQMW9JQWUvS2h2SDJPR3ZwUWtpMGhi?=
+ =?utf-8?B?NDBTdGprNVFHRTMvTFQrNXkwUEs2T0xUdmoyTFJJcmU1RUhFd2RLNTZtTERx?=
+ =?utf-8?B?a0UyNkdlb0RyNEdIQWZmbkhpSUw0Mk1nSzd0MGxwandwaUZ0K0hBa0NXZjMr?=
+ =?utf-8?B?VTVxRVNkS0plRGhtNDBTVkNLOXhKT2R3RHdycW1EbWZRU3pwNnhraVZQWmZo?=
+ =?utf-8?B?ZFFGekJzcXFJMEd1R1FNOWxtSk5URVhXY1ZCRUs2eTRydGl5L2k5cjJka2Jo?=
+ =?utf-8?B?WnljeVZINTZxMHExNGc0ZHQyNnY3ODRUMHVXNFZLREg0YU9kVzFSa1NoRjg3?=
+ =?utf-8?B?ZFIvYzV6Wkd1MjFpRzVLU3ZMQ1ZNTkV5K0Vxem9SSiswUG9wUnBWdnhIQldG?=
+ =?utf-8?B?ZWdZTFp3OVRLNzNXTTVtMWFrYk82UmhCdGdleWp6SFloUERrZ0YwZVgwc2RC?=
+ =?utf-8?B?MHJQN3RFNjJ1NVhNVk9BOU1tR0hYUXdaK3Ayam4rSzRZb1JnUjMzMklVVlk2?=
+ =?utf-8?B?WStnQXU2OFNBNXh6Ykdrenl1ZHdxam9NR3lOUVMrOTdwalNxUTd3NmVoZWJv?=
+ =?utf-8?B?ZEtBZ1FnMmlDaTExVy9ZSXpselFwMWZtVE95SFptL3AvNE84c0tnb2lVcnNs?=
+ =?utf-8?B?VlVLdHdvbzR2ZzNLcWwyeWtERCtnNHVMRllPRlpwellwSS9ueWNpbUNodURh?=
+ =?utf-8?B?UmRFK09IclgyblB2bHB5NDF2cDZIb211bFpUUysyd3hBa3hQSWlyeGdRSjR1?=
+ =?utf-8?B?OUFmbHplQ1ZzOUJsSFZiUEhMRnFiOWxKQXlsLzdEMXNVbzZKMzhBT3ZONHJj?=
+ =?utf-8?B?MERWY0ZFbUVVNWpiQkxuaDlXK0xQV0FYeTNBR1pieUZ5SmQxaExQc1BjYlJQ?=
+ =?utf-8?B?R3gyaEorSnJFOWdubmV2cXF1MzNsR1JRd1NyS3VkREZZVEtkbWQ2UTZ2SGFn?=
+ =?utf-8?B?bFVVdGJ3ajFydWVNRVFING95NEVIUkt0OW5CbzlnSWZFcmxKWURDZTM5TGtm?=
+ =?utf-8?B?ZDZ4akp2UlhodEJENXF4cHVuQkF2NjRsNWhTU1pFUW52bzdJVmdma2x1Z0tO?=
+ =?utf-8?B?VStUK2RVVkR1Uy9OdFd4RU05QXRsWG9ScllaK1FwZmJCY1k4Mm14TlpwWlls?=
+ =?utf-8?B?alN6N01maVNscmZ3YlBnSk40SGtaTUhUNnN2V0pMTHhEUzlZcDFXSCtRQkd4?=
+ =?utf-8?B?bkdFUElNeDZzYVlSUTFmcTJiSlczZkpoR0FWVkU2ME1Sd1kzSlROeXk5NENV?=
+ =?utf-8?B?a1hMYUhNcEFvcGgrV2xLM2l3dzV1OWRMK3hvQU1GQnBrQlJwMEpHQXVhMVdu?=
+ =?utf-8?B?VHdIVnZCWUw4eENhN2NySFlMQWRPV3hjYzlPS1NsN2FDZncwQzZLWFQ3cWY4?=
+ =?utf-8?B?aWltbUV3RHdxYVRXbHRLMFN0NHJwM0E0QmM0UjFCa2RVMUVKbFRFWUl1THM3?=
+ =?utf-8?B?UjI3bU8wRmdiMVgzS3kzT1BUZlZsZm5wZHNkWWUyTUtmeVRkOUQvdVJFblky?=
+ =?utf-8?B?RnZEVXZPT093N1hUWkJWQVJMdXE3T2dUSTBheVQxVThhREx3Z2xYL2FFM2Rl?=
+ =?utf-8?Q?ndQfQSDO3zwXk1GoYNjnAB3hP?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66645076-e87d-46e2-a9e2-08dd506f69a4
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 22:56:00.3088
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Mcnk+BM4jWgSVQPoBZJN2z3dz50jZoz5t3VCjqa1gB6hiu5nfLQ3qe3VCIlwxxs090ZjyagdWmE+AtCzhRcdOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6367
 
-ima_dump_measurement_list() is called during kexec 'load', which may
-result in loss of IMA measurements during kexec soft reboot.  It needs
-to be called during kexec 'execute'.
 
-This patch includes the following changes:
- - Implement kimage_file_post_load() function to be invoked after the new
-   Kernel image has been loaded for kexec.
- - Call kimage_file_post_load() from kexec_file_load() syscall only for
-   kexec soft reboot scenarios and not for KEXEC_FILE_ON_CRASH.  It will
-   map the IMA segment, and register reboot notifier for the function
-   ima_update_kexec_buffer() which would copy the IMA log at kexec soft
-   reboot.
- - Make kexec_segment_size variable local static to the file, for it to be
-   accessible both during kexec 'load' and 'execute'.
- - Move ima_dump_measurement_list() call from ima_add_kexec_buffer()
-   to ima_update_kexec_buffer().
- - Remove ima_reset_kexec_file() call from ima_add_kexec_buffer(), now
-   that the buffer is being copied at kexec 'execute', and resetting the
-   file at kexec 'load' will corrupt the buffer.
+On 2/13/25 22:11, Lu Baolu wrote:
+> The IOMMU_DEV_FEAT_IOPF implementation in the iommu driver is just a no-op.
+> It will also be removed from the iommu driver in the subsequent patch.
+> Remove it to avoid dead code.
+>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+> ---
+>   drivers/dma/idxd/init.c | 37 ++++++-------------------------------
+>   1 file changed, 6 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 1e5038cca22c..d44944195807 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -626,21 +626,6 @@ static void idxd_disable_system_pasid(struct idxd_device *idxd)
+>   	idxd->pasid = IOMMU_PASID_INVALID;
+>   }
+>   
+> -static int idxd_enable_sva(struct pci_dev *pdev)
+> -{
+> -	int ret;
+> -
+> -	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+> -	if (ret)
+> -		return ret;
+> -	return 0;
+> -}
+> -
+> -static void idxd_disable_sva(struct pci_dev *pdev)
+> -{
+> -	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+> -}
+> -
+>   static int idxd_probe(struct idxd_device *idxd)
+>   {
+>   	struct pci_dev *pdev = idxd->pdev;
+> @@ -655,17 +640,13 @@ static int idxd_probe(struct idxd_device *idxd)
+>   	dev_dbg(dev, "IDXD reset complete\n");
+>   
+>   	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM) && sva) {
+> -		if (idxd_enable_sva(pdev)) {
+> -			dev_warn(dev, "Unable to turn on user SVA feature.\n");
+> -		} else {
+> -			set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
+> +		set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
+>   
+> -			rc = idxd_enable_system_pasid(idxd);
+> -			if (rc)
+> -				dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
+> -			else
+> -				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+> -		}
+> +		rc = idxd_enable_system_pasid(idxd);
+> +		if (rc)
+> +			dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
+> +		else
+> +			set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+>   	} else if (!sva) {
+>   		dev_warn(dev, "User forced SVA off via module param.\n");
+>   	}
+> @@ -703,8 +684,6 @@ static int idxd_probe(struct idxd_device *idxd)
+>    err:
+>   	if (device_pasid_enabled(idxd))
+>   		idxd_disable_system_pasid(idxd);
+> -	if (device_user_pasid_enabled(idxd))
+> -		idxd_disable_sva(pdev);
+>   	return rc;
+>   }
+>   
+> @@ -715,8 +694,6 @@ static void idxd_cleanup(struct idxd_device *idxd)
+>   	idxd_cleanup_internals(idxd);
+>   	if (device_pasid_enabled(idxd))
+>   		idxd_disable_system_pasid(idxd);
+> -	if (device_user_pasid_enabled(idxd))
+> -		idxd_disable_sva(idxd->pdev);
+>   }
+>   
+>   /*
+> @@ -1248,8 +1225,6 @@ static void idxd_remove(struct pci_dev *pdev)
+>   	free_irq(irq_entry->vector, irq_entry);
+>   	pci_free_irq_vectors(pdev);
+>   	pci_iounmap(pdev, idxd->reg_base);
+> -	if (device_user_pasid_enabled(idxd))
+> -		idxd_disable_sva(pdev);
+>   	pci_disable_device(pdev);
+>   	destroy_workqueue(idxd->wq);
+>   	perfmon_pmu_remove(idxd);
 
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Signed-off-by: steven chen <chenste@linux.microsoft.com>
----
- kernel/kexec_file.c                |  8 ++++++
- security/integrity/ima/ima_kexec.c | 43 +++++++++++++++++++-----------
- 2 files changed, 36 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 606132253c79..76b6a877b842 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -201,6 +201,11 @@ kimage_validate_signature(struct kimage *image)
- }
- #endif
- 
-+static void kimage_file_post_load(struct kimage *image)
-+{
-+	ima_kexec_post_load(image);
-+}
-+
- /*
-  * In file mode list of segments is prepared by kernel. Copy relevant
-  * data from user space, do error checking, prepare segment list
-@@ -428,6 +433,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 
- 	kimage_terminate(image);
- 
-+	if (!(flags & KEXEC_FILE_ON_CRASH))
-+		kimage_file_post_load(image);
-+
- 	ret = machine_kexec_post_load(image);
- 	if (ret)
- 		goto out;
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 0fa65f91414b..f9dd7ff95b84 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -19,6 +19,7 @@
- #ifdef CONFIG_IMA_KEXEC
- static struct seq_file ima_kexec_file;
- static void *ima_kexec_buffer;
-+static size_t kexec_segment_size;
- static bool ima_kexec_update_registered;
- 
- static void ima_reset_kexec_file(struct seq_file *sf)
-@@ -129,7 +130,6 @@ void ima_add_kexec_buffer(struct kimage *image)
- 	/* use more understandable variable names than defined in kbuf */
- 	void *kexec_buffer = NULL;
- 	size_t kexec_buffer_size = 0;
--	size_t kexec_segment_size;
- 	int ret;
- 
- 	/*
-@@ -154,13 +154,6 @@ void ima_add_kexec_buffer(struct kimage *image)
- 		return;
- 	}
- 
--	ret = ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
--					kexec_segment_size);
--	if (ret < 0) {
--		pr_err("Failed to dump IMA measurements. Error:%d.\n", ret);
--		return;
--	}
--
- 	kbuf.buffer = kexec_buffer;
- 	kbuf.bufsz = kexec_buffer_size;
- 	kbuf.memsz = kexec_segment_size;
-@@ -178,12 +171,6 @@ void ima_add_kexec_buffer(struct kimage *image)
- 	image->ima_segment_index = image->nr_segments - 1;
- 	image->is_ima_segment_index_set = true;
- 
--	/*
--	 * kexec owns kexec_buffer after kexec_add_buffer() is called
--	 * and it will vfree() that buffer.
--	 */
--	ima_reset_kexec_file(&ima_kexec_file);
--
- 	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
- 		      kbuf.mem);
- }
-@@ -194,7 +181,33 @@ void ima_add_kexec_buffer(struct kimage *image)
- static int ima_update_kexec_buffer(struct notifier_block *self,
- 				   unsigned long action, void *data)
- {
--	return NOTIFY_OK;
-+	void *buf = NULL;
-+	size_t buf_size = 0;
-+	int ret = NOTIFY_OK;
-+
-+	if (!kexec_in_progress) {
-+		pr_info("No kexec in progress.\n");
-+		return ret;
-+	}
-+
-+	if (!ima_kexec_buffer) {
-+		pr_err("Kexec buffer not set.\n");
-+		return ret;
-+	}
-+
-+	ret = ima_dump_measurement_list(&buf_size, &buf,
-+					kexec_segment_size);
-+
-+	if (ret)
-+		pr_err("Dump measurements failed. Error:%d\n", ret);
-+
-+	if (buf_size != 0)
-+		memcpy(ima_kexec_buffer, buf, buf_size);
-+
-+	kimage_unmap_segment(ima_kexec_buffer);
-+	ima_kexec_buffer = NULL;
-+
-+	return ret;
- }
- 
- struct notifier_block update_buffer_nb = {
--- 
-2.25.1
+Thanks.
+
+
+-Fenghua
 
