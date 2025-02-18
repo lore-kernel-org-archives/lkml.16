@@ -1,34 +1,34 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D2026E630
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 16:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA8E26D5BC
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 16:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739894965; cv=none; b=SH8beTULeA2OvygFGwjIPV4Un1RVFOh5qLy80vRmIx9+yecSHemlY/bDR6F3nG615rbyUjGjnmKZn9rSqrI8Cc83uPiiWPV5YZjWjcxDmtGy3/d5HW0FEsdOLmMCgiZqbcnKyPL1Ws7bqGWsaE5eCZNhO67jEDtOPSkm4PlZs7g=
+	t=1739895044; cv=none; b=u4BkLXW0y1590Th9opJcrhR3ec/WFLUGgRt1DCnCFB3KEznrqqOZ+sacYe7VyuQx05B1zx52GEc1cGrbfX5oEWl2mC+Re9YaiHX9fDut5I8ErDAW8OIRlN84G88kKKBJnmzqXYQohOFWtpkjXOCUv/JBaYTqA6xAyBWU7GsRJqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739894965; c=relaxed/simple;
-	bh=AOhOsmxZezWbzjTsfDSX8kpBDPtwMyCO8DPaiR7znVw=;
+	s=arc-20240116; t=1739895044; c=relaxed/simple;
+	bh=X3iyuBDAJs9NecXBggaSvB9fTlXvnxoYTpUmuq60vF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZZUiFWFi67HL89EXJA2sHTcRocozhYPx//EV/7kLpiz1Y3ysHg9MgeMZMtO0taHQ1DMjMRtSF93+C4/vUr7tr/wTtkPFNPBMB1fuOSOmEmZG2hkRBnGanAIfN01iggVRgWmvkbaeUvVcj6CWjw/8DF5QNRXgiKwHyk1/vjQmNK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=lb1FKjCI; arc=none smtp.client-ip=91.218.175.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLlcQXuB8YbSF2Zsd0AB8bjLjF1VPAqzUDJF2jjZhsbm2aNnPan35abs+7oxcZsFsvYGj/t+tS6hYpNn/EHJyRpT/5vwB4V7oq36fGogTu+Mrv+iOJFyevcHDixH9tmE6gPXU6vw6gpdbHcIW8vzAF/jdBQuI5wx/IEhBCXQZZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=I2DBeoab; arc=none smtp.client-ip=91.218.175.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="lb1FKjCI"
-Date: Tue, 18 Feb 2025 11:09:03 -0500
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="I2DBeoab"
+Date: Tue, 18 Feb 2025 11:09:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1739894951;
+	s=key1; t=1739895040;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iEztrQmMNZf8KxW9it4BP89Ve0C07hVeIKvyoxZfpJA=;
-	b=lb1FKjCI/WnYRemUD4eSVsAiqqKAwPZA+IuP1hhdgSp52sjlv2BMqOtqQ6OkTSYFTlGp2D
-	VSyjNnweZztIHyNNEDCbT04vjvqC2KTV0HL2y0ml6hgl6K22rQPOOCbxTdOSWVBUrS9Wb1
-	+eJuNV0+pB3SeoDtvAGXupFaZNIDISuwEFWJLdlqLWMCdGVB0d420Fyg9krTERTJYeT2OU
-	uvJKwMox1fq95/oUZTl84dtLigO0QyM1F99D6nEX/nF/tyo+dViHaYJSEpjY4BfIzbtAPf
-	SQJsUb8x+4BIkSft47WDuW3RkOeoV0AcvqACXtnvwujIi86DQcuu/BcY8oX0Bw==
+	bh=Ain+K2rYMsxf/s6n991mIKzQ3CJnjDO4HAoAnKShdLU=;
+	b=I2DBeoabN1UcgNUM//Po6Bt7J7UuK1m8s38ivqi+YGWTBQKhwTXuZqgMdQSFXPIm/aUscf
+	UFBzzoCsL2efmPxhpH4O9zOHvjQ5lOIVglFFrLX4GY4nsZZhEbT6XXnIAHqpaAxDj8NYdG
+	EU/UldI5zaJ9V81UnBVtTDndZm93O/X8oIx7uGRgJc1/uaLH0hLbAYNnsY1M1nwiTZWxZM
+	HqQpkG9wh63MQBFPpnC4JKlE0Yz2DEmwuZKEYkzZYHYkA1AOTipwL2WYwX1oVpIWlTJXhf
+	hcs+KND7UGzHt9zdVN5JNLSatJqQvGW5OdnFPu6SeBxUgASUURCUIlTziL+aLA==
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 To: Mark Brown <broonie@kernel.org>
@@ -49,7 +49,7 @@ Cc: James Calligeros <jcalligeros99@gmail.com>,
 	asahi@lists.linux.dev, linux-hwmon@vger.kernel.org,
 	Neal Gompa <neal@gompa.dev>
 Subject: Re: [PATCH v2 13/29] ASoC: tas2770: Export 'die_temp' to sysfs
-Message-ID: <Z7Swn3nuGJfOO0Bc@blossom>
+Message-ID: <Z7SwznzjPS1-TSdZ@blossom>
 References: <20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com>
  <20250218-apple-codec-changes-v2-13-932760fd7e07@gmail.com>
  <Z7Slq3BQY7S5REPy@finisterre.sirena.org.uk>
@@ -80,6 +80,5 @@ Le Tue, Feb 18, 2025 at 03:22:19PM +0000, Mark Brown a écrit :
 > with the review comments that's fine but you need to reply and discuss
 > your concerns so that the reviewer can understand your decisions.
 
-Which review comment...? The only thing I could find was about hwmon
-exporting, which James added a patch for in v2 ("ASoC: tas2770: expose
-die temp to hwmon"). Maybe I missed an email?
+Oh, I see your later email. Serves me right for replying without reading
+the whole thing, sorry!
