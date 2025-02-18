@@ -1,203 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DA822B8D7;
-	Tue, 18 Feb 2025 08:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF37522C352
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866462; cv=none; b=TdqRT27lKj5Bb5JfmL6jsViIVAb9inBa/Aq5nnpWkXa40MTCEOw3Zd+f+lbs8kdUhvbGdYm+6ETkd6Ter1x79CfFMHHNX6892EpVjn644bwxOFAlYZjQorrXrXsQXqX+UI7p61k6MRTdjeVT3IONKxuyVToR82fSqqYiYaD2KJc=
+	t=1739866466; cv=none; b=O877ukWaar+giC9R/lX9J2zvWcBNNYz/qadLJ4pWSriDLrAGB6JETP+dRBTThQd8lJ3Uvcx76XZe4weWiQ/Nb4MlxFWK66WvnKIIUxHLBFcsjZo5QCPYgI15bSu1yfklVing1kC8B7EoZQf8r1b9CcaDRXZhqWuSL8vbUlw40JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866462; c=relaxed/simple;
-	bh=WCYkrTIXtHOSw9+J6ub0l1JIY5nGGHsHpKst4UO3shg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KHaDU/dJgXpH1eVqYju08DVpMk5YR8UljpoaidRHgHIwRoZbLMmqBJtIqYLqnwoTaRyXB0l6xGjQflcRKT1/KSTrc/nJwmm7J1B9t7mqZkHF/5GMVtvnJIpiUTGMTEVawD3k6FnMBlMP9ctzFq32UsXLQzykuv+bjVxT9TxwE3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bP4AbPhJ; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739866466; c=relaxed/simple;
+	bh=sK8OvyySumMdynSgRGKgZrd8TTS4U8uKw9PAHIAk3Nk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PCvRCcWK4uQ4ZDaW33HCRZBDXK24eqa8Hcygomk3RN5GUzqLimClTH6GLcHE2jrUcFPGBU5h+vTVPCyDUC0t/J8oaX0QJS/PHqVLYuQwcB013zRsd6sg0gKl8aHYLJqUijHF2kv68Vdbr7sefOBSlP08t03V14lSFqspJw7odC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbO+c5W2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bP4AbPhJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866462; x=1771402462;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WCYkrTIXtHOSw9+J6ub0l1JIY5nGGHsHpKst4UO3shg=;
-  b=bP4AbPhJxh3D6bQk8jeq6DxPVbFDWp6tLBoPrmt2YZdePFLfnAVS1HEY
-   eCXdTaUhtxcVXjRBiYcOjohrWm/GQ7Ga7YS1NztzM+RkAwClPWavlDXAw
-   ry1gb3GK3Vrkux1dDOV4yUtGCaSFIbhThXIATH/Tp5aGbgao/tcOqxciB
-   ZsLVqdpVU1CRjpSHyXKmmNNH549eM+PMCaxngdsjYHmVFhuqkhZNu602e
-   0wpZenksxiFdmbsKNjv6/tUZU28AFKlm8b85bN8DNuxJ3uKvdV0/o9zoP
-   VTHB1dWT2KBlS/Hd/k8T43fVe8e42aG8xJ2/bltPE367uxcbGcyka5aP1
-   g==;
-X-CSE-ConnectionGUID: vRxGeeRfR2ewahzAgAMRgw==
-X-CSE-MsgGUID: LLP+xt7vSsWK+ea5iGX0Cw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200791"
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="44200791"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:14:19 -0800
-X-CSE-ConnectionGUID: bDNdaz2pT7WaDcwTVO81rA==
-X-CSE-MsgGUID: yM4kLjKlRkKERsD2FSiJPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="145166205"
-Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:14:15 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 09/24] perf/x86/intel/ds: Factor out common PEBS processing code to functions
-Date: Tue, 18 Feb 2025 15:28:03 +0000
-Message-Id: <20250218152818.158614-10-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbO+c5W2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E50A1C4CEE2;
+	Tue, 18 Feb 2025 08:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739866465;
+	bh=sK8OvyySumMdynSgRGKgZrd8TTS4U8uKw9PAHIAk3Nk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=AbO+c5W2a24zWrFd5vgoqYvGkVnewmOK06KO3xgUWlJxlgZ77vB+Qj40jFr+veER+
+	 EffIu3gs1hoykD6InX2z3Crz+23eojDl74vcfDijznofFjJzl4QXJ1qWOfuw++BL6X
+	 6CmFz5fY38hEmMljy/JpAxwgrdGU/wrRAq62/PEy0e1ppWLQUcIEX2U2fWPfarqC9U
+	 1MK0XSUkiffveOsH7LC85lGQG0YK6gGb4ydi5sZivqTI/pDmYDD9+cG91c5iLOeYNe
+	 baZzG0KBrQ9z3WpguqmAok9WkK7pK/cabMa4s6xWmOkQAVuRX/8CNcWrSjll/Km93Z
+	 8rASBGHGWRwdg==
+From: Robert Foss <rfoss@kernel.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, oushixiong1025@163.com
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Shixiong Ou <oushixiong@kylinos.cn>
+In-Reply-To: <20250128065645.27140-1-oushixiong1025@163.com>
+References: <20250128065645.27140-1-oushixiong1025@163.com>
+Subject: Re: [PATCH] drm/bridge: analogix_dp: Use
+ devm_platform_ioremap_resource()
+Message-Id: <173986645947.826953.17434979178193947426.b4-ty@kernel.org>
+Date: Tue, 18 Feb 2025 09:14:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-Beside some PEBS record layout difference, arch-PEBS can share most of
-PEBS record processing code with adaptive PEBS. Thus, factor out these
-common processing code to independent inline functions, so they can be
-reused by subsequent arch-PEBS handler.
+On Tue, 28 Jan 2025 14:56:45 +0800, oushixiong1025@163.com wrote:
+> Convert platform_get_resource(), devm_ioremap_resource() to a single
+> call to devm_platform_ioremap_resource().
+> 
+> 
 
-Suggested-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/ds.c | 80 ++++++++++++++++++++++++++------------
- 1 file changed, 55 insertions(+), 25 deletions(-)
+Applied, thanks!
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index e66c5f307e93..94865745e997 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2594,6 +2594,54 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
- 	}
- }
- 
-+static inline void __intel_pmu_handle_pebs_record(struct pt_regs *iregs,
-+						  struct pt_regs *regs,
-+						  struct perf_sample_data *data,
-+						  void *at, u64 pebs_status,
-+						  short *counts, void **last,
-+						  setup_fn setup_sample)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct perf_event *event;
-+	int bit;
-+
-+	for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
-+		event = cpuc->events[bit];
-+
-+		if (WARN_ON_ONCE(!event) ||
-+		    WARN_ON_ONCE(!event->attr.precise_ip))
-+			continue;
-+
-+		if (counts[bit]++)
-+			__intel_pmu_pebs_event(event, iregs, regs, data,
-+					       last[bit], setup_sample);
-+
-+		last[bit] = at;
-+	}
-+}
-+
-+static inline void
-+__intel_pmu_handle_last_pebs_record(struct pt_regs *iregs, struct pt_regs *regs,
-+				    struct perf_sample_data *data, u64 mask,
-+				    short *counts, void **last,
-+				    setup_fn setup_sample)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct perf_event *event;
-+	int bit;
-+
-+	for_each_set_bit(bit, (unsigned long *)&mask, X86_PMC_IDX_MAX) {
-+		if (!counts[bit])
-+			continue;
-+
-+		event = cpuc->events[bit];
-+
-+		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
-+					    counts[bit], setup_sample);
-+	}
-+
-+}
-+
- static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_data *data)
- {
- 	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
-@@ -2603,9 +2651,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
- 	struct x86_perf_regs perf_regs;
- 	struct pt_regs *regs = &perf_regs.regs;
- 	struct pebs_basic *basic;
--	struct perf_event *event;
- 	void *base, *at, *top;
--	int bit;
- 	u64 mask;
- 
- 	if (!x86_pmu.pebs_active)
-@@ -2618,6 +2664,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
- 
- 	mask = hybrid(cpuc->pmu, pebs_events_mask) |
- 	       (hybrid(cpuc->pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED);
-+	mask &= cpuc->pebs_enabled;
- 
- 	if (unlikely(base >= top)) {
- 		intel_pmu_pebs_event_update_no_drain(cpuc, X86_PMC_IDX_MAX);
-@@ -2635,31 +2682,14 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
- 		if (basic->format_size != cpuc->pebs_record_size)
- 			continue;
- 
--		pebs_status = basic->applicable_counters & cpuc->pebs_enabled & mask;
--		for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
--			event = cpuc->events[bit];
--
--			if (WARN_ON_ONCE(!event) ||
--			    WARN_ON_ONCE(!event->attr.precise_ip))
--				continue;
--
--			if (counts[bit]++) {
--				__intel_pmu_pebs_event(event, iregs, regs, data, last[bit],
--						       setup_pebs_adaptive_sample_data);
--			}
--			last[bit] = at;
--		}
-+		pebs_status = mask & basic->applicable_counters;
-+		__intel_pmu_handle_pebs_record(iregs, regs, data, at,
-+					       pebs_status, counts, last,
-+					       setup_pebs_adaptive_sample_data);
- 	}
- 
--	for_each_set_bit(bit, (unsigned long *)&mask, X86_PMC_IDX_MAX) {
--		if (!counts[bit])
--			continue;
--
--		event = cpuc->events[bit];
--
--		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
--					    counts[bit], setup_pebs_adaptive_sample_data);
--	}
-+	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask, counts, last,
-+					    setup_pebs_adaptive_sample_data);
- }
- 
- static void __init intel_arch_pebs_init(void)
--- 
-2.40.1
+[1/1] drm/bridge: analogix_dp: Use devm_platform_ioremap_resource()
+      (no commit info)
+
+
+
+Rob
+
 
