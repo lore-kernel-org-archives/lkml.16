@@ -1,64 +1,45 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF58F1B87CF;
-	Tue, 18 Feb 2025 08:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F5E22B5A4;
+	Tue, 18 Feb 2025 08:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739867280; cv=none; b=qRlPMq8LF6N+ksEagqDfQM5IZvRCDzNw50PmVrotcpsFxKNyE46BQHu0Z+yRT29iu9oYtMQIMYVaaExHg22e33Eldo0uKXM0F0kvTSsnFJjjW2WpWT7xTfV6eMuNrtxKemLGRIQg22OO6BtDpVx3mTNVbtR2CdQP6LjqxsKeH6I=
+	t=1739867406; cv=none; b=KfUqZv1QPR1HTvREK/KDNSAA6iQIPOgdfy1GC1BotPYR6gfeI3gwpB9e0cjWzEtZNKtCET6GuFnuUAppF+mqaI3EqXxhenEg96wevXLLzmziw2A4mWyGr9l52woBYyB9UK6T1lEN6SkGDQpzlySPz9QiIxNHpfXatPeKfoABblA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739867280; c=relaxed/simple;
-	bh=1hbGrgaPb6b6ENR44HlCCVsM2gp2+PClw4vmk3z4fsE=;
+	s=arc-20240116; t=1739867406; c=relaxed/simple;
+	bh=RJzuFaLWPOeQw2qL9MsXD0LyNRhkVMROTAKrQrtwjPc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lcdJQ/YuGgJ/uZEGSpsx9qVvZIwqsV7iMrZ/QPVLXCwvtZpQ8rzvIB17820sKuzWbgysQDNIFA+oXYPQfKUArVX15NQKAEdD1AFy69dJ1JbIB+/s9EDcV2DTXmbedyo+wCcwSJpMX6Ql0YNGG1exNupp7tcarDlBbPQy6xUnewc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UoKlHSOz; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=b0IrCSypWBGSptrQsJNaJfj0OAhc/95qBEzjpj7ysMvxsRfrSdZeKOUxOVdI8brDYtM3othbbxDkpLcZQt7UHaoSoTC6Shadoo3BX5G3lDWhqtekKx+0mPRudHUS2+RYh9bQAhLLh1lxBI4pEnzT9cKXt/c5scYvSUQDgw1LCW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYvWgY7c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UoKlHSOz"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 33B3940E01A1;
-	Tue, 18 Feb 2025 08:27:56 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1jdlKZXk4JKo; Tue, 18 Feb 2025 08:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739867270; bh=jAn/HNcN37jbOxycChzF/f77JjKiI97PDWxT1WP+ZdQ=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYvWgY7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24172C4CEE2;
+	Tue, 18 Feb 2025 08:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739867405;
+	bh=RJzuFaLWPOeQw2qL9MsXD0LyNRhkVMROTAKrQrtwjPc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UoKlHSOzJAu0JSvQFqfJYA9VfpBnBpdcy+1rmxWYA5pGqGdTKar0S7NRvWfUYgf/P
-	 0mjWPnZOClBlKipV5IspJBaBhQCiFkgLcAY64SB6Cj+JTs3cUeQ3EcDoAasH6jwalU
-	 Mn3IXfZNCeAH553uN2iZ0RGWFqHYl5oIO0TTyt+Oxtly+ARdyMV4Uz0/0ZWiVGFn9S
-	 SvbvuFlVnawHGcn4p6qSG0g3gZjkRgLrRt5FnfI0TgIKqQWFAC8r3zfZ/O475kYvGZ
-	 lRJKn1gtrHf5j4nrrC8zOFoTAtZ7CnID06cVx3k4a2R//Yu3jIYqYYDpEAtZvWqQaN
-	 5wLQ3bb2BiuamJ6xpV2Ki69A1oZk3yEiTLv+k/9pzD18A/b0nUyza17Fa5wIZyjLsI
-	 LKfOSsWXZ/hqJtPFo8EdBhGZKAWCMdbwu+TFsWFFF+GK8K64XO3XjiyysD0XoDeoaS
-	 dQefxl0K3X22C1JDh+lhx8TJa8Op8GG/uvxyfhE1iuuEYkoB5auo+57Hi7mLS87cmu
-	 YCsbhTWtA8ovVjif1o/Uk0k+3yRqvapxFmJjEG9SgUYwZII5KxqInIw7QZgTZNBhYe
-	 UcV0Ip+LOSpb5b8oCelDUcgZH8EaWxkWiYm+PY9m+VYXPGtVExwVAIWplbO+yj9x7Y
-	 ySs9TH3AjydRhA609hjHzfUY=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C000F40E021F;
-	Tue, 18 Feb 2025 08:27:32 +0000 (UTC)
-Date: Tue, 18 Feb 2025 09:27:27 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: tony.luck@intel.com, nao.horiguchi@gmail.com, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, linmiaohe@huawei.com, akpm@linux-foundation.org,
-	peterz@infradead.org, jpoimboe@kernel.org,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, baolin.wang@linux.alibaba.com,
-	tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v2 0/5] mm/hwpoison: Fix regressions in memory failure
- handling
-Message-ID: <20250218082727.GCZ7REb7OG6NTAY-V-@fat_crate.local>
-References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
+	b=FYvWgY7cR1jjhqGVrvPJPYiflGXgdBYUr/Ys8Yg2BiiP/5zVTBa09mBwE1BHDIJHO
+	 7irbvR0iVpzIFlkvdrnk9E25pn7tPQHE6Bh6DhRkgngrJbhX4l9mBXI3iKg7J5ymNx
+	 tqeSKdzV+VxoXaPsqoM4WCmuJhkg7OCGmVNz9gsK2+jQlddFoLmtxj26+zzVGPxK6d
+	 P9gadQvj7aOFNeisylwtfCX/nsfWZ6R37+wAC1RJ++5wlXT1n6y8dVClS45JicUPDh
+	 AU1on5lt/fBN48MnzpJbh+TgPhy3BQynkSWF2ePLkekEtScXA8FpdnanuS9UNiL6T9
+	 6/4dDPwX4yHWw==
+Date: Tue, 18 Feb 2025 09:30:02 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Matthew Majewski <mattwmajewski@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Uwe Kleine-Konig <u.kleine-koenig@baylibre.com>, Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, 
+	devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add dt bindings for
+ m2m-deinterlace device
+Message-ID: <20250218-eggplant-skylark-of-swiftness-dcf6ba@krzk-bin>
+References: <20250214231759.119481-1-mattwmajewski@gmail.com>
+ <20250214231759.119481-2-mattwmajewski@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,39 +48,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
+In-Reply-To: <20250214231759.119481-2-mattwmajewski@gmail.com>
 
-On Mon, Feb 17, 2025 at 02:33:30PM +0800, Shuai Xue wrote:
-> changes singce v1:
-> - Patch 1: Fix cur_sev and sev type to `int` per Tony
-> - Patch 4: Fix return value to 0 for clean pages per Miaohe
-> - Patch 5: pick return value comments of memory-failure()
+On Fri, Feb 14, 2025 at 06:17:58PM -0500, Matthew Majewski wrote:
+> Create a new yaml schema file to describe the device tree bindings for
+> generic m2m-deinterlace device.
 > 
-> This patch addresses three regressions identified in memory failure
-> handling, as discovered using ras-tools[1]:
+> This device is supported on any hardware that provides a MEM_TO_MEM
+
+Which device? I don't see here any device name/model.
+
+I asked to provide here some examples of devices.
+
+> capable dma channel with interleaved trasfer support. Device tree
+> bindings are for providing appropriate dma channel to device.
+
+Don't describe what DT is, but the hardware.
+
 > 
-> - `./einj_mem_uc copyin -f`
-> - `./einj_mem_uc futex -f`
-> - `./einj_mem_uc instr`
+> Signed-off-by: Matthew Majewski <mattwmajewski@gmail.com>
+> ---
+>  .../bindings/media/m2m-deinterlace.yaml       | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/m2m-deinterlace.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/m2m-deinterlace.yaml b/Documentation/devicetree/bindings/media/m2m-deinterlace.yaml
+> new file mode 100644
+> index 000000000000..e39599d7d07b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/m2m-deinterlace.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/m2m-deinterlace.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: M2M Deinterlacer
+> +
+> +maintainers:
+> +  - Mauro Carvalho Chehab <mchehab@kernel.org>
+> +
+> +description: |-
+> +  A generic memory2memory device for deinterlacing video using dmaengine. It can
+> +  convert between interlaced buffer formats and can convert interlaced to
+> +  progressive using a simple line-doubling algorithm. This device can be used on
+> +  any hardware that provides a MEM_TO_MEM capable dma controller that supports
+> +  interleaved transfers.
 
-This is not how you write a problem statement and explain why your patches
-exist.
+And how do you program that device to deinterlace? How do you signal end
+of frame/data when writing to the memory?
 
-You need to state:
+It still looks all this is for driver :/
 
-1. What are you trying to do
-2. What is the expected outcome and why
-3. What actually happens and why
-4. The fix, in your opinion, should be X or Y
+Best regards,
+Krzysztof
 
-Not quote some ras tools commands. Show me that you actually know what you're
-doing and explain the problem in human understandable way.  And then we can
-talk fixes.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
