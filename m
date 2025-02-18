@@ -1,100 +1,167 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F601EB1A6;
-	Tue, 18 Feb 2025 09:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47CC222C35B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869584; cv=none; b=SW0CpUqI/k9vw5Cmnnq2qfZtEfLNMYZc5b/OtPV8GLM16nVvXUeahJnokPcSfJ92SqJg/rntBHoiyS8089s5Vi0xfa33bH41lpoyBvWcLFaWSQ54/OlE8vLgDsmxjL59DfpJ+zsZLi3CQ8oek6t1mAUc+Z55BrHp3pd0BQZmn50=
+	t=1739869603; cv=none; b=DEmuFs51yUxXXkhGO23hepImfTr7J+vK90BUSJJIasFhmiiBI3suUmLV9g90lOKvs/BWviJJay2UdHn4h+BiqB3khFFyxIW1KxDfFGH86+fxKbXI7vkQAf314ysGcAlfAXSNcMWEUtbDqF6zEm6PYz7V9ME7+Ox9oJGU3AJqnPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869584; c=relaxed/simple;
-	bh=HW1cKeUppOYj7zZ3UrGYK50X+pAOl67uFRhyYb1lTqc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tvkGOTVTJjyq37ytGqme0naG+QxMXW3Cv/cWYQXnTovnmAGf4gzRDtc6U2oL2MCqtsvuABegNYcMkl3H5fbsbVxrTERBaQlSmohxfk3ewqvxxz8Xia38I/VsWvKG3FhyOY7P47rj672MRqNTr6p5wXKVKJnzLEa2PPQCYFRuo1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Yxtnv0DYnzkXTn;
-	Tue, 18 Feb 2025 17:02:27 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0329E1800ED;
-	Tue, 18 Feb 2025 17:06:06 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 17:06:05 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>, <sudongming1@huawei.com>,
-	<xujunsheng@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH v2 net-next 0/6] Support some enhances features for the HIBMCGE driver
-Date: Tue, 18 Feb 2025 16:58:23 +0800
-Message-ID: <20250218085829.3172126-1-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1739869603; c=relaxed/simple;
+	bh=iQDM7PKRru/CfAErGjv04c2iAj92tp0iIhcNKuR45xM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l12CknbBOfUk6eOHq/E1bLEuR61mwBUnPZNI2fUrryljJRU5GQOP4VoY+S6htzvjaHF8J5PFaweQn93O/8o/17+hTlxG1jPcc13sCMnuUuK9fKPMEE7nbw18gVHgOkVKT9W0rDN0bdNOzELV5cqjXcmJMnQOrVzGmpBvzWTCxKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=B+VNOPaa; arc=none smtp.client-ip=220.197.31.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="B+VNOPaa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=lDvlHwS9RGejQMkA7x7QDWrKJ8ThUtuM7Gv/wwEBi6E=;
+	b=B+VNOPaaXb/7GmPSbCUgQhp+K6aEyLke76aKXMEigt+8GZT+0sDSZ+gpx3yRU0
+	QGFIZF38L/LzzCM2RWUJNYkMuM/n4GDb2Pkknaf+RCCm2jyaDMGMwaiJOfHzjRay
+	m4YzPA5fADyRMVuIYSa8aiNF1TdW84nuJTKE27tPMkZxo=
+Received: from [172.19.20.199] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3FxN_TbRn7pLpBA--.55503S2;
+	Tue, 18 Feb 2025 17:06:08 +0800 (CST)
+Message-ID: <b2f6f122-fad5-4ed2-8c24-2cf4226a60d1@126.com>
+Date: Tue, 18 Feb 2025 17:06:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] mm/hugetlb: wait for hugepage folios to be freed
+To: David Hildenbrand <david@redhat.com>, Muchun Song <muchun.song@linux.dev>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, 21cnbao@gmail.com,
+ baolin.wang@linux.alibaba.com, osalvador@suse.de, liuzixing@hygon.cn
+References: <1739604026-2258-1-git-send-email-yangge1116@126.com>
+ <574F9D6A-F370-4A8C-9044-BC0A6189F055@linux.dev>
+ <4195424c-3147-402f-bb73-4f7b96f6a9bf@redhat.com>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <4195424c-3147-402f-bb73-4f7b96f6a9bf@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+X-CM-TRANSID:_____wD3FxN_TbRn7pLpBA--.55503S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAryrur4xtFWrAw1rKr48Zwb_yoWrArW7pF
+	WUGF45GFWkJr9akr12vwn0yr1IyrZYqrWxurWIqr43A3ZxtwnrKFy7Aw1Duay8Zr1xCF4I
+	vrWjvFZxuF1UA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jUUUUUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifgD3G2e0PcjfYQABsL
 
-In this patch set, we mainly implement some enhanced features.
-It mainly includes the statistics, diagnosis, and ioctl to
-improve fault locating efficiency,
-abnormal irq and MAC link exception handling feature
-to enhance driver robustness,
-and rx checksum offload feature to improve performance 
-(tx checksum feature has been implemented).
 
----
-ChangeLog:
-v1 -> v2:
-  - Remove self_test patch from this series, suggested by Andrew.
-  - Use phy_do_ioctl() to simplify ioctl code, suggested by Andrew.
-  - Replace phy_reset() with phy_stop() and phy_start(), suggested by Andrew.
-  - Recalculate the interval for the scheduled task to update statistics,
-    suggested by Andrew.
-  - Use !! to convert integer to boolean, suggested by Simon Horman.
-  v1: https://lore.kernel.org/all/20250213035529.2402283-1-shaojijie@huawei.com/
----
 
-Jijie Shao (6):
-  net: hibmcge: Add dump statistics supported in this module
-  net: hibmcge: Add rx checksum offload supported in this module
-  net: hibmcge: Add abnormal irq handling feature in this module
-  net: hibmcge: Add mac link exception handling feature in this module
-  net: hibmcge: Add BMC diagnose feature in this module
-  net: hibmcge: Add ioctl supported in this module
-
- .../net/ethernet/hisilicon/hibmcge/Makefile   |   2 +-
- .../ethernet/hisilicon/hibmcge/hbg_common.h   | 122 ++++++
- .../ethernet/hisilicon/hibmcge/hbg_debugfs.c  |   7 +-
- .../ethernet/hisilicon/hibmcge/hbg_diagnose.c | 348 ++++++++++++++++++
- .../ethernet/hisilicon/hibmcge/hbg_diagnose.h |  11 +
- .../net/ethernet/hisilicon/hibmcge/hbg_err.c  |  58 +++
- .../net/ethernet/hisilicon/hibmcge/hbg_err.h  |   1 +
- .../ethernet/hisilicon/hibmcge/hbg_ethtool.c  | 298 +++++++++++++++
- .../ethernet/hisilicon/hibmcge/hbg_ethtool.h  |   5 +
- .../net/ethernet/hisilicon/hibmcge/hbg_hw.c   |  20 +
- .../net/ethernet/hisilicon/hibmcge/hbg_irq.c  |  55 +--
- .../net/ethernet/hisilicon/hibmcge/hbg_main.c | 110 ++++++
- .../net/ethernet/hisilicon/hibmcge/hbg_mdio.c |  20 +
- .../net/ethernet/hisilicon/hibmcge/hbg_mdio.h |   2 +
- .../net/ethernet/hisilicon/hibmcge/hbg_reg.h  | 105 ++++++
- .../net/ethernet/hisilicon/hibmcge/hbg_txrx.c | 176 ++++++++-
- 16 files changed, 1314 insertions(+), 26 deletions(-)
- create mode 100644 drivers/net/ethernet/hisilicon/hibmcge/hbg_diagnose.c
- create mode 100644 drivers/net/ethernet/hisilicon/hibmcge/hbg_diagnose.h
-
--- 
-2.33.0
+在 2025/2/18 16:52, David Hildenbrand 写道:
+> On 18.02.25 07:52, Muchun Song wrote:
+>>
+>>
+>>> On Feb 15, 2025, at 15:20, yangge1116@126.com wrote:
+>>>
+>>> ﻿From: Ge Yang <yangge1116@126.com>
+>>>
+>>> Since the introduction of commit b65d4adbc0f0 ("mm: hugetlb: defer 
+>>> freeing
+>>> of HugeTLB pages"), which supports deferring the freeing of HugeTLB 
+>>> pages,
+>>> the allocation of contiguous memory through cma_alloc() may fail
+>>> probabilistically.
+>>>
+>>> In the CMA allocation process, if it is found that the CMA area is 
+>>> occupied
+>>> by in-use hugepage folios, these in-use hugepage folios need to be 
+>>> migrated
+>>> to another location. When there are no available hugepage folios in the
+>>> free HugeTLB pool during the migration of in-use HugeTLB pages, new 
+>>> folios
+>>> are allocated from the buddy system. A temporary state is set on the 
+>>> newly
+>>> allocated folio. Upon completion of the hugepage folio migration, the
+>>> temporary state is transferred from the new folios to the old folios.
+>>> Normally, when the old folios with the temporary state are freed, it is
+>>> directly released back to the buddy system. However, due to the deferred
+>>> freeing of HugeTLB pages, the PageBuddy() check fails, ultimately 
+>>> leading
+>>> to the failure of cma_alloc().
+>>>
+>>> Here is a simplified call trace illustrating the process:
+>>> cma_alloc()
+>>>    ->__alloc_contig_migrate_range() // Migrate in-use hugepage
+>>>        ->unmap_and_move_huge_page()
+>>>            ->folio_putback_hugetlb() // Free old folios
+>>>    ->test_pages_isolated()
+>>>        ->__test_page_isolated_in_pageblock()
+>>>             ->PageBuddy(page) // Check if the page is in buddy
+>>>
+>>> To resolve this issue, we have implemented a function named
+>>> wait_for_hugepage_folios_freed(). This function ensures that the 
+>>> hugepage
+>>> folios are properly released back to the buddy system after their 
+>>> migration
+>>> is completed. By invoking wait_for_hugepage_folios_freed() before 
+>>> calling
+>>> PageBuddy(), we ensure that PageBuddy() will succeed.
+>>>
+>>> Fixes: b65d4adbc0f0 ("mm: hugetlb: defer freeing of HugeTLB pages")
+>>> Signed-off-by: Ge Yang <yangge1116@126.com>
+>>> ---
+>>>
+>>> V2:
+>>> - flush all folios at once suggested by David
+>>>
+>>> include/linux/hugetlb.h |  5 +++++
+>>> mm/hugetlb.c            |  8 ++++++++
+>>> mm/page_isolation.c     | 10 ++++++++++
+>>> 3 files changed, 23 insertions(+)
+>>>
+>>> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+>>> index 6c6546b..04708b0 100644
+>>> --- a/include/linux/hugetlb.h
+>>> +++ b/include/linux/hugetlb.h
+>>> @@ -697,6 +697,7 @@ bool hugetlb_bootmem_page_zones_valid(int nid, 
+>>> struct huge_bootmem_page *m);
+>>>
+>>> int isolate_or_dissolve_huge_page(struct page *page, struct list_head 
+>>> *list);
+>>> int replace_free_hugepage_folios(unsigned long start_pfn, unsigned 
+>>> long end_pfn);
+>>> +void wait_for_hugepage_folios_freed(void);
+>>> struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+>>>                unsigned long addr, bool cow_from_owner);
+>>> struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int 
+>>> preferred_nid,
+>>> @@ -1092,6 +1093,10 @@ static inline int 
+>>> replace_free_hugepage_folios(unsigned long start_pfn,
+>>>    return 0;
+>>> }
+>>>
+>>> +static inline void wait_for_hugepage_folios_freed(void)
+>>> +{
+>>> +}
+>>> +
+>>> static inline struct folio *alloc_hugetlb_folio(struct vm_area_struct 
+>>> *vma,
+>>>                       unsigned long addr,
+>>>                       bool cow_from_owner)
+>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>> index 30bc34d..36dd3e4 100644
+>>> --- a/mm/hugetlb.c
+>>> +++ b/mm/hugetlb.c
+>>> @@ -2955,6 +2955,14 @@ int replace_free_hugepage_folios(unsigned long 
+>>> start_pfn, unsigned long end_pfn)
+>>>    return ret;
+>>> }
+>>>
+>>> +void wait_for_hugepage_folios_freed(void)
+>>
+>> We usually use the "hugetlb" term now instead of "huge_page" to 
+>> differentiate with THP. So I suggest naming it as 
+>> wait_for_hugetlb_folios_freed().
+> 
+> Maybe "wait_for_freed_hugetlb_folios" or "hugetlb_wait_for_freed_folios".
+> 
+> In general, LGTM
+> 
+Ok, thanks.
 
