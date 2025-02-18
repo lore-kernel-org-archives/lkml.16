@@ -1,208 +1,185 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5432826A088;
-	Tue, 18 Feb 2025 13:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A116A2417CF;
+	Tue, 18 Feb 2025 13:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739883753; cv=none; b=qk2NURERJQTRcWlQEslQWBD33Ff/RHZFr6WUb5F1Fvdu2ac2WyyB40ON3+WgK6aos1Q3YOgDV+OaXvvT2vreKEye3/WJzepVDprr5kLI9fVbQJmMNRYeXrqz2BlfQAaAxBcXOHIsCRzbsAw85RRqKPj6McGK6RlHJRQpnVNA9fw=
+	t=1739883752; cv=none; b=lTHTa70S9pd3O8UnCHxjiIUguEhP6MjPIz+3xpAaFiYRakwr/fuvLGeLwW/PV+cw/NFrEfogxDOV33DsxTY2wXP+r0OnL7y2epLBfWoNxFttFNZH1nnf5mDRj7NcdhEM6v48E132WAmz2XdCXMatKpkv+NbZ3QXAVHTOV8f5xkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739883753; c=relaxed/simple;
-	bh=6jGygvIpZ+inynCJibhgOfbOLfeSPLHzPo4VOrGkPLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cR+RM1uZ2sk2bQ6Xx48dvLZGevYj2WvGo9MQEeioSlYYID/DOtECQOlMhyqiJYygotD58S4oPbBJwAUBdmrocbxiCeyQwyUt928hjg0FE94b49u6csI8+ku8u2RLWQFOH655k8wj10WAuROyP2xszSINRwUnEzQT2gRf/ueCbd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yy02G6ckbz1wn8K;
-	Tue, 18 Feb 2025 20:58:30 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2688E18005F;
-	Tue, 18 Feb 2025 21:02:25 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 21:02:23 +0800
-Message-ID: <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
-Date: Tue, 18 Feb 2025 21:02:22 +0800
+	s=arc-20240116; t=1739883752; c=relaxed/simple;
+	bh=D0VtLbSmaYFpjlfRBVq6AysntobeoKWy+aKbu1SseDI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=krUJk4yNr6atCjstNKjbb99cklx2Jlnits+GScyAH9kn7W4IlKrWMePaPe3Shiftolnkx/q/m79ZIjbN5CMEDsw2RYkUgs6LrKp91Wxr/qNkqaVjmb9s3t91H29zf+uXcLQgPh4a4E6OahOfmSoLUD0GxhYm5LtiPkRkIOZ3x9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPEjECNB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPEjECNB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E309C4CEE9;
+	Tue, 18 Feb 2025 13:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739883752;
+	bh=D0VtLbSmaYFpjlfRBVq6AysntobeoKWy+aKbu1SseDI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=GPEjECNB+MGP558zSF3d46ATFtDQ7vUlFOZ97OumY8zzPObaV8ro0enC+Ff74u4fl
+	 kyPtPLtBtbvVjdCYZZ6AiNDwWxKvJn+k0y0WooF/Av09ZnYOZ2107GUALFakzEFk66
+	 LLGKaOK49pexhdWFWJ2aUmVFvjiKaSagAgeGcpJyqi761oXIrP59abbUSgKLOdWhLe
+	 EdnILg6jq2qPmUM9QaDmgNRW67p6y8WavIIJfF7ZQrypIx4986z8mT7xylqLZApWMj
+	 3tmyOB5k88p5Dc8hODm62FxjjIof0AVubwZGQ3XM/Ib2/TpvpBygtXXs7cqRMQl18F
+	 C41oNfQc0Q+pg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Subject: [PATCH v3 0/4] rust: configfs abstractions
+Date: Tue, 18 Feb 2025 13:57:15 +0100
+Message-Id: <20250218-configfs-v3-0-0e40c0778187@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
- uprobes: fix two zero old_folio bugs in __replace_page()
-To: David Hildenbrand <david@redhat.com>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<wangkefeng.wang@huawei.com>, linux-mm <linux-mm@kvack.org>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
- <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+X-B4-Tracking: v=1; b=H4sIAKuDtGcC/2WOQW7DIBBFr2KxLhEM2Iy96j2qLjAMNmpjJ+CiV
+ pHvXuIs2qrLP5r3/r+xTClSZkNzY4lKzHFdalBPDXOzXSbi0dfMQEArpJLcrUuIU8h8RETnETx
+ qy+r7JVGIn4fq5fWRE10/qnF7HNnFbm6uvqEB01IgJIGoelJWeAIkDx2hJxQj9djWRn33jjZTb
+ T2f4zY0pTtJzZOT7F4xx7yt6esYX+TR8X9nkVxwNL02nZRaSPf8Rmmh99OapsNS4IcEYX6RUMl
+ gbCdG0F4h/SH3ff8GZhFRHT4BAAA=
+X-Change-ID: 20250131-configfs-b888cd82d84a
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+ Waiman Long <longman@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
+ Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Charalampos Mitrodimas <charmitro@posteo.net>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4561; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=D0VtLbSmaYFpjlfRBVq6AysntobeoKWy+aKbu1SseDI=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIO6FSvw+j1YHK7QapmOFlrBia8zcZ3Q/5S9x
+ /+OmDh0QueJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SDugAKCRDhuBo+eShj
+ d7TID/0fV/h7AtAIdlnZHn7I2Whho8a5xhUycXvBxonP3IZ3BCNPtuRmGDLksGpePOl3vRmNIVs
+ v3BlX1L8wezPkhDkyFRye0htVI7m6XZp1ZnblnrBxQqHe6qn7bAbyfb/DoA6ptl/ilCc9UIDKwL
+ ua/s8kY+aAgCeBDkktlpQux53ElnkWmq1eThUTkDx6eartFYTlrJqXpPl4vy9RhrquLClzN0DnG
+ KGq8Zsmoyy6L/Y4jLsDb3YcKxx/fOCzxXgpOnls0WI1Gq1mvuEilqBe3fnz2/gC+fwno52+epoU
+ 5yUwMxJIOf2AATYXZQ/HJmooDz0ZGY3YLIEWYBc7850Y33Qc3spnlZqX1XaLYdq2N5AVn9Oohpf
+ I4fgNZ83oKqLvV1Th4q1nn7ISqMt0PJKaOi2dMM7e2gRjb0UwMQRAlzuqHzHVKlB/930+2x9fjD
+ k2faOlswcgeX3eHAC/8LoKm3cc6vB3TjRP+7okj/6srbP0RbtYLW3QOJXRe5N36y988JTQEGvoK
+ G5NCQWLbnicIrL7XvKLkpjZBbXfb9itkN66tVv23J3kySMhuw3FwmQhDan3drnGbalgytP2zspu
+ eJPTfrgbR9MYQGkakmqJAQxiOH0NFel5UWf4/6X1TdWVLNxaEuFm1UIhrHuZzs8qnELUSd0QhgO
+ 0b6l41SEH4F2GnQ==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+
+This series adds a safe Rust API that allows Rust modules to interface
+the `configfs` machinery.
+
+The series contains an example for the samples folder to demonstrate
+usage of the API. As such, there is no inline example in the
+documentation.
+
+The last patch adds a maintainer entry for the Rust configfs
+abstractions, to make it absolutely clear that I will commit to maintain
+these abstractions, if required. Feel free to drop this patch if this is
+not required.
+
+The series is a dependency of `rnull`, the Rust null block driver.
+Please see [1] for initial `configfs` support in `rnull`.
+
+[1] https://github.com/metaspace/linux/tree/9ac53130f5fb05b9b3074fa261b445b8fde547dd/drivers/block/rnull
+
+---
+Joel, Christoph: please let me know how you would like to proceed with
+maintenance and whether you would like to pick these patches through the
+configfs tree or not.
+
+To: Danilo Krummrich <dakr@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+To: Alex Gaynor <alex.gaynor@gmail.com>
+To: Boqun Feng <boqun.feng@gmail.com>
+To: Gary Guo <gary@garyguo.net>
+To: Björn Roy Baron <bjorn3_gh@protonmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+To: Alice Ryhl <aliceryhl@google.com>
+To: Trevor Gross <tmgross@umich.edu>
+To: Joel Becker <jlbec@evilplan.org>
+To: Christoph Hellwig <hch@lst.de>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Will Deacon <will@kernel.org>
+To: Waiman Long <longman@redhat.com>
+To: Fiona Behrens <me@kloenk.dev>
+To: Charalampos Mitrodimas <charmitro@posteo.net>
+Cc: rust-for-linux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+Changes in v3:
+- Allow trailing commas in invocation of `configfs_attrs!`.
+- Use a more suitable C initialization function when initializing `Subsystem`.
+- Split sample into separate patch.
+- Add an inline example.
+
+The remaining changes in this version are style fixes, documentation
+improvements and typo fixes. They are enumerated below:
+- Consolidate `paste` macro calls.
+- Do not hard code page size in example.
+- Remove prefix of `c_str!` in sample.
+- Use a more descriptive variable name in `into_foreign`.
+- Improve code formatting in macros invocations.
+- Add comment related to null terminator in `configfs_attrs!`
+- Move attributes below docstrings.
+- Remove a rogue todo.
+- Remove trait bound from struct definition `GroupOperationsVTable`.
+- Remove `as _` casts.
+- Remove `GroupOprations::Parent` associated type.
+- General documentation improvements.
+- Explicitly use `ArcBorrow` for `drop_item` parameter type.
+- Add a comment describing expansion to a call to `Attribute::add`.
+- Add a comment explaining bound check in `Attribute::add`.
+- Link to v2: https://lore.kernel.org/r/20250207-configfs-v2-0-f7a60b24d38e@kernel.org
+
+Changes in v2:
+- Remove generalization over pointer type and enforce use of `Arc`.
+- Use type system to enforce connection between `ItemType` and
+  `Subsystem` or `Group`. Differentiate construction of vtables on this
+  type difference.
+- Move drop logic of child nodes from parent to child.
+- Pick `ForeignOwnable::PointedTo` patch as dependency instead of
+  including it here.
+- Fix some rustdoc warnings.
+- Use CamelCase for generic type parameter declaration.
+- Destroy mutex in `Subsystem::drop`.
+- Move `GroupOperationsVTable` struct definition next to implementation.
+- Rebase on v6.14-rc1.
+- Link to v1: https://lore.kernel.org/r/20250131-configfs-v1-0-87947611401c@kernel.org
+
+---
+Andreas Hindborg (4):
+      rust: sync: change `<Arc<T> as ForeignOwnable>::PointedTo` to `T`
+      rust: configfs: introduce rust support for configfs
+      rust: configfs: add a sample demonstrating configfs usage
+      MAINTAINERS: add entry for configfs Rust abstractions
+
+ MAINTAINERS                     |   7 +
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/mutex.c            |   5 +
+ rust/kernel/configfs.rs         | 938 ++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs              |   2 +
+ rust/kernel/sync/arc.rs         |  21 +-
+ samples/rust/Kconfig            |  11 +
+ samples/rust/Makefile           |   1 +
+ samples/rust/rust_configfs.rs   | 179 ++++++++
+ 9 files changed, 1160 insertions(+), 5 deletions(-)
+---
+base-commit: 379487e17ca406b47392e7ab6cf35d1c3bacb371
+change-id: 20250131-configfs-b888cd82d84a
+prerequisite-patch-id: 275efe8e08839e3a0de28ed26e8de80be9852024
+
+Best regards,
+-- 
+Andreas Hindborg <a.hindborg@kernel.org>
 
 
-
-在 2025/2/18 16:23, David Hildenbrand 写道:
-> On 18.02.25 03:47, Tong Tiangen wrote:
->>
->>
->> 在 2025/2/17 20:38, Tong Tiangen 写道:
->>> We triggered the following error logs in syzkaller test:
->>>
->>>     BUG: Bad page state in process syz.7.38  pfn:1eff3
->>>     page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 
->>> pfn:0x1eff3
->>>     flags: 
->>> 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
->>>     raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 
->>> 0000000000000000
->>>     raw: 0000000000000000 0000000000000000 00000000fffffffe 
->>> 0000000000000000
->>>     page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
->>>     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 
->>> 1.13.0-1ubuntu1.1 04/01/2014
->>>     Call Trace:
->>>      <TASK>
->>>      dump_stack_lvl+0x32/0x50
->>>      bad_page+0x69/0xf0
->>>      free_unref_page_prepare+0x401/0x500
->>>      free_unref_page+0x6d/0x1b0
->>>      uprobe_write_opcode+0x460/0x8e0
->>>      install_breakpoint.part.0+0x51/0x80
->>>      register_for_each_vma+0x1d9/0x2b0
->>>      __uprobe_register+0x245/0x300
->>>      bpf_uprobe_multi_link_attach+0x29b/0x4f0
->>>      link_create+0x1e2/0x280
->>>      __sys_bpf+0x75f/0xac0
->>>      __x64_sys_bpf+0x1a/0x30
->>>      do_syscall_64+0x56/0x100
->>>      entry_SYSCALL_64_after_hwframe+0x78/0xe2
->>>
->>>      BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES 
->>> val:-1
->>>
->>> The following syzkaller test case can be used to reproduce:
->>>
->>>     r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
->>>     write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
->>>     r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 
->>> 0x42, 0x0)
->>>     mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 
->>> 0x0, 0x12, r4, 0x0)
->>>     r5 = userfaultfd(0x80801)
->>>     ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
->>>     r6 = userfaultfd(0x80801)
->>>     ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
->>>     ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, 
->>> &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
->>>     ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, 
->>> &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
->>>     r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, 
->>> &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 
->>> 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 
->>> 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
->>> 0x0, 0x10, 0x0, @void, @value}, 0x94)
->>>     bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 
->>> 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', 
->>> &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
->>>
->>> The cause is that zero pfn is set to the pte without increasing the rss
->>> count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
->>> not increase accordingly. Then, the operation on the same pfn is 
->>> performed
->>> in uprobe_write_opcode()->__replace_page() to unconditional decrease the
->>> rss count and old_folio's refcount.
->>>
->>> Therefore, two bugs are introduced:
->>> 1. The rss count is incorrect, when process exit, the check_mm() report
->>>      error "Bad rss-count".
->>> 2. The reserved folio (zero folio) is freed when folio->refcount is 
->>> zero,
->>>      then free_pages_prepare->free_page_is_bad() report error "Bad 
->>> page state".
->>>
->>> To fix it, add zero folio check before rss counter and refcount 
->>> decrease.
->>>
->>> Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement 
->>> logic account for rss_stat counters")
->>> Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install 
->>> and remove uprobes breakpoints")
->>> Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
->>> ---
->>>    kernel/events/uprobes.c | 6 ++++--
->>>    1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->>> index 46ddf3a2334d..ff5694acfa68 100644
->>> --- a/kernel/events/uprobes.c
->>> +++ b/kernel/events/uprobes.c
->>> @@ -213,7 +213,8 @@ static int __replace_page(struct vm_area_struct 
->>> *vma, unsigned long addr,
->>>            dec_mm_counter(mm, MM_ANONPAGES);
->>>        if (!folio_test_anon(old_folio)) {
->>> -        dec_mm_counter(mm, mm_counter_file(old_folio));
->>> +        if (!is_zero_folio(old_folio))
->>> +            dec_mm_counter(mm, mm_counter_file(old_folio));
->>>            inc_mm_counter(mm, MM_ANONPAGES);
->>>        }
->>> @@ -227,7 +228,8 @@ static int __replace_page(struct vm_area_struct 
->>> *vma, unsigned long addr,
->>>        if (!folio_mapped(old_folio))
->>>            folio_free_swap(old_folio);
->>>        page_vma_mapped_walk_done(&pvmw);
->>> -    folio_put(old_folio);
->>> +    if (!is_zero_folio(old_folio))
->>> +        folio_put(old_folio);
->  >>    >>        err = 0;
->>>     unlock:
->>
-> 
-> The whole "manually replace pages" logic is fragile. I tried to rewrite 
-> it a while back:
-> 
-> https://lkml.kernel.org/r/20240604122548.359952-1-david@redhat.com
-> 
-> But didn't get to follow-up yet.
-> 
-> I'm not sure if the page_vma_mapped_walk() really does what we would 
-> expect here.
-> 
-> The folio_remove_rmap_pte(old_folio, old_page, vma); is certainly wrong 
-> as well for ero folios.
-> 
-> 
-> I don't think there is a sane use case right now where we would hit the 
-> shared zeropage.
-> 
-> So for the time being, I think we should just reject them immediately 
-> after get_user_page_vma_remote().
-> 
-> At some point I'll follow up with my rewrite that will clean this 
-> nastiness here up a bit.
-
-OK, Before your rewrite last merged, How about i change the solution to
-just reject them immediately after get_user_page_vma_remote()？
-
-Thanks,
-Tong.
-
-> 
