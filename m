@@ -1,298 +1,191 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0138C17333F
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E42817333F
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739857264; cv=none; b=aOC8s6JfK73gtZDYa3/lHzXt75jp1qonKeKv4yGQuKKNeiilIzxQejHyFg/YsR2bBJqHXiGPngMaADcmMv3vAOGLfTAPIy2dpg8fiHkQD2MOcXCXIGVM3o/gPG4feTYhraJM7nsUslynZ6h1O4PIgJZAP5SNdvXqPksCGMsM3S0=
+	t=1739857396; cv=none; b=J0uwo0yd58HcrMJBfaI3V+J0V56lOf5esf79iZ2qQMcIL7iAYempoZ8l9bVf/QQbd17KwW8/7uFWf7SNnv2PTo0nSBHswaKnUTm2kK32Kktl/UmSNCq+h6nVIock3kUZXH6avhP9LH1IjUFamFNfrqzuTfM1MkR0o9ZjkJ/N1zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739857264; c=relaxed/simple;
-	bh=t3Oa6WJ3xwJqIKsDLQjt36wU6ohjsaRiFpJTjT8oImM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W8jCCYpJhABFlMyRP4VXwm/EeDJo16rlJGTatsqOJM1pWMxQFmZURax5WSPbHP1t8eazR3SiI5Ccg+0wp8dn1ED1G1VCLro1KqXrk8Wys4LN/PrFEEBhFHcml+/4m5N1X0d/bq4GXzy+5eiSrgDbWxia2iFgeGJmqgDiZwW3/rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zh7oGQ8x; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739857396; c=relaxed/simple;
+	bh=9haT/RPfWrsra5Lx47qsyBlVlLOZpTxe+wWf0CQ1lnE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=g3MPoeLKB8dmvCofD7Om/lIHbgQBttiK1B8QdCy1iaGpwMRth0Bhn06O5IOjo1OKvCCcro+F3A+Vs6biVXpwrfHPnSF0sfhL+D7Y3/UDDfquU02cVb7zosIo5QvD/iBPjLwm4+Gg4ev0aH3CdCUuHo9OVzVkcQ4x2OsOG4zxQ+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bA3Vzbng; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zh7oGQ8x"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4be707fffbcso247361137.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 21:41:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739857262; x=1740462062; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MifYh++JAuvD0qZvmXaJQvX960rDJK4fzbBnF35BdDY=;
-        b=Zh7oGQ8xZDtBIyn4b4w36j/ZKs1rnkW7HgbQsfhvoSnM8Hx0w9kUY25aKaEqOJp4nW
-         Y5BCSXLVZxANiwvcH5PM19qwyilVSGk14PCL6ZF+N25aOSouAn1EFcdi+7EYTF9sP6vh
-         6o5+Uz5vlnCnYPuHNDX7poU8CwKUxpv+X+sQ3Zdumxp6inX+FOEZbXAwKt6ghfDLFx7O
-         vQVrE8Gt8hRjdkwVFsi/QXFbGztMmPnBZ8OJIFym0ZbF7jE4SZjMrgG06++TGyIacZz7
-         KHTMmmlqjiysfp3xLdO/wDnTFg5En442AUHwKkhO2/v8ZyuRofrdXYzMohFCggITZjhe
-         2rKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739857262; x=1740462062;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MifYh++JAuvD0qZvmXaJQvX960rDJK4fzbBnF35BdDY=;
-        b=P+Doa4sKmDCDBAOnV1AwkXNMXfNKU9eS04kdyxF6qhp7g76HVNkHnZrxuXA5zZ0otE
-         o8AduDzl99lvzeSyO0bQsiR6kiXScEsRr3Ekntrx1NzAgSZddt1hEZ7PV0MClYgmXzqk
-         6XBgxQZ3iKCQow6Iooe+tE6YaF4DZx7/0TD+Ygx/+QxpkIcVZDS7GdPzSjSX9tVTzQFM
-         QbVplY35WqaeC5OfSssccbNGezIxw43Y/yG4fpkWHSXdXzPZHngBSx/Mc3cVnDnsG/Oz
-         CJytlJ3zPwNjWa2e6XYsZc3pZJmyxR7/rKv+WDeKgbWCwl3TRmBz1fv2SWvwntZZwl4G
-         1kbw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1S9nXxXxIhioRfpy7r647f7+eJsjQsqSbgY7L5mwGLZNclY0vRCpQC7ErW1L+mGm5PCrLVO5aENK6T/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhkXmfvcs+7goSw9PQaz6lmMJcVeLehp34ep4ref9cuUKkbFII
-	54Ctp7fYEkcG6yZ/KIWMgDNjHKQTNORtri/T/ipWBzppIaL1/pY+rG6hFeBC7kts0g94dTYZs1E
-	Xon3NXfZcTLA+mBoZ6xp6YqHTipBvhNbkAmk=
-X-Gm-Gg: ASbGncsoV5shjNtFlVq8hJS5UHHz+g3QWtEOTiQte2OZLbIs13juT2DUxCBUqPJpmpO
-	WXXQJ2fP1hgD9RbLsFDbhBqLN5RcWbgSo7Zmcwonsr4Uvt9mcAn4VQLVcOdQgXaAnWQNS8BDi
-X-Google-Smtp-Source: AGHT+IGR7ulYUkokYF6mOlYBL+Q9buDJnVmvFe9JxfmdfiSj3xbT9BLP20AyUrpmZXe7JuKrQ3wm4zhEQsRVNWwXQ4Q=
-X-Received: by 2002:a05:6102:442b:b0:4bb:cf25:c5a7 with SMTP id
- ada2fe7eead31-4bd3fd4882amr6529257137.7.1739857261737; Mon, 17 Feb 2025
- 21:41:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bA3Vzbng"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739857395; x=1771393395;
+  h=date:from:to:cc:subject:message-id;
+  bh=9haT/RPfWrsra5Lx47qsyBlVlLOZpTxe+wWf0CQ1lnE=;
+  b=bA3VzbngKP7np1oloDfSJ5AlX74NoAbElZHDd+QxsBnZQIjZuZ6/KIvV
+   ozv4nj9Yn8tIUSanXGTVL5bL4vHZQONMCsp7YqQlO2jIr82iXG8Sn1S5j
+   EoWAdhfa5C3fRcVOudvZaNG9IX9C/Tz/VfepSuLx97l1U5kfvNzdY3H+d
+   TaYVhqutGZ4Adl+xGqxLjQ/qvsX5JhweOa99Y95JTK0gP6Ji5a4RY/GFV
+   HyXkQOTjQzHiHud7wZaLUDT93axvTnsk1/X8dkP/WNISm1lj/JZbrHNXX
+   YVtbEhe+6gVQxGoCRgyAxbXnRP7tJbB09LakJO/ydfbYUwX0JM8ii30ow
+   g==;
+X-CSE-ConnectionGUID: SyPtjEhvTMyJcqxW2K9xpQ==
+X-CSE-MsgGUID: NGVl6rZcSwak38KbCsRo3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="63015230"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="63015230"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 21:43:14 -0800
+X-CSE-ConnectionGUID: B48fpnOqQtmTRDMa/TEjfQ==
+X-CSE-MsgGUID: ESncnAFSSiCJe1fcCTUizA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="145203739"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 17 Feb 2025 21:43:13 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tkGNz-0000D1-0d;
+	Tue, 18 Feb 2025 05:43:11 +0000
+Date: Tue, 18 Feb 2025 13:42:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 9ca30fd083717f45b4384101b1a739bc83548ad2
+Message-ID: <202502181329.ea1U7r6g-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <f8be2606fa114184a17a48f9859ec592@honor.com> <CAGsJ_4zUbwFP+gf-Y70uGQeO08uAJn2RKj=h9nsV83GvfgVA0A@mail.gmail.com>
- <ef92dcc88e914c9c8d8dbcc3adbb06bb@honor.com>
-In-Reply-To: <ef92dcc88e914c9c8d8dbcc3adbb06bb@honor.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 18 Feb 2025 18:40:49 +1300
-X-Gm-Features: AWEUYZmrzTbh2ql9JksTax0dFkC3yuh-suhge5VV8sP3McTaFwVSAJzAWWlPK10
-Message-ID: <CAGsJ_4w4iewqi0a+WN0bEVRV-r_EopJcSNDWObLSeRDd4CJhaQ@mail.gmail.com>
-Subject: Re: [PATCH v3] mm: Fix possible NULL pointer dereference in __swap_duplicate
-To: gaoxu <gaoxu2@honor.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, yipengxiang <yipengxiang@honor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Thank you!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: 9ca30fd083717f45b4384101b1a739bc83548ad2  Merge branch into tip/master: 'x86/misc'
 
-On Tue, Feb 18, 2025 at 3:51=E2=80=AFPM gaoxu <gaoxu2@honor.com> wrote:
->
-> >
-> > On Sat, Feb 15, 2025 at 10:05=E2=80=AFPM gaoxu <gaoxu2@honor.com> wrote=
-:
-> > >
-> > > Add a NULL check on the return value of swp_swap_info in
-> > > __swap_duplicate to prevent crashes caused by NULL pointer dereferenc=
-e.
-> > >
-> > > The reason why swp_swap_info() returns NULL is unclear; it may be due
-> > > to CPU cache issues or DDR bit flips. The probability of this issue i=
-s
-> > > very small, and the stack info we encountered is as follows=EF=BC=9A
-> > > Unable to handle kernel NULL pointer dereference at virtual address
-> > > 0000000000000058
-> > > [RB/E]rb_sreason_str_set: sreason_str set null_pointer Mem abort info=
-:
-> > >   ESR =3D 0x0000000096000005
-> > >   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-> > >   SET =3D 0, FnV =3D 0
-> > >   EA =3D 0, S1PTW =3D 0
-> > >   FSC =3D 0x05: level 1 translation fault Data abort info:
-> > >   ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
-> > >   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
-> > >   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0 user pgtable: 4k=
- pages,
-> > > 39-bit VAs, pgdp=3D00000008a80e5000 [0000000000000058]
-> > > pgd=3D0000000000000000, p4d=3D0000000000000000,
-> > > pud=3D0000000000000000
-> > > Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP Skip md ftrac=
-e
-> > > buffer dump for: 0x1609e0 ...
-> > > pc : swap_duplicate+0x44/0x164
-> > > lr : copy_page_range+0x508/0x1e78
-> > > sp : ffffffc0f2a699e0
-> > > x29: ffffffc0f2a699e0 x28: ffffff8a5b28d388 x27: ffffff8b06603388
-> > > x26: ffffffdf7291fe70 x25: 0000000000000006 x24: 0000000000100073
-> > > x23: 00000000002d2d2f x22: 0000000000000008 x21: 0000000000000000
-> > > x20: 00000000002d2d2f x19: 18000000002d2d2f x18: ffffffdf726faec0
-> > > x17: 0000000000000000 x16: 0010000000000001 x15: 0040000000000001
-> > > x14: 0400000000000001 x13: ff7ffffffffffb7f x12: ffeffffffffffbff
-> > > x11: ffffff8a5c7e1898 x10: 0000000000000018 x9 : 0000000000000006
-> > > x8 : 1800000000000000 x7 : 0000000000000000 x6 : ffffff8057c01f10
-> > > x5 : 000000000000a318 x4 : 0000000000000000 x3 : 0000000000000000
-> > > x2 : 0000006daf200000 x1 : 0000000000000001 x0 : 18000000002d2d2f Cal=
-l
-> > > trace:
-> > >  swap_duplicate+0x44/0x164
-> > >  copy_page_range+0x508/0x1e78
-> >
-> > This is really strange since we already have a swap entry check before =
-calling
-> > swap_duplicate().
-> >
-> > copy_nonpresent_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
-> >                 pte_t *dst_pte, pte_t *src_pte, struct vm_area_struct
-> > *dst_vma,
-> >                 struct vm_area_struct *src_vma, unsigned long addr, int
-> > *rss) {
-> >         unsigned long vm_flags =3D dst_vma->vm_flags;
-> >         pte_t orig_pte =3D ptep_get(src_pte);
-> >         pte_t pte =3D orig_pte;
-> >         struct folio *folio;
-> >         struct page *page;
-> >         swp_entry_t entry =3D pte_to_swp_entry(orig_pte);
-> >
-> >         if (likely(!non_swap_entry(entry))) {
-> >                 if (swap_duplicate(entry) < 0)
-> >                         return -EIO;
-> > ...
-> > }
-> >
-> > likely the swap_type is larger than MAX_SWAPFILES so we get a NULL?
-> >
-> > static struct swap_info_struct *swap_type_to_swap_info(int type) {
-> >         if (type >=3D MAX_SWAPFILES)
-> >                 return NULL;
-> >
-> >         return READ_ONCE(swap_info[type]); /* rcu_dereference() */ }
-> >
-> > But non_swap_entry() guarantees that swp_type is smaller than
-> > MAX_SWAPFILES.
-> >
-> > static inline int non_swap_entry(swp_entry_t entry) {
-> >         return swp_type(entry) >=3D MAX_SWAPFILES; }
-> >
-> > So another possibility is that we have an overflow of swap_info[] where=
- type is <
-> > MAX_SWAPFILES but is not a valid existing swapfile?
-> In the log of this issue, there is a printed entry: get_swap_device:
-> Bad swap file entry 18000000002d2d2f.
-> It can be calculated that swp_type(18000000002d2d2f) =3D 6.
-> In the Android 15-linux6.6:
-> system: MAX_SWAPFILES =3D 28, nr_swapfiles =3D 1.
-> Since swp_type(18000000002d2d2f)=3D6 is less than MAX_SWAPFILES but great=
-er
-> than nr_swapfiles, the value of this entry is abnormal.
->
-> static unsigned int nr_swapfiles;
-> static struct swap_info_struct *swap_info[MAX_SWAPFILES];
-> swap_info is a static array, with its values initialized to 0.
-> The size of the array is MAX_SWAPFILES, and the size of valid values in t=
-he array is
-> nr_swapfiles. Therefore, when we validate the validity of swp_type(entry)=
-,
-> we should compare it with nr_swapfiles, not MAX_SWAPFILES.
-> The code for validating swp_type may need to be modified as follows:
+elapsed time: 1173m
 
-That might be true, but on a normal system, we only need to distinguish
-between a swap entry and a migrate entry. Therefore, comparing with
-MAX_SWAPFILES is sufficient.
+configs tested: 114
+configs skipped: 3
 
-> static inline int non_swap_entry(swp_entry_t entry)
-> {
-> -       return swp_type(entry) >=3D MAX_SWAPFILES;
-> +       return swp_type(entry) >=3D nr_swapfiles;
-> }
->
-> static struct swap_info_struct *swap_type_to_swap_info(int type)
-> {
-> -       if (type >=3D MAX_SWAPFILES)
-> +       if (type >=3D nr_swapfiles)
->                 return NULL;
->
->         return READ_ONCE(swap_info[type]); /* rcu_dereference() */
-> }
-> >
-> > I don't see how the current patch contributes to debugging or fixing an=
-ything
-> > related to this dumped stack. Can we dump swp_type() as well?
-> >
-> > >  copy_process+0x1278/0x21cc
-> > >  kernel_clone+0x90/0x438
-> > >  __arm64_sys_clone+0x5c/0x8c
-> > >  invoke_syscall+0x58/0x110
-> > >  do_el0_svc+0x8c/0xe0
-> > >  el0_svc+0x38/0x9c
-> > >  el0t_64_sync_handler+0x44/0xec
-> > >  el0t_64_sync+0x1a8/0x1ac
-> > > Code: 9139c35a 71006f3f 54000568 f8797b55 (f9402ea8) ---[ end trace
-> > > 0000000000000000 ]--- Kernel panic - not syncing: Oops: Fatal
-> > > exception
-> > > SMP: stopping secondary CPUs
-> > >
-> > > The patch seems to only provide a workaround, but there are no more
-> > > effective software solutions to handle the bit flips problem. This
-> > > path will change the issue from a system crash to a process exception=
-,
-> > > thereby reducing the impact on the entire machine.
-> > >
-> > > Signed-off-by: gao xu <gaoxu2@honor.com>
-> > > ---
-> > > v1 -> v2:
-> > > - Add WARN_ON_ONCE.
-> > > - update the commit info.
-> > > v2 -> v3: Delete the review tags (This is my issue, and I apologize).
-> > > ---
-> > >
-> > > mm/swapfile.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/mm/swapfile.c b/mm/swapfile.c index 7448a3876..a0bfdba94
-> > > 100644
-> > > --- a/mm/swapfile.c
-> > > +++ b/mm/swapfile.c
-> > > @@ -3521,6 +3521,8 @@ static int __swap_duplicate(swp_entry_t entry,
-> > unsigned char usage, int nr)
-> > >         int err, i;
-> > >
-> > >         si =3D swp_swap_info(entry);
-> > > +       if (WARN_ON_ONCE(!si))
-> >
-> > I mean, printk something related to swp_type(). This is really strange,=
- but the
-> > current stack won't help with debugging.
-> The log can find info related to "get_swap_device: Bad swap file entry xx=
-x"
-> when an entry encounters an exception.
-> Add a print info log like the following:
-> pr_err("%s%08d\n", Bad swap type, swp_type(entry));
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This is really strange. It would be better to have the entire PTE value
-dumped so we can determine if a bit-flip occurred on critical bits like
-PTE_PRESENT.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250217    gcc-13.2.0
+arc                   randconfig-002-20250217    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250217    gcc-14.2.0
+arm                   randconfig-002-20250217    gcc-14.2.0
+arm                   randconfig-003-20250217    gcc-14.2.0
+arm                   randconfig-004-20250217    clang-19
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250217    gcc-14.2.0
+arm64                 randconfig-002-20250217    clang-21
+arm64                 randconfig-003-20250217    clang-15
+arm64                 randconfig-004-20250217    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250217    gcc-14.2.0
+csky                  randconfig-002-20250217    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250217    clang-21
+hexagon               randconfig-002-20250217    clang-14
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250217    clang-19
+i386        buildonly-randconfig-002-20250217    gcc-12
+i386        buildonly-randconfig-003-20250217    clang-19
+i386        buildonly-randconfig-004-20250217    gcc-12
+i386        buildonly-randconfig-005-20250217    gcc-12
+i386        buildonly-randconfig-006-20250217    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250217    gcc-14.2.0
+loongarch             randconfig-002-20250217    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250217    gcc-14.2.0
+nios2                 randconfig-002-20250217    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250217    gcc-14.2.0
+parisc                randconfig-002-20250217    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc               randconfig-001-20250217    clang-17
+powerpc               randconfig-002-20250217    clang-15
+powerpc               randconfig-003-20250217    gcc-14.2.0
+powerpc64             randconfig-001-20250217    clang-19
+powerpc64             randconfig-002-20250217    clang-21
+powerpc64             randconfig-003-20250217    clang-15
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250217    gcc-14.2.0
+riscv                 randconfig-002-20250217    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250217    gcc-14.2.0
+s390                  randconfig-002-20250217    clang-18
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250217    gcc-14.2.0
+sh                    randconfig-002-20250217    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250217    gcc-14.2.0
+sparc                 randconfig-002-20250217    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250217    gcc-14.2.0
+sparc64               randconfig-002-20250217    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250217    clang-19
+um                    randconfig-002-20250217    clang-17
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250217    gcc-12
+x86_64      buildonly-randconfig-002-20250217    clang-19
+x86_64      buildonly-randconfig-003-20250217    clang-19
+x86_64      buildonly-randconfig-004-20250217    gcc-12
+x86_64      buildonly-randconfig-005-20250217    gcc-12
+x86_64      buildonly-randconfig-006-20250217    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250217    gcc-14.2.0
+xtensa                randconfig-002-20250217    gcc-14.2.0
 
-In that case, a present PTE could be misinterpreted as a swap entry.
-
-On arm64,
-/*
- * Encode and decode a swap entry:
- *      bits 0-1:       present (must be zero)
- *      bits 2:         remember PG_anon_exclusive
- *      bits 3-7:       swap type
- *      bits 8-57:      swap offset
- *      bit  58:        PTE_PROT_NONE (must be zero)
- */
-
-#define __SWP_TYPE_SHIFT        3
-#define __SWP_TYPE_BITS         5
-#define __SWP_OFFSET_BITS       50
-#define __SWP_TYPE_MASK         ((1 << __SWP_TYPE_BITS) - 1)
-#define __SWP_OFFSET_SHIFT      (__SWP_TYPE_BITS + __SWP_TYPE_SHIFT)
-#define __SWP_OFFSET_MASK       ((1UL << __SWP_OFFSET_BITS) - 1)
-
-_swp_type is bits3-7.
-
-For a present pte,  bits 3-7 are:
-AP[7-6], NS[5], AttributeIndex[4-2].
-
-> >
-> > > +               return -EINVAL;
-> > >
-> > >         offset =3D swp_offset(entry);
-> > >         VM_WARN_ON(nr > SWAPFILE_CLUSTER - offset %
-> > SWAPFILE_CLUSTER);
-> > > --
-> > > 2.17.1
-
-Thanks
-Barry
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
