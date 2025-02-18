@@ -1,90 +1,103 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2260621B9F1
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E360A21B9FF
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739907339; cv=none; b=HMaiv8Kv+Jils5b/plJhoutES4Fp/cR3N8kELnzcXWBoHvCDzBknJe3VO+aH1lfsTlVqMdp8XWYPRaufRyFeDZdQpOKVmqnPoo50DRwBkLpAtp9z9HbtWJt3rSQxJMH//APE6avnGXhvRHGOWjXuXInBCcmfRIKn6yPkO/a4y+M=
+	t=1739907417; cv=none; b=Aj8ct3NjCeiyaiWCwIhUjotw3wOMHEYhrqzXyhXR5z2AvlQL/mCDBHjl+WjVHuKmB4pjXa1z1R/+V8KvZnf1mnNjRSY10X8QU9A7zJOY/9Zz3Azq/7/so5L3JHdIqc7Tz7JADkekU+Me2hez/+IbfDfHgOd7AAnIIPcdzBa3xs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739907339; c=relaxed/simple;
-	bh=vtthgsJvf7iae4Ixe36ZvkqUsbbfBLIClG/vv951ItU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qWYRAUWhne3kzPMVrGSyqJLn0PLJh4rJBGzWWDenPG614gYtwRXRWSuwqlwOd52LBzgCg++veE+stBK+N64i8KOesRcdIXBmCnWN9WU0iCSqv2u+V7wR6/t9vIZHOWoNPC8kGi8ZTJTRDE9islzWQTiUPxt1P9dAFBCKgNDGMwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tkTJl-000000004yL-0ozc;
-	Tue, 18 Feb 2025 14:31:41 -0500
-Message-ID: <af2ad6d448a551ec0fdf8235195a9d8078da2b13.camel@surriel.com>
-Subject: Re: [PATCH v11 08/12] x86/mm: use broadcast TLB flushing for page
- reclaim TLB flushing
-From: Rik van Riel <riel@surriel.com>
-To: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org, 
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, 	thomas.lendacky@amd.com, kernel-team@meta.com,
- linux-mm@kvack.org, 	akpm@linux-foundation.org, jackmanb@google.com,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
- Shukla	 <Manali.Shukla@amd.com>
-Date: Tue, 18 Feb 2025 14:31:41 -0500
-In-Reply-To: <cfa6e15f-3fe5-42bc-a877-fd46bb3c9f88@intel.com>
-References: <20250213161423.449435-1-riel@surriel.com>
-	 <20250213161423.449435-9-riel@surriel.com>
-	 <cfa6e15f-3fe5-42bc-a877-fd46bb3c9f88@intel.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1739907417; c=relaxed/simple;
+	bh=G8pyyJo/lOYFj0uKvsMIIikr9CBjmIs+dJA5Da5IqBE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IHZJw/eDZrC4PII/UA8WqQgIOoAQCP0NNg3VjNmbp3oqt65DRpU48Mh1igbWg3TBhFFJ4h66yseZtJ5m3sZXKuPPWukwO8ixTVw8idmMrx/o8ZCDydcaiXlxP189k/qJkkz3v0p3OTTqQBF5qbFG9Xl1phfzHS6Gqq2QTbV4LY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OfZSKN6Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OfZSKN6Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C6B7C4CEE2
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739907415;
+	bh=G8pyyJo/lOYFj0uKvsMIIikr9CBjmIs+dJA5Da5IqBE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OfZSKN6ZQ/s2tMl4RCx1Gp7BOeP3CipcC5QRzis32+J7bGKEpuT0fdQ0i19iLOtNG
+	 UFZch7Kj6Iwg1Eh5AKPL97/hzzI/lp4jE3sOwDwMZsYM7ivAFD9z0sBzBTvn+KnQV/
+	 /Yjx2acMCJ1T8v/QWJXLcDJIy2laUGb616pIuxxHqeCgatqANz2Gmk9u95wDxzkPeD
+	 VfKl8sj4J8fD8rhMiPMsswkKRLlvSzJUcjbLjOlM62eKRXelfsu71SHMPur1qTztnj
+	 70MHyvTOGUFCXXRHsx78OytzTXVrDO7vu9angiiIb3NUdpAySgC+ZYNubQtlZgwNaZ
+	 eC0Unm6P3Pctw==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5452c29bacfso4985752e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:36:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVEB7bj26a+sbnCFcKRL3nWqM1Mwy+MqSl6drRRab+e+49g4IoDUA22dkjRwTvSbPTQivNUXKCZ0ize0fw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpdSR/EX71QNVo3C1LuWBezux/dgQFVOscEkN3OwhRqF7wRqd8
+	wyfkjMa/iKi1hrnVCKcsajqmnU/ObCmDlPpWhQGpkjbRQzRcTJevLVG55mEy/zXkaE2wT7k8AME
+	DYTOf6Kln1AzRwU5lQOfFbBYqkkI=
+X-Google-Smtp-Source: AGHT+IGOYECX0y3bSc9oPPqcwIyy2ZDM62L97j0oJfQY1sxzo5+1NJbyzSy/eT4G5ZWoerzrUgsTllnoutT4g5VB+CA=
+X-Received: by 2002:a05:6512:3e07:b0:545:6a2:e58 with SMTP id
+ 2adb3069b0e04-5452fe6fb9bmr5430490e87.32.1739907413855; Tue, 18 Feb 2025
+ 11:36:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+References: <20250218092538.1903204-2-ardb+git@google.com> <20250218173827.vk4gplulq3pjdnn6@jpoimboe>
+ <CAMj1kXHqS=fTOa13LHqs1bqxy-EeD0xNUGxJA4xK=bKya+XBwA@mail.gmail.com> <20250218183108.anuqoojsgkjxwfai@jpoimboe>
+In-Reply-To: <20250218183108.anuqoojsgkjxwfai@jpoimboe>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 18 Feb 2025 20:36:42 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFa==KmSseWD1WK=uHW9BOTF0fDOUX0txsMKZzHqCfE+g@mail.gmail.com>
+X-Gm-Features: AWEUYZlAAQuA6Dpgne7N6_GziJ1MtccfpCLuAsY3h8i0cPhJT2SXWAF0IPZSyN4
+Message-ID: <CAMj1kXFa==KmSseWD1WK=uHW9BOTF0fDOUX0txsMKZzHqCfE+g@mail.gmail.com>
+Subject: Re: [PATCH] objtool: Use idiomatic section name for relocatable
+ rodata under PIE
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2025-02-14 at 10:51 -0800, Dave Hansen wrote:
->=20
-> Would that make sense here? It would also preserve the "common case"
-> optimization that's in arch_tlbbatch_flush().
->=20
-What we do in this patch goes out the window in patch
-10. This is just a temporary stage along the way to
-what we have at the end of the series, needed to make
-sure we don't break bisect partway through the series.
+On Tue, 18 Feb 2025 at 19:31, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> On Tue, Feb 18, 2025 at 06:44:23PM +0100, Ard Biesheuvel wrote:
+> > > If I understand correctly, this is fixing an existing bug in loongarch
+> > > and any other arches using PIE, right?
+> >
+> > There are no other arches using PIE as far as I know. But it indeed
+> > fixes an oversight in how -fPIE is used in the kernel.
+> >
+> > > And it has nothing to do with
+> > > objtool?
+> > >
+> >
+> > That didn't stop you from taking the previous fix :-)
+>
+> The whole point of the previous fix was to fix a bug in the objtool
+> annotations.  Unlike your patch, it didn't have any intended side
+> effects.
+>
 
-I'm not sure we should be doing much with this patch.
+Right, I skimmed over the missing ORC bit - I thought it was working
+around a linker warning.
 
-I could fold it into the next patch, but that would
-make things harder to read.
+> > > If so, it feels like this needs to be its own patch, described as a fix.
+> > >
+> >
+> > Fair enough. But better to drop the previous patch from the objtool tree then.
+>
+> I think we can do that... Peter?
+>
+> And just to be clear, you'll have two fixes, right?
+>
+>   1) Make loongarch .data.rel.ro.* actually read-only
+>   2) Fix objtool C jump table annotations for clang
+>
 
---=20
-All Rights Reversed.
+One fix is to emit .data.rel.ro input sections into .rodata, and fix
+objtool accordingly so it also looks for jump tables there.
+
+The other is to emit the BPF jump table into .data.rel.ro.c_jump_table
+so that the linker does not complain about conflicting permissions.
+
+Does that sound about right?
