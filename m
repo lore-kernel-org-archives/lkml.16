@@ -1,108 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A4F23ED69;
-	Tue, 18 Feb 2025 15:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830F416E863
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 15:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739891750; cv=none; b=N0nlZwy5BmoX3Pm1ztXnFLMANMG5FhzQg8oHpqWiyhn+TH7NouiFdPNw1OoINMnH3l6Lh+cAhlL2Xww+fznn+jc8T6+KJxlgcMiHwDOumwfJTRkKFkpqDEsVTRKhayCn/m78WY+x+JNZ255TJXp0YZLSDKNniCCl/7ZS/GDKkDs=
+	t=1739891784; cv=none; b=h34i/oxEcGUcAmS8Lf/q6HhcQyArJcBlVjIr2LxYRjBapipI63EtgyzDRy3awTD9sU5EEKeehNLL2/Jk3PMIjE6934M5dbyq/0Z5EZBGGpclFI4pBEsg3K9O12Ep6PFWsGkgaCpWR8ENWxocNoizQ33ovul9ob9V7RpFQbDAH8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739891750; c=relaxed/simple;
-	bh=Ib4Pm+5C9/8AIMYLPPJHBDj/uTaSeXuNctIV6FJv7Ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P5fiqA9KjNr6ArnMj/+ILLBh9OKjyzFlOyrgPqcoKuTy4coetYHOswgpy+fihRhDGMme1+xZUfP54XFtKDHj8x9vWRQyEQ9iYdoNdt5GIj3A+gimCfmIFhYXvmNB718QUyponA4I4Oi+HwjdC4lshjVJ6lVVdnyYdnYsShC7bRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrQjXHQd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739891784; c=relaxed/simple;
+	bh=JyzjOhp54RJcSNhEqhLM7HJR2BvRNw1Fhg11mQgNEqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t0W9EUDPm4znYE2sfaLfQPe089SopEmlB+0o4oQH5uVh+T9nl6b5ZKb4X3EBGoFj9/u8pA2G2Jo4EkKnxIDqPPmN6KjbMzjnThM4rTXkdSNhogphcMrbtnk9P+e51ok0eKbqE5Ct9qValkMcEA2U4Ewh5DOsDXd+SftmUpxPCdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LNY81Aif; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrQjXHQd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015F9C4CEE7;
-	Tue, 18 Feb 2025 15:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739891749;
-	bh=Ib4Pm+5C9/8AIMYLPPJHBDj/uTaSeXuNctIV6FJv7Ko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FrQjXHQd850c06d7C4Ku9v0LEKUAyAoQDrNLtIYWqDeFP7kZTV6ft/v5HC/VeMPdU
-	 2siDlZ3jDeDqZ2Nj/ibboUMFaqk1q9qDOXY0OlT0B+tTKyFxXoFcxYwZCwPSjk1vR8
-	 YOMSozF/WFFJV6ztw87mqpdQoHS+oTSQBz9DyS/8gewkXC9rf1agXY3ZEgz2yivOSb
-	 1DLVCmA6V0mxB8IDejYCfkY7yu2NqLZ13GOwNjrr1YrkSdz3QlkLM06ZqXTUfdtwDN
-	 FyxMSIquqeLzqHbbPiKwQ8gfRGs3ZkNCMwGebE3XXQrFwBSyQrOO0D7EAC40bcDH6j
-	 abiOnIDJ2ecFA==
-Date: Tue, 18 Feb 2025 15:15:45 +0000
-From: Mark Brown <broonie@kernel.org>
-To: James Calligeros <jcalligeros99@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Shenghao Ding <shenghao-ding@ti.com>,
-	Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>,
-	Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shi Fu <shifu0704@thundersoft.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	asahi@lists.linux.dev, linux-hwmon@vger.kernel.org,
-	Neal Gompa <neal@gompa.dev>
-Subject: Re: [PATCH v2 05/29] ASoC: tas2764: Extend driver to SN012776
-Message-ID: <Z7SkIUs_d7ty-GU3@finisterre.sirena.org.uk>
-References: <20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com>
- <20250218-apple-codec-changes-v2-5-932760fd7e07@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LNY81Aif"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739891783; x=1771427783;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JyzjOhp54RJcSNhEqhLM7HJR2BvRNw1Fhg11mQgNEqo=;
+  b=LNY81AiflA2BMZp7mRUB1kH2z78Ca3pKXb8PKqKD8GA9/DGhAppjtWA7
+   oIFxqWQOBt59hjkWKcB2Hmy4ZGywsLEkOJOSlVz/kkI6gCANihe0m5nYe
+   D2q1Wqc1gHtDXHJRx992xizZoWai6CMcgPn0fdw42Axz/lan01Od4vcd5
+   TXVFRGXfz9CzG5DMVrXFWOzVi1Dm6ua2pPDlT204D2wtsrt6FyD26Vcph
+   HNYhJU3djzChfD5RQuivl/fTavhk7ti5xeKAoidHVdUTaaPRSrd7kprWV
+   6o/HK9E1axC7PFEXZP9p8SN6Ayq91YuHvJG0yGw7mJIGi66WKvpg0CQRr
+   g==;
+X-CSE-ConnectionGUID: NeEojajAS/m1Z6UdlgnDHA==
+X-CSE-MsgGUID: V9E0rwDDSI2HFLQ+lEIO8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="40730507"
+X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
+   d="scan'208";a="40730507"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 07:16:22 -0800
+X-CSE-ConnectionGUID: fmiF/4cIQPCENGiPAv3WEg==
+X-CSE-MsgGUID: sE8ncNo4Se6ix7mYMPxMBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118559897"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.167]) ([10.125.109.167])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 07:16:21 -0800
+Message-ID: <5ed90792-ba64-476a-ad7c-6fdba7af3df1@intel.com>
+Date: Tue, 18 Feb 2025 07:16:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PPOhNaWiX4C4lTj9"
-Content-Disposition: inline
-In-Reply-To: <20250218-apple-codec-changes-v2-5-932760fd7e07@gmail.com>
-X-Cookie: Editing is a rewording activity.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] x86/microcode: Introduce staging option to reduce
+ late-loading latency
+To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com
+References: <20241001161042.465584-1-chang.seok.bae@intel.com>
+ <20241211014213.3671-1-chang.seok.bae@intel.com>
+ <20241211014213.3671-2-chang.seok.bae@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20241211014213.3671-2-chang.seok.bae@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 12/10/24 17:42, Chang S. Bae wrote:
+> +	if (microcode_ops->use_staging)
+> +		microcode_ops->stage_microcode();
 
---PPOhNaWiX4C4lTj9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't know if any non-Intel vendors will implement one of these, but
+could we please comment this a _bit_?
 
-On Tue, Feb 18, 2025 at 06:35:39PM +1000, James Calligeros wrote:
+Somebody is going to come along at some point and ask themselves whether
+they should add a new staging handler or dump some new code in an
+existing one. The key aspects of the existing staging handler are:
 
-> +	if (tas2764->devid == DEVID_SN012776) {
-> +		ret = snd_soc_component_update_bits(component, TAS2764_PWR_CTRL,
-> +					TAS2764_PWR_CTRL_BOP_SRC,
-> +					TAS2764_PWR_CTRL_BOP_SRC);
+	1. Helps the future actual microcode load in some way
+	2. Has little impact on the rest of the system
+	3. Can succeed or fail without affecting functionality
 
-This sort of code is generally better written with switch statements for
-extensibility.
+Did I miss any?
 
-> +	if (device_is_compatible(&client->dev, "ti,sn012776"))
-> +		tas2764->devid = DEVID_SN012776;
-> +	else
-> +		tas2764->devid = DEVID_TAS2764;
-> +
-
->  #if defined(CONFIG_OF)
->  static const struct of_device_id tas2764_of_match[] = {
-> -	{ .compatible = "ti,tas2764" },
-> +	{ .compatible = "ti,tas2764",  },
-> +	{ .compatible = "ti,sn012776", },
-
-It would be more usual to use the data field in the of_device_id to look
-up the enum.
-
---PPOhNaWiX4C4lTj9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme0pCAACgkQJNaLcl1U
-h9AavAf+PefPB5tBS+9HAQnlJyDWHiyIub1mLugOQ6Lp9v8dm7nlt1cp4T3GdXq/
-8PqSyalqppiie2kJFvhE+BoZmeXuoREbwpbV1ldT1oitu92KbLG2wu8v1uZ5f0Jd
-wnyNdyLrxo/Oy0a4F4Cc5PYw8nDOHilFCGlAvtcdTKmSpPXe95SBLLza5HJsYP0X
-nYSzqGUmdAuKnn/H4N72JEddaLjxBokHg5/8FCvgYZ8H6SB4gQ/uor9R42IO9VrG
-xbnsCQKTdQ3apGSAp1NVHqNvkE/h4itzghJyZ2oKtZbQMgD8AB89B5fyHO4FPOOG
-GVCJXefFFikpw8i4b3GEsh/B991FPA==
-=Pnbb
------END PGP SIGNATURE-----
-
---PPOhNaWiX4C4lTj9--
+Could we add a comment here, or maybe even at the Intel
+stage_microcode() function explaining this intent?
