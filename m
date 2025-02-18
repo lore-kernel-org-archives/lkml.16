@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E91B266F19;
-	Tue, 18 Feb 2025 13:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D98B267F4C;
+	Tue, 18 Feb 2025 13:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739883696; cv=none; b=Vv83MODJD+1cDMh4awQUhrgyACzKF0Qt+mgIGooc5zWuQXK3SH7tQr9JsHP8bDKo/sa2Dn5kq3fSCnEEoWzA8sBoBTyhdLqVEJlZ96LxxQJL58j/sMhV0CcMzYWzkc3IyWCZCha05JBZ0yKR2oYoKTJ0K+NNqV96TOy1SIpbnqs=
+	t=1739883707; cv=none; b=TMAfGVPkWwzPCSTR1Uej9p6qkf+NNdp1CChPLarfzADxTB/IRMejazgAPrwxr5/NQ+lJtacdm/RjUiK3LN/9tbpMEz0pgPxL/GWSUmZKpVgclZ+9LzUuXW+ZqmsixIldmTQ5zZLjTcI8jOTUqOpiitp3ebWNBrInHsXQ+x0i2Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739883696; c=relaxed/simple;
-	bh=utOYMK9wxdhg7AQtrh9ChFcDPs7Qi9/RVDGLNBePUoU=;
+	s=arc-20240116; t=1739883707; c=relaxed/simple;
+	bh=i8wDoobO6bpiZd26u4+7TLx2QrCQIwRboF1OHEy8KdY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GmMGaufLaFb81hbFOpt/F3rzaIRTKtc+jxwoERVWycZzvRVWXNGmBY8zm3EZUM+UnEedKfY8k9h2cChVgJvVEP8OwqmboyHHs5+0yy9P9nheJ2NA6tC2EnKVNFpi8vImVfW53Sp3vpK8XcxX4SCqyOnph2X65oVweLEmIQWsT8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjRa/E+2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=O22Iq07kt3h1nhZTIshr8cnw6uqwR3IUCABIdKnRs5oCp+58KIEyYMg5lx45x7EOBlynxn6WXfaViNHwbUpdEqSJX5euVFtJmYqVEmhD81W7OYZMTU2vdh92VCKDJ8MPiS3+yNWraQZOioifGB2JU1JsdzKwE7jqrkdwe3I68w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFX7qWlO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjRa/E+2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3238C4CEE6;
-	Tue, 18 Feb 2025 13:01:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFX7qWlO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 292E2C4CEE8;
+	Tue, 18 Feb 2025 13:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739883695;
-	bh=utOYMK9wxdhg7AQtrh9ChFcDPs7Qi9/RVDGLNBePUoU=;
+	s=k20201202; t=1739883707;
+	bh=i8wDoobO6bpiZd26u4+7TLx2QrCQIwRboF1OHEy8KdY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gjRa/E+2VqZEgbzH2IgMG0bXv1F0TZo2/B/7EjgaTaATDR0bHPuo8ttuJ2KEKz4dD
-	 CAyZ+mJLdlsRADqRWcgbmGFJz7czhJh4l5A9YSGt5P45UHMen0/Fqs8XnTdG5Ju7X5
-	 CNLuEEVAuW1OUwnRb3jTpxSoZvXsl+NTFkwAf51kMJD7HDdOOAEqnLY4AKf7Xrk1x2
-	 ic9u4eCz1IKgrVXlhd14yOrKoaU5SMK24FmkLpoCSZYf498Ks+wYutn8NKKbKx/LB4
-	 syEytg4TCyMonsjmwn+UioSwq8SqL7cLZNfpVJegv/iFJt7re72n6UE10FrH+w8XCv
-	 PriNDQ9yfUPwA==
+	b=XFX7qWlO9SUhgdW7HQvoaB6iK2So0vYTIgDQgJigmZ4atQd8fb6YUkM/O+VYkCoxT
+	 99imA0eFR3aLJ7MSKEwlGENFBHo5yCTm+AI3I4YJwG366dG2VE+qmQm5ojMZORU+gC
+	 Tbu3ntTK+vJMC2G68mAhr2osdQ7jvs0XaCv/xy0GSsImf3K7W0tmFGsEFRs4F3CHwe
+	 0P2+Dzry/7Te69G/W82cuLeGVyuSVQYsfS1/a6WqytcUh04CCzKRhW1extSTgbtSKQ
+	 M54+LxM+DV0qhIwvI00jieyFNKh4c6OArERHykjfcIh5ae4wr87DFYqJ0JEhoS2CZ6
+	 4XaDLDVnVdp3w==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 18 Feb 2025 13:57:18 +0100
-Subject: [PATCH v3 3/4] rust: configfs: add a sample demonstrating configfs
- usage
+Date: Tue, 18 Feb 2025 14:00:46 +0100
+Subject: [PATCH v7 4/6] rust: str: implement `strip_prefix` for `BStr`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,268 +37,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-configfs-v3-3-0e40c0778187@kernel.org>
-References: <20250218-configfs-v3-0-0e40c0778187@kernel.org>
-In-Reply-To: <20250218-configfs-v3-0-0e40c0778187@kernel.org>
+Message-Id: <20250218-module-params-v3-v7-4-5e1afabcac1b@kernel.org>
+References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
+In-Reply-To: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
  Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
  =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
  Benno Lossin <benno.lossin@proton.me>, 
  Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
- Waiman Long <longman@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
- Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, 
- Fiona Behrens <me@kloenk.dev>, 
- Charalampos Mitrodimas <charmitro@posteo.net>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+ Trevor Gross <tmgross@umich.edu>, Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+ Luis Chamberlain <mcgrof@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Adam Bratschi-Kaye <ark.email@gmail.com>, linux-kbuild@vger.kernel.org, 
+ Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+ Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+ Greg KH <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6453; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=utOYMK9wxdhg7AQtrh9ChFcDPs7Qi9/RVDGLNBePUoU=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIPAMU1QnCc4uVHRNsgKlsG9VzjytL4o/H9Ga
- ZBI+WFxEPWJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SDwAAKCRDhuBo+eShj
- d7aFD/4+0UNN7hgWFNnRmCkW5MpE/aRmgbio6dEkzdLSvbYwsvtOAIQdK/WSAmTaC4bJ853V0gU
- W1Vx6K0fqLhZD8LWvVwKMYydQN410+yFAx+mdXDWRzqdbZbAXagIV95uYUqJXMsfL9Orf5p4N43
- Kr6xRKTg3juscIwoq9Pm1T+FTy2rYR+XPbatVuCr5Odjl889i0oGeZKcTO+loSXCvmZqQ+UU+Lx
- DdtdI9uY3gCyuRsh0V15QQfZLd819hRpQG8Lp7SACGb2mXhlasNFkU0T8c4tP6Njygs3AXLWFbu
- OCeghUQ6lSiPQSpK0F2zO6PS4IZKpvmST3cD/U1p+2bzWIG6bSmLRVzczX+9P/Bx4CyDxErav60
- OX2/XNBHdmgoAAnLfcl2ZT0q/V1gynaqYQZZ6p9Y7oaoR1UJ9wL+1gr92YADf9xUQC7vAYAyiOk
- FDr9+NZyTOBNiqp16BA4TUJUuFmG6I9MHf6XJDu9r0K6sEaqgQFHqr8i5EVAIn8AmwDUKxGLjDT
- UILXqdDpLtFA+BPaZH/nDZO0gnPZW1aXZCQTfGYTBvH+rJAkJI+gsf+m03UpEvWL+lA3kjEYn8K
- EZR9Y0DuTNcTAUR+jfaqxAw331gmeNGKzTRysGd71SPLZXIFoG+DzFQnK/T0TD1KLtBCNinGS0G
- 2BORAale5DTVCAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1603; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=i8wDoobO6bpiZd26u4+7TLx2QrCQIwRboF1OHEy8KdY=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntISGYFVJJPsX7afbpIBc/fwF692CI7LF5379D
+ BeVodH8mNWJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SEhgAKCRDhuBo+eShj
+ dwpjD/wO5E4AFgGZvg4pqp74C2eRjkj1DWNc72uyZ+T2yS5yAgyl9ZOchb1IACBZLwg7dtQvmCc
+ gfH4v39sOzJzGGEY5Tfq2U9T5Jhziobh/tmqZw9x3rJcaG6GK/HSx4pHnGCvN7km58JxjFUDHBg
+ XUNzh8AkiNejZlZv+HfcHunUClrF1b9CGxJfJbo/LhctHNf+fjO5eFOuEB9nvQV4gqO+rt9OrxO
+ btfk0PP2yRZY1mgAAOt0DathpcbA2VKtImhEYxqjKo4R7coK+Q6tW6DHhxHX4naInpmopCylCey
+ tVxd86SYh4OEQwXF2TV1bC3cQsm9wy273n/gwoSCMr/OiimCJcwXBiEUvLDeLvG/PbEZ8Xbm/mc
+ UdwKb/gvQmaP1atypWFjq7I95uNXKVPt0xfUHCXOp5bhnWnn8n1UteJRYvG8eNSE2KFBHhR+kLE
+ OW0aomSHQ8zDON8DsGYVWF3DjxLDq3DOvcN84qYWYzcrEwfpjdMwfQ5zzHw8Vqwt0ZW41zorraZ
+ c7ZlYZpDwRoPezfDIMBCwJsv5QxMMQlDQ1dkgth5yVaVSpiraBrU2+gMrQLaCjjVre9uQ1csmJb
+ DC5lWWs9EmF4eu9itqmEOEKr5DEgRsqsQ7vLiA/zEKUCPZyTLGShCUbPaubgs3aOOUnXE+ZPac5
+ N3RPiD1pNP1nhpA==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Add a sample to the samples folder, demonstrating the intended use of the
-rust configfs API.
+Implement `strip_prefix` for `BStr` by deferring to `slice::strip_prefix`
+on the underlying `&[u8]`.
 
+Reviewed-by: Gary Guo <gary@garyguo.net>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- samples/rust/Kconfig          |  11 +++
- samples/rust/Makefile         |   1 +
- samples/rust/rust_configfs.rs | 179 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 191 insertions(+)
 
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index 918dbead2c0b4..2f97bf9a7b4cc 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -10,6 +10,17 @@ menuconfig SAMPLES_RUST
+It is also possible to get this method by implementing
+`core::slice::SlicePattern` for `BStr`. `SlicePattern` is unstable, so this
+seems more reasonable.
+---
+ rust/kernel/str.rs | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index c6bd2c69543dc..db272d2198fcc 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -31,6 +31,22 @@ pub const fn from_bytes(bytes: &[u8]) -> &Self {
+         // SAFETY: `BStr` is transparent to `[u8]`.
+         unsafe { &*(bytes as *const [u8] as *const BStr) }
+     }
++
++    /// Strip a prefix from `self`. Delegates to [`slice::strip_prefix`].
++    ///
++    /// # Example
++    /// ```
++    /// use kernel::b_str;
++    /// assert_eq!(Some(b_str!("bar")), b_str!("foobar").strip_prefix(b_str!("foo")));
++    /// assert_eq!(None, b_str!("foobar").strip_prefix(b_str!("bar")));
++    /// assert_eq!(Some(b_str!("foobar")), b_str!("foobar").strip_prefix(b_str!("")));
++    /// assert_eq!(Some(b_str!("")), b_str!("foobar").strip_prefix(b_str!("foobar")));
++    /// ```
++    pub fn strip_prefix(&self, pattern: impl AsRef<Self>) -> Option<&BStr> {
++        self.deref()
++            .strip_prefix(pattern.as_ref().deref())
++            .map(Self::from_bytes)
++    }
+ }
  
- if SAMPLES_RUST
- 
-+config SAMPLE_RUST_CONFIGFS
-+	tristate "Configfs sample"
-+	depends on CONFIGFS_FS
-+	help
-+	  This option builds the Rust configfs sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_configfs.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_MINIMAL
- 	tristate "Minimal"
- 	help
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index 5a8ab0df0567c..72122f010cafc 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
-+obj-$(CONFIG_SAMPLE_RUST_CONFIGFS)		+= rust_configfs.o
- 
- rust_print-y := rust_print_main.o rust_print_events.o
- 
-diff --git a/samples/rust/rust_configfs.rs b/samples/rust/rust_configfs.rs
-new file mode 100644
-index 0000000000000..36a2c848a979a
---- /dev/null
-+++ b/samples/rust/rust_configfs.rs
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust configfs sample.
-+
-+use kernel::alloc::flags;
-+use kernel::c_str;
-+use kernel::configfs;
-+use kernel::configfs_attrs;
-+use kernel::new_mutex;
-+use kernel::page::PAGE_SIZE;
-+use kernel::prelude::*;
-+use kernel::sync::Mutex;
-+
-+module! {
-+    type: RustConfigfs,
-+    name: "rust_configfs",
-+    author: "Rust for Linux Contributors",
-+    description: "Rust configfs sample",
-+    license: "GPL",
-+}
-+
-+#[pin_data]
-+struct RustConfigfs {
-+    #[pin]
-+    config: configfs::Subsystem<Configuration>,
-+}
-+
-+#[pin_data]
-+struct Configuration {
-+    message: &'static CStr,
-+    #[pin]
-+    bar: Mutex<(KBox<[u8; PAGE_SIZE]>, usize)>,
-+}
-+
-+impl Configuration {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {
-+            message: c_str!("Hello World\n"),
-+            bar <- new_mutex!((KBox::new([0; PAGE_SIZE], flags::GFP_KERNEL)?, 0)),
-+        })
-+    }
-+}
-+
-+impl kernel::InPlaceModule for RustConfigfs {
-+    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
-+        pr_info!("Rust configfs sample (init)\n");
-+
-+        let item_type = configfs_attrs! {
-+            container: configfs::Subsystem<Configuration>,
-+            data: Configuration,
-+            child: Child,
-+            attributes: [
-+                message: 0,
-+                bar: 1,
-+            ],
-+        };
-+
-+        try_pin_init!(Self {
-+            config <- configfs::Subsystem::new(
-+                c_str!("rust_configfs"), item_type, Configuration::new()
-+            ),
-+        })
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::GroupOperations for Configuration {
-+    type Child = Child;
-+
-+    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::Group<Child>, Error>> {
-+        let tpe = configfs_attrs! {
-+            container: configfs::Group<Child>,
-+            data: Child,
-+            child: GrandChild,
-+            attributes: [
-+                baz: 0,
-+            ],
-+        };
-+
-+        Ok(configfs::Group::new(name.try_into()?, tpe, Child::new()))
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for Configuration {
-+    type Data = Configuration;
-+
-+    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show message\n");
-+        let data = container.message;
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<1> for Configuration {
-+    type Data = Configuration;
-+
-+    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show bar\n");
-+        let guard = container.bar.lock();
-+        let data = guard.0.as_slice();
-+        let len = guard.1;
-+        page[0..len].copy_from_slice(&data[0..len]);
-+        Ok(len)
-+    }
-+
-+    fn store(container: &Configuration, page: &[u8]) -> Result {
-+        pr_info!("Store bar\n");
-+        let mut guard = container.bar.lock();
-+        guard.0[0..page.len()].copy_from_slice(page);
-+        guard.1 = page.len();
-+        Ok(())
-+    }
-+}
-+
-+#[pin_data]
-+struct Child {}
-+
-+impl Child {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {})
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::GroupOperations for Child {
-+    type Child = GrandChild;
-+
-+    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::Group<GrandChild>, Error>> {
-+        let tpe = configfs_attrs! {
-+            container: configfs::Group<GrandChild>,
-+            data: GrandChild,
-+            attributes: [
-+                gc: 0,
-+            ],
-+        };
-+
-+        Ok(configfs::Group::new(
-+            name.try_into()?,
-+            tpe,
-+            GrandChild::new(),
-+        ))
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for Child {
-+    type Data = Child;
-+
-+    fn show(_container: &Child, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show baz\n");
-+        let data = c"Hello Baz\n".to_bytes();
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
-+
-+#[pin_data]
-+struct GrandChild {}
-+
-+impl GrandChild {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {})
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for GrandChild {
-+    type Data = GrandChild;
-+
-+    fn show(_container: &GrandChild, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show baz\n");
-+        let data = c"Hello GC\n".to_bytes();
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
+ impl fmt::Display for BStr {
 
 -- 
 2.47.0
