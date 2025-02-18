@@ -1,165 +1,169 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABAC23C8DC;
-	Tue, 18 Feb 2025 11:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820FF23ED47
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 11:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878971; cv=none; b=GPeRzhouFloOldRcSsaj0nuVkzGh7eL3/LWrU0KLCV1mxG23feUdO7FbnTleAdIqxtLYDGP50MVcBRjE2+xOrmvjHYH7GaE/jdrI4OkVCRLTt6W02xrXeIWl59+aWO0bnS496hiwVt4+krLhy72IxixfD+P436Ray+1pbtNGN5s=
+	t=1739879019; cv=none; b=arpGErZiWectzn6GPukGVAJ4iKJKrvLBgnqxv610d1wtjBw0Hv1d8bPlUxWJGiTirmNTCd3hhM9hZXuSPxa6LX7pnK+AQH75U/cST8Yw6ofIrBB/o0AFc9guJ7FtZ0BFcWkc1Ya2h1OoEc47xVfnKEPdZrJrB172hACS/Sw4FQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878971; c=relaxed/simple;
-	bh=bBNT4QlzZXKhd7EQ9JV5YlXy79pcFJ/hqJ3SE6SkiKg=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=oI0YShNL59Ooq1Al9Bv36eTembA3skm1sD3uH6FHIpGuZrPfWEeYaPA3KuVVUu6uX3gryBsMf88c6Ji4hz9+Gvz5+/gLh0tkfQRk2BSd+PB7Yck5AqCJ0+m7En9mOdaeqzLCMApsFZa2Nh7aA8D/9qiJso7Y+4/UADVG2FfDRx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Ouss9I8F; arc=none smtp.client-ip=117.135.210.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1739879019; c=relaxed/simple;
+	bh=1mN+xNgaFFvNE9UYqlV3tBQki4fbSbB7xoygLiCSzbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J7uC1zLSbCkN1wZBCPBFGVuXPqwT68YXnI6u4RFrqnPV++tMbmh2PmsYgqBviZxZ3LmY4djIYcp49LKEA6ryexOeMnO0rE0xNduEzu85Z6mbWkxMkhSYeLca6GTvMqYEC/LvfMRRBEmCA8K7BQyI6Z8BVa4eGIf5E5RB9Q2K1Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GB+XRPh/; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Ouss9I8F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=KkHPLPhS/lcvXv2PGW
-	47P5xHPzK/OHNmih6dbHFhbrA=; b=Ouss9I8Fc4R4KkbIlN1YgVgbUZ9QDDLzp7
-	LBabT84KOv4vz0grUvIk/SJUAIjYP2QFgcip731TZfNOB/sxSN9aTFCAC+8YmvoN
-	B3FJePlnfcoha1dN0QXxr5We+uUP1LmEoS1n4wGwzEX5hZjawI5P4wOmzXDg++x7
-	tPvWiIre4=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDnD9StcbRn5BnwAw--.45758S2;
-	Tue, 18 Feb 2025 19:40:30 +0800 (CST)
-From: yangge1116@126.com
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	21cnbao@gmail.com,
-	david@redhat.com,
-	baolin.wang@linux.alibaba.com,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	liuzixing@hygon.cn,
-	Ge Yang <yangge1116@126.com>
-Subject: [PATCH V3] mm/hugetlb: wait for hugetlb folios to be freed
-Date: Tue, 18 Feb 2025 19:40:28 +0800
-Message-Id: <1739878828-9960-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wDnD9StcbRn5BnwAw--.45758S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXryrZr43Gw13Cw48Cw45KFg_yoWrur4rpF
-	yUKr13GayDJr9akrn7AwsYyr12y3ykZFWjkrWIqw45ZFnxJas7KFy2vwn0v3y8Ar93CFWx
-	ZrWqqrWDuF1UZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR0JmUUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifgP3G2e0TMW1YgABsd
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GB+XRPh/"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-546237cd3cbso2052278e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 03:43:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739879015; x=1740483815; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TDh3LF7I2VAOvbuYPKV/iG9cnLKgilP672D2NsUsYOM=;
+        b=GB+XRPh/KuwVxzzVET95bIwFd4RYRV4299ywjOQ62fWhQ2s1zEw2PK2sxauNE7PyCq
+         bpE2Ikmlfh7PhWNZGmxbc0YEKnTT3WddQFILl9YsRLM1nT1165fTx4nBXN1E1pgytwLU
+         jBSJqUamdr/mx9Ht9+Tdz5i8uUsPGT9Yfm9FugiIghlX/fHD46P87TnGjeHZyStoaCsO
+         g8EJFU/jTONwe4CAqPycMGjBqKmbtkzgD0B0mAcSQN5trbIy34irUD3NjYv19ygurvQI
+         lQqskxo8v0YRus/BuyB0nkOXUgQ9EsvKv5s9mTR4g16M5g5mRwNJmdd0pkP8AFFjMaL0
+         0MFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739879015; x=1740483815;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TDh3LF7I2VAOvbuYPKV/iG9cnLKgilP672D2NsUsYOM=;
+        b=TOzEoOh0eM2TwiFNqWwgvc35d1/ZiYqtO8CraopuHWLNVCOViP53XZmD386pwOIitC
+         xa+nlUg2BP5lIrVENGTMa72UavPKeXwyb8TdM6SZQJtKUo6hjnFEPRb4IeJIMjTzAdw4
+         TFKtMlI3Ljkqett3br7qZwoLvHCumcDUwLgdISxtj29BOTRCunk4xF4JnQJQaf6ynq3I
+         WMTViDJ8YzxK0BjF5FxgJ66dogY1Tn56Jb59UJ1v2H5M9na7NxKujQoSSu1CQLML8QFo
+         XfMkSJKAq5/W7I6p19N4Dv3gp0QkdmIbtuVgvtTT3w480wXGZR2CWUP3HDsmMXGmVE7A
+         AdkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkJcGTSjbDkoWkaR4j2xc2CvMt97sPRgecoC2GZ8h/59QfCa0Ch6Zb8+MwaN3BHaIfAXFVbP4O/Hk9XNc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywYHoca5FcOfxKQ/Hj6vm6mpgzl9lGJqiLXM1FT3YbqAG/lome
+	Q9eWDmm8RYr2Uf7eT+H5ogxcC0DHRvz4qfdty4wtT9Lmdi5IhH0BuggPcuK+x84=
+X-Gm-Gg: ASbGnctVc4VOjUWMsUt2l5wnc0+/lHe5tKkxl4nZ+LXGJ/hmp4UhiS4VXXYt7yLFMQ7
+	nGE4wXK+xtvIrrvqGUEFI+a9ICv8LyqEeRPQX7YphSHaZulkDdkkl/0l6o9QzQi1FUiTdh4V8Oa
+	vd2htQNw2eBVhaJrh6uEaNEX7Q1UMIAtDy+oy52uq7OHoERKsMlmQwD263RCkMeu1e6WBOIi1CH
+	ofZ+7qzEnYxqz+lDJ2WkJOen1DLFMFNNMK9UCiBWXKg9AKlFhnC1rwf8+olq409ih5exMbFPTRC
+	hynF31hzJtdq99IyFWl4Xk3gyvMImk5pa7x3A8wYu8pUXU0P9V0HG50q3+JJ7KGDEryzrMU=
+X-Google-Smtp-Source: AGHT+IHO9NwIK+TdHNEcDP9zUALpP+YltWjVqof/wrSV+s+68TLTGCq/F5NabaF825FmYPwW4CFqtA==
+X-Received: by 2002:a05:6512:ea5:b0:545:6cf:6f3e with SMTP id 2adb3069b0e04-5452fea6e3fmr4013685e87.49.1739879015479;
+        Tue, 18 Feb 2025 03:43:35 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5461a6efd88sm980973e87.69.2025.02.18.03.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 03:43:35 -0800 (PST)
+Date: Tue, 18 Feb 2025 13:43:32 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Taniya Das <quic_tdas@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
+	Imran Shaik <quic_imrashai@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] clk: qcom: lpassaudiocc-sc7280: Add support for
+ LPASS resets for QCM6490
+Message-ID: <jxhkddeu32v5fg6avsa7pnzicreisrlzpws2nixaie2znn3eei@mstncyeqqfgg>
+References: <20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com>
+ <20250212-lpass_qcm6490_resets-v3-2-0b1cfb35b38e@quicinc.com>
+ <exyxni7td5vow2n6jarav5euje6dnbue5f5yxzu6az554dthfe@zn5yd2byvkoj>
+ <ccc87c55-d157-4ffc-8081-1a5900752931@quicinc.com>
+ <CAA8EJpp7e5q36jGmB-TZX5A=XVGKsDtmBF8kJmxoga8NqGZP1A@mail.gmail.com>
+ <c820c697-c3ec-4ae3-9720-fb80cb3a0450@quicinc.com>
+ <CAA8EJpon5+R5s0HXUmoikjtuyEf3sQUqBVYvWrxuh14h2DvjQg@mail.gmail.com>
+ <30e84d27-6047-492a-8602-8822b5d492fe@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30e84d27-6047-492a-8602-8822b5d492fe@quicinc.com>
 
-From: Ge Yang <yangge1116@126.com>
+On Tue, Feb 18, 2025 at 10:53:05AM +0530, Taniya Das wrote:
+> 
+> 
+> On 2/13/2025 7:58 PM, Dmitry Baryshkov wrote:
+> >>>>>>  static const struct qcom_cc_desc lpass_audio_cc_reset_sc7280_desc = {
+> >>>>>> -    .config = &lpass_audio_cc_sc7280_regmap_config,
+> >>>>>> +    .config = &lpass_audio_cc_sc7280_reset_regmap_config,
+> >>>>>>      .resets = lpass_audio_cc_sc7280_resets,
+> >>>>>>      .num_resets = ARRAY_SIZE(lpass_audio_cc_sc7280_resets),
+> >>>>>>  };
+> >>>>>>
+> >>>>>>  static const struct of_device_id lpass_audio_cc_sc7280_match_table[] = {
+> >>>>>> -    { .compatible = "qcom,sc7280-lpassaudiocc" },
+> >>>>>> +    { .compatible = "qcom,qcm6490-lpassaudiocc", .data = &lpass_audio_cc_reset_sc7280_desc },
+> >>>>>> +    { .compatible = "qcom,sc7280-lpassaudiocc", .data = &lpass_audio_cc_sc7280_desc },
+> >>>>>>      { }
+> >>>>>>  };
+> >>>>>>  MODULE_DEVICE_TABLE(of, lpass_audio_cc_sc7280_match_table);
+> >>>>>> @@ -752,13 +763,17 @@ static int lpass_audio_cc_sc7280_probe(struct platform_device *pdev)
+> >>>>>>      struct regmap *regmap;
+> >>>>>>      int ret;
+> >>>>>>
+> >>>>>> +    desc = device_get_match_data(&pdev->dev);
+> >>>>>> +
+> >>>>>> +    if (desc->num_resets)
+> >>>>>> +            return qcom_cc_probe_by_index(pdev, 1, desc);
+> >>>>> Won't this break SC7280 support by causing an early return?
+> >>>>>
+> >>>> The resets are not defined for SC7280.
+> >>>> static const struct qcom_cc_desc lpass_audio_cc_sc7280_desc = {
+> >>>>         .config = &lpass_audio_cc_sc7280_regmap_config,
+> >>>>         .clks = lpass_audio_cc_sc7280_clocks,
+> >>>>         .num_clks = ARRAY_SIZE(lpass_audio_cc_sc7280_clocks),
+> >>>> };
+> >>>>
+> >>>> The reset get registered for SC7280 after the clocks are registered.
+> >>>> qcom_cc_probe_by_index(pdev, 1,  &lpass_audio_cc_reset_sc7280_desc);
+> >>> Could you please make this condition more obvious and error-prone
+> >>> rather than checking one particular non-obvious property?
+> >>>
+> >> Dmitry, we had earlier tried [1], but seems like we could not align on
+> >> this patchset.
+> >>
+> >> If you are aligned, please let me know I can fall back on the approach.
+> > You have been using of_device_is_compatible(). Krzysztof suggested
+> > using mach data. Both approaches are fine with me (I'm sorry,
+> > Krzysztof, this is a clock driver for a single platform, it doesn't
+> > need to scale).
+> > 
+> > You've settled on the second one. So far so good.
+> 
+> Sure, I will go ahead with the existing approach, but ensure I replace
+> the num_resets check with the of_device_is_compatible(), so it is more
+> readable. Hope this aligns with your thoughts as well.
 
-Since the introduction of commit c77c0a8ac4c52 ("mm/hugetlb: defer freeing
-of huge pages if in non-task context"), which supports deferring the
-freeing of hugetlb pages, the allocation of contiguous memory through
-cma_alloc() may fail probabilistically.
+Ack, thanks.
 
-In the CMA allocation process, if it is found that the CMA area is occupied
-by in-use hugetlb folios, these in-use hugetlb folios need to be migrated
-to another location. When there are no available hugetlb folios in the
-free hugetlb pool during the migration of in-use hugetlb folios, new folios
-are allocated from the buddy system. A temporary state is set on the newly
-allocated folio. Upon completion of the hugetlb folio migration, the
-temporary state is transferred from the new folios to the old folios.
-Normally, when the old folios with the temporary state are freed, it is
-directly released back to the buddy system. However, due to the deferred
-freeing of hugetlb pages, the PageBuddy() check fails, ultimately leading
-to the failure of cma_alloc().
+> 
+> > 
+> > But! The problem is in readability. Checking for desc->num_resets is a
+> > _hidden_ or cryptic way of checking whether to register only a first
+> > controller or both.
+> > 
+> > BTW: the commit message also tells nothing about the dropped power
+> > domain and skipped PM code. Is it not required anymore? Is it handled
+> > automatically by the firmware? But I see that audio codecs still use
+> > that power domain.
+> Yes, it will be taken care in the firmware and I will update in the
+> commit text.
 
-Here is a simplified call trace illustrating the process:
-cma_alloc()
-    ->__alloc_contig_migrate_range() // Migrate in-use hugetlb folios
-        ->unmap_and_move_huge_page()
-            ->folio_putback_hugetlb() // Free old folios
-    ->test_pages_isolated()
-        ->__test_page_isolated_in_pageblock()
-             ->PageBuddy(page) // Check if the page is in buddy
+Ack, thanks.
 
-To resolve this issue, we have implemented a function named
-wait_for_freed_hugetlb_folios(). This function ensures that the hugetlb
-folios are properly released back to the buddy system after their migration
-is completed. By invoking wait_for_freed_hugetlb_folios() before calling
-PageBuddy(), we ensure that PageBuddy() will succeed.
+> 
+> 
+> Thanks,
+> Taniya.
 
-Fixes: c77c0a8ac4c52 ("mm/hugetlb: defer freeing of huge pages if in non-task context")
-Signed-off-by: Ge Yang <yangge1116@126.com>
-Cc: <stable@vger.kernel.org>
----
-
-V3:
-- adjust code and message suggested by Muchun and David
-
-V2:
-- flush all folios at once suggested by David
-
- include/linux/hugetlb.h |  5 +++++
- mm/hugetlb.c            |  5 +++++
- mm/page_isolation.c     | 10 ++++++++++
- 3 files changed, 20 insertions(+)
-
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 6c6546b..0c54b3a 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -697,6 +697,7 @@ bool hugetlb_bootmem_page_zones_valid(int nid, struct huge_bootmem_page *m);
- 
- int isolate_or_dissolve_huge_page(struct page *page, struct list_head *list);
- int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn);
-+void wait_for_freed_hugetlb_folios(void);
- struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 				unsigned long addr, bool cow_from_owner);
- struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
-@@ -1092,6 +1093,10 @@ static inline int replace_free_hugepage_folios(unsigned long start_pfn,
- 	return 0;
- }
- 
-+static inline void wait_for_freed_hugetlb_folios(void)
-+{
-+}
-+
- static inline struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 					   unsigned long addr,
- 					   bool cow_from_owner)
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 30bc34d..b4630b3 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2955,6 +2955,11 @@ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
- 	return ret;
- }
- 
-+void wait_for_freed_hugetlb_folios(void)
-+{
-+	flush_work(&free_hpage_work);
-+}
-+
- typedef enum {
- 	/*
- 	 * For either 0/1: we checked the per-vma resv map, and one resv
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 8ed53ee0..b2fc526 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -615,6 +615,16 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
- 	int ret;
- 
- 	/*
-+	 * Due to the deferred freeing of hugetlb folios, the hugepage folios may
-+	 * not immediately release to the buddy system. This can cause PageBuddy()
-+	 * to fail in __test_page_isolated_in_pageblock(). To ensure that the
-+	 * hugetlb folios are properly released back to the buddy system, we
-+	 * invoke the wait_for_freed_hugetlb_folios() function to wait for the
-+	 * release to complete.
-+	 */
-+	wait_for_freed_hugetlb_folios();
-+
-+	/*
- 	 * Note: pageblock_nr_pages != MAX_PAGE_ORDER. Then, chunks of free
- 	 * pages are not aligned to pageblock_nr_pages.
- 	 * Then we just check migratetype first.
 -- 
-2.7.4
-
+With best wishes
+Dmitry
