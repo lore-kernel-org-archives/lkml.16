@@ -1,120 +1,75 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F27D22DF8C;
-	Tue, 18 Feb 2025 09:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4E522FAE1
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739870932; cv=none; b=jVCnInIX54bcuQ4h6w3GBH0r+9F5nY31fnuowWUcDYDqn48DaX3C8JAUN8AyjmiFMH1sDFLrKqLEEHgaAwEybVDWE14r6NwK4tP88qn667P6IiKDDW56F5opQAbEx4rd8VRJdN/99OyBQhd0OevbI2vyW5F+cx4g/E7T5f9Do4Y=
+	t=1739870959; cv=none; b=nwvKf/3Ky5QnR837Jy8kQlPKmN7rh2GywWAhpkK7rGNeSeNaX2Re9DpP0Ld4ryugRru5FGNadRuhjTyMgyJm0HlBUPyjsk7UNztrgM2yXA56kXkWtlF6iAYdDbAC2NfsX/zQSCUTDdcwA2JrFZm0KbgqE2z7T6gb1WfqSKIIuj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739870932; c=relaxed/simple;
-	bh=rF+DqFOfI59087a/Ev+sbb4fxL1DoZUspANuVUxya9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VRJhiXX4E4MzkAx+pUjFXrTXJbJG2Jzcy9TawEW2TEmYENNu0baXVAmZ4zkSssluiegRPh7gR2N3kCOrv5++K6bz4tvIVAuB7NDi0jO76hdVrEeOV6nn5hHK766/sF4zFB9pakYVx6CI2FMGrugacg8rMiVYlQiZ7HBfjzRDKl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DKGfDp38; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739870959; c=relaxed/simple;
+	bh=yQlBwEetNAXy1+J71TlsSNNeiqeKL1aRYliDQ7TohCs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Svxm2Ts42AQcC5rCW/j6V4tI0sCestUTrwsT0Ezr4oPRSjcpSTBIEZ9Vnb7elBJfyyVgO5cmwtmDHF0xNAJqMLk+cRtpeI8TvlxSOm/gWaFNA0uyy7eq/4iRscR5yHVe+cO4kawxdP980h2weWrv20hwk0jCW3i15HrSkCaZc04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fjG+SX4u; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKGfDp38"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f3fc8f5ffdso427099b6e.0;
-        Tue, 18 Feb 2025 01:28:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739870930; x=1740475730; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sezXMcausz+IaGoxGziV5wzbaNf+UQBQEy/lkhU+JEU=;
-        b=DKGfDp38f10WhlXlgYTDOHCpGsTpcWlFaq1TVlRceYwlB4rvthZZT2H4AFswQkQZsp
-         eeTICVUxsHFM0Qas2C6dQvTalt1c9Wnk8cyocUAoarZuMtZ4xuWFJXB4CbViFlVDw//6
-         NyL/hybgzgkj6u7FTPHBf9qP2By/vhLNkUd4+HGG+XR9SBJZny13TQH8ukZN/OJXPx15
-         i/Igig2qO6Vows6g/mdWH0n0CIjer92ILD6MzuGQOObmfC9tF13p8tAKtXWIOZ3hHCpW
-         uVzTy2pzjBIDV1J+XvnR1X8OOwsimb/CKLaYhMVklptj3N83YWMXTdhHo2bpBwdfbqPt
-         TZfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739870930; x=1740475730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sezXMcausz+IaGoxGziV5wzbaNf+UQBQEy/lkhU+JEU=;
-        b=oxBZAN3cFdOWMXVeBqAS1HH9dimNQfk3wwtvFJ4kpNuaXZzVkCN8Ulhy4RzuKxdXfH
-         ZdO879unPs22aep+kBXgWclePxGLwgz5LX8/sZvIgK02asByKLix/kbAjPhm1ZzQEn3c
-         bGvNrWWZsL4JBNK8MWaTR/A5nfa2IHsaDU8IbJWUBwRPRUZjprKh82kD5UurR8k7qMMO
-         usfoFpAvn/NTLxkT+olbsuv4GhKr62z6LGu44Zoc9g62luXe4QwriTo2CDgAIZqBle9+
-         T8xkOZrXt6f58zNryUdIEpmm+aK8YtKHzToms2VY9MtWPOZTq++iDTBvBVPW6q53RPLX
-         EEVA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8bUCGEouVloPlzRyQMpoiIX7QLlD61DaBAXcYvcE8J0n7eXZOLBq983C5qwJInigeBT7a51oF@vger.kernel.org, AJvYcCX6d/B35VMJST4rUN/PwxszIUokKZvp5qiuM/1yAeIZ+2Uwol7uEa5r52GGIoemDQsF2GxEoB8NSVFhwZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzxfu4pCOG+aPIXLTyrqD5HcKj4F16Veim8NwBNEX+a1xL89rTr
-	yIWq6PD+pDDXR8sBTDSA1NlBG7+AasJtfXY1IydNZngN/4V1FlXLi3K38zJvWwwXkUf9jS/17VM
-	14RhYN13yoo1zwChDTnv6rbJ5JMU=
-X-Gm-Gg: ASbGncsKWasxwgzqAl5MCc8Nv+0bM4by01vCjPEpeBkufMpbWyiLWygWTBRP2j7A42p
-	mqAplcWKGAT3pdC3cOE2JUwXEfqyYvU8XiQR/d9HDLA9As+0jwdKqWf15iPbCUViKytmA66A=
-X-Google-Smtp-Source: AGHT+IGME/AC8qe5AUB1a8euFWY1Fz/Kaovk/J9faa/18hil/HqjrzuUjLy4va4QJwZOd0rfOqeVA912FK10yH1bVmk=
-X-Received: by 2002:a05:6808:1a25:b0:3f4:756:52cf with SMTP id
- 5614622812f47-3f4075653f4mr2211945b6e.10.1739870930338; Tue, 18 Feb 2025
- 01:28:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fjG+SX4u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739870955;
+	bh=yQlBwEetNAXy1+J71TlsSNNeiqeKL1aRYliDQ7TohCs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=fjG+SX4uSZwOGJWlQQAcOjH8oiGU8nmGlgm4SJDaKTO5Pnq1BVy+s/7nTtpBMJGDR
+	 QvlZ98DxAUx5hfByzWyyIJmqa4pYrTN8YBJLdJjvO0wMqm2Gflq5qDqfb7yYp3TPbI
+	 qnj5uUBGrqyfeaAY4cMuJkQzYeCnm1eUJ8KEwrNmvbtzBdYS0JBuWGqKkqAiZ6CDGp
+	 o87Nsu91rkqvdNbJYt1wqdAxmuNDJKy9z9FYCZCjvuCLXNORsOjHUTQIt5ZYDQcZWB
+	 3EpWnb66rGla+/BgFwTGvrjFs0aajrqIrpNfWYtakAuiM0FSEz5C/rupklAsbFx5Ra
+	 VYFmVdC9/+hDA==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5A7F017E0391;
+	Tue, 18 Feb 2025 10:29:15 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>, 
+ Fei Shao <fshao@chromium.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org
+In-Reply-To: <20241219113411.3999355-1-fshao@chromium.org>
+References: <20241219113411.3999355-1-fshao@chromium.org>
+Subject: Re: [PATCH] soc: mediatek: mtk-socinfo: Restructure SoC attribute
+ information
+Message-Id: <173987095528.24486.1591525974990532719.b4-ty@collabora.com>
+Date: Tue, 18 Feb 2025 10:29:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAO9wTFgN=hVJN8jUrFif0SO5hAvayrKweLDQSsmJWrE55wnTwQ@mail.gmail.com>
- <0c5f1dcf-1bd4-4ddd-b6c0-e3ee2b3671ea@kernel.org> <20250217153708.65269745@kernel.org>
-In-Reply-To: <20250217153708.65269745@kernel.org>
-From: Suchit K <suchitkarunakaran@gmail.com>
-Date: Tue, 18 Feb 2025 14:58:39 +0530
-X-Gm-Features: AWEUYZmqW1VEzyPQIcuB1lxWtLUFNSdx1n2rsSB5LI_l9n1oKwFOzJ96mNvsxiU
-Message-ID: <CAO9wTFgjZ+in3ypHCKGOtY=K7DBBfJy82d6gXw=4mqJG4vtOjw@mail.gmail.com>
-Subject: Re: [PATCH] selftests: net: Fix minor typos in MPTCP and
- psock_tpacket tests
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, netdev@vger.kernel.org, horms@kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-Hi Jakub. I've reposted the patch. Thanks.
+On Thu, 19 Dec 2024 19:33:50 +0800, Fei Shao wrote:
+> So far, the MediaTek socinfo driver populates the SoC information as
+> follows:
+>   - family:  "MediaTek"
+>   - machine: "<marketing_name> (<soc_name>)"
+>       e.g.,  "Kompanio 1380 (MT8195)"
+>   - soc_id:  <null>
+> 
+> [...]
 
-On Tue, 18 Feb 2025 at 05:07, Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Mon, 17 Feb 2025 11:08:36 +0100 Matthieu Baerts wrote:
-> > On 16/02/2025 13:25, Suchit K wrote:
-> > > Fixes minor spelling errors:
-> > > - `simult_flows.sh`: "al testcases" =E2=86=92 "all testcases"
-> > > - `psock_tpacket.c`: "accross" =E2=86=92 "across"
-> >
-> > The modifications in MPTCP (and psock_tpacket) look good to me:
-> >
-> > Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
-> Thanks! This patch is corrupted:
->
-> Applying: selftests: net: Fix minor typos in MPTCP and psock_tpacket test=
-s
-> error: git diff header lacks filename information when removing 1 leading=
- pathname component (line 7)
-> Patch failed at 0001 selftests: net: Fix minor typos in MPTCP and psock_t=
-packet tests
-> hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
-> hint: When you have resolved this problem, run "git am --continue".
-> hint: If you prefer to skip this patch, run "git am --skip" instead.
-> hint: To restore the original branch and stop patching, run "git am --abo=
-rt".
-> hint: Disable this message with "git config set advice.mergeConflict fals=
-e"
-> Waiting for rebase to finish Mon Feb 17 03:34:36 PM PST 2025^C
->
-> So repost will be needed (unless Matt wants to take it into his tree
-> manually).
->
-> > This patch can be applied directly in the netdev tree, but I'm not sure
-> > the Netdev maintainers will accept that kind of small clean-up patch
-> > alone, see:
-> >
-> >  https://docs.kernel.org/process/maintainer-netdev.html#clean-up-patche=
-s
->
-> FWIW spelling problems are explicitly called out as okay there.
-> --
-> pw-bot: cr
+Applied to v6.14-next/soc, thanks!
+
+[1/1] soc: mediatek: mtk-socinfo: Restructure SoC attribute information
+      commit: da77c2d3d06c6fa36ed26a5a48490b80e4f94753
+
+Cheers,
+Angelo
+
+
