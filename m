@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC1118E743;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A3F233128;
 	Tue, 18 Feb 2025 09:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872606; cv=none; b=itoUYTDg+vzLIOuO/CDMQsNSQnW8ly8WXfXtuzpcwUvXWhSffkIWXkqIh+pRrfFd8UaZoB+HbCSIzC8ES1FjufY6eOB0n93C9ZWifa57urMFpK1vcbsD1V2dh5lR8oQqOB9Thu4LPzOP5shopdtlGYBIlxkTmMuW9oc/NAMTXFc=
+	t=1739872606; cv=none; b=hIxwNtkpkudDRbQyhYIFQSaNTrfN45RPy6Rnkt0Mu/KieNJB9O8vEuUkzfRxaj8ilLEzN3Em3V9Ruj/c/MhG17Dq3U6OoEEZE9KT5WEmIn7Ocpl6k5m3Z0t6KqkSLAL/mbSHhWSTnqs8kTnDK7y0DdCvdGcnmpr/rExlFtni7ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739872606; c=relaxed/simple;
-	bh=gKOcrGpQjahVvJdglNWmSaswvExwnbWiiSjSH90VtpI=;
+	bh=N7FQbtF5ltXkGtvDBPbDBnYnA6Jue7K/KSgw9wenOFM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gwrcND5wrnqPPmcHDA2aeTStrXbmHd+gP0Z6Kqln5oUhq4nvaax2+MItt9hDopb00ufhGZ6wt5GZ2ckwXSCD+xY+s8m90pG0ocdgwTcuI/wJTmQs5rN3Ryr3v4B8+VZLYMbHHJzokICID22SQxAvlYUoETr/P8oogIa3Yy7Ij0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsAAAuDU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=eNluq0Tn3xHzlWat78lZ2WMDHH9swkN3X8spkiLkDSv3UbFR9AO6ECt9PAtrVWH90qSgjx0pwH6fH2WHeP65A8u1UPqRLO4znIqJBN6G23SBS+qRDhfj7JqXFmAD2+GpSTWkllWz4HEsHRM8Z1HrvG3CbzQhvXqGJKT9Xrdpmv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiLJJgU0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsAAAuDU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D6103C4CEF0;
-	Tue, 18 Feb 2025 09:56:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiLJJgU0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1B00CC116B1;
+	Tue, 18 Feb 2025 09:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739872605;
-	bh=gKOcrGpQjahVvJdglNWmSaswvExwnbWiiSjSH90VtpI=;
+	s=k20201202; t=1739872606;
+	bh=N7FQbtF5ltXkGtvDBPbDBnYnA6Jue7K/KSgw9wenOFM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fsAAAuDUrmTBpjf+pPR7mbS+SCq/vkH2zq/1nUArctmJSEhpXQaGCLTRsO1lEjITT
-	 yUREgDThnSIf+e3NvsnzKLR7oojEzmy36xjSo2gJIvdK+xvOqZybKW+Fmkt5wXv+zH
-	 2WEtIe6URfhy3zia00dCQf2k+67D52yFXuMwYH9hudxB7jvfC4xbIfvxnMU/BJSelk
-	 t8jnfB5wFK/fX439Xvj+mYoSv+2bTKUeI6shdsp0gUfStGEgYTUuLWbMVfQVzVmZqu
-	 ufBRMhwTww2nNjVba9gwRtyS2NMvw3XhyrG1ckv3LMaW2G/q25Nr18zkOfWd1wWB5O
-	 31cDuFMuVUsFQ==
+	b=PiLJJgU09VgdMcmCHRHUjALxcJXfrbvT47Lfk8/1IQHkViiDlPVIoxnpFfrSQUI/1
+	 mpoZ/zZr+9EiZREmqHSr9ZJNwdJN/SjoR3Iu7o7l3ticBq+qYXsihacBzGXVwSa1lF
+	 2w4UOrxBU8qxaFVW6uyk42Ud5JEIHuVP4qBDUCTezhviBeJT52YzcdodGKnJqWI6TN
+	 OUNm88jB7lANyq870kMpFZCO+xcwxyVYrESgVQQMuxXw2PLMyPdVrZIYsrKxr6pzzE
+	 tVq6qrwO+JduFv7LRaUyC2vUwmCM/lFUm9tnDUTibgVRYQXEnSnt0J60nGPtDOViqR
+	 8+eWf7T2pKllw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD80C02198;
-	Tue, 18 Feb 2025 09:56:45 +0000 (UTC)
-From: Joel Granados <joel.granados@kernel.org>
-Date: Tue, 18 Feb 2025 10:56:19 +0100
-Subject: [PATCH 3/8] ftrace: Move trace sysctls into trace.c
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E67DC02198;
+	Tue, 18 Feb 2025 09:56:46 +0000 (UTC)
+From: joel granados <joel.granados@kernel.org>
+Date: Tue, 18 Feb 2025 10:56:23 +0100
+Subject: [PATCH 7/8] s390: mv s390 sysctls into their own file under
+ arch/s390 dir
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-jag-mv_ctltables-v1-3-cd3698ab8d29@kernel.org>
+Message-Id: <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
 References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
 In-Reply-To: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
 To: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
@@ -69,155 +70,145 @@ Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
  sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, 
  linux-acpi@vger.kernel.org, Joel Granados <joel.granados@kernel.org>
 X-Mailer: b4 0.15-dev-64da2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4133;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3521;
  i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=gKOcrGpQjahVvJdglNWmSaswvExwnbWiiSjSH90VtpI=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGe0WViZ+1Utx9MJcRoUlK2QW6VYygMERf4Hj
- Ahbcaguu2zpRYkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJntFlYAAoJELqXzVK3
- lkFPUJQL/jbOqbjXit8Gy+oxvkYPcsV3ssL8il7SReg2PhRCFIkA8a31a0iIhDGRtpwXwz0dq/L
- CTmsWNMTMapxBbmyinvlCTFCMcpOx/B3JWFdM6uyNCy10Xs8H5VU9U3TTQz6rtqj6z8Jmn5Xcv8
- N1iJ+rsM0qDsa/wx8gf/A/HeVwZTKfj+VIHAgVfT5TDGFEzx22C2VSNzhPSIrqz7EdPifNzrche
- xdbRsDR4QYqveSKRYOetQqkaond55zNApIJDcYyAwlm0C4uCz0YkP5M2g8x2T1Wty6sF4bNIJEV
- MNHmOB0GLYo799ehS0P5B7D5Bp9JYw+HO90bKQ972uCB5tkrT/rKCvvCvpVIvLNuMnQOfnv9Gf/
- KeqL8S5Bxe/pNyeTSdwDzuMwaQg0jNgs1IT5V66G+5GNJH8k4P7ifO11fAXVH2uCAMx33e+lFHn
- GomuRYKFW6gRomNXfz3vj++4G17yWSAJ7co6mnb6DNf0+cg1LAjG9QhSrMvJl0tqlx2P+Hk8HX5
- o0=
+ bh=N7FQbtF5ltXkGtvDBPbDBnYnA6Jue7K/KSgw9wenOFM=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGe0WVrYqtwc7VEBWPUryeCr6UzTsodifa1V4
+ CuoLFfpqs2PiokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJntFlaAAoJELqXzVK3
+ lkFPBUsL/ilaJN/M2x5LmYQCnoB9tWZ3Y9gdJo92ZebGWWbZVzMlVOy16V+EWORPHSxFTyNq0jJ
+ 2DFlqm0+J41KgFUgCXXkWhavZqVV5QpGkCZQ1eUDsrSEISgNu+kpYhqllYTAcEQyLah33jm1Yld
+ 7z1SSWbm/mAPk/tRV39wZn6V8y4IVW+jczx6nUO/ekNqLAGg7dwYQAIepv7UixCMB2EgYqpqw0N
+ hBxmxHbhhdZstJGF+K5o8WZP6faE9ntyK1g42n8WZ/ENwjae2FiPTU5pI/D2f/HRybg4MrdvwY2
+ rcHQNzklx6KvCw1s/KFJyPvxdgpcVLqeMEtqoUwc0n6svbJZtgyUy/dwFePwTBQ+TXiuOjZYC/A
+ 07u47HcjEy2ajf3BNZNfGYdvpJkUCnMn1lzU1R8BGGDgvPgwYWFKBIaCzQv78MkEe56Qo8y2qsq
+ F0BnjOlkTFv1ecsfXZp3j6g8LlwO0jFg1b0L1gLh2AI/mIY99tSmoFdAvUomc+StqFRyZypCkM5
+ lE=
 X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
  auth_id=239
 
-Move trace ctl tables into their own const array in
-kernel/trace/trace.c. The sysctl table register is called with
-subsys_initcall placing if after its original place in proc_root_init.
+Move s390 sysctls (spin_retry and userprocess_debug) into their own
+files under arch/s390. We create two new sysctl tables
+(2390_{fault,spin}_sysctl_table) which will be initialized with
+arch_initcall placing them after their original place in proc_root_init.
+
 This is part of a greater effort to move ctl tables into their
 respective subsystems which will reduce the merge conflicts in
 kerenel/sysctl.c.
 
-Signed-off-by: Joel Granados <joel.granados@kernel.org>
+Signed-off-by: joel granados <joel.granados@kernel.org>
 ---
- include/linux/ftrace.h |  7 -------
- kernel/sysctl.c        | 24 ------------------------
- kernel/trace/trace.c   | 36 +++++++++++++++++++++++++++++++++++-
- 3 files changed, 35 insertions(+), 32 deletions(-)
+ arch/s390/lib/spinlock.c | 23 +++++++++++++++++++++++
+ arch/s390/mm/fault.c     | 17 +++++++++++++++++
+ kernel/sysctl.c          | 18 ------------------
+ 3 files changed, 40 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index fbabc3d848b3..59774513ae45 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1298,16 +1298,9 @@ static inline void unpause_graph_tracing(void) { }
- #ifdef CONFIG_TRACING
- enum ftrace_dump_mode;
+diff --git a/arch/s390/lib/spinlock.c b/arch/s390/lib/spinlock.c
+index a81a01c44927..4483fdc9d472 100644
+--- a/arch/s390/lib/spinlock.c
++++ b/arch/s390/lib/spinlock.c
+@@ -17,6 +17,10 @@
+ #include <asm/alternative.h>
+ #include <asm/asm.h>
  
--#define MAX_TRACER_SIZE		100
--extern char ftrace_dump_on_oops[];
- extern int ftrace_dump_on_oops_enabled(void);
--extern int tracepoint_printk;
- 
- extern void disable_trace_on_warning(void);
--extern int __disable_trace_on_warning;
--
--int tracepoint_printk_sysctl(const struct ctl_table *table, int write,
--			     void *buffer, size_t *lenp, loff_t *ppos);
- 
- #else /* CONFIG_TRACING */
- static inline void  disable_trace_on_warning(void) { }
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 6514c13800a4..baa250e223a2 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -51,7 +51,6 @@
- #include <linux/nfs_fs.h>
- #include <linux/acpi.h>
- #include <linux/reboot.h>
--#include <linux/ftrace.h>
- #include <linux/perf_event.h>
- #include <linux/oom.h>
- #include <linux/kmod.h>
-@@ -1684,29 +1683,6 @@ static const struct ctl_table kern_table[] = {
- 		.proc_handler	= stack_trace_sysctl,
- 	},
- #endif
--#ifdef CONFIG_TRACING
--	{
--		.procname	= "ftrace_dump_on_oops",
--		.data		= &ftrace_dump_on_oops,
--		.maxlen		= MAX_TRACER_SIZE,
--		.mode		= 0644,
--		.proc_handler	= proc_dostring,
--	},
--	{
--		.procname	= "traceoff_on_warning",
--		.data		= &__disable_trace_on_warning,
--		.maxlen		= sizeof(__disable_trace_on_warning),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
--	},
--	{
--		.procname	= "tracepoint_printk",
--		.data		= &tracepoint_printk,
--		.maxlen		= sizeof(tracepoint_printk),
--		.mode		= 0644,
--		.proc_handler	= tracepoint_printk_sysctl,
--	},
--#endif
- #ifdef CONFIG_MODULES
- 	{
- 		.procname	= "modprobe",
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 0e6d517e74e0..abfc0e56173b 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -117,6 +117,7 @@ static int tracing_disabled = 1;
- 
- cpumask_var_t __read_mostly	tracing_buffer_mask;
- 
-+#define MAX_TRACER_SIZE		100
- /*
-  * ftrace_dump_on_oops - variable to dump ftrace buffer on oops
-  *
-@@ -139,7 +140,40 @@ cpumask_var_t __read_mostly	tracing_buffer_mask;
- char ftrace_dump_on_oops[MAX_TRACER_SIZE] = "0";
- 
- /* When set, tracing will stop when a WARN*() is hit */
--int __disable_trace_on_warning;
-+static int __disable_trace_on_warning;
++#if defined(CONFIG_SMP)
++#include <linux/sysctl.h>
++#endif
 +
-+int tracepoint_printk_sysctl(const struct ctl_table *table, int write,
-+			     void *buffer, size_t *lenp, loff_t *ppos);
-+static const struct ctl_table trace_sysctl_table[] = {
+ int spin_retry = -1;
+ 
+ static int __init spin_retry_init(void)
+@@ -37,6 +41,25 @@ static int __init spin_retry_setup(char *str)
+ }
+ __setup("spin_retry=", spin_retry_setup);
+ 
++#if defined(CONFIG_SMP)
++static const struct ctl_table s390_spin_sysctl_table[] = {
 +	{
-+		.procname	= "ftrace_dump_on_oops",
-+		.data		= &ftrace_dump_on_oops,
-+		.maxlen		= MAX_TRACER_SIZE,
-+		.mode		= 0644,
-+		.proc_handler	= proc_dostring,
-+	},
-+	{
-+		.procname	= "traceoff_on_warning",
-+		.data		= &__disable_trace_on_warning,
-+		.maxlen		= sizeof(__disable_trace_on_warning),
++		.procname	= "spin_retry",
++		.data		= &spin_retry,
++		.maxlen		= sizeof(int),
 +		.mode		= 0644,
 +		.proc_handler	= proc_dointvec,
 +	},
++};
++
++static int __init init_s390_spin_sysctls(void)
++{
++	register_sysctl_init("kernel", s390_spin_sysctl_table);
++	return 0;
++}
++arch_initcall(init_s390_spin_sysctls);
++#endif
++
+ struct spin_wait {
+ 	struct spin_wait *next, *prev;
+ 	int node_id;
+diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+index 9b681f74dccc..507da355bf68 100644
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -175,6 +175,23 @@ static void dump_fault_info(struct pt_regs *regs)
+ 
+ int show_unhandled_signals = 1;
+ 
++static const struct ctl_table s390_fault_sysctl_table[] = {
 +	{
-+		.procname	= "tracepoint_printk",
-+		.data		= &tracepoint_printk,
-+		.maxlen		= sizeof(tracepoint_printk),
++		.procname	= "userprocess_debug",
++		.data		= &show_unhandled_signals,
++		.maxlen		= sizeof(int),
 +		.mode		= 0644,
-+		.proc_handler	= tracepoint_printk_sysctl,
++		.proc_handler	= proc_dointvec,
 +	},
 +};
 +
-+static int __init init_trace_sysctls(void)
++static int __init init_s390_fault_sysctls(void)
 +{
-+	register_sysctl_init("kernel", trace_sysctl_table);
++	register_sysctl_init("kernel", s390_fault_sysctl_table);
 +	return 0;
 +}
-+subsys_initcall(init_trace_sysctls);
- 
- #ifdef CONFIG_TRACE_EVAL_MAP_FILE
- /* Map of enums to their values, for "eval_map" file */
++arch_initcall(init_s390_fault_sysctls);
++
+ void report_user_fault(struct pt_regs *regs, long signr, int is_mm_fault)
+ {
+ 	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index b63d53e592d8..7f505f9ace87 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1702,15 +1702,6 @@ static const struct ctl_table kern_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_MAXOLDUID,
+ 	},
+-#ifdef CONFIG_S390
+-	{
+-		.procname	= "userprocess_debug",
+-		.data		= &show_unhandled_signals,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+-#endif
+ 	{
+ 		.procname	= "ngroups_max",
+ 		.data		= (void *)&ngroups_max,
+@@ -1791,15 +1782,6 @@ static const struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dointvec,
+ 	},
+ #endif
+-#if defined(CONFIG_S390) && defined(CONFIG_SMP)
+-	{
+-		.procname	= "spin_retry",
+-		.data		= &spin_retry,
+-		.maxlen		= sizeof (int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+-#endif
+ #if	defined(CONFIG_ACPI_SLEEP) && defined(CONFIG_X86)
+ 	{
+ 		.procname	= "acpi_video_flags",
 
 -- 
 2.44.2
