@@ -1,64 +1,65 @@
 Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA8526B2DB;
-	Tue, 18 Feb 2025 14:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E601826E65F;
+	Tue, 18 Feb 2025 14:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889472; cv=none; b=pYSap0VBHWCZ52iRCkfO3cwNV9WIpu/GN8FW8Rsp6MEs3APr8n691XmVGfb0Cj6MwE4PBbr7j8pCwYELLHXe6HooxhNQDBYNpb0Z8h70DZlOFiPEZZoIZUCD5dNd0PWDDj69PAEwCYkU/COGV3ehwIU4BPfY+I+cNTP2mo82F0s=
+	t=1739889477; cv=none; b=bW6cXx3KsmIL0Rw9bBPCylE7YMnZQgoap6aItzKMM9hds4lztv27lgbwsGgRxrodrVkRJMSwa+EhMUI6ZOyngb/DZQLUtXc5hwCZLo9cIuzXZ+eSwkKW5WzzZwPslPN90gnyl/yvybhFNXczc4RHudkFZge2Ljvrz+FF5UP+EB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889472; c=relaxed/simple;
-	bh=kTZkgisOeW801Sth2+lerhok9tOzKPXAzYpArOKOy6U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=J818UMEMoN7kyeX9AA1h2v0skWOjla0QEkb2wWJZdhY8rXury5bri5UuUUh+LYpaBsJbeDmhg+sTVlyBKIO/yYNyUtCcRKkx6abHLk0yePrpx9ZCqHlmScAJg65mf4gO9FRQmEfRpAyxogLZk9oUdfkUUdr/OLbKK65VFQdPN5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PBE19Myi; arc=none smtp.client-ip=209.85.160.172
+	s=arc-20240116; t=1739889477; c=relaxed/simple;
+	bh=nGhttoR1swOP1QTQwepuqeDirYgZPEDMvtJFLrL5dpk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mkZPmMK8afVxLTbWeruaETjl+UPgrcZPqOWur3wA66iYoFqSz2ly6sQKnQ+7v3P+hcUGNenYbS/xiBLkP9LPGflNgeCD2Ml65J/N7gPJigMjcBGfjX3l07P3q47HYae1HU+i9XrrdrhFqFauw5im7/aghfcxs3yaQEE2oGTgYOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBVREB9p; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBE19Myi"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-471f257f763so16314031cf.0;
-        Tue, 18 Feb 2025 06:37:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBVREB9p"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-472049c72afso4996381cf.2;
+        Tue, 18 Feb 2025 06:37:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739889470; x=1740494270; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+HcaZw8R1wNpH+/hwT2VE9RWMhIZpp47OuhMJQ43oHw=;
-        b=PBE19MyiA6N1yIcjTl3Mz55/aM9hzFAqGPkNCe8ia8XxGCl6ZWu/5dSM7UyLj819T2
-         cwA6H6s1A9sg/ukSUc85PQA0SX2BmIfgYZntwYat705J5wyoaNSLRFvjNjGe+sL4FvU1
-         LMyRAnlPaww/RNpzDlcT2WDe/3PtudgmMRVWmgyaOH0xodA0uJTy5Bn8AwM40snfRBHP
-         yyLZGNvJdqVznhR26ilLvVul56HrD6J7OdIZfkh22KsYI2Tc7ms/Vpm+Ga7qx0LYoFz/
-         aL8UVrfkYh69IPs+8WMmlUa7gbSz+myJ+iq5NSwgmH8m9n15w1L7OopM5bxZo+5SsUr0
-         BVeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739889470; x=1740494270;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1739889475; x=1740494275; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+HcaZw8R1wNpH+/hwT2VE9RWMhIZpp47OuhMJQ43oHw=;
-        b=upozvza4G3c74X4obCFPODUbB8D6ZvGTrMpSCI3alApyNiLOPtpevwOwqAmuvG38qp
-         oEGX5ky/m1Hb7ioyTqGO8WvgZHDk7wHstBWlrQeFfeYMMew6awXqBfaWRtqKRc2K9iuP
-         e7FRRNflavwxeTnn6Tsj6aBgwrY6A1oF+9rUdagnKG8mJY3ivUzM/IU/MZTWQZ0PXqRt
-         fJp3ysUaTN1lZtmSKcnip4uG8m4Y8nCdxCnHRm6Ar/j2LhJbsGe6o4nA2dHkSQIZznyp
-         KusTRO5g3u1egmAT/zNMsRlvoYi38sfRoV9nsVXnREQhjqNjZVZNA9kUIGcETZUW0ilf
-         yhCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAfvoK6RB6qhBoEr1M8WIFUDGYmp4nfiK3KpPVqmO8tHs/CqlgC/yCDAZbQ0hEwA2s0/WKuIKz0XNxcI81@vger.kernel.org, AJvYcCVB9HRsGJH7LVdnGn6ligFKPQVigb/iDBgUtiPAZLEwt8PnWVhV3PAxflL+5MwE65ZYqO3SGUMQqOXH@vger.kernel.org, AJvYcCWZhdbTPYp2BABtbR5QsFt/KXlySxVRvwQWEFtYe15k4aV6WcXZOo0sVMHkX0R/zYFtr9cb4NnpY9DGaR8c@vger.kernel.org, AJvYcCWpGQGoq7npRrIkgLctAOipmBibiqw3C91tHFrzzCR/goppMgDUsz0hC852hMF8CgXwttx/ycnpr5DdHawfl70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDJvnEe2QHztdf4u/sYPRK35GhCkWN47wbX+vS1Kr4+grXhNMl
-	ZV0BoiToGQ6JDGtpUtEgzabNJEodr9Uq5duqA0uXk8hR0ej5xw4l1JeHeI9P
-X-Gm-Gg: ASbGncsbtshNGC2+WZY8l+FX270Uc/UteUxdlrj1Nb0kuYqSjCKxTnpOW+2TpKuT1l9
-	jrqmQy43oCw+ASZz/2zphvZwikcFwEt8uQBclH/lJnyojufAcwdQGV0I4YApe8+DEi0J1cnBa2k
-	gPXwhgnLYsbX0KiPWgWC+g+qMGAyNLHObHaK+AllWQVuXfjTiwJ9Eo+bVGBF4O+W9rG4Avfsf0e
-	aJB/XTSad/Mk3yeV60h4zT8akcubM2qIBUJUjpKRKn6qpfAw5nfripA7Eh6SPiWdKYxhjALuqES
-	9FyssthjZkniXP3GuQNMUgcu4Bc55joxMYBrh1k=
-X-Google-Smtp-Source: AGHT+IG7VJe+61wvnIsolh0sANxc/xJbP61UOhGcDR2IAysdCbfSG3tsR8slb+Tj/RTbi9efoyXXNg==
-X-Received: by 2002:ac8:5892:0:b0:471:cdae:ac44 with SMTP id d75a77b69052e-471dbe978a2mr220943451cf.47.1739889469779;
-        Tue, 18 Feb 2025 06:37:49 -0800 (PST)
+        bh=ipEWRTbUNI0fhw7p2quxgycmIwXwELriTrZg15QiXvk=;
+        b=OBVREB9pgEgdLUh6F0I+4MfTfVDqRDqBiKPVkqVfiZn2EgTb3Q/LcW6OUoYVDpuorz
+         U/zeGhQIOiyg7ZsANU4U1yA8BeDsMQOWsz8wGUf2+LZ+k3MlJn4x8P1vMinXJ+r+nccd
+         nc+6V1CPGfknC2edtfqWAJJjgqoghBAVrze4LEmrHvDI5KrkltVWO3ZQNsv13OCSgRvx
+         ubud8JVA1eDJvdGB7jpkDVi3OlD+E5ssz9kuHX3WkZiwT4NZSK+yMl+D/PJ9/RIFtGpY
+         sNhyoLgqrEicSJVOp7Mj4gzrSZ8C5dKJUFBhvm7CyiFh7hY8e609GAoKoftio07/UIpW
+         TlPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739889475; x=1740494275;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ipEWRTbUNI0fhw7p2quxgycmIwXwELriTrZg15QiXvk=;
+        b=Eo2Ebv9UhOleK6MW36P/z2PKv8CZiU+k3YJIdnbptKE3XpWo9N5ubMBj5Wze0ky9gu
+         jqu6xQSLAs0N9yp9TakS+mjADV02A9ROhcztW6J4HoauCV2EdZj4LvnrRGPnQneq8Pw1
+         rbti3toOpiE5egRTWGxdDCw8Mt/3T6YvBN6d/gaAQqxRbiGjEyTLMlQqhQh2Ihx18zAR
+         seYcBpw6BChuWigQaO5j8Z3VhkT0x3RJ7991wyjDFCJWylfQuhhstVZia4Ugvph9EiPC
+         H5Dn80n5Q3FpQ6mAfIOD1MB2ZUtzXPGwWhPd8vZcrGkRMjJKbm0xrlJQNwEmwRoDben2
+         cjBA==
+X-Forwarded-Encrypted: i=1; AJvYcCURid0dLYlIZyydYmY02y/WJg9ItrYBigijRVpctpibIp5bX7NEGbLc7wImCf4Yzv9p5cBGZGdLRejw@vger.kernel.org, AJvYcCV6PjIqeMPZ31WX25VJsDUlUpIT56PpCeegNgPC02sy8PwKg/OYbWl8WImSoSO6HMa9PK4S4nvULeWNhyjX@vger.kernel.org, AJvYcCVO1B/d9q24Zd9LxXCDBlhlg0PDEaCK2v14hOJerA8AxnCm/oqT+c4QxHAXFrQ8amrl8DaadfTAxVrjFR0u@vger.kernel.org, AJvYcCW99I+pjF1XGgNQam3n+TBIL6xLgUAkZR6uYZskITMRWjNO6lP21kni2cVjBvMn9oKnS8W8+2ocUGnCDFVr6qA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHCqs0tdOjlMovYeHr103Fw9K3W1LoOsLwqyzzCGWSepTDmlGE
+	NN1ISkHw1dSuvVlghHuaC7mICd2gBEml7JWFtXDWIuTTNvvkgTYb
+X-Gm-Gg: ASbGncsg6iTmnNesH2/Fn5VruiWRVhUdMQaBlKaBhb+8lBffnH5QSd1Z5mNtAxnLlTA
+	/q2N90SVlZWkV5HPEJYvPcmZT2JsJ+sNq++iVKVCfRxQHhI+RmIeNx0D1QSSveQjV3FcVwM32Gh
+	uyiSS32JtiYgrSbT+4Wlg2nhNMVoIxryQg+Hnxm2ZFlZVRlE89h8edub4kfKEjNhZwcUzEdhulT
+	IUsCLRuIe2hbicLuxbEyse30tiPhnDlaaAF8vIwjmHiimZcdfG1ICjIAENdGZy9eG2JfUabk2Zb
+	T3Ed74tVik4ZPMi6qww1r5ns6G3PLdqsJVLJ5rA=
+X-Google-Smtp-Source: AGHT+IGWGozAyJpwGUgR/1ZiePcXGyBqaVKmWP4LBKOh5G7+06ogLFFHWvR9tghEbSQhwtHQ6RAYsQ==
+X-Received: by 2002:ac8:5e0b:0:b0:471:837f:d5bf with SMTP id d75a77b69052e-471dbd1a17amr194869601cf.12.1739889474669;
+        Tue, 18 Feb 2025 06:37:54 -0800 (PST)
 Received: from tamird-mac.local ([2600:4041:5be7:7c00:283f:a857:19c2:7622])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471ef0a5943sm24409281cf.51.2025.02.18.06.37.48
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471ef0a5943sm24409281cf.51.2025.02.18.06.37.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 06:37:49 -0800 (PST)
+        Tue, 18 Feb 2025 06:37:54 -0800 (PST)
 From: Tamir Duberstein <tamird@gmail.com>
-Subject: [PATCH v17 0/3] rust: xarray: Add a minimal abstraction for XArray
-Date: Tue, 18 Feb 2025 09:37:42 -0500
-Message-Id: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
+Date: Tue, 18 Feb 2025 09:37:45 -0500
+Subject: [PATCH v17 3/3] MAINTAINERS: add entry for Rust XArray API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,15 +67,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIADabtGcC/3XSzW7DIAwH8Fepch4VNpiEnfoe0w5AIEVqko2kU
- auq7z6afTRSlqMt/OMP8q0YfIp+KF53tyL5KQ6x73IB5cuucEfTNZ7FOjcK5CiBI2fpPIzsYlI
- yV2ZjV8euGZj1gUCCRK2qIo9+JB/iZXbf3nMdUt+y8Zi8+cO44BoFaSz3oCoNxJC1znTmdIiNO
- UWzd337YyX/ec7Rxid4jMPYp+uce9KP7ndCgOr/hJNmnAkE7WpLQlV0aFoTT/MlD3ACvlC23pl
- PZcYgWbTcBqpwxcCTQS62GMgMVUZTDaL0bs3gggHcYvDBaGO1hSBr9CtGLJnNNCIzlSICJb1CG
- VaMXDLlFiMzo4MPwvngrIQVQ78M5U1SWwzNX4yWamecsWLFqCWzmUZlBklZ7oIWytZL5n6/fwF
- gM3Xg+wIAAA==
-X-Change-ID: 20241020-rust-xarray-bindings-bef514142968
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-rust-xarray-bindings-v17-3-f3a99196e538@gmail.com>
+References: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
+In-Reply-To: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
 To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
  Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
  Gary Guo <gary@garyguo.net>, 
@@ -94,95 +90,37 @@ Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
  linux-pci@vger.kernel.org
 X-Mailer: b4 0.15-dev
 
-This is a reimagining relative to earlier versions[0] by Asahi Lina and
-Maíra Canal.
+Add an entry for the Rust xarray abstractions.
 
-It is needed to support rust-binder, though this version only provides
-enough machinery to support rnull.
-
-Link: https://lore.kernel.org/rust-for-linux/20240309235927.168915-2-mcanal@igalia.com/ [0]
+Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
-Changes in v17:
-- Drop patch "rust: remove redundant `as _` casts". (Danilo Krummrich)
-- Drop trailers for shared commit from configfs series[0]. (Danilo
-  Krummrich)
-- Avoid shadowing expressions with .cast() calls. (Danilo Krummrich)
-- Link to v16: https://lore.kernel.org/r/20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Changes in v16:
-- Extract prequel patch for `as _` casts. (Danilo Krummrich)
-- Improve doc and safety comments. (Boqun Feng)
-- Pull trailers for shared commit from configfs series[0]. (Andreas Hindborg, Alice Ryhl, Fiona Behrens)
-- Link to configfs series: https://lore.kernel.org/rust-for-linux/20250131-configfs-v1-1-87947611401c@kernel.org/
-- Link to v15: https://lore.kernel.org/r/20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com
+diff --git a/MAINTAINERS b/MAINTAINERS
+index efee40ea589f..f8d6a5f4a4cc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25794,6 +25794,17 @@ F:	lib/test_xarray.c
+ F:	lib/xarray.c
+ F:	tools/testing/radix-tree
+ 
++XARRAY API [RUST]
++M:	Tamir Duberstein <tamird@gmail.com>
++M:	Andreas Hindborg <a.hindborg@kernel.org>
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++W:	https://rust-for-linux.com
++B:	https://github.com/Rust-for-Linux/linux/issues
++C:	https://rust-for-linux.zulipchat.com
++T:	git https://github.com/Rust-for-Linux/linux.git rust-next
++F:	rust/kernel/xarray.rs
++
+ XBOX DVD IR REMOTE
+ M:	Benjamin Valentin <benpicco@googlemail.com>
+ S:	Maintained
 
-Changes in v15:
-- Rebase on v6.14-rc1.
-- Add MAINTAINERS entry.
-- Link to v14: https://lore.kernel.org/r/20241217-rust-xarray-bindings-v14-0-9fef3cefcb41@gmail.com
-
-Changes in v14:
-- Remove TODO made stale by Gary Guo's FFI type series.
-- Link: https://lore.kernel.org/all/20240913213041.395655-5-gary@garyguo.net/
-- Link to v13: https://lore.kernel.org/r/20241213-rust-xarray-bindings-v13-0-8655164e624f@gmail.com
-
-Changes in v13:
-- Replace `bool::then` with `if`. (Miguel Ojeda)
-- Replace `match` with `let` + `if`. (Miguel Ojeda)
-- Link to v12: https://lore.kernel.org/r/20241212-rust-xarray-bindings-v12-0-59ab9b1f4d2e@gmail.com
-
-Changes in v12:
-- Import `core::ptr::NonNull`. (Alice Ryhl)
-- Introduce `StoreError` to allow `?` to be used with `Guard::store`.
-  (Alice Ryhl)
-- Replace `{crate,core}::ffi::c_ulong` and clarify TODO with respect to
-  `usize`. (Alice Ryhl)
-- Drop `T: Sync` bound on `impl Sync for XArray<T>`. (Alice Ryhl)
-- Reword `Send` and `Sync` safety comments to match the style used in
-  `lock.rs`. (Alice Ryhl and Andreas
-  Hindborg)
-- Link to v11: https://lore.kernel.org/r/20241203-rust-xarray-bindings-v11-0-58a95d137ec2@gmail.com
-
-Changes in v11:
-- Consolidate imports. (Alice Ryhl)
-- Use literal `0` rather than `MIN`. (Alice Ryhl)
-- Use bulleted list in SAFETY comment. (Alice Ryhl)
-- Document (un)locking behavior of `Guard::store`. (Alice Ryhl)
-- Document Normal API behavior WRT `XA_ZERO_ENTRY`. (Alice Ryhl)
-- Rewrite `unsafe impl Sync` SAFETY comment. (Andreas Hindborg)
-- Link to v10: https://lore.kernel.org/r/20241120-rust-xarray-bindings-v10-0-a25b2b0bf582@gmail.com
-
-Changes in v10:
-- Guard::get takes &self instead of &mut self. (Andreas Hindborg)
-- Guard is !Send. (Boqun Feng)
-- Add Inspired-by tags. (Maíra Canal and Asahi Lina)
-- Rebase on linux-next, use NotThreadSafe. (Alice Ryhl)
-- Link to v9: https://lore.kernel.org/r/20241118-rust-xarray-bindings-v9-0-3219cdb53685@gmail.com
-
----
-Tamir Duberstein (3):
-      rust: types: add `ForeignOwnable::PointedTo`
-      rust: xarray: Add an abstraction for XArray
-      MAINTAINERS: add entry for Rust XArray API
-
- MAINTAINERS                     |  11 ++
- rust/bindings/bindings_helper.h |   6 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/xarray.c           |  28 ++++
- rust/kernel/alloc/kbox.rs       |  38 +++---
- rust/kernel/lib.rs              |   1 +
- rust/kernel/miscdevice.rs       |  10 +-
- rust/kernel/pci.rs              |   2 +-
- rust/kernel/platform.rs         |   2 +-
- rust/kernel/sync/arc.rs         |  21 +--
- rust/kernel/types.rs            |  46 ++++---
- rust/kernel/xarray.rs           | 276 ++++++++++++++++++++++++++++++++++++++++
- 12 files changed, 393 insertions(+), 49 deletions(-)
----
-base-commit: 11668f3b4a446222f0f3fe89b21247c176928c72
-change-id: 20241020-rust-xarray-bindings-bef514142968
-
-Best regards,
 -- 
-Tamir Duberstein <tamird@gmail.com>
+2.48.1
 
