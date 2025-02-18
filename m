@@ -1,30 +1,50 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFF73233159;
-	Tue, 18 Feb 2025 09:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8B71FFC48;
+	Tue, 18 Feb 2025 09:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739870653; cv=none; b=dzdQ3FS/sdWf3l/+FVQrrX8LcDnns06YFjk6awV1AZj2lm+aCjTpAwhUpddCJsS19MVtL6yD/5oNncA37Fv/NQqGnNKsjmp011v76rlKZ6RuCV8z9byp7W65q9CGrCRSHe0u7DtoIr+JtBUlt7e+EOBuhtoCCEE/LIV2gbnpFkg=
+	t=1739870689; cv=none; b=neaiqcNqETuynuwB/scxZG168RB6k5czaCCnd7xMEEJCvzLvU5F0r5P3VzX9am3kHTjyctEQOqbxZhfXRret2H6UkGfQUsLbbGQrvd+ZtbLjZ6aREIG9H694UV9MpXLbj9GerHsmfA8hfMeOWZCX5wgxS7nbMxWN9zlZmrcpnmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739870653; c=relaxed/simple;
-	bh=QlrFeM/WWhevHbuCRZ3/h/DidYjyTdQ4NVZyCs//d+g=;
+	s=arc-20240116; t=1739870689; c=relaxed/simple;
+	bh=u3NTUke63J+FiMXN2bpgaJxdQ+QYdBae8LOnVMR0vtw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eFaZOLFITFZWYIHurwGD3dvKXfeeCrOI42dJ6yhP2D2Z1NQ3e5FCQjIrmUmcJE0wdaQvTctdPFjSaZ7owGuP8H4kjjXm9UA/SFvdxu0kZFWrOa8q/AaBDiOa/cTGDrsdo2UI0OXbgWcEUY6u1oQVxIWoHGFV3+6M6PnpdBYarVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=TTGpfDfC; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	 In-Reply-To:Content-Type; b=XvQsOT1G9vCccSJNqWryTmVSUMtNRGFmmBlnoXuV/a05PG8ePquvGS5g5yQYJWIUNodThNwZpMN3KWdsmLYC9RF+MhaqyBZ4QznM2/sWY0V7OldjSP9DrKa+CzGtRuIMdrgGvceV8eBktr8jan/f6jaQaGAfqvxrG4dZe09NHXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h1V3ZfFp; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="TTGpfDfC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=q0FKelqD4MBXC07LZw1lv1trJGhq02WD8AUCXzMNScg=;
-	b=TTGpfDfC9SEr1KevxG+T+nBjD3R/STYOH9ZyeaAKJyA4BQ/t1cFHFCWCYOto0d
-	Ss0Nl2zD01rF7zBdeIu4U0rz82bryM6P9goh6Y963VcgeSIPqxA2rGCFDQ7Kspqs
-	KhpVKvNXphKYc1lWTk4fF94vA3Gn0hGmlad84Nodt0hAg=
-Received: from [172.19.20.199] (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDnl6toUbRn6etmBA--.9439S2;
-	Tue, 18 Feb 2025 17:22:48 +0800 (CST)
-Message-ID: <406c6713-356b-4acf-bcd0-e5a6c1e9adcf@126.com>
-Date: Tue, 18 Feb 2025 17:22:47 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1V3ZfFp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739870687; x=1771406687;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=u3NTUke63J+FiMXN2bpgaJxdQ+QYdBae8LOnVMR0vtw=;
+  b=h1V3ZfFpuz8woa3lKJkmljODYms/5kPci4XuciE3jgi1gwRAfL5NzEWM
+   VrtGDtKBGIL+w9LVJblO2vbx0Iz1ypkDnf+KslfM3MuPo5yyw5/YAbCtx
+   1XZPsPXvd613HSIz9YeCa5mNsQEqArDLMrkOFQcapiTZuaKoC1hJHaZ8I
+   qeqzPZRCl+7hluyS65EwspC/ssnEuBVu/yNu1oH0t5sdq3oPdE06ezg3o
+   jUEdI1HUNxpQSxI6vhEOwqtnWPPODCoedONTHTPl8O2/ESWQSpRyFV4XD
+   VSmhQQeTnOxHl+Y1v0a4bDp5V4rMTw5h395DiPuv3FlbN3E/jO32yPYbi
+   A==;
+X-CSE-ConnectionGUID: mV4nD0wORzmbljC68iJKpA==
+X-CSE-MsgGUID: 6KhEjPa4TEaOQSN0PupWoA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="50770709"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="50770709"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 01:24:46 -0800
+X-CSE-ConnectionGUID: PKzfezc7QLi6eGJFjA8ITw==
+X-CSE-MsgGUID: F1VeVPGETfelmdvdTilkwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="114208710"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 01:24:43 -0800
+Message-ID: <cf013079-ad8a-4b07-bbcf-6f35d1126a92@linux.intel.com>
+Date: Tue, 18 Feb 2025 17:24:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,95 +52,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: wait for hugepage folios to be freed
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
- osalvador@suse.de, liuzixing@hygon.cn
-References: <1739514729-21265-1-git-send-email-yangge1116@126.com>
- <37363b17-88b0-4ccc-a115-8c9f1d83a1b5@redhat.com>
- <d043bdd2-a978-4a09-869e-b6e43f5ce409@126.com>
- <2d0b01c5-a736-41d5-a0f7-db0da065d049@redhat.com>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <2d0b01c5-a736-41d5-a0f7-db0da065d049@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [kvm-unit-tests patch v6 05/18] x86: pmu: Enlarge cnt[] length to
+ 48 in check_counters_many()
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+ Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Like Xu <like.xu.linux@gmail.com>,
+ Jinrong Liang <cloudliang@tencent.com>, Yongwei Ma <yongwei.ma@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240914101728.33148-1-dapeng1.mi@linux.intel.com>
+ <20240914101728.33148-6-dapeng1.mi@linux.intel.com>
+ <Z6-wbu7KFqFDLTLH@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <Z6-wbu7KFqFDLTLH@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnl6toUbRn6etmBA--.9439S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXw17Gry8tFWfXFWruFW3ZFb_yoW5Ww48pF
-	W3Ca17G3yDJr9ayrnFqws09r10krWjqFWxWF1aqry3CFs8ArnrKF42ywn8uFW5Zr10ka10
-	qrWYvwnruF1UZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jUo7tUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOgD3G2e0Sbh-YAAAsr
 
 
-
-在 2025/2/18 16:55, David Hildenbrand 写道:
-> On 15.02.25 06:50, Ge Yang wrote:
+On 2/15/2025 5:06 AM, Sean Christopherson wrote:
+> On Sat, Sep 14, 2024, Dapeng Mi wrote:
+>> Considering there are already 8 GP counters and 4 fixed counters on
+>> latest Intel processors, like Sapphire Rapids. The original cnt[] array
+>> length 10 is definitely not enough to cover all supported PMU counters on
+>> these new processors even through currently KVM only supports 3 fixed
+>> counters at most. This would cause out of bound memory access and may trigger
+>> false alarm on PMU counter validation
 >>
+>> It's probably more and more GP and fixed counters are introduced in the
+>> future and then directly extends the cnt[] array length to 48 once and
+>> for all. Base on the layout of IA32_PERF_GLOBAL_CTRL and
+>> IA32_PERF_GLOBAL_STATUS, 48 looks enough in near feature.
 >>
->> 在 2025/2/14 16:08, David Hildenbrand 写道:
->>> On 14.02.25 07:32, yangge1116@126.com wrote:
->>>> From: Ge Yang <yangge1116@126.com>
->>>>
->>>> Since the introduction of commit b65d4adbc0f0 ("mm: hugetlb: defer
->>>> freeing
->>>> of HugeTLB pages"), which supports deferring the freeing of HugeTLB
->>>> pages,
->>>> the allocation of contiguous memory through cma_alloc() may fail
->>>> probabilistically.
->>>>
->>>> In the CMA allocation process, if it is found that the CMA area is
->>>> occupied
->>>> by in-use hugepage folios, these in-use hugepage folios need to be
->>>> migrated
->>>> to another location. When there are no available hugepage folios in the
->>>> free HugeTLB pool during the migration of in-use HugeTLB pages, new
->>>> folios
->>>> are allocated from the buddy system. A temporary state is set on the
->>>> newly
->>>> allocated folio. Upon completion of the hugepage folio migration, the
->>>> temporary state is transferred from the new folios to the old folios.
->>>> Normally, when the old folios with the temporary state are freed, it is
->>>> directly released back to the buddy system. However, due to the 
->>>> deferred
->>>> freeing of HugeTLB pages, the PageBuddy() check fails, ultimately 
->>>> leading
->>>> to the failure of cma_alloc().
->>>>
->>>> Here is a simplified call trace illustrating the process:
->>>> cma_alloc()
->>>>       ->__alloc_contig_migrate_range() // Migrate in-use hugepage
->>>>           ->unmap_and_move_huge_page()
->>>>               ->folio_putback_hugetlb() // Free old folios
->>>>       ->test_pages_isolated()
->>>>           ->__test_page_isolated_in_pageblock()
->>>>                ->PageBuddy(page) // Check if the page is in buddy
->>>>
->>>> To resolve this issue, we have implemented a function named
->>>> wait_for_hugepage_folios_freed(). This function ensures that the 
->>>> hugepage
->>>> folios are properly released back to the buddy system after their
->>>> migration
->>>> is completed. By invoking wait_for_hugepage_folios_freed() following 
->>>> the
->>>> migration process, we guarantee that when test_pages_isolated() is
->>>> executed, it will successfully pass.
->>>
->>> Okay, so after every successful migration -> put of src, we wait for the
->>> src to actually get freed.
->>>
->>> When migrating multiple hugetlb folios, we'd wait once per folio.
->>>
->>> It reminds me a bit about pcp caches, where folios are !buddy until the
->>> pcp was drained.
->>>
->> It seems that we only track unmovable, reclaimable, and movable pages on
->> the pcp lists. For specific details, please refer to the
->> free_frozen_pages() function.
-> 
-> It reminded me about PCP caches, because we effectively also have to 
-> wait for some stuck folios to properly get freed to the buddy.
-> 
-It seems that when an isolated page is freed, it won't be placed back 
-into the PCP caches.
+>> Reviewed-by: Jim Mattson <jmattson@google.com>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  x86/pmu.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/x86/pmu.c b/x86/pmu.c
+>> index a0268db8..b4de2680 100644
+>> --- a/x86/pmu.c
+>> +++ b/x86/pmu.c
+>> @@ -255,7 +255,7 @@ static void check_fixed_counters(void)
+>>  
+>>  static void check_counters_many(void)
+>>  {
+>> -	pmu_counter_t cnt[10];
+>> +	pmu_counter_t cnt[48];
+> ARGH.  Since the *entire* purpose of increasing the size is to guard against
+> buffer overflow, add an assert that the loop doesn't overflow.
 
+This is not only for ensuring no buffer overflow. As the commit message
+says,  the counter number has already exceeded 10, such as SPR has 12
+counters (8 GP + 4 fixed), and there would be more counters in later
+platfroms. The aim of enlarging the array size is to ensure these counters
+can be enabled and verified simultaneously.  48 may be too large and 32
+should be fair enough. Thanks.
+
+
+>
+>>  	int i, n;
+>>  
+>>  	for (i = 0, n = 0; n < pmu.nr_gp_counters; i++) {
+>> -- 
+>> 2.40.1
+>>
