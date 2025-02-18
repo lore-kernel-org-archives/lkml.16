@@ -1,362 +1,107 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC68D17A30B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD3621B9C7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739906482; cv=none; b=ZB9abjeH58SQrIsV4VQYSv9foLffS2HHVfRbSDwhhiSIkVn6aXny7/1wm/nWhdQHnK0N4uvbxc4VL+e9/SsBU7f4bxucMLlvtXaMUUdUUO2IHh4uB4An+n3F5CsnV0Ry1ENrWwsmSWfZ/DBbLR3rDaEug68JMfc0gUBBfYGQsJg=
+	t=1739906583; cv=none; b=O2tZruHvy1PPszMPrZkqQsZ5vN+acm5KGDgYKHK/g8XncKa29VilWoc0kvIEcdoub3ld42c2NJxw/MxhUgePPyx7IcAR9MdTX9gx+ipxakoKnqP+MDzICi5+rcUD9HhjmIj1WtZRJvPTqG7R/ovzJVzyzqtuHXtkFTk7sltTywo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739906482; c=relaxed/simple;
-	bh=g6pM5p59DtafRScJvERQT6s7kkxvi1A/0/KvljZlntI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMDczPflMRScgTtJj8cOuS0zd7HRFjCZhdGQ5X5WvWvQSqiNhsCTkfACeZ/+nMDvsExbg3kX0OkUF45xWF8HosnrxuRqMFeXaSB6z4T/RjUYoF7HAYIG0Tk0M8vF/EWU8JxCAfG3/R36uIe4MI9wH1GCSb3IE6KyaGGT1k2TrP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=CDVyVVOx; arc=none smtp.client-ip=185.125.25.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1739906583; c=relaxed/simple;
+	bh=swGB3xGE9Yoh2kRKbPlYsUFSqqbPDflfTARdV/Ubt4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s/fFWGJyvHDlvl0yFTkoueHgM28F7M06Srx8D86eLfuskQXJ0zLSt1s/Cq5zWwWiG8wzVgzAawPp3isjDvgvumeKxbKtMkJeDd25IeS4I1mJH4htlu3CStM02eC1e3nBttZJVhKex4aczZyKbIrQ3fUSXSLxpVDFV2DhsXQhPqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=acDAABgY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="CDVyVVOx"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yy8Wn35pzzsHM;
-	Tue, 18 Feb 2025 20:21:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1739906469;
-	bh=TP/4KcQ7PwfLgx3GavNd5mFGIeNpg/wtdpDBEjPeE/4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CDVyVVOxAKCow0jCQYaGujlvPHO5NV/YpVTGwRGnowb3Tx7KNADx/EvFsqplMLc8t
-	 RvOrGeXFrsl2IdL71gM5tIZOZudNlDlXK40iDkqsGrkIlEGCYKd769GZKnl2c8TRrV
-	 BeDZkTXErKsW+Ea2ZirTN2QM2GJJmgSHgogoszGw=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yy8Wm4VQ8z41;
-	Tue, 18 Feb 2025 20:21:08 +0100 (CET)
-Date: Tue, 18 Feb 2025 20:21:08 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Eric Paris <eparis@redhat.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
-	Ben Scarlato <akhna@google.com>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Charles Zaffery <czaffery@roblox.com>, Daniel Burgener <dburgener@linux.microsoft.com>, 
-	Francis Laniel <flaniel@linux.microsoft.com>, James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>, 
-	Jeff Xu <jeffxu@google.com>, Jorge Lucangeli Obes <jorgelo@google.com>, 
-	Kees Cook <kees@kernel.org>, Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
-	Phil Sutter <phil@nwl.cc>, Praveen K Paladugu <prapal@linux.microsoft.com>, 
-	Robert Salvet <robert.salvet@roblox.com>, Shervin Oloumi <enlightened@google.com>, 
-	Song Liu <song@kernel.org>, Tahera Fahimi <fahimitahera@gmail.com>, 
-	Tyler Hicks <code@tyhicks.com>, audit@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v5 10/24] landlock: Add AUDIT_LANDLOCK_DOMAIN and log
- domain status
-Message-ID: <20250218.aePeer3oole2@digikod.net>
-References: <20250131163059.1139617-11-mic@digikod.net>
- <7ed44e7b0e371302d29be95789cd1a57@paul-moore.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acDAABgY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739906581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YaNAwOy0l3tTCLhav17cAtoV5hBrzuMcbhO7CyzKHR8=;
+	b=acDAABgYj/WJ2FN12YBco4I2LTnsy4/TvM2PNcl/mlFw+i6LGctPkPOQbmLVYR3Tk6lKdr
+	hh+Dt7WzgOcJ2fVGJAdmBOtPaR1kVAZODTo7lYYbw7areuk9kVMJtYJ+VnjYCQzBR0P4kC
+	CaEWQTx5bkJAdvkqsASYPvG/HsnIBGg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-D2-hc7eYN4mzExwpWZUUqQ-1; Tue,
+ 18 Feb 2025 14:22:57 -0500
+X-MC-Unique: D2-hc7eYN4mzExwpWZUUqQ-1
+X-Mimecast-MFC-AGG-ID: D2-hc7eYN4mzExwpWZUUqQ_1739906576
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 213F5180087B;
+	Tue, 18 Feb 2025 19:22:56 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.9])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1538E180087C;
+	Tue, 18 Feb 2025 19:22:52 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/5] rxrpc, afs: Miscellaneous fixes
+Date: Tue, 18 Feb 2025 19:22:43 +0000
+Message-ID: <20250218192250.296870-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ed44e7b0e371302d29be95789cd1a57@paul-moore.com>
-X-Infomaniak-Routing: alpha
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Fri, Feb 14, 2025 at 05:52:49PM -0500, Paul Moore wrote:
-> On Jan 31, 2025 =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net> wrote:
-> > 
-> > Asynchronously log domain information when it first denies an access.
-> > This minimize the amount of generated logs, which makes it possible to
-> > always log denials since they should not happen (except with the new
-> > LANDLOCK_RESTRICT_SELF_QUIET flag).  These records are identified with
-> > the new AUDIT_LANDLOCK_DOMAIN type.
-> > 
-> > The AUDIT_LANDLOCK_DOMAIN message contains:
-> > - the "domain" ID which is described;
-> > - the "status" which can either be "allocated" or "deallocated";
-> > - the "mode" which is for now only "enforcing";
-> > - for the "allocated" status, a minimal set of properties to easily
-> >   identify the task that loaded the domain's policy with
-> >   landlock_restrict_self(2): "pid", "uid", executable path ("exe"), and
-> >   command line ("comm");
-> > - for the "deallocated" state, the number of "denials" accounted to this
-> >   domain, which is at least 1.
-> > 
-> > This requires each domain to save these task properties at creation
-> > time in the new struct landlock_details.  A reference to the PID is kept
-> > for the lifetime of the domain to avoid race conditions when
-> > investigating the related task.  The executable path is resolved and
-> > stored to not keep a reference to the filesystem and block related
-> > actions.  All these metadata are stored for the lifetime of the related
-> > domain and should then be minimal.  The required memory is not accounted
-> > to the task calling landlock_restrict_self(2) contrary to most other
-> > Landlock allocations (see related comment).
-> > 
-> > The AUDIT_LANDLOCK_DOMAIN record follows the first AUDIT_LANDLOCK_ACCESS
-> > record for the same domain, which is always followed by AUDIT_SYSCALL
-> > and AUDIT_PROCTITLE.  This is in line with the audit logic to first
-> > record the cause of an event, and then add context with other types of
-> > record.
-> > 
-> > Audit event sample for a first denial:
-> > 
-> >   type=LANDLOCK_ACCESS msg=audit(1732186800.349:44): domain=195ba459b blockers=ptrace opid=1 ocomm="systemd"
-> >   type=LANDLOCK_DOMAIN msg=audit(1732186800.349:44): domain=195ba459b status=allocated mode=enforcing pid=300 uid=0 exe="/root/sandboxer" comm="sandboxer"
-> >   type=SYSCALL msg=audit(1732186800.349:44): arch=c000003e syscall=101 success=no [...] pid=300 auid=0
-> > 
-> > Audit event sample for a following denial:
-> > 
-> >   type=LANDLOCK_ACCESS msg=audit(1732186800.372:45): domain=195ba459b blockers=ptrace opid=1 ocomm="systemd"
-> >   type=SYSCALL msg=audit(1732186800.372:45): arch=c000003e syscall=101 success=no [...] pid=300 auid=0
-> > 
-> > Log domain deletion with the "deallocated" state when a domain was
-> > previously logged.  This makes it possible for log parsers to free
-> > potential resources when a domain ID will never show again.
-> > 
-> > The number of denied access requests is useful to easily check how many
-> > access requests a domain blocked and potentially if some of them are
-> > missing in logs because of audit rate limiting or audit rules.  Rate
-> > limiting could also drop this record though.
-> > 
-> > Audit event sample for a deletion of a domain that denied something:
-> > 
-> >   type=LANDLOCK_DOMAIN msg=audit(1732186800.393:46): domain=195ba459b status=deallocated denials=2
-> > 
-> > Cc: Günther Noack <gnoack@google.com>
-> > Cc: Paul Moore <paul@paul-moore.com>
-> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> > Link: https://lore.kernel.org/r/20250131163059.1139617-11-mic@digikod.net
-> > ---
-> > Changes since v4:
-> > - Rename AUDIT_LANDLOCK_DOM_{INFO,DROP} to AUDIT_LANDLOCK_DOMAIN and add
-> >   a "status" field, as requested by Paul.
-> > - Add a harcoded "mode=enforcing" to leave room for a potential future
-> >   permissive mode, as suggested by Paul.
-> > - Remove the "creation" timestamp, as suggested by Paul.
-> > - Move LANDLOCK_PATH_MAX_SIZE to domain.h, check the size of the
-> >   greatest landlock_details at build time, and improve comments.
-> > - Improve audit check in landlock_log_drop_domain().
-> > - Add missing headers.
-> > - Fix typo in comment.
-> > - Rebase on top of the landlock_log_denial() and subject type changes.
-> > 
-> > Changes since v3:
-> > - Log number of denied access requests with AUDIT_LANDLOCK_DOM_DROP
-> >   records, suggested by Tyler.
-> > - Do not store a struct path pointer but the resolved string instead.
-> >   This enables us to not block unmount of the initially restricted task
-> >   executable's mount point.  See the new get_current_info() and
-> >   get_current_exe().  A following patch add tests for this case.
-> > - Create and allocate a new struct landlock_details for initially
-> >   restricted task's information.
-> > - Remove audit_get_ctime() call, as requested by Paul.  We now always
-> >   have a standalone timestamp per Landlock domain creations.
-> > - Fix docstring.
-> > 
-> > Changes since v2:
-> > - Fix docstring.
-> > - Fix log_status check in log_hierarchy() to also log
-> >   LANDLOCK_LOG_DISABLED.
-> > - Add audit's creation time to domain's properties.
-> > - Use hexadecimal notation for domain IDs.
-> > - Remove domain's parent records: parent domains are not really useful
-> >   in the logs.  They will be available with the upcoming introspection
-> >   feature though.
-> > - Extend commit message with audit's timestamp explanation.
-> > 
-> > Changes since v1:
-> > - Add a ruleset's version for atomic logs.
-> > - Rebased on the TCP patch series.
-> > - Rename operation using "_" instead of "-".
-> > - Rename AUDIT_LANDLOCK to AUDIT_LANDLOCK_RULESET.
-> > - Only log when audit is enabled, but always set domain IDs.
-> > - Don't log task's PID/TID with log_task() because it would be redundant
-> >   with the SYSCALL record.
-> > - Remove race condition when logging ruleset creation and logging
-> >   ruleset modification while the related file descriptor was already
-> >   registered but the ruleset creation not logged yet.
-> > - Fix domain drop logs.
-> > - Move the domain drop record from the previous patch into this one.
-> > - Do not log domain creation but log first domain use instead.
-> > - Save task's properties that sandbox themselves.
-> > ---
-> >  include/uapi/linux/audit.h  |   1 +
-> >  security/landlock/audit.c   |  90 ++++++++++++++++++++++++++++++--
-> >  security/landlock/audit.h   |   7 +++
-> >  security/landlock/domain.c  | 101 ++++++++++++++++++++++++++++++++++++
-> >  security/landlock/domain.h  |  68 ++++++++++++++++++++++++
-> >  security/landlock/ruleset.c |   6 +++
-> >  6 files changed, 270 insertions(+), 3 deletions(-)
-> 
-> Some minor questions below, but from an audit perspective this is okay.
-> 
-> Acked-by: Paul Moore <paul@paul-moore.com> (Audit)
-> 
-> > diff --git a/security/landlock/audit.c b/security/landlock/audit.c
-> > index b0dde6bcfb76..a5b055306757 100644
-> > --- a/security/landlock/audit.c
-> > +++ b/security/landlock/audit.c
-> > @@ -8,6 +8,8 @@
-> >  #include <kunit/test.h>
-> >  #include <linux/audit.h>
-> >  #include <linux/lsm_audit.h>
-> > +#include <linux/pid.h>
-> > +#include <linux/uidgid.h>
-> >  
-> >  #include "audit.h"
-> >  #include "cred.h"
-> > @@ -31,6 +33,40 @@ static void log_blockers(struct audit_buffer *const ab,
-> >  	audit_log_format(ab, "%s", get_blocker(type));
-> >  }
-> >  
-> > +static void log_node(struct landlock_hierarchy *const node)
-> > +{
-> > +	struct audit_buffer *ab;
-> > +
-> > +	if (WARN_ON_ONCE(!node))
-> > +		return;
-> > +
-> > +	/* Ignores already logged domains.  */
-> > +	if (READ_ONCE(node->log_status) == LANDLOCK_LOG_RECORDED)
-> > +		return;
-> > +
-> > +	ab = audit_log_start(audit_context(), GFP_ATOMIC,
-> > +			     AUDIT_LANDLOCK_DOMAIN);
-> 
-> You use __GFP_NOWARN in the other calls to audit_log_start(), did you
-> mean to use it here as well?
+Here are some miscellaneous fixes for rxrpc and afs:
 
-Good catch, this is at least inconsistent.
+ (1) In the rxperf test server, make it correctly receive and decode the
+     terminal magic cookie.
 
-My initial though was that we should use __GFP_NOWARN for access
-requests that can occure frequently, and common_lsm_audit() already uses
-this flag, and the fact that audit events might not be logged at all for
-other reasons (e.g. burst of entries).  But __GFP_NOWARN is not use for
-all audit_log_start() calls.
+ (2) In rxrpc, get rid of the peer->mtu_lock as it is not only redundant,
+     it now causes a lockdep complaint.
 
-For domain allocations and deallocations, this should rarely happen
-during the life of a process, and it looked reasonable to warn about an
-issue at this point.
+ (3) In rxrpc, fix a lockdep-detected instance where a spinlock is being
+     bh-locked whilst irqs are disabled.
 
-Are there guidance about __GFP_NOWARN for audit or other subsystems?
+ (4) In afs, fix the ref of a server displaced from an afs_server_list
+     struct.
 
-> 
-> > +	if (!ab)
-> > +		return;
-> > +
-> > +	WARN_ON_ONCE(node->id == 0);
-> > +	audit_log_format(
-> > +		ab,
-> > +		"domain=%llx status=allocated mode=enforcing pid=%d uid=%u exe=",
-> > +		node->id, pid_nr(node->details->pid),
-> > +		from_kuid(&init_user_ns, node->details->cred->uid));
-> > +	audit_log_untrustedstring(ab, node->details->exe_path);
-> > +	audit_log_format(ab, " comm=");
-> > +	audit_log_untrustedstring(ab, node->details->comm);
-> > +	audit_log_end(ab);
-> > +
-> > +	/*
-> > +	 * There may be race condition leading to logging of the same domain
-> > +	 * several times but that is OK.
-> > +	 */
-> > +	WRITE_ONCE(node->log_status, LANDLOCK_LOG_RECORDED);
-> > +}
-> > +
-> >  static struct landlock_hierarchy *
-> >  get_hierarchy(const struct landlock_ruleset *const domain, const size_t layer)
-> >  {
+ (5) In afs, make afs_server records belonging to a cell take refs on the
+     afs_cell record so that the latter doesn't get deleted first when that
+     cell is being destroyed.
 
-> > @@ -106,16 +142,24 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
-> >  	if (!is_valid_request(request))
-> >  		return;
-> >  
-> > -	if (!unlikely(audit_context() && audit_enabled))
-> > -		return;
-> > -
-> >  	youngest_layer = request->layer_plus_one - 1;
-> >  	youngest_denied = get_hierarchy(subject->domain, youngest_layer);
-> >  
-> > +	/*
-> > +	 * Consistently keeps track of the number of denied access requests
-> > +	 * even if audit is currently disabled, if audit rules currently
-> > +	 * exclude this record type, or if landlock_restrict_self(2)'s flags
-> > +	 * quiet logs.
-> > +	 */
-> > +	atomic64_inc(&youngest_denied->num_denials);
-> > +
-> >  	/* Ignores denials after an execution. */
-> >  	if (!(subject->domain_exec & (1 << youngest_layer)))
-> >  		return;
-> >  
-> > +	if (!unlikely(audit_context() && audit_enabled))
-> > +		return;
-> > +
-> 
-> Not a big deal either way, but it seems like the check above should
-> probably be in patch 09/24.
+David
 
-It is in 09/24 but it's moved in this patch because we need to count
-denials consistently, see a few lines above.
+The patches can be found here also:
 
-> 
-> >  	ab = audit_log_start(audit_context(), GFP_ATOMIC | __GFP_NOWARN,
-> >  			     AUDIT_LANDLOCK_ACCESS);
-> >  	if (!ab)
-> > @@ -125,6 +169,46 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
-> >  	log_blockers(ab, request->type);
-> >  	audit_log_lsm_data(ab, &request->audit);
-> >  	audit_log_end(ab);
-> > +
-> > +	/* Logs this domain if it is the first time. */
-> > +	log_node(youngest_denied);
-> > +}
-> > +
-> > +/**
-> > + * landlock_log_drop_domain - Create an audit record when a domain is deleted
-> > + *
-> > + * @domain: The domain being deleted.
-> > + *
-> > + * Only domains which previously appeared in the audit logs are logged again.
-> > + * This is useful to know when a domain will never show again in the audit log.
-> > + *
-> > + * This record is not directly tied to a syscall entry.
-> > + *
-> > + * Called by the cred_free() hook, in an uninterruptible context.
-> > + */
-> > +void landlock_log_drop_domain(const struct landlock_ruleset *const domain)
-> > +{
-> > +	struct audit_buffer *ab;
-> > +
-> > +	if (WARN_ON_ONCE(!domain->hierarchy))
-> > +		return;
-> > +
-> > +	if (!unlikely(audit_enabled))
-> > +		return;
-> 
-> I'm guessing you probably also want to check the audit context given
-> that you are doing it elsewhere?
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
 
-The context is NULL when this function is called, I guess because it is
-not directly triggered by a syscall but deferred to the domain
-deallocation.
+David Howells (5):
+  rxrpc: rxperf: Fix missing decoding of terminal magic cookie
+  rxrpc: peer->mtu_lock is redundant
+  rxrpc: Fix locking issues with the peer record hash
+  afs: Fix the server_list to unuse a displaced server rather than
+    putting it
+  afs: Give an afs_server object a ref on the afs_cell object it points
+    to
 
-> 
-> > +	/* Ignores domains that were not logged.  */
-> > +	if (READ_ONCE(domain->hierarchy->log_status) != LANDLOCK_LOG_RECORDED)
-> > +		return;
-> > +
-> > +	ab = audit_log_start(audit_context(), GFP_ATOMIC,
-> > +			     AUDIT_LANDLOCK_DOMAIN);
-> > +	if (!ab)
-> > +		return;
-> > +
-> > +	audit_log_format(ab, "domain=%llx status=deallocated denials=%llu",
-> > +			 domain->hierarchy->id,
-> > +			 atomic64_read(&domain->hierarchy->num_denials));
-> > +	audit_log_end(ab);
-> >  }
-> >  
-> >  #ifdef CONFIG_SECURITY_LANDLOCK_KUNIT_TEST
-> 
-> --
-> paul-moore.com
-> 
+ fs/afs/server.c            |  3 +++
+ fs/afs/server_list.c       |  4 ++--
+ include/trace/events/afs.h |  2 ++
+ net/rxrpc/ar-internal.h    |  1 -
+ net/rxrpc/input.c          |  2 --
+ net/rxrpc/peer_event.c     |  9 +--------
+ net/rxrpc/peer_object.c    |  5 ++---
+ net/rxrpc/rxperf.c         | 12 ++++++++++++
+ 8 files changed, 22 insertions(+), 16 deletions(-)
+
