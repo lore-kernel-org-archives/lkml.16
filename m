@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98651DDA2F;
-	Tue, 18 Feb 2025 20:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A6520102B;
+	Tue, 18 Feb 2025 20:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910415; cv=none; b=I6uQLEKmyo8SMKntlcF0rQvc3xVSulyAo0jSJiio9koXBONN4X2r0m2kgkJxbfS4MSM6NCVEf2i3mkDzbqOebwjd9zk9dK2ywdeFdYnJ9gMfCJJWzW/ZHU67j1mUMwHAhBdu0AdYoUiJ3X0Qne58rVxdsmG1Y0Ws2+wTcdtp7bI=
+	t=1739910418; cv=none; b=SAbWrQIpC5+alcMCFiXz0B3SkdgJb0kmVfVBDoHI+gzmB22VKqxHtL15l6+CwMynQEaqPy6jL8U2TJ6KVEjMsjVA/CNN1KpV6wgonZTrcBam2kkyxkZmBjB/245aIMJu6FBbEVLq3QG35GqnA7xBGM0j1+5/J+LKp5pw54FRBhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910415; c=relaxed/simple;
-	bh=OL3iHrhYU1CtX7JtXkVz4l/Hrhz90/5DcBtZjk9qTsY=;
+	s=arc-20240116; t=1739910418; c=relaxed/simple;
+	bh=LdtzdOFt4c3JVnt2IqX0N0jlHd/IKoQ64fBioyu5dNA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IygLiM4d1hwtrwRdwXu8e5tQoPsoAbAR1X7Nhdd9Z2Bh7nogdVM7ZWEz8NDIFpFjkC6+BsUkzQ2OIewfMVMM6nu0Sa5D8NUnmukcBkk//eMIPDdfbUJs0jCv9c6pxiTpjbZ0Ad8pNY5buAse4z5O17bSL7UZuN2eY6Jj0oM6868=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REfc6BDy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=QvGc61oPuvfZN+ddxALxyHumW30wKz1hUOlBHU24gSm6hdpAGqKMh6Eeddffso5VmJ/sN5NCiynHBRcdCdf860gQU4pTpez0TmXUPpChstWc6NZiwB6raSNijf8W4ibzXGQJ1kgpfgxX1G6j/EMuuCuaetNKRnEvh0fLpxxUjnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NncNsdTj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REfc6BDy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BE4C4CEE8;
-	Tue, 18 Feb 2025 20:26:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NncNsdTj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEAFC4CEE9;
+	Tue, 18 Feb 2025 20:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739910414;
-	bh=OL3iHrhYU1CtX7JtXkVz4l/Hrhz90/5DcBtZjk9qTsY=;
+	s=k20201202; t=1739910417;
+	bh=LdtzdOFt4c3JVnt2IqX0N0jlHd/IKoQ64fBioyu5dNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=REfc6BDyoi07jiL++Gnof8a22ENXgpXSaA0V6mqNtbrDNLKxKtaUxpv1sHWeCFtsK
-	 RavtB1QQrFrVQ8FH9k7XTPkBhM2+5gxDizQn3jWhuhHiWsRBz4v7lNZwwyxjdBCaOD
-	 WxjOxNmqARE66U29XER7sVbhjgxMhbX1s8LSLa6q8xqOI0DkmtTlws+v4PnrGXxdMN
-	 TNPPLAt05r0szc81Yw2KpT5CPL++NQoGe4AZfYyJzpOF3zb4qxDnIo1scOfF1qq85P
-	 J5pF/rVXyRSu+mgDXadQihdBetrsebjjQX39G8BDms2g9SIWU+hefdPQXRs/cSJtop
-	 1jtNXVVwzTklA==
+	b=NncNsdTjwnccegfFl3Ab8YUcduVmA3qoe08bM1okT2P1WY3jXyoZohoVaG7it65UW
+	 6QpSw+IJP9FvXMC+zAwERo6ZspPtj5d7eb6mD5l2PN8JQyKYM6WMmNLwdNnMMitlj3
+	 dNdbF87F7gkrwfhkK0Ega1YW1fy3ffWjojHV4UhWxYHrnWUHUlDTHgZ6F0y9rUWqHj
+	 r8hsrPYu6r9TpQLH8Reo19pLBh0Ltaf9mbVI52lze6oi2T0j3ccDf1Ocrg+uJsoBRy
+	 Cm72ILmH4Xd19a8WIpn5oWCB39JHYGzYNcUcDGwfvXEH9nSjpxoiFw/U4EmGQ9BAP6
+	 jRP1RdGnCShOg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	hmh@hmh.eng.br,
-	hdegoede@redhat.com,
-	ibm-acpi-devel@lists.sourceforge.net,
+	djrscally@gmail.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 16/31] platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
-Date: Tue, 18 Feb 2025 15:26:02 -0500
-Message-Id: <20250218202619.3592630-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 18/31] platform/x86: int3472: Call "reset" GPIO "enable" for INT347E
+Date: Tue, 18 Feb 2025 15:26:04 -0500
+Message-Id: <20250218202619.3592630-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250218202619.3592630-1-sashal@kernel.org>
 References: <20250218202619.3592630-1-sashal@kernel.org>
@@ -54,117 +54,105 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.15
 Content-Transfer-Encoding: 8bit
 
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit 9cff907cbf8c7fb5345918dbcc7b74a01656f34f ]
+[ Upstream commit 569617dbbd06286fb73f3f1c2ac91e51d863c7de ]
 
-Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
-profiles used for PSC mode. Add support for this update.
-Tested on P14s G5 AMD
+The DT bindings for ov7251 specify "enable" GPIO (xshutdown in
+documentation) but the int3472 indiscriminately provides this as a "reset"
+GPIO to sensor drivers. Take this into account by assigning it as "enable"
+with active high polarity for INT347E devices, i.e. ov7251. "reset" with
+active low polarity remains the default GPIO name for other devices.
 
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Link: https://lore.kernel.org/r/20250206193953.58365-1-mpearson-lenovo@squebb.ca
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20250211072841.7713-3-sakari.ailus@linux.intel.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 34 ++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ drivers/platform/x86/intel/int3472/discrete.c | 52 +++++++++++++++++--
+ 1 file changed, 48 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 05d77f87e235e..31ec9ec9206cf 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -10329,6 +10329,10 @@ static struct ibm_struct proxsensor_driver_data = {
- #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
- #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index dc4d09611c5ab..9e69ac9cfb92c 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -2,6 +2,7 @@
+ /* Author: Dan Scally <djrscally@gmail.com> */
  
-+#define DYTC_MODE_PSCV9_LOWPOWER 1  /* Low power mode */
-+#define DYTC_MODE_PSCV9_BALANCE  3  /* Default mode aka balanced */
-+#define DYTC_MODE_PSCV9_PERFORM  4  /* High power mode aka performance */
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
+ #include <linux/bitfield.h>
+ #include <linux/device.h>
+ #include <linux/gpio/consumer.h>
+@@ -122,10 +123,53 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+ 	return desc;
+ }
+ 
+-static void int3472_get_func_and_polarity(u8 type, const char **func,
+-					  unsigned long *gpio_flags)
++/**
++ * struct int3472_gpio_map - Map GPIOs to whatever is expected by the
++ * sensor driver (as in DT bindings)
++ * @hid: The ACPI HID of the device without the instance number e.g. INT347E
++ * @type_from: The GPIO type from ACPI ?SDT
++ * @type_to: The assigned GPIO type, typically same as @type_from
++ * @func: The function, e.g. "enable"
++ * @polarity_low: GPIO_ACTIVE_LOW true if the @polarity_low is true,
++ * GPIO_ACTIVE_HIGH otherwise
++ */
++struct int3472_gpio_map {
++	const char *hid;
++	u8 type_from;
++	u8 type_to;
++	bool polarity_low;
++	const char *func;
++};
 +
- #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
- #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
- 
-@@ -10349,6 +10353,10 @@ static int dytc_capabilities;
- static bool dytc_mmc_get_available;
- static int profile_force;
- 
-+static int platform_psc_profile_lowpower = DYTC_MODE_PSC_LOWPOWER;
-+static int platform_psc_profile_balanced = DYTC_MODE_PSC_BALANCE;
-+static int platform_psc_profile_performance = DYTC_MODE_PSC_PERFORM;
++static const struct int3472_gpio_map int3472_gpio_map[] = {
++	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, false, "enable" },
++};
 +
- static int convert_dytc_to_profile(int funcmode, int dytcmode,
- 		enum platform_profile_option *profile)
++static void int3472_get_func_and_polarity(struct acpi_device *adev, u8 *type,
++					  const char **func, unsigned long *gpio_flags)
  {
-@@ -10370,19 +10378,15 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
- 		}
- 		return 0;
- 	case DYTC_FUNCTION_PSC:
--		switch (dytcmode) {
--		case DYTC_MODE_PSC_LOWPOWER:
-+		if (dytcmode == platform_psc_profile_lowpower)
- 			*profile = PLATFORM_PROFILE_LOW_POWER;
--			break;
--		case DYTC_MODE_PSC_BALANCE:
-+		else if (dytcmode == platform_psc_profile_balanced)
- 			*profile =  PLATFORM_PROFILE_BALANCED;
--			break;
--		case DYTC_MODE_PSC_PERFORM:
-+		else if (dytcmode == platform_psc_profile_performance)
- 			*profile =  PLATFORM_PROFILE_PERFORMANCE;
--			break;
--		default: /* Unknown mode */
-+		else
- 			return -EINVAL;
--		}
+-	switch (type) {
++	unsigned int i;
 +
- 		return 0;
- 	case DYTC_FUNCTION_AMT:
- 		/* For now return balanced. It's the closest we have to 'auto' */
-@@ -10403,19 +10407,19 @@ static int convert_profile_to_dytc(enum platform_profile_option profile, int *pe
- 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
- 			*perfmode = DYTC_MODE_MMC_LOWPOWER;
- 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
--			*perfmode = DYTC_MODE_PSC_LOWPOWER;
-+			*perfmode = platform_psc_profile_lowpower;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
- 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
- 			*perfmode = DYTC_MODE_MMC_BALANCE;
- 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
--			*perfmode = DYTC_MODE_PSC_BALANCE;
-+			*perfmode = platform_psc_profile_balanced;
- 		break;
- 	case PLATFORM_PROFILE_PERFORMANCE:
- 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
- 			*perfmode = DYTC_MODE_MMC_PERFORM;
- 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
--			*perfmode = DYTC_MODE_PSC_PERFORM;
-+			*perfmode = platform_psc_profile_performance;
- 		break;
- 	default: /* Unknown profile */
- 		return -EOPNOTSUPP;
-@@ -10604,6 +10608,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
- 	if (output & BIT(DYTC_QUERY_ENABLE_BIT))
- 		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
++	for (i = 0; i < ARRAY_SIZE(int3472_gpio_map); i++) {
++		/*
++		 * Map the firmware-provided GPIO to whatever a driver expects
++		 * (as in DT bindings). First check if the type matches with the
++		 * GPIO map, then further check that the device _HID matches.
++		 */
++		if (*type != int3472_gpio_map[i].type_from)
++			continue;
++
++		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
++			continue;
++
++		*type = int3472_gpio_map[i].type_to;
++		*gpio_flags = int3472_gpio_map[i].polarity_low ?
++			      GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
++		*func = int3472_gpio_map[i].func;
++		return;
++	}
++
++	switch (*type) {
+ 	case INT3472_GPIO_TYPE_RESET:
+ 		*func = "reset";
+ 		*gpio_flags = GPIO_ACTIVE_LOW;
+@@ -218,7 +262,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
  
-+	dbg_printk(TPACPI_DBG_INIT, "DYTC version %d\n", dytc_version);
- 	/* Check DYTC is enabled and supports mode setting */
- 	if (dytc_version < 5)
- 		return -ENODEV;
-@@ -10642,6 +10647,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
- 		}
- 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
- 		pr_debug("PSC is supported\n");
-+		if (dytc_version >= 9) { /* update profiles for DYTC 9 and up */
-+			platform_psc_profile_lowpower = DYTC_MODE_PSCV9_LOWPOWER;
-+			platform_psc_profile_balanced = DYTC_MODE_PSCV9_BALANCE;
-+			platform_psc_profile_performance = DYTC_MODE_PSCV9_PERFORM;
-+		}
- 	} else {
- 		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
- 		return -ENODEV;
+ 	type = FIELD_GET(INT3472_GPIO_DSM_TYPE, obj->integer.value);
+ 
+-	int3472_get_func_and_polarity(type, &func, &gpio_flags);
++	int3472_get_func_and_polarity(int3472->sensor, &type, &func, &gpio_flags);
+ 
+ 	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
+ 	if (pin != agpio->pin_table[0])
 -- 
 2.39.5
 
