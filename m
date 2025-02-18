@@ -1,139 +1,255 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A40D271293
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33676281379
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739902650; cv=none; b=aqEjJhHhSQuv8IG8nRE8xTn6PBzCiT7b3BYMgYe1mXTAzY8ONR5zR/EqxFjSQF+EAoA3EnBlXyqW/M15k2v0TtT36poPZz+2b/DsCc6K3ilbPT7grfuMNhVtONnxsGKHsnMNjcxXrtXAffP41n7+7jWh+2JcQK7dA04ZvSPZj/c=
+	t=1739902650; cv=none; b=QyaokR7GBQhMpCCe/GCVeB6OI+EdaPkLfQic9FBXznj2sguaWEsR4XFroE4ygIa50bK0+uOaSGKCXBWAh8EkXgy00DxWu+vpdVppcctZ1JhYkkkXFfI207humlJV3ac+ddedzB1KiUlUakHgwYcgbdvboB6xFZcoL2OUJ8kINa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739902650; c=relaxed/simple;
-	bh=BOUyx5EsWWjCZqwoILlVSGflf8blEnkgIikzItCUqP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H1GLD6yByPAJLDNi44sa/5EkTVQcXJ2auP4cFR0PzE6BFjALIzsRh41RiMfZKs5gt0/z3wsDcoC5s69bot9EWoh5p8fZVXtGgm/w4Rl1Hp6aanaOTy14hkfAeiNR06s8e+sbQmIl3b+5DzmULmy7MknCoTbCXDMzhJ3EaYCyWaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IEDDKPwm; arc=none smtp.client-ip=209.85.214.176
+	bh=hVwCANj+CorVmjuRlsHWC8kHdg3pBhnm/kY0SBR96vc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HSLN6rGGsH4eoK7eAHrZa/K2hoGABEVTWK/s0dmXSJcZq03TAiBanKlf/DOoY0HjTCtx52ELmmsIvH5iO4pDKTEIpm3lu10ZDVOEzXPayX0eMmYSIOY0yfpCrdBtDNmPiRom/L/C0OXo2sXOqQPeftTjlYzYzxMX5dS0KWSLiw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3/ioRqjW; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IEDDKPwm"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220e0575f5bso490435ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:17:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3/ioRqjW"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc2b258e82so9921788a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:17:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20230601; t=1739902647; x=1740507447; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M89M9SRzWTrfxkPQChi6cYghdfRxV0Kb26Fn5pPvW98=;
-        b=IEDDKPwmsCnXzgsxU9UFmcPy9nb+59LDcji7VEN+uObYIwhYLLVTegfR4cPukphh3i
-         n26LIz5uFbOfM/CNOEVdgY4wc+WQR/0qKhZQKofkElSAsQrxpASu4a3Mm1l7JKF3mmDT
-         s/NQ2BIxdDPNuCxdxg1g7iomKKMTBrPho1/0geaO1qyOtRU2lhMQTVJf+XvQLCh6bfJ+
-         JLqpFqvteKZlzmUfHQ2FFM4npwJoSf3EFM93FUNU9T4II+4/eFE0eCPZF1+11hUGrKPK
-         UcQkj1neNFdFBgJQfaNO635F4y3UqCvwiTx+nyUw2/RAme0lKoGug97pV1DZ7CuAWt8h
-         Wo9g==
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=165gS3goRLf8zZj6pEhjQb5PxE79JM+3p+KuzMFcveU=;
+        b=3/ioRqjWCMjVnaWbMhVq8XLHkFbE50jRhRR+uPNhCSNO0dCglXIi204X+NIohxhmki
+         VvtdfNDv4ypf0+x0bgYG3WvAq9hcpd9OD4/LocQgGQ8Di73Gn45RL37RDP2vGCdEVSaW
+         LBzm4HZDzbfuZ/KOYlQIhTqKJzPwzcS0NrTcD7N9BvV6qb9VF6cBKwaifXICrN06xYe8
+         uJiDMlodHd1i0Xs8PR/GMNa3QvAr2Uz5wxDLo2Qu35GLo/yW3jFvcc0rGEdBj3joBct5
+         ah1BTdIZQcKFhLy4EduDqAvhDj2a+ZX8VmKgmtmslkyDP1WghDVIYF8JXTBzHeamhnFv
+         gNLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1739902647; x=1740507447;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M89M9SRzWTrfxkPQChi6cYghdfRxV0Kb26Fn5pPvW98=;
-        b=nY6ry9zAebNqQIO4pstjVDSQ+kXd/brtkcQTRNBGvj4qJCxfr/jrYpInBr1DFbX4lu
-         VWcX5ayxWlgju6EhhunBuJA+cDrZ0zOAOcyxYEHayGgl5VoVwpt4JKvdtJ5xVCNsGAAe
-         v6lxP/KaBO+rfBVJ80OMtVk9FcRO9oQ6dgqINCarFtyQX0QejGpXugmDMD/gKJBghYY6
-         phXbQHyRULbAkPTdLQDJIeEKMsm0EjdMhFurkJQAC6esOTKMH1VdXF2tuizwcyDVpNYH
-         8PzzRZgBf2hUimtc+ADIFRqtuKeZWSVeN+6kx/sIw9y0vEL8g3kJRL7x2qBqD120YGOL
-         CmCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLBSWRLq73XrvAxawfzbAHSUN9clCfnrvFzNrWY/E2QRyLrA+jNHkoq5bWdj96hWY/PWD/p7Q4ol5Euc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9rb5sWWTSr5NyG7NqUtBwRBzSUL4hdKyDBOgGrnMMwEgDO8dv
-	9NepZkGj/G089YOwIifqOwmQ6K/XfdsyTHHau8kizg92VC43OaDuQ6pR49oEyw==
-X-Gm-Gg: ASbGncvynfEz5n250LQVlfXnPjtIqGz2Gbj9zZ1sOgRRi8dRHIIuOfoKHQXM0yy9YYP
-	xfQiC6a7GqrWHO3PsfTZr9dmFUbGCdLmtBrJ4A+ZP8zFlSUF786E4usRt5uf3YR/1OnOSov+GZR
-	h8rFdbuI9GXFtgzI3bUcuQkiczWGA+7cgC76MvHEFe0WlzjXj8x5xqwEYV0YjL8KU4dN6jw6rcD
-	n12p6r2tkIDRqEZ4QC8xD8R0TSgNE2YmDrTUwpWUFLTnfP2k6tYH4TksghG2AAwDWdb4b9Il5ZV
-	ld13AHJjapIxRDKjR/lROvnP6P3yfnBO5Emv4fvCCD1WCg7/v+xE
-X-Google-Smtp-Source: AGHT+IFkiHL5TTpaBclB/MgmM3kcQbDHYVWCGmPRDpeRclWjC4Poa8aWW8CJbN/ySGXple0OccOeRQ==
-X-Received: by 2002:a17:902:fc4e:b0:216:48d4:b3a8 with SMTP id d9443c01a7336-22104c939afmr7012905ad.16.1739902646969;
-        Tue, 18 Feb 2025 10:17:26 -0800 (PST)
-Received: from google.com (169.224.198.35.bc.googleusercontent.com. [35.198.224.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55960ecsm91516115ad.253.2025.02.18.10.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 10:17:26 -0800 (PST)
-Date: Tue, 18 Feb 2025 18:17:15 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"eric.auger@redhat.com" <eric.auger@redhat.com>,
-	"jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-	"mdf@kernel.org" <mdf@kernel.org>,
-	"mshavit@google.com" <mshavit@google.com>,
-	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>,
-	"smostafa@google.com" <smostafa@google.com>,
-	"ddutile@redhat.com" <ddutile@redhat.com>,
-	"Liu, Yi L" <yi.l.liu@intel.com>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH v6 14/14] iommu/arm-smmu-v3: Set MEV bit in nested STE
- for DoS mitigations
-Message-ID: <Z7TOq-gIGPY_ztW7@google.com>
-References: <cover.1737754129.git.nicolinc@nvidia.com>
- <436ac2021bb3d75114ca0e45f25a6a8257489d3b.1737754129.git.nicolinc@nvidia.com>
- <BN9PR11MB5276291C74E2DF0C8821BE718CFA2@BN9PR11MB5276.namprd11.prod.outlook.com>
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=165gS3goRLf8zZj6pEhjQb5PxE79JM+3p+KuzMFcveU=;
+        b=bElhY3c7rFxbhsmLpef5Ec7n+2KzLrlJTqzmBVzHXfgx0XEL5HriZy43ItHr8Lcp53
+         eVy1ErX66I/W+EQ19NTdLBKmy+CDpJRfXYByNzaGJZwwSqu9TOeeYkdZ39W7TI4LYu+f
+         1wVvsXZatFLtZfFyIEFBz+3crxJjauZGXu8+G5LsYA1apT3TmEvDa0bBuBPlKuUuPOGw
+         wTJ1G634tdtoRkM3LJBMGZVcR90jvpShmIsiCiXUle44jNoBmgW6YBoGskfhB096GdAE
+         UO8pQ2p4v/zt9UnLmw6BsmAHAmBehw5TJSNdC5Ci/AnKOmpcuA7Jbob6UorkfevHeGmh
+         +eqw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+L0UXsPvWEL0FqLubLoKhS0Ds04vQHpU2L/Um1YdAH+z1uL4HcxOY3nvOVVGlW0JpMTMdXZ5+e4q/2oI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9xw8+XzYfJqzMSIM+CSViftMfbPyo5NxO1SC1uOO12F+5XmR4
+	pLN72fbiTV5MpdM6+/1MXwBc0Q4NrIBm4ejER4sLdGYFPYU3V8nW/9grkGtRM5oE16Ucrg==
+X-Google-Smtp-Source: AGHT+IEoqMlrNITX7gZxzMB0Y+rjQKU0M6SIkqPiK42wAClKKAVtpeQMhJt67RX0BgBBDoe6CJK14pHN
+X-Received: from pjf4.prod.google.com ([2002:a17:90b:3f04:b0:2fc:13d6:b4cb])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:134e:b0:2ee:acb4:fecd
+ with SMTP id 98e67ed59e1d1-2fcb5a10379mr642511a91.9.1739902647343; Tue, 18
+ Feb 2025 10:17:27 -0800 (PST)
+Date: Tue, 18 Feb 2025 18:16:41 +0000
+In-Reply-To: <20250218181656.207178-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276291C74E2DF0C8821BE718CFA2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Mime-Version: 1.0
+References: <20250218181656.207178-1-fvdl@google.com>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250218181656.207178-14-fvdl@google.com>
+Subject: [PATCH v4 13/27] mm/hugetlb: check bootmem pages for zone intersections
+From: Frank van der Linden <fvdl@google.com>
+To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com, 
+	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 18, 2025 at 05:24:08AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Saturday, January 25, 2025 8:31 AM
-> > 
-> > There is a DoS concern on the shared hardware event queue among devices
-> > passed through to VMs, that too many translation failures that belong to
-> > VMs could overflow the shared hardware event queue if those VMs or their
-> > VMMs don't handle/recover the devices properly.
-> 
-> This statement is not specific to the nested configuration.
-> 
-> > 
-> > The MEV bit in the STE allows to configure the SMMU HW to merge similar
-> > event records, though there is no guarantee. Set it in a nested STE for
-> > DoS mitigations.
-> 
-> Is MEV available only in nested mode? Otherwise it perhaps makes
-> sense to turn it on in all configurations in IOMMUFD paths...
+Bootmem hugetlb pages are allocated using memblock, which isn't
+(and mostly can't be) aware of zones.
 
-MEV is available at all times (if an implemented by the HW) and doesn't
-depend on the nested mode. As per the Arm SMMUv3 spec (section 3.5.5):
+So, they may end up crossing zone boundaries. This would create
+confusion, a hugetlb page that is part of multiple zones is bad.
+Worse, HVO might then end up stealthily re-assigning pages to a
+different zone when a hugetlb page is freed, since the tail page
+structures beyond the first vmemmap page would inherit the zone
+of the first page structures.
 
-Events can be merged where all of the following conditions are upheld:
- - The event types and all fields are identical, except fields explicitly
-indicated in section 7.3 Event records.
+While the chance of this happening is low, you can definitely
+create a configuration where this happens (especially using
+ZONE_MOVABLE).
 
- - If present, the Stall field is 0. Stall fault records are not merged.
+To avoid this issue, check if bootmem hugetlb pages intersect
+with multiple zones during the gather phase, and discard
+them, handing them to the page allocator, if they do. Record
+the number of invalid bootmem pages per node and subtract them
+from the number of available pages at the end, making it easier
+to do these checks in multiple places later on.
 
-I'm not sure to what extent, but I think *trying* to merge similar event
-should reduce some chances of overflowing the hw eventq.
+Signed-off-by: Frank van der Linden <fvdl@google.com>
+---
+ mm/hugetlb.c  | 61 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ mm/internal.h |  2 ++
+ mm/mm_init.c  | 25 +++++++++++++++++++++
+ 3 files changed, 86 insertions(+), 2 deletions(-)
 
-> Is MEV available only in nested mode? Otherwise it perhaps makes
-> sense to turn it on in all configurations in IOMMUFD paths...
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 19a7a795a388..f9704a0e62de 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -62,6 +62,7 @@ static unsigned long hugetlb_cma_size_in_node[MAX_NUMNODES] __initdata;
+ static unsigned long hugetlb_cma_size __initdata;
+ 
+ __initdata struct list_head huge_boot_pages[MAX_NUMNODES];
++static unsigned long hstate_boot_nrinvalid[HUGE_MAX_HSTATE] __initdata;
+ 
+ /*
+  * Due to ordering constraints across the init code for various
+@@ -3304,6 +3305,44 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
+ 	}
+ }
+ 
++static bool __init hugetlb_bootmem_page_zones_valid(int nid,
++						    struct huge_bootmem_page *m)
++{
++	unsigned long start_pfn;
++	bool valid;
++
++	start_pfn = virt_to_phys(m) >> PAGE_SHIFT;
++
++	valid = !pfn_range_intersects_zones(nid, start_pfn,
++			pages_per_huge_page(m->hstate));
++	if (!valid)
++		hstate_boot_nrinvalid[hstate_index(m->hstate)]++;
++
++	return valid;
++}
++
++/*
++ * Free a bootmem page that was found to be invalid (intersecting with
++ * multiple zones).
++ *
++ * Since it intersects with multiple zones, we can't just do a free
++ * operation on all pages at once, but instead have to walk all
++ * pages, freeing them one by one.
++ */
++static void __init hugetlb_bootmem_free_invalid_page(int nid, struct page *page,
++					     struct hstate *h)
++{
++	unsigned long npages = pages_per_huge_page(h);
++	unsigned long pfn;
++
++	while (npages--) {
++		pfn = page_to_pfn(page);
++		__init_reserved_page_zone(pfn, nid);
++		free_reserved_page(page);
++		page++;
++	}
++}
++
+ /*
+  * Put bootmem huge pages into the standard lists after mem_map is up.
+  * Note: This only applies to gigantic (order > MAX_PAGE_ORDER) pages.
+@@ -3311,14 +3350,25 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
+ static void __init gather_bootmem_prealloc_node(unsigned long nid)
+ {
+ 	LIST_HEAD(folio_list);
+-	struct huge_bootmem_page *m;
++	struct huge_bootmem_page *m, *tm;
+ 	struct hstate *h = NULL, *prev_h = NULL;
+ 
+-	list_for_each_entry(m, &huge_boot_pages[nid], list) {
++	list_for_each_entry_safe(m, tm, &huge_boot_pages[nid], list) {
+ 		struct page *page = virt_to_page(m);
+ 		struct folio *folio = (void *)page;
+ 
+ 		h = m->hstate;
++		if (!hugetlb_bootmem_page_zones_valid(nid, m)) {
++			/*
++			 * Can't use this page. Initialize the
++			 * page structures if that hasn't already
++			 * been done, and give them to the page
++			 * allocator.
++			 */
++			hugetlb_bootmem_free_invalid_page(nid, page, h);
++			continue;
++		}
++
+ 		/*
+ 		 * It is possible to have multiple huge page sizes (hstates)
+ 		 * in this list.  If so, process each size separately.
+@@ -3590,13 +3640,20 @@ static void __init hugetlb_init_hstates(void)
+ static void __init report_hugepages(void)
+ {
+ 	struct hstate *h;
++	unsigned long nrinvalid;
+ 
+ 	for_each_hstate(h) {
+ 		char buf[32];
+ 
++		nrinvalid = hstate_boot_nrinvalid[hstate_index(h)];
++		h->max_huge_pages -= nrinvalid;
++
+ 		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
+ 		pr_info("HugeTLB: registered %s page size, pre-allocated %ld pages\n",
+ 			buf, h->free_huge_pages);
++		if (nrinvalid)
++			pr_info("HugeTLB: %s page size: %lu invalid page%s discarded\n",
++					buf, nrinvalid, nrinvalid > 1 ? "s" : "");
+ 		pr_info("HugeTLB: %d KiB vmemmap can be freed for a %s page\n",
+ 			hugetlb_vmemmap_optimizable_size(h) / SZ_1K, buf);
+ 	}
+diff --git a/mm/internal.h b/mm/internal.h
+index 57662141930e..63fda9bb9426 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -658,6 +658,8 @@ static inline struct page *pageblock_pfn_to_page(unsigned long start_pfn,
+ }
+ 
+ void set_zone_contiguous(struct zone *zone);
++bool pfn_range_intersects_zones(int nid, unsigned long start_pfn,
++			   unsigned long nr_pages);
+ 
+ static inline void clear_zone_contiguous(struct zone *zone)
+ {
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 925ed6564572..f7d5b4fe1ae9 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -2287,6 +2287,31 @@ void set_zone_contiguous(struct zone *zone)
+ 	zone->contiguous = true;
+ }
+ 
++/*
++ * Check if a PFN range intersects multiple zones on one or more
++ * NUMA nodes. Specify the @nid argument if it is known that this
++ * PFN range is on one node, NUMA_NO_NODE otherwise.
++ */
++bool pfn_range_intersects_zones(int nid, unsigned long start_pfn,
++			   unsigned long nr_pages)
++{
++	struct zone *zone, *izone = NULL;
++
++	for_each_zone(zone) {
++		if (nid != NUMA_NO_NODE && zone_to_nid(zone) != nid)
++			continue;
++
++		if (zone_intersects(zone, start_pfn, nr_pages)) {
++			if (izone != NULL)
++				return true;
++			izone = zone;
++		}
++
++	}
++
++	return false;
++}
++
+ static void __init mem_init_print_info(void);
+ void __init page_alloc_init_late(void)
+ {
+-- 
+2.48.1.601.g30ceb7b040-goog
 
-I think the arm-smmu-v3's iommufd implementation only supports nested
-which could be the reason.
-
-Thanks,
-Praan
