@@ -1,100 +1,97 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19388246359
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB622475CE
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739882505; cv=none; b=JlXZhxqJgjGjgdsU7ydARAyDx7iB8xavJNT5oBrjs4H9DbaUwlZqAfPtyLOpOSl/o8qfeinLr82jQ7x1KFCNGRzswdJBloUhS5Y5gsYrKn3VoLkExq5HHIrjPEnBQlErsSNmRxUqDCslDvNole7cKciOIdJStXsC5RX/8zjbi/g=
+	t=1739882529; cv=none; b=GNDxLxAN+8UxvAU8xLk1nhVDeAEIsAT6I9douJXQQT/2rwsLrSHvkMunBNnqDVpEwrH7te9Z6Q5DMXfE1oWrbXSr5kuW7qaHuj5OTubLwSISRHaqSqzwcUSfNh8GCjL9nDxDoxtjnnr4fE1Nbz5foqgY6uuHcZvTsjhSw0adXs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739882505; c=relaxed/simple;
-	bh=LzEymOzbsaFCfZbS8DvP7Xa5WpoPyDkfBS8NNNj1zBs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uxIk22V1eFHZ8rR5x8aLOp9HGoo85Vpp7fVQARwyh/zTXrSMHnSCutfG9gw0sDzHQOZn/+oKRm79WEvPUq041HO4h3whycKmkD0fUtUvihshDUZNQFYmD/nNSl9m1fr90R18sjUBjhSQ4stAI7pbFfWqF09kcPIhmwNLDtkFS8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OtwbyIby; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1739882529; c=relaxed/simple;
+	bh=53+Jq1bsLhyjJZLdqY5IT9VqwmYxkNtjI8g1D826Ef4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dC47Ggqnmp+K4yVB/l2VsLjxeTzPaqH8Vd8nrVB0wgnvPW2vyMnWIDoVHwSggBlSF+iFhmiFvKqMowZP+njBbTs1YaCha3FcCWJj4lMfZnUrtKOmiPLBWHwrqSH+y0g0IbTOqE9J7i0zdF8LN9nS8nctmrz5oiKQjvo5gJWsN9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWwsQ1Nx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OtwbyIby"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1739882499; x=1740141699;
-	bh=LzEymOzbsaFCfZbS8DvP7Xa5WpoPyDkfBS8NNNj1zBs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=OtwbyIbyZ12RfK0U18KBp0C8/Kw4Q4+weM+sx73BEMPrYwwAR7Rmo+p+yLMRqplCd
-	 HSZxuNl/vcP6IJYgR8JqCCD61bFQHywIcEILWZ0qOXljtHL+7yPaIMSfDTy/dg7ei2
-	 Ubn8G6mTe+2NBXR5zasSq8VxxB+XnaamstrKpsF+QBRsr8E89xPLDHLfZ+7BlBbcfG
-	 DpX1MLvdX2ySI0EHrtHj1qnjfGXH4zPrMgGHxvBMaQd19rtyPz+xkXksb9oN5/x7ny
-	 e1+XsnLqvfxTwnQjZVQmd2XzIW4ahjIHC37kApzhp5U6JuXU9GHvVfFYoc0HPZTJJc
-	 7au8hbqILgmGA==
-Date: Tue, 18 Feb 2025 12:41:35 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, Charalampos Mitrodimas <charmitro@posteo.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] rust: configfs: introduce rust support for configfs
-Message-ID: <d76a0453-86d3-40c4-bc39-2ec8a71fbcb6@proton.me>
-In-Reply-To: <87ldu3fnwf.fsf@kernel.org>
-References: <20250207-configfs-v2-0-f7a60b24d38e@kernel.org> <20250207-configfs-v2-2-f7a60b24d38e@kernel.org> <S6DKlLVx4KKevl_q2zrW69Z7oS0jwyX4DXpDZrFiIy1lKo4VYHM52aDiV82c2yf52Ecr7t9FayuqBUPR9onvZA==@protonmail.internalid> <dd63fcde-ba4c-4a6e-9bde-1af5af37e91b@proton.me> <87h64su8ux.fsf@kernel.org> <Kkrr23DbfvS1nChcwAfhrogDdCOO92FQ2-9JUCab-_6CREP4iBX8k1KuxaJb-yv_ErGv9TbzDWwBZHvaszFS7w==@protonmail.internalid> <bfd79db6-bd79-4187-8577-3ae412f36f35@proton.me> <87bjv0u5j0.fsf@kernel.org> <87ldu3fnwf.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: a9d121d1e911990ed26e6657f63e404cfee26057
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWwsQ1Nx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED1AC4CEE9;
+	Tue, 18 Feb 2025 12:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739882529;
+	bh=53+Jq1bsLhyjJZLdqY5IT9VqwmYxkNtjI8g1D826Ef4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SWwsQ1Nxh3mXXGdYakmphpXJbo2sg6eci213YGVqDhaz5f3lwr+BiZBjxw27oOs4O
+	 xOpyMCkw4erAHDEh/a6BUTwgGtvqM9zZznnNuW9wUm1+U6EHVXlA1lamPWAKzUKzRH
+	 4HL64AE53ualjtscUe4b5xQHq2I4LGOi+XuC3myGhuClIRkuhkgyNrfNTTfDv4PezN
+	 ik+TwkwLr7hQfc81L0vJuaNp+LG0MrbtaN216Pj7zn7DJMRiyUImK3MV782fbsAbM2
+	 hA0ISKfNuiNYYyeil9s9CMCdYzVZAn6ajghqRH6Qgu1Mhw2amWpEd4iZ8QXi7c4Ch0
+	 s3IxcRfG2bHqA==
+From: Philipp Stanner <phasta@kernel.org>
+To: Matthew Brost <matthew.brost@intel.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] drm/sched: Fix preprocessor guard
+Date: Tue, 18 Feb 2025 13:41:50 +0100
+Message-ID: <20250218124149.118002-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 18.02.25 13:17, Andreas Hindborg wrote:
-> Andreas Hindborg <a.hindborg@kernel.org> writes:
->=20
->> "Benno Lossin" <benno.lossin@proton.me> writes:
->>
->>> On 17.02.25 12:08, Andreas Hindborg wrote:
->>
->> [...]
->>
->>>>>
->>>>>> +//!
->>>>>> +//! See the [rust_configfs.rs] sample for a full example use of thi=
-s module.
->>>>>
->>>>> It could also be useful to just put the example directly here into th=
-e
->>>>> docs instead of/additionally to having it as a sample.
->>>>
->>>> I don't think we should duplicate the code. As long as the link works,=
- I
->>>> think having it separately is fine.
->>>
->>> When I'm coding in my editor and read some docs directly in it, it ofte=
-n
->>> is annoying to find a link, because then I have to open the docs in my
->>> web-browser.
->>> I understand that you don't want to duplicate the code (and it also is =
-a
->>> bit too much for a short example), so how about having a simpler
->>> example? Maybe with only a single operation that has no associated data
->>> (use `()`)?
->>
->> Sure, we can do that.
->=20
-> Actually, I am having some problems making the inline example compile.
-> `configfs_attrs!` references `THIS_MODULE`, which is not present for
-> doctests.
+When writing the header guard for gpu_scheduler_trace.h, a typo,
+apparently, occurred.
 
-I see. Does KUNIT have a THIS_MODULE that we could use? If so, we might
-want to make that accessible in the test harness. Does anyone know more
-about this?
+Fix the typo and document the scope of the guard.
 
-> I'll add the example but mark it `ignore` ?
-
-Sounds good. If we end up adding a THIS_MODULE to the test harness, we
-can remove the ignore later.
-
+Fixes: 353da3c520b4 ("drm/amdgpu: add tracepoint for scheduler (v2)")
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
-Cheers,
-Benno
+I just discovered this. But I have little understanding of what is going
+on in this header in the first place, so I kindly ask for comments on
+this entire guard line with its logical or ||
+
+The code hasn't been touched since 2015. So it seems it at least didn't
+cause bugs.
+
+P.
+---
+ drivers/gpu/drm/scheduler/gpu_scheduler_trace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+index c75302ca3427..f56e77e7f6d0 100644
+--- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
++++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+@@ -21,7 +21,7 @@
+  *
+  */
+ 
+-#if !defined(_GPU_SCHED_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
++#if !defined(_GPU_SCHED_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
+ #define _GPU_SCHED_TRACE_H_
+ 
+ #include <linux/stringify.h>
+@@ -106,7 +106,7 @@ TRACE_EVENT(drm_sched_job_wait_dep,
+ 		      __entry->seqno)
+ );
+ 
+-#endif
++#endif /* _GPU_SCHED_TRACE_H_ */
+ 
+ /* This part must be outside protection */
+ #undef TRACE_INCLUDE_PATH
+-- 
+2.47.1
 
