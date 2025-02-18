@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC80235346;
-	Tue, 18 Feb 2025 09:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCA9235C15;
+	Tue, 18 Feb 2025 09:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739871995; cv=none; b=fYID7uXEaTfwNc6LGH5LABGXAEXwc4QN7LbMz4qso19Ky3PJgP6veA4WPOIMTNAV88zr0T5WccasE7GDvTfhP3uTlxMuA5qHY0o5XXxannKx8OEA9W1vCZ5qfmGufbiR+tbGXch5ssiifhRuVli5EiQtoK7eIWXGphsX7FeRlzE=
+	t=1739871996; cv=none; b=OBoWRepDXWvB013SmOYC4c+Aqxc7xYvJ/LmFyr+uoqSalQmHtBVlNpQx4QLkd5XxfkUvaT38LuAOmq1qQFzWnLqdx+j9z16XAb1Cog4Dmx4GGJbIwb4ARigwPkm4N/c1m53KRs+ZTE5yyyOLYz2nJwuuB+IFDbjRLi7IY77vpKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739871995; c=relaxed/simple;
-	bh=2bCc+cH7wOC9uTV6zX7HR4np7BoHs5BqStjsejPxc2c=;
+	s=arc-20240116; t=1739871996; c=relaxed/simple;
+	bh=7vmmvq8WcU4KV797cR5Y+qLLd8CNZM3HlpM5Pz4TY18=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jhL0cnpKX1/URqDSQlaiVm0DQLLqYwIyHjh7bBR9EZlOTolup3xK8MBUQpVX1tRDF/r3/8R49CjQLehxbcTFR1xbwBXk/U0gkVsIllw0qRFAtA0ULuIkzkYSxZuRrT/rtFzkYUGGqKAkCb6IDhMwRiH9NmpCdz3DRsoh5D+7IEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lE660Pcy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+bgD1BM2; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=CKfUF3w2nFf4Q3kYyypVEnyvr9x/mYVXBgAH9bXMzKFw/4dcatz1UXKMXs1y9UfVqCuAWZAo9Bmt37WTdCpjMjjzaPGwTkWXb5nfmCKVUwEJ8q9hk6uNT8B4RYoPStRbYAB4Qp7OhI6xYPtoa3+fRmCgS1O7WiyULVns9dJDGH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XivqMjrh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+OasvWN0; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lE660Pcy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+bgD1BM2"
-Date: Tue, 18 Feb 2025 09:46:31 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XivqMjrh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+OasvWN0"
+Date: Tue, 18 Feb 2025 09:46:32 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739871992;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ANhGy+mmlg2hY3YOOmdIhly8pP5zr6hRfEUG5nIfXXw=;
-	b=lE660Pcyo07nQrKFlGO84qd7va4VOVWkI6xqg1abe/Uk5logyDUDRqZ5uFJmVAvHi5oofQ
-	21h8z5A1DtZoEzVaqxdEEAZ+LWwmmPbc/HUGIkr2u1bD1PhtxHI0Z3thLIcMhaleKyDCIp
-	8SnyEPUOb5e+7qwbz9imjcZ0s/YXCTiu6uFTB6LM1WhcBQS0zly3sfav0a6AtzhnPk9by5
-	vU0aUUALRsOjCv7QxPRDiLWhjZFgZ7X1ym4x7JtWHYWcB0LhZ/Njg8/psk7b6OJVq7nA8t
-	6EPZ48robbF+u56Vb6Cjkhl33R7jNnrwOEAJz/Y+HlkzEtL2pRt5JUF9VyGIdA==
+	bh=SLv/BY4wRUFwb+7nMN1wO43HFS8KZT6TKtU1HCSavmQ=;
+	b=XivqMjrhKQZpOnyWqBzMhEN1acqjG8th9/VNNY2AZXnwZrw4nd7Tgv+w1b8sRjFR/+/1ZG
+	KNKdQ5C0ahbRqpnLzuOayo8fvt+9GxXM7t5+wdDPQPUj3NW3KSO7wMzZqfTnIGFqy7mTUh
+	ahmmEACM1fgpnLnjxI/EYn6nz7hc1xQdflkNCd9X/oXG2QnsbHTnijuiydzhlhZjMEFZjS
+	I5gpth/QWaKW1RwtiLF5JuKFq4oLYKWoWcnSKwPi1v1g0q6+4zqGYlhEHeZunTueGg9/Ji
+	WPb0XditIpQ5itIAQB+S5SvuSvpwYwBiFPl7VmIK/tFLtGIdIBpCtNrFoV8khg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739871992;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,19 +38,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ANhGy+mmlg2hY3YOOmdIhly8pP5zr6hRfEUG5nIfXXw=;
-	b=+bgD1BM2yIPDueII5rxpdm5VCnIl2HCIyhfPDt855F2d9rt6xahkWoRhkBpAyytSdVgZFr
-	FDkmn9CrNunOTmCg==
+	bh=SLv/BY4wRUFwb+7nMN1wO43HFS8KZT6TKtU1HCSavmQ=;
+	b=+OasvWN0had+3xRCpJN7IFaAVM6x/fKSWuIOsiJoBVemqim7CM3MyEFL1dtibBg/P4NT7z
+	AtTlS1AiN2HasQDg==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] watchdog: Switch to use hrtimer_setup()
+Subject: [tip: timers/cleanups] ubifs: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Ca5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875=2E17387?=
+ Richard Weinberger <richard@nod.at>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3Cf5767e50aaa2935b3e4a0e9cf1bc4365d6b0c1a0=2E17387?=
  =?utf-8?q?46821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3Ca5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875=2E173874?=
+References: =?utf-8?q?=3Cf5767e50aaa2935b3e4a0e9cf1bc4365d6b0c1a0=2E173874?=
  =?utf-8?q?6821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,7 +59,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987199145.10177.8808739283421726234.tip-bot2@tip-bot2>
+Message-ID: <173987199209.10177.5699241316095419577.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     d2254b0643222ffa7e4e7ac0ae8aa0e4cbf6d09a
-Gitweb:        https://git.kernel.org/tip/d2254b0643222ffa7e4e7ac0ae8aa0e4cbf6d09a
+Commit-ID:     1654eba8f74d1fcb95dd63e549c621722adc2689
+Gitweb:        https://git.kernel.org/tip/1654eba8f74d1fcb95dd63e549c621722adc2689
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:39:07 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:39:06 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 10:32:33 +01:00
 
-watchdog: Switch to use hrtimer_setup()
+ubifs: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -87,78 +88,24 @@ Patch was created by using Coccinelle.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/a5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875.1738746821.git.namcao@linutronix.de
+Acked-by: Richard Weinberger <richard@nod.at>
+Link: https://lore.kernel.org/all/f5767e50aaa2935b3e4a0e9cf1bc4365d6b0c1a0.1738746821.git.namcao@linutronix.de
 
 ---
- drivers/watchdog/softdog.c                     | 8 +++-----
- drivers/watchdog/watchdog_dev.c                | 4 ++--
- drivers/watchdog/watchdog_hrtimer_pretimeout.c | 4 ++--
- kernel/watchdog.c                              | 3 +--
- 4 files changed, 8 insertions(+), 11 deletions(-)
+ fs/ubifs/io.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/softdog.c b/drivers/watchdog/softdog.c
-index 7a10962..0820e35 100644
---- a/drivers/watchdog/softdog.c
-+++ b/drivers/watchdog/softdog.c
-@@ -187,14 +187,12 @@ static int __init softdog_init(void)
- 	watchdog_set_nowayout(&softdog_dev, nowayout);
- 	watchdog_stop_on_reboot(&softdog_dev);
+diff --git a/fs/ubifs/io.c b/fs/ubifs/io.c
+index 01d8eb1..a79f229 100644
+--- a/fs/ubifs/io.c
++++ b/fs/ubifs/io.c
+@@ -1179,8 +1179,7 @@ int ubifs_wbuf_init(struct ubifs_info *c, struct ubifs_wbuf *wbuf)
+ 	wbuf->c = c;
+ 	wbuf->next_ino = 0;
  
--	hrtimer_init(&softdog_ticktock, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	softdog_ticktock.function = softdog_fire;
-+	hrtimer_setup(&softdog_ticktock, softdog_fire, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 
- 	if (IS_ENABLED(CONFIG_SOFT_WATCHDOG_PRETIMEOUT)) {
- 		softdog_info.options |= WDIOF_PRETIMEOUT;
--		hrtimer_init(&softdog_preticktock, CLOCK_MONOTONIC,
--			     HRTIMER_MODE_REL);
--		softdog_preticktock.function = softdog_pretimeout;
-+		hrtimer_setup(&softdog_preticktock, softdog_pretimeout, CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_REL);
- 	}
- 
- 	if (soft_active_on_boot)
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 19698d8..8369fd9 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -1051,8 +1051,8 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
- 	}
- 
- 	kthread_init_work(&wd_data->work, watchdog_ping_work);
--	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
--	wd_data->timer.function = watchdog_timer_expired;
-+	hrtimer_setup(&wd_data->timer, watchdog_timer_expired, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_HARD);
- 	watchdog_hrtimer_pretimeout_init(wdd);
- 
- 	if (wdd->id == 0) {
-diff --git a/drivers/watchdog/watchdog_hrtimer_pretimeout.c b/drivers/watchdog/watchdog_hrtimer_pretimeout.c
-index 940b537..fbc7eec 100644
---- a/drivers/watchdog/watchdog_hrtimer_pretimeout.c
-+++ b/drivers/watchdog/watchdog_hrtimer_pretimeout.c
-@@ -23,8 +23,8 @@ void watchdog_hrtimer_pretimeout_init(struct watchdog_device *wdd)
- {
- 	struct watchdog_core_data *wd_data = wdd->wd_data;
- 
--	hrtimer_init(&wd_data->pretimeout_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	wd_data->pretimeout_timer.function = watchdog_hrtimer_pretimeout;
-+	hrtimer_setup(&wd_data->pretimeout_timer, watchdog_hrtimer_pretimeout, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL);
+-	hrtimer_init(&wbuf->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	wbuf->timer.function = wbuf_timer_callback_nolock;
++	hrtimer_setup(&wbuf->timer, wbuf_timer_callback_nolock, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	return 0;
  }
- 
- void watchdog_hrtimer_pretimeout_start(struct watchdog_device *wdd)
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index b2da7de..6a98dbc 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -797,8 +797,7 @@ static void watchdog_enable(unsigned int cpu)
- 	 * Start the timer first to prevent the hardlockup watchdog triggering
- 	 * before the timer has a chance to fire.
- 	 */
--	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
--	hrtimer->function = watchdog_timer_fn;
-+	hrtimer_setup(hrtimer, watchdog_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	hrtimer_start(hrtimer, ns_to_ktime(sample_period),
- 		      HRTIMER_MODE_REL_PINNED_HARD);
  
