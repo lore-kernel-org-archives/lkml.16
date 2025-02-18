@@ -1,57 +1,57 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41802580D6;
-	Tue, 18 Feb 2025 10:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1909261579;
+	Tue, 18 Feb 2025 10:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874405; cv=none; b=hHgM+iI3ZX37/PZX+S/vdffGm8PbszWBo4DcprrNNyhW7S3QPeKobzY8ijFv6nUIGR9o0HKpAkvZ2TLrsedqAS7qrogKBeVKPBiNDSfKnpsff+f4boJmGguuv0W0QDzXB9h2nA6siTIhb+m18Ge4mcmdvcBIYCCxlQndS1DxFzo=
+	t=1739874406; cv=none; b=pYmTBo6EREfRfANbfsuy8OiYMXX4YBgSKUbKM3aaDg1mPzVRaRbzQHrlQV9uD/qOXC/XUWRGfxa6+0U5BNHM6qP1EABvT0M9kSzsOJYTnFIoXblmpL/W0JZ9G7VU5H6gsuVzs9QLgwGoACY+VkaA1NF/TP9Xy0EH6xI4+k/SKVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739874405; c=relaxed/simple;
-	bh=Yv171g8ktvdE99m0rFDY9lalX5LPYbBKhjYft+R9tQE=;
+	s=arc-20240116; t=1739874406; c=relaxed/simple;
+	bh=XNoA0k6L7Z06REcZMghK6qTQPW1Ebu5FtKH7WUP9L0M=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ItAnIdbV/MXmg69/iDmcxwR4mYeAZahHmdBpOn4xriYcfUXEGq9gYgqW6ahIhQ92qTYouCWnRBPSJkTr/jK5/K/Sw3nrTGbp/CeOFn5hF+B8DlZ8b2cazD9YuVQCj7CsdKnb9hLzzM0KKH4e9Yum2d+IyWCxiuatX+IDNijRwiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v3Eqe04z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=40kwIzPZ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Qr9f8ZVM2zoAuNVOoc1SDP3liIHw65jjuhc+I06doI1VS9uqSVpeVIWFSIeU++6AqEdcSpr70U/zkuojJMlIn3Av8l3N6XOJSvzdlNtrkly1c0oKnsq9ayWw5sJK9rFsyrKEdMAe4Ng5KVJvirdrg5FyL/e015XU/obLhp6N1cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s2W54C+W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=corPPkTf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v3Eqe04z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="40kwIzPZ"
-Date: Tue, 18 Feb 2025 10:26:41 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s2W54C+W";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="corPPkTf"
+Date: Tue, 18 Feb 2025 10:26:42 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739874402;
+	s=2020; t=1739874403;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pqHtTPUngK0lABvJMho4+8z4/SShq3cWEkQMAo6jG1Q=;
-	b=v3Eqe04z74r2pNAPMFDOokdF/6Nsdqr1mgodUqLz1J8X6uMkEtvdMMB1J6m/5mlLcFbvVK
-	oDJRmg8og95rMp8+2GEVhOQt6MuK9/PIEPMVVzX672pG4UeO1L9ky9X6SGCPPJWDjAKUNl
-	0nbtXoQ0A93bRfOt26tcsbOMW4x11lgBRMH5gCOuH7kl1ahm4384rDf52r39vsiQNLoja2
-	W/cnsviM0trS6zJQ2O6BFxzfS+MaZBivpCLO6LoxOzue1AmACoNcYddod5eY2iTgwsK/em
-	CjRH89cLHOIZ+07ObrYJLNrsJ5FOnh5uV5gtcguHjz9q6L8yP+Fsli4gj+fykg==
+	bh=6X5Wyce+GYnJIRrLMpDcbkEbs9r/Ynfy0p27fzdT8Zw=;
+	b=s2W54C+WR8fpHesNHHY+BaoUi7kqfA2z3oHYj732SWlka+GmR8AJVo/o/LqBJKu66NgT5I
+	DBBAsOuwphH9ztCT2uspK/Vv0UfmTQFm7Pwsf+pOjVqeM6SJaxKZlw7/EuLNPLwBgTrxCU
+	jwVvCfncJOErjy2BAtNRn8QzWniS/gTquFsopkoEcgQOrfabVzSX3DPNmzGgykM3uhS8d/
+	2p2+ycYpQr6fT1LedtknaEEpHlTpdDJ0hlAym/PPaEmY9oEStXUeeGSrZlv1B9lnHgdCTE
+	St9oYDHtbdUxegOG9JZK4qOYWhdNo3YuvBDGKSp5cFfOvrAbOzO04KXHhLLcEg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739874402;
+	s=2020e; t=1739874403;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pqHtTPUngK0lABvJMho4+8z4/SShq3cWEkQMAo6jG1Q=;
-	b=40kwIzPZhLzxK7yvboOlOssFYvdPOKRne4/TiNbnetlUaKEc8OzKumr6BssYmEyU7nnNyx
-	Ke9vo8ChsP3IuODg==
+	bh=6X5Wyce+GYnJIRrLMpDcbkEbs9r/Ynfy0p27fzdT8Zw=;
+	b=corPPkTfRyDhw2bWAbClz/lYOzh0omJ3uF9V9hDU7NueQQS7cWnXqaXiI/GgCbrCsqFZoY
+	+eabzMrTbEoB+1Ag==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] serial: imx: Switch to use hrtimer_setup()
+Subject:
+ [tip: timers/cleanups] serial: amba-pl011: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
- Zack Rusin <zack.rusin@broadcom.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cad27070bc67c13f8a9acbd5cbf4cbae72797e3e1=2E17387?=
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3C78e8c0d1b38998eab983fad265751ed13c2b9009=2E17387?=
  =?utf-8?q?46904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3Cad27070bc67c13f8a9acbd5cbf4cbae72797e3e1=2E173874?=
+References: =?utf-8?q?=3C78e8c0d1b38998eab983fad265751ed13c2b9009=2E173874?=
  =?utf-8?q?6904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,7 +59,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987440192.10177.5822486703163579137.tip-bot2@tip-bot2>
+Message-ID: <173987440247.10177.15372016314805718779.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     721c5bf65a1d19d2958a83c6eb7ddd8002b9026f
-Gitweb:        https://git.kernel.org/tip/721c5bf65a1d19d2958a83c6eb7ddd8002b9026f
+Commit-ID:     c5f0fa1622f6fec7c461f2fe5b5d62229b4ae785
+Gitweb:        https://git.kernel.org/tip/c5f0fa1622f6fec7c461f2fe5b5d62229b4ae785
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:45:58 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:45:57 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 18 Feb 2025 11:19:03 +01:00
+CommitterDate: Tue, 18 Feb 2025 11:19:02 +01:00
 
-serial: imx: Switch to use hrtimer_setup()
+serial: amba-pl011: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -88,29 +88,29 @@ Patch was created by using Coccinelle.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://lore.kernel.org/all/ad27070bc67c13f8a9acbd5cbf4cbae72797e3e1.1738746904.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/78e8c0d1b38998eab983fad265751ed13c2b9009.1738746904.git.namcao@linutronix.de
 
 ---
- drivers/tty/serial/imx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/serial/amba-pl011.c |  9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 9c59ec1..9a1afe4 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -2582,10 +2582,10 @@ static int imx_uart_probe(struct platform_device *pdev)
- 		imx_uart_writel(sport, ucr3, UCR3);
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 04212c8..98f178b 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2867,11 +2867,10 @@ static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
+ 			return -EINVAL;
+ 		}
  	}
- 
--	hrtimer_init(&sport->trigger_start_tx, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	hrtimer_init(&sport->trigger_stop_tx, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	sport->trigger_start_tx.function = imx_trigger_start_tx;
--	sport->trigger_stop_tx.function = imx_trigger_stop_tx;
-+	hrtimer_setup(&sport->trigger_start_tx, imx_trigger_start_tx, CLOCK_MONOTONIC,
+-
+-	hrtimer_init(&uap->trigger_start_tx, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	hrtimer_init(&uap->trigger_stop_tx, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	uap->trigger_start_tx.function = pl011_trigger_start_tx;
+-	uap->trigger_stop_tx.function = pl011_trigger_stop_tx;
++	hrtimer_setup(&uap->trigger_start_tx, pl011_trigger_start_tx, CLOCK_MONOTONIC,
 +		      HRTIMER_MODE_REL);
-+	hrtimer_setup(&sport->trigger_stop_tx, imx_trigger_stop_tx, CLOCK_MONOTONIC,
++	hrtimer_setup(&uap->trigger_stop_tx, pl011_trigger_stop_tx, CLOCK_MONOTONIC,
 +		      HRTIMER_MODE_REL);
  
- 	/*
- 	 * Allocate the IRQ(s) i.MX1 has three interrupts whereas later
+ 	ret = pl011_setup_port(&dev->dev, uap, &dev->res, portnr);
+ 	if (ret)
