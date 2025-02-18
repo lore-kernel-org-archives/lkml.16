@@ -1,78 +1,51 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BCF24336D;
-	Tue, 18 Feb 2025 16:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF1414A4E7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 16:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739896723; cv=none; b=Y89r5okxjDYgefXMjy9pmcf8xPmqzeN8DpUU+JXDlBrWUCYHsqTGYpLUZimDE/OROp77TTCapJv0zd/5kNPtqPYxNOYSokfAx1y6OPglLviT+Z1QNa3iQQ2oZ6X8x7nLzQiHx/Aypv/JThioQk3D1mFHVHDOcRpqaRWR3auQHME=
+	t=1739896783; cv=none; b=ss4GVdBV/zL3nfkGUtWppNTRDW3lLvl/nGyfCH16RDg0tpFXt/STzOEKuE7rHX5CTwWbdILNGzaCOKji8g6dPpf1vg81MjMERazRxZCXAeGEiiQYfrui/SCwIMJcKI+3Nolh4JfqZFCzuYO1QTygGXD0HrtCYlCNEzQmEyrdW30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739896723; c=relaxed/simple;
-	bh=Jr2XeqFa7wILBc9ajjjmwJuulxiR+E1gLDxz38v3qMY=;
+	s=arc-20240116; t=1739896783; c=relaxed/simple;
+	bh=HDJc7RtypDDPooB5e73rQOHBIRa4tufRX1lQCVmM6hg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QUC5MxBUOwvxtUBsAz7Oj/25doVEQqFIE4Hfk2VmxSkqLUNvwmkL80BZ/+nm/lPmpo8s8VWTRMwtl1LHwy7mkozrkMGcwk7jUicGUIBroJneANagnlVjFRRVAy4YvHOnMW1VApr6AZYNVzwdnkPjVEf1Ej1E1nJ4PSIeLskUIVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VEMKe/Zo; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jgJN7syuKoV22ZZOgjq1NGsqRZ8FzWf1FCSv6pNXv5Qq8dQO+s8+EMFw4mpVwePjXoHEoV0qN4Pom3jyvSw+dTygirFpcek31Pux499L/XiG0yjf3/L13waDdWzMUyFUkvwx6h8J2xrIPFhR4/ig4yNy0EL5tf48n2DHObr/LEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sxquo0ol; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F29KfG2U; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VEMKe/Zo"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ICsfkP000995;
-	Tue, 18 Feb 2025 16:38:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=5Nl9G0E+MY+LQNb1Fl4PTgZed9Nw1L
-	2PXWSuck02l9w=; b=VEMKe/Zo2B3H4e41q1f6ievffRcJJAgMA14Rse9Uxz8Ask
-	eFIslL/t1QATbfRoceJxlt6Nb8iKeF21hL96rP9YKj8HrK1Je562WxBKFMLsDFew
-	SC55tChO4wolxWYmjTjlD/T+lN/ITQtUG3xXDQDhWRQZTSpFJm9v+6m1mToSLADw
-	5hrCw+tcsGf3YLvGpgQfT8oU1wKMmgAgxqoGvJycx0zSJ15lveBTbiQxcz0LjrVw
-	/37zHdy0OaDpfb7jbiiMIi22oCeyoAys08DwBVZPZ9Z3y8uATg1w5I/H0dpusI0Z
-	k1kBF77mlmImXGIkjW3ix0SBwwf6iIkiJwv6Kcxg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vh203rwk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 16:38:14 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51IDQadB001641;
-	Tue, 18 Feb 2025 16:38:13 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44u5myv9d4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 16:38:13 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51IGc96Z47645152
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Feb 2025 16:38:09 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D00B20043;
-	Tue, 18 Feb 2025 16:38:09 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B75C20040;
-	Tue, 18 Feb 2025 16:38:08 +0000 (GMT)
-Received: from localhost (unknown [9.179.25.213])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 18 Feb 2025 16:38:08 +0000 (GMT)
-Date: Tue, 18 Feb 2025 17:38:06 +0100
-From: Vasily Gorbik <gor@linux.ibm.com>
-To: Halil Pasic <pasic@linux.ibm.com>
-Cc: Eric Farman <farman@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Holger Dengler <dengler@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thorsten Blum <thorsten.blum@linux.dev>
-Subject: Re: [PATCH 0/2] s390/vfio-*: make mdev_types unlike a fake flex array
-Message-ID: <your-ad-here.call-01739896686-ext-9687@work.hours>
-References: <20250217100614.3043620-1-pasic@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sxquo0ol";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F29KfG2U"
+Date: Tue, 18 Feb 2025 17:39:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739896780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jplqvq9GdJOIcNd8y7Q+I1v34nlxrE0UMCPpI6JRAy0=;
+	b=sxquo0olvHfg6ZLQrRK9a6jV+isPC4AxTWxinAp2m2c4goW35qpSsfIiKRDJr2CTxYJKlY
+	vVX2FzOHE15XN+G1Mig7kARR46t0Q3nXP7SJAjdVzLq16VOUlNJG25bGlMOMxNjXsA3j8r
+	p2azbaP1EmLb29MM9HwNSpAXelpQK4WoYHGb+DoUV/1vUXV31os0jF0VoPfEgDg7gFuC2g
+	43t0mHMFKB+Cgu6Rd3ta2y4YbL2ZxA2Kd5weaijtwPm9tbRiVh786NGl653th0RL0wGQVL
+	sz62KRWUJ9Po8+9SL64FFZfz4sFV826wfN4kWaidDSpBnNVQhVFyL2Bi+NXigw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739896780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jplqvq9GdJOIcNd8y7Q+I1v34nlxrE0UMCPpI6JRAy0=;
+	b=F29KfG2U2uBQZdShRtGAIZfnCAHMy6m9mIPCAMKQQICoceeUlHJCESeun0as5H87r1xar4
+	/cjY+2G+/LBTWqAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: syzbot <syzbot+ecccecbc636b455f9084@syzkaller.appspotmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com, tj@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] kernfs: Drop kernfs_rwsem while invoking
+ lookup_positive_unlocked().
+Message-ID: <20250218163938.xmvjlJ0K@linutronix.de>
+References: <67b45276.050a0220.173698.004f.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,34 +54,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250217100614.3043620-1-pasic@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: pmzFKryF_fYebefZeqqwO3X7z98vGZJn
-X-Proofpoint-ORIG-GUID: pmzFKryF_fYebefZeqqwO3X7z98vGZJn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-18_08,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- spamscore=0 impostorscore=0 adultscore=0 bulkscore=0 mlxlogscore=231
- phishscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502180119
+In-Reply-To: <67b45276.050a0220.173698.004f.GAE@google.com>
 
-On Mon, Feb 17, 2025 at 11:06:12AM +0100, Halil Pasic wrote:
-> 
-> One sized trailing array members can look like fake flex arrays and
-> confuse people. Let us try to make the mdev_types member of the parent
-> devices in vfio-ap and vfio-ccw less confusing.
-> 
-> 
-> Halil Pasic (2):
->   s390/vfio-ap: make mdev_types not look like a fake flex array
->   s390/vfio-ccw: make mdev_types not look like a fake flex array
-> 
->  drivers/s390/cio/vfio_ccw_drv.c       | 6 +++---
->  drivers/s390/cio/vfio_ccw_private.h   | 2 +-
->  drivers/s390/crypto/vfio_ap_ops.c     | 4 ++--
->  drivers/s390/crypto/vfio_ap_private.h | 2 +-
->  4 files changed, 7 insertions(+), 7 deletions(-)
+syzbot reported two warnings:
+- kernfs_node::name was accessed outside of a RCU section so it created
+  warning. The kernfs_rwsem was held so it was okay but it wasn't seen.
 
-Applied, thank you!
+- While kernfs_rwsem was held invoked lookup_positive_unlocked()->
+  kernfs_dop_revalidate() which acquired kernfs_rwsem.
+
+kernfs_rwsem was both acquired as a read lock so it can be acquired
+twice. However if a writer acquires the lock after the first reader then
+neither the writer nor the second reader can obtain the lock so it
+deadlocks.
+
+The reason for the lock is to ensure that kernfs_node::name remain
+stable during lookup_positive_unlocked()'s invocation. The function can
+not be invoked within a RCU section because it may sleep.
+
+Make a temporary copy of the kernfs_node::name under the lock so
+GFP_KERNEL can be used and use this instead.
+
+Reported-by: syzbot+ecccecbc636b455f9084@syzkaller.appspotmail.com
+Fixes: 5b2fabf7fe8f ("kernfs: Acquire kernfs_rwsem in kernfs_node_dentry().")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ fs/kernfs/mount.c | 35 +++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
+
+diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
+index d1f512b7bf867..f1cea282aae32 100644
+--- a/fs/kernfs/mount.c
++++ b/fs/kernfs/mount.c
+@@ -220,12 +220,19 @@ struct dentry *kernfs_node_dentry(struct kernfs_node *kn,
+ 		return dentry;
+ 
+ 	root = kernfs_root(kn);
+-	guard(rwsem_read)(&root->kernfs_rwsem);
+-
+-	knparent = find_next_ancestor(kn, NULL);
+-	if (WARN_ON(!knparent)) {
+-		dput(dentry);
++	/*
++	 * As long as kn is valid, its parent can not vanish. This is cgroup's
++	 * kn so it not have its parent replaced. Therefore it is safe to use
++	 * the ancestor node outside of the RCU or locked section.
++	 */
++	if (WARN_ON_ONCE(!(root->flags & KERNFS_ROOT_INVARIANT_PARENT)))
+ 		return ERR_PTR(-EINVAL);
++	scoped_guard(rcu) {
++		knparent = find_next_ancestor(kn, NULL);
++		if (WARN_ON(!knparent)) {
++			dput(dentry);
++			return ERR_PTR(-EINVAL);
++		}
+ 	}
+ 
+ 	do {
+@@ -235,14 +242,22 @@ struct dentry *kernfs_node_dentry(struct kernfs_node *kn,
+ 
+ 		if (kn == knparent)
+ 			return dentry;
+-		kntmp = find_next_ancestor(kn, knparent);
+-		if (WARN_ON(!kntmp)) {
+-			dput(dentry);
+-			return ERR_PTR(-EINVAL);
++
++		scoped_guard(rwsem_read, &root->kernfs_rwsem) {
++			kntmp = find_next_ancestor(kn, knparent);
++			if (WARN_ON(!kntmp)) {
++				dput(dentry);
++				return ERR_PTR(-EINVAL);
++			}
++			name = kstrdup(kernfs_rcu_name(kntmp), GFP_KERNEL);
++		}
++		if (!name) {
++			dput(dentry);
++			return ERR_PTR(-ENOMEM);
+ 		}
+-		name = rcu_dereference(kntmp->name);
+ 		dtmp = lookup_positive_unlocked(name, dentry, strlen(name));
+ 		dput(dentry);
++		kfree(name);
+ 		if (IS_ERR(dtmp))
+ 			return dtmp;
+ 		knparent = kntmp;
+-- 
+2.47.2
+
