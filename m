@@ -1,91 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BD922FF55;
-	Tue, 18 Feb 2025 09:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CB922DF91
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739870305; cv=none; b=dxut68Kv88Z/Eon1OAYWEdBHrwXFR9k2KCEVWFg0/3ftrfgluIkj5p/zBPrpeAis+lqQQipDpBmOvrIAXvIdiRe/VvJyneYZq+MLHAHDHM1zCl416GfXMTJeqjUQPt+bsVkay6zhbhl91fB6R9yExU6MA48QKgJGiy+OQSl3rbA=
+	t=1739870392; cv=none; b=O+hSJjpgtfO53z4xs4EspCZgynSD+J/4Co04UPjBHUOYkWgLHFicfAOD7EqFXJIIrvhYpWFCn6jmrrAR7oQ8tnqTYgA3rTNCUajLuYTvZvrhexNT+rtwYay5KBQopyb59dfVGCxP2f7EnrJHO+8rLGuvRMs2dgQVaNCB2UluiUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739870305; c=relaxed/simple;
-	bh=vfuQjd/8LgaGZuh/Qvb8dlDpyh9HdnmRmMB5nk3IgHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KrKkviiJmhZXMKJ46i2dXozrLr3pmGLCy5J7m31eWHcMQg7j8c2wJAFwm0CZfg1V67gIhwmptm6AyAB53CGk0j0wJvG8s8lgTYIbnhzpdpu3NGLw2//506A7IbPixw54dUZhoLNaqtj+GekYrjYy2lLXhx4uoK57cF4xBayHzUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BC84C4CEE4;
-	Tue, 18 Feb 2025 09:18:20 +0000 (UTC)
-Date: Tue, 18 Feb 2025 09:18:18 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Beata Michalska <beata.michalska@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org, ionela.voinescu@arm.com,
-	sudeep.holla@arm.com, will@kernel.org, rafael@kernel.org,
-	viresh.kumar@linaro.org, sumitg@nvidia.com,
-	yang@os.amperecomputing.com, vanshikonda@os.amperecomputing.com,
-	lihuisong@huawei.com, zhanjie9@hisilicon.com,
-	ptsm@linux.microsoft.com, Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Phil Auld <pauld@redhat.com>,
-	x86@kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v10 0/4] Add support for AArch64 AMUv1-based average freq
-Message-ID: <Z7RQWgLksl4bBksr@arm.com>
-References: <20250131162439.3843071-1-beata.michalska@arm.com>
- <173982791748.4020779.2848639862581042284.b4-ty@arm.com>
- <Z7PNlFv2995pDARQ@arm.com>
+	s=arc-20240116; t=1739870392; c=relaxed/simple;
+	bh=1jGp3oCUgZYPtCmy6uC7seQ+tq/ufBmb1K6m3PKDDVE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nZSWQjnubw5gDERjOi0qFhXz/urHpOJF53HW5dFfJpLNYOH0Iw/ZfDJqIiketAfmBZC/odXtCW5mQgyqQIJe5Xw8JTfxEl7pKDe9Y3cjZoXpKOYJCLQhTikxqBxEaVRDiN/0Ux2ZXRzGuDA09yeKC2VYF2ugac1OjIRv4px7Sw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Yxv5Q411vz2JYYK;
+	Tue, 18 Feb 2025 17:15:54 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 04855180214;
+	Tue, 18 Feb 2025 17:19:48 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 18 Feb 2025 17:19:47 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <will@kernel.org>, <mark.rutland@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
+	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>, <wangyushan12@huawei.com>
+Subject: [PATCH 1/9] drivers/perf: hisi: Extend struct hisi_pmu_dev_info
+Date: Tue, 18 Feb 2025 17:19:52 +0800
+Message-ID: <20250218092000.41641-2-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20250218092000.41641-1-yangyicong@huawei.com>
+References: <20250218092000.41641-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7PNlFv2995pDARQ@arm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-On Tue, Feb 18, 2025 at 01:00:20AM +0100, Beata Michalska wrote:
-> On Mon, Feb 17, 2025 at 09:32:06PM +0000, Catalin Marinas wrote:
-> > On Fri, 31 Jan 2025 16:24:35 +0000, Beata Michalska wrote:
-> > > This series adds support for obtaining an average CPU frequency based on
-> > > a hardware provided feedback. The average frequency is being exposed via
-> > > dedicated yet optional cpufreq sysfs attribute - cpuinfo_avg_freq.
-> > > The architecture specific bits are being provided for AArch64, caching on
-> > > existing implementation for FIE and AMUv1 support: the frequency scale
-> > > factor, updated on each sched tick, serving as a base for retrieving
-> > > the frequency for a given CPU, representing an average frequency
-> > > reported between the ticks.
-> > > 
-> > > [...]
-> >
-> Thank you for that.
-> 
-> There is still a (not so) small issue with patch
-> [3/4] arm64: Provide an AMU-based version of arch_freq_get_on_cpu.
-> It did not come up while testing, sadly.
-> No idea how I could have missed that, nor why I made the mistake
-> in the first place.
-> 
-> The fix is pretty straightforward:
-> 
-> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> index 6f0cab8e746b..4bac26d8e29c 100644
-> --- a/arch/arm64/kernel/topology.c
-> +++ b/arch/arm64/kernel/topology.c
-> @@ -268,7 +268,7 @@ int arch_freq_get_on_cpu(int cpu)
->  
->                         do {
->                                 ref_cpu = cpumask_next_wrap(ref_cpu, policy->cpus,
-> -                                                           start_cpu, false);
-> +                                                           start_cpu, true);
-> 
-> Please let me know if you want me to send new version with the fix applied.
+From: Junhao He <hejunhao3@huawei.com>
 
-Usually we apply another patch on top with a Fixes tag or just fold it
-in if no-one relies on this branch being stable. I'll do the latter, no
-need to resend.
+The counter bits and event range may differ from versions of a
+certain uncore PMU. Make this device specific information into
+struct hisi_pmu_dev_info. This will help to simplify the
+initialization process by using a list of struct hisi_pmu_dev_info
+rather than checking the version.
 
-Thanks.
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/perf/hisilicon/hisi_uncore_pmu.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.h b/drivers/perf/hisilicon/hisi_uncore_pmu.h
+index f4fed2544877..777675838b80 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_pmu.h
++++ b/drivers/perf/hisilicon/hisi_uncore_pmu.h
+@@ -72,6 +72,8 @@ struct hisi_uncore_ops {
+ struct hisi_pmu_dev_info {
+ 	const char *name;
+ 	const struct attribute_group **attr_groups;
++	u32 counter_bits;
++	u32 check_event;
+ 	void *private;
+ };
+ 
 -- 
-Catalin
+2.24.0
+
