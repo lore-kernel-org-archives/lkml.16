@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658FF24061B;
-	Tue, 18 Feb 2025 09:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B94241136;
+	Tue, 18 Feb 2025 09:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872003; cv=none; b=jjUgxmnuZXwdMOxFHF3uQEmZJByWjWB59hgiDPUXIHg+NIZAFcJCLfiS7FnNETQoEvf5JIlHAYz+NuSyTnOucCoNNTSlfZ4lmg4m1xHbYitCyzMRe5ABLvD2rcd+QzQP79FPeFmG6ysD5tvmihQsHOa5OAAecEifIk+8MKQ9gho=
+	t=1739872003; cv=none; b=ITLuG5Npf46f5Jfyb0u9QKn819BEZEomIuJxGsetQR+XQb5wOpyAuXeemn/TnyMWDWVT1lM5AF9/IZE6ESr6wQUXsbky0jkiNoR8SotzRhkpYRl4hHZeKydrlL6N/q05FoUAyG8fJFuB5izS41x2YEU/kl6dII+hPV8sq/w65Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739872003; c=relaxed/simple;
-	bh=QiUfmpfhI41FdwvozdmNTohNQUXBnJUweyd6em1Qf64=;
+	bh=My42XFiT1TyuVVAnou9bT0K07lxSbf6pYeBnD3SpuQA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=cNmriQqm61P40BAE7dxDAFbd80ZBBwjsKOIhqyV5kPGovC/7D97g7VGyWYzmomB061qf40T9VuhkmD1Z7+lLeqBf9yJFQ8uy9Yw7KMvDVW9GHb1KA/azwhXi82TXo2xX3auudggz6Xoj0V1DI77i3iiyj9a9ndElwf43AMTpCg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ELG9lg14; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pl78WA7u; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=t8tRQ5e/YFGqw+YioWI4HwqM6L5go/V/v2MBPR5H1emBUSkxdwRi3Q76fxsmL2cMzJxjhCSJqgP8QE/0hN+obtBv49tGKwO4IO7rnn0J1v3yqloxuTVRqu/scv5GFjM06Uywr74rapH07C0Y7qv+8iNexQL7YYUNJ4fS911A1lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lH+ETarJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BRzrJVCD; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELG9lg14";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pl78WA7u"
-Date: Tue, 18 Feb 2025 09:46:39 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lH+ETarJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BRzrJVCD"
+Date: Tue, 18 Feb 2025 09:46:40 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739872000;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Do9ShhgZNaVPx9CEcb8cIEFHkmA86NCDcHFtmat4QrE=;
-	b=ELG9lg14lBVXjsjtcioXbr+ks31OytFH42jzY3ed2PRXxFR49ZBH2EsEO4j6edfTW6dqIk
-	QhMi5CyC/ABgy8qpTHm0876kYoWntSV1iNb5XSUYzrxW1IjOR4aeUR6D4gUObV6G0UFbPw
-	w/zwkOz6ZplGS+JTgiAV5VFvzl34uBX0ZHFOA6ubOTWR7LgOBKeVjgsco8H2wtpx0dp5i2
-	e2+H7Q/JqTzZXw9t4+m6cA61ccxdqRgzyIBt5F6Ex7NhV2ese9fcJADosRuhjZQNq9rUSn
-	SE4MBk8bvVp+EqPlq4xtJp68nYKAZJHxlMUeUjBrFyolsJTSSGrIf4EJocgBPA==
+	bh=FWYwqmiZNV/j1fZWOrucDnodEh4gQ9LTVq0AysQIE2s=;
+	b=lH+ETarJ3pCKUm1TSv4X6Stp48KQnmoq5sVYa+uUzqc7Brsmcs610FUG+Nl3cpRDEb8Rbm
+	yL/Ts3MDDJCYC2tGXjyuDo6ZA6LryP6yq4CmdY3V+CIaKTomeLjtbAn5WPVS7nYQsxQA3K
+	zKDklpX3lQPJSRFXSjJSNAB1iTCwlanXioBv+ciughrSSdO+fJXu0f3wuW4KoL1/PJ+e0B
+	PMM0257jmups90zK7ad8dWqhb2v4/G5Cs1VkxVrBmjZFFL0kOMy51Eb8zqzu7GmVKR5I8b
+	bnCZ91juI3uv4Rul2m5+WUIBqyXIdr9buh/ihIaiInLdqH5SlYDGS+KVmlU86A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739872000;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,19 +38,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Do9ShhgZNaVPx9CEcb8cIEFHkmA86NCDcHFtmat4QrE=;
-	b=Pl78WA7uCKa51+wAplO0PYoIxmy7ycQbMMhgkJPM3LDXvMhcKRYu2zHaLxVRLdFR4QHvCF
-	j0Rm4GbTxGTFGzCg==
+	bh=FWYwqmiZNV/j1fZWOrucDnodEh4gQ9LTVq0AysQIE2s=;
+	b=BRzrJVCDB1HgjL9QyaHaCRwiEbeWqdndwTCKMtlEVuaTQ+MrVdKYicXdH9rr6kQ1IAi19R
+	WiEsVf94RQrDWVAw==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] perf/x86: Switch to use hrtimer_setup()
+Subject:
+ [tip: timers/cleanups] powerpc/watchdog: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Ce84ad5a660b8e10867e547db8e64f7e99c48ebba=2E17387?=
+In-Reply-To: =?utf-8?q?=3C099ebf6d352094a56e22fdfe76582b50f8fd6029=2E17387?=
  =?utf-8?q?46821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3Ce84ad5a660b8e10867e547db8e64f7e99c48ebba=2E173874?=
+References: =?utf-8?q?=3C099ebf6d352094a56e22fdfe76582b50f8fd6029=2E173874?=
  =?utf-8?q?6821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,7 +59,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987199951.10177.13134666698456925374.tip-bot2@tip-bot2>
+Message-ID: <173987200011.10177.16460203953948877633.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     c56c98e5af6d912c07b4e1e7be8ee97b0ff6ab27
-Gitweb:        https://git.kernel.org/tip/c56c98e5af6d912c07b4e1e7be8ee97b0ff6ab27
+Commit-ID:     d1f0d81b3604506cdd128578f778b899bd142b94
+Gitweb:        https://git.kernel.org/tip/d1f0d81b3604506cdd128578f778b899bd142b94
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:38:55 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:38:54 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 10:32:31 +01:00
 
-perf/x86: Switch to use hrtimer_setup()
+powerpc/watchdog: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -87,38 +88,23 @@ Patch was created by using Coccinelle.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/e84ad5a660b8e10867e547db8e64f7e99c48ebba.1738746821.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/099ebf6d352094a56e22fdfe76582b50f8fd6029.1738746821.git.namcao@linutronix.de
 
 ---
- arch/x86/events/intel/uncore.c | 3 +--
- arch/x86/events/rapl.c         | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/watchdog.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 60b3078..a34e50f 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -347,8 +347,7 @@ void uncore_pmu_cancel_hrtimer(struct intel_uncore_box *box)
+diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
+index 8c464a5..2429cb1 100644
+--- a/arch/powerpc/kernel/watchdog.c
++++ b/arch/powerpc/kernel/watchdog.c
+@@ -495,8 +495,7 @@ static void start_watchdog(void *arg)
  
- static void uncore_pmu_init_hrtimer(struct intel_uncore_box *box)
- {
--	hrtimer_init(&box->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	box->hrtimer.function = uncore_pmu_hrtimer;
-+	hrtimer_setup(&box->hrtimer, uncore_pmu_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	*this_cpu_ptr(&wd_timer_tb) = get_tb();
+ 
+-	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	hrtimer->function = watchdog_timer_fn;
++	hrtimer_setup(hrtimer, watchdog_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	hrtimer_start(hrtimer, ms_to_ktime(wd_timer_period_ms),
+ 		      HRTIMER_MODE_REL_PINNED);
  }
- 
- static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 4952faf..6a0d957 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -274,8 +274,7 @@ static void rapl_hrtimer_init(struct rapl_pmu *rapl_pmu)
- {
- 	struct hrtimer *hr = &rapl_pmu->hrtimer;
- 
--	hrtimer_init(hr, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	hr->function = rapl_hrtimer_handle;
-+	hrtimer_setup(hr, rapl_hrtimer_handle, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- }
- 
- static void __rapl_pmu_event_start(struct rapl_pmu *rapl_pmu,
