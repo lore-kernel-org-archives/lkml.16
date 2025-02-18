@@ -1,40 +1,40 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D95014A614;
-	Tue, 18 Feb 2025 08:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412281B6D11;
+	Tue, 18 Feb 2025 08:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869034; cv=none; b=ZOwVq6pn1llofnaJishSzH8p8fKye32ep1qrpocbssPpeKQYHC5OQKClRbOvWO3CUk7XX9qU1eoCifJe/oq/VHIqh8E0aDSyp/njB8CvZrpxxmEf+MgD31tOUo1oYaq7bYJGBcPBLZSUsw7Cksx7L8ui8SVrYz6IEqwQG6mL0SI=
+	t=1739869034; cv=none; b=mcptmT6MHm+9l1YwPdSFagtdK0fhWoSQ54+PZwlpNWWx6gLAXN3ZbSjtmGfFB/ZtsNSp0KTGlGsXPsCjvpU6YtSpPKZ5duhDE5SOsEaxrrFvxqdUsSB1TWQMM9KbJPflmDSL+LbP+GE4SmnpKALDiBZSZQ1/Qj+06kZmizjVJ9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739869034; c=relaxed/simple;
-	bh=2vE8L5fJp+dtJyWdQbSVt0omOCEQO0xF00KJ3QonoKI=;
+	bh=FAM8Q0Vg3RX0znVoiEabsoyA+LQWwAU+aFTdXsSmpow=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qKShPg/mfNy7ZFoCjVh2l/+xuGS2M+f4N/rxZVbuEZzlG0kuYSJQsB22JCxVoZzxSHBgsDuzIqRH09Mx4f/IGMEgGdeB5FJHYENuVVwA9dBXiLvBrUrjIHWLEm0fQ0YYeyBEiMGXK6PTE4wUYdiFpx+7PgkirP6n5rS+8yIEz10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HTLwXxO+; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:Content-Type; b=jPcLpkcDM67Zav02PZPLxRWxAym1lQ2A7VNgEMzcxTswjh7BMUVSeZPRlU+05WeFnmYlc7Klq/uHxzc1eBD1xuut9SVnxZ4n6ovs9loB7BnS6HBizAvhgisYoHK3X4a1besyLNxLrHNetGrRROSSBAN7KWDZXMkmGjbu3yQixq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UBX60/LO; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HTLwXxO+"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UBX60/LO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739869030;
-	bh=2vE8L5fJp+dtJyWdQbSVt0omOCEQO0xF00KJ3QonoKI=;
+	s=mail; t=1739869031;
+	bh=FAM8Q0Vg3RX0znVoiEabsoyA+LQWwAU+aFTdXsSmpow=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HTLwXxO+GyF1AD8FucYG29B1fK/lOd5HKGq+eU7n3INbr/PXWBliw6JzFvF7421MN
-	 hVl6i6IzO7bTIAGbQBFDLUT7fwRd+wMWhA/ik1ULEcoU3kUkh93PXjephjguDhySuM
-	 CmC+GdxgZnokHX8UesfiDF5xgtbjPcm7Dj2nL+pPVXXNToAMwvbGnC/mHMXLUMjw8u
-	 sVlYbD3RVIg1eNGMndq6XgRtwqk6xqPJRO1XiSfd4/M1Msj0oMhtB8QKotY/eBsEOs
-	 cgA1/9SBpKX7ROGTANvw32SiSHRG3t7JX+9w7gTTqKUzm1M2HpOYcQxaYqZlbcmcX9
-	 qN67gFS9gcYog==
+	b=UBX60/LOc8k0z48ex/gZNuGCt+3MgHPT4Ntt6Ib695Yai7diMjadnHACYzrE34M8U
+	 eKjp9cws36qoco5fX9OsbLiQchRN3lp3whUNZ0SUoR5+e1KIv761G40lwnYzmSxMOu
+	 nQPjdFpYJk7pKfvsIJlcgaZEAumEs/JouVKY29Z7cqHQ2rhFltEk67r2/BlWcS+JNv
+	 wt6xF8W98DVB5rTsuF/szJYDf2K4bDd3UhI0co5z2kNk+VZRv7I5BJEY/QPhC8Cpbv
+	 lMm6wszrA4QtfcQe50eT0C2bFhYtksAF12QZTix1aTdMs2X6rtc3GqTO9EyTiAP++l
+	 shVCBOK08qg1w==
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E178217E0657;
-	Tue, 18 Feb 2025 09:57:09 +0100 (CET)
-Message-ID: <b26294cf-c751-4507-ae01-4f510cb4834a@collabora.com>
-Date: Tue, 18 Feb 2025 09:57:09 +0100
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D2D1F17E0CA0;
+	Tue, 18 Feb 2025 09:57:10 +0100 (CET)
+Message-ID: <eb9d0d76-f366-43c3-8c41-baf588ce6ccb@collabora.com>
+Date: Tue, 18 Feb 2025 09:57:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] dt-bindings: usb: mtk-xhci: add support mt8196
+Subject: Re: [PATCH v3 2/4] dt-bindings: usb: mtu3: add support mt8196
 To: Chunfeng Yun <chunfeng.yun@mediatek.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Rob Herring <robh@kernel.org>
@@ -53,19 +53,21 @@ Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
  linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
 References: <20250215100615.808-1-chunfeng.yun@mediatek.com>
+ <20250215100615.808-2-chunfeng.yun@mediatek.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20250215100615.808-1-chunfeng.yun@mediatek.com>
+In-Reply-To: <20250215100615.808-2-chunfeng.yun@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Il 15/02/25 11:06, Chunfeng Yun ha scritto:
 > There are three USB controllers on mt8196, each controller's wakeup
 > control is different, add some specific versions for them, and add
-> a new compatilbe for mt8196.
+> compatilbe for mt8196.
 > 
 > Acked-by: Conor Dooley <conor.dooley@microchip.com>
 > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
 
