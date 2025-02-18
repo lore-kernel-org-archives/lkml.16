@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C06826AA96
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A4426BD91
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739890765; cv=none; b=TY66xVXsiOehJt/apW7qcrreBirY/T54SVDFwTvJ6kNku2ykzGKkijJkycqTl3+LxW+MEWf5cIoi2zxJc5jbfvXkPhCcYof7EKGe4ZmE5RCw78V4ygQ+AVJIheCJQktSlQv6q2IQ7qeAtni3tmdY2SAscq2i6iUsBObwHkHtnMM=
+	t=1739890772; cv=none; b=iSM36MOz/tuNnd25ELv78BC9sIltbiuJER0XNsVCtZsD20IpqIYL0V9/UROjhXvQjiwooGRrNjrIo4Vo3y9CwaxGwhN6A90RU6CL1C3mCifuI/WVOoONrk8X9rb6d8BjnC5Ac7Ytj7SS1o9LjlVqW+RLwtRoVWTSoNxd9zFLxN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739890765; c=relaxed/simple;
-	bh=+nx7atCiKC7K40KmvYwI0uOhG0aBGVOP+7Ar70bIL6s=;
+	s=arc-20240116; t=1739890772; c=relaxed/simple;
+	bh=AeYe2vBNU+m9FBdUC7nwJOFvDJpO9BLROJh30fvw8Gg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=igzoRTj5bnlneWTzZji1whlvKQykwUOQADqN2dM/NW9pIFDXEI0U/EP7lJu0SrO4WUrYNu2I8rD5k684PjaJU8xtTbv8gG3j8Wpaayed/Fm3yIlp+AaHn1swX34wL684kz5IBDeG9LMPQccBbymV/WwFViMSnS7/ZmBH1ocsq28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XiZjWIk/; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=RLlO17jmfheSomOH6LggM+qgsgvJTt7QpW99KgTJf8NsTYngVcvfKe18jjXgjGlOsDQ80dhYR3QaOzidz2CGX5tPllNFuiUf3XK5IODrAERdUcMGYC2NXfwBCeHdE+nx18Hzt22Uh3BVavLkx91tMnHZOqLJZpXDNfFiaJNwZzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=efDdWtW2; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XiZjWIk/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="efDdWtW2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739890762;
+	s=mimecast20190719; t=1739890769;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6uE98EGD7qlh2c6nXiYJWtCR+2B2lttdnNAf3Mj11rY=;
-	b=XiZjWIk/VXMOOV56ONHfY67sxwzfQ2AwVNjJ99j61NVTwCRg9x9Si9uiygZyzf5kQS/qW0
-	hhU0Rpizu7GAYZVT0A+FR/c3LXJTJ0CD/zg1o1VQJCPib/BNkF6IIFVqasTda2JJAh7+5q
-	PqS40yuOWG8L4LFxdfAC989OVFGYios=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=k4Xvf5gPCmpzm9QGgHlDq78O/tV2kJRlkD34Az50cMA=;
+	b=efDdWtW2F6H9/FnKlPoMSHcB+f3mMdyUGGMJTAuFr597QWUxxwVNuI7AVp2aKrW6WIHM9b
+	fnhvZjjullOX1AWUge3rJHanDLZiIqbF3xgl8pTPyzNiQUa9Joc19ID7JJntDaqRg5pFGu
+	QsN7O/EuoFAHN/dQfYOXLfrORxBpZ9c=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-P2RvYzmDM1OkuusA6J0ZHw-1; Tue,
- 18 Feb 2025 09:59:17 -0500
-X-MC-Unique: P2RvYzmDM1OkuusA6J0ZHw-1
-X-Mimecast-MFC-AGG-ID: P2RvYzmDM1OkuusA6J0ZHw_1739890756
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-588-8BpTYZv1N6u1qu9Drsr6gg-1; Tue,
+ 18 Feb 2025 09:59:25 -0500
+X-MC-Unique: 8BpTYZv1N6u1qu9Drsr6gg-1
+X-Mimecast-MFC-AGG-ID: 8BpTYZv1N6u1qu9Drsr6gg_1739890764
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2EC9A1903096;
-	Tue, 18 Feb 2025 14:59:16 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 686FF18D95E0;
+	Tue, 18 Feb 2025 14:59:24 +0000 (UTC)
 Received: from fedora.brq.redhat.com (unknown [10.43.17.52])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D7E11180035F;
-	Tue, 18 Feb 2025 14:59:13 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1ECB81800357;
+	Tue, 18 Feb 2025 14:59:21 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -51,9 +51,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 1/8] rtla/timerlat: Unify params struct
-Date: Tue, 18 Feb 2025 15:58:52 +0100
-Message-ID: <20250218145859.27762-2-tglozar@redhat.com>
+Subject: [PATCH 4/8] rtla/timerlat: Add BPF skeleton to collect samples
+Date: Tue, 18 Feb 2025 15:58:55 +0100
+Message-ID: <20250218145859.27762-5-tglozar@redhat.com>
 In-Reply-To: <20250218145859.27762-1-tglozar@redhat.com>
 References: <20250218145859.27762-1-tglozar@redhat.com>
 Precedence: bulk
@@ -65,401 +65,486 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Instead of having separate structs timerlat_top_params and
-timerlat_hist_params, use one struct timerlat_params for both.
+Add BPF program that attaches to the osnoise:timerlat_sample tracepoint
+and collects both the summary and the histogram (if requested) into BPF
+maps (one map of each kind per context).
 
-This allows code using the structs to be shared between timerlat-top and
-timerlat-hist.
+The program is designed to be used for both timerlat-top and
+timerlat-hist. If using with timerlat-top, the "entries" parameter is
+set to zero, which prevents the BPF program from recording histogram
+entries. In that case, the maps for histograms do not have to be
+created, as the BPF verifier will identify the code using them as
+unreachable.
+
+An IRQ or thread latency threshold might be supplied to stop recording
+if hit, similar to the timerlat tracer threshold, which stops ftrace
+tracing if hit. A BPF ringbuffer is used to signal threshold overflow to
+userspace. In aa-only mode, this is the only function of the BPF
+program.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/src/osnoise.h       |  2 +
- tools/tracing/rtla/src/timerlat.h      | 54 ++++++++++++++++++++++
- tools/tracing/rtla/src/timerlat_aa.c   |  2 -
- tools/tracing/rtla/src/timerlat_hist.c | 62 +++++---------------------
- tools/tracing/rtla/src/timerlat_top.c  | 57 +++++------------------
- 5 files changed, 78 insertions(+), 99 deletions(-)
+ tools/tracing/rtla/.gitignore         |   1 +
+ tools/tracing/rtla/Makefile           |  14 ++-
+ tools/tracing/rtla/src/Build          |   1 +
+ tools/tracing/rtla/src/timerlat.bpf.c | 149 +++++++++++++++++++++++
+ tools/tracing/rtla/src/timerlat_bpf.c | 166 ++++++++++++++++++++++++++
+ tools/tracing/rtla/src/timerlat_bpf.h |  59 +++++++++
+ 6 files changed, 389 insertions(+), 1 deletion(-)
+ create mode 100644 tools/tracing/rtla/src/timerlat.bpf.c
+ create mode 100644 tools/tracing/rtla/src/timerlat_bpf.c
+ create mode 100644 tools/tracing/rtla/src/timerlat_bpf.h
 
-diff --git a/tools/tracing/rtla/src/osnoise.h b/tools/tracing/rtla/src/osnoise.h
-index 91835a7d8c2b..056c8b113dee 100644
---- a/tools/tracing/rtla/src/osnoise.h
-+++ b/tools/tracing/rtla/src/osnoise.h
-@@ -1,4 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/tracing/rtla/.gitignore b/tools/tracing/rtla/.gitignore
+index 293f0dbb0ca2..1a394ad26cc1 100644
+--- a/tools/tracing/rtla/.gitignore
++++ b/tools/tracing/rtla/.gitignore
+@@ -4,3 +4,4 @@ rtla-static
+ fixdep
+ feature
+ FEATURE-DUMP
++*.skel.h
+diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+index 0aa116f7b355..557af322be61 100644
+--- a/tools/tracing/rtla/Makefile
++++ b/tools/tracing/rtla/Makefile
+@@ -73,6 +73,17 @@ CFLAGS		+= $(INCLUDES) $(LIB_INCLUDES)
+ 
+ export CFLAGS OUTPUT srctree
+ 
++ifeq ($(BUILD_BPF_SKEL),1)
++src/timerlat.bpf.o: src/timerlat.bpf.c
++	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -c $(filter %.c,$^) -o $@
++
++src/timerlat.skel.h: src/timerlat.bpf.o
++	$(QUIET_GENSKEL)$(BPFTOOL) gen skeleton $< > $@
++else
++src/timerlat.skel.h:
++	$(Q)echo '/* BPF skeleton is disabled */' > src/timerlat.skel.h
++endif
++
+ $(RTLA): $(RTLA_IN)
+ 	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $(RTLA) $(RTLA_IN) $(EXTLIBS)
+ 
+@@ -83,7 +94,7 @@ static: $(RTLA_IN)
+ rtla.%: fixdep FORCE
+ 	make -f $(srctree)/tools/build/Makefile.build dir=. $@
+ 
+-$(RTLA_IN): fixdep FORCE
++$(RTLA_IN): fixdep FORCE src/timerlat.skel.h
+ 	make $(build)=rtla
+ 
+ clean: doc_clean fixdep-clean
+@@ -91,6 +102,7 @@ clean: doc_clean fixdep-clean
+ 	$(Q)find . -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)rm -f rtla rtla-static fixdep FEATURE-DUMP rtla-*
+ 	$(Q)rm -rf feature
++	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h
+ check: $(RTLA)
+ 	RTLA=$(RTLA) prove -o -f tests/
+ .PHONY: FORCE clean check
+diff --git a/tools/tracing/rtla/src/Build b/tools/tracing/rtla/src/Build
+index dbed9e31829b..7bb7e39e391a 100644
+--- a/tools/tracing/rtla/src/Build
++++ b/tools/tracing/rtla/src/Build
+@@ -8,4 +8,5 @@ rtla-y += timerlat_top.o
+ rtla-y += timerlat_hist.o
+ rtla-y += timerlat_u.o
+ rtla-y += timerlat_aa.o
++rtla-y += timerlat_bpf.o
+ rtla-y += rtla.o
+diff --git a/tools/tracing/rtla/src/timerlat.bpf.c b/tools/tracing/rtla/src/timerlat.bpf.c
+new file mode 100644
+index 000000000000..96196d46e170
+--- /dev/null
++++ b/tools/tracing/rtla/src/timerlat.bpf.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/bpf.h>
++#include <bpf/bpf_tracing.h>
++#include <stdbool.h>
++#include "timerlat_bpf.h"
++
++#define nosubprog __always_inline
++#define MAX_ENTRIES_DEFAULT 4096
++
++char LICENSE[] SEC("license") = "GPL";
++
++struct trace_event_raw_timerlat_sample {
++	unsigned long long timer_latency;
++	int context;
++} __attribute__((preserve_access_index));
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__uint(max_entries, MAX_ENTRIES_DEFAULT);
++	__type(key, unsigned int);
++	__type(value, unsigned long long);
++} hist_irq SEC(".maps"), hist_thread SEC(".maps"), hist_user SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__uint(max_entries, SUMMARY_FIELD_N);
++	__type(key, unsigned int);
++	__type(value, unsigned long long);
++} summary_irq SEC(".maps"), summary_thread SEC(".maps"), summary_user SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_RINGBUF);
++	__uint(max_entries, 1);
++} signal_stop_tracing SEC(".maps");
++
++/* Params to be set by rtla */
++const volatile int bucket_size = 1;
++const volatile int output_divisor = 1000;
++const volatile int entries = 256;
++const volatile int irq_threshold;
++const volatile int thread_threshold;
++const volatile bool aa_only;
++
++int stop_tracing;
++
++nosubprog unsigned long long map_get(void *map,
++				     unsigned int key)
++{
++	unsigned long long *value_ptr;
++
++	value_ptr = bpf_map_lookup_elem(map, &key);
++
++	return !value_ptr ? 0 : *value_ptr;
++}
++
++nosubprog void map_set(void *map,
++		       unsigned int key,
++		       unsigned long long value)
++{
++	bpf_map_update_elem(map, &key, &value, BPF_ANY);
++}
++
++nosubprog void map_increment(void *map,
++			     unsigned int key)
++{
++	map_set(map, key, map_get(map, key) + 1);
++}
++
++nosubprog void update_main_hist(void *map,
++				int bucket)
++{
++	if (entries == 0)
++		/* No histogram */
++		return;
++
++	if (bucket >= entries)
++		/* Overflow */
++		return;
++
++	map_increment(map, bucket);
++}
++
++nosubprog void update_summary(void *map,
++			      unsigned long long latency,
++			      int bucket)
++{
++	if (aa_only)
++		/* Auto-analysis only, nothing to be done here */
++		return;
++
++	map_set(map, SUMMARY_CURRENT, latency);
++
++	if (bucket >= entries)
++		/* Overflow */
++		map_increment(map, SUMMARY_OVERFLOW);
++
++	if (latency > map_get(map, SUMMARY_MAX))
++		map_set(map, SUMMARY_MAX, latency);
++
++	if (latency < map_get(map, SUMMARY_MIN) || map_get(map, SUMMARY_COUNT) == 0)
++		map_set(map, SUMMARY_MIN, latency);
++
++	map_increment(map, SUMMARY_COUNT);
++	map_set(map, SUMMARY_SUM, map_get(map, SUMMARY_SUM) + latency);
++}
++
++nosubprog void set_stop_tracing(void)
++{
++	int value = 0;
++
++	/* Suppress further sample processing */
++	stop_tracing = 1;
++
++	/* Signal to userspace */
++	bpf_ringbuf_output(&signal_stop_tracing, &value, sizeof(value), 0);
++}
++
++SEC("tp/osnoise/timerlat_sample")
++int handle_timerlat_sample(struct trace_event_raw_timerlat_sample *tp_args)
++{
++	unsigned long long latency, latency_us;
++	int bucket;
++
++	if (stop_tracing)
++		return 0;
++
++	latency = tp_args->timer_latency / output_divisor;
++	latency_us = tp_args->timer_latency / 1000;
++	bucket = latency / bucket_size;
++
++	if (tp_args->context == 0) {
++		update_main_hist(&hist_irq, bucket);
++		update_summary(&summary_irq, latency, bucket);
++
++		if (irq_threshold != 0 && latency_us >= irq_threshold)
++			set_stop_tracing();
++	} else if (tp_args->context == 1) {
++		update_main_hist(&hist_thread, bucket);
++		update_summary(&summary_thread, latency, bucket);
++
++		if (thread_threshold != 0 && latency_us >= thread_threshold)
++			set_stop_tracing();
++	} else {
++		update_main_hist(&hist_user, bucket);
++		update_summary(&summary_user, latency, bucket);
++	}
++
++	return 0;
++}
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.c b/tools/tracing/rtla/src/timerlat_bpf.c
+new file mode 100644
+index 000000000000..5abee884037a
+--- /dev/null
++++ b/tools/tracing/rtla/src/timerlat_bpf.c
+@@ -0,0 +1,166 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifdef HAVE_BPF_SKEL
++#include "timerlat.h"
++#include "timerlat_bpf.h"
++#include "timerlat.skel.h"
++
++static struct timerlat_bpf *bpf;
++
++/*
++ * timerlat_bpf_init - load and initialize BPF program to collect timerlat data
++ */
++int timerlat_bpf_init(struct timerlat_params *params)
++{
++	int err;
++
++	debug_msg("Loading BPF program\n");
++
++	bpf = timerlat_bpf__open();
++	if (!bpf)
++		return 1;
++
++	/* Pass common options */
++	bpf->rodata->output_divisor = params->output_divisor;
++	bpf->rodata->entries = params->entries;
++	bpf->rodata->irq_threshold = params->stop_us;
++	bpf->rodata->thread_threshold = params->stop_total_us;
++	bpf->rodata->aa_only = params->aa_only;
++
++	if (params->entries != 0) {
++		/* Pass histogram options */
++		bpf->rodata->bucket_size = params->bucket_size;
++
++		/* Set histogram array sizes */
++		bpf_map__set_max_entries(bpf->maps.hist_irq, params->entries);
++		bpf_map__set_max_entries(bpf->maps.hist_thread, params->entries);
++		bpf_map__set_max_entries(bpf->maps.hist_user, params->entries);
++	} else {
++		/* No entries, disable histogram */
++		bpf_map__set_autocreate(bpf->maps.hist_irq, false);
++		bpf_map__set_autocreate(bpf->maps.hist_thread, false);
++		bpf_map__set_autocreate(bpf->maps.hist_user, false);
++	}
++
++	if (params->aa_only) {
++		/* Auto-analysis only, disable summary */
++		bpf_map__set_autocreate(bpf->maps.summary_irq, false);
++		bpf_map__set_autocreate(bpf->maps.summary_thread, false);
++		bpf_map__set_autocreate(bpf->maps.summary_user, false);
++	}
++
++	/* Load and verify BPF program */
++	err = timerlat_bpf__load(bpf);
++	if (err) {
++		timerlat_bpf__destroy(bpf);
++		return err;
++	}
++
++	return 0;
++}
++
++/*
++ * timerlat_bpf_attach - attach BPF program to collect timerlat data
++ */
++int timerlat_bpf_attach(void)
++{
++	debug_msg("Attaching BPF program\n");
++
++	return timerlat_bpf__attach(bpf);
++}
++
++/*
++ * timerlat_bpf_detach - detach BPF program to collect timerlat data
++ */
++void timerlat_bpf_detach(void)
++{
++	timerlat_bpf__detach(bpf);
++}
++
++/*
++ * timerlat_bpf_detach - destroy BPF program to collect timerlat data
++ */
++void timerlat_bpf_destroy(void)
++{
++	timerlat_bpf__destroy(bpf);
++}
++
++static int handle_rb_event(void *ctx, void *data, size_t data_sz)
++{
++	return 0;
++}
++
++/*
++ * timerlat_bpf_wait - wait until tracing is stopped or signal
++ */
++int timerlat_bpf_wait(int timeout)
++{
++	struct ring_buffer *rb;
++	int retval;
++
++	rb = ring_buffer__new(bpf_map__fd(bpf->maps.signal_stop_tracing),
++			      handle_rb_event, NULL, NULL);
++	retval = ring_buffer__poll(rb, timeout * 1000);
++	ring_buffer__free(rb);
++
++	return retval;
++}
++
++static int get_value(struct bpf_map *map_irq,
++		     struct bpf_map *map_thread,
++		     struct bpf_map *map_user,
++		     int key,
++		     long long *value_irq,
++		     long long *value_thread,
++		     long long *value_user,
++		     int cpus)
++{
++	int err;
++
++	err = bpf_map__lookup_elem(map_irq, &key,
++				   sizeof(unsigned int), value_irq,
++				   sizeof(long long) * cpus, 0);
++	if (err)
++		return err;
++	err = bpf_map__lookup_elem(map_thread, &key,
++				   sizeof(unsigned int), value_thread,
++				   sizeof(long long) * cpus, 0);
++	if (err)
++		return err;
++	err = bpf_map__lookup_elem(map_user, &key,
++				   sizeof(unsigned int), value_user,
++				   sizeof(long long) * cpus, 0);
++	if (err)
++		return err;
++	return 0;
++}
++
++/*
++ * timerlat_bpf_get_hist_value - get value from BPF hist map
++ */
++int timerlat_bpf_get_hist_value(int key,
++				long long *value_irq,
++				long long *value_thread,
++				long long *value_user,
++				int cpus)
++{
++	return get_value(bpf->maps.hist_irq,
++			 bpf->maps.hist_thread,
++			 bpf->maps.hist_user,
++			 key, value_irq, value_thread, value_user, cpus);
++}
++
++/*
++ * timerlat_bpf_get_summary_value - get value from BPF summary map
++ */
++int timerlat_bpf_get_summary_value(enum summary_field key,
++				   long long *value_irq,
++				   long long *value_thread,
++				   long long *value_user,
++				   int cpus)
++{
++	return get_value(bpf->maps.summary_irq,
++			 bpf->maps.summary_thread,
++			 bpf->maps.summary_user,
++			 key, value_irq, value_thread, value_user, cpus);
++}
++#endif /* HAVE_BPF_SKEL */
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.h b/tools/tracing/rtla/src/timerlat_bpf.h
+new file mode 100644
+index 000000000000..f1b54dbddb0e
+--- /dev/null
++++ b/tools/tracing/rtla/src/timerlat_bpf.h
+@@ -0,0 +1,59 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +#pragma once
 +
- #include "trace.h"
- 
- /*
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index 88561bfd14f3..e452d385cb0f 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -1,4 +1,58 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "utils.h"
-+#include "osnoise.h"
-+
-+struct timerlat_params {
-+	/* Common params */
-+	char			*cpus;
-+	cpu_set_t		monitored_cpus;
-+	char			*trace_output;
-+	char			*cgroup_name;
-+	unsigned long long	runtime;
-+	long long		stop_us;
-+	long long		stop_total_us;
-+	long long		timerlat_period_us;
-+	long long		print_stack;
-+	int			sleep_time;
-+	int			output_divisor;
-+	int			duration;
-+	int			quiet;
-+	int			set_sched;
-+	int			dma_latency;
-+	int			no_aa;
-+	int			aa_only;
-+	int			dump_tasks;
-+	int			cgroup;
-+	int			hk_cpus;
-+	int			user_workload;
-+	int			kernel_workload;
-+	int			pretty_output;
-+	int			warmup;
-+	int			buffer_size;
-+	int			deepest_idle_state;
-+	cpu_set_t		hk_cpu_set;
-+	struct sched_attr	sched_param;
-+	struct trace_events	*events;
-+	union {
-+		struct {
-+			/* top only */
-+			int			user_top;
-+		};
-+		struct {
-+			/* hist only */
-+			int			user_hist;
-+			char			no_irq;
-+			char			no_thread;
-+			char			no_header;
-+			char			no_summary;
-+			char			no_index;
-+			char			with_zeros;
-+			int			bucket_size;
-+			int			entries;
-+		};
-+	};
++enum summary_field {
++	SUMMARY_CURRENT,
++	SUMMARY_MIN,
++	SUMMARY_MAX,
++	SUMMARY_COUNT,
++	SUMMARY_SUM,
++	SUMMARY_OVERFLOW,
++	SUMMARY_FIELD_N
 +};
 +
- int timerlat_hist_main(int argc, char *argv[]);
- int timerlat_top_main(int argc, char *argv[]);
- int timerlat_main(int argc, char *argv[]);
-diff --git a/tools/tracing/rtla/src/timerlat_aa.c b/tools/tracing/rtla/src/timerlat_aa.c
-index 7bd80ee2a5b4..31e66ea2b144 100644
---- a/tools/tracing/rtla/src/timerlat_aa.c
-+++ b/tools/tracing/rtla/src/timerlat_aa.c
-@@ -5,8 +5,6 @@
- 
- #include <stdlib.h>
- #include <errno.h>
--#include "utils.h"
--#include "osnoise.h"
- #include "timerlat.h"
- #include <unistd.h>
- 
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 6d7d0a2d45b4..fe683a20b0e2 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -14,50 +14,10 @@
- #include <sched.h>
- #include <pthread.h>
- 
--#include "utils.h"
--#include "osnoise.h"
- #include "timerlat.h"
- #include "timerlat_aa.h"
- #include "timerlat_u.h"
- 
--struct timerlat_hist_params {
--	char			*cpus;
--	cpu_set_t		monitored_cpus;
--	char			*trace_output;
--	char			*cgroup_name;
--	unsigned long long	runtime;
--	long long		stop_us;
--	long long		stop_total_us;
--	long long		timerlat_period_us;
--	long long		print_stack;
--	int			sleep_time;
--	int			output_divisor;
--	int			duration;
--	int			set_sched;
--	int			dma_latency;
--	int			cgroup;
--	int			hk_cpus;
--	int			no_aa;
--	int			dump_tasks;
--	int			user_workload;
--	int			kernel_workload;
--	int			user_hist;
--	cpu_set_t		hk_cpu_set;
--	struct sched_attr	sched_param;
--	struct trace_events	*events;
--	char			no_irq;
--	char			no_thread;
--	char			no_header;
--	char			no_summary;
--	char			no_index;
--	char			with_zeros;
--	int			bucket_size;
--	int			entries;
--	int			warmup;
--	int			buffer_size;
--	int			deepest_idle_state;
--};
--
- struct timerlat_hist_cpu {
- 	int			*irq;
- 	int			*thread;
-@@ -174,7 +134,7 @@ timerlat_hist_update(struct osnoise_tool *tool, int cpu,
- 		     unsigned long long context,
- 		     unsigned long long latency)
- {
--	struct timerlat_hist_params *params = tool->params;
-+	struct timerlat_params *params = tool->params;
- 	struct timerlat_hist_data *data = tool->data;
- 	int entries = data->entries;
- 	int bucket;
-@@ -238,7 +198,7 @@ timerlat_hist_handler(struct trace_seq *s, struct tep_record *record,
-  */
- static void timerlat_hist_header(struct osnoise_tool *tool)
- {
--	struct timerlat_hist_params *params = tool->params;
-+	struct timerlat_params *params = tool->params;
- 	struct timerlat_hist_data *data = tool->data;
- 	struct trace_seq *s = tool->trace.seq;
- 	char duration[26];
-@@ -300,7 +260,7 @@ static void format_summary_value(struct trace_seq *seq,
-  * timerlat_print_summary - print the summary of the hist data to the output
-  */
- static void
--timerlat_print_summary(struct timerlat_hist_params *params,
-+timerlat_print_summary(struct timerlat_params *params,
- 		       struct trace_instance *trace,
- 		       struct timerlat_hist_data *data)
- {
-@@ -427,7 +387,7 @@ timerlat_print_summary(struct timerlat_hist_params *params,
- }
- 
- static void
--timerlat_print_stats_all(struct timerlat_hist_params *params,
-+timerlat_print_stats_all(struct timerlat_params *params,
- 			 struct trace_instance *trace,
- 			 struct timerlat_hist_data *data)
- {
-@@ -575,7 +535,7 @@ timerlat_print_stats_all(struct timerlat_hist_params *params,
-  * timerlat_print_stats - print data for each CPUs
-  */
- static void
--timerlat_print_stats(struct timerlat_hist_params *params, struct osnoise_tool *tool)
-+timerlat_print_stats(struct timerlat_params *params, struct osnoise_tool *tool)
- {
- 	struct timerlat_hist_data *data = tool->data;
- 	struct trace_instance *trace = &tool->trace;
-@@ -734,10 +694,10 @@ static void timerlat_hist_usage(char *usage)
- /*
-  * timerlat_hist_parse_args - allocs, parse and fill the cmd line parameters
-  */
--static struct timerlat_hist_params
-+static struct timerlat_params
- *timerlat_hist_parse_args(int argc, char *argv[])
- {
--	struct timerlat_hist_params *params;
-+	struct timerlat_params *params;
- 	struct trace_events *tevent;
- 	int auto_thresh;
- 	int retval;
-@@ -1017,7 +977,7 @@ static struct timerlat_hist_params
-  * timerlat_hist_apply_config - apply the hist configs to the initialized tool
-  */
- static int
--timerlat_hist_apply_config(struct osnoise_tool *tool, struct timerlat_hist_params *params)
-+timerlat_hist_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
- {
- 	int retval, i;
- 
-@@ -1122,7 +1082,7 @@ timerlat_hist_apply_config(struct osnoise_tool *tool, struct timerlat_hist_param
-  * timerlat_init_hist - initialize a timerlat hist tool with parameters
-  */
- static struct osnoise_tool
--*timerlat_init_hist(struct timerlat_hist_params *params)
-+*timerlat_init_hist(struct timerlat_params *params)
- {
- 	struct osnoise_tool *tool;
- 	int nr_cpus;
-@@ -1170,7 +1130,7 @@ static void stop_hist(int sig)
-  * timerlat_hist_set_signals - handles the signal to stop the tool
-  */
- static void
--timerlat_hist_set_signals(struct timerlat_hist_params *params)
-+timerlat_hist_set_signals(struct timerlat_params *params)
- {
- 	signal(SIGINT, stop_hist);
- 	if (params->duration) {
-@@ -1181,7 +1141,7 @@ timerlat_hist_set_signals(struct timerlat_hist_params *params)
- 
- int timerlat_hist_main(int argc, char *argv[])
- {
--	struct timerlat_hist_params *params;
-+	struct timerlat_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct timerlat_u_params params_u;
- 	struct osnoise_tool *tool = NULL;
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 05a9403b01d2..97eead91decc 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -15,45 +15,10 @@
- #include <sched.h>
- #include <pthread.h>
- 
--#include "utils.h"
--#include "osnoise.h"
- #include "timerlat.h"
- #include "timerlat_aa.h"
- #include "timerlat_u.h"
- 
--struct timerlat_top_params {
--	char			*cpus;
--	cpu_set_t		monitored_cpus;
--	char			*trace_output;
--	char			*cgroup_name;
--	unsigned long long	runtime;
--	long long		stop_us;
--	long long		stop_total_us;
--	long long		timerlat_period_us;
--	long long		print_stack;
--	int			sleep_time;
--	int			output_divisor;
--	int			duration;
--	int			quiet;
--	int			set_sched;
--	int			dma_latency;
--	int			no_aa;
--	int			aa_only;
--	int			dump_tasks;
--	int			cgroup;
--	int			hk_cpus;
--	int			user_top;
--	int			user_workload;
--	int			kernel_workload;
--	int			pretty_output;
--	int			warmup;
--	int			buffer_size;
--	int			deepest_idle_state;
--	cpu_set_t		hk_cpu_set;
--	struct sched_attr	sched_param;
--	struct trace_events	*events;
--};
--
- struct timerlat_top_cpu {
- 	unsigned long long	irq_count;
- 	unsigned long long	thread_count;
-@@ -194,7 +159,7 @@ timerlat_top_handler(struct trace_seq *s, struct tep_record *record,
- 		     struct tep_event *event, void *context)
- {
- 	struct trace_instance *trace = context;
--	struct timerlat_top_params *params;
-+	struct timerlat_params *params;
- 	unsigned long long latency, thread;
- 	struct osnoise_tool *top;
- 	int cpu = record->cpu;
-@@ -215,7 +180,7 @@ timerlat_top_handler(struct trace_seq *s, struct tep_record *record,
- /*
-  * timerlat_top_header - print the header of the tool output
-  */
--static void timerlat_top_header(struct timerlat_top_params *params, struct osnoise_tool *top)
-+static void timerlat_top_header(struct timerlat_params *params, struct osnoise_tool *top)
- {
- 	struct trace_seq *s = top->trace.seq;
- 	char duration[26];
-@@ -263,7 +228,7 @@ static const char *no_value = "        -";
- static void timerlat_top_print(struct osnoise_tool *top, int cpu)
- {
- 
--	struct timerlat_top_params *params = top->params;
-+	struct timerlat_params *params = top->params;
- 	struct timerlat_top_data *data = top->data;
- 	struct timerlat_top_cpu *cpu_data = &data->cpu_data[cpu];
- 	int divisor = params->output_divisor;
-@@ -327,7 +292,7 @@ static void
- timerlat_top_print_sum(struct osnoise_tool *top, struct timerlat_top_cpu *summary)
- {
- 	const char *split = "----------------------------------------";
--	struct timerlat_top_params *params = top->params;
-+	struct timerlat_params *params = top->params;
- 	unsigned long long count = summary->irq_count;
- 	int divisor = params->output_divisor;
- 	struct trace_seq *s = top->trace.seq;
-@@ -404,7 +369,7 @@ static void clear_terminal(struct trace_seq *seq)
-  * timerlat_print_stats - print data for all cpus
-  */
- static void
--timerlat_print_stats(struct timerlat_top_params *params, struct osnoise_tool *top)
-+timerlat_print_stats(struct timerlat_params *params, struct osnoise_tool *top)
- {
- 	struct trace_instance *trace = &top->trace;
- 	struct timerlat_top_cpu summary;
-@@ -505,10 +470,10 @@ static void timerlat_top_usage(char *usage)
- /*
-  * timerlat_top_parse_args - allocs, parse and fill the cmd line parameters
-  */
--static struct timerlat_top_params
-+static struct timerlat_params
- *timerlat_top_parse_args(int argc, char **argv)
- {
--	struct timerlat_top_params *params;
-+	struct timerlat_params *params;
- 	struct trace_events *tevent;
- 	long long auto_thresh;
- 	int retval;
-@@ -765,7 +730,7 @@ static struct timerlat_top_params
-  * timerlat_top_apply_config - apply the top configs to the initialized tool
-  */
- static int
--timerlat_top_apply_config(struct osnoise_tool *top, struct timerlat_top_params *params)
-+timerlat_top_apply_config(struct osnoise_tool *top, struct timerlat_params *params)
- {
- 	int retval;
- 	int i;
-@@ -876,7 +841,7 @@ timerlat_top_apply_config(struct osnoise_tool *top, struct timerlat_top_params *
-  * timerlat_init_top - initialize a timerlat top tool with parameters
-  */
- static struct osnoise_tool
--*timerlat_init_top(struct timerlat_top_params *params)
-+*timerlat_init_top(struct timerlat_params *params)
- {
- 	struct osnoise_tool *top;
- 	int nr_cpus;
-@@ -924,7 +889,7 @@ static void stop_top(int sig)
-  * timerlat_top_set_signals - handles the signal to stop the tool
-  */
- static void
--timerlat_top_set_signals(struct timerlat_top_params *params)
-+timerlat_top_set_signals(struct timerlat_params *params)
- {
- 	signal(SIGINT, stop_top);
- 	if (params->duration) {
-@@ -935,7 +900,7 @@ timerlat_top_set_signals(struct timerlat_top_params *params)
- 
- int timerlat_top_main(int argc, char *argv[])
- {
--	struct timerlat_top_params *params;
-+	struct timerlat_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct timerlat_u_params params_u;
- 	struct osnoise_tool *top = NULL;
++#ifndef __bpf__
++#ifdef HAVE_BPF_SKEL
++int timerlat_bpf_init(struct timerlat_params *params);
++int timerlat_bpf_attach(void);
++void timerlat_bpf_detach(void);
++void timerlat_bpf_destroy(void);
++int timerlat_bpf_wait(int timeout);
++int timerlat_bpf_get_hist_value(int key,
++				long long *value_irq,
++				long long *value_thread,
++				long long *value_user,
++				int cpus);
++int timerlat_bpf_get_summary_value(enum summary_field key,
++				   long long *value_irq,
++				   long long *value_thread,
++				   long long *value_user,
++				   int cpus);
++static inline int have_libbpf_support(void) { return 1; }
++#else
++static inline int timerlat_bpf_init(struct timerlat_params *params)
++{
++	return -1;
++}
++static inline int timerlat_bpf_attach(void) { return -1; }
++static inline void timerlat_bpf_detach(void) { };
++static inline void timerlat_bpf_destroy(void) { };
++static inline int timerlat_bpf_wait(int timeout) { return -1; }
++static inline int timerlat_bpf_get_hist_value(int key,
++					      long long *value_irq,
++					      long long *value_thread,
++					      long long *value_user,
++					      int cpus)
++{
++	return -1;
++}
++static inline int timerlat_bpf_get_summary_value(enum summary_field key,
++						 long long *value_irq,
++						 long long *value_thread,
++						 long long *value_user,
++						 int cpus)
++{
++	return -1;
++}
++static inline int have_libbpf_support(void) { return 0; }
++#endif /* HAVE_BPF_SKEL */
++#endif /* __bpf__ */
 -- 
 2.48.1
 
