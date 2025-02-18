@@ -1,489 +1,221 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F171A5B8E;
-	Tue, 18 Feb 2025 05:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3591A9B48
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739857516; cv=none; b=fsRY4vn/avfk64xuZ5t+GgB/9BPHnSe2QWv5csc+l0MHKprz6LGWdjZTTgGeMXcuEnnZnDVDJ3QPzcQ4kyrv0pbK7W7DrzAafNyYb1NMNV/fD/quJp1KsBQzAvm5A+F9v07nGB+MVUkJxJva9ovbrCl/almSZSKlDOKC/L56I98=
+	t=1739857552; cv=none; b=kbPua873kFkVMBRsaO4g5XWumuuXO3eS8fueHAt0vIJFTF0w7uxZ0meHBUsiDVer0m5spawDuIZXVJJGIwTdh7OLAFvg9wFJn1lBWGXJ9Tfq0M9eKc5BX6HgyOrDIyxJlA5zGf3XNUVBDns3KVja3V2VbZkc45wXlYtkd6hJ9jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739857516; c=relaxed/simple;
-	bh=/MBJuPwsJLz+uXsDOk66hrgXkb8nr1XHIbqjmPM2Zv0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PS1LKEchBdrFrqm2EZJxl3o1x1XHdBvrc+Iwq8dm3yDvjGQktB4psdgosH0HHPER0TPNn9Zi/tnmNRQCzbi4zk4QkOmTyAubg4X3rzRYzP+C0a2seElhmF98Ih/H9dZvZR4FaOkPuluwykYLsiLYHkjEsYK1dCg7c4NgCx7m4V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZJajjzZ9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739857552; c=relaxed/simple;
+	bh=L+HA70TVZSbeMdYskL8kC42n8szwtVtfysFxmDVHkKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eTVOPsfQHwiNzshKGE8QOY7BXjXpolOyL8bDUKD0ywPhXMDO3Q5/6O3upyaLEHf1hNcyrKhd8DNqHrH1q9zTaKtZ5GhxZcSe3CbBiKyB7LRRHHRgf8TkpupHKidckFsuUN/AlvDeOYwmr9MX3c2ix50SrcuYY6dc/b4Htn7tYMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CZ9x+v4b; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZJajjzZ9"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HMnRxf014574;
-	Tue, 18 Feb 2025 05:44:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pSkpIR
-	kXBMR+N2jNPwNvVAH5sFpj81q4WOq+masxKM0=; b=ZJajjzZ9hp+JogsL3ESEY6
-	6WBNfxhK3FR0LZOUAZp/HYsycRISDEdcm7+k4d6WIhEMHoCrPWyujN9AVIOLu3Fu
-	RIB2tQAzvn7tpNng/LT9WXKU4oR3IpzzWMttqLDV+mc5aEEBuPSWQHy3zh8o2pAN
-	O4p4smYMi+Su2ZbiFrNjMLdJIyoE/jdopoTOIfHcSyZDvOGDiFheanSAH9deFZDI
-	WU1WSJsaqM8Rbj7L2ttpAsxFYF9cpVs8Qsuk+2I1KiP66Il5ToSxKKao7mWNIxRW
-	jJ/M/ladcSJNYXdlbG1lwKNoenDIjos6JniooBUE3Ng8GGeuld/8pwGQdDgZxi6Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ve8a9as3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 05:44:56 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51I5iuLU013341;
-	Tue, 18 Feb 2025 05:44:56 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ve8a9ary-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 05:44:55 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51I1DgkK008124;
-	Tue, 18 Feb 2025 05:44:55 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44u58thpcd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 05:44:54 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51I5irnR39452986
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Feb 2025 05:44:53 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4CE5E20043;
-	Tue, 18 Feb 2025 05:44:53 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 530F720040;
-	Tue, 18 Feb 2025 05:44:50 +0000 (GMT)
-Received: from [9.124.222.120] (unknown [9.124.222.120])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 18 Feb 2025 05:44:50 +0000 (GMT)
-Message-ID: <ee74de65-1b9d-4c40-aa57-52682801260a@linux.ibm.com>
-Date: Tue, 18 Feb 2025 11:14:48 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CZ9x+v4b"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22128b7d587so32152955ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 21:45:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739857550; x=1740462350; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=P3fYbERtYWIWV5Ldhm0+1AIYnN3OdcFMhdr4MubLhJ4=;
+        b=CZ9x+v4bhPl2367Q/xYnwaa+zEHVu9bRrRQ20rGyPNm0lXvfYhm4RvY9zkjkI0lUKu
+         N3wXvTiJJ5BT+19jK7ArVbH1BAzTgenn8OaVdrG0ofb4TViOpxmzjzojVOEGI/rHYlmX
+         orsBKpUh61KMp470Ex7cbmt4OScB9+J8B6/iYHWcYXu1vVPUJWh6lQMPujlfgBR0d13V
+         /FSv6sPDn4H5BwC9EvCiRNnikpV1QyJBAy0YHp4LKIOl1rWT8KC9Gx8o+U6yH837dDRe
+         98sgVzzbEV3izV758Z2IZnV+1EIo7TPjaxKJEAA5RTaGKO1csnoCXEXQiDleWXZ/k7hr
+         GU1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739857550; x=1740462350;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P3fYbERtYWIWV5Ldhm0+1AIYnN3OdcFMhdr4MubLhJ4=;
+        b=o0DuYZeAQqy8ZBFR3Bbkpkerr/RYSsjHHdZ897Ax0bHQDt4FF+kwCIyyBp0ZlXiZs8
+         zX1ai/jbHEszZiMsA9W/zfohcN0XSDaX0ujW+TLZ7lm43eFaA7ZEtyg+C/iJGP5ytYvO
+         jeYUF7xckXmt4lRZRYK3rKuN11/laSt2Hp8jHq+JrVdj1SlEw0daMeMFrMbbMEnG1PDF
+         8YUL9Xy62u+UFHC+pgSpAVkdpGzXiADgQ2gzZhzy3fGzO3SsgbkiW6m61rr2BPDiqQWC
+         Z4eJfNYKDhjfwt3YwUUNSephybZpbDGW/UtMm9r3I1VQzvngNLyscB51IbELvewQW+Ar
+         WJIA==
+X-Forwarded-Encrypted: i=1; AJvYcCW06aiyR+EhCeZ/hl6uj8irp9I3ZzHjsuNwwPOxA/08f8JG/pGpvpch/PLT1n86B1TL1AyaNdgGi/6OZ+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxji1atx40rSqDsUZJs95xY1AitoWF8YnbVe6qXb1Lx+c/WZUus
+	VkfL3IkboD+ECp49bXXv2NHufM88d+lWik8uPSYlEQhEBr87UOYuMlChgAgmdw==
+X-Gm-Gg: ASbGncuJlnk6ijFU/0uSuCW36+kjmvdQDtZbG3rdXfWTonp3Qo1BkUr6AMgiP66VRrF
+	J7diaWY7bfZ2mj9TO/1p/OZcEc3F+Y98k9QCsPmy6SZmAHmQkekc6By3TkktRoa9JLISnijj88n
+	SVKloRTWVE+AF/PoaTgQko6XMjs7Dah73ySBEEhMYp0B+V9UbDqiZM7CJB8RYU55ybgKPPw+ddE
+	JTQf5hLbAXQ5VGLx3RJ8SxwnG/2UFsTbUgpd02THAnaXOyN4O5cLiMoH8+WBlPmEIvPMJuzUvpS
+	VojXNzlCZGfDA5lIx/GgG8ENAhb2WGuKZpScmnOaRLeH5nOlBXEc/+nnKw==
+X-Google-Smtp-Source: AGHT+IH9mb67E80iE2dKITP866mfonSNY51J7MjFAaydvKRMhKMf5Uoax7tn4nwC3ALthMBo2i5EMw==
+X-Received: by 2002:a05:6a21:b93:b0:1ee:cdd1:2fdd with SMTP id adf61e73a8af0-1eecdd14f01mr48697637.16.1739857549554;
+        Mon, 17 Feb 2025 21:45:49 -0800 (PST)
+Received: from google.com (49.156.143.34.bc.googleusercontent.com. [34.143.156.49])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242546301sm9261922b3a.33.2025.02.17.21.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 21:45:49 -0800 (PST)
+Date: Tue, 18 Feb 2025 11:15:40 +0530
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Brian Norris <briannorris@google.com>, Oliver Neukum <oneukum@suse.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Vincent Whitchurch <vincent.whitchurch@axis.com>,
+	"jic23@kernel.org" <jic23@kernel.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Joy Chakraborty <joychakr@google.com>,
+	Vamshi Gajjela <vamshigajjela@google.com>,
+	Manu Gautam <manugautam@google.com>
+Subject: Re: PM runtime_error handling missing in many drivers?
+Message-ID: <Z7QehEhw3uM176tW@google.com>
+References: <1937b65c-36c0-5475-c745-d7285d1a6e25@suse.com>
+ <CAJZ5v0j0mgOcfKXRzyx12EX8CYLzowXrM8DGCH9XvQGnRNv0iw@mail.gmail.com>
+ <5c37ee19-fe2c-fb22-63a2-638e3dab8f7a@suse.com>
+ <CAJZ5v0ijy4FG84xk_n8gxR_jS0xao246eVbnFj-dXzwz=8S9NQ@mail.gmail.com>
+ <Z6lzWfGbpa7jN1QD@google.com>
+ <Z6vNV8dDDPdWUKLS@google.com>
+ <CAJZ5v0i83eJWV_kvWxZvja+Js3tKbrwZ8rVVGn7vR=0qLf1mtw@mail.gmail.com>
+ <Z7Kx2RN35QVyg8nP@google.com>
+ <CAJZ5v0hom5Ex9xCfd_qD7XyFxie1iy2L_T8vDNWF-xBMmq=9aQ@mail.gmail.com>
+ <Z7QcjvKRGKgrI8EC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/3] sched/fair: introduce new scheduler group type
- group_parked
-To: Tobias Huschle <huschle@linux.ibm.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250217113252.21796-1-huschle@linux.ibm.com>
- <20250217113252.21796-2-huschle@linux.ibm.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250217113252.21796-2-huschle@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lCs1rUKIpdVZO_cXeWv80lt_eDJZcZqZ
-X-Proofpoint-ORIG-GUID: Qk1VhEyLEtaBqXzmxW-wFj9HH2Af7XMY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-18_01,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 suspectscore=0
- phishscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501 mlxscore=0
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502180039
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7QcjvKRGKgrI8EC@google.com>
 
-Hi Tobias.
+On Tue, Feb 18, 2025 at 11:07:19AM +0530, Ajay Agarwal wrote:
+> On Mon, Feb 17, 2025 at 09:23:18PM +0100, Rafael J. Wysocki wrote:
+> > On Mon, Feb 17, 2025 at 4:49 AM Ajay Agarwal <ajayagarwal@google.com> wrote:
+> > >
+> > > On Wed, Feb 12, 2025 at 08:29:34PM +0100, Rafael J. Wysocki wrote:
+> > > > On Tue, Feb 11, 2025 at 11:21 PM Brian Norris <briannorris@google.com> wrote:
+> > > > >
+> > > > > Hi Ajay,
+> > > > >
+> > > > > On Mon, Feb 10, 2025 at 09:02:41AM +0530, Ajay Agarwal wrote:
+> > > > > > On Wed, Jul 27, 2022 at 06:31:48PM +0200, Rafael J. Wysocki wrote:
+> > > > > > > On Wed, Jul 27, 2022 at 10:08 AM Oliver Neukum <oneukum@suse.com> wrote:
+> > > > > > > > On 26.07.22 17:41, Rafael J. Wysocki wrote:
+> > > > > > > > > Well, in general suspending or resuming a device is a collaborative
+> > > > > > > > > effort and if one of the pieces falls over, making it work again
+> > > > > > > > > involves fixing up the failing piece and notifying the others that it
+> > > > > > > > > is ready again.  However, that part isn't covered and I'm not sure if
+> > > > > > > > > it can be covered in a sufficiently generic way.
+> > > > > > > >
+> > > > > > > > True. But that still cannot solve the question what is to be done
+> > > > > > > > if error handling fails. Hence my proposal:
+> > > > > > > > - record all failures
+> > > > > > > > - heed the record only when suspending
+> > > > > > >
+> > > > > > > I guess that would boil down to moving the power.runtime_error update
+> > > > > > > from rpm_callback() to rpm_suspend()?
+> > > > > > Resuming this discussion. One of the ways the device drivers are
+> > > > > > clearing the runtime_error flag is by calling pm_runtime_set_suspended
+> > > > > > [1].
+> > > >
+> > > > I personally think that jumping on a 2.5 years old thread is not a
+> > > > good idea.  It would be better to restate the problem statement and
+> > > > provide the link to the previous discussion.
+> > > >
+> > > > > > To me, it feels weird that a device driver calls pm_runtime_set_suspended
+> > > > > > if the runtime_resume() has failed. It should be implied that the device
+> > > > > > is in suspended state if the resume failed.
+> > > > > >
+> > > > > > So how really should the runtime_error flag be cleared? Should there be
+> > > > > > a new API exposed to device drivers for this? Or should we plan for it
+> > > > > > in the framework itself?
+> > > > >
+> > > > > While the API naming is unclear, that's exactly what
+> > > > > pm_runtime_set_suspended() is about. Personally, I find it nice when a
+> > > > > driver adds the comment "clear runtime_error flag", because otherwise
+> > > > > it's not really obvious why a driver has to take care of "suspending"
+> > > > > after a failed resume. But that's not the biggest question here, IMO.
+> > > > >
+> > > > > The real reson I pointed you at this thread was because I think it's
+> > > > > useful to pursue the proposal above: to avoid setting a persistent
+> > > > > "runtime_error" for resume failures. This seems to just create a pitfall
+> > > > > for clients, as asked by Vincent and Oliver upthread.
+> > > > >
+> > > > > And along this line, there are relatively few drivers that actually
+> > > > > bother to reset this error flag ever (e.g., commit f2bc2afe34c1
+> > > > > ("accel/ivpu: Clear runtime_error after pm_runtime_resume_and_get()
+> > > > > fails")).
+> > > > >
+> > > > > So to me, we should simply answer Rafael's question:
+> > > > >
+> > > > > (repeated:)
+> > > > > > > I guess that would boil down to moving the power.runtime_error update
+> > > > > > > from rpm_callback() to rpm_suspend()?
+> > > > >
+> > > > > Yes, I think so. (Although I'm not sure if this leaves undesirable spam
+> > > > > where persistent .runtime_resume() failures occur.)
+> > > > >
+> > > > > ...and then write/test/submit such a patch, provided it achieves the
+> > > > > desired results.
+> > > > >
+> > > > > Unless of course one of the thread participants here has some other
+> > > > > update in the intervening 2.5 years, or if Rafael was simply asking the
+> > > > > above rhetorically, and wasn't actually interested in fielding such a
+> > > > > change.
+> > > >
+> > > > The reason why runtime_error is there is to prevent runtime PM
+> > > > callbacks from being run until something is done about the error,
+> > > > under the assumption that running them in that case may make the
+> > > > problem worse.
+> > > >
+> > > > I'm not sure if I see a substantial difference between suspend and
+> > > > resume in that respect: If any of them fails, the state of the device
+> > > > is kind of unstable.  In particular, if resume fails and the device
+> > > > doesn't actually resume, something needs to be done about it or it
+> > > > just becomes unusable.
+> > > >
+> > > > Now, the way of clearing the error may not be super-convenient, which
+> > > > was a bit hard to figure out upfront, so I'm not against making any
+> > > > changes as long as there are sufficient reasons for making them.
+> > >
+> > > I am thinking if we can start with a change to not check runtime_error
+> > > in rpm_resume, and let it go through even if the previous rpm_resume
+> > > attempt failed. Something like this:
+> > >
+> > > ```
+> > > static int rpm_resume(struct device *dev, int rpmflags)
+> > >         trace_rpm_resume(dev, rpmflags);
+> > >
+> > >   repeat:
+> > > -       if (dev->power.runtime_error) {
+> > > -               retval = -EINVAL;
+> > > -       } else if (dev->power.disable_depth > 0) {
+> > > +       if (dev->power.disable_depth > 0) {
+> > >                 if (dev->power.runtime_status == RPM_ACTIVE &&
+> > >                     dev->power.last_status == RPM_ACTIVE)
+> > >                         retval = 1;
+> > > ```
+> > >
+> > > I think setting the runtime_error in rpm_callback, i.e. for both resume
+> > > and suspend is still a good idea for book-keeping purposes, e.g. the
+> > > user reading the runtime_status of the device from sysfs.
+> > 
+> > What would be the benefit of this change?
+> The benefit would be that the runtime_resume would be re-attempted even if
+> the previous attempt failed.
+Actually, I wanted to propose the removal of `runtime_error` flag
+completely from the code. But it sounded too disruptive to me. Hence, I
+proposed the milder patch of removal of `runtime_error` check from
+rpm_resume so that the drivers do not have to call
+`pm_runtime_set_suspended` explicitly.
 
-On 2/17/25 17:02, Tobias Huschle wrote:
-> A parked CPU is considered to be flagged as unsuitable to process
-> workload at the moment, but might be become usable anytime. Depending on
-> the necessity for additional computation power and/or available capacity
-> of the underlying hardware.
-> 
-> A scheduler group is considered to be parked, if there are tasks queued
-> on parked CPUs and there are no idle CPUs, i.e. all non parked CPUs are
-> busy or there are only parked CPUs. A scheduler group with parked tasks
-> can be considered to not be parked, if it has idle CPUs which can pick
-> up the parked tasks. A parked scheduler group is considered to be busier
-> than another if it runs more tasks on parked CPUs than another parked
-> scheduler group.
-> 
-> A parked CPU must keep its scheduler tick (or have it re-enabled if
-> necessary) in order to make sure that parked CPUs which only run a
-> single task which does not give up its runtime voluntarily is still
-> evacuated as it would otherwise go into NO_HZ.
-> 
-> The status of the underlying hardware must be considered to be
-> architecture dependent. Therefore the check whether a CPU is parked is
-> architecture specific. For architectures not relying on this feature,
-> the check is mostly a NOP.
-> 
-> This is more efficient and non-disruptive compared to CPU hotplug in
-> environments where such changes can be necessary on a frequent basis.
-> 
-> Signed-off-by: Tobias Huschle <huschle@linux.ibm.com>
-> ---
->   include/linux/sched/topology.h | 19 ++++++++
->   kernel/sched/core.c            | 13 ++++-
->   kernel/sched/fair.c            | 86 +++++++++++++++++++++++++++++-----
->   kernel/sched/syscalls.c        |  3 ++
->   4 files changed, 109 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-> index 7f3dbafe1817..2a4730729988 100644
-> --- a/include/linux/sched/topology.h
-> +++ b/include/linux/sched/topology.h
-> @@ -265,6 +265,25 @@ unsigned long arch_scale_cpu_capacity(int cpu)
->   }
->   #endif
->   
-> +#ifndef arch_cpu_parked
-> +/**
-> + * arch_cpu_parked - Check if a given CPU is currently parked.
-> + *
-> + * A parked CPU cannot run any kind of workload since underlying
-> + * physical CPU should not be used at the moment .
-> + *
-> + * @cpu: the CPU in question.
-> + *
-> + * By default assume CPU is not parked
-> + *
-> + * Return: Parked state of CPU
-> + */
-> +static __always_inline bool arch_cpu_parked(int cpu)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
->   #ifndef arch_scale_hw_pressure
->   static __always_inline
->   unsigned long arch_scale_hw_pressure(int cpu)
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 165c90ba64ea..9ed15911ec60 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1352,6 +1352,9 @@ bool sched_can_stop_tick(struct rq *rq)
->   	if (rq->cfs.h_nr_queued > 1)
->   		return false;
->   
-> +	if (rq->cfs.nr_running > 0 && arch_cpu_parked(cpu_of(rq)))
-> +		return false;
-> +
-
-you mean rq->cfs.h_nr_queued or rq->nr_running ?
-
->   	/*
->   	 * If there is one task and it has CFS runtime bandwidth constraints
->   	 * and it's on the cpu now we don't want to stop the tick.
-> @@ -2443,7 +2446,7 @@ static inline bool is_cpu_allowed(struct task_struct *p, int cpu)
->   
->   	/* Non kernel threads are not allowed during either online or offline. */
->   	if (!(p->flags & PF_KTHREAD))
-> -		return cpu_active(cpu);
-> +		return !arch_cpu_parked(cpu) && cpu_active(cpu);
->   
->   	/* KTHREAD_IS_PER_CPU is always allowed. */
->   	if (kthread_is_per_cpu(p))
-> @@ -2453,6 +2456,10 @@ static inline bool is_cpu_allowed(struct task_struct *p, int cpu)
->   	if (cpu_dying(cpu))
->   		return false;
->   
-> +	/* CPU should be avoided at the moment */
-> +	if (arch_cpu_parked(cpu))
-> +		return false;
-> +
->   	/* But are allowed during online. */
->   	return cpu_online(cpu);
->   }
-> @@ -3930,6 +3937,10 @@ static inline bool ttwu_queue_cond(struct task_struct *p, int cpu)
->   	if (task_on_scx(p))
->   		return false;
->   
-> +	/* The task should not be queued onto a parked CPU. */
-> +	if (arch_cpu_parked(cpu))
-> +		return false;
-> +
->   	/*
->   	 * Do not complicate things with the async wake_list while the CPU is
->   	 * in hotplug state.
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1c0ef435a7aa..5eb1a3113704 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6871,6 +6871,8 @@ static int sched_idle_rq(struct rq *rq)
->   #ifdef CONFIG_SMP
->   static int sched_idle_cpu(int cpu)
->   {
-> +	if (arch_cpu_parked(cpu))
-> +		return 0;
->   	return sched_idle_rq(cpu_rq(cpu));
->   }
->   #endif
-> @@ -7399,6 +7401,9 @@ static int wake_affine(struct sched_domain *sd, struct task_struct *p,
->   {
->   	int target = nr_cpumask_bits;
->   
-> +	if (arch_cpu_parked(target))
-> +		return prev_cpu;
-> +
->   	if (sched_feat(WA_IDLE))
->   		target = wake_affine_idle(this_cpu, prev_cpu, sync);
->   
-> @@ -9182,7 +9187,12 @@ enum group_type {
->   	 * The CPU is overloaded and can't provide expected CPU cycles to all
->   	 * tasks.
->   	 */
-> -	group_overloaded
-> +	group_overloaded,
-> +	/*
-> +	 * The CPU should be avoided as it can't provide expected CPU cycles
-> +	 * even for small amounts of workload.
-> +	 */
-> +	group_parked
->   };
->   
->   enum migration_type {
-> @@ -9902,6 +9912,7 @@ struct sg_lb_stats {
->   	unsigned long group_runnable;		/* Total runnable time over the CPUs of the group */
->   	unsigned int sum_nr_running;		/* Nr of all tasks running in the group */
->   	unsigned int sum_h_nr_running;		/* Nr of CFS tasks running in the group */
-> +	unsigned int sum_nr_parked;
->   	unsigned int idle_cpus;                 /* Nr of idle CPUs         in the group */
->   	unsigned int group_weight;
->   	enum group_type group_type;
-> @@ -10159,6 +10170,9 @@ group_type group_classify(unsigned int imbalance_pct,
->   			  struct sched_group *group,
->   			  struct sg_lb_stats *sgs)
->   {
-> +	if (sgs->sum_nr_parked && !sgs->idle_cpus)
-> +		return group_parked;
-> +
->   	if (group_is_overloaded(imbalance_pct, sgs))
->   		return group_overloaded;
->   
-> @@ -10354,6 +10368,8 @@ static inline void update_sg_lb_stats(struct lb_env *env,
->   		if (cpu_overutilized(i))
->   			*sg_overutilized = 1;
->   
-> +		sgs->sum_nr_parked += arch_cpu_parked(i) * rq->cfs.h_nr_queued;
-> +
->   		/*
->   		 * No need to call idle_cpu() if nr_running is not 0
->   		 */
-> @@ -10459,6 +10475,8 @@ static bool update_sd_pick_busiest(struct lb_env *env,
->   	 */
->   
->   	switch (sgs->group_type) {
-> +	case group_parked:
-> +		return sgs->sum_nr_parked > busiest->sum_nr_parked;
->   	case group_overloaded:
->   		/* Select the overloaded group with highest avg_load. */
->   		return sgs->avg_load > busiest->avg_load;
-> @@ -10622,6 +10640,9 @@ static int idle_cpu_without(int cpu, struct task_struct *p)
->   {
->   	struct rq *rq = cpu_rq(cpu);
->   
-> +	if (arch_cpu_parked(cpu))
-> +		return 0;
-> +
->   	if (rq->curr != rq->idle && rq->curr != p)
->   		return 0;
->   
-> @@ -10670,6 +10691,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
->   		nr_running = rq->nr_running - local;
->   		sgs->sum_nr_running += nr_running;
->   
-> +		sgs->sum_nr_parked += arch_cpu_parked(i) * rq->cfs.h_nr_queued;
-> +
->   		/*
->   		 * No need to call idle_cpu_without() if nr_running is not 0
->   		 */
-> @@ -10717,6 +10740,8 @@ static bool update_pick_idlest(struct sched_group *idlest,
->   	 */
->   
->   	switch (sgs->group_type) {
-> +	case group_parked:
-> +		return false;
->   	case group_overloaded:
->   	case group_fully_busy:
->   		/* Select the group with lowest avg_load. */
-> @@ -10767,7 +10792,7 @@ sched_balance_find_dst_group(struct sched_domain *sd, struct task_struct *p, int
->   	unsigned long imbalance;
->   	struct sg_lb_stats idlest_sgs = {
->   			.avg_load = UINT_MAX,
-> -			.group_type = group_overloaded,
-> +			.group_type = group_parked,
->   	};
->   
->   	do {
-> @@ -10825,6 +10850,8 @@ sched_balance_find_dst_group(struct sched_domain *sd, struct task_struct *p, int
->   		return idlest;
->   
->   	switch (local_sgs.group_type) {
-> +	case group_parked:
-> +		return idlest;
->   	case group_overloaded:
->   	case group_fully_busy:
->   
-> @@ -11076,6 +11103,12 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->   	local = &sds->local_stat;
->   	busiest = &sds->busiest_stat;
->   
-> +	if (busiest->group_type == group_parked) {
-> +		env->migration_type = migrate_task;
-> +		env->imbalance = busiest->sum_nr_parked;
-> +		return;
-> +	}
-> +
->   	if (busiest->group_type == group_misfit_task) {
->   		if (env->sd->flags & SD_ASYM_CPUCAPACITY) {
->   			/* Set imbalance to allow misfit tasks to be balanced. */
-> @@ -11244,13 +11277,14 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->   /*
->    * Decision matrix according to the local and busiest group type:
->    *
-> - * busiest \ local has_spare fully_busy misfit asym imbalanced overloaded
-> - * has_spare        nr_idle   balanced   N/A    N/A  balanced   balanced
-> - * fully_busy       nr_idle   nr_idle    N/A    N/A  balanced   balanced
-> - * misfit_task      force     N/A        N/A    N/A  N/A        N/A
-> - * asym_packing     force     force      N/A    N/A  force      force
-> - * imbalanced       force     force      N/A    N/A  force      force
-> - * overloaded       force     force      N/A    N/A  force      avg_load
-> + * busiest \ local has_spare fully_busy misfit asym imbalanced overloaded parked
-> + * has_spare        nr_idle   balanced   N/A    N/A  balanced   balanced  balanced
-> + * fully_busy       nr_idle   nr_idle    N/A    N/A  balanced   balanced  balanced
-> + * misfit_task      force     N/A        N/A    N/A  N/A        N/A       N/A
-> + * asym_packing     force     force      N/A    N/A  force      force     balanced
-> + * imbalanced       force     force      N/A    N/A  force      force     balanced
-> + * overloaded       force     force      N/A    N/A  force      avg_load  balanced
-> + * parked           force     force      N/A    N/A  force      force     balanced
->    *
->    * N/A :      Not Applicable because already filtered while updating
->    *            statistics.
-> @@ -11259,6 +11293,8 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->    * avg_load : Only if imbalance is significant enough.
->    * nr_idle :  dst_cpu is not busy and the number of idle CPUs is quite
->    *            different in groups.
-> + * nr_task :  balancing can go either way depending on the number of running tasks
-> + *            per group
->    */
-
-This comment on nr_task can be removed as it is not present in the list.
-
->   /**
-> @@ -11289,6 +11325,13 @@ static struct sched_group *sched_balance_find_src_group(struct lb_env *env)
->   		goto out_balanced;
->   
->   	busiest = &sds.busiest_stat;
-> +	local = &sds.local_stat;
-> +
-> +	if (local->group_type == group_parked)
-> +		goto out_balanced;
-> +
-> +	if (busiest->group_type == group_parked)
-> +		goto force_balance;
->   
->   	/* Misfit tasks should be dealt with regardless of the avg load */
->   	if (busiest->group_type == group_misfit_task)
-> @@ -11310,7 +11353,6 @@ static struct sched_group *sched_balance_find_src_group(struct lb_env *env)
->   	if (busiest->group_type == group_imbalanced)
->   		goto force_balance;
->   
-> -	local = &sds.local_stat;
->   	/*
->   	 * If the local group is busier than the selected busiest group
->   	 * don't try and pull any tasks.
-> @@ -11423,6 +11465,9 @@ static struct rq *sched_balance_find_src_rq(struct lb_env *env,
->   		enum fbq_type rt;
->   
->   		rq = cpu_rq(i);
-> +		if (arch_cpu_parked(i) && rq->cfs.h_nr_queued)
-> +			return rq;
-> +
->   		rt = fbq_classify_rq(rq);
->   
->   		/*
-> @@ -11593,6 +11638,9 @@ static int need_active_balance(struct lb_env *env)
->   {
->   	struct sched_domain *sd = env->sd;
->   
-> +	if (arch_cpu_parked(env->src_cpu) && cpu_rq(env->src_cpu)->cfs.h_nr_queued)
-> +		return 1;
-> +
->   	if (asym_active_balance(env))
->   		return 1;
->   
-> @@ -11626,6 +11674,14 @@ static int should_we_balance(struct lb_env *env)
->   	struct sched_group *sg = env->sd->groups;
->   	int cpu, idle_smt = -1;
->   
-> +	if (arch_cpu_parked(env->dst_cpu))
-> +		return 0;
-> +
-> +	for_each_cpu(cpu, sched_domain_span(env->sd)) {
-> +		if (arch_cpu_parked(cpu) && cpu_rq(cpu)->cfs.h_nr_queued)
-> +			return 1;
-> +	}
-> +
->   	/*
->   	 * Ensure the balancing environment is consistent; can happen
->   	 * when the softirq triggers 'during' hotplug.
-> @@ -11766,7 +11822,7 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
->   	ld_moved = 0;
->   	/* Clear this flag as soon as we find a pullable task */
->   	env.flags |= LBF_ALL_PINNED;
-> -	if (busiest->nr_running > 1) {
-> +	if (busiest->nr_running > 1 || arch_cpu_parked(busiest->cpu)) {
-
-Since there is reliance on active balance if there is single task, it 
-think above isn't needed. Is there any usecase for it?
-
->   		/*
->   		 * Attempt to move tasks. If sched_balance_find_src_group has found
->   		 * an imbalance but busiest->nr_running <= 1, the group is
-> @@ -12356,6 +12412,11 @@ static void nohz_balancer_kick(struct rq *rq)
->   	if (time_before(now, nohz.next_balance))
->   		goto out;
->   
-> +	if (!idle_cpu(rq->cpu)) {
-> +		flags = NOHZ_STATS_KICK | NOHZ_BALANCE_KICK;
-> +		goto out;
-> +	}
-> +
-
-This could be agrressive. Note when the code comes here, it is not idle. 
-It would bail out early if it is idle.
-
->   	if (rq->nr_running >= 2) {
->   		flags = NOHZ_STATS_KICK | NOHZ_BALANCE_KICK;
->   		goto out;
-> @@ -12767,6 +12828,9 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
->   
->   	update_misfit_status(NULL, this_rq);
->   
-> +	if (arch_cpu_parked(this_cpu))
-> +		return 0;
-> +
->   	/*
->   	 * There is a task waiting to run. No need to search for one.
->   	 * Return 0; the task will be enqueued when switching to idle.
-> diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-> index 456d339be98f..7efd76a30be7 100644
-> --- a/kernel/sched/syscalls.c
-> +++ b/kernel/sched/syscalls.c
-> @@ -214,6 +214,9 @@ int idle_cpu(int cpu)
->   		return 0;
->   #endif
->   
-> +	if (arch_cpu_parked(cpu))
-> +		return 0;
-> +
->   	return 1;
->   }
->   
-
+Basically, we still do not have a good solution for the situation where
+one of the ancestors fails to resume. We do not know how to make the
+ancestor working again. But I guess a re-attempt is better than not
+doing anything about it?
