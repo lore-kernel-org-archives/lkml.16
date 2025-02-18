@@ -1,250 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425E922E418;
-	Tue, 18 Feb 2025 08:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3BC22B8AA;
+	Tue, 18 Feb 2025 08:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866612; cv=none; b=u+mLyag3Qfdx2u64ibxctcQcvd6RXisqcMChFLowXB9zIhsWXN+2FFzQ/7yNjoJLmNIxu1l/bq2vx+9LZwW7xr+BfzUU0Ssl4qB2icfiFu46ID+xR80u8izYFfI4uE4vak/VPIb7m10tfpf4o51tGcF5qlQFlibEADh4bsRAj6M=
+	t=1739866627; cv=none; b=j2kc/HZgStDjPy/wlcuWENQOeGDQo4InqA/bEJaIRlxR+Py0B/rLi3v1HpBYnIi+8kxZ88NJ4FHkg1KyOXajVTnhDybQrkamutBj+D1bQgyHBvqNPmzfj0A6A/3k/5YuwPZUPGfvUNKqN49U82ZpqzHWcUDusc2DrXI4ThJ2dDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866612; c=relaxed/simple;
-	bh=o6OuX/IUpTkc++lHSC1ghvLKQzFvuT/g3IidU8BLRI0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=slVvORzvASJ0AIDa1KVuUViNF6UR97CQp1IV0j6IuKKr39en2QJVeKhhh+LPu5Okoo4CgdvyNp7BKPh/j1r2lBXLpPPzuYH3BBgM1KiusFO+wz/QqrI21SZbQbEyWGZByYRhTErNC2lv8QX6m6sie46WzRVHIMKLs0NkFMS42m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IHT0uC2G; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739866627; c=relaxed/simple;
+	bh=unAtoMZ/6LB+ku15iDriUMC7ier19fz8oDz6eJJnpjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F8wS1WHb3meBewYeI7ufU0pjVwM5Z8FU251HuWgsQheBbAp75ixSB++7KHjI9OtPWkXb37puWqpC4op9qG+uF22CxYzjs5TIjLFIViYyDvu0tPzNMQGRPsagHoPD7M5t04UePkSWQWIpaE3UWmFyLfrMlCLKyBKFhYVdHD4JyYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8/27QDN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHT0uC2G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866610; x=1771402610;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=o6OuX/IUpTkc++lHSC1ghvLKQzFvuT/g3IidU8BLRI0=;
-  b=IHT0uC2GkgJfPSugFmVEgcGMvlhPxcpZetEz3BCvwymRY1jM6nGa5jdw
-   I7buLZx3lRxRKNQr4MQ5rMMbMXLqQuqtLUZSUku4wBcwsSwHA3cxNmcYw
-   8L49nvHPSPXkyZ7v+YPEFOqaikuRnqb27uotJx4UpPg7pL9G2YdjBEs9w
-   CjOzzGJymjA9cPisd5liPu8NyDuXouaO5Su9XAOEsK0o3tzulPdXdybf6
-   CTiYyFWF6oQxVMxVIMCmOZHjjmzEuMMYUZH1H5p6vP4RQ14rjneuDXINx
-   nG0tVHUCy+0135lZ0vpHTjm6z/6F27NSbFxd9grc7STLx1cx4yGsy5LON
-   g==;
-X-CSE-ConnectionGUID: WjHcZXvsSUmIsPI639pgRA==
-X-CSE-MsgGUID: 4UJ8e0irQBaVzsmThOSRog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="28150012"
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="28150012"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:16:49 -0800
-X-CSE-ConnectionGUID: M5Fwk1/OT62LIgJLo5m/Ew==
-X-CSE-MsgGUID: 5TZpocIhS3iT+cIhiLsT0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="119247387"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.245.49])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:16:28 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: kees@kernel.org,
-	julian.stecklina@cyberus-technology.de,
-	kevinloughlin@google.com,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	justinstitt@google.com,
-	catalin.marinas@arm.com,
-	wangkefeng.wang@huawei.com,
-	bhe@redhat.com,
-	ryabinin.a.a@gmail.com,
-	kirill.shutemov@linux.intel.com,
-	will@kernel.org,
-	ardb@kernel.org,
-	jason.andryuk@amd.com,
-	dave.hansen@linux.intel.com,
-	pasha.tatashin@soleen.com,
-	ndesaulniers@google.com,
-	guoweikang.kernel@gmail.com,
-	dwmw@amazon.co.uk,
-	mark.rutland@arm.com,
-	broonie@kernel.org,
-	apopple@nvidia.com,
-	bp@alien8.de,
-	rppt@kernel.org,
-	kaleshsingh@google.com,
-	richard.weiyang@gmail.com,
-	luto@kernel.org,
-	glider@google.com,
-	pankaj.gupta@amd.com,
-	andreyknvl@gmail.com,
-	pawan.kumar.gupta@linux.intel.com,
-	kuan-ying.lee@canonical.com,
-	tony.luck@intel.com,
-	tj@kernel.org,
-	jgross@suse.com,
-	dvyukov@google.com,
-	baohua@kernel.org,
-	samuel.holland@sifive.com,
-	dennis@kernel.org,
-	akpm@linux-foundation.org,
-	thomas.weissschuh@linutronix.de,
-	surenb@google.com,
-	kbingham@kernel.org,
-	ankita@nvidia.com,
-	nathan@kernel.org,
-	maciej.wieczor-retman@intel.com,
-	ziy@nvidia.com,
-	xin@zytor.com,
-	rafael.j.wysocki@intel.com,
-	andriy.shevchenko@linux.intel.com,
-	cl@linux.com,
-	jhubbard@nvidia.com,
-	hpa@zytor.com,
-	scott@os.amperecomputing.com,
-	david@redhat.com,
-	jan.kiszka@siemens.com,
-	vincenzo.frascino@arm.com,
-	corbet@lwn.net,
-	maz@kernel.org,
-	mingo@redhat.com,
-	arnd@arndb.de,
-	ytcoode@gmail.com,
-	xur@google.com,
-	morbo@google.com,
-	thiago.bauermann@linaro.org
-Cc: linux-doc@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v2 02/14] kasan: sw_tags: Check kasan_flag_enabled at runtime
-Date: Tue, 18 Feb 2025 09:15:18 +0100
-Message-ID: <b1a6cd99e98bf85adc9bdf063f359c136c1a5e78.1739866028.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
-References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8/27QDN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97349C4CEE2;
+	Tue, 18 Feb 2025 08:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739866626;
+	bh=unAtoMZ/6LB+ku15iDriUMC7ier19fz8oDz6eJJnpjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W8/27QDN9jps1nyShhUPWS3f5RCyhj0k3K7aVVPA4GxyepEwMBiyAwv/VBChpTdhA
+	 /wE5ZLeiJpqRVyoMvLLdG0IT1IJitAcKhTjPght7fqvhd2w9Zdbu1zIqSz6ui40/xM
+	 RHpJHSr4qGf5xRsxmYJHahQoeiKXQ0hgHzZS2wCRcX28q1xt1CTQizsn7jU3tFnr0B
+	 wXg5KMM7PAwuT8aJ6PZwzcQ6ty1RUQX2RSvW0tCip2d3axeAeypUufgF0XyAo7T1qf
+	 HWPi47RJIcozlOD4W/Lv3zqNF3I2zI0/0tWwxecdXQnRmMPcg3xx4xrv3Ua3b0XySp
+	 VT8QUDvfqaByg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tkIn2-000000001v6-4ALR;
+	Tue, 18 Feb 2025 09:17:13 +0100
+Date: Tue, 18 Feb 2025 09:17:12 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Trilok Soni <quic_tsoni@quicinc.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] usb: typec: Add support for Parade PS8830 Type-C
+ Retimer
+Message-ID: <Z7RCCF58RTsyr-eN@hovoldconsulting.com>
+References: <20250206-x1e80100-ps8830-v6-0-60b1e49cfa8d@linaro.org>
+ <20250206-x1e80100-ps8830-v6-2-60b1e49cfa8d@linaro.org>
+ <Z68EUTlHcm6TxjlY@hovoldconsulting.com>
+ <Z7Q8xwcfeE3tcBLL@hovoldconsulting.com>
+ <2025021807-equipment-ignition-017f@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025021807-equipment-ignition-017f@gregkh>
 
-From: Samuel Holland <samuel.holland@sifive.com>
+On Tue, Feb 18, 2025 at 09:00:27AM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 18, 2025 at 08:54:47AM +0100, Johan Hovold wrote:
+> > On Fri, Feb 14, 2025 at 09:52:33AM +0100, Johan Hovold wrote:
+> > > On Thu, Feb 06, 2025 at 11:28:28AM +0200, Abel Vesa wrote:
+> > > > The Parade PS8830 is a USB4, DisplayPort and Thunderbolt 4 retimer,
+> > > > controlled over I2C. It usually sits between a USB/DisplayPort PHY
+> > > > and the Type-C connector, and provides orientation and altmode handling.
+> > 
+> > Turns out Greg had picked this one up 20 minutes before I sent my
+> > comments. I did see Heikki's ack the day before and realised time was
+> > short but was not able to drop everything and review the last revision
+> > due to meetings that afternoon.
+> > 
+> > Well, well, I guess you can say I only have myself to blame for not
+> > reviewing within a week of the last revision being posted.
+> 
+> I can revert it if you want me to, or an incremental fix, your call.
 
-On RISC-V, the ISA extension required to dereference tagged pointers is
-optional, and the interface to enable pointer masking requires firmware
-support. Therefore, we must detect at runtime if sw_tags is usable on a
-given machine. Reuse the logic from hw_tags to dynamically enable KASAN.
+Thanks, but I think Abel should be able to test the
+not-enabled-by-boot-firmware case and if needed amend the binding these
+next few weeks.
 
-This commit makes no functional change to the KASAN_HW_TAGS code path.
+I'll just send an incremental fix for the error handling for now.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
- include/linux/kasan-enabled.h | 15 +++++----------
- mm/kasan/hw_tags.c            | 10 ----------
- mm/kasan/tags.c               | 10 ++++++++++
- 3 files changed, 15 insertions(+), 20 deletions(-)
+And sorry about the rant, just needed to vent some frustration with the
+never ending stream of interruptions and unscheduled work...
 
-diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
-index 6f612d69ea0c..648bda9495b7 100644
---- a/include/linux/kasan-enabled.h
-+++ b/include/linux/kasan-enabled.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/static_key.h>
- 
--#ifdef CONFIG_KASAN_HW_TAGS
-+#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
- 
- DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
- 
-@@ -13,23 +13,18 @@ static __always_inline bool kasan_enabled(void)
- 	return static_branch_likely(&kasan_flag_enabled);
- }
- 
--static inline bool kasan_hw_tags_enabled(void)
--{
--	return kasan_enabled();
--}
--
--#else /* CONFIG_KASAN_HW_TAGS */
-+#else /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
- 
- static inline bool kasan_enabled(void)
- {
- 	return IS_ENABLED(CONFIG_KASAN);
- }
- 
-+#endif /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
-+
- static inline bool kasan_hw_tags_enabled(void)
- {
--	return false;
-+	return IS_ENABLED(CONFIG_KASAN_HW_TAGS) && kasan_enabled();
- }
- 
--#endif /* CONFIG_KASAN_HW_TAGS */
--
- #endif /* LINUX_KASAN_ENABLED_H */
-diff --git a/mm/kasan/hw_tags.c b/mm/kasan/hw_tags.c
-index 9a6927394b54..7f82af13b6a6 100644
---- a/mm/kasan/hw_tags.c
-+++ b/mm/kasan/hw_tags.c
-@@ -45,13 +45,6 @@ static enum kasan_arg kasan_arg __ro_after_init;
- static enum kasan_arg_mode kasan_arg_mode __ro_after_init;
- static enum kasan_arg_vmalloc kasan_arg_vmalloc __initdata;
- 
--/*
-- * Whether KASAN is enabled at all.
-- * The value remains false until KASAN is initialized by kasan_init_hw_tags().
-- */
--DEFINE_STATIC_KEY_FALSE(kasan_flag_enabled);
--EXPORT_SYMBOL(kasan_flag_enabled);
--
- /*
-  * Whether the selected mode is synchronous, asynchronous, or asymmetric.
-  * Defaults to KASAN_MODE_SYNC.
-@@ -259,9 +252,6 @@ void __init kasan_init_hw_tags(void)
- 
- 	kasan_init_tags();
- 
--	/* KASAN is now initialized, enable it. */
--	static_branch_enable(&kasan_flag_enabled);
--
- 	pr_info("KernelAddressSanitizer initialized (hw-tags, mode=%s, vmalloc=%s, stacktrace=%s)\n",
- 		kasan_mode_info(),
- 		str_on_off(kasan_vmalloc_enabled()),
-diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-index d65d48b85f90..c111d98961ed 100644
---- a/mm/kasan/tags.c
-+++ b/mm/kasan/tags.c
-@@ -32,6 +32,13 @@ enum kasan_arg_stacktrace {
- 
- static enum kasan_arg_stacktrace kasan_arg_stacktrace __initdata;
- 
-+/*
-+ * Whether KASAN is enabled at all.
-+ * The value remains false until KASAN is initialized by kasan_init_tags().
-+ */
-+DEFINE_STATIC_KEY_FALSE(kasan_flag_enabled);
-+EXPORT_SYMBOL(kasan_flag_enabled);
-+
- /* Whether to collect alloc/free stack traces. */
- DEFINE_STATIC_KEY_TRUE(kasan_flag_stacktrace);
- 
-@@ -92,6 +99,9 @@ void __init kasan_init_tags(void)
- 		if (WARN_ON(!stack_ring.entries))
- 			static_branch_disable(&kasan_flag_stacktrace);
- 	}
-+
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
- }
- 
- static void save_stack_info(struct kmem_cache *cache, void *object,
--- 
-2.47.1
-
+Johan
