@@ -1,103 +1,148 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A228233E4;
-	Tue, 18 Feb 2025 07:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BA433E4
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 07:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739862248; cv=none; b=UiVqMb+WhzqvXoQqUQ96wT4495Tm0qep+egPySVSzG9lnxMBZrbukX57XCszJ+k7kpWqcaCzh6GSEX6XyRPtHuSrZqt71swBvu4HH0mp+6go2bvesAOzJdek2KLe7kEHXCVcEeQCbBDEzNLfxMD414tl/rkDjOZCX/1m8Bdgmt8=
+	t=1739862303; cv=none; b=sO0AjkEzs4sHgoKy7PecgWyWH05INjumDtzSxYwD5DZXR4yu8La/8+n6IBhVfg2rOxXgxM87HYHK8ZyyBpJP2C+eQQg9u+/HiWf3g3ZVdmKmZqcBfhPh0r2meWPEhz6GpBS3lh98rFcUEKVzXuvofDBb1ZaNXkwh1GUf/jKM/Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739862248; c=relaxed/simple;
-	bh=v27i0/Y7IbMkoMl5dXY8lkEEmNmBXsOtf2ypUWvrK/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=D84x3aWEYeZdQ2UZ3OX3ZyXXrxR25PnaM8bufeWLYy5KCdmi0FND4kqflWwXKDz/iqn0U+9Cz/hCjpJHIg4UfUZSMNYfAJX7Xo1BnmJqzRao1xA3/go4m5L56H8YfhQ9D1BI1hGuvewq1npDBf49yOcP3bQ4+CUTi6qot6mDJf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q2QHpV+T; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739862303; c=relaxed/simple;
+	bh=2rpxJgyouZ9eSsOh6PhY4BxbMZeNfYOzEbn3FxOFH84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VxYU5lO2D4e70C3b4h3Mh77Y9FMlXOYXd7kOr95WgSAuQ6+SlGhSbdmCTOHqQ6dQD17RPSr2uC2miXy62piQtYV9p85AdXAlEH2kX/YXWYDVpNSDPKE12ilAC7cJC3lukCdzFlLOYOFSvcvK0B4hZqO6umP+nTRSPEpvh1FiDsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M217Hu5I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q2QHpV+T"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51I1MaR1027314;
-	Tue, 18 Feb 2025 07:04:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	jSL9zuJUXEbXclE9+b+diToGUZd9DITU+37fs3p/eOM=; b=Q2QHpV+Te0zhOcbS
-	FvlUb8BuTY0tQj4YizDN/Cd/0mG5+jvaPm6hx4gEQGSqBGD51B1TzBjXgbBLxgdb
-	zT7Ap8eQ2C4TMW9/Ifpn4o9zyIYfGfgAzryit8PMHOZPR11yYfTyCXZnRpzzDiiU
-	q/1Jk5coHXUChW+FB8IEs8v+rIq/fK68WD6ykvCTi2UQmcHP9ODn9mCfb7/CctSm
-	sAxxL3h1a5/tyPxl4IKfXh2oRFWdcxQmuPnQBdtIGEnZznZIOAW4f5tEbQW2mKCY
-	YsVpmBv/kpvLxuuP9dh4Pqlj91wVG2rrhEkQAI2Q56MlyEMFwDc3rbB7a8/ZLllu
-	FWkazA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7tuy59-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 07:04:02 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51I741bB013716
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 07:04:01 GMT
-Received: from [10.218.33.29] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 17 Feb
- 2025 23:03:58 -0800
-Message-ID: <4b4a70f1-0419-4383-a63e-5fc2ceb27e7b@quicinc.com>
-Date: Tue, 18 Feb 2025 12:33:58 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M217Hu5I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC870C4CEE2;
+	Tue, 18 Feb 2025 07:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739862303;
+	bh=2rpxJgyouZ9eSsOh6PhY4BxbMZeNfYOzEbn3FxOFH84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M217Hu5IzvuOxg1Ua6VH8M7vwZVQXHjNW7QSBDQmC4XMHbjrIuYhFLCD/6UaO3Y2S
+	 eWzL3cfAEK6JH2iPpAIBpf3oT9Nm/RxuI2L6CgUXCgEA2EvaTCEcakB/RIOQnu+D8u
+	 YGt/IiDYm6jfKZYYD5bmuwdAaCcvJtIGJPDYicwDwyyQOfIR6t4iinlNVEasiAaUPc
+	 AiTFrZ2CfHq9z1VkuLp1AeR3F//lm5RXf1NNZeEcxrKRR3KM79Lzp2hSey3DbG59Uf
+	 FB7NXR6ToCRF3tUbtFNoGCjrmd2Zx19Sq5V8zaLqMAGfFxEVsZ1WabiBUNC8lpc8/7
+	 RpM0og+xth7MA==
+Date: Mon, 17 Feb 2025 23:05:01 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
+Message-ID: <20250218070501.7mwcxqgsuxl3meef@jpoimboe>
+References: <20250108202515.385902-1-david.kaplan@amd.com>
+ <20250108202515.385902-21-david.kaplan@amd.com>
+ <20250211180752.pfsjvz62bztpnmoi@jpoimboe>
+ <LV3PR12MB9265804700AB74A446F5220F94FC2@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <LV3PR12MB926524EFB64F6FB361046C5E94FB2@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250217201910.crsu7xucsa4dz3ub@jpoimboe>
+ <LV3PR12MB9265249E8D0FD3920C42A1A994FB2@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250217233928.k3oem3bm7w63jzfr@jpoimboe>
+ <LV3PR12MB9265041C9D8D4F3E5760F0B694FA2@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] clk: qcom: gdsc: Update the status poll timeout for
- GDSC
-To: Taniya Das <quic_tdas@quicinc.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Jagadeesh Kona
-	<quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250214-gdsc_fixes-v1-0-73e56d68a80f@quicinc.com>
- <20250214-gdsc_fixes-v1-2-73e56d68a80f@quicinc.com>
-Content-Language: en-US
-From: Imran Shaik <quic_imrashai@quicinc.com>
-In-Reply-To: <20250214-gdsc_fixes-v1-2-73e56d68a80f@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 35hD-d9h1xsySEXke3bIt2dxLAFRR8Ro
-X-Proofpoint-GUID: 35hD-d9h1xsySEXke3bIt2dxLAFRR8Ro
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-18_02,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 phishscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502180053
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB9265041C9D8D4F3E5760F0B694FA2@LV3PR12MB9265.namprd12.prod.outlook.com>
 
-
-
-On 2/14/2025 9:57 AM, Taniya Das wrote:
-> During the GDSC FSM state, the GDSC hardware waits for an ACK from the
-> respective subsystem core. In some scenarios, this ACK can be delayed.
-> To handle such delays, increase the GDSC status poll timeout from 1500us
-> to 2000us as per the design recommendation.
+On Tue, Feb 18, 2025 at 02:24:01AM +0000, Kaplan, David wrote:
+> > > I do agree that they can be arch-generic (hence why I originally put
+> > > them in kernel/cpu.c) but I also don't know when (if ever) anyone from
+> > > other archs will want to pick them up.
+> >
+> > Well, for example, we already have the generic
+> > prctl(PR_SET_SPECULATION_CTRL) which is used by arm64.  If somebody boots
+> > with mitigate_user_user=off on arm64, they could reasonably expect those context
+> > switch mitigations to be disabled.
 > 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> ---
->  drivers/clk/qcom/gdsc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I'm not sure which this is an argument for actually :)
 > 
+> That is, I do agree that mitigate_user_user makes sense in an
+> arch-agnostic way and a user might expect context switch mitigations
+> disabled.  However this patch series doesn't implement these attack
+> vector controls for anything other than x86.  So I guess I'm not sure
+> if your argument is that because they aren't yet implemented for
+> arm64, then keeping them x86-specific is better...or if we should make
+> them generic to more easily support extension to other architectures.
 
-Reviewed-by: Imran Shaik <quic_imrashai@quicinc.com>
-Tested-by: Imran Shaik <quic_imrashai@quicinc.com> # on QCS8300
+IMO, make them generic from the start, then there's less churn and it's
+easy to port the other arches.
+
+If we went with putting everything in "mitigations=", making them
+generic would be the obvious way to go anyway.
+
+> > And then the mitigations= cmdline could simply be processed in order, without side
+> > effects, to give the user full flexibility.  To opt-in to specific vectors:
+> >
+> >   mitigations=off mitigations=user_kernel,host_guest
+> 
+> I don't like this idea as much as the next, because as noted above, I
+> think with most other command lines, a later version replaces an
+> earlier one, it doesn't append to it.
+>
+> That is, something like "spectre_v2=retpoline spectre_v2=ibrs" ends up just meaning ibrs.
+
+Yeah, that makes sense to me.
+
+> > which is equivalent to:
+> >
+> >   mitigations=off,user_kernel,host_guest
+> >
+> > Or, if one prefers to opt-out:
+> >
+> >   mitigations=auto,no_user_user,no_guest_guest
+> >
+> > where the "auto" is optional for default configs.
+> 
+> This seems more appealing to me because I think it's clearer what 'on'
+> vs 'off' is.  It retains the more compact form of the command line
+> while also allowing for opt-in or opt-out style.  And if you specify
+> multiple "mitigations=" command lines, the new one replaces the old
+> one, like with most other options.
+> 
+> So I rather like this, and would be interested in what others think too.
+
++1
+
+> > The priority could be simplified:
+> >
+> >   1) individual mitigations (=auto means use system-wide default)
+> >
+> >   2) system-wide defaults (tweaked by mitigations=/mitigate_*=)
+> >
+> > So the system-wide defaults would be defined by mitigations=whatever, and those
+> > can be overriden by the individual mitigations.  That seems a lot more simple and
+> > logical.
+> >
+> > And since you're already introducing "=auto" for the individual mitigations, I think that
+> > would be easy enough to implement.
+> >
+> 
+> Yes it wouldn't be very hard, and it does make logical sense.  But I
+> think the big caveat is the change to the existing mitigations=off and
+> that it would no longer override individual mitigations.  Changing
+> that would seem to be a risk, and is that risk worth taking?
+
+Honestly I don't see it as much of a risk.  AFAICT that behavior isn't
+documented anywhere.  I'd view it as more of an implementation detail.
+
+And we have to weigh that risk against better maintainability and ease
+of use going forward.  These bugs are going to continue to be found
+across all the major arches for a long time, let's get the interfaces
+right.
+
+-- 
+Josh
