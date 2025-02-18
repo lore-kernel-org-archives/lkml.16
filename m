@@ -1,106 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCE526B2A2;
-	Tue, 18 Feb 2025 15:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5620F23ED69
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 15:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739891785; cv=none; b=iGPTKBgX5j1al6CslZqN8OWa+DuK1SWc8K18IdeDSCCrOzX0orsTiMv8DTsBIBgdKUWAnAkFqjN2OsUccyZPBMQz6PZongzVhyTq9IQE0ACoYCqpFouiAHjTuqrb7XzGhPb3SRwA1PXDYiMQnoe6neFa4qL359YtxN4CN66tKok=
+	t=1739891840; cv=none; b=P1B/L6tJ1cylop6Tl9yqy5CFnsgxQw6Qdb/vMKAU96KHhP1Gdx4IgwHestoI3lbX/t1vkAYJJV7qiCotl02SRZQLj0rJkR/tWAhR/C+5dkXvlph5bW7loFgOTVTTKV1PiCBwyLaPyYcLtf0AFdLWFt1nnrPd+19V/JlzUfLGOdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739891785; c=relaxed/simple;
-	bh=AceSqE+dN1fqncQf3jSZVkxkI4JsO0+9I/Rm/ds/R/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YyFm3HNYpHmzjOgoCoJr3EIze2Hq72Q6brC133Kx6mIfseu+OCMrufSB0sQh/m7C6ybeSrb7GypTwZBzJQDeNfPgti3GZP+hmdl8b3GT1hs8MsG5EyFx6XDaEpjMrIqufmFMLL1jTXB4Hap80pwyReTeaovhhVl0sj8q64l9XFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJhGCAuo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739891840; c=relaxed/simple;
+	bh=06wi7OlKU9pttsryo+yx/71t6ANWvg+wVnFIDb+RIUo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pUcPu1b3kffvtlOPd2l8V71GbhT/C5FD3KKxagpWaiRk7OHS+qGV75Cfrqi9dERJHHz7u9aC0ecWOB7f1NCcEKYe1AsLjQA3aQUQVq5B9ztwDUvdg5hILLycNKHk/fhLqpT7GqY0Vs+w/87EaM8dLB4VeMcd3gT9IhoMvgBChvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JcLLBVJ5; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJhGCAuo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0402DC4CEE2;
-	Tue, 18 Feb 2025 15:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739891784;
-	bh=AceSqE+dN1fqncQf3jSZVkxkI4JsO0+9I/Rm/ds/R/Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZJhGCAuoRW4LKYqn1tFbJZJ9GkQKkOn5zHhRmSA66HDExxvLHkOjU0LuQN3lOcj6Z
-	 TQ3A4ylu2YsB2dUBDZvJaIVuvdm7o51sLerNLcXoouyDRIZecxq2BIXrVdshNi8DIh
-	 gNqL/o/QWzrtMw2vSUWe0ivH3p1AD4MAH7h/BPdhYDKx4Bl/tvxSogkNGpl6jb+c+Z
-	 8WdJ9KGKL++lx76jCRK92/EhQAmaXAEWZ+cHNdY1+Zu6H6NaKPGZo5dJ8UK8YfgLx7
-	 G++xW2k+1gf5B9NONT5HK/3ILTmpSEqokLW44m3Vmwbjn+omuzGN0mB8Z7GQg0KRpT
-	 GCu36+ESNBRBw==
-Message-ID: <b2876489-7bd5-4c38-b1f8-2d2fcb5a9aba@kernel.org>
-Date: Tue, 18 Feb 2025 09:16:20 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JcLLBVJ5"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc2fee4425so13149824a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 07:17:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739891838; x=1740496638; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KTl00Jhr2CSLXa3I1xwwS3f7lgcM+/4oxJC/10DlxMg=;
+        b=JcLLBVJ5G1hzsASTVglEUHhbaPwb/uB/w1y6emzcF8CpoXqdeCqNMUIyeveAfh1QbH
+         BC1uNCXPAMVTHFUuXAaJXPWPzyvoJIS7yH1UYirnyWjC7/0Vh/pF16tdTrgliER3xhT7
+         cmn/sUL9CTHhi30B+6jba3lqEMqzI/8HYXal23v1ZHdMvw4xo7LN0+fpsrzYWwvjhS8M
+         mYae9FBu6YnHfhenVCnOIKAD3qxPJdR0ETK8M3G1S/B1LcLSbaImr5jNmoPg6B91jUNS
+         vkV9Cn6AGbx5Afp82Cue7nDhdsvxTWOeOGvNoHvcotXesjKU/ma9yY/+EnJBYWLekyyL
+         33MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739891838; x=1740496638;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KTl00Jhr2CSLXa3I1xwwS3f7lgcM+/4oxJC/10DlxMg=;
+        b=mXwUZqgcCW+iQ6YMYynk8cT3xhVnCSfTyOvFdVPtf3gmVcORTczLN7fmX+V+6i2fe2
+         RQki6R2gLHJwz8P88Yt1Xuu2JB3tFC13H8V8rLB9qTbzG6EZcaWm8Q//QAN0SfXGc/sM
+         LHHm92Yvcy5zgZyN1UqHFPpJQkR6qBxtL5xfv+M2EcHdU+j7mmbtp+mYE0X8kketYHRc
+         JDelOol2K8edv+l0UAwAdvmCrIhnYdWOL8OI4VdBpsJFqWmqf9Et8bQbX82ltIcCLOwK
+         KDi5arY9Itdzrs/XhBTHO/zWIpx5ywz/Aueg9nF1o8e5HNAZCza7koOV+m6AEY6NXU+X
+         uwWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWq5Dz7fObgoqQUtfSJoKXEeLLOTESf1Wt+5M0YS+FOKHurseY9CmqRk6GqB/L4BZgKVzRvwnukR552D+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp5uyVuuPrhfFRS5cTniZnXVlOaxFAIlpjU975ZVhLeQdJwIGa
+	QpWxtJmd/8C26+IcLR82yNPSYdRCXvZeEnrAo6fW5QmLYWq7x0EeutgyzAxBGbIdqDd//982ra+
+	YNw==
+X-Google-Smtp-Source: AGHT+IG/fPttDnqX5qnmK9IJ1EvouZpm2CtXv0FEGLAeE0RI7k+5VtmeIsohxgzGHhXJ4d5CHa8CCumGZCw=
+X-Received: from pjbpm4.prod.google.com ([2002:a17:90b:3c44:b0:2fa:a101:743])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ac4:b0:2fa:b84:b304
+ with SMTP id 98e67ed59e1d1-2fc41049fecmr18192739a91.22.1739891838593; Tue, 18
+ Feb 2025 07:17:18 -0800 (PST)
+Date: Tue, 18 Feb 2025 07:17:17 -0800
+In-Reply-To: <87frkcrab8.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] Adjust all AMD audio drivers to use AMD_NODE
-To: Mark Brown <broonie@kernel.org>, Borislav Petkov <bp@alien8.de>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Jeff Johnson <quic_jjohnson@quicinc.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- "open list:AMD NODE DRIVER" <linux-kernel@vger.kernel.org>,
- "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..."
- <linux-sound@vger.kernel.org>,
- "moderated list:SOUND - SOUND OPEN FIRMWARE (SOF) DRIVERS"
- <sound-open-firmware@alsa-project.org>
-References: <20250217231747.1656228-1-superm1@kernel.org>
- <Z7SjI-NIZbMEgz2y@finisterre.sirena.org.uk>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <Z7SjI-NIZbMEgz2y@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20241127172654.1024-1-kalyazin@amazon.com> <20241127172654.1024-2-kalyazin@amazon.com>
+ <Z6ucl7U79RuBsYJt@google.com> <87frkcrab8.fsf@redhat.com>
+Message-ID: <Z7SkfSRsE5hcsrRe@google.com>
+Subject: Re: [PATCH 1/2] KVM: x86: async_pf: remove support for KVM_ASYNC_PF_SEND_ALWAYS
+From: Sean Christopherson <seanjc@google.com>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Nikita Kalyazin <kalyazin@amazon.com>, pbonzini@redhat.com, corbet@lwn.net, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	xiaoyao.li@intel.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, roypat@amazon.co.uk, xmarcalx@amazon.com
+Content-Type: text/plain; charset="us-ascii"
 
-On 2/18/2025 09:11, Mark Brown wrote:
-> On Mon, Feb 17, 2025 at 05:17:40PM -0600, Mario Limonciello wrote:
+On Mon, Feb 17, 2025, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
 > 
->> The various AMD audio drivers have self contained implementations
->> for SMN router communication that require hardcoding the bridge ID.
+> > On Wed, Nov 27, 2024, Nikita Kalyazin wrote:
+> >> 3a7c8fafd1b42adea229fd204132f6a2fb3cd2d9 ("x86/kvm: Restrict
+> >> ASYNC_PF to user space") stopped setting KVM_ASYNC_PF_SEND_ALWAYS in
+> >> Linux guests.  While the flag can still be used by legacy guests, the
+> >> mechanism is best effort so KVM is not obliged to use it.
+> >
+> > What's the actual motivation to remove it from KVM?  I agreed KVM isn't required
+> > to honor KVM_ASYNC_PF_SEND_ALWAYS from a guest/host ABI perspective, but that
+> > doesn't mean that dropping a feature has no impact.  E.g. it's entirely possible
+> > removing this support could negatively affect a workload running on an old kernel.
+> >
+> > Looking back at the discussion[*] where Vitaly made this suggestion, I don't see
+> > anything that justifies dropping this code.  It costs KVM practically nothing to
+> > maintain this code.
+> >
+> > [*] https://lore.kernel.org/all/20241118130403.23184-1-kalyazin@amazon.com
+> >
 > 
->> These implementations also don't prevent race conditions with other
->> drivers performing SMN communication.
+> How old is old? :-)
 > 
->> A new centralized driver AMD_NODE is introduced and all drivers in
->> the kernel should use this instead. Adjust all AMD audio drivers to
->> use it.
->> Mario Limonciello (7):
->>    x86/amd_node: Add a helper for use with `read_poll_timeout`
+> Linux stopped using KVM_ASYNC_PF_SEND_ALWAYS in v5.8: 
+
+5.8 is practically a baby.  Maybe a toddler :-)
+
+> commit 3a7c8fafd1b42adea229fd204132f6a2fb3cd2d9
+> Author: Thomas Gleixner <tglx@linutronix.de>
+> Date:   Fri Apr 24 09:57:56 2020 +0200
 > 
-> What's the thinking for merging this - the SMN driver is in arch/x86 but
-> the bulk of the changes are in ASoC?  My first thought is that it's
-> mostly ASoC stuff, are the x86 people OK with me picking up the arch
-> patch (I'd put it on a branch anyway so if needed we can do a merge
-> later)?
+>     x86/kvm: Restrict ASYNC_PF to user space
+> 
+> and I was under the impression other OSes never used KVM asynchronous
+> page-fault in the first place (not sure about *BSDs though but certainly
+> not Windows). As Nikita's motivation for the patch was "to avoid the
+> overhead ... in case of kernel-originated faults" I suggested we start
+> by simplifyign the code to not care about 'send_user_only' at all. 
 
-Probably need Boris' perspective here.
+In practice, I don't think it's a meaningful simplification.  There are other
+scenarios where KVM shouldn't inject an async #PF, so kvm_can_deliver_async_pf()
+itself isn't going anywhere.
 
-There are some patches that just landed to tip/tip.git today which I 
-believe the first patch needs to rebase on top of.
+AFAICT, what Nikita actually wants is a way to disable host-side async #PF, e.g.
 
-My thought is maybe:
-1) We can get an immutable branch from tip/tip.git with the conflicting 
-changes.
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index f97d4d435e7f..d461e1b5489c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13411,7 +13411,8 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+                     kvm_is_exception_pending(vcpu)))
+                return false;
+ 
+-       if (kvm_hlt_in_guest(vcpu->kvm) && !kvm_can_deliver_async_pf(vcpu))
++       if ((kvm_hlt_in_guest(vcpu->kvm) || kvm_only_pv_async_pf(vcpu->kvm)) &&
++           !kvm_can_deliver_async_pf(vcpu))
+                return false;
+ 
+        /*
 
-2) An Ack from x86 maintainers on the first patch.
-
-3) ASoC merges immutable branch and takes the series through ASoC tree.
+> We can keep the code around, I guess, but with no plans to re-introduce
+> KVM_ASYNC_PF_SEND_ALWAYS usage to Linux I still believe it would be good
+> to set a deprecation date.
