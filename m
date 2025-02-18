@@ -1,204 +1,276 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82541243368;
-	Tue, 18 Feb 2025 12:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D795243377
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739881890; cv=none; b=Y7jvrW1zqdytr4WS7E+IUBCfv4PGddN9AQZEwWGSUx5C95nA6ph39dIgOzDuqcPYM9oO5NtFLlKoUOxAk9XDtrZBdGf6kaR/DIqvQiKWZVRMgKWH3ZBfDEUfwJXKNTPrFSNv+rF91ZodguGSl6OVOurH9o3bVp0yiavZYtkfIPY=
+	t=1739881898; cv=none; b=ebMibJQVJngt4U/ahMKODKUxmyGVEOziVi9e6H4mcnvS23k0ZpAl1AxjFLxPYNhlYXaeaqe7lcrBZv7bjKYRFEKZb5CeFLeXDHZQJU1w0QCPLy7y+sGnLdaozS3RkpO8u+QV7snxXWGlfQJXC+23MJZtbJ5ojYxSPBOUALtQMes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739881890; c=relaxed/simple;
-	bh=UA8BgaNnyRCw9xFtLSS5bxjRr4IV+xOTkb3Z8/jS98Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dS/cGZdsVkx3uRrXPZjBbHJe3IzJUBey4XF5Efvxu71rep5ych+xfb4zgU2JN4XcQ+p6JCG4ANuBXWvS7rKkOgVdCJE+ncL/PtHDntTiZPnsau0tZ27ju2cbxGG8Gkpcwb+2IE0sVf3AHlPOKIXR+k4+zeraa1Eg+/3LaC9WFS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqLtlBiN; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739881898; c=relaxed/simple;
+	bh=ZgYaE5C+DSuZ7xMnsln6YDzr67QMMSxSZvdH+SChEYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=onbn/NaTgY+NiqUn7X/9XAxdpl1lY7DkLrOTwsiNGDKIRKFCDVsx3QFRHmnB/ptYiaMizqMNAAgiM6x759ARgRqStWt1HPL2Lbn27XETfOMoxR/IIEb8W7E8eHicjiDWyuqVE7Jv/s4rEG3vYNPTT0pyLmsjwul5Taavx/Czbio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SVXzm9sj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqLtlBiN"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43989226283so11678665e9.1;
-        Tue, 18 Feb 2025 04:31:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739881887; x=1740486687; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=i1EiuFrOZAAO8BlNap0r2h1PwkpkjTMEHOOdrLbjwQw=;
-        b=nqLtlBiNlAZBA06X0j0ZUBxPm/33ztcOa/kmENREwj2B91m1puNYm0WuU1zNocPu6E
-         ykY/vRPL3jyXBcVQrw3Q/hb8hpCRmSL3zCvzTDp31g9nNCW49WAo0k5kEoX4lXLP1N2P
-         +bTp31AS6O9ZMBypDk/YA6AbAq716L3q5mi/w8jqs5cIj0Gm0yF98p7drkzq9hc1kpax
-         kqmlp3Bqv1IvaUd8SR2tBK9Uwav/aVyHByWEYAM9OQFCkMkuzRnvrAGrzUdiIa6Yvwo3
-         A+i6eXiQExWXYd7ck7s7IhemzBLtOwQwcZKYsb3w8WXqbO6tQhX+Hl01oVs4jMcWXqsS
-         HiMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739881887; x=1740486687;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i1EiuFrOZAAO8BlNap0r2h1PwkpkjTMEHOOdrLbjwQw=;
-        b=T17a7z7AIIOfFsgOX3PU0BdRDemZPXZ5GXkjz2rDez0CsJeZONrDv/pV2glFvbSvTD
-         RpxmjT5kZOjL133ngWtu3Zt3YFC9T9T5+xeK4JbLw60fgAdCiUE3Z5JlJXqcf2y7wg7P
-         UMPWKNAp16pd/ZbkmuthPMSR0bDTZt/79Cj6+so6LsnwMzwQcZvNpGM5QjLHsH9QaqMm
-         nYAMCzCzbv4hUlnjHev39s8vhNWA5goMLzhQJ0BUntmxINWjfR7gopsLX6ulqaUub5qx
-         4aGDR2kH225SQXhe4+scAsKRasjOXAlJ/jVLNMZvXCbImBM4u55G4YbJdJeNg05NKl7T
-         MdnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAMixuZ322ZoffopR1dNet+tUmuveA5sYPdRTtH8gehb9bf7b1UVr4wN52Uq80aGb33cKlB46Gy5z45NM=@vger.kernel.org, AJvYcCWycFTc7gMXWQssQNXYnvUj78ug93A9ZqZjx6fPTdV/nSWONy8T2FVShVJB7qof/tuS2wNrpwz8@vger.kernel.org, AJvYcCXEJjnFjAVmzJzFHg7AWDZiNnayxd6jeq8GomAs7EHKST0B+gR+RwzqFBqNe3jeU1Qj0PI6C82f/tv8uw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxILDrO1yNHSIlArjYohlAT2FygvvMDP5vjI9P9jP+fUdtlhiJq
-	eNl5zmJdjVpnS+v7nSyEfXKvJ+a2GEjC3Q7xUEvepK9w+brO/FrX
-X-Gm-Gg: ASbGnct+CGT2WQF1V/oIAsrQX0VN2TotQkf4ClHKOHfcdj1Xp4E9cNy9vS4+lnL+eUA
-	Me6I7rukQqnGZkmdz39feeT4RH256Mafrc+O+q79rQ8SjECSaylG2UlXyrPbcLzdNl/8nqkgN92
-	CyXyUDDjt6TYgd7j7het9wCN0CyNBzeqD0Z5xIymLDdKejUgffpSArfi1NOt85ykC4fsUOWenCh
-	S7123oZffNjxsv934OckbRbd10lLyDTNpty6vOSuKHSaJdivW+eubAjKuCSNO8kaCn5ktaIRi5X
-	jtfjnLeAJUcDqb8aWQ==
-X-Google-Smtp-Source: AGHT+IHKpJVuCvnYRsmz4RpDTMOseTWydDN8ScsZSlwC/tzSRIKYd5jXEevc0CQS+qOpeSRpTQ0pbg==
-X-Received: by 2002:a05:600c:474f:b0:439:9828:c450 with SMTP id 5b1f17b1804b1-4399828c663mr7030715e9.15.1739881886433;
-        Tue, 18 Feb 2025 04:31:26 -0800 (PST)
-Received: from [10.176.235.56] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43984dd042fsm56277745e9.12.2025.02.18.04.31.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 04:31:25 -0800 (PST)
-Message-ID: <8be8c9c45d627e40e4ce3dc87c1ac83f32717e2b.camel@gmail.com>
-Subject: Re: [PATCH v2] ufs: core: bsg: Fix memory crash in case arpmb
- command failed
-From: Bean Huo <huobean@gmail.com>
-To: Arthur Simchaev <arthur.simchaev@sandisk.com>, martin.petersen@oracle.com
-Cc: avri.altman@sandisk.com, Avi.Shchislowski@sandisk.com,
- beanhuo@micron.com,  linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, bvanassche@acm.org,  stable@vger.kernel.org
-Date: Tue, 18 Feb 2025 13:31:23 +0100
-In-Reply-To: <20250218111527.246506-1-arthur.simchaev@sandisk.com>
-References: <20250218111527.246506-1-arthur.simchaev@sandisk.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SVXzm9sj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739881895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0ZyyClGrdhsMUcnObF6QJA8H4HBIz5UAw6ZxbsaaZ+I=;
+	b=SVXzm9sjKaV91ScffvnQYVPPWMiXi44CrqHlzpzL9cO2MA9m4UU8tAgGzqeb/txnp8GDom
+	+aOVaKa8HB9Ch6KnFeivUV+kMmmi8xHhAizWp9HVQ+9/pEBoErDWqXkPB3rFmIkjq55mDa
+	LgVfHu7eEfzEICT3BVbeDngF7W5lj2Q=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-92-RXIyVGZXNumingpdaOzo8g-1; Tue,
+ 18 Feb 2025 07:31:30 -0500
+X-MC-Unique: RXIyVGZXNumingpdaOzo8g-1
+X-Mimecast-MFC-AGG-ID: RXIyVGZXNumingpdaOzo8g_1739881889
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9046E180087C;
+	Tue, 18 Feb 2025 12:31:29 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.33.84])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E75361800360;
+	Tue, 18 Feb 2025 12:31:24 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4 00/11] rv: Add scheduler specification monitors
+Date: Tue, 18 Feb 2025 13:31:05 +0100
+Message-ID: <20250218123121.253551-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, 2025-02-18 at 13:15 +0200, Arthur Simchaev wrote:
-> In case the device doesn't support arpmb, the kernel get memory crash
-> due to copy user data in bsg_transport_sg_io_fn level. So in case
-> ufs_bsg_exec_advanced_rpmb_req returned error, do not set the job's
-> reply_len.
->=20
-> Memory crash backtrace:
-> 3,1290,531166405,-;ufshcd 0000:00:12.5: ARPMB OP failed: error code -
-> 22
->=20
-> 4,1308,531166555,-;Call Trace:
->=20
-> 4,1309,531166559,-; <TASK>
->=20
-> 4,1310,531166565,-; ? show_regs+0x6d/0x80
->=20
-> 4,1311,531166575,-; ? die+0x37/0xa0
->=20
-> 4,1312,531166583,-; ? do_trap+0xd4/0xf0
->=20
-> 4,1313,531166593,-; ? do_error_trap+0x71/0xb0
->=20
-> 4,1314,531166601,-; ? usercopy_abort+0x6c/0x80
->=20
-> 4,1315,531166610,-; ? exc_invalid_op+0x52/0x80
->=20
-> 4,1316,531166622,-; ? usercopy_abort+0x6c/0x80
->=20
-> 4,1317,531166630,-; ? asm_exc_invalid_op+0x1b/0x20
->=20
-> 4,1318,531166643,-; ? usercopy_abort+0x6c/0x80
->=20
-> 4,1319,531166652,-; __check_heap_object+0xe3/0x120
->=20
-> 4,1320,531166661,-; check_heap_object+0x185/0x1d0
->=20
-> 4,1321,531166670,-; __check_object_size.part.0+0x72/0x150
->=20
-> 4,1322,531166679,-; __check_object_size+0x23/0x30
->=20
-> 4,1323,531166688,-; bsg_transport_sg_io_fn+0x314/0x3b0
->=20
-> Fixes: 6ff265fc5ef6 ("scsi: ufs: core: bsg: Add advanced RPMB support
-> in ufs_bsg")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Arthur Simchaev <arthur.simchaev@sandisk.com>
->=20
-> ---
-> Changes in v2:
-> =C2=A0 - Add Fixes tag
-> =C2=A0 - Elaborate commit log
->=20
-> Signed-off-by: Arthur Simchaev <arthur.simchaev@sandisk.com>
-> ---
-> =C2=A0drivers/ufs/core/ufs_bsg.c | 6 ++++--
-> =C2=A01 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/ufs/core/ufs_bsg.c b/drivers/ufs/core/ufs_bsg.c
-> index 8d4ad0a3f2cf..a8ed9bc6e4f1 100644
-> --- a/drivers/ufs/core/ufs_bsg.c
-> +++ b/drivers/ufs/core/ufs_bsg.c
-> @@ -194,10 +194,12 @@ static int ufs_bsg_request(struct bsg_job *job)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ufshcd_rpm_put_sync(hba);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kfree(buff);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bsg_reply->result =3D ret=
-;
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0job->reply_len =3D !rpmb ? siz=
-eof(struct ufs_bsg_reply) :
-> sizeof(struct ufs_rpmb_reply);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* complete the job here =
-only if no error */
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret =3D=3D 0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret =3D=3D 0) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0job->reply_len =3D !rpmb ? sizeof(struct ufs_bsg_reply)
-> :
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 sizeof(struct
-> ufs_rpmb_reply);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0bsg_job_done(job, ret, bsg_reply-
-> >reply_payload_rcv_len);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ret;
-> =C2=A0}
+This patchset starts including adapted scheduler specifications from
+Daniel's task model [1].
+As the model is fairly complicated, it is split in several generators
+and specifications. The tool used to create the model can output a
+unified model, but that would be hardly readable (9k states).
+
+RV allows monitors to run and react concurrently. Running the cumulative
+model is equivalent to running single components using the same
+reactors, with the advantage that it's easier to point out which
+specification failed in case of error.
+
+We allow this by introducing nested monitors, in short, the sysfs
+monitor folder will contain a monitor named sched, which is nothing but
+an empty container for other monitors. Controlling the sched monitor
+(enable, disable, set reactors) controls all nested monitors.
+
+The task model proposed by Daniel includes 12 generators and 33
+specifications. The generators are good for documentation but are
+usually implied in some specifications.
+Not all monitors work out of the box, mainly because of those reasons:
+* need to distinguish if preempt disable leads to schedule
+* need to distinguish if irq disable comes from an actual irq
+* assumptions not always true on SMP
+
+The original task model was designed for PREEMPT_RT and this patchset is
+only tested on an upstream kernel with full preemption enabled.
+
+In patch 4-6 are included only some specifications that work without
+further modifications. Ideally, we would adapt all specifications and
+add them gradually to the sched monitor.
+
+Patch 1 fixes a macro required for some tracepoints
+This patch was already sent and reviewed in [2]
+
+Patch 2 adds some additional tracepoints in the scheduler's code to
+complete the model, the tracepoints were already defined in Daniel's
+patches but, as far as I understand, were never submitted
+
+Patch 3 adds the empty sched monitor container and the infrastructure
+for nested monitors
+
+Patch 4 adds 2 per-cpu monitors using the tracepoints defined in 2
+
+Patch 5 adds a per-task monitor using the tracepoints defined in 2
+
+Patch 6 adds 3 more per-cpu monitors using the tracepoints defined in 2
+and preemptirq tracepoints
+
+Patch 7 adjusts the rv tool to support nested monitors
+
+Patch 8 adjusts the dot2k tool to support nested monitors
+
+Patch 9 adds some documentation for the sched monitors, including
+a description of the included specifications
+
+Patch 10 adapts the rv tool to list also filtering by container
+
+Changes since V3:
+* revert skip static_branch_unlikely
+* remove argument curr_state from set_state tracepoint
+* fix typo
+
+Changes since V2:
+* fix reported compilation warnings:
+    - missing __do_trace_ function if tracepoints are disabled
+    - remove unused DA_MON_EVENT in sched's Kconfig
+* improve condition to detect empty monitor containers
+
+Changes since V1:
+* skip static_branch_unlikely in function exporting the tracepoint
+* rename function and make clear it should not be called directly
+* add missing parameter documentation in rv_register_monitor
+
+Changes since RFC:
+* use static_branch_unlikely to trace set_state via external function
+* allow nested monitors to be disabled via Kconfig
+    - they are enabled by default if the container is enabled
+* remove need_resched tracepoint as it needs a bit more work
+    - will come in a following patch together with a monitor using it
+
+[1] - https://bristot.me/linux-task-model
+[2] - https://lore.kernel.org/linux-trace-kernel/20250128111926.303093-1-gmonaco@redhat.com
+
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+
+Gabriele Monaco (11):
+  tracing: Fix DECLARE_TRACE_CONDITION
+  rv: Add license identifiers to monitor files
+  sched: Add sched tracepoints for RV task model
+  rv: Add option for nested monitors and include sched
+  rv: Add sco and tss per-cpu monitors
+  rv: Add snroc per-task monitor
+  rv: Add scpd, snep and sncid per-cpu monitors
+  tools/rv: Add support for nested monitors
+  verification/dot2k: Add support for nested monitors
+  Documentation/rv: Add docs for the sched monitors
+  tools/rv: Allow rv list to filter for container
+
+ Documentation/tools/rv/rv-mon-sched.rst       |  69 +++++
+ Documentation/trace/rv/monitor_sched.rst      | 171 ++++++++++++
+ include/linux/rv.h                            |   4 +-
+ include/linux/sched.h                         |  16 ++
+ include/trace/define_trace.h                  |   7 +
+ include/trace/events/sched.h                  |  13 +
+ kernel/sched/core.c                           |  23 +-
+ kernel/trace/rv/Kconfig                       |   7 +
+ kernel/trace/rv/Makefile                      |   7 +
+ kernel/trace/rv/monitors/sched/Kconfig        |  11 +
+ kernel/trace/rv/monitors/sched/sched.c        |  38 +++
+ kernel/trace/rv/monitors/sched/sched.h        |   3 +
+ kernel/trace/rv/monitors/sco/Kconfig          |  14 +
+ kernel/trace/rv/monitors/sco/sco.c            |  88 ++++++
+ kernel/trace/rv/monitors/sco/sco.h            |  47 ++++
+ kernel/trace/rv/monitors/sco/sco_trace.h      |  15 +
+ kernel/trace/rv/monitors/scpd/Kconfig         |  15 +
+ kernel/trace/rv/monitors/scpd/scpd.c          |  96 +++++++
+ kernel/trace/rv/monitors/scpd/scpd.h          |  49 ++++
+ kernel/trace/rv/monitors/scpd/scpd_trace.h    |  15 +
+ kernel/trace/rv/monitors/sncid/Kconfig        |  15 +
+ kernel/trace/rv/monitors/sncid/sncid.c        |  96 +++++++
+ kernel/trace/rv/monitors/sncid/sncid.h        |  49 ++++
+ kernel/trace/rv/monitors/sncid/sncid_trace.h  |  15 +
+ kernel/trace/rv/monitors/snep/Kconfig         |  15 +
+ kernel/trace/rv/monitors/snep/snep.c          |  96 +++++++
+ kernel/trace/rv/monitors/snep/snep.h          |  49 ++++
+ kernel/trace/rv/monitors/snep/snep_trace.h    |  15 +
+ kernel/trace/rv/monitors/snroc/Kconfig        |  14 +
+ kernel/trace/rv/monitors/snroc/snroc.c        |  85 ++++++
+ kernel/trace/rv/monitors/snroc/snroc.h        |  47 ++++
+ kernel/trace/rv/monitors/snroc/snroc_trace.h  |  15 +
+ kernel/trace/rv/monitors/tss/Kconfig          |  14 +
+ kernel/trace/rv/monitors/tss/tss.c            |  91 +++++++
+ kernel/trace/rv/monitors/tss/tss.h            |  47 ++++
+ kernel/trace/rv/monitors/tss/tss_trace.h      |  15 +
+ kernel/trace/rv/monitors/wip/Kconfig          |   2 +
+ kernel/trace/rv/monitors/wip/wip.c            |   2 +-
+ kernel/trace/rv/monitors/wip/wip.h            |   1 +
+ kernel/trace/rv/monitors/wwnr/Kconfig         |   2 +
+ kernel/trace/rv/monitors/wwnr/wwnr.c          |   2 +-
+ kernel/trace/rv/monitors/wwnr/wwnr.h          |   1 +
+ kernel/trace/rv/rv.c                          | 154 +++++++++--
+ kernel/trace/rv/rv.h                          |   4 +
+ kernel/trace/rv/rv_reactors.c                 |  28 +-
+ kernel/trace/rv/rv_trace.h                    |   6 +
+ tools/verification/dot2/dot2k                 |  27 +-
+ tools/verification/dot2/dot2k.py              |  80 ++++--
+ .../verification/dot2/dot2k_templates/Kconfig |   3 +
+ .../verification/dot2/dot2k_templates/main.c  |   4 +-
+ .../dot2/dot2k_templates/main_container.c     |  38 +++
+ .../dot2/dot2k_templates/main_container.h     |   3 +
+ tools/verification/models/sched/sco.dot       |  18 ++
+ tools/verification/models/sched/scpd.dot      |  18 ++
+ tools/verification/models/sched/sncid.dot     |  18 ++
+ tools/verification/models/sched/snep.dot      |  18 ++
+ tools/verification/models/sched/snroc.dot     |  18 ++
+ tools/verification/models/sched/tss.dot       |  18 ++
+ tools/verification/rv/include/in_kernel.h     |   2 +-
+ tools/verification/rv/include/rv.h            |   3 +-
+ tools/verification/rv/src/in_kernel.c         | 256 ++++++++++++++----
+ tools/verification/rv/src/rv.c                |  38 ++-
+ 62 files changed, 2023 insertions(+), 127 deletions(-)
+ create mode 100644 Documentation/tools/rv/rv-mon-sched.rst
+ create mode 100644 Documentation/trace/rv/monitor_sched.rst
+ create mode 100644 kernel/trace/rv/monitors/sched/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sched/sched.c
+ create mode 100644 kernel/trace/rv/monitors/sched/sched.h
+ create mode 100644 kernel/trace/rv/monitors/sco/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sco/sco.c
+ create mode 100644 kernel/trace/rv/monitors/sco/sco.h
+ create mode 100644 kernel/trace/rv/monitors/sco/sco_trace.h
+ create mode 100644 kernel/trace/rv/monitors/scpd/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd.c
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd.h
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd_trace.h
+ create mode 100644 kernel/trace/rv/monitors/sncid/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid.c
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid.h
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid_trace.h
+ create mode 100644 kernel/trace/rv/monitors/snep/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/snep/snep.c
+ create mode 100644 kernel/trace/rv/monitors/snep/snep.h
+ create mode 100644 kernel/trace/rv/monitors/snep/snep_trace.h
+ create mode 100644 kernel/trace/rv/monitors/snroc/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc.c
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc.h
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc_trace.h
+ create mode 100644 kernel/trace/rv/monitors/tss/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/tss/tss.c
+ create mode 100644 kernel/trace/rv/monitors/tss/tss.h
+ create mode 100644 kernel/trace/rv/monitors/tss/tss_trace.h
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.c
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.h
+ create mode 100644 tools/verification/models/sched/sco.dot
+ create mode 100644 tools/verification/models/sched/scpd.dot
+ create mode 100644 tools/verification/models/sched/sncid.dot
+ create mode 100644 tools/verification/models/sched/snep.dot
+ create mode 100644 tools/verification/models/sched/snroc.dot
+ create mode 100644 tools/verification/models/sched/tss.dot
 
 
-Arthur,
-
-thanks for your update.=20
-
-I tried to repoduce the issue as your steps, I didn't get this issue,
-The kernel will only print this as expected:=20
-
-Err: ARPMB OP failed 0 :-22
-
-
-
-I don't think your patch can fix your issue, becase if ufs_bsg returns=C2=
-=A0
-
--EINVAL(-22).  then,=20
-
-
-bsg_reply->result =3D ret(-22);
-
-after that,  then in bsg_transport_sg_io_fn:
-
-if (job->result < 0) {
-	job->reply_len =3D sizeof(u32);  //overwrite the length.
-
-
-
-Could you please provide more information how you can get this issue?
-My understanding is that it is not because this job->reply_len, it is
-your buffer initiated by your application?
-
-
-Kind regards,
-Bean
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+-- 
+2.48.1
 
