@@ -1,205 +1,246 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3A91DEFEB;
-	Tue, 18 Feb 2025 11:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60E3323C8BA;
+	Tue, 18 Feb 2025 11:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878137; cv=none; b=Y7rmOd/qpGySsKEPozwRh7Jlj90pbZUwRC3ehx8IVFj8635KDOJQomcx9BvuBn7JNQkoXWr2gOhfn22WVElaWYdRitRBc3ytz5RrFAKHYH49k7MJQc21PuTFjJsxP0vv3Bvz8hIxv6cCyr9ufNYN77y8ezeI4j4Uv5fozkI/ZM8=
+	t=1739878139; cv=none; b=AMhJHWzjG4dwev47YXGBf95zi5Qp85ajt9PoFvAjkAeJ2JArK60kLc7BlgRDKcdlX0ikqa3bi1lMlPvtG4PIb4BEIGKpjtlcyjBsu1OLXFXxKkhHBx5n0+tj6sxQiy2rIfsMnFT/r7EmRByYNgZL7xXmJo3NGEYpTAzeYJwDyAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878137; c=relaxed/simple;
-	bh=e3YwgSBfhhjN6vJS7m63dt9OHcAqtI+PxuY9KnmPzqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jAQ3bRfsb4WtpZ14U6miltv2auHmqZPyb3XyNAGM7OrU7pBAw1pDOVGDB1K6wh3T7Q3FFnSkwgKEQQrugnJTtG2pquiLEo3P2gwn9263ZdgZ9u3NVO5y7eLTgykPRjYx6xE9UFdkWOK2xBftIaeNW0bKnuvhci0T3HQA7jZzYDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 906D313D5;
-	Tue, 18 Feb 2025 03:29:11 -0800 (PST)
-Received: from [10.1.26.35] (e127648.arm.com [10.1.26.35])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE8413F6A8;
-	Tue, 18 Feb 2025 03:28:50 -0800 (PST)
-Message-ID: <09472579-d59a-4be9-996b-1638228895ac@arm.com>
-Date: Tue, 18 Feb 2025 11:28:48 +0000
+	s=arc-20240116; t=1739878139; c=relaxed/simple;
+	bh=IIp5h6YxxRO1PaRYMZ+fZKrGw+yJ6uSZcquYnpuBwnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qfC+/HKLPOsIfBVl88K8AcXBpEcDgytBTtkm1Km8NWBG+0P9pIBhfrSodaCgOjzNDskAjT9TJj9fzoNNwIXkR3HlSjVFex07kHuhNQtX4o1CtjMa5+TX6dA3K+gW6Mh+yk7WRA4RNHr6QrWh2QpIpoBSguD8Cotxvu0NpNvEphQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=huj4A/DG; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="huj4A/DG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=EVJUp
+	fmLID5dB9MOcOPlsCAVHWDNOJjgMn/lUBtD1v8=; b=huj4A/DGXGuRl7FtmfEBN
+	qrkYvi/so/6o9mpm86PuzmM+11508NiHGbMI7CHdeOFxXdIyFjHzfVqVvJi/PrVW
+	fBdOJRXcK5Wx8D4xaStnNmuxZnf8FPIZDP7YzHsW79WG12z5ZLqkvQINFFdQS6rg
+	9JrUf1vD/x8RL9qp/oazrM=
+Received: from ProDesk.. (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD333uybrRnLIPUMQ--.34107S10;
+	Tue, 18 Feb 2025 19:27:57 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com,
+	krzk+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	derek.foreman@collabora.com,
+	detlev.casanova@collabora.com,
+	daniel@fooishbar.org,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Michael Riesch <michael.riesch@wolfvision.net>
+Subject: [PATCH v15 08/13] drm/rockchip: vop2: Set plane possible crtcs by possible vp mask
+Date: Tue, 18 Feb 2025 19:27:35 +0800
+Message-ID: <20250218112744.34433-9-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250218112744.34433-1-andyshrk@163.com>
+References: <20250218112744.34433-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFT][PATCH v1] cpuidle: teo: Avoid selecting deepest idle state
- over-eagerly
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>, dsmythies@telus.net,
- LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>
-References: <12630185.O9o76ZdvQC@rjwysocki.net>
- <8d147f4f-f511-4f44-b18e-2011b0fab17c@arm.com>
- <CAJZ5v0jjs=po8y0MzkUo=mUuqkxq3tg-V8r7-=AUJUu6=9ymMw@mail.gmail.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <CAJZ5v0jjs=po8y0MzkUo=mUuqkxq3tg-V8r7-=AUJUu6=9ymMw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD333uybrRnLIPUMQ--.34107S10
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtrW8JFWkXF43Zr17tw45GFg_yoWxKrWUpa
+	yxZF13WF4fCr4agry7Ja98ZFyak3sxAw4a93ZrKFsxKr13Kry7Wr1UK3Z8Cr1DWFyxZr1j
+	vw43tryDur17trJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jOgAwUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBz3Xme0aMptrAAAst
 
-On 2/14/25 21:34, Rafael J. Wysocki wrote:
-> On Thu, Feb 13, 2025 at 3:08 PM Christian Loehle
-> <christian.loehle@arm.com> wrote:
->>
->> On 2/4/25 20:58, Rafael J. Wysocki wrote:
->>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>
->>> It has been observed that the recent teo governor update which concluded
->>> with commit 16c8d7586c19 ("cpuidle: teo: Skip sleep length computation
->>> for low latency constraints") caused the max-jOPS score of the SPECjbb
->>> 2015 benchmark [1] on Intel Granite Rapids to decrease by around 1.4%.
->>> While it may be argued that this is not a significant increase, the
->>> previous score can be restored by tweaking the inequality used by teo
->>> to decide whether or not to preselect the deepest enabled idle state.
->>> That change also causes the critical-jOPS score of SPECjbb to increase
->>> by around 2%.
->>>
->>> Namely, the likelihood of selecting the deepest enabled idle state in
->>> teo on the platform in question has increased after commit 13ed5c4a6d9c
->>> ("cpuidle: teo: Skip getting the sleep length if wakeups are very
->>> frequent") because some timer wakeups were previously counted as non-
->>> timer ones and they were effectively added to the left-hand side of the
->>> inequality deciding whether or not to preselect the deepest idle state.
->>>
->>> Many of them are now (accurately) counted as timer wakeups, so the left-
->>> hand side of that inequality is now effectively smaller in some cases,
->>> especially when timer wakeups often occur in the range below the target
->>> residency of the deepest enabled idle state and idle states with target
->>> residencies below CPUIDLE_FLAG_POLLING are often selected, but the
->>> majority of recent idle intervals are still above that value most of
->>> the time.  As a result, the deepest enabled idle state may be selected
->>> more often than it used to be selected in some cases.
->>>
->>> To counter that effect, add the sum of the hits metric for all of the
->>> idle states below the candidate one (which is the deepest enabled idle
->>> state at that point) to the left-hand side of the inequality mentioned
->>> above.  This will cause it to be more balanced because, in principle,
->>> putting both timer and non-timer wakeups on both sides of it is more
->>> consistent than only taking into account the timer wakeups in the range
->>> above the target residency of the deepest enabled idle state.
->>>
->>> Link: https://www.spec.org/jbb2015/
->>> Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
->>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>> ---
->>>  drivers/cpuidle/governors/teo.c |    6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> --- a/drivers/cpuidle/governors/teo.c
->>> +++ b/drivers/cpuidle/governors/teo.c
->>> @@ -349,13 +349,13 @@
->>>       }
->>>
->>>       /*
->>> -      * If the sum of the intercepts metric for all of the idle states
->>> -      * shallower than the current candidate one (idx) is greater than the
->>> +      * If the sum of the intercepts and hits metric for all of the idle
->>> +      * states below the current candidate one (idx) is greater than the
->>>        * sum of the intercepts and hits metrics for the candidate state and
->>>        * all of the deeper states, a shallower idle state is likely to be a
->>>        * better choice.
->>>        */
->>> -     if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
->>> +     if (2 * (idx_intercept_sum + idx_hit_sum) > cpu_data->total) {
->>>               int first_suitable_idx = idx;
->>>
->>>               /*
->>>
->>>
->>>
->>
->> I'm curious, are Doug's numbers reproducible?
->> Or could you share the idle state usage numbers? Is that explainable?
->> Seems like a lot and it does worry me that I can't reproduce anything
->> as drastic.
-> 
-> Well, it may not be drastic, but the results below pretty much confirm
-> that this particular change isn't going in the right direction IMV.
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Agreed, I'd still be eager to pick up something like Doug reported with
-my tests too :(
+In the upcoming VOP of rk3576, a window cannot attach to all Video
+Ports, we introduce a possible_vp_mask for every window to indicate
+which Video Ports this window can attach to.
 
-> 
->> I did a bit of x86 as well and got for Raptor Lake (I won't post the
->> non-x86 numbers now, but teo-tweak performs comparable to teo mainline.)
->>
->> Idle 5 min:
->> device   gov     iter    Joules  idles   idle_misses     idle_miss_ratio         belows  aboves
->> teo     0       170.02  12690   646     0.051   371     275
->> teo     1       123.17  8361    517     0.062   281     236
->> teo     2       122.76  7741    347     0.045   262     85
->> teo     3       118.5   8699    668     0.077   307     361
->> teo     4       80.46   8113    443     0.055   264     179
->> teo-tweak       0       115.05  10223   803     0.079   323     480
->> teo-tweak       1       164.41  8523    631     0.074   263     368
->> teo-tweak       2       163.91  8409    711     0.085   256     455
->> teo-tweak       3       137.22  8581    721     0.084   261     460
->> teo-tweak       4       174.95  8703    675     0.078   261     414
-> 
-> So basically the energy usage goes up, idle misses go up, idle misses
-> ratio goes up and the "above" misses go way up.  Not so good as far as
-> I'm concerned.
-> 
->> teo     0       164.34  8443    516     0.061   303     213
->> teo     1       167.85  8767    492     0.056   256     236
->> teo     2       166.25  7835    406     0.052   263     143
->> teo     3       189.77  8865    493     0.056   276     217
->> teo     4       136.97  9185    467     0.051   286     181
-> 
-> The above is menu I think?
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Tested-by: Michael Riesch <michael.riesch@wolfvision.net> # on RK3568
+Tested-by: Detlev Casanova <detlev.casanova@collabora.com>
+---
 
-No this is teo again, just wanted to include it because the variance is
-quite large, (not unusual for idle).
-The full table (with menu (mainline))
+(no changes since v1)
 
-teo 	0 	170.02 	12690 	646 	0.051 	371 	275
-teo 	1 	123.17 	8361 	517 	0.062 	281 	236
-teo 	2 	122.76 	7741 	347 	0.045 	262 	85
-teo 	3 	118.5 	8699 	668 	0.077 	307 	361
-teo 	4 	80.46 	8113 	443 	0.055 	264 	179
-teo-tweak 	0 	115.05 	10223 	803 	0.079 	323 	480
-teo-tweak 	1 	164.41 	8523 	631 	0.074 	263 	368
-teo-tweak 	2 	163.91 	8409 	711 	0.085 	256 	455
-teo-tweak 	3 	137.22 	8581 	721 	0.084 	261 	460
-teo-tweak 	4 	174.95 	8703 	675 	0.078 	261 	414
-teo 	0 	164.34 	8443 	516 	0.061 	303 	213
-teo 	1 	167.85 	8767 	492 	0.056 	256 	236
-teo 	2 	166.25 	7835 	406 	0.052 	263 	143
-teo 	3 	189.77 	8865 	493 	0.056 	276 	217
-teo 	4 	136.97 	9185 	467 	0.051 	286 	181
-menu 	0 	180.13 	8925 	343 	0.038 	303 	40
-menu 	1 	208.49 	8717 	345 	0.040 	312 	33
-menu 	2 	168.38 	8451 	321 	0.038 	274 	47
-menu 	3 	139.48 	7853 	310 	0.039 	289 	21
-menu 	4 	166.61 	7769 	339 	0.044 	322 	17
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 18 +++++++++++++++++-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.h |  1 +
+ drivers/gpu/drm/rockchip/rockchip_vop2_reg.c | 14 ++++++++++++++
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
-> 
->> At least in the idle case you can see an increase in 'above' idle_misses.
-
-Agreed, idle_misses clearly go up as mentioned.
-
->>
->> Firefox Youtube 4K video playback 2 min:
->> device   gov     iter    Joules  idles   idle_misses     idle_miss_ratio         belows  aboves
->> teo     0       260.09  67404   11189   0.166   1899    9290
->> teo     1       273.71  76649   12155   0.159   2233    9922
->> teo     2       231.45  59559   10344   0.174   1747    8597
->> teo     3       202.61  58223   10641   0.183   1748    8893
->> teo     4       217.56  61411   10744   0.175   1809    8935
->> teo-tweak       0       227.99  61209   11251   0.184   2110    9141
->> teo-tweak       1       222.44  61959   10323   0.167   1474    8849
->> teo-tweak       2       218.1   64380   11080   0.172   1845    9235
->> teo-tweak       3       207.4   60183   11267   0.187   1929    9338
->> teo-tweak       4       217.46  61253   10381   0.169   1620    8761
-> 
-> And it doesn't improve things drastically here, although on average it
-> does reduce energy usage.
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+index 2c84bac9d88a..cc46fe2dc188 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+@@ -2335,6 +2335,10 @@ static int vop2_create_crtcs(struct vop2 *vop2)
+ 			if (win->base.type == DRM_PLANE_TYPE_PRIMARY)
+ 				continue;
+ 
++			/* If this win can not attached to this VP */
++			if (!(win->data->possible_vp_mask & BIT(vp->id)))
++				continue;
++
+ 			if (vop2_is_mirror_win(win))
+ 				continue;
+ 
+@@ -2366,7 +2370,19 @@ static int vop2_create_crtcs(struct vop2 *vop2)
+ 
+ 		win->type = DRM_PLANE_TYPE_OVERLAY;
+ 
+-		possible_crtcs = (1 << nvps) - 1;
++		possible_crtcs = 0;
++		nvp = 0;
++		for (j = 0; j < vop2_data->nr_vps; j++) {
++			vp = &vop2->vps[j];
++
++			if (!vp->crtc.port)
++				continue;
++
++			if (win->data->possible_vp_mask & BIT(vp->id))
++				possible_crtcs |= BIT(nvp);
++			nvp++;
++		}
++
+ 		ret = vop2_plane_init(vop2, win, possible_crtcs);
+ 		if (ret) {
+ 			drm_err(vop2->drm, "failed to init overlay plane %s: %d\n",
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
+index aca654986d24..2c3d6d2d063f 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
+@@ -167,6 +167,7 @@ struct vop2_win_data {
+ 	unsigned int phys_id;
+ 
+ 	u32 base;
++	u32 possible_vp_mask;
+ 	enum drm_plane_type type;
+ 
+ 	u32 nformats;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
+index 0afef24db144..97df9d479f11 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
++++ b/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
+@@ -347,6 +347,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
+ 		.name = "Smart0-win0",
+ 		.phys_id = ROCKCHIP_VOP2_SMART0,
+ 		.base = 0x1c00,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
+ 		.formats = formats_smart,
+ 		.nformats = ARRAY_SIZE(formats_smart),
+ 		.format_modifiers = format_modifiers,
+@@ -360,6 +361,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
+ 	}, {
+ 		.name = "Smart1-win0",
+ 		.phys_id = ROCKCHIP_VOP2_SMART1,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
+ 		.formats = formats_smart,
+ 		.nformats = ARRAY_SIZE(formats_smart),
+ 		.format_modifiers = format_modifiers,
+@@ -373,6 +375,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
+ 	}, {
+ 		.name = "Esmart1-win0",
+ 		.phys_id = ROCKCHIP_VOP2_ESMART1,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
+ 		.formats = formats_rk356x_esmart,
+ 		.nformats = ARRAY_SIZE(formats_rk356x_esmart),
+ 		.format_modifiers = format_modifiers,
+@@ -386,6 +389,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
+ 	}, {
+ 		.name = "Esmart0-win0",
+ 		.phys_id = ROCKCHIP_VOP2_ESMART0,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
+ 		.formats = formats_rk356x_esmart,
+ 		.nformats = ARRAY_SIZE(formats_rk356x_esmart),
+ 		.format_modifiers = format_modifiers,
+@@ -400,6 +404,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
+ 		.name = "Cluster0-win0",
+ 		.phys_id = ROCKCHIP_VOP2_CLUSTER0,
+ 		.base = 0x1000,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
+ 		.formats = formats_cluster,
+ 		.nformats = ARRAY_SIZE(formats_cluster),
+ 		.format_modifiers = format_modifiers_afbc,
+@@ -415,6 +420,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
+ 		.name = "Cluster1-win0",
+ 		.phys_id = ROCKCHIP_VOP2_CLUSTER1,
+ 		.base = 0x1200,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
+ 		.formats = formats_cluster,
+ 		.nformats = ARRAY_SIZE(formats_cluster),
+ 		.format_modifiers = format_modifiers_afbc,
+@@ -580,6 +586,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 		.name = "Cluster0-win0",
+ 		.phys_id = ROCKCHIP_VOP2_CLUSTER0,
+ 		.base = 0x1000,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_cluster,
+ 		.nformats = ARRAY_SIZE(formats_cluster),
+ 		.format_modifiers = format_modifiers_afbc,
+@@ -598,6 +605,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 		.name = "Cluster1-win0",
+ 		.phys_id = ROCKCHIP_VOP2_CLUSTER1,
+ 		.base = 0x1200,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_cluster,
+ 		.nformats = ARRAY_SIZE(formats_cluster),
+ 		.format_modifiers = format_modifiers_afbc,
+@@ -616,6 +624,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 		.name = "Cluster2-win0",
+ 		.phys_id = ROCKCHIP_VOP2_CLUSTER2,
+ 		.base = 0x1400,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_cluster,
+ 		.nformats = ARRAY_SIZE(formats_cluster),
+ 		.format_modifiers = format_modifiers_afbc,
+@@ -634,6 +643,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 		.name = "Cluster3-win0",
+ 		.phys_id = ROCKCHIP_VOP2_CLUSTER3,
+ 		.base = 0x1600,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_cluster,
+ 		.nformats = ARRAY_SIZE(formats_cluster),
+ 		.format_modifiers = format_modifiers_afbc,
+@@ -651,6 +661,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 	}, {
+ 		.name = "Esmart0-win0",
+ 		.phys_id = ROCKCHIP_VOP2_ESMART0,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_esmart,
+ 		.nformats = ARRAY_SIZE(formats_esmart),
+ 		.format_modifiers = format_modifiers,
+@@ -667,6 +678,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 	}, {
+ 		.name = "Esmart1-win0",
+ 		.phys_id = ROCKCHIP_VOP2_ESMART1,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_esmart,
+ 		.nformats = ARRAY_SIZE(formats_esmart),
+ 		.format_modifiers = format_modifiers,
+@@ -684,6 +696,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 		.name = "Esmart2-win0",
+ 		.phys_id = ROCKCHIP_VOP2_ESMART2,
+ 		.base = 0x1c00,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_esmart,
+ 		.nformats = ARRAY_SIZE(formats_esmart),
+ 		.format_modifiers = format_modifiers,
+@@ -699,6 +712,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
+ 	}, {
+ 		.name = "Esmart3-win0",
+ 		.phys_id = ROCKCHIP_VOP2_ESMART3,
++		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
+ 		.formats = formats_esmart,
+ 		.nformats = ARRAY_SIZE(formats_esmart),
+ 		.format_modifiers = format_modifiers,
+-- 
+2.34.1
 
