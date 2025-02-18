@@ -1,87 +1,75 @@
-Received: from mail.sdinet.de (hydra.sdinet.de [136.243.3.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DE223644D;
-	Tue, 18 Feb 2025 10:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.243.3.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B315235341;
+	Tue, 18 Feb 2025 10:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739875593; cv=none; b=TZW6Kp7XvgiDbdh//+ew7yZ6xp7LFEG41FfaLa0BH+buwvW6ypqYxUXqpHzYhceleQwp+fJwtogXKf8mjWmhkLTZa7WpOSIff4XAPVkB9zljAL8lPVJIdeiHuUZOH05muC0nzqjerUT15BtYWgmvGgPRH6CwtwRAMU9ZLUw+NLo=
+	t=1739875607; cv=none; b=gH89PaW2b2r4fRxGSRUlPCVOTThzKzzQxqwyTrpDeZhWBWLTEAiOc4LJK71WseA2RxX303hBjG1ksCnng5IntZKddtfqSq10+FGQIQvBxD219VJlJQ6z7Hx/qj4CBPaDlCWCq7btpyR3GvQORnwHVFjUYnWMvL41GWCMtAW7AxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739875593; c=relaxed/simple;
-	bh=8hwAEfYHLi1qKR0YP1FUgTPhNsoxFHO8NvCdNPecFbk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gVehoRXiVw7DLwszWCbmraZUd2hp7iw8FEITHzktdhL5ka+qFZwMnuvSER5Fvhi/8OhCSaulAzyapJ/8BLGbVqQcigFhYmTgUGGOF4sFjxHgORrsOv3ns794duzaSl1jmcc8PekwEoF51/PwnLt5bEf7cRkj82Trvu499JZqTOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdinet.de; spf=pass smtp.mailfrom=sdinet.de; dkim=pass (4096-bit key) header.d=sdinet.de header.i=@sdinet.de header.b=mNmsaUl0; arc=none smtp.client-ip=136.243.3.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdinet.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sdinet.de
+	s=arc-20240116; t=1739875607; c=relaxed/simple;
+	bh=lFybjn1lzd3uty5K8+/fX/EZsa8vtx9u05tnjD6rAIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HmNYIXldPGXYJg/I2QKFaIJJ5qXRIUZ/qgSlOEInU7J9BnzVd/ur4IorVKhGeTGveg3RblQi3a1fQtryCzJ/QW43RuTUtiQ3RKoNwwCOQ5Rexz7U0g3aaa24Cun/BtvKGAa57HQEV0A+Y+Hbubm8M9PTS32lXkuiVYuc0JDz1I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LN7/crkc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=sdinet.de header.i=@sdinet.de header.b="mNmsaUl0"
-Received: from aurora64.sdinet.de (aurora64.sdinet.de [193.103.159.64])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: haegar)
-	by mail.sdinet.de (bofa-smtpd) with ESMTPSA id D1C3934003A;
-	Tue, 18 Feb 2025 11:38:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sdinet.de; s=mail2024;
-	t=1739875121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+i9Iw2wxStBEEjo8w2Ll1bq83y0kUgzFah+tO1rE1yE=;
-	b=mNmsaUl02ujcoirbeRUBrWHbfOnXEe84lH/3UD2K8o3WkE+f0/ixSJC7MbknlPXm/T24+M
-	csmyHJmlZGdRqQ8mARo+KuWYKcyYR8FYiCYcMJKmjD9no8reWWd03O8/34IMv9TnsxMS72
-	R620cx/EZmqLRzgjwuj2HQmgzn/4rwNP+3o9KjwndkTa4/JnY1AoONngc7yEDI8qVoALtG
-	3yfCJhKfP6RuDz+lSOXBn0Wzm0dg3G5Mj31ksJ7Qjj0Z3Ok92Wc8eFq4S8VE2bXIem1UdN
-	xGzD4TXFwh7I4N4Zoh/Pko7MbB8bVef4BJMVcot1vHvaGBl1O1rRtLAyXrBGEY+4GVmO5a
-	aQE8DX/sDTMpKchYvDRx7DXB7R4MoLcyGWvtSy/KN+Chx4VifXFAxzrpn0j2+1OEIPooNu
-	FTRtyhf3JU4qwZqkJmf1u2V2hZEvIs8Ds/L51hWxYMwm9MMeMQttBM1lzDXxX9UK4P4IpL
-	cZi6SFZ/x3/m3EK25OivgxLN2moTbJR4g+aqasKWUPQ3e4wlhYeVVFpxzvpKXi4jJon2yG
-	skWKyskIzR8PqOnA3blPAvytGLH6Ro5w34azGjUvXPKP+vDbxjEvvQv7S4ohFd3uEnUTD3
-	BNtB1vS75eoSsv7l1kaGInB3K1c3hf+/Bzmw3c64GXxVg7LOomhA8=
-Date: Tue, 18 Feb 2025 11:36:22 +0100 (CET)
-From: Sven-Haegar Koch <haegar@sdinet.de>
-To: Johannes Berg <johannes@sipsolutions.net>
-cc: Corentin Labbe <clabbe.montjoie@gmail.com>, kvalo@kernel.org, 
-    linux-wireless@vger.kernel.org, 
-    Linux-Kernel-Mailinglist <linux-kernel@vger.kernel.org>
-Subject: Re: unknow Network controller: Intel Corporation Device 093c (rev
- 3a)
-In-Reply-To: <6a5eb58c06cc1d5bdeb67fe877ef3a98520627ed.camel@sipsolutions.net>
-Message-ID: <8eb241a2-d8d7-f01c-c2ca-b615e8a1cc41@sdinet.de>
-References: <Z7N7AvQvv8k4OY-o@Red> <6a5eb58c06cc1d5bdeb67fe877ef3a98520627ed.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LN7/crkc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A6EC4CEE6;
+	Tue, 18 Feb 2025 10:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739875606;
+	bh=lFybjn1lzd3uty5K8+/fX/EZsa8vtx9u05tnjD6rAIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LN7/crkcTZHdkdwLpR5JGrRCG/xYcwV7jukPGpHXq4XaRTgDpWXcdWfMYMQNzCuLT
+	 rp9K9RFdMnXPh7bxX14G9dTedkkgHsGLvroa1YFHmxWysSxdXBN+v3u0OMDJOwJxp5
+	 n9i3l+MKZfktPcPbepwTA6J0VHfftOEH1fEt9BOXlGJkKtwBeaAfxPs4+r0fWUcuz5
+	 fjRrEIx+31QqVfgVhFvjtPmZtO8sPLciHzQ0wulItC7Y8mV04Kt+MoVrSSbn8RhWbU
+	 iz1AF7CwjyotSIrAM9Y4IcK2/OY56JRKQI9+ugfNzT6RAp57fZ/epqu3GHD6sQ7pHk
+	 VXTUxoHEdDUqQ==
+Date: Tue, 18 Feb 2025 16:16:43 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Roger Quadros <rogerq@kernel.org>
+Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	MD Danish Anwar <danishanwar@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>, srk@ti.com,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Drop skip_fdq argument from
+ k3_udma_glue_reset_rx_chn
+Message-ID: <Z7RlE+QfzdQ07spk@vaman>
+References: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
 
-On Tue, 18 Feb 2025, Johannes Berg wrote:
-
-> On Mon, 2025-02-17 at 19:08 +0100, Corentin Labbe wrote:
-> > The laptop is running Debian bookworm, and I tried to update pci.ids, no more information.
-> > 
-> > lspci -vx give:
-> > 03:00.0 Network controller: Intel Corporation Device 093c (rev 3a)
-> > 	Subsystem: Intel Corporation Device 2181
+On 16-01-25, 17:00, Roger Quadros wrote:
+> The user of k3_udma_glue_reset_rx_chn() e.g. ti_am65_cpsw_nuss can
+> run on multiple platforms having different DMA architectures.
+> On some platforms there can be one FDQ for all flows in the RX channel
+> while for others there is a separate FDQ for each flow in the RX channel.
 > 
-> But that doesn't match at all, not even close.
+> So far we have been relying on the skip_fdq argument of
+> k3_udma_glue_reset_rx_chn().
 > 
-> I cannot find any record for WiFi of these numbers, so either the device
-> is not WiFi or is malfunctioning. You could try to open it up, take a
-> picture so we can see what the WiFi NIC is, and also maybe re-seat the
-> NIC while at is, occasionally that fixes such issues.
+> Instead of relying on the user to provide this information, infer it
+> based on DMA architecture during k3_udma_glue_request_rx_chn() and save it
+> in an internal flag 'single_fdq'. Use that flag at
+> k3_udma_glue_reset_rx_chn() to deicide if the FDQ needs
+> to be cleared for every flow or just for flow 0.
 
-https://linux-hardware.org/?id=pci:8086-093c-8086-2181
-
-Suggests it to be a "Intel Wireless Gigabit 17265", with no linux driver 
-existing for it.
-
-c'ya
-sven-haegar
+This fails to apply for me on dmaengine/fixes, can you please rebase and
+resend
 
 -- 
-Three may keep a secret, if two of them are dead.
-- Ben F.
+~Vinod
