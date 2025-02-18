@@ -1,188 +1,117 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D655F1D0F5A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 22:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CA91B87EB
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 22:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739918042; cv=none; b=U8kuLy3HSICF5rl1ziGL1ERet4M4tJ7syLgkUtQ9BTPx9jk8/stLnTK12qDqwJ7iRiiPfXOHktzwk+Idl4Ux+vLoNVeMQPut/67rNglJpos99xqZlVuLSHXcsg7GDgfRWdXNm4Lwl9fPCmt/3UfEalVmG3uPRD1MM6sI4+JI2OQ=
+	t=1739918087; cv=none; b=XiuyelThJQo12dD7ihhOObRqDUC2ef/6CO9UPtIh0P8CRX2ze5la+PLwEqgjY13Rl1dPDRCiQ0kJvYm47WzVROZEm97rtMRTVKIB880jShjXpuYKXd46BbtutPDWznTdf5pra5j1qOOvLhjQK+tfRp+rEuZmSXbaqb7oCkpnJQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739918042; c=relaxed/simple;
-	bh=LMr3mAVEp9T0899OdsHcYNuOQbKwWhoX8JpQNIYLZ+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eegnbYZtCXjnpJXFcMn1e3mSrYjC3/yIyj2LdFAld3XaVDSZ7dDLHuGTW5E2kPGF3Vx5F4/w/0slBRejfhDULjnOFd6oFA9bbF7SetPtUwl/MYwu4fO3ZdkebSQOioG9FTzAXdh/ZBlesAyRKPBMdqNSzWTP0pRA3yf3JypOk+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oDh0iWYQ; arc=none smtp.client-ip=209.85.166.181
+	s=arc-20240116; t=1739918087; c=relaxed/simple;
+	bh=c9MCg23fFw/wwbwFWoLmtmEt2qSX634nqFWl7SGjvXc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HOd8lpfgvAZS0eGKH1pPRUZM+r5TtO6hsEK+w/askJ+U8LZhazRN45lqvHRHJu7zdNIfns40t8Dc54O7/1NkqVTXb57M3XsfrmiSda6ROJAma8XiaN4yVrAHKlaYLTxxTXfWTU4YIcPFMNW4LS9d1A+V7nKLVytmCCLLTPSHQ1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ch6usJ1+; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oDh0iWYQ"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d18c325ee4so632745ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:34:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ch6usJ1+"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2212a930001so69900425ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:34:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739918040; x=1740522840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/cgij1lFdZqKfhJzvdkh7LmAc2T325VXWYvJrhG6fY=;
-        b=oDh0iWYQRl2y+GBgwCET+eh4ecnW7iVY77Dsnn76nyKeV8bCkR2JJk3ll47VX4r+wb
-         bza3Wy8vKeeWSu0wuyeEu2RDuRdMym6Za6kRwB5WgsCu3GMBb2NVyoDEHNDZZdJihhOP
-         3YGJsaNy/Rrk6XdXZ5VPLTmfUNYP59jsEt2QlirZwOPBNrTDPZr+t/sk9sq0PU2PV2Od
-         jqLlzSXQ71PasDFriIHi0Mtz8xDDgqUMJXdobwUv1mSMdK9tA7TIC5Q7Q8xFAouApiqt
-         wihFAAyEST2b423lZr3n250/+gZ5iYsnPVNBWS59cIYmOfQo7qGEnRLWgxSnfTXDRcEi
-         1jyg==
+        d=google.com; s=20230601; t=1739918085; x=1740522885; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TZLHuC1Hi4yGX01nX6e056nsAoeCP8oBOZxASCblh0I=;
+        b=Ch6usJ1+X4N0L8bChPSQRO0cWImdkIPIIMscOQvtNIIlTD4Dhu4ldWO8hwbZRYZ3+J
+         wuiHqSVviyzxz49ZLFSvxr22IyWrUDeqy0BOWkEbtdMP0jlPdqSbsUBWej6ZDe2u6EOR
+         6JHp2QB2F2YWjJAJ+dBr/zT3YdXXx1KBxiRwPo2d1B7ZjjiMeoAz7NlmSJTYvX/1Wz8L
+         jva11ybSVLLWZ78b/hu8GX7rweBho5FztvFphcbIo6rAJwwSIafI+9H5luUHJYziAL8M
+         5oE8SQtr05ducUf9HJZDYMsw4wuUX9hjRFSK8K/bBfDVKkqhlvVS3ZJFPxRhzO/WoCj2
+         69gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739918040; x=1740522840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/cgij1lFdZqKfhJzvdkh7LmAc2T325VXWYvJrhG6fY=;
-        b=URX5B/te78N4G/5vG6S8JtanhzIEck7lqvS0Skm0zuL0OpJIgmjJzpLdsVA0e/MWSR
-         eQB72sPfvy4/kRsjUYlLAQWT9cCGgjk8hgf6mZOAfDqnA8EDdz99gXAmwoz2sKVB8/c+
-         iy7N7D/mbRaZfRa5tjVjf/CaPRMiFP9NoR2U8rD4VPc3BjLpXZrvpbSbRLnOTpXZkjK4
-         imZUWq+6pJNSBu0VcBfnozBYjLV+x9pagJ6EtIdovZCeOUk8dz3xxumSzHwx2e9JrEst
-         PX0WAlXjioHoSutQiTXdTXMYhuZ6204CiT3PJlRNe5gbK0/Bj57OBEkvec/oNBmVvn9f
-         J7pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjqxF9/69Yz8ank8EQ+a0/xJeC20Rbw+WG+WGMCRWr9ubWL8WQ2EGn8yPXhr3hNHKvtsIg9aWilYLNNjI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+T2SZnXrgV5EA0DQwVbuOFCGWLCD9YHJxU4GkSgvasPcRiucl
-	ub1xk70UI8M+qlGVP8fEwlhAz26VEj0E4zRWznNJ34XMx8WNStes/V/k7O/lA4/v0R7bfgAmOpX
-	Gb1Lwm1S/rzCOVNFDiJW61MAcbSw9HXw5nhXT
-X-Gm-Gg: ASbGnctubhabLCL5nBz+C/UZHwImri4h5IuN5M1U8A/uch5v7tvEphuZc5qdZBFjpxp
-	ob0tkV+yHgZySJ/VWhifCGdVnvVIMnw5HD6jYxrGaa/Xg4B85AxyLsyj9oALX0UyOlh5YO9C+QZ
-	4HJkh0X9CkycukVCoAghJnd6dh
-X-Google-Smtp-Source: AGHT+IHw3DoO4qf0xpi1Amzv3pmc+X9SJTYSaoh3aiUz35JKe6rXdAzYIXkiqfdS7Bg/GHnOCWs6r2oDH8RnN6nJDDg=
-X-Received: by 2002:a05:6e02:3287:b0:3d1:7971:e6d5 with SMTP id
- e9e14a558f8ab-3d2b6236f8amr1406365ab.0.1739918039639; Tue, 18 Feb 2025
- 14:33:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739918085; x=1740522885;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TZLHuC1Hi4yGX01nX6e056nsAoeCP8oBOZxASCblh0I=;
+        b=WplJub4ZDhL1L2nwv2yVFNNedD5KBSIcZaRmM77twPQJgUsbUlXIEX4VygCZ7sOpJ0
+         c7gtn2y2xLPFjyHrEbYiin3MLBb8d5SyCkKH1zCWgKKYl1SS3853po9nWv/wYUR6sfSI
+         bvo/JWuG1G2bvg89L8rugRlSG1xgmx/0zDHEP5XUWrAcgQj4PWxiKAleGZptsGMcRxs9
+         ZYg9pzUKU2IqmSGAd7v11FAdg8vuyGdeS/nFaop8rKJ5jg1sR2grSGJ5m5vzUjSwLe+I
+         SufvaawOS036vq0h4SAbPkxFCPy3fgDaq/R3xoZm+RG/CNVhWjJwaS/aAMd46XX46MZw
+         B7Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCV9x8SzYLgUsXh5XsYuSvHzmAyUQGzYx5KzCLm6bYSx62q9Jvfngg6SyH4mYifxUXl1uH+Cb9BldY7mSwM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDEmSRSLbKZZiW+w469u3ucDt/N4ODU7fllnDs8NcAb0/2baaN
+	RUsCzCTaDNK/jxhoe30qBFf7kPuNbAxMoQS+LgW+MJd9lMcrAbIXAl0wsvBV1T12yZGr/y7t9AZ
+	hrhMJ
+X-Gm-Gg: ASbGncvs7hODwgvEJqYp67Jea442tu9sCmowwE1Vl9M1ce0Xg4C+y2pzRan1P2O+z0L
+	DZllIWPGYF64K32mXGDFQAfiI1twGWymhk3eRj4zB60DdgO7IKRr+MtRmqqoLcILakU5Ki+SL2P
+	WoOxApZJUfX72CVFdfe1UCCzrKs6gy/Boume2tOBe71t6d9h7WRvTgi4AvFPXTx5/iU+zqrgZnT
+	8UCMdWES0IHgsGhDCme3ZAKJx7pUUMqQIUc2TY9Qpa0Y1LOWsOM0Sdiwam+biZjhA8T2tNJhTMj
+	vt4atMbeHdMUkQ79NyCmxdwVuv/9Hy9WnFiVlkpdOAO+DsknIG7RMID8mIsg/0o1+u03qw==
+X-Google-Smtp-Source: AGHT+IFYKz/EYn7TNybiJj1qW3okUbikhAGX/UJBob0S9X1x6mD9V3eaYo2eIvlon59gvNzDMcxedg==
+X-Received: by 2002:a05:6a00:c9:b0:732:6221:7180 with SMTP id d2e1a72fcca58-732622171dfmr16003879b3a.5.1739918085461;
+        Tue, 18 Feb 2025 14:34:45 -0800 (PST)
+Received: from bsegall-glaptop.localhost (c-73-202-176-14.hsd1.ca.comcast.net. [73.202.176.14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324f64a39asm9321541b3a.69.2025.02.18.14.34.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 14:34:44 -0800 (PST)
+From: Benjamin Segall <bsegall@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,  Frederic Weisbecker
+ <frederic@kernel.org>,  linux-kernel@vger.kernel.org,  Eric Dumazet
+ <edumazet@google.com>,  Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] posix-timers: cond_resched() during exit_itimers()
+In-Reply-To: <877c5nk4jw.ffs@tglx> (Thomas Gleixner's message of "Tue, 18 Feb
+	2025 10:03:47 +0100")
+References: <xm2634gg2n23.fsf@google.com> <877c5nk4jw.ffs@tglx>
+Date: Tue, 18 Feb 2025 14:34:43 -0800
+Message-ID: <xm26y0y22870.fsf@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
- <Z66YjGvjD_yzEHUg@google.com> <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
- <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org> <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
- <fe46069e-c52e-45ee-b4b3-8b929fb83b31@linaro.org> <Z7UHieRRnvRb5_oU@google.com>
-In-Reply-To: <Z7UHieRRnvRb5_oU@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 18 Feb 2025 14:33:47 -0800
-X-Gm-Features: AWEUYZnCIRZ8gA78AOy7d6LlsQyiSAxYf8f5kf90YgWTOUXfQDLRg9JD7T1vwFY
-Message-ID: <CAP-5=fWXmNoFLyWv+vo7hhLSqTDy7hf+-huKRD9OUWnO-GESRw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520 events/metrics
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Yangyu Chen <cyy@cyyself.name>, 
-	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Feb 18, 2025 at 2:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Feb 18, 2025 at 09:30:23AM +0000, James Clark wrote:
-> >
-> >
-> > On 18/02/2025 12:41 am, Ian Rogers wrote:
-> > > On Fri, Feb 14, 2025 at 2:02=E2=80=AFAM James Clark <james.clark@lina=
-ro.org> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On 14/02/2025 5:49 am, Yangyu Chen wrote:
-> > > > >
-> > > > >
-> > > > > > On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wr=
-ote:
-> > > > > >
-> > > > > > Hello,
-> > > > > >
-> > > > > > On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
-> > > > > > > This patchset adds the perf JSON files for the Cortex-A720 an=
-d Cortex-A520
-> > > > > > > processors. Some events have been tested on Raxda Orion 6 wit=
-h Cix P1 SoC
-> > > > > > > (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
-> > > > > >
-> > > > > > I'm curious how the name of PMUs look like.  It is cortex_a720 =
-(or a520)?
-> > > > >
-> > > > > The name of PMUs comes from Arm's documentation. I have included =
-these
-> > > > > links in each patch.
-> > > > >
-> > > > > > I remember there's a logic to check the length of hex digits at=
- the end.
-> > > > > >
-> > > > >
-> > > > > Could you provide more details about this?
-> > > > >
-> > > > > > Ian, are you ok with this?
-> > > > > >
-> > > >
-> > > > I think they wouldn't be merged because they're core PMUs, so shoul=
-d be
-> > > > fine? Even though they would otherwise be merged because they're mo=
-re
-> > > > than 3 hex digits.
-> > >
-> > > Do we know the PMU names? If they are cortex_a520 and cortex_a720 the=
-n
-> >
-> > It will be "armv9_cortex_a720" from this line:
-> >
-> >   PMUV3_INIT_SIMPLE(armv9_cortex_a720)
->
-> I see, thanks!
->
-> >
-> > > this comment at least reads a little stale:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n76
-> > > ```
-> > > /*
-> > > * There is a '_{num}' suffix. For decimal suffixes any length
-> > > * will do, for hexadecimal ensure more than 2 hex digits so
-> > > * that S390's cpum_cf PMU doesn't match.
-> > > */
-> > > ```
-> > > James is right that core PMUs aren't put on the same list as uncore/o=
-ther PMUs.
->
-> Ok, then I guess we're good.
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-I think you may be able to do things that look odd, like today the
-"i915" PMU can be called just "i", I think the a520/a720 naming will
-allow "armv9_cortex/cycles/" as an event name, then open it on two
-PMUs if they are present. We may only show one PMU in perf list as
-that code I think assumes they're the same PMU as they only differ by
-suffix:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmus.c?h=3Dperf-tools-next#n384
-I can imagine aggregation possibly being broken, but I think that
-works off the number of PMUs not the names of the PMUs, so it should
-be okay. Probably the only thing broken that matter is perf list when
-you have a BIG.little system with a520 and a720, this may be broken
-with say a a53 and a72 today as both of those suffix lengths are >2,
-but maybe they use the "armv8._pmuv3_0", "armv8._pmuv3_1", etc. naming
-convention. I suspect the >2 here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmus.c?h=3Dperf-tools-next#n80
-would still work and be correct if it were >4. If that changes then
-this will also need to change:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-tools-=
-next#n12
+> On Fri, Feb 14 2025 at 14:12, Benjamin Segall wrote:
+>> exit_itimers() loops through every timer in the process to delete it.
+>> This requires taking the system-wide hash_lock for each of these locks,
+>> and contends with other processes trying to create or delete timers.
+>> When a process creates hundreds of thousands of timers, and then exits
+>> while other processes contend with it, this can trigger softlockups on
+>> CONFIG_PREEMPT=n.
+>>
+>> Ideally this will some day be better solved by eliminating the global
+>> hashtable, but until that point mitigate the issue by doing
+>> cond_resched in that loop.
+>
+> It won't help for a PREEMPT_NONE kernel because the loop will be equally
+> long as before. Only the hash lock contention will be smaller, but that
+> does not mean that mopping up 100k timers won't be able to take ages.
 
-Thanks,
-Ian
+Yeah, it could just run into a new lock or other bottleneck, though it's
+not immediately obvious to me what it would be (hash_lock isn't sharing
+~any of the time in perf tracing, the obvious other locks like hrtimer
+are sharded, etc). Just sharding the lock a bunch (leaving the actual
+hashtable with the same cacheline sharing even) boosts the speed of my
+synthetic contention test freeing 100k timers from 6s to 380ms (with
+uncontended exit at 17ms), so I think it's realistic that avoiding
+the shared lock/table might well do the job.
 
+Of course nothing is stopping an even buggier application from
+just creating more timers (and at that point starting to notice the
+fixed hashtable size during timer_create)...
+
+>
+> We really need to get this PREEMPT_LAZY thing going and kill all of this
+> cond_resched() nonsense.
 >
 > Thanks,
-> Namhyung
 >
+>         tglx
