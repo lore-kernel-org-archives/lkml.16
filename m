@@ -1,388 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93376233155;
-	Tue, 18 Feb 2025 09:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3966232792;
+	Tue, 18 Feb 2025 09:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872606; cv=none; b=JYPOFLlLfiNUrfb3GQWfqN1iB1tA0U5RMAeViR/dDOuklld6mN03gmzn+lyqK7sHF08LE0Cf1fxp1HQ0+rAX47DSX9fqJs/2hUG43oS92OdUIUUPRHK8phfYqJTLLsq1eGOLfERWsk9dQpb+uH0YXWCLkQxcHn/2z8XCGQFkvrI=
+	t=1739872719; cv=none; b=bhhA78WK3XEExMTcL/zsureOgP3tTIu2XCirdeRDaN7UJ36s663Tw05tlV9LxkcoyNLzmyWlp3hz9PkK7JBGkAj1qmkhZkaShSIsQOiN3tp1L7UOx4Qg4jNTHw8YjMcWoa9DI7vaEGe6GIVOFOjhjCJbcmNX9zjK/Im5gOgCstY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872606; c=relaxed/simple;
-	bh=ec+FA3bJhRbXcy44mL0olZwg4DCvtazy/yRT+8kvChY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ylxz5PwX4C39Z/zYoaY8xTIQU/PlL5CDitVGYXp8ngQMU1KS45Hp7fFhUaap6zZQTjVaoaBADKKJb4RPvf/R+5tdgBHW21NnFinlvGR1iZX7FarpWxkNLGtQHUuqPTOXNBOtwQqWkhl/hbtGC17ksuG/6QCUTReGvDtqYI3Xxgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mq4wG/wX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739872719; c=relaxed/simple;
+	bh=6cooqqHCoA6P1atL6E2YmZn6GVJWVgjv5JafkIvyAbI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a0pkbeL53ZgY2Yl/SiQFosWzRmssJQj5jyH+M/6I+CiIITalK2mDfKICg4hCbQh/LvoxzS/iytxgoFdji7tYfHuMl4KqlRrFl20YVFO9BbdNPmm1wGKQiMx+dBa03M5b6e59sueoknCksBE/NgaFckxY36vmpYKhTV+2FXYJC1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvUsczMz; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mq4wG/wX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F0275C4CEF5;
-	Tue, 18 Feb 2025 09:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739872606;
-	bh=ec+FA3bJhRbXcy44mL0olZwg4DCvtazy/yRT+8kvChY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mq4wG/wX0fCB0VL5nhi+lFBk/iJXk0oNlnvWSvD2yVB7MdbNX44SUp4Kqlk4apwvD
-	 S9Od0pQJIlk32D0wQs+tiQnHKc37Ay1Pfr0q1Q8N+BQv28A2x+NsvTBy9PfVNAp/1y
-	 TBmlFaKEBPs8sWyKz3dUs130DmI/fEmRck4esvLGjmDfRgq+TAOX3RyudbXWKEMhGc
-	 ZsclT/zcw6BcBpr6PR6OdfUcNUoPcQDq/ay7X/KoCPsKjLqeQgBOQVz43IU3NE2roV
-	 1Yg0htV8iUny+PxDDIKIlSUwB9DhGCB/8f+TghMK/RkJJmov6/p6QYkzRwEX+YxzKY
-	 OU5bEdZETAcoQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFCCC021AF;
-	Tue, 18 Feb 2025 09:56:45 +0000 (UTC)
-From: Joel Granados <joel.granados@kernel.org>
-Date: Tue, 18 Feb 2025 10:56:21 +0100
-Subject: [PATCH 5/8] events: Move perf_event sysctls into kernel/events
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvUsczMz"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-545fed4642aso2505587e87.0;
+        Tue, 18 Feb 2025 01:58:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739872716; x=1740477516; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lmts2CcKs4nwISoE8RyWH4djGtBRCn0gg8bpEKNfluA=;
+        b=GvUsczMzokWbBz6nDDNHcgePYCB7OpPCZXZvUyt7pQLwVQofMRPOxBt7jhbf8aSaGR
+         KIOnhGPAkMSGqqor9iNYE3/Athm/WUVS56movIxXBKPWyI6MdMA7zg/pc63dAu18+wnY
+         kxIat9W6wLOV0A6bZWAyFvKHTkMJsjHaqMq1BIrKYzmJI75iDZhe65CvHx5wPt7t5/RT
+         3t4NaQhiWVU7IbnqFOH/SS5483lyVPuo6oXOAMBFd1yK31PjoDg26OcV9VBzVgubs7Mf
+         puEGXCaFfqX5TGMhmEpSFAVpkZVQisCwUY9Qodduk2HlVDSaFstJ6wGTgU8StNfh+lxf
+         MrPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739872716; x=1740477516;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lmts2CcKs4nwISoE8RyWH4djGtBRCn0gg8bpEKNfluA=;
+        b=l8swpZdZzyqpSvL0nc8JmfnlPLxl9oen9go218Xp3ZqJRcOxSe+HuD4+hg/nBOSCQO
+         k8GVDv9Ckl9RuFWqELDh1K3mhftBqM2XC7Geij5w3KQL4y3cpdzquo+j5NMH25bnRJO3
+         mUTbUxHsaZA7H8FpsBAy2hYflnDWCgChQ4WNWj1yoTfOF4BKJXSQwPpRej3JS4Uf5c2w
+         oiLpbBN3jrvT+6V+MDg+M1zAfAgy68LkMI0+HJPLpmYyb6cw77XMInQHLlOnOwOYiLMH
+         6AkNvF4M04ZIzC2QkDKVVyxtEAydp0a9e8+F4rjjlnqXqU08AzYioErT9w/O1YGpxtSD
+         kO3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXwXnaS1xDVHr/U5sJypZenTIuxqVUuqY05gZyXlDE+uPIzBqe3e4ImgE/UI0/DAH99QOlL+BJMMNJwaJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoQN66p21hl/Leg0bW00qwxolp+BVNu9QWRetYdFFe/sEQJZWn
+	W1Oq3CvYYX3+gD2jykY1zWh984N02Vr6d3AAk9CY+kSUmuJXRr1M
+X-Gm-Gg: ASbGncsB5UVVccjs1hlLDk8n1HDuvY+gF3Rf7Pc/Z8LpPVjVUO5EISoCjUlAOrukOFN
+	MXhUmU+AWcuqkfw164CIwTxp5647SMmrYd2oqW1eybQ5LiUBSrlDRUDeBas4R80zbGBnnLKjPyc
+	3IiTUg+4FlxVq6o7go+wUgmhFji0E6CJVEK4/GykFuY9NDrbT2HJJOB5cR9bSzyfhfdSHRv8mCy
+	qsawz8q9RM52pa4V5Y+VUAJhRAuiaYQBXrRhk942Dr7tmr5DwU9EfU1ZH+6/0/Ed185QtgLMgzU
+	3B5j9oxcohe9VJqNPP1o1RErzG4NMgVNpp4pF37EaHxYW4XFQvDetal7GTPbaQ==
+X-Google-Smtp-Source: AGHT+IFSgaLtcnavys5mJwrcFVSSqID4HA2Wxm607QSTsSZJ468RX9mWtnC6yEKMzbHenx1fdpwcuA==
+X-Received: by 2002:a05:6512:2398:b0:545:b89:309b with SMTP id 2adb3069b0e04-5452fe955efmr5596497e87.44.1739872715711;
+        Tue, 18 Feb 2025 01:58:35 -0800 (PST)
+Received: from [192.168.1.146] (87-94-132-183.rev.dnainternet.fi. [87.94.132.183])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30931b895e5sm11078211fa.113.2025.02.18.01.58.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 01:58:35 -0800 (PST)
+Message-ID: <2b019479-2d32-433f-af78-c3378dee4e2b@gmail.com>
+Date: Tue, 18 Feb 2025 11:58:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 2/3] rust: add dma coherent allocator abstraction.
+To: Robin Murphy <robin.murphy@arm.com>,
+ Daniel Almeida <daniel.almeida@collabora.com>
+Cc: rust-for-linux@vger.kernel.org, dakr@kernel.org, aliceryhl@google.com,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+References: <20250123104333.1340512-1-abdiel.janulgue@gmail.com>
+ <20250123104333.1340512-3-abdiel.janulgue@gmail.com>
+ <633274AD-E55C-4A90-AB72-33D3E176176F@collabora.com>
+ <dd57c3ba-246e-414d-a9c1-eb2cff032d83@arm.com>
+Content-Language: en-US
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+In-Reply-To: <dd57c3ba-246e-414d-a9c1-eb2cff032d83@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-jag-mv_ctltables-v1-5-cd3698ab8d29@kernel.org>
-References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
-In-Reply-To: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
-To: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, Heiko Carstens <hca@linux.ibm.com>, 
- Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Len Brown <lenb@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, 
- linux-acpi@vger.kernel.org, Joel Granados <joel.granados@kernel.org>
-X-Mailer: b4 0.15-dev-64da2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10332;
- i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=ec+FA3bJhRbXcy44mL0olZwg4DCvtazy/yRT+8kvChY=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGe0WVl4I3BgQWKHSlxKcgbAbttCoqSWTuqv6
- E2K55ipFuPqeokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJntFlZAAoJELqXzVK3
- lkFPov4L/RxARj9V/wFZMdAdHvvAdNNNOGecvUbb5RcX9LmCIH1ffYRA+vpEsrxQr81qFqysDjN
- Vedrg2sG3GXwbK+AvI7bbh5a/qrrtSURVs1JSqWyVHc3olvazvg6RwBFXprR/Iwqqv7MVKDWlMu
- N7duPFpbjZqFRP/g3KxlBKUc80Sy2A42bP3H1Qmx1g4lDI2AJqf0Ozkrpw3D77p+eFUs7Mrp8hI
- 5n6DCzWKHSIVWF2qmMR7T35tdEftGxSw+uFU8DPZCBv9AQxpSjz4OnUmTXoNdBMEjPZ8gJc+vyf
- 77WXvsBXxN3/GQwY1dI1pa8rxTTrUgO7MhvvxN8xd/1oJKecjUtMbdehbgdCpV7xdF1NGvwWdGx
- hsS5Be3VxuZ+cHM+xUgMV7WHSZOLlU7KFyzi7guNab1Ncr8xS7+eDIshIyfJIbNTj91LNiVbOBS
- AEpcfTffEUYJOxygd7R5/GqX7eSLArk2LJVCHd8SusvHNbUJGQX6cPCrqv4WoEHKFIW27QGmmX8
- mg=
-X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
- auth_id=239
 
-Move ctl tables to two files:
-* perf_event_{paranoid,mlock_kb,max_sample_rate} and
-  perf_cpu_time_max_percent into kernel/events/core.c
-* perf_event_max_{stack,context_per_stack} into
-  kernel/events/callchain.c
+Hi Robin,
 
-Make static variables and functions that are fully contained in core.c
-and callchain.cand remove them from include/linux/perf_event.h.
-Additionally six_hundred_forty_kb is moved to callchain.c.
+On 17/02/2025 15:52, Robin Murphy wrote:
+> FWIW we've been wanting to steer away from relying on the default mask 
+> in new code, so it would be quite neat to actually enforce that 
+> allocations fail if dma_coherent_mask hasn't been explicitly set 
+> (assuming it's sufficiently cheap to keep a flag in the Device handle or 
+> something like that - it's not the end of the world if it isn't practical).
 
-Two new sysctl tables are added ({callchain,events_core}_sysctl_table)
-with their respective sysctl registration functions.
+I just had a quick look on how to possible approach this and indeed 
+would refactor the Device binding a bit. If it is okay with you this 
+could go in a follow-up patch? I was hoping to upstream the initial 
+support first - at least with the dma_set_mask/dma_set_coherent_mask put 
+in place already.
 
-This is part of a greater effort to move ctl tables into their
-respective subsystems which will reduce the merge conflicts in
-kerenel/sysctl.c.
-
-Signed-off-by: Joel Granados <joel.granados@kernel.org>
----
- include/linux/perf_event.h |  9 -------
- kernel/events/callchain.c  | 38 ++++++++++++++++++++++-----
- kernel/events/core.c       | 57 ++++++++++++++++++++++++++++++++++++-----
- kernel/sysctl.c            | 64 ----------------------------------------------
- 4 files changed, 83 insertions(+), 85 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 8333f132f4a9..a92ade5d62be 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1646,19 +1646,10 @@ static inline int perf_callchain_store(struct perf_callchain_entry_ctx *ctx, u64
- }
- 
- extern int sysctl_perf_event_paranoid;
--extern int sysctl_perf_event_mlock;
- extern int sysctl_perf_event_sample_rate;
--extern int sysctl_perf_cpu_time_max_percent;
- 
- extern void perf_sample_event_took(u64 sample_len_ns);
- 
--int perf_event_max_sample_rate_handler(const struct ctl_table *table, int write,
--		void *buffer, size_t *lenp, loff_t *ppos);
--int perf_cpu_time_max_percent_handler(const struct ctl_table *table, int write,
--		void *buffer, size_t *lenp, loff_t *ppos);
--int perf_event_max_stack_handler(const struct ctl_table *table, int write,
--		void *buffer, size_t *lenp, loff_t *ppos);
--
- /* Access to perf_event_open(2) syscall. */
- #define PERF_SECURITY_OPEN		0
- 
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 8a47e52a454f..6c83ad674d01 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -22,6 +22,7 @@ struct callchain_cpus_entries {
- 
- int sysctl_perf_event_max_stack __read_mostly = PERF_MAX_STACK_DEPTH;
- int sysctl_perf_event_max_contexts_per_stack __read_mostly = PERF_MAX_CONTEXTS_PER_STACK;
-+static const int six_hundred_forty_kb = 640 * 1024;
- 
- static inline size_t perf_callchain_entry__sizeof(void)
- {
-@@ -266,12 +267,8 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 	return entry;
- }
- 
--/*
-- * Used for sysctl_perf_event_max_stack and
-- * sysctl_perf_event_max_contexts_per_stack.
-- */
--int perf_event_max_stack_handler(const struct ctl_table *table, int write,
--				 void *buffer, size_t *lenp, loff_t *ppos)
-+static int perf_event_max_stack_handler(const struct ctl_table *table, int write,
-+					void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	int *value = table->data;
- 	int new_value = *value, ret;
-@@ -292,3 +289,32 @@ int perf_event_max_stack_handler(const struct ctl_table *table, int write,
- 
- 	return ret;
- }
-+
-+static const struct ctl_table callchain_sysctl_table[] = {
-+	{
-+		.procname	= "perf_event_max_stack",
-+		.data		= &sysctl_perf_event_max_stack,
-+		.maxlen		= sizeof(sysctl_perf_event_max_stack),
-+		.mode		= 0644,
-+		.proc_handler	= perf_event_max_stack_handler,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= (void *)&six_hundred_forty_kb,
-+	},
-+	{
-+		.procname	= "perf_event_max_contexts_per_stack",
-+		.data		= &sysctl_perf_event_max_contexts_per_stack,
-+		.maxlen		= sizeof(sysctl_perf_event_max_contexts_per_stack),
-+		.mode		= 0644,
-+		.proc_handler	= perf_event_max_stack_handler,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE_THOUSAND,
-+	},
-+};
-+
-+static int __init init_callchain_sysctls(void)
-+{
-+	register_sysctl_init("kernel", callchain_sysctl_table);
-+	return 0;
-+}
-+core_initcall(init_callchain_sysctls);
-+
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index bcb09e011e9e..3c3d95312c28 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -452,8 +452,8 @@ static struct kmem_cache *perf_event_cache;
-  */
- int sysctl_perf_event_paranoid __read_mostly = 2;
- 
--/* Minimum for 512 kiB + 1 user control page */
--int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
-+/* Minimum for 512 kiB + 1 user control page. 'free' kiB per user. */
-+static int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024);
- 
- /*
-  * max perf event sample rate
-@@ -463,6 +463,7 @@ int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free'
- #define DEFAULT_CPU_TIME_MAX_PERCENT	25
- 
- int sysctl_perf_event_sample_rate __read_mostly	= DEFAULT_MAX_SAMPLE_RATE;
-+static int sysctl_perf_cpu_time_max_percent __read_mostly = DEFAULT_CPU_TIME_MAX_PERCENT;
- 
- static int max_samples_per_tick __read_mostly	= DIV_ROUND_UP(DEFAULT_MAX_SAMPLE_RATE, HZ);
- static int perf_sample_period_ns __read_mostly	= DEFAULT_SAMPLE_PERIOD_NS;
-@@ -484,7 +485,7 @@ static void update_perf_cpu_limits(void)
- 
- static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc);
- 
--int perf_event_max_sample_rate_handler(const struct ctl_table *table, int write,
-+static int perf_event_max_sample_rate_handler(const struct ctl_table *table, int write,
- 				       void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	int ret;
-@@ -506,9 +507,7 @@ int perf_event_max_sample_rate_handler(const struct ctl_table *table, int write,
- 	return 0;
- }
- 
--int sysctl_perf_cpu_time_max_percent __read_mostly = DEFAULT_CPU_TIME_MAX_PERCENT;
--
--int perf_cpu_time_max_percent_handler(const struct ctl_table *table, int write,
-+static int perf_cpu_time_max_percent_handler(const struct ctl_table *table, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-@@ -528,6 +527,52 @@ int perf_cpu_time_max_percent_handler(const struct ctl_table *table, int write,
- 	return 0;
- }
- 
-+static const struct ctl_table events_core_sysctl_table[] = {
-+	/*
-+	 * User-space relies on this file as a feature check for
-+	 * perf_events being enabled. It's an ABI, do not remove!
-+	 */
-+	{
-+		.procname	= "perf_event_paranoid",
-+		.data		= &sysctl_perf_event_paranoid,
-+		.maxlen		= sizeof(sysctl_perf_event_paranoid),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+	{
-+		.procname	= "perf_event_mlock_kb",
-+		.data		= &sysctl_perf_event_mlock,
-+		.maxlen		= sizeof(sysctl_perf_event_mlock),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+	{
-+		.procname	= "perf_event_max_sample_rate",
-+		.data		= &sysctl_perf_event_sample_rate,
-+		.maxlen		= sizeof(sysctl_perf_event_sample_rate),
-+		.mode		= 0644,
-+		.proc_handler	= perf_event_max_sample_rate_handler,
-+		.extra1		= SYSCTL_ONE,
-+	},
-+	{
-+		.procname	= "perf_cpu_time_max_percent",
-+		.data		= &sysctl_perf_cpu_time_max_percent,
-+		.maxlen		= sizeof(sysctl_perf_cpu_time_max_percent),
-+		.mode		= 0644,
-+		.proc_handler	= perf_cpu_time_max_percent_handler,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
-+	},
-+};
-+
-+static int __init init_events_core_sysctls(void)
-+{
-+	register_sysctl_init("kernel", events_core_sysctl_table);
-+	return 0;
-+}
-+core_initcall(init_events_core_sysctls);
-+
-+
- /*
-  * perf samples are done in some very critical code paths (NMIs).
-  * If they take too much CPU time, the system can lock up and not
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index dc3747cc72d4..fdc92d80e841 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -51,7 +51,6 @@
- #include <linux/nfs_fs.h>
- #include <linux/acpi.h>
- #include <linux/reboot.h>
--#include <linux/perf_event.h>
- #include <linux/oom.h>
- #include <linux/kmod.h>
- #include <linux/capability.h>
-@@ -87,12 +86,6 @@ EXPORT_SYMBOL_GPL(sysctl_long_vals);
- #if defined(CONFIG_SYSCTL)
- 
- /* Constants used for minimum and maximum */
--
--#ifdef CONFIG_PERF_EVENTS
--static const int six_hundred_forty_kb = 640 * 1024;
--#endif
--
--
- static const int ngroups_max = NGROUPS_MAX;
- static const int cap_last_cap = CAP_LAST_CAP;
- 
-@@ -1869,63 +1862,6 @@ static const struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif
--#ifdef CONFIG_PERF_EVENTS
--	/*
--	 * User-space scripts rely on the existence of this file
--	 * as a feature check for perf_events being enabled.
--	 *
--	 * So it's an ABI, do not remove!
--	 */
--	{
--		.procname	= "perf_event_paranoid",
--		.data		= &sysctl_perf_event_paranoid,
--		.maxlen		= sizeof(sysctl_perf_event_paranoid),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
--	},
--	{
--		.procname	= "perf_event_mlock_kb",
--		.data		= &sysctl_perf_event_mlock,
--		.maxlen		= sizeof(sysctl_perf_event_mlock),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
--	},
--	{
--		.procname	= "perf_event_max_sample_rate",
--		.data		= &sysctl_perf_event_sample_rate,
--		.maxlen		= sizeof(sysctl_perf_event_sample_rate),
--		.mode		= 0644,
--		.proc_handler	= perf_event_max_sample_rate_handler,
--		.extra1		= SYSCTL_ONE,
--	},
--	{
--		.procname	= "perf_cpu_time_max_percent",
--		.data		= &sysctl_perf_cpu_time_max_percent,
--		.maxlen		= sizeof(sysctl_perf_cpu_time_max_percent),
--		.mode		= 0644,
--		.proc_handler	= perf_cpu_time_max_percent_handler,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE_HUNDRED,
--	},
--	{
--		.procname	= "perf_event_max_stack",
--		.data		= &sysctl_perf_event_max_stack,
--		.maxlen		= sizeof(sysctl_perf_event_max_stack),
--		.mode		= 0644,
--		.proc_handler	= perf_event_max_stack_handler,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= (void *)&six_hundred_forty_kb,
--	},
--	{
--		.procname	= "perf_event_max_contexts_per_stack",
--		.data		= &sysctl_perf_event_max_contexts_per_stack,
--		.maxlen		= sizeof(sysctl_perf_event_max_contexts_per_stack),
--		.mode		= 0644,
--		.proc_handler	= perf_event_max_stack_handler,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE_THOUSAND,
--	},
--#endif
- #ifdef CONFIG_TREE_RCU
- 	{
- 		.procname	= "panic_on_rcu_stall",
-
--- 
-2.44.2
-
-
+Thanks!
+/Abdiel
