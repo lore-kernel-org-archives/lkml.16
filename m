@@ -1,83 +1,174 @@
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BCA23496F
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E992376FF
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872738; cv=none; b=pz54jJSFqJgPcIwusrCJeTrr3ZcfS9TIBUgOKWEIoxVwz9Z4offbcPtFJO3hGLY0t9ESH3Mk941wIXrTAdeS6s0ODfLnSJvhmKfDEf8+tgovK0WX6p8X5JISQ15Eg3dc4cmDx4y/ePdXFfKwi8LneKf7a6MBM1nHLosI54Mvhsc=
+	t=1739872749; cv=none; b=Eujw4jVDE6FIAQupcgvLQ3Ysfv9+ZipwKedgQxDNZGF7pnlNneZ6CB3yq+hBnnpZo8ycESg9YeimaHNRyqE45I68Kkag6pL9wF5jEOpym70KEkspmBBaIu9qbiKfFt0wCLaJqHgimIoT+8HNhTn4cKKVIB2zK8tYVRGOvLLnC50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872738; c=relaxed/simple;
-	bh=YILd5b+WgEImMcZvqFh77mCVPV+v4tIi2NThn8rfhcA=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=M/9rMEON30oi5ChzEM8SuTslxuAT93VAqxN3lUL+tsZtuIGGAj2MrADvNrvof9uSBSty11X2wgBiaMC7e180XK36OltIhaMowZ+t6kbykO2F68JyRFOH71luAxSydUVNceQF1YHQ200I5Tl0S72oCGn7gjNbayTI+shL7OEqJpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Bt6naX0M; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739872749; c=relaxed/simple;
+	bh=xS5fRlzqO9+4hWTNOQeoD8COZX0VM/0CekcU+kRzcIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OZLfhZAtPxTkcNEaQkU7hembS//v68lmO8RY15/KhWUInOshQ5m3dsu/7j5CQOi7cSpSOP2+h4CLS2r9eXo8fMk5m2VIAXmu5AtrA37NALg52oL6mA2lUQBlHIo4nRR8UAsiDJG5mkPwTSr5pauqQAhNaZwpTBds/OLq9cgMLyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wz6X6RGc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Bt6naX0M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739872695;
-	bh=YILd5b+WgEImMcZvqFh77mCVPV+v4tIi2NThn8rfhcA=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=Bt6naX0M4i7q7GznIk18ekhWhKkiorMO9gzotdjRmirA8qvQNhGvmDxM2s8JWFNyP
-	 hcAyKaOh7QeNZ5B3mRticLBrBCxB2bhm7Pefmg+lh7+yizeoGkvSgzQndvGucjoD6O
-	 fZ5HuVYe/3B1BOoOfkO5IrDStqwfqPrVKVLsZb7M=
-X-QQ-GoodBg: 1
-X-QQ-SSF: 00420000000000F0
-X-QQ-FEAT: LmkY14RBebTc565ZtoBk0Us/CMUSuxshwwpAIO79bxs=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: gXDe23XLI9Uj5W8jpWSvhFtd7dLLcl8OOXB+/KUXF+s=
-X-QQ-STYLE: 
-X-QQ-mid: v3sz3a-6t1739872657t6316258
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>
-Cc: "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?eWFuZ3RpZXpodQ==?=" <yangtiezhu@loongson.cn>, "=?utf-8?B?bWFvYmlibw==?=" <maobibo@loongson.cn>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>, "=?utf-8?B?6IGC6K+a?=" <niecheng1@uniontech.com>, "=?utf-8?B?6ZmI6bqf6L2p?=" <chenlinxuan@uniontech.com>
-Subject: Re:[PATCH] LoongArch: acpi: Make parse_acpi_topology() return void
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wz6X6RGc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739872745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HnxN+9zQDHC4kX76DKiHSrj1mZvMK6o4KSuBiUtHt0o=;
+	b=Wz6X6RGcFp2EtiXYjX6Xs9hjVpcHHEHKyAVT7brKsTx8czsGx+st4lRgoLIKrMrFlaugNr
+	uGxDrpnWmsD63L76Pd7bHtu7dDPWJVt7RqUbu/5M1qoE/kUW4z9+5J+wjDxUDwAtOg6JXM
+	HEcYemOnzQXx2DJsHtfLC1WUrF+ReJw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-ZTNQbmCvOYOzZxfvx76dsA-1; Tue, 18 Feb 2025 04:59:04 -0500
+X-MC-Unique: ZTNQbmCvOYOzZxfvx76dsA-1
+X-Mimecast-MFC-AGG-ID: ZTNQbmCvOYOzZxfvx76dsA_1739872743
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43933b8d9b1so28063605e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 01:59:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739872743; x=1740477543;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HnxN+9zQDHC4kX76DKiHSrj1mZvMK6o4KSuBiUtHt0o=;
+        b=JEgr1GjDuIVUs7am1csIcJ30p1uwcW6LsUX/QCoHWvO+8ZA8EVteBLcERzFV1hEHfY
+         Fa74KKJPcidbNzLI8cG98+SW9IVQ8Sq/YFjjRbQyUA6Xud6h/0pgqi5gHLvAWaAxDUUt
+         VOGWCO9tOaLDEQXpxzIwfDpMDVMTf6WNZRnpdAxixdNOYnWFJFWh68CK/qorsBcvbd4g
+         9UaQ8CU/GnyPYRjHSviucQ+4KrqE+LC6gh3A+GPwYAfMb/1iLt6zpxMW67iFZXJIh9ob
+         7DEyoFH2k5FW4Hryv1RuB3xhV1B9VPnU1DTnc3RxNpVx7s9YQz8m1sZ/ExNE2BHJTlNQ
+         1cqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVG58dnibMS4UJu0J69zKUBxSPX4dKKvzsPS5C6B3IEbbf1x5AYLTxgn6XUxYnkwjQ74xKbXWrLQsNrlBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs6b+olNHJMcxcH23ohq6JhYNaTq7vWCBDR0HfMFkGw1Po6yvF
+	OT0RkVeGIg5TueWVwaQiju9F+q5YAmmQ9Lwh3gjWv+SgWkLjfGkCbtDkk4U87GkoRwh4qs2fEvT
+	5CM5nyMp0ijuEEjU+2X+HjSAQ+Qa5vB/29gE7I12qL/cti4y2xc2/cAnV4MGwJg==
+X-Gm-Gg: ASbGncuS/K/nt4d1EMWI3yml0m29gx+ibBE1Xt9NDANlDem7zepyHHrWDtfvOZ8VqG7
+	t6cHLMoe2GKlFqD0QDGAHY0BX3vT9foZ7oJ4GGOEzwmhjqvsR7q6A7Ykwqgey2UHJwPYmXbK++0
+	gurYRzI4GWRE5LH2bPEnVa2GatK2yLf2bvzlxl7ynVh/cI45S4FDYbwzx/z/7Dx8OBUa14L1iNm
+	bARLO1vSGqL6mqwvrbUsUKqJCV5EA+lIcMBzVWekWUxdF2iKMWnsdZ8Cc8r1zPFN6Kvhq1w2Wth
+	S1SCqlkeyeI+cRenaic4xsiQi8w+DKDNDA==
+X-Received: by 2002:a05:600c:4fce:b0:439:56f3:d40f with SMTP id 5b1f17b1804b1-4396e739ea3mr99807805e9.21.1739872742849;
+        Tue, 18 Feb 2025 01:59:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF2VK4+rzq0k+t4nLHdtSG+G7+DDI4+o/B6t86VLFcmyvesV7g1iJIaxNNhNcprgd5qG658SA==
+X-Received: by 2002:a05:600c:4fce:b0:439:56f3:d40f with SMTP id 5b1f17b1804b1-4396e739ea3mr99807575e9.21.1739872742459;
+        Tue, 18 Feb 2025 01:59:02 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4398a64febasm38488205e9.1.2025.02.18.01.59.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 01:59:01 -0800 (PST)
+Date: Tue, 18 Feb 2025 10:58:59 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Christian Loehle <christian.loehle@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Aashish Sharma <shraash@google.com>,
+	Shin Kawamura <kawasin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+Message-ID: <Z7RZ4141H-FnoQPW@jlelli-thinkpadt14gen4.remote.csb>
+References: <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
+ <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
+ <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
+ <dbd2af63-e9ac-44c8-8bbf-84358e30bf0b@arm.com>
+ <Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb>
+ <78f627fe-dd1e-4816-bbf3-58137fdceda6@nvidia.com>
+ <Z62ONLX4OLisCLKw@jlelli-thinkpadt14gen4.remote.csb>
+ <30a8cda5-0fd0-4e47-bafe-5deefc561f0c@nvidia.com>
+ <151884eb-ad6d-458e-a325-92cbe5b8b33f@nvidia.com>
+ <Z7Ne49MSXS2I06jW@jlelli-thinkpadt14gen4.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Tue, 18 Feb 2025 17:57:36 +0800
-X-Priority: 3
-Message-ID: <tencent_46D6C2824357C42E11A3C9CD@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
-In-Reply-To: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
-X-QQ-ReplyHash: 3688260371
-X-BIZMAIL-ID: 17015835246629524927
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Tue, 18 Feb 2025 17:57:38 +0800 (CST)
-Feedback-ID: v:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NZiJZo0DdgPmxvZZTzlawGMhJn451se/jIMXPnEqCNIhtx6dp51YW8xB
-	cEFIhRLlD7oTutopgNi/8bSRNBsZeXxh3qGKI3L3mBOqnZwan6S6XiT6osrgUOMHOIsQahw
-	+f9UK7p3L/kLO5Y8BVdRUHQjxEu1xiwXuWFG2Vu3s79S7411gKc4KIzC/RVA9u29dBqry43
-	/UPwpO4xBCrmGmSLyTsi4N4Malgx2HFSNHf0sEj/q0TsVeaiYKBSvyy+0yOa0e6KqjvJTNS
-	StmvIV/qclG21VH3MGQNFek0xg+AfMXTKw0bythQ1Z/tpC503djyUHQmOS0aj/IC/ubx2zu
-	tgFah6ZNVZEkj14QQuj+z5UkE79ocp3uW1hXZHIXHnNiSAqpyhytGQNgF9A64KLT/0LXpTi
-	Y+P90qIh84d5ntT6IQ71mNRuxj+v5CPyHiyX0lMQz9UWxfXdp5kg6GrtFu2os9AAk62RKYm
-	gB7ka76aKPg3uWx8a+8PEzj3HaZeyjG4wGTxvSJ6YF7aq36Q4h/pX+c9DwJJxT6LDQCaQ1S
-	7QsS21JQExnmb75BZZ9W8PVs0TPFkwUSTlVzO8D+Er2qtPTxuAxyqXk39c0KN4asw5HG2C6
-	B1/5spbZJBZs9zsyunw3u7ugx0a2p1g4jIiQY8ZsnAlP9EVF/O/VSkurvCwURmxUvv6amqb
-	Me04HFju/sOpoefAf7y/IaZuaIonSOeexsHSvDW6Kv7fjLBv/pYTAUhKB5Da3/Y3X1W1Pwk
-	DH3P/uxad3hTeU/DEXG+0AxHLSRLCqemaVDiKrtCUu/OQPaIpOFPH2GU42p8AS9ta/wrSEv
-	+4xikqW1d1cNG2bLr3pwQbxVkgmXSCy4KQbnbKQDpIrNZG5I3Dx+GUYE1ZnVEzjIufOhAvB
-	kTrrfjQs13Fc4Y4JbjWhm1dpEeR9FObH8YktkspJ4bCfTRe5PPFfyjtIA2H7WMsqMD4lZfK
-	eoSRfey71MpAFMaST3kFYHP+yhf5HysMjQgdkQfzwA6r+xYZBFq0OWr6pNQX1uhAUYEdbHW
-	FcxiLDbv9mixrQx0TF4MIa86ugw9LsFvvst0El7pRasjJQuisY1nAmICP8w7PyVhjUeqJG9
-	w0PWAwBvz3H5KmQRmIZ1xUeySwcaAkmV/NBBLH+Tc5M
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7Ne49MSXS2I06jW@jlelli-thinkpadt14gen4.remote.csb>
 
-TkFLLCBNVVNUIGFkZCAicmV0dXJuOyIgYWZ0ZXIgInByX3dhcm4oIkludmFsaWQgQklPUyBQ
-UFRUXG4iKTsiIHR3aWNlLg==
+Hi!
+
+On 17/02/25 17:08, Juri Lelli wrote:
+> On 14/02/25 10:05, Jon Hunter wrote:
+
+...
+
+> At this point I believe you triggered suspend.
+> 
+> > [   57.290150] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+> > [   57.335619] tegra-xusb 3530000.usb: Firmware timestamp: 2020-07-06 13:39:28 UTC
+> > [   57.353364] dwc-eth-dwmac 2490000.ethernet eth0: Link is Down
+> > [   57.397022] Disabling non-boot CPUs ...
+> 
+> Offlining CPU5.
+> 
+> > [   57.400904] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4 type=DYN span=0,3-5
+> > [   57.400949] CPU0 attaching NULL sched-domain.
+> > [   57.415298] span=1-2
+> > [   57.417483] __dl_sub: cpus=3 tsk_bw=52428 total_bw=157284 span=0,3-5 type=DYN
+> > [   57.417487] __dl_server_detach_root: cpu=0 rd_span=0,3-5 total_bw=157284
+> > [   57.417496] rq_attach_root: cpu=0 old_span=NULL new_span=1-2
+> > [   57.417501] __dl_add: cpus=3 tsk_bw=52428 total_bw=157284 span=0-2 type=DEF
+> > [   57.417504] __dl_server_attach_root: cpu=0 rd_span=0-2 total_bw=157284
+> > [   57.417507] CPU3 attaching NULL sched-domain.
+> > [   57.454804] span=0-2
+> > [   57.456987] __dl_sub: cpus=2 tsk_bw=52428 total_bw=104856 span=3-5 type=DYN
+> > [   57.456990] __dl_server_detach_root: cpu=3 rd_span=3-5 total_bw=104856
+> > [   57.456998] rq_attach_root: cpu=3 old_span=NULL new_span=0-2
+> > [   57.457000] __dl_add: cpus=4 tsk_bw=52428 total_bw=209712 span=0-3 type=DEF
+> > [   57.457003] __dl_server_attach_root: cpu=3 rd_span=0-3 total_bw=209712
+> > [   57.457006] CPU4 attaching NULL sched-domain.
+> > [   57.493964] span=0-3
+> > [   57.496152] __dl_sub: cpus=1 tsk_bw=52428 total_bw=52428 span=4-5 type=DYN
+> > [   57.496156] __dl_server_detach_root: cpu=4 rd_span=4-5 total_bw=52428
+> > [   57.496162] rq_attach_root: cpu=4 old_span=NULL new_span=0-3
+> > [   57.496165] __dl_add: cpus=5 tsk_bw=52428 total_bw=262140 span=0-4 type=DEF
+> > [   57.496168] __dl_server_attach_root: cpu=4 rd_span=0-4 total_bw=262140
+> > [   57.496171] CPU5 attaching NULL sched-domain.
+> > [   57.532952] span=0-4
+> > [   57.535143] rq_attach_root: cpu=5 old_span= new_span=0-4
+> > [   57.535147] __dl_add: cpus=5 tsk_bw=52428 total_bw=314568 span=0-5 type=DEF
+> 
+> Maybe we shouldn't add the dl_server contribution of a CPU that is going
+> to be offline.
+
+I tried to implement this idea and ended up with the following. As usual
+also pushed it to the branch on github. Could you please update and
+re-test?
+
+Another thing that I noticed is that in my case an hotplug operation
+generating a sched/root domain rebuild ends up calling dl_rebuild_
+rd_accounting() (from partition_and_rebuild_sched_domains()) which
+resets accounting for def and dyn domains. In your case (looking again
+at the last dmesg you shared) I don't see this call, so I wonder if for
+some reason related to your setup we do the rebuild by calling partition_
+sched_domains() (instead of partition_and_rebuild_) and this doesn't
+call dl_rebuild_rd_accounting() after partition_sched_domains_locked() -
+maybe it should? Dietmar, Christian, Peter, what do you think?
+
+Thanks,
+Juri
 
