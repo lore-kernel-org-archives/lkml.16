@@ -1,16 +1,16 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430A31DE2BC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A159E1DE2C2;
 	Tue, 18 Feb 2025 07:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739864579; cv=none; b=aMP/wfXxuc4nXu9XMXqxlt15Eq2AGebOHyWDd6algK9XMxM+wmtitapWIXYIbS3fyiSFPhDJ0SErjX8o3WRJGp1MqggAWquuf6kysEAr4xkpn1CsPWWbvj7YPJjoCmXDVN744ZGsBRsgtCjNRCyJwQRL8e1tsESnZMBthj4nGE4=
+	t=1739864580; cv=none; b=udJpaJl1ntNNqIIZoSaP5zoUfOM8JHr9tPiftgaa8cVPWKQ7QRnRMVb9oA/Tmh+lMBZYkr7PLTxkTJK04A9ElCzApyw4XjDaoFVSeQtMZIL7K9c+zBeSMcaskxiQRZYND1yEz3qmijsp1dVpNBPrWWCxdm5ZZ4QjHDrJ3SUJJ14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739864579; c=relaxed/simple;
-	bh=181kaWNaGjBhyZTmRFrjgfsKp25rrab/bDDvrYVH/nA=;
+	s=arc-20240116; t=1739864580; c=relaxed/simple;
+	bh=BiUV62mf2nwxx1jDx46P+ko85ephu7710hKtThBs5y0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p7I5jcb5PLQlRDldCKLzpUMSa8DS9dhh9F93npd/f0BydT9RBFwHmKNRvlGw8NQqlu37QBrM/MVE1vbzEQTG8KEA3ZIpeIh86iZnUVOEKtq8addOT7Frhv/nzztQCl4LIjq/naPqU0B5U0GY87MeXEN0B9hChlmmPxG6oeL/ftU=
+	 MIME-Version; b=O4tUcRjCD7WytAk1uS1UtKsuMn8PNzG3ibfUgElBa8WH9xsYe3iJUYxnwND2WeN1qZAjYgD2msKOE/8sZAXIy/V0gaeJgwl9Y+eqX+heHRrHeRE6qwkZOtZZxZZ+mQKYWituIlh3HWB8hPigrFpH69AIUSXOP63qYJPNKL/64DY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
@@ -18,7 +18,7 @@ Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:52604 helo=and-HP-Z
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <andrej.picej@norik.com>)
-	id 1tkIFt-00G0MD-0s;
+	id 1tkIFt-00G0MD-1R;
 	Tue, 18 Feb 2025 08:42:56 +0100
 From: Andrej Picej <andrej.picej@norik.com>
 To: shawnguo@kernel.org,
@@ -33,9 +33,9 @@ Cc: imx@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v3 13/15] arm64: dts: imx8mm-phycore-som: Add overlay for rproc
-Date: Tue, 18 Feb 2025 08:41:54 +0100
-Message-Id: <20250218074156.807214-14-andrej.picej@norik.com>
+Subject: [PATCH v3 15/15] arm64: dts: imx8mm-phycore-som: Add overlay to disable SPI NOR flash
+Date: Tue, 18 Feb 2025 08:41:56 +0100
+Message-Id: <20250218074156.807214-16-andrej.picej@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250218074156.807214-1-andrej.picej@norik.com>
 References: <20250218074156.807214-1-andrej.picej@norik.com>
@@ -57,103 +57,61 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-From: Dominik Haller <d.haller@phytec.de>
+From: Teresa Remmet <t.remmet@phytec.de>
 
-Adds a devicetree overlay containing reserved memory regions used
-for intercore communication between A53 and M4 cores.
+There are SoM variants with no SPI NOR flash populated. Add overlay to be
+able to support this.
 
-Signed-off-by: Dominik Haller <d.haller@phytec.de>
+Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
 Signed-off-by: Andrej Picej <andrej.picej@norik.com>
 ---
 Changes in v3:
-- updated copyright year,
-- added address-cells and size-cells to the root node to fix a dts
-  check warning.
+- updated copyright year.
 ---
- arch/arm64/boot/dts/freescale/Makefile        |  2 +
- .../dts/freescale/imx8mm-phycore-rpmsg.dtso   | 58 +++++++++++++++++++
- 2 files changed, 60 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-phycore-rpmsg.dtso
+ arch/arm64/boot/dts/freescale/Makefile           |  2 ++
+ .../freescale/imx8mm-phycore-no-spiflash.dtso    | 16 ++++++++++++++++
+ 2 files changed, 18 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-phycore-no-spiflash.dtso
 
 diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 7e0fef7ed9de..a10c8b5c2c4a 100644
+index 7f3d8fb8123b..664438aa2e26 100644
 --- a/arch/arm64/boot/dts/freescale/Makefile
 +++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -125,9 +125,11 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-phyboard-polis-rdk.dtb
- 
+@@ -126,11 +126,13 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-phyboard-polis-rdk.dtb
  imx8mm-phyboard-polis-peb-av-10-dtbs += imx8mm-phyboard-polis-rdk.dtb imx8mm-phyboard-polis-peb-av-10.dtbo
  imx8mm-phyboard-polis-peb-eval-01-dtbs += imx8mm-phyboard-polis-rdk.dtb imx8mm-phyboard-polis-peb-eval-01.dtbo
-+imx8mm-phycore-rpmsg-dtbs += imx8mm-phyboard-polis-rdk.dtb imx8mm-phycore-rpmsg.dtbo
+ imx8mm-phycore-no-eth-dtbs += imx8mm-phyboard-polis-rdk.dtb imx8mm-phycore-no-eth.dtbo
++imx8mm-phycore-no-spiflash-dtbs += imx8mm-phyboard-polis-rdk.dtb imx8mm-phycore-no-spiflash.dtbo
+ imx8mm-phycore-rpmsg-dtbs += imx8mm-phyboard-polis-rdk.dtb imx8mm-phycore-rpmsg.dtbo
  
  dtb-$(CONFIG_ARCH_MXC) += imx8mm-phyboard-polis-peb-av-10.dtb
  dtb-$(CONFIG_ARCH_MXC) += imx8mm-phyboard-polis-peb-eval-01.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8mm-phycore-rpmsg.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mm-phycore-no-eth.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mm-phycore-no-spiflash.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mm-phycore-rpmsg.dtb
  
  dtb-$(CONFIG_ARCH_MXC) += imx8mm-phygate-tauri-l.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mm-prt8mm.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-phycore-rpmsg.dtso b/arch/arm64/boot/dts/freescale/imx8mm-phycore-rpmsg.dtso
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-phycore-no-spiflash.dtso b/arch/arm64/boot/dts/freescale/imx8mm-phycore-no-spiflash.dtso
 new file mode 100644
-index 000000000000..43d5905f3d72
+index 000000000000..7bfc366c1689
 --- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-phycore-rpmsg.dtso
-@@ -0,0 +1,58 @@
++++ b/arch/arm64/boot/dts/freescale/imx8mm-phycore-no-spiflash.dtso
+@@ -0,0 +1,16 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2025 PHYTEC Messtechnik GmbH
-+ * Author: Dominik Haller <d.haller@phytec.de>
++ * Author: Teresa Remmet <t.remmet@phytec.de>
 + */
 +
 +/dts-v1/;
 +/plugin/;
 +
-+#include <dt-bindings/clock/imx8mm-clock.h>
++&flexspi {
++	status = "disabled";
++};
 +
-+&{/} {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		m4_reserved: m4@80000000 {
-+			reg = <0 0x80000000 0 0x1000000>;
-+			no-map;
-+		};
-+
-+		vdev0vring0: vdev0vring0@b8000000 {
-+			reg = <0 0xb8000000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@b8008000 {
-+			reg = <0 0xb8008000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		rsc_table: rsc_table@b80ff000 {
-+			reg = <0 0xb80ff000 0 0x1000>;
-+			no-map;
-+		};
-+
-+		vdevbuffer: vdevbuffer@b8400000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0xb8400000 0 0x100000>;
-+			no-map;
-+		};
-+	};
-+
-+	core-m4 {
-+		compatible = "fsl,imx8mm-cm4";
-+		clocks = <&clk IMX8MM_CLK_M4_DIV>;
-+		mboxes = <&mu 0 1
-+			&mu 1 1
-+			&mu 3 1>;
-+		mbox-names = "tx", "rx", "rxdb";
-+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&rsc_table>;
-+		syscon = <&src>;
-+	};
++&som_flash {
++	status = "disabled";
 +};
 -- 
 2.34.1
