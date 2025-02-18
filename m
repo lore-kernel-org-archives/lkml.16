@@ -1,140 +1,128 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575C02356BA;
-	Tue, 18 Feb 2025 18:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D6B26FA5D;
+	Tue, 18 Feb 2025 18:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904653; cv=none; b=tFELqTjIjT0U3lkog8sxuA+1wuv9Gs3jy9+CKnxmEOpMR5hgA/KHtwjUWA86O8dYr3Vhn8IEDOxiCbXYoZ4w+1fZ8vmiItDksB4Ms/qZ1icEnG1FavQsICCV2rUsFSVLQzEW2hD0x6r//rSQBfVINWAcyOBY9DYdTNZy5n0/NSo=
+	t=1739904659; cv=none; b=a5eTh9QjtOWcdLGRrFcrPOygmw2a9v6SdRjCxJ7phbkpLXHQqJBeOl4r68JS+YKafBUY8bN/uuw8Qi1tl+m80Ffw96C6od3mkF6/386whwm0RDHnUMHCEoTeNzfsITWUUb1xJhLYXUUsVIG+qOuSdSAWEbkKAHmLe9FRZrqt5mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904653; c=relaxed/simple;
-	bh=lsflQrO1N48O+jshUWxiHl8d7dgJUl8JR7UUofGDcOU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cxLRRPWfNs1eDBZf4J5Ka3GEJaUZagSF5/lczajNGB286tetBTcnO5p9xq0he00jHSicJHOh2czX9trtOjqRuQXA/L/Ei2HZG0JFjDUe0O+RC8aGx+4hhzaLa8zcALQUajtBv2bL8Ftxbsafs9dcqjeIAo0YgpszIdtIHawdcSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DZt7UW1l; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1739904659; c=relaxed/simple;
+	bh=BXcSZpx+Le2bntwbZDzn7we6IloI2TDAfbSfncDltOE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UKv85A3sNwtZQoPTSeMtuycEooowhSAJ14dqKiP1edv2fVVIYgQa3nkot5xD18PdKbWH/D7SktLms0zeF4SFhQRExdO+UD+Ejj9k7fBiutvDkMMEJKwz03vq38/sA2wN4jATCAUCn2EVkhWROYbDDREU0/9AWpgPOLEEH3GDucY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=fXFaJ5Oq; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DZt7UW1l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739904651; x=1771440651;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/1XY/m7rlHy9RJvp29NIT0p6dcrQvEcQVV1BnoOoOvg=;
-  b=DZt7UW1l/2ky4722t3/PIRud+K7BivymcsD91nyw+va21WNfHR7A9Jh6
-   onz6NuouVBzoE9hxQOJdUENIUeUqIOqs+cDhBU5j/Eje51bFlrT34i3ov
-   ODI/+xY9COHTi7OEzVhV/0IvuI0CkbODdssUehXFUPSfGNKbp3noewquj
-   A=;
-X-IronPort-AV: E=Sophos;i="6.13,296,1732579200"; 
-   d="scan'208";a="494971099"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 18:50:46 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:49314]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.115:2525] with esmtp (Farcaster)
- id ad366e28-5030-4d80-9ae4-2708614bf9a9; Tue, 18 Feb 2025 18:50:45 +0000 (UTC)
-X-Farcaster-Flow-ID: ad366e28-5030-4d80-9ae4-2708614bf9a9
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Tue, 18 Feb 2025 18:50:44 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.36) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 18 Feb 2025 18:50:41 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <purvayeshi550@gmail.com>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<linux-ppp@vger.kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<skhan@linuxfoundation.org>,
-	<syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] ppp: Prevent out-of-bounds access in ppp_sync_txmunge
-Date: Tue, 18 Feb 2025 10:50:33 -0800
-Message-ID: <20250218185033.26399-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <1e906059-83c7-4f29-a026-76cd73d8b6fa@gmail.com>
-References: <1e906059-83c7-4f29-a026-76cd73d8b6fa@gmail.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="fXFaJ5Oq"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 7CA7525FB4;
+	Tue, 18 Feb 2025 19:50:55 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id D7HvUdC65Vq9; Tue, 18 Feb 2025 19:50:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1739904654; bh=BXcSZpx+Le2bntwbZDzn7we6IloI2TDAfbSfncDltOE=;
+	h=From:Subject:Date:To:Cc;
+	b=fXFaJ5OqeuwDC+WuzjXOs8vW1foiisKEEffYVOfdFCplENol26rGMgwcgm9iWa8QK
+	 M54UNyaCsDfiOpAuWDGFqXfmTeW717GEh9NGS3dk4uoYoMue19ZM8R9ezgywsMeZTh
+	 q8cqsAUXZp4JQrQuhnUXc2ZsZlEfJxFQw/N999cw0g+NDNGP8KRl+JSnuLYT04WaSl
+	 Nrc0Hpdzp43xmUH3n/Yd2olo4aCeAckLJ/hVBukDyJy2ECW0o740F6S9nDfJ37XCTc
+	 Dg2u3SVa3uoNcK8sXwzq68SuPo2sTNulczv4uhfQ6X9n0FuIXmD/EUwM6RqDyIPn8z
+	 4ebmQBV1Aqzmg==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v3 0/5] Introduce support for Exynos7870 clocks and PMU
+Date: Wed, 19 Feb 2025 00:20:27 +0530
+Message-Id: <20250219-exynos7870-pmu-clocks-v3-0-0d1e415e9e3a@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D039UWB001.ant.amazon.com (10.13.138.119) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHPWtGcC/3WNQQ6CQAxFr0K6dkyhklFX3MOwGKBCozJkigRCu
+ LsjiUuX7yX//RWUg7DCNVkh8CQqvo9AhwTqzvUtG2kiQ4ZZjhmS4XnpvdqzRTO83qZ++vqhpsG
+ KCC8W2VmI2yHwXea9eysjd6KjD8t+M6Vf+yue/hSn1KBxhISO86rKqWhEg/fj0YcWym3bPpfOA
+ Fe8AAAA
+X-Change-ID: 20250203-exynos7870-pmu-clocks-d0b330970ea7
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739904648; l=2379;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=BXcSZpx+Le2bntwbZDzn7we6IloI2TDAfbSfncDltOE=;
+ b=y+09pcC11CL24RvdlKFlTZ5Vaa3GKfmOCyi0Gb2s4Z00xUVnohX3SmWiXy06QZHlM5mdsvlPd
+ yKsXXXEXbBZDiAi4h7BK0P6N12/Z3juZq93EBiWLWQIs28Fyy4TzBwk
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-From: Purva Yeshi <purvayeshi550@gmail.com>
-Date: Tue, 18 Feb 2025 11:58:17 +0530
-> On 18/02/25 02:46, Kuniyuki Iwashima wrote:
-> > From: Purva Yeshi <purvayeshi550@gmail.com>
-> > Date: Sun, 16 Feb 2025 11:34:46 +0530
-> >> Fix an issue detected by syzbot with KMSAN:
-> >>
-> >> BUG: KMSAN: uninit-value in ppp_sync_txmunge
-> >> drivers/net/ppp/ppp_synctty.c:516 [inline]
-> >> BUG: KMSAN: uninit-value in ppp_sync_send+0x21c/0xb00
-> >> drivers/net/ppp/ppp_synctty.c:568
-> >>
-> >> Ensure sk_buff is valid and has at least 3 bytes before accessing its
-> >> data field in ppp_sync_txmunge(). Without this check, the function may
-> >> attempt to read uninitialized or invalid memory, leading to undefined
-> >> behavior.
-> >>
-> >> To address this, add a validation check at the beginning of the function
-> >> to safely handle cases where skb is NULL or too small. If either condition
-> >> is met, free the skb and return NULL to prevent processing an invalid
-> >> packet.
-> >>
-> >> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-> >> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
-> >> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-> >> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> >> ---
-> >>   drivers/net/ppp/ppp_synctty.c | 6 ++++++
-> >>   1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
-> >> index 644e99fc3..e537ea3d9 100644
-> >> --- a/drivers/net/ppp/ppp_synctty.c
-> >> +++ b/drivers/net/ppp/ppp_synctty.c
-> >> @@ -506,6 +506,12 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
-> >>   	unsigned char *data;
-> >>   	int islcp;
-> >>   
-> >> +	/* Ensure skb is not NULL and has at least 3 bytes */
-> >> +	if (!skb || skb->len < 3) {
-> > 
-> > When is skb NULL ?
-> 
-> skb pointer can be NULL in cases where memory allocation for the socket 
-> buffer fails, or if an upstream function incorrectly passes a NULL 
-> reference due to improper error handling.
+Add a CMU driver for Exynos7870 devices. It handles the following
+clock banks:
+ * CMU_MIF
+ * CMU_DISPAUD
+ * CMU_FSYS
+ * CMU_G3D
+ * CMU_ISP
+ * CMU_MFCMSCL
+ * CMU_PERI
 
-Which caller passes NULL skb ?
+It also documents Exynos7870 PMU's compatible, and adds a CLKOUT driver
+which depends on the compatible. The CLKOUT driver manages clocks from
+PMU_DEBUG.
 
-If it's really possible, you'll see null-ptr-deref at
+This patch series is a part of Exynos7870 upstreaming.
 
-  data = skb->data;
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Changes in v3:
+- Fix incorrect versioning (Link to v2: is labelled as v1).
+- Fix formatting issues in clk-exynos7870 DT docs (from v1).
+- Add myself as maintainer for clk-exynos7870.
+- Change clock name definitions in clk-exynos7870 DT docs.
+- Fix line wrapping in commit message of exynos7870-pmu DT docs.
+- Change a few ordinals of PERI* clocks in the clk-exynos7870 driver.
+- Take over ownership of patches by the co-author, upon their request.
+- Link to v2: https://lore.kernel.org/r/20250204-exynos7870-pmu-clocks-v1-0-a3030ae5bb53@disroot.org
 
-below instead of KMSAN's uninit splat.
+Changes in v2:
+- Drop all patches from v1 except:
+  - dt-bindings: clock: add clock definitions for exynos7870 CMU
+  - dt-bindings: clock: document exynos7870 clock driver CMU bindings
+- Add patch for adding appropriate PMU compatible.
+- Add patches for CMU and CLKOUT drivers.
+- Link to v1: https://lore.kernel.org/all/20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org/
 
+---
+Kaustabh Chakraborty (5):
+      dt-bindings: clock: add clock definitions for exynos7870 CMU
+      dt-bindings: clock: document exynos7870 clock driver CMU bindings
+      dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+      clk: samsung: add initial exynos7870 clock driver
+      clk: samsung: add exynos7870 CLKOUT support
 
-> 
-> Additionally, skb->len being less than 3 can occur if the received 
-> packet is truncated or malformed, leading to out-of-bounds memory access 
-> when attempting to read data[2].
-> 
-> > 
-> > 
-> >> +		kfree_skb(skb);
-> >> +		return NULL;
-> >> +	}
-> >> +
-> >>   	data  = skb->data;
-> >>   	proto = get_unaligned_be16(data);
-> >>   
-> >> -- 
-> >> 2.34.1
+ .../bindings/clock/samsung,exynos7870-clock.yaml   |  227 +++
+ .../bindings/soc/samsung/exynos-pmu.yaml           |    1 +
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos-clkout.c            |    3 +
+ drivers/clk/samsung/clk-exynos7870.c               | 1830 ++++++++++++++++++++
+ include/dt-bindings/clock/exynos7870.h             |  324 ++++
+ 6 files changed, 2386 insertions(+)
+---
+base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
+change-id: 20250203-exynos7870-pmu-clocks-d0b330970ea7
+
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
