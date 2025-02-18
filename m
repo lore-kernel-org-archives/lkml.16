@@ -1,307 +1,212 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE8A1B87EB;
-	Tue, 18 Feb 2025 20:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910064; cv=none; b=DIbrHWJb7kP4UJzt+uukzfiy9SO9w7hraSQhtDJ73PCckGXeTx8Nq0YdPTUHyBYzLNqV+pUfAM7hyXPs6OGmLZc9r4IlbUBR4JrURt+X8gSkQAqPXl8qEWww8/chaggc2lc3g081Mp28rpvYVlvgtX2/Q8G4jFArFqbTme49P70=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910064; c=relaxed/simple;
-	bh=UWFsr3S0ZAgFS9MM5N1gmI7f6CQaZdj255B5JhS38vA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O/ZSlCxYOV1gsN7q29lKa1IMZzYxUYUokbAvmPXLO/OCjblSQ1Hd/KsqmU/nJyoutaSNSLRiHVfe8lwgfcwcOrRyi60BLYKqS2ZVmmL4rvrKObjEM37SNKfya9Z//OUk2N4UejyB10cc+bBHQwmIDVe63YlIqt23n3SjzB4EXc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=DPriTzos; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4A41B423D;
+	Tue, 18 Feb 2025 20:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739910079; cv=fail; b=s3NK4MSw0FjArtQ/tcZvrR2Zq7DRUu1Cq8I2+7aiX8zlllcm+lIE2CxOH55CNxifzsVInY65B3OnLfecJFnD8s/kbY0l1HRJWqBez3nAkgRlvJdnq09WjASm7tCCd2k4HTAg6YBBZ/fpyXFHqVHiVWWaMXN7olB2A3k+IvHNGmE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739910079; c=relaxed/simple;
+	bh=uwy7ok+YZDcHG8lcHxkGEgtPK6fZbjdNX7LptduVmno=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P5u9ZJ8iinczEG8xjhJUCJCLamtKMDIjYeJSRvyEp09c/43amccGVo/Hzw2EZSjf/+vzK7NqtaDZxZfnJMqo+OyRpFk2xpIUtfTLkXen+5RG+OZZCyKbQ69v8WR2b+LGQecF/HH2eXmM98ngcpcxAI5ESR8r2eRF9VEagOb3GuY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QpvGp+ML; arc=fail smtp.client-ip=40.107.93.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="DPriTzos"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id 94f45c07a1466cf7; Tue, 18 Feb 2025 21:20:53 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 8243996554D;
-	Tue, 18 Feb 2025 21:20:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1739910053;
-	bh=UWFsr3S0ZAgFS9MM5N1gmI7f6CQaZdj255B5JhS38vA=;
-	h=From:Subject:Date;
-	b=DPriTzosChgGQHpRb1su/rfJv5R61RicnUG8ClheZYbArXGTpjFeT8ywm+IVaFnRj
-	 I2p/ErygndMJU9uaTMOiZcCfUrLVl9hCfm5DUG1btOOjeHyCSrX3wneDCfyvF77Got
-	 gzarq64qOawW9tUrgedIseETMdCirsM6UcnJkqvWAHfTwtDVS9eRTp1xqvhj2XJRgt
-	 imToXamddZfpulfOOBXcW1PTje3B92yy3fQehWea2IO0MTJQUPr39FAQq+Gi7u1/HV
-	 spp8BQVUrobjF/mOPZK7vmFxnMd7KDeaLz8aOvY8zfKLl1x/A9yGe3xBmANVLDzctF
-	 QT2hj3igMOLUQ==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>,
- Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Johan Hovold <johan@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 3/4] PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally
-Date: Tue, 18 Feb 2025 21:16:48 +0100
-Message-ID: <1914558.tdWV9SEqCh@rjwysocki.net>
-In-Reply-To: <12612706.O9o76ZdvQC@rjwysocki.net>
-References: <12612706.O9o76ZdvQC@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QpvGp+ML"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=flLwhVY0/QgeaWkr50Z8rMD2xpKLufJU6qxDKqQ/Cy2WDR5LhuGWXP/Oc7nvZTQSI6HEQiyBNOOXAwxK0lWMkSGvbOOhhKtV+/kPL+XgpV6AIh/SFV6ZC6hPGqFfpr1Ssu3hfqPw5pnNVJvAU9BbXoqe//gACEHOc8Ek1iu6AXEg1TTXMRR+OH67WQ5M/xmkfpqCD855lOJT8rh4jBiOHwkbdp3hRxiQYGdGZcebMmYM1AzOj3e56BOBDV6dgQDZZ2JNJymdHUxcY67lvmjwEE+6q9Zmb5rLLGF6FmWMgzb871h5HML6y5wF7Forb+XhNg79++MlhUIvIX8NfkDPlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PjM1tqGHaR2CfciMWdQpjxciTlL2RzfqXWVI9H+nSEc=;
+ b=bLy7GJHC2oJFzvbDycnvuEGwrbuCj+qcaVRCiBSxQgn2PiY17sJyAt08MuEP7h2sqGfW6vqiM2kHQ5nL3xaNucpb1Vh6JXs1MWa9Ef/6lSQ5mUt4SlfS4foqgShtrS1RxkTamg16P6ay2e+PvC0jaxJE8BvTk63lveAQ9pesAjFbI/5iizFTJ0qGiQorpAQHh0mxkSyzjmHZLJl4tjvMEJn9yjUlpYkDIzbswqVqXHoZG+e9DL/ajbmgQbKjcPE2FYCAjFWi+lj3nJnAmhKA+RUBdpb96L5tllnhuQBVmv03v+i9LJ0sz9bowu75aTkupykQz9VvcMuSPxMdVX0URg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PjM1tqGHaR2CfciMWdQpjxciTlL2RzfqXWVI9H+nSEc=;
+ b=QpvGp+MLFkU7efXXPpPlHVAl7euM41eo3p1UXCYmgBdZHfIyHRNF1P/ni2Mvg7CM+bTVWOS9KTqXAcokrLllYitK6Gq8UP4/HkNSMuHHOvDYpwibWwIUeRDk/RFHdJIITtYEC8FN5goF59Z/cWr/J6llG6LF0zPv+oJpy6F5DwwE66nJxhXYUPjeiJOpiAYHnYbCflPqsE2xRitY8ATOurITmzR2wbvsEu9XP4XAj6wZCwO04H0kg/9k7FoEIfM7f1lGaSu/gOI4LLNeDNDANQmj3ZUvrG996bnOqo2niMWMhUqMtUkJgD/OfrKatPpN4j9fzCLH0OUnJFk1hJ366Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ DS0PR12MB9275.namprd12.prod.outlook.com (2603:10b6:8:1be::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.18; Tue, 18 Feb 2025 20:21:13 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%5]) with mapi id 15.20.8445.016; Tue, 18 Feb 2025
+ 20:21:13 +0000
+Message-ID: <5959e316-19da-4d10-bc7c-75431b87b9e0@nvidia.com>
+Date: Tue, 18 Feb 2025 12:21:11 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/7] dmaengine: idxd: fix memory leak in error handling
+ path of idxd_pci_probe
+To: Shuai Xue <xueshuai@linux.alibaba.com>, vinicius.gomes@intel.com,
+ dave.jiang@intel.com, vkoul@kernel.org
+Cc: nikhil.rao@intel.com, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
+ <20250215054431.55747-6-xueshuai@linux.alibaba.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250215054431.55747-6-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR21CA0020.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::30) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeivddviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeefudduuedtuefgleffudeigeeitdeufeelvdejgefftdethffhhfethfeljefgteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhi
-X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|DS0PR12MB9275:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4990a8ac-0378-4b3a-e480-08dd5059ca08
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TjgwR3JOZXcrTnZHZWEvM2dxbForQXI0S2E2clgrSTRwUVVwMUVUTHl0T0V3?=
+ =?utf-8?B?S3ZVdkdsb0JJVlI3Skg3QjR3WjdObU1ramIzK3FVNGFoSjY0Z21xWlZ3U3V4?=
+ =?utf-8?B?UkNUMzZjbm1sZk80K01saUZBVlU4WkRhY293ZmJOMUsrMXRMQjdpeTIvRUNL?=
+ =?utf-8?B?UUxJamMrNEQyQ1NLZGJBc3lTY1F3SWNGSVJVdkZFZm1aNjNhcHpLVmF4SGlW?=
+ =?utf-8?B?Zk5uNnJPTnVoQnRwOHVNazFTeG1FSkcvVGhJUWU1d3UvZ1JnbndhUjgyNzlk?=
+ =?utf-8?B?K1JIdXMzQ080NXR5ZVBxMXkrN2dqS21wWFRkZzRXTWF0bzhGVE9rWWZWQkR5?=
+ =?utf-8?B?VWVpTG5IMlgweFVtaGtVMVB0dE5UbnVJZWcvbjJKeGwvaHdYRnJIbkhQUVo5?=
+ =?utf-8?B?VUxOYzJoTWF0SDA1a3RTSkdDTUU3ZEsvOExWYjFES2RmTGNvVnZScGg5bmkw?=
+ =?utf-8?B?aGJQQmxqR2FNMUV2OE9mcGgxZDRDcTRGZlkwVFpMeXB1djRiS1BQOGtoVFdu?=
+ =?utf-8?B?KzFvZ0pVb2VOb3p0KzN6QkowUXlCMlVyMUx5ZTZPbWFza0g3ZVBFMjBCblZs?=
+ =?utf-8?B?T290cG1ZTXROdmFMdllnQmxZNW45UWwxaUMway9xVVZrTUVhL0Q3clhGdldq?=
+ =?utf-8?B?TkJrQXV2ZDBIeS8rUWxZcmQrVDExTExOVE41RnRCMHlWK1NMUHhOdFNxL2ZW?=
+ =?utf-8?B?L0JrMlJIZ2FJeVFhNlY4RDU0Q2p2TmlNMlY3VDh3RGxyQ1o4NWlpaGxtam1a?=
+ =?utf-8?B?eno2VStpSG9zMTNvdk52Wlc3L1BiU2JJdWlneUpTRGx5RXNIeHliQnVnVG5P?=
+ =?utf-8?B?aE9wbTh3NEIrTHRvTWdzU1BLS1QyNlJldFEvUWFuVTF4Mm5qd2RDRU9YUWU4?=
+ =?utf-8?B?cGdXYzVCUGxyQ2FMVHc1ZTNjaXI4R2poVUdJTStsYUlqZUR2d0UvUDFpWkl3?=
+ =?utf-8?B?RE9EaU4wTndyV3hTNWtZeXFlWWhyTkVKR3Frajk5cGxRbGMvM1prdE9oL3ZZ?=
+ =?utf-8?B?Y3FnY0Z3K05WL3c1cVp5L3pQTE80bW4rSkRSUU02MXlNV2hkUnR3Mk1jTHEv?=
+ =?utf-8?B?enBwaVE1T2twYUdJZCtyalhZSzVLT1pKc2lRS1ArQnFsSm43aHk2UUNVOGov?=
+ =?utf-8?B?dzV2MVM0WHo2VmU2Z0E4OHBQd1ljKzJpc1FUa0lQelFERFN3K2NFWm42WnZi?=
+ =?utf-8?B?VXEwSFRVcWtycmNkWlJ2QVZwTUVxc0lnNmVWeU05YU1PbXI1SlVwVXBxeHRH?=
+ =?utf-8?B?OUlEKzd6NlR1U2d5ZUhMSFEzYlplOXZyV3o5R2d3dUVmM0Q2YWZkZmR1Tjd3?=
+ =?utf-8?B?d0F2TklrZTZZRTk1RElpakwwSSsrbnJvRjR5UFF0bnVmOHcrWmFnV0Q1NlMz?=
+ =?utf-8?B?dXdLUEdTbngya3NCRWd1MTZhRmgvUncrbW53RjRMMkFpZHlwendSL0ZCVmhQ?=
+ =?utf-8?B?d3VVem92QmFzQmY3Tjg0RW1QOXlJWmFWbW5qNGFwRkdFQ1lOdlI0dUxDUEpX?=
+ =?utf-8?B?dlVNS0xvY1JZVkVxMC9yVXFNZU9MYVIvRVhCRTh1bERLQ2RHSmdzYW84QXo5?=
+ =?utf-8?B?MGptVm9aYjNybFNSTTVlUGlQc2JZOGpGWFdrdnVka2RQQVJtV1FET2U4UDNU?=
+ =?utf-8?B?dElVMC8rQjhucEhLdU5COUNZWnV2QVZPaVhqaDRTOWpmMFZ0UWFNd1EveFhy?=
+ =?utf-8?B?dDBiSnV2ZmIySW11Zzd1MzVwNTQzNzlzMURKL0ZvUFlmUWlHNldTWGlNbmNB?=
+ =?utf-8?B?MFB1YWNMSVVtWDlQNStaSXYzNEdKVGhSazNaZ1ozMVpFVEZpMTIyTVpTOUhX?=
+ =?utf-8?B?eGJZLzFzdDBTamY2OGoxMEd0OW5uWmR4SlBpa0p4WHhNcGFFQTFvVW9rMkdM?=
+ =?utf-8?Q?MEPhxC3IKvXSr?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bWhMTUJBTjM2eGlHRytXUlozcStKOU5VQ01QS2dLTjh3SUdGa3dERlZNZ29X?=
+ =?utf-8?B?RDBXQWNQSnEyVmlKRVJhbDM0eWFjWmZieHczTGFwcHVhWS9IREx0ZDN1Vkxl?=
+ =?utf-8?B?Ymd5WlJyREdmYzlkTllSb0JrRW9PY0czZ0xtTzdFQ3A2SzhEY1ErTDhDVVZM?=
+ =?utf-8?B?YjlpMDdYV2F6UmlwL1V3UXpKcnEyT3ptRTJzMU9GNW9HT1F1cFdDZTdKcGNr?=
+ =?utf-8?B?VytUL3JuTnFvbkNxZUJSbC9EREhuS2UxUlk2UEtFSFFQUUdNT3pTNXZnWHhp?=
+ =?utf-8?B?alJUT3ErK2pqa2VuODk1NkFyZ3loRVdkNGZEb0M2a3NoU2dDYVMxU3Uwbzho?=
+ =?utf-8?B?NktRU3FHUXpQT2tONzh3QzVEdjQwa2lqNWZ3a3lqMnkraG1Xei9xMUJkWkp1?=
+ =?utf-8?B?TU84QUdaZE1MaE1ic1BkNnU1eU5VSWtJb0dWUm5xdU9WMWYxcGFpb040RnFH?=
+ =?utf-8?B?aHR3dTQ4Q3ZycTg2b2sxV1hpUDBGYUxBYW1SWHZERUpKemRGelJyN2p2ekEw?=
+ =?utf-8?B?YnJ3dVUyaW1xN1oyeFF4ZG1MaDRoOVgxVmtjZGF1dHVxTHoyanBLQldlM3FF?=
+ =?utf-8?B?citSNWdETGhObmFnOTZTaWdqVWZhSUhLclZ0M3lmUE9SUnVZK3YrQXA1QlhB?=
+ =?utf-8?B?bXd1NjIrazBUWHk4RkZkbExhVE9xMGlQZjlMWEFubC9CZER3YWZlV1orNytX?=
+ =?utf-8?B?SG5nc2tvalpmSStia0wxRE5TcGJFRG9CTEpVaVByMnhtV2ZFT1c3UmhobGUv?=
+ =?utf-8?B?N1hwNGtoRkVibkcxY3ZOSFhQM3BXZkNOc3h5YktqUTVZOVc5dTdrdy9Rb0hW?=
+ =?utf-8?B?N29OZlB1SjFXS01nY0RvRlVXaGZrOHdpOFlDZWllQ1pSMUw4TFJUY2o0YWI3?=
+ =?utf-8?B?SVJpWHFGUUlRUlVLczVvc2xta2NObUQrZlBWWU1tNlltTlNaak03Sy9lRklm?=
+ =?utf-8?B?ajFSSlg2VTdyakVmeWdMWGR5MFZQVXpaYVJ2cXpDRW01RDg4cm5lVW00UUtl?=
+ =?utf-8?B?VVNhNlBFZm5iSXM0Z3p4b0NjWE1Qc212b1FTZmNQK09lWEg5NlRFRjhQa0RO?=
+ =?utf-8?B?K1FCQnoyZ1I5ZVBGN1V3MVVmTGcwZTVnN3Q4UWl0Z3Z5RHJ4ei9GK2JKNzFK?=
+ =?utf-8?B?T0pwNjkyZHp5b2liT1FFZGZ1VzJheitmcjZ6LzFNV1lYWTIrWCtVZm9aZy96?=
+ =?utf-8?B?TzUxd1NBSWtWMmJseDROYVRzdGlPc0ZhRFdsZktJeU8xVDd4Tzk3bkVkNDJ3?=
+ =?utf-8?B?RG5xYXIrRUN1TnhrQkVja3owZERGWEhrdXNuWnZDUTdiOUxMZXdDMlBZMzRk?=
+ =?utf-8?B?U29Ua2svaEo5VllDNXZpcTBaOWtWUEd0R0QzRnBjT0pGTDZqRkJvYnZpTTVH?=
+ =?utf-8?B?ZHVJTEFxdGJoaXpGdDk4RVJEdW9xdzgvSXlkMlk5Zy9zYjhrcUF3ZlUrNEgr?=
+ =?utf-8?B?MG4wbzJiRUZsdGlEM0s1RU53S3F6ZVR6dlN1cDhFYmRRekI1UjVBOTgwWC9V?=
+ =?utf-8?B?N2pnTGpuL0hkYXZlcjVSbnYwelNseWcrTTQ4UHd5VkJiUSttNVFsZjVlZUl5?=
+ =?utf-8?B?TWRQdTlQTjVub0ltT1lkNm1HajZmek5veGE5eXp6M2lvejVVOTFaQ1R1UXlB?=
+ =?utf-8?B?T2lBdVgxM21ZOFFvVFlTVWoyNUtjazBVeHJsaVljc3NxWkc4ZkpNWkRpVGMw?=
+ =?utf-8?B?ZStwVEtTd0VyZ1doOEhjeCtodGxwL0xOdHAzYzY3bm1yRHJtdWJGdXNDS0tR?=
+ =?utf-8?B?UmpzV1lPSk1yRlFlLzZGaUk0WDJMdWdjbnRoampuUE5vNWpvVFBuR1JyUWI3?=
+ =?utf-8?B?V2FFZml6S2RxZ1hKcXY1NEFPVGdYM0xDZk9jQmdJcWhyd0lsSG56OEtsdkhF?=
+ =?utf-8?B?NEhVZGlXQ3VhM0h0UytDYkdKeXp0akpQYStRbUJiaWNTN1I5Rjd1M2toa1Z1?=
+ =?utf-8?B?aWxJN21vaDZNamVwUlQrTlV1M2l6WHlHa2lpRDhGdEJxU1cyOE52UUNBMkpN?=
+ =?utf-8?B?UjhPZlZpVkpqOENoUTZkdU1PK1pBNzNrRHJrcXlkeTN0RHhsVFB2RmJtKy9q?=
+ =?utf-8?B?bWRpSnJMNElqdGcvQ2xtWUNBUDIvNFcxdlZZbmZ0T3R3ZjVXYVV2RXVyN1NU?=
+ =?utf-8?Q?Q64uY5nGlLcqHNkd4phR+VB+j?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4990a8ac-0378-4b3a-e480-08dd5059ca08
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 20:21:13.0335
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ccCxnKZOoqG4MEOGKVe8y8IAzc7k6BqgjWBonVKT9W60ZOpu4XJEaywxHL4xHjQ/HNwORJswKmoDDrkUxY5+dA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9275
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi, Shuai,
 
-A recent discussion has revealed that using DPM_FLAG_SMART_SUSPEND
-unconditionally is generally problematic because it may lead to
-situations in which the device's runtime PM information is internally
-inconsistent or does not reflect its real state [1].
+On 2/14/25 21:44, Shuai Xue wrote:
+> Memory allocated for idxd is not freed if an error occurs during
+> idxd_pci_probe(). To fix it, free the allocated memory in the reverse
+> order of allocation before exiting the function in case of an error.
+>
+> Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>   drivers/dma/idxd/init.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index dc34830fe7c3..ac1cdc1d82bf 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -550,6 +550,14 @@ static void idxd_read_caps(struct idxd_device *idxd)
+>   		idxd->hw.iaa_cap.bits = ioread64(idxd->reg_base + IDXD_IAACAP_OFFSET);
+>   }
+>   
+> +static void idxd_free(struct idxd_device *idxd)
+> +{
+> +	put_device(idxd_confdev(idxd));
+> +	bitmap_free(idxd->opcap_bmap);
+> +	ida_free(&idxd_ida, idxd->id);
+> +	kfree(idxd);
 
-For this reason, change the handling of DPM_FLAG_SMART_SUSPEND so that
-it is only taken into account if it is consistently set by the drivers
-of all devices having any PM callbacks throughout dependency graphs in
-accordance with the following rules:
+opcap_bmap, idxd_ida, idxd are NOT allocated during FLR re-init idxd 
+device. In the FLR case, they should not be freed.
 
- - The "smart suspend" feature is only enabled for devices whose drivers
-   ask for it (that is, set DPM_FLAG_SMART_SUSPEND) and for devices
-   without PM callbacks unless they have never had runtime PM enabled.
-
- - The "smart suspend" feature is not enabled for a device if it has not
-   been enabled for the device's parent unless the parent does not take
-   children into account or it has never had runtime PM enabled.
-
- - The "smart suspend" feature is not enabled for a device if it has not
-   been enabled for one of the device's suppliers taking runtime PM into
-   account unless that supplier has never had runtime PM enabled.
-
-Namely, introduce a new device PM flag called smart_suspend that is only
-set if the above conditions are met and update all DPM_FLAG_SMART_SUSPEND
-users to check power.smart_suspend instead of directly checking the
-latter.
-
-At the same time, drop the power.set_active flage introduced recently
-in commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status
-of parents and children") because it is now sufficient to check
-power.smart_suspend along with the dev_pm_skip_resume() return value
-to decide whether or not pm_runtime_set_active() needs to be called
-for the device.
-
-Link: https://lore.kernel.org/linux-pm/CAPDyKFroyU3YDSfw_Y6k3giVfajg3NQGwNWeteJWqpW29BojhQ@mail.gmail.com/  [1]
-Fixes: 7585946243d6 ("PM: sleep: core: Restrict power.set_active propagation")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
----
-
-v1 -> v2:
-   * Add helper function for reading power.smart_suspend() (Ulf), add the R-by.
-   * Rearrange conditionals in device_prepare_smart_suspend() so that the checks
-     involving locking are done last.
-
----
- drivers/acpi/device_pm.c  |    4 +-
- drivers/base/power/main.c |   63 +++++++++++++++++++++++++++++++++++-----------
- drivers/mfd/intel-lpss.c  |    2 -
- drivers/pci/pci-driver.c  |    6 +---
- include/linux/device.h    |    5 +++
- include/linux/pm.h        |    2 -
- 6 files changed, 60 insertions(+), 22 deletions(-)
-
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1161,7 +1161,7 @@
-  */
- int acpi_subsys_suspend(struct device *dev)
- {
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-+	if (!dev_pm_smart_suspend(dev) ||
- 	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
- 		pm_runtime_resume(dev);
- 
-@@ -1320,7 +1320,7 @@
-  */
- int acpi_subsys_poweroff(struct device *dev)
- {
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-+	if (!dev_pm_smart_suspend(dev) ||
- 	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
- 		pm_runtime_resume(dev);
- 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -656,15 +656,13 @@
- 	 * so change its status accordingly.
- 	 *
- 	 * Otherwise, the device is going to be resumed, so set its PM-runtime
--	 * status to "active" unless its power.set_active flag is clear, in
-+	 * status to "active" unless its power.smart_suspend flag is clear, in
- 	 * which case it is not necessary to update its PM-runtime status.
- 	 */
--	if (skip_resume) {
-+	if (skip_resume)
- 		pm_runtime_set_suspended(dev);
--	} else if (dev->power.set_active) {
-+	else if (dev_pm_smart_suspend(dev))
- 		pm_runtime_set_active(dev);
--		dev->power.set_active = false;
--	}
- 
- 	if (dev->pm_domain) {
- 		info = "noirq power domain ";
-@@ -1282,14 +1280,8 @@
- 	      dev->power.may_skip_resume))
- 		dev->power.must_resume = true;
- 
--	if (dev->power.must_resume) {
--		if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
--			dev->power.set_active = true;
--			if (dev->parent && !dev->parent->power.ignore_children)
--				dev->parent->power.set_active = true;
--		}
-+	if (dev->power.must_resume)
- 		dpm_superior_set_must_resume(dev);
--	}
- 
- Complete:
- 	complete_all(&dev->power.completion);
-@@ -1797,6 +1789,49 @@
- 	return error;
- }
- 
-+static void device_prepare_smart_suspend(struct device *dev)
-+{
-+	struct device_link *link;
-+	int idx;
-+
-+	/*
-+	 * The "smart suspend" feature is enabled for devices whose drivers ask
-+	 * for it and for devices without PM callbacks unless runtime PM is
-+	 * disabled and enabling it is blocked for them.
-+	 *
-+	 * However, if "smart suspend" is not enabled for the device's parent
-+	 * or any of its suppliers that take runtime PM into account, it cannot
-+	 * be enabled for the device either.
-+	 */
-+	dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
-+		dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
-+		!pm_runtime_blocked(dev);
-+
-+	if (!dev_pm_smart_suspend(dev))
-+		return;
-+
-+	if (dev->parent && !dev_pm_smart_suspend(dev->parent) &&
-+	    !dev->parent->power.ignore_children && !pm_runtime_blocked(dev->parent)) {
-+		dev->power.smart_suspend = false;
-+		return;
-+	}
-+
-+	idx = device_links_read_lock();
-+
-+	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
-+		if (!(link->flags | DL_FLAG_PM_RUNTIME))
-+			continue;
-+
-+		if (!dev_pm_smart_suspend(link->supplier) &&
-+		    !pm_runtime_blocked(link->supplier)) {
-+			dev->power.smart_suspend = false;
-+			break;
-+		}
-+	}
-+
-+	device_links_read_unlock(idx);
-+}
-+
- /**
-  * device_prepare - Prepare a device for system power transition.
-  * @dev: Device to handle.
-@@ -1858,6 +1893,7 @@
- 		pm_runtime_put(dev);
- 		return ret;
- 	}
-+	device_prepare_smart_suspend(dev);
- 	/*
- 	 * A positive return value from ->prepare() means "this device appears
- 	 * to be runtime-suspended and its state is fine, so if it really is
-@@ -2033,6 +2069,5 @@
- 
- bool dev_pm_skip_suspend(struct device *dev)
- {
--	return dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) &&
--		pm_runtime_status_suspended(dev);
-+	return dev_pm_smart_suspend(dev) && pm_runtime_status_suspended(dev);
- }
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -480,7 +480,7 @@
- 
- static int resume_lpss_device(struct device *dev, void *data)
- {
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
-+	if (!dev_pm_smart_suspend(dev))
- 		pm_runtime_resume(dev);
- 
- 	return 0;
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -812,8 +812,7 @@
- 	 * suspend callbacks can cope with runtime-suspended devices, it is
- 	 * better to resume the device from runtime suspend here.
- 	 */
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
--	    pci_dev_need_resume(pci_dev)) {
-+	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
- 		pm_runtime_resume(dev);
- 		pci_dev->state_saved = false;
- 	} else {
-@@ -1151,8 +1150,7 @@
- 	}
- 
- 	/* The reason to do that is the same as in pci_pm_suspend(). */
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
--	    pci_dev_need_resume(pci_dev)) {
-+	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
- 		pm_runtime_resume(dev);
- 		pci_dev->state_saved = false;
- 	} else {
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -1025,6 +1025,11 @@
- 	return !!(dev->power.driver_flags & flags);
- }
- 
-+static inline bool dev_pm_smart_suspend(struct device *dev)
-+{
-+	return dev->power.smart_suspend;
-+}
-+
- static inline void device_lock(struct device *dev)
- {
- 	mutex_lock(&dev->mutex);
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -680,8 +680,8 @@
- 	bool			syscore:1;
- 	bool			no_pm_callbacks:1;	/* Owned by the PM core */
- 	bool			async_in_progress:1;	/* Owned by the PM core */
-+	bool			smart_suspend:1;	/* Owned by the PM core */
- 	bool			must_resume:1;		/* Owned by the PM core */
--	bool			set_active:1;		/* Owned by the PM core */
- 	bool			may_skip_resume:1;	/* Set by subsystems */
- #else
- 	bool			should_wakeup:1;
+> +}
+> +
+>   static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -1219,7 +1227,7 @@ int idxd_pci_probe_alloc(struct idxd_device *idxd, struct pci_dev *pdev,
+>    err:
+>   	pci_iounmap(pdev, idxd->reg_base);
+>    err_iomap:
+> -	put_device(idxd_confdev(idxd));
+> +	idxd_free(idxd);
+>    err_idxd_alloc:
+>   	pci_disable_device(pdev);
+>   	return rc;
 
 
+Thanks.
+
+
+-Fenghua
 
