@@ -1,93 +1,62 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A30D145FE0
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 02:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E8214B08E;
+	Tue, 18 Feb 2025 02:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739844737; cv=none; b=ropXQsMOYeUReOYnOl8wtHOK9JVcfo8lQOxKzcoDi3pM4okNKKo7TT6HFm0dDQ5ncHKTDYgp7yo7Wm5KXDUg+txtKvsqoq/oAC93s8aeYZHuZ09KC2CIj+DXbYeFP08cpQaO/NKRfxFcIAVYIX/Jay3ut3oOH4xourw23hSsySY=
+	t=1739844906; cv=none; b=KNejSEyOgP9kK98NtCiKwz6yMfwD0/FgrZDRL4kSgDus8hecEvczMP+yZWBBkJQnyLd+iOmSnma7qdTAt5PTO1/UGfR00Pj6x9rvoiX9HFWBimcNAsDNIrokJdyw7W1deBtOYkXMNWxGqIbmx7hw9OnucerBYstYL+kMEnWfVyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739844737; c=relaxed/simple;
-	bh=fjBYlxbE1h/DOuOc31KToTPqxmYA7HMncRPrxjXgLg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hLVNZnS1Se/OrXW5n0B56rgQBv8onVZ9fkGSIW+wJKoVARd+ucCEazpLk+cvB3uV3Q+M4W+bza/r12KCjAeUKx7gbHwik/WLVRkXdvIMZRucHidYXPctVv95hv0HaEgfbxanr9ClnayzjTGiKuNn6dljb4y5ZlOOphf0S0xIa0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEpM9EFG; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEpM9EFG"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e66a7e2754so24167946d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2025 18:12:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739844735; x=1740449535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nFj7UXaCbYXWJKfATJnfF3oNg/3GMNWA/XopD15wK6g=;
-        b=fEpM9EFGOPF4pQebTxR0PiY6UMv962EaZkMwsSIICuVAzWqZD3NAqPweCGbKNnhpLF
-         zvvCxdEpNj4yWR+pp5cZzoh3eN4kKaxvdBlsd6Ec7zDeQR5CtmpgobRaFV3gb28xMbge
-         UKQzoEhqnVlSHXgzFbvda3qfLc5YA3uSAKE9zRg7HTZ0lCTf+Gs3JbZ+dIyc1qnSkepO
-         q+LRZsxn1wj4iu1pTG/REZLPKutVT7sEgQoAIxzPekbjdjpMTEr33NwP0AjXj8A7o9F5
-         hEjdjeI5dd9OlDNls2+YoYY6hSeaiq/T4AH9xr8cm9GzTsNXCuo7nje45zvNRlO02POt
-         1ZXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739844735; x=1740449535;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nFj7UXaCbYXWJKfATJnfF3oNg/3GMNWA/XopD15wK6g=;
-        b=G4RbRC3Hq/W+NSbIgIJIPpivEWG/hERNh6HcTr/dUhkEIqZYbuwil3fIdjHQmfQXTa
-         zHIHOlnZ2a0XQqUPZ0MNgPvj20tkdfd19toEZNrVy2JOoNBfOzS0pKVrU7Fo0FXVcZ2F
-         Zeqmoe2WlfF0b457Q5OedfkrfgPrqe0/6UAgnPgP2MkXwEDppHIeL7eDMNhA7aK/w0pU
-         fNRV8mt+UTEdZwaqM0tMXsKKrHE7D2V+2Sc3nVAx64626XE4PJIv/QIaMaxulj29l/Xf
-         QtpcN5E24ZNfxeBfWJBuUr6x97cHhJZ6GM/SjjyTzCnUXD2k6A6pWIinmCMxj/7pd8/K
-         UTDA==
-X-Gm-Message-State: AOJu0Yy+8GcM3cCSxME/e49+ZyU7ER/uCJhFU5ZZMZ75EJG1MbicA6pf
-	pPQPpnTpFZ8MeqJzrvpSzos113MZ1YW/QwfgWINU1gOg797udWLR
-X-Gm-Gg: ASbGncvbaeXaex5qxme8T183SjEJojUo4a/417t7ewY/pKTuTTQxD2I92Gwez/WVLZE
-	z+UfuhJk1LxHx5SZxkSlBOJXZLOvVwAnkxhlUftvwkhU49LInOh2KljZWv8ju+djxg1NdYnehrl
-	yRsYy7EZHn71Z6ZfX+mAeLbKsv53ao96PD9ld0hlu8PBICdpr3S9qrn8GKVBJBEAHxcpSJoZzNp
-	xCudd+sCenhs1YeStKgc05/l7S42hnR+lNCjr970SMoyPRHA9aJUj4l26keqX4OjlE=
-X-Google-Smtp-Source: AGHT+IG6GhKW9alG2L/dAhy8Vk9gV9ZNg2jhx1jhDY57Z65ue1+h3rnzF/NdR78ODmApaHhRn3CMHw==
-X-Received: by 2002:a05:6214:1bcb:b0:6e6:6504:ea64 with SMTP id 6a1803df08f44-6e66ccab3c8mr159240376d6.11.1739844735358;
-        Mon, 17 Feb 2025 18:12:15 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e672c1e7f0sm29033026d6.114.2025.02.17.18.12.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 18:12:14 -0800 (PST)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: update info for SOPHGO DEVICETREES and DRIVERS
-Date: Tue, 18 Feb 2025 10:12:00 +0800
-Message-ID: <173984471557.305421.11394944011706782554.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250212022831.244143-1-inochiama@gmail.com>
-References: <20250212022831.244143-1-inochiama@gmail.com>
+	s=arc-20240116; t=1739844906; c=relaxed/simple;
+	bh=chV8zIYYRIDkhq8Wv1kzAHed85FzvaGHNATHGhYlVzU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pw9kxK2PjkYMDSON1pEcpWm9g6eAZIJnBkvqR/W5k6dS4FvGaP+hSo6Gp6q7IKXKTwgyxYSoYXRSVzuSRVjnmtx8xslVCR4nJaExWeifL6heIXHOd9mNXm8A3iBzcT8SyswUiu1oCWMANCirAw7M5PMdQso6JRtSHHGyaKGSI9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YxjhC6qqpz22vfL;
+	Tue, 18 Feb 2025 10:11:55 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id D5064140259;
+	Tue, 18 Feb 2025 10:14:54 +0800 (CST)
+Received: from huawei.com (10.50.165.33) by kwepemg500006.china.huawei.com
+ (7.202.181.43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 18 Feb
+ 2025 10:14:54 +0800
+From: Longfang Liu <liulongfang@huawei.com>
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
+Subject: [PATCH 0/3] update live migration configuration region
+Date: Tue, 18 Feb 2025 10:15:04 +0800
+Message-ID: <20250218021507.40740-1-liulongfang@huawei.com>
+X-Mailer: git-send-email 2.24.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-On Wed, 12 Feb 2025 10:28:30 +0800, Inochi Amaoto wrote:
-> Add mail list and wiki info for SOPHGO entry. Also change Inochi's
-> email as the old one can not be accessed.
-> 
-> 
+On the new hardware platform, the configuration register space
+of the live migration function is set on the PF, while on the
+old platform, this part is placed on the VF.
 
-Applied to for-next, thanks!
+Longfang Liu (3):
+  migration: update BAR space size
+  migration: qm updates BAR configuration
+  migration: adapt to new migration configuration
 
-[1/1] MAINTAINERS: update info for SOPHGO DEVICETREES and DRIVERS
-      https://github.com/sophgo/linux/commit/8630ed6f2adc2dcc89ac601d27c3fe37a187dfec
+ drivers/crypto/hisilicon/qm.c                 |  28 +++
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 206 ++++++++++++------
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |   7 +
+ 3 files changed, 179 insertions(+), 62 deletions(-)
 
-Thanks,
-Inochi
+-- 
+2.24.0
 
