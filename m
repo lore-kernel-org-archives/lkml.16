@@ -1,130 +1,122 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6C9653;
-	Tue, 18 Feb 2025 12:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307BC10F4;
+	Tue, 18 Feb 2025 12:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739881121; cv=none; b=C0M8pajy3A6WJh2O71C6yQO9TQiytr1GxgnGSpMbyy4EYpUhgKZZ6pUpZeqbldiblB1bk2hMAvg00LZ203xJXqnTyUMyyOAcwS9kb7Oudp6U+zPaz6Le5B230PUvknQqNk8U5ZAWUdsVookutAuGpwZ0M32jIModYtlysi56ksI=
+	t=1739881203; cv=none; b=n0CcKBEh6XB5wPEoWtFgAENDJwmOUemv3276nnlD1l42DC6ygoZF68la6N3tbcdskJH1XvphYkTVX8AnJqQpXpTQTOiGHQ+dZFtiZkG5VhUL3arfoBh+kxLg3HZI+OfBzNhcwhO/60ISKLKZahLLMGpKTfu1EkgMWfswvLpXgGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739881121; c=relaxed/simple;
-	bh=UXMGXKFPk66kxCTjhHEVzYxn8lEWZHsKZJL5YAmtQuQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gPxINIsaw+vLU5FeqhmKvHUcLsZ4NYxZGU4d+B57ooZ+ktHd6wKIdobSVB+XLK26A0j9MOnvvKfbc5AG00gL0pfCwAJJc7LSUEx9QW5WfFkGtS6jydogShysNLyG4VfskELNlcLWy6Xm/8Iq7O/5ZQ+ttIUULVONVR6AHh7hjF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AcbIPFhq; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1739881203; c=relaxed/simple;
+	bh=4tj/uKB2dgnjPTdijnM3vXriuzb+4MfuEX2Q/7/ORiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=e/TWMeFaG7OHv/rTuwD3QArI7J2LJt+eo3GpX6SEa01zfFDxv6iyVgBNQjr479QKKgj4E5yF2pVP3VQpVEWkdt0LzR2hAJAvzwFPoizGhFZg1Q+7hKWOGejVE6e/nhUGTMU0JgorbXtqwbZ/I4yMyXRWsCetbBb2jGQJRrwiDUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SR+loHcv; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AcbIPFhq"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fc8482c62dso392885a91.3;
-        Tue, 18 Feb 2025 04:18:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SR+loHcv"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f3ee8a119so1311275f8f.0;
+        Tue, 18 Feb 2025 04:20:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739881119; x=1740485919; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rcOf/+mAe7HjVKdjr7yO9VSKEbj6DVv1uV/KGTc/++g=;
-        b=AcbIPFhqVGnKwmd48hIlhXJZIifrNo4gqxOViIzUs9WZGuY5U2OHH4UcJ1j06sMmOC
-         cnFVADBG4fUQMQpIKIaXXP/Bnj7ezEkFTLt/VprUOLqLdqhAZKmPg3RIFVNQeEMpV8PD
-         HvrG4Hn7W+HZCD11Zfz2fAvzl1DjipC+TnYkswUFR6nV4KYGtuIiTfi0CKFdx27ktdZ5
-         MJFNzITiQLkJY4MBhg5I4/I+Co9/MNRda+Nc4cSGEb3gWLx/ayDYNrNkMH4QF++LozfA
-         PRUAqhD6EEnlg6X8Ysl5SMz1mSeAZvdJ2vgCnqC2Ana2s2WUuCDBNPAWo2EMGZdJshbH
-         1g3w==
+        d=gmail.com; s=20230601; t=1739881200; x=1740486000; darn=vger.kernel.org;
+        h=content-disposition:mime-version:reply-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YI0Ifn7vvsd2ZeXns6IUX10UekanaA4DCvpGAYoOivQ=;
+        b=SR+loHcvlKFpnepbLbGmd2S9Vm9u00KFX0I7CJMT45tmiZ1YY5yGFJaxKbDN14xx4c
+         fQ4mTgGUQU4dKYxIkxryg1Z7c/BmaKz9rp5JQVe8GRiTUNrPkED76kHfWPSaZo3liV19
+         KsD86tBvBjFfyi3+64WY83rZoAGyFQZLPwC13qHGSw0LExUUH7Nd3LAqbOaOipRpBU1z
+         hWKT+D253xLaUGGhpHwysipkCRrHyY1KRpnnBP5PZvyu6i/ZC1gADAeOlI160hoJ8jQx
+         nG2pTnXDYbw6LsDXZt5AY5ut5SiZNnf8CM8o2g6qxOToPXfqnwe9Dt45RgNStMC7eI6F
+         lvPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739881119; x=1740485919;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rcOf/+mAe7HjVKdjr7yO9VSKEbj6DVv1uV/KGTc/++g=;
-        b=vnpegqC+J5y5ad/PNzu/7Ph+hser2Kz1Etvgzw+4zSk65CkBI9CZekjfo0F04Aszcp
-         XkFRcrnHmTbnd26D7MifNtpVvZtuVLn9LT2fZikKFm+GsJAP9l/cASET43AQQCGmBeVi
-         /b6XYfyQ3G2hSFqHCz2xnAVyE3rpIwp06ai69u0BzPtR+CU5XE6xbTp/gq3/PiY82F8P
-         49OOyY/SDEvY4GsT7A7UMvN3IWImOC9s+eJtk+mYqDlWnw/96m75bm94bp76eQT8TDou
-         ySh2A1430mj0W1kH1KhV6Yf81ehF21J+vTwaV8x0IxCTpHzBX7+Gecwpo9jI0ki79ywa
-         L4iA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4f0/L8ZiCO9GaQsjZ87uZBqFFP1rM+tTL5F4DM5Q1FyJadMIXktewOMixpoCYGBfetNIjjUozBICA7gEN@vger.kernel.org, AJvYcCXcfzZapChY8XskY/UHrauEt5+2IjNyyGX4JUjmbFvNXx471WWHtjCX5ysXfl4uEI+CCDQlXOx1wsGm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8nSsLkcmgNu8PKAOHUzJVq2lmvsV7yXOvRJDbrVjjtpTFcZyI
-	lGUV048a+QWTkQ1ziKjaAaItEpuyRVA9hZ2XhwhHeXwLc5GR6FOE
-X-Gm-Gg: ASbGncvbhFqAKMa3IWmYm8K4Ohj6pg+1txQurQF9oxzOAm8LTj+Fo2kD2jjibXxi9Au
-	UejdEKKgS6Ery40uDmm9cjFVV51xeCcoArfd1ffCPTRlEcmZflyxwq4+wA9Vd0dycxkdtGaL/yP
-	3j/Hugdtc9HFu+6bzjApszE7evLw0epooT5B5wwL7qH0C4Li1MK2TtgLreWR6+1B3d4IhJUIMAf
-	wUmMbRQpK+G12XnsC1vij+iHBtnUb9D1FdQ+suuVfnSs5dtygpfi+saa3DK1Ga1hwN3A512WF+D
-	YRw4CJdefINC2kwgh5MC
-X-Google-Smtp-Source: AGHT+IHPsPfeZPNuDFA8wzs+mlVOqsQ83YHZnd3qlJa4+vQqXKKzygw1wD0+aOsxjfqbOZCURGWEyg==
-X-Received: by 2002:a17:90b:2250:b0:2fc:1370:9c2f with SMTP id 98e67ed59e1d1-2fc4103cd0dmr8326098a91.4.1739881118858;
-        Tue, 18 Feb 2025 04:18:38 -0800 (PST)
-Received: from rock-5b.. ([221.220.131.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc13ac19aesm9896535a91.17.2025.02.18.04.18.11
+        d=1e100.net; s=20230601; t=1739881200; x=1740486000;
+        h=content-disposition:mime-version:reply-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YI0Ifn7vvsd2ZeXns6IUX10UekanaA4DCvpGAYoOivQ=;
+        b=Mm48DdxXubhwvHMSz8Tw2zLT6GxCwBEnt19l3bW0fVESusoGXLWkEaGSA8AHgd2yE6
+         48V+bZ1iTa4ZXNc30+6AzvH21v0ZHQgCX7KuaEQZuqOKCSP6P9xi25USJW5knMrvFeCu
+         IjlxR6GcH/GldQtCRLtJLWuSxOJYmrndmhrHhNh8z74sIqNsH9KTEsP9SndYzcPHOd7x
+         it786cB6ICydtfRIe1yfITxMTe6MrYUkMgjv7YJsM46CQhzYAUzQ7bhsBnaRQzIJ1Mrn
+         6KzfHk3fDwd0XOwnmexfwyw6JWbzvL7QRw8bf0wAmJjiGz2F224k0+W9nxUJFg+hZ5xF
+         mouQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhNQwPbe/pIx0SMbzGoqeQrD3dk35UDgihcyNpXMDRVzutViHOERvoCte4aZHkDiBqX7gr7A6j7OIo/MY=@vger.kernel.org, AJvYcCW3AX+AUmu4WHRITi9R16uYY6Gu3KyFfMPxMG86fXEVx4MOjkTfJcIawGbpB1Go+eMlxdROydbk@vger.kernel.org, AJvYcCWVpWaDK1GvOu925P7pppsAXBUqcaafgqWkuv97O3850tZSAhhuXUuzD+VXgiDWUkIHj27ASp2F@vger.kernel.org, AJvYcCX24h4qQvCg7W5nCueP3nwD93F6WURaTbOIupLc9vIOCONZc/+sMwdK8go5xMLU4i4sSVOPwbaYPVg5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoKoD9A1oPdVOP4b5oLDKh4fuAkXA5u+kMLlQbmyFbqX4+shBY
+	4G9wUT8vUog5SegOmTQKAKiGViERb0H+C4SjjPKDs6DqOK73z0kB
+X-Gm-Gg: ASbGncs7Z38Ip8ZwIAxOPjSocOBuxYfEyd4oXEKpU9jNr8fnsO4IHnvquO30dLM1oZX
+	ZuCD550HIM3GltEEf20ITUiVJg+hKwP6xBBojI602qzN0GXWRleNo9/QQ/2HyhPGnm1ri3bZje6
+	cSMT0xDe2WbZFo96Q75vCy4T0xnCBbeDFWubSkmbq+aQx1zop+0TdTJchY7Legd2wb9bT3Qusqk
+	4IU+g9IUgWyijGukR2BNKap1JPCBeWT+i2FWCsG4X6+qaN4hNTADDneGYjNplcniZqsYFN/gKOq
+	uUNtU+AsZd+g9goSLy8=
+X-Google-Smtp-Source: AGHT+IHlT4BxvNGeiNIO+gy5eC2ESBpBIhLS2/P0chI7LitN4FV9GGXXLs586hiKwDjI9OiT413wcA==
+X-Received: by 2002:a5d:6c66:0:b0:38d:c2d7:b5a1 with SMTP id ffacd0b85a97d-38f33f28cb8mr11802160f8f.19.1739881200078;
+        Tue, 18 Feb 2025 04:20:00 -0800 (PST)
+Received: from qasdev.system ([2a02:c7c:6696:8300:5092:6ded:7935:11b8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5ee2sm14652183f8f.80.2025.02.18.04.19.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 04:18:38 -0800 (PST)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: heiko@sntech.de
-Cc: airlied@gmail.com,
-	andy.yan@rock-chips.com,
-	conor+dt@kernel.org,
-	cristian.ciocaltea@collabora.com,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	hjc@rock-chips.com,
-	kernel@collabora.com,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	liujianfeng1994@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	robh@kernel.org,
-	simona@ffwll.ch,
-	tzimmermann@suse.de
-Subject: Re: [PATCH 3/4] arm64: dts: rockchip: Add HDMI1 PHY PLL clock source to VOP2 on RK3588
-Date: Tue, 18 Feb 2025 20:17:46 +0800
-Message-ID: <20250218121749.1382322-1-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <1919367.CQOukoFCf9@diego>
-References: <1919367.CQOukoFCf9@diego>
+        Tue, 18 Feb 2025 04:19:59 -0800 (PST)
+Date: Tue, 18 Feb 2025 12:19:57 +0000
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] net: fix uninitialised access in mii_nway_restart()
+Message-ID: <Z7R6uet1dJ1UJsJ1@qasdev.system>
+Reply-To: cf0d2929-d854-48ce-97eb-69747f0833f2@lunn.ch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Heiko,
+On Tue, Feb 18, 2025 at 02:10:08AM +0100, Andrew Lunn wrote:
+> On Tue, Feb 18, 2025 at 12:24:43AM +0000, Qasim Ijaz wrote:
+> > In mii_nway_restart() during the line:
+> > 
+> > 	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
+> > 
+> > The code attempts to call mii->mdio_read which is ch9200_mdio_read().
+> > 
+> > ch9200_mdio_read() utilises a local buffer, which is initialised 
+> > with control_read():
+> > 
+> > 	unsigned char buff[2];
+> > 	
+> > However buff is conditionally initialised inside control_read():
+> > 
+> > 	if (err == size) {
+> > 		memcpy(data, buf, size);
+> > 	}
+> > 
+> > If the condition of "err == size" is not met, then buff remains 
+> > uninitialised. Once this happens the uninitialised buff is accessed 
+> > and returned during ch9200_mdio_read():
+> > 
+> > 	return (buff[0] | buff[1] << 8);
+> > 	
+> > The problem stems from the fact that ch9200_mdio_read() ignores the
+> > return value of control_read(), leading to uinit-access of buff.
+> > 
+> > To fix this we should check the return value of control_read()
+> > and return early on error.
+> 
+> What about get_mac_address()?
+> 
+> If you find a bug, it is a good idea to look around and see if there
+> are any more instances of the same bug. I could be wrong, but it seems
+> like get_mac_address() suffers from the same problem?
 
-On Tue, 18 Feb 2025 11:00:57 +0100, Heiko Stübnerwrote:
->So I guess step1, check what error is actually returned.
+Thank you for the feedback Andrew. I checked get_mac_address() before
+sending this patch and to me it looks like it does check the return value of
+control_read(). It accumulates the return value of each control_read() call into 
+rd_mac_len and then checks if it not equal to what is expected (ETH_ALEN which is 6),
+I believe each call should return 2.
 
-I have checked that the return value is -517:
-
-rockchip-drm display-subsystem: [drm] *ERROR* failed to get pll_hdmiphy1 with -517
-
->Step2 check if clk_get_optional need to be adapted or alternatively
->catch the error in the vop2 and set the clock to NULL ourself in that case.
-
-I tried the following patch to set the clock to NULL when clk_get_optional
-failed with value -517, and hdmi0 is working now. There are also some
-boards like rock 5 itx which only use hdmi1, I think we should also add
-this logic to vop2->pll_hdmiphy0.
-
-@@ -3733,6 +3751,15 @@ static int vop2_bind(struct device *dev, struct device *master, void *data)
- 		return PTR_ERR(vop2->pll_hdmiphy0);
- 	}
- 
-+	vop2->pll_hdmiphy1 = devm_clk_get_optional(vop2->dev, "pll_hdmiphy1");
-+	if (IS_ERR(vop2->pll_hdmiphy1)) {
-+		drm_err(vop2->drm, "failed to get pll_hdmiphy1 with %d\n", vop2->pll_hdmiphy1);
-+		if (vop2->pll_hdmiphy1 == -EPROBE_DEFER)
-+			vop2->pll_hdmiphy1 = NULL;
-+		else
-+			return PTR_ERR(vop2->pll_hdmiphy1);
-+	}
-+
- 	vop2->irq = platform_get_irq(pdev, 0);
- 	if (vop2->irq < 0) {
- 		drm_err(vop2->drm, "cannot find irq for vop2\n");
-
-Best regards,
-Jianfeng
+> 
+> 	Andrew
