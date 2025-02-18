@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E65F22D7BB;
-	Tue, 18 Feb 2025 11:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFF523F29F;
+	Tue, 18 Feb 2025 11:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878162; cv=none; b=gZl8xK3vb0GQimFqNMrl2lNq1qy38QSKpFWxPBnY0sdkD3/U6xDMG1yE7p48S/NTRfQpu1poIbcMA6TzYb430iZmBPQ6Dau8jm5MiXghxIV/W32FCbCmUVbdgMNw+LkLaB0EOepuPwcCHwn/XoNNPZkXC5bIpvsMUeG5nAbE0HY=
+	t=1739878168; cv=none; b=q7CJzyRm73Mrq3dTOuO/C+q6jlhxctrygM9egmzF05O2gBw7byfzzL0+LyiwA8AAy7OV5GBBGiOKtmhecO1/gXR9CPmwhQOwq7372vjliFx0LYZJXYmTJ5peqDUbNfpFXeOtElYA2DfXgCJ7ue3utj/2DsO6HtwCAVsp1oVWuBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878162; c=relaxed/simple;
-	bh=V+BFJSU2AQm1RuVBzUR4w8BdrGCihfwPNBppLdotF/o=;
+	s=arc-20240116; t=1739878168; c=relaxed/simple;
+	bh=N1Ebj7SolLqY4B9oj+bbcM0K+lf0Yt1dnRhT0gLgxmg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c9/LdkA+I3B/iWbZhsQEJSk9fwaalRgdqQ3fy9M0bcpsGTPYjIftHWdUK9W0qoUmChDqFj4TV6qVQlWJ1e7DsvHrJUIus34s48AFm77rT5D4kDSyPEWERak77ssslhE8nWYIT5XRzjFL4AoDyS8BCf5wz/4STzAVqYZbdhbxx2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EXZjpSdC; arc=none smtp.client-ip=117.135.210.4
+	 MIME-Version; b=E3gg2JYlZWtk57urPcBUsbifpErQNX1HIIB/PqlrfZNbfC1R63H4qKvYWk+w1+EN+hzTxjdb2I3qrynpPVcdVYEXX8+ur4MM30vf6c3GGvm7C0brb7NTnr89/PjDzWvLsRTwbysZzPRpVb/6LLxfk5365o9/lCxifdPRxT2Giu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gIvTrfuR; arc=none smtp.client-ip=117.135.210.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EXZjpSdC"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gIvTrfuR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=iEV3o
-	ojg3U2eJSaxG1OETOyVCd9PZzwbh6RS1wsZRok=; b=EXZjpSdCYRCRKL2V2JeHL
-	Ez9ep+6M6w0cCqmmnZFO38FEQMBq0KT7JH6FjmOmIFDIoD8AryCnwOYAe1Xr99Gu
-	go2Lu3E329WytaZKZ7xhw7sQWL/53j4vfd5vdMFzyeztkfNKfEQNC9t3ekf3pnBZ
-	mfJk+EFTSNVrmGIE3r0zgA=
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=FElbK
+	wJG9bbVudahow88EWjSdaPcuW8HWtyI1wDmCXQ=; b=gIvTrfuRh+ISFtQY6u9+h
+	/Fysvpr+issDL9+StHdQoCAFrbPdcfnv2vs5GQ780sw+uHizULIhGY22h4//rpS0
+	S28YE2x9LDvqwZ/EOs2NorYCnytQAKwi3b8gdVaSe8+q5WKztR7A7SkcasdaPzDt
+	+dBjdU8+821BzbRLGjj6z4=
 Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wCncwzxbrRnw_zOMw--.32912S2;
-	Tue, 18 Feb 2025 19:28:53 +0800 (CST)
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD333uybrRnLIPUMQ--.34107S6;
+	Tue, 18 Feb 2025 19:27:54 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: heiko@sntech.de
 Cc: hjc@rock-chips.com,
@@ -37,11 +37,10 @@ Cc: hjc@rock-chips.com,
 	daniel@fooishbar.org,
 	robh@kernel.org,
 	sebastian.reichel@collabora.com,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v15 12/13] dt-bindings: display: vop2: Add rk3576 support
-Date: Tue, 18 Feb 2025 19:28:46 +0800
-Message-ID: <20250218112848.34535-1-andyshrk@163.com>
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v15 04/13] drm/rockchip: vop2: Merge vop2_cluster/esmart_init function
+Date: Tue, 18 Feb 2025 19:27:31 +0800
+Message-ID: <20250218112744.34433-5-andyshrk@163.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250218112744.34433-1-andyshrk@163.com>
 References: <20250218112744.34433-1-andyshrk@163.com>
@@ -52,167 +51,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCncwzxbrRnw_zOMw--.32912S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWr1kWFWUuF4UtFW5trWkZwb_yoW5tF4fpa
-	93Cas8XrW8Gr1UWw1ktF1rCwnYq3Z3Aw1Ykrn7Ka13KrsxtF48Ww4agrn8Zr9xWFy2vayj
-	9F4Fkw17G3sFvr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UypBfUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBD3Xme0aMpw7AAAs8
+X-CM-TRANSID:_____wD333uybrRnLIPUMQ--.34107S6
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWw4UKF1rCF1xJF4rCw1DAwb_yoW5XF13pF
+	W3Gr13Wr4UGFsF9r4kJrn8uF1Fkr12yaykAa48Kw1akwnrKr9FkFn5GF10yr90krWv9Fy2
+	yF4kK3y3ua429r7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJR67UUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAn3Xme0bEsv8gAAsZ
 
 From: Andy Yan <andy.yan@rock-chips.com>
 
-Add vop found on rk3576, the main difference between rk3576 and the
-previous vop is that each VP has its own interrupt line.
+Now these two function share the same logic, they can
+be merged as one.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 ---
 
-(no changes since v13)
+Changes in v15:
+- Fix nr_regs arguments for smart windows register.
 
-Changes in v13:
-- Use maxItems constraint for clocks in allOf block
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 42 +++++---------------
+ 1 file changed, 11 insertions(+), 31 deletions(-)
 
-Changes in v12:
-- Split from patch 10/13
-
-Changes in v11:
-- Remove redundant min/maxItems constraint
-
-Changes in v10:
-- Move interrupt-names back to top level
-- Add constraint of interrupts for all platform
-- Add constraint for all grf phandles
-- Reorder some properties
-
-Changes in v9:
-- Drop 'vop-' prefix of interrupt-names.
-- Add blank line between DT properties
-- Remove list interrupt-names in top level
-
-Changes in v8:
-- Fix dt_binding_check errors
-- ordered by soc name
-- Link to the previous version:
-  https://lore.kernel.org/linux-rockchip/6pn3qjxotdtpzucpul24yro7ppddezwuizneovqvmgdwyv2j7p@ztg4mqyiqmjf/T/#u
-
-Changes in v4:
-- describe constraint SOC by SOC, as interrupts of rk3576 is very
-  different from others
-- Drop Krzysztof's Reviewed-by, as this version changed a lot.
-
-Changes in v3:
-- ordered by soc name
-- Add description for newly added interrupt
-
-Changes in v2:
-- Add dt bindings
-
- .../display/rockchip/rockchip-vop2.yaml       | 61 ++++++++++++++++++-
- 1 file changed, 58 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-index 083eadcf0588..f546d481b7e5 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-@@ -21,6 +21,7 @@ properties:
-     enum:
-       - rockchip,rk3566-vop
-       - rockchip,rk3568-vop
-+      - rockchip,rk3576-vop
-       - rockchip,rk3588-vop
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+index 32724232c2d5..e3147a58ff0e 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+@@ -2423,18 +2423,18 @@ static int vop2_find_rgb_encoder(struct vop2 *vop2)
+ 	return -ENOENT;
+ }
  
-   reg:
-@@ -38,10 +39,21 @@ properties:
-       - const: gamma-lut
+-static int vop2_cluster_init(struct vop2_win *win)
++static int vop2_regmap_init(struct vop2_win *win, const struct reg_field *regs,
++			    int nr_regs)
+ {
+ 	struct vop2 *vop2 = win->vop2;
+ 	int i;
  
-   interrupts:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 4
-     description:
--      The VOP interrupt is shared by several interrupt sources, such as
--      frame start (VSYNC), line flag and other status interrupts.
-+      For VOP version under rk3576, the interrupt is shared by several interrupt
-+      sources, such as frame start (VSYNC), line flag and other interrupt status.
-+      For VOP version from rk3576 there is a system interrupt for bus error, and
-+      every video port has it's independent interrupts for vsync and other video
-+      port related error interrupts.
-+
-+  interrupt-names:
-+    items:
-+      - const: sys
-+      - const: vp0
-+      - const: vp1
-+      - const: vp2
+-	for (i = 0; i < vop2->data->nr_cluster_regs; i++) {
++	for (i = 0; i < nr_regs; i++) {
+ 		const struct reg_field field = {
+-			.reg = (vop2->data->cluster_reg[i].reg != 0xffffffff) ?
+-				vop2->data->cluster_reg[i].reg + win->offset :
+-				vop2->data->cluster_reg[i].reg,
+-			.lsb = vop2->data->cluster_reg[i].lsb,
+-			.msb = vop2->data->cluster_reg[i].msb
++			.reg = (regs[i].reg != 0xffffffff) ?
++				regs[i].reg + win->offset : regs[i].reg,
++			.lsb = regs[i].lsb,
++			.msb = regs[i].msb
+ 		};
  
-   # See compatible-specific constraints below.
-   clocks:
-@@ -136,6 +148,11 @@ allOf:
-         clock-names:
-           maxItems: 5
+ 		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
+@@ -2445,28 +2445,6 @@ static int vop2_cluster_init(struct vop2_win *win)
+ 	return 0;
+ };
  
-+        interrupts:
-+          maxItems: 1
-+
-+        interrupt-names: false
-+
-         ports:
-           required:
-             - port@0
-@@ -149,6 +166,39 @@ allOf:
-       required:
-         - rockchip,grf
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - rockchip,rk3576-vop
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 5
-+
-+        clock-names:
-+          maxItems: 5
-+
-+        interrupts:
-+          minItems: 4
-+
-+        interrupt-names:
-+          minItems: 4
-+
-+        ports:
-+          required:
-+            - port@0
-+            - port@1
-+            - port@2
-+
-+        rockchip,vo1-grf: false
-+        rockchip,vop-grf: false
-+
-+      required:
-+        - rockchip,grf
-+        - rockchip,pmu
-+
-   - if:
-       properties:
-         compatible:
-@@ -164,6 +214,11 @@ allOf:
-           minItems: 7
-           maxItems: 9
- 
-+        interrupts:
-+          maxItems: 1
-+
-+        interrupt-names: false
-+
-         ports:
-           required:
-             - port@0
+-static int vop2_esmart_init(struct vop2_win *win)
+-{
+-	struct vop2 *vop2 = win->vop2;
+-	int i;
+-
+-	for (i = 0; i < vop2->data->nr_smart_regs; i++) {
+-		const struct reg_field field = {
+-			.reg = (vop2->data->smart_reg[i].reg != 0xffffffff) ?
+-				vop2->data->smart_reg[i].reg + win->offset :
+-				vop2->data->smart_reg[i].reg,
+-			.lsb = vop2->data->smart_reg[i].lsb,
+-			.msb = vop2->data->smart_reg[i].msb
+-		};
+-
+-		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
+-		if (IS_ERR(win->reg[i]))
+-			return PTR_ERR(win->reg[i]);
+-	}
+-
+-	return 0;
+-}
+-
+ static int vop2_win_init(struct vop2 *vop2)
+ {
+ 	const struct vop2_data *vop2_data = vop2->data;
+@@ -2483,9 +2461,11 @@ static int vop2_win_init(struct vop2 *vop2)
+ 		win->win_id = i;
+ 		win->vop2 = vop2;
+ 		if (vop2_cluster_window(win))
+-			ret = vop2_cluster_init(win);
++			ret = vop2_regmap_init(win, vop2->data->cluster_reg,
++					       vop2->data->nr_cluster_regs);
+ 		else
+-			ret = vop2_esmart_init(win);
++			ret = vop2_regmap_init(win, vop2->data->smart_reg,
++					       vop2->data->nr_smart_regs);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
 2.34.1
 
