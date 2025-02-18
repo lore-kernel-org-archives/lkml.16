@@ -1,75 +1,96 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3F71B85CC;
-	Tue, 18 Feb 2025 20:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5011B85CC;
+	Tue, 18 Feb 2025 20:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910279; cv=none; b=XYUrFKyUES2Mk9qEwQk4X1vHB3mkPrSzEuJsT7daHODlk624v6CvIVzg4UTO6SXV4NrUH7Dg6TUDc3eaGwGF17Q/6+P+yf5kfJgh2O2z02WXpi9pem5agAZQaFkYZRuM/KmgT11GT7peeEZXqd0YJimHP2mqKo+wHpBsxfborvw=
+	t=1739910300; cv=none; b=fvgSfhn3h1MPedsSzF09KGkpnYJ5g61KZF4Wd6vXgiSMKbwla0kNl/GdUbl4a/R31SYYM1T3D7Y7ddgF+BQW93eWyZgG8r2cGOsoKnpoX3hSWx77QSEuGBX/qArwXWim6XACd5gK4jy9cabK3YOpndQlPkyAC9MxQCT/GMRol3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910279; c=relaxed/simple;
-	bh=4DkPl/uIKWli6sVtAuJSieBXxIdn9s6IGRaS2Pr9ilM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OICD8K0sS1dOoDbajcuVGXvL1nLXPnwtLyLQezKuikXnxdB+/FW4nMnqqv6hZ0Fut/xZtw8Pjl58SGl3Unej+6MOGXiOf6utZ/MHUYkZB8r5IFv4XYYsRylQwHx486uGT1jy8Ajl16vGgODQszrEvMCOsOQ/OT/LCIKmJ2KcUkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ojJkG+AC; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1739910300; c=relaxed/simple;
+	bh=RqfvD49zab00WPi+iJaDRqAfyPdg3UsQrxIpCeME0BU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W1iPexYQcVdfCruvpdskusLRTw6biTlVCi7C99o/FR0K5od5WM7tP76DJcjFYS1XWHku7QqTba07Q+euhlXFiTABMull1p30us1SBCjHtRkqTo+WffsA4WcF0xRX1IE5Ig9dnD0SZYlYVg8zyUOLrlBNAgiPOHh8ebJxrOWnRqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMGDlKev; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ojJkG+AC"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 52511411AF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1739910276; bh=ybkMF4J/vHwO4z2dt7srdkkRKShhkd5wEGE0vV1SgEY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ojJkG+ACpvQ/kuXxSMeCbR/PvjoclHReIf6Y6dPCwa7erzzJ8ZgGeOY6jROB/Yc2v
-	 YgtQf7A2u6DkKokLa3ZiIeM3Hu/aAsvJpL/2GwfbcpHHYZOqi11Y9PVKKjHdIYOqq+
-	 Dx+Yv9Yn1G3WYSShpLbZPq3vbmYT+oCavpuhtQneV7m3TlUtee7UNvBkBTdMGN3DkG
-	 wGc71yY91sGYtuDI8bdijchRg/DWZndFJSR0vm2YZ10QWxdSBTvGUpvmIcg0EgP9HX
-	 wCIKHRZNbEBtYDbUrvVQx26OZVtJNJtZOB7x/10NHkPwSKtoaSHx8E7mFepm1lPGX5
-	 XCEj2VTt6mbFA==
-Received: from localhost (unknown [IPv6:2601:280:4600:2d7f::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 52511411AF;
-	Tue, 18 Feb 2025 20:24:36 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Carlos Bilbao
- <carlos.bilbao@kernel.org>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel-docs: Add book to process/kernel-docs.rst
-In-Reply-To: <20250218154303.45595-1-lorenzo.stoakes@oracle.com>
-References: <20250218154303.45595-1-lorenzo.stoakes@oracle.com>
-Date: Tue, 18 Feb 2025 13:24:35 -0700
-Message-ID: <87y0y3ngqk.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMGDlKev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC43C4CEE2;
+	Tue, 18 Feb 2025 20:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739910300;
+	bh=RqfvD49zab00WPi+iJaDRqAfyPdg3UsQrxIpCeME0BU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jMGDlKev+Y8BLMXOd4sEeIWSj+D38CZbb7Tyk47ctY2KK7jK1iGwxGzlTGHMO2w/d
+	 g0XRuuJoqxhLxzG4bJt33mEXmhsYiomGD3CAbaTBCD+TTAG2OhVhPbp/6Z5Drenhvx
+	 YK+f3vpfINTnAHbiVL0O5TqYZuFdhTZmVWahvdwGcMaNoMTZgiP426ICT7d3mOyeBx
+	 Wq6HgKNxjpGDra9AG9qzTCZ7umDwepbLP7gy+u7WCi6nH6AwnIqrnJmaAv1TnTvWlt
+	 4TS3j4ZNEAizhgBEsfifyCpJdJoGl/Fe7s3NePuMliWd1nVi9NGHk8xFMY83cPCAmW
+	 pyxiouTQyJAbA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@pm.me>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>,
+	Sasha Levin <sashal@kernel.org>,
+	shuah@kernel.org,
+	dvernet@meta.com,
+	vishalc@linux.ibm.com,
+	linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 01/31] sched_ext: selftests/dsp_local_on: Fix sporadic failures
+Date: Tue, 18 Feb 2025 15:24:21 -0500
+Message-Id: <20250218202455.3592096-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.3
+Content-Transfer-Encoding: 8bit
 
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> writes:
+From: Tejun Heo <tj@kernel.org>
 
-> Add a reference to my new book, The Linux Memory Manager, an in-depth
-> exploration of the memory management subsystem, to
-> process/kernel-docs.rst.
->
-> This is not yet published, but the full draft is available on pre-order, so
-> it seems worthwhile adding it here. The situation is made clear in the
-> 'notes' section.
->
-> The 'pre-release' was made available in February 2025, and full release is
-> scheduled for Fall 2025. The book's ISBN-13 is 978-1718504462.
->
-> The document will be updated upon release to reflect this.
->
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->  Documentation/process/kernel-docs.rst | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+[ Upstream commit e9fe182772dcb2630964724fd93e9c90b68ea0fd ]
 
-Applied, thanks.
+dsp_local_on has several incorrect assumptions, one of which is that
+p->nr_cpus_allowed always tracks p->cpus_ptr. This is not true when a task
+is scheduled out while migration is disabled - p->cpus_ptr is temporarily
+overridden to the previous CPU while p->nr_cpus_allowed remains unchanged.
 
-jon
+This led to sporadic test faliures when dsp_local_on_dispatch() tries to put
+a migration disabled task to a different CPU. Fix it by keeping the previous
+CPU when migration is disabled.
+
+There are SCX schedulers that make use of p->nr_cpus_allowed. They should
+also implement explicit handling for p->migration_disabled.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Ihor Solodrai <ihor.solodrai@pm.me>
+Cc: Andrea Righi <arighi@nvidia.com>
+Cc: Changwoo Min <changwoo@igalia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/sched_ext/dsp_local_on.bpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/sched_ext/dsp_local_on.bpf.c b/tools/testing/selftests/sched_ext/dsp_local_on.bpf.c
+index fbda6bf546712..758b479bd1ee1 100644
+--- a/tools/testing/selftests/sched_ext/dsp_local_on.bpf.c
++++ b/tools/testing/selftests/sched_ext/dsp_local_on.bpf.c
+@@ -43,7 +43,7 @@ void BPF_STRUCT_OPS(dsp_local_on_dispatch, s32 cpu, struct task_struct *prev)
+ 	if (!p)
+ 		return;
+ 
+-	if (p->nr_cpus_allowed == nr_cpus)
++	if (p->nr_cpus_allowed == nr_cpus && !p->migration_disabled)
+ 		target = bpf_get_prandom_u32() % nr_cpus;
+ 	else
+ 		target = scx_bpf_task_cpu(p);
+-- 
+2.39.5
+
