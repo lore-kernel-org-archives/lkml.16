@@ -1,96 +1,82 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D33F26F45E;
-	Tue, 18 Feb 2025 17:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E170E26F47D;
+	Tue, 18 Feb 2025 17:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739901394; cv=none; b=NUCC2G1RtlIzUTS1q9kLaxV3dAch7msiEbiy1y89P26/VqOtnYpQXHGH468fSqUf5RnS1g8vG/aFJQoxBw1Z574ZQxD7wUOFI5d14ASfWs4M7qIcu9QgdUxqdItbOlJJJ6XVFA8nvweQamMb/RZCOPZ/ls9gWRYB9iE7E0xLKbs=
+	t=1739901434; cv=none; b=Tp80CBfs5PLAxUFRZFyb26nyp5Wwc3zgj7LdxK6G/ozrkkmSc5BsJBUSnbkNMaP54e8aCWglSYOZVS+DRs1aVahAsdJRS5QgMkS0UtP6ZOMvBO6UF40kGJcotOWzTRMEwKMnuTyxnqZwY11n2QvDY1HNDFIzybNp5Dx7rvzse2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739901394; c=relaxed/simple;
-	bh=8/xeGIFMWIi4dm7oFuwYay00JIETRD/k+jULot2/mq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZPPDB5w0retg8yc447gns6hS/v9kvimhlh8PUkWuCvZ5hJrEikR+Y0+apAfAc8rWSLlDmY6t0oSYpRqJQU1YNGYTPityns95uQP0S2pvxV1ivld0XOUVjYaEPWiXkj+qh24t0oaNOGveNW9kWYek4urzR0aLc2p0kjWglSkAciU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Vo1/Dqic; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739901434; c=relaxed/simple;
+	bh=tU9Zd8NFakzAf3zN7ldSQi3XanfcSI1SkdescDqtkVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XSm/e95nMWDKsvA+eJ7LgO3uk+h6DO6DAzGNcQuZo+LE8PZidps+3f04r6xJGN6W6EdyuVh156pBiIOEytnqcMmzErJ9jPP1J0yD8NBD056BCLPYMVbEoRG0Fcz3F7ZfRitwSzKoSiuErXBgvkmsG5ataKSnJuF3Exp8MetOvbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JUFIZ3Ok; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Vo1/Dqic"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51IHtwWL052717
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 18 Feb 2025 11:55:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739901358;
-	bh=ZxZPMPRqc2YVU3nXWwH2+2obTCBbW0fH/0Zd2nYlJcY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Vo1/Dqic6aBhdbEUDoG5pV4dOv9AL6C/o6819Wdi9txicvAyU07Afyk9eE2quGkWQ
-	 sIDl04TcV4U+4liBmvLPb5rJUOQAb9CzUmHF3wUjQIu4qyVT+5TaJfhrPXitz6OhAE
-	 6VCXzDUQtTXxl3OGhwHpb9Fd8R87iD1VNYu7ZSNY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51IHtwW1031510;
-	Tue, 18 Feb 2025 11:55:58 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
- Feb 2025 11:55:58 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 18 Feb 2025 11:55:57 -0600
-Received: from [10.249.140.156] ([10.249.140.156])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51IHtn69060469;
-	Tue, 18 Feb 2025 11:55:50 -0600
-Message-ID: <e1800e66-9043-4add-bbc9-19a8121de2f2@ti.com>
-Date: Tue, 18 Feb 2025 23:25:49 +0530
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JUFIZ3Ok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E6FC4CEE2;
+	Tue, 18 Feb 2025 17:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739901433;
+	bh=tU9Zd8NFakzAf3zN7ldSQi3XanfcSI1SkdescDqtkVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JUFIZ3OkwXpBsOy7q8AANQJFVNfXQxZ2GiZkYesdqyl1mbjHz9H5nF1al6Nxyh9Oj
+	 EKybpiQA7X/PE3rmHjwbcJLgM5EvGLDZrOldpJko+lyGYgKOaygiMT0YWk49KT6W9Q
+	 jFSQx3LRcshbdts9cLWA3I9t3ACojhzqf1NFoVSY=
+Date: Tue, 18 Feb 2025 18:57:10 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Madhur Kumar <madhurkumar004@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: sm750fb: Fix CamelCase and remove volatile
+ warnings
+Message-ID: <2025021854-habitual-bulldog-df4b@gregkh>
+References: <20250218173712.15770-1-madhurkumar004@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 0/3] Add native mode XDP support
-To: Jesper Dangaard Brouer <hawk@kernel.org>, <rogerq@kernel.org>,
-        <danishanwar@ti.com>, <pabeni@redhat.com>, <kuba@kernel.org>,
-        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <u.kleine-koenig@baylibre.com>, <krzysztof.kozlowski@linaro.org>,
-        <dan.carpenter@linaro.org>, <schnelle@linux.ibm.com>,
-        <glaroque@baylibre.com>, <rdunlap@infradead.org>,
-        <diogo.ivo@siemens.com>, <jan.kiszka@siemens.com>,
-        <john.fastabend@gmail.com>, <daniel@iogearbox.net>, <ast@kernel.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-References: <20250210103352.541052-1-m-malladi@ti.com>
- <285d1541-6af4-4dc3-bdcd-720bfc1f9aa4@kernel.org>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <285d1541-6af4-4dc3-bdcd-720bfc1f9aa4@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218173712.15770-1-madhurkumar004@gmail.com>
 
-
-
-On 2/18/2025 9:32 PM, Jesper Dangaard Brouer wrote:
+On Tue, Feb 18, 2025 at 11:07:12PM +0530, Madhur Kumar wrote:
+> Fixed multiple coding style issues in sm750fb:
+> - Replaced CamelCase variable names with snake_case.
+> - Removed incorrect use of volatile in memory-mapped IO.
 > 
-> On 10/02/2025 11.33, Meghana Malladi wrote:
->> This series adds native XDP support using page_pool.
-> 
-> Please also describe *what driver* to adds XDP support for.
-> 
-> This cover letter will (by netdev maintainers) be part of the merge
-> commit text.  Thus, please mention the driver name in the text.
-> 
-> This also applies for the Subject line.  It should either be prefix with
-> "net: ti: icssg-prueth:" like you did for other patches, or be renamed
-> to e.g.: "Add native mode XDP support for driver ti/icssg-prueth".
-> 
+> Signed-off-by: Madhur Kumar <madhurkumar004@gmail.com>
+> ---
 
-Oh ok got it. Will update the subject line accordingly in v3 and follow 
-the same for my upcoming patches. Thanks.
+Hi,
 
-> Thanks,
-> --Jesper
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
