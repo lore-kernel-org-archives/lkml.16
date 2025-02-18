@@ -1,104 +1,158 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A06A1AC882
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AA21AC882;
+	Tue, 18 Feb 2025 05:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739855245; cv=none; b=l25QXwP/VvpDfBLBb6hrIURUIg++Spit/2fZhwrlaQOYJ6xElb+Z1RXrRrEfIf/xS+tLhn3xspChj4nA0CHpk3XsSpArq26lrTK0/l8wL+heKFLxRJlZZxsgVaxtpT+RI/VWKWUcv46QtrocdoHuZ3XpeEQJG0nGO5TPaEZMjXg=
+	t=1739855278; cv=none; b=LBjZcyxFoR0+JPVnICsB4OoFAqqAgFo0lF5ClUygIhbNoaumhU+hcGEiySNVDPhira9lSr7WXXioW39JE258qj7kBXloK4t0UcGCk7NkpekbhroYHxz/wDVyASWTzFmTNLL1cFK/trfdBk3EuC6wVwaYvKCmieN0aMs0WneFQ5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739855245; c=relaxed/simple;
-	bh=LtiaEOZsgDZuuU2n1MkfkwAUkhX7jYfHI2FIWQVUesU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hAc0fL3lr7Kc8EOvmTLGQRe9LFCIdmC8Z3fESES1YgvCym3Nr6Y3vqT8cwRUPc6++xgFkOKbRIe9txhVSZEOpux+VZODwXWgYrp3rMLjlmhSVDxQvav4TCJlRitq6KhVCoKuKk5dg9yo6rGMl+QKdOB09lnvP2pfyMGkZ5cOF7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=J6cOA2Tu; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739855278; c=relaxed/simple;
+	bh=z/6JA4eNoed8CZkrnBDxJDBqVf8SQDJUgT8/uSsYtK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jVatvONrBvshcWZ12hsVM60t5SNT0fRfucXtoe/NKqk66y6DTyUD+6UofXLVDSUtDuu9uNSD9S3xjF8hCQj2M0jICHStUk0O5kibgmCGgOYMbMv9e6o0S+ZRRb1hT9YYFAsUs1FKQnzhRX6buvHr5Xnv8gYDlX+cGi7mUsGZ9gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=YgaXaIwI; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="J6cOA2Tu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739855206;
-	bh=1vAKLqNsFIt3VZbfHz9u4YiCFpGxegS27zz7OL5Y9aM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=J6cOA2Tu8vxctfFoA8B/lAkurBouTb6Q4vmgM3J+ga45WuvwUc06A6UOAoc8LU2RS
-	 Mg0rBurU3OIFpmxDtJTLP5R1jwaoWMNiS1i8Q8jgpQta0MYIPKCsPkv38gv0xXLI1F
-	 svFu9C9Lfk0aj1QeJg51miANkBwnfb4jTzM6huGQ=
-X-QQ-mid: bizesmtpip4t1739855161tcklbz7
-X-QQ-Originating-IP: NSxoZGYJy3N0XkREdeX3sustINZnXeAPkIi71wc7HD0=
-Received: from avenger-OMEN-by-HP-Gaming-Lapto ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 18 Feb 2025 13:05:59 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16173264948170778916
-From: WangYuli <wangyuli@uniontech.com>
-To: sboyd@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	mayulong1@huawei.com,
-	mchehab+huawei@kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	chenlinxuan@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] spmi: Only use Hikey 970 SPMI controller driver when ARM64
-Date: Tue, 18 Feb 2025 13:05:52 +0800
-Message-ID: <23BAA675A75EF4F5+20250218050552.57711-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YgaXaIwI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739855264;
+	bh=5LIOKZ2TM0YfxcjNlKCXnCn+7rZf/CA6PMGHhfYZysY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=YgaXaIwIVm6vbNYGnvKc3hWD4TwsJ4hBRFWpfmUGuB/Ijh1hUDLFWVAFV8o7CQrq4
+	 AptfgmYg6ZyJwfxZBsrjVNvwS0Z33dMyfs+2sXL2hXruCBa7sbGbPCskg+/fkPQY/+
+	 OIu2Kec/2t+ZAYESrxVfp42tIsU69Z9k06IEkBQz3hWiM2FcYgq9xJRCu+seIEmOq7
+	 Ag0ZTrB8GDqdiCVhN1Bdzvh6qlI2wmZUpcp1uiddjuTX5oPkG4+mZqSPug/j/XDH6J
+	 NiRaVgT6LuKYfoZtsonQl3DFtmtFSKzLzTkwBII5VeSJGUx/xpebjhAcKjmby+Dfn3
+	 EOk+vf4iGxV3w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yxnb4086Gz4wcr;
+	Tue, 18 Feb 2025 16:07:43 +1100 (AEDT)
+Date: Tue, 18 Feb 2025 16:07:42 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Yury Norov <yury.norov@gmail.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Beata Michalska <beata.michalska@arm.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the bitmap tree
+Message-ID: <20250218160742.49d6ab76@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: ODAIZU/2rwU14P2aWaeUvgb0L04r4OTeUokhlejl03d6KnBSjIL5NdoI
-	yyjkHAfIe6HBPZZAgDUl09hVfxH5mr3ejuwhr3rwU/Wh9CPGjgEXJNtW8GIEQk9Iy7lVxw3
-	nVtRAibG9dlYfcF8w5abvh8me6yQghYgLdXJlyRtq2K2maY0ZbzoRzZa+kYKJr6xZMHLiUs
-	jUAR3S95sqDKw5dwkGN58CLX8EVOvqCFr17lXGl6f7HR1Ysx4Q7vhPpConwuiViFy9KIYfZ
-	O4Djn71XnSJcAFWDT5B6gWAfBxP1PrMLesf8THFFqmMRPrWtW2I+qJs9+/ROYCdCTkKrpD7
-	dZDiRScARqenIMNzH4W4xan389NXkufFCUzAmDRQqSkzfm/uAdoT/HyKMr/ujKWPIhWuSB4
-	jbRRd8IFHZHjGKYJydzSY5eO4yMGvJuQtv06YaAtFq2K5XgMLJZ9ZdKsbNdJpv1qjgiv5O5
-	fFhKAGDNBdQR4p0dB/NQ5jxvtexXWKTdjRwPT2nxhq6KHCBlJn7LAVno00FAJuxGOMwxBsM
-	j6XRSWvEExYjQFSh/aJj+SICfNY7lNhXlzow0pTzdqtiLePbfRYHfHaLBqu+JqYuZGwSrxB
-	8pVTgwIm48U4+O++KQH8HKRxe64NlIFGdJihPD/tCCER9soAjevBU8KLLjTh8nBSvqJNPJs
-	fNJ/5SyUX5SM2e9zxzloWdZep3DN/Y77/AOPlobwwtKMtvnVJr71cQOa+6p6Kd7bY0tp05j
-	kz73JhWypKZR9/VR6ZYTt+N8bJibue+KyBzEBiL2fxDbtIwjKtcz6UBCGsQNlB6Z0Mfc4uV
-	byESKKZCHHbmyW+TFHux3kv7cRqhHZa03yutTrYuOUcxzLIV1d3Pqqf89smybdBLs/LFwhC
-	vYH6PcJfOfgEOp5mfvuj9Gsl0yb5Sw3ElSJTNSYunqMhzVc98mChA8ti5kZxApcWlgEq3l9
-	EF8hRiH0Z5eO4yDMQpDKpAoTz/Z2nLnwS1XlWQEOnt6wSHD1fpX7GPHktni/+KQi/ELk/rg
-	lENKK3VpzAg9ACpJ99Vt6Yl7cKvH1dSMmW755Fnbfc5R6JjoB3QGKiaQqBXmFwtWZYx/MLn
-	g==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+Content-Type: multipart/signed; boundary="Sig_/gKNUyiP8KO/XVe8SLNQ1Q6d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-SPMI_HISI3670, the Hikey 970 SPMI controller driver, is only
-required to use the Kirin 970 SPMI bus.
+--Sig_/gKNUyiP8KO/XVe8SLNQ1Q6d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-And the Kirin 970 is an ARM64-based SoC, it cannot be used on
-platforms of other architectures.
+Hi all,
 
-Link: https://lore.kernel.org/all/b4810f476e41e7de4efdf28b42472ae4ffe7defe.1597647359.git.mchehab+huawei@kernel.org/
-Reported-by: Wentao Guan <guanwentao@uniontech.com>
-Closes: https://github.com/deepin-community/kernel/pull/604
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
+After merging the bitmap tree, today's linux-next build (arm64 defconfig)
+failed like this:
+
+arch/arm64/kernel/topology.c: In function 'arch_freq_get_on_cpu':
+arch/arm64/kernel/topology.c:270:43: error: too many arguments to function =
+'cpumask_next_wrap'
+  270 |                                 ref_cpu =3D cpumask_next_wrap(ref_c=
+pu, policy->cpus,
+      |                                           ^~~~~~~~~~~~~~~~~
+In file included from arch/arm64/include/asm/cpufeature.h:27,
+                 from arch/arm64/include/asm/ptrace.h:11,
+                 from arch/arm64/include/asm/irqflags.h:9,
+                 from include/linux/irqflags.h:18,
+                 from include/linux/spinlock.h:59,
+                 from include/linux/mmzone.h:8,
+                 from include/linux/gfp.h:7,
+                 from include/linux/slab.h:16,
+                 from include/linux/resource_ext.h:11,
+                 from include/linux/acpi.h:13,
+                 from arch/arm64/kernel/topology.c:14:
+include/linux/cpumask.h:317:14: note: declared here
+  317 | unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
+      |              ^~~~~~~~~~~~~~~~~
+
+Caused by commits
+
+  46ac1bec179d ("cpumask: deprecate cpumask_next_wrap()")
+  43f7f920e14e ("cpumask: re-introduce cpumask_next{,_and}_wrap()")
+  65b98ea8b278 ("cpumask: drop cpumask_next_wrap_old()")
+
+interacting with commit
+
+  dd871ac1237f ("arm64: Provide an AMU-based version of arch_freq_get_on_cp=
+u")
+
+from the arm64 tree.
+
+I have applied the following patch for today (which may not be correct).
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 18 Feb 2025 15:44:06 +1100
+Subject: [PATCH] fixup for "cpumask: drop cpumask_next_wrap_old()"
+
+interacting with commit
+
+  dd871ac1237f ("arm64: Provide an AMU-based version of arch_freq_get_on_cp=
+u")
+
+from the arm64 tree.
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- drivers/spmi/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/topology.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spmi/Kconfig b/drivers/spmi/Kconfig
-index 737802046314..4ee496491c74 100644
---- a/drivers/spmi/Kconfig
-+++ b/drivers/spmi/Kconfig
-@@ -14,6 +14,7 @@ if SPMI
- config SPMI_HISI3670
- 	tristate "Hisilicon 3670 SPMI Controller"
- 	select IRQ_DOMAIN_HIERARCHY
-+	depends on ARM64 || COMPILE_TEST
- 	depends on HAS_IOMEM
- 	help
- 	  If you say yes to this option, support will be included for the
--- 
+diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+index 6f0cab8e746b..70db234c41a2 100644
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@ -231,7 +231,6 @@ void arch_cpu_idle_enter(void)
+ int arch_freq_get_on_cpu(int cpu)
+ {
+ 	struct amu_cntr_sample *amu_sample;
+-	unsigned int start_cpu =3D cpu;
+ 	unsigned long last_update;
+ 	unsigned int freq =3D 0;
+ 	u64 scale;
+@@ -267,8 +266,7 @@ int arch_freq_get_on_cpu(int cpu)
+=20
+=20
+ 			do {
+-				ref_cpu =3D cpumask_next_wrap(ref_cpu, policy->cpus,
+-							    start_cpu, false);
++				ref_cpu =3D cpumask_next_wrap(ref_cpu, policy->cpus);
+=20
+ 			} while (ref_cpu < nr_cpu_ids && idle_cpu(ref_cpu));
+=20
+--=20
 2.45.2
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gKNUyiP8KO/XVe8SLNQ1Q6d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme0FZ4ACgkQAVBC80lX
+0Gw+/Qf/cOZpqJjjGT6gzRR7os4wyXCTQzcnm1R6jYQCafvqwaGBch7H8AnTX7G2
+N7oqfoIHdMJQtG+hpL4yBZhitsuX0CMrCGDsV6oIURF6qSjmwVVNCHCYf6r5kWu0
+uEYU2yNPoxAoTdDEFf/WKztMrSQ+JTrGrEqF4cPQcyNO9N7ECeXxYNs46i/cacMX
+muB/K03pA3ot3ELXzL1gTBYs3iK0u7F7GwGMtf6T3rxUap4uWYF/anlkWm2P5ysM
+Nr6KMOXKn2caXNOZogjqVX6hzWfpZDjqLaCI8ZL8iUsoy0YZh2g2/Y0aY34M2MUM
+tAAXUt/ar2bQGvNXOohpjXwEqe1ytQ==
+=Q9MW
+-----END PGP SIGNATURE-----
+
+--Sig_/gKNUyiP8KO/XVe8SLNQ1Q6d--
