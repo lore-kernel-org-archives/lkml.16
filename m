@@ -1,99 +1,96 @@
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DB91EB5CF;
-	Tue, 18 Feb 2025 18:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE0F17A30E;
+	Tue, 18 Feb 2025 18:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904001; cv=none; b=krP1nCM5Y3TyQVB2vj6MbMod4uFIYKqGUqPDUDJbrcYVduu12SmK4hTu1xRP0gspx02inXELn/TE5nB//JirHzhZKeT27rC7af7m3rEm8RUILLFm6IhkZjlGJ5OyJ/EtLISjiz9eKQAJeKqhFxy4n5X92ml2XluYvTKEuIP1O5w=
+	t=1739904061; cv=none; b=iS64ZJ161D/Nj9fN1E6+eX49rTEGw10MJr3igr0Y7fxw7TnOwNbhO/lBs9SZpR3Xcd8xKCqdAREWLvwFE2eh/T8xwzth/WbH2mNFORDTxzXHZi2F4X3Gq8rMtvBa2/l9JvtPN36AokpWvRUWG0cmhTc/6lw8DUCxGy/vSKelRgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904001; c=relaxed/simple;
-	bh=HNdgRxifz8YMGcx60trEWb6XMRQ2yH9UIRf2R3QL4p4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G1xC7mhcphHzHtGE70dAkg7w8RZBtnT4RpYMLGrgfrO+sofJQUacpmdzjKDBhSCE8a83dn5b21BF9dPgTgOgKh5yptsBA99MpzYiO1WG86GclrhsuZDP8Vum/bOQx0gpL8rYoPRugiFYNdXGn3U/OlkKxxdhWIfghRsvoHbP9rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=oDovy6Oz; arc=none smtp.client-ip=207.171.190.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1739904061; c=relaxed/simple;
+	bh=iSn5qlkSLrvY9fduNUiNVom2UONzE20CK92zMJiRyX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HG2qwFPZ11xrxpBtfgB15Tm0EFC5w2te6LE18IXIHgK/S4io1mxS4r+M14azoJA46cpAW41wy5990vtt9ovK6/eYMAZbQpB588aE7tZy2xHHNxxX7+G83viKbSNop9l5L2NSVOf8j1GErJ2jJ9/tHpl9N02LOuc5T8dW07NRCEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsAtfCe3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oDovy6Oz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739904000; x=1771440000;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=u7m8oAaXCTKe270hEAyxF+vZafTCm9qe7mOPUC/9oyo=;
-  b=oDovy6Ozpvath61E8CcvbcCWFZHLccAMCGB42+1L3ckqgYr5ePUm/65M
-   sRMAVw8VYo7nRjpiLT5k0/LVYfgHxrraRaXbRPFoe0554tRnQTN+9LGa3
-   bLgRJblw15JRtm7yexbADGHEzdweaNwLuiWEkWnhBmEobFaDTALYiF0bp
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.13,296,1732579200"; 
-   d="scan'208";a="409672751"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 18:39:36 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:33463]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.115:2525] with esmtp (Farcaster)
- id 44be82b4-125d-4530-bf06-4ad7690a1e7a; Tue, 18 Feb 2025 18:39:36 +0000 (UTC)
-X-Farcaster-Flow-ID: 44be82b4-125d-4530-bf06-4ad7690a1e7a
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Tue, 18 Feb 2025 18:39:35 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.36) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 18 Feb 2025 18:39:32 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <purvayeshi550@gmail.com>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
-	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <skhan@linuxfoundation.org>, Kuniyuki Iwashima
-	<kuniyu@amazon.com>
-Subject: Re: [PATCH net-next v3] af_unix: Fix undefined 'other' error
-Date: Tue, 18 Feb 2025 10:39:22 -0800
-Message-ID: <20250218183922.25318-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250218141045.38947-1-purvayeshi550@gmail.com>
-References: <20250218141045.38947-1-purvayeshi550@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsAtfCe3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D09C4CEE2;
+	Tue, 18 Feb 2025 18:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739904061;
+	bh=iSn5qlkSLrvY9fduNUiNVom2UONzE20CK92zMJiRyX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BsAtfCe3TAKsKWVtlrXywIPoIXoilqgNSNTs7nYiJc7ox+cXZyshjoUv90wT0Osem
+	 gKt4dti+h3LbR+hjEVOSXF7DiCIUmTSBgEf3brOEfXA+gBYKnfp9lAHfcjIqppqwNt
+	 O5iJVnxAaW2giwyDCoTCa9J6qAIjM/78Mf9KEXnbHmNtRjFQJlDkwRmqVWBmvInh9W
+	 gOgfC4YJKTDkZQCamXcn2rQd2ZGzCemGdD3+fRrh1A8cslNK2eJQAq5fYaKg/lVd1P
+	 /An9oyr5gEw/rirR+v1fnVuI/KKCf5++5RsZhyZBnRErWxl5d3wj7xTVZYK0ET9teO
+	 nEMH/LLtJf9gw==
+Date: Tue, 18 Feb 2025 10:40:59 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>, Weinan Liu <wnliu@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+Message-ID: <20250218184059.iysrvtaoah6e4bu4@jpoimboe>
+References: <mb61py0yaz3qq.fsf@kernel.org>
+ <CAPhsuW7dV7UR3PsGVx_DLBH5-95DAmLMGTPuY0NfUwWLZMSTrQ@mail.gmail.com>
+ <20250214080848.5xpi2y2omk4vxyoj@jpoimboe>
+ <CAPhsuW6dxPtgqZaHrZEVhQXwm2+sETreZnGybZXVKYKfG9H6tg@mail.gmail.com>
+ <20250214193400.j4hp45jlufihv5eh@jpoimboe>
+ <CAPhsuW6q+yhn0pGQb0K+RhXHYDkjEgomZ2pu3P_MEeX+xNRe0g@mail.gmail.com>
+ <20250214232342.5m3hveygqb2qafpp@jpoimboe>
+ <CAPhsuW48h11yLuU7uHuPgYNCzwaxVKG+TaGOZeT7fR60+brTwA@mail.gmail.com>
+ <20250218063702.e2qrpjk4ylhnk5s7@jpoimboe>
+ <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWA002.ant.amazon.com (10.13.139.11) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+In-Reply-To: <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
 
-From: Purva Yeshi <purvayeshi550@gmail.com>
-Date: Tue, 18 Feb 2025 19:40:45 +0530
-> Fix an issue detected by the Smatch static analysis tool where an
-> "undefined 'other'" error occurs due to `__releases(&unix_sk(other)->lock)`
-> being placed before 'other' is in scope.
-
-I don't care much, but according to Dan, this is Sparse error due to
-const unix_sk() ?
-
-https://lore.kernel.org/all/bbf51850-814a-4a30-8165-625d88f221a5@stanley.mountain/
-
+On Tue, Feb 18, 2025 at 10:20:10AM -0800, Song Liu wrote:
+> Hi Josh,
 > 
-> Remove the `__releases()` annotation from the `unix_wait_for_peer()`
-> function to eliminate the Smatch warning. The annotation references `other`
-
-Same here ?
-
-
-> before it is declared, leading to a false positive error during static
-> analysis.
+> On Mon, Feb 17, 2025 at 10:37 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> >
+> > On Mon, Feb 17, 2025 at 08:38:22PM -0800, Song Liu wrote:
+> > > On Fri, Feb 14, 2025 at 3:23 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > > > Poking around the arm64 module code, arch/arm64/kernel/module-plts.c
+> > > > is looking at all the relocations in order to set up the PLT.  That also
+> > > > needs to be done for klp relas, or are your patches already doing that?
+> > >
+> > > I don't think either version (this set and my RFC) added logic for PLT.
+> > > There is some rela logic on the kpatch-build side. But I am not sure
+> > > whether it is sufficient.
+> >
+> > The klp relas looked ok.  I didn't see any signs of kpatch-build doing
+> > anything wrong.  AFAICT the problem is that module-plts.c creates PLT
+> > entries for regular relas but not klp relas.
 > 
-> Since AF_UNIX does not use Sparse annotations, this annotation is
-> unnecessary and does not impact functionality.
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> In my tests (with printk) module-plts.c processes the .
+> klp.rela.vmlinux..text.copy_process section just like any other .rela.*
+> sections. Do we need special handling of the klp.rela.* sections?
 
-Anyway,
+Ok, I see how it works now:
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+klp_write_section_relocs()
+	apply_relocate_add()
+		module_emit_plt_entry()
+  
+If that code is working correctly then I'm fresh out of ideas...
 
-Also, I think you can carry over Joe and Simon's tags as the change is
-trivial.
+-- 
+Josh
