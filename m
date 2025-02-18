@@ -1,58 +1,58 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3070924113E;
-	Tue, 18 Feb 2025 10:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A5D2417DE;
+	Tue, 18 Feb 2025 10:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874396; cv=none; b=DDUm+a/nYNhLNX8OUmR6MHVIVi0D5mbBybGBsjIUfY9X3ihfaz+eq5Q/G35JI35hSOqf24vqH5qgl+iLI3mWndcW49qaKa24dDbYJkOjqxNn/rDetJ3eP1snaxBB0RwF/Mc0BQWnbtGVNLSQV58Hg1QvBl0MM1s+2NfAfog2XKk=
+	t=1739874396; cv=none; b=EC1BAx7a/gCpmcHXLYc18yXRxJCE6ZtzBAtG1/uteNzOocM8LL9lJevlwV6q72xr8zV5DeauGyV3v4LRKe9p/rGBkM3jeIN21RI4bBC7ADYPFRTFdrj4kI5ZHLJxFMdzKU4ZtKUNUdSTfmM1JINhkkpiONhtyiJlUIq6Ymj7iBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739874396; c=relaxed/simple;
-	bh=pvlGj1I01zpsDEEic2q/2rLKNDUEAB1hsaB+mKL9/wU=;
+	bh=yG0Y2Trd4wIOrymyZNyPHIVPvglX30ozaSn1czT0tig=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=GUpbz0nCzjfFQzPQptGaq2VR9uRxuFI3rXaTlxTay+NDHvmjnwBwyGVz4gEw9ei1y1TjhVTShekzUqf+xR7Z4CEpwQ6iUBBgWB1IXubT0V8Muz2/ivStbUTj1BNOzsQmG/VkzXf1xqGLZwF9kVduNMQslXensALU+i4v5cOHp1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sIDgX4xv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qAzfcWzj; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JyCgIsdzimiNI1QtSlPoj/07f75tei1Jmnv7+0nFg2IRRidYZqehDx+syl0gkzf2JLhhRS/YcteruAekNKIgF9tJ74v3NQ2Q1Q60mu/4UrOQ80pziVYfJ2Wf6pifDfPYc2rSISAAucOdclXyDM+2+z0lXSAMcHGbQv+D/SBNlyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LDIFOJ6V; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y6rRaUk0; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sIDgX4xv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qAzfcWzj"
-Date: Tue, 18 Feb 2025 10:26:31 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LDIFOJ6V";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y6rRaUk0"
+Date: Tue, 18 Feb 2025 10:26:32 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739874392;
+	s=2020; t=1739874393;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EdEho1+hvIl5F11CAuMWhA6zA4lur0XobHR4R5WsqJY=;
-	b=sIDgX4xvV7NzU/Tk3YU2W+LZztzDmQEwYWXCxADxA+LXO4aFlUlC21QqahCqiuwpRSqP7/
-	SGufHS7/+8lF8yGQOyKIIMjNIzehIJFcaRwR8nFaP8iG9FmX1suFPsJixEJGaPt6RDuBew
-	Uy7ekPmK86KDHoDcWNQMn/Z3xjXQ7Ka18peAaguRoGqoPUI21lRsRvqlYTQvWHzU6pvtJU
-	PFpNDAt/38FaK+ckuNBYa4k38NkD6iRkUkwKBKNBtJBgJ35WIcLw9vhAoz2TAL5tGch3bh
-	9mdcKqJm1N6uWPIiW8mg2Eu6QeVL+WIa3KBCW3/eEiHCoHf823NedZ0C4vIS7w==
+	bh=auSLKxwlgI1ozWke8Cqpq3rsAwzB3ubuku9/7/Kn38k=;
+	b=LDIFOJ6VSRRInW0FIsZULZAnYch3f/VWEE6kFcBROJ44QoElk0V2baPHMeYQu8t2/tFimK
+	RDKWcBgNrfHGdSakLD22ee4VyOrNr3qK8HlXad4Nw2vzT4ZK/2RbbcSFL+XxMwdxc8cfsG
+	15m1bvqNN1Vq+qxSUJDr0HgsXFYPqOurxlspo68g3E5IIBwKih7RYdk0qUAqbbP5dld9g1
+	d6NB/xZEN1OBDrBXgrsmz4Zfgyyr132t3T77BczqeKily2LzWQvFNzny8ZwAXuD+HmutLS
+	h09oMKNOBCN+D+h0Y8S+HHOE8svWF8cyp5U+V6kO7qHoxK8cs2fZzMP66MzHbw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739874392;
+	s=2020e; t=1739874393;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EdEho1+hvIl5F11CAuMWhA6zA4lur0XobHR4R5WsqJY=;
-	b=qAzfcWzjKdiK6OBmy4PBHyzzY4XRht7+hC+QczVTbj9lNCtj4BTSDImzNiSgzTQxIBXnne
-	YcDpL4R2Pfx5+SDA==
+	bh=auSLKxwlgI1ozWke8Cqpq3rsAwzB3ubuku9/7/Kn38k=;
+	b=y6rRaUk0POliL9+LpSnR7U0kWnpN6f97agOQOlZLmtuavJ3Q7B4chbXoTPLindcxs4tNhI
+	hIXYHD94wRDNjzBQ==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] iio: Switch to use hrtimer_setup()
+Subject:
+ [tip: timers/cleanups] leds: trigger: pattern: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  Zack Rusin <zack.rusin@broadcom.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C570792e31b28a94a511c19c6789f2171a6745685=2E17387?=
+In-Reply-To: =?utf-8?q?=3C76fa1cc9777a99a48f49f949abadc1c10af1bc64=2E17387?=
  =?utf-8?q?46904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C570792e31b28a94a511c19c6789f2171a6745685=2E173874?=
+References: =?utf-8?q?=3C76fa1cc9777a99a48f49f949abadc1c10af1bc64=2E173874?=
  =?utf-8?q?6904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,7 +60,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987439197.10177.17785823876266132760.tip-bot2@tip-bot2>
+Message-ID: <173987439261.10177.17400093532233436700.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,14 +70,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     c69da1735f19d93c63fef5d38d9ff3b1c56587da
-Gitweb:        https://git.kernel.org/tip/c69da1735f19d93c63fef5d38d9ff3b1c56587da
+Commit-ID:     a9d0ac739658f9a7c27d3430475aa3a00948ab1f
+Gitweb:        https://git.kernel.org/tip/a9d0ac739658f9a7c27d3430475aa3a00948ab1f
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:46:15 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:46:13 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 11:19:05 +01:00
 
-iio: Switch to use hrtimer_setup()
+leds: trigger: pattern: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -89,42 +89,25 @@ Patch was created by using Coccinelle.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://lore.kernel.org/all/570792e31b28a94a511c19c6789f2171a6745685.1738746904.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/76fa1cc9777a99a48f49f949abadc1c10af1bc64.1738746904.git.namcao@linutronix.de
 
 ---
- drivers/iio/adc/ti-tsc2046.c           | 4 +---
- drivers/iio/trigger/iio-trig-hrtimer.c | 4 ++--
- 2 files changed, 3 insertions(+), 5 deletions(-)
+ drivers/leds/trigger/ledtrig-pattern.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ti-tsc2046.c b/drivers/iio/adc/ti-tsc2046.c
-index 7dde571..4956005 100644
---- a/drivers/iio/adc/ti-tsc2046.c
-+++ b/drivers/iio/adc/ti-tsc2046.c
-@@ -812,9 +812,7 @@ static int tsc2046_adc_probe(struct spi_device *spi)
+diff --git a/drivers/leds/trigger/ledtrig-pattern.c b/drivers/leds/trigger/ledtrig-pattern.c
+index aad48c2..a594bd5 100644
+--- a/drivers/leds/trigger/ledtrig-pattern.c
++++ b/drivers/leds/trigger/ledtrig-pattern.c
+@@ -483,8 +483,8 @@ static int pattern_trig_activate(struct led_classdev *led_cdev)
+ 	data->led_cdev = led_cdev;
+ 	led_set_trigger_data(led_cdev, data);
+ 	timer_setup(&data->timer, pattern_trig_timer_function, 0);
+-	hrtimer_init(&data->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	data->hrtimer.function = pattern_trig_hrtimer_function;
++	hrtimer_setup(&data->hrtimer, pattern_trig_hrtimer_function, CLOCK_MONOTONIC,
++		      HRTIMER_MODE_REL);
+ 	led_cdev->activated = true;
  
- 	spin_lock_init(&priv->state_lock);
- 	priv->state = TSC2046_STATE_SHUTDOWN;
--	hrtimer_init(&priv->trig_timer, CLOCK_MONOTONIC,
--		     HRTIMER_MODE_REL_SOFT);
--	priv->trig_timer.function = tsc2046_adc_timer;
-+	hrtimer_setup(&priv->trig_timer, tsc2046_adc_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
- 
- 	ret = devm_iio_trigger_register(dev, trig);
- 	if (ret) {
-diff --git a/drivers/iio/trigger/iio-trig-hrtimer.c b/drivers/iio/trigger/iio-trig-hrtimer.c
-index 716c795..82c72ba 100644
---- a/drivers/iio/trigger/iio-trig-hrtimer.c
-+++ b/drivers/iio/trigger/iio-trig-hrtimer.c
-@@ -145,8 +145,8 @@ static struct iio_sw_trigger *iio_trig_hrtimer_probe(const char *name)
- 	trig_info->swt.trigger->ops = &iio_hrtimer_trigger_ops;
- 	trig_info->swt.trigger->dev.groups = iio_hrtimer_attr_groups;
- 
--	hrtimer_init(&trig_info->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
--	trig_info->timer.function = iio_hrtimer_trig_handler;
-+	hrtimer_setup(&trig_info->timer, iio_hrtimer_trig_handler, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_HARD);
- 
- 	trig_info->sampling_frequency[0] = HRTIMER_DEFAULT_SAMPLING_FREQUENCY;
- 	trig_info->period = NSEC_PER_SEC / trig_info->sampling_frequency[0];
+ 	if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER) {
