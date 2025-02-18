@@ -1,83 +1,73 @@
-Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBD2269AF0;
-	Tue, 18 Feb 2025 14:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.162
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739887214; cv=pass; b=WYUHEtVbscUboykn4gNhqy4AKT07+QZOymz3PAwmkzENli4tj+23vIUei3ntAhXPVwWEFaNIq02t1tiIWzYwJXl+huClIrNXg2a6fXnaX0r86MpmMlMgZ4BOQezESG5t9vLGVKapuhHb/pT0fGyqZ7BMv2GBoOb86kVCC/gpXCo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739887214; c=relaxed/simple;
-	bh=DGgdmGoXFuNbS7z/vFF8stOUuDr8Sn4WUzD/hMg1nu4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE17267384
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739887283; cv=none; b=L61Dl8iEEsUCGdKHahS5NS3bUz4bCqAfBxYqqQyrXjOKce/ZRZ8dsoq+f0CUTbQJhwLLEnRJ/foMUhIMhBYhz9dUJQkJJ2VEax8GxZkuXAF711tb7Ft2MSfTk61dWfEea1hENvECYrcDQCqX4slmAclQIkTyoG1xIDkV9EJAo7Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739887283; c=relaxed/simple;
+	bh=CUUtLbg/V9NQg+AuWoIWQTSD1MxC1DHpXmOuggSU0+o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ur8UROBZihrdaxtpe0UvYShhg4cwqc8p6Z1eDWQUSJIFlm1ZXAT2J+YD3Q7smtcayje35TkoTX5RRelaXeEtqQQu0BX6K+mS+z8i1y3ZdcCKdbo2TFdYohOVJCJQCQ6OjHFWWxbZHSG6CcF3tut0l+az6O12DHDjWBXvaqm6qak=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=B4psEMDl; arc=pass smtp.client-ip=23.83.223.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
+	 In-Reply-To:Content-Type; b=QmvudnCquMvQoI7dTzyIIG3rBmRhyEs2/2P+ZTc8TvZO6I+oxCENL0Bu+wLxyZNaQqHtx3tIMbVyIdsfTGpbOJbX0WCOosBns2oCIxYH1srd3YPlUSXMuG5R/r0HVXTsKb4wp1aJUNWd/7pcEjXIp9xxiQuh0lw1Bsp9O5BGBqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=uMJe0cX6; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="B4psEMDl"
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id ADFC71A5486;
-	Tue, 18 Feb 2025 12:43:10 +0000 (UTC)
-Received: from pdx1-sub0-mail-a208.dreamhost.com (100-127-158-254.trex-nlb.outbound.svc.cluster.local [100.127.158.254])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 0E1A61A4E91;
-	Tue, 18 Feb 2025 12:43:10 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739882590; a=rsa-sha256;
-	cv=none;
-	b=VrwwjxbFesy8mpfO2IjNYUhcLWBLaYAgmBHh+mrMKnhAM8CJ7q0AfNwtFaJZhLG8VJaNS5
-	0UWnJASq6ykqjlPUp8troZLiwAVQxv/juZ+j0UorrMeeqaHhA1gisW0M5YBp6NHy8C8hdL
-	Ai9IAOmvU5Pb6u7N1j5v/gRaisbRWh/abj7c+RZhx+Ibi6uj5qdMxt7ghv0XYU6pge5qga
-	3msspTlwd+WBz364Y3d4vPI9A1mJkuaxwJLmtUULQlvCp84czqy1ZbwmFHOkLJr3J3Hgql
-	tlzlLgRX6kB+qGuLAChdMDNxSdGaf8/VAoLBwE4OvLHgZXJqcfI4DKSiIdSJOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1739882590;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=B95tabb5XZzsLZAdmM0q9rShY5CxFJ7DzbxtbrrhHbY=;
-	b=ZlvR4WgSsHn+uWciGXRxmLTLs9afzEirW57vVLw+fbrBJgl6fituvs27LNJyTNDFgw4bWi
-	mX2jnFlFWu0vFpKtYE9zuZj2SwAlDPb8hjcqUxS+qJampzAOzpev79dF+pQhKOleg5CAvZ
-	R41V/MF/pxzs+FMx94NTZigkkrXm1XT5RBwZLCocLpkk5N+vWxTGs3zgj/EYxykUcV9Edq
-	VnvUNvxwVc8iJRHqHbbQAhaIVPkB81wzd25agT2DShpo5bQRqbhmogQbWDeOMBy+ooREp3
-	zQl6SrPLeVEjrarzDrCMNpllEq1XR6puu1ciPrejLgNSVokR1xwzrCRmRoD1lg==
-ARC-Authentication-Results: i=1;
-	rspamd-78ddd997cc-ttgrr;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
-X-MailChannels-Auth-Id: dreamhost
-X-Stop-Madly: 6edb93bf651849a8_1739882590423_2474421560
-X-MC-Loop-Signature: 1739882590423:52837196
-X-MC-Ingress-Time: 1739882590423
-Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.127.158.254 (trex/7.0.2);
-	Tue, 18 Feb 2025 12:43:10 +0000
-Received: from [172.16.32.88] (unknown [198.232.126.202])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="uMJe0cX6"
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: rob@landley.net)
-	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4YxzhX6n0qzNR;
-	Tue, 18 Feb 2025 04:43:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
-	s=dreamhost; t=1739882589;
-	bh=B95tabb5XZzsLZAdmM0q9rShY5CxFJ7DzbxtbrrhHbY=;
-	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-	b=B4psEMDltaoKyD63Dts4zk1CiSgxddy46xHI/QV5mgigdVCqa2Bu/FzfsnujpuaPb
-	 eeZbRnPq+UC/S1HRcZABcatN5jxRzWlmKGyF36KtpgCg56zffacA73cKHb2nB1SeUS
-	 vzFrvGBuMWF0+LtGa5O3dqci2KXCJ1mz9s+zz4Q8FrjVTuUvpTsKA1avO0L/QZBEVg
-	 f73zzlrc3rb6uQPQ/So8zmcuGSRtL5N/mjcXyw4mGBTYdXtDTTVC95V4o6YYMYKdD0
-	 8sXSdHaLqUotjLgMAL/wrYlInzhPKifQchb0/DKoibUsrgqxy7iZIuA9mSYZmuYomY
-	 kNmukHkY9h9+w==
-Message-ID: <c9caa50a-597b-48c7-9ac8-b3a4193c3fec@landley.net>
-Date: Tue, 18 Feb 2025 06:43:07 -0600
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1ABBF3FA50
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1739887280;
+	bh=9baZ8MtjuJOAuAOdwVfX6siiAQJttTW47fGC4JGW+8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=uMJe0cX6dg/8O7cep566C+h1tK6jlGR6+9waeuXGsv5zgBp1m5Cge4AD6DwZJe4Mr
+	 coSDhmitStjYR2yalvovjfduV715JzVN9WO04qv63f9UJdFzXquLBIXAMmxJHHtmJA
+	 GhU/qiI6cxNwOrlV8a87/6LBJTFHPDbbJ0R5HIO2fgMtDq7m/sfGyK6fDBBoIS6VkI
+	 2vUzMz1D1d9WSNYN8Fw76eof5AXksiLU3DhqLXPeeev/9UaAgTbiTb/V9SrAaZKa4n
+	 ZxRaxv8p7wIdVivzQuL1FxDGvY6ODQuHeeG3jBFunSPIFUqm/qmmckDY7P7UjVasxD
+	 UFxwgD4Y+fVxw==
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38f55ccb04bso265540f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:01:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739887280; x=1740492080;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9baZ8MtjuJOAuAOdwVfX6siiAQJttTW47fGC4JGW+8U=;
+        b=N1fU144AMZNIOlGOuot2E0dgmd3c5sL+v4GgM/rdh9jrt2zX6wtihOmNU5+gXxUasp
+         mPPmIRU2VQKuXo1JhGe/Zyq6+5bvM9iI7RIPIusZCdce7mKm/Ivm8G0Bu31XC+3ev0EW
+         mGZx1r2DJugknVMMV27oB6713rcCHKl+0KQTJ+Ovr7S6kGybuqBbyj1xs4mvUzp6j2RT
+         C2/gKy9DOH+l+9bqTLXqEleNJ1RWj+R2YpXQpyaKRlr4YcwxqAYsPaxVda27dUjJkMjy
+         XXRnW1Ba7QBhf+h2hrDuu0sIztneh5dJnWmoWMFpH8GwYZpYRBwp4MX5PEEfus4H3Izv
+         LPww==
+X-Forwarded-Encrypted: i=1; AJvYcCUaOaE1DSXoFG7rOk50qXRlNUCRY3Gb4Lgr/Q+XDnlr5wOQxppqzE3/OQn5QbNSi2WsaeQ1bEucXgrGr4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX9jM8Bx89ZVYQECiTpYopCRx4/4n1zK1ndwE7DDYvl7nM9K3p
+	RBW6bsRXGKpEAwKDmqBy1AxxDSBA40Crq2S12KrjB2kWpOGCai/mQ9mrX8Iyrc0ieeMNtRDjX8H
+	1ImpMBGIKCfNqWqIVCmnFqk+yGJqdW6LwaL7YX49L5Cv0WruAnBLP22jIgP47STsmwWlPBjw66M
+	M2C6KAzKUP386I
+X-Gm-Gg: ASbGncswEJ+xQeFyI4LAOhManaqLxL+ysCMPRkRgYuRMEcEKEe9sBN2dF1qZy5Ldn0Z
+	Oh53C2KkL6J7HjzpFYx34qKJtFck3QwTTyc6O2GDp9teOhlY79rgSzPZ7vPCW0lvvAVwGKjxUQz
+	iRQHK8wJCQJvMYLdwu08BUmho8puX9uRG8ohzRdJxfRF1bX5fN/awmNhNCcyQxkDS12/JZn8sQ5
+	h4cZJhZI9/FbaB0I2UwN82TPIHTUzVxuzbSNOWaa6vaMiynB6Q80QhVkuchhiTJUhTXxCsM7iR4
+	gCOmoMKpzQFJG+dZnym1v6v+pJpAc08UG5FzpgoxBQ0jfOfzon8=
+X-Received: by 2002:a5d:5f82:0:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-38f33f14a34mr9766457f8f.4.1739887279389;
+        Tue, 18 Feb 2025 06:01:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF3bFoFj7AvC39E0Kp9bB9u3iWm4LdGhfLWfOqb0TEnl13m+51JdBvSgkS7pO5yYT484fKs6g==
+X-Received: by 2002:a5d:5f82:0:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-38f33f14a34mr9766394f8f.4.1739887278805;
+        Tue, 18 Feb 2025 06:01:18 -0800 (PST)
+Received: from [192.168.80.20] (51.169.30.93.rev.sfr.net. [93.30.169.51])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258ccd51sm15105057f8f.29.2025.02.18.06.01.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 06:01:18 -0800 (PST)
+Message-ID: <4cac90c2-e414-4ebb-ae62-2a4589d9dc6e@canonical.com>
+Date: Tue, 18 Feb 2025 15:01:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,42 +75,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] irqchip: clocksource: fix jcore-pit irq request
-To: Artur Rojek <contact@artur-rojek.eu>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- "D . Jeff Dionne" <jeff@coresemi.io>, linux-sh@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250216175545.35079-1-contact@artur-rojek.eu>
- <20250216175545.35079-3-contact@artur-rojek.eu>
+Subject: [PATCH v2 1/1 RESEND] block: fix conversion of GPT partition name to
+ 7-bit
+To: Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
+ Ming Lei <ming.lei@redhat.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ linux-efi@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Cc: daniel.bungert@canonical.com, Olivier Gayot <olivier.gayot@canonical.com>
+References: <54095d2f-daea-4e4a-9542-f6a2b7603672@canonical.com>
 Content-Language: en-US
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <20250216175545.35079-3-contact@artur-rojek.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Olivier Gayot <olivier.gayot@canonical.com>
+In-Reply-To: <54095d2f-daea-4e4a-9542-f6a2b7603672@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2/16/25 11:55, Artur Rojek wrote:
-> The jcore-aic irqchip does not have separate interrupt numbers reserved
-> for cpu-local vs global interrupts. Instead, the task of selecting this
-> property is being delegated to the device drivers requesting the given
-> irq.
-> 
-> This quirk has not been taken into account while migrating jcore-pit to
-> request_percpu_irq(), resulting in a failure to register PIT interrupts.
-> 
-> Fix this behavior by making the following changes:
-> 1) Explicitly register irq_set_percpu_devid() in jcore-pit.
-> 2) Provide enable_percpu_irq()/disable_percpu_irq() calls in jcore-pit.
-> 3) Make jcore-aic pass the correct per-cpu cookie to the irq handler by
->     using handle_percpu_devid_irq() instead of handle_percpu_irq().
-> 
-> Fixes: 69a9dcbd2d65 ("clocksource/drivers/jcore: Use request_percpu_irq()")
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 
-Tested-by: Rob Landley <rob@landley.net>
+The utf16_le_to_7bit function claims to, naively, convert a UTF-16
+string to a 7-bit ASCII string. By naively, we mean that it:
+ * drops the first byte of every character in the original UTF-16 string
+ * checks if all characters are printable, and otherwise replaces them
+   by exclamation mark "!".
 
-Rob
+This means that theoretically, all characters outside the 7-bit ASCII
+range should be replaced by another character. Examples:
+
+ * lower-case alpha (ɒ) 0x0252 becomes 0x52 (R)
+ * ligature OE (œ) 0x0153 becomes 0x53 (S)
+ * hangul letter pieup (ㅂ) 0x3142 becomes 0x42 (B)
+ * upper-case gamma (Ɣ) 0x0194 becomes 0x94 (not printable) so gets
+   replaced by "!"
+
+The result of this conversion for the GPT partition name is passed to
+user-space as PARTNAME via udev, which is confusing and feels questionable.
+
+However, there is a flaw in the conversion function itself. By dropping
+one byte of each character and using isprint() to check if the remaining
+byte corresponds to a printable character, we do not actually guarantee
+that the resulting character is 7-bit ASCII.
+
+This happens because we pass 8-bit characters to isprint(), which
+in the kernel returns 1 for many values > 0x7f - as defined in ctype.c.
+
+This results in many values which should be replaced by "!" to be kept
+as-is, despite not being valid 7-bit ASCII. Examples:
+
+ * e with acute accent (é) 0x00E9 becomes 0xE9 - kept as-is because
+   isprint(0xE9) returns 1.
+ * euro sign (€) 0x20AC becomes 0xAC - kept as-is because isprint(0xAC)
+   returns 1.
+
+Fixed by using a mask of 7 bits instead of 8 bits before calling
+isprint.
+
+Signed-off-by: Olivier Gayot <olivier.gayot@canonical.com>
+---
+ V1 -> V2: No change - resubmitted with subsystem maintainers in CC
+
+ block/partitions/efi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+index 5e9be13a56a8..7acba66eed48 100644
+--- a/block/partitions/efi.c
++++ b/block/partitions/efi.c
+@@ -682,7 +682,7 @@ static void utf16_le_to_7bit(const __le16 *in, unsigned int size, u8 *out)
+ 	out[size] = 0;
+ 
+ 	while (i < size) {
+-		u8 c = le16_to_cpu(in[i]) & 0xff;
++		u8 c = le16_to_cpu(in[i]) & 0x7f;
+ 
+ 		if (c && !isprint(c))
+ 			c = '!';
+
+
