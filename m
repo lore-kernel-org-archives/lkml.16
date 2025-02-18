@@ -1,100 +1,137 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83AE26D5AD;
-	Tue, 18 Feb 2025 15:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C885C262811
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 15:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739892724; cv=none; b=CAddlF4ABiOr+DNNjp5XB5wDl/cvLRhjKihs7p3HIQ6BDsXgtcsAI0JbJByPpGiTCtcWFSnpomw1iPKxLwcsdYNLvk769B6+yXZf1H1MMox6mkts5I5Kbne/nxZ7fGg1MZObLF4kWzIWhxlc0rM2sdA0Cjo6UDkpMtxnS7TGk9I=
+	t=1739892742; cv=none; b=uUvb8MOyt5r4J9qqkTQTjLaERAu0fe1oQaKZKOYrNIh9/QJdJnvSnfshHozZk/bnF1mfRaLvcdTpOAMOv3SBE1NQDIDLpmXEOyiFROmIfOsV8unjXIn5fbouOJEi6HsJME4C69pgn9yZZ4stgFEzaHKOCg3Bb78FprOpdJggv18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739892724; c=relaxed/simple;
-	bh=4A2sXShPAtHWuMnR6v0hXy6n/Ate9VWgRnyzmHJ6E/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7WDThiwVmarjyEsZR9Dfry6Dibo8fjpLcz9DuesZH4MwnSrrzClmv1QMBeGgP5r0ALqHcgJVk4Oyp5pBUCJ4sgxghuC2Pv5ja8hNimk49H7EMSCXJCCdoDaDudgW4h0SW8JJtkX9OkujVKkTokyrvaYJASRSB/+VY3F9PHpncw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PeXt2gJB; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PeXt2gJB"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 50F4740E0212;
-	Tue, 18 Feb 2025 15:32:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id h5b8z9JULs8g; Tue, 18 Feb 2025 15:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739892716; bh=xqGUt4GM0NYMO1Cjv7SB68App5WCIDQNnSBWsuJvqx8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PeXt2gJBSP+HzBUrHGbRTmyDh/Nx1jkQ1fgufGgT+d6SLqfZxp1g9qQ75UhMLeNUA
-	 fFTpCFgLJCOCBQ/QFdmyvcXFAub/CUSwCMT0FfT1GU+ZReFElWWxAwZXUdpiWKqbJh
-	 vF7q0KhWFc7xj1lgykE8PbNeEDn8/Anewg+jQN1zgWREXT0aGZe1A4sPd+9YE2ihOU
-	 2Kllps77Q5o9WulkTcwOzyRy/e6oBbcdOBwF+IaeKJBx0DYi3rruV48v7Ubpyhx8eE
-	 0s6te/veXswH7EJw72xtcLbjQ1MBHokKgHE9HOiacqJqqvRcNwoBPUUsEWrud83eUR
-	 VeknBeYWrFiSyIILFxHSJIemWal0QKUeYd0D+sgGIMMyoP1qU922eU/NYcvArp45hK
-	 4u2drsQ4mgHDWAnN/yRStjb+tzvlzT7fysiUdksocItfpPdNxQaH7rdMfJJmmh5fr6
-	 m4hfeqq6A2XMHZyPs+9XSkzCJ/358iMWoM8mQjgXPzxHaxQPLdv4z+AfKNkQIGiRS6
-	 TBSiD3eM4oIPEuqHNh5g2Fi/5bCeovCl7waX82i6x8i0Sg2yGJ9i5TIcub9kkG1KWK
-	 XNSsszHEIgoyutt5VzsAfBLvkvHF1Z8vnDFiJ2fEhgNvkby2+YO1I04xyq9GmFxAgl
-	 L2C7uFBUaPDeI9F8J4NAAE9s=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 670F440E0220;
-	Tue, 18 Feb 2025 15:31:39 +0000 (UTC)
-Date: Tue, 18 Feb 2025 16:31:38 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: tony.luck@intel.com, nao.horiguchi@gmail.com, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, linmiaohe@huawei.com, akpm@linux-foundation.org,
-	peterz@infradead.org, jpoimboe@kernel.org,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, baolin.wang@linux.alibaba.com,
-	tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v2 0/5] mm/hwpoison: Fix regressions in memory failure
- handling
-Message-ID: <20250218153138.GLZ7Sn2inSAgMo1aAM@fat_crate.local>
-References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
- <20250218082727.GCZ7REb7OG6NTAY-V-@fat_crate.local>
- <7393bcfb-fe94-4967-b664-f32da19ae5f9@linux.alibaba.com>
- <20250218122417.GHZ7R78fPm32jKYUlx@fat_crate.local>
- <02164ab7-c65b-4b2e-8686-5539bdcb8f43@linux.alibaba.com>
- <20250218131753.GIZ7SIgRZBJokysBeX@fat_crate.local>
- <4b52e6cd-1315-4b0b-8b6e-95a3d4ed96cc@linux.alibaba.com>
+	s=arc-20240116; t=1739892742; c=relaxed/simple;
+	bh=QpL/AtEu0RLHanD5578BLOiZ1DfT9IbMpp5qQyl6uFk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WSgOhm2a1lRSaweACRyM0bQmvHwsLXqxGX89k2sRO+brBj1NFxoSboEgZ25PyfpnRHjMURX2IUytn+oLA0L+13KfwwJeIc9LXlWdpvcQMjeCi0B+gDkE8xtemtEAJi4ULJFvq6vzLX4XfatS2rBh6B/Ldva1GwsQudDQfgg9r9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d054d79dacso102727275ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 07:32:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739892740; x=1740497540;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U38C3lDKwbTK17gc2HRI9P8P3TtJlwig/T9P9hd3NCE=;
+        b=h9nfk7IIT/czx6WTWrNyA0/v3OO5DOe6jvHRaxgWi1tBp1xcAT3OKyfo+PLcAVTHRz
+         mksH/GLeR7LE88z0rHI8s6vIqezKb9UdccY3XoMVLoiZNVcYHXSuFqXpO6ECPSvXmtkz
+         bu3Qr3ts7rfxpj9Db95fbwLFGyT0x/FNO4+B7oSNkrXQ5wTKsqMN8fSSHoLbZnt+7a59
+         of1HoNNRIO6Y1dlzfRGfGr6ZflzOvNwyBMdAqTQG5KC4WBXCEnc6PQWWCmRMMK9YRMPw
+         DyTL5knpb4OJS1vN2/i7kt6xzW9Ldz3CBYnPUKRcI062iZy+w9t6Wk1TJ0Lf6rdomLT/
+         T3Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVBGCmSesyRRww3s60phC7F+4UylcWoOWynj8TgSYzfW3MUTJxB3yHGMrnCw488AvxE/T3c7gIsuLtIROU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQzp/j3Kwj9TcvtmH/0x5dnT5Xvwlp+bm1ORwgdITumZ1+IJQw
+	bO9vicn5pto9e1I9SO8QWVvPVL+80Yya8vcP5ltJivbEmIEM7jjtMAlCAIDpU1DtGsnyBTBJhE6
+	tthzc9HIhNDUgI0hOw/lVa5zUVhHRqSP0dAu/wtn4MFRUzTw/FhaMmgQ=
+X-Google-Smtp-Source: AGHT+IF6n3nUbG7dttcbsl4kRv/GKA8Le7LRdxhlOoo5EIBnOZIj5ufi/JRfI9HsLVyb5scZtoNdR+oUDTC3Rh7Q/9K1eh5LFIjv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4b52e6cd-1315-4b0b-8b6e-95a3d4ed96cc@linux.alibaba.com>
+X-Received: by 2002:a05:6e02:1384:b0:3d0:17d2:a03e with SMTP id
+ e9e14a558f8ab-3d2809d97dcmr137102065ab.21.1739892739946; Tue, 18 Feb 2025
+ 07:32:19 -0800 (PST)
+Date: Tue, 18 Feb 2025 07:32:19 -0800
+In-Reply-To: <67b44ef3.050a0220.173698.004c.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b4a803.050a0220.173698.0066.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs] WARNING: locking bug in simple_recursive_removal
+From: syzbot <syzbot+727c886b67040701c448@syzkaller.appspotmail.com>
+To: dakr@kernel.org, gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rafael@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 18, 2025 at 09:53:17PM +0800, Shuai Xue wrote:
-> The regression is reported by end user and we also observed in the production.
+syzbot has found a reproducer for the following issue on:
 
-Where is that report? How many times do I have to ask about different aspects
-of your patches until you explain the *whole* picture?
+HEAD commit:    2408a807bfc3 Merge tag 'vfs-6.14-rc4.fixes' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=154fb7df980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6cc40dfe827ffb85
+dashboard link: https://syzkaller.appspot.com/bug?extid=727c886b67040701c448
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17982498580000
 
-> [5056863.064239] task: ffff8837d2a2a0c0 task.stack: ffffc90065814000
-> [5056863.137299] RIP: 0010:[<ffffffff813ad231>]  [<ffffffff813ad231>] __get_user_8+0x21/0x2b
-> ...
-> [5056864.512018] Call Trace:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3bbfce004a48/disk-2408a807.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0151460c5539/vmlinux-2408a807.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8dfe7f8b2862/bzImage-2408a807.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/2e6491f4c19e/mount_0.gz
 
-This tells me exactly 0 - I see some truncated stack trace.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+727c886b67040701c448@syzkaller.appspotmail.com
 
-> Sorry, I did not get your point.
+bcachefs (loop0): alloc_read... done
+bcachefs (loop0): stripes_read... done
+bcachefs (loop0): snapshots_read... done
+bcachefs (loop0): done starting filesystem
+bcachefs (loop0): missing subvolume 1
+bcachefs (loop0): inconsistency detected - emergency read only at journal seq 10
+bcachefs (loop0): bch2_fs_get_tree(): error mounting: error getting root inode ENOENT_bkey_type_mismatch
+bcachefs (loop0): shutting down
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 1 PID: 6056 at kernel/locking/lockdep.c:234 hlock_class kernel/locking/lockdep.c:234 [inline]
+WARNING: CPU: 1 PID: 6056 at kernel/locking/lockdep.c:234 check_wait_context kernel/locking/lockdep.c:4852 [inline]
+WARNING: CPU: 1 PID: 6056 at kernel/locking/lockdep.c:234 __lock_acquire+0x564/0x2100 kernel/locking/lockdep.c:5178
+Modules linked in:
+CPU: 1 UID: 0 PID: 6056 Comm: syz.0.18 Not tainted 6.14.0-rc3-syzkaller-00012-g2408a807bfc3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:hlock_class kernel/locking/lockdep.c:234 [inline]
+RIP: 0010:check_wait_context kernel/locking/lockdep.c:4852 [inline]
+RIP: 0010:__lock_acquire+0x564/0x2100 kernel/locking/lockdep.c:5178
+Code: 00 00 83 3d 81 37 9f 0e 00 75 23 90 48 c7 c7 e0 a2 2a 8c 48 c7 c6 e0 a5 2a 8c e8 07 c2 e4 ff 48 ba 00 00 00 00 00 fc ff df 90 <0f> 0b 90 90 90 31 db 48 81 c3 c4 00 00 00 48 89 d8 48 c1 e8 03 0f
+RSP: 0018:ffffc90003337530 EFLAGS: 00010046
+RAX: 8841e1c411249300 RBX: 0000000000001826 RCX: ffff8880278ebc00
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000041826 R08: ffffffff81817d42 R09: 1ffff110170e519a
+R10: dffffc0000000000 R11: ffffed10170e519b R12: ffff8880278ec6d4
+R13: 0000000000000005 R14: 1ffff11004f1d8e7 R15: ffff8880278ec738
+FS:  00007efc242d26c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055efac1c6518 CR3: 000000006cff8000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ down_write+0x99/0x220 kernel/locking/rwsem.c:1577
+ inode_lock include/linux/fs.h:877 [inline]
+ simple_recursive_removal+0x9a/0x8f0 fs/libfs.c:615
+ debugfs_remove+0x49/0x70 fs/debugfs/inode.c:805
+ __bch2_fs_stop+0x290/0x5c0 fs/bcachefs/super.c:643
+ bch2_fs_get_tree+0xd3a/0x17a0 fs/bcachefs/fs.c:2303
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7efc2338e58a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007efc242d1e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007efc242d1ef0 RCX: 00007efc2338e58a
+RDX: 00004000000058c0 RSI: 0000400000005900 RDI: 00007efc242d1eb0
+RBP: 00004000000058c0 R08: 00007efc242d1ef0 R09: 0000000000010000
+R10: 0000000000010000 R11: 0000000000000246 R12: 0000400000005900
+R13: 00007efc242d1eb0 R14: 0000000000005912 R15: 00004000000001c0
+ </TASK>
 
-I don't get your text either. Until this is explained and debugged properly,
-it is not going anywhere.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
