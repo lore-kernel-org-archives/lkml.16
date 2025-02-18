@@ -1,128 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A9F235360;
-	Tue, 18 Feb 2025 09:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33FF231C8D;
+	Tue, 18 Feb 2025 09:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872102; cv=none; b=Ud67XeTVRCh3h0r7OeMLKuEoLUeCAGnU9gmQY8kcNUiZsyE0mV/jtuHDzQDtQrphVcIG+pa2uBseIRnuvrvrU4KECve8aRwIvcm62NAn1FZcvVG/XA3r/q4ISlBmnpJihcu6JtH2eQMtYVQB0XeMN33gozt83yv6Rbe51+ZSHG4=
+	t=1739872161; cv=none; b=XqxRGuICG9rbHoqvF5gpbeiEtbINrh+UWpEetywd49gJRDmR8TH9Q4s5bPYsJ/3jFL81eePEHa7VHyxnfH+XImyzLX/vdC5+cKf3sMmLLbMT+mcq5BBcf0i1DNM58zeigDJvooQ3IzkGW2HVF8WqhlUO3PPKL8wWXIJJwPUg8hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872102; c=relaxed/simple;
-	bh=o2N1i+HuudpYUzD+SBObuaUBQ9OkUJtfFTP+2nbOm8o=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SSG6MwMcS71XMwns/SrZFHQhc+4pUSmOYqB0LTeRJ8oyNMLpBRuPf8DrIW9pja2QaEi53lc9sdbUZbjWGc3RPYVaKPoZ4Bj81528n+D4q6ub6WRCr2gpSXKhh9meo5yCaJWHlnwz4BuQAW6f/KyJW6FC+hRELRUWhYSR+tzyZZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MwqKTFt2; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739872161; c=relaxed/simple;
+	bh=XbF9Z9EDOE+WH6IsM10sX91VT6//KmQmo+fxU51EyWo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aYDCXGNxGTTWV8bN//Uzh5TG1eF2758cn29RcK5v+QRFDZXOq+TI/IdDK+Qn2qmZA/9GXKRmtM4clUTpZZ83w1omXMJp58aotdfRwA6CIN6qsIBHWgdGK9BEQ8x44pjAlaGh1RnrON+CTq4i/sUT9YfsV5aEKTukIqqSgMMDhtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFraw+Iv; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MwqKTFt2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739872099; x=1771408099;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=o2N1i+HuudpYUzD+SBObuaUBQ9OkUJtfFTP+2nbOm8o=;
-  b=MwqKTFt2dEROSHanWuQKOXXqMVD96HpejL5YRQscnFMHpi9xKpZh+Rde
-   5Ya8fk8mSX89Wtb0uyz/kgilIqMJqCMsUVhhUds13jG2D7IKmQJ1osTIM
-   ZNRqg/VLTQlGqY6PU7gXxiPFvaCC9iNxKAO5WMet+pSZUMD4oNSH4bLA4
-   YYXBybSI1Oi7S+4v7ZrnucdbHlT7+xT8s6qNwZiff192W0hgbZ+Y3C6R7
-   INfPX1fGBw5KwIIsqOa0HPcnnZONgPovYZF+Dcp+RG45sQXA9OQs8rsmM
-   Ksacdv+XtlvEUrH4x61LbcGswpP6jRiMNTviE24ZktJOi3jmS3JoUKrYW
-   A==;
-X-CSE-ConnectionGUID: Uhp6d1UlQQa+cQEjfVkxZA==
-X-CSE-MsgGUID: 1l7MzOE1RDGpiWGex53NIw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="57965157"
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="57965157"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 01:48:19 -0800
-X-CSE-ConnectionGUID: 7Mddcl+JSJKmBN79D63KQA==
-X-CSE-MsgGUID: rgOVoaQmSqmy/wwSF0tKig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114213743"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by orviesa010.jf.intel.com with ESMTP; 18 Feb 2025 01:48:17 -0800
-From: niravkumar.l.rabara@intel.com
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	niravkumar.l.rabara@intel.com,
-	nirav.rabara@altera.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: socfpga: agilex5: add TB daughter board support
-Date: Tue, 18 Feb 2025 17:44:34 +0800
-Message-Id: <20250218094434.3574060-3-niravkumar.l.rabara@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250218094434.3574060-1-niravkumar.l.rabara@intel.com>
-References: <20250218094434.3574060-1-niravkumar.l.rabara@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFraw+Iv"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so2913299f8f.2;
+        Tue, 18 Feb 2025 01:49:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739872158; x=1740476958; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nmC+DcBpQAGFGOKtkkBPoJk4Mr/Jtv0ZiKFK90g8220=;
+        b=nFraw+IvTEiak+45ZTjOsCIVk8idx4nEpHJhdUlAp6F8JgiE4vlNQa6Vay+IN6TT47
+         +DU330t+VHrJxId0q2msTYOZk9no6h76gQxb2upP4GAjJwPHZwG11wceY3gmju+FAfl3
+         DBTLCXG8gdXW49/0cIXD+O5GmC8pK7t2Fcm0RrKKLEN/Zb2ZC7vvDUlCfQKg0/9ExIPe
+         vuCwC25znSHBnTAJ4AQV97PwazcAM4+dI8K408DIXs29aYZ3PhrWMH5VP5coKHkTV5xp
+         BUSZHFK61YLfO7FB+wRdRhEmDPH8ZbFXjh/7ifIja0nJ/b11e8rAK1SXj7l2Cp7L/Qqe
+         AyvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739872158; x=1740476958;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmC+DcBpQAGFGOKtkkBPoJk4Mr/Jtv0ZiKFK90g8220=;
+        b=mVZIrW4rUL/gmoBrm1W6sLs82Vtj2nuMtcPOmTGED0368emgvy9dfhLRO6xAW8VAHD
+         qhUb/i01djKMIOvTIeCW362IJ5FTLePFLDFg3Nzh4j03xriMEuOlqGVIb12lwzZm2d5/
+         9r4U37MKVc9fRWosS/IDXqHZeKgDUnwCSxrStpVHPWtemHfhuEGDklhGkmLV2xLVfrKS
+         1EwgAfHfitIza10/0JHC2pfnFYfpcO6qQMpKeeKx4hp7VEE2iDv2CjmgPVlWgAfAuKd/
+         4iSgBXLUbG9tD9NPyM2x10dbNr+SrPF7dThl7mgJxH0u9cxEdHHHYLmem/y78UlhEWrE
+         AKUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJyPFrLHrvoxwEzqWYUa0eIOLsvyeGgvh3Ji/rsM2kWNYUPzWs+yRGBNlGHqZMb5kcGVk5QREPT5jFnuAm@vger.kernel.org, AJvYcCVFSvaQuCqeVPcgmNcHG848Voj+AZDwZnp9AafznTjxm7wmjDrjr+wH3c+hpMC9s0ngbrj2xePh2lpJ7A==@vger.kernel.org, AJvYcCVjTil4mSGmG223Q2npQAPxV+Use5xEnPeCnT0CjGGbNMGhaQuWawE9qnDQr60NW67yd/0R392+QfPGy1/IFFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzfdvWg/J9n5x4e3cWjmPqL/yuyUbAvF4a9HuA1MWzgv+upIUl
+	26BvIoj6IHFMJhfJqFtiL44e8hvsHxN+KwgKq0NAZrKaQPcT9/mc
+X-Gm-Gg: ASbGncsttmkB56v8rXW9P0sjR4Kn2qgPBqz7gugQ8Rv1JCSUC51aTuEIGFblezhmQPN
+	eOEBPkV7ptHIGkDbwtlffhjm41oh3DgxaEaf2S7O+WJkxcEKEnhnNskTgRPNu9hV6e/gJSQ/0jp
+	Wt7VhSHjwuMnzi706FmhnY20JMTrla2JeYD7mDOkiOH6I6rkunb4Rys//2BMZ+AzOd8TJlN62fC
+	aJH79Nhu9rP1D65Qlab/aJzGenZhMDkHZwRa6B0eyZFwjJPw3yN8az4dxu6qUwNf8F8Id5dPNB9
+	Paxiu3ncqPvfErJy9eT0hkZjicSTaF02Zne2
+X-Google-Smtp-Source: AGHT+IHMMavTvoFgwqe3JTZjFjaVhMPpCPIj09sm9EPZ0jm15kDP34LtqQrw6MAxx6sLesAeKhn1HQ==
+X-Received: by 2002:a5d:64ad:0:b0:38d:d4b5:84cf with SMTP id ffacd0b85a97d-38f33f1b5cbmr13829426f8f.5.1739872157727;
+        Tue, 18 Feb 2025 01:49:17 -0800 (PST)
+Received: from [172.27.59.237] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f8273sm14201167f8f.89.2025.02.18.01.49.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 01:49:17 -0800 (PST)
+Message-ID: <5f2ca37f-3f6d-44d2-9821-7d6b0655937d@gmail.com>
+Date: Tue, 18 Feb 2025 11:49:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z6GCJY8G9EzASrwQ@kspp>
+ <4e556977-c7b9-4d37-b874-4f3d60d54429@embeddedor.com>
+ <8d06f07c-5bb4-473d-90af-5f57ce2b068f@gmail.com>
+ <7ce8d318-584f-42c2-b88a-2597acd67029@embeddedor.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <7ce8d318-584f-42c2-b88a-2597acd67029@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
 
-The Agilex5 devkit supports a separate TB daughter board.
-This board includes a SPI EEPROM and different LED pin configuration
-compared to the default daughter board for the Agilex5 devkit.
 
-Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
----
- arch/arm64/boot/dts/intel/Makefile            |  1 +
- .../dts/intel/socfpga_agilex5_socdk_tb.dts    | 27 +++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_tb.dts
+On 18/02/2025 10:14, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping: who can take this, please?
+> 
+> Thanks
+> -- 
+> Gustavo
+> 
 
-diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
-index d39cfb723f5b..4c977b0aaf9b 100644
---- a/arch/arm64/boot/dts/intel/Makefile
-+++ b/arch/arm64/boot/dts/intel/Makefile
-@@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_n6000.dtb \
- 				socfpga_agilex_socdk.dtb \
- 				socfpga_agilex_socdk_nand.dtb \
- 				socfpga_agilex5_socdk.dtb \
-+				socfpga_agilex5_socdk_tb.dtb \
- 				socfpga_n5x_socdk.dtb
- dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_tb.dts b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_tb.dts
-new file mode 100644
-index 000000000000..3cda73e12f38
---- /dev/null
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_tb.dts
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier:     GPL-2.0
-+/*
-+ * Copyright (C) 2025, Altera Corporation
-+ */
-+#include "socfpga_agilex5_socdk.dts"
-+
-+/ {
-+	model = "SoCFPGA Agilex5 SoCDK - TB";
-+	compatible = "intel,socfpga-agilex5-socdk-tb", "intel,socfpga-agilex5";
-+
-+	leds {
-+		led-0 {
-+			label = "hps_led0";
-+			gpios = <&portb 12 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&spi0 {
-+	status = "okay";
-+
-+	spidev@0{
-+		compatible = "rohm,dh2228fv";
-+		reg = <0>;
-+		spi-max-frequency = <10000000>;
-+	};
-+};
--- 
-2.25.1
+net-next maintainers, please pick it.
+I provided the Reviewed-by tag.
 
+Tariq.
