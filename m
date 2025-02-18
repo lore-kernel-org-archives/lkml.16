@@ -1,55 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCEF17A31C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9C01EB5E6
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 19:23:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739906594; cv=none; b=X7oQxcfghRXynTpSKkVVwJL0cbfsjnz9OGqzPDAyxajdmuHfQk71v7XsXOzFuw4EN2EM77aJ4Q9I8czbF4g3UrVI1wv/v5x5rbN7TUDF/adR6CEIsc2jF5QZYuRq7GOHZah5pwby5RmDFUUU7TulU2b2PITWoH11zthEgMRak8k=
+	t=1739906598; cv=none; b=rD0oQ3FP/kyUUL8t9/iWsdsJ9kCBPvejCs/40MHh4tXnq+zxQ3429atCZUy5xdbxP7usos5osWn0/LOgMDkwokP5NYhvPov1HwSOSPHsOm1+q02ljbXcpSF73AUSv2fnYZqGRRZlZUNHFuIx/KNP6x59BGFo2fAbFI4guiPDb80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739906594; c=relaxed/simple;
-	bh=rIbyj8Nfyu7DcneP0IRpGppUs09YF1sxNIX45ZVw0hE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EUiGZ3eTWYBYeJqbokrWtFwulHnMLwskx7u7lD7RrYkMuqOIRv+yrArXVmGIv/4Xtg7ae9ZdP1KxMOSm0rxH+5IGsyGDgfgay6svPIHVfSp+q7Mdh9Peiqu87a1XSzQI/3pY2PJt6oj8mlqiAV46Co7qKJxD4mY4uc/Q/knikWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BUUPTzZ6; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1739906598; c=relaxed/simple;
+	bh=eZXHQ2G41uUOKVDh8j9cpZv9XKLuoY45JwNn5kAktpA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C1iXTPK+1LGPcyjG1SOyUKyg2b3A+3xr6mopsCWgpUpV2dMyPafayk8IuSj8g864XoHiWpk3d8HEBHk2g5hYSGoGT/lNVok8t4l3TCQ5ZcKWgNs5Jll8YeH+QckrIgjr53Z4naavhrSAMw4QMyAa6vBXNKDBO0hH7a2v1LdhUTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yzc4oCNd; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BUUPTzZ6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yzc4oCNd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739906591;
+	s=mimecast20190719; t=1739906595;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MERCQpBpo0tKF1DN4IvIC5vT6oTv8oj1DKhfqvfja4w=;
-	b=BUUPTzZ6tOiDp5U1VYK1ImOaArqWZi10kcWMtkT/kpNM8rBtlUZ8XKn5s9E2CkBgR9XSDe
-	q4IDmSUFyuRhJfb7vZ3Gr8jisBcRZfvxD1qxsoDl8fJkgxn4bf3FGy4naG76a8cg7gX2s/
-	YInKRroKeXuM1lT4mvOALmtRrIhG6IM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WaiYoCGsFpAWLKJ3d+qpfykW2KxLfKQHY0MVDwtgSTg=;
+	b=Yzc4oCNdLGbg1Xb/UE5i3+TG9ajDJICGke5yArY+h0lzT1TEfWRWnOEMFaVFqgjk1XBjoS
+	C42em6OsBF1dZNCKEbcfKcFsuPXacGDNRplb5PNfD1edLakPpgWlQxsg4Ep2nGFuhEe6fE
+	DTIfKJ3ti46e7Q/2y5B6KeyOT6l/Mq4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-sytx-8WxP9i_Ga2YRr4Ajw-1; Tue,
- 18 Feb 2025 14:23:06 -0500
-X-MC-Unique: sytx-8WxP9i_Ga2YRr4Ajw-1
-X-Mimecast-MFC-AGG-ID: sytx-8WxP9i_Ga2YRr4Ajw_1739906585
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-184-NCeu0UUnNc-PQ1hbDUvhMg-1; Tue,
+ 18 Feb 2025 14:23:12 -0500
+X-MC-Unique: NCeu0UUnNc-PQ1hbDUvhMg-1
+X-Mimecast-MFC-AGG-ID: NCeu0UUnNc-PQ1hbDUvhMg_1739906589
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6AC891800878;
-	Tue, 18 Feb 2025 19:23:05 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.22.58.10])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D89C81800374;
-	Tue, 18 Feb 2025 19:23:03 +0000 (UTC)
-From: Rafael Aquini <aquini@redhat.com>
-To: linux-kselftest@vger.kernel.org
-Cc: linux-mm@kvack.org,
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 669641800873;
+	Tue, 18 Feb 2025 19:23:09 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.9])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 890AC1800359;
+	Tue, 18 Feb 2025 19:23:06 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Peter Xu <peterx@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: [PATCH] selftests/mm: run_vmtests.sh: fix half_ufd_size_MB calculation
-Date: Tue, 18 Feb 2025 14:22:51 -0500
-Message-ID: <20250218192251.53243-1-aquini@redhat.com>
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net 3/5] rxrpc: Fix locking issues with the peer record hash
+Date: Tue, 18 Feb 2025 19:22:46 +0000
+Message-ID: <20250218192250.296870-4-dhowells@redhat.com>
+In-Reply-To: <20250218192250.296870-1-dhowells@redhat.com>
+References: <20250218192250.296870-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,53 +67,58 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Rafael Aquini <raquini@redhat.com>
+rxrpc_new_incoming_peer() can't use spin_lock_bh() whilst its caller has
+interrupts disabled.
 
-We noticed that uffd-stress test was always failing to run when invoked
-for the hugetlb profiles on x86_64 systems with a processor count of 64
-or bigger:
-  ...
-  # ------------------------------------
-  # running ./uffd-stress hugetlb 128 32
-  # ------------------------------------
-  # ERROR: invalid MiB (errno=9, @uffd-stress.c:459)
-  ...
-  # [FAIL]
-  not ok 3 uffd-stress hugetlb 128 32 # exit=1
-  ...
+    WARNING: CPU: 0 PID: 1550 at kernel/softirq.c:369 __local_bh_enable_ip+0x46/0xd0
+    ...
+    Call Trace:
+     rxrpc_alloc_incoming_call+0x1b0/0x400
+     rxrpc_new_incoming_call+0x1dd/0x5e0
+     rxrpc_input_packet+0x84a/0x920
+     rxrpc_io_thread+0x40d/0xb40
+     kthread+0x2ec/0x300
+     ret_from_fork+0x24/0x40
+     ret_from_fork_asm+0x1a/0x30
+     </TASK>
+    irq event stamp: 1811
+    hardirqs last  enabled at (1809): _raw_spin_unlock_irq+0x24/0x50
+    hardirqs last disabled at (1810): _raw_read_lock_irq+0x17/0x70
+    softirqs last  enabled at (1182): handle_softirqs+0x3ee/0x430
+    softirqs last disabled at (1811): rxrpc_new_incoming_peer+0x56/0x120
 
-The problem boils down to how run_vmtests.sh (mis)calculates the size
-of the region it feeds to uffd-stress. The latter expects to see an
-amount of MiB while the former is just giving out the number of free
-hugepages halved down. This measurement discrepancy ends up violating
-uffd-stress' assertion on number of hugetlb pages allocated per CPU,
-causing it to bail out with the error above.
+Fix this by using a plain spin_lock() instead.  IRQs are held, so softirqs
+can't happen.
 
-This commit fixes that issue by adjusting run_vmtests.sh's half_ufd_size_MB
-calculation so it properly renders the region size in MiB, as expected,
-while maintaining all of its original constraints in place.
-
-Fixes: 2e47a445d7b3 ("selftests/mm: run_vmtests.sh: fix hugetlb mem size calculation")
-Signed-off-by: Rafael Aquini <raquini@redhat.com>
+Fixes: a2ea9a907260 ("rxrpc: Use irq-disabling spinlocks between app and I/O thread")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: Simon Horman <horms@kernel.org>
+cc: linux-afs@lists.infradead.org
+cc: netdev@vger.kernel.org
 ---
- tools/testing/selftests/mm/run_vmtests.sh | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/rxrpc/peer_object.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index 333c468c2699..157d07e5aaa3 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -304,7 +304,9 @@ uffd_stress_bin=./uffd-stress
- CATEGORY="userfaultfd" run_test ${uffd_stress_bin} anon 20 16
- # Hugetlb tests require source and destination huge pages. Pass in half
- # the size of the free pages we have, which is used for *each*.
--half_ufd_size_MB=$((freepgs / 2))
-+# uffd-stress expects a region expressed in MiB, so we adjust
-+# half_ufd_size_MB accordingly.
-+half_ufd_size_MB=$(((freepgs * hpgsize_KB) / 1024 / 2))
- CATEGORY="userfaultfd" run_test ${uffd_stress_bin} hugetlb "$half_ufd_size_MB" 32
- CATEGORY="userfaultfd" run_test ${uffd_stress_bin} hugetlb-private "$half_ufd_size_MB" 32
- CATEGORY="userfaultfd" run_test ${uffd_stress_bin} shmem 20 16
--- 
-2.47.0
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index 2ddc8ed68742..56e09d161a97 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -324,10 +324,10 @@ void rxrpc_new_incoming_peer(struct rxrpc_local *local, struct rxrpc_peer *peer)
+ 	hash_key = rxrpc_peer_hash_key(local, &peer->srx);
+ 	rxrpc_init_peer(local, peer, hash_key);
+ 
+-	spin_lock_bh(&rxnet->peer_hash_lock);
++	spin_lock(&rxnet->peer_hash_lock);
+ 	hash_add_rcu(rxnet->peer_hash, &peer->hash_link, hash_key);
+ 	list_add_tail(&peer->keepalive_link, &rxnet->peer_keepalive_new);
+-	spin_unlock_bh(&rxnet->peer_hash_lock);
++	spin_unlock(&rxnet->peer_hash_lock);
+ }
+ 
+ /*
 
