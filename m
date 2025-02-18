@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A24269CE3;
-	Tue, 18 Feb 2025 13:28:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C9226B2BC;
+	Tue, 18 Feb 2025 13:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885303; cv=none; b=dg5i9/OJdw15pU8S1Oj6d+4AM2H4IopZtutVHaEkwbSkCmkJz3KbP/yo4/3QFSK5KCjL7jYUs6vZQGAz7oHWVxmXZLbw5q5mxYz1KEWO7/iD9RFI4PTp7z/tYQCV/shqG0UYXKVozE3tPLJniQ11np67iy009qEeeN7/zcGJW7s=
+	t=1739885307; cv=none; b=tisHondUjz+Ai6cLXZFWvs7bBzKglypS+lp5m3N/ZtEFUqGGnVzPWgp/4uyutS9Dl0k9JtsefG294/bJwbBsYXXlj3tDx8+704BQfFtXzAOM2pcsyynDA4f/G9+zKwl9L6E9/VlrcZFsZk01VtZjuDF36bupuSoWdT/1AapzBsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885303; c=relaxed/simple;
-	bh=3Ft4pTQRAMp8Q2HQW1M4IOo3tvpqkrYGalc5YpRcw+c=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SbbCPrLjTOnZmcDFhSToPVYoV487pn/O8SFr2KOL8Qnx1wTFiBKPm7IrobdEvUGQhrQoc4Uz2CSJOuUs47yQFY32YxZgPduVKlTuCsy5HaUWCRGGp7tjgf4clQBdSA8UO0b+j4dC6Kz2kbXm6/P1Gr0SwtDQR4hv01Hq/NyhxmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grx3FH3N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739885307; c=relaxed/simple;
+	bh=FhqC9LeTi3i3E4qvwVUGdTQsRHg4Tojfkv9D1HoCLaY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LKC7wOP4c7OD79Lyoq92w0UHid7Ef4drKZ4mC+G2aOeXpA+N/S8qqxMPIM2zkCEkrTlNeE2OA8LitFcoZ1U6y+5tBgtz5KCFjAw0BLlXbA5N9bIOKbdooC6NHldhlhQN02zYAQ5JHfc+mpZhbWQ05YIHcqesufgOrTU/I4mGm0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbGtZKTW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grx3FH3N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D80BC4CEE2;
-	Tue, 18 Feb 2025 13:28:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbGtZKTW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B119C4CEE2;
+	Tue, 18 Feb 2025 13:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739885302;
-	bh=3Ft4pTQRAMp8Q2HQW1M4IOo3tvpqkrYGalc5YpRcw+c=;
-	h=From:Subject:Date:To:Cc:From;
-	b=grx3FH3NMiLYvvz5QJHXtuakj2T1YjPOi005TsOwyIVBu7M1tY2wfsSONXgK2Hsyg
-	 Jb7FWvJiAHxvZZTRW6BcKn4mVj1ADwghiFjsPyy6UnmnVY0OLdh8xw9KuKNEqRkCj4
-	 1f0k8KTeX95j4kg52LQjLrtKQq7OduZLTtIk0Q5CHgsjV77APpjX+L3bzc8LtfrHDm
-	 h4Ft+LdHtQRjz9I6mk5OuMPHhgqpK85RAxFv55Z9H0NoaTliqDl+U//rum8Cj50yW4
-	 ip12FyjVFCz/M/YT5ORDKmYOqXE6rqwmo7LH6GXxAFkvCzg3KrMOiP5nBgLzqM2wuB
-	 s2ASVfY8HQrBA==
+	s=k20201202; t=1739885307;
+	bh=FhqC9LeTi3i3E4qvwVUGdTQsRHg4Tojfkv9D1HoCLaY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=gbGtZKTW2FJWDPdnVdTEZhbjBEOKYBUPY7xUPGt53p5IaZm2EEti2wwt/0bKGjRgN
+	 qhylmTn0Wx0bd2QOEcJ/WaecEOMahBUkKwImSHIVMiy3WJStaUSY1inHGmVMxbyaUU
+	 zrZPPdvJc7BrAoJHwKJimo/dvimme/8QZk5H1Z1nNzcBpZU2SqAcDDrmXaJ9XRwrCl
+	 e8x54eYPbe2YAFfAsXTgay9LQVWLmI5dL/YiphTS4//wnseabDuvCURdV2h3FB+cWQ
+	 IL7F8n7G45yquQX95+x5G9l8Fc8A9VYyeZcYM3SCM/R5LpFE6e5u5DAQYqzImpC/kx
+	 x3ZhUchNjgpow==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Subject: [PATCH v8 00/14] hrtimer Rust API
-Date: Tue, 18 Feb 2025 14:27:05 +0100
-Message-Id: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+Date: Tue, 18 Feb 2025 14:27:18 +0100
+Subject: [PATCH v8 13/14] rust: hrtimer: add clocksource selection through
+ `ClockSource`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,15 +37,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKmKtGcC/3XSQW7DIBAF0KtErIsFAwwmq9yj6gLwOEap7RS7V
- qsody9J1KZV6h0f6T9GGk5sopxoYtvNiWVa0pTGoYT6acNi54c98dSUzECAlkJa3uU59ZT5ovi
- CXALPEThI00QMEl1oWakeM7Xp48o+v5TcpWke8+f1lUVebq+g0GCE06h0BQhoNZd86NOup9lPR
- x+pag7s0l/g3nHSAoBVrpLgarCmlHzVpaEJY97vDpQHeq3K8dZUP8318UsQ3DhvTQxB68Y/KPq
- ugMAVRRcFY6ijQquwhgfF/FJWZzFFCUpHED5CDPZBwW/FCCnFioJFaa1sjGgl6n9msXcFhFpRb
- FFk7aTWFoxy7o9yvi0609t7+Tbzbdss+Il4HPs+zdsNCKmjM76lSKTIYvTaG3QGvVNIoKBWrTC
- hYOcvOOmvWYsCAAA=
-X-Change-ID: 20241017-hrtimer-v3-v6-12-rc2-215dc6b169bf
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250218-hrtimer-v3-v6-12-rc2-v8-13-48dedb015eb3@kernel.org>
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>, 
  Anna-Maria Behnsen <anna-maria@linutronix.de>, 
  Frederic Weisbecker <frederic@kernel.org>, 
@@ -59,146 +55,110 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
  Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5620; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=3Ft4pTQRAMp8Q2HQW1M4IOo3tvpqkrYGalc5YpRcw+c=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIqrvuVHsYrSZpcigQSxCPkZxazxAX0Kbsiou
- hXTChgCQt+JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SKqwAKCRDhuBo+eShj
- d50GEAC8V6IGVBbJWUhjOGKx6xeuBHN/VL/QJW9jrLfyaqOMkjhr8c3bwxtndFF3TRMlWEpF8jB
- jIRwiE/HR9CwXIrfAU+1b1A5zFQp5LR9lywUgAc3mTrUGxkNh8J3DRCgTJB69ns/qfpxoldK0QE
- G8mlkog7c7N8SjwvFQ3XuzRz+tqk5mw+4RXWIFJu4ur/ZSQeHKe+PmBIb7GZATP5wQo+lS5YcmQ
- OKvzXpdOgkArC+PSFR84xiLZqNIztcIf0gQDQ0XpBQ7muYb2wlEK0opOiI/kZ9/p2q+G+n/MF4f
- kqMfGEGFxLeoUgm4oFNoXru07fekyTXqUre6ilhxY2DK1W5o0xvgikfRK8QEFpSJD6rTU77kGkQ
- D/tIoVCrwAvKPlHwedLYL4UGBGCxJ4WR/QVVGAWESHAeXy4gHL1JQV0PEDzu8aW3iKmqgNjQcr7
- 57CCnQ+hA0OdlKAm9Q26juSyK98MDuFVm1nFPVouABqHTAlN1Bw73mIN7JJwqX4773nx6EvGo9D
- w5rGSOiTopcNgXC7C3eGK+rPjmN9v+s+CyFyWWNqsso6YTXpDSub6uEwY2p8VJIvv0nY/sHPit7
- cWwoB5UUCwoUv5rRFpUOf4B+JRPlNR0DjQbPSWScwcMVOgZiM1FXkbO8CUJ47sWQaaFl+lID1q+
- Etb7a1buH18e3dA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3998; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=FhqC9LeTi3i3E4qvwVUGdTQsRHg4Tojfkv9D1HoCLaY=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIq7YANcgZqMzDeuuifIn4VXRQuerYmLWVIzq
+ 0LW2VbwvwSJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SKuwAKCRDhuBo+eShj
+ d06KEADFvgDST9bU+byuR3mbPkPDWudF54VYxCyLiNZuiN5ItEinvOIi/zJzqXKFS+47g6BcF9a
+ nwmbAKtfNaiJHhigOGUZlyx/U4WfakMM+y8uI9bA0wjgfaFD/9IbOvlZJL4pbrCsbyjj7fBq0hw
+ +Y2ZA8XR5eaEDJouSrlW2BSnI6ncQqn2hyX+eTxpkvqZvJB+Lb3O5kkRsA049Bz8Ib0twbsu++t
+ qXJoOKhiwnN11vJaDUh1u5gEfC56fF9DNQJtC2/5bOynD6sl9WjfJMQd5+LT4fELpGF/oQeONbY
+ Yb7SwWT6AtiGG33qnuXtENWhRUSJSpcorD3qELRycRsSq8rxLrBOaZAEPln+S20ucNgMPmrknR0
+ GIQgqTD1BqJ+/o2CaX4lSDT7VY9QdJGu0/biMy1GCtuvnkFogu7A84cFG0dKQzYeDoJopu09071
+ TMXNr2N0Rld68QNN+Grct/l/E1ukMwr29LKqjx2gs44HCJHseIoKndKmFU5ljYYdPeBm7nENyzA
+ KShBoxfuZEJrA9mf4AoYg0G2WOlK7QDHJFJkP9u5rO8yd2KxPir6WDwqjbMfAj2bPudzqCjIMGT
+ tHNw2CtR52VGZO86ccTnNKb063R2pGvS07OQY6o/QHMI7kYbf5+MA0tZQMoEFO7cV5Xx+Fkx/er
+ O7c9LR63TFsCzVw==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-This series adds support for using the `hrtimer` subsystem from Rust code.
+Allow selecting a clock source for timers by passing a `ClockSource`
+variant to `HrTimer::new`.
 
-The series adds support for timer mode and clock source configuration during
-timer initialization. Examples and functionality to execute closures at timer
-expiration has been removed, as these depend on either atomics [3] or
-`SpinLockIrq` [4], which are still being worked on.
-
-This series is a dependency for unmerged features of the Rust null block driver
-[1], and for rkvms [2].
-
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/a.hindborg/linux.git/log/?h=rnull-v6.11-rc2 [1]
-Link: https://gitlab.freedesktop.org/lyudess/linux/-/tree/rvkms-wip [2]
-Link: https://lore.kernel.org/rust-for-linux/20240612223025.1158537-1-boqun.feng@gmail.com/ [3]
-Link: https://lore.kernel.org/rust-for-linux/20240916213025.477225-1-lyude@redhat.com/ [4]
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
-Changes in v8:
-- Publicly expose timer handles.
-- Link to v7: https://lore.kernel.org/r/20250203-hrtimer-v3-v6-12-rc2-v7-0-189144725399@kernel.org
+ rust/kernel/time/hrtimer.rs | 52 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 50 insertions(+), 2 deletions(-)
 
-Changes in v7:
-- fix a typo in commit message for "rust: time: Add Ktime::from_ns()"
-- fix a typo in safety comment in `HrTimer::new`
-- fix a typo in `HrTimer::raw_cancel`
-- fix a typo in the vocabulary
-- fix a typo in `HrTimerCallback` docs
-- refactor module documentation
-- add an ascii state diagram to module documentation
-- specify reason for adding `Arc::as_ptr`'
-- change `boxed` to `this` in `Box::into_pin`
-- change `from_ns` to `from_nanos` to align with std
-- imporove safety comment for `impl Send for HrTimer`
-- remove useless paragraph in docs for `HrTimerPointer`
-- rephrase docs for `HrTimerPointer::TimerHandle`
-- update docs for `HrTimerCallback::CallbackTarget`
-- explain how users should use safe functions for cancelling a timer
-- rename generics for consistency
-- remove a note about storing mode in `HrTimer` - this is still required
-- rebase on v6.14-rc1
-- Link to v6: https://lore.kernel.org/r/20250110-hrtimer-v3-v6-12-rc2-v6-0-f71d50f16482@kernel.org
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index db49061f830c3..2b46d66eaa313 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -73,7 +73,7 @@ unsafe impl<T> Sync for HrTimer<T> {}
+ 
+ impl<T> HrTimer<T> {
+     /// Return an initializer for a new timer instance.
+-    pub fn new(mode: HrTimerMode) -> impl PinInit<Self>
++    pub fn new(mode: HrTimerMode, clock: ClockSource) -> impl PinInit<Self>
+     where
+         T: HrTimerCallback,
+     {
+@@ -87,7 +87,7 @@ pub fn new(mode: HrTimerMode) -> impl PinInit<Self>
+                     bindings::hrtimer_setup(
+                         place,
+                         Some(T::CallbackTarget::run),
+-                        bindings::CLOCK_MONOTONIC as i32,
++                        clock.into(),
+                         mode.into(),
+                     );
+                 }
+@@ -448,6 +448,54 @@ fn from(value: HrTimerMode) -> Self {
+     }
+ }
+ 
++/// The clock source to use for a [`HrTimer`].
++pub enum ClockSource {
++    /// A settable system-wide clock that measures real (i.e., wall-clock) time.
++    /// Setting this clock requires appropriate privileges. This clock is
++    /// affected by discontinuous jumps in the system time (e.g., if the system
++    /// administrator manually changes the clock), and by frequency adjustments
++    /// performed by NTP and similar applications via adjtime(3), adjtimex(2),
++    /// clock_adjtime(2), and ntp_adjtime(3). This clock normally counts the
++    /// number of seconds since 1970-01-01 00:00:00 Coordinated Universal Time
++    /// (UTC) except that it ignores leap seconds; near a leap second it is
++    /// typically adjusted by NTP to stay roughly in sync with UTC.
++    RealTime,
++    /// A nonsettable system-wide clock that represents monotonic time since—as
++    /// described by POSIX—"some unspecified point in the past". On Linux, that
++    /// point corresponds to the number of seconds that the system has been
++    /// running since it was booted.
++    ///
++    /// The CLOCK_MONOTONIC clock is not affected by discontinuous jumps in the
++    /// system time (e.g., if the system administrator manually changes the
++    /// clock), but is affected by frequency adjustments. This clock does not
++    /// count time that the system is suspended.
++    Monotonic,
++    /// A nonsettable system-wide clock that is identical to CLOCK_MONOTONIC,
++    /// except that it also includes any time that the system is suspended. This
++    /// allows applications to get a suspend-aware monotonic clock without
++    /// having to deal with the complications of CLOCK_REALTIME, which may have
++    /// discontinuities if the time is changed using settimeofday(2) or similar.
++    BootTime,
++    /// A nonsettable system-wide clock derived from wall-clock time but
++    /// counting leap seconds. This clock does not experience discontinuities or
++    /// frequency adjustments caused by inserting leap seconds as CLOCK_REALTIME
++    /// does.
++    ///
++    /// The acronym TAI refers to International Atomic Time.
++    TAI,
++}
++
++impl From<ClockSource> for bindings::clockid_t {
++    fn from(value: ClockSource) -> Self {
++        match value {
++            ClockSource::RealTime => bindings::CLOCK_REALTIME as i32,
++            ClockSource::Monotonic => bindings::CLOCK_MONOTONIC as i32,
++            ClockSource::BootTime => bindings::CLOCK_BOOTTIME as i32,
++            ClockSource::TAI => bindings::CLOCK_TAI as i32,
++        }
++    }
++}
++
+ /// Use to implement the [`HasHrTimer<T>`] trait.
+ ///
+ /// See [`module`] documentation for an example.
 
-Changes in v6:
-- prefix all hrtimer related type names with `Hr`
-- add a few links for type names in the documentation
-- Link to v5: https://lore.kernel.org/r/20241217-hrtimer-v3-v6-12-rc2-v5-0-b34c20ac2cb7@kernel.org
-
-Changes in v5:
-- Fix a typo in `impl_has_timer`
-- Implement `Box::into_pin` in terms of `impl From<Box> for Pin<Box>`
-- Link to v4: https://lore.kernel.org/r/20241206-hrtimer-v3-v6-12-rc2-v4-0-6cb8c3673682@kernel.org
-
-Changes in v4:
-- rebase on v6.13-rc1 and adapt to kernel `Box`
-- add a missing safety comment to `hrtimer::start`
-- use `hrtimer_setup`
-- fix a build issue when `bindings::hrtimer_restart` is signed
-- fix a memory leak where box was not destroyed
-- fix a documentation typo
-- remove `as` coercion at multiple locations
-- use fully qualified syntax when invoking `deref`
-- move `hrtimer` into `time` module
-- Link to v3: https://lore.kernel.org/r/20241017-hrtimer-v3-v6-12-rc2-v3-0-59a75cbb44da@kernel.org
-
-Changes in v3:
-- support timer mode selection
-- support clock source selection
-- eliminate `Arc::clone_from_raw` in favor of using `ArcBorrow`
-- make `Arc::as_ptr` an associated method
-- update safety requirement for `ArcBorrow::from_raw`
-- remove examples (pending `SpinLockIrq` and `CondVar` patches)
-- remove `start_function` (v2 `schedule_function`, pending `SpinLockIrq` and `CondVar` patches)
-- change function naming from schedule/armed to start/running
-- add vocabulary to documentation
-- update safety comment in `Arc::as_ptr`
-- Link to v2: https://lore.kernel.org/r/20240917222739.1298275-1-a.hindborg@kernel.org
-
-Changes in v2:
-- use a handle to own the timer callback target
-- add ability to for callback to reschedule timer
-- improve `impl_has_timer` to allow generics
-- add support for stack allocated timers
-- add support for scheduling closures
-- use `Ktime` for setting expiration
-- use `CondVar` instead of `AtomicBool` in examples
-- rebase on 6.11
-- improve documentation
-- Link to v1: https://lore.kernel.org/r/20240425094634.262674-1-nmi@metaspace.dk
-
----
-Andreas Hindborg (13):
-      rust: hrtimer: introduce hrtimer support
-      rust: sync: add `Arc::as_ptr`
-      rust: hrtimer: implement `HrTimerPointer` for `Arc`
-      rust: hrtimer: allow timer restart from timer handler
-      rust: hrtimer: add `UnsafeHrTimerPointer`
-      rust: hrtimer: add `hrtimer::ScopedHrTimerPointer`
-      rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&T>`
-      rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&mut T>`
-      rust: alloc: add `Box::into_pin`
-      rust: hrtimer: implement `HrTimerPointer` for `Pin<Box<T>>`
-      rust: hrtimer: add `HrTimerMode`
-      rust: hrtimer: add clocksource selection through `ClockSource`
-      rust: hrtimer: add maintainer entry
-
-Lyude Paul (1):
-      rust: time: Add Ktime::from_ns()
-
- MAINTAINERS                         |  10 +
- rust/kernel/alloc/kbox.rs           |   6 +
- rust/kernel/sync/arc.rs             |  13 +-
- rust/kernel/time.rs                 |  10 +
- rust/kernel/time/hrtimer.rs         | 539 ++++++++++++++++++++++++++++++++++++
- rust/kernel/time/hrtimer/arc.rs     |  87 ++++++
- rust/kernel/time/hrtimer/pin.rs     |  95 +++++++
- rust/kernel/time/hrtimer/pin_mut.rs |  97 +++++++
- rust/kernel/time/hrtimer/tbox.rs    | 102 +++++++
- 9 files changed, 957 insertions(+), 2 deletions(-)
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20241017-hrtimer-v3-v6-12-rc2-215dc6b169bf
-
-Best regards,
 -- 
-Andreas Hindborg <a.hindborg@kernel.org>
+2.47.0
 
 
