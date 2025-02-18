@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D387723C8A4;
-	Tue, 18 Feb 2025 11:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E65F22D7BB;
+	Tue, 18 Feb 2025 11:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878146; cv=none; b=IjKhTILPfXl/3zEgm9kvgU+eGBn8K7ZIZ+5d45d4QZRTKaiINnWyIRBpPoPi5VRWsc+qmMWAPQPsbBUnheBdF4V42u5RMGtIt1Ee0IIZ/ZTJM4KCQNpc/lZNl51zfsj4LpZ5ZjeXd/LAR0cmOHnGpEQEAXSa5hPWcfU2Nk41g5E=
+	t=1739878162; cv=none; b=gZl8xK3vb0GQimFqNMrl2lNq1qy38QSKpFWxPBnY0sdkD3/U6xDMG1yE7p48S/NTRfQpu1poIbcMA6TzYb430iZmBPQ6Dau8jm5MiXghxIV/W32FCbCmUVbdgMNw+LkLaB0EOepuPwcCHwn/XoNNPZkXC5bIpvsMUeG5nAbE0HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878146; c=relaxed/simple;
-	bh=Eh8krLpDs9sUJ+pEpy8Kpyl8U9L/En4zU0UE6JR+Y6c=;
+	s=arc-20240116; t=1739878162; c=relaxed/simple;
+	bh=V+BFJSU2AQm1RuVBzUR4w8BdrGCihfwPNBppLdotF/o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L6jd5NM97/1hFx92Fajr35x5by4D1KtAeQ37b6xjukEvyG8qv+lm8cTRa+cvL196SjvgyR6W0xHgQgWGX2c1YymFk3Cvzhw210pOvPe+eKEgAed8GKq4UIT1wmBu6FcFz+/aJgq7BE/CZWrLmjWr/Ihq9iQoSLER0PAv8x0CvzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hhLpsffq; arc=none smtp.client-ip=117.135.210.5
+	 MIME-Version; b=c9/LdkA+I3B/iWbZhsQEJSk9fwaalRgdqQ3fy9M0bcpsGTPYjIftHWdUK9W0qoUmChDqFj4TV6qVQlWJ1e7DsvHrJUIus34s48AFm77rT5D4kDSyPEWERak77ssslhE8nWYIT5XRzjFL4AoDyS8BCf5wz/4STzAVqYZbdhbxx2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EXZjpSdC; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hhLpsffq"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EXZjpSdC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=rgwQw
-	aW4CJVO+djgR5oP+BuVMz8oTfdlefD5MBuPc3c=; b=hhLpsffquMWDF9Q51nhhE
-	+AEBWdOEncdlEf8d5bjOEvQwKE5eamuHd1tnKn0lU59IhfJ3U8sQgqEfiT3i+/+Y
-	MS2eSQTg4m6Iks69dECVkCWEiBoWRXr2Nc/04dkSURcnuQmvG5fjHcP3YvRv+D03
-	B1mKy2M0VVrAu4qzAgDL5s=
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=iEV3o
+	ojg3U2eJSaxG1OETOyVCd9PZzwbh6RS1wsZRok=; b=EXZjpSdCYRCRKL2V2JeHL
+	Ez9ep+6M6w0cCqmmnZFO38FEQMBq0KT7JH6FjmOmIFDIoD8AryCnwOYAe1Xr99Gu
+	go2Lu3E329WytaZKZ7xhw7sQWL/53j4vfd5vdMFzyeztkfNKfEQNC9t3ekf3pnBZ
+	mfJk+EFTSNVrmGIE3r0zgA=
 Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD333uybrRnLIPUMQ--.34107S4;
-	Tue, 18 Feb 2025 19:27:52 +0800 (CST)
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wCncwzxbrRnw_zOMw--.32912S2;
+	Tue, 18 Feb 2025 19:28:53 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: heiko@sntech.de
 Cc: hjc@rock-chips.com,
@@ -37,10 +37,11 @@ Cc: hjc@rock-chips.com,
 	daniel@fooishbar.org,
 	robh@kernel.org,
 	sebastian.reichel@collabora.com,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v15 02/13] drm/rockchip: vop2: Remove AFBC from TRANSFORM_OFFSET register macro
-Date: Tue, 18 Feb 2025 19:27:29 +0800
-Message-ID: <20250218112744.34433-3-andyshrk@163.com>
+	Andy Yan <andy.yan@rock-chips.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v15 12/13] dt-bindings: display: vop2: Add rk3576 support
+Date: Tue, 18 Feb 2025 19:28:46 +0800
+Message-ID: <20250218112848.34535-1-andyshrk@163.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250218112744.34433-1-andyshrk@163.com>
 References: <20250218112744.34433-1-andyshrk@163.com>
@@ -51,93 +52,167 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD333uybrRnLIPUMQ--.34107S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCrWxKr4rurWrCFyxArykuFg_yoWrZrWDpr
-	W3JayDWF4UKFs2gF48Ar15AF4rJan7K3yfGanxJrnIqFyagryDG342kFyDJr47tas29FZ2
-	q3saqrW7urWftr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jUTmhUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkBT3Xme0bEsvuAACsM
+X-CM-TRANSID:_____wCncwzxbrRnw_zOMw--.32912S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWr1kWFWUuF4UtFW5trWkZwb_yoW5tF4fpa
+	93Cas8XrW8Gr1UWw1ktF1rCwnYq3Z3Aw1Ykrn7Ka13KrsxtF48Ww4agrn8Zr9xWFy2vayj
+	9F4Fkw17G3sFvr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UypBfUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBD3Xme0aMpw7AAAs8
 
 From: Andy Yan <andy.yan@rock-chips.com>
 
-This TRANSFORM_OFFSET register needs to be configured not only in
-AFBC mode, but also in tile mode, so remove the AFBC/AFBCD prefix.
-
-This also help avoid "exceeds 100 columns" warning from checkpatch.
+Add vop found on rk3576, the main difference between rk3576 and the
+previous vop is that each VP has its own interrupt line.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 ---
 
-Changes in v15:
-- Remove AFBC/AFBCD prefix of TRANSFORM_OFFSET register
+(no changes since v13)
 
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 8 ++++----
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.h | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Changes in v13:
+- Use maxItems constraint for clocks in allOf block
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-index ebc9cb93073c..19125ab6f3f3 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -1524,7 +1524,7 @@ static void vop2_plane_atomic_update(struct drm_plane *plane,
- 		transform_offset = vop2_afbc_transform_offset(pstate, half_block_en);
- 		vop2_win_write(win, VOP2_WIN_AFBC_HDR_PTR, yrgb_mst);
- 		vop2_win_write(win, VOP2_WIN_AFBC_PIC_SIZE, act_info);
--		vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFSET, transform_offset);
-+		vop2_win_write(win, VOP2_WIN_TRANSFORM_OFFSET, transform_offset);
- 		vop2_win_write(win, VOP2_WIN_AFBC_PIC_OFFSET, ((src->x1 >> 16) | src->y1));
- 		vop2_win_write(win, VOP2_WIN_AFBC_DSP_OFFSET, (dest->x1 | (dest->y1 << 16)));
- 		vop2_win_write(win, VOP2_WIN_AFBC_PIC_VIR_WIDTH, stride);
-@@ -1535,7 +1535,7 @@ static void vop2_plane_atomic_update(struct drm_plane *plane,
- 	} else {
- 		if (vop2_cluster_window(win)) {
- 			vop2_win_write(win, VOP2_WIN_AFBC_ENABLE, 0);
--			vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFSET, 0);
-+			vop2_win_write(win, VOP2_WIN_TRANSFORM_OFFSET, 0);
- 		}
+Changes in v12:
+- Split from patch 10/13
+
+Changes in v11:
+- Remove redundant min/maxItems constraint
+
+Changes in v10:
+- Move interrupt-names back to top level
+- Add constraint of interrupts for all platform
+- Add constraint for all grf phandles
+- Reorder some properties
+
+Changes in v9:
+- Drop 'vop-' prefix of interrupt-names.
+- Add blank line between DT properties
+- Remove list interrupt-names in top level
+
+Changes in v8:
+- Fix dt_binding_check errors
+- ordered by soc name
+- Link to the previous version:
+  https://lore.kernel.org/linux-rockchip/6pn3qjxotdtpzucpul24yro7ppddezwuizneovqvmgdwyv2j7p@ztg4mqyiqmjf/T/#u
+
+Changes in v4:
+- describe constraint SOC by SOC, as interrupts of rk3576 is very
+  different from others
+- Drop Krzysztof's Reviewed-by, as this version changed a lot.
+
+Changes in v3:
+- ordered by soc name
+- Add description for newly added interrupt
+
+Changes in v2:
+- Add dt bindings
+
+ .../display/rockchip/rockchip-vop2.yaml       | 61 ++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
+index 083eadcf0588..f546d481b7e5 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
+@@ -21,6 +21,7 @@ properties:
+     enum:
+       - rockchip,rk3566-vop
+       - rockchip,rk3568-vop
++      - rockchip,rk3576-vop
+       - rockchip,rk3588-vop
  
- 		vop2_win_write(win, VOP2_WIN_YRGB_VIR, DIV_ROUND_UP(fb->pitches[0], 4));
-@@ -3448,7 +3448,7 @@ static const struct reg_field vop2_cluster_regs[VOP2_WIN_MAX_REG] = {
- 	[VOP2_WIN_AFBC_TILE_NUM] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_VIR_WIDTH, 16, 31),
- 	[VOP2_WIN_AFBC_PIC_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_PIC_OFFSET, 0, 31),
- 	[VOP2_WIN_AFBC_DSP_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_DSP_OFFSET, 0, 31),
--	[VOP2_WIN_AFBC_TRANSFORM_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFSET, 0, 31),
-+	[VOP2_WIN_TRANSFORM_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_TRANSFORM_OFFSET, 0, 31),
- 	[VOP2_WIN_AFBC_ROTATE_90] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 0, 0),
- 	[VOP2_WIN_AFBC_ROTATE_270] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 1, 1),
- 	[VOP2_WIN_XMIRROR] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 2, 2),
-@@ -3547,7 +3547,7 @@ static const struct reg_field vop2_esmart_regs[VOP2_WIN_MAX_REG] = {
- 	[VOP2_WIN_AFBC_PIC_OFFSET] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_PIC_SIZE] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_DSP_OFFSET] = { .reg = 0xffffffff },
--	[VOP2_WIN_AFBC_TRANSFORM_OFFSET] = { .reg = 0xffffffff },
-+	[VOP2_WIN_TRANSFORM_OFFSET] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_HDR_PTR] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_HALF_BLOCK_EN] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_ROTATE_270] = { .reg = 0xffffffff },
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-index 29cc7fb8f6d8..156a272480f3 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-@@ -118,7 +118,7 @@ enum vop2_win_regs {
- 	VOP2_WIN_AFBC_PIC_OFFSET,
- 	VOP2_WIN_AFBC_PIC_SIZE,
- 	VOP2_WIN_AFBC_DSP_OFFSET,
--	VOP2_WIN_AFBC_TRANSFORM_OFFSET,
-+	VOP2_WIN_TRANSFORM_OFFSET,
- 	VOP2_WIN_AFBC_HDR_PTR,
- 	VOP2_WIN_AFBC_HALF_BLOCK_EN,
- 	VOP2_WIN_AFBC_ROTATE_270,
-@@ -335,7 +335,7 @@ enum dst_factor_mode {
- #define RK3568_CLUSTER_WIN_DSP_INFO		0x24
- #define RK3568_CLUSTER_WIN_DSP_ST		0x28
- #define RK3568_CLUSTER_WIN_SCL_FACTOR_YRGB	0x30
--#define RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFSET	0x3C
-+#define RK3568_CLUSTER_WIN_TRANSFORM_OFFSET	0x3C
- #define RK3568_CLUSTER_WIN_AFBCD_OUTPUT_CTRL	0x50
- #define RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE	0x54
- #define RK3568_CLUSTER_WIN_AFBCD_HDR_PTR	0x58
+   reg:
+@@ -38,10 +39,21 @@ properties:
+       - const: gamma-lut
+ 
+   interrupts:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+     description:
+-      The VOP interrupt is shared by several interrupt sources, such as
+-      frame start (VSYNC), line flag and other status interrupts.
++      For VOP version under rk3576, the interrupt is shared by several interrupt
++      sources, such as frame start (VSYNC), line flag and other interrupt status.
++      For VOP version from rk3576 there is a system interrupt for bus error, and
++      every video port has it's independent interrupts for vsync and other video
++      port related error interrupts.
++
++  interrupt-names:
++    items:
++      - const: sys
++      - const: vp0
++      - const: vp1
++      - const: vp2
+ 
+   # See compatible-specific constraints below.
+   clocks:
+@@ -136,6 +148,11 @@ allOf:
+         clock-names:
+           maxItems: 5
+ 
++        interrupts:
++          maxItems: 1
++
++        interrupt-names: false
++
+         ports:
+           required:
+             - port@0
+@@ -149,6 +166,39 @@ allOf:
+       required:
+         - rockchip,grf
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rk3576-vop
++    then:
++      properties:
++        clocks:
++          maxItems: 5
++
++        clock-names:
++          maxItems: 5
++
++        interrupts:
++          minItems: 4
++
++        interrupt-names:
++          minItems: 4
++
++        ports:
++          required:
++            - port@0
++            - port@1
++            - port@2
++
++        rockchip,vo1-grf: false
++        rockchip,vop-grf: false
++
++      required:
++        - rockchip,grf
++        - rockchip,pmu
++
+   - if:
+       properties:
+         compatible:
+@@ -164,6 +214,11 @@ allOf:
+           minItems: 7
+           maxItems: 9
+ 
++        interrupts:
++          maxItems: 1
++
++        interrupt-names: false
++
+         ports:
+           required:
+             - port@0
 -- 
 2.34.1
 
