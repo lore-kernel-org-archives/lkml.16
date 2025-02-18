@@ -1,66 +1,87 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCF718E20;
-	Tue, 18 Feb 2025 01:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C8484D34;
+	Tue, 18 Feb 2025 01:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739840993; cv=none; b=LndwPYE4LyrohfEnm2Bd9KYgJr5V49AA5jY1ytY29oT9nJjgIU4rHdnhKyaYh8ERW/kRBQN4eIX+6V2R2fh9QIc7CWbuACLw/N6O+0RsnU9fJpIJKjTC8shZBEQLhMy59VN8ISMA5tfYHNhiedxmOGxDuHBf2Uiwh84nlfjtlEY=
+	t=1739841028; cv=none; b=HP54uh/5pSfn9yfYxz5JcQRGMa50yy8OaqLVZlX0L9XCFQd4TQ7XxVCgHPNPJmJv+6/WOL0szHcNJRxO0C3WxMidh9ZJDJkzt1VitOCXnN2PMFBxTtFgQfMj9cGxJCI4//Jj9g5k30OWZ94Bsn/+LQl+EDMAy1fLs511L0zsphQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739840993; c=relaxed/simple;
-	bh=42hWqZkaDlwsbOuKcR363GQ3gUU+QNYqERbd6QgQwlc=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hhcpmCAePMgSd9ylZk78zaUub5ZKapxDJnjkENUeRM4O3+LlQFrgY6gUedMW0r6qUC4+IALQ79Zy4Cu9yjEo9oKXhk/FoFrhSQctwb037mWOIVbxPoDQIPEMeJ62r+QykBwF7YgS+4MG02DjuwpYvEUtJeKCuJBgq1pVbPK8mU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=MR++2k7U; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1739841028; c=relaxed/simple;
+	bh=mp41Y2E+0Yi5ho4XyG2Vk8jU5I+itfdLIQ/z4tHFpHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LzC2FUgNmzCyC5fdMzRIZCLqxhZ/3lpoLqs17vsny22ZvZi3T2bQZ8CMd54SH1qGk69kyKVTOnt4EGQvD/csVAB9i65Fd1AngWrxLFjmDILEHNNRn2upO1fvKSZy9Jkh8lIq6uu+FoGj+KGF1fiPzpswz1lh1DK0Vb5T4c1YKVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lj3ovUrV; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="MR++2k7U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1739840990;
-	bh=42hWqZkaDlwsbOuKcR363GQ3gUU+QNYqERbd6QgQwlc=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=MR++2k7U+SQKF98nYBZwOBmOb2ncRe5qVWZZqcgx53Sxw3D5moRDfFaVkaHQo5NQ4
-	 LbioIN1E+rcU4Wp1Hu0I4t8thOoIhVZbPzjXj93GiVOal9l27Ela+cMaKBpmCu7kJn
-	 XwTfFf2rQDw6bw/3mh2fjTHBnkkNRx2UVhb/c+dhq9l6ez8P07OmspidVXdrYefeG3
-	 Y+g5frhVzF8OswBMD88vkDH54VcxI7BDmHRh7iroxNDAcLKcpqMTdUkK+83LSo9H64
-	 6NO4s475K8i/MJC9vvAQw0dmtxeDxdFCo+I+orlHbkbg9svQ5Orna6hLHx+edN52nm
-	 Ra+qldThpmp1g==
-Received: from [192.168.68.112] (ppp118-210-165-49.adl-adc-lon-bras34.tpg.internode.on.net [118.210.165.49])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 1E5A876234;
-	Tue, 18 Feb 2025 09:09:49 +0800 (AWST)
-Message-ID: <560da647d1fd12c53f6403db4207fec48899648e.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v6] media: dt-bindings: aspeed,video-engine: Convert to
- json schema
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Jammy Huang <jammy_huang@aspeedtech.com>, eajames@linux.ibm.com, 
- mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org,  joel@jms.id.au, andrew@aj.id.au,
- linux-media@vger.kernel.org,  openbmc@lists.ozlabs.org,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org,  linux-kernel@vger.kernel.org
-Date: Tue, 18 Feb 2025 11:39:48 +1030
-In-Reply-To: <20250213015338.3243171-1-jammy_huang@aspeedtech.com>
-References: <20250213015338.3243171-1-jammy_huang@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lj3ovUrV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=hQf6BQmTrhmN5xM7XWiDSR55b1HKStYnTUiapIt/KYM=; b=lj3ovUrVNBrgmFnmw6mSqZ6L/1
+	hyFv5scaXARlvfmV69IzrWj3xM31BmASongb3cFpc43edLuIsBw0X8FNeHNlZMn1OCWyyMU9GAyOe
+	qluzF6PRSDAkKtNGdKjjTElXbsnH+imoUtLL5X44MyiNXaxII8SCdMJ7GkRK1zrCBphY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tkC7k-00F8VR-PI; Tue, 18 Feb 2025 02:10:08 +0100
+Date: Tue, 18 Feb 2025 02:10:08 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Qasim Ijaz <qasdev00@gmail.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] net: fix uninitialised access in mii_nway_restart()
+Message-ID: <cf0d2929-d854-48ce-97eb-69747f0833f2@lunn.ch>
+References: <20250218002443.11731-1-qasdev00@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218002443.11731-1-qasdev00@gmail.com>
 
-On Thu, 2025-02-13 at 09:53 +0800, Jammy Huang wrote:
-> Convert aspeed-video.txt to yaml format.
-> Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER
-> file.
->=20
-> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+On Tue, Feb 18, 2025 at 12:24:43AM +0000, Qasim Ijaz wrote:
+> In mii_nway_restart() during the line:
+> 
+> 	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
+> 
+> The code attempts to call mii->mdio_read which is ch9200_mdio_read().
+> 
+> ch9200_mdio_read() utilises a local buffer, which is initialised 
+> with control_read():
+> 
+> 	unsigned char buff[2];
+> 	
+> However buff is conditionally initialised inside control_read():
+> 
+> 	if (err == size) {
+> 		memcpy(data, buf, size);
+> 	}
+> 
+> If the condition of "err == size" is not met, then buff remains 
+> uninitialised. Once this happens the uninitialised buff is accessed 
+> and returned during ch9200_mdio_read():
+> 
+> 	return (buff[0] | buff[1] << 8);
+> 	
+> The problem stems from the fact that ch9200_mdio_read() ignores the
+> return value of control_read(), leading to uinit-access of buff.
+> 
+> To fix this we should check the return value of control_read()
+> and return early on error.
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+What about get_mac_address()?
 
-Thanks Jammy.
+If you find a bug, it is a good idea to look around and see if there
+are any more instances of the same bug. I could be wrong, but it seems
+like get_mac_address() suffers from the same problem?
 
-Andrew
+	Andrew
