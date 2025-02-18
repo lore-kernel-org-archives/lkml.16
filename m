@@ -1,96 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE0F17A30E;
-	Tue, 18 Feb 2025 18:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38E817A30E;
+	Tue, 18 Feb 2025 18:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904061; cv=none; b=iS64ZJ161D/Nj9fN1E6+eX49rTEGw10MJr3igr0Y7fxw7TnOwNbhO/lBs9SZpR3Xcd8xKCqdAREWLvwFE2eh/T8xwzth/WbH2mNFORDTxzXHZi2F4X3Gq8rMtvBa2/l9JvtPN36AokpWvRUWG0cmhTc/6lw8DUCxGy/vSKelRgk=
+	t=1739904079; cv=none; b=T028KXO1ujygEmCa/A6T88EjUQ6/STdgaFQMbuzPYO8fk3KBhDrnk9/7kAS1APkXxbSDYSf7r2IiCofzLZzZUclKJHF3r4wrJ9YjJZ+gVzxmJG2joRGevxGjFq/2Eduu5tX9AAtkc348CBuBTcfHYD6TvVzRMpGh2LPNHf2sJj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904061; c=relaxed/simple;
-	bh=iSn5qlkSLrvY9fduNUiNVom2UONzE20CK92zMJiRyX0=;
+	s=arc-20240116; t=1739904079; c=relaxed/simple;
+	bh=0n/N4OIMFC/2nMujN0L1S/sXtFEZdrSCzgbpESuMTxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HG2qwFPZ11xrxpBtfgB15Tm0EFC5w2te6LE18IXIHgK/S4io1mxS4r+M14azoJA46cpAW41wy5990vtt9ovK6/eYMAZbQpB588aE7tZy2xHHNxxX7+G83viKbSNop9l5L2NSVOf8j1GErJ2jJ9/tHpl9N02LOuc5T8dW07NRCEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsAtfCe3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LHWW0NORIq3UoL9A1z7hhjp2QffsTYXqt3xbi7EeYXH8mRiAtBF3CVnVxvgDYg6cRvl6nCHDiWvoE63th/iAM7YchOFUeJr+UJxyG6QkSMaJ5+jaqH4DQfKUHRPlmJ01FSSzP1r5a54hPqJupruAe+0D+COc/Nci7zZYn37ioHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWq6yUTM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsAtfCe3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D09C4CEE2;
-	Tue, 18 Feb 2025 18:41:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWq6yUTM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61EA7C4CEE2;
+	Tue, 18 Feb 2025 18:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739904061;
-	bh=iSn5qlkSLrvY9fduNUiNVom2UONzE20CK92zMJiRyX0=;
+	s=k20201202; t=1739904074;
+	bh=0n/N4OIMFC/2nMujN0L1S/sXtFEZdrSCzgbpESuMTxw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BsAtfCe3TAKsKWVtlrXywIPoIXoilqgNSNTs7nYiJc7ox+cXZyshjoUv90wT0Osem
-	 gKt4dti+h3LbR+hjEVOSXF7DiCIUmTSBgEf3brOEfXA+gBYKnfp9lAHfcjIqppqwNt
-	 O5iJVnxAaW2giwyDCoTCa9J6qAIjM/78Mf9KEXnbHmNtRjFQJlDkwRmqVWBmvInh9W
-	 gOgfC4YJKTDkZQCamXcn2rQd2ZGzCemGdD3+fRrh1A8cslNK2eJQAq5fYaKg/lVd1P
-	 /An9oyr5gEw/rirR+v1fnVuI/KKCf5++5RsZhyZBnRErWxl5d3wj7xTVZYK0ET9teO
-	 nEMH/LLtJf9gw==
-Date: Tue, 18 Feb 2025 10:40:59 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: Puranjay Mohan <puranjay@kernel.org>, Weinan Liu <wnliu@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
-	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
-	linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org, joe.lawrence@redhat.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
-Message-ID: <20250218184059.iysrvtaoah6e4bu4@jpoimboe>
-References: <mb61py0yaz3qq.fsf@kernel.org>
- <CAPhsuW7dV7UR3PsGVx_DLBH5-95DAmLMGTPuY0NfUwWLZMSTrQ@mail.gmail.com>
- <20250214080848.5xpi2y2omk4vxyoj@jpoimboe>
- <CAPhsuW6dxPtgqZaHrZEVhQXwm2+sETreZnGybZXVKYKfG9H6tg@mail.gmail.com>
- <20250214193400.j4hp45jlufihv5eh@jpoimboe>
- <CAPhsuW6q+yhn0pGQb0K+RhXHYDkjEgomZ2pu3P_MEeX+xNRe0g@mail.gmail.com>
- <20250214232342.5m3hveygqb2qafpp@jpoimboe>
- <CAPhsuW48h11yLuU7uHuPgYNCzwaxVKG+TaGOZeT7fR60+brTwA@mail.gmail.com>
- <20250218063702.e2qrpjk4ylhnk5s7@jpoimboe>
- <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
+	b=TWq6yUTMhM30VHPmrJgTSC+OuoF3COyvfzi3NZaH0PjfGH4CO1353g0qz2RXkumYn
+	 zJUH48qbksTNskXdIwln6rdqhzYP0E61y+DFL1ZkGC4RFSyUJIe5tmU/WaVCYjFDGc
+	 ffbRFU+nnswr1mLyqSK0Ga2/tHzdZKt9W8YGr3/4LHLwGFpyGvYiHYIKKRi0LBnNE4
+	 gzWNfPs6gWkmugHdbk152KLobi6gOUEAxC/J/uzcfB6RZIk2cDLCqAMB7MiAIhjAUd
+	 raFDDNhQjpCEaF3/EFeYJVEISMtX49jkmIAzStOXksyRdCzQBLkfn9z+GsibXmMWls
+	 6hoV0j0X82g+A==
+Date: Tue, 18 Feb 2025 11:41:10 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nicolas Schier <nicolas@fjasle.eu>
+Subject: Re: [PATCH] kbuild: remove KBUILD_ENABLE_EXTRA_GCC_CHECKS support
+Message-ID: <20250218184110.GA1316487@ax162>
+References: <20250217113706.1012816-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
+In-Reply-To: <20250217113706.1012816-1-masahiroy@kernel.org>
 
-On Tue, Feb 18, 2025 at 10:20:10AM -0800, Song Liu wrote:
-> Hi Josh,
+On Mon, Feb 17, 2025 at 08:36:48PM +0900, Masahiro Yamada wrote:
+> Commit e27128db6283 ("kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to
+> KBUILD_EXTRA_WARN") renamed KBUILD_ENABLE_EXTRA_GCC_CHECKS in 2019.
+> The migration in downstream code should be complete.
 > 
-> On Mon, Feb 17, 2025 at 10:37 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> >
-> > On Mon, Feb 17, 2025 at 08:38:22PM -0800, Song Liu wrote:
-> > > On Fri, Feb 14, 2025 at 3:23 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > > > Poking around the arm64 module code, arch/arm64/kernel/module-plts.c
-> > > > is looking at all the relocations in order to set up the PLT.  That also
-> > > > needs to be done for klp relas, or are your patches already doing that?
-> > >
-> > > I don't think either version (this set and my RFC) added logic for PLT.
-> > > There is some rela logic on the kpatch-build side. But I am not sure
-> > > whether it is sufficient.
-> >
-> > The klp relas looked ok.  I didn't see any signs of kpatch-build doing
-> > anything wrong.  AFAICT the problem is that module-plts.c creates PLT
-> > entries for regular relas but not klp relas.
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+Seems reasonable.
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+
+> ---
 > 
-> In my tests (with printk) module-plts.c processes the .
-> klp.rela.vmlinux..text.copy_process section just like any other .rela.*
-> sections. Do we need special handling of the klp.rela.* sections?
-
-Ok, I see how it works now:
-
-klp_write_section_relocs()
-	apply_relocate_add()
-		module_emit_plt_entry()
-  
-If that code is working correctly then I'm fresh out of ideas...
-
--- 
-Josh
+>  Makefile | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 96407c1d6be1..3c1b012a156f 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -151,9 +151,6 @@ endif
+>  
+>  export KBUILD_EXTMOD
+>  
+> -# backward compatibility
+> -KBUILD_EXTRA_WARN ?= $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)
+> -
+>  ifeq ("$(origin W)", "command line")
+>    KBUILD_EXTRA_WARN := $(W)
+>  endif
+> -- 
+> 2.43.0
+> 
