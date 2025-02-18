@@ -1,118 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38C01EB1B0;
-	Tue, 18 Feb 2025 20:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653F91D7E4F;
+	Tue, 18 Feb 2025 20:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910359; cv=none; b=MryMI2cCahhQN57o6k7H7YH7YVpeCLs4A/kOzLwgeGP5sbj+gpr/6SaTMC5i9jrvJhtD1463AChBzi4rLTAIePh1/9lxzteMc06g5qmiWK0UHHbLTRm91PvocSF6o8M0M5hpZRcc/qoECDjd3XESkG7K0mual5GljWK6G+kjXv0=
+	t=1739910362; cv=none; b=T5YyfjJ7qM5pmXX0bEdV+tWeh3tB6v824KWmSy10i/p5knk1FUvsmu69VnJq/oW7OIN3PwnQCKOBDmuSBd7eFsB7XeNRQwhjtpd9aQyiPA8NIdKlglHaZlrNj8bEEEJb2QTdO7L73UEXYcviRvwuGgnnmnP+ghO8iHhO3I8bato=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910359; c=relaxed/simple;
-	bh=9IUfkYYejgzYqaILdxndHszsbEAz7eKvYdVVZCcUKtk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hYHfGY9Q1cSENWhYV+1MSynFG5yYGZIMJjGIiCF7mRf9H9RD2hGrcVFmyb0K9UkSu9eSCVJpWTU6h8A2WPRkvDG0zkt5jVKwv7WOZ6+UMjjg1upDFFvK9+D/E0+cDMddv4SEdMkBmBCgcKQ9fFU4KAAlrTQTA6ASymN82mutzfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KkdB3XAL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739910362; c=relaxed/simple;
+	bh=VropmkxRvGV2M+HXGjJIyxCbLwUKDK91l3HDTGhaTAY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=k1mqX5wW+NHxYPOZGzE100G0rmLSj1nJ1KDCIK+YJCRBsx0B3gm7r3LaY3Zwn+4yMffk2uaDs9Z5wq2r3UUPu4RnAk8SEjDWRxhDg4sir8dQ7/lTAV1G3i0BMak+H5GYtUgG0psg+E6BiesIYxxgWdkF/Wdyr5nCsG23a8a1JSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7xnhbkO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KkdB3XAL"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IIwLAc014993;
-	Tue, 18 Feb 2025 20:25:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xbintQ10k3gaAfsoEtml4GPxRMtrtT4KCwA9NwsAfgw=; b=KkdB3XALGA7Fv65j
-	1YtvGRTvtISofMA88kCcatAXJ4lPS2qmR7MyYEd+oA1fJ4+7SReJNFSAMt9oJytj
-	aVCSXEWaG2LdV8QvcRpcKudpnbyEhvPEIzZwMXTmCBfQm/sAjhMbM2UA8BN2jU4a
-	hVk+baI35/OrogM7ftGk9mnrOA1y8KDB3jTXGKDtOx1xiKLJDi/GKN+XMRApMzXN
-	t+7oHkR969s1VTrWMdDwcA6bzlBoFn/Po68dzWzTJsZGJVm8qqm8JOY2h0RW25db
-	8kqDnqukvcJLnY6i0nZydSaoLavGhAf1NW3YQj9zDfRUwYrdv9q7XVprEDtA/L0L
-	/ePqQw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy106nk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 20:25:40 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51IKPdfe002295
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 20:25:39 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Feb
- 2025 12:25:39 -0800
-Message-ID: <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
-Date: Tue, 18 Feb 2025 13:25:38 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7xnhbkO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B739C4CEE2;
+	Tue, 18 Feb 2025 20:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739910362;
+	bh=VropmkxRvGV2M+HXGjJIyxCbLwUKDK91l3HDTGhaTAY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c7xnhbkOsM4EEQcZOU5IKdmzV951tqRXySsxXmMcfH5p904dK74l9fo1BTYRTU5bU
+	 d/OiQ6i6+ry3pJsZEyc2LZJrquz3QLqV5sHxWAvmZK2vloFcrS9BRtoXCLz1vzPHaX
+	 TkGQw7odvwYt+negXYgQUoXTUicMhKd7BjgmnkvJBmEI/rr1Zkm5xBBpZSavhprIky
+	 5OhAf32TFyWT4qk23CAM880Xnyn10xxQKK1Kf85yueRHAUFZsagfrPf/FHNItUYR+X
+	 MEZXSDvtvpK0W0eJSYEpdfyTeAI2pEAU80aIkT8lVPsprMraJJmTNDGHGxGWQ12HfQ
+	 IRfni2j8PZr8g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Sasha Levin <sashal@kernel.org>,
+	maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	dmitry.baryshkov@linaro.org,
+	dave.stevenson@raspberrypi.com,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.13 29/31] drm/tests: hdmi: Remove redundant assignments
+Date: Tue, 18 Feb 2025 15:24:49 -0500
+Message-Id: <20250218202455.3592096-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250218202455.3592096-1-sashal@kernel.org>
+References: <20250218202455.3592096-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH 3/4] kbuild: slim down package for building external
- modules
-Content-Language: en-US
-To: Masahiro Yamada <masahiroy@kernel.org>, <linux-kbuild@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Kees Cook <kees@kernel.org>,
-        Nathan
- Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Ben
- Hutchings <ben@decadent.org.uk>
-References: <20240727074526.1771247-1-masahiroy@kernel.org>
- <20240727074526.1771247-4-masahiroy@kernel.org>
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20240727074526.1771247-4-masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 6K0e3kPgCKMQGaIOtOscn-GlU9SZ47QA
-X-Proofpoint-ORIG-GUID: 6K0e3kPgCKMQGaIOtOscn-GlU9SZ47QA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-18_09,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 clxscore=1011
- suspectscore=0 spamscore=0 mlxlogscore=983 mlxscore=0 bulkscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2502180139
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.3
+Content-Transfer-Encoding: 8bit
 
-On 7/27/2024 1:42 AM, Masahiro Yamada wrote:
-> Exclude directories and files unnecessary for building external modules:
-> 
->   - include/config/  (except include/config/auto.conf)
->   - scripts/atomic/
->   - scripts/dtc/
->   - scripts/kconfig/
->   - scripts/mod/mk_elfconfig
->   - scripts/package/
->   - scripts/unifdef
->   - .config
+From: Maxime Ripard <mripard@kernel.org>
 
-Please revert this (the removal of .config).
+[ Upstream commit bb4f929a8875b4801db95b8cf3b2c527c1e475e0 ]
 
-I got some strange reports that our external module install broke, and 
-traced it to this change.  Our external module references the .config 
-because we have different logic for the build depending on if other, 
-related modules are present or not.
+Some tests have the drm pointer assigned multiple times to the same
+value. Drop the redundant assignments.
 
-Also, it looks like this broke DKMS for some configurations, which not 
-only impacts DKMS itself [1] but also downstream projects [2].
+Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250129-test-kunit-v2-2-fe59c43805d5@kernel.org
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Stable-dep-of: 5d14c08a4746 ("drm/tests: hdmi: Fix recursive locking")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-While DKMS may be updated going forward to avoid this issue, there are 
-plenty of affected version out in the wild.
+diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+index 4ba869e0e794c..ac653346e766b 100644
+--- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
++++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+@@ -443,7 +443,6 @@ static void drm_test_check_broadcast_rgb_auto_cea_mode_vic_1(struct kunit *test)
+ 	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
+-	drm = &priv->drm;
+ 	crtc = priv->crtc;
+ 	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+@@ -557,7 +556,6 @@ static void drm_test_check_broadcast_rgb_full_cea_mode_vic_1(struct kunit *test)
+ 	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
+-	drm = &priv->drm;
+ 	crtc = priv->crtc;
+ 	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+@@ -673,7 +671,6 @@ static void drm_test_check_broadcast_rgb_limited_cea_mode_vic_1(struct kunit *te
+ 	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
+-	drm = &priv->drm;
+ 	crtc = priv->crtc;
+ 	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+@@ -1275,7 +1272,6 @@ static void drm_test_check_output_bpc_format_vic_1(struct kunit *test)
+ 	rate = mode->clock * 1500;
+ 	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
+ 
+-	drm = &priv->drm;
+ 	crtc = priv->crtc;
+ 	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+-- 
+2.39.5
 
-Also, I haven't surveyed every distro, but it looks like Ubuntu still 
-packages the .config with their headers in their upcoming "Plucky" 
-release based on 6.12.  I suspect they wouldn't do that if they didn't 
-feel it was needed/useful.
-
--Jeff
-
-[1]: https://github.com/dell/dkms/issues/464
-[2]: https://github.com/linux-surface/linux-surface/issues/1654
