@@ -1,150 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D960198E60
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 16:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A596826E622
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 16:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739895918; cv=none; b=fcHoC6xdSkhOIXTqoEzWfH6akhS/zJWCH7pT6OjUPPrZhCv466r19qjk6Yg/V0NtLOzgccrLRphdg/ucJhvZhLGWWdwsBS0y1D3FA9AKKdDUittZ8nF1oBIDb3D0TTuzcaGK/z5sIjNSp0UZwikwG9u6dyVr76FtVOCJXElUxuQ=
+	t=1739895942; cv=none; b=PJNG3ypaON3Im1AvLbPXt0Y+LMJ0Jp2vKFXJ8uJTSm2UVzxJ925bQDzIK47qCWQxnLYBkNbU1J+KNYXhTx46yYrUW/m8sd/rKePgmK/emnOrD/QDj3Bgy1x/cfsQculp10eYzGHJm7yfIXSd897SWCVALfV32qZ1yp4/mbdh9Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739895918; c=relaxed/simple;
-	bh=41BI8YlrCGmBKS+t8IH/N263QGj1uwZ0cBkSEzL2LRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N1s7e7wJRUau6DE2NxLdeQ1QDdne7y3RB8s0Aud2hm8fQ4XRRQpXgHt5rKgm54vWeFWT/qOOkTRHm2J0ICQW47h2KpbMy1Fjy8udyWVSqTRTMODD3urE5/0rNCkVekHWrj1OPJThHtXhAwirvCyHTkVqni0X0P+CKKKE4p9N6BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJ5DEJJ+; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJ5DEJJ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739895915; x=1771431915;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=41BI8YlrCGmBKS+t8IH/N263QGj1uwZ0cBkSEzL2LRI=;
-  b=AJ5DEJJ+uZvoA7qulgh7uVAy8dkhTu53b92aq0P9P/O1Wsg81q1p6aJV
-   fx9ubB6858NidTAJwReQ545l5C5axqcTSfnGt5t6cHJlrVEOrZOehVEvV
-   50pp35hsGqcUVBSXMIl3NZX6PjLzsDC3DXFMAnpX5oE/8/6RXZWrR8RZ1
-   XTO62EsvDdZGY2n5+n3axoUwszrCC0PsqgOMda5p/V6bNf00uu6y0f8J1
-   SPyXFMafJ8jdPOx7eRe3Xb80F5TMcmybM6Ok3KAn87sj58W1ogNHnXSYn
-   PNWrExG1yl5O+Wigncw0Y0ITpCF9HpezUyE2OjXQBfx5ud0MojVJhRqjW
-   g==;
-X-CSE-ConnectionGUID: zo9RmKOSRjCXqk6HoY9BAA==
-X-CSE-MsgGUID: iy/yKA5sSdKts1gDESVLJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52029936"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="52029936"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 08:25:14 -0800
-X-CSE-ConnectionGUID: bR7eGB9cT/S1HdZh82AbWA==
-X-CSE-MsgGUID: APnwE7LjS5Ss6ce2pApoEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
-   d="scan'208";a="114374448"
-Received: from dikoukis-mobl1.amr.corp.intel.com (HELO [10.95.1.75]) ([10.95.1.75])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 08:25:13 -0800
-Message-ID: <ab2036d5-5b6f-4fa9-995a-fba63c0a5209@linux.intel.com>
-Date: Tue, 18 Feb 2025 10:25:07 -0600
+	s=arc-20240116; t=1739895942; c=relaxed/simple;
+	bh=s3z020jExDCDiFNOPpL8W4R81Z92L1w2M/kyMLr2Ums=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fJ6o6hxJ3m2pv/bddKDmsM13P2YUWvT+z3Okei6BvVdB0ORSBVnohEiW+EBSzln5QmNdM3xO0nM55VdFGbIS0FEM6hOrTwvXoKi7dHuASWH1xTSH0nilMlYYCW9PaB8XtIy2QeCAb3aRjN6U6/dOezG196gUStIpG6y/Vi7+sTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C571C4CEE8;
+	Tue, 18 Feb 2025 16:25:41 +0000 (UTC)
+Date: Tue, 18 Feb 2025 11:26:02 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>
+Subject: Re: [GIT PULL] ftrace: Updates for v6.14
+Message-ID: <20250218112602.5611754e@gandalf.local.home>
+In-Reply-To: <20250217133830.25e634d8@gandalf.local.home>
+References: <20250119193134.0ebd56bc@gandalf.local.home>
+	<20250217114918.10397-A-hca@linux.ibm.com>
+	<20250217133830.25e634d8@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] tsm: Unified Measurement Register ABI for TVMs
-To: "Xing, Cedric" <cedric.xing@intel.com>,
- Dave Hansen <dave.hansen@intel.com>, Dan Williams
- <dan.j.williams@intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20250212-tdx-rtmr-v1-0-9795dc49e132@intel.com>
- <15c69d57-4ffb-4ea1-8cbc-0ba6d3d7b14f@intel.com>
- <be7e3c9d-208a-4bda-b8cf-9119f3e0c4ce@intel.com>
- <015cdddb-7f74-4205-af8a-b15cad7ddc22@intel.com>
- <d8f3eb33-d902-4391-adc7-005e4895b471@intel.com>
- <c7894df2-2b27-4f67-b428-3eca312503f9@intel.com>
- <c2cf2184-7753-454e-ac99-8c4f3c9c3d16@intel.com>
- <01fc0997-a0e7-4086-b0aa-67b4a51b328a@intel.com>
- <12ed2ab1-e97d-4a20-8370-8c60cabffc77@intel.com>
-Content-Language: en-US
-From: Dan Middleton <dan.middleton@linux.intel.com>
-In-Reply-To: <12ed2ab1-e97d-4a20-8370-8c60cabffc77@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Mon, 17 Feb 2025 13:38:30 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On 2/14/25 3:59 PM, Xing, Cedric wrote:
-> On 2/14/2025 10:26 AM, Dave Hansen wrote:
->> On 2/14/25 08:19, Xing, Cedric wrote:
->>>> But if this is for debug, wouldn't these belong better in debugfs? 
->>>> Do we
->>>> really want to maintain this interface forever? There's no shame in
->>>> debugfs.
->>>>
->>> There are many other (more important/significant) uses besides 
->>> debugging.
->>>
->>> For example, any applications that make use of runtime measurements 
->>> must
->>> extend RTMRs, and this interface provides that exact functionality.
->>>
->>> Another example, a policy may be associated with a TD (e.g., CoCo) by
->>> storing its digest in MRCONFIGID, so that the policy could be verified
->>> against its digest at runtime. This interface allows applications to
->>> read MRCONFIGID.
->>
->> The attestation world is horrifically complicated, and I don't
->> understand the details at _all_. You're going to have to explain this
->> one to me like I'm five.
->>
->> Could you also explain how this is different from the hardware and
->> virtual TPMs and why this doesn't fit into that existing framework? How
->> are TVMs novel? What justifies all this new stuff?
-> TVM (TEE VM) is a broad term referring to encrypted/protected VMs on 
-> various confidential computing (CC) architectures, such as AMD SEV, 
-> Arm CCA, Intel TDX, etc. Each of these architectures includes hardware 
-> components for storing software measurements, known as measurement 
-> registers (MRs). This patch series aims to provide the necessary 
-> functionality for applications that need to access these MRs.
->
-> There are no real/hardware TPMs but only virtual ones in TVMs. Virtual 
-> TPMs can be built upon the native MRs provided by the underlying CC 
-> architectures.
->
-> If you need more detailed information, I'd be happy to discuss it 
-> further offline to avoid cluttering the mailing list.
->
-Hi Dave,
+> On Mon, 17 Feb 2025 12:49:18 +0100
+> Heiko Carstens <hca@linux.ibm.com> wrote:
+> 
+> > $ cat /sys/kernel/debug/tracing/current_tracer
+> > nop
+> > 
+> > Bisected to commit 4346ba160409 ("fprobe: Rewrite fprobe on function-graph
+> > tracer"). Before this commit there were no ftrace enabled functions after the
+> > test suite finished:
+> > 
+> > $ wc -l /sys/kernel/debug/tracing/enabled_functions
+> > 0 /sys/kernel/debug/tracing/enabled_functions
+> > 
+> > This is on s390 with defconfig.  
+> 
+> Thanks, I can reproduce it on x86 (I didn't check that commit though).
+> 
+> I'll take a look.
 
-Let me try to add more plain language usages.
+I think I found 3 different bugs in the accounting of what is registered
+and what is not. I'll post a patch series shortly. Two in the function
+graph tracer subops accounting, and one in the fprobe accounting.
 
-This ABI lets applications extend events after boot such that they can be
-part of the hardware-based attestation.
-
-One common reason is to _identify the workload_ running in the VM.
-Typically a VM attestation tells you that you booted to a clean state.
-It is much more valuable to a Relying Party to know that they are 
-interacting
-with a trusted application / workload.
-Projects like CNCF Confidential Containers [1] and Attested Containers
-[2] would like to do this.
-
-More generally, Relying Parties can track the state of an application in
-the attestation. Auctions are common examples of stateful flows where it
-can be meaningful to, e.g., attest that a bid arrived before or after the
-close of an auction.
-
-[1] 
-https://github.com/confidential-containers/guest-components/blob/main/attestation-agent/attester/src/tdx/rtmr.rs
-[2] https://github.com/intel/acon
-
-Thanks,
-Dan Middleton
-
-
+-- Steve
