@@ -1,103 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7861A270EB2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C39270EB9;
 	Tue, 18 Feb 2025 13:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885358; cv=none; b=hEJceVpDQRGwJMNfcIFcFCqlaJeMI1sJfSMdr8y1ngoazPueQwXIoZAUxSY6/cte5NdfE1FiJjTwFTZhSOB+LKTp+Z1wiUvzUWXKIybIyIj4F+CRHorpzJ2Mk5mJq7DMVzZd9Z0GEKKoENqYCGm8/xylg4rVUteQKbZUebGXzTY=
+	t=1739885362; cv=none; b=T5NW9eox9U0IRGHTuC+d6UARaUbCcjjgGqvksdZmw1OgolKRPlUUzlgvhoeu3CNkjdXtuVjG2fDfE126deURcBPpyqm7NCsLP8QmFlvZA3yvoRSkh5Mt6YNH/Rcj1Raq0g/jlMwXXHzZpBcHKTayLdBkWWovC3GX4Lese/F9Ibc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885358; c=relaxed/simple;
-	bh=nwZNyOuiuprl7SMNik85pXwE5CG7wJ0i0TbeV7CGEdQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OUJd5sNAnWUiBw/X5LcsznBzl8q03p9+N467pRKPYpNNd5cUb1sI4rTBFJnnE5xeB9RV8XOk2RzsdfsW/wm/btbF2+nJ6JkKUO3ZeTD9SUh1CiufrviBnI1MmPRnBJqeWzb+LwGKz9HyrLgD8aJBCWCeP6oVdwgxFomvYRSCQRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JoXYkXxP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739885362; c=relaxed/simple;
+	bh=rYjXngdQ0dbFzgwgn7WGaRs5H4t0BPJlZAYlLdGZ3MY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cvFmZD4WCHPzE+mC7m5yydKvLYb/acwmS96vG67uRBh0ppsKOlDlsxkMIK0NkPbWNcL9khAwnJxL+w6ff9Pe7+B0MYdgWpp84OOpmU+UZ9AX2NaI+b+pdA8R6Og7NXsnTs6OodpIJtl/CVnHWaPQQyt5J/cvLFqJUo8vqPkTpyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=T1XgF5GJ; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JoXYkXxP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8431C4CEE8;
-	Tue, 18 Feb 2025 13:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739885357;
-	bh=nwZNyOuiuprl7SMNik85pXwE5CG7wJ0i0TbeV7CGEdQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=JoXYkXxPyMu3iy5hwEg66jQ6u0cvQTiSiJLVOaO+PIA14hlaiVxbc6p/EX9hiJoQo
-	 ZjG6fOEGbRfKdaBR4hf0l6+gQWmAomsMdwvUc5TB9t1W8KmYmJqjjC6gvIC8Q0mIyv
-	 CmJNTvZ7qyRsRoeIhg3gNNWoLFyBu2AJh3XAWeTi2rK+MFaIavzeet/uTdiE8X9Cap
-	 T1yx5pW7cZq/XffY+a/8ItjRkmDlU8mxYeDnSZvQYebe+wClJz1+Of5Nb8BLULHyTO
-	 /oOBiTQ9xIZbZdd3nD5qsXsG5SOZ2Iro8YMfnbZ2huOpq76hMQtUCH18eoqJr+I079
-	 W+CCrTjrlks/Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 18 Feb 2025 14:27:15 +0100
-Subject: [PATCH v8 10/14] rust: alloc: add `Box::into_pin`
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="T1XgF5GJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=R9zhQrQxExKFJv3fYFW1IElfhSiSEpY6hem10hrKIVc=; b=T1XgF5GJTFc7sFp9yg3KuIyNhu
+	MhzngxTkzJPcwWXf2K7zTycetZEIxkXJTrC65pGlgkQVN75mFxiKkqqT/ofRZ/5sV3bqjOXlQokOM
+	ZSJIRtb4yEfo8w0o0/ssCp5l//pqLNpL0f3OZugQlNqHKrmBQ87KwpcT6osG30gddCPKTxKNsvrUt
+	FZYVxaZs3XZKj7w86gVIswcvr8z0pjXnu77b1pb+MG5m21FSuzERou+6LEKQSa6uor22L0XgfhkMI
+	rEqJI8LL6cMDcrooDk974GXUBpJDWyLcnWuCwzCEd/Vo9Y/d5qzbEjcXZ0yx7ZBJjEuvBgXctDaN6
+	ASIDVTeA==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tkNeg-00AOyU-AF; Tue, 18 Feb 2025 14:29:00 +0100
+From: Luis Henriques <luis@igalia.com>
+To: Jan Kara <jack@suse.cz>
+Cc: Bernd Schubert <bschubert@ddn.com>,  Miklos Szeredi <miklos@szeredi.hu>,
+  Dave Chinner <david@fromorbit.com>,  Alexander Viro
+ <viro@zeniv.linux.org.uk>,  Christian Brauner <brauner@kernel.org>,  Matt
+ Harvey <mharvey@jumptrading.com>,  "linux-fsdevel@vger.kernel.org"
+ <linux-fsdevel@vger.kernel.org>,  "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] fuse: add new function to invalidate cache for
+ all inodes
+In-Reply-To: <bpevrif4k5h2l4pscsnsj3flwmwdw6w5nge5n7ji2yshk5pz6z@tngefti6stld>
+	(Jan Kara's message of "Tue, 18 Feb 2025 12:57:28 +0100")
+References: <20250216165008.6671-1-luis@igalia.com>
+	<20250216165008.6671-3-luis@igalia.com>
+	<3fac8c84-2c41-461d-92f1-255903fc62a9@ddn.com>
+	<87r03wx4th.fsf@igalia.com>
+	<847288fa-b66a-4f3d-9f50-52fa293a1189@ddn.com>
+	<87ldu4x076.fsf@igalia.com>
+	<bpevrif4k5h2l4pscsnsj3flwmwdw6w5nge5n7ji2yshk5pz6z@tngefti6stld>
+Date: Tue, 18 Feb 2025 13:28:59 +0000
+Message-ID: <877c5n8jqc.fsf@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-hrtimer-v3-v6-12-rc2-v8-10-48dedb015eb3@kernel.org>
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
-In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
- Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1028; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=nwZNyOuiuprl7SMNik85pXwE5CG7wJ0i0TbeV7CGEdQ=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIq4n7RTCoXhS7u6DlebG7p92eiZABT4YHP5x
- 7oX1G8mO2OJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SKuAAKCRDhuBo+eShj
- d4DVEACCRkXBowHgAhVf9vblwxpFJ08MKHX/n5XuydtczVTxeVxJy0PzSJc6vzvHwmlLa16KeIi
- IST+3WPFNSsMi9IlgjelLF7w7qBS94ohS9uiQgX9B5HZmUUEvYaQzqfkiNcLhu3A/bw9RlSY4il
- TD+OErdZnCd3t8oZ4PcfpIhVozWT7HCYHvkk5hOVaS7fKCfA1AVxcXWOcYq+Y7+U1k59qGybvyj
- Zy2Xta4gNKKzXoezfFipFcoUDbI1J/1WXOgV/uVPzO3EqRxzeHuVAgdiA2fbhHUbbMncPft/XYD
- yYWZfElKrlfZ4n52aLGp3AqaD/QB8g2+15f1Bac8LSvL5mrFXJJCpIvndzhrhuTutHxfjvTAokd
- 3108VGr4YHqYXD7Q4P2yZko0z7AC6zPDgg27u+9HxGiIQsk07ogbRnYHNUQJwBX3K9CfxXVl3P9
- jCW2DPFzlNGKynpyyvM8eGyatjyfPEldA4MvJnlZGbRhfTv0RO5/2gsC20Ls/+ZYxE0Uij3MSbB
- t2IA4RyIWw87+EORCGNtRX6WZujuWxuus022vM9qaOS79zB3S/9WGo/3S9AFMjWbCcFGmuEosfd
- j5RRCDdHXVmFbiMsLFZMiJRFo702xNyHGNXePui3Z30rqLRlGmqdte3kSEL+iQRYnMtNcz4mEzq
- s67gzzN+BwyDzKg==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add an associated function to convert a `Box<T>` into a `Pin<Box<T>>`.
+On Tue, Feb 18 2025, Jan Kara wrote:
 
-Acked-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/alloc/kbox.rs | 6 ++++++
- 1 file changed, 6 insertions(+)
+> On Mon 17-02-25 11:47:09, Luis Henriques wrote:
+>> On Mon, Feb 17 2025, Bernd Schubert wrote:
+>> > On 2/17/25 11:07, Luis Henriques wrote:
+>> >> On Mon, Feb 17 2025, Bernd Schubert wrote:
+>> >>=20
+>> >>> On 2/16/25 17:50, Luis Henriques wrote:
+>> >>>> Currently userspace is able to notify the kernel to invalidate the =
+cache
+>> >>>> for an inode.  This means that, if all the inodes in a filesystem n=
+eed to
+>> >>>> be invalidated, then userspace needs to iterate through all of them=
+ and do
+>> >>>> this kernel notification separately.
+>> >>>>
+>> >>>> This patch adds a new option that allows userspace to invalidate al=
+l the
+>> >>>> inodes with a single notification operation.  In addition to invali=
+date
+>> >>>> all the inodes, it also shrinks the sb dcache.
+>> >>>>
+>> >>>> Signed-off-by: Luis Henriques <luis@igalia.com>
+>> >>>> ---
+>> >>>>  fs/fuse/inode.c           | 33 +++++++++++++++++++++++++++++++++
+>> >>>>  include/uapi/linux/fuse.h |  3 +++
+>> >>>>  2 files changed, 36 insertions(+)
+>> >>>>
+>> >>>> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+>> >>>> index e9db2cb8c150..01a4dc5677ae 100644
+>> >>>> --- a/fs/fuse/inode.c
+>> >>>> +++ b/fs/fuse/inode.c
+>> >>>> @@ -547,6 +547,36 @@ struct inode *fuse_ilookup(struct fuse_conn *f=
+c, u64 nodeid,
+>> >>>>  	return NULL;
+>> >>>>  }
+>> >>>>=20=20
+>> >>>> +static int fuse_reverse_inval_all(struct fuse_conn *fc)
+>> >>>> +{
+>> >>>> +	struct fuse_mount *fm;
+>> >>>> +	struct inode *inode;
+>> >>>> +
+>> >>>> +	inode =3D fuse_ilookup(fc, FUSE_ROOT_ID, &fm);
+>> >>>> +	if (!inode || !fm)
+>> >>>> +		return -ENOENT;
+>> >>>> +
+>> >>>> +	/* Remove all possible active references to cached inodes */
+>> >>>> +	shrink_dcache_sb(fm->sb);
+>> >>>> +
+>> >>>> +	/* Remove all unreferenced inodes from cache */
+>> >>>> +	invalidate_inodes(fm->sb);
+>> >>>> +
+>> >>>> +	return 0;
+>> >>>> +}
+>> >>>> +
+>> >>>> +/*
+>> >>>> + * Notify to invalidate inodes cache.  It can be called with @node=
+id set to
+>> >>>> + * either:
+>> >>>> + *
+>> >>>> + * - An inode number - Any pending writebacks within the rage [@of=
+fset @len]
+>> >>>> + *   will be triggered and the inode will be validated.  To invali=
+date the whole
+>> >>>> + *   cache @offset has to be set to '0' and @len needs to be <=3D =
+'0'; if @offset
+>> >>>> + *   is negative, only the inode attributes are invalidated.
+>> >>>> + *
+>> >>>> + * - FUSE_INVAL_ALL_INODES - All the inodes in the superblock are =
+invalidated
+>> >>>> + *   and the whole dcache is shrinked.
+>> >>>> + */
+>> >>>>  int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
+>> >>>>  			     loff_t offset, loff_t len)
+>> >>>>  {
+>> >>>> @@ -555,6 +585,9 @@ int fuse_reverse_inval_inode(struct fuse_conn *=
+fc, u64 nodeid,
+>> >>>>  	pgoff_t pg_start;
+>> >>>>  	pgoff_t pg_end;
+>> >>>>=20=20
+>> >>>> +	if (nodeid =3D=3D FUSE_INVAL_ALL_INODES)
+>> >>>> +		return fuse_reverse_inval_all(fc);
+>> >>>> +
+>> >>>>  	inode =3D fuse_ilookup(fc, nodeid, NULL);
+>> >>>>  	if (!inode)
+>> >>>>  		return -ENOENT;
+>> >>>> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+>> >>>> index 5e0eb41d967e..e5852b63f99f 100644
+>> >>>> --- a/include/uapi/linux/fuse.h
+>> >>>> +++ b/include/uapi/linux/fuse.h
+>> >>>> @@ -669,6 +669,9 @@ enum fuse_notify_code {
+>> >>>>  	FUSE_NOTIFY_CODE_MAX,
+>> >>>>  };
+>> >>>>=20=20
+>> >>>> +/* The nodeid to request to invalidate all inodes */
+>> >>>> +#define FUSE_INVAL_ALL_INODES 0
+>> >>>> +
+>> >>>>  /* The read buffer is required to be at least 8k, but may be much =
+larger */
+>> >>>>  #define FUSE_MIN_READ_BUFFER 8192
+>> >>>>=20=20
+>> >>>
+>> >>>
+>> >>> I think this version might end up in=20
+>> >>>
+>> >>> static void fuse_evict_inode(struct inode *inode)
+>> >>> {
+>> >>> 	struct fuse_inode *fi =3D get_fuse_inode(inode);
+>> >>>
+>> >>> 	/* Will write inode on close/munmap and in all other dirtiers */
+>> >>> 	WARN_ON(inode->i_state & I_DIRTY_INODE);
+>> >>>
+>> >>>
+>> >>> if the fuse connection has writeback cache enabled.
+>> >>>
+>> >>>
+>> >>> Without having it tested, reproducer would probably be to run
+>> >>> something like passthrough_hp (without --direct-io), opening
+>> >>> and writing to a file and then sending FUSE_INVAL_ALL_INODES.
+>> >>=20
+>> >> Thanks, Bernd.  So far I couldn't trigger this warning.  But I just f=
+ound
+>> >> that there's a stupid bug in the code: a missing iput() after doing t=
+he
+>> >> fuse_ilookup().
+>> >>=20
+>> >> I'll spend some more time trying to understand how (or if) the warnin=
+g you
+>> >> mentioned can triggered before sending a new revision.
+>> >>=20
+>> >
+>> > Maybe I'm wrong, but it calls=20
+>> >
+>> >    invalidate_inodes()
+>> >       dispose_list()
+>> >         evict(inode)
+>> >            fuse_evict_inode()
+>> >
+>> > and if at the same time something writes to inode page cache, the
+>> > warning would be triggered?=20
+>> > There are some conditions in evict, like inode_wait_for_writeback()
+>> > that might protect us, but what is if it waited and then just
+>> > in the right time the another write comes and dirties the inode
+>> > again?
+>>=20
+>> Right, I have looked into that too but my understanding is that this can
+>> not happen because, before doing that wait, the code does:
+>>=20
+>> 	inode_sb_list_del(inode);
+>>=20
+>> and the inode state will include I_FREEING.
+>>=20
+>> Thus, before writing to it again, the inode will need to get added back =
+to
+>> the sb list.  Also, reading the comments on evict(), if something writes
+>> into the inode at that point that's likely a bug.  But this is just my
+>> understanding, and I may be missing something.
+>
+> Yes. invalidate_inodes() checks i_count =3D=3D 0 and sets I_FREEING. Once
+> I_FREEING is set nobody can acquire inode reference until the inode is
+> fully destroyed. So nobody should be writing to the inode or anything like
+> that.
 
-diff --git a/rust/kernel/alloc/kbox.rs b/rust/kernel/alloc/kbox.rs
-index cb4ebea3b0742..9da4a32e60bc3 100644
---- a/rust/kernel/alloc/kbox.rs
-+++ b/rust/kernel/alloc/kbox.rs
-@@ -245,6 +245,12 @@ pub fn pin(x: T, flags: Flags) -> Result<Pin<Box<T, A>>, AllocError>
-         Ok(Self::new(x, flags)?.into())
-     }
- 
-+    /// Convert a [`Box<T,A>`] to a [`Pin<Box<T,A>>`]. If `T` does not implement
-+    /// [`Unpin`], then `x` will be pinned in memory and can't be moved.
-+    pub fn into_pin(this: Self) -> Pin<Self> {
-+        this.into()
-+    }
-+
-     /// Forgets the contents (does not run the destructor), but keeps the allocation.
-     fn forget_contents(this: Self) -> Box<MaybeUninit<T>, A> {
-         let ptr = Self::into_raw(this);
+Awesome, it's good to have that confirmed.  Thank you, Jan!
 
--- 
-2.47.0
-
-
+Cheers,
+--=20
+Lu=C3=ADs
