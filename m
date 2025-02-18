@@ -1,113 +1,107 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00300601.pphosted.com (mx0b-00300601.pphosted.com [148.163.142.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F291F5848;
-	Tue, 18 Feb 2025 18:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DCE17A2EC;
+	Tue, 18 Feb 2025 18:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.142.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904082; cv=none; b=koubVJpjvjB0hNUT7pbrMAS6iOjTxa1oQQNGSILOv9/LRfVBnBY1DkYShmJ9vqcRbhYHvdFi+Iip/nh7wV982whzGrS6yKnSBP25/lGDfEsO250iIAMZPUM/ORddzzqYqpkF6dUQgJPpjNJrVePXdzwqYbxTUyMqWnJTrt/2Ojg=
+	t=1739904118; cv=none; b=LilN+IFken5tw6RWGxw8ouBzWdw7lCgUALIOQm6eo1xsF0hRSGT1RAmnaApPVoqwiZGy1YUvUlO8Z/qkTchC/2nitoqAt7fkpGry4SD4fwyqzNhCR5a3SUeesOr0mkBD7i2rLGI3RIWNGEwEZpoIDDr/JxS5+iA+Qp2ojcP5Kvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904082; c=relaxed/simple;
-	bh=064kNw/EgN0UHYWByMwYl66J+KJpEyOx8IH/nhyVgZ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N7bIuVDkiYz6+crmZdv6MUn4p236URb257LnyjqYK5QqqZeEFIsjMc0ytqNp9AvKLEQ5sBeJqG/ABp+Q7aJDhtBK8XmSRLG7BjhTncKcjqzRoCcMYs2iY+K9NBJ4HFX8vyh4/NTOmhsV7mGdY10o6soXtxQYIuu4PBgVGmyXydc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NAK2nriu; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739904118; c=relaxed/simple;
+	bh=FwQLvt0b0jjAMvDANZYeEGm1bNKJ+VufBs8kb0nglPQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A+fv/rTvlWe/f19MnfFi2yHrmFJxIKnVTdkTkD3JXqFrfvpb0+g0q8sHH50DMzhR1Rf74pHsLxdOlZp1kSdzD4lu0d5F46tdFrIJjlVSQDnCug/EkR1VMQU+uqA0plmKEEp9NNLEE+MbMaSo0D4G6AUA9Ts80o4trMrkg1wBf7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com; spf=pass smtp.mailfrom=ni.com; dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b=rCnh3LIV; arc=none smtp.client-ip=148.163.142.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ni.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAK2nriu"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f1e8efef5so3230730f8f.1;
-        Tue, 18 Feb 2025 10:41:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739904079; x=1740508879; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=064kNw/EgN0UHYWByMwYl66J+KJpEyOx8IH/nhyVgZ4=;
-        b=NAK2nriu75OA7y6JkgfVba13muttU0EMJ7Vi0Ud35Rfra8jc3lktv4rn28JM0LC74I
-         XP5sIcwL8NIumi5T5nCIn1bXMPge+5yiyygC16CalyEVG8kwW3qtvW2Gw/uNA0DvgvFy
-         eLbwEpCSG+9lGKybSLP1KoTi4JdNy5f7kvybZnYMZulB63Mot7EX1uzNbCWx2F7532zr
-         TF49XAAnGeTup3RpTnPsBsuYkpjwBegm44v7EkCR7a02E+KYTBOlBBYj7pv0Dlm8nRp8
-         V8ScHlscGiQHmrHPiZsGpeUrooee0m9ZLuXI660SB3FSzllz/NF2GrixMrGu1xRHlgUa
-         OpFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739904079; x=1740508879;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=064kNw/EgN0UHYWByMwYl66J+KJpEyOx8IH/nhyVgZ4=;
-        b=BaEe6T7TTPy33vEnAgj5V52Bu4sdLiUsPpakGQvBznjXA3sjCT8yrcSfSLMh/YYp87
-         J8+YU+//5sOgNgUmOQEsDLlxf/mLeehtn6rWidCLZ0Cvnc9cBw3c8LDJ64WVhxAtqLjU
-         uUSS2yZAHpPi/5uRr7PRKrt95qh9nOAq18xYa6k7leJj1OSqq52UzdyB1KXFtlGqbJD8
-         ULqau0OBzzb9TV+HLKn+KPrSStQk+7SK9XjwWNuWdhioZFGAvhyDO0b0bjiuV0NhtCyk
-         0o1H9Bzv+/f24wunVrCY+EWQcNB4xeThxwSkC7LxcDn0e/AdkWIPXsVvMpguO2eyHJfJ
-         l2OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFqijPNfTp+PKvtqwXD/8SUAzy2PV2P7DGu0RshxGUpyfAHsVQTMkkQgB4o9kpESjsuplscnYqymNnyJI=@vger.kernel.org, AJvYcCXNjIFlopaj7p5tSIOYH/AmguBgzu4Fxkp3JgQExe3kt7ElQeNBSkzZq+cfcOgHrJUNUf3L@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzVHBf5OwlVedBnM3YUVw+zD54X/DHHgSh00+0CXW/dxPKdN5u
-	S7pV7qyU4ZjTEWX4HYwpp7+RvQGnYKHc1zyWIXLFL+SABs1QltjuOpbJ2bEJ0R8dUzjv8diQLQO
-	b4DQOscSCzsgvaXnyLtijSGw5xXA=
-X-Gm-Gg: ASbGncv17py59sufgBXC3He68o1+Nr3LN35b4bJabykbGY4gi1/u/H/jOBwHDJKhDI5
-	i0Ij5UUAeghgbksTrS7rUhh4G1BLKJ9GP/p6imm/3J3di57x4iVeKwYH/z28f9SVqM5XE9iqGZ2
-	NmHIkqjLj3GEN3
-X-Google-Smtp-Source: AGHT+IHhkiMm6MGXT17M9xfM7NM8mSv/O9ojIthPD9COWHkCQBAc+IHDA5g5Sf9lOqEzMmvYuHcqhE3bUTjjvjqFZhY=
-X-Received: by 2002:a5d:6c63:0:b0:38f:4b2c:2475 with SMTP id
- ffacd0b85a97d-38f4b2c255amr6762956f8f.20.1739904079217; Tue, 18 Feb 2025
- 10:41:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b="rCnh3LIV"
+Received: from pps.filterd (m0144092.ppops.net [127.0.0.1])
+	by mx0b-00300601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IHVLRK039602;
+	Tue, 18 Feb 2025 18:41:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ni.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=PPS11142024;
+	 bh=SZryNcz4hB8/2CgV3E5LWmJHzoiXcaur0GcsHqT1S9s=; b=rCnh3LIVz07a
+	HLO5hcfbrI4Dl801Iz3A5H1cocSoSTDB1rLTV9oj28aZ1bqvNLZ5lV68hIG3HTI5
+	PLzUi06QKh7GgcqfeGa2kcpS8tCiyl20ZuYjrmUzOB8rsbtk6WZ5oMuwcQfVqXAE
+	Gz84O/8XRU35XdoLdsKMwo+9GtEz+85PLoqKdeyCqlJkU0fhOR2L0cf+mGe8mUuQ
+	y0/4NRL8srSQHTfqZr2FOeh/b9qSUpDQQAPxb9EFNnpGs7j0WiAIJIGfrg1R9K86
+	/kR5iabhAiU4BRDgiOBzVQI291uTI8TKdndFkjz7FjFphCdCWHf8SIMPbfNTz6Bo
+	w38Ha0FXHg==
+Received: from us-aus-excas-p2.ni.corp.natinst.com ([130.164.94.74])
+	by mx0b-00300601.pphosted.com (PPS) with ESMTPS id 44vxp9h43h-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 18:41:13 +0000 (GMT)
+Received: from us-aus-excas-p1.ni.corp.natinst.com (130.164.68.17) by
+ us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 18 Feb 2025 12:41:12 -0600
+Received: from ershephe-ubuntu.amer.corp.natinst.com (172.18.68.32) by
+ us-aus-excas-p1.ni.corp.natinst.com (130.164.68.17) with Microsoft SMTP
+ Server id 15.2.1258.28 via Frontend Transport; Tue, 18 Feb 2025 12:41:12
+ -0600
+From: Erick Shepherd <erick.shepherd@ni.com>
+To: <adrian.hunter@intel.com>
+CC: <andy-ld.lu@mediatek.com>, <avri.altman@wdc.com>, <cw9316.lee@samsung.com>,
+        <dsimic@manjaro.org>, <erick.shepherd@ni.com>, <keita.aihara@sony.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <quic_jjohnson@quicinc.com>, <ricardo@marliere.net>,
+        <ulf.hansson@linaro.org>, <victor.shih@genesyslogic.com.tw>,
+        <wsa+renesas@sang-engineering.com>
+Subject: Re: [RFC PATCH V2 1/2] mmc: Update sdhci tune function to return errors
+Date: Tue, 18 Feb 2025 12:41:12 -0600
+Message-ID: <20250218184112.574772-1-erick.shepherd@ni.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <8002f01b-97cd-4c30-b00c-c73d0cbccdc3@intel.com>
+References: <8002f01b-97cd-4c30-b00c-c73d0cbccdc3@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
- <20250214-slub-percpu-caches-v2-3-88592ee0966a@suse.cz> <20250217141956._01BcsrG@linutronix.de>
- <bbb29d35-0a7b-4b19-b0c4-5b2e899b7b5e@suse.cz>
-In-Reply-To: <bbb29d35-0a7b-4b19-b0c4-5b2e899b7b5e@suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 18 Feb 2025 10:41:08 -0800
-X-Gm-Features: AWEUYZkw7pLuqM8rpwQ14Nm2IrYgdo2AXxznTsMF9KECxxoRCxM2XTApIligPx4
-Message-ID: <CAADnVQL_3dayDBboTkUs6g4PmEOpFhufx736eaBqoqjZcnUwiQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 03/10] locking/local_lock: Introduce localtry_lock_t
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, linux-mm <linux-mm@kvack.org>, 
-	LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org, 
-	maple-tree@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-GUID: gQIfY5-fF7ovBVqH2DeT_Z-tWmElfCWK
+X-Proofpoint-ORIG-GUID: gQIfY5-fF7ovBVqH2DeT_Z-tWmElfCWK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_09,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ clxscore=1015 mlxscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=762 priorityscore=1501 phishscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502180130
 
-On Mon, Feb 17, 2025 at 6:35=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 2/17/25 15:19, Sebastian Andrzej Siewior wrote:
-> > On 2025-02-14 17:27:39 [+0100], Vlastimil Babka wrote:
-> >> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> >>
-> >> In !PREEMPT_RT local_lock_irqsave() disables interrupts to protect
-> >> critical section, but it doesn't prevent NMI, so the fully reentrant
-> >> code cannot use local_lock_irqsave() for exclusive access.
-> >>
-> >> Introduce localtry_lock_t and localtry_lock_irqsave() that
-> >> disables interrupts and sets acquired=3D1, so localtry_lock_irqsave()
-> >> from NMI attempting to acquire the same lock will return false.
-> >>
-> >> In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
-> >> Map localtry_lock_irqsave() to preemptible spin_trylock().
-> >> When in hard IRQ or NMI return false right away, since
-> >> spin_trylock() is not safe due to PI issues.
-> >
-> > spin_trylock() is not safe due to explicit locking in the underneath
-> > rt_spin_trylock() implementation. Removing this explicit locking and
-> > attempting only "trylock" is undesired due to PI implications.
-
-Makes sense.
-
-> Just to be sure, you're suggesting how to reword that sentence in the
-> changelog to make it more precise right?
-> Alexei will you incorporate that in your version?
-
-Sure. Let's squash patches 3 and 4 and add above
-commit log clarification.
-Whoever respins first can do it.
+I see, in my case intel_execute_tuning() in sdhci-pci-core.c is what=0D
+is calling into sdhci_execute_tuning() so I should check the value of=0D
+tuning_err there and possibly return it? The issue I'm trying to solve=0D
+is only for DDR50 cards that do not support tuning so I could=0D
+conditionally return tuning_err if the timing mode is DDR50. Maybe=0D
+something like this?=0D
+=0D
+---=0D
+ drivers/mmc/host/sdhci-pci-core.c | 3 +++=0D
+ 1 file changed, 3 insertions(+)=0D
+=0D
+diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci=
+-core.c=0D
+index 1f0bd723f011..9aedb476bd5d 100644=0D
+--- a/drivers/mmc/host/sdhci-pci-core.c=0D
++++ b/drivers/mmc/host/sdhci-pci-core.c=0D
+@@ -725,6 +725,9 @@ static int intel_execute_tuning(struct mmc_host *mmc, u=
+32 opcode)=0D
+ 	if (err)=0D
+ 		return err;=0D
+ =0D
++	if (host->tuning_err && mmc->ios.timing =3D=3D MMC_TIMING_UHS_DDR50)=0D
++		return host->tuning_err;=0D
++=0D
+ 	/*=0D
+ 	 * Tuning can leave the IP in an active state (Buffer Read Enable bit=0D
+ 	 * set) which prevents the entry to low power states (i.e. S0i3). Data=0D
+-- =0D
+=0D
+Regards=0D
+Erick=
