@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2DF269CEB;
-	Tue, 18 Feb 2025 13:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE86F2690C6;
+	Tue, 18 Feb 2025 13:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739883742; cv=none; b=nvlzNlDM2tZtHb4lucBO6zbQDbQq/tHAQOCF96wsb6Lemh+XuLcJo17AG9sX7lLsoqlDEjtD1ulfeS7J86o4zpqUoc3AB8EYJZTRWTWtOIeGToj1hmSwPJkZChTzlbEo03cLZOe61zguC0vya4DHB0n/oQHjqZf9U/70O+dz028=
+	t=1739883747; cv=none; b=otXaeZIIJrllOHYRvQ3afXYAOphpnrcqA70GYsZa/AX3/lj2Xvhl6lEWPfnfEPMmHPHWoB/lSAl4Hf1YHY2nFQHB/avAcBmHDD2w/7PXLMql3jm74NBaG3Xlgow1U0ggdC3qkk3ObA5F35FPgpMnBRa+riSGASI8sNnMzoDQzi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739883742; c=relaxed/simple;
-	bh=eORqxd0mJn05akI2ESSnkwHFWYB8nod8rI3Ghzxpw9g=;
+	s=arc-20240116; t=1739883747; c=relaxed/simple;
+	bh=ZCtD1w7YciQFFZSg9uxP+oTq2EUuClmnZ/gBWrvvPTg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aeEeq6YfJCM/JCICAmSFmS8UJX5xf7004ipoVMcKqKM6wm/ZgwG5BqeiDzL5S9vlh5C94FTEBgYmdTmJzDxsdoDTCMA9VH51PVPmTn2liqCO9I7Vgxue9SBmU9ncqCp7neOwKygRlcZNp7bw2pTFIMmkWlrQ4nRdeiAx5MImxYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na8orcHN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=PGG8KBTsQG8rLrPm07YA3BmTsAfxrQUJwMJdjZbU91bUhsP82qTBp9aU23DXatwxdtzGhw9EBpVWUymJuV7s6bQqcK9wjCIFYHpI86wwFSGV4Xn2XpL6V8Iy99wW5CJMqQAWingQ9IqJV7iDPIaYBQkdJgqXzO5zo5nLF0tTamA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hc8jpvEj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na8orcHN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60DFCC4CEE2;
-	Tue, 18 Feb 2025 13:02:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hc8jpvEj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65444C4CEE2;
+	Tue, 18 Feb 2025 13:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739883741;
-	bh=eORqxd0mJn05akI2ESSnkwHFWYB8nod8rI3Ghzxpw9g=;
+	s=k20201202; t=1739883747;
+	bh=ZCtD1w7YciQFFZSg9uxP+oTq2EUuClmnZ/gBWrvvPTg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=na8orcHNWaxPtN5CoIJLgH4PhCwiW7zHqA62CFqEyEEzqqB2VY9NyEtwYn/p8hz3B
-	 ncPT1gHHJCSzt3TvD+c4+tw/MlARr4qkWhLUxKFaxUIWqeF6o8NuHP6wZlN0oI6RfM
-	 CkLOCxFi3tq5ZWu9PMSA9LF/rnlrnfN0i7IdQ49tbOjJnEu/V+jfyouSfm38q94KHh
-	 gVow/G0L3mW3PfJAi/e1n3EZGuUj1PH5De1+CW+N6cruPW3XTSE0oTKQvB9ha3FT7x
-	 KEv9xRsXDeSqwAGL3neYr7LNaoSOo5gYbn4yd/algxuc5m4uJ6KNYt9cDInkbFtcQv
-	 IsIXzwQIV1J6A==
+	b=Hc8jpvEjOzvH8zofHL/NU33O3IiAeILQb254yZjp8AGR44Yq6AQxgudANZg300XtK
+	 VAw6oSxZzE/iE+Z3m1pUWVrx5td+Dyj2/EUgDhutWc5roNmZ/WaahQdJeKJ7P+14HZ
+	 Otyobahlz/sLDoiHcQYWm1fJ5Kvja1OWDABOvGaV59ccykLUQ4MKI9x5mw6479ikJR
+	 gJftQPfAzcZZu/IM+bIFixjykQorP2n9VV65aigQnv+VMg6u6tlGOPL5VtT2jxakhw
+	 JKsr3gOuqwEm2JT66zFafLSF6KyZVyTRjq+6wCqzFRsU1e1wdZ7K0s8Hc5JLYF84HQ
+	 LzUGH98l4dskA==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 18 Feb 2025 13:57:16 +0100
-Subject: [PATCH v3 1/4] rust: sync: change `<Arc<T> as
- ForeignOwnable>::PointedTo` to `T`
+Date: Tue, 18 Feb 2025 14:00:44 +0100
+Subject: [PATCH v7 2/6] rust: str: implement `Index` for `BStr`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,112 +37,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-configfs-v3-1-0e40c0778187@kernel.org>
-References: <20250218-configfs-v3-0-0e40c0778187@kernel.org>
-In-Reply-To: <20250218-configfs-v3-0-0e40c0778187@kernel.org>
+Message-Id: <20250218-module-params-v3-v7-2-5e1afabcac1b@kernel.org>
+References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
+In-Reply-To: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
  Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
  =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
  Benno Lossin <benno.lossin@proton.me>, 
  Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
- Waiman Long <longman@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
- Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, 
- Fiona Behrens <me@kloenk.dev>, 
- Charalampos Mitrodimas <charmitro@posteo.net>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+ Trevor Gross <tmgross@umich.edu>, Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+ Luis Chamberlain <mcgrof@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Adam Bratschi-Kaye <ark.email@gmail.com>, linux-kbuild@vger.kernel.org, 
+ Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+ Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+ Greg KH <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3517; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=eORqxd0mJn05akI2ESSnkwHFWYB8nod8rI3Ghzxpw9g=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntIO+fsEE+kNjovn0VrilnLGRuRMSAXn7BSarl
- s0TdSE1kQmJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SDvgAKCRDhuBo+eShj
- dyOWEAClTZUEf7xX5fDUfakBFemdXABwwkJ3YP6ID8r1waBuVzdJMkTW88nkIjp08fix2X96uaB
- EIftNsf6lsXF6R8QZiH7FBF4Ay16u60LGTEQiVyMN2I27A+2m1mvairYwDqWRkc/7lgIeYMYfQ3
- xEoMY+t8PJ66daMhqWR0NxYno39w+/dXKI4Ogk4wwbRETlzXUf3O/xfxPNjIA1M479/ZbTQX55c
- /02gjDOVoWhgyAm9lYgqXpVxmukjD2ab5kXJ6PFNiKP3c3/i6sRMGV4FkZwV7z8geyiPq1uTMuX
- bytai9FhM2dd0sLWqG4uNHli3B7aNYwI+DfwmVZUdKIz1/ceJKu8fOcSX9X1bZFvStIwKwKL6Up
- 2b6uSYs9gK+hPWW5y0AjEl3SQWqKg0JTgzY3p5gz7/rsi9T2PdfN/jZVbGiE5ha+Czcuz8h+p6a
- e0O1VEjMR6xw/H0X/SG71yWHydlXdeQlxayVbpaxvvP2atRRyd4gTz9bPPeBy5D1aHZ45WY5pa5
- SaXTzq7h+cdoVlDygp92mRBq8lzJVnL4IgwCQN54XRssAQ/1IEq7qQcslA8PSd2/KNC/usFMqax
- T27Bi1Q9yInaZj8VtsbJipKHMXDhbS4Q0O0VglQ2+iCwuIkE16bYNFbxtxYPS6Vd2TW6om6HGxh
- OYOBsLpDNU0C9Yg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=965; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=ZCtD1w7YciQFFZSg9uxP+oTq2EUuClmnZ/gBWrvvPTg=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBntISElCXiUpM+MmkbzANn72kRTg4AcuhWu3gZZ
+ rFV245EChqJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7SEhAAKCRDhuBo+eShj
+ d1yPD/9E9Yw2ABuGs7zFFraasCJGLy4+kM5T/AA9gZkGY1miE7AcgIHPm0nG64h1pyZ75vLNBDL
+ WrSl8XT9KTq6XOi7GixZRVAMvIh2zqTcCZE6FFp21Yrf7sbxTriFPKcRZk/Po2WuxNlC1wfcbBU
+ wyp9UmMf6aAAABSDijVStgtWfN/OoT9HGaH+XroHO1oOaM8YSstv7oim6IYUtT/U7+KVtWeXpyU
+ HzQh2SWDJSNi9LEG2VxcoDznC7GeuH4ixu9qVmNosjDV1DTqWFkOIE7XAbrfM0DqHcQpAfXDvZN
+ /B4WHCSNsq/+lpqyXjAEqu5JkcbXsf0jQby8Ct4webRgNoJzwJFnSXWSfdUDnZ14bmkZht7zjZX
+ IbABfRGrPeD3glM1CuZcwqAP5/ulpfPiMvM8/5/km5bJ/+U+JOcMLuotp0JjAJzQLY6vA6mOKtK
+ k1V786i+RQwB91qHDDZqmRRVsFDdcE56BuhYOq19cIEz/93VKvTAFHSBHvxFiryV8Mg52n1MG1t
+ ZmdICxzxAPiqFjzxXnoX4NHGZw5Pl+pnS05UGtItAu9TQgS55c74PJyEBit8Hlc6McqBQNRZ3Ch
+ 5N9NSLx3ywDxRxbu287G3I+Jlo+bFH015MLEY/+5jizF1hhhzx5bcpUAaVJmM7yHSWyEWJX0dds
+ NrZcjW+WWvpiTWg==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Using `ArcInner` as `PoinedTo` in the `ForeignOwnable` implementation for
-`Arc` is a bit unfortunate. Using `T` as `PointedTo` does not remove any
-functionality, but allows `ArcInner` to be private. Further, it allows
-downstream users to write code that is generic over `Box` and `Arc`, when
-downstream users need access to `T` after calling `into_foreign`.
+The `Index` implementation on `BStr` was lost when we switched `BStr` from
+a type alias of `[u8]` to a newtype. This patch adds back `Index` by
+implementing `Index` for `BStr` when `Index` would be implemented for
+`[u8]`.
 
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
+ rust/kernel/str.rs | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-This patch is a dependency for Rust `configfs` abstractions. It allows both
-`Box` and `Arc` to be used as pointer types in the `configfs` hierarchy.
----
- rust/kernel/sync/arc.rs | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index dfe4abf82c25c..3d77a31e116f1 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -143,7 +143,7 @@ pub struct Arc<T: ?Sized> {
- #[doc(hidden)]
- #[pin_data]
- #[repr(C)]
--pub struct ArcInner<T: ?Sized> {
-+struct ArcInner<T: ?Sized> {
-     refcount: Opaque<bindings::refcount_t>,
-     data: T,
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index 002dcddf7c768..ba6b1a5c4f99d 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -114,6 +114,17 @@ fn eq(&self, other: &Self) -> bool {
+     }
  }
-@@ -345,18 +345,25 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
  
- // SAFETY: The `into_foreign` function returns a pointer that is well-aligned.
- unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
--    type PointedTo = ArcInner<T>;
-+    type PointedTo = T;
-     type Borrowed<'a> = ArcBorrow<'a, T>;
-     type BorrowedMut<'a> = Self::Borrowed<'a>;
- 
-     fn into_foreign(self) -> *mut Self::PointedTo {
--        ManuallyDrop::new(self).ptr.as_ptr()
-+        let this = ManuallyDrop::new(self).ptr.as_ptr();
-+        // SAFETY: `x` is a valid pointer to `Self` so the projection below is
-+        // in bounds of the allocation.
-+        unsafe { core::ptr::addr_of_mut!((*this).data) }
-     }
- 
-     unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
-+        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
-+        // the offset calculation below is in bounds of the allocation.
-+        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
++impl<Idx> Index<Idx> for BStr
++where
++    [u8]: Index<Idx, Output = [u8]>,
++{
++    type Output = Self;
 +
-         // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
-         // call to `Self::into_foreign`.
--        let inner = unsafe { NonNull::new_unchecked(ptr) };
-+        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
- 
-         // SAFETY: By the safety requirement of this function, we know that `ptr` came from
-         // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
-@@ -365,9 +372,13 @@ unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
-     }
- 
-     unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> ArcBorrow<'a, T> {
-+        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
-+        // the offset calculation below is in bounds of the allocation.
-+        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
++    fn index(&self, index: Idx) -> &Self::Output {
++        BStr::from_bytes(&self.0[index])
++    }
++}
 +
-         // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
-         // call to `Self::into_foreign`.
--        let inner = unsafe { NonNull::new_unchecked(ptr) };
-+        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
- 
-         // SAFETY: The safety requirements of `from_foreign` ensure that the object remains alive
-         // for the lifetime of the returned value.
+ /// Creates a new [`BStr`] from a string literal.
+ ///
+ /// `b_str!` converts the supplied string literal to byte string, so non-ASCII
 
 -- 
 2.47.0
