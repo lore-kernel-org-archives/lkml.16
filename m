@@ -1,64 +1,108 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E77749A;
-	Tue, 18 Feb 2025 08:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6961B4250;
+	Tue, 18 Feb 2025 08:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739867187; cv=none; b=CwmBBD5+Zb2JDzBcSrgIQ50wgWgw9PBs7aQr+7YJhRmX/ZVWmvw+VblV6KC4SPT+Ws9GgvyDR1m/upOO5VTfQpgDTdmDZY7zl8O1y6pBEEOxWlXXOV9SospOQHvfKI6X48P//pw9l4bg9ECiZVfVuZ1OGop+oGsNFNbdCSGJbrg=
+	t=1739867260; cv=none; b=DRqcKtoZIYZ3jaTKsNF4Up6wqCxaySQhnTXf4uMlU+9Hho9MhIHOyCI6sB3odlYwIxB4R/i9+0SIihUn01R2s/9swdbYfd0YJV/PMu93wBIzGl8I8VU0cOHLjX6BousiNGeQZNtzFYR4yqZ0MtIQjm3cbmzOefveZjecDdT2Ahw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739867187; c=relaxed/simple;
-	bh=vw8VUAUqd1LTDPrqZW2pq0bIjio3+TrURyjC/H9+pJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hN1aTPuj4qhOyYZ7S1UVaOQNW7cz/Pgw0P5vVaa6PzFrXKldqp4hZpyqzb/IJUpL/mj93UXnhBWlLozA+wuyiIlZpMaAwOtfPDiAMDnOektTvaQMHn4W6F1r/lRv8gtWS+DjtLb8LdDN3qioFgTj6fj72igcBxd6inHPfhA5apU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bh6WoHHs; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bh6WoHHs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vw8VUAUqd1LTDPrqZW2pq0bIjio3+TrURyjC/H9+pJ0=; b=bh6WoHHsvHllgvyNgEjPnv7jOv
-	Gvnz4nl3mQlat0BS86DYJiXUPixN/nzmhnS2BJ+RYRMGqoKSqIi8RJS4czXq57hzIkP8JLe2S/lkl
-	90Rd5Ofhm2BcgD+gyzquBhVYThB5CBZj8rwPzEsOFwayPj2uXfDzzbvfXSjqR5s5H0Sb3jgIJWxDn
-	Kvz5CVSiWxOsYGr3+5Ds1pI0piIT+iv3wVbOKQ8WjG+RKoyG5G6YPLvAAHGEPKO8X8qnn9H9p4yTo
-	9i3kN9rMAmSSAAlzOBAKpAUBHG1LXj8Mq7rKiwBkaP8ErPXJHZKR9q/TRN6qCrkUn8yTTN8H/e0/u
-	qnq+GOvQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkIvu-00000007Gow-2uJl;
-	Tue, 18 Feb 2025 08:26:22 +0000
-Date: Tue, 18 Feb 2025 00:26:22 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Eugen Hristev <eugen.hristev@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kees@kernel.org, linux-kernel@vger.kernel.org,
-	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-	rafael@kernel.org, dakr@kernel.org, andersson@kernel.org,
-	konradybcio@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
-	pmladek@suse.com, rostedt@goodmis.org, john.ogness@linutronix.de,
-	senozhatsky@chromium.org, quic_mojha@quicinc.com,
-	linux-arm-kernel@lists.infradead.org, kernel@quicinc.com
-Subject: Re: [RFC][PATCH 07/10] printk: export symbols for buffer address and
- length functions
-Message-ID: <Z7RELnyWRLietj9b@infradead.org>
-References: <20250217101706.2104498-1-eugen.hristev@linaro.org>
- <20250217101706.2104498-8-eugen.hristev@linaro.org>
+	s=arc-20240116; t=1739867260; c=relaxed/simple;
+	bh=1soCMC1mDzlUguPyqOBPKxSSzf+ZHtXkwqiV35e1GYA=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ANKerQZPtFJV3tZNasQtM7oFUfjA8w32aqFgBxdNfTW3GxOXjjnbbWqOyAaW1rSN3xdb/PLNJytCwVMxdq3OIJEsH7uXDl0c+nI+mLOujeCjDwGPJQCxGdY2H9NiCUYnIFJC/oKuGcFracZiossvrbjUEj8MV+OXQtTBH32y8e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yxsx40sHkz1wn5P;
+	Tue, 18 Feb 2025 16:23:36 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 179661A0188;
+	Tue, 18 Feb 2025 16:27:30 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 18 Feb 2025 16:27:29 +0800
+Message-ID: <9d55d0a8-7a85-4caf-8358-7e04621813cc@huawei.com>
+Date: Tue, 18 Feb 2025 16:27:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217101706.2104498-8-eugen.hristev@linaro.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, Simon Horman <horms@kernel.org>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <shenjian15@huawei.com>,
+	<wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>, <chenhao418@huawei.com>,
+	<sudongming1@huawei.com>, <xujunsheng@huawei.com>, <shiyongbang@huawei.com>,
+	<libaihan@huawei.com>, <jonathan.cameron@huawei.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/7] net: hibmcge: Add rx checksum offload
+ supported in this module
+To: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
+References: <20250213035529.2402283-1-shaojijie@huawei.com>
+ <20250213035529.2402283-4-shaojijie@huawei.com>
+ <20250217154028.GM1615191@kernel.org>
+ <14b562d6-7006-4fe0-be61-48fe1abebe49@huawei.com>
+ <CAH-L+nM0axD3QWXixe6p7U4dyVx=qn9zh5crOXLTxTH9Gpd9dQ@mail.gmail.com>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <CAH-L+nM0axD3QWXixe6p7U4dyVx=qn9zh5crOXLTxTH9Gpd9dQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-On Mon, Feb 17, 2025 at 12:17:03PM +0200, Eugen Hristev wrote:
-> log_buf_addr_get() and log_buf_len_get() can be reused in another module,
-> export the symbols.
 
-Err, no way.
+on 2025/2/18 10:46, Kalesh Anakkur Purayil wrote:
+> On Tue, Feb 18, 2025 at 7:47 AM Jijie Shao <shaojijie@huawei.com> wrote:
+>>
+>> on 2025/2/17 23:40, Simon Horman wrote:
+>>> On Thu, Feb 13, 2025 at 11:55:25AM +0800, Jijie Shao wrote:
+>>>> This patch implements the rx checksum offload feature
+>>>> including NETIF_F_IP_CSUM NETIF_F_IPV6_CSUM and NETIF_F_RXCSUM
+>>>>
+>>>> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+>>> ...
+>>>
+>>>> diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c
+>>>> index 8c631a9bcb6b..aa1d128a863b 100644
+>>>> --- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c
+>>>> +++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_txrx.c
+>>>> @@ -202,8 +202,11 @@ static int hbg_napi_tx_recycle(struct napi_struct *napi, int budget)
+>>>>    }
+>>>>
+>>>>    static bool hbg_rx_check_l3l4_error(struct hbg_priv *priv,
+>>>> -                                struct hbg_rx_desc *desc)
+>>>> +                                struct hbg_rx_desc *desc,
+>>>> +                                struct sk_buff *skb)
+>>>>    {
+>>>> +    bool rx_checksum_offload = priv->netdev->features & NETIF_F_RXCSUM;
+>>> nit: I think this would be better expressed in a way that
+>>>        rx_checksum_offload is assigned a boolean value (completely untested).
+>>>
+>>>        bool rx_checksum_offload = !!(priv->netdev->features & NETIF_F_RXCSUM);
+>> Okay, I'll modify it in v2.
+> Maybe you can remove " in this module" from the patch title as it is
+> implicit. This comment/suggestion applies to all patches in this
+> series.
 
+Sorry this may not have any bad effect,
+so I don't plan to change it in V2.
+If anyone else thinks it should be modified,
+I will modify it.
+
+Thanks a lot
+Jijie Shao
+
+>> Thanks
+>> Jijie Shao
+>>
+>>>> +
+>>>>       if (likely(!FIELD_GET(HBG_RX_DESC_W4_L3_ERR_CODE_M, desc->word4) &&
+>>>>                  !FIELD_GET(HBG_RX_DESC_W4_L4_ERR_CODE_M, desc->word4)))
+>>>>               return true;
+>
