@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A3E24BBED;
-	Tue, 18 Feb 2025 10:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892D82500DC;
+	Tue, 18 Feb 2025 10:26:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874404; cv=none; b=M6ORQpezYPviuaNLLkxCUa+E7h71cAFsUxkK8atRt7V6PAaQ3BWON8pMZ9Egog0yEh9miWw7cojXuYOtB8fh9ECvATHPuPPNhhUlcZnpIKpw11xuotu1OoLJW/LdofcX7GZqRU2VRMCFChiQrNwvjXL8p3q4pDuDAyuSCecTKoI=
+	t=1739874405; cv=none; b=UHWXZMC3r6s5jQxd2ZWG+AQNj7XoqaCryYgsinmznCZfJQiIrlJpfmR9Qp+9rwNXqgrTJgKnCNDLmbck7422XpCNs5S4uIldckSHtG1v78386fu3gea3QFxnZOiDYGItDeyCe7qhAa1zdHdHRE05Bgn0GmdTBb/ayH017kvsWKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739874404; c=relaxed/simple;
-	bh=hm0b4HrN/h7gh87hBq/UvO2Fcce8zw+8lb+LGIBiM1Q=;
+	s=arc-20240116; t=1739874405; c=relaxed/simple;
+	bh=JMhkV2KjTHwcSa4kVM7/nibeZQCGakkE3y4yA1KaaSI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=GRi9eFXx0yl25tQ3V7xCl1xUBuC/RuGTZi7SgAgxV6JSeeHIV+cwYQvqUBGOKqFU0AAidZxS1AB9q/WM8OPe/YbRZb6FvZdXSCmV3KP+85Hp4aAN45BbDpMQX4lY6Jn+BVJIuFiGewpxLb91gLVJkj6ZTK+Ovdd1HBkFKR/oHSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EDB7ulkQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R5OHwEQw; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=MxoTBQw36FVcybR3sbfIDj9zBCt0v6PCozrvQeuVnrFbgIXozsaR2uh67o+E251p6jqwjqVVAkDSbzm1U77OjF3A9wnhHZNygqirorb/fPb2Hm5ITKaiBIVLn7GGN7BjGidVeOl9usWnD1dRW0h3jKiviw3kJdE64gJ8TMwlXac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jwiavnpc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pBS8DiYh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EDB7ulkQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R5OHwEQw"
-Date: Tue, 18 Feb 2025 10:26:40 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jwiavnpc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pBS8DiYh"
+Date: Tue, 18 Feb 2025 10:26:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739874401;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6xIRTDFtn8drkTPoa+DXe2nzrLF9HOIbBQVFg/6E6dU=;
-	b=EDB7ulkQFvMjKj5iKH/VRuIOh7sQgfEhQmrS9qUEfg7P1kRDbupoRfP0TWTRq+YBHtcOu8
-	unRCkdtk9q6yT6ix/6qMgn+wxHLOX/a9WCMGAmBmxiRn+aWTD4Czn1wQohWVqDg5eG9gLP
-	Jss5vrzgnbNBN+t3KNEeLL5uq88jQeGDAQ5VsbIEKKiWi2iUa/Rih+/aUVIlKi1Y/AffKh
-	ECG8sr+tvh8LmfRXEW/gzToduRumfcDCZ1UXEiNeMluMl0fozVNyzNH0c+9iu9hfjxueS6
-	NX/+7a9BSpQPxLEI92PZhkhXOxTl5Kj6fZXfXY91ylLaOQB8+9AXLzvgbneWuw==
+	bh=Xz71nM8KStAqPl4ffv/CanQmUQtTxSNtucivjc7KKEk=;
+	b=JwiavnpcnApQ7SXGWRbyECG9RE2mtouvLBx++Jh/hFALmB1SDZxUy+BVoS7QCOd0v3+J65
+	VSgN+jgaaR2VG+BlCirbwHnNZAObqZdpnjJvOH4iCDnqaIWdQ3cY5gtdt4JGSYhAb5/RnQ
+	dAqZ+O6sMpaAMn4Jy44H36/sS4JuyZ2MalRU3zZngdjTIIZrSqkpYx9qdTEPfbZRol9nN6
+	yFZ0FbeYjzpuIk9FQ6pZIe5dwniUFFp0s/DqqDtEvNlX9RsHyWdjo8rVZllu+qXHT/vNdg
+	t+oCawyIFA+y0UYQJ9DfhAApjcr22a7mKfnCO56Wrd3Pewz3wtfpyI3+/EAOtA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739874401;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,21 +38,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6xIRTDFtn8drkTPoa+DXe2nzrLF9HOIbBQVFg/6E6dU=;
-	b=R5OHwEQw+Xpq6wPBdIw65bC9oocnsei5tOkIF6/YzrW2GYqmTAZLO9K0ZYt0lpwXd1FSQs
-	57zp+nVtn0kMg5Bw==
+	bh=Xz71nM8KStAqPl4ffv/CanQmUQtTxSNtucivjc7KKEk=;
+	b=pBS8DiYhUFGLs7zrIbXVb05xTCo3jxKcPoE9tJsxQyqeeDzUj6gZXbqeRzCLQxdIGpOcbm
+	NFL3sbr5A8NAPHBw==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/cleanups] serial: xilinx_uartps: Switch to use hrtimer_setup()
+Subject: [tip: timers/cleanups] serial: sh-sci: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
  Zack Rusin <zack.rusin@broadcom.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C4a028a23126b3350a5e243dcb49e1ef1b2a4b740=2E17387?=
+In-Reply-To: =?utf-8?q?=3Cc21664d013015584aebbb6bb8cedd748182cb551=2E17387?=
  =?utf-8?q?46904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C4a028a23126b3350a5e243dcb49e1ef1b2a4b740=2E173874?=
+References: =?utf-8?q?=3Cc21664d013015584aebbb6bb8cedd748182cb551=2E173874?=
  =?utf-8?q?6904=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,7 +59,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987440081.10177.18370206598180763150.tip-bot2@tip-bot2>
+Message-ID: <173987440137.10177.1436809314131153883.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     0852ca41ce1cf1559764cdc7bf17c68e8042daaa
-Gitweb:        https://git.kernel.org/tip/0852ca41ce1cf1559764cdc7bf17c68e8042daaa
+Commit-ID:     4e121496960342f3f2c2c563d65a3c08821ef7d7
+Gitweb:        https://git.kernel.org/tip/4e121496960342f3f2c2c563d65a3c08821ef7d7
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:46:00 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:45:59 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 11:19:03 +01:00
 
-serial: xilinx_uartps: Switch to use hrtimer_setup()
+serial: sh-sci: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -90,24 +89,23 @@ Patch was created by using Coccinelle.
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://lore.kernel.org/all/4a028a23126b3350a5e243dcb49e1ef1b2a4b740.1738746904.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/c21664d013015584aebbb6bb8cedd748182cb551.1738746904.git.namcao@linutronix.de
 
 ---
- drivers/tty/serial/xilinx_uartps.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/sh-sci.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 92ec518..efb124a 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1626,8 +1626,8 @@ static int cdns_rs485_config(struct uart_port *port, struct ktermios *termios,
- 		writel(val, port->membase + CDNS_UART_MODEMCR);
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index b1ea48f..b72c3bc 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1702,8 +1702,7 @@ static void sci_request_dma(struct uart_port *port)
+ 			dma += s->buf_len_rx;
+ 		}
  
- 		/* Timer setup */
--		hrtimer_init(&cdns_uart->tx_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--		cdns_uart->tx_timer.function = &cdns_rs485_tx_callback;
-+		hrtimer_setup(&cdns_uart->tx_timer, &cdns_rs485_tx_callback, CLOCK_MONOTONIC,
-+			      HRTIMER_MODE_REL);
+-		hrtimer_init(&s->rx_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-		s->rx_timer.function = sci_dma_rx_timer_fn;
++		hrtimer_setup(&s->rx_timer, sci_dma_rx_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
  
- 		/* Disable transmitter and make Rx setup*/
- 		cdns_uart_stop_tx(port);
+ 		s->chan_rx_saved = s->chan_rx = chan;
+ 
