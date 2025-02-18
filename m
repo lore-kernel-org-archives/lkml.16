@@ -1,155 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D7A26FDB7;
-	Tue, 18 Feb 2025 18:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD30270ED0
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739901885; cv=none; b=tYkNZ7Hxp97VJZbHjphKfszSb1zp3q+nIhM0vy/tmhjR39N5no+glz0EgS+OuKRgHPql95F1qTDhkH+6M7uUYGJNgb1FH5zFPoWXe9gMQ/HEf6ru3lnZC4K3ZvL52Ir6dWI28Z/dMxzLIbZsUWxdsiwUcPFz/dK3o/b4VYPVH1M=
+	t=1739901896; cv=none; b=X7kKqZ36cy8ZX53Qs9aAH78GYthABVY5zczm7GAr3dTCuNE8LrzZVH2KoDUXjnfS12AjopImJ535meQJoYl2JOawYWnC3aobATt4j+Q3BmKDSMRdC0Tc3/blfk6Gv75Nf5RWrypfGFmPNeFAuZT3Z3ypRPhMTndaZf7GRBd7n6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739901885; c=relaxed/simple;
-	bh=K1MQgtQMpAYOKptLlvAi8++cnfRAKCe3hfbb1sB6G/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BpUfgYBSQb8EdO80cwOHc0eipusvCdax8xGGhL9fpBmpce6zP2FfZXueJgUAo40So01MGdFwB6tjpb3FeYJLJHvHzPzfstlNafd3ChR2dnS7Sw2n+wwE0rFLqyOXZI+ktLgPxrywEtvZg4OwEJOz+Bm13YXazif154h3C7ji1Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbbJCtyT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739901896; c=relaxed/simple;
+	bh=89YH2L66JdBDvc/z1zr776bVYkPkPpM/OI3XRKn7/0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RXbRxkHMeKUCDEQ+ZTffR5/ss4gCFN8FTzMjc7UXqdfFYaNmaOACYoL07x4SBGuI0C5tIa7Il25lTldhfXWorQNISAKrtRnRzPvvQ/6jZJbmaAKMY6edTSRQUAtLsaqQjaQHxlno26rkvVX6xB1n1EmSrPTffgrTYScu2npbpM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=K0a6GdIy; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbbJCtyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A642EC4CEE8;
-	Tue, 18 Feb 2025 18:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739901883;
-	bh=K1MQgtQMpAYOKptLlvAi8++cnfRAKCe3hfbb1sB6G/o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sbbJCtyTPzPc1wAb0IKtxW4rYOfUMNfnCgLtkihQbbVVrl7gBotnz/JoB78mfMMzU
-	 ZAETI2iJR8ir5rljSwVgTurZXCfoQ9bp46CdXgSPTRAx/Q8lsnnFpGOcWI9V7/1/9b
-	 5v15Q9P4tU4gRBIIo4o2fSxrw2Qf0Or7oIMFHYk3kr0SsD24Bi/+hk26t6+134Vgd8
-	 4bNI1yS5SH5yk/PqDl3g7SS39VYNGRV96owwLfKuMtl7X4psJTXa+POPkV1zhwCXgK
-	 teVr0pKlUcJNF99/lnLWLFNzLvRUKzdYL2aLXjJ0OgqwIGhcpcSj4xbGqbiayx2UCo
-	 091jx0v2ATV4g==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5fc69795ecbso2833013eaf.1;
-        Tue, 18 Feb 2025 10:04:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUULLxf3sWZhCicmt92iG2gIDuy+R+aEXlm3ErLTHRFZwoLCGlGM3GccR0q/U6AOT6nieJ/BXYeBQdhsAeYUViGgDywcw==@vger.kernel.org, AJvYcCV/YTHDhAaJkaHh1nUZ/I0qV0rzXefYnx0d9a/4gxVo6MpvHw+qniv8VCPl6++Jw2v0r5v/8t1ckddz@vger.kernel.org, AJvYcCVMoDcx/fpYikixSQVMIjrV2C0hBVGl2N+nVkkQGM4WmoFZkHOfhW+0iDzcFsjZZG0/FtRTCWvvnPhSOHTI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyegoYwQ653TI9AgUXN2u/0vZyBKqp0mNwnbZ+QZweuqGF8Yc1T
-	B4R4c8Zf7KDfvQuCwhBvypMOavWqdc4m3lmX5PujdUbmsrhbM+quVxlVPJa1bJuX2RqUHPqSwGj
-	FmBeET7+7mW+/3vRb3q4ZDVVViFo=
-X-Google-Smtp-Source: AGHT+IEBd/lGYlmKz5IXPZRcAwCG/IQG41R5xdPwkp1MAQpKXaru0Z1ZlEhvqLP4dIAk+b2rEWmAmE1R/PBN/D71JJg=
-X-Received: by 2002:a05:6808:2188:b0:3f4:b6f:c49 with SMTP id
- 5614622812f47-3f40b6f0e2emr1754189b6e.15.1739901882996; Tue, 18 Feb 2025
- 10:04:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="K0a6GdIy"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c081915cf3so131687985a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:04:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1739901893; x=1740506693; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/2QkXBrR+RLY2Ff/8MHFN38wGfIHYvjpwObZxuk5dJA=;
+        b=K0a6GdIyb3ewk6pQ6b1xuyURq3XEdUo5m64DbGAV0y45eDuLj/MDS2BZr/oRNzUGYI
+         aNTlQkGSqRtSIlnkQFJE2sgfpbqzP2GwBh8A6pqGXjAc4QRpDJvDEQGE91YVI+5NYS3H
+         AJLRbV2a0dJ8goyv+69bJjzEUwC50EJZW7IxZcghhIOOpyQExcKymOWqTukXu7HoYNkh
+         9h0hMGg0YMrW1u4OsLEbKDlC3vj1eokY3Hu2IeS1cD1sUphPpsd5ASwniV7mh7h1EyQh
+         nCO/ihxAZDkhvkA72NNbr9nWP9u+hp5mAO6SFW1JAtCjamDrF0p6CQx/KoiWjvSfyBpG
+         kyqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739901893; x=1740506693;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/2QkXBrR+RLY2Ff/8MHFN38wGfIHYvjpwObZxuk5dJA=;
+        b=rnG9m1tBUM06jph9FhruyNHEuYm7aTmsgImcfYQsPo019QBzSv6V0P/CUcsCUUcDLe
+         2EDZ6gwygwGDAVeAeRhh30yuKD7w9Ckx3r3j4izo1lXn7ReGfgnRyub/CGBZzDXkLK7K
+         KjVlkigym5X/+iHQL0LRQJjtz0JI+8AUmEb6hJun63XCNKF/bTy0qW9SmWyTKyIU/l//
+         jAHO2i8lmaBGGwDOG8IYrV92To/z6Fc18qUwIoiif/44TYoUUijUwZdnkHByMYL0JmlL
+         +FIohg+V39+EJqmHA9/EaeEZbjPKAfbaYbAO4ddjhedhGwpepgPwl9TjPYqfoa3MrXKr
+         MEuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7XaWA3qCw85aQGqsMCbfiV+9/u12qP5S4nbqinD4sr76hKs2oOnCHS8ElHoY29isqSBgOjo43zVuPSS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhZG2QYGcFnmyhHC6DFe553/CSsaFDTRyDzIWzcinLyZ8Dhm8n
+	Cmi0hcCNGynO7Br+UW0GuuHBlJCB+EllzB6K5rQomJxgKVASMQ5zithQ+VLPixTmqe2P9y8bVPr
+	q
+X-Gm-Gg: ASbGncueZlvnsDd3H+Y6k1VvQqzDic+70bB7KrCyT3dZKsTrBuJot4VI7sISPdRg8q9
+	DBJgZA/B4d30R2IBKbezrmVBcIerNYn0yf+1T+r1E2zh7ie2nog9CBY2gYMpPKm7W3yp5aI4/3k
+	LjoH40U4xAxCvX0BOGfFk5dnLDpWSNU89/SUymn7gtlb3lsm+Mpn3mzaKx5VEUCDgdZG/L6+k+V
+	M9P4Swp17Ez6zDymRmMLlCiLd2NAt+gljLcGcg7LTNojMgzpW6GHfcQeIzBA0fy11H0MIxYhwTL
+	CXJ5FBh5ZfSqYcLbP7QVCDs36NygddRBTuJAltNgu1USZs2AuG4eN02H7vvUQ2NhDg7PR9TTpw=
+	=
+X-Google-Smtp-Source: AGHT+IEprOBQSn3Ytg4X7qFQ2WbvhHazV+Lw3tNlJvmsytmgmsjBdXJWK9TXucgmcuhpw5lyap3g8A==
+X-Received: by 2002:a05:620a:2b4a:b0:7c0:ae2e:62ff with SMTP id af79cd13be357-7c0ae2e6516mr464537585a.22.1739901893011;
+        Tue, 18 Feb 2025 10:04:53 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0a852b95fsm162892085a.116.2025.02.18.10.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 10:04:52 -0800 (PST)
+Date: Tue, 18 Feb 2025 13:04:50 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Yang Shi <shy828301@gmail.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
+Message-ID: <Z7TLwtQY3vGUw2bO@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F>
+ <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212190308.21209-1-kuurtb@gmail.com>
-In-Reply-To: <20250212190308.21209-1-kuurtb@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 18 Feb 2025 19:04:31 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0iPGihaxsC02cgqzHqXJ+TfbPp0fJBWyWwPDC_wdEqtZA@mail.gmail.com>
-X-Gm-Features: AWEUYZmOsYPysd-LRwcUv6jOiLJG6xUnyJGOt3SJxECO4_0hWY41yXZ98KQydRE
-Message-ID: <CAJZ5v0iPGihaxsC02cgqzHqXJ+TfbPp0fJBWyWwPDC_wdEqtZA@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: platform_profile: Improve platform_profile_unregister
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, platform-driver-x86@vger.kernel.org, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
 
-On Wed, Feb 12, 2025 at 8:03=E2=80=AFPM Kurt Borja <kuurtb@gmail.com> wrote=
-:
->
-> Drivers usually call this method on error/exit paths and do not check
-> for it's return value, which is always 0 anyway, so make it void. This
-> is safe to do as currently all drivers use
-> devm_platform_profile_register().
->
-> While at it improve the style and make the function safer by checking
-> for IS_ERR_OR_NULL before dereferencing the device pointer.
->
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
-> Hi all,
->
-> I made a little modification that I forgot in the last version.
->
-> Rafael, please tell me if you prefer different commits for this. Also
-> should we WARN_ON(IS_ERR_OR_NULL)?
->
-> Based on the acpi branch of the linux-pm tree.
->
-> ~ Kurt
->
-> Changes in v2:
->   - Get reference to pprof after checking for IS_ERR_OR_NULL(dev)
->   - CC Mark Pearson (sorry!)
->
->  drivers/acpi/platform_profile.c  | 19 +++++++++----------
->  include/linux/platform_profile.h |  2 +-
->  2 files changed, 10 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
-ile.c
-> index fc92e43d0fe9..ed9c0cc9ea9c 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -569,24 +569,23 @@ EXPORT_SYMBOL_GPL(platform_profile_register);
->  /**
->   * platform_profile_remove - Unregisters a platform profile class device
->   * @dev: Class device
-> - *
-> - * Return: 0
->   */
-> -int platform_profile_remove(struct device *dev)
-> +void platform_profile_remove(struct device *dev)
->  {
-> -       struct platform_profile_handler *pprof =3D to_pprof_handler(dev);
-> -       int id;
-> +       struct platform_profile_handler *pprof;
-> +
-> +       if (IS_ERR_OR_NULL(dev))
-> +               return;
-> +
-> +       pprof =3D to_pprof_handler(dev);
-> +
->         guard(mutex)(&profile_lock);
->
-> -       id =3D pprof->minor;
-> +       ida_free(&platform_profile_ida, pprof->minor);
->         device_unregister(&pprof->dev);
-> -       ida_free(&platform_profile_ida, id);
->
->         sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> -
->         sysfs_update_group(acpi_kobj, &platform_profile_group);
-> -
-> -       return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_remove);
->
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_pr=
-ofile.h
-> index 8ab5b0e8eb2c..d5499eca9e1d 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -47,7 +47,7 @@ struct platform_profile_ops {
->  struct device *platform_profile_register(struct device *dev, const char =
-*name,
->                                          void *drvdata,
->                                          const struct platform_profile_op=
-s *ops);
-> -int platform_profile_remove(struct device *dev);
-> +void platform_profile_remove(struct device *dev);
->  struct device *devm_platform_profile_register(struct device *dev, const =
-char *name,
->                                               void *drvdata,
->                                               const struct platform_profi=
-le_ops *ops);
->
-> base-commit: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
-> --
+On Tue, Feb 18, 2025 at 09:49:28AM -0800, Yang Shi wrote:
+> On Mon, Feb 17, 2025 at 12:05 PM Gregory Price <gourry@gourry.net> wrote:
+> > The node ID passed in as an argument is a "preferred node", which means
+> > is insufficient space on that node exists to service the GFP_KERNEL
+> > allocation, it will fall back to another node.
+> >
+> > If all hot-plugged memory is added to ZONE_MOVABLE, two things occur:
+> >
+> >   1) A portion of the memory block is carved out for to allocate memmap
+> >      data (reducing usable size by 64b*nr_pages)
+> >
+> >   2) The memory is allocated on ZONE_NORMAL on another node..
+> 
+> Nice write-up, thanks for putting everything together. A follow up
+> question on this. Do you mean the memmap memory will show up as a new
+> node with ZONE_NORMAL only besides other hot-plugged memory blocks? So
+> we will actually see two nodes are hot-plugged?
+> 
 
-Applied as 6.15 material with minor edits in the changelog, thanks!
+No, it creates 1 ZONE_MOVABLE memory block of size
+
+                   (BLOCK_SIZE - memmap_size)
+
+and as far as i can tell the actual memory map allocations still
+occur on ZONE_NORMAL (i.e. not CXL).
+
+So you just lose the capacity, it's just stranded and unused.
+
+> Thanks,
+> Yang
+> 
