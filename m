@@ -1,106 +1,93 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA34268C74
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E7A248161
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739884895; cv=none; b=tjlShzbnPzw59XL3+CWguZcOjIXMpL/GhDoiLkRhOshsNvVlZ6GRoNC07TntFFI9SKVwHnafRvmhKzn5+FD3qUB3Nj1PRTRFTBtyjBSrUeTFg+ln2sFkBbU926EQcuFpb4+sgguFyu31JDhBPpxOwc1dwIWQg+HI1Al7FVQI5+8=
+	t=1739884918; cv=none; b=NF1Dgq+5x1J3MTJn2/JnzVVs9gL5zOTggiQpljCKJ2Yj4CcNg48PdAAFuLMrozLuG+WVsApVK48TuXMrWw3qtVr01oZpbhwP08T9Ci/z9jwiHldCAswKpBfXgNxjF6J2E0rtk6ILhDfnbn2hJvwN8zM65KGa2PLJu5JrFuAV7rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739884895; c=relaxed/simple;
-	bh=vNJSYCuYen7yBiUlt8/F/NhDj/0DDvBzBZsO/cYBZN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IHdkTREpqFWkSSn95rwWDeudt93mdbDk8fzTmht4YN/OLmE3k1dneG3EGPr+kMoUvggpTndfSiys2q5XG3gB4FgNIkAsoIK3NykVSOdPi0xFG1xeAGU4Z4XM+Ke8LQhbWBCIGdwFWD7kE0s5gIu4+DDF5X09MBiYyvmbyca3EF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nPbVYq27; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739884918; c=relaxed/simple;
+	bh=HHOR+ZHUuxKVWPGOIKWQ+Fft+jN2FThtcVTnSzlPmNE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pNzUYDTpYg5kSPpJ1UYAEuILHnIwPqWnZzBLL6Ay3OHgFFjeQJ98APCiXgzMrSaOTT/maIudeGImM6TD2o3JqvJ/t/4CINNEA4JdzF/VqzacU99r/JWlLH/0OysQXMgBbci1WlfEoIBtuxnjJ97F9NLaL7fBvj5vlkmdNPL/Aes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shkspr.mobi; spf=pass smtp.mailfrom=shkspr.mobi; dkim=pass (1024-bit key) header.d=shkspr.mobi header.i=@shkspr.mobi header.b=QROs0wp/; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shkspr.mobi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shkspr.mobi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nPbVYq27"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abb705e7662so568760066b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:21:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=shkspr.mobi header.i=@shkspr.mobi header.b="QROs0wp/"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220ec47991aso56013795ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:21:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739884891; x=1740489691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+VRsn+AEynXrzDApi3GOCSB7kda1CeXhMpv+TvTGpE8=;
-        b=nPbVYq27ZawqQJs54gG+N7vhAULaE74Dqem+QI0sRYaGaOIjWBLt2QoG5tcUwc3LMp
-         djms69G1IJbBIk1ct6zk7pVYqfjOSgeYAf1iWCENh67LoeMVSEmtydzKgGJj8Tc9l76C
-         WuuqeQDDCyIOEkOllnD6jyoXevFsQcasuZukogKipx1PWdsMNubuA/XAumbQ6PQB0tCr
-         LDq4O7XA4VwzBc0u7AbTzZgXWfg3RuYBBH7nZtFulbaQoQ33NLbqRW0+sYsNyXBfmtlh
-         B7bTNzWWkIdw/MSwZRTtOdCcvSY0gklRCtR63UEM1Bl4QUWvq/a9E0hNY2sAlnXk0UBj
-         MlSA==
+        d=shkspr.mobi; s=google; t=1739884914; x=1740489714; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vGyNh+yUFFGrKndGyRtq3BCCKJ9iF/NeUQj7XuO4dpk=;
+        b=QROs0wp/wk1I6PVebuTUbF6NEd/Y9vqP1rI9BJrbReXRp1KKDrw6+49YVc5AsIEMEs
+         FFnVrU9CI2fxLGkuw3F7zqfChkVsLeCHMQN5DlWV3AEDZ9x/TrPHb4FvQQKkB7ptFO53
+         KQO60Qu2ZhB5myjhKw8Snelyz5peFDN7rIIRc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739884891; x=1740489691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+VRsn+AEynXrzDApi3GOCSB7kda1CeXhMpv+TvTGpE8=;
-        b=ZZbFlz3lmtWp7BYH3XcLGeufrHqaFMNv3hlW1CLO4WWXNyBe3/UXO9jGgD07NJonQZ
-         rrUyQ4/9b3K7bro6UPrqS74X1+caTO4I8P+D33kby7t2qhyhbx9m3a1quzTErOfH2eij
-         yWU2VBBgSl1WDSu/6msbqGsjhKFa/afUxd566uqgOg40aF4y8TlqoKe1F0L4mfIfGIMT
-         rhBQXlBewTKxhSZ2M0YlZjSG7N9VghCGulHREqZ8PzKIW/KRXguryndV+w7QXEOURtXK
-         FQogCs75jRTnqmqF+hgzlSIEK8K8evHQiC9fhF7etGr7cwHiO5HWZ/S2R4mFU39pDZgY
-         X6kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhfRV6m3riNygJ+adCuyQGfm97DXiL/dGJcE2TtRe+JhRj2UEItFjFxKhb9nxioY6OxkX5Q+1HjKP1ubA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRKs//Fi4Tqn1N12xKBTR5MqozXeB6/uXbVi17wd2ncpUMqAvv
-	Z4pvr+dAYbbsvGd3xIVIplxN66BjVH81CV4ySfTIv8BMCaW3Cev2aXKwPCyRmr6aE0kqz/PhKSk
-	xU+uxhP+5stsv+W86PzINM+lO/tsdO5NmeGfe
-X-Gm-Gg: ASbGnctnj6f06Ue9YY+mdtAOrguf/dG9U3B261zKJwhPTXvo2Hy+yLJN/HL2eqJGar9
-	6UY31heNhcRUfoBxDNgiOFUewzlnj/qZzirbt7farmlPSgI0xY24glh9KlJV80v3rWYVWsjMu
-X-Google-Smtp-Source: AGHT+IHENWMLQyMCFNyQoxq+tfzbXqrmhbnicTEoipxWjXHMkPQJj0dvAxcA8gbOg9IcuPizgSbv9RYX5Ub2iiHYQEw=
-X-Received: by 2002:a17:907:1903:b0:abb:c457:af69 with SMTP id
- a640c23a62f3a-abbc457b75emr101178366b.0.1739884891353; Tue, 18 Feb 2025
- 05:21:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739884914; x=1740489714;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vGyNh+yUFFGrKndGyRtq3BCCKJ9iF/NeUQj7XuO4dpk=;
+        b=WxSeW9/fL4Vf29Qbr2sshV+JpK7uc1UjZoXa05OKA7clbLEmyQC9s58MNWN3yu6MVb
+         9BTUA/wu/Li3XKaR91Vp4h+Oz3CBzvAbCUwkGqyi1lOYLww0+R61pJ9Aaze9hIb60PPK
+         UE4uFZqiy8QSqtpO4M4PKbvwIj6Km3JqwdQYlLnDukYU4dNq64dzm6TYEIn9+jnI0FNJ
+         WaUML9catctA+QqXcgLsXLajfsi5mqzEZmDg3oCR9GCFL305urAnIdUkA6lhlX/THiy3
+         spz54LXeuK5SPbaGaLy8WhSKH6YzzCJd1kpj3/m/nnf5FIcZ5nGv/g7RnDUVKrTMJtDd
+         Tubg==
+X-Gm-Message-State: AOJu0YwY6V5+Ur9pNQCGfBD7zrM1L6STF4iwuYGvNqD7pJAHGv3lSmgU
+	8Cm+e0ELZgiZAPSwp3f1Sj0rYCETyVuqKttl67H+uYYpM0Wp8Td/9H9jaZ0fZnBPAHnkYbzZaN+
+	pjJ6qIG/Eo9ePVdAnUUwR478KqGtfnhhSVBYwTDuCVU1W7OmdzHC6Nw==
+X-Gm-Gg: ASbGncuuWySercGQdWaWOKiZYD1jV5OvR6kWheoRmlna+GgSSR0IeGM7em74drwg0f7
+	lubvoveOBgfCTHAfqjWhWBwEbOLLgCZQRT5HQunBHIqsa+XNcyBf/dJklXhdvHDL8F01QiOc=
+X-Google-Smtp-Source: AGHT+IGYwISPYytG4IVY1AqTmQX/s2MLmXL8bShNS5ZPRZoYIRdhPBN8vgROTeh4Z/BJ4LWALp6umK9K8/EdyTFXp9Y=
+X-Received: by 2002:a05:6a00:847:b0:732:2170:b69a with SMTP id
+ d2e1a72fcca58-732618ba2d2mr24395367b3a.18.1739884914593; Tue, 18 Feb 2025
+ 05:21:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
-In-Reply-To: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 18 Feb 2025 14:21:19 +0100
-X-Gm-Features: AWEUYZn0nWNA0Mz8GXU5V1iIM17iCX9C2BuP0-zp0BUC-CYDsMjMQia2EAIfB_0
-Message-ID: <CANn89iKyKTD+vQwG-h=oczX=tfBJeY9SVmXFX4a7yMXJCvuJ7w@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] trace: tcp: Add tracepoint for tcp_cwnd_reduction()
-To: Breno Leitao <leitao@debian.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	kernel-team@meta.com
+From: Terence Eden <terence.eden@shkspr.mobi>
+Date: Tue, 18 Feb 2025 13:21:42 +0000
+X-Gm-Features: AWEUYZmGwytYCELLGP-V_6kd9Ja-_X391aaL-yyzeVP2m7qXb7s_IEoCtQYbBPE
+Message-ID: <CAPFVDHokn+kfyk9AxTHuBJjRKMNJjZy8w=e-qzvXaA8Vfcq6Dg@mail.gmail.com>
+Subject: [PATCH] Fixed a spelling error in the comments
+To: maximlevitsky@gmail.com, miquel.raynal@bootlin.com, richard@nod.at, 
+	vigneshr@ti.com
+Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 14, 2025 at 6:07=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
-ote:
->
-> Add a lightweight tracepoint to monitor TCP congestion window
-> adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
-> of:
-> - TCP window size fluctuations
-> - Active socket behavior
-> - Congestion window reduction events
->
-> Meta has been using BPF programs to monitor this function for years.
-> Adding a proper tracepoint provides a stable API for all users who need
-> to monitor TCP congestion window behavior.
->
-> Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
-> infrastructure and exporting to tracefs, keeping the implementation
-> minimal. (Thanks Steven Rostedt)
->
-> Given that this patch creates a rawtracepoint, you could hook into it
-> using regular tooling, like bpftrace, using regular rawtracepoint
-> infrastructure, such as:
->
->         rawtracepoint:tcp_cwnd_reduction_tp {
->                 ....
->         }
->
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Continuing the work of Commit #8ab1b51 /
+https://lore.kernel.org/linux-mtd/20240923065649.11966-1-shenlichuan@vivo.com/
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Terence Eden <terence.eden@shkspr.mobi>
+---
+ drivers/mtd/nand/raw/r852.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/r852.c b/drivers/mtd/nand/raw/r852.c
+index b07c2f8b4035..136589f9a0e9 100644
+--- a/drivers/mtd/nand/raw/r852.c
++++ b/drivers/mtd/nand/raw/r852.c
+@@ -242,13 +242,12 @@ static void r852_write_buf(struct nand_chip
+*chip, const uint8_t *buf, int len)
+                return;
+        }
+
+-       /* write DWORD chinks - faster */
++       /* write DWORD chunks - faster */
+        while (len >= 4) {
+                reg = buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24;
+                r852_write_reg_dword(dev, R852_DATALINE, reg);
+                buf += 4;
+                len -= 4;
+-
+        }
+
+        /* write rest */
+-- 
+2.34.1
