@@ -1,146 +1,122 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF49653
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8084223024C;
+	Tue, 18 Feb 2025 10:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739873193; cv=none; b=G4lPD00wI7hmOgx0dFhzIJiTIvrHIcRZOjgGnJkbJePFsmEpvWQUGHz1ht/kuZXv0rlL2ttP7JZ3WqzDQpBlpT4ZmGDCgiRkq7j1FJNjZxs/K1BxIqS7nC9QEZY7xpXUSXNct0QkEy+oxDm2sR8mukvBR7QzaCKYcg5gIwbXJbs=
+	t=1739873194; cv=none; b=utcBU9ZabyHhv0DG6O2g/JRapS175GEuJbGiSNVT95B/RSojM3pH5cp78K9hJ9h/i/jFphsyjn3ZZM1PR3ojnHqJb/N1u83sWIxJC1vstqyIUudbVSbZF32cMQZA489bRGgM5zMBPN7Cml3Bzv2Zo5IzT+5qk8wAEoQSQJpmLA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739873193; c=relaxed/simple;
-	bh=yTQLFA2M60fO6k4WtuJpDsKQ5AkSMH3vfnsFVh5jiew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ldZnpRGDxFsAd4hGMa5ND2WZLSDHCAlYo0vJyK8sjkzYXG4/A1q7ZXQD0oAFh+EGEuinQ8Xph0StkNfKEQh2m26XH1GDtMhlCsw5hhnds9NzTLcHmlA959MCCPeiGFGpZzAlxe7f1LxPyYdE8MGBKvlfQ/49kcxdMCZaR9aRPos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dvjb6zU4; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739873194; c=relaxed/simple;
+	bh=E3xOi/9hGj00jnNV5AhoZbkDyjCclw+unRetxDkBpRg=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=eTjmwhc3oGqetrzq4iOKvWc/4Z6X3TqNu5HK8How43apSieAw8xkGlJyUMBWwoSTaBtZW6+Gru2/cHOunMfxQo/qg9p4zWrx7iay9hqBzFeRzsjnjLBsPCzoMLOO680EL9lE+BVMMhscitarjww5Afreoaevu7q6pjfPkjwXjjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=YsjgW8iQ; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dvjb6zU4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739873164;
-	bh=TFJStyRkd1bQw5tjsHzKQeYrAIDitsLr5zzdKFMGMbc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dvjb6zU4Cxeq1fnRlr5wJeVRXw/TSdF6YG9wz+gU2EjwJCwwXp5YmViFojpPP79Ea
-	 u7E4PBllNen1FkC6+md1QkcWKRXYSI7cK6BzYKn421qvVJIRSU8kb4lmAAbN5ikKXl
-	 4wdUIPqs7Ld7fuX7naTo6ufjGuRD61fOtTUMIcBs=
-X-QQ-mid: bizesmtpip2t1739873151t23iyhi
-X-QQ-Originating-IP: TwGmGTJ49W7Svc0/Eh/Oa3QTL3/IcQynx4AZ4jbyB4w=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 18 Feb 2025 18:05:49 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5340021001472229730
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	wangyuli@uniontech.com,
-	guanwentao@uniontech.com,
-	yangtiezhu@loongson.cn,
-	maobibo@loongson.cn,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH v2] LoongArch: acpi: Make parse_acpi_topology() return void
-Date: Tue, 18 Feb 2025 18:05:46 +0800
-Message-ID: <07F85BCCFA4D65DF+20250218100546.500452-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="YsjgW8iQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
+	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=OVLzpGyAnuZGHlfCQnUEFiF2NICo49l1c70JyAHdJCE=; b=YsjgW8iQkmOefbMr+6DULtsIga
+	yFggL4XyBiiokWFf3Yl10YLELIEdidsYjMd1P23he71C2U0yLjxOQ1A2Z1/Lxh452bIq7+gmWbfhH
+	ykWZ3d/b0XeYJlwVZY8I8ahMi8s3TkX4kifAxMp/kp2wa3mH+63hOkhk402KWiBaAoPNPKTJOQs2f
+	qoxFzskQ+WpcfR2y/pE4OMAAGAJDbJgiuxgQ6iop5tWejuRB+1aLSnzTWbk77Gdn66JlCUuM6pcSR
+	p4mcDjSZ/iglZq+kxgGilPEXmFV1sfz1koVdXfY2+evT2Ue16Ysfe6Ey5OKxEJvxt0YlReMGrD7be
+	0JNj/tYQ==;
+Received: from [122.175.9.182] (port=15274 helo=zimbra.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <parvathi@couthit.com>)
+	id 1tkKUm-00086M-2f;
+	Tue, 18 Feb 2025 15:36:29 +0530
+Received: from zimbra.couthit.local (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTPS id 8A9E317821C8;
+	Tue, 18 Feb 2025 15:36:20 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTP id 665BF17823D4;
+	Tue, 18 Feb 2025 15:36:20 +0530 (IST)
+Received: from zimbra.couthit.local ([127.0.0.1])
+	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id AF5WfMi2JOCR; Tue, 18 Feb 2025 15:36:20 +0530 (IST)
+Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
+	by zimbra.couthit.local (Postfix) with ESMTP id 3381D17821C8;
+	Tue, 18 Feb 2025 15:36:20 +0530 (IST)
+Date: Tue, 18 Feb 2025 15:36:20 +0530 (IST)
+From: Parvathi Pudi <parvathi@couthit.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
+	rogerq <rogerq@kernel.org>, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, nm@ti.com, 
+	ssantosh@kernel.org, richardcochran@gmail.com, 
+	basharath <basharath@couthit.com>, schnelle@linux.ibm.com, 
+	diogo ivo <diogo.ivo@siemens.com>, m-karicheri2@ti.com, 
+	horms@kernel.org, jacob e keller <jacob.e.keller@intel.com>, 
+	m-malladi@ti.com, 
+	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, afd@ti.com, 
+	s-anna@ti.com, linux-arm-kernel@lists.infradead.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, pratheesh <pratheesh@ti.com>, 
+	Prajith Jayarajan <prajith@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, praneeth@ti.com, srk@ti.com, 
+	rogerq@ti.com, krishna <krishna@couthit.com>, 
+	pmohan <pmohan@couthit.com>, mohan <mohan@couthit.com>
+Message-ID: <1348929889.600853.1739873180072.JavaMail.zimbra@couthit.local>
+In-Reply-To: <20250214170219.22730c3b@kernel.org>
+References: <20250214054702.1073139-1-parvathi@couthit.com> <20250214170219.22730c3b@kernel.org>
+Subject: Re: [PATCH net-next v3 00/10] PRU-ICSSM Ethernet Driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: Ngks2kg28nq5wTl/POcCcm1ewxXLLymmlQMTo1osKKC8xC9zTxyTLDTB
-	ZH773r8i5lg+55A6m+Q8s/yXSNSmYXNrOyOENMcAsAAPKoLZXK09MV/2Rx/8P0iwUD6sBtI
-	tQuFBzN2jtr6GYFLC5DTS43CWHgmmdBxg8ttUx0dNcx2RZeCJKyfPI3TEBz1T85Zz1VFBrK
-	Pluj0spLhRVFCoEMBuuqzDyJwmn55dsHJDawio2cIgWYpmDhr/M+T3qVl9+mzDfuoO1Kel0
-	HRQW1+IIkCV2pQWSZJp8hLDDKc73c7zq/ExX057ujObxbsvKqtkb3azYJ+ig3mGzBOdI2UH
-	TBaZku0D33xMrrxeTCTSxq7it7eh/ea/BnFQdEfZEMlHy0v6iw9t82kuKeoN+YtRcuxZ68Y
-	02OagaYGA3aQd7RPnSvtltmZgW5kmKUKjydhYBtYcaxVNdJltbKKZv2Oih2VwF51iZmjMEF
-	neYMO7i4xNgQGw67XRtkc53iT949UX+FuSuUWNes0i6PggsHjiAg9rJkDPzkiAK4iZHS7id
-	VnRGu5dUls9oQ8thQbrtd1TkCbBar0aGpIXTYI8lYY7tF+Jtwra75ZpyABFN1mBgikwxei7
-	8XTOJLBsnanu/vw4ioZT2pabrhSNs5pbUs1prnzEgPsBuUu0FPrr1O/4uSA/nYl3cM+65oo
-	cDgsu5/XbuWxJKiVETEjDS2vwGv1TDGKf62qM8VxDNor3KNtN9sbBp1D92Cx6Ev3HW6iK3Y
-	PabGCGcO3xXfS4c6C4ldrBDL1KXejeOgmJNNmMsnc1s6xD5UoNe/j4qq8haBPCAqVNTdaoz
-	mCnRpI4jUmO3qEALZezuScu7OgVXLAAAA9zf7MMnBC4wBgpCGPgZi5xyDTEbtTLKrtSGlHc
-	3FXPfV/WdRCfzEqtkPOH1i6PC25tYj8xWkmj3OH8SXHLoNalAr1E1OQlwT9sUf00S/6i82O
-	khIFBvzyIYBfGlLZN/jwpC+vQTGxj1BpxUPHIOOakhaD7p6GWSbBVrj/bEkWWEG/JCXVrkb
-	RhvcL9vQTfjOmPzCCooxVKsNqtr678ZCyOZ6haQF9FVo3QR2K68AnG2qmbFiM=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
+Thread-Topic: PRU-ICSSM Ethernet Driver
+Thread-Index: G9POODYMWs8t48CuCyp4N0Tp+gKU+w==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-The return value of parse_acpi_topology() is both unnecessary and
-unused.
 
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
-Changelog:
- *v1->v2: Fix missing "return".
----
- arch/loongarch/include/asm/acpi.h | 2 +-
- arch/loongarch/kernel/acpi.c      | 9 ++++-----
- 2 files changed, 5 insertions(+), 6 deletions(-)
+Hi,
 
-diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
-index 313f66f7913a..c1b90a90e28b 100644
---- a/arch/loongarch/include/asm/acpi.h
-+++ b/arch/loongarch/include/asm/acpi.h
-@@ -38,7 +38,7 @@ static inline bool acpi_has_cpu_in_madt(void)
- extern struct list_head acpi_wakeup_device_list;
- extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
- 
--extern int __init parse_acpi_topology(void);
-+extern void __init parse_acpi_topology(void);
- 
- static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
- {
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 382a09a7152c..5581e8009421 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -173,7 +173,7 @@ static void __init acpi_process_madt(void)
- 
- int pptt_enabled;
- 
--int __init parse_acpi_topology(void)
-+void __init parse_acpi_topology(void)
- {
- 	int cpu, topology_id;
- 
-@@ -181,7 +181,7 @@ int __init parse_acpi_topology(void)
- 		topology_id = find_acpi_cpu_topology(cpu, 0);
- 		if (topology_id < 0) {
- 			pr_warn("Invalid BIOS PPTT\n");
--			return -ENOENT;
-+			return;
- 		}
- 
- 		if (acpi_pptt_cpu_is_thread(cpu) <= 0)
-@@ -189,15 +189,14 @@ int __init parse_acpi_topology(void)
- 		else {
- 			topology_id = find_acpi_cpu_topology(cpu, 1);
- 			if (topology_id < 0)
--				return -ENOENT;
-+				pr_warn("Invalid BIOS PPTT\n");
-+				return;
- 
- 			cpu_data[cpu].core = topology_id;
- 		}
- 	}
- 
- 	pptt_enabled = 1;
--
--	return 0;
- }
- 
- #ifndef CONFIG_SUSPEND
--- 
-2.47.2
+> On Fri, 14 Feb 2025 11:16:52 +0530 parvathi wrote:
+>> The Programmable Real-Time Unit Industrial Communication Sub-system (PRU-ICSS)
+>> is available on the TI SOCs in two flavors: Gigabit ICSS (ICSSG) and the older
+>> Megabit ICSS (ICSSM).
+> 
+> Every individual patch must build cleanly with W=1.
+> Otherwise doing git bisections is a miserable experience.
+> --
 
+As we mentioned in cover letter we have dependency with SOC patch.
+
+"These patches have a dependency on an SOC patch, which we are including at the
+end of this series for reference. The SOC patch has been submitted in a separate
+thread [2] and we are awaiting for it to be merged."
+
+SOC patch need to be applied prior applying the "net" patches. We have changed the 
+order and appended the SOC patch at the end, because SOC changes need to go into 
+linux-next but not into net-next. 
+
+We have make sure every individual patch has compiled successfully with W=1 if we 
+apply SOC patch prior to the "net" patches.
+
+
+Thanks and Regards,
+Parvathi.
