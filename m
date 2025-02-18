@@ -1,71 +1,83 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1844A2405EC
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739887195; cv=none; b=JKNW8GWBunbziIq6ZpSUGZzuvnJQqMOWtC3OhaiUOQka0pK04pOXjapaLlkgXwmqmfZd8WliccuRXLP86B/e+QLYtxYRSYa1sZr3l2n4fabp7Tcrsv6lS9M9zwqXuz/7gJ59fziBbR5sGiaVSN3gR9dZIAbgy7o20uyXkrjID7A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739887195; c=relaxed/simple;
-	bh=oLapzg2kmr8ra4GmoxtioxQBLEe8tuDRu4pDXkNj86s=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=hTti4BUzW1nXmGerty9wQZdwBI4yekB661djxkcSxUy5e/3jRyvXP05jGrKaTcqGRbh2b4iKyCD8VTc1W5Ab3mqmPBnDO1ByKRk6j8k+BODPTuez+yUnstSxh1Jx1dbwHCatWLtN9SIWZdjm1/NkEvJZJNBOSVM6wrELRG8mjoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=QUvHzR5o; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBD2269AF0;
+	Tue, 18 Feb 2025 14:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.162
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739887214; cv=pass; b=WYUHEtVbscUboykn4gNhqy4AKT07+QZOymz3PAwmkzENli4tj+23vIUei3ntAhXPVwWEFaNIq02t1tiIWzYwJXl+huClIrNXg2a6fXnaX0r86MpmMlMgZ4BOQezESG5t9vLGVKapuhHb/pT0fGyqZ7BMv2GBoOb86kVCC/gpXCo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739887214; c=relaxed/simple;
+	bh=DGgdmGoXFuNbS7z/vFF8stOUuDr8Sn4WUzD/hMg1nu4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ur8UROBZihrdaxtpe0UvYShhg4cwqc8p6Z1eDWQUSJIFlm1ZXAT2J+YD3Q7smtcayje35TkoTX5RRelaXeEtqQQu0BX6K+mS+z8i1y3ZdcCKdbo2TFdYohOVJCJQCQ6OjHFWWxbZHSG6CcF3tut0l+az6O12DHDjWBXvaqm6qak=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=B4psEMDl; arc=pass smtp.client-ip=23.83.223.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="QUvHzR5o"
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="B4psEMDl"
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id ADFC71A5486;
+	Tue, 18 Feb 2025 12:43:10 +0000 (UTC)
+Received: from pdx1-sub0-mail-a208.dreamhost.com (100-127-158-254.trex-nlb.outbound.svc.cluster.local [100.127.158.254])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 0E1A61A4E91;
+	Tue, 18 Feb 2025 12:43:10 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739882590; a=rsa-sha256;
+	cv=none;
+	b=VrwwjxbFesy8mpfO2IjNYUhcLWBLaYAgmBHh+mrMKnhAM8CJ7q0AfNwtFaJZhLG8VJaNS5
+	0UWnJASq6ykqjlPUp8troZLiwAVQxv/juZ+j0UorrMeeqaHhA1gisW0M5YBp6NHy8C8hdL
+	Ai9IAOmvU5Pb6u7N1j5v/gRaisbRWh/abj7c+RZhx+Ibi6uj5qdMxt7ghv0XYU6pge5qga
+	3msspTlwd+WBz364Y3d4vPI9A1mJkuaxwJLmtUULQlvCp84czqy1ZbwmFHOkLJr3J3Hgql
+	tlzlLgRX6kB+qGuLAChdMDNxSdGaf8/VAoLBwE4OvLHgZXJqcfI4DKSiIdSJOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1739882590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=B95tabb5XZzsLZAdmM0q9rShY5CxFJ7DzbxtbrrhHbY=;
+	b=ZlvR4WgSsHn+uWciGXRxmLTLs9afzEirW57vVLw+fbrBJgl6fituvs27LNJyTNDFgw4bWi
+	mX2jnFlFWu0vFpKtYE9zuZj2SwAlDPb8hjcqUxS+qJampzAOzpev79dF+pQhKOleg5CAvZ
+	R41V/MF/pxzs+FMx94NTZigkkrXm1XT5RBwZLCocLpkk5N+vWxTGs3zgj/EYxykUcV9Edq
+	VnvUNvxwVc8iJRHqHbbQAhaIVPkB81wzd25agT2DShpo5bQRqbhmogQbWDeOMBy+ooREp3
+	zQl6SrPLeVEjrarzDrCMNpllEq1XR6puu1ciPrejLgNSVokR1xwzrCRmRoD1lg==
+ARC-Authentication-Results: i=1;
+	rspamd-78ddd997cc-ttgrr;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
+X-MailChannels-Auth-Id: dreamhost
+X-Stop-Madly: 6edb93bf651849a8_1739882590423_2474421560
+X-MC-Loop-Signature: 1739882590423:52837196
+X-MC-Ingress-Time: 1739882590423
+Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.127.158.254 (trex/7.0.2);
+	Tue, 18 Feb 2025 12:43:10 +0000
+Received: from [172.16.32.88] (unknown [198.232.126.202])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D25C03F47B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739887187;
-	bh=TFVkVW8mqzZvRa2FQ2uGvuEytv7Dg/puiNRGWYVs8Vg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type;
-	b=QUvHzR5oTp70JOo2wgCJP9JMcxSACzzX2Bc70kevRR2UgepF6eD0/jBW5PgTi/Hcq
-	 gn8Ae8xSAKx/qRL8AwugpiUcpwMm1k7aFmqu0GtYnTFdCyo85e7dG2xM1v9rxfpB0s
-	 fFu72fDOdeTVFXWctYBeltZlhfnG2WldjLf6jOH6F0KwgUQEjmDCxo8WOIBOG9gBuw
-	 urAFs06U5V/ND7DuCIspj6m5OhrRhLGdYkgTE+IhLfAnY43yBfENq2rmL0OneRRxCo
-	 DIhEgfycs7hFsktlpFEKNZsggwoox0aduoXXi50R9hnsKjGP28X5aUnVdCY2gCJ9L/
-	 pGvbM8PokgZXg==
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43933b8d9b1so29372115e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:59:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739887187; x=1740491987;
-        h=content-transfer-encoding:cc:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TFVkVW8mqzZvRa2FQ2uGvuEytv7Dg/puiNRGWYVs8Vg=;
-        b=TNGH8SyXc86inPAeznOyNMCj47VWtJCOF9+opYH8Rm6ru3/PsCgGorGl7PF5OZQ/mN
-         m1tqJxad80I2RwtbDSIcqmi2uzhBpYW+okvm2lHjK17fSmXyJp0JoJVQWnPRxsqE+VPY
-         1IGBzgqgDeI5XDm58jkzHyVEVv9r0J5jLKEyTMC/udA79zVI4OmnCeaTLBRmsqvAf2dd
-         uZ6wgwIO+HgmbyGcJOjgxtUeRK57oenIB4GXuri5SImjjhaf6NGKg1OlfenC8W2zsGpy
-         mAcyMrDc7q6Hrirv0qpFRlifjhlDUNHHjOfiKEwexQsZh7cbVBxP8rb0Ko5HBqWJWGMy
-         14+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU7dj4blswFrcPPUx+vgXu1w0O2o1jSGgLYLaHwIP02627zrvPbZ025Dp1p+6JcWuPzNhkIomXFtg3V/Zg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc1sFXivM41N17IEna23MjzKqb3bkJOaL/DPrA13Yp911uFVfZ
-	rCpURd4qcOnuNaktI2Zr9FebjvHkCA+BMV1hsm3olrVzgi5ZoPxJYBfCr4agGD9F4jyFIh2MaEA
-	RiQY3zwhyn4mFdPdNzbNbcso2gxterrUrOXlzXjq4fkskL2D5r2kb/Jylgo4T5LhoetcnvHAuS1
-	vIsg==
-X-Gm-Gg: ASbGncsWpgrLojzzhZboPFOy1V2TFMlnc7Lrq6ef6y68hSzyiHLB/jbJ6yYZDOKSXgK
-	qAdwc2/YzhAApopds1uPRi7CycxjXfl/cK0V2w/ssCWEvlkgBjBvRVo/mgpfbMI/xLGY6dv6Jgc
-	hJuTaaq9KgS8HI385SUq+HVw6pYr/Fk8mc9XvWRkKnAi2mcUF3jVV8mA5kYeTSZ1RdNoeZiEHW3
-	xMHrD0TyGRlW5PxhVvk/+FE6AakTNXbKvAsQ64xrBjbnDMVjom+ifqCY6rhxIBT7VIjmQCZUFUw
-	i3KkY7YUKuWisPIV69KWDIv8BR8ACgIClpu3PQt1Pbv0wrM+eCE=
-X-Received: by 2002:a05:600c:1c28:b0:439:42c6:f11f with SMTP id 5b1f17b1804b1-4396e6ab033mr122972785e9.4.1739887187456;
-        Tue, 18 Feb 2025 05:59:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHkuueM4q9zjyh2zOdRzt+GIWkGfCPkA6ywuytmuiaFKbIi3h6FEUwjrGAeEowaXsN5ZS1O9Q==
-X-Received: by 2002:a05:600c:1c28:b0:439:42c6:f11f with SMTP id 5b1f17b1804b1-4396e6ab033mr122972595e9.4.1739887187111;
-        Tue, 18 Feb 2025 05:59:47 -0800 (PST)
-Received: from [192.168.80.20] (51.169.30.93.rev.sfr.net. [93.30.169.51])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a1b8397sm182603185e9.36.2025.02.18.05.59.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 05:59:46 -0800 (PST)
-Message-ID: <54095d2f-daea-4e4a-9542-f6a2b7603672@canonical.com>
-Date: Tue, 18 Feb 2025 14:59:45 +0100
+	(Authenticated sender: rob@landley.net)
+	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4YxzhX6n0qzNR;
+	Tue, 18 Feb 2025 04:43:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
+	s=dreamhost; t=1739882589;
+	bh=B95tabb5XZzsLZAdmM0q9rShY5CxFJ7DzbxtbrrhHbY=;
+	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+	b=B4psEMDltaoKyD63Dts4zk1CiSgxddy46xHI/QV5mgigdVCqa2Bu/FzfsnujpuaPb
+	 eeZbRnPq+UC/S1HRcZABcatN5jxRzWlmKGyF36KtpgCg56zffacA73cKHb2nB1SeUS
+	 vzFrvGBuMWF0+LtGa5O3dqci2KXCJ1mz9s+zz4Q8FrjVTuUvpTsKA1avO0L/QZBEVg
+	 f73zzlrc3rb6uQPQ/So8zmcuGSRtL5N/mjcXyw4mGBTYdXtDTTVC95V4o6YYMYKdD0
+	 8sXSdHaLqUotjLgMAL/wrYlInzhPKifQchb0/DKoibUsrgqxy7iZIuA9mSYZmuYomY
+	 kNmukHkY9h9+w==
+Message-ID: <c9caa50a-597b-48c7-9ac8-b3a4193c3fec@landley.net>
+Date: Tue, 18 Feb 2025 06:43:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,56 +85,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] irqchip: clocksource: fix jcore-pit irq request
+To: Artur Rojek <contact@artur-rojek.eu>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ "D . Jeff Dionne" <jeff@coresemi.io>, linux-sh@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250216175545.35079-1-contact@artur-rojek.eu>
+ <20250216175545.35079-3-contact@artur-rojek.eu>
 Content-Language: en-US
-From: Olivier Gayot <olivier.gayot@canonical.com>
-Subject: [PATCH v2 0/1 RESEND] block: fix conversion of GPT partition name to
- 7-bit
-To: Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
- Ming Lei <ming.lei@redhat.com>, Pavel Begunkov <asml.silence@gmail.com>,
- linux-efi@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Cc: olivier.gayot@canonical.com, daniel.bungert@canonical.com
-Content-Type: text/plain; charset=UTF-8
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <20250216175545.35079-3-contact@artur-rojek.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Dear maintainers,
+On 2/16/25 11:55, Artur Rojek wrote:
+> The jcore-aic irqchip does not have separate interrupt numbers reserved
+> for cpu-local vs global interrupts. Instead, the task of selecting this
+> property is being delegated to the device drivers requesting the given
+> irq.
+> 
+> This quirk has not been taken into account while migrating jcore-pit to
+> request_percpu_irq(), resulting in a failure to register PIT interrupts.
+> 
+> Fix this behavior by making the following changes:
+> 1) Explicitly register irq_set_percpu_devid() in jcore-pit.
+> 2) Provide enable_percpu_irq()/disable_percpu_irq() calls in jcore-pit.
+> 3) Make jcore-aic pass the correct per-cpu cookie to the irq handler by
+>     using handle_percpu_devid_irq() instead of handle_percpu_irq().
+> 
+> Fixes: 69a9dcbd2d65 ("clocksource/drivers/jcore: Use request_percpu_irq()")
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 
-This is a resend of a patch that I originally sent in May 2023.
+Tested-by: Rob Landley <rob@landley.net>
 
-Resending with an updated list of recipients since the list has been updated.
-
-Original submission:
-
-https://lore.kernel.org/linux-efi/f19a6d8a-c85a-963e-412e-efaa7f520453@canonical.com/T/#t
-http://www.uwsg.indiana.edu/hypermail/linux/kernel/2305.2/08638.html
-
---
-
-While investigating a userspace issue, we noticed that the PARTNAME udev
-property for GPT partitions is not always valid ASCII / UTF-8.
-
-The value of the PARTNAME property for GPT partitions is initially set
-by the kernel using the utf16_le_to_7bit function.
-
-This function does a very basic conversion from UTF-16 to 7-bit ASCII by
-dropping the first byte of each UTF-16 character and replacing the
-remaining byte by "!" if it is not printable.
-
-Essentially, it means that characters outside the ASCII range get
-"converted" to other characters which are unrelated. Using this function
-for data that is presented in userspace feels questionable and using a
-proper conversion to UTF-8 would probably be preferable. However, the
-patch attached does not attempt to change this design.
-
-The patch attached actually addresses an implementation issue in the
-utf16_le_to_7bit function, which causes the output of the function to
-not always be valid 7-bit ASCII.
-
-Olivier Gayot (1):
-  block: fix conversion of GPT partition name to 7-bit ASCII
-
- block/partitions/efi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Thanks,
-Olivier
+Rob
