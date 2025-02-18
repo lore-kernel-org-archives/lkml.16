@@ -1,94 +1,225 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6000822CBD8;
-	Tue, 18 Feb 2025 08:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C66123315E;
+	Tue, 18 Feb 2025 08:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866703; cv=none; b=B3rrk27w4eyUJVMrvL8dkcqZlIQIu9PS/iOwDPnNIPgI09jRcZUIQOfKkJIvpSkzwdWFdlYneOxUP22q8bMvVkPPKJM0n1Pr/2hbyC1uNytoD0jkQrEH9z2SBgdKzFjoZDB4bFeOln6DN3unlvkFO0K4uuCQKyT4HEg3Tbkpsr8=
+	t=1739866709; cv=none; b=HAz6CVx6/5mWfJN2tXrLiXaJwqkUywQJ4vm7LRtYXrWFobQTmK0mR6uEy0U/XdGCvVBtypX8+2hUHU3P0tq1dMHGJf114XbXIs3QmO/LM+Ya4IDbkzfLXF53U2vOexQACMPEosqzF0p5u60Mufc7MuCG/qaDVF5k8CJ6cmhoOao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866703; c=relaxed/simple;
-	bh=2VBYXOW5In6lit0F1gJahtZuGAfHYPipCEI5SAdDqvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cQqwTwUSIoBH/dBPpKWRgH4y2KpU5/y7/ur/kuAbv8qoAh+xVcgIGEP8dRYbX+xPWrKsslLyBma7+Q5b3TDLxn1SLDZMQWFTjp8iRbLN0gkqYdLx+EclT60NXuylmLjn6P5tC+Kt6TiDHbx5GOvWNv5oVIF68ZFL2Nca7a3E8rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-521b5bd2268so410444e0c.0;
-        Tue, 18 Feb 2025 00:18:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739866700; x=1740471500;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VT68uUFOtiLM/j4EB1RwnCT+0lIJjD9PLyVD0uYr2cM=;
-        b=pJYalHd/seZz6JgzSYgsmXApfk9VN20SFUDI0hGFVENQJs/R8Hwxq6WsZe8xyAAA9q
-         +XVb/rppSptyshrtiEtBujNdzBuIyxFfNHmIXTMNaj5/slP5Mn6hQc0uRXk6V8Vy1jv2
-         YmCbQthT/xmG2DCc0hnFxvg5foEwOFPrPWMWpRjNAIgtmvrWfU9GMs7vLc4CEtSWtC5c
-         33w/PVPhK16BX06jkMTJxvzNb1dK6QaxYE74D9sK0JeO+ZHUo6sJDBut0X4ouiZwVQlw
-         yEi2izSyMh6luD5OOi4sbT4OHqrcyDHzzqJNqEKgDyICI0WheRXv+vWmGCOiG3Ku+qIN
-         0xiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8f5MiYQUDKuR+A+gm4VNgBlCrU6syJEkZ80qkkCQ+DtILXyafAxiPla3VQ8ysFLYEQCH6cvxdyRF7n3U=@vger.kernel.org, AJvYcCWeqDrnXiKAZv4ifaO6EgfII4dMhyzlUukW755UdCDxAktB01j6+BnF1/6RbBLUR6/IgUJvVBYJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+uukBYrQeT9VdoAgVROyWwfBUB71/Hhjy4fbJmsf4nVr8pfM4
-	DTL4oBubPKXedyS3XzjVDDl2nBdjL8AJGaK9eCBkvP9H6D+88yTDuElfpNcqFfo=
-X-Gm-Gg: ASbGnctPpI7xK4qQRmjNayIWD9aXQcLMVErzfpCL4I1KxIDils6Q/PYccotqcNw9ZwO
-	LSby5vHMvWpKYNHOo7LCt5Kjr8XJAqAF3Z98BtcBl5PXm0rQAuRYvpIzdu2W+YmrMI/TeY7WgIz
-	arnfMIdb24Z+cbHiVw+nQHSOC8Sp5Kk5HuFF4P5vCrXFInKUabqQwM+Xe/oYHv1sHv7fbmcoico
-	w9WiC6yU7X5SnYd7w2R4d4Z694+aFo5qtroQqgBSoPmLw35kyo1vsDhLTPy7y0GkLZap5MSF3rM
-	8rZvyJnamnkNdPlY7thV84tDTL0+LseookPkFEyu0Ff+xCdsMyS0sg==
-X-Google-Smtp-Source: AGHT+IGMgwpf+kYRAPr7XkyvWrb+UmLfkmdXvlkoGgf+GRltx16IBJkg0+LVFD+bPb17sWsfv10Dxg==
-X-Received: by 2002:a05:6122:2a56:b0:520:59ee:8197 with SMTP id 71dfb90a1353d-5209dcccf61mr6069911e0c.8.1739866699899;
-        Tue, 18 Feb 2025 00:18:19 -0800 (PST)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-868e8599598sm2092279241.15.2025.02.18.00.18.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 00:18:19 -0800 (PST)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4bd3c887545so2357738137.1;
-        Tue, 18 Feb 2025 00:18:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVxcUNr2MIRsG7425tbBNIiFKCpVgUDQTyET6myPSk1NpDDlyWE2ZCnqzxcyvgkNki3dCfKfjE6@vger.kernel.org, AJvYcCWudjV5gnNEsHldn8Z3/d9968nHXHJfaVYsdc0o4nUW35SpaTSpUcnypIwNNQjReWtTQcPKBvH17tMUSJg=@vger.kernel.org
-X-Received: by 2002:a67:e7c3:0:b0:4b1:1eb5:8ee5 with SMTP id
- ada2fe7eead31-4bd40001d6amr6978606137.25.1739866699350; Tue, 18 Feb 2025
- 00:18:19 -0800 (PST)
+	s=arc-20240116; t=1739866709; c=relaxed/simple;
+	bh=Nv/ltyViEdDWF68nXs2iXcAPsfBSVXeu+MHh0fs1GJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sLlX7BYe5WBzrXVaRn9gq8U99SChlT9MDG00CCs8gHEafYpgveNB+b0vel3qSvxtfhGi6xEGRD8txX/RIAWgXBZ3NMhUQV1FnaRsccGQhex/IRdTmkDZkCka0LHzbK8Eg4jTIbLzZ+50TCMOXimPKyGpCPXNcEDFbXxz8e4GvTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PVWpQFBN; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PVWpQFBN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739866708; x=1771402708;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Nv/ltyViEdDWF68nXs2iXcAPsfBSVXeu+MHh0fs1GJ4=;
+  b=PVWpQFBNG5SaKkuv1Rq7ahiWRA8TetpRKsRlHypNZQ05FOZZD7dhoIwe
+   /H84YcsMXRS42rTUEDwE8aflf96RwCz1nttYlF6/X0nNU+Q5X7dFzpnCj
+   hSe0h6RUnRMaFjT53ADckHOMtf9sCuvSzhI9DsVyeUPRDiAAPX3bn4eMi
+   2Ncu1dGpg8W/Wv/Hh9xy6Wx4FRdbU3G6qjcDP1d7dmPDrslw09DAzS2NB
+   WI5LlnTPQr+nYlDqUgshtY2ZTasTq9pafn6CwROs8Oja4dJH2FzIOieqo
+   JaEDuTxCj4lAEitOIx/OLR8dNDfPeTaVjBQcq0kBktV9sTvQF6VFq1qSc
+   w==;
+X-CSE-ConnectionGUID: nSqKCf7ZS4SOesRSfcs/GA==
+X-CSE-MsgGUID: 6WmXdm4NQZ2pQcq1rpvENQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="28150286"
+X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
+   d="scan'208";a="28150286"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:18:27 -0800
+X-CSE-ConnectionGUID: 5z9vRN7wSMWUvwtxJjGh6g==
+X-CSE-MsgGUID: Z/kyhOw/QdSF0c+xdlivEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="119247683"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.245.49])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:18:10 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: kees@kernel.org,
+	julian.stecklina@cyberus-technology.de,
+	kevinloughlin@google.com,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	justinstitt@google.com,
+	catalin.marinas@arm.com,
+	wangkefeng.wang@huawei.com,
+	bhe@redhat.com,
+	ryabinin.a.a@gmail.com,
+	kirill.shutemov@linux.intel.com,
+	will@kernel.org,
+	ardb@kernel.org,
+	jason.andryuk@amd.com,
+	dave.hansen@linux.intel.com,
+	pasha.tatashin@soleen.com,
+	ndesaulniers@google.com,
+	guoweikang.kernel@gmail.com,
+	dwmw@amazon.co.uk,
+	mark.rutland@arm.com,
+	broonie@kernel.org,
+	apopple@nvidia.com,
+	bp@alien8.de,
+	rppt@kernel.org,
+	kaleshsingh@google.com,
+	richard.weiyang@gmail.com,
+	luto@kernel.org,
+	glider@google.com,
+	pankaj.gupta@amd.com,
+	andreyknvl@gmail.com,
+	pawan.kumar.gupta@linux.intel.com,
+	kuan-ying.lee@canonical.com,
+	tony.luck@intel.com,
+	tj@kernel.org,
+	jgross@suse.com,
+	dvyukov@google.com,
+	baohua@kernel.org,
+	samuel.holland@sifive.com,
+	dennis@kernel.org,
+	akpm@linux-foundation.org,
+	thomas.weissschuh@linutronix.de,
+	surenb@google.com,
+	kbingham@kernel.org,
+	ankita@nvidia.com,
+	nathan@kernel.org,
+	maciej.wieczor-retman@intel.com,
+	ziy@nvidia.com,
+	xin@zytor.com,
+	rafael.j.wysocki@intel.com,
+	andriy.shevchenko@linux.intel.com,
+	cl@linux.com,
+	jhubbard@nvidia.com,
+	hpa@zytor.com,
+	scott@os.amperecomputing.com,
+	david@redhat.com,
+	jan.kiszka@siemens.com,
+	vincenzo.frascino@arm.com,
+	corbet@lwn.net,
+	maz@kernel.org,
+	mingo@redhat.com,
+	arnd@arndb.de,
+	ytcoode@gmail.com,
+	xur@google.com,
+	morbo@google.com,
+	thiago.bauermann@linaro.org
+Cc: linux-doc@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH v2 07/14] x86: Reset tag for virtual to physical address conversions
+Date: Tue, 18 Feb 2025 09:15:23 +0100
+Message-ID: <dc2aa15404098561c1eb5bad9b31b8d404f93b1c.1739866028.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217160017.2375536-1-haoxiang_li2024@163.com>
-In-Reply-To: <20250217160017.2375536-1-haoxiang_li2024@163.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 18 Feb 2025 09:18:07 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUs_2mB5RFga8Dv7xPp5VFMaXqykJShndTW-_Q8hgUYfw@mail.gmail.com>
-X-Gm-Features: AWEUYZlXeXLAPjROcl_yxFn5h2lk18a3_Wom0kri1EP69xrAxJlcBNWCh-TcD_A
-Message-ID: <CAMuHMdUs_2mB5RFga8Dv7xPp5VFMaXqykJShndTW-_Q8hgUYfw@mail.gmail.com>
-Subject: Re: [PATCH] m68k: sun3: Add check for __pgd_alloc()
-To: Haoxiang Li <haoxiang_li2024@163.com>
-Cc: sammy@sammy.net, zhengqi.arch@bytedance.com, akpm@linux-foundation.org, 
-	dave.hansen@linux.intel.com, kevin.brodsky@arm.com, 
-	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 17 Feb 2025 at 17:00, Haoxiang Li <haoxiang_li2024@163.com> wrote:
-> Add check for the return value of __pgd_alloc() in
-> pgd_alloc() to prevent null pointer dereference.
->
-> Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+Any place where pointer arithmetic is used to convert a virtual address
+into a physical one can raise errors if the virtual address is tagged.
 
-As akpm has already taken this:
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Reset the pointer's tag by sign extending the tag bits in macros that do
+pointer arithmetic in address conversions. There will be no change in
+compiled code with KASAN disabled since the compiler will optimize the
+__tag_reset() out.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+---
+ arch/x86/include/asm/page.h    | 17 +++++++++++++----
+ arch/x86/include/asm/page_64.h |  2 +-
+ arch/x86/mm/physaddr.c         |  1 +
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
-                        Geert
-
+diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
+index c9fe207916f4..fdafeb06c195 100644
+--- a/arch/x86/include/asm/page.h
++++ b/arch/x86/include/asm/page.h
+@@ -7,6 +7,7 @@
+ #ifdef __KERNEL__
+ 
+ #include <asm/page_types.h>
++#include <asm/kasan.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <asm/page_64.h>
+@@ -41,7 +42,7 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+ #define __pa(x)		__phys_addr((unsigned long)(x))
+ #endif
+ 
+-#define __pa_nodebug(x)	__phys_addr_nodebug((unsigned long)(x))
++#define __pa_nodebug(x)	__phys_addr_nodebug((unsigned long)(__tag_reset(x)))
+ /* __pa_symbol should be used for C visible symbols.
+    This seems to be the official gcc blessed way to do such arithmetic. */
+ /*
+@@ -65,9 +66,17 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+  * virt_to_page(kaddr) returns a valid pointer if and only if
+  * virt_addr_valid(kaddr) returns true.
+  */
+-#define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
++
++#ifdef CONFIG_KASAN_SW_TAGS
++#define page_to_virt(x)	({									\
++	__typeof__(x) __page = x;								\
++	void *__addr = __va(page_to_pfn((__typeof__(x))__tag_reset(__page)) << PAGE_SHIFT);	\
++	(void *)__tag_set((const void *)__addr, page_kasan_tag(__page));			\
++})
++#endif
++#define virt_to_page(kaddr)	pfn_to_page(__pa((void *)__tag_reset(kaddr)) >> PAGE_SHIFT)
+ extern bool __virt_addr_valid(unsigned long kaddr);
+-#define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
++#define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long)(__tag_reset(kaddr)))
+ 
+ static __always_inline void *pfn_to_kaddr(unsigned long pfn)
+ {
+@@ -81,7 +90,7 @@ static __always_inline u64 __canonical_address(u64 vaddr, u8 vaddr_bits)
+ 
+ static __always_inline u64 __is_canonical_address(u64 vaddr, u8 vaddr_bits)
+ {
+-	return __canonical_address(vaddr, vaddr_bits) == vaddr;
++	return __canonical_address(vaddr, vaddr_bits) == __tag_reset(vaddr);
+ }
+ 
+ #endif	/* __ASSEMBLY__ */
+diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
+index d63576608ce7..54990ea82f74 100644
+--- a/arch/x86/include/asm/page_64.h
++++ b/arch/x86/include/asm/page_64.h
+@@ -33,7 +33,7 @@ static __always_inline unsigned long __phys_addr_nodebug(unsigned long x)
+ extern unsigned long __phys_addr(unsigned long);
+ extern unsigned long __phys_addr_symbol(unsigned long);
+ #else
+-#define __phys_addr(x)		__phys_addr_nodebug(x)
++#define __phys_addr(x)		__phys_addr_nodebug(__tag_reset(x))
+ #define __phys_addr_symbol(x) \
+ 	((unsigned long)(x) - __START_KERNEL_map + phys_base)
+ #endif
+diff --git a/arch/x86/mm/physaddr.c b/arch/x86/mm/physaddr.c
+index fc3f3d3e2ef2..7f2b11308245 100644
+--- a/arch/x86/mm/physaddr.c
++++ b/arch/x86/mm/physaddr.c
+@@ -14,6 +14,7 @@
+ #ifdef CONFIG_DEBUG_VIRTUAL
+ unsigned long __phys_addr(unsigned long x)
+ {
++	x = __tag_reset(x);
+ 	unsigned long y = x - __START_KERNEL_map;
+ 
+ 	/* use the carry flag to determine if x was < __START_KERNEL_map */
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.47.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
