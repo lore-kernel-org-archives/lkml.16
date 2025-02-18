@@ -1,153 +1,260 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2066.outbound.protection.outlook.com [40.107.21.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B02522FF55
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869088; cv=none; b=GJrY95pP1FqbGCduzGFTA/SlHhGsIvUfghe6jRkF+N9V9LMDTNTS2IDqN8TV5k47hnYgiHE7nMWTJ2EerRe2IGQbnu74EZ/keDQt1He9E4AsVROEmHkYS0+59e19H4/ffep/s3+vGnUdplKjNJDFRU7549EVNednxgJjOAeKVYE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869088; c=relaxed/simple;
-	bh=OyAnmBjaHUZcFsMsEw63Uv32r7ZHuHh2rGeXIQyNl/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FKrVcq+qQLwfsDTHeGtZwgYdBmpkCDNAkvw0Y7IsmlhApHBBwf+fXmhwY0m5eo0xk1DdE9Exwohcj9N+EymMhJkl3v8pljC5RXshW8Idj1r0zRMIcEFpYt1ojuN0/DO9rsqzZiC7/x+Vydu1jXKaFU+NFs2StdHqr2p6RS0jcRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NgCyuku9; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC0822FE19;
+	Tue, 18 Feb 2025 08:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739869086; cv=fail; b=lP9s2eDHbku+Nkw7bT0yR43BdBLyOJdtMN7QJiatIZq3aqiP3Ga9gxU3aH7F7DBeWgj/sz+eOto7viycWHC78O9VacqBZRXAUKOgSPqgHeSh++7YQTyf5yw0MtFDtYJEMfsTUp9qr/erW6YmeLAaR+BmplLqrhJOF98KgHuDH1Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739869086; c=relaxed/simple;
+	bh=IIhoINaHdbmXzJOzwnW6npY/qO04kVEIvadRu4WY0ag=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XrKwGRs6/IHecc1abLRhf/mP0NWJAita9Bd+O6NVBL3Vx5yBrO6b8tIqixooQxrt7lmtCp1YPKerUeUBKt4aluxl4kmZ9bw6MuzbaBZHxow5jrZnzYw+gd33Txn8zGufsin2rBNfdBic/26KI8ZTXGN+9VejPTGDMB9kgXrOcko=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=fjcMvZYx; arc=fail smtp.client-ip=40.107.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NgCyuku9"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e5dd164f03fso2161321276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:58:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739869085; x=1740473885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0WiV88RuMX52VqCnbJqBbwtStRRNrClMaC5QzgRj89Y=;
-        b=NgCyuku9/qgheDn5M4AcDO0rpIQ7we6s2fI+hrP7/IVD1PY+t2eEFUlDgCbvGTAMzi
-         lTtn4doq9FOuq/DQaxHkmhTXBL7S4bpaQaggl/pZ2cliWqMD4SQSanwH+TB4znQsDL3g
-         3VQ+XW0K1n/TsA5iNsTuf8wdByIahjSgB4lYW1N7xAI1XUa0hBsoxL9ZC1sF72NGmKE3
-         1v9tcV1o1bHQr5FKz2ncx96EXW2MTHnmjralRbx6TBZ5aj+rRM3Os5dIaA6fdCY1oOhY
-         38MRGx8ZDfq6B5JjPuOUzQ38colL9+v0U5CnHYGeDNJx7xzcVI3xRkFyhFNxgBSFSZrK
-         CbJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739869085; x=1740473885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0WiV88RuMX52VqCnbJqBbwtStRRNrClMaC5QzgRj89Y=;
-        b=WH/7GxVXSWIDwNjmim/YSQOvgap5v/tRsJeUKYqTf8Ky2INqXWeH09rMPicSpQcCHu
-         Jab6b3583BU535ptNr2cJXF8eMqx0i4XkGhCrgeqtFj2K8ocFRmt2vJtKHZk2CtO09fX
-         hNo1Y8znF7NzQ8RNcQyREw7omobKZNG7/YR9jDJw/lacchyj/WJ/Ged5W99FvG0p46Gn
-         eQtSqTFB38ZLfnpQ7OCp6FNbwd9BQBpAgjKdsnTuxCsWos8waCnC9TZDsfF4f40MLXmg
-         K3l+d2sLE/gHdAsNaUZVuibqwMfuQW0tx1Mb8PKjzYoHOBKOBPLToJ68NFT740e6mCrD
-         tLMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvBFY/a42LoAwHT9uVvo7M/4BlXY5ztOS4SJJJWTFmTqKJJ2bMa4oOwfTZBlSwUxq3U3Wt5Td8Jy9Iupw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2bL0jxfgcHDJwndeE+5rMGDnzqFjcKNT+Hh+cy51kljWsbLrq
-	96oIqzF+vTjfIh7u5vUI+fr+s0+O+1ckZe+7GK5nNOFQd5xqiQGADasFnT+c2oZs6bDCn6puC8a
-	xZafMsbixeL4BZpbxnIX0t88DIJwGjrx0E0VW
-X-Gm-Gg: ASbGncsMBBN8AVBJ+GVD/YLVwC20BziRpFLviwtnIi2LWSa/BlsiESpS9aisvKVJEa7
-	fcN8+LkmirnnKUuRYFJdYQjOQgE7Ec2f4Mop/1wsjFeOlv9ZGAylFJL066wf9Xn78otlxI8Z3sA
-	==
-X-Google-Smtp-Source: AGHT+IFDAv+Ww5Ff98rM498LWZrMYVGA7SxrEKpXl53VPNF2TtUIGFalfKMi0kzAC0F6424I9hSryLL8fES2qf4u6tI=
-X-Received: by 2002:a05:6902:102c:b0:e58:341d:50d6 with SMTP id
- 3f1490d57ef6-e5dc91ed41fmr8784581276.35.1739869085379; Tue, 18 Feb 2025
- 00:58:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="fjcMvZYx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eHelgkp+tlAnJkZLTbFfilJbDnCCnOG5QTycJYF9tSon9+3IGEwlc+ByZwvEtbtYR9kP8mnKObtI0huUyjwLD1kaKib4IwIF/JlylCNM/vJ7YU61bUsePa/GYDxGQCDgp30p6+34oO7ATa6brV+b+y7uzcvUIbd86jCScUoB8hOHF5Rjb8Z4DTxwwETR+cdHu2aBAyA8u6AKSa5+Ob8ts/w+bR6ZKwJV/MH3kmQS8lOPoe2hTitLGg7bspp7cNZQwkfhNr3F2S4+adIlVq18+FSEQ5qK08zWyfFVNbqHXmCQ44Oq9gMgaWa11ngk0+aiVhJzaNDHyQ8vQJ7UgBfPNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hOHt3iDB89h6JJKR5Dz0sefDRH/Dw83Al5OyEdeUXNA=;
+ b=WZ3f0pXmd5x/SBKCGdjPoGKkEuUnKCfIwTNxl2gMaSXJVoeNn6slD05wpyCDukpxHZQt8I+ZRiOJOVdv7E0dS4qguo7wSIGlfAN10VrQISB4kuxVn7G1si2BfFnlCIa04b1ScdUBr4mZvj/le3VNIfVIlf9Afx8I/EQV/1425Cw2EDWZ+7NiaOk5rQLa3l2Ag4MdIe/eQOsHw3p+YtAKyO9rmVir7+pfhBRb4uUFBMurPK8w9eISFw5dB3/+tX88LqaGT/ya5VUjKFW/GIYhcAkC16/8MXpMzN1qqg+05Wo/6ao7VMv+0fXxe/PjdNSUGn6wxH/75fyCPWMLkJAsHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hOHt3iDB89h6JJKR5Dz0sefDRH/Dw83Al5OyEdeUXNA=;
+ b=fjcMvZYxm1LgLdZ5yD4gYNbDKFV4CB1AnGV/OTSraZFeX1Tvy87tvvHRXcsdIyCDEYDVghdDzPR320FeUv2AGNaUt+KeKMnub4kuhS1Ydc3tDHEhgiBCjb6B8GkWK9d30SnWE3t4xXEOzOAa33fprprhM6Kiq+wESntwOBobE4fwK43XfsGgClOM0Uda7d6JyG1HWgf5rw56neCTChMDkiscGEHaNeh+2INVarzjBpSJKT/v+s29nND2NWMH8/3kf+o3jnDyay5Erx1nODxN0hO+Mkk962AeDcfGeAqlU0z6pJw/grczZsBz1k24LjfwHeuAR7+R1vD4ZPRNRnhKiA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com (2603:10a6:20b:3f2::13)
+ by AS5PR04MB10057.eurprd04.prod.outlook.com (2603:10a6:20b:67d::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Tue, 18 Feb
+ 2025 08:58:00 +0000
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6]) by AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6%5]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
+ 08:58:00 +0000
+From: Daniel Baluta <daniel.baluta@nxp.com>
+To: p.zabel@pengutronix.de,
+	shawnguo@kernel.org,
+	mathieu.poirier@linaro.org
+Cc: s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	andersson@kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	iuliana.prodan@nxp.com,
+	laurentiu.mihalcea@nxp.com,
+	shengjiu.wang@nxp.com,
+	Frank.Li@nxp.com,
+	krzk@kernel.org,
+	Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 3/5] reset: imx8mp-audiomix: Introduce active_low configuration option
+Date: Tue, 18 Feb 2025 10:57:10 +0200
+Message-Id: <20250218085712.66690-4-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250218085712.66690-1-daniel.baluta@nxp.com>
+References: <20250218085712.66690-1-daniel.baluta@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: VI1PR07CA0286.eurprd07.prod.outlook.com
+ (2603:10a6:800:130::14) To AS8PR04MB8247.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3f2::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214191615.v5.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <2025021425-surgical-wackiness-0940@gregkh> <CADg1FFd3H0DLV-WX8jTB1VGyOZYEzchP99QvYxWmg1XCOo1ttg@mail.gmail.com>
- <2025021717-prepay-sharpener-37fb@gregkh> <CADg1FFf7fONc+HJT8rq55rVFRnS_UxnEPnAGQ476WVe+208_pA@mail.gmail.com>
- <2025021829-clamor-lavish-9126@gregkh>
-In-Reply-To: <2025021829-clamor-lavish-9126@gregkh>
-From: Hsin-chen Chuang <chharry@google.com>
-Date: Tue, 18 Feb 2025 16:57:38 +0800
-X-Gm-Features: AWEUYZm1tDse1ET3a-jgOK_9kE2iguqODg5oqAc57Y_gfIfAsF1oYPN_93ho47Y
-Message-ID: <CADg1FFd=PbnNSBWk4KGV85jvvRQBBGG4QD2VHM6ABY-mqC8+Lg@mail.gmail.com>
-Subject: Re: [PATCH v5] Bluetooth: Fix possible race with userspace of sysfs isoc_alt
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Ying Hsu <yinghsu@chromium.org>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8247:EE_|AS5PR04MB10057:EE_
+X-MS-Office365-Filtering-Correlation-Id: eb45b44a-f089-4425-93ed-08dd4ffa583f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?pue/rGRpdNie1V1uhxflLYR44lH2+rAQwPVNc+l80DlIaforsCK9k7U9CM74?=
+ =?us-ascii?Q?kN7Tyu+QKJ+JDKpwcuvtMMbaRbECmG3InXFxul7G7FvcnUaD0amnippSwoek?=
+ =?us-ascii?Q?h9Ycpj9oRxeVSw2LDF4PomL6PRlOo2QmPTy2rAEm7bC5xWoU3Am+p8bfefBm?=
+ =?us-ascii?Q?QYiwyqSiBGd4J3v4H02pHCJmWPZadCO9UYe9N6OX2AjeDK6QfFkOCXGRXUVM?=
+ =?us-ascii?Q?P8GfZf67t8oKK81cbmLn/46ciDL+900Kp49aUn+AMPF0Nl7qnIvALF2hTl42?=
+ =?us-ascii?Q?H1R7dlDx5Zil9585pP0n/DtzEIamS4jAkXksrTQn5srhr1Ez+pO1KIl5aC8L?=
+ =?us-ascii?Q?B4cqYX1+y9ugAxEBDWhwBp6+PbJ1XfIJP7ntyOdGwVt4ge2ieZZjs80uAVbN?=
+ =?us-ascii?Q?/G6yhQCiLlTsRV8ZO9BQflj18xqZ2rxBLr/3JShyiDnEvDKqNKDvkB/iYy53?=
+ =?us-ascii?Q?gF0N0FMRA1HqBKFhfTCtg+/GXjCO+rk4AswYVwHSxG+y0ly0V5wFOlOu7y4y?=
+ =?us-ascii?Q?+A9tVU+sP/KyKkTt96j5/XjqK0gxNLeSHFsQ9txe+F5IgJ6if49Djs4L2vYY?=
+ =?us-ascii?Q?FIHx4Zmyfob+SnhDAU0JrBpaYsFpgy6vkshyiaFpusJJGxNcOb7IUZQpuKw1?=
+ =?us-ascii?Q?w4jRDJ7yH+9wlvorDfC+PEUvcZMYQ/BLmHAkG5n2JZumk98+cQGd9q4F7sWZ?=
+ =?us-ascii?Q?bvKxJ9geCitukPtdZInZbvS/sGMqyYbwhOFozS5C/yNB5PrJ03RpcatjPocU?=
+ =?us-ascii?Q?Qsjs0u2Si22YqnD7YclOXn7xYFnQx4IG5BT5F/F1ZDDwQmbao0ao1Kl6MgGI?=
+ =?us-ascii?Q?WMCSvStcHNA5sn81s/o83HZupDSTHb3u3rgLBrNp07DPrvYtpyudNvLMVsXL?=
+ =?us-ascii?Q?8VF0JOJhKCbC/p1mqFW/eqQezCBMnhW5GMVy2/uQW5MC1yF5+O49hwEyYRft?=
+ =?us-ascii?Q?8N6yt0AnWM0LhjrZ0DR6h0FJ34Wfdd73I8uqKDrQnn+5Y2yDcsF/Ld37NdUy?=
+ =?us-ascii?Q?gYdBVoDxlhVOm3ahkIVcAWkGgUAjmp33OAx/mJssd723xQHf5bZGepmhyhz3?=
+ =?us-ascii?Q?9WJA53XFzxXN9RKiRS23X8qKIfl+Xiy3L0U7tObdodIgM+x8rmzSrm0hspXR?=
+ =?us-ascii?Q?hFAGMvDrMSPTk0lWRs3/iGhHXYEtAf2xI8Zm5LNT6qeaEOg8yIKE5yxONHmM?=
+ =?us-ascii?Q?TxPTWB+W6voYScLfoZsqXQuLm44Z1QQFhweBtWWojaFWIOhzjdFJ5G6VGNfi?=
+ =?us-ascii?Q?0k9q1BcYEkt6fnXQhkpUTrIVK3511LlCFwklo2GEzEYbijdcnXrT8cbbq+NN?=
+ =?us-ascii?Q?QkqURmU4yaykGb1X/6c/pC43cL9u6a/amVojHF0AN7V8Pr155vquhrm5zHG8?=
+ =?us-ascii?Q?WzIXoJYu/bcDG5gn56+UaPtEtoue?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8247.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3J2z2drm3SBDJfu2uuKwI0TsorJMH0X6epPCxG1CAh5nlTijwna+0My1y+c5?=
+ =?us-ascii?Q?Lwwhe1bA+Q1MpBUREE+bJrNMuo91ZMJD6Pylf5wUBQMRn3/7dllmF4HACwxH?=
+ =?us-ascii?Q?KgLj9+nytwQrpsoBLuNQEjXI/XkD3ELTkF/Lr94T+sUZoXQ08AozK3W2JGP1?=
+ =?us-ascii?Q?uaVHupJEYYJZJaRK+en257EplZ18PO/MT1EmkDQAz5fkNWmON4tKKHEWiS72?=
+ =?us-ascii?Q?4o/pqi+AuNKlEiZBYaZgMxq/LT1BGYWzK0vFipkdwysRCvLnQcgdo7/mkHUA?=
+ =?us-ascii?Q?ru2h5QwUgM8cbCTVZNuNWGwBpbH8tZMNE2cK40IyVYx2bZ32TQZecidRM844?=
+ =?us-ascii?Q?aYPZoZMkaNyobJNKas7X9ehfPSQwwp6+NBHVNaJS9DoognDNrv/ewi4LEqU/?=
+ =?us-ascii?Q?YFjnDnQvzynQkmAXa/H+U+TUIFwgxJUpdJNiamsc2YOWghcAKaPyvXmqlbK8?=
+ =?us-ascii?Q?D+aUMT4EXKFQllh2keWNVktpB60rGkp9gxwm10kwQcsPI0Rzsm2ZrEgeu4JU?=
+ =?us-ascii?Q?YLn6lhXYiduLXV1cIripyHdlVFfDvBtjsJv0ETndVjXFXIfX3LZ66jJk5MF7?=
+ =?us-ascii?Q?UsBygVy7xjRdHpQQi0n7mWXqSKo8UfdDixSFg87QPRh4gB32/qjQKSd7+xj5?=
+ =?us-ascii?Q?LEbIL5X+6gbwHxsgI14Oy4Ij/ytBmwTLF4v4m3y+7VCubhqlKTgGEiaMlgMV?=
+ =?us-ascii?Q?nY44Jqf2cgnNYqX3OCMp7C9pATDfrnzj0Wer0oV701CDx/gK3OzkrlG2piGZ?=
+ =?us-ascii?Q?WR0IJVIn17MvkkDxpElo4CQp6lGXB/3FDaMmdQHZ5FaTHUvHaLwPzwkuOH63?=
+ =?us-ascii?Q?gLeWdLjzDsc6Q5KYpWlDCFAa0zQKHIXaesWvPyLfpvFRgq7uhyAVj4Ibzjh2?=
+ =?us-ascii?Q?fWjUqbs8OtoFLo1NxkCiP0+ifZAALwHA6tad8d3RnYVdMP4U9Nm7hWJ/r3q4?=
+ =?us-ascii?Q?Nh6/VMe9F+uROlCVNgVjjKz9gp10oc8Dc8EedUOvV1P05QPJbAdW+xCluB2o?=
+ =?us-ascii?Q?Xz5+tTw0zXP4JmwjldKWsz1Ptx93ONV5YFLeJy4mHwJnDy6Tfl3WzkeNn2zk?=
+ =?us-ascii?Q?hjR6adhm0BZWMbtBo299w+zMhNiK8gn3IfjHZt4c4g6z42mPrRmwUeU+hR6g?=
+ =?us-ascii?Q?n3o7rpK2O4OGlhPy5UITBMsVSivPAoHD0oIry9zcheDh3erV/wsmARgNREGy?=
+ =?us-ascii?Q?H6Cv+rLaOzGQ8+frZZX/TnNn1bUqjTQ7XSeRO08BxEQD6AYeksqCn/Stv0Ei?=
+ =?us-ascii?Q?9jr5lJNPRNoopdL99p0M3/v9ndiREuAxepzNEockr9aPsJ3eC/w6tBteXQPp?=
+ =?us-ascii?Q?05W3jGjmPSZQxIw8HKrbbowCjmqSqMXsIaIWgS05Q+QTqh8b1/7ck7pL9t9p?=
+ =?us-ascii?Q?TKRZOn0IRme4ip/ERkWbQQHIXTYCnA5LOOXMFf81bAWQii+HGGs4/sNaTctT?=
+ =?us-ascii?Q?xmaPayH2bJcoHsnsPRiwFf15arnSQZQsZ4wJIXHDVhEagBFeo5c4kQgtYkFW?=
+ =?us-ascii?Q?tNlD08jxRPLxGIwTOgHEJCiaT3WuogBOkPfXBmkR7ZRP26MCaBsQ2nSl195Z?=
+ =?us-ascii?Q?7AxVXl/qqzmU2fTQo17SsxgIicvY4hU4jNB/a4HFtj/b/B56E4T1qWKjKGSt?=
+ =?us-ascii?Q?D/TFFH9AufrOzBWWjyrkovfhGIBE0ACYaKlq/D1gjlXQv7KRTg1m6mxJSYBD?=
+ =?us-ascii?Q?3sLLug=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb45b44a-f089-4425-93ed-08dd4ffa583f
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8247.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 08:57:59.9514
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Yw9R8qJN0s7D1oSrxG1bxF6bKvj+JirCf4oJsM86CYAIduqANCaMyiSAPF9QyFkU8ns3lXJuRVnLC2Ad7ISXcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB10057
 
-Hi Greg,
+For EARC and EARC PHY the reset happens when clearing the reset bits.
+Refactor assert/deassert function in order to take into account
+the active_low configuratin option.
 
-On Tue, Feb 18, 2025 at 4:23=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Tue, Feb 18, 2025 at 12:24:07PM +0800, Hsin-chen Chuang wrote:
-> > Hi Greg,
-> >
-> > On Mon, Feb 17, 2025 at 4:53=E2=80=AFPM Greg KH <gregkh@linuxfoundation=
-.org> wrote:
-> > >
-> > > On Mon, Feb 17, 2025 at 04:44:35PM +0800, Hsin-chen Chuang wrote:
-> > > > On Fri, Feb 14, 2025 at 7:37=E2=80=AFPM Greg KH <gregkh@linuxfounda=
-tion.org> wrote:
-> > > > >
-> > > > > On Fri, Feb 14, 2025 at 07:16:17PM +0800, Hsin-chen Chuang wrote:
-> > > > > > From: Hsin-chen Chuang <chharry@chromium.org>
-> > > > > >
-> > > > > > Expose the isoc_alt attr with device group to avoid the racing.
-> > > > > >
-> > > > > > Now we create a dev node for btusb. The isoc_alt attr belongs t=
-o it and
-> > > > > > it also becomes the parent device of hci dev.
-> > > > > >
-> > > > > > Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to =
-control USB alt setting")
-> > > > >
-> > > > > Wait, step back, why is this commit needed if you can change the =
-alt
-> > > > > setting already today through usbfs/libusb without needing to mes=
-s with
-> > > > > the bluetooth stack at all?
-> > > >
-> > > > In short: We want to configure the alternate settings without
-> > > > detaching the btusb driver, while detaching seems necessary for
-> > > > libusb_set_interface_alt_setting to work (Please correct me if I'm
-> > > > wrong!)
-> > >
-> > > I think changing the alternate setting should work using usbfs as you
-> > > would send that command to the device, not the interface, so the driv=
-er
-> > > bound to the existing interface would not need to be removed.
-> >
-> > I thought USBDEVFS_SETINTERFACE was the right command to begin with,
-> > but it seems not working in this case.
-> > The command itself attempts to claim the interface, but the interface
-> > is already claimed by btusb so it failed with Device or resource busy
-> >
-> > drivers/usb/core/devio.c:
-> >   USBDEVFS_SETINTERFACE -> proc_setintf -> checkintf -> claimintf
->
-> Ah, ok, thanks for checking.  So as you control this device, why not
-> just disconnect it, change the setting, and then reconnect it?
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ drivers/reset/reset-imx8mp-audiomix.c | 45 ++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
-After dis/reconnecting, a Bluetooth chipset would lose all its state:
-Existing connections/scanners/advertisers are all dropped.
-This is as bad as (just an analogy) "Whenever you access a http web
-page, you need to bring your ethernet interface down and up, and after
-the page is downloaded, do that again".
+diff --git a/drivers/reset/reset-imx8mp-audiomix.c b/drivers/reset/reset-imx8mp-audiomix.c
+index 6b1666c4e069..8cc0a6b58cbc 100644
+--- a/drivers/reset/reset-imx8mp-audiomix.c
++++ b/drivers/reset/reset-imx8mp-audiomix.c
+@@ -23,16 +23,19 @@
+ struct imx8mp_reset_map {
+ 	unsigned int offset;
+ 	unsigned int mask;
++	bool active_low;
+ };
+ 
+ static const struct imx8mp_reset_map reset_map[IMX8MP_AUDIOMIX_RESET_NUM] = {
+ 	[IMX8MP_AUDIOMIX_EARC] = {
+ 		.offset	= IMX8MP_AUDIOMIX_EARC_OFFSET,
+ 		.mask	= IMX8MP_AUDIOMIX_EARC_RESET_MASK,
++		.active_low = true,
+ 	},
+ 	[IMX8MP_AUDIOMIX_EARC_PHY] = {
+ 		.offset	= IMX8MP_AUDIOMIX_EARC_OFFSET,
+ 		.mask	= IMX8MP_AUDIOMIX_EARC_PHY_RESET_MASK,
++		.active_low = true,
+ 	},
+ 
+ };
+@@ -48,48 +51,46 @@ static struct imx8mp_audiomix_reset *to_imx8mp_audiomix_reset(struct reset_contr
+ 	return container_of(rcdev, struct imx8mp_audiomix_reset, rcdev);
+ }
+ 
+-static int imx8mp_audiomix_reset_assert(struct reset_controller_dev *rcdev,
+-					unsigned long id)
++static int imx8mp_audiomix_update(struct reset_controller_dev *rcdev,
++				  unsigned long id, bool assert)
+ {
+ 	struct imx8mp_audiomix_reset *priv = to_imx8mp_audiomix_reset(rcdev);
+ 	void __iomem *reg_addr = priv->base;
+-	unsigned int mask, offset, reg;
+-	unsigned long flags;
++	unsigned int mask, offset, active_low;
++	unsigned long reg, flags;
+ 
+ 	if (id >=  IMX8MP_AUDIOMIX_RESET_NUM)
+ 		return -EINVAL;
+ 
+ 	mask = reset_map[id].mask;
+ 	offset = reset_map[id].offset;
++	active_low = reset_map[id].active_low;
+ 
+ 	spin_lock_irqsave(&priv->lock, flags);
++
+ 	reg = readl(reg_addr + offset);
+-	writel(reg & ~mask, reg_addr + offset);
++	if (active_low ^ assert)
++		reg |= mask;
++	else
++		reg &= ~mask;
++	writel(reg, reg_addr + offset);
++
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ 
+ 	return 0;
+ }
+ 
++
++static int imx8mp_audiomix_reset_assert(struct reset_controller_dev *rcdev,
++					unsigned long id)
++{
++	return imx8mp_audiomix_update(rcdev, id, true);
++}
++
+ static int imx8mp_audiomix_reset_deassert(struct reset_controller_dev *rcdev,
+ 					  unsigned long id)
+ {
+-	struct imx8mp_audiomix_reset *priv = to_imx8mp_audiomix_reset(rcdev);
+-	void __iomem *reg_addr = priv->base;
+-	unsigned int mask, offset, reg;
+-	unsigned long flags;
+-
+-	if (id >=  IMX8MP_AUDIOMIX_RESET_NUM)
+-		return -EINVAL;
+-
+-	mask = reset_map[id].mask;
+-	offset = reset_map[id].offset;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	reg = readl(reg_addr + offset);
+-	writel(reg | mask, reg_addr + offset);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+-	return 0;
++	return imx8mp_audiomix_update(rcdev, id, false);
+ }
+ 
+ static const struct reset_control_ops imx8mp_audiomix_reset_ops = {
+-- 
+2.25.1
 
->
-> Also, see my other review comment, how does BlueZ do this today?
-
-BlueZ handles that in their MGMT command, that is, through Control
-channel -> BlueZ kernel space code -> driver callbacks.
-Once a Bluetooth chipset is opened with the User channel, it can't be
-used with the Control channel simultaneously, and vice versa.
-
---=20
-Best Regards,
-Hsin-chen
