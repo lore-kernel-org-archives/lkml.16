@@ -1,62 +1,62 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6279A26A1C7
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1CC26B2B9
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889343; cv=none; b=PO2uLMIr2KAeHgPC/p/tNwfEBEbT2ZNFN3vVZ8PDxdpFLk4uu4k7VN/YP5IxN+sKXKgJcwJbjAVHJY87ci9CllPS2jfwA3dak5smfemypLTyLGFPGYSLtTugCHB157yQiKWSC+NcQh3ZS6DXUv/oN1E1Kub+zEdxopZJcYSannQ=
+	t=1739889349; cv=none; b=qXqILdjBTErMrxVgxTfHo2pdtgBoLs+mlTWxYLmFLUjRu0B29sdTnbGHzjpch0j7z51E1+pwr1WGM3ekwcGvyWUMbNz5yUafY4fqjCFpwnMZ/ewtbzIhGhwSe9djRSj/O2oDVKr13eQmcFn/Fa5iTik7Z0jbYLTaqsyNi2Q3Q8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889343; c=relaxed/simple;
-	bh=3QwjNj0ROdzqLW71IRTDhiQ0v1pIcRutbYPvI7OCWac=;
+	s=arc-20240116; t=1739889349; c=relaxed/simple;
+	bh=YB2dQ1rBZRLx3aY/9FJdGsn3BIuWnqmUrluD4l+qzqU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cY5tQysxDYsJvHxIV6lKn6GJvugBip1FB4RYfkFgmYiGTjq+xC8vX1uYLS7MMLA6N2ZaqF57YsXmsx4AvL9ettuSG3YhV6Zdjthuyy+mbH6deGGuFF4BHlN8LgtA7GSsUJplG9k1Yz8Xv47bQsQqmJh3fMPtg8emFoGs8He9Q1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BY03jPkz; arc=none smtp.client-ip=209.85.208.169
+	 MIME-Version; b=JjLDIkhvnzv+eB++7BgpXLG/lGDliyR8ZgPdsf3gyFElx73U+rNJf4+/wY39I2LkyuJ9WPAJ0fGicklRXV/kI33KFUQpJVbM/qmND9Cy3C1tma0v6ROsrV8BhyaY0yoE+xZw+QtP2SdgoleAmDDCGK3Z449NnPCFhUF++yl2Hnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NwM3sbTg; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BY03jPkz"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30795988ebeso57842471fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:35:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NwM3sbTg"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30737db1aa9so52552151fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:35:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739889338; x=1740494138; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739889345; x=1740494145; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aSw2Z+vDYpMcPS9QNEoQcbq77hOYHck6fzByPwaDKgI=;
-        b=BY03jPkz7YPdrMl50ZpK6IJmV8hRlvrHFIXDyxd6bmaT8HefDrUMYFyWU6dQ4W5z3h
-         vN+JJZWMyOresHOMQD2ACXCLItl+KHfxIYJdFtGPLN9kvYwQjORUfcD3aIlaTKON7O35
-         L+LL7Fx7eYWJP868ObV1gIGwQ5/l2I0dbckw6+f3jE4woNkVrt3F410BTfvpOeiugJCW
-         6rYsvEjSBR38Cru2geN2i7y1j3wvs9aAafyAyyArXPe4eZ4CNvWtrxZXUwQHHw3lTenJ
-         MQAWqCjUFWh1sn6Z7fWLH90HbQ8ffMwx3/Vf6HqOossXZTaYucyE9pTclc3mFyoI56Pa
-         Ey6A==
+        bh=nSDQWd9UZqV/STl4BJjbppPEGE1hH0ufO/G2aXdmVa4=;
+        b=NwM3sbTgus7CcqDd8GvqoivzeFX8EtdWJa9Vb2LYgdNgGnBaFLS8wuDMLy9CpKVa3S
+         /0PyFkNBN/oNg5kc+NwbwaG9Vv2I6j/tdi6I8SYtR0FMiulhsjPNRzMPS9P0uBRPkCiI
+         HakWV+XPXDaLYAGgHQrzzR/vbrblwjp+0b1P86XFVA03Q1I2TGTnJAzDZ/pIQQjky9Xo
+         AWFaQ5ZnjVHGrl0PvRPcmU+PiybzSs7AoM9Np5+9DaZXXdiA+WkFMVuSdskf5oiNSVwN
+         EnV6Zkc48sglVr0EfhyjPBvVBbxTt0PG6rxrkmMvGRcoTnHXfmvW1ZBqmGCAHu/61G1P
+         pazw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739889338; x=1740494138;
+        d=1e100.net; s=20230601; t=1739889345; x=1740494145;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aSw2Z+vDYpMcPS9QNEoQcbq77hOYHck6fzByPwaDKgI=;
-        b=ojVHs/iJDN4XMVboGCkOTgLMy507bekn4BP7bPdIZiI3jr8BAjnJz0Tj8XO890vrB7
-         JGVebdJLc/7uGCShT7k9pgrDYYPiB69E6YvZUqSE2BPoFcmmIe9CZtm+x9vYBi0un8w+
-         viNJpkPoHOvRryGUMeQV4cuL83dV1NnHAAjPxwE2jy6rQxZf37BkL+etT9gJ8hiphtbL
-         cY+IwO6YOw/WfruzN9WDFdn8sdH0aGyP2700zz/yzbmXt+zmiDXUO4KuDuVJcZ8PaQea
-         j2oFbnQKMwnihnw7/7fy3zvJS3TEyYFVvhjpDmaWxb8jjFZ0prXttcv0vfdaVLBS0G7E
-         OQgQ==
-X-Gm-Message-State: AOJu0Yz3/6T/J3Bs3QbgKgnpOP3Jr0e3syogeayoFAiCbKZnEAhwx5dg
-	5OZtBRnFmKKabk8wTe4SHXMHQYAorJ9mJogsFiMKHJmU1bjTNcKhjk4TLdgXlmDCt1QC3KxrZ9G
-	P
-X-Gm-Gg: ASbGncu+0qNdt//j5Q/UQbkoz2MTQVWhO7uqL2OBUJrsLxTgDX4CCFX1M1kJ8ss5TdI
-	yfHjqo7k5GswZ9WVVCz2jD7dwYXWDDfmG+b4ZeMARQ+QGL5MQZ+RJ/wZJ4A6UlGpMAmYn5xk9NR
-	KpsELG30P2U+4BgQlW+ZfW9MqTXXNfGwMuKs4Z0Y+ZwOXvRUWqT4nDWVj8JkPxq3aqnYBMbAroH
-	zINwc3WzyBhI5T+xXpcZR2f/U4Qgbsi2tOSLSgB0DuHJwAhuQPPs64e/CVhnJVRL8l2bJYYrzTU
-	GBJtWn+qp+gM9RYxDIr5u4P7Pa9hqYAuTS5JveYRp/II6Ac2+vU7gdXXrHp63VLSFzF+
-X-Google-Smtp-Source: AGHT+IF7f9ec48KaZv7M3tutHQN+6tTXNf+jaL1lxy33GRxn28Otk9evT4b6BnrHCYuKUlHmWKLqmQ==
-X-Received: by 2002:a2e:9f54:0:b0:2fa:d2c3:a7e8 with SMTP id 38308e7fff4ca-30927a474a1mr39521641fa.13.1739889337817;
-        Tue, 18 Feb 2025 06:35:37 -0800 (PST)
+        bh=nSDQWd9UZqV/STl4BJjbppPEGE1hH0ufO/G2aXdmVa4=;
+        b=FAdImhjWjzCjsBWqRw8R661c1FvTnlWVsBhvwi/XGgNe5m6L7R2MUL62Uz2A/Xrmwt
+         05/4em19I6zS1EED6vu16ozZ3h05W/ds+vZrsH9zj8m1q3oi1ZcubcFExliqfmI3H2Jy
+         Y43laye1zWjB3fiFZuS42L00KgWJice40qDroSQaj2y3lNvxGlKOlXm44VgaLcoxr1aS
+         N62Zeg2ZtnE0z2/DSVwat3Fj1knF60M3zsEAQC9CyOYAw/WEuPt0uBhbvDnMVpm+eZFl
+         ruZUoOPdMVxOmhX2ol6tckZL9p9UKuFJKraS+fg6M4B+Wmj197mc3nYBAZt3j8ztFCDR
+         wmlw==
+X-Gm-Message-State: AOJu0YzotPF5c+HeDDYDQ4cGpJiCryIlCGuTamMUaxn/LEYI226hMo8i
+	vOX3+hYKe1GVr1DcBPI0PAYxLJf3MZQdSU+/QJyFV7g4xA3fE8AO832dzdePkisLRP1lU70MGO+
+	4
+X-Gm-Gg: ASbGncta1j1PaMsfbGZNNoKDaWMtEb1PGfwsIJIYj0biBs3NiuNUFO+vC3Ka3q6ciB5
+	nF1pwlb2NnHuVoHkpNqbyElwV6aIBs9hMCQw1ECThGkU8K8ws+42m43dtODartxzYgolhlZlddD
+	7IvjtCHwOhjx6uPl8atcO2TC2hnWbqNsGm1vTLKkxXDBKcR5YdilhnTgRhuVmNm25FCYgalntaD
+	I3uYqrUNrwdZoe+Dd0CHbURk8yn/NvoDu/rTN77v2vj7witozFTSMuN8Haqvx8cvy8rX5MEP5GJ
+	lLLrRoAQPb+jLiuIUBKrEEQjpHZKfNkFF5Fy9DobsoPH99v810R2GLsXVqXddZYZQUnW
+X-Google-Smtp-Source: AGHT+IF9vO7JxagmmEJhta7Zxm6e8mrTw9C6huFeIBooCIxbmBYjTz6cKR26jv51+niVmF52hX1/gw==
+X-Received: by 2002:a2e:8757:0:b0:308:db61:34cf with SMTP id 38308e7fff4ca-30927a72551mr42596281fa.14.1739889345220;
+        Tue, 18 Feb 2025 06:35:45 -0800 (PST)
 Received: from rayden.urgonet (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309311777a8sm12360831fa.25.2025.02.18.06.35.36
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309311777a8sm12360831fa.25.2025.02.18.06.35.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 06:35:36 -0800 (PST)
+        Tue, 18 Feb 2025 06:35:43 -0800 (PST)
 From: Jens Wiklander <jens.wiklander@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	linux-media@vger.kernel.org,
@@ -79,9 +79,9 @@ Cc: Olivier Masse <olivier.masse@nxp.com>,
 	azarrabi@qti.qualcomm.com,
 	Simona Vetter <simona.vetter@ffwll.ch>,
 	Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v5 1/7] tee: add restricted memory allocation
-Date: Tue, 18 Feb 2025 15:34:50 +0100
-Message-ID: <20250218143527.1236668-2-jens.wiklander@linaro.org>
+Subject: [PATCH v5 4/7] optee: sync secure world ABI headers
+Date: Tue, 18 Feb 2025 15:34:53 +0100
+Message-ID: <20250218143527.1236668-5-jens.wiklander@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250218143527.1236668-1-jens.wiklander@linaro.org>
 References: <20250218143527.1236668-1-jens.wiklander@linaro.org>
@@ -93,553 +93,288 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add restricted memory allocation to the TEE subsystem.
-
-Restricted memory refers to memory buffers behind a hardware enforced
-firewall. It is not accessible to the kernel during normal circumstances
-but rather only accessible to certain hardware IPs or CPUs executing in
-higher privileged mode than the kernel itself. This interface allows to
-allocate and manage such restricted memory buffers via interaction with
-a TEE implementation.
-
-A new ioctl TEE_IOC_RSTMEM_ALLOC is added to allocate these restricted
-memory buffers.
-
-The restricted memory is allocated for a specific use-case, like Secure
-Video Playback, Trusted UI, or Secure Video Recording where certain
-hardware devices can access the memory.
-
-More use-cases can be added in userspace ABI, but it's up to the backend
-drivers to provide the implementation.
+Update the header files describing the secure world ABI, both with and
+without FF-A. The ABI is extended to deal with restricted memory, but as
+usual backward compatible.
 
 Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 ---
- drivers/tee/Makefile       |   1 +
- drivers/tee/tee_core.c     |  38 +++++++-
- drivers/tee/tee_private.h  |   2 +
- drivers/tee/tee_rstmem.c   | 180 +++++++++++++++++++++++++++++++++++++
- drivers/tee/tee_shm.c      |   2 +
- drivers/tee/tee_shm_pool.c |  69 +++++++++++++-
- include/linux/tee_core.h   |  15 ++++
- include/linux/tee_drv.h    |   2 +
- include/uapi/linux/tee.h   |  44 ++++++++-
- 9 files changed, 349 insertions(+), 4 deletions(-)
- create mode 100644 drivers/tee/tee_rstmem.c
+ drivers/tee/optee/optee_ffa.h | 27 ++++++++++---
+ drivers/tee/optee/optee_msg.h | 65 ++++++++++++++++++++++++++++++--
+ drivers/tee/optee/optee_smc.h | 71 ++++++++++++++++++++++++++++++++++-
+ 3 files changed, 154 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/tee/Makefile b/drivers/tee/Makefile
-index 5488cba30bd2..a4c6b55444b9 100644
---- a/drivers/tee/Makefile
-+++ b/drivers/tee/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_TEE) += tee.o
- tee-objs += tee_core.o
- tee-objs += tee_shm.o
- tee-objs += tee_shm_pool.o
-+tee-objs += tee_rstmem.o
- obj-$(CONFIG_OPTEE) += optee/
- obj-$(CONFIG_AMDTEE) += amdtee/
- obj-$(CONFIG_ARM_TSTEE) += tstee/
-diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-index d113679b1e2d..f4a45b77753b 100644
---- a/drivers/tee/tee_core.c
-+++ b/drivers/tee/tee_core.c
-@@ -1,12 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2015-2016, Linaro Limited
-+ * Copyright (c) 2015-2022, 2024, Linaro Limited
+diff --git a/drivers/tee/optee/optee_ffa.h b/drivers/tee/optee/optee_ffa.h
+index 257735ae5b56..7bd037200343 100644
+--- a/drivers/tee/optee/optee_ffa.h
++++ b/drivers/tee/optee/optee_ffa.h
+@@ -81,7 +81,7 @@
+  *                   as the second MSG arg struct for
+  *                   OPTEE_FFA_YIELDING_CALL_WITH_ARG.
+  *        Bit[31:8]: Reserved (MBZ)
+- * w5:	  Bitfield of secure world capabilities OPTEE_FFA_SEC_CAP_* below,
++ * w5:	  Bitfield of OP-TEE capabilities OPTEE_FFA_SEC_CAP_*
+  * w6:	  The maximum secure world notification number
+  * w7:	  Not used (MBZ)
   */
+@@ -94,6 +94,8 @@
+ #define OPTEE_FFA_SEC_CAP_ASYNC_NOTIF	BIT(1)
+ /* OP-TEE supports probing for RPMB device if needed */
+ #define OPTEE_FFA_SEC_CAP_RPMB_PROBE	BIT(2)
++/* OP-TEE supports Restricted Memory for secure data path */
++#define OPTEE_FFA_SEC_CAP_RSTMEM	BIT(3)
  
- #define pr_fmt(fmt) "%s: " fmt, __func__
+ #define OPTEE_FFA_EXCHANGE_CAPABILITIES OPTEE_FFA_BLOCKING_CALL(2)
  
- #include <linux/cdev.h>
- #include <linux/cred.h>
-+#include <linux/dma-buf.h>
- #include <linux/fs.h>
- #include <linux/idr.h>
- #include <linux/module.h>
-@@ -815,6 +816,38 @@ static int tee_ioctl_supp_send(struct tee_context *ctx,
- 	return rc;
- }
+@@ -108,7 +110,7 @@
+  *
+  * Return register usage:
+  * w3:    Error code, 0 on success
+- * w4-w7: Note used (MBZ)
++ * w4-w7: Not used (MBZ)
+  */
+ #define OPTEE_FFA_UNREGISTER_SHM	OPTEE_FFA_BLOCKING_CALL(3)
  
-+static int
-+tee_ioctl_rstmem_alloc(struct tee_context *ctx,
-+		       struct tee_ioctl_rstmem_alloc_data __user *udata)
-+{
-+	struct tee_ioctl_rstmem_alloc_data data;
-+	struct dma_buf *dmabuf;
-+	int id;
-+	int fd;
-+
-+	if (copy_from_user(&data, udata, sizeof(data)))
-+		return -EFAULT;
-+
-+	if (data.use_case == TEE_IOC_UC_RESERVED)
-+		return -EINVAL;
-+
-+	dmabuf = tee_rstmem_alloc(ctx, data.flags, data.use_case, data.size,
-+				  &id);
-+	if (IS_ERR(dmabuf))
-+		return PTR_ERR(dmabuf);
-+	if (put_user(id, &udata->id)) {
-+		fd = -EFAULT;
-+		goto err;
-+	}
-+	fd = dma_buf_fd(dmabuf, O_CLOEXEC);
-+	if (fd < 0)
-+		goto err;
-+	return fd;
-+err:
-+	dma_buf_put(dmabuf);
-+	return fd;
-+}
-+
- static long tee_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- {
- 	struct tee_context *ctx = filp->private_data;
-@@ -839,6 +872,8 @@ static long tee_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		return tee_ioctl_supp_recv(ctx, uarg);
- 	case TEE_IOC_SUPPL_SEND:
- 		return tee_ioctl_supp_send(ctx, uarg);
-+	case TEE_IOC_RSTMEM_ALLOC:
-+		return tee_ioctl_rstmem_alloc(ctx, uarg);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1286,3 +1321,4 @@ MODULE_AUTHOR("Linaro");
- MODULE_DESCRIPTION("TEE Driver");
- MODULE_VERSION("1.0");
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS("DMA_BUF");
-diff --git a/drivers/tee/tee_private.h b/drivers/tee/tee_private.h
-index 9bc50605227c..bf97796909c0 100644
---- a/drivers/tee/tee_private.h
-+++ b/drivers/tee/tee_private.h
-@@ -23,5 +23,7 @@ void teedev_ctx_put(struct tee_context *ctx);
- struct tee_shm *tee_shm_alloc_user_buf(struct tee_context *ctx, size_t size);
- struct tee_shm *tee_shm_register_user_buf(struct tee_context *ctx,
- 					  unsigned long addr, size_t length);
-+struct dma_buf *tee_rstmem_alloc(struct tee_context *ctx, u32 flags,
-+				 u32 use_case, size_t size, int *shm_id);
+@@ -119,16 +121,31 @@
+  * Call register usage:
+  * w3:    Service ID, OPTEE_FFA_ENABLE_ASYNC_NOTIF
+  * w4:	  Notification value to request bottom half processing, should be
+- *	  less than OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE.
++ *	  less than OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE
+  * w5-w7: Not used (MBZ)
+  *
+  * Return register usage:
+  * w3:    Error code, 0 on success
+- * w4-w7: Note used (MBZ)
++ * w4-w7: Not used (MBZ)
+  */
+ #define OPTEE_FFA_ENABLE_ASYNC_NOTIF	OPTEE_FFA_BLOCKING_CALL(5)
  
- #endif /*TEE_PRIVATE_H*/
-diff --git a/drivers/tee/tee_rstmem.c b/drivers/tee/tee_rstmem.c
-new file mode 100644
-index 000000000000..3b27594ec30b
---- /dev/null
-+++ b/drivers/tee/tee_rstmem.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0-only
+-#define OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE 64
++#define OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE	64
++
 +/*
-+ * Copyright (c) 2024 Linaro Limited
++ * Release Restricted memory
++ *
++ * Call register usage:
++ * w3:    Service ID, OPTEE_FFA_RECLAIM_RSTMEM
++ * w4:    Shared memory handle, lower bits
++ * w5:    Shared memory handle, higher bits
++ * w6-w7: Not used (MBZ)
++ *
++ * Return register usage:
++ * w3:    Error code, 0 on success
++ * w4-w7: Note used (MBZ)
 + */
-+#include <linux/device.h>
-+#include <linux/dma-buf.h>
-+#include <linux/genalloc.h>
-+#include <linux/scatterlist.h>
-+#include <linux/slab.h>
-+#include <linux/tee_core.h>
-+#include "tee_private.h"
-+
-+struct tee_rstmem_attachment {
-+	struct sg_table table;
-+	struct device *dev;
-+};
-+
-+static int rstmem_dma_attach(struct dma_buf *dmabuf,
-+			     struct dma_buf_attachment *attachment)
-+{
-+	struct tee_shm *shm = dmabuf->priv;
-+	struct tee_rstmem_attachment *a;
-+	int rc;
-+
-+	a = kzalloc(sizeof(*a), GFP_KERNEL);
-+	if (!a)
-+		return -ENOMEM;
-+
-+	if (shm->pages) {
-+		rc = sg_alloc_table_from_pages(&a->table, shm->pages,
-+					       shm->num_pages, 0,
-+					       shm->num_pages * PAGE_SIZE,
-+					       GFP_KERNEL);
-+		if (rc)
-+			goto err;
-+	} else {
-+		rc = sg_alloc_table(&a->table, 1, GFP_KERNEL);
-+		if (rc)
-+			goto err;
-+		sg_set_page(a->table.sgl, phys_to_page(shm->paddr), shm->size,
-+			    0);
-+	}
-+
-+	a->dev = attachment->dev;
-+	attachment->priv = a;
-+
-+	return 0;
-+err:
-+	kfree(a);
-+	return rc;
-+}
-+
-+static void rstmem_dma_detach(struct dma_buf *dmabuf,
-+			      struct dma_buf_attachment *attachment)
-+{
-+	struct tee_rstmem_attachment *a = attachment->priv;
-+
-+	sg_free_table(&a->table);
-+	kfree(a);
-+}
-+
-+static struct sg_table *
-+rstmem_dma_map_dma_buf(struct dma_buf_attachment *attachment,
-+		       enum dma_data_direction direction)
-+{
-+	struct tee_rstmem_attachment *a = attachment->priv;
-+	int ret;
-+
-+	ret = dma_map_sgtable(attachment->dev, &a->table, direction,
-+			      DMA_ATTR_SKIP_CPU_SYNC);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &a->table;
-+}
-+
-+static void rstmem_dma_unmap_dma_buf(struct dma_buf_attachment *attachment,
-+				     struct sg_table *table,
-+				     enum dma_data_direction direction)
-+{
-+	struct tee_rstmem_attachment *a = attachment->priv;
-+
-+	WARN_ON(&a->table != table);
-+
-+	dma_unmap_sgtable(attachment->dev, table, direction,
-+			  DMA_ATTR_SKIP_CPU_SYNC);
-+}
-+
-+static void rstmem_dma_buf_free(struct dma_buf *dmabuf)
-+{
-+	struct tee_shm *shm = dmabuf->priv;
-+
-+	tee_shm_put(shm);
-+}
-+
-+static const struct dma_buf_ops rstmem_generic_buf_ops = {
-+	.attach = rstmem_dma_attach,
-+	.detach = rstmem_dma_detach,
-+	.map_dma_buf = rstmem_dma_map_dma_buf,
-+	.unmap_dma_buf = rstmem_dma_unmap_dma_buf,
-+	.release = rstmem_dma_buf_free,
-+};
-+
-+struct dma_buf *tee_rstmem_alloc(struct tee_context *ctx, u32 flags,
-+				 u32 use_case, size_t size, int *shm_id)
-+{
-+	struct tee_device *teedev = ctx->teedev;
-+	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-+	struct dma_buf *dmabuf;
-+	struct tee_shm *shm;
-+	void *ret;
-+	int rc;
-+
-+	if (!tee_device_get(teedev))
-+		return ERR_PTR(-EINVAL);
-+
-+	if (!teedev->desc->ops->rstmem_alloc ||
-+	    !teedev->desc->ops->rstmem_free) {
-+		dmabuf = ERR_PTR(-EINVAL);
-+		goto err;
-+	}
-+
-+	shm = kzalloc(sizeof(*shm), GFP_KERNEL);
-+	if (!shm) {
-+		dmabuf = ERR_PTR(-ENOMEM);
-+		goto err;
-+	}
-+
-+	refcount_set(&shm->refcount, 1);
-+	shm->flags = TEE_SHM_RESTRICTED;
-+	shm->use_case = use_case;
-+	shm->ctx = ctx;
-+
-+	mutex_lock(&teedev->mutex);
-+	shm->id = idr_alloc(&teedev->idr, NULL, 1, 0, GFP_KERNEL);
-+	mutex_unlock(&teedev->mutex);
-+	if (shm->id < 0) {
-+		dmabuf = ERR_PTR(shm->id);
-+		goto err_kfree;
-+	}
-+
-+	rc = teedev->desc->ops->rstmem_alloc(ctx, shm, flags, use_case, size);
-+	if (rc) {
-+		dmabuf = ERR_PTR(rc);
-+		goto err_idr_remove;
-+	}
-+
-+	mutex_lock(&teedev->mutex);
-+	ret = idr_replace(&teedev->idr, shm, shm->id);
-+	mutex_unlock(&teedev->mutex);
-+	if (IS_ERR(ret)) {
-+		dmabuf = ret;
-+		goto err_rstmem_free;
-+	}
-+	teedev_ctx_get(ctx);
-+
-+	exp_info.ops = &rstmem_generic_buf_ops;
-+	exp_info.size = shm->size;
-+	exp_info.priv = shm;
-+	dmabuf = dma_buf_export(&exp_info);
-+	if (IS_ERR(dmabuf)) {
-+		tee_shm_put(shm);
-+		return dmabuf;
-+	}
-+
-+	*shm_id = shm->id;
-+	return dmabuf;
-+
-+err_rstmem_free:
-+	teedev->desc->ops->rstmem_free(ctx, shm);
-+err_idr_remove:
-+	mutex_lock(&teedev->mutex);
-+	idr_remove(&teedev->idr, shm->id);
-+	mutex_unlock(&teedev->mutex);
-+err_kfree:
-+	kfree(shm);
-+err:
-+	tee_device_put(teedev);
-+	return dmabuf;
-+}
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index daf6e5cfd59a..416f7f25d885 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -55,6 +55,8 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
- 				"unregister shm %p failed: %d", shm, rc);
++#define OPTEE_FFA_RELEASE_RSTMEM	OPTEE_FFA_BLOCKING_CALL(8)
  
- 		release_registered_pages(shm);
-+	} else if (shm->flags & TEE_SHM_RESTRICTED) {
-+		teedev->desc->ops->rstmem_free(shm->ctx, shm);
- 	}
- 
- 	teedev_ctx_put(shm->ctx);
-diff --git a/drivers/tee/tee_shm_pool.c b/drivers/tee/tee_shm_pool.c
-index 80004b55628d..ee57ef157a77 100644
---- a/drivers/tee/tee_shm_pool.c
-+++ b/drivers/tee/tee_shm_pool.c
-@@ -1,9 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-only
  /*
-- * Copyright (c) 2015, 2017, 2022 Linaro Limited
-+ * Copyright (c) 2015, 2017, 2022, 2024 Linaro Limited
-  */
- #include <linux/device.h>
--#include <linux/dma-buf.h>
- #include <linux/genalloc.h>
- #include <linux/slab.h>
- #include <linux/tee_core.h>
-@@ -90,3 +89,69 @@ struct tee_shm_pool *tee_shm_pool_alloc_res_mem(unsigned long vaddr,
- 	return ERR_PTR(rc);
- }
- EXPORT_SYMBOL_GPL(tee_shm_pool_alloc_res_mem);
-+
-+static int rstmem_pool_op_gen_alloc(struct tee_shm_pool *pool,
-+				    struct tee_shm *shm, size_t size,
-+				    size_t align)
-+{
-+	size_t sz = ALIGN(size, PAGE_SIZE);
-+	phys_addr_t pa;
-+
-+	pa = gen_pool_alloc(pool->private_data, sz);
-+	if (!pa)
-+		return -ENOMEM;
-+
-+	shm->size = sz;
-+	shm->paddr = pa;
-+
-+	return 0;
-+}
-+
-+static void rstmem_pool_op_gen_free(struct tee_shm_pool *pool,
-+				    struct tee_shm *shm)
-+{
-+	gen_pool_free(pool->private_data, shm->paddr, shm->size);
-+	shm->paddr = 0;
-+}
-+
-+static struct tee_shm_pool_ops rstmem_pool_ops_generic = {
-+	.alloc = rstmem_pool_op_gen_alloc,
-+	.free = rstmem_pool_op_gen_free,
-+	.destroy_pool = pool_op_gen_destroy_pool,
-+};
-+
-+struct tee_shm_pool *tee_rstmem_gen_pool_alloc(phys_addr_t paddr, size_t size)
-+{
-+	const size_t page_mask = PAGE_SIZE - 1;
-+	struct tee_shm_pool *pool;
-+	int rc;
-+
-+	/* Check it's page aligned */
-+	if ((paddr | size) & page_mask)
-+		return ERR_PTR(-EINVAL);
-+
-+	pool = kzalloc(sizeof(*pool), GFP_KERNEL);
-+	if (!pool)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pool->private_data = gen_pool_create(PAGE_SHIFT, -1);
-+	if (!pool->private_data) {
-+		rc = -ENOMEM;
-+		goto err_free;
-+	}
-+
-+	rc = gen_pool_add(pool->private_data, paddr, size, -1);
-+	if (rc)
-+		goto err_free_pool;
-+
-+	pool->ops = &rstmem_pool_ops_generic;
-+	return pool;
-+
-+err_free_pool:
-+	gen_pool_destroy(pool->private_data);
-+err_free:
-+	kfree(pool);
-+
-+	return ERR_PTR(rc);
-+}
-+EXPORT_SYMBOL_GPL(tee_rstmem_gen_pool_alloc);
-diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-index a38494d6b5f4..608302f494fe 100644
---- a/include/linux/tee_core.h
-+++ b/include/linux/tee_core.h
-@@ -26,6 +26,7 @@
- #define TEE_SHM_USER_MAPPED	BIT(1)  /* Memory mapped in user space */
- #define TEE_SHM_POOL		BIT(2)  /* Memory allocated from pool */
- #define TEE_SHM_PRIV		BIT(3)  /* Memory private to TEE driver */
-+#define TEE_SHM_RESTRICTED	BIT(4)  /* Restricted memory */
- 
- #define TEE_DEVICE_FLAG_REGISTERED	0x1
- #define TEE_MAX_DEV_NAME_LEN		32
-@@ -76,6 +77,8 @@ struct tee_device {
-  * @supp_send:		called for supplicant to send a response
-  * @shm_register:	register shared memory buffer in TEE
-  * @shm_unregister:	unregister shared memory buffer in TEE
-+ * @rstmem_alloc:	allocate restricted memory
-+ * @rstmem_free:	free restricted memory
-  */
- struct tee_driver_ops {
- 	void (*get_version)(struct tee_device *teedev,
-@@ -99,6 +102,9 @@ struct tee_driver_ops {
- 			    struct page **pages, size_t num_pages,
- 			    unsigned long start);
- 	int (*shm_unregister)(struct tee_context *ctx, struct tee_shm *shm);
-+	int (*rstmem_alloc)(struct tee_context *ctx, struct tee_shm *shm,
-+			    u32 flags, u32 use_case, size_t size);
-+	void (*rstmem_free)(struct tee_context *ctx, struct tee_shm *shm);
+  * Call with struct optee_msg_arg as argument in the supplied shared memory
+diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
+index e8840a82b983..1b558526e7d9 100644
+--- a/drivers/tee/optee/optee_msg.h
++++ b/drivers/tee/optee/optee_msg.h
+@@ -133,13 +133,13 @@ struct optee_msg_param_rmem {
  };
  
  /**
-@@ -229,6 +235,15 @@ static inline void tee_shm_pool_free(struct tee_shm_pool *pool)
- 	pool->ops->destroy_pool(pool);
- }
- 
-+/**
-+ * tee_rstmem_gen_pool_alloc() - Create a restricted memory manager
-+ * @paddr:	Physical address of start of pool
-+ * @size:	Size in bytes of the pool
-+ *
-+ * @returns pointer to a 'struct tee_shm_pool' or an ERR_PTR on failure.
-+ */
-+struct tee_shm_pool *tee_rstmem_gen_pool_alloc(phys_addr_t paddr, size_t size);
-+
- /**
-  * tee_get_drvdata() - Return driver_data pointer
-  * @returns the driver_data pointer supplied to tee_register().
-diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-index a54c203000ed..cba067715d14 100644
---- a/include/linux/tee_drv.h
-+++ b/include/linux/tee_drv.h
-@@ -55,6 +55,7 @@ struct tee_context {
-  * @pages:	locked pages from userspace
-  * @num_pages:	number of locked pages
-  * @refcount:	reference counter
-+ * @use_case:	defined by TEE_IOC_UC_* in tee.h
-  * @flags:	defined by TEE_SHM_* in tee_core.h
-  * @id:		unique id of a shared memory object on this device, shared
-  *		with user space
-@@ -71,6 +72,7 @@ struct tee_shm {
- 	struct page **pages;
- 	size_t num_pages;
- 	refcount_t refcount;
-+	u32 use_case;
- 	u32 flags;
- 	int id;
- 	u64 sec_world_id;
-diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
-index d0430bee8292..88834448debb 100644
---- a/include/uapi/linux/tee.h
-+++ b/include/uapi/linux/tee.h
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2015-2016, Linaro Limited
-+ * Copyright (c) 2015-2017, 2020, 2024, Linaro Limited
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -48,6 +48,7 @@
- #define TEE_GEN_CAP_PRIVILEGED	(1 << 1)/* Privileged device (for supplicant) */
- #define TEE_GEN_CAP_REG_MEM	(1 << 2)/* Supports registering shared memory */
- #define TEE_GEN_CAP_MEMREF_NULL	(1 << 3)/* NULL MemRef support */
-+#define TEE_GEN_CAP_RSTMEM	(1 << 4)/* Supports restricted memory */
- 
- #define TEE_MEMREF_NULL		(__u64)(-1) /* NULL MemRef Buffer */
- 
-@@ -389,6 +390,47 @@ struct tee_ioctl_shm_register_data {
+- * struct optee_msg_param_fmem - ffa memory reference parameter
++ * struct optee_msg_param_fmem - FF-A memory reference parameter
+  * @offs_lower:	   Lower bits of offset into shared memory reference
+  * @offs_upper:	   Upper bits of offset into shared memory reference
+  * @internal_offs: Internal offset into the first page of shared memory
+  *		   reference
+  * @size:	   Size of the buffer
+- * @global_id:	   Global identifier of Shared memory
++ * @global_id:	   Global identifier of the shared memory
   */
- #define TEE_IOC_SHM_REGISTER   _IOWR(TEE_IOC_MAGIC, TEE_IOC_BASE + 9, \
- 				     struct tee_ioctl_shm_register_data)
-+
-+#define TEE_IOC_UC_RESERVED		0
-+#define TEE_IOC_UC_SECURE_VIDEO_PLAY	1
-+#define TEE_IOC_UC_TRUSTED_UI		2
-+#define TEE_IOC_UC_SECURE_VIDEO_RECORD	3
-+
-+/**
-+ * struct tee_ioctl_rstmem_alloc_data - Restricted memory allocate argument
-+ * @size:	[in/out] Size of restricted memory to allocate
-+ * @flags:	[in/out] Flags to/from allocate
-+ * @use_case	[in] Restricted memory use case, TEE_IOC_UC_*
-+ * @id:		[out] Identifier of the restricted memory
+ struct optee_msg_param_fmem {
+ 	u32 offs_low;
+@@ -165,7 +165,7 @@ struct optee_msg_param_value {
+  * @attr:	attributes
+  * @tmem:	parameter by temporary memory reference
+  * @rmem:	parameter by registered memory reference
+- * @fmem:	parameter by ffa registered memory reference
++ * @fmem:	parameter by FF-A registered memory reference
+  * @value:	parameter by opaque value
+  * @octets:	parameter by octet string
+  *
+@@ -296,6 +296,18 @@ struct optee_msg_arg {
+  */
+ #define OPTEE_MSG_FUNCID_GET_OS_REVISION	0x0001
+ 
++/*
++ * Values used in OPTEE_MSG_CMD_LEND_RSTMEM below
++ * OPTEE_MSG_RSTMEM_RESERVED		Reserved
++ * OPTEE_MSG_RSTMEM_SECURE_VIDEO_PLAY	Secure Video Playback
++ * OPTEE_MSG_RSTMEM_TRUSTED_UI		Trused UI
++ * OPTEE_MSG_RSTMEM_SECURE_VIDEO_RECORD	Secure Video Recording
 + */
-+struct tee_ioctl_rstmem_alloc_data {
-+	__u64 size;
-+	__u32 flags;
-+	__u32 use_case;
-+	__s32 id;
++#define OPTEE_MSG_RSTMEM_RESERVED		0
++#define OPTEE_MSG_RSTMEM_SECURE_VIDEO_PLAY	1
++#define OPTEE_MSG_RSTMEM_TRUSTED_UI		2
++#define OPTEE_MSG_RSTMEM_SECURE_VIDEO_RECORD	3
++
+ /*
+  * Do a secure call with struct optee_msg_arg as argument
+  * The OPTEE_MSG_CMD_* below defines what goes in struct optee_msg_arg::cmd
+@@ -337,6 +349,49 @@ struct optee_msg_arg {
+  * OPTEE_MSG_CMD_STOP_ASYNC_NOTIF informs secure world that from now is
+  * normal world unable to process asynchronous notifications. Typically
+  * used when the driver is shut down.
++ *
++ * OPTEE_MSG_CMD_LEND_RSTMEM lends restricted memory. The passed normal
++ * physical memory is restricted from normal world access. The memory
++ * should be unmapped prior to this call since it becomes inaccessible
++ * during the request.
++ * Parameters are passed as:
++ * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
++ * [in] param[0].u.value.a		OPTEE_MSG_RSTMEM_* defined above
++ * [in] param[1].attr			OPTEE_MSG_ATTR_TYPE_TMEM_INPUT
++ * [in] param[1].u.tmem.buf_ptr		physical address
++ * [in] param[1].u.tmem.size		size
++ * [in] param[1].u.tmem.shm_ref		holds restricted memory reference
++ *
++ * OPTEE_MSG_CMD_RECLAIM_RSTMEM reclaims a previously lent restricted
++ * memory reference. The physical memory is accessible by the normal world
++ * after this function has return and can be mapped again. The information
++ * is passed as:
++ * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
++ * [in] param[0].u.value.a		holds restricted memory cookie
++ *
++ * OPTEE_MSG_CMD_GET_RSTMEM_CONFIG get configuration for a specific
++ * restricted memory use case. Parameters are passed as:
++ * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INOUT
++ * [in] param[0].value.a		OPTEE_MSG_RSTMEM_*
++ * [in] param[1].attr			OPTEE_MSG_ATTR_TYPE_{R,F}MEM_OUTPUT
++ * [in] param[1].u.{r,f}mem		Buffer or NULL
++ * [in] param[1].u.{r,f}mem.size	Provided size of buffer or 0 for query
++ * output for the restricted use case:
++ * [out] param[0].value.a		Minimal size of SDP memory
++ * [out] param[0].value.b		Required alignment of size and start of
++ *					restricted memory
++ * [out] param[1].{r,f}mem.size		Size of output data
++ * [out] param[1].{r,f}mem		If non-NULL, contains an array of
++ *					uint16_t holding endpoints that
++ *					must be included when lending
++ *					memory for this use case
++ *
++ * OPTEE_MSG_CMD_ASSIGN_RSTMEM assigns use-case to restricted memory
++ * previously lent using the FFA_LEND framework ABI. Parameters are passed
++ * as:
++ * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
++ * [in] param[0].u.value.a		holds restricted memory cookie
++ * [in] param[0].u.value.b		OPTEE_MSG_RSTMEM_* defined above
+  */
+ #define OPTEE_MSG_CMD_OPEN_SESSION	0
+ #define OPTEE_MSG_CMD_INVOKE_COMMAND	1
+@@ -346,6 +401,10 @@ struct optee_msg_arg {
+ #define OPTEE_MSG_CMD_UNREGISTER_SHM	5
+ #define OPTEE_MSG_CMD_DO_BOTTOM_HALF	6
+ #define OPTEE_MSG_CMD_STOP_ASYNC_NOTIF	7
++#define OPTEE_MSG_CMD_LEND_RSTMEM	8
++#define OPTEE_MSG_CMD_RECLAIM_RSTMEM	9
++#define OPTEE_MSG_CMD_GET_RSTMEM_CONFIG	10
++#define OPTEE_MSG_CMD_ASSIGN_RSTMEM	11
+ #define OPTEE_MSG_FUNCID_CALL_WITH_ARG	0x0004
+ 
+ #endif /* _OPTEE_MSG_H */
+diff --git a/drivers/tee/optee/optee_smc.h b/drivers/tee/optee/optee_smc.h
+index 879426300821..abc379ce190c 100644
+--- a/drivers/tee/optee/optee_smc.h
++++ b/drivers/tee/optee/optee_smc.h
+@@ -264,7 +264,6 @@ struct optee_smc_get_shm_config_result {
+ #define OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM	BIT(0)
+ /* Secure world can communicate via previously unregistered shared memory */
+ #define OPTEE_SMC_SEC_CAP_UNREGISTERED_SHM	BIT(1)
+-
+ /*
+  * Secure world supports commands "register/unregister shared memory",
+  * secure world accepts command buffers located in any parts of non-secure RAM
+@@ -280,6 +279,10 @@ struct optee_smc_get_shm_config_result {
+ #define OPTEE_SMC_SEC_CAP_RPC_ARG		BIT(6)
+ /* Secure world supports probing for RPMB device if needed */
+ #define OPTEE_SMC_SEC_CAP_RPMB_PROBE		BIT(7)
++/* Secure world supports Secure Data Path */
++#define OPTEE_SMC_SEC_CAP_SDP			BIT(8)
++/* Secure world supports dynamic restricted memory */
++#define OPTEE_SMC_SEC_CAP_DYNAMIC_RSTMEM	BIT(9)
+ 
+ #define OPTEE_SMC_FUNCID_EXCHANGE_CAPABILITIES	9
+ #define OPTEE_SMC_EXCHANGE_CAPABILITIES \
+@@ -451,6 +454,72 @@ struct optee_smc_disable_shm_cache_result {
+ 
+ /* See OPTEE_SMC_CALL_WITH_REGD_ARG above */
+ #define OPTEE_SMC_FUNCID_CALL_WITH_REGD_ARG	19
++/*
++ * Get Secure Data Path memory config
++ *
++ * Returns the Secure Data Path memory config.
++ *
++ * Call register usage:
++ * a0   SMC Function ID, OPTEE_SMC_GET_SDP_CONFIG
++ * a2-6	Not used, must be zero
++ * a7	Hypervisor Client ID register
++ *
++ * Have config return register usage:
++ * a0	OPTEE_SMC_RETURN_OK
++ * a1	Physical address of start of SDP memory
++ * a2	Size of SDP memory
++ * a3	Not used
++ * a4-7	Preserved
++ *
++ * Not available register usage:
++ * a0	OPTEE_SMC_RETURN_ENOTAVAIL
++ * a1-3 Not used
++ * a4-7	Preserved
++ */
++#define OPTEE_SMC_FUNCID_GET_SDP_CONFIG		20
++#define OPTEE_SMC_GET_SDP_CONFIG \
++	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_SDP_CONFIG)
++
++struct optee_smc_get_sdp_config_result {
++	unsigned long status;
++	unsigned long start;
++	unsigned long size;
++	unsigned long flags;
 +};
 +
-+/**
-+ * TEE_IOC_RSTMEM_ALLOC - allocate restricted memory
++/*
++ * Get Secure Data Path dynamic memory config
 + *
-+ * Allocates restricted physically memory normally not accessible by the
-+ * kernel.
++ * Returns the Secure Data Path dynamic memory config.
 + *
-+ * Restricted memory refers to memory buffers behind a hardware enforced
-+ * firewall. It is not accessible to the kernel during normal circumstances
-+ * but rather only accessible to certain hardware IPs or CPUs executing in
-+ * higher privileged mode than the kernel itself. This interface allows to
-+ * allocate and manage such restricted memory buffers via interaction with
-+ * a TEE implementation.
++ * Call register usage:
++ * a0	SMC Function ID, OPTEE_SMC_GET_DYN_SHM_CONFIG
++ * a2-6	Not used, must be zero
++ * a7	Hypervisor Client ID register
 + *
-+ * Returns a file descriptor on success or < 0 on failure
++ * Have config return register usage:
++ * a0	OPTEE_SMC_RETURN_OK
++ * a1	Minamal size of SDP memory
++ * a2	Required alignment of size and start of registered SDP memory
++ * a3	Not used
++ * a4-7	Preserved
 + *
-+ * The returned file descriptor is a dma-buf that can be attached and
-+ * mapped for device with permission to access the physical memory.
++ * Not available register usage:
++ * a0	OPTEE_SMC_RETURN_ENOTAVAIL
++ * a1-3 Not used
++ * a4-7	Preserved
 + */
-+#define TEE_IOC_RSTMEM_ALLOC     _IOWR(TEE_IOC_MAGIC, TEE_IOC_BASE + 10, \
-+				       struct tee_ioctl_rstmem_alloc_data)
 +
++#define OPTEE_SMC_FUNCID_GET_DYN_SDP_CONFIG	21
++#define OPTEE_SMC_GET_DYN_SDP_CONFIG \
++	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_DYN_SDP_CONFIG)
++
++struct optee_smc_get_dyn_sdp_config_result {
++	unsigned long status;
++	unsigned long size;
++	unsigned long align;
++	unsigned long flags;
++};
+ 
  /*
-  * Five syscalls are used when communicating with the TEE driver.
-  * open(): opens the device associated with the driver
+  * Resume from RPC (for example after processing a foreign interrupt)
 -- 
 2.43.0
 
