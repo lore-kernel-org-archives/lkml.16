@@ -1,137 +1,144 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F3C7E1;
-	Tue, 18 Feb 2025 09:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603FE7E1
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869714; cv=none; b=p/i4OAbp+WcqgSxEZNpdtzHu3wzNfLdylmlm4H5lGovHHN4nlmXV4Ct7fnO3tt3sK+Pkzt14BX0eRD9gVbwlNvbbkhp8vkDkjUopir2K8jWgcXABDHherdya8oDC6+qD/yXtNiKgjI2mNltwZSatxyRfdh/35tCclMVxy/PvtWA=
+	t=1739869882; cv=none; b=EmtZZiZixr3POur3r/UoUiasxnt/rq4duap63I23gXCbDvMWfP8FzRs0MyRXyFcD6MUbDzth56ioEd43uKvbDaP94grihyefj1ypKeVsE3PpNv9orDJCpO1X+/67yYcxjkqjWPIT9P8/cMY8iYMXH7kvYufzo1faiU3Bf43ZEA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869714; c=relaxed/simple;
-	bh=dlIRbXNG/mhbn9FYZEriTMHgLPOctd1yhUg4bqvJgwU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jsKrrxZAG2Eiuh3NMGgOED+mC6YURTdsHQr9j1Q4YWXSqg8yWGLEDS2QYmzjR4sgcQXDgTr0tjOHjhJbIG7W3+7LBYdNe7op6O6zXljd3Gzsdgp5NnTRGUY0fktdpColWmE8jq9jLBiwTgh3CEid6BvzAOlFsx/15YAD0Py9QJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id CFD6B2800B4BB;
-	Tue, 18 Feb 2025 09:59:25 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C8BC76FD5F3; Tue, 18 Feb 2025 09:59:25 +0100 (CET)
-Date: Tue, 18 Feb 2025 09:59:25 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Joel Mathew Thomas <proxy0@tutamail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Disable PCIe BW controller during reset
-Message-ID: <Z7RL7ZXZ_vDUbncw@wunner.de>
-References: <20250217165258.3811-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1739869882; c=relaxed/simple;
+	bh=l7knZN4W/sdx8EjNigShL7jvGxNk401Q/KFmvQdIhIE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hgDOCVAVQvqaekJjeKe3OmpbdQFCrK6q1CDkX64I5CQ0dD1vpHnM+DW7uvcWHtiwVOoPhufsY9Bxa8Ul4QrtSEl10qWcKF6G9pps7iFgYCz+aomO//R5NBwWLZTTif3t6xw3sXfy7+6lHPxRXoNOun3caU9EmQwlv96Thee0oeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d2b1e1e89fso230005ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 01:11:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739869879; x=1740474679;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wrddDZpG5+l1dfekVwD4fLhNCFPqqVG4cen7iWuaUtM=;
+        b=us93gxXh0brZ8adjMRp+3QXbrJeWhaLb/KgdslisZ6xmuQopD0dmAG47xMkIV4bDWV
+         HLIoZBhn+OxpUkWb9CmwtybaJ9tA1x53dqkgKgmq4z7hWjKgs15j1vGIrqMm4GydFrl9
+         vZBrFU3Dh+wY9mrunlX8dCF5pxn0FvRjXTWJEGWSxDtx/L5Ic5ds+FYdeupf3yC4DkR6
+         LoISPSvOYrkzsqzsrIr2dQiYjLphwb4Wy+XCp3WJ2S461Sa4kCozB4r5LGzr0p7gMJeh
+         lFj4KAT8mleUQgS6ZeOkxocpvF0ZgDs4aSZNdTD5dLO7dfHdXmdAQPmn+tBsyJILYE9b
+         PgKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLpAfl7d3ZpkexOiveXRKCGodQXOng/Yiv4TSOlwzZt9c9GkVv4Sj8Xehfa9NLyHQnxzsRU1GtSIbLZeI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEXd31F9fMo5e/ei7ScF7mgo1GxswnEyZjKEQvxmDh4kjvX74r
+	ony/CNGQ3HF+LYULCefAF0EnhSYuT6v6+TfXOdpBJLHKdJChGlG9mfX36VEqT/HlpEDAYyoDpMB
+	XPm499hjhR6z6d3wntnak7SEvoc+mfiTh79CdfTR/blDZmKc5Ho9x39A=
+X-Google-Smtp-Source: AGHT+IGpSzJQNaZAX0/UkZ0ss9s8jdMrds/GrIl+FwLWx8laWT5fJqlH1oaphUhy1L5ArI3aBqPnW0i2RCiDvYtaQeZpFjZyYlho
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250217165258.3811-1-ilpo.jarvinen@linux.intel.com>
+X-Received: by 2002:a05:6e02:1d85:b0:3d1:9992:bf11 with SMTP id
+ e9e14a558f8ab-3d28091f90dmr129002755ab.21.1739869879493; Tue, 18 Feb 2025
+ 01:11:19 -0800 (PST)
+Date: Tue, 18 Feb 2025 01:11:19 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b44eb7.050a0220.173698.004a.GAE@google.com>
+Subject: [syzbot] [mm?] KCSAN: data-race in try_to_migrate_one / zap_page_range_single
+From: syzbot <syzbot+419c4b42acc36c420ad3@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, hughd@google.com, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 17, 2025 at 06:52:58PM +0200, Ilpo Järvinen wrote:
-> PCIe BW controller enables BW notifications for Downstream Ports by
-> setting Link Bandwidth Management Interrupt Enable (LBMIE) and Link
-> Autonomous Bandwidth Interrupt Enable (LABIE) (PCIe Spec. r6.2 sec.
-> 7.5.3.7).
-> 
-> It was discovered that performing a reset can lead to the device
-> underneath the Downstream Port becoming unavailable if BW notifications
-> are left enabled throughout the reset sequence (at least LBMIE was
-> found to cause an issue).
+Hello,
 
-What kind of reset?  FLR?  SBR?  This needs to be specified in the
-commit message so that the reader isn't forced to sift through a
-bugzilla with dozens of comments and attachments.
+syzbot found the following issue on:
 
-The commit message should also mention the type of affected device
-(Nvidia GPU AD107M [GeForce RTX 4050 Max-Q / Mobile]).  The Root Port
-above is an AMD one, that may be relevant as well.
+HEAD commit:    2408a807bfc3 Merge tag 'vfs-6.14-rc4.fixes' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17481898580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ce4e433ac2a58cc2
+dashboard link: https://syzkaller.appspot.com/bug?extid=419c4b42acc36c420ad3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> While the PCIe Specifications do not indicate BW notifications could not
-> be kept enabled during resets, the PCIe Link state during an
-> intentional reset is not of large interest. Thus, disable BW controller
-> for the bridge while reset is performed and re-enable it after the
-> reset has completed to workaround the problems some devices encounter
-> if BW notifications are left on throughout the reset sequence.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/2b5bc36288cc/disk-2408a807.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/75982289b311/vmlinux-2408a807.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c94f6df111e0/bzImage-2408a807.xz
 
-This approach won't work if the reset is performed without software
-intervention.  E.g. if a DPC event occurs, the device likewise undergoes
-a reset but there is no prior system software involvement.  Software only
-becomes involved *after* the reset has occurred.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+419c4b42acc36c420ad3@syzkaller.appspotmail.com
 
-I think it needs to be tested if that same issue occurs with DPC.
-It's easy to simulate DPC by setting the Software Trigger bit:
+==================================================================
+BUG: KCSAN: data-race in try_to_migrate_one / zap_page_range_single
 
-setpci -s 00:01.1 ECAP_DPC+6.w=40:40
+write to 0xffff88810005d8f8 of 8 bytes by task 8962 on cpu 1:
+ update_hiwater_rss include/linux/mm.h:2669 [inline]
+ zap_page_range_single+0x1a0/0x2f0 mm/memory.c:2012
+ unmap_mapping_range_vma mm/memory.c:3834 [inline]
+ unmap_mapping_range_tree mm/memory.c:3851 [inline]
+ unmap_mapping_pages mm/memory.c:3917 [inline]
+ unmap_mapping_range+0x15c/0x1a0 mm/memory.c:3954
+ shmem_fallocate+0x278/0x860 mm/shmem.c:3672
+ vfs_fallocate+0x368/0x3b0 fs/open.c:338
+ madvise_remove mm/madvise.c:1025 [inline]
+ madvise_vma_behavior mm/madvise.c:1260 [inline]
+ madvise_walk_vmas mm/madvise.c:1502 [inline]
+ do_madvise+0x14da/0x2ad0 mm/madvise.c:1689
+ __do_sys_madvise mm/madvise.c:1705 [inline]
+ __se_sys_madvise mm/madvise.c:1703 [inline]
+ __x64_sys_madvise+0x61/0x70 mm/madvise.c:1703
+ x64_sys_call+0x23ab/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:29
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-If the issue does occur with DPC then this fix isn't sufficient.
+read to 0xffff88810005d8f8 of 8 bytes by task 8928 on cpu 0:
+ update_hiwater_rss include/linux/mm.h:2668 [inline]
+ try_to_migrate_one+0x775/0x12e0 mm/rmap.c:2183
+ rmap_walk_file+0x272/0x3c0 mm/rmap.c:2708
+ try_to_migrate+0x108/0x150
+ migrate_folio_unmap mm/migrate.c:1320 [inline]
+ migrate_pages_batch+0x786/0x1930 mm/migrate.c:1866
+ migrate_pages_sync mm/migrate.c:1989 [inline]
+ migrate_pages+0xf02/0x1840 mm/migrate.c:2098
+ do_mbind mm/mempolicy.c:1394 [inline]
+ kernel_mbind mm/mempolicy.c:1537 [inline]
+ __do_sys_mbind mm/mempolicy.c:1611 [inline]
+ __se_sys_mbind+0xfd1/0x11c0 mm/mempolicy.c:1607
+ __x64_sys_mbind+0x78/0x90 mm/mempolicy.c:1607
+ x64_sys_call+0x2662/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:238
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
+value changed: 0x00000000000021af -> 0x00000000000021b9
 
-> Keep a counter for the disable/enable because MFD will execute
-> pci_dev_save_and_disable() and pci_dev_restore() back to back for
-> sibling devices:
-> 
-> [   50.139010] vfio-pci 0000:01:00.0: resetting
-> [   50.139053] vfio-pci 0000:01:00.1: resetting
-> [   50.141126] pcieport 0000:00:01.1: PME: Spurious native interrupt!
-> [   50.141133] pcieport 0000:00:01.1: PME: Spurious native interrupt!
-> [   50.441466] vfio-pci 0000:01:00.0: reset done
-> [   50.501534] vfio-pci 0000:01:00.1: reset done
-
-So why are you citing the PME messages here?  Are they relevant?
-Do they not occur when the bandwidth controller is disabled?
-If they do not, they may provide a clue what's going on.
-But that's not clear from the commit message.
-
-
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5166,6 +5167,9 @@ static void pci_dev_save_and_disable(struct pci_dev *dev)
->  	 */
->  	pci_set_power_state(dev, PCI_D0);
->  
-> +	if (bridge)
-> +		pcie_bwnotif_disable(bridge);
-> +
->  	pci_save_state(dev);
-
-Instead of putting this in the PCI core, amend pcie_portdrv_err_handler
-with ->reset_prepare and ->reset_done callbacks which call down to all
-the port service drivers, then amend bwctrl.c to disable/enable
-interrupts in these callbacks.
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 UID: 0 PID: 8928 Comm: syz.4.2451 Not tainted 6.14.0-rc3-syzkaller-00012-g2408a807bfc3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+==================================================================
 
 
-> +	port->link_bwctrl->disable_count--;
-> +	if (!port->link_bwctrl->disable_count) {
-> +		__pcie_bwnotif_enable(port);
-> +		pci_dbg(port, "BW notifications enabled\n");
-> +	}
-> +	WARN_ON_ONCE(port->link_bwctrl->disable_count < 0);
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-So why do you need to count this?  IIUC you get two consecutive
-disable and two consecutive enable events.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the interrupts are already disabled, just do nothing.
-Same for enablement.  Any reason this simpler approach
-doesn't work?
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Thanks,
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Lukas
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
