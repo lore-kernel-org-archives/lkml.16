@@ -1,274 +1,92 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2E81E51E0;
-	Tue, 18 Feb 2025 18:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321021F582E;
+	Tue, 18 Feb 2025 18:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904915; cv=none; b=N6lX2SILrT+WIwoocN7njKzJcJAVDZyjkWS5FeBKm+pMnffGKr/X8GI1ILtEu5qxlryHEd21PHkZ/IFuU5WEbgSSG5ZeKszGhB4uD7UzM45UIh2AMMcsSFQ/ZD4Mv9vVaa/08EyMr4IU0KPo9M3IR1KLprJlbS+DyAfvCvJnPko=
+	t=1739904919; cv=none; b=hw15Vo2drH6+keaJPoEEoivYuCfqrAuwockWUXHkFVEPOYgAo/c+wazzAqn7EOwdEBPof38UTnMAJOy+gcQ+8ZRHpvBMfF10uOsQUQYdnzeqlKMJEv5rSETx3sN+ezLNOKcs3c7YOv1oZolqvsnh1+B2Myv8GtzFNeta2I9WfXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904915; c=relaxed/simple;
-	bh=5TmJAiZBN90TOu4q/jkNIQcsUGmjWFWHXB+2deRRvNw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZkUVbojkeoNrLc/tFAClhZeMQdP8+ZmjYPNdY8EXNirgG1RFnYGn/8lM8NmKKzv5/eShONb1JcsLJegS4V639oU2kwIj6TDU67QjIcDytVzOp3HydzL0dy5spcSLfClp4hrJXY8SJDcEBGY99AO7cH1kfRELvMYStZP6Wptkku8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FvhT1M73; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739904919; c=relaxed/simple;
+	bh=BxR9jFPEiAwMiqt5QfVjfx6zF42bwqi4ug6psMIP9Ls=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bxp/YOnY7vmKDOR/wqgQzQ8ZELvaTCCHA2cuISNtJe+Wy6Y0AczCRAwYpshXqsvt46cfP1W7nZrAvjXyMe/gYywAHrarJg6gsnxy/+J5nSbFjJGZL0RqPMmhA+j5n2BAjIfRtG23B5sEg7KF8/Hu/Jv5ETdJXiGI+ZKpE86rf9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=d93Dyk8W; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FvhT1M73"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51IIt4b2060601
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Feb 2025 12:55:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739904904;
-	bh=+mzZWC6x4HtKvt8lE1i3uuPpKisVzmzGwWeB1THsahc=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=FvhT1M73oH/+1EmkvOkolL6mdvR/7BPV+5JmGpRcdIV+mQEwXmIOx5stvHxjyv3At
-	 OAhSnGAH2Jx7+mYJBAIfxgjH7EU7Nr6ZKDYLdS5nTkKTYetNG3TAVT0Tz/8tMZQhrr
-	 MKOKl/q3P3YzUGFAvw4PL//SMa5exESltZbzZWvA=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51IIt4fN061082
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 18 Feb 2025 12:55:04 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
- Feb 2025 12:55:04 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 18 Feb 2025 12:55:04 -0600
-Received: from uda0490681.. ([10.24.69.142])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51IIsrxa123821;
-	Tue, 18 Feb 2025 12:55:01 -0600
-From: Vaishnav Achath <vaishnav.a@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <linux-kernel@vger.kernel.org>, <jai.luthra@linux.dev>,
-        <y-abhilashchandra@ti.com>, <vaishnav.a@ti.com>
-Subject: [PATCH 2/5] arm64: dts: ti: k3-j722s-main: Add CSI2RX nodes
-Date: Wed, 19 Feb 2025 00:24:49 +0530
-Message-ID: <20250218185452.600797-3-vaishnav.a@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250218185452.600797-1-vaishnav.a@ti.com>
-References: <20250218185452.600797-1-vaishnav.a@ti.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="d93Dyk8W"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A11C925F3D;
+	Tue, 18 Feb 2025 19:55:14 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id d5LHm9JJqCpk; Tue, 18 Feb 2025 19:55:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1739904910; bh=BxR9jFPEiAwMiqt5QfVjfx6zF42bwqi4ug6psMIP9Ls=;
+	h=From:Subject:Date:To:Cc;
+	b=d93Dyk8Wa+n8vyZdIO1QSVsiuODg9kHdqbXykEq9cs9EgWmlIqp38Mgt2/I7a5kvC
+	 pX6ehS9RyqbhpRjQNiZHBuYIlLazXWRrw7hGIScZOvtIEq6TYIdm18KrDr6DaguPK2
+	 /ekKn0XDLWxqgSJc8TALoz8RVJNFYPeVDSk6g8d0xGYjBb8bLwgYpg3ZgxKYJI4wqg
+	 Xte9vPq2Fkb/wtA61EbkJARftGqzD6PvXMAVhN5C+O7/t0+3MeiK9BqWZBQw7hL+4h
+	 WM0imfqFQeuZKTOjOdftdmeS9Tu8YT5nvA4/bJWycCvXrvLtP3A4m2/SGwyorV/8CB
+	 4ecjGV8PLA9OQ==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v2 0/2] Introduce DWC3 support for Exynos7870
+Date: Wed, 19 Feb 2025 00:24:41 +0530
+Message-Id: <20250219-exynos7870-usb-v2-0-1de41a89c9d4@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHHXtGcC/13MQQ6DIBCF4auYWZcGQQJ25T0aF7QOOhtpGEs0x
+ ruXmnTT5f+S9+3AmAgZbtUOCTMxxbmEulTwnPw8oqChNCipjFRSC1y3ObJ1Voo3P0QbtDc4WMT
+ WQDm9EgZaT/Del56Il5i208/1d/1RzT+VayGFt9bo4GqnfdMNxCnG5RrTCP1xHB/ptOaYrgAAA
+ A==
+X-Change-ID: 20250203-exynos7870-usb-9f3a5ed7ee95
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-usb@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739904902; l=905;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=BxR9jFPEiAwMiqt5QfVjfx6zF42bwqi4ug6psMIP9Ls=;
+ b=DD2ZhpEVbRcVE/PLP/ud3pf1ys+uU6rHRIfm3V2I8G99ZjAnCM7Lrmvc4KxOJ7/oFGSipmE/c
+ tkZAAuXzt0XC3LZhemTjcrp0tf1oP7xnZUknXdr4igOhwNjiSUDVb0D
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-J722S has 4 CSI2RX receiver instances with external DPHY. The first CSI2RX
-instance node is derived from the AM62P common dtsi, Add the nodes for the
-subsequent three instances and keep them disabled.
+This patch series is a part of Exynos7870 upstreaming.
 
-TRM (12.6 Camera Peripherals): https://www.ti.com/lit/zip/sprujb3
-
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
- arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 183 ++++++++++++++++++++++
- 1 file changed, 183 insertions(+)
+Changes in v2:
+- Change compatible string (s/dwusb2/dwusb3).
+- Rename clocks to "bus_early", "ctrl", and "ref".
+- Set 3.0V regulator as mandatory.
+- Link to v1: https://lore.kernel.org/r/20250204-exynos7870-usb-v1-0-a7753f8183a4@disroot.org
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-index f8e4424f3bb7..e69e9b34c0a4 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-@@ -154,6 +154,189 @@ usb1: usb@31200000 {
- 		};
- 	};
- 
-+	ti_csi2rx1: ticsi2rx@30122000 {
-+		compatible = "ti,j721e-csi2rx-shim";
-+		reg = <0x00 0x30122000 0x00 0x1000>;
-+		ranges;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		dmas = <&main_bcdma_csi 0 0x5100 0>;
-+		dma-names = "rx0";
-+		power-domains = <&k3_pds 247 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+
-+		cdns_csi2rx1: csi-bridge@30121000 {
-+			compatible = "ti,j721e-csi2rx", "cdns,csi2rx";
-+			reg = <0x00 0x30121000 0x00 0x1000>;
-+			clocks = <&k3_clks 247 0>, <&k3_clks 247 3>, <&k3_clks 247 0>,
-+				 <&k3_clks 247 0>, <&k3_clks 247 4>, <&k3_clks 247 4>;
-+			clock-names = "sys_clk", "p_clk", "pixel_if0_clk",
-+				      "pixel_if1_clk", "pixel_if2_clk", "pixel_if3_clk";
-+			phys = <&dphy1>;
-+			phy-names = "dphy";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				csi1_port0: port@0 {
-+					reg = <0>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port1: port@1 {
-+					reg = <1>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port2: port@2 {
-+					reg = <2>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port3: port@3 {
-+					reg = <3>;
-+					status = "disabled";
-+				};
-+
-+				csi1_port4: port@4 {
-+					reg = <4>;
-+					status = "disabled";
-+				};
-+			};
-+		};
-+	};
-+
-+	ti_csi2rx2: ticsi2rx@30142000 {
-+		compatible = "ti,j721e-csi2rx-shim";
-+		reg = <0x00 0x30142000 0x00 0x1000>;
-+		ranges;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		power-domains = <&k3_pds 248 TI_SCI_PD_EXCLUSIVE>;
-+		dmas = <&main_bcdma_csi 0 0x5200 0>;
-+		dma-names = "rx0";
-+		status = "disabled";
-+
-+		cdns_csi2rx2: csi-bridge@30141000 {
-+			compatible = "ti,j721e-csi2rx", "cdns,csi2rx";
-+			reg = <0x00 0x30141000 0x00 0x1000>;
-+			clocks = <&k3_clks 248 0>, <&k3_clks 248 3>, <&k3_clks 248 0>,
-+				 <&k3_clks 248 0>, <&k3_clks 248 4>, <&k3_clks 248 4>;
-+			clock-names = "sys_clk", "p_clk", "pixel_if0_clk",
-+				      "pixel_if1_clk", "pixel_if2_clk", "pixel_if3_clk";
-+			phys = <&dphy2>;
-+			phy-names = "dphy";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				csi2_port0: port@0 {
-+					reg = <0>;
-+					status = "disabled";
-+				};
-+
-+				csi2_port1: port@1 {
-+					reg = <1>;
-+					status = "disabled";
-+				};
-+
-+				csi2_port2: port@2 {
-+					reg = <2>;
-+					status = "disabled";
-+				};
-+
-+				csi2_port3: port@3 {
-+					reg = <3>;
-+					status = "disabled";
-+				};
-+
-+				csi2_port4: port@4 {
-+					reg = <4>;
-+					status = "disabled";
-+				};
-+			};
-+		};
-+	};
-+
-+	ti_csi2rx3: ticsi2rx@30162000 {
-+		compatible = "ti,j721e-csi2rx-shim";
-+		reg = <0x00 0x30162000 0x00 0x1000>;
-+		ranges;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		dmas = <&main_bcdma_csi 0 0x5300 0>;
-+		dma-names = "rx0";
-+		power-domains = <&k3_pds 249 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+
-+		cdns_csi2rx3: csi-bridge@30161000 {
-+			compatible = "ti,j721e-csi2rx", "cdns,csi2rx";
-+			reg = <0x00 0x30161000 0x00 0x1000>;
-+			clocks = <&k3_clks 249 0>, <&k3_clks 249 3>, <&k3_clks 249 0>,
-+				 <&k3_clks 249 0>, <&k3_clks 249 4>, <&k3_clks 249 4>;
-+			clock-names = "sys_clk", "p_clk", "pixel_if0_clk",
-+				      "pixel_if1_clk", "pixel_if2_clk", "pixel_if3_clk";
-+			phys = <&dphy3>;
-+			phy-names = "dphy";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				csi3_port0: port@0 {
-+					reg = <0>;
-+					status = "disabled";
-+				};
-+
-+				csi3_port1: port@1 {
-+					reg = <1>;
-+					status = "disabled";
-+				};
-+
-+				csi3_port2: port@2 {
-+					reg = <2>;
-+					status = "disabled";
-+				};
-+
-+				csi3_port3: port@3 {
-+					reg = <3>;
-+					status = "disabled";
-+				};
-+
-+				csi3_port4: port@4 {
-+					reg = <4>;
-+					status = "disabled";
-+				};
-+			};
-+		};
-+	};
-+
-+	dphy1: phy@30130000 {
-+		compatible = "cdns,dphy-rx";
-+		reg = <0x00 0x30130000 0x00 0x1100>;
-+		#phy-cells = <0>;
-+		power-domains = <&k3_pds 251 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+	};
-+
-+	dphy2: phy@30150000 {
-+		compatible = "cdns,dphy-rx";
-+		reg = <0x00 0x30150000 0x00 0x1100>;
-+		#phy-cells = <0>;
-+		power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+	};
-+
-+	dphy3: phy@30170000 {
-+		compatible = "cdns,dphy-rx";
-+		reg = <0x00 0x30170000 0x00 0x1100>;
-+		#phy-cells = <0>;
-+		power-domains = <&k3_pds 253 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+	};
-+
- 	main_r5fss0: r5fss@78400000 {
- 		compatible = "ti,am62-r5fss";
- 		#address-cells = <1>;
+---
+Kaustabh Chakraborty (2):
+      dt-bindings: usb: samsung,exynos-dwc3: add exynos7870 support
+      usb: dwc3: exynos: add support for exynos7870
+
+ .../bindings/usb/samsung,exynos-dwc3.yaml          | 28 +++++++++++++++++++++-
+ drivers/usb/dwc3/dwc3-exynos.c                     |  9 +++++++
+ 2 files changed, 36 insertions(+), 1 deletion(-)
+---
+base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
+change-id: 20250203-exynos7870-usb-9f3a5ed7ee95
+
+Best regards,
 -- 
-2.34.1
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
