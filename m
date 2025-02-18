@@ -1,157 +1,151 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8726AA98
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724CA26A0CF
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889628; cv=none; b=BNk/IVSP2K6He0zxjN5aPRHt6BlrXu58NCN7nT/4Mpj/m4tPolzsAeeD0hDgO4NhuOG4EtFxniqwD9TPXY5XN7j40zQihwUL7AdtOfqaCv+LiJTNqwClM/wpR2DNuQkUYX32j6/r2o+cxw3S5sECxDO3SqylYJVGCRMP5fTeA08=
+	t=1739889696; cv=none; b=Rp7AmrUzCxh4AHHxx90rJbSkZ3DimhVVdqfFaEdEWaNC21xkIIxrnL4R00Fl3Tw2Bm9YvtgEy0bZLGTneGLYruey6BXf8mEzkt2XSc3E0wtlXycMLBiE+iEQU3UqS9F9t1gw+Mgr/JTYHy86Z5ogX5xdBNf7HSouES/UZqkq4oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889628; c=relaxed/simple;
-	bh=mr+2Jhhmfhv+3seL9n1mB+VOznYBvn3lX+NZfQylTqg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=St0RUHjBgUhE1AI2jK70xXOvnfsNFluIbmcOlZd6U12BVu29wDp3ewb3YB14irdWqqdaYssWXAc5YNX4nqKgq8sdMnHFfDAnduNNxzLfsRSMseE54fRg1qp1fewJsH2GGlVpjlJfBvvZ3WPKsNVdeiC3ECMx9iDd3/9RaKD0pbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yzS9Jomi; arc=none smtp.client-ip=209.85.219.180
+	s=arc-20240116; t=1739889696; c=relaxed/simple;
+	bh=lVC//oaIfvl6lsPznOhO049G/mRIeHfCQD1Y85ErtNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y4ftKyfZD1Bn4AiB2VY+KnEx+zbMDVNnQ3HrbCHWrF9/vz4V+eN2BLLfroL0kwQqz61gVb8C4WF3J6KIPAaHaY+bY4OdHAED2iPXKm5Fi417zgZShxQe2yToWuFMCcrwZvQtg/LmT9OvgXoJrlW+j/YyysTeuimbY/gwycAU6yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T5npafFq; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzS9Jomi"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e587cca1e47so5006139276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:40:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T5npafFq"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2210d92292eso80286275ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:41:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739889624; x=1740494424; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2wkeEEWV1t+jTfGMDjVEd0UQWJSursxJ+qu65t0oVks=;
-        b=yzS9JomiL+1VCRq5xGA/LVJBda1hD0LHa+tIsrOwo+8YCI4bbA8FZadK/V/4waPQQH
-         9aFpqNh/ia1C10WgvRzuB5wF2U66/lYcRX0QP2L1I3eQBf6yiuSOHZmFx2d7MpQ/D7zY
-         U4ZFcDr7s9T1qxzTzHpwAigz1L8lTWxIO0rcZsWkoNBRq0D4NxcLBiCyVoniZJywJJ7s
-         xsWKhTGX/urMFShw+xctToQ4jo4bUdGFKRL2aGJPp513TUp5dN5+B1OYXD4C9f+yFbaw
-         RGlT0VlSjnEtn1qTEGgF0XzOGk/xU6ENK+5wByLpc0RPumM9RquuK4enTt/nGOnnii8s
-         FbRg==
+        d=linaro.org; s=google; t=1739889694; x=1740494494; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=821eXPtnueOz/5A0gi+hS+KRWbjzmoLShlhzccBLQOg=;
+        b=T5npafFqQYl1uySwWFumN/yGefLcMSStj6gPF35nhj+DpnbFQ/4hUTGbfCT0fM722e
+         8omP2MSenKk71UGHQczM9/cgGuOe73seNSi3UHCnsUXN7NOrQgZO9yoM/2alWAqqM/Xr
+         tmwp+4zi9ZJPlpnXsQOX6HGnPBQ2FK8u3PTQSQjm6Yp19vaAAtRbUjGl1hLy61PjKyDY
+         halCQXyGU9IBlDpLFRlrGhs5T+TSpWQ9itZ1cQryblHTwQ8rG4jE4vUc+vuR3ODUdzfq
+         Iq7PEjaookz2rpE544MSqdMS+NPSvjwD+1if//+qxKE1V53eAoXjsFw//BC4nYz6mYaN
+         yj0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739889624; x=1740494424;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2wkeEEWV1t+jTfGMDjVEd0UQWJSursxJ+qu65t0oVks=;
-        b=VRNMitzCJwsEkjk6OCZ5QTgrD/GMr25TF6UetSe2BEF26K7ikK/RHPE74CVZeFrnNR
-         zUvD/hWtZwUVJkJjkkJbPYpDH3p8di9jG5rrJiTBIDKQpNSmD/Ik3LKWDJVS2yOfVenA
-         zZMgnorv2XT0v1/zl7OZnlu3FtezcxW0BLaolU0AE/ZWs0vCL9yAIVmsdcYe7EGcoDk6
-         LK7IM+B/x35zjusSGcV0qAdbzDgect9Ew7JZEB4AZoeRrkWlWiPIToDFNw/warKdTOe9
-         poTuTGQUTQ8YsiYF2UX85UyvbjJPtR5Jh6VeSKIskHTcBWe0OfyHkE+5ohU4fEdb76kf
-         W+Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWySJdSstIPwcGuCzdV4kaM4jxxwwcTiz+kA3LJSOsNLYE27gh/AeWAnjQbg6/hsSARl8M1k0TKaBSujwg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc2nenSrD1GVfTzYzr6nwHuKi7+tEx43lG844bX354uhEhGaXG
-	XpqKi6QTkwuVwCha6qtupzwB9LoTkqcHUCY0BxZDTyA6hiCEkPfwrvmN9W5+Are8D4pz7qdNjOP
-	NBjfwZzu1gUPwtw/MRGz9rXBzO1kye849Q6hcAg==
-X-Gm-Gg: ASbGncvuLpm+Uj4SD137uEKebSzsd1XDwTGIurz/Swqo6KkJl1hrCi8QCbdw0i9uwFm
-	wjxMr0U6jry+jKUPPtO2vKThALa77dWdB5vYUopT6KynCoXFOuR+45L5GR6+rQfx6jU9Yz1A7Hg
-	==
-X-Google-Smtp-Source: AGHT+IGc7tsTon1APxRniRGgusdip7zanYIlI5kyK12K1ApVdClP0yClUsQd8ZYL07bK78dVmjWR+9yq+z6BP2esIog=
-X-Received: by 2002:a05:6902:15c4:b0:e20:25bb:7893 with SMTP id
- 3f1490d57ef6-e5dc9305520mr9687881276.46.1739889623851; Tue, 18 Feb 2025
- 06:40:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739889694; x=1740494494;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=821eXPtnueOz/5A0gi+hS+KRWbjzmoLShlhzccBLQOg=;
+        b=Tj9Xj74EaZW8gDB9o4JvdqKbMNnGaEeRd17g4kNOyDm/sx7k4KmSZPRvUO2DkRdo+P
+         ti6j2jmr0yFamUzy8sE5KtzBxFCvUWbg5q/qvgWWp9NKd5axMVuWA6nFcUcfYVqhuUKZ
+         sS8juX+f94qIBp2Qf60vQlR8dd2d5LBKeRfxkqTZi/WSNXvHVHvykUnRQsQfNO3TOfpr
+         T2uAdDpm1JBVbISNdguoY+TbyYyyzqLRFiv4pZP5ASHYLJTQJw9KSu7boiJ4DvQTiJSY
+         L4ryfQwguh6/kJ1hekJn9FiWK3w/sMjGN+Mx9pzaAYnAZeaXY+vL+CUfUOeqOuJrNFQ9
+         Y4NQ==
+X-Gm-Message-State: AOJu0YyFrZ/uqCZ+px4sA1aCcIs6VkKQoEF8fAtZvZZYJ9/0IJOkoqH9
+	WGVQzA91BOerWDae/P0bfrZSCkqYmtJHQpBcIndMQAEYOaA1MzlyGZSsTiIUYQ==
+X-Gm-Gg: ASbGncsADfzGpBV0OqVuzyfztZE6msVLbSpeNjyWFhvZbca6zVI9Fk64PE8EebweB+r
+	CcybSjP58bPa8iXd6ECxFIGeavil3jP4GM716yLdT5lToGCRyZfDCJpK6OGQSWa+G9m0bpTIyBZ
+	Il47c0aQHpxyddKF7py5yyYyR0Tg1rh3ZtOhuQvVE1Z+4eivZmkqfod9UF4MZny37SpbEV11z6Z
+	USnewoalfr0QAIxLcbdNcW+zEbja1sR7+sxFHXnlbThtMzRVzc618eebrO6H8ZEdQ3IWzbjl1S/
+	YF05H8frXzOASrJNAi80uKWlJls=
+X-Google-Smtp-Source: AGHT+IH0JkhadLczcJSuFXXlAkhuVkxnff47A1GKB/6+c1aeO34seCTwYCrmBfEVuu+T8wBsuXlG1g==
+X-Received: by 2002:a17:903:92:b0:220:c4f0:4ed9 with SMTP id d9443c01a7336-221040d6a62mr153962185ad.45.1739889693718;
+        Tue, 18 Feb 2025 06:41:33 -0800 (PST)
+Received: from thinkpad ([120.56.197.245])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb5870e862sm9288410a12.44.2025.02.18.06.41.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 06:41:33 -0800 (PST)
+Date: Tue, 18 Feb 2025 20:11:26 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@Huawei.com, fan.ni@samsung.com,
+	nifan.cxl@gmail.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	quic_nitegupt@quicinc.com, quic_krichai@quicinc.com,
+	gost.dev@samsung.com
+Subject: Re: [PATCH v6 1/4] PCI: dwc: Add support for vendor specific
+ capability search
+Message-ID: <20250218144126.5kapvjj4e64bamvi@thinkpad>
+References: <20250214105007.97582-1-shradha.t@samsung.com>
+ <CGME20250214105337epcas5p3a385fdb0bd03c3887df5c31037f47889@epcas5p3.samsung.com>
+ <20250214105007.97582-2-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4966939.GXAFRqVoOG@rjwysocki.net> <2000822.PYKUYFuaPT@rjwysocki.net>
- <CAPDyKFoB0fQCabahYpx=A_Ns7vJgWYdK=rxuHk+XHVv35cFvWQ@mail.gmail.com> <CAJZ5v0iHsOw4_UbEWGk_-jPpc3q2K3fUXBs4T3JCooPGV10CHQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iHsOw4_UbEWGk_-jPpc3q2K3fUXBs4T3JCooPGV10CHQ@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 18 Feb 2025 15:39:47 +0100
-X-Gm-Features: AWEUYZkUeOWjKpfEpylPzwUgMmhW5JCtP7D9lSJ8wjRrv-WgzsAF82ls-gYur34
-Message-ID: <CAPDyKFqshaVNzHPe0KL3HRTpiuzyKVJ-LuDsaAne5PawFLMJow@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250214105007.97582-2-shradha.t@samsung.com>
 
-[...]
+On Fri, Feb 14, 2025 at 04:20:04PM +0530, Shradha Todi wrote:
+> Add vendor specific extended configuration space capability search API
+> using struct dw_pcie pointer for DW controllers.
+> 
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
 
-> > >
-> > > +static void device_prepare_smart_suspend(struct device *dev)
-> > > +{
-> > > +       struct device_link *link;
-> > > +       int idx;
-> > > +
-> > > +       /*
-> > > +        * The "smart suspend" feature is enabled for devices whose drivers ask
-> > > +        * for it and for devices without PM callbacks unless runtime PM is
-> > > +        * disabled and enabling it is blocked for them.
-> > > +        *
-> > > +        * However, if "smart suspend" is not enabled for the device's parent
-> > > +        * or any of its suppliers that take runtime PM into account, it cannot
-> > > +        * be enabled for the device either.
-> > > +        */
-> > > +       dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
-> > > +               dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
-> > > +               !pm_runtime_blocked(dev);
-> > > +
-> > > +       if (!dev->power.smart_suspend)
-> > > +               return;
-> > > +
-> > > +       if (dev->parent && !pm_runtime_blocked(dev->parent) &&
-> > > +           !dev->parent->power.ignore_children && !dev->parent->power.smart_suspend) {
-> > > +               dev->power.smart_suspend = false;
-> > > +               return;
-> > > +       }
-> > > +
-> > > +       idx = device_links_read_lock();
-> > > +
-> > > +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
-> > > +               if (!(link->flags | DL_FLAG_PM_RUNTIME))
-> > > +                       continue;
-> > > +
-> > > +               if (!pm_runtime_blocked(link->supplier) &&
-> > > +                   !link->supplier->power.smart_suspend) {
-> >
-> > This requires device_prepare() for all suppliers to be run before its
-> > consumer. Is that always the case?
->
-> Yes, it is by design.
+I took this patch and modified to pass the 'struct dwc_pcie_vsec_id' to the API
+to simplify the callers:
+https://lore.kernel.org/linux-pci/20250218-pcie-qcom-ptm-v1-2-16d7e480d73e@linaro.org
 
-Okay! I was worried that fw_devlink could mess this up.
+- Mani
 
->
-> > > +                       dev->power.smart_suspend = false;
-> > > +                       break;
-> > > +               }
-> > > +       }
-> > > +
-> > > +       device_links_read_unlock(idx);
-> >
-> > From an execution overhead point of view, did you check if the above
-> > code had some measurable impact on the latency for dpm_prepare()?
->
-> It didn't on my systems.
->
-> For the vast majority of devices the overhead is just checking
-> power.no_pm_callbacks and DPM_FLAG_SMART_SUSPEND.  For some,
-> pm_runtime_blocked() needs to be called which requires grabbing a
-> spinlock and there are only a few with power.smart_suspend set to
-> start with.
->
-> I'm wondering why you didn't have this concern regarding other changes
-> that involved walking suppliers or consumers, though.
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 19 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 6d6cbc8b5b2c..3588197ba2d7 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -277,6 +277,25 @@ static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+>  	return 0;
+>  }
+>  
+> +u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id, u16 vsec_cap)
+> +{
+> +	u16 vsec = 0;
+> +	u32 header;
+> +
+> +	if (vendor_id != dw_pcie_readw_dbi(pci, PCI_VENDOR_ID))
+> +		return 0;
+> +
+> +	while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
+> +					PCI_EXT_CAP_ID_VNDR))) {
+> +		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
+> +		if (PCI_VNDR_HEADER_ID(header) == vsec_cap)
+> +			return vsec;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_find_vsec_capability);
+> +
+>  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+>  {
+>  	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 347ab74ac35a..02e94bd9b042 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -476,6 +476,7 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
+>  
+>  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+> +u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id, u16 vsec_cap);
+>  
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> -- 
+> 2.17.1
+> 
 
-Well, the concern is mostly generic from my side. When introducing
-code that potentially could impact latency during system
-suspend/resume, we should at least check it.
-
-That said, I think the approach makes sense, so no objections from my side!
-
-Feel free to add:
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
+-- 
+மணிவண்ணன் சதாசிவம்
