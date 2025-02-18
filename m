@@ -1,54 +1,54 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A7726AA94
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A6727128E
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 18:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739902630; cv=none; b=rVUty204lNK3zrwRGGkbeC9J8AxsQMRKHnBW+Iy18J59u3YpBAs7ZqXbNFBt2cfbMHlK6h70uk5UI5AaytfGmhZyFTrHM+o5k8OZ3gzzArYCpjn0R4InBJbDCezk7SnnX3ej5AVF37SDqDNEhgpj7R+j7D+hJpVxZlso5ZpFEA0=
+	t=1739902633; cv=none; b=Q4RHBwjFR0jE0oTCJpyLB5Rl6YBnOQ4ofLZsSg4fEaBzq5e7tIzgzPos22UC+Z9+fCMwF21ImQhy/P0OM8gjToXahzsv8/ZmwqwdivBrGm3LycUn9Z3j55dDCx1mhlzW0By7/QtZ6vq20pXCZH59dxulMhnTFRx3wegf8nbSsKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739902630; c=relaxed/simple;
-	bh=Gk1Ovclg+uwRXUdufYrBruyoP79K0+Q5gmZuqPBwVRE=;
+	s=arc-20240116; t=1739902633; c=relaxed/simple;
+	bh=O7o+HWviERTdl/2M2SHuibwM8esj60P3sjEF4srvJ3Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j/I7/72yVSVNRva1Q9LISNzfuzVGVd6Er+SkLoSVPLAjJpBYcSLgaJihgBW0AiMPTaOiGRQXlDW8VH3VudrLRK/eB8x51BJtCnPrLuVNy4bqUcTCocr05UQvsv+QDdcHWmd8zFsjVlotGzp2MrHYUkqugHVNVrCBJSakDDRFLUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JmrUrCZs; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=qAyyjX3ZsVctJfC5H+UmVpd0vwzSvvNQ7IfJQuIvivEeyroku+dblkIezyax6PEM7fBBTd6wUOW+5phlqtwq0PfX6QWUWC+e99mOrxHMfMngmjR45YA04R7zF3X7WDgjMERBF7xw6Yyd9vB8yR/J2LeNI16ELwm/R4D4KHzqeMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hhtf70F/; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JmrUrCZs"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc2b258e82so9921273a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:17:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hhtf70F/"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1a4c150bso11310483a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:17:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739902628; x=1740507428; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739902631; x=1740507431; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YFMDP9y7jE/B7rMGFu3HCD39n6UMlP9JUwWE0fLegnI=;
-        b=JmrUrCZsy1frvTasNHOTx/0++sOdMxTFjBhFSucvLBpzVwU0JGXyfZGRgl4R+37TUl
-         Ef96lfEO0+fV574hRS1uZsPyYNS5cvNmGr12YnYG3d6CwUKlbNZvVn4VGdiqlwyfGfSn
-         BlfiD0cHOupyBJTPRVFl7qQwUCk/wUMQWfGwIZ8lGStQpJTqkUNN2Cx02J8paWMigC2I
-         BRU+fAwsnIK83+OITQsyi3LFN5hTwbP+cKyJlYdW2J0r6wcXCCsMq653ryESKeeKTgUF
-         rZeSnEYNsZjJTO5M3xBzC1ncW3jG2tCh82dAksGTEZRQEs9hUabQOqHx0Bx2AgIAai0q
-         7TSg==
+        bh=tllVc7X/acXyb+IoDErelML7G/kmBDOgXbXRXqPobDE=;
+        b=hhtf70F/Tpngy7+D60Xer0WBEDd/D1wA9YTNjUm0jEpDY9mxHIQFtbl0rzVNtgdKI3
+         nB3sWoBw3RS5y8BmRal5rdvwEN/TXCF6o7MnZEGy6w8medvluPdkFqMAg0mrivw4vfWb
+         9oechwNyxMroMwqiQW+JUvgbmCqlD4L0EcwxiLKJw2XAPivZkaVpOqYfHCCS+DEPDN4J
+         o8+4frOLmUsG6oABSFKG+fc+zwsG9zydGqGAP04yz3bGVe9qzP10+b5Af5NkoM8mbFHf
+         Fb0yYMHN9RbDHIHT+XzOJ+mt8vBp4XwogEDcrZVwJ8usU4fLbgVwgkNLFCtH0phK6hwN
+         S5wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739902628; x=1740507428;
+        d=1e100.net; s=20230601; t=1739902631; x=1740507431;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YFMDP9y7jE/B7rMGFu3HCD39n6UMlP9JUwWE0fLegnI=;
-        b=qFKHrRrBtvQODmBIgPu8WeuInwQNW5bEviZTqDWsMDnLW1H/B3N4wxBhyvE5/X8tXA
-         YupUip9KCEfp33Va2VYZ+5Uy/IWZeQvxeVNhS+iFCT8IlZuIy/o/apjAJAmOMbNjkpzY
-         hUxvDKwyzj7t5IQnqnuAt1wX/V0ott5d7kPnWenlVbumSDbF9bJaimMw+qt9BNOtoYH0
-         w7LlrEveCNzsWsKmDiM66nab0tdoEU9Bva818MsWW4J8nWIaAWOIaEjhixK2ctrK2x8T
-         y6VYKLonjl/Y4cZu7U+ioYLfHj0g3bkLBlWBR2Bh38nusEUExAOdK7cvw/Xb87axrLdk
-         rahQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWITN1A+q+vMx315hzuQ2enUxsKx8NOkwb4VOyITyRmOAIPou7j2LVXnYMDf5dasmwBe1A9mgI4eda74Sg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHFuGfrqmb6yxWf9CV2RrvpkX3hXuH1dYHlNkACKSgaWCvi5xi
-	eTnZeHj02WpEq+UNIsnnP9I0mm8BfHtGeju/28U9g6mPs3WbyzEBjpGfo2iNg/A2DMmpYg==
-X-Google-Smtp-Source: AGHT+IFKNXDQlFw3p4kB+WyHMQa70HsCZ8AgEKV5M11liys6mRWRTzYQbQMsUg+5jC7sM7FrCTb3toTw
-X-Received: from pfbji12.prod.google.com ([2002:a05:6a00:8f0c:b0:730:50c0:136d])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1301:b0:730:8a0a:9f06
- with SMTP id d2e1a72fcca58-7329df4e95dmr405449b3a.16.1739902628294; Tue, 18
- Feb 2025 10:17:08 -0800 (PST)
-Date: Tue, 18 Feb 2025 18:16:29 +0000
+        bh=tllVc7X/acXyb+IoDErelML7G/kmBDOgXbXRXqPobDE=;
+        b=EavudakR3VEZMVX/NzQ6mpVRi1VRNMMGr6fCWiSr0KAQoSJeK8OQCFXCzn0h/iLZm3
+         eInKDCu0qr/PNw0K6IwsQ/iI0bQG0okaUHF+vVGG+fkz8Yc4EnDa+oQekJVXNq4EQtRR
+         /8u/+3iNwMTtMqeO1y05BxSjc40QImsAb3oRu0a3iIJVOTPyXMBFZiUWGak2jTSsRIFt
+         RYx6KmNU+Q10J6NFFwqiOV+mQkRB2upR++qeqbk3pnHb6Fxibq1j7HE6GsEv3M8weZqV
+         Ia43HZ7+78d7nPb+QT/0ihTd5VbyBlZzzgc3ccAfVtEuAxs7TS4YvBDXjXoUWghgkgB8
+         aVYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVt0MdNE7AI2sQGzs6Od+5JPUwFCWIpz+4YV8W8+NViMGPRHbNQNpVFlLiLAGXmmctxux9PhF4H13mTl1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMhelW95ad8iFbElbw6O+Qn9bX1H7dUDfqVW8zeVg0K4k90t7B
+	jrMEdtwB7xSNzMmzgAiP6RaE2BKq661u2APTRklMoqNaNLBMtC/+E70wnAl5aqiT9R2AGg==
+X-Google-Smtp-Source: AGHT+IEImgj/kN4IDC2d0OdCVCT/P6/c0Qlb8Kol3LFJI2Z9hlrSwi6kxHopJVJc8L3J73IZc+vlmUAx
+X-Received: from pjbli10.prod.google.com ([2002:a17:90b:48ca:b0:2ea:448a:8cd1])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d0c6:b0:2fc:a3b7:108a
+ with SMTP id 98e67ed59e1d1-2fca3b711a8mr4781829a91.2.1739902631607; Tue, 18
+ Feb 2025 10:17:11 -0800 (PST)
+Date: Tue, 18 Feb 2025 18:16:31 +0000
 In-Reply-To: <20250218181656.207178-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,209 +58,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250218181656.207178-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250218181656.207178-2-fvdl@google.com>
-Subject: [PATCH v4 01/27] mm/cma: export total and free number of pages for
- CMA areas
+Message-ID: <20250218181656.207178-4-fvdl@google.com>
+Subject: [PATCH v4 03/27] mm/cma: introduce cma_intersects function
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
 Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com, 
 	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>, 
-	Oscar Salvador <osalvador@suse.de>
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In addition to the number of allocations and releases, system
-management software may like to be aware of the size of CMA
-areas, and how many pages are available in it. This information
-is currently not available, so export it in total_page and
-available_pages, respectively.
+Now that CMA areas can have multiple physical ranges,
+code can't assume a CMA struct represents a base_pfn
+plus a size, as returned from cma_get_base.
 
-The name 'available_pages' was picked over 'free_pages' because
-'free' implies that the pages are unused. But they might not
-be, they just haven't been used by cma_alloc
+Most cases are ok though, since they all explicitly
+refer to CMA areas that were created using existing
+interfaces (cma_declare_contiguous_nid or
+cma_init_reserved_mem), which guarantees they have just
+one physical range.
 
-The number of available pages is tracked regardless of
-CONFIG_CMA_SYSFS, allowing for a few minor shortcuts in
-the code, avoiding bitmap operations.
+An exception is the s390 code, which walks all CMA
+ranges to see if they intersect with a range of memory
+that is about to be hotremoved. So, in the future,
+it might run in to multi-range areas. To keep this check
+working, define a cma_intersects function. This just checks
+if a physaddr range intersects any of the ranges.
+Use it in the s390 check.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- Documentation/ABI/testing/sysfs-kernel-mm-cma | 13 +++++++++++
- mm/cma.c                                      | 22 ++++++++++++++-----
- mm/cma.h                                      |  1 +
- mm/cma_debug.c                                |  5 +----
- mm/cma_sysfs.c                                | 20 +++++++++++++++++
- 5 files changed, 51 insertions(+), 10 deletions(-)
+ arch/s390/mm/init.c | 13 +++++--------
+ include/linux/cma.h |  1 +
+ mm/cma.c            | 21 +++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-cma b/Documentation/ABI/testing/sysfs-kernel-mm-cma
-index dfd755201142..aaf2a5d8b13b 100644
---- a/Documentation/ABI/testing/sysfs-kernel-mm-cma
-+++ b/Documentation/ABI/testing/sysfs-kernel-mm-cma
-@@ -29,3 +29,16 @@ Date:		Feb 2024
- Contact:	Anshuman Khandual <anshuman.khandual@arm.com>
- Description:
- 		the number of pages CMA API succeeded to release
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index f2298f7a3f21..d88cb1c13f7d 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -239,16 +239,13 @@ struct s390_cma_mem_data {
+ static int s390_cma_check_range(struct cma *cma, void *data)
+ {
+ 	struct s390_cma_mem_data *mem_data;
+-	unsigned long start, end;
+ 
+ 	mem_data = data;
+-	start = cma_get_base(cma);
+-	end = start + cma_get_size(cma);
+-	if (end < mem_data->start)
+-		return 0;
+-	if (start >= mem_data->end)
+-		return 0;
+-	return -EBUSY;
 +
-+What:		/sys/kernel/mm/cma/<cma-heap-name>/total_pages
-+Date:		Jun 2024
-+Contact:	Frank van der Linden <fvdl@google.com>
-+Description:
-+		The size of the CMA area in pages.
++	if (cma_intersects(cma, mem_data->start, mem_data->end))
++		return -EBUSY;
 +
-+What:		/sys/kernel/mm/cma/<cma-heap-name>/available_pages
-+Date:		Jun 2024
-+Contact:	Frank van der Linden <fvdl@google.com>
-+Description:
-+		The number of pages in the CMA area that are still
-+		available for CMA allocation.
++	return 0;
+ }
+ 
+ static int s390_cma_mem_notifier(struct notifier_block *nb,
+diff --git a/include/linux/cma.h b/include/linux/cma.h
+index 863427c27dc2..03d85c100dcc 100644
+--- a/include/linux/cma.h
++++ b/include/linux/cma.h
+@@ -53,6 +53,7 @@ extern bool cma_pages_valid(struct cma *cma, const struct page *pages, unsigned
+ extern bool cma_release(struct cma *cma, const struct page *pages, unsigned long count);
+ 
+ extern int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data);
++extern bool cma_intersects(struct cma *cma, unsigned long start, unsigned long end);
+ 
+ extern void cma_reserve_pages_on_error(struct cma *cma);
+ 
 diff --git a/mm/cma.c b/mm/cma.c
-index de5bc0c81fc2..95a8788e54d3 100644
+index 6ac9173d3a7d..c7116a5819c5 100644
 --- a/mm/cma.c
 +++ b/mm/cma.c
-@@ -86,6 +86,7 @@ static void cma_clear_bitmap(struct cma *cma, unsigned long pfn,
- 
- 	spin_lock_irqsave(&cma->lock, flags);
- 	bitmap_clear(cma->bitmap, bitmap_no, bitmap_count);
-+	cma->available_count += count;
- 	spin_unlock_irqrestore(&cma->lock, flags);
- }
- 
-@@ -133,7 +134,7 @@ static void __init cma_activate_area(struct cma *cma)
- 			free_reserved_page(pfn_to_page(pfn));
- 	}
- 	totalcma_pages -= cma->count;
--	cma->count = 0;
-+	cma->available_count = cma->count = 0;
- 	pr_err("CMA area %s could not be activated\n", cma->name);
- }
- 
-@@ -206,7 +207,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
- 		snprintf(cma->name, CMA_MAX_NAME,  "cma%d\n", cma_area_count);
- 
- 	cma->base_pfn = PFN_DOWN(base);
--	cma->count = size >> PAGE_SHIFT;
-+	cma->available_count = cma->count = size >> PAGE_SHIFT;
- 	cma->order_per_bit = order_per_bit;
- 	*res_cma = cma;
- 	cma_area_count++;
-@@ -390,7 +391,7 @@ static void cma_debug_show_areas(struct cma *cma)
- {
- 	unsigned long next_zero_bit, next_set_bit, nr_zero;
- 	unsigned long start = 0;
--	unsigned long nr_part, nr_total = 0;
-+	unsigned long nr_part;
- 	unsigned long nbits = cma_bitmap_maxno(cma);
- 
- 	spin_lock_irq(&cma->lock);
-@@ -402,12 +403,12 @@ static void cma_debug_show_areas(struct cma *cma)
- 		next_set_bit = find_next_bit(cma->bitmap, nbits, next_zero_bit);
- 		nr_zero = next_set_bit - next_zero_bit;
- 		nr_part = nr_zero << cma->order_per_bit;
--		pr_cont("%s%lu@%lu", nr_total ? "+" : "", nr_part,
-+		pr_cont("%s%lu@%lu", start ? "+" : "", nr_part,
- 			next_zero_bit);
--		nr_total += nr_part;
- 		start = next_zero_bit + nr_zero;
- 	}
--	pr_cont("=> %lu free of %lu total pages\n", nr_total, cma->count);
-+	pr_cont("=> %lu free of %lu total pages\n", cma->available_count,
-+			cma->count);
- 	spin_unlock_irq(&cma->lock);
- }
- 
-@@ -444,6 +445,14 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
- 
- 	for (;;) {
- 		spin_lock_irq(&cma->lock);
-+		/*
-+		 * If the request is larger than the available number
-+		 * of pages, stop right away.
-+		 */
-+		if (count > cma->available_count) {
-+			spin_unlock_irq(&cma->lock);
-+			break;
-+		}
- 		bitmap_no = bitmap_find_next_zero_area_off(cma->bitmap,
- 				bitmap_maxno, start, bitmap_count, mask,
- 				offset);
-@@ -452,6 +461,7 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
- 			break;
- 		}
- 		bitmap_set(cma->bitmap, bitmap_no, bitmap_count);
-+		cma->available_count -= count;
- 		/*
- 		 * It's safe to drop the lock here. We've marked this region for
- 		 * our exclusive use. If the migration fails we will take the
-diff --git a/mm/cma.h b/mm/cma.h
-index 8485ef893e99..3dd3376ae980 100644
---- a/mm/cma.h
-+++ b/mm/cma.h
-@@ -13,6 +13,7 @@ struct cma_kobject {
- struct cma {
- 	unsigned long   base_pfn;
- 	unsigned long   count;
-+	unsigned long	available_count;
- 	unsigned long   *bitmap;
- 	unsigned int order_per_bit; /* Order of pages represented by one bit */
- 	spinlock_t	lock;
-diff --git a/mm/cma_debug.c b/mm/cma_debug.c
-index 602fff89b15f..89236f22230a 100644
---- a/mm/cma_debug.c
-+++ b/mm/cma_debug.c
-@@ -34,13 +34,10 @@ DEFINE_DEBUGFS_ATTRIBUTE(cma_debugfs_fops, cma_debugfs_get, NULL, "%llu\n");
- static int cma_used_get(void *data, u64 *val)
- {
- 	struct cma *cma = data;
--	unsigned long used;
- 
- 	spin_lock_irq(&cma->lock);
--	/* pages counter is smaller than sizeof(int) */
--	used = bitmap_weight(cma->bitmap, (int)cma_bitmap_maxno(cma));
-+	*val = cma->count - cma->available_count;
- 	spin_unlock_irq(&cma->lock);
--	*val = (u64)used << cma->order_per_bit;
+@@ -978,3 +978,24 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
  
  	return 0;
  }
-diff --git a/mm/cma_sysfs.c b/mm/cma_sysfs.c
-index f50db3973171..97acd3e5a6a5 100644
---- a/mm/cma_sysfs.c
-+++ b/mm/cma_sysfs.c
-@@ -62,6 +62,24 @@ static ssize_t release_pages_success_show(struct kobject *kobj,
- }
- CMA_ATTR_RO(release_pages_success);
- 
-+static ssize_t total_pages_show(struct kobject *kobj,
-+					  struct kobj_attribute *attr, char *buf)
++
++bool cma_intersects(struct cma *cma, unsigned long start, unsigned long end)
 +{
-+	struct cma *cma = cma_from_kobj(kobj);
++	int r;
++	struct cma_memrange *cmr;
++	unsigned long rstart, rend;
 +
-+	return sysfs_emit(buf, "%lu\n", cma->count);
++	for (r = 0; r < cma->nranges; r++) {
++		cmr = &cma->ranges[r];
++
++		rstart = PFN_PHYS(cmr->base_pfn);
++		rend = PFN_PHYS(cmr->base_pfn + cmr->count);
++		if (end < rstart)
++			continue;
++		if (start >= rend)
++			continue;
++		return true;
++	}
++
++	return false;
 +}
-+CMA_ATTR_RO(total_pages);
-+
-+static ssize_t available_pages_show(struct kobject *kobj,
-+					  struct kobj_attribute *attr, char *buf)
-+{
-+	struct cma *cma = cma_from_kobj(kobj);
-+
-+	return sysfs_emit(buf, "%lu\n", cma->available_count);
-+}
-+CMA_ATTR_RO(available_pages);
-+
- static void cma_kobj_release(struct kobject *kobj)
- {
- 	struct cma *cma = cma_from_kobj(kobj);
-@@ -75,6 +93,8 @@ static struct attribute *cma_attrs[] = {
- 	&alloc_pages_success_attr.attr,
- 	&alloc_pages_fail_attr.attr,
- 	&release_pages_success_attr.attr,
-+	&total_pages_attr.attr,
-+	&available_pages_attr.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(cma);
 -- 
 2.48.1.601.g30ceb7b040-goog
 
