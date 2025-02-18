@@ -1,147 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD2323A994;
-	Tue, 18 Feb 2025 08:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB57749A;
+	Tue, 18 Feb 2025 08:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866498; cv=none; b=QleDuZH01/PHeYfL0bbXqRhnJHK7gwbqg7b20VaZOHYcqenBIG2z8P5lBYZa35b9gLwN8IN+xJYqeMogesNb+PgdwI8p+n8fM7qnRJorzshQgsNDkb5N6K8cBsLrDOwblfvNar2/zZhKZbdrDhtDONGwq9dT7CvwF47JaJXmv/Q=
+	t=1739866503; cv=none; b=F9ycMRELl+Rsb7jZfDH79A0+JXBMmfXoPxPZejS2OFi1ft+yoTFhCi2P5yymo8zoEonFrvCyyXTf7If8+4PbEf1a699N8gdIGD4lWpmNtXK/J7O9pz7HaEXjOdRhvWw2FT32J+TAQSgTXV4OTDyn2SQEvbCPmZOdwTji4GfLqVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866498; c=relaxed/simple;
-	bh=FAfg4NlWSqWarG44b3rZlBp2gJSjEkErxxY8icsPQTA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=imv08qTXTwpMNVWt9e3vIyocdkUyCKBnHHgGCORZyo+Vl32JwRTcpHM18YLSz3oLKXLcQLanFDYXMXcK1L/KjQIIAY35FyOKuhaLmrlZTl/JusBOQolVNR8pQWPxgadpagWF6p7vx8YpdF9RWFLFmTc2h+ZCDD6rL65hLKb33D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UDP0hR6R; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739866503; c=relaxed/simple;
+	bh=UFdR7IbguGl7iKpceVwoQo+fFJc+Ocd7Dgzg0nOOeAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QR0TTmQpVg9VULZAspdn3kAXaCZJChPkVIgXhsTYTZbzZVqgBBNZoz0wAp3d7nmjlQNxnAR0aYXJhD8IWKBH+ur1iKiUOBz2XASSXQVyfPO1LB6oe+AwzwMqPB4q2W9x1nJZa+Az6/z5rPiZqgOKYUn2m6kp347tvTIBHSeLW6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=f4mC4+xj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UDP0hR6R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866498; x=1771402498;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FAfg4NlWSqWarG44b3rZlBp2gJSjEkErxxY8icsPQTA=;
-  b=UDP0hR6RfD01N/DUtAH64RMwadyXn96R2VSqvgzBCKQKDwemotXOHSgi
-   kM17EnsOl+9N/DSU+XJUfcb1ltYsEyMtss38iKD/dYokVnO9xlNtnqFSu
-   DwNe/wfWMv/A7NTCoKlFv8n0uXk4J9JOhfTWUz0Qw/94pNXbtBwU8bFNy
-   g5JHcd0MXZsuC+6dSAtTzvrIiwg4DvNEL7whkUOYwEiiVbpHyeOOf17Aq
-   xghuh2OL3VJZaKW7N8CQKWUJRLw5nQYOEydv2DQWNdfjA1YP3pDgnbaph
-   dt7oha9/3t/BTTE7qRZqjrqJiFqYcZXmDqJP+HNgLM9RT+zYn7fG9H7qS
-   g==;
-X-CSE-ConnectionGUID: YjvvexseS2atEzEHzbRLWw==
-X-CSE-MsgGUID: zBywe0aVRIGPoq7SFhdxnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200861"
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="44200861"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:14:58 -0800
-X-CSE-ConnectionGUID: aEO+CWTeRnCMS2O48znd3w==
-X-CSE-MsgGUID: /lIWyOqyRaC/fLuBkR4Mnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="145166302"
-Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:14:53 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 19/24] perf tools: Support to show SSP register
-Date: Tue, 18 Feb 2025 15:28:13 +0000
-Message-Id: <20250218152818.158614-20-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f4mC4+xj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 303D0C4CEE2;
+	Tue, 18 Feb 2025 08:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739866502;
+	bh=UFdR7IbguGl7iKpceVwoQo+fFJc+Ocd7Dgzg0nOOeAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f4mC4+xjy8+3Ap3+zmCq4f4juZVPx3MmLXCA2pN+OuMHab5gaVtMq0RgIb/vmcIt4
+	 5pomyFm6UrsvIjuGwEbtdC0Cnn6HgTkNdbLBGtu/S6H3634IT4Qh8f1TMWeYpsxTMx
+	 HEiie4JkezV19OJAsaovd47Bq7gU0JDqjGhlceHw=
+Date: Tue, 18 Feb 2025 09:14:59 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-clk@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v3 1/7] driver core: auxiliary bus: add device creation
+ helpers
+Message-ID: <2025021826-smile-batting-e52f@gregkh>
+References: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com>
+ <20250211-aux-device-create-helper-v3-1-7edb50524909@baylibre.com>
+ <2025021437-washout-stonewall-d13e@gregkh>
+ <1jwmdsxugx.fsf@starbuckisacylon.baylibre.com>
+ <2025021501-tamer-sank-142a@gregkh>
+ <1jikp8xx01.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1jikp8xx01.fsf@starbuckisacylon.baylibre.com>
 
-Add SSP register support.
+On Mon, Feb 17, 2025 at 07:10:54PM +0100, Jerome Brunet wrote:
+> On Sat 15 Feb 2025 at 07:53, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> [...]
+> 
+> >> 
+> >> >
+> >> >> +							int id)
+> >> >> +{
+> >> >> +	struct auxiliary_device *auxdev;
+> >> >> +	int ret;
+> >> >> +
+> >> >> +	auxdev = kzalloc(sizeof(*auxdev), GFP_KERNEL);
+> >> >> +	if (!auxdev)
+> >> >> +		return ERR_PTR(-ENOMEM);
+> >> >
+> >> > Ick, who cares what the error value really is?  Why not just do NULL or
+> >> > a valid pointer?  That makes the caller much simpler to handle, right?
+> >> >
+> >> 
+> >> Sure why not
+> 
+> I have tried the 'NULL or valid' approach. In the consumers,
+> which mostly return an integer from their various init function, I got
+> this weird to come up with one from NULL. EINVAL, ENOMEM, etc ... can't
+> really pick one.
+> 
+> It is actually easier to pass something along.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/arch/x86/include/uapi/asm/perf_regs.h    | 7 ++++++-
- tools/perf/arch/x86/util/perf_regs.c           | 2 ++
- tools/perf/util/intel-pt.c                     | 2 +-
- tools/perf/util/perf-regs-arch/perf_regs_x86.c | 2 ++
- 4 files changed, 11 insertions(+), 2 deletions(-)
+Ok, fair enough, thanks for trying.  But I would have returned just
+-ENODEV in all cases, as that's what the end result was :)
 
-diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
-index 7c9d2bb3833b..9c45b07bfcf7 100644
---- a/tools/arch/x86/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
-@@ -27,9 +27,14 @@ enum perf_event_x86_regs {
- 	PERF_REG_X86_R13,
- 	PERF_REG_X86_R14,
- 	PERF_REG_X86_R15,
-+	/* Shadow stack pointer (SSP) present on Clearwater Forest and newer models. */
-+	PERF_REG_X86_SSP,
- 	/* These are the limits for the GPRs. */
- 	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
--	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
-+	/* PERF_REG_X86_64_MAX used generally, for PEBS, etc. */
-+	PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
-+	/* PERF_REG_INTEL_PT_MAX ignores the SSP register. */
-+	PERF_REG_INTEL_PT_MAX = PERF_REG_X86_R15 + 1,
- 
- 	/* These all need two bits set because they are 128bit */
- 	PERF_REG_X86_XMM0  = 32,
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 12fd93f04802..9f492568f3b4 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -36,6 +36,8 @@ static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG(R14, PERF_REG_X86_R14),
- 	SMPL_REG(R15, PERF_REG_X86_R15),
- #endif
-+	SMPL_REG(SSP, PERF_REG_X86_SSP),
-+
- 	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
- 	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
- 	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 30be6dfe09eb..86196275c1e7 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -2139,7 +2139,7 @@ static u64 *intel_pt_add_gp_regs(struct regs_dump *intr_regs, u64 *pos,
- 	u32 bit;
- 	int i;
- 
--	for (i = 0, bit = 1; i < PERF_REG_X86_64_MAX; i++, bit <<= 1) {
-+	for (i = 0, bit = 1; i < PERF_REG_INTEL_PT_MAX; i++, bit <<= 1) {
- 		/* Get the PEBS gp_regs array index */
- 		int n = pebs_gp_regs[i] - 1;
- 
-diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-index 708954a9d35d..9a909f02bc04 100644
---- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-+++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-@@ -54,6 +54,8 @@ const char *__perf_reg_name_x86(int id)
- 		return "R14";
- 	case PERF_REG_X86_R15:
- 		return "R15";
-+	case PERF_REG_X86_SSP:
-+		return "ssp";
- 
- #define XMM(x) \
- 	case PERF_REG_X86_XMM ## x:	\
--- 
-2.40.1
+thanks,
 
+greg k-h
