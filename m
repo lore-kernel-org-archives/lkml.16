@@ -1,120 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54E92066C1;
-	Tue, 18 Feb 2025 07:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9E20F082;
+	Tue, 18 Feb 2025 08:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739865601; cv=none; b=iCoIC1QSamjsV6BLoWpcZTGRxqrnqRtPuSPQRfyB7WPeM2wWjiFqBk7ONzLq8qDYYylPzRW6bHysS+YeEzSvnfo770HI1xHnOslIF57WhNgipxFTYiBJ4TJpxdxKfBZSXD/TPF0shhecAl7/0Eu73srp+HJ8T0cLniBW2dtWgxs=
+	t=1739865620; cv=none; b=ABiNNhcE2HvBT+IE8MC6g9+IRPWO7+bB0DMitNgXtpsPS/M7iREY0S12aSzIg3id/6eCtiFyEcoOvIhDDo6uOrCHM5n8wOHjSjyldq+zNWMXWj28QmTlLNM7i4mEWJPld16+J7kcHVYK+qOScKfKB7u8YUBFnzelSUCiK3uMsyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739865601; c=relaxed/simple;
-	bh=ziEzK7wRUsoPk34tXG4PKX0kfZMyG09T1TuFOZsMGH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pTJSiNOJNkR/EYZaVn6qto2a4fck2ZNFv4RdWMlTjtfm8+JSwwNYM9CsBHYM/A3kkm0tJbZk76P1tTs8VdV3pW0B/88Op4Frpn2qMDZ6+zAkyrRWIP0POsv1pCP1bczpSTh46JY4hiQE7IgI61eh9v1+v77wlbZoBQc4c4ejIEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Il8DsjEP; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739865620; c=relaxed/simple;
+	bh=BIBoLdAaz+syXSP2Bq+NI3t7QHXsMK1JKWwPblX5Opk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=f1TSmvr6DPdSvCXGPpuv0oaIhSWk/n959FHKy8dDcP4+2amPr8q8s/SZFdoBxtjWlhTW0Oto3ojATI8365Uz2QSR31eSD4KA1WmC/uVmJ1tpmjeYKzZw4WD8fuwHMbGuJDKTsWuJWoOIDcNmPwgjCowZoZ/k5GCvDtxgEwWjRP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lzcJk7wG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4EK+CtiQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Il8DsjEP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739865600; x=1771401600;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ziEzK7wRUsoPk34tXG4PKX0kfZMyG09T1TuFOZsMGH8=;
-  b=Il8DsjEPYt8gsPOdIAdONGzNkYRwugGkyXiYyVfUpRQdSY8vuF4fAlC2
-   lW34dlDaC169qW646ZxZXME7hK1FNXJP2wFWtDM5xPmil9+GERQM9ylUh
-   fHq1TawIPHqS4tTlzUC2DYDK+InYAUjhrc0rbA/t+cHcMAiT20ggUkJtF
-   /hKJdhGxx7don89No1qKBzJc7Oawv4rTj37aleK8432ctKqF6VskmWVLf
-   kU/SkLPcwos2lIfrFg1eReSBQQLw2LTJ40Nitf68fE71UgvIL/jDe1ZcR
-   CDArJCMT0G5zkyc/QViocClFOlylukjvRvs1Z3eDzW/wQbzqrhU0968v1
-   w==;
-X-CSE-ConnectionGUID: Kep8qXXcS+KckG0knDufkw==
-X-CSE-MsgGUID: FRseRXI1QY6uqmVjGOl5mw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="57954571"
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="57954571"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 23:59:59 -0800
-X-CSE-ConnectionGUID: wQGNfdpkTraGbuexWoXZ6w==
-X-CSE-MsgGUID: In4y45QdQsCSaspdTULcUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="119419175"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 23:59:55 -0800
-Date: Tue, 18 Feb 2025 08:56:16 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
-Cc: Haoxiang Li <haoxiang_li2024@163.com>, kuba@kernel.org,
-	louis.peens@corigine.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	qmo@kernel.org, daniel@iogearbox.net, bpf@vger.kernel.org,
-	oss-drivers@corigine.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] nfp: bpf: Add check for nfp_app_ctrl_msg_alloc()
-Message-ID: <Z7Q9ILUfC90Vd490@mev-dev.igk.intel.com>
-References: <20250218011744.2397726-1-haoxiang_li2024@163.com>
- <CAH-L+nP5w7hRbONxPNG7NJtJzb-A0JOEMSq1hKNepM9GpFkt-g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lzcJk7wG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4EK+CtiQ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739865617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1VopzplUY31yktOMEeJ7DZO4lbiNm+WmseWdkp9vwaE=;
+	b=lzcJk7wGfDSoswY5b6fXLF8WXUqdt6HvIakiQw//oL9GTTJ+QWsT0/Y9VU5kyBqaZl/AeY
+	xM6L8l7IIhUqYsnsNHf0nVsN6VlYITV2W/yVImUaynppDxYIUHivitxc8gzY9a2qCDInCq
+	eOuOl4psopZyNjJUqS50bwF9BTfWPNMu2qh7VZMev/mZ/7WdXtVsbPehvCXuCKmxDvStjg
+	jq9gD+KMQd9pPqFL/+JSlE0s6F9hf44j8fZQgOlDPe/qeLOf3WHo17JcFzESAimmIrn6q/
+	qhmz6mzijUyLd1irQmridL5XTcJ1WdVUgek0E6PYp0Y/G0a3cNxKwB2YKS0yNA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739865617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1VopzplUY31yktOMEeJ7DZO4lbiNm+WmseWdkp9vwaE=;
+	b=4EK+CtiQ827ZYkXO6ioIZHJZXMvjyNhbA1ri+Y0EMk6EiaNNuX+ltmB4o/kxm7FO5BicXx
+	bH5M61qxoHHAJVCA==
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Geert Uytterhoeven
+ <geert+renesas@glider.be>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, Lad
+ Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] irqchip/renesas-rzv2h: Add
+ rzv2h_icu_register_dma_req_ack
+In-Reply-To: <20250212221305.431716-5-fabrizio.castro.jz@renesas.com>
+References: <20250212221305.431716-1-fabrizio.castro.jz@renesas.com>
+ <20250212221305.431716-5-fabrizio.castro.jz@renesas.com>
+Date: Tue, 18 Feb 2025 09:00:16 +0100
+Message-ID: <87a5ajk7hr.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH-L+nP5w7hRbONxPNG7NJtJzb-A0JOEMSq1hKNepM9GpFkt-g@mail.gmail.com>
+Content-Type: text/plain
 
-On Tue, Feb 18, 2025 at 08:14:49AM +0530, Kalesh Anakkur Purayil wrote:
-> On Tue, Feb 18, 2025 at 6:49 AM Haoxiang Li <haoxiang_li2024@163.com> wrote:
-> >
-> > Add check for the return value of nfp_app_ctrl_msg_alloc() in
-> > nfp_bpf_cmsg_alloc() to prevent null pointer dereference.
-> >
-> > Fixes: ff3d43f7568c ("nfp: bpf: implement helpers for FW map ops")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-> > ---
-> > Changes in v2:
-> > - remove the bracket for one single-statement. Thanks, Guru!
-> > ---
-> >  drivers/net/ethernet/netronome/nfp/bpf/cmsg.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
-> > index 2ec62c8d86e1..b02d5fbb8c8c 100644
-> > --- a/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
-> > +++ b/drivers/net/ethernet/netronome/nfp/bpf/cmsg.c
-> > @@ -20,6 +20,8 @@ nfp_bpf_cmsg_alloc(struct nfp_app_bpf *bpf, unsigned int size)
-> >         struct sk_buff *skb;
-> >
-> >         skb = nfp_app_ctrl_msg_alloc(bpf->app, size, GFP_KERNEL);
-> > +       if (!skp)
-> > +               return NULL;
-> It looks like you did not compile this change.
-> 
-> Also, next time you push a new version, please modify the subject as:
-> "[PATCH net v3] xxxx"
+On Wed, Feb 12 2025 at 22:13, Fabrizio Castro wrote:
+> On the Renesas RZ/V2H(P) family of SoCs, DMAC IPs are connected
+> to the Interrupt Control Unit (ICU).
+> For DMA transfers, a request number and an ack number must be
+> registered with the ICU, which means that the DMAC driver has
+> to be able to instruct the ICU driver with the registration of
+> such ids.
+>
+> Export rzv2h_icu_register_dma_req_ack so that the DMA driver
+> can register both ids in one go.
 
-Yeah, you need to send v3 (skp -> skb). Fix looks fine, other call to
-nfp_app_ctrl_msg_alloc() is checking returned value as here.
+Please denote functions in the subject and change log body as fun()
+according to documentation:
 
-Feel free to add my RB tag in v3.
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#function-references-in-changelogs
 
-> >         skb_put(skb, size);
-> >
-> >         return skb;
-> > --
-> > 2.25.1
-> >
-> >
-> 
-> 
-> -- 
-> Regards,
-> Kalesh AP
+With that fixed:
 
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
+under the assumption that this will be merged via the dmaengine tree.
+
+Thanks,
+
+        tglx
