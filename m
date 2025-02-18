@@ -1,80 +1,99 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B5B22DFFA
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1822622D4E9;
+	Tue, 18 Feb 2025 09:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869432; cv=none; b=vAgJSuFuEceheZUCFnZXDc3HyqJC3Cyt3DzBG1hmULEEXN33k+U1V69g7DBT70wXlS++SmFSZS0/XZoH8XmIK1dFWHGAQsrvEiqpiBtQtQ80C7n0IUF7b78FqrectaGcruIqK+ekPPs3RSKKiBdWSGxikzf/kvZmSACPT7r8gkQ=
+	t=1739869438; cv=none; b=J5Dvi2qPDrQs0MzUhSzzaxqGZ+60Wx7BxFUoIu/r0QvdIvjsXDBoh39NYtLHmZIC19YcXKyDdoYhDYW+mBhVmU+mWR+5pwlAeSMGAgWmjqgCwXJCxfIz9cvi2XB55PpdanOJvdKGqAElAhilil5+RV8umSh8Vpky1plrbuPmdIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869432; c=relaxed/simple;
-	bh=Rb/oEzPquB0AN3zNExVOUPkHhu2SKGcn8YilK2l8ikA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cLR0LGc4g3lNqJHhH1qGyVtvvQBT9HUApRUkNnRjLRvISUdJA8FbkpKgmklwU39VpXtYJn/VWir5i8k7G3Yd9Ys3hNJWsJ3siPkSnZCBHmZN1z5qu3xLuf0MwUUecO0ckuxSrJQElVagU2IlNHodvjh9WWT/pEF2PxO8rfuu/u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tkJVw-0005iJ-9J; Tue, 18 Feb 2025 10:03:36 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tkJVv-001YXQ-2k;
-	Tue, 18 Feb 2025 10:03:35 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tkJVv-0002g6-2W;
-	Tue, 18 Feb 2025 10:03:35 +0100
-Message-ID: <15bbca6567ff640fdcfbe1a9525989887a94732c.camel@pengutronix.de>
-Subject: Re: [PATCH v2] media: verisilicon: Fix AV1 decoder clock frequency
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Heiko Stuebner <heiko@sntech.de>, Hans Verkuil
- <hverkuil@xs4all.nl>
-Cc: linux-rockchip@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, kernel@collabora.com,  stable@vger.kernel.org
-Date: Tue, 18 Feb 2025 10:03:35 +0100
-In-Reply-To: <20250217-b4-hantro-av1-clock-rate-v2-1-e179fad52641@collabora.com>
-References: 
-	<20250217-b4-hantro-av1-clock-rate-v2-1-e179fad52641@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1739869438; c=relaxed/simple;
+	bh=OhGgopD8UcgrRAAlKfX8UsrmN+XEITghrcnpLsrIWUc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=HepUx/WPNG48eWbUstJ5uZSevwq949aSWlyL8oDZlt9b3+EdTHHIVcUYmxx3OQfgv0rzJ9OjvxXUvq19CSNVdLxMelP1nFQl6etZ+bcl87q5RfZ3DhGEaxe/DSejbzpDsXtMMMcYCFsKQqMnLkRIoyAZsky5RxVIMKPdiKihb5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YNR5OH87; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ntt86Lsn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YNR5OH87";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ntt86Lsn"
+Date: Tue, 18 Feb 2025 09:03:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739869435;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=odqM1eje+C7yJYPWAZCGNApFzPHDP7os21AL9LuILW0=;
+	b=YNR5OH87oPh0QZxukMXpTzIAS0xbU2hznaZlmOd/dYzDjT71QdQUzX+pg9A0yxL36YGH0H
+	BrpX2tC+jInFDmwi9jD670t6mFmwUVbeciPIpEu9Oi5aaFjFxKttAemudkm+qWJLNRI0Bi
+	oqt/b++HT6mI3mzuIKw2jfEOUH4Vr3bBWGignwV493jAKel6N5PtZIIWdJECUSnxT2iJIv
+	iXfphcuY+MBtoABI5RezPxNQt4jZ+UjmDVXK3j/NxpKtx/Bdlbf6pjVC9wFkU+QK9St+1y
+	oiNV6xWqXwjFTweYINn+kGpVn/qmfKO15CeZZWI8xQxdLOU/baD5k+NMsgJk3A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739869435;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=odqM1eje+C7yJYPWAZCGNApFzPHDP7os21AL9LuILW0=;
+	b=ntt86Lsn84fJ7PsmbzSK6ECDOtgz51jW7OgwNXX63euetay8ZIqMjmqpvJcUM+ru4UJE8X
+	F5QCm7FKYh4FFuBQ==
+From: "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/drivers] RISC-V: Select CONFIG_GENERIC_PENDING_IRQ
+Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250217085657.789309-7-apatel@ventanamicro.com>
+References: <20250217085657.789309-7-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Message-ID: <173986943482.10177.16197758003555178082.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mo, 2025-02-17 at 16:46 -0500, Nicolas Dufresne wrote:
-> The desired clock frequency was correctly set to 400MHz in the device tre=
-e
-> but was lowered by the driver to 300MHz breaking 4K 60Hz content playback=
-.
-> Fix the issue by removing the driver call to clk_set_rate(), which reduce
-> the amount of board specific code.
->=20
-> Fixes: 003afda97c65 ("media: verisilicon: Enable AV1 decoder on rk3588")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+The following commit has been merged into the irq/drivers branch of tip:
 
-I was going to ask whether there might be any device trees without the
-assigned-clock-rates around that this patch could break, but the DT
-node was introduced with 400 MHz clock setting in the initial commit
-dd6dc0c4c126 ("arm64: dts: rockchip: Add AV1 decoder node to rk3588s").
+Commit-ID:     213ea5f92da586fe137dfa55004ed0f7706cfae5
+Gitweb:        https://git.kernel.org/tip/213ea5f92da586fe137dfa55004ed0f7706cfae5
+Author:        Anup Patel <apatel@ventanamicro.com>
+AuthorDate:    Mon, 17 Feb 2025 14:26:52 +05:30
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 18 Feb 2025 09:51:01 +01:00
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+RISC-V: Select CONFIG_GENERIC_PENDING_IRQ
 
-regards
-Philipp
+Enable CONFIG_GENERIC_PENDING_IRQ for RISC-V so that RISC-V interrupt chips
+can support delayed interrupt mirgration in interrupt context.
+
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250217085657.789309-7-apatel@ventanamicro.com
+---
+ arch/riscv/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 7612c52..a32f397 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -111,6 +111,7 @@ config RISCV
+ 	select GENERIC_IRQ_SHOW
+ 	select GENERIC_IRQ_SHOW_LEVEL
+ 	select GENERIC_LIB_DEVMEM_IS_ALLOWED
++	select GENERIC_PENDING_IRQ if SMP
+ 	select GENERIC_PCI_IOMAP
+ 	select GENERIC_PTDUMP if MMU
+ 	select GENERIC_SCHED_CLOCK
