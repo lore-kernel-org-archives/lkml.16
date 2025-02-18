@@ -1,131 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-73.smtpout.orange.fr [193.252.22.73])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D8324113C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88E52309B5;
+	Tue, 18 Feb 2025 14:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889830; cv=none; b=WQa79ZCmQwtx20k5qXe+dkCFwCi9gcCwOMda7r7sitJeJY1acxscMlBPfOq2OqukT3FfLFpC5A2rQaDhTtloWQLNiEscDcxtUpc01MJyhcgiJ0hpMERN/eVO5VsjhxEuI1ItSPHHifeyq2IJIYId3SSx+WqdF+p01J7VzolkbgI=
+	t=1739889902; cv=none; b=rYaaXR9qDVzjy3oesnXV/rs+xHEFTwYTNc99vLVi7/iPFJCMFPd/2/E/gDo4babRKYIzJ72XGiHQQHJsL4sfUyUE6bLjJ5R2uLOhTYJkjVB1hN5ekxP94KyMvz5ESac1jNv9e4x+KP0lUkPw+J1Y8H3aj/oJ+gmAmTBaSpUB/8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889830; c=relaxed/simple;
-	bh=h8DEt1/6IHk73Srir2K3HMIdQ2xbglOD0uGMGqLPCeU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bEexfr/Pj95O4sztYQcJkEKqbkmNJWQuyplapVWj9y3UPzyLuP6LmnjZbCKImllNWsMd5rFvT/PHI9hS2RuhC/Qjj1kWrw4E0MOzPKs5h925yL0asmibJLnZ2RiNjX7wKxTwjZJmPRrKa9LHI36HH+KQTO9lg6T3I0xz+7ylOro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AfIU3O0n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739889902; c=relaxed/simple;
+	bh=iLs3plEjkwEpLyj0A8yL7flOYDE8g7L+9PydZRFPTfM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ljw26P8UDvR3TeCkbKFpgu1opo4HA+PKikavDDQIJo/CrXOzrSNu36S6UCxRWqBaSOrBg3N2psFYZsKg2erG8TA0cQEmRTsNrzqmIYuuVjmlzVuk/tES8xG2XregLVFxF0YRoWACdsicLJg1UJ29wbkr516toHD1Yyb44KDSsjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tnp6TO7k; arc=none smtp.client-ip=193.252.22.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AfIU3O0n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739889827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OLp9JRNVUhT0m1v0T73vab4YaM/Pfh0Xi9X9EVQSmqg=;
-	b=AfIU3O0n4h2Cd6+EQqBLqzPKdEMckV6jHV/y6r0BEXTjWT1sVJJJIfVwd8Kr80VkMB6fTR
-	f6E9TSkmZXVaX3ppu0Q9LDRWXDKsZgeLpGopuXm7mztNFM7cSz6TjyQlATSw2OepypH9Tp
-	ITid6uGjUZ5LtHmOdrwZb6jSsSdcgX0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-rPY--Uj5NOyhtVFz1p5B2w-1; Tue,
- 18 Feb 2025 09:43:43 -0500
-X-MC-Unique: rPY--Uj5NOyhtVFz1p5B2w-1
-X-Mimecast-MFC-AGG-ID: rPY--Uj5NOyhtVFz1p5B2w_1739889822
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D5A681800874;
-	Tue, 18 Feb 2025 14:43:41 +0000 (UTC)
-Received: from [10.22.65.116] (unknown [10.22.65.116])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2B8E21956094;
-	Tue, 18 Feb 2025 14:43:40 +0000 (UTC)
-Message-ID: <21abd9e4-de2f-4d9e-a6d2-700b3d326524@redhat.com>
-Date: Tue, 18 Feb 2025 09:43:39 -0500
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tnp6TO7k"
+Received: from localhost.localdomain ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id kOhEtKM4rovodkOhQtiUMN; Tue, 18 Feb 2025 15:35:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1739889354;
+	bh=g/yw2yo0t0Acq9kWMIp+qDeiq85Jgqqq0N/OKh7IZqk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=tnp6TO7kVuDCNYNMXAjCTeVfIIgrjRNUMEN+ThL87akWRBbHTnEvZgs65Aq7d674U
+	 oHxWac9ko9nvTB8GpyjXv3ygBlz90pwCrIbGmd+bdPIG7SGCCzpWS6BAIRvlB2GtSJ
+	 cgO0qKu5TWtEg+c4xwq0jvG+EC/Fyp0wE7jbITsiV90CGKvcisbeMQw0M0uUNSm210
+	 VV5QVQKXp3S9EJMObSpVUJBF3tF0Eue8ifep9wWg1kZSUip2p1l8bwBJvDrvDJ48BI
+	 FvxQzCpEGfOnqYpqFrV15v54q7CKaCgl3eSq6ZC2A9TqheQ1LwMWOHm9ENNxPCF2Al
+	 eiMEEioW9KSzA==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 18 Feb 2025 15:35:54 +0100
+X-ME-IP: 124.33.176.97
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Matt Jan <zoo868e@gmail.com>,
+	Xu Panda <xu.panda@zte.com.cn>,
+	Yang Yang <yang.yang29@zte.com>,
+	linux-can@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	syzbot+d7d8c418e8317899e88c@syzkaller.appspotmail.com
+Subject: [PATCH] can: ucan: fix out of bound read in strscpy() source
+Date: Tue, 18 Feb 2025 23:32:28 +0900
+Message-ID: <20250218143515.627682-2-mailhol.vincent@wanadoo.fr>
+X-Mailer: git-send-email 2.45.3
+In-Reply-To: <67b323a4.050a0220.173698.002b.GAE@google.com>
+References: <67b323a4.050a0220.173698.002b.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvme: remove multipath module parameter
-To: Bryan Gurney <bgurney@redhat.com>, linux-kernel@vger.kernel.org,
- linux-nvme@lists.infradead.org, kbusch@kernel.org, hch@lst.de,
- sagi@grimberg.me, axboe@kernel.dk
-Cc: bmarzins@redhat.com
-References: <20250204211158.43126-1-bgurney@redhat.com>
-Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <20250204211158.43126-1-bgurney@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4692; i=mailhol.vincent@wanadoo.fr; h=from:subject; bh=iLs3plEjkwEpLyj0A8yL7flOYDE8g7L+9PydZRFPTfM=; b=owGbwMvMwCV2McXO4Xp97WbG02pJDOlbZi1e//yDpZutBcO3D4ZOoR5LXvnO2Wb1r/i/8f/UX RsvnSwR7yhlYRDjYpAVU2RZVs7JrdBR6B126K8lzBxWJpAhDFycAjCR2jSGP9xyb5rX8h948zOX US06q3P5F3uDwu/V/aG+TOVsmk1J7Az/tM8nHRat3bG63t/xP5PQAn0BVYG1V6c2W7QLSK7/8ug uAwA=
+X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp; fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
+Content-Transfer-Encoding: 8bit
 
-Bryan,  See my comments below.
+Commit 7fdaf8966aae ("can: ucan: use strscpy() to instead of strncpy()")
+unintentionally introduced a one byte out of bound read on strscpy()'s
+source argument (which is kind of ironic knowing that strscpy() is meant
+to be a more secure alternative :)).
 
-On 2/4/25 4:11 PM, Bryan Gurney wrote:
-> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-> index a85d190942bd..28ab868182b2 100644
-> --- a/drivers/nvme/host/multipath.c
-> +++ b/drivers/nvme/host/multipath.c
-> @@ -9,11 +9,6 @@
->   #include <trace/events/block.h>
->   #include "nvme.h"
->   
-> -bool multipath = true;
-> -module_param(multipath, bool, 0444);
-> -MODULE_PARM_DESC(multipath,
-> -	"turn on native support for multiple controllers per subsystem");
-> -
->   static const char *nvme_iopolicy_names[] = {
->   	[NVME_IOPOLICY_NUMA]	= "numa",
->   	[NVME_IOPOLICY_RR]	= "round-robin",
-> @@ -632,9 +627,11 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
->   	 * We also do this for private namespaces as the namespace sharing flag
->   	 * could change after a rescan.
->   	 */
-> +#ifdef CONFIG_NVME_MULTIPATH
->   	if (!(ctrl->subsys->cmic & NVME_CTRL_CMIC_MULTI_CTRL) ||
-> -	    !nvme_is_unique_nsid(ctrl, head) || !multipath)
-> +	    !nvme_is_unique_nsid(ctrl, head))
->   		return 0;
-> +#endif
+Let's consider below buffers:
 
-You don't need to add these #ifdef CONFIG_NVME_MULTIPATH conditional compile statements
-to multipath.c because the multipath.c is not compiled when CONFIG_NVME_MULTIPATH=N.
+  dest[len + 1]; /* will be NUL terminated */
+  src[len]; /* may not be NUL terminated */
 
-These won't hurt anything, but they are redundant and we can make the patch smaller by removing them.
+When doing:
 
->   	blk_set_stacking_limits(&lim);
->   	lim.dma_alignment = 3;
-> @@ -1038,10 +1035,11 @@ int nvme_mpath_init_identify(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
->   	size_t ana_log_size;
->   	int error = 0;
->   
-> +#ifdef CONFIG_NVME_MULTIPATH
->   	/* check if multipath is enabled and we have the capability */
-> -	if (!multipath || !ctrl->subsys ||
-> -	    !(ctrl->subsys->cmic & NVME_CTRL_CMIC_ANA))
-> +	if (!ctrl->subsys || !(ctrl->subsys->cmic & NVME_CTRL_CMIC_ANA))
->   		return 0;
-> +#endif
+  strncpy(dest, src, len);
+  dest[len] = '\0';
 
-Same here.
+strncpy() will read up to len bytes from src.
 
->   	/* initialize this in the identify path to cover controller resets */
->   	atomic_set(&ctrl->nr_active, 0);
-> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-> index 2c76afd00390..6dea04f05b59 100644
-> --- a/drivers/nvme/host/nvme.h
-> +++ b/drivers/nvme/host/nvme.h
-> @@ -972,7 +972,6 @@ static inline void nvme_trace_bio_complete(struct request *req)
->   		trace_block_bio_complete(ns->head->disk->queue, req->bio);
->   }
->   
+On the other hand:
 
-/John
+  strscpy(dest, src, len + 1);
+
+will read up to len + 1 bytes from src, that is to say, an out of bound
+read of one byte will occur on src if it is not NUL terminated. Note
+that the src[len] byte is never copied, but strscpy() still needs to
+read it to check whether a truncation occurred or not.
+
+This exact pattern happened in ucan.
+
+The root cause is that the source is not NUL terminated. Instead of
+doing a copy in a local buffer, directly NUL terminate it as soon as
+usb_control_msg() returns. With this, the local firmware_str[] variable
+can be removed.
+
+On top of this do a couple refactors:
+
+  - ucan_ctl_payload->raw is only used for the firmware string, so
+    rename it to ucan_ctl_payload->fw_str and change its type from u8 to
+    char.
+
+  - ucan_device_request_in() is only used to retrieve the firmware
+    string, so rename it to ucan_get_fw_str() and refactor it to make it
+    directly handle all the string termination logic.
+
+Reported-by: syzbot+d7d8c418e8317899e88c@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/linux-can/67b323a4.050a0220.173698.002b.GAE@google.com/
+Fixes: 7fdaf8966aae ("can: ucan: use strscpy() to instead of strncpy()")
+Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+---
+ drivers/net/can/usb/ucan.c | 43 ++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/net/can/usb/ucan.c b/drivers/net/can/usb/ucan.c
+index 39a63b7313a4..07406daf7c88 100644
+--- a/drivers/net/can/usb/ucan.c
++++ b/drivers/net/can/usb/ucan.c
+@@ -186,7 +186,7 @@ union ucan_ctl_payload {
+ 	 */
+ 	struct ucan_ctl_cmd_get_protocol_version cmd_get_protocol_version;
+ 
+-	u8 raw[128];
++	u8 fw_str[128];
+ } __packed;
+ 
+ enum {
+@@ -424,18 +424,20 @@ static int ucan_ctrl_command_out(struct ucan_priv *up,
+ 			       UCAN_USB_CTL_PIPE_TIMEOUT);
+ }
+ 
+-static int ucan_device_request_in(struct ucan_priv *up,
+-				  u8 cmd, u16 subcmd, u16 datalen)
++static void ucan_get_fw_str(struct ucan_priv *up, char *fw_str, size_t size)
+ {
+-	return usb_control_msg(up->udev,
+-			       usb_rcvctrlpipe(up->udev, 0),
+-			       cmd,
+-			       USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+-			       subcmd,
+-			       0,
+-			       up->ctl_msg_buffer,
+-			       datalen,
+-			       UCAN_USB_CTL_PIPE_TIMEOUT);
++	int ret;
++
++	ret = usb_control_msg(up->udev, usb_rcvctrlpipe(up->udev, 0),
++			      UCAN_DEVICE_GET_FW_STRING,
++			      USB_DIR_IN | USB_TYPE_VENDOR |
++			      USB_RECIP_DEVICE,
++			      0, 0, fw_str, size - 1,
++			      UCAN_USB_CTL_PIPE_TIMEOUT);
++	if (ret > 0)
++		fw_str[ret] = '\0';
++	else
++		strscpy(fw_str, "unknown", size);
+ }
+ 
+ /* Parse the device information structure reported by the device and
+@@ -1314,7 +1316,6 @@ static int ucan_probe(struct usb_interface *intf,
+ 	u8 in_ep_addr;
+ 	u8 out_ep_addr;
+ 	union ucan_ctl_payload *ctl_msg_buffer;
+-	char firmware_str[sizeof(union ucan_ctl_payload) + 1];
+ 
+ 	udev = interface_to_usbdev(intf);
+ 
+@@ -1527,17 +1528,6 @@ static int ucan_probe(struct usb_interface *intf,
+ 	 */
+ 	ucan_parse_device_info(up, &ctl_msg_buffer->cmd_get_device_info);
+ 
+-	/* just print some device information - if available */
+-	ret = ucan_device_request_in(up, UCAN_DEVICE_GET_FW_STRING, 0,
+-				     sizeof(union ucan_ctl_payload));
+-	if (ret > 0) {
+-		/* copy string while ensuring zero termination */
+-		strscpy(firmware_str, up->ctl_msg_buffer->raw,
+-			sizeof(union ucan_ctl_payload) + 1);
+-	} else {
+-		strcpy(firmware_str, "unknown");
+-	}
+-
+ 	/* device is compatible, reset it */
+ 	ret = ucan_ctrl_command_out(up, UCAN_COMMAND_RESET, 0, 0);
+ 	if (ret < 0)
+@@ -1555,7 +1545,10 @@ static int ucan_probe(struct usb_interface *intf,
+ 
+ 	/* initialisation complete, log device info */
+ 	netdev_info(up->netdev, "registered device\n");
+-	netdev_info(up->netdev, "firmware string: %s\n", firmware_str);
++	ucan_get_fw_str(up, up->ctl_msg_buffer->fw_str,
++			sizeof(up->ctl_msg_buffer->fw_str));
++	netdev_info(up->netdev, "firmware string: %s\n",
++		    up->ctl_msg_buffer->fw_str);
+ 
+ 	/* success */
+ 	return 0;
+-- 
+2.45.3
 
