@@ -1,62 +1,62 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DC823F296
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1385F23AE7D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 10:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739873556; cv=none; b=PJ+chp5kT4OjP2FHpb8jIMXHzcMGmQ20lkGg3MWsRoMtP38TBlrWy6uSy4x2oiVGRHPOfYO9DQumPVkbRutzQsRyAzxYk6JDkhdMgpoYr5cySbwWvYE0udtAw33KPQGzNULJamRrdvT/B8KkJY0MCLv5vLcJjUBnkXuR26nfZ0M=
+	t=1739873560; cv=none; b=CQp5cOnBzgzcjpE0AxPXv1ZLGdgRDrrLTqmsCnBBbjIB3KAuQI2dmBLsAL8veqa4puuWyBhgkN+f+39fkwVDDNI31h3AVWo8Jt9416PmjORhdSlo6xJc4JLj/6LnGMh43kqR5w21KVr+XF7PMN1dhoAJQcu1PMRPAj1nUxdkY98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739873556; c=relaxed/simple;
-	bh=a4ElrdpwVXpCQL7dKsThLcYntyabpDhRSXfRoVBxI/E=;
+	s=arc-20240116; t=1739873560; c=relaxed/simple;
+	bh=Yq28pqHTePQp7L+t1SrFXFbJAQm7/bMZO8hygotWTW4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tW1OyTRZUDe4HEjYkrfx2ZieoSGAj/gVSG7XuMBkZdBaIFRFNMffvpUmuwuctGNimGJ8fM8o1SCLMHT6GvP+KbxiG3/FgAPm3U+c4qayFm1A/2NPkC5cKD1KctB5v4AniIfNprruAhGADK93FjyAspqZopR/1RDQdREIkKYcDcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HH4Dkvbd; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version:Content-Type; b=Pp+Pp6Zcp7QZmLm1eE1HHykiVcX+DCLEjWFSv1GXMwMUgtn9vh+RjzcmyrO1mne4ESZmxdJGknoRpiSF7eC765vN6ioRUmOTw2Mx13Rc/CB8NDVOcyTYNar02fCo1e0UVE/olq2pTm4wSOBzKOR79LCXGOJIg+TJbrXLVWM8Ezg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ic93PRDT; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HH4Dkvbd"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43937cf2131so35085095e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 02:12:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ic93PRDT"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f325dd9e6so1681464f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 02:12:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739873552; x=1740478352; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739873556; x=1740478356; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rfe2c/w4yYGc2jUSMRT4IzcezaRR9Jxw3SRE879VZ2w=;
-        b=HH4Dkvbdou26C9YOCQdCFaekJtdDxI/uP/N/u79rMz99a7foll6Ye2Oh9Kzdojc7ef
-         4Uj5GzEFpiexkJgjhfjz/LFurvGo1KDlyL+D66sb1r0nw8/3w74n+CSHGvwcn6HwhB8p
-         e9bZFh4NcYiFkH1jHTK15JBDv85yOJ23YD1BEQzWO1SBlElIhYAJ1fYx9jj/Oe4tPI1c
-         tMIa+oFqJoWIXrwPg2B8954I9RJ1xiGAnJX+S9B0vStzE3wZ5P6bnrwzSRW/SzKOmlt8
-         ZIlE9g/qtuxnWrQ9ub+tG8oV3ne7LjjqkI/0YgjeWYwQzE/PRUan0kP2r7tvGqyASLzE
-         S9XQ==
+        bh=h+xCFrURTppY63NVOBwqa8Qg4TsqZlxYnGgiayzWMgE=;
+        b=ic93PRDTQUdXI85z/G0UCX4jtayNpM4LrrMKkGLkygED2v0TsiyziYtfmrMfVVkHXJ
+         gs8j3419U+xTjwAt3ENc0ljlp3LjyUUOdCR+ps7/TcJcw8/NYoRECvMhQrjOykCRljpC
+         Ew/m3ZObMazVuAXmyH/OcJp31T2n2UKALT/4KimqEPAbQmCrdWt/1xP5LrPwohttbVMS
+         qNndeybSX5/Hib4i/nr43NiXECuivabEssj8QtxNt32lhTpE6EPdfp6U5ce4tD9AN2qe
+         LG6GtSpuB00Ki4GAOGLWhLsnMVS+gy23NrcYfDd9tMA5Zyij5pTFleW9KoecQIVdtgpw
+         +Imw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739873552; x=1740478352;
+        d=1e100.net; s=20230601; t=1739873556; x=1740478356;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Rfe2c/w4yYGc2jUSMRT4IzcezaRR9Jxw3SRE879VZ2w=;
-        b=XDzHlw9ueEqXsclVq9YWRRk9H1nWK9oMrChKC0jtS5j8+0CntyV2PD/sGcofUYIa8+
-         g6RhLqSTR9cviwUszEAT02rmPo7UuP6CuiI/9ifeLScfBinbN1RdVTk3TYKxKG+uYDC1
-         ZOxrDF1PssyiWqvXW5/lltrtmdZoMvF3Rv7Gt/nNrdGrxG9d+/1fFlPqnq2dk9SkEB1O
-         92zIdcGksLHHmTcMT69h7K8ZtZGa+DTh7y677zX9/e0ZbTjSQH2KRyGltRTX9BmVunoM
-         NWLC6syanTNDtpGR5j9YRsF+fLRjOEk4+eQUJnNDkttGBVHXSbCZEdBH4XYJScJsTHhb
-         jW9w==
-X-Forwarded-Encrypted: i=1; AJvYcCW9XY4DXt3s6vJP3J+mxq8MuPF5Pq8nvGI2rtJzXt1rt8vEjHGM/s78ac2plfeRncqDzQn2VkoPH2pvTNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy741X5KseIdIvJv5/sMg2G5N2yfVz/y1+3rz34lkHwI20+Gc6X
-	auXMi1rx/iIx46jr0AQ994Rvdgs6weW5oiImURl95tcFmq5w+WZo
-X-Gm-Gg: ASbGncuisQd4eyh6T5lHK1TMzm/GjP/rTZw/FJ4O++HSDN/hQVAWUKi0qcnXf2W/F7G
-	ZBTaD0ZmsdTSxn/H0kW6NYmPcPKU+m+xmb8d5aBpSQKnzv8YF7+x33HAg5+wBDjl36iiCexK4eh
-	T8MFjn99U6prXFvHCBaV8zBW4/meQza3xQNZwliwV+MH+AoIprzewynXKBO67cfXN8KH/wHmJUv
-	K6e+end8JZmCoeED5wJXA5LyVjFgJpCt8U9yTz0sMV1+w/rgiiI3TY1iqaJoXxBpTXyjtsXTdft
-	Ea4/rS4o8wmnTfAOWg==
-X-Google-Smtp-Source: AGHT+IFq19ppFLrzdssvti0OfQMaqZsLO7r8CXrtLyu5zD+ypnAc7vgPsZoR2nQ+w9y/vu8OEG333g==
-X-Received: by 2002:a05:600c:a384:b0:439:88bb:d017 with SMTP id 5b1f17b1804b1-43988bbd458mr55401175e9.6.1739873551564;
-        Tue, 18 Feb 2025 02:12:31 -0800 (PST)
+        bh=h+xCFrURTppY63NVOBwqa8Qg4TsqZlxYnGgiayzWMgE=;
+        b=eqSrEs6fo19dMYcyIt3BRf3TWoLMOFG5NvJ0yUiIlEaTtXSO0tOGjKLpocEFWRJRbo
+         ywG10RUFuI7j7Lr4DNKi96Iw7LhHfj2G4DteUNLeDrg7iVxdY7SIZMyAayvoH5oaR0xw
+         5UXtHL9T+RIZmCGP+lfdwCNQaMcCYJHqa4jxCxqCrHDCg2YTkeTHMNNt6ezzfnDufidz
+         ghXE5AVkpXqulkvFt6PQktcezc2fCt0w4woiTMZQ7NfZtajUJK6+B1FJsYHWjInt9ov/
+         DtFgC3RhzOdvNKOSQafP4K6NWHGiP8uBcv83SgMIRQh8ZKp/Kivbdvfto9cobhsYH7jd
+         9hKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnit7NI2WDuAMUCXs9XRhEccColGm+cGDzJrUgLJfUdNQLSVx20yGYdRd/FkIcv4idB9PKqmncexgVg9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWDAGBbbq/d0ynduGy3IcwqwonZNdcMCCu0U0TNWqRUpU76TQF
+	4BTpfH1OXpl+bu8qZFjwby44v4jiwKrPV1dJhH/eWRwW1spIosba
+X-Gm-Gg: ASbGncufKeZA4s2m8qELzgYhrnD1SWCEbSrndrUeU5j7YXNOmLoXo+VlJknglqRLI07
+	uGdp3k4AmlHF9cYESQPOvrYomAPY955ZAuzXs1RC2gDWTxj/vzGjaBVjN9FeS1XpRSQfPXV071Z
+	AJNSwqoZCaNicK4Q1z5yFmt1rNIdYzLJSIAB8ATKtP1oIQLC6g8CMWgo6I2OD2y+qOJkp1ovJ2f
+	oHru9gZ4GSp1F1/VjQC45yOQiWNz6phQLXcRqKI26rton1BGgikKQJqkb7FSy2SgNHu8Hi2Tiiy
+	gI+Jpiz78nFSz+ba7w==
+X-Google-Smtp-Source: AGHT+IH1fgM5ly1pG4PQnHCQHvU2qjuyGPQ9TH5SuTOagsYNNt7IikoLHxrhYwZdCW6vd8EuNSSdpQ==
+X-Received: by 2002:a5d:598b:0:b0:38f:4e6e:22 with SMTP id ffacd0b85a97d-38f4e6e01a3mr4986452f8f.48.1739873556184;
+        Tue, 18 Feb 2025 02:12:36 -0800 (PST)
 Received: from fedora.. ([213.94.27.232])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e92sm14749720f8f.66.2025.02.18.02.12.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e92sm14749720f8f.66.2025.02.18.02.12.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 02:12:30 -0800 (PST)
+        Tue, 18 Feb 2025 02:12:35 -0800 (PST)
 From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
 To: louis.chauvet@bootlin.com
 Cc: hamohammed.sa@gmail.com,
@@ -69,9 +69,9 @@ Cc: hamohammed.sa@gmail.com,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v4 10/14] drm/vkms: Allow to attach planes and CRTCs
-Date: Tue, 18 Feb 2025 11:12:10 +0100
-Message-ID: <20250218101214.5790-11-jose.exposito89@gmail.com>
+Subject: [PATCH v4 14/14] drm/vkms: Allow to attach connectors and encoders
+Date: Tue, 18 Feb 2025 11:12:14 +0100
+Message-ID: <20250218101214.5790-15-jose.exposito89@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250218101214.5790-1-jose.exposito89@gmail.com>
 References: <20250218101214.5790-1-jose.exposito89@gmail.com>
@@ -84,11 +84,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a list of possible CRTCs to the plane configuration and helpers to
-attach, detach and get the primary and cursor planes attached to a CRTC.
+Add a list of possible encoders to the connector configuration and
+helpers to attach and detach them.
 
-Now that the default configuration has its planes and CRTC correctly
-attached, configure the output following the configuration.
+Now that the default configuration has its connector and encoder
+correctly, configure the output following the configuration.
 
 Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
@@ -96,293 +96,166 @@ Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 ---
  .clang-format                                 |   1 +
- drivers/gpu/drm/vkms/tests/vkms_config_test.c | 222 ++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_config.c            | 154 ++++++++++--
- drivers/gpu/drm/vkms/vkms_config.h            |  59 ++++-
- drivers/gpu/drm/vkms/vkms_drv.c               |   3 +-
- drivers/gpu/drm/vkms/vkms_output.c            |  51 ++--
- 6 files changed, 454 insertions(+), 36 deletions(-)
+ drivers/gpu/drm/vkms/tests/vkms_config_test.c | 102 ++++++++++++++++++
+ drivers/gpu/drm/vkms/vkms_config.c            |  64 +++++++++++
+ drivers/gpu/drm/vkms/vkms_config.h            |  29 +++++
+ drivers/gpu/drm/vkms/vkms_output.c            |  33 +++---
+ 5 files changed, 216 insertions(+), 13 deletions(-)
 
 diff --git a/.clang-format b/.clang-format
-index e7a901c3617d..6f944fa39841 100644
+index ca49832993c5..7630990aa07a 100644
 --- a/.clang-format
 +++ b/.clang-format
-@@ -692,6 +692,7 @@ ForEachMacros:
-   - 'virtio_device_for_each_vq'
+@@ -694,6 +694,7 @@ ForEachMacros:
    - 'vkms_config_for_each_crtc'
+   - 'vkms_config_for_each_encoder'
    - 'vkms_config_for_each_plane'
-+  - 'vkms_config_plane_for_each_possible_crtc'
++  - 'vkms_config_connector_for_each_possible_encoder'
+   - 'vkms_config_encoder_for_each_possible_crtc'
+   - 'vkms_config_plane_for_each_possible_crtc'
    - 'while_for_each_ftrace_op'
-   - 'xa_for_each'
-   - 'xa_for_each_marked'
 diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-index 104120c91c39..0997ea924ab7 100644
+index 610bcde3e018..ff4566cf9925 100644
 --- a/drivers/gpu/drm/vkms/tests/vkms_config_test.c
 +++ b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-@@ -118,6 +118,18 @@ static void vkms_config_test_default_config(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, vkms_config_crtc_get_writeback(crtc_cfg),
- 			params->enable_writeback);
- 
-+	vkms_config_for_each_plane(config, plane_cfg) {
-+		struct vkms_config_crtc *possible_crtc;
-+		int n_possible_crtcs = 0;
-+		unsigned long idx = 0;
-+
-+		vkms_config_plane_for_each_possible_crtc(plane_cfg, idx, possible_crtc) {
-+			KUNIT_EXPECT_PTR_EQ(test, crtc_cfg, possible_crtc);
-+			n_possible_crtcs++;
-+		}
-+		KUNIT_EXPECT_EQ(test, n_possible_crtcs, 1);
-+	}
-+
- 	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
- 
+@@ -584,12 +584,32 @@ static void vkms_config_test_invalid_connector_number(struct kunit *test)
  	vkms_config_destroy(config);
-@@ -230,6 +242,8 @@ static void vkms_config_test_valid_plane_type(struct kunit *test)
- {
- 	struct vkms_config *config;
- 	struct vkms_config_plane *plane_cfg;
-+	struct vkms_config_crtc *crtc_cfg;
-+	int err;
+ }
  
- 	config = vkms_config_default_create(false, false, false);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-@@ -237,16 +251,26 @@ static void vkms_config_test_valid_plane_type(struct kunit *test)
- 	plane_cfg = get_first_plane(config);
- 	vkms_config_destroy_plane(plane_cfg);
- 
-+	crtc_cfg = get_first_crtc(config);
-+
- 	/* Invalid: No primary plane */
- 	plane_cfg = vkms_config_create_plane(config);
- 	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_OVERLAY);
-+	err = vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
- 	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
- 
- 	/* Invalid: Multiple primary planes */
- 	plane_cfg = vkms_config_create_plane(config);
- 	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_PRIMARY);
-+	err = vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+
- 	plane_cfg = vkms_config_create_plane(config);
- 	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_PRIMARY);
-+	err = vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+
- 	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
- 
- 	/* Valid: One primary plane */
-@@ -256,14 +280,50 @@ static void vkms_config_test_valid_plane_type(struct kunit *test)
- 	/* Invalid: Multiple cursor planes */
- 	plane_cfg = vkms_config_create_plane(config);
- 	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_CURSOR);
-+	err = vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+
- 	plane_cfg = vkms_config_create_plane(config);
- 	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_CURSOR);
-+	err = vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+
- 	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
- 
- 	/* Valid: One primary and one cursor plane */
- 	vkms_config_destroy_plane(plane_cfg);
- 	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
- 
-+	/* Invalid: Second CRTC without primary plane */
-+	crtc_cfg = vkms_config_create_crtc(config);
-+	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
-+	/* Valid: Second CRTC with a primary plane */
-+	plane_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_PRIMARY);
-+	err = vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
-+
-+	vkms_config_destroy(config);
-+}
-+
-+static void vkms_config_test_valid_plane_possible_crtcs(struct kunit *test)
++static void vkms_config_test_valid_connector_possible_encoders(struct kunit *test)
 +{
 +	struct vkms_config *config;
-+	struct vkms_config_plane *plane_cfg;
-+	struct vkms_config_crtc *crtc_cfg;
++	struct vkms_config_encoder *encoder_cfg;
++	struct vkms_config_connector *connector_cfg;
 +
 +	config = vkms_config_default_create(false, false, false);
 +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
 +
-+	plane_cfg = get_first_plane(config);
-+	crtc_cfg = get_first_crtc(config);
++	encoder_cfg = get_first_encoder(config);
++	connector_cfg = get_first_connector(config);
 +
-+	/* Invalid: Primary plane without a possible CRTC */
-+	vkms_config_plane_detach_crtc(plane_cfg, crtc_cfg);
++	/* Invalid: Connector without a possible encoder */
++	vkms_config_connector_detach_encoder(connector_cfg, encoder_cfg);
 +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
- 	vkms_config_destroy(config);
- }
- 
-@@ -290,6 +350,164 @@ static void vkms_config_test_invalid_crtc_number(struct kunit *test)
- 	vkms_config_destroy(config);
- }
- 
-+static void vkms_config_test_attach_different_configs(struct kunit *test)
-+{
-+	struct vkms_config *config1, *config2;
-+	struct vkms_config_plane *plane_cfg1, *plane_cfg2;
-+	struct vkms_config_crtc *crtc_cfg1, *crtc_cfg2;
-+	int err;
-+
-+	config1 = vkms_config_create("test1");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config1);
-+
-+	config2 = vkms_config_create("test2");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config2);
-+
-+	plane_cfg1 = vkms_config_create_plane(config1);
-+	crtc_cfg1 = vkms_config_create_crtc(config1);
-+
-+	plane_cfg2 = vkms_config_create_plane(config2);
-+	crtc_cfg2 = vkms_config_create_crtc(config2);
-+
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane_cfg1);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane_cfg2);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_cfg1);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_cfg2);
-+
-+	err = vkms_config_plane_attach_crtc(plane_cfg1, crtc_cfg2);
-+	KUNIT_EXPECT_NE(test, err, 0);
-+	err = vkms_config_plane_attach_crtc(plane_cfg2, crtc_cfg1);
-+	KUNIT_EXPECT_NE(test, err, 0);
-+
-+	vkms_config_destroy(config1);
-+	vkms_config_destroy(config2);
-+}
-+
-+static void vkms_config_test_plane_attach_crtc(struct kunit *test)
-+{
-+	struct vkms_config *config;
-+	struct vkms_config_plane *overlay_cfg;
-+	struct vkms_config_plane *primary_cfg;
-+	struct vkms_config_plane *cursor_cfg;
-+	struct vkms_config_crtc *crtc_cfg;
-+	int err;
-+
-+	config = vkms_config_create("test");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-+
-+	overlay_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(overlay_cfg, DRM_PLANE_TYPE_OVERLAY);
-+	primary_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(primary_cfg, DRM_PLANE_TYPE_PRIMARY);
-+	cursor_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(cursor_cfg, DRM_PLANE_TYPE_CURSOR);
-+
-+	crtc_cfg = vkms_config_create_crtc(config);
-+
-+	/* No primary or cursor planes */
-+	KUNIT_EXPECT_NULL(test, vkms_config_crtc_primary_plane(config, crtc_cfg));
-+	KUNIT_EXPECT_NULL(test, vkms_config_crtc_cursor_plane(config, crtc_cfg));
-+
-+	/* Overlay plane, but no primary or cursor planes */
-+	err = vkms_config_plane_attach_crtc(overlay_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	KUNIT_EXPECT_NULL(test, vkms_config_crtc_primary_plane(config, crtc_cfg));
-+	KUNIT_EXPECT_NULL(test, vkms_config_crtc_cursor_plane(config, crtc_cfg));
-+
-+	/* Primary plane, attaching it twice must fail */
-+	err = vkms_config_plane_attach_crtc(primary_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	err = vkms_config_plane_attach_crtc(primary_cfg, crtc_cfg);
-+	KUNIT_EXPECT_NE(test, err, 0);
-+	KUNIT_EXPECT_PTR_EQ(test,
-+			    vkms_config_crtc_primary_plane(config, crtc_cfg),
-+			    primary_cfg);
-+	KUNIT_EXPECT_NULL(test, vkms_config_crtc_cursor_plane(config, crtc_cfg));
-+
-+	/* Primary and cursor planes */
-+	err = vkms_config_plane_attach_crtc(cursor_cfg, crtc_cfg);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	KUNIT_EXPECT_PTR_EQ(test,
-+			    vkms_config_crtc_primary_plane(config, crtc_cfg),
-+			    primary_cfg);
-+	KUNIT_EXPECT_PTR_EQ(test,
-+			    vkms_config_crtc_cursor_plane(config, crtc_cfg),
-+			    cursor_cfg);
-+
-+	/* Detach primary and destroy cursor plane */
-+	vkms_config_plane_detach_crtc(overlay_cfg, crtc_cfg);
-+	vkms_config_plane_detach_crtc(primary_cfg, crtc_cfg);
-+	vkms_config_destroy_plane(cursor_cfg);
-+	KUNIT_EXPECT_NULL(test, vkms_config_crtc_primary_plane(config, crtc_cfg));
-+	KUNIT_EXPECT_NULL(test, vkms_config_crtc_cursor_plane(config, crtc_cfg));
 +
 +	vkms_config_destroy(config);
 +}
 +
-+static void vkms_config_test_plane_get_possible_crtcs(struct kunit *test)
+ static void vkms_config_test_attach_different_configs(struct kunit *test)
+ {
+ 	struct vkms_config *config1, *config2;
+ 	struct vkms_config_plane *plane_cfg1, *plane_cfg2;
+ 	struct vkms_config_crtc *crtc_cfg1, *crtc_cfg2;
+ 	struct vkms_config_encoder *encoder_cfg1, *encoder_cfg2;
++	struct vkms_config_connector *connector_cfg1, *connector_cfg2;
+ 	int err;
+ 
+ 	config1 = vkms_config_create("test1");
+@@ -601,10 +621,12 @@ static void vkms_config_test_attach_different_configs(struct kunit *test)
+ 	plane_cfg1 = vkms_config_create_plane(config1);
+ 	crtc_cfg1 = vkms_config_create_crtc(config1);
+ 	encoder_cfg1 = vkms_config_create_encoder(config1);
++	connector_cfg1 = vkms_config_create_connector(config1);
+ 
+ 	plane_cfg2 = vkms_config_create_plane(config2);
+ 	crtc_cfg2 = vkms_config_create_crtc(config2);
+ 	encoder_cfg2 = vkms_config_create_encoder(config2);
++	connector_cfg2 = vkms_config_create_connector(config2);
+ 
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane_cfg1);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane_cfg2);
+@@ -612,6 +634,8 @@ static void vkms_config_test_attach_different_configs(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_cfg2);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, encoder_cfg1);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, encoder_cfg2);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, connector_cfg1);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, connector_cfg2);
+ 
+ 	err = vkms_config_plane_attach_crtc(plane_cfg1, crtc_cfg2);
+ 	KUNIT_EXPECT_NE(test, err, 0);
+@@ -623,6 +647,11 @@ static void vkms_config_test_attach_different_configs(struct kunit *test)
+ 	err = vkms_config_encoder_attach_crtc(encoder_cfg2, crtc_cfg1);
+ 	KUNIT_EXPECT_NE(test, err, 0);
+ 
++	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg2);
++	KUNIT_EXPECT_NE(test, err, 0);
++	err = vkms_config_connector_attach_encoder(connector_cfg2, encoder_cfg1);
++	KUNIT_EXPECT_NE(test, err, 0);
++
+ 	vkms_config_destroy(config1);
+ 	vkms_config_destroy(config2);
+ }
+@@ -816,6 +845,77 @@ static void vkms_config_test_encoder_get_possible_crtcs(struct kunit *test)
+ 	vkms_config_destroy(config);
+ }
+ 
++static void vkms_config_test_connector_get_possible_encoders(struct kunit *test)
 +{
 +	struct vkms_config *config;
-+	struct vkms_config_plane *plane_cfg1, *plane_cfg2;
-+	struct vkms_config_crtc *crtc_cfg1, *crtc_cfg2;
-+	struct vkms_config_crtc *possible_crtc;
++	struct vkms_config_connector *connector_cfg1, *connector_cfg2;
++	struct vkms_config_encoder *encoder_cfg1, *encoder_cfg2;
++	struct vkms_config_encoder *possible_encoder;
 +	unsigned long idx = 0;
-+	int n_crtcs = 0;
++	int n_encoders = 0;
 +	int err;
 +
 +	config = vkms_config_create("test");
 +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
 +
-+	plane_cfg1 = vkms_config_create_plane(config);
-+	plane_cfg2 = vkms_config_create_plane(config);
-+	crtc_cfg1 = vkms_config_create_crtc(config);
-+	crtc_cfg2 = vkms_config_create_crtc(config);
++	connector_cfg1 = vkms_config_create_connector(config);
++	connector_cfg2 = vkms_config_create_connector(config);
++	encoder_cfg1 = vkms_config_create_encoder(config);
++	encoder_cfg2 = vkms_config_create_encoder(config);
 +
-+	/* No possible CRTCs */
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg1, idx, possible_crtc)
-+		KUNIT_FAIL(test, "Unexpected possible CRTC");
++	/* No possible encoders */
++	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
++							possible_encoder)
++		KUNIT_FAIL(test, "Unexpected possible encoder");
 +
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg2, idx, possible_crtc)
-+		KUNIT_FAIL(test, "Unexpected possible CRTC");
++	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
++							possible_encoder)
++		KUNIT_FAIL(test, "Unexpected possible encoder");
 +
-+	/* Plane 1 attached to CRTC 1 and 2 */
-+	err = vkms_config_plane_attach_crtc(plane_cfg1, crtc_cfg1);
++	/* Connector 1 attached to encoders 1 and 2 */
++	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg1);
 +	KUNIT_EXPECT_EQ(test, err, 0);
-+	err = vkms_config_plane_attach_crtc(plane_cfg1, crtc_cfg2);
++	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg2);
 +	KUNIT_EXPECT_EQ(test, err, 0);
 +
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg1, idx, possible_crtc) {
-+		n_crtcs++;
-+		if (possible_crtc != crtc_cfg1 && possible_crtc != crtc_cfg2)
-+			KUNIT_FAIL(test, "Unexpected possible CRTC");
++	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
++							possible_encoder) {
++		n_encoders++;
++		if (possible_encoder != encoder_cfg1 &&
++		    possible_encoder != encoder_cfg2)
++			KUNIT_FAIL(test, "Unexpected possible encoder");
 +	}
-+	KUNIT_ASSERT_EQ(test, n_crtcs, 2);
-+	n_crtcs = 0;
++	KUNIT_ASSERT_EQ(test, n_encoders, 2);
++	n_encoders = 0;
 +
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg2, idx, possible_crtc)
-+		KUNIT_FAIL(test, "Unexpected possible CRTC");
++	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
++							possible_encoder)
++		KUNIT_FAIL(test, "Unexpected possible encoder");
 +
-+	/* Plane 1 attached to CRTC 1 and plane 2 to CRTC 2 */
-+	vkms_config_plane_detach_crtc(plane_cfg1, crtc_cfg2);
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg1, idx, possible_crtc) {
-+		n_crtcs++;
-+		if (possible_crtc != crtc_cfg1)
-+			KUNIT_FAIL(test, "Unexpected possible CRTC");
++	/* Connector 1 attached to encoder 1 and connector 2 to encoder 2 */
++	vkms_config_connector_detach_encoder(connector_cfg1, encoder_cfg2);
++	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
++							possible_encoder) {
++		n_encoders++;
++		if (possible_encoder != encoder_cfg1)
++			KUNIT_FAIL(test, "Unexpected possible encoder");
 +	}
-+	KUNIT_ASSERT_EQ(test, n_crtcs, 1);
-+	n_crtcs = 0;
++	KUNIT_ASSERT_EQ(test, n_encoders, 1);
++	n_encoders = 0;
 +
-+	err = vkms_config_plane_attach_crtc(plane_cfg2, crtc_cfg2);
++	err = vkms_config_connector_attach_encoder(connector_cfg2, encoder_cfg2);
 +	KUNIT_EXPECT_EQ(test, err, 0);
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg2, idx, possible_crtc) {
-+		n_crtcs++;
-+		if (possible_crtc != crtc_cfg2)
-+			KUNIT_FAIL(test, "Unexpected possible CRTC");
++	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
++							possible_encoder) {
++		n_encoders++;
++		if (possible_encoder != encoder_cfg2)
++			KUNIT_FAIL(test, "Unexpected possible encoder");
 +	}
-+	KUNIT_ASSERT_EQ(test, n_crtcs, 1);
++	KUNIT_ASSERT_EQ(test, n_encoders, 1);
 +
 +	vkms_config_destroy(config);
 +}
@@ -390,121 +263,46 @@ index 104120c91c39..0997ea924ab7 100644
  static struct kunit_case vkms_config_test_cases[] = {
  	KUNIT_CASE(vkms_config_test_empty_config),
  	KUNIT_CASE_PARAM(vkms_config_test_default_config,
-@@ -298,7 +516,11 @@ static struct kunit_case vkms_config_test_cases[] = {
- 	KUNIT_CASE(vkms_config_test_get_crtcs),
- 	KUNIT_CASE(vkms_config_test_invalid_plane_number),
- 	KUNIT_CASE(vkms_config_test_valid_plane_type),
-+	KUNIT_CASE(vkms_config_test_valid_plane_possible_crtcs),
- 	KUNIT_CASE(vkms_config_test_invalid_crtc_number),
-+	KUNIT_CASE(vkms_config_test_attach_different_configs),
-+	KUNIT_CASE(vkms_config_test_plane_attach_crtc),
-+	KUNIT_CASE(vkms_config_test_plane_get_possible_crtcs),
+@@ -831,10 +931,12 @@ static struct kunit_case vkms_config_test_cases[] = {
+ 	KUNIT_CASE(vkms_config_test_invalid_encoder_number),
+ 	KUNIT_CASE(vkms_config_test_valid_encoder_possible_crtcs),
+ 	KUNIT_CASE(vkms_config_test_invalid_connector_number),
++	KUNIT_CASE(vkms_config_test_valid_connector_possible_encoders),
+ 	KUNIT_CASE(vkms_config_test_attach_different_configs),
+ 	KUNIT_CASE(vkms_config_test_plane_attach_crtc),
+ 	KUNIT_CASE(vkms_config_test_plane_get_possible_crtcs),
+ 	KUNIT_CASE(vkms_config_test_encoder_get_possible_crtcs),
++	KUNIT_CASE(vkms_config_test_connector_get_possible_encoders),
  	{}
  };
  
 diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
-index d195db770fae..458385413648 100644
+index fbbdee6068ce..a1df5659b0fb 100644
 --- a/drivers/gpu/drm/vkms/vkms_config.c
 +++ b/drivers/gpu/drm/vkms/vkms_config.c
-@@ -52,13 +52,20 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
+@@ -95,6 +95,9 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
+ 	if (IS_ERR(connector_cfg))
  		goto err_alloc;
- 	vkms_config_crtc_set_writeback(crtc_cfg, enable_writeback);
  
-+	if (vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg))
++	if (vkms_config_connector_attach_encoder(connector_cfg, encoder_cfg))
 +		goto err_alloc;
 +
- 	if (enable_overlay) {
- 		for (n = 0; n < NUM_OVERLAY_PLANES; n++) {
- 			plane_cfg = vkms_config_create_plane(config);
- 			if (IS_ERR(plane_cfg))
- 				goto err_alloc;
-+
- 			vkms_config_plane_set_type(plane_cfg,
- 						   DRM_PLANE_TYPE_OVERLAY);
-+
-+			if (vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg))
-+				goto err_alloc;
- 		}
- 	}
- 
-@@ -66,7 +73,11 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
- 		plane_cfg = vkms_config_create_plane(config);
- 		if (IS_ERR(plane_cfg))
- 			goto err_alloc;
-+
- 		vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_CURSOR);
-+
-+		if (vkms_config_plane_attach_crtc(plane_cfg, crtc_cfg))
-+			goto err_alloc;
- 	}
- 
  	return config;
-@@ -107,7 +118,8 @@ static bool valid_plane_number(const struct vkms_config *config)
+ 
+ err_alloc:
+@@ -279,6 +282,22 @@ static bool valid_connector_number(const struct vkms_config *config)
  	return true;
  }
  
--static bool valid_plane_type(const struct vkms_config *config)
-+static bool valid_planes_for_crtc(const struct vkms_config *config,
-+				  struct vkms_config_crtc *crtc_cfg)
- {
- 	struct drm_device *dev = config->dev ? &config->dev->drm : NULL;
- 	struct vkms_config_plane *plane_cfg;
-@@ -115,24 +127,31 @@ static bool valid_plane_type(const struct vkms_config *config)
- 	bool has_cursor_plane = false;
- 
- 	vkms_config_for_each_plane(config, plane_cfg) {
-+		struct vkms_config_crtc *possible_crtc;
-+		unsigned long idx = 0;
- 		enum drm_plane_type type;
- 
- 		type = vkms_config_plane_get_type(plane_cfg);
- 
--		if (type == DRM_PLANE_TYPE_PRIMARY) {
--			if (has_primary_plane) {
--				drm_info(dev, "Multiple primary planes\n");
--				return false;
--			}
-+		vkms_config_plane_for_each_possible_crtc(plane_cfg, idx, possible_crtc) {
-+			if (possible_crtc != crtc_cfg)
-+				continue;
- 
--			has_primary_plane = true;
--		} else if (type == DRM_PLANE_TYPE_CURSOR) {
--			if (has_cursor_plane) {
--				drm_info(dev, "Multiple cursor planes\n");
--				return false;
--			}
-+			if (type == DRM_PLANE_TYPE_PRIMARY) {
-+				if (has_primary_plane) {
-+					drm_info(dev, "Multiple primary planes\n");
-+					return false;
-+				}
- 
--			has_cursor_plane = true;
-+				has_primary_plane = true;
-+			} else if (type == DRM_PLANE_TYPE_CURSOR) {
-+				if (has_cursor_plane) {
-+					drm_info(dev, "Multiple cursor planes\n");
-+					return false;
-+				}
-+
-+				has_cursor_plane = true;
-+			}
- 		}
- 	}
- 
-@@ -144,6 +163,21 @@ static bool valid_plane_type(const struct vkms_config *config)
- 	return true;
- }
- 
-+static bool valid_plane_possible_crtcs(const struct vkms_config *config)
++static bool valid_connector_possible_encoders(const struct vkms_config *config)
 +{
 +	struct drm_device *dev = config->dev ? &config->dev->drm : NULL;
-+	struct vkms_config_plane *plane_cfg;
++	struct vkms_config_connector *connector_cfg;
 +
-+	vkms_config_for_each_plane(config, plane_cfg) {
-+		if (xa_empty(&plane_cfg->possible_crtcs)) {
-+			drm_info(dev, "All planes must have at least one possible CRTC\n");
++	vkms_config_for_each_connector(config, connector_cfg) {
++		if (xa_empty(&connector_cfg->possible_encoders)) {
++			drm_info(dev,
++				 "All connectors must have at least one possible encoder\n");
 +			return false;
 +		}
 +	}
@@ -512,362 +310,200 @@ index d195db770fae..458385413648 100644
 +	return true;
 +}
 +
- static bool valid_crtc_number(const struct vkms_config *config)
- {
- 	struct drm_device *dev = config->dev ? &config->dev->drm : NULL;
-@@ -160,15 +194,22 @@ static bool valid_crtc_number(const struct vkms_config *config)
- 
  bool vkms_config_is_valid(const struct vkms_config *config)
  {
-+	struct vkms_config_crtc *crtc_cfg;
-+
- 	if (!valid_plane_number(config))
+ 	struct vkms_config_crtc *crtc_cfg;
+@@ -306,6 +325,9 @@ bool vkms_config_is_valid(const struct vkms_config *config)
+ 	if (!valid_encoder_possible_crtcs(config))
  		return false;
  
- 	if (!valid_crtc_number(config))
- 		return false;
- 
--	if (!valid_plane_type(config))
-+	if (!valid_plane_possible_crtcs(config))
- 		return false;
- 
-+	vkms_config_for_each_crtc(config, crtc_cfg) {
-+		if (!valid_planes_for_crtc(config, crtc_cfg))
-+			return false;
-+	}
++	if (!valid_connector_possible_encoders(config))
++		return false;
 +
  	return true;
  }
  EXPORT_SYMBOL_IF_KUNIT(vkms_config_is_valid);
-@@ -220,6 +261,7 @@ struct vkms_config_plane *vkms_config_create_plane(struct vkms_config *config)
- 
- 	plane_cfg->config = config;
- 	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_OVERLAY);
-+	xa_init_flags(&plane_cfg->possible_crtcs, XA_FLAGS_ALLOC);
- 
- 	list_add_tail(&plane_cfg->link, &config->planes);
- 
-@@ -229,11 +271,45 @@ EXPORT_SYMBOL_IF_KUNIT(vkms_config_create_plane);
- 
- void vkms_config_destroy_plane(struct vkms_config_plane *plane_cfg)
+@@ -513,6 +535,11 @@ EXPORT_SYMBOL_IF_KUNIT(vkms_config_create_encoder);
+ void vkms_config_destroy_encoder(struct vkms_config *config,
+ 				 struct vkms_config_encoder *encoder_cfg)
  {
-+	xa_destroy(&plane_cfg->possible_crtcs);
- 	list_del(&plane_cfg->link);
- 	kfree(plane_cfg);
- }
- EXPORT_SYMBOL_IF_KUNIT(vkms_config_destroy_plane);
- 
-+int __must_check vkms_config_plane_attach_crtc(struct vkms_config_plane *plane_cfg,
-+					       struct vkms_config_crtc *crtc_cfg)
-+{
-+	struct vkms_config_crtc *possible_crtc;
-+	unsigned long idx = 0;
-+	u32 crtc_idx = 0;
++	struct vkms_config_connector *connector_cfg;
 +
-+	if (plane_cfg->config != crtc_cfg->config)
++	vkms_config_for_each_connector(config, connector_cfg)
++		vkms_config_connector_detach_encoder(connector_cfg, encoder_cfg);
++
+ 	xa_destroy(&encoder_cfg->possible_crtcs);
+ 	list_del(&encoder_cfg->link);
+ 	kfree(encoder_cfg);
+@@ -561,6 +588,7 @@ struct vkms_config_connector *vkms_config_create_connector(struct vkms_config *c
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	connector_cfg->config = config;
++	xa_init_flags(&connector_cfg->possible_encoders, XA_FLAGS_ALLOC);
+ 
+ 	list_add_tail(&connector_cfg->link, &config->connectors);
+ 
+@@ -570,7 +598,43 @@ EXPORT_SYMBOL_IF_KUNIT(vkms_config_create_connector);
+ 
+ void vkms_config_destroy_connector(struct vkms_config_connector *connector_cfg)
+ {
++	xa_destroy(&connector_cfg->possible_encoders);
+ 	list_del(&connector_cfg->link);
+ 	kfree(connector_cfg);
+ }
+ EXPORT_SYMBOL_IF_KUNIT(vkms_config_destroy_connector);
++
++int __must_check vkms_config_connector_attach_encoder(struct vkms_config_connector *connector_cfg,
++						      struct vkms_config_encoder *encoder_cfg)
++{
++	struct vkms_config_encoder *possible_encoder;
++	unsigned long idx = 0;
++	u32 encoder_idx = 0;
++
++	if (connector_cfg->config != encoder_cfg->config)
 +		return -EINVAL;
 +
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg, idx, possible_crtc) {
-+		if (possible_crtc == crtc_cfg)
++	vkms_config_connector_for_each_possible_encoder(connector_cfg, idx,
++							possible_encoder) {
++		if (possible_encoder == encoder_cfg)
 +			return -EEXIST;
 +	}
 +
-+	return xa_alloc(&plane_cfg->possible_crtcs, &crtc_idx, crtc_cfg,
-+			xa_limit_32b, GFP_KERNEL);
++	return xa_alloc(&connector_cfg->possible_encoders, &encoder_idx,
++			encoder_cfg, xa_limit_32b, GFP_KERNEL);
 +}
-+EXPORT_SYMBOL_IF_KUNIT(vkms_config_plane_attach_crtc);
++EXPORT_SYMBOL_IF_KUNIT(vkms_config_connector_attach_encoder);
 +
-+void vkms_config_plane_detach_crtc(struct vkms_config_plane *plane_cfg,
-+				   struct vkms_config_crtc *crtc_cfg)
++void vkms_config_connector_detach_encoder(struct vkms_config_connector *connector_cfg,
++					  struct vkms_config_encoder *encoder_cfg)
 +{
-+	struct vkms_config_crtc *possible_crtc;
++	struct vkms_config_encoder *possible_encoder;
 +	unsigned long idx = 0;
 +
-+	vkms_config_plane_for_each_possible_crtc(plane_cfg, idx, possible_crtc) {
-+		if (possible_crtc == crtc_cfg)
-+			xa_erase(&plane_cfg->possible_crtcs, idx);
++	vkms_config_connector_for_each_possible_encoder(connector_cfg, idx,
++							possible_encoder) {
++		if (possible_encoder == encoder_cfg)
++			xa_erase(&connector_cfg->possible_encoders, idx);
 +	}
 +}
-+EXPORT_SYMBOL_IF_KUNIT(vkms_config_plane_detach_crtc);
-+
- struct vkms_config_crtc *vkms_config_create_crtc(struct vkms_config *config)
- {
- 	struct vkms_config_crtc *crtc_cfg;
-@@ -254,7 +330,57 @@ EXPORT_SYMBOL_IF_KUNIT(vkms_config_create_crtc);
- void vkms_config_destroy_crtc(struct vkms_config *config,
- 			      struct vkms_config_crtc *crtc_cfg)
- {
-+	struct vkms_config_plane *plane_cfg;
-+
-+	vkms_config_for_each_plane(config, plane_cfg)
-+		vkms_config_plane_detach_crtc(plane_cfg, crtc_cfg);
-+
- 	list_del(&crtc_cfg->link);
- 	kfree(crtc_cfg);
- }
- EXPORT_SYMBOL_IF_KUNIT(vkms_config_destroy_crtc);
-+
-+/**
-+ * vkms_config_crtc_get_plane() - Return the first attached plane to a CRTC with
-+ * the specific type
-+ * @config: Configuration containing the CRTC and the plane
-+ * @crtc_cfg: Only find planes attached to this CRTC
-+ * @type: Plane type to search
-+ *
-+ * Returns:
-+ * The first plane found attached to @crtc_cfg with the type @type.
-+ */
-+static struct vkms_config_plane *vkms_config_crtc_get_plane(const struct vkms_config *config,
-+							    struct vkms_config_crtc *crtc_cfg,
-+							    enum drm_plane_type type)
-+{
-+	struct vkms_config_plane *plane_cfg;
-+	struct vkms_config_crtc *possible_crtc;
-+	enum drm_plane_type current_type;
-+	unsigned long idx = 0;
-+
-+	vkms_config_for_each_plane(config, plane_cfg) {
-+		current_type = vkms_config_plane_get_type(plane_cfg);
-+
-+		vkms_config_plane_for_each_possible_crtc(plane_cfg, idx, possible_crtc) {
-+			if (possible_crtc == crtc_cfg && current_type == type)
-+				return plane_cfg;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+struct vkms_config_plane *vkms_config_crtc_primary_plane(const struct vkms_config *config,
-+							 struct vkms_config_crtc *crtc_cfg)
-+{
-+	return vkms_config_crtc_get_plane(config, crtc_cfg, DRM_PLANE_TYPE_PRIMARY);
-+}
-+EXPORT_SYMBOL_IF_KUNIT(vkms_config_crtc_primary_plane);
-+
-+struct vkms_config_plane *vkms_config_crtc_cursor_plane(const struct vkms_config *config,
-+							struct vkms_config_crtc *crtc_cfg)
-+{
-+	return vkms_config_crtc_get_plane(config, crtc_cfg, DRM_PLANE_TYPE_CURSOR);
-+}
-+EXPORT_SYMBOL_IF_KUNIT(vkms_config_crtc_cursor_plane);
++EXPORT_SYMBOL_IF_KUNIT(vkms_config_connector_detach_encoder);
 diff --git a/drivers/gpu/drm/vkms/vkms_config.h b/drivers/gpu/drm/vkms/vkms_config.h
-index 978418db84b9..ad303b34ee03 100644
+index 73562c894102..0118e3f99706 100644
 --- a/drivers/gpu/drm/vkms/vkms_config.h
 +++ b/drivers/gpu/drm/vkms/vkms_config.h
-@@ -5,6 +5,7 @@
- 
- #include <linux/list.h>
- #include <linux/types.h>
-+#include <linux/xarray.h>
- 
- #include "vkms_drv.h"
- 
-@@ -12,14 +13,12 @@
-  * struct vkms_config - General configuration for VKMS driver
+@@ -99,6 +99,7 @@ struct vkms_config_encoder {
   *
-  * @dev_name: Name of the device
-- * @writeback: If true, a writeback buffer can be attached to the CRTC
-  * @planes: List of planes configured for the device
-  * @crtcs: List of CRTCs configured for the device
-  * @dev: Used to store the current VKMS device. Only set when the device is instantiated.
-  */
- struct vkms_config {
- 	const char *dev_name;
--	bool writeback;
- 	struct list_head planes;
- 	struct list_head crtcs;
- 	struct vkms_device *dev;
-@@ -32,6 +31,7 @@ struct vkms_config {
-  * @config: The vkms_config this plane belongs to
-  * @type: Type of the plane. The creator of configuration needs to ensures that
-  *        at least one primary plane is present.
-+ * @possible_crtcs: Array of CRTCs that can be used with this plane
-  * @plane: Internal usage. This pointer should never be considered as valid.
-  *         It can be used to store a temporary reference to a VKMS plane during
-  *         device creation. This pointer is not managed by the configuration and
-@@ -42,6 +42,7 @@ struct vkms_config_plane {
+  * @link: Link to the others connector in vkms_config
+  * @config: The vkms_config this connector belongs to
++ * @possible_encoders: Array of encoders that can be used with this connector
+  * @connector: Internal usage. This pointer should never be considered as valid.
+  *             It can be used to store a temporary reference to a VKMS connector
+  *             during device creation. This pointer is not managed by the
+@@ -108,6 +109,8 @@ struct vkms_config_connector {
+ 	struct list_head link;
  	struct vkms_config *config;
  
- 	enum drm_plane_type type;
-+	struct xarray possible_crtcs;
- 
++	struct xarray possible_encoders;
++
  	/* Internal usage */
- 	struct vkms_plane *plane;
-@@ -84,6 +85,16 @@ struct vkms_config_crtc {
- #define vkms_config_for_each_crtc(config, crtc_cfg) \
- 	list_for_each_entry((crtc_cfg), &(config)->crtcs, link)
+ 	struct vkms_connector *connector;
+ };
+@@ -164,6 +167,16 @@ struct vkms_config_connector {
+ #define vkms_config_encoder_for_each_possible_crtc(encoder_cfg, idx, possible_crtc) \
+ 	xa_for_each(&(encoder_cfg)->possible_crtcs, idx, (possible_crtc))
  
 +/**
-+ * vkms_config_plane_for_each_possible_crtc - Iterate over the vkms_config_plane
-+ * possible CRTCs
-+ * @plane_cfg: &struct vkms_config_plane pointer
++ * vkms_config_connector_for_each_possible_encoder - Iterate over the
++ * vkms_config_connector possible encoders
++ * @connector_cfg: &struct vkms_config_connector pointer
 + * @idx: Index of the cursor
-+ * @possible_crtc: &struct vkms_config_crtc pointer used as cursor
++ * @possible_encoder: &struct vkms_config_encoder pointer used as cursor
 + */
-+#define vkms_config_plane_for_each_possible_crtc(plane_cfg, idx, possible_crtc) \
-+	xa_for_each(&(plane_cfg)->possible_crtcs, idx, (possible_crtc))
++#define vkms_config_connector_for_each_possible_encoder(connector_cfg, idx, possible_encoder) \
++	xa_for_each(&(connector_cfg)->possible_encoders, idx, (possible_encoder))
 +
  /**
   * vkms_config_create() - Create a new VKMS configuration
   * @dev_name: Name of the device
-@@ -191,6 +202,22 @@ vkms_config_plane_set_type(struct vkms_config_plane *plane_cfg,
- 	plane_cfg->type = type;
- }
+@@ -405,4 +418,20 @@ struct vkms_config_connector *vkms_config_create_connector(struct vkms_config *c
+  */
+ void vkms_config_destroy_connector(struct vkms_config_connector *connector_cfg);
  
 +/**
-+ * vkms_config_plane_attach_crtc - Attach a plane to a CRTC
-+ * @plane_cfg: Plane to attach
-+ * @crtc_cfg: CRTC to attach @plane_cfg to
++ * vkms_config_connector_attach_encoder - Attach a connector to an encoder
++ * @connector_cfg: Connector to attach
++ * @encoder_cfg: Encoder to attach @connector_cfg to
 + */
-+int __must_check vkms_config_plane_attach_crtc(struct vkms_config_plane *plane_cfg,
-+					       struct vkms_config_crtc *crtc_cfg);
++int __must_check vkms_config_connector_attach_encoder(struct vkms_config_connector *connector_cfg,
++						      struct vkms_config_encoder *encoder_cfg);
 +
 +/**
-+ * vkms_config_plane_detach_crtc - Detach a plane from a CRTC
-+ * @plane_cfg: Plane to detach
-+ * @crtc_cfg: CRTC to detach @plane_cfg from
++ * vkms_config_connector_detach_encoder - Detach a connector from an encoder
++ * @connector_cfg: Connector to detach
++ * @encoder_cfg: Encoder to detach @connector_cfg from
 + */
-+void vkms_config_plane_detach_crtc(struct vkms_config_plane *plane_cfg,
-+				   struct vkms_config_crtc *crtc_cfg);
-+
- /**
-  * vkms_config_create_crtc() - Add a new CRTC configuration
-  * @config: Configuration to add the CRTC to
-@@ -231,4 +258,32 @@ vkms_config_crtc_set_writeback(struct vkms_config_crtc *crtc_cfg,
- 	crtc_cfg->writeback = writeback;
- }
- 
-+/**
-+ * vkms_config_crtc_primary_plane() - Return the primary plane for a CRTC
-+ * @config: Configuration containing the CRTC
-+ * @crtc_config: Target CRTC
-+ *
-+ * Note that, if multiple primary planes are found, the first one is returned.
-+ * In this case, the configuration will be invalid. See vkms_config_is_valid().
-+ *
-+ * Returns:
-+ * The primary plane or NULL if none is assigned yet.
-+ */
-+struct vkms_config_plane *vkms_config_crtc_primary_plane(const struct vkms_config *config,
-+							 struct vkms_config_crtc *crtc_cfg);
-+
-+/**
-+ * vkms_config_crtc_cursor_plane() - Return the cursor plane for a CRTC
-+ * @config: Configuration containing the CRTC
-+ * @crtc_config: Target CRTC
-+ *
-+ * Note that, if multiple cursor planes are found, the first one is returned.
-+ * In this case, the configuration will be invalid. See vkms_config_is_valid().
-+ *
-+ * Returns:
-+ * The cursor plane or NULL if none is assigned yet.
-+ */
-+struct vkms_config_plane *vkms_config_crtc_cursor_plane(const struct vkms_config *config,
-+							struct vkms_config_crtc *crtc_cfg);
++void vkms_config_connector_detach_encoder(struct vkms_config_connector *connector_cfg,
++					  struct vkms_config_encoder *encoder_cfg);
 +
  #endif /* _VKMS_CONFIG_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index ba977ef09b2b..a24d1655f7b8 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -181,7 +181,8 @@ static int vkms_create(struct vkms_config *config)
- 		goto out_devres;
- 	}
- 
--	ret = drm_vblank_init(&vkms_device->drm, 1);
-+	ret = drm_vblank_init(&vkms_device->drm,
-+			      vkms_config_get_num_crtcs(config));
- 	if (ret) {
- 		DRM_ERROR("Failed to vblank\n");
- 		goto out_devres;
 diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index 08ea691db299..f63bc8e3014b 100644
+index 8920d6b5d105..8d7ca0cdd79f 100644
 --- a/drivers/gpu/drm/vkms/vkms_output.c
 +++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -10,9 +10,8 @@ int vkms_output_init(struct vkms_device *vkmsdev)
+@@ -8,10 +8,10 @@
+ int vkms_output_init(struct vkms_device *vkmsdev)
+ {
  	struct drm_device *dev = &vkmsdev->drm;
- 	struct vkms_connector *connector;
- 	struct drm_encoder *encoder;
--	struct vkms_output *output;
--	struct vkms_plane *primary = NULL, *cursor = NULL;
+-	struct vkms_connector *connector;
  	struct vkms_config_plane *plane_cfg;
-+	struct vkms_config_crtc *crtc_cfg;
+ 	struct vkms_config_crtc *crtc_cfg;
+ 	struct vkms_config_encoder *encoder_cfg;
++	struct vkms_config_connector *connector_cfg;
  	int ret;
  	int writeback;
  
-@@ -29,18 +28,37 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 			DRM_DEV_ERROR(dev->dev, "Failed to init vkms plane\n");
- 			return PTR_ERR(plane_cfg->plane);
+@@ -83,22 +83,29 @@ int vkms_output_init(struct vkms_device *vkmsdev)
  		}
-+	}
-+
-+	vkms_config_for_each_crtc(vkmsdev->config, crtc_cfg) {
-+		struct vkms_config_plane *primary, *cursor;
-+
-+		primary = vkms_config_crtc_primary_plane(vkmsdev->config, crtc_cfg);
-+		cursor = vkms_config_crtc_cursor_plane(vkmsdev->config, crtc_cfg);
- 
--		if (type == DRM_PLANE_TYPE_PRIMARY)
--			primary = plane_cfg->plane;
--		else if (type == DRM_PLANE_TYPE_CURSOR)
--			cursor = plane_cfg->plane;
-+		crtc_cfg->crtc = vkms_crtc_init(dev, &primary->plane->base,
-+						cursor ? &cursor->plane->base : NULL);
-+		if (IS_ERR(crtc_cfg->crtc)) {
-+			DRM_ERROR("Failed to allocate CRTC\n");
-+			return PTR_ERR(crtc_cfg->crtc);
-+		}
-+
-+		/* Initialize the writeback component */
-+		if (vkms_config_crtc_get_writeback(crtc_cfg)) {
-+			writeback = vkms_enable_writeback_connector(vkmsdev, crtc_cfg->crtc);
-+			if (writeback)
-+				DRM_ERROR("Failed to init writeback connector\n");
-+		}
  	}
  
--	output = vkms_crtc_init(dev, &primary->base,
--				cursor ? &cursor->base : NULL);
--	if (IS_ERR(output)) {
--		DRM_ERROR("Failed to allocate CRTC\n");
--		return PTR_ERR(output);
-+	vkms_config_for_each_plane(vkmsdev->config, plane_cfg) {
-+		struct vkms_config_crtc *possible_crtc;
-+		unsigned long idx = 0;
-+
-+		vkms_config_plane_for_each_possible_crtc(plane_cfg, idx, possible_crtc) {
-+			plane_cfg->plane->base.possible_crtcs |=
-+				drm_crtc_mask(&possible_crtc->crtc->crtc);
-+		}
- 	}
- 
- 	connector = vkms_connector_init(vkmsdev);
-@@ -60,7 +78,9 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 		DRM_ERROR("Failed to init encoder\n");
- 		return ret;
- 	}
--	encoder->possible_crtcs = drm_crtc_mask(&output->crtc);
-+
-+	vkms_config_for_each_crtc(vkmsdev->config, crtc_cfg)
-+		encoder->possible_crtcs = drm_crtc_mask(&crtc_cfg->crtc->crtc);
- 
- 	/* Attach the encoder and the connector */
- 	ret = drm_connector_attach_encoder(&connector->base, encoder);
-@@ -69,13 +89,6 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 		return ret;
- 	}
- 
--	/* Initialize the writeback component */
--	if (vkmsdev->config->writeback) {
--		writeback = vkms_enable_writeback_connector(vkmsdev, output);
--		if (writeback)
--			DRM_ERROR("Failed to init writeback connector\n");
+-	connector = vkms_connector_init(vkmsdev);
+-	if (IS_ERR(connector)) {
+-		DRM_ERROR("Failed to init connector\n");
+-		return PTR_ERR(connector);
 -	}
--
++	vkms_config_for_each_connector(vkmsdev->config, connector_cfg) {
++		struct vkms_config_encoder *possible_encoder;
++		unsigned long idx = 0;
+ 
+-	/* Attach the encoder and the connector */
+-	vkms_config_for_each_encoder(vkmsdev->config, encoder_cfg) {
+-		ret = drm_connector_attach_encoder(&connector->base, encoder_cfg->encoder);
+-		if (ret) {
+-			DRM_ERROR("Failed to attach connector to encoder\n");
+-			return ret;
++		connector_cfg->connector = vkms_connector_init(vkmsdev);
++		if (IS_ERR(connector_cfg->connector)) {
++			DRM_ERROR("Failed to init connector\n");
++			return PTR_ERR(connector_cfg->connector);
++		}
++
++		vkms_config_connector_for_each_possible_encoder(connector_cfg,
++								idx,
++								possible_encoder) {
++			ret = drm_connector_attach_encoder(&connector_cfg->connector->base,
++							   possible_encoder->encoder);
++			if (ret) {
++				DRM_ERROR("Failed to attach connector to encoder\n");
++				return ret;
++			}
+ 		}
+ 	}
+ 
  	drm_mode_config_reset(dev);
  
- 	return ret;
+-	return ret;
++	return 0;
+ }
 -- 
 2.48.1
 
