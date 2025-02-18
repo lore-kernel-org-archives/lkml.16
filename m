@@ -1,36 +1,62 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DC139475;
-	Tue, 18 Feb 2025 03:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125E818C31
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 03:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739847718; cv=none; b=eNn+FTKUm5/tR6WtZGdNbTnH1RH6Xl+fqba6QZiezZ82lQ6kzCMCZjsnc7nJL+T02k0FgCvy53OG0GyTi5mNVagtAma6RFh367/eudHA0FJ393osHs8u27gzh34+rrBSi1DRTeIJlkLPhV5291+tNYI+xpReLKvcpF6vEU6NHK8=
+	t=1739848056; cv=none; b=D5NlowsMvxTQ6MvF5+O+UcdHWXktHHLlsiWdKbyKo3IuBjZlOGvdYjfg/ocyjCmRhI/QXsgq188rkhP8sXAfeQ/qIiyB5yp9sMEDlwUI5Gc6RcLBHdxKOCMfvkauUYjPWbk5UQOti14ttXXO5xc93jXoV11Jgsahveq7QE9w2XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739847718; c=relaxed/simple;
-	bh=uKs5IpAUzXE3MGe8SGxKsjxPHf9hQPm4P80golM4VoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jHYAR1cSFbEZ8EPgI4UcZf7MthOW/tEdkaIseqf9v2VEloPurePZkNd3xHRvZMsPDInCyUwa1ODmo61G/diu9inF4D6DZFDONKa8aI2/pUo/SJJgnqPLIBnXIHeJEq5ExiMn2kN+wjIE59dA7VpQNIWuHp+esih690lVVm8qWJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAnLAwW+LNnd8lzAw--.13203S2;
-	Tue, 18 Feb 2025 11:01:42 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBHS4cT+LNnTbQqAA--.16562S2;
-	Tue, 18 Feb 2025 11:01:39 +0800 (CST)
-Date: Tue, 18 Feb 2025 11:01:23 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Fan Ni <nifan.cxl@gmail.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	chenbaozi@phytium.com.cn
-Subject: Re: [PATCH v3 1/1] cxl/pmem: debug invalid serial number data
-Message-ID: <Z7P4A+3hfRdNnMM3@phytium.com.cn>
-References: <20250218014746.166565-1-wangyuquan1236@phytium.com.cn>
- <20250218014746.166565-2-wangyuquan1236@phytium.com.cn>
- <67b3ee67.a70a0220.21e7fd.0285@mx.google.com>
+	s=arc-20240116; t=1739848056; c=relaxed/simple;
+	bh=LJCRGsPscyCMWgefTOMlF4XecTltnIfoamUgwmuNWoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KNEeRRYkA7MrB1eNVShSVgfmnmb/B02VxzJG3wjG/BI8HN96FNA+fSEoTr/oJ/Gi6cidGy+YL1h+ffTxTts0zKE19L6o3wXy+bMyfEhgZKRIFAPvSZu8kRmZppy5pULKwAblZucMxR8it45wf4N/HI9Ql/VpqdAw+DK2equ1Rh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O8Bo9QiY; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O8Bo9QiY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739848055; x=1771384055;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=LJCRGsPscyCMWgefTOMlF4XecTltnIfoamUgwmuNWoQ=;
+  b=O8Bo9QiY1hAhWIy6TGb91N8XUmfXZ6Z+Br81RZ4RcBSpZu0ldr7nk26T
+   5l4lQVPbR7XJI0324IV9LkmED6BjxZQNs499SKEEeHMRbQxDCBatF8mj/
+   FGU0ipLPV98H1PknTR+roFJkOcAB2yCjKi8qipKoUtMJshi/48mGEbZf0
+   UVvivvyiKIWcrMV4fSQavaTQT7MBW7Tn3iLEzzlmzvw+GLM6qXQMaO2x7
+   poNA4QZhKNOXX74t8pL6q+GIQKO0+AQmHY5m/qIFilGDA3DLsHG9Sl6mG
+   PG1FZFZJ+wHZOnkM8Uuw0Ef0O+69qgiK94Er78XJGxGS7ivTKOXI+rzZh
+   Q==;
+X-CSE-ConnectionGUID: pVWgzcTMTYOTM442TQwJpQ==
+X-CSE-MsgGUID: hcSUXYSsSCadb44VDP0kqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44182362"
+X-IronPort-AV: E=Sophos;i="6.13,294,1732608000"; 
+   d="scan'208";a="44182362"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 19:07:35 -0800
+X-CSE-ConnectionGUID: ZE877J0WRiaNmAglAEfRbQ==
+X-CSE-MsgGUID: aUXGUHQRRZeKmyPbe0Jlfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,294,1732608000"; 
+   d="scan'208";a="114249776"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 17 Feb 2025 19:07:32 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tkDx5-00006t-1r;
+	Tue, 18 Feb 2025 03:07:19 +0000
+Date: Tue, 18 Feb 2025 11:06:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jinyang He <hejinyang@loongson.cn>,
+	Youling Tang <tangyouling@loongson.cn>
+Subject: drivers/net/wireless/ath/ath10k/mac.o: warning: objtool:
+ ath10k_monitor_start+0x240: stack state mismatch: reg1[26]=-1+0
+ reg2[26]=-2-40
+Message-ID: <202502181126.ot62N8wN-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,82 +65,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67b3ee67.a70a0220.21e7fd.0285@mx.google.com>
-X-CM-TRANSID:AQAAfwBHS4cT+LNnTbQqAA--.16562S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAFAWezlaEBBgAAsi
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WrW3ZFW5Kr15ZF13uF1DGFg_yoW8tw1Dpr
-	W8ta4YkFW5JF47Zw4Iva40qF1Fgw1vgrW8Gr90qw15urnYyFnaqF4xta1Yya4fCa95tw4S
-	v34jvayUuF47X3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
 
-On Mon, Feb 17, 2025 at 06:20:18PM -0800, Fan Ni wrote:
-> On Tue, Feb 18, 2025 at 09:47:46AM +0800, Yuquan Wang wrote:
-> > In a nvdimm interleave-set each device with an invalid or zero
-> > serial number may cause pmem region initialization to fail, but in
-> > cxl case such device could still set cookies of nd_interleave_set
-> > and create a nvdimm pmem region.
-> > 
-> > This adds the validation of serial number in cxl pmem region creation.
-> > The event of no serial number would cause to fail to set the cookie
-> > and pmem region.
-> > 
-> > For cxl-test to work properly, always +1 on mock device's serial
-> > number.
-> > 
-> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> > ---
-> >  drivers/cxl/pmem.c           | 8 ++++++++
-> >  tools/testing/cxl/test/mem.c | 2 +-
-> >  2 files changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> > index f9c95996e937..73787afe1b9d 100644
-> > --- a/drivers/cxl/pmem.c
-> > +++ b/drivers/cxl/pmem.c
-> > @@ -383,6 +383,14 @@ static int cxl_pmem_region_probe(struct device *dev)
-> >  			.position = i,
-> >  		};
-> >  		info[i].offset = m->start;
-> > +
-> > +		if (cxlds->serial == 0) {
-> > +			/* include missing alongside invalid in this error message. */
-> > +			dev_err(dev, "%s: invalid or missing serial number\n",
-> > +				dev_name(&cxlmd->dev));
-> > +			rc = -ENXIO;
-> > +			goto out_nvd;
-> > +		}
-> 
-> Should we do the check earlier in the code? 
-> For example, right below if (!nvdimm) {}
-> 
-> Fan
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   2408a807bfc3f738850ef5ad5e3fd59d66168996
+commit: cb8a2ef0848ca80d67d6d56e2df757cfdf6b3355 LoongArch: Add ORC stack unwinder support
+date:   11 months ago
+config: loongarch-randconfig-r051-20250218 (https://download.01.org/0day-ci/archive/20250218/202502181126.ot62N8wN-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250218/202502181126.ot62N8wN-lkp@intel.com/reproduce)
 
-I agree. This would removes unnecessary struct value assignments
-and make the code easier to read. Jonathan, what's your opinion?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502181126.ot62N8wN-lkp@intel.com/
 
-Yuquan
+All warnings (new ones prefixed by >>):
 
-> 
-> >  		info[i].serial = cxlds->serial;
-> >  	}
-> >  	ndr_desc.num_mappings = cxlr_pmem->nr_mappings;
-> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> > index 8d731bd63988..9e098cf06603 100644
-> > --- a/tools/testing/cxl/test/mem.c
-> > +++ b/tools/testing/cxl/test/mem.c
-> > @@ -1533,7 +1533,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
-> >  	mds->event.buf = (struct cxl_get_event_payload *) mdata->event_buf;
-> >  	INIT_DELAYED_WORK(&mds->security.poll_dwork, cxl_mockmem_sanitize_work);
-> >  
-> > -	cxlds->serial = pdev->id;
-> > +	cxlds->serial = pdev->id + 1;
-> >  	if (is_rcd(pdev))
-> >  		cxlds->rcd = true;
-> >  
-> > -- 
-> > 2.34.1
-> > 
+>> drivers/net/wireless/ath/ath10k/mac.o: warning: objtool: ath10k_monitor_start+0x240: stack state mismatch: reg1[26]=-1+0 reg2[26]=-2-40
+>> drivers/net/wireless/ath/ath10k/mac.o: warning: objtool: ath10k_peer_assoc_h_ht+0x438: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-16
+>> drivers/net/wireless/ath/ath10k/mac.o: warning: objtool: ath10k_peer_assoc_h_vht+0x3e8: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-16
+>> drivers/net/wireless/ath/ath10k/mac.o: warning: objtool: ath10k_control_beaconing+0x2a8: stack state mismatch: reg1[27]=-1+0 reg2[27]=-2-48
+>> drivers/net/wireless/ath/ath10k/mac.o: warning: objtool: ath10k_mac_handle_tx_pause_iter+0xec: stack state mismatch: reg1[25]=-1+0 reg2[25]=-2-32
+--
+>> drivers/net/wireless/ath/ath10k/core.o: warning: objtool: ath10k_core_check_bdfext+0x230: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+>> drivers/net/wireless/ath/ath10k/core.o: warning: objtool: ath10k_core_copy_target_iram+0x2d4: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+>> drivers/net/wireless/ath/ath10k/core.o: warning: objtool: ath10k_download_cal_data+0x3a0: stack state mismatch: reg1[25]=-1+0 reg2[25]=-2-32
+--
+>> drivers/net/wireless/ath/ath10k/htt_rx.o: warning: objtool: ath10k_update_per_peer_tx_stats+0x590: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-16
+>> drivers/net/wireless/ath/ath10k/htt_rx.o: warning: objtool: ath10k_htt_rx_alloc+0x2e0: stack state mismatch: reg1[25]=-1+0 reg2[25]=-2-32
+--
+>> drivers/net/wireless/ath/ath10k/htt_tx.o: warning: objtool: __ath10k_htt_tx_txq_recalc.isra.0+0x354: stack state mismatch: reg1[26]=-1+0 reg2[26]=-2-40
+--
+>> drivers/net/wireless/ath/ath10k/wmi.o: warning: objtool: ath10k_wmi_handle_tdls_peer_event+0x24c: stack state mismatch: reg1[25]=-1+0 reg2[25]=-2-32
+>> drivers/net/wireless/ath/ath10k/wmi.o: warning: objtool: ath10k_wmi_event_mgmt_tx_bundle_compl+0x138: stack state mismatch: reg1[26]=-1+0 reg2[26]=-2-40
+>> drivers/net/wireless/ath/ath10k/wmi.o: warning: objtool: ath10k_wmi_event_pdev_tpc_config+0x338: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+>> drivers/net/wireless/ath/ath10k/wmi.o: warning: objtool: ath10k_wmi_event_tpc_final_table+0x32c: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+--
+>> drivers/net/wireless/ath/ath10k/wmi-tlv.o: warning: objtool: ath10k_wmi_tlv_op_rx+0xe98: stack state mismatch: reg1[26]=-1+0 reg2[26]=-2-40
+--
+>> drivers/net/wireless/ath/ath10k/ahb.o: warning: objtool: ath10k_ahb_halt_chip+0x43c: stack state mismatch: reg1[25]=-1+0 reg2[25]=-2-32
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
