@@ -1,121 +1,121 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED9F26B0B4
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE6226A1C7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 14:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739888798; cv=none; b=j+X1IOlnTNT+7od/Ouj/oqLK1pgSEA37BjEUYc+0uqHmgmmiSOKNFKCe3bU/6d87BEQiE3GNpp7Xnd0ymEAyV4IXk+0ZbQs+BUDycN5Lc7snTQHpMeG4MEnsz8+lmyAu5dSq5yIogKnxM+mJdKqFl25muQgyiNzqRVg5W8/dZQ0=
+	t=1739888820; cv=none; b=rqjSpLm3FM9DGTgOyS2c2MCQvw48xq67zIM320Ng0Xh0uhZNPabCpfNfJmo7Bq6cebfVOPAA41Jb3CR4fZhBwn5a3XW9g6+74SLIO1qpAgd224wHxlOoRleXZ8ozwJp06S8pTi44p2LFuc+PVfbSHuGpepAi1FcNfDWJ0iS7H50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739888798; c=relaxed/simple;
-	bh=sS36fJX8Vbth94UBPCAo0LFNfvI4rCKWV8qYzF0ZOPE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ehNI1L93L5Q28ylIeGDNrydiOGwjz3ymg9HQbFzIeSndrBcaMDSUl6TwN7KK9F4y1e8CfYfvV39lrS6xs0u5sCk7YLM4Rz1yiLBxW8iXpbw8oiUS/rN1yo3WeJX7SRQW8e+Pr9pnCmH+o3emF7gDxl6o4Mg0vXspR9SqrmY5J4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=adisqPGE; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1739888820; c=relaxed/simple;
+	bh=fAs3dRD0u6BFc+urwpqRLW7N8APiGaj+bD3c4M7v0yQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sI6THg3MFycEg1feVZup/hLe4tXQQ0eObp3iBF8E2IBMAZnARPjiK5C/h1q3Fy+Dhlqcf9tnKEXVnFxEy/WPDdm+eb/zYm6SRCIpiD+2eJ1eO4O1ZZlJ63t3zUuv81jEmo00sxm/DVAaLAqCnjlnMntswM5wuD7f9L8sza6vACY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHSy1I3B; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="adisqPGE"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-471fe5e0a80so8586381cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 06:26:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1739888795; x=1740493595; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8/EmbDSl+l5HXRvJiyRxM4EbJGeupWnXKptfCU5Nq4k=;
-        b=adisqPGEX6vQCq4dkLfAUSAd24zrAldAXaDhjB+5olCkvWnEkLtUPvSz1a4NR+N+sx
-         4qWZVc+KLFVczKkU6lNn6ojfLCEBm6oQ4X8blfIgxaN+Rbpwr2hajiKUMFfgmjCSP9gM
-         f8Ckzqf0sDHuEXbJtug+XhHjdITP3UwR+M0nM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739888795; x=1740493595;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8/EmbDSl+l5HXRvJiyRxM4EbJGeupWnXKptfCU5Nq4k=;
-        b=kP7v+WjM/hj81bV4BwU7YqGlrVjggTNOCeGQqiI4e5CFoMjGxQB+beUQMkmxV3TXYf
-         EKxHkQ4izRF05yXNpLW0NmPPnYhG9vjzhqbREwzXw2+READd2NCs6rbI3bTPoNAQvXcI
-         0bmI6lQu+1Z/qHIaW/p5tYPHWRKKuxblUB6Zrb8Tlgr3pqD4wtmSsGBd5OiAJgDj/sbc
-         UzJDhhdNODRDsrBGWwS/nfl63tWYXUAo/N6gDUNIp1C8Jy9VLM6vmg6VK7/J7sYRRAzT
-         jS3wUfdBP/9N3xfcLrmHV0iu2FawkpWjfzBNyaglAwMA4VPsG+mR4g55vKPe79yhZyFw
-         T7Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeIS3BcMFijENT+S80M7bAmxjATSGJtCrUt0QgFQn7OA1HkK0OGB6kjotS62dbQBSDH1Kv8Otk1F8x984=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPBE8IIaCrPPvrWGW3NXicWovvSaPHRdu/IyeXHHg1FwTANHlz
-	xYrp/ACkraePveFl3Cn7F/zr4HFl3clw8kjnIPGW7jdoweaK0Vg7Jykp4QS+dmVaFSMB34eRKra
-	iNSkiiVJLPRBzFB44xSEhetEOhOI/0R4+Jhc8Sw==
-X-Gm-Gg: ASbGncu5Uoaoq6GKbfOMSr8LYk4hQjrvX2v0S+Pu2Mbs+lYCmXGYJXf9rY3ff8QauOz
-	LX6QISVNMJfM6AZvMhd0sef4do98PjQy4+sCKGnz/BibvKNnA38zpqqNeQDnb4s4fgN2kKKE=
-X-Google-Smtp-Source: AGHT+IGET3EbYLamjGGt8dSMpL8Nkri+TYxZim1J3IHFlr3O5sraAFYYOQ2HRKm+Tx9aTfNhy4qqarSD/WPsGZTxgfQ=
-X-Received: by 2002:a05:622a:15c6:b0:471:fc9e:8de8 with SMTP id
- d75a77b69052e-471fc9e905fmr67186901cf.4.1739888795313; Tue, 18 Feb 2025
- 06:26:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHSy1I3B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739888816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b9YdB2lf/xAULty1c3rpqiX1ztJ6KQXsmrrMcR64c6s=;
+	b=DHSy1I3Bj5mFh3WY/cPpfT37ZXxN1Q0SO9/cdmYv5U38ICbjZlvDaVlDcIT9RXVQU6aa8Y
+	PQ4VwGL09/GvkF7GSyOvqGra3VoQFrE+9eB2NqQMcpgM/J9DdSFKxLvJG0tqc2zOAVPg/t
+	6M+8fp3X8E7rgjoTM2psvIoe7CIcHIQ=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-141-ONeTPkMZNVmZOCsw6QROjg-1; Tue,
+ 18 Feb 2025 09:26:51 -0500
+X-MC-Unique: ONeTPkMZNVmZOCsw6QROjg-1
+X-Mimecast-MFC-AGG-ID: ONeTPkMZNVmZOCsw6QROjg_1739888810
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A79C219030AC;
+	Tue, 18 Feb 2025 14:26:49 +0000 (UTC)
+Received: from [10.22.65.116] (unknown [10.22.65.116])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7AA5F19560A3;
+	Tue, 18 Feb 2025 14:26:47 +0000 (UTC)
+Message-ID: <b37a4f6c-95a9-430d-89f9-141b72fd6be8@redhat.com>
+Date: Tue, 18 Feb 2025 09:26:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217133228.24405-1-luis@igalia.com> <20250217133228.24405-3-luis@igalia.com>
- <Z7PaimnCjbGMi6EQ@dread.disaster.area> <CAJfpegszFjRFnnPbetBJrHiW_yCO1mFOpuzp30CCZUnDZWQxqg@mail.gmail.com>
- <87r03v8t72.fsf@igalia.com> <CAJfpegu51xNUKURj5rKSM5-SYZ6pn-+ZCH0d-g6PZ8vBQYsUSQ@mail.gmail.com>
- <87frkb8o94.fsf@igalia.com>
-In-Reply-To: <87frkb8o94.fsf@igalia.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 18 Feb 2025 15:26:24 +0100
-X-Gm-Features: AWEUYZlBOOIIaYs34OYy_0E3-HRJyLG5kCRwuFnjQlWeGTg0omw4orTEC-iLSMc
-Message-ID: <CAJfpegsThcFwhKb9XA3WWBXY_m=_0pRF+FZF+vxAxe3RbZ_c3A@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] fuse: add new function to invalidate cache for all inodes
-To: Luis Henriques <luis@igalia.com>
-Cc: Dave Chinner <david@fromorbit.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Matt Harvey <mharvey@jumptrading.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Valentin Volkl <valentin.volkl@cern.ch>, 
-	Laura Promberger <laura.promberger@cern.ch>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme: remove multipath module parameter
+To: Bryan Gurney <bgurney@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, kbusch@kernel.org, hch@lst.de,
+ sagi@grimberg.me, axboe@kernel.dk
+Cc: bmarzins@redhat.com
+References: <20250204211158.43126-1-bgurney@redhat.com>
+Content-Language: en-US
+From: John Meneghini <jmeneghi@redhat.com>
+Organization: RHEL Core Storge Team
+In-Reply-To: <20250204211158.43126-1-bgurney@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, 18 Feb 2025 at 12:51, Luis Henriques <luis@igalia.com> wrote:
->
-> On Tue, Feb 18 2025, Miklos Szeredi wrote:
->
-> > On Tue, 18 Feb 2025 at 11:04, Luis Henriques <luis@igalia.com> wrote:
-> >
-> >> The problem I'm trying to solve is that, if a filesystem wants to ask the
-> >> kernel to get rid of all inodes, it has to request the kernel to forget
-> >> each one, individually.  The specific filesystem I'm looking at is CVMFS,
-> >> which is a read-only filesystem that needs to be able to update the full
-> >> set of filesystem objects when a new generation snapshot becomes
-> >> available.
-> >
-> > Yeah, we talked about this use case.  As I remember there was a
-> > proposal to set an epoch, marking all objects for "revalidate needed",
-> > which I think is a better solution to the CVMFS problem, than just
-> > getting rid of unused objects.
->
-> OK, so I think I'm missing some context here.  And, obviously, I also miss
-> some more knowledge on the filesystem itself.  But, if I understand it
-> correctly, the concept of 'inode' in CVMFS is very loose: when a new
-> snapshot generation is available (you mentioned 'epoch', which is, I
-> guess, the same thing) the inodes are all renewed -- the inode numbers
-> aren't kept between generations/epochs.
->
-> Do you have any links for such discussions, or any details on how this
-> proposal is being implemented?  This would probably be done mostly in
-> user-space I guess, but it would still need a way to get rid of the unused
-> inodes from old snapshots, right?  (inodes from old snapshots still in use
-> would obvious be kept aroud).
+Bryan, since we are re-spinning this patch please make the changes below.
 
-I don't have links.  Adding Valentin Volkl and Laura Promberger to the
-Cc list, maybe they can help with clarification.
+On 2/4/25 4:11 PM, Bryan Gurney wrote:
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index 2bcd9f710cb6..b07cd482fbc1 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -3809,14 +3809,6 @@ static int nvme_init_ns_head(struct nvme_ns *ns, struct nvme_ns_info *info)
+>   					info->nsid);
+>   			goto out_put_ns_head;
+>   		}
+> -
+> -		if (!multipath) {
+> -			dev_warn(ctrl->device,
+> -				"Found shared namespace %d, but multipathing not supported.\n",
+> -				info->nsid);
+> -			dev_warn_once(ctrl->device,
+> -				"Support for shared namespaces without CONFIG_NVME_MULTIPATH is deprecated and will be removed in Linux 6.0.\n");
+> -		}
 
-As far as I understand it would work by incrementing fc->epoch on
-FUSE_INVALIDATE_ALL. When an object is looked up/created the current
-epoch is copied to e.g. dentry->d_time.  fuse_dentry_revalidate() then
-compares d_time with fc->epoch and forces an invalidate on mismatch.
+I think we want to keep a similar warning like the above, only move it down below.
 
-Only problem with this is that it seems very CVMFS specific, but I
-guess so is your proposal.
+Let's wait for Sagi's approval of the exact message.
 
-Implementing the LRU purge is more generally useful, but I'm not sure
-if that helps CVMFS, since it would only get rid of unused objects.
+>   	}
+>   
+>   	list_add_tail_rcu(&ns->siblings, &head->list);
+> @@ -3915,12 +3907,14 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, struct nvme_ns_info *info)
+>   		sprintf(disk->disk_name, "nvme%dc%dn%d", ctrl->subsys->instance,
+>   			ctrl->instance, ns->head->instance);
+>   		disk->flags |= GENHD_FL_HIDDEN;
+> -	} else if (multipath) {
+> +	} else {
+> +#ifdef CONFIG_NVME_MULTIPATH
+>   		sprintf(disk->disk_name, "nvme%dn%d", ctrl->subsys->instance,
+>   			ns->head->instance);
+> -	} else {
+ > +#else
+
+You don't need the this #ifdef conditional statement because the nvme_ns_head_multipath() function checks CONFIG_NVME_MULTIPATH
+for you and the sprintf(disk->disk_name, "nvme%dn%d" statement is kind of redundant.
+
+
+>   		sprintf(disk->disk_name, "nvme%dn%d", ctrl->instance,
+>   			ns->head->instance);
+> +#endif
+>   	}
+>   
+>   	if (nvme_update_ns_info(ns, info))
 
 Thanks,
-Miklos
+
+/John
+
