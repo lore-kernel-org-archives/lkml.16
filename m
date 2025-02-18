@@ -1,108 +1,124 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173BF22B8A5
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE42A22B8D0;
+	Tue, 18 Feb 2025 08:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739867761; cv=none; b=dsZT8GzhZ5IE+2sfjDbfA9/N4xona/ZiWcNF4GBxs8Wg0XwEzTjjU+mYMfiRidEis8yNebs4lnt+HUcQT3YRUarSBxd2YaPRXQy4rbuDt6qZASWNyr5YCVAPu7YLFSuyRZHLnfVwfyxOCNnAm/SxVO/zREa6g9bzYEFrtAOhlMs=
+	t=1739867765; cv=none; b=lCSS4Ezx9ZG/E2FViaMEMNq27UpasxnJPxldLyHAZfz8uo6fhdr4LU2bBSEsGBPBvYhgxrmTBZKZ+QBUPizZjyvqE35TW/X3si4KSVTuOEEgOTtgiQ5+Wu4xrOSnQ+sTgS+36J9JC56n+eZapyOTH7I4nY3upGjZA5+4yjU1HbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739867761; c=relaxed/simple;
-	bh=feF1eHyyT0zWjy4z/Md8u1+8+0ZLHRFpAShbWTlr/Qg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FELcwK7LGzXm671EB9gOetofBQizlX736qkVjjkjtQYEgU7q1+UlYxmHov1FWaG0I2iab1kNZhNCE5LTn5w5LXcYcPclOXtezNmVenvIJiUvkaljip/WZTttHusx+MP80GN1F04iIm73G72/LKqNwSkdqkWmoUTKWYzS5ek9P/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=biSovEpA; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
+	s=arc-20240116; t=1739867765; c=relaxed/simple;
+	bh=JjlvOPqR1QdqJhsMRRHhvT8COSrKfIPpL8mmZWKayTs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nAUzLktwFmXZ0mesgnMdBVBRrbvCvvDtxNWuL9hecEuWMMgt0jFdW9E+KVI3bNjh2NtlhbNKDtOfRC6jfWTFrWylwA+cEOqDNShXttPKDZCisEWb3gEU4HSFx8ew0SP/2SeaM2l1vL1jXHlscN4WRKJYTWH849tJ/NlVzGmZ7gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bG8q7eOR; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="biSovEpA"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4399509058dso493735e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:35:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bG8q7eOR"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-221050f3f00so50366675ad.2;
+        Tue, 18 Feb 2025 00:36:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google; t=1739867757; x=1740472557; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSJ23b7dcp2nXbCFtNTYLtGlvCk+YzKblQR08ITEHhc=;
-        b=biSovEpAlE38/v4+KDQyJgZSbwF/zPlf7WvgG0duyMN04oAZ1udX/rkeLmf0f2KCes
-         XrIqKcLyBtVy4U69nNVrLi+R3ED3wNcTTItEWUA95EOZQggaqiiwnHp5FAhAdw+d7WM6
-         6YH3sZqKyFoDwtoor1DIE3P0tEy7dnIWBIE1D/porQxnkqyikFrPxAQD9R6z3RVCO2xV
-         ncQ4kcuE/DlHyoRwoj1I0DsngPlfYWFv2DvjHifmtuoZnjewTO9Dp7B30PWzu8fadltL
-         BsiL9577C6AYT4GGiBC1yyEO6fZsw4trvTKikHqS5wGApwmjxTWYFAVkqLHQGRZoKa34
-         rJLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739867757; x=1740472557;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1739867763; x=1740472563; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MSJ23b7dcp2nXbCFtNTYLtGlvCk+YzKblQR08ITEHhc=;
-        b=fxeS7HbAMYF+gH+h649BI297w4oOwBf2Li99zxDXhrM1eKEP+LGjHyX3jPGdVDo7f5
-         l6KOPx6JjKMgorhDAU3Q4MtYeTfxn3gJgSEh0NtcCDyRUKOWR1sqCUlrBY99YyFhSzDD
-         e3qkSTBk1fuRqmLSM0K7Zl1mBPrbkYXcjWUkY1O77y0+jYQ7/X95QcK4rRW9+DuzQT+a
-         5c3ehosAnQ5lHiRuoQeHMX7yOPWI44+Qw8MMGW6i+lxmdHIC+HMqw5GFvFg2Jha6XGnI
-         HNHTficYPNYtrc/09vlr59CDxtjM2iIMrfdd+Xovyb7xGuHFkcU1k7noPnalpyXjSSoQ
-         XJlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQEXpIrJj/mQFtXcp4ruyZIqg9D6Mwb6QykI2UFQvGjrR4VG9CUGnxamd46+5/ic/wJZZB7K3cashmaFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxysdUkaD3VfUE/BTa7z2OhtpNFzOcxvm3GX1z1cuNmE7eL/PEI
-	czkdyOFxa57KVdpylQTul11imKfWw4TUJzC7diB68Zf+gOhF85ym1MII8w0a7go=
-X-Gm-Gg: ASbGncvuzrdITSL7F4Dvj2vepDk6gRW5ljAEbzFAqbCDwG2Uh1jHwTexXMzabSavY61
-	XA8XJ0y7wfCiVtALxbSGz6kkWN7EQ/+sYEN1QvXSmz6vlBr+L3cBEoQEl3Tk/DFKCF3K3AmGfxy
-	ISs0jZm+QwPYlLo1vnRzAUhqgzeetzkxESDue7wxp1M3cIemWwJuOUNUWSaEf3hMh2omUJeUb1l
-	+OgA4qfvlsB7p9DV6ZIkoGxXwNJlQE0/T9at6w2Aza6UDBtGIsuV4M9yaUzKlbTBU77EXJkG0Fi
-	7c/WKanGUc8LP8GaA3Oo50p+JS6lNWhvEf+7ig1SPG2yBSQjtYr9k4V0VDTAmh+ZR5f+
-X-Google-Smtp-Source: AGHT+IG92hjCJWGEFWUkF1TNBt8VJRHE77BbFuIFujokh0dlUjpL0uxRKa49heL6SedL+6HcLajH0w==
-X-Received: by 2002:a05:600c:2d04:b0:439:84d3:f7fd with SMTP id 5b1f17b1804b1-43984d3fb0bmr21918935e9.4.1739867757357;
-        Tue, 18 Feb 2025 00:35:57 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:b41:c160:8e5f:76fd:491b:501e? ([2a01:e0a:b41:c160:8e5f:76fd:491b:501e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439858ec5fasm48100965e9.29.2025.02.18.00.35.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 00:35:56 -0800 (PST)
-Message-ID: <715a9dd2-4309-436d-bdfc-716932ccb95c@6wind.com>
-Date: Tue, 18 Feb 2025 09:35:55 +0100
+        bh=BceYlCX5vbozGNFMmQiIjW33ZPH5I7W91a3fTwyhgQQ=;
+        b=bG8q7eORPvBjTgxG5ri9myYo3BtJsxH9bkH0TMj0l9yyvTnkgghJGrU3QZm3BQhNP6
+         2N0dPoE2vMpT5Qb9/VQ33qMg2dcd/rMJRngOjRycx8d3tG033Qw4qOktKiar/vjuQKDf
+         9fRS5HV4rHVos1PENHaXFCgDpxRAyoisvHf+eZMZKbxsL0OTmKrIFEsGknIYk9EH2R6Q
+         JS4fkOveP21/6HTLcUFK9/mL+iQeSL58dixXFeDPE+hdgQ9+rrN3xCO/oGPbyKmjA2Ss
+         v+qiHVblPrG85Y1chQUljksAdt+2DWiNR/v7jtQN+z+H/G7Ha3P03MKF5YEz170K7MAL
+         k0aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739867763; x=1740472563;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BceYlCX5vbozGNFMmQiIjW33ZPH5I7W91a3fTwyhgQQ=;
+        b=t8Lh0OW7y+nS91TYbuB1l72pXYOREovlFogbo4Rc7PIRwG8NDuH8eOgEzPeBLvgDVs
+         LdSBPERyXP597oKHH6bPOeto3SZJLqnzXWzu4sYYBimyiij/iSoSjpvF444O3aoHRAsn
+         4U1ZGbsEW6YgmDaTp7XfT4+vt2x1Ez8kvq/ZQYMpQR6kwcvNVjmlQlJhnjXhJYG+WE3p
+         RD/FLasoFPKYuUeNZpUKBrVyukKucbS4KG+IpPIwZIOZOAUYUK7HBD9DAp1NJEZhrb/P
+         B5sqCJT2tAlqjWwLeB1mb7S7xPXv/DKhnLNbV0bHyxe984jPmKEs7eDjAiRTRFkAx2XW
+         nP7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU0lK3lWQ72MUx9XBTndGljlMsHEc31LPBa0WF3r5wzwqZ/GCm2n7mLyWEdtCUnORCn+kcDX03lXZcy@vger.kernel.org, AJvYcCUpn3enwQ1NfpaIgoZOwqNiALOhLJj3PDeTP/G7obSY29x/s80qqw6urnqHgGZzZOgFmswO0bnhhSCt3Fc=@vger.kernel.org, AJvYcCW4ltY7fyGnFdclqy02XxWj3hrAo3HCRFNBZgRwV+iEoF4TQzGZ5lwlt0e1xEwE6JhdftBWQRZkRhz3lRrL@vger.kernel.org, AJvYcCWlj3OPdDFahXcpISTbvhaOVWQc3Uzl3ho2tV0dhEzoFfFeFaxcLRJbDZn1JgYv+MRWX3aFHqnQdrPEsDo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXfLFgbpn+w02AE0XynPzKXok9qrmYtPD20qLfd+U63vF+VeC8
+	bPLAyV557FYMJvbFAhdm5d76IscwuZWBF4K/EHqrPfvl/YXOwnmEt1xpZT9f
+X-Gm-Gg: ASbGncsfLMJ5CjDMRYBS1qaQsCFYIBLGO1+iSclerWeBRrPGjAxzD7rYYp3tbgdCmMZ
+	t0PJr0Z8ksz0OtN571ZK0AGNwHrqid01BPFiufA+ryo5GrSz90l/+IiOJ3gg7+E7jM3I5WFzkBr
+	2jfsno3P5qEPaeF1N7H6pYU5JdIG0k6woR8SwK1WRHpQRd404DaX7njWlM6DjJdFxg6VzQrI128
+	i64HOONUqQMQsTiBlSOs0kkFhdxxOOpQ8Gr0V29Av1FE4AIcQJZZ0E78rBhKMJx/B3msuPwpccQ
+	S4qdNe284VsHSfb3e7Zle5ItxVbw2LI1SteCMJ1wrtVe3/UChitITJZELGcbkmeoKy7scFP6TN7
+	vN+XXcSbviA==
+X-Google-Smtp-Source: AGHT+IExe1obOg6JdhqaMeZP9BJnI/sbek9jjVND4C34Fb62dH/AuT4ztTLKvkL9heLj+cU5Y+13Yw==
+X-Received: by 2002:a05:6a00:3e0c:b0:730:75b1:7218 with SMTP id d2e1a72fcca58-732618c1ec6mr22056568b3a.16.1739867762934;
+        Tue, 18 Feb 2025 00:36:02 -0800 (PST)
+Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ae1ee4febb2sm787325a12.51.2025.02.18.00.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 00:36:02 -0800 (PST)
+From: James Calligeros <jcalligeros99@gmail.com>
+Date: Tue, 18 Feb 2025 18:35:35 +1000
+Subject: [PATCH v2 01/29] ASoC: tas2764: Fix power control mask
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH net-next v2] net: Remove redundant variable declaration in
- __dev_change_flags()
-To: Breno Leitao <leitao@debian.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, andrew@lunn.ch
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-References: <20250217-old_flags-v2-1-4cda3b43a35f@debian.org>
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Content-Language: en-US
-Organization: 6WIND
-In-Reply-To: <20250217-old_flags-v2-1-4cda3b43a35f@debian.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-apple-codec-changes-v2-1-932760fd7e07@gmail.com>
+References: <20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com>
+In-Reply-To: <20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
+ Neal Gompa <neal@gompa.dev>, James Calligeros <jcalligeros99@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=802;
+ i=jcalligeros99@gmail.com; h=from:subject:message-id;
+ bh=3C7DOfIHda8WjgBc3ejixI8wNYha3fB9QmWCFcWPEPU=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOlb3OIF+d793mUl/67UftksU+dWFj03dY0LHw8etclyq
+ Vn7lP1hRwkLgxgXg6yYIsuGJiGP2UZsN/tFKvfCzGFlAhnCwMUpABM5ysvwhW/foRXV/cLFGnsK
+ bHf/EDc3Xrrpk5u47RGjL5X3g50SGRlmLKhnUFc981p7S/gro5hrUXnzPr0RYXuUuejkcruEV+l
+ sAA==
+X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
+ fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-Le 17/02/2025 à 16:48, Breno Leitao a écrit :
-> The old_flags variable is declared twice in __dev_change_flags(),
-> causing a shadow variable warning. This patch fixes the issue by
-> removing the redundant declaration, reusing the existing old_flags
-> variable instead.
-> 
-> 	net/core/dev.c:9225:16: warning: declaration shadows a local variable [-Wshadow]
-> 	9225 |                 unsigned int old_flags = dev->flags;
-> 	|                              ^
-> 	net/core/dev.c:9185:15: note: previous declaration is here
-> 	9185 |         unsigned int old_flags = dev->flags;
-> 	|                      ^
-> 	1 warning generated.
-> 
-> Remove the redundant inner declaration and reuse the existing old_flags
-> variable since its value is not needed outside the if block, and it is
-> safe to reuse the variable. This eliminates the warning while
-> maintaining the same functionality.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> Reviewed-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-Reviewed-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Hector Martin <marcan@marcan.st>
+
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
+---
+ sound/soc/codecs/tas2764.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/tas2764.h b/sound/soc/codecs/tas2764.h
+index 168af772a898ffd1c5e96c50df77ff6225f704cd..d13ecae9c9c2f57853db70bb1eef2380f6fec45c 100644
+--- a/sound/soc/codecs/tas2764.h
++++ b/sound/soc/codecs/tas2764.h
+@@ -25,7 +25,7 @@
+ 
+ /* Power Control */
+ #define TAS2764_PWR_CTRL		TAS2764_REG(0X0, 0x02)
+-#define TAS2764_PWR_CTRL_MASK		GENMASK(1, 0)
++#define TAS2764_PWR_CTRL_MASK		GENMASK(2, 0)
+ #define TAS2764_PWR_CTRL_ACTIVE		0x0
+ #define TAS2764_PWR_CTRL_MUTE		BIT(0)
+ #define TAS2764_PWR_CTRL_SHUTDOWN	BIT(1)
+
+-- 
+2.48.1
+
