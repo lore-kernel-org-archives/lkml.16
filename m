@@ -1,150 +1,129 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B181C7018
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 20:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F6E1D61AC;
+	Tue, 18 Feb 2025 20:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910305; cv=none; b=Xwg5I3GMtMaiep6I7HzVzR6dX+KITjKa8oOvT/sjJHomXY3Tx9PQcfdx4Yxw/vNHTUVT1aF6bHrRNKYFbp7Dat/MfOR8AU1wl0tKLuTHEbmzD0tyCeaf+qr+EEy9Jaibn2+Hb7xF3ZX79ZXnEKRdW+YV+RCIVcK7vQ1lFl9CtsY=
+	t=1739910307; cv=none; b=D8WiAB0516sr7AZnacdYIUTXYRWd/QkgnzP5HlF48V2SByb9lQeQFvl18wQSCvg4jS5L21HDbwmCFxOfBKQAgYx8HlVyfKad8RGDwHPMG3dvuO6+zLI5j+zHgyrDWMbZxuo5mjadTO2Aj10vfbQKhOxriA4WHSHPHMapjFsf1bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910305; c=relaxed/simple;
-	bh=K/4csQkLxCjzNwOWH+Ssn6tsCq1oMWzz19TKXOOa2y4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Pg6Y/Qgv569nQ/Fcd28/PmM/LthUnugtrRuF0gbVB2ct8eCNnGJCW0TQVPidXVS/edWKFDnDm3ybdG7KqJRADljUDXrfoU5/zqmj/sLeA8iz5zSnVIgaTbuaPfoYdo3H/A80bv0lvgoUvJPjoMLYj8KJe/tAa+/uXlTpuDOi1es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2a6102c1aso32599975ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:25:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739910302; x=1740515102;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8r9sc6OzcSBAxyuSRSyB9xeJjZ3iNaxuy0Cr/uWAkc=;
-        b=hUq9XxJS9eVd13IWIeuq/I5iiYzv6U0bbuX4gATuNig5SD4dc8zfuF0t4al5cssrmx
-         fjshunIKUqG6PU9luWayWtMlOQpCZqpxMdF4aauJMg6zY3i7RqZEea/r+au5O/eyyuck
-         yqWYHhsmzh8qkA4c5w26OtpIkKnHG/U98mhXmL6K+RTdpgxfvZ/6HZ7cd7r15CuoTaJQ
-         Z6RrE+DPkld2ZIqKbRfeIGa/98s5is+6lF60TX8s7lujyhscLkPbJL2zd+3bacSFf9iB
-         go4j0Rlm5nIRS/TrGOrZKxm0hw/wnSPARuyaFn2bqCJnbchthU+GKcDz1iyf6eQA0vCe
-         HHzQ==
-X-Gm-Message-State: AOJu0YxJyo+4Efncgttv8p527keNFBl9S8DsPQyJILHLCzcCBAYyUpHk
-	vx4SyRKUVAmtDKxsAmtyISzCtL47KvwHOvVmkGT3BlHY9HQvxuxGshWFoXgs5ACBGda3HXoGJ87
-	CwqCzMF2g0Lo7FxJ8lUgXxjoSC+THLUNYv0Pt+iEwzYhBZrpy8vKup7c=
-X-Google-Smtp-Source: AGHT+IE5KoxwWs8vvoXBhbdKC/I7g1TVUo4lVt8EP9Weco6ptflM8EdTM0F2L7kanqa1QNuBqPf5bnI1ef6lTFfpI1SGrPCbM7cW
+	s=arc-20240116; t=1739910307; c=relaxed/simple;
+	bh=7NA97BaYLDXvPlX1kOjax7amK/G2RN81JC/5aiXT8gY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=i7qnOGvr00L6mGQGc6nAgbx6ZsZIg42KCYMhMjBTiPbrLoC7d+k2qOYqChLgRN+Zn2I3Rj+kc9wDKv34hB5+IWVkXad4TQOLIuTlEZDxfF+h9YVBrmRTsZ+ew6m5y1jEETlPLchYj2GiTtpAW4O8PJ7LAJlDDHy9691p/10FWwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QhD2Teat; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QhD2Teat"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA0AAC4CEE4;
+	Tue, 18 Feb 2025 20:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739910306;
+	bh=7NA97BaYLDXvPlX1kOjax7amK/G2RN81JC/5aiXT8gY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QhD2TeatkRxHdomvutrtympav2J6hnwd6Migh8iwmRRLfwA9Ap3z3/DjcKHt/SyIB
+	 aqsBk6HabOh2NvrIfcXgD8A8//tJVkHZYccwqSwhuveBw4t/9TXXKniwd0EpkMyfQM
+	 KR77FopzuJ/OJHupGuzY5j+9VJJYusyHIH94Ec8udHwWp//5vthIArjSh1EsUnCU7x
+	 z6UDCIUR+rtoGRKKkHzC1y3rwU+eSLKab4+dcRsiD4Im9PH0rloafuiecRcHPINU+a
+	 Q2rQCXxS+Tv0+GFgTIGw1pfbXu/Ng48yfktTMan0KLN3eUmjEpoplJ94HH3JT8kZx5
+	 ybWDhr3uVOOpw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Zhang Lixu <lixu.zhang@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Jiri Kosina <jkosina@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	andriy.shevchenko@intel.com,
+	linux@treblig.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 03/31] HID: intel-ish-hid: Send clock sync message immediately after reset
+Date: Tue, 18 Feb 2025 15:24:23 -0500
+Message-Id: <20250218202455.3592096-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250218202455.3592096-1-sashal@kernel.org>
+References: <20250218202455.3592096-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1523:b0:3d1:95c5:40a5 with SMTP id
- e9e14a558f8ab-3d2b512eca5mr9873725ab.0.1739910302677; Tue, 18 Feb 2025
- 12:25:02 -0800 (PST)
-Date: Tue, 18 Feb 2025 12:25:02 -0800
-In-Reply-To: <180B5E33-351D-4A3F-8948-02AF10DBA3D8@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b4ec9e.050a0220.14d86d.000e.GAE@google.com>
-Subject: Re: [syzbot] [mm?] [bcachefs?] WARNING in lock_list_lru_of_memcg
-From: syzbot <syzbot+38a0cbd267eff2d286ff@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.3
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Zhang Lixu <lixu.zhang@intel.com>
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-general protection fault in call_rcu
+[ Upstream commit 7e0d1cff12b895f44f4ddc8cf50311bc1f775201 ]
 
-Oops: general protection fault, probably for non-canonical address 0xef11a50f048e916c: 0000 [#1] PREEMPT SMP KASAN NOPTI
-KASAN: maybe wild-memory-access in range [0x788d487824748b60-0x788d487824748b67]
-CPU: 0 UID: 0 PID: 5968 Comm: modprobe Not tainted 6.14.0-rc3-syzkaller-g6537cfb395f3-dirty #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:lookup_object lib/debugobjects.c:423 [inline]
-RIP: 0010:lookup_object_or_alloc lib/debugobjects.c:662 [inline]
-RIP: 0010:debug_object_activate+0x1bd/0x580 lib/debugobjects.c:820
-Code: 89 df e8 06 d5 2c fd 48 89 5c 24 30 4c 8b 3b 45 31 e4 eb 06 4d 8b 3f 41 ff c4 4d 85 ff 74 40 49 8d 5f 18 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 d4 d4 2c fd 48 8b 44 24 10 48 39
-RSP: 0018:ffffc9000d09f2c0 EFLAGS: 00010006
-RAX: 0f11a90f048e916c RBX: 788d487824748b60 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: 0000000000000004 RDI: ffffc9000d09f1a0
-RBP: ffffc9000d09f3d0 R08: 0000000000000003 R09: fffff52001a13e34
-R10: dffffc0000000000 R11: fffff52001a13e34 R12: 0000000000000001
-R13: 1ffff92001a13e60 R14: dffffc0000000000 R15: 788d487824748b48
-FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055f7221a9008 CR3: 0000000053bc0000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- debug_rcu_head_queue kernel/rcu/rcu.h:224 [inline]
- __call_rcu_common kernel/rcu/tree.c:3050 [inline]
- call_rcu+0x97/0xac0 kernel/rcu/tree.c:3172
- remove_vma mm/vma.c:419 [inline]
- vms_complete_munmap_vmas+0x65b/0x8f0 mm/vma.c:1202
- do_vmi_align_munmap+0x5ef/0x6f0 mm/vma.c:1445
- do_vmi_munmap+0x24e/0x2d0 mm/vma.c:1493
- __vm_munmap+0x372/0x510 mm/vma.c:2951
- elf_map fs/binfmt_elf.c:389 [inline]
- elf_load+0x2d6/0x700 fs/binfmt_elf.c:414
- load_elf_interp+0x440/0xac0 fs/binfmt_elf.c:681
- load_elf_binary+0x1a87/0x2820 fs/binfmt_elf.c:1241
- search_binary_handler fs/exec.c:1775 [inline]
- exec_binprm fs/exec.c:1807 [inline]
- bprm_execve+0x979/0x1430 fs/exec.c:1859
- kernel_execve+0x931/0xa50 fs/exec.c:2026
- call_usermodehelper_exec_async+0x237/0x380 kernel/umh.c:109
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:lookup_object lib/debugobjects.c:423 [inline]
-RIP: 0010:lookup_object_or_alloc lib/debugobjects.c:662 [inline]
-RIP: 0010:debug_object_activate+0x1bd/0x580 lib/debugobjects.c:820
-Code: 89 df e8 06 d5 2c fd 48 89 5c 24 30 4c 8b 3b 45 31 e4 eb 06 4d 8b 3f 41 ff c4 4d 85 ff 74 40 49 8d 5f 18 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 d4 d4 2c fd 48 8b 44 24 10 48 39
-RSP: 0018:ffffc9000d09f2c0 EFLAGS: 00010006
-RAX: 0f11a90f048e916c RBX: 788d487824748b60 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: 0000000000000004 RDI: ffffc9000d09f1a0
-RBP: ffffc9000d09f3d0 R08: 0000000000000003 R09: fffff52001a13e34
-R10: dffffc0000000000 R11: fffff52001a13e34 R12: 0000000000000001
-R13: 1ffff92001a13e60 R14: dffffc0000000000 R15: 788d487824748b48
-FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055f7221a9008 CR3: 0000000053bc0000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	89 df                	mov    %ebx,%edi
-   2:	e8 06 d5 2c fd       	call   0xfd2cd50d
-   7:	48 89 5c 24 30       	mov    %rbx,0x30(%rsp)
-   c:	4c 8b 3b             	mov    (%rbx),%r15
-   f:	45 31 e4             	xor    %r12d,%r12d
-  12:	eb 06                	jmp    0x1a
-  14:	4d 8b 3f             	mov    (%r15),%r15
-  17:	41 ff c4             	inc    %r12d
-  1a:	4d 85 ff             	test   %r15,%r15
-  1d:	74 40                	je     0x5f
-  1f:	49 8d 5f 18          	lea    0x18(%r15),%rbx
-  23:	48 89 d8             	mov    %rbx,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 80 3c 30 00       	cmpb   $0x0,(%rax,%r14,1) <-- trapping instruction
-  2f:	74 08                	je     0x39
-  31:	48 89 df             	mov    %rbx,%rdi
-  34:	e8 d4 d4 2c fd       	call   0xfd2cd50d
-  39:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
-  3e:	48                   	rex.W
-  3f:	39                   	.byte 0x39
+The ISH driver performs a clock sync with the firmware once at system
+startup and then every 20 seconds. If a firmware reset occurs right
+after a clock sync, the driver would wait 20 seconds before performing
+another clock sync with the firmware. This is particularly problematic
+with the introduction of the "load firmware from host" feature, where
+the driver performs a clock sync with the bootloader and then has to
+wait 20 seconds before syncing with the main firmware.
 
+This patch clears prev_sync immediately upon receiving an IPC reset,
+so that the main firmware and driver will perform a clock sync
+immediately after completing the IPC handshake.
 
-Tested on:
+Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/intel-ish-hid/ipc/ipc.c         | 9 ++++++---
+ drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h | 2 ++
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-commit:         6537cfb3 Merge tag 'sound-6.14-rc4' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13732498580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
-dashboard link: https://syzkaller.appspot.com/bug?extid=38a0cbd267eff2d286ff
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10f8e5b0580000
+diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
+index cb956a8c386cb..4c861119e97aa 100644
+--- a/drivers/hid/intel-ish-hid/ipc/ipc.c
++++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
+@@ -517,6 +517,10 @@ static int ish_fw_reset_handler(struct ishtp_device *dev)
+ 	/* ISH FW is dead */
+ 	if (!ish_is_input_ready(dev))
+ 		return	-EPIPE;
++
++	/* Send clock sync at once after reset */
++	ishtp_dev->prev_sync = 0;
++
+ 	/*
+ 	 * Set HOST2ISH.ILUP. Apparently we need this BEFORE sending
+ 	 * RESET_NOTIFY_ACK - FW will be checking for it
+@@ -577,13 +581,12 @@ static void fw_reset_work_fn(struct work_struct *work)
+  */
+ static void _ish_sync_fw_clock(struct ishtp_device *dev)
+ {
+-	static unsigned long	prev_sync;
+ 	struct ipc_time_update_msg time = {};
+ 
+-	if (prev_sync && time_before(jiffies, prev_sync + 20 * HZ))
++	if (dev->prev_sync && time_before(jiffies, dev->prev_sync + 20 * HZ))
+ 		return;
+ 
+-	prev_sync = jiffies;
++	dev->prev_sync = jiffies;
+ 	/* The fields of time would be updated while sending message */
+ 	ipc_send_mng_msg(dev, MNG_SYNC_FW_CLOCK, &time, sizeof(time));
+ }
+diff --git a/drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h b/drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h
+index effbb442c7277..dfc8cfd393532 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h
++++ b/drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h
+@@ -254,6 +254,8 @@ struct ishtp_device {
+ 	unsigned int	ipc_tx_cnt;
+ 	unsigned long long	ipc_tx_bytes_cnt;
+ 
++	/* Time of the last clock sync */
++	unsigned long prev_sync;
+ 	const struct ishtp_hw_ops *ops;
+ 	size_t	mtu;
+ 	uint32_t	ishtp_msg_hdr;
+-- 
+2.39.5
 
