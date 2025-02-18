@@ -1,162 +1,182 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2B01D8A0D;
-	Tue, 18 Feb 2025 22:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930811D8A0D;
+	Tue, 18 Feb 2025 22:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739919294; cv=none; b=Hs8tu5n0YXjX5cIhEtuepCeq/IQJUFFBwJH/1ieOix/B7FVX/CXssbX5j2yM2r/YBrPziLf0fBvPBHjJ1Ggfuk+yZ6uxDM9QmRBQPBz/VFdILQqbvIDrnB6Iv5WA9gg89/dvmuNAK3KZalOnOkp62Ux4GSYnREHWpVz1AMsNnF8=
+	t=1739919301; cv=none; b=kbLCz0MTw9i4aK2RbcNaskftyB7Eb5Pypv7jpT8mTOFZnr141vuqt4erjQOHV0SLQHLJ+lwVaTZgOz46MqH40X2mC4b0JRQ29ZZXh3aTT70l8xYY8+j6TCi0pOLOOFIrQKomhlIy7cvqGGXTQ4VariEDJ94Cbnj+8gRArYp+WHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739919294; c=relaxed/simple;
-	bh=NHZ5tgatG1hk5aXhyUIk7AxfbmXlungsl+QkbaLBUtA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YbPs+vfXeAkf9x26RRHBfDWcdbYrySmoQPkik0fKqWyYnQReJKkDH9xSb15Z+ck7k95SOs7AkFlH0zjIZ5ev7r1x0qjKrFUOhLY5g/JwEEYRNVJcSe8OcABSAEt9kZZI/gn2rJ1e6hM1NQyoVO1p2bgBLBL9l5ubwN5PLNNQWRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aEoTzr8k; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739919301; c=relaxed/simple;
+	bh=JfZZ5wVAOe/Y1NihNftjYuYbwLi7XmW8eEZlPrqPMd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AtgLHhWS2qFYesAWal7ExFsAez1OBW0cB1j2SQvKVZCUuTaKFT+IW9DhOw+tGXpqgbmc4Zyqdim5rsGBDwa+09ctw+aDDKCfksoBg8ng1nObxQAWwMQWeIk2045a6WD22wq0nQ636c1L2roOs/ctLY+aTEn4GLpTMZl/bxomZl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aiOZcO7g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEoTzr8k"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fc317ea4b3so934207a91.3;
-        Tue, 18 Feb 2025 14:54:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739919292; x=1740524092; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=drvJ3mqMM3e9qG8aW2Y2X9PovJqvp/GsC2QW7NPY4D0=;
-        b=aEoTzr8kL0exmWWRg4tPXZh01j1JRavtLFfqLAwxZSfSVO5/tnLYgq0gAvqe+OCoFW
-         kpuTTYB/huntvzEhQLfmkhBgeQHj+qmKkZoUPBGTyPbINXnx4yLF/PXcSL6Fth3DyEne
-         p3uOOT1KpV4nL3VVhMvLmdr6Mq2SCqh+7hYM5LIhEF6lK4EogouVtlOiEnGeI3TXauuf
-         s7/AZ00grGXJAxm7Jk19ZRap1jKedZfhWoA7QqaHW3P0TLh90fiybGW5o76DoQqAvGYQ
-         iNGJ2FOPMvw2ia8a9gcZz49uuvT/9Xe1XzHIe9PvRJUOAFthCQMQPqDgCXb5vVVgijCd
-         uFwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739919292; x=1740524092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=drvJ3mqMM3e9qG8aW2Y2X9PovJqvp/GsC2QW7NPY4D0=;
-        b=gs5BUGc/wR9u9m0zROniTfSC7rP/mu0VLH2y/f3ZaulT4zcMuj1nLF4rNVj1jN+Cll
-         bRfrSf/guGf2n3FM9kyeMU2pteKIXz86VtwGq/08MrKRTl6jwIkvUXLyUOdhwlUvxUsp
-         V06FmgGn269LmP3WNV/Oyx2Hxa1qXJLJ0lDKpoL2ugqIdLLixksVLAwhEj1aKPZtdC+L
-         PTCEIwScYs9OPQkV8pM6HMdu3RJjsN7uoKUB3J7n/Umaklc47+ogpnNE8eJ1KjkkYgjo
-         Q5XHW/9xPuRZTzQCOzzT2In7kD1c7Xzi9hZHuWqZTnPRy1GllTT+PPI9blncy48kddzD
-         coiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGjwN7ommTDemrYqvE/xvIv8c3JRSFTMDa47OoFGlBE/+YnWqnZaiJsPkaPAN/0dM65Z6p9wyopfGclK8=@vger.kernel.org, AJvYcCX3nwU1thQDw2ffStwjtKnyceSZJypkGwB/8ZcWuK+pR9ZIQMGqXPlMCKMR2elkXcdsacfaPCRCYQ5hUjf5Ecw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxF762ZpGniAqD1kqen7KcJm1YnkOfGcpzrod5gKERQEKMqk679
-	1W4qSNxPaXER+F08z4lUi5eGWmSZfTvXj/O4FNOtJcLa1wVNzeWuUL98vMnNefi2MR0Cgc89peH
-	Qh3FocQLPXPoDx5zmqicD7EUZcrw=
-X-Gm-Gg: ASbGnct1JoiBPOjT4tSTKZgU5K7TeZj2QexR0DBG08+y39BeflFEolj7dNlQAD27rkA
-	gLJCeBSGTQTbngbfNI5u4ONKp1rOmG2tUC6H41cj+sjqwG58jnYM3XB0++7IlsnGJRcDC1qTU
-X-Google-Smtp-Source: AGHT+IEtCTBGqOQRC9rNZdOYUBN5s1vmNJEBcjEH/ezu3SeAnZEITW7yhuB8ayvKj8UwfukXpAApynYvYC2ttiDTVus=
-X-Received: by 2002:a17:90b:3504:b0:2fc:f63:4b6a with SMTP id
- 98e67ed59e1d1-2fc4078f0a1mr9513326a91.0.1739919291778; Tue, 18 Feb 2025
- 14:54:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiOZcO7g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F80C4CEE2;
+	Tue, 18 Feb 2025 22:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739919301;
+	bh=JfZZ5wVAOe/Y1NihNftjYuYbwLi7XmW8eEZlPrqPMd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aiOZcO7gz+YKbzy7UfmkDhU3tc1GP77KXGgqZvo8QBWC5vgpTgTrmRki8TY27KEG9
+	 8HqF/60pEH5UBgtSchm3Se6wqh0dZaDowr6l0b6r0YUl+j0tajI/QC2mEqdWnL1GnL
+	 LiqABVRTk5NWk1BgguBFuStYX4r6uCiugCD746iyvxydi45/2eBqxBVJGd1AGnfWRG
+	 ylD6MnyNRCoHpbpVjxW/FVxP8oPsdm4slgSekZk/4aRmRIPRkFjtlJborqm0BF8/oW
+	 GCSKlZDlRTb1JiQ+9Nn3ndwQV91qYjgd4h0D3IG0l3MLO6jxlYtY1qBAyD9YDZ6pGA
+	 E6dhuaXIuBhyA==
+Date: Tue, 18 Feb 2025 22:54:57 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Will Deacon <will@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Dave Martin <Dave.Martin@arm.com>, Fuad Tabba <tabba@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 00/27] KVM: arm64: Implement support for SME in
+ non-protected guests
+Message-ID: <Z7UPwXVqkaKZDtGk@finisterre.sirena.org.uk>
+References: <20250214-kvm-arm64-sme-v4-0-d64a681adcc2@kernel.org>
+ <86pljkswuk.wl-maz@kernel.org>
+ <Z69dsGn1JVWPCqAi@finisterre.sirena.org.uk>
+ <86h64ssyi1.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org> <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
-In-Reply-To: <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 18 Feb 2025 23:54:39 +0100
-X-Gm-Features: AWEUYZllVlCBOkeQTx7fTLjoA285Tdhin73DUOICR9PC8JCLOM4rew0tsCSZ4zc
-Message-ID: <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
-Subject: Re: Rust kernel policy
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Christoph Hellwig <hch@infradead.org>, rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="S0+W34M0g75qMnHY"
+Content-Disposition: inline
+In-Reply-To: <86h64ssyi1.wl-maz@kernel.org>
+X-Cookie: Editing is a rewording activity.
+
+
+--S0+W34M0g75qMnHY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 18, 2025 at 10:49=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wro=
-te:
->
-> I have a few issues with Rust in the kernel:
->
-> 1. It seems to be held to a *completely* different and much lower standar=
-d than the C code as far as stability. For C code we typically require that=
- it can compile with a 10-year-old version of gcc, but from what I have see=
-n there have been cases where Rust level code required not the latest bleed=
-ing edge compiler, not even a release version.
+On Mon, Feb 17, 2025 at 09:37:26AM +0000, Marc Zyngier wrote:
+> Mark Brown <broonie@kernel.org> wrote:
+> > On Fri, Feb 14, 2025 at 09:24:03AM +0000, Marc Zyngier wrote:
 
-Our minimum version is 1.78.0, as you can check in the documentation.
-That is a very much released version of Rust, last May. This Thursday
-Rust 1.85.0 will be released.
+> > > Why SVCR? This isn't a register, just an architected accessor to
+> > > PSTATE.{ZA,SM}. Userspace already has direct access to PSTATE, so I
+> > > don't understand this requirement.
 
-You can already build the kernel with the toolchains provided by some
-distributions, too.
+> > Could you be more explicit as to what you mean by direct access to
+> > PSTATE here?  The direct access to these PSTATE fields is in the form of
 
-I think you may be referring to the "unstable features". There remain
-just a few language features (which are the critical ones to avoid
-source code changes), but upstream Rust is working to get them stable
-as soon as possible -- the Linux kernel has been twice, in 2024H2 and
-2025H1, a flagship goal of theirs for this reason:
+> I'm painfully aware of the architecture limitations.
 
-    https://rust-lang.github.io/rust-project-goals/2025h1/goals.html#flagsh=
-ip-goals
-    https://rust-lang.github.io/rust-project-goals/2024h2/index.html
+> However, I don't get your mention of SPSR here. The architecture is
+> quite clear that PSTATE is where these bits are held, that they are
+> not propagated anywhere else, and that's where userspace should expect
+> to find them.
 
-Meanwhile that happens, upstream Rust requires every PR to
-successfully build a simple configuration of the Linux kernel, to
-avoid mistakenly breaking us in a future release. This has been key
-for us to be able to establish a minimum version with some confidence.
+> The fact that SW must use SVCR to alter PSTATE.{ZA,SM} doesn't matter.
+> We save/restore registers, not accessors. If this means we need to
+> play a dance when the VMM accesses PSTATE to reconciliate KVM's
+> internal view with the userspace view, so be it.
 
-This does not mean there will be no hiccups, or issues here and there
--- we are doing our best.
+Could you please clarify what you're referring to as the VMM accessing
+PSTATE here?  The KVM API documentation defines it's concept of PSTATE
+as:
 
-> 2. Does Rust even support all the targets for Linux?
+ 0x6030 0000 0010 0042 PSTATE      64  regs.pstate
 
-Rust has several backends. For the main (LLVM) one, there is no reason
-why we shouldn't be able to target everything LLVM supports, and we
-already target several architectures.
+in api.rst but does not futher elaborate.  Looking at the code the
+values that appear there seem to be mapped fairly directly to SPSR
+values, this is why I was talking about them above.
 
-There is also a GCC backend, and an upcoming Rust compiler in GCC.
-Both should solve the GCC builds side of things. The GCC backend built
-and booted a Linux kernel with Rust enabled a couple years ago. Still,
-it is a work in progress.
+It's not clear to me that PSTATE in the architecture is a register
+exactly.  DDI0487 L.a D1.4 defines the PSTATE bits as being stored in a
+ProcState pseudocode structure (ProcState is defined in J1.3.3.457, the
+pseudocode maps PSTATE in J1.3.3.454) but has an explicit comment that
+"There is no significace in the field order".  I can't seem to locate an
+architectural definition of the layout of PSTATE as a whole.  I also
+can't find any direct observability of PSTATE as a whole which would
+require a layout definition for PSTATE itself from the architecture. =20
 
-Anyway, for some of the current major use cases for Rust in the
-kernel, there is no need to cover all architectures for the time
-being.
+There *is* a statement in R_DQXFW that "The contents of PSTATE
+immediately before the exception was taken are written to SPSR_ELx"
+which is somewhat in conflict with the absence of SM and ZA fields in
+any of SPSR_ELx.  There's also R_BWCFK similarly for exception return,
+though that also already has some additional text for PSTATE.{IT,T} for
+returns to AArch32.  If everything in PSTATE ends up getting written to
+SPSR then we can use SPSR as our representation of PSTATE.
 
-> 3. I still feel that we should consider whether it would make sense to co=
-mpile the *entire* kernel with a C++ compiler. I know there is a huge amoun=
-t of hatred against C++, and I agree with a lot of it =E2=80=93 *but* I fee=
-l that the last few C++ releases (C++14 at a minimum to be specific, with C=
-++17 a strong want) actually resolved what I personally consider to have be=
-en the worst problems.
+> It probably means you need to obtain a clarification of the
+> architecture to define *where* these bits are stored in PSTATE,
+> because that's not currently defined.
 
-Existing Rust as a realistic option nowadays, and not having any
-existing C++ code nor depending on C++ libraries, I don't see why the
-kernel would want to jump to C++.
+I will raise the issue with R_DQXFW and friends with the architects but
+I'm not convinced that at this point the clarification wouldn't be an
+adjustment to those rules rather than the addition of fields for SM and
+ZA in the SPSRs.  Without any additions the only access we have is via
+SVCR.
 
-> As far as I understand, Rust-style memory safety is being worked on for C=
-++; I don't know if that will require changes to the core language or if it=
- is implementable in library code.
+> > > Isn't it that there is simply a dependency between restoring PSTATE
+> > > and any of the vector stuff? Also, how do you preserve the current ABI
+> > > that do not have this requirement?
 
-Rust-style memory safety for C++ is essentially the "Safe C++"
-proposal. My understanding is that C++ is going with "Profiles" in the
-end, which is not Rust-style memory safety (and remains to be seen how
-they achieve it). "Contracts" aren't it, either.
+> > Yes, that's the dependency - I'm spelling out explicitly what changes in
+> > the register view when PSTATE.{SM,ZA} are restored.  This ABI is what
+> > you appeared to be asking for the last time we discussed this.
 
-My hope would be, instead, that C is the one getting an equivalent
-"Safe C" proposal with Rust-style memory safety, and we could start
-using that, including better interop with Rust.
+=2E..
 
-> David Howells did a patch set in 2018 (I believe) to clean up the C code =
-in the kernel so it could be compiled with either C or C++; the patchset wa=
-sn't particularly big and mostly mechanical in nature, something that would=
- be impossible with Rust. Even without moving away from the common subset o=
-f C and C++ we would immediately gain things like type safe linkage.
+> > Would you prefer:
 
-That is great, but that does not give you memory safety and everyone
-would still need to learn C++.
+> >  - Changing the register view based on the current value of PSTATE.SM.
+> >  - Exposing streaming mode Z and P as separate registers.
+> >  - Exposing the existing Z and P registers with the maximum S?E VL.
 
-Cheers,
-Miguel
+> > or some other option?
+
+> My take on this hasn't changed. I want to see something that behaves
+> *exactly* like the architecture defines the expected behaviour of a
+> CPU.
+
+> But you still haven't answered my question: How is the *current* ABI
+> preserved? Does it require *not* selecting SME? Does it require
+> anything else? I'm expecting simple answers to simple questions, not a
+
+Yes, it requires not selecting SME and only that.  If the VMM does not
+enable SME then it should see no change.
+
+> wall of text describing something that is not emulating the
+> architecture.
+
+I'm not clear what you're referring to as not emulating the architecture
+here, I *think* it's the issues with PSTATE.{SM,ZA} not appearing in
+SPSR_ELx and hence KVM's pstate?
+
+Your general style of interaction means that it is not always altogether
+clear when your intent is to just ask a simple question or when it is to
+point out some problem you have seen.
+
+--S0+W34M0g75qMnHY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme1D8EACgkQJNaLcl1U
+h9Ag7Af9FSno1GEtP2DysLSKInBllL4rhNcN+6z7D0oMeZYX+CbjmeedfMLNVwdd
+quEjDrrV5PN76cyP3s35ABkWOUUUWyrUMYt3sP6vVesfNuMhjb54DETOj71CTEaW
+wt8TicvFuN6erEuz85tgB5CPng+CEGwJRhu6STP7/gBEfPou7y/9dH6xj++i/ueD
+Affm1jdtJAtdk6lDgtqjF0K9Tkawu8SM/0MkoITsCRK3R05LpSLBiCvr3S0e/rUv
+r616LswXOvPnYxuJ3Cr2phgx5ZTGgSo+IH/KQUOdK9lM1E6YkqXDtNQtw5qXldu+
+NYjTRYepfepTBCUZ6GVhkP7IEmi+tQ==
+=qowg
+-----END PGP SIGNATURE-----
+
+--S0+W34M0g75qMnHY--
