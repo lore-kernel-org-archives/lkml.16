@@ -1,107 +1,231 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E18B10F4;
-	Tue, 18 Feb 2025 12:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739881228; cv=pass; b=sytStNd5nX1a5UNPT9M7otKh2FXv9tPDh9z2b3D2sbtHgkmx5jGr1jEoQMpgYWYSNsUWxzG9jzP3oUZ/Hvo/d8raqq/n0aIp2RrH8JAx/+vBFss34ujob3/kaVJ9E7kbI7PofqufS1+Nmsq89sy+agTVQtChkwV1uSyLVGEzA2A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739881228; c=relaxed/simple;
-	bh=7wG+k/J27UhE0wr9moyh2JThWcB7wEZyZUkzLHmMNAc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=YMkl7amyO0D6fn+tBCiVuri41gt8OVjjzx6YYoC9rVpvLufnhrEOgdMCNrn66MoH0uEZkq/o/w0Ug5mCO/0t79RXTCwk2X2Z/sl91nVvSE+bQYaSdG2KTXQdSNnvbo+p6bRbz2EeH9whmKGonNYb5XceUPE1dWOYl6Nvgu5cTF0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=k2o8+YsR; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12886237707
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739881261; cv=none; b=i9/XuQ0ExeCeHD+rs8ycxd/0GfvMBYxuVvpXb5AhMYdv1Toeje4xxRW3JcZICoFEgsWEBx8LkjQcwMnKsGMCp7gg6S7I9JCOqU7ENxHIRx4GfFntHs01Cl26gj87mrjxenVRjND5gdepw58gh86WojAPU3Emu+dtX6IkvN7oQXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739881261; c=relaxed/simple;
+	bh=bds0z1Ps8lHCjN8PZJSpJtGwlL50yPWSJgoePSjKqIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qbj3z4zVLB0mmC3DbjXW4ULWEVvC4FgNpVet3vyYuPds2ntElu7/YhpVM+s+/on+XA+uvS/jL8uf1EIz2v30qCqsD0l9nuOTpFN9ZOThuQixZCCnKDD3yrDnjjArR88i+k+MmheXGXC8qcsOAh/B4V/IjsLFJTLfS/Gx+7keyvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=fail smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=va0WAio6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uhgYou0M; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=va0WAio6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uhgYou0M; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="k2o8+YsR"
-ARC-Seal: i=1; a=rsa-sha256; t=1739881194; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=oGjXYGqxVAaQvjPL6J0oChYi7O14uxalRxAVSbOKNImPXpApIvWUQq2ILUaSiOvArjnGS07kGjCHwaXHtyf8AgMZJbnnfi3E5GzyBrAD5+gMTYj7VMAROAfNihIfANS3uxSTAgXJBzoucH7P8Ch7QGjD1WpoQ/qZ9KDNNsxwOjY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739881194; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=7wG+k/J27UhE0wr9moyh2JThWcB7wEZyZUkzLHmMNAc=; 
-	b=ZFW7JcyThRzv5FOvC4onq+bxF4M8EaRZk6aZD/JMEb9Tt6UiYac2mC1Xdj4MZBkwXlM3jR0JR4I9ktA4cI2umuSaK1K6HXbXtSZuhOST0ajwjoNQRtW9yvJW8S1z2mQ8XTB7s3LXv1VYLhvf6EcqZK5Ck/uifFl3I4m8dUh5NRs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739881194;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=7wG+k/J27UhE0wr9moyh2JThWcB7wEZyZUkzLHmMNAc=;
-	b=k2o8+YsRfBvh1gD5rj+DG2L7sdQoD7piyxZp0lABE4/bbdDs5gFtBKlLDVTVJz0T
-	JBbiJuECpD65vbol2UnZghnPNwCd5qFBq5HQn6f0d85ixjXuMY1APaC3pWEh/A0z37s
-	QkMwt+/1GnT6tHXOx7EycRrmU1saERxg/p5qo9Oc=
-Received: by mx.zohomail.com with SMTPS id 1739881191996449.9203601583672;
-	Tue, 18 Feb 2025 04:19:51 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="va0WAio6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uhgYou0M";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="va0WAio6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uhgYou0M"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4F1901F442;
+	Tue, 18 Feb 2025 12:20:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739881258; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=32YxdVv/MFw34rijN0IiQG58J9aBNTWTnlrh5qWUaug=;
+	b=va0WAio6OYEndVRlVk7JN2jufbVjz92ge/kh5NK0NK72yPEQWjQY27jjU0l7zD4hb2vvdK
+	MLoK1FTMd/WvNJ3jLp0/mTCl9vGaM0x4Qyv7Qvc3tjW0mnbEkeB4rn2uKxkrcfWrmadc4i
+	+aXcQ7krT4BVnaVJ2F3Ox8LhB7ef1FA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739881258;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=32YxdVv/MFw34rijN0IiQG58J9aBNTWTnlrh5qWUaug=;
+	b=uhgYou0MiExwK9OHdDE5PuXs/+zZlfCn2FPOvEtzu5IWoWfb4as/89ElPijnIanJrSbZql
+	YLdLCHFYxBsSzKBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739881258; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=32YxdVv/MFw34rijN0IiQG58J9aBNTWTnlrh5qWUaug=;
+	b=va0WAio6OYEndVRlVk7JN2jufbVjz92ge/kh5NK0NK72yPEQWjQY27jjU0l7zD4hb2vvdK
+	MLoK1FTMd/WvNJ3jLp0/mTCl9vGaM0x4Qyv7Qvc3tjW0mnbEkeB4rn2uKxkrcfWrmadc4i
+	+aXcQ7krT4BVnaVJ2F3Ox8LhB7ef1FA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739881258;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=32YxdVv/MFw34rijN0IiQG58J9aBNTWTnlrh5qWUaug=;
+	b=uhgYou0MiExwK9OHdDE5PuXs/+zZlfCn2FPOvEtzu5IWoWfb4as/89ElPijnIanJrSbZql
+	YLdLCHFYxBsSzKBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3A78E132C7;
+	Tue, 18 Feb 2025 12:20:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id XRZADip7tGcdNAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 18 Feb 2025 12:20:58 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E8B8FA08B5; Tue, 18 Feb 2025 13:20:57 +0100 (CET)
+Date: Tue, 18 Feb 2025 13:20:57 +0100
+From: Jan Kara <jack@suse.cz>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] Change inode_operations.mkdir to return struct
+ dentry *
+Message-ID: <twielfhtttexj7gnhzkfm4eygx4avot4xaw63nv4winm6rjfqz@674juh7cylku>
+References: <20250217053727.3368579-1-neilb@suse.de>
+ <20250217053727.3368579-2-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v11 2/3] rust: add dma coherent allocator abstraction.
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <2b019479-2d32-433f-af78-c3378dee4e2b@gmail.com>
-Date: Tue, 18 Feb 2025 09:19:34 -0300
-Cc: Robin Murphy <robin.murphy@arm.com>,
- rust-for-linux@vger.kernel.org,
- dakr@kernel.org,
- aliceryhl@google.com,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E4FEFE5F-77C4-4ADB-AEFA-2580CA75BCFD@collabora.com>
-References: <20250123104333.1340512-1-abdiel.janulgue@gmail.com>
- <20250123104333.1340512-3-abdiel.janulgue@gmail.com>
- <633274AD-E55C-4A90-AB72-33D3E176176F@collabora.com>
- <dd57c3ba-246e-414d-a9c1-eb2cff032d83@arm.com>
- <2b019479-2d32-433f-af78-c3378dee4e2b@gmail.com>
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217053727.3368579-2-neilb@suse.de>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-Hi Abdiel,
+On Mon 17-02-25 16:30:03, NeilBrown wrote:
+> Some filesystems, such as NFS, cifs, ceph, and fuse, do not have
+> complete control of sequencing on the actual filesystem (e.g.  on a
+> different server) and may find that the inode created for a mkdir
+> request already exists in the icache and dcache by the time the mkdir
+> request returns.  For example, if the filesystem is mounted twice the
+> file could be visible on the other mount before it is on the original
+> mount, and a pair of name_to_handle_at(), open_by_handle_at() could
+> instantiate the directory inode with an IS_ROOT() dentry before the
+> first mkdir returns.
+> 
+> This means that the dentry passed to ->mkdir() may not be the one that
+> is associated with the inode after the ->mkdir() completes.  Some
+> callers need to interact with the inode after the ->mkdir completes and
+> they currently need to perform a lookup in the (rare) case that the
+> dentry is no longer hashed.
+> 
+> This lookup-after-mkdir requires that the directory remains locked to
+> avoid races.  Planned future patches to lock the dentry rather than the
+> directory will mean that this lookup cannot be performed atomically with
+> the mkdir.
+> 
+> To remove this barrier, this patch changes ->mkdir to return the
+> resulting dentry if it is different from the one passed in.
+> Possible returns are:
+>   NULL - the directory was created and no other dentry was used
+>   ERR_PTR() - an error occurred
+>   non-NULL - this other dentry was spliced in
+> 
+> Not all filesystems reliable result in a positive hashed dentry:
+> 
+> - NFS does produce the proper dentry, but does not yet return it.  The
+>   code change is larger than I wanted to include in this patch
+> - cifs will, when posix extensions are enabled,  unhash the
+>   dentry on success so a subsequent lookup  will create it if needed.
+> - cifs without posix extensions will unhash the dentry if an
+>   internal lookup finds a non-directory where it expected the dir.
+> - kernfs and tracefs leave the dentry negative and the ->revalidate
+>   operation ensures that lookup will be called to correctly populate
+>   the dentry
+> - hostfs leaves the dentry negative and uses
+>      .d_delete = always_delete_dentry
+>   so the negative dentry is quickly discarded and a lookup will add a
+>   new entry.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
 
-> On 18 Feb 2025, at 06:58, Abdiel Janulgue <abdiel.janulgue@gmail.com> =
-wrote:
->=20
-> Hi Robin,
->=20
-> On 17/02/2025 15:52, Robin Murphy wrote:
->> FWIW we've been wanting to steer away from relying on the default =
-mask in new code, so it would be quite neat to actually enforce that =
-allocations fail if dma_coherent_mask hasn't been explicitly set =
-(assuming it's sufficiently cheap to keep a flag in the Device handle or =
-something like that - it's not the end of the world if it isn't =
-practical).
->=20
-> I just had a quick look on how to possible approach this and indeed =
-would refactor the Device binding a bit. If it is okay with you this =
-could go in a follow-up patch? I was hoping to upstream the initial =
-support first - at least with the dma_set_mask/dma_set_coherent_mask put =
-in place already.
->=20
-> Thanks!
-> /Abdiel
->=20
+Looks good to me. I've spotted just a few style nits:
 
-FYI: I don=E2=80=99t mind a follow-up patch.=20
+> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+> index 31eea688609a..bd3751dfddcf 100644
+> --- a/Documentation/filesystems/vfs.rst
+> +++ b/Documentation/filesystems/vfs.rst
+> @@ -562,7 +562,10 @@ otherwise noted.
+>  ``mkdir``
+>  	called by the mkdir(2) system call.  Only required if you want
+>  	to support creating subdirectories.  You will probably need to
+> -	call d_instantiate() just as you would in the create() method
+> +	call d_instantiate() just as you would in the create() method.
+> +	If some dentry other than the one given is spliced in, then it
+> +	much be returned, otherwise NULL is returned is the original dentry
+        ^^^^ must
 
-=E2=80=94 Daniel=
+> +	is successfully used, else an ERR_PTR() is returned.
+>  
+>  ``rmdir``
+>  	called by the rmdir(2) system call.  Only required if you want
+
+...
+
+> @@ -918,6 +922,7 @@ static int fuse_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+>  	args.in_args[1].size = entry->d_name.len + 1;
+>  	args.in_args[1].value = entry->d_name.name;
+>  	return create_new_entry(idmap, fm, &args, dir, entry, S_IFDIR);
+> +
+
+Bogus empty line here.
+
+>  }
+>  
+>  static int fuse_symlink(struct mnt_idmap *idmap, struct inode *dir,
+
+...
+
+> @@ -4313,10 +4314,17 @@ int vfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+>  	if (max_links && dir->i_nlink >= max_links)
+>  		return -EMLINK;
+>  
+> -	error = dir->i_op->mkdir(idmap, dir, dentry, mode);
+> -	if (!error)
+> +	de = dir->i_op->mkdir(idmap, dir, dentry, mode);
+> +	if (IS_ERR(de))
+> +		return PTR_ERR(de);
+> +	if (de) {
+> +		fsnotify_mkdir(dir, de);
+> +		/* Cannot return de yet */
+> +		dput(de);
+> +	} else
+>  		fsnotify_mkdir(dir, dentry);
+
+The prefered style is:
+	} else {
+  		fsnotify_mkdir(dir, dentry);
+	}
+
+Otherwise the patch looks good to me at least for the VFS bits and the
+filesystems I understand like ext2, ext4, ocfs2, udf. So feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+									Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
