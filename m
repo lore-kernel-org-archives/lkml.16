@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BF12451E4;
-	Tue, 18 Feb 2025 09:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0D7246335;
+	Tue, 18 Feb 2025 09:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872008; cv=none; b=MqKvBpPOu1RYIi0VvKPjrQTdAtANqSthvwzN2LbpxDaVV13q2+9/WvOX6/KgUI6ieQjztkxZx7BcF0IlyoQLsSd1pbk+Y9przDlRoZgm5b+f5uyN2rqMbnpUOWR7mDh+R+3RXWAB7oozY/LX6hl/VvhykYM0p/mMkAttnougyTY=
+	t=1739872009; cv=none; b=leepAO8l5aqhUcZdMz6FUQFRE+Ua/P7nKoqsOadicDiYxQVSCXk1Xob2Oxp8KvnxQhtqe+fACP2/fZppd89/CIWThdZIPZvHn1MUINrWlst310wic4vP0Z3BbAl2DTqyVZQA4J96FT6N+UuyRbqR6SMqht7Ce7b1BDBkKZxFs04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872008; c=relaxed/simple;
-	bh=KKWaLP5qpMsw7RydGkFQ2gw3A/cuiQ2yBj1Fo4fRsKI=;
+	s=arc-20240116; t=1739872009; c=relaxed/simple;
+	bh=5J1JCnlrPEyC3wKj5hlfaP8vPKgl5X42BUKi5TPNLdw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Fj5/mlktAOkawsy+UQHs7/nxEv/+g7CTmQZrLEXo3wAKeMsapmp7T9smgEsBHQOXrQ0aC9WLxbYcXRMydx43kSDbjldq/OP0g8NlS64Xt4bxFJbsiCnpel428Ct4724kYBx3hxBl5vQaws17DF2i7FlmREpxQim2/BXA3bJgtgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AvCvmrLo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aL2g0AY/; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=M2X6P4ftq6uVixJPxj+sT3p3VlaA4dx3c+/y0auT01Evffs5GxNL8qpHt/3eppnKG2uguFchjEIA6zuPjNgAP6ylQpQHt1dXAxOh5n039EQFZE58dhDl3t+b0oWvqg6HuCTwCPEr6hFLZsUQ+SZA91nTSuEp0pkhYp22sd4Kv7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UL2mXM8l; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BOHBFqT2; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AvCvmrLo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aL2g0AY/"
-Date: Tue, 18 Feb 2025 09:46:44 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UL2mXM8l";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BOHBFqT2"
+Date: Tue, 18 Feb 2025 09:46:45 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739872005;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/pkT/dCu7yNaUEWVDp8GeC82JB12IPGDaNqK/eSURkc=;
-	b=AvCvmrLotQKfQS934cF7F3A+HnpLKt2z1affvSO8BbfsmPH3U9/YVnl/q8Q2e3XseSlAwN
-	X6H+M6Vq55gtSL0huQ4tR7Ho24FX/prNPZZbEbXz5g5Uid75mn+ykD3sIYhaA/pi8/ujjn
-	fbY3QVsO5/96VZivFjaKhnKmv5P3UhEoGu30Xto9kRhcVKnBG9sB9J8/dj24ZKbuRSdtDI
-	ko+cCETzkjaHzlry8ES8IaVqtE+KScQvaAjtNzBO45JHXW/x5NLRP9CYOQlcQBMa3Um454
-	PUVG+5z+G4on7fGDq/8SP2l7wuLru3lS+TeW+nq12rO2lKnpdwip31sEm7xwjA==
+	bh=0el+vZOLLGmlZA+e1CSulntccrWgwxv9M5Q6sS5J0uw=;
+	b=UL2mXM8lC1NkC/P5SZn46TpcoIlX5ezk4o1ppt1ZhksS9v6dK1hNCpB1enE74cYB6aS4gk
+	UlRwLKjgEe1O+8d5DblIPRleg9+nziOaTB0dfj0va8tV3BrTYE+nkcU4PG7rB8MnfKf8Mf
+	zNvsf4USXEes2KR7pQbkxz53zFBE+Jv6BK5Uyj5p/9GpleJIzZ4xw7s9mT0cRDvrZNUd67
+	l8l5lf1j/mwZtA6FKcgXKnL8RZLH90n2Ez4F6qrniA0oxnhk60av3oFK/laySqWlM47g1l
+	liWMtJn9fLaLerwuQ/SlocFmdtDr8wmyLK14zNumPnE8xZm97xzejlqmzKw7lA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739872005;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,20 +38,19 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/pkT/dCu7yNaUEWVDp8GeC82JB12IPGDaNqK/eSURkc=;
-	b=aL2g0AY/gWnRX53hAAleDjPzBgOdL5QM+nq6Uy3/CN9yB+YVcSoIPpM7LRYa47PJrBCJcC
-	dhOlsirAD9gwRzCA==
+	bh=0el+vZOLLGmlZA+e1CSulntccrWgwxv9M5Q6sS5J0uw=;
+	b=BOHBFqT2WGpY3yJM6PKsXCUsDCEp2yA9RhwrKUCcIHMk8xA/e00G5LY5NCq2IO7hBanmHn
+	s/jSDKz1Rqf/usCQ==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] KVM: s390: Switch to use hrtimer_setup()
+Subject: [tip: timers/cleanups] KVM: PPC: Switch to use hrtimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C637865c62963fb8cddf6c4368ca12434988a8c27=2E17387?=
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3Ca58c4f16b1cfba13f96201fda355553850a97562=2E17387?=
  =?utf-8?q?46821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C637865c62963fb8cddf6c4368ca12434988a8c27=2E173874?=
+References: =?utf-8?q?=3Ca58c4f16b1cfba13f96201fda355553850a97562=2E173874?=
  =?utf-8?q?6821=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,7 +58,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173987200472.10177.17967223407419091137.tip-bot2@tip-bot2>
+Message-ID: <173987200535.10177.7528400490473745436.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,14 +68,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     7ff22753d894250aed6048f6d4a5680142b4083f
-Gitweb:        https://git.kernel.org/tip/7ff22753d894250aed6048f6d4a5680142b4083f
+Commit-ID:     a0241210a3f3950bf4a28b5077108c8a126d47ec
+Gitweb:        https://git.kernel.org/tip/a0241210a3f3950bf4a28b5077108c8a126d47ec
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:38:47 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:38:46 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 18 Feb 2025 10:32:30 +01:00
 
-KVM: s390: Switch to use hrtimer_setup()
+KVM: PPC: Switch to use hrtimer_setup()
 
 hrtimer_setup() takes the callback function pointer as argument and
 initializes the timer completely.
@@ -88,40 +87,24 @@ Patch was created by using Coccinelle.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Link: https://lore.kernel.org/all/637865c62963fb8cddf6c4368ca12434988a8c27.1738746821.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/a58c4f16b1cfba13f96201fda355553850a97562.1738746821.git.namcao@linutronix.de
 
 ---
- arch/s390/kvm/interrupt.c | 3 +--
- arch/s390/kvm/kvm-s390.c  | 4 ++--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/powerpc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-index 07ff0e1..0f00f8e 100644
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -3174,8 +3174,7 @@ void kvm_s390_gisa_init(struct kvm *kvm)
- 	gi->alert.mask = 0;
- 	spin_lock_init(&gi->alert.ref_lock);
- 	gi->expires = 50 * 1000; /* 50 usec */
--	hrtimer_init(&gi->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	gi->timer.function = gisa_vcpu_kicker;
-+	hrtimer_setup(&gi->timer, gisa_vcpu_kicker, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	memset(gi->origin, 0, sizeof(struct kvm_s390_gisa));
- 	gi->origin->next_alert = (u32)virt_to_phys(gi->origin);
- 	VM_EVENT(kvm, 3, "gisa 0x%pK initialized", gi->origin);
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index ebecb96..1066c6a 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3943,8 +3943,8 @@ static int kvm_s390_vcpu_setup(struct kvm_vcpu *vcpu)
- 		if (rc)
- 			return rc;
- 	}
--	hrtimer_init(&vcpu->arch.ckc_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	vcpu->arch.ckc_timer.function = kvm_s390_idle_wakeup;
-+	hrtimer_setup(&vcpu->arch.ckc_timer, kvm_s390_idle_wakeup, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL);
+diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+index ce1d91e..61f2b7e 100644
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -766,8 +766,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ {
+ 	int err;
  
- 	vcpu->arch.sie_block->hpid = HPID_KVM;
+-	hrtimer_init(&vcpu->arch.dec_timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
+-	vcpu->arch.dec_timer.function = kvmppc_decrementer_wakeup;
++	hrtimer_setup(&vcpu->arch.dec_timer, kvmppc_decrementer_wakeup, CLOCK_REALTIME,
++		      HRTIMER_MODE_ABS);
  
+ #ifdef CONFIG_KVM_EXIT_TIMING
+ 	mutex_init(&vcpu->arch.exit_timing_lock);
