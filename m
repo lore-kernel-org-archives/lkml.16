@@ -1,107 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEFE286284;
-	Wed, 19 Feb 2025 17:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AB8286284;
+	Wed, 19 Feb 2025 17:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739985668; cv=none; b=CNF96jRmBMPzxABAltJ06ptpXjKAVKwSnihRu+N8UQtWIXNfW5uxtZ6tOfU++00rX43FewsSopPKT0qnHS88KojO9ePkKPr4TxRwxUvv0nOVZ8I00+UtsIVY1eUG6l+1CyrpLuDwgtw1HsDrVZzuaMj+hxaJIQLbSnDhbsTkUh4=
+	t=1739985701; cv=none; b=HMC2di0GF4pYYw792aHM2oe/WprrjXffyHDNB2jdtPa18JtgXhomNJts/G+WDuZD4kKXWpp76NxIXdC0WrxN8okC+708ltKuvCHjNSBQuqs01H4X/YB9mCDhrD81k83AUpSgek6l3dJViqtrJ8xTiYIcv9Hf2Wuch11ryLOKyQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739985668; c=relaxed/simple;
-	bh=ov+u5w/5fC+8oMPN7+g0AbEGhh+S1mUoX5U15HsZ72o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tn/IGmrLLWIbHs34UqDccWGWiP2ab5WC3Y40zFJhDC/Bgyy0R+Jh2eod/oPJuf4FVRuXlO7oiu1numFKLviVRx9Vw9P7MHFAugac72KjPjS0WygbjzwbhVVhzbSV9ouPaLK/g0xnCyjJVQMYCMagqSKXofNA0p9X5d/z8oxqVS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddjY5H2g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739985701; c=relaxed/simple;
+	bh=1Me3lu0fX9NUSPq+Ggrr4DEAwkU4l3ce4Mld2GXKtg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BYce3WBAjfXjpI+8r0FQv3NDprBDJIBahSS0rVG0rhUh1ZcE5qvw0X4IACDsTW/fueh4hT1DG5xW8fiVqjUn9bSLwnTTJlVQrvji0/MCnREvKN7UFzntUJVkWGY3qCxzZfITm6+UkZReUgkUHEVIV5rFVUzHebpZ4LqMw9imMtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Oec9H/gA; arc=none smtp.client-ip=80.12.242.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddjY5H2g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AEA7C4CED1;
-	Wed, 19 Feb 2025 17:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739985667;
-	bh=ov+u5w/5fC+8oMPN7+g0AbEGhh+S1mUoX5U15HsZ72o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ddjY5H2gWfTW5YwRCxyJV9CWSepJjZTICyTk07K9DUtj+yeVFHNvc6fOag0o9SUJ+
-	 I+wuk1RwlU5tiP8cbZp++09mdD30s89q2UjmifyxpMtk6J7/VZ5jOP6PfFFuMGjSzK
-	 dib1HPv1FSWr2c3KeFtrc9RaOgKnK7vqDtyNu8Hqe6sgVfZygvpY9ViAE6jjbSjYS/
-	 bLOwmWsD+xD2KCyuPqicoLbEJsz06yMKT54QvpIxgytMphAwMMZki/BDqk/kCbS/Ug
-	 yeg7pc7SE1yFntGZUToQph+lp+xLc5zUbSkrMw5G51oJqm/krY4VkjmTaKIN8PI6b6
-	 I+V2qN3M/NW1A==
-Message-ID: <740725e2-0580-4a52-baa1-44e722d4ce35@kernel.org>
-Date: Wed, 19 Feb 2025 11:21:05 -0600
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Oec9H/gA"
+Received: from fedora.home ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id knkEt082zsC0pknkHtl0HU; Wed, 19 Feb 2025 18:20:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1739985626;
+	bh=QW6x6Fz8XX5peZDa2MJO8SZhs7Tp8RyNuh/Nt9PBXRE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Oec9H/gAZMMuSXgE68f9B/TYvkhyYCZxwWie6NgYFH0TjbLCByUDa3Vx7BDcXSPgF
+	 HSoZn/z6jWtYw9sMKm1BuxGRC70Bw93hdBbF5yrprmV4/nZrGU6bVCmedccal8JVOk
+	 W7CK8OP7Qxpd750ShNiWHS5aQNGyaNrKB4LboofPf8Rk8rIpVfVhaxITnBgpD++Iy1
+	 CDClym/uMUSGPmXEEoWxJAYGzU/jbSyLJUsIYfN93078Way/gUF0RfQj6WMDB0vJcT
+	 EkNcj8b3Nif4ctnAPHE2N0b1GLTcRonx498ixCGMm9fyuUP+SQwA2fmrciBnELr9s9
+	 bM59H7wDOfXnQ==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 19 Feb 2025 18:20:26 +0100
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-leds@vger.kernel.org
+Subject: [PATCH] leds: st1202: Fix an error handling path in st1202_probe()
+Date: Wed, 19 Feb 2025 18:20:20 +0100
+Message-ID: <4afa457713874729eb61eec533a4674a51d1d242.1739985599.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/18] cpufreq/amd-pstate: Invalidate cppc_req_cached
- during suspend
-To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-Cc: Perry Yuan <perry.yuan@amd.com>,
- Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Miroslav Pavleski <miroslav@pavleski.net>
-References: <20250217220707.1468365-1-superm1@kernel.org>
- <20250217220707.1468365-2-superm1@kernel.org>
- <Z7VrADfrrPB7GtfX@BLRRASHENOY1.amd.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <Z7VrADfrrPB7GtfX@BLRRASHENOY1.amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/18/2025 23:24, Gautham R. Shenoy wrote:
-> Hello Mario,
-> 
-> 
-> On Mon, Feb 17, 2025 at 04:06:50PM -0600, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> During resume it's possible the firmware didn't restore the CPPC request MSR
->> but the kernel thinks the values line up. This leads to incorrect performance
->> after resume from suspend.
->>
->> To fix the issue invalidate the cached value at suspend. During resume use
->> the saved values programmed as cached limits.
->>
->> Reported-by: Miroslav Pavleski <miroslav@pavleski.net>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217931
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/cpufreq/amd-pstate.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
->> index f425fb7ec77d7..12fb63169a24c 100644
->> --- a/drivers/cpufreq/amd-pstate.c
->> +++ b/drivers/cpufreq/amd-pstate.c
->> @@ -1611,7 +1611,7 @@ static int amd_pstate_epp_reenable(struct cpufreq_policy *policy)
->>   					  max_perf, policy->boost_enabled);
->>   	}
-> 
-> You can also remove the tracing code from amd_pstate_epp_reenable(), i.e,
-> 
-> 	if (trace_amd_pstate_epp_perf_enabled()) {
-> 		trace_amd_pstate_epp_perf(cpudata->cpu, cpudata->highest_perf,
-> 					  cpudata->epp_cached,
-> 					  FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cpudata->cppc_req_cached),
-> 					  max_perf, policy->boost_enabled);
-> 	}
-> 
-> Since amd_pstate_epp_update_limit() also has the the tracing code.
+devm_mutex_init() may return -ENOMEM.
+So this error should be handled in st1202_probe().
 
-Yeah; the tracing code gets updated later in the series.
-My plan is this commit is a minimal fix, and will go to 6.14, the rest 
-will be in 6.15.
+Fixes: 259230378c65 ("leds: Add LED1202 I2C driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/leds/leds-st1202.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> 
-> The patch looks good to me otherwise.
-> 
-> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-> 
+diff --git a/drivers/leds/leds-st1202.c b/drivers/leds/leds-st1202.c
+index b691c4886993..4fc17d518292 100644
+--- a/drivers/leds/leds-st1202.c
++++ b/drivers/leds/leds-st1202.c
+@@ -356,7 +356,10 @@ static int st1202_probe(struct i2c_client *client)
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
+-	devm_mutex_init(&client->dev, &chip->lock);
++	ret = devm_mutex_init(&client->dev, &chip->lock);
++	if (ret < 0)
++		return ret;
++
+ 	chip->client = client;
+ 
+ 	ret = st1202_dt_init(chip);
+-- 
+2.48.1
 
-Thanks!
