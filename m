@@ -1,83 +1,84 @@
-Received: from 002.mia.mailroute.net (002.mia.mailroute.net [199.89.3.5])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598682528E6;
-	Wed, 19 Feb 2025 20:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E7B247DE1;
+	Wed, 19 Feb 2025 20:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739998544; cv=none; b=qcelu+yeIMEhRCpjmnCmiPGyUNlQbDwJs7deKk+L5AFYO+iy15yOjojKE+FYlwUQtyOsNX7GUXC4uGXn8YKAEj/Ss+3l5F6QQh6Fr2+22v7GRogoEQvdhDSZaFjZQ5B/zmjJZqIsebt1JgTGx9h0upLeJ0cd6FoZ75pZ/7lYcpk=
+	t=1739998580; cv=none; b=usdhf+rHUqj3rG13FZQxngAKDT6AbnIS45Ox1j1LSO1id+af/3/VnIgJOyBZIHJ0ylhAjO7319FShmMdC5ryaca2xBkUcLII3kciJDcrptG7NtvwOOmoh4jbbl0Qhy9w3X8p7o0WoLOZ1UAFFObuu/w3dD8MIFV0FVeQfR/SgZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739998544; c=relaxed/simple;
-	bh=czMByyYReIpUlR6GzNLR1SALmS9l1XM4mmWYhV9IfLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lIqGokDytUTUiklRAH0ORJ6xlmcSufXCpBHDQNiyy/8C20Xb/Sw3S7dvK2HbAbu2FYOmM3rrMCy510O4p15s1HZoluYxGsZbRIOMma+ekIMWzf/D3wyISwAjSYvivxpuq52IDn0imSKJkfCPEa/PQI31Fp22g/5EfFH+nhRW7H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=N4/a9lUP; arc=none smtp.client-ip=199.89.3.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1739998580; c=relaxed/simple;
+	bh=j3Z1m9Hj7+QyCu8uQvcw8xqLLqcrNWzvxMOS2qVC2J4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTYhAjS1Ra89uEM40uC8MQIpjqi1egv/nAt3AKgiendOX2IJMu6HAtHCJvQSKVMVZj8QqeneRvdrw/WLFP77FF2l7yI8z11zxk0db14kI/veSxpHfu05Nl2A/tj6O2pzzQDS+pSdfzESBc2ezxr33XxUIXNggAcb/KmcuympnAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aVkq3dIg; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="N4/a9lUP"
-Received: from localhost (localhost [127.0.0.1])
-	by 002.mia.mailroute.net (Postfix) with ESMTP id 4YypVg5hFzzlsBGD;
-	Wed, 19 Feb 2025 20:52:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1739998346; x=1742590347; bh=czMByyYReIpUlR6GzNLR1SAL
-	mS9l1XM4mmWYhV9IfLM=; b=N4/a9lUP5L6UKs/agVhzbsZ0TIWrZE/+ExuiLCb5
-	0qFSMK8zpFReC0lckEdW/kEeGlbsGBY5HME5QA/U2VWvDwpYRafvkM3I+h/dIIt5
-	lXGlgENhlQRokMW5QW8Lx39uOaXKp52xjE7fDfhZbpK7S2mg5QyP28CXpDlsArs/
-	jBeh8I5yx0BW3nK1wXtLg5k+PWpiN61TTjVANrTN96NCqW0jMg7RPBYSizMx1hFb
-	Ex/ikitJQuXDZa/r3hoLBAhCcgZKnSmuJi+7sojAXW+uE8llJnmOJ9XnC8FQtnN7
-	rkengsBmMoO2fzrIA1jZoqBUa0VbULqvPK1jdEdT96g4Dw==
-X-Virus-Scanned: by MailRoute
-Received: from 002.mia.mailroute.net ([127.0.0.1])
- by localhost (002.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id pk2laRYKX8zR; Wed, 19 Feb 2025 20:52:26 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aVkq3dIg"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 526C840E015F;
+	Wed, 19 Feb 2025 20:56:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id sylMmaoy6Uec; Wed, 19 Feb 2025 20:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739998572; bh=BzSk146EZPdEuoi3fRzTjgIcSI+I1KqFNXTcwx/L4Bc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aVkq3dIgPr6+5o1k3zYpUi4eS1vWXA2yWgboIFcAiLRGdxot0OWfOmMJD8cmcQfET
+	 u60oS07EkLaLM2rqBXDWYDhT1Yk1iCeGB3k5EjQo7348HK8MZuHhvNaqKwHHmDnZ88
+	 8eEMMVrZramrswk7Myjw0GM8iRBd32XJmXLCF8ML2K7F6jTu8kKxRnbEuvmcI0PNN9
+	 Ex3AKfASEDn+9HkY3HYF27f6iSg1YMhdto1FVaJeNlLvvAyUFQOAZNOArqNX84ru18
+	 e7R/FgZieLXkmidmG4qcvPS17I916+k0xG5zJRuiyzC7XIOzVcFEDxvcRufJdu6RF5
+	 GPLApVlOzRtqqg3ilMMkaapKBfMlZL2V2CLZnPyt7I43YHsB9dVbuaDpwYqAk9hEQK
+	 Pq62XBNGabRcHr7A3EoUg3C8DwCH3uvBxhI6LheWeCihDS3M9T3RC1Et8HjFQAO9Kz
+	 SK9yt8bpxtu+OxGVHZzlInnKN0cRhsmikPnLxDMsx10SS047lnbounb6GxZwF4wAB/
+	 ENsGPeCmZ+Ia8gS/pW89+4TmaufrjOoedJTnpxL6/FBQinE1K4oXqEKlHpESXUGqBB
+	 BlIjV85hfV122bQ/hvdLs2ylzDYA2/Y2fkmtQY3KRkYf2CN0T4pAVLYFmzSEzAOQDf
+	 Ffnx3AKuELfYb+9D49NOXvNM=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 002.mia.mailroute.net (Postfix) with ESMTPSA id 4YypVV3frrzlsCZW;
-	Wed, 19 Feb 2025 20:52:17 +0000 (UTC)
-Message-ID: <97841173-1de8-4221-8bf3-3470a5ac98a7@acm.org>
-Date: Wed, 19 Feb 2025 12:52:14 -0800
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3FB2A40E015D;
+	Wed, 19 Feb 2025 20:55:57 +0000 (UTC)
+Date: Wed, 19 Feb 2025 21:55:56 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ruidong Tian <tianruidong@linux.alibaba.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, lpieralisi@kernel.org,
+	guohanjun@huawei.com, sudeep.holla@arm.com,
+	xueshuai@linux.alibaba.com, baolin.wang@linux.alibaba.com,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, rafael@kernel.org,
+	lenb@kernel.org, tony.luck@intel.com, yazen.ghannam@amd.com
+Subject: Re: [PATCH v3 2/5] RAS/AEST: Introduce AEST driver sysfs interface
+Message-ID: <20250219205556.GSZ7ZFXL0In8nPzRIm@fat_crate.local>
+References: <20250115084228.107573-1-tianruidong@linux.alibaba.com>
+ <20250115084228.107573-3-tianruidong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Rust kernel policy
-To: Steven Rostedt <rostedt@goodmis.org>, Jason Gunthorpe <jgg@nvidia.com>
-Cc: Kees Cook <kees@kernel.org>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Christoph Hellwig <hch@infradead.org>,
- rust-for-linux <rust-for-linux@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Greg KH <gregkh@linuxfoundation.org>, David Airlie <airlied@gmail.com>,
- linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <202502191026.8B6FD47A1@keescook>
- <20250219140821.27fa1e8a@gandalf.local.home>
- <202502191117.8E1BCD4615@keescook> <20250219202751.GA42073@nvidia.com>
- <20250219154610.30dc6223@gandalf.local.home>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250219154610.30dc6223@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250115084228.107573-3-tianruidong@linux.alibaba.com>
 
-On 2/19/25 12:46 PM, Steven Rostedt wrote:
-> I do feel that new drivers written in Rust would help with the
-> vulnerabilities that new drivers usually add to the kernel.
+On Wed, Jan 15, 2025 at 04:42:25PM +0800, Ruidong Tian wrote:
+> Exposes certain AEST driver information to userspace.
 
-For driver developers it is easier to learn C than to learn Rust. I'm
-not sure that all driver developers, especially the "drive by"
-developers, have the skills to learn Rust.
+Why?
 
-Bart.
+Why do we need to support a debug interface indefinitely.
+
+If "no real reason", then drop it.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
