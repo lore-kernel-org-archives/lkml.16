@@ -1,132 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AEF22D4E7;
-	Wed, 19 Feb 2025 19:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E2F22DF94
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 19:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739993381; cv=none; b=OINdn5siiIVlY9rIphrFIJqga9pV+b6JBPF+GpTDYp/agNaN4LZHo9SZU+n+h+EzZDoo9ehZZb8+q2spS+w3bnEHoG/gFQfo1QVRMgrMhyve2euFkojZ1uquKKoorWCUVZC1wuWSwCH7SiTePhLSkpjVq5PA4FdX5Zt2rncqXPQ=
+	t=1739993390; cv=none; b=m8lwtXjFK31eHXQpODbCni2javzZjzRx6cVwQBQZTwH+A+j88yfhu+Cwb9PPESU0RzOViLNwMfNGzCaxIXUu3uyilmT8XfmHhtp6cnGI+J7p8owvji5h+S8FDn522BtxeAaUxwoEh4RemxCYCOJxKk9Y9RI7rBqgXcjiheP2+Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739993381; c=relaxed/simple;
-	bh=Z7V906WlulIENLuqD38aqu92AY/oFAIHejRUI6piyqI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gx+3hXnjZpFjrwH+4eoGooAdaUb+FzMehX+azQ35+pH1poBmVNAFELXvJJscMtN7+AAOJGbRFOsYLM2ZDBLAC5T/rlX4V2+MSJ485J+42Woh8bP1wkJl6ARWeJAvhQgZ1q89MGuyJRwcf3u2ijyShRIgzVJE1P+Gd0vnDXZDW1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B2HWywCh; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739993390; c=relaxed/simple;
+	bh=vPJR1E+0nKkRmD9t4ibyCr5vD5vQJz9FfqZBVLMHJH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bVN0o5bQW6xKVBZDaMbJIzjIWHsR3O+4VT5UoYkRXint7NHuwJ4IK1yeXnproXnLu4RAe3g0IGc5mVvpejT5+BLFw7KsstmBn04B3Qxuegs2mW50jHGfpkzFS35kjh5+sgsGR1+4r8zgKii8vuznwKSE+On3DPSEqxyYI6BxAys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KE1J4CEX; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B2HWywCh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739993380; x=1771529380;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Z7V906WlulIENLuqD38aqu92AY/oFAIHejRUI6piyqI=;
-  b=B2HWywChCnpgEmBKhmj0lNnyX8IAmPjjSNnlXxtV2vTi2WcDgngDuX2S
-   5/aySlCnc0nXAZYVrhQbX9/0+L2ja8sYXVqOU5P6lFgqIvr04fZ/lOhqw
-   WzxHfFxrHmHyAiqb7j96NSpFT1HvsnPCRcVGucigy2CcVKae04z3Ogy2o
-   evrQ5PFNpD7iqZbrwWQzJRnlETJ2dMfxEjv3+193aF0Bw2uKk5Z36APh1
-   s4VK9zCBhNnyHb0yP2cGPsWqMEHPK2Vx3uf0Uir/UZ+5ZdUreYHjeKY46
-   OBQwhmOKsgh9mAZfGSS4XUG+XF/Kx4FxKjDrIUSzEPSf8RKU3XBP/v88u
-   w==;
-X-CSE-ConnectionGUID: jnkMXuDVQlCfZM+Uj3l70Q==
-X-CSE-MsgGUID: 4a7reIGKSS6PDVhzLfL7xA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52182990"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="52182990"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 11:29:39 -0800
-X-CSE-ConnectionGUID: Chmk76SWRmmLrviLrkjnJA==
-X-CSE-MsgGUID: EUrRt8CGTs2uznCUO0yqQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="115344046"
-Received: from sohilmeh.sc.intel.com ([172.25.103.65])
-  by fmviesa010.fm.intel.com with ESMTP; 19 Feb 2025 10:49:07 -0800
-From: Sohil Mehta <sohil.mehta@intel.com>
-To: x86@kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v3 10/15] x86/smpboot: Fix INIT delay assignment for extended Intel Families
-Date: Wed, 19 Feb 2025 18:41:28 +0000
-Message-ID: <20250219184133.816753-11-sohil.mehta@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250219184133.816753-1-sohil.mehta@intel.com>
-References: <20250219184133.816753-1-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KE1J4CEX"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4398c8c8b2cso1073325e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:29:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739993386; x=1740598186; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CRgBw/9+DjIn2dUaxLVe1aJruEsrC0b6BMldTb9aem4=;
+        b=KE1J4CEXhtkyOgkhPSESfBNhpQ1seNsT1y7FosjTqiXMD/Lgkc8Fqm0XlUFC6dVtFp
+         5CzwbKZXeV8c7xt9SLuzv0WnTcAA+7hA+ZBkZyJe0CyRkt7fqc9Dz65uvS2RiCFggjNZ
+         ehpmyMO8M+XBC2XKKGQFkLPM7a5+oJaY5/OP5IOiX+6KCgesM0biUofAx9VjMJ318sKN
+         OHcq8F6gCe8fTp4P6kZjOYQ/8yf8RhGWshWCMEbjhcnp5pNGejq8cSzSTFzOxwuaSUTq
+         2e4oBy+Eh9FWzAwzak76WdnfT2lfTvVpJjMYUSSMZBkPn/pPjDP1tkanC/7ieVZNNj+y
+         2LbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739993386; x=1740598186;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CRgBw/9+DjIn2dUaxLVe1aJruEsrC0b6BMldTb9aem4=;
+        b=kv5aJxhIFzIH+jy9yj+2TTy6b2jUgoi9rNv5sXvMPeO/c9wU1uwtEZ21oP9bXREv7l
+         JEtsR1NGD6T7wmSCcuGtY1ZgKrvVq50qMsOdistegvTreyIslNHxiPLKoi6gLqj+gRL5
+         lPcjwUkmzI8Nqm87SxO5tdsBVJEiSBskfwZDndJ4WL6JHbXbZi0NkD8lH6Hb/OuEReAf
+         4/KhORRKSfk+ngSTlUVeaMZSkO2lmFNucbMGJPlXE8A6R0lM6qyWH5J/78OqR8hEhA6x
+         khp2il3rWGlmDj/HpqoKN97flJEr2c3eKpXmXEqDdExcZcsjuNVqnnu/QFxIZCANPRKF
+         t84w==
+X-Gm-Message-State: AOJu0Ywzd+P8IkBdC01AWLDF5+Bb94B0+NFrKvjCK7S84RtGBymDImn5
+	oCsiGIKP7SHYh5tM3oXr/8DZGNyf/g9muacvFZVDEvbztVyIIB9/
+X-Gm-Gg: ASbGncu9AwVR7jmYiVyvBHwwBtWGhWnwvv+imBddEB0rIvb1I5mRSl2uvN7biPXObkD
+	iJSYmUrkKJRSvT/Hz5W+Or7sooxuGHtdbz8aOKdCyu/tLkBuNv4WE9T1AYhSEEWuH0641iMb2k2
+	ha1+0dQNlUcwUeegPrnMwdl1uuE71VhEUYrddM0kLX/jM9kQLeHZIe40j/4ZtVwd4kpIRov0A2i
+	//zTdZzMX3rRfrSY7/eK1cPavx6XqipMCmdsIh6t/Hc5NTZuy/S8MEquKlgVVlZhPFo/73gDa4w
+	hWy7e3jLG/U8yle3TXA2v4cGKtuN3IJGeu9sIFD8mOrZ8DDdT731Ew==
+X-Google-Smtp-Source: AGHT+IEldZw97RgBCR+et5tlq+vptn7zbAMzZt83K7+cVKArImxu5UkAG9iKOkq02jxtsUrMMEkBnQ==
+X-Received: by 2002:a05:600c:510f:b0:439:3d5c:8c19 with SMTP id 5b1f17b1804b1-439a3d07b0bmr955405e9.24.1739993386247;
+        Wed, 19 Feb 2025 11:29:46 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4398a44264csm82960165e9.25.2025.02.19.11.29.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 11:29:45 -0800 (PST)
+Date: Wed, 19 Feb 2025 19:29:42 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Nick Child <nnac123@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH next 1/1] lib: Optimise hex_dump_to_buffer()
+Message-ID: <20250219192942.1b579f74@pumpkin>
+In-Reply-To: <Z7UPNhW_bXSOzACk@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
+References: <20250216201901.161781-1-david.laight.linux@gmail.com>
+	<Z7UPNhW_bXSOzACk@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Some old crusty CPUs need an extra delay that slows down booting. See
-the comment above 'init_udelay' for details. Newer CPUs don't need the
-delay.
+On Tue, 18 Feb 2025 16:52:38 -0600
+Nick Child <nnac123@linux.ibm.com> wrote:
 
-Right now, for Intel, Family 6 and only Family 6 skips the delay. That
-leaves out both the Family 15 (Pentium 4s) and brand new Family 18/19
-models.
+> On Sun, Feb 16, 2025 at 08:19:01PM +0000, David Laight wrote:
+> > Fastpath the normal case of single byte output that fits in the buffer.
+> > Output byte groups (byteswapped on little-endian) without calling snprintf().
+> > Remove the restriction that rowsize must be 16 or 32.
 
-The omission of Family 15 (Pentium 4s) seems like an oversight and 18/19
-do not need the delay.
+That lets dump_hex_to_buffer(buf, len, len, 1, output, size, true) be used
+to format hex+ascii without a gap between the hex and ascii.
 
-Skip the delay on all Intel processors Family 6 and beyond.
+> > Remove the restriction that groupsize must be 8 or less.
+> > If groupsize isn't a power of 2 or doesn't divide into both len and
+> >   rowsize it is set to 1 (otherwise byteswapping is hard).
+> > Change the types of the rowsize and groupsize parameters to be unsigned types.
+> >  
+> 
+> Thank you!
+> 
+....
+> > +	out_len += pad_len + len;
+> > +	if (dst + pad_len >= dst_end)
+> > +		pad_len = dst_end - dst - 1;  
+> 
+> Why not jump to hex_truncate here? This feels like an error case and
+> if I am understanding correctly, this will pad the rest of the buffer
+> leaving no room for ascii.
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
----
-v3: Improve commit message
-v2: Make the changelog more precise
----
- arch/x86/kernel/smpboot.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I've had a look at the code again.
+The truncating error path would be: dst[0] = 0; return out_len;
+But that would be confusing because it would be a truncated output that
+doesn't fill the buffer.
+This is different from snprintf(), so I think it is best to pad to the
+end of the buffer.
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index eb91ed0f2a06..57e7b6441384 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -675,9 +675,9 @@ static void __init smp_set_init_udelay(void)
- 		return;
- 
- 	/* if modern processor, use no delay */
--	if (((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) && (boot_cpu_data.x86 == 6)) ||
--	    ((boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) && (boot_cpu_data.x86 >= 0x18)) ||
--	    ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD) && (boot_cpu_data.x86 >= 0xF))) {
-+	if ((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && boot_cpu_data.x86_vfm >= INTEL_PENTIUM_PRO) ||
-+	    (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON && boot_cpu_data.x86 >= 0x18) ||
-+	    (boot_cpu_data.x86_vendor == X86_VENDOR_AMD   && boot_cpu_data.x86 >= 0xF)) {
- 		init_udelay = 0;
- 		return;
- 	}
--- 
-2.43.0
+	David
 
