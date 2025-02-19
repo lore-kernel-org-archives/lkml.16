@@ -1,151 +1,146 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9599485C5E;
-	Wed, 19 Feb 2025 03:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DAE1119A;
+	Wed, 19 Feb 2025 03:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739934306; cv=none; b=fghzTU15o/vybaNrvU12ytRap129JUu/8xT5mwdM9kb/TaDhTArbXCHHnYPDqDnawFBR+pT5Ss1R55MXumv3JpSUT33E1uj7IKlwk14NtjGGkFyuVG6f43mmTR27xqwOGptWnkFqfzw8sgVhliSXKdrZPvMAqZBe/yOoEA2cjng=
+	t=1739934522; cv=none; b=ip7iF/YtZNP5ROI7yFeWKRoiB3jVrqb1jYW6Mu75Ay18kFeuhIxp4mfO1XR8k/OJPmUmThflM9Fq0gKwLU954xDM2wT+AYhXu4j1DQAy+SqxFI+NusAgXAAy7Pe2yrOsj3WMmU4cnnn7gmrmKQJ41kA0CMHT+R09SfnQIdpDYS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739934306; c=relaxed/simple;
-	bh=e8A+H2y7XktQhmsGL/DgdGADtxCo9djA5AXEHoodIj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGoDcmx+CVTn/J80XHpz71dStyUVIHA6WS+jCU4eKlWYFtXPyfsS38aCoMWo5nkKPM+GzLha+KL73WjpbI9rKRlPzYiwhfXOSsA4fmgNOleNE4djElMu2fsMP838WPy6rcvhtGjYGmQKXfdZQda3gtGP4t9ZJ3kgI04q8PDp5yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipTFm6cj; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipTFm6cj"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6dd15d03eacso4365616d6.0;
-        Tue, 18 Feb 2025 19:05:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739934303; x=1740539103; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9BYvLma230HuNlMIuMla/WdfRB1EHLePrdfB/AY0iYo=;
-        b=ipTFm6cjNy5FvbQOeE1Psw7tZGHKLs9XGkOWZPd0d8RITSrWcXTVER4uYMHRigiKJ7
-         4dB96xIhFPBm6VUtKECj/l5H+9y/glT3SiGhiZNYDIj01UvI3XtaxlISvodainJ4fmcX
-         7o4bWzA9hHjXs8bdQCWrbCzK21ypF80NloHmqXabc+BkUySrvclX5s5ET7hKAV5Fx6U1
-         CpaFoclX/psv9c8Q0KPs2J0yKMcweScHiat18LDzvMFLePdajO2eEfODJgzVYSnI2WkF
-         +r4Tu2ITZRHpnB4EZ4udaFFL5ujnpcK35mXMXCkjkVB6BKkvn92w7cN6UpRekXHA/SM8
-         NI8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739934303; x=1740539103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9BYvLma230HuNlMIuMla/WdfRB1EHLePrdfB/AY0iYo=;
-        b=jr+bgUQp8028/bY5QZRJ4YOgfE0Mz6iSiWlKBhv0muxmVDPXjVE525lPQeZkiFD3T5
-         2NMfVTgL1fdf2CTmXRU0BrGNi/XYvaWb1PRtqHaRG5M+6HWuiXK24ACwMo0nWfW6mXpu
-         RznNBAapK3TY8gOkuO3h9fwfxWqG2jpvD1dicX6D7jiQVoiSot7ZzhEHTdNrj+bzsRq3
-         cARlZMvTmDzBcz+qwWvb17I2HjyjOknwdFbed95N/y8LY8dQzAbQW5mWwL6dISAjlLy9
-         qFpb1MUB4GVmJ5VBcmaRpdH7AFJ4tEy484oeXR0eeMrojjWbrnDUz3/lczf5PLvcA2q2
-         EpVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUL2nXRM8vGlPYami4HG911b7jtfx3GXcjlPt+YG8pE9dd7gFhKPRzxXrVuju2Tn5SGtaVnt5dk0XrMDjQ=@vger.kernel.org, AJvYcCX5vPdcm6w8mq1RIufou31pFXrzrhPCD1nAZX6m0HUofHDS1X8GZbnxY5Q/LByaOR/oOuDIhqZsQ0kOKTFVmn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwausbT0ORfovqKZyLRYcTz/BsT0LFU8MiJX3WvdvsiEvhnL6SX
-	l4ACBfPnP4X4jXxF15IIjflVRJimfT03ZJPXwVby5C6mI552Eyky
-X-Gm-Gg: ASbGnctdQ8pQ6XMxh8r3it5rNHubXTx3+7+LAtf9PFAyQn7CoX+J31DEAdCTIYuppCE
-	V5JsEuuW5LAKFzWRtjFNoeAASNGOZgPc5sCrz5mRtNYWDGChJGMml2Zire9QXCuEWCorua/GISd
-	8pp1PiYjuDs/LA3LdYTHSDooUDeLbOyIpUgixHgWPifI/1WNPi75V+4LvEaMncIG93qWl/3Xk/g
-	BEm9BW1d2q3UgtXOeTuxwhn+IGySrD4UY9Oot6IwtzziS+UYGBGGo9X++IngPB+xa64ULxnaaPk
-	kWzkKPBLWMMlVspvgPtuze2BROPe6EfjU7Gz1yFVR0jkyFNEXW78O6iiS5MhSgy52S6kvM3Tr1G
-	2EBizBg==
-X-Google-Smtp-Source: AGHT+IEpwLJUfuLuhmgXxM1P44u6J5PghjbG8Z0zrez13XdfxdvL+e3xMCDuDpHACWHGgbPI08KK1Q==
-X-Received: by 2002:a05:6214:29e8:b0:6d8:b81c:ecc1 with SMTP id 6a1803df08f44-6e6970a062cmr27704776d6.13.1739934303405;
-        Tue, 18 Feb 2025 19:05:03 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65dce9b56sm70371876d6.112.2025.02.18.19.05.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 19:05:02 -0800 (PST)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 3C2C51200043;
-	Tue, 18 Feb 2025 22:05:01 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Tue, 18 Feb 2025 22:05:01 -0500
-X-ME-Sender: <xms:XUq1Z6tK4ps1TBNrszKb6OYR1jJLYLxzgSMg55hZskBqMSHduihTXA>
-    <xme:XUq1Z_eICRaGMKv6le5sJyERTAtqHH06lmmIe-phZJEWC63BUQKPKGOvUJaDrXa0C
-    JG19SnpSiRObxTOfA>
-X-ME-Received: <xmr:XUq1Z1yTMWAOfIEpRgiqLyIO0yu1B8S_AfivWLecuJGPXDMMui9a7FHq-w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeifedtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedutddpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohephhhprgesiiihthhorhdrtghomhdprhgtph
-    htthhopehmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhm
-    pdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehruh
-    hsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpth
-    htohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthht
-    oheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvg
-    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkshhumhhmihht
-    sehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:XUq1Z1PSM2WIqYp5_V8nHtKpf6OiFsq3fOe0Ir7UYPRbDsJwEGUYUg>
-    <xmx:XUq1Z6_jzsChztG1BEB1qD9bxXDBs-vdaoNy1LxF_YS0s42KcsTEKA>
-    <xmx:XUq1Z9XH4CAn_ISf4VA8-ar0avdJz9VAgjkbpFpQleOcoBmxbFL0gA>
-    <xmx:XUq1ZzcFOFTTDIEClzgQ3_1kFg6eRaIbP3UT9fZIp5zaNTWcMx9h3g>
-    <xmx:XUq1Z0dv7rkKMWgmOzawS2Pmzl5a9C6eMw8vrSwlb2TlMe7E2k19acGz>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 18 Feb 2025 22:05:00 -0500 (EST)
-Date: Tue, 18 Feb 2025 19:04:59 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <Z7VKW3eul-kGaIT2@Mac.home>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
- <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
+	s=arc-20240116; t=1739934522; c=relaxed/simple;
+	bh=F/b7KSb/46Hhx7CHmSwzSQ8LRO+xjTjA4Gt7OJu6PLs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DDOlqmcWa1GK33vcVEz4X57ZZDgGWyyP1pq8caKb1H7bB24LmxYKKk/MTiHT0dyGHJkQmFTcYQe1OBULKCEej8fJNZb70VonZOGJK6E3hGLn5B3ZCmQMc0E0+ANtzktH1NghxVKzgJqDLihsJB5QFBu16DGYLdS4avSeCNU9i9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4YyLsK5pbVzMrgD;
+	Wed, 19 Feb 2025 11:07:01 +0800 (CST)
+Received: from dggemv711-chm.china.huawei.com (unknown [10.1.198.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 22AFF1A0188;
+	Wed, 19 Feb 2025 11:08:32 +0800 (CST)
+Received: from kwepemn100006.china.huawei.com (7.202.194.109) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 19 Feb 2025 11:08:31 +0800
+Received: from [10.174.176.245] (10.174.176.245) by
+ kwepemn100006.china.huawei.com (7.202.194.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 19 Feb 2025 11:08:30 +0800
+Message-ID: <4dff834e-f652-447c-a1f0-bfd851449f70@huawei.com>
+Date: Wed, 19 Feb 2025 11:08:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] tcp: Fix error ts_recent time during three-way
+ handshake
+To: Eric Dumazet <edumazet@google.com>
+CC: <ncardwell@google.com>, <kuniyu@amazon.com>, <davem@davemloft.net>,
+	<dsahern@kernel.org>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<horms@kernel.org>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Jason Xing <kerneljasonxing@gmail.com>
+References: <20250218105824.34511-1-wanghai38@huawei.com>
+ <CANn89iKF+LC_isruAAd+nyxgytr4LPeFTe9=ey0j=Xy5URMvkg@mail.gmail.com>
+Content-Language: en-US
+From: Wang Hai <wanghai38@huawei.com>
+In-Reply-To: <CANn89iKF+LC_isruAAd+nyxgytr4LPeFTe9=ey0j=Xy5URMvkg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemn100006.china.huawei.com (7.202.194.109)
 
-On Tue, Feb 18, 2025 at 04:58:27PM -0800, H. Peter Anvin wrote:
-[...]
-> > > David Howells did a patch set in 2018 (I believe) to clean up the C code in the kernel so it could be compiled with either C or C++; the patchset wasn't particularly big and mostly mechanical in nature, something that would be impossible with Rust. Even without moving away from the common subset of C and C++ we would immediately gain things like type safe linkage.
-> > 
-> > That is great, but that does not give you memory safety and everyone
-> > would still need to learn C++.
+
+
+On 2025/2/18 21:35, Eric Dumazet wrote:
+> On Tue, Feb 18, 2025 at 12:00 PM Wang Hai <wanghai38@huawei.com> wrote:
+>>
+>> If two ack packets from a connection enter tcp_check_req at the same time
+>> through different cpu, it may happen that req->ts_recent is updated with
+>> with a more recent time and the skb with an older time creates a new sock,
+>> which will cause the tcp_validate_incoming check to fail.
+>>
+>> cpu1                                cpu2
+>> tcp_check_req
+>>                                      tcp_check_req
+>> req->ts_recent = tmp_opt.rcv_tsval = t1
+>>                                      req->ts_recent = tmp_opt.rcv_tsval = t2
+>>
+>> newsk->ts_recent = req->ts_recent = t2 // t1 < t2
+>> tcp_child_process
+>> tcp_rcv_state_process
+>> tcp_validate_incoming
+>> tcp_paws_check
+>> if ((s32)(rx_opt->ts_recent - rx_opt->rcv_tsval) <= paws_win) // failed
+>>
+>> In tcp_check_req, restore ts_recent to this skb's to fix this bug.
+>>
+>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+>> ---
+>>   net/ipv4/tcp_minisocks.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+>> index b089b08e9617..0208455f9eb8 100644
+>> --- a/net/ipv4/tcp_minisocks.c
+>> +++ b/net/ipv4/tcp_minisocks.c
+>> @@ -878,6 +878,10 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
+>>          sock_rps_save_rxhash(child, skb);
+>>          tcp_synack_rtt_meas(child, req);
+>>          *req_stolen = !own_req;
+>> +       if (own_req && tcp_sk(child)->rx_opt.tstamp_ok &&
+>> +           unlikely(tcp_sk(child)->rx_opt.ts_recent != tmp_opt.rcv_tsval))
+>> +               tcp_sk(child)->rx_opt.ts_recent = tmp_opt.rcv_tsval;
+>> +
+>>          return inet_csk_complete_hashdance(sk, child, req, own_req);
 > 
-> The point is that C++ is a superset of C, and we would use a subset of C++
-> that is more "C+"-style. That is, most changes would occur in header files,
-> especially early on. Since the kernel uses a *lot* of inlines and macros,
-> the improvements would still affect most of the *existing* kernel code,
-> something you simply can't do with Rust.
+> Have you seen the comment at line 818 ?
+> 
+> /* TODO: We probably should defer ts_recent change once
+>   * we take ownership of @req.
+>   */
+> 
+> Plan was clear and explained. Why implement something else (and buggy) ?
+Hi Eric,
+
+According to the plan, can we fix it like this?
+
+diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+index b089b08e9617..1210d4967b94 100644
+--- a/net/ipv4/tcp_minisocks.c
++++ b/net/ipv4/tcp_minisocks.c
+@@ -814,13 +814,6 @@ struct sock *tcp_check_req(struct sock *sk, struct 
+sk_buff *skb,
+         }
+
+         /* In sequence, PAWS is OK. */
+-
+-       /* TODO: We probably should defer ts_recent change once
+-        * we take ownership of @req.
+-        */
+-       if (tmp_opt.saw_tstamp && !after(TCP_SKB_CB(skb)->seq, 
+tcp_rsk(req)->rcv_nxt))
+-               WRITE_ONCE(req->ts_recent, tmp_opt.rcv_tsval);
+-
+         if (TCP_SKB_CB(skb)->seq == tcp_rsk(req)->rcv_isn) {
+                 /* Truncate SYN, it is out of window starting
+                    at tcp_rsk(req)->rcv_isn + 1. */
+@@ -878,6 +871,9 @@ struct sock *tcp_check_req(struct sock *sk, struct 
+sk_buff *skb,
+         sock_rps_save_rxhash(child, skb);
+         tcp_synack_rtt_meas(child, req);
+         *req_stolen = !own_req;
++       if (own_req && tmp_opt.saw_tstamp && !after(TCP_SKB_CB(skb)- 
+seq, tcp_rsk(req)->rcv_nxt))
++               tcp_sk(child)->rx_opt.ts_recent = tmp_opt.rcv_tsval;
++
+         return inet_csk_complete_hashdance(sk, child, req, own_req);
+
+  listen_overflow:
 > 
 
-I don't think that's the point of introducing a new language, the
-problem we are trying to resolve is when writing a driver or some kernel
-component, due to the complexity, memory safety issues (and other
-issues) are likely to happen. So using a language providing type safety
-can help that. Replacing inlines and macros with neat template tricks is
-not the point, at least from what I can tell, inlines and macros are not
-the main source of bugs (or are they any source of bugs in production?).
-Maybe you have an example?
-
-Regards,
-Boqun
-
-[...]
