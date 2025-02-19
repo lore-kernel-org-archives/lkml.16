@@ -1,172 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA2E1494DF
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52511FCFD2;
+	Wed, 19 Feb 2025 18:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739989229; cv=none; b=kAdYmk54/Yl2qczLUNIXRxXv2EgA3hZ1YNLlOLcA2Y5oT9gJlhMYB4iTilAc1Rpi9QmgvQy61Pw3Bmvy05VJToT+a5ZX2rjEMPGoSw3dF1pp1LJHJCXck0dMlejloZjRL8a9Fqv51+goH39qQA33bIK9S0yuAFdDuRnpqjSUlIE=
+	t=1739989249; cv=none; b=J2VN0DS1azLgWiFPtmynl28WzkO3r9lWbKk9pPEp/dOfWu9QmBuagEtI9lKVomCs5xk5EODc0x3HuGCxvhB3y+Vb0tvRJ9+5a923Ahur6/eHSimqzbtKqyD1T+D0g6smxZHmOvb6CIZYhJZuCK8DEjq37givfuIiYnVjAsbPEys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739989229; c=relaxed/simple;
-	bh=DCjk6dDVCRMWeL58L3QZn9z12drE+ckbb/rbzxaBZj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CeaSGwIXybQevoUxak0uniRNAKkalhJmPX4xrMMbOWfSjvqL0bzyVy3sZEB2wjIAG8gNqjsR7AiFmfARLlUC2x3TnuqSp9+Vun0zPwj+HbFvwZQc/9mGa4JYG8kg52hHzkKoTMuw20hRUfaosLftkGoSQKrF5x5mBP/9BDzet94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uW2akTXo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739989249; c=relaxed/simple;
+	bh=X14I7mbTIu2+tFsLjHVL5fSZz+NqDimLUr7e8CxbkJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cRtElYX9UbrDp49aALNwyppUHK3KLlFsf4a4KWDTtMPw4YUzGpArEDaAORA2disPVA3nHW+KgMWHWSAObiACJhpHCKRWEDtgC4BPa5JYoqYMK0Gk3rcNy1z/roBQek6tE7TOZBvh6Cq+7sOWNLKlTeu5+9VY1k0eT+JCyYMf6cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oej0EZNh; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uW2akTXo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD170C4CED1;
-	Wed, 19 Feb 2025 18:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739989228;
-	bh=DCjk6dDVCRMWeL58L3QZn9z12drE+ckbb/rbzxaBZj4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uW2akTXoAwcO/+ojDy+ryGkKmLSXP+Wht5ZN3QW3CStdi5nU/nhCDlOMYz+B63/ip
-	 WuQKPyKWCITWZ7cQvkWibNk9bk0Ou3F6FH2z4L6rr4GJfThxHj/oMpH5egD0O3El8p
-	 pTiNFklhcJIvutAgWXyA4xggT8p7Gzg02etNsbWsbEaoHDI3N2yvN0zK3dXsF6Kv2L
-	 wj0AyHVtZ3tmX2yAhWfHyRgHV00VktvtOuPGzpXMse/BWeilM+bhjlb985prfll/tX
-	 66H8LeJ/7nvLF5hz1YlG9hrhbbQL4icWgM2BRjRyUR2DbuJRrWGSnfWT4bOI/Tw5A+
-	 +Q86/S+1FozYA==
-Date: Wed, 19 Feb 2025 10:20:25 -0800
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, alyssa.milburn@intel.com,
-	scott.d.constable@intel.com, joao@overdrivepizza.com,
-	andrew.cooper3@citrix.com, jpoimboe@kernel.org,
-	jose.marchesi@oracle.com, hjl.tools@gmail.com,
-	ndesaulniers@google.com, samitolvanen@google.com, nathan@kernel.org,
-	ojeda@kernel.org, alexei.starovoitov@gmail.com, mhiramat@kernel.org,
-	jmill@asu.edu
-Subject: Re: [PATCH v3 06/10] x86/traps: Decode LOCK Jcc.d8 #UD
-Message-ID: <202502191013.72E4EFFF0@keescook>
-References: <20250219162107.880673196@infradead.org>
- <20250219163514.928125334@infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oej0EZNh"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220c2a87378so372225ad.1;
+        Wed, 19 Feb 2025 10:20:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739989247; x=1740594047; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=76EGObTpdOqVLxr8ga99oMSHZxAdsSys7BY3UEvgdGo=;
+        b=Oej0EZNhjzgZcZ80QOQXMavocEt9OUDwGXOWcfj4ihnRPbvq9fkgzSgwE1SKpeFc7N
+         Cz9sc8W4WQMJFe534jm/DvG/yGm2ld0Vars48i3H8N8XJtMVYaqnb9GhRNjnrRe9p8qx
+         sT+j3cx36mXWNMwN93dHXCT0Hm89aoBKhEl3fjw5cYoW1bGTa9R4AVhMwC+2eYggdicT
+         VBlFHalHtLbIBdejW9K8PMshaaUT36AB8dHgEg8JPTvs7kvMCljTtAVAXUO8gwAEiYu+
+         0uI1O5YaoOxgY1BlkrJyuzqbyB4wjhbTrQRHJA38eH1VZaTxODIDXfkT/LAtCcwye/iD
+         pBZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739989247; x=1740594047;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=76EGObTpdOqVLxr8ga99oMSHZxAdsSys7BY3UEvgdGo=;
+        b=n22XBJivSu4RyDFx4XSiEUNDmXfY2dh8q6F/maFFiNT6C2QPbWuxBOy5zgA65M4xvH
+         mWdKCQWtHT+YddABeubbjGUwmUcywDFZb0YE1PHcWHdS3hhwZAQYPoFUMrf64S6RIYyB
+         XyR/i963nk8zv+/6DaYK+Ho9UzJ0bqRoaIZOirZwWrQ43NDG5Srbefc7mSnvlULdekhi
+         yFZs3+Hd5Tp/lntD6MsJBmzq6RE0h6ug11JrMZiT49ft7lcpBCtlPWvQIhRTK62e6EMg
+         +WDyfvhd3IRQTIrf/ygZEbBlWrStfYT2YxH3bpVago6/R+7+O8krr1RSozfkXzYjwtOr
+         RKDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlwzNSjD5R/5VOaI8Uv5FevfJfVJqFwsu3/x4rnacEyQxLJmp/woOD+JiSGZlPQvSwJmHKGO+mYLB1iHE8gCaM2zDN@vger.kernel.org, AJvYcCWWD+kXo0pjRos1+jm8TLArOLcmvKXlw1k1O9icJkSrd4mpTf2yaBBokoL0w03xgVd6z3SXkFL9AvE=@vger.kernel.org, AJvYcCXB2B9hkBoGLY48AjW0ZDhrKMiRwP70wTikKw0hYJM1FzDW2R5BHw9Lg+1HggZxDDCx9o6fF0GRJ7+EoamS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqKkPYTS457dF91I1bhCAsYkxpZIeQmU/DJWJkAmn6GLKPq9/Z
+	wC6jXKzk0KuTWfnvM5Xs2DHsj8Phu0Sr314jcsqZwc+AXREIGihA
+X-Gm-Gg: ASbGncthr8k01c6MsNzkxnmlRk33PwTiv72ifF4Y/6QZYY9pSHuKWDVrD1100J6OqM2
+	ZQG+2/2bwXQIbIkz4RC1yvzjc2V4ydAW/rWZHQGVsq9X8fPpdiqwraal3/X6aSwAS8AjlLykmJL
+	t6a342zUz6APJVY9yxs5cm8/anbz2tHHFVpm9floDTQmLKDaCsxITD4zSvJq4xvTOE/olPdO6XA
+	boEaudvvNeaJFV2fvz8iNeOvB0T3E/h69MkuWjCd97+Qz5Dv0TtZo7kvPX9gdO4q5VmqCbCieYq
+	+EtBscJN9p5Oqw==
+X-Google-Smtp-Source: AGHT+IE9woL3cS8LSc84OwEKFZItt18q3T4hIJa4P0EOZXN+eQBRjN/5am8F7oQZrvigsd9J1eVjrg==
+X-Received: by 2002:a05:6a20:3d84:b0:1ee:8922:563 with SMTP id adf61e73a8af0-1ee8cb08f4amr29813280637.16.1739989246845;
+        Wed, 19 Feb 2025 10:20:46 -0800 (PST)
+Received: from jemmy.. ([47.116.124.190])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ade083277b3sm7753218a12.27.2025.02.19.10.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 10:20:46 -0800 (PST)
+From: Jemmy Wong <jemmywong512@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Jemmy Wong <Jemmywong512@gmail.com>
+Subject: [PATCH 0/2] sched: Refine scheduler naming for clarity and specificity
+Date: Thu, 20 Feb 2025 02:20:18 +0800
+Message-ID: <20250219182020.393006-1-jemmywong512@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219163514.928125334@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 05:21:13PM +0100, Peter Zijlstra wrote:
-> Because overlapping code sequences are all the rage.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi, I'm relatively new to Linux and eager to contribute to the community
+with some foundational work.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+I aim to help improve code readability and maintainability.
+While reading the scheduler code, I found some naming inconsistencies
+that made understanding the code more difficult.
 
-Semi-pointless stream of consciousness below...
+Specifically:
+1. Some function names do not accurately reflect their purpose.
+2. Certain names are too general, making it unclear what they represent.
+3. Some concepts are ambiguous, leading to potential confusion.
 
-> ---
->  arch/x86/include/asm/bug.h |    2 ++
->  arch/x86/kernel/traps.c    |   30 +++++++++++++++++++++++++-----
->  2 files changed, 27 insertions(+), 5 deletions(-)
-> 
-> --- a/arch/x86/include/asm/bug.h
-> +++ b/arch/x86/include/asm/bug.h
-> @@ -17,6 +17,7 @@
->   * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
->   */
->  #define INSN_ASOP		0x67
-> +#define INSN_LOCK		0xf0
->  #define OPCODE_ESCAPE		0x0f
->  #define SECOND_BYTE_OPCODE_UD1	0xb9
->  #define SECOND_BYTE_OPCODE_UD2	0x0b
-> @@ -26,6 +27,7 @@
->  #define BUG_UD1			0xfffd
->  #define BUG_UD1_UBSAN		0xfffc
->  #define BUG_EA			0xffea
-> +#define BUG_LOCK		0xfff0
->  
->  #ifdef CONFIG_GENERIC_BUG
->  
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -97,6 +97,7 @@ __always_inline int is_valid_bugaddr(uns
->   * If it's a UD1, further decode to determine its use:
->   *
->   * FineIBT:      ea                      (bad)
-> + * FineIBT:      0f 75 f9                lock jne . - 6
->   * UBSan{0}:     67 0f b9 00             ud1    (%eax),%eax
->   * UBSan{10}:    67 0f b9 40 10          ud1    0x10(%eax),%eax
->   * static_call:  0f b9 cc                ud1    %esp,%ecx
-> @@ -106,6 +107,7 @@ __always_inline int is_valid_bugaddr(uns
->  __always_inline int decode_bug(unsigned long addr, s32 *imm, int *len)
->  {
->  	unsigned long start = addr;
-> +	bool lock = false;
->  	u8 v;
->  
->  	if (addr < TASK_SIZE_MAX)
-> @@ -114,12 +116,29 @@ __always_inline int decode_bug(unsigned
->  	v = *(u8 *)(addr++);
->  	if (v == INSN_ASOP)
->  		v = *(u8 *)(addr++);
-> -	if (v == 0xea) {
-> +
-> +	if (v == INSN_LOCK) {
-> +		lock = true;
-> +		v = *(u8 *)(addr++);
-> +	}
-> +
-> +	switch (v) {
-> +	case 0x70 ... 0x7f: /* Jcc.d8 */
-> +		addr += 1; /* d8 */
-> +		*len = addr - start;
-> +		WARN_ON_ONCE(!lock);
-> +		return BUG_LOCK;
-> +
-> +	case 0xea:
->  		*len = addr - start;
->  		return BUG_EA;
-> -	}
-> -	if (v != OPCODE_ESCAPE)
-> +
-> +	case OPCODE_ESCAPE:
-> +		break;
-> +
-> +	default:
->  		return BUG_NONE;
-> +	}
->  
->  	v = *(u8 *)(addr++);
->  	if (v == SECOND_BYTE_OPCODE_UD2) {
-> @@ -315,7 +334,8 @@ static noinstr bool handle_bug(struct pt
->  
->  	switch (ud_type) {
->  	case BUG_EA:
-> -		if (handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
-> +	case BUG_LOCK:
-> +		if (handle_cfi_failure(ud_type, regs) == BUG_TRAP_TYPE_WARN) {
->  			if (regs->ip == addr)
->  				regs->ip += ud_len;
->  			handled = true;
-> @@ -324,7 +344,7 @@ static noinstr bool handle_bug(struct pt
->  
->  	case BUG_UD2:
->  		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
-> -		    handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
-> +		    handle_cfi_failure(ud_type, regs) == BUG_TRAP_TYPE_WARN) {
->  			if (regs->ip == addr)
->  				regs->ip += ud_len;
->  			handled = true;
+- Rename ttwu_do_wakeup to ttwu_set_running:
+    - This function only sets task state to TASK_RUNNING,
+        not performing the actual wakeup.
 
-I realize these are misplaced chunks, but passing ud_type into the
-handler feels like a layering violation to me. I struggled with this
-when making recommendations for the UBSAN handler too, so I'm not sure
-I have any better idea. It feels like there should be a way to separate
-this logic more cleanly. The handlers are all doing very similar things:
+- Rename update_cfs_group to update_cfs_group_shares:
+    - The name was too generic; specifying "shares" clarifies its purpose.
 
-1- find the address where a bad thing happened
-2- report about it
-3- whether to continue execution
-4- where to continue execution
+- Rename place_entity to update_entity_sched:
+    - The function does not handle entity placement but updates
+        sched info: vruntime, slice, and deadline.
 
-The variability happens with 1 and 4, where it depends on the instruction
-sequences. Meh, I dunno. I can't see anything cleaner, so passing down
-ud_type does seem best.
+- Rename update_load_<set, add, sub> to load_weight_<set, add, sub>:
+    - "load" can refer to either PELT load or load weight, causing ambiguity;
+        "load_weight" specifies it's dealing with weight.
 
--- 
-Kees Cook
+- Rename struct sched_avg to struct sched_pelt:
+    - This structure includes not just average statistics
+        but also sums like <load, runnable, util>_sum, last_updae_time,
+        all of which are PELT (Per-Entity Load Tracking) metrics.
+
+- Rename init_entity_runnable_average to init_entity_pelt
+
+This patch aims to improve code readability and reduce confusion by
+ensuring names are more descriptive of their actual functionality or purpose.
+
+Signed-off-by: Jemmy Wong <Jemmywong512@gmail.com>
+---
+Jemmy Wong (2):
+  sched: Refine scheduler naming for clarity and specificity
+  sched: Refine sched_avg naming for clarity and specificity
+
+ Documentation/trace/ftrace.rst | 190 ++++++-------
+ include/linux/sched.h          |   6 +-
+ kernel/sched/core.c            |  18 +-
+ kernel/sched/debug.c           |  36 +--
+ kernel/sched/fair.c            | 478 ++++++++++++++++-----------------
+ kernel/sched/pelt.c            | 100 +++----
+ kernel/sched/pelt.h            |  16 +-
+ kernel/sched/rt.c              |   2 +-
+ kernel/sched/sched.h           |  22 +-
+ 9 files changed, 433 insertions(+), 435 deletions(-)
+
+--
+2.43.0
