@@ -1,139 +1,191 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCAB21CC74;
-	Wed, 19 Feb 2025 19:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEB522B8A2;
+	Wed, 19 Feb 2025 19:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739994609; cv=none; b=kpLSI39n1J2iRwnWbh4xGdccdSnqdy3f7Yxyfi+RfVGu8XUBkuOjgz56Mx4BAUnFDOfa2nXY2fMYsuFo6YpmUG7RVPOtYuWhX4E/FFDaYKPSJqYLGweNGbLOmYOLTWQUo++qiEr+A0DdQp325D46ud4WT+ArUbMp51vDFbcT3gA=
+	t=1739994737; cv=none; b=OYtl77p1zRnqfoi3Zn0v2gds8Wugidd76n+YOw9TF5bHqOvB50CrPuh8HH6KoYeI3LJRnahxgGTQA9ZaxYx5vaxSllZogEnTO8IV63ByFqxedY7h9ryc5Bum7pNJALnkv+GiMSF4Q5HT57pmuyshVGDApJlPPjnn3ndJbzgSqcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739994609; c=relaxed/simple;
-	bh=tWZue+1RuI1RRVTcW+CiaxaQDWrkOh8LDyTvVfPHg2E=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=s5HSphfmc+gOikutPhdk58EQJwxWIbyO8aO8cxiCHGKvoRBfxZS4ElN56LApsPN+AfVhxsHnMBPDssuv9+yATFGLlnKBe1UZY8nvsl5pME4QFHeFXDLr2QEc6aU13g8V4mbtnAswvngTk1fU7PMGdhswShewQHU6V7eYXjoiUpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Alw8WS3U; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739994737; c=relaxed/simple;
+	bh=DOLQO1RhmFhLWn7hxDgAwrHM0OygQR57BvyDe/z/2wI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhaB/yg8s7lUcEc5UIn1M7KQJAEC2NFou5g3yfDr+pC6HLx7mnGyJi4u/aXmHRlaBkAT3MKLnhwFJ00hGwokC8v8QlOfusBY8ks7Whgnd4rlkkw/zn/IfkPHEiZfIMH40P0hm8p4V2JoJCCYa+8cJhsArc5rZ+wNAStuj0G+Upg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+nvF/kz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Alw8WS3U"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JAaXDw017365;
-	Wed, 19 Feb 2025 19:49:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=yoqVrLtziorSSQIsiIHYjF
-	LK7d7Ng89gryqZ1bWum3s=; b=Alw8WS3Uy0f3gjmV0BQodARsWkBWXWtfUkEnSm
-	P93OuUt+u58A6LIvXW35boq2OjP/HsRXFeo/n6VyQoI2r4BecVgvYL02mWpicgBr
-	AdyRMbpI94NkkTKE4cs4xMyWz7VQodDXsEETikjz+HeB/j02mlT6lrpYoN/0Cq+P
-	QHGgATo+j1+D1nUwer2Hpd1+YxGeZ0941la+dhvPh2J8FwW58yig0WPwqpk/lk3c
-	VehPc0Y0/+TXuaPww5HEhHA9Ws8FmBQfb2rlbLSFa0yJfmwrz2+UYZfNBbqc6Mys
-	KakG1e9ly4dETr2BnQJdPUjYgA0mqJwcTrNz9lw00b1PMi3A==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy3bthn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 19:49:58 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51JJnvcb025556
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 19:49:57 GMT
-Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 19 Feb 2025 11:49:57 -0800
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Subject: [PATCH v3 0/5] drm/msm: add a display mmu fault handler
-Date: Wed, 19 Feb 2025 11:49:16 -0800
-Message-ID: <20250219-abhinavk-smmu-fault-handler-v3-0-aa3f0bf4434a@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+nvF/kz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D99C4CED1;
+	Wed, 19 Feb 2025 19:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739994734;
+	bh=DOLQO1RhmFhLWn7hxDgAwrHM0OygQR57BvyDe/z/2wI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+nvF/kzUx8ChqdNJGi4mLE5l7ace1wA4FRzx2E0rnuH98fibIN30MigbxOXBGOOS
+	 7HiekgYP6+Rn3tqCwgOWIvRfGwzvTxQPLfrLfNotoHBEjop2kGVs8C4T1098tm+UGu
+	 wnjLKRz3NbY5b5mL0vhn4/s2ev10wIbZ3Htq0sBijZc15A9hn1bIO9gL+Lju8usPbR
+	 jjqWZyY8sNs6aQBOTFKXebmpFKuwtzQxbbSOeoOX8YlKTl0ddB7cOHGgVAPvCHhk0u
+	 fYGZoBSBE1lSU79SMxq+EjZtJYpYunCpCaWJZrbuZJq/q1pX9KXzw/dWTpdW6aD31W
+	 QgHfoUx6KDaXw==
+Date: Wed, 19 Feb 2025 11:52:11 -0800
+From: Kees Cook <kees@kernel.org>
+To: Jan Kara <jack@suse.cz>, Michael Stapelberg <michael@stapelberg.ch>,
+	Brian Mak <makb@juniper.net>
+Cc: Christian Brauner <brauner@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v3] binfmt_elf: Dump smaller VMAs first in ELF cores
+Message-ID: <202502191134.CC80931AC9@keescook>
+References: <036CD6AE-C560-4FC7-9B02-ADD08E380DC9@juniper.net>
+ <20250218085407.61126-1-michael@stapelberg.de>
+ <39FC2866-DFF3-43C9-9D40-E8FF30A218BD@juniper.net>
+ <a3owf3zywbnntq4h4eytraeb6x7f77lpajszzmsy5d7zumg3tk@utzxmomx6iri>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL01tmcC/43OQQrCMBCF4atI1k5J0jSprryHiMR0Ygdtq0lbF
- OndTQsK7lz+MHzzXixiIIxsu3qxgCNF6toU+XrFXG3bMwJVqZnkUgkpDNhTTa0dLxCbZgBvh2s
- P6bC6YgBboSk8+k3JNywJt4CeHou+P6T2oWugrwPar8m1LKVQpSozxU2hCwEC7gO54+fRbi5qX
- ea6ZkZrin0XnsviUc70f+NGCRxUIXJjtNbOVj/wYZqmNy5mrn4NAQAA
-X-Change-ID: 20241217-abhinavk-smmu-fault-handler-ade75fef9809
-To: Rob Clark <robdclark@gmail.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>
-CC: Abhinav Kumar <quic_abhinavk@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Jessica
- Zhang" <quic_jesszhan@quicinc.com>
-X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739994596; l=1766;
- i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=tWZue+1RuI1RRVTcW+CiaxaQDWrkOh8LDyTvVfPHg2E=;
- b=wk/Y/1EhCHPvuwDEasfLYS+BHi4CT28ZuZeceUMxShAsQNxssgoQa8YDYHOXWoNlBCQxTmaA2
- e6tyaG9JH9+AsZS/JMvLcIfzP54zh02YSH/eAEPmWHzM+M8VNqGZRIu
-X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
- pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: AphNhgLKZhfAdtjavU5Z1462TtlcefRw
-X-Proofpoint-GUID: AphNhgLKZhfAdtjavU5Z1462TtlcefRw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_08,2025-02-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- phishscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 mlxlogscore=889 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502190153
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3owf3zywbnntq4h4eytraeb6x7f77lpajszzmsy5d7zumg3tk@utzxmomx6iri>
 
-To debug display mmu faults, this series introduces a display fault
-handler similar to the gpu one.
+On Wed, Feb 19, 2025 at 05:20:17PM +0100, Jan Kara wrote:
+> On Tue 18-02-25 19:53:51, Brian Mak wrote:
+> > On Feb 18, 2025, at 12:54 AM, Michael Stapelberg <michael@stapelberg.ch> wrote:
+> > 
+> > > I think in your testing, you probably did not try the eu-stack tool
+> > > from the elfutils package, because I think I found a bug:
+> > 
+> > Hi Michael,
+> > 
+> > Thanks for the report. I can confirm that this issue does seem to be
+> > from this commit. I tested it with Juniper's Linux kernel with and
+> > without the changes.
+> > 
+> > You're correct that the original testing done did not include the
+> > eu-stack tool.
+> > 
+> > > Current elfutils cannot symbolize core dumps created by Linux 6.12+.
+> > > I noticed this because systemd-coredump(8) uses elfutils, and when
+> > > a program crashed on my machine, syslog did not show function names.
+> > > 
+> > > I reported this issue with elfutils at:
+> > > https://urldefense.com/v3/__https://sourceware.org/bugzilla/show_bug.cgi?id=32713__;!!NEt6yMaO-gk!DbttKuHxkBdrV4Cj9axM3ED6mlBHXeQGY3NVzvfDlthl-K39e9QIrZcwT8iCXLRu0OivWRGgficcD-aCuus$
+> > > …but figured it would be good to give a heads-up here, too.
+> > > 
+> > > Is this breakage sufficient reason to revert the commit?
+> > > Or are we saying userspace just needs to be updated to cope?
+> > 
+> > The way I see it is that, as long as we're in compliance with the
+> > applicable ELF specifications, then the issue lies with userspace apps
+> > to ensure that they are not making additional erroneous assumptions.
+> > 
+> > However, Eric mentioned a while ago in v1 of this patch that he believes
+> > that the ELF specification requires program headers be written in memory
+> > order. Digging through the ELF specifications, I found that any loadable
+> > segment entries in the program header table must be sorted on the
+> > virtual address of the first byte of which the segment resides in
+> > memory.
+> > 
+> > This indicates that we have deviated from the ELF specification with
+> > this commit. One thing we can do to remedy this is to have program
+> > headers sorted according to the specification, but then continue dumping
+> > in VMA size ordering. This would make the dumping logic significantly
+> > more complex though.
+> > 
+> > Seeing how most popular userspace apps, with the exception of eu-stack,
+> > seem to work, we could also just leave it, and tell userspace apps to
+> > fix it on their end.
+> 
+> Well, it does not seem eu-stack is that unpopular and we really try hard to
+> avoid user visible regressions. So I think we should revert the change. Also
+> the fact that the patch breaks ELF spec is an indication there may be other
+> tools that would get confused by this and another reason for a revert...
 
-This series has been tested on sc7280 chromebook by using triggering
-a smmu fault by forcing an incorrect stride on the planes.
+Yeah, I think we need to make this a tunable. Updating the kernel breaks
+elftools, which isn't some weird custom corner case. :P
 
----
-Changes in v3:
-- Move resetting of fault_snapshot_capture to before prepare_commit()
-  call (Dmitry)
-- Change fault_snapshot_capture from int to atomic_t (Dmitry, Abhinav)
-- Link to v2: https://lore.kernel.org/r/20241217-abhinavk-smmu-fault-handler-v2-0-451377666cad@quicinc.com
+So, while it took a few months, here is a report of breakage that I said
+we'd need to watch for[1]. :)
 
-Changes in v2:
-- Reset fault_snapshot_capture flag in atomic commit tail (Rob)
+Is anyone able to test this patch? And Brian will setting a sysctl be
+okay for your use-case?
 
-changes since RFC:
-	- move msm_mmu_set_fault_handler() to msm_kms_init_aspace
-	- make msm_kms_fault_handler return -ENOSYS
-	- use msm_disp_snapshot_state() instead of msm_disp_snapshot_state_sync()
-	  because smmu fault handler should not sleep
-	- add a rate limiter for the snapshot to avoid spam
 
----
-Abhinav Kumar (5):
-      drm/msm: register a fault handler for display mmu faults
-      drm/msm/iommu: rename msm_fault_handler to msm_gpu_fault_handler
-      drm/msm/iommu: introduce msm_iommu_disp_new() for msm_kms
-      drm/msm: switch msm_kms to use msm_iommu_disp_new()
-      drm/msm/dpu: rate limit snapshot capture for mmu faults
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index a43b78b4b646..35d5d86cff69 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -222,6 +222,17 @@ and ``core_uses_pid`` is set, then .PID will be appended to
+ the filename.
+ 
+ 
++core_sort_vma
++=============
++
++The default coredump writes VMAs in address order. By setting
++``core_sort_vma`` to 1, VMAs will be written from smallest size
++to largest size. This is known to break at least elfutils, but
++can be handy when dealing with very large (and truncated)
++coredumps where the more useful debugging details are included
++in the smaller VMAs.
++
++
+ ctrl-alt-del
+ ============
+ 
+diff --git a/fs/coredump.c b/fs/coredump.c
+index 591700e1b2ce..4375c70144d0 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -63,6 +63,7 @@ static void free_vma_snapshot(struct coredump_params *cprm);
+ 
+ static int core_uses_pid;
+ static unsigned int core_pipe_limit;
++static unsigned int core_sort_vma;
+ static char core_pattern[CORENAME_MAX_SIZE] = "core";
+ static int core_name_size = CORENAME_MAX_SIZE;
+ unsigned int core_file_note_size_limit = CORE_FILE_NOTE_SIZE_DEFAULT;
+@@ -1026,6 +1027,15 @@ static const struct ctl_table coredump_sysctls[] = {
+ 		.extra1		= (unsigned int *)&core_file_note_size_min,
+ 		.extra2		= (unsigned int *)&core_file_note_size_max,
+ 	},
++	{
++		.procname	= "core_sort_vma",
++		.data		= &core_sort_vma,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_douintvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ };
+ 
+ static int __init init_fs_coredump_sysctls(void)
+@@ -1256,8 +1266,9 @@ static bool dump_vma_snapshot(struct coredump_params *cprm)
+ 		cprm->vma_data_size += m->dump_size;
+ 	}
+ 
+-	sort(cprm->vma_meta, cprm->vma_count, sizeof(*cprm->vma_meta),
+-		cmp_vma_size, NULL);
++	if (core_sort_vma)
++		sort(cprm->vma_meta, cprm->vma_count, sizeof(*cprm->vma_meta),
++		     cmp_vma_size, NULL);
+ 
+ 	return true;
+ }
 
- drivers/gpu/drm/msm/msm_atomic.c |  2 ++
- drivers/gpu/drm/msm/msm_iommu.c  | 32 +++++++++++++++++++++++++++++---
- drivers/gpu/drm/msm/msm_kms.c    | 18 +++++++++++++++++-
- drivers/gpu/drm/msm/msm_kms.h    |  3 +++
- drivers/gpu/drm/msm/msm_mmu.h    |  1 +
- 5 files changed, 52 insertions(+), 4 deletions(-)
----
-base-commit: 866e43b945bf98f8e807dfa45eca92f931f3a032
-change-id: 20241217-abhinavk-smmu-fault-handler-ade75fef9809
 
-Best regards,
+
+-Kees
+
+[1] https://lore.kernel.org/all/202408092104.FCE51021@keescook/
+
 -- 
-Jessica Zhang <quic_jesszhan@quicinc.com>
-
+Kees Cook
