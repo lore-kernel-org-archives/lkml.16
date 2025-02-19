@@ -1,48 +1,31 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D511D1E25EF;
-	Wed, 19 Feb 2025 13:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E182AD00;
+	Wed, 19 Feb 2025 13:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739970082; cv=none; b=P9W926eh4kAfKpCKLcIRNyMdsOlchDh2RGSkPRg0JT3OGhKWg9gUwav0UTzDhV+Jnxj3C9pPWOx1Pcbyfhtf4U5NJppvepSJfCwaYPsYSXFPE183/LSs5rDe4xjK38BpImVvqo37upszmAgm1MOQWVjDGW+Fa1AGrXGeCC03znU=
+	t=1739970332; cv=none; b=jp/Lgb1SBI7zKAZcrYViGyq1wMAwXSx5PJOxr3rYwG5uKE6lB4gGkXcV3oIq41vj9pHcsY6iYNCQYqKDPjW6CIjhQy9thL7XVbe+6iHDrruy3JA5KoaonNG87mMxXWYeFtpyjK02YThYjUkIY2q2KokEQA2j1OhFeadBeIGKZBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739970082; c=relaxed/simple;
-	bh=QcccMRbXtdO3gmmJTjotleh7lPgIqkwTESnzznTvJvg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=DHjXB28Spg/XFDXDJOrRbPW5ihfoecSTkSjiGvKWrRR6pDbaPYIbfS/n11AWcx2ZaUCMpNqdV4BdM77H8eS/uB0hVWb4XpViaJLW5qGGy8UDI1nIn9mBhifA28HWdnpHyQEBLz5HPSVEm+dF9vRDAsXPXAqmxH4ulmj3hdKzhMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c7C0yDME; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739970332; c=relaxed/simple;
+	bh=s911wMcbeZp32AGNtUVATQgYnK5tlhQjxdBvXNAXKhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mBy9aVclSK+rJgOWqC2nZfWKrFnvqn+uqh9T7XBdiOnzAHpsl+XAHabFmanXmnempoWK4oc/Ks7sutXGonJQRCMoOn+9zW2MP+pDlrXR/nGaUlBEZsbcs1NpZvJHQVOsPTDKTFt/ygkUGkAMyOBJZbLDZEC1jEZVT4CiHJTLKMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QSG6P8AY; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c7C0yDME"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51J8NRbm014898;
-	Wed, 19 Feb 2025 13:01:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6KgOzMA8ihMoUxGj5Qw6lNE4j2AzNyOH0PA1NQsnhJI=; b=c7C0yDMEnkbIvyRN
-	vctHbQmTt0jo6TD4MK2X2usM2lG8Cos1u6smvWAihNL4HXSkfYzCG+sEcJK0g8mP
-	l5bjb3JahMY0dg1HLck5SARMvzK/+SzWD1ixqcss7ejrHGa8QbgG+1pm0oZFI+iB
-	2bX38gGUCu8E9l9FREoKv6WXNUA3uoW/FgUZkOWAYbUpcAIexP4dCcl9bjTtztNh
-	vP7yyyC3KvHEIGI/2iH8VOK8LU+VIs02PmYLLtEx9i2+JsqTQ7/Il2D4R7oykENz
-	eUd/IiCdFHPpDT5C1sMhZup5v1iFP218A/xV54NcKqysbVBGvd9lf5ecjwg2XBKp
-	MIl2JQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy12kuw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 13:01:03 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51JD1274015906
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 13:01:02 GMT
-Received: from [10.253.35.15] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Feb
- 2025 05:00:55 -0800
-Message-ID: <2aa1c649-6fce-40b1-bbf7-1d6d756dbbec@quicinc.com>
-Date: Wed, 19 Feb 2025 21:00:53 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QSG6P8AY"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739970318; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=4wI6vYc+X3DPw8mXzQ1PLO+DDcPPxrtx9n1GzpVltlk=;
+	b=QSG6P8AYmYhHM8c8sqPhUXN3eh3AWUbZ47HXWAKLPIys+AFZUN0pfDeg7IndaBVyM0eBECzIc96Qz1+3VWAZjxcQqg71HpX0YYmi7B/YiuvVHt91PSHdt5qu4GjKFbThMcEMkuYnPoaQscRXe+s7QZsoscNZJPfbuGcNPp+MRkc=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPpRQpA_1739970317 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 19 Feb 2025 21:05:18 +0800
+Message-ID: <78f7d2ab-67d8-41ab-a7b6-1313d1c1655c@linux.alibaba.com>
+Date: Wed, 19 Feb 2025 21:05:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,74 +33,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Jie Luo <quic_luoj@quicinc.com>
-Subject: Re: [PATCH net-next v3 04/14] net: ethernet: qualcomm: Initialize PPE
- buffer management for IPQ9574
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
- <17d9f02c-3eb3-4bae-8a2c-0504747de6f2@lunn.ch>
-Content-Language: en-US
-In-Reply-To: <17d9f02c-3eb3-4bae-8a2c-0504747de6f2@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Oqth_QsftGBuhgXf9_XkLsBETwYRHjW8
-X-Proofpoint-ORIG-GUID: Oqth_QsftGBuhgXf9_XkLsBETwYRHjW8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_05,2025-02-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 spamscore=0 mlxlogscore=910 mlxscore=0 bulkscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2502190104
+Subject: Re: [PATCH v2 5/7] dmaengine: idxd: fix memory leak in error handling
+ path of idxd_pci_probe
+To: Fenghua Yu <fenghuay@nvidia.com>, vinicius.gomes@intel.com,
+ dave.jiang@intel.com, vkoul@kernel.org
+Cc: nikhil.rao@intel.com, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
+ <20250215054431.55747-6-xueshuai@linux.alibaba.com>
+ <5959e316-19da-4d10-bc7c-75431b87b9e0@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <5959e316-19da-4d10-bc7c-75431b87b9e0@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2/11/2025 9:14 PM, Andrew Lunn wrote:
->> +/* Assign the share buffer number 1550 to group 0 by default. */
->> +static const int ipq9574_ppe_bm_group_config = 1550;
+在 2025/2/19 04:21, Fenghua Yu 写道:
+> Hi, Shuai,
 > 
-> To a large extent, the comment is useless. What should be in the
-> comment is why, not what.
+> On 2/14/25 21:44, Shuai Xue wrote:
+>> Memory allocated for idxd is not freed if an error occurs during
+>> idxd_pci_probe(). To fix it, free the allocated memory in the reverse
+>> order of allocation before exiting the function in case of an error.
+>>
+>> Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/dma/idxd/init.c | 10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+>> index dc34830fe7c3..ac1cdc1d82bf 100644
+>> --- a/drivers/dma/idxd/init.c
+>> +++ b/drivers/dma/idxd/init.c
+>> @@ -550,6 +550,14 @@ static void idxd_read_caps(struct idxd_device *idxd)
+>>           idxd->hw.iaa_cap.bits = ioread64(idxd->reg_base + IDXD_IAACAP_OFFSET);
+>>   }
+>> +static void idxd_free(struct idxd_device *idxd)
+>> +{
+>> +    put_device(idxd_confdev(idxd));
+>> +    bitmap_free(idxd->opcap_bmap);
+>> +    ida_free(&idxd_ida, idxd->id);
+>> +    kfree(idxd);
 > 
-> 	Andrew
+> opcap_bmap, idxd_ida, idxd are NOT allocated during FLR re-init idxd device. In the FLR case, they should not be freed.
 > 
 
-OK, I will improve the comment to describe it better.
+After relook the code, idxd_free() will not be called in FLR case,
+because all error lable in idxd_pci_probe_alloc() is called from
+alloc_idxd=true, not the FLR case.
 
-There are total 2048 buffers available in PPE, out of which some
-buffers are reserved for some specific purposes. The rest of the
-pool of 1550 buffers are assigned to the general 'group0' which
-is shared among all ports of the PPE.
+Anyway, I will add a protection in idxd_free().
+
+Thanks.
+Shuai
 
