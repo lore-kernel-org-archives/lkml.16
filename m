@@ -1,104 +1,72 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC3D1DED62
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBE01E0B61;
+	Wed, 19 Feb 2025 12:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739968948; cv=none; b=RUz1b4bmp1TdsSYAXtCymCVMuD1gNo5fHTvV/qegLTLQ+nPJf6xNL+jQxxwvnK97K92TAPKWdr1rfW1eIlV1e0QXdmEQu3MItsYJrsmmR34MJn4rMhW+NIR8x0MfCBesFnu54DS85ZM7eLVNdSTm7RBwiUacMcVkgCFRcFu6QAU=
+	t=1739968955; cv=none; b=KJvtRh87HoQC6vboVt97ReUIpdZ4yYUchKjW0xvW+QkEE/zDUlSujZTTIcT0tA8dYmXFKwkqGJrbcI8JsRy4CSO12Fpk46gPoHz1qzrbpQ3vKofru4E8JZfRtb8TTdglqdhLLyPXzAqxVBw5XkYQ0RnC+nM4reIsXCLjh24C29s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739968948; c=relaxed/simple;
-	bh=aEZmkm1hV21rp3YTZCGbmxtF7lznLzqBxNFTStfv000=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BUO9E1CFoU0wVNjL8HdRZlFedii3AX4LXgKBUKqNyb7QPjwTENSDyVuKRBcF29TQbVRVt4XzqhWmYZFaLrtmOBG9Xsko93dwOS8eKo6Wi949i4v3cp3CvUkkKshwnJfTZvDvgJuHcRLUCngaxK1XNiJ730i4M2lNt7KdJvf2Iq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=kFciqOF7; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1739968955; c=relaxed/simple;
+	bh=pE+n3hF9XW3Ek/Ggngk8vtCwn6fa99/elpOQc2SHUVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ahlTK16lOu5UmMCTinR6+ZO0ADvWPvH3utQEwpNR1NEvsSTdUEkgqkYv/gW+8Jkuplf9AaJccLNvWCSvIV2Sxs54+yEEghR+elwh6Kl8RUNfJDWVhB5NbZNxhd1XsJhD4bCHlWUDf3VAKFy56Y1bkzwf6Jl86gzGwuGO8i/RSJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ha4FM+Mt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="kFciqOF7"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 0292A240029
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:42:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1739968945; bh=aEZmkm1hV21rp3YTZCGbmxtF7lznLzqBxNFTStfv000=;
-	h=From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
-	b=kFciqOF7S+S+lUYsOZoMYpGVAw2fVaHmSdIxpySR5gNUVensULp1uJ5+V6DT86iPO
-	 HLddDm3YY1quwhj4J91Eten351mOR/Zf3Ai3gHP61PMbo5vc3eAhE5eqQGblVZZ9WA
-	 4Sbsh7VUmZgD7bJPFVK72uJc83WfXHC+4G6PNCvOwmsfi85GOyLE0Z3AkDr1qX+TbY
-	 K2SJWWq5s+e6smIHAurH57lx4478N9bxYf/k4/CxmE1mnlJYkfOSFG5KnaNNABIvw5
-	 HqeI0arTI1C4pk4iQpvKuGXgvlcNJNDN+/wjQDtnXxs9rAe7jyE2EXNznr2FB97vig
-	 +Juk5OicXaN8w==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YybdB0TTPz6twQ;
-	Wed, 19 Feb 2025 13:42:21 +0100 (CET)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-Date: Wed, 19 Feb 2025 12:41:55 +0000
-Subject: [PATCH net v2] net: phy: qt2025: Fix hardware revision check
- comment
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ha4FM+Mt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5251BC4CED1;
+	Wed, 19 Feb 2025 12:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739968955;
+	bh=pE+n3hF9XW3Ek/Ggngk8vtCwn6fa99/elpOQc2SHUVE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ha4FM+Mtw/7PMR99p4Silac6jsb7S5msE4bWT3zvvkinsAe/iHY385zmcuveYr3Yv
+	 xgy4DRg5dR95OQfF/1N2olWfUTDddhdQf6YQ+w0Pzmi2bclsOu0blOx5UF7ZVnohjM
+	 7J2kXlHyLebRs+ZDz3vxinAL82ubtsLD4YYgxW/VBtLDB67IxWfPd2+C4hkAzI25FP
+	 UwU5p6uzI4/s4nwlhCBs5rtvqZAEp4x0pTziwkQ54ETMOtv9Pqd5qj+d1ZTHuqy0UI
+	 MQOqGGdQrI67E0ox0ooP4TycR6qofpp5lWh4ZofmtZBRu4bgD4UC9e1sn4Mf2+bHxH
+	 1wWwtl/ggKrbA==
+Message-ID: <d7df3b86-c3ff-48af-ad72-428e105976b9@kernel.org>
+Date: Wed, 19 Feb 2025 06:42:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH] clk: socfpga: clk-pll: Optimize local variables
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250219104224.1265-2-thorsten.blum@linux.dev>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20250219104224.1265-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-qt2025-comment-fix-v2-1-029f67696516@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAJLRtWcC/32NTQ7CIBCFr9LM2jFAUYgr72FcVBwsi0ILhGga7
- i5yAHfvJ+97OySKjhJchh0iFZdc8M2IwwBmnvyL0D2bB8HEiQmuccs/iSYsC/mM1r1x5JOy2pq
- HOUtowzVSizv0Bp4y3Fs4u5RD/PSjwnv1j1k4clRyJK0MY5KZ6xpSpnDsvFrrF0cv2YG6AAAA
-X-Change-ID: 20250218-qt2025-comment-fix-31a7f8fcbc64
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- Trevor Gross <tmgross@umich.edu>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739968933; l=1517;
- i=charmitro@posteo.net; s=20250218; h=from:subject:message-id;
- bh=aEZmkm1hV21rp3YTZCGbmxtF7lznLzqBxNFTStfv000=;
- b=rjm5rN4NKlBBwxqtODOZ62E5SaiIwJVOr7MYv+DUdwOfAoKfVDgfiHI+azP52m/u1tkggWizk
- 96yrORzotrkCAN9hSMpfRgWQviEksl+UYf1bvmTy5AvGN3kmPMY4z/8
-X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
- pk=tqvFF75nwS3URscujaAaCD+j9ViKh5jLMkj1mnX7Rws=
 
-Correct the hardware revision check comment in the QT2025 driver. The
-revision value was documented as 0x3b instead of the correct 0xb3,
-which matches the actual comparison logic in the code.
+On 2/19/25 04:42, Thorsten Blum wrote:
+> Since readl() returns a u32, the local variables reg and bypass can also
+> have the data type u32. Furthermore, divf and divq are derived from reg
+> and can also be a u32.
+> 
+> Since do_div() casts the divisor to u32 anyway, changing the data type
+> of divq to u32 removes the following Coccinelle/coccicheck warning
+> reported by do_div.cocci:
+> 
+>    WARNING: do_div() does a 64-by-32 division, please consider using div64_ul instead
+> 
+> Compile-tested only.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>   drivers/clk/socfpga/clk-pll.c | 4 ++--
 
-Fixes: fd3eaad826da ("net: phy: add Applied Micro QT2025 PHY driver")
-Reviewed-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
----
-Changes in v2:
-- Resend with proper patch subject, according to netdev documentation
-- Add "Fixes: " tag
-- Link to v1: https://lore.kernel.org/r/20250218-qt2025-comment-fix-v1-1-743e87c0040c@posteo.net
----
- drivers/net/phy/qt2025.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied!
 
-diff --git a/drivers/net/phy/qt2025.rs b/drivers/net/phy/qt2025.rs
-index 1ab065798175b4f54c5f2fd6c871ba2942c48bf1..7e754d5d71544c6d6b6a6d90416a5a130ba76108 100644
---- a/drivers/net/phy/qt2025.rs
-+++ b/drivers/net/phy/qt2025.rs
-@@ -41,7 +41,7 @@ impl Driver for PhyQT2025 {
- 
-     fn probe(dev: &mut phy::Device) -> Result<()> {
-         // Check the hardware revision code.
--        // Only 0x3b works with this driver and firmware.
-+        // Only 0xb3 works with this driver and firmware.
-         let hw_rev = dev.read(C45::new(Mmd::PMAPMD, 0xd001))?;
-         if (hw_rev >> 8) != 0xb3 {
-             return Err(code::ENODEV);
-
----
-base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
-change-id: 20250218-qt2025-comment-fix-31a7f8fcbc64
-
-Best regards,
--- 
-Charalampos Mitrodimas <charmitro@posteo.net>
+Thanks,
+Dinh
 
