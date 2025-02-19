@@ -1,203 +1,297 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD421DEFD4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81A81DF276
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954109; cv=none; b=BtSCEVWJTHPdfAuy2Io/6SNTqCSlIa8wM7n6Ml/1hh4gLqLQoV+B8JFUdkJk8bOs7cYS+kUEG8t7470MH4i/5VkDrf2k+t2rcVOiiV4SfKwPcA2gTANk/h4LMZZy0TA+BJz62gZffeaDycPBl0BAk4eaG/st2dq73rnZ+8e3DaY=
+	t=1739954127; cv=none; b=pfMTIo2zcaaVS3jPORL8aLoS836Xisx39RdLPYWLCXcKiC4dyVuhDPw8kCP0hpLmNIrX8zdvA9AAMDi+qBN7a12YE19dnFCyiJS/7Wj+fiL7CcElMMhdBUpEGiTjVrQWl6hwDMzl/oFmpIgWk68EKGiRRoXxffiz/u/1OtRMNjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954109; c=relaxed/simple;
-	bh=n7H9TXtXn1vG1HHhCEri+d8DCew1NKpGfIM7cXGAqvs=;
+	s=arc-20240116; t=1739954127; c=relaxed/simple;
+	bh=mS2ERImW1IWdcM2cHUONXcpUeVpV6rwp0Wo9NrUajqw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l58pF7TZtzjY958RQXvGAKemFOjBQDg5mcHnct7exmEgYqNAxqjjB2kBDRXyOJk3TVAr54zIS7Hq+wK8rzBdQHFPCkZVszbED1uWYiU+iAXzHXm/lN6G1KczYvll4yHu8PKz3mZgjdNLyXc0ASp3/xd94Dki9ERj6cMqy6vjMQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jx13HUKz; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=KXetsyIpYgU+oXqqSCtG3c45wEhYM83P1zBO7n8J2e5W6gdaN7o5dofVMMkJqtOtwsoOhZ7bzXg2aM3XXU/3DP+chl1ffNnlkzTlNLXHdeVpo4HYC5sO4Z2ZcEJShCW4U/fx8QEt7LmY+eSdbmkbIU0hJZ4tD7cO/GJzvBR4Pl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RnBz6kWs; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jx13HUKz"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-307325f2436so54889541fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 00:35:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RnBz6kWs"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-219f6ca9a81so607845ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 00:35:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739954102; x=1740558902; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739954125; x=1740558925; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ymf/r5WVS2oRidQjYGCcOUX71UniPr2O+cwqDyy+uhM=;
-        b=Jx13HUKzsGpKCk3q/4j/rCxqIAtFrSdKUwyIIZZFn4h2WZx6xlWntbDtGaZUBjkRou
-         OSMaNyQkI+gQc2gzT2s6ZRuJ2pAX/CmuWnrF+wBXRtEpJYIBMyaaXyYiNImRTbemy5ZY
-         QGSmejplO044/jFyqbcnTjMoFEQsxpgqPYONzYSZqkO6fZ/msnAh+DxeCp14HHGukSxv
-         1vTCXJGIK20OkCv5VDcQiyzHC9HHzqS/izBvqTGQePLST5uhQLfqCAfcXytF79PxAIDt
-         iNTXDgmUxUYGy54qX9Z8i5XNIKbNeCjy48YgcNO6Dxa0fuYnV+6Lgk6h8v9hHXfV6x/y
-         mAUQ==
+        bh=nh11V3R3PpQccWp7H0vYXQcsX+FHgC2HvQI3gNl8VR0=;
+        b=RnBz6kWs79eMemi6iEUZfopQql4LGTqhWtQYz1vS7FKSApLJw+6tY51qp751kl3V9r
+         fEooS42rQEGh8WcYJH90bnc1G5OXEV1KT7Lez4BB+KfCgs0mFg5R7zHmJzVadHTvl9z5
+         z439NpPO/u5t/p34Blz+CQvq14T39BgHCjVQd+Te0v7jEeGKYRmQY9XrF7W29NIcQxIQ
+         tImXdNIFRAf0qeu9IxMa+/1inoYKy1AQ+0W14tFcJpK+Dj9qeffhyVtkq+kjWPs+POtZ
+         ls0HMER6fM42nGJ9rLIugKNr46k62nVUJINPpxfpgJteYisruTYNFPCoAait383n95Si
+         BkEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739954102; x=1740558902;
+        d=1e100.net; s=20230601; t=1739954125; x=1740558925;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ymf/r5WVS2oRidQjYGCcOUX71UniPr2O+cwqDyy+uhM=;
-        b=Xach1d4YWzB2Zd1IRb4nJ3KxYvPdJBjoMXuNOgV5b9U76mjbymlngGscVaIUdVf/D3
-         3hgV1udINSZvJdvhzJo/3aR/m/GbI1X+KjkeCvpzqO8bYNcdF8/ddl8XfkuHFuV2F9et
-         9wFLuaMOJDci8zqzjlSi1XsCRMuuUJamUry9ODuH0ESClHuwXUQ4/VsD5oYieD4CNcEJ
-         VZ1rltAS9dcM5ctxQloOnewU2RiZYBDf19zTCh9B4UR5LiaFU3M4rUcZvaoggt15H6Mc
-         1DnfTpSmSd2IWyX8t95i3WEevwOw2vRqsHj0LAZw/e5xopFBnGrb3bmH8UPnQQn1nZgP
-         5vIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyRVkCbj5yAquW6NyeMQVBc2Pv3UzWrtKffylowEgvbn2hQA7jFsiwISwtnsVplvSkFW/XlZwQKah/gJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfidEICeVUCwKPU07bP/Vp2LZ5S/eBscWcWHzjPSX8BgGX+4Ux
-	8cs6JFPbWISghK8sNUd6ObKKWYvOYCO2yj7cXHpxhuUp7L7NHtxRJ9N1bsU6LEn9+qBxWvy60f4
-	gy5UOpf21oixOk5OchvZBRySTExY=
-X-Gm-Gg: ASbGncuh5Yb5EpL00GIIGgKREFCMVYU2QSBILt12DJfQaV9EuuN1/P+Blvn182j8Xgt
-	750KRlLl73PbQ93+TTT0WH+2Qm+fkUA7HS6B27OCmwvyd/nC4vy6z0kyK0bk1BOhnVze0DtZ/
-X-Google-Smtp-Source: AGHT+IGv3q5/LIOR6BIzcIw9PSev1r9ulF73uf4A99AqseTCJq9zL6QOHf9tiO80xMKCoXG+cgrSDbNIpOZ/oHeBbEU=
-X-Received: by 2002:a05:6512:3d15:b0:545:a2f:22bd with SMTP id
- 2adb3069b0e04-5462ef23810mr1112660e87.48.1739954101418; Wed, 19 Feb 2025
- 00:35:01 -0800 (PST)
+        bh=nh11V3R3PpQccWp7H0vYXQcsX+FHgC2HvQI3gNl8VR0=;
+        b=WJ0d4KvUsl0vDlyGA8jr7iGa96jqbiiunRzlHRtVHv3y05/XzFeHXYWAOCgoHKrtV/
+         hrvlmoPw6ULk63N1fc03fRiaD1z0RkxuFThl9qv7/zc2/xGKGupZMISwiGG/YOeYHfZQ
+         N8oEeOHTMHCogHcO3+TJGv7nXP6mphN5UpoJGCVRJlNNl2dHF5RC839aUmcRq7I7Scxz
+         QOZEsrrGi+Ikp1iDVQBI0Ngw0zIK6QHNoOTMYj0Qr+ibxkZnz/HaQl8r0wL6zAy/jvLu
+         uw5+MNRpFxsrb4tDbINi/W/r0X78m6l+C1Dut3PQoX/3hn4+awd0fGdTal/GQ47inwGX
+         QSqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWv8DISQjkZP16LOzDd7VSd+Of2h1om2/e5yUFWRnqq47sO8nH2AodXtdLda5bD3TSwWqBsPgQVOjspZ5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbCV+FenlBYHnoyLeSyN037mACgPsBZdi7MQYCSbwkp9b0blpe
+	dIIOOuE45u9t0NwZ2aaLxBkJvvGYHbEo0ZrTvMAB2Iygfv8Jso0sr76lvg214rSmj1htUic8h/I
+	DxTwNell2PyV4+HZx1Q05v157E8GAbQDfkscA
+X-Gm-Gg: ASbGncsXVmCw4n6tmxa8XM3AQQEkLmIMCJx6vp+9rd3cVCs+YbeHGq3ZfFfuuukOjvO
+	eN27n1JbOwBwoTq/CJdUtf5nCNvA4Ta2K44QmXFdZcWZ4aZj7aLSQqZV80Nyi71N9O1nZJ2+nF7
+	BNoV0LYTzS3CgsShx6+y6EHfzywL0g5A==
+X-Google-Smtp-Source: AGHT+IF8lhN2VKRtkBG8lgw6HbFBNjGSvIa0tqHhUKQQlK5tOi+1VUQJdJ+dTtru3EjOzYbkzwwP/EYSufqagYHgcKs=
+X-Received: by 2002:a17:902:d491:b0:217:8612:b690 with SMTP id
+ d9443c01a7336-221740eacc2mr2096905ad.8.1739954124714; Wed, 19 Feb 2025
+ 00:35:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214175709.76029-1-ryncsn@gmail.com> <20250214175709.76029-6-ryncsn@gmail.com>
- <Z7WOCvQq3xi9wxnt@MiWiFi-R3L-srv>
-In-Reply-To: <Z7WOCvQq3xi9wxnt@MiWiFi-R3L-srv>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Wed, 19 Feb 2025 16:34:45 +0800
-X-Gm-Features: AWEUYZkPJOd4SwyQaKWas7yryXBRZnRYFVtmL1SihZNVdbYFgqLG0htrQyLOR4o
-Message-ID: <CAMgjq7C0Yg164SHJcP6wDC0od-xRuBMxLsJJwB0oWavpgsr8tg@mail.gmail.com>
-Subject: Re: [PATCH 5/7] mm, swap: use percpu cluster as allocation fast path
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Chris Li <chrisl@kernel.org>, Barry Song <v-songbaohua@oppo.com>, 
-	Hugh Dickins <hughd@google.com>, Yosry Ahmed <yosryahmed@google.com>, 
-	"Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Kalesh Singh <kaleshsingh@google.com>, 
-	linux-kernel@vger.kernel.org
+References: <cover.1739469950.git.lorenzo.stoakes@oracle.com> <CAC_TJveMB1_iAUt81D5-+z8gArbVcbfDM=djCZG_bRVaCEMRmg@mail.gmail.com>
+In-Reply-To: <CAC_TJveMB1_iAUt81D5-+z8gArbVcbfDM=djCZG_bRVaCEMRmg@mail.gmail.com>
+From: Kalesh Singh <kaleshsingh@google.com>
+Date: Wed, 19 Feb 2025 00:35:12 -0800
+X-Gm-Features: AWEUYZkFYO4honuUctBjczHtttLmlYcLayKN2sdlCl_V5hwlV_Nm6uGMdSDX7hk
+Message-ID: <CAC_TJvfPNkJDWnG81GnJcFeMLYzN8=uM-oTrK6FKT7tD=E4TQg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] mm: permit guard regions for file-backed/shmem mappings
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Matthew Wilcox <willy@infradead.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, "Paul E . McKenney" <paulmck@kernel.org>, Jann Horn <jannh@google.com>, 
+	David Hildenbrand <david@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+	linux-api@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>, 
+	Juan Yescas <jyescas@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 3:54=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
-
-Hi Baoquan,
-
-Thanks for the review!
-
+On Wed, Feb 19, 2025 at 12:25=E2=80=AFAM Kalesh Singh <kaleshsingh@google.c=
+om> wrote:
 >
-> On 02/15/25 at 01:57am, Kairui Song wrote:
-> > From: Kairui Song <kasong@tencent.com>
+> On Thu, Feb 13, 2025 at 10:18=E2=80=AFAM Lorenzo Stoakes
+> <lorenzo.stoakes@oracle.com> wrote:
 > >
-> > Current allocation workflow first traverses the plist with a global loc=
-k
-> > held, after choosing a device, it uses the percpu cluster on that swap
-> > device. This commit moves the percpu cluster variable out of being tied
-> > to individual swap devices, making it a global percpu variable, and wil=
-l
-> > be used directly for allocation as a fast path.
+> > The guard regions feature was initially implemented to support anonymou=
+s
+> > mappings only, excluding shmem.
 > >
-> > The global percpu cluster variable will never point to a HDD device, an=
-d
-> > allocation on HDD devices is still globally serialized.
+> > This was done such as to introduce the feature carefully and incrementa=
+lly
+> > and to be conservative when considering the various caveats and corner
+> > cases that are applicable to file-backed mappings but not to anonymous
+> > ones.
 > >
-> > This improves the allocator performance and prepares for removal of the
-> > slot cache in later commits. There shouldn't be much observable behavio=
-r
-> > change, except one thing: this changes how swap device allocation
-> > rotation works.
+> > Now this feature has landed in 6.13, it is time to revisit this and to
+> > extend this functionality to file-backed and shmem mappings.
 > >
-> > Currently, each allocation will rotate the plist, and because of the
-> > existence of slot cache (64 entries), swap devices of the same priority
-> > are rotated for every 64 entries consumed. And, high order allocations
-> > are different, they will bypass the slot cache, and so swap device is
-> > rotated for every 16K, 32K, or up to 2M allocation.
-> >
-> > The rotation rule was never clearly defined or documented, it was chang=
+> > In order to make this maximally useful, and since one may map file-back=
 ed
-> > several times without mentioning too.
-> >
-> > After this commit, once slot cache is gone in later commits, swap devic=
-e
-> > rotation will happen for every consumed cluster. Ideally non-HDD device=
-s
-> > will be rotated if 2M space has been consumed for each order, this seem=
-s
+> > mappings read-only (for instance ELF images), we also remove the
+> > restriction on read-only mappings and permit the establishment of guard
+> > regions in any non-hugetlb, non-mlock()'d mapping.
 >
-> This breaks the rule where the high priority swap device is always taken
-> to allocate as long as there's free space in the device. After this patch=
-,
-> it will try the percpu cluster firstly which is lower priority even thoug=
+> Hi Lorenzo,
+>
+> Thank you for your work on this.
+>
+> Have we thought about how guard regions are represented in /proc/*/[s]map=
+s?
+>
+> In the field, I've found that many applications read the ranges from
+> /proc/self/[s]maps to determine what they can access (usually related
+> to obfuscation techniques). If they don't know of the guard regions it
+> would cause them to crash; I think that we'll need similar entries to
+> PROT_NONE (---p) for these, and generally to maintain consistency
+> between the behavior and what is being said from /proc/*/[s]maps.
+
+To clarify why the applications may not be aware of their guard
+regions -- in the case of the ELF mappings these PROT_NONE (guard
+regions) would be installed by the dynamic loader; or may be inherited
+from the parent (zygote in Android's case).
+
+>
+> -- Kalesh
+>
+> >
+> > It is permissible to permit the establishment of guard regions in read-=
+only
+> > mappings because the guard regions only reduce access to the mapping, a=
+nd
+> > when removed simply reinstate the existing attributes of the underlying
+> > VMA, meaning no access violations can occur.
+> >
+> > While the change in kernel code introduced in this series is small, the
+> > majority of the effort here is spent in extending the testing to assert
+> > that the feature works correctly across numerous file-backed mapping
+> > scenarios.
+> >
+> > Every single guard region self-test performed against anonymous memory
+> > (which is relevant and not anon-only) has now been updated to also be
+> > performed against shmem and a mapping of a file in the working director=
+y.
+> >
+> > This confirms that all cases also function correctly for file-backed gu=
+ard
+> > regions.
+> >
+> > In addition a number of other tests are added for specific file-backed
+> > mapping scenarios.
+> >
+> > There are a number of other concerns that one might have with regard to
+> > guard regions, addressed below:
+> >
+> > Readahead
+> > ~~~~~~~~~
+> >
+> > Readahead is a process through which the page cache is populated on the
+> > assumption that sequential reads will occur, thus amortising I/O and,
+> > through a clever use of the PG_readahead folio flag establishing during
+> > major fault and checked upon minor fault, provides for asynchronous I/O=
+ to
+> > occur as dat is processed, reducing I/O stalls as data is faulted in.
+> >
+> > Guard regions do not alter this mechanism which operations at the folio=
+ and
+> > fault level, but do of course prevent the faulting of folios that would
+> > otherwise be mapped.
+> >
+> > In the instance of a major fault prior to a guard region, synchronous
+> > readahead will occur including populating folios in the page cache whic=
 h
-> the higher priority device has free space. However, this only happens whe=
-n
-> the higher priority device is exhausted, not a generic case. If this is
-> expected, it may need be mentioned in log or doc somewhere at least.
-
-Hmm, actually this rule was already broken if you are very strict
-about it. The current percpu slot cache does a pre-allocation, so the
-high priority device will be removed from the plist while some CPU's
-slot cache holding usable entries.
-
-If the high priority device is exhausted, some CPU's percpu cluster
-will point to a low priority device indeed, and keep using it until
-the percpu cluster is drained. I think this should be
-OK. The high priority device is already full, so the amount of
-swapouts falls back to low priority device is only a performance
-issue, I think it's a tiny change for a rare case.
-
->
-> > reasonable. HDD devices is rotated for every allocation regardless of t=
-he
-> > allocation order, which should be OK and trivial.
+> > the guard regions will, in the case of the mapping in question, prevent
+> > access to.
 > >
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > ---
-> >  include/linux/swap.h |  11 ++--
-> >  mm/swapfile.c        | 120 +++++++++++++++++++++++++++----------------
-> >  2 files changed, 79 insertions(+), 52 deletions(-)
-> ......
-> > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> > index ae3bd0a862fc..791cd7ed5bdf 100644
-> > --- a/mm/swapfile.c
-> > +++ b/mm/swapfile.c
-> > @@ -116,6 +116,18 @@ static atomic_t proc_poll_event =3D ATOMIC_INIT(0)=
-;
+> > In addition, if PG_readahead is placed in a folio that is now inaccessi=
+ble,
+> > this will prevent asynchronous readahead from occurring as it would
+> > otherwise do.
 > >
-> ......snip....
-> >  int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_or=
-der)
-> >  {
-> >       int order =3D swap_entry_order(entry_order);
-> > @@ -1211,19 +1251,28 @@ int get_swap_pages(int n_goal, swp_entry_t swp_=
-entries[], int entry_order)
-> >       int n_ret =3D 0;
-> >       int node;
+> > However, there are mechanisms for heuristically resetting this within
+> > readahead regardless, which will 'recover' correct readahead behaviour.
 > >
-> > +     /* Fast path using percpu cluster */
-> > +     local_lock(&percpu_swap_cluster.lock);
-> > +     n_ret =3D swap_alloc_fast(swp_entries,
-> > +                             SWAP_HAS_CACHE,
-> > +                             order, n_goal);
-> > +     if (n_ret =3D=3D n_goal)
-> > +             goto out;
-> > +
-> > +     n_goal =3D min_t(int, n_goal - n_ret, SWAP_BATCH);
->
-> Here, the behaviour is changed too. In old allocation, partial
-> allocation will jump out to return. In this patch, you try the percpu
-> cluster firstly, then call scan_swap_map_slots() to try best and will
-> jump out even though partial allocation succeed. But the allocation from
-> scan_swap_map_slots() could happen on different si device, this looks
-> bizarre. Do you think we need reconsider the design?
-
-Right, that's a behavior change, but only temporarily affects slot cache.
-get_swap_pages will only be called with size > 1 when order =3D=3D 0, and
-only by slot cache. (Large order allocation always use size =3D=3D 1,
-other users only uses order =3D=3D 0 && size =3D=3D 1). So I didn't' notice
-it, as this series is removing slot cache.
-
-The partial side effect would be "returned slots will be from
-different devices" and "slot_cache may get drained faster as
-get_swap_pages may return less slots when percpu cluster is drained".
-Might be a performance issue but seems slight and trivial, slot cache
-can still work. And the next commit will just remove the slot cache,
-and the problem will be gone. I think I can add a comment about it
-here?
+> > Readahead presumes sequential data access, the presence of a guard regi=
+on
+> > clearly indicates that, at least in the guard region, no such sequentia=
+l
+> > access will occur, as it cannot occur there.
+> >
+> > So this should have very little impact on any real workload. The far mo=
+re
+> > important point is as to whether readahead causes incorrect or
+> > inappropriate mapping of ranges disallowed by the presence of guard
+> > regions - this is not the case, as readahead does not 'pre-fault' memor=
+y in
+> > this fashion.
+> >
+> > At any rate, any mechanism which would attempt to do so would hit the u=
+sual
+> > page fault paths, which correctly handle PTE markers as with anonymous
+> > mappings.
+> >
+> > Fault-Around
+> > ~~~~~~~~~~~~
+> >
+> > The fault-around logic, in a similar vein to readahead, attempts to imp=
+rove
+> > efficiency with regard to file-backed memory mappings, however it diffe=
+rs
+> > in that it does not try to fetch folios into the page cache that are ab=
+out
+> > to be accessed, but rather pre-maps a range of folios around the faulti=
+ng
+> > address.
+> >
+> > Guard regions making use of PTE markers makes this relatively trivial, =
+as
+> > this case is already handled - see filemap_map_folio_range() and
+> > filemap_map_order0_folio() - in both instances, the solution is to simp=
+ly
+> > keep the established page table mappings and let the fault handler take
+> > care of PTE markers, as per the comment:
+> >
+> >         /*
+> >          * NOTE: If there're PTE markers, we'll leave them to be
+> >          * handled in the specific fault path, and it'll prohibit
+> >          * the fault-around logic.
+> >          */
+> >
+> > This works, as establishing guard regions results in page table mapping=
+s
+> > with PTE markers, and clearing them removes them.
+> >
+> > Truncation
+> > ~~~~~~~~~~
+> >
+> > File truncation will not eliminate existing guard regions, as the
+> > truncation operation will ultimately zap the range via
+> > unmap_mapping_range(), which specifically excludes PTE markers.
+> >
+> > Zapping
+> > ~~~~~~~
+> >
+> > Zapping is, as with anonymous mappings, handled by zap_nonpresent_ptes(=
+),
+> > which specifically deals with guard entries, leaving them intact except=
+ in
+> > instances such as process teardown or munmap() where they need to be
+> > removed.
+> >
+> > Reclaim
+> > ~~~~~~~
+> >
+> > When reclaim is performed on file-backed folios, it ultimately invokes
+> > try_to_unmap_one() via the rmap. If the folio is non-large, then map_pt=
+e()
+> > will ultimately abort the operation for the guard region mapping. If la=
+rge,
+> > then check_pte() will determine that this is a non-device private
+> > entry/device-exclusive entry 'swap' PTE and thus abort the operation in
+> > that instance.
+> >
+> > Therefore, no odd things happen in the instance of reclaim being attemp=
+ted
+> > upon a file-backed guard region.
+> >
+> > Hole Punching
+> > ~~~~~~~~~~~~~
+> >
+> > This updates the page cache and ultimately invokes unmap_mapping_range(=
+),
+> > which explicitly leaves PTE markers in place.
+> >
+> > Because the establishment of guard regions zapped any existing mappings=
+ to
+> > file-backed folios, once the guard regions are removed then the
+> > hole-punched region will be faulted in as usual and everything will beh=
+ave
+> > as expected.
+> >
+> > Lorenzo Stoakes (4):
+> >   mm: allow guard regions in file-backed and read-only mappings
+> >   selftests/mm: rename guard-pages to guard-regions
+> >   tools/selftests: expand all guard region tests to file-backed
+> >   tools/selftests: add file/shmem-backed mapping guard region tests
+> >
+> >  mm/madvise.c                                  |   8 +-
+> >  tools/testing/selftests/mm/.gitignore         |   2 +-
+> >  tools/testing/selftests/mm/Makefile           |   2 +-
+> >  .../mm/{guard-pages.c =3D> guard-regions.c}     | 921 ++++++++++++++++=
+--
+> >  4 files changed, 821 insertions(+), 112 deletions(-)
+> >  rename tools/testing/selftests/mm/{guard-pages.c =3D> guard-regions.c}=
+ (58%)
+> >
+> > --
+> > 2.48.1
