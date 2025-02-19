@@ -1,108 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB561FECAE
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6E316F858;
+	Wed, 19 Feb 2025 18:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987968; cv=none; b=ULhBTNLqfVxezS0vylCS5hOv3DR5uBPLot7bCYl/SCq5C2gpOenkBfS+R9vTLjS9UQoVsu4bNY99Q4+nsEl5VzOrHYstgYm2ZvD1YPp1WQNRucxChKi8dp0/vvIvPnyllhB6lm9nboTshu5pqmKXmmKusbes/fkR0G42ZOtOERc=
+	t=1739988002; cv=none; b=rpdlCWog6FdEzh8Z9BasB8/lFQUDynkgaVnupSkX6WyEC7NN5bTegy5c4rbPfL0h59aSirVW+rJ2AaAHgZFHiPMgu+Hs9to60CZYbALDM1jZ8eb0Nb0+ODqVZMxAmaVO6ZxxVu1PWDqPBsDYJGOUw3Gz/nU0x21iCA18YlEiacQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987968; c=relaxed/simple;
-	bh=dZRPlTg8UwRQsvICOzZrnxpjLEsnFkHU87BP1KT3JfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LSUZ3nTeOPkExK2fCW/QmxPHLGRdGtdYW3hjJHeHwUqeQw3pd8BVcm2b0t/K5UM4E5fIR0mN9MKnFBzZrT9/pF8DLJCSEhpV4NyUt83h885joEisol/QEYRl4uTjNNCVvQQ1OQ+75J4p4r5cqkwKZDKmrQOBmm5g/5lc+Qt3h8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jm7A/8ZG; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739988002; c=relaxed/simple;
+	bh=8GH4isiEtxx4zmx1wFTQsbmQVm37L4dBhX2XWViqAXk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=aHSts+aFNUyBydfD3mrt01qM51z4VF3LougY3wV6CAAzcmdReJ03DNV57cn7XptfmYZgrfgORWbCkzJBLF44heyxc4lLlN+O5YWb+ggCWbbQTNUHx8YQ41JwU/tLGPkXQ1ZJ4BjX0HumhHN44CR+nrdUE3yTRp67x6lJ1jKdRM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiYsOzsu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jm7A/8ZG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739987968; x=1771523968;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dZRPlTg8UwRQsvICOzZrnxpjLEsnFkHU87BP1KT3JfA=;
-  b=Jm7A/8ZGBKdUBHFArEX3Z21xCuxmM4MFURailjy6z9yH8utKhd8bYZuI
-   mawCjw4RZhGLDxqitxmwwFXlWgNakXquwp46WeJbHfGis53k65gKJ7lfO
-   A4avjYyVg4HTGySQ+r68uIuTbenK/+dQEQ/cNxmJR5VLiywbM9eAMscbB
-   1URVXSLx0IgIJMOHzDjEHSOa9JCKNqSJbR6Iobunq2Sbr1189ZSoYfMgh
-   h4H13vlmTQsOKyk70mob0GIfZ0vb5D6ojGq8I7ZScP3PSh9oD4mMaDaKh
-   aJwxwkHXc+Xxms0SvlmztQGTb++sdEq0KM+XaDnaJGqGxdLpNaInZJrbq
-   g==;
-X-CSE-ConnectionGUID: /zK7FqaCSS+ellYZ8rkCYw==
-X-CSE-MsgGUID: yzCI2ShTQJ+PJ75FlyW/oQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44508074"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="44508074"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:59:25 -0800
-X-CSE-ConnectionGUID: bMFkRCDDQl+JuIoQya6e0A==
-X-CSE-MsgGUID: 6lzyRyhlQ5KfUfVG4K+gNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="119992342"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 19 Feb 2025 09:37:51 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tko12-0003FZ-0k;
-	Wed, 19 Feb 2025 17:37:44 +0000
-Date: Thu, 20 Feb 2025 01:37:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wolfram Sang <wsa-dev@sang-engineering.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: drivers/i2c/i2c-core-base.c:1420:12: warning: stack frame size
- (1040) exceeds limit (1024) in 'i2c_do_add_adapter'
-Message-ID: <202502200154.kBYwSZGe-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiYsOzsu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40003C4CED1;
+	Wed, 19 Feb 2025 18:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739988002;
+	bh=8GH4isiEtxx4zmx1wFTQsbmQVm37L4dBhX2XWViqAXk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=PiYsOzsuNs20ekgUQWtFKLhp3iI9HdjZqHxXNpUVfi/VPSEiMv8mA6oTQoe9j4OzQ
+	 4749m/XzzGYqiNjKk6DRhXTl7nc6X4+yRWllT48Pc06bvnwFUDYrWl9lzys+7DUAD9
+	 S2uW6qoDoHwsObEbeCwiIKxDBRlT+HrrmCJka4VZBHqAWXp9tzWMjm/LhRq/nBa47d
+	 EZimEsEiFsTBRDhSKH1sCxw92o9+enV2eb7Ufkq17omvSKcwb93mXDQQ1puEjUrm8X
+	 GhDoiN55tLd4R1iB9p3UHwbebeRiKwU4pzR+Xp3/chLQuTTTFPVJxYFoTGRIkL1uE1
+	 BWsHtKThPWinQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EC895380AAE9;
+	Wed, 19 Feb 2025 18:00:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v2 0/4] selftests/bpf: tc_links/tc_opts:
+ Unserialize tests
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173998803276.698021.4187184444862727581.git-patchwork-notify@kernel.org>
+Date: Wed, 19 Feb 2025 18:00:32 +0000
+References: <20250219-b4-tc_links-v2-0-14504db136b7@bootlin.com>
+In-Reply-To: <20250219-b4-tc_links-v2-0-14504db136b7@bootlin.com>
+To: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
+ shuah@kernel.org, alexis.lothore@bootlin.com, thomas.petazzoni@bootlin.com,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
-commit: 3bfa08fe9ec8dd79e183c88e1275be74191e7bc8 Revert "i2c: Replace list-based mechanism for handling auto-detected clients"
-date:   2 weeks ago
-config: mips-eyeq6_defconfig (https://download.01.org/0day-ci/archive/20250220/202502200154.kBYwSZGe-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 910be4ff90d7d07bd4518ea03b85c0974672bf9c)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250220/202502200154.kBYwSZGe-lkp@intel.com/reproduce)
+Hello:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502200154.kBYwSZGe-lkp@intel.com/
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-All warnings (new ones prefixed by >>):
+On Wed, 19 Feb 2025 15:52:59 +0100 you wrote:
+> Hi all,
+> 
+> Both tc_links.c and tc_opts.c do their tests on the loopback interface.
+> It prevents from parallelizing their executions.
+> 
+> Add a new behaviour to the test_progs framework that creates and opens a
+> new network namespace to run a test in it. This is done automatically on
+> tests whose names start with 'ns_'.
+> 
+> [...]
 
->> drivers/i2c/i2c-core-base.c:1420:12: warning: stack frame size (1040) exceeds limit (1024) in 'i2c_do_add_adapter' [-Wframe-larger-than]
-    1420 | static int i2c_do_add_adapter(struct i2c_driver *driver,
-         |            ^
-   1 warning generated.
+Here is the summary with links:
+  - [bpf-next,v2,1/4] selftests/bpf: ns_current_pid_tgid: Rename the test function
+    https://git.kernel.org/bpf/bpf-next/c/4a06c5251ae3
+  - [bpf-next,v2,2/4] selftests/bpf: Optionally open a dedicated namespace to run test in it
+    https://git.kernel.org/bpf/bpf-next/c/c047e0e0e435
+  - [bpf-next,v2,3/4] selftests/bpf: tc_links/tc_opts: Unserialize tests
+    https://git.kernel.org/bpf/bpf-next/c/207cd7578ad1
+  - [bpf-next,v2,4/4] selftests/bpf: ns_current_pid_tgid: Use test_progs's ns_ feature
+    https://git.kernel.org/bpf/bpf-next/c/157feaaf18ce
 
-
-vim +/i2c_do_add_adapter +1420 drivers/i2c/i2c-core-base.c
-
-9c1600eda42e52 drivers/i2c/i2c-core.c David Brownell 2007-05-01  1419  
-69b0089a6750a0 drivers/i2c/i2c-core.c Jean Delvare   2009-12-06 @1420  static int i2c_do_add_adapter(struct i2c_driver *driver,
-69b0089a6750a0 drivers/i2c/i2c-core.c Jean Delvare   2009-12-06  1421  			      struct i2c_adapter *adap)
-026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1422  {
-4735c98f8447ac drivers/i2c/i2c-core.c Jean Delvare   2008-07-14  1423  	/* Detect supported devices on that bus, and instantiate them */
-4735c98f8447ac drivers/i2c/i2c-core.c Jean Delvare   2008-07-14  1424  	i2c_detect(adap, driver);
-4735c98f8447ac drivers/i2c/i2c-core.c Jean Delvare   2008-07-14  1425  
-026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1426  	return 0;
-026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1427  }
-026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1428  
-
-:::::: The code at line 1420 was first introduced by commit
-:::::: 69b0089a6750a0435570df3ba8456c77b352af55 i2c: Refactor for_each callbacks
-
-:::::: TO: Jean Delvare <khali@linux-fr.org>
-:::::: CC: Jean Delvare <khali@linux-fr.org>
-
+You are awesome, thank you!
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
