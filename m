@@ -1,85 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866E01ADC86;
-	Wed, 19 Feb 2025 19:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC5221B19E;
+	Wed, 19 Feb 2025 19:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739994565; cv=none; b=hNKtOAOL7qB+9qkB0mJwpgY1VGgFJqqwdFhqeLmhxoDcjC4aXMdRDMIxNmxFUw5MxvT9T/8p5KqoatftYpmxs3A+lrlHBQKOZYjMyZFalPjUx2qCxm+Kmol4taLgGu+qGR8xKK/zYGBlWtkIljvI9wAbqAortSAxUD2oVUplwyU=
+	t=1739994606; cv=none; b=WX8IqDp9Y6R/CiVqflCHh87IP0+5XswowKQqCZ4Umdt4uchzDWW2uLXhYCtvvK3Ul+xyeoJGwd2p1JBSrAcWozI4kmARs358B+KBc7zyx9s5H6g1zAtUNLphFZ+tmDFxXKYkpuxqdH4lWe+TBg61MUfPWJWtU9f3SMRjfGQnRLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739994565; c=relaxed/simple;
-	bh=UYy/lu0qQ2sbGAMvLTq/G1MIeAdrMLKHu1KjRZuiZK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RRGAS1Vpm4IcN5TjUDZ7o9xSoLTi9m/OT/90k+iFRYN1sueL1ghyKv6vwuYKrOZ75sbKHN6Wd/h0UfIaXBmpAP4/oTEGrNt+FA5AI9HTrj69458Agt0k1CsizUP89uuMwtBeDEagnLjCRX9IyFlbj/ODskyYocP6JyvB1I8t+54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qoYl5k9l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739994606; c=relaxed/simple;
+	bh=na6tRMY2nDLZLDxp6DUxdR2j8PPKYFVxpSitdTsBMT4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=i47ijVczFBLtfGQwjapXGiQr4h4vLorhHRstR51eOWqCfsxqmOBge7BICTqRaKs1x9+tD7XqrwnkOB76mV2ZiCH9JXAfgxWpRpPJ0Hec/spKQh2UmSvnFYLLOlUlz3yGrAJc+NE0BeUNsYaliWKMOJWEyyfJgPUASuhdOYAkgE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TIeFGsec; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qoYl5k9l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2D4C4CED1;
-	Wed, 19 Feb 2025 19:49:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739994565;
-	bh=UYy/lu0qQ2sbGAMvLTq/G1MIeAdrMLKHu1KjRZuiZK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qoYl5k9l2SDx44RekQuCJla114E3wfs6aYeD6rwHHgZtsjRe/9gxcKjKEqmqrzJXB
-	 8neAg8ezfGb4OJyLGxOPOBsj6TTjq7EXlrnbrvImAs27D3UCfS4iQY58V9K1iPksXK
-	 jQzJXMg5S5dbRX24Ws9ls9RdSlUNr7Qz/q3HFD0yvorBUyUoV1YalZO6B4ppru1MmH
-	 Y9moeE0KUc5n1l9OPMM9aEWPZpU+PObBrSJj1sGQcPOgo5iBa1EhL9JsK2APaqA7EZ
-	 OalRrjsOI4cf+L78KuEL3QflG0U1BabWgoAchX9IYy1AdMwH0voeU57ROxpgDjf7fm
-	 pcbJpyISf6GuA==
-Date: Wed, 19 Feb 2025 13:49:23 -0600
-From: Rob Herring <robh@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: andersson@kernel.org, dmitry.baryshkov@linaro.org,
-	manivannan.sadhasivam@linaro.org, krzk@kernel.org,
-	helgaas@kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree-spec@vger.kernel.org,
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH V3 0/2] schemas: pci: bridge: Document PCI L0s & L1 entry
- delay and N_FTS
-Message-ID: <20250219194923.GA2776564-robh@kernel.org>
-References: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TIeFGsec"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JG5AqL011626;
+	Wed, 19 Feb 2025 19:49:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MvvT+DAcnXh2DZoZQ+WrszmWm0FnhK3YiKXvc4Y/A0Y=; b=TIeFGsecpm4V2UtD
+	mL7wgojmwa/XlZbgZACeYT9WU/GsrzxXG9RuAAzHCKKMlzcpijM2DeBQe8b2h77D
+	0Rou1AwNYc9CyNHFA2D8/KGzybdKvTBy3SSwE4oMPgZMV3NoGlDVKKhw23i2Kg1I
+	MNXcv93fcMkqcJ37nCwkThyfCzJ5v1YvlElWJ3pShvXbLoCI6hnk6NXwBczUJRGb
+	tLjQa5ogT2wU9rtgsbaxCc1sdJQZ28g9E/xDms0a4Fx0uYuQh+7SLUfS0IdBwoO/
+	9KAc916baHFb9vnPO9vt2cDEmzA20DLKnyqUfFV645BytpE46ZKIeyWVItZROexk
+	d4Q1iw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy3ksmd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 19:49:59 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51JJnwLi010722
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 19:49:58 GMT
+Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 19 Feb 2025 11:49:58 -0800
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+Date: Wed, 19 Feb 2025 11:49:20 -0800
+Subject: [PATCH v3 4/5] drm/msm: switch msm_kms to use msm_iommu_disp_new()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250219-abhinavk-smmu-fault-handler-v3-4-aa3f0bf4434a@quicinc.com>
+References: <20250219-abhinavk-smmu-fault-handler-v3-0-aa3f0bf4434a@quicinc.com>
+In-Reply-To: <20250219-abhinavk-smmu-fault-handler-v3-0-aa3f0bf4434a@quicinc.com>
+To: Rob Clark <robdclark@gmail.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>
+CC: Abhinav Kumar <quic_abhinavk@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Jessica
+ Zhang" <quic_jesszhan@quicinc.com>
+X-Mailer: b4 0.15-dev-f0f05
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739994597; l=865;
+ i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
+ bh=YyfUWthfUVhSwt8MIJf9DYWrG9IFT6JTRe2gToz7Vdg=;
+ b=XqHnW+vQJTbOpuirAj/6dv2dOTat+llI2ZbF6VfyWkdk0QzHQ9n2oNu8AsVt230teV7ELcNhC
+ 19FgWQDNuZlAJVXrTOeu4EJdEzX7DXuvkO3KLIPH0P0p/wJhP/cSZ6n
+X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
+ pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tcJ9kb6Rr_V7kqQrY8215058KcSWnPQP
+X-Proofpoint-GUID: tcJ9kb6Rr_V7kqQrY8215058KcSWnPQP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-19_08,2025-02-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502100000 definitions=main-2502190153
 
-On Sun, Feb 16, 2025 at 07:15:08AM +0530, Krishna Chaitanya Chundru wrote:
-> Some controllers and endpoints provide provision to program the entry
-> delays of L0s & L1 which will allow the link to enter L0s & L1 more
-> aggressively to save power.
-> 
-> Per PCIe r6.0, sec 4.2.5.1, during Link training, a PCIe component
-> captures the N_FTS value it receives.  Per 4.2.5.6, when
-> transitioning the Link from L0s to L0, it must transmit N_FTS Fast
-> Training Sequences to enable the receiver to obtain bit and Symbol
-> lock.
-> 
-> Components may have device-specific ways to configure N_FTS values
-> to advertise during Link training.  Define an n-fts array with an
-> entry for each supported data rate.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
-> changes in v3:-
-> - Update the description to specfify about entries of the array (rob)
-> changes in v2:-
-> - Split N_FTS & L1 and L0s entry delay in two patches (bjorn)
-> - Update the commit text, description (bjorn)
-> 
-> Krishna Chaitanya Chundru (2):
->   schemas: pci: bridge: Document PCI L0s & L1 entry delay
->   schemas: pci: bridge: Document PCIe N_FTS
-> 
->  dtschema/schemas/pci/pci-bus-common.yaml | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
 
-Applied, thanks.
+Switch msm_kms to use msm_iommu_disp_new() so that the newly
+registered fault handler will kick-in during any mmu faults.
 
-Rob
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+---
+ drivers/gpu/drm/msm/msm_kms.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/msm_kms.c b/drivers/gpu/drm/msm/msm_kms.c
+index 1a9f551ea031..1d3dae3d4c93 100644
+--- a/drivers/gpu/drm/msm/msm_kms.c
++++ b/drivers/gpu/drm/msm/msm_kms.c
+@@ -192,7 +192,7 @@ struct msm_gem_address_space *msm_kms_init_aspace(struct drm_device *dev)
+ 	else
+ 		iommu_dev = mdss_dev;
+ 
+-	mmu = msm_iommu_new(iommu_dev, 0);
++	mmu = msm_iommu_disp_new(iommu_dev, 0);
+ 	if (IS_ERR(mmu))
+ 		return ERR_CAST(mmu);
+ 
+
+-- 
+2.48.1
+
