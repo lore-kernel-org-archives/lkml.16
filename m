@@ -1,40 +1,40 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6E51FCCFD
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AAF1FDE12
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739983011; cv=none; b=TdL6vVNOpW8Xgn/dGbhISLkzn28CwR0s2rWF/IPHrskq3oqqDiEFpoGcxqcVf5obBnwAuA+iJ18/8NnybFOjgwH0V37s74NFpK/V1ymhN8fzuTcyl9zyt0qBObTN0VnetsHDfIrGOKgPsrsCU1yVdGRan06E77jXv3NzlkTo68Q=
+	t=1739983011; cv=none; b=XOEIVW23blzNQmVo4bw63Fqh5A8+O/TGFbpKvGCx89Szip29xpRiCzjHtRIKG8kusBjSICko/YsgukqqQP1tZLD1eiiKb0azsDTJMewXxFNPxctIy/Ej3Y7CukorZmhdSexAYjypYqyqB90MOYx5CGjAbHe8OHyYY9dA2JKsYp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739983011; c=relaxed/simple;
-	bh=Btti5HdLHNcBRd1KzoFWC5o4jtbV4UKRZPpvGQwFmYs=;
+	bh=7/R9Q29okdEYiDknWp2ksDiZmvkLI7PssYu9BwnB2K0=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=onjJCo509PTRHu36nFgV71igltE6sih1MeukfocFSvB7K03svwP/lPwOA6w6WXkJ/OC4Rx2jAQZUsMGcdrCTCxmShfLXq8W21vu0t2In7/VCXQC7nrXiFbjNsX0Vpa03ygUUoPZ9ufsjfmjdcq0996DNIUnrtYSTu8rhmZEl628=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m6E47sfs; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type; b=VI5qMnvTEImaexXGiA626IobB+ahC8UAn/v1BEWBwqFN9+C7QXZ9ZN8mlwE8PvRjWZOK3Qpdh706IxiwT5Dj5FZ9dJCskOPF908G0rL/xlrGkYZnNVR9iKdQP4p+0d+KOrQSIwvYUA3R2V4VaYK4JwcF5iF1S+NK4JB7wtDtCzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XbGMXRZr; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m6E47sfs"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XbGMXRZr"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=EO/UeWnTi587WDLa+KBtfMxZo5oSImtpAx4xhvYuAZk=; b=m6E47sfsI3mOxUXYn2MCWPsrlF
-	QJY5qT/vVAzn6xd4Kw1vxZ3s3YXhtmsBHzJMUoagwX1CyZEU4HczkqcxYGnyAQJHf3mS2VZzhm7oC
-	qw2SluBt2Xs8N72wXkZP5AfCGwrZ5mTuuRZcC3yCbnFvALzQqmAg/gIqBnjhDYNPeHOgvNlti1L6d
-	Z0DL7DaLJWMlZfV5wvh317bF3yG4Qq5Z0jy2+lLSBOczouOkTDr6CFdJtMhQsqDuJGHZBapxQl8Ib
-	ByjwaUYq55rZ7KjNruVrwUHRgMRMhfPOXfxvXqih7mknjv9cVfA2ktd5Blxkv5lLMQ7A8QXUzZWwq
-	UXiNkDbg==;
+	bh=U88omwiH5A+inj+uOYAaqUYCMp5kwoQ7OKMg92ce4XM=; b=XbGMXRZr9CESTWAEvEqgc2HyNd
+	YCkSknwhnGk2i23J3Robj++By5p63VWH84RNGz88HXVdP0r65K/EXoBLRIT5I4I2qcxz+v12pTroI
+	07055jck3j3FqodDJ/8Zx+eic24HV3ENzWFOJQ/LAvzWIFa38X3AkEOp+c49v5EM3UJgDKKvF110i
+	RhJABt7FJHQE5n6LylPMOMo2g6JD14RrhRIp5bXf7CMuP9LplQT5Q1/u26GO0EJ2DNhMrKAcr8xas
+	/+6WmcYJJbNaCKdA2Z11Bq2gSv9wDujqiJrxBF3IojI63UCbfyAojqcBwRlTTaV2Rf1g1UCv5cNUn
+	MfO7V8sg==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkn41-00000002HAU-065T;
-	Wed, 19 Feb 2025 16:36:45 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tkn3z-00000006Whh-3pdO;
+	Wed, 19 Feb 2025 16:36:44 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 113C1306573; Wed, 19 Feb 2025 17:36:43 +0100 (CET)
-Message-ID: <20250219163515.150619755@infradead.org>
+	id 024C63007F0; Wed, 19 Feb 2025 17:36:43 +0100 (CET)
+Message-ID: <20250219163514.688460830@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 19 Feb 2025 17:21:15 +0100
+Date: Wed, 19 Feb 2025 17:21:11 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -54,7 +54,7 @@ Cc: linux-kernel@vger.kernel.org,
  alexei.starovoitov@gmail.com,
  mhiramat@kernel.org,
  jmill@asu.edu
-Subject: [PATCH v3 08/10] x86: BHI stubs
+Subject: [PATCH v3 04/10] x86/traps: Allow custom fixups in handle_bug()
 References: <20250219162107.880673196@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,185 +64,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
+The normal fixup in handle_bug() is simply continuing at the next
+instruction. However upcomming patches make this the wrong thing, so
+allow handlers (specifically handle_cfi_failure()) to over-ride
+regs->ip.
+
+The callchain is such that the fixup needs to be done before it is
+determined if the exception is fatal, as such, revert any changes in
+that case.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/include/asm/cfi.h |    4 +
- arch/x86/lib/Makefile      |    3 
- arch/x86/lib/bhi.S         |  146 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 152 insertions(+), 1 deletion(-)
+ arch/x86/kernel/traps.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/x86/include/asm/cfi.h
-+++ b/arch/x86/include/asm/cfi.h
-@@ -102,6 +102,10 @@ enum cfi_mode {
- extern enum cfi_mode cfi_mode;
- extern bool cfi_warn;
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -287,11 +287,12 @@ static inline void handle_invalid_op(str
  
-+typedef u8 bhi_thunk[32];
-+extern bhi_thunk __bhi_args[];
-+extern bhi_thunk __bhi_args_end[];
-+
- struct pt_regs;
+ static noinstr bool handle_bug(struct pt_regs *regs)
+ {
++	unsigned long addr = regs->ip;
+ 	bool handled = false;
+ 	int ud_type, ud_len;
+ 	s32 ud_imm;
  
- #ifdef CONFIG_CFI_CLANG
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -66,5 +66,6 @@ endif
-         lib-y += clear_page_64.o copy_page_64.o
-         lib-y += memmove_64.o memset_64.o
-         lib-y += copy_user_64.o copy_user_uncached_64.o
--	lib-y += cmpxchg16b_emu.o
-+        lib-y += cmpxchg16b_emu.o
-+        lib-y += bhi.o
- endif
---- /dev/null
-+++ b/arch/x86/lib/bhi.S
-@@ -0,0 +1,146 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+-	ud_type = decode_bug(regs->ip, &ud_imm, &ud_len);
++	ud_type = decode_bug(addr, &ud_imm, &ud_len);
+ 	if (ud_type == BUG_NONE)
+ 		return handled;
+ 
+@@ -315,7 +316,8 @@ static noinstr bool handle_bug(struct pt
+ 	switch (ud_type) {
+ 	case BUG_EA:
+ 		if (handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+-			regs->ip += ud_len;
++			if (regs->ip == addr)
++				regs->ip += ud_len;
+ 			handled = true;
+ 		}
+ 		break;
+@@ -323,7 +325,8 @@ static noinstr bool handle_bug(struct pt
+ 	case BUG_UD2:
+ 		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+ 		    handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+-			regs->ip += ud_len;
++			if (regs->ip == addr)
++				regs->ip += ud_len;
+ 			handled = true;
+ 		}
+ 		break;
+@@ -340,6 +343,9 @@ static noinstr bool handle_bug(struct pt
+ 		break;
+ 	}
+ 
++	if (!handled && regs->ip != addr)
++		regs->ip = addr;
 +
-+#include <linux/linkage.h>
-+#include <asm/unwind_hints.h>
-+#include <asm/nospec-branch.h>
-+
-+/*
-+ * Notably, the FineIBT preamble calling these will have ZF set and r10 zero.
-+ *
-+ * The very last element is in fact larger than 32 bytes, but since its the
-+ * last element, this does not matter,
-+ *
-+ * There are 2 #UD sites, located between 0,1-2,3 and 4,5-6,7 such that they
-+ * can be reached using Jcc.d8, these elements (1 and 5) have sufficiently
-+ * big alignment holes for this to not stagger the array.
-+ */
-+
-+.pushsection .noinstr.text, "ax"
-+
-+	.align 32
-+SYM_CODE_START(__bhi_args)
-+
-+#ifdef CONFIG_FINEIBT_BHI
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_0, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_1
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_1, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_1
-+	cmovne %r10, %rdi
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 8
-+	ANNOTATE_REACHABLE
-+.Lud_1:	ud2
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_2, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_1
-+	cmovne %r10, %rdi
-+	cmovne %r10, %rsi
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_3, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_1
-+	cmovne %r10, %rdi
-+	cmovne %r10, %rsi
-+	cmovne %r10, %rdx
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_4, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_2
-+	cmovne %r10, %rdi
-+	cmovne %r10, %rsi
-+	cmovne %r10, %rdx
-+	cmovne %r10, %rcx
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_5, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_2
-+	cmovne %r10, %rdi
-+	cmovne %r10, %rsi
-+	cmovne %r10, %rdx
-+	cmovne %r10, %rcx
-+	cmovne %r10, %r8
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 8
-+	ANNOTATE_REACHABLE
-+.Lud_2:	ud2
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_6, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_2
-+	cmovne %r10, %rdi
-+	cmovne %r10, %rsi
-+	cmovne %r10, %rdx
-+	cmovne %r10, %rcx
-+	cmovne %r10, %r8
-+	cmovne %r10, %r9
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_7, SYM_L_LOCAL)
-+	ANNOTATE_NOENDBR
-+	UNWIND_HINT_FUNC
-+	jne .Lud_2
-+	cmovne %r10, %rdi
-+	cmovne %r10, %rsi
-+	cmovne %r10, %rdx
-+	cmovne %r10, %rcx
-+	cmovne %r10, %r8
-+	cmovne %r10, %r9
-+	cmovne %r10, %rsp
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+	int3
-+
-+#endif /* CONFIG_FINEIBT_BHI */
-+
-+	.align 32
-+SYM_INNER_LABEL(__bhi_args_end, SYM_L_GLOBAL)
-+	ANNOTATE_NOENDBR
-+SYM_CODE_END(__bhi_args)
-+
-+.popsection
+ 	if (regs->flags & X86_EFLAGS_IF)
+ 		raw_local_irq_disable();
+ 	instrumentation_end();
 
 
