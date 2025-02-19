@@ -1,583 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC331DC04A;
-	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B891E1EA7ED;
+	Wed, 19 Feb 2025 08:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739953972; cv=none; b=G+/Lpz9eMqXNCd9f49o6nXBDcLm67Q8Rs2Kon2hPhVE73kk7hHOUNMkf4WvoT6Il0a9PfI69nleDpNNfQRAYZVbJRrbt0Q9bg05YsNv2cYHip/zydNl+R2f0Sx7vBMyS0jtVVDRerqTJAQ51JQAid98IoEKbTxmCtDc9K43a4jU=
+	t=1739953983; cv=none; b=dX3o0OBbkL5yVvnylgmQIGv7hfY11rVa8pMRvHHPlBhrMDhslC+SxGx6RyCxDdZKYAg215RZIWyl9EfXfuOEGsKF1R5bCDhub6jig7JgrZir/sg+57VX/e98X+MHwAmRxZ6E8DG9VWKOnJqQdFswzut48i73bIcYIRm7punE5k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739953972; c=relaxed/simple;
-	bh=2+Yr/2kIpnCitwTGtyjeQMnDH8wv+vGuRcW8RKqXkZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GLUlkreF4SexHslc9qLyWjvh6cNaJJajrHWV5jngFxmOZV3V7swgHOWCj9lwVgwRw8Xb41p8Nhzeyrk2CsRN2cxkxxEGSHCm7ZV8ZF3hpnWJaJcpsouz2pdf7G2RyKNNSV2cCQTX7SiMT4gMjfNWWZDwL7ptStmD9gZCu4MpnJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAv9YyDT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739953983; c=relaxed/simple;
+	bh=492UxWHba5+PdraY25snSVuyYciW7Iz27+/Vla1ltTo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kjt6DKJShy+M2OOlCRJuwtAI/xBl3nIDFywsLTBM8IRK+KyucZDufhJb0Bbt8zV+O+HnZ0Ge+686pT9veDPK/VqB4I8z8p+B2Nh7/7kEKvt/ttP6nB+sh3jJ18TEdYR3TyWg1k+dT+bab1u9lNEDPcEc1YlnZaPph5Fb5rPWE+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrbFtN9j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAv9YyDT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8D1C4CEFD;
-	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrbFtN9j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD416C4CEE9;
+	Wed, 19 Feb 2025 08:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739953972;
-	bh=2+Yr/2kIpnCitwTGtyjeQMnDH8wv+vGuRcW8RKqXkZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JAv9YyDTuiprHRGNMZ1qjSEkGj5oa4aBfrz++fFKJtI/ZIdmEmWythQGKFXJXdmGk
-	 FgZn2VLwTTpIV4cc9f2zHjBQhctoYGHldwnhrM5AMO9u7qiXCTCTtGxBy7/bFIUYNv
-	 qyB//s3GynHuz7+lB4oTJnvAi8JRAZdthit9ARfSGranTS2hEPSaS2AtTOqBMoCaa8
-	 hjkQn87O9EuTexMMa88OYIXlhP4dSicmx52SUag2UuNvitVu+fX7vVewcd3djyS9KX
-	 misqQe3v7ne663QT6uCDeSNtLdUjbjLMsrwIWzcysynzOyJwYlcPguV7xxO0Gvwhzd
-	 PMwhQw88NODKw==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tkfVi-0000000Gv5F-1PUT;
-	Wed, 19 Feb 2025 09:32:50 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 15/27] scripts/kernel-doc.py: move KernelFiles class to a separate file
-Date: Wed, 19 Feb 2025 09:32:31 +0100
-Message-ID: <f2e97492fcf32247a8ebe72b90f776d57248f63a.1739952783.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1739952783.git.mchehab+huawei@kernel.org>
-References: <cover.1739952783.git.mchehab+huawei@kernel.org>
+	s=k20201202; t=1739953983;
+	bh=492UxWHba5+PdraY25snSVuyYciW7Iz27+/Vla1ltTo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jrbFtN9jcjqpz1JAips0rZy8nLJ1Mw3cqwhGfn3uyojPxfdYxfEL9B8T60DLf7Bga
+	 aXMq286XivXZbnyzXjB7J9xEeB3P04uz9R0CaOeEeo249Y0lPvnOXeePGzrOAWx2XT
+	 28/3b8Y9MccgDjMTg8seRDOA6gRc5o1wnwfawVzkRig7JHQDmeYzGqsoIPPwt4rNdr
+	 rcCxl5KSdP1Th3pmoKdubWX34ckFJdnUSAscjdEm6dUvFfOctgKeOokXnBgdMH00Cp
+	 3br0tS5hZvL6AI2fRCRnXT9OmYY5gM/gayqdKzoho4pEu4pfGBRMrn831U9WOZkSKV
+	 ulCpe8k7IOSQQ==
+Message-ID: <0dd1d68a-37e5-4c90-ad2a-74805d94296f@kernel.org>
+Date: Wed, 19 Feb 2025 09:32:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] usb: dwc3: exynos: add support for Exynos2200
+ variant
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250215123453.163434-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250215123453.163434-3-ivo.ivanov.ivanov1@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250215123453.163434-3-ivo.ivanov.ivanov1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The KernelFiles class is the main dispatcher which parses each
-source file.
+On 15/02/2025 13:34, Ivaylo Ivanov wrote:
+> Add Exynos2200 compatible string and associated driver data. This SoC
+> requires a Link interface AXI clock.
+> 
+> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> ---
+>  drivers/usb/dwc3/dwc3-exynos.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-In preparation for letting kerneldoc Sphinx extension to import
-Python libraries, move regex ancillary classes to a separate
-file.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- scripts/kernel-doc.py          | 220 +--------------------------
- scripts/lib/kdoc/kdoc_files.py | 269 +++++++++++++++++++++++++++++++++
- 2 files changed, 270 insertions(+), 219 deletions(-)
- create mode 100755 scripts/lib/kdoc/kdoc_files.py
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
-index 193a30fcfb7c..cd79b2c1b746 100755
---- a/scripts/kernel-doc.py
-+++ b/scripts/kernel-doc.py
-@@ -44,6 +44,7 @@ sys.path.insert(0, os.path.join(SRC_DIR, LIB_DIR))
- 
- from kdoc_parser import KernelDoc, type_param
- from kdoc_re import Re
-+from kdoc_files import KernelFiles
- 
- function_pointer = Re(r"([^\(]*\(\*)\s*\)\s*\(([^\)]*)\)", cache=False)
- 
-@@ -68,225 +69,6 @@ type_member = Re(r"\&([_\w]+)(\.|->)([_\w]+)", cache=False)
- type_fallback = Re(r"\&([_\w]+)", cache=False)
- type_member_func = type_member + Re(r"\(\)", cache=False)
- 
--class GlobSourceFiles:
--    """
--    Parse C source code file names and directories via an Interactor.
--
--    """
--
--    def __init__(self, srctree=None, valid_extensions=None):
--        """
--        Initialize valid extensions with a tuple.
--
--        If not defined, assume default C extensions (.c and .h)
--
--        It would be possible to use python's glob function, but it is
--        very slow, and it is not interactive. So, it would wait to read all
--        directories before actually do something.
--
--        So, let's use our own implementation.
--        """
--
--        if not valid_extensions:
--            self.extensions = (".c", ".h")
--        else:
--            self.extensions = valid_extensions
--
--        self.srctree = srctree
--
--    def _parse_dir(self, dirname):
--        """Internal function to parse files recursively"""
--
--        with os.scandir(dirname) as obj:
--            for entry in obj:
--                name = os.path.join(dirname, entry.name)
--
--                if entry.is_dir():
--                    yield from self._parse_dir(name)
--
--                if not entry.is_file():
--                    continue
--
--                basename = os.path.basename(name)
--
--                if not basename.endswith(self.extensions):
--                    continue
--
--                yield name
--
--    def parse_files(self, file_list, file_not_found_cb):
--        for fname in file_list:
--            if self.srctree:
--                f = os.path.join(self.srctree, fname)
--            else:
--                f = fname
--
--            if os.path.isdir(f):
--                yield from self._parse_dir(f)
--            elif os.path.isfile(f):
--                yield f
--            elif file_not_found_cb:
--                file_not_found_cb(fname)
--
--
--class KernelFiles():
--
--    def parse_file(self, fname):
--
--        doc = KernelDoc(self.config, fname)
--        doc.run()
--
--        return doc
--
--    def process_export_file(self, fname):
--        try:
--            with open(fname, "r", encoding="utf8",
--                      errors="backslashreplace") as fp:
--                for line in fp:
--                    KernelDoc.process_export(self.config.function_table, line)
--
--        except IOError:
--            print(f"Error: Cannot open fname {fname}", fname=sys.stderr)
--            self.config.errors += 1
--
--    def file_not_found_cb(self, fname):
--        self.config.log.error("Cannot find file %s", fname)
--        self.config.errors += 1
--
--    def __init__(self, files=None, verbose=False, out_style=None,
--                 werror=False, wreturn=False, wshort_desc=False,
--                 wcontents_before_sections=False,
--                 logger=None, modulename=None, export_file=None):
--        """Initialize startup variables and parse all files"""
--
--
--        if not verbose:
--            verbose = bool(os.environ.get("KBUILD_VERBOSE", 0))
--
--        if not modulename:
--            modulename = "Kernel API"
--
--        dt = datetime.now()
--        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
--            # use UTC TZ
--            to_zone = tz.gettz('UTC')
--            dt = dt.astimezone(to_zone)
--
--        if not werror:
--            kcflags = os.environ.get("KCFLAGS", None)
--            if kcflags:
--                match = re.search(r"(\s|^)-Werror(\s|$)/", kcflags)
--                if match:
--                    werror = True
--
--            # reading this variable is for backwards compat just in case
--            # someone was calling it with the variable from outside the
--            # kernel's build system
--            kdoc_werror = os.environ.get("KDOC_WERROR", None)
--            if kdoc_werror:
--                werror = kdoc_werror
--
--        # Set global config data used on all files
--        self.config = argparse.Namespace
--
--        self.config.verbose = verbose
--        self.config.werror = werror
--        self.config.wreturn = wreturn
--        self.config.wshort_desc = wshort_desc
--        self.config.wcontents_before_sections = wcontents_before_sections
--        self.config.modulename = modulename
--
--        self.config.function_table = set()
--        self.config.source_map = {}
--
--        if not logger:
--            self.config.log = logging.getLogger("kernel-doc")
--        else:
--            self.config.log = logger
--
--        self.config.kernel_version = os.environ.get("KERNELVERSION",
--                                                    "unknown kernel version'")
--        self.config.src_tree = os.environ.get("SRCTREE", None)
--
--        self.out_style = out_style
--        self.export_file = export_file
--
--        # Initialize internal variables
--
--        self.config.errors = 0
--        self.results = []
--
--        self.file_list = files
--        self.files = set()
--
--    def parse(self):
--        """
--        Parse all files
--        """
--
--        glob = GlobSourceFiles(srctree=self.config.src_tree)
--
--        # Let's use a set here to avoid duplicating files
--
--        for fname in glob.parse_files(self.file_list, self.file_not_found_cb):
--            if fname in self.files:
--                continue
--
--            self.files.add(fname)
--
--            res = self.parse_file(fname)
--            self.results.append((res.fname, res.entries))
--
--        if not self.files:
--            sys.exit(1)
--
--        # If a list of export files was provided, parse EXPORT_SYMBOL*
--        # from the ones not already parsed
--
--        if self.export_file:
--            files = self.files
--
--            glob = GlobSourceFiles(srctree=self.config.src_tree)
--
--            for fname in glob.parse_files(self.export_file,
--                                          self.file_not_found_cb):
--                if fname not in files:
--                    files.add(fname)
--
--                    self.process_export_file(fname)
--
--    def out_msg(self, fname, name, arg):
--        # TODO: filter out unwanted parts
--
--        return self.out_style.msg(fname, name, arg)
--
--    def msg(self, enable_lineno=False, export=False, internal=False,
--            symbol=None, nosymbol=None):
--
--        function_table = self.config.function_table
--
--        if symbol:
--            for s in symbol:
--                function_table.add(s)
--
--        # Output none mode: only warnings will be shown
--        if not self.out_style:
--            return
--
--        self.out_style.set_config(self.config)
--
--        self.out_style.set_filter(export, internal, symbol, nosymbol,
--                                  function_table, enable_lineno)
--
--        for fname, arg_tuple in self.results:
--            for name, arg in arg_tuple:
--                if self.out_msg(fname, name, arg):
--                    ln = arg.get("ln", 0)
--                    dtype = arg.get('type', "")
--
--                    self.config.log.warning("%s:%d Can't handle %s",
--                                            fname, ln, dtype)
--
- 
- class OutputFormat:
-     # output mode.
-diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
-new file mode 100755
-index 000000000000..76dd53611c08
---- /dev/null
-+++ b/scripts/lib/kdoc/kdoc_files.py
-@@ -0,0 +1,269 @@
-+#!/usr/bin/env python3
-+# pylint: disable=R0903,R0913,R0914,R0917
-+# Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# TODO: implement warning filtering
-+
-+"""
-+Parse lernel-doc tags on multiple kernel source files.
-+"""
-+
-+import argparse
-+import logging
-+import os
-+import re
-+import sys
-+from datetime import datetime
-+
-+from dateutil import tz
-+
-+from kdoc_parser import KernelDoc
-+
-+
-+class GlobSourceFiles:
-+    """
-+    Parse C source code file names and directories via an Interactor.
-+    """
-+
-+    def __init__(self, srctree=None, valid_extensions=None):
-+        """
-+        Initialize valid extensions with a tuple.
-+
-+        If not defined, assume default C extensions (.c and .h)
-+
-+        It would be possible to use python's glob function, but it is
-+        very slow, and it is not interactive. So, it would wait to read all
-+        directories before actually do something.
-+
-+        So, let's use our own implementation.
-+        """
-+
-+        if not valid_extensions:
-+            self.extensions = (".c", ".h")
-+        else:
-+            self.extensions = valid_extensions
-+
-+        self.srctree = srctree
-+
-+    def _parse_dir(self, dirname):
-+        """Internal function to parse files recursively"""
-+
-+        with os.scandir(dirname) as obj:
-+            for entry in obj:
-+                name = os.path.join(dirname, entry.name)
-+
-+                if entry.is_dir():
-+                    yield from self._parse_dir(name)
-+
-+                if not entry.is_file():
-+                    continue
-+
-+                basename = os.path.basename(name)
-+
-+                if not basename.endswith(self.extensions):
-+                    continue
-+
-+                yield name
-+
-+    def parse_files(self, file_list, file_not_found_cb):
-+        """
-+        Define an interator to parse all source files from file_list,
-+        handling directories if any
-+        """
-+
-+        for fname in file_list:
-+            if self.srctree:
-+                f = os.path.join(self.srctree, fname)
-+            else:
-+                f = fname
-+
-+            if os.path.isdir(f):
-+                yield from self._parse_dir(f)
-+            elif os.path.isfile(f):
-+                yield f
-+            elif file_not_found_cb:
-+                file_not_found_cb(fname)
-+
-+
-+class KernelFiles():
-+    """
-+    Parse lernel-doc tags on multiple kernel source files.
-+    """
-+
-+    def parse_file(self, fname):
-+        """
-+        Parse a single Kernel source.
-+        """
-+
-+        doc = KernelDoc(self.config, fname)
-+        doc.run()
-+
-+        return doc
-+
-+    def process_export_file(self, fname):
-+        """
-+        Parses EXPORT_SYMBOL* macros from a single Kernel source file.
-+        """
-+        try:
-+            with open(fname, "r", encoding="utf8",
-+                      errors="backslashreplace") as fp:
-+                for line in fp:
-+                    KernelDoc.process_export(self.config.function_table, line)
-+
-+        except IOError:
-+            print(f"Error: Cannot open fname {fname}", fname=sys.stderr)
-+            self.config.errors += 1
-+
-+    def file_not_found_cb(self, fname):
-+        """
-+        Callback to warn if a file was not found.
-+        """
-+
-+        self.config.log.error("Cannot find file %s", fname)
-+        self.config.errors += 1
-+
-+    def __init__(self, files=None, verbose=False, out_style=None,
-+                 werror=False, wreturn=False, wshort_desc=False,
-+                 wcontents_before_sections=False,
-+                 logger=None, modulename=None, export_file=None):
-+        """
-+        Initialize startup variables and parse all files
-+        """
-+
-+        if not verbose:
-+            verbose = bool(os.environ.get("KBUILD_VERBOSE", 0))
-+
-+        if not modulename:
-+            modulename = "Kernel API"
-+
-+        dt = datetime.now()
-+        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
-+            # use UTC TZ
-+            to_zone = tz.gettz('UTC')
-+            dt = dt.astimezone(to_zone)
-+
-+        if not werror:
-+            kcflags = os.environ.get("KCFLAGS", None)
-+            if kcflags:
-+                match = re.search(r"(\s|^)-Werror(\s|$)/", kcflags)
-+                if match:
-+                    werror = True
-+
-+            # reading this variable is for backwards compat just in case
-+            # someone was calling it with the variable from outside the
-+            # kernel's build system
-+            kdoc_werror = os.environ.get("KDOC_WERROR", None)
-+            if kdoc_werror:
-+                werror = kdoc_werror
-+
-+        # Set global config data used on all files
-+        self.config = argparse.Namespace
-+
-+        self.config.verbose = verbose
-+        self.config.werror = werror
-+        self.config.wreturn = wreturn
-+        self.config.wshort_desc = wshort_desc
-+        self.config.wcontents_before_sections = wcontents_before_sections
-+        self.config.modulename = modulename
-+
-+        self.config.function_table = set()
-+        self.config.source_map = {}
-+
-+        if not logger:
-+            self.config.log = logging.getLogger("kernel-doc")
-+        else:
-+            self.config.log = logger
-+
-+        self.config.kernel_version = os.environ.get("KERNELVERSION",
-+                                                    "unknown kernel version'")
-+        self.config.src_tree = os.environ.get("SRCTREE", None)
-+
-+        self.out_style = out_style
-+        self.export_file = export_file
-+
-+        # Initialize internal variables
-+
-+        self.config.errors = 0
-+        self.results = []
-+
-+        self.file_list = files
-+        self.files = set()
-+
-+    def parse(self):
-+        """
-+        Parse all files
-+        """
-+
-+        glob = GlobSourceFiles(srctree=self.config.src_tree)
-+
-+        # Let's use a set here to avoid duplicating files
-+
-+        for fname in glob.parse_files(self.file_list, self.file_not_found_cb):
-+            if fname in self.files:
-+                continue
-+
-+            self.files.add(fname)
-+
-+            res = self.parse_file(fname)
-+            self.results.append((res.fname, res.entries))
-+
-+        if not self.files:
-+            sys.exit(1)
-+
-+        # If a list of export files was provided, parse EXPORT_SYMBOL*
-+        # from the ones not already parsed
-+
-+        if self.export_file:
-+            files = self.files
-+
-+            glob = GlobSourceFiles(srctree=self.config.src_tree)
-+
-+            for fname in glob.parse_files(self.export_file,
-+                                          self.file_not_found_cb):
-+                if fname not in files:
-+                    files.add(fname)
-+
-+                    self.process_export_file(fname)
-+
-+    def out_msg(self, fname, name, arg):
-+        """
-+        Output messages from a file name using the output style filtering.
-+
-+        If output type was not handled by the syler, return False.
-+        """
-+
-+        # NOTE: we can add rules here to filter out unwanted parts,
-+        # although OutputFormat.msg already does that.
-+
-+        return self.out_style.msg(fname, name, arg)
-+
-+    def msg(self, enable_lineno=False, export=False, internal=False,
-+            symbol=None, nosymbol=None):
-+        """
-+        Interacts over the kernel-doc results and output messages.
-+        """
-+
-+        function_table = self.config.function_table
-+
-+        if symbol:
-+            for s in symbol:
-+                function_table.add(s)
-+
-+        # Output none mode: only warnings will be shown
-+        if not self.out_style:
-+            return
-+
-+        self.out_style.set_config(self.config)
-+
-+        self.out_style.set_filter(export, internal, symbol, nosymbol,
-+                                  function_table, enable_lineno)
-+
-+        for fname, arg_tuple in self.results:
-+            for name, arg in arg_tuple:
-+                if self.out_msg(fname, name, arg):
-+                    ln = arg.get("ln", 0)
-+                    dtype = arg.get('type', "")
-+
-+                    self.config.log.warning("%s:%d Can't handle %s",
-+                                            fname, ln, dtype)
--- 
-2.48.1
-
+Best regards,
+Krzysztof
