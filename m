@@ -1,117 +1,182 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013044.outbound.protection.outlook.com [40.107.162.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5623E1B87E3;
-	Wed, 19 Feb 2025 05:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739944783; cv=none; b=rpg9TxXdXoVK/fsNKuzmEKkfaLDC/0Yh0ae1hjToXkYZhLGeRd1vECUpxEP2TlsEWvXZ6p7+1FtuiJ3uRP8jH0vYr9fnH3OQvBtZM4aJV65pAwjo0ktfZAyXg2ijhpdO2cnFNg/EGTlkkcqpUzMIY55abkl9dLtBwehUNlRtOp0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739944783; c=relaxed/simple;
-	bh=uElxjeT4hItqlbW04BTLLQC+G+DPsa6uTID423EAftU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VG8cRU5Ir7UObXsPpgPK/438hxEU/2BNvbd+fjChxQm3RGCec7Ct5BIQrq2GNOa9dKxTU+6TfVgrqOnH7usEq/g9DNK4OuA1pAvz4iW4duYWekyZ1YYoqiYJPr5G5qcJ2d9xLgrl5TigyHPCAf4RPAea84of20lDQU8snMBCrMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QIJHiHrg; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0012E1B87E3;
+	Wed, 19 Feb 2025 05:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739944790; cv=fail; b=PHEO/9tOnv2c5cI0N+lq+Wer4ZRWQrbGiQWa29zYzPimn9nRmbN/ZJ/D8rWNSFPjq/7GNAfz6QVTWeYWrthZlp1/SIffEQ7AWVcNPknOIHnpW5FD7jNdf01RcOQcSpwIMRPx0ljs50HjEaCpsEb/kxjEZ8m0dewgLwcYEQDamsg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739944790; c=relaxed/simple;
+	bh=apO2jZbpkjF7AtwBRIZrPiXjDxzt6VEEkDAkq7oP7mA=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=KKf22k1EWOlPjeH5qie3nROU0gRpad87pu7ndcuF6cUMSvHfMCyu/SIeUayWUy/NlKfUSSRyiAm8UzEjtp9MM/n9bg69gKaye6cyUyw/oybiV6qrXej1TCtEvoPN4TR2YlO1zZh2/ZWesNo+LkOSv2K6Lcu4xYGGFjCQG9dPwxk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cnq7oJBX; arc=fail smtp.client-ip=40.107.162.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIJHiHrg"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5deb956aa5eso8731734a12.2;
-        Tue, 18 Feb 2025 21:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739944779; x=1740549579; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uElxjeT4hItqlbW04BTLLQC+G+DPsa6uTID423EAftU=;
-        b=QIJHiHrgn1yI13xFlezAeThSGtdEtXqx9X7Y2Y6oUSrWL4pyykU3cyjD/BMXGO1wmZ
-         5QkM2hxNwx40fZ3vABHiOJ051b7JRHiKwoBR6wnOzTMJIgvWBD6WYoSUkorlvUzlXvE5
-         ae6f0giIM3dWATVm6WhWr7FlCPE7g11nDBQj8WWusXtLdobNV6BKcyYD/vxiJXXRer02
-         JfTKYFpUGXClQHxohrm2IOUYghUE3UbFQ6RIdVoBkvdkOb1GEfKuPncfCQbiQVl31kU7
-         vmCKVZWL/avY4byW3ep77nxzuloa9Mu6htf4KPiWpS+6rakD1RNHprgIPJ5gpO5ruiaV
-         XZog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739944779; x=1740549579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uElxjeT4hItqlbW04BTLLQC+G+DPsa6uTID423EAftU=;
-        b=IRSO612yTqfhsMRPcrVAoGWNek3W+sf+nTeLTPYJyDaTd8kCTHd0pSoCbN7QoHg/ij
-         Bq6etp73gObX2NwftILP8HAyXN1QRT9VB8JKPugsx75TiTrfg4d9AuHcIDviSBk8+69S
-         ZuSdlKmPNKdVFYdMpJJmOQzRWFTN9fec6HA+e+kkPdkSsfYFoIeD4ooVBodjhg1KIBKq
-         ROvz9imxovDv5A3C5ny6kybpIxoBVZD3mMsYbohojz8293ET2/n6+xqclJ1PnyJwLmfF
-         Fh0OEYWFcpvAR14+srS61HiSpzhPYBoJOlydS5F3Rk0t99OX0QViyXAErmltFkJ8Ot3r
-         p9+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVdBEJ692Tu12kJLF9JUvdQwY3rR1RYk4cdiQqyg+Ny3SO7CVdRVG70Jy/2E4aPL2qgvBmjLYpO1K1HD+4=@vger.kernel.org, AJvYcCXd4yltqkP8Os9Uc/Zvy068/bSiPCRTTtYAOLMHHLkkqoHFk7NU0PQ2cu+yemzXwYQjp8UsHvzSW5/FitTHfQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5H18xA63Q2Pg+t4he6hgzWjrFL69XiCrOVtdC+uwql6LkCufd
-	5ZCeT+fhArw6Jb1OFnAxII6qfqWz5IIeMQSZRL7oQfsiikHsfGu+4odHFAjUdlQFubesRVQmj9Y
-	48q/E9UWc0c+3hU88MqtA9W01u+o=
-X-Gm-Gg: ASbGnct1hQOM5m0tWxmsK2jTlL++yOugZiCwGwpNSU6NwFZ/ITwfCdr6DUwn4HGI9eF
-	9yeifPTeGpWcIV+VDG89dswO+Eqjk6SMdgrimkKEkDoHBNG59ok2YGnSyNzc99Hb2qSZcCEE=
-X-Google-Smtp-Source: AGHT+IHf4yNl/lSglIrOWZ7tmy7DCI/C6vKYCZbWJ9e/970OUdAdTYVDcnQGlKd463dGyvBmjNpnQe7qZ9a4VXeSxzo=
-X-Received: by 2002:a05:6402:430f:b0:5df:b6e1:4690 with SMTP id
- 4fb4d7f45d1cf-5e03602e5eemr45126801a12.12.1739944779488; Tue, 18 Feb 2025
- 21:59:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cnq7oJBX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=inzaoIG+jgqj3RfjCNFnE/CJH0PUDDLudsBvDb9ybj3vWJM13kjZfy6L+aL8S1CUWdHtflOJNvFCQDTqJU4+2l12WiXaaV0/+I5UqGF6CcBUn/I0cqReGWWLqibvbSyfHMezJd7AV8gMs0lVUSwAE38+wKybfXYlr9m675Nob6cwmape2EElVFrJeMIYhHjT+h30rhEFalxH7lqImcmjrdwHSqhgyDssNc+ox4QU+tWSq9bI0B0eURIlbMXnZIpHFC+XTt2kwrT0xvx2H+Fyxg6lVQ6DWKEpxrG9FABEUIQZEVHavA2bPX9XQPLkfOf6uEZJ580Kzc9LgI1TLl+PrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Zcksdm+GdZcdY/gntH9gf9veEUCyRBbPuwJ41cfJKsk=;
+ b=q3DLcGC/BbFdXyFdxxOeuQ+kf6cJMFIiEnz9Ukm6guaeqH6bOOMxAq9/7SST6+8htZSvN5b1K9E8je4ivUu1WlsMupxA8XHrqzn/IoTKfgEfte/+N8wNUGY6cKiFtixbyIwUA67XBWnDxY0zwuRiVXbmuvYcJWGbFUuMOroUJJvd52WMMIAj86HtFb5sUO5GYUEL28/xjQg2oM3N0k7vho6jx+RX9YMvT5uHTzUGKqKGhZaZWCMJAwVIyFzCmi1xXhrv07O9zL7IVxWtGosFqDheGuL/2GpAu8s7xBTcJ2X7zZeheltPrrdn6jfJhdGFKO18JYOLlxPPeUgO0WGwKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zcksdm+GdZcdY/gntH9gf9veEUCyRBbPuwJ41cfJKsk=;
+ b=cnq7oJBXPGObsUQ7rMGcRlOrZJAyKvALQ26WbERCg6bVNa55bVTeZPPzszL1JT3dy7wB88bt4CUYEnPv7/1inAW3UvzN9WX33z/mYCbAdQOHJM6iwTojqdNj1ZVl6/hDwRpq5/YruqGqW21H4bc3upVbE8EkLFF6vsu6axS231p8bUSvzNPPOWMbMWJfH/CAbJaE5qTYKqg5irUBth0agX1bHem4KLoonU70XTuJrDr4MvKwQlqQisWbdFpbtctc3ChnUN9QwsWfCK7Tb4aIS1FIPI08trK/x6lHjQHG613XJn+Oxs31/W1u9hmgCMVJjpvqXUjeBKxd/ceJHcXvTw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by AS4PR04MB9409.eurprd04.prod.outlook.com (2603:10a6:20b:4e8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Wed, 19 Feb
+ 2025 05:59:45 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8445.011; Wed, 19 Feb 2025
+ 05:59:45 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: claudiu.manoil@nxp.com,
+	vladimir.oltean@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: ioana.ciornei@nxp.com,
+	yangbo.lu@nxp.com,
+	michal.swiatkowski@linux.intel.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH v2 net 0/9] net: enetc: fix some known issues
+Date: Wed, 19 Feb 2025 13:42:38 +0800
+Message-Id: <20250219054247.733243-1-wei.fang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGBP274CA0023.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::35)
+ To PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org> <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <326CC09B-8565-4443-ACC5-045092260677@zytor.com> <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
-In-Reply-To: <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
-From: Dave Airlie <airlied@gmail.com>
-Date: Wed, 19 Feb 2025 15:59:27 +1000
-X-Gm-Features: AWEUYZnB0Uf80ixJrp1q3PtuTwheEh6E-d43yX7BPT95rhn-uR-FN5lupp-eR5o
-Message-ID: <CAPM=9twZYgp4skmHCcpRr4z8pne-3LN=J=Dan-sEAwJEpttXSA@mail.gmail.com>
-Subject: Re: Rust kernel policy
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|AS4PR04MB9409:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8ff8d44-6691-4efa-d694-08dd50aa9bf9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cAUf5XQW/SeCETlMzq0vPEg+3HipvxHsigyE302OgmHkv7dVrkOWU1VXi0GR?=
+ =?us-ascii?Q?Ccx5Yyh4aqKrssKK0SPfOBqXyNuREscWQs0Grj++1oN0RuVdhq7g6cQsHsV9?=
+ =?us-ascii?Q?/3jGXldP1t01AeBVEwk9rGJ4rwhVZ3SwcEMYOF7Oy2sqphiCMRZH5M4yMsBm?=
+ =?us-ascii?Q?Od69Rm+64qt7H01oZoe1uqhf0GnBM/73odmGw8+/hv584xzK1dVQrU4J/tEF?=
+ =?us-ascii?Q?NhT+wFPU/Dh4Vs37o2Bf5YecOlXKgz6gUaFxHw5+Ynxl07AHhuP0XfMUHe3c?=
+ =?us-ascii?Q?MVHD9MgOv0/bskqwycGT9X+bDDfE37T49Z32jCeoCdDdMuiQvI32y5wFvoJa?=
+ =?us-ascii?Q?61IOK1/jx4z0vAVfqUy+xLMDA7ahsqAR1FVA8qCmAyuVghs5YBR9nRnlgBiZ?=
+ =?us-ascii?Q?yTkbaMxIp9StI63fYiXKNpRaMiH9/M2Mnc4dzY7zk8u9qjq5b2OqdrRXx3BF?=
+ =?us-ascii?Q?JComG1Mu9V7vjUmwMGx4Kr3eNFL3MutSTms4AqHWdhmsys04XAtwqjRae91J?=
+ =?us-ascii?Q?BOW2YG76x/dkvfAmcQehLN549efC1FMnPu87MrVD9jbG7ck/KkaUPvXKziDI?=
+ =?us-ascii?Q?5Zef93nZMGCoS7XX+ODnpxiMR9rbZVVUKDvO8UUZjb7W37n5WP1SvsPaTpuY?=
+ =?us-ascii?Q?yBiGsc71Lih5sPmHb28OYBo6BoQ+QwhBuk+ApL+l0v9Q7hR8UtjV0htmGqCp?=
+ =?us-ascii?Q?pqCsHdZK+xVPLyI/8eIL3QN5cgav2Okd6w8InwrUm3jWzAQTqpxqoyUBXymJ?=
+ =?us-ascii?Q?1gB0Wt0cVGFUJXop0z5mnfEwpSk5+3JMHa4kYa77k/NFrao9NXuKmRFLReXv?=
+ =?us-ascii?Q?F3iloye8NslMXYRj5bibjXjDiMbn7INCoK5C1S5v8k1WsfYf4BtJedi3fubH?=
+ =?us-ascii?Q?TTCRm5Hgl0JJJPKX1PCJFTExsB9TyL8OiTvVMPcaKaOBnVEU+ghmSr/a2Epf?=
+ =?us-ascii?Q?oLNCbeY9+Af3idhxK00r2VmQ/5T6V1Wb9Uh3eavsaz5hIwrt1TzTSEDM3Ct4?=
+ =?us-ascii?Q?T3+sM9k64fxFms7ZLXrtrlRDCA03c13tLhqVEYjTJAHLBuga3NLk8F0IVIFP?=
+ =?us-ascii?Q?7DSwzsBfTa7xit1HYxHqOjKZcbXOn7pt999dKXvP+LyXdVTWc5BIzCcPsPET?=
+ =?us-ascii?Q?RSZ1nGjWyIVj2DhU5BorD+F0PMYOnBIheemohXfq/L2uOEW0lwM82ufn2dHd?=
+ =?us-ascii?Q?3IldyJAud6s/VHxD4Ng0Ttc+H4oSY0KegHd74UNpuBQONOmR+//AXrOsqOyg?=
+ =?us-ascii?Q?8LLHhxjfC1w+BfwPuvYubhDyNbAn4ID9LzCsXwKxKpn/1ORVJISXYkmbkuub?=
+ =?us-ascii?Q?szCx1vr6KE8oGft3Gjsi9sQpbmYloQrJo0WG9p4ad7vWo6qXWsA5iEoGbFzB?=
+ =?us-ascii?Q?fDAVSAYLUcGDnnhIKiYXlvHCiCPGG17t0Mn0IV/fUJSM7vKYOWlZFUpIaQnZ?=
+ =?us-ascii?Q?h+e91OUVYZuQ2FnKqgeeArUVNrBm7fMZ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aMuwSXJPqbYXqfjNsgnYcNY5eSnUD0q/VI0w1z7yHw6ir30lgXZ0oJwtLIed?=
+ =?us-ascii?Q?oIh5flxAR/xtDeZfJbJlSyOn4XFAKAhLYqDAuL0b8jUYZG6nFRS8f45bQ72z?=
+ =?us-ascii?Q?bOfE91+AvjKC6Zpp5bUHOEfURC2cqwcUmGCkcsCYhmak4BDmP9JAVr3QR4ug?=
+ =?us-ascii?Q?U9o4dD8Zh/zZCAJH3tlHLydE0Im8xbtm10aHvHnBjxwfDOIXWXTk3ww+NjFH?=
+ =?us-ascii?Q?DhbzEi/QFJacF0hInjb8+oSIGB4Im9wY+0HapBbfindHAeZbAT0s324uwOg+?=
+ =?us-ascii?Q?e5XsrYIUjCbGd+3loPFqcyy9rJT7H7bxNIY2wS+H8oNhQ/CgrX86X+rgcG8O?=
+ =?us-ascii?Q?nkO56DPJLUyKmbPgBaRSR7lc2nVITyqt2GEgEGi7DkFErc6p74kU6oJ9QUko?=
+ =?us-ascii?Q?cYEKvGMX5OO+OGR6oI06BqqGk9lVAuAgmdVMPdpdx4+NfbzpGBBSHxJ/Tphl?=
+ =?us-ascii?Q?RJK6R67EDUAxVI941VMtWrIFO+WPB+ufqxAppTgOMxAvg5ksbS5feV4VzLeJ?=
+ =?us-ascii?Q?54bDVAtQiFIjTWV/pPDu8vIRehV6dKYDFljPw1SSJG2H2LPe5x5Mg8RdS0ey?=
+ =?us-ascii?Q?PcFpRILpgNybsMr+izbJkyW2s3D9KnmzQMRkeQ5wYvxINoSIaJT+HZP8xa8t?=
+ =?us-ascii?Q?1CJ2J7wriNI3/BO/9bs3WY/jRviVFdMVQqaEL/GI0bdLQNnT7RjO5HxtIGt9?=
+ =?us-ascii?Q?DtCaUCJz8aVi8L3jg38NMjGBJlmDWn8cDe50JrWinCtmNT3AwodOZUxOcite?=
+ =?us-ascii?Q?6Z1zaq8bCAm4pDPluGn/xFC+EKMA2FNymzfyQn544h7dBKXD2xnZ9zUkPJ1i?=
+ =?us-ascii?Q?UC6C0WTYMw70NUWJ0wJCLs9E5RogUuZFyirUlMMROpUHFAMLx2wBMA/N2q3K?=
+ =?us-ascii?Q?vlXM9Iy9wzmUlwjaRMq3lOEnSxoR350y0I1vGGGfwF08by5pg1KifF6X4mw1?=
+ =?us-ascii?Q?SB+WUwLOT+6Yv1wWRr0YkXYWiInVHPduuTWBaUBf9BdnnBQzEIvH3uxbZDlv?=
+ =?us-ascii?Q?i+CKwYrU6Ra6+q1d6zU4TsiU7VSp9UDvbyxHMd4ESxSFMmuaqM9tZwauebEk?=
+ =?us-ascii?Q?xYjO3e3neWdcJta4Cs8iDyCJqWxTfeww9UytGhCzasYd6dkaMsNAiy3V7CQ1?=
+ =?us-ascii?Q?YJTV7p3AIvYpsnkor/S53mZx2Semx1JztpR/yxOLH97eVvkKDMqWnVViZKWg?=
+ =?us-ascii?Q?RkWIOhwKq/Ksbs/GkH+FsADahhNJBZB16Lwsay+gIUzcKsySNijJOqcuh9XV?=
+ =?us-ascii?Q?etWnelNarl9FaJubIKGqgtlFGiy5N32DCfdo7QUU7psKXodk8qEjNyGg+bsh?=
+ =?us-ascii?Q?wG6UO3mkNBqJVFA50Jezxb6bspENqIwRXTDJwy7TjxGY01vMTTgrZIDZbMh2?=
+ =?us-ascii?Q?0+P1jF8g4eTXx8lAEYvX0xDkN8XoxSPo89C8UGHpu6j7QhluApWLtFUunHbo?=
+ =?us-ascii?Q?nX3UMbGChfK8LCY2d9bM1lgQXPpnryQolITMH5P7uTcTCGT7JpaNoI+ekUKa?=
+ =?us-ascii?Q?RKkJQlSGXpZlZuJRF/In9G5KryoJ957imTBx3IYfOyE1NrmvGYx4mLJ9MKtt?=
+ =?us-ascii?Q?zXCHG6zct93gdq8is4EQQmWfPnXGLT3cTD7fDN8L?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8ff8d44-6691-4efa-d694-08dd50aa9bf9
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 05:59:45.1985
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hx2Re2AVeyNTpffb2CRcWmYgOkXIQ+KtOFUsn3+b2RsGenByZlJbC+O6I6nVmea7NblLXAcB3jTSQP+2nzVx8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9409
 
-On Wed, 19 Feb 2025 at 11:00, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> On 2/18/25 14:54, Miguel Ojeda wrote:
-> > On Tue, Feb 18, 2025 at 10:49=E2=80=AFPM H. Peter Anvin <hpa@zytor.com>=
- wrote:
-> >>
-> >> I have a few issues with Rust in the kernel:
-> >>
-> >> 1. It seems to be held to a *completely* different and much lower stan=
-dard than the C code as far as stability. For C code we typically require t=
-hat it can compile with a 10-year-old version of gcc, but from what I have =
-seen there have been cases where Rust level code required not the latest bl=
-eeding edge compiler, not even a release version.
-> >
-> > Our minimum version is 1.78.0, as you can check in the documentation.
-> > That is a very much released version of Rust, last May. This Thursday
-> > Rust 1.85.0 will be released.
-> >
-> > You can already build the kernel with the toolchains provided by some
-> > distributions, too.
-> >
->
-> So at this point Rust-only kernel code (other than experimental/staging)
-> should be deferred to 2034 -- or later if the distributions not included
-> in the "same" are considered important -- if Rust is being held to the
-> same standard as C.
+There are some issues with the enetc driver, some of which are specific
+to the LS1028A platform, and some of which were introduced recently when
+i.MX95 ENETC support was added, so this patch set aims to clean up those
+issues.
 
-Rust is currently planned for non-core kernel things first, binder,
-drivers, maybe a filesystem,
-There will be production kernel drivers for new hardware shipping in
-the next few years, not 2034 that will require rust to work.
+---
+v1 link: https://lore.kernel.org/imx/20250217093906.506214-1-wei.fang@nxp.com/
+v2 changes:
+1. Remove the unneeded semicolon from patch 1
+2. Modify the commit message of patch 1
+3. Add new patch 9 to fix another off-by-one issue
+---
 
-Now if you are talking about core kernel code I don't believe anyone
-has suggested any core piece of the kernel to be written in rust yet,
-when someone does that we can make more informed decisions on how to
-move forward with that code at that time, but otherwise this is just a
-theoretical badly made argument.
+Wei Fang (9):
+  net: enetc: fix the off-by-one issue in enetc_map_tx_buffs()
+  net: enetc: correct the tx_swbd statistics
+  net: enetc: correct the xdp_tx statistics
+  net: enetc: VFs do not support HWTSTAMP_TX_ONESTEP_SYNC
+  net: enetc: update UDP checksum when updating originTimestamp field
+  net: enetc: add missing enetc4_link_deinit()
+  net: enetc: remove the mm_lock from the ENETC v4 driver
+  net: enetc: correct the EMDIO base offset for ENETC v4
+  net: enetc: fix the off-by-one issue in enetc_map_tx_tso_buffs()
 
-Dave.
+ drivers/net/ethernet/freescale/enetc/enetc.c  | 59 ++++++++++++++-----
+ .../net/ethernet/freescale/enetc/enetc4_hw.h  |  3 +
+ .../net/ethernet/freescale/enetc/enetc4_pf.c  |  2 +-
+ .../ethernet/freescale/enetc/enetc_ethtool.c  |  7 ++-
+ .../freescale/enetc/enetc_pf_common.c         | 10 +++-
+ 5 files changed, 63 insertions(+), 18 deletions(-)
+
+-- 
+2.34.1
+
