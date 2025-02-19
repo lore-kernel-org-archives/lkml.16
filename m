@@ -1,122 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD39E1E0080;
-	Wed, 19 Feb 2025 12:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262151DE2BB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739968377; cv=none; b=SAF1jAA+sJTY2IVcQ7cCgbc6Jr2N1BCwnb4/AtUcDfCQ9RAwk19GT81n80l1yjKEqxqcfRSIClKOraXquF1BgycITCfSuhA6H4jeRflb7foEJ6URz8HtyP5KfQXvJSpX1TZisiRSi7g8pHG0stMFCDgSTfO3x45mSxdsnJn19Mo=
+	t=1739968523; cv=none; b=syLsQVJXryCCxwZbaaLIQO4yhVVRKlIfsGtFgA2ZOICWYYneu+ByRhS6FxnrXxZnVzoQKfDe3mqhDlbyhoGe0dbgM00EUgHvLs0TA9s8QbuIWM28+Iknojh6R/pgqo6YRzWZ466pLj8AxaGQrvnp1cm+OfkEsavO0psrLrgR2FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739968377; c=relaxed/simple;
-	bh=yDIUhMyqlYHrRY20nMSXqUJxRAG2s+oBiIMHyGosyBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oJop2aDB33R6oa0or0Z2HlQGMMvs0/A1vQ6rjYUJFrzFT6rNqGiXAR2i2OryTUdXbV/UglKQcdxs8Y0HlHQ/xmGhQbfZWiGp1RLPHTd3Oyn50svG8nXrbIU+OexjaWXqg6WiT9/3qjq2A17ly/5BMAw+//GDQiF7zf0QN63yeWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RoGlhI8t; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RoGlhI8t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739968374; x=1771504374;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yDIUhMyqlYHrRY20nMSXqUJxRAG2s+oBiIMHyGosyBg=;
-  b=RoGlhI8taAGKT6PI9qqJtbIT0Tmj9MmI7smPws2BxN9gAKJVG7YVSgHC
-   w+8PiVqXMfCbumv4+oowLm+sAf3L6ggdKETj42gzk80uzEcuS7fviaEom
-   L5jXHdfqGFjxBV5xZMuhg/VH0MBV0aqKNLgnOmd1eFPeOrRpcGiguieZs
-   QKiLswICX5kXviKVMyYADHzVhDaMKB+iCYMBndx/8BjKxGQLwP5xQZd6w
-   fCZUAYwSqDTHimd7VkQMc2YXkurG25KkRYFVAZtQ+fIdR4+sAz2vBCM8j
-   aJSXm3dlkWmStEMZIoprFHR64TrUGUXCbzXwm9tVydcQZ60SIxrcKwNQo
-   A==;
-X-CSE-ConnectionGUID: INzGqisJTJa9JyRLp60uDA==
-X-CSE-MsgGUID: Q3yLY/8oQgiZTx4+0BbUQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44618012"
-X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
-   d="scan'208";a="44618012"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 04:32:54 -0800
-X-CSE-ConnectionGUID: P6SoXoDrS4CFvqkEzYPl/Q==
-X-CSE-MsgGUID: ubcoNE6GTcOEyO+gJYZUDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
-   d="scan'208";a="114622799"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 04:32:51 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1tkjFx-0000000D1RH-1Vab;
-	Wed, 19 Feb 2025 14:32:49 +0200
-Date: Wed, 19 Feb 2025 14:32:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dipen Patel <dipenp@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	timestamp@lists.linux.dev,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 1/2] gpiolib: move all includes to the top of
- gpio/consumer.h
-Message-ID: <Z7XPcYtaA4COHDYj@smile.fi.intel.com>
-References: <20250217103922.151047-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1739968523; c=relaxed/simple;
+	bh=5vdtEc6BvzGcQwj1QRv2l9SVhh0iokKC+Am2QXJT0gE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rwTcAPKRGg9JYFJ4BZnYO94KMbnd8l3YnlX7wsglgCU+0IKLzdq7G+jLfJMS4LQH7JrDUgTUetrw5f5XV3fZ6LzcAAqC6UwDRo03yOj7bh6Fn84iKUq1LxDUeDb96Qd7MiTQlXSrxPNz51PNdsZ8pFfiSxvsyOvBh7ABLkPy1JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d2b3882ff5so8414955ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 04:35:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739968521; x=1740573321;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0Z8qukj7P/diP4PN1+Duleu+4kEiKP8/6UKJa5LjiN4=;
+        b=np6Oav6nbQyy7+PRhWCgvBimq7A9rIlP4UjRqV0ae1966//pdwZx7FC1XAdIHIZLOc
+         vOJfTJbiOhPFN5YI6FuWJv344w4LXi3+M7S2/snK5qZLreqzL/LWsNvirSr1zT99hiFw
+         fB89M5ZH6wyi94ZTotl39ELm+r6oruKldQlyrGmW8cJsP1NTS26wpuqS/509pRI5fLJf
+         bOTzXcFFuew5JyPkz1ZFK+eV9CGjK4I460M+w+4csJAm8m2n1YieoyYiPK7XKq/TOqci
+         Tqs8nJuo/mYIgOda8mv72UO2d8c5k1R9GAbWdPa6wvSTNUthAV+w8SlAw8iNa48lRTvs
+         tQeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3NdOq3cHDiutTM74/P3+i27kZPlw9JbPE5Cgvga7/OTE8eqLdAiui7RSskMxbPNC4cD6XiVTqcS0PNbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE937DwnCgjyrsiyWEdTAMoL/riSxcY74yVWab1u+WjH4kMhRj
+	fCiQbakDLWRKsSG2s6nJlsjiDwmMfIBk/Aqee7YoI3XSqYTmM4ntJgCjdNO+TCZVDmLbkziDcSy
+	ogqUxCjNqG0tecwcRcvBEu2n7XCYOo89nyYXNrze2+Kkd35wBxL60804=
+X-Google-Smtp-Source: AGHT+IFzq+BD4QljtilcaZSj3uPo0LpyRJ1l8EqGdjWg0kM/DNUcbzeK4zPwZYC4GNVOtkHBoKYmAJU1GgSBmFLUbjXrHMg8ye/n
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217103922.151047-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Received: by 2002:a05:6e02:152d:b0:3d1:9236:ca52 with SMTP id
+ e9e14a558f8ab-3d2b5131279mr26035125ab.0.1739968521260; Wed, 19 Feb 2025
+ 04:35:21 -0800 (PST)
+Date: Wed, 19 Feb 2025 04:35:21 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b5d009.050a0220.14d86d.00e2.GAE@google.com>
+Subject: [syzbot] Monthly btrfs report (Feb 2025)
+From: syzbot <syzbot+list9543db9a98d1565ec35b@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 17, 2025 at 11:39:21AM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> We have several conditional includes depending on !CONFIG_GPIOLIB. This
-> is supposed to reduce compilation time with CONFIG_GPIOLIB=y but in
-> practice there's no difference on modern machines.
+Hello btrfs maintainers/developers,
 
-It's not about modern machines. If every maintainer will think this way,
-we end up in the complete and utter dead end with the headers.
+This is a 31-day syzbot report for the btrfs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/btrfs
 
-I believe you at least had read the cover letter for the infamous Ingo's series
-about headers and how it speeds up the build (in some cases up to 70% on as you
-said "modern machines").
+During the period, 1 new issues were detected and 1 were fixed.
+In total, 49 issues are still open and 97 have already been fixed.
 
-> It makes adding new stubs that depend on more than just GPIOLIB harder so
-> move them all to the top, unduplicate them and replace asm/ with preferred
-> linux/ alternatives.
+Some of the still happening issues:
 
-NAK.
+Ref  Crashes Repro Title
+<1>  6529    Yes   kernel BUG in close_ctree
+                   https://syzkaller.appspot.com/bug?extid=2665d678fffcc4608e18
+<2>  3753    Yes   WARNING in btrfs_space_info_update_bytes_may_use
+                   https://syzkaller.appspot.com/bug?extid=8edfa01e46fd9fe3fbfb
+<3>  951     Yes   BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low! (7)
+                   https://syzkaller.appspot.com/bug?extid=74f79df25c37437e4d5a
+<4>  453     Yes   WARNING in btrfs_commit_transaction (2)
+                   https://syzkaller.appspot.com/bug?extid=dafbca0e20fbc5946925
+<5>  359     Yes   WARNING in btrfs_chunk_alloc
+                   https://syzkaller.appspot.com/bug?extid=e8e56d5d31d38b5b47e7
+<6>  352     Yes   WARNING in btrfs_create_pending_block_groups (2)
+                   https://syzkaller.appspot.com/bug?extid=b0643a1387dac0572b27
+<7>  266     Yes   general protection fault in btrfs_root_node
+                   https://syzkaller.appspot.com/bug?extid=9c3e0cdfbfe351b0bc0e
+<8>  257     Yes   WARNING in btrfs_remove_chunk
+                   https://syzkaller.appspot.com/bug?extid=e8582cc16881ec70a430
+<9>  217     Yes   WARNING in cleanup_transaction
+                   https://syzkaller.appspot.com/bug?extid=021d10c4d4edc87daa03
+<10> 125     Yes   WARNING in btrfs_put_block_group
+                   https://syzkaller.appspot.com/bug?extid=e38c6fff39c0d7d6f121
 
-This makes dependency hell things much worse and this is a step back on the
-untangling the current situation along with the slowing down the speed of the
-build. Please. consider to revert or discard this patch.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-...
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
->  #include <linux/bits.h>
-> +#include <linux/bug.h>
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
-Okay to replace, but not okay to move.
-
->  #include <linux/err.h>
-> +#include <linux/errno.h>
-
-Please, double check that it uses error codes from it, otherwise err.h includes
-asm/errno.h with basic codes already.
-
-> +#include <linux/kernel.h>
-
-This is definitely no. Please, read what's written in the top of that file and
-here is just a proxy for should come in the future a kind of might_sleep.h.
-Do not move this one at all, please.
-
->  #include <linux/types.h>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+You may send multiple commands in a single email message.
