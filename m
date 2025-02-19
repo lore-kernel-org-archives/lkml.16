@@ -1,213 +1,136 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCA51C3F04
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74351C3029
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739951742; cv=none; b=GKINF43eC4z6N4V2biz0R0hsIq/bzwlKo4gZAu+9cb5VyQkwvj439p8KkTa4ACLo0xC8DBXyBGjUk5Dfn5zPSEx+E8boj3QXoETMD5tdtcQCVSayHW0/8zuRBJl6pmYc8p0wD9sNN6Wjk5bFC25Cv+JLFcPhuKpEchUWGvK99uM=
+	t=1739951755; cv=none; b=Ms8suKa7fuMlScNVDU2LH3LDZd8o/2SFUDH3kKNvVXTaEbSSwHakgtE7D+MzUm6BM06qes/bCRkkeTaBxGcBOog+BAsnHVAxho5xn6FxrmjrMYgW+y3C++gCIxrbLKIIc0OJ+QA7hBdZN0aA9KZ3jDXHNi420sMFUVbSFnQ6EZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739951742; c=relaxed/simple;
-	bh=ss6647Vq7Cy6U+GNIlcy6ezE7ATXTzSydGRry2X6VVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Phito54FzWyLc1k0NMWwpwqSse6v7PgkcnN6ofGatzhQwTqMQ2S6+XRITCENSzBtu3MR0c9So5PKceQCAzOS/Yb5tIGW9h0wbNFVvRi8QoQF2VedhESl20V8yV1Hx9KX9XXfMbZDUh45aXOW2JlKXJzMP1Mv+i2H9tEV11jTw1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fHJBZIai; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739951755; c=relaxed/simple;
+	bh=UH32YQGrhQ8zsuamSIzMy12L0Zs1MOTArM5Sj6UWIbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YZTX+POiNnQ8Br9asVaa1OBaIA28MLKHWdlH7nQTBb10GiypXgtg+HsPvVCu3Mmhj2PUYxj4AhQv7S0qiqf4CmEsQXnjeo+oF93/ZEGHKdprO1KR9ExXnejISEbBJyO3VXJ229xZI5xxBJ/Ze1DCJXJQz68vqjwixh339rMf41Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KxGzQ00f; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fHJBZIai"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-220c4159f87so84798425ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 23:55:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739951739; x=1740556539; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KQ8YbWKKN0JUEDEyejcT43K2AZBg1IVNzkk5e0M7RQ0=;
-        b=fHJBZIaiB+bzCM0QcuUFSBATA7NHiXJ+fGEharNp8aR62bTJmJ/Tz37czbMa/HpchK
-         5UVI3B2zuwdLMWOz2CmrdWgRG/WrPSC1sx+9uLlibXj7NEwa3utt9X9+d7qpfUWXoDo5
-         KMlpJVPX8KFIeBL5BIvLtdPqlPiqGU1aMnv7VHIExx2ggdCGaTyJGLfRyPxzwPRsMstL
-         CtE4w4qv7H9Np+7UHhB86MbHKgBTujhgecBVx1SSIbMCzqbvDnWqKGxR3IvYhOn/hNVB
-         y+8NRreta6VijmITbN09iIFZkXafyqNUsfaoqKnhiY8ixx2U3/VQC+uoRrmH0Pk9fhgQ
-         zHtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739951739; x=1740556539;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KQ8YbWKKN0JUEDEyejcT43K2AZBg1IVNzkk5e0M7RQ0=;
-        b=l4ABEcHfMpjMVI2FhBWjT33xCqLoPyHymZ9vrkvtIKE/pkMoz/3EH/hytCnctLfXC5
-         UL1ELJsc6ejPFsiy9+KyPZVfbmuWddr+sAu4CTar3seb/mSWPjhUG5Ow8k+H+3wAkcM5
-         gz00yiGNLsVdbW4WfyP7GoP+ZVa4sRr18OpO7E1vnTwLQ1xn0jE54IKCT0v0BW4/rOgi
-         SZYG6VlZJLRIVlueBN+EhTriq0KjKNuJ3gOvvVZ2CQtePzp5FkX53TDmZOQMeNR8Ahnn
-         oWBpC34hOmCChIfFq9sVYVjb4W8MuOHC/Q7Z7u238BAMMvf5gODUdDmqmNXeCcT9kIhx
-         n58g==
-X-Forwarded-Encrypted: i=1; AJvYcCWfYau/M38aCHmHe0QvA7SaC2EnLZSKnEokDPX0+H3ofstWWfzghbm70BCTmA8gMNR8Ni1px5NWzfpzdtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO6WGbQIMrtS5IuyuNRdNVm1R+YcB173UZ9Xrc6VbWYlqvKRJK
-	6VX6C/rrwa/qo6hH2MWMAJACPiEsjhhaLHEDovnjeHBwLL6np6UR42V3g4jj+Q==
-X-Gm-Gg: ASbGncsEK9QupcllkmMD1Z13B4ah1KYvxYBzs+DvY6En2B9ucWqOfbj8V/X61wtYQLh
-	Dv7nOQ4yBq2xXv9fA/rniedSRevyfXF+O+Wt5n7INNZc42KHpHV8kp4epJzL2zxbQmxUpsX3KmZ
-	IKPvDzPRp0mFkV68E+q1rYKVWR+r64Df2dOimu4NLOWhQGW3vZC2Saf9fGNiInJ3PS5Tjr4GT21
-	WfFFemL+9csQwo07wDDTKrN2r9RXzvj7GHwR8G6P8GlE9sJe9QXGyB8vowchkPc+2ZITlR4AZ3P
-	ucNc8dvUrnq7KKkzNIHNSivOCas=
-X-Google-Smtp-Source: AGHT+IG4njE0mVfhwsbo461mQskQTrTqKLJp04nKx1lPyB6/OYKMHkjA+8znL3Lf5HXh3/3N1AgKoQ==
-X-Received: by 2002:a17:903:283:b0:215:ae3d:1dd7 with SMTP id d9443c01a7336-221040269bbmr278400085ad.19.1739951739441;
-        Tue, 18 Feb 2025 23:55:39 -0800 (PST)
-Received: from thinkpad ([120.56.197.245])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d53491ecsm99383825ad.9.2025.02.18.23.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 23:55:39 -0800 (PST)
-Date: Wed, 19 Feb 2025 13:25:33 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Shradha Todi <shradha.t@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf/dwc_pcie: Move common DWC struct definitions to
- 'pcie-dwc.h'
-Message-ID: <20250219075533.dqj4rqeskilg76lj@thinkpad>
-References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
- <20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org>
- <4nnikepf7ay4ml3audn34gmq5jttjcfz3syfnxeowmjb4no2cj@lyawl4saa3sa>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KxGzQ00f"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51J7tMhO1653376
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 18 Feb 2025 23:55:22 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51J7tMhO1653376
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1739951723;
+	bh=oDgZq7gWYayOHoGByNh18uQgQ/WetppPuukdDrLGmII=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KxGzQ00fjj4NMMFTj0STMg35dePQevrF3uI1L3l8h6Ch6qMpUVknic1Pa7Ho6tdpq
+	 kJRqyNg9eBE1FumsT2aDoih3OASlw6943L0Ly/+rGM/rqafDgW1aj0bs3zy8wCENvt
+	 zaBHeJ99hJLOgGO55gQZngzYR7PomAo6uK5Pi/NMX2DXYxdmqpUxHCG0CMsHNiKfqJ
+	 sm/B8BshZR8VdjI7NitHPFbI2uIGRqZA+DaB/DIjEnobALNK0OR3FdCM7I816GCG95
+	 6DXEFloZrSATNt1W0lEQjiwwgwO4kQa/U5efLvOr2CuwZ78fZyQbekjuDamfs5cHhD
+	 qiInNBCzs0kqg==
+Message-ID: <cace0bfa-2de7-431b-9b4d-fd8ca5e7873d@zytor.com>
+Date: Tue, 18 Feb 2025 23:55:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/1] x86/ia32: Leave NULL selector values 0~3 as is
+To: Andrew Cooper <andrew.cooper3@citrix.com>, linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        brgerst@gmail.com, ebiederm@xmission.com
+References: <20241126184529.1607334-1-xin@zytor.com>
+ <fa3d0093-818d-4592-8415-3c2e287cc3e6@zytor.com>
+ <36970ddb-c0d8-43e4-a94e-0d9ea3d55ced@zytor.com>
+ <eb5f75e3-0882-4baa-be32-f363a8e411d8@citrix.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <eb5f75e3-0882-4baa-be32-f363a8e411d8@citrix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4nnikepf7ay4ml3audn34gmq5jttjcfz3syfnxeowmjb4no2cj@lyawl4saa3sa>
 
-On Tue, Feb 18, 2025 at 06:31:02PM +0200, Dmitry Baryshkov wrote:
-> On Tue, Feb 18, 2025 at 08:06:40PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Since these are common to all Desginware PCIe IPs, move them to a new
-> > header, 'pcie-dwc.h' so that other drivers could make use of them.
+On 2/14/2025 6:01 AM, Andrew Cooper wrote:
+> On 14/02/2025 6:56 am, Xin Li wrote:
+>> On 12/12/2024 10:44 AM, Xin Li wrote:
+>>> On 11/26/2024 10:45 AM, Xin Li (Intel) wrote:
+>>>> The first GDT descriptor is reserved as 'NULL descriptor'.  As bits 0
+>>>> and 1 of a segment selector, i.e., the RPL bits, are NOT used to index
+>>>> GDT, selector values 0~3 all point to the NULL descriptor, thus values
+>>>> 0, 1, 2 and 3 are all valid NULL selector values.
+>>>>
+>>>> When a NULL selector value is to be loaded into a segment register,
+>>>> reload_segments() sets its RPL bits.  Later IRET zeros ES, FS, GS, and
+>>>> DS segment registers if any of them is found to have any nonzero NULL
+>>>> selector value.  The two operations offset each other to actually
+>>>> effect
+>>>> a nop.
+>>>>
+>>>> Besides, zeroing of RPL in NULL selector values is an information leak
+>>>> in pre-FRED systems as userspace can spot any interrupt/exception by
+>>>> loading a nonzero NULL selector, and waiting for it to become zero.
+>>>> But there is nothing software can do to prevent it before FRED.
+>>>>
+>>>> ERETU, the only legit instruction to return to userspace from kernel
+>>>> under FRED, by design does NOT zero any segment register to avoid this
+>>>> problem behavior.
+>>>>
+>>>> As such, leave NULL selector values 0~3 as is.
+>>>
+>>> Hi Andrew,
+>>>
+>>> Do you have any more comments?
+>>
+>> Hi Andrew,
+>>
+>> Are you okay to give a review-by to this patch?
 > 
-> Which drivers are going to use it? Please provide an explanation.
+> Apologies.
 > 
+> Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
 
-I can certainly add reference as 'upcoming pcie-designware-sysfs' driver.
+Thank you very much!
 
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  MAINTAINERS                 |  1 +
-> >  drivers/perf/dwc_pcie_pmu.c | 23 ++---------------------
-> >  include/linux/pcie-dwc.h    | 34 ++++++++++++++++++++++++++++++++++
-> >  3 files changed, 37 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 896a307fa065..b4d09d52a750 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -18123,6 +18123,7 @@ S:	Maintained
-> >  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-> >  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> >  F:	drivers/pci/controller/dwc/*designware*
-> > +F:	include/linux/pcie-dwc.h
-> >  
-> >  PCI DRIVER FOR TI DRA7XX/J721E
-> >  M:	Vignesh Raghavendra <vigneshr@ti.com>
-> > diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-> > index cccecae9823f..05b37ea7cf16 100644
-> > --- a/drivers/perf/dwc_pcie_pmu.c
-> > +++ b/drivers/perf/dwc_pcie_pmu.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/errno.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/list.h>
-> > +#include <linux/pcie-dwc.h>
-> >  #include <linux/perf_event.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/platform_device.h>
-> > @@ -99,26 +100,6 @@ struct dwc_pcie_dev_info {
-> >  	struct list_head dev_node;
-> >  };
-> >  
-> > -struct dwc_pcie_pmu_vsec_id {
-> > -	u16 vendor_id;
-> > -	u16 vsec_id;
-> > -	u8 vsec_rev;
-> > -};
-> > -
-> > -/*
-> > - * VSEC IDs are allocated by the vendor, so a given ID may mean different
-> > - * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
-> > - */
-> > -static const struct dwc_pcie_pmu_vsec_id dwc_pcie_pmu_vsec_ids[] = {
-> > -	{ .vendor_id = PCI_VENDOR_ID_ALIBABA,
-> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> > -	{ .vendor_id = PCI_VENDOR_ID_AMPERE,
-> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> > -	{ .vendor_id = PCI_VENDOR_ID_QCOM,
-> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> > -	{} /* terminator */
-> > -};
-> > -
-> >  static ssize_t cpumask_show(struct device *dev,
-> >  					 struct device_attribute *attr,
-> >  					 char *buf)
-> > @@ -529,7 +510,7 @@ static void dwc_pcie_unregister_pmu(void *data)
-> >  
-> >  static u16 dwc_pcie_des_cap(struct pci_dev *pdev)
-> >  {
-> > -	const struct dwc_pcie_pmu_vsec_id *vid;
-> > +	const struct dwc_pcie_vsec_id *vid;
-> >  	u16 vsec;
-> >  	u32 val;
-> >  
-> > diff --git a/include/linux/pcie-dwc.h b/include/linux/pcie-dwc.h
-> > new file mode 100644
-> > index 000000000000..261ae11d75a4
-> > --- /dev/null
-> > +++ b/include/linux/pcie-dwc.h
-> > @@ -0,0 +1,34 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2021-2023 Alibaba Inc.
-> > + *
-> > + * Copyright 2025 Linaro Ltd.
-> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > + */
-> > +
-> > +#ifndef LINUX_PCIE_DWC_H
-> > +#define LINUX_PCIE_DWC_H
-> > +
-> > +#include <linux/pci_ids.h>
-> > +
-> > +struct dwc_pcie_vsec_id {
-> > +	u16 vendor_id;
-> > +	u16 vsec_id;
-> > +	u8 vsec_rev;
-> > +};
-> > +
-> > +/*
-> > + * VSEC IDs are allocated by the vendor, so a given ID may mean different
-> > + * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
-> > + */
-> > +static const struct dwc_pcie_vsec_id dwc_pcie_pmu_vsec_ids[] = {
-> 
-> Having it in the header means that there are going to be several
-> copies of this data. Is that expected?
-> 
+Thanks!
+     Xin
 
-Yes. I wanted to consolidate these ids in a single file to make it easy to track
-them. Otherwise, these are spread across different subsystems, making it harder
-to maintain.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
