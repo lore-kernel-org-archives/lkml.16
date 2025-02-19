@@ -1,75 +1,41 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DD02144C8
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296BB214230;
+	Wed, 19 Feb 2025 17:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739985079; cv=none; b=cz4O5gbJcSekON17Mr5ZU7Mu2dIWm/QWkqmjWfspIc7IPjY8UnHK2sOXhlabnkTryi54vYJ2kryWaZn8sqpZrAxhoaNvMOBtlj2AFjJtqq3W2J4UTRnWUR9zXshbl9u+lkLTtI2AcpJFNEQ4cr0RX6buY97zNSAxK+LfTdWjlpA=
+	t=1739985188; cv=none; b=Cl6IOLUew90ZxEKudCiv9tahpJtqrBZJPTwDE5/LmCAKVe5ADBWrp+7D0EoKWc9SmFp7iDJB4r4v5F/P6QC0o5fePX0pxVOJHTDeTDbKw3gftHVuUv0Yz6cPyXeWWTz9F0ErhuQIn5ds5A3+LvI/QLhhqt7uLHvrTm5F8TkRJBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739985079; c=relaxed/simple;
-	bh=qFOAoe/oJXNfqjoR0wzSc/QQQsNl/9s1vfShbsSca04=;
+	s=arc-20240116; t=1739985188; c=relaxed/simple;
+	bh=L/QYV+Qom79g9HuHBK43mFl7f5J5yQqARQ5i2sJ4WKY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lCwMrrBmD9X0DfyClHcPK66jMnU30mgWf6dgTUJxpsPxwvoIsiPuQWaGGc4CeQ/uMLCzTXhddzd37sdMT0XufrHFPrCFVTRMVpiQaHF/TqHOkxlh8Vaa2M7QEi4WrM+10wXf3q1Hgbyf3pck2gX+83ufufakU7iyLOj6aFc+Rsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MAkZpj/U; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=JD0hkMfPTiVJ3bO/PjvxTBL8icNPTyl1u5tfFC/knx03MIX26wPXL1gj5j63d01XeEMgFTud+O9n7JANsfJQX4rozX16tABVjg/mMzrdIgeOmiRktUo1+b4zde1NKWVC0zG8mKwXntwcZJZREHTND8iamVdCQfUrrQSEM0drtlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVJIOehH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MAkZpj/U"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54524740032so55697e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:11:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739985075; x=1740589875; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LVBCLwBb20SftVpr6Cb6gqWVa+/TpS0PacR3slD6cr4=;
-        b=MAkZpj/UgQ4a3tyLtP8ht4mAMT2edz2dcQA/T9lWGcpU0gSS2Nuj0USmNHhDdVPJ69
-         Mu08vip51LTcW+zSxyLeV7amDBWR2L2cDpmeeLmS4t91qIvXOgmXTXtSq/+r4vLKYgnw
-         xpey6ns34xNmmUJ4Vu00CBoN7Du/8iU8Cd8qCDhIDpMe4AUtPdahHhMZLPVmA5CNMvln
-         vZ0xScgsGvp+A7w6+EWNT32xG121qrlFNKGG0oyAfB8udj8OZs9jOke3qpcdOSPoKj6o
-         j+whlb0tJLAdwcUCx4MQ+WqfnxyrAKSPu97jZhH5a9bYbWpJKE4c+xS9MuxKOl2zaxa6
-         bqMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739985075; x=1740589875;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LVBCLwBb20SftVpr6Cb6gqWVa+/TpS0PacR3slD6cr4=;
-        b=EPUXIML+Ern0MOS8j/OwFD9wN8bpNPLfijauKBEF1Z8j++SooibGFBcv31zBUgPlUq
-         GV9cghuJZTJk1tkaMTa75ixyTAKtBD+Uu6z7/9TVWQGeXJMUTw0VwLtMz3xcqzCrWmP4
-         sDRxOPRHmsgN6Qci5Ql48YLiztomgLiUplE91sBjB3bIAGI2s9icu7+11OtZ2wYYeyDB
-         5BacRBybWKuwzAt0mhJGKlGXk+w7DwwjPoVLp68RA4blx9ytqv+nAIfeIAxkxwvq2nzc
-         T7Evy+k7nISWk9aAzfHP+QvpLAz5I7nvYwvP6WvKDR5d1aGq1JLRqVRFJ45C3qFs+W0D
-         wRbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUivR+iua2K1xf+UpbjCawoQ+ZDZjAkkJahIcAksAMfOZi5NNhGsxVQR87VslErl+VruJ+RkPh0x3cAQnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCRtG2HJIkJX5wMVaRCxxnDTNdzwylBQvi03wvIn5C7Yt5ZJEe
-	+3Eqajc0y7fOB5nAcI0q4RqGCtO2CbgIY1STFQy02sEavdljGi0zUy2dyFOQlf0=
-X-Gm-Gg: ASbGncvCysVvxMLfwPc7/rEvHfoZxzUU2EFQHsQ5nZ+d64AbZhg/q1WywdijLr13uxd
-	EJHaY3ZTa1OSB8jXW8n0w7jKFL/N7EbRsxzlNbGE1ba014WiGJyZKb1zhkFeX/FcOOIg+QLU7o2
-	apk9AlfaFaeBfNm/1qImZHcAS6X01SsvLgb5C+Vy27mw8rTyCbFEsYL/pb0ZqsMPLV86R6eOVZ6
-	JcaEtDQwvHz8071yC1h9y1R058gA1kOb6XMRZgL0FTsiTvTID/IM4cTYD1y1wX5WHLqHsc6mczG
-	WYbxqr9juLC7RQVlPttYHeUFj383ThAJrwa0EH1YldBQLw/t9QgOYqNChBYaI2kHyUSWn38=
-X-Google-Smtp-Source: AGHT+IH7FL01qZOB3XAPbsmFC6KyEv2EmZ1yIsxjB78l1rwLXp5knouU37jT15QdaWHDAkHvPlzRzg==
-X-Received: by 2002:a05:6512:b12:b0:545:e7f:cf3d with SMTP id 2adb3069b0e04-5452fe2e4aemr7300090e87.5.1739985075494;
-        Wed, 19 Feb 2025 09:11:15 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452f3d38basm1661990e87.222.2025.02.19.09.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 09:11:14 -0800 (PST)
-Date: Wed, 19 Feb 2025 19:11:12 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jonathan Marek <jonathan@marek.ca>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Rob Clark <robdclark@chromium.org>
-Subject: Re: [PATCH v5 2/2] drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01]
- bitfields and simplify saving
-Message-ID: <snvornde63yoviyjn6yitmz2vkw424jkyv4434jre7ts65cqe6@tbqgalok5e5n>
-References: <20250219-drm-msm-phy-pll-cfg-reg-v5-0-d28973fa513a@linaro.org>
- <20250219-drm-msm-phy-pll-cfg-reg-v5-2-d28973fa513a@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVJIOehH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8093CC4CED1;
+	Wed, 19 Feb 2025 17:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739985187;
+	bh=L/QYV+Qom79g9HuHBK43mFl7f5J5yQqARQ5i2sJ4WKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EVJIOehHSqr8PKdEefVAoXdXxWoapJRSOxmVK3UoxthHWmfMSOMEMGCr7xaDzEF6o
+	 Is5xIokYrUnXoeRayJe7O2SZ42wr51wSr6SxMOhXttVT0KxLJuIohuHF6dlwMMx5Qj
+	 xCQdOVVGTq5rWzu0QYppjX1UM3PJxjjetCo6ozhsNGHe1QPbLp23NFx+9HCRMdTJH5
+	 eWYIa9cAcoSxHY1nmbzrXdGRgvTwDZhD5EMXwqlXf2jIZrko1nqOY9ZH0RdrHOSPnS
+	 eeFOFR2Ycd6Rz+cyS0qSWyak0G9/68xiw1Em0Fd7tWDFbbUnNjJ7gCq4PEZ+zOEOPQ
+	 y6DiYo85VJqFg==
+Date: Wed, 19 Feb 2025 09:13:04 -0800
+From: Kees Cook <kees@kernel.org>
+To: Sumya Hoque <sumyahoque2012@gmail.com>
+Cc: skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	shuah@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] selftests:sysctl:Fix minor grammers in sysctl test
+Message-ID: <202502190912.CA03B56796@keescook>
+References: <20250219030451.39782-1-sumyahoque2012@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,39 +44,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250219-drm-msm-phy-pll-cfg-reg-v5-2-d28973fa513a@linaro.org>
+In-Reply-To: <20250219030451.39782-1-sumyahoque2012@gmail.com>
 
-On Wed, Feb 19, 2025 at 05:23:33PM +0100, Krzysztof Kozlowski wrote:
-> Add bitfields for PHY_CMN_CLK_CFG0 and PHY_CMN_CLK_CFG1 registers to
-> avoid hard-coding bit masks and shifts and make the code a bit more
-> readable.
+On Wed, Feb 19, 2025 at 03:04:51AM +0000, Sumya Hoque wrote:
+> Hello everyone,
+> Some minor grammer issues that I have fixed:
+> 1. echo "If an error every occurs -->  echo "If an error occurs, every execution
+> 2. Example uses --> Example Usage 
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
+> Signed-off-by: Sumya Hoque <sumyahoque2012@gmail.com>
 > ---
+>  tools/testing/selftests/sysctl/sysctl.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Changes in v5:
-> 1. Split part touching pll_7nm_register() to new patch.
-> 2. Update commit msg.
-> 
-> Changes in v4:
-> 1. Add mising bitfield.h include
-> 2. One more FIELD_GET and DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL (Dmitry)
-> 
-> Changes in v3:
-> 1. Use FIELD_GET
-> 2. Keep separate bit_clk_div and pix_clk_div
-> 3. Rebase (some things moved to previous patches)
-> 
-> Changes in v2:
-> 1. New patch
-> ---
->  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
+> diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
+> index 84472b436c07..a4d76147ed8a 100755
+> --- a/tools/testing/selftests/sysctl/sysctl.sh
+> +++ b/tools/testing/selftests/sysctl/sysctl.sh
+> @@ -891,11 +891,11 @@ usage()
+>  	echo "    -l      List all test ID list"
+>  	echo " -h|--help  Help"
+>  	echo
+> -	echo "If an error every occurs execution will immediately terminate."
+> +	echo "If an error occurs, every execution will immediately terminate."
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+I think the typo here is just "every" -> "ever"
+
+>  	echo "If you are adding a new test try using -w <test-ID> first to"
+>  	echo "make sure the test passes a series of tests."
+>  	echo
+> -	echo Example uses:
+> +	echo Example usage:
+>  	echo
+>  	echo "$TEST_NAME.sh            -- executes all tests"
+>  	echo "$TEST_NAME.sh -t 0002    -- Executes test ID 0002 number of times is recomended"
+> -- 
+> 2.34.1
+> 
 
 -- 
-With best wishes
-Dmitry
+Kees Cook
