@@ -1,176 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6982147F4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB561FECAE
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987941; cv=none; b=PquYUSnzFo8zHWYT+g+ml6xYyH8/w2YPaVBExplukVjVcArZkJ8Ulg6ZjIkn8IcKR9zbatYoATt05vT89JUZpcaQoeZN2oWJpqFkPRMmM62hsqcZujrs+rb4y6PVfzKBUjcRjDCcw2vhIdT5ex20XVgDIh00K06dclL7RxxGZPQ=
+	t=1739987968; cv=none; b=ULhBTNLqfVxezS0vylCS5hOv3DR5uBPLot7bCYl/SCq5C2gpOenkBfS+R9vTLjS9UQoVsu4bNY99Q4+nsEl5VzOrHYstgYm2ZvD1YPp1WQNRucxChKi8dp0/vvIvPnyllhB6lm9nboTshu5pqmKXmmKusbes/fkR0G42ZOtOERc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987941; c=relaxed/simple;
-	bh=bca4/lOlAI/66D+6VdDDMQS936BD6LQ3sNTZwS+FImM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BBCm5lAuUP75IBzYQdRx2XS/k1xppUyyBlYHft71dp6Z2dKcnHMJUySqmulekdKvnZc40PoTqE/BlHp1dSQlyR8u35AHHSEzeJrxtyCc8D7Qj4JHLaUXU/Ysi1E7ngC45xQFcsuk1e72pl7ARQqOjlqUcOK4vYel263tyu/myUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PscXiEyB; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739987968; c=relaxed/simple;
+	bh=dZRPlTg8UwRQsvICOzZrnxpjLEsnFkHU87BP1KT3JfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LSUZ3nTeOPkExK2fCW/QmxPHLGRdGtdYW3hjJHeHwUqeQw3pd8BVcm2b0t/K5UM4E5fIR0mN9MKnFBzZrT9/pF8DLJCSEhpV4NyUt83h885joEisol/QEYRl4uTjNNCVvQQ1OQ+75J4p4r5cqkwKZDKmrQOBmm5g/5lc+Qt3h8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jm7A/8ZG; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PscXiEyB"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JGfPWc008504
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:58:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RZPYXYhznydRoNkH0Kcvg2U8jDI9yURgtXY5VTKjyko=; b=PscXiEyBqT9oImjr
-	DFubEALiRiOyR2Gck+mvk+zM7IYu3Zd6Lu+mYqBLHt6p5SjWEk9/HJVlYhTYQz60
-	j1QXksRrA3taY8NCfFDngNHvgoop6FXffcl1BBJ43j9eeMSCecXOZwwUo96ARn3j
-	GKZWpVIh45VZbmTsroHh+xzwIHYVrgHh9eLscZ+2BKqxb3FQOgzMvNnZRn5zZQLe
-	n+fCVkTUbKjHERsTCKYqgfwr3nfvcacsSM80R+4uWAQi6hkK2IpOQPF/8HW4Vdd6
-	ZitGL/o5uWzT+BPlLjhCpJNaqKz9Gt30ZKVpB6jzuH58QsgQHzleB9D1o3fXmZPt
-	NSa0xw==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy3bhd7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:58:58 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-220d9d98ea6so180285995ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:58:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739987937; x=1740592737;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RZPYXYhznydRoNkH0Kcvg2U8jDI9yURgtXY5VTKjyko=;
-        b=Zzwl+Ij5CyHNJTwxQ69ljL8K3SdDtr3DXnhUzXjvFcWGoATcNwWRpw2GiGKU91oTN5
-         IOwZ00uf6Iq6jkHm59ttZyAo5SBA09iLE6p2/kX6pALVXAMf7Lsupum4Jgllhh9aEZ3M
-         usJinDVurpnMCcWJzYWahdBVmmaZQDchp/6cgEHhfr3ScC8uefwSxNF5xK7qHW/+yEGZ
-         YIqBq7JIUUDYhD79Z27r57p+Qp3QbqKreoMNlJsR8vm4LrdAjodty9ej+CJ+doKrGyta
-         OfUR1GsNBjaHW81d1PNHSYSUGhCBA4XRhHctAypwPwlpLbTf7pkdmKnXwL23CkgGYX6G
-         +qCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Xi4sTOYhCFRUh2S1IWQxHyAZbqHGAIECwCAnw72KsHKTGvdqbfZPa09+AmwGAeC/I6V4v6qV2hztU+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNjuOwh+fNar2OBQZ97PqV/grRoIj4HFqybyav5QaCn38cUNDp
-	0TznATqCS5hISEDmFGM8Mo5/kniCo1C/QzJ7sNxcx+Y5rMlzdkONVa9sG0HpxEfFq2UTn2lVKY9
-	RX86haacW7qJP8DMU8vhwQZUvjb9BzwmPVPD7b4W3f0czuPZ2AwMrhjXZcfVBNXE=
-X-Gm-Gg: ASbGncux9mP4Xb42oJSm54JfY3bHg8Yu2JIVXMwe8ohY0bryXUyzQ0jFoWmVZk6g3RO
-	+oT0oUJXaCWB6WfRjZcLRWuDv+4uETQi0Iv7csWyoRtZEg+Jin4SUsm07mYprSN6uOcgeDPuQ4F
-	sbxGbzo+keXxgBSS8xWG8SvwX36riX3h2K3aSCJfzGCGXH1sPvq0QAX2WXnzgwB+BLG0fQqLxG6
-	AOAzOiy72hIBTBoyKF72fDxu98SKdKwkm411aqdJqVAnb4pubpqJ3nWG0v1J8AV7LQ5xjs8EWNL
-	z8NFCRVpUUJyxdIu+FM6Kuehg4WIQvE9UHI=
-X-Received: by 2002:a17:902:f543:b0:21f:542e:dd0a with SMTP id d9443c01a7336-221040a99d9mr278372665ad.41.1739987937128;
-        Wed, 19 Feb 2025 09:58:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHUYFCEoZHriB5wecTnOAu53AMlZezfTLFnsL8ikE+PkMeZB3Iwnzg0FnHSPGIoH3cIgQ5kgg==
-X-Received: by 2002:a17:902:f543:b0:21f:542e:dd0a with SMTP id d9443c01a7336-221040a99d9mr278372065ad.41.1739987936755;
-        Wed, 19 Feb 2025 09:58:56 -0800 (PST)
-Received: from [192.168.29.92] ([49.43.231.99])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d536b047sm107696615ad.101.2025.02.19.09.58.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2025 09:58:56 -0800 (PST)
-Message-ID: <f0e5efb7-8ea0-a064-21e4-6d7596b1a9ae@oss.qualcomm.com>
-Date: Wed, 19 Feb 2025 23:28:47 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jm7A/8ZG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739987968; x=1771523968;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=dZRPlTg8UwRQsvICOzZrnxpjLEsnFkHU87BP1KT3JfA=;
+  b=Jm7A/8ZGBKdUBHFArEX3Z21xCuxmM4MFURailjy6z9yH8utKhd8bYZuI
+   mawCjw4RZhGLDxqitxmwwFXlWgNakXquwp46WeJbHfGis53k65gKJ7lfO
+   A4avjYyVg4HTGySQ+r68uIuTbenK/+dQEQ/cNxmJR5VLiywbM9eAMscbB
+   1URVXSLx0IgIJMOHzDjEHSOa9JCKNqSJbR6Iobunq2Sbr1189ZSoYfMgh
+   h4H13vlmTQsOKyk70mob0GIfZ0vb5D6ojGq8I7ZScP3PSh9oD4mMaDaKh
+   aJwxwkHXc+Xxms0SvlmztQGTb++sdEq0KM+XaDnaJGqGxdLpNaInZJrbq
+   g==;
+X-CSE-ConnectionGUID: /zK7FqaCSS+ellYZ8rkCYw==
+X-CSE-MsgGUID: yzCI2ShTQJ+PJ75FlyW/oQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44508074"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="44508074"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:59:25 -0800
+X-CSE-ConnectionGUID: bMFkRCDDQl+JuIoQya6e0A==
+X-CSE-MsgGUID: 6lzyRyhlQ5KfUfVG4K+gNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="119992342"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 19 Feb 2025 09:37:51 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tko12-0003FZ-0k;
+	Wed, 19 Feb 2025 17:37:44 +0000
+Date: Thu, 20 Feb 2025 01:37:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wolfram Sang <wsa-dev@sang-engineering.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: drivers/i2c/i2c-core-base.c:1420:12: warning: stack frame size
+ (1040) exceeds limit (1024) in 'i2c_do_add_adapter'
+Message-ID: <202502200154.kBYwSZGe-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 4/8] PCI: dwc: qcom: Update ICC & OPP votes based upon the
- requested speed
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, quic_jjohnson@quicinc.com,
-        quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com
-References: <20250218220728.GA194681@bhelgaas>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250218220728.GA194681@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: o63OaOR9vYJdY1oJ5b0GI0BPSEQ42b3l
-X-Proofpoint-GUID: o63OaOR9vYJdY1oJ5b0GI0BPSEQ42b3l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_07,2025-02-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- phishscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502190139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
+commit: 3bfa08fe9ec8dd79e183c88e1275be74191e7bc8 Revert "i2c: Replace list-based mechanism for handling auto-detected clients"
+date:   2 weeks ago
+config: mips-eyeq6_defconfig (https://download.01.org/0day-ci/archive/20250220/202502200154.kBYwSZGe-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 910be4ff90d7d07bd4518ea03b85c0974672bf9c)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250220/202502200154.kBYwSZGe-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502200154.kBYwSZGe-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/i2c/i2c-core-base.c:1420:12: warning: stack frame size (1040) exceeds limit (1024) in 'i2c_do_add_adapter' [-Wframe-larger-than]
+    1420 | static int i2c_do_add_adapter(struct i2c_driver *driver,
+         |            ^
+   1 warning generated.
 
 
+vim +/i2c_do_add_adapter +1420 drivers/i2c/i2c-core-base.c
 
-On 2/19/2025 3:37 AM, Bjorn Helgaas wrote:
-> Make subject line match history for this file.
-> 
-> On Mon, Feb 17, 2025 at 12:04:11PM +0530, Krishna Chaitanya Chundru wrote:
->> QCOM PCIe controllers needs to disable ASPM before initiating link
->> re-train. So as part of pre_bw_scale() disable ASPM and as part of
->> post_scale_bus_bw() enable ASPM back.
-> 
-> s/needs/need/
-> 
-> Why does Qcom need to disable ASPM?  Is there a PCIe spec restriction
-> about this that should be applied to all PCIe host bridges?  Or is
-> this a Qcom defect?
-> 
-It is QCOM controller issue, PCIe spec doesn't mention to disable ASPM.
->> Update ICC & OPP votes based on the requested speed so that RPMh votes
->> gets updated based on the speed.
-> 
-> s/gets/get/
-> 
->> Bring out the core logic from qcom_pcie_icc_opp_update() to new function
->> qcom_pcie_set_icc_opp().
-> 
-> This refactoring possibly could be a separate patch to make the meat
-> of this change clearer.
-> 
-ack.
+9c1600eda42e52 drivers/i2c/i2c-core.c David Brownell 2007-05-01  1419  
+69b0089a6750a0 drivers/i2c/i2c-core.c Jean Delvare   2009-12-06 @1420  static int i2c_do_add_adapter(struct i2c_driver *driver,
+69b0089a6750a0 drivers/i2c/i2c-core.c Jean Delvare   2009-12-06  1421  			      struct i2c_adapter *adap)
+026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1422  {
+4735c98f8447ac drivers/i2c/i2c-core.c Jean Delvare   2008-07-14  1423  	/* Detect supported devices on that bus, and instantiate them */
+4735c98f8447ac drivers/i2c/i2c-core.c Jean Delvare   2008-07-14  1424  	i2c_detect(adap, driver);
+4735c98f8447ac drivers/i2c/i2c-core.c Jean Delvare   2008-07-14  1425  
+026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1426  	return 0;
+026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1427  }
+026526f5afcd42 drivers/i2c/i2c-core.c Jean Delvare   2008-01-27  1428  
 
-- Krishna Chaitanya.
->> +static int qcom_pcie_set_icc_opp(struct qcom_pcie *pcie, int speed, int width)
->> +{
->> +	struct dw_pcie *pci = pcie->pci;
->> +	unsigned long freq_kbps;
->> +	struct dev_pm_opp *opp;
->> +	int ret, freq_mbps;
->> +
->> +	if (pcie->icc_mem) {
->> +		ret = icc_set_bw(pcie->icc_mem, 0,
->> +				 width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
->> +		if (ret) {
->> +			dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
->> +				ret);
->> +		}
->> +	} else if (pcie->use_pm_opp) {
->> +		freq_mbps = pcie_dev_speed_mbps(pcie_link_speed[speed]);
->> +		if (freq_mbps < 0)
->> +			return -EINVAL;
->> +
->> +		freq_kbps = freq_mbps * KILO;
->> +		opp = dev_pm_opp_find_freq_exact(pci->dev, freq_kbps * width,
->> +						 true);
->> +		if (!IS_ERR(opp)) {
->> +			ret = dev_pm_opp_set_opp(pci->dev, opp);
->> +			if (ret)
->> +				dev_err(pci->dev, "Failed to set OPP for freq (%lu): %d\n",
->> +					freq_kbps * width, ret);
->> +			dev_pm_opp_put(opp);
->> +		}
->> +	}
->> +
->> +	return ret;
-> 
-> Looks uninitialized in some paths.
+:::::: The code at line 1420 was first introduced by commit
+:::::: 69b0089a6750a0435570df3ba8456c77b352af55 i2c: Refactor for_each callbacks
+
+:::::: TO: Jean Delvare <khali@linux-fr.org>
+:::::: CC: Jean Delvare <khali@linux-fr.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
