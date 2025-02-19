@@ -1,110 +1,117 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53B324E4A1
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 20:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F3124E4A9
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 20:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739998300; cv=none; b=MEQvELCHxnVzcsqz+9S8wxE5vbwmeX0fs7nJpWiiO0kieIITDKEZ+vwpYW/MC3DbjZc1Y7WuiFZDGALSO1kiI+yEk8QFZocCpZ6IyCXXpw+nA6tl8KtuO2J/GuE1rxMwClgoJFgzGAuY8xm+XMNxgLd4UITWEt7n1PEA622Ybm4=
+	t=1739998336; cv=none; b=K7KIsbSCvt64AMxmGBQBUNeTZrigks8yKNPWphWJZYhMUfhwWRNrr1A88gcqW3gTRjuWXbw1y0oQYjw8jCuRoZOf9TqZL6tLULkDWejR7rAaXXcDVpA61QCKrSc1umvuRV+Vp+l5tvwIrI7esUefRpLyWrHA5SxGVjsB72qG0Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739998300; c=relaxed/simple;
-	bh=+uHdTRHxNDfBVd3zhnH7kveAQzlfhzBsi9i6T6xdxJU=;
+	s=arc-20240116; t=1739998336; c=relaxed/simple;
+	bh=5xM591Q9pMY4myUmlKylPMFrmVvIMKXhUKSFxtN3m0o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G+w2MgdFZzJIxg5ZqE7QUnfoV1UwVwjyaztlF4sFOcPaMS2Sh09UC+E4dX8l1nCRhIxqR0dGwTi1ud6dT0NZXszzveTYLEUsKGqkUWrxzBLWVgMu7N94S8aDj2JkRffEoamZpa/Hqx0hDbOsGE7qSOF/nk2191xxNRInd0pRt3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DMzqsYWa; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 In-Reply-To:Content-Type; b=RO/g43XI/JpKCOnhc3aCfVEoV2XU7WJvOGNf2aPY4K3HJrcDzJrowpVfXqKnOOIqN8M3HNATHEKTMGwne664iBYvvVHz/qpfl+FnNiS3OQchgNWHTKUAQl5IFrW/taZ1aWz68xC9gAsihOGO+5GVtgS6bAZg0ANKwlFVOV9mpo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=zh3zspZ2; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DMzqsYWa"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-855a8275758so6018239f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:51:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1739998297; x=1740603097; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v2o5IeA7VDXTHKtaj62YbAWTuLHaB+wX30y2aehqoy0=;
-        b=DMzqsYWavni4q+a4KghpQ6zyHCnbtkfKbUWJSrgCRoF9D9s4Rlzv2wUJryPbyeC88a
-         Nt/klUmxYWh0DTIXu4+8/PpVeNUgJpfD5i8Vx/DsUPkAL4hSW4BI5J3TBSQaDfo33o+B
-         qgbeWoP9gTiTEH5XkMPhsKKM5WxaiJxXRbc5A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739998297; x=1740603097;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v2o5IeA7VDXTHKtaj62YbAWTuLHaB+wX30y2aehqoy0=;
-        b=uXpDMI6jUzn0AihAIAXJAXXb14KGfEht4nbEEFoGvmgnzxohSLxQcxxR7yTXm89dDD
-         yMnOAFyE7FtYqlHaYVH43fr5AlB7NasPTgErwK5iOn2E03zutlRBL9D4yVfvxGwzXID7
-         6m5RiYWsH/UThnM7N8PUW2E8FSLzhxAYabPPTi94BTI23VIaxpKey3MPUWVZPVfLIDri
-         8iMN0fTWLcXubHd/7XOQeCzcGDA6f896tg/sghIqpCDSbjwsA4OLFa2S31dCpBTtHDoP
-         FNeRIT2dWy0yUkfoHXD8UJX/+sNUWnJPwIHR2/+PDk6AMeH3eNy+I9FPgPAl2L5R72gE
-         NFvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXD4MTEOPYY41GvNSEaal3kNi/xS2rwzo+IAMVPmAm9amcK96fybG7j6GLT800pDGdiws78bFljyNCJwg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsAeKPllhGQKH/fa3/Iot+nzUBOHx4mXHwA66tAVae8TctO6jK
-	T5mlJYLTlg9qBsKSxopn3QMSiWu+RRcXuymR2ucRdf7TYpC+mLjUqF1+nk4X5lI=
-X-Gm-Gg: ASbGncs2/yqcq562HQ7IHOmp3bGWTq8T28nPq33QT/FKU7DpAabZC92GmURvFjazP1+
-	feTIFqlFd0G4KiWZqFGDtQ/APvPjX6+S4HlIyfkwuonjU8rJNfsnQ3W3eKT9wgkm+9n5c+yVpUD
-	6HB9N99ZxVSP47VnN8pFd8NKpFiazoGI4WuayTLNYanvsyDFC+AZJJZp3gNJ7uQEBnLfxuq+aW+
-	HaQj0m3fTlN+lEu5jFSdy7Ur6SXJqhNLXxUi8QD/Ct29T95XMUU24JkGKNbelrQ9+SbgBdoz8h4
-	sObvwT5rjq7iCm59soi11WVpaw==
-X-Google-Smtp-Source: AGHT+IHMYP6GsM4Y2iBZ0krD9AR16rOibJ64C+QYYXdRt3JS3ZCwEwZHaU6pgXrYj2XeSJIsteCc0A==
-X-Received: by 2002:a05:6602:2d86:b0:855:690e:ed8f with SMTP id ca18e2360f4ac-855b3a01ccemr621360839f.12.1739998296814;
-        Wed, 19 Feb 2025 12:51:36 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8559c37b07fsm120999639f.0.2025.02.19.12.51.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2025 12:51:36 -0800 (PST)
-Message-ID: <9f137f62-e182-4f00-97c1-5dca6e25b316@linuxfoundation.org>
-Date: Wed, 19 Feb 2025 13:51:35 -0700
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zh3zspZ2"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F2D722C019A;
+	Thu, 20 Feb 2025 09:42:31 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1739997751;
+	bh=1OF9sa6quHwoXM17gF/nCRzqK14R3hUHb3M+ii+Vwkw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=zh3zspZ2gbCGDQDjdDM8IzzRl6EKqqPWDjMzeGi1796lk1kGeteG4iDdloA7wCLL2
+	 8Y2C9zeZq7d8Qx5SEEB0HFZZad36tjUc3TJEtro6+AvBi4SjHzHD4UaXqFIhEzd/qK
+	 hdcovdikriFgSRjDJdsfGSCoaf+XDfd6GNbDhiodvMu0fQxizWQYuo7hi4J2MSbcWa
+	 fReNYs87i0IWhY0gCMuL7CONeztsD1UXWofQ400ntIIWSGc4djmbGvVETmqKMVoRmq
+	 CAWeFEbjEpH+x4EAdVMnP73RYGHAjIWpSlPBEzFMGQcDSSihjsQNGUnqhP0eTCV6ml
+	 AlmD8qjGOo80A==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B67b642370000>; Thu, 20 Feb 2025 09:42:31 +1300
+Received: from [10.33.22.30] (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 9E0AD13ED2A;
+	Thu, 20 Feb 2025 09:42:31 +1300 (NZDT)
+Message-ID: <f051fd62-4762-412e-a11e-ff96d468476c@alliedtelesis.co.nz>
+Date: Thu, 20 Feb 2025 09:42:31 +1300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pm: cpupower: bench: Prevent NULL dereference on malloc
- failure
-To: Zhongqiu Han <quic_zhonhan@quicinc.com>, trenn@suse.com,
- shuah@kernel.org, jwyatt@redhat.com, jkacur@redhat.com, peng.fan@nxp.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250219122715.3892223-1-quic_zhonhan@quicinc.com>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RESEND PATCH net-next 3/5] dt-bindings: net: Add Realtek MDIO
+ controller
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: conor+dt@kernel.org, krzk+dt@kernel.org, linux-mips@vger.kernel.org,
+ tsbogend@alpha.franken.de, andrew+netdev@lunn.ch, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ netdev@vger.kernel.org, kuba@kernel.org, edumazet@google.com,
+ lee@kernel.org, davem@davemloft.net
+References: <20250218195216.1034220-1-chris.packham@alliedtelesis.co.nz>
+ <20250218195216.1034220-4-chris.packham@alliedtelesis.co.nz>
+ <173997391420.2383401.13425265155310657100.robh@kernel.org>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250219122715.3892223-1-quic_zhonhan@quicinc.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <173997391420.2383401.13425265155310657100.robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=ccpxrWDM c=1 sm=1 tr=0 ts=67b64237 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=Cr900lsLVkzRsI26oPQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-On 2/19/25 05:27, Zhongqiu Han wrote:
-> If malloc returns NULL due to low memory, 'config' pointer can be NULL.
-> Add a check to prevent NULL dereference.
-> 
-> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
-> ---
->   tools/power/cpupower/bench/parse.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/power/cpupower/bench/parse.c b/tools/power/cpupower/bench/parse.c
-> index 080678d9d74e..bd67c758b33a 100644
-> --- a/tools/power/cpupower/bench/parse.c
-> +++ b/tools/power/cpupower/bench/parse.c
-> @@ -121,6 +121,10 @@ FILE *prepare_output(const char *dirname)
->   struct config *prepare_default_config()
->   {
->   	struct config *config = malloc(sizeof(struct config));
-> +	if (!config) {
-> +		perror("malloc");
-> +		return NULL;
-> +	}
->   
->   	dprintf("loading defaults\n");
->   
+Hi Rob,
 
-Thanks. Applied for Linux 6.15-rc1 - will be included in pull request
-to PM maintainer.
+On 20/02/2025 03:06, Rob Herring (Arm) wrote:
+> On Wed, 19 Feb 2025 08:52:14 +1300, Chris Packham wrote:
+>> Add dtschema for the MDIO controller found in the RTL9300 Ethernet
+>> switch. The controller is slightly unusual in that direct MDIO
+>> communication is not possible. We model the MDIO controller with the
+>> MDIO buses as child nodes and the PHYs as children of the buses. The
+>> mapping of switch port number to MDIO bus/addr requires the
+>> ethernet-ports sibling to provide the mapping via the phy-handle
+>> property.
+>>
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>> ---
+>>
+>> Notes:
+>>      This is technically v7 of [1] and [2] which are combined now that
+>>      rtl9301-switch.yaml under net/ the only change from those is that the
+>>      $ref: in rtl9301-switch.yaml can now use a relative path
+>>
+>>      I could technically do away with the reg property on the mdio-controller
+>>      node. I don't currently need to use it in my driver and it looks like
+>>      the register offsets are the same between the RTL9300 and RTL9310.
+>>
+>>      [1] - https://lore.kernel.org/lkml/20250204030249.1965444-6-chris.packham@alliedtelesis.co.nz/
+>>      [2] - https://lore.kernel.org/lkml/20250204030249.1965444-4-chris.packham@alliedtelesis.co.nz/
+>>
+>>   .../bindings/net/realtek,rtl9301-mdio.yaml    | 86 +++++++++++++++++++
+>>   .../bindings/net/realtek,rtl9301-switch.yaml  | 31 +++++++
+>>   2 files changed, 117 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/realtek,rtl9301-mdio.yaml
+>>
+>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>
+> If a tag was not added on purpose, please state why and what changed.
+>
+> Missing tags:
+>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux.git/log/?h=cpupower
+Sorry about that. I wasn't sure since this was spun off from the other 
+series and because it now includes changes to 
+realtek,rtl9301-switch.yaml. I should have at least mentioned that.
 
-thanks,
--- Shuah
+If there is another round for this one I'll include your r-by.
+
