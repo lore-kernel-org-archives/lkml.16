@@ -1,121 +1,76 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375141EFFA3
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032A01E47D6;
+	Wed, 19 Feb 2025 13:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973030; cv=none; b=oNvwHo2QKUOZE8QuQtQv84E0EHNxBAOLAC9G52Yw6ojB607RvMqYn3EAoixKSKNYoEygzWsVD1gfFT9iFaUW9PgRdEjAjeInL/StbqB5HhfMRaq//lsF2zhw6V/Gl5DeDlGS3ZVNfIYJTQ2N1pcGE7gKgRQiwmIQhYlnOKA6l6Y=
+	t=1739973151; cv=none; b=Dj5AtzbDVrs5hPGKAj8uR+r/FlKqkJt13NPN8ThsadSz1Hvp3R74AsDUCvpyHtNo1cRWINcdw11GetP6Zpf0Sv62RNDR+QW7S6QdcfaOxhMn7OqIN/vHLU7y7ltRyF1ySqJIb9AtFlZGLmZF8KKRvnWCPdgr+E44pxi9arbtnNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739973030; c=relaxed/simple;
-	bh=cUA7XGIEYvXXI6LpEvkpuihgJFTpSxZlDOgmf9EBdE8=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q27U2kM0ah7C1u1gJ8yeReTCvm7j7M2hXNilr/jtwvodmpV7p7ELphkqiKFW47dfKtCSlQ4SCFdXKuk8w24PmOQJQnJA80IDCUQLRnZUQcm19bYYe04NBWqbe550HTbeZJ5ZDQEMqZKrWAJOwmW7UXswk3o+aUk/1Kq6xgUOmCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=iOjKkdyS; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1739973151; c=relaxed/simple;
+	bh=kr5/iZkjd7ntlCerK+ncHbCvVFFwEVzZpVFBtYCh/vM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NYxbJsBOhwBmBVqWigBAI57AG2cuSSaBD/s0CQd6WU2rmBKNOlGDDFcUryyYkc4V0+JgKg0v7LgjlguUyxQ+LN16gh/RGt1ctiGfQRoPSGannodsRYiVCU1x9zbFcZsVuT9lSX14m76wO1Km30bdps0wDm5TEuDkNpURASmA/4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=myysLyLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="iOjKkdyS"
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B042C3F296
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739973026;
-	bh=HkThrHww5O7217vswgEm19Ksu4iUBCwcKWWe4XYtKbw=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=iOjKkdySiO15H/owhS+6RlWbTaM7qWbj/4SbkVh+GTb6k7Ome6jhwOVeyqSiYJ0CN
-	 8wsi7Xh49BRWqybkMhmMJ7OXQIIRBxU7WaFU8um6IXpgHggOu8TH9S4/ch+6DpwWtV
-	 BmDJU1m3OuH/tT5NAya4xB7Z5QDS5WJ5BW1JArIh/vp4Z11Y3Ag36c980Axgskm4kk
-	 YA8MhzSAoYzW44t0RbwFe+9HRBzgFqyjw/2G/ytcLrUDg5ynE6nOUrrHVNgRXGqrS7
-	 taELqWiW9iFAw9i2MG37l2FOW2mcSdw4wNlKeWaJTdq5Qpl3+G7gcw9AYVahisF33R
-	 xqfnhjmByjTQQ==
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3f4165b5849so218367b6e.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:50:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739973025; x=1740577825;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HkThrHww5O7217vswgEm19Ksu4iUBCwcKWWe4XYtKbw=;
-        b=ZF8ft9Uy46LXfNC6Bj7jSp4qa3R45/hVMB+8PL76pGMacon4ndrPfdDSbsD2dPQymW
-         OPMJ97DSmCthxptRP/zBYnbY/JLBdu1uTjN526waJ9EL1DNMumxJHs2+80i094B+4pby
-         ljtNb6IqBCqhzcpx2AO/SiFJq/wCIEEzDFql63SIJm4Q4PcdpbybbLkECrrisbTs21/T
-         jsrhuzAvlJAAuCK3cmPgRHUg+tCeatdfdR4oXYMMvGK90tqbcxJvF70PiZlIVcH7WF6o
-         cChcS0GZARuu+3wM3aonSyi9uBvOGpey1ud/U38RxmtxOi/rJdlG2KIyjmb2cOeGiqPF
-         BaIA==
-X-Forwarded-Encrypted: i=1; AJvYcCURE5txbNIwEbBq8Usm0kAVK0tHGuDRQJzkYm85CrzaHQ4JSwCmyg0BuXtLii/LvmwwHPvuwMbXfqDTgek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydLGkgg/43c9BWDlvRRGz1KrFEBbmkkqWkFBNI42nzcvwl4Cvf
-	4CoMeKG2jPxVbSeK1gTiEixjWGAbUjRoQNlMG+tXnF/o1QIkodQMCVcbmnWKgzzbL8I2gfU2QGu
-	Wh75jZTqFwSaVibzpK1c4F7dMcK2p1y5fLeSNpV1XYlmpplNk1Ayzratp0nxX1pM1Jn3TmloLrL
-	ZDWpKAuSzOnhOjydeIoIKUN4w4snl52vV4O0USwYoLC+YUE0jnQnDE
-X-Gm-Gg: ASbGncsGMGXyuPsd4L8nnOs77e4ztasq2GpchP4um4g93b30Bf7/g+rojFq57jOexqr
-	dVcXkGmSWi52QDCaIgOfUJWsxp1xOkcGwIXj78dgmdhQQIqYy1HAI/wSC8Dios3aLFSzoQw3bGK
-	zmAV8AUScDXfmnx6Y=
-X-Received: by 2002:a05:6808:1404:b0:3f3:fca6:e780 with SMTP id 5614622812f47-3f40f1d80damr2677728b6e.4.1739973025296;
-        Wed, 19 Feb 2025 05:50:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IELzb0relCMdxW2h9gdJIHGCHMAFy7OUi/2S7r6jAP4Sq1/PdQCSb8BJv9iB/UP1miQ71opDlKqPQcOB0oF060=
-X-Received: by 2002:a05:6808:1404:b0:3f3:fca6:e780 with SMTP id
- 5614622812f47-3f40f1d80damr2677715b6e.4.1739973025019; Wed, 19 Feb 2025
- 05:50:25 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 19 Feb 2025 05:50:24 -0800
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 19 Feb 2025 05:50:24 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20250102183746.411526-3-e@freeshell.de>
-References: <20250102183746.411526-1-e@freeshell.de> <20250102183746.411526-3-e@freeshell.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="myysLyLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F004C4CED1;
+	Wed, 19 Feb 2025 13:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739973150;
+	bh=kr5/iZkjd7ntlCerK+ncHbCvVFFwEVzZpVFBtYCh/vM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=myysLyLp4Cg4uvwCydiXZktTnu1bf5xY9vE0LJGSZxv0Hd1KJY8LyUtmaF1wC93pG
+	 3ZGZJwfb9a9tb1/Quwxu+zbN6RXsWZ0C7Zv1E/R0ImBr7OXItsztbkJf2uP4SJoxVK
+	 5RbguUcylQoqIP7cCpvKuJ7HPtuO8sO9jIrG8IkW1rM3YYdcS9KX/64Z3GKlAC/eY1
+	 IVj23dE/wSgxETbFoDEvibgbuukH2qqu8b2ZMR7fmqAnR3BvuLzRDcYfaPgKOBfaou
+	 EIRsEgV18Wpfp0X/3sXSQ3iCi1+UA6tCLdGjNHDQGBeJ5c0IEKp9xITsI2w55J63M0
+	 qLhYIZdLt1sCQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tkkVE-000000008GZ-0q6R;
+	Wed, 19 Feb 2025 14:52:40 +0100
+Date: Wed, 19 Feb 2025 14:52:40 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mhi@lists.linux.dev, Loic Poulain <loic.poulain@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] bus: mhi: host: pci_generic: Use
+ pci_try_reset_function() to avoid deadlock
+Message-ID: <Z7XiKBD63EE7ZzNr@hovoldconsulting.com>
+References: <20250108-mhi_recovery_fix-v1-0-a0a00a17da46@linaro.org>
+ <20250108-mhi_recovery_fix-v1-1-a0a00a17da46@linaro.org>
+ <Z5EKrbXMTK9WBsbq@hovoldconsulting.com>
+ <20250219131324.ohfrkuj32fifkmkt@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Wed, 19 Feb 2025 05:50:24 -0800
-X-Gm-Features: AWEUYZnjj3UcLpDwY9vHo1V6-acr0oNVHmkQ82SwWdTmAkFxnAuNPZAUCub5EJA
-Message-ID: <CAJM55Z_b2qf7NsvKm5mVjS4O-hqqsDNhpohcvJ_myasOL97oSg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] riscv: dts: starfive: jh7110-pine64-star64: enable
- USB 3.0 port
-To: E Shattow <e@freeshell.de>, Conor Dooley <conor@kernel.org>, 
-	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219131324.ohfrkuj32fifkmkt@thinkpad>
 
-E Shattow wrote:
-> One of four USB-A ports on the Pine64 Star64 is USB 3.0 which requires to
-> disable PCIE0 and change the mode of PCIE0 PHY to USB3.0 operation. The
-> remaining three USB-A ports are USB 2.0 with the USB0 PHY and do not
-> conflict with any of PCIE0 or PCIE1. PCIE1 (1-lane) routes to a PCIe X4
-> connector.
->
-> Signed-off-by: E Shattow <e@freeshell.de>
+On Wed, Feb 19, 2025 at 06:43:24PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jan 22, 2025 at 04:11:41PM +0100, Johan Hovold wrote:
 
-Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> > I can confirm that this patch (alone) fixes the deadlock on shutdown
+> > and suspend as expected, but it does leave the system state that blocks
+> > further suspend (this is with patches that tear down the PCI link).
 
-Thanks!
+> > > Cc: stable@vger.kernel.org # 5.12
+> > > Reported-by: Johan Hovold <johan@kernel.org>
+> > > Closes: https://lore.kernel.org/mhi/Z1me8iaK7cwgjL92@hovoldconsulting.com
 
-> ---
->  arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-> index b764d4d92fd9..31e825be2065 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-> @@ -100,3 +100,8 @@ &usb0 {
->  	pinctrl-0 = <&usb0_pins>;
->  	status = "okay";
->  };
-> +
-> +&usb_cdns3 {
-> +	phys = <&usbphy0>, <&pciephy0>;
-> +	phy-names = "cdns3,usb2-phy", "cdns3,usb3-phy";
-> +};
-> --
-> 2.45.2
->
+> > > Fixes: 7389337f0a78 ("mhi: pci_generic: Add suspend/resume/recovery procedure")
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+> Makes sense. Added the errno to the log and applied to patch to mhi/next with
+> your tags. Thanks a lot!
+
+Since this fixes a severe issue that hangs the machine on suspend and
+shutdown, please try to get this fixed already in 6.14-rc.
+
+Johan
