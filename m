@@ -1,158 +1,179 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2074.outbound.protection.outlook.com [40.107.241.74])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE6C28628C;
-	Wed, 19 Feb 2025 02:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739930479; cv=fail; b=pzJLJV2u7vmtYt65jweNhLVkQKZ/nDKOkF41PMLPdVxSaIRDss20IfyN+C0msE1z3mE1aVCO6ve8GsHJ6Wxif9ReM7lb/EVTVmmLrB/qXJGFPjh9VKZjCnjJSJ0SgoMbhfkgOy7knHYHMBhLVarYASNz12v8NTjGMp08EYoqaOM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739930479; c=relaxed/simple;
-	bh=EL7g50UOcnfkkE8ClILrbdTdq+Gjd+tEtppvxpyzgco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lHutDnZXxU7HEwQcPVyvwq7KaWJ9pd3D0qm+ovX4JF9yVTkIBk1XTYEkqRtGzSRbdEhRf8bpI3CZRcZJJ9Sx8uBVwK99usfzsVOS3P7SUIVgsGwIgJOVwBX3F35BuyN5PcgnQop+eomdcm1mjOqM0nvnGGbZZ9lssKVGnPNZGmY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=FBe8xNLM; arc=fail smtp.client-ip=40.107.241.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C991632DF
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 02:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739930486; cv=none; b=aC2CpLl8tu0KpG46Z+U4H/YdX0K5GjJKYjwimzjfXGbHa/UzjHFrNeu3riHSnlFa/UNRTg54VvwbCgDrosu2gL+DV4cIq5ti8lLQt1FtfeNe1m4hM0hMMEHr4nQiFClK/ZeDR8/Hvwuryvj+yC57zIFx00APxDTsC9Fc3azs8yM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739930486; c=relaxed/simple;
+	bh=gZqQM7O9ByYPgtbt8cvoz84LcIYYYPm2MVl/usKmDxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z5kSp1po10SCY5mB1uUDIpWiXXw0z0CjGHwS5hQtMl4W5o/lZzsX0if7MpjjeOFLfLoylEoKxn0LK/m/g9Cu2es+ldUONRN0MFeWgWGpTi7mgXXs1KIZPKid7D+kark26E6catJx++tUwy18/0hkCqq2IiSyCpdhrOkrNkFS9CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UYJcvvdU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="FBe8xNLM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RfFK7gPOCZByltNJX248A8RM3l86Xf7aUQumCRpb0d+S9tR6C31b/sKu/30JFY6hxSs+ZtIklYfhX0uEiM+xTKUTgYZ2a58hpzNh01COrZ2MhpJbTXc4v5cjZAKIilK8Xm29gDdLNpfvBV+1p1bHh20DNhi79AFUk6e7X6NzdRVfmWDiJLMWqW78raYcSS7JzsmuyQpOhZZ6FCfroyHBD3iYcO9Zso8n+QdALN3/ZWAvE+ZDJn7K/Njmf3xrqGpJCm34Lafv0eJP8GQHiEQioJfA8Xy447OPkEInbMMZzKabkNUPbO55tTI9B/zq+rmS7v2KEW17FY3N9sxUyRNzow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EL7g50UOcnfkkE8ClILrbdTdq+Gjd+tEtppvxpyzgco=;
- b=Vh3beiQFMAUs4vlcvhz7TAi+rdIdOnFppO5v9c9jaWAkaKBfXjgB28pElWWnuR7hiBNPAX7Kx1WF6taCQ9RsR5SusP/t9uIOoEY1ObteeiLaOxT6I0P60HiaY1QRhqMGsofELeq5kBinhVYVMv8UoKOWtHjJcB9hxYdghhqhGngapIl3SfUQs4DWv+Lbsl8+4L+W7k3s+1CG7gMmpOYgZE9lMZrC+QqfnJtIH6P+lcwxT7siTe13bqf358qKVYoqdSpeN/3ha2ytCikaY+z/ZABk6X52HlmwMd5LBUU/QBHyGwwA2MhqvnpcjLIODUD0Fw8DegIJtAepW6Z3kN4cmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EL7g50UOcnfkkE8ClILrbdTdq+Gjd+tEtppvxpyzgco=;
- b=FBe8xNLM7yDV2gcIvYa96k6h8fcSHwOAjbcTCair0d3zWI82iBLQ06rdcW8RjXUIqZ1XW/ttNRgiCwufsvGgjRosAnV9ujAnn+w59RXs2qLpDhYq52KhEMSXyA74NXQg740680VKukvQMOxFcVRWJ9xsVc/vvslyKhYyz6mFCDp3RYqHnpPOA4xb6PYOT9dgvjleV54kP3aPWHss7PrYPKUHvzSXezsU9wk9TNqFOEJ23Mzp2kXEPmBA/G8I6/YPIsewE1zJ+81gnbc2QrW/Gn5qNsk4PS8jIsR8/9y+n2kyjIK549Rx7u4Ln2sy1t5v25fWvIubbW+HvSJWlVWNgw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
- by PR3PR04MB7227.eurprd04.prod.outlook.com (2603:10a6:102:82::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Wed, 19 Feb
- 2025 02:01:10 +0000
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197]) by DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197%4]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
- 02:01:09 +0000
-Date: Wed, 19 Feb 2025 11:08:09 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: p.zabel@pengutronix.de, shawnguo@kernel.org, mathieu.poirier@linaro.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, andersson@kernel.org,
-	linux-remoteproc@vger.kernel.org, iuliana.prodan@nxp.com,
-	laurentiu.mihalcea@nxp.com, shengjiu.wang@nxp.com, Frank.Li@nxp.com,
-	krzk@kernel.org
-Subject: Re: [PATCH 5/5] imx_dsp_rproc: Use reset controller API to control
- the DSP
-Message-ID: <20250219030809.GD6537@nxa18884-linux>
-References: <20250218085712.66690-1-daniel.baluta@nxp.com>
- <20250218085712.66690-6-daniel.baluta@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218085712.66690-6-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2PR01CA0049.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::13) To DB9PR04MB8461.eurprd04.prod.outlook.com
- (2603:10a6:10:2cf::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UYJcvvdU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739930482;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TTYk5mPgovr+xjBEyGONMlriCe8a4cY2bYNbOhvz11I=;
+	b=UYJcvvdU4UIOvsZlyZYMJFvhDEVZBMzzgdbHU5ntq/yqpZidzx/35t6jfmXTQhFar97G/l
+	sBJ+gj2Qi5UYXtZw3aqmxCwvuqHxYz22Zczi1eCf9OWwlnY/+hwDKHv1fzGW/IttkLlIVO
+	hi2KfIDCX3lArQWgXcBtXBYBi7mAjXA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-642-uHOYB5vsO6mICsb6iqyLHA-1; Tue,
+ 18 Feb 2025 21:01:19 -0500
+X-MC-Unique: uHOYB5vsO6mICsb6iqyLHA-1
+X-Mimecast-MFC-AGG-ID: uHOYB5vsO6mICsb6iqyLHA_1739930477
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACDF81800875;
+	Wed, 19 Feb 2025 02:01:16 +0000 (UTC)
+Received: from localhost (unknown [10.2.16.53])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0B788300019F;
+	Wed, 19 Feb 2025 02:01:14 +0000 (UTC)
+Date: Wed, 19 Feb 2025 10:01:12 +0800
+From: Stefan Hajnoczi <stefanha@redhat.com>
+To: Ferry Meng <mengferry@linux.alibaba.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>, linux-block@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+	Christoph Hellwig <hch@infradead.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v1 0/3] virtio-blk: add io_uring passthrough support.
+Message-ID: <20250219020112.GB38164@fedora>
+References: <20241218092435.21671-1-mengferry@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB8461:EE_|PR3PR04MB7227:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a27d2ed-4d63-4c1a-cbe8-08dd50894523
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?w6PiAkM0NVpZbmRa8A1izrZg+ARjax+V9KCierCCkZyAVB8jglTQwTdP3bpG?=
- =?us-ascii?Q?fwpU9otBWMK0IW9BcLD7Zk9NBdrkG7lUvDS33wryohbpNTKQirHI4eUh40w7?=
- =?us-ascii?Q?iSvE5XOQ73lMzFdD07VGYkdgCcDPcMzjUOR9sz5E+e+945XrmBe/buovvDUY?=
- =?us-ascii?Q?enIUmyw1fzFXTpUTdxVSE333xDH1TtKND4fF0mMsfQBfyXV3jx4VxWKFYWdb?=
- =?us-ascii?Q?2v2oLT21Uh32HnBsZo5xX80HeNJVfij4vUvoiOLTtVmk5DKeJjs/evcnffF1?=
- =?us-ascii?Q?KQNECeiZUiHC5uP+pxDlvYCdlQ39ziG+8zH7dfRJRThKNrukG4O4WHU1c6EJ?=
- =?us-ascii?Q?xummJGAS/Ti12/SDan/lz3OhaAP8vByFfFddLvjoijx3O9KztwTryLaEZy7l?=
- =?us-ascii?Q?bV1sY6i7QRdgkFH1Gf2TX1yjvYRfxCheI/diGn0n1mWgXM6QDKD6boykxCEz?=
- =?us-ascii?Q?ePEXLVec+eYOEhDnqYSkitLbzrDJU8YigZ9Q7XIqM/mjkTUwxawMESGssDw+?=
- =?us-ascii?Q?a3piTYRvYPEUUvWOgsYT7UM71eIV/2koEcbFzBEsMsLQhfEMPRkB3S5InJWR?=
- =?us-ascii?Q?U4GEqUdskspaq7ejuTJinyfV/rzywOd5EsDiEDeJu0uzD5DsCqIHVnkQ8DYm?=
- =?us-ascii?Q?YDuwzTkjieUGms6FlJeYnBsBe3UYJEb352D/SDXkME+z2GtdCLRfn7ZSY4zf?=
- =?us-ascii?Q?KJR5m8N1NJjTvCcEGrZ//q5ZdkOqefqbmjT+E+6fxxEL2X9+GINS8wjwyWuJ?=
- =?us-ascii?Q?FfV5Ho9GHCKhiHGtnkGYuT4Jiulci3EyEE++Td13kJLBFLvDsv37AYKrxEsm?=
- =?us-ascii?Q?uRwnNpu0T5Sgsl1ouxwzXNM9DixUzV7iV4PjKYTxKIwwHKS48v/VSEKMpzKs?=
- =?us-ascii?Q?YyvPw5P5c11C5RX5tPxyJahPWzJhmcQMtYQsyaNM01RI9ymmn38LjoxUWTTm?=
- =?us-ascii?Q?ZKibATB8IkraA8cixC8pakx2YFCHsGmLLw7tNZYZq9sGrvgNPi9X5rlrmjGw?=
- =?us-ascii?Q?TkYR9QC2eTcol/Bp8AuBw8wyFaOjMqFMxG3p2LuV/87y754uzYpCJuMVnT7Q?=
- =?us-ascii?Q?mRiIg+otDDysnnw6DHNk+cK7+63mWTADmSh8vr8O2nkETJCRDkt6D4qKDAA/?=
- =?us-ascii?Q?Zeqo0bD/9lDlYUnXo6VLh2SCYB3Qx2gGLPlN96JoNA0+yeVKbmXYTW0u+Le/?=
- =?us-ascii?Q?bIeFCSEp9625J5NivWSANZgjR49lI01Ga65iuhEWAfE8C6bZyJGG8wgx3heA?=
- =?us-ascii?Q?WvUpm/qKqwO4SMl0bJNuvtm0KMtWSZ3FxHQbu/jSJlSfwit5Jy7/IGZIfjpK?=
- =?us-ascii?Q?k4um8pRiDV1jbQGE9i3N4BKFLcTFzfeYkq0hClhP6vgWz/tL5YgFofw/Woa9?=
- =?us-ascii?Q?3u9iYLGgUrya/kjZb3dO0LJsZ3bYIlQrGmVMTVmkqga0UN5sFtV9alzAG5yU?=
- =?us-ascii?Q?Uq4rIH5oY2JYPwgZW0Roir0MnkMEJIDD?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8461.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?M4XIb1O5QXN/OEjfo4eTxd5roN43L4YORhECb9mbuYdExiv/p2Qq84ddZBEn?=
- =?us-ascii?Q?/QY2KKVTodWbRg/kYF2PeZ5qCQp4riQYxCNP2SSNyTnSG09ZqOqJcYblotSh?=
- =?us-ascii?Q?uNLQgTGXdSB7GrvhAQHXbVsYA0wnz5wtx/Jj2LEtFPIwvwGwYaRd39upXkji?=
- =?us-ascii?Q?ctllk5MxKxC0g0xnN1U+Pm90xeGaFdIR7XBcssUWA+qnIJ5gvqhzSoY8pFWI?=
- =?us-ascii?Q?YzYyMo+cDBXlpBiDk4SAPgamZbU555IYI+CH/a9uynSVgzBlGvgTsRYTl/5G?=
- =?us-ascii?Q?Ys0bbKCauYpLaYOsWxaxSDaj8Ld23SKJ+TMYHCXq6+Qp3DK5D1lQMxHqt3zx?=
- =?us-ascii?Q?ltRZ6r27JFGssK8ZU5qv6AAa8X0Ejzq7SWxY7pRL1x2T+ewfgqVrNm+E0pvL?=
- =?us-ascii?Q?8G5vq3bmdMuDeh4aaTkYYEDl0aTeSLYmzWm/JYlRDzfFGtB+N/gSJpGJmO3J?=
- =?us-ascii?Q?fc1mRseEfO7+3V1lNux4maBIthRqtxjkrww1ksiLhjrdOur0LN+Ma14kM7ha?=
- =?us-ascii?Q?HOGg6w3W3mKfm4ilMDVM4AwV0Z7+qYi5/j/AfAPXkydltad6XjFbexpKjHUn?=
- =?us-ascii?Q?pYlQmJFf5B/estiKCs85kOOj2BBZ8hw36jRi5jvtUeXSCE15oIwe8QVkgS2a?=
- =?us-ascii?Q?+iwEPwJfVUdR6pKXA+keJORAmn/en5LEIiiMo2het2GlKwH/s8ZsVFexMsOf?=
- =?us-ascii?Q?427e71hyz2MMrFn/914jX2HP6VE+/nLvTvCieHUPwPZbSk5adntRjtiXPE4f?=
- =?us-ascii?Q?lnOj9/BAT4fmD7+5VSfe4KdT64HrZ4PDnqwjepX517duwNHaxUI97hzDwLP7?=
- =?us-ascii?Q?uJ/sqkLTICTkoCGSNMnOl3Ugw2Q4+Z0bBFJYPfIuggiab4QzddHMCmV306Br?=
- =?us-ascii?Q?HTA266yDxV2cDbn/D5uYliyjMchbG3gR8ek2Pi88Pvr+Uw0LuolV7FM38ZkJ?=
- =?us-ascii?Q?CwJ1seFYSTIQT9swHjKqU0nqlWfNxyZM2kqzlsJLHGUwisYVHd8axVzD32iA?=
- =?us-ascii?Q?7hZ1tFsFoIdq00Yo3hwD74ZPNN8RTu30zX2nljLTbvEp0NAQPY4mbzTjaZaV?=
- =?us-ascii?Q?/1WwzWnSHpygRA4tZKKh331UQ9bYNf6q+0YXmWD4s1PraMk+VqDEVkuLGxZ6?=
- =?us-ascii?Q?rkhkRpkH0DUgfUtSY2KIFyNN6bJCNZhmUgaWJmz1OjT5osDAAgt1BMq3Gg2B?=
- =?us-ascii?Q?60MkpfR8hfrh8oEHiv399IAy0LL6FS8HQj7aCiceUQ+NbdjGspOurRAwh7vZ?=
- =?us-ascii?Q?Mkr3L8Do6DWM10V1E7z7PHregc3dOkg5dPxi3xixha1ZvOKCdj2eMSbnLFZi?=
- =?us-ascii?Q?0Gwbq8CyPumFa7WXYIQSddP4WfcMwfQuVnKIr35Kp8y8WE90tLqWAd4KV7Dp?=
- =?us-ascii?Q?Re9EOEBuIixcSMFZ9EMQnkJ0vKZDIYvPF4mV6uR4PnxRyJOKCivGsEuib0Zu?=
- =?us-ascii?Q?/PMOgeHlGogpOmbjI1SnKtoGwnSFPPgb4dnKZaeIlVybVNu7GMtJmaCnpFp1?=
- =?us-ascii?Q?0HfZjT1CGMA8McKh8h+t+0+r547Z5CduZnjZhnCTCU8E5d+Z075kAuEyimN6?=
- =?us-ascii?Q?Ww2kUGeUidY6DOsqtJWrMfCWMS/JPS4umCAAKFm3?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a27d2ed-4d63-4c1a-cbe8-08dd50894523
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8461.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 02:01:08.9111
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bBN1jvc+N0taHXM7kC+omtyIo3Dv9cVRRYkMiyrSRC6UCnBdd6ieIekHbMgZAac1gO4lnrhimRF0MCa3JUhjAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7227
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0EDesKCYBKGeMMyG"
+Content-Disposition: inline
+In-Reply-To: <20241218092435.21671-1-mengferry@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, Feb 18, 2025 at 10:57:12AM +0200, Daniel Baluta wrote:
->Use the reset controller API to control the DSP on i.MX8MP. This way
->we can have a better control of the resources and avoid using a syscon
->to access the audiomix bits.
->
->Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-LGTM: Reviewed-by: Peng Fan <peng.fan@nxp.com>
+--0EDesKCYBKGeMMyG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Dec 18, 2024 at 05:24:32PM +0800, Ferry Meng wrote:
+> This patchset implements io_uring passthrough surppot in virtio-blk
+> driver, bypass vfs and part of block layer logic, resulting in lower
+> submit latency and increased flexibility when utilizing virtio-blk.
+
+Hi,
+What is the status of this patch series?
+
+Stefan
+
+>=20
+> In this version, currently only supports READ/WRITE vec/no-vec operations,
+> others like discard or zoned ops not considered in. So the userspace-rela=
+ted
+> struct is not complicated.
+>=20
+> struct virtblk_uring_cmd {
+> 	__u32 type;
+> 	__u32 ioprio;
+> 	__u64 sector;
+> 	/* above is related to out_hdr */
+> 	__u64 data;  // user buffer addr or iovec base addr.
+> 	__u32 data_len; // user buffer length or iovec count.
+> 	__u32 flag;  // only contains whether a vector rw or not.
+> };=20
+>=20
+> To test this patch series, I changed fio's code:=20
+> 1. Added virtio-blk support to engines/io_uring.c.
+> 2. Added virtio-blk support to the t/io_uring.c testing tool.
+> Link: https://github.com/jdmfr/fio
+>=20
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Performance
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> Using t/io_uring-vblk, the performance of virtio-blk based on uring-cmd
+> scales better than block device access. (such as below, Virtio-Blk with Q=
+EMU,
+> 1-depth fio)=20
+> (passthru) read: IOPS=3D17.2k, BW=3D67.4MiB/s (70.6MB/s)=20
+> slat (nsec): min=3D2907, max=3D43592, avg=3D3981.87, stdev=3D595.10=20
+> clat (usec): min=3D38, max=3D285,avg=3D53.47, stdev=3D 8.28=20
+> lat (usec): min=3D44, max=3D288, avg=3D57.45, stdev=3D 8.28
+> (block) read: IOPS=3D15.3k, BW=3D59.8MiB/s (62.7MB/s)=20
+> slat (nsec): min=3D3408, max=3D35366, avg=3D5102.17, stdev=3D790.79=20
+> clat (usec): min=3D35, max=3D343, avg=3D59.63, stdev=3D10.26=20
+> lat (usec): min=3D43, max=3D349, avg=3D64.73, stdev=3D10.21
+>=20
+> Testing the virtio-blk device with fio using 'engines=3Dio_uring_cmd'
+> and 'engines=3Dio_uring' also demonstrates improvements in submit latency.
+> (passthru) taskset -c 0 t/io_uring-vblk -b4096 -d8 -c4 -s4 -p0 -F1 -B0 -O=
+0 -n1 -u1 /dev/vdcc0=20
+> IOPS=3D189.80K, BW=3D741MiB/s, IOS/call=3D4/3
+> IOPS=3D187.68K, BW=3D733MiB/s, IOS/call=3D4/3=20
+> (block) taskset -c 0 t/io_uring-vblk -b4096 -d8 -c4 -s4 -p0 -F1 -B0 -O0 -=
+n1 -u0 /dev/vdc=20
+> IOPS=3D101.51K, BW=3D396MiB/s, IOS/call=3D4/3
+> IOPS=3D100.01K, BW=3D390MiB/s, IOS/call=3D4/4
+>=20
+> =3D=3D=3D=3D=3D=3D=3D
+> Changes
+> =3D=3D=3D=3D=3D=3D=3D
+>=20
+> Changes in v1:
+> --------------
+> * remove virtblk_is_write() helper
+> * fix rq_flags type definition (blk_opf_t), add REQ_ALLOC_CACHE flag.
+> https://lore.kernel.org/io-uring/202412042324.uKQ5KdkE-lkp@intel.com/
+>=20
+> RFC discussion:
+> ---------------
+> https://lore.kernel.org/io-uring/20241203121424.19887-1-mengferry@linux.a=
+libaba.com/
+>=20
+> Ferry Meng (3):
+>   virtio-blk: add virtio-blk chardev support.
+>   virtio-blk: add uring_cmd support for I/O passthru on chardev.
+>   virtio-blk: add uring_cmd iopoll support.
+>=20
+>  drivers/block/virtio_blk.c      | 320 +++++++++++++++++++++++++++++++-
+>  include/uapi/linux/virtio_blk.h |  16 ++
+>  2 files changed, 331 insertions(+), 5 deletions(-)
+>=20
+> --=20
+> 2.43.5
+>=20
+
+--0EDesKCYBKGeMMyG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAme1O2gACgkQnKSrs4Gr
+c8g5MAf+O8k3P8AmJJwDbR4DW92CZdhXuLHVJZkQLtaxAhrAyTMb9MkmxoqnWQRc
+/hlcNOeoe3xO9vu53lnY5LiTjh1K77qW7abGrAtzLL4+2VGNmd8rfh/sy+E9Fgse
+LY4YnOupHx/1YlCn3KYabbToQcNqybbfgDD/Lv8zqt+2pFF7lWkAd+1FGOgYFyl2
+5kQhEWRwUiN9GRP7KfnESxjA92QSOFMYtqlhjy4FjYfgaPKePPVXAphfjGeqS1I/
+2IQSETYLfiXAMW6Q6AbL4HMYeSx0OPeozx7SJvG4m5g5aZBbq6tdgqVNvPWUDI1H
+kI7ySFuZWYp+g3EO9+COaYXrk6iJWQ==
+=X8Wb
+-----END PGP SIGNATURE-----
+
+--0EDesKCYBKGeMMyG--
+
