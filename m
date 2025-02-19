@@ -1,145 +1,133 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CAC1DE3BE;
-	Wed, 19 Feb 2025 08:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80F51DE3BB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954937; cv=none; b=cwCRJLBLrj6gXlCm51862FsDNl5LvcazUzZLbKCtUJ0lBZYbuBT8aFOJjl0dzS4UCxGw2xOYtydQAg/8rCL8+UoZ4jkhzQF5PINwvA9y6wWi5GFcVkrBkhWW0Hi4pAepEIcgQiSdm2NTR+nxw8HsBLj3vE3KnUykhThxgp8STA4=
+	t=1739955070; cv=none; b=JrPkg/vNsqa5RANRP/8kwgvYJ36R+uJ5bS0N7cnhmI3lA01yMEM6EJDOWGRVk6N8a7IMqE12p9E+5TAn9dS+g4VGV5lHBIw06ywCWyG89q70+jW8/9WchkrZPtFS5/SJEf1LAYZIyWW5hwEvG8VNVEGAXyuhfYuR8tV9RF/q/GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954937; c=relaxed/simple;
-	bh=fQbJ1QkpxFm4SGCWfxJzdDPB5fI9jirKoaXycqEgolc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MT6NMfG85tj9q2PT/6HKdLkW8O5FXRffpAkLx0wyTkZXc86oZyFfrntU+dnLmRXT/P/ki6CZt7oNdVHve2z3jMlHDO7eNSsj1efFtScPKd9tjiNM7SnQ+Q3lDGX5B0F94eFkfhl7nFX4nH2QV7gwkcT+biknlxofH6Aci4cYiB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R9s+9nrn; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739955070; c=relaxed/simple;
+	bh=aB7wbo6LJoP8fuqHyehR1qLit5d+ohfBtEaefLRZGSs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=Sxtczq4DaOKy4BFgdYrBTDASsROs50rc36TYLK2scEKl/XtjYmwMVqd7aBpIl7pez7zkC4Oe9ZZCD+xj61Mry/Nma2LYbubB4/Gisu3wfm/amC3pgkofwIUpYIRt8q3jAbPXLzIvOd5C6RRTf//C1ySZEYC+QVOVYenlRxi52/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=bgN1B5LU; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R9s+9nrn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DC92F44443;
-	Wed, 19 Feb 2025 08:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739954933;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7uQR7Ryzn6i4UNyU9zcKaYBUdL/qVB7QaGkD/Wt9o6k=;
-	b=R9s+9nrniofjhO95BXMJmUUr1CFUhslXjgpUMJM3tORBZZdAUyzU+/rBYKvpVY8zZjdOU0
-	uaZp1o2BSikw69d3XAqTIfWKsQT2EeFq+fk8C+cxbp0wv1bip5cQYY5GQABxk0DLgBuw9l
-	Tq9D5WolkMPizxMWtpO4HuyPH2nuUbCr+62N9QUG8qZtuxm9BHLVViF0hOaHIQnMXWIrHB
-	emQggSTYM08I4edTDTUoGs56F8N6dJp3N5qdG+FagwyYglnAE6b30Fn+hV35vNtGpnujYN
-	j7nttnbBAHcJVmielnnOyhqE6rHl8kMgzogvip3onh6hiqQiQraj2ak6wsN6mA==
-Date: Wed, 19 Feb 2025 09:48:51 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, netdev@vger.kernel.org, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH net] net: cadence: macb: Synchronize stats calculations
-Message-ID: <20250219094851.0419759f@2a02-8440-d103-5c0b-874f-3af8-c06f-cd89.rev.sfr.net>
-In-Reply-To: <20250218195036.37137-1-sean.anderson@linux.dev>
-References: <20250218195036.37137-1-sean.anderson@linux.dev>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="bgN1B5LU"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4399509058dso2194425e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 00:51:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1739955067; x=1740559867; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cyOr3ZD32WYQ578+kdBxZIoR9hORXh2QvsH9UB3Wz3E=;
+        b=bgN1B5LU3P2E5gi+YoAnACHUGWg5tz6LQ4wQXKu7ycAUC/E0YPPd4Bh7y+ofcrefz2
+         4wQmOOmxSYtbakVZnUBgmrF0+Kqc8WwHDmEejlWp5r8v3mB92JYibBIWCMuCl9KkatS2
+         xSLHsJZsdQ6JBz5v1WNZAocsi0onG35oXx+mPIChBvh8jzQKPVw6+ZXrjWTIarkF54vI
+         hJ437QoKXXP9stCkAFPcMiiDg7xVYHGAOO95o0RpZ9I+G3xUjVqCu3rSbd2hLpjgh0Hz
+         vo9ayxF+bW8uU2xardh+S7h7OF4XYdmVT13evYfYBTnPgZsLD5/zrT5VVlz52ALDyO/G
+         SPsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739955067; x=1740559867;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cyOr3ZD32WYQ578+kdBxZIoR9hORXh2QvsH9UB3Wz3E=;
+        b=ufFLT0ybUOy2hNBtgZedMMmZNEhSNGjg4CikHBELoVBrpLhQQEgnaWrjoXTAHQbWkB
+         mKje/sc58eGypDKSl8XmeUSkF0p1Wkf6GRKaAal3lObbQFkEdsc7HmwJsqFo2muOIdef
+         XkLA/dvWgd8sojya+Mbm87Ldhmuj2fzSO2jlKgN1o9Y83tLMokS9pVraLUOc+zdad+iD
+         pbU30LheTb1r/+pj+cm+3qc0a7YIwLFQwuqX7IWpLRl3XiGmOISEFC8LHgHp9w+uIFzm
+         n3QWxZtLZ88p11lJr2jVuGF0hHbNe+RCbhhfRXQwCV5tHUwRVb0oyr5cu/xDOIGiVn6Z
+         HYEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAIE9rqpnYnVuYGkxummNBE1MlDuvDzXHIe5bYJJ9vbZWplpGrxMBfjfMWli0MoeI1o+Ko5snhJRNsCUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBl5jQVNLm/U0qfVRnFp3wpn3M+1h+qb7qKAfvsdTJ1muPBbIJ
+	+fGxOb5kMvJKR/2I08pa3Xoklutss4FSxU+iUXqX6KkllIdOLNkzkxrxva4kLfIH9ktrN+Dkpkh
+	i
+X-Gm-Gg: ASbGnct2zjf4JYA0fqVGGU4QSdMg+kPHi2yazbcOZGF+L+Mq2gwMVtBe/HMiR4aYJUV
+	EDZW13Gl4ns8od22ckl4Iy5b5OySf3BXdb4Z9/E50SHAojZd8KzEUrQlqAYHF5SPU0rjoHZTep+
+	hwPUE9/BIuwoptjjcEHj3aqlQeL8a0+z9zxIXI3a1azUrcCbeAmQQpNi4wkk7BchrruyA9mwxO/
+	1rWTaGAw7U1aQ75dvyTjpEwcus3+U9lqftzQUyrEEFUUctbPctXDxZV1FsDc8ajubGnf2rD9/uZ
+	LL1mS5T3whXCnSzBygIrBONq83lQCUC9f3wJ3PXcUsnZZ8u5bn4=
+X-Google-Smtp-Source: AGHT+IH6D4plZNYfuEYjbGdATaVAlFztkIrp/rClPpYzS5dL67Gt7zhXEE8RN1q+8mV+NLcuY45v6A==
+X-Received: by 2002:a05:600c:524a:b0:439:4d1c:bf72 with SMTP id 5b1f17b1804b1-4396e77b89dmr62388815e9.6.1739955066877;
+        Wed, 19 Feb 2025 00:51:06 -0800 (PST)
+Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f8730sm17632219f8f.93.2025.02.19.00.51.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 00:51:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeifeekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepvdgrtddvqdekgeegtddqugdutdefqdehtgdtsgdqkeejgehfqdefrghfkedqtgdtiehfqdgtugekledrrhgvvhdrshhfrhdrnhgvthdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehsvggrnhdrrghnuggvrhhsohhnsehlihhnuhigrdguvghvpdhrtghpthhtohepnhhitghol
- hgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvght
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 19 Feb 2025 09:51:05 +0100
+Message-Id: <D7WALEFMK28X.13HQ0UL1S3NM5@ventanamicro.com>
+To: "BillXiang" <xiangwencheng@lanxincomputing.com>, <anup@brainfault.org>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+Subject: Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
+Cc: <ajones@ventanamicro.com>, <kvm-riscv@lists.infradead.org>,
+ <kvm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <atishp@atishpatra.org>,
+ <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+ "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+References: <20250219015426.1939-1-xiangwencheng@lanxincomputing.com>
+In-Reply-To: <20250219015426.1939-1-xiangwencheng@lanxincomputing.com>
 
-Hello Sean,
+2025-02-19T09:54:26+08:00, BillXiang <xiangwencheng@lanxincomputing.com>:
+> Thank you Andrew Jones, forgive my errors in the last email.
+> I'm wondering whether it's necessary to kick the virtual hart
+> after writing to the vsfile of IMSIC.
+> From my understanding, writing to the vsfile should directly
+> forward the interrupt as MSI to the virtual hart. This means that
+> an additional kick should not be necessary, as it would cause the
+> vCPU to exit unnecessarily and potentially degrade performance.
 
-On Tue, 18 Feb 2025 14:50:36 -0500
-Sean Anderson <sean.anderson@linux.dev> wrote:
+Andrew proposed to avoid the exit overhead, but do a wakeup if the VCPU
+is "sleeping".  I talked with Andrew and thought so as well, but now I
+agree with you that we shouldn't have anything extra here.
 
-> Stats calculations involve a RMW to add the stat update to the existing
-> value. This is currently not protected by any synchronization mechanism,
-> so data races are possible. Add a spinlock to protect the update. The
-> reader side could be protected using u64_stats, but we would still need
-> a spinlock for the update side anyway. And we always do an update
-> immediately before reading the stats anyway.
-> 
-> Fixes: 89e5785fc8a6 ("[PATCH] Atmel MACB ethernet driver")
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
->  drivers/net/ethernet/cadence/macb.h      |  2 ++
->  drivers/net/ethernet/cadence/macb_main.c | 12 ++++++++++--
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-> index 5740c98d8c9f..2847278d9cd4 100644
-> --- a/drivers/net/ethernet/cadence/macb.h
-> +++ b/drivers/net/ethernet/cadence/macb.h
-> @@ -1279,6 +1279,8 @@ struct macb {
->  	struct clk		*rx_clk;
->  	struct clk		*tsu_clk;
->  	struct net_device	*dev;
-> +	/* Protects hw_stats and ethtool_stats */
-> +	spinlock_t		stats_lock;
->  	union {
->  		struct macb_stats	macb;
->  		struct gem_stats	gem;
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index 48496209fb16..990a3863c6e1 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -1978,10 +1978,12 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
->  
->  		if (status & MACB_BIT(ISR_ROVR)) {
->  			/* We missed at least one packet */
-> +			spin_lock(&bp->stats_lock);
->  			if (macb_is_gem(bp))
->  				bp->hw_stats.gem.rx_overruns++;
->  			else
->  				bp->hw_stats.macb.rx_overruns++;
-> +			spin_unlock(&bp->stats_lock);
->  
->  			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
->  				queue_writel(queue, ISR, MACB_BIT(ISR_ROVR));
-> @@ -3102,6 +3104,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
->  	if (!netif_running(bp->dev))
->  		return nstat;
->  
-> +	spin_lock(&bp->stats_lock);
->  	gem_update_stats(bp);
->  
->  	nstat->rx_errors = (hwstat->rx_frame_check_sequence_errors +
-> @@ -3131,6 +3134,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
->  	nstat->tx_aborted_errors = hwstat->tx_excessive_collisions;
->  	nstat->tx_carrier_errors = hwstat->tx_carrier_sense_errors;
->  	nstat->tx_fifo_errors = hwstat->tx_underrun;
-> +	spin_unlock(&bp->stats_lock);
->  
->  	return nstat;
->  }
-> @@ -3138,12 +3142,13 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
->  static void gem_get_ethtool_stats(struct net_device *dev,
->  				  struct ethtool_stats *stats, u64 *data)
->  {
-> -	struct macb *bp;
-> +	struct macb *bp = netdev_priv(dev);
->  
-> -	bp = netdev_priv(dev);
-> +	spin_lock(&bp->stats_lock);
+Direct MSIs from IOMMU or other harts won't perform anything afterwards,
+so what you want to do correct and KVM has to properly handle the memory
+write alone.
 
-Sorry if I missed something, but as you're using that lock within the
-macb_interrupt(), shouldn't it be a spin_lock_irqsave() for all the
-callsites that aren't in irq context ?
+> I've tested this behavior in QEMU, and it seems to work perfectly
+> fine without the extra kick.
 
-You would risk a deadlock otherwise.
+If the rest of KVM behaves correctly is a different question.
+A mistake might result in a very rare race condition, so it's better to
+do verification rather than generic testing.
 
-Thanks,
+For example, is `vsfile_cpu >=3D 0` the right condition for using direct
+interrupts?
 
-Maxime
+I don't see KVM setting vsfile_cpu to -1 before descheduling after
+emulating WFI, which could cause a bug as a MSI would never cause a wake
+up.  It might still look like it works, because something else could be
+waking the VCPU up and then the VCPU would notice this MSI as well.
+
+Please note that I didn't actualy verify the KVM code, so it can be
+correct, I just used this to give you an example of what can go wrong
+without being able to see it in testing.
+
+I would like to know if KVM needs fixing before this change is accepted.
+(It could make bad things worse.)
+
+> Would appreciate any insights or confirmation on this!
+
+Your patch is not acceptable because of its commit message, though.
+Please look again at the document that Andrew posted and always reply
+the previous thread if you do not send a new patch version.
+
+The commit message should be on point.
+Please avoid extraneous information that won't help anyone reading the
+commit.  Greeting and commentary can go below the "---" line.
+(And possibly above a "---8<---" line, although that is not official and
+ may cause issues with some maintainers.)
+
+Thanks.
