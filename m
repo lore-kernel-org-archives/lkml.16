@@ -1,137 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0579C1BBBC6;
-	Wed, 19 Feb 2025 07:24:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF221BBBC6;
+	Wed, 19 Feb 2025 07:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739949895; cv=none; b=IY20pb/nVNCAIyFVWgLOJhyjfr9eLoytOCa/yxuxY8tJRTMW2mOQUj+g788ACR8HXEbjGjnP6Fo7QQrAwyVp7w75nbuFKMho6nm38EOwvINLm7hn+4MK2vmVQ/iYL8U2w/eC8CvZz3lCVZ4FsD3GAKryeKbHjBrg12fub34wHbQ=
+	t=1739949913; cv=none; b=DBIV402Lpuo0E83r7JM2iPFoLV/ffcMYRE1egC8ZRNGYmZkD+PsZY+WRHLNcxiQnVS9+JwqqGBz57WHmV1A0b8FfdHLw8G5IffJ0+EyROcvUpmf4hVMe5Ylot2+0L9mayVOS+3seiB9Wu6WNMqlieDfM3jT/vev4d8Wzte4DeaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739949895; c=relaxed/simple;
-	bh=SRqj9MZLCV8OPtw+RLc/L0/R3k9RqsqUSw55QX9OOlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtPfqFmnY540fizjQvdMLKzY79uMEwbWgyoG8nP+AUei+W+bc5edInd9RytkY6rzc1GKTBjx3X7VwX16g1q+TBSyli2yvA9ZX/jamMqH5+LqF7X8A8FGtlAq+4eb1nXbxChMd7OQf6e21q/X50HcHruXH4B/XLp5p5MnoGtejwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtKBbQaY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739949913; c=relaxed/simple;
+	bh=rnE5diAoNTSFE9SCHBRipNtxziK2J/4LOo7YbT+G7YI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NcC2HA+mMHTO3X1Vz4Co6zNVpHn6nk/eUHVM/WOgkscNERydFIpFXYBy6g1tUXIIkBIrYPTgrLdimCBedWanSn2aToXWQLhl42aU9q03diGjEG0R/bqBis/h7vllUvQ07BfgQjPqWPhHMPoS+g6q+jV/hqhCsTSH5lVBdDi6P+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUmNgnCH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtKBbQaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1235C4CED1;
-	Wed, 19 Feb 2025 07:24:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUmNgnCH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B787C4CED1;
+	Wed, 19 Feb 2025 07:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739949894;
-	bh=SRqj9MZLCV8OPtw+RLc/L0/R3k9RqsqUSw55QX9OOlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FtKBbQaYTslR+0p7SefBILIuS73xk2HkHE9X1wi3f1RYXdzexSpsyIrHcPKNtZYjL
-	 BvKiLvIz6tiQbKcH9IhyUrzpRPaTkQMGYuEz3o1+LwRY6+cXJ2ZdV6QYVU7JbUtlYQ
-	 05YBQSpFJ0o9+4PFttNGG2I4B8gyRtwm24/vnas8DwL/rcu9i5Hz/rxhmWxht1y1Dw
-	 wkLpe3ZZgtmacfwPN46ynU8iy+ypPSs9dwF5Tdr7KWenmjNUChafxZkv2PmgFVMNfi
-	 6mdnd8DQM0qYd4dN8GiXu45YvQUX49U1bZ45kTkOBpF0wvbKLl80gJxVUX5K2raMUR
-	 MM9jdOERGv5AQ==
-Date: Wed, 19 Feb 2025 09:24:31 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <Z7WHL_Xqgoln9oLg@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-3-rppt@kernel.org>
- <20250218155004.n53fcuj2lrl5rxll@master>
+	s=k20201202; t=1739949913;
+	bh=rnE5diAoNTSFE9SCHBRipNtxziK2J/4LOo7YbT+G7YI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VUmNgnCHbnR+cjXxFafn98XZKqpsaEL741lVDRzEQqygK7RvOVvMcAXUbSh/Ux750
+	 8EK8Dq8VYGJdMe6QMowl92WGv4CbJrHvXcsKhjWVdjmfW0LLbBKIOT1WJAAMCVdPAD
+	 f2HMlG6ySxajRzH4qWMUN6YaOBzwIa7mEwdhlItRsxtLiiw4kf0nLtgzRr0+i1/p49
+	 ljKd6CBpqD+co31lioFoVrylmVZi4zTNn9arms3rZkOTD2rleqqq6ctVvFCFk0pRDa
+	 xgysEyoNP0OqCgqQO9ikdVuk1RqbHCJeEx7XWCQf0pm/zQu70XSC33SDz+MSxvtCHs
+	 CTvwouTDuvYmw==
+Message-ID: <69b10d11-72d3-42b4-a7af-8c9e72476674@kernel.org>
+Date: Wed, 19 Feb 2025 08:25:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218155004.n53fcuj2lrl5rxll@master>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] nfc: hci: Remove unused nfc_llc_unregister
+To: linux@treblig.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250219020258.297995-1-linux@treblig.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250219020258.297995-1-linux@treblig.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On Tue, Feb 18, 2025 at 03:50:04PM +0000, Wei Yang wrote:
-> On Thu, Feb 06, 2025 at 03:27:42PM +0200, Mike Rapoport wrote:
-> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> >
-> >to denote areas that were reserved for kernel use either directly with
-> >memblock_reserve_kern() or via memblock allocations.
-> >
-> >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> >---
-> > include/linux/memblock.h | 16 +++++++++++++++-
-> > mm/memblock.c            | 32 ++++++++++++++++++++++++--------
-> > 2 files changed, 39 insertions(+), 9 deletions(-)
-> >
-> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> >index e79eb6ac516f..65e274550f5d 100644
-> >--- a/include/linux/memblock.h
-> >+++ b/include/linux/memblock.h
-> >@@ -50,6 +50,7 @@ enum memblock_flags {
-> > 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
-> > 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
-> > 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
-> >+	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
+On 19/02/2025 03:02, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> Above memblock_flags, there are comments on explaining those flags.
-> 
-> Seems we miss it for MEMBLOCK_RSRV_KERN.
+> nfc_llc_unregister() has been unused since it was added in 2012's
+> commit 67cccfe17d1b ("NFC: Add an LLC Core layer to HCI")
 
-Right, thanks!
- 
-> > 
-> > #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> >@@ -1459,14 +1460,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
-> > again:
-> > 	found = memblock_find_in_range_node(size, align, start, end, nid,
-> > 					    flags);
-> >-	if (found && !memblock_reserve(found, size))
-> >+	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
-> 
-> Maybe we could use memblock_reserve_kern() directly. If my understanding is
-> correct, the reserved region's nid is not used.
+... and it is basically part of nfc_llc_exit() already, so no need to
+call it.
 
-We use nid of reserved regions in reserve_bootmem_region() (commit
-61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")) but KHO needs to
-know the distribution of reserved memory among the nodes before
-memmap_init_reserved_pages().
- 
-> BTW, one question here. How we handle concurrent memblock allocation? If two
-> threads find the same available range and do the reservation, it seems to be a
-> problem to me. Or I missed something?
+I would like to see that you actually investigated that this cleanup
+should not be called, instead of just blindly removing code.
 
-memblock allocations end before smp_init(), there is no possible concurrency.
- 
-> -- 
-> Wei Yang
-> Help you, Help me
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
--- 
-Sincerely yours,
-Mike.
+
+Best regards,
+Krzysztof
