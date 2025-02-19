@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 404EB21B19E;
-	Wed, 19 Feb 2025 20:10:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B144222DFE3;
+	Wed, 19 Feb 2025 20:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739995828; cv=none; b=Kg7oHoOxfpR3H07tcoxm+3UAatrBD2CvEEugwCbhj8zxPmctjaNgMxVBHMLvxp+YhyohQZqwSQR7f1LuMcI6/IeVYnkwBGmHg6DYg3JBWkdewUD4EcC6zTqyGTO1i70e+6KwrTa1TvNSWGDLGsVrla+8DSgG0yP6XqT+ajWPBn0=
+	t=1739995833; cv=none; b=NUztj2WkwINe48auja/LLNd/mJZ7UUfiDvIvLBCIVCFiINQd0Qya1lv8t/B2P6+CV3KfISWqEp+dIuJt8p3tc8vPQ2ZX2yIRn1Ed5+An7c/W8FQeEF+zt8YPPzjlNSt0ruZPzOTvdWoz2l1ePAx6XH3LIwaSLHUNfgwH7rpQ4IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739995828; c=relaxed/simple;
-	bh=lTA4egH+s//z8kVkW+OC2UPpZpk7ro1d0FnpsCfHul4=;
+	s=arc-20240116; t=1739995833; c=relaxed/simple;
+	bh=jUSUz00ESf+S26jtK/k3pKofGf7cV8jQzbW7nQEsROM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=izAN03NkWLblHlt7H+sMPOHsQRcmBlMmCWZ5kChDOZvhCaFJwthhPEI/Zcq3o/O97zfr6jGzb2OITq1oWj2IcruOeU0G0/Bdpxx2q3bKXet+CVtIiWklRK3/y4Fba7x4lKveVenPxwH4MW5eFldvWZD8OyzV7GPMsLBfItQjPpQ=
+	 MIME-Version; b=kwDCqb0sFLoy2iSvlmo2M34baspFwz1RGmQ1VbLFDJulYv47VeCfUGg/hTTfKKXMFRYUXJ03a+B00xM1ohBfJF8YPGxb7swsdE2zgRkXvQwZXSJ0ZIWSdXhSm47+27ibhJGJeykH1Z4+GwNIoXVJ7Ifl2RVDZpClaOnzaiNwuLA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 023E51595;
-	Wed, 19 Feb 2025 12:10:44 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7167C2050;
+	Wed, 19 Feb 2025 12:10:45 -0800 (PST)
 Received: from beelzebub.ast.arm.com (unknown [10.118.29.240])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5AB4B3F59E;
-	Wed, 19 Feb 2025 12:10:25 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C97AD3F59E;
+	Wed, 19 Feb 2025 12:10:26 -0800 (PST)
 From: Stuart Yoder <stuart.yoder@arm.com>
 To: linux-integrity@vger.kernel.org,
 	jarkko@kernel.org,
@@ -28,9 +28,9 @@ To: linux-integrity@vger.kernel.org,
 	lenb@kernel.org
 Cc: linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/5] tpm_crb: implement driver compliant to CRB over FF-A
-Date: Wed, 19 Feb 2025 14:10:10 -0600
-Message-Id: <20250219201014.174344-2-stuart.yoder@arm.com>
+Subject: [PATCH v5 5/5] Documentation: tpm: add documentation for the CRB FF-A interface
+Date: Wed, 19 Feb 2025 14:10:14 -0600
+Message-Id: <20250219201014.174344-6-stuart.yoder@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250219201014.174344-1-stuart.yoder@arm.com>
 References: <20250219201014.174344-1-stuart.yoder@arm.com>
@@ -42,445 +42,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Arm specification TPM Service CRB over FF-A specification
-defines the FF-A messages to interact with a CRB-based TPM
-implemented as an FF-A secure partition.
+Add documentation providing details of how the CRB driver interacts
+with FF-A.
 
-Spec URL:
-https://developer.arm.com/documentation/den0138/latest/
-
-This driver is probed when a TPM Secure Partition is
-discovered by the FF-A subsystem. It exposes APIs
-used by the TPM CRB driver to send notifications to
-the TPM.
-
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
 ---
- drivers/char/tpm/Kconfig       |   9 +
- drivers/char/tpm/Makefile      |   1 +
- drivers/char/tpm/tpm_crb_ffa.c | 348 +++++++++++++++++++++++++++++++++
- drivers/char/tpm/tpm_crb_ffa.h |  25 +++
- 4 files changed, 383 insertions(+)
- create mode 100644 drivers/char/tpm/tpm_crb_ffa.c
- create mode 100644 drivers/char/tpm/tpm_crb_ffa.h
+ Documentation/security/tpm/tpm_ffa_crb.rst | 65 ++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/security/tpm/tpm_ffa_crb.rst
 
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 0fc9a510e059..4c85b8c00b12 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -210,6 +210,15 @@ config TCG_CRB
- 	  from within Linux.  To compile this driver as a module, choose
- 	  M here; the module will be called tpm_crb.
- 
-+config TCG_ARM_CRB_FFA
-+	tristate "TPM CRB over Arm FF-A Transport"
-+	depends on ARM_FFA_TRANSPORT
-+	default y if (TCG_CRB && ARM_FFA_TRANSPORT)
-+	help
-+	  If the Arm FF-A transport is used to access the TPM say Yes.
-+	  To compile this driver as a module, choose M here; the module
-+	  will be called tpm_crb_ffa.
-+
- config TCG_VTPM_PROXY
- 	tristate "VTPM Proxy Interface"
- 	depends on TCG_TPM
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 9bb142c75243..2b004df8c04b 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -42,5 +42,6 @@ obj-$(CONFIG_TCG_IBMVTPM) += tpm_ibmvtpm.o
- obj-$(CONFIG_TCG_TIS_ST33ZP24) += st33zp24/
- obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
- obj-$(CONFIG_TCG_CRB) += tpm_crb.o
-+obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
- obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
- obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+diff --git a/Documentation/security/tpm/tpm_ffa_crb.rst b/Documentation/security/tpm/tpm_ffa_crb.rst
 new file mode 100644
-index 000000000000..3169a87a56b6
+index 000000000000..0184193da3c7
 --- /dev/null
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -0,0 +1,348 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ *
-+ * This device driver implements the TPM CRB start method
-+ * as defined in the TPM Service Command Response Buffer
-+ * Interface Over FF-A (DEN0138).
-+ */
++++ b/Documentation/security/tpm/tpm_ffa_crb.rst
+@@ -0,0 +1,65 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+#define pr_fmt(fmt) "CRB_FFA: " fmt
++========================
++TPM CRB over FF-A Driver
++========================
 +
-+#include <linux/arm_ffa.h>
-+#include "tpm_crb_ffa.h"
++The TPM Command Response Buffer (CRB) interface is a standard TPM interface
++defined in the TCG PC Client Platform TPM Profile (PTP) Specification [1]_.
++The CRB provides a structured set of control registers a client uses when
++interacting with a TPM as well as a data buffer for storing TPM commands and
++responses. A CRB interface can be implemented in:
 +
-+/* TPM service function status codes */
-+#define CRB_FFA_OK			0x05000001
-+#define CRB_FFA_OK_RESULTS_RETURNED	0x05000002
-+#define CRB_FFA_NOFUNC			0x8e000001
-+#define CRB_FFA_NOTSUP			0x8e000002
-+#define CRB_FFA_INVARG			0x8e000005
-+#define CRB_FFA_INV_CRB_CTRL_DATA	0x8e000006
-+#define CRB_FFA_ALREADY			0x8e000009
-+#define CRB_FFA_DENIED			0x8e00000a
-+#define CRB_FFA_NOMEM			0x8e00000b
++- hardware registers in a discrete TPM chip
 +
-+#define CRB_FFA_VERSION_MAJOR	1
-+#define CRB_FFA_VERSION_MINOR	0
++- in memory for a TPM running in isolated environment where shared memory
++  allows a client to interact with the TPM
 +
-+/* version encoding */
-+#define CRB_FFA_MAJOR_VERSION_MASK  GENMASK(30, 16)
-+#define CRB_FFA_MINOR_VERSION_MASK  GENMASK(15, 0)
-+#define CRB_FFA_MAJOR_VERSION(x)    ((u16)(FIELD_GET(CRB_FFA_MAJOR_VERSION_MASK, (x))))
-+#define CRB_FFA_MINOR_VERSION(x)    ((u16)(FIELD_GET(CRB_FFA_MINOR_VERSION_MASK, (x))))
++The Firmware Framework for Arm A-profile (FF-A) [2]_ is a specification
++that defines interfaces and protocols for the following purposes:
 +
-+/*
-+ * Normal world sends requests with FFA_MSG_SEND_DIRECT_REQ and
-+ * responses are returned with FFA_MSG_SEND_DIRECT_RESP for normal
-+ * messages.
-+ *
-+ * All requests with FFA_MSG_SEND_DIRECT_REQ and FFA_MSG_SEND_DIRECT_RESP
-+ * are using the AArch32 SMC calling convention with register usage as
-+ * defined in FF-A specification:
-+ * w0:    Function ID (0x8400006F or 0x84000070)
-+ * w1:    Source/Destination IDs
-+ * w2:    Reserved (MBZ)
-+ * w3-w7: Implementation defined, free to be used below
-+ */
++- Compartmentalize firmware into software partitions that run in the Arm
++  Secure world environment (also know as TrustZone)
 +
-+/*
-+ * Returns the version of the interface that is available
-+ * Call register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function ID, CRB_FFA_GET_INTERFACE_VERSION
-+ * w5-w7: Reserved (MBZ)
-+ *
-+ * Return register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function status
-+ * w5:    TPM service interface version
-+ *        Bits[31:16]: major version
-+ *        Bits[15:0]: minor version
-+ * w6-w7: Reserved (MBZ)
-+ *
-+ * Possible function status codes in register w4:
-+ *     CRB_FFA_OK_RESULTS_RETURNED: The version of the interface has been
-+ *                                  returned.
-+ */
-+#define CRB_FFA_GET_INTERFACE_VERSION 0x0f000001
++- Provide a standard interface for software components in the Non-secure
++  state, for example OS and Hypervisors, to communicate with this firmware.
 +
-+/*
-+ * Return information on a given feature of the TPM service
-+ * Call register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function ID, CRB_FFA_START
-+ * w5:    Start function qualifier
-+ *            Bits[31:8] (MBZ)
-+ *            Bits[7:0]
-+ *              0: Notifies TPM that a command is ready to be processed
-+ *              1: Notifies TPM that a locality request is ready to be processed
-+ * w6:    TPM locality, one of 0..4
-+ *            -If the start function qualifier is 0, identifies the locality
-+ *             from where the command originated.
-+ *            -If the start function qualifier is 1, identifies the locality
-+ *             of the locality request
-+ * w6-w7: Reserved (MBZ)
-+ *
-+ * Return register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function status
-+ * w5-w7: Reserved (MBZ)
-+ *
-+ * Possible function status codes in register w4:
-+ *     CRB_FFA_OK: the TPM service has been notified successfully
-+ *     CRB_FFA_INVARG: one or more arguments are not valid
-+ *     CRB_FFA_INV_CRB_CTRL_DATA: CRB control data or locality control
-+ *         data at the given TPM locality is not valid
-+ *     CRB_FFA_DENIED: the TPM has previously disabled locality requests and
-+ *         command processing at the given locality
-+ */
-+#define CRB_FFA_START 0x0f000201
++A TPM can be implemented as an FF-A secure service.  This could be a firmware
++TPM or could potentially be a TPM service that acts as a proxy to a discrete
++TPM chip. An FF-A based TPM abstracts hardware details (e.g. bus controller
++and chip selects) away from the OS and can protect locality 4 from access
++by an OS.  The TCG-defined CRB interface is used by clients to interact
++with the TPM service.
 +
-+struct tpm_crb_ffa {
-+	struct ffa_device *ffa_dev;
-+	u16 major_version;
-+	u16 minor_version;
-+	/* lock to protect sending of FF-A messages: */
-+	struct mutex msg_data_lock;
-+	struct ffa_send_direct_data direct_msg_data;
-+};
++The Arm TPM Service Command Response Buffer Interface Over FF-A [3]_
++specification defines FF-A messages that can be used by a client to signal
++when updates have been made to the CRB.
 +
-+static struct tpm_crb_ffa *tpm_crb_ffa;
++How the Linux CRB driver interacts with FF-A is summarized below:
 +
-+static int tpm_crb_ffa_to_linux_errno(int errno)
-+{
-+	int rc;
++- The tpm_crb_ffa driver registers with the FF-A subsystem in the kernel
++  with an architected TPM service UUID defined in the CRB over FF-A spec.
 +
-+	switch (errno) {
-+	case CRB_FFA_OK:
-+		rc = 0;
-+		break;
-+	case CRB_FFA_OK_RESULTS_RETURNED:
-+		rc = 0;
-+		break;
-+	case CRB_FFA_NOFUNC:
-+		rc = -ENOENT;
-+		break;
-+	case CRB_FFA_NOTSUP:
-+		rc = -EPERM;
-+		break;
-+	case CRB_FFA_INVARG:
-+		rc = -EINVAL;
-+		break;
-+	case CRB_FFA_INV_CRB_CTRL_DATA:
-+		rc = -ENOEXEC;
-+		break;
-+	case CRB_FFA_ALREADY:
-+		rc = -EEXIST;
-+		break;
-+	case CRB_FFA_DENIED:
-+		rc = -EACCES;
-+		break;
-+	case CRB_FFA_NOMEM:
-+		rc = -ENOMEM;
-+		break;
-+	default:
-+		rc = -EINVAL;
-+	}
++- If a TPM service is discovered by FF-A, the probe() function in the
++  tpm_crb_ffa driver runs, and the driver initializes.
 +
-+	return rc;
-+}
++- The probing and initialization of the Linux CRB driver is triggered
++  by the discovery of a TPM advertised via ACPI.  The CRB driver can
++  detect the type of TPM through the ACPI 'start' method.  The start
++  method for Arm FF-A was defined in TCG ACPI v1.4 [4]_.
 +
-+/**
-+ * tpm_crb_ffa_init - called by the CRB driver to do any needed initialization
-+ *
-+ * This function is called by the tpm_crb driver during the tpm_crb
-+ * driver's initialization. If the tpm_crb_ffa has not been probed
-+ * yet, returns -ENOENT in order to force a retry.  If th ffa_crb
-+ * driver had been probed  but failed with an error, returns -ENODEV
-+ * in order to prevent further retries.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int tpm_crb_ffa_init(void)
-+{
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
++- When the CRB driver performs its normal functions such as signaling 'start'
++  and locality request/relinquish it invokes the tpm_crb_ffa_start() funnction
++  in the tpm_crb_ffa driver which handles the FF-A messaging to the TPM.
 +
-+	if (IS_ERR_VALUE(tpm_crb_ffa))
-+		return -ENODEV;
++References
++==========
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
-+
-+static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
-+				      unsigned long a0,
-+				      unsigned long a1,
-+				      unsigned long a2)
-+{
-+	const struct ffa_msg_ops *msg_ops;
-+	int ret;
-+
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
-+
-+	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
-+
-+	memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-+	       sizeof(struct ffa_send_direct_data));
-+
-+	tpm_crb_ffa->direct_msg_data.data1 = func_id;
-+	tpm_crb_ffa->direct_msg_data.data2 = a0;
-+	tpm_crb_ffa->direct_msg_data.data3 = a1;
-+	tpm_crb_ffa->direct_msg_data.data4 = a2;
-+
-+	ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-+			&tpm_crb_ffa->direct_msg_data);
-+	if (!ret)
-+		ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-+
-+	return ret;
-+}
-+
-+/**
-+ * tpm_crb_ffa_get_interface_version() - gets the ABI version of the TPM service
-+ * @major: Pointer to caller-allocated buffer to hold the major version
-+ *         number the ABI
-+ * @minor: Pointer to caller-allocated buffer to hold the minor version
-+ *         number the ABI
-+ *
-+ * Returns the major and minor version of the ABI of the FF-A based TPM.
-+ * Allows the caller to evaluate its compatibility with the version of
-+ * the ABI.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
-+{
-+	int rc;
-+
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(tpm_crb_ffa))
-+		return -ENODEV;
-+
-+	if (!major || !minor)
-+		return -EINVAL;
-+
-+	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
-+
-+	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
-+	if (!rc) {
-+		*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+		*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+	}
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(tpm_crb_ffa_get_interface_version);
-+
-+/**
-+ * tpm_crb_ffa_start() - signals the TPM that a field has changed in the CRB
-+ * @request_type: Identifies whether the change to the CRB is in the command
-+ *                fields or locality fields.
-+ * @locality: Specifies the locality number.
-+ *
-+ * Used by the CRB driver
-+ * that might be useful to those using or modifying it.  Begins with
-+ * empty comment line, and may include additional embedded empty
-+ * comment lines.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int tpm_crb_ffa_start(int request_type, int locality)
-+{
-+	if (!tpm_crb_ffa)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(tpm_crb_ffa))
-+		return -ENODEV;
-+
-+	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
-+
-+	return __tpm_crb_ffa_send_recieve(CRB_FFA_START, request_type, locality, 0x00);
-+}
-+EXPORT_SYMBOL_GPL(tpm_crb_ffa_start);
-+
-+static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
-+{
-+	struct tpm_crb_ffa *p;
-+	int rc;
-+
-+	/* only one instance of a TPM partition is supported */
-+	if (tpm_crb_ffa && !IS_ERR_VALUE(tpm_crb_ffa))
-+		return -EEXIST;
-+
-+	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
-+
-+	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
-+		pr_err("TPM partition doesn't support direct message receive.\n");
-+		return -EINVAL;
-+	}
-+
-+	p = kzalloc(sizeof(*tpm_crb_ffa), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+	tpm_crb_ffa = p;
-+
-+	mutex_init(&tpm_crb_ffa->msg_data_lock);
-+	tpm_crb_ffa->ffa_dev = ffa_dev;
-+	ffa_dev_set_drvdata(ffa_dev, tpm_crb_ffa);
-+
-+	/* if TPM is aarch32 use 32-bit SMCs */
-+	if (!ffa_partition_check_property(ffa_dev, FFA_PARTITION_AARCH64_EXEC))
-+		ffa_dev->ops->msg_ops->mode_32bit_set(ffa_dev);
-+
-+	/* verify compatibility of TPM service version number */
-+	rc = tpm_crb_ffa_get_interface_version(&tpm_crb_ffa->major_version,
-+					       &tpm_crb_ffa->minor_version);
-+	if (rc) {
-+		pr_err("failed to get crb interface version. rc:%d", rc);
-+		goto out;
-+	}
-+
-+	pr_info("ABI version %u.%u", tpm_crb_ffa->major_version,
-+		tpm_crb_ffa->minor_version);
-+
-+	if (tpm_crb_ffa->major_version != CRB_FFA_VERSION_MAJOR ||
-+	    (tpm_crb_ffa->minor_version > 0 &&
-+	    tpm_crb_ffa->minor_version < CRB_FFA_VERSION_MINOR)) {
-+		pr_err("Incompatible ABI version");
-+		goto out;
-+	}
-+
-+	return 0;
-+
-+out:
-+	kfree(tpm_crb_ffa);
-+	tpm_crb_ffa = ERR_PTR(-ENODEV);
-+	return -EINVAL;
-+}
-+
-+static void tpm_crb_ffa_remove(struct ffa_device *ffa_dev)
-+{
-+	kfree(tpm_crb_ffa);
-+	tpm_crb_ffa = NULL;
-+}
-+
-+static const struct ffa_device_id tpm_crb_ffa_device_id[] = {
-+	/* 17b862a4-1806-4faf-86b3-089a58353861 */
-+	{ UUID_INIT(0x17b862a4, 0x1806, 0x4faf,
-+		    0x86, 0xb3, 0x08, 0x9a, 0x58, 0x35, 0x38, 0x61) },
-+	{}
-+};
-+
-+static struct ffa_driver tpm_crb_ffa_driver = {
-+	.name = "ffa-crb",
-+	.probe = tpm_crb_ffa_probe,
-+	.remove = tpm_crb_ffa_remove,
-+	.id_table = tpm_crb_ffa_device_id,
-+};
-+
-+module_ffa_driver(tpm_crb_ffa_driver);
-+
-+MODULE_AUTHOR("Arm");
-+MODULE_DESCRIPTION("TPM CRB FFA driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/char/tpm/tpm_crb_ffa.h b/drivers/char/tpm/tpm_crb_ffa.h
-new file mode 100644
-index 000000000000..23a9b93287a1
---- /dev/null
-+++ b/drivers/char/tpm/tpm_crb_ffa.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ *
-+ * This device driver implements the TPM CRB start method
-+ * as defined in the TPM Service Command Response Buffer
-+ * Interface Over FF-A (DEN0138).
-+ */
-+#ifndef _TPM_CRB_FFA_H
-+#define _TPM_CRB_FFA_H
-+
-+#if IS_ENABLED(CONFIG_TCG_ARM_CRB_FFA)
-+int tpm_crb_ffa_init(void);
-+int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor);
-+int tpm_crb_ffa_start(int request_type, int locality);
-+#else
-+static inline int tpm_crb_ffa_init(void) { return 0; }
-+static inline int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor) { return 0; }
-+static inline int tpm_crb_ffa_start(int request_type, int locality) { return 0; }
-+#endif
-+
-+#define CRB_FFA_START_TYPE_COMMAND 0
-+#define CRB_FFA_START_TYPE_LOCALITY_REQUEST 1
-+
-+#endif
++.. [1] **TCG PC Client Platform TPM Profile (PTP) Specification**
++   https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
++.. [2] **Arm Firmware Framework for Arm A-profile (FF-A)**
++   https://developer.arm.com/documentation/den0077/latest/
++.. [3] **Arm TPM Service Command Response Buffer Interface Over FF-A**
++   https://developer.arm.com/documentation/den0138/latest/
++.. [4] **TCG ACPI Specification**
++   https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
 -- 
 2.34.1
 
