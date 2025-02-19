@@ -1,156 +1,158 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9578745C14
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C689F1E3790;
+	Wed, 19 Feb 2025 13:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972591; cv=none; b=ZV7DEsj5aMvsvr5quzPOQkeA1THwQi8PfnUpVFZ1a2kmdgjLkt200eMhau/fgEAXC3VohqVEqUO53mXCoDemHMTpkapKn+AjD2LeHcwzmwDknwL1DTSYcNB2Qu5nrx9Foi7UrTzmfcu06i7n1cMiGJU7ZU3rff9OMzMBk56wO84=
+	t=1739972596; cv=none; b=AvHWt2XOBT9kWZHvjmNLKikg/mozW4ogPhiTBXIZEBQTjFSq9ekaxMtX2LsHLLMDHXDvwMEGF8kxm4D4j/F0k6NXFSY4kqqmHTNaqTN+G3jDJ70CMPLnrZYthIJuE2MkM6qXpjW4grm3XxqckAoL/kmUkZdI3HD4fOaJFvv3fXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739972591; c=relaxed/simple;
-	bh=2ZTdAQt9df8PaTguKr01nU1Fak9WbZrG4FFH1ejRmE8=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S8YxgWBDz56D1UfymWh7voP5csUwCQsj0PzJKuH+7Hfmhq7/RyldQnoUuk4Jut9x8QCNyV1tet80zlXYQFJRiw5OUUGZWXYb9TrZ2X8949Vcr1zJ5bTvdje0Sngubk7FV/+EgcPuWuBgLVcf3ChuJjnWpkjR4OkU7LMYQxosU/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Sy1GdYfn; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1739972596; c=relaxed/simple;
+	bh=8KfB7rbIPBnSY0LnsccyH07FlsHh2P9Fjsmpuh3Qk5A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RZ2B6/C2yhK/m3XZsO52HyaOgk9H8JftbMCW2xT7R2Q/ya3Cd/12CDNnYZZFk43h8RIZ9c8b6ae6VCLS9xQ0m4RJp/St5kiLU35Mq/dHcU6boAPgE9BLuWRnc0/pDxTZOMp2JtzdKoo+E5I5tVse9jCsQJoJFcwcg7Kqh4I8s9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADRBu+Xs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Sy1GdYfn"
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id F32A63F2F0
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:43:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739972588;
-	bh=WFjePigVwF4Z8j9CYTif0ybYr6jQ2TZ/Iin7O5BwwQ4=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=Sy1GdYfnf0ibXu9MD7IVANlxgA5M+uiNrl+9OfU+GPV+FMWjwnhXXM4t4sIs/9fE3
-	 3xfTi2QbzESK+biWiF/5dxO3iv+LbDoULGpFKp4G6zRVv/animRcaxX8atCQNMnxK2
-	 I8lTJBCYhmUDGrQ7Aj++2sPA0omHtbhD8O7zc+cqKEV/aB+BAVGseXdn2SzDeb8vVc
-	 p2LFBO8tJiR5kZr7NQrEr4i7+gZw0ttB94pagxjqvmCskiSiotwmPGef+64qkVBYa1
-	 JXteMJfHht34KMA1KFjYEK5mmoV19grosRstT2TkwK/CO69cjH7y6xAa5VYkQWDI2p
-	 QM03VYq3b/x4A==
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-5fcec4e9f78so1995581eaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:43:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739972586; x=1740577386;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WFjePigVwF4Z8j9CYTif0ybYr6jQ2TZ/Iin7O5BwwQ4=;
-        b=cNb9jArgZg/bfsa+G0i+MXC1iLCDs/AVf9izO9Rvu2EaCfkIWAa+YcSCqoYo4jjAzY
-         rnTmfYqKqMFWOZzqCNnW+677jQybIZGdPBlFDk8o8p3gVBIDh6KLnf3OIoX2zy/t74mz
-         xa9F5S1XdqlpT8On/jbUSxQ8p++4zM4rTHzO3knWvq38g61Lnnmyc+p9tqzDintCjgGV
-         ae4Ht2FhIyiWJxzaeOTw4x9SMkJ2tGyvrNMAI+c9iFjbuSz1x1zBS4Kv28wlAwYWCW4r
-         HNqpnovL2z66iNNfYuQNeK7sUnyPToN3rtK1X40j6zdeagIU1yKhWiY7U9ccBnmLyeZo
-         HAfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXP6AnOyeZxyIOevfp8P5tgDnmY6P6QLcOyrq2KA0HhtKF9JYf1PatNn4hWP0kLP7X2rTvxAU1dHhpv48Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx77QmssHZX9WChioeh35P/XQ9I0Jw+lZYD4hoPQ/6etN6OCJsd
-	kEMJcKf+iK2BhauCrdFg2NQqbbp9TcHneT9ulzNTi1qDVr53DttM1SePdSJxumsodXh822GaJgw
-	Ouz8r8nJQI8xapw4Af9wRxrLuMU9O+vDO6xByNhsjf8/IkZGV7uGNB7YRPAGezNFIB6FzVXHGK6
-	BF8kWiJT6quMGMd89HMWJHn5kyUrhjeWgdhllhR1koJPYaKfZagRRo
-X-Gm-Gg: ASbGnctIsnciK49Mjw8i2SAYJ2vRlG+L9CVR7xitCoNYxvqiqyklETSgk+dHKm+f63E
-	xtuG/0DY9GADzEDwYiyZYzuSzEWyCMsH2ptSuiNYNLb1aeStipjxddJKitKnvvlMVW5FZCJzSxV
-	1kq/Y4IKS7xk98UA8=
-X-Received: by 2002:a05:6808:398a:b0:3f4:d61:36cf with SMTP id 5614622812f47-3f40f236581mr2682847b6e.30.1739972586673;
-        Wed, 19 Feb 2025 05:43:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGYn9lRXBv/JpzO42HxdnnTEcRnjUT2CvEOcRyp+AhxkqJL3rRw8dalMjzUUDUoa47Zxxh/fN+SUIulaLwLwpw=
-X-Received: by 2002:a05:6808:398a:b0:3f4:d61:36cf with SMTP id
- 5614622812f47-3f40f236581mr2682828b6e.30.1739972586434; Wed, 19 Feb 2025
- 05:43:06 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 19 Feb 2025 05:43:05 -0800
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 19 Feb 2025 05:43:05 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20250207093618.126636-1-sandie.cao@deepcomputing.io>
-References: <20250207093618.126636-1-sandie.cao@deepcomputing.io>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADRBu+Xs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 976B5C4CED1;
+	Wed, 19 Feb 2025 13:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739972596;
+	bh=8KfB7rbIPBnSY0LnsccyH07FlsHh2P9Fjsmpuh3Qk5A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ADRBu+Xscq6HB/bnLjQc7B/pSVUMUly00qRmYbisVJDnrT7vj1/a5oO1dlq7275Cf
+	 1oFUiixlAjAWRDqEG5JehFUxMMWmcmMEIXAFGznnE8t+AcpVGHB728D4eOMzsc8ZPI
+	 zaGMU0U3k3e1MDwpANA9x4k3sWbXTbhP+yaNtEzO8OiXEMAmky52wuK83XvTL9odE2
+	 4J02Sh/M9JdWG6dOdBfvcpr3VOhg1EyofJfmwy158dyTn9HWTHEW2WtbulwZdNJR1Y
+	 F+c/ASYqLex8ag4K2HSyzfalnoGXW7QeEn+aW9ZbXjIO2r/4hEtM8xgTzqgxESPqrI
+	 1G3Qg732CQscQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1tkkMH-0000000086W-0s5D;
+	Wed, 19 Feb 2025 14:43:25 +0100
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Bjorn Andersson <andersson@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Jonathan Marek <jonathan@marek.ca>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Joel Stanley <joel@jms.id.au>,
+	Sebastian Reichel <sre@kernel.org>,
+	Steev Klimaszewski <steev@kali.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v2 0/6] arm64: dts: qcom: x1e80100: enable rtc
+Date: Wed, 19 Feb 2025 14:41:12 +0100
+Message-ID: <20250219134118.31017-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.45.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Wed, 19 Feb 2025 05:43:05 -0800
-X-Gm-Features: AWEUYZknIHcy7u_-bftvl8Qvj-VvK3o4Nv3eX4N0vbhXOKNS0iUj00wp-j9bK3U
-Message-ID: <CAJM55Z-Csuw+sUgKkNUdsXfX0LkhsQKRTXfVXxm4kmKeABodTg@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: starfive: fml13v01: enable pcie1
-To: Sandie Cao <sandie.cao@deepcomputing.io>, Conor Dooley <conor@kernel.org>, 
-	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Sandie Cao wrote:
-> Starfive Soc common defines GPIO28 as pcie1 reset, GPIO21 as pcie1 wakeup;
-> But the FML13V01 board uses GPIO21 as pcie1 reset, GPIO28 as pcie1 wakeup;
-> redefine pcie1 gpio and enable pcie1 for pcie based Wi-Fi.
->
-> Signed-off-by: Sandie Cao <sandie.cao@deepcomputing.io>
+This series adds support for utilising the UEFI firmware RTC offset to
+the Qualcomm PMIC RTC driver and uses that to enable the RTC on all X
+Elite machines.
 
-Unfortunately I don't yet have a board to test this on, but it looks ok to me.
+Included is also a patch to switch the Lenovo ThinkPad X13s over to
+using the UEFI offset.
 
-Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+The RTCs in many Qualcomm devices are effectively broken due to the time
+registers being read-only. Instead some other non-volatile memory can be
+used to store an offset which a driver can take into account. On Windows
+on Arm laptops, the UEFI firmware (and Windows) use a UEFI variable for
+storing such an offset.
 
-> ---
->  .../jh7110-deepcomputing-fml13v01.dts         | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-> index 30b0715196b6..8d9ce8b69a71 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-> @@ -11,6 +11,40 @@ / {
->  	compatible = "deepcomputing,fml13v01", "starfive,jh7110";
->  };
->
-> +&pcie1 {
-> +	perst-gpios = <&sysgpio 21 GPIO_ACTIVE_LOW>;
-> +	phys = <&pciephy1>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie1_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&sysgpio {
-> +	pcie1_pins: pcie1-0 {
-> +		clkreq-pins {
-> +			pinmux = <GPIOMUX(29, GPOUT_LOW,
-> +					      GPOEN_DISABLE,
-> +					      GPI_NONE)>;
-> +			bias-pull-down;
-> +			drive-strength = <2>;
-> +			input-enable;
-> +			input-schmitt-disable;
-> +			slew-rate = <0>;
-> +		};
-> +
-> +		wake-pins {
-> +			pinmux = <GPIOMUX(28, GPOUT_HIGH,
-> +					      GPOEN_DISABLE,
-> +					      GPI_NONE)>;
-> +			bias-pull-up;
-> +			drive-strength = <2>;
-> +			input-enable;
-> +			input-schmitt-disable;
-> +			slew-rate = <0>;
-> +		};
-> +	};
-> +};
-> +
->  &usb0 {
->  	dr_mode = "host";
->  	status = "okay";
->
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> --
-> 2.34.1
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+When RTC support for the X13s was added two years ago we did not yet
+have UEFI variable support for these machines in mainline and there were
+also some concerns regarding flash wear. [1] As not all Qualcomm
+platforms have UEFI firmware anyway, we instead opted to use a PMIC
+scratch register for storing the offset. [2]
+
+On the UEFI machines in question this is however arguably not correct
+as it means that the RTC time can differ between the UEFI firmware (and
+Windows) and Linux.
+
+Now that the (reverse engineered) UEFI variable implementation has been
+merged and thoroughly tested, let's switch to using that to store the
+RTC offset also on Linux. The flash wear concerns can be mitigated by
+deferring writes due to clock drift until shutdown.
+
+Note that this also avoids having to wait for months for Qualcomm to
+provide a free PMIC SDAM scratch register for X1E and future platforms,
+and specifically allows us to enable the RTC on X1E laptops today.
+
+The first version of this series (and the RFC) used a DT property to
+determine whether the UEFI firmware uses a variable for storing the RTC
+offset. This is strictly only needed if we ever are to allow (further)
+modular efivars implementations as otherwise a driver can just check if
+the variable is there during probe (and assume efivars are available at
+module init time).
+
+The Qualcomm efivars implementation (qcom_qseecom_uefisecapp) cannot be
+built as a module currently to avoid similar problems with user space
+expecting efivarfs to be available during early boot. As changing this
+now would cause a regression, let's assume at least the Qualcomm
+implementation will remain built-in indefinitely.
+
+Hopefully this all goes away (for future platforms) once Qualcomm fix
+their UEFI implementation so that the UEFI time (and variable) services
+can be used directly.
+
+Johan
+
+
+Changes in v2
+ - drop DT property in favour of probing for the UEFI variable (Rob)
+ - rebase on 6.14-rc1; use bool constant for device_init_wakeup()
+ - fix flash wear commit message (X13s typo, example)
+
+Changes since UEFI offset RFC [1]:
+ - clarify that UEFI variable format is not arbitrary (Alexandre)
+ - add missing use_uefi kernel doc
+ - use dev_dbg() instead of dev_err() (Alexandre)
+ - rename epoch define RTC_TIMESTAMP_EPOCH_GPS (Alexandre)
+ - mitigate flash wear by deferring writes due to clock drift until
+   shutdown
+
+Changes since Jonathan's X1E series v3 [3]:
+ - tweak qcom,no-alarm binding update (and drop Krystzof's Reviewed-by tag)
+ - drop no-alarm flag and restructure probe() to clear feature flag before
+   registering RTC
+ - use UEFI variable offset on X1E
+
+[1] https://lore.kernel.org/lkml/20230126142057.25715-1-johan+linaro@kernel.org/
+[2] https://lore.kernel.org/lkml/20230202155448.6715-1-johan+linaro@kernel.org/
+[3] https://lore.kernel.org/lkml/20241015004945.3676-1-jonathan@marek.ca/
+
+
+Johan Hovold (4):
+  rtc: pm8xxx: add support for uefi offset
+  rtc: pm8xxx: mitigate flash wear
+  arm64: dts: qcom: sc8280xp-x13s: switch to uefi rtc offset
+  arm64: dts: qcom: x1e80100: enable rtc
+
+Jonathan Marek (2):
+  dt-bindings: rtc: qcom-pm8xxx: document qcom,no-alarm flag
+  rtc: pm8xxx: implement qcom,no-alarm flag for non-HLOS owned alarm
+
+ .../bindings/rtc/qcom-pm8xxx-rtc.yaml         |   5 +
+ .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    |  11 -
+ arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi  |   3 +-
+ drivers/rtc/rtc-pm8xxx.c                      | 225 ++++++++++++++----
+ include/linux/rtc.h                           |   1 +
+ 5 files changed, 189 insertions(+), 56 deletions(-)
+
+-- 
+2.45.3
+
