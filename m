@@ -1,37 +1,44 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 838921C54BE;
-	Wed, 19 Feb 2025 08:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail.fris.de (mail.fris.de [116.203.77.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C66317A2EE
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739952708; cv=none; b=hEFcJUoaXQXgGNAz6S4CWOTq+3vPnJbQ2Qq4JGgGQsNEqhy8qK52vQlWYt/LJRN7PF0nD9j5KO5V23dXIdxRAIVjqcnuoFzUJkp03tCgRedxmqgxEoO3EKiHt3Ao9My80Y/Ho+d8sqoUBOvvL5yY6uJJHeP7hJEWZrrthHojXj0=
+	t=1739952712; cv=none; b=S6+y78YSoRVH5SL4oGmV1uAs7hnBTTg7Gpnl8mAgas8rRNggVue/bOeBrL/JmbME5oUKDG5vSloaUZTvjrx1hPGBQyYWRlEuhKYNOTGo9tAhKLXEN7wOLTbl/ulgOfGhDrVXG/oqjdt2uK3FhwcpTnodLAjMd8nWpVP2DfLxM40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739952708; c=relaxed/simple;
-	bh=elTfSUpJus9Dh01GMc0HZ/JUEutfoMK622ZRG8wXE/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nC0s8D82ognkC+1xOdFo25Z82giKA4W2DwTAv6q/MB9ZQQL5s37hlQR7pSfq8B0877Ck4vydAhmqmws7fVht2kZRiygewh+Zm8dcoMRCuZQSfk4LkyYi8vu+80dRmpKTc6hPVwNdeqwVj+18N//CS3H22Puz6osja1h2Uq6mUWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eA12FOcn; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1739952712; c=relaxed/simple;
+	bh=ORt85hqPPWjc/cKEc1XwNy5zah0r2SWmq0WxehDJxrA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AETBOjSmuSQOskZeawnON/HOd8qOX7/3uypkvG/SCguXHlOS1y6ONHDPj9Aahpt4dA8nknE5q001inRlqNzrBah0t/XFhKXduKmpbeKU235TbM9Il5fbstQ1Vl/KwX8VY60eChjQwIIDXUYgpt7wsr8ddrkCDfRXcG+uLCfWur4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=pass smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=jldIeh9B; arc=none smtp.client-ip=116.203.77.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fris.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eA12FOcn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=pIf9b
-	39a574X2F7JDmFa9sO7taNTVX9ScalIAYOkPeA=; b=eA12FOcnM6eKw6cUarc1H
-	PJwxMDweb5TS0nk0TMPsWFhF/sIRtPrlHNL8fFL5+JfiKgzi6Hv8ekaZ2VawjwT/
-	ZZfbHGP+KlkExh69yB26OMNL9w1lmIAPpCOjNrBQ/U3SUrxDooRZnQ47Ly9/2+rG
-	XLQgQR06cZ5YpQk9UgZxMc=
-Received: from wdhh6.sugon.cn (unknown [60.29.3.194])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgB3I7Q1krVnIyHBOQ--.44615S2;
-	Wed, 19 Feb 2025 16:11:34 +0800 (CST)
-From: Chaohai Chen <wdhh66@163.com>
-To: martin.petersen@oracle.com
-Cc: James.Bottomley@HansenPartnership.com,
-	linux-scsi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="jldIeh9B"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0A4CBFB4D;
+	Wed, 19 Feb 2025 09:02:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
+	t=1739952165; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=+HmpXKPAD9ALBIJIuYji9/wPjq2kkxzldwrjVPCxR28=;
+	b=jldIeh9Bo4Rrq9MdnBTo0xAocBcj2Iin0Xgk0Y0oHrMk0TxEMuIpMUqEx5KveF57Mu2dDd
+	BhShyOY9RRWjZfADJlz2q1hy0nD47pzrIY6UP0iCUOv+IZpOeyzHYIsSVbxYluytO5bOWx
+	Pv7BVrvgptD7w7/IzMQQrIn7VfOd1AeM4CJttcJAlksoLmQ8tMZ0btBS5LHt7izgguMDqG
+	DLYVr+niyfO1W6xsXon/otZCHG5V4OtMHkbHO7bk5aNz1JNJbUNPIudRTGuF0KONxkXf3L
+	QNkLKT7gqTsKe46eAr0Uo6YAxoRMcvxbFRwiKcHCMe6xx93BnTnwV1PCEF6RIg==
+From: Frieder Schrempf <frieder@fris.de>
+To: linux-arm-kernel@lists.infradead.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	Chaohai Chen <wdhh66@163.com>
-Subject: [PATCH] scsi: fix missing lock protection
-Date: Wed, 19 Feb 2025 16:11:19 +0800
-Message-Id: <20250219081119.203295-1-wdhh66@163.com>
-X-Mailer: git-send-email 2.34.1
+	Mark Brown <broonie@kernel.org>
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Bo Liu <liubo03@inspur.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Joy Zou <joy.zou@nxp.com>,
+	Marek Vasut <marex@denx.de>,
+	Robin Gong <yibin.gong@nxp.com>
+Subject: [PATCH] regulator: pca9450: Remove duplicate code in probe
+Date: Wed, 19 Feb 2025 09:01:48 +0100
+Message-ID: <20250219080152.11883-1-frieder@fris.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,39 +46,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgB3I7Q1krVnIyHBOQ--.44615S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Jry7Gr48tr4fGw48Xr1rtFb_yoWfXFX_ur
-	Zaqr97Jr4jkr43tws5tay3Gr9F9r4rXr1v9F1fta43Z3yrX3Wktas3tr43Z3y3CrWkCw15
-	Aw1DZryFyr1DGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_L0ePUUUUU==
-X-CM-SenderInfo: hzgkxlqw6rljoofrz/1tbiKAz41me1j+ZBLQAAsd
+X-Last-TLS-Session-Version: TLSv1.3
 
-async_scan_lock is designed to protect the scanning_hosts list,
-but there is no protection here.
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Signed-off-by: Chaohai Chen <wdhh66@163.com>
+The SD_VSEL GPIO is fetched twice for no reason. Remove the
+duplicate code.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- drivers/scsi/scsi_scan.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Apparently something went wrong when preparing the v3 patch
+that got applied to regulator/for-next and is now in linux-next.
+---
+ drivers/regulator/pca9450-regulator.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 087fcbfc9aaa..9a90e6ba5603 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -151,8 +151,12 @@ int scsi_complete_async_scans(void)
- 	struct async_scan_data *data;
+diff --git a/drivers/regulator/pca9450-regulator.c b/drivers/regulator/pca9450-regulator.c
+index 4519e725706cd..8f81d813640d9 100644
+--- a/drivers/regulator/pca9450-regulator.c
++++ b/drivers/regulator/pca9450-regulator.c
+@@ -1100,18 +1100,6 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
+ 		return ret;
+ 	}
  
- 	do {
--		if (list_empty(&scanning_hosts))
-+		spin_lock(&async_scan_lock);
-+		if (list_empty(&scanning_hosts)) {
-+			spin_unlock(&async_scan_lock);
- 			return 0;
-+		}
-+		spin_unlock(&async_scan_lock);
- 		/* If we can't get memory immediately, that's OK.  Just
- 		 * sleep a little.  Even if we never get memory, the async
- 		 * scans will finish eventually.
+-	/*
+-	 * For LDO5 we need to be able to check the status of the SD_VSEL input in
+-	 * order to know which control register is used. Most boards connect SD_VSEL
+-	 * to the VSELECT signal, so we can use the GPIO that is internally routed
+-	 * to this signal (if SION bit is set in IOMUX).
+-	 */
+-	pca9450->sd_vsel_gpio = gpiod_get_optional(&ldo5->dev, "sd-vsel", GPIOD_IN);
+-	if (IS_ERR(pca9450->sd_vsel_gpio)) {
+-		dev_err(&i2c->dev, "Failed to get SD_VSEL GPIO\n");
+-		return ret;
+-	}
+-
+ 	dev_info(&i2c->dev, "%s probed.\n",
+ 		type == PCA9450_TYPE_PCA9450A ? "pca9450a" :
+ 		(type == PCA9450_TYPE_PCA9451A ? "pca9451a" : "pca9450bc"));
 -- 
-2.34.1
+2.48.1
 
