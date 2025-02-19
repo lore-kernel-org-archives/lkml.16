@@ -1,301 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2086.outbound.protection.outlook.com [40.107.220.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A37A24E4B4;
-	Wed, 19 Feb 2025 20:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D1F24E4B4;
+	Wed, 19 Feb 2025 20:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739998484; cv=fail; b=DHFzb5jQNhQ8zpZ4VRAO58EIsFrZGwC5dSIazsQSGm0/l6IvMBtTI5Z5vGfZpDQDmeP8LqIWn5pVhCMqPFmAksmZxC6boxF/p9rEDGzWwQe6T7stwbPt6jZtD55MzBpk/MVFJm8yyBgR/kY79LgSbRheQBgYSaxwR/QvhR/1nJM=
+	t=1739998503; cv=fail; b=DVFnjzIv8Ik0lRBSmODMYDe05PIlqL7uR5JjyQrgsiyFiPa4rcj9qiBLEfS+5p/i/4J6adYqkioc/I+Y8g+m14sqju6uQX2gB39UFhhhGJPMoMIwvJo9LW54Q09srCdAUxCySYuV+4ZY45AxzAU61870gzoRyCQXMa53yukJw2k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739998484; c=relaxed/simple;
-	bh=xqdd3x1xJhOnUodftc8hB6QvW9IaP5VqP7FcCmR6g50=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YC53QPfaG73z/lweusnlDga5RujBGN4WydR5HhcSIEaT9xbkJfRk/yW0uQt5Uucm5QjV7YEmvIwHNgmi6zgsIso4wo992+LXZpd79u4kxzmv8P44Fm+Fj+Wz4WhFYa95i6hqqG64Jd1RyJBMKbsbrEd+G3zMvX7AvKrrzSlHasU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4Nr+edr; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739998503; c=relaxed/simple;
+	bh=iGVKnAsE1ba95GWCRw58c/50CmL9pjDOget8VIkoeU0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QETh07e4j6iNI9/8wa7YSgO1LJII7shL7hH5qOdXPIRZGav99sSrh4uyWliAtjaw+DDpYOWrRsjgj+nyJjscxFmUAUBkUA6po/FA1z4kH8DmaXaLCSIUtfjSkdwAtAWuNQeWt+Y03NEsZybhpNW7Nim0aWY36ojrI49RR+UazG4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Bv21L0lU; arc=fail smtp.client-ip=40.107.220.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4Nr+edr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739998481; x=1771534481;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=xqdd3x1xJhOnUodftc8hB6QvW9IaP5VqP7FcCmR6g50=;
-  b=l4Nr+edrhJFIi/yG1+mHdOJWykmPVNi0rmSXAPnTJKxYTBzN7ZsU5FYG
-   i/JzLIbLXcBl+rL3QXGGaUWecB0cthgIkN8BgXI4zJIAjO6k6TvtWr9OQ
-   bJnbn4H24W+E3+DVCNGYORxlP2eQsRihKhjN3Ngnq8tUtgKvn2vm2gRkR
-   WGc8NJdp9Fzbb2ZtkVLKMTOQ4V/VXbkCTZiiEZx3pFY5+2C6BVFTD06JA
-   KLtrdnxuBRpbQx15B+nVzszpZ/fq0GIFkbTEnfzI4t/R7gBubpAkc6eFo
-   IGarrtEyuvg/0J9wN6raGexFAvqhHE+4Nhw5cGsSqLNIgIVtS6qd+iLFJ
-   g==;
-X-CSE-ConnectionGUID: SfLLjgFgRlWByqmyJHGgmg==
-X-CSE-MsgGUID: vPGLTcPZTlySKScP+xrfJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="58299356"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="58299356"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 12:54:40 -0800
-X-CSE-ConnectionGUID: HY+06/bzSRqtFzrjG5oKXQ==
-X-CSE-MsgGUID: ZYOajQ1oRB6ajcYr3Vp48Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114572648"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Feb 2025 12:18:19 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 19 Feb 2025 12:17:59 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 19 Feb 2025 12:17:59 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 19 Feb 2025 12:17:58 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Bv21L0lU"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EEH2pbMCWvKAJz9CapGzdP9rWfp6vQmE19J3qZ1TJKCOtz9lGlLOYYXhSDXsltz1R+KRqW5EcHQCDmh+NRBj9s9wS07f6ekekIa80qPZOdkwNq7fTCOYMljdNlclRM7RMfFAM7r102KSgRCd8oYrPUfT75d4dAG/3zWwMmHeLbpVpPKUNrHArElFSN+SFhlAOa1SLW7m+4W1A+txfDeRNec27QNP49+WI02VzyIIT7LOlh6z4WG+1s25x2EQjnSOnsveSbHIeapCmIVqdyTGl7BkIOZteTTm2YjHkin4J1k1/3vD8u2yQ8732bx2MZxnpBNwAxkxNgNnJBbGEcHAwg==
+ b=xISBvrI+wmknMchk0YHJb3t7aWTF4G+yUoKqXbGrDAHmf97z491q5EWNkiGPgPGeZr2LfN5uG4RTlqqZquVozMzu7nBM757VFLQg162H3pmezOpOWGAZoJqDJea9+ghKt3tn32ikcZ2j+dKhAiK+/t+pyoE3osO+NMMnfksdxNJKR0PDrUzj+F/tyE95GWuNYQQfjmaMIbUWPTNAHNOpmlJ4Gz+kmvAIXhleoWJJqI1S/y2Zw3fql9NLkLLYyb4MUC8+v1w8GwtqnmB0VSBi+onyN8sjzeTeLjAF0eWGkpNuwqp37CZhQs1SY654iLjdCG0HxmuELl21S/609PSmIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=28PcdZHOyhHkQcfruJOTzHmEyytBQBvyA+829bYi0GQ=;
- b=XCZYPQf7fEvYCnXm9UUp3JJerl2TfVKQgvzxeA7yCrFYfLWkIoHkMafNl8rrF+y6W4nkY+J+tNBZgJ3TlowiOdqSjtm3PWv+qp5z2N8kjv9l1i9lLFcCG0WxK1MU6M2/770ux4j+dvJ4mnIWDcPYnJKR5N2qek6X6pR179AxswHiPUcOnvNB1zW1/r0SmW6o/jb5e+MgrpVtHXA9giBlYV0HPqBXlxVJfhKoAYoJqvYPvv8I0pcq1aFjN9Pxcs2ePm1WcYJzymF82GIm37oAFZZ0eigGQzCMxorSycoandp19JeRn8bGRgZ7On+Nf+00RCwiuuFfQuRm4DvyOS3Mig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by MW3PR11MB4667.namprd11.prod.outlook.com (2603:10b6:303:53::10) with
+ bh=WihQCoGliPJv20KI8JNgvXzX95k2sNXJNrEBuEfF0RI=;
+ b=oABhEdj51cVI3LJ5o/0jIcClDUtR7wZ9+Co7Oba1VLnSc2TXJSBeR8CDwMcfOEbNrTL3Mr4JnnH7QwC6brnix7Aux1gAwak+iyiwaQlh52fkPlsfkmAh21meaA6BWwYvw5gfir8bxYk0g3DNYM0kVBEYzQAR7HDxxmyVqWTJUJ2JYG5TNNjU9HODTySnOF+iO5a8ozjXP0DYem8EK61SQ9L067ZhhSDlDwgdx8PLTHYMLID//Rlj3tzWkcsz/1wYDXkTjJHrmoTfJbkWkz8jfdiksRh9aQi9y1Fomby0W3QSOPsvWOAMcc/HFvk4TK6dw4k/Inlm7L0Ou2Y8Bcqolw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WihQCoGliPJv20KI8JNgvXzX95k2sNXJNrEBuEfF0RI=;
+ b=Bv21L0lUx8Rwd2tW990bF6avWv2qA+4VCxZJuJ1/9g7JATlIkBb55PRR6U611JqRIe9+GWgd/K8v2oQQIEfNAnqECuFp9fexrrvgS/NN4uknFa4KqT7+kPrPx3iWsPtCjpDBMItRs4BKWelV+VRQNM9DEsQ+CVTTwRyacdrkZHs=
+Received: from SA0PR13CA0020.namprd13.prod.outlook.com (2603:10b6:806:130::25)
+ by DS0PR12MB7778.namprd12.prod.outlook.com (2603:10b6:8:151::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Wed, 19 Feb
- 2025 20:17:54 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%3]) with mapi id 15.20.8466.013; Wed, 19 Feb 2025
- 20:17:54 +0000
-Date: Wed, 19 Feb 2025 14:17:48 -0600
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Luis Chamberlain <mcgrof@kernel.org>
-CC: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Daniel Gomez
-	<da.gomez@samsung.com>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
-	<samitolvanen@google.com>, Alexei Starovoitov <ast@kernel.org>, "Daniel
- Borkmann" <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
-	"Martin KaFai Lau" <martin.lau@linux.dev>, Eduard Zingerman
-	<eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, Yonghong Song
-	<yonghong.song@linux.dev>, "John Fastabend" <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
-	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Nathan Chancellor
-	<nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
- Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	<linux-modules@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, bpf
-	<bpf@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, iovisor-dev
-	<iovisor-dev@lists.iovisor.org>, <gost.dev@samsung.com>
-Subject: Re: [PATCH 2/2] moderr: add module error injection tool
-Message-ID: <qnfhjhyqlagmrmk3dwfb2ay37ihi6dlkzs67bzxpu7izz6wqc5@aiohaxlgzx5r>
-References: <CGME20250122131159eucas1p17693e311a9b7674288eb3c34014b6f2c@eucas1p1.samsung.com>
- <20250122-modules-error-injection-v1-0-910590a04fd5@samsung.com>
- <20250122-modules-error-injection-v1-2-910590a04fd5@samsung.com>
- <CAADnVQJ8tYSx-ujszq54m2XyecoJUgQZ6HQheTrohhfQS6Y9sQ@mail.gmail.com>
- <Z5lEoUxV4fBzKf4i@bombadil.infradead.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5lEoUxV4fBzKf4i@bombadil.infradead.org>
-X-ClientProxiedBy: MW4P221CA0021.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::26) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+ 2025 20:54:53 +0000
+Received: from SA2PEPF00003F68.namprd04.prod.outlook.com
+ (2603:10b6:806:130:cafe::e4) by SA0PR13CA0020.outlook.office365.com
+ (2603:10b6:806:130::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Wed,
+ 19 Feb 2025 20:54:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF00003F68.mail.protection.outlook.com (10.167.248.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8466.11 via Frontend Transport; Wed, 19 Feb 2025 20:54:52 +0000
+Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Feb
+ 2025 14:54:51 -0600
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <thomas.lendacky@amd.com>,
+	<john.allen@amd.com>, <herbert@gondor.apana.org.au>
+CC: <michael.roth@amd.com>, <dionnaglaze@google.com>, <nikunj@amd.com>,
+	<ardb@kernel.org>, <kevinloughlin@google.com>, <Neeraj.Upadhyay@amd.com>,
+	<aik@amd.com>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linux-coco@lists.linux.dev>
+Subject: [PATCH v4 6/7] KVM: SVM: Add support to initialize SEV/SNP functionality in KVM
+Date: Wed, 19 Feb 2025 20:54:42 +0000
+Message-ID: <5346a666758c21ec25d26ae184a2d1a9324f3b55.1739997129.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1739997129.git.ashish.kalra@amd.com>
+References: <cover.1739997129.git.ashish.kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|MW3PR11MB4667:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae0156fc-374f-4caa-8ae5-08dd51227daf
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F68:EE_|DS0PR12MB7778:EE_
+X-MS-Office365-Filtering-Correlation-Id: b63c6abe-502b-4ae8-024f-08dd5127a89b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?ZjFKb0hLamdHRzdNcEVVK01ocytVcHJDclgxK3RFWFdlQXZjcjZwRXBYY3BV?=
- =?utf-8?B?cXY3dktjZjF4ZG9KbkVkbGJ2MURrU05tUGRpQmpsQ3BVYU5XcFhXem1GZW9q?=
- =?utf-8?B?TU1xUndBblFrVFhxakNJc2I0Z2QwcHQ2TnVXZVBNZ25nNEtaTnhOY09KQWlr?=
- =?utf-8?B?cElpS1cvdTIxNDNhL2FFMzdsTlZpclJmdnl1Y1RkZXptdzdPOXZzZXdia1V6?=
- =?utf-8?B?RFlLeDNkbHNWa0RGb2gySzVQS3BJWUFicW1pblF0Z21PTkU2dEFXeExnMXZx?=
- =?utf-8?B?KzRmKzExNVNaUE8yc3hwRzhSS0trTEs4cWpzTUdoeUVxbEhSWVJVZVBZakl0?=
- =?utf-8?B?NjNQQ25xdEFDSnVBdERIRVlzUkp4NFV3N1pPMG1wemtvU0pqTkFmQklQRDQy?=
- =?utf-8?B?M21pVjkzVmNWK1VDKzB6Mm9ic010MW05UjR0aU1pRFdkYUtmTGh6MDQrUG1m?=
- =?utf-8?B?ZER2TmE5T1Zmb1FSQU4yMTRNYWdxZlVOOUluMEhmS1BQUytYS1ovM1NpQTRT?=
- =?utf-8?B?YjNuVWJQM0JwdC9UU2hKcEdBYmRQZE44b2d6ai95bjhQcldXNFBlcm9IbGlr?=
- =?utf-8?B?VTFFRE4zQ3pjVENrVVdnUngxQnloZXlXSTllZ05QbHVmcFJMMXdraVhxMzlF?=
- =?utf-8?B?OXVRVmJlUEJQblQwSlhQZVhvWUpocTBzSzNpNXc2WWZCRFMrcmw0M2J3K1Vk?=
- =?utf-8?B?WW5YaFJsNDQvM1BvQjhpR25tZlVOd1RYK0dsZTFTUHRDa3dtdkRQYm9nbEpT?=
- =?utf-8?B?ODc4dnFqalZBTWE4Sk8xQ3VjRFIySGxLU2NybHkzVmdUdWVrUVUwbnMrS1BB?=
- =?utf-8?B?R3EwM2ZYVDQ0ZVFBUHdkRmJVa0JHS0F4SWYrTnN3bGl6Y0hDaW92a29CNG0v?=
- =?utf-8?B?d2VPcG5TNllPVE9aVHpqWHBFbjkxNmMxZFVOL2JoNTJpQkhrOEw0YWtlQndr?=
- =?utf-8?B?cVBKS1BpT2lXSmRtWGRIa3Y2eE50NGlsQ0cvbkxYSDZUNjFmaHBYd3Z4M0dD?=
- =?utf-8?B?Vkh1ZVNhSjk2V3FZOHJaci95SlhGVTV0UG9ZOGo3NXVzWnJNaFMzT1hKRVFT?=
- =?utf-8?B?T0pLRWo2ZEFrc29vZnh6ZzlRdG9YNW4wWXV2RkluL3FIQmw3dUtRQkkybUt2?=
- =?utf-8?B?SG1yWFYwUkR6SnRqREtCbUpsY29OZituMVV1U0lpZkhrSUQvWC9RRUs5bkxz?=
- =?utf-8?B?T3JmU25MV1E2dTZOMHFSTWw0WEhKSVpKZVllQlNuUVpXM0pPNWo0dFZKRnJC?=
- =?utf-8?B?N2ZCUWlqTHM5ckN6S05VRnpMbDNoYk9EYW5CRUZtS1NDVk9iMC9hUEZRK1RY?=
- =?utf-8?B?dFIrVjNFQ3VjdUhXMnRkbFB0ZWZJNFF2YkdaTjJZMjA2TmRPNzBVZkhVUnd1?=
- =?utf-8?B?VC9FRHNOTHd6WTJ6YjBURndlK1k4aEdCNjA1NnZnU2tYMm9TME41QnNRaFI4?=
- =?utf-8?B?VmpjQ3N3ZnNDRk1ibEpEYVFMSFRjc1lFWEhmSllYT0ppUXRoUGtxSFdFZTMx?=
- =?utf-8?B?YjUzUGhOOU41dnA2Zzl4Y2RsVmZsTDBoaUJvQlZWRjJwWjI3TWNUV0d3ZjR0?=
- =?utf-8?B?ZzhGaWpzam5vSVNRZnF4QmNaRG9JRVNxeGpDTG1ueWN3Sm1uNFNUeENpSzg0?=
- =?utf-8?B?bGVGYStrOUNNSnhUQnI2QkRTZ0Q0czFSQW10L1NKZTBMOTBSM0V5UmU3S2Zp?=
- =?utf-8?B?dFQ3d1pqRVduTDFLTCt2QXRwUVJCdmNDNk5ITHJZeTQ4VmVTdkl0Z21iVG9W?=
- =?utf-8?B?b0RqcTZVOEtNdEk4Zi9vYzZ3Rk9mUGlYeDZ0bVVHMG0rUndEMFZTckpKaVBP?=
- =?utf-8?B?MndLUWt1ZU0vc2dEZ2h2Zz09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eGVESlVXcnB5UG9nbEx2Vm1HajBMM1dCeURsYS9vY0xnRzVzS2JMWEZpS2xI?=
- =?utf-8?B?eitDV1lDM2JFNThoSncvS2FLVmtJeUZBWnVjOU9qL3p4cWpiVVBNa2xzUFRw?=
- =?utf-8?B?QTNkbyt3ZEt4NmJQOVd6UmI2VFRsYlRiaGVLeXFDeWZKc21mRytROTRWcWtC?=
- =?utf-8?B?WmM1aEl4VExWTHhJRklOemNHWFQ1RXk0RlZRWnAxdWdNa2l2NDk5WCtMaVhX?=
- =?utf-8?B?QU1XWmxYWHpJVkVxaW5jUjhjYTF3MTZ1WlVhUWw5ZjFuaWhDQlM0TStBc1ZQ?=
- =?utf-8?B?UDRYMDF6b3VTWlhMMWpPZ01nMVRnUWhLN2NCQVlrVzZ1QWtUaVdjMGhKSmx4?=
- =?utf-8?B?TVdSWWFyN3JidFpVRkxsYytQejdOK2UyZ3FwWG5RMVEvcXRKZGQ0SHdvcmYw?=
- =?utf-8?B?V1B0OHRRZHlwMG5LRVJFeEllWExRekpzckpMMkJUYUhUVGhNQnRHN2dEMzBY?=
- =?utf-8?B?OFVRSVYzVncwMU5PWFQ1NE8vNmJSNDIwNFRuT0w2NUpVY29yWks3RStQaHRa?=
- =?utf-8?B?REV1cDVpcU0zOGhDVnFreFU0TWtxekdtaU5DcGlQaFQ1SkJIQWpDRXFIWmlS?=
- =?utf-8?B?MnpXN1Z6czRxb3RJZjBVeXYyQ3NzcFhjeVBlVXk1NUNHNC9wMnBaSUE2a2hz?=
- =?utf-8?B?b0VoQS91dy9ZM3c2NGt5SnVQTnhmd2V1M25GdEJXbWt2T2hZUldoQ2JkZ3JS?=
- =?utf-8?B?NHlBZU1hRnU5OUtGS3FnRUFvc3Z0UG9IREtvYldvN2dOdUdJUkdZYkNkZVlX?=
- =?utf-8?B?c25QOGN4LysrbEVERUdrWHZUK2Myak9xQ1RGTDV3eVR5UzhhZ1RtQ29ham1D?=
- =?utf-8?B?VW9HTTY1NmFNazlCNlowcjlodythV2pwY3hCaFZ0V3NrNFdDQlAyNXA3Z0xY?=
- =?utf-8?B?Z2YwTEI0b09GMDJYZkN4RUpVVm1HemxycWNMVmtUQXZqZDkyR3V2dG0xLzdV?=
- =?utf-8?B?MjhsZHRJZCtZbXE2c3h2ZzR1WHJIVG1QVStvQzZ3OXNDSHpsYWwyUlJVVWhU?=
- =?utf-8?B?ZEdHT3dUUkJYSlFjRVVQa2xUQW42dVVMTlcrQmtWa0YvSjAzb0MwNGpQWEQz?=
- =?utf-8?B?ZTlBYWFGV2FQRHJTZUh2VCtiSlFIM1pEd3JQd1JTNDA1bCt4aWdNU21TczJy?=
- =?utf-8?B?TXFQd1FKc3dDdS9CVHZDL0tMQnlXdTJuK0tDMzBFRTJHT2t3Zm5qaUUxT3dC?=
- =?utf-8?B?YW83OEw4Uy9BT0VWeVhwc1FDbSt1VGNhNjc3dHljWUZUZ0RkRVIzUmUyWWxv?=
- =?utf-8?B?a1hMcGQvQTFjTXlMa2dvSnhMSzZPeVNzWWZKNjBWQ1h4dnBScXhyT2FSbERa?=
- =?utf-8?B?YWtqL0p4RzZ0aTFCcDc0aGxYRnhMU2ErNWZ2bHY1cUNkSzlJR201TlZNWU9q?=
- =?utf-8?B?MHh6d0k5aVNBOEExL3VJT0NlUjcwdklSVTF4dmtXYjQyNkcrWHJOVXBENTAv?=
- =?utf-8?B?a1VscW1SOXRTaVRhRHErWDhEVXdsdXh0MDIyUGllSDZpS2RpQ3RTT05HdG9P?=
- =?utf-8?B?Vzd2bjlXNi9WSzZxTE0vNHFYTStKZ2Z6a2loNWFDaGNZenBxY1A4VFVsYkw4?=
- =?utf-8?B?R2lRNDdNakw3SEZhKzR6Y3hrWk4rRVUrV1JUMmkzYkx2NHZVOTFaRGcycWRD?=
- =?utf-8?B?eklNaHBJWnBEaW9iSWVILy9ydTVTQVRZL2VWMzVta3c2OGJwNnpRbncrMFFT?=
- =?utf-8?B?dlpFWGZMV3d0KzZDcU91aytrbVpEY1dmaTZWOTBJTnNockwwMkRzV0NlRGpV?=
- =?utf-8?B?TUhtQlhodFJDbmZITWh2Zkh0VEh5dFE0QytPWXBTbVQ1S0VFZXFYcjFaYVFL?=
- =?utf-8?B?Ym8xSnB0RmRUdjBMSnB0YkUra3BNNE8vVnJZY3pITkpSZGUwUXBQMDVha1h0?=
- =?utf-8?B?WTk4SzBMS0U4Ky94V0w3T0M0eHJFZVc3cGdPenQvZmxFQWVZdzRWVnRQT3NJ?=
- =?utf-8?B?d2hPM2NEdVY5WVJ3NDBDRUtPdERmU1k1VjBOR3pPYm83dzFJZ2VLRVk2aVo3?=
- =?utf-8?B?ZW1OZk5xcndpM3VlamVRTzFVdXRWdHZobklMT0t1QktBcVdQOTZySCt3NUYy?=
- =?utf-8?B?TXk2TFdHenI4WTdVWU9EVitWR2NWdzNaYnF5U2ZFYkhqbnJxTzQ4OVVWSGtz?=
- =?utf-8?B?TmtLcnEwZlZiUldPWkYyKys3MVppY2o5ZWFsWFl4Q2c4bml6OFJWZkdJME00?=
- =?utf-8?B?T2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae0156fc-374f-4caa-8ae5-08dd51227daf
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 20:17:54.0153
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?p8v4dSLJ9m0PHA49UxCpaA+EZjbHhY+IH1vBECAFeGvhpXoysGVqNDYkjT+i?=
+ =?us-ascii?Q?BuI5+v7t1JgeJ83BDE2r6ckL0YhqRp8y3LIHtvgS6tuCqQffMNWHERYtN5FG?=
+ =?us-ascii?Q?zyNL9m82VMOwV2U1vMpU67BcYYysvmQmbGZOkI/1epfNHiBO8E2J9hxSenpI?=
+ =?us-ascii?Q?CNvLmdkT4CXeYFbSaZ3mv2lahZbbJ4D89BrIb2ym3iiTyzSW1oo03vBihMbZ?=
+ =?us-ascii?Q?sF/2rJ33sFDrBOx3YCi9tSmCCWK0/HfrGWUSO8PEIb43T0Up5jX0OY/cib11?=
+ =?us-ascii?Q?vwrtD38JPQyi8fcwzvCOOImeZV9TsKsAx5UvPNRjR9AmrZtr4/81wYieuW3z?=
+ =?us-ascii?Q?zzBVrnJz4GPOM9eQxJ2CeDY7nfTRvz1yAQWWOaf52AhcnAOaJ5snnd3IBVD4?=
+ =?us-ascii?Q?NQgHf3wEWRj6V4rorabrqBu7Ph9oYB/3L8g6CbMHVVVV268IELezgBulnbal?=
+ =?us-ascii?Q?bYLNtZHTyd8K8cHUpW2yVuW9gRy6g+jhd4+C1Zzd5WIr0Q8bzFe4Vv8yyEMG?=
+ =?us-ascii?Q?1fr377qVH+9Z6XTUklXyiZa+WsCcBW0+Wyb18kc0M373sFYHZbtYPkkxAitI?=
+ =?us-ascii?Q?Y4VN7wFaBJvO3qA0U0gcMc1S2vSNalbrj/z7SlDwNGDVf+WFGhBeM8WCQRzN?=
+ =?us-ascii?Q?f74Je8cK2tvFvNsC1OAX6DUz3EnaecxVTDGftoTDEkO3jn125H6IUUQadiwp?=
+ =?us-ascii?Q?xZf77Ra4XwhJQvDRTiRJCxnhCrKrXXTqZ5OrasIQ3UPuU+9wc0aOJygejmJ3?=
+ =?us-ascii?Q?Wlo5y1XUuVY58LcQ1ThZMfBlUuRtT1nsCdTY7vJnwgGS6MYPyp8zbp+KVYDf?=
+ =?us-ascii?Q?1NZY8hrR3mXvpQ7+8TX2LeFTkZboTKYfhHpORLKt047jsoYrdEAaHWPNPnqH?=
+ =?us-ascii?Q?eCOCnJ/DdYAGPDmqBiZp9gzJ+A5ZosRlQgOE1clErhn/AwsROTnevC77B0iU?=
+ =?us-ascii?Q?mrvBOCP1/b/mM8scyD38NXT8QP95WwxONSPXThxcAyjXK7WhMaJcxUD7EiAL?=
+ =?us-ascii?Q?/HjAqF7Fjp5qT33aLbPm17Ao7/Oaovbdc7uArFp1BtnXIOkLIFbwh1r9ivLo?=
+ =?us-ascii?Q?D54xxdqDgY8oDGFj4/IbjoEZsmzsvoukepkKrMPDWmoPdSnaeSndvPF6Hdj8?=
+ =?us-ascii?Q?/XefrCGnJkyMKvAQPdvGw/fAQlJDdtAotb4Dmm6lVw5fVnOjnpqhXohuIkLP?=
+ =?us-ascii?Q?00aNHzXMZXabfmh67S0dBZTqHAJVkbuY28t49T2cKAShniLSI7StcGbIa6nV?=
+ =?us-ascii?Q?GduFk2Akz7GFMjXNk+wDyPmKhc4CY1uQ2K3kNLnC3GOscHY8IIPH92j/udL2?=
+ =?us-ascii?Q?Im9kfu3XeF5laQAZ9ZJj+7Ge6RxDrwWxPhcSgiPW43s1TYcLRS3bXAQ8E4r1?=
+ =?us-ascii?Q?ljMUXXkliVh8uKpaOkOnknN+MpKuQANRtMkqpCCq34ybihedG/VQ9f9WkAmd?=
+ =?us-ascii?Q?aKLmM2iWS1M3i7+Zve6xzz8gle7S1TthrcuxelYCV9iXeEBOz/7vxtN+NG3I?=
+ =?us-ascii?Q?KtTuZ9vBlMywEdRb15e06rtIdZ9lEqzbJOy7?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 20:54:52.9846
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mF9JQUvDDaSZF9ln87mheWGmrxUoJBi/e72HG7MHi/VIFTVAvoQwo975H6ak5+UOqKQTWHfQAWwKj0kZbhr1l2AmQJNoVO+uLLxsURdwX4Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4667
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b63c6abe-502b-4ae8-024f-08dd5127a89b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F68.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7778
 
-On Tue, Jan 28, 2025 at 12:57:05PM -0800, Luis Chamberlain wrote:
->On Wed, Jan 22, 2025 at 09:02:19AM -0800, Alexei Starovoitov wrote:
->> On Wed, Jan 22, 2025 at 5:12 AM Daniel Gomez <da.gomez@samsung.com> wrote:
->> >
->> > Add support for a module error injection tool. The tool
->> > can inject errors in the annotated module kernel functions
->> > such as complete_formation(), do_init_module() and
->> > module_enable_rodata_after_init(). Module name and module function are
->> > required parameters to have control over the error injection.
->> >
->> > Example: Inject error -22 to module_enable_rodata_ro_after_init for
->> > brd module:
->> >
->> > sudo moderr --modname=brd --modfunc=module_enable_rodata_ro_after_init \
->> > --error=-22 --trace
->> > Monitoring module error injection... Hit Ctrl-C to end.
->> > MODULE     ERROR FUNCTION
->> > brd        -22   module_enable_rodata_after_init()
->> >
->> > Kernel messages:
->> > [   89.463690] brd: module loaded
->> > [   89.463855] brd: module_enable_rodata_ro_after_init() returned -22,
->> > ro_after_init data might still be writable
->> >
->> > Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
->> > ---
->> >  tools/bpf/Makefile            |  13 ++-
->> >  tools/bpf/moderr/.gitignore   |   2 +
->> >  tools/bpf/moderr/Makefile     |  95 +++++++++++++++++
->> >  tools/bpf/moderr/moderr.bpf.c | 127 +++++++++++++++++++++++
->> >  tools/bpf/moderr/moderr.c     | 236 ++++++++++++++++++++++++++++++++++++++++++
->> >  tools/bpf/moderr/moderr.h     |  40 +++++++
->> >  6 files changed, 510 insertions(+), 3 deletions(-)
->>
->> The tool looks useful, but we don't add tools to the kernel repo.
->> It has to stay out of tree.
->
->For selftests we do add random tools.
->
->> The value of error injection is not clear to me.
->
->It is of great value, since it deals with corner cases which are
->otherwise hard to reproduce in places which a real error can be
->catostrophic.
->
->> Other places in the kernel use it to test paths in the kernel
->> that are difficult to do otherwise.
->
->Right.
->
->> These 3 functions don't seem to be in this category.
->
->That's the key here we should focus on. The problem is when a maintainer
->*does* agree that adding an error injection entry is useful for testing,
->and we have a developer willing to do the work to help test / validate
->it. In this case, this error case is rare but we do want to strive to
->test this as we ramp up and extend our modules selftests.
->
->Then there is the aspect of how to mitigate how instrusive code changes
->to allow error injection are. In 2021 we evaluated the prospect of error
->injection in-kernel long ago for other areas like the block layer for
->add_disk() failures [0] but the minimal interface to enable this from
->userspace with debugfs was considered just too intrusive.
->
->This effort tried to evaluate what this could look like with eBPF to
->mitigate the required in-kernel code, and I believe the light weight
->nature of it by just requiring a sprinkle with ALLOW_ERROR_INJECTION()
->suffices to my taste.
->
->So, perhaps the tools aspect can just go in:
->
->tools/testing/selftests/module/
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-but why would it be module-specific? Based on its current implementation
-and discussion about inject.py it seems to be generic enough to be
-useful to test any function annotated with ALLOW_ERROR_INJECTION().
+Move platform initialization of SEV/SNP from PSP driver probe time to
+KVM module load time so that KVM can do SEV/SNP platform initialization
+explicitly if it actually wants to use SEV/SNP functionality.
 
-As xe driver maintainer, it may be interesting to use such a tool:
+Add support for KVM to explicitly call into the PSP driver at load time
+to initialize SEV/SNP by default but this behavior can be altered with KVM
+module parameters to not do SEV/SNP platform initialization at module load
+time if required. Additionally SEV/SNP platform shutdown is invoked during
+KVM module unload time.
 
-	$ git grep ALLOW_ERROR_INJECT -- drivers/gpu/drm/xe | wc -l  
-	23
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ arch/x86/kvm/svm/sev.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-How does this approach compare to writing the function name on debugfs
-(the current approach in xe's testsuite)?
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 74525651770a..213d4c15a9da 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -2933,6 +2933,7 @@ void __init sev_set_cpu_caps(void)
+ void __init sev_hardware_setup(void)
+ {
+ 	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
++	struct sev_platform_init_args init_args = {0};
+ 	bool sev_snp_supported = false;
+ 	bool sev_es_supported = false;
+ 	bool sev_supported = false;
+@@ -3059,6 +3060,17 @@ void __init sev_hardware_setup(void)
+ 	sev_supported_vmsa_features = 0;
+ 	if (sev_es_debug_swap_enabled)
+ 		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
++
++	if (!sev_enabled)
++		return;
++
++	/*
++	 * NOTE: Always do SNP INIT regardless of sev_snp_supported
++	 * as SNP INIT has to be done to launch legacy SEV/SEV-ES
++	 * VMs in case SNP is enabled system-wide.
++	 */
++	init_args.probe = true;
++	sev_platform_init(&init_args);
+ }
+ 
+ void sev_hardware_unsetup(void)
+@@ -3074,6 +3086,9 @@ void sev_hardware_unsetup(void)
+ 
+ 	misc_cg_set_capacity(MISC_CG_RES_SEV, 0);
+ 	misc_cg_set_capacity(MISC_CG_RES_SEV_ES, 0);
++
++	/* Do SEV and SNP Shutdown */
++	sev_platform_shutdown();
+ }
+ 
+ int sev_cpu_init(struct svm_cpu_data *sd)
+-- 
+2.34.1
 
-	fail_function @ https://docs.kernel.org/fault-injection/fault-injection.html#fault-injection-capabilities-infrastructure
-	https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/blob/master/tests/intel/xe_fault_injection.c?ref_type=heads#L108
-
-If you decide to have the tool to live somewhere else, then kmod repo
-could be a candidate. Although I think having it in kernel tree is
-simpler maintenance-wise.
-
-Lucas De Marchi
-
->
->[0] https://www.spinics.net/lists/linux-block/msg68159.html
->
->  Luis
