@@ -1,82 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EAC22CBF3;
-	Wed, 19 Feb 2025 23:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABED81B2193;
+	Wed, 19 Feb 2025 23:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740006753; cv=none; b=HOBOT03wpOThCUFdzKqh2+Acjlt9ew24/prnOOXmialPKRv8YoM9Nu43jkmkH3tCX41VSLq6s9Arn0ytDsKHbvMkxlq8qLdqpnmN4yxjIVYGa8AHjCGfB8/tIBOxNrAfjR47bhMPgzIcCjvQi1w1a5LpyKaR/bn8ivxSxxqshGs=
+	t=1740006809; cv=none; b=O7AFlkDn5YQPzwUQrkANzg0YU8v6c67AyG2nsWiW4xx4lkApd/EjTCQ7l6rPzzr0ACcBOC+4c2o3/2FG2olA+JW2utcibu+1GVZFG+KngeacqRbN2HM5dxXyEyhYN1wNttWqpMUnxMiO7F+b3uRLeEXUeFNP0vxRr0QjqQd/DTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740006753; c=relaxed/simple;
-	bh=gQSqgQ2dE7pAJgW7MxghoZhRW8qSvUMPJTszxGKXEds=;
+	s=arc-20240116; t=1740006809; c=relaxed/simple;
+	bh=1hogxnuECIzSV/Tm1A6DPdaKyUbceozlacoXk8KBzwo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBzfM+xHGnfB2S/tuuy8wzg5nWN/H70RnDILq/KDWbUhrak1ZFyWttbjfxA5VPbxP1yFTY4Rs8Tv4J2Hcmld+uIn7l8ASW6eId0J9zbxv5uf5Nr03Qx5vK2GkNjpIK+oiXPmeDQPPSYprZ8EpNJ9YUlw7cjpHpYpKDM5e4Tw/8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdqqah3q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EA4z8H/c5C/tPxpuVeZtWmwczWdBV2PMvshutya96Vjf3Krz7snDqM9du0BKKdXyfdPk9XlDK3QiTLDo6zWDmsd+clCJzmqCqj0RgTOu62SSIdqd/ftOOwrcbZi7ddd1KWdqx3vkgk/gcg5eZXUD4bBiGGAejuaAHqQH88ct2RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzKjMpVZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdqqah3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E72C4CED1;
-	Wed, 19 Feb 2025 23:12:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzKjMpVZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEDA2C4CED1;
+	Wed, 19 Feb 2025 23:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740006752;
-	bh=gQSqgQ2dE7pAJgW7MxghoZhRW8qSvUMPJTszxGKXEds=;
+	s=k20201202; t=1740006809;
+	bh=1hogxnuECIzSV/Tm1A6DPdaKyUbceozlacoXk8KBzwo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hdqqah3qP2kQ87wiS2BDCnNG1BBTgf1ROMd3zsOMdn+hFo1GL+8vP6KlPCHFTPZFO
-	 bMy0tQNG3jACytjw8bVjTfKZtjgybZwbLuQzbJChCQNwHL7bamI+e6ehcR3UTE2CsX
-	 6yiReybm1GzPpGoXWIXb1O3yfbxlAVvO3i91XOz+rZuriHl1XxkwI2QPBg2WUZ0zpI
-	 YlLjQW2BQri32hRNXP/rC1ZcoJ1o7nqyUaEX+hplJ6FWCW3q6FC3BZww2gJzwCF5O8
-	 1YItmL4VVQc/VMn//VyGSvuQ9w383tDRazKJqgWpQvU+RgtH7/9UQKp+XGjbUAhr6A
-	 asbrRV/h9fo9g==
-Date: Wed, 19 Feb 2025 23:12:29 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.6 000/152] 6.6.79-rc1 review
-Message-ID: <Z7ZlXdxiwLBOFJ5w@finisterre.sirena.org.uk>
-References: <20250219082550.014812078@linuxfoundation.org>
+	b=XzKjMpVZTHiOg2EJoOlVL4olptH5P+B4qffLfXz7wGY66guDlrYX+4e5KUQkW9sKY
+	 6R2AFlEJugpdEnFSQ/H2mlGKdXx+tdG3k60h6YqhneYWj1cIjubwOvc8uf0lWHFl24
+	 GgA+JrgVRpMpG56fLXy48jK7Wbe8yPsBC/s9M8RoqDFRCgNcV26n7c4r9PLszkqtr3
+	 F58GOyDBrW/fBfUUInEQz3HpjhKovHygjHOpeEinKTG+VCqsXO3B0oT61JLltE1rMQ
+	 BxWYAOUo22Dhf1nKmmHbXpWSW9L7WEbKobvm/IhASjJ5FS/bntuL24BQh7wgdjowg6
+	 A+oCUMMd+oG3Q==
+Date: Wed, 19 Feb 2025 17:13:28 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: shengjiu.wang@gmail.com, festevam@gmail.com, krzk+dt@kernel.org,
+	lgirdwood@gmail.com, linux-sound@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, shawnguo@kernel.org,
+	tiwai@suse.com, nicoleotsuka@gmail.com, conor+dt@kernel.org,
+	perex@perex.cz, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	broonie@kernel.org, Xiubo.Lee@gmail.com
+Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: imx-card: Add playback-only
+ and capture-only property
+Message-ID: <174000680771.3151442.2014916167117128565.robh@kernel.org>
+References: <20250217021715.284951-1-shengjiu.wang@nxp.com>
+ <20250217021715.284951-2-shengjiu.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VimosWQ4Y5SCbMoS"
-Content-Disposition: inline
-In-Reply-To: <20250219082550.014812078@linuxfoundation.org>
-X-Cookie: Editing is a rewording activity.
-
-
---VimosWQ4Y5SCbMoS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250217021715.284951-2-shengjiu.wang@nxp.com>
 
-On Wed, Feb 19, 2025 at 09:26:53AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.79 release.
-> There are 152 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
 
-Tested-by: Mark Brown <broonie@kernel.org>
+On Mon, 17 Feb 2025 10:17:14 +0800, Shengjiu Wang wrote:
+> Refer to audio graph card, add playback-only and capture-only property
+> for imx-audio-card.yaml for the case that only playback or capture is
+> supported.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> ---
+>  .../devicetree/bindings/sound/imx-audio-card.yaml  | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
 
---VimosWQ4Y5SCbMoS
-Content-Type: application/pgp-signature; name="signature.asc"
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme2ZVwACgkQJNaLcl1U
-h9D6wAf/bWg26c/bjkiNGaYdUJF0mW4MWcgAgKCd76TQ+wuxTurwahqXlgXwZ5e2
-LK30hUHUsvroa5jyScKI6NCUIVoQLUy/vlOZE7+8XLrOsRUD18/TgnYEC6mXy1g7
-RcswmFyJsCKDhSXSua9s/Aoyc+KMGme1PkCvoOWI2y53sLlIfqjbUW5S4tUHcUVL
-EsTVJQuYsYXLh6UgXA2nv1/piDGkpkS9oppc15XEGItIapWWhKndqqce/L8fGKe/
-9dWPNhh8Si21zy64OkevtseIfpBoGeNXLELOGY3WXw8ZT+oOhR52vH75kDWNClbl
-xA15jleSz76XYfE5qZCMVum3udw3Kg==
-=q8va
------END PGP SIGNATURE-----
-
---VimosWQ4Y5SCbMoS--
