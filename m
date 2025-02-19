@@ -1,39 +1,39 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E702E1E47A3;
-	Wed, 19 Feb 2025 14:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3EB1F4176;
+	Wed, 19 Feb 2025 14:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739976788; cv=none; b=HjtZ1Nv+BxRW+Am17AR9yd2gk3/UDCnahHdKhdBjnEr5MZoVLClR7bQSm0OwZPrdhpMH7R8CL3q3QDXQRdw3xMua7JpTsJpjW4aCgXK3Yv7CbTuOev+47q+6JxhI9n0Ked88pNk6E8MGcIZk+m7Uy+zqfHtKyDOQpWX/Z1H4VSo=
+	t=1739976790; cv=none; b=kb+9cPmuOCdcG94fPGKFM0orS/0AAeOyriMg8fLyoBpYgGWisRMUpN3bPfuFlG3ci9jg2hvFxe9M1l2MDbJDWNnfHEBZfwlSMsavHp/8DGnK0a3xskV79DHEpR2PsCJ5n/X20u8V9W1LxDjfXjDKUjx/Zhm1n6HAYpGzNI9zuhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739976788; c=relaxed/simple;
-	bh=xKZOw9hzrviAcvXKVZ1M5SSZtUleov7kmWdKELPA4Q8=;
+	s=arc-20240116; t=1739976790; c=relaxed/simple;
+	bh=IUWt6BlA3nz5q9tU9OtyNMXBpp7uAHSvmV5zMkpo09I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b4/EDqT0hEfS5gjgj2HBDvRBeWiMI8kvnZTkJHkqIvv5IV6uhZZhL5l30IQ9oUT0LCxF2vHNj0sb2H1NgFDx10DQ6hSEBPKaX7QOuG9oQOf5bOfE7gNASyPaUkukw6tEsvJUbFLvnU1KXyZd1J+Ixy2HhI43sFi36Z3Yu3gW3Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AiPClfsu; arc=none smtp.client-ip=217.70.183.195
+	 In-Reply-To:To:Cc; b=aJFl/uxEAgRkiG3AiNjAVB4Kr5dQtkBAbnoJ+J0/lV7q0hBZWojKQEfMljzifzz75NZ+8O7tdMyBC+w55LXsTKv8RmT6mB6XV5mrl7IkOA6fP6gfhANzvYdeEOaHNr6bYPepvfIvOQ3eYJsoG8qYQ/6NTfiXbbZyNMT5EsH7Sh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ggDp1br9; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AiPClfsu"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C20D20454;
-	Wed, 19 Feb 2025 14:53:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ggDp1br9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5E5B8204DC;
+	Wed, 19 Feb 2025 14:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739976784;
+	t=1739976786;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8u+UDft4UpY9KBk40YrkVV1XuG+FD5zM2TE/VNfUf+w=;
-	b=AiPClfsuSSXes2BKAC2KC+rwnDDlfrbieiZnCzo8nzDupE5WwvszjtTktRa0jq0qXvH6wZ
-	jlX/Tyn6X0t+zxewjeHbw2NGCvGnJDaT7QlfRLREzMhKAwzlhPEXo/PSHCK8CddLARcdTv
-	lnhkTNAyR/c0mYeungtXZgxT8XJ1Tp0oQazz8U8BGfxIO101Ehy5Kd1N3tlmrSON0Wxii5
-	1dUFfpaQt9tVTIhp2Q0wbBTarx769N1eJ9WbWKCCqoxe4WISiHU+yuBkZfAYQ/N1Q8MyEK
-	aMtR5LPMX+B/pHZDV30p3Y3yK5D1JaFpOfP42jF5VoxY05Hz+9R+WPidQjnUIw==
+	bh=ZpHw9c/eOKMcAGX5xz4agnqcyuJa9chaURQCdlZsdw4=;
+	b=ggDp1br9WwoQsozcj8MZeeryE4xUynvBkWWEAgUc84U57/cD143m0fgSlTNwJEkOH277oc
+	uEbbg5aERc4McYgYv1g7SLA2rPTpEp8vHau5dsxm6OkUdwhD8bfNyp8D+Qu6Z13lnBUG/n
+	l5nhhJDPN++ItSXf35iU1fE9f+qmcFfUZriqXD8vRnIQSU0I7k7W7RwyKFB9VbHqfBlVr1
+	vSRBfDNGHRLR3pksmCz3Tw4yCYyO8hVnY04bjU/NpAb89UVVJrgyDfaBwdOPWhriRu3Zm8
+	monLbzndzDesEgIKsLLqU59B23Y42xtASd5wdffOHJLlnR/0nHzWJ3J14TU4QA==
 From: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
-Date: Wed, 19 Feb 2025 15:53:01 +0100
-Subject: [PATCH bpf-next v2 2/4] selftests/bpf: Optionally open a dedicated
- namespace to run test in it
+Date: Wed, 19 Feb 2025 15:53:03 +0100
+Subject: [PATCH bpf-next v2 4/4] selftests/bpf: ns_current_pid_tgid: Use
+ test_progs's ns_ feature
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-b4-tc_links-v2-2-14504db136b7@bootlin.com>
+Message-Id: <20250219-b4-tc_links-v2-4-14504db136b7@bootlin.com>
 References: <20250219-b4-tc_links-v2-0-14504db136b7@bootlin.com>
 In-Reply-To: <20250219-b4-tc_links-v2-0-14504db136b7@bootlin.com>
 To: Alexei Starovoitov <ast@kernel.org>, 
@@ -65,55 +65,79 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeigeehgecutefuodetggdotef
  hhgrdhsohhngheslhhinhhugidruggvvhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhholhhsrgeskhgvrhhnvghlrdhorhhg
 X-GND-Sasl: bastien.curutchet@bootlin.com
 
-Some tests are serialized to prevent interference with others.
+Two subtests use the test_in_netns() function to run the test in a
+dedicated network namespace. This can now be done directly through the
+test_progs framework with a test name starting with 'ns_'.
 
-Open a dedicated network namespace when a test name starts with 'ns_' to
-allow more test parallelization. Use the test name as namespace name to
-avoid conflict between namespaces.
+Replace the use of test_in_netns() by test_ns_* calls.
 
 Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 ---
- tools/testing/selftests/bpf/test_progs.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../selftests/bpf/prog_tests/ns_current_pid_tgid.c | 45 ++++++++--------------
+ 1 file changed, 16 insertions(+), 29 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index c9e745d49493e594b55d79ac26061b0466f9a039..0cb759632225d27ad8df7bc478bf1adb5651bf33 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -1365,10 +1365,19 @@ static int recv_message(int sock, struct msg *msg)
- 	return ret;
+diff --git a/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c b/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
+index 78020ece6a29c3bec4600f4fd6fe88fdbd2a768b..99c953f2be21581f8362f6c9217d395c06e7b5b4 100644
+--- a/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
++++ b/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
+@@ -200,25 +200,6 @@ static void test_ns_current_pid_tgid_new_ns(int (*fn)(void *), void *arg)
+ 		return;
  }
  
-+static bool ns_is_needed(const char *test_name)
-+{
-+	if (strlen(test_name) < 3)
-+		return false;
-+
-+	return !strncmp(test_name, "ns_", 3);
+-static void test_in_netns(int (*fn)(void *), void *arg)
+-{
+-	struct nstoken *nstoken = NULL;
+-
+-	SYS(cleanup, "ip netns add ns_current_pid_tgid");
+-	SYS(cleanup, "ip -net ns_current_pid_tgid link set dev lo up");
+-
+-	nstoken = open_netns("ns_current_pid_tgid");
+-	if (!ASSERT_OK_PTR(nstoken, "open_netns"))
+-		goto cleanup;
+-
+-	test_ns_current_pid_tgid_new_ns(fn, arg);
+-
+-cleanup:
+-	if (nstoken)
+-		close_netns(nstoken);
+-	SYS_NOFAIL("ip netns del ns_current_pid_tgid");
+-}
+-
+ /* TODO: use a different tracepoint */
+ void serial_test_current_pid_tgid(void)
+ {
+@@ -226,15 +207,21 @@ void serial_test_current_pid_tgid(void)
+ 		test_current_pid_tgid_tp(NULL);
+ 	if (test__start_subtest("new_ns_tp"))
+ 		test_ns_current_pid_tgid_new_ns(test_current_pid_tgid_tp, NULL);
+-	if (test__start_subtest("new_ns_cgrp")) {
+-		int cgroup_fd = -1;
+-
+-		cgroup_fd = test__join_cgroup("/sock_addr");
+-		if (ASSERT_GE(cgroup_fd, 0, "join_cgroup")) {
+-			test_in_netns(test_current_pid_tgid_cgrp, &cgroup_fd);
+-			close(cgroup_fd);
+-		}
 +}
 +
- static void run_one_test(int test_num)
- {
- 	struct prog_test_def *test = &prog_test_defs[test_num];
- 	struct test_state *state = &test_states[test_num];
-+	struct netns_obj *ns = NULL;
- 
- 	env.test = test;
- 	env.test_state = state;
-@@ -1376,10 +1385,13 @@ static void run_one_test(int test_num)
- 	stdio_hijack(&state->log_buf, &state->log_cnt);
- 
- 	watchdog_start();
-+	if (ns_is_needed(test->test_name))
-+		ns = netns_new(test->test_name, true);
- 	if (test->run_test)
- 		test->run_test();
- 	else if (test->run_serial_test)
- 		test->run_serial_test();
-+	netns_free(ns);
- 	watchdog_stop();
- 
- 	/* ensure last sub-test is finalized properly */
++void test_ns_current_pid_tgid_cgrp(void)
++{
++	int cgroup_fd = test__join_cgroup("/sock_addr");
++
++	if (ASSERT_OK_FD(cgroup_fd, "join_cgroup")) {
++		test_ns_current_pid_tgid_new_ns(test_current_pid_tgid_cgrp, &cgroup_fd);
++		close(cgroup_fd);
+ 	}
+-	if (test__start_subtest("new_ns_sk_msg"))
+-		test_in_netns(test_current_pid_tgid_sk_msg, NULL);
+ }
++
++void test_ns_current_pid_tgid_sk_msg(void)
++{
++	test_ns_current_pid_tgid_new_ns(test_current_pid_tgid_sk_msg, NULL);
++}
++
++
 
 -- 
 2.48.1
