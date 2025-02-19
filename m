@@ -1,141 +1,70 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59101DF730;
-	Wed, 19 Feb 2025 11:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730C21DF730
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739965653; cv=none; b=hAgBKmlIjEsDeimVXg5KwlrQ7mIB0QRN7ic4QOX9uhero0AE42IDNTSJAx/W6NLKXkeYqi1jcJKt2j2O+Q47V1pta1vbh5wWj4OmDwhUHHfca/I36ei2nKTMoYi3YlybIzztVwVwyFS1kFbE76tp8SJdh3YFZi6RBYQsxNz/+Bo=
+	t=1739965659; cv=none; b=CSBv+uBnMoxwc6tVQajEyVM3YwNKqo5SRVNLfikk7Eua8bUZFE7E52fkH7GdP3duxNKZ9+pni1UxutSwK+MSVNN2e0hpNAbLiL+b41n+svmLm8WeTwE7ncwDifWW1q5MsmqLa33e4Fd5yhQPbBpcFVsK5cRE3zE+te1uD7nQyfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739965653; c=relaxed/simple;
-	bh=4F4BQbwhZ42l1hicc/rXsFLMooM0Yyz+PO4b6Gl8KkM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N04e53UJOWFlOpZR2EdPM4r4FKNEQwh/cGfEddZYxz3axhTcq4oaSvNbaUDk/2yl+En9HoPPHFkqO2uDNex16Pukzc9wfavYIcaq5rOul8t51rBN1E4+ErepvC5sYin9hleeO5rDmfD08ExPN5HXI6E8EFz0lOsxbyKYZDtbdeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dLngnWDT; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739965659; c=relaxed/simple;
+	bh=zWx5hk1WAf8TrISGvDDN/GnDdSXaBsNABFLb3KrPPws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzyCFP4+jGPiiOFkJyl6BY/2tHfrtVe8lfQMaCjfQRZAqz+MAuB0XJxiAvoMmhKuDoKhOKvv/vLylj5c6MQnbDYL6WIS2o3bMC95qrB8RFfCBnTWdaJKrMQGTrWTNSnTUhF9NB7PXVf4DJvW8MDhwU5NA0oFFYbBZTPxeSij8rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m562y06k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dLngnWDT"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c30:4abb:6de5:9248:813e:8db3])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9506E169;
-	Wed, 19 Feb 2025 12:46:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739965568;
-	bh=4F4BQbwhZ42l1hicc/rXsFLMooM0Yyz+PO4b6Gl8KkM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dLngnWDT2KtTfOleSMZsTTkgKtZvtHz5QvJA2PwhbLbS12wixGtAZW7plzORvawCj
-	 c3xql2gQWWAp0cXP7hoIQm2TWuUY3ulzUpG8B0bFbo2+2YvT+zKkfbO0GBcz7BcBIG
-	 EBtnZ56VLZAGEZDPc0vgk59aKvwUnYYdIrYdxgNc=
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Date: Wed, 19 Feb 2025 17:16:45 +0530
-Subject: [PATCH 3/3] media: i2c: imx219: Use subdev state to calculate
- binning and pixelrate
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m562y06k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1394C4CED1;
+	Wed, 19 Feb 2025 11:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739965658;
+	bh=zWx5hk1WAf8TrISGvDDN/GnDdSXaBsNABFLb3KrPPws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m562y06kMDqn1m5JG+R6kbWEqk0i8L/7+1X31mPKOtSkuguAkOdBIXQVRL0T105P6
+	 2zrkOzLkG5usKum2Mmlti6jdIgdoAPUweEN4rig11ZkE2JKVNWj+n5VHbWXZibVG66
+	 TrEQqEBaXMo1DADbCpXwN02VoFl/GDYQMptN61K2VWXlJHROioUj5YWoapYYIF4EYT
+	 73xdeMgIT23WFLpU19fbd6Lj+5G5TeqHTGq08tNTwTowc4ZA18DTTZ7QzB+Sb8E4ah
+	 pW+d7yLMc2BJnzQiGwWUgHVvoQYYmgGMWTuwKe5sH4VE12wNJi2SgYxItin0ucNwWX
+	 GLmFESONMAq8g==
+Date: Wed, 19 Feb 2025 12:47:28 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v6 00/15] x86-64: Stack protector and percpu improvements
+Message-ID: <Z7XE0P6ZFHxtlYXw@gmail.com>
+References: <20250123190747.745588-1-brgerst@gmail.com>
+ <Z7RRZ0jdqsrADMm0@gmail.com>
+ <CAFULd4Z_QoOLKCOawyeFtRe6V4+oaaGxfQxav9dS-Di-Ne7tfw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-imx219_fixes_v2-v1-3-0e3f5dd9b024@ideasonboard.com>
-References: <20250219-imx219_fixes_v2-v1-0-0e3f5dd9b024@ideasonboard.com>
-In-Reply-To: <20250219-imx219_fixes_v2-v1-0-0e3f5dd9b024@ideasonboard.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
- Jai Luthra <jai.luthra@ideasonboard.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2950;
- i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
- bh=4F4BQbwhZ42l1hicc/rXsFLMooM0Yyz+PO4b6Gl8KkM=;
- b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBntcS25HVKh8yh9wn7Cve+Ujd9p3brD8cupdGR0
- 0ZhU4L4M/mJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ7XEtgAKCRBD3pH5JJpx
- RS4wEACd3PVfkrQM1pon3+eOtOBmLWQxoJ2LD6hErMtOghdW76jFmhyRNZFPS0+Yg41vB1db6Wj
- litNPIiAo8JucJDmIh/Lk7zd5cf1h7/UbK+UczBNZwp+bvJIm7nweIHFGj5WOFhjezP2UQ1X5qT
- nzRMBETFtlPciOhoZhPS4nf5Uf985EfF1BDEFol2fg/JXP6R5ZzcqlJeZ1rrXSu3iStRiVhxdvX
- 0CXlykoLPyiLK4ri65jx093Hm1u67imrpBNXopRcDDtDYAjMyunO11cc3fTIEU2ymcACUhG3LzR
- Pkkq0lwVyWaif6gNjQw5REI8IwTgN7sqJiJVKJUfvv2SDQFBn40k76C3RBCQ+tnGiBFh8BAlho1
- 1Yq8uiMLn65SOy0X9G7Wc5ctKRNNPjzhJqI2De+k5biTRHwMhQisTbXkYPCd33Yc3WvUkwWEmbf
- H9XICemEfeJhtDVKuerT0iA9RkbrFRC6LX5aNnLEcq+bwMxWtCdkZ8EPmd8AP52WrmR25uCaE1H
- kwQpbxcnMd1yq7VdoYP99PghDVYfC6ZjlTTzESIQiwXYeqTOVJT1ojPQw4rzXveybOcSm3LWl7N
- Be83R4Aseh5UhwcK2Zh8A4SXJB4+BialR0Ns9kbNYQQgQmHVMGJA9CKrd6g2rJCH5y3lrEY3P3T
- lO9TYwlt3VvWKPA==
-X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
- fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFULd4Z_QoOLKCOawyeFtRe6V4+oaaGxfQxav9dS-Di-Ne7tfw@mail.gmail.com>
 
-The pixel rate and binning calculations need the format and resolution
-of the sensor, so pass the v4l2 subdev state directly instead of always
-operating on the active state.
 
-Suggested-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Link: https://lore.kernel.org/linux-media/sejl7xskif6rlpdsg3jhczjwe5gi6rs53ehbyka6omv2zeg7qq@4iis7i2lla5p/
-Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
----
- drivers/media/i2c/imx219.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+* Uros Bizjak <ubizjak@gmail.com> wrote:
 
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index f02732d8fa95de0a295f247d4f0b60017dbb2ed2..0adfe8e5775ba6661f7d06fedfd920d91c24cba5 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -400,10 +400,9 @@ static u32 imx219_get_format_bpp(const struct v4l2_mbus_framefmt *format)
- 	}
- }
- 
--static void imx219_get_binning(struct imx219 *imx219, u8 *bin_h, u8 *bin_v)
-+static void imx219_get_binning(struct v4l2_subdev_state *state, u8 *bin_h,
-+			       u8 *bin_v)
- {
--	struct v4l2_subdev_state *state =
--		v4l2_subdev_get_locked_active_state(&imx219->sd);
- 	const struct v4l2_mbus_framefmt *format =
- 		v4l2_subdev_state_get_format(state, 0);
- 	const struct v4l2_rect *crop = v4l2_subdev_state_get_crop(state, 0);
-@@ -430,11 +429,11 @@ static void imx219_get_binning(struct imx219 *imx219, u8 *bin_h, u8 *bin_v)
- 		*bin_v = IMX219_BINNING_X2;
- }
- 
--static inline u32 imx219_get_rate_factor(struct imx219 *imx219)
-+static inline u32 imx219_get_rate_factor(struct v4l2_subdev_state *state)
- {
- 	u8 bin_h, bin_v;
- 
--	imx219_get_binning(imx219, &bin_h, &bin_v);
-+	imx219_get_binning(state, &bin_h, &bin_v);
- 
- 	return (bin_h & bin_v) == IMX219_BINNING_X2_ANALOG ? 2 : 1;
- }
-@@ -455,7 +454,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
- 
- 	state = v4l2_subdev_get_locked_active_state(&imx219->sd);
- 	format = v4l2_subdev_state_get_format(state, 0);
--	rate_factor = imx219_get_rate_factor(imx219);
-+	rate_factor = imx219_get_rate_factor(state);
- 
- 	if (ctrl->id == V4L2_CID_VBLANK) {
- 		int exposure_max, exposure_def;
-@@ -689,7 +688,7 @@ static int imx219_set_framefmt(struct imx219 *imx219,
- 	cci_write(imx219->regmap, IMX219_REG_Y_ADD_END_A,
- 		  crop->top - IMX219_PIXEL_ARRAY_TOP + crop->height - 1, &ret);
- 
--	imx219_get_binning(imx219, &bin_h, &bin_v);
-+	imx219_get_binning(state, &bin_h, &bin_v);
- 	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H, bin_h, &ret);
- 	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V, bin_v, &ret);
- 
-@@ -937,7 +936,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
- 
- 		/* Scale the pixel rate based on the mode specific factor */
- 		pixel_rate = imx219_get_pixel_rate(imx219) *
--			     imx219_get_rate_factor(imx219);
-+			     imx219_get_rate_factor(state);
- 		__v4l2_ctrl_modify_range(imx219->pixel_rate, pixel_rate,
- 					 pixel_rate, 1, pixel_rate);
- 	}
+> > Thank you for doing this series - it all looks pretty good from my 
+> > side and I've applied it experimentally to tip:x86/asm. I fixed up 
+> > the trivial details other reviewers and me noticed.
+> >
+> > Note that the merge is tentative, it might still need a rebase if 
+> > some fundamental problem comes up - but let's see how testing goes 
+> > in -next.
+> 
+> I wonder if there would be any benefit if stack canary is put into 
+> struct pcpu_hot?
 
--- 
-2.48.1
+It should definitely be one of the hottest data structures on x86, so 
+moving it there makes sense even if it cannot be measured explicitly.
 
+Thanks,
+
+	Ingo
