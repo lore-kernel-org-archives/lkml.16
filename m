@@ -1,224 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26087A944;
-	Wed, 19 Feb 2025 17:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987067; cv=fail; b=FhfXpvdLgbPGi8hq7M0vmU9mjhmXoxP7WtkRAk6Q28Mp+NwQ0BSKGWq5hz9rT0GbY1LE+ETONc2GlSVoyKzSfsd1LOZeqY/zAJHOnJ/y5zTgu1O75AO0tmxd+8NOWarzmag/tlzBaTs1lnE/5wlE82/2wJ5sBbqo4AO1YeqF21I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987067; c=relaxed/simple;
-	bh=270FKZueewluMOtunA4s8efRoYTvV/d9aGXMrkKA9Ro=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LrjmvrM3vR9MP90iOtALTcvyKJ1BR2DCzFc5yCQwLappFEG+aSQJTPa29AqXDTZRCJ6pWVvcUfo5Gw5jQWZxLwB1kTmhVsxIWPdKzHmEPiw4ajcCc1G3tBPmr7DrDdiDNQCGKfM/7ZdFzkdhUl/m7JPa2lvtd3y1qQKLvJMSFa0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EUcX1AzN; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA462144CF;
+	Wed, 19 Feb 2025 17:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739987102; cv=none; b=iqozSCvvvFwMGMPp5DEShpKKQflaaFBivgP4/olEHCAsLR5EJn6gL7NrqAdaZAYJgiyMio/RAlXPTMwLzZWPfQcQiVvxjV3YYI4RlFShZQqLlF0724VeMt/BZcF0HWutMw9vaxY3sNze+jgrbU31erfKJGG19HD+oEUP6trBLJ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739987102; c=relaxed/simple;
+	bh=9DDQSRBXojYKs3E7l0ZcCaT7BmSFwinEFa+8YID+AY0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pBcE4vYr1FhYv4N5Ph71acGfG0+9eilxiHnMeWn5ti+B8RKbxW0cR6bUYoL8pUp9DxuLoBpVAgi81ymSau6VMvl9U2cVb5fNvL4OiGxUZM2uHITr43WcVgz9eL7Bp5iocP3zRqnGMD34wMr61YsvdleSxu3/43YGDL/Yt+LdbBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GzI76u01; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EUcX1AzN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739987066; x=1771523066;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=270FKZueewluMOtunA4s8efRoYTvV/d9aGXMrkKA9Ro=;
-  b=EUcX1AzNsPWnjOIs4FUXFR3h8T6MNrnNKuCeieCyC9zrzWSxSN92D625
-   lk3LsHRHRrRAVDbTlBuy/ZkB2nJ2QKjFaduNP2lw5wTbUgc3dNm6tF3KO
-   sjJHoLNhy5nxdl2X14evOgcHPSt+IPFZSsAwqBxz4AUHyEtKDCODmAxHi
-   QyQtLSKXwJf84pBZgXTEwZ/qpq3FgSLhGeL4wp1n4iTeyUzYKc2YtquFP
-   CvHSp4mFNILfEvYX01MmpVCGXXGQXVFUyl+IycQ+zUe64CZ1VABJk6N6t
-   bgbmlO4W0Et2iHuxFzQUd1F4poGRrexWoMaYsf1LTChKAsz5Vv50JOXuZ
-   w==;
-X-CSE-ConnectionGUID: lm2jhWE3R9W6JOz7VX6qfQ==
-X-CSE-MsgGUID: tOaUAQ9kTR6I1Cg+hgPYEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="66094245"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="66094245"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:44:25 -0800
-X-CSE-ConnectionGUID: G6QYcfFdTvCktH7XivRYMw==
-X-CSE-MsgGUID: lkDnVODkQhWiOz2Hwo5c5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114516580"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:16:30 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Wed, 19 Feb 2025 09:16:29 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 19 Feb 2025 09:16:29 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.42) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 19 Feb 2025 09:16:21 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SJWYUTewFe0GVJIckxVgPT4ecgo6HEANS3MvcZUsEvf8PnyqjKR0lTiTfAq5K5CwnfH9YuswQskW25YpQ26d08CwL/umNMo7DVGNi4djdMGwb92uxmwK+8d21qe81tcnKIyCO/x3hZjdEXb44EwBGZ+wB3CPi7sXoBsl0ZE3F7PTTuwG4MNvQZYrs/OcJWhBQQBdSZqAGoSkNKF+O9PG9NAWPLugS4HPvuxohA26FYoCQSWurtSNjdcajZ0QB84O0tyIik2+SIjAVbqwuBALovunGe7qdp23ppSLv5pe4Dsb7oHKIOfaSVlFJaFLZ5H5Z2XOBmLZ5Id6Cos/jCSikw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=270FKZueewluMOtunA4s8efRoYTvV/d9aGXMrkKA9Ro=;
- b=GpwbX4/u9EkAsK8308qpHojCFLYdjCbFMYg2771x8qFMvkXP3QjVqnPur0BdQr1ZI9zGVXYQkjMrWzX4i0RTvpGaNyD7Nf0DLuWFp5fqPnaJtrSLR+tC3InbnIBoFbGnmgBu4QotVB86CVwSYPeN5FaTWOqIQJSefj52kVyL369d/D1G1npQ25Dtt29FnHdjTknfYeu3dSDJ3gclaIm6LMIzUxWfj575Uc/vTjI/xe8Phw6NkvPBVPP2lwvr67NBffiiDbRxOYG/7/bWLPTZKa/FmTuklJTHj3z6mC1HRxbdswzWfKHlsWjgALL6GSE8I8MGC3deiB4t0z+eddSzQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
- by DS0PR11MB7190.namprd11.prod.outlook.com (2603:10b6:8:132::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.20; Wed, 19 Feb
- 2025 17:15:37 +0000
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::acfd:b7e:b73b:9361]) by SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::acfd:b7e:b73b:9361%7]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
- 17:15:37 +0000
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Miaohe Lin <linmiaohe@huawei.com>
-CC: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
-	"hpa@zytor.com" <hpa@zytor.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "peterz@infradead.org" <peterz@infradead.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
-	"tianruidong@linux.alibaba.com" <tianruidong@linux.alibaba.com>,
-	"bp@alien8.de" <bp@alien8.de>, "nao.horiguchi@gmail.com"
-	<nao.horiguchi@gmail.com>
-Subject: RE: [PATCH v2 4/5] mm/hwpoison: Fix incorrect "not recovered" report
- for recovered clean pages
-Thread-Topic: [PATCH v2 4/5] mm/hwpoison: Fix incorrect "not recovered" report
- for recovered clean pages
-Thread-Index: AQHbgQXqknHuofGPgUGBTzisw8EteLNOLrQAgAAm8wCAAIuSIA==
-Date: Wed, 19 Feb 2025 17:15:37 +0000
-Message-ID: <SJ1PR11MB608384612B78AF0D65ECC545FCC52@SJ1PR11MB6083.namprd11.prod.outlook.com>
-References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
- <20250217063335.22257-5-xueshuai@linux.alibaba.com>
- <ddd769c2-a17d-9e34-822d-66f72bd654ac@huawei.com>
- <be78641b-becc-4cdb-a90e-574734638869@linux.alibaba.com>
-In-Reply-To: <be78641b-becc-4cdb-a90e-574734638869@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|DS0PR11MB7190:EE_
-x-ms-office365-filtering-correlation-id: 27e9c04f-fa31-4e2f-a47c-08dd51090763
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?ZzV2WStsUFV4dk9ha0JUdFFTWHY4cUtpOTNxRVBmNUg5dXVsOFNtV2RlcHlu?=
- =?utf-8?B?SlhOWDdUdlhrZXVZNmtOakhicDRCUDd2elNiNS9YU2EyZ0lFa1NZb3k5NG1z?=
- =?utf-8?B?T2FqcFRxaTRtL2RTRU9nUVRsOENwL01ZWlAzSG1kRmJadzZwZWpnZHYrYTFw?=
- =?utf-8?B?VWE0R3AxVHovVmRLQnJUL1lDVlI0VXprbTZzZTVQdE9OQkIxMkZyU2FyNDZX?=
- =?utf-8?B?aW1YSlZraDBzV1dEblRMcW5TR0NxOFZJWmR2U1RZUWhOS09sQVV1eXYxOE8x?=
- =?utf-8?B?aFhJQzUyUmdMd242dmF0SVFydXZNZW83LzFPS1M5UVpFVjFJUGhoRlpwYnk4?=
- =?utf-8?B?NmsyOEF2eFZWU3ZRY2U0MHR2ZU95djJMZ3dPdDhFOHZHYmRSWktxeTg5RUlO?=
- =?utf-8?B?TlhFQkFlcWVSU1pvdzJ5dGgzcjNrSER1azBSVkFpTzRrMEZWR3FGVmtGWkdB?=
- =?utf-8?B?VVNFZ3pRaDF0TVR0UGtYMXBYYVA0eTI3MXFVTDlacWZGNU0wQnVrUk5rUjEv?=
- =?utf-8?B?M1FieWI1ZFlwMWhNajFuaTVIREY3RTlBaEhvYkhMQ28xNXVEVGFYZDNQVzNa?=
- =?utf-8?B?YWhRajJDMkRHK3JzbUxKQjhHeHRsaXY3N01GU01SbnRCa01Nb0VGdWdUUmxU?=
- =?utf-8?B?c2h6MGRuWDhGYXNPemRUd0pSVzNvMmFsT2dFVzRObkdqcjVYNkhIVWJjT2tB?=
- =?utf-8?B?L2ErNjdKc2o3aVZySXZQVStJUUJMdjU0dnRqamZRc3huSUpZUWtPcFJYRG5H?=
- =?utf-8?B?V1A0UVdBUGlCQjBmK3pRUzQ1WVNsVnEvSzFVaDVQOW8wNzdadDRMcDNoVlQz?=
- =?utf-8?B?TWJsdUZSVGZydFNTRlY2WWhGZjhmVWJ5ZS9NYjNpRGpaWXgzL25ZeEtlR1pR?=
- =?utf-8?B?ZnFNYy9scDQvT002YjNEMzBSMG55bWFlREd4bjM2cFVqcDE1Y2lkR3VjdzFL?=
- =?utf-8?B?c0NmbVA4Y3NDTGREOG5GcC9admdlRHJEb3JwZFEyczQ1VXRsWElzbTZ3dHAw?=
- =?utf-8?B?VjgvbkFubzBaejFVSTRYUXNUQ2hTVjVhOURhSk9HOU1rd2lxdUlGZUJtN3lG?=
- =?utf-8?B?UGZyTjIzQzVEWjVGVE5TUTVqWmQ4TVUvVmxkTlNHRnhFMEJxT2JKTm4ydzhr?=
- =?utf-8?B?MWVPOXh6czFqN05zbmtBVFc4WE1WVzhMSDU3ODdFSGRuTTQ0aVVyZVAvRFkz?=
- =?utf-8?B?TXNqbEI0dVU5WWxKKzFRdm1icFRsSHNpVnlNMWwwZUd5ZUw0MkRJSTE3ZkZH?=
- =?utf-8?B?blBQTThPeFpHdHZHOXhOWkphVm5RdWpDc1pXVWVna0lrVStzVkNPSGlGZm1X?=
- =?utf-8?B?b0NwditNaDFWU2dlMDA1Ziswc0xGelhIbi9ZblowVW1kclh0T1kwY0F4R3dX?=
- =?utf-8?B?V3BmQnFyUDdMK0xKY3NMT0JCcGw1aTVRWncwZEU2Q0JySHk1eVNuTzd2aGFn?=
- =?utf-8?B?aHhtSU1qWjVPZ1N5VmNobjIzVzFjcVJ3WHEweEswTzh6UWNsdDJvMkE5eHFH?=
- =?utf-8?B?a1BldElhUmp3OER0UHQ1aFBCVEJlYU9TdDVEOVdqNTN0aDZqdzlsdjNraUJN?=
- =?utf-8?B?a3dvVTE0V1kxODBCaFhMaXI3emFrbkV4WmFiRGlRdTRyaWxDREVHaTJHODZj?=
- =?utf-8?B?bVNId0J5QnFBTjV4NXJnVG12cExXelVlUi90UHlmcUhoODR1ckdJVjVwQU5T?=
- =?utf-8?B?MnB4dG41T0piN1JnUHdGcEh3UGM0REY0L3E3YjBSYllrY0N2UG9JdkVjRUlo?=
- =?utf-8?B?dWdZSm9uR0gzT3dmSzUvOUJQb25qQndCWW1UWjRBRkFSUFR1SkZoMmNaUWN0?=
- =?utf-8?B?dXhkdjNiSnkzR1o0MVBVNzBKVGYzMjlHN0FEMmkzWjJwc0pWRE5rSmhSV2pt?=
- =?utf-8?B?VVlPYnl4VTNPajdsRENBK0Y5TmxKS0ZCcXFpRzVvMityaHc9PQ==?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VFdqWE9ybm15S2JGRU9xNnBxWFVqR1NMbXhteEVlRkN5clZ3c1M3SjhvWk5z?=
- =?utf-8?B?TTdEeEI4VC9OL3ZkNlhRVlpqU2sxVzR4UkloU25wejJqRkpERjFYOWdycHpx?=
- =?utf-8?B?SHk3MTBDY1VuRlE3dGRzaXRGdFpzaUY0azJ4VG1pV1U3R04xSmREN3NUSlVt?=
- =?utf-8?B?K1NpYlhnOHNLa1NuSlo0ZFBZN3kzbHAwNS9pQ2dvWkpDK2p4WTdZY0ZrR0VQ?=
- =?utf-8?B?WDJIVDRzVkdXM0NSM0E1TDA2emh6OVlnemU5eTYrSDducE5NeDdwcnBSb04r?=
- =?utf-8?B?Y1E3Rks2SUpINUZVY29RZHZqUVVNenJDNkxvT3I1b3BzUjBUK2ZiOTZaRk5m?=
- =?utf-8?B?ak5QM0VMS3d3L2hLMStTb2dya0xRdW1qMHhiUExoZzR2L2FLVkZUUGRLdW9F?=
- =?utf-8?B?Y3JscXRoNGg0N044cHNZc3N6TlhYYXpFSHRaMTRQUGNWejdOemUvZnNXbG5W?=
- =?utf-8?B?ZFd4UHZUbE5qeGVyMkhNSy8rU3cwNGhSenBHejdmSzNOU21iZnkyTjZldmdh?=
- =?utf-8?B?bTU0U3JSQlQybHB0bGNkVHEwMlAzR1NwaVFjc1FEMXVrV0x4NVVzUGluTUtq?=
- =?utf-8?B?NURrd0dYVnVURFlWYWxqcGlONDBzWS9STnF5WVQyK3VQNCtqOCs0akI2azlp?=
- =?utf-8?B?M0hOMlUwT3ZOU3J4RVFCK2dzRWxiejBZc2xYUDJTVlRhSzhFOUp0L1hCajU2?=
- =?utf-8?B?ejVLd3ovc25oMmt4Z3A2dHhBNFR1YzdYWWhUYldHbEE0RjJMMjNMRWRuR2Ni?=
- =?utf-8?B?TE5vYUV4dFFONXFYY25hU3E5MW9IclF3N3Bkd04ycXRJUUU3ZzBTbjYwMlpo?=
- =?utf-8?B?d0k3SmpFQ2ZYVldla3FsU0hWeFhHM01EZnJ6NzE0a3FMS05JREVqbnhPUDdH?=
- =?utf-8?B?Vy9aQ2ZjYnJ4L2lram9IM0x3MTNhdzZMZnlQVERUY0xiTklQYjNXSzM4Wi9v?=
- =?utf-8?B?bVhhRWo4WTBLUExROGxlYUR6TktjWDFRQlRoYnZ4ZHVGZlptUXRaV0JIMmRV?=
- =?utf-8?B?N2ZYYnlFY3MxaFg2WkcwU1lWL3JwK0NHT1ZpSUdxcWxTWWhQVWpGWTY4L1l0?=
- =?utf-8?B?UGdXcHhod2YwQ2cwSDdFWUxFemRUcTlmejRLemNFLzhjSHVFSHcwSmY0ZFFF?=
- =?utf-8?B?T1J4MGtXL1VRUmE4c3lvd1h3NGF2YlRidmNjVFA2ajc0aUt2UGlRdVJXcEtO?=
- =?utf-8?B?NDcyUG54Vjdoa2pBR1B2UmRhL3c4aVBiQ1pkSkxUSWxKbEZOYXJUajVKaHMz?=
- =?utf-8?B?dkZvUnhqcklxUDJDQjVDdjIzb1Y5ZW1ESHZzeTlOMGtqTmxheEt0MGFSOERz?=
- =?utf-8?B?NWpmckdtMFNtdWthdVQwM25xbGJsV1FsVWxySG9ndnZRd0xneGx3dTdtdlFp?=
- =?utf-8?B?SUs1OVZYbVpOMVFORFh6aXdGVndMeWx5allDalllS2J5VzZhZ0cvbkJzaHU5?=
- =?utf-8?B?WTlxMVhtT1VKcUpCenNNSFFaWkt0d2J5cFBkWVFFM2NWbUhwNDdpdzJiT1V2?=
- =?utf-8?B?RXloWHQ3SkZoOVdDU2RHSVVxWW5IT0RJWUtOaTk3MVBnTGNqUFRxQzN2N3Q2?=
- =?utf-8?B?R0VYalBjK2dQd1Rpd1V2elRucWtSQ2w1aHp0VmZHWG9XWktMRXJOVHF0VERH?=
- =?utf-8?B?M1BnTE9BL2JkRUgyVjNGT00wODQxd3EzRFlyRktDNGM0MXNOL3dDNUd0cm9W?=
- =?utf-8?B?MTlacFZpQUZxTTV6bjZ3QlFlU3BoeVlNbDc5QlVRT3VMUW1ZQ1FmMmI3K1Vh?=
- =?utf-8?B?ZytmcUI2OW5vcER0SmRLemxId2d3cU9kMkRHVG1wSytnT1VGcnovWW5BRURZ?=
- =?utf-8?B?eUUxL241amdrZE1pT3pGUWM3NVNOMUQxNGZpbTFLRDJVTzNPVVBEcWFNMGhC?=
- =?utf-8?B?Zmw4bjk4QWZBM2NLZEVyaXh4ZEZORTVKa01nMzBZVVdxeWdSbG9Qb3MwQW1p?=
- =?utf-8?B?aGd0ZXF4aEE2R3pyWkZNV3N6K0pmRTRzVUt5Z1dxU1l3c3J6MmMwZWxLZTJX?=
- =?utf-8?B?Sml6d3d0NkM1dHhKaURkTk04dXcrMWZhSTN6eW9EdE5NUDJiNjZROTNwNzVh?=
- =?utf-8?B?d3BZYXpHNUxXVGlQc0JSWkx1TFUwUDB5M2RtY1puS1hpcGxlRTBYMnpqeFFs?=
- =?utf-8?Q?rbNodKcCBfUmxacrfP3Mc/72w?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzI76u01"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56B1C4CED1;
+	Wed, 19 Feb 2025 17:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739987102;
+	bh=9DDQSRBXojYKs3E7l0ZcCaT7BmSFwinEFa+8YID+AY0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GzI76u01W+GuItG8twFKvac3xBV8lqEt2O70ZlQ9ECAM7mn4PvY6B6m3dFVNeoSJF
+	 bAZxgh30RdMRUzQZLDVLSZOCrIsIbWzdIvS33u09PTY07HDgLbMXmj9W6psLwIPzV0
+	 RRdB7by9dMs04GOCMFsJFA3aNWTLPeTIY3MtUfRUk7iI1rZlLhg6o8YHzQk6Y1myQG
+	 +vh8xwegNiTBcoB2O13Kb55jz5H6cBYN5tTbvKe6Xv5pKDYLJPngZcOJg79IpF7r1H
+	 9Fe0p6n8xuhg2RWvpbnx4SRy/p+ijK15Cn73A1hkbadJEXNaZqwemj4H/B/dHrvYY/
+	 i6Rd5VZq9xLKg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tko83-005ud8-MR;
+	Wed, 19 Feb 2025 17:44:59 +0000
+Date: Wed, 19 Feb 2025 17:44:59 +0000
+Message-ID: <864j0psuas.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: kvmarm@lists.linux.dev,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Colton Lewis <coltonlewis@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Janne Grunau <j@jannau.net>
+Subject: Re: [PATCH v2 07/14] KVM: arm64: Use a cpucap to determine if system supports FEAT_PMUv3
+In-Reply-To: <20250203183111.191519-8-oliver.upton@linux.dev>
+References: <20250203183111.191519-1-oliver.upton@linux.dev>
+	<20250203183111.191519-8-oliver.upton@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27e9c04f-fa31-4e2f-a47c-08dd51090763
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2025 17:15:37.6465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Oxvj0kztWjQpsGr9k3701BC5UbqOPZIRRiiyrSo25m/ln150NXF2ahq3MLXZc9jHLQgyZz3fIv4mHhR67/IMvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7190
-X-OriginatorOrg: intel.com
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, kvmarm@lists.linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, mizhang@google.com, coltonlewis@google.com, rananta@google.com, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, j@jannau.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-PiA+IFRoZSBjYWxsZXIga2lsbF9tZV9tYXliZSB3aWxsIGRvIHNldF9tY2Vfbm9zcGVjICsgc3lu
-Y19jb3JlIGFnYWluLg0KPiA+DQo+ID4gc3RhdGljIHZvaWQga2lsbF9tZV9tYXliZShzdHJ1Y3Qg
-Y2FsbGJhY2tfaGVhZCAqY2IpDQo+ID4gew0KPiA+ICAgICBzdHJ1Y3QgdGFza19zdHJ1Y3QgKnAg
-PSBjb250YWluZXJfb2YoY2IsIHN0cnVjdCB0YXNrX3N0cnVjdCwgbWNlX2tpbGxfbWUpOw0KPiA+
-ICAgICBpbnQgZmxhZ3MgPSBNRl9BQ1RJT05fUkVRVUlSRUQ7DQo+ID4gICAgIC4uLg0KPiA+ICAg
-ICByZXQgPSBtZW1vcnlfZmFpbHVyZShwZm4sIGZsYWdzKTsNCj4gPiAgICAgaWYgKCFyZXQpIHsN
-Cj4gPiAgICAgICAgICAgICBzZXRfbWNlX25vc3BlYyhwZm4pOw0KPiA+ICAgICAgICAgICAgIHN5
-bmNfY29yZSgpOw0KPiA+ICAgICAgICAgICAgIHJldHVybjsNCj4gPiAgICAgfQ0KPiA+DQo+ID4g
-SXMgdGhpcyBleHBlY3RlZD8NCj4gPg0KPg0KPiB0aGUgc2Vjb25kIHNldF9tY2Vfbm9zcGVjIGRv
-IG5vdGhpbmcgYW5kIGhhdmUgbm8gc2lkZSBhZmZlY3QuDQo+DQo+IHN5bmNfY29yZSgpIGlzIGlu
-dHJvZHVjZWQgYnkgVG9ueSBbMV06DQo+DQo+IEFsc28gbW92ZWQgc3luY19jb3JlKCkuIFRoZSBj
-b21tZW50cyBmb3IgdGhpcyBmdW5jdGlvbiBzYXkgdGhhdCBpdCBzaG91bGQNCj4gb25seSBiZSBj
-YWxsZWQgd2hlbiBpbnN0cnVjdGlvbnMgaGF2ZSBiZWVuIGNoYW5nZWQvcmUtbWFwcGVkLiBSZWNv
-dmVyeSBmb3INCj4gYW4gaW5zdHJ1Y3Rpb24gZmV0Y2ggbWF5IGNoYW5nZSB0aGUgcGh5c2ljYWwg
-YWRkcmVzcy4gQnV0IHRoYXQgZG9lc24ndCBoYXBwZW4NCj4gdW50aWwgdGhlIHNjaGVkdWxlZCB3
-b3JrIHJ1bnMgKHdoaWNoIGNvdWxkIGJlIG9uIGFub3RoZXIgQ1BVKS4NCj4NCj4gWzFdaHR0cHM6
-Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjAwODI0MjIxMjM3LjUzOTctMS10b255Lmx1Y2tAaW50
-ZWwuY29tL1QvI3UNCj4NCj4gSU1ITywgSSB0aGluayBpdCBhbHNvIGhhcyBubyBzaWRlIGFmZmVj
-dC4NCj4NCj4gQFRvbnksIGNvdWxkIHlvdSBoZWxwIHRvIGNvbmZpcm0gdGhpcz8NCg0KQ29ycmVj
-dC4gUmUtcnVuaW5nIHRoZXNlIGNhbGxzIGlzIGhhcm1sZXNzLg0KDQotVG9ueQ0K
+On Mon, 03 Feb 2025 18:31:04 +0000,
+Oliver Upton <oliver.upton@linux.dev> wrote:
+> 
+> KVM is about to learn some new tricks to virtualize PMUv3 on IMPDEF
+> hardware. As part of that, we now need to differentiate host support
+> from guest support for PMUv3.
+> 
+> Add a cpucap to determine if an architectural PMUv3 is present to guard
+> host usage of PMUv3 controls.
+> 
+> Tested-by: Janne Grunau <j@jannau.net>
+> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+> ---
+>  arch/arm64/include/asm/cpufeature.h     |  5 +++++
+>  arch/arm64/kernel/cpufeature.c          | 19 +++++++++++++++++++
+>  arch/arm64/kvm/hyp/include/hyp/switch.h |  4 ++--
+>  arch/arm64/kvm/pmu.c                    | 10 +++++-----
+>  arch/arm64/tools/cpucaps                |  1 +
+>  include/kvm/arm_pmu.h                   |  2 +-
+>  6 files changed, 33 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+> index e0e4478f5fb5..0eff048848b8 100644
+> --- a/arch/arm64/include/asm/cpufeature.h
+> +++ b/arch/arm64/include/asm/cpufeature.h
+> @@ -866,6 +866,11 @@ static __always_inline bool system_supports_mpam_hcr(void)
+>  	return alternative_has_cap_unlikely(ARM64_MPAM_HCR);
+>  }
+>  
+> +static inline bool system_supports_pmuv3(void)
+> +{
+> +	return cpus_have_final_cap(ARM64_HAS_PMUV3);
+> +}
+> +
+>  int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
+>  bool try_emulate_mrs(struct pt_regs *regs, u32 isn);
+>  
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 4eb7c6698ae4..6886d2875fac 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -1898,6 +1898,19 @@ static bool has_lpa2(const struct arm64_cpu_capabilities *entry, int scope)
+>  }
+>  #endif
+>  
+> +static bool has_pmuv3(const struct arm64_cpu_capabilities *entry, int scope)
+> +{
+> +	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+> +	unsigned int pmuver;
+> +
+> +	pmuver = cpuid_feature_extract_unsigned_field(dfr0,
+> +						      ID_AA64DFR0_EL1_PMUVer_SHIFT);
+> +	if (pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
+> +		return false;
+> +
+> +	return pmuver >= ID_AA64DFR0_EL1_PMUVer_IMP;
+
+Given that PMUVer is a signed field, how about using
+cpuid_feature_extract_signed_field() and do a signed comparison instead?
+
+> +}
+> +
+>  #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>  #define KPTI_NG_TEMP_VA		(-(1UL << PMD_SHIFT))
+>  
+> @@ -2999,6 +3012,12 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>  		ARM64_CPUID_FIELDS(ID_AA64PFR1_EL1, GCS, IMP)
+>  	},
+>  #endif
+> +	{
+> +		.desc = "PMUv3",
+> +		.capability = ARM64_HAS_PMUV3,
+> +		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+> +		.matches = has_pmuv3,
+> +	},
+
+This cap is probed unconditionally (without any configuration
+dependency)...
+
+>  	{},
+>  };
+>  
+> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> index f838a45665f2..0edc7882bedb 100644
+> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
+> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> @@ -244,7 +244,7 @@ static inline void __activate_traps_common(struct kvm_vcpu *vcpu)
+>  	 * counter, which could make a PMXEVCNTR_EL0 access UNDEF at
+>  	 * EL1 instead of being trapped to EL2.
+>  	 */
+> -	if (kvm_arm_support_pmu_v3()) {
+> +	if (system_supports_pmuv3()) {
+
+... but kvm_arm_support_pmu_v3() is conditional on
+CONFIG_HW_PERF_EVENTS.  Doesn't this create some sort of new code path
+that we didn't expect?
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
