@@ -1,180 +1,70 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2067.outbound.protection.outlook.com [40.107.95.67])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D155F1E4AB;
-	Wed, 19 Feb 2025 18:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990840; cv=fail; b=nMaiHo1D7YKEbC5BeJDfwjL2t3Q+Swz20zOQzeB4yCG29YYFjZUCgmXcjaKsShQWx9/zUnk912vxueJhCi4xm4oXEAPnz5iIhy1QRQJh0JSBuxRmrqZBfm5wwG+TWXRnbukAUnh/DFkA7TiySLzjwLM+aS5JNZO4zWUkNHXMwsY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990840; c=relaxed/simple;
-	bh=u/1MW1Qz5QeWp9/6BNEy8SOGLXtTUIGGmvojRndfeCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MIvL3Ib06sXhAPXDOCtGGNuW5KZ7YC4Nl8QLIHi4fQLoVe1+xrAkpOq5CA/f94zohzcueJFLfBobm7P6irn8cOegcVdWOMW2BM3U9Y0eo4RmczXPQylnh/1+8fxPpqWVtkpEUWitfjySP5px7p/B5UhlMdBBxkIjGNKMDoSk23M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Z2QH8Sxx; arc=fail smtp.client-ip=40.107.95.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88FA21481A
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739990853; cv=none; b=mqYW2X3Sb3pC9AjYYfF/ZWjpYBgJZuZIPmddVFlmLJaluv2DkHttZ2Yuv5XyqR/OvxwJnG77Da/mAPhZx9XNg+YQwgDJKOXtqi6mUs2r5C0kkY9tSi4mUXLUiPwbEs14zJHGXVNXfT/fBZuyg9UjuhIN2i4XWkQyhgUc85Y6PIE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739990853; c=relaxed/simple;
+	bh=fozhqE9akH7er2I4jciWAzDTwepAkfAZs2iN9t2Op/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d7Xq1EJYh8IlPpKC9nN0M4RfnuEfqKdnnfGThjVtj6u1Sp4RKOZZj3qOOjaGnjL87Qrgw8T5H0/EyY7gvxoOBuxwo4id7FdVz0VxHTYozbCR+mO2E7UM2L4NDwFkeurC3z0Yl2l7zgOEwoY1aVSIoRU/uqnqEuYxEI4tOiueDyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lPdPzJqW; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Z2QH8Sxx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fACvvsLLyNIAauUxctgbiBgGGAlmKPJj062/1x1++yXmUux/HkNrfjwkxB7CZLwlnG/0bowVYYm+xMOIm1xYzJ77dnMmzUg7LynYV6Ye5iMZQ+YsLI0Kf+38kHUc7QZhFCgHWKy2sFuFceaMMCPfoyuIF4RMLV7n01ZF0FP8wnFcR5snKJ95mnaMKXGlSGu7Si3RHwVm0zbbkx3mQEuISclf94vsTYl5Z1104gSJSHLS5JQ/GFQlBE7dBWRGhXQKHC/j4RJD4xz3Q8tX2LsLy2qCbGJixbPqFNevwYx/eomWQGakq9A0L3p6JvF44LrzUNjImV0PRBCXcPQaPpSgWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=scT/KsI42Z/eyT34daJd2VXa/5Vxm+ZdLwiMkCSUVMc=;
- b=CS3Ef18sN5leLF0qfYmw3hsVvYPYZ0dqIEKh/H3z4Vg5Fg+oXCDvHnsQMXmkVzcg5CFtpyXN/enhr/DKbcdbYC987URStNDJBiGIOYrhQEuJwTdtcHPswvLlDBE9xBSaj3B5nGqdre34twmM47geY0XyFlAM0wNOgcB9RLv4npG6Y1rYRbIRs1QyRLX9iQaUqEBmgcZomQT1A0NZzx3zR4GySObYYxUTZSm0brFWhNATtp2ztqjhBy4k80E9rEaBMdmhxWJPl5qtLXUPX5kUJEK1ipGumt5817Pr8cxDPoeguiyPx+olY3jKs1L6wIFS/GzoANSurDzXbz/+E0jAPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=quicinc.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=scT/KsI42Z/eyT34daJd2VXa/5Vxm+ZdLwiMkCSUVMc=;
- b=Z2QH8SxxVFIBjPJ9ethzY9avITwPFf6eATVXcU33A0tDrCSLTPxPwMriM+vVzQff66r2+qvGKySdGTBNElComVLAi9VNskOFIIq2Ou4d4hnrxc6HGVTTFErJYpI5fIkGD0EoNuYh27URPXKZY4flE+cITnaM6UEBtQOVHl5ezkY=
-Received: from BY5PR17CA0013.namprd17.prod.outlook.com (2603:10b6:a03:1b8::26)
- by CY8PR12MB8266.namprd12.prod.outlook.com (2603:10b6:930:79::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Wed, 19 Feb
- 2025 18:47:16 +0000
-Received: from SJ5PEPF00000208.namprd05.prod.outlook.com
- (2603:10b6:a03:1b8:cafe::a3) by BY5PR17CA0013.outlook.office365.com
- (2603:10b6:a03:1b8::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Wed,
- 19 Feb 2025 18:47:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SJ5PEPF00000208.mail.protection.outlook.com (10.167.244.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Wed, 19 Feb 2025 18:47:15 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Feb
- 2025 12:47:15 -0600
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Feb
- 2025 12:47:14 -0600
-Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 19 Feb 2025 12:47:14 -0600
-Message-ID: <c3075150-94f5-7187-007c-0037eaed6077@amd.com>
-Date: Wed, 19 Feb 2025 10:47:13 -0800
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lPdPzJqW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=akHLByESjhAZIdirUO+hq68gdgMh4KX2vVVmGox+LUA=; b=lPdPzJqWh9ItaRTXq608inXMoI
+	/qML2dL16PX7Q9qIr5hMjpVDKmdyHjoKhA+xJMCcR+xvNlDG68IHHS0zmU0Akp5q8CqUTVeIRN/VV
+	H2b5KEBjni7cQQpluquYCgn3Wg4Zp4urVz2EepDu0XsL/kSSnkg82+gja6603wcwXuWAIeW97YzkA
+	x5HCTUjbiibPBRhwkFVdlQMkjuR8Rs818dHCBkDCGGh8YoZ99dFTv0my7cXFmDuMmOB7WdyO0werJ
+	P+5Ulu/dKy4m1X2++XQfh3Z+srGzzXoeC6cMr0OIDcaPzcJZ4idfEC2UERixtw0MxTzAO6WM3GHxS
+	ib1cKO/A==;
+Received: from d162-157-58-14.abhsia.telus.net ([162.157.58.14] helo=maloca.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tkp6M-00EwF0-DV; Wed, 19 Feb 2025 19:47:24 +0100
+From: Rodrigo Siqueira <siqueira@igalia.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>
+Cc: amd-gfx@lists.freedesktop.org,
+	kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	Rodrigo Siqueira <siqueira@igalia.com>
+Subject: [PATCH 0/2] Add myself as a Reviewer of AMD display and update mailmap
+Date: Wed, 19 Feb 2025 11:46:18 -0700
+Message-ID: <20250219184702.242924-1-siqueira@igalia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] accel/amdxdna: Add missing include linux/slab.h
-Content-Language: en-US
-To: Jeffrey Hugo <quic_jhugo@quicinc.com>, Su Hui <suhui@nfschina.com>,
-	<jacek.lawrynowicz@linux.intel.com>, <min.ma@amd.com>, <ogabbay@kernel.org>
-CC: <George.Yang@amd.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-References: <20250211015354.3388171-1-suhui@nfschina.com>
- <60700ca3-8d9a-d284-d2d8-343d770ca384@quicinc.com>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <60700ca3-8d9a-d284-d2d8-343d770ca384@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB05.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000208:EE_|CY8PR12MB8266:EE_
-X-MS-Office365-Filtering-Correlation-Id: 89aff0a5-0535-40b2-4429-08dd5115d4b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UEZTSk5RSlMzS3NjbDRuajR4QUROcVQxRmZjSWUvUjZSa09EU3lTYnlwMDJK?=
- =?utf-8?B?VkhUZks3eXRzV1MvNUtNdVRqbHgvK1UwQVcxV25BcW1ZMmFZWTVnMXlNS1ls?=
- =?utf-8?B?bGk1VE9UUGYrelpLbDdKT0pQUE5LVG05ajZJSE0veklYZUs2V0dvb1JVVEw1?=
- =?utf-8?B?OTZKTmFjNnhJMFhSa09BcDZoYXRUaU5xSld6WnhNUkZteGE3RnRrM294azFt?=
- =?utf-8?B?Z0dxTWJlQWVGTEtyejNYSnArTWRMUS92Zytic29oNGhZWkdUaUVJOTFCdkJz?=
- =?utf-8?B?cEVFeUNaVDhtTEVhVSsrbmc1dlBHL2JYSWNpWS9qUU9aSWs4WGVmQ0pDaXNr?=
- =?utf-8?B?UWV2ZitvOTlpMi9SdkVSQzd6cVhkNFRYTW45Z3BScklkb0dLeWpsMEZMUG9W?=
- =?utf-8?B?aTZzMEFjSlphTDNiK0tYTWdPNWxTc3JNNDltN1RvWkNLeGMxQkJvY3dmSlYv?=
- =?utf-8?B?L0Z6RHNMM08wL0Z1QWdhbEhPc0hENEJkdXB0bGtObUVVZVp4dUszN0xrMWFq?=
- =?utf-8?B?RGdJTU9KYWRVdUZQTXF6Sit4VzkzdHhqWmF2NVR1VzZBQzNoa0JxOVZXYlhT?=
- =?utf-8?B?SlpvamIrN1RxeFVZVDhYelJoMWJOZkQ0S0k0UEQ2MXA3T1NTcHlkbXFsL2Np?=
- =?utf-8?B?YjE3c2xWNU13KzNrai85Y01ZSTZLdS9qVEV2bTk0MlB4ZzdraXpZelVxWVg5?=
- =?utf-8?B?YlBtZDlzTzFKdThtdTlXdmh6RU0zVjFFZUpHa0s4bDlqem5aNmFCVFVJR09G?=
- =?utf-8?B?ZFJqY0p5NWN1SHVXdWMvYjhEV1llNlkxS1lxSVhTY3BGcGFoVlFqZitWZkVU?=
- =?utf-8?B?Nnpvc0JIb0wva3RteEV4SndrcmVWZ0IySVFYdjFNN0VkNkZiY2cxUlcyb1Zw?=
- =?utf-8?B?eFliOGtwYjJ0ekZCcnZ5L0QzSGpyc1JlaWFlK1V1S3paa2hBdHhlcWtLU3dv?=
- =?utf-8?B?aHBhc2YwTThhV1c2c045YXZhR0hQNzRJc2d2S0c5NTdkVktjRFVOa0FaeGFR?=
- =?utf-8?B?STAzc3BBYmxhVUtzbktNeEdZdkYzeER0N1VJdWVPTFY3Y2FnVkxJTmRSNE1L?=
- =?utf-8?B?amlsV1hzNnZhOXM4bms5RTEwa1Y0UWE0ejRZMDQ3M0lROVBUZGdSZGNmTkg2?=
- =?utf-8?B?cVZZOHhKRFR5dHJnR1lJTmFOV0RCaStyL2h1bTRIK3dPZUQ3LzRaM0dZMG9T?=
- =?utf-8?B?d1BlcHQrczFjS2dZZUc1aDBrTkxtZVNrbGE4bFczaGZPQ0dpbHd5TFZVa2lu?=
- =?utf-8?B?UGM1cytpTEhXVWRBNkYrdlhKWDdBZnYwaFd4N0V6cHpubTlaYit3V3YrZ1dW?=
- =?utf-8?B?a1BVUDRoRVl1MkY1L0x0NTdBRUtLSWdnTWZ6Z2F2MDhlR0V3OE11L2JvWVVi?=
- =?utf-8?B?NXc3WFZEYS8zVklDdFpSVSs5Q01VZS9zM1ViMWh0ZC9iUHBuVVlFODJoeFVX?=
- =?utf-8?B?eXE4b2pQazl1c2Zkb0R3ekVQQzZrdzQwZUJ3QUVzVlFnQ2pmalBLSWZnZEJE?=
- =?utf-8?B?ZlBLU1BNZ0FrUnVsQWR0cWpVMnNFV29pNkxoWUltT1JKT1grbXhrT05jVExV?=
- =?utf-8?B?RVgxNlkzNUxJVklLRjVVR1A0T1JxdTZNWEFTYWlXalR4aXNwdmVDZW55Q2ZE?=
- =?utf-8?B?T3lJZXBUZUNXdlpoRWR2c2EybXBqM1JNME9WelV6TUpOK003RVh2aVBBeTR3?=
- =?utf-8?B?YjJ4WDNySEtNWk5FdllQZ2c4cG9mdzRGWWswUjV2MEo5N0FCMEZxVUtCZ3FL?=
- =?utf-8?B?MTYrZlFmUnNTVFlKZjZTVGZRSlZlOC9QMzh6U051UUNTMDQvSXlOa3BqMkhi?=
- =?utf-8?B?Q2M0Z3F0eHFJVW9WZHRKNUpZbHk2aGNOdGZCSE9mYnMvajFFbjk2KzdDQk5h?=
- =?utf-8?B?cTFKZWRIbDk1dXhrN2Y5c0pYZDkwU0hwTWllUnVWMUxsL1FpcHFOOTBramxv?=
- =?utf-8?B?K0hsZU9zVDNSWDRJdWVwRGlMTkFYbEVGc3dLanFwSWRoMk5IMklRQVpwc2RO?=
- =?utf-8?Q?dmWGjCZ9XTcDT5fu4KtQ4S3qwGxlN4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 18:47:15.9466
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89aff0a5-0535-40b2-4429-08dd5115d4b1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000208.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8266
 
+This patchset changes my status from a Maintainer of the display code to
+a reviewer, and it also adds an entry to my name in the mailmap file.
 
-On 2/11/25 07:36, Jeffrey Hugo wrote:
-> On 2/10/2025 6:53 PM, Su Hui wrote:
->> When compiling without CONFIG_IA32_EMULATION, there can be some errors:
->>
->> drivers/accel/amdxdna/amdxdna_mailbox.c: In function 
->> ‘mailbox_release_msg’:
->> drivers/accel/amdxdna/amdxdna_mailbox.c:197:2: error: implicit 
->> declaration
->> of function ‘kfree’.
->>    197 |  kfree(mb_msg);
->>        |  ^~~~~
->> drivers/accel/amdxdna/amdxdna_mailbox.c: In function 
->> ‘xdna_mailbox_send_msg’:
->> drivers/accel/amdxdna/amdxdna_mailbox.c:418:11: error:implicit 
->> declaration
->> of function ‘kzalloc’.
->>    418 |  mb_msg = kzalloc(sizeof(*mb_msg) + pkg_size, GFP_KERNEL);
->>        |           ^~~~~~~
->>
->> Add the missing include.
->>
->> Fixes: b87f920b9344 ("accel/amdxdna: Support hardware mailbox")
->> Signed-off-by: Su Hui <suhui@nfschina.com>
->> Reviewed-by: Lizhi Hou <lizhi.hou@amd.com>
->
-> Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Thanks
+Siqueira
 
-Pushed to drm-misc-fixes
+Rodrigo Siqueira (2):
+  MAINTAINERS: Change my role from Maintainer to Reviewer
+  mailmap: Add entry for Rodrigo Siqueira
 
+ .mailmap    | 2 ++
+ MAINTAINERS | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-
-Lizhi
+-- 
+2.48.1
 
