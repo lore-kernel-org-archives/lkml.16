@@ -1,173 +1,227 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1052F1E5B89;
-	Wed, 19 Feb 2025 12:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D4A1E25EB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739969365; cv=none; b=B7oSjL9SMA0Jhn8wdvFVqJdTsvHNG0KhR6qJdIogHytpGyoj02w3ic3LKpenOhMYiiElFa1QuyyHi6D6PPG6yEyyNa+tHm4ISTKD6Gl8LS33obUY5ZX4IioZX9Nx3c7xaMwheW1aiG82+ifeY8+TPa/EFXqhkFbdSQYwWK1a/k4=
+	t=1739969374; cv=none; b=MkXpY4LXlYCQYscLHayUGPYRS2ioDVI7m3MUbMuWt8MeIQTPDKa3VVjlQip8jaEEZIwqSD57rA5lTUeWsFae75DVnmhXgD65aB/Th1CfCvOR3HfXDh8v+7svbK9hjc18JVIW7NjATU8lqv7bFukBSY8umEgHQvsaxS3mGCOkX8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739969365; c=relaxed/simple;
-	bh=JtCFmUUtrIS/1k4JkzCecit2Kb9gJDSyTekDFBqRn5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iJlMxPIBBr6+wweIk6L/zuKTcGQWYmpgWTqeXZPcerAd0nPHZXiEJeNMiNvq+AZiEmkcJwrjtv0pBMArg4a/S/CfBiBp/syVeFuF+JFneTwAZBEGBSbN4F4h3FzN8gk3gNSBSWA5fI/M5rQChnCxXnChyuJxQUNzQzL9js0ZvDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BoFJwleh; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739969374; c=relaxed/simple;
+	bh=EDsmNvJG6i+8D4LW00y//lAFbtwrmRk1VHBMZ8wJodo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cb+AkQ6VEZR2LasZOjrRlL8LvD2eWVUev5Q30O0ELk3wJxNM9zg2bS0gxGyRI8Ops2vsSfOunGMJW0NbBur2P1wfxYlIlyzQW3TDu1CiVE65tiqSKOqhEN+em9RSxVOyHLExZAeGAGoATAKmQldrlFx4d3snd4r6jgbuvMGAog8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CiB/OEFk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BoFJwleh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739969362;
-	bh=JtCFmUUtrIS/1k4JkzCecit2Kb9gJDSyTekDFBqRn5s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BoFJwlehHzLHswimyS6738I+f/x3tTiFvGkMWVEz+qn3QCdBvMUw+81CaryIEvLGa
-	 M1zQylEbDaQIkxPTakQ4n+OPp0Rk5Ss4JGZeJqsnhWdBvdtI21bfZ6qTVASRPSYaz6
-	 Z8wNjy+dXT5Jdamjzr9lCe4+oUqyOsubYjhpMYM/4gBbv3CYP1zUe5rp6CAJNeOKHx
-	 pGkTrTJvDynLRbfxmoWaMmAcuC2yGealIojDe+dbmtZgSRfgyjp2c6bklFVUa3D0H0
-	 hDWyInVFE5P2ne3wzPE8KoPJTojnhFPaqzlIkEfyx04Z4U/cNJHaywWnmkhn8ddfwE
-	 at8RWKN5fHTsg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 51BF917E14E7;
-	Wed, 19 Feb 2025 13:49:21 +0100 (CET)
-Message-ID: <779b0915-f0fa-46b6-8c5b-57745114252f@collabora.com>
-Date: Wed, 19 Feb 2025 13:49:21 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CiB/OEFk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739969371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rreqea7gob/60z8pNTfWbKUJ2v9iqUromgRXlIzbXP4=;
+	b=CiB/OEFkxk2tb6hs/ZnQO1aua9YctlNMaSDbk804ENTaR0tUHEKfPhbGF2cpIxJrJJtjMe
+	V6Sz6teooo+b1AHGp+QkPihkQjFejCC+JU0hkV/+nJ/8mFfVAiMEuqga6bwqVHCMe481jU
+	aaup/XymcX4f2BR+zZ+rA3ykOMsoAak=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-583-EitjDsBJOxadC6JHWGsBTw-1; Wed, 19 Feb 2025 07:49:30 -0500
+X-MC-Unique: EitjDsBJOxadC6JHWGsBTw-1
+X-Mimecast-MFC-AGG-ID: EitjDsBJOxadC6JHWGsBTw_1739969369
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e04de6583bso4235620a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 04:49:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739969369; x=1740574169;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rreqea7gob/60z8pNTfWbKUJ2v9iqUromgRXlIzbXP4=;
+        b=ADcGjPXYd+ISBFGNX6b9BhgHWkpby3x8Ng8eqK/drk894mVTEAfJwHJXJncCoVN/Un
+         3SA99lT5SwGVWitx9qFDzHbQspWKE5Numt55N8PgjQoRrydhMerPISI/MNaWFG3odIQC
+         QoNbDJfICGV+Axb68yJzGUScEKJCiKSSpQW+iJ34zRWXPHVcST7CxsCmYJ0KNjSJWlJU
+         2jixb6AMUWvsZ2AbYrzMEgZFyBRDLbYjk3o04PLCdKb1ogmjYYQtfjJV41TrVgzakRFX
+         sT8ZhWDLXL8itDWch74p/8/Ck1KOD0TAzMFfuwcxmWiD+Iw2KzPMH/XpxF0atDisfxr7
+         khww==
+X-Forwarded-Encrypted: i=1; AJvYcCW6m+gM/NaMxUyfAIwD5sVyjYtxivTjZF8xzBzxLM0xfX9s+9ZWHi1YqmLP8O0WC1tumvTscCZHufZubAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUSRKsdkH1ivEMd7OYrL9svvWlN3M3LTYwGeOFU9uU4QnY1OKY
+	7yk6Rg1/gHHcGpMFp/2+638vfgUKOUD2IN5iSxXjMhewDwWWcvuI7lhrhrkG0DgN6Mpcz4Xx6D/
+	ZXwMnbAl/B32ymU7nI1aB5jyH6/ohpftFIgn0J5qcYbmNfhwsBM46/qou9baJWy3zlR8qwni9ph
+	lwh5UUaoIIfpsdYZLHR+w8jwrxzxpJkmn5NRER0HB2ev3AqmI=
+X-Gm-Gg: ASbGnctnQWpIw3RYiMRhFVEqyDAA8Ppg4qMtYNxEQ9ozHLx5y3sYrrJFTz5ZpcGYtMN
+	xVjK7u8eDTth6cvUvLE2RRWzrTcxwxiOiZN1SYGpVQ+0SAlFXVdSjsFsSXVJsuM7Hl23ftsMA5B
+	WFcNJ+ebODwR2mtpl7
+X-Received: by 2002:a17:907:6ea7:b0:abb:ca31:8877 with SMTP id a640c23a62f3a-abbca318c12mr501706066b.0.1739969369090;
+        Wed, 19 Feb 2025 04:49:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHrJ+KooYm5EcqJPGxQt1LpLB0CkdlVYG1NrpzXOwYPi/3fnsFqEB+yJ0oIwBQsTdFJa5qKOomUHiL7yERHl2g=
+X-Received: by 2002:a17:907:6ea7:b0:abb:ca31:8877 with SMTP id
+ a640c23a62f3a-abbca318c12mr501702766b.0.1739969368673; Wed, 19 Feb 2025
+ 04:49:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] drm/mediatek: Add CCORR component support for MT8196
-To: Jay Liu <jay.liu@mediatek.com>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>,
- CK Hu <ck.hu@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20250219092040.11227-1-jay.liu@mediatek.com>
- <20250219092040.11227-2-jay.liu@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250219092040.11227-2-jay.liu@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250219115138.406075-1-costa.shul@redhat.com>
+In-Reply-To: <20250219115138.406075-1-costa.shul@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 19 Feb 2025 13:49:17 +0100
+X-Gm-Features: AWEUYZkYvfK5JpbvU46W1SFw9D0VGBjvXAvqoPqgQy1IV8AabKtxO-Spu2r3qzQ
+Message-ID: <CAP4=nvQ=qj6STkXH=iDvpcesgj-0aBXPhHhXc5POyjWuwuzWYg@mail.gmail.com>
+Subject: Re: [PATCH v1] rtla: Refactor save_trace_to_file
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	John Kacur <jkacur@redhat.com>, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, 
+	Eder Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 19/02/25 10:20, Jay Liu ha scritto:
-> Add CCORR component support for MT8196.
-> 
-> CCORR is a hardware module that optimizes the visual effects of
-> images by adjusting the color matrix, enabling features such as
-> night light.
-> 
-> The 8196 hardware platform includes two CCORR (Color Correction) units.
-> However, the `mtk_ccorr_ctm_set` API only utilizes one of these units.
-> To prevent the unused CCORR unit from inadvertently taking effect,
-> we need to block it by adding mandatory_ccorr flag in the driver_data.
-> 
-> Signed-off-by: Jay Liu <jay.liu@mediatek.com>
+st 19. 2. 2025 v 12:52 odes=C3=ADlatel Costa Shulyupin
+<costa.shul@redhat.com> napsal:
+>
+> The functions osnoise_hist_main(), osnoise_top_main(),
+> timerlat_hist_main(), and timerlat_top_main() are lengthy and contain
+> duplicated code.
+>
 
-This is yet another thing that can be resolved by using OF Graph for defining the
-display pipeline: by using that, I don't see how can CCORR1 be used instead of
-CCORR0, if the latter is in the pipeline, but not the former.
+There is definitely a bunch of code that needs to be unified in rtla.
+My idea is to eventually merge top and hist, see my note to the cover
+letter to the BPF patchset [1].
 
-NACK.
+[1] https://lore.kernel.org/linux-trace-kernel/20250218145859.27762-1-tgloz=
+ar@redhat.com/
 
-Regards,
-Angelo
+> Refactor by consolidating the duplicate lines into the
+> save_trace_to_file() function.
+>
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+
+Thank you for the cleanup patch.
+
+Reviewed-by: Tomas Glozar <tglozar@redhat.com>
+Tested-by: Tomas Glozar <tglozar@redhat.com>
 
 > ---
->   drivers/gpu/drm/mediatek/mtk_ddp_comp.c   |  3 ++-
->   drivers/gpu/drm/mediatek/mtk_disp_ccorr.c | 16 ++++++++++++++++
->   2 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
-> index edc6417639e6..d7e230bac53e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
-> @@ -457,7 +457,8 @@ static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_DRM_ID_MAX]
->   	[DDP_COMPONENT_AAL0]		= { MTK_DISP_AAL,		0, &ddp_aal },
->   	[DDP_COMPONENT_AAL1]		= { MTK_DISP_AAL,		1, &ddp_aal },
->   	[DDP_COMPONENT_BLS]		= { MTK_DISP_BLS,		0, NULL },
-> -	[DDP_COMPONENT_CCORR]		= { MTK_DISP_CCORR,		0, &ddp_ccorr },
-> +	[DDP_COMPONENT_CCORR0]		= { MTK_DISP_CCORR,		0, &ddp_ccorr },
-> +	[DDP_COMPONENT_CCORR1]		= { MTK_DISP_CCORR,		1, &ddp_ccorr },
->   	[DDP_COMPONENT_COLOR0]		= { MTK_DISP_COLOR,		0, &ddp_color },
->   	[DDP_COMPONENT_COLOR1]		= { MTK_DISP_COLOR,		1, &ddp_color },
->   	[DDP_COMPONENT_DITHER0]		= { MTK_DISP_DITHER,		0, &ddp_dither },
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c b/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c
-> index 10d60d2c2a56..94e82b3fa2d8 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c
-> @@ -31,11 +31,13 @@
->   
->   struct mtk_disp_ccorr_data {
->   	u32 matrix_bits;
-> +	enum mtk_ddp_comp_id mandatory_ccorr;
->   };
->   
->   struct mtk_disp_ccorr {
->   	struct clk *clk;
->   	void __iomem *regs;
-> +	enum mtk_ddp_comp_id comp_id;
->   	struct cmdq_client_reg cmdq_reg;
->   	const struct mtk_disp_ccorr_data	*data;
->   };
-> @@ -115,6 +117,9 @@ void mtk_ccorr_ctm_set(struct device *dev, struct drm_crtc_state *state)
->   	if (!blob)
->   		return;
->   
-> +	if (ccorr->comp_id != ccorr->data->mandatory_ccorr)
-> +		return;
+>  tools/tracing/rtla/src/osnoise_hist.c  | 5 +----
+>  tools/tracing/rtla/src/osnoise_top.c   | 5 +----
+>  tools/tracing/rtla/src/timerlat_hist.c | 5 +----
+>  tools/tracing/rtla/src/timerlat_top.c  | 5 +----
+>  tools/tracing/rtla/src/trace.c         | 4 ++++
+>  5 files changed, 8 insertions(+), 16 deletions(-)
+>
+> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/s=
+rc/osnoise_hist.c
+> index b4930b835b0a1..7c6ef67ef3e6c 100644
+> --- a/tools/tracing/rtla/src/osnoise_hist.c
+> +++ b/tools/tracing/rtla/src/osnoise_hist.c
+> @@ -983,10 +983,7 @@ int osnoise_hist_main(int argc, char *argv[])
+>
+>         if (osnoise_trace_is_off(tool, record)) {
+>                 printf("rtla osnoise hit stop tracing\n");
+> -               if (params->trace_output) {
+> -                       printf("  Saving trace to %s\n", params->trace_ou=
+tput);
+> -                       save_trace_to_file(record->trace.inst, params->tr=
+ace_output);
+> -               }
+> +               save_trace_to_file(record->trace.inst, params->trace_outp=
+ut);
+>         }
+>
+>  out_hist:
+> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
+c/osnoise_top.c
+> index 4772677ac762c..0eeefbbbf3173 100644
+> --- a/tools/tracing/rtla/src/osnoise_top.c
+> +++ b/tools/tracing/rtla/src/osnoise_top.c
+> @@ -813,10 +813,7 @@ int osnoise_top_main(int argc, char **argv)
+>
+>         if (osnoise_trace_is_off(tool, record)) {
+>                 printf("osnoise hit stop tracing\n");
+> -               if (params->trace_output) {
+> -                       printf("  Saving trace to %s\n", params->trace_ou=
+tput);
+> -                       save_trace_to_file(record->trace.inst, params->tr=
+ace_output);
+> -               }
+> +               save_trace_to_file(record->trace.inst, params->trace_outp=
+ut);
+>         }
+>
+>  out_top:
+> diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/=
+src/timerlat_hist.c
+> index 6d7d0a2d45b47..5f54b268a1033 100644
+> --- a/tools/tracing/rtla/src/timerlat_hist.c
+> +++ b/tools/tracing/rtla/src/timerlat_hist.c
+> @@ -1390,10 +1390,7 @@ int timerlat_hist_main(int argc, char *argv[])
+>                 if (!params->no_aa)
+>                         timerlat_auto_analysis(params->stop_us, params->s=
+top_total_us);
+>
+> -               if (params->trace_output) {
+> -                       printf("  Saving trace to %s\n", params->trace_ou=
+tput);
+> -                       save_trace_to_file(record->trace.inst, params->tr=
+ace_output);
+> -               }
+> +               save_trace_to_file(record->trace.inst, params->trace_outp=
+ut);
+>         }
+>
+>  out_hist:
+> diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/s=
+rc/timerlat_top.c
+> index 05a9403b01d26..1e64e6216bc2e 100644
+> --- a/tools/tracing/rtla/src/timerlat_top.c
+> +++ b/tools/tracing/rtla/src/timerlat_top.c
+> @@ -1159,10 +1159,7 @@ int timerlat_top_main(int argc, char *argv[])
+>                 if (!params->no_aa)
+>                         timerlat_auto_analysis(params->stop_us, params->s=
+top_total_us);
+>
+> -               if (params->trace_output) {
+> -                       printf("  Saving trace to %s\n", params->trace_ou=
+tput);
+> -                       save_trace_to_file(record->trace.inst, params->tr=
+ace_output);
+> -               }
+> +               save_trace_to_file(record->trace.inst, params->trace_outp=
+ut);
+>         } else if (params->aa_only) {
+>                 /*
+>                  * If the trace did not stop with --aa-only, at least pri=
+nt the
+> diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trac=
+e.c
+> index 728f5029d5335..74ed2f6208baa 100644
+> --- a/tools/tracing/rtla/src/trace.c
+> +++ b/tools/tracing/rtla/src/trace.c
+> @@ -75,12 +75,16 @@ int save_trace_to_file(struct tracefs_instance *inst,=
+ const char *filename)
+>         int out_fd, in_fd;
+>         int retval =3D -1;
+>
+> +       if (!filename)
+> +               return 0;
 > +
->   	ctm = (struct drm_color_ctm *)blob->data;
->   	input = ctm->matrix;
->   
-> @@ -154,6 +159,7 @@ static int mtk_disp_ccorr_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct mtk_disp_ccorr *priv;
->   	int ret;
-> +	enum mtk_ddp_comp_id comp_id;
->   
->   	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->   	if (!priv)
-> @@ -169,6 +175,14 @@ static int mtk_disp_ccorr_probe(struct platform_device *pdev)
->   		return dev_err_probe(dev, PTR_ERR(priv->regs),
->   				     "failed to ioremap ccorr\n");
->   
-> +	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DISP_CCORR);
-> +	if (comp_id < 0) {
-> +		dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
-> +		return comp_id;
-> +	}
-> +
-> +	priv->comp_id = comp_id;
-> +
->   #if IS_REACHABLE(CONFIG_MTK_CMDQ)
->   	ret = cmdq_dev_get_client_reg(dev, &priv->cmdq_reg, 0);
->   	if (ret)
-> @@ -192,10 +206,12 @@ static void mtk_disp_ccorr_remove(struct platform_device *pdev)
->   
->   static const struct mtk_disp_ccorr_data mt8183_ccorr_driver_data = {
->   	.matrix_bits = 10,
-> +	.mandatory_ccorr = DDP_COMPONENT_CCORR0,
->   };
->   
->   static const struct mtk_disp_ccorr_data mt8192_ccorr_driver_data = {
->   	.matrix_bits = 11,
-> +	.mandatory_ccorr = DDP_COMPONENT_CCORR0,
->   };
->   
->   static const struct of_device_id mtk_disp_ccorr_driver_dt_match[] = {
+>         in_fd =3D tracefs_instance_file_open(inst, file, O_RDONLY);
+>         if (in_fd < 0) {
+>                 err_msg("Failed to open trace file\n");
+>                 return -1;
+>         }
+>
+> +       printf("  Saving trace to %s\n", filename);
+>         out_fd =3D creat(filename, mode);
+>         if (out_fd < 0) {
+>                 err_msg("Failed to create output file %s\n", filename);
+> --
+> 2.48.1
+>
 
