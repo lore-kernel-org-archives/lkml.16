@@ -1,89 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440C325E45F;
-	Wed, 19 Feb 2025 21:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78765253F04;
+	Wed, 19 Feb 2025 21:05:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739999015; cv=none; b=TetXfM6Qn11LQQlug/e0P4zjoAjBft6wZUTKzOQcLF/scKuTGDAw0FdnhsGPWgFD6a2qGN5FRK9OGCf1Cx7ghOaugKRii9TANIWUvpMNaVY3QKk4BnzeDNdzH5F4xcjdnqpQoE4MXASuaB/+Ie2JT0JQghzEKCQsqL6HuufgyBo=
+	t=1739999141; cv=none; b=KGaP8vCnbzHjYuFQmfZt1CUZ4hbPq/6HS0++TaQOLLRg0xBfLLHrEKIpqXHHYGu4nEc0nlWSjgBosU8/5aBvYNHRsePt0VN7+byE6unTiJ7M0flUP204cRQkSqEFCR+hW9Icss84cSWMH9kcik3uZgVty7nZn2XmBTIlhzdK6YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739999015; c=relaxed/simple;
-	bh=WTzO3oBnq/qedOzKGSH7Hoth3Dlm5/JLQ/Unfm5RalE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mK2XBdctMDWT77kqe8LxaoaDPzDXUO36szV/bAlSJvlPF5m3fbCwKryvOlrgsO0AUnOppiD2YFdm0a1f2TMNLx7JhqlDhpTWbPYOnbscFl233wz/WwENzsRjOPsbhDXclKRlkdTpgMXSw335uUh3BkiceBp5lSnJlZxANzIXi00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdENsraZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739999141; c=relaxed/simple;
+	bh=GyhV3lcJSOotUArslQ+DPnCWFQF3eyPqRLf5/jkAdJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jeFXPwNbdkWU1Bh44vVowuCXjJNzAAnBOYS6k8wCl31oZRL/5uw2UaPMp7IVeYtnOReSMuM8nLwbEm9kcS1DdmKohz6OyVljnGZQ49p9NbyDSO7v5LT8dTycNMhPr+7hSHjS4TPUJA1x3aiiO+4aHiuSkvmVAlZYn6qJj0+etnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ErG3Mxq6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdENsraZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25555C4CEE0;
-	Wed, 19 Feb 2025 21:03:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ErG3Mxq6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15279C4CED1;
+	Wed, 19 Feb 2025 21:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739999014;
-	bh=WTzO3oBnq/qedOzKGSH7Hoth3Dlm5/JLQ/Unfm5RalE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pdENsraZfdRH+dbiq+MRqeHGgeQX1x+4a1qHnbborf8ta/r0wKWtAymPZ2h9/Lpye
-	 eDXV7UjcRTdghu2TSudmd/PcMv9cy8k/HW+VLz9Ug+j4FUzMs8jRNpyNdYn18mpTe8
-	 4fUEMbZf2TxksJz/cXnxJ210shp3syV5CmheOMaGpUBbUXnA+JoExd9OGMipu6ux/0
-	 n+ssMwPsjoNhwG7T2ssgY5WhbAgvkuBjs5M05aZXaxknTVJu/a9/iVTrWRPekPdVl9
-	 FuFjbWEGjAsnAxFPLzBHteYSHXNY6VkHnrKvAd8NtF8g7LIMuzyu6Gxj0mopZqlmVl
-	 pu8nDwXoBjYjw==
-From: Mario Limonciello <superm1@kernel.org>
-To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v4 19/19] cpufreq/amd-pstate: Drop amd_pstate_epp_cpu_offline()
-Date: Wed, 19 Feb 2025 15:03:02 -0600
-Message-ID: <20250219210302.442954-20-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250219210302.442954-1-superm1@kernel.org>
-References: <20250219210302.442954-1-superm1@kernel.org>
+	s=k20201202; t=1739999141;
+	bh=GyhV3lcJSOotUArslQ+DPnCWFQF3eyPqRLf5/jkAdJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ErG3Mxq616iGCoUz8SrfNnzzTTxqxNXKJjBhfW2Y+qnP1g1utp/sqcAqrrMeVOw+C
+	 p8XoON0pwyLN7dkFt70atzLNoDbYtAzpVsa19d7qnCeNxU8lE92rrhBl19/b4YdFXX
+	 uqrIbm4x+xRcGYJBmBXcO3yqQ11THTBndYbSp3JthISQuqS9qaH/H5hnKWLriYAlzB
+	 sxiyEMfnPeLMSnC7fkrZO23Xs6QGTMkROpFS74Ja4Fs90/v/QfFz6bIGtnzKn9bPD3
+	 X5h1GwlH2jpDrLkEGH7BP1oIXrpNi5sIm9UZy/JsJYWeAlRIDabEttNO+bd8MZFMgO
+	 z1JM/eKaXON2g==
+Date: Wed, 19 Feb 2025 15:05:40 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Purism Kernel Team <kernel@puri.sm>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Martin Kepplinger <martink@posteo.de>, imx@lists.linux.dev,
+	Robert Chiras <robert.chiras@nxp.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/12] dt-bindings: firmware: imx: add property
+ reset-controller
+Message-ID: <173999913941.2953348.10916179903206198002.robh@kernel.org>
+References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
+ <20250210-8qxp_camera-v3-1-324f5105accc@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210-8qxp_camera-v3-1-324f5105accc@nxp.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
 
-When the CPU goes offline there is no need to change the CPPC request
-because the CPU will go into the deepest C-state it supports already.
+On Mon, 10 Feb 2025 15:59:20 -0500, Frank Li wrote:
+> System Controller Firmware(SCU) reset some peripherals, such as CSI. So add
+> reset-controller for it.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change from v2 to v3
+> -none
+> 
+> change from v1 to v2
+> - new patch, move reset-controller in top fsl,scu.yaml
+> ---
+>  Documentation/devicetree/bindings/firmware/fsl,scu.yaml | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
 
-Actually changing the CPPC request when it goes offline messes up the
-cached values and can lead to the wrong values being restored when
-it comes back.
-
-Instead if the CPU comes back online let amd_pstate_epp_set_policy()
-restore it to expected values.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 408e63aff377a..5068778c1542a 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -1610,14 +1610,7 @@ static int amd_pstate_epp_cpu_online(struct cpufreq_policy *policy)
- 
- static int amd_pstate_epp_cpu_offline(struct cpufreq_policy *policy)
- {
--	struct amd_cpudata *cpudata = policy->driver_data;
--	union perf_cached perf = READ_ONCE(cpudata->perf);
--
--	if (cpudata->suspended)
--		return 0;
--
--	return amd_pstate_update_perf(policy, perf.lowest_perf, 0, perf.lowest_perf,
--				      AMD_CPPC_EPP_BALANCE_POWERSAVE, false);
-+	return 0;
- }
- 
- static int amd_pstate_epp_suspend(struct cpufreq_policy *policy)
--- 
-2.43.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
