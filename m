@@ -1,127 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B144222DFE3;
-	Wed, 19 Feb 2025 20:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCF921B9E0;
+	Wed, 19 Feb 2025 20:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739995833; cv=none; b=NUztj2WkwINe48auja/LLNd/mJZ7UUfiDvIvLBCIVCFiINQd0Qya1lv8t/B2P6+CV3KfISWqEp+dIuJt8p3tc8vPQ2ZX2yIRn1Ed5+An7c/W8FQeEF+zt8YPPzjlNSt0ruZPzOTvdWoz2l1ePAx6XH3LIwaSLHUNfgwH7rpQ4IY=
+	t=1739995892; cv=none; b=UA8Qf5DNN4gLxZr14KlPcFpAv4ARVi/HjpGTsUwjxhKEYGzrLvfLDwt5FWn57WglLna/qbVqKn9vc03aOOK07hhs0SSujlUFXFcKKscqdXL57N1kqBJdBt8Vd8LAIGfs+fNzM3XovweGIagHaX+0FPzYIX/y0s7c+/UnokXpsdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739995833; c=relaxed/simple;
-	bh=jUSUz00ESf+S26jtK/k3pKofGf7cV8jQzbW7nQEsROM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kwDCqb0sFLoy2iSvlmo2M34baspFwz1RGmQ1VbLFDJulYv47VeCfUGg/hTTfKKXMFRYUXJ03a+B00xM1ohBfJF8YPGxb7swsdE2zgRkXvQwZXSJ0ZIWSdXhSm47+27ibhJGJeykH1Z4+GwNIoXVJ7Ifl2RVDZpClaOnzaiNwuLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7167C2050;
-	Wed, 19 Feb 2025 12:10:45 -0800 (PST)
-Received: from beelzebub.ast.arm.com (unknown [10.118.29.240])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C97AD3F59E;
-	Wed, 19 Feb 2025 12:10:26 -0800 (PST)
-From: Stuart Yoder <stuart.yoder@arm.com>
-To: linux-integrity@vger.kernel.org,
-	jarkko@kernel.org,
-	peterhuewe@gmx.de,
-	jgg@ziepe.ca,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/5] Documentation: tpm: add documentation for the CRB FF-A interface
-Date: Wed, 19 Feb 2025 14:10:14 -0600
-Message-Id: <20250219201014.174344-6-stuart.yoder@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250219201014.174344-1-stuart.yoder@arm.com>
-References: <20250219201014.174344-1-stuart.yoder@arm.com>
+	s=arc-20240116; t=1739995892; c=relaxed/simple;
+	bh=vVc8kNeKRrfQX23z0vb9lTZ07UAQytComilfQtfkp3c=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=OsWIw45dOA5nIpCHuThGhI6gABD5jK7krv5UaNIs9hNznsq0igIa/+DdBndXaPKIKMRipTGxFfpotumALM8b7zw7JZ9oXD5n6vosgKGD9flt9QQHMb6uDLKgDIF1vlSXKk1rZtempcWmZsKVYKzIoncw3rYxuHYGESaZGzpv1qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=A7GIG5xo; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="A7GIG5xo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739995867; x=1740600667; i=markus.elfring@web.de;
+	bh=vVc8kNeKRrfQX23z0vb9lTZ07UAQytComilfQtfkp3c=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=A7GIG5xoQLXADczgbO0CvHCP644fS1ow9URsZy3kefibGZYUD94krXbiDwdPw2xy
+	 6XckxWP9jkpt6rqrOBAiUG7yrKsRZWGtDJITGT+xrO6coCFEaiIqQEmigEN7N+K1n
+	 8d8u7B3diTqYrYXo+TV/B3ROwLFDX6HrCB3gGURiu/+JumHczCujbAq5YsZruEaly
+	 iclkdC0f5hPFAdXv+Q2+8RvkATVy00VfmkspDVtFVGAv6zdrAI/RgijbgsIFVtvxU
+	 MKo1ead4vcNgQJ6rG7gfYsXtbM9uyxldfManPQdCNXl41rvCmdn5AvL+j44pOXFyT
+	 H3F9DXj7aIv9Q0xsrQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.10]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MI3p7-1tWDpF3qQp-008Xvw; Wed, 19
+ Feb 2025 21:11:06 +0100
+Message-ID: <8923aaae-becd-489a-bfe1-8c1c569d8d48@web.de>
+Date: Wed, 19 Feb 2025 21:10:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Josh Don <joshdon@google.com>, kernel-janitors@vger.kernel.org,
+ Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ben Segall <bsegall@google.com>,
+ Chengming Zhou <chengming.zhou@linux.dev>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>, Mel Gorman <mgorman@suse.de>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Valentin Schneider <vschneid@redhat.com>
+References: <20250210195117.1074569-1-joshdon@google.com>
+Subject: Re: [PATCH] sched: fix potential use-after-free with cfs bandwidth
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250210195117.1074569-1-joshdon@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:X3d0E9WrjagRkba4BQm0pfUD+YOsvBTW2m2USxRtZE4oOAsiyi/
+ n8JSJAmZ+gc5ElVU0TBeloHmbm0LEk5tfjHFdNr4DddiSWCz0F0osNqophwlK/1cs1w84ka
+ ow40DtBp4665Y94uxzt5Q+aQjEtJJO8Usu+xGhxKLyPPY94Nu9Ptc7Nh/1p8nOsmbb9ArvG
+ ybxx5xNdhE2aGllDcVyyQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:MAC5JS6jmxM=;mXe69x3zsDUjeVuwGYCr1umOBbN
+ EYoBsIrLDJVE0kx5f08ZH2ujWwi3HFKVAjaQ7C9JGE/82OO8yn5QY17EuYHl8xD3pHclp5ZAd
+ Xv0odmOgC8Xn9XXIHPDxEXOiv4oVwHjzgrNxAI9ViEkUCNfOBxSNHqSocxyMLbQTcb+RXwK24
+ kT5+BEmv6MGkvpUODd1TPHIExeZ0jJ0uIKhvnqh4qwQ1eh2ntgOkBkpxjrK7clmT7yQ5rBllS
+ ykbHazLRVEP+UevlridiRj+P1bUZWaNZm9Or9GrC7GYtJhxMm07wIqvHGppfHRiTUuFgKn9Bn
+ fuqD26bEh/2PmqKh63VUit91Z6OV78D1AyvymppuA4c/x5rZHaVFewuz8CSzcSu6lERqMafL4
+ f8F7eoUhIk753QL185elJKmzgKS39+sAoknJ8p4xIRU1Ch5BH1byuZLAwX6toSiUliawyfQjd
+ t6aGlFMIgGtteK+Om4HyYHSwXxzgSECmcBMpenYOc/8G5Mem3M42SAarvFJ3oX4iCM4D5NyHg
+ qemFJL/UCNTO19X0oaBgoJtEfvzqGIO1m5dRyxgRlmmWm+4HFHgDR3+NSficsrtnry3T1h7/g
+ rQCsJLJqPJ1Fy98at0NE2Werl6iJF5eNe7cWjKvB9Vy3S0vBGPUUP9Re1wWMtZv5RXlxoqpwL
+ 2/o7f6sN8ywA5c4OPsZJ7trsz4XBUxsOZ0u6qhS8mkslPsL8ilZWEXVK7DC+NjRqj15FbI9Jv
+ gjlrDEwgfBUq8GeSxWFtRy/ou3ATf3ZkGxWPjxZtii5yRgKthjgl9Y87WFAp4iXbKBTy2cMeB
+ 9Nw+Aga0dfiqoFlSekloCImBiDy3EJhinpt4Qf8EGVnBUNg80Tolq35hYCmBO17G1hxMg4HWj
+ Z53uCHnjaF8xrcBHq1GpHj8ryrevxHCB+IxvrjQl791dLdaJfNutrOXUw5qVjay83oOgw3MaY
+ +JCW14aPH86s5MfiY/1pbo0IKFQrLbTld7+e/dJWCwpwZy/KY1Tmw5Wgc5MxkL8xMl3Iy9ROn
+ hc8G0kauWQGHxVgMPDf+2r3BOV6BL/lVNuiu0pBS0EkEYdKBOyezTom7XrSRMaCzWmQWhM7nC
+ ekoQeIR2L8MyXEvm2PoKZYgdthXb7iC95p+0j2CRaXodv5LaJDRGborB+nTsbWjrbSxjidb6H
+ H7/6ud+hxw+RkhO/y2WcTZyTJR3SGGTde9vJxff/O/1Nr5ZZmseXzSce9FbykciWGVyBQUVu0
+ ib9HntGxx6iA2n2DNYYcz7VaEWnnYSlDh7hLjx+1Hu5Q4kd0JHM82k3yFZ3yNm4ti1RCU2QVO
+ XQwprT1NLkU1l0im+sbbAQYUguO0cQFtxL73cvnzjRgdqXdr1Gg4X2v61YLW2MnrW0I0RR2CZ
+ Mq9z6FrknGJuBWWtTkKLFd1nZ5NjkDCR89nC2bQFoVQo4/ZOpYIzNWYdyxnpuUbo3N6Bd38Zx
+ el/SSb9+RU1CgjulB6UGYQWWvITU=
 
-Add documentation providing details of how the CRB driver interacts
-with FF-A.
+=E2=80=A6
+> For full correctness, we should avoid removal from the list until after
+> we're done unthrottling in __cfsb_csd_unthrottle().
+=E2=80=A6
 
-Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
----
- Documentation/security/tpm/tpm_ffa_crb.rst | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/security/tpm/tpm_ffa_crb.rst
+How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and =
+=E2=80=9CCc=E2=80=9D) accordingly?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n145
 
-diff --git a/Documentation/security/tpm/tpm_ffa_crb.rst b/Documentation/security/tpm/tpm_ffa_crb.rst
-new file mode 100644
-index 000000000000..0184193da3c7
---- /dev/null
-+++ b/Documentation/security/tpm/tpm_ffa_crb.rst
-@@ -0,0 +1,65 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+========================
-+TPM CRB over FF-A Driver
-+========================
-+
-+The TPM Command Response Buffer (CRB) interface is a standard TPM interface
-+defined in the TCG PC Client Platform TPM Profile (PTP) Specification [1]_.
-+The CRB provides a structured set of control registers a client uses when
-+interacting with a TPM as well as a data buffer for storing TPM commands and
-+responses. A CRB interface can be implemented in:
-+
-+- hardware registers in a discrete TPM chip
-+
-+- in memory for a TPM running in isolated environment where shared memory
-+  allows a client to interact with the TPM
-+
-+The Firmware Framework for Arm A-profile (FF-A) [2]_ is a specification
-+that defines interfaces and protocols for the following purposes:
-+
-+- Compartmentalize firmware into software partitions that run in the Arm
-+  Secure world environment (also know as TrustZone)
-+
-+- Provide a standard interface for software components in the Non-secure
-+  state, for example OS and Hypervisors, to communicate with this firmware.
-+
-+A TPM can be implemented as an FF-A secure service.  This could be a firmware
-+TPM or could potentially be a TPM service that acts as a proxy to a discrete
-+TPM chip. An FF-A based TPM abstracts hardware details (e.g. bus controller
-+and chip selects) away from the OS and can protect locality 4 from access
-+by an OS.  The TCG-defined CRB interface is used by clients to interact
-+with the TPM service.
-+
-+The Arm TPM Service Command Response Buffer Interface Over FF-A [3]_
-+specification defines FF-A messages that can be used by a client to signal
-+when updates have been made to the CRB.
-+
-+How the Linux CRB driver interacts with FF-A is summarized below:
-+
-+- The tpm_crb_ffa driver registers with the FF-A subsystem in the kernel
-+  with an architected TPM service UUID defined in the CRB over FF-A spec.
-+
-+- If a TPM service is discovered by FF-A, the probe() function in the
-+  tpm_crb_ffa driver runs, and the driver initializes.
-+
-+- The probing and initialization of the Linux CRB driver is triggered
-+  by the discovery of a TPM advertised via ACPI.  The CRB driver can
-+  detect the type of TPM through the ACPI 'start' method.  The start
-+  method for Arm FF-A was defined in TCG ACPI v1.4 [4]_.
-+
-+- When the CRB driver performs its normal functions such as signaling 'start'
-+  and locality request/relinquish it invokes the tpm_crb_ffa_start() funnction
-+  in the tpm_crb_ffa driver which handles the FF-A messaging to the TPM.
-+
-+References
-+==========
-+
-+.. [1] **TCG PC Client Platform TPM Profile (PTP) Specification**
-+   https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
-+.. [2] **Arm Firmware Framework for Arm A-profile (FF-A)**
-+   https://developer.arm.com/documentation/den0077/latest/
-+.. [3] **Arm TPM Service Command Response Buffer Interface Over FF-A**
-+   https://developer.arm.com/documentation/den0138/latest/
-+.. [4] **TCG ACPI Specification**
-+   https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
--- 
-2.34.1
-
+Regards,
+Markus
