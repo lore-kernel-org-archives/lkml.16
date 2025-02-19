@@ -1,103 +1,156 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D27922FADE;
-	Wed, 19 Feb 2025 19:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E2222ACE7
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 19:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739993447; cv=none; b=MuodwzwTx1otLzxfGhkM6ZgOJy4CP9fG+FSu8pJDcKsBnG7i4qtMae9yD0mwnaAw+caaLgqfTWYJqy76MvnA6psCMG6YwSZSh2nXfFzIxSAWNPsXm/3bmUJtleEfUoNjeKXhb4xqSrwpLKkWXyTjFNgoIKgKQRJQTKf1Fcfp8zg=
+	t=1739993587; cv=none; b=tNL/W8M8Jv6ylCvqwg3UerluAS29kmUc6CRMqrv3sMd4yWhhYuyFO2m/SW8hc2+nWncy5J2bKdRIZi0pFjKvmsWJyD8yXzeSoGCiHmpvc1FrwDUFyVoDxjomYU7IY76Ek2PzjAIr4vQVbmRqNeE/PV0jVvBJSxl5cOLNuvnn4Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739993447; c=relaxed/simple;
-	bh=sksAyNByNx8NSbChA5OyZoKTsU644DZbakRE/oSvqeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MAZorF4cKw/SB6LotvUHh+TkEPLgGQOFBHAg1kzvTeJa6Cwfnp8PWrRvSd1DD3uwy1afokp04jLzhFEJ76L6rNcYdbYOvIfF/eNLmYyYaLdsGUvZ4ifRcMrp27cK4lDkobeFWBYV9xVHfqGLSuc/SQ4I1DZOuLsoB1juJ/uKeyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cd3e3eN+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1739993587; c=relaxed/simple;
+	bh=alXYuPS0FINh9Nm9P5MiVyVk+9+fDhZvqgT5JAY4svw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DimeiZgJxFatiOKRtBOg0fObzYBhoERFfDVOKNJlAGSn1Fyvx/i+fGRJmakpoRpUNETTmFDUn2C9/RmizCnIss7OKWSv58DVI7NUaOxeS0gDXAwUelODD6W1F9PjPA8WLDGiNuZYknuRSVtqtb0EzFrGF0AYSmE5ZuTt7A30mtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NJT6a+Za; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cd3e3eN+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1A9DB40E015D;
-	Wed, 19 Feb 2025 19:30:43 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id CiZ-zDsycV4B; Wed, 19 Feb 2025 19:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739993438; bh=iIz2uUSUDw1IG6CoLQi9jMA0nzb/XyRocZHfN1XR/B8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cd3e3eN+0/Un1Q65ttpGp0zhvbBD8sm48aGJ5khm9Ij5ZdaCHyEzNzqmjqtYjQro1
-	 3jc1/RKtrD8/TBMA8RS8LLbuSkEc1DNxgEGnYthOFl66c15u6XKiu9i+4oH2TP7WUa
-	 sDAyPLT9jsYBiCoDLOD2i6yzrEVerygg+hHHiPqLWoZpY0JpLj1pxVeeo16L02UcCf
-	 ieWgIyDoTMEFMIumti7nJJJf95GAAKmwWhghktakEEJMM1KUaP+1RNvt6FZPqZLUt0
-	 IBGcvBBDCJktWFEgRtesDqSauGSKMUyhNDIJfR+0IUcaKsv8Pvmi+cmbfnqIO90+oY
-	 suV8/9wUsRt5tOwJPAvGb83M/JusjYPgSDFeTBeH3wlIcTbiOrMGW7NM8Hw1aWdaL5
-	 Hv/nMHFM75ZNli2/ijzONDBF/+VErQoP+5Gzr/ZnOnPV74T/owUpL3IxH7h7DXxSgA
-	 T+zDEuyJD8yJIO2ti7h7IUcC8DfR9LH0fSw/mw5uqWJEIloC5q5Jp+upBfDSZjnOk7
-	 IAhbckEnlPkDBrIr5CkKrrInGkVOFxboM6+hT9XtbWs1iyMTVznlR0+VjXHU/ArX1Y
-	 SibPu/PMQtZroNeMhUxAAvKbHhmhcxGpBPS54CMR8HHRba9sF8g8Sm0w7YyUF9JYV/
-	 5ao4qJibuRTB5+msE2szY0uY=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CAD4F40E015F;
-	Wed, 19 Feb 2025 19:30:13 +0000 (UTC)
-Date: Wed, 19 Feb 2025 20:30:07 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, pawan.kumar.gupta@linux.intel.com,
-	jpoimboe@kernel.org, daniel.sneddon@linux.intel.com,
-	perry.yuan@amd.com, thomas.lendacky@amd.com, sandipan.das@amd.com,
-	namhyung@kernel.org, acme@redhat.com, xin3.li@intel.com,
-	brijesh.singh@amd.com, linux-kernel@vger.kernel.org,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, CobeChen@zhaoxin.com,
-	TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com, GeorgeXue@zhaoxin.com
-Subject: Re: [PATCH 1/2] x86/cpufeatures: Add CPU feature flags for Zhaoxin
- Hash Engine v2
-Message-ID: <20250219193007.GPZ7YxP3aKjTV08yJo@fat_crate.local>
-References: <20250114121301.156359-1-TonyWWang-oc@zhaoxin.com>
- <20250114121301.156359-2-TonyWWang-oc@zhaoxin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NJT6a+Za"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739993586; x=1771529586;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=alXYuPS0FINh9Nm9P5MiVyVk+9+fDhZvqgT5JAY4svw=;
+  b=NJT6a+Zaw3vAEt5SSKbq4tUXRvpZwuiVR2jKdz2ZixFcBHAQmwYcrN1e
+   7yG53esN6x2Jc4WK4SX7lCoWsCa+lO1ZSTeVHJZflVXstvF6WNAzRllO1
+   eXWiQ1jcAZrHJ93T+SNp52/cbgqHYcYitwjnLhh9y5nxn5bOAS4FXyg8V
+   mCxImvsP/2WHwtDwH8cY604k6zQ5lkG4Gn7UdI8oT5y8hwUs7rpbCreW9
+   ACA/kNzoHrXEy0UQp5e2ifw9w1Ycekzq7KoGz+U/ycIfQ4Zw6tHJyVi8J
+   IgreRaPnWgqsByAbRI1f7W/k7HMqtlX7Zc5+VqSHHDJNzEk42DUOblpZd
+   A==;
+X-CSE-ConnectionGUID: LSOsnJRoS5Wh3L93FDvB1w==
+X-CSE-MsgGUID: hip2Cg1oScyftFhe4Vmp8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44665137"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="44665137"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 11:33:05 -0800
+X-CSE-ConnectionGUID: qmAl5OaIR7aoFqIIOv6vDA==
+X-CSE-MsgGUID: s4N8mZO9TfuSeGmxmFrj6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120021039"
+Received: from kinlongk-mobl1.amr.corp.intel.com (HELO [10.125.109.250]) ([10.125.109.250])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 11:26:09 -0800
+Message-ID: <0ebdfab1-09c6-475f-bcf8-366a321359a0@intel.com>
+Date: Wed, 19 Feb 2025 11:26:07 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250114121301.156359-2-TonyWWang-oc@zhaoxin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 04/12] x86/mm: get INVLPGB count max from CPUID
+To: Rik van Riel <riel@surriel.com>, Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+ dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+ linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+ jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+ Manali Shukla <Manali.Shukla@amd.com>
+References: <20250213161423.449435-1-riel@surriel.com>
+ <20250213161423.449435-5-riel@surriel.com>
+ <20250219115626.GMZ7XG6s-5ftg1XLoZ@fat_crate.local>
+ <b749384b7dea020880057359d06d4e9172c7aaec.camel@surriel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <b749384b7dea020880057359d06d4e9172c7aaec.camel@surriel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 14, 2025 at 08:13:00PM +0800, Tony W Wang-oc wrote:
-> Zhaoxin currently uses CPUID leaf 0xC0000001 instead of VIA/Cyrix/
-> Centaur to represent the presence or absence of certain CPU features
-> due to company changes. The previously occupied bits in CPUID leaf
-> 0xC0000001 remain functional, and the unoccupied bits are used by
-> Zhaoxin to represent some new CPU features.
-> 
-> Zhaoxin CPUs implements the PadLock Hash Engine v2 feature on the
-> basis of features supported by CPUID leaf 0xC0000001, which indicates
-> that Zhaoxin CPUs support SHA384/SHA512 algorithm hardware instructions.
-> 
-> Add two Padlock Hash Engine v2 feature flags support in cpufeatures.h
-> 
-> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-> ---
->  arch/x86/include/asm/cpufeatures.h       | 4 +++-
->  tools/arch/x86/include/asm/cpufeatures.h | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
+On 2/19/25 09:52, Rik van Riel wrote:
+>> CPU_SUP_AMD selects X86_BROADCAST_TLB_FLUSH which depends on
+>> CPU_SUP_AMD which
+>> selects X86_BROADCAST_TLB_FLUSH which depends on CPU_SUP_AMD...
+>>
+>> Why do you really need yet another Kconfig symbol? Just whack
+>> X86_BROADCAST_TLB_FLUSH - it'll be enabled by default on everything
+>> anyway.
+> Dave specifically asked me to do things that way.
 
-I'm assuming this is going through the crypto tree due to patch 2 so for this
-one:
+Yeah, I'm in camp "moar Kconfig!" and Boris is in camp "too many Kconfigs!".
 
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+I'm OK getting rid of the Kconfig as long as we have _some_ other way to
+nicely identify the INVLPGB code (which I think the X86_FEATURE gives
+us) _and_ that the overhead isn't too bad from leaving it compiled in
+all the time.
 
--- 
-Regards/Gruss,
-    Boris.
+The mmu_context is the one place that's kinda nasty without a Kconfig
+option. I guess it's only a few bytes but it's a super silly waste of a
+few bytes on i386, for example.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I also really like the _logical_ clarity that comes from something like:
+
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++	u16 global_asid;
++	bool asid_transition;
++#endif
+
+as opposed to:
+
++#ifdef CONFIG_64BIT
++ 	/* Only used with X86_FEATURE_INVLPGB */
++	u16 global_asid;
++	bool asid_transition;
++#endif
+
+So, while I respect Boris's concern about Kconfig proliferation, I see
+the user-invisible ones (the ones without a prompt) as pretty harmless.
+
+Sorry for the maintainer crossfire, btw. I definitely don't want to be
+thrashing you around too much.
