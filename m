@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5268621C9FA;
-	Wed, 19 Feb 2025 18:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2B421B1B5;
+	Wed, 19 Feb 2025 18:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739989472; cv=none; b=U42j79IASLxAxZltGBVf5OxyAoGSz7tL+IkNIwkq0OXBOyn6eFpftHFI8Gx686Pv7Oxdri0K55Qd9crXlZfoifiAyVpYXeAzU/+DtQ/Kj+veUIHziP53yLgbQtNnS3I6RGF46G0nH0ROrhjOMoRptDc+TqNTbY9k6n6AXzpoVXo=
+	t=1739989471; cv=none; b=U25LTH5DjJnbGI2GJ9KR4NpJTbGg2UpYjnheSSKM5inriUHM46Hgqp8hVuOEuQzllhyBALTZlwS01PdQdcqdeRl0d2DbXNoixiB5WaSuWeFjzopIL1uQ0z5ALEzr8abrtVStPlUyyJX3zOtpp24A8ErhEAKQLhpvxR/lPwRI4BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739989472; c=relaxed/simple;
-	bh=4lMjZPPR5tAt3RCT7E5nLuW/hwq2SL9e/KRXA8qjeXs=;
+	s=arc-20240116; t=1739989471; c=relaxed/simple;
+	bh=cXUqK6gzrQ6Jb8f2XQHgstHPltOXwTTStbk2H1bPmow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JDNkbwiAW4HaSQzdShZkmL+IdEoRp1W2ajDJudVqb9/a0Zv7LbXIIlTMSi38aKl02JJzjfrxAOt40SkbU+xju/bH2UIGKAa5xhS2zFQVIeSdHqtD51rZdiqyMbWH625+NN0ceBSeERQmfIU+mKn5C4SKRPVlj3CtzMcq02OkliU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bl9Z7AZM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Xygc26FoTw8ZRlkCkKjGWW2cyu/KGdZtMqufiblvilP58y+068vsKhcOrXCf+arC5xDYgcipidgJjgwHMXDuGrcTx0t/75ZDGA0/79YYrF0ZBiDSKx4fu51whM4+EHmXuGzp+3pliIbOcwALEAMHCiDWkb/dFLIOzwjZ8N0NC1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBs4SFo1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bl9Z7AZM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14EB5C4CEEB;
-	Wed, 19 Feb 2025 18:24:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBs4SFo1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F8FDC4CEE9;
+	Wed, 19 Feb 2025 18:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739989472;
-	bh=4lMjZPPR5tAt3RCT7E5nLuW/hwq2SL9e/KRXA8qjeXs=;
+	s=k20201202; t=1739989471;
+	bh=cXUqK6gzrQ6Jb8f2XQHgstHPltOXwTTStbk2H1bPmow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bl9Z7AZM1wlXC9fPoO45VIQY87igC9vxRgXSke8uCaQeZYNTiTzqp2+WWyXogYmdq
-	 2QHv7M4z+VAvoW4lgPcW5B6Ejw5ydbKYWrunmuZTDq/srEW6AVzvFl4Kjg2008gNkr
-	 QBc7mUnkW/aw6Cnu/k98SCi1BjW7m5JhCY37A9jNNjKqiL2+BsvXxJ/jmWrOsx7Fys
-	 qwUPOZfN/WhAjwpnvOI+PLhtJS5YEehiGG7wlxFWTIvOBtewyPgwZVoJlXpPK+Lnth
-	 gLFOaCA8vYTx53EHEgKy0W0U1ZcCaOQcsRU1pffLufUX1wGhgvpybQ5xawDpCJWriX
-	 wJ2FTSNJxPRBA==
+	b=kBs4SFo1yJD+EOXqO74HzIV7aOWP8Zs4387sigrp++bBLIaVkEQxhnBDdW+6dEGh1
+	 AlrcIasD9/EKoOd+GGwmKXWPq1yFkUkv/4/LjCpv8sGPBZSQ9BdBVncrONvEKO7Y4p
+	 sga/5WKolx5qUc5EJUO/wYsK3nRygi4L9W8NPfUoIeQx/ryqCHRBMCgJGxBaQkv0MC
+	 Umj1Q5PtHGD8INYDOVPMA6BZBzRFqSxy1abrg9k7WsPvv2uXqlr7YHRxWyeI4xByh4
+	 7RfW1OxrI3s8FVHx48kjN+dnVt4kYd67egfiD2N0USjGVVYV5e/qe9zL+ahymajH0t
+	 BYu9hHiyjDqWw==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v3 18/19] crypto: scatterwalk - remove obsolete functions
-Date: Wed, 19 Feb 2025 10:23:40 -0800
-Message-ID: <20250219182341.43961-19-ebiggers@kernel.org>
+	netdev@vger.kernel.org,
+	Boris Pismenny <borisp@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>
+Subject: [PATCH v3 16/19] net/tls: use the new scatterwalk functions
+Date: Wed, 19 Feb 2025 10:23:38 -0800
+Message-ID: <20250219182341.43961-17-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250219182341.43961-1-ebiggers@kernel.org>
 References: <20250219182341.43961-1-ebiggers@kernel.org>
@@ -46,117 +49,121 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-Remove various functions that are no longer used.
+Replace calls to the deprecated function scatterwalk_copychunks() with
+memcpy_from_scatterwalk(), memcpy_to_scatterwalk(), or
+scatterwalk_skip() as appropriate.  The new functions generally behave
+more as expected and eliminate the need to call scatterwalk_done() or
+scatterwalk_pagedone().
 
+However, the new functions intentionally do not advance to the next sg
+entry right away, which would have broken chain_to_walk() which is
+accessing the fields of struct scatter_walk directly.  To avoid this,
+replace chain_to_walk() with scatterwalk_get_sglist() which supports the
+needed functionality.
+
+Cc: Boris Pismenny <borisp@nvidia.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- crypto/scatterwalk.c         | 37 ------------------------------------
- include/crypto/scatterwalk.h | 25 ------------------------
- 2 files changed, 62 deletions(-)
+ net/tls/tls_device_fallback.c | 31 ++++++-------------------------
+ 1 file changed, 6 insertions(+), 25 deletions(-)
 
-diff --git a/crypto/scatterwalk.c b/crypto/scatterwalk.c
-index 2e7a532152d61..87c080f565d45 100644
---- a/crypto/scatterwalk.c
-+++ b/crypto/scatterwalk.c
-@@ -28,47 +28,10 @@ void scatterwalk_skip(struct scatter_walk *walk, unsigned int nbytes)
- 	walk->sg = sg;
- 	walk->offset = sg->offset + nbytes;
- }
- EXPORT_SYMBOL_GPL(scatterwalk_skip);
+diff --git a/net/tls/tls_device_fallback.c b/net/tls/tls_device_fallback.c
+index f9e3d3d90dcf5..03d508a45aaee 100644
+--- a/net/tls/tls_device_fallback.c
++++ b/net/tls/tls_device_fallback.c
+@@ -35,21 +35,10 @@
+ #include <net/ip6_checksum.h>
+ #include <linux/skbuff_ref.h>
  
--static inline void memcpy_dir(void *buf, void *sgdata, size_t nbytes, int out)
+ #include "tls.h"
+ 
+-static void chain_to_walk(struct scatterlist *sg, struct scatter_walk *walk)
 -{
--	void *src = out ? buf : sgdata;
--	void *dst = out ? sgdata : buf;
+-	struct scatterlist *src = walk->sg;
+-	int diff = walk->offset - src->offset;
 -
--	memcpy(dst, src, nbytes);
+-	sg_set_page(sg, sg_page(src),
+-		    src->length - diff, walk->offset);
+-
+-	scatterwalk_crypto_chain(sg, sg_next(src), 2);
 -}
 -
--void scatterwalk_copychunks(void *buf, struct scatter_walk *walk,
--			    size_t nbytes, int out)
--{
--	for (;;) {
--		unsigned int len_this_page = scatterwalk_pagelen(walk);
--		u8 *vaddr;
+ static int tls_enc_record(struct aead_request *aead_req,
+ 			  struct crypto_aead *aead, char *aad,
+ 			  char *iv, __be64 rcd_sn,
+ 			  struct scatter_walk *in,
+ 			  struct scatter_walk *out, int *in_len,
+@@ -67,20 +56,17 @@ static int tls_enc_record(struct aead_request *aead_req,
+ 	DEBUG_NET_WARN_ON_ONCE(!cipher_desc || !cipher_desc->offloadable);
+ 
+ 	buf_size = TLS_HEADER_SIZE + cipher_desc->iv;
+ 	len = min_t(int, *in_len, buf_size);
+ 
+-	scatterwalk_copychunks(buf, in, len, 0);
+-	scatterwalk_copychunks(buf, out, len, 1);
++	memcpy_from_scatterwalk(buf, in, len);
++	memcpy_to_scatterwalk(out, buf, len);
+ 
+ 	*in_len -= len;
+ 	if (!*in_len)
+ 		return 0;
+ 
+-	scatterwalk_pagedone(in, 0, 1);
+-	scatterwalk_pagedone(out, 1, 1);
 -
--		if (len_this_page > nbytes)
--			len_this_page = nbytes;
+ 	len = buf[4] | (buf[3] << 8);
+ 	len -= cipher_desc->iv;
+ 
+ 	tls_make_aad(aad, len - cipher_desc->tag, (char *)&rcd_sn, buf[0], prot);
+ 
+@@ -88,12 +74,12 @@ static int tls_enc_record(struct aead_request *aead_req,
+ 
+ 	sg_init_table(sg_in, ARRAY_SIZE(sg_in));
+ 	sg_init_table(sg_out, ARRAY_SIZE(sg_out));
+ 	sg_set_buf(sg_in, aad, TLS_AAD_SPACE_SIZE);
+ 	sg_set_buf(sg_out, aad, TLS_AAD_SPACE_SIZE);
+-	chain_to_walk(sg_in + 1, in);
+-	chain_to_walk(sg_out + 1, out);
++	scatterwalk_get_sglist(in, sg_in + 1);
++	scatterwalk_get_sglist(out, sg_out + 1);
+ 
+ 	*in_len -= len;
+ 	if (*in_len < 0) {
+ 		*in_len += cipher_desc->tag;
+ 		/* the input buffer doesn't contain the entire record.
+@@ -108,14 +94,12 @@ static int tls_enc_record(struct aead_request *aead_req,
+ 
+ 		*in_len = 0;
+ 	}
+ 
+ 	if (*in_len) {
+-		scatterwalk_copychunks(NULL, in, len, 2);
+-		scatterwalk_pagedone(in, 0, 1);
+-		scatterwalk_copychunks(NULL, out, len, 2);
+-		scatterwalk_pagedone(out, 1, 1);
++		scatterwalk_skip(in, len);
++		scatterwalk_skip(out, len);
+ 	}
+ 
+ 	len -= cipher_desc->tag;
+ 	aead_request_set_crypt(aead_req, sg_in, sg_out, len, iv);
+ 
+@@ -160,13 +144,10 @@ static int tls_enc_records(struct aead_request *aead_req,
+ 				    cpu_to_be64(rcd_sn), &in, &out, &len, prot);
+ 		rcd_sn++;
+ 
+ 	} while (rc == 0 && len);
+ 
+-	scatterwalk_done(&in, 0, 0);
+-	scatterwalk_done(&out, 1, 0);
 -
--		if (out != 2) {
--			vaddr = scatterwalk_map(walk);
--			memcpy_dir(buf, vaddr, len_this_page, out);
--			scatterwalk_unmap(vaddr);
--		}
--
--		scatterwalk_advance(walk, len_this_page);
--
--		if (nbytes == len_this_page)
--			break;
--
--		buf += len_this_page;
--		nbytes -= len_this_page;
--
--		scatterwalk_pagedone(walk, out & 1, 1);
--	}
--}
--EXPORT_SYMBOL_GPL(scatterwalk_copychunks);
--
- inline void memcpy_from_scatterwalk(void *buf, struct scatter_walk *walk,
- 				    unsigned int nbytes)
- {
- 	do {
- 		const void *src_addr;
-diff --git a/include/crypto/scatterwalk.h b/include/crypto/scatterwalk.h
-index f6262d05a3c75..ac03fdf88b2a0 100644
---- a/include/crypto/scatterwalk.h
-+++ b/include/crypto/scatterwalk.h
-@@ -113,32 +113,10 @@ static inline void *scatterwalk_next(struct scatter_walk *walk,
- {
- 	*nbytes_ret = scatterwalk_clamp(walk, total);
- 	return scatterwalk_map(walk);
+ 	return rc;
  }
  
--static inline void scatterwalk_pagedone(struct scatter_walk *walk, int out,
--					unsigned int more)
--{
--	if (out) {
--		struct page *page;
--
--		page = sg_page(walk->sg) + ((walk->offset - 1) >> PAGE_SHIFT);
--		flush_dcache_page(page);
--	}
--
--	if (more && walk->offset >= walk->sg->offset + walk->sg->length)
--		scatterwalk_start(walk, sg_next(walk->sg));
--}
--
--static inline void scatterwalk_done(struct scatter_walk *walk, int out,
--				    int more)
--{
--	if (!more || walk->offset >= walk->sg->offset + walk->sg->length ||
--	    !(walk->offset & (PAGE_SIZE - 1)))
--		scatterwalk_pagedone(walk, out, more);
--}
--
- static inline void scatterwalk_advance(struct scatter_walk *walk,
- 				       unsigned int nbytes)
- {
- 	walk->offset += nbytes;
- }
-@@ -182,13 +160,10 @@ static inline void scatterwalk_done_dst(struct scatter_walk *walk,
- 	scatterwalk_advance(walk, nbytes);
- }
- 
- void scatterwalk_skip(struct scatter_walk *walk, unsigned int nbytes);
- 
--void scatterwalk_copychunks(void *buf, struct scatter_walk *walk,
--			    size_t nbytes, int out);
--
- void memcpy_from_scatterwalk(void *buf, struct scatter_walk *walk,
- 			     unsigned int nbytes);
- 
- void memcpy_to_scatterwalk(struct scatter_walk *walk, const void *buf,
- 			   unsigned int nbytes);
+ /* Can't use icsk->icsk_af_ops->send_check here because the ip addresses
+  * might have been changed by NAT.
 -- 
 2.48.1
 
