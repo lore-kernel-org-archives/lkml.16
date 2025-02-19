@@ -1,145 +1,99 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944C41F8BCC;
-	Wed, 19 Feb 2025 15:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA48C1FC10F;
+	Wed, 19 Feb 2025 15:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739979408; cv=none; b=NTe7cv9LhLu5zH8Cv6BWFFxgYVl+BLmVGURhPg556/aU44sQ+dIi4r1FkmnyehDBUbMMxFUpqv7hl6Brv9g3Q8txRJ2tlYqKv7sQY8sgDi4VavUW2HW5O3/VbYV2q8a9PVABWVAUaBsAGII+t3NDJ4ghcuRd3B3ezySYlYjQYdo=
+	t=1739979412; cv=none; b=WxyZx6wq64gvXrKAMk6dt364MAQrcI50Nb6l608g8cEQkh4UoOBKcH/wK8f/pttG6vooD9VwaCWwkvyTkntQOK489absAPRAmCpFc8pUZAoI5+JWbLwl9zNkC9PrsRMu8/HTrJhzPQiWWn5sO2B+VE/qs844JlGAw9KUDTuK0sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739979408; c=relaxed/simple;
-	bh=oWWajixtlHPEE9PFDS//yTG8eD00WLGc+jcUF5caSKk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=rMIXHHWWpuAv8mxZR19R1dUBc5TsxywlPflzw53VtlK/twX7YtVnsnhyDl1iuQirrmEsD8UYNKaoGfM9wzWP4tDf9wfOLt4JrmgQaWKKq0OCcN1HhnQo2IqO/g8vhwCILFhiZrKthTNkGB1XQMlXxd2CVe8WrS+4mGODsRZAo/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=i76W0ndt; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="i76W0ndt"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: lina@asahilina.net)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id A4A5B41EF0;
-	Wed, 19 Feb 2025 15:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
-	s=default; t=1739979403;
-	bh=oWWajixtlHPEE9PFDS//yTG8eD00WLGc+jcUF5caSKk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References;
-	b=i76W0ndt7R0fdW2YCSE3r1spun1yeZRuV/w3I70GnJAOje6cLjmNW98433Lsp1ksv
-	 PAzTB8VxQj9/UYbbJc04urECHsRIzu18/+mS9ea81cpuso9T1XEAFKFDUmOa8RRcc7
-	 E/dmjZLb2LPZYwu07I52yh99eojtZAEEzy9qPzna1Qrka2hkJPQ4mcvWimQpDSEoHp
-	 qg8I0sLMoCN6L/8uggRmes0lGUFgHgdZIERLJcE5y+1bbNnIgYWe9Hko4mx2i/f61X
-	 RN0zOC5s8GPEBveJDrEkIpMEVxBALGdchdJaNtzcfOlXr3+Uem4DL0rMV8+/t0hQVv
-	 p7wouJCPeJv5Q==
-Date: Wed, 19 Feb 2025 16:36:41 +0100
-From: Asahi Lina <lina@asahilina.net>
-To: Sasha Finkelstein <fnkl.kernel@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC: Krzysztof Kozlowski <krzk@kernel.org>, Sven Peter <sven@svenpeter.dev>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Hector Martin <marcan@marcan.st>, Ulf Hansson <ulf.hansson@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-media@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH 3/5] media: dt-bindings: Add Apple ISP
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMT+MTToVdm72ovNZ8ySySYe5fT99a0Y6bv02NKxADCBCe+pMQ@mail.gmail.com>
-References: <20250219-isp-v1-0-6d3e89b67c31@gmail.com> <20250219-isp-v1-3-6d3e89b67c31@gmail.com> <16f6d4a2-2102-48b9-a0ae-b8c6595975b8@kernel.org> <CAMT+MTR7dhtt3SOMg0K3UakJQftqnc2S-rV41HdHtA+o9aSPug@mail.gmail.com> <20250219105326.GA31383@pendragon.ideasonboard.com> <CAMT+MTToVdm72ovNZ8ySySYe5fT99a0Y6bv02NKxADCBCe+pMQ@mail.gmail.com>
-Message-ID: <252808F9-D1DA-4233-A878-5C47595302A6@asahilina.net>
+	s=arc-20240116; t=1739979412; c=relaxed/simple;
+	bh=Ujy0BIPtNrfND0xHnHIFj/TLD1JGmnJppohKxkoYFzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FKCklLVr9A5aC9VtAYQWzZ9PMG7h8gUzjyvAXbzDirOkgCjzQEhyKHwNPgW8w5Vnbe1habLHHBrsFUL2DK7k6jmZCAoJwlxadj07I9AwqVKK/7lEaVl4JG46ye4evYf5MzHo5erAFYZwCYacO81zqGnbEqgablSC6D1DmOnP7Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ded368fcd9so9311231a12.1;
+        Wed, 19 Feb 2025 07:36:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739979409; x=1740584209;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6llFm8J1sbZ3d26kndvqAhLtdSFqZOZdKTBTtPApNdc=;
+        b=qPxgHraFt0b4N7GCkuHKC6Yowk0aYek5kgKCEgxAkImzbvET1zia80THI0rocTqdCL
+         kk0aY0It6kNiLlhSg8TJy+PxDo6Bnaxvh9aCGkOEHiPlZYf4KThi8bgPyJpZHbgyB5cQ
+         7Vw0mdfM2kKlqyjowxlTJgSj6e3JIWyMyum5Uv3hc0jAFioWeZtrXJIVpi19JiEj39jG
+         MmcSWL3iavOU9+8GAAYwqaTgM7XLWItBQ7doJDNRpnMFvmY10dntZwXuJnYoOAZ19TXS
+         97+ZRXHI9tUT8IH2yUNYG1OXPPQyXEpap+M9unDIa93j80pEU5bFKvYEsi1JMG+OB9Yx
+         F+sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWgipPcmCwCxkETfDtt7XenCmWq/wJBP59TCpB81EyD8jpzEcIqSmz4Bu3zOOj/UrU3XgLg7Uv@vger.kernel.org, AJvYcCVYqdhV+Q3GJNGFRTigm4aRPFkl6PWE/UmziwQaywDK8vgxH4I61hQroX4eDtB6EawgVX6ksCT+op65huw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynUHHQ3DkB30OFdB2Coul9eBzEyhNkzKuiW9/Fx79xnJPKwtaE
+	y+xveQai5EbDIFBlE8BU3INej6aYdPgOGwtQLJKX0foXwGd3X5mb
+X-Gm-Gg: ASbGncscIDURcbVbrFSTaxHi8Y9OwOyaEqHqHWWeeag55WBjo77taUgRgNHuP3QN37N
+	NrnQZsWYl6qs/c6zOllWPCteX/uiTXXwJEai8R5ngwLqbdIxfyl8aKV5r2uJFpSyBaowfzKgWiD
+	0shWNJhX7V205oRJDz8Ao5pNyX8hbiFa0SPOanPokyEaSTtuQOFqw2t5ZdD5xW9SyF70mEfZ6Pp
+	NeFtOA6UzIliA3KluZw/AxS+RZ55yvPE77her946y4VH5JvTGjgJhzpEp0kT3x6ArSu+JK6DJxT
+	+uY=
+X-Google-Smtp-Source: AGHT+IHLbbKT+NeJwzgMUAtja4qR1bPzV8ZDiBggz1Xb8UKenPMjRNiG3pGusZx60PHjyIhUvsHq+g==
+X-Received: by 2002:a17:906:314a:b0:ab7:ec8b:c642 with SMTP id a640c23a62f3a-abbccccb77amr355748566b.5.1739979408746;
+        Wed, 19 Feb 2025 07:36:48 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abba4542e7fsm532798866b.139.2025.02.19.07.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 07:36:48 -0800 (PST)
+Date: Wed, 19 Feb 2025 07:36:45 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	David Wei <dw@davidwei.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, paulmck@kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH net-next v2] netdevsim: call napi_schedule from a timer
+ context
+Message-ID: <20250219-astonishing-nimble-wolverine-1300f0@leitao>
+References: <20250217-netdevsim-v2-1-fc7fe177b98f@debian.org>
+ <20250217115031.25abfaf4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217115031.25abfaf4@kernel.org>
 
-On February 19, 2025 12:05:29 PM GMT+01:00, Sasha Finkelstein <fnkl=2Ekerne=
-l@gmail=2Ecom> wrote:
->On Wed, 19 Feb 2025 at 11:53, Laurent Pinchart
-><laurent=2Epinchart@ideasonboard=2Ecom> wrote:
->> >
->> > Those are board-specific and not discoverable via the ISP protocol=2E
->>
->> But they are settable through the ISP protocol, aren't they ? For
->> instance, looking at isp-imx248=2Edtsi, the first four entries are
->>
->>         /* 1280x720 */
->>         preset0 {
->>                 apple,config-index =3D <0>;
->>                 apple,input-size =3D <1296 736>;
->>                 apple,output-size =3D <1280 720>;
->>                 apple,crop =3D <8 8 1280 720>;
->>         };
->>
->>         /* 960x720 (4:3) */
->>         preset1 {
->>                 apple,config-index =3D <0>;
->>                 apple,input-size =3D <1296 736>;
->>                 apple,output-size =3D <960 720>;
->>                 apple,crop =3D <168 8 960 720>;
->>         };
->>
->>         /* 960x540 (16:9) */
->>         preset2 {
->>                 apple,config-index =3D <0>;
->>                 apple,input-size =3D <1296 736>;
->>                 apple,output-size =3D <960 540>;
->>                 apple,crop =3D <8 8 1280 720>;
->>         };
->>
->>         /* 640x480 (4:3) */
->>         preset3 {
->>                 apple,config-index =3D <0>;
->>                 apple,input-size =3D <1296 736>;
->>                 apple,output-size =3D <640 480>;
->>                 apple,crop =3D <168 8 960 720>;
->>         };
->>
->> But I may be interested in capturing a 640x480 frame with cropping only
->> and without scaling, with
->>
->> input-size =3D 1296x736
->> output-size =3D 640x480
->> crop =3D (328,128)/640x480
->>
->> Or I may want my cropped frame to be located in the upper-left corner:
->>
->> input-size =3D 1296x736
->> output-size =3D 640x480
->> crop =3D (8,8)/640x480
->>
->> If I set those parameters through the ISP protocol, won't it work ?
->>
->> --
->> Regards,
->>
->> Laurent Pinchart
->
->For cropping - you do not want to change those parameters, the sensor
->is partially occluded, and the crop area is specified in such a way
->to not expose those pixels=2E As for scaling - we can expose only the 1:1
->scale and let userspace deal with it, but it appears that it expects
->the other common output sizes to exist=2E
->
->
+Hello Jakub,
 
-The square sensor with the hack is the IMX558=2E The configs there are act=
-ually a workaround for missing ANE support=2E
+On Mon, Feb 17, 2025 at 11:50:31AM -0800, Jakub Kicinski wrote:
+> On Mon, 17 Feb 2025 09:35:29 -0800 Breno Leitao wrote:
+> > The netdevsim driver was experiencing NOHZ tick-stop errors during packet
+> > transmission due to pending softirq work when calling napi_schedule().
+> > This issue was observed when running the netconsole selftest, which
+> > triggered the following error message:
+> > 
+> >   NOHZ tick-stop error: local softirq work is pending, handler #08!!!
+> > 
+> > To fix this issue, introduce a timer that schedules napi_schedule()
+> > from a timer context instead of calling it directly from the TX path.
+> > 
+> > Create an hrtimer for each queue and kick it from the TX path,
+> > which then schedules napi_schedule() from the timer context.
+> 
+> This crashes in the nl_netdev test.
 
-What the driver is supposed to be doing is using the higher numbered prese=
-ts, which crop internally and exclude the occluded area=2E But those on mac=
-hines with that sensor end up requiring ANE integration for denoising and I=
-SP crashes without it=2E
+Yea, a nasty crash. Looking at the crash, it seems to be  disabling the
+timer before initializing it, and timer->base was not properly
+assigned/set.
 
-Config #0 doesn't use ANE, so the crops are re-creations of the other conf=
-igs so it behaves the same minus the denoising=2E
+> I think you should move the hrtimer init to nsim_queue_alloc()
+> and removal to nsim_queue_free()
+
+That seems to make nl_netdev happier. Let me do more tests, and then ask
+NIPA do finish the work.
+
+Thanks!
