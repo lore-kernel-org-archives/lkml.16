@@ -1,165 +1,155 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017AA211A0D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4012B1EEA34
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973804; cv=none; b=NyEwEwAtUWSoAIvJBBeK2EOP53vY5HXZPYHaCiGd6XDTXJTPKTscw0gM/JJVucyF5jiFdQQP/9dCfX/E82Fxm7ae49g7WwF8+ANsTG02bz1KGEW5jb7ZxtWNotx7FRzjFi8+XRBx4uVDoXikUDkz95H1kzTdx9Jo08mCd91AWQE=
+	t=1739973819; cv=none; b=EnXjIbjWlF1bgy9GP7WPvm6a+EID2LfxzXVn1czw+nCBMejVg+Vhy7mAl/vcDNviaMTtCIvHFtysWAbjuAmWcUtzv2ppKwWWtZ3jErIaDgiJK3XvK1Zqq9dPS3dVmnhrx12gUIJD/G3KehaBN3bGh1ZsD9Q4rPnYhRroCif/WEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739973804; c=relaxed/simple;
-	bh=mPNJ48aDPqdFg1ECdW+dKYVom+swah7vyuEFQYmv82E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=gzi3VJ4cn97visYl6GuPXEjkKkcW5OLwrL1flpDZkm6xfEE9wesqBBPJhLtVUWUTzvFphY8ZvNcQKunA/wrhsjrGZ/t9WnN5Kc8nTlt+Je4KzL7QX7GL6ESGMXYMd7tmP3AwlhBHGaXY+mNvbqeos/EfoUW8wfZNC3KQjMfzPkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GwygPMBA; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1739973819; c=relaxed/simple;
+	bh=QmbQLkkDdQ72D1Tjn3A14Gl1CAEBwtZyNkBzH5iXLzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pr8J/sgYz8Oa1gzJK0M0dSuTS5qnXvi9S2+5gQgiT3v2S4WU4/dblItG+LCZbKRM35kz2t0ABn+yDOAwWAtq65ODwac39ZF8q43jJqKGJkKLuMxI4NTPyfztmfZyaraAi5eRPpaCFJfCqufsNWdqKL+oA9/yELtQOPJh+NHUl0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=caUpztk5; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GwygPMBA"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250219140319euoutp0178cf4605363634066e413a185cb0eade~loPOqM7KL1474514745euoutp01k
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:03:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250219140319euoutp0178cf4605363634066e413a185cb0eade~loPOqM7KL1474514745euoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739973799;
-	bh=PsAB+JOgcxnXBZ0RJoudGrm4LQ1wEP+2yNk/4fwQIHs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GwygPMBAIwrdjEo7uvTOCLeB5Sn0RNiLBSgqfWgo7r/clZHUPJDqKamuHY+MEgOn+
-	 J5TbRdELtbNind9dJ5d9TzuqqhCJxMK8nWM67/S8rgsbUiFL79ZnIMuqeBOGlVMe4Z
-	 7SyCnpJ6NRWZFlEUgkNfmo9oXRnlULIV9gndBygg=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250219140319eucas1p1ecfb22946c7f4617d5f74daf7dc47c4b~loPORRSwq2213222132eucas1p1g;
-	Wed, 19 Feb 2025 14:03:19 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 3D.93.20821.6A4E5B76; Wed, 19
-	Feb 2025 14:03:18 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250219140318eucas1p1db0d55468b1958f9d41963cb789e4f29~loPNxaRGl1654516545eucas1p1B;
-	Wed, 19 Feb 2025 14:03:18 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250219140318eusmtrp2029534af637e6839596fe5c3ea02185c~loPNrxAUV2481124811eusmtrp2F;
-	Wed, 19 Feb 2025 14:03:18 +0000 (GMT)
-X-AuditID: cbfec7f2-b11c470000005155-8e-67b5e4a609c7
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 5D.62.19654.6A4E5B76; Wed, 19
-	Feb 2025 14:03:18 +0000 (GMT)
-Received: from AMDC4942.home (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250219140316eusmtip2a5c7a24083fa3ce8351ed5c3f9fdaa14~loPMPVwmE0697306973eusmtip2J;
-	Wed, 19 Feb 2025 14:03:16 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
-	wefu@redhat.com, jassisinghbrar@gmail.com, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, frank.binns@imgtec.com,
-	matt.coster@imgtec.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	ulf.hansson@linaro.org, jszhang@kernel.org, p.zabel@pengutronix.de,
-	m.szyprowski@samsung.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org, Michal Wilczynski
-	<m.wilczynski@samsung.com>
-Subject: [PATCH v5 21/21] riscv: dts: thead: Add GPU node to TH1520 device
- tree
-Date: Wed, 19 Feb 2025 15:02:39 +0100
-Message-Id: <20250219140239.1378758-22-m.wilczynski@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250219140239.1378758-1-m.wilczynski@samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="caUpztk5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739973817; x=1771509817;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QmbQLkkDdQ72D1Tjn3A14Gl1CAEBwtZyNkBzH5iXLzU=;
+  b=caUpztk5bMOmYWO/ObiA2YFU1k+OCzM5EdGB9Ep6UeAuK61d4EfqQSuW
+   nK2PhZtyUZ0blbr/XydXdJfOpYOCt5a6um9n0ab+hkCCD5eY3EE8MUqxQ
+   pOKbsgz9TbTMEi14wOco+66pkL0ae3RoGPNleYpzTwcB4Di11YDPBaE7v
+   DeedHdhIdUsjwTswsv21u4qGykF9cf9WlTDN6aAzE/qKuHsghOOdc6/yo
+   y2pQxjF2D2Otf1F4mlqxhqXaoikXppBydL8C+G0m+YDlWmmuibjCw0+V9
+   dDuRXBmTz5gH/1TPUm7OF276pUSllulUt4IPSDyy51ck+PoxWpi4R60Gc
+   Q==;
+X-CSE-ConnectionGUID: mVcGvILNTjy0otc3FZokZw==
+X-CSE-MsgGUID: s1lkdqONT1i2nsIF7I8dLg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44477502"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="44477502"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 06:03:26 -0800
+X-CSE-ConnectionGUID: 8Ea9qZleTLapvJoMw6xpQA==
+X-CSE-MsgGUID: KjvrAP6aQgCFGCMW5B3nLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="114572569"
+Received: from opintica-mobl1 (HELO himmelriiki) ([10.245.245.206])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 06:03:22 -0800
+Date: Wed, 19 Feb 2025 16:03:13 +0200
+From: Mikko Ylinen <mikko.ylinen@linux.intel.com>
+To: "Xing, Cedric" <cedric.xing@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH 0/4] tsm: Unified Measurement Register ABI for TVMs
+Message-ID: <Z7XkoQ1cJNw8dn3I@himmelriiki>
+References: <20250212-tdx-rtmr-v1-0-9795dc49e132@intel.com>
+ <15c69d57-4ffb-4ea1-8cbc-0ba6d3d7b14f@intel.com>
+ <be7e3c9d-208a-4bda-b8cf-9119f3e0c4ce@intel.com>
+ <015cdddb-7f74-4205-af8a-b15cad7ddc22@intel.com>
+ <d8f3eb33-d902-4391-adc7-005e4895b471@intel.com>
+ <Z7Sd6FuDDMgExEna@himmelriiki>
+ <465d712c-b638-4884-88c8-1a88c506efdf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUxTZxTGfXtv773UFa6F6BvKhjRxmS4imsnesPmVzO1uyTKJmil/CEXu
-	ipEvW9DpSKDQMmRUNmFbKLiqQQRi7ZS2AqNUC7blQ1YQqoigbhAtQ4FSRpxDRrls87/fOc9z
-	3uec5KUwUT0RSh1Ky2TladIUCSHAzfbn3eurR0yyqF9/iEHOO+d5yPRCS6JLlm4e0rV189Fw
-	r5GH+mYmCHR51EWiJxYljtw1Z0iUbzcQyKMdJtBU8TAf3W6qJNC0pg0g87SKQPq2IRIZZnQ8
-	dG7KhKOqhiaACk5W81FPx040NOzEked2MYYKtEFovrmBRC/dV3BU8cxKIuP4d3zk0H+OVNYy
-	fPsbzMRdNcmMezw401roIxnLn2dxplE7RDLFjV2AuVp3kmDuu5sJ5qf2WObBNw4eU1+Vw6j0
-	dh5TMhfFTLT0E8wpYx1gevPvkLtEcYL3k9iUQ0dZ+YatCYJk36CKzNAs/9JzbZTIBYUBRSCA
-	gvQ7sKXcTRQBASWiawDsKLUQfkFE+wAsrYznhGkAy5v1/CJALU6c/i2c618EcKAzH+OKcQAf
-	m9sWpwl6E3x4Ucf3CyG0Gofqm0rgLzD6MYDmkcpFVzAdC2/UuoCfcXoN9PZoF1lIb4cNvn6c
-	WzAcWm/cwvzRAQv9lp5QzrICtpePLFqwBUu+qQLj7FcEcORRNMcfwJtdGoLjYDjmMJIch8H5
-	Rh2P43T40ORdms2GjcWOJX4P3u/+i/DHYvRaaGjawB2/A/oGszgMhHefruAWCISnzT9iXFsI
-	CwtE3Btvwu+LNf9ldteYlzIZWKi8jH8LIrSvnKJ95RTt/7FnAVYHVrFZilQZq9iYxh6LVEhT
-	FVlpssiD6alXwcK/7nzp8DaAM2NTkTbAo4ANQAqThAgLcowykTBJevwEK0+Pl2elsAobEFO4
-	ZJXwvFUtE9EyaSZ7mGUzWPm/Ko8KCM3lAVcXii853L/2dV2iO6Ek8ci6steuD3x9ITps/9Nr
-	gXm79n2RB9tLJkPstc9QNjy+cj6nNXdZtZc5EN8SxoZvTnPRc8p3xQLTp0fnJSeOCCPq2sRV
-	sVsSbJ/MbJlc9tUs7S7fU1LWdz3GZ8+Y2+3d5BFuntWv0ZqPjUkqDLtX703QZOpsefcsITvW
-	x4xGS2bjnEFJnZEZOz9O7nMc6Aihrb/Y9eG+lak/w61iFPfZk9Bt9aqKR7ZtrefqXlAXDhbs
-	10T98UBc61QEv039vXr5vY8CIib35M5aYkyMcfhUqbK9SbZ33qVNfB444My6la0etNZOmX/f
-	pwz68JLY0PuWt0WCK5KlG9dhcoX0H62cehFGBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMKsWRmVeSWpSXmKPExsVy+t/xe7rLnmxNN7j6VtDixPVFTBZbf89i
-	t1iz9xyTxfwj51gt7l3awmRx5et7Not1Ty+wW7zY28hicW3FXHaL5mPr2SxezrrHZvGx5x6r
-	xeVdc9gsPvceYbTY9rmFzWLtkbvsFuu/zmeyWPhxK4vFkh27GC3aOpexWlw85Wpx994JFouX
-	l3uYLdpm8Vv837OD3eLftY0sFrPf7We32PJmIqvF8bXhFi37p7A4yHm8v9HK7vHm5UsWj8Md
-	X9g99n5bwOKxc9Zddo+enWcYPTat6mTzuHNtD5vHvJOBHve7jzN5bF5S79Gy9hiTR/9fA4/3
-	+66yefRtWcXocan5OnuAUJSeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6d
-	TUpqTmZZapG+XYJexpfbLewFvdwVL7c/ZWtg7ODsYuTgkBAwkZj0SL6LkZNDSGApo8TP0+wg
-	toSAjMS17pcsELawxJ9rXWxdjFxANa8YJT5+vwSWYBMwkniwfD4riC0isJhFYu++SpAiZoG3
-	jBLXZ24EKxIW8Jc4PHEyM4jNIqAq8eniLEYQm1fAQWLHl6tQG+Ql9h88ywxyECdQfN9FKYiD
-	7CXO9d1nhSgXlDg58wlYOTNQefPW2cwTGAVmIUnNQpJawMi0ilEktbQ4Nz232EivODG3uDQv
-	XS85P3cTIzC1bDv2c8sOxpWvPuodYmTiYDzEKMHBrCTC21a/JV2INyWxsiq1KD++qDQntfgQ
-	oynQ2ROZpUST84HJLa8k3tDMwNTQxMzSwNTSzFhJnJftyvk0IYH0xJLU7NTUgtQimD4mDk6p
-	BiYFxtSv/z69nynU46ls9//3zZ/Vz71Snr/SzNy2oWeC/7as2wWi/XvlEj7e/JtnGXh1eRBz
-	zY7a+XWPizWZ5zw9aP8upF77RsKf5PznSukpWyc4X1ogWeuSzxmStHTWWfuAOdctTlsV7fwZ
-	snNS17mmDZmGjreevw5+qC9RNJWve5JD3FYZpi22Xw2ZeHfHzb3wcdH2rzN+bp/wxfhDbWhk
-	wOq4x+W/pvPsu2Q5adKDdTZHruqJp/VI7uN49Ejy8oNJnH2h1/ZyLhWrcj+5cqOVw573WuEO
-	+gEZFqu/rs5aJ2Js9nFVM1PBd5+bjlzfWpw8rIPzZqyQeSjnVjLvSXF7/Wovxh1JDyZpujP8
-	8WFVYinOSDTUYi4qTgQAOTMmP7YDAAA=
-X-CMS-MailID: 20250219140318eucas1p1db0d55468b1958f9d41963cb789e4f29
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250219140318eucas1p1db0d55468b1958f9d41963cb789e4f29
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250219140318eucas1p1db0d55468b1958f9d41963cb789e4f29
-References: <20250219140239.1378758-1-m.wilczynski@samsung.com>
-	<CGME20250219140318eucas1p1db0d55468b1958f9d41963cb789e4f29@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <465d712c-b638-4884-88c8-1a88c506efdf@intel.com>
 
-Add a device tree node for the IMG BXM-4-64 GPU present in the T-HEAD
-TH1520 SoC used by the Lichee Pi 4A board. This node enables support for
-the GPU using the drm/imagination driver.
+On Tue, Feb 18, 2025 at 10:04:19PM -0600, Xing, Cedric wrote:
+> On 2/18/2025 8:49 AM, Mikko Ylinen wrote:
+> > On Thu, Feb 13, 2025 at 03:50:19PM -0600, Xing, Cedric wrote:
+> > > On 2/13/2025 10:58 AM, Dave Hansen wrote:
+> > > > On 2/13/25 08:21, Xing, Cedric wrote:
+> > > > > On 2/12/2025 10:50 PM, Dave Hansen wrote:
+> > > > > > On 2/12/25 18:23, Cedric Xing wrote:
+> > > > > > > NOTE: This patch series introduces the Measurement Register (MR) ABI,
+> > > > > > > and
+> > > > > > > is a continuation of the RFC series on the same topic [1].
+> > > > > > 
+> > > > > > Could you please explain how the benefits of this series are helpful to
+> > > > > > end users?
+> > > > > 
+> > > > > This series exposes MRs as sysfs attributes, allowing end users to
+> > > > > access them effortlessly without needing to write any code. This
+> > > > > simplifies the process of debugging and diagnosing measurement-related
+> > > > > issues. Additionally, it makes the CC architecture more intuitive for
+> > > > > newcomers.
+> > > > 
+> > > > Wait a sec, so there's already ABI for manipulating these? This just
+> > > > adds a parallel sysfs interface to the existing ABI?
+> > > > 
+> > > No, this is new. There's no existing ABI for accessing measurement registers
+> > > from within a TVM (TEE VM). Currently, on TDX for example, reading TDX
+> > > measurement registers (MRs) must be done by getting a TD quote. And there's
+> > > no way to extend any RTMRs. Therefore, it would be much easier end users to
+> > 
+> > TD reports *are* available through the tdx_guest ioctl so there's overlap
+> > with the suggested reportdata/report0 entries at least. Since configfs-tsm
+> > provides the generic transport for TVM reports, the best option to make report0
+> > available is through configfs-tsm reports.
+> > 
+> Given the purpose of TSM, I once thought this TDX_CMD_GET_REPORT0 ioctl of
+> /dev/tdx_guest had been deprecated but I was wrong.
+> 
+> However, unlocked_ioctl is the only fops remaining on /dev/tdx_guest and
+> TDX_CMD_GET_REPORT0 is the only command supported. It might soon be time to
+> deprecate this interface.
 
-By adding this node, the kernel can recognize and initialize the GPU,
-providing graphics acceleration capabilities on the Lichee Pi 4A and
-other boards based on the TH1520 SoC.
+Once an alternative is available but it's still in use because of this 
+use case (i.e., read registers from a TD report). AFAUI, SEV has its
+reports available through configfs-tsm reports so it'd be a good fit here too.
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
----
- arch/riscv/boot/dts/thead/th1520.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Obviously, if the registers get exposed through this series, the use case
+can be covered but full TD report is still good to keep available.
 
-diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index 6b34aab4b455..c4fa616efac8 100644
---- a/arch/riscv/boot/dts/thead/th1520.dtsi
-+++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-@@ -498,6 +498,19 @@ clk: clock-controller@ffef010000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		gpu: gpu@ffef400000 {
-+			compatible = "thead,th1520-gpu", "img,img-bxm";
-+			reg = <0xff 0xef400000 0x0 0x100000>;
-+			interrupt-parent = <&plic>;
-+			interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk_vo CLK_GPU_CORE>,
-+				 <&clk_vo CLK_GPU_MEM>,
-+				 <&clk_vo CLK_GPU_CFG_ACLK>;
-+			clock-names = "core", "mem", "sys";
-+			power-domains = <&aon TH1520_GPU_PD>;
-+			resets = <&rst TH1520_RESET_ID_GPU>;
-+		};
-+
- 		rst: reset-controller@ffef528000 {
- 			compatible = "thead,th1520-reset";
- 			reg = <0xff 0xef528000 0x0 0x4f>;
+> 
+> > The use case on MRCONFIGID mentioned later in this thread does not depend
+> > on this series. It's easy for the user-space to interprete the full report
+> > to find MRCONFIGID or any other register value (the same is true for HOSTDATA
+> > on SNP).
+> > 
+> Yes, parsing the full report will always be an option. But reading static
+> MRs like MRCONDFIGID or HOSTDATA from sysfs attributes will be way more
+> convenient.
+> 
+> Additionally, this sysfs interface is more friendly to newcomers, as
+> everyone can tell what MRs are available from the directory tree structure,
+> rather than studying processor manuals.
+> 
+> > The question here is whether there's any real benefit for the kernel to
+> > expose the provider specific report details through sysfs or could we focus on
+> > the RTMR extend capability only.
+> > 
+> Again, parsing the full report is always an alternative for reading any MRs
+> from the underlying arch. But it's much more convenient to read them from
+> files, which I believe is a REAL benefit.
+> 
+> Or can we flip the question around and ask: is there any real benefit NOT to
+> allow reading MRs as files and force users and applications to go through an
+> arch specific IOCTL interface?
+
+FWIW, I'm not thinking about IOCTLs here but configfs-tsm reports: a
+single read gives you all registers as specified by the report without
+having to add anything to the kernel ABI.
+
 -- 
-2.34.1
-
+Regards, Mikko
