@@ -1,105 +1,65 @@
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [195.130.132.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DA01F17EB
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595A81DFE25
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739975109; cv=none; b=KwL/tTVv3Yd+Iss3i7bN3F+cqCECHG4AQ8QY+1mV/dNBfmwQOUAA5w5IxDTbSdpMlTLSsbS74rI5UGA6cAxTXOLhjF6wnPQ8yoNc4WsyZaXTBxduPwGdkzgem/Kin+q4PowghUYfjhR/qzThcUGXMI7l5seysPZoRZjPqQJUJ4U=
+	t=1739975130; cv=none; b=Bf07YolQ8gV7F+BKYfy7on9Fn54lChTSBJNo1fX0jLoxNxUpcF0J/iGSD3b1Wg6AfQfMzz1ih9z/jezsGPlg+5C0nV0T0ONgmHHLpLvHkDgcTC6TuuF5up3liYaH62WUJljLYpBkUXZrtWX07p7hmX7i2WlbFWx2OopQJwCA41s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739975109; c=relaxed/simple;
-	bh=ltI4g7nPmJeeGqiwBzK/MJgSPoL3ykRP0wBimvKDGws=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nVBkwXg8n5uqyDTAZFlofQFDXkpfdxWb1BkJL5PTz5OS0pQJvoyRJBmF7pvvcqW45qZbASBoPaBLycld4xbD2ihGeYO1fyktNDRET0YTcmK2UXUZm4kU/t2bI9I6wMsXGNp7mWoVbcTsNmPjrXQ4d1E8hmTOj7iT0O7dPO93tSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:47f6:a1ad:ad8e:b945])
-	by baptiste.telenet-ops.be with cmsmtp
-	id FSQw2E00557WCNj01SQwj5; Wed, 19 Feb 2025 15:24:58 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tkl09-0000000B3Sy-2RlP;
-	Wed, 19 Feb 2025 15:24:56 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tkl0S-0000000BaPR-105W;
-	Wed, 19 Feb 2025 15:24:56 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-serial@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] serial: sh-sci: Save and restore SCDL and SCCKS
-Date: Wed, 19 Feb 2025 15:24:54 +0100
-Message-ID: <20250219142454.2761556-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1739975130; c=relaxed/simple;
+	bh=zDMhoXicGLI2a+X0sHz8W0ODc2KcBPFmXjR0R0QbK4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/nPmmitTTlTE427RMGozS0hp5y/XyhH/x9ghe1iDM0Bon81B+wIP0sIE32SRKqKPoWLLBB+PtRYa/n+x+NYdac0TDTqEin439ohHI2tYZFBmiyl82JIIgVQ6ohg3BwKy3tJO6Nk9PBpJ3pQLT0OoPS0mzHReT8EovE/RY13/9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QhtzV8qq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QhtzV8qq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A6EC4CED1;
+	Wed, 19 Feb 2025 14:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739975129;
+	bh=zDMhoXicGLI2a+X0sHz8W0ODc2KcBPFmXjR0R0QbK4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QhtzV8qqPiWVa4VZ4TgWZZGka88JCzRR8m28CrX/NSNipKtciRZSUVYu+RBkHlTOz
+	 Si0xjsOP2NYfN+Glx4GwoMP+uDVkbWIccTLLetCiayRX8xoSKHmH/gq7twJWLyTeDf
+	 FlSSaLgYJpKUatdvQFlFTDDdY7m+V4bqmiPXoeLI=
+Date: Wed, 19 Feb 2025 15:25:27 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Elizabeth Figura <zfigura@codeweavers.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	wine-devel@winehq.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] ntsync: Check wait count based on byte size.
+Message-ID: <2025021906-retainer-trustless-bd1d@gregkh>
+References: <20250219001920.210847-1-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219001920.210847-1-zfigura@codeweavers.com>
 
-On (H)SCIF with a Baud Rate Generator for External Clock (BRG), there
-are multiple ways to configure the requested serial speed.  If firmware
-uses a different method than Linux, and if any debug info is printed
-after the Bit Rate Register (SCBRR) is restored, but before termios is
-reconfigured (which configures the alternative method), the system may
-lock-up during resume.
+On Tue, Feb 18, 2025 at 06:19:20PM -0600, Elizabeth Figura wrote:
+> GCC versions below 13 incorrectly detect the copy size as being static and too
+> small to fit in the "fds" array. Work around this by explicitly calculating the
+> size and returning EINVAL based on that, instead of based on the object count.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202502072019.LYoCR9bF-lkp@intel.com/
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> --
+> 
+> Suggested-by as per Arnd's request, but the only thing I changed was preserving
+> array_size() [as noted by Geert in the linked thread]. I tested and found no
+> regressions.
 
-Fix this by saving and restoring the contents of the Frequency Division
-(DL) and Clock Select (CKS) registers as well.
+You forgot to sign-off on this commit :(
 
-Fixes: 22a6984c5b5df8ea ("serial: sh-sci: Update the suspend/resume support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This can be reproduced on e.g. Salvator-X(S) by enabling the debug
-print in sci_brg_calc(), and using s2ram with no_console_suspend.
----
- drivers/tty/serial/sh-sci.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Can you resend it please with that fixed?
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index df6512c9c0ff28db..70f34b8a93888eb9 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -109,6 +109,8 @@ struct sci_suspend_regs {
- 	u16 scscr;
- 	u16 scfcr;
- 	u16 scsptr;
-+	u16 scdl;
-+	u16 sccks;
- 	u8 scbrr;
- 	u8 semr;
- };
-@@ -3571,6 +3573,10 @@ static void sci_console_save(struct sci_port *s)
- 		regs->scfcr = sci_serial_in(port, SCFCR);
- 	if (sci_getreg(port, SCSPTR)->size)
- 		regs->scsptr = sci_serial_in(port, SCSPTR);
-+	if (sci_getreg(port, SCDL)->size)
-+		regs->scdl = sci_serial_in(port, SCDL);
-+	if (sci_getreg(port, SCCKS)->size)
-+		regs->sccks = sci_serial_in(port, SCCKS);
- 	if (sci_getreg(port, SCBRR)->size)
- 		regs->scbrr = sci_serial_in(port, SCBRR);
- 	if (sci_getreg(port, SEMR)->size)
-@@ -3590,6 +3596,10 @@ static void sci_console_restore(struct sci_port *s)
- 		sci_serial_out(port, SCFCR, regs->scfcr);
- 	if (sci_getreg(port, SCSPTR)->size)
- 		sci_serial_out(port, SCSPTR, regs->scsptr);
-+	if (sci_getreg(port, SCDL)->size)
-+		sci_serial_out(port, SCDL, regs->scdl);
-+	if (sci_getreg(port, SCCKS)->size)
-+		sci_serial_out(port, SCCKS, regs->sccks);
- 	if (sci_getreg(port, SCBRR)->size)
- 		sci_serial_out(port, SCBRR, regs->scbrr);
- 	if (sci_getreg(port, SEMR)->size)
--- 
-2.43.0
+thanks,
 
+greg k-h
