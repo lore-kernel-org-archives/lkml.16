@@ -1,270 +1,283 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711CA1DF269;
-	Wed, 19 Feb 2025 11:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739966322; cv=fail; b=IiZRu++bXyWHmmuCbHBWoPfIlykT6mt6FGDofU3i0TkB2i1Aen4jB7UlNpo1/1j6u8XfZYOhKdeC3dJJb75K25K+JiVYLGUkqx0luyOAX3Pka0Y692sIz0mVGitnkm/B6oCCs5aeUHJdhk7vjmT5frWPswlu5iDOjg/H+esTjuo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739966322; c=relaxed/simple;
-	bh=YWVSbluTzraWqcctHaLXcTB9nh/SeguxiGzUG7hSsoM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gt7EkmRAJvqZE6wdFMp+YkhFkbzrgJ+RYIIOXiSXqAIxcFITaVzwMJMU6uE/kyguu+e0LnB0QkAKguVewi17d7GoKns3aVWsuyxFu71X1b+/9QKZPuzkkLxVwhdbbfjtO2iabkY8VzcjbpYVUcHpEqHP25Li6KZwLABGUbc+o04=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EuFv7VwD; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8090E1DF265
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739966360; cv=none; b=SX6DfWDZAMUuE7uJ2tVzgkvP0IkTuOJg+RPJNp7YabgqLKbfbdVF6NgDuV+JqPDpqLiewyC2ClWuncEyeyaFCfDPLKi5p+dgcVTw9TDtuviKPaazzbz1eqpyxfPZiuNXuN7wb9JpNt03mY39qBLndAbOsxl2Vb3+LS22AQAMS5s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739966360; c=relaxed/simple;
+	bh=J0hF3UhRpwjKs/Yi5If5aov9xyBNwUE9OWA3Fv+Euqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hh/8DYoiG2QZRBwjR3Lun5nPWWavYmPjSk2ShnNJblG2H7prcRGBZaGnvOYCK8y5wyeHUnqCa7FPU9U7/bh30GukEZeiga5ivOKDj1O3IU55VtAJgiPww20L/yJRt7qwcOs9AIawGfcV41ZxkgTxv+9vDAg2eDrAqjfDMijfGZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fysd5Ans; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EuFv7VwD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739966321; x=1771502321;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=YWVSbluTzraWqcctHaLXcTB9nh/SeguxiGzUG7hSsoM=;
-  b=EuFv7VwDS4ItX5ZEeO4Jnz+++pDYnLxhK+NARm9FGGEI6Hr5a1P2wRG9
-   tFZsNoEsVc/Su13MN8ITjd8PmiEgDRghcKnzWbGS1o+uISEjCKMolS6Kb
-   G8c5G7IDYNaMObggOwRg/1k8xh6jrrr01VIIrPKAwZKdKfR5i4Fwu4gpr
-   uvx+6dnZOFPRn4GMJwb6vXs5sOMqhv09SVHt1Eqfx32VFOnJ1Pw/fakmJ
-   xkl4jo8IJVYxY1CHkbuac7vrEIdbd3E+d11mk7RxwFs8Qm6q+SIVz+Rq1
-   9NrUz4/IJksjGUpG/Oa1EKNPB72bK1iLmhDlr6Wzu8WX9azR8QJykxavm
-   A==;
-X-CSE-ConnectionGUID: QhrbsGIcR8GdCdS3xSiekw==
-X-CSE-MsgGUID: JTThPE7WRqulLXfuEU40rQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="40412604"
-X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
-   d="scan'208";a="40412604"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 03:58:40 -0800
-X-CSE-ConnectionGUID: IWCYJZ2ERemro6K3XJaXrQ==
-X-CSE-MsgGUID: sruBSkwVT5ud6iGwownppg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114558528"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 03:58:39 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 19 Feb 2025 03:58:39 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 19 Feb 2025 03:58:39 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 19 Feb 2025 03:58:39 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o6imV1sNRbLqaNyoSIBcAkmBdWiQ9BKLEawux0MkiWwpBfXd27ZFSwz4WDS4r9pfTjwL7np0ynNW4mXsNefhiRrzt8IC4OPnSLOqI7FdXgC175DLZnMc/THwme4r06laK++i1xDlkdFyaQRLNSc0H9onZsz6BCzHbFTzhMh2uA7Vgz1qaIdn1EghJEDc+VrfAmQxYo+rNVfzCUdSWirkMuQ+USpk1I+rckQKweNzUhQUhniZLdz9e6CfARbv035OZJaEZNywLnDg6AJ++7iZ7TWWeTVBUbmN3SkUYIaYs5FWxsl1v2uIryO1eK5yG73SHDegfvsHsE4QA5KuUuDAJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZGO9m2kslZIym0XnyMoGnXLkqe7WdaKMiBsvPRSjGC0=;
- b=EJfb4zNZgDFu/ppigKBc8CODfuZ+7h/kTO0AwIzXIEEygDp4qAfc1I9oTtiqOSbCWpq3CDDxKwi3ctL282blDNp6f/VsRyRh7QkiyPYFXUKLkFNgDKW96Bc92BN6UCPeK/gAYmUaPyM+v1F0vugOPQi5mSex6P78IjnZ9Rof8uOUa5eKIdex7yLGR4K/+Gao9dg4ElGSXqobjRX8lvtjLdTUle07m26QcBQ3gRcRhlj/zvKYSFdWzIcP44IhAHEewaZAbXRbxXMDL8aWzBdb2JMg1eaTMp1pV+9NSz3iwLrpzcvbcVCfvUKRaO4QcniV5JtxnpCSl2ATJpW+7w/Vog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com (2603:10b6:806:340::7)
- by CO1PR11MB4818.namprd11.prod.outlook.com (2603:10b6:303:93::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Wed, 19 Feb
- 2025 11:58:10 +0000
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::399f:ff7c:adb2:8d29]) by SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::399f:ff7c:adb2:8d29%3]) with mapi id 15.20.8445.013; Wed, 19 Feb 2025
- 11:58:10 +0000
-Date: Wed, 19 Feb 2025 12:58:00 +0100
-From: Larysa Zaremba <larysa.zaremba@intel.com>
-To: "Buvaneswaran, Sujai" <sujai.buvaneswaran@intel.com>, "Nguyen, Anthony L"
-	<anthony.l.nguyen@intel.com>
-CC: "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
-	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Kitszel,
- Przemyslaw" <przemyslaw.kitszel@intel.com>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>, "Michal
- Swiatkowski" <michal.swiatkowski@linux.intel.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "David S. Miller"
-	<davem@davemloft.net>
-Subject: Re: [Intel-wired-lan] [PATCH iwl-net] ice: do not configure
- destination override for switchdev
-Message-ID: <Z7XHSGstLAiHWovx@lzaremba-mobl.ger.corp.intel.com>
-References: <20241209140856.277801-1-larysa.zaremba@intel.com>
- <PH0PR11MB5013488226F0A48B91CA7E1A96102@PH0PR11MB5013.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <PH0PR11MB5013488226F0A48B91CA7E1A96102@PH0PR11MB5013.namprd11.prod.outlook.com>
-X-ClientProxiedBy: VI1PR08CA0262.eurprd08.prod.outlook.com
- (2603:10a6:803:dc::35) To SN7PR11MB7540.namprd11.prod.outlook.com
- (2603:10b6:806:340::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fysd5Ans"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30795988ebeso68961121fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 03:59:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739966356; x=1740571156; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+CJq2ouQgs6Uq09Ja7eyw0fU6FYWGc/bKljMrdEqE5g=;
+        b=fysd5AnsZVhSou6cBr7mDT58oBHY5Uf9Otrp+vJtJVIAjzDI9qVnqvXNNk3ZquZAn2
+         OdNETd+ptp5/mJ1hIAjM/l3arZ1cM3dvP7XP92FPj9rRaZ5FfA47PiyXNKIDIwE+tGvA
+         d/+vKReqQt6kC8ymMlZa9vFCKmieunSrI4r6lwr0IRH/TsvslM1ZqfDQU/UumM1OdNt8
+         cnI4xzeBtH5j5ZzkpIRdWVrqGJuMnX6c8194aNNvDFGe0JdglHkkT3AgRSeKlvV2+le1
+         tzM8QgEeVXj3/sbqIZe0jEIespkwoqQPeUHXt0msyHST/lhEoWcfgBvWKDvqSo76fcTE
+         0EXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739966356; x=1740571156;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+CJq2ouQgs6Uq09Ja7eyw0fU6FYWGc/bKljMrdEqE5g=;
+        b=q9gIH6N8NV0HgC3O16YEIYy7EwwVfPzQN1JUABsoI8CVZATiXN5uWnSKayAvUXQtZL
+         QH8eRcpRZaY4M/XWdpRr3+M4L1Recwr2uc2IwL56kYOYJ9fCdjo4sKprZdzhPJgvcnPK
+         Z570K30H3SInIAPEFotXbkDLWWEER1vUK0t9cWEa/ybV2nLdylkCwWmNUGymz9PBNi/A
+         +RjXprTbPUOehzI8he2fC4Y1wFOukQ4x3PjO38MLnCwXgfXsaaQ778ATQwlid5fB5Nh0
+         HZgr+pU1m69Gld8Lq+YaRLkwFjBGvLXfNivOPcrdJ330jbecPCwifwGAgAHHiM1dnQS7
+         zzeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnRAHHmRECnZAY3My/Aj6mQosVWrOdqdA8u0BgM5Qw6bAGUReW6GLJ7GW7QGJzfl6jfWAcbMyzFHVm2dM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxUsz8jB073jdM2EYpsGFABba26mMQa4WahKvism2pQTJ64JIQ
+	xahJ9f5/y/km0wNfyUN6RTPR4iT2tmJcp/Spu0LdUNEB/9rexWGtibPVhTftZjk=
+X-Gm-Gg: ASbGnctiSoPSzVEgye5kSru0tJoGhhrjgdsjhQc4cktrOGDddNscUqz9ySmOQmp/W4v
+	+uysbv79Rxgea60mOrZbOLZBjhIxlhVxDqYvocGLYJcg36ZhkoV7XvShd7//R7WwUKOdBzkhpHj
+	sXTvNUr6/vbsiePwHFC34Ap9u5i9mcio+CcafXtr1hmd3D6a+qSGn4GuKGzlpbRpu28xJp1J08P
+	h0XfNIOaZ+ksc/IEl2M+crz3vwGJTsmRJb7IXk8G+tt8ZbJm6Co4WQ91zm4ZA18ZMcK7qJQa4yC
+	OkmEhVh78/P68r++Qs3tagbmgilCOPST5r4/8Pi+lgBHxJlGEhXOkbZxtNk7VzMmaZ9oRkM=
+X-Google-Smtp-Source: AGHT+IG3EA5zmOZxqYnvB2TJIdKQeVBGkZe99Cqn1+AqimTJVwzVgST9xXBbyJiYmWEnq1QwRnfltw==
+X-Received: by 2002:a2e:9490:0:b0:309:2ed:7331 with SMTP id 38308e7fff4ca-30927a62d05mr61534381fa.18.1739966355575;
+        Wed, 19 Feb 2025 03:59:15 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309cec7e45asm13998091fa.105.2025.02.19.03.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 03:59:14 -0800 (PST)
+Date: Wed, 19 Feb 2025 13:59:11 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Jagadeesh Kona <quic_jkona@quicinc.com>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
+	Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, 
+	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] clk: qcom: videocc: Add support to attach multiple
+ power domains
+Message-ID: <gzjyyl2kzv52zsewn5zf6ei65fymyi4pspvsmsjaqj5sklfxvc@bkg46saulni5>
+References: <20250218-videocc-pll-multi-pd-voting-v1-0-cfe6289ea29b@quicinc.com>
+ <20250218-videocc-pll-multi-pd-voting-v1-4-cfe6289ea29b@quicinc.com>
+ <eec2869a-fa8f-4aaf-9fc5-e7a8baf0f864@linaro.org>
+ <huluiiaqmunvmffoqadrhssd3kl2toutqtcw7rzamv3sqdglsf@7lz66x4sj3gv>
+ <d4c4ecf0-9094-4341-8711-78a48e5d1344@linaro.org>
+ <d444f1fb-42a0-48ef-83bc-d5aab9282b22@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR11MB7540:EE_|CO1PR11MB4818:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91647432-638c-46cd-ea0a-08dd50dcae0e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?UP7Iw3GbzI2CZLLl6/eQ02d9W3wQit7NV8/FH9w8QKlin0YNyaefDdkkq32K?=
- =?us-ascii?Q?GvW3GH0ysE6mx5bfb3OGGa8el5IbixnvmiaHPUpc+y98of430cuEHP2V8e25?=
- =?us-ascii?Q?WsejBcztFV5yQ+VraYqdIxL9U9UMR57dvz3H5GqT0KU7955Nw5zFxIOw52RN?=
- =?us-ascii?Q?omGC4N1sq2pLWdE1t0wB1SO85RW9IlrpcOI2zf7z/DwK9fbRfetVGrBEDw0a?=
- =?us-ascii?Q?Yi1APvLQTZxf3wYv70ixMcWZZgfd5nPTv4scmUo80MgQsFDcdnFGDpVMwmBy?=
- =?us-ascii?Q?tgyA0NlebqxqUzhHYOmYppOzM6qMGbvpeLLXCTRFpPlf09HTZ5KNe4TTKU3d?=
- =?us-ascii?Q?sEdAFEtB7sXNLyrPKRVZ2E5LyT1lH47E6VrRVIuNKXn1n6adNa5AAAX807oi?=
- =?us-ascii?Q?zgXoV/ur4TAaEUkUBjXR6WkfZQSiW8QbSwarYv0vc6Kyp8d/qYDuDluBFQgV?=
- =?us-ascii?Q?E+wUXnkk8p2wmdWH6qlJL6y4TnzCzsXM/R0CTB2OhxA6iOv4a3WCvlPRLI49?=
- =?us-ascii?Q?mOwiuUn9cc1qb4YVbaMRoFuWdPg2q6VWSAmhY3lmS7ld9iDh/pNAy1eIG08G?=
- =?us-ascii?Q?lyvCh+u1sVdaa/iTWV6MQu59RR4oEHvNUVzEcsfuqnxoGQ8fX+Mdgscd3E8N?=
- =?us-ascii?Q?FuRYT2wHizLtqQAzcmBK3f6nIkzudBToQctxueyvNYQWduFsJTaIdQ436Gkc?=
- =?us-ascii?Q?znJzRfL2JMLgy0+kSU7AifZoLQaVUx23r8YBkhcvtmZRej6evUHoFvja7O2y?=
- =?us-ascii?Q?KNzHnKL0YJ0LC3pKdCFTtmBlRW9Vk8a59o1Arn3nPxmAMyTc4JZZas5fJREC?=
- =?us-ascii?Q?2O05vmLcAgiZIpAR+jypa/WvWjGoyUdTSPD3zdNH29+96h2jq0cuZDk5yXgU?=
- =?us-ascii?Q?Fb8v0ZP2ka2jFfUgwYda10iO2mBOHeYyL3pw7uxMC2cE5T0bHSdUGxp5bQML?=
- =?us-ascii?Q?KxrZ+YMsSNRt4V6yyHHN8kisUSDPfpbKWZtSV9OjVn/jeP5OkQYqedUA8DEE?=
- =?us-ascii?Q?7B7n+uNw+Ih8SPnmPVkazjeaz16tJYL7c+9N19YTU/J+3vjPmlR5iZUJMS/9?=
- =?us-ascii?Q?ULoJcK3Btt4pjqdLGL+iwmbDkCINmofbhQQqW7RgNVqIBEQ1br61MtacLeYV?=
- =?us-ascii?Q?bHH258QlMJ4VDTdz27neeSbFg3IPd14y3Mfw4kfv2T1sC4WW/yiQmwn7bS0B?=
- =?us-ascii?Q?0TmJROzfGotKr2KqFXFGIjBlRR4y0aOVBG8w7aSRFcWWt6y38+6dYeeOCO+q?=
- =?us-ascii?Q?iIxIebx++Qb5zlyHPdkLzmSgWa8F0U1MZkRdMv0MDFSrnWPX7TWeVm4tt0f6?=
- =?us-ascii?Q?TaBNKSE38jM9EHpgFG9MGpuAiWr5f3pHY43fpbwiPMGePA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7540.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?C/xOfcNpS2f+xgQiy3AdaXMCuYSUWvT+3u+bfS8A+tQxvS/9PLNPZ7/wT2Xk?=
- =?us-ascii?Q?9p5nem/dq0HhTm5cuZgw2dpRG040350lUjTjq83gP+eauuFzaamPUGmU4VHC?=
- =?us-ascii?Q?UOXUrxBWTdzd7YU7nOphBjQs1zL8F8J2u2TVHu6VOmYaD7f6VXO0fPmzFecS?=
- =?us-ascii?Q?1sbMUtIYnTnl7sfqh1t7VmDiScQVcNaCRuWTAzHEpKkpC2FHj/+prWtNpcJ/?=
- =?us-ascii?Q?C6WnQ4m8rbuiPctvvYdWqjIDkmoqdJucZKoslZcTmTL4FS3zg6bM4KJiiPTU?=
- =?us-ascii?Q?ChtWKKfTf/j/lxLN1vBmXyvk0FGT2GuOjLKr5W8ckBz6B+Pn0G0k8L0G4vhI?=
- =?us-ascii?Q?Nm4pbWdSgrKSaX8D4zpAVmgf3bUrY5q8ZlYGJOPdik7/pcCIPja3O/rfLlLq?=
- =?us-ascii?Q?axFGgU+7FJU5gM/+Wbz52IJcvAifwZ7G0kQzacULCbSk8P/2TSG/uYCQdMnA?=
- =?us-ascii?Q?x6rYGLCDYUYFjRFhi1lZpzDWDJnivBsBZCZOOAcV6f0RHEv/g/WlqbNPx6MU?=
- =?us-ascii?Q?CrceCwT9siNqj1eO7uvfHj40Ayy7KWdKKULED/+8lqw8TPEX8jjcGJBZY3hc?=
- =?us-ascii?Q?xsxTuUqRf56y3/yaBoyitCaLGTwqR89qo/FPdsbiS7uyWMMtAI3cLdIzx/Dg?=
- =?us-ascii?Q?cEN/xwGnP9XE62u7952OlEFIAVEQCEAWW7XWDANXwWDnv8iDPl7b3YLkHMPo?=
- =?us-ascii?Q?sZ8GBVDBydnF346S6vX2WJIMJ2QboRjwr1sk5jmqWxMfRKLg7VLENZJoLyWR?=
- =?us-ascii?Q?cDBGKrsNKCKi8OgRFAltZki4H1sPQPJbpNU3kSclJfiBc2wjs11XDiaj/rYc?=
- =?us-ascii?Q?sKQLEnihsn5rCLz6pl9nkCxOv5IUmwYh7XmIuIJ6P5y7yH4bY4utKis1a2Xs?=
- =?us-ascii?Q?5V8cBQENEGtK+wOzVl5pHmGrVa6FmXVp8rbtuHiU9AmuV2EwGuGbUDSHzY7k?=
- =?us-ascii?Q?pzG+MoNjIs3CXBS0kG1FhJ+HISdZ1QHdbvIzlUtEEhW4ekdhLr+80FCwfzdr?=
- =?us-ascii?Q?/KE94t9I8HjGMndSLq+vyNuqT9MORXZxfZHQ/8VwVDQ1T78QIdxcilblu7ia?=
- =?us-ascii?Q?gch0PjjQQB9PPjlA9FU4q3X5l2SNq7+1tgB1TgNxlMh1L1NaCgqsusbPaL3Q?=
- =?us-ascii?Q?i4xjekEpP3FtuCegyaaWzp2lTIhjjyp6R2MqhMR8Dz4uYATnLgIZiajJEDch?=
- =?us-ascii?Q?0z7RYuBXkzLriHGrsiRXGKCJWqksXmLn/h78E4E637VLTsDFQBKt/5Nzi14G?=
- =?us-ascii?Q?aa9lo1DQHa1xVUAYQhLsPP8homLUzBgJaFvwWLqpFNUAt0qISdDDQKe2puCc?=
- =?us-ascii?Q?i56ayDJmauRHu82dbvRqT2ENltWsYLfWnr/UNwpNlqnmEIuWxmIvzRKQmqnN?=
- =?us-ascii?Q?pkBQPytw7AbEegQy1InEItWWR0RjUNH3AWDj/895EZQkrWjsab+pp3KybuO4?=
- =?us-ascii?Q?CPUX9NPan5tpQ4Ltm9EjGewhN6igvrWK8/SzdS3m/4Hfu3V6keikCq4/11OV?=
- =?us-ascii?Q?8TSIUkZ137LDQ5kj4Xc3Q4GHl23vLbEjU7a5UQw2uJmdWu/DIoMMpsdz643q?=
- =?us-ascii?Q?IdoRRmiN9glK1NkVVcSDDiToyPacZbs3lkM6JAwoU5xJLf3wffrysfvnYjzB?=
- =?us-ascii?Q?2Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91647432-638c-46cd-ea0a-08dd50dcae0e
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7540.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 11:58:10.0789
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gqs3zzefRdUEsLJtXLLpIdaNuq2wMJuxUjUQFaf1R9vMs0h7R186ICzH/njqKI+8dzdh6MIho2sNFEB0igpKQ+l5PNi1dVWf1xOzZcjmSu4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4818
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d444f1fb-42a0-48ef-83bc-d5aab9282b22@quicinc.com>
 
-On Mon, Jan 06, 2025 at 08:51:40AM +0100, Buvaneswaran, Sujai wrote:
-> > -----Original Message-----
-> > From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
-> > Larysa Zaremba
-> > Sent: Monday, December 9, 2024 7:39 PM
-> > To: Nguyen, Anthony L <anthony.l.nguyen@intel.com>; intel-wired-
-> > lan@lists.osuosl.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Cc: Zaremba, Larysa <larysa.zaremba@intel.com>; Kitszel, Przemyslaw
-> > <przemyslaw.kitszel@intel.com>; Andrew Lunn <andrew+netdev@lunn.ch>;
-> > Eric Dumazet <edumazet@google.com>; Michal Swiatkowski
-> > <michal.swiatkowski@linux.intel.com>; Jakub Kicinski <kuba@kernel.org>;
-> > Paolo Abeni <pabeni@redhat.com>; David S. Miller <davem@davemloft.net>
-> > Subject: [Intel-wired-lan] [PATCH iwl-net] ice: do not configure destination
-> > override for switchdev
-> > 
-> > After switchdev is enabled and disabled later, LLDP packets sending stops,
-> > despite working perfectly fine before and during switchdev state.
-> > To reproduce (creating/destroying VF is what triggers the reconfiguration):
-> > 
-> > devlink dev eswitch set pci/<address> mode switchdev echo '2' >
-> > /sys/class/net/<ifname>/device/sriov_numvfs
-> > echo '0' > /sys/class/net/<ifname>/device/sriov_numvfs
-> > 
-> > This happens because LLDP relies on the destination override functionality.
-> > It needs to 1) set a flag in the descriptor, 2) set the VSI permission to make it
-> > valid. The permissions are set when the PF VSI is first configured, but
-> > switchdev then enables it for the uplink VSI (which is always the PF) once
-> > more when configured and disables when deconfigured, which leads to
-> > software-generated LLDP packets being blocked.
-> > 
-> > Do not modify the destination override permissions when configuring
-> > switchdev, as the enabled state is the default configuration that is never
-> > modified.
-> > 
-> > Fixes: 1a1c40df2e80 ("ice: set and release switchdev environment")
-> > Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-> > Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
-> > ---
-> >  drivers/net/ethernet/intel/ice/ice_eswitch.c |  6 ------
-> >  drivers/net/ethernet/intel/ice/ice_lib.c     | 18 ------------------
-> >  drivers/net/ethernet/intel/ice/ice_lib.h     |  4 ----
-> >  3 files changed, 28 deletions(-)
-> > 
-> Hi,
+On Wed, Feb 19, 2025 at 05:11:03PM +0530, Jagadeesh Kona wrote:
 > 
-> Observing below call trace while creating VFs in Switchdev mode with this patch in net-queue.
 > 
-> [  +0.000188] ice 0000:b1:00.0: Enabling 1 VFs with 17 vectors and 16 queues per VF
-> [  +0.000062] list_add corruption. next->prev should be prev (ff1d7c830300c6f0), but was ff282828ff282828. (next=ff1d7c5367d61330).
-> [  +0.000015] ------------[ cut here ]------------
-> [  +0.000001] kernel BUG at lib/list_debug.c:29!
-> [  +0.000007] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-> [  +0.000004] CPU: 81 UID: 0 PID: 2758 Comm: bash Kdump: loaded Not tainted 6.13.0-rc3+ #1
-> [  +0.000003] Hardware name: Dell Inc. PowerEdge R750/06V45N, BIOS 1.3.8 08/31/2021
-> [  +0.000002] RIP: 0010:__list_add_valid_or_report+0x61/0xa0
-> [  +0.000008] Code: c7 c7 a8 97 b2 8f e8 7e e4 af ff 0f 0b 48 c7 c7 d0 97 b2 8f e8 70 e4 af ff 0f 0b 4c 89 c1 48 c7 c7 f8 97 b2 8f e8 5f e4 af ff <0f> 0b 48 89 d1 4c 89 c6 4c 89 ca 48 c7 c7 50 98 b2 8f e8 48 e4 af
-> [  +0.000002] RSP: 0018:ff5ebf3d22093d20 EFLAGS: 00010246
-> [  +0.000003] RAX: 0000000000000075 RBX: ff1d7c54143a1330 RCX: 0000000000000000
-> [  +0.000002] RDX: 0000000000000000 RSI: ff1d7c81f06a0bc0 RDI: ff1d7c81f06a0bc0
-> [  +0.000001] RBP: ff1d7c83030097d8 R08: 0000000000000000 R09: ff5ebf3d22093bd8
-> [  +0.000002] R10: ff5ebf3d22093bd0 R11: ffffffff901debc8 R12: ff1d7c5367d61330
-> [  +0.000001] R13: ff1d7c830300c6f0 R14: 0000000000000000 R15: 0000000000000000
-> [  +0.000002] FS:  00007fea5e4e4740(0000) GS:ff1d7c81f0680000(0000) knlGS:0000000000000000
-> [  +0.000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  +0.000001] CR2: 0000562ef57c7608 CR3: 000000019037c002 CR4: 0000000000773ef0
-> [  +0.000002] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  +0.000001] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  +0.000001] PKRU: 55555554
-> [  +0.000002] Call Trace:
-> [  +0.000003]  <TASK>
-> [  +0.000002]  ? die+0x37/0x90
-> [  +0.000007]  ? do_trap+0xdd/0x100
-> [  +0.000004]  ? __list_add_valid_or_report+0x61/0xa0
-> [  +0.000003]  ? do_error_trap+0x65/0x80
-> [  +0.000002]  ? __list_add_valid_or_report+0x61/0xa0
-> [  +0.000003]  ? exc_invalid_op+0x52/0x70
-> [  +0.000005]  ? __list_add_valid_or_report+0x61/0xa0
-> [  +0.000002]  ? asm_exc_invalid_op+0x1a/0x20
-> [  +0.000007]  ? __list_add_valid_or_report+0x61/0xa0
-> [  +0.000005]  ice_mbx_init_vf_info+0x3c/0x60 [ice]
-> [  +0.000076]  ice_initialize_vf_entry+0x99/0xa0 [ice]
+> On 2/19/2025 6:51 AM, Bryan O'Donoghue wrote:
+> > On 18/02/2025 17:19, Dmitry Baryshkov wrote:
+> >> On Tue, Feb 18, 2025 at 03:46:15PM +0000, Bryan O'Donoghue wrote:
+> >>> On 18/02/2025 14:26, Jagadeesh Kona wrote:
+> >>>> During boot-up, the PLL configuration might be missed even after
+> >>>> calling pll_configure() from the clock controller probe. This can
+> >>>> happen because the PLL is connected to one or more rails that are
+> >>>> turned off, and the current clock controller code cannot enable
+> >>>> multiple rails during probe. Consequently, the PLL may be activated
+> >>>> with suboptimal settings, causing functional issues.
+> >>>>
+> >>>> To properly configure the video PLLs in the probe on SM8450, SM8475,
+> >>>> SM8550, and SM8650 platforms, the MXC rail must be ON along with MMCX.
+> >>>> Therefore, add support to attach multiple power domains to videocc on
+> >>>> these platforms.
+> >>>>
+> >>>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+> >>>> ---
+> >>>>    drivers/clk/qcom/videocc-sm8450.c | 4 ++++
+> >>>>    drivers/clk/qcom/videocc-sm8550.c | 4 ++++
+> >>>>    2 files changed, 8 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/clk/qcom/videocc-sm8450.c b/drivers/clk/qcom/videocc-sm8450.c
+> >>>> index f26c7eccb62e7eb8dbd022e2f01fa496eb570b3f..b50a14547336580de88a741f1d33b126e9daa848 100644
+> >>>> --- a/drivers/clk/qcom/videocc-sm8450.c
+> >>>> +++ b/drivers/clk/qcom/videocc-sm8450.c
+> >>>> @@ -437,6 +437,10 @@ static int video_cc_sm8450_probe(struct platform_device *pdev)
+> >>>>        struct regmap *regmap;
+> >>>>        int ret;
+> >>>> +    ret = qcom_cc_attach_pds(&pdev->dev, &video_cc_sm8450_desc);
+> >>>> +    if (ret)
+> >>>> +        return ret;
+> >>>> +
+> >>>>        ret = devm_pm_runtime_enable(&pdev->dev);
+> >>>>        if (ret)
+> >>>>            return ret;
+> >>>> diff --git a/drivers/clk/qcom/videocc-sm8550.c b/drivers/clk/qcom/videocc-sm8550.c
+> >>>> index 7c25a50cfa970dff55d701cb24bc3aa5924ca12d..d4b223d1392f0721afd1b582ed35d5061294079e 100644
+> >>>> --- a/drivers/clk/qcom/videocc-sm8550.c
+> >>>> +++ b/drivers/clk/qcom/videocc-sm8550.c
+> >>>> @@ -542,6 +542,10 @@ static int video_cc_sm8550_probe(struct platform_device *pdev)
+> >>>>        int ret;
+> >>>>        u32 sleep_clk_offset = 0x8140;
+> >>>> +    ret = qcom_cc_attach_pds(&pdev->dev, &video_cc_sm8550_desc);
+> >>>> +    if (ret)
+> >>>> +        return ret;
+> >>>> +
+> >>>>        ret = devm_pm_runtime_enable(&pdev->dev);
+> >>>>        if (ret)
+> >>>>            return ret;
+> >>>>
+> >>>
+> >>> What's the difference between doing the attach here or doing it in
+> >>> really_probe() ?
+> >>
+> >> I'd second this. If the domains are to be attached before calling any
+> >> other functions, move the call to the qcom_cc_map(), so that all drivers
+> >> get all domains attached before configuring PLLs instead of manually
+> >> calling the function.
+> >>
+> >>> There doesn't seem to be any difference except that we will have an
+> >>> additional delay introduced.
+> >>>
+> >>> Are you describing a race condition ?
+> >>>
+> >>> I don't see _logic_ here to moving the call into the controller's higher
+> >>> level probe.
+> >>>
+> >>> Can you describe some more ?
+> >>>
+> >>> ---
+> >>> bod
+> >>
+> > 
+> > Here's one way this could work
+> > 
+> > Author: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Date:   Tue Feb 18 19:46:55 2025 +0000
+> > 
+> >     clk: qcom: common: Add configure_plls callback prototype
+> > 
+> >     Add a configure_plls() callback so that we can stage qcom_cc_attach_pds()
+> >     before configuring PLLs and ensure that the power-domain rail list is
+> >     switched on prior to configuring PLLs.
+> > 
+> >     Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > 
+> > diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+> > index 9e3380fd71819..1924130814600 100644
+> > --- a/drivers/clk/qcom/common.c
+> > +++ b/drivers/clk/qcom/common.c
+> > @@ -304,6 +304,9 @@ int qcom_cc_really_probe(struct device *dev,
+> >         if (ret < 0 && ret != -EEXIST)
+> >                 return ret;
+> > 
+> > +       if (desc->configure_plls)
+> > +               desc->configure_plls(regmap);
+> > +
+> >         reset = &cc->reset;
+> >         reset->rcdev.of_node = dev->of_node;
+> >         reset->rcdev.ops = &qcom_reset_ops;
+> > diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
+> > index 7ace5d7f5836a..4955085ff8669 100644
+> > --- a/drivers/clk/qcom/common.h
+> > +++ b/drivers/clk/qcom/common.h
+> > @@ -38,6 +38,7 @@ struct qcom_cc_desc {
+> >         const struct qcom_icc_hws_data *icc_hws;
+> >         size_t num_icc_hws;
+> >         unsigned int icc_first_node_id;
+> > +       void (*configure_plls)(struct regmap *regmap);
+> >  };
+> > 
+> > and
+> > 
+> > % git diff drivers/clk/qcom/camcc-x1e80100.c
+> > diff --git a/drivers/clk/qcom/camcc-x1e80100.c b/drivers/clk/qcom/camcc-x1e80100.c
+> > index b73524ae64b1b..c9748d1f8a15b 100644
+> > --- a/drivers/clk/qcom/camcc-x1e80100.c
+> > +++ b/drivers/clk/qcom/camcc-x1e80100.c
+> > @@ -2426,6 +2426,21 @@ static const struct regmap_config cam_cc_x1e80100_regmap_config = {
+> >         .fast_io = true,
+> >  };
+> > 
+> > +static void cam_cc_x1e80100_configure_plls(struct regmap *regmap)
+> > +{
+> > +       clk_lucid_ole_pll_configure(&cam_cc_pll0, regmap, &cam_cc_pll0_config);
+> > +       clk_lucid_ole_pll_configure(&cam_cc_pll1, regmap, &cam_cc_pll1_config);
+> > +       clk_rivian_evo_pll_configure(&cam_cc_pll2, regmap, &cam_cc_pll2_config);
+> > +       clk_lucid_ole_pll_configure(&cam_cc_pll3, regmap, &cam_cc_pll3_config);
+> > +       clk_lucid_ole_pll_configure(&cam_cc_pll4, regmap, &cam_cc_pll4_config);
+> > +       clk_lucid_ole_pll_configure(&cam_cc_pll6, regmap, &cam_cc_pll6_config);
+> > +       clk_lucid_ole_pll_configure(&cam_cc_pll8, regmap, &cam_cc_pll8_config);
+> > +
+> > +       /* Keep clocks always enabled */
+> > +       qcom_branch_set_clk_en(regmap, 0x13a9c); /* CAM_CC_GDSC_CLK */
+> > +       qcom_branch_set_clk_en(regmap, 0x13ab8); /* CAM_CC_SLEEP_CLK */
+> > +}
+> > +
+> >  static const struct qcom_cc_desc cam_cc_x1e80100_desc = {
+> >         .config = &cam_cc_x1e80100_regmap_config,
+> >         .clks = cam_cc_x1e80100_clocks,
+> > @@ -2434,6 +2449,7 @@ static const struct qcom_cc_desc cam_cc_x1e80100_desc = {
+> >         .num_resets = ARRAY_SIZE(cam_cc_x1e80100_resets),
+> >         .gdscs = cam_cc_x1e80100_gdscs,
+> >         .num_gdscs = ARRAY_SIZE(cam_cc_x1e80100_gdscs),
+> > +       .configure_plls = cam_cc_x1e80100_configure_plls,
+> >  };
+> > 
+> >  static const struct of_device_id cam_cc_x1e80100_match_table[] = {
+> > @@ -2461,18 +2477,6 @@ static int cam_cc_x1e80100_probe(struct platform_device *pdev)
+> >                 return PTR_ERR(regmap);
+> >         }
+> > 
+> > -       clk_lucid_ole_pll_configure(&cam_cc_pll0, regmap, &cam_cc_pll0_config);
+> > -       clk_lucid_ole_pll_configure(&cam_cc_pll1, regmap, &cam_cc_pll1_config);
+> > -       clk_rivian_evo_pll_configure(&cam_cc_pll2, regmap, &cam_cc_pll2_config);
+> > -       clk_lucid_ole_pll_configure(&cam_cc_pll3, regmap, &cam_cc_pll3_config);
+> > -       clk_lucid_ole_pll_configure(&cam_cc_pll4, regmap, &cam_cc_pll4_config);
+> > -       clk_lucid_ole_pll_configure(&cam_cc_pll6, regmap, &cam_cc_pll6_config);
+> > -       clk_lucid_ole_pll_configure(&cam_cc_pll8, regmap, &cam_cc_pll8_config);
+> > -
+> > -       /* Keep clocks always enabled */
+> > -       qcom_branch_set_clk_en(regmap, 0x13a9c); /* CAM_CC_GDSC_CLK */
+> > -       qcom_branch_set_clk_en(regmap, 0x13ab8); /* CAM_CC_SLEEP_CLK */
+> > -
+> >         ret = qcom_cc_really_probe(&pdev->dev, &cam_cc_x1e80100_desc, regmap);
+> > 
+> >         pm_runtime_put(&pdev->dev);
+> > 
+> > Or a least it works for me.
+> > 
 > 
-> Regards,
-> Sujai B
-> 
+> This patch will not work in all cases, maybe in your case required power domains might be ON
+> from bootloaders so it might be working.
 
-Hello,
-the problem was addressed by another patch [0] and is not related to this
-change.
+But with his patch domains are attached before configuring the PLLs, are
+they not?
 
-[0] https://patchwork.ozlabs.org/project/intel-wired-lan/patch/20250211174322.603652-1-marcin.szycik@linux.intel.com/
+> 
+> > New clock controllers would then use this callback mechanism and potentially all of the controllers to have uniformity.
+> > 
+> 
+> No, above approach also requires changes in each individual clock driver to define the callback. So I don't see any advantage
+> with this than the current approach. 
+
+Bryan's proposal moves us towards having a common code, so it's better.
+
+-- 
+With best wishes
+Dmitry
