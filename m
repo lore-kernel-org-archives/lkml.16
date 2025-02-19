@@ -1,130 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D14E25EF87;
-	Wed, 19 Feb 2025 23:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC2B263898
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 23:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740009131; cv=none; b=qv5hTdWTUXqu1FR5QJiAi3eTUpV9VH7S2fpRrU0te5rjMuJ8osf1wpqmjQqgKiIjijWd7Inz+eujVJRLuHlMvSxoSXuODWNhaOY0SHeTyf3enTNz1n6JQjlsfzMwqEkLFhu5SD8VvvuSM/foJCGCi0EWBMiN1KYSng7VxsBVK/Q=
+	t=1740009134; cv=none; b=LHqscHkBzFrMZcQQLwJFB5V/w8/KGYplS8sr/+x87AYWgWZwaj7AjQILIOVYG+qPbb/73nxD8rsx4rxbd9PweVmjWZuP5VuT6wNRGvk00enaKPYh6GFXoGa3NZI2EKKGntLRwOqFx4ijEW1yCewGn6i6/Q6kqfK4yD/hMNDwl48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740009131; c=relaxed/simple;
-	bh=fC6muqlChDrljBG2bGaCmMbBFb3Lrun3fzk8vu7AYLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YWdjfnRQlM1A6asntg2Eq1jq5LDnNVmsvC8h+Jmgm7VBim7/OhB3r7OV9ERtAmePnHUxCgaGfC+hMsASRQABvTk/nkNxepY9xP6ZdgaWmsEfUf8un5g51OQnaJf9c8y9fXmd03nsLYu04Cxx8Tlc6JFAL4jkqWVYJavatpqxOdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nrO2KsAB; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740009134; c=relaxed/simple;
+	bh=LRzEFwyIrBQ74JDs/gdiaH0OrhDUHunRPLF7kmwnS6o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IlIz9a2Jf1yV/Hjhc8ZVBls9k2rV787YVa7Pzgc103XRgVewquLzhA+j0FBIsHTDYrZnCgqewHUN6GH/rx2Hfii1pQKZFqJKZGpJ0hY3Se4RtqogcyXU5x7sCPxlbXE/aeUE+LrkDIyN9rR3hCoBXy37nIB7TXjIP2FtY/rX5sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=wzQff/eO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nrO2KsAB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740009129; x=1771545129;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fC6muqlChDrljBG2bGaCmMbBFb3Lrun3fzk8vu7AYLA=;
-  b=nrO2KsAB8MhUlqZMSNHsxPoG+tMkFCfdRdqSPyXo/BmlOXFHutA1QjhM
-   75yc6ZOykBcHhq5QfqQ1ib/8hhAKSPdBDAP8TS4c/grAJJqFOSvB/jq+8
-   18/nHEOrNf7wEDY34hrH6sUouaGshXtj9WPJY4jTaJ2bONX6tmfl1TO2I
-   rwooDDHZswIr1jjaaeo8Zm30jvNgvdwhAYzdybJxqXmTfZMjRwoUAS0Fv
-   /RTvl+db7/s5Yj937VFS2yFJjs4mkfUbWR3sNfIswA39kVT40YwdYgU6E
-   uWtdQC1X1GoppuBfZhEF4xVAcZfFmapjbOH4PGB0ZP7sqT+8s/UzFL2nE
-   w==;
-X-CSE-ConnectionGUID: y9safsIiRJCd87WfDDymbg==
-X-CSE-MsgGUID: qJ5AF7wuQ0mqU0ue1Sv2ZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44688520"
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="44688520"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 15:52:08 -0800
-X-CSE-ConnectionGUID: ooLzz0LaSPGEFPY9ENumrA==
-X-CSE-MsgGUID: NYD5DsV1TIOSvYVpYayIhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="115065139"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 19 Feb 2025 15:52:04 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tktrF-0003d5-26;
-	Wed, 19 Feb 2025 23:52:01 +0000
-Date: Thu, 20 Feb 2025 07:51:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mfd: lm3533: convert to use OF
-Message-ID: <202502200718.H8t6Uv7b-lkp@intel.com>
-References: <20250218132702.114669-3-clamor95@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="wzQff/eO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74547C4CEE0;
+	Wed, 19 Feb 2025 23:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1740009133;
+	bh=LRzEFwyIrBQ74JDs/gdiaH0OrhDUHunRPLF7kmwnS6o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=wzQff/eOT+u+AtG0ZT7G/dp+QoLv+4GFH94A5lV3pU0eEqGgk8EvbQRAOGvEVTd4I
+	 mfQDv4TisX/2jopNlzVHMN/2BjVh+CnmXeS4Rz+/E7qk547VHFMs0RSvknkpFmbtYw
+	 keHCHB/Jw+T0Zqp2c/lIb96W47aiPk3Eu49oXr2E=
+Date: Wed, 19 Feb 2025 15:52:12 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Luiz Capitulino <luizcap@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, david@redhat.com,
+ yuzhao@google.com, pasha.tatashin@soleen.com, hannes@cmpxchg.org,
+ muchun.song@linux.dev
+Subject: Re: [PATCH 0/4] mm: page_ext: Introduce new iteration API
+Message-Id: <20250219155212.9474b8c44bd58780a54c8a6e@linux-foundation.org>
+In-Reply-To: <cover.1739931468.git.luizcap@redhat.com>
+References: <cover.1739931468.git.luizcap@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218132702.114669-3-clamor95@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Svyatoslav,
+On Tue, 18 Feb 2025 21:17:46 -0500 Luiz Capitulino <luizcap@redhat.com> wrote:
 
-kernel test robot noticed the following build errors:
+> To fix this, this series introduces a new iteration API for page extension
+> objects. The API checks if the next page extension object can be retrieved
+> from the current section or if it needs to look up for it in another
+> section.
+> 
+> ...
 
-[auto build test ERROR on lee-mfd/for-mfd-next]
-[also build test ERROR on lee-leds/for-leds-next robh/for-next linus/master v6.14-rc3 next-20250219]
-[cannot apply to lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+A regression since 6.12, so we should backport the fix.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Svyatoslav-Ryhel/dt-bindings-mfd-Document-TI-LM3533-MFD/20250218-212857
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20250218132702.114669-3-clamor95%40gmail.com
-patch subject: [PATCH v2 2/2] mfd: lm3533: convert to use OF
-config: arm-randconfig-002-20250219 (https://download.01.org/0day-ci/archive/20250220/202502200718.H8t6Uv7b-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250220/202502200718.H8t6Uv7b-lkp@intel.com/reproduce)
+> ...
+>
+>  include/linux/page_ext.h | 67 +++++++++++++++++++++++++++++++++++++---
+>  mm/page_ext.c            | 48 ++++++++++++++++++++++++++++
+>  mm/page_owner.c          | 61 +++++++++++++++++-------------------
+>  mm/page_table_check.c    | 39 +++++++----------------
+>  4 files changed, 152 insertions(+), 63 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502200718.H8t6Uv7b-lkp@intel.com/
+That's a lot to backport!
 
-All errors (new ones prefixed by >>):
-
->> drivers/video/backlight/lm3533_bl.c:417:25: error: use of undeclared identifier 'lm3533_match_table'; did you mean 'lm3533_bl_match_table'?
-     417 | MODULE_DEVICE_TABLE(of, lm3533_match_table);
-         |                         ^~~~~~~~~~~~~~~~~~
-         |                         lm3533_bl_match_table
-   include/linux/module.h:250:15: note: expanded from macro 'MODULE_DEVICE_TABLE'
-     250 | extern typeof(name) __mod_device_table__##type##__##name                \
-         |               ^
-   drivers/video/backlight/lm3533_bl.c:413:34: note: 'lm3533_bl_match_table' declared here
-     413 | static const struct of_device_id lm3533_bl_match_table[] = {
-         |                                  ^
-   1 error generated.
-
-
-vim +417 drivers/video/backlight/lm3533_bl.c
-
-   412	
-   413	static const struct of_device_id lm3533_bl_match_table[] = {
-   414		{ .compatible = "ti,lm3533-backlight" },
-   415		{ },
-   416	};
- > 417	MODULE_DEVICE_TABLE(of, lm3533_match_table);
-   418	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Is there some quick-n-dirty fixup we can apply for the sake of -stable
+kernels, then work on this long-term approach for future kernels?
