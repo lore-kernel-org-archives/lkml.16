@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9EF1DE2A6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C721DE2D8;
 	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739953972; cv=none; b=evCJ8c3vwIY8bKyKTcLvccDc633x4HJSdk5dzIlKPf4dETl30Mn4uNzoCxPg9XU5n17K7d9aCthBRsJqeNwGqn7phADSsOYsvXWERAtS2SJj2uxrcsa9ZWNFPnhyd2/wtiQ8UXZFjOKHkE+isR52ciPvzBn9dAGoq1IpiBuRla0=
+	t=1739953973; cv=none; b=ERemHr3p483JPhN3/IP7b2olNel0ytHWoyAuDAZ4R363PYyU/iwfPO8DnetZj1gfH8+/+edPeylPODhk5K7/xBYyqyhw4FCuxhLHvBhgp4OA0i7rb4ApruvxgBhxRg0f4gNOMQvj/3rEDjyPN3xpgUYQkzXG/9dvvcGAFK0op8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739953972; c=relaxed/simple;
-	bh=nv2FWo3LGyCll6dWzmoWsroR9XM0kzMdOA2DYqUHwCw=;
+	s=arc-20240116; t=1739953973; c=relaxed/simple;
+	bh=pOTBzlS7I7jZeyW/hygW6cvMdWH+uYsFy5DDt8PknnA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hzkTrmeHyWpzZBEVvqim+Wc9G4P5qDJPJAgq1qLDVwA5fstgMC3g1WrrUY20LfY9wAdU+/NSXsZAbnHMWYy6GWTrlOKTCs4Mlpqwp6tGCbG7D9MNM8F4B/QAMayu7ejCbX6yLT5fLY3mUREvmNEWhTJ8R65FWRW536exPKZ4naY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ny4sZzWe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=toEHYmhrAve7m9ky5MK+ZtqNuKO2C2bOrAZYGuWfP0T1qmNDmcjWT4Lk7nltTxBOfGY876/kS5YBzono6BB06B5m240zqMpuyk8d9pI67duZDmLY4ASDSbsN1EZoDZdCqMP8EHkbBjVPX1z+EuRZ3qG6jKh8keV3ngMVJwWtV/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1mpJ6FJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ny4sZzWe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F50DC4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1mpJ6FJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C457C4CEF0;
 	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739953972;
-	bh=nv2FWo3LGyCll6dWzmoWsroR9XM0kzMdOA2DYqUHwCw=;
+	bh=pOTBzlS7I7jZeyW/hygW6cvMdWH+uYsFy5DDt8PknnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ny4sZzWeUa7F64amtQrSA95MXHPF6R9tuqquIp1pwYt/84v+gouX65xMFltlGgbe8
-	 FwApyZpv+/7W/ApoAumLjoy97R1VRf6byNrf+H1Ngp1lBO+FYCyTlZbWj3M2iGbjb0
-	 bVf3j+dqN6Gzyr3b8BlmHJUwps2zYywmXqlXTpLTai7B3g2TYMkhu86zOtOWgRC9qI
-	 lUKoaHMEzZfMjwa4mllcggFGvtSSJN0HxUIPS6WIRUBCDwaPoWGnYqHQwG3zESPgyM
-	 h+g1RjdlahRj4Xb5TeKnKQM0PxYhaxlIxqZk7/BchEvgnCXUnXYcvTj01GqQuZNFVl
-	 aYGf7YoLEMTXg==
+	b=F1mpJ6FJHxbUhASHnwQfWob9BvW5TuOYs/6znrgkEnCD6oBJXTeAY05PQnRqvhBF2
+	 taaZ9/NFjIMWS/ahOwbsfK508IXyiViwOm5LSrDla9bdc5sNQZn6jPyedhZSuuOWZN
+	 7gbAmU6ILUbM97LJx/gKOhVKm7/CCnGWqkKNaiCeun/RVjHGpzjbJqMTrNwDHGJa1U
+	 VSlgCqJhENpB2h2H1a7V3SFZay1yB0Zfq912g+uXS+baaQTOrf2f+WutuyeAe4RqlO
+	 c9pdn/cJrgoaXS6ViW/Qf6D586qdmPPPAQVnnTCa6cABf1gkAPZqyMGgP9PpBnXEqi
+	 1a3gaz2a8cBAw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tkfVi-0000000Gv61-2kKE;
+	id 1tkfVi-0000000Gv5p-2PeJ;
 	Wed, 19 Feb 2025 09:32:50 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 27/27] docs: sphinx: kerneldoc: use kernel-doc.py script
-Date: Wed, 19 Feb 2025 09:32:43 +0100
-Message-ID: <f84a14d5f339f871fa2a8c91b6a7a26fce140eb5.1739952783.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 24/27] docs: add a .pylintrc file with sys path for docs scripts
+Date: Wed, 19 Feb 2025 09:32:40 +0100
+Message-ID: <7cfc76bb53197582b1367976c08ee1364c996a42.1739952783.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739952783.git.mchehab+huawei@kernel.org>
 References: <cover.1739952783.git.mchehab+huawei@kernel.org>
@@ -51,40 +51,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Switch to the new version when producing documentation.
+The docs scripts that are used by Documentation/sphinx are
+using scripts/lib/* directories to place classes that will
+be used by both extensions and scripts.
+
+When pylint is used, it needs to identify the path where
+such scripts are, otherwise it will bail out. Add a simple
+RC file placing the location of such files.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/Makefile | 2 +-
- Documentation/conf.py  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ .pylintrc | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 .pylintrc
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index 63094646df28..c022b97c487e 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -60,7 +60,7 @@ endif #HAVE_LATEXMK
- # Internal variables.
- PAPEROPT_a4     = -D latex_paper_size=a4
- PAPEROPT_letter = -D latex_paper_size=letter
--KERNELDOC       = $(srctree)/scripts/kernel-doc
-+KERNELDOC       = $(srctree)/scripts/kernel-doc.py
- KERNELDOC_CONF  = -D kerneldoc_srctree=$(srctree) -D kerneldoc_bin=$(KERNELDOC)
- ALLSPHINXOPTS   =  $(KERNELDOC_CONF) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS)
- ifneq ($(wildcard $(srctree)/.config),)
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 3dad1f90b098..b126f6760b5f 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -540,7 +540,7 @@ pdf_documents = [
- # kernel-doc extension configuration for running Sphinx directly (e.g. by Read
- # the Docs). In a normal build, these are supplied from the Makefile via command
- # line arguments.
--kerneldoc_bin = '../scripts/kernel-doc'
-+kerneldoc_bin = '../scripts/kernel-doc.py'
- kerneldoc_srctree = '..'
- 
- # ------------------------------------------------------------------------------
+diff --git a/.pylintrc b/.pylintrc
+new file mode 100644
+index 000000000000..30b8ae1659f8
+--- /dev/null
++++ b/.pylintrc
+@@ -0,0 +1,2 @@
++[MASTER]
++init-hook='import sys; sys.path += ["scripts/lib/kdoc", "scripts/lib/abi"]'
 -- 
 2.48.1
 
