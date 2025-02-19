@@ -1,245 +1,118 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4611FDA9D;
-	Wed, 19 Feb 2025 16:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739982370; cv=pass; b=Qwlr0+Hqinp7A3qBiJOcZZuke8Efl/W/PFrX1y/STnDqgEIr+QxFwbXGmLDhQ0/uouvA6ihqGTvBKih2EYL8VeuDuGW2X7emQW5MuY2BVNTj2dgG5bg0TwjLmSnU1yD+zOjR3alJjstHyfZK9ieXG0IKuQfrhONif882kP93UTE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739982370; c=relaxed/simple;
-	bh=fnY+xRhs/mvmhcqrrOJoleU6kesLGIJG/3olYNCyL1k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y7HdSj14NaOD/ydUDnGt/Ob8uB3ULHt2gv9DxbCxt0YBxyBmRZHyhcWeOXlcQFmm8lWX4dBGbPG2kemntw7AFLjvHc+vHy4ufs7XkZx3AXwc4R/iOCBErCGGy3Swtd02dcBQNea4n1+S0Pn6WnYCbms5fhW+bvmfKLIPJZUG3iw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Me53PNRJ; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A831FA267
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739982432; cv=none; b=JhvF9hc1+ZxhgBNtREJKJzHiHEipLMeamac8jDYYH19/muupGe1JjqzJpUB4lBwINE5UUPDHig2eA2R4bRwRThZw6Vu1FS071jXOOV2+m23QLNaFB6UqMAK+fThl/MaIjxZ1cSNVJ+GLndXLw6Vg04SgtzL/8Rp5OCHkNOGzZpk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739982432; c=relaxed/simple;
+	bh=fY7kQvrXBSicPzpDTSxsGdCK4jMtvwuoyE7YHeUdqBQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CsDLEbHs7f6vyUd+zbiqe+NSY5qIXBW98q/iqv/61gnjG8f/uTRECa/HVveQcTbkvej+xMYVIpFBZiBxW0eX+zV0q9AtIAmqlTyIL6W3rh6VjCImfkI8z70Hn1K7qJRVdIh/bkt/Lt7Bar1rx7cbLnGPed8AoeQnwWaYhK4LzVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=dpJr42FC; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Me53PNRJ"
-ARC-Seal: i=1; a=rsa-sha256; t=1739982346; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mHdTfssk3hO/gVSjbUBWQIgt+/aextPwhJBmYx2l1LALAtXke+PJBVC3ehWpndt/8GXW9YqXYnRQfxHUyeH1u+OyagIttWYVrK7zcpoq8GzEialDmTQkxODQ+C1UnRCxiMvYBzBlBRJyTbFxM6vItnfX10hkVATuJM72NF6jexY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739982346; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=pJryDSJkCrzxd3hCCxQyAoikD3lNWruHuXg6LmIobnI=; 
-	b=kKHxBdK74Z+o2689NatXJRZuL9bfFDwypgrT6rx1ZejbrFml8cEwlEtokk6KvgG65oakSkRWd/DNoA/yMoJ/bcR1tFJ9Osi5mhTxuE3RTOpC31hpBvr7xAPl4vUCS6pl4SL+vauPBuHMuFs52Y7c4J6HyRmu9cqTMGE13V71qII=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739982346;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=pJryDSJkCrzxd3hCCxQyAoikD3lNWruHuXg6LmIobnI=;
-	b=Me53PNRJII0FexdnI44sYwGiP82B3cKKaUkB+sNZGy9DbbABEBvokG649Sbpl+8l
-	M/M0TGPsS5+B3yX6vYBo9sXibiPODW388vOONDB1UWyRC+q6cnRoiYVkMQNPpqz71GW
-	fSyi2l9JlJAWozzG+JPzYuVbBjv9NAGlgTv5Zum4=
-Received: by mx.zohomail.com with SMTPS id 1739982344632512.1546033548996;
-	Wed, 19 Feb 2025 08:25:44 -0800 (PST)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	sebastian.reichel@collabora.com,
-	sjoerd.simons@collabora.co.uk,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	a.hindborg@kernel.org,
-	benno.lossin@proton.me,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rust: regulator: add a bare minimum regulator abstraction
-Date: Wed, 19 Feb 2025 13:25:16 -0300
-Message-ID: <20250219162517.278362-1-daniel.almeida@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dpJr42FC"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JFu336022079;
+	Wed, 19 Feb 2025 10:26:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=Liiu3C5LRMrFCCEl8pUDANPi+XZvIfaCdvYtbsdrqKk=; b=
+	dpJr42FCZd7BDgIuR+wHQmWTLY1Sxz6A5PDCVDHri8zmvMFP6SxcxKnIdNQmJ5yX
+	z6aUsElyGLbS5jYioRlmHuEXB/MHnZSIAbosHyrpAa9CzzJMLw810Jk1LrjWimIa
+	O9oH8nTmOjmiZALKD0p81Y3nWCfRdO+pd84BaiVTaXal1Vg6/ChSOLQ4Hgo/YU4r
+	4LrAlIrULVfbOq14KCriI3+mFk9pshv31MANHfHjgj0LHu3foPNIp/IWGWsHBYfm
+	+jLEB51lH3TMqGtw83Vs929/BS7LuQ5gnKg554fJUQq+Un6w0FpvhNhYyh6SWpH1
+	cQwTWh0uYMzkhwHaahakQg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44wjcag36b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 10:26:56 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Feb
+ 2025 16:26:55 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Wed, 19 Feb 2025 16:26:55 +0000
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 24D3D82025A;
+	Wed, 19 Feb 2025 16:26:55 +0000 (UTC)
+Message-ID: <8d15d138-658c-4083-885b-62495023bb9a@opensource.cirrus.com>
+Date: Wed, 19 Feb 2025 16:26:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] firmware: cs_dsp: Remove usage of GFP_DMA
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+        "Mark
+ Brown" <broonie@kernel.org>
+CC: Simon Trimmer <simont@opensource.cirrus.com>,
+        Charles Keepax
+	<ckeepax@opensource.cirrus.com>,
+        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
+References: <20250211-cs_dsp-gfp_dma-v1-0-afc346363832@linutronix.de>
+ <0e9c1cca-592f-4983-93f4-ab2f76a3c97e@opensource.cirrus.com>
+ <e93d1b72-43da-4e96-9523-e1bbf3853031@opensource.cirrus.com>
+ <1e251815-5d58-436b-9120-e88f75a7ecaa@sirena.org.uk>
+ <20250213161059-a4c53711-fdf6-480c-af49-f9f36227ba42@linutronix.de>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <20250213161059-a4c53711-fdf6-480c-af49-f9f36227ba42@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-Authority-Analysis: v=2.4 cv=aplICTZV c=1 sm=1 tr=0 ts=67b60650 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=jBZ0p1ap1sntT-lPAfcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: DBGSOnuPSOOY7aoIsPZDKJuIlufE9EzX
+X-Proofpoint-GUID: DBGSOnuPSOOY7aoIsPZDKJuIlufE9EzX
+X-Proofpoint-Spam-Reason: safe
 
-Add a bare minimum regulator abstraction to be used by Rust drivers.
-This abstraction adds a small subset of the regulator API, which is
-thought to be sufficient for the drivers we have now.
+On 13/02/2025 3:16 pm, Thomas Weißschuh wrote:
+> On Thu, Feb 13, 2025 at 03:06:59PM +0000, Mark Brown wrote:
+>> On Thu, Feb 13, 2025 at 02:28:06PM +0000, Richard Fitzgerald wrote:
+>>> On 11/02/2025 5:21 pm, Richard Fitzgerald wrote:
+>>
+>>>>> Not tested on real hardware.
+>>>>> This came up while porting kunit to mips64.
+>>>>> Apparently GFP_DMA does not work there, but IMO the usage of GFP_DMA by
+>>
+>>> I would say that is a bug in mips64 that should be fixed in mips64.
+>>> It is not reasonable to expect generic drivers to have special cases for
+>>> platforms that don't handle GFP_DMA.
+> 
+> Indeed, I did that, too.
+> 
+>> What specifically is the issue?  If it's a build time issue I'd
+>> definitely agree that we should just be able to assume that platforms at
+>> least build.  IIRC there is a Kconfig you can depend on for DMA but it
+>> seems more trouble than it's worth to fix all users.
+> 
+> More details in [0], It's only a runtime issue.
+> 
+> I'm still wondering how all the on-stack buffers used with regmap_raw_read()
+> and regmap_raw_write() by cs_dsp are satisfying the DMA requirements.
+> 
+There are 3 suspicious regmap_raw_read(). The others are all integers,
+which are guaranteed not to cross a page boundary.
 
-Regulators provide the power needed by many hardware blocks and thus are
-likely to be needed by a lot of drivers.
+However, it looks like it might be safe to remove the GFP_DMA flags
+now. regmap_raw_read() calls spi_write_then_read() which specifically
+says that the buffers do not need to be DMA-safe and internally uses a
+DMA-safe buffer. regmap_raw_write() uses either a temporary physically
+contiguous buffer or GFP_DMA buffer (the implementation is terrifyingly
+complex so it's difficult to determine exactly what it does).
 
-It was tested on rk3588, where it was used to power up the "mali"
-regulator in order to power up the GPU.
+(Some older systems could only use certain special memory areas for DMA
+but we haven't seen any of those used with cs_dsp.)
 
-Note that each instance of [`Regulator`] obtained from
-`Regulator::get()` can only be enabled once. This ensures that the calls
-to enable and disable are perfectly balanced before `regulator_put()` is
-called, as mandated by the C API.
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/lib.rs              |   2 +
- rust/kernel/regulator.rs        | 120 ++++++++++++++++++++++++++++++++
- 3 files changed, 123 insertions(+)
- create mode 100644 rust/kernel/regulator.rs
-
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 55354e4dec14..92504f19655e 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -28,6 +28,7 @@
- #include <linux/poll.h>
- #include <linux/property.h>
- #include <linux/refcount.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/sched.h>
- #include <linux/security.h>
- #include <linux/slab.h>
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 496ed32b0911..0224f4c248c0 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -68,6 +68,8 @@
- pub mod prelude;
- pub mod print;
- pub mod rbtree;
-+#[cfg(CONFIG_REGULATOR)]
-+pub mod regulator;
- pub mod revocable;
- pub mod security;
- pub mod seq_file;
-diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
-new file mode 100644
-index 000000000000..df6eb325d11a
---- /dev/null
-+++ b/rust/kernel/regulator.rs
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Regulator abstractions.
-+//!
-+//! C header: [`include/linux/regulator/consumer.h`](srctree/include/linux/regulator/consumer.h)
-+
-+use crate::{
-+    bindings,
-+    device::Device,
-+    error::{from_err_ptr, to_result, Result},
-+    prelude::*,
-+};
-+
-+use core::ptr::NonNull;
-+
-+/// A `struct regulator` abstraction.
-+///
-+/// Note that each instance of [`Regulator`] obtained from `Regulator::get()`
-+/// can only be enabled once. This ensures that the calls to enable and disable
-+/// are perfectly balanced before `regulator_put()` is called, as mandated by
-+/// the C API.
-+///
-+/// # Invariants
-+///
-+/// - [`Regulator`] is a non-null wrapper over a pointer to a `struct regulator`
-+///   obtained from `regulator_get()`.
-+/// - Each instance of [`Regulator`] obtained from `Regulator::get()` can only
-+///   be enabled once.
-+pub struct Regulator {
-+    inner: NonNull<bindings::regulator>,
-+    enabled: bool,
-+}
-+
-+impl Regulator {
-+    /// Obtains a [`Regulator`] instance from the system.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        // SAFETY: It is safe to call `regulator_get()`, on a device pointer
-+        // earlier received from the C code.
-+        let inner = from_err_ptr(unsafe { bindings::regulator_get(dev.as_raw(), name.as_ptr()) })?;
-+
-+        // SAFETY: We can safely trust `inner` to be a pointer to a valid
-+        // regulator if `ERR_PTR` was not returned.
-+        let inner = unsafe { NonNull::new_unchecked(inner) };
-+
-+        Ok(Self {
-+            inner,
-+            enabled: false,
-+        })
-+    }
-+
-+    /// Enable the regulator.
-+    pub fn enable(&mut self) -> Result {
-+        if self.enabled {
-+            return Ok(());
-+        }
-+
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        let res = to_result(unsafe { bindings::regulator_enable(self.inner.as_ptr()) });
-+        if res.is_ok() {
-+            self.enabled = true;
-+        }
-+
-+        res
-+    }
-+
-+    /// Disable the regulator.
-+    pub fn disable(&mut self) -> Result {
-+        if !self.enabled {
-+            return Ok(());
-+        }
-+
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        let res = to_result(unsafe { bindings::regulator_disable(self.inner.as_ptr()) });
-+        if res.is_ok() {
-+            self.enabled = false;
-+        }
-+
-+        res
-+    }
-+
-+    /// Set the voltage for the regulator.
-+    pub fn set_voltage(&self, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe {
-+            bindings::regulator_set_voltage(self.inner.as_ptr(), min_uv.0, max_uv.0)
-+        })
-+    }
-+
-+    /// Get the current voltage of the regulator.
-+    pub fn get_voltage(&self) -> Result<Microvolt> {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        let voltage = unsafe { bindings::regulator_get_voltage(self.inner.as_ptr()) };
-+        if voltage < 0 {
-+            Err(Error::from_errno(voltage))
-+        } else {
-+            Ok(Microvolt(voltage))
-+        }
-+    }
-+}
-+
-+impl Drop for Regulator {
-+    fn drop(&mut self) {
-+        if self.enabled {
-+            // It is a requirement from the C API that the calls to enable and
-+            // disabled are balanced before calling `regulator_put()`.
-+            self.disable();
-+        }
-+
-+        // SAFETY: By the type invariants, we know that `self` owns a reference,
-+        // so it is safe to relinquish it now.
-+        unsafe { bindings::regulator_put(self.inner.as_ptr()) };
-+    }
-+}
-+
-+/// A voltage in microvolts.
-+///
-+/// The explicit type is used to avoid confusion with other multiples of the
-+/// volt, which can be desastrous.
-+#[repr(transparent)]
-+pub struct Microvolt(pub i32);
--- 
-2.48.1
+> [0] https://lore.kernel.org/lkml/20250212-kunit-mips-v1-1-eb49c9d76615@linutronix.de/
 
