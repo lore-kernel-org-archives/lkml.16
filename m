@@ -1,75 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F74C1DE889;
-	Wed, 19 Feb 2025 09:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EFD1DE88A;
+	Wed, 19 Feb 2025 09:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739956140; cv=none; b=Bg2Sqpseh62rcZATtScqn3y+jkwB2ltEzIP83Riz39L++TwjKPl8xzPe+e9b9mmacx4pDKLLGLrsByPx+QL3BkaOYBp+tSmyfwfoOTYhPAgj2+lRjTc2Hp9nOmfPqk+UgZhXM6TukX97kgDnr4jYh6hjwjTJRO6l7IU5jFZge5o=
+	t=1739956156; cv=none; b=FSa+HWpQU6NmXIcjQbP/HD+V5bWXkiqL5+dJgO5ERPQwijLZAdUXaRQsVeO92RxHsbdLxVqmLrAbKXjzpUSuVPJbyd5Ge9C4AYaXuVnkdQSLnAygKZzI86XugASI03IbOVHaaokJwbqND07kNxuqAPDv+SBrX5iCd3A6DSt1g3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739956140; c=relaxed/simple;
-	bh=rSLObtOYNhvEbwoHR+5gOiO7o0p1QXTJY22C2gSMTXU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BXJDN0RwfEA0YVEN3HY6LM46IH9gljF7f5+iITAjBQU1v3Z+y7AO3dl6MMDP4p9c303THqcDMbfmjbKMbB7BruaY+htguMjRNEi+HqG5cFI4TAI/q/WWd+DyUhD04PZsugNnKiXe+pNXh/L+sQhDxFDMXah732htjnrOt7AV7bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vtr12H1G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739956156; c=relaxed/simple;
+	bh=9vk7x8p7OZ+QywMaVdmYFW4mZywPyCxbk61u3m25ECI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gRl/xvgEJ2ZW8tXLrCsPnLxy9veoEGI/1R/MynifA8wC3VP8ODZx57ZVlkmivlbc0SIEqUzWHSO3qH17WcOyuFpeTZUUEN95ApBiLOmTo1BoGu/NcVCgQbRq9Cvo+hmsfixPYuLKQWl4IsJpodyjWEhaoIkWhTl7P5hOGUcUQpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cRtniLhk; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vtr12H1G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78249C4CEEC;
-	Wed, 19 Feb 2025 09:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739956140;
-	bh=rSLObtOYNhvEbwoHR+5gOiO7o0p1QXTJY22C2gSMTXU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Vtr12H1GRzYENaEK4wQdVRf535eQVAMbGLkcePMXoZv9W3FCpva06gkuUw67YkmO7
-	 KH9hjPmx2xqnuvHa019pC1Fj1+Zw3ZjouUTTjG5C+QXyJC13ZOaDzqfgUUW63nF/kI
-	 Oe/5geFRm2W6Ud2AbeYYYkqL8mA/GXlKhld28igIlaJXw9Sm0CnN2vQ7BZYPbKRZOu
-	 E/rQDU7S+zK7Or8CZT77BvmKzQNNB5FWUsc7LQKo75G3Izlxp219jDqq3HOj1C4s8k
-	 ZADa5INYK5ghLn/UcCNoWdfVmj+LIsMwIpMt9TJ4v3bBLMt8jp8gdNBm/VsgBgBq/Z
-	 WW/Pg+ezwMyjA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Asahi Lina" <lina@asahilina.net>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Jann Horn" <jannh@google.com>,
-  "Matthew Wilcox" <willy@infradead.org>,  "Paolo Bonzini"
- <pbonzini@redhat.com>,  "Danilo Krummrich" <dakr@kernel.org>,  "Wedson
- Almeida Filho" <wedsonaf@gmail.com>,  "Valentin Obst"
- <kernel@valentinobst.de>,  "Andrew Morton" <akpm@linux-foundation.org>,
-  <linux-mm@kvack.org>,  <airlied@redhat.com>,  "Abdiel Janulgue"
- <abdiel.janulgue@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <asahi@lists.linux.dev>
-Subject: Re: [PATCH 6/6] rust: page: Make Page::as_ptr() pub(crate)
-In-Reply-To: <20250202-rust-page-v1-6-e3170d7fe55e@asahilina.net> (Asahi
-	Lina's message of "Sun, 02 Feb 2025 22:05:48 +0900")
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
-	<oRvzr1HN7fPhMdrzHGHQEpLWs7h0WF9FP7GgmaVnKlIXPWEV5OYawIagJ8RvmPHMaIvPsdxwO86vivlw3foqWw==@protonmail.internalid>
-	<20250202-rust-page-v1-6-e3170d7fe55e@asahilina.net>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 19 Feb 2025 10:08:25 +0100
-Message-ID: <87ldu2cnee.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cRtniLhk"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739956143; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ftZU+5bMAOO43RWbn35YZbsoovI4IiODb5WpQejCd88=;
+	b=cRtniLhkv3wjY2JOwtfP02DcJvl+1vJFgEDet0Wh1fCOq0GJZP1FgNuczHLGUF54NNRJ9x9oHzRjr7sP4By5oVuY6fqbKEV1vs4g3KiYe951kQ04Vj8bATqR2M1ufAFjuQScbpfB+kmSELcXiVBmKOryMjkSMI4hTrUlV7ga0lo=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPonrx6_1739956141 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 19 Feb 2025 17:09:02 +0800
+Message-ID: <eb44baac-f212-4b25-bbbf-6f0c498f2c5c@linux.alibaba.com>
+Date: Wed, 19 Feb 2025 17:08:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] dmaengine: idxd: fix memory leak in error handling
+ path of idxd_setup_wqs
+To: Fenghua Yu <fenghuay@nvidia.com>, vinicius.gomes@intel.com,
+ dave.jiang@intel.com, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
+ <20250215054431.55747-2-xueshuai@linux.alibaba.com>
+ <f44a4303-d106-408c-ba59-911fe7b9a290@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <f44a4303-d106-408c-ba59-911fe7b9a290@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-"Asahi Lina" <lina@asahilina.net> writes:
-
-> There's no good reason for drivers to need access to the raw `struct
-> page` pointer, since that should be handled by Rust abstractions. Make
-> this method pub(crate) so it is only visible to the kernel crate.
->
-
-As I mentioned on another patch, we are planning to split the kernel
-crate per subsystem, and this would need to be pub again then.
 
 
-Best regards,
-Andreas Hindborg
+在 2025/2/19 00:32, Fenghua Yu 写道:
+> Hi, Shuai,
+> 
+> On 2/14/25 21:44, Shuai Xue wrote:
+>> Memory allocated for wqs is not freed if an error occurs during
+>> idxd_setup_wqs(). To fix it, free the allocated memory in the reverse
+>> order of allocation before exiting the function in case of an error.
+>>
+>> Fixes: a8563a33a5e2 ("dmanegine: idxd: reformat opcap output to match bitmap_parse() input")
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/dma/idxd/init.c | 20 +++++++++++++++++---
+>>   1 file changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+>> index b946f78f85e1..b85736fd25bd 100644
+>> --- a/drivers/dma/idxd/init.c
+>> +++ b/drivers/dma/idxd/init.c
+>> @@ -169,8 +169,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>       idxd->wq_enable_map = bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL, dev_to_node(dev));
+>>       if (!idxd->wq_enable_map) {
+>> -        kfree(idxd->wqs);
+>> -        return -ENOMEM;
+>> +        rc = -ENOMEM;
+>> +        goto err_bitmap;
+>>       }
+>>       for (i = 0; i < idxd->max_wqs; i++) {
+>> @@ -191,6 +191,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>           rc = dev_set_name(conf_dev, "wq%d.%d", idxd->id, wq->id);
+>>           if (rc < 0) {
+>>               put_device(conf_dev);
+>> +            kfree(wq);
+>>               goto err;
+>>           }
+>> @@ -204,6 +205,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>           wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
+>>           if (!wq->wqcfg) {
+>>               put_device(conf_dev);
+>> +            kfree(wq);
+>>               rc = -ENOMEM;
+>>               goto err;
+>>           }
+>> @@ -211,7 +213,9 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>           if (idxd->hw.wq_cap.op_config) {
+>>               wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
+>>               if (!wq->opcap_bmap) {
+>> +                kfree(wq->wqcfg);
+>>                   put_device(conf_dev);
+>> +                kfree(wq);
+>>                   rc = -ENOMEM;
+>>                   goto err;
+>>               }
+>> @@ -225,11 +229,21 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>       return 0;
+>>    err:
+>> -    while (--i >= 0) {
+>> +    while (i-- > 0) {
+> 
+> Why changed to "i-- > 0" here? Before coming to here, the mem areas allocated for wqs[i] are freed already and there is not need to free them again here, right? 
 
+Yes.
+
+> And if i>1, mem areas for wqs[0] won't be freed and will leak, right?
+
+No, the two ways of writing are equivalent.
+
+#include <stdio.h>
+
+int main()
+{
+     int i = 1;
+     while (i-- > 0)
+         printf("freeing i %d\n", i);
+
+     return 0;
+}
+
+// console output
+// freeing i 0
+
+I will drop this line to avoid confusion.
+
+Thanks.
+Shuai
 
