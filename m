@@ -1,150 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF95A21B9D1
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 20:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF2F1B4247;
+	Wed, 19 Feb 2025 20:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739996305; cv=none; b=gwfNaV8cJtKL37lkaQ0uv5Cpm1FO6Zu2866nNOo38M7Z8ymUhTSmOrJpKABeFgSdcsBuyXUCmMkGvAJSnhHjtV2QVCv1sTX5L4IwlB7Emb5DtS5yUYSDaTWRtM/naHYreCg7gh8iNbhqNK/YBFBXC95x8LrFmIgKL+AaRhVe2/8=
+	t=1739996339; cv=none; b=FqbJ15cBu6JDfSg4mvPO2fucy+lFUlCDK9AtavzQztw8J8OQ1JgUEA3e3eIX2L4D923jibvICM9uU6v+bx40am32FX/LPxTZITannj41870nnyH4vASCLxHkKJOUKn+9ldgDO0egfV51A56d1LO3E7NCyCayjYmceFJfM01Bwug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739996305; c=relaxed/simple;
-	bh=htF0r6kx/S7tQY8cEb6K/3jw6UP23ugfC+8gBe9WF8o=;
+	s=arc-20240116; t=1739996339; c=relaxed/simple;
+	bh=oXeGgZ0czwVwUtkAvKWihshapBTjaKnRt7r/lDXjwUg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hMpaqqE9z1mBBsT+3PkyIBWpKtO+saofUTuXJRMOqW7GRHBcprt3cJTRasDbOV4iS8JPNKvH1es2YVR0RhdW4UxALbx8oiWiaKWPGSP84DOOqvHoOLXsHSUcx9AvHCRj8UGHZVPKYSItpGnAwGOyGJ5C3LfW+PlM9pHcTStOIjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HFa6tZkX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/dEnmsOAglL3+olUOgRRtworeDEMhVKXJjN7EXo24F9qSTcByeBQPveedK1N6JXjeAG6xTH7xqMWjoR0DKQot1gAcC0xtAhguTscQNYjEISqbfBnfEaBeJoba+oO8/McdOE8mAYkq7LO0G8ZyyPv51Cl1/Z7rDG/ixKHM4VcfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q2hpu+3V; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HFa6tZkX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739996302;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cly/NXz6wazzzBHR6ULlMjYuQlQdlZukgLVDG9F7dVo=;
-	b=HFa6tZkXCdxQj7j7HRAfdfA/w1hKBim8MCtJ2Zjo0J3Y1JinNqMeDPYKM2W2W8mMObNk80
-	fZ5bnU55d+QzQdfv/jo2axOT/q9oF10kMuvQDbKH/ypfQUPYPSjCf6CSespSrBwrW9UsGE
-	Eef16V2TE8kEPSz9OfDHpQZ/ROkRab0=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-146-WhEuTI77PvWpZ_bkU6GrGg-1; Wed,
- 19 Feb 2025 15:18:16 -0500
-X-MC-Unique: WhEuTI77PvWpZ_bkU6GrGg-1
-X-Mimecast-MFC-AGG-ID: WhEuTI77PvWpZ_bkU6GrGg_1739996295
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC8CA19783B7;
-	Wed, 19 Feb 2025 20:18:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.102])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 134401800359;
-	Wed, 19 Feb 2025 20:18:11 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Feb 2025 21:17:46 +0100 (CET)
-Date: Wed, 19 Feb 2025 21:17:42 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] yama: don't abuse rcu_read_lock/get_task_struct in
- yama_task_prctl()
-Message-ID: <20250219201742.GD5948@redhat.com>
-References: <20250219161417.GA20851@redhat.com>
- <202502191125.1A6F07E@keescook>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q2hpu+3V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739996338; x=1771532338;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=oXeGgZ0czwVwUtkAvKWihshapBTjaKnRt7r/lDXjwUg=;
+  b=Q2hpu+3VcrCRlHkvWLhmtgMWXagzMGN6IzF3XEoSKkB8S75vJPiqrjpV
+   nxyyNpYw5oCMMQ9cQYIpUTjHtazcwPn4b9U24hLvmKoaawcasppXLbMLp
+   0t/0OK/I34XUOq7tZzzawPehEw4l3q9e1egUczWhDGRcQesFkCUFNNHd2
+   kirYqC6sJIHEfX5m4vvdundIhE5qMsivBNvvX50+/0JCo9FGMZ+16FJOT
+   UxwW041ZPeMm3OOySCgV/41ImWBgzzr8CqrDmKcxoZvV4GTUvFsy37umT
+   mRX83A5FTcGhWLvpxA8iw95Pg5tOFU7aJ/rVW3CAnFiWkQK9Lrom/tD4T
+   A==;
+X-CSE-ConnectionGUID: KtbOo9zsTl6ZLs51G89LzA==
+X-CSE-MsgGUID: SJ245mD+TyeUsZcdq/1PLA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="51734465"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="51734465"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 12:18:57 -0800
+X-CSE-ConnectionGUID: vlRCi91XTOu32FEws8/1Vg==
+X-CSE-MsgGUID: yYmc9FLARoeVY4knBxElMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="138038520"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 12:18:52 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tkqWv-0000000D7cB-47Tq;
+	Wed, 19 Feb 2025 22:18:49 +0200
+Date: Wed, 19 Feb 2025 22:18:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>,
+	Daniel Thompson <danielt@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mfd: lm3533: convert to use OF
+Message-ID: <Z7Y8qcNDxjsqJfhM@smile.fi.intel.com>
+References: <20250218132702.114669-1-clamor95@gmail.com>
+ <20250218132702.114669-3-clamor95@gmail.com>
+ <Z7XqKcOUt5niXzpv@smile.fi.intel.com>
+ <CAPVz0n1_WQyOHhtEVAh53uhEUhZvqqZSEJh6XALtSrVfkMSLYw@mail.gmail.com>
+ <Z7XzgfHcjyK_UZKv@smile.fi.intel.com>
+ <CAPVz0n2WwAOb1UU7J7aDTdhXXCaAZkCpYjW_nc_CBRgkGWdEOw@mail.gmail.com>
+ <Z7X3ZvQbSe75U-AR@smile.fi.intel.com>
+ <CAPVz0n19D1mS_prvMo-HD3m7U9+iknm49JSj5ydNUHoqjK7gZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202502191125.1A6F07E@keescook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPVz0n19D1mS_prvMo-HD3m7U9+iknm49JSj5ydNUHoqjK7gZw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 02/19, Kees Cook wrote:
->
-> On Wed, Feb 19, 2025 at 05:14:17PM +0100, Oleg Nesterov wrote:
-> > current->group_leader is stable, no need to take rcu_read_lock() and do
-> > get/put_task_struct().
->
-> Can you explain why this is true? In trying to figure this out again,
-> it seems that the only way current->group_leader can vanish is if
-> the entire process vanishes (fork or thread exec), in which case the
-> "current" in this prctl can't be happening; this appears to be locked
-> behind tsk->sighand->siglock ?
+On Wed, Feb 19, 2025 at 07:39:29PM +0200, Svyatoslav Ryhel wrote:
+> ср, 19 лют. 2025 р. о 17:56 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> пише:
+> > On Wed, Feb 19, 2025 at 05:13:15PM +0200, Svyatoslav Ryhel wrote:
+> > > ср, 19 лют. 2025 р. о 17:07 Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> пише:
+> > > > On Wed, Feb 19, 2025 at 04:36:38PM +0200, Svyatoslav Ryhel wrote:
+> > > > > ср, 19 лют. 2025 р. о 16:27 Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> пише:
 
-Well, almost, but this has nothing to do with tsk->sighand->siglock...
+...
 
-task->group_leader can only be changed by thread exec, when a non leader
-thread does exec, see de_thread(). But de_thread() can't succeed and change
-->group_leader until all other threads exit, see the "Kill all other threads
-in the thread group" code in de_thread(). The "current" task can't exit, so
-current->group_leader is stable.
-
-Note also that we already have a lot of current->group_leader users which
-don't use rcu/get_task_struct.
-
-That said, we have a lot of buggy users of tsk->group_leader when
-same_thread_group(tsk, current) != true ;) For example, sys_prlimit64().
-And note that rcu_read_lock/get_task_struct can't help in this case.
-I am going to send some fixes.
-
-Oleg.
-
+> > > > > MFD part is removed since MFD cells binding is unconditional, while
+> > > > > the device supports any amount of children grater then one. For
+> > > > > example, my  device uses only backlight at bank A, while all other
+> > > > > subdevices are not present and used. This patch switches to dynamic
+> > > > > bind of children.
+> > > >
+> > > > MFD does the same. Please, take your time and get familiar with how MFD works.
+> > >
+> > > It does not. I have tried. If mfd cell binding is missing, driver will
+> > > complain and fail.
+> >
+> > I really don't know what exactly is going on here, you can check it later, but
+> > I'm 100% sure that MFD works for only driver that are present. What you are
+> > describing is how component framework is designed.
+> >
+> > To proove my words you can check drivers/mfd/intel_soc_pmic_*.c and find listed
+> > cells that never had a driver in the Linux kernel. They are just placeholders.
 > 
-> -Kees
-> 
-> > 
-> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> > ---
-> >  security/yama/yama_lsm.c | 9 ++-------
-> >  1 file changed, 2 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
-> > index 1971710620c1..3d064dd4e03f 100644
-> > --- a/security/yama/yama_lsm.c
-> > +++ b/security/yama/yama_lsm.c
-> > @@ -222,7 +222,7 @@ static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
-> >  			   unsigned long arg4, unsigned long arg5)
-> >  {
-> >  	int rc = -ENOSYS;
-> > -	struct task_struct *myself = current;
-> > +	struct task_struct *myself;
-> >  
-> >  	switch (option) {
-> >  	case PR_SET_PTRACER:
-> > @@ -232,11 +232,7 @@ static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
-> >  		 * leader checking is handled later when walking the ancestry
-> >  		 * at the time of PTRACE_ATTACH check.
-> >  		 */
-> > -		rcu_read_lock();
-> > -		if (!thread_group_leader(myself))
-> > -			myself = rcu_dereference(myself->group_leader);
-> > -		get_task_struct(myself);
-> > -		rcu_read_unlock();
-> > +		myself = current->group_leader;
-> >  
-> >  		if (arg2 == 0) {
-> >  			yama_ptracer_del(NULL, myself);
-> > @@ -255,7 +251,6 @@ static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
-> >  			}
-> >  		}
-> >  
-> > -		put_task_struct(myself);
-> >  		break;
-> >  	}
-> >  
-> > -- 
-> > 2.25.1.362.g51ebf55
-> > 
-> > 
-> 
-> -- 
-> Kees Cook
-> 
+> This example is not valid since those drivers do not use device tree.
+
+You didn't get the point. I'm telling that it should not matter if there is a
+device driver present or absent. The rest will be enumerated as usual.
+
+I even checked the code that handles of_compatible member from struct mfd_cell and
+at a brief glance I do not see that it can do otherwise.
+
+Care to elaborate what and where is the error happened exactly?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
