@@ -1,114 +1,110 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F181AF0C8;
-	Wed, 19 Feb 2025 08:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025771E1A2B;
+	Wed, 19 Feb 2025 08:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954208; cv=none; b=oniZ0KdHTnJipY8kk698wz2vkeTzW6O9QK9VWYqjZH0BfqDmf4GOyKa4PtPijSrxE2zzg0TpFjLrX3Wv4YxNURsVq24OYgaabGz1XIvYCXbxiMmW0yFqUMmkseblXwRIYPwUDyodVFDxKvAkUFx0D01l1xy6FLy04xQmTWdEdVw=
+	t=1739954216; cv=none; b=H9BWxrXuuXRnz8gt0WVErAXf4oA9zDTLZBKJyE/CPSeqlwKrvWWfBfFmjE/ZwBNo1v3GguOLTWq78JhrmYPvTaungQgXkeyE/qb85O/7Qaj0tLLq9TT7Ek+d3yrb91Oke3h0uvzosQSxrTp2SLzDURzwNblkxBjP2aekVNBkZbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954208; c=relaxed/simple;
-	bh=vBWdb5FzpHt5ZjRBzV17DBH89UaJ076ckpjDBTFsSZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fvD2z1VZaq50Jh7Mw12VaZ3TPonfRIze8SO8oCLdQwoZxD6PudHuRwdstjR4/VsWXDDgEy/bG1M0GX6tPXWtmLAZFPeBqFvrKKXeVb8pixcJqpuZHe6O7UnSCIDo2omcLLXmD40fpCv/qp6nbJ9oXux0XSJS21LHtAzU2cBILhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JNOUB4fF; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739954216; c=relaxed/simple;
+	bh=rgJvidjAQMDoQVWGBwJ2leXpTN2OG2+kgUkDZ7AeZQQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JAGhon7zgdoBesQg74pe039NtA0Tt8wnU3bw86CRtVAtrF/KxmdzJSfYTnatnIqoynjHc9pppDr+x4fxLSnw2uKduL1lqJsyvjRf9/Ti0cSb3IUUwK8ECkbFP9dc10JpIUl2GnSrt6QClRcFueM+/z7snLcdb6nlPAGJeAh/8SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNj/xDKj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNOUB4fF"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f2b7ce319so4016328f8f.2;
-        Wed, 19 Feb 2025 00:36:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739954200; x=1740559000; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YFUfS4MN212nAVnRhe58nyBjXY8HxrKGCZnWtI4ATrk=;
-        b=JNOUB4fFIBPqhkfAtnkMmzYkwgaFH80VRzMisCVhb9L5iMhq+RRRBAMxCGMorelcMC
-         fbsbS4r3EYPVltRqRgPWdTzc6tC8LZLXqngu0X2GpolpPxqnRQGE/CiD1zRtVt68XBDP
-         vHiXVODOob/Q28BNbxv5/DYDqyv6AhKeUGjmNC7WJDcyx0AZe+9hVxLYwigbVJTJMTsz
-         xtzjK0xt61pUufPZV06CrqnRpDMMdLLRiWk298CjdR2QEJ6bOi1ZeLDu2OAZiCRMDSJD
-         RgPYhluyw8DhCVaOjuitAtXlMFKXnUvqQh+lV32TtSHT3FiVW0atJZ2onze2+t2qWw95
-         7yvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739954200; x=1740559000;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YFUfS4MN212nAVnRhe58nyBjXY8HxrKGCZnWtI4ATrk=;
-        b=U6s1XCWa4F7PnYZ7avdavVfUYCAk50hDLJmqkC7wve6gcqwpn5EDqCfXjuf0MA2qCN
-         AOP0D7geiXAQQHqj5SLghAbxAJnmQReyBRwjb8+7EUr/THpFVGWzUA1Fr3znJCfOh+RB
-         f6EjSAahNbOGSbZYa5oPAp5cmkyYqZyrrIqVbD6YsEaQIIFmtlX+gyqGxuzoK5ghGaur
-         vhDJS6iQ+0xVlFiRL3J5UdkrqSh12BSA4bkG6Mu2AhrluRs/c3L6lvBnICmKSzSc+oAo
-         ksX/IMIJhjr/jQUSEEl2ty8wMCamrfoWunHQNNf/Zs754LYQmIWSjJhFhr9lgjJ1JB29
-         isUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVyIwEM97FQL8VQ8PwgUYdZnrj4ypHu2XtEAqgWtdNt1MWRXv3dTMjMipqkmvjmBPSU2JavdOkxEuBAh/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK//aeoyAobebcsmLcHc35JevSgnibHThB+BiXmhY75XvccSkU
-	ZAPpr9MjvhcbzWYgpJSRgFziFhdO8Hd2f0C9KT/ZeaCzsm27p6Sh
-X-Gm-Gg: ASbGncsOk1yJQYbq+A0Z0WbWLhnL6AWYTJsaVh/RK2N19SfLbPBHCrLoEc86zENZGgZ
-	KPAT+8O5iOtKqvZjSilwXZBWptPUZBklt2fG6m+5s1uNvFbF5sdSjvU8WKBCxZ/zpUgiXftSzLT
-	Hvo0I52laEI0FZtSHMhyDQRJoSHAzkw5If+Sei0YwG0OID+JdhBMZLiUS91TQp+NKPhKVn85//1
-	e/kkPjuDDY5UjTxHeNIKHsNxDsJ6XsXfJ7tGGUORlXFvjWvBUIziTP+zKACCfhnRoOPm06M7ZZt
-	xQyvAvjXGY5+JWGk
-X-Google-Smtp-Source: AGHT+IGUR3tSkS3WDS6O427aOiUDWFepr6QHmWHQE9Tm5bdBdUFEY/hZlA8g9FMTjybk2Wv4qUWMsg==
-X-Received: by 2002:adf:e647:0:b0:38d:ba09:86b5 with SMTP id ffacd0b85a97d-38f587e6476mr1897829f8f.52.1739954199911;
-        Wed, 19 Feb 2025 00:36:39 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f259f7df2sm17193376f8f.84.2025.02.19.00.36.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 00:36:39 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org
-Cc: kernel-janitors@vger.kernel.org,
-	Matthew Wilcox <willy@infradead.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next][V2] mm/mincore: improve performance by adding an unlikely hint
-Date: Wed, 19 Feb 2025 08:36:07 +0000
-Message-ID: <20250219083607.5183-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNj/xDKj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93432C4CED1;
+	Wed, 19 Feb 2025 08:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739954214;
+	bh=rgJvidjAQMDoQVWGBwJ2leXpTN2OG2+kgUkDZ7AeZQQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kNj/xDKjpNDb/OyA58zXZSI/uowZdiwP3jlGB0BsxCp/GZY+e5QsVeA7f7ecNP4YU
+	 r7GBP0/GW0yFUmRdYKQyND0fjqmVBWtT8/kkYq0qBWQcFz8eZ3lInPWKy/xXO5hU0P
+	 lbrGs6+3zhuIAsokBOVuQg0p9yX46gFFqxgb/22T8bYI+bfKuK7rNxT4gzAEgkI5UV
+	 VSeiIAfeCEvgBFH1pnlTf4eTEw0HPAJ38cUkKb1YvS4F8kJ4rJvnNG6vUttO9i3a1c
+	 anyxhXUOvP5yni6wnAEIe7u3426OVqYxkwdpVNN64g7gNWf/N1W9oKvx6QXx9Qe7K2
+	 21YMRo4iWIfPQ==
+Date: Wed, 19 Feb 2025 17:36:52 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/user_events: Don't use %pK through printk
+Message-Id: <20250219173652.183b22ff533301c5206b9743@kernel.org>
+In-Reply-To: <20250219081236-812a157c-5c60-41af-a7c8-f75f9da5e92a@linutronix.de>
+References: <20250217-restricted-pointers-trace-v1-1-bbe9ea279848@linutronix.de>
+	<20250219091023.f17833aea92a3d90e1bbc7da@kernel.org>
+	<20250219081236-812a157c-5c60-41af-a7c8-f75f9da5e92a@linutronix.de>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Adding an unlikely() hint on the masked start comparison error
-return path improves run-time performance of the mincore system call.
+On Wed, 19 Feb 2025 08:14:34 +0100
+Thomas Weißschuh <thomas.weissschuh@linutronix.de> wrote:
 
-Benchmarking on an i9-12900 shows an improvement of 7ns on mincore calls
-on a 256KB mmap'd region where 50% of the pages we resident. Improvement
-was from ~970 ns down to 963 ns, so a small ~0.7% improvement.
+> On Wed, Feb 19, 2025 at 09:10:23AM +0900, Masami Hiramatsu wrote:
+> > On Mon, 17 Feb 2025 14:16:12 +0100
+> > Thomas Weißschuh <thomas.weissschuh@linutronix.de> wrote:
+> > 
+> > > Restricted pointers ("%pK") are not meant to be used through printk().
+> > > It can unintentionally expose security sensitive, raw pointer values.
+> > > 
+> > > Use regular pointer formatting instead.
+> > > 
+> > > Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+> > 
+> > This is only for the kernel pointer, but the "uaddr" below means it
+> > has a user space address. So I think this does not need to be applied.
+> 
+> "uaddr" is formatted with %llx, which is fine.
+> "%pK" is used for mm->mm, which is a kernel pointer.
 
-Results based on running 20 tests with turbo disabled (to reduce
-clock freq turbo changes), with 10 second run per test and comparing
-the number of mincores calls per second. The % standard deviation of
-the 20 tests was ~0.10%, so results are reliable.
+Oops, I misread it. OK. looks good to me.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
----
 
-V2: Add information about % improvement and timings in nanoseconds
+Thank you,
 
----
- mm/mincore.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> > Thank you,
+> > 
+> > > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> > > ---
+> > >  kernel/trace/trace_events_user.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> > > index 97325fbd62836f4fb477c4a2b2936eff544291ec..3effc6fce20e65a8077de5221eb69db04fb1a775 100644
+> > > --- a/kernel/trace/trace_events_user.c
+> > > +++ b/kernel/trace/trace_events_user.c
+> > > @@ -455,7 +455,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
+> > >  	if (ret && ret != -ENOENT) {
+> > >  		struct user_event *user = enabler->event;
+> > >  
+> > > -		pr_warn("user_events: Fault for mm: 0x%pK @ 0x%llx event: %s\n",
+> > > +		pr_warn("user_events: Fault for mm: 0x%p @ 0x%llx event: %s\n",
+> > >  			mm->mm, (unsigned long long)uaddr, EVENT_NAME(user));
+> > >  	}
+> > >  
+> > > 
+> > > ---
+> > > base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+> > > change-id: 20250217-restricted-pointers-trace-a0fb12707ac6
+> > > 
+> > > Best regards,
+> > > -- 
+> > > Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-diff --git a/mm/mincore.c b/mm/mincore.c
-index d6bd19e520fc..832f29f46767 100644
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -239,7 +239,7 @@ SYSCALL_DEFINE3(mincore, unsigned long, start, size_t, len,
- 	start = untagged_addr(start);
- 
- 	/* Check the start address: needs to be page-aligned.. */
--	if (start & ~PAGE_MASK)
-+	if (unlikely(start & ~PAGE_MASK))
- 		return -EINVAL;
- 
- 	/* ..and we need to be passed a valid user-space range */
+
 -- 
-2.47.2
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
