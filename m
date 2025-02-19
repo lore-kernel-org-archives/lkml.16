@@ -1,147 +1,209 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA03F1A315E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D175C15B971
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739957921; cv=none; b=u+RV7fJ3hUQcWo8kn6BuYrpwmqRCtdpJqMSFdTi6a9lrSjIceC8Gu2x0AknXjQ+HpgiSgdcAeo4f5/Wgmg08t/cg9Nyh/XOLCnlYIzWA2k8+gljclVzitncnnEsxPl2xBaPf/+iZc90NanRwCYmI9N1qcLguM7VnoNMqZicG1Aw=
+	t=1739958108; cv=none; b=DqvrO2Ai29n1GxKGIDvJI9VusPbiITVWqYWZ1e0V19A8YCS4qkZz73/im37/4ahRQWcwRhV2+hv8Kr9FC6hURJnXNj5EiFM/KKFHg0NCqyIaJY0ug4BuMoEcA+y2W1fbl8a9dEwsnunLjpbYwnISSDLW6a10QA8sarI6uiB3JgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739957921; c=relaxed/simple;
-	bh=pFcpTDqU0wCpY/TJ6FjQZyphAtOY5YxEvc5BhkEgNOo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jswFIhyOy5MjMfLxEgbdpsIuFJhk9ojBtg7HsCvFxcuiQh65nvXmsPSMEL3PlmREAn9MEJYlrAmHoyILyeVVdRV4ig+xQQBUf/qURolro+CL9tBb0OxsKiGVkh8GOjM0z17g4gR6MOcIUXaGRqAL+qmLNkq70JmI3iP7YPkuf8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 51J9cLiY054113;
-	Wed, 19 Feb 2025 17:38:21 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4YyWRq2pWkz2SRfry;
-	Wed, 19 Feb 2025 17:33:59 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 19 Feb 2025 17:38:18 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <vincent.guittot@linaro.org>, <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>
-CC: <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
-        <mgorman@suse.de>, <vschneid@redhat.com>, <christian.loehle@arm.com>,
-        <hongyan.xia2@arm.com>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
-        <xuewen.yan94@gmail.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/2] sched/uclamp: Add uclamp_is_used() check before enable it
-Date: Wed, 19 Feb 2025 17:37:47 +0800
-Message-ID: <20250219093747.2612-2-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250219093747.2612-1-xuewen.yan@unisoc.com>
-References: <20250219093747.2612-1-xuewen.yan@unisoc.com>
+	s=arc-20240116; t=1739958108; c=relaxed/simple;
+	bh=OqVfjPY4uovxjbBBcLnPOdCFmXYjPN5y/81gUS2Ep4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YIXpuwkMxza8tiWxdEAO0K5cfSCVXsSqQXiYr98/YpbDc4xkSXYc5DGz7smdlvX13dbTlPff9udMnymTtMYR+ODUS8IcUUAqS5GXSzyN4HKlnt3b07LjVNiTehhYvX+BQrbnksap7EnIMYOtiCI3VZd2JoKsm/P78wj1XDMkaos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tkga5-0001Ah-I0; Wed, 19 Feb 2025 10:41:25 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tkga4-001jyF-2O;
+	Wed, 19 Feb 2025 10:41:24 +0100
+Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 690343C67A2;
+	Wed, 19 Feb 2025 09:41:24 +0000 (UTC)
+Date: Wed, 19 Feb 2025 10:41:24 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Dimitri Fedrau <dimitri.fedrau@liebherr.com>, 
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: Re: [PATCH 2/2] can: flexcan: add transceiver capabilities
+Message-ID: <20250219-garnet-gorilla-of-will-6e389e-mkl@pengutronix.de>
+References: <20250211-flexcan-add-transceiver-caps-v1-0-c6abb7817b0f@liebherr.com>
+ <20250211-flexcan-add-transceiver-caps-v1-2-c6abb7817b0f@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 51J9cLiY054113
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xh2teahwk43t3c4n"
+Content-Disposition: inline
+In-Reply-To: <20250211-flexcan-add-transceiver-caps-v1-2-c6abb7817b0f@liebherr.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Because the static_branch_enable() would get the cpus_read_lock(),
-and sometimes users may frequently set the uclamp value of tasks,
-and this operation would call the static_branch_enable()
-frequently, so add the uclamp_is_used() check to prevent calling
-the cpus_read_lock() frequently.
-And to make the code more concise, add a helper function to encapsulate
-this and use it everywhere we enable sched_uclamp_used.
 
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
-V2:
-- change some commit message;
-- Add a helper function and use it everywhere when enable uclamp (Vincent)
----
----
- kernel/sched/core.c     |  6 +++---
- kernel/sched/sched.h    | 14 ++++++++++++++
- kernel/sched/syscalls.c |  2 +-
- 3 files changed, 18 insertions(+), 4 deletions(-)
+--xh2teahwk43t3c4n
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] can: flexcan: add transceiver capabilities
+MIME-Version: 1.0
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 38a7192bfc19..0466a2f61b99 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1942,12 +1942,12 @@ static int sysctl_sched_uclamp_handler(const struct ctl_table *table, int write,
- 	}
- 
- 	if (update_root_tg) {
--		static_branch_enable(&sched_uclamp_used);
-+		sched_uclamp_enable();
- 		uclamp_update_root_tg();
- 	}
- 
- 	if (old_min_rt != sysctl_sched_uclamp_util_min_rt_default) {
--		static_branch_enable(&sched_uclamp_used);
-+		sched_uclamp_enable();
- 		uclamp_sync_util_min_rt_default();
- 	}
- 
-@@ -9295,7 +9295,7 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
- 	if (req.ret)
- 		return req.ret;
- 
--	static_branch_enable(&sched_uclamp_used);
-+	sched_uclamp_enable();
- 
- 	guard(mutex)(&uclamp_mutex);
- 	guard(rcu)();
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 3624fdce5536..bd22af347d0b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -3407,6 +3407,18 @@ static inline bool uclamp_is_used(void)
- 	return static_branch_likely(&sched_uclamp_used);
- }
- 
-+/*
-+ * Enabling static branches would get the cpus_read_lock(),
-+ * check whether uclamp_is_used before enable it to avoid always
-+ * calling cpus_read_lock(). Because we never disable this
-+ * static key once enable it.
-+ */
-+static inline void sched_uclamp_enable(void)
-+{
-+	if (!uclamp_is_used())
-+		static_branch_enable(&sched_uclamp_used);
-+}
-+
- static inline unsigned long uclamp_rq_get(struct rq *rq,
- 					  enum uclamp_id clamp_id)
- {
-@@ -3486,6 +3498,8 @@ static inline bool uclamp_is_used(void)
- 	return false;
- }
- 
-+static inline void sched_uclamp_enable(void) {}
-+
- static inline unsigned long
- uclamp_rq_get(struct rq *rq, enum uclamp_id clamp_id)
- {
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-index 456d339be98f..9100a77e9d79 100644
---- a/kernel/sched/syscalls.c
-+++ b/kernel/sched/syscalls.c
-@@ -368,7 +368,7 @@ static int uclamp_validate(struct task_struct *p,
- 	 * blocking operation which obviously cannot be done while holding
- 	 * scheduler locks.
- 	 */
--	static_branch_enable(&sched_uclamp_used);
-+	sched_uclamp_enable();
- 
- 	return 0;
- }
--- 
-2.25.1
+On 11.02.2025 14:12:34, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+>=20
+> Currently the flexcan driver does not support adding PHYs. Add the
+> capability to ensure that the PHY is in operational state when the link
+> is set to an "up" state.
+>=20
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> ---
+>  drivers/net/can/flexcan/flexcan-core.c | 25 +++++++++++++++++++------
+>  drivers/net/can/flexcan/flexcan.h      |  1 +
+>  2 files changed, 20 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/fle=
+xcan/flexcan-core.c
+> index ac1a860986df69a1dd64c25ff879490d5b21073b..a03dc8e3c80546a0e2fa9a85f=
+0e0cc8159afa4f0 100644
+> --- a/drivers/net/can/flexcan/flexcan-core.c
+> +++ b/drivers/net/can/flexcan/flexcan-core.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/property.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/phy/phy.h>
+> =20
+>  #include "flexcan.h"
+> =20
+> @@ -634,18 +635,22 @@ static void flexcan_clks_disable(const struct flexc=
+an_priv *priv)
+> =20
+>  static inline int flexcan_transceiver_enable(const struct flexcan_priv *=
+priv)
+>  {
+> -	if (!priv->reg_xceiver)
+> -		return 0;
+> +	if (priv->reg_xceiver)
+> +		return regulator_enable(priv->reg_xceiver);
+> +	else if (priv->xceiver)
+> +		return phy_power_on(priv->xceiver);
+> =20
+> -	return regulator_enable(priv->reg_xceiver);
+> +	return 0;
+>  }
+> =20
+>  static inline int flexcan_transceiver_disable(const struct flexcan_priv =
+*priv)
+>  {
+> -	if (!priv->reg_xceiver)
+> -		return 0;
+> +	if (priv->reg_xceiver)
+> +		return regulator_disable(priv->reg_xceiver);
+> +	else if (priv->xceiver)
+> +		return phy_power_off(priv->xceiver);
+> =20
+> -	return regulator_disable(priv->reg_xceiver);
+> +	return 0;
+>  }
+> =20
+>  static int flexcan_chip_enable(struct flexcan_priv *priv)
+> @@ -2061,6 +2066,7 @@ static int flexcan_probe(struct platform_device *pd=
+ev)
+>  	struct net_device *dev;
+>  	struct flexcan_priv *priv;
+>  	struct regulator *reg_xceiver;
+> +	struct phy *xceiver;
+>  	struct clk *clk_ipg =3D NULL, *clk_per =3D NULL;
+>  	struct flexcan_regs __iomem *regs;
+>  	struct flexcan_platform_data *pdata;
+> @@ -2076,6 +2082,12 @@ static int flexcan_probe(struct platform_device *p=
+dev)
+>  	else if (IS_ERR(reg_xceiver))
+>  		return PTR_ERR(reg_xceiver);
+> =20
+> +	xceiver =3D devm_phy_optional_get(&pdev->dev, NULL);
+> +	if (IS_ERR(xceiver)) {
+> +		dev_err(&pdev->dev, "failed to get phy\n");
+> +		return PTR_ERR(xceiver);
+> +	}
+> +
+>  	if (pdev->dev.of_node) {
+>  		of_property_read_u32(pdev->dev.of_node,
+>  				     "clock-frequency", &clock_freq);
+> @@ -2173,6 +2185,7 @@ static int flexcan_probe(struct platform_device *pd=
+ev)
+>  	priv->clk_per =3D clk_per;
+>  	priv->clk_src =3D clk_src;
+>  	priv->reg_xceiver =3D reg_xceiver;
+> +	priv->xceiver =3D xceiver;
+> =20
+>  	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_NR_IRQ_3) {
+>  		priv->irq_boff =3D platform_get_irq(pdev, 1);
 
+please also add
+	if (xceiver)
+		priv->can.bitrate_max =3D xceiver->attrs.max_link_rate;
+
+
+> diff --git a/drivers/net/can/flexcan/flexcan.h b/drivers/net/can/flexcan/=
+flexcan.h
+> index 4933d8c7439e62b5d6fcc445d88c2b5ccbfa13bb..56be40875eee24aee9297c4bc=
+7c2fc4380e682ff 100644
+> --- a/drivers/net/can/flexcan/flexcan.h
+> +++ b/drivers/net/can/flexcan/flexcan.h
+> @@ -103,6 +103,7 @@ struct flexcan_priv {
+>  	struct clk *clk_per;
+>  	struct flexcan_devtype_data devtype_data;
+>  	struct regulator *reg_xceiver;
+> +	struct phy *xceiver;
+
+All other drivers name this variable "transceiver", does it make sense
+to use this name here, too?
+
+>  	struct flexcan_stop_mode stm;
+> =20
+>  	int irq_boff;
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--xh2teahwk43t3c4n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAme1p0EACgkQDHRl3/mQ
+kZxZawf8DS2ziMwjv52nMtPJBIEZ/Wae0iSvk40AHkni1Cj0dKISm4FEWt9LynG/
+XbJfdytN4m1N0ZiMQkPEIkck8ZXUQJuYtmky4Qw4weh3voavw9rZuDRIaCFs99ES
+6lNz5Wz59iMipHFv//iWGUrviCkhON34NtKwEd3HKAq+oMb6RYEbvYEjQL36DXj1
+0xlDfejiMuSn2J9ylx2h978MCLBibly28BVJZ+6x/qVR70moCg+LWXzKXDW83jhy
+siFJMcMfumOJRUiBz0UKVxfEV8D13Hj+XipoLeaJbOI/YA7aIAgq+a2E85TRIk37
+z6Prd0caYlIt0sKjG3r1Xtg8Zbc4aw==
+=0a4S
+-----END PGP SIGNATURE-----
+
+--xh2teahwk43t3c4n--
