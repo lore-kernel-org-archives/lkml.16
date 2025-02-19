@@ -1,118 +1,174 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E0523DE
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E1428628F
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739962835; cv=none; b=l5z/NYRKFpTwnqhm13ZAxEVXB7duMCOxU7riAOf5BtHyM8MzNReMH9ty0ez+dUbrhZkQiaAN/oAyhjIvVq1TuRI354UfG2ebmRf+p93fY4THiQUrwlsDwlNgL9jwZN3ze4GmyOA45r3g9ekfwU2rirvOsRtmjF7BC+96l3f4TSw=
+	t=1739962904; cv=none; b=iXbPdZM67Ln8JMgL58TEg1/7VFGZwL6Pt2FPiczZoPQuoh0DjIEc/lqGxAeB+jNgOWtgl5Fi2F70CEUdK8GprsDc60MyVr5UFPWvPbx487by0KWRxIB18QfbCHglXOh3fYaWG1PbPAyOB7FXI4dJpH4UHKAnIJb0NiaY8cpfcEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739962835; c=relaxed/simple;
-	bh=MG3xGBAkVKmKkqiO52O8AdqSHtZcQiyeNK+723bu6Vs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jfXFSGdmVXWOve0fuQjP/khQ0i8SyULtwjIImfrkCq0PaGHVoHhEcyw2iQiwh1vXCYYGvE8hbNGIt4pS2/dJC9isUx6o92y3esBT2Pxq/k/jNav/+YuABQirTewYMSNI4fBo048eVp6d8Rna8gbqM/SpOEIpat5Rkg+nNUGJgWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tkhoS-0004su-Oc; Wed, 19 Feb 2025 12:00:20 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tkhoR-001kbf-2H;
-	Wed, 19 Feb 2025 12:00:19 +0100
-Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
+	s=arc-20240116; t=1739962904; c=relaxed/simple;
+	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LfOkN4X287i4MAnVwUWf+bbz3zCpEqi4vvNzOg30XzOB87Pr6kEjOBiF0uHfomzrR3PNDC7L+lq6BByWe0SGk4NRQznoqXG8nsLb3Znc8S9TCm0xlaaSwvGhBl5DD6O0VqO19f2FztAs2lJTBUq8/PqZuDpBVdOXQUEpGmdl3YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=fail smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zXkIKhes; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=chs1dt7A; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zXkIKhes; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=chs1dt7A; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zXkIKhes";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="chs1dt7A";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zXkIKhes";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="chs1dt7A"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 5272A3C6891;
-	Wed, 19 Feb 2025 11:00:19 +0000 (UTC)
-Date: Wed, 19 Feb 2025 12:00:17 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>, 
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: Re: [PATCH 2/2] can: flexcan: add transceiver capabilities
-Message-ID: <20250219-xanthic-elephant-of-jest-9b5720-mkl@pengutronix.de>
-References: <20250211-flexcan-add-transceiver-caps-v1-0-c6abb7817b0f@liebherr.com>
- <20250211-flexcan-add-transceiver-caps-v1-2-c6abb7817b0f@liebherr.com>
- <20250219-garnet-gorilla-of-will-6e389e-mkl@pengutronix.de>
- <20250219103955.GB3888@debian>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 98C5521A7A;
+	Wed, 19 Feb 2025 11:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739962900; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
+	b=zXkIKhesFTquq+VTtJw95pv57tG0q0BLMTqfmk8ZpYf21ZaJTqOzdg6C/ip9dgqZ2LJWOq
+	ALiKplTFjZaHMUTQdRaRUSnXBaXUgN590yGhS0uwozQ4BMOnQOwuiSyYHAWSzDdFHOrdm8
+	WzjissaB/8qu5EJvoFmavadOY7R8y20=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739962900;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
+	b=chs1dt7A9jGiX+Cw7lt6J0giTARWgf18O3T27Xk6GxYVVne4/1Ug4mq9Df++SfuqKsnriK
+	TcCo5htQqOofKzBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739962900; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
+	b=zXkIKhesFTquq+VTtJw95pv57tG0q0BLMTqfmk8ZpYf21ZaJTqOzdg6C/ip9dgqZ2LJWOq
+	ALiKplTFjZaHMUTQdRaRUSnXBaXUgN590yGhS0uwozQ4BMOnQOwuiSyYHAWSzDdFHOrdm8
+	WzjissaB/8qu5EJvoFmavadOY7R8y20=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739962900;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
+	b=chs1dt7A9jGiX+Cw7lt6J0giTARWgf18O3T27Xk6GxYVVne4/1Ug4mq9Df++SfuqKsnriK
+	TcCo5htQqOofKzBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7DA04137DB;
+	Wed, 19 Feb 2025 11:01:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id U+JMHhS6tWe6UwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 19 Feb 2025 11:01:40 +0000
+Message-ID: <345e4f5b-2427-4964-b0f1-e6f72e48f409@suse.cz>
+Date: Wed, 19 Feb 2025 12:01:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l2mzcqrvw6yumylm"
-Content-Disposition: inline
-In-Reply-To: <20250219103955.GB3888@debian>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/page_alloc: Clarify some migratetype fallback code
+Content-Language: en-US
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Brendan Jackman <jackmanb@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Mel Gorman <mgorman@techsingularity.net>, Michal Hocko <mhocko@kernel.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Yosry Ahmed <yosry.ahmed@linux.dev>
+References: <20250214-clarify-steal-v1-1-79dc5adf1b79@google.com>
+ <20250214212647.GB233399@cmpxchg.org>
+ <CA+i-1C3e_JUBBhMDYwrehvLZzLtb9pfgEy8=wQa=9uTBr1-b5g@mail.gmail.com>
+ <764394d9-592c-4d68-8910-67362dd8810a@suse.cz>
+ <20250218203830.GA1264207@cmpxchg.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20250218203830.GA1264207@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+On 2/18/25 21:38, Johannes Weiner wrote:
+> It still makes sense to have the two passes, though, right? One pass
+> where we try to steal a whole block starting from the biggest buddies;
+> and then one pass where we try to steal an individual page starting
+> from the smallest buddies.
 
---l2mzcqrvw6yumylm
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] can: flexcan: add transceiver capabilities
-MIME-Version: 1.0
+Yes.
 
-On 19.02.2025 11:39:55, Dimitri Fedrau wrote:
-> > > diff --git a/drivers/net/can/flexcan/flexcan.h b/drivers/net/can/flex=
-can/flexcan.h
-> > > index 4933d8c7439e62b5d6fcc445d88c2b5ccbfa13bb..56be40875eee24aee9297=
-c4bc7c2fc4380e682ff 100644
-> > > --- a/drivers/net/can/flexcan/flexcan.h
-> > > +++ b/drivers/net/can/flexcan/flexcan.h
-> > > @@ -103,6 +103,7 @@ struct flexcan_priv {
-> > >  	struct clk *clk_per;
-> > >  	struct flexcan_devtype_data devtype_data;
-> > >  	struct regulator *reg_xceiver;
-> > > +	struct phy *xceiver;
-> >=20
-> > All other drivers name this variable "transceiver", does it make sense
-> > to use this name here, too?
-> >=20
-> I have no preference on this, but my intention was to name it xceiver
-> according to reg_xceiver, so people familiar with the code would know
-> what it is about. I can change it to transceiver, what do you think ?
+> Something like this, completely untested draft:
 
-Please use transceiver.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---l2mzcqrvw6yumylm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAme1ub4ACgkQDHRl3/mQ
-kZzwZwf/V0UbOs2j2oZzUGx3EQAySIQ843epnVc8qB11S6fhhnBq+2/cCc3ABqpO
-QkZ4w0HomALIB2wT9Weqiv2QhbgzlN+jJK+C9gjTm8hEK91v28uzR7JcO+Zod7eO
-/eDYaHx5UrGooB2f5MH4mwWwH6W3kDYoFerMhM9rwcgDLJ8BByBdi5aKgnzCb5wU
-Sn1L5eD02YQEb42iOIVdmJxnGhWQKC3jCM25Lo4PNVP+iRtol2uMqXLYJrZFle0t
-XUO3QL/Qv9g2q7amwHfgQewjbWc8ZgOZ4Lpni5trJUIiqOrQzSF0b1tVIqV6Ahjk
-yxxexAh0DUC6cwIjOlheDS8Cw967og==
-=81Ih
------END PGP SIGNATURE-----
-
---l2mzcqrvw6yumylm--
+Looks good to me!
