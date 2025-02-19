@@ -1,173 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79787199E80;
-	Wed, 19 Feb 2025 13:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A5C1E0B61
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972948; cv=none; b=EEACPgdIHNP3uR9uNz4iZhRGvZNfA4T6gtT3UygoQ29da0k/niRg3DmRCwd+dfLVyPweRICHa7emX/OnbTfB2FVOjb19LUgGyAun7Lwt79GNnwW+OJCWkNvQOEVxnCR3+roqQ4bOvNcfN9pAe2FLzDawp1sbc6PZqR4VxrJpFF0=
+	t=1739972949; cv=none; b=W4NUvueoH0u9BzC32FmZDUEYskOSoFR9aZUgL8yxsvIoeW17dz6KrIS4HecfJ/W4UqbpyUUEfU3fwOU1+jl3PPayNiOrP6/3DEiKcF2vmuHXmeW0KNq8pshddHALF+vCjSxFW2Gk64oNSprpFF2hc3XeXfkRF0XtbIPcOwtJ0Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739972948; c=relaxed/simple;
-	bh=A1jQdtZvRbIjirpi/QpXD1jZ8tpStZUExtEIfK1U5Cc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kOz05UaDVhreidWKpp5xvpHkyb5yKJ0yQqfzqXXcITRDolJEm1a4Ypay8sqbVPCZYEIpX59ZhYrn1LV0R74Zo0aS3u+xZmxLHkWpZf3spFUQIzP6sJ2rWchx4h/2mTbojYWBez1rncSrTvVnNGwjSVxA7HuZT5brJKLS4235iy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFIwFIYx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739972949; c=relaxed/simple;
+	bh=BUI9OqmTcDikEdPpFqYBtUMWk3tIemL4LfC4CrBlhCs=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GKH0T3p/XNLodXL/1z/5cqJ8+rb+vhvhf1KNQaLLKIGWhkaQFi26YRwft99h9LxRXlJ1qW3//e42Hfe38emVQDTs9Ia3JW97Cbyax8MDHZ7e/TkMvSQITnFZ2TJfITp/TlQJg0+lUPN46TQn2WKyPhjOqBrb4v2gBmTD94cxq0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=nEzbjkMW; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFIwFIYx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAAEDC4CEEE;
-	Wed, 19 Feb 2025 13:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739972947;
-	bh=A1jQdtZvRbIjirpi/QpXD1jZ8tpStZUExtEIfK1U5Cc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IFIwFIYx0ARMx+0zY1HAfpnbVgkm//Wuvx46GSLkxcqt8pyR8cUWXdqQX9Ej8EiXY
-	 lOcuGfIVJCls3eng4yKpq6pAOUAIFyjgJeOMXv/uc14jU0fNAWka+TYNrkG31Zby4A
-	 q5VS+9iwtZOHE40aGcTDcdLU23EEaiFCpiIqVrn1HUceDqzWSED6ATPKac07FqWy18
-	 xGWm3cfbewXnj16OJw5uP5S/dxWwk8fUQBiuNCzCP4YyUOTi2SA4nzyCv46RrN8pxN
-	 geAc5o/X9/8YtXZmLfPdQPqnu0SC7k0Hm5aYQkVlcEXfFH68vkhwsmQAihN3TDx49u
-	 +73uOfTOqinSg==
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fc0026eb79so12733448a91.0;
-        Wed, 19 Feb 2025 05:49:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU3r+TkUvZe7ly/BbfAlwfhwz+zv7VeLiehuaralBs0JAVvpNFH/iGh/DkXOVq6/NuIuOsE9LrnD+ebDuQL@vger.kernel.org, AJvYcCUPOBp0c1Qt+4uHGJVLydFjKz9e0UbfraHyRalDhE+s5EGFdrZ+7NUD/SEFECX3EHu5RB4bH1QhAJLSYo8=@vger.kernel.org, AJvYcCWKykq2d1qY438QesGINQ1aFCsiLRbDHfWz4HbBKeObdPrRE8J2Zfe4N4Y6NlGe/iOhrPR91SPmJSF7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs3bxzOjpWPIPzWqNj4tja5dBGWjRR2JIHobwlAW7D6PRWTwE/
-	f3sC1JZ73qlE17dVtshf9UyIvpexDJrLBjfi8HPVr4zZyaLa4V2KXZ3mcg4UiKNuR0eLUmu2NdR
-	cmojdLMyYWunp8t7cAgMphvUR2g==
-X-Google-Smtp-Source: AGHT+IHzQqtYsvHwADMmf9VWFRyvbp1G6Xfgzoq4kaeRwD/sC1OC2iDXSHRlVSxq3fcQCkZrXfrGdEMDnJjaCDjhs5g=
-X-Received: by 2002:a17:90b:17c4:b0:2ef:2f49:7d7f with SMTP id
- 98e67ed59e1d1-2fcb5a39f93mr6272302a91.18.1739972947332; Wed, 19 Feb 2025
- 05:49:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="nEzbjkMW"
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 30C9B403E4
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1739972946;
+	bh=vZ2L/MpVD9pi+KEJm9yQ5LlxRKJxVGZ45ty3yuLt/90=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=nEzbjkMWCJnyEWQBKILuTnDW97lTVU/aBTXW2aqzx3rC5S734Yb6BkrGSCEQuuZ+X
+	 zcvHcndsb92buXpnQB7mKmbKhO7MMKe4YKoj6vSpuDuVCenqqJjW5/Hszp0KpG3My6
+	 yG0encPaaPDwQXpT4rtKh2/pvuV3+KyWhjSoULAkdXr3FdEoPIzZchwmPz7GfcJBvD
+	 YUMf27tiqfqpYwvL5j+e8Vb14ZwoUst7apMN01wa4vgW3HnIrhUHK1g5iMOtQoTq3v
+	 2iCjpoTSHi0ATFRyvLkpEJJoTBH1DsDUUhioxb6dfbRfpLvJtKVQgGPXYDfaT0FjqF
+	 UbylJ7ch0ayQw==
+Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3f402d2e007so2393666b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:49:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739972945; x=1740577745;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vZ2L/MpVD9pi+KEJm9yQ5LlxRKJxVGZ45ty3yuLt/90=;
+        b=PODuwzuK4+8sK7Djv4OM7ii+PrbeNsr3M2fGcPYxrUKa9qiVpa9shXyOEDQak1mMPe
+         ovHUBUPYlyHvCXo0SpMZJXzcuM7vnSAysIArKqyxj+6j1ISPtiVvgiKgrZT/TiPMyaSm
+         nzJZ9rg693G+vxEeqrZPnbXciyvny/Ab1eJOUu9k8gMfqUTVUsW5Zlbs6UQCgFRA9gbT
+         6txLSOPqhWoGZcl7h2gwohvClurAaZDWoW37K4ZZAm3brc8FjpVZFE9c4YU0Pqhzvw/Y
+         scHGMXVtDpq6vRAsBXFt/KEu1C0ngxFQmI2RMSoy+ub7EtjUpwOtZnnoHpSdAmt09PTB
+         xRFA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0KCtOzd+zdBEKoReFXux7a7z9E9gV/lqCGD3V7pj0ZvIqIpgrPfTQsJhHYvjD4qfyIDWl7T3mlPn8yoM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE1H71dZAMhPEQDYcBKtiknGJBlxy9jlRTBi4MHPLcDxDkrhwT
+	9lmCDXj9UEos1fAkwT9qwN09Q080nMBXQi2lwntqiogVsdL4RjaXJ65kS2ejnViGyLsAdg4WwuF
+	RFW5bk/cNz95M3kWEti0IeCdcm9yV3dFvRIywAiUoyhwRoeW6Vgtv/J9emBw0UUs62Ugptl7QxT
+	dk4mrFsuWhVPxIYZp17S9Gc5lH33WpCeBmBQ2KNEmUQTD8fMvUWy6p
+X-Gm-Gg: ASbGncvnoj+vuuvjOdXw+nCSLWtyksEriWYoqL8+xHV1OhYJANPJH09EcR1SrqVX1k6
+	QpM7Wclyxd3/IsWzf8Kd8oyMLhMa6VTjzHhJ7y00kld3+LUrC544BM/quAUVUjKzL2lqpyFJVqc
+	S953lvMtSXSedJVWM=
+X-Received: by 2002:a54:470b:0:b0:3f3:fd67:2608 with SMTP id 5614622812f47-3f3fd672befmr5957015b6e.29.1739972945145;
+        Wed, 19 Feb 2025 05:49:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGemB5vEg69QJBbksFxTXFeiKLyjYXC6wA0L7MlZFlY9odqxeB6ktR9vGlUGBZLGLU/XQ5O+HGNQ5YSDDhmNxY=
+X-Received: by 2002:a54:470b:0:b0:3f3:fd67:2608 with SMTP id
+ 5614622812f47-3f3fd672befmr5956995b6e.29.1739972944890; Wed, 19 Feb 2025
+ 05:49:04 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 19 Feb 2025 05:49:04 -0800
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 19 Feb 2025 05:49:04 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20250102183746.411526-2-e@freeshell.de>
+References: <20250102183746.411526-1-e@freeshell.de> <20250102183746.411526-2-e@freeshell.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241218105320.38980-1-angelogioacchino.delregno@collabora.com> <20241218105320.38980-2-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20241218105320.38980-2-angelogioacchino.delregno@collabora.com>
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date: Wed, 19 Feb 2025 21:49:51 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9J4TE=qo+00N7T6-daMET+eTt8psp+eV1DXdgrz+avEQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkyNYkPz9DDQbj1WmcsisPQynG6ha2xkIpk0KuCjDPQnw0UB2_LYJk3Qtw
-Message-ID: <CAAOTY_9J4TE=qo+00N7T6-daMET+eTt8psp+eV1DXdgrz+avEQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: display: mediatek: Add compatibles
- for MT8188 MDP3
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
-	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mchehab@kernel.org, matthias.bgg@gmail.com, moudy.ho@mediatek.com, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@collabora.com, sebastian.fricke@collabora.com, 
-	macpaul.lin@mediatek.com
+Mime-Version: 1.0
+Date: Wed, 19 Feb 2025 05:49:04 -0800
+X-Gm-Features: AWEUYZkTX4lQFT8guSxek473k_5pfX61Dv6EsoPJnhEMc3gblikrRm7DyM9abC4
+Message-ID: <CAJM55Z-g4nQXcHe94KUj78W5N1PfSbRo03uPs31_8gH41z4aww@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] riscv: dts: starfive: jh7110: pciephy0 USB 3.0
+ configuration registers
+To: E Shattow <e@freeshell.de>, Conor Dooley <conor@kernel.org>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
-=BC
-2024=E5=B9=B412=E6=9C=8818=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:=
-53=E5=AF=AB=E9=81=93=EF=BC=9A
+E Shattow wrote:
+> StarFive JH7110 contains a Cadence USB2.0+USB3.0 controller IP block that
+> may exclusively use pciephy0 for USB3.0 connectivity. Add the register
+> offsets for the driver to enable/disable USB3.0 on pciephy0.
 >
-> Add compatible strings for the AAL, COLOR, MERGE and PADDING
-> hardware components found in MediaTek's MT8188 SoC.
->
-> This hardware is compatible with MT8195.
+> Signed-off-by: E Shattow <e@freeshell.de>
 
-Acked-by: Chun-Kuang Hu <chunkuang.hu@mediatek.com>
+Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
+Thanks!
+
 > ---
->  .../bindings/display/mediatek/mediatek,aal.yaml        |  4 ++++
->  .../bindings/display/mediatek/mediatek,color.yaml      |  4 ++++
->  .../bindings/display/mediatek/mediatek,merge.yaml      |  4 ++++
->  .../bindings/display/mediatek/mediatek,padding.yaml    | 10 +++++++---
->  4 files changed, 19 insertions(+), 3 deletions(-)
+>  arch/riscv/boot/dts/starfive/jh7110.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-aal.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.=
-yaml
-> index cf24434854ff..1479035da409 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yam=
-l
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yam=
-l
-> @@ -25,6 +25,10 @@ properties:
->            - mediatek,mt8173-disp-aal
->            - mediatek,mt8183-disp-aal
->            - mediatek,mt8195-mdp3-aal
-> +      - items:
-> +          - enum:
-> +              - mediatek,mt8188-mdp3-aal
-> +          - const: mediatek,mt8195-mdp3-aal
->        - items:
->            - enum:
->                - mediatek,mt2712-disp-aal
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-color.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,co=
-lor.yaml
-> index 7df786bbad20..799c0b8fc1f9 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,color.y=
-aml
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,color.y=
-aml
-> @@ -27,6 +27,10 @@ properties:
->            - mediatek,mt8167-disp-color
->            - mediatek,mt8173-disp-color
->            - mediatek,mt8195-mdp3-color
-> +      - items:
-> +          - enum:
-> +              - mediatek,mt8188-mdp3-color
-> +          - const: mediatek,mt8195-mdp3-color
->        - items:
->            - enum:
->                - mediatek,mt7623-disp-color
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-merge.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,me=
-rge.yaml
-> index dae839279950..415a25bc18fa 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.y=
-aml
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.y=
-aml
-> @@ -25,6 +25,10 @@ properties:
->            - mediatek,mt8173-disp-merge
->            - mediatek,mt8195-disp-merge
->            - mediatek,mt8195-mdp3-merge
-> +      - items:
-> +          - enum:
-> +              - mediatek,mt8188-mdp3-merge
-> +          - const: mediatek,mt8195-mdp3-merge
->        - items:
->            - const: mediatek,mt6795-disp-merge
->            - const: mediatek,mt8173-disp-merge
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-padding.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-padding.yaml
-> index be07bbdc54e3..86787866ced0 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,padding=
-.yaml
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,padding=
-.yaml
-> @@ -20,9 +20,13 @@ description:
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> index 0d8339357bad..75ff07303e8b 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> @@ -611,6 +611,8 @@ usbphy0: phy@10200000 {
+>  		pciephy0: phy@10210000 {
+>  			compatible = "starfive,jh7110-pcie-phy";
+>  			reg = <0x0 0x10210000 0x0 0x10000>;
+> +			starfive,sys-syscon = <&sys_syscon 0x18>;
+> +			starfive,stg-syscon = <&stg_syscon 0x148 0x1f4>;
+>  			#phy-cells = <0>;
+>  		};
 >
->  properties:
->    compatible:
-> -    enum:
-> -      - mediatek,mt8188-disp-padding
-> -      - mediatek,mt8195-mdp3-padding
-> +    oneOf:
-> +      - enum:
-> +          - mediatek,mt8188-disp-padding
-> +          - mediatek,mt8195-mdp3-padding
-> +      - items:
-> +          - const: mediatek,mt8188-mdp3-padding
-> +          - const: mediatek,mt8195-mdp3-padding
->
->    reg:
->      maxItems: 1
 > --
-> 2.46.1
+> 2.45.2
 >
