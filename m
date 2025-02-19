@@ -1,40 +1,40 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FF51FE45B
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7B81FDA7C
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739983012; cv=none; b=cCIRkiUkS3YhHF2DAzsUCUv+I81n44Be268DpC6hwqmh3jrnqFkREmxg1PfYQWSrF+dJYR0O5utOy71TMpZubnYo5aXXZakkoef+xQPmQQDaZM/HJmpY80qLqjYGA9dfw1Xs2qry5D6qMtYbmrt8Pyi2IxU+buDbzpC4CZSTcCo=
+	t=1739983012; cv=none; b=dWrabR+dq/ICQj/34ZMJapsJKDfB5TAXKLUuIgcNy1qg/v5y48QYQcnY9K0lvveS8x8CbYJVsjVU+aQZVGNbjZm/oQ1ON9Y9r0kZF2573dzoo2ZB3/MyfaY4ex/Hytr+nWDvhPVC11mPKmWTKngQCojFXOV7soZt3L7hssIecW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739983012; c=relaxed/simple;
-	bh=TM+i+OGrZK8ytIpm5H0KdmzYz4hrrB25z0z6K2huRys=;
+	bh=WWLgwcr1iviX+ssT6byJTCw29PdFNdzy9d/eq3z4WFM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uzauDdl3yUU/haItdb2yOM4Pii6S5JXD5JZSXVfzpYPJnVKGsEYgD33OYusosxCOOD/nZLTNEhT5FdfaVbXFNueVZ/voy6gy3J/EgxlRgZnV27KCyyDWYMyaZiu/txXjwljJk9OP/+hGdpkNu0zFoP8aI0KW2aW1ublu+31J18o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M/EwmvmN; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=Onzz1e4IuhVXO9iHvL9RlggwmiHPVNsC4qgpY0GGjD3Imvwv/Hfjp7RyhpMc55aBJu571jnlcluBbU4e7WNhGrdf9BSD4Lvr0JTaY6jBOrwUHjvBQfVg/SPoc/8OMi2UTuRUQOWQM2b/OeYihMQHRFTR4nT6iW0STU2daLNCCu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Fb9CpNa5; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M/EwmvmN"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fb9CpNa5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=XiaeP0zY0E9OZG92iLfjRSZjSKwJIsUYCSKEWwoZUPM=; b=M/EwmvmNW8f6hgqPsH0JR69QWN
-	rF1k4jEdB7NsrI3CtMeBVvrVo/Ci3aWhcgT4r9ur0P5EvXR/L4ScREo1AN2lPUH6PkVKiDLcrunud
-	1N6avw0GjPLiByBdCzZhyd8CPKcAsFiht1cLCWYG4w60EKRMaa2rGPUCPqUQky/S9ukFc2fnBuYmP
-	KJJf9lz7/rUsAX0YV9eN5guYnYsH8Kb4FfJ9aHzz/pn2dyXtmxbw0P9Qmzzd4ufMBVdB57AVsVl5T
-	6qWp2XJ/yUKE8ICb1cV/bCuerOyjiqokJXjPT3pKi/Y/FaMoK7QlOxR5DXjDJnGunYLGCxZuMmSWQ
-	XJuIFOeg==;
+	bh=dVIbxD0kjnfglDLzgJxL3mSgF+P17AVA1k/bY9HdUKQ=; b=Fb9CpNa5hjmq0zZNdyYUaIB+qb
+	xgLT8VEnHWUzdQGys6VhEq1NBTm6nFLUejw7bT49kXjaOzSw6ZzU1xUayEajYaDJMPUfutv4cL/kN
+	TI73ZmzqgmwMukfrzVHxkWk+hPjYk1CCdZLe/jE8ENMnTCDkdGFqfg9CqFmW2L4aLp2OH21invlEN
+	DCzC1m78LdSNGVnlSKuRn6WmHagvepAJIJ13K0OSZle/sLJcFaRLL/0WvuVVkmWtIMry+0/aBQcJ3
+	7Eas133TQo6i6XSxpnGzINxoqJNp0aQ+DVp5c/hFlajjYij1ZLhuC6tTtcGu1j1HjfqO8QWyClikO
+	mumGcWLw==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkn40-00000006Whj-2QYr;
-	Wed, 19 Feb 2025 16:36:44 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tkn41-00000002HAV-04Vt;
+	Wed, 19 Feb 2025 16:36:45 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 06372300B40; Wed, 19 Feb 2025 17:36:43 +0100 (CET)
-Message-ID: <20250219163514.791951626@infradead.org>
+	id 15D523078A4; Wed, 19 Feb 2025 17:36:43 +0100 (CET)
+Message-ID: <20250219163515.259229338@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 19 Feb 2025 17:21:12 +0100
+Date: Wed, 19 Feb 2025 17:21:16 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -54,7 +54,7 @@ Cc: linux-kernel@vger.kernel.org,
  alexei.starovoitov@gmail.com,
  mhiramat@kernel.org,
  jmill@asu.edu
-Subject: [PATCH v3 05/10] x86/ibt: Optimize FineIBT sequence
+Subject: [PATCH v3 09/10] x86/ibt: Implement FineIBT-BHI mitigation
 References: <20250219162107.880673196@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,141 +64,398 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Scott notes that non-taken branches are faster. Abuse overlapping code
-that traps instead of explicit UD2 instructions.
+While WAIT_FOR_ENDBR is specified to be a full speculation stop; it
+has been shown that some implementations are 'leaky' to such an extend
+that speculation can escape even the FineIBT preamble.
 
-And LEA does not modify flags and will have less dependencies.
+To deal with this, add additional hardening to the FineIBT preamble.
+
+Notably, using a new LLVM feature:
+
+  https://github.com/llvm/llvm-project/commit/e223485c9b38a5579991b8cebb6a200153eee245
+
+which encodes the number of arguments in the kCFI preamble's register.
+
+Using this register<->arity mapping, have the FineIBT preamble CALL
+into a stub clobbering the relevant argument registers in the
+speculative case.
+
+(This is where Scott goes and gives more details...)
 
 Suggested-by: Scott Constable <scott.d.constable@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/kernel/alternative.c |   58 ++++++++++++++++++++++++++----------------
- arch/x86/net/bpf_jit_comp.c   |    5 +--
- 2 files changed, 39 insertions(+), 24 deletions(-)
+ Makefile                      |    3 +
+ arch/x86/Kconfig              |    8 +++
+ arch/x86/include/asm/cfi.h    |    6 ++
+ arch/x86/kernel/alternative.c |  101 +++++++++++++++++++++++++++++++++++++-----
+ arch/x86/net/bpf_jit_comp.c   |   29 ++++++++----
+ 5 files changed, 128 insertions(+), 19 deletions(-)
 
+--- a/Makefile
++++ b/Makefile
+@@ -1014,6 +1014,9 @@ CC_FLAGS_CFI	:= -fsanitize=kcfi
+ ifdef CONFIG_CFI_ICALL_NORMALIZE_INTEGERS
+ 	CC_FLAGS_CFI	+= -fsanitize-cfi-icall-experimental-normalize-integers
+ endif
++ifdef CONFIG_FINEIBT_BHI
++	CC_FLAGS_CFI	+= -fsanitize-kcfi-arity
++endif
+ ifdef CONFIG_RUST
+ 	# Always pass -Zsanitizer-cfi-normalize-integers as CONFIG_RUST selects
+ 	# CONFIG_CFI_ICALL_NORMALIZE_INTEGERS.
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2473,6 +2473,10 @@ config CC_HAS_RETURN_THUNK
+ config CC_HAS_ENTRY_PADDING
+ 	def_bool $(cc-option,-fpatchable-function-entry=16,16)
+ 
++config CC_HAS_KCFI_ARITY
++	def_bool $(cc-option,-fsanitize=kcfi -fsanitize-kcfi-arity)
++	depends on CC_IS_CLANG && !RUST
++
+ config FUNCTION_PADDING_CFI
+ 	int
+ 	default 59 if FUNCTION_ALIGNMENT_64B
+@@ -2498,6 +2502,10 @@ config FINEIBT
+ 	depends on X86_KERNEL_IBT && CFI_CLANG && MITIGATION_RETPOLINE
+ 	select CALL_PADDING
+ 
++config FINEIBT_BHI
++	def_bool y
++	depends on FINEIBT && CC_HAS_KCFI_ARITY
++
+ config HAVE_CALL_THUNKS
+ 	def_bool y
+ 	depends on CC_HAS_ENTRY_PADDING && MITIGATION_RETHUNK && OBJTOOL
+--- a/arch/x86/include/asm/cfi.h
++++ b/arch/x86/include/asm/cfi.h
+@@ -101,6 +101,7 @@ enum cfi_mode {
+ 
+ extern enum cfi_mode cfi_mode;
+ extern bool cfi_warn;
++extern bool cfi_bhi;
+ 
+ typedef u8 bhi_thunk[32];
+ extern bhi_thunk __bhi_args[];
+@@ -130,6 +131,7 @@ static inline int cfi_get_offset(void)
+ #define cfi_get_offset cfi_get_offset
+ 
+ extern u32 cfi_get_func_hash(void *func);
++extern int cfi_get_func_arity(void *func);
+ 
+ #ifdef CONFIG_FINEIBT
+ extern bool decode_fineibt_insn(int ud_type, struct pt_regs *regs, unsigned long *target, u32 *type);
+@@ -153,6 +155,10 @@ static inline u32 cfi_get_func_hash(void
+ {
+ 	return 0;
+ }
++static inline int cfi_get_func_arity(void *func)
++{
++	return 0;
++}
+ #endif /* CONFIG_CFI_CLANG */
+ 
+ #if HAS_KERNEL_IBT == 1
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -1054,9 +1054,9 @@ early_param("cfi", cfi_parse_cmdline);
-  * __cfi_\func:					__cfi_\func:
-  *	movl   $0x12345678,%eax		// 5	     endbr64			// 4
-  *	nop					     subl   $0x12345678,%r10d   // 7
-- *	nop					     jz     1f			// 2
-- *	nop					     ud2			// 2
-- *	nop					1:   nop			// 1
-+ *	nop					     jne    __cfi_\func+6	// 2
-+ *	nop					     nop3			// 3
-+ *	nop
-  *	nop
-  *	nop
-  *	nop
-@@ -1068,37 +1068,47 @@ early_param("cfi", cfi_parse_cmdline);
-  *
-  * caller:					caller:
-  *	movl	$(-0x12345678),%r10d	 // 6	     movl   $0x12345678,%r10d	// 6
-- *	addl	$-15(%r11),%r10d	 // 4	     sub    $16,%r11		// 4
-+ *	addl	$-15(%r11),%r10d	 // 4	     lea    -0x10(%r11),%r11	// 4
-  *	je	1f			 // 2	     nop4			// 4
-  *	ud2				 // 2
-- * 1:	call	__x86_indirect_thunk_r11 // 5	     call   *%r11; nop2;	// 5
-+ * 1:	cs call	__x86_indirect_thunk_r11 // 6	     call   *%r11; nop3;	// 6
-  *
-  */
+@@ -933,6 +933,7 @@ void __init_or_module apply_seal_endbr(s
  
--asm(	".pushsection .rodata			\n"
--	"fineibt_preamble_start:		\n"
--	"	endbr64				\n"
--	"	subl	$0x12345678, %r10d	\n"
--	"	je	fineibt_preamble_end	\n"
--	"fineibt_preamble_ud2:			\n"
--	"	ud2				\n"
--	"	nop				\n"
--	"fineibt_preamble_end:			\n"
-+/*
-+ * <fineibt_preamble_start>:
-+ *  0:   f3 0f 1e fa             endbr64
-+ *  4:   41 81 <ea> 78 56 34 12  sub    $0x12345678, %r10d
-+ *  b:   75 f9                   jne    6 <fineibt_preamble_start+0x6>
-+ *  d:   0f 1f 00                nopl   (%rax)
-+ */
-+asm(	".pushsection .rodata				\n"
-+	"fineibt_preamble_start:			\n"
-+	"	endbr64					\n"
-+	"	subl	$0x12345678, %r10d		\n"
-+	"	jne	fineibt_preamble_start+6	\n"
-+	ASM_NOP3
-+	"fineibt_preamble_end:				\n"
- 	".popsection\n"
+ enum cfi_mode cfi_mode __ro_after_init = __CFI_DEFAULT;
+ bool cfi_warn __ro_after_init = false;
++bool cfi_bhi __ro_after_init = false;
+ 
+ #ifdef CONFIG_CFI_CLANG
+ struct bpf_insn;
+@@ -993,6 +994,21 @@ u32 cfi_get_func_hash(void *func)
+ 
+ 	return hash;
+ }
++
++int cfi_get_func_arity(void *func)
++{
++	bhi_thunk *target;
++	s32 disp;
++
++	if (cfi_mode != CFI_FINEIBT && !cfi_bhi)
++		return 0;
++
++	if (get_kernel_nofault(disp, func - 4))
++		return 0;
++
++	target = func + disp;
++	return target - __bhi_args;
++}
+ #endif
+ 
+ #ifdef CONFIG_FINEIBT
+@@ -1050,6 +1066,12 @@ static __init int cfi_parse_cmdline(char
+ 			} else {
+ 				pr_err("Ignoring paranoid; depends on fineibt.\n");
+ 			}
++		} else if (!strcmp(str, "bhi")) {
++			if (cfi_mode == CFI_FINEIBT) {
++				cfi_bhi = true;
++			} else {
++				pr_err("Ignoring bhi; depends on fineibt.\n");
++			}
+ 		} else {
+ 			pr_err("Ignoring unknown cfi option (%s).", str);
+ 		}
+@@ -1099,6 +1121,7 @@ asm(	".pushsection .rodata				\n"
+ 	"fineibt_preamble_start:			\n"
+ 	"	endbr64					\n"
+ 	"	subl	$0x12345678, %r10d		\n"
++	"fineibt_preamble_bhi:				\n"
+ 	"	jne	fineibt_preamble_start+6	\n"
+ 	ASM_NOP3
+ 	"fineibt_preamble_end:				\n"
+@@ -1106,9 +1129,11 @@ asm(	".pushsection .rodata				\n"
  );
  
  extern u8 fineibt_preamble_start[];
--extern u8 fineibt_preamble_ud2[];
++extern u8 fineibt_preamble_bhi[];
  extern u8 fineibt_preamble_end[];
  
  #define fineibt_preamble_size (fineibt_preamble_end - fineibt_preamble_start)
--#define fineibt_preamble_ud2  (fineibt_preamble_ud2 - fineibt_preamble_start)
-+#define fineibt_preamble_ud   6
++#define fineibt_preamble_bhi  (fineibt_preamble_bhi - fineibt_preamble_start)
+ #define fineibt_preamble_ud   6
  #define fineibt_preamble_hash 7
  
-+/*
-+ * <fineibt_caller_start>:
-+ *  0:   41 ba 78 56 34 12       mov    $0x12345678, %r10d
-+ *  6:   4d 8d 5b f0             lea    -0x10(%r11), %r11
-+ *  a:   0f 1f 40 00             nopl   0x0(%rax)
-+ */
- asm(	".pushsection .rodata			\n"
- 	"fineibt_caller_start:			\n"
- 	"	movl	$0x12345678, %r10d	\n"
--	"	sub	$16, %r11		\n"
-+	"	lea	-0x10(%r11), %r11	\n"
- 	ASM_NOP4
- 	"fineibt_caller_end:			\n"
- 	".popsection				\n"
-@@ -1429,15 +1439,15 @@ static void poison_cfi(void *addr)
+@@ -1181,13 +1206,16 @@ extern u8 fineibt_paranoid_end[];
+ #define fineibt_paranoid_ind  (fineibt_paranoid_ind - fineibt_paranoid_start)
+ #define fineibt_paranoid_ud   0xd
+ 
+-static u32 decode_preamble_hash(void *addr)
++static u32 decode_preamble_hash(void *addr, int *reg)
+ {
+ 	u8 *p = addr;
+ 
+-	/* b8 78 56 34 12          mov    $0x12345678,%eax */
+-	if (p[0] == 0xb8)
++	/* b8+reg 78 56 34 12          movl    $0x12345678,\reg */
++	if (p[0] >= 0xb8 && p[0] < 0xc0) {
++		if (reg)
++			*reg = p[0] - 0xb8;
+ 		return *(u32 *)(addr + 1);
++	}
+ 
+ 	return 0; /* invalid hash value */
+ }
+@@ -1196,11 +1224,11 @@ static u32 decode_caller_hash(void *addr
+ {
+ 	u8 *p = addr;
+ 
+-	/* 41 ba 78 56 34 12       mov    $0x12345678,%r10d */
++	/* 41 ba 88 a9 cb ed       mov    $(-0x12345678),%r10d */
+ 	if (p[0] == 0x41 && p[1] == 0xba)
+ 		return -*(u32 *)(addr + 2);
+ 
+-	/* e8 0c 78 56 34 12	   jmp.d8  +12 */
++	/* e8 0c 88 a9 cb ed	   jmp.d8  +12 */
+ 	if (p[0] == JMP8_INSN_OPCODE && p[1] == fineibt_caller_jmp)
+ 		return -*(u32 *)(addr + 2);
+ 
+@@ -1265,7 +1293,7 @@ static int cfi_rand_preamble(s32 *start,
+ 		void *addr = (void *)s + *s;
+ 		u32 hash;
+ 
+-		hash = decode_preamble_hash(addr);
++		hash = decode_preamble_hash(addr, NULL);
+ 		if (WARN(!hash, "no CFI hash found at: %pS %px %*ph\n",
+ 			 addr, addr, 5, addr))
+ 			return -EINVAL;
+@@ -1283,6 +1311,7 @@ static int cfi_rewrite_preamble(s32 *sta
+ 
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
++		int arity;
+ 		u32 hash;
+ 
+ 		/*
+@@ -1293,7 +1322,7 @@ static int cfi_rewrite_preamble(s32 *sta
+ 		if (!is_endbr(addr + 16))
+ 			continue;
+ 
+-		hash = decode_preamble_hash(addr);
++		hash = decode_preamble_hash(addr, &arity);
+ 		if (WARN(!hash, "no CFI hash found at: %pS %px %*ph\n",
+ 			 addr, addr, 5, addr))
+ 			return -EINVAL;
+@@ -1301,6 +1330,19 @@ static int cfi_rewrite_preamble(s32 *sta
+ 		text_poke_early(addr, fineibt_preamble_start, fineibt_preamble_size);
+ 		WARN_ON(*(u32 *)(addr + fineibt_preamble_hash) != 0x12345678);
+ 		text_poke_early(addr + fineibt_preamble_hash, &hash, 4);
++
++		WARN_ONCE(!IS_ENABLED(CONFIG_FINEIBT_BHI) && arity,
++			  "kCFI preamble has wrong register at: %pS %*ph\n",
++			  addr, 5, addr);
++
++		if (!cfi_bhi || !arity)
++			continue;
++
++		text_poke_early(addr + fineibt_preamble_bhi,
++				text_gen_insn(CALL_INSN_OPCODE,
++					      addr + fineibt_preamble_bhi,
++					      __bhi_args[arity]),
++				CALL_INSN_SIZE);
+ 	}
+ 
+ 	return 0;
+@@ -1468,8 +1510,9 @@ static void __apply_fineibt(s32 *start_r
+ 		cfi_rewrite_endbr(start_cfi, end_cfi);
+ 
+ 		if (builtin) {
+-			pr_info("Using %sFineIBT CFI\n",
+-				cfi_paranoid ? "paranoid " : "");
++			pr_info("Using %sFineIBT%s CFI\n",
++				cfi_paranoid ? "paranoid " : "",
++				cfi_bhi ? "+BHI" : "");
+ 		}
+ 		return;
+ 
+@@ -1520,7 +1563,7 @@ static void poison_cfi(void *addr)
+ 		/*
+ 		 * kCFI prefix should start with a valid hash.
+ 		 */
+-		if (!decode_preamble_hash(addr))
++		if (!decode_preamble_hash(addr, NULL))
+ 			break;
+ 
+ 		/*
+@@ -1570,6 +1613,41 @@ static bool decode_fineibt_preamble(int
  }
  
  /*
-- * regs->ip points to a UD2 instruction, return true and fill out target and
-- * type when this UD2 is from a FineIBT preamble.
-+ * When regs->ip points to a 0xEA byte in the FineIBT preamble,
-+ * return true and fill out target and type.
-  *
-  * We check the preamble by checking for the ENDBR instruction relative to the
-- * UD2 instruction.
-+ * 0xEA instruction.
-  */
- bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
- {
--	unsigned long addr = regs->ip - fineibt_preamble_ud2;
-+	unsigned long addr = regs->ip - fineibt_preamble_ud;
- 	u32 hash;
- 
- 	if (!exact_endbr((void *)addr))
-@@ -1448,6 +1458,12 @@ bool decode_fineibt_insn(struct pt_regs
- 	__get_kernel_nofault(&hash, addr + fineibt_preamble_hash, u32, Efault);
- 	*type = (u32)regs->r10 + hash;
- 
-+	/*
-+	 * Since regs->ip points to the middle of an instruction; it cannot
-+	 * continue with the normal fixup.
-+	 */
-+	regs->ip = *target;
++ * regs->ip points to one of the UD2 in __bhi_args[].
++ */
++static bool decode_fineibt_bhi(int ud_type, struct pt_regs *regs,
++			       unsigned long *target, u32 *type)
++{
++	unsigned long addr;
++	u32 hash;
 +
- 	return true;
++	/*
++	 * Fetch the return address from the stack, this points to the
++	 * FineIBT preamble. Since the CALL instruction is in the 5 last
++	 * bytes of the preamble, the return address is in fact the target
++	 * address.
++	 */
++	__get_kernel_nofault(&addr, regs->sp, unsigned long, Efault);
++	*target = addr;
++
++	addr -= fineibt_preamble_size;
++	if (!exact_endbr((void *)addr))
++		return false;
++
++	__get_kernel_nofault(&hash, addr + fineibt_preamble_hash, u32, Efault);
++	*type = (u32)regs->r10 + hash;
++
++	/*
++	 * The UD2 sites are constructed with a RET immediately following,
++	 * as such the non-fatal case can use the regular fixup.
++	 */
++	return true;
++
++Efault:
++	return false;
++}
++
++/*
+  * regs->ip points to a LOCK Jcc.d8 instruction from the fineibt_paranoid_start[]
+  * sequence.
+  */
+@@ -1598,6 +1676,9 @@ bool decode_fineibt_insn(int ud_type, st
+ {
+ 	if (ud_type == BUG_LOCK)
+ 		return decode_fineibt_paranoid(ud_type, regs, target, type);
++	if (regs->ip > (unsigned long)__bhi_args &&
++	    regs->ip < (unsigned long)__bhi_args_end)
++		return decode_fineibt_bhi(ud_type, regs, target, type);
+ 	return decode_fineibt_preamble(ud_type, regs, target, type);
+ }
  
- Efault:
 --- a/arch/x86/net/bpf_jit_comp.c
 +++ b/arch/x86/net/bpf_jit_comp.c
-@@ -417,9 +417,8 @@ static void emit_fineibt(u8 **pprog, u32
+@@ -410,15 +410,20 @@ static void emit_nops(u8 **pprog, int le
+  * Emit the various CFI preambles, see asm/cfi.h and the comments about FineIBT
+  * in arch/x86/kernel/alternative.c
+  */
++static int emit_call(u8 **prog, void *func, void *ip);
+ 
+-static void emit_fineibt(u8 **pprog, u32 hash)
++static void emit_fineibt(u8 **pprog, u8 *ip, u32 hash, int arity)
+ {
+ 	u8 *prog = *pprog;
  
  	EMIT_ENDBR();
  	EMIT3_off32(0x41, 0x81, 0xea, hash);		/* subl $hash, %r10d	*/
--	EMIT2(0x74, 0x07);				/* jz.d8 +7		*/
--	EMIT2(0x0f, 0x0b);				/* ud2			*/
--	EMIT1(0x90);					/* nop			*/
-+	EMIT2(0x75, 0xf9);				/* jne.d8 .-7		*/
-+	EMIT3(0x0f, 0x1f, 0x00);			/* nop3			*/
+-	EMIT2(0x75, 0xf9);				/* jne.d8 .-7		*/
+-	EMIT3(0x0f, 0x1f, 0x00);			/* nop3			*/
++	if (cfi_bhi) {
++		emit_call(&prog, __bhi_args[arity], ip + 11);
++	} else {
++		EMIT2(0x75, 0xf9);			/* jne.d8 .-7		*/
++		EMIT3(0x0f, 0x1f, 0x00);		/* nop3			*/
++	}
  	EMIT_ENDBR_POISON();
  
  	*pprog = prog;
+@@ -447,13 +452,13 @@ static void emit_kcfi(u8 **pprog, u32 ha
+ 	*pprog = prog;
+ }
+ 
+-static void emit_cfi(u8 **pprog, u32 hash)
++static void emit_cfi(u8 **pprog, u8 *ip, u32 hash, int arity)
+ {
+ 	u8 *prog = *pprog;
+ 
+ 	switch (cfi_mode) {
+ 	case CFI_FINEIBT:
+-		emit_fineibt(&prog, hash);
++		emit_fineibt(&prog, ip, hash, arity);
+ 		break;
+ 
+ 	case CFI_KCFI:
+@@ -504,13 +509,17 @@ static void emit_prologue_tail_call(u8 *
+  * bpf_tail_call helper will skip the first X86_TAIL_CALL_OFFSET bytes
+  * while jumping to another program
+  */
+-static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf,
++static void emit_prologue(u8 **pprog, u8 *ip, u32 stack_depth, bool ebpf_from_cbpf,
+ 			  bool tail_call_reachable, bool is_subprog,
+ 			  bool is_exception_cb)
+ {
+ 	u8 *prog = *pprog;
+ 
+-	emit_cfi(&prog, is_subprog ? cfi_bpf_subprog_hash : cfi_bpf_hash);
++	if (is_subprog) {
++		emit_cfi(&prog, ip, cfi_bpf_subprog_hash, 5);
++	} else {
++		emit_cfi(&prog, ip, cfi_bpf_hash, 1);
++	}
+ 	/* BPF trampoline can be made to work without these nops,
+ 	 * but let's waste 5 bytes for now and optimize later
+ 	 */
+@@ -1479,7 +1488,7 @@ static int do_jit(struct bpf_prog *bpf_p
+ 
+ 	detect_reg_usage(insn, insn_cnt, callee_regs_used);
+ 
+-	emit_prologue(&prog, stack_depth,
++	emit_prologue(&prog, image, stack_depth,
+ 		      bpf_prog_was_classic(bpf_prog), tail_call_reachable,
+ 		      bpf_is_subprog(bpf_prog), bpf_prog->aux->exception_cb);
+ 	/* Exception callback will clobber callee regs for its own use, and
+@@ -3046,7 +3055,9 @@ static int __arch_prepare_bpf_trampoline
+ 		/*
+ 		 * Indirect call for bpf_struct_ops
+ 		 */
+-		emit_cfi(&prog, cfi_get_func_hash(func_addr));
++		emit_cfi(&prog, image,
++			 cfi_get_func_hash(func_addr),
++			 cfi_get_func_arity(func_addr));
+ 	} else {
+ 		/*
+ 		 * Direct-call fentry stub, as such it needs accounting for the
 
 
