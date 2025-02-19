@@ -1,260 +1,124 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C7B4C6D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 06:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B62216D9AF;
+	Wed, 19 Feb 2025 06:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739945793; cv=none; b=VzR1GE/zQ/Er+cg2C46Iz5vUmdFrGJgHc0FJJBto8PcwCV2a/NWBgmU0FD3ilGCfRqG5M8JuweGmsrLKbhi/wtpISYGpgd3D5XsbTfFzipoFX+GNCGDFuLnnlyVYi85rUtY99aHf/XpwPz99A2RV4lAl7uXpuxE7T09MWwj248I=
+	t=1739945825; cv=none; b=NeKvCI6kFz0ZmWyxk38XQCH/qaKh3YlXcQnuExVGEcwn8Ma5T9bd/kSQTCB6nOR7/PfV0B2cMcqtIukqBTXL9v/adJEH7D0b/WrwJVnSdUVfJK6JkVbMjgwXvhnBl2R3zg+zr9FAnRInArcTeVp48vYYW/7g6OBhYqYS5C+zJH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739945793; c=relaxed/simple;
-	bh=RgYSUqPJkdoPQVBKv8aa8ZC8sQGAxp6ko1hDJrqt28Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gIvRtN+BHKLTjmX0oAjKiNCuM+5BCrue9Nw0qmjTiT7tXX3pFLYAC2mjvyDQMusVfFpKfwbahAF+c4UEAdk71iyzpOGdgQT+0OMBOBWkL+3rpg31vVtm7KTw6RjPlrAFNeunwGEr5zh8hiU0B+fwZ1BIDO1ZblpMhLuhLDatToU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YyQzM71BBz2JYb4;
-	Wed, 19 Feb 2025 14:12:31 +0800 (CST)
-Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id 865B8180214;
-	Wed, 19 Feb 2025 14:16:26 +0800 (CST)
-Received: from huawei.com (10.175.124.71) by kwepemg100017.china.huawei.com
- (7.202.181.58) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 19 Feb
- 2025 14:16:25 +0800
-From: Wupeng Ma <mawupeng1@huawei.com>
-To: <akpm@linux-foundation.org>, <david@redhat.com>, <osalvador@suse.de>,
-	<nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <mhocko@suse.com>
-CC: <mawupeng1@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] mm: memory-failure: update ttu flag inside unmap_poisoned_folio
-Date: Wed, 19 Feb 2025 14:06:52 +0800
-Message-ID: <20250219060653.3849083-1-mawupeng1@huawei.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <55e4ad74-752b-65c6-5ceb-b3a7fd7959a1@huawei.com>
-References: <55e4ad74-752b-65c6-5ceb-b3a7fd7959a1@huawei.com>
+	s=arc-20240116; t=1739945825; c=relaxed/simple;
+	bh=Ny6SfcZl8SixuBLPYKC1n/I4Wz9XWrTJ0ezJeX6s8bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mD8lSKd+prue0J0wh4S9ozuY5gEOFH1tvSYe2acE/xJ5cVyrcJfM8ww2JRZzeKFP3TE36CPPc449c/UIcoPlGF4Tjixj5QQhRVK4vlpLZUsxpHMB+kRZEGh73sO48cG9bZtop0N3lAzf9o6A+wOM7ePo2x2esfC210AwfCa2y5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMPJGomw; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMPJGomw"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaec111762bso1462124366b.2;
+        Tue, 18 Feb 2025 22:17:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739945822; x=1740550622; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C0Mh+n11QGKFXLHD1zn/e43NMN7EuN42iHSLYiWebp4=;
+        b=IMPJGomwfQ3JjXTblFetlbK60ysCnvn6a+ZGAIOLOmWQNs9DD4+vlItogxBdLg92Lh
+         VN46JqeWZ4P+F74P6uK9In2XIsPmFZThH2/+azBPITnKpMUbj50uwneez0aVy5/vdr4T
+         dmypVfD9BRWT+gr+3KXNCYpCOjVYOX7E4p5hFI+7Uh+qcAAXF23d1qB374g3IENgxVBh
+         Qg1tUqV0uc7GnBshKkqqnlmOEt0w8YsHjmVE8RwIwrSQzM+qp1Xoc4WsCWI9rZTUW+tY
+         wKGLrxLW3qUX4ECfoLcmtk4hgmKUYynf86M1ySCRsoJ1BhGzVJyqiyFSuCJgsj/vV3/4
+         6wZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739945822; x=1740550622;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C0Mh+n11QGKFXLHD1zn/e43NMN7EuN42iHSLYiWebp4=;
+        b=fKNdflBcGGeE66D5Z9bYxXoWlFm+W+Yj1WwJ/qWoRP4w94bVc56ZV4eLjX9civbR/v
+         j6aBcTgUqFGAtOhK0vFt4KVfUi0qpllv74DvoD0/SxOPZGQ6iSihZuKaw70KkLo0dV+U
+         QlZimwIV5U7u58oUFjOob1R6/CVnRy7oBnBMyNCqH/MZiyk+dPBiJpUNscJqAuf6LCyU
+         RvdYjAF/qAAjj0wc2CqRPksi0wDRA5HF0SPRZ9lNAJkkWMhC4CLLlwlw1oFtKgAso0Yo
+         Wr9OGe13PcPBRQjrfhZmGNRQ/StWVjOulRnPCW+LFZQIseIe/pM4b9QYfsaZ8bW7k5B1
+         gdNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAefZqJVUuXjkqHs5v1UcmWnrJ5D1GDULqfv4OaOGEBUtTebY78KKi9Nj9sbl0SLCVRpHSdpO+vvYwXxg=@vger.kernel.org, AJvYcCWXlsoqiH7KzzOpRNzlnwlTAlwHzcCfoqQnlxcB9xsacPiB5WYnOJXMmkflJTlrcJtEu1kygpu6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEa/ARWgEoD2B/JgzP2d+uYWlVBYbdAGrhWF7xBvDH898PB4VI
+	ceB7CFfsu8XNQ8pz8zjiUDrUPK/48I83EIBcvEBo5LtCrTbt6CKP
+X-Gm-Gg: ASbGnctjTKf/2AoNsHRGDlHG6+lOAUE1+4fhDLQpTIMSx6WUn68u2K041ynwgShrtn5
+	IgZ+zfh5FJlc20piOleJHlI0k0K8GVxtDtv41CpQOki/uvsvxwEkNSBqp0pPbG83Y37jdxh4eH4
+	f+L7ksJP0qaio+yrrTt8aDIRjHC3zSkt4nN4Olocew8aVI8IyOkj2wJSgKL+OhGf3TQeLOxVOvc
+	1Z3H9iaVQZCx1CnlJu6rxB4ucIF2c6u73WRNe0CcXdS3V1bbOMv8mJwnSNMphRCPL0Z9cxE9YPU
+	x6MUvr8lHCIn6f+cYQ==
+X-Google-Smtp-Source: AGHT+IEnKnfOnKBhfUtKb0edyU2wPAS9dcKPrNOCcz62kbU+ZYnxhBiooIXhiQYh7tvo+Gbpq0buQA==
+X-Received: by 2002:a17:906:1bb2:b0:abb:1b23:67b7 with SMTP id a640c23a62f3a-abbccf12ca0mr243110466b.33.1739945821328;
+        Tue, 18 Feb 2025 22:17:01 -0800 (PST)
+Received: from eichest-laptop ([178.197.206.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9f3a695dsm474897966b.2.2025.02.18.22.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 22:17:00 -0800 (PST)
+Date: Wed, 19 Feb 2025 07:16:58 +0100
+From: Stefan Eichenberger <eichest@gmail.com>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: phy: marvell-88q2xxx: Enable temperature
+ measurement in probe again
+Message-ID: <Z7V3Wsex1G7-zEYc@eichest-laptop>
+References: <20250218-marvell-88q2xxx-hwmon-enable-at-probe-v1-0-999a304c8a11@gmail.com>
+ <20250218-marvell-88q2xxx-hwmon-enable-at-probe-v1-1-999a304c8a11@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg100017.china.huawei.com (7.202.181.58)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218-marvell-88q2xxx-hwmon-enable-at-probe-v1-1-999a304c8a11@gmail.com>
 
-From: Ma Wupeng <mawupeng1@huawei.com>
+Hi Dimitri,
 
-Commit 6da6b1d4a7df ("mm/hwpoison: convert TTU_IGNORE_HWPOISON to
-TTU_HWPOISON") introduce TTU_HWPOISON to replace TTU_IGNORE_HWPOISON
-in order to stop send SIGBUS signal when accessing an error page after
-a memory error on a clean folio. However during page migration, anon
-folio must be set with TTU_HWPOISON during unmap_*(). For pagecache
-we need some policy just like the one in hwpoison_user_mappings to
-set this flag. So move this policy from hwpoison_user_mappings to
-unmap_poisoned_folio to handle this warning properly.
+On Tue, Feb 18, 2025 at 07:33:09PM +0100, Dimitri Fedrau wrote:
+> Enabling of the temperature sensor was moved from mv88q2xxx_hwmon_probe to
+> mv88q222x_config_init with the consequence that the sensor is only
+> usable when the PHY is configured. Enable the sensor in
+> mv88q2xxx_hwmon_probe as well to fix this.
+> 
+> Fixes: a197004cf3c2 ("net: phy: marvell-88q2xxx: Fix temperature measurement with reset-gpios")
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+> ---
+>  drivers/net/phy/marvell-88q2xxx.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/net/phy/marvell-88q2xxx.c b/drivers/net/phy/marvell-88q2xxx.c
+> index a3996471a1c9a5d4060d5d19ce44aa70e902a83f..30d71bfc365597d77c34c48f05390db9d63c4af4 100644
+> --- a/drivers/net/phy/marvell-88q2xxx.c
+> +++ b/drivers/net/phy/marvell-88q2xxx.c
+> @@ -718,6 +718,13 @@ static int mv88q2xxx_hwmon_probe(struct phy_device *phydev)
+>  	struct device *dev = &phydev->mdio.dev;
+>  	struct device *hwmon;
+>  	char *hwmon_name;
+> +	int ret;
+> +
+> +	/* Enable temperature sense */
+> +	ret = phy_modify_mmd(phydev, MDIO_MMD_PCS, MDIO_MMD_PCS_MV_TEMP_SENSOR2,
+> +			     MDIO_MMD_PCS_MV_TEMP_SENSOR2_DIS_MASK, 0);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	priv->enable_temp = true;
+>  	hwmon_name = devm_hwmon_sanitize_name(dev, dev_name(dev));
 
-Warning will be produced during unamp poison folio with the following log:
+Is it necessary to have it enabled in probe and in config? Is that
+because of the soft reset? Can it happen that the phy is reset but
+config is not called, then we would end up in the same situation right?
 
-  ------------[ cut here ]------------
-  WARNING: CPU: 1 PID: 365 at mm/rmap.c:1847 try_to_unmap_one+0x8fc/0xd3c
-  Modules linked in:
-  CPU: 1 UID: 0 PID: 365 Comm: bash Tainted: G        W          6.13.0-rc1-00018-gacdb4bbda7ab #42
-  Tainted: [W]=WARN
-  Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
-  pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-  pc : try_to_unmap_one+0x8fc/0xd3c
-  lr : try_to_unmap_one+0x3dc/0xd3c
-  Call trace:
-   try_to_unmap_one+0x8fc/0xd3c (P)
-   try_to_unmap_one+0x3dc/0xd3c (L)
-   rmap_walk_anon+0xdc/0x1f8
-   rmap_walk+0x3c/0x58
-   try_to_unmap+0x88/0x90
-   unmap_poisoned_folio+0x30/0xa8
-   do_migrate_range+0x4a0/0x568
-   offline_pages+0x5a4/0x670
-   memory_block_action+0x17c/0x374
-   memory_subsys_offline+0x3c/0x78
-   device_offline+0xa4/0xd0
-   state_store+0x8c/0xf0
-   dev_attr_store+0x18/0x2c
-   sysfs_kf_write+0x44/0x54
-   kernfs_fop_write_iter+0x118/0x1a8
-   vfs_write+0x3a8/0x4bc
-   ksys_write+0x6c/0xf8
-   __arm64_sys_write+0x1c/0x28
-   invoke_syscall+0x44/0x100
-   el0_svc_common.constprop.0+0x40/0xe0
-   do_el0_svc+0x1c/0x28
-   el0_svc+0x30/0xd0
-   el0t_64_sync_handler+0xc8/0xcc
-   el0t_64_sync+0x198/0x19c
-  ---[ end trace 0000000000000000 ]---
-
-Fixes: 6da6b1d4a7df ("mm/hwpoison: convert TTU_IGNORE_HWPOISON to TTU_HWPOISON")
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Miaohe Lin <linmiaohe@huawei.com>
----
- mm/internal.h       |  5 ++--
- mm/memory-failure.c | 63 ++++++++++++++++++++++-----------------------
- mm/memory_hotplug.c |  3 ++-
- 3 files changed, 36 insertions(+), 35 deletions(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index 109ef30fee11..20b3535935a3 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1115,7 +1115,7 @@ static inline int find_next_best_node(int node, nodemask_t *used_node_mask)
-  * mm/memory-failure.c
-  */
- #ifdef CONFIG_MEMORY_FAILURE
--void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu);
-+int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill);
- void shake_folio(struct folio *folio);
- extern int hwpoison_filter(struct page *p);
- 
-@@ -1138,8 +1138,9 @@ unsigned long page_mapped_in_vma(const struct page *page,
- 		struct vm_area_struct *vma);
- 
- #else
--static inline void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
-+static inline int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill)
- {
-+	return -EBUSY;
- }
- #endif
- 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 995a15eb67e2..327e02fdc029 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1556,11 +1556,35 @@ static int get_hwpoison_page(struct page *p, unsigned long flags)
- 	return ret;
- }
- 
--void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
-+int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill)
- {
--	if (folio_test_hugetlb(folio) && !folio_test_anon(folio)) {
--		struct address_space *mapping;
-+	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
-+	struct address_space *mapping;
-+
-+	if (folio_test_swapcache(folio)) {
-+		pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
-+		ttu &= ~TTU_HWPOISON;
-+	}
- 
-+	/*
-+	 * Propagate the dirty bit from PTEs to struct page first, because we
-+	 * need this to decide if we should kill or just drop the page.
-+	 * XXX: the dirty test could be racy: set_page_dirty() may not always
-+	 * be called inside page lock (it's recommended but not enforced).
-+	 */
-+	mapping = folio_mapping(folio);
-+	if (!must_kill && !folio_test_dirty(folio) && mapping &&
-+	    mapping_can_writeback(mapping)) {
-+		if (folio_mkclean(folio)) {
-+			folio_set_dirty(folio);
-+		} else {
-+			ttu &= ~TTU_HWPOISON;
-+			pr_info("%#lx: corrupted page was clean: dropped without side effects\n",
-+				pfn);
-+		}
-+	}
-+
-+	if (folio_test_hugetlb(folio) && !folio_test_anon(folio)) {
- 		/*
- 		 * For hugetlb folios in shared mappings, try_to_unmap
- 		 * could potentially call huge_pmd_unshare.  Because of
-@@ -1572,7 +1596,7 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
- 		if (!mapping) {
- 			pr_info("%#lx: could not lock mapping for mapped hugetlb folio\n",
- 				folio_pfn(folio));
--			return;
-+			return -EBUSY;
- 		}
- 
- 		try_to_unmap(folio, ttu|TTU_RMAP_LOCKED);
-@@ -1580,6 +1604,8 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
- 	} else {
- 		try_to_unmap(folio, ttu);
- 	}
-+
-+	return folio_mapped(folio) ? -EBUSY : 0;
- }
- 
- /*
-@@ -1589,8 +1615,6 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
- static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
- 		unsigned long pfn, int flags)
- {
--	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
--	struct address_space *mapping;
- 	LIST_HEAD(tokill);
- 	bool unmap_success;
- 	int forcekill;
-@@ -1613,29 +1637,6 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
- 	if (!folio_mapped(folio))
- 		return true;
- 
--	if (folio_test_swapcache(folio)) {
--		pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
--		ttu &= ~TTU_HWPOISON;
--	}
--
--	/*
--	 * Propagate the dirty bit from PTEs to struct page first, because we
--	 * need this to decide if we should kill or just drop the page.
--	 * XXX: the dirty test could be racy: set_page_dirty() may not always
--	 * be called inside page lock (it's recommended but not enforced).
--	 */
--	mapping = folio_mapping(folio);
--	if (!(flags & MF_MUST_KILL) && !folio_test_dirty(folio) && mapping &&
--	    mapping_can_writeback(mapping)) {
--		if (folio_mkclean(folio)) {
--			folio_set_dirty(folio);
--		} else {
--			ttu &= ~TTU_HWPOISON;
--			pr_info("%#lx: corrupted page was clean: dropped without side effects\n",
--				pfn);
--		}
--	}
--
- 	/*
- 	 * First collect all the processes that have the page
- 	 * mapped in dirty form.  This has to be done before try_to_unmap,
-@@ -1643,9 +1644,7 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
- 	 */
- 	collect_procs(folio, p, &tokill, flags & MF_ACTION_REQUIRED);
- 
--	unmap_poisoned_folio(folio, ttu);
--
--	unmap_success = !folio_mapped(folio);
-+	unmap_success = !unmap_poisoned_folio(folio, pfn, flags & MF_MUST_KILL);
- 	if (!unmap_success)
- 		pr_err("%#lx: failed to unmap page (folio mapcount=%d)\n",
- 		       pfn, folio_mapcount(folio));
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e3655f07dd6e..e7e47838fd49 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1833,7 +1833,8 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 			if (WARN_ON(folio_test_lru(folio)))
- 				folio_isolate_lru(folio);
- 			if (folio_mapped(folio))
--				unmap_poisoned_folio(folio, TTU_IGNORE_MLOCK);
-+				unmap_poisoned_folio(folio, pfn, false);
-+
- 			continue;
- 		}
- 
--- 
-2.43.0
-
+Regards,
+Stefan
