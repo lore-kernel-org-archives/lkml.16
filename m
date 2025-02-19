@@ -1,151 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF50B286284
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A2E1D47B5
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990137; cv=none; b=TVZYyoSPxCmrQ+qOF6vYc7cRgHzoR/86M3bHJZncVWl/BwQkfFkv62sODEcQtNnP9J0GV6yRjqKhGteQNfZiydjqTdBfB0dgS+vINLi8iH7ZxDb4HL7adiVYsz4QlrLT3c/RXLHgz/hcJLw1WBNP4KyQcvFI55QUrRChnROkWK0=
+	t=1739990147; cv=none; b=DMs3KieCvoX0Fc3tH6DN5kgDG54DChHCRUylnLBzLzaAP63Gr/g3os6FfFxNJ6o//eo3YYiESWdk9SOGwCZT0QI4LrMcrYDRb+QkFJplgK5HHjRfalypEcRGUzxXzfM+g2Z2XPHxytS2R/rtUJNieSh/6aV0x2LjnHd/LjgWnmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990137; c=relaxed/simple;
-	bh=7prenXagOrLaHxQTYkCyFErnEhCLzGfw+nnqrOCEqVw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=hCR3N1JL374hABwxZ07cJvIen+As78AlkNUrMT7TGXJfjYhpydcne5j2/6wLy8wnykDvzOocLUxhrK3gjS7iktknnLJJmqhMWnA8NAHamUxmwjXpalpdmiU5CfD15irvv45R0VhiU28CDSQQH34FZ/rgSHKSO4d9Di/9MtTTvU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gA4vvv6n; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739990147; c=relaxed/simple;
+	bh=lC04pkibMSnB+nQ7QRyWb5nDximsbQ0hDi5hUooIyRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pnzzKYxqbWgGoZmYyB0IFHqE5uleZHVa+y1xJOJdtdPZql+UWtAojdFonP1DQKgzjpkWFnE4vk0Ddp1mIPkdHfn8W+OwZbzfsLyWodhMCHyoC4rL3tDTwG0IoKM3GC4EVtrgdZ+acuVa5CUlCo+P2d5nV4xTEPP61vUgPwGa8Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H6Bktc0G; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gA4vvv6n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739990136; x=1771526136;
-  h=date:from:to:cc:subject:message-id;
-  bh=7prenXagOrLaHxQTYkCyFErnEhCLzGfw+nnqrOCEqVw=;
-  b=gA4vvv6n9v8bYPm7GYuuDsZlxzU+/xHdE/qZENWhTI5uSkhxF4yqERpB
-   5tI2surBD5EMkeieI+HcMLazem5H1AGnd1Rrv16BQZXOdsl4f9TdOXqxT
-   I3BNYewecfY0o/z9XIYIFCDP1rD/uGHbUqPmUzWULYqUYXHGKKx52fJkD
-   JzHFT1jmnbjoXAlp/dgbn0PAO/UEbbggkABAY5U77JHvO1O3SoD+UIUqk
-   30gJqBXiA0qflzzKuHNtBct1LTT4/Wg5EJ3gsWLYlZXOrZySHOjbynYFP
-   4TGKOFoQgT1mZIqkdK4Yjk6WgG98zp8NP7ztlnhEe0Waf+JS87dZ7LnpR
-   A==;
-X-CSE-ConnectionGUID: 0kY5DbfqRKKk+h1LPJdo6A==
-X-CSE-MsgGUID: J26VEjIqT1WOs/R0ljYX4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="63220148"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="63220148"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:35:35 -0800
-X-CSE-ConnectionGUID: i4DlK0O/TGmV5zLYsy+N7Q==
-X-CSE-MsgGUID: CpwIsLGNSbisaZzPxyHgnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="115326225"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 19 Feb 2025 10:21:17 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tkoh7-0003In-2H;
-	Wed, 19 Feb 2025 18:21:13 +0000
-Date: Thu, 20 Feb 2025 02:20:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/misc] BUILD SUCCESS
- c893ee3f95f16fcb98da934d61483d0b7d8ed568
-Message-ID: <202502200233.FaoTxUh8-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H6Bktc0G"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-219f6ca9a81so11515ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 10:35:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739990145; x=1740594945; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+itER1h14EX5rQVkBvQ5Ol7VJuRnv/3xk34hJH8B0eE=;
+        b=H6Bktc0GibkVAWQpyysC0nan6AA80IJoImEVJMoQmlJGNfI1djiQKD3uyA3FKmrGto
+         iPApSHUAGd8+qOyPByIoIh1wuBL731u1pkMjKCo1NRLBuFHnFuq8sb0iF1qoEAG9XB/H
+         dHJCxTxnCxwLjkSUiPo0Ypv+RdnohQecPcV/ILzHt+4VSYSt/QLo0+MCMPrEzKSR2Koa
+         lOc94wzon1E1MgU/G+opfL/M6+SPLQPXmcoQRppu1SZa4ZyaF6jwy6T+oEsTmKHAFUeK
+         ojr3q3fPTdX3kWzaUEzWI9FV2KaDZ8TlunXH537QiyfOleTx3ndnyHxWQy+JCiiLasv/
+         izpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739990145; x=1740594945;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+itER1h14EX5rQVkBvQ5Ol7VJuRnv/3xk34hJH8B0eE=;
+        b=epywsp8feMS87keUA8uoH180gxLGNSVdS64WgkOEIYVT+yiTGU/CysQMwefEJ01z88
+         9direuQnbL6EZN37aC+lbLD9u7mzU5bcluJil0++h8W3PBCsqW9PGzYe+ynYLzfj43s1
+         Fbbyq5xaNRicPMjsykYUxj7/MKkyNGuu/6V4YtUIbPZs9lFxrQKgqlPFewgJ2IUmTjLG
+         jQPgy3YCvxMxTjf9NZo+JMFXOrUJxSieM8M/vlV4VX4Qb98c1GIfEZr8mapdCCGJ6uce
+         1MaSwrN2gzw5QREacq3GjDhfbepPigWAX1ctcctxI/KFoT7TWBbnasJ5SUrkigFJ15PN
+         WR5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUedaj4h2HoRbTrnJuckpk1R0iMr75eQftvpucaT/kay2tnimLYUjce1AMfqnh9l3xSrh3iijr5q34ODzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw99qsl6bR0sXFxkZ4owWevyz54CuNnc80B2EeVlA7sdqkE0p63
+	pr6XQXL/zee2P4s25HgUhq7RQVHo5wLF3fRqllbwfWymRNg8VmJICRAA7wLYXA==
+X-Gm-Gg: ASbGncveHoNtmnnpJTOLAYU5irohYgVkxa085PAQijdJZATjUOzNT1cykvqbsRey6QN
+	5NNH2pk5TGYOJqIkhV/pZVyf9CBhd+0ab2JfkDG/id3KnqhLmkmSVUasNL1vP0HndyMys+789yX
+	37p/lmYWZIkPXRbPWwSPSlKnTazeU3PUgQf2YZtXgSCuB0jFFfF83R4G9oe4hLuM53hTln+EXhH
+	6HhI3NsyTH1ziVNO2yQMxttLwv2AEmRtT2Z5FNostXvsg60L2cXRgLD9081lzWKq+ufFCnK9h39
+	PcwN5p2I+g5Oz5bxkhPIMXbofMFrosE+KB1BijMxS3rnh2oHwtsyvQ==
+X-Google-Smtp-Source: AGHT+IHAULCNkvzKZQBb/FReH9CykVEx+mAi17NEzYX7dKsPqX5HhXoQBs+TgGZyrNUOEtDTCkJWkg==
+X-Received: by 2002:a17:902:ccc8:b0:21f:16af:188c with SMTP id d9443c01a7336-22175af9931mr3117655ad.23.1739990144506;
+        Wed, 19 Feb 2025 10:35:44 -0800 (PST)
+Received: from google.com (57.145.233.35.bc.googleusercontent.com. [35.233.145.57])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adec4756d0csm5861792a12.55.2025.02.19.10.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 10:35:43 -0800 (PST)
+Date: Wed, 19 Feb 2025 18:35:37 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: syzbot <syzbot+799a2d4576c454ac2693@syzkaller.appspotmail.com>,
+	surenb@google.com
+Cc: arve@android.com, brauner@kernel.org, gregkh@linuxfoundation.org,
+	joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+	maco@android.com, surenb@google.com,
+	syzkaller-bugs@googlegroups.com, tkjos@android.com
+Subject: Re: [syzbot] [kernel?] possible deadlock in binder_alloc_free_page
+Message-ID: <Z7YkXTtINfuKY4F2@google.com>
+References: <6782483e.050a0220.216c54.001d.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6782483e.050a0220.216c54.001d.GAE@google.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/misc
-branch HEAD: c893ee3f95f16fcb98da934d61483d0b7d8ed568  x86/amd_node: Add a smn_read_register() helper
+On Sat, Jan 11, 2025 at 02:30:22AM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    7b4b9bf203da Add linux-next specific files for 20250107
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17d02dc4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=63fa2c9d5e12faef
+> dashboard link: https://syzkaller.appspot.com/bug?extid=799a2d4576c454ac2693
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10302dc4580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/c179cc0c7a3c/disk-7b4b9bf2.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/fdea80f2ec16/vmlinux-7b4b9bf2.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/a277fcaff608/bzImage-7b4b9bf2.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+799a2d4576c454ac2693@syzkaller.appspotmail.com
 
-elapsed time: 1454m
+Hey Suren, just FYI. I bisected this to commit e8f32ff00a66 ("mm:
+replace vm_lock and detached flag with a reference count"), which was an
+older version (v7) of your patchset. However, I've tested the same on
+the newer linux-next tip with your v10 and it no longer reproduces the
+problem.
 
-configs tested: 74
-configs skipped: 1
+Nothing else for me to do here.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                           allyesconfig    gcc-14.2.0
-arc                             allmodconfig    gcc-13.2.0
-arc                             allyesconfig    gcc-13.2.0
-arc                  randconfig-001-20250219    gcc-13.2.0
-arc                  randconfig-002-20250219    gcc-13.2.0
-arm                             allmodconfig    gcc-14.2.0
-arm                             allyesconfig    gcc-14.2.0
-arm                  randconfig-001-20250219    gcc-14.2.0
-arm                  randconfig-002-20250219    clang-17
-arm                  randconfig-003-20250219    clang-15
-arm                  randconfig-004-20250219    gcc-14.2.0
-arm64                           allmodconfig    clang-18
-arm64                randconfig-001-20250219    clang-21
-arm64                randconfig-002-20250219    gcc-14.2.0
-arm64                randconfig-003-20250219    gcc-14.2.0
-arm64                randconfig-004-20250219    gcc-14.2.0
-csky                 randconfig-001-20250219    gcc-14.2.0
-csky                 randconfig-002-20250219    gcc-14.2.0
-hexagon                         allmodconfig    clang-21
-hexagon                         allyesconfig    clang-18
-hexagon              randconfig-001-20250219    clang-14
-hexagon              randconfig-002-20250219    clang-21
-i386                            allmodconfig    gcc-12
-i386                             allnoconfig    gcc-12
-i386                            allyesconfig    gcc-12
-i386       buildonly-randconfig-001-20250219    clang-19
-i386       buildonly-randconfig-002-20250219    clang-19
-i386       buildonly-randconfig-003-20250219    gcc-12
-i386       buildonly-randconfig-004-20250219    clang-19
-i386       buildonly-randconfig-005-20250219    clang-19
-i386       buildonly-randconfig-006-20250219    gcc-12
-i386                               defconfig    clang-19
-loongarch            randconfig-001-20250219    gcc-14.2.0
-loongarch            randconfig-002-20250219    gcc-14.2.0
-nios2                randconfig-001-20250219    gcc-14.2.0
-nios2                randconfig-002-20250219    gcc-14.2.0
-parisc               randconfig-001-20250219    gcc-14.2.0
-parisc               randconfig-002-20250219    gcc-14.2.0
-powerpc              randconfig-001-20250219    clang-15
-powerpc              randconfig-002-20250219    clang-17
-powerpc              randconfig-003-20250219    gcc-14.2.0
-powerpc64            randconfig-001-20250219    gcc-14.2.0
-powerpc64            randconfig-002-20250219    gcc-14.2.0
-powerpc64            randconfig-003-20250219    gcc-14.2.0
-riscv                randconfig-001-20250219    clang-21
-riscv                randconfig-002-20250219    gcc-14.2.0
-s390                            allmodconfig    clang-19
-s390                            allyesconfig    gcc-14.2.0
-s390                 randconfig-001-20250219    clang-18
-s390                 randconfig-002-20250219    clang-21
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sh                   randconfig-001-20250219    gcc-14.2.0
-sh                   randconfig-002-20250219    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-sparc                randconfig-001-20250219    gcc-14.2.0
-sparc                randconfig-002-20250219    gcc-14.2.0
-sparc64              randconfig-001-20250219    gcc-14.2.0
-sparc64              randconfig-002-20250219    gcc-14.2.0
-um                              allmodconfig    clang-21
-um                              allyesconfig    gcc-12
-um                   randconfig-001-20250219    clang-21
-um                   randconfig-002-20250219    clang-21
-x86_64                           allnoconfig    clang-19
-x86_64                          allyesconfig    clang-19
-x86_64     buildonly-randconfig-001-20250219    gcc-12
-x86_64     buildonly-randconfig-002-20250219    clang-19
-x86_64     buildonly-randconfig-003-20250219    gcc-12
-x86_64     buildonly-randconfig-004-20250219    clang-19
-x86_64     buildonly-randconfig-005-20250219    gcc-12
-x86_64     buildonly-randconfig-006-20250219    clang-19
-x86_64                             defconfig    gcc-11
-xtensa               randconfig-001-20250219    gcc-14.2.0
-xtensa               randconfig-002-20250219    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Carlos Llamas
