@@ -1,91 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5718A45C14;
-	Wed, 19 Feb 2025 13:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFD119CD01
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972473; cv=none; b=PMnU75GFHLwE0m6UBiSqjECu2+HmSEGGh7hx+2bNrBQJ18Q3+5aGC+GrYsnRd8XmCsg1TYT1/8P4WxlFXr9HlvJVavE4jQ8489QV2dghjDoNb7si8ZpArpQ1D5uqVtOkpWZEolHQJWVKk6bMgyFnx8XKiddFN+2e9Y4GRn+lOQA=
+	t=1739972483; cv=none; b=ShY/47ng8B1lZ9n/st0T7iGuUoUT5ZJgO8HLmOj3ADrTEW/7NPqrrkJ7CE0WeW75zonxn56TCKFM8OAH9cnlOvWBlntS/YRb1k7ViB49nGCD86ybPCUReqFbvyrTw/pRM0MSHOxrp+qNNQJ0Eu1n92o1AbZlfqmWuRvnqj32UJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739972473; c=relaxed/simple;
-	bh=z3oU/+k+ZI8AERKJpGKypXZmHNAT00Wj8hIykkcfdNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FP4FdtqGgOZNziWhbXdkXvf3XL6+ZwUtPZgDJUeDLN52hMG3KFk2apnfn9vxyiAj/J4xio1Z8cTvIN2JuYmKPX5BFiA5zSnDYAarXh87APrVkNAS9sMlQUWTxYWnIjIvvuPbQ5D+pbZPtZNojNqi4ex5+sF5uooYAliR8YoVmC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 056F61682;
-	Wed, 19 Feb 2025 05:41:30 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C9773F59E;
-	Wed, 19 Feb 2025 05:41:07 -0800 (PST)
-Date: Wed, 19 Feb 2025 13:41:05 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: Babu Moger <babu.moger@amd.com>
-Cc: corbet@lwn.net, reinette.chatre@intel.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	tony.luck@intel.com, peternewman@google.com, fenghua.yu@intel.com,
-	x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
-	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
-	xiongwei.song@windriver.com, pawan.kumar.gupta@linux.intel.com,
-	daniel.sneddon@linux.intel.com, jpoimboe@kernel.org,
-	perry.yuan@amd.com, sandipan.das@amd.com, kai.huang@intel.com,
-	xiaoyao.li@intel.com, seanjc@google.com, xin3.li@intel.com,
-	andrew.cooper3@citrix.com, ebiggers@google.com,
-	mario.limonciello@amd.com, james.morse@arm.com,
-	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
-	eranian@google.com
-Subject: Re: [PATCH v11 17/23] x86/resctrl: Auto assign/unassign counters
- when mbm_cntr_assign is enabled
-Message-ID: <Z7XfcV05ZZkHm6bc@e133380.arm.com>
-References: <cover.1737577229.git.babu.moger@amd.com>
- <2119b76ef8be21b1d8b2deedfab23e8e33ba724c.1737577229.git.babu.moger@amd.com>
+	s=arc-20240116; t=1739972483; c=relaxed/simple;
+	bh=rFQyiZoEMUWMw2eEtfx4APQV76D89h6kfmj48FsyZdU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Af4z4Nom+n/T2+9t3YAzyDI6yh5yaAtn3++RVdG5y+KgyoFjYhGnfcECuQ/u3s+blTc2tavbnHPScT8CO09dsB5dLgSqiBD9L4mE0bP03yBtbdG8q5P6jNEcGl9oyOQwCYTNVqy92taE6IHQeZaxmWQEM3zv7MW4G1NIl/FYB8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UwfrExLB; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UwfrExLB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7FFFF443EF;
+	Wed, 19 Feb 2025 13:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739972479;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xcBRoz8d8kfVyEGHs3Q9+R3j8VA136sGzn8ZA7cE/sU=;
+	b=UwfrExLByhzPWOX2cZk++dnv8S1jfe7JPEOeEXBm2csPgjTE2VjZJVzVyFSGOWgjIFEzbK
+	FTPdvxd+zOEBb/MjKVg/J9c6gm4tXv53pzIHfbEjNnDkq4iML8+BQv7HuLGJY/mRPpzA/y
+	h+Y+TVSnYMF8U0D8gQfOwe4ucf0p2pPrmiVO9r/obAKnbMZT0+U3cBB7SH31cRej3SKxsZ
+	YlA05x5/xeF+n4p0UP09oSxFX27jlOatqbUqk29OSzJgEsz4jPNyHmWl9eMaiULJgP6pqv
+	Ku3m/aQQOQKmwQQKErQGD9TYBRDbLpqjzyGraVQm6FDs657tlXiTBxS3nqaj9g==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux@treblig.org,
+	Shen Lichuan <shenlichuan@vivo.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	u.kleine-koenig@baylibre.com,
+	nirav.rabara@altera.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	niravkumar.l.rabara@intel.com
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH mtd/fixes] mtd: rawnand: cadence: fix unchecked dereference
+Date: Wed, 19 Feb 2025 14:41:17 +0100
+Message-ID: <173997243493.1255269.588065932781621293.b4-ty@bootlin.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250216031536.3366360-1-niravkumar.l.rabara@intel.com>
+References: <20250216031536.3366360-1-niravkumar.l.rabara@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2119b76ef8be21b1d8b2deedfab23e8e33ba724c.1737577229.git.babu.moger@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeigeefkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeeugfdvffefhfduhfetfffgieeiudeugeffvdehvddvledujeejvedvgfdtvefgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehffidrrddpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugiesthhrvggslhhighdrohhrghdprhgtphhtthhopehshhgvnhhlihgthhhurghnsehvihhvohdrtghomhdprhgtphhtthhopehruhgrnhhjihhnjhhivgeshhhurgifvghirdgtohhmpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnhhighessggrhihli
+ hgsrhgvrdgtohhmpdhrtghpthhtohepnhhirhgrvhdrrhgrsggrrhgrsegrlhhtvghrrgdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi,
-
-On Wed, Jan 22, 2025 at 02:20:25PM -0600, Babu Moger wrote:
-> Assign/unassign counters on resctrl group creation/deletion. Two counters
-> are required per group, one for MBM total event and one for MBM local
-> event.
+On Sun, 16 Feb 2025 11:15:36 +0800, niravkumar.l.rabara@intel.com wrote:
+> Add NULL check before variable dereference to fix static checker warning.
 > 
-> There are a limited number of counters available for assignment. If these
-> counters are exhausted, the kernel will display the error message: "Out of
-> MBM assignable counters". However, it is not necessary to fail the
-> creation of a group due to assignment failures. Users have the flexibility
-> to modify the assignments at a later time.
+> 
 
-If we are doing this, should turning mbm_cntr_assign mode on also
-trigger auto-assingment for all extant monitoring groups?
+Applied to mtd/fixes, thanks!
 
-Either way though, this auto-assignment feels like a potential nuisance
-for userspace.
+[1/1] mtd: rawnand: cadence: fix unchecked dereference
+      commit: 60255f3704fde70ed3c4d62f919aa4b46f841f70
 
-If the userspace use-case requires too many monitoring groups for the
-available counters, then the kernel will auto-assign counters to a
-random subset of groups which may or may not be the ones that userspace
-wanted to monitor; then userspace must manually look for the assigned
-counters and unassign some of them before they can be assigned where
-userspace actually wanted them.
+Patche(s) should be available on mtd/linux.git and will be
+part of the next PR (provided that no robot complains by then).
 
-This is not impossible for userspace to cope with, but it feels
-awkward.
-
-Is there a way to inhibit auto-assignment?
-
-Or could automatic assignments be considered somehow "weak", so that
-new explicit assignments can steal automatically assigned counters
-without the need to unassign them explicitly?
-
-[...]
-
-Cheers
----Dave
+Kind regards,
+Miquèl
