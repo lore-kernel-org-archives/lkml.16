@@ -1,162 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92E51DF25E;
-	Wed, 19 Feb 2025 15:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618DF1F37C3
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739977664; cv=none; b=E2yD7X45xi+mqL744h84CpaQhDue0Pr4J/aC5HdfqCBxLy7UWslure1n8SMFX6lJLC4v9n6MVPx4MOVkn7tebdx5jhQJtfoI/P28tJ0Ps7JUWeZJezw6eWu61NoCQW+m4i2TezJNDfDttBA0RQVCuT/r7vmBUxBullQzI8BN0GM=
+	t=1739977698; cv=none; b=XVhZiOAG9Kif/7p9HOjxOkU1B0/Rvt+G/GilmhzGXcCMKGsMnjcMtq+VYq0CuRbyuJvxwY+eeVFaY+SIXPyxu7V6OXxtlywRUkVscgKA6AKNwWqy2S+bqU25Rq901M9aOoIcBmlEU6GXa6+fpFkVrHnQE1xjSN65G+DCsDWnBeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739977664; c=relaxed/simple;
-	bh=qLMt/EjgXexfc92vAw0wlJWhv6oYot1ftBwA0iHaP28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rv3WSnDDeBuhDrHBOSxX9yoUWC6aQ0aI38e3iF+VXP+YkGo0B2niSyRp9pawU+pY9mhyBc8qhFqV37SgcCbkpEkWQhIxNCmrAOf58uIuFfcnemvLXgBsBFgP57ZTNLX5q0184oaA4ROj9wiqO3EqH92aLYAAeVt3mEuo3af+6/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xj5AiI7F; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739977698; c=relaxed/simple;
+	bh=nIlzcWPCpNDHeGWJ1Tv8gxxOpW0FShbKAlaQ3tpaGjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GcM1ECukiMr0umY4Z8bAwglRsW7KglgrIWPiY/oedt1sKPnDKsAzPJ0tNM8/Hdpvj8ujvLONdZR07QxxsjZmnjh2YqD6Rmy3f/rFi2YnXRZte8g2RC4xozgWaczSMdIzQH5x9osXIArNqSMiWlqDJugF7yNi0ISLH9kBYWPEQfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DR65f3vj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xj5AiI7F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739977663; x=1771513663;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=qLMt/EjgXexfc92vAw0wlJWhv6oYot1ftBwA0iHaP28=;
-  b=Xj5AiI7FF6KiB88fqeQCPpravKK4AxGKyw969UnEU7OUiieC891tlh8V
-   v9LjCdsYL/C9ewE91wWFcwRpOpphd66smVmFRmKB/yCbe+9lwgiq0PCZw
-   uiLamkeyV8wh5PbMjwaOArdCsPSFbHHIXB8kcgvRqLfsjKOx1qf2UJUU3
-   YRGlO/pAGGPkkU+n+zxvMxqMxi6cP0y7tlGiime7H2m9ysaagJKxvogxn
-   rjI6b/WzY8y5bYRkg+Y3VnQ0c2mkzFwN2Mkietuk+yjYvRjyOWqVd1zh/
-   jsgAmmBEIakFpaaAkOi35gxsFay0YyQOXCKXzlzwe7pYd3cJY5PWq7W9y
-   Q==;
-X-CSE-ConnectionGUID: twPQxufsQW27BeCE4KZ4qA==
-X-CSE-MsgGUID: FI6od6Y8RTawZBnbDkOiNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="58127017"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="58127017"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 07:06:49 -0800
-X-CSE-ConnectionGUID: OB0MzcPQQFC05yUlRCyNdg==
-X-CSE-MsgGUID: Qu6UFl4VQgGe64cmCmVi0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114593212"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 07:06:45 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tkles-0000000D3UY-0lnR;
-	Wed, 19 Feb 2025 17:06:42 +0200
-Date: Wed, 19 Feb 2025 17:06:41 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mfd: lm3533: convert to use OF
-Message-ID: <Z7XzgfHcjyK_UZKv@smile.fi.intel.com>
-References: <20250218132702.114669-1-clamor95@gmail.com>
- <20250218132702.114669-3-clamor95@gmail.com>
- <Z7XqKcOUt5niXzpv@smile.fi.intel.com>
- <CAPVz0n1_WQyOHhtEVAh53uhEUhZvqqZSEJh6XALtSrVfkMSLYw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DR65f3vj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739977695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h0i0ytHqma4RDTIEIdZzYRA/ktw8J09sr28RqE6ASb0=;
+	b=DR65f3vjWAsFAXNiRHmbvwqhcqjv+lGT1I0oEcFG0whmdE31bezQIk9kMs/UqCUJwtQM0K
+	G27/5aLO/TB3X3z1vbW01C2SApN4t8fo7POGeyS5AbPo3FEINJIM3X6NmZ97bEE0MeuYky
+	7Jwm1nTJtLS3K08UyRNr6B9R+/OSBsw=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-333-TWdQj8WuMJ2Xb9gsKSPUHQ-1; Wed, 19 Feb 2025 10:08:14 -0500
+X-MC-Unique: TWdQj8WuMJ2Xb9gsKSPUHQ-1
+X-Mimecast-MFC-AGG-ID: TWdQj8WuMJ2Xb9gsKSPUHQ_1739977693
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d2a939f01bso1708345ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:08:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739977693; x=1740582493;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h0i0ytHqma4RDTIEIdZzYRA/ktw8J09sr28RqE6ASb0=;
+        b=SL/ohiKVVMfpasF09unQ6/Yj9vfF9quq1uHsB+vx+UAO6Y/G2ZY0V1oGSZuTpECT+F
+         6R3GpKOS3dt4AY/UUqaKxe44u4MzMazAC8X5UEG3iUZqT4OIwVnP+6c7kumhgoO/NXvz
+         wEkWbgptHnotoQ5Rg8EZRECHJmsREWIoSj+asvoYgCuOOEAod4hh9eZEuqP2D37UzwDc
+         W9wPXaYNQ2GXb5h50mG8H/TpzjWxzNgS0iU6Q0/7xzDzDoAqvwWxRI/aQmfw+XHDlJqg
+         GGvxMnf4+h3L5Vnw+VzN6Cw6hZEi/T2aoQV8OQV7uGteaxSOpd6adMGnJReoZniaDmQD
+         K/JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSpHATsHGWBaEaSSFo5t1iAMcV8xsFjVCPwaYonFro8qtPSv6h7ACrAxsgzw1JQlPRrQmdd5DtC38amik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJrl/PGbYURc4mjioVPwl96782W4QJkcvQhrN9eDpDOijQ0Eh1
+	IZsbhRRZ0bJSbWspvWGGADWH8j9WoTX1h8KpBZPneQYZN3bcOnS7tKGO/z0JfY8Wc3OCz+iqirR
+	pNd043uxWOCgoAVBlwaiu4wi5UGbRKMHg5zPX4fYz8zC0CsBmFHtRnM8c2AdJWQ==
+X-Gm-Gg: ASbGncvO/CnK+LyKO+Y7vCJIRtOhyZ0QD6RNH9sicuM8qD7TyfOD9AXSaj+qz65Zllp
+	dFrEjje4GAOrc1pZf3oZQ29X//IQplDfls+bhEwE99yYvMliji7NK0Pu9RQfH430AWSLM0mKPUR
+	hJVb/HKNwGYfmDVGHlKAGZ111jNiqswTTnhWmiFEiRwAg9En5lvQRErcmPF0fmHjOqpjgZYUUkS
+	iA9UD3SDoE2hd0B+wxqP3/2nvlXM9FyDenk96ah36mQWwdbI5r3fRwLFQdzPmDh7aHEuDnG4/ee
+	pomKZGmw
+X-Received: by 2002:a05:6602:2dd2:b0:855:a047:5f01 with SMTP id ca18e2360f4ac-855a0477cdfmr292673339f.3.1739977693172;
+        Wed, 19 Feb 2025 07:08:13 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFewhjDw5FMQQv2E37ZGUyKeodB2Szx8gB5YrE4eo4YClIcD42Wt2wzkfld876dn+j1QGOjWQ==
+X-Received: by 2002:a05:6602:2dd2:b0:855:a047:5f01 with SMTP id ca18e2360f4ac-855a0477cdfmr292671039f.3.1739977692599;
+        Wed, 19 Feb 2025 07:08:12 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8559c37b07fsm108826239f.0.2025.02.19.07.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 07:08:10 -0800 (PST)
+Date: Wed, 19 Feb 2025 08:08:08 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Mitchell Augustin <mitchell.augustin@canonical.com>
+Cc: Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, clg@redhat.com, jgg@nvidia.com,
+ willy@infradead.org
+Subject: Re: [PATCH v2 6/6] vfio/type1: Use mapping page mask for pfnmaps
+Message-ID: <20250219080808.0e22215c.alex.williamson@redhat.com>
+In-Reply-To: <CAHTA-ua8mTgNkDs0g=_8gMyT1NkgZqCE0J7QjOU=+cmZ2xqd7Q@mail.gmail.com>
+References: <20250218222209.1382449-1-alex.williamson@redhat.com>
+	<20250218222209.1382449-7-alex.williamson@redhat.com>
+	<Z7UOEpgH5pdTBcJP@x1.local>
+	<20250218161407.6ae2b082.alex.williamson@redhat.com>
+	<CAHTA-ua8mTgNkDs0g=_8gMyT1NkgZqCE0J7QjOU=+cmZ2xqd7Q@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPVz0n1_WQyOHhtEVAh53uhEUhZvqqZSEJh6XALtSrVfkMSLYw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 04:36:38PM +0200, Svyatoslav Ryhel wrote:
-> ср, 19 лют. 2025 р. о 16:27 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> пише:
-> > On Tue, Feb 18, 2025 at 03:27:00PM +0200, Svyatoslav Ryhel wrote:
-> > > Remove platform data and fully relay on OF and device tree
-> > > parsing and binding devices.
+On Tue, 18 Feb 2025 20:36:22 -0600
+Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
+
+> /s/follow_pfnmap_args.pgmask/follow_pfnmap_args.addr_mask/ in v2
+> commit log.
+
+Thanks for spotting that, if there's no other cause for a re-spin I'll
+fix that on commit.  Thanks for the review and testing!
+
+Alex
+
+> Aside from that, it works as expected.
+>=20
+> Reviewed-by: "Mitchell Augustin" <mitchell.augustin@canonical.com>
+> Tested-by: "Mitchell Augustin" <mitchell.augustin@canonical.com>
+>=20
+>=20
+> On Tue, Feb 18, 2025 at 5:14=E2=80=AFPM Alex Williamson
+> <alex.williamson@redhat.com> wrote:
 > >
-> > Thanks for following the advice, but the problem with this change as it does
-> > too much at once. It should be split to a few simpler ones.
-> > On top of that, this removes MFD participation from the driver but leaves it
-> > under MFD realm. Moreover, looking briefly at the code it looks like it open
-> > codes the parts of MFD. The latter needs a very goo justification which commit
-> > message is missing.
-
-...
-
-> Splitting this into a set of commits would be nearly impossible,
-
-I don't buy this.
-One patch can introduce device property support.
-Another one removes the old platform data interface.
-
-So, at bare minimum there will be two patches. (Besides the advice to have
-two more.)
-
-> original driver does not relay on OF, it relays on platform data.
-
-And?..
-
-> Ripping out platform data will leave behind a broken useless driver.
-
-Hmm... This cna be the case if and only if we have the user in kernel.
-Is this the case?
-
-> So it has to be done simultaneously.
-
-Nope.
-
-> MFD part is removed since MFD cells binding is unconditional, while
-> the device supports any amount of children grater then one. For
-> example, my  device uses only backlight at bank A, while all other
-> subdevices are not present and used. This patch switches to dynamic
-> bind of children.
-
-MFD does the same. Please, take your time and get familiar with how MFD works.
-
-...
-
-> > > +     device_property_read_string(&pdev->dev, "linux,default-trigger",
-> > > +                                 &led->cdev.default_trigger);
+> > On Tue, 18 Feb 2025 17:47:46 -0500
+> > Peter Xu <peterx@redhat.com> wrote:
+> > =20
+> > > On Tue, Feb 18, 2025 at 03:22:06PM -0700, Alex Williamson wrote: =20
+> > > > vfio-pci supports huge_fault for PCI MMIO BARs and will insert pud =
+and
+> > > > pmd mappings for well aligned mappings.  follow_pfnmap_start() walk=
+s the
+> > > > page table and therefore knows the page mask of the level where the
+> > > > address is found and returns this through follow_pfnmap_args.pgmask.
+> > > > Subsequent pfns from this address until the end of the mapping page=
+ are
+> > > > necessarily consecutive.  Use this information to retrieve a range =
+of
+> > > > pfnmap pfns in a single pass.
+> > > >
+> > > > With optimal mappings and alignment on systems with 1GB pud and 4KB
+> > > > page size, this reduces iterations for DMA mapping PCI BARs by a
+> > > > factor of 256K.  In real world testing, the overhead of iterating
+> > > > pfns for a VM DMA mapping a 32GB PCI BAR is reduced from ~1s to
+> > > > sub-millisecond overhead.
+> > > >
+> > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > ---
+> > > >  drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++-------
+> > > >  1 file changed, 16 insertions(+), 7 deletions(-)
+> > > >
+> > > > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_io=
+mmu_type1.c
+> > > > index ce661f03f139..0ac56072af9f 100644
+> > > > --- a/drivers/vfio/vfio_iommu_type1.c
+> > > > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > > > @@ -520,7 +520,7 @@ static void vfio_batch_fini(struct vfio_batch *=
+batch)
+> > > >
+> > > >  static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_=
+struct *mm,
+> > > >                         unsigned long vaddr, unsigned long *pfn,
+> > > > -                       bool write_fault)
+> > > > +                       unsigned long *addr_mask, bool write_fault)
+> > > >  {
+> > > >     struct follow_pfnmap_args args =3D { .vma =3D vma, .address =3D=
+ vaddr };
+> > > >     int ret;
+> > > > @@ -544,10 +544,12 @@ static int follow_fault_pfn(struct vm_area_st=
+ruct *vma, struct mm_struct *mm,
+> > > >                     return ret;
+> > > >     }
+> > > >
+> > > > -   if (write_fault && !args.writable)
+> > > > +   if (write_fault && !args.writable) {
+> > > >             ret =3D -EFAULT;
+> > > > -   else
+> > > > +   } else {
+> > > >             *pfn =3D args.pfn;
+> > > > +           *addr_mask =3D args.addr_mask;
+> > > > +   }
+> > > >
+> > > >     follow_pfnmap_end(&args);
+> > > >     return ret;
+> > > > @@ -590,15 +592,22 @@ static long vaddr_get_pfns(struct mm_struct *=
+mm, unsigned long vaddr,
+> > > >     vma =3D vma_lookup(mm, vaddr);
+> > > >
+> > > >     if (vma && vma->vm_flags & VM_PFNMAP) {
+> > > > -           ret =3D follow_fault_pfn(vma, mm, vaddr, pfn, prot & IO=
+MMU_WRITE);
+> > > > +           unsigned long addr_mask;
+> > > > +
+> > > > +           ret =3D follow_fault_pfn(vma, mm, vaddr, pfn, &addr_mas=
+k,
+> > > > +                                  prot & IOMMU_WRITE);
+> > > >             if (ret =3D=3D -EAGAIN)
+> > > >                     goto retry;
+> > > >
+> > > >             if (!ret) {
+> > > > -                   if (is_invalid_reserved_pfn(*pfn))
+> > > > -                           ret =3D 1;
+> > > > -                   else
+> > > > +                   if (is_invalid_reserved_pfn(*pfn)) {
+> > > > +                           unsigned long epfn;
+> > > > +
+> > > > +                           epfn =3D (*pfn | (~addr_mask >> PAGE_SH=
+IFT)) + 1;
+> > > > +                           ret =3D min_t(long, npages, epfn - *pfn=
+); =20
+> > >
+> > > s/long/unsigned long/? =20
 > >
-> > One prerequisite patch you probably want is an introduction of
+> > ret is signed long since it's the function return and needs to be able
+> > to return -errno, so long was the intention here.  Thanks,
 > >
-> >         struct device *dev = &pdev->dev;
-> >
-> > in the respective ->probe() implementations. This, in particular, makes the
-> > above lines shorter and fit one line.
-> 
-> This is not a scope of this patchset. Original driver uses &pdev->dev
-
-Indirectly it is. The change you are proposing tries to continue using this
-construction with making needlessly longer.
-
-...
-
-> > > +             if (!strcmp(comatible, "ti,lm3533-als"))
-> > > +                     lm3533->have_als = 1;
-> >
-> > If you end up having this, it's not the best what we can do. OF ID tables have
-> > a driver_data field exactly for the cases like this.
-> 
-> This is required by core driver to handle some attributes and is here
-> solely not to touch those in this patch.
-
-What does this mean?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> > Alex
+> > =20
+> > > Reviewed-by: Peter Xu <peterx@redhat.com>
+> > > =20
+> > > > +                   } else {
+> > > >                             ret =3D -EFAULT;
+> > > > +                   }
+> > > >             }
+> > > >     }
+> > > >  done:
+> > > > --
+> > > > 2.48.1
+> > > > =20
+> > > =20
+> > =20
+>=20
+>=20
+> --
+> Mitchell Augustin
+> Software Engineer - Ubuntu Partner Engineering
+>=20
 
