@@ -1,209 +1,95 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D175C15B971
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB2E1B4F21;
+	Wed, 19 Feb 2025 09:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739958108; cv=none; b=DqvrO2Ai29n1GxKGIDvJI9VusPbiITVWqYWZ1e0V19A8YCS4qkZz73/im37/4ahRQWcwRhV2+hv8Kr9FC6hURJnXNj5EiFM/KKFHg0NCqyIaJY0ug4BuMoEcA+y2W1fbl8a9dEwsnunLjpbYwnISSDLW6a10QA8sarI6uiB3JgE=
+	t=1739958211; cv=none; b=k5Mnr82cAcD2T9JE8ZWmnL92DC2oHMYm4nKUeYcGUQGc0NqSxeIUeHVO4jZOWDW4qMw5JtT8GMtXvFc0t3Q23ZacvcVfTbw2pZnPDAmy24iXskp/vtkfaE2zWggYqjvYmu1GXUO0yqi8AkXmE93NjiUnoc8csjPkSgtKxuCQGLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739958108; c=relaxed/simple;
-	bh=OqVfjPY4uovxjbBBcLnPOdCFmXYjPN5y/81gUS2Ep4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YIXpuwkMxza8tiWxdEAO0K5cfSCVXsSqQXiYr98/YpbDc4xkSXYc5DGz7smdlvX13dbTlPff9udMnymTtMYR+ODUS8IcUUAqS5GXSzyN4HKlnt3b07LjVNiTehhYvX+BQrbnksap7EnIMYOtiCI3VZd2JoKsm/P78wj1XDMkaos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tkga5-0001Ah-I0; Wed, 19 Feb 2025 10:41:25 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tkga4-001jyF-2O;
-	Wed, 19 Feb 2025 10:41:24 +0100
-Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 690343C67A2;
-	Wed, 19 Feb 2025 09:41:24 +0000 (UTC)
-Date: Wed, 19 Feb 2025 10:41:24 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Dimitri Fedrau <dimitri.fedrau@liebherr.com>, 
-	Dimitri Fedrau <dima.fedrau@gmail.com>
-Subject: Re: [PATCH 2/2] can: flexcan: add transceiver capabilities
-Message-ID: <20250219-garnet-gorilla-of-will-6e389e-mkl@pengutronix.de>
-References: <20250211-flexcan-add-transceiver-caps-v1-0-c6abb7817b0f@liebherr.com>
- <20250211-flexcan-add-transceiver-caps-v1-2-c6abb7817b0f@liebherr.com>
+	s=arc-20240116; t=1739958211; c=relaxed/simple;
+	bh=JbQfZE+vLsay+m41W/xExMvsph46lPBJtYHfkRyAxdw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hh3pcf5buM7CrvEftLPQQIWHoNlkEAXBnIGBWGsKd6/VdIHHHKREpLBApm4YHP31BTEKX6+Ke1FzVFXH60CEdgGUFUzGQ2FzYpuAjOZo4GMKx5kCO1vfzNKBVv8PdTiFLIYBbrtCQMjljkt544F4Q08Ie+pqyWVLRSCd1flz8mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUATjFqP; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUATjFqP"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e4419a47887so4845296276.0;
+        Wed, 19 Feb 2025 01:43:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739958209; x=1740563009; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JbQfZE+vLsay+m41W/xExMvsph46lPBJtYHfkRyAxdw=;
+        b=CUATjFqPhA43PvcqgI8KA79AiKj96IUELf7ndyZJWe+gD/y7uQ1vsQCexotvMEoopZ
+         OF4d9jXLaTFtsBwRpGrDH5TLieLmg/zW8foM4+MP26kn+nYhHbk5fkWacDoTYWwv+Nwl
+         wvHkWlefOY0mUGh6mg0QGFSYL/AxRCUvom8BblVQ19o3PzmI3SluDqlpPN4l/Pa0nuFz
+         YOdg/PTbyst2Qf+wEzjfI6EA1ACCRDi2Ruvg1DpLqmtlSXF7sJOArkLkFmRjmhjC7yeI
+         6eZU4zZlv/MFoTYhvFsIPhgfM1XXBLCcOFRvbieVt3JV8SLSA/k/UztDmHeXl88rBMBx
+         DNVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739958209; x=1740563009;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JbQfZE+vLsay+m41W/xExMvsph46lPBJtYHfkRyAxdw=;
+        b=sUkWwhjJRwzvZQ2ZfLy8A5kVbRWFBNmB43YKPONkJb8fqJLWIqMjwNptQvJiO2NlSu
+         1A/YzCbgxYFlLMED//e1t6xM9fK4RMCSRUHS2nX56TseC6Tm+q5B+LGh61KyJS4i7D22
+         apI5KMKDF5jXhmUvwArM/8dJITdAT+ZObxwBedikfBR/SBAolZLfdW92Vlv7X+HbBLBV
+         Q8y+u0k6DA7gu7B04pUtBf5K6E9tRgKZq2NIJ036WcvGt3kXVdR6a+/dm/5JBsABVQuK
+         hh7Jmr+7m5rvoQlxzZTGAgUQ9/dvVLQTniDDvdBDgYhhF8ABmIr50QcCfIXn8wm1Ro+l
+         Nqpg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2a+luLmQg1Q3eqd3mZkke27Y8mDAapoQnCuIY7bCGAzwK4z0yd/CvJekgSa7x90t525UwZWgalLY=@vger.kernel.org, AJvYcCWn6tNUsb7DZAacG3x8ZpSZqDwRHLAEdZxthzyN5RgunaGnlPWkOzS9OKKgs9WECp7njSewSeg2jti1@vger.kernel.org, AJvYcCX0LSE9h3t8z08jCC03K8BVl3aJnQD33tN38BA7sMhgSlkfIURNdsQtnB5/X8XeKYY69Swp7oYLX2zjLCU=@vger.kernel.org, AJvYcCX5ei3+qQBOyd5gen1IHX6sll7fg6wEs6f/s0K07n8rjuKzTHp2nqKfcddp7sDBjiygrFeY14dTlGwqXEpG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR0gQ4qPVrIM0E763ZfDVXFlpS6A2yOWe9gkvGoMpdUcx8TTCQ
+	p4Bjziryxs7qYNsJ2vm741S2DfW6U1SfO//+9sYqbISCbJqVXPvXAMNI9+jIqLTBDAfjwdrh2LN
+	UwfM9ZsB647+dSlI5tlPZAs+8OCc=
+X-Gm-Gg: ASbGncudIUXCQyq+r9E5NHMkC6NlRbQkg5gRh2fy84H2Pc9NmKOi9jp8kWmCezGvbeL
+	PAEfwmM8iz2HS8sAzNhxlOIAR46t1TBopStrsmTqoMRhSm9n6LMjQWI72ykn10W7lOQOWqEYeLg
+	==
+X-Google-Smtp-Source: AGHT+IF4fhS5ToYgiyprNptli3rl/YWe/Sr8AbYoBe7Xa+PURKeBJb7TRkFTdB3HeJfB6d1BuGRjs+ziA08+lfNk/74=
+X-Received: by 2002:a05:6902:1509:b0:e5b:1453:d2e4 with SMTP id
+ 3f1490d57ef6-e5e0a09dcb1mr2433065276.11.1739958208906; Wed, 19 Feb 2025
+ 01:43:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xh2teahwk43t3c4n"
-Content-Disposition: inline
-In-Reply-To: <20250211-flexcan-add-transceiver-caps-v1-2-c6abb7817b0f@liebherr.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250219-isp-v1-0-6d3e89b67c31@gmail.com> <20250219-isp-v1-1-6d3e89b67c31@gmail.com>
+ <400d64ed-670a-4297-b43b-cdf4e8599c7b@kernel.org>
+In-Reply-To: <400d64ed-670a-4297-b43b-cdf4e8599c7b@kernel.org>
+From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Date: Wed, 19 Feb 2025 10:43:17 +0100
+X-Gm-Features: AWEUYZngFT_TlGtzAp7eDIc5jUmixD2xinxUmQy_lSABzD_u61AwBZNq6Cj2sCI
+Message-ID: <CAMT+MTSb2gdkfCZE3i+0ah8AgE_G8mH2MFTms=QgFwd-nbA8Ag@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: power: apple,pmgr-pwrstate: Add
+ force-{disable,reset} properties
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sven Peter <sven@svenpeter.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-media@vger.kernel.org, imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 19 Feb 2025 at 10:34, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 19/02/2025 10:26, Sasha Finkelstein via B4 Relay wrote:
+> > From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> >
+> > Add properties to set disable/reset bits when powering down
+> > certain domains
+>
+>
+> Please explain why and what problem are you solving. This looks too
+> close to SW policy or really arbitrary choice. Background would be useful.
 
---xh2teahwk43t3c4n
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] can: flexcan: add transceiver capabilities
-MIME-Version: 1.0
-
-On 11.02.2025 14:12:34, Dimitri Fedrau via B4 Relay wrote:
-> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
->=20
-> Currently the flexcan driver does not support adding PHYs. Add the
-> capability to ensure that the PHY is in operational state when the link
-> is set to an "up" state.
->=20
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> ---
->  drivers/net/can/flexcan/flexcan-core.c | 25 +++++++++++++++++++------
->  drivers/net/can/flexcan/flexcan.h      |  1 +
->  2 files changed, 20 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/fle=
-xcan/flexcan-core.c
-> index ac1a860986df69a1dd64c25ff879490d5b21073b..a03dc8e3c80546a0e2fa9a85f=
-0e0cc8159afa4f0 100644
-> --- a/drivers/net/can/flexcan/flexcan-core.c
-> +++ b/drivers/net/can/flexcan/flexcan-core.c
-> @@ -30,6 +30,7 @@
->  #include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/phy/phy.h>
-> =20
->  #include "flexcan.h"
-> =20
-> @@ -634,18 +635,22 @@ static void flexcan_clks_disable(const struct flexc=
-an_priv *priv)
-> =20
->  static inline int flexcan_transceiver_enable(const struct flexcan_priv *=
-priv)
->  {
-> -	if (!priv->reg_xceiver)
-> -		return 0;
-> +	if (priv->reg_xceiver)
-> +		return regulator_enable(priv->reg_xceiver);
-> +	else if (priv->xceiver)
-> +		return phy_power_on(priv->xceiver);
-> =20
-> -	return regulator_enable(priv->reg_xceiver);
-> +	return 0;
->  }
-> =20
->  static inline int flexcan_transceiver_disable(const struct flexcan_priv =
-*priv)
->  {
-> -	if (!priv->reg_xceiver)
-> -		return 0;
-> +	if (priv->reg_xceiver)
-> +		return regulator_disable(priv->reg_xceiver);
-> +	else if (priv->xceiver)
-> +		return phy_power_off(priv->xceiver);
-> =20
-> -	return regulator_disable(priv->reg_xceiver);
-> +	return 0;
->  }
-> =20
->  static int flexcan_chip_enable(struct flexcan_priv *priv)
-> @@ -2061,6 +2066,7 @@ static int flexcan_probe(struct platform_device *pd=
-ev)
->  	struct net_device *dev;
->  	struct flexcan_priv *priv;
->  	struct regulator *reg_xceiver;
-> +	struct phy *xceiver;
->  	struct clk *clk_ipg =3D NULL, *clk_per =3D NULL;
->  	struct flexcan_regs __iomem *regs;
->  	struct flexcan_platform_data *pdata;
-> @@ -2076,6 +2082,12 @@ static int flexcan_probe(struct platform_device *p=
-dev)
->  	else if (IS_ERR(reg_xceiver))
->  		return PTR_ERR(reg_xceiver);
-> =20
-> +	xceiver =3D devm_phy_optional_get(&pdev->dev, NULL);
-> +	if (IS_ERR(xceiver)) {
-> +		dev_err(&pdev->dev, "failed to get phy\n");
-> +		return PTR_ERR(xceiver);
-> +	}
-> +
->  	if (pdev->dev.of_node) {
->  		of_property_read_u32(pdev->dev.of_node,
->  				     "clock-frequency", &clock_freq);
-> @@ -2173,6 +2185,7 @@ static int flexcan_probe(struct platform_device *pd=
-ev)
->  	priv->clk_per =3D clk_per;
->  	priv->clk_src =3D clk_src;
->  	priv->reg_xceiver =3D reg_xceiver;
-> +	priv->xceiver =3D xceiver;
-> =20
->  	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_NR_IRQ_3) {
->  		priv->irq_boff =3D platform_get_irq(pdev, 1);
-
-please also add
-	if (xceiver)
-		priv->can.bitrate_max =3D xceiver->attrs.max_link_rate;
-
-
-> diff --git a/drivers/net/can/flexcan/flexcan.h b/drivers/net/can/flexcan/=
-flexcan.h
-> index 4933d8c7439e62b5d6fcc445d88c2b5ccbfa13bb..56be40875eee24aee9297c4bc=
-7c2fc4380e682ff 100644
-> --- a/drivers/net/can/flexcan/flexcan.h
-> +++ b/drivers/net/can/flexcan/flexcan.h
-> @@ -103,6 +103,7 @@ struct flexcan_priv {
->  	struct clk *clk_per;
->  	struct flexcan_devtype_data devtype_data;
->  	struct regulator *reg_xceiver;
-> +	struct phy *xceiver;
-
-All other drivers name this variable "transceiver", does it make sense
-to use this name here, too?
-
->  	struct flexcan_stop_mode stm;
-> =20
->  	int irq_boff;
-
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---xh2teahwk43t3c4n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAme1p0EACgkQDHRl3/mQ
-kZxZawf8DS2ziMwjv52nMtPJBIEZ/Wae0iSvk40AHkni1Cj0dKISm4FEWt9LynG/
-XbJfdytN4m1N0ZiMQkPEIkck8ZXUQJuYtmky4Qw4weh3voavw9rZuDRIaCFs99ES
-6lNz5Wz59iMipHFv//iWGUrviCkhON34NtKwEd3HKAq+oMb6RYEbvYEjQL36DXj1
-0xlDfejiMuSn2J9ylx2h978MCLBibly28BVJZ+6x/qVR70moCg+LWXzKXDW83jhy
-siFJMcMfumOJRUiBz0UKVxfEV8D13Hj+XipoLeaJbOI/YA7aIAgq+a2E85TRIk37
-z6Prd0caYlIt0sKjG3r1Xtg8Zbc4aw==
-=0a4S
------END PGP SIGNATURE-----
-
---xh2teahwk43t3c4n--
+The ISP block has some weird requirements where some of it's power domains
+will not power down correctly without using the "force disable" or "force reset"
+pmgr feature. Basically a hardware quirk.
