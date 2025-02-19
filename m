@@ -1,155 +1,101 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2560F1CD213;
-	Wed, 19 Feb 2025 09:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427681B86E9
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739958273; cv=none; b=qAxn2Jjt6vfuZc6Ct1vzTmsPh5AqEgx84qbp0DkMiPwXxfKDAwRuhTsqwpktaPuDucNl2bCslaJnBBZPpSD8PIPEOnH5+l0gwWFC/3Y6mbmWjUreriq+6x66A6n6oUZBXgB/GGjiOIY3L9RQh/OaH/v7RQ0IHMAtBaqh10ln9HU=
+	t=1739958384; cv=none; b=pxPIbh8w0A9Ei1nB8iuNhLdkeKXbvJ3s3pP1h5RZo2C899wRqaVMdu0XqCXhIrH3IlicNkLgbcx/VHH/jZSwQOmfxJLpHgdkP6GkCHtuxX1B6NC4e+YhapZ+R9DN1x6rotpEh8oUmqi0Zs1PV//OUVgyAv3krdHHJlN5jUbro7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739958273; c=relaxed/simple;
-	bh=3aGNDO4JPGcz2XPIJhdm7F9SVuX+jTc81pEhyWCKxhI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YuhrSW+QiKlNtUoi5l7e62FyjD/k6pMB/+DLr/pnip0WcBmeZgZScKXgI28Lrsnkm7potvOeRpqqp+oX/2ZJtNhhgS6XWSzHsEFkE713w1RKyL4HDHWLfpnMtindfwkmH3hzB+vm8K9ThJtn/67jN6wKVyk4ei5dkoJMm+O2tB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ook6ip7K; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ook6ip7K"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7C6EED21;
-	Wed, 19 Feb 2025 10:43:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739958184;
-	bh=3aGNDO4JPGcz2XPIJhdm7F9SVuX+jTc81pEhyWCKxhI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ook6ip7KEZmPutIEMqsGQficvTdxqcrR6VZggTSxlZdVjEEauX2We9C16073Q0hwq
-	 iTyjjlBsrYb92k3YY1H+FFnIde1nYciwmlEWRAL25bFTfq6uGHauPgmBxnZJbVQGIa
-	 HVv/mvDsnusQuJk3qzbepdzeoDrKjrikXchdK9iw=
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Wed, 19 Feb 2025 11:44:09 +0200
-Subject: [PATCH v2 3/3] media: i2c: ds90ub913: Use
- v4l2_get_frame_desc_passthrough
+	s=arc-20240116; t=1739958384; c=relaxed/simple;
+	bh=6VQ4aEJy9a96AQdVkahptEXSrtt0nmZNJQD2h5YtIQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Onb8pS38hAUa+yU1a5pMbAMUs8nnyRva5ghYJd9S+1GpWSN2h4Sm3mlM5MRS6e4oWTk3PhBCJjemaYE24Inw3CYlqH7pgSG3YQt+e2XLxTf3WreNeW1ZjZygNL+LDKVGhuuUMRqlEO3k37q/HnPonG81G6JMaDKku+uASjC9S6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tkgen-00029E-De; Wed, 19 Feb 2025 10:46:17 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tkgen-001jyo-0K;
+	Wed, 19 Feb 2025 10:46:17 +0100
+Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id BDD683C67B3;
+	Wed, 19 Feb 2025 09:46:16 +0000 (UTC)
+Date: Wed, 19 Feb 2025 10:46:16 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	Tong Zhang <ztong0001@gmail.com>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND v2 0/4] can: c_can: Simplify few things
+Message-ID: <20250219-intelligent-fragrant-lionfish-a1e11b-mkl@pengutronix.de>
+References: <20250212-syscon-phandle-args-can-v2-0-ac9a1253396b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-frame-desc-passthrough-v2-3-5135d57ecd6a@ideasonboard.com>
-References: <20250219-frame-desc-passthrough-v2-0-5135d57ecd6a@ideasonboard.com>
-In-Reply-To: <20250219-frame-desc-passthrough-v2-0-5135d57ecd6a@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2612;
- i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=3aGNDO4JPGcz2XPIJhdm7F9SVuX+jTc81pEhyWCKxhI=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBntaf4z7ZLOrBGD/K17IhmUXio4xWHAQT52VRq0
- IbUyql9CGiJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ7Wn+AAKCRD6PaqMvJYe
- 9aWwD/4g4IdEzXw9peib70gAmY3Ndm22YVviyzgRWtez6ZntuOwlUtM90ZP9LT6+z0cmSyNEca9
- hPEyt3d9F3C+InY1FCVlzwUbHClpeDAc/oUHt+oJMjopbAKXk80SCIS5Fu4Ag1D4zO9vtLC7Rzg
- rxoFzoyjNQZBnenfsSIPafGBs5HVaGx5Qy/yS1LoPXxoYcbIHki/LVCPSpNdVPQfZPombhQ4mjz
- UE50QVtQxY4xuihyrJ6El6ZJhskVBmQxTzb5gy4LBi+i79P7WUHeHlA+hhW3WAyOe/Z0d7gBBgq
- 4JuTgQUwOdXY0GsFd1eqFXMvrvxPEhz5nJJ1wIcys9d7u7OXnRJUnDcLCDAPCBwDqV+a3xj+UXR
- YoU1pza8jTzOLeHEJ1upBxcafmjk9JwT+YVzuN4Gv5kakIkCc7IcD/vtER3yvd+LnXOzcoRE9+N
- btt2V8n804o2pdZNMg2LMZGycB5tK7B9Kiswo+g9uVL8W0KYl+ETN/QzIblc0JhW3De3FQqYU4q
- mP9wtADl/rMVrwdL6VdTuhWndDMMIEijZrRU365FqbH+BvQG2rTb9hJ0ICe8gNno7CaON2U74lG
- N7oUZTmLG6j6/pGKCXWY8zpDqgeH2S0ju109pjGtrn77Fs1xbHBOUJ2HKzWd10nSrR6th5mEN0W
- QI8p8TK8YU+m5+g==
-X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="srd62ye3iaw732cc"
+Content-Disposition: inline
+In-Reply-To: <20250212-syscon-phandle-args-can-v2-0-ac9a1253396b@linaro.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Use the new v4l2_get_frame_desc_passthrough helper for .get_frame_desc.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
----
- drivers/media/i2c/ds90ub913.c | 59 +------------------------------------------
- 1 file changed, 1 insertion(+), 58 deletions(-)
+--srd62ye3iaw732cc
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RESEND v2 0/4] can: c_can: Simplify few things
+MIME-Version: 1.0
 
-diff --git a/drivers/media/i2c/ds90ub913.c b/drivers/media/i2c/ds90ub913.c
-index fd2d2d5272bf..9ae761d7e3a5 100644
---- a/drivers/media/i2c/ds90ub913.c
-+++ b/drivers/media/i2c/ds90ub913.c
-@@ -358,63 +358,6 @@ static int ub913_set_routing(struct v4l2_subdev *sd,
- 	return _ub913_set_routing(sd, state, routing);
- }
- 
--static int ub913_get_frame_desc(struct v4l2_subdev *sd, unsigned int pad,
--				struct v4l2_mbus_frame_desc *fd)
--{
--	struct ub913_data *priv = sd_to_ub913(sd);
--	const struct v4l2_subdev_krouting *routing;
--	struct v4l2_mbus_frame_desc source_fd;
--	struct v4l2_subdev_route *route;
--	struct v4l2_subdev_state *state;
--	int ret;
--
--	if (pad != UB913_PAD_SOURCE)
--		return -EINVAL;
--
--	ret = v4l2_subdev_call(priv->source_sd, pad, get_frame_desc,
--			       priv->source_sd_pad, &source_fd);
--	if (ret)
--		return ret;
--
--	fd->type = V4L2_MBUS_FRAME_DESC_TYPE_PARALLEL;
--
--	state = v4l2_subdev_lock_and_get_active_state(sd);
--
--	routing = &state->routing;
--
--	for_each_active_route(routing, route) {
--		unsigned int i;
--
--		if (route->source_pad != pad)
--			continue;
--
--		for (i = 0; i < source_fd.num_entries; i++) {
--			if (source_fd.entry[i].stream == route->sink_stream)
--				break;
--		}
--
--		if (i == source_fd.num_entries) {
--			dev_err(&priv->client->dev,
--				"Failed to find stream from source frame desc\n");
--			ret = -EPIPE;
--			goto out_unlock;
--		}
--
--		fd->entry[fd->num_entries].stream = route->source_stream;
--		fd->entry[fd->num_entries].flags = source_fd.entry[i].flags;
--		fd->entry[fd->num_entries].length = source_fd.entry[i].length;
--		fd->entry[fd->num_entries].pixelcode =
--			source_fd.entry[i].pixelcode;
--
--		fd->num_entries++;
--	}
--
--out_unlock:
--	v4l2_subdev_unlock_state(state);
--
--	return ret;
--}
--
- static int ub913_set_fmt(struct v4l2_subdev *sd,
- 			 struct v4l2_subdev_state *state,
- 			 struct v4l2_subdev_format *format)
-@@ -514,7 +457,7 @@ static const struct v4l2_subdev_pad_ops ub913_pad_ops = {
- 	.enable_streams = ub913_enable_streams,
- 	.disable_streams = ub913_disable_streams,
- 	.set_routing = ub913_set_routing,
--	.get_frame_desc = ub913_get_frame_desc,
-+	.get_frame_desc = v4l2_get_frame_desc_passthrough,
- 	.get_fmt = v4l2_subdev_get_fmt,
- 	.set_fmt = ub913_set_fmt,
- };
+On 12.02.2025 21:23:11, Krzysztof Kozlowski wrote:
+> Changes in v2:
+> - None, just rebase and drop applied fix.
+> - Link to v1: https://lore.kernel.org/r/20250112-syscon-phandle-args-can-=
+v1-0-314d9549906f@linaro.org
+>=20
+> Not tested on hardware.
 
--- 
-2.43.0
+Applied to linux-can-next.
 
+Thanks,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--srd62ye3iaw732cc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAme1qGUACgkQDHRl3/mQ
+kZyhSgf8DyLEUYoXYmDa0PqcV0NWi7+V90cDHTAMBjtZJD/06rCwNVYZubsgqBMG
+H7MxPwh0HhHHKdDZ/dEZR7caaXhGNinZOoKG7jtxUV8P4Xrb9V9Y8mRGn9+IlGoe
+Nu4kqPBqE6htMpvmFCgnzu21KEhexyaDsYAQwQlN4uQgnblqtds5+/s90ABAOMTq
+PHsWuKXTsOutNR0zdrqvhRuRQqadsy/NWOh8/TwhWe1t8dAyGhYDixzIqq4F6Kfx
+RxIUMtEKw/LnnXHwubo5N04h9IpTumM2q9JVzplIZl2a0gStiTICEfeN7J5+6rnf
+msGnFNSeeW+sak+MEXiWrOCzCcgDBw==
+=33r+
+-----END PGP SIGNATURE-----
+
+--srd62ye3iaw732cc--
