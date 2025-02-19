@@ -1,461 +1,144 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7B81FDA7C
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1BD212F83
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739983012; cv=none; b=dWrabR+dq/ICQj/34ZMJapsJKDfB5TAXKLUuIgcNy1qg/v5y48QYQcnY9K0lvveS8x8CbYJVsjVU+aQZVGNbjZm/oQ1ON9Y9r0kZF2573dzoo2ZB3/MyfaY4ex/Hytr+nWDvhPVC11mPKmWTKngQCojFXOV7soZt3L7hssIecW4=
+	t=1739983024; cv=none; b=bX959ubm9h46/88PKrU75dJY1JAeX3N1dH/3jUQE2Avwhs3WF7o+R6LQ3Dl5Br2cr5i/CN1b3zTBtBFf0h98SU5gWVGQgyiWHy2/jmctGKi68GiK0cVivXjdaj1LZ+YrCZXtPOpfFOT9j5SDMRwO61elDKImEKBMz2mwIDtUUZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739983012; c=relaxed/simple;
-	bh=WWLgwcr1iviX+ssT6byJTCw29PdFNdzy9d/eq3z4WFM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Onzz1e4IuhVXO9iHvL9RlggwmiHPVNsC4qgpY0GGjD3Imvwv/Hfjp7RyhpMc55aBJu571jnlcluBbU4e7WNhGrdf9BSD4Lvr0JTaY6jBOrwUHjvBQfVg/SPoc/8OMi2UTuRUQOWQM2b/OeYihMQHRFTR4nT6iW0STU2daLNCCu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Fb9CpNa5; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fb9CpNa5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=dVIbxD0kjnfglDLzgJxL3mSgF+P17AVA1k/bY9HdUKQ=; b=Fb9CpNa5hjmq0zZNdyYUaIB+qb
-	xgLT8VEnHWUzdQGys6VhEq1NBTm6nFLUejw7bT49kXjaOzSw6ZzU1xUayEajYaDJMPUfutv4cL/kN
-	TI73ZmzqgmwMukfrzVHxkWk+hPjYk1CCdZLe/jE8ENMnTCDkdGFqfg9CqFmW2L4aLp2OH21invlEN
-	DCzC1m78LdSNGVnlSKuRn6WmHagvepAJIJ13K0OSZle/sLJcFaRLL/0WvuVVkmWtIMry+0/aBQcJ3
-	7Eas133TQo6i6XSxpnGzINxoqJNp0aQ+DVp5c/hFlajjYij1ZLhuC6tTtcGu1j1HjfqO8QWyClikO
-	mumGcWLw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkn41-00000002HAV-04Vt;
-	Wed, 19 Feb 2025 16:36:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 15D523078A4; Wed, 19 Feb 2025 17:36:43 +0100 (CET)
-Message-ID: <20250219163515.259229338@infradead.org>
-User-Agent: quilt/0.66
-Date: Wed, 19 Feb 2025 17:21:16 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
- peterz@infradead.org,
- alyssa.milburn@intel.com,
- scott.d.constable@intel.com,
- joao@overdrivepizza.com,
- andrew.cooper3@citrix.com,
- jpoimboe@kernel.org,
- jose.marchesi@oracle.com,
- hjl.tools@gmail.com,
- ndesaulniers@google.com,
- samitolvanen@google.com,
- nathan@kernel.org,
- ojeda@kernel.org,
- kees@kernel.org,
- alexei.starovoitov@gmail.com,
- mhiramat@kernel.org,
- jmill@asu.edu
-Subject: [PATCH v3 09/10] x86/ibt: Implement FineIBT-BHI mitigation
-References: <20250219162107.880673196@infradead.org>
+	s=arc-20240116; t=1739983024; c=relaxed/simple;
+	bh=MumPnFtZBttP0cpGAujchTVlCrGubX02XfmwGtIwkc8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=X92pLGoRjKU1vokbNJoYNcnJKe68uiUHtLW58CgyuNw5CjZ+Qvej7N5kGbm2ZXsQ0SC+txxX/WCAzMlx3LOew984GVrnNMs9ZjkVbZOmCAdrvQmAC9bWGLQkVdP/MAMyCsb0xvbGjRT+bQ3TqUMDlR9/rg2mLjb7GJ9xKr3HIJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d1a365d10fso95715ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:37:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739983022; x=1740587822;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4hiqv5qoK2NFncU8CtvmpmTNQ0PTNuFD0TFT+7vIIhg=;
+        b=XN0BZ6rJbPFX6n9WllaqCUUeXYqwAp5BqCCP9UrCsJGiOkWOfD7cVTgcR290SaUi5G
+         UVB/I6GxnHmPY9uzEzAkSImJ0PHqumy2cspYfPeLItdwieV3NVLbj1vbRYrHhbhTZySu
+         HGePmh+oBdIP/n+NZFGCI0p680hBXBtc4YqcNIcczT2hk2eQXnwGnjAeb0Tk7CRIRnaH
+         r9VM7Vl5yooXgs9j2M+j6evP4cbdZPDAOZfK8bcuzV5M/AzCAH3n2oa/zVjGn2t2Y2gL
+         h4Gs/S3UBK6FZctSyg3CGH5aiOaVbUMnDaON2uKf96EQnRrrc3rcDa13y8rOoi8Bad32
+         b0/Q==
+X-Gm-Message-State: AOJu0Yxk0koel5sijYIREbRw3vK+MpXs2ECaf3I1z0Q+EMx/dFICknTi
+	tBlf19O4G4eRCnHmC5vn1/LCVlwcGR2IUFu4ZUbdFhvPRFnzXjqcY+n0H6sYkYP75QeFUM/vcgw
+	yYZzHRdPgHwZgLbkvlDfUNJoYRtCBRvHdhHRL2Zfx+wL/+bnhndoBVXg=
+X-Google-Smtp-Source: AGHT+IGEwaR9+xOqFd8DT98dRIauBCrMHbza0TQHqsyXa8HRTNOu+XYISZAs5MAkEgUlMgRurD4KUL1UNm4X0aPXs5sqrQaR7une
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Received: by 2002:a92:cd84:0:b0:3d1:4a69:e58f with SMTP id
+ e9e14a558f8ab-3d2b4adf2edmr47551325ab.2.1739983021699; Wed, 19 Feb 2025
+ 08:37:01 -0800 (PST)
+Date: Wed, 19 Feb 2025 08:37:01 -0800
+In-Reply-To: <984ABB17-1380-4581-B8AD-5E233B167856@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b608ad.050a0220.14d86d.0151.GAE@google.com>
+Subject: Re: [syzbot] [mm?] [bcachefs?] WARNING in lock_list_lru_of_memcg
+From: syzbot <syzbot+38a0cbd267eff2d286ff@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-While WAIT_FOR_ENDBR is specified to be a full speculation stop; it
-has been shown that some implementations are 'leaky' to such an extend
-that speculation can escape even the FineIBT preamble.
+Hello,
 
-To deal with this, add additional hardening to the FineIBT preamble.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+BUG: corrupted list in new_inode
 
-Notably, using a new LLVM feature:
+ slab debugfs_inode_cache start ffff888045d00a30 pointer offset 448 size 1176
+list_add corruption. next->prev should be prev (ffff888030eb09c0), but was 0000000000000000. (next=ffff888045d00bf0).
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:31!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5848 Comm: syz-executor Not tainted 6.14.0-rc3-syzkaller-g6537cfb395f3-dirty #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:__list_add_valid_or_report+0xf3/0x130 lib/list_debug.c:29
+Code: e9 0a fd 42 80 7c 2d 00 00 74 08 48 89 df e8 64 dd 2c fd 49 8b 56 08 48 c7 c7 80 ef 80 8c 4c 89 e6 4c 89 f1 e8 ce e8 2a fc 90 <0f> 0b 4c 89 e7 e8 53 e9 0a fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 34
+RSP: 0018:ffffc9000cdced78 EFLAGS: 00010246
+RAX: 0000000000000075 RBX: ffff888045d00bf8 RCX: 77c72d62d2106c00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 1ffff11008ba017f R08: ffffffff81a1108c R09: fffffbfff1d3a614
+R10: dffffc0000000000 R11: fffffbfff1d3a614 R12: ffff888030eb09c0
+R13: dffffc0000000000 R14: ffff888045d00bf0 R15: ffff888045d01108
+FS:  0000555584544500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffa5c4d56c0 CR3: 000000003f29a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __list_add_valid include/linux/list.h:88 [inline]
+ __list_add include/linux/list.h:150 [inline]
+ list_add include/linux/list.h:169 [inline]
+ inode_sb_list_add fs/inode.c:617 [inline]
+ new_inode+0xc7/0x1d0 fs/inode.c:1195
+ debugfs_get_inode fs/debugfs/inode.c:72 [inline]
+ debugfs_create_dir+0xf6/0x430 fs/debugfs/inode.c:597
+ wiphy_register+0x1a59/0x2650 net/wireless/core.c:1015
+ ieee80211_register_hw+0x35d9/0x42e0 net/mac80211/main.c:1587
+ mac80211_hwsim_new_radio+0x2ae8/0x4a40 drivers/net/wireless/virtual/mac80211_hwsim.c:5558
+ hwsim_new_radio_nl+0xece/0x2290 drivers/net/wireless/virtual/mac80211_hwsim.c:6242
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb1f/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2543
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:733
+ __sys_sendto+0x363/0x4c0 net/socket.c:2187
+ __do_sys_sendto net/socket.c:2194 [inline]
+ __se_sys_sendto net/socket.c:2190 [inline]
+ __x64_sys_sendto+0xde/0x100 net/socket.c:2190
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd5e5b8ec7c
+Code: 2a 5f 02 00 44 8b 4c 24 2c 4c 8b 44 24 20 89 c5 44 8b 54 24 28 48 8b 54 24 18 b8 2c 00 00 00 48 8b 74 24 10 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 34 89 ef 48 89 44 24 08 e8 70 5f 02 00 48 8b
+RSP: 002b:00007ffc35ff7120 EFLAGS: 00000293 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00007fd5e68d4620 RCX: 00007fd5e5b8ec7c
+RDX: 0000000000000024 RSI: 00007fd5e68d4670 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 00007ffc35ff7174 R09: 000000000000000c
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000003
+R13: 0000000000000000 R14: 00007fd5e68d4670 R15: 0000000000000000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__list_add_valid_or_report+0xf3/0x130 lib/list_debug.c:29
+Code: e9 0a fd 42 80 7c 2d 00 00 74 08 48 89 df e8 64 dd 2c fd 49 8b 56 08 48 c7 c7 80 ef 80 8c 4c 89 e6 4c 89 f1 e8 ce e8 2a fc 90 <0f> 0b 4c 89 e7 e8 53 e9 0a fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 34
+RSP: 0018:ffffc9000cdced78 EFLAGS: 00010246
+RAX: 0000000000000075 RBX: ffff888045d00bf8 RCX: 77c72d62d2106c00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 1ffff11008ba017f R08: ffffffff81a1108c R09: fffffbfff1d3a614
+R10: dffffc0000000000 R11: fffffbfff1d3a614 R12: ffff888030eb09c0
+R13: dffffc0000000000 R14: ffff888045d00bf0 R15: ffff888045d01108
+FS:  0000555584544500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffa5c4d56c0 CR3: 000000003f29a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-  https://github.com/llvm/llvm-project/commit/e223485c9b38a5579991b8cebb6a200153eee245
 
-which encodes the number of arguments in the kCFI preamble's register.
+Tested on:
 
-Using this register<->arity mapping, have the FineIBT preamble CALL
-into a stub clobbering the relevant argument registers in the
-speculative case.
-
-(This is where Scott goes and gives more details...)
-
-Suggested-by: Scott Constable <scott.d.constable@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- Makefile                      |    3 +
- arch/x86/Kconfig              |    8 +++
- arch/x86/include/asm/cfi.h    |    6 ++
- arch/x86/kernel/alternative.c |  101 +++++++++++++++++++++++++++++++++++++-----
- arch/x86/net/bpf_jit_comp.c   |   29 ++++++++----
- 5 files changed, 128 insertions(+), 19 deletions(-)
-
---- a/Makefile
-+++ b/Makefile
-@@ -1014,6 +1014,9 @@ CC_FLAGS_CFI	:= -fsanitize=kcfi
- ifdef CONFIG_CFI_ICALL_NORMALIZE_INTEGERS
- 	CC_FLAGS_CFI	+= -fsanitize-cfi-icall-experimental-normalize-integers
- endif
-+ifdef CONFIG_FINEIBT_BHI
-+	CC_FLAGS_CFI	+= -fsanitize-kcfi-arity
-+endif
- ifdef CONFIG_RUST
- 	# Always pass -Zsanitizer-cfi-normalize-integers as CONFIG_RUST selects
- 	# CONFIG_CFI_ICALL_NORMALIZE_INTEGERS.
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2473,6 +2473,10 @@ config CC_HAS_RETURN_THUNK
- config CC_HAS_ENTRY_PADDING
- 	def_bool $(cc-option,-fpatchable-function-entry=16,16)
- 
-+config CC_HAS_KCFI_ARITY
-+	def_bool $(cc-option,-fsanitize=kcfi -fsanitize-kcfi-arity)
-+	depends on CC_IS_CLANG && !RUST
-+
- config FUNCTION_PADDING_CFI
- 	int
- 	default 59 if FUNCTION_ALIGNMENT_64B
-@@ -2498,6 +2502,10 @@ config FINEIBT
- 	depends on X86_KERNEL_IBT && CFI_CLANG && MITIGATION_RETPOLINE
- 	select CALL_PADDING
- 
-+config FINEIBT_BHI
-+	def_bool y
-+	depends on FINEIBT && CC_HAS_KCFI_ARITY
-+
- config HAVE_CALL_THUNKS
- 	def_bool y
- 	depends on CC_HAS_ENTRY_PADDING && MITIGATION_RETHUNK && OBJTOOL
---- a/arch/x86/include/asm/cfi.h
-+++ b/arch/x86/include/asm/cfi.h
-@@ -101,6 +101,7 @@ enum cfi_mode {
- 
- extern enum cfi_mode cfi_mode;
- extern bool cfi_warn;
-+extern bool cfi_bhi;
- 
- typedef u8 bhi_thunk[32];
- extern bhi_thunk __bhi_args[];
-@@ -130,6 +131,7 @@ static inline int cfi_get_offset(void)
- #define cfi_get_offset cfi_get_offset
- 
- extern u32 cfi_get_func_hash(void *func);
-+extern int cfi_get_func_arity(void *func);
- 
- #ifdef CONFIG_FINEIBT
- extern bool decode_fineibt_insn(int ud_type, struct pt_regs *regs, unsigned long *target, u32 *type);
-@@ -153,6 +155,10 @@ static inline u32 cfi_get_func_hash(void
- {
- 	return 0;
- }
-+static inline int cfi_get_func_arity(void *func)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_CFI_CLANG */
- 
- #if HAS_KERNEL_IBT == 1
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -933,6 +933,7 @@ void __init_or_module apply_seal_endbr(s
- 
- enum cfi_mode cfi_mode __ro_after_init = __CFI_DEFAULT;
- bool cfi_warn __ro_after_init = false;
-+bool cfi_bhi __ro_after_init = false;
- 
- #ifdef CONFIG_CFI_CLANG
- struct bpf_insn;
-@@ -993,6 +994,21 @@ u32 cfi_get_func_hash(void *func)
- 
- 	return hash;
- }
-+
-+int cfi_get_func_arity(void *func)
-+{
-+	bhi_thunk *target;
-+	s32 disp;
-+
-+	if (cfi_mode != CFI_FINEIBT && !cfi_bhi)
-+		return 0;
-+
-+	if (get_kernel_nofault(disp, func - 4))
-+		return 0;
-+
-+	target = func + disp;
-+	return target - __bhi_args;
-+}
- #endif
- 
- #ifdef CONFIG_FINEIBT
-@@ -1050,6 +1066,12 @@ static __init int cfi_parse_cmdline(char
- 			} else {
- 				pr_err("Ignoring paranoid; depends on fineibt.\n");
- 			}
-+		} else if (!strcmp(str, "bhi")) {
-+			if (cfi_mode == CFI_FINEIBT) {
-+				cfi_bhi = true;
-+			} else {
-+				pr_err("Ignoring bhi; depends on fineibt.\n");
-+			}
- 		} else {
- 			pr_err("Ignoring unknown cfi option (%s).", str);
- 		}
-@@ -1099,6 +1121,7 @@ asm(	".pushsection .rodata				\n"
- 	"fineibt_preamble_start:			\n"
- 	"	endbr64					\n"
- 	"	subl	$0x12345678, %r10d		\n"
-+	"fineibt_preamble_bhi:				\n"
- 	"	jne	fineibt_preamble_start+6	\n"
- 	ASM_NOP3
- 	"fineibt_preamble_end:				\n"
-@@ -1106,9 +1129,11 @@ asm(	".pushsection .rodata				\n"
- );
- 
- extern u8 fineibt_preamble_start[];
-+extern u8 fineibt_preamble_bhi[];
- extern u8 fineibt_preamble_end[];
- 
- #define fineibt_preamble_size (fineibt_preamble_end - fineibt_preamble_start)
-+#define fineibt_preamble_bhi  (fineibt_preamble_bhi - fineibt_preamble_start)
- #define fineibt_preamble_ud   6
- #define fineibt_preamble_hash 7
- 
-@@ -1181,13 +1206,16 @@ extern u8 fineibt_paranoid_end[];
- #define fineibt_paranoid_ind  (fineibt_paranoid_ind - fineibt_paranoid_start)
- #define fineibt_paranoid_ud   0xd
- 
--static u32 decode_preamble_hash(void *addr)
-+static u32 decode_preamble_hash(void *addr, int *reg)
- {
- 	u8 *p = addr;
- 
--	/* b8 78 56 34 12          mov    $0x12345678,%eax */
--	if (p[0] == 0xb8)
-+	/* b8+reg 78 56 34 12          movl    $0x12345678,\reg */
-+	if (p[0] >= 0xb8 && p[0] < 0xc0) {
-+		if (reg)
-+			*reg = p[0] - 0xb8;
- 		return *(u32 *)(addr + 1);
-+	}
- 
- 	return 0; /* invalid hash value */
- }
-@@ -1196,11 +1224,11 @@ static u32 decode_caller_hash(void *addr
- {
- 	u8 *p = addr;
- 
--	/* 41 ba 78 56 34 12       mov    $0x12345678,%r10d */
-+	/* 41 ba 88 a9 cb ed       mov    $(-0x12345678),%r10d */
- 	if (p[0] == 0x41 && p[1] == 0xba)
- 		return -*(u32 *)(addr + 2);
- 
--	/* e8 0c 78 56 34 12	   jmp.d8  +12 */
-+	/* e8 0c 88 a9 cb ed	   jmp.d8  +12 */
- 	if (p[0] == JMP8_INSN_OPCODE && p[1] == fineibt_caller_jmp)
- 		return -*(u32 *)(addr + 2);
- 
-@@ -1265,7 +1293,7 @@ static int cfi_rand_preamble(s32 *start,
- 		void *addr = (void *)s + *s;
- 		u32 hash;
- 
--		hash = decode_preamble_hash(addr);
-+		hash = decode_preamble_hash(addr, NULL);
- 		if (WARN(!hash, "no CFI hash found at: %pS %px %*ph\n",
- 			 addr, addr, 5, addr))
- 			return -EINVAL;
-@@ -1283,6 +1311,7 @@ static int cfi_rewrite_preamble(s32 *sta
- 
- 	for (s = start; s < end; s++) {
- 		void *addr = (void *)s + *s;
-+		int arity;
- 		u32 hash;
- 
- 		/*
-@@ -1293,7 +1322,7 @@ static int cfi_rewrite_preamble(s32 *sta
- 		if (!is_endbr(addr + 16))
- 			continue;
- 
--		hash = decode_preamble_hash(addr);
-+		hash = decode_preamble_hash(addr, &arity);
- 		if (WARN(!hash, "no CFI hash found at: %pS %px %*ph\n",
- 			 addr, addr, 5, addr))
- 			return -EINVAL;
-@@ -1301,6 +1330,19 @@ static int cfi_rewrite_preamble(s32 *sta
- 		text_poke_early(addr, fineibt_preamble_start, fineibt_preamble_size);
- 		WARN_ON(*(u32 *)(addr + fineibt_preamble_hash) != 0x12345678);
- 		text_poke_early(addr + fineibt_preamble_hash, &hash, 4);
-+
-+		WARN_ONCE(!IS_ENABLED(CONFIG_FINEIBT_BHI) && arity,
-+			  "kCFI preamble has wrong register at: %pS %*ph\n",
-+			  addr, 5, addr);
-+
-+		if (!cfi_bhi || !arity)
-+			continue;
-+
-+		text_poke_early(addr + fineibt_preamble_bhi,
-+				text_gen_insn(CALL_INSN_OPCODE,
-+					      addr + fineibt_preamble_bhi,
-+					      __bhi_args[arity]),
-+				CALL_INSN_SIZE);
- 	}
- 
- 	return 0;
-@@ -1468,8 +1510,9 @@ static void __apply_fineibt(s32 *start_r
- 		cfi_rewrite_endbr(start_cfi, end_cfi);
- 
- 		if (builtin) {
--			pr_info("Using %sFineIBT CFI\n",
--				cfi_paranoid ? "paranoid " : "");
-+			pr_info("Using %sFineIBT%s CFI\n",
-+				cfi_paranoid ? "paranoid " : "",
-+				cfi_bhi ? "+BHI" : "");
- 		}
- 		return;
- 
-@@ -1520,7 +1563,7 @@ static void poison_cfi(void *addr)
- 		/*
- 		 * kCFI prefix should start with a valid hash.
- 		 */
--		if (!decode_preamble_hash(addr))
-+		if (!decode_preamble_hash(addr, NULL))
- 			break;
- 
- 		/*
-@@ -1570,6 +1613,41 @@ static bool decode_fineibt_preamble(int
- }
- 
- /*
-+ * regs->ip points to one of the UD2 in __bhi_args[].
-+ */
-+static bool decode_fineibt_bhi(int ud_type, struct pt_regs *regs,
-+			       unsigned long *target, u32 *type)
-+{
-+	unsigned long addr;
-+	u32 hash;
-+
-+	/*
-+	 * Fetch the return address from the stack, this points to the
-+	 * FineIBT preamble. Since the CALL instruction is in the 5 last
-+	 * bytes of the preamble, the return address is in fact the target
-+	 * address.
-+	 */
-+	__get_kernel_nofault(&addr, regs->sp, unsigned long, Efault);
-+	*target = addr;
-+
-+	addr -= fineibt_preamble_size;
-+	if (!exact_endbr((void *)addr))
-+		return false;
-+
-+	__get_kernel_nofault(&hash, addr + fineibt_preamble_hash, u32, Efault);
-+	*type = (u32)regs->r10 + hash;
-+
-+	/*
-+	 * The UD2 sites are constructed with a RET immediately following,
-+	 * as such the non-fatal case can use the regular fixup.
-+	 */
-+	return true;
-+
-+Efault:
-+	return false;
-+}
-+
-+/*
-  * regs->ip points to a LOCK Jcc.d8 instruction from the fineibt_paranoid_start[]
-  * sequence.
-  */
-@@ -1598,6 +1676,9 @@ bool decode_fineibt_insn(int ud_type, st
- {
- 	if (ud_type == BUG_LOCK)
- 		return decode_fineibt_paranoid(ud_type, regs, target, type);
-+	if (regs->ip > (unsigned long)__bhi_args &&
-+	    regs->ip < (unsigned long)__bhi_args_end)
-+		return decode_fineibt_bhi(ud_type, regs, target, type);
- 	return decode_fineibt_preamble(ud_type, regs, target, type);
- }
- 
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -410,15 +410,20 @@ static void emit_nops(u8 **pprog, int le
-  * Emit the various CFI preambles, see asm/cfi.h and the comments about FineIBT
-  * in arch/x86/kernel/alternative.c
-  */
-+static int emit_call(u8 **prog, void *func, void *ip);
- 
--static void emit_fineibt(u8 **pprog, u32 hash)
-+static void emit_fineibt(u8 **pprog, u8 *ip, u32 hash, int arity)
- {
- 	u8 *prog = *pprog;
- 
- 	EMIT_ENDBR();
- 	EMIT3_off32(0x41, 0x81, 0xea, hash);		/* subl $hash, %r10d	*/
--	EMIT2(0x75, 0xf9);				/* jne.d8 .-7		*/
--	EMIT3(0x0f, 0x1f, 0x00);			/* nop3			*/
-+	if (cfi_bhi) {
-+		emit_call(&prog, __bhi_args[arity], ip + 11);
-+	} else {
-+		EMIT2(0x75, 0xf9);			/* jne.d8 .-7		*/
-+		EMIT3(0x0f, 0x1f, 0x00);		/* nop3			*/
-+	}
- 	EMIT_ENDBR_POISON();
- 
- 	*pprog = prog;
-@@ -447,13 +452,13 @@ static void emit_kcfi(u8 **pprog, u32 ha
- 	*pprog = prog;
- }
- 
--static void emit_cfi(u8 **pprog, u32 hash)
-+static void emit_cfi(u8 **pprog, u8 *ip, u32 hash, int arity)
- {
- 	u8 *prog = *pprog;
- 
- 	switch (cfi_mode) {
- 	case CFI_FINEIBT:
--		emit_fineibt(&prog, hash);
-+		emit_fineibt(&prog, ip, hash, arity);
- 		break;
- 
- 	case CFI_KCFI:
-@@ -504,13 +509,17 @@ static void emit_prologue_tail_call(u8 *
-  * bpf_tail_call helper will skip the first X86_TAIL_CALL_OFFSET bytes
-  * while jumping to another program
-  */
--static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf,
-+static void emit_prologue(u8 **pprog, u8 *ip, u32 stack_depth, bool ebpf_from_cbpf,
- 			  bool tail_call_reachable, bool is_subprog,
- 			  bool is_exception_cb)
- {
- 	u8 *prog = *pprog;
- 
--	emit_cfi(&prog, is_subprog ? cfi_bpf_subprog_hash : cfi_bpf_hash);
-+	if (is_subprog) {
-+		emit_cfi(&prog, ip, cfi_bpf_subprog_hash, 5);
-+	} else {
-+		emit_cfi(&prog, ip, cfi_bpf_hash, 1);
-+	}
- 	/* BPF trampoline can be made to work without these nops,
- 	 * but let's waste 5 bytes for now and optimize later
- 	 */
-@@ -1479,7 +1488,7 @@ static int do_jit(struct bpf_prog *bpf_p
- 
- 	detect_reg_usage(insn, insn_cnt, callee_regs_used);
- 
--	emit_prologue(&prog, stack_depth,
-+	emit_prologue(&prog, image, stack_depth,
- 		      bpf_prog_was_classic(bpf_prog), tail_call_reachable,
- 		      bpf_is_subprog(bpf_prog), bpf_prog->aux->exception_cb);
- 	/* Exception callback will clobber callee regs for its own use, and
-@@ -3046,7 +3055,9 @@ static int __arch_prepare_bpf_trampoline
- 		/*
- 		 * Indirect call for bpf_struct_ops
- 		 */
--		emit_cfi(&prog, cfi_get_func_hash(func_addr));
-+		emit_cfi(&prog, image,
-+			 cfi_get_func_hash(func_addr),
-+			 cfi_get_func_arity(func_addr));
- 	} else {
- 		/*
- 		 * Direct-call fentry stub, as such it needs accounting for the
-
+commit:         6537cfb3 Merge tag 'sound-6.14-rc4' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1334b5b0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
+dashboard link: https://syzkaller.appspot.com/bug?extid=38a0cbd267eff2d286ff
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=142f4ba4580000
 
