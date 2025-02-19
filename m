@@ -1,101 +1,122 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46C41F3D53
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65401F4195;
+	Wed, 19 Feb 2025 15:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739977605; cv=none; b=a3JhE371Fy1d1cijy7qXimMIaxsv06511tkS302PNcvMYMjzaM3YWEbOhqaDEoKEFzil8XVuv0RI4JhK9dDyIm7uKbvi5NkyRx7KEyvr+NdZvibqIckMki7bu5IXPvyFz/4WVUou1uw0pLi+zsoB0JaM8+MqI4pZgi2L0wJ/iq8=
+	t=1739977619; cv=none; b=gl8odxm9n1gJG5D0cboslJtKd7AngcfUsnNOmYmo7hKKyIpFKcXG2T2zrJZ6AaHyv2wUymW8ZjkY6jkWGgY0dtu697RM9Dc9I7pTWfF2CS5PAhA0iXy2E2bVuTHckGwVS7TgHt1ksFCX97+QTqclnsu34nQltQYiY6dav6H2Zc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739977605; c=relaxed/simple;
-	bh=RsIgDGy7qZ8B3MBFSHhVZSusxcdoPT4+tAYIqqxrg48=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KkLjY1d58z20gvmgTXrcWPYz4aq88yKmrfMR9sHKy5TB3HPhNFrlFgMqjItqNNtA/JeVx6jF6Xu24SMTeubtlY8moaIOKPuIelSomu7eIelQ4w7iTqsWwkJhgdOiBbUsMNUNfV5sC8GO0CKapF8xDsJpacztXhJ0IiTy2ou5zQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=J1SaBKR3; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1739977619; c=relaxed/simple;
+	bh=gV8SHYBIC1MRrvAo6UD5l94mHWIUoHpvSZ2HNTzC13g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=okm4VWdJsULfSPkueopS3zuZEq4TrKhDn7oTl3rU4dAMGS77gbk36OUNOhC08zquF/OJzksN8Ge4yQ2LuhgMHV8/tZACpRZAE0gdYQNqHcXo+7/EJ371jjm+jPzm8ezPCtzurNcltSkg/XPggbG04xKqiazkAcebujuH+i5X0vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KdiTlEY5; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="J1SaBKR3"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-8559461c2c2so84438639f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:06:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdiTlEY5"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30a2f240156so35345141fa.3;
+        Wed, 19 Feb 2025 07:06:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1739977601; x=1740582401; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Facg3HecWXCU/JkqnQPL5G/CpP1AOCney8P06Ut0gwc=;
-        b=J1SaBKR3DXIo6mmI06ls4yYhyhN5ybupBUGq6q0R5sxOEISJvF9Yuww7eKb48URaFl
-         DjzAazQcGhGqc7ErtFVbhwCXiXDFpci59QhaxaDLuqN6xvBMDAPcijv+KdoE4vmwC1OM
-         UBDRzR4yQ6NEtHBpHLFC5j3d/AXsapAhcN6ZDM/QKRUgIYCDh4p6vFqPRcOHnbEPlNrO
-         ENwo+pDjgeDETgduC+zFwg6UPmWk6OW6iiQI02YLxDL3hNZRzbiq/0jsXgwhNAytBf9b
-         idUyIqhApS1g2j4TFuiH/uc9b1xjuqQoGu0zUNuS4Id0Hl508vFkoskD/JfnNnDNq2zm
-         lgEA==
+        d=gmail.com; s=20230601; t=1739977616; x=1740582416; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bgV97x/vQ/whH7vk6tSNveDGHR7Aye2btAEtKhwCZ7A=;
+        b=KdiTlEY5gMrWG2GT8HjUCocDmVd63J6+hhjqc8SVIq87I2OdydElBi6XmTigmVcM3R
+         7SdGgSy2QZNgtib7HoU099f1Oy0OxYggggOAa0qo59oyplgCiXlx26uuhceQUuMN/hyL
+         99uEDk5Psapd9zbwHjXmJQ3wGYD8A/6ZQNmsHEXlV9UwuxwJlkVHwpd2TBGcw+gmgmjZ
+         1MhiQdXzBEbMqrpC3MgMRlMSgX7KyoZpF5q93WezEN2YAqnceL3o8uxk147ev4vPRuuX
+         2f7HDZdusnAW44rrYX9EUNJIqU1w+anoXqxSL+1H6L/YSHR9o9lD0GIa+CZRtL/bYx3I
+         9GjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739977601; x=1740582401;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Facg3HecWXCU/JkqnQPL5G/CpP1AOCney8P06Ut0gwc=;
-        b=MciOSNFrfoZ1e9Qi7v3pEF1JKoChS5SulXfzVb0DZSuilF/ZQJvWDfYC0BaDHQI4kJ
-         DY4sP7EtvO9BaKV0pT9fpLfRQdBaMxKiQbLcNG5oq/IjjSfGVDjH75l1zTm0gNBn1Wo0
-         /OsG0Khdh5ax3R3B0ogvYrb5q589+yIlheDNcVOzY2VI/HIikrH+gKwxJv3meI4rILUX
-         Wr9DpS9mcKk4+mZsOFi5i4JPaxYdcLJq8DChl6SgNBavufqCuy7ZUjKSnVAmW41yZtee
-         Bo+pXhthNdzM0pE8Eee8LdCrwcdxcqZfIdt7vSvIn863CmCd31QBOGMecoDpeZxTeJFD
-         g72w==
-X-Forwarded-Encrypted: i=1; AJvYcCVSlLG6JFfM8TNcrakTrv56TrU6qHbT516A+MzUVvyQfaC2+n3hj24d6+1lrlwBzkRocRYQgJr21rLafK0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0ug8EZraifSaGV5eEKjaGsuZtN2BXYYQ1AWRy8W+aCIl0wfYf
-	JHlliMlPgQL8ayO8xFoNBUf6EcMRf5Mq7RNa75FkrWT3j0ZmvWP1zbHRC3OY54M=
-X-Gm-Gg: ASbGncu2fv+2Qaf1k+9tt0IL/4LPCMKloBRCH4QUrppSc2VhmZKZ7X7Cdrb6v6I0bSM
-	WxzWtiG32UnVQzXrnAgB0z5esvaLclNg8chGTBuNDVNJXZXv/SQeROcArrDRJN/snIRJ3bFoAAK
-	1Nc6Bfw9P8UClZDYIZhK6SWAg1m/QQTGbcfjhgpJ0gkKkaGrCp1zRGqQAvP57pQqaXZdYWGTdh5
-	00Njxs9oXSfg+TUe2A01TA12UDe4MiMKlrJ72HiL7qbUJIaukxjIpjjmkQ5un99fyow2PafTDqy
-	LAXxXA==
-X-Google-Smtp-Source: AGHT+IE900lcMYGFzRy4z2mV2nYf+DRnF5ozVCCn29CL/Gd+3WZwyLfLr39McanUqzpQSq2dm5K21w==
-X-Received: by 2002:a92:c247:0:b0:3d2:b4b8:bf54 with SMTP id e9e14a558f8ab-3d2b52bc919mr38993545ab.7.1739977601624;
-        Wed, 19 Feb 2025 07:06:41 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d2b374de28sm5304345ab.71.2025.02.19.07.06.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 07:06:40 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Pavel Begunkov <asml.silence@gmail.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250219033444.2020136-1-csander@purestorage.com>
-References: <20250219033444.2020136-1-csander@purestorage.com>
-Subject: Re: [PATCH] io_uring/rsrc: remove unused constants
-Message-Id: <173997760046.1535105.540337617191043636.b4-ty@kernel.dk>
-Date: Wed, 19 Feb 2025 08:06:40 -0700
+        d=1e100.net; s=20230601; t=1739977616; x=1740582416;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgV97x/vQ/whH7vk6tSNveDGHR7Aye2btAEtKhwCZ7A=;
+        b=v0WrEQOwpCUQqm2iTio6T2hWCiq8OLhkUYXPazim0qTSY24gzVbCZiJ3KLZPMsUi3N
+         F5oIHlBPCiN7CwoMoNsv8yrKi1qJXx5wc8FgzIcrvKGL3aqT/JjA/rVYGIj26fL+Lpsi
+         gos/gDoQ85N8H5IKs0O0Zntb+CVmkLpv0LzKwfGAZJw9msfwdeqlliWvUm7NM4FSTnZW
+         fw5OffZ0WiqNHd98oJNf7wK3LSkL35SABTg4LEdAy4xAeveeuVnrwOs/UU74PjDFOxGW
+         XrXXxiiOl2UwbDWmSgfabnZl4iwChCY5/S4gmvvwOIhr16maqPeB38IW2hVrwYEeC0gI
+         HAVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAv3B2vQu3KuCKOHQxt6B1sGAvi4Q3zARI3cIbhTOpze9LQfFp+hX6wdeDMehr4E5Eex9goj9bsIo20XM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAnrDPGFGoYIorMu8LGeOGvaPBf7Zfs/QOfEUQ6CRkyH4FjOfN
+	0AT6yQsDVdPtnmQ19OmO7D+pZbXUYmiT2zOvlbMqsK/JnBOVcJTdB02l4Md2
+X-Gm-Gg: ASbGncu/OTDDTWoFfOOpG2aKaqAkQBYUcrcPJlWfp/Q+cn1U06k1QS3qJt5jXxUoBeG
+	VL63CNF0br067gGxXo9A7cSeUJP1boMw0+DAAVB+BYTQcGDIxCenwhFsx3JoylYwrqk7OJ3pJ5r
+	FLP07TtvKE+jXqSTjiBmVTcJZdfo1wrzrvul7cwqAC5me4sqTgsQTPAjakJEmCc/PUKM1gIyVGc
+	VoN+yWbnZsZwHDIc7+4fs2uFmoTX0bG9hdJinao2ipPxK1pCbXIR/Yb5Xuf3K9fFbjmgsHlr2D3
+	Prd77RKFw7rhBdV9uIaqxEpDV/ExN9IRV4gS6D59FgcTkrIeBtjD4zmyHT+CqV9hE/VsT3ACJVS
+	mO1MwNIG8rPFRZ1Adi5ZXjfQnMf40gKmgO9BB
+X-Google-Smtp-Source: AGHT+IH3NEn440FuqyNHJ3LPI/XaJig8Wk5u/s4h5uGYDLuaGxcEoQGndw46vqTZzl19OWGjFt+fQA==
+X-Received: by 2002:a2e:9911:0:b0:307:2aea:5594 with SMTP id 38308e7fff4ca-30a44ed1aeamr13192091fa.18.1739977615236;
+        Wed, 19 Feb 2025 07:06:55 -0800 (PST)
+Received: from ?IPV6:2001:999:400:2a04:e774:ddfe:347f:bb68? (n4bkk9yqra8wbkrzgx4-1.v6.elisa-mobile.fi. [2001:999:400:2a04:e774:ddfe:347f:bb68])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30928c24a47sm16259691fa.93.2025.02.19.07.06.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2025 07:06:54 -0800 (PST)
+Message-ID: <55d56d32-64b5-4cef-8c1c-fb29b7b93b87@gmail.com>
+Date: Wed, 19 Feb 2025 17:06:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-14bd6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: ti: edma: support sw triggered chans in
+ of_edma_xlate()
+To: Matthew Majewski <mattwmajewski@gmail.com>, Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250216214741.207538-1-mattwmajewski@gmail.com>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250216214741.207538-1-mattwmajewski@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-On Tue, 18 Feb 2025 20:34:43 -0700, Caleb Sander Mateos wrote:
-> IO_NODE_ALLOC_CACHE_MAX has been unused since commit fbbb8e991d86
-> ("io_uring/rsrc: get rid of io_rsrc_node allocation cache") removed the
-> rsrc_node_cache.
+
+On 16/02/2025 23:47, Matthew Majewski wrote:
+> The .of_edma_xlate() function always sets the hw_triggered flag to
+> true. This causes sw triggered channels consumed via the device-tree
+> to not function properly, as the driver incorrectly assumes they are
+> hw triggered. Modify the xlate() function to correctly set the
+> hw_triggered flag to false for channels reserved for memcpy
+> operation (ie, sw triggered).
 > 
-> IO_RSRC_TAG_TABLE_SHIFT and IO_RSRC_TAG_TABLE_MASK have been unused
-> since commit 7029acd8a950 ("io_uring/rsrc: get rid of per-ring
-> io_rsrc_node list") removed the separate tag table for registered nodes.
+> Signed-off-by: Matthew Majewski <mattwmajewski@gmail.com>
+
+Good catch,
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
+> ---
+>  drivers/dma/ti/edma.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> [...]
+> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> index 4ece125b2ae7..0554a18d84ba 100644
+> --- a/drivers/dma/ti/edma.c
+> +++ b/drivers/dma/ti/edma.c
+> @@ -2258,8 +2258,12 @@ static struct dma_chan *of_edma_xlate(struct of_phandle_args *dma_spec,
+>  
+>  	return NULL;
+>  out:
+> -	/* The channel is going to be used as HW synchronized */
+> -	echan->hw_triggered = true;
+> +	/*
+> +	 * The channel is going to be HW synchronized, unless it was
+> +	 * reserved as a memcpy channel
+> +	 */
+> +	echan->hw_triggered =
+> +		!edma_is_memcpy_channel(i, ecc->info->memcpy_channels);
+>  	return dma_get_slave_channel(chan);
+>  }
+>  #else
 
-Applied, thanks!
-
-[1/1] io_uring/rsrc: remove unused constants
-      commit: fb3331f53e3cb1f1505f918f4f33bb0a3a231e4f
-
-Best regards,
 -- 
-Jens Axboe
-
-
+Péter
 
