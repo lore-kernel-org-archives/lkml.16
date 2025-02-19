@@ -1,244 +1,135 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D734A1ACED2;
-	Wed, 19 Feb 2025 10:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7681D6DD8;
+	Wed, 19 Feb 2025 10:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739961665; cv=none; b=eftCG/mJMaVZwH+0VbKp4womcMTg3+sQOhiibS7EdSyfJ5Bf/d/uoCbRBCt8syZmcdEQm13lFiA8zwJE5yhtRloAjfc8jgd59a/fckWwYQztvyBfdykIN807u9Q7sCjjlJ6wTg5wdJHnesXE6+OIWkLf64zM2d/djdYMp1UvP1g=
+	t=1739961775; cv=none; b=d+9VjtE/I+oAygUJZEKSgNZ50/vAzRgokRfAkxSBcRc4PBZ48pwQ4afoEsdvmiuhcn1AXwxbjNRQxLcarYjuBxqjEoX/uthfUkP8RTBHjKvb/TwbtxlCZ8b22HeG2r3NKU7i6q24qZP5mL6SLAfollrYVM/fccZN2qyHDmW+Xfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739961665; c=relaxed/simple;
-	bh=1ZifGDt6ZsCQyZDMlCaNaOvYPhCX16g7i+WBuMry1HM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P4teib9Y7jG91hF5T5pGdevT+Ef2U/OubM5/uvnISRZNhr8tanezHRGShVg9lafaeu5yUVfeV3TZjUoqiWFVkVBqPsvvDHM6yfAwEtG1T0VhgtRGzlTx0yBz/ia5vdiWC7ceCEqqiScGQAaV8Orb1Ss9cAvnhi2ivjRQpiF3lHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZZJ2z1F6; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739961775; c=relaxed/simple;
+	bh=p+hPLk0JhmrKHlRpP43gqWn7owWRPdmZ77cBOwe7hoA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MIqiidztizsJNlvMC0TgBbKGKyvODboUdmdaWUZtihbjvagzp5ylqsJ6RTuvvbCYakfs0vQUUc4xShTcVZQp6HwlvG+KCBSvWFX9kLmJIICuUPxpJx61fJmPbLsjl5U3q+cShdPTk62OugtzTMw5mGp54CuBaq56f1CXX5z4Mzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ak8rxXY3; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZZJ2z1F6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3G6kUYCeF3vQA0srZDA8CCP/Hwqz0yhm4jKVJ6oazFg=; b=ZZJ2z1F676sZRKBnsd2zd+5eNa
-	W7JGCVMwwTsxjM8oX9qzYCwG02vZ70AgwhgZtTFjVKjO2XvAaXBZHMToy7XFCMVlJIwdnLdxAnQ/z
-	55qm8Cd41GYNVm3OzFFPz9itzjIUgvZSjYEzXWld5ZDxMmojS9uTLyQdjT0qMC5TBEidMTVn2+7dd
-	5JhhufeQdigioyM77qdRhzoLJMGDLkDHT53t1Wnl86mpJItw9yW53Dp471njAcr3Y6OaF6cWbpc1o
-	syQdV6vWDR7HvAIfBJVeg4TkthkHP6S2rqM8EmGmTrIcAJGzXts4W548AYOTAL0bgTWn+rxYaRg2U
-	1IfeEkpw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkhVO-00000005kiw-2Fle;
-	Wed, 19 Feb 2025 10:40:38 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8EC60300783; Wed, 19 Feb 2025 11:40:37 +0100 (CET)
-Date: Wed, 19 Feb 2025 11:40:37 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, tony.luck@intel.com,
-	nao.horiguchi@gmail.com, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	linmiaohe@huawei.com, akpm@linux-foundation.org,
-	jpoimboe@kernel.org, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	baolin.wang@linux.alibaba.com, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v2 3/5] x86/mce: add EX_TYPE_EFAULT_REG as in-kernel
- recovery context to fix copy-from-user operations regression
-Message-ID: <20250219104037.GG40464@noisy.programming.kicks-ass.net>
-References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
- <20250217063335.22257-4-xueshuai@linux.alibaba.com>
- <20250218125408.GD40464@noisy.programming.kicks-ass.net>
- <1ff716d3-eb3d-477e-ae30-1abe97eee01b@linux.alibaba.com>
- <20250218141535.GC34567@noisy.programming.kicks-ass.net>
- <20250218164800.GNZ7S5wL1A4dTaySOP@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ak8rxXY3"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-220f048c038so85685085ad.2;
+        Wed, 19 Feb 2025 02:42:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739961774; x=1740566574; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2XnFU8EaOdq62LfxTov6x5Z3I/byCdSxv47oBiUyW3I=;
+        b=Ak8rxXY31b7Xa1+Pb8KuTDMy/3RIUCLCqlw2fnSAuiUJ4HiAjNUdQYFOdqrRKqk41E
+         CUrF7aad6zvVcWQTeO+RbkbpbDYwkFQfWnTHQ7Lz7zow1AsQ3kgkO29g6n6YnIi+yEwG
+         Iwx/cCS3SV8L8dPaGIqQotwxPrf9AunLRqLqmKk9T4qf0lAwphCxG7NakFryfUkUuFM5
+         hE1FANgXCpUERQLfppArx9pqU44Do6eHwxS+S6OZTYiuQxov3oFadQdeUCQs1y1e3oge
+         IlTwMfLixVWYWOesFY++CmDOXo0Gvco2wAE2qmkFkx+dK//+kSHcRJMKBE61K2H0ww2u
+         9LIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739961774; x=1740566574;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2XnFU8EaOdq62LfxTov6x5Z3I/byCdSxv47oBiUyW3I=;
+        b=Sygf1SuB0ULtEJBD4OA1poH9RCwXTqYkFD+EkeRYLqFxAWLAk2mXCZlmE9zDgAsqpu
+         8VrP4XsbXVjXeW6PCOJqY0j26EO1tUOYTmDuCVjJsChgbRzPhfGwrpA5+TuuhL8WChzI
+         nmH82+Rj49qQXYaKPsAMcuHXCVgvxWKETV72z5bQQJYaWI33ek7qomPGA/Pvfue0Ny6H
+         3BxvO7dqU4kH6O3WEfr/7j7BgtHOuu8MVSeIh0ldx5+lPwQL/FxPN6CWBFnoAGK4ww8t
+         +ajXBZ5ZhI9bnfkgj7UhhwC+qpgFrBWDXfzjed3jc8aVhyRRoglNtvUHJ++pIjFwIYlB
+         aNxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPqAHngZNG+8IVONpx5j2LOxQMkRs2/62tsS4xgrrbBPi9D8RALb1t/qkqVzBgXx/kp15wNAIjs8546VI=@vger.kernel.org, AJvYcCX0E1bwlRFIpfclqCIR4TadArPOoNT1t3TVTNZnwOwlTq7Fn0EmF+w84rYT10LUvQpncoa4Z0c7r5pyLHx56aixjrb9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTO2rkH+AEE9p5Z4Ko27LRVmlzGl9vkiDQ7hfASms0wgqbY0CO
+	TzmzgF26AfL0gfUdL4eP4i28v07qvgbCaxvW8XybSxPouOwzvvV5
+X-Gm-Gg: ASbGncu6sFqh3kRULXqk+hwL42bAgx7jUZLRb/rSYBX5V6dp/Senuex1KlaFjvd8TdV
+	sGcaepHqROi2FoRyxhsDvWXdiSyFtlQYE24FwoQjES9iXSKBg/16ck1clVMNyhspE2qKjdW06pf
+	DCoIUlMlSH+SkuPbKN7iKP3FcYt5RGqaX4skmAuZlZmDYxTpTX94Hu7DZecIRDv5e54cCw91PbJ
+	SguAxisaLSYldpVdFZbvd22VW6rUyo6DWtyNmAUNJK+gt4kNm80jz00MINJK92fR50jduyTyQ8v
+	OIlkqBZgy23P04wh1HNJx8KjDrznlXzJyLoeI9sN8q227r/fS6YZ7wmBCotlbh3t4hKUBOc=
+X-Google-Smtp-Source: AGHT+IHjTS8X+w1k6uNV84RSXxe6rvfUywxmTyv8ppnFYs6uUU4/dVHdurSXskkGx1KBDXq6C2bJyw==
+X-Received: by 2002:a05:6300:640d:b0:1ee:b033:6dde with SMTP id adf61e73a8af0-1eeb03372d7mr14817906637.3.1739961773660;
+        Wed, 19 Feb 2025 02:42:53 -0800 (PST)
+Received: from AHUANG12-3ZHH9X.lenovo.com (1-175-143-196.dynamic-ip.hinet.net. [1.175.143.196])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-add3f326b31sm8246832a12.64.2025.02.19.02.42.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 02:42:53 -0800 (PST)
+From: Adrian Huang <adrianhuang0701@gmail.com>
+X-Google-Original-From: Adrian Huang <ahuang12@lenovo.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Adrian Huang <ahuang12@lenovo.com>
+Subject: [PATCH 1/1] tracing: Fix memory leak when reading set_event file
+Date: Wed, 19 Feb 2025 18:42:30 +0800
+Message-Id: <20250219104230.12000-1-ahuang12@lenovo.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218164800.GNZ7S5wL1A4dTaySOP@fat_crate.local>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 05:48:00PM +0100, Borislav Petkov wrote:
-> On Tue, Feb 18, 2025 at 03:15:35PM +0100, Peter Zijlstra wrote:
-> > diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
-> > index dac4d64dfb2a..cfdae25eacd7 100644
-> > --- a/arch/x86/kernel/cpu/mce/severity.c
-> > +++ b/arch/x86/kernel/cpu/mce/severity.c
-> > @@ -301,18 +301,19 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
-> >  	instrumentation_end();
-> >  
-> >  	switch (fixup_type) {
-> > -	case EX_TYPE_UACCESS:
-> > -		if (!copy_user)
-> > -			return IN_KERNEL;
-> > -		m->kflags |= MCE_IN_KERNEL_COPYIN;
-> > -		fallthrough;
-> > -
-> >  	case EX_TYPE_FAULT_MCE_SAFE:
-> >  	case EX_TYPE_DEFAULT_MCE_SAFE:
-> >  		m->kflags |= MCE_IN_KERNEL_RECOV;
-> >  		return IN_KERNEL_RECOV;
-> >  
-> >  	default:
-> > +		if (copy_user) {
-> 
-> As said on chat, if we can make is_copy_from_user() *always* correctly detect
-> user access, then sure but I'm afraid EX_TYPE_UACCESS being generated at the
-> handful places where we do user memory access is there for a reason as it
-> makes it pretty explicit.
+From: Adrian Huang <ahuang12@lenovo.com>
 
-Thing is, we have copy routines that do not know if its user or not.
-is_copy_from_user() must be reliable.
+kmemleak reports the following memory leak after reading set_event file:
 
-Anyway, if you all really want to go all funny, try the below.
+  # cat /sys/kernel/tracing/set_event
 
-Someone has to go and stick some EX_FLAG_USER on things, but I just
-really don't believe that's doing to be useful. Because while you're
-doing that, you should also audit if is_copy_from_user() will catch it
-and if it does, you don't need the tag.
+  # cat /sys/kernel/debug/kmemleak
+  unreferenced object 0xff110001234449e0 (size 16):
+  comm "cat", pid 13645, jiffies 4294981880
+  hex dump (first 16 bytes):
+    01 00 00 00 00 00 00 00 a8 71 e7 84 ff ff ff ff  .........q......
+  backtrace (crc c43abbc):
+    __kmalloc_cache_noprof+0x3ca/0x4b0
+    s_start+0x72/0x2d0
+    seq_read_iter+0x265/0x1080
+    seq_read+0x2c9/0x420
+    vfs_read+0x166/0xc30
+    ksys_read+0xf4/0x1d0
+    do_syscall_64+0x79/0x150
+    entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-See how much tags you end up with..
+The issue can be reproduced regardless of whether set_event is empty or
+not. Here is an example about the valid content of set_event.
 
+  # cat /sys/kernel/tracing/set_event
+  sched:sched_process_fork
+  sched:sched_switch
+  sched:sched_wakeup
+  *:*:mod:trace_events_sample
 
+The root cause is that s_next() returns NULL when nothing is found.
+This results in s_stop() attempting to free a NULL pointer because its
+parameter p is NULL.
+
+Fix the issue by freeing the memory appropriately when s_next() fails
+to find anything.
+
+Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
+Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
 ---
-diff --git a/arch/x86/include/asm/extable_fixup_types.h b/arch/x86/include/asm/extable_fixup_types.h
-index 906b0d5541e8..1d6c6ff51d28 100644
---- a/arch/x86/include/asm/extable_fixup_types.h
-+++ b/arch/x86/include/asm/extable_fixup_types.h
-@@ -31,6 +31,9 @@
- #define EX_FLAG_CLEAR_DX		EX_DATA_FLAG(2)
- #define EX_FLAG_CLEAR_AX_DX		EX_DATA_FLAG(3)
+ kernel/trace/trace_events.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 4cb275316e51..c76353ad0a4e 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1591,6 +1591,7 @@ s_next(struct seq_file *m, void *v, loff_t *pos)
+ 		return iter;
+ #endif
  
-+#define EX_FLAG_USER			EX_DATA_FLAG(4)
-+#define EX_FLAG_MCE			EX_DATA_FLAG(8)
-+
- /* types */
- #define	EX_TYPE_NONE			 0
- #define	EX_TYPE_DEFAULT			 1
-@@ -46,8 +49,6 @@
- #define	EX_TYPE_RDMSR_SAFE		11 /* reg := -EIO */
- #define	EX_TYPE_WRMSR_IN_MCE		12
- #define	EX_TYPE_RDMSR_IN_MCE		13
--#define	EX_TYPE_DEFAULT_MCE_SAFE	14
--#define	EX_TYPE_FAULT_MCE_SAFE		15
- 
- #define	EX_TYPE_POP_REG			16 /* sp += sizeof(long) */
- #define EX_TYPE_POP_ZERO		(EX_TYPE_POP_REG | EX_DATA_IMM(0))
-diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
-index dac4d64dfb2a..86a32fa020d2 100644
---- a/arch/x86/kernel/cpu/mce/severity.c
-+++ b/arch/x86/kernel/cpu/mce/severity.c
-@@ -300,21 +300,20 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
- 	copy_user  = is_copy_from_user(regs);
- 	instrumentation_end();
- 
--	switch (fixup_type) {
--	case EX_TYPE_UACCESS:
--		if (!copy_user)
--			return IN_KERNEL;
--		m->kflags |= MCE_IN_KERNEL_COPYIN;
--		fallthrough;
--
--	case EX_TYPE_FAULT_MCE_SAFE:
--	case EX_TYPE_DEFAULT_MCE_SAFE:
-+	if (fixup_type == EX_TYPE_NONE)
-+		return IN_KERNEL;
-+
-+	if (fixup_type & EX_FLAG_MCE) {
- 		m->kflags |= MCE_IN_KERNEL_RECOV;
- 		return IN_KERNEL_RECOV;
-+	}
- 
--	default:
--		return IN_KERNEL;
-+	if ((fixup_type & EX_FLAG_USER) || copy_user) {
-+		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
-+		return IN_KERNEL_RECOV;
- 	}
-+
-+	return IN_KERNEL;
++	kfree(iter);
+ 	return NULL;
  }
  
- /* See AMD PPR(s) section Machine Check Error Handling. */
-diff --git a/arch/x86/kernel/fpu/legacy.h b/arch/x86/kernel/fpu/legacy.h
-index 098f367bb8a7..3f6036840d65 100644
---- a/arch/x86/kernel/fpu/legacy.h
-+++ b/arch/x86/kernel/fpu/legacy.h
-@@ -24,7 +24,7 @@ static inline void ldmxcsr(u32 mxcsr)
- 	asm volatile(ASM_STAC "\n"					\
- 		     "1: " #insn "\n"					\
- 		     "2: " ASM_CLAC "\n"				\
--		     _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT_MCE_SAFE)	\
-+		     _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT | EX_FLAG_MCE)	\
- 		     : [err] "=a" (err), output				\
- 		     : "0"(0), input);					\
- 	err;								\
-diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
-index aa16f1a1bbcf..eef534091105 100644
---- a/arch/x86/kernel/fpu/xstate.h
-+++ b/arch/x86/kernel/fpu/xstate.h
-@@ -115,7 +115,7 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
- 	asm volatile("1:" op "\n\t"					\
- 		     "xor %[err], %[err]\n"				\
- 		     "2:\n\t"						\
--		     _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT_MCE_SAFE)	\
-+		     _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT | EX_FLAG_MCE)	\
- 		     : [err] "=a" (err)					\
- 		     : "D" (st), "m" (*st), "a" (lmask), "d" (hmask)	\
- 		     : "memory")
-diff --git a/arch/x86/lib/copy_mc_64.S b/arch/x86/lib/copy_mc_64.S
-index c859a8a09860..7977689ad46e 100644
---- a/arch/x86/lib/copy_mc_64.S
-+++ b/arch/x86/lib/copy_mc_64.S
-@@ -103,9 +103,9 @@ SYM_FUNC_START(copy_mc_fragile)
- 	movl	%ecx, %edx
- 	jmp copy_mc_fragile_handle_tail
- 
--	_ASM_EXTABLE_TYPE(.L_read_leading_bytes, .E_leading_bytes, EX_TYPE_DEFAULT_MCE_SAFE)
--	_ASM_EXTABLE_TYPE(.L_read_words, .E_read_words, EX_TYPE_DEFAULT_MCE_SAFE)
--	_ASM_EXTABLE_TYPE(.L_read_trailing_bytes, .E_trailing_bytes, EX_TYPE_DEFAULT_MCE_SAFE)
-+	_ASM_EXTABLE_TYPE(.L_read_leading_bytes, .E_leading_bytes, EX_TYPE_DEFAULT | EX_FLAG_MCE)
-+	_ASM_EXTABLE_TYPE(.L_read_words, .E_read_words, EX_TYPE_DEFAULT | EX_FLAG_MCE)
-+	_ASM_EXTABLE_TYPE(.L_read_trailing_bytes, .E_trailing_bytes, EX_TYPE_DEFAULT | EX_FLAG_MCE)
- 	_ASM_EXTABLE(.L_write_leading_bytes, .E_leading_bytes)
- 	_ASM_EXTABLE(.L_write_words, .E_write_words)
- 	_ASM_EXTABLE(.L_write_trailing_bytes, .E_trailing_bytes)
-@@ -143,7 +143,7 @@ SYM_FUNC_START(copy_mc_enhanced_fast_string)
- 	movq %rcx, %rax
- 	RET
- 
--	_ASM_EXTABLE_TYPE(.L_copy, .E_copy, EX_TYPE_DEFAULT_MCE_SAFE)
-+	_ASM_EXTABLE_TYPE(.L_copy, .E_copy, EX_TYPE_DEFAULT | EX_FLAG_MCE)
- 
- SYM_FUNC_END(copy_mc_enhanced_fast_string)
- #endif /* !CONFIG_UML */
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index 51986e8a9d35..7358bf10baba 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -293,8 +293,10 @@ static bool ex_handler_eretu(const struct exception_table_entry *fixup,
- int ex_get_fixup_type(unsigned long ip)
- {
- 	const struct exception_table_entry *e = search_exception_tables(ip);
-+	if (!e)
-+		return EX_TYPE_NONE;
- 
--	return e ? FIELD_GET(EX_DATA_TYPE_MASK, e->data) : EX_TYPE_NONE;
-+	return FIELD_GET(EX_DATA_TYPE_MASK, e->data) | (e->data & (EX_FLAG_USER | EX_FLAG_MCE));
- }
- 
- int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
-@@ -327,10 +329,8 @@ int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
- 
- 	switch (type) {
- 	case EX_TYPE_DEFAULT:
--	case EX_TYPE_DEFAULT_MCE_SAFE:
- 		return ex_handler_default(e, regs);
- 	case EX_TYPE_FAULT:
--	case EX_TYPE_FAULT_MCE_SAFE:
- 		return ex_handler_fault(e, regs, trapnr);
- 	case EX_TYPE_UACCESS:
- 		return ex_handler_uaccess(e, regs, trapnr, fault_addr);
+-- 
+2.34.1
+
