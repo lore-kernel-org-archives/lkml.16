@@ -1,48 +1,48 @@
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574051E102E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2544D1E131B;
 	Wed, 19 Feb 2025 09:21:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739956876; cv=none; b=FxzbrM3npaH9IkIHnC9GvSl2WjkD1OcQv8pAK4LQjauAHnaVhUIehU696WpBdf7znirx3RMhIelpq3OAKVi/ibIwFeUy+gFLNejzEK+KAYsWx0uJ7T2SrIuAk6MXT/pdwwhLlEZqcpQObIlUk94ktq1fhp+DPWiFCZYw3i/CEN8=
+	t=1739956876; cv=none; b=Y3hHfN/grl3t3iMAVgryx1pexnV4OKyu6olD/uqQ9eRrozPaQXWoH4lHLB6ZQbP/ZTWJod4u2AXZ7rNMgMljTFwry1y64b4jPQwLaIRcxyLL4+DglYlQZ3Dq/Qrd91o5a650lEUYruQ75ffX7swXaUmup+7RzH9PtdTgV1dJ15Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739956876; c=relaxed/simple;
-	bh=KL4XlZCvI1qMqPFJWiKRdzgrZnLq+qP5kclGfyvCZ50=;
+	bh=55iiCiYJadNrp+BOFukeIs7gN6IGlzUQF7IEfCNq2nY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hP/bwbPVMmE64KJoY1M7GVvYj4RUlf4yGMbzftQW3vu5HXwvwI2nJlL/FiKjiuWmn0+uBiwCnxfAhCkn0KpbzYlYkAT092BVAT0PKhd0/5dnXc39GaSOfoIKO23dNS5oXn6sDwM4TkFs8LZivjCZg3VxQoIQmx7vjY0yt/SwdnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=gBxBdwhT; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=FPD9vsAzSeIWUwGIgLdjdpTeUUhmMnwyMbcDAk8JhscfLjQN36FtuURfjUd8mgSpBN2uxCrXLXbEZ02LJcZKtnKcmAMRCYaPKFhwmkhx45eZHiNcjQh61IBfP/MK1TMY1z3YYd3Eju+aRk/wmimSED15qbhT9EMrf8fWTNd780o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=SeYEZdEU; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gBxBdwhT"
-X-UUID: dbb8ec74eea211efaae1fd9735fae912-20250219
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SeYEZdEU"
+X-UUID: dbaf2b62eea211efaae1fd9735fae912-20250219
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=QR9jU3sMl1GsR4VRW4gk3j4bKASW14wQJjbf/vk+BGc=;
-	b=gBxBdwhTOZUE9wHfVx12r93MaQV0EDNDgDWS2je2OOkyPwSaO836tLevUAaVALJcnDE3Rd8JjNE63s+4REaTzKsTdtldr7ijnfHLT2LQNn43t9E7oAcn37E5NCCSJtubS6Bwmmxd8o21JZgqisu5GFmFC8pstYb7VcB7Yx+0qjw=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=z81jqvb/W/+wNwrIKo097z+5wGBkPNPBIQ67TL4/32Q=;
+	b=SeYEZdEU5pn1txmvK60D2Y0KdY/0uw0esrFu4oRJnSezDF9DGnmw8HB2TZTcR8eiX/2DMsTgDhWJgLNnWGA2MHKOjjIjiTjCw+7j/+FiGj3RaaE20k6kkrG1C+mbzqbgHSvBVTx+HxkGaYz2ZAClDApyKqW5hAanG9s6jcmIi8E=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:d0070c9d-fb22-4487-981f-fe9b695d0c1d,IP:0,U
+X-CID-O-INFO: VERSION:1.1.46,REQID:57d7a159-b281-4917-9e9c-5df778f2cd63,IP:0,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:245e51b5-a2a1-4ef3-9ef9-e116773da0a7,B
+X-CID-META: VersionHash:60aa074,CLOUDID:022f13dc-d480-4873-806f-0f365159227b,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
 	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
 	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: dbb8ec74eea211efaae1fd9735fae912-20250219
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+X-UUID: dbaf2b62eea211efaae1fd9735fae912-20250219
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
 	(envelope-from <jay.liu@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 847271237; Wed, 19 Feb 2025 17:21:11 +0800
+	with ESMTP id 1150441936; Wed, 19 Feb 2025 17:21:10 +0800
 Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 19 Feb 2025 17:21:10 +0800
+ 15.2.1258.28; Wed, 19 Feb 2025 17:21:06 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Wed, 19 Feb 2025 17:21:09 +0800
+ 15.2.1258.28 via Frontend Transport; Wed, 19 Feb 2025 17:21:05 +0800
 From: Jay Liu <jay.liu@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel
 	<p.zabel@pengutronix.de>, Maarten Lankhorst
@@ -59,9 +59,9 @@ CC: <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
 	<linux-arm-kernel@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jay Liu
 	<jay.liu@mediatek.com>
-Subject: [PATCH 6/7] dt-bindings: display: mediatek: gamma: Add support for MT8196
-Date: Wed, 19 Feb 2025 17:20:39 +0800
-Message-ID: <20250219092040.11227-7-jay.liu@mediatek.com>
+Subject: [PATCH 4/7] dt-bindings: display: mediatek: ccorr: Add support for MT8196
+Date: Wed, 19 Feb 2025 17:20:37 +0800
+Message-ID: <20250219092040.11227-5-jay.liu@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20250219092040.11227-1-jay.liu@mediatek.com>
 References: <20250219092040.11227-1-jay.liu@mediatek.com>
@@ -77,19 +77,19 @@ Add a compatible string for MediaTek MT8196 SoC
 
 Signed-off-by: Jay Liu <jay.liu@mediatek.com>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,gamma.yaml     | 1 +
+ .../devicetree/bindings/display/mediatek/mediatek,ccorr.yaml     | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml
-index 48542dc7e784..513e51c6d2b9 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml
-@@ -40,6 +40,7 @@ properties:
-       - items:
-           - enum:
-               - mediatek,mt8188-disp-gamma
-+              - mediatek,mt8196-disp-gamma
-           - const: mediatek,mt8195-disp-gamma
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml
+index fca8e7bb0cbc..581003aa9b9c 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml
+@@ -32,6 +32,7 @@ properties:
+               - mediatek,mt8186-disp-ccorr
+               - mediatek,mt8188-disp-ccorr
+               - mediatek,mt8195-disp-ccorr
++              - mediatek,mt8196-disp-ccorr
+           - const: mediatek,mt8192-disp-ccorr
  
    reg:
 -- 
