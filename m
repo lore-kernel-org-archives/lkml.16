@@ -1,119 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A4B1C07D8;
-	Wed, 19 Feb 2025 08:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from hmat.qianxin.com (hmat.qianxin.com [220.181.41.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEF0180A80
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.41.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739953217; cv=none; b=UIBicgvKTbuX8Qn+m+KNPrT6t8VA/pF5yfuF7UDqZoJeL61dqoQ3OIhPs6pnLF0+XnNK5aL+PsmBg3fTmvStyAniSn95P6prZN0ch7pkuvvoypKth38KLN1AQbffmrNtBguafQ+WgjWoO2B8cyjXAtc+ASFRprIFef8a2VdBicg=
+	t=1739953286; cv=none; b=ShuqJL+arIIO3VVjWbo1dlkwWxDzgMDsuy5BAtU2ZPNGf3iTh9gIjTD8L6mO+lJu4VMAO+H23NM2Jr+PTxHivh6dPBPi7ErjvB8BCR6XiPVaDv6phc4ah9ML8ZRX/1CZOwe/JfQIUjvFRceilJPF9VEc2aT2xxNDkU1fAxD7tfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739953217; c=relaxed/simple;
-	bh=6wZy9EuO1eT7DmYlRDQUktf92Tji9heVhYH1Bu+cHw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DbFqbjEj+ocNwWCvGNKAKco+zXNMRNnHmaHCP86nr4d8Sw6lCaLwF74cSRje7dBmNyACv6sm8peo0KSGfr1jKuLXKxEkBPX8TIgiLZKuIEt/Sqo4IRrsjyN1pRzDM9yCI90BN0mNPyZHby1gH3w1iikW87/M4h1CKw/7K5okfYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 234B21682;
-	Wed, 19 Feb 2025 00:20:23 -0800 (PST)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8C523F5A1;
-	Wed, 19 Feb 2025 00:20:00 -0800 (PST)
-Date: Wed, 19 Feb 2025 09:19:56 +0100
-From: Beata Michalska <beata.michalska@arm.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	sudeep.holla@arm.com, will@kernel.org, catalin.marinas@arm.com,
-	sfr@canb.auug.org.au, ionela.voinescu@arm.com,
-	linux-next@vger.kernel.org, sumitg@nvidia.com,
-	yang@os.amperecomputing.com, vanshikonda@os.amperecomputing.com,
-	lihuisong@huawei.com, zhanjie9@hisilicon.com,
-	ptsm@linux.microsoft.com
-Subject: Re: [PATCH] arm64: Utilize for_each_cpu_wrap for reference lookup
-Message-ID: <Z7WULBZPsh8QK3DV@arm.com>
-References: <20250218192412.2072619-1-beata.michalska@arm.com>
- <Z7TqFLU0Kwg9cUjO@thinkpad>
+	s=arc-20240116; t=1739953286; c=relaxed/simple;
+	bh=JYp4OK0U+b4qOG4P0pETiqrI1nIPYBpaJeHMfAoAt8g=;
+	h=From:To:CC:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=L4XCamSebEzKhnbI8k5uuKY25GI+5Fb92OY4uVmABzj+Q9jo0qMdnzrIyudIRC/SuV7QntXGx9fqqrT92SD37nOD1rZ53Jh1zwYyvf1E/W63ifD0iF85JnX4x4W6r+VyvqhF0HJ/SVKCHu3h6b65pynFgH6wXDkch90Kah1mPc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=qianxin.com; spf=pass smtp.mailfrom=qianxin.com; arc=none smtp.client-ip=220.181.41.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=qianxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qianxin.com
+Received: from hmat.qianxin.com (unknown [10.44.121.98])
+	by hmat.qianxin.com (SkyGuard) with ESMTPS id 4YyTTM2Ll0z2MWkC;
+	Wed, 19 Feb 2025 16:05:11 +0800 (CST)
+Received: from BJ3TS063 (10.110.199.9) by qax-bjmail06.ESG.360ES.CN
+ (2402:d040:0:8425:2849:52e7:3abe:7096) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Wed, 19 Feb 2025 16:05:11 +0800
+From: =?UTF-8?B?5p+z6I+B5bOw?= <liujingfeng@qianxin.com>
+To: 'Greg KH' <gregkh@linuxfoundation.org>
+CC: <security@kernel.org>, <shaggy@kernel.org>,
+	<jfs-discussion@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+	<rkeshri@redhat.com>, <syzkaller@googlegroups.com>, <secalert@redhat.com>
+References: <!&!AAAAAAAAAAAuAAAAAAAAAKIhlVZMQAxHpE33aCjXyrEBAMO2jhD3dRHOtM0AqgC7tuYAAAAAAA4AABAAAADjUO4EdW0hQ4941fq05lF+AQAAAAA=@qianxin.com> <2025021052-alfalfa-unwrapped-c53a@gregkh>
+In-Reply-To: <2025021052-alfalfa-unwrapped-c53a@gregkh>
+Subject: RE: FW: GPF and null-ptr-deref caused by uninitialization of jfs module(INC3342348)
+Date: Wed, 19 Feb 2025 16:05:11 +0800
+Message-ID: <!&!AAAAAAAAAAAuAAAAAAAAAKIhlVZMQAxHpE33aCjXyrEBAMO2jhD3dRHOtM0AqgC7tuYAAAAAAA4AABAAAABTrGeEs4SaSZ6/Js27w/JiAQAAAAA=@qianxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7TqFLU0Kwg9cUjO@thinkpad>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQI7GIlFtJ/6vr9lkfloK3CXuqMOXQIrIPt0sn28c+A=
+Content-Language: zh-cn
+X-ClientProxiedBy: qax-bjmail02.ESG.360ES.CN
+ (2402:d040:0:8425:80c4:a21f:47a:b645) To qax-bjmail06.ESG.360ES.CN
+ (2402:d040:0:8425:2849:52e7:3abe:7096)
 
-On Tue, Feb 18, 2025 at 03:14:23PM -0500, Yury Norov wrote:
-> On Tue, Feb 18, 2025 at 07:24:12PM +0000, Beata Michalska wrote:
-> > While searching for a reference CPU within a given policy,
-> > arch_freq_get_on_cpu relies on cpumask_next_wrap to iterate over
-> > all available CPUs and to ensure each is verified only once.
-> > Recent changes to cpumask_next_wrap will handle the latter no more,
-> > so switching to for_each_cpu_wrap, which  preserves expected behavior
-> > while ensuring compatibility with the updates.
-> 
-> This is technically correct, but I would rather point that for
-> iterating over each CPU, it's better to use a dedicated iterator
-> instead of opencoded loop.
+> On Mon, Feb 10, 2025 at 10:09:54AM +0800, =E6=9F=B3=E8=8F=81=E5=B3=B0 =
+wrote:
+> > Hello,Here is forward INC3342348 origin message
+> >
+> > I hope to receive updated response regarding this issue.
+>=20
+> We have no lack of syzbot reported issues, what we do have is a lack =
+of people
+> fixing them, so patches are always welcome, especially as you already =
+have a
+> working reproducer for the problem to test against.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-I can certainly add that.
-> 
-> > Fixes: 16d1e27475f6 ("arm64: Provide an AMU-based version of arch_freq_get_on_cpu")
-> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> > ---
-> >  based on arm64 for-next/amuv1-avg-freq
-> > 
-> >  arch/arm64/kernel/topology.c | 16 ++++++++++------
-> >  1 file changed, 10 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> > index a09b0551ec59..9e3583720668 100644
-> > --- a/arch/arm64/kernel/topology.c
-> > +++ b/arch/arm64/kernel/topology.c
-> > @@ -254,7 +254,7 @@ int arch_freq_get_on_cpu(int cpu)
-> >  		if (!housekeeping_cpu(cpu, HK_TYPE_TICK) ||
-> >  		    time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS))) {
-> >  			struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > -			int ref_cpu = cpu;
-> > +			int ref_cpu;
-> >  
-> >  			if (!policy)
-> >  				return -EINVAL;
-> > @@ -265,11 +265,15 @@ int arch_freq_get_on_cpu(int cpu)
-> >  				return -EOPNOTSUPP;
-> >  			}
-> >  
-> > -			do {
-> > -				ref_cpu = cpumask_next_wrap(ref_cpu, policy->cpus,
-> > -							    start_cpu, true);
-> > -
-> > -			} while (ref_cpu < nr_cpu_ids && idle_cpu(ref_cpu));
-> > +			for_each_cpu_wrap(ref_cpu, policy->cpus, cpu + 1) {
-> > +				if (ref_cpu == start_cpu) {
-> > +					/* Prevent verifying same CPU twice */
-> > +					ref_cpu = nr_cpu_ids;
-> > +					break;
-> 
-> If start_cpu == cpu, and you begin with 'cpu + 1', you will never
-> check the 'cpu' for idle, right? Maybe like this?
-> 
->         unsigned int start_cpu = cpu + 1;
-> 
-This is not entirely a pure for-each case here.
-If this loop is reached, it means the start_cpu did not meet the criteria, and
-we are trying to find another CPU within the policy that might. Which is why we
-pick up the next in line and check whether it is suitable or not.
-Testing for idle is just a shortcut, as an idle CPU will most probably not be
-considered a good reference either way.
+Hello,I try to do it.
 
----
-BR
-Beata
-> > +				}
-> > +				if (!idle_cpu(ref_cpu))
-> > +					break;
-> > +			}
-> >  
-> >  			cpufreq_cpu_put(policy);
-> >  
-> > -- 
-> > 2.25.1
+TxBegin returns 0 because the file system is read-only, and TxBlock =
+[tid=3D0] is a reserved block, so I tried to perform a read-only file =
+system check in the jfs_create function. This should prevent crashes, =
+but I'm not sure if it affects the original logic. I hope developers can =
+help check this patch.
+
+
+diff --git a/fs/jfs/namei.c b/fs/jfs/namei.c
+index d68a4e6ac345..4b6d85d47c3a 100644
+--- a/fs/jfs/namei.c
++++ b/fs/jfs/namei.c
+@@ -77,6 +77,10 @@ static int jfs_create(struct mnt_idmap *idmap, struct =
+inoded,
+        if (rc)
+                goto out1;
+=20
++       if (isReadOnly(dip)){
++               rc=3D-EROFS;
++               goto out1;
++       }
+        /*
+         * search parent directory for entry/freespace
+         * (dtSearch() returns parent directory page pinned)
+
