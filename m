@@ -1,101 +1,71 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946F9191F77
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C50191F77;
+	Wed, 19 Feb 2025 08:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739952361; cv=none; b=lPx5eQcloca5Jto0xVeKdidkwyFsyNxzhwwIYY6RpYiefzqSJNrFfgeYCSTawonVEFHAEnS0ojcaYRdzVEa0KpqKPw8CJ4IZEqr7bq4H80G79JuE5ofQJ0ustEa0YTDKHYcrcbk+D9M37tGUsHKqAl+QJo2oS7NjarwicNBfygU=
+	t=1739952441; cv=none; b=fptz6fnwlnUEbPv2EeDSsupsD2ERQQdAV5+BNC0qpOzApIWL5V4Hrrn9FQs9gnMctFpSwy8Iv9wzRWmAgE16ugefsazY6qUS8GsdI0uv7752f6UUL4UMP2D6faqBWiQZPjZOa+3gjluIc/bCAfV0FqiqP3FhDPcaFRtGbx5chmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739952361; c=relaxed/simple;
-	bh=6b/FYVUKFZW/rZzPAqlMXsdGXCeCSu0N5Kd+DJjdp7I=;
+	s=arc-20240116; t=1739952441; c=relaxed/simple;
+	bh=oPdqC27LMeZBOtRe3tu0wOqkmalfCuiPMd3Is+E5hPg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Adyr3QGUQfSq4JDpHQTTMB59Q89+iXmwNV0YXCigDbMiFlYv9JaHtVR+syg7JMJQvr/ol66Gu/UpJ6F7t3aAQRd3RbF/RHLwncjY0uh/sbcZ1iZnIv59IwtbVPGGgcmukeVcf2hk7ZEBkBVuJgqUQ/d6AUY2QbQjMqdbnSMrPuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OP0ZWc5S; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=t4FKMNa5J6812XrAbS+aTc27tZAsnb42azHSPpXHF/yCPpo/T8I08GzABizgc2MA9s8GLo1VJ53/oWDOd1UMjbkIU9SJSyhXppU6P4UyLXHO+TZUtamlAklCJK0+mhW43e/FJGihSbPu/Ua7OwptzVUT8gdwxzo8C1mqDEpz4Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDt63obS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OP0ZWc5S"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abadccdfe5aso825957366b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 00:05:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739952354; x=1740557154; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wLGc0PhsYQqjnufHmhSBlNvjs6ldgEolpYxIgynjQOs=;
-        b=OP0ZWc5SESZewczmU4FGe0a8AgI4gtgDFl/IwY9sYT3Za7fNJT9i5NqT2W3xCuBQIf
-         TrJZzWXu+vo/PqlX2Zwy7+Yw7xFLcTvuPfgoeRRLSuXzUTndXRoaeI4OSKMcVvWxNdnC
-         /QZBHXJUhIpL3PG60Uuw5XEd3lfFevbS9XdFskpRhrroZ8JNxmlx1+0tgb6LgX74CDXX
-         bd84sQVbuXkLxmFeomxiX+rAZ5nIlKfPMMMN7v4CegZ+LqAtZodxN8JPHCLWR2+CZD2P
-         3equ3fiYigPR5vGksIGlTSwqyOcMqBBG88MKv4mF0ks7nNojOy4142pIeYRs9zlUY6HR
-         2fwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739952354; x=1740557154;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wLGc0PhsYQqjnufHmhSBlNvjs6ldgEolpYxIgynjQOs=;
-        b=M3tfI73lT8tW605xgV8XmVFGT8I9nGLigNNuBO7RPRW0vhxb5GNffPoEy01MDmzpWP
-         4MpXLgxvc/mmT8cJoHVIR+oR6jnCCadVrNFWSvsSIhssEw0N5W6Y65vzXIUH72aSji2M
-         2BG/nmO0YZtFm4Rt+OokMLMRe5f8cKhxWJnZSa6S9MlslBvBOCTkI3wORziDZaPPROWV
-         f/jQwb2Zw9z0K2MXo/84wqVe/LOdtZ1u0Tj/XUGRvTmadmNoCU1/4JLV5RJIAI4OYiOR
-         PPJZ9JAUKUTDllM5w0vXg0XH45/scBqacrGWHbLrEnYZqFc47wLH0BkwEzpQ4nAfIhQC
-         5IQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ9FBknTI9CR/7eNom6hhWRK/5NzxQ1g6r3xA3/FOxfk5vfz92255MMXJ/lfk4XfHjKTM41UIzTb01NAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFHS8PK814L+ldnlszYGiJkUryfQ2447Q+fuXQUd5+x/arvvYP
-	1B5ZkRnDFIK/L0etSZAJGJw5HrPtAjiKjUbkmwsZpp4bL2hyGpPCAZo731yfXfQ=
-X-Gm-Gg: ASbGncslrxouLsbg1cO3PgEBD3Xyqtp3Sdu9OHoyBjQ9NuU2Y4edUhuYUk/vfyUXI2G
-	Q52mE2/+1WliKCssuwTnP+1wxvmJOEeDCXp287qi5UfICGRQeiHv7P10OATt0j05u2zndr1X3Uw
-	hD9ZyNVG8K5h8Hpd4tYCmgYKxpmAzgiY2ug0ocdTiuqVZkKQzyMJfzTzUD2r5a025OW7RgVv+Nx
-	6MsxMuvo3dlJBbHZrW/N/kwGOLsAvSH2lA3vUmJY8y4kHFD9flTMA3GCM2fPU0GcBV2h83kRuq/
-	9AueboQHwPwq0SRVmRAM
-X-Google-Smtp-Source: AGHT+IGBEq/z6D6qnilsHC3+mDce/VGZCnHMT6t2e1BeXhqvd14hXzgZOEYBBCCaEPZH9/ztZFe9uQ==
-X-Received: by 2002:a17:907:7247:b0:ab7:c6f4:9522 with SMTP id a640c23a62f3a-abb70921334mr1722647266b.9.1739952353901;
-        Wed, 19 Feb 2025 00:05:53 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abb8915db0dsm690660166b.145.2025.02.19.00.05.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 00:05:53 -0800 (PST)
-Date: Wed, 19 Feb 2025 11:05:49 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <b7a3958e-7a0a-482e-823a-9d6efcb4b577@stanley.mountain>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDt63obS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2754C4CED1;
+	Wed, 19 Feb 2025 08:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739952440;
+	bh=oPdqC27LMeZBOtRe3tu0wOqkmalfCuiPMd3Is+E5hPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nDt63obSmoG/1zxBKwdIVxoCHK2hZzwNXC5nnATPG58h9v7zMHt/8OS/xRCp+TcwW
+	 uw/3i8a+wbqMj0JXq/HSO8cI3tcsFHiV/qnoJl3+WwK3aG/xP476JiDgnmDOMFDNmP
+	 cKxjksRceqV/TCqiU/tqa8ZLJvltccQfEZuXGayYSdsAcoqUk09D8DmN+0kNyFXrqk
+	 0C8JM8YbXPKwPIDbysbtp2r6W1dI227ae0s+7s2WiXxgPPxKtfWwyAo/j7PO84gaVx
+	 MrYABIWZ7Z4KhEMfUDGtiE6apwYGPgta9mGGTvuRbtVHk0oA42yvMCV0SPoM48NvW8
+	 isuBkuFnjDadQ==
+Date: Wed, 19 Feb 2025 09:07:17 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/5] dt-bindings: clock: add clock definitions for
+ exynos7870 CMU
+Message-ID: <20250219-naughty-spaniel-of-refinement-ab6fac@krzk-bin>
+References: <20250219-exynos7870-pmu-clocks-v3-0-0d1e415e9e3a@disroot.org>
+ <20250219-exynos7870-pmu-clocks-v3-1-0d1e415e9e3a@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z7SwcnUzjZYfuJ4-@infradead.org>
+In-Reply-To: <20250219-exynos7870-pmu-clocks-v3-1-0d1e415e9e3a@disroot.org>
 
-On Tue, Feb 18, 2025 at 08:08:18AM -0800, Christoph Hellwig wrote:
-> But that also shows how core maintainers
-> are put off by trivial things like checking for integer overflows or
-> compiler enforced synchronization (as in the clang thread sanitizer).
-> How are we're going to bridge the gap between a part of the kernel that
-> is not even accepting relatively easy rules for improving safety vs
-> another one that enforces even strong rules.
+On Wed, Feb 19, 2025 at 12:20:28AM +0530, Kaustabh Chakraborty wrote:
+> Add unique identifiers for exynos7870 clocks for every bank. It adds all
+> clocks of CMU_MIF, CMU_DISPAUD, CMU_G3D, CMU_ISP, CMU_MFCMSCL, and
+> CMU_PERI.
+> 
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  include/dt-bindings/clock/exynos7870.h | 324 +++++++++++++++++++++++++++++++++
+>  1 file changed, 324 insertions(+)
 
-Yeah.  It's an ironic thing...
+Again, you keep repeating some old patterns ignoring what was added
+recently. This must match compatible, so missing vendor prefix.
 
-	unsigned long total = nr * size;
+Also squash the patch with the binding itself so you will see the
+difference in names.
 
-	if (nr > ULONG_MAX / size)
-		return -EINVAL;
+Best regards,
+Krzysztof
 
-In an ideal world, people who write code like that should receive a
-permanent ban from promoting Rust.
-
-regards,
-dan carpenter
