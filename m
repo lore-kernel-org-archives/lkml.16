@@ -1,305 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2047.outbound.protection.outlook.com [40.107.247.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4181A2147F3;
-	Wed, 19 Feb 2025 17:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987182; cv=none; b=IS+YyTZGHmkcLLXnx34FU/k0ooSBNE7MOKBL1URoqsWIrhpHuB+QqMcdEGvsqHuFDKo/s+D/1fvVkZAyrBLLQGTiE0flScy/r8HK4XfKDap+vYR8ePuRe1fFJ3CEbHHDsQN/kg/jW3XeRhgJA81t8vcvqFeyTUFH2BvqiXeVAZo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987182; c=relaxed/simple;
-	bh=v0mV9d9F4bC7WQnGYcrOFt0VFmgb9KQ5yKqZlvACNA8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cpC7n/eBqtet9rn8Aiqsi8wTTG6TYKdgfYHT7YrXlusrU0CRVpTaFoV+UXF+eazy8Q5W58MZw7ke3SXNRz1h2OSziaey4Qc0QLJDvGFXPWFOgaWZ6X4UbkDqY57fPS7xWh7j4ZeHyBSTUM5ZNKQsG835Km4cBGzyil0oTAkW09U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NaM3GKas; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283B71B2190;
+	Wed, 19 Feb 2025 17:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739987204; cv=fail; b=iiYpMfZpevUDXEeMIyoekg4TEmp8LiEkfKlb0CN1rPkSpjWbG8lUaIfIj4hrUH3qodhxuG032gsVUJ0bJU8WdJbSIJrIb8J66OQgE7s0eibyUYzpBny+k2SoE+9z3RIHsPHoekoEd6YWCiHn9xAJ7EuqZImIHpcP8qqJGHcNbAw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739987204; c=relaxed/simple;
+	bh=FA20wUBUKyi6UZZnccjuXcQalKWnUpggHvGy12BvO8s=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=u4mGucf0DGscj43vvq5moN5F7txaWRJ5dqZnxn4naA3ulDt7+FzTycIo/+veag6mJhvuwcOaucfUJhdkwNfxXxOWJKyf2QtBrRlob1AItozH5NnZPLTedGnn+URB5XqjLs0F20CL9WLiTmYYS2JDyuVqG6wRTuxjMLNfzvpjo00=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Eczj9xDl; arc=fail smtp.client-ip=40.107.247.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NaM3GKas"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739987180; x=1771523180;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=v0mV9d9F4bC7WQnGYcrOFt0VFmgb9KQ5yKqZlvACNA8=;
-  b=NaM3GKasLxExeBqTyLYX113znVvUFWm/OGrHxdCkytn6ffHn3kqG8vjq
-   bRDI1nE6XOsoGuGafTpOx9Juj3l2SI0mDhSsFOqn2tVvpWBq0J2nAhBnH
-   MDCu8CvIoGQEttu2UhY8wmAAJwOoAQ88H0fZbY3ueT6IIGS3XBYspaO4t
-   4qmlOnvHmYtrDdk5Cu8Q6VpCYliR2triLpmWgLPOERh548neJPEWxDQOL
-   emeVNLbksKbpRMpe9Dr0o46mn0vDjbiFQilJxlU/Agk7PMvliCPFBaG2t
-   xk7Blt19P+iCAHBksBouMFseo1qLIZ8A3c9XLRATtdm7vi0eEh+3Z9+RH
-   Q==;
-X-CSE-ConnectionGUID: RMpb0ihTTE2+NVygFa8K8g==
-X-CSE-MsgGUID: W2F+T7wATfmkYf5/lVmmNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="50953029"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="50953029"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:46:18 -0800
-X-CSE-ConnectionGUID: bQm2QqyNSUiunKFvJuH9ZQ==
-X-CSE-MsgGUID: VIGPr0GVSWuUJ9IY1w87TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="119427316"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmviesa005.fm.intel.com with ESMTP; 19 Feb 2025 08:44:32 -0800
-Received: from pkitszel-desk.intel.com (unknown [10.245.246.109])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 4F7EC34301;
-	Wed, 19 Feb 2025 16:44:19 +0000 (GMT)
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-To: intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>
-Cc: netdev@vger.kernel.org,
-	Konrad Knitter <konrad.knitter@intel.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	linux-kernel@vger.kernel.org,
-	ITP Upstream <nxne.cnse.osdt.itp.upstreaming@intel.com>,
-	Carolina Jubran <cjubran@nvidia.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [RFC net-next v2 1/2] devlink: add whole device devlink instance
-Date: Wed, 19 Feb 2025 17:32:54 +0100
-Message-ID: <20250219164410.35665-2-przemyslaw.kitszel@intel.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250219164410.35665-1-przemyslaw.kitszel@intel.com>
-References: <20250219164410.35665-1-przemyslaw.kitszel@intel.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Eczj9xDl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jjCP3y6TBkF73f7sBH0TdIPx1rtzmhyk/4MWXNHzLSjA19MwR31G2XT9n6nTdanBkGr5g1NSmnnQBIigrgEd5PNE2msSRi+4aCnWiPVaDGaF5OyoaMi0/35f+Nrgu+VA6G1gwX7YLd7xhcr0ftAw2n7J5Ay05P8Wj8pnKG4tB93X8yhN7ZjonfII8tIP3N79yVso8dwZ54O3EhP/kAm6mda9RVUuZu5BlZhckBFmx2kUTmeE5nszMJXGIiw5nM+/XpOSGFYgoA9taT6O3j1o/rWvTT7n4KP5O+f3ESORJbSx9IxiiqSLLEygfowv/KlOvFRQ318j276aRPQCRK4Cfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f/61dzS9iBj3g8HhbX/vMsc21BD8hli19wYKVNn3xBE=;
+ b=ikLrCwTnOISUQuknOtn05QvUkSDzoDES/c5i+DjjLuPy0ShWvoNwsv8OqtQ1r88NT+LPdF5V583RnZeoAUEGOmyBo5IDNEcWS1uvU1KuM4OvkCAy+hNuGF23e8YPTc1wGnaWVCk84i+cZYxiVOtrevnunYgJ6AiPQVVD0b4nDaC77HvmEMWI+ESRv5UXjry46uOIVTKtBUpiEiyin20vZCZYSwIGG8Qvdp6KppFVQZqkmYFEL5aGOEKeMuDF+RLmVdYHZSIcIWdu9+Gg+HLMDc0MxcStVm4Orul3nFn0ofzc0miBDiH6BPrmiujape89kKjUXskKpvH9FEW/oyCabQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f/61dzS9iBj3g8HhbX/vMsc21BD8hli19wYKVNn3xBE=;
+ b=Eczj9xDlgJeubPFpSVaGiUKS1ckQGRfx4QlTEFa6nZ22RqTyU99OfuywWsDqATBDEFX7658bwU2xi4pHbh0eAo9wxK/DRAnzvSEYHJtKVrGsRQFOS+lhBnoecnAthk9N0en8Y+Ih6CrBF0/mRnlsPb8jPrQzHmfSbgg4qAnYnQQ5lKnhm87cpRt7OQmJsH4q/CsYz/9ckY1oM60h/pcx4YIWzm1sxOEY+nsZ8ecoqUvqkPF6Qjem7xaXz99Wns93nZysVmBjNOAl61A6GnRrrUfcW5W9urrbeVlrdGpmi/SMfhsnjU2naHhHNqPQF0TTvmkMT+S2yOaH2eE4cq7MzQ==
+Received: from AS8PR04MB8849.eurprd04.prod.outlook.com (2603:10a6:20b:42c::17)
+ by AM0PR04MB6915.eurprd04.prod.outlook.com (2603:10a6:208:187::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Wed, 19 Feb
+ 2025 17:46:39 +0000
+Received: from AS8PR04MB8849.eurprd04.prod.outlook.com
+ ([fe80::d8e2:1fd7:2395:b684]) by AS8PR04MB8849.eurprd04.prod.outlook.com
+ ([fe80::d8e2:1fd7:2395:b684%7]) with mapi id 15.20.8445.013; Wed, 19 Feb 2025
+ 17:46:39 +0000
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+To: Wei Fang <wei.fang@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>, "andrew+netdev@lunn.ch"
+	<andrew+netdev@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>
+CC: Ioana Ciornei <ioana.ciornei@nxp.com>, "Y.B. Lu" <yangbo.lu@nxp.com>,
+	"michal.swiatkowski@linux.intel.com" <michal.swiatkowski@linux.intel.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+Subject: RE: [PATCH v2 net 9/9] net: enetc: fix the off-by-one issue in
+ enetc_map_tx_tso_buffs()
+Thread-Topic: [PATCH v2 net 9/9] net: enetc: fix the off-by-one issue in
+ enetc_map_tx_tso_buffs()
+Thread-Index: AQHbgpOU4gMYnZt/c0WSS3pD+9mhubNO3ySw
+Date: Wed, 19 Feb 2025 17:46:39 +0000
+Message-ID:
+ <AS8PR04MB8849C3544A63C75E37D2079896C52@AS8PR04MB8849.eurprd04.prod.outlook.com>
+References: <20250219054247.733243-1-wei.fang@nxp.com>
+ <20250219054247.733243-10-wei.fang@nxp.com>
+In-Reply-To: <20250219054247.733243-10-wei.fang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8849:EE_|AM0PR04MB6915:EE_
+x-ms-office365-filtering-correlation-id: d31ed512-88bf-45e2-3632-08dd510d5d08
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?4JNftn6CXfdNe9d012vsUmScDJbntsm06Tpu3OdX5LLRVumpKS4nOgzDtmPc?=
+ =?us-ascii?Q?fECHdQB48P/rPQNJyL3wKlMvk/duOJ/YcFcQ85ZCdYJsxweraSUWrybqRe64?=
+ =?us-ascii?Q?l9MYhKthniusXmJBMcx+J+rNDzwsppOC+0/C/pJer7/oVKpPBXBpejq01ahp?=
+ =?us-ascii?Q?jWrZDKZ7zDq6dvWJ73FfL7VXygVn9wKVS6kO1YP6vb+uhwtNS9Ez8LvgZYsE?=
+ =?us-ascii?Q?7yCwTd1/48XumnwKHMwe0TMzteoMRidqTdZra+rRjpMg73F2i6p5gZ9LVjSG?=
+ =?us-ascii?Q?uWG8Vx2NyG4KVgEWVSnUGaY3Q4IQoY6XZHVMjyTZxwBb4A0iUJ8kR4n4g86T?=
+ =?us-ascii?Q?FU3IxhYKihVltSl+lh+opUaiC9uIt2fVIhqIJ1V7kynwdeQK3LbQI6d2YC5x?=
+ =?us-ascii?Q?y7FKajgQu6AaN4iK+V9+DXxrrLAphyl830tKITd9h6O5WUOpJ48u2KrXcmGO?=
+ =?us-ascii?Q?bEmjAMYmOQYHOWyTQDHtpEdhD62QS0+c4/qPo/HWY5VOB6L/dWAkKvSRA995?=
+ =?us-ascii?Q?qwy3yyCGaN87P8N+PVgVNMu4V8Q5hymH6Fzm5QEqWvsoge+YQI7GPwdFLL4e?=
+ =?us-ascii?Q?wBLa4MGBP74CXjKwOPkIcyVkDT69Qnvs6SpjTgZRcpawxD0r2rqI0oldM/ld?=
+ =?us-ascii?Q?1qbo/G6PXNAJsXw+r2QEJwvGHvtfHCGukPILjK3QwEJuBKgFXHdcXCc6nhMS?=
+ =?us-ascii?Q?ILvCv+nOM6rA7d+/zKhT7mHOXpy9bkhLe68NMztETAWB9gcd57xkVkZnCY9b?=
+ =?us-ascii?Q?9YS5ccBfuX1C9whCoahAOTyM1/e6Ndo9QCOk+7t3LEP41LNz6OFgeys/CiHl?=
+ =?us-ascii?Q?NtYC33npQgckw5gdyvczqXwzgZQL669FHHcBfcYHHdl7PgmafXNglUU0sxv+?=
+ =?us-ascii?Q?kir2a6pIkgxCBLJMXtTz6G3kj2Ae4yzB3BFoBFwRJe6sSYNe5hwxTvHtmflQ?=
+ =?us-ascii?Q?sXehwl/ajfM/2PsAue9b+Osc84tSKxh9sPxz5cmlBXdC8LoS8RNPWsa8Tyyf?=
+ =?us-ascii?Q?MCMHJ7bNXc6m2Nn0ADx0KVV0uxRDjXHcFtH2hlnEwvM6CFKUHe2VgVLKZlX9?=
+ =?us-ascii?Q?IO3Z+6H3gTbmihnBh4EiDGM86SssIdptB8Ns2bFWSM/kq1JL/RjfYarU3Xur?=
+ =?us-ascii?Q?34lOV9dw2jm3X4rQISwC21YmHXIRI/TnbJUcXafJvQoCzfSP08iayP5waM2j?=
+ =?us-ascii?Q?AOaFwIAbZll5efsJK0pJOGeglqdlbqFQ4k9y3Vfo72Z2fesht4dzVN5u+Qlc?=
+ =?us-ascii?Q?hA/sR1npTf6FdTTZhCiJCpj+vzgeaK8OKeWWY+rKh13UmFRcrHQy1MRTjbAE?=
+ =?us-ascii?Q?DXbJ14eeQOvHjXH/kf9H3VObpO3gqsMKloMmefxwuLjrODxXAczlCUvk9qIF?=
+ =?us-ascii?Q?YMlFbW6pUraJsWJx42+YbWyxcQeqiqjv2z5fYhFn16r657+LBpixqKIe2JlN?=
+ =?us-ascii?Q?XpyCxy/VILNkeYe2O6O9olEmOyYXOPhs?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8849.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?8gGuJ2L0Zij0sx0F2mW+ZYlWsKTBIJ9bzMP49ZIKtlN7cWGGvD4TbZA7izdD?=
+ =?us-ascii?Q?dn+5sU4/JVcppiOJXYXInonLgHYAOTWfFq8NWnQOnP1dsl7VZhsXgNlEFl9T?=
+ =?us-ascii?Q?zn6vGOBRIzRuA6J8vYKdy14/3osFcZzzxijesEA0qpHv625pTP63CA7/SDnr?=
+ =?us-ascii?Q?uc4XwHq+FYyGCKjpFOf3tGak1mc+Z3kucFpbQBeOt+krlVvk3KJOMs9wFQFQ?=
+ =?us-ascii?Q?zfT+L53rF9z9sA8sUxP1aiGfAIgkcgBlILNnQ14RwCm3I77Z3AG5LYR4mUyE?=
+ =?us-ascii?Q?6SeVO6cVz5FppyGh6chWGzWUUpkqLoMS/m5iB0yJnOnt/+o0sl9SF9LMjVCg?=
+ =?us-ascii?Q?WM4i+clgUnxpx51iSSt78oVUSkyV5y4vAemwD8Ad3GUqOHEvRw1IAu0C0phR?=
+ =?us-ascii?Q?4ZmiM0JtApwSa51JsJ5b5/cRdrdnEmJDtQMqwwiqYb8y1pJwqpxSmjB7SxgX?=
+ =?us-ascii?Q?soZuHIrrP+pbjB39WUav88KNPYJtLN+tN5nN/PfDzvpfLHzDVr8lzZ1Ad+bm?=
+ =?us-ascii?Q?JCkj2VYadVkEVvw1f1jMVYvN/Zswi78lB1GD2GHQITt6C+5QDvfAdTYXsR2B?=
+ =?us-ascii?Q?4FcZZ487LtM9xZUUmwxRaHI4Mkt19X9a3AcgvjhXeSWzQvQU4p4EV/5vPbvT?=
+ =?us-ascii?Q?IPzCAaI5T9BIYEv54FBVha+5+Fti1lWGIelrmfA6c9mxLfSx/oo4gkw8FnMN?=
+ =?us-ascii?Q?bhpsZnYfPx1UrvzeARXjTmhASiIN6tIfzQD3p5ifIEgJTZ2K9uY/pXqXwCSz?=
+ =?us-ascii?Q?9OBzV3ygCnXQBU4XlM5EcVf3qXDqiKZ/qsr80ys4PVhcnqF2qC/OQ0X1+4cC?=
+ =?us-ascii?Q?1GyNKrXBDnJGO9cGoD/NW6+JxgprxIwXCR/l/bOJHzWy1pMXe0qfkIJr445F?=
+ =?us-ascii?Q?4AHA1/bHJH3FVEovEn2ARQJu4gqA0nsO0pfJsb/jBJJ98ToQkI6cqrIOwiUq?=
+ =?us-ascii?Q?+JzQ2n2x3lDgo7nu2KyfsVvo/tFGcOSxJVtiL1BDaRcGf21vbYa5vndj2voZ?=
+ =?us-ascii?Q?6e+QZU0cTAWR2GP92YDyIDh/dqjP74w4yYtWhXpcyo2gg81mq0CqxvdPD1Jy?=
+ =?us-ascii?Q?nQ7QFkYXTdKMAFPtJ2kTksR4CjN0sn6ntuWkpcjHkM2cF1QEtnLwDBaAKOzs?=
+ =?us-ascii?Q?KjxURi5Ckp/qdKYSUIX/8fb0siczYC3J1+3UIgZhY4DJM4A9yMBwxj8H7I5x?=
+ =?us-ascii?Q?t4ZkxFx0JoxDvB2F2p05D2kt3OE/jcAsYK6pQzOHxLH5TxsRaFnRx8IfvLbj?=
+ =?us-ascii?Q?teg2PdFntTwslTbOCcSX2NW0t2iVg6+72ZOEZmmkAEbPx+edENhwM5ndhD/S?=
+ =?us-ascii?Q?TNAmbi+cV4mZQlkQ7HuVvtk1qWHULUn5lb2Mo53vZCLWv9RJRDlk2TM0mfWY?=
+ =?us-ascii?Q?RMSHeiQwC3fXL97dQFx+WBJvoEWFQTCRNER1uAVniC9kLCm0RiDEW2VriGMq?=
+ =?us-ascii?Q?jiMxAONYO+v5kIDfr8mzCPUiUY45UWpIlFF1gn3rcWuu4vOvxFqlO3bSCvbj?=
+ =?us-ascii?Q?RrDHL/dM2eeg1H6G1+ehpXJfyDR6QQ4hVNBG4mptZ+YdVg7gxJiyo1T63D0p?=
+ =?us-ascii?Q?5RwOPNcSYW1ZB6gys+U/BlJa2PVm7pLaMNUN92Nn?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8849.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d31ed512-88bf-45e2-3632-08dd510d5d08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2025 17:46:39.3572
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: V2dbhIypiuLHCEhgPqwpHZTmPY3r5bNJw+Cjm1cwkDTSCL63rKPFdnW0O4vH48A+VHIKQFTAbcuGKebGZVV1kQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6915
 
-Add a support for whole device devlink instance. Intented as a entity
-over all PF devices on given physical device.
+> -----Original Message-----
+> From: Wei Fang <wei.fang@nxp.com>
+> Sent: Wednesday, February 19, 2025 7:43 AM
+[...]
+> Subject: [PATCH v2 net 9/9] net: enetc: fix the off-by-one issue in
+> enetc_map_tx_tso_buffs()
+>=20
+> There is an off-by-one issue for the err_chained_bd path, it will free
+> one more tx_swbd than expected. But there is no such issue for the
+> err_map_data path. To fix this off-by-one issue and make the two error
+> handling consistent, the loop condition of error handling is modified
+> and the 'count++' operation is moved before enetc_map_tx_tso_data().
+>=20
+> Fixes: fb8629e2cbfc ("net: enetc: add support for software TSO")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> ---
+>  drivers/net/ethernet/freescale/enetc/enetc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c
+> b/drivers/net/ethernet/freescale/enetc/enetc.c
+> index 9a24d1176479..fe3967268a19 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+> @@ -832,6 +832,7 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb
+>  			txbd =3D ENETC_TXBD(*tx_ring, i);
+>  			tx_swbd =3D &tx_ring->tx_swbd[i];
+>  			prefetchw(txbd);
+> +			count++;
+>=20
+>  			/* Compute the checksum over this segment of data and
+>  			 * add it to the csum already computed (over the L4
+> @@ -848,7 +849,6 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb
+>  				goto err_map_data;
+>=20
+>  			data_len -=3D size;
+> -			count++;
 
-In case of ice driver we have multiple PF devices (with their devlink
-dev representation), that have separate drivers loaded. However those
-still do share lots of resources due to being the on same HW. Examples
-include PTP clock and RSS LUT. Historically such stuff was assigned to
-PF0, but that was both not clear and not working well. Now such stuff
-is moved to be covered into struct ice_adapter, there is just one instance
-of such per HW.
+Hi Wei,
 
-This patch adds a devlink instance that corresponds to that ice_adapter,
-to allow arbitrage over resources (as RSS LUT) via it (further in the
-series (RFC NOTE: stripped out so far)).
+My issue is that:
+enetc_map_tx_tso_hdr() not only updates the current tx_swbd (so 1 count++
+needed), but in case of extension flag it advances 'tx_swbd' and 'i' with a=
+nother
+position so and extra 'count++' would be needed in that case.
 
-Thanks to Wojciech Drewek for very nice naming of the devlink instance:
-PF0:		pci/0000:00:18.0
-whole-dev:	pci/0000:00:18
-But I made this a param for now (driver is free to pass just "whole-dev").
-
-$ devlink dev # (Interesting part of output only)
-pci/0000:af:00:
-  nested_devlink:
-    pci/0000:af:00.0
-    pci/0000:af:00.1
-    pci/0000:af:00.2
-    pci/0000:af:00.3
-    pci/0000:af:00.4
-    pci/0000:af:00.5
-    pci/0000:af:00.6
-    pci/0000:af:00.7
-
-Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
----
- net/devlink/devl_internal.h | 14 +++++----
- net/devlink/core.c          | 58 +++++++++++++++++++++++++++++--------
- net/devlink/netlink.c       |  4 +--
- net/devlink/port.c          |  4 +--
- 4 files changed, 58 insertions(+), 22 deletions(-)
-
-diff --git a/net/devlink/devl_internal.h b/net/devlink/devl_internal.h
-index 14eaad9cfe35..073afe02ce2f 100644
---- a/net/devlink/devl_internal.h
-+++ b/net/devlink/devl_internal.h
-@@ -49,6 +49,8 @@ struct devlink {
- 	struct xarray snapshot_ids;
- 	struct devlink_dev_stats stats;
- 	struct device *dev;
-+	const char *dev_name;
-+	const char *bus_name;
- 	possible_net_t _net;
- 	/* Serializes access to devlink instance specific objects such as
- 	 * port, sb, dpipe, resource, params, region, traps and more.
-@@ -104,15 +106,15 @@ static inline bool devl_is_registered(struct devlink *devlink)
- 
- static inline void devl_dev_lock(struct devlink *devlink, bool dev_lock)
- {
--	if (dev_lock)
-+	if (dev_lock && devlink->dev)
- 		device_lock(devlink->dev);
- 	devl_lock(devlink);
- }
- 
- static inline void devl_dev_unlock(struct devlink *devlink, bool dev_lock)
- {
- 	devl_unlock(devlink);
--	if (dev_lock)
-+	if (dev_lock && devlink->dev)
- 		device_unlock(devlink->dev);
- }
- 
-@@ -174,9 +176,9 @@ devlink_dump_state(struct netlink_callback *cb)
- static inline int
- devlink_nl_put_handle(struct sk_buff *msg, struct devlink *devlink)
- {
--	if (nla_put_string(msg, DEVLINK_ATTR_BUS_NAME, devlink->dev->bus->name))
-+	if (nla_put_string(msg, DEVLINK_ATTR_BUS_NAME, devlink->bus_name))
- 		return -EMSGSIZE;
--	if (nla_put_string(msg, DEVLINK_ATTR_DEV_NAME, dev_name(devlink->dev)))
-+	if (nla_put_string(msg, DEVLINK_ATTR_DEV_NAME, devlink->dev_name))
- 		return -EMSGSIZE;
- 	return 0;
- }
-@@ -209,8 +211,8 @@ static inline void devlink_nl_obj_desc_init(struct devlink_obj_desc *desc,
- 					    struct devlink *devlink)
- {
- 	memset(desc, 0, sizeof(*desc));
--	desc->bus_name = devlink->dev->bus->name;
--	desc->dev_name = dev_name(devlink->dev);
-+	desc->bus_name = devlink->bus_name;
-+	desc->dev_name = devlink->dev_name;
- }
- 
- static inline void devlink_nl_obj_desc_port_set(struct devlink_obj_desc *desc,
-diff --git a/net/devlink/core.c b/net/devlink/core.c
-index f49cd83f1955..f4960074b845 100644
---- a/net/devlink/core.c
-+++ b/net/devlink/core.c
-@@ -397,26 +397,25 @@ void devlink_unregister(struct devlink *devlink)
- EXPORT_SYMBOL_GPL(devlink_unregister);
- 
- /**
-- *	devlink_alloc_ns - Allocate new devlink instance resources
-- *	in specific namespace
-+ *	devlink_alloc_wrapper - Allocate a new devlink instance resources
-+ *	for a SW wrapper over multiple HW devlink instances
-  *
-  *	@ops: ops
-  *	@priv_size: size of user private data
-- *	@net: net namespace
-- *	@dev: parent device
-+ *	@bus_name: user visible bus name
-+ *	@dev_name: user visible device name
-  *
-- *	Allocate new devlink instance resources, including devlink index
-- *	and name.
-+ *	Allocate new devlink instance resources, including devlink index.
-  */
--struct devlink *devlink_alloc_ns(const struct devlink_ops *ops,
--				 size_t priv_size, struct net *net,
--				 struct device *dev)
-+struct devlink *devlink_alloc_wrapper(const struct devlink_ops *ops,
-+				      size_t priv_size, const char *bus_name,
-+				      const char *dev_name)
- {
- 	struct devlink *devlink;
- 	static u32 last_id;
- 	int ret;
- 
--	WARN_ON(!ops || !dev);
-+	WARN_ON(!ops);
- 	if (!devlink_reload_actions_valid(ops))
- 		return NULL;
- 
-@@ -429,13 +428,14 @@ struct devlink *devlink_alloc_ns(const struct devlink_ops *ops,
- 	if (ret < 0)
- 		goto err_xa_alloc;
- 
--	devlink->dev = get_device(dev);
- 	devlink->ops = ops;
-+	devlink->bus_name = bus_name;
-+	devlink->dev_name = dev_name;
- 	xa_init_flags(&devlink->ports, XA_FLAGS_ALLOC);
- 	xa_init_flags(&devlink->params, XA_FLAGS_ALLOC);
- 	xa_init_flags(&devlink->snapshot_ids, XA_FLAGS_ALLOC);
- 	xa_init_flags(&devlink->nested_rels, XA_FLAGS_ALLOC);
--	write_pnet(&devlink->_net, net);
-+	write_pnet(&devlink->_net, &init_net);
- 	INIT_LIST_HEAD(&devlink->rate_list);
- 	INIT_LIST_HEAD(&devlink->linecard_list);
- 	INIT_LIST_HEAD(&devlink->sb_list);
-@@ -458,6 +458,40 @@ struct devlink *devlink_alloc_ns(const struct devlink_ops *ops,
- 	kvfree(devlink);
- 	return NULL;
- }
-+EXPORT_SYMBOL_GPL(devlink_alloc_wrapper);
-+
-+/**
-+ *	devlink_alloc_ns - Allocate new devlink instance resources
-+ *	in specific namespace
-+ *
-+ *	@ops: ops
-+ *	@priv_size: size of user private data
-+ *	@net: net namespace
-+ *	@dev: parent device
-+ *
-+ *	Allocate new devlink instance resources, including devlink index
-+ *	and name.
-+ */
-+struct devlink *devlink_alloc_ns(const struct devlink_ops *ops,
-+				 size_t priv_size, struct net *net,
-+				 struct device *dev)
-+{
-+	struct devlink *devlink;
-+
-+	if (WARN_ON(!dev))
-+		return NULL;
-+
-+	dev = get_device(dev);
-+	devlink = devlink_alloc_wrapper(ops, priv_size, dev->bus->name,
-+					dev_name(dev));
-+	if (!devlink) {
-+		put_device(dev);
-+		return NULL;
-+	}
-+	devlink->dev = dev;
-+	write_pnet(&devlink->_net, net);
-+	return devlink;
-+}
- EXPORT_SYMBOL_GPL(devlink_alloc_ns);
- 
- /**
-diff --git a/net/devlink/netlink.c b/net/devlink/netlink.c
-index 593605c1b1ef..3f73ced2d879 100644
---- a/net/devlink/netlink.c
-+++ b/net/devlink/netlink.c
-@@ -193,8 +193,8 @@ devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs,
- 	devname = nla_data(attrs[DEVLINK_ATTR_DEV_NAME]);
- 
- 	devlinks_xa_for_each_registered_get(net, index, devlink) {
--		if (strcmp(devlink->dev->bus->name, busname) == 0 &&
--		    strcmp(dev_name(devlink->dev), devname) == 0) {
-+		if (strcmp(devlink->bus_name, busname) == 0 &&
-+		    strcmp(devlink->dev_name, devname) == 0) {
- 			devl_dev_lock(devlink, dev_lock);
- 			if (devl_is_registered(devlink))
- 				return devlink;
-diff --git a/net/devlink/port.c b/net/devlink/port.c
-index 939081a0e615..508ecf34d41a 100644
---- a/net/devlink/port.c
-+++ b/net/devlink/port.c
-@@ -220,8 +220,8 @@ size_t devlink_nl_port_handle_size(struct devlink_port *devlink_port)
- {
- 	struct devlink *devlink = devlink_port->devlink;
- 
--	return nla_total_size(strlen(devlink->dev->bus->name) + 1) /* DEVLINK_ATTR_BUS_NAME */
--	     + nla_total_size(strlen(dev_name(devlink->dev)) + 1) /* DEVLINK_ATTR_DEV_NAME */
-+	return nla_total_size(strlen(devlink->bus_name) + 1) /* DEVLINK_ATTR_BUS_NAME */
-+	     + nla_total_size(strlen(devlink->dev_name) + 1) /* DEVLINK_ATTR_DEV_NAME */
- 	     + nla_total_size(4); /* DEVLINK_ATTR_PORT_INDEX */
- }
- 
--- 
-2.46.0
-
+Thanks,
+-Claudiu
