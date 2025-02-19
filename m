@@ -1,59 +1,51 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1974E2862B2;
-	Wed, 19 Feb 2025 16:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329531DE4C6
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739983697; cv=none; b=dM2Nd6uKL9lpgsQksn4sPkGGuKXHuGFR7XIg9kkzSDVPa6jW9c86PMt88WBAaSwk3qFX6w5apuRF++Y2BKCUBTbqyuGpw/S5t+8iQ3qHwxziG/szHWtbPfa9cBCUmyJ1xbkfHR1SMH93EP/F5Lm2suCBUb+dQHXirNYwmDGrchg=
+	t=1739983763; cv=none; b=HMUoDR5gRaYEKmB/d2HgjpVvpGMJAvTLLeJlWpsQ6ldWwpecUtlV+L6U2+fCX4jNDpjyY98pH5j7WtYe7H7EIEHPZt13sdjPNXUw1hgKaI6oIFTZGDAZWJ2WSondVbDPv5Wiwr5rtiwQ62XflGyjgHK4aJIcggMBrANO3X640mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739983697; c=relaxed/simple;
-	bh=autM+RJ3s43Lzh4Mjz4jQCjBOdzux19fRDijqU9FLGg=;
+	s=arc-20240116; t=1739983763; c=relaxed/simple;
+	bh=7rc1d/SjX6ZUEsz5GUvOB9z1e+pX4PsmcEMEOYv2A0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovYjEBUEOUD+9HFkM5+k+Yd6iwV+3vXTd1hrefrV61UT7latRLCajdZ4KMgSQtXPUGCyf6BAw8OEzBXStc3vtmgLuPzTZYN5epgRrehEqWqhgXbBLzKS6HGawcOpoxwlJ+kZUbk1VgOOXkvZ7ZFZT3g2JVcCwad3fy+JzxjlNX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=EVrrsjBm; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=bwviAByzjcfJocWL2wT8I4Ye4yBoecM72v7uuCswewKgEmSstxVLmXsEEZujuSKnLEuW3tMzQkdFAx/1FNOoVJvquqFwHCNiJmsptaaPH3uFUzVMyqKyF5hIadw4EPm3Qx4JQLt/NrUR5APuktDH/+TagAfMkUTCmda8sjwXtkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=L2LPc7GF; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EVrrsjBm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=sL1+mg2q26umhi2nwvSOZWxdt3u5cMZSRU5xPb7xHWY=; b=EVrrsjBmLbQ7+aWhz0PSoXAZ4M
-	WP5x7rOcn3WmX1nLiW3CfBGgZbcz6H6OV6DLiMaFY26LiUysD33RLsj8JSPRdUpuxRxV2GyjaBkQG
-	tvHicju0yfRh8oF7Z52CsVfXCWxRetZ4urTCyEOsV3q4+Tm4to/m2YxnkmhicqDjfpYo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tknEm-00Fgku-Qx; Wed, 19 Feb 2025 17:47:52 +0100
-Date: Wed, 19 Feb 2025 17:47:52 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Willy Tarreau <w@1wt.eu>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <fb33ab90-7c9c-4840-9246-e0ad6a4db60a@lunn.ch>
-References: <b7a3958e-7a0a-482e-823a-9d6efcb4b577@stanley.mountain>
- <2bcf7cb500403cb26ad04934e664f34b0beafd18.camel@HansenPartnership.com>
- <yq1mseim24a.fsf@ca-mkp.ca.oracle.com>
- <c1693d15d0a9c8b7d194535f88cbc5b07b5740e5.camel@HansenPartnership.com>
- <20250219153350.GG19203@1wt.eu>
- <e42e8e79a539849419e475ef8041e87b3bccbbfe.camel@HansenPartnership.com>
- <20250219155617.GH19203@1wt.eu>
- <20250219160723.GB11480@pendragon.ideasonboard.com>
- <20250219161543.GI19203@1wt.eu>
- <20250219113331.17f014f4@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L2LPc7GF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zhIvxo9ed3SAUc9WUeA/MwYtzmAfVb1ZUH/2B34fAcM=; b=L2LPc7GFXLnXI83aLkusVmg3ns
+	TWoiCoKihDLl3UIoJWoEmdkdmI0XlDRDun1IlDPUcLcTK3SzTou7XJ53fhN3eSNmeZkxEU5GTAC/B
+	Ju6n7cE1nIG1bXyB9pSRULzSYA5xZh5orY01ql7NWjCVAbpdDoEdsgzjV25fuh/52ektkvIoYWs20
+	T8+uBIbTAz1crSdqDSu2D2MvpocrRGg7234jqMZv6DTNfIUACmMs/0wmLb6Mn1Xi0Iyu2tZSVgBtl
+	jeNMn+OHAk3VQVbvijc7ZZDD9fM1lXyDQxEUNwKmxvpYw0m/att1ZP+aSYVObM5oAz9mOs3dv199W
+	HGDAIEkA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tknG8-00000002HOS-1UJQ;
+	Wed, 19 Feb 2025 16:49:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E95ED300783; Wed, 19 Feb 2025 17:49:15 +0100 (CET)
+Date: Wed, 19 Feb 2025 17:49:15 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, alyssa.milburn@intel.com,
+	scott.d.constable@intel.com, joao@overdrivepizza.com,
+	jpoimboe@kernel.org, jose.marchesi@oracle.com, hjl.tools@gmail.com,
+	ndesaulniers@google.com, samitolvanen@google.com, nathan@kernel.org,
+	ojeda@kernel.org, kees@kernel.org, alexei.starovoitov@gmail.com,
+	mhiramat@kernel.org, jmill@asu.edu
+Subject: Re: [PATCH v3 03/10] x86/traps: Decode 0xEA #UD
+Message-ID: <20250219164915.GH34567@noisy.programming.kicks-ass.net>
+References: <20250219162107.880673196@infradead.org>
+ <20250219163514.581527735@infradead.org>
+ <101d4be1-9090-4d3f-8f21-d1ab6ecb79cd@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,37 +54,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250219113331.17f014f4@gandalf.local.home>
+In-Reply-To: <101d4be1-9090-4d3f-8f21-d1ab6ecb79cd@citrix.com>
 
-On Wed, Feb 19, 2025 at 11:33:31AM -0500, Steven Rostedt wrote:
-> On Wed, 19 Feb 2025 17:15:43 +0100
-> Willy Tarreau <w@1wt.eu> wrote:
+On Wed, Feb 19, 2025 at 04:47:10PM +0000, Andrew Cooper wrote:
+> On 19/02/2025 4:21 pm, Peter Zijlstra wrote:
+> > FineIBT will start using 0xEA as #UD
+> >
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > 
-> > Yeah absolutely. However I remember having faced code in the past where
-> > developers had abused this "unlock on return" concept resulting in locks
-> > lazily being kept way too long after an operation. I don't think this
-> > will happen in the kernel thanks to reviews, but typically all the stuff
-> > that's done after a locked retrieval was done normally is down outside
-> > of the lock, while here for the sake of not dealing with unlocks, quite
-> > a few lines were still covered by the lock for no purpose. Anyway
-> > there's no perfect solution.
-> 
-> This was one of my concerns, and it does creep up slightly (even in my own
-> use cases where I implemented them!).
-> 
-> But we should be encouraging the use of:
-> 
-> 	scoped_guard(mutex)(&my_mutex) {
-> 		/* Do the work needed for for my_mutex */
-> 	}
-> 
-> Which does work out very well. And the fact that the code guarded by the
-> mutex is now also indented, it makes it easier to review.
+> FINEIBT probably ought to gain a "depends on X86_64" too, or this is
+> going to go wrong in a very fun way.
 
-In networking, at least for the moment, we have set a policy of only
-allowing scoped_guard. The more magical, less C like constructs are
-strongly discouraged. We will review this policy in a few years time,
-see how well the rest of cleanup.h actually worked out in other parts
-of the kernel.
+It already is:
 
-	Andrew
+config X86_KERNEL_IBT
+        depends on X86_64 && CC_HAS_IBT && HAVE_OBJTOOL
+
+
+Nobody wants to touch i386 if they don't have to :-)
