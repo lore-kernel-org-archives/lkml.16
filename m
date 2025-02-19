@@ -1,89 +1,80 @@
-Received: from mail.fris.de (mail.fris.de [116.203.77.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C66317A2EE
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B42B1C5D4D;
+	Wed, 19 Feb 2025 08:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739952712; cv=none; b=S6+y78YSoRVH5SL4oGmV1uAs7hnBTTg7Gpnl8mAgas8rRNggVue/bOeBrL/JmbME5oUKDG5vSloaUZTvjrx1hPGBQyYWRlEuhKYNOTGo9tAhKLXEN7wOLTbl/ulgOfGhDrVXG/oqjdt2uK3FhwcpTnodLAjMd8nWpVP2DfLxM40=
+	t=1739952719; cv=none; b=lERg8q56s6OCsrTGPfIoW/irFrs18wdxi7KNyIZ0f96RYtmYu1wdeiWMog6nATvYR3lMY1VFLT0EjZfJCSigbTHOE3Y2YiFK915OtXTH5lSDxyeoYKgc/RY5maG7OvNkxA/O5QPSDIGPMyocf+s1bYaBMz7nFt0l0yELeBgkCCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739952712; c=relaxed/simple;
-	bh=ORt85hqPPWjc/cKEc1XwNy5zah0r2SWmq0WxehDJxrA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AETBOjSmuSQOskZeawnON/HOd8qOX7/3uypkvG/SCguXHlOS1y6ONHDPj9Aahpt4dA8nknE5q001inRlqNzrBah0t/XFhKXduKmpbeKU235TbM9Il5fbstQ1Vl/KwX8VY60eChjQwIIDXUYgpt7wsr8ddrkCDfRXcG+uLCfWur4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=pass smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=jldIeh9B; arc=none smtp.client-ip=116.203.77.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fris.de
+	s=arc-20240116; t=1739952719; c=relaxed/simple;
+	bh=Y5C9D/vFHq4rZfOa6tjHQU7RIYN7P5MhUkxZQyexirU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J1u3Ud6sV549U+GrUYm8AdYy7Svwd5Z8doO0l5Cjwj1+zEqJ/aC3zyoHu1zAyJgG4O8lrC3gHWl9yiHAm8CDtSydnn9PgRqVXocg0nTojExrN8FlWokeoVEvEv1UXw5hDedBvXo2X1W4vaNqvvFVDycF57ApKWmGXg8LuJE1Jb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xxib5cAQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="jldIeh9B"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0A4CBFB4D;
-	Wed, 19 Feb 2025 09:02:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
-	t=1739952165; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=+HmpXKPAD9ALBIJIuYji9/wPjq2kkxzldwrjVPCxR28=;
-	b=jldIeh9Bo4Rrq9MdnBTo0xAocBcj2Iin0Xgk0Y0oHrMk0TxEMuIpMUqEx5KveF57Mu2dDd
-	BhShyOY9RRWjZfADJlz2q1hy0nD47pzrIY6UP0iCUOv+IZpOeyzHYIsSVbxYluytO5bOWx
-	Pv7BVrvgptD7w7/IzMQQrIn7VfOd1AeM4CJttcJAlksoLmQ8tMZ0btBS5LHt7izgguMDqG
-	DLYVr+niyfO1W6xsXon/otZCHG5V4OtMHkbHO7bk5aNz1JNJbUNPIudRTGuF0KONxkXf3L
-	QNkLKT7gqTsKe46eAr0Uo6YAxoRMcvxbFRwiKcHCMe6xx93BnTnwV1PCEF6RIg==
-From: Frieder Schrempf <frieder@fris.de>
-To: linux-arm-kernel@lists.infradead.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Bo Liu <liubo03@inspur.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	Joy Zou <joy.zou@nxp.com>,
-	Marek Vasut <marex@denx.de>,
-	Robin Gong <yibin.gong@nxp.com>
-Subject: [PATCH] regulator: pca9450: Remove duplicate code in probe
-Date: Wed, 19 Feb 2025 09:01:48 +0100
-Message-ID: <20250219080152.11883-1-frieder@fris.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xxib5cAQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EA2C4CED1;
+	Wed, 19 Feb 2025 08:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739952719;
+	bh=Y5C9D/vFHq4rZfOa6tjHQU7RIYN7P5MhUkxZQyexirU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xxib5cAQRAHBXgg/XZIb5FeRnQ76iLxR+ijhdedzKV62UHDAff2Uxg+sB7ZfMSm41
+	 lieXAdHOB6oaxNk7+MrR5O6UPFaaqvs4qZIYulVMdtAiNnCfNmUK9EGVd6nGEbj3IG
+	 38OI3b01ulJ+OLGmFSu+CRgsL5lMGfcspLdLTxzptWXN0ENocKkOa+G88BWM+qyLAB
+	 Uh69vR9QRo2K/F7SZOB9uIhqWvWP06LZDRt1nKCmlSQrFn8oBBP9KhFkLvwgZOrvu4
+	 xvqs7mBrui87AkpYW71HwO4Qc78agSRRrH/iHCRLQVimTGDCHtTFVvDXyx2ZyoSJmO
+	 v61Tf+FY2u2hg==
+Date: Wed, 19 Feb 2025 09:11:55 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 5/5] clk: samsung: add exynos7870 CLKOUT support
+Message-ID: <20250219-discerning-affable-chital-1fdff4@krzk-bin>
+References: <20250219-exynos7870-pmu-clocks-v3-0-0d1e415e9e3a@disroot.org>
+ <20250219-exynos7870-pmu-clocks-v3-5-0d1e415e9e3a@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250219-exynos7870-pmu-clocks-v3-5-0d1e415e9e3a@disroot.org>
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Wed, Feb 19, 2025 at 12:20:32AM +0530, Kaustabh Chakraborty wrote:
+> Exynos7870's CLKOUT registers are the same as Exynos5's. Add the PMU
+> compatible to the existing CLKOUT ID list.
+> 
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  drivers/clk/samsung/clk-exynos-clkout.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos-clkout.c b/drivers/clk/samsung/clk-exynos-clkout.c
+> index 2ef5748c139b37ca5429b9071ee0e06f44fcf28e..9a31b1c311b45096f1d680b6724571854c08725c 100644
+> --- a/drivers/clk/samsung/clk-exynos-clkout.c
+> +++ b/drivers/clk/samsung/clk-exynos-clkout.c
+> @@ -75,6 +75,9 @@ static const struct of_device_id exynos_clkout_ids[] = {
+>  	}, {
+>  		.compatible = "samsung,exynos5433-pmu",
+>  		.data = &exynos_clkout_exynos5,
+> +	}, {
+> +		.compatible = "samsung,exynos7870-pmu",
+> +		.data = &exynos_clkout_exynos5,
 
-The SD_VSEL GPIO is fetched twice for no reason. Remove the
-duplicate code.
+I wonder why do we need to keep growing this list? All devices are
+compatible, aren't they?
 
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
-Apparently something went wrong when preparing the v3 patch
-that got applied to regulator/for-next and is now in linux-next.
----
- drivers/regulator/pca9450-regulator.c | 12 ------------
- 1 file changed, 12 deletions(-)
+Do you use clkout, BTW?
 
-diff --git a/drivers/regulator/pca9450-regulator.c b/drivers/regulator/pca9450-regulator.c
-index 4519e725706cd..8f81d813640d9 100644
---- a/drivers/regulator/pca9450-regulator.c
-+++ b/drivers/regulator/pca9450-regulator.c
-@@ -1100,18 +1100,6 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
- 		return ret;
- 	}
- 
--	/*
--	 * For LDO5 we need to be able to check the status of the SD_VSEL input in
--	 * order to know which control register is used. Most boards connect SD_VSEL
--	 * to the VSELECT signal, so we can use the GPIO that is internally routed
--	 * to this signal (if SION bit is set in IOMUX).
--	 */
--	pca9450->sd_vsel_gpio = gpiod_get_optional(&ldo5->dev, "sd-vsel", GPIOD_IN);
--	if (IS_ERR(pca9450->sd_vsel_gpio)) {
--		dev_err(&i2c->dev, "Failed to get SD_VSEL GPIO\n");
--		return ret;
--	}
--
- 	dev_info(&i2c->dev, "%s probed.\n",
- 		type == PCA9450_TYPE_PCA9450A ? "pca9450a" :
- 		(type == PCA9450_TYPE_PCA9451A ? "pca9451a" : "pca9450bc"));
--- 
-2.48.1
+Best regards,
+Krzysztof
 
