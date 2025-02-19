@@ -1,62 +1,62 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B27A1FE479
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F421FF5FC
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739981287; cv=none; b=Zo36zyo7VNrnRyf9Ci2yWrG4TaD8WCiTEi3HtlAlVFq2eOv8pXvFF3EVT75Xf2oUHD7/de12hSqrNI7UAMWUiIafK/CRt9DCk7rfYDhG5kRToLUS61YE8IwM44Tw2leisNr3rRJXSBKbdYdO+n6XuenSoipoawzBgywTv2LbjwQ=
+	t=1739981288; cv=none; b=WBREyzNifH17dCPdcx6yT5ggxKZwt9jzf6IEZSlSHqE+0XE1HyXCZ9DsLW1E8GrzkDM5kipuAoIfX7QPaD6ZUvQzGrsdymmvFvQ6P4cUXYGL2VI49p8Ufl33qAX7zOaDCmNNgGtG75pknlFeVUIXEWARU6VdaB0XGy3EVZBuMWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739981287; c=relaxed/simple;
-	bh=dbGXzpAY3SGMwzX9P+QBAYN0/ZylTElV2Ah8d0DRt8s=;
+	s=arc-20240116; t=1739981288; c=relaxed/simple;
+	bh=Nu+B+aent9gnDnLeup0LX+XZtFmQ3i9h19QHH4qM5Yw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=saH75ACw+A1h3S9AdSdJ6zt5VR6jApMoHU/V1vpjFYKiXftMoiWDmc8+sSD8xqeEBE99rF832CBpXjukYKyQ+zccR6tOPTu97WCpPClEeOkHw0aZ8+YW+/Xq4v9EcXx1rQJkhPD72QT0FeC33XwkbsQg8z0NKp9PvI8MZyaf0rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=m3wENOtF; arc=none smtp.client-ip=209.85.218.53
+	 MIME-Version; b=H1MGdbmh1X5aMqqFG7HtNiXmv3W6LjrzonCI1zAXJ8h3d2Y5vWFrCgt2soouMa6MzV3uThiC9MGUwtUg2YxI4+nqX6b2oDTXJ7gsmq2QWSIPoYFWNj93UqHtta8iVf4bK+i4rpYkVHaM9MY9qWXzvGh5eAP/tDunoZ7qsfwx3qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Ehy0sari; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="m3wENOtF"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso1061605766b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:08:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Ehy0sari"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so1385585866b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:08:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1739981283; x=1740586083; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1739981285; x=1740586085; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ag0ceyd6lnvDklvR5kTzKXppBlKmljc5PPbiPVBs5+k=;
-        b=m3wENOtFKSu+3/5/kD97o6tN2/1TUAwDKRGiY69MblWR7v0BCNQw8/B9eGuNtK3uQy
-         k1t+2jlrt4j3qv6eRC6H9T4Gh8CJx5c4I3oz4dGUFgnFENOt9GDGVhw8JGv2BQe9UkxP
-         FCOj0gemSr9xmpl78AkYOgxyeiizORIViRdkgD5aTcz10gFG5F+SnSYQuFiXpqJhWrzI
-         /K3cAoT9FS/PJiNcmaLfqp3/qwlxrLDiG1kYI1sGpKx+/5PEBIfwZL+07NOEy2CFBqS/
-         Gp4EZLQzzwtTIs1OSgnABYzXYB7JdUX83Qz2/Snp3HhCzYPlfz4BsFntqXi2TFHZ3ClJ
-         8kxg==
+        bh=BtGBoe5coeUnXZJpUlOcRLqzBSKuMVRJ9kwi5GgXX1M=;
+        b=Ehy0sariCfO4XSF/zqmG1HB8+NOcqx3EyYI89+XO3YwUnm05s+gG6Z8o9zMG9X+13p
+         OiBW8ElNlzC3y84Gkc/7SMswqUa6RkS+VH3/Hl6IdWySdOzMflAc5A3cKMGu+0QgiMEu
+         RWWbFaUCyL1mtPdcnSXXOJDoeEho21NNwTzIIp3hk90zUiQyB0W/HC+POMOQ45Emgqgx
+         Ut1EBEVjIQU4O9V5NIU9EzOBtD+YIydLuhQe5PjZmiAkbpNUQtpXLHNmuCqGBN/3++sb
+         R1OiDmJcdaY1oq1g81gOYmhYr6AuNfvKD4XgWc5SNaa9oKilkwY2P5h1FqSHg9GlwnUg
+         RyWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739981283; x=1740586083;
+        d=1e100.net; s=20230601; t=1739981285; x=1740586085;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ag0ceyd6lnvDklvR5kTzKXppBlKmljc5PPbiPVBs5+k=;
-        b=AzrLUtQSzW8Lo1e1gh3moyIYsUVoZoAuIRIfFOZU6fu3CemMwJA6+j0HDCXu5l7UIB
-         mmGD2xtTFBpRGzlDT7nRsTPP1lVw5rxICYh9Q9dEK93VnGvjGnveCGIGMyHjuMV862bD
-         WU8gfXoLoh8sHWbynuwWfun4cElak2uNSIDBiwp8RF9LZNorV44sFVBwhcOJFWggm74z
-         1YooDS1aS+g1rH3yf/iVYQWO5r1uI59QcBj0jvm3v3CmBiZWB5mURQm5IeaYb/n87ixG
-         BTfAmPuuXMPjuRUt/tXeCX26LNsFVexohnLtwUJmyPP32q6lLsVOb1OOmboaeuHQEGyE
-         OroA==
-X-Forwarded-Encrypted: i=1; AJvYcCXjMtll1dH1ZGdI7vltMrijEVgUYO1nN2WKMa940f7tlzZkJ+VSYAxrImkeC0yWx1N/VIRFMAaf7tbBc4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1t8PAZ5iWY1MiLYLow0PwqixyoH8T/MVNEPktSH5KdRWj45f9
-	Nxsp+8JCug+TOpwmc1YcT1Fl3B3tlmACSo8nJ4r7CEIiopJZgTq1zBuiaOdWC5s=
-X-Gm-Gg: ASbGncvjv3b1IeANPDTXkarQgYEm1qPpKH7pwl9s6KdfyzEeMwTj33lFT6EagZiTEPw
-	spj2fdYp91qbqwL3fsQnMdGGBcqfH7FJMqXiAyxVtHrM6h8e+YnA3CT3keac9Sa973wB8WzKQaW
-	F+Fc9jh+mTIKyoy5dDvVEm3A/U59fGyY45KbwYxlnMay8O9aqXcsWAxzzgGb3OkJ7k7fXG/Wryg
-	eR5UsvXY0Ejm4lj83CdkFGCNH3MKCnL5BsY45KEcgB8oMLqpQHo+QxZre7ZtXvtrkZRCnIZZkS+
-	u4wMjl81ZEthRRD/7w0G91EAaIyt8O6jBoFEpBHs29qD
-X-Google-Smtp-Source: AGHT+IFK03MU51YyMeqqHzkdzf8lpSKD/7+03XHiHb///Jp2uJuRaLvE73Rv2ADy8FE6aZ3jeb4UfQ==
-X-Received: by 2002:a17:907:7e9d:b0:aab:9430:40e9 with SMTP id a640c23a62f3a-abbcce74170mr348337366b.32.1739981282218;
-        Wed, 19 Feb 2025 08:08:02 -0800 (PST)
+        bh=BtGBoe5coeUnXZJpUlOcRLqzBSKuMVRJ9kwi5GgXX1M=;
+        b=BzhhrO0mqB/XUy5rbeW4SpmRyqIAGdIDjVNZuOmZnBGuAfoXLg+kxDchsbcxYW2UPp
+         f4MB4rDmKMxXuXp4x3uEF/YekjUZumtQ+gW9cEcN/VrXPbtKwFiOuJQ8ldRiEeuzwqeN
+         sxWpzenqT/K4MPVVHOiAG2T1rdTGN/lpujb1gg+S6PwxGacf8Y/NQx/D917+iTbz3wX6
+         p5lgTBcG6nj5maxkRIEY5wlMu7EK85/GZiffjBx3qN+CUeKY8i05OVBpyiPka3LH/Wfc
+         PncZ1c0Ouq0xyvUggm2P0ztdSwAxscDovrdU21PYSab/OBaZtNn2sifPXy83rYWtgjiV
+         7Skw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcdifXjCtUElzqRmcg43+qpJjEBifMAvRLX3NVN9Ssl3pWbiFblMMr0zji5esvV/5zERrIy8R1XOVVZcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzpnUjHI+HtZoov7KTLg3A9xq0kesbRXwP4JpdvUp0cbYINw1j
+	blmRG/XLpz/2i0oLmnt9YGtQ0pkIMa5J96X+fKiTTs88laIrqPiN+pX9c8S2Bm4=
+X-Gm-Gg: ASbGncvYbm7F2YULN1c8crBh4QZiuDViOjft4dF5wXBSl86PjjZiZwje6Lvt8MzBVfy
+	f557LIxMJ91Vr5Hny6uo4QdkTQvwmK9oadLWkQmjxhICLOfhlX9WaDfuYlqYyVdsszM5TXw0Ci7
+	8yD07Jm/P6yNdTkQjT1rplG7w90G+5eWK0F6pRhrEQTPyXS5/h7qnvpo0luCjeKbbs0go8k+Qpm
+	PaHKDj2nxKr4vuSlERN0DO679ZZN71RzSFTBm4hfacrRF0XVG4JDya/ln3ApDj25eg5mNfW09va
+	I2Gn9axCNdp4HdP73piViuhPHEsgDokjpoTcMrlYgqHo
+X-Google-Smtp-Source: AGHT+IHxe5ZyQ3C/l0BujyjIhZwXC57yvWHfxRUBHLFeh5ZxtlbAM5sS46OrKTP8YZUtyZ2rOwWbYQ==
+X-Received: by 2002:a17:906:9b4b:b0:ab7:c3c9:2ab1 with SMTP id a640c23a62f3a-abbcd0d1b4emr437963966b.50.1739981285101;
+        Wed, 19 Feb 2025 08:08:05 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.25])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbc0d0b882sm327791066b.109.2025.02.19.08.08.00
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbc0d0b882sm327791066b.109.2025.02.19.08.08.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 08:08:01 -0800 (PST)
+        Wed, 19 Feb 2025 08:08:04 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: yoshihiro.shimoda.uh@renesas.com,
@@ -71,9 +71,9 @@ Cc: claudiu.beznea@tuxon.dev,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
 	stable@vger.kernel.org
-Subject: [PATCH RFT 3/5] phy: renesas: rcar-gen3-usb2: Lock around hardware registers and driver data
-Date: Wed, 19 Feb 2025 18:07:46 +0200
-Message-ID: <20250219160749.1750797-4-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH RFT 5/5] phy: renesas: rcar-gen3-usb2: Set timing registers only once
+Date: Wed, 19 Feb 2025 18:07:48 +0200
+Message-ID: <20250219160749.1750797-6-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250219160749.1750797-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20250219160749.1750797-1-claudiu.beznea.uj@bp.renesas.com>
@@ -87,185 +87,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The phy-rcar-gen3-usb2 driver exposes four individual PHYs that are
-requested and configured by PHY users. The struct phy_ops APIs access the
-same set of registers to configure all PHYs. Additionally, PHY settings can
-be modified through sysfs or an IRQ handler. While some struct phy_ops APIs
-are protected by a driver-wide mutex, others rely on individual
-PHY-specific mutexes.
-
-This approach can lead to various issues, including:
-1/ the IRQ handler may interrupt PHY settings in progress, racing with
-   hardware configuration protected by a mutex lock
-2/ due to msleep(20) in rcar_gen3_init_otg(), while a configuration thread
-   suspends to wait for the delay, another thread may try to configure
-   another PHY (with phy_init() + phy_power_on()); re-running the
-   phy_init() goes to the exact same configuration code, re-running the
-   same hardware configuration on the same set of registers (and bits)
-   which might impact the result of the msleep for the 1st configuring
-   thread
-3/ sysfs can configure the hardware (though role_store()) and it can
-   still race with the phy_init()/phy_power_on() APIs calling into the
-   drivers struct phy_ops
-
-To address these issues, add a spinlock to protect hardware register access
-and driver private data structures (e.g., calls to
-rcar_gen3_is_any_rphy_initialized()). Checking driver-specific data remains
-necessary as all PHY instances share common settings. With this change,
-the existing mutex protection is removed and the cleanup.h helpers are
-used.
-
-While at it, to keep the code simpler, do not skip
-regulator_enable()/regulator_disable() APIs in
-rcar_gen3_phy_usb2_power_on()/rcar_gen3_phy_usb2_power_off() as the
-regulators enable/disable operations are reference counted anyway.
+phy-rcar-gen3-usb2 driver exports 4 PHYs. The timing registers are common
+to all PHYs. There is no need to set them every time a PHY is initialized.
+Set timing register only when the 1st PHY is initialized.
 
 Fixes: f3b5a8d9b50d ("phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver")
 Cc: stable@vger.kernel.org
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 49 +++++++++++++-----------
- 1 file changed, 26 insertions(+), 23 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 826c9c4dd4c0..5c0ceba09b67 100644
+index 087937407b0b..8e57fa8c1cff 100644
 --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
 +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -9,6 +9,7 @@
-  * Copyright (C) 2014 Cogent Embedded, Inc.
-  */
- 
-+#include <linux/cleanup.h>
- #include <linux/extcon-provider.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -118,7 +119,7 @@ struct rcar_gen3_chan {
- 	struct regulator *vbus;
- 	struct reset_control *rstc;
- 	struct work_struct work;
--	struct mutex lock;	/* protects rphys[...].powered */
-+	spinlock_t lock;	/* protects access to hardware and driver data structure. */
- 	enum usb_dr_mode dr_mode;
- 	u32 obint_enable_bits;
- 	bool extcon_host;
-@@ -348,6 +349,8 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 	bool is_b_device;
- 	enum phy_mode cur_mode, new_mode;
- 
-+	guard(spinlock_irqsave)(&ch->lock);
-+
- 	if (!ch->is_otg_channel || !rcar_gen3_is_any_otg_rphy_initialized(ch))
- 		return -EIO;
- 
-@@ -415,7 +418,7 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
- 		val = readl(usb2_base + USB2_ADPCTRL);
- 		writel(val | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
- 	}
--	msleep(20);
-+	mdelay(20);
- 
- 	writel(0xffffffff, usb2_base + USB2_OBINTSTA);
- 	writel(ch->obint_enable_bits, usb2_base + USB2_OBINTEN);
-@@ -436,12 +439,14 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- 	if (pm_runtime_suspended(dev))
- 		goto rpm_put;
- 
--	status = readl(usb2_base + USB2_OBINTSTA);
--	if (status & ch->obint_enable_bits) {
--		dev_vdbg(dev, "%s: %08x\n", __func__, status);
--		writel(ch->obint_enable_bits, usb2_base + USB2_OBINTSTA);
--		rcar_gen3_device_recognition(ch);
--		ret = IRQ_HANDLED;
-+	scoped_guard(spinlock, &ch->lock) {
-+		status = readl(usb2_base + USB2_OBINTSTA);
-+		if (status & ch->obint_enable_bits) {
-+			dev_vdbg(dev, "%s: %08x\n", __func__, status);
-+			writel(ch->obint_enable_bits, usb2_base + USB2_OBINTSTA);
-+			rcar_gen3_device_recognition(ch);
-+			ret = IRQ_HANDLED;
-+		}
- 	}
- 
- rpm_put:
-@@ -456,6 +461,8 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	void __iomem *usb2_base = channel->base;
- 	u32 val;
- 
-+	guard(spinlock_irqsave)(&channel->lock);
-+
- 	/* Initialize USB2 part */
+@@ -467,8 +467,11 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
  	val = readl(usb2_base + USB2_INT_ENABLE);
  	val |= USB2_INT_ENABLE_UCOM_INTEN | rphy->int_enable_bits;
-@@ -479,6 +486,8 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
- 	void __iomem *usb2_base = channel->base;
- 	u32 val;
- 
-+	guard(spinlock_irqsave)(&channel->lock);
+ 	writel(val, usb2_base + USB2_INT_ENABLE);
+-	writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
+-	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
 +
- 	rphy->initialized = false;
++	if (!rcar_gen3_is_any_rphy_initialized(channel)) {
++		writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
++		writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
++	}
  
- 	val = readl(usb2_base + USB2_INT_ENABLE);
-@@ -498,16 +507,17 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- 	u32 val;
- 	int ret = 0;
- 
--	mutex_lock(&channel->lock);
--	if (!rcar_gen3_are_all_rphys_power_off(channel))
--		goto out;
--
- 	if (channel->vbus) {
- 		ret = regulator_enable(channel->vbus);
- 		if (ret)
--			goto out;
-+			return ret;
- 	}
- 
-+	guard(spinlock_irqsave)(&channel->lock);
-+
-+	if (!rcar_gen3_are_all_rphys_power_off(channel))
-+		goto out;
-+
- 	val = readl(usb2_base + USB2_USBCTR);
- 	val |= USB2_USBCTR_PLL_RST;
- 	writel(val, usb2_base + USB2_USBCTR);
-@@ -517,7 +527,6 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- out:
- 	/* The powered flag should be set for any other phys anyway */
- 	rphy->powered = true;
--	mutex_unlock(&channel->lock);
- 
- 	return 0;
- }
-@@ -528,18 +537,12 @@ static int rcar_gen3_phy_usb2_power_off(struct phy *p)
- 	struct rcar_gen3_chan *channel = rphy->ch;
- 	int ret = 0;
- 
--	mutex_lock(&channel->lock);
--	rphy->powered = false;
--
--	if (!rcar_gen3_are_all_rphys_power_off(channel))
--		goto out;
-+	scoped_guard(spinlock_irqsave, &channel->lock)
-+		rphy->powered = false;
- 
- 	if (channel->vbus)
- 		ret = regulator_disable(channel->vbus);
- 
--out:
--	mutex_unlock(&channel->lock);
--
- 	return ret;
- }
- 
-@@ -750,7 +753,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 	if (phy_data->no_adp_ctrl)
- 		channel->obint_enable_bits = USB2_OBINT_IDCHG_EN;
- 
--	mutex_init(&channel->lock);
-+	spin_lock_init(&channel->lock);
- 	for (i = 0; i < NUM_OF_PHYS; i++) {
- 		channel->rphys[i].phy = devm_phy_create(dev, NULL,
- 							phy_data->phy_usb2_ops);
+ 	/* Initialize otg part (only if we initialize a PHY with IRQs). */
+ 	if (rphy->int_enable_bits)
 -- 
 2.43.0
 
