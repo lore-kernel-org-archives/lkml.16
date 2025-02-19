@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FE5170A11
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 02:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CA2192580
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 02:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739931505; cv=none; b=DiEulGSQoM0MzFe9+0GfThfvVCqJgK0D6XDAntEHuXxF2dznnR6sPUlKS9IKx+mDgTdKOskN9ObdVjaa/P/3Es9BYRAkZjaqvhxvhLsawbLWBZAiJBcbaXTd4YYSp8gG7W+dYExNZUteploJ4OZ8CoAJPOfzY0zoqPz6JRx+yjE=
+	t=1739931509; cv=none; b=U0yuZotZW7bo+HTxnzR0gOzToQeLRC4snZoPwtTcJ0Jlrox6IOYd1futjwFgcWxwOxJPqhH5eN3VQI9c9jDvUrGt0nNx59XShvE/t8CqEnVjxVOezUx5HKqFBF0/fQnQPlYCh46HD2XeyKcWpKZdPnPQ7gz/Z72sLpLhWDENyIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739931505; c=relaxed/simple;
-	bh=3iPOGv3PQchbB18B4ZinqtqeDFAmJ/DFZI2T+f/LAWE=;
+	s=arc-20240116; t=1739931509; c=relaxed/simple;
+	bh=7970QM1xZmqq/TgEZxRgA2G329dagmUAvSBDdehiCKg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UOZGbZ+C7nqHAVeYAlxCvgn7kyvZa+NvFGtPflLoxKm39i3OpfmsTeo8xWoJaQVF8FoP9VRBbdVpkeg0Su0OfIYLEoRvsHklV/H2v9TK2drP586twWHiOLpPmQUiW0G4+jfRrItlej/xJrj055CCcm6bfFA+P0MfEZUNGLJzYnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Knw+qpNx; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=ZIOzp8/08j/grPFYw43XpRCRyfGAAcUhd94H8W4JEfBEULHxWRdfUuyVi3x3YNRkhEUwHDsydO+KvR7fgfdb91f4bSovOo9u21EzSUo5cPKQjX4lwbdLa9ucb13Ks7KW9L29vIZS/d8r0hFO2ZKaYNgqI2JhrZc5/CNE2DITjiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TkmQiIq8; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Knw+qpNx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TkmQiIq8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739931502;
+	s=mimecast20190719; t=1739931506;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NsF2KsmlxImjdJhL9OxCFldmZagOaePVCluv2R2e7Ow=;
-	b=Knw+qpNxgRvMjeqsj9VC3CziaVDA/YL/QNAYKug2K77UUPuV46CTzSAecSFSOCA3GcKPGj
-	HG7262+L5DrwN3nxEkZu8c4ci9LQ3BGAeOEJ9LnNvMDh+Gb4lXHP9ibvqI5aWFa1vtmmrO
-	20W7oJvBF+/x8v7KJMD91lLdwCDn0hY=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=v8m9/U7uQSSFPcBA25A4fBqyiaCO54n8VIlpbaNJ5EU=;
+	b=TkmQiIq8dvhrjJ7Uy+wOzn0vbDG2zHIb51mz14aF3FEk6T6gIeRY3fnMeNYhBywLLb26ts
+	HH7fn1mp2BAz8rAuS2lx1uoYeJzzRQNDqXsmAXu1LtAoXmmNjVTg5iudB0PBhdD+KCIseU
+	hITS/D6rjb+y6r8jLcx+AvzE7/psx/o=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-599-8odB42S2OHSsiU1HfMlZmg-1; Tue,
- 18 Feb 2025 21:18:19 -0500
-X-MC-Unique: 8odB42S2OHSsiU1HfMlZmg-1
-X-Mimecast-MFC-AGG-ID: 8odB42S2OHSsiU1HfMlZmg_1739931498
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-338-rLhuEFm1MNKyofazmyW6_g-1; Tue,
+ 18 Feb 2025 21:18:23 -0500
+X-MC-Unique: rLhuEFm1MNKyofazmyW6_g-1
+X-Mimecast-MFC-AGG-ID: rLhuEFm1MNKyofazmyW6_g_1739931502
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6C1818EB2CF;
-	Wed, 19 Feb 2025 02:18:17 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4186619373DC;
+	Wed, 19 Feb 2025 02:18:22 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.65.50])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 59B1D19560B9;
-	Wed, 19 Feb 2025 02:18:15 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 44EAA1956094;
+	Wed, 19 Feb 2025 02:18:20 +0000 (UTC)
 From: Luiz Capitulino <luizcap@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -52,9 +52,9 @@ Cc: akpm@linux-foundation.org,
 	hannes@cmpxchg.org,
 	muchun.song@linux.dev,
 	luizcap@redhat.com
-Subject: [PATCH 2/4] mm: page_table_check: use new iteration API
-Date: Tue, 18 Feb 2025 21:17:48 -0500
-Message-ID: <85f11743d259d5e4a1f47456fbcda82ff6db9ab3.1739931468.git.luizcap@redhat.com>
+Subject: [PATCH 4/4] mm: page_ext: make page_ext_next() private to page_ext
+Date: Tue, 18 Feb 2025 21:17:50 -0500
+Message-ID: <5794ff5b322febd376728c8e22c802c15827dcc8.1739931468.git.luizcap@redhat.com>
 In-Reply-To: <cover.1739931468.git.luizcap@redhat.com>
 References: <cover.1739931468.git.luizcap@redhat.com>
 Precedence: bulk
@@ -66,128 +66,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-The page_ext_next() function assumes that page extension objects for a
-page order allocation always reside in the same memory section, which
-may not be true and could lead to crashes. Use the new page_ext
-iteration API instead.
+Previous commits removed page_ext_next() use from page_ext clients. Make
+it private.
 
 Fixes: cf54f310d0d3 ("mm/hugetlb: use __GFP_COMP for gigantic folios")
 Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
 ---
- mm/page_table_check.c | 39 ++++++++++++---------------------------
- 1 file changed, 12 insertions(+), 27 deletions(-)
+ include/linux/page_ext.h | 7 -------
+ mm/page_ext.c            | 7 +++++++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/mm/page_table_check.c b/mm/page_table_check.c
-index 509c6ef8de400..b52e04d31c809 100644
---- a/mm/page_table_check.c
-+++ b/mm/page_table_check.c
-@@ -62,24 +62,20 @@ static struct page_table_check *get_page_table_check(struct page_ext *page_ext)
-  */
- static void page_table_check_clear(unsigned long pfn, unsigned long pgcnt)
- {
-+	struct page_ext_iter iter;
- 	struct page_ext *page_ext;
- 	struct page *page;
--	unsigned long i;
- 	bool anon;
- 
- 	if (!pfn_valid(pfn))
- 		return;
- 
- 	page = pfn_to_page(pfn);
--	page_ext = page_ext_get(page);
--
--	if (!page_ext)
--		return;
--
- 	BUG_ON(PageSlab(page));
- 	anon = PageAnon(page);
- 
--	for (i = 0; i < pgcnt; i++) {
-+	rcu_read_lock();
-+	for_each_page_ext(page, pgcnt, page_ext, iter) {
- 		struct page_table_check *ptc = get_page_table_check(page_ext);
- 
- 		if (anon) {
-@@ -89,9 +85,8 @@ static void page_table_check_clear(unsigned long pfn, unsigned long pgcnt)
- 			BUG_ON(atomic_read(&ptc->anon_map_count));
- 			BUG_ON(atomic_dec_return(&ptc->file_map_count) < 0);
- 		}
--		page_ext = page_ext_next(page_ext);
- 	}
--	page_ext_put(page_ext);
-+	rcu_read_unlock();
+diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+index a99da12e59fa7..3a4f0f825aa59 100644
+--- a/include/linux/page_ext.h
++++ b/include/linux/page_ext.h
+@@ -101,13 +101,6 @@ static inline void *page_ext_data(struct page_ext *page_ext,
+ 	return (void *)(page_ext) + ops->offset;
  }
  
- /*
-@@ -102,24 +97,20 @@ static void page_table_check_clear(unsigned long pfn, unsigned long pgcnt)
- static void page_table_check_set(unsigned long pfn, unsigned long pgcnt,
- 				 bool rw)
- {
-+	struct page_ext_iter iter;
- 	struct page_ext *page_ext;
- 	struct page *page;
--	unsigned long i;
- 	bool anon;
- 
- 	if (!pfn_valid(pfn))
- 		return;
- 
- 	page = pfn_to_page(pfn);
--	page_ext = page_ext_get(page);
+-static inline struct page_ext *page_ext_next(struct page_ext *curr)
+-{
+-	void *next = curr;
+-	next += page_ext_size;
+-	return next;
+-}
 -
--	if (!page_ext)
--		return;
--
- 	BUG_ON(PageSlab(page));
- 	anon = PageAnon(page);
- 
--	for (i = 0; i < pgcnt; i++) {
-+	rcu_read_lock();
-+	for_each_page_ext(page, pgcnt, page_ext, iter) {
- 		struct page_table_check *ptc = get_page_table_check(page_ext);
- 
- 		if (anon) {
-@@ -129,9 +120,8 @@ static void page_table_check_set(unsigned long pfn, unsigned long pgcnt,
- 			BUG_ON(atomic_read(&ptc->anon_map_count));
- 			BUG_ON(atomic_inc_return(&ptc->file_map_count) < 0);
- 		}
--		page_ext = page_ext_next(page_ext);
- 	}
--	page_ext_put(page_ext);
-+	rcu_read_unlock();
+ struct page_ext_iter {
+ 	unsigned long pfn;
+ 	unsigned long index;
+diff --git a/mm/page_ext.c b/mm/page_ext.c
+index 508deb04d5ead..f9e515d353005 100644
+--- a/mm/page_ext.c
++++ b/mm/page_ext.c
+@@ -567,6 +567,13 @@ struct page_ext *page_ext_iter_begin(struct page_ext_iter *iter, struct page *pa
+ 	return iter->page_ext;
  }
  
- /*
-@@ -140,24 +130,19 @@ static void page_table_check_set(unsigned long pfn, unsigned long pgcnt,
-  */
- void __page_table_check_zero(struct page *page, unsigned int order)
- {
-+	struct page_ext_iter iter;
- 	struct page_ext *page_ext;
--	unsigned long i;
- 
- 	BUG_ON(PageSlab(page));
- 
--	page_ext = page_ext_get(page);
--
--	if (!page_ext)
--		return;
--
--	for (i = 0; i < (1ul << order); i++) {
-+	rcu_read_lock();
-+	for_each_page_ext_order(page, order, page_ext, iter) {
- 		struct page_table_check *ptc = get_page_table_check(page_ext);
- 
- 		BUG_ON(atomic_read(&ptc->anon_map_count));
- 		BUG_ON(atomic_read(&ptc->file_map_count));
--		page_ext = page_ext_next(page_ext);
- 	}
--	page_ext_put(page_ext);
-+	rcu_read_unlock();
- }
- 
- void __page_table_check_pte_clear(struct mm_struct *mm, pte_t pte)
++static struct page_ext *page_ext_next(struct page_ext *curr)
++{
++	void *next = curr;
++	next += page_ext_size;
++	return next;
++}
++
+ /**
+  * page_ext_iter_next() - Get next page extension
+  * @iter: page extension iterator.
 -- 
 2.48.1
 
