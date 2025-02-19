@@ -1,152 +1,161 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BF01DFE25
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8791EFFA1;
+	Wed, 19 Feb 2025 14:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739975100; cv=none; b=FML4zRA9dnEI/yzYGBgEErJs/PPIeWpCnvP2Wrd5DEzvYIDIvYfVFFaTyh32qn7LtBOXCNnQLdk4+GnFmXqDfqTNp+2wedHEEHJbznIsmD0ErHwHffMi9WhsOimwAm+2RwoEnRCC0Yyh3yx7+58AY97dGLlsGVa9RWpND4jwE+8=
+	t=1739975105; cv=none; b=roqOOk7czzUL9wLRREjuRmfoWCbfNRBvqVB2XvIOC7kBgND4+9C0OjLiQ1ghUd0kRG0fFT7maNeAvjo4Z88yjynTxVfhI+26kIeJg2wD1xfgm52o41wcDIIHBxXVOTayIoPNp3MCo4fzN7CA8935j4Jlu/3WXigfhPNo+YHSv+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739975100; c=relaxed/simple;
-	bh=NEpwjvWwd3zdH87q00QcMAth/YL8+NIAVMkbiMlaE5w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SK0fWu3jFEKMGD2dAP0JZ3elN0AY9hboi3TrmHpaeU6b2IZzeUV8CBM+KUARzRiwWB7AFkgARytWLc//Nb5hsVK7Ap34VePRKBdRph1vOE4KmpSz1AYwM+G43ZGIztj74B85p0X1BiGsydmaSZqcr+eJv8f/6m7VlSJ4iGEE4Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxzZeqmp; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739975105; c=relaxed/simple;
+	bh=vQc9aAx8CcdK82FZkUz6HZQjjJMhvLybA0eSKC4QkKw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZW1ZSD/5uYckCmXyWt41PIrqksfrWaYsno95eXTtdpVbksDMRYgdc0fmn+CXt80nb150py//LxwRbbZ23JI+KFe9he0RbXgf+ewzNr7FgmBEDHE6TYV9SLTsg+VQXMHjoD21jiAzmfBZx9Wl9LwGWoD47bm+nkFC3wmjOxQAC/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=DeRJqtv0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MAcanNsf; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxzZeqmp"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4399d14334aso5707135e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 06:24:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739975097; x=1740579897; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2OhlGluAjXb17F8YGQfin1m4bYC+4YIL3i7B/no4Yxo=;
-        b=gxzZeqmpYgX6f6aIFf2pbDuWbM5zwxs+Lo1LYslU89rkI3nbTup/TpHe8iB/Eib2f6
-         GtJiynh0gar4/zcsQXlaOO8i7cDiIZkKLZaj6uZtsfOQd3NgugjgmdKX3NDjwzBECeg/
-         W+JTZSBrWezCKsXZyPhbCy2qC4XSFiQdhozYdg2th9SgIBZyLI0fmo29T9bg2sP3nuDH
-         xCkbmVmJX94vLwdcY2WqxVlasOXCE8wkvfXI8y+9PMIquS6dtAaQg1RrpZdvSSZ/8Mqq
-         PRO6DDlLc1p1B3P20A5ImQZ6Qwe8Bxa6gF6fejF5b3nUgh2ZWIqinA+7YLd6YFDG5Ysl
-         JwLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739975097; x=1740579897;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2OhlGluAjXb17F8YGQfin1m4bYC+4YIL3i7B/no4Yxo=;
-        b=QmS1InXmzsBrZRr6q1pN8FWORR9XMAGAgL8bpVCB9MsEk5M4H3qnpjjZH4JODGi0qW
-         0x8mTye8bQLbxNrbmkmboFgwnrMZsuksjnN8uVXN5kcoS4SfPWIOzA6wXPKvkX8I8WDA
-         zv1wd0LoZwo/bLuN0EGHhh5crqte+XkFJkCHM7PQsobm0jRuyCaWgxdiNqsP1xQvUBm9
-         9eOHl8noVR1av8SGyE2mfQBWvaPbnTXjTtU/REwLEUQg02LwixTvMv9SSbwcy4VQudy1
-         MebhpPhp+Sd1bbUfk7ZMYo/J1TlmKaB0gnYLKK35u5mlhPuqHpA/UmDzXQdpi9vM6uaq
-         pTPQ==
-X-Gm-Message-State: AOJu0Yy/ZoWLnBCfwHLOLYFfElwxGKYycmJ/M2Cz+gUy8krpfYRSl7gx
-	Y3SoRFpe76lU5IKh2uGp68aQHq9xO2jI30zNIM5nXWk4JZtEyqWc
-X-Gm-Gg: ASbGncvIPyYwsJzCA0fFQ4a4sy12SmHKrh3n65PevQrClspf0FuoT340D0fV+SJQ33j
-	Kx9cx8A/h67GYXlPzhcJ/BOsvXjUNWxl7HmS4Oo04bkgvFCu1RbkIZDS3UtKEtl4ZtBMejviF2y
-	hnNhVsXNGX2v8XBR/AqJmpluJGmzex5iG8Gi8O5OA2RQDPyrj4xqIlGMyNkx3VuR5Nc5APgihjz
-	itF1gfmcU0Z7wNgxvYI17FtnP1n1Vo6vxCRdjOBuKSYV13No8Bl4FEKjxUlfsErKrg0jkYvDhkG
-	TDlnD/Ko3OBgwQgI
-X-Google-Smtp-Source: AGHT+IFRVNEisW/f14MpMOb3gWBHyE2+Pgpe6vOLOm5HWgt/KqZ5Xa02RMEhjsGEzDID9RoC34JmwQ==
-X-Received: by 2002:a05:600c:4f48:b0:439:8bb1:14b1 with SMTP id 5b1f17b1804b1-43999d91255mr46587815e9.11.1739975096579;
-        Wed, 19 Feb 2025 06:24:56 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f258b410dsm17968582f8f.5.2025.02.19.06.24.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 06:24:56 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] sched: add unlikey branch hints to several system calls
-Date: Wed, 19 Feb 2025 14:24:23 +0000
-Message-ID: <20250219142423.45516-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="DeRJqtv0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MAcanNsf"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 0FC95254019E;
+	Wed, 19 Feb 2025 09:25:02 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Wed, 19 Feb 2025 09:25:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1739975101;
+	 x=1740061501; bh=2FT/S7jmQJ86nFa5PyoiBPEHzmHzcMxWb1OSX8bVYD0=; b=
+	DeRJqtv0dybEZdWYUQZK1kr98zo74tguhSSwPIuhfnoUI7yCj9MpPirPiN7EqlGV
+	Z1okIQQJZ+x1tJqEK+UIcgEePQVDS61gfiiX/WYzVXuGiurMaHcD0NcahZKxjh93
+	2Rkj9pjFPAD9YD19SSYTOfDsjBwOIszw7bFn/29yB5CIa3RQus7Q9VYoPAzLK19Q
+	+Bu677MJt+kUyfevlEVh5XIXnaX9QZM02d9CJIUHd53LyOSW4esvAg1jg1rMl6aE
+	ErxHLo7znqHcHxkDmsPoU880bGdBRd3c1AF7ti7oK/wRRlUc3dm/wslmNGwdqsXd
+	j7VmNzrq8s1hmD6Ef4ZyYw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739975101; x=
+	1740061501; bh=2FT/S7jmQJ86nFa5PyoiBPEHzmHzcMxWb1OSX8bVYD0=; b=M
+	AcanNsfZjEYNhM6YLpSKa+TYkhNHfIGIGLiD56lzHtpMNf4NKrTzlOmo25E9kK8v
+	KeZs3hQQ543cSM07nDqqATIOQmXwnDYonri4/nR4bYW2LNnZORJWrPofrX6j3hQh
+	vhmIPIXDtyY9/oEs5QOHcBF1ArmJLoisAvkXDDaY5+N3iF8JNF+6rlrXQyXlSLEL
+	XXvSCYVDJ9bFQI6PH8NJTgfPV6GU5fLs1YFPOeUuaPfGx9bWg0J6sw6hJ9mhKEBG
+	sggtL2RdHkpcOSKS1l9OW/pwL55okOa/JlN4sWQbyAkYSSNYhtQTey+/IpzzuvBD
+	xrbN86WY3lQ/vheYQW4ZA==
+X-ME-Sender: <xms:vem1Z74jn6PjbmOp1LJDMdHgSxFT71_RH8VYrauBpAO9dgWUN81tNQ>
+    <xme:vem1Zw4I_aNs5sDSeqmGbIrhegNxYyWRumkfU5jiBq4z484n7pwXAa-SvJ0HhEgWS
+    n_0eXOYvfnjdJvMm6M>
+X-ME-Received: <xmr:vem1ZydaQbBW5UtCrHyizcR71oEaJF_Q_RTdqbXWcI5fkkU9uxC28gKdndZmrx1RBvjhOQAC2zFFc3SMWdtVdw4I4UOPkCXR7Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeigeegkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
+    guvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepveet
+    gedtvddvhfdtkeeghfeffeehteehkeekgeefjeduieduueelgedtheekkeetnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhs
+    ohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpthhtohepledpmh
+    houggvpehsmhhtphhouhhtpdhrtghpthhtohepthhomhhirdhvrghlkhgvihhnvghnodhr
+    vghnvghsrghssehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehmtghhvg
+    hhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrghkrghrihdrrghilhhushes
+    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmvgguihgrse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhgvnhgvshgr
+    shdqshhotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
+    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmtghhvghh
+    rggsodhhuhgrfigviheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgruhhrvghnth
+    drphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehj
+    rggtohhpohdrmhhonhguihesihguvggrshhonhgsohgrrhgurdgtohhm
+X-ME-Proxy: <xmx:vem1Z8LYqfWUVO4lVSEobQcYX7rYwaQhfMuLnsPcmM0a1vhjVmKJIw>
+    <xmx:vem1Z_JaK33J5Dlf9Ui2qwv860I8yHxLfA2bkaUMV6UTYswOnWjC6w>
+    <xmx:vem1Z1zBKXMvckVJh-RYwN6UGvqsOPfTg4AhWOOL77i8E11cn-oaRg>
+    <xmx:vem1Z7KN7QcVjNwf1IiyhRm3HopQfZKMb-NXx32dvP2qcnlLeLbNqw>
+    <xmx:vem1ZwWuzsh7srGPUUS4H90AzVrHKKKWATgnrfG3wtj0XcoWWETJIh9n>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 19 Feb 2025 09:25:01 -0500 (EST)
+Date: Wed, 19 Feb 2025 15:24:59 +0100
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH 07/18] media: rcar-csi2: Fix typo
+Message-ID: <20250219142459.GB512344@ragnatech.se>
+References: <20250219-rcar-streams-v1-0-f1b93e370aab@ideasonboard.com>
+ <20250219-rcar-streams-v1-7-f1b93e370aab@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250219-rcar-streams-v1-7-f1b93e370aab@ideasonboard.com>
 
-Adding an unlikely() hint on early error return paths improves the
-run-time performance of several sched related system calls.
+Hi Tomi,
 
-Benchmarking on an i9-12900 shows the following per system call
-performance improvements:
+On 2025-02-19 15:49:01 +0200, Tomi Valkeinen wrote:
+> Fix typo with variable name 'msps'.
 
-		       before     after     improvement
-sched_getattr          182.4ns    170.6ns      ~6.5%
-sched_setattr          284.3ns    267.6ns      ~5.9%
-sched_getparam         161.6ns    148.1ns      ~8.4%
-sched_setparam        1265.4ns   1227.6ns      ~3.0%
-sched_getscheduler     129.4ns    118.2ns      ~8.7%
-sched_setscheduler    1237.3ns   1216.7ns      ~1.7%
+FWIW, this is not a typo, C-PHY uses symbols per seconds, not bits per 
+second.
 
-Results are based on running 20 tests with turbo disabled (to reduce
-clock freq turbo changes), with 10 second run per test based on the
-number of system calls per second. The % standard deviation of the
-measurements for the 20 tests was 0.05% to 0.40%, so the results are
-reliable.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/platform/renesas/rcar-csi2.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 845fb3e155f1..92697ea3df01 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -1301,7 +1301,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	const struct rcar_csi2_format *format;
+>  	const struct v4l2_mbus_framefmt *fmt;
+>  	unsigned int lanes;
+> -	int msps;
+> +	int mbps;
+>  	int ret;
+>  
+>  	/* Use the format on the sink pad to compute the receiver config. */
+> @@ -1314,9 +1314,9 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	if (ret)
+>  		return ret;
+>  
+> -	msps = rcsi2_calc_mbps(priv, format->bpp, lanes);
+> -	if (msps < 0)
+> -		return msps;
+> +	mbps = rcsi2_calc_mbps(priv, format->bpp, lanes);
+> +	if (mbps < 0)
+> +		return mbps;
+>  
+>  	/* Reset LINK and PHY*/
+>  	rcsi2_write(priv, V4H_CSI2_RESETN_REG, 0);
+> @@ -1352,7 +1352,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	rcsi2_write16(priv, V4H_PPI_RW_COMMON_CFG_REG, 0x0003);
+>  
+>  	/* C-PHY settings */
+> -	ret = rcsi2_c_phy_setting_v4h(priv, msps);
+> +	ret = rcsi2_c_phy_setting_v4h(priv, mbps);
+>  	if (ret)
+>  		return ret;
+>  
+> 
+> -- 
+> 2.43.0
+> 
 
-Tested on kernel build with gcc 14.2.1
-
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- kernel/sched/syscalls.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-index 456d339be98f..9f40348f1dc7 100644
---- a/kernel/sched/syscalls.c
-+++ b/kernel/sched/syscalls.c
-@@ -875,7 +875,7 @@ do_sched_setscheduler(pid_t pid, int policy, struct sched_param __user *param)
- {
- 	struct sched_param lparam;
- 
--	if (!param || pid < 0)
-+	if (unlikely(!param || pid < 0))
- 		return -EINVAL;
- 	if (copy_from_user(&lparam, param, sizeof(struct sched_param)))
- 		return -EFAULT;
-@@ -984,7 +984,7 @@ SYSCALL_DEFINE3(sched_setattr, pid_t, pid, struct sched_attr __user *, uattr,
- 	struct sched_attr attr;
- 	int retval;
- 
--	if (!uattr || pid < 0 || flags)
-+	if (unlikely(!uattr || pid < 0 || flags))
- 		return -EINVAL;
- 
- 	retval = sched_copy_attr(uattr, &attr);
-@@ -1049,7 +1049,7 @@ SYSCALL_DEFINE2(sched_getparam, pid_t, pid, struct sched_param __user *, param)
- 	struct task_struct *p;
- 	int retval;
- 
--	if (!param || pid < 0)
-+	if (unlikely(!param || pid < 0))
- 		return -EINVAL;
- 
- 	scoped_guard (rcu) {
-@@ -1085,8 +1085,8 @@ SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
- 	struct task_struct *p;
- 	int retval;
- 
--	if (!uattr || pid < 0 || usize > PAGE_SIZE ||
--	    usize < SCHED_ATTR_SIZE_VER0 || flags)
-+	if (unlikely(!uattr || pid < 0 || usize > PAGE_SIZE ||
-+		      usize < SCHED_ATTR_SIZE_VER0 || flags))
- 		return -EINVAL;
- 
- 	scoped_guard (rcu) {
 -- 
-2.47.2
-
+Kind Regards,
+Niklas Söderlund
