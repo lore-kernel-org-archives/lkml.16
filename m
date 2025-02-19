@@ -1,98 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C46B15B971;
-	Wed, 19 Feb 2025 09:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A42C158862
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739957904; cv=none; b=ncq7NJgalyvsVEO7PRVdLWXmE8CVKOThWEK5yt22cFIk7KilMcXYV6LUADUtVFT0Kp7s43sgHzjzztBm7SdvRI5Z8v7vgv6xZEFNOYCZSHA9/NRc/wAYju2qr29oKGaJIV78vMPwhyBusVMCV4UbwtbWse8FzxelwQe89FmTeYA=
+	t=1739957906; cv=none; b=HjbfHMpfuJePkVYRMtkEoMvS0OKPGvE5AoZjov+z00mO3SWH6dnKtF85t0Vsc6wezaDNOI/S0MvWE5OzgZk8ExziYWgWixOQHDAWxWAeZPnn8PosjS/3cPTBMbjft+Fb1VrfwhKUkkRizZYgb1wKYsrgvmp+KqtzOBoheuCGSEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739957904; c=relaxed/simple;
-	bh=80I3NFEQ9dB3idbQ3rrlutO1WpxNEwV3ESxpvEHssw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GCAPEHz8CWug/WFODb9ulfYVJSZAm2LMR9eTSEI00dczsLlCFNSeDP/ZdIFRuHHRhsMv2MHbhYrUKbJjQ0PaErgSZvRswIKtGOVM5jDhYzPbEqCru5Q2l8jSrSGby97iD+f5uLWCOME0QDLVhQ160X0MzRij93EGfowPGLvoGY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mk4X7I+4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mk4X7I+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3B1C4CED1;
-	Wed, 19 Feb 2025 09:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739957903;
-	bh=80I3NFEQ9dB3idbQ3rrlutO1WpxNEwV3ESxpvEHssw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mk4X7I+4NK641JPh0lH3mxXQjPoMemeHNJVvxuFmmLHC/ixCa1WumSq6dDN+UTlpw
-	 zpUgxeiJXqYBElyQ0DUuYW0guCtjDYpCi78mBTZdKc1ZYh1YOvEi9mJvXP9b6EHWlm
-	 YQERNL01Ou2rIWZUSUECfVGTKQQXNoBJ3nDyfpn9bhl6froDTMMH46SmIILX7oxuAg
-	 Gc9nPV0WuyOoDvloGJC95f13CxxB9MO5/fFpM0spaDwQ25NgZy/oitF3thNmdPPSOc
-	 4MrXUl8X5T49bOg9sM1P1IOiNOngbfg1IgoTW8bfr/EAseOp0qJHA7zCpi7XDqslBr
-	 ZZRGTJCy24gpQ==
-Date: Wed, 19 Feb 2025 09:38:21 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH 0/2 v9] reclaim file-backed pages given POSIX_FADV_NOREUSE
-Message-ID: <Z7WmjagtARpTA781@google.com>
-References: <20250212023518.897942-1-jaegeuk@kernel.org>
- <Z7REHrJ3ImdrF476@infradead.org>
+	s=arc-20240116; t=1739957906; c=relaxed/simple;
+	bh=ysn8Ps0vO2OODTfoa/COI0o36WWXjzc7jOD3tFpkkpU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=btU4m5bGVhdq6MvQyTHmwm9PIKVm/3m9CmXgetDjaKmsksEGQQ7Er2AxQKyzgU+ehEmgcG53NWxkhrf9kAGQz9m8t2ALO/bI5KnIepAzWTGUpEr4jcGXzs3IKv2LaIKf+78KT348pZkcQIu1JAXX7b8LVJdIgp2E5a0GetrpUPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 51J9c5d3052013;
+	Wed, 19 Feb 2025 17:38:05 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4YyWRX4Vf0z2SR95B;
+	Wed, 19 Feb 2025 17:33:44 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 19 Feb 2025 17:38:03 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <vincent.guittot@linaro.org>, <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>
+CC: <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
+        <mgorman@suse.de>, <vschneid@redhat.com>, <christian.loehle@arm.com>,
+        <hongyan.xia2@arm.com>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
+        <xuewen.yan94@gmail.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] sched/uclamp: Always using uclamp_is_used()
+Date: Wed, 19 Feb 2025 17:37:46 +0800
+Message-ID: <20250219093747.2612-1-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7REHrJ3ImdrF476@infradead.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 51J9c5d3052013
 
-On 02/18, Christoph Hellwig wrote:
-> This still has a file system sysfs HACK, you're still not Ccing the
-> right list, etc.
-> 
-> Can you pleae at least try to get it right?
+Now, we have the uclamp_is_used() func to judge the uclamp enabled,
+so replace the static_branch_unlikely(&sched_uclamp_used) with it.
 
-I was modifying the patch having 1) declaring a static global list, 2) adding
-some fields to superblock and inode structures to keep the given range in the
-inode through fadvise, 3) adding hooks in evict_inode to handle the list, 4)
-exploring which sysfs entry in MM to reclaim them explicitly.
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Reviewed-by: Hongyan Xia <hongyan.xia2@arm.com>
+Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+V2:
+- Correct the spelling mistakes in the commit message (Hongyan)
+- Add Reviewed-by
+---
+---
+ kernel/sched/core.c  |  4 ++--
+ kernel/sched/sched.h | 28 ++++++++++++++--------------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-But, I stopped at some point, as it looks not good at all. Moreover, I started
-to be questioning why not just doing in F2FS back, given sementically I didn't
-change anything  on general behavior of fadvise(POSIX_FADV_NOREUSE), IIUC, which
-moves pages back to LRU. In addiiton to that, I'd like to keep the range hint in
-a filesystem and provide a sysfs entry to manage the hints additionally.
-In addition, I don't think there's rule that filesystem cannot reclaim file-back
-pages, as it just uses the exported symbol that all filesystems are using in
-various different purpose. Hence, I don't get the point which is wrong.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9aecd914ac69..38a7192bfc19 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1757,7 +1757,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 	 * The condition is constructed such that a NOP is generated when
+ 	 * sched_uclamp_used is disabled.
+ 	 */
+-	if (!static_branch_unlikely(&sched_uclamp_used))
++	if (!uclamp_is_used())
+ 		return;
+ 
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+@@ -1784,7 +1784,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 	 * The condition is constructed such that a NOP is generated when
+ 	 * sched_uclamp_used is disabled.
+ 	 */
+-	if (!static_branch_unlikely(&sched_uclamp_used))
++	if (!uclamp_is_used())
+ 		return;
+ 
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b93c8c3dc05a..3624fdce5536 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3394,6 +3394,19 @@ static inline bool update_other_load_avgs(struct rq *rq) { return false; }
+ 
+ unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+ 
++/*
++ * When uclamp is compiled in, the aggregation at rq level is 'turned off'
++ * by default in the fast path and only gets turned on once userspace performs
++ * an operation that requires it.
++ *
++ * Returns true if userspace opted-in to use uclamp and aggregation at rq level
++ * hence is active.
++ */
++static inline bool uclamp_is_used(void)
++{
++	return static_branch_likely(&sched_uclamp_used);
++}
++
+ static inline unsigned long uclamp_rq_get(struct rq *rq,
+ 					  enum uclamp_id clamp_id)
+ {
+@@ -3417,7 +3430,7 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
+ 	unsigned long rq_util;
+ 	unsigned long max_util;
+ 
+-	if (!static_branch_likely(&sched_uclamp_used))
++	if (!uclamp_is_used())
+ 		return false;
+ 
+ 	rq_util = cpu_util_cfs(cpu_of(rq)) + cpu_util_rt(rq);
+@@ -3426,19 +3439,6 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
+ 	return max_util != SCHED_CAPACITY_SCALE && rq_util >= max_util;
+ }
+ 
+-/*
+- * When uclamp is compiled in, the aggregation at rq level is 'turned off'
+- * by default in the fast path and only gets turned on once userspace performs
+- * an operation that requires it.
+- *
+- * Returns true if userspace opted-in to use uclamp and aggregation at rq level
+- * hence is active.
+- */
+-static inline bool uclamp_is_used(void)
+-{
+-	return static_branch_likely(&sched_uclamp_used);
+-}
+-
+ #define for_each_clamp_id(clamp_id) \
+ 	for ((clamp_id) = 0; (clamp_id) < UCLAMP_CNT; (clamp_id)++)
+ 
+-- 
+2.25.1
 
-Thanks,
-
-> 
-> On Wed, Feb 12, 2025 at 02:31:55AM +0000, Jaegeuk Kim wrote:
-> > This patch series does not add new API, but implements POSIX_FADV_NOREUSE where
-> > it keeps the page ranges in the f2fs superblock and add a way for users to
-> > reclaim the pages manually.
-> > 
-> > Change log from v8:
-> >  - remove new APIs, but use fadvise(POSIX_FADV_NOREUSE)
-> > 
-> > Jaegeuk Kim (2):
-> >   f2fs: keep POSIX_FADV_NOREUSE ranges
-> >   f2fs: add a sysfs entry to reclaim POSIX_FADV_NOREUSE pages
-> > 
-> >  Documentation/ABI/testing/sysfs-fs-f2fs |  7 ++
-> >  fs/f2fs/debug.c                         |  3 +
-> >  fs/f2fs/f2fs.h                          | 14 +++-
-> >  fs/f2fs/file.c                          | 60 +++++++++++++++--
-> >  fs/f2fs/inode.c                         | 14 ++++
-> >  fs/f2fs/shrinker.c                      | 90 +++++++++++++++++++++++++
-> >  fs/f2fs/super.c                         |  1 +
-> >  fs/f2fs/sysfs.c                         | 63 +++++++++++++++++
-> >  8 files changed, 246 insertions(+), 6 deletions(-)
-> > 
-> > -- 
-> > 2.48.1.601.g30ceb7b040-goog
-> > 
-> > 
-> ---end quoted text---
