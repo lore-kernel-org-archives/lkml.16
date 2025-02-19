@@ -1,114 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AE021505D;
-	Wed, 19 Feb 2025 18:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A78214A66
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739989368; cv=none; b=Glu/bqqCDKNUwGZiN2H3/UBxIbrjJv5mIErlXNJ+R5FsUXZg2c1Zw/TPLz7uCfp1Zj23wL9lRIkDbI5Pb7Tm6QzCLglLEPAe37QkV0CEnxcVjgZI39LlaUtWCYIF5slS0ht4NKyIQ5UVt9StwpcJCAQaM/ZZSMjrkj+thOmWGPo=
+	t=1739989399; cv=none; b=nYSJdJSZxHaoNqsj0te5GJjbgSCcZofjITwMXd7BCE3PvxjN4fcdjbPtdNP73ZPCjPC90QHFaAxkpc0PanX5OWEwDkQcqSDBI2PjsvbGtCdOxD2u204RjEuGmYg2IWnoJQ2UbsBQz8D4krW0/Bup1kQjTDzgzLu3nOeJpc6Z+ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739989368; c=relaxed/simple;
-	bh=faBN0IDEHn011JJ6CBEbtJMdZifBloW9Uki3sRQ2NFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qeWKV/puom1LUECqVpFIeR3Cc5kONz2sg0LF6n5+oLWWekUUT+OYiQIJ0Ge88OyeTYYA0n/sFMUUQUVttBs02IV0viWIhbKGbgO5fStmJh85OnbpJiIxOszubNcOrDQ9VX+lI+4qiIkxEMPilkM7asL0cs1CO5IaUTXzrFa9WwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiDzNvJj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739989399; c=relaxed/simple;
+	bh=54xOSojKngCTcb3gwSgCrEU5ccPyKZZCGbLNRJN5AH4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=XLu+GSwZX7V4vWNfupe8OnmVVaCNdH31EsO2n7C9g0Z9eV3+hhkZ21f7AyKBqRuNRyO7maUE8xFf3Nmc1bjjNeEEn/fMODyxqNgAw6JoRI3mmEFSsxwYsSegBUirWNMTRDd+WQIj5juL/i7Mpn7AMwSrTeeyyXwBLu5sXWEGU3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A1UeWnXW; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiDzNvJj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ABDEC4CEE6;
-	Wed, 19 Feb 2025 18:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739989368;
-	bh=faBN0IDEHn011JJ6CBEbtJMdZifBloW9Uki3sRQ2NFc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=BiDzNvJjL91V2HDPnBs7dKbPdXvA8S0BQ46CpANs2Oc4NEmRROuvTqAUbOosqJSmc
-	 ucLGRNjf0LoUsW3EC8/78mNlImUUpGRGLbWj2eh3/xr9xXd6spSqlKKc959yRA2dtM
-	 Q88ubglPWVKNTDsxFF0RquzIThh9F/6CQNgOSGwhlFWFOXRy7DnnihJbh5Ml0M/9sP
-	 +ObCE42MLKwCylSWckR1ATbINC39tseHs7lMFpnI4v3MTHolIXj4LWJmHHe0fBztN3
-	 c5BktpBJXnFlVwHUf1TOg36nIxXT0UBE9++JKOwMWfKsJMSk7wHZ5rdsitf+ER/LYb
-	 jj9gcm86rmXjA==
-Date: Wed, 19 Feb 2025 12:22:47 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chen Wang <unicorn_wang@outlook.com>
-Cc: Chen Wang <unicornxw@gmail.com>, kw@linux.com,
-	u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu, arnd@arndb.de,
-	bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
-	inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	palmer@dabbelt.com, paul.walmsley@sifive.com, pbrobinson@gmail.com,
-	robh@kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
-	xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com
-Subject: Re: [PATCH v3 1/5] dt-bindings: pci: Add Sophgo SG2042 PCIe host
-Message-ID: <20250219182247.GA225989@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A1UeWnXW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739989397; x=1771525397;
+  h=date:from:to:cc:subject:message-id;
+  bh=54xOSojKngCTcb3gwSgCrEU5ccPyKZZCGbLNRJN5AH4=;
+  b=A1UeWnXW9WDGmZHWmW5Q3CKRYBC9njkqpjT5yLETJPsBG7w8V3siybkv
+   twyqZd+fa8k1ofMKQiaYekUFvIGaEcreVk5JKQTVY3w6WA9oWGiR12Drg
+   cyMIiBfpgJFYnGvGRlLfFbdgsOwzZK80yf8cBdbu2HlxfiU6rvzz4MYOp
+   7FwIcLIxvzj+U1EVRgkTlJjlV2rT0Oos1yKkBWZx0sfIt+Z3VKh9htN22
+   ZJRJ2T+2v4JJiY868dBEDastItk/YqmXJDei4TMtz7PrvWWXmj2yzz+zj
+   mFTrS76Gz0Y0lnZCTgic2dLYU4uKHCNzoKTeJuoo46ryBtxXqdgwcLCFk
+   g==;
+X-CSE-ConnectionGUID: dISa7WkgQSir72BPWlC5IQ==
+X-CSE-MsgGUID: GK2a0lCORlKHGuchCrG74A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44388929"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="44388929"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:23:17 -0800
+X-CSE-ConnectionGUID: ef6W5XxGSxCxWyUZVJLbvg==
+X-CSE-MsgGUID: RvtG8C+3Q4qljF2z9IVC0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="119772618"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 19 Feb 2025 10:23:17 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tkoj4-0003J5-03;
+	Wed, 19 Feb 2025 18:23:14 +0000
+Date: Thu, 20 Feb 2025 02:22:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:timers/cleanups] BUILD SUCCESS
+ 86a578e780a9fb0e1a1b6f3f3aa847c29b5255b9
+Message-ID: <202502200220.NWwKMS3r-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BMXPR01MB24403F8CD6BF5D4D2DDC57A4FEFC2@BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM>
 
-On Wed, Feb 12, 2025 at 01:54:11PM +0800, Chen Wang wrote:
-> On 2025/2/12 12:25, Bjorn Helgaas wrote:
-> [......]
-> > > pcie_rc1 and pcie_rc2 share registers in cdns_pcie1_ctrl. By using
-> > > different "sophgo,core-id" values, they can distinguish and access
-> > > the registers they need in cdns_pcie1_ctrl.
-> > Where does cdns_pcie1_ctrl fit in this example?  Does that enclose
-> > both pcie_rc1 and pcie_rc2?
-> 
-> cdns_pcie1_ctrl is defined as a syscon node,  which contains registers
-> shared by pcie_rc1 and pcie_rc2. In the binding yaml file, I drew a diagram
-> to describe the relationship between them, copy here for your quick
-> reference:
-> 
-> +                     +-- Core (Link0) <---> pcie_rc1  +-----------------+
-> +                     |                                |                 |
-> +      Cadence IP 2 --+                                | cdns_pcie1_ctrl |
-> +                     |                                |                 |
-> +                     +-- Core (Link1) <---> pcie_rc2  +-----------------+
-> 
-> The following is an example with cdns_pcie1_ctrl added. For simplicity, I
-> deleted pcie_rc0.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/cleanups
+branch HEAD: 86a578e780a9fb0e1a1b6f3f3aa847c29b5255b9  wifi: rt2x00: Switch to use hrtimer_update_function()
 
-Looks good.  It would be nice if there were some naming similarity or
-comment or other hint to connect sophgo,core-id with the syscon node.
+elapsed time: 1456m
 
-> pcie_rc1: pcie@7062000000 {
->     compatible = "sophgo,sg2042-pcie-host";
->     ...... // host bride level properties
->     linux,pci-domain = <1>;
->     sophgo,core-id = <0>;
->     sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
->     port {
->         // port level properties
->         vendor-id = <0x1f1c>;
->         device-id = <0x2042>;
->         num-lanes = <2>;
->     };
-> };
-> 
-> pcie_rc2: pcie@7062800000 {
->     compatible = "sophgo,sg2042-pcie-host";
->     ...... // host bride level properties
->     linux,pci-domain = <2>;
->     sophgo,core-id = <1>;
->     sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
->     port {
->         // port level properties
->         vendor-id = <0x1f1c>;
->         device-id = <0x2042>;
->         num-lanes = <2>;
->     }
-> 
-> };
-> 
-> cdns_pcie1_ctrl: syscon@7063800000 {
->     compatible = "sophgo,sg2042-pcie-ctrl", "syscon";
->     reg = <0x70 0x63800000 0x0 0x800000>;
-> };
-> 
+configs tested: 74
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                           allyesconfig    gcc-14.2.0
+arc                             allmodconfig    gcc-13.2.0
+arc                             allyesconfig    gcc-13.2.0
+arc                  randconfig-001-20250219    gcc-13.2.0
+arc                  randconfig-002-20250219    gcc-13.2.0
+arm                             allmodconfig    gcc-14.2.0
+arm                             allyesconfig    gcc-14.2.0
+arm                  randconfig-001-20250219    gcc-14.2.0
+arm                  randconfig-002-20250219    clang-17
+arm                  randconfig-003-20250219    clang-15
+arm                  randconfig-004-20250219    gcc-14.2.0
+arm64                           allmodconfig    clang-18
+arm64                randconfig-001-20250219    clang-21
+arm64                randconfig-002-20250219    gcc-14.2.0
+arm64                randconfig-003-20250219    gcc-14.2.0
+arm64                randconfig-004-20250219    gcc-14.2.0
+csky                 randconfig-001-20250219    gcc-14.2.0
+csky                 randconfig-002-20250219    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250219    clang-14
+hexagon              randconfig-002-20250219    clang-21
+i386                            allmodconfig    gcc-12
+i386                             allnoconfig    gcc-12
+i386                            allyesconfig    gcc-12
+i386       buildonly-randconfig-001-20250219    clang-19
+i386       buildonly-randconfig-002-20250219    clang-19
+i386       buildonly-randconfig-003-20250219    gcc-12
+i386       buildonly-randconfig-004-20250219    clang-19
+i386       buildonly-randconfig-005-20250219    clang-19
+i386       buildonly-randconfig-006-20250219    gcc-12
+i386                               defconfig    clang-19
+loongarch            randconfig-001-20250219    gcc-14.2.0
+loongarch            randconfig-002-20250219    gcc-14.2.0
+nios2                randconfig-001-20250219    gcc-14.2.0
+nios2                randconfig-002-20250219    gcc-14.2.0
+parisc               randconfig-001-20250219    gcc-14.2.0
+parisc               randconfig-002-20250219    gcc-14.2.0
+powerpc              randconfig-001-20250219    clang-15
+powerpc              randconfig-002-20250219    clang-17
+powerpc              randconfig-003-20250219    gcc-14.2.0
+powerpc64            randconfig-001-20250219    gcc-14.2.0
+powerpc64            randconfig-002-20250219    gcc-14.2.0
+powerpc64            randconfig-003-20250219    gcc-14.2.0
+riscv                randconfig-001-20250219    clang-21
+riscv                randconfig-002-20250219    gcc-14.2.0
+s390                            allmodconfig    clang-19
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250219    clang-18
+s390                 randconfig-002-20250219    clang-21
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250219    gcc-14.2.0
+sh                   randconfig-002-20250219    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250219    gcc-14.2.0
+sparc                randconfig-002-20250219    gcc-14.2.0
+sparc64              randconfig-001-20250219    gcc-14.2.0
+sparc64              randconfig-002-20250219    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250219    clang-21
+um                   randconfig-002-20250219    clang-21
+x86_64                           allnoconfig    clang-19
+x86_64                          allyesconfig    clang-19
+x86_64     buildonly-randconfig-001-20250219    gcc-12
+x86_64     buildonly-randconfig-002-20250219    clang-19
+x86_64     buildonly-randconfig-003-20250219    gcc-12
+x86_64     buildonly-randconfig-004-20250219    clang-19
+x86_64     buildonly-randconfig-005-20250219    gcc-12
+x86_64     buildonly-randconfig-006-20250219    clang-19
+x86_64                             defconfig    gcc-11
+xtensa               randconfig-001-20250219    gcc-14.2.0
+xtensa               randconfig-002-20250219    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
