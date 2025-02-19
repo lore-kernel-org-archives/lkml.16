@@ -1,149 +1,194 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D06A1E834B;
-	Wed, 19 Feb 2025 13:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE50B1EB1B8;
+	Wed, 19 Feb 2025 13:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972460; cv=none; b=nNHlbAukNYFtpiZMTi52jCMZoEipi9fIm4SOHXmsukgNlvRGporDO+i3IdYsq6lcy+fhkwGr1lQqfQjSLIuxh3M1Z4ciP8GTcaeqQtErNQJkvr6gxMjcVAAKMuFMLXnI0aIP9y70ks8zng42wKEKgrexKp3Ettc15YrdiXszw/g=
+	t=1739972462; cv=none; b=qXckfNpR5z8p9ICuy0ofI8Pyfd6r2rZlDge/C51ZUGkiFVBlxWYdGJtU7/kNHKA+BVJDnuuyGInkALeK24BdOSuQNgF5cZSDyXXsVaCWcettKoWuw3BZxTmYUXMtg5bZeMtExCje/mwrox0AkzYkLH7vCrxeciQArHREcLjc0Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739972460; c=relaxed/simple;
-	bh=Tvl7NLuxa/MhrFZ6wDutYPLFjwy69UYMZuxI97W8IBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bh3cgCF4qxXwUd1Vw8ef1+TyGMjXM3gShEaJgm5N1p3FREwBDmzMWJw0ugSZLamdECoNzk++UM0ckg80McL5TtcJNsUzv7MHlshmoSdF59vmGAqHZU9Qh5p/PXructiAFt67HMcbFy4PufMyojztlHwolNzOf+u3nQm2Y7/+1wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=F5ePZKWQ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739972462; c=relaxed/simple;
+	bh=Agd8dAvug++fNqH4Fy/1e7D6Lgjyatp74gkEX5NdNps=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FaCjCvchDsmfjTHtEH2oxJnST1OCXYbDMgL20+fIIMo4SU5nGPwYDJZqtoKaa3pdSmybEynmE6RSW2SPQPafmJeI6wyJAopdNeliZOan9+blYdM1xbymzo2UWIzZFgl8r1Syxwb1UwIPn6lfGlPu3bNzYlgnCiRpAK2IMe1HJlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vBdg6rzO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="F5ePZKWQ"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7A3D9169;
-	Wed, 19 Feb 2025 14:39:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739972373;
-	bh=Tvl7NLuxa/MhrFZ6wDutYPLFjwy69UYMZuxI97W8IBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F5ePZKWQD+C14wb+wfDzgmEopigfymY0uMlT9W7U6DMhFq52QTFgmFW8ZGgZ0EPTA
-	 7HLdLnru62xznpFBYRF3NcQiuDJmNKSo91SN7nFxCGG5NkADaY9JT2tHLOOjqe61yu
-	 HEDR73x7nnav2J0ued+XM5lGzCBm5sGAM3Mg2l9k=
-Date: Wed, 19 Feb 2025 15:40:41 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-media@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH 3/5] media: dt-bindings: Add Apple ISP
-Message-ID: <20250219134041.GB15114@pendragon.ideasonboard.com>
-References: <20250219-isp-v1-0-6d3e89b67c31@gmail.com>
- <20250219-isp-v1-3-6d3e89b67c31@gmail.com>
- <16f6d4a2-2102-48b9-a0ae-b8c6595975b8@kernel.org>
- <CAMT+MTR7dhtt3SOMg0K3UakJQftqnc2S-rV41HdHtA+o9aSPug@mail.gmail.com>
- <20250219105326.GA31383@pendragon.ideasonboard.com>
- <CAMT+MTToVdm72ovNZ8ySySYe5fT99a0Y6bv02NKxADCBCe+pMQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vBdg6rzO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5617C4CEE7;
+	Wed, 19 Feb 2025 13:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739972461;
+	bh=Agd8dAvug++fNqH4Fy/1e7D6Lgjyatp74gkEX5NdNps=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vBdg6rzOtRgIpF2ExgrdPZyFzcjdO/yMw8De+F+0Uu93VrR/30dOZetNZjReJaEbp
+	 BSfQfRYf2AxPzk8a70HfoB8C53PB6gPbTPAKv0HerNwi/+C2yFs32ASVXQel/GWbul
+	 L4EnK2IGxTdFiL0Nn8DV+hkYtGlLpduOZLipucck=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable <stable@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf: fix up some comments and code to properly use the event_source bus
+Date: Wed, 19 Feb 2025 14:40:56 +0100
+Message-ID: <2025021955-implant-excavator-179d@gregkh>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMT+MTToVdm72ovNZ8ySySYe5fT99a0Y6bv02NKxADCBCe+pMQ@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5486; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=Agd8dAvug++fNqH4Fy/1e7D6Lgjyatp74gkEX5NdNps=; b=owGbwMvMwCRo6H6F97bub03G02pJDOlb76ebbU9UnT+X4ZnUhoWH5R9O2PNTc3Pzo9v8O7ksO Hd33e2f2hHLwiDIxCArpsjyZRvP0f0VhxS9DG1Pw8xhZQIZwsDFKQAT6VrLsKD/3/tZr2bObREz Z1p6LnD1HuYCcz+G+XG2l1qW8QgKzCvoLeD43XleQlgkFQA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 12:05:29PM +0100, Sasha Finkelstein wrote:
-> On Wed, 19 Feb 2025 at 11:53, Laurent Pinchart wrote:
-> > >
-> > > Those are board-specific and not discoverable via the ISP protocol.
-> >
-> > But they are settable through the ISP protocol, aren't they ? For
-> > instance, looking at isp-imx248.dtsi, the first four entries are
-> >
-> >         /* 1280x720 */
-> >         preset0 {
-> >                 apple,config-index = <0>;
-> >                 apple,input-size = <1296 736>;
-> >                 apple,output-size = <1280 720>;
-> >                 apple,crop = <8 8 1280 720>;
-> >         };
-> >
-> >         /* 960x720 (4:3) */
-> >         preset1 {
-> >                 apple,config-index = <0>;
-> >                 apple,input-size = <1296 736>;
-> >                 apple,output-size = <960 720>;
-> >                 apple,crop = <168 8 960 720>;
-> >         };
-> >
-> >         /* 960x540 (16:9) */
-> >         preset2 {
-> >                 apple,config-index = <0>;
-> >                 apple,input-size = <1296 736>;
-> >                 apple,output-size = <960 540>;
-> >                 apple,crop = <8 8 1280 720>;
-> >         };
-> >
-> >         /* 640x480 (4:3) */
-> >         preset3 {
-> >                 apple,config-index = <0>;
-> >                 apple,input-size = <1296 736>;
-> >                 apple,output-size = <640 480>;
-> >                 apple,crop = <168 8 960 720>;
-> >         };
-> >
-> > But I may be interested in capturing a 640x480 frame with cropping only
-> > and without scaling, with
-> >
-> > input-size = 1296x736
-> > output-size = 640x480
-> > crop = (328,128)/640x480
-> >
-> > Or I may want my cropped frame to be located in the upper-left corner:
-> >
-> > input-size = 1296x736
-> > output-size = 640x480
-> > crop = (8,8)/640x480
-> >
-> > If I set those parameters through the ISP protocol, won't it work ?
-> 
-> For cropping - you do not want to change those parameters, the sensor
-> is partially occluded, and the crop area is specified in such a way
-> to not expose those pixels.
+In sysfs, the perf events are all located in
+/sys/bus/event_source/devices/ but some places ended up hard-coding the
+location to be at the root of /sys/devices/ which could be very risky as
+you do not exactly know what type of device you are accessing in sysfs
+at that location.
 
-Surely cropping *more* wouldn't be an issue from that point of view ?
-The visible area is a device-specific property, so that could be
-specified in DT, instead of presets. The problem isn't limited to this
-device, so ideally the DT binding for this feature should be
-standardized.
+So fix this all up by properly pointing everything at the bus device
+list instead of the root of the sysfs devices/ tree.
 
-In general, I'd say that even occluded pixels should be exposed to
-userspace, should an application want to capture them. If you think of
-fisheye lenses, for instance, it's common to have a round image captured
-from a rectangular sensor, and use a dewarping engine (it could just be
-GPU shaders) to un-distord it. Restricting capture to rectangles of
-fully visible pixels would result in loss of information. For this
-particular device I don't think that would really be a use case, so I'm
-not opposed to the driver setting restrictions on crop rectangles.
+Cc: stable <stable@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/Documentation/intel-hybrid.txt | 12 ++++++------
+ tools/perf/Documentation/perf-list.txt    |  2 +-
+ tools/perf/arch/x86/util/iostat.c         |  2 +-
+ tools/perf/builtin-stat.c                 |  2 +-
+ tools/perf/util/mem-events.c              |  2 +-
+ tools/perf/util/pmu.c                     |  4 ++--
+ 6 files changed, 12 insertions(+), 12 deletions(-)
 
-> As for scaling - we can expose only the 1:1
-> scale and let userspace deal with it, but it appears that it expects
-> the other common output sizes to exist.
-
-Can the driver synthesize the list of scaled-down resolutions, instead
-of specifying them in DT ?
-
+diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
+index e7a776ad25d7..0379903673a4 100644
+--- a/tools/perf/Documentation/intel-hybrid.txt
++++ b/tools/perf/Documentation/intel-hybrid.txt
+@@ -8,15 +8,15 @@ Part of events are available on core cpu, part of events are available
+ on atom cpu and even part of events are available on both.
+ 
+ Kernel exports two new cpu pmus via sysfs:
+-/sys/devices/cpu_core
+-/sys/devices/cpu_atom
++/sys/bus/event_source/devices/cpu_core
++/sys/bus/event_source/devices/cpu_atom
+ 
+ The 'cpus' files are created under the directories. For example,
+ 
+-cat /sys/devices/cpu_core/cpus
++cat /sys/bus/event_source/devices/cpu_core/cpus
+ 0-15
+ 
+-cat /sys/devices/cpu_atom/cpus
++cat /sys/bus/event_source/devices/cpu_atom/cpus
+ 16-23
+ 
+ It indicates cpu0-cpu15 are core cpus and cpu16-cpu23 are atom cpus.
+@@ -60,8 +60,8 @@ can't carry pmu information. So now this type is extended to be PMU aware
+ type. The PMU type ID is stored at attr.config[63:32].
+ 
+ PMU type ID is retrieved from sysfs.
+-/sys/devices/cpu_atom/type
+-/sys/devices/cpu_core/type
++/sys/bus/event_source/devices/cpu_atom/type
++/sys/bus/event_source/devices/cpu_core/type
+ 
+ The new attr.config layout for PERF_TYPE_HARDWARE:
+ 
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index d0c65fad419a..c3ffd93f94d7 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -188,7 +188,7 @@ in the CPU vendor specific documentation.
+ 
+ The available PMUs and their raw parameters can be listed with
+ 
+-  ls /sys/devices/*/format
++  ls /sys/bus/event_source/devices/*/format
+ 
+ For example the raw event "LSD.UOPS" core pmu event above could
+ be specified as
+diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+index 00f645a0c18a..7442a2cd87ed 100644
+--- a/tools/perf/arch/x86/util/iostat.c
++++ b/tools/perf/arch/x86/util/iostat.c
+@@ -32,7 +32,7 @@
+ #define MAX_PATH 1024
+ #endif
+ 
+-#define UNCORE_IIO_PMU_PATH	"devices/uncore_iio_%d"
++#define UNCORE_IIO_PMU_PATH	"bus/event_source/devices/uncore_iio_%d"
+ #define SYSFS_UNCORE_PMU_PATH	"%s/"UNCORE_IIO_PMU_PATH
+ #define PLATFORM_MAPPING_PATH	UNCORE_IIO_PMU_PATH"/die%d"
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 77e327d4a9a7..68ea7589c143 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -97,7 +97,7 @@
+ #include <internal/threadmap.h>
+ 
+ #define DEFAULT_SEPARATOR	" "
+-#define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
++#define FREEZE_ON_SMI_PATH	"bus/event_source/devices/cpu/freeze_on_smi"
+ 
+ static void print_counters(struct timespec *ts, int argc, const char **argv);
+ 
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 3692e988c86e..0277d3e1505c 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -189,7 +189,7 @@ static bool perf_pmu__mem_events_supported(const char *mnt, struct perf_pmu *pmu
+ 	if (!e->event_name)
+ 		return true;
+ 
+-	scnprintf(path, PATH_MAX, "%s/devices/%s/events/%s", mnt, pmu->name, e->event_name);
++	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/%s", mnt, pmu->name, e->event_name);
+ 
+ 	return !stat(path, &st);
+ }
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6206c8fe2bf9..a8193ac8f2e7 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -36,12 +36,12 @@
+ #define UNIT_MAX_LEN	31 /* max length for event unit name */
+ 
+ enum event_source {
+-	/* An event loaded from /sys/devices/<pmu>/events. */
++	/* An event loaded from /sys/bus/event_source/devices/<pmu>/events. */
+ 	EVENT_SRC_SYSFS,
+ 	/* An event loaded from a CPUID matched json file. */
+ 	EVENT_SRC_CPU_JSON,
+ 	/*
+-	 * An event loaded from a /sys/devices/<pmu>/identifier matched json
++	 * An event loaded from a /sys/bus/event_source/devices/<pmu>/identifier matched json
+ 	 * file.
+ 	 */
+ 	EVENT_SRC_SYS_JSON,
 -- 
-Regards,
+2.48.1
 
-Laurent Pinchart
