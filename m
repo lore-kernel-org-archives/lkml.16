@@ -1,177 +1,99 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FD01C5F0C;
-	Wed, 19 Feb 2025 09:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5891C07D5;
+	Wed, 19 Feb 2025 09:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739958214; cv=none; b=uya15rHMUaHcE2twQrPEWUy2a+f5u5spZ42zEXNZd1N4t137m3omFuVsqxhRqw8wolAI0+/nETWsdj67+XAfGlbQFJ/TILiKk/bmU/Z7GNCKJ3/d+ubpmzTZON25ybXsWlxDnAJ5Xn59SxKIeKWeqZcir1Hf26wSAdHv+2iPpU0=
+	t=1739958269; cv=none; b=cAXcbXokCn5SjG8I8ws+CwCP0RNxv+pfGEQMUNx75hXoY3vICS7rTHg9cw0Dj8ZaW+LUZGZ1gTYQO4sZvlTT0mvpmaWo2xPYMnGVrkwcWzwdzW9L2KQGqjpJ2Dgtj4+oyOB66oo684EUALrTqqzoaIUwrSdu9/AjAcy1MtHoITI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739958214; c=relaxed/simple;
-	bh=Jd/Y5vJ5sDHZ1WgGnceafzFojzCctHAlAM5qQ9Kamw0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eVzn6CuSQq4Zh0inDQIc8aDSmquAeBewoqktLT+tGy3k7panqpxpcW7Wi3AAmpgZF9PXHcSRpQhid+wKKDbifsYW6GQnyyGKJtTWbyIWwjEuMxRdZj/pmK0XWuVeaV9aEaxHfUZnoQLA9bIrVnYY7AoI3J1a2cS+X5j8Z67JOEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jmtUx3np; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739958269; c=relaxed/simple;
+	bh=vgMAwgPmDiSVX3oKTWyuWdHQNxgNKQWXMsS82fzlN6Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MMYtzoJfBc/DCfz4lAP1Ni2ReXXZtL6VUhTtPmm5sf3+l2OUpP9ccp6kKrhFlSvEeEtJf+c/d0A50ijlM28e1Ud2kQSCRljf2DsK2uPltEV23y2a+Hnjomy2TDaz5ZoWfImKYo4ZbqhhNMT3hzrpo362UGqbQ/QnbzlbCbfoHAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=u4ZIoNsQ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jmtUx3np"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51J7e2GY002691;
-	Wed, 19 Feb 2025 09:43:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BRmVuOElVxUTeRDyEZ3ekSWRHBkhEe7aS51JcoAJOjQ=; b=jmtUx3npP5Pl5qsG
-	TpVsj9sH4/ADHpNfABczpXPUAkxd3OJKnfWn8Jn2rMkdPLi0josfanIB4q5AGmKe
-	Ao+bpJT5ecZnKBzFochJbEck8KWrruBvykDmxSZUowVPCICBOZUjWTZt/XmG+PIA
-	zD0oOxUckkJC4SK1d+4m8r3Qq29uZ/JcDpiQ5bC4bvQp9BeW/dh0DY4l+kjm+hRN
-	GxMYMrFKte4sRlAIFKBnQgmBRuxRerpL9rb2LvQdRCnTr0A3qp7FXkr3e5K0XWwP
-	MMRZchP1nnMiqOgHTXC8bAa2EDbEOR2PdpwjxbROW1yGJ14Yn3Qq7YhYqeHYeuu6
-	nwWOGw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy29yqh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 09:43:17 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51J9hHLe003295
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 09:43:17 GMT
-Received: from [10.64.68.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Feb
- 2025 01:43:10 -0800
-Message-ID: <d45d9832-31b3-4a23-bcc2-8313d2fccec7@quicinc.com>
-Date: Wed, 19 Feb 2025 17:43:07 +0800
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="u4ZIoNsQ"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 06F1C3A2;
+	Wed, 19 Feb 2025 10:43:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739958183;
+	bh=vgMAwgPmDiSVX3oKTWyuWdHQNxgNKQWXMsS82fzlN6Y=;
+	h=From:Subject:Date:To:Cc:From;
+	b=u4ZIoNsQz/XyoW8zB4E1L40kkBftScZC44jnPL4hlSyd2xv3kfiwVcPipVrJrKEQt
+	 OsptOcwg/yBuNPW1ygXwFawBHft4gEjXGKZA/s+d+U+O1m3uvG7iPPZNuoxzKLOWaX
+	 o7ZOCrm4KW+4ghjyYVztGh8kbKI0VlJM6O9xUBSQ=
+From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Subject: [PATCH v2 0/3] media: subdev: Add v4l2_get_frame_desc_passthrough
+ and use it
+Date: Wed, 19 Feb 2025 11:44:06 +0200
+Message-Id: <20250219-frame-desc-passthrough-v2-0-5135d57ecd6a@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: display/msm: Redocument the
- dp-controller for QCS8300
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250212-mst_qcs8300-v1-0-38a8aa08394b@quicinc.com>
- <20250212-mst_qcs8300-v1-1-38a8aa08394b@quicinc.com>
- <531a23fe-940a-4e9a-b023-5f1789ac65a5@kernel.org>
- <10d83c88-9f72-4577-95ba-bb1fd1ef36d1@quicinc.com>
- <5fd75e3d-ee87-439e-b6d4-dd0dd9a0ea2d@kernel.org>
- <c4850349-e0d7-4976-a6dc-9c690905abf3@oss.qualcomm.com>
-Content-Language: en-US
-From: Yongxing Mou <quic_yongmou@quicinc.com>
-In-Reply-To: <c4850349-e0d7-4976-a6dc-9c690905abf3@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: wiU1kxTL0LrvIcw-0lzCg0AnIbycbzrZ
-X-Proofpoint-GUID: wiU1kxTL0LrvIcw-0lzCg0AnIbycbzrZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_04,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 malwarescore=0 impostorscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502190077
+X-B4-Tracking: v=1; b=H4sIAOentWcC/4WNQQ6CMBBFr0JmbU1bWkBW3sOwqHSgs4CSDhIN4
+ e5WLuDyveS/vwNjImRoix0SbsQU5wz6UkAf3DyiIJ8ZtNRWatWIIbkJhUfuxeKY15Diawyiqhp
+ p0ajyVhvI4yXhQO8z/OgyB+I1ps/5s6mf/ZvclJDCldrYZrBlrcydPDqO8zO65K99nKA7juMLT
+ oZ0msMAAAA=
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1125;
+ i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
+ bh=vgMAwgPmDiSVX3oKTWyuWdHQNxgNKQWXMsS82fzlN6Y=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBntaf0E+PTeZhFqJUqT2Yjl5NHFRNx8atVNJhx0
+ yDJTCcrhvWJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ7Wn9AAKCRD6PaqMvJYe
+ 9f2vD/4noY8cco6OtUB/QKSTvQsEpOrqAjNf84u1zxgXufexwscgctojjge0QqbUdOGut+44Es3
+ GaZdsaNmd5bkzQsTf/NJKshfmO82j/ua8Pf0aWir6Zu89ENEAmmaTdc+H8uScEA119SxviSFUmV
+ bxnAyjNQ1CjLJcL+oPDe2LpBiAu9ElkoghOXJuKmqSgkydD4OXd4xU78bmQ/csghRfMxf5ptBJs
+ dzLI+QasSOfZj4SaTCBxZ+Sr8ITMn1WtnxikfApjnlcNeGYjIN5yABjo0cGWRdSjKUSV85Wtkul
+ p9Ha1Rc/r0pzFsflVnijgdAk1xpyBr8j5GRLY2L/uMpAf3/FcHByPXV0OESoPoUv1ceV9tWmHmM
+ 9xoSH/YgXNiZeasydkMHGwiuq9T/8+cwhpGz2mYGP1ptKf3jHqtSJ9uZar0uBRfH9nrtUwiYunK
+ dZrQDwG+xfN7OFNRyqT0axbfANeo/Sow4Yjj2D7H6oqab2aSrqKasOv7V1WJpPyqq+dE3gV6ZZd
+ t9/rn6H1qr9PrGFctqe6dGX/9m3uaxgr2szgAa1Hi7FVDP3b8YDjCDfEKvR+Qr0zkCt0+ScCchQ
+ wCX1AaH9j/M2qZonYbUt64BLQsKFe8aPDnfpeUx714BvV0SuywTw8fnYICWP5PtWu4rM9CBJFEE
+ Rcb+BN00it3DrGQ==
+X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
+When writing the exact same code the third time for Renesas, I thought
+we probably need a helper.
 
+ Tomi
 
-On 2025/2/12 21:44, Konrad Dybcio wrote:
-> On 12.02.2025 12:28 PM, Krzysztof Kozlowski wrote:
->> On 12/02/2025 12:13, Yongxing Mou wrote:
->>>
->>>
->>> On 2025/2/12 16:35, Krzysztof Kozlowski wrote:
->>>> On 12/02/2025 08:12, Yongxing Mou wrote:
->>>>> We need to enable mst for qcs8300, dp0 controller will support 2 streams
->>>>> output. So not reuse sm8650 dp controller driver and will add a new driver
->>>>> patch for qcs8300 mst feature. Modify the corresponding dt-bingding file
->>>>> to compatible with the qcs8300-dp.
->>>>>
->>>>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
->>>> NAK. You just said qcs8300 is compatible with sm8650. I did not ask
->>>> about drivers, I asked about hardware.
->>>>
->>>> This is messy approach. Describe properly the hardware first, instead of
->>>> sending two conflicting patchsets.
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>
->>> Hi, Krzysztof, thanks for reviewing, i want to explain why i submitted
->>> this patch. Patch
->>> https://lore.kernel.org/all/20250114-dts_qcs8300-v3-1-d114cc5e4af9@quicinc.com/
->>> and
->>> https://lore.kernel.org/all/20250120-mdssdt_qcs8300-v4-2-1687e7842125@quicinc.com/
->>> is the qcs8300 display enablement changes. It base on current linux base
->>> code and it only support SST mode, so in the SST mode, qcs8300 dp
->>> controller driver is quite same with sm8650, struct msm_dp_desc only
->>> have 3 members(io_start, id and wide_bus_supported) and they are same
->>> both in qcs8300 and sm8650, so we reuse it. BTW, for dp phy hardware
->>> version, qcs8300 and sm8650 is different.
->>
->> No. In one patchset you claim hardware is like that, in other patchset
->> you say hardware is different.
->>
->> Sorry, hardware does not change based on your patchsets.
->>
->> Sort out this before posting new versions.
-> 
-> In other words, fallback compatibles must be chosen with features that
-> are present in hardware, but not yet supported upstream in mind.
-> 
-> It's totally fine (and even preferred/expected) to describe hardware resources
-> (such as MST clocks here) when initially creating bindings for a piece of hw,
-> even though the drivers don't use them yet at that moment.
-> 
-> dt-bindings are supposed to give the OS a complete representation of the
-> hardware and ideally be immutable (which is a struggle, but we're getting
-> better). Driver specifics should not influence your decisions (or at least
-> do so very minimally) when adding these.
-> 
-> Now you're in a """good""" position as the display bindings haven't been merged
-> yet, so you can still upload a new patchset where the description is more
-> accurate. If it was merged, we'd have to break the ABI or add some crazy
-> workarounds..
-> 
-> Please coalesce this patchset with the "add 8300 display support" one.
-> 
-> Please also describe all 4 MST clocks and whatever other clocks/resets that
-> may be necessary down the line.
->   
-> Konrad
-Thanks, will update it in this patch "add 8300 display support". Because 
-this will depend on this change: 
-https://patchwork.freedesktop.org/series/142016/. we will first fix our 
-dependecy comments and then repost it.
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+---
+Changes in v2:
+- Fix "uninitialized symbol 'ret'"
+- Reorder local variables
+- Link to v1: https://lore.kernel.org/r/20250218-frame-desc-passthrough-v1-0-a32458f53714@ideasonboard.com
+
+---
+Tomi Valkeinen (3):
+      media: subdev: Add v4l2_get_frame_desc_passthrough helper
+      media: i2c: ds90ub953: Use v4l2_get_frame_desc_passthrough
+      media: i2c: ds90ub913: Use v4l2_get_frame_desc_passthrough
+
+ drivers/media/i2c/ds90ub913.c         | 59 +--------------------
+ drivers/media/i2c/ds90ub953.c         | 61 +---------------------
+ drivers/media/v4l2-core/v4l2-subdev.c | 96 +++++++++++++++++++++++++++++++++++
+ include/media/v4l2-subdev.h           | 21 ++++++++
+ 4 files changed, 119 insertions(+), 118 deletions(-)
+---
+base-commit: b2c4bf0c102084e77ed1b12090d77a76469a6814
+change-id: 20250218-frame-desc-passthrough-66805e413974
+
+Best regards,
+-- 
+Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+
