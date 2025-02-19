@@ -1,45 +1,55 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A35D21FDE03;
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C31FDE10;
 	Wed, 19 Feb 2025 16:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739981262; cv=none; b=FsE18DwfeFVBQSA3ke+/NWZg8D8DktoRXp/LdSYL/Z7seDya8qHzj7X21XtEU1fqqcUz3Y4JMJogr/mb+UhK9iZgo9X0ClI7PnHsaPCskqooejY2AKDvdvxbvvs5WLdN5kVcjUHHfZ8rzocYqYbf/72razpJq7ZHetZ6R4GCsVY=
+	t=1739981262; cv=none; b=X/vQTCHScxggychgSRWC0dvmwRAZ4jIV5CuV1vQw+ZIj1E4hdbSL8pgX9TYzuo8se4vEoXTqTXkvfboGpZehAyuaK7pDal5k+uEPbtmUUskXG6/WLWWLWtUrcH+Uz+3o3jCtZ1XVD/bHlo2joYwNqK0pi6c7ydnFYqKIuFG/QKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739981262; c=relaxed/simple;
-	bh=g0PBpbCAAAIxLvLEUXjbW119WGVJf9Rzrw66OtCteLY=;
+	bh=0ffD3GzZEOQ9UcQ1u0TFG+RKGkt81ixRU8Ke58Kp3pE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZ7RIEtO2lvYD9UnJf2g7OW+sB6owYH5IoaE6/rwIl/iLuMol5zCO0rgkK7ezqV7m8nniFMUrrtMdYQRwEUsWvX9E1VM0LxSuMeLWoubN0iSdXiVYcj5EtlfMG8uWrcjaxXSNgnXdX4XqFKlrQ7bx9tooz0KjOdbQewW9J60z00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39FCD1682;
-	Wed, 19 Feb 2025 08:07:58 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 202723F6A8;
-	Wed, 19 Feb 2025 08:07:35 -0800 (PST)
-Date: Wed, 19 Feb 2025 16:07:32 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: Babu Moger <babu.moger@amd.com>
-Cc: corbet@lwn.net, reinette.chatre@intel.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	tony.luck@intel.com, peternewman@google.com, fenghua.yu@intel.com,
-	x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
-	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
-	xiongwei.song@windriver.com, pawan.kumar.gupta@linux.intel.com,
-	daniel.sneddon@linux.intel.com, jpoimboe@kernel.org,
-	perry.yuan@amd.com, sandipan.das@amd.com, kai.huang@intel.com,
-	xiaoyao.li@intel.com, seanjc@google.com, xin3.li@intel.com,
-	andrew.cooper3@citrix.com, ebiggers@google.com,
-	mario.limonciello@amd.com, james.morse@arm.com,
-	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
-	eranian@google.com
-Subject: Re: [PATCH v11 23/23] x86/resctrl: Introduce interface to modify
- assignment states of the groups
-Message-ID: <Z7YBxNIWb7dqOnfi@e133380.arm.com>
-References: <cover.1737577229.git.babu.moger@amd.com>
- <fe1c0c4cebd353ccb3e588d7ea2fe9ef3dff0ef2.1737577229.git.babu.moger@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mZvpCrhBvuyYs8AkqnTnsWqDo5GL/10ZU5OT7XgYnwAp6hhnXcNEYYBMV1jwT/g3aPaWnxCMmWZN3ZC7EbEAbltDvRxfXePPR2rjcl/8qfzWQ+OYr2KitgfW4fjsaMjdL3+/70dUw0uUHfD++W9rtjg64RA9DMY8DhoI3Oh4z9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lEB9CPIw; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lEB9CPIw"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D97EB514;
+	Wed, 19 Feb 2025 17:06:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739981176;
+	bh=0ffD3GzZEOQ9UcQ1u0TFG+RKGkt81ixRU8Ke58Kp3pE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lEB9CPIwWCNavSqqJCBHsF2FoGzZhlEk6bUDb+QtTFFhdqbFoyC/Ho/Ve48HYU+Fq
+	 vkVqV5oeKKwFSKnUaLPailKVUKoF1KlYxLOG/iTCuFCuHkzMH/CHqmKa7wKCdoi3MX
+	 uKr171qBRa+hPk7yqkLuRsfjcnNbgaDxdpMJzxZI=
+Date: Wed, 19 Feb 2025 18:07:23 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Willy Tarreau <w@1wt.eu>
+Cc: James Bottomley <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+	ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <20250219160723.GB11480@pendragon.ideasonboard.com>
+References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
+ <Z7SwcnUzjZYfuJ4-@infradead.org>
+ <b7a3958e-7a0a-482e-823a-9d6efcb4b577@stanley.mountain>
+ <2bcf7cb500403cb26ad04934e664f34b0beafd18.camel@HansenPartnership.com>
+ <yq1mseim24a.fsf@ca-mkp.ca.oracle.com>
+ <c1693d15d0a9c8b7d194535f88cbc5b07b5740e5.camel@HansenPartnership.com>
+ <20250219153350.GG19203@1wt.eu>
+ <e42e8e79a539849419e475ef8041e87b3bccbbfe.camel@HansenPartnership.com>
+ <20250219155617.GH19203@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,112 +59,79 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fe1c0c4cebd353ccb3e588d7ea2fe9ef3dff0ef2.1737577229.git.babu.moger@amd.com>
+In-Reply-To: <20250219155617.GH19203@1wt.eu>
 
-Hi,
-
-On Wed, Jan 22, 2025 at 02:20:31PM -0600, Babu Moger wrote:
-> When mbm_cntr_assign mode is enabled, users can designate which of the MBM
-> events in the CTRL_MON or MON groups should have counters assigned.
+On Wed, Feb 19, 2025 at 04:56:17PM +0100, Willy Tarreau wrote:
+> On Wed, Feb 19, 2025 at 10:46:03AM -0500, James Bottomley wrote:
+> > > > > I like using cleanup attributes for some error handling. However,
+> > > > > I'm finding that in many cases I want to do a bit more than a
+> > > > > simple kfree(). And at that point things get syntactically messy
+> > > > > in the variable declarations and harder to read than just doing a
+> > > > > classic goto style unwind.
+> > > > 
+> > > > So the way systemd solves this is that they define a whole bunch of
+> > > > _cleanup_<type>_ annotations which encode the additional logic.  It
+> > > > does mean you need a globally defined function for each cleanup
+> > > > type, but judicious use of cleanup types seems to mean they only
+> > > > have a few dozen of these.
+> > > 
+> > > I may be missing something obvious, but this seems super dangerous to
+> > > me to perform lightly without reference counting, as it increases the
+> > > risks of use-after-free and double-free in case one of the allocated
+> > > objects in question can sometimes be returned.
+> > 
+> > Who said anything about not reference counting?
 > 
-> Provide an interface for assigning MBM events by writing to the file:
-> /sys/fs/resctrl/info/L3_MON/mbm_assign_control. Using this interface,
-> events can be assigned or unassigned as needed.
+> Nobody, but it was not said either that they were used at all!
 > 
-> Format is similar to the list format with addition of opcode for the
-> assignment operation.
->  "<CTRL_MON group>/<MON group>/<domain_id><opcode><flags>"
+> >  One the things the
+> > _cleanup_X annotations can do is drop references (or even locks).
+> 
+> OK then!
+> 
+> > >  Users of such mechanisms must be extremely cautious never to ever
+> > > return a pointer derivated from a variable tagged as such, or to
+> > > properly NULL-assign the original object for it not to double-free.
+> > > So it might in the end require to be careful about null-setting on
+> > > return instead of explicitly freeing what was explicitly allocated.
+> > > I'm not sure about the overall benefit.
+> > > Also I suspect it encourages to multiply the return points, which
+> > > makes it even more difficult to possibly fix what needs to be fixed
+> > > without coming from a locally allocated variable (e.g. restore a
+> > > state in a parser etc). Maybe it's just me not seeing the whole
+> > > picture, but as a general case I prefer to forget a free() call
+> > > (worst case: memory leak) than forget a foo=NULL that may result in a
+> > > double free, and the description here makes me think the latter might
+> > > more easily happen.
+> > 
+> > Well we could all speculate about the mess we'll make with any new
+> > tool.  All I'm saying is that another project with a large code base
+> > (systemd), which you can go an look at, managed to use these
+> > annotations very successfully to simplify their error legs. Perhaps
+> > there are reasons why the kernel can't be as successful, but I think
+> > assuming failure from the outset isn't the best way to flush these
+> > reasons out.
+> 
+> I'm not trying to assume failure or anything, just saying that it's
+> probably not always as simple as calling kfree() on anything locally
+> allocated for error paths to be magically cleaned, and it actually is
+> more subtle (and Laurent confirmed my concerns illustrating that this
+> case is precisely covered in glib using transfer of ownership).
+> 
+> And the temptation to return from everywhere since it's the only
+> required statement (instead of a goto to a collecting place) becomes
+> great and should sometimes be resisted to.
+> 
+> Regardless I do understand how these cleanups can help in a number of
+> case, at least to avoid some code duplication.
 
-[...]
+They're particularly useful to "destroy" local variables that don't need
+to be returned. This allows implementing scope guards, to facilitate
+lock handling for instance. Once a mutex guard is instantiated, the
+mutex is locked, and it will be guaranteed to be unlocked in every
+return path.
 
-> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> index 6e29827239e0..299839bcf23f 100644
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> @@ -1050,6 +1050,244 @@ static int resctrl_mbm_assign_control_show(struct kernfs_open_file *of,
+-- 
+Regards,
 
-[...]
-
-> +static ssize_t resctrl_mbm_assign_control_write(struct kernfs_open_file *of,
-> +						char *buf, size_t nbytes, loff_t off)
-> +{
-> +	struct rdt_resource *r = of->kn->parent->priv;
-> +	char *token, *cmon_grp, *mon_grp;
-> +	enum rdt_group_type rtype;
-> +	int ret;
-> +
-> +	/* Valid input requires a trailing newline */
-> +	if (nbytes == 0 || buf[nbytes - 1] != '\n')
-> +		return -EINVAL;
-> +
-> +	buf[nbytes - 1] = '\0';
-> +
-> +	cpus_read_lock();
-> +	mutex_lock(&rdtgroup_mutex);
-> +
-> +	rdt_last_cmd_clear();
-> +
-> +	if (!resctrl_arch_mbm_cntr_assign_enabled(r)) {
-> +		rdt_last_cmd_puts("mbm_cntr_assign mode is not enabled\n");
-> +		mutex_unlock(&rdtgroup_mutex);
-> +		cpus_read_unlock();
-> +		return -EINVAL;
-> +	}
-> +
-> +	while ((token = strsep(&buf, "\n")) != NULL) {
-> +		/*
-> +		 * The write command follows the following format:
-> +		 * “<CTRL_MON group>/<MON group>/<domain_id><opcode><flags>”
-> +		 * Extract the CTRL_MON group.
-> +		 */
-> +		cmon_grp = strsep(&token, "/");
-> +
-
-As when reading this file, I think that the data can grow larger than a
-page and get split into multiple write() calls.
-
-I don't currently think the file needs to be redesigned, but there are
-some concerns about how userspace will work with it that need to be
-sorted out.
-
-Every monitoring group can contribute a line to this file:
-
-	CTRL_GROUP / MON_GROUP / DOMAIN = [t][l] [ ; DOMAIN = [t][l] ]* LF
-
-so, 2 * (NAME_MAX + 1) + NUM_DOMAINS * 5 - 1 + 1
-
-NAME_MAX on Linux is 255, so with, say, up to 16 domains, that's about
-600 bytes per monitoring group in the worst case.
-
-We don't need to have many control and monitoring groups for this to
-grow potentially over 4K.
-
-
-We could simply place a limit on how much userspace is allowed to write
-to this file in one go, although this restriction feels difficult for
-userspace to follow -- but maybe this is workable in the short term, on
-current systems (?)
-
-Otherwise, since we expect this interface to be written using scripting
-languages, I think we need to be prepared to accept fully-buffered
-I/O.  That means that the data may be cut at random places, not
-necessarily at newlines.  (For smaller files such as schemata this is
-not such an issue, since the whole file is likely to be small enough to
-fit into the default stdio buffers -- this is how sysfs gets away with
-it IIUC.)
-
-For fully-buffered I/O, we may have to cache an incomplete line in
-between write() calls.  If there is a dangling incomplete line when the
-file is closed then it is hard to tell userspace, because people often
-don't bother to check the return value of close(), fclose() etc.
-However, since it's an ABI violation for userspace to end this file
-with a partial line, I think it's sufficient to report that via
-last_cmd_status.  (Making close() return -EIO still seems a good idea
-though, just in case userspace is listening.)
-
-I hacked up something a bit like this so that schemata could be written
-interactively from the shell, so I can try to port that onto this series
-as an illustration, if it helps.
-
-Cheers
----Dave
+Laurent Pinchart
