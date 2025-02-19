@@ -1,87 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279751FA267
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBC11FCFD2
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739989418; cv=none; b=eqsu/ecv71DP1+oZZxHdh92HSH0EJVQv/i6/u9t5dgAKs9mXKCBUknbPQyJxe9+/kuU4+/DLHEy6fY8S9rGJvJGScA1h7IF6wtvKT3hArg1JalXu2SuFHCYi3VADcbF0ZTi3WKlwIClKaal0NeTx+BfiR6QTU5IAbm0iXJyTBJU=
+	t=1739989427; cv=none; b=DYhQ0DyxG4GFJ+WUirlnyHEeSJ2hoFNmgCbMaKTv7yzc1zzF32+3/ANbEaGWuqdfxyu45/ckyx9P6MlorxiW5rUvjwGC5kaFMI9QQKjkCW78winKnJgVjvaR8+pjsonhl1hzm6salKpSRwjH1dU24dh8DN3d27A1uaSjp90bzso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739989418; c=relaxed/simple;
-	bh=mEGt7WDWrinT6c9r8+Ftc6ZedRfW9XkXNXg2znesnzc=;
+	s=arc-20240116; t=1739989427; c=relaxed/simple;
+	bh=F3QQLn5iHEqa61zNY6HqpiLPzAagm6AWvPWfS3ckb3U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=otHFHmaTpsOkJcLBJGVTPhfo5F9ZYmeuuHMuJ5GwFb8km/k0gqtlXLUztcBxWxRI47BGkhLTLDSdWQb1krUCANQfPwyfu6MEfTtaSsXesXXMgPQOcbegbO1AvXjz8ZAOvODAY54jSALh5NsUPNIk0JKXJ8jGkAXZeNkqXK/fMVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDIROf3/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MvnLUkO7iosLCTcv003bTUNC9rSMBTjsM8Q9HfT8vdyQerXzwaayZYqykiElaEi05ZoTIR+TpdBppWl7nOcoEEaYD1PAY4oCPdH3pEoYsOeWXwOx+0SALjjg179YuxdncZ64HbT6iG+18jsLZ5cnCjYKT9mIxNedL0wCi9RiHCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FSh8FygM; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDIROf3/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF279C4CED1;
-	Wed, 19 Feb 2025 18:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739989418;
-	bh=mEGt7WDWrinT6c9r8+Ftc6ZedRfW9XkXNXg2znesnzc=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FSh8FygM"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D8C8540E015F;
+	Wed, 19 Feb 2025 18:23:42 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id M-9yfGl9isMo; Wed, 19 Feb 2025 18:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739989419; bh=v0HTPPPJwvOYn4e7z6j0xoj8hH1coAAx24Lf63l4oeE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VDIROf3/LJEbfsOVhWjAAVryPgiM89JOh5zT4v3keHWkble37HxS8dpPrCWhLo/zk
-	 XzOq5dAAWhEWRazHHFkRsWgL4HFXYRRKUqpbvfcIO76lFsyuFvfivweRNfC5DrW6VP
-	 3Y6mAZEeLsUHzFHfWods9yF5E/Ntfx+9Py+sXmDNnPZZrhE6l2gs9VHXUSxg/XSzGB
-	 4HtYAaAkMnJ6Eb+ExY7yYLMSVz1w4NYG/JiFryH0U5EtfH7DVM58mube1FZeX0tigx
-	 2envJbo4m3bVsQsw8BfaQsWsEAHOCgqV67f2uPNc2EaxhQd7BBuR72WMF5xQ6pxKAm
-	 ziAuvAnOEnZUw==
-Date: Wed, 19 Feb 2025 10:23:34 -0800
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, alyssa.milburn@intel.com,
-	scott.d.constable@intel.com, joao@overdrivepizza.com,
-	andrew.cooper3@citrix.com, jpoimboe@kernel.org,
-	jose.marchesi@oracle.com, hjl.tools@gmail.com,
-	ndesaulniers@google.com, samitolvanen@google.com, nathan@kernel.org,
-	ojeda@kernel.org, alexei.starovoitov@gmail.com, mhiramat@kernel.org,
-	jmill@asu.edu
-Subject: Re: [PATCH v3 05/10] x86/ibt: Optimize FineIBT sequence
-Message-ID: <202502191023.4E0BE00CC7@keescook>
-References: <20250219162107.880673196@infradead.org>
- <20250219163514.791951626@infradead.org>
- <202502190959.C414304@keescook>
- <20250219181833.GD23004@noisy.programming.kicks-ass.net>
+	b=FSh8FygMwhSOUfjaGnlTdRKcC6BR/AiyuJB2sUSS5Jf51d7CxQT/TJ+EgfzIQJmVa
+	 UeqGLDJ2Ktx3AHls5U/2lHSRB6Z57WgoGMCGJJTfmEIupnOTqZQmrI4TUfM5HjQFEO
+	 /ILWWahkfZXx19PADct2AiG0bxIOOdlO180Fz6wPp+MqFtlZ9l92jw75PAErXTTYkR
+	 SfxKJw0J0k7fB3jX2yGdzbFLHvmsG4r7pznYn9pxh6qUbPBT23JNjmD0+eRUFefb0e
+	 oeb+o/wWTwRBJZpvNOhze42XXWbBGR3dVnPi0OleQy91t+8q5ha94NuG9BodzukeTs
+	 Xlsnc1eDMTDTiirky4Dal1Z+phevYuBYpW+StIBrELOAfwzAAyFfWkgH/4o1tO23Ud
+	 hlBEXRng82XhOiOI5OI1qxqQzCLuh+FZX0NmLWeiehkujuMPjjGu5hgffG5uwjB4u9
+	 YkhLT9CNipXxBNtc73HsHB7W95UfMWdnPiQ5XEgsBqVnZi3ycfYIFeUAu3UAdYJXqm
+	 rRm1ioN1PMXTZKi1UGKeXVvLovyNVS1ENkV2X+y+AUgT+qv05CFl/b4c6dsqN2ERX7
+	 T4dchjZVbMwaPaxBRxA1D0eSkw3mC3ZOVr9o9nLE2NhbXUCqppt6SkoYAu2qycFvHj
+	 odJ/x9ySPL6jopfW4PJ7GHUA=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1AC5840E0176;
+	Wed, 19 Feb 2025 18:23:23 +0000 (UTC)
+Date: Wed, 19 Feb 2025 19:23:22 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali Shukla <Manali.Shukla@amd.com>
+Subject: Re: [PATCH v11 04/12] x86/mm: get INVLPGB count max from CPUID
+Message-ID: <20250219182322.GBZ7YhmoQw13Welm_d@fat_crate.local>
+References: <20250213161423.449435-1-riel@surriel.com>
+ <20250213161423.449435-5-riel@surriel.com>
+ <20250219115626.GMZ7XG6s-5ftg1XLoZ@fat_crate.local>
+ <b749384b7dea020880057359d06d4e9172c7aaec.camel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250219181833.GD23004@noisy.programming.kicks-ass.net>
+In-Reply-To: <b749384b7dea020880057359d06d4e9172c7aaec.camel@surriel.com>
 
-On Wed, Feb 19, 2025 at 07:18:33PM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 19, 2025 at 10:01:15AM -0800, Kees Cook wrote:
-> > On Wed, Feb 19, 2025 at 05:21:12PM +0100, Peter Zijlstra wrote:
-> > > Scott notes that non-taken branches are faster. Abuse overlapping code
-> > > that traps instead of explicit UD2 instructions.
-> > 
-> > Some kind of commenting is needed in here to explicitly call out the
-> > embedded EA in the "subl" instruction. There is a tiny hint of it in the
-> > disassembly dump of fineibt_preamble_start, but it's very subtle for
-> > someone trying to understand this fresh.
+On Wed, Feb 19, 2025 at 12:52:56PM -0500, Rik van Riel wrote:
+> Should I modify get_cpu_cap() to store
+> c->x86_capabilities[CPUID_8000_0008_EDX] ?
 > 
-> Ah, but you found my clue :-)
-> 
-> How's this?
-> 
-> ---
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -1080,6 +1080,9 @@ early_param("cfi", cfi_parse_cmdline);
->   *  4:   41 81 <ea> 78 56 34 12  sub    $0x12345678, %r10d
->   *  b:   75 f9                   jne    6 <fineibt_preamble_start+0x6>
->   *  d:   0f 1f 00                nopl   (%rax)
-> + *
-> + * Note that the JNE target is the 0xEA byte inside the SUB, this decodes as
-> + * (bad) on x86_64 and raises #UD.
->   */
->  asm(	".pushsection .rodata				\n"
->  	"fineibt_preamble_start:			\n"
+> Currently only the EBX data is stored there,
+> while invlpgb_count_max comes from EDX.
 
-Better! Thank you. :)
+No, you should simply assign invlpgb_count_max there.
 
 -- 
-Kees Cook
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
