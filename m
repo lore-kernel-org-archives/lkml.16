@@ -1,132 +1,87 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from smtp.smtpout.orange.fr (smtp-80.smtpout.orange.fr [80.12.242.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4471D6DA3
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02651D5CFA;
+	Wed, 19 Feb 2025 14:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739974724; cv=none; b=lN3CCV4igAWl3R88lOTz3RtE7Wcv/+QKXKJqaBvw15zIGGSJcCgPo3pI00SsfBfkS4PxReExOXOOG1dgPBAuB7U5Xco4QGwWqW2DOPUAEZFGXxmoHsLj4cePJwWvekpplFVvWY8EO8vykuLFKW1bA6vo4BB6kv9bPC8p4ht2RQk=
+	t=1739974760; cv=none; b=tAVXt5fyaYLFS4GjB5j9xwSxXsjznbpbX3uDLLGjxiv1WIoxHdMykptdLmz70gjxLr+oNU/kw5TiwvVQkmyASx0JIz9SkF0rh3LULIQmKL9PCjp3y0SlSUUXZW1MYTynRTUPBJcAZ/q+3wR5qjaHxcLrdUHBZy0PRk7jEddb04Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739974724; c=relaxed/simple;
-	bh=WNU7L+pRzTncQAtGYNgI5WB88sb+gLbJX7bWqgPEXSg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lUq2QlbmdxGY/RiuRGp5XM3HUlP1WTlCiUTSiq4QruNjOvBwUL2t449GeihY7Z0uaAvHMwzhLL8Dnxsh0xI0dVX2D2xzQirVkWMcEijBdh4wZ5dAEbvhiPW14Boti0HZDS05y/Umqke2ocIPypOdsGrXNxd/0gRtZ9awHpnz3mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i5CfN0vC; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739974760; c=relaxed/simple;
+	bh=xhOka5HrB/5l9DnPGh8I/d8vI/RjpFfgtquNt4qx9kk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GtbUXK1airPflb+BCP3ODWwLgbWTnnq4UqdJ9r1/BuR0s0kihMlBPrkfk0erGOdDKydnuxpZ2dUXUv5tACsS4Ie9mzRrvEG8U88rpB6eymZ5lAjGrHZanCgpDkyxFsyFYY0UnsDv9fadDwvWE/5lY4PgnhUu6DVr5pS2kADfiv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Iy8gBjDX; arc=none smtp.client-ip=80.12.242.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i5CfN0vC"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc2e648da3so10496658a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 06:18:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739974723; x=1740579523; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c65p+W814m9oQCzxxz1KTZzmIhTFpCPYJR6tzp05a6w=;
-        b=i5CfN0vCDiox0/RzZJxLMXveS+/czg/0xrGOQi1pdhyRnQD0VJVK+CpMIChGb/3dQl
-         6zekPsOJNvYp9/7lgiBg+259615fjA26W6Z5GyDgG9pl3Bk/rafE2L5+Mqf9GEcD5WNp
-         n41ADWdfglnxFH5fODmrL4+dEVM5ViXtHOoRy8lF5+2CwLz60j+UN9mc+UuJh/FAmq4s
-         QjnRUQV6atYvEr1Zw4SaTzUKtzrZzJ03a0tKvsjjbTiITNpCY0913pfsUlDYjE509z16
-         s64U6bTDTkXLlftpFJZvOowDWy3McXTb2XbKGf8Je2ml6Iechs7n3GL55mwjzmhaowMc
-         +taQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739974723; x=1740579523;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c65p+W814m9oQCzxxz1KTZzmIhTFpCPYJR6tzp05a6w=;
-        b=fEwnDw5CIXz8149U6PJ9a29v1Hkw/Ta1UzRMpnqvUHL/FENncu4o08o61KPznj8+PE
-         BuXILt+m0iSKP9Ci85AyjmDQgELaBhqNKh9WsjiRMK6kGy3WbDNgEbMnN5bdj76T+5ZV
-         D8qniqhTAOJz0ADA9/xWSTILEBFAUOgvZXu1qc5cj3lwDMzSVp5dl0BEKNyExRkb9rQJ
-         0V5Tmhlt/4C/me5xo/gACQpkbw+r3V+gOIziM1N5L0JOU2jkeFen5qM4LyjPG3DXW59T
-         tfZCBG8UU7CqoVgvuFuZFLjUAz9GIlfAvfW0nLePWwIHqj8fGnLn4jwJojWX5WU5Bj88
-         8vZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuITN122p1nI7Jh2chnWnQmYrv3jGyolE0yUQgSZMf0LHEjtbhOYdXMPbUQhOtOJ8VknYbmQYI03FvYCo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0ryj278O22+hORw0QQigN/lzD92R2FTuSkwpwguJERDThLIlF
-	nBOg5RPDLB3oNpDPQzowVJwcqn6P7Y9hvI1JtA+ci/L1XGFuBkiEKTj5pGSsdXYXwL9Coyq6dgN
-	h3g==
-X-Google-Smtp-Source: AGHT+IHOtmpikt5e7ycBsXGSUnI2H4uciTvMM1w0M1qwsRTZcqLefcR59vHLVwUI8cqO6b/VLcncUsJZhCQ=
-X-Received: from pfbbe20.prod.google.com ([2002:a05:6a00:1f14:b0:730:94db:d304])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3a0a:b0:730:7885:d902
- with SMTP id d2e1a72fcca58-7329dcc1259mr5317325b3a.0.1739974722627; Wed, 19
- Feb 2025 06:18:42 -0800 (PST)
-Date: Wed, 19 Feb 2025 06:18:41 -0800
-In-Reply-To: <Z7U/IlUEcdmxSs90@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Iy8gBjDX"
+Received: from fedora.home ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id kkmNtlwWuP1lPkkmQtAPTZ; Wed, 19 Feb 2025 15:10:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1739974227;
+	bh=/3VqG2Ixu4D/b/fBjdxtIHmnWs32ARGjXTBEBsZkq2k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Iy8gBjDXBxphsv6TAVjALjMVIWnok0wI4Cn6sv230TK+vh1OEefemFDGWNn93Q3dW
+	 mi6c47I+n2eTCn+vM0WVmX0SRdFkR1mbig/p1d4gFvyZ0+l6M0fJHGwlCqE5ZmgKJ6
+	 05lb5Beqs9gRPb9WW8e0Q6+v2f3v2XktqjQQH3DIFLLb5K5CMBpRsil+Aupeg2hsuH
+	 +9wnWbiqgkK3yf0SoktRsrp8WYCnzZZuwaztUh8kmED9XgKDcMCyCr1ozmRj0kUH8l
+	 tZpjHPXWUuFZxo/yydJ/XvXeiwDRCgNaIztMvQcAMWPgu8k4fMGEMS/Bc9fHFYoDGt
+	 eeEiSBiqY2xBg==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 19 Feb 2025 15:10:27 +0100
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH] btrfs: zoned: Remove some code duplication
+Date: Wed, 19 Feb 2025 15:10:21 +0100
+Message-ID: <74072f83285f96aba98add7d24c9f944d22a721b.1739974151.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250217085535.19614-1-yan.y.zhao@intel.com> <20250217085731.19733-1-yan.y.zhao@intel.com>
- <Z7SvbSHe74HUXvz4@google.com> <Z7U/IlUEcdmxSs90@yzhao56-desk.sh.intel.com>
-Message-ID: <Z7XoQU-kEF8osICK@google.com>
-Subject: Re: [PATCH 2/2] KVM: x86/mmu: Bail out kvm_tdp_map_page() when VM dead
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025, Yan Zhao wrote:
-> On Tue, Feb 18, 2025 at 08:03:57AM -0800, Sean Christopherson wrote:
-> > On Mon, Feb 17, 2025, Yan Zhao wrote:
-> > > Bail out of the loop in kvm_tdp_map_page() when a VM is dead. Otherwise,
-> > > kvm_tdp_map_page() may get stuck in the kernel loop when there's only one
-> > > vCPU in the VM (or if the other vCPUs are not executing ioctls), even if
-> > > fatal errors have occurred.
-> > > 
-> > > kvm_tdp_map_page() is called by the ioctl KVM_PRE_FAULT_MEMORY or the TDX
-> > > ioctl KVM_TDX_INIT_MEM_REGION. It loops in the kernel whenever RET_PF_RETRY
-> > > is returned. In the TDP MMU, kvm_tdp_mmu_map() always returns RET_PF_RETRY,
-> > > regardless of the specific error code from tdp_mmu_set_spte_atomic(),
-> > > tdp_mmu_link_sp(), or tdp_mmu_split_huge_page(). While this is acceptable
-> > > in general cases where the only possible error code from these functions is
-> > > -EBUSY, TDX introduces an additional error code, -EIO, due to SEAMCALL
-> > > errors.
-> > > 
-> > > Since this -EIO error is also a fatal error, check for VM dead in the
-> > > kvm_tdp_map_page() to avoid unnecessary retries until a signal is pending.
-> > > 
-> > > The error -EIO is uncommon and has not been observed in real workloads.
-> > > Currently, it is only hypothetically triggered by bypassing the real
-> > > SEAMCALL and faking an error in the SEAMCALL wrapper.
-> > > 
-> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > > ---
-> > >  arch/x86/kvm/mmu/mmu.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > > index 08ed5092c15a..3a8d735939b5 100644
-> > > --- a/arch/x86/kvm/mmu/mmu.c
-> > > +++ b/arch/x86/kvm/mmu/mmu.c
-> > > @@ -4700,6 +4700,10 @@ int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 *level
-> > >  	do {
-> > >  		if (signal_pending(current))
-> > >  			return -EINTR;
-> > > +
-> > > +		if (vcpu->kvm->vm_dead)
-> > 
-> > This needs to be READ_ONCE().  Along those lines, I think I'd prefer
-> Indeed.
-> 
-> > 
-> > 		if (kvm_check_request(KVM_REQ_VM_DEAD, vcpu))
-> > 			return -EIO;
-> > 
-> > or
-> > 
-> > 		if (kvm_check_request(KVM_REQ_VM_DEAD, vcpu)) 
-> > 			return -EIO;
-> Hmm, what's the difference between the two cases?
-> Paste error?
+This code snippet is written twice in row, so remove one of them.
 
-Hrm, yes.  I already forgot what I was thinking, but I believe the second one was
-supposed to be:
+This was apparently added by accident in commit efe28fcf2e47 ("btrfs:
+handle unexpected parent block offset in btrfs_alloc_tree_block()")
 
-		if (kvm_test_request(KVM_REQ_VM_DEAD, vcpu))
-			return -EIO;
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ fs/btrfs/zoned.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-The "check" version should be fine though, i.e. clearing the request is ok,
-because kvm_vcpu_ioctl() will see vcpu->kvm->vm_dead before handling KVM_RUN or
-any other ioctl.
+diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
+index b5b9d16664a8..6c4534316aad 100644
+--- a/fs/btrfs/zoned.c
++++ b/fs/btrfs/zoned.c
+@@ -1663,15 +1663,6 @@ int btrfs_load_block_group_zone_info(struct btrfs_block_group *cache, bool new)
+ 	}
+ 
+ out:
+-	/* Reject non SINGLE data profiles without RST */
+-	if ((map->type & BTRFS_BLOCK_GROUP_DATA) &&
+-	    (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) &&
+-	    !fs_info->stripe_root) {
+-		btrfs_err(fs_info, "zoned: data %s needs raid-stripe-tree",
+-			  btrfs_bg_type_to_raid_name(map->type));
+-		return -EINVAL;
+-	}
+-
+ 	/* Reject non SINGLE data profiles without RST. */
+ 	if ((map->type & BTRFS_BLOCK_GROUP_DATA) &&
+ 	    (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) &&
+-- 
+2.48.1
+
