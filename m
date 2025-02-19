@@ -1,59 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94832198E81
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385441E51F5
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739969632; cv=none; b=MpM959fksr48T9f4ZS3BHGNX0KHfXWklVXwjN2zudGd2OjYWb8B1UP/+mnzCIdvY3aN9kF1uXel2vHiRZqsTvO0cJmj7TwAMojk55cdfriwoeoX50pxjUO4D9B450gYcX3/c9q/U3iyU1Wbg/7CxgN9cTGJE48VAFuyFZPopHGQ=
+	t=1739969673; cv=none; b=mHpj1WQh44purDVnI2QzQbdWsP3xdnRSnRqHC/akHR6gnRMzApUXpAAMh2dsex35mKlgHVjPtbAd79kZ23ghJEsSQqQ0sdz/hPpbdMzcsIV987UhnmWJgOtDp4Od4Ha9+G9jLfIjag2BfhzeV8smPOuJW4IG4ztaGZ9s0e/7KxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739969632; c=relaxed/simple;
-	bh=o1vrbknKIaZg3v8eM8Gd3qfJuaEPRIedyoiJKVEUJBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jlhcMWOOCRrMdox3P94YUBg47O3ovmYA88mPKLMChPNXuvdI8bEhTwei7zNxy3L1KlLRImcPjcfE8uOlvP6+Ix0cxB33xiQxK51/+T+b3/4SaP+9Gek3irgdbOz31bYe7zXGEaXA4GUwj9WMSNJwtthhCAdj8eaRCEr5C2RlT+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtiLZmhK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739969673; c=relaxed/simple;
+	bh=ZbFDSDP6ihWQxeV8n2QAe0hnzHYjfxm2Xc2zWrP5Ae8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=rtSLEAJoyfsAlrhd4WIMXBqdJTCgG6O+UHQu96f2Wb9WlP07DZMg8KfoIiwZNefCKT9yS3VnrB2MkcFZw9ztbcijDxOVWxvAxVkm3Kd9m0Etp5eeBxmc8lQh1uIlPmyQ5Ui9BJMjXX63b3XmNO+ob1CpjIPMkVcMJXOlR05R0A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=kAQ54mvk; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtiLZmhK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF33C4CED1;
-	Wed, 19 Feb 2025 12:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739969632;
-	bh=o1vrbknKIaZg3v8eM8Gd3qfJuaEPRIedyoiJKVEUJBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HtiLZmhKlr528J6r/FF0G8RYi7LKgIXhNe9vWG3+/5yZiJACZa7vf2F0zNPCtnky/
-	 C+ffLJ6OJAEElfxHvdsPNdJNUE0Cn6DNb35GsYQAZb2lFPmCEc4IZtpP7H4h/lhlCO
-	 5A/wrWjLRGcYFqrpwFxX1GtUw6FxsGCVg4fkUAyRAmsOy/jySNBAyIBjbqfHitN72W
-	 QD6NsoADotjMkUcgnmnlyCLgSZj//4BvoZVrBMmjBbbfhpZHI1L5n3p7LcAy3gAAgM
-	 drfauWiSI5bgzU28CA67TuzObyJXoDMFrfk1x8eGxGx7wBf0QuCxnPjIR/+KdpDdo2
-	 xa/gai+p4dHgw==
-Date: Wed, 19 Feb 2025 13:53:47 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: webgeek1234@gmail.com
-Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Ben Skeggs <bskeggs@redhat.com>, dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/nouveau/pmu: Fix gp10b firmware guard
-Message-ID: <Z7XUW6-wT-CXUMgT@polis>
-References: <20250218-nouveau-gm10b-guard-v2-1-a4de71500d48@gmail.com>
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kAQ54mvk"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c0819d8ebcso551314085a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 04:54:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1739969671; x=1740574471; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PGyRcAMv6rGFWkpbew/x+SUNeZB9997kAxXImq7GFIY=;
+        b=kAQ54mvk3YV7wh4UWK++qymxn6HFWzW4rfe5GAIH8dybDntTfGbouiEjR1JQYD8MVi
+         Cnbtm2JfIXvTuyREGk3NZCL7s491+PMevPctSbeNU7BMwYpqTIZ/RqMYtGhaDivxUGCY
+         Eaf8oJ7TGJRo4ZlYT1zUHb2VvnRVr61XJJkHc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739969671; x=1740574471;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PGyRcAMv6rGFWkpbew/x+SUNeZB9997kAxXImq7GFIY=;
+        b=M/PxBZcor4G/Pxv7zzGJ9Y4Ih1A0cUFjHL/W9zegZ7KYO80P9lJi+46bHJIKZYorb+
+         joOdB5y0IyMk9q06FzCA0zmEamEtu9OVLuY2SqzUCcg/xmMJqODgFAZjdm4zrQboW1oT
+         imFAvpOF8BlJDaageojwgUhcsbhRY26XAylhu49M9iG8CWCNqZ18LUUM5ZOKfPRPF25E
+         u42ea2JZh9FagUvdRGVZLxi5Vk5aOxsndMhTkVf4w3kyN9c1cpMhy2r4v6zDwarX6gdU
+         g+utQcg3Y3XMiQxceZspyO2vlAO8vyDtdh82Sd5JpkgIDYRcPmfXAhX5bcKcB8+XpobM
+         8yFQ==
+X-Gm-Message-State: AOJu0YxpKwLN3mceHpoSZy+qJgb9JygyGARf/QrM/jxOsk8vJT1RXgY3
+	oqUnLlTbNpDoewmgftPov1BxIX8l5q5EkyKkJiaV83w+dkgygisFBj8k4LGi72n6SAWTBRMnny4
+	w
+X-Gm-Gg: ASbGncsxGgEVzQ5shGKWBwvTO4iw1gQXbS3bMnARDZYO0ppHfeUdIOvy0dYKeyB8oaj
+	/d5oJSBGddhJ7Ke6B7Q8rcxDj4rdEBfP1eAl5l0sbxETayAnwuFDWy9HimFtKkDdiEi1Tnbazxm
+	sAcRnjCnGLu7HLbfPsK8iG5AF9DrmigBWIhX7fZ2Iohaj6ajA4Qw93o4sP2JFNvh1GN/e7aN8uc
+	A7mJTLh4SU2yuNKSdhMIOZlLYFaC3/DkMqkTvDuuqAUi7AHZ8bQH3P0pTUzodEPkt5AC18Ak3gi
+	kxjHCRS6WutRsa4pHQYX0XIDqP7tv9odMRNvF/91VWeGeOEjataArX2T
+X-Google-Smtp-Source: AGHT+IGSDagjmy0sJ8WQxqSlY0UadiPBt+TBfV2Z1f8LHGSNN5HZAWiTioBZhRnXhlGmK48JoOI1fQ==
+X-Received: by 2002:a05:620a:288b:b0:7c0:7a41:667e with SMTP id af79cd13be357-7c08aaa8aabmr2374004585a.44.1739969670662;
+        Wed, 19 Feb 2025 04:54:30 -0800 (PST)
+Received: from joelbox2.. (c-73-251-172-144.hsd1.va.comcast.net. [73.251.172.144])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d7a436esm74469496d6.62.2025.02.19.04.54.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 04:54:30 -0800 (PST)
+From: Joel Fernandes <joel@joelfernandes.org>
+X-Google-Original-From: Joel Fernandes <joelagnelf@nvidia.com>
+To: linux-kernel@vger.kernel.org,
+	paulmck@kernel.org,
+	boqun.feng@gmail.com
+Cc: rcu@vger.kernel.org,
+	Joel Fernandes <joelagnelf@nvidia.com>
+Subject: [PATCH] MAINTAINERS: Update Joel's email address
+Date: Wed, 19 Feb 2025 07:54:24 -0500
+Message-Id: <20250219125425.1175676-1-joelagnelf@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218-nouveau-gm10b-guard-v2-1-a4de71500d48@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 03:28:03AM -0600, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
-> 
-> Most kernel configs enable multiple Tegra SoC generations, causing this
-> typo to go unnoticed. But in the case where a kernel config is strictly
-> for Tegra186, this is a problem.
-> 
-> Fixes: 989863d7cbe5 ("drm/nouveau/pmu: select implementation based on available firmware")
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+Update MAINTAINERS file to reflect changes to Joel's email address for
+upstream work.
 
-Applied to drm-misc-fixes, thanks!
+Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+---
+ MAINTAINERS | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6ff7ba6cc270..97aba6b60158 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1608,7 +1608,7 @@ M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ M:	Arve Hjønnevåg <arve@android.com>
+ M:	Todd Kjos <tkjos@android.com>
+ M:	Martijn Coenen <maco@android.com>
+-M:	Joel Fernandes <joel@joelfernandes.org>
++M:	Joel Fernandes <joelagnelf@nvidia.com>
+ M:	Christian Brauner <christian@brauner.io>
+ M:	Carlos Llamas <cmllamas@google.com>
+ M:	Suren Baghdasaryan <surenb@google.com>
+@@ -13296,7 +13296,7 @@ M:	Luc Maranget <luc.maranget@inria.fr>
+ M:	"Paul E. McKenney" <paulmck@kernel.org>
+ R:	Akira Yokosawa <akiyks@gmail.com>
+ R:	Daniel Lustig <dlustig@nvidia.com>
+-R:	Joel Fernandes <joel@joelfernandes.org>
++R:	Joel Fernandes <joelagnelf@nvidia.com>
+ L:	linux-kernel@vger.kernel.org
+ L:	linux-arch@vger.kernel.org
+ L:	lkmm@lists.linux.dev
+@@ -19671,7 +19671,7 @@ READ-COPY UPDATE (RCU)
+ M:	"Paul E. McKenney" <paulmck@kernel.org>
+ M:	Frederic Weisbecker <frederic@kernel.org> (kernel/rcu/tree_nocb.h)
+ M:	Neeraj Upadhyay <neeraj.upadhyay@kernel.org> (kernel/rcu/tasks.h)
+-M:	Joel Fernandes <joel@joelfernandes.org>
++M:	Joel Fernandes <joelagnelf@nvidia.com>
+ M:	Josh Triplett <josh@joshtriplett.org>
+ M:	Boqun Feng <boqun.feng@gmail.com>
+ M:	Uladzislau Rezki <urezki@gmail.com>
+-- 
+2.34.1
+
