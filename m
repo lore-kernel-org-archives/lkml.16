@@ -1,303 +1,172 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDFF1ACEB0
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5911BD9C5
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739951242; cv=none; b=swM1N44pOXFtitzJkhWa8tk49bHyA0joLbRc87hSdzr7n8EiuW2f9VQzC009/++omR1ia6Csvyi7BZ8APM3A84gC7L2QbghYu3pvy79CnPdk8FQet9/x62NoDr37EAgdU9GiYczYWFRTlFEXF8b8AvId/vSLM0oJgetnzjZCoLU=
+	t=1739951362; cv=none; b=JduKfCXP81CN72sLwXiAFOhyFn46m3ig33bxzgZB2RC8zhnKls8HtlQWQKoPDzs/SgRd/KbFHRB7iYivdpymprcKb7Q9k2x1venhVRglx9DA7THcKgQj7isZhRAZN+FoOK0mWLQMA3CcvwVE7a4C+ifNN3v+QnX7YQNIh+T8RYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739951242; c=relaxed/simple;
-	bh=fT7kwX4eGXG+3sHNKABOBy/KX9YbT9dcpVfqnw8cQkw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=erg0t4e/MnkNmseVXEDpMo2Yo7gM2p/rDdvwqAP3hE5Juu7I4pYWXDqiv9Jsd79XpPS6rlNScjiftPstMkaNm3lwrBIQ9MW4oYnaqd0DbuzdCIgMsWJnx6TkGPZHHGWhaVSgmJGKY5v2bfP/jjzfDfH8hOdEFvMf2Y297QDFUj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=fail smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dBDFgRkv; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739951362; c=relaxed/simple;
+	bh=9W51922lZcRv+WfFDa8r/ahBXeZgRii7HNNotr9H40A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AoZc86LntMyaQyhOfJ6Rd7owmkFjRi9TsWlRU65HhBPtizTRIfMj4xnwM5RpM0d2KkTD+jpiatrB10jA6kjT5Ere61Ge1RpB3f31ybB9YH/sNz0zDvtB7V6nQLmtX287qGUmysKqTYX5Sw6EMFozXaJ0PJLI7frykeb2aU/xtqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GXsCk5vt; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dBDFgRkv"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb7520028bso510995366b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 23:47:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GXsCk5vt"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-220bfdfb3f4so129406215ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 23:49:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739951237; x=1740556037; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nWD0f94cZllFMbpjY4gBUBZLZNGtagHiQ/H3PnmJ9Rc=;
-        b=dBDFgRkv8zRXS8p1vGZS/+kQlpIHEcYDyMp2y06mYQjuSViYro6Yp9AyFTyL/h8X4J
-         DW3BsEFRCzO0r2u8napyn5uD7VBx0SQDntwNIPVBZLTq/CzNTMEiF8BSoiJA1jnDIiGV
-         B/V7na6LQ/zIO4yOF7bA98mTs6fEvKndxrvp3jvLDuI0mIUO1hPkeOBO/tGcfgs0fDiI
-         +S73b2woxkviPQM8W0mBIbqyDnLIA7gPZkFlDj0fU1UMZx0eVqdyVEoezRts4fR17SvN
-         kodWbpotWb5ZYOrOnzCMqDmOSaTmggC1zC21tl/PX29T5A3niCTNj5FpV4E3DJKOCy3h
-         Jt+w==
+        d=linaro.org; s=google; t=1739951360; x=1740556160; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9sOSWz9/b/A8wxbS7QG6N98UoPE8+0el0tVSZ986HeU=;
+        b=GXsCk5vtZXWbfyUxd6XjAq2xuH65zsHjsXCvFr1C5CT3/RIJqmJKYJCWm+/bS1s1Pq
+         ZV0uEGGiXETFK06QHk1SNbOPVZbmUTeG9Vt5VD9biKBZUtCPcx/E9p/w1ADwtUFHUFOv
+         mDOmmc1V0hGySc9PydoflYRDMr5GydahqeXgECmJwSLRR1+A0J5T23y19mWC2GMjc1XD
+         9PhTzb0hTz9fd52R54WraenDme75YJQcICBWAlr7l1GhqeGXqwkIbfp+0NzrrvBTQX1B
+         wL3jo/e+1fCpGBf6/ecccVke7EHG1VSVL4eT5afGbwB8RV/m559dMDTqWXU6uQrL826B
+         JScQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739951237; x=1740556037;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nWD0f94cZllFMbpjY4gBUBZLZNGtagHiQ/H3PnmJ9Rc=;
-        b=OfeNy22aJbrNGQQgeTq6dJLnWFylfYOA2N0uKnjkK+8sZCQBMc9VlcZI6iidMPy9Ti
-         bs16rnZt1++pqHx2Tqt4OKq3ONDerRA2PM7YVhfjqr19tJ8a2lSKKe10h9B7EadH+XGz
-         5wrrr+xJcwiKZXJSsnF12Ggi41arRqiVf4FD6kDbnuqCkufRtedauY5d5HE7kcX6500q
-         ZAylWsYQMLD1UKH4LawcQDgJQTChoZ+WjpasI4bJkUeJGZWI7nZHOT7/XrtJy3Tt0I18
-         pdYGI5KbGQQIsMECWECBUNnMrX6DV639PaqxZv7LxYteA8HcRNqBVRXxSKf76CUVO1Xh
-         L05Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWx6c/ILA8ulEdQ5wqS1UakDtCrA4eXHWpTBQh+OHFCNOyIg69UiQ0jFMYXQKetm8qODUBcgYOl1RQw7RY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzqcXtwgqG1RoiPaqsFYRsosrvZNvUmJiXVsX3bXBvJVGBtKhk
-	NyzU5nyhyjlEhB+OCiRKm0ubENeDpg+XKyXLEIXo5nFB7Ov0eGId3LqbL/Lq49tSbJId9YVAzqg
-	UZR8Ge/GsRmbrfl669fHkZgp7xDyBKAY9Pyg9Qw==
-X-Gm-Gg: ASbGnctgzZcDyhgWLxGXzF155NTh0teXHv7xqVsjeEsqhJnddbBKIiX85fJc1O9Usj+
-	XQQ1ARRfZy9Ec7PybSXFJ3PuC7OwSDAu/hcVbgog2I2yyt6rBo1kvOhhvXmjgcMrA2zjK/tQ=
-X-Google-Smtp-Source: AGHT+IFrtJ6niuoc1CE7e90rBaks4suqrJYB9tUhpBJRCnJrO54FeJLf7jhz5ZDNfBIv3dA2VbHBX/7kFwAEMYY+V9s=
-X-Received: by 2002:a17:907:7b88:b0:abb:514d:1f39 with SMTP id
- a640c23a62f3a-abbcceba8cbmr211287366b.23.1739951237215; Tue, 18 Feb 2025
- 23:47:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739951360; x=1740556160;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9sOSWz9/b/A8wxbS7QG6N98UoPE8+0el0tVSZ986HeU=;
+        b=DQkeh32TyEUDhrAc/K2OY1Xu6jrFjgfPGXDfqaqBkxJgMrl8wLLSxWpVr7/cqp69wF
+         G2iT6Y0UcBsgHHU9duaiI1uE4531BVqEfMkREp5+ZfGe5Q67IyichqXgRLxIW+Plgs/1
+         xstEkoCxxM6toJWFayk3JvCZpw3GOf0oFwoziP4nB59ZIOtIeuvJGPhjChZQ9Yg9VyKy
+         6qhHlSPJpSu/m4/9fRjQYKaFtq72CestPhbVysGoQts+fylDP5i5VFwnoEnmopALktPL
+         UO8L/KPOlDCsaUn1y9Y3GcHs8G9AAzT9eL6NzZDspjytaCjcueS/A5lJpZKx9/W6wI+D
+         lv+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUdAd/VyfZWokX2X/K/wRYbe7TXQMpCEP3jdE2+hKUWJEoB9DdT0EAo8VM5QMENHG521F6yfPZHkd6Ipio=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxetxAzCFaBxtqQb8/u2dr3OMd5Y/EcuB4/HNtlQv8jDICFQWp
+	RR6v2RWQqzi99lF1i2rATUXy9OkBXZZP8mnYfXqhin9GWChlT+TbF6MQo0lo2w==
+X-Gm-Gg: ASbGncsUYIuQWJLiAlyYUvSQr8CqYuQIWHgJfWtCL3b4jTCCzrSI4QI+PjgRDubr2jt
+	htYZpHYbivnLxhiNkCsy1nW3bt0iT5ZNKxx2+pPTCyvC9Ijyh1DAw21CAJBJMN9foKa6dpVJhAO
+	HOxoPAqiESFFuXHVWXO9EPrF2Vfh/XHZopvHFpFxkN/Z1bfeBERByAGYGqsFCRnDXDjtg+sw+xT
+	IdDGYsJPConR6cbVMwOwmNv8ZNqEFaDYtct6L4V69ulJzf64dAwQYVVB44LwBpspa7voe13Z37I
+	LPB22wzjEqWSPdKJEE+TjxgTupU=
+X-Google-Smtp-Source: AGHT+IFoGyzNx30oj5QPZ8kXyITKzcMTpTQ6sfoOeGpNaqW8WOSxc+hSdJl3P3R9gIDdbaeQkXzR7w==
+X-Received: by 2002:a05:6a21:103:b0:1ee:c7c8:c9e with SMTP id adf61e73a8af0-1eed4e5240fmr4788072637.2.1739951360379;
+        Tue, 18 Feb 2025 23:49:20 -0800 (PST)
+Received: from thinkpad ([120.56.197.245])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-732425467d1sm11672713b3a.12.2025.02.18.23.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 23:49:20 -0800 (PST)
+Date: Wed, 19 Feb 2025 13:19:13 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Shradha Todi <shradha.t@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/4] PCI: dwc: Add PTM sysfs support
+Message-ID: <20250219074913.e4rtyup3m3yv66po@thinkpad>
+References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
+ <Z7Syf2LXEuKFToV4@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208073829.1176287-1-zhenghaoran154@gmail.com>
- <CAL3q7H5JgQkFavwrjOsvxDt9mMjVUK_nPOha-WYU-muLW=Orug@mail.gmail.com>
- <CAPjX3FeaL2+oRz81OEkLKjWwr1XuOOa3t-kgCrc51we-C-GVng@mail.gmail.com>
- <CAL3q7H7iFQ0pS+TB8NNj5CDA=c1cmurSiGsuXDn61O6A5=mBSQ@mail.gmail.com>
- <CAPjX3Feo9=hkptSxOMREKVckbvhfbmjHAWYBL2sBryDcVzp0NA@mail.gmail.com> <CAL3q7H7eSw0gg=JQwiEe9_pSEqcxugpgOWJDdv45UHrZbsFhzw@mail.gmail.com>
-In-Reply-To: <CAL3q7H7eSw0gg=JQwiEe9_pSEqcxugpgOWJDdv45UHrZbsFhzw@mail.gmail.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Wed, 19 Feb 2025 08:47:06 +0100
-X-Gm-Features: AWEUYZlTvJzF87Vsea8SJmvuWa0eZCZSt6aWltZ72LXqyTQxuc8bjJ5FznL8DP0
-Message-ID: <CAPjX3Fe2nACp=Zr5X+fzsB9GyOy2jfbew_KQWPib53oEzzZLVw@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: fix data race when accessing the block_group's
- used field
-To: Filipe Manana <fdmanana@kernel.org>
-Cc: Hao-ran Zheng <zhenghaoran154@gmail.com>, clm@fb.com, josef@toxicpanda.com, 
-	dsterba@suse.com, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	baijiaju1990@gmail.com, 21371365@buaa.edu.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7Syf2LXEuKFToV4@lizhi-Precision-Tower-5810>
 
-On Tue, 18 Feb 2025 at 17:29, Filipe Manana <fdmanana@kernel.org> wrote:
->
-> On Tue, Feb 18, 2025 at 4:14=E2=80=AFPM Daniel Vacek <neelx@suse.com> wro=
-te:
+On Tue, Feb 18, 2025 at 11:17:03AM -0500, Frank Li wrote:
+> On Tue, Feb 18, 2025 at 08:06:39PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > Hi,
 > >
-> > On Tue, 18 Feb 2025 at 11:19, Filipe Manana <fdmanana@kernel.org> wrote=
-:
-> > >
-> > > On Tue, Feb 18, 2025 at 8:08=E2=80=AFAM Daniel Vacek <neelx@suse.com>=
- wrote:
-> > > >
-> > > > On Mon, 10 Feb 2025 at 12:11, Filipe Manana <fdmanana@kernel.org> w=
-rote:
-> > > > >
-> > > > > On Sat, Feb 8, 2025 at 7:38=E2=80=AFAM Hao-ran Zheng <zhenghaoran=
-154@gmail.com> wrote:
-> > > > > >
-> > > > > > A data race may occur when the function `btrfs_discard_queue_wo=
-rk()`
-> > > > > > and the function `btrfs_update_block_group()` is executed concu=
-rrently.
-> > > > > > Specifically, when the `btrfs_update_block_group()` function is=
- executed
-> > > > > > to lines `cache->used =3D old_val;`, and `btrfs_discard_queue_w=
-ork()`
-> > > > > > is accessing `if(block_group->used =3D=3D 0)` will appear with =
-data race,
-> > > > > > which may cause block_group to be placed unexpectedly in discar=
-d_list or
-> > > > > > discard_unused_list. The specific function call stack is as fol=
-lows:
-> > > > > >
-> > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DDATA_RACE=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> > > > > >  btrfs_discard_queue_work+0x245/0x500 [btrfs]
-> > > > > >  __btrfs_add_free_space+0x3066/0x32f0 [btrfs]
-> > > > > >  btrfs_add_free_space+0x19a/0x200 [btrfs]
-> > > > > >  unpin_extent_range+0x847/0x2120 [btrfs]
-> > > > > >  btrfs_finish_extent_commit+0x9a3/0x1840 [btrfs]
-> > > > > >  btrfs_commit_transaction+0x5f65/0xc0f0 [btrfs]
-> > > > > >  transaction_kthread+0x764/0xc20 [btrfs]
-> > > > > >  kthread+0x292/0x330
-> > > > > >  ret_from_fork+0x4d/0x80
-> > > > > >  ret_from_fork_asm+0x1a/0x30
-> > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DOTHER_INFO=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> > > > > >  btrfs_update_block_group+0xa9d/0x2430 [btrfs]
-> > > > > >  __btrfs_free_extent+0x4f69/0x9920 [btrfs]
-> > > > > >  __btrfs_run_delayed_refs+0x290e/0xd7d0 [btrfs]
-> > > > > >  btrfs_run_delayed_refs+0x317/0x770 [btrfs]
-> > > > > >  flush_space+0x388/0x1440 [btrfs]
-> > > > > >  btrfs_preempt_reclaim_metadata_space+0xd65/0x14c0 [btrfs]
-> > > > > >  process_scheduled_works+0x716/0xf10
-> > > > > >  worker_thread+0xb6a/0x1190
-> > > > > >  kthread+0x292/0x330
-> > > > > >  ret_from_fork+0x4d/0x80
-> > > > > >  ret_from_fork_asm+0x1a/0x30
-> > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > >
-> > > > > > Although the `block_group->used` was checked again in the use o=
-f the
-> > > > > > `peek_discard_list` function, considering that `block_group->us=
-ed` is
-> > > > > > a 64-bit variable, we still think that the data race here is an
-> > > > > > unexpected behavior. It is recommended to add `READ_ONCE` and
-> > > > > > `WRITE_ONCE` to read and write.
-> > > > > >
-> > > > > > Signed-off-by: Hao-ran Zheng <zhenghaoran154@gmail.com>
-> > > > > > ---
-> > > > > >  fs/btrfs/block-group.c | 4 ++--
-> > > > > >  fs/btrfs/discard.c     | 2 +-
-> > > > > >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > > > > >
-> > > > > > diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-> > > > > > index c0a8f7d92acc..c681b97f6835 100644
-> > > > > > --- a/fs/btrfs/block-group.c
-> > > > > > +++ b/fs/btrfs/block-group.c
-> > > > > > @@ -3678,7 +3678,7 @@ int btrfs_update_block_group(struct btrfs=
-_trans_handle *trans,
-> > > > > >         old_val =3D cache->used;
-> > > > > >         if (alloc) {
-> > > > > >                 old_val +=3D num_bytes;
-> > > > > > -               cache->used =3D old_val;
-> > > > > > +               WRITE_ONCE(cache->used, old_val);
-> > > > > >                 cache->reserved -=3D num_bytes;
-> > > > > >                 cache->reclaim_mark =3D 0;
-> > > > > >                 space_info->bytes_reserved -=3D num_bytes;
-> > > > > > @@ -3690,7 +3690,7 @@ int btrfs_update_block_group(struct btrfs=
-_trans_handle *trans,
-> > > > > >                 spin_unlock(&space_info->lock);
-> > > > > >         } else {
-> > > > > >                 old_val -=3D num_bytes;
-> > > > > > -               cache->used =3D old_val;
-> > > > > > +               WRITE_ONCE(cache->used, old_val);
-> > > > > >                 cache->pinned +=3D num_bytes;
-> > > > > >                 btrfs_space_info_update_bytes_pinned(space_info=
-, num_bytes);
-> > > > > >                 space_info->bytes_used -=3D num_bytes;
-> > > > > > diff --git a/fs/btrfs/discard.c b/fs/btrfs/discard.c
-> > > > > > index e815d165cccc..71c57b571d50 100644
-> > > > > > --- a/fs/btrfs/discard.c
-> > > > > > +++ b/fs/btrfs/discard.c
-> > > > > > @@ -363,7 +363,7 @@ void btrfs_discard_queue_work(struct btrfs_=
-discard_ctl *discard_ctl,
-> > > > > >         if (!block_group || !btrfs_test_opt(block_group->fs_inf=
-o, DISCARD_ASYNC))
-> > > > > >                 return;
-> > > > > >
-> > > > > > -       if (block_group->used =3D=3D 0)
-> > > > > > +       if (READ_ONCE(block_group->used) =3D=3D 0)
-> > > > >
-> > > > > There are at least 3 more places in discard.c where we access ->u=
-sed
-> > > > > without being under the protection of the block group's spinlock.
-> > > > > So let's fix this for all places and not just a single one...
-> > > > >
-> > > > > Also, this is quite ugly to spread READ_ONCE/WRITE_ONCE all over =
-the place.
-> > > > > What we typically do in btrfs is to add helpers that hide them, s=
-ee
-> > > > > block-rsv.h for example.
-> > > > >
-> > > > > Also, I don't think we need READ_ONCE/WRITE_ONCE.
-> > > > > We could use data_race(), though I think that could be subject to
-> > > > > load/store tearing, or just take the lock.
-> > > > > So adding a helper like this to block-group.h:
-> > > > >
-> > > > > static inline u64 btrfs_block_group_used(struct btrfs_block_group=
- *bg)
-> > > > > {
-> > > > >    u64 ret;
-> > > > >
-> > > > >    spin_lock(&bg->lock);
-> > > > >    ret =3D bg->used;
-> > > > >    spin_unlock(&bg->lock);
-> > > > >
-> > > > >     return ret;
-> > > > > }
-> > > >
-> > > > Would memory barriers be sufficient here? Taking a lock just for
-> > > > reading one member seems excessive...
-> > >
-> > > Do you think there's heavy contention on this lock?
+> > This series adds sysfs support for PCIe PTM in Synopsys Designware IPs.
 > >
-> > This is not about contention. Spin lock should just never be used this
-> > way. Or any lock actually. The critical section only contains a single
-> > fetch operation which does not justify using a lock.
-> > Hence the only guarantee such lock usage provides are the implicit
-> > memory barriers (from which maybe only one of them is really needed
-> > depending on the context where this helper is going to be used).
+> > First patch moves the common DWC struct definitions (dwc_pcie_vsec_id) to
+> > include/pci/pcie-dwc.h from dwc-pcie-pmu driver. This allows reusing the same
+> > definitions in pcie-designware-sysfs driver introduced in this series and also
+> > in the debugfs series by Shradha [1].
 > >
-> > Simply put, the lock is degraded into a memory barrier this way. So
-> > why not just use the barriers in the first place if only ordering
-> > guarantees are required? It only makes sense.
->
-> As said earlier, it's a lot easier to reason about lock() and unlock()
-> calls rather than spreading memory barriers in the write and read
-> sides.
-> Historically he had several mistakes with barriers, they're simply not
-> as straightforward to reason as locks.
->
-> Plus spreading the barriers in the read and write sides makes the code
-> not so easy to read, not to mention in case of any new sites updating
-> the member, we'll have to not forget adding a barrier.
->
-> It's just easier to reason and maintain.
->
->
+> > Second patch adds support for searching the Vendor Specific Extended Capability
+> > (VSEC) in the pcie-designware driver. This patch was originally based on
+> > Shradha's patch [2], but modified to accept 'struct dwc_pcie_vsec_id' to avoid
+> > iterating through the vsec_ids in the driver.
 > >
-> > > Usually I prefer to go the simplest way, and using locks is a lot mor=
-e
-> > > straightforward and easier to understand than memory barriers.
+> > Third patch adds the actual sysfs support for PTM in a new file
+> > pcie-designware-sysfs.c built along with pcie-designware.c.
 > >
-> > How so? Locks provide the same memory barriers implicitly.
->
-> I'm not saying they don't.
-> I'm talking about easier code to read and maintain.
->
+> > Finally, fourth patch masks the PTM_UPDATING interrupt in the pcie-qcom-ep
+> > driver to avoid processing the interrupt for each PTM context update.
 > >
-> > > Unless it's clear there's an observable performance penalty, keeping
-> > > it simple is better.
+> > Testing
+> > =======
 > >
-> > Exactly. Here is where our opinions differ. For me 'simple' means
-> > without useless locking.
-> > I mean especially with locks they should only be used when absolutely
-> > necessary. In a sense of 'use the right tool for the job'. There are
-> > more lightweight tools possible in this context. Locks provide
-> > additional guarantees which are not needed here.
+> > This series is tested on Qcom SA8775p Ride Mx platform where one SA8775p acts as
+> > RC and another as EP with following instructions:
 > >
-> > On the other hand I understand that using a lock is a 'better safe
-> > than sorry' approach which should also work. Just keep in mind that
-> > spinlock may sleep on RT.
->
-> It's not about a better safe than sorry, but easier to read, reason
-> and maintain.
+> > RC
+> > --
+> >
+> > $ echo 1 > /sys/devices/platform/1c10000.pcie/dwc/ptm/ptm_context_valid
+> >
+> > EP
+> > --
+> >
+> > $ echo auto > /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_context_update
+> >
+> > $ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_local_clock
+> > 159612570424
+> >
+> > $ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_master_clock
+> > 159609466232
+> >
+> > $ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_t1
+> > 159609466112
+> >
+> > $ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_t4
+> > 159609466518
+> 
+> 
+> I am not sure what real means by only show these number.
 
-I see. Understood. I guess I'm just too micro-optimizing where it's
-not really needed and only adds complexity in a way.
+These values are supposed to be consumed by the userspace applications to make
+sure that whether the PTM feature is working as expected or not. For instance,
+once the PTM dialog is established with PTM root, PTM requester's local clock
+should be synchronized with PTM master clock. And these can be verified using
+these sysfs attributes.
 
-> >
-> > > data_race() may be ok here, at least for one of the unprotected
-> > > accesses it's fine, but would have to analyse the other 3 cases.
-> >
-> > That's exactly my thoughts. Maybe not even the barriers are needed
-> > after all. This needs to be checked on a per-case basis.
-> >
-> > > >
-> > > > > And then use btrfs_bock_group_used() everywhere in discard.c wher=
-e we
-> > > > > aren't holding a block group's lock.
-> > > > >
-> > > > > Thanks.
-> > > > >
-> > > > >
-> > > > > >                 add_to_discard_unused_list(discard_ctl, block_g=
-roup);
-> > > > > >         else
-> > > > > >                 add_to_discard_list(discard_ctl, block_group);
-> > > > > > --
-> > > > > > 2.34.1
-> > > > > >
-> > > > > >
-> > > > >
+> It is quite
+> similar to network 1588, ptp. There were already linux-ptp
+> https://www.kernel.org/doc/html/v5.5/driver-api/ptp.html
+> 
+
+PTP and PTM are different even though both are meant to synchronize times across
+devices. PTM is limited to PCIe hierarchy and the actual synchronization is
+performed at the hw level, limited to PCIe clock source (core_clk in DWC terms).
+
+> Can we use similar method to sync local timer to master? I think it is real
+> purpuse of PTM.
+> 
+
+Actual synchronization happens in the hardware itself as I explained above.
+Software is not intended to do anything (if not using any external master clock
+source) to synchronize the clocks.
+
+I think you are referring to synchronizing the global clock source (the one used
+by the kernel) of the endpoint based on PTM. But I don't think that is what
+intended by this feature.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
