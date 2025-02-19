@@ -1,362 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D7B1F4E48;
-	Wed, 19 Feb 2025 15:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDDA381AF;
+	Wed, 19 Feb 2025 15:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978320; cv=none; b=EHwMr4sKFdBVhaZlf+KpQcW89arL3C2ZudosYeF4v3UV9awpHF3L2P6RwPdR4GrTnrJgo4tnlwcEUI3H3m+HHoRY1KWC8vaT4A9AhHkD703cSg/NS0f72bjWpAZ+5fkwrHgKfw7thBbKx/KxWMLRBNGvAKHmhfM86ODBIxdoHvs=
+	t=1739978321; cv=none; b=ZqnBSpmBq6FVhF6ZQE/Oi+3wWHU78snefKvXtiMt4FrsWHldQCAW3A0eaJb2umEemewMPyyBjbB2OxNbgE9H823sexBJN3/qUxOrTbtTcdKxHEfRsVznZQ2aWdG/xTwf2gu0pSpTUjzBBHK5anFmip/ro/nAEv+MgTKXb9GcEZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978320; c=relaxed/simple;
-	bh=XxE5ECmmF2MOFgenOCH2A3ygcxqw9TvCcp8NthW6ogg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=QqQ/NXeu4B5q3brrnigmBfnqK3h9t3NBn2HKMYOSR+6/Edg1CoCcy1JK2hEemfHurycv9o7l5G+Y5CqtKTqv5ciqmoJpEsF5XZJpRESaocOeXjts9LjFpthBlD7DtqnKXq80CLNMUMqTg/33Fs8401vf/NiidDxY7N1NHGoNACk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F47FC4CEF3;
-	Wed, 19 Feb 2025 15:18:40 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tklqq-00000004baH-2cVS;
-	Wed, 19 Feb 2025 10:19:04 -0500
-Message-ID: <20250219151904.476350486@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 19 Feb 2025 10:18:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- bpf <bpf@vger.kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>,
- Zheng Yejian <zhengyejian1@huawei.com>,
- Martin  Kelly <martin.kelly@crowdstrike.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Josh Poimboeuf <jpoimboe@redhat.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [for-next][PATCH 4/6] scripts/sorttable: Zero out weak functions in mcount_loc table
-References: <20250219151815.734900568@goodmis.org>
+	s=arc-20240116; t=1739978321; c=relaxed/simple;
+	bh=N+uSn/8nCGKQ8qivT7nk7rE+toQsBlzw6bxxMBCQAEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ivmJND79OU3PZv6Y7+6foXbaDeVCC+obdhIZIludbS8b89O7bPYkR+k3CQqqhaj9s5/tBtb2eqwokQfNJAg5tVADRxgpAUnWAg3loXanwXWfbUu1yhCZp414WBOuuDSDxI/nk0q3J7t045CdNjMIYLUY465OPGwu8/9Yp0jD7g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=epKGMJ56; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="epKGMJ56"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JFH1Qm022119;
+	Wed, 19 Feb 2025 09:18:17 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=jkjcggGWrNZ/iXb/3ceRHdKS8e8cSlNrQV1UXrkbLsU=; b=
+	epKGMJ56EdvKQBxs8RLWrgS8qgnntWA21WqLcv3U8snEH76/+UDGzrfP+ZnfIqTy
+	2Ajx0E766SEr3HarEy++CeZObl/LBPFToE/MnHVoruf4hb+qMfggg+06IAFvmzP6
+	lw9QscYqSaPHo5lVyFY83kDpXSuuAVAgy5UnqM1gPGuoke/V0OSuVmlLuG3l0tLs
+	E1uVx/vQH9ffEMjFOAs3ena98mD+NczNLYtGc+2WO1Ll9NeMZztDz1Nek2w9/8wo
+	l4gz2gma0o/dchb8LrAK5vnSoZHBZJPBu8GrSBNa6l7qf6msjMqISRIVLgx7VgnG
+	FXTb3NQaMTFCIil4DmJ4ow==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44vyywt38b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 09:18:17 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Feb
+ 2025 15:18:14 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Wed, 19 Feb 2025 15:18:14 +0000
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id A0F6182025A;
+	Wed, 19 Feb 2025 15:18:14 +0000 (UTC)
+Message-ID: <695e7853-dc6a-41f6-85c1-47aa78085048@opensource.cirrus.com>
+Date: Wed, 19 Feb 2025 15:18:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] firmware: cs_dsp: test_control_parse: null-terminate test
+ strings
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+        "Mark
+ Brown" <broonie@kernel.org>
+CC: <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: IQxgJ7Pe1iqm0QDtCdtXDw9Yen8MUrmi
+X-Proofpoint-ORIG-GUID: IQxgJ7Pe1iqm0QDtCdtXDw9Yen8MUrmi
+X-Authority-Analysis: v=2.4 cv=WOSFXmsR c=1 sm=1 tr=0 ts=67b5f639 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=w1d2syhTAAAA:8 a=5WolietwVMrf4Qt7vzEA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-Spam-Reason: safe
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 11/02/2025 3:00 pm, Thomas Weißschuh wrote:
+> The char pointers in 'struct cs_dsp_mock_coeff_def' are expected to
+> point to C strings. They need to be terminated by a null byte.
+> However the code does not allocate that trailing null byte and only
+> works if by chance the allocation is followed by such a null byte.
+> 
+> Refactor the repeated string allocation logic into a new helper which
+> makes sure the terminating null is always present.
+> It also makes the code more readable.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> Fixes: 83baecd92e7c ("firmware: cs_dsp: Add KUnit testing of control parsing")
+> Cc: stable@vger.kernel.org
+> ---
+>   .../cirrus/test/cs_dsp_test_control_parse.c        | 51 ++++++++--------------
+>   1 file changed, 19 insertions(+), 32 deletions(-)
+> 
 
-When a function is annotated as "weak" and is overridden, the code is not
-removed. If it is traced, the fentry/mcount location in the weak function
-will be referenced by the "__mcount_loc" section. This will then be added
-to the available_filter_functions list. Since only the address of the
-functions are listed, to find the name to show, a search of kallsyms is
-used.
-
-Since kallsyms will return the function by simply finding the function
-that the address is after but before the next function, an address of a
-weak function will show up as the function before it. This is because
-kallsyms does not save names of weak functions. This has caused issues in
-the past, as now the traced weak function will be listed in
-available_filter_functions with the name of the function before it.
-
-At best, this will cause the previous function's name to be listed twice.
-At worse, if the previous function was marked notrace, it will now show up
-as a function that can be traced. Note that it only shows up that it can
-be traced but will not be if enabled, which causes confusion.
-
- https://lore.kernel.org/all/20220412094923.0abe90955e5db486b7bca279@kernel.org/
-
-The commit b39181f7c6907 ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid
-adding weak function") was a workaround to this by checking the function
-address before printing its name. If the address was too far from the
-function given by the name then instead of printing the name it would
-print: __ftrace_invalid_address___<invalid-offset>
-
-The real issue is that these invalid addresses are listed in the ftrace
-table look up which available_filter_functions is derived from. A place
-holder must be listed in that file because set_ftrace_filter may take a
-series of indexes into that file instead of names to be able to do O(1)
-lookups to enable filtering (many tools use this method).
-
-Even if kallsyms saved the size of the function, it does not remove the
-need of having these place holders. The real solution is to not add a weak
-function into the ftrace table in the first place.
-
-To solve this, the sorttable.c code that sorts the mcount regions during
-the build is modified to take a "nm -S vmlinux" input, sort it, and any
-function listed in the mcount_loc section that is not within a boundary of
-the function list given by nm is considered a weak function and is zeroed
-out.
-
-Note, this does not mean they will remain zero when booting as KASLR
-will still shift those addresses. To handle this, the entries in the
-mcount_loc section will be ignored if they are zero or match the
-kaslr_offset() value.
-
-Before:
-
- ~# grep __ftrace_invalid_address___ /sys/kernel/tracing/available_filter_functions | wc -l
- 551
-
-After:
-
- ~# grep __ftrace_invalid_address___ /sys/kernel/tracing/available_filter_functions | wc -l
- 0
-
-Cc: bpf <bpf@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Zheng Yejian <zhengyejian1@huawei.com>
-Cc: Martin  Kelly <martin.kelly@crowdstrike.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Link: https://lore.kernel.org/20250218200022.883095980@goodmis.org
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c   |   6 +-
- scripts/link-vmlinux.sh |   4 +-
- scripts/sorttable.c     | 128 +++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 134 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 728ecda6e8d4..e3f89924f603 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7004,6 +7004,7 @@ static int ftrace_process_locs(struct module *mod,
- 	unsigned long count;
- 	unsigned long *p;
- 	unsigned long addr;
-+	unsigned long kaslr;
- 	unsigned long flags = 0; /* Shut up gcc */
- 	int ret = -ENOMEM;
- 
-@@ -7052,6 +7053,9 @@ static int ftrace_process_locs(struct module *mod,
- 		ftrace_pages->next = start_pg;
- 	}
- 
-+	/* For zeroed locations that were shifted for core kernel */
-+	kaslr = !mod ? kaslr_offset() : 0;
-+
- 	p = start;
- 	pg = start_pg;
- 	while (p < end) {
-@@ -7063,7 +7067,7 @@ static int ftrace_process_locs(struct module *mod,
- 		 * object files to satisfy alignments.
- 		 * Skip any NULL pointers.
- 		 */
--		if (!addr) {
-+		if (!addr || addr == kaslr) {
- 			skipped++;
- 			continue;
- 		}
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 56a077d204cf..59b07fe6fd00 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -177,12 +177,14 @@ mksysmap()
- 
- sorttable()
- {
--	${objtree}/scripts/sorttable ${1}
-+	${NM} -S ${1} > .tmp_vmlinux.nm-sort
-+	${objtree}/scripts/sorttable -s .tmp_vmlinux.nm-sort ${1}
- }
- 
- cleanup()
- {
- 	rm -f .btf.*
-+	rm -f .tmp_vmlinux.nm-sort
- 	rm -f System.map
- 	rm -f vmlinux
- 	rm -f vmlinux.map
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index ec02a2852efb..23c7e0e6c024 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -580,6 +580,98 @@ static void rela_write_addend(Elf_Rela *rela, uint64_t val)
- 	e.rela_write_addend(rela, val);
- }
- 
-+struct func_info {
-+	uint64_t	addr;
-+	uint64_t	size;
-+};
-+
-+/* List of functions created by: nm -S vmlinux */
-+static struct func_info *function_list;
-+static int function_list_size;
-+
-+/* Allocate functions in 1k blocks */
-+#define FUNC_BLK_SIZE	1024
-+#define FUNC_BLK_MASK	(FUNC_BLK_SIZE - 1)
-+
-+static int add_field(uint64_t addr, uint64_t size)
-+{
-+	struct func_info *fi;
-+	int fsize = function_list_size;
-+
-+	if (!(fsize & FUNC_BLK_MASK)) {
-+		fsize += FUNC_BLK_SIZE;
-+		fi = realloc(function_list, fsize * sizeof(struct func_info));
-+		if (!fi)
-+			return -1;
-+		function_list = fi;
-+	}
-+	fi = &function_list[function_list_size++];
-+	fi->addr = addr;
-+	fi->size = size;
-+	return 0;
-+}
-+
-+/* Only return match if the address lies inside the function size */
-+static int cmp_func_addr(const void *K, const void *A)
-+{
-+	uint64_t key = *(const uint64_t *)K;
-+	const struct func_info *a = A;
-+
-+	if (key < a->addr)
-+		return -1;
-+	return key >= a->addr + a->size;
-+}
-+
-+/* Find the function in function list that is bounded by the function size */
-+static int find_func(uint64_t key)
-+{
-+	return bsearch(&key, function_list, function_list_size,
-+		       sizeof(struct func_info), cmp_func_addr) != NULL;
-+}
-+
-+static int cmp_funcs(const void *A, const void *B)
-+{
-+	const struct func_info *a = A;
-+	const struct func_info *b = B;
-+
-+	if (a->addr < b->addr)
-+		return -1;
-+	return a->addr > b->addr;
-+}
-+
-+static int parse_symbols(const char *fname)
-+{
-+	FILE *fp;
-+	char addr_str[20]; /* Only need 17, but round up to next int size */
-+	char size_str[20];
-+	char type;
-+
-+	fp = fopen(fname, "r");
-+	if (!fp) {
-+		perror(fname);
-+		return -1;
-+	}
-+
-+	while (fscanf(fp, "%16s %16s %c %*s\n", addr_str, size_str, &type) == 3) {
-+		uint64_t addr;
-+		uint64_t size;
-+
-+		/* Only care about functions */
-+		if (type != 't' && type != 'T' && type != 'W')
-+			continue;
-+
-+		addr = strtoull(addr_str, NULL, 16);
-+		size = strtoull(size_str, NULL, 16);
-+		if (add_field(addr, size) < 0)
-+			return -1;
-+	}
-+	fclose(fp);
-+
-+	qsort(function_list, function_list_size, sizeof(struct func_info), cmp_funcs);
-+
-+	return 0;
-+}
-+
- static pthread_t mcount_sort_thread;
- static bool sort_reloc;
- 
-@@ -752,6 +844,21 @@ static void *sort_mcount_loc(void *arg)
- 		goto out;
- 	}
- 
-+	/* zero out any locations not found by function list */
-+	if (function_list_size) {
-+		for (void *ptr = vals; ptr < vals + size; ptr += long_size) {
-+			uint64_t key;
-+
-+			key = long_size == 4 ? r((uint32_t *)ptr) : r8((uint64_t *)ptr);
-+			if (!find_func(key)) {
-+				if (long_size == 4)
-+					*(uint32_t *)ptr = 0;
-+				else
-+					*(uint64_t *)ptr = 0;
-+			}
-+		}
-+	}
-+
- 	compare_values = long_size == 4 ? compare_values_32 : compare_values_64;
- 
- 	qsort(vals, count, long_size, compare_values);
-@@ -801,6 +908,8 @@ static void get_mcount_loc(struct elf_mcount_loc *emloc, Elf_Shdr *symtab_sec,
- 		return;
- 	}
- }
-+#else /* MCOUNT_SORT_ENABLED */
-+static inline int parse_symbols(const char *fname) { return 0; }
- #endif
- 
- static int do_sort(Elf_Ehdr *ehdr,
-@@ -1256,14 +1365,29 @@ int main(int argc, char *argv[])
- 	int i, n_error = 0;  /* gcc-4.3.0 false positive complaint */
- 	size_t size = 0;
- 	void *addr = NULL;
-+	int c;
-+
-+	while ((c = getopt(argc, argv, "s:")) >= 0) {
-+		switch (c) {
-+		case 's':
-+			if (parse_symbols(optarg) < 0) {
-+				fprintf(stderr, "Could not parse %s\n", optarg);
-+				return -1;
-+			}
-+			break;
-+		default:
-+			fprintf(stderr, "usage: sorttable [-s nm-file] vmlinux...\n");
-+			return 0;
-+		}
-+	}
- 
--	if (argc < 2) {
-+	if ((argc - optind) < 1) {
- 		fprintf(stderr, "usage: sorttable vmlinux...\n");
- 		return 0;
- 	}
- 
- 	/* Process each file in turn, allowing deep failure. */
--	for (i = 1; i < argc; i++) {
-+	for (i = optind; i < argc; i++) {
- 		addr = mmap_file(argv[i], &size);
- 		if (!addr) {
- 			++n_error;
--- 
-2.47.2
-
+Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Tested-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
