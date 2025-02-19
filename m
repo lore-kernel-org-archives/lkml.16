@@ -1,92 +1,145 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835A81F78E0;
-	Wed, 19 Feb 2025 08:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CAC1DE3BE;
+	Wed, 19 Feb 2025 08:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954833; cv=none; b=uVyQwqlngjxFp8yIp6WmSyzRvbya839rhaR8MwydWqRlj4HfO25YFuvFRsmuveDZRzbNTZKLUiDSBbFwyWWxCYoW54Ngg3IhmauFNiLfqQrr/wcPqVgiCmfR1ZgGuAvj7BVr/5nOh0ATaCKyWL0S4x+hCs7GSOE8xXaZz9097PY=
+	t=1739954937; cv=none; b=cwCRJLBLrj6gXlCm51862FsDNl5LvcazUzZLbKCtUJ0lBZYbuBT8aFOJjl0dzS4UCxGw2xOYtydQAg/8rCL8+UoZ4jkhzQF5PINwvA9y6wWi5GFcVkrBkhWW0Hi4pAepEIcgQiSdm2NTR+nxw8HsBLj3vE3KnUykhThxgp8STA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954833; c=relaxed/simple;
-	bh=AgIkmTOMFIiQ/yYf+qwHjFoT+UCJ7JkbheTv56rMQVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bLOezr2MYSdlnmEVKyjVK2wCwk6pfIsxprBoen5AgIpHdWc9YckJj8/EClW97sUJwzVXk4D9xDrNt3ve7laeTEaoTU5/9oqY1mEtOBI+KX7x8hFaoS6N9iiUn/kvu3Ni4Tvpom7lZUlr9m+rXwDYU5vq7RXmEik/esgLSo5WbNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FrYyeie8; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739954937; c=relaxed/simple;
+	bh=fQbJ1QkpxFm4SGCWfxJzdDPB5fI9jirKoaXycqEgolc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MT6NMfG85tj9q2PT/6HKdLkW8O5FXRffpAkLx0wyTkZXc86oZyFfrntU+dnLmRXT/P/ki6CZt7oNdVHve2z3jMlHDO7eNSsj1efFtScPKd9tjiNM7SnQ+Q3lDGX5B0F94eFkfhl7nFX4nH2QV7gwkcT+biknlxofH6Aci4cYiB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R9s+9nrn; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrYyeie8"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa48404207so12906349a91.1;
-        Wed, 19 Feb 2025 00:47:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739954828; x=1740559628; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lm6ot2bmZKY4yplCPn3FScSqX5mEiwAZVgVtm575nD8=;
-        b=FrYyeie8IriuF3s5RaNI58kcDur8t9JVC2mxtKJ9f+WtIprbYOENpzeVKRiT/hNZvQ
-         p0qf2sVBGUCyQceY+Z7IRxxz4rpuuegeT2rjtlRPV/ni07lPmmu7qKpUOKPm5MWJp812
-         zceL9/qWB3oFRw1xMGLppnYAyC8ZHtJRmaRPTQ5yS7OsNdKUYyEE91jo3rxkGc8bd0a8
-         GGkkxvZmrkGFMbGYXZp4laJPzP5M944XISIkmtkDFwQFa5/gYHePWw/2WKhB8BNzT2qV
-         KLK87lug2YOyz5P+yMfv+Fi9uCasrFhQ1oXsdsRRlwPYQyQwezo4v6Y9EwsT7+JTwNLX
-         tF2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739954828; x=1740559628;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Lm6ot2bmZKY4yplCPn3FScSqX5mEiwAZVgVtm575nD8=;
-        b=IeBsSW291hWHMTPDCG5Yo4P8DLiv/6dBRJl1b4yLpcPwJbd0JiHI1QgEuwODdVcDs/
-         gxpZSQF8VVbt2W/RutzUx8sNRbePoEnl0HVBYj4NG8g7sCT0IndinIEzO/BWbY0LTpdb
-         wl5/UfPJlAPa9/fJf484tis7LThz7eAgEdASiLycBj8Ez+/IahuM/HKuvf24VYI2vJ9c
-         IMKiNAb9euQuD0tjS8kTrmQsSNLseBlM061U85MgWvCL//49o3zN6LhMGKUUlGRagOHu
-         kbY/21qUyheH5dhMc7l+otY9eQYjIwZnyiSencZ/rY2sOXnmnB27B2cjLnc4ew8e1KYO
-         maug==
-X-Forwarded-Encrypted: i=1; AJvYcCVDbvlTmn1PjJya2jQC3ZMJ8rc2ayW0xWeWzeegm359fo/lY0KEA3ptdFy/DSquv7GarjxVQP4LvHq24ec=@vger.kernel.org, AJvYcCWfapfIEA4vB4hfsD5GfFdwEqARrXp3Z3ZIgjzxKMB8cGUHs7i0pfYDDoO2bBjxL+l9dvKHwx6n0kJj3JxX2daHIQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzvFsWgHCUuMuchEhsM0m4hGiVzboJdh9q9zzblmGGFTVTecCE
-	Mm3bpfP66EKHTUImWMYFORserdtlr+w29nAPSde/cT3Vfq+WbBj6LjD99rQkDT0urAu/GLk/BDM
-	Zb5mziwzMVAf6x7X63rwNwbs1aw0=
-X-Gm-Gg: ASbGnct5rWy5fyjCbgf8a87/bxfvNhDUAvuBo20BhzgKaG0R0rzI4HE3ZJ4uo7gSYDB
-	djfq7/ggw3LQnIvq3UGAfg42/Hj/0IJFG+siUw8GUgUENxx1j9Iun044e6EoyaD5EixAMGOEvpM
-	IytshmlCMc30HtDCVBFZKZkl1YcYH9EII=
-X-Google-Smtp-Source: AGHT+IG+metsRNLMCZZs47flBptl1mN2HTXJMmlH3rhFkejJqD6kI7GKh4odcp79LiYNjAbxr0qV1WFbSYqoQepjiGU=
-X-Received: by 2002:a17:90a:ea17:b0:2fa:d95:4501 with SMTP id
- 98e67ed59e1d1-2fc40f21c67mr30436208a91.18.1739954827668; Wed, 19 Feb 2025
- 00:47:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R9s+9nrn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DC92F44443;
+	Wed, 19 Feb 2025 08:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739954933;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7uQR7Ryzn6i4UNyU9zcKaYBUdL/qVB7QaGkD/Wt9o6k=;
+	b=R9s+9nrniofjhO95BXMJmUUr1CFUhslXjgpUMJM3tORBZZdAUyzU+/rBYKvpVY8zZjdOU0
+	uaZp1o2BSikw69d3XAqTIfWKsQT2EeFq+fk8C+cxbp0wv1bip5cQYY5GQABxk0DLgBuw9l
+	Tq9D5WolkMPizxMWtpO4HuyPH2nuUbCr+62N9QUG8qZtuxm9BHLVViF0hOaHIQnMXWIrHB
+	emQggSTYM08I4edTDTUoGs56F8N6dJp3N5qdG+FagwyYglnAE6b30Fn+hV35vNtGpnujYN
+	j7nttnbBAHcJVmielnnOyhqE6rHl8kMgzogvip3onh6hiqQiQraj2ak6wsN6mA==
+Date: Wed, 19 Feb 2025 09:48:51 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, netdev@vger.kernel.org, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ linux-kernel@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH net] net: cadence: macb: Synchronize stats calculations
+Message-ID: <20250219094851.0419759f@2a02-8440-d103-5c0b-874f-3af8-c06f-cd89.rev.sfr.net>
+In-Reply-To: <20250218195036.37137-1-sean.anderson@linux.dev>
+References: <20250218195036.37137-1-sean.anderson@linux.dev>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218085712.66690-1-daniel.baluta@nxp.com> <20250218085712.66690-6-daniel.baluta@nxp.com>
- <50c7055a676fb7f1bf27cb33a914df641c56dd15.camel@pengutronix.de>
-In-Reply-To: <50c7055a676fb7f1bf27cb33a914df641c56dd15.camel@pengutronix.de>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Wed, 19 Feb 2025 10:46:55 +0200
-X-Gm-Features: AWEUYZlhtQ6N4279fN6OqZAxKAvbZZ0SsWRbMIXuyMNnTZ9yjwFgBR8L58MeFwg
-Message-ID: <CAEnQRZCSL2ieQQFoHHpRwR5XfErZCm8nDMpr6rBVBWXiFKbm1A@mail.gmail.com>
-Subject: Re: [PATCH 5/5] imx_dsp_rproc: Use reset controller API to control
- the DSP
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, shawnguo@kernel.org, mathieu.poirier@linaro.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, andersson@kernel.org, 
-	linux-remoteproc@vger.kernel.org, iuliana.prodan@nxp.com, 
-	laurentiu.mihalcea@nxp.com, shengjiu.wang@nxp.com, Frank.Li@nxp.com, 
-	krzk@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeifeekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepvdgrtddvqdekgeegtddqugdutdefqdehtgdtsgdqkeejgehfqdefrghfkedqtgdtiehfqdgtugekledrrhgvvhdrshhfrhdrnhgvthdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehsvggrnhdrrghnuggvrhhsohhnsehlihhnuhigrdguvghvpdhrtghpthhtohepnhhitghol
+ hgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvght
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-> > +     case IMX_RPROC_RESET_CONTROLLER:
-> > +             priv->reset = devm_reset_control_get_optional_exclusive(dev, NULL);
->
-> Is this optional on purpose? There is no mention of it in the commit
-> message. Where is this resets property documented in the dt-bindings?
+Hello Sean,
 
-For this particular case on imx8mp the reset control shouldn't be optional
-because the DSP won't really start without it.
+On Tue, 18 Feb 2025 14:50:36 -0500
+Sean Anderson <sean.anderson@linux.dev> wrote:
 
-I was thinking for future boards that might have a reset but which is
-is not mandatory.
+> Stats calculations involve a RMW to add the stat update to the existing
+> value. This is currently not protected by any synchronization mechanism,
+> so data races are possible. Add a spinlock to protect the update. The
+> reader side could be protected using u64_stats, but we would still need
+> a spinlock for the update side anyway. And we always do an update
+> immediately before reading the stats anyway.
+> 
+> Fixes: 89e5785fc8a6 ("[PATCH] Atmel MACB ethernet driver")
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> ---
+> 
+>  drivers/net/ethernet/cadence/macb.h      |  2 ++
+>  drivers/net/ethernet/cadence/macb_main.c | 12 ++++++++++--
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+> index 5740c98d8c9f..2847278d9cd4 100644
+> --- a/drivers/net/ethernet/cadence/macb.h
+> +++ b/drivers/net/ethernet/cadence/macb.h
+> @@ -1279,6 +1279,8 @@ struct macb {
+>  	struct clk		*rx_clk;
+>  	struct clk		*tsu_clk;
+>  	struct net_device	*dev;
+> +	/* Protects hw_stats and ethtool_stats */
+> +	spinlock_t		stats_lock;
+>  	union {
+>  		struct macb_stats	macb;
+>  		struct gem_stats	gem;
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index 48496209fb16..990a3863c6e1 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -1978,10 +1978,12 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
+>  
+>  		if (status & MACB_BIT(ISR_ROVR)) {
+>  			/* We missed at least one packet */
+> +			spin_lock(&bp->stats_lock);
+>  			if (macb_is_gem(bp))
+>  				bp->hw_stats.gem.rx_overruns++;
+>  			else
+>  				bp->hw_stats.macb.rx_overruns++;
+> +			spin_unlock(&bp->stats_lock);
+>  
+>  			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+>  				queue_writel(queue, ISR, MACB_BIT(ISR_ROVR));
+> @@ -3102,6 +3104,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
+>  	if (!netif_running(bp->dev))
+>  		return nstat;
+>  
+> +	spin_lock(&bp->stats_lock);
+>  	gem_update_stats(bp);
+>  
+>  	nstat->rx_errors = (hwstat->rx_frame_check_sequence_errors +
+> @@ -3131,6 +3134,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
+>  	nstat->tx_aborted_errors = hwstat->tx_excessive_collisions;
+>  	nstat->tx_carrier_errors = hwstat->tx_carrier_sense_errors;
+>  	nstat->tx_fifo_errors = hwstat->tx_underrun;
+> +	spin_unlock(&bp->stats_lock);
+>  
+>  	return nstat;
+>  }
+> @@ -3138,12 +3142,13 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
+>  static void gem_get_ethtool_stats(struct net_device *dev,
+>  				  struct ethtool_stats *stats, u64 *data)
+>  {
+> -	struct macb *bp;
+> +	struct macb *bp = netdev_priv(dev);
+>  
+> -	bp = netdev_priv(dev);
+> +	spin_lock(&bp->stats_lock);
 
-Will document the resets in v2.
+Sorry if I missed something, but as you're using that lock within the
+macb_interrupt(), shouldn't it be a spin_lock_irqsave() for all the
+callsites that aren't in irq context ?
+
+You would risk a deadlock otherwise.
+
+Thanks,
+
+Maxime
