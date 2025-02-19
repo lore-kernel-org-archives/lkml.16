@@ -1,67 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A58B1BD9D3;
-	Wed, 19 Feb 2025 23:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2905257ACE;
+	Wed, 19 Feb 2025 23:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740006191; cv=none; b=qlf5HKbUNK7YCglOO8jXqnkG3tHPCPKM05MelTKXeREAx/8qD8YiPVpmCY15zLfbNg5HDre1MHZ9yfwRXJcCSthvDydweAfqTXo3hm/TuC4O9M2q2bbUnMN1EKxMgjHke4bsphpSfeyZdwWygHTE5zfpRO9sP3Q05MJBxk243DE=
+	t=1740006203; cv=none; b=VvH2cVh/zadBcNhQxg2atAp+C7jIVJTsTSl1rqUI2td4hfBvziZGBIrrmhpI9D5jf7AoSh89njy1ba2OYZefiFihpaWCf2SN4pELY3ZpP0w+QFcIU0z0IIGtXCbl1jHYgEs6q7U5LdpjBqojaI8JUtH4gvwrB3YqEFQyYGRE1l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740006191; c=relaxed/simple;
-	bh=VUeQu1vrzQP2/7jPS3smCWyLj/rmS0K39e18uTexhz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O1EjgKN+q1iVAmzRddJaJQWDMeajDb+USGCKpIM79whJEwvHGQvPQTewXy5GVfEOvaUu60idYciiMlLpxGMOo7KVyQkbTeegWqCNNfEe9FYJxlOr7hW4V5pJkn3eTjgbr/9Yi1psCMS3t5cPx83VqeHr3DDlAkXPsQqRnvF9h1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dw8pTKvu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740006203; c=relaxed/simple;
+	bh=GirwESdaI+RJ9HvJVcapEPWjFi6xoHCf0oX+hQcZ3nI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Oo1fIPyLhsntSmXSfmyasn/h0sKzW0YrSt0dk9wWu0XoBVtwRiLkdGV3QFFh+eDIQKf7iqXcjkdimfW+mj5o70kFZISUngBwla7ydHJJCjPv4Vw5E6xFHpO604tjBHt7hptg1MPTkuaS7qV0b2noZf12Vtobt+dXc/njIKyjJ28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=bkLU4YES; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dw8pTKvu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26CAC4CED1;
-	Wed, 19 Feb 2025 23:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740006191;
-	bh=VUeQu1vrzQP2/7jPS3smCWyLj/rmS0K39e18uTexhz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dw8pTKvugW7ZaQzOiw3C0XKopY6Hf/aEGHoQAngd8UnAXxaEgWjpQDjUeGYfV6MvR
-	 fdO1y+W4JYAkQwCIDAuTKxCiXqy+XJ+BBiMlzqk0pXqzQ2xhAE3cHcqlzQ62oYbd0T
-	 cuQqDJRtFEt9dYl+9b7lT6ihRefYWnf4+1EqUN3FtTVKLFsRTTcx0/+hXqTJjUZ98w
-	 HnfOEHTrbhwKbBdxNM1ZdtZ+kfYqYkjQCZoTFi4jrrQUKczyROSHTo6MMxg+V3MbyN
-	 0Mk6Z2I/wY0IwiybtQbOsj3L08ZaOWBynwxpX4zCe5MGEKYETlTGzCXQwwWib+T7YQ
-	 x3ncvP79QgYEA==
-Date: Wed, 19 Feb 2025 17:03:09 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	Zhang Rui <rui.zhang@intel.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, kernel@collabora.com,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="bkLU4YES"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gxy/D70314SLvPjtQ3M8F2Cxl5dglM+LoYwaFSNDAIo=; b=bkLU4YESjqUDorekF8n19QZNSY
+	ufx57LUNk51CyVqi+HqizUoPbK5NYPs8EZQpNDTTb6UNUECJN4cEVgDap4XDMSxsSsGTyfu6rMLpY
+	GP+r8NyvKABBBDf6iK8poZEEdOChXj88Wlm0eLx2xTXBz0dMy0W8eGzLr727m3z4CTMEsfX8RgURx
+	pqvEn/Ifw48zX3T7OaNA/AjkgSqLTciBuJf8XDFMLOTomb9eoPeEQhovep3mrUbnljg6HChbhwoH6
+	IFPGN0S3L/Ih7dx8nr8XJD1NDA+Ch/9AMmIoEck//pJEsZBukL87j16mgZ2mVJHHgbg8QaAPZBnP3
+	gQ8cpmew==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tkt64-0006Du-9o; Thu, 20 Feb 2025 00:03:16 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: vkoul@kernel.org,
+	kishon@kernel.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	quentin.schulz@cherry.de,
+	sebastian.reichel@collabora.com,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: rockchip-thermal: Add RK3576 compatible
-Message-ID: <174000618924.3136841.3347238546392310162.robh@kernel.org>
-References: <20250216-rk3576-tsadc-upstream-v1-0-6ec969322a14@collabora.com>
- <20250216-rk3576-tsadc-upstream-v1-1-6ec969322a14@collabora.com>
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	dse@thaumatec.com,
+	heiko@sntech.de
+Subject: [PATCH v7 0/2] MIPI DSI phy for rk3588
+Date: Thu, 20 Feb 2025 00:02:57 +0100
+Message-ID: <20250219230303.2539733-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250216-rk3576-tsadc-upstream-v1-1-6ec969322a14@collabora.com>
+Content-Transfer-Encoding: 8bit
 
+This adds the phy driver need for DSI output on rk3588.
 
-On Sun, 16 Feb 2025 00:34:50 +0100, Nicolas Frattaroli wrote:
-> Add a new compatible for the thermal sensor device on the RK3576 SoC.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+The phy itself is used for both DSI output and CSI input, though the
+CSI part for the whole chain needs a lot more work, so is left out for
+now and only the DSI part implemented.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+This allows the rk3588 with its current VOP support to drive a DSI display
+using the DSI2 controller driver I'll submit in a next step.
+
+Only generic phy interfaces are used, so the DSI part is pretty straight
+forward.
+
+changes in v7:
+- missing pclk-disable in resume error path
+- replace remaining magic values with actual constants
+- lower-case hex values
+- made lane_disable behave similar to lane_enable wrt. lane count
+
+changes in v6:
+- rebase onto 6.14-rc1
+- add Krzysztof binding review
+- v5 was sent at the beginning of december '24, so probably has been lost
+
+changes in v5:
+- add bitfield.h for the FIELD_PROP definition
+  (reported by kernel-test-robot)
+- add Sebastian's Reviewed-by
+- add Conor's Ack to the dt-binding
+
+changes in v4:
+- moved to #phy-cells = 1 as suggested by Sebastian, with the argument
+  denoting the requested phy-type (C-PHY, D-PHY). This works similarly
+  how the Mediatek C/D-PHY already implements this, see mails around:
+  https://lore.kernel.org/all/20230608200552.GA3303349-robh@kernel.org/
+- dropped Krzysztof's review tag from the binding because of this
+- dropped custom UPDATE macro and use FIELD_PREP instead
+- build a FIELD_PREP_HIWORD macro for the GRF settings
+- add received Tested-by tags
+
+changes in v3:
+- add Krzysztof review tag to the binding
+- address Sebastian's review comments
+  - better error handling
+  - dropping empty function
+  - headers
+  - not using of_match_ptr - this should also make the
+    test-robot happier
+
+changes in v2:
+- fix error in dt-binding example
+- drop unused frequency table
+- pull in some more recent improvements from the vendor-kernel
+  which includes a lot less magic values
+- already include the support for rk3576
+- use dev_err_probe
+
+Heiko Stuebner (2):
+  dt-bindings: phy: Add Rockchip MIPI C-/D-PHY schema
+  phy: rockchip: Add Samsung MIPI D-/C-PHY driver
+
+ .../phy/rockchip,rk3588-mipi-dcphy.yaml       |   87 +
+ drivers/phy/rockchip/Kconfig                  |   12 +
+ drivers/phy/rockchip/Makefile                 |    1 +
+ .../phy/rockchip/phy-rockchip-samsung-dcphy.c | 1715 +++++++++++++++++
+ 4 files changed, 1815 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3588-mipi-dcphy.yaml
+ create mode 100644 drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c
+
+-- 
+2.47.2
 
