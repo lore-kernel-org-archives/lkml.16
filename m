@@ -1,144 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3011D1F30A9;
-	Wed, 19 Feb 2025 14:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F1F1E1C1F;
+	Wed, 19 Feb 2025 14:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739974197; cv=none; b=l005Ln3ybregdTmUpAf1tidEfpJCYDFKp19oEWfhQvwNN1RXH+hjG4Obn/yY50bFvL29IFh/F5KD03t9FA6aSq2TNXecnwkz31WigGgTchVB2mE8kyl9JQYgPyI/p3L7vvFR57SADmDlY1JfGd8ueavWpC4SMKpOnj+5hUKR8Fc=
+	t=1739974416; cv=none; b=GUqCBXJ7P9AdNIYPcWtYjI+YxK+eJ7uc8t+slQ7LleqpCxKiPtdogrSdJa6GKl6MdTa1ku2MzUuY4Ymrp+bBX/ReS+bF1F3zKpTEMBp9i37J43ql1PC31H7OqEKzSvgAy31fQuVptLlik0DOX2HAnGXXrDG6lrpKOoSdTDXYpKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739974197; c=relaxed/simple;
-	bh=FmNh8i/+NBQdKhSxJQWTczf6sC4JYYzdaKEbQ/SujWk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J5DIQ4NHpsu83y1FyujdNu7GNWMBJ5zI1Wf3gz2BZS0CMkNQqlSrU9j5QSpiSBTA/DUFTb/qBHvk9ym2ERYJKiDpWSn74zUy6zEiYKO9CJUlBSM8TGDqVxjkgN5FhnH9pDbkXW79DYtbOWffFbIGtokOnw9EJskbU2SxN12jojE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SSsjidcM; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739974416; c=relaxed/simple;
+	bh=jso5qQFQSYU2mgkN6qCTfJjd+ezV54v2ynj9RTPzjc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S5tX1mafdtmNLUfDUOu+cuL1tWxkMVICvYojAKDIp1QAdpCSZWTH+Xy1M1OxFPSURDPHeyjnHB0+zK63b5L6pQ+Tq1AHTBtdKOTKsZAuN3mBTm4qVoDwGeHpMoUGCOAEL6aqhFO6QidOur0uvbwCGSIs1W9dpRuqLuVCDQ7dn4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnsiTdTj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SSsjidcM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739974196; x=1771510196;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FmNh8i/+NBQdKhSxJQWTczf6sC4JYYzdaKEbQ/SujWk=;
-  b=SSsjidcMyZQcdGiy48krTE/TXJSb9Xt+ZrL248UBopobKcjA7bO5CFC/
-   vWgTUYYxFO90jDB10vzRZ9mg26KBWSYSiBy6+LoRNIYaPDk33JYOMzPq1
-   Tw4kqzEB99ChQzMBwr5RfJNdYQElrzMQRFMvuB9EyrPDw1AH3dga2Qr1/
-   H3tBTw14qImCEYsD7ZtwFA87FoGKwZ0sD7ZuIOo+V7HY+HcRq52ZE9fw/
-   uiw/Y3H+PweDyqA2KxQ5h14QUnnwvFr6/PF+yGCHoIUo8RYMZGXxyZoRR
-   IHaMraVHth2ag38kJkRk8WHCbsMZ3HTqf2rIJG0TYlyH9PAmBts9baxzW
-   g==;
-X-CSE-ConnectionGUID: kXmosbpmS+uWfQaqo/6oWQ==
-X-CSE-MsgGUID: zOmLAjNnQDWlgVy+XJD1mQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="51351222"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="51351222"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 06:09:55 -0800
-X-CSE-ConnectionGUID: FHBLuRzJSRSY2NCfTF611Q==
-X-CSE-MsgGUID: Y9EvvsvVS0O0u6GzPtvajg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118860004"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa003.fm.intel.com with ESMTP; 19 Feb 2025 06:09:55 -0800
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	linux-kernel@vger.kernel.org
-Cc: ak@linux.intel.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Amiri Khalil <amiri.khalil@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel: Fix event constraints for LNC
-Date: Wed, 19 Feb 2025 06:10:05 -0800
-Message-Id: <20250219141005.2446823-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnsiTdTj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15A0C4CEEC;
+	Wed, 19 Feb 2025 14:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739974415;
+	bh=jso5qQFQSYU2mgkN6qCTfJjd+ezV54v2ynj9RTPzjc4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FnsiTdTjIta96r2UPsWQppWhDfdDVi33yIdAv7br0buBtK0uCnRlPz0zRE70iN7jh
+	 qU5jsaxlcf56OVAeYMyc9UZZcCMR60GxCxst2IolLXGVZ/dvgaC8RZOOj8Re+N/zrA
+	 25NjV3xP/6CV/+rhx4njuRt3Wv0qvCfwVw5iHK5l6YA1fngr3GwC+Ota629c+VKEye
+	 qVFF9FH0D0rsAHnroytvbw/un7iO2yCsCfutiArUcaWitMcJArqal9WgfQ6dY7HtAi
+	 bzGz9inzKseg0RKM85ZLNScRMNjpmwIXJK5dU1ihYmGpvi2DKeeFrYZ/lOeaTOtDtK
+	 3yJ424zphsNFA==
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fc20e0f0ceso8905041a91.3;
+        Wed, 19 Feb 2025 06:13:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW9zOrfK3KBHCWBgbxayw+qwmn2/31wCHNjrUQ9yeiZwa6NoXUfCCYHC8MiNSIr96yff7xtuTu7ggIO@vger.kernel.org, AJvYcCWkhhZDxHoBNLF4Yp8z8oZ6Ks83kFpC+EuwAR2+8Zd6PXgvEABvbPOW0049Ng7UKvCn66dQYAcrtvgSA7QF@vger.kernel.org
+X-Gm-Message-State: AOJu0YykOUgPE0UQzjTWlL9uDvAWfHhcQMd/I5g0mAX+ansIh/R8M8bt
+	4YZFXFpO+JPKdYbn5clHsGOLD/Vf7fnO+8JPwimnHYOHDTtH6Qw+lvEkpLbF4Z0ZK5m1AtebEk/
+	ka2qdLfMWJuTsTU40Ul4ep0ppCQ==
+X-Google-Smtp-Source: AGHT+IFa8R6i4Eeuldo8axIMgGyezQE2Aih3YKW/uwabG5hR2Fqqcd+qkA666mlQjsQf/SRPn9uJJ5YEmt8CiUS/WUI=
+X-Received: by 2002:a17:90b:3912:b0:2fa:229f:d036 with SMTP id
+ 98e67ed59e1d1-2fcb5abe3cemr5694227a91.30.1739974415205; Wed, 19 Feb 2025
+ 06:13:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com> <20250217154836.108895-17-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250217154836.108895-17-angelogioacchino.delregno@collabora.com>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Wed, 19 Feb 2025 22:14:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_99Q5X+PurxQKewJRN4e=cxwMwX-6qzrZztOe5Eu2KuPg@mail.gmail.com>
+X-Gm-Features: AWEUYZmtLYXEQSNosRWwGHhpXxbA8tfEaeBMbNB5Y9ryg9Aq3cPAidz3jkYE8sg
+Message-ID: <CAAOTY_99Q5X+PurxQKewJRN4e=cxwMwX-6qzrZztOe5Eu2KuPg@mail.gmail.com>
+Subject: Re: [PATCH v7 16/43] drm/mediatek: mtk_hdmi: Compress of_device_id
+ array entries
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	matthias.bgg@gmail.com, ck.hu@mediatek.com, jitao.shi@mediatek.com, 
+	jie.qiu@mediatek.com, junzhi.zhao@mediatek.com, 
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com, 
+	dmitry.baryshkov@linaro.org, lewis.liao@mediatek.com, 
+	ives.chenjh@mediatek.com, tommyyl.chen@mediatek.com, 
+	jason-jh.lin@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hi, Angelo:
 
-According to the latest event list, update the event constraint tables
-for Lion Cove core.
+AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
+=BC
+2025=E5=B9=B42=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:=
+49=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Compress the entries found in the of_device_id array to improve
+> readability of this file and to make that consistent with other
+> kernel drivers.
 
-The general rule (the event codes < 0x90 are restricted to counters
-0-3.) has been removed. There is no restriction for most of the
-performance monitoring events.
+Applied to mediatek-drm-next [1], thanks.
 
-Fixes: a932aa0e868f ("perf/x86: Add Lunar Lake and Arrow Lake support")
-Reported-by: Amiri Khalil <amiri.khalil@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/core.c | 20 +++++++-------------
- arch/x86/events/intel/ds.c   |  2 +-
- 2 files changed, 8 insertions(+), 14 deletions(-)
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index da70526194b0..051a5bea0568 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -397,34 +397,28 @@ static struct event_constraint intel_lnc_event_constraints[] = {
- 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_FETCH_LAT, 6),
- 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_MEM_BOUND, 7),
- 
-+	INTEL_EVENT_CONSTRAINT(0x20, 0xf),
-+
-+	INTEL_UEVENT_CONSTRAINT(0x012a, 0xf),
-+	INTEL_UEVENT_CONSTRAINT(0x012b, 0xf),
- 	INTEL_UEVENT_CONSTRAINT(0x0148, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x0175, 0x4),
- 
- 	INTEL_EVENT_CONSTRAINT(0x2e, 0x3ff),
- 	INTEL_EVENT_CONSTRAINT(0x3c, 0x3ff),
--	/*
--	 * Generally event codes < 0x90 are restricted to counters 0-3.
--	 * The 0x2E and 0x3C are exception, which has no restriction.
--	 */
--	INTEL_EVENT_CONSTRAINT_RANGE(0x01, 0x8f, 0xf),
- 
--	INTEL_UEVENT_CONSTRAINT(0x01a3, 0xf),
--	INTEL_UEVENT_CONSTRAINT(0x02a3, 0xf),
- 	INTEL_UEVENT_CONSTRAINT(0x08a3, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x0ca3, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x04a4, 0x1),
- 	INTEL_UEVENT_CONSTRAINT(0x08a4, 0x1),
- 	INTEL_UEVENT_CONSTRAINT(0x10a4, 0x1),
- 	INTEL_UEVENT_CONSTRAINT(0x01b1, 0x8),
-+	INTEL_UEVENT_CONSTRAINT(0x01cd, 0x3fc),
- 	INTEL_UEVENT_CONSTRAINT(0x02cd, 0x3),
--	INTEL_EVENT_CONSTRAINT(0xce, 0x1),
- 
- 	INTEL_EVENT_CONSTRAINT_RANGE(0xd0, 0xdf, 0xf),
--	/*
--	 * Generally event codes >= 0x90 are likely to have no restrictions.
--	 * The exception are defined as above.
--	 */
--	INTEL_EVENT_CONSTRAINT_RANGE(0x90, 0xfe, 0x3ff),
-+
-+	INTEL_UEVENT_CONSTRAINT(0x00e0, 0xf),
- 
- 	EVENT_CONSTRAINT_END
- };
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index df9499d6e4dc..a04618c47f05 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1199,7 +1199,7 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
- 
--	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0x3ff),
-+	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0x3fc),
- 	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_STORES */
--- 
-2.38.1
+Regards,
+Chun-Kuang.
 
+>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
+ek/mtk_hdmi.c
+> index 1e50b3918069..be71105ba81d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> @@ -1780,15 +1780,10 @@ static const struct mtk_hdmi_conf mtk_hdmi_conf_m=
+t8167 =3D {
+>  };
+>
+>  static const struct of_device_id mtk_hdmi_of_ids[] =3D {
+> -       { .compatible =3D "mediatek,mt2701-hdmi",
+> -         .data =3D &mtk_hdmi_conf_mt2701,
+> -       },
+> -       { .compatible =3D "mediatek,mt8167-hdmi",
+> -         .data =3D &mtk_hdmi_conf_mt8167,
+> -       },
+> -       { .compatible =3D "mediatek,mt8173-hdmi",
+> -       },
+> -       {}
+> +       { .compatible =3D "mediatek,mt2701-hdmi", .data =3D &mtk_hdmi_con=
+f_mt2701 },
+> +       { .compatible =3D "mediatek,mt8167-hdmi", .data =3D &mtk_hdmi_con=
+f_mt8167 },
+> +       { .compatible =3D "mediatek,mt8173-hdmi" },
+> +       { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_hdmi_of_ids);
+>
+> --
+> 2.48.1
+>
