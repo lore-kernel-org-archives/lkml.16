@@ -1,174 +1,172 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e3i103.smtp2go.com (e3i103.smtp2go.com [158.120.84.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E1428628F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1D11BD9DB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739962904; cv=none; b=iXbPdZM67Ln8JMgL58TEg1/7VFGZwL6Pt2FPiczZoPQuoh0DjIEc/lqGxAeB+jNgOWtgl5Fi2F70CEUdK8GprsDc60MyVr5UFPWvPbx487by0KWRxIB18QfbCHglXOh3fYaWG1PbPAyOB7FXI4dJpH4UHKAnIJb0NiaY8cpfcEs=
+	t=1739962914; cv=none; b=N3CW1/KDKukpuubpYbejkgqQeWeyiKEsBlNXgt7tABCzwaxvwh+txTKGMp/UR42fFHe+Mt5oPHCUwDyrXoZqwxarUzQxwawiPxiztcR0lpVLb52WOuFQrXBGslquy4Vx/TTj/GDNgIn0+zSytIHGXUHdWp6ZOUgChTSQTTEmnSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739962904; c=relaxed/simple;
-	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LfOkN4X287i4MAnVwUWf+bbz3zCpEqi4vvNzOg30XzOB87Pr6kEjOBiF0uHfomzrR3PNDC7L+lq6BByWe0SGk4NRQznoqXG8nsLb3Znc8S9TCm0xlaaSwvGhBl5DD6O0VqO19f2FztAs2lJTBUq8/PqZuDpBVdOXQUEpGmdl3YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=fail smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zXkIKhes; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=chs1dt7A; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zXkIKhes; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=chs1dt7A; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1739962914; c=relaxed/simple;
+	bh=KVCozw5OuqMr/WczaaczI9sNw6U6VyepsSXMw6cdk+0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZwqXXkb3HHkUIRgC5GoCPhAtNKJiLGqhNa7C9NszUJ6U3ZtMKLhO19/dyw0/0UfN9S7sqkB/1/iAS5cT7Zx0gVMGWebqK+Vv6LHcpjFRj2/dsaAwZZOZYQssLWS8zZ36321AXMBgTSl7OaqghQCbZiEFQavXQx9dbMrREJbSBW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt; spf=pass smtp.mailfrom=em510616.triplefau.lt; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=BtWahkjv; dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b=kKNjoD2y; arc=none smtp.client-ip=158.120.84.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em510616.triplefau.lt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zXkIKhes";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="chs1dt7A";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zXkIKhes";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="chs1dt7A"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 98C5521A7A;
-	Wed, 19 Feb 2025 11:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739962900; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
-	b=zXkIKhesFTquq+VTtJw95pv57tG0q0BLMTqfmk8ZpYf21ZaJTqOzdg6C/ip9dgqZ2LJWOq
-	ALiKplTFjZaHMUTQdRaRUSnXBaXUgN590yGhS0uwozQ4BMOnQOwuiSyYHAWSzDdFHOrdm8
-	WzjissaB/8qu5EJvoFmavadOY7R8y20=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739962900;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
-	b=chs1dt7A9jGiX+Cw7lt6J0giTARWgf18O3T27Xk6GxYVVne4/1Ug4mq9Df++SfuqKsnriK
-	TcCo5htQqOofKzBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739962900; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
-	b=zXkIKhesFTquq+VTtJw95pv57tG0q0BLMTqfmk8ZpYf21ZaJTqOzdg6C/ip9dgqZ2LJWOq
-	ALiKplTFjZaHMUTQdRaRUSnXBaXUgN590yGhS0uwozQ4BMOnQOwuiSyYHAWSzDdFHOrdm8
-	WzjissaB/8qu5EJvoFmavadOY7R8y20=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739962900;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UQ39+Q6zWe5FH6m8gxGxNwSLfvpsDPqpS3BC6AkGyLA=;
-	b=chs1dt7A9jGiX+Cw7lt6J0giTARWgf18O3T27Xk6GxYVVne4/1Ug4mq9Df++SfuqKsnriK
-	TcCo5htQqOofKzBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7DA04137DB;
-	Wed, 19 Feb 2025 11:01:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id U+JMHhS6tWe6UwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 19 Feb 2025 11:01:40 +0000
-Message-ID: <345e4f5b-2427-4964-b0f1-e6f72e48f409@suse.cz>
-Date: Wed, 19 Feb 2025 12:01:40 +0100
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="BtWahkjv";
+	dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b="kKNjoD2y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1739962001; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=+8j7cPu5o3satpWXmx3WXP8Hl7/oNZHXIrtA6XxAmFU=;
+ b=BtWahkjvK9E2lWv4tmIwxFtD/IrUN+Qhopr/8KJbxHNZdp4irU9FFt71LiglJeW+G2dUK
+ ktGGv3xIrLym5dAY3VJ7uY3EBh17GpOM/XUU5unVmtczaQnM6dS5ftIDwqCIGRbUMhfwZ1k
+ A6XNvfCLPMXwRrNBFCMAer+aRrhqMTFfUU9VAqBYtI2GrVWVbfrF08J9g3kfPXbKUe+77oZ
+ tTVna52Z36hBaQcrsINe/1Lzb6SIKOFFc53rFnPIlK8Z1xw5TOO3emQPbV36LMQg12GEceD
+ iNCj7M5B+pZn+o7xzS/UV4dFp2c4TBxrIJrDOIDGeKD4K9OPTciRpDe70Aig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=triplefau.lt;
+ i=@triplefau.lt; q=dns/txt; s=s510616; t=1739962001; h=from : subject
+ : to : message-id : date;
+ bh=+8j7cPu5o3satpWXmx3WXP8Hl7/oNZHXIrtA6XxAmFU=;
+ b=kKNjoD2yyfd/pC/oTvSeVWVtno2h7ea/GCAcXMS+ZxLEDvjjLhDjIZ9qGOV4C6+q1wxfZ
+ +VT/bjUkFIRdPkkKaJDQH1+8UDIla7/iNBq3tRjRqLgTGxEYCRQk8TDkp272b1CCHvvX60k
+ wE2Sq6NJAowhiBCMY6B/2OoDVYWvgn6JUKljFnPaUddM1jd+UUNZeb2ZMWK2Sc5NtOFBvSz
+ 9Uv6wy6nyN5PQbUwG/dn66kc1bNJT3E0hKhzwHoBm6lQ6w+0YuFAkYkTHbK6tKiOgRV1ECF
+ KqLUfgjDQMST9jTgBt7P9xVxTPhWVKnArovO/hjef1mXEEKK3ToW6UUFWQWw==
+Received: from [10.12.239.196] (helo=localhost)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97.1-S2G)
+	(envelope-from <repk@triplefau.lt>)
+	id 1tkhb5-AIkwcC8t737-KJeX;
+	Wed, 19 Feb 2025 10:46:31 +0000
+From: Remi Pommarel <repk@triplefau.lt>
+To: linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] leds: Fix LED_OFF brightness race
+Date: Wed, 19 Feb 2025 11:41:36 +0100
+Message-Id: <26a2690e77671cfe687c5614613fbb6f079f7365.1739959820.git.repk@triplefau.lt>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/page_alloc: Clarify some migratetype fallback code
-Content-Language: en-US
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Brendan Jackman <jackmanb@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Mel Gorman <mgorman@techsingularity.net>, Michal Hocko <mhocko@kernel.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Yosry Ahmed <yosry.ahmed@linux.dev>
-References: <20250214-clarify-steal-v1-1-79dc5adf1b79@google.com>
- <20250214212647.GB233399@cmpxchg.org>
- <CA+i-1C3e_JUBBhMDYwrehvLZzLtb9pfgEy8=wQa=9uTBr1-b5g@mail.gmail.com>
- <764394d9-592c-4d68-8910-67362dd8810a@suse.cz>
- <20250218203830.GA1264207@cmpxchg.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJkBREIBQkRadznAAoJECJPp+fMgqZkNxIQ
- ALZRqwdUGzqL2aeSavbum/VF/+td+nZfuH0xeWiO2w8mG0+nPd5j9ujYeHcUP1edE7uQrjOC
- Gs9sm8+W1xYnbClMJTsXiAV88D2btFUdU1mCXURAL9wWZ8Jsmz5ZH2V6AUszvNezsS/VIT87
- AmTtj31TLDGwdxaZTSYLwAOOOtyqafOEq+gJB30RxTRE3h3G1zpO7OM9K6ysLdAlwAGYWgJJ
- V4JqGsQ/lyEtxxFpUCjb5Pztp7cQxhlkil0oBYHkudiG8j1U3DG8iC6rnB4yJaLphKx57NuQ
- PIY0Bccg+r9gIQ4XeSK2PQhdXdy3UWBr913ZQ9AI2usid3s5vabo4iBvpJNFLgUmxFnr73SJ
- KsRh/2OBsg1XXF/wRQGBO9vRuJUAbnaIVcmGOUogdBVS9Sun/Sy4GNA++KtFZK95U7J417/J
- Hub2xV6Ehc7UGW6fIvIQmzJ3zaTEfuriU1P8ayfddrAgZb25JnOW7L1zdYL8rXiezOyYZ8Fm
- ZyXjzWdO0RpxcUEp6GsJr11Bc4F3aae9OZtwtLL/jxc7y6pUugB00PodgnQ6CMcfR/HjXlae
- h2VS3zl9+tQWHu6s1R58t5BuMS2FNA58wU/IazImc/ZQA+slDBfhRDGYlExjg19UXWe/gMcl
- De3P1kxYPgZdGE2eZpRLIbt+rYnqQKy8UxlszsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
- J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
- /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
- IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
- X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
- wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
- PVAiT6fnzIKmZAUCZAUSmwUJDK5EZgAKCRAiT6fnzIKmZOJGEACOKABgo9wJXsbWhGWYO7mD
- 8R8mUyJHqbvaz+yTLnvRwfe/VwafFfDMx5GYVYzMY9TWpA8psFTKTUIIQmx2scYsRBUwm5VI
- EurRWKqENcDRjyo+ol59j0FViYysjQQeobXBDDE31t5SBg++veI6tXfpco/UiKEsDswL1WAr
- tEAZaruo7254TyH+gydURl2wJuzo/aZ7Y7PpqaODbYv727Dvm5eX64HCyyAH0s6sOCyGF5/p
- eIhrOn24oBf67KtdAN3H9JoFNUVTYJc1VJU3R1JtVdgwEdr+NEciEfYl0O19VpLE/PZxP4wX
- PWnhf5WjdoNI1Xec+RcJ5p/pSel0jnvBX8L2cmniYnmI883NhtGZsEWj++wyKiS4NranDFlA
- HdDM3b4lUth1pTtABKQ1YuTvehj7EfoWD3bv9kuGZGPrAeFNiHPdOT7DaXKeHpW9homgtBxj
- 8aX/UkSvEGJKUEbFL9cVa5tzyialGkSiZJNkWgeHe+jEcfRT6pJZOJidSCdzvJpbdJmm+eED
- w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
- 1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20250218203830.GA1264207@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 510616m:510616apGKSTK:510616sYieL8a4ZV
+X-smtpcorp-track: -T8PF3lcNFij.M73-XIf0KzC2.UKiciwXCj8k
 
-On 2/18/25 21:38, Johannes Weiner wrote:
-> It still makes sense to have the two passes, though, right? One pass
-> where we try to steal a whole block starting from the biggest buddies;
-> and then one pass where we try to steal an individual page starting
-> from the smallest buddies.
+While commit fa15d8c69238 ("leds: Fix set_brightness_delayed() race")
+successfully forces led_set_brightness() to be called with LED_OFF at
+least once when switching from blinking to LED on state so that
+hw-blinking can be disabled, another race remains. Indeed in
+led_set_brightness(LED_OFF) followed by led_set_brightness(any)
+scenario the following CPU scheduling can happen:
 
-Yes.
+    CPU0                                     CPU1
+    ----                                     ----
+ set_brightness_delayed() {
+   test_and_clear_bit(BRIGHTNESS_OFF)
+                                         led_set_brightness(LED_OFF) {
+                                           set_bit(BRIGHTNESS_OFF)
+					   queue_work()
+                                         }
+                                         led_set_brightness(any) {
+                                           set_bit(BRIGHTNESS)
+					   queue_work() //already queued
+                                         }
+   test_and_clear_bit(BRIGHTNESS)
+     /* LED set with brightness any */
+ }
 
-> Something like this, completely untested draft:
+ /* From previous CPU1 queue_work() */
+ set_brightness_delayed() {
+   test_and_clear_bit(BRIGHTNESS_OFF)
+     /* LED turned off */
+   test_and_clear_bit(BRIGHTNESS)
+     /* Clear from previous run, LED remains off */
 
-Looks good to me!
+In that case the led_set_brightness(LED_OFF)/led_set_brightness(any)
+sequence will be effectively executed in reverse order and LED will
+remain off.
+
+With the introduction of commit 32360bf6a5d4 ("leds: Introduce ordered
+workqueue for LEDs events instead of system_wq") the race is easier to
+trigger as sysfs brightness configuration does not wait for
+set_brightness_delayed() work to finish (flush_work() removal).
+
+Use delayed_set_value to optionnally re-configure brightness after a
+LED_OFF. That way a LED state could be configured more that once but
+final state will always be as expected.
+
+Fixes: fa15d8c69238 ("leds: Fix set_brightness_delayed() race")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+While the race does seem to be very thin, it is very easy to trigger it
+on my setup with the following command:
+
+ $ echo "pattern" > /sys/class/leds/<device>/trigger
+ $ echo "3 200 40 200 3 200 3 200" > /sys/class/leds/<device>/pattern
+ $ sleep 1
+ $ echo 0 > /sys/class/leds/<device>/brightness
+ $ echo 30 > /sys/class/leds/<device>/brightness
+
+The issue happens 8 out of 10 times, not sure why this is the case,
+maybe two consecutive set_bit() on one CPU are likely to appear as
+one just after a previous test_and_clear_bit() on another due to
+the full memory barrier implied by this atomic operation ?
+
+ drivers/leds/led-core.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index f6c46d2e5276..528f53bf13a9 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -159,8 +159,19 @@ static void set_brightness_delayed(struct work_struct *ws)
+ 	 * before this work item runs once. To make sure this works properly
+ 	 * handle LED_SET_BRIGHTNESS_OFF first.
+ 	 */
+-	if (test_and_clear_bit(LED_SET_BRIGHTNESS_OFF, &led_cdev->work_flags))
++	if (test_and_clear_bit(LED_SET_BRIGHTNESS_OFF, &led_cdev->work_flags)) {
+ 		set_brightness_delayed_set_brightness(led_cdev, LED_OFF);
++		/*
++		 * The consecutives led_set_brightness(LED_OFF),
++		 * led_set_brightness(LED_FULL) could have been executed out of
++		 * order (LED_FULL first), if the work_flags has been set
++		 * between LED_SET_BRIGHTNESS_OFF and LED_SET_BRIGHTNESS of this
++		 * work. To avoid ending with the LED turned off, turn the LED
++		 * on again.
++		 */
++		if (led_cdev->delayed_set_value != LED_OFF)
++			set_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags);
++	}
+ 
+ 	if (test_and_clear_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags))
+ 		set_brightness_delayed_set_brightness(led_cdev, led_cdev->delayed_set_value);
+@@ -331,10 +342,11 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev, unsigned int value)
+ 	 * change is done immediately afterwards (before the work runs),
+ 	 * it uses a separate work_flag.
+ 	 */
+-	if (value) {
+-		led_cdev->delayed_set_value = value;
++	led_cdev->delayed_set_value = value;
++
++	if (value)
+ 		set_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags);
+-	} else {
++	else {
+ 		clear_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags);
+ 		clear_bit(LED_SET_BLINK, &led_cdev->work_flags);
+ 		set_bit(LED_SET_BRIGHTNESS_OFF, &led_cdev->work_flags);
+-- 
+2.40.0
+
