@@ -1,149 +1,144 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904621FCFD3
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3011D1F30A9;
+	Wed, 19 Feb 2025 14:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739974189; cv=none; b=LS61mgmK6ATyAKKCbs8tT2/61NV1SSqzyQe5nNnFsLVHICs+9iRl2yi8ad8Glu1f5rRgV7fmTlLKIJ2fuwVj7SnTGR8ocLWBNTHdZ5vGowUr40olrHtE3KNsDsoJWwycbzOYot602b0rH1Z74tTnBvI8w/nWuc+bJhsRYYkNNhs=
+	t=1739974197; cv=none; b=l005Ln3ybregdTmUpAf1tidEfpJCYDFKp19oEWfhQvwNN1RXH+hjG4Obn/yY50bFvL29IFh/F5KD03t9FA6aSq2TNXecnwkz31WigGgTchVB2mE8kyl9JQYgPyI/p3L7vvFR57SADmDlY1JfGd8ueavWpC4SMKpOnj+5hUKR8Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739974189; c=relaxed/simple;
-	bh=10jMimjxuVlCFGM2ZCcbo0fe9PRhXfBjVBsvwxGav90=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gtCIzZtR5vcD7Ry4+iLaJ+p7XN+Dj4I3TN6xObtkmYtNWoNpLf5X0k3DyGbl16PPbYRSw38RhqcHMr8AO1qouhZr5uTCe5o9E9dSgdAyCOHZE1q/QU9ncx3NkMEUolzWN6Cgfaxo9c2lhtyEsicInoUW5fdiVaviN/d5q73GlWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bfWKhPSD; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739974197; c=relaxed/simple;
+	bh=FmNh8i/+NBQdKhSxJQWTczf6sC4JYYzdaKEbQ/SujWk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J5DIQ4NHpsu83y1FyujdNu7GNWMBJ5zI1Wf3gz2BZS0CMkNQqlSrU9j5QSpiSBTA/DUFTb/qBHvk9ym2ERYJKiDpWSn74zUy6zEiYKO9CJUlBSM8TGDqVxjkgN5FhnH9pDbkXW79DYtbOWffFbIGtokOnw9EJskbU2SxN12jojE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SSsjidcM; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bfWKhPSD"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso1136822966b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 06:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739974186; x=1740578986; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=10jMimjxuVlCFGM2ZCcbo0fe9PRhXfBjVBsvwxGav90=;
-        b=bfWKhPSDk8e/Tj1SrdFTLWWe5QpJEeMVISVVjF1+oCcweeLf6nd9X/Kxo2dRMFjnNf
-         UpW1eAx4cb/tcvKIIhb3ua+uKsdd+p8Qmvy+IOzEZKj7/h+/iGPiAgicXMu2IRA7dSDa
-         rcNPgKidKV7vXL07YfBbQJ1O8OBlTLRMWL4wg8+FJzfcaPmyRzoNifjvMd5fHQ/imNxn
-         OYKsnbcNP32F3CBvcIXmXR4IIyOAGC0HsguB8nWVo5XXifOQGCw8j77+N1YBgfT02fDF
-         nG9MdtXG3gZSyXDgis9AWWqE1MvKAGZ5JsUFtJ9ZJ17R11WwRr8/uF/jNGsB7lOO4O4m
-         EByg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739974186; x=1740578986;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=10jMimjxuVlCFGM2ZCcbo0fe9PRhXfBjVBsvwxGav90=;
-        b=dSIxGBlkmnOgUXnYP0hN8mkVhk8wgTm8X6gtxx9I1+HsmEqqTEYHhUsZJ3Z/fBfxlA
-         Yieg7Ae5y7+s6CFoeaIaTmH49cWNGZEuCqRBZPBxRUfyvFrev5BGbWUNK/12MKhyWFb7
-         9/vkaCATVpgiAnknA9xpvojwqyymOSzFqR1+kZ9gF8Ur7BxvnFFsVTpeD3tJyVSZqWli
-         umrJxNVtx3HP8mu4lypFEBpWLarT8BwQiiXxXP3OC/vf86gJYIodx1VXrQuU8U/eksW5
-         J9IZq94t+QPDD7i2QsZCxbnasBM2KfxwkK+ky1IuJZriacD2kFKZUIUGPHbKkhfJmj1d
-         wWoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWI7fmeS98izW0pb1JJcQDO6agfsFdcnxOlHhGpvJAbMQweUFVewtgtzoLHrM27tr9/K0ly/qNW2Wevk58=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHJ/4shadRuasep5nWm+soaNpDBkKksvdKCJ/ezAzH6IjdTc9E
-	bEeA9z0Fc+j5j8kElvRSSUufu0V4m0h+xgxsO3jvbVTBUfHhIIJqrSOaMf7yqVz1QpHXOyL0JQ7
-	tSFGDn+dJqrsCm+iZkRLDQgJcQ1WPJJcuwtsnuTJ8Cn/OgeCd0lnjJ9o=
-X-Gm-Gg: ASbGncuv2330E/FO8pMcajAE+/B3TA/WA40ol0gez5e9n7fbmw6BjM7KmRxDdFNmUHR
-	gyjcJhzqi2nJrUQZpLISRzRriSbeZ3NKkx8G2EpSg34s7qK3wNRCO1efQ69zQLVQ8YXsiRjKnB7
-	xZ3KXsj4SiJCrCHPMg8KcJ0sIRzQ==
-X-Google-Smtp-Source: AGHT+IH8Kk8ypOlI+q0204bWOg0K+kei1efTO1AVFOuvMiUq/prv2i2qE+mN7M/RL4ubsnylAhdc2zfoJmjYvSACjtk=
-X-Received: by 2002:a17:906:18b2:b0:ab7:d10b:e200 with SMTP id
- a640c23a62f3a-abb70aa66dfmr1211679466b.22.1739974166997; Wed, 19 Feb 2025
- 06:09:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SSsjidcM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739974196; x=1771510196;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FmNh8i/+NBQdKhSxJQWTczf6sC4JYYzdaKEbQ/SujWk=;
+  b=SSsjidcMyZQcdGiy48krTE/TXJSb9Xt+ZrL248UBopobKcjA7bO5CFC/
+   vWgTUYYxFO90jDB10vzRZ9mg26KBWSYSiBy6+LoRNIYaPDk33JYOMzPq1
+   Tw4kqzEB99ChQzMBwr5RfJNdYQElrzMQRFMvuB9EyrPDw1AH3dga2Qr1/
+   H3tBTw14qImCEYsD7ZtwFA87FoGKwZ0sD7ZuIOo+V7HY+HcRq52ZE9fw/
+   uiw/Y3H+PweDyqA2KxQ5h14QUnnwvFr6/PF+yGCHoIUo8RYMZGXxyZoRR
+   IHaMraVHth2ag38kJkRk8WHCbsMZ3HTqf2rIJG0TYlyH9PAmBts9baxzW
+   g==;
+X-CSE-ConnectionGUID: kXmosbpmS+uWfQaqo/6oWQ==
+X-CSE-MsgGUID: zOmLAjNnQDWlgVy+XJD1mQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="51351222"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="51351222"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 06:09:55 -0800
+X-CSE-ConnectionGUID: FHBLuRzJSRSY2NCfTF611Q==
+X-CSE-MsgGUID: Y9EvvsvVS0O0u6GzPtvajg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118860004"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa003.fm.intel.com with ESMTP; 19 Feb 2025 06:09:55 -0800
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	linux-kernel@vger.kernel.org
+Cc: ak@linux.intel.com,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Amiri Khalil <amiri.khalil@intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/x86/intel: Fix event constraints for LNC
+Date: Wed, 19 Feb 2025 06:10:05 -0800
+Message-Id: <20250219141005.2446823-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737577229.git.babu.moger@amd.com> <2119b76ef8be21b1d8b2deedfab23e8e33ba724c.1737577229.git.babu.moger@amd.com>
- <Z7XfcV05ZZkHm6bc@e133380.arm.com>
-In-Reply-To: <Z7XfcV05ZZkHm6bc@e133380.arm.com>
-From: Peter Newman <peternewman@google.com>
-Date: Wed, 19 Feb 2025 15:09:16 +0100
-X-Gm-Features: AWEUYZmLnt6t_Sm9Rq-kqfE53HCQG6LWj-INsRp5bS0oFoaS6xQL7aEZNuvjSPk
-Message-ID: <CALPaoCiPkjbTf2He2tXsguxHDtGF+YfVUZScL8dseVc6rvAfvA@mail.gmail.com>
-Subject: Re: [PATCH v11 17/23] x86/resctrl: Auto assign/unassign counters when
- mbm_cntr_assign is enabled
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: Babu Moger <babu.moger@amd.com>, corbet@lwn.net, reinette.chatre@intel.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, tony.luck@intel.com, fenghua.yu@intel.com, 
-	x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, akpm@linux-foundation.org, 
-	thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com, 
-	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com, 
-	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com, 
-	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com, 
-	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com, 
-	mario.limonciello@amd.com, james.morse@arm.com, tan.shaopeng@fujitsu.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	maciej.wieczor-retman@intel.com, eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Dave,
+From: Kan Liang <kan.liang@linux.intel.com>
 
-On Wed, Feb 19, 2025 at 2:41=E2=80=AFPM Dave Martin <Dave.Martin@arm.com> w=
-rote:
->
-> Hi,
->
-> On Wed, Jan 22, 2025 at 02:20:25PM -0600, Babu Moger wrote:
-> > Assign/unassign counters on resctrl group creation/deletion. Two counte=
-rs
-> > are required per group, one for MBM total event and one for MBM local
-> > event.
-> >
-> > There are a limited number of counters available for assignment. If the=
-se
-> > counters are exhausted, the kernel will display the error message: "Out=
- of
-> > MBM assignable counters". However, it is not necessary to fail the
-> > creation of a group due to assignment failures. Users have the flexibil=
-ity
-> > to modify the assignments at a later time.
->
-> If we are doing this, should turning mbm_cntr_assign mode on also
-> trigger auto-assingment for all extant monitoring groups?
->
-> Either way though, this auto-assignment feels like a potential nuisance
-> for userspace.
->
-> If the userspace use-case requires too many monitoring groups for the
-> available counters, then the kernel will auto-assign counters to a
-> random subset of groups which may or may not be the ones that userspace
-> wanted to monitor; then userspace must manually look for the assigned
-> counters and unassign some of them before they can be assigned where
-> userspace actually wanted them.
->
-> This is not impossible for userspace to cope with, but it feels
-> awkward.
->
-> Is there a way to inhibit auto-assignment?
->
-> Or could automatic assignments be considered somehow "weak", so that
-> new explicit assignments can steal automatically assigned counters
-> without the need to unassign them explicitly?
+According to the latest event list, update the event constraint tables
+for Lion Cove core.
 
-We had an incomplete discussion about this early on[1]. I guess I
-didn't revisit it because I found it was trivial to add a flag that
-inhibits the assignment behavior during mkdir and had moved on to
-bigger issues.
+The general rule (the event codes < 0x90 are restricted to counters
+0-3.) has been removed. There is no restriction for most of the
+performance monitoring events.
 
-If an agent creating directories isn't coordinated with the agent
-managing counters, a series of creating and destroying a group could
-prevent a monitor assignment from ever succeeding because it's not
-possible to atomically discover the name of the new directory that
-stole the previously-available counter and reassign it.
+Fixes: a932aa0e868f ("perf/x86: Add Lunar Lake and Arrow Lake support")
+Reported-by: Amiri Khalil <amiri.khalil@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/events/intel/core.c | 20 +++++++-------------
+ arch/x86/events/intel/ds.c   |  2 +-
+ 2 files changed, 8 insertions(+), 14 deletions(-)
 
-However, if the counter-manager can get all the counters assigned once
-and only move them with atomic reassignments, it will become
-impossible to snatch them with a mkdir.
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index da70526194b0..051a5bea0568 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -397,34 +397,28 @@ static struct event_constraint intel_lnc_event_constraints[] = {
+ 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_FETCH_LAT, 6),
+ 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_MEM_BOUND, 7),
+ 
++	INTEL_EVENT_CONSTRAINT(0x20, 0xf),
++
++	INTEL_UEVENT_CONSTRAINT(0x012a, 0xf),
++	INTEL_UEVENT_CONSTRAINT(0x012b, 0xf),
+ 	INTEL_UEVENT_CONSTRAINT(0x0148, 0x4),
+ 	INTEL_UEVENT_CONSTRAINT(0x0175, 0x4),
+ 
+ 	INTEL_EVENT_CONSTRAINT(0x2e, 0x3ff),
+ 	INTEL_EVENT_CONSTRAINT(0x3c, 0x3ff),
+-	/*
+-	 * Generally event codes < 0x90 are restricted to counters 0-3.
+-	 * The 0x2E and 0x3C are exception, which has no restriction.
+-	 */
+-	INTEL_EVENT_CONSTRAINT_RANGE(0x01, 0x8f, 0xf),
+ 
+-	INTEL_UEVENT_CONSTRAINT(0x01a3, 0xf),
+-	INTEL_UEVENT_CONSTRAINT(0x02a3, 0xf),
+ 	INTEL_UEVENT_CONSTRAINT(0x08a3, 0x4),
+ 	INTEL_UEVENT_CONSTRAINT(0x0ca3, 0x4),
+ 	INTEL_UEVENT_CONSTRAINT(0x04a4, 0x1),
+ 	INTEL_UEVENT_CONSTRAINT(0x08a4, 0x1),
+ 	INTEL_UEVENT_CONSTRAINT(0x10a4, 0x1),
+ 	INTEL_UEVENT_CONSTRAINT(0x01b1, 0x8),
++	INTEL_UEVENT_CONSTRAINT(0x01cd, 0x3fc),
+ 	INTEL_UEVENT_CONSTRAINT(0x02cd, 0x3),
+-	INTEL_EVENT_CONSTRAINT(0xce, 0x1),
+ 
+ 	INTEL_EVENT_CONSTRAINT_RANGE(0xd0, 0xdf, 0xf),
+-	/*
+-	 * Generally event codes >= 0x90 are likely to have no restrictions.
+-	 * The exception are defined as above.
+-	 */
+-	INTEL_EVENT_CONSTRAINT_RANGE(0x90, 0xfe, 0x3ff),
++
++	INTEL_UEVENT_CONSTRAINT(0x00e0, 0xf),
+ 
+ 	EVENT_CONSTRAINT_END
+ };
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index df9499d6e4dc..a04618c47f05 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1199,7 +1199,7 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
+ 
+-	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0x3ff),
++	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0x3fc),
+ 	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_STORES */
+-- 
+2.38.1
 
--Peter
-
-[1] https://lore.kernel.org/lkml/CALPaoCihfQ9VtLYzyHB9-PsQzXLc06BW8bzhBXwj9=
--i+Q8RVFQ@mail.gmail.com/
