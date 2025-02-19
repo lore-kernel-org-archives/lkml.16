@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108AF1E8347;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107DB1DED63;
 	Wed, 19 Feb 2025 13:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973480; cv=none; b=GA6oW7B2Afwgar3a3D8vpwdCkEenhjqlgGggA4Anh6+GkkMXgk2pEWna1Ncz/+imHSDXRCE9sQA3pkQ2vmUHV758uuATZKuXT1/3r3RBJu1//OKj6vs2kZQoWiVznL2ZngDHG3qTZf56VBL1AeByXbRgdPVplwX+yOzbqFUG8wg=
+	t=1739973480; cv=none; b=Ue4DGvjsYM5owbl+G5WpaDs6LzboL8iLwgS/nHDNy3L9HBbueYPGHoaV5ciENlF3ArmCZzblVWW4jWlAzh/58YoOOMBOXoy+/OpHFBXRsaO4FqTq6YlI96//EQYhlks2Ne1Aj0cpplG1vBNYLZAClBy7RpjX3H6YIG3ipIOL4OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739973480; c=relaxed/simple;
-	bh=RPy+c9M9XnSF7fnvH42jTZeZw448FaaVZdh7+FOlT+M=;
+	bh=7R366oYKmHOPpm8w8SRMstX38EO00rzyOjDKwrc/HvM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K8rAe14WjcxPaiZ07CzXxOkaWmhELZw4aAr/IKFdPMeg0e0XoNykqst34Oy2t7jsNmG/9D8WgdmzDp0pAqUas6Yz1B0EqTERFNO99PROOCRD2Q5hK5Uq3ck5xIq2ChLbL1b7nC6mEPSKOADepE9smELrOFHSNlPnx68h9iTE2ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPQ6QDDo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kCLHFxorVDkVxxrCFgZjzqJGpYYdWEHkxBxoQFucbdHktncPMkjAZZPNdS4ceRVDBmFS/xVjlm6IT8abMYvsrqs6wzyrahKgZtTXALA5Nnkrtm+2Gkeg9e9JHAPFdZUEg8vg01jlYpQ8AxytvG3hOtgTkJH7l8Aee9L1rDNd9xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6P5eAMg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPQ6QDDo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94AE9C4CEE0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6P5eAMg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AB3C4CED6;
 	Wed, 19 Feb 2025 13:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739973479;
-	bh=RPy+c9M9XnSF7fnvH42jTZeZw448FaaVZdh7+FOlT+M=;
+	bh=7R366oYKmHOPpm8w8SRMstX38EO00rzyOjDKwrc/HvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SPQ6QDDoZ4F1MXQEUy+Z+h7yDNVxu5v2g/DwNCiQRC7YwmbivCptds62RpRUt/JZc
-	 PaO4rASQMvfsLoKX5babgf2we+TfomBqsuKmne/dgOzvT5yPICoM17FLMOt+M9J4Lj
-	 20ayGoQMOHsbl2p24vgwkP0HnNM3v7lo5cZeiqYz2h0wg4b60cfBezn0ebCOnDWmLy
-	 UzXq0zjpxHUEFXXIk93N7JhDxkpI/u1eLEqWijsXHyjX+2uw36cEXZTKRH8oEkvhPy
-	 Ke+ME7zAttBxFjyDSzq3ma36/nCD6HUSPXj35OG1z/WPP/VfJT29949cg+wdLbWvrC
-	 IOAXbQcpkkVQA==
+	b=R6P5eAMgEhntbiTEVUOj/hhs4F3GyrUMl49CX5ax4h1XPzEwNoCTKvymaKMt+NSX2
+	 Gzf9N5LIuHTomtvVCIRppzNkDgPsLGGiyft4HWrNbhsFTnjj+LiNCxxueAJBZuroqJ
+	 gWv2Tx3hLGFq5VhzFsVXdAGLKGiM3tUw0wS/mRGi00NjJ+MnJR3I6atPOZBwsuxiNH
+	 yei3iN/meR49MHNSF1Vj6DgUZqP7iUFcQJOsdhIxJNPpRS/kuUigetHmnh6likUC3M
+	 9xJ9A44QJybbXG+xQdLfziwNBCxI0fBxXDL7CWW8LDW5ZSZjcbMHu91SzyQcyiwwrx
+	 8zVW0WUeMVCLg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tkkaL-0000000H1jF-0Zk9;
+	id 1tkkaL-0000000H1jV-11aI;
 	Wed, 19 Feb 2025 14:57:57 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] scripts/kernel-doc.py: Set an output format for --none
-Date: Wed, 19 Feb 2025 14:57:36 +0100
-Message-ID: <465a4660df470b214aec6abe1b2b931781ef2122.1739972906.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 5/6] scripts/kernel-doc.py: properly handle KBUILD_BUILD_TIMESTAMP
+Date: Wed, 19 Feb 2025 14:57:40 +0100
+Message-ID: <35d0f26f8ab2845245b3c3b7817c1e3ab883f069.1739972906.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739972906.git.mchehab+huawei@kernel.org>
 References: <cover.1739972906.git.mchehab+huawei@kernel.org>
@@ -51,38 +51,97 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that warnings output is deferred to the output plugin, we
-need to have an output style for none as well.
+The logic that handles KBUILD_BUILD_TIMESTAMP is wrong, and adds
+a dependency of a third party module (dateutil).
 
-So, use the OutputFormat base class on such cases.
+Fix it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/lib/kdoc/kdoc_files.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/lib/kdoc/kdoc_files.py  |  9 ---------
+ scripts/lib/kdoc/kdoc_output.py | 28 +++++++++++++++++++++-------
+ 2 files changed, 21 insertions(+), 16 deletions(-)
 
 diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
-index c215ae3047b8..957aaeaed7e6 100755
+index a2417cafb1c8..19fe9c6f5352 100755
 --- a/scripts/lib/kdoc/kdoc_files.py
 +++ b/scripts/lib/kdoc/kdoc_files.py
-@@ -19,6 +19,7 @@ from datetime import datetime
- from dateutil import tz
+@@ -12,9 +12,6 @@ import logging
+ import os
+ import re
+ import sys
+-from datetime import datetime
+-
+-from dateutil import tz
  
  from kdoc_parser import KernelDoc
-+from kdoc_output import OutputFormat
+ from kdoc_output import OutputFormat
+@@ -136,12 +133,6 @@ class KernelFiles():
+         if out_style is None:
+             out_style = OutputFormat()
  
+-        dt = datetime.now()
+-        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
+-            # use UTC TZ
+-            to_zone = tz.gettz('UTC')
+-            dt = dt.astimezone(to_zone)
+-
+         if not werror:
+             kcflags = os.environ.get("KCFLAGS", None)
+             if kcflags:
+diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
+index 13a74a687f89..166fcabbb4cf 100755
+--- a/scripts/lib/kdoc/kdoc_output.py
++++ b/scripts/lib/kdoc/kdoc_output.py
+@@ -18,8 +18,6 @@ import os
+ import re
+ from datetime import datetime
  
- class GlobSourceFiles:
-@@ -137,6 +138,9 @@ class KernelFiles():
-         if not modulename:
-             modulename = "Kernel API"
+-from dateutil import tz
+-
+ from kdoc_parser import KernelDoc, type_param
+ from kdoc_re import Re
  
-+        if out_style is None:
-+            out_style = OutputFormat()
+@@ -584,6 +582,15 @@ class ManFormat(OutputFormat):
+     )
+     blankline = ""
+ 
++    date_formats = [
++        "%a %b %d %H:%M:%S %Z %Y",
++        "%a %b %d %H:%M:%S %Y",
++        "%Y-%m-%d",
++        "%b %d %Y",
++        "%B %d %Y",
++        "%m %d %Y",
++    ]
 +
-         dt = datetime.now()
-         if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
-             # use UTC TZ
+     def __init__(self, modulename):
+         """
+         Creates class variables.
+@@ -595,11 +602,18 @@ class ManFormat(OutputFormat):
+         super().__init__()
+         self.modulename = modulename
+ 
+-        dt = datetime.now()
+-        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
+-            # use UTC TZ
+-            to_zone = tz.gettz('UTC')
+-            dt = dt.astimezone(to_zone)
++        dt = None
++        tstamp = os.environ.get("KBUILD_BUILD_TIMESTAMP")
++        if tstamp:
++            for fmt in self.date_formats:
++                try:
++                    dt = datetime.strptime(tstamp, fmt)
++                    break
++                except ValueError:
++                    pass
++
++        if not dt:
++            dt = datetime.now()
+ 
+         self.man_date = dt.strftime("%B %Y")
+ 
 -- 
 2.48.1
 
