@@ -1,153 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2006612B73;
-	Wed, 19 Feb 2025 13:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C63B1E47A5;
+	Wed, 19 Feb 2025 13:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739970605; cv=none; b=kkgx8H4BRlxjmqcYhZoymKoc4quCTKCEcCy3elMHOmnHP1Lg9MPDmemQDpYVpZ0+s8JqSKhFBWP6XxYKcyeAqeuRXYPmvK6qgKEjUM4EFRF8vGEZiZ85LhLmqAqqfXoCOXKyHkSqIu7d+OF00mQHXdj6xNLi7jBQVeJLFy//8Yg=
+	t=1739970604; cv=none; b=nC+EjKWics7B6mZqWd1UgdUnha/XiMXiaGqzKOAzz+47IY/1ErC3a3JgD8hoGn7uFv7kzJPqNQg46L02vTXJA7CUwHWaH+M7aq7+ueK0CiSK+eE55XgrcGet17fIK3KYUFQsvkuAGG7GcWat3TI2OP/KuAT0rdEwWcrtqXkg+/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739970605; c=relaxed/simple;
-	bh=DepBL+EcutslP3WvrFiAmM/2fFO9PYbE7cwE7cuP0dw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uNHnzSVik/tATlQFQVTe79poiRc1NeTxAxUw2bPu7v4Ha3NvcpIe4Ct2AiYUk8lzqpLTyPCapjoQ5wPrtiOdxBLLX73aMopv/xKJ0bFNA2sWrF1t4glzZGxd4msP4RI9UoimyvoPqdLsfctpDe4s9gsKH2jAYnnDwkyqcJn9+BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9943912FC;
-	Wed, 19 Feb 2025 05:10:20 -0800 (PST)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D5713F59E;
-	Wed, 19 Feb 2025 05:09:58 -0800 (PST)
-Message-ID: <4c045707-6f5a-44fd-b2d1-3ad13c2b11ba@arm.com>
-Date: Wed, 19 Feb 2025 14:09:48 +0100
+	s=arc-20240116; t=1739970604; c=relaxed/simple;
+	bh=hhInF30wke/UovUOXAo1FFA7iYgBOW3/hkzvAoWVCCY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jUYFsdncAetgUE2v3s5vDxTCo4KQegDa9QCf/+QVVG3Yn2e6TkLQtCXapxvG1YEzrDS8vOJKA/aEISxlPFujHPE3YQftIX07bZOWavOCkRfOTbs9xa4pCVrDrGS1PxXdxLGDfLWDow1wpgadtHpU5xS+df8/i2kT8jPBygolgNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GdiNPkgN; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GdiNPkgN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Huuvv
+	E5ZoWF1UAGvFneCadtnRZGO01ETPd9/BIZRpBI=; b=GdiNPkgNIWJq9fxfCpCgQ
+	bQ1qbXV4JfrXThmi+r3MCVsIWpF5HckJQy3bnBRp+n83HrvehZpfEFN57v+L+uej
+	ri2TxtBfhnc+b7DkfRoUF/DePXhvnaGnuAVpvnmzUA3xcgUmi93lngAdOI8lsFD5
+	+9bu5JNfV9insVqH5dAohg=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wB3yiyy17VnoJLHNA--.52215S4;
+	Wed, 19 Feb 2025 21:08:03 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: jani.nikula@linux.intel.com,
+	rodrigo.vivi@intel.com,
+	joonas.lahtinen@linux.intel.com,
+	tursulin@ursulin.net,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	gustavo.sousa@intel.com
+Cc: intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Haoxiang Li <haoxiang_li2024@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/i915/display: Add check for alloc_ordered_workqueue() and alloc_workqueue()
+Date: Wed, 19 Feb 2025 21:08:00 +0800
+Message-Id: <20250219130800.2638016-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>,
- Christian Loehle <christian.loehle@arm.com>,
- Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
- Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Joel Fernandes (Google)" <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>, Aashish Sharma <shraash@google.com>,
- Shin Kawamura <kawasin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb>
- <78f627fe-dd1e-4816-bbf3-58137fdceda6@nvidia.com>
- <Z62ONLX4OLisCLKw@jlelli-thinkpadt14gen4.remote.csb>
- <30a8cda5-0fd0-4e47-bafe-5deefc561f0c@nvidia.com>
- <151884eb-ad6d-458e-a325-92cbe5b8b33f@nvidia.com>
- <Z7Ne49MSXS2I06jW@jlelli-thinkpadt14gen4.remote.csb>
- <Z7RZ4141H-FnoQPW@jlelli-thinkpadt14gen4.remote.csb>
- <d7cc3a3c-155e-4872-a426-cbd239d79cac@arm.com>
- <Z7SWvr86RXlBbJlw@jlelli-thinkpadt14gen4.remote.csb>
- <a0f03e3e-bced-4be7-8589-1e65042b39aa@arm.com>
- <Z7WsRvsVCWu_By1c@jlelli-thinkpadt14gen4.remote.csb>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <Z7WsRvsVCWu_By1c@jlelli-thinkpadt14gen4.remote.csb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wB3yiyy17VnoJLHNA--.52215S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4kKFy7ArykKF47tr4rAFb_yoWkKrbEkF
+	WrZr1xGry5C3ZruF1UCrn3uryFvr4Yyry8AryxtryYyr47Kw10vrWkZr15Xw1rAFy3AFWq
+	93W8WF1kAws7WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNvtCUUUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqBH4bme10+BHjQAAsE
 
-On 19/02/2025 11:02, Juri Lelli wrote:
-> On 19/02/25 10:29, Dietmar Eggemann wrote:
+Add check for the return value of alloc_ordered_workqueue()
+and alloc_workqueue() to catch potential exception.
 
-[...]
+Fixes: 40053823baad ("drm/i915/display: move modeset probe/remove functions to intel_display_driver.c")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+---
+ drivers/gpu/drm/i915/display/intel_display_driver.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> So you don't have the one with which we ignore special tasks while
-> rebuilding domains?
-> 
-> https://lore.kernel.org/all/Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb/
-> 
-> Could you please double check again against
-> 
-> git@github.com:jlelli/linux.git experimental/dl-debug
+diff --git a/drivers/gpu/drm/i915/display/intel_display_driver.c b/drivers/gpu/drm/i915/display/intel_display_driver.c
+index 50ec0c3c7588..dfe5b779aefd 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_driver.c
++++ b/drivers/gpu/drm/i915/display/intel_display_driver.c
+@@ -245,6 +245,11 @@ int intel_display_driver_probe_noirq(struct intel_display *display)
+ 						WQ_UNBOUND, WQ_UNBOUND_MAX_ACTIVE);
+ 	display->wq.cleanup = alloc_workqueue("i915_cleanup", WQ_HIGHPRI, 0);
+ 
++	if (!display->wq.modeset || !display->wq.flip || !display->wq.cleanup) {
++		ret = -ENOMEM;
++		goto cleanup_vga_client_pw_domain_dmc;
++	}
++
+ 	intel_mode_config_init(display);
+ 
+ 	ret = intel_cdclk_init(display);
+-- 
+2.25.1
 
-Sorry, I forgot this one. Yes, I have it as well.
-
-2993 void dl_add_task_root_domain(struct task_struct *p)
-2994 {
-2995         struct rq_flags rf;
-2996         struct rq *rq;
-2997         struct dl_bw *dl_b;
-2998
-2999         raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
-3000         if (!dl_task(p) || dl_entity_is_special(&p->dl)) {
-                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-3001                 raw_spin_unlock_irqrestore(&p->pi_lock, rf.flags);
-3002                 return;
-3003         }
-
->> The suspend issue still persists.
->>
->> My hunch is that it's rather an issue with having 0 CPUs left in DEF
->> while deactivating the last isol CPU (CPU3) so we set overflow = 1 w/o
->> calling __dl_overflow(). We want to account fair_server_bw=52428
->> against 0 CPUs. 
->>
->> l B B l l l
->>
->>       ^^^
->>       isolcpus=[3,4]
->>
->>
->> cpumask_and(mask, rd->span, cpu_active_mask)
->>
->> mask = [3-5] & [0-3] = [3] -> dl_bw_cpus(3) = 1
->>
->> ---
->>
->> dl_bw_deactivate() called cpu=5
->>
->> dl_bw_deactivate() called cpu=4
->>
->> dl_bw_deactivate() called cpu=3
->>
->> dl_bw_cpus() cpu=6 rd->span=3-5 cpu_active_mask=0-3 cpus=1 type=DEF
->>                    ^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^
->>   cpumask_subset(rd->span, cpu_active_mask) is false
->>
->>   for_each_cpu_and(i, rd->span, cpu_active_mask)
->>     cpus++                                       <-- cpus is 1 !!!
->>
->> dl_bw_manage: cpu=3 cap=0 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=1 type=DEF span=3-5
->                                                           ^^^^^^
-> This still looks wrong: with a single cpu remaining we should only have
-> the corresponding dl server bandwidth present (unless there is some
-> other DL task running.
-
-That's true. '104856 - 52428 = 52428' so util of 51 ? Which is 50% of a
-sugov task? Or exactly the fair_server_bw.
-
-But the bw numbers don't matter here since we go straight into the else
-path since dl_bw_cpus(3) = 1.
-
-3587    if (dl_bw_cpus(cpu) - 1)
-3588        overflow = __dl_overflow(dl_b, cap, fair_server_bw, 0);
-3589    else
-3590        overflow = 1;
-
-> If you already had the patch ignoring sugovs bandwidth in your set, could
-> you please share the full dmesg?
-
-Will do later today ... busy with other stuff right now ;-(
-
-BTW, I just saw that this issue also happens for me w/o sugov threads
-(running with Performance CPUfreq governor)! So the remaining
-'total_bw=104856' must be the contribution from 2 CPUs of DEF. Maybe we
-just have a CPU-offset in this accounting somewhere during suspend?
