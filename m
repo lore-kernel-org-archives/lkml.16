@@ -1,415 +1,280 @@
-Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022074.outbound.protection.outlook.com [40.107.193.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4741F540F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978015; cv=fail; b=iYStxZE3pOT+156KflfQvJvSf6O+L1HeCKa8+bD5uE0ACBJxtL+WCR/hxmfscTl6H+Er3xJiOqMly8iS2LWRm7trENgbkj9Z2fBc9tKWtgRBfzNZoYUVm3+Rd+LESTEDgGqoNppyLaZJOO+Ftg4Xp4//D0dIiX9UenAIT+HjNyM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978015; c=relaxed/simple;
-	bh=7IAzFHglTZS1Rp8lIF0Bi6JhCXZh2Hcanhrj372+qKI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Y4XZUmTgBeZeFjDbLI+EQlhu7YvG1WRIto7QmOh44jJBTYTk66LYioC7rocMmT6ZNWQszz50w705Xc7HpP2RL3JFERGaLKBihgOw3NmZgT5HPo9+jIyYHeatVC+q8Rii9+y1P+GIcvdsQfHDEgfBpP3hh9EnDTronEh0TqUY4s8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=i00UNb/t; arc=fail smtp.client-ip=40.107.193.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF521F3D54
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739978098; cv=none; b=VPtz0rUZHqOYMI4TTuDIqDL1HCAeuOchkhkYSCiThrmi72m06ueZuJIVsStV+eIG/i7pXT5d3tOENb3d27pJnIjGrKEPPux7qjeEcFqfg7m/8H0dyEqAFfZ3u/bHFM5HXbXxX4j9cKuoJujFm5F8aviXy2jBBfPwZDgNI5DQzXc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739978098; c=relaxed/simple;
+	bh=7ZzF5Ad64kAmT1EYsz/Ribn3T3yAZpN1quCf0vgkVIQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e3B2SZ7O1YJFCUBKGxz64Hcu/4FrRNn3s5BGhFoBAdG3UqyX+j4GwGwMdQD7whFyK/ccbug7AnL3bQcQdXJcDFIywtpi+g9qVqsYfgxo2VMdcqai7gHjlx6gNz147ftMG+3/w8FIb6IVRIql7XNWODS0bARkLTP62QLw2+EFPDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cDW3FfKC; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="i00UNb/t"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hRDGQNc1vFQr7+B5zBKi3oL/XX3yxU696fjlLBd8aHJUF0XlUteCfZUDgacKQMb/Y0aGs2bI46V7bNNF4F/ioKs4ORoAUX2jb6zDrLPaSTOn1/puOdjAgT9kZsOkyNBKz8MsNzAhKVki6WTdwJsjCl79/cZMnvey54gE7OdZsvk93+n9vVcYD+zFV0Vwl1vknJFk0OqaXqVqyOI7IIZL8TmLx1uS2NIr1m28bCaTo7+4s2DE0/1jOpOOi9R46qtqNjLWGEMdmQewy2N0GJ6/ePeWbSIBr/dV7pZymLQVQiOGbIDEwlfeMKo0kpnsFc66mtRltIhHlysxZOhxR3mq0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZRZJDrnKp89xDA0SMMVQtOMzambriMArCE4vG6vipuQ=;
- b=D1ieNAFGbU7rQ9lEKh3Scfrd579KgypoUkT1P6AYNxaBb9qGZKGOUKVevIPA1lBi3zvUyK01yHuBSUIb0vC9/8CV0ZgPXgnSu2KLx0dExikJ2kMmdUZX06keO7ySReDL0mFeQZqIYuIS13MnwHBrQOaXxeFIaAabqGLYtKKHgIBkz7ROGO1xcoxb5NrljBbCJOKQ8Vu27bgwVl4/G0ZpmJNYHNdBklWsxCbeBl8e3nQk1plUaVuLhgvQEWUjbv/+NhYl3uLvQIb2rUw7mcd3t4N8bI+JOdd5ltfIQdkcIQatjizDC17WPGdExoDVeiPSL9AI1lYesR86ynXZCTG+vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZRZJDrnKp89xDA0SMMVQtOMzambriMArCE4vG6vipuQ=;
- b=i00UNb/tFoUrLsViJTzzGdWF/Hb4JvSOpNo9eoq0aPDgGHmZyGQkdUlDWc3niD1rOeiywPms+BAz7D77NEG6NIYc/AzycYLJwEcz44r6WW5Juui2awtDKxeUml1GYc5nIcRCwscn8QJox2TU42s4WlEYdlmDcki/CAxtbUdUSHwIpRlHWWhsdtIw4mr8YJ6YlClaDUdl7Xa6j3ZqWZxSzrkLr6OKwCAlYNTfZKxL1QUWxtYEQizJUeFx0ExbMG+hvy/iSwGojf+q/4re8ST2aGhslum22HsGaxSx7jBvGBG8lA9kTgDhHozpYfc9TiKRx+kk19bhUDHVwuqu+TNQvg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YQXPR01MB6137.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:3e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Wed, 19 Feb
- 2025 15:13:30 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8466.015; Wed, 19 Feb 2025
- 15:13:30 +0000
-Message-ID: <8fc793e3-cdfc-4603-afe6-d2ed6785ffbb@efficios.com>
-Date: Wed, 19 Feb 2025 10:13:28 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] sched: Move task_mm_cid_work to mm work_struct
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, "Paul E. McKenney"
- <paulmck@kernel.org>, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, Shuah Khan <shuah@kernel.org>
-References: <20250219113108.325545-1-gmonaco@redhat.com>
- <20250219113108.325545-2-gmonaco@redhat.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20250219113108.325545-2-gmonaco@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQXP288CA0003.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c00:41::14) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDW3FfKC"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f678a27787so58515747b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:14:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739978095; x=1740582895; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b+E6kC7d+DNvc02YejfVB1otPtjrvjn2uNRtdwjS8Tw=;
+        b=cDW3FfKCsShYdJ8iaSqiKbbPqupv2AD7ExsgYEMfibYJ5kpKAX9zyYOTEZceVHQIwo
+         GxLEv4KVEGQ8ya6lw011D2bUFi6VSLBpi657IXERRArBGMDk+MiMWmvOIOWMbRVYa/wa
+         2WnKgXU3pF1ifQACU/asTZktc2eE8mQGFnUsdLtIDVYEvX8Q3We86uYazT4tDUT744BH
+         IIWpz1JvdxIxMl1M1O3qSbnDJ3BcuJ5ZsF1Hlfzk6OdI7+bafFhsK9mra/jLGaAVOsZ/
+         lBD70Ly2Vhg11gj0rGPebf8+j3taSKqGbcD2I9T2U8XZ41vZM0GnMFxpIty6QiSpQUiR
+         1hrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739978095; x=1740582895;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b+E6kC7d+DNvc02YejfVB1otPtjrvjn2uNRtdwjS8Tw=;
+        b=TCt5zBZ+jw7GjJb2Ih/Ts7Cj4tsO958lIHEKH+uWJnIC0WUg/Imc+Rvk5sTAa4MR+V
+         VakdvXsQtY6p41DT3hDa9dU7eMQXgwiTq4mTo80CP7H3yW09GK/xw+o8MePfP5e0fWVu
+         J34LpXKEORh5qogjC5WkiY7Hm6mv86/JuRkzGOfsEWspvBMQlF4+4vBEpuyLN+46CWy3
+         QARP3wo3MPMsEN5gwIjkQ7FdnvGpsSNDmtUjPklXlcmnihdGkQ3sIpeOV55KRpLU93iv
+         Ta1s8dfxC9nyrU0gTVouKKXrxXYp+KH4S2dgjXBJETfFjdz/bAb+nzVM+uZchrHKpn4E
+         uYBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUF2/g04IJVsNnmq8WRwl+Yc0OjavUHT2aJgKj/WmvrahTl0zP1xs+dPN3Xvm0Br2F88ex/YUGI5fjbbr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx6u+EDj28Of66CnKboCUQ1+g3h8t8v76bgAP94OKw3miWG7wh
+	apDWDvqFj4PnF2YL0wDDlNVMlmzgNzLntcukBm1rplK/BcyHHEORUx1n9oTszWTOsUSTYHvmCSW
+	qYfBPh5kMnI2hmbleEpI+RAlbAxhXE+lHN530zA==
+X-Gm-Gg: ASbGncuGMvam8kXeto6V3PS/c1E/l3jAMloRlmno9BybonWerBMWIFSTlJPZrKEpZ7V
+	zdXxLoS6UJvsfhByQvSYGKgmmDGTaP8H0NiWnoEKiqW0s4VCdY6Q4qKrFdKgCSsrmsahZhCF7eb
+	wsnJ87iS3/cKI=
+X-Google-Smtp-Source: AGHT+IGzsPfDdeeAveGhU+aOYK1SYop1lJB2Gp+ImKyViDH0yKDhHuYN7jg/YXNY7Ml0uxzkPfJKqZciVxbo+viEHSg=
+X-Received: by 2002:a05:690c:450e:b0:6fb:277f:f022 with SMTP id
+ 00721157ae682-6fba56ac46amr37599417b3.15.1739978094861; Wed, 19 Feb 2025
+ 07:14:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YQXPR01MB6137:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c7620f2-8246-4326-5ce2-08dd50f7f7a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YTdVK1ltM3h2d3EwL213eTJwNmZaRnV3ZGJLY1MzcXZLeE54OFBMR0xEZTNU?=
- =?utf-8?B?bll4eVpCbGZISGhnMzZ3ZkZ6ZlJrdmQrcndraEVGaDNUd3YxelZlcDZlaHZK?=
- =?utf-8?B?OGF5aW40M3ppMmM5OVJVdVhUMy9rdmMzaFBTOEZhL01UaEtqd0VXeG9Ma1pw?=
- =?utf-8?B?NHFiVER5RGkxN1BXT3plTU1IR3hEMmlzRWZMWUwyZmVKQTN3RUpnUmphOFpL?=
- =?utf-8?B?ZHNUbUg5RGtSU3k4NVdoM081cVZQOXJWMnVnL093RzFBTURxa25zK3RrdGdq?=
- =?utf-8?B?V0tRYVJvZ0xXM0MwbW1VMjY1UHdFazcvZ0hEd0dKN0R0cG1qanRKNDluSUpB?=
- =?utf-8?B?NGpqQTR2bmNjTHVubE04aXlwZUJUSGxyN0hnMkU0WGM5Vi9lQU1RUXJSY2dt?=
- =?utf-8?B?Szhkc1FCS1d4ck5LWkFtaU9vWHl3NGxxSExxUFNnN1Ftb2tTZTNvNjI0ZVVa?=
- =?utf-8?B?aWd3ZThiM2RpRVlFYzFFRkdxb2hsaDQ4Mk5BSHp2VXNpSGZwWk81Y05ITS9K?=
- =?utf-8?B?aXRvUmR2NmhMSlp4Q0xEYk9oL3lMeTZrWGtVN1RTR29nRGtDVGxCcmtiZDZo?=
- =?utf-8?B?R3RldWxpcWM0eFdvS3h1TWVkcWpWdXBodTdHSGczdUNzOGpEa09oTEhmY2JU?=
- =?utf-8?B?d0xZUVMvb3JxVU1hcExtc1BRMTZhL29odW82YVFYOVVidVdMSnZqTzFNT3NJ?=
- =?utf-8?B?UW80SUorQllIRS9HR2V1cE5NZ2J1T01hT3Ayc1FVOGNMUXhGVFNtRmE0dnEv?=
- =?utf-8?B?anJGMkFaMnJJRXdHNHpOaUp1bVNLckR0cDQ4c1hKZ1dHdGdqRDFnNmxJVUZW?=
- =?utf-8?B?N0srS0xESVUxT2U0UFBvNHRoNFlIQ1JQa3lIMCtvWFBZdGg0NUZjNTZJYUJ6?=
- =?utf-8?B?UU5hTGdHNy9WT0ErUExKdGRrYXNZaHBock4vSkpNanFNazZPQ3FuNzZXNlpx?=
- =?utf-8?B?OWZCeVo5Q1lOam50ZEJIRkwwelQ2VW9WdWtKQTRIVysyWG5PaTFob05YWjVz?=
- =?utf-8?B?bWpxSnBKTjVIT1BiUmU2cDFIR3NEcnF2RkQzUGpESy9qc0I0bDZUM2RjQlhM?=
- =?utf-8?B?WGVHWUM1bzJ5ME4va2xoa2lmM04xckc4Ky9ablhGL3VvM0J6bFUrY2tYUDFT?=
- =?utf-8?B?UFJiN2VRUEpWbWFjd1o5T1NjTDdZS2dzMkRlS2oxMGRmM25UUFdvZGNSVUdp?=
- =?utf-8?B?Y2VwK2VTc0lrK1NpdFJ1Tnk0cmxTUUxJVkhHVE5oMktLcGtOa0VEaXBCSU5v?=
- =?utf-8?B?NUpqa1duTklXZnV6Z2p1VWozaW02aWFUTjViNGI3eiszbzlpcURRdk5CVmo1?=
- =?utf-8?B?NlQ3SmZXRjgrOU0zdEtxaHQzL2pOaFQwRTR0L242YXo1aEgrdm9TNUFqNkpu?=
- =?utf-8?B?VDZadGdGdWNoMWthU252bDBMUXhVbXlSUk90bXlWNCszREFuVWd5alU5cktZ?=
- =?utf-8?B?NjByYjVHUDU0eEFzZkxvcVFVTFVYLzZwWm5La3VNQVJRa1VMVXZsL2xXVnlk?=
- =?utf-8?B?emE0aDAwaFMxRWNnYVdGUFRzdDhqa3NjN0x3ZXg1U2IrR2U3d3ZHM2lFdDZO?=
- =?utf-8?B?c2h4NmFCNzBmY2lBdGFmczNrL1QzNmliaUdaWVRDeU9CMmVrdi9EZUZ5aXh6?=
- =?utf-8?B?VG01MlhpV3hFSUgrNHJCUEppNlV6Nk9hYUxscGlaMzVsMmw0Sm45ejFPMklZ?=
- =?utf-8?B?SnpRWXlzWFNOdWtTMmROc0NPNm9yZHdIbzIxWUp6MmVXamNsU3RoaEc2QTJZ?=
- =?utf-8?Q?zQwVK+E7WO+V9zcY5G9Ph34Xh+96EGFhnmxlBQ/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZU5FSm5tN1dBdWptcGpCbkN1NlpndDVPUGxqcHpsSDhRR003WlFXbW0rSGlX?=
- =?utf-8?B?bWtmeEQxS0RTdFhYeGVWNDlLK3pOYWNiNGtXWm5rUDRmVG5WaVBEazhITEtM?=
- =?utf-8?B?UU5WcnRtejlONWhPREk4WE5OVnNKZU9zVXlLR1FLcTZ2WU1uZ3NHbnRPUDZj?=
- =?utf-8?B?V1JXaWozVmNJQVZQS2I4dDNkSzc4WHJVZUhkQWpXR0NoZWpUUzlhNktIMjAw?=
- =?utf-8?B?VkI5WFFnNGhuUDFtMm81WTQ0OVNMUEVEempHcmlhOVMvSXVJcVN2eDh4TGp0?=
- =?utf-8?B?MXFJRllOMm56R3B0ekNINU1mVVZpS2FjM1RzYlZLSW5hMUtZeTNzeGFwVHZ4?=
- =?utf-8?B?c0xKY0ZpcFRaUkp5WnloNi82bVg4eWh2bmY2R2F5RUhFeEI2VUlyTlllT0tN?=
- =?utf-8?B?ZVc3NlVSa1k0dVlIVkhpK3NGWUttbTZYc3J5Tm9GcDBjYkNjN0tyeDBRVUZD?=
- =?utf-8?B?a21KRlA1RkI4K2ZreU1PVGZxb09lOUVlVzF1emFoUTg5V2hTZ3RTZ0U1N0pl?=
- =?utf-8?B?NFhOM1VvVlRRUWZxVDZjenlpNy9ieUs1a2ZTd2tIL1k3UXVPa0NVaDRVRnlz?=
- =?utf-8?B?c1NQK21mODVia0Z5TnZGU3hadUlHT3NZWW5GT2V2RjY3eG05QkE2TzdiRW4x?=
- =?utf-8?B?TzlBOTYweXh0bXl2VkdqQjJlZWlpck00MDNNcGdraTF5MndMd3pmcjJIMk42?=
- =?utf-8?B?SVBTZ3AwZnV4TUlhTG8wZWEzZ1d0eElzeVM3VjhLNTYwVjY1K29pZTRUM2F4?=
- =?utf-8?B?OXdnbzZMU3Y3M1U0Zmt4blFHRmIvY0lCYkExNGpoMHdiUHpmS3UwSjh3YWU1?=
- =?utf-8?B?V2VQVzRVdXZLcTMwU1BFSXRLQmJ2ZUdKbEptbllDN0luMVVmcElQb0YzbzY2?=
- =?utf-8?B?OEZXQWxvcmM3NUZ1MnNwQ3BPd3FGYTJkR1BOSllXU3dIcDRGVmhMWDVMeGF3?=
- =?utf-8?B?YlUrWFlTTVFBc2p1V0s3VlJQdTdkNHZKMXlkRlE1UFdaMlVZa09XOWVEMjNI?=
- =?utf-8?B?QVFqRVJ3bWpGaUhlbHRSK1hEa1RUM2xBSG5mSXQwYWZURlhCSHFyVTVpNlF5?=
- =?utf-8?B?L3dYUE1tT1A1L1hpSGtsTXl0MTczaFBJOWtKWGtOU3lLbm9xNmVvN05DdXo4?=
- =?utf-8?B?YUg1VTN1SDZmS3d4b2RTbTVuelhxSFBwbnFPSTU3cXUzUVB1Q3FULzgzb2xv?=
- =?utf-8?B?TGErdm9WdDRqRFJrQW82a2QxTElDU3d1ZkRJVXhhdzZhZ2FZbndJelhWS25u?=
- =?utf-8?B?ZTVyOHJOUEhTVEhYemlXSjdJOGJTTXdDS2thOFNRYWdnS21sZUV0clJsaUlC?=
- =?utf-8?B?R2tzaGdJWkFKZnV1VFp0UURBZ3dFTTNHS2paU2tKRm1WTkt5VEE2VEJORyts?=
- =?utf-8?B?RytVOU5vU0RDODJwVDJ2MjR5dE1lU016THVHT1lHK29xMHpkYTNKRDFJcWFF?=
- =?utf-8?B?N3dnOTFCQ3hQbERWcnlMWlNCVnJ3djAxd0N0S2hEYU1CTjFzcFhUeCt5Y1RF?=
- =?utf-8?B?ODNUbW52RXJxUzgxMmQ4QnBzaWVLbFZHM3FrT0s4OERzdUNGcFF1WHYyTGtF?=
- =?utf-8?B?K3ZrRzFPRThIRjd2alMyU2ZPVXVFTXZGdTJsRk1EYVRTZ0NhMjdsOXFZSW9D?=
- =?utf-8?B?aWxRcVNwc0thV2J5Vml3cHJrNXEvY290eUEyWGN2WTR1dGJZNDJvT3VTWVNU?=
- =?utf-8?B?V3k4Q3ZhL2JVTERTa0toaDdmcThxMUtvRWRzQ3QxNmtneVRmNFRFeE96ZXBR?=
- =?utf-8?B?ME5HdzdYOWtWQ01VUWRXUWpJZE52M2x0V3Exc2wvWUFMUi9LdHdGYkQ0TEtp?=
- =?utf-8?B?eTNPQzIxNlRWTDJaV2lKc1pkTlNIeVpDOU1BTm5vV29jL1FEdy9vZjltbnJV?=
- =?utf-8?B?WGdxOXRUeG9iS3NjalluMlBxaUZaamFXb0VkK1J3Zzg2RUNZVU1seUYrRVBF?=
- =?utf-8?B?SVF3L2xUUGNsTWVWZTRDYUc2WXNxQWFReC9xSVBNNlNLd01NR3J0aEl6cnZD?=
- =?utf-8?B?b3I4OVU0Uk5IQzk3VmRTcGc5ci9ZdURqb1pCZmtrNmx0VVM2OFA2d29NNHk2?=
- =?utf-8?B?N3NzYS9mc3NaMUVNc09wTnovRjZIeE9aVm5yQmdwZFFmYlFCNkIzalFqSEFY?=
- =?utf-8?B?UEJMcUlEOTVTTXRHMXMxTmMxekdmQm12eUJvWStkajBZS29UMUtoMjhnTlJC?=
- =?utf-8?Q?ftFiqAIvQhcmf6eJsoAS0GU=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c7620f2-8246-4326-5ce2-08dd50f7f7a2
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 15:13:29.9821
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8UTasGYocd6m8qZ4HldejnYLKOg76qmeWkIdW9DuL2WvfHY7WXYNCWhLQhn9CJZT8FY9kjonkBEnxeBAirxFi5UHbMiXUiWMpCW4rb7SPCM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQXPR01MB6137
+References: <20250109-sar2130p-nvmem-v4-0-633739fe5f11@linaro.org>
+ <20250109-sar2130p-nvmem-v4-2-633739fe5f11@linaro.org> <Z7Xv9lNc6ckJVtKc@finisterre.sirena.org.uk>
+In-Reply-To: <Z7Xv9lNc6ckJVtKc@finisterre.sirena.org.uk>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 19 Feb 2025 17:14:43 +0200
+X-Gm-Features: AWEUYZlKZrJ6BlnP5LZGrcDfshTk8gmJlBpd2Sd2bgFCh0GYo_K5SDi55MeUV-E
+Message-ID: <CAA8EJpp-mE2w_c3K08+8AR3Mn1r8X58FRXvAUFALQ-u2ppoKgw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] nvmem: core: verify cell's raw_len
+To: Mark Brown <broonie@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Akhil P Oommen <quic_akhilpo@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-02-19 06:31, Gabriele Monaco wrote:
-> Currently, the task_mm_cid_work function is called in a task work
-> triggered by a scheduler tick to frequently compact the mm_cids of each
-> process. This can delay the execution of the corresponding thread for
-> the entire duration of the function, negatively affecting the response
-> in case of real time tasks. In practice, we observe task_mm_cid_work
-> increasing the latency of 30-35us on a 128 cores system, this order of
-> magnitude is meaningful under PREEMPT_RT.
-> 
-> Run the task_mm_cid_work in a new work_struct connected to the
-> mm_struct rather than in the task context before returning to
-> userspace.
-> 
-> This work_struct is initialised with the mm and disabled before freeing
-> it. Its execution is no longer triggered by scheduler ticks: the queuing
-> of the work happens while returning to userspace in
-> __rseq_handle_notify_resume, maintaining the checks to avoid running
-> more frequently than MM_CID_SCAN_DELAY.
-> 
-> The main advantage of this change is that the function can be offloaded
-> to a different CPU and even preempted by RT tasks.
-> 
-> Moreover, this new behaviour is more predictable with periodic tasks
-> with short runtime, which may rarely run during a scheduler tick.
-> Now, the work is always scheduled when the task returns to userspace.
-> 
-> The work is disabled during mmdrop, since the function cannot sleep in
-> all kernel configurations, we cannot wait for possibly running work
-> items to terminate. We make sure the mm is valid in case the task is
-> terminating by reserving it with mmgrab/mmdrop, returning prematurely if
-> we are really the last user before mmgrab.
-> This situation is unlikely since we don't schedule the work for exiting
-> tasks, but we cannot rule it out.
-> 
-> Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid")
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> ---
->   include/linux/mm_types.h |  8 ++++++++
->   include/linux/sched.h    |  7 ++++++-
->   kernel/rseq.c            |  1 +
->   kernel/sched/core.c      | 33 ++++++++++++---------------------
->   kernel/sched/sched.h     |  2 --
->   5 files changed, 27 insertions(+), 24 deletions(-)
-> 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 0234f14f2aa6b..e748cf51e0c32 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -889,6 +889,10 @@ struct mm_struct {
->   		 * mm nr_cpus_allowed updates.
->   		 */
->   		raw_spinlock_t cpus_allowed_lock;
-> +		/*
-> +		 * @cid_work: Work item to run the mm_cid scan.
-> +		 */
-> +		struct work_struct cid_work;
->   #endif
->   #ifdef CONFIG_MMU
->   		atomic_long_t pgtables_bytes;	/* size of all page tables */
-> @@ -1185,6 +1189,8 @@ enum mm_cid_state {
->   	MM_CID_LAZY_PUT = (1U << 31),
->   };
->   
-> +extern void task_mm_cid_work(struct work_struct *work);
-> +
->   static inline bool mm_cid_is_unset(int cid)
->   {
->   	return cid == MM_CID_UNSET;
-> @@ -1257,12 +1263,14 @@ static inline int mm_alloc_cid_noprof(struct mm_struct *mm, struct task_struct *
->   	if (!mm->pcpu_cid)
->   		return -ENOMEM;
->   	mm_init_cid(mm, p);
-> +	INIT_WORK(&mm->cid_work, task_mm_cid_work);
->   	return 0;
->   }
->   #define mm_alloc_cid(...)	alloc_hooks(mm_alloc_cid_noprof(__VA_ARGS__))
->   
->   static inline void mm_destroy_cid(struct mm_struct *mm)
->   {
-> +	disable_work(&mm->cid_work);
->   	free_percpu(mm->pcpu_cid);
->   	mm->pcpu_cid = NULL;
->   }
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 9632e3318e0d6..2fd65f125153d 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1397,7 +1397,6 @@ struct task_struct {
->   	int				last_mm_cid;	/* Most recent cid in mm */
->   	int				migrate_from_cpu;
->   	int				mm_cid_active;	/* Whether cid bitmap is active */
-> -	struct callback_head		cid_work;
->   #endif
->   
->   	struct tlbflush_unmap_batch	tlb_ubc;
-> @@ -2254,4 +2253,10 @@ static __always_inline void alloc_tag_restore(struct alloc_tag *tag, struct allo
->   #define alloc_tag_restore(_tag, _old)		do {} while (0)
->   #endif
->   
-> +#ifdef CONFIG_SCHED_MM_CID
-> +extern void task_queue_mm_cid(struct task_struct *curr);
-> +#else
-> +static inline void task_queue_mm_cid(struct task_struct *curr) { }
-> +#endif
-> +
->   #endif
-> diff --git a/kernel/rseq.c b/kernel/rseq.c
-> index 442aba29bc4cf..f8394ebbb6f4d 100644
-> --- a/kernel/rseq.c
-> +++ b/kernel/rseq.c
-> @@ -419,6 +419,7 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
->   	}
->   	if (unlikely(rseq_update_cpu_node_id(t)))
->   		goto error;
-> +	task_queue_mm_cid(t);
->   	return;
->   
->   error:
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 9aecd914ac691..ee35f9962444b 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -5663,7 +5663,6 @@ void sched_tick(void)
->   		resched_latency = cpu_resched_latency(rq);
->   	calc_global_load_tick(rq);
->   	sched_core_tick(rq);
-> -	task_tick_mm_cid(rq, donor);
+On Wed, 19 Feb 2025 at 16:51, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Jan 09, 2025 at 06:35:46AM +0200, Dmitry Baryshkov wrote:
+> > Check that the NVMEM cell's raw_len is a aligned to word_size. Otherwis=
+e
+> > Otherwise drivers might face incomplete read while accessing the last
+> > part of the NVMEM cell.
+>
+> I'm seeing a bunch of failures on i.MX platforms in -next which bisect
+> to this patch.  For example on the i.MX6q based UDOOq various things
+> including the ethernet fail to come up due to the efuse not appearing:
+>
+> [    1.735264] nvmem imx-ocotp0: cell mac-addr raw len 6 unaligned to nvm=
+em word size 4
+> [    1.735289] imx_ocotp 21bc000.efuse: probe with driver imx_ocotp faile=
+d with error -22
 
-I agree that this approach is promising, however I am concerned about
-the fact that a task running alone on its runqueue (thus without
-preemption) for a long time will never recompact mm_cid, and also
-will never update its mm_cid field.
+This looks like an error on the i.MX platforms. The raw_len must be
+aligned to word size. I think the easiest fix is to implement the
+.fixup_dt_cell_info() callback like I did for the qfprom driver.
 
-So I am tempted to insert this in the sched_tick to cover that scenario:
-
-      rseq_preempt(current);
-
-This would ensure that the task runs __rseq_handle_notify_resume() at
-least each tick.
-
->   	scx_tick(rq);
->   
->   	rq_unlock(rq, &rf);
-> @@ -10530,22 +10529,16 @@ static void sched_mm_cid_remote_clear_weight(struct mm_struct *mm, int cpu,
->   	sched_mm_cid_remote_clear(mm, pcpu_cid, cpu);
->   }
->   
-> -static void task_mm_cid_work(struct callback_head *work)
-> +void task_mm_cid_work(struct work_struct *work)
->   {
->   	unsigned long now = jiffies, old_scan, next_scan;
-> -	struct task_struct *t = current;
->   	struct cpumask *cidmask;
-> -	struct mm_struct *mm;
-> +	struct mm_struct *mm = container_of(work, struct mm_struct, cid_work);
->   	int weight, cpu;
->   
-> -	SCHED_WARN_ON(t != container_of(work, struct task_struct, cid_work));
-> -
-> -	work->next = work;	/* Prevent double-add */
-> -	if (t->flags & PF_EXITING)
-> -		return;
-> -	mm = t->mm;
-> -	if (!mm)
-> +	if (!atomic_read(&mm->mm_count))
->   		return;
-> +	mmgrab(mm);
-
-AFAIU this is racy with respect to re-use of mm struct.
-
-I recommend that you move mmgrab() to task_queue_mm_cid() just before
-invoking schedule_work. That way you ensure that the mm count never
-reaches 0 while there is work in flight (and therefore guarantee that
-the mm is not re-used).
-
-Thanks,
-
-Mathieu
-
->   	old_scan = READ_ONCE(mm->mm_cid_next_scan);
->   	next_scan = now + msecs_to_jiffies(MM_CID_SCAN_DELAY);
->   	if (!old_scan) {
-> @@ -10558,9 +10551,9 @@ static void task_mm_cid_work(struct callback_head *work)
->   			old_scan = next_scan;
->   	}
->   	if (time_before(now, old_scan))
-> -		return;
-> +		goto out_drop;
->   	if (!try_cmpxchg(&mm->mm_cid_next_scan, &old_scan, next_scan))
-> -		return;
-> +		goto out_drop;
->   	cidmask = mm_cidmask(mm);
->   	/* Clear cids that were not recently used. */
->   	for_each_possible_cpu(cpu)
-> @@ -10572,6 +10565,8 @@ static void task_mm_cid_work(struct callback_head *work)
->   	 */
->   	for_each_possible_cpu(cpu)
->   		sched_mm_cid_remote_clear_weight(mm, cpu, weight);
-> +out_drop:
-> +	mmdrop(mm);
->   }
->   
->   void init_sched_mm_cid(struct task_struct *t)
-> @@ -10584,23 +10579,19 @@ void init_sched_mm_cid(struct task_struct *t)
->   		if (mm_users == 1)
->   			mm->mm_cid_next_scan = jiffies + msecs_to_jiffies(MM_CID_SCAN_DELAY);
->   	}
-> -	t->cid_work.next = &t->cid_work;	/* Protect against double add */
-> -	init_task_work(&t->cid_work, task_mm_cid_work);
->   }
->   
-> -void task_tick_mm_cid(struct rq *rq, struct task_struct *curr)
-> +void task_queue_mm_cid(struct task_struct *curr)
->   {
-> -	struct callback_head *work = &curr->cid_work;
-> +	struct work_struct *work = &curr->mm->cid_work;
->   	unsigned long now = jiffies;
->   
-> -	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
-> -	    work->next != work)
-> +	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)))
->   		return;
->   	if (time_before(now, READ_ONCE(curr->mm->mm_cid_next_scan)))
->   		return;
->   
-> -	/* No page allocation under rq lock */
-> -	task_work_add(curr, work, TWA_RESUME);> +	schedule_work(work);
->   }
->   
->   void sched_mm_cid_exit_signals(struct task_struct *t)
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index c8512a9fb0229..37a2e2328283e 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -3630,7 +3630,6 @@ extern int use_cid_lock;
->   
->   extern void sched_mm_cid_migrate_from(struct task_struct *t);
->   extern void sched_mm_cid_migrate_to(struct rq *dst_rq, struct task_struct *t);
-> -extern void task_tick_mm_cid(struct rq *rq, struct task_struct *curr);
->   extern void init_sched_mm_cid(struct task_struct *t);
->   
->   static inline void __mm_cid_put(struct mm_struct *mm, int cid)
-> @@ -3899,7 +3898,6 @@ static inline void switch_mm_cid(struct rq *rq,
->   static inline void switch_mm_cid(struct rq *rq, struct task_struct *prev, struct task_struct *next) { }
->   static inline void sched_mm_cid_migrate_from(struct task_struct *t) { }
->   static inline void sched_mm_cid_migrate_to(struct rq *dst_rq, struct task_struct *t) { }
-> -static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *curr) { }
->   static inline void init_sched_mm_cid(struct task_struct *t) { }
->   #endif /* !CONFIG_SCHED_MM_CID */
->   
+>
+> ...
+>
+> [   12.647970] platform 20c8000.anatop:tempmon: deferred probe pending: p=
+latform: wait for supplier /soc/bus@2100000/efuse@21bc000/temp-grade@20
+> [   12.648001] platform imx6q-cpufreq: deferred probe pending: (reason un=
+known)
+> [   12.648012] platform 2188000.ethernet: deferred probe pending: platfor=
+m: wait for supplier /soc/bus@2100000/efuse@21bc000/mac-addr@88
+>
+> full log:
+>
+>    https://lava.sirena.org.uk/scheduler/job/1128243
+>
+> I'm also seeing the efuse failing to come up on i.MX8MP platforms:
+>
+> [    2.503137] nvmem imx-ocotp0: cell mac-address raw len 6 unaligned to =
+nvmem word size 4
+> [    2.503155] imx_ocotp 30350000.efuse: probe with driver imx_ocotp fail=
+ed with error -22
+>
+> Full log:
+>
+>    https://lava.sirena.org.uk/scheduler/job/1126672
+>
+> Bisection log, there's a bunch of additional good commits added at the
+> start because my automation feeds in results it already knows about to
+> narrow things down:
+>
+> # bad: [8936cec5cb6e27649b86fabf383d7ce4113bba49] Add linux-next specific=
+ files for 20250219
+> # good: [67961d4f4e34f5ed1aeebab08f42c2e706837ec5] Merge branch 'for-linu=
+x-next-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
+> # good: [d1a09c610027e446ed30c21f61c2f2443bf92a3f] MAINTAINERS: adjust th=
+e file entry in SPI OFFLOAD
+> # good: [5d9fca12f54d3e25e02521aa8f3ec5d53759b334] ASoC: amd: ps: fix inc=
+onsistent indenting warning in check_and_handle_sdw_dma_irq()
+> # good: [e08fe24c34d37d00e84009f2fb4c35f5978041e6] ASoC: SOF: Intel: Use =
+str_enable_disable() helper
+> # good: [d64c4c3d1c578f98d70db1c5e2535b47adce9d07] ASoC: tas2764: Add reg=
+ defaults for TAS2764_INT_CLK_CFG
+> # good: [42da18e62652b58ba5ecd1524c146b202cda9bb7] ASoC: soc-pcm: cleanup=
+ dpcm_fe_dai_do_trigger()
+> # good: [994719ed6d81a6f4677875ab6730254c0bc484ea] ASoC: Intel: avs: Use =
+str_on_off() in avs_dsp_core_power()
+> # good: [ae575d2145d1a2c8bb5d2835d7d54751f3b0bace] ASoC: tegra: Remove th=
+e isomgr_bw APIs export
+> # good: [f22ba3561daa792dd138ed543e0bf48efe0b999c] ASoC: SOF: imx-common:=
+ set sdev->pdata->hw_pdata after common is alloc'd
+> # good: [ad0fbcebb5f6e093d433a0873758a2778d747eb8] ASoC: adau1701: use gp=
+iod_multi_set_value_cansleep
+> # good: [e957c96455e8f4c630d5e374312cad0633ca7e17] spi: offload: fix use =
+after free
+> # good: [ff4d4158ef9143327a42f7be4298751cb0d1be69] spi: spi-offload-trigg=
+er-pwm: add extra headers
+> # good: [21aa330fec31bb530a4ef6c9555fb157d0711112] ASoC: fsl_micfil: Add =
+decimation filter bypass mode support
+> # good: [c5528214c7c0a753c908a7b353309ba665985fb4] ASoC: codecs: wcd93xx-=
+sdw: fix of_property_read_bool() warnings
+> # good: [330cbb40bb3664a18a19760bd6dc6003d6624041] dt-bindings: ASoC: roc=
+kchip: Add compatible for RK3588 SPDIF
+> # good: [5a19e1985d014fab9892348f6175a19143cec810] spi: axi-spi-engine: i=
+mplement offload support
+> # good: [6cf5df1040ba0694aea6a5edc6f31811a442ea36] ASoC: SOF: imx: add dr=
+iver for the imx95 chip
+> # good: [9da195880f167ab7c2d595388decf783c9920121] ASoC: SDCA: Add suppor=
+t for PDE Entity properties
+> # good: [852c0b7204ded184924c41ab99b2ac7a70ad4dab] ASoC: Intel: soc-acpi-=
+intel-ptl-match: add rt713_vb_l2_rt1320_l13
+> # good: [4bb5b6f13fd83b32c8a93fbd399e7558415d1ce0] ASoC: amd: amd_sdw: Ad=
+d quirks for Dell SKU's
+> # good: [cb161c333927142818d6bf22a4da2b023fb2b8c9] ASoC: tas2781: Switch =
+to use %ptTsr
+> # good: [153dbf4adad0082d030c30d20541df2b1af52db6] regmap: irq: Use one w=
+ay of setting all bits in the register
+> # good: [0e9a970d7b2cb98d741bc0e32ad8c8f30c009c63] ASoC: qcom: sdw: Add g=
+et and set channel maps support from codec to cpu dais
+> # good: [583348bd65ceaf4a5067a6267dd236929e1b4b37] ASoC: SOF: ipc4-topolo=
+gy: Improve the information in prepare_copier prints
+> # good: [0a7c85b516830c0bb088b0bdb2f2c50c76fc531a] regulator: ad5398: Fix=
+ incorrect power down bit mask
+> # good: [4c7518062d638837cea915e0ffe30f846780639a] ASoC: SOF: ipc4: Add s=
+upport for split firmware releases
+> # good: [215705db51eb23052c73126d2efb6acbc2db0424] spi: Replace custom fs=
+leep() implementation
+> # good: [6603c5133daadbb3277fbd93be0d0d5b8ec928e8] ASoC: dt-bindings: atm=
+el,at91-ssc: Convert to YAML format
+> # good: [25fac20edd09b60651eabcc57c187b1277f43d08] spi: gpio: Support a s=
+ingle always-selected device
+> # good: [e27c125040b1e1f26d910b46daabbe55e67fdf3b] ASoC: codecs: wcd934x:=
+ use wcd934x binding header
+> # good: [652ffad172d089acb1a20e5fde1b66e687832b06] spi: fsi: Batch TX ope=
+rations
+> # good: [6eab7034579917f207ca6d8e3f4e11e85e0ab7d5] ASoC: soc-core: Stop u=
+sing of_property_read_bool() for non-boolean properties
+> # good: [856366dc924a9561dae39f252b45dfd6cc6895ce] ALSA: hda: Select avs-=
+driver by default on MBL
+> # good: [5a6a461079decea452fdcae955bccecf92e07e97] regulator: ad5398: Add=
+ device tree support
+> # good: [f5aab0438ef17f01c5ecd25e61ae6a03f82a4586] regulator: pca9450: Fi=
+x enable register for LDO5
+> # good: [c1ac98492d1584d31f335d233a5cd7a4d4116e5a] spi: realtek-rtl-snand=
+: Drop unneeded assignment for cache_type
+> # good: [7ed1b265021dd13ce5619501b388e489ddc8e204] ASoC: cpcap: Implement=
+ jack detection
+> # good: [89785306453ce6d949e783f6936821a0b7649ee2] spi: zynqmp-gqspi: Alw=
+ays acknowledge interrupts
+> # good: [995cf0e014b0144edf1125668a97c252c5ab775e] regmap: Reorder 'struc=
+t regmap'
+> git bisect start '8936cec5cb6e27649b86fabf383d7ce4113bba49' '67961d4f4e34=
+f5ed1aeebab08f42c2e706837ec5' 'd1a09c610027e446ed30c21f61c2f2443bf92a3f' '5=
+d9fca12f54d3e25e02521aa8f3ec5d53759b334' 'e08fe24c34d37d00e84009f2fb4c35f59=
+78041e6' 'd64c4c3d1c578f98d70db1c5e2535b47adce9d07' '42da18e62652b58ba5ecd1=
+524c146b202cda9bb7' '994719ed6d81a6f4677875ab6730254c0bc484ea' 'ae575d2145d=
+1a2c8bb5d2835d7d54751f3b0bace' 'f22ba3561daa792dd138ed543e0bf48efe0b999c' '=
+ad0fbcebb5f6e093d433a0873758a2778d747eb8' 'e957c96455e8f4c630d5e374312cad06=
+33ca7e17' 'ff4d4158ef9143327a42f7be4298751cb0d1be69' '21aa330fec31bb530a4ef=
+6c9555fb157d0711112' 'c5528214c7c0a753c908a7b353309ba665985fb4' '330cbb40bb=
+3664a18a19760bd6dc6003d6624041' '5a19e1985d014fab9892348f6175a19143cec810' =
+'6cf5df1040ba0694aea6a5edc6f31811a442ea36' '9da195880f167ab7c2d595388decf78=
+3c9920121' '852c0b7204ded184924c41ab99b2ac7a70ad4dab' '4bb5b6f13fd83b32c8a9=
+3fbd399e7558415d1ce0' 'cb161c333927142818d6bf22a4da2b023fb2b8c9' '153dbf4ad=
+ad0082d030c30d20541df2b1af52db6' '0e9a970d7b2cb98d741bc0e32ad8c8f30c009c63'=
+ '583348bd65ceaf4a5067a6267dd236929e1b4b37' '0a7c85b516830c0bb088b0bdb2f2c5=
+0c76fc531a' '4c7518062d638837cea915e0ffe30f846780639a' '215705db51eb23052c7=
+3126d2efb6acbc2db0424' '6603c5133daadbb3277fbd93be0d0d5b8ec928e8' '25fac20e=
+dd09b60651eabcc57c187b1277f43d08' 'e27c125040b1e1f26d910b46daabbe55e67fdf3b=
+' '652ffad172d089acb1a20e5fde1b66e687832b06' '6eab7034579917f207ca6d8e3f4e1=
+1e85e0ab7d5' '856366dc924a9561dae39f252b45dfd6cc6895ce' '5a6a461079decea452=
+fdcae955bccecf92e07e97' 'f5aab0438ef17f01c5ecd25e61ae6a03f82a4586' 'c1ac984=
+92d1584d31f335d233a5cd7a4d4116e5a' '7ed1b265021dd13ce5619501b388e489ddc8e20=
+4' '89785306453ce6d949e783f6936821a0b7649ee2' '995cf0e014b0144edf1125668a97=
+c252c5ab775e'
+> # bad: [8936cec5cb6e27649b86fabf383d7ce4113bba49] Add linux-next specific=
+ files for 20250219
+> git bisect bad 8936cec5cb6e27649b86fabf383d7ce4113bba49
+> # good: [4aa591507214c82976992e1810d5ac121a8545d2] Merge branch 'for-next=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.g=
+it
+> git bisect good 4aa591507214c82976992e1810d5ac121a8545d2
+> # good: [79eb91f3f44b4146967f38834f55b21c328569ee] Merge branch 'for-next=
+' of git://git.kernel.dk/linux-block.git
+> git bisect good 79eb91f3f44b4146967f38834f55b21c328569ee
+> # good: [c21be55001aaa27cb2470ecc26109970058228f1] Merge branch 'driver-c=
+ore-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-co=
+re.git
+> git bisect good c21be55001aaa27cb2470ecc26109970058228f1
+> # good: [b708438ccc2b4dc37ec478db6589c03aca76c4ac] Merge branch 'for-next=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+> git bisect good b708438ccc2b4dc37ec478db6589c03aca76c4ac
+> # bad: [3a3b9078eb6ae21a99e26b80447e1dcf31cd6491] Merge branch 'for-next'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git
+> git bisect bad 3a3b9078eb6ae21a99e26b80447e1dcf31cd6491
+> # good: [7e17e80c3a7eb2734795f66ba946f933412d597f] Merge branch 'for-6.14=
+/stack-order' into for-next
+> git bisect good 7e17e80c3a7eb2734795f66ba946f933412d597f
+> # good: [e5bb72d538dabba8cad1224b853aa0fbd6d79844] Merge branch 'at24/for=
+-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+> git bisect good e5bb72d538dabba8cad1224b853aa0fbd6d79844
+> # bad: [4770132f37dbf327d25455d226e54fafbef6a5c4] nvmem: qfprom: switch t=
+o 4-byte aligned reads
+> git bisect bad 4770132f37dbf327d25455d226e54fafbef6a5c4
+> # good: [3419bdfd88e314bc5f80b02fa4651c81a0a85b57] dt-bindings: nvmem: qf=
+prom: Add X1E80100 compatible
+> git bisect good 3419bdfd88e314bc5f80b02fa4651c81a0a85b57
+> # good: [d5d9e982a0886a1a99a1a8ef5320c57e257b4fb0] nvmem: core: fix bit o=
+ffsets of more than one byte
+> git bisect good d5d9e982a0886a1a99a1a8ef5320c57e257b4fb0
+> # bad: [eca73df072715efb5e880514bb8395e0a4e74a59] nvmem: core: update raw=
+_len if the bit reading is required
+> git bisect bad eca73df072715efb5e880514bb8395e0a4e74a59
+> # bad: [11ccaa3121119eeff9ab9d537e0cf6be3b10698b] nvmem: core: verify cel=
+l's raw_len
+> git bisect bad 11ccaa3121119eeff9ab9d537e0cf6be3b10698b
+> # first bad commit: [11ccaa3121119eeff9ab9d537e0cf6be3b10698b] nvmem: cor=
+e: verify cell's raw_len
 
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+
+--=20
+With best wishes
+Dmitry
