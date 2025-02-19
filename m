@@ -1,183 +1,160 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA3922B5B6
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 19:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C934B22B597;
+	Wed, 19 Feb 2025 19:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739993367; cv=none; b=FRfWFCyBOxS+rcPFEpLoRYNDr3SRMjKhlw5Ylry33hBn8gGHbUxg1TUitgMtROrdYeGPWLLW1r4KtEFWzSuXDtZsQKbHug8Ss1yog9He4dULpeHyzPFR6xneEcqky8h1KyqTq96Qx1mUov/ES9nVj9xfyI4okQNK88qG5EN97vc=
+	t=1739993368; cv=none; b=ETO4drEgH77X2n+eBDprvbEKYmDiYUqa4ivzD/kEJapkbewnTu+SH/N02ikpNjsbXCikHbPhusr9aPQaUhyhGyUD/TsfGTXUTY1Nyo2O14gRSGN9ehJgjAWnbZK0r/OKUBy0aU5Ka5i0QC01OwKTJaE1ZUU4Gmc5UfL/PuiYfLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739993367; c=relaxed/simple;
-	bh=H8HDfsjRdTLeCiSUsEFAPOM3zMyyboUITTD5Uaa1PnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YAuU57sOOjS/G9Qh6gem1d37FO9DMDnFhkZ962g4HCz2e5BQm8rClfsAOeNSJ3T+dwQo9wr7vd6uQhUvbtDvv8+6uupVtneBberSr+2mbmjxV6C/mIQa4OBpxMOhZvsyN8w/6TWya3JgULsk0gyr2C+CXFBzl76SGEfCMsu7VBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3GspiWLe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZuBiIz42; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3GspiWLe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZuBiIz42; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1739993368; c=relaxed/simple;
+	bh=P9o4bCSPBdpQHPEjmhfPo03t9UDYKs2YD45Ob4HtAOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fTy7/JBYvQ2+zvNLnZrAe201Jz4B698QkXR+UJ7cfIpp/RClGlZ1vgV3WWEK6J8RSSSWOv13f/Am334kS47VzO0DElVTe76peppgcPAso4YcTk48a3Ei+A2xo5g0/9uq28KgQtClJvJ5QkL6KaSZ6B5EXmMuRZmm89anyhsZh1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YvuWhvCW; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3GspiWLe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZuBiIz42";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3GspiWLe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZuBiIz42"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 88B3321137;
-	Wed, 19 Feb 2025 19:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739993363;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qp0pqMz6ueZ4JV1vYoPSBbdk2P2+tc6COjGX7xSlRyo=;
-	b=3GspiWLejZnLRU/qUjBgS8UWAiklAxXJh3HigNe/51wkTDXjM+Wc7tPxgQK7LGpnx5IT2y
-	RTJx836O3VPeBGUQavL+nBdf7FYEIWhMLpewUkEr+u4vn70SLUMcRq6wtzXI5X1cGsQyOd
-	quPUI/iTSwcK/XX4IFILV8t/4vNBXOo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739993363;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qp0pqMz6ueZ4JV1vYoPSBbdk2P2+tc6COjGX7xSlRyo=;
-	b=ZuBiIz42+gr7xVhLV03J2V2Zxwhn2uaWYQtxLh/0XrmXf2Yyp6/XuwXbEHK2qzLWab9T15
-	+OImyck7B7cFx4DA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=3GspiWLe;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ZuBiIz42
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739993363;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qp0pqMz6ueZ4JV1vYoPSBbdk2P2+tc6COjGX7xSlRyo=;
-	b=3GspiWLejZnLRU/qUjBgS8UWAiklAxXJh3HigNe/51wkTDXjM+Wc7tPxgQK7LGpnx5IT2y
-	RTJx836O3VPeBGUQavL+nBdf7FYEIWhMLpewUkEr+u4vn70SLUMcRq6wtzXI5X1cGsQyOd
-	quPUI/iTSwcK/XX4IFILV8t/4vNBXOo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739993363;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qp0pqMz6ueZ4JV1vYoPSBbdk2P2+tc6COjGX7xSlRyo=;
-	b=ZuBiIz42+gr7xVhLV03J2V2Zxwhn2uaWYQtxLh/0XrmXf2Yyp6/XuwXbEHK2qzLWab9T15
-	+OImyck7B7cFx4DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48B9513715;
-	Wed, 19 Feb 2025 19:29:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kPwSERMxtmcrAgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 19 Feb 2025 19:29:23 +0000
-Date: Wed, 19 Feb 2025 20:29:21 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Jeff Layton <jlayton@kernel.org>, Jeremy Kerr <jk@ozlabs.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Nick Terrell <terrelln@fb.com>, Vineet Gupta <vgupta@kernel.org>
-Subject: Re: linux-next: trees being removed (zstd tree)
-Message-ID: <20250219192921.GF5777@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250212095632.6bdd50d7@canb.auug.org.au>
- <20250216224200.50b9dd6a@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YvuWhvCW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739993367; x=1771529367;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=P9o4bCSPBdpQHPEjmhfPo03t9UDYKs2YD45Ob4HtAOg=;
+  b=YvuWhvCWclOWwOlK3NW0LT0sGX8qppccfvwZlZ/gODcuJGWv50DOXZrA
+   SbKLuQXijLC+H31ilUf+D0+fgKepg1b/oYRZMP8WcEg6vSv6i1yISPynF
+   oHNTGihYjb5LV+QWVaJBlrFkCW21Q8k7elgBN6XT5XircKVyl7SbVA7mL
+   6qgknzptWhCQ1Xw84rmQKNkGCLxjb7Q5OUuqpkk48mf+PFndlKl2FZgSZ
+   q1kMYAtCsDGpIjX7DX2mZLK941KxtSAajLcn1a2MqQG1099WrcgQgb2WF
+   rG1yd10mwFlCekGKSxvCxD9AIlkAHOqleneAFXkzVqg+6WO6MsPH92ULu
+   A==;
+X-CSE-ConnectionGUID: Q7rnl/aNTV+UQlwILNpxiw==
+X-CSE-MsgGUID: U3qkYLezTXSSWx5d/dQ8Dg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52182949"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52182949"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 11:29:25 -0800
+X-CSE-ConnectionGUID: vucltjVdRAamGbVSuvwdpw==
+X-CSE-MsgGUID: 4zd8VEqOTGam3WTujjw2cQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="115344040"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by fmviesa010.fm.intel.com with ESMTP; 19 Feb 2025 10:48:10 -0800
+From: Sohil Mehta <sohil.mehta@intel.com>
+To: x86@kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v3 08/15] x86/acpi/cstate: Improve Intel Family model checks
+Date: Wed, 19 Feb 2025 18:41:26 +0000
+Message-ID: <20250219184133.816753-9-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250219184133.816753-1-sohil.mehta@intel.com>
+References: <20250219184133.816753-1-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250216224200.50b9dd6a@canb.auug.org.au>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: 88B3321137
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:replyto,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.21
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 16, 2025 at 10:42:00PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Wed, 12 Feb 2025 09:56:32 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Tree			Last commit date
-> >   URL
-> >   comits (if any)
-> > ----			----------------
-> > file-locks		2023-09-01 08:09:48 -0700
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git#locks-next
-> > fsi			2023-12-14 19:44:11 +1030
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git#next
-> >   ec084e4ec314 ("fsi: sbefifo: Bump up user write cmd length")
-> >   f7236a0c919e ("fsi: sbefifo: Handle pending write command")
-> >   c5eeb63edac9 ("fsi: Fix panic on scom file read")
-> > gpio			2023-09-10 16:28:41 -0700
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git#for-next
-> > header_cleanup		2024-01-15 15:52:12 -0500
-> >   git://evilpiepirate.org/bcachefs.git#header_cleanup
-> > kspp-gustavo		2024-01-21 14:11:32 -0800
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git#for-next/kspp
-> > tsm			2023-10-19 18:12:00 -0700
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/djbw/linux#tsm-next
-> > zstd			2023-11-20 14:49:34 -0800
-> >   https://github.com/terrelln/linux.git#zstd-next
-> >   98988fc8e9ed ("zstd: import upstream v1.5.5")
-> >   40eb0e915deb ("zstd: Backport Huffman speed improvement from upstream")
-> >   3f832dfb8a8e ("zstd: fix g_debuglevel export warning")
-> > zstd-fixes		2023-11-14 17:12:52 -0800
-> >   https://github.com/terrelln/linux.git#zstd-linus
-> 
-> All the above trees have been removed.  Give me a yell if you want one
-> back.
+Update the Intel Family checks to consistently use Family 15 instead of
+Family 0xF. Also, get rid of one of last usages of x86_model by using
+the new VFM checks.
 
-That's unfortunate that ZSTD is out of linux-next. We have several
-in-kernel users of ZSTD so we need to keep up with its upstream. In the
-past the ZSTD syncs were already in big steps, like from 1.4.10 to
-1.5.0. Now we don't even have the 1.5.5 updated merged for like 1.5 year
-(since 6.6 times).
+Update the incorrect comment since the check has changed[1][2] since the
+initial commit ee1ca48fae7e ("ACPI: Disable ARB_DISABLE on platforms
+where it is not needed").
 
-There are scripts to prepare the update for kernel, it's quite easy to
-get it for linux.git testing. There still needs to be a review because
-it's userspace code but it should not be that hard.
+[1]: commit 3e2ada5867b7 ("ACPI: fix Compaq Evo N800c (Pentium 4m) boot
+hang regression") removed the P4 - Family 15.
 
-Unless Nick wants to continue maintaining it, I am reluctantly
-volunteering with hopes that somebody will join and take over it
-eventually.
+[2]: commit 03a05ed11529 ("ACPI: Use the ARB_DISABLE for the CPU which
+model id is less than 0x0f.") got rid of CORE_YONAH - Family 6, model E.
+
+Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+---
+v3: Pick up Dave's Ack.
+v2: Improve commit message.
+---
+ arch/x86/include/asm/intel-family.h | 3 +++
+ arch/x86/kernel/acpi/cstate.c       | 8 ++++----
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 9e6a13f03f0e..deb17c9c21e5 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -187,6 +187,9 @@
+ #define INTEL_XEON_PHI_KNL		IFM(6, 0x57) /* Knights Landing */
+ #define INTEL_XEON_PHI_KNM		IFM(6, 0x85) /* Knights Mill */
+ 
++/* Notational marker denoting the last Family 6 model */
++#define INTEL_FAM6_LAST			IFM(6, 0xFF)
++
+ /* Family 15 - NetBurst */
+ #define INTEL_P4_WILLAMETTE		IFM(15, 0x01) /* Also Xeon Foster */
+ #define INTEL_P4_PRESCOTT		IFM(15, 0x03)
+diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+index 5854f0b8f0f1..444602a0a3dd 100644
+--- a/arch/x86/kernel/acpi/cstate.c
++++ b/arch/x86/kernel/acpi/cstate.c
+@@ -13,6 +13,7 @@
+ #include <linux/sched.h>
+ 
+ #include <acpi/processor.h>
++#include <asm/cpu_device_id.h>
+ #include <asm/cpuid.h>
+ #include <asm/mwait.h>
+ #include <asm/special_insns.h>
+@@ -47,12 +48,11 @@ void acpi_processor_power_init_bm_check(struct acpi_processor_flags *flags,
+ 	/*
+ 	 * On all recent Intel platforms, ARB_DISABLE is a nop.
+ 	 * So, set bm_control to zero to indicate that ARB_DISABLE
+-	 * is not required while entering C3 type state on
+-	 * P4, Core and beyond CPUs
++	 * is not required while entering C3 type state.
+ 	 */
+ 	if (c->x86_vendor == X86_VENDOR_INTEL &&
+-	    (c->x86 > 0xf || (c->x86 == 6 && c->x86_model >= 0x0f)))
+-			flags->bm_control = 0;
++	    (c->x86 > 15 || (c->x86_vfm >= INTEL_CORE2_MEROM && c->x86_vfm <= INTEL_FAM6_LAST)))
++		flags->bm_control = 0;
+ 
+ 	if (c->x86_vendor == X86_VENDOR_CENTAUR) {
+ 		if (c->x86 > 6 || (c->x86 == 6 && c->x86_model == 0x0f &&
+-- 
+2.43.0
+
