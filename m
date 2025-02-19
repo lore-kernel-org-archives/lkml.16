@@ -1,134 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33AA1DE3A7;
-	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98A41C68A6;
+	Wed, 19 Feb 2025 08:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739953973; cv=none; b=ZlP40/fKUd2RSQ2g+NqXK0tMeIXnoX8vvHBYB9KuBfmFP+M+4uIB1HiNC1+CDfxSNNaqgISDzR+jBbdCpmcLJRp87ETiw7x/z66XsaGZHdm1FMapdshRcrH36sU8V33bimCvIEL8wu18s7v1HV5zL+NpgdyyUFqtO8aiBanvh0E=
+	t=1739953973; cv=none; b=BDf+dxa54fot2n5J1RzikR1P6WAGKt6qW5aZ6Mx79/mg1namOK/burvWGGco1Kozuz3MoTmfs8L9QkCyXgF6jzMmACPHWr0Zq2PBFUpI6PaK1FPiWEk5khrqw7S7sb215Z0718+Mw6zvXyNvyiwz6qd2W8a0UYxRK5I1jyRYGxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739953973; c=relaxed/simple;
-	bh=visFeBdmwWEXGD09mdOdO30j7sy6oK5qUh63NaeMIjk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hho270Ftm3EkP4IUI7Nbobp5e+6IDlRR95/dCqi51NWaHTygyEsKbsLawpkEiavCl+gusaHWaKnIOM6sxDfEPk5cuhPE2ljpkIlvDE1rmceMDrWcJAweQxhgUaqFySw+L8EIYN4jrwIvb8Kp0nS5ckajSclY6sWK3djm9WnV844=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbHE4clH; arc=none smtp.client-ip=10.30.226.201
+	bh=p8ISVEVcjD4emNEQ9vavFRhlStV/heXGlu9P8t2vCZo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:Content-Type:
+	 MIME-Version; b=GArxT/iOu8jqN9GUNlqGkHCAHYvVz2QbD0f948U4kokRBXyv1JcuR8Y/DzezHQU9JMArWPTtyhpQ58zDjk1Y5WoSVc4qKaTKwHM9c8zGtwzLaTrn1D8T3Oi7vTGG4T5R8HXh6XqgCWpVB+EodThHOu0FC5+q1Y5BT/LEdybyEso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=jU3C9QoP; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbHE4clH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A053DC2BCB4;
-	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739953972;
-	bh=visFeBdmwWEXGD09mdOdO30j7sy6oK5qUh63NaeMIjk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MbHE4clHSD3016HjRq0ep1cKrf+kilXVk26nNJ5USFIAnEgE/bhd6umy5uhWpunZu
-	 KEKQS9Ef3sBED1doregIU8M3LmoK7SMtC2DUcKwu5kN9HJR7CJ76/Y16xuu+9+RYg3
-	 DCOIosWmFIAX367boDRkj1QmFuQQIDd2jKOwdK9yaEYBWrnwbi2PHydTWSOx5dLQL/
-	 lEVoWF38Fmsj6LrEklz9Y4nJShwMOO4PhgluUMWMBQA3mHVAIMg3njOQ+5TnMXO2Js
-	 +PNVQCgXNlVEqv9Jw3GzvmLIHjJGR95wyjcJQFxJe7gjty6c2Z+/i5OQOfNFSQfNnX
-	 p8Nmo6RJho+RQ==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tkfVi-0000000Gv5t-2WX3;
-	Wed, 19 Feb 2025 09:32:50 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Kees Cook <mchehab+huawei@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 25/27] docs: sphinx: kerneldoc: verbose kernel-doc command if V=1
-Date: Wed, 19 Feb 2025 09:32:41 +0100
-Message-ID: <6d7af20038b540c30d53e2b214f1985b57a4e26f.1739952783.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1739952783.git.mchehab+huawei@kernel.org>
-References: <cover.1739952783.git.mchehab+huawei@kernel.org>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="jU3C9QoP"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 51J8WXCW03088461, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1739953953; bh=p8ISVEVcjD4emNEQ9vavFRhlStV/heXGlu9P8t2vCZo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	b=jU3C9QoPyx9XbGeBLusDbwNv61wxaR431cfXjw91xOEv9ZDuxVXzc+iXx1Ty31jkg
+	 HiUQMgzs7lTc0fksAvGB5wY5LtY8Rhn+NE8Y4PdurrSrHkUYTxeaIXslNjX57QH2DK
+	 sbDg5pzZR5U/sldT+nBN8X15Ugy/lo9y/GkRw6lbZlR2X7DnlEmgdDCofVFC90C1Bc
+	 pXuRoPJEPSOEtvplLnf/CQGKMlEgGTFxS07qoLyBJL6BK+dUSIRSPPAhfhtuSz9ASR
+	 BMoVLEr3DL+d2uoRAcFl/nKGY+2b5SMCDhZ5WQi0MYbkjYw7YoPjxud2JNG2IY1iJx
+	 gXw+Hi8VxfHYg==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 51J8WXCW03088461
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Feb 2025 16:32:33 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 19 Feb 2025 16:32:33 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 19 Feb 2025 16:32:32 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::f5bd:6ac9:46d:9547]) by
+ RTEXMBS01.realtek.com.tw ([fe80::f5bd:6ac9:46d:9547%5]) with mapi id
+ 15.01.2507.035; Wed, 19 Feb 2025 16:32:32 +0800
+From: Kailang <kailang@realtek.com>
+To: Takashi Iwai <tiwai@suse.de>,
+        "Maciej S. Szmigiero"
+	<mail@maciej.szmigiero.name>
+CC: "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] ALSA: hda/realtek: Enable PC beep passthrough for HP EliteBook 855 G7
+Thread-Topic: [PATCH v2] ALSA: hda/realtek: Enable PC beep passthrough for HP
+ EliteBook 855 G7
+Thread-Index: AQHbgSMJVrDFmK8Mp0CrjaEmJFua+rNLUekPgAL4rhCAAARNMA==
+Date: Wed, 19 Feb 2025 08:32:32 +0000
+Message-ID: <6224620265674b09b5762f908b5158f9@realtek.com>
+References: <7461f695b4daed80f2fc4b1463ead47f04f9ad05.1739741254.git.mail@maciej.szmigiero.name>
+	<87jz9o99ef.wl-tiwai@suse.de>
+	<a02344f2-3b99-41ea-af64-8d2bcb01e435@maciej.szmigiero.name>
+ <87h64s972a.wl-tiwai@suse.de> 
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-It is useful to know what kernel-doc command was used during
-document build time, as it allows one to check the output the same
-way as Sphinx extension does.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/sphinx/kerneldoc.py | 34 +++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-index 39ddae6ae7dd..d206eb2be10a 100644
---- a/Documentation/sphinx/kerneldoc.py
-+++ b/Documentation/sphinx/kerneldoc.py
-@@ -43,6 +43,29 @@ from sphinx.util import logging
- 
- __version__  = '1.0'
- 
-+def cmd_str(cmd):
-+    """
-+    Helper function to output a command line that can be used to produce
-+    the same records via command line. Helpful to debug troubles at the
-+    script.
-+    """
-+
-+    cmd_line = ""
-+
-+    for w in cmd:
-+        if w == "" or " " in w:
-+            esc_cmd = "'" + w + "'"
-+        else:
-+            esc_cmd = w
-+
-+        if cmd_line:
-+            cmd_line += " " + esc_cmd
-+            continue
-+        else:
-+            cmd_line = esc_cmd
-+
-+    return cmd_line
-+
- class KernelDocDirective(Directive):
-     """Extract kernel-doc comments from the specified file"""
-     required_argument = 1
-@@ -57,6 +80,7 @@ class KernelDocDirective(Directive):
-     }
-     has_content = False
-     logger = logging.getLogger('kerneldoc')
-+    verbose = 0
- 
-     def run(self):
-         env = self.state.document.settings.env
-@@ -65,6 +89,13 @@ class KernelDocDirective(Directive):
-         filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
-         export_file_patterns = []
- 
-+        verbose = os.environ.get("V")
-+        if verbose:
-+            try:
-+                self.verbose = int(verbose)
-+            except ValueError:
-+                pass
-+
-         # Tell sphinx of the dependency
-         env.note_dependency(os.path.abspath(filename))
- 
-@@ -104,6 +135,9 @@ class KernelDocDirective(Directive):
- 
-         cmd += [filename]
- 
-+        if self.verbose >= 1:
-+            print(cmd_str(cmd))
-+
-         try:
-             self.logger.verbose("calling kernel-doc '%s'" % (" ".join(cmd)))
- 
--- 
-2.48.1
+Hi Maciej S,
+=20
+ Could you test plug headphone then speaker will mute or not?
+=20
+ Below was why I close the beep mode.
+ https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git/commit/?id=
+=3Dfcf c9f711d1e2fc7876ac12b1b16c509404b9625
+=20
+=20
+ Hi Takashi,
+=20
+ COEF 0x36 bit 13 was the enable bit for pcbeep passthrough for 0x14.
+ If this patch no PM issues and speaker can mute by plug headphone or heads=
+et,
+ I think this work for me.
 
