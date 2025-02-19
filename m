@@ -1,130 +1,121 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D461DEFE1;
-	Wed, 19 Feb 2025 13:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE5F1DF98E;
+	Wed, 19 Feb 2025 13:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739971706; cv=none; b=tT4FL4gZc96dUBrUz+XXmFFfZzlqw0st6dS3DWZ3R+DPGDrWaWmMEDd3qam4Olia4I83l1w27Lmw9iyPkKwa3VsAimMcZ1PPkcoUnzE2Swy8razqcggh7K/swKyED9U0l55NSprXBkELqEbDRPAhiOp+7yrABGINcRBP0X2zkFs=
+	t=1739971731; cv=none; b=Nej74vyS/Ff2GHTRXP0xBvomeUn4hteaMHK8teYJ6RLXeL/iNpD098i8WVacC/xzswVsldvCOZmKN0S7gQs8mC9W1pWXTmt2WsZqaqFMcbDRriuMBUQrwIUSu8mNPd+e8gF3L0WiKa90KZNlEyqPDuB0AwjqwKP2H+rNGsGqmzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739971706; c=relaxed/simple;
-	bh=1e016EqTQZdP7kuufHE6tQ1LhaOiDE00JtzdrCEtDOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PKDK3yXJAq+DtBLkyhrIbgDre+3eOa8ipGUXmwTA4I3aXjG/YOLXK9t50p5l1riwSyl7pD0dP5E14Edv8rHfPhZ+tNdTidS8f1NPycoNePAmxcFAAawWGK+UzXulHXIqRAbuULE4TcCngO1LeUJ44XGEdS1ti76vMfi9IHR44kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=o/u2j1HJ; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="o/u2j1HJ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739971698; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=PZFTmiWgIWK8Z5wC1s1Fh0TDUD2HKL3tvr0e+ik4nUg=;
-	b=o/u2j1HJC0q6BFcG3NTEFjNfFPaMINeKkR4hgRRBR5U41LGoQeR8ac7n4yzKv/9EReNfKJ9azQeT6ZZoupxCyEXHaPtw9a6tpb76lFfmCMMu0/fjKrH9fz1dOeE5iYAJh19L0FOeCBqHpLctL/SCMmPMhJvrsA6ldCS8lOgf+fc=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPpRZwU_1739971697 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 19 Feb 2025 21:28:18 +0800
-Message-ID: <5dfdb75c-e532-4a5e-8098-7650c6494d78@linux.alibaba.com>
-Date: Wed, 19 Feb 2025 21:28:16 +0800
+	s=arc-20240116; t=1739971731; c=relaxed/simple;
+	bh=uWS+fW47N6wt39dtEOcS7XkDieAQeJAE7zI6AMNgwrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r8fdTVr8YJiMNpkjHpSciz6NgbZSoA5gsrk5yNrXFYJQAkzTIm9EPmUsllPPlsNaKMPUiTxmi8Ru+AtBlaV3ojGOIC1z14TXRJbv/g/Cpn+70N0QSvsHHcaR5N5NKf3GYgcp6g1kYjDRxXgTBzm1wXZv4n+cI35CRANXfyhzjW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5B281682;
+	Wed, 19 Feb 2025 05:29:07 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C67A13F59E;
+	Wed, 19 Feb 2025 05:28:44 -0800 (PST)
+Date: Wed, 19 Feb 2025 13:28:42 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, Babu Moger <babu.moger@amd.com>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"peternewman@google.com" <peternewman@google.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"paulmck@kernel.org" <paulmck@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"thuth@redhat.com" <thuth@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"xiongwei.song@windriver.com" <xiongwei.song@windriver.com>,
+	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
+	"daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"perry.yuan@amd.com" <perry.yuan@amd.com>,
+	"sandipan.das@amd.com" <sandipan.das@amd.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	"Li, Xiaoyao" <xiaoyao.li@intel.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"Li, Xin3" <xin3.li@intel.com>,
+	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+	"ebiggers@google.com" <ebiggers@google.com>,
+	"mario.limonciello@amd.com" <mario.limonciello@amd.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"tan.shaopeng@fujitsu.com" <tan.shaopeng@fujitsu.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
+	"Eranian, Stephane" <eranian@google.com>
+Subject: Re: [PATCH v11 10/23] x86/resctrl: Remove MSR reading of event
+ configuration value
+Message-ID: <Z7XcinJVBKfr7JN7@e133380.arm.com>
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <b4298186c0be8db76be4eb74e1d948fbe5c1de7d.1737577229.git.babu.moger@amd.com>
+ <53e104c0-64ee-4191-bddf-3ddb56dca1d5@intel.com>
+ <SJ1PR11MB6083C234656AF934E41A7BA8FCF62@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <2a78f9a1-e03a-4e82-836b-26d3175d3f2b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] dmaengine: idxd: Refactor remove call with
- idxd_cleanup() helper
-To: Fenghua Yu <fenghuay@nvidia.com>, vinicius.gomes@intel.com,
- dave.jiang@intel.com, vkoul@kernel.org
-Cc: nikhil.rao@intel.com, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
- <20250215054431.55747-8-xueshuai@linux.alibaba.com>
- <4b5b45b3-76a1-4850-aeba-ff4d6777e97c@nvidia.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <4b5b45b3-76a1-4850-aeba-ff4d6777e97c@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a78f9a1-e03a-4e82-836b-26d3175d3f2b@intel.com>
 
-
-
-在 2025/2/19 05:01, Fenghua Yu 写道:
-> Hi, Shuai,
+On Wed, Feb 05, 2025 at 05:41:53PM -0800, Reinette Chatre wrote:
+> Hi Tony,
 > 
-> On 2/14/25 21:44, Shuai Xue wrote:
->> The idxd_cleanup() helper clean up perfmon, interrupts, internals and so
+> On 2/5/25 4:51 PM, Luck, Tony wrote:
+> >> This new arch API has sharp corners because of asymmetry of where resctrl
+> >> runs the arch function. I do not think it is required to change this since we
+> >> can only speculate about how this may be used in the future but I do think
+> >> it will be helpful to add comments that highlight:
+> >>
+> >> resctrl_arch_mon_event_config_get() ->  May run on CPU that does not belong to domain.
+> >> resctrl_arch_mon_event_config_set() ->  Runs on CPU that belongs to domain.
+> > 
+> > Here's a vague data point about the future to help with speculation.
+> > 
+> > I have something coming along the pipeline that also can run on any CPU.
+> > 
+> > I am contemplating a flag in the rdt_resource structure (in appropriate substructure
+> > resctrl_cache/resctrl_membw) to indicate "domain" vs. "any" for operations.
+> > 
+> > Would something like that be useful here?
 > 
-> s/clean/cleans/
+> hmm ... I cannot envision how this may look. Could you please elaborate?
 > 
+> You mention "a" (singular) flag in rdt_resource while this scenario involves
+> different ops having different scope. This makes me think that this flag may
+> have to be per operation that in turn would need additional infrastructure to
+> manage and track operations.
 > 
->> on. Refactor remove call with idxd_cleanup() helper to avoid code
-> s/idxd_cleanup()/the idxd_cleanup()/
->> duplication. Note, this also fixes the missing put_device() for idxd
->> groups, enginces and wqs.
->>
->> Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
->> Suggested-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>   drivers/dma/idxd/init.c | 13 ++-----------
->>   1 file changed, 2 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
->> index f40f1c44a302..0fbfbe024c29 100644
->> --- a/drivers/dma/idxd/init.c
->> +++ b/drivers/dma/idxd/init.c
->> @@ -1282,20 +1282,11 @@ static void idxd_remove(struct pci_dev *pdev)
->>       get_device(idxd_confdev(idxd));
-> get_device() is called here.
->>       device_unregister(idxd_confdev(idxd));
->>       idxd_shutdown(pdev);
->> -    if (device_pasid_enabled(idxd))
->> -        idxd_disable_system_pasid(idxd);
->>       idxd_device_remove_debugfs(idxd);
->> -
->> -    irq_entry = idxd_get_ie(idxd, 0);
->> -    free_irq(irq_entry->vector, irq_entry);
->> -    pci_free_irq_vectors(pdev);
->> +    idxd_cleanup(idxd);
->>       pci_iounmap(pdev, idxd->reg_base);
->> -    if (device_user_pasid_enabled(idxd))
->> -        idxd_disable_sva(pdev);
->> -    pci_disable_device(pdev);
->> -    destroy_workqueue(idxd->wq);
->> -    perfmon_pmu_remove(idxd);
->>       idxd_free(idxd);
+> These "arch" functions are evolving as the work to support MPAM is done and
+> so far I think it has been quite ad-hoc to just refactor arch specific code
+> into "arch" helpers instead of keeping track of which scope they are running in.
+> This currently requires any arch implementing an "arch" helper to be well aware 
+> of how resctrl will call it.
 > 
-> put_device() is called inside idxd_free(). Seems not easy to read code to match the pair.
+> Reinette
 
-IMHO, idxd_free() is paired with idxd_alloc() which grap a reference count by
-device_initialize(). So, we should match that right pair.
+For MPAM, we must typically do all configuration access from a CPU in a
+power domain that depends on the power domain of the relevant MPAM MSC,
+including reads of the configuration.
 
-> * When ->release() is called for the idxd->conf_dev, it frees all the memory related
-> * to the idxd context.
+In the MPAM case, the required topology knowledge is not necessarily
+identical to the resctrl domain topology, so it doesn't feel right to
+have the resctrl core code making the decisions.
 
-I did not figure out why you explictly grab reference count of
-idxd_confdev(idxd).
+So, in the interest of keeping the arch interface simple, should cross-
+calling be delegated to the arch code, at least for now?
 
-idxd_unregister_devices() is paired with idxd_register_devices(), it only
-decrease reference through wqs, engines, and groups. So a refcnt of
-idxd->conf_dev is still hold by idxd_alloc().
-
-Please correct me, if I missed anything.
-
-> 
-> Plus idxd_free() is called only in non FLR case.
-> 
-> Maybe it's better to change this code to:
-> 
-> 1. call put_device() outside idxd_free() so that it's easy to match the get_device() and put_deivce in the same level of function.
-
-See my comments above.
-> 
-> 2. idxd_free() called here is OK because this is not in FLR handler. But only call it in non FLR path in idxd_pci_probe_alloc()
-> 
-
-Exactly, so, shoud I add a protection in idxd_free() in a fact that non FLR case will not call it.
-
-Thanks.
-Shuai
+Cheers
+---Dave
