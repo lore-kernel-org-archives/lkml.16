@@ -1,94 +1,106 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 526C61E0DE6;
-	Wed, 19 Feb 2025 15:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14201DE8BE;
+	Wed, 19 Feb 2025 15:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739979255; cv=none; b=Id6FigzbuqBIUlb0dPNc6HM5ldiAUDu1kf2/Oa63oC4I+i93IvU5vIJB61//97I2OWlkpEqXlWKIrceq40Wns5nYfo6LnYRUT3MI7azdYGLWtDIGxalrlHjVk6JXK4wns2WLsYmNa9ups9Fh5ESXb5N3Qjc+JWkribOu9x3BNZI=
+	t=1739979396; cv=none; b=X8lAqFiB9/fYYr/CCk9im5lq3XX73+HKyKYqn66ghMFPAuefPQMsRlivTKDvw3h42YDIaoTSdCH36ykMwXVBNS/2HvOzMkDIplJXOss6qBIwfyRIDdP2VT4+zDk6Rj4jCe0m6LoTJgIgmrM9k/gN9ozbg6o43BzlFXUrM6mPXYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739979255; c=relaxed/simple;
-	bh=AH262twbeco0CVkJDgGgdinJ5Ed52X0ZjdMelCWdmR4=;
+	s=arc-20240116; t=1739979396; c=relaxed/simple;
+	bh=a3GoHWAtbGEX5SYxHIAKqAqipfDcxdOpT8UtE5+wBX4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpDEmzKbo5jn1AhXuuk1vdyxguor1Irp0ldNdhabd26IQVEUwILpHJMT6vp6ab831WSWek6OjNSH/kyGZtL+sOvAdL/IDan4ChOl3WJGM5ap2bgwCoDO7+lupT58nm5WXZTgj5F+Ov6JZfnCQeGCA/n9u97av1L7SG9pRX6SDW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 51JFXoTx022768;
-	Wed, 19 Feb 2025 16:33:50 +0100
-Date: Wed, 19 Feb 2025 16:33:50 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>, David Airlie <airlied@gmail.com>,
-        linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <20250219153350.GG19203@1wt.eu>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <b7a3958e-7a0a-482e-823a-9d6efcb4b577@stanley.mountain>
- <2bcf7cb500403cb26ad04934e664f34b0beafd18.camel@HansenPartnership.com>
- <yq1mseim24a.fsf@ca-mkp.ca.oracle.com>
- <c1693d15d0a9c8b7d194535f88cbc5b07b5740e5.camel@HansenPartnership.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=strVpxjpvdwfiYIvjjlD+X8rSmE6g+Zhk6heBdCRHB0YhlOxYZoYPGKWsvCX8gWrnVz5xzjcsvVTlfdglT0wgR2McRthWooj7PKvh/pmLrRbZ8Haqh8GR6auP0WtDIovjQFMGx7tt7wcLOjTSt6ohL7g8gPO4bQbqSyFBOUF77E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6OSmOqv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6OSmOqv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6725FC4CED1;
+	Wed, 19 Feb 2025 15:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739979395;
+	bh=a3GoHWAtbGEX5SYxHIAKqAqipfDcxdOpT8UtE5+wBX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S6OSmOqvmKP3TboFyrwmpiegR2HtvWZGRS7d7jlMNPqXqXpwjFTFPi69O64bRQqYj
+	 3GQWH5zdJusYM5PEz5SuPTF5evUA7UZufw3EO4janDzg2fKTJ7vWyi8B6dWJG1+kSC
+	 +RydITHFHvkQcQ3I98uQcHeY6ZkhWFQSDSnaNIrU9Bq+QZtI5iw5bXPY2QTwma++a9
+	 0MHb6EZkmknga/aHnHYx506KNrdNzF5xcGvG0qwqDSbTL1PF1XbnQe4aBig9S/sK+r
+	 a/+jbDzeQOHG94QmZKn7Z+YPpMsM9+4qX90HQygA6xQnersG3Sgx9BPWgnoHN0qtgu
+	 BFi9lM1T1QjkQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tkm7x-000000003PB-0mbg;
+	Wed, 19 Feb 2025 16:36:45 +0100
+Date: Wed, 19 Feb 2025 16:36:45 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Akhil P Oommen <quic_akhilpo@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH 2/4] arm64: dts: qcom: x1e80100: Apply consistent
+ critical thermal shutdown
+Message-ID: <Z7X6jZev8fpoq0Ih@hovoldconsulting.com>
+References: <20250219-x1e80100-thermal-fixes-v1-0-d110e44ac3f9@linaro.org>
+ <20250219-x1e80100-thermal-fixes-v1-2-d110e44ac3f9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c1693d15d0a9c8b7d194535f88cbc5b07b5740e5.camel@HansenPartnership.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250219-x1e80100-thermal-fixes-v1-2-d110e44ac3f9@linaro.org>
 
-Hi James,
-
-On Wed, Feb 19, 2025 at 10:15:00AM -0500, James Bottomley wrote:
-> On Wed, 2025-02-19 at 09:46 -0500, Martin K. Petersen wrote:
-> > 
-> > James,
-> > 
-> > > Could we possibly fix a lot of this by adopting the _cleanup_
-> > > annotations[1]? I've been working in systemd code recently and they
-> > > seem to make great use of this for error leg simplification.
-> > 
-> > We already have this:
-> > 
-> > � include/linux/cleanup.h
-> > 
-> > I like using cleanup attributes for some error handling. However, I'm
-> > finding that in many cases I want to do a bit more than a simple
-> > kfree(). And at that point things get syntactically messy in the
-> > variable declarations and harder to read than just doing a classic
-> > goto style unwind.
+On Wed, Feb 19, 2025 at 12:36:19PM +0100, Stephan Gerhold wrote:
+> The firmware configures the TSENS controller with a maximum temperature of
+> 120°C. When reaching that temperature, the hardware automatically triggers
+> a reset of the entire platform. Some of the thermal zones in x1e80100.dtsi
+> use a critical trip point of 125°C. It's impossible to reach those.
 > 
-> So the way systemd solves this is that they define a whole bunch of
-> _cleanup_<type>_ annotations which encode the additional logic.  It
-> does mean you need a globally defined function for each cleanup type,
-> but judicious use of cleanup types seems to mean they only have a few
-> dozen of these.
+> It's preferable to shut down the system cleanly before reaching the
+> hardware trip point. Make the critical temperature trip points consistent
+> by setting all of them to 115°C and apply a consistent hysteresis.
+> The ACPI tables also specify 115°C as critical shutdown temperature.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 4e915987ff5b ("arm64: dts: qcom: x1e80100: Enable tsens and thermal zone nodes")
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 
-I may be missing something obvious, but this seems super dangerous to
-me to perform lightly without reference counting, as it increases the
-risks of use-after-free and double-free in case one of the allocated
-objects in question can sometimes be returned. Users of such mechanisms
-must be extremely cautious never to ever return a pointer derivated
-from a variable tagged as such, or to properly NULL-assign the original
-object for it not to double-free. So it might in the end require to be
-careful about null-setting on return instead of explicitly freeing what
-was explicitly allocated. I'm not sure about the overall benefit. Also
-I suspect it encourages to multiply the return points, which makes it
-even more difficult to possibly fix what needs to be fixed without
-coming from a locally allocated variable (e.g. restore a state in a
-parser etc). Maybe it's just me not seeing the whole picture, but as
-a general case I prefer to forget a free() call (worst case: memory
-leak) than forget a foo=NULL that may result in a double free, and the
-description here makes me think the latter might more easily happen.
+> @@ -8483,7 +8483,7 @@ trip-point1 {
+>  				};
+>  
+>  				cpu-critical {
+> -					temperature = <110000>;
+> +					temperature = <115000>;
 
-Regards,
-Willy
+Have you asked the authors where this lower limit came from (or
+determined it was just copy pasta some other way)?
+
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+
+> @@ -8737,7 +8737,7 @@ trip-point0 {
+>  				};
+>  
+>  				video-critical {
+> -					temperature = <125000>;
+> +					temperature = <115000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+
+Ok, make sense to backport the first patch as well then.
+
+Looks good to me:
+
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
