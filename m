@@ -1,46 +1,36 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB3A2136A;
-	Wed, 19 Feb 2025 03:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1E119D8A9;
+	Wed, 19 Feb 2025 03:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739936246; cv=none; b=YIAhWyWsphervgGTYHLBWJzqxNPRRvcHOCDwni2O/DKHD4KLJjhpMzLl7thMw3ZhQUGCRNrxJZnmKgmWBSCkCWoMHgqORPyielHBrRQGxL6scg062wvpC3gIz2dhM08ZvS00tFuWw8OSajspFGs7eKBeZqc035CUrRD7S7jYbeg=
+	t=1739936309; cv=none; b=ACy3j4bfikLt8iCB+m8Pet2K8oCES7rKqbHz1zhhhJHEU35UZQTfbdyJnLuuisKEvXonkHiU6hhMHGQINHGQMJsVoUNm8M/15tXd90R8b5O1yJLwjHIolN37DS8J16awvVLsUSWlT6b5QdKFtl3iIjYoJyle++s3dHlpot4hYZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739936246; c=relaxed/simple;
-	bh=yXzzcVaNALwy7igFxnJgJRax5d7CA1EwhIEuqRCTu3A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rdrc6cl9tylDFqX+x0uF4TjBkSSRuen+ZJ0ICXe9HWJsoknNPX0FE9q96zvQPkodkvFhJdfmOxNMKWZYZSIjWiNpOexkddUy929fv5ZE+Ynj+RBe4VPUVN6QtzeE2qFQAROBKOYcxV1umCoJa7fdQvZv8htff0DxkdZP/T1RZKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BzC9sW61; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BzC9sW61"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Kl7u8
-	bFLHAjtaElzFILg5UyTJziKGgGFb4LO1YSKTug=; b=BzC9sW61lpYTYF70UeYs9
-	3pgGYPYcyNd+RXZb8SFZXSlWn62tp14ZoF4276oyxRjo2W+I+4D9lztbuUmIfwPb
-	RvskGq2T5hB18evYkfulaO0P0ep5Xmu23lqP8Dg8NlVatDlPCAn3CeawzhBYOwZ7
-	qP1ZyhP2IssKpgsKsjmobA=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wCH0CvPUbVnWpNgNA--.30420S4;
-	Wed, 19 Feb 2025 11:36:49 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: nbd@nbd.name,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	shayne.chen@mediatek.com,
-	sean.wang@mediatek.com,
-	johannes@sipsolutions.net,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] wifi: mt76: Add check for devm_kstrdup()
-Date: Wed, 19 Feb 2025 11:36:45 +0800
-Message-Id: <20250219033645.2594753-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739936309; c=relaxed/simple;
+	bh=B5D0QBR6hqfloL2g//LnwTjoR4Jenu08YmsMwiP98uc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=myb6c2qU3fRMgQ4UXLWSXO3GUV1GL8TIGiEq3qCXYiq8+GHOiF5rwETTUZs+OqSdO227Ra+jQrYD9/lnnFCvxR9Aur0YjdqRYQYuT8t9LboMDuz1flbGFhkcjLHycIrMby5RM/Yql175k7KkDmKZdoY6SEaWfBz3QqwpwlU/WwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxG6wxUrVn7Ip6AA--.48243S3;
+	Wed, 19 Feb 2025 11:38:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMAxj8UwUrVnRnAbAA--.39192S3;
+	Wed, 19 Feb 2025 11:38:24 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] LoongArch: KVM: Remove PGD saving during VM context switch
+Date: Wed, 19 Feb 2025 11:38:22 +0800
+Message-Id: <20250219033823.215630-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20250219033823.215630-1-maobibo@loongson.cn>
+References: <20250219033823.215630-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,38 +38,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCH0CvPUbVnWpNgNA--.30420S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr4DCr48uF45Cw18ZFyUGFg_yoWDGrc_uF
-	s7Zrn3Xry7Gr1Ykr4jyFsIv34Yk3y8JF1kZrySqrySqrZIgrWkGr9xZrn5XrWDuwnxZr9r
-	ua1DJ3WrZ39IvjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNtxhDUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqAv4bme1R0DC6QABsK
+X-CM-TRANSID:qMiowMAxj8UwUrVnRnAbAA--.39192S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Add check for the return value of devm_kstrdup() in
-mt76_get_of_data_from_mtd() to catch potential exception.
+PGD table for primary mmu keeps unchanged once VM is created, it
+is not necessary to save PGD table pointer during VM context switch.
+And it can be acquired when VM is created.
 
-Fixes: e7a6a044f9b9 ("mt76: testmode: move mtd part to mt76_dev")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- drivers/net/wireless/mediatek/mt76/eeprom.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/loongarch/include/asm/kvm_host.h |  2 ++
+ arch/loongarch/kernel/asm-offsets.c   |  4 +---
+ arch/loongarch/kvm/switch.S           | 12 ++----------
+ arch/loongarch/kvm/vcpu.c             |  8 ++++++++
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
-index 0bc66cc19acd..443517d06c9f 100644
---- a/drivers/net/wireless/mediatek/mt76/eeprom.c
-+++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
-@@ -95,6 +95,10 @@ int mt76_get_of_data_from_mtd(struct mt76_dev *dev, void *eep, int offset, int l
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 590982cd986e..7a96c6300b0b 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -180,6 +180,8 @@ struct kvm_vcpu_arch {
+ 	unsigned long host_sp;
+ 	unsigned long host_tp;
+ 	unsigned long host_pgd;
++	/* physical address about pgd for secondary mmu */
++	unsigned long kvm_pgd;
  
- #ifdef CONFIG_NL80211_TESTMODE
- 	dev->test_mtd.name = devm_kstrdup(dev->dev, part, GFP_KERNEL);
-+	if (!dev->test_mtd.name) {
-+		ret = -ENOMEM;
-+		goto out_put_node;
-+	}
- 	dev->test_mtd.offset = offset;
- #endif
+ 	/* Host CSRs are used when handling exits from guest */
+ 	unsigned long badi;
+diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+index 8be1c38ad8eb..13b158081145 100644
+--- a/arch/loongarch/kernel/asm-offsets.c
++++ b/arch/loongarch/kernel/asm-offsets.c
+@@ -289,13 +289,13 @@ static void __used output_kvm_defines(void)
+ 	BLANK();
  
+ 	OFFSET(KVM_VCPU_ARCH, kvm_vcpu, arch);
+-	OFFSET(KVM_VCPU_KVM, kvm_vcpu, kvm);
+ 	OFFSET(KVM_VCPU_RUN, kvm_vcpu, run);
+ 	BLANK();
+ 
+ 	OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
+ 	OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
+ 	OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
++	OFFSET(KVM_ARCH_KVMPGD, kvm_vcpu_arch, kvm_pgd);
+ 	OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
+ 	OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
+ 	OFFSET(KVM_ARCH_GEENTRY, kvm_vcpu_arch, guest_eentry);
+@@ -306,8 +306,6 @@ static void __used output_kvm_defines(void)
+ 	OFFSET(KVM_ARCH_HECFG, kvm_vcpu_arch, host_ecfg);
+ 	OFFSET(KVM_ARCH_HESTAT, kvm_vcpu_arch, host_estat);
+ 	OFFSET(KVM_ARCH_HPERCPU, kvm_vcpu_arch, host_percpu);
+-
+-	OFFSET(KVM_GPGD, kvm, arch.pgd);
+ 	BLANK();
+ }
+ 
+diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+index 1be185e94807..f1768b7a6194 100644
+--- a/arch/loongarch/kvm/switch.S
++++ b/arch/loongarch/kvm/switch.S
+@@ -60,16 +60,8 @@
+ 	ld.d	t0, a2, KVM_ARCH_GPC
+ 	csrwr	t0, LOONGARCH_CSR_ERA
+ 
+-	/* Save host PGDL */
+-	csrrd	t0, LOONGARCH_CSR_PGDL
+-	st.d	t0, a2, KVM_ARCH_HPGD
+-
+-	/* Switch to kvm */
+-	ld.d	t1, a2, KVM_VCPU_KVM - KVM_VCPU_ARCH
+-
+-	/* Load guest PGDL */
+-	li.w    t0, KVM_GPGD
+-	ldx.d   t0, t1, t0
++	/* Load PGD for KVM hypervisor */
++	ld.d	t0, a2, KVM_ARCH_KVMPGD
+ 	csrwr	t0, LOONGARCH_CSR_PGDL
+ 
+ 	/* Mix GID and RID */
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 20f941af3e9e..1edce1192577 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1462,6 +1462,14 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+ 	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
+ 
++	/* Get physical address about pgd for kvm hypervisor */
++	vcpu->arch.kvm_pgd = __pa(vcpu->kvm->arch.pgd);
++
++	/*
++	 * Get pgd for primary mmu, virtual address is used since there is
++	 * memory access after loading from CSR_PGD in tlb exception fast path.
++	 */
++	vcpu->arch.host_pgd = (unsigned long)vcpu->kvm->mm->pgd;
+ 	vcpu->arch.handle_exit = kvm_handle_exit;
+ 	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->exc_entry;
+ 	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
 -- 
-2.25.1
+2.39.3
 
