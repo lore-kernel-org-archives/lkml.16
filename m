@@ -1,80 +1,50 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0377B1C1AB4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB731C3029;
+	Wed, 19 Feb 2025 07:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739951840; cv=none; b=a1ARmejPvIlsOM3VFVo6HHBAB4uFzArETc8RqIpt27pu2TFdAU74lVAcEG98rBROfIbi7lv4hd/W2NCR/0I3naQbu2Lmbh+pQsQFVuWLU9o+sE9cqAF/qX28jOhqkx6flmiIssq1AdGjQwW/jVVHbuqg7kFGAVWaYPVavxKPX9Y=
+	t=1739951919; cv=none; b=p3YrGsyuMC1vmv1jQHm2kQirlpn29zcBG8O0XvcOfeL1i5KWVCkHR7El0H9WoHtgK2DCWzGNTsgdQ+7vr81yQQu1DChmGQiB8EXYFuYkdfVbibaCsVZs7qDLV6+/p/FWjiev7nNq5msUzV7XxNaHGobbup8VH/u5IZ3Ib5HvE2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739951840; c=relaxed/simple;
-	bh=Lq/QgHp+/lRpL7BbEfxDVPqPeaGR9JP5sVWOxp22LMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JK4tVvFqdf3r2jvpuka5wZ+GseMknb1F61mW4C4faiZvq5NhUg1esxiLiEllWrLGVlKGYtJu5JTgct9CgILyKPkCcBlh0YLXPXRxWP9lA7b0oDVrtTS3tLNXzbMZNOM0Ny9IMn25fhLHruO3LLqNsOUn1DRKWPdnojVmdIHBUww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=fail smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CaP6o4M8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fg+6U9lP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=znwyIw5A; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CytNWTwG; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.de
+	s=arc-20240116; t=1739951919; c=relaxed/simple;
+	bh=a2LKr/WX/y4caLjmK7olEcFpRmLm/fSiSAHkL/FlYyA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CQVRuaw5ELgK8H0hDpTXss+FdKej1ZQ1BH3X+XomnrXsid6BhX8QicZoalfG23cv1btKvK2Gwm/T0julSaCCW1uS0Va1V5NBu9KczByMLGgDVMdJNNQo5ztS3DIKtio0BKrNsopOpAnDMtJDv52oNxdLvFjO/rKfir6KyNES034=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=qrofjjdI; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CaP6o4M8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fg+6U9lP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="znwyIw5A";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CytNWTwG"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EBD3A21F92;
-	Wed, 19 Feb 2025 07:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739951837; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=epgq9lhcK/GD6iEOWEZ2braEaMsDndp1rBFaDGg7IBw=;
-	b=CaP6o4M8vRhiQUu5VSmmzBaVelQVinAk1Oh0X0pMpiz5b7ZQldqzDzR8epuiCGXvy88P+o
-	/GEcig+VRO56Rb4CrGnud6ExWeYuXsL9BN639LhrB9ON3Vs1pZ8igLTRh+iOmyeVZlyDYg
-	0Pn2wBkkmN5RZR0WY0bq/ofXK52iEY4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739951837;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=epgq9lhcK/GD6iEOWEZ2braEaMsDndp1rBFaDGg7IBw=;
-	b=fg+6U9lP2fgNnvwWL4pj6yoYhnElxSQd7wofN+flOF2fT28rPstJhMmb7g03LKRu7Lehap
-	ndiBBIxLqy8dbCBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739951836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=epgq9lhcK/GD6iEOWEZ2braEaMsDndp1rBFaDGg7IBw=;
-	b=znwyIw5A4Mzs2Wno0Oir3iCFbMEJWHahtzoHKB6YiXXaZCITB2qi4OVdHIuUt6q7SPJlzk
-	IPfb7MuejOocvRosia3XEjdq0OT2OcUA7FS6xEBybz/L8DogyMXTlBxyQRjVQ7am2bMG+L
-	3DYMXjdUoF+rcIWXi1iGt0kYj1yH8dQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739951836;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=epgq9lhcK/GD6iEOWEZ2braEaMsDndp1rBFaDGg7IBw=;
-	b=CytNWTwGIq+7idS/URVkUFkLhrRlnsyS3Kat4OISgqGgdBX6SeIigKt4RCOqWhhY0MyahY
-	8aPA8EabosL5KrCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AD60D13806;
-	Wed, 19 Feb 2025 07:57:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id c7j6KNyOtWd+EwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 19 Feb 2025 07:57:16 +0000
-Message-ID: <81826e1b-1ec8-4665-9682-2a57c95f06d3@suse.de>
-Date: Wed, 19 Feb 2025 08:57:16 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qrofjjdI"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51J4sKAc024666;
+	Wed, 19 Feb 2025 08:58:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	3bBJS43pvAXXysK32UqQ0DdYgo9OZo0TPX7SlCS/zbM=; b=qrofjjdIBjqjCtpb
+	eXbj5Hjt98R97RAEso4phh094s2/DGVfjhBk9wOuOFTSjnzyQ5GMt39Hca+VHeI6
+	+6F0WqQwbljBlbKo6DUQxa/d/zVrSybRz6RwlkD5sEiYRUcSqf2+q0IpeANXZe5f
+	5hY7cOmdN5AmovgJE1ctS/U1beNebFZVyMVEBLJlkbcBdN1b1j6Kr1HwCqdLNL3G
+	tkHAg7150dqPbTeV4UPFl9zR2pqPNubn7WuB4ZDo12AdH8eiT26dfvvsUeSbKdYG
+	jW57vPUdO4wnQQmlNx1vp4EzwNmWoNEjqdGVx+p5yoLyseOiK4Xw06QG7HfllL7G
+	jptJmA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44vyyn25qe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 08:58:07 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BB48C40053;
+	Wed, 19 Feb 2025 08:56:46 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0D4984026F8;
+	Wed, 19 Feb 2025 08:52:52 +0100 (CET)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Feb
+ 2025 08:52:51 +0100
+Message-ID: <df73976e-12a5-4af9-b312-503ae68edcfc@foss.st.com>
+Date: Wed, 19 Feb 2025 08:52:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,201 +52,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/tiny: add driver for Apple Touch Bars in x86 Macs
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "mripard@kernel.org" <mripard@kernel.org>,
- "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
- <simona@ffwll.ch>, Kerem Karabay <kekrby@gmail.com>,
- Atharva Tiwari <evepolonium@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <4BAFD886-84E0-4C4C-94B3-90BF911ED0E7@live.com>
- <F16BB9EB-632C-4BC4-A8BA-492BF32E43C1@live.com>
- <d9304ed0-911b-4877-a15c-981b3335bbf9@suse.de>
- <BC25CBDD-D101-49DA-B10B-F47F1CAE2A6F@live.com>
+Subject: Re: [PATCH v4 0/8] Add STM32MP25 SPI NOR support
+To: Rob Herring <robh@kernel.org>
+CC: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <christophe.kerello@foss.st.com>
+References: <20250218130000.87889-1-patrice.chotard@foss.st.com>
+ <20250218212138.GA1092771-robh@kernel.org>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <BC25CBDD-D101-49DA-B10B-F47F1CAE2A6F@live.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[live.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,vger.kernel.org,lists.freedesktop.org];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,bootlin.com:url]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <20250218212138.GA1092771-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-19_03,2025-02-18_01,2024-11-22_01
 
-Hi
 
-Am 18.02.25 um 21:12 schrieb Aditya Garg:
-> Hi
->
-> In continuation to my previous mail.
->
->>> +
->>> +static int appletbdrm_send_msg(struct appletbdrm_device *adev, u32 msg)
->>> +{
->>> + struct appletbdrm_msg_simple_request *request;
->>> + int ret;
->>> +
->>> + request = kzalloc(sizeof(*request), GFP_KERNEL);
->>> + if (!request)
->>> + return -ENOMEM;
->>> +
->>> + request->header.unk_00 = cpu_to_le16(2);
->>> + request->header.unk_02 = cpu_to_le16(0x1512);
->>> + request->header.size = cpu_to_le32(sizeof(*request) - sizeof(request->header));
->>> + request->msg = msg;
->>> + request->size = request->header.size;
->>> +
->>> + ret = appletbdrm_send_request(adev, &request->header, sizeof(*request));
->>> +
->>> + kfree(request);
->> This is temporary data for the send operation and save to free here?
-> Probably yes. If I understand correctly, it’s needed to make the touchbar go into the display mode, from the hid keyboard mode.
->
-> We here are doing the same as the Windows driver [1] for this does.
->
-> [1] https://github.com/imbushuo/DFRDisplayKm/blob/master/src/DFRDisplayKm/include/Dfr.h#L3
 
-Yeah. My concern was that request is being freed while the USB send 
-operation is still using it. But in the USB code, it doesn't look like that.
-
-[...]
->> Can we void the use of drm_fb_blit()? Since you know all formats in advance, just do
+On 2/18/25 22:21, Rob Herring wrote:
+> On Tue, Feb 18, 2025 at 01:59:52PM +0100, patrice.chotard@foss.st.com wrote:
+>> From: Patrice Chotard <patrice.chotard@foss.st.com>
 >>
->> switch (format)
->> case XRGB8888: drm_fb_xrgb888_to_bgr888() break default:
->>     drm_fb_memcpy() break }We use blit in simpledrm and ofdrm, where we don't know the formats and output buffers in advance. But it's really not so great in other drivers, I think.
-> I think you mean this:
->
-> #include <drm/drm_framebuffer.h>
->
-> 		switch (fb->format->format) {
-> 		case DRM_FORMAT_XRGB8888:
-> 			drm_fb_xrgb8888_to_bgr888(&dst, NULL, &shadow_plane_state->data[0], fb, &damage, &shadow_plane_state->fmtcnv_state);
-> 			break;
-> 		default:
-> 			drm_fb_memcpy(&dst, NULL, &shadow_plane_state->data[0], fb, &damage);
-> 			break;
-> 		}
-
-Yes.
-
-[...]
->> For USB devices, we need special wiring to make PRIME work. The PRIME device must support DMA, but a USB device doesn't. So we pass the USB controller device instead. See [2] for what udl does and how it obtains dmadev.
+>> This series adds SPI NOR support for STM32MP25 SoCs from STMicroelectronics.
 >>
->> [2] https://elixir.bootlin.com/linux/v6.14-rc3/source/drivers/gpu/drm/udl/udl_drv.c#L76
-> Disregard my previous reply for this. I believe you meant by this?:
->
-> —>8—
->  From b6fda730995b7f28374c1ff38778a6f3e6da65da Mon Sep 17 00:00:00 2001
-> From: Aditya Garg <gargaditya08@live.com>
-> Date: Tue, 18 Feb 2025 22:47:44 +0530
-> Subject: [PATCH] prime
->
-> ---
-> drivers/gpu/drm/tiny/appletbdrm.c | 13 +++++++++++++
-> 1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/gpu/drm/tiny/appletbdrm.c b/drivers/gpu/drm/tiny/appletbdrm.c
-> index f2d911325..b835063c2 100644
-> --- a/drivers/gpu/drm/tiny/appletbdrm.c
-> +++ b/drivers/gpu/drm/tiny/appletbdrm.c
-> @@ -118,6 +118,7 @@ struct appletbdrm_fb_request_response {
->
-> struct appletbdrm_device {
-> 	struct device *dev;
-> +	struct device *dmadev;
->
-> 	unsigned int in_ep;
-> 	unsigned int out_ep;
-> @@ -521,10 +522,22 @@ static const struct drm_encoder_funcs appletbdrm_encoder_funcs = {
-> 	.destroy = drm_encoder_cleanup,
-> };
->
-> +static struct drm_gem_object *appletbdrm_driver_gem_prime_import(struct drm_device *dev,
-> +								 struct dma_buf *dma_buf)
-> +{
-> +	struct appletbdrm_device *adev = drm_to_adev(dev);
-> +
-> +	if (!adev->dmadev)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return drm_gem_prime_import_dev(dev, dma_buf, adev->dmadev);
-> +}
-> +
-> DEFINE_DRM_GEM_FOPS(appletbdrm_drm_fops);
->
-> static const struct drm_driver appletbdrm_drm_driver = {
-> 	DRM_GEM_SHMEM_DRIVER_OPS,
-> +	.gem_prime_import	= appletbdrm_driver_gem_prime_import,
+>> On STM32MP25 SoCs family, an Octo Memory Manager block manages the muxing,
+>> the memory area split, the chip select override and the time constraint 
+>> between its 2 Octo SPI children.
+>>
+>> Due to these depedencies, this series adds support for: 
+>>   - Octo Memory Manager driver.
+>>   - Octo SPI driver.
+>>   - yaml schema for Octo Memory Manager and Octo SPI drivers.
+>>
+>> The device tree files adds Octo Memory Manager and its 2 associated Octo 
+>> SPI chidren in stm32mp251.dtsi and adds SPI NOR support in stm32mp257f-ev1
+>> board.
+>>
+>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+>>
+>> Changes in v4:
+>>   - Add default value requested by Krzysztof for st,omm-req2ack-ns, 
+>>     st,omm-cssel-ovr and st,omm-mux properties in st,stm32mp25-omm.yaml
+>>   - Remove constraint in free form test for st,omm-mux property.
+>>   - Fix drivers/memory/Kconfig by replacing TEST_COMPILE_ by COMPILE_TEST.
+>>   - Fix SPDX-License-Identifier for stm32-omm.c.
+>>   - Fix Kernel test robot by fixing dev_err() format in stm32-omm.c.
+>>   - Add missing pm_runtime_disable() in the error handling path in
+>>     stm32-omm.c.
+>>   - Replace an int by an unsigned int in stm32-omm.c
+>>   - Remove uneeded "," after terminator in stm32-omm.c.
+>>   - Update cover letter description to explain dependecies between 
+>>     Octo Memory Manager and its 2 Octo SPI children.
+>>   - Add Reviewed-by Krzysztof Kozlowski for patch 1 and 3.
+> 
+> No, you didn't.
 
-Exactly. The TODO item for this problem is at [1], but there's quite a 
-bit of change involved to fix it. Setting a dedicated DMA device is the 
-next best thing.
+Argh, sorry, i will send a v5
 
-[1] 
-https://elixir.bootlin.com/linux/v6.13.3/source/Documentation/gpu/todo.rst#L615
-
-Best regards
-Thomas
-
-> 	.name			= "appletbdrm",
-> 	.desc			= "Apple Touch Bar DRM Driver",
-> 	.major			= 1,
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Patrice
