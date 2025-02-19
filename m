@@ -1,110 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025771E1A2B;
-	Wed, 19 Feb 2025 08:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D8A1E51F7;
+	Wed, 19 Feb 2025 08:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954216; cv=none; b=H9BWxrXuuXRnz8gt0WVErAXf4oA9zDTLZBKJyE/CPSeqlwKrvWWfBfFmjE/ZwBNo1v3GguOLTWq78JhrmYPvTaungQgXkeyE/qb85O/7Qaj0tLLq9TT7Ek+d3yrb91Oke3h0uvzosQSxrTp2SLzDURzwNblkxBjP2aekVNBkZbQ=
+	t=1739954265; cv=none; b=RRu01C009zvpQbzJtGB9L1HXjVGwF4tcdnkL5PeVsBq2iOe6v2LcH96pTF3DXyYXlpyDCMhbIllog1iAF6vuiQ2Yeq6lrxdbymlMUysnmh9KLZ5ez5xD9SPhtkuAwpJ6Yar2PJU4rQI/ry1ecdjeDU88GlvZsopry7Z6eHH/bWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954216; c=relaxed/simple;
-	bh=rgJvidjAQMDoQVWGBwJ2leXpTN2OG2+kgUkDZ7AeZQQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=JAGhon7zgdoBesQg74pe039NtA0Tt8wnU3bw86CRtVAtrF/KxmdzJSfYTnatnIqoynjHc9pppDr+x4fxLSnw2uKduL1lqJsyvjRf9/Ti0cSb3IUUwK8ECkbFP9dc10JpIUl2GnSrt6QClRcFueM+/z7snLcdb6nlPAGJeAh/8SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNj/xDKj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739954265; c=relaxed/simple;
+	bh=yZbiG8fVqkzzBxHxgsdvgj/ouf+ympNpqJ+EWQMu3p8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qV4dHO3YGHQqxRbf76a2V3a+DC3Mow+tCHJTEyzKnGUXZZsnTbVZFxeiUmTPB6xib3W9PJx/rFS+K8kiOLPWQyWr639yuHeTpWSeHTh4z0UkEr+KrhoNbqTUq9i8il9W+FD1I8hxQ76SS+DWKNxwSnNXb1kUnV1z4G7nmofZGCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YfqhXf1P; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNj/xDKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93432C4CED1;
-	Wed, 19 Feb 2025 08:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739954214;
-	bh=rgJvidjAQMDoQVWGBwJ2leXpTN2OG2+kgUkDZ7AeZQQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kNj/xDKjpNDb/OyA58zXZSI/uowZdiwP3jlGB0BsxCp/GZY+e5QsVeA7f7ecNP4YU
-	 r7GBP0/GW0yFUmRdYKQyND0fjqmVBWtT8/kkYq0qBWQcFz8eZ3lInPWKy/xXO5hU0P
-	 lbrGs6+3zhuIAsokBOVuQg0p9yX46gFFqxgb/22T8bYI+bfKuK7rNxT4gzAEgkI5UV
-	 VSeiIAfeCEvgBFH1pnlTf4eTEw0HPAJ38cUkKb1YvS4F8kJ4rJvnNG6vUttO9i3a1c
-	 anyxhXUOvP5yni6wnAEIe7u3426OVqYxkwdpVNN64g7gNWf/N1W9oKvx6QXx9Qe7K2
-	 21YMRo4iWIfPQ==
-Date: Wed, 19 Feb 2025 17:36:52 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: Don't use %pK through printk
-Message-Id: <20250219173652.183b22ff533301c5206b9743@kernel.org>
-In-Reply-To: <20250219081236-812a157c-5c60-41af-a7c8-f75f9da5e92a@linutronix.de>
-References: <20250217-restricted-pointers-trace-v1-1-bbe9ea279848@linutronix.de>
-	<20250219091023.f17833aea92a3d90e1bbc7da@kernel.org>
-	<20250219081236-812a157c-5c60-41af-a7c8-f75f9da5e92a@linutronix.de>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YfqhXf1P"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-546202d633dso3076393e87.2;
+        Wed, 19 Feb 2025 00:37:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739954261; x=1740559061; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w3CFcnR135smaOvbfxPS9mVyTzTgMH51kZeCWuwrg2o=;
+        b=YfqhXf1P034SW5X4YxlV/1joBayERydfcDqee2S0Dj2EGBLzxMzvKu4wDmiKWVuVq3
+         uPzukE0IqRgCmysFur1DYY3bcRTYTpieXMMrXyfhGWgGrC+he5qaJtExgp8pMIpidFOU
+         qf3l/WDfJ2INAQ23LWOzM4Mj/ysPlydGY0cnnwG9b0nh94zCHBT0sQca595aVwfYXC+V
+         E+zPRehv0cCL/OmiZMGlo4U7CO0nNcd4tsCRY+yB8PD26ZDsKpFDgmQZ2zIUgMUTYW71
+         LN9Fby0QOsnVL6wrqhJ2e7wuu0xUj0zVFWU52jeKu+WsGHvcBOkAMF3tdhqT7zYhZiWo
+         gt5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739954261; x=1740559061;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w3CFcnR135smaOvbfxPS9mVyTzTgMH51kZeCWuwrg2o=;
+        b=EzqTJqWEPsNpMCZCoi2BGmoAG79Hcc4FH0xCacYi8PZ8dVKo7GEmr6AJMsaPIvU/78
+         qFNp7byDdwTc6JB5M5ZcoXOUczNW1kqDnpW3U6LnZdsr6mMSkIKTNGj5UzJevTEhupcx
+         GirFM8WLVWmZD8D+sTCZCaYQDye4PHQZlsSrNLN//LRJ1pJr0rjSh1uZyRII8/HcIcz+
+         8zlZMyzEFmZhhvHdQZE+g0o7lWG3YJOoBp9nj9wPLcf2D4OaIvSApMCu/iAwUuhZ5EHA
+         j+tMlwtW3gndyGthsjqUYDxCUVlgGRBrnwdrV+VHY3ViMk1K4xypI6+VpGe+uBnwF7J7
+         lB2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUc8OMbdvvaSRWMjmoGI5F34q81l6pSg2tIzj+1gCnQXBrPKxu53PsO67oOu9zURZNYNtRWxzYXD+HR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzalroPACydtEn0AVSQ2grCPsMVEGdmI9PrkaB3UNMOugGinxRz
+	Pot1+cpK3mw4oXH5GGa9bjIQo16Rjrl5MmYuTLNXv4sJILn2olGB
+X-Gm-Gg: ASbGncu+l7PmIYayVJKRk8v2lB64F8aLv2D+EZu/HqWhyRRMpe4uo/7IzSS9Pf1Kbrd
+	sVQB8yBbOzPJysEq50iG/tb5cv1iYjlIfHFmk4sKy+LQG9UmuKZTUXCdf15cZGeiyW8QYZ7ztVk
+	eqidw7fJ6J9BvaDq8QUbhD+Uh/SVibojaU4yC1kSV6FLHXI15ic559OJ455qutHZP7FHH1b6UnD
+	xesSPynJO14G29lJrN5UPt1IioIJ5QJujMZn15/Gcf3gUaBb68hACciO52unvebvVTenLch/Y0q
+	PQTGky0=
+X-Google-Smtp-Source: AGHT+IF7N0m9fi7UNBnynmCrYtZ3nHLsyYGEDuj/ytM52ZzivFGmDorYqVT6d6ffaGAJC3tLFVpx3w==
+X-Received: by 2002:a19:ca4e:0:b0:546:2fde:d2d9 with SMTP id 2adb3069b0e04-5462fded38cmr667284e87.28.1739954261340;
+        Wed, 19 Feb 2025 00:37:41 -0800 (PST)
+Received: from xeon.. ([188.163.112.51])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452d8e54f7sm1692319e87.9.2025.02.19.00.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 00:37:39 -0800 (PST)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v1 1/2] dt-bindings: extcon: Document Maxim MAX14526 MUIC
+Date: Wed, 19 Feb 2025 10:37:23 +0200
+Message-ID: <20250219083724.56945-2-clamor95@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250219083724.56945-1-clamor95@gmail.com>
+References: <20250219083724.56945-1-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 19 Feb 2025 08:14:34 +0100
-Thomas Weißschuh <thomas.weissschuh@linutronix.de> wrote:
+Add bindings for Maxim MAX14526 MicroUSB Integrated Circuit.
 
-> On Wed, Feb 19, 2025 at 09:10:23AM +0900, Masami Hiramatsu wrote:
-> > On Mon, 17 Feb 2025 14:16:12 +0100
-> > Thomas Weißschuh <thomas.weissschuh@linutronix.de> wrote:
-> > 
-> > > Restricted pointers ("%pK") are not meant to be used through printk().
-> > > It can unintentionally expose security sensitive, raw pointer values.
-> > > 
-> > > Use regular pointer formatting instead.
-> > > 
-> > > Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
-> > 
-> > This is only for the kernel pointer, but the "uaddr" below means it
-> > has a user space address. So I think this does not need to be applied.
-> 
-> "uaddr" is formatted with %llx, which is fine.
-> "%pK" is used for mm->mm, which is a kernel pointer.
+Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+---
+ .../bindings/extcon/maxim,max14526.yaml       | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/maxim,max14526.yaml
 
-Oops, I misread it. OK. looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
-Thank you,
-
-> 
-> > Thank you,
-> > 
-> > > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> > > ---
-> > >  kernel/trace/trace_events_user.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> > > index 97325fbd62836f4fb477c4a2b2936eff544291ec..3effc6fce20e65a8077de5221eb69db04fb1a775 100644
-> > > --- a/kernel/trace/trace_events_user.c
-> > > +++ b/kernel/trace/trace_events_user.c
-> > > @@ -455,7 +455,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
-> > >  	if (ret && ret != -ENOENT) {
-> > >  		struct user_event *user = enabler->event;
-> > >  
-> > > -		pr_warn("user_events: Fault for mm: 0x%pK @ 0x%llx event: %s\n",
-> > > +		pr_warn("user_events: Fault for mm: 0x%p @ 0x%llx event: %s\n",
-> > >  			mm->mm, (unsigned long long)uaddr, EVENT_NAME(user));
-> > >  	}
-> > >  
-> > > 
-> > > ---
-> > > base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
-> > > change-id: 20250217-restricted-pointers-trace-a0fb12707ac6
-> > > 
-> > > Best regards,
-> > > -- 
-> > > Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
-
+diff --git a/Documentation/devicetree/bindings/extcon/maxim,max14526.yaml b/Documentation/devicetree/bindings/extcon/maxim,max14526.yaml
+new file mode 100644
+index 000000000000..87cf7fd19ee9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/maxim,max14526.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/extcon/maxim,max14526.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim MAX14526 MicroUSB Integrated Circuit (MUIC)
++
++maintainers:
++  - Svyatoslav Ryhel <clamor95@gmail.com>
++
++properties:
++  compatible:
++    const: maxim,max14526-muic
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        muic@44 {
++            compatible = "maxim,max14526-muic";
++            reg = <0x44>;
++
++            interrupt-parent = <&gpio>;
++            interrupts = <72 IRQ_TYPE_EDGE_FALLING>;
++        };
++    };
++...
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
