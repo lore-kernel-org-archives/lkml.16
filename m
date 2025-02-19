@@ -1,64 +1,65 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A101DDA3B
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5695A1DF265
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739965014; cv=none; b=a1/vQ/0AVPol7Bg0XhaoOeIy8Ju+A46XT6W9hM0foDwSUEiQmb5SURfEO23B/gClyQA97an6Pp42hfiSnRmpbKo9BvjM38bkw6K9rPS7MOZof0F2Dr/5+n7CNT7DuOFPdQuspr8rFKsSyRjcPSw4H7SAbYx78HrmJP/kJBPuHQQ=
+	t=1739965016; cv=none; b=o+o4zdfjGwiOlFzg7HQezEFuoPyggfoK57Jwt1cQ0Qbk9MD+Ahr+BPFO/BbWOuHm4oODp2WLMBVu3KtBGXETUWs9wSBiB0rlY7kFIYr1L0H1dJV94PDf9dBEX4Y+aD7+IuUz4s9aRvf2cq//KVqH97wnlKMXyCkotHBhyMz4DnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739965014; c=relaxed/simple;
-	bh=iZrgBM//167wPR0zsBWkWKvKI/i6DaxXBXDrsaYFLII=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Zbn+OydQUlIeC2sOjEWHRfKAy5w/Zwh1V1Dq9dEi1XD8Y91TQS7ex6SJgQ9f78EjU9Oiu2cY2ze3D1gcv+lsw4aT2Xgo2a2QaMTZNKjYcaSvP6oVZkS449ss3AWpxujOpxGde1t020DCrgpeF1zgD4x5VqOi392B94t/YXj0Nys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q5kQ4XCM; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1739965016; c=relaxed/simple;
+	bh=aeQpVCYX96EiILRvRBe71bf7oL57iRYfowgV8+KRUvI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VNTg+PUFx5QXoBAJZg3OWYsunIQyBr2daKkRQJxy+6p9Z830IbItCdldJf0gjOkHHsip7DttqGE820hTAnEmMdhsERmzr3vt2bE17PiA3BAU3FCWabA5nvYCItl9reB3UdFUhcG9ftsL/c3gagp2vTOIvq/1bBGLnjuD5+hxBbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gw8cLMwY; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q5kQ4XCM"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4398e839cd4so4379195e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 03:36:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gw8cLMwY"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4396424d173so67154735e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 03:36:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739965010; x=1740569810; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3hrqKpucUA63MqyDzmKkOY4RhGhYMWg+g6q4LxLXOk=;
-        b=q5kQ4XCMJBSOKmtODBnxa58O0fWiFeYNyRsiNwLo4kn6XmWg1SVNnmdixw+N9tMMPL
-         8uTfX+xpjGHqLlPQYTZIoVaQUP+z7yVB6AoNxJjLadSspoak3qmKZqi0g2swVV4NykV2
-         6XcKmb/b4s5IG7DVACjn/u115N7fN+tRtw4GzTwYJ2nT9iu5sjESuNKxV3xP96/W7MFA
-         REFgRwaOQwtns7/EyAZkcgzRe6hiXaE8TGTkpRAcVJFG5o2w+cmntt8iYfRKIsIXidnJ
-         fYMjfNTpHMphbgjvPMGpm6JbYoZTEMEvPQ5bdjVxUEAHC7+Wq6Ns+jLKSTm/C09W2PlW
-         UG6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739965010; x=1740569810;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1739965012; x=1740569812; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=l3hrqKpucUA63MqyDzmKkOY4RhGhYMWg+g6q4LxLXOk=;
-        b=RvCFdCCO2kVFW0j555VZz3rAMbbbnc5HUyhvNn/oFmsFravFehEdrhF4I1pgpWKWR7
-         jSXwrHap1bWtgFCXXMwT8INRGsUw5k1KL0tXcu3gify0CZm896YXVaNTsx0pdFTqry5a
-         MuLvCndhmPG6LH9tpM/PTFH5K0MB+WMdjXxltafvU4sNawDSK0CN/i9Rspik3clL7zkJ
-         ZZqxmL6vTv0cgWJi1rPGFhMm/ZOGwuqVfp6JUUT5K47ZeibvGNJ3HW9Sb663gpXzDgTL
-         haV0kWAw9W5i2M9cs9Ebt3KovdnhhdiTtXvCie/rBm28KM3k/SeMkbAVKo8JPp6qn+FU
-         i6Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUekTmsbqFK+yQQ9Z0dRpJ7WKGjEeDgrfebWzlRzchvyUKz3VEPCEYY/T6vzEOdSVFMOBmAkXySoyQtG1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUWCcRBHv4n+Q91aandYBEDI40pU5lNiXTbzmMZMXKe9+X1gav
-	xuHuJGCz+qLBWTh2qQ0U3EO8sNGpontd89LphwHFX+tvgnRM/A7XVg+ILhN1lB0=
-X-Gm-Gg: ASbGncuAYOp6fpjLKISTv5pWvJoqrnjYF7Ciurh6HK/JPlD5GQytJ8y6kgVUvLAHnaN
-	FJoR/eyULs7a7VpfgLAYP8gxN2a0yS9lk6otwCIH2vh21xiIKXPqQj5hCslWnkmstz41wgXnNPn
-	/J2yD+Bfdf+5Esx93gXOQwsgDXmNM/vkYY5rVZefmJqAXtFC22LYlCZcTsLfnuD3tecFO5Jyyk0
-	xiiFaWc+3P5LwS8jc5RTXy2qMNIvbxvRqUTObrix41IF+B2ZiRXBbtfR8468qthgaXKtL/wFYiQ
-	fAq+x2pvjF2ZBB/jdqbwYtUYO1ID6A==
-X-Google-Smtp-Source: AGHT+IGFzF5HoEkc5QW9xKy8r+v6LMQ5QmeA1OFi3LefcjtgsIdfpa9GKpxun66J9kkK0Rwa0bOljw==
-X-Received: by 2002:a05:600c:6d4a:b0:439:5d00:e78f with SMTP id 5b1f17b1804b1-43999b7ec7emr30047155e9.11.1739965009642;
-        Wed, 19 Feb 2025 03:36:49 -0800 (PST)
+        bh=iSkPk59emVMF8j5rckMLbpsRWNkWqyF3q7PprSmf8V8=;
+        b=Gw8cLMwYexqDMERa/CyD9oIgsdyG7RCGnpfhwjnJySKq7h8d7TXp8XjKxYokd7UTnr
+         5zs8c/oJR5LM5ksRAVOJea3Fv1CdkzQrP72lqXEVw2LO20/be+WOC9WxqDotdDxdpZFD
+         60XxksQ+Zd/312GvTUMGcy7WOr5YsGy4wLcqZJ0GFT+o2PXO5lNExZmCj6Y5R9BvTmcR
+         4MM7ewP0SBP9Dds61DZS3Z8d3FpgpEqki6s2YTKM39Q/U1shscs1l8YTyVThLk5xw4CE
+         HSdAHQr0q7z7xbEMV4NCVoaljKCD3B0ys6gLge29IoGwyyfQz/sfVNPh5KvUjNXryygb
+         NRGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739965012; x=1740569812;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iSkPk59emVMF8j5rckMLbpsRWNkWqyF3q7PprSmf8V8=;
+        b=QkWYBJcoYLAu2B/H6Az9vGaXy/ivv2TUWrLKXj2Vq5LmX/hJ2ROCVNKIjbJFx8cQhZ
+         M4h4qhNcApG1g9F3Cj5qJSriExS2Yx2flCfqcBQ0llCsQ67uEgG7Tjo8QX3I4hxiWp++
+         NDlSeYdXVi594CiPCGxU0H2FTtRDxjOl37ZcmZWErG3O+s7G+7mFlK8u2MYwoNJD0WMo
+         QZqvMcSZRUJQbtpoF7oboACJiky7jeC5OuDifeiJII5h7BcSRsTwms4LLbmWHE08xUkY
+         X6nftAobTLFihzS2OeeBLdBHZ90lsJYcY11hGvbFC5jxjAcyAkrTXZ96shGJ+79zPXSq
+         sPHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyJYxEwV4GYAEhq6VSov40j3f2DHtKGPDASMqIuE9ocotE79p3xfUvHeE3i72LMOoFmbcCYm5RteE980c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya22GeG25BxS6diEFi4Og0S+lfdVOTDE9+KIcMMmGoaPbQeXe+
+	kYV48GUUEE38y4RU6ZUdAJnOpKk1VST8xYcFTmlVJRLyJYosUnc5jkm2gMJX2Cs=
+X-Gm-Gg: ASbGnctxSAaeyttacROS+GXLfUiOyesAJi704yhyDcvI7NTuw+ZM32+cZlOvyp4dtqa
+	ZOcMK2t8zdWVD/DhPXy8RWtzmWDXQCxSY5RfuBSZY+OMy1mW3yDn3rqeAiJszBxkhEWfGK94Y1i
+	Q2XWCiFxux5GHN3OOFchL6iM77Phm/N/6fxYhhHBrAQKl3NnEWtUDVP0ZI5zK4elluGwPHjGq3d
+	M0TLZFwKv6PdPwCoT8gG847o1gvr1SSDXHmixtk57qNXKADRj094qlpCfcBuRfCX+JKaCexEGkd
+	hYafBfV9V8u2XzPuspQH4n2VWPN2rA==
+X-Google-Smtp-Source: AGHT+IEpXXkp/nHXqfdoqJc5/1i4FhiGEfkVGPMa0uEDEmE51VlEjCs0pDaE1dXfD31R0mK2D+8t4w==
+X-Received: by 2002:a05:600c:4fce:b0:439:3d5c:8c19 with SMTP id 5b1f17b1804b1-4396e717094mr151284125e9.24.1739965012519;
+        Wed, 19 Feb 2025 03:36:52 -0800 (PST)
 Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:8630:e1af:c2ac:8a22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399600257asm42437905e9.4.2025.02.19.03.36.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399600257asm42437905e9.4.2025.02.19.03.36.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 03:36:49 -0800 (PST)
+        Wed, 19 Feb 2025 03:36:52 -0800 (PST)
 From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Subject: [PATCH 0/4] arm64: dts: qcom: x1e80100: Fix thermal trip points
-Date: Wed, 19 Feb 2025 12:36:17 +0100
-Message-Id: <20250219-x1e80100-thermal-fixes-v1-0-d110e44ac3f9@linaro.org>
+Date: Wed, 19 Feb 2025 12:36:20 +0100
+Subject: [PATCH 3/4] arm64: dts: qcom: x1e80100: Add GPU cooling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,11 +67,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADHCtWcC/x3LSwqAMAxF0a1IxgbSqljcijgQ+9SAP1oRQdy7x
- eHhch+KCIpITfZQwKVR9y3B5BkNc79NYPXJZMVWYo3j28CJEeFzRlj7hUe9EbmuSy/Oo0QxUJq
- PgD+kt+3e9wPE0mWDaAAAAA==
-X-Change-ID: 20250218-x1e80100-thermal-fixes-774d08de4e3c
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250219-x1e80100-thermal-fixes-v1-3-d110e44ac3f9@linaro.org>
+References: <20250219-x1e80100-thermal-fixes-v1-0-d110e44ac3f9@linaro.org>
+In-Reply-To: <20250219-x1e80100-thermal-fixes-v1-0-d110e44ac3f9@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -81,35 +81,322 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
 
-There are some mistakes in the thermal trip points currently used on
-X1E80100. Several of the critical trip points are too high, so the hardware
-will trigger an emergency reset before the kernel has the chance to
-shutdown cleanly. We're also missing GPU cooling in the device tree, which
-prevents running certain GPU-intensive applications without reaching the
-critical shutdown temperatures. The CPU on the other hand throttles itself
-automatically, so we can just drop the passive trip points there.
+Unlike the CPU, the GPU does not throttle its speed automatically when it
+reaches high temperatures. With certain high GPU loads it is possible to
+reach the critical hardware shutdown temperature of 120°C, endangering the
+hardware and making it impossible to run certain applications.
 
-This series addresses these problems. It's quite similar to Neil's thermal
-zone rework for SM8650 [1], which provides some extra background on the
-mechanisms behind the throttling.
+Set up GPU cooling similar to the ACPI tables, by throttling the GPU speed
+when reaching 95°C and polling every 200ms.
 
-[1]: https://lore.kernel.org/linux-arm-msm/20250203-topic-sm8650-thermal-cpu-idle-v4-0-65e35f307301@linaro.org/T/
-
+Cc: stable@vger.kernel.org
+Fixes: 721e38301b79 ("arm64: dts: qcom: x1e80100: Add gpu support")
 Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 ---
-Stephan Gerhold (4):
-      arm64: dts: qcom: x1e80100: Fix video thermal zone
-      arm64: dts: qcom: x1e80100: Apply consistent critical thermal shutdown
-      arm64: dts: qcom: x1e80100: Add GPU cooling
-      arm64: dts: qcom: x1e80100: Drop unused passive thermal trip points for CPU
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 169 +++++++++++++++++----------------
+ 1 file changed, 89 insertions(+), 80 deletions(-)
 
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 679 ++++++++-------------------------
- 1 file changed, 160 insertions(+), 519 deletions(-)
----
-base-commit: c177fed7617d6306541305e93e575c0c01600ff0
-change-id: 20250218-x1e80100-thermal-fixes-774d08de4e3c
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index 9893fa8353f144e0ee723ab5312cd95aadab041d..a0d4be29a489618a152f79d15a847338271f12d4 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -20,6 +20,7 @@
+ #include <dt-bindings/soc/qcom,gpr.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -9359,24 +9360,25 @@ nsp3-critical {
+ 		};
+ 
+ 		gpuss-0-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 5>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss0_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss0_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+@@ -9385,24 +9387,25 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-1-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 6>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss1_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss1_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+@@ -9411,24 +9414,25 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-2-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 7>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss2_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss2_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+@@ -9437,24 +9441,25 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-3-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 8>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss3_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss3_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+@@ -9463,24 +9468,25 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-4-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 9>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss4_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss4_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+@@ -9489,24 +9495,25 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-5-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 10>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss5_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss5_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+@@ -9515,24 +9522,25 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-6-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 11>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss6_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss6_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+@@ -9541,24 +9549,25 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-7-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 12>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss7_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss7_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
++				gpu-critical {
+ 					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
 
-Best regards,
 -- 
-Stephan Gerhold <stephan.gerhold@linaro.org>
+2.47.2
 
