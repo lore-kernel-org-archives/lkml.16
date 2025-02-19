@@ -1,78 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C8E25D555;
-	Wed, 19 Feb 2025 23:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79F925A334;
+	Wed, 19 Feb 2025 23:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740006001; cv=none; b=uKoopbG6EKJMMcyCLhzEwMFnsqjDtZ53Um/5zuZh+KLtHBvq+/Dh1AuL4TajzD1RUw8KNHkzBGaJP24pmqHMDBMT92JUNntKDnd9WzGEMIBheEjmAXN5yz4X19zBuzyL6twSfSLUhVFIpzf4sB7Lcet2jj91LjN8SqltOMB6k8o=
+	t=1740006006; cv=none; b=n143+QAHwLFYvJTZie9EEV+pKqW8i/0LOl6SHMwKQDOo0EJHNMUXG3Num0Ku47fcED9rym2c25NbzBlN9vcbYzFmKXOUQtsN8Hnd62qEJDu8FVc95UEXehYZzglfm6axtPFK4tvqIJP7uffPJNGY19RnKLwhslrx8knp9XlYBqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740006001; c=relaxed/simple;
-	bh=Avixi87/yUvx+vB5Nk9euMakPds3svx9rpHC3tSzvek=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KRi/1SUrgJx6vVoj4KWXeOI2zmTGcAiy7kBMxH85hsndLZaxJUO6LoNJgFrsQ6T4PrLW2F1F1uS4dPZ0NIxRJZ1GXLjzjPtLjAF5G5Hw3KK1HpqLLpYC3G3golqcZM2pG4Dxseza6Ynx58Lpty50KcS8eHUpsIGF5aAMYtdzRWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gT+ft3iL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740006006; c=relaxed/simple;
+	bh=ycjVKUq0Z/JzO3KFCBtaeWyRj0ZFaYt/UYqgHgQIqQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IiyQeVpQfmAz4nCkMLnRqibH9TqsjDDP0pop/UScrCtR1iWNKrB1D+yDcuTu2X8J/l23pWWSPh70SxI/HGtgjZFqaXNHpt3DtpBh89JU0S5lSUyZyWkrFs9PCzjIzKPIquMKOBAt2KnBbrqrdXk6XrMS20qOZT+7G0QyX+8G0QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZtFBri/4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gT+ft3iL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8380C4CEE0;
-	Wed, 19 Feb 2025 23:00:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZtFBri/4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 236C6C4CED1;
+	Wed, 19 Feb 2025 23:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740006000;
-	bh=Avixi87/yUvx+vB5Nk9euMakPds3svx9rpHC3tSzvek=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gT+ft3iLRCKHnOxgb4+TqS+HaBofMO943Lft75JgqO9u1+LUmOBgsPeA/8qWOmGWR
-	 g9G4tdUefzFzoaVDRk99mgJYGtl2DqskhhHaeHLV9F1nbhtUOv/Xvr+JB0bBbG59Ji
-	 2HsKEroDQJPMb+lTVFtt4IcgkS9k8vP1XLjkoxIOuJJR2715GigH1ILMMkUAry8cG9
-	 gWC7Lod3Uev5pOVvzsz70Qyx9YqKeKrC4UhauNBpEXlGxMMLlEHIcC3dz/7K0iS0ja
-	 6MEWQr380RJT0cKyqr6n6L5u42n5Mxocnqc78YrZU84AatZKDhI50K9buRQ18lo7xn
-	 mzvK9YKuuXk2w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE374380AAEC;
-	Wed, 19 Feb 2025 23:00:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1740006006;
+	bh=ycjVKUq0Z/JzO3KFCBtaeWyRj0ZFaYt/UYqgHgQIqQo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZtFBri/4A0glWn5U+INtzQH/E0QqdqJyOB50h3NrGzv9vuluIEFYbA31+fxDoXBnO
+	 +0PlwNTe+iYXaY7Yao6IQIMNYU3vICTYT8ZX9XRoVAODhOAq0M+QJHd30YnhAoW6kE
+	 moUOEoVqihsND3H6jZ5uJun4tWudm75pXQ5Qd1WXFY5npLl810ovG9YSFXNUVyPszD
+	 nzQwx2w/eBI/pZwTeGQtVRdIx+i0cgezapTEnJuowfgE62gAuISqZCJegTakhpeLCb
+	 3oHdyjZat6m6UYxzVp33DJesmf7Pv3gmXB8//98EpdSAJacjqhfnc5b5sGxQ6Xi+Jn
+	 kLbJhUmHiKfPg==
+Date: Wed, 19 Feb 2025 17:00:04 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] PCI: shpchp: Debug & logging cleanup
+Message-ID: <20250219230004.GA248230@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v2] libbpf: Wrap libbpf API direct err with
- libbpf_err
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174000603155.775571.10326164542234873495.git-patchwork-notify@kernel.org>
-Date: Wed, 19 Feb 2025 23:00:31 +0000
-References: <20250219153711.29651-1-chen.dylane@linux.dev>
-In-Reply-To: <20250219153711.29651-1-chen.dylane@linux.dev>
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- eddyz87@gmail.com, haoluo@google.com, jolsa@kernel.org, qmo@kernel.org,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org, chen.dylane@gmail.com
+In-Reply-To: <20250218224602.GA198344@bhelgaas>
 
-Hello:
-
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Wed, 19 Feb 2025 23:37:11 +0800 you wrote:
-> From: Tao Chen <chen.dylane@gmail.com>
+On Tue, Feb 18, 2025 at 04:46:02PM -0600, Bjorn Helgaas wrote:
+> On Mon, Feb 17, 2025 at 11:55:48AM +0200, Ilpo Järvinen wrote:
+> > Hi all,
+> > 
+> > This series cleans up debug/logging in shpchp driver.
+> > 
+> > The series is an update for the only remaining patch in the pci_printk()
+> > removal series. To avoid breaking build, pci_printk() itself will only
+> > be removed in the next kernel release because both AER and shpchp used
+> > it and are in different topic branches.
+> > 
+> > v2:
+> > - Split removal of logging wrappers and module parameter removal to
+> >   own patches
+> > - Explain how dynamic debugging can be enabled
+> > 
+> > Ilpo Järvinen (2):
+> >   PCI: shpchp: Remove unused logging wrappers
+> >   PCI: shpchp: Remove "shpchp_debug" module parameter
+> > 
+> >  drivers/pci/hotplug/shpchp.h      | 18 +-----------------
+> >  drivers/pci/hotplug/shpchp_core.c |  3 ---
+> >  2 files changed, 1 insertion(+), 20 deletions(-)
 > 
-> Just wrap the direct err with libbpf_err, keep consistency
-> with other APIs.
-> 
-> Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> 
-> [...]
+> Applied to pci/hotplug for v6.15, thanks, Ilpo!
 
-Here is the summary with links:
-  - [bpf-next,v2] libbpf: Wrap libbpf API direct err with libbpf_err
-    https://git.kernel.org/bpf/bpf-next/c/e8af068239ca
+And I added the previous patches:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+  7d5f1e615e69 ("PCI: shpchp: Remove logging from module init/exit functions")
+  499982200892 ("PCI: shpchp: Change dbg() -> ctrl_dbg()")
 
-
+that you mentioned that I forgot to include here, which should fix the
+build failure.
