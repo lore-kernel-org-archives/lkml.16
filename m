@@ -1,156 +1,169 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE4E1C4A20
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 10:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F872862A1;
+	Wed, 19 Feb 2025 10:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739959738; cv=none; b=j4155q1A7hjYLlhe8aG1e0MtROyCaoiNXpneQI6LviMi8p7pQzMhJDQH4eorHkx2kdlwUswX+h+8VFbtpNe6Ejbc2oIb3EmQHDTkF4WvwJNflk1fhGnuVmhtOTX8Tv1xNTrt31PpWixxhZ9JHj44OOnQ1JnDeMQs3eugm0ISOYk=
+	t=1739959999; cv=none; b=decUiUzvOHP/DB4tNME6IdlpIxmFg7XiZxbpS3wa/1neOJQjeUAQiR1KbUkC4zuQH2TbVHBIQZAUF4d1eLvyjdg9HLbNyuY+rnKwktRMPd8Yoj1lPAarHioNx4BXu8tCou/5aO/DrW5qALbouTtdmseXC2URcv6HMdYF7lAuvQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739959738; c=relaxed/simple;
-	bh=p/KxdQ4ruN5JahY/uQN98eW+Q2Xwpg9xtO6USNbCEdM=;
+	s=arc-20240116; t=1739959999; c=relaxed/simple;
+	bh=fMTgCZ4pkvP3/QIoF7iwpCmqEdcG6A1koNbMDvsj2dk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UH9Q08ZyYLUWiBzmrnKxZAvULu9nhGtcsnU6lh+okmPUY1w6jMJYCwSbMtrXril58r79rAyxrSo4HnmkruFJrwy6ZEUAtF5wIpEEzF/7hRfLbyINjNRpBbXiWZ4RitFoneCdftEbLZc2PT/t4vIvKjTJ04Iv+yWEwraneu0Yr5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tkh0P-0005fw-VC; Wed, 19 Feb 2025 11:08:37 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tkh0P-001k4v-1n;
-	Wed, 19 Feb 2025 11:08:37 +0100
-Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 2F77D3C67EB;
-	Wed, 19 Feb 2025 10:08:37 +0000 (UTC)
-Date: Wed, 19 Feb 2025 11:08:36 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, NXP S32 Linux <s32@nxp.com>, imx@lists.linux.dev, 
-	Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>, 
-	Enric Balletbo <eballetb@redhat.com>
-Subject: Re: [PATCH v4 2/3 RESEND] can: flexcan: Add quirk to handle separate
- interrupt lines for mailboxes
-Message-ID: <20250219-prophetic-accomplished-sunfish-5f0f0d-mkl@pengutronix.de>
-References: <20250113120704.522307-1-ciprianmarian.costea@oss.nxp.com>
- <20250113120704.522307-3-ciprianmarian.costea@oss.nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aov2Bk8RY+eTZ4wflic/7PYWbkQDymoSSRkIEOJqvebmWRuk5R3WeHv2wi+BpxT6prqfkpFd6K1Y8hjux27ZYDdDzko4zlNkYmMMF16SzfvJCPmzL0WQOjfEPrqhKBhhq2JZbfTj34TK2DvP876ewxWKWGDQJptkN56sDm0MuJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LHj7SUL6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LHj7SUL6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F40B3C4CED1;
+	Wed, 19 Feb 2025 10:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739959997;
+	bh=fMTgCZ4pkvP3/QIoF7iwpCmqEdcG6A1koNbMDvsj2dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LHj7SUL6hr9dnxeuMouAoZl+TqgPJkJnt6OxeGZBVnwjG1an8QfGZTZhAz67SUNMi
+	 V5LaRH/n8f0+cZvr3kZbgPWLsV3MQceZE5n+wYuzRWmC4ZHELcec25299VKUrxRVkD
+	 lwg+grq7xKKnKHBmMBQEKZrZR5rJUGwcEwJFWwx8=
+Date: Wed, 19 Feb 2025 11:13:14 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-clk@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v4 1/8] driver core: auxiliary bus: add device creation
+ helpers
+Message-ID: <2025021922-spongy-swirl-0746@gregkh>
+References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com>
+ <20250218-aux-device-create-helper-v4-1-c3d7dfdea2e6@baylibre.com>
+ <crtrciitrlqkxh5mxvnbdjy6zoxny5onse7xgbw7biozg6myux@grp3ketgl2uh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xuwrpmy5uiyzauwm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250113120704.522307-3-ciprianmarian.costea@oss.nxp.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <crtrciitrlqkxh5mxvnbdjy6zoxny5onse7xgbw7biozg6myux@grp3ketgl2uh>
 
+On Wed, Feb 19, 2025 at 11:06:02AM +0200, Dmitry Baryshkov wrote:
+> On Tue, Feb 18, 2025 at 08:29:46PM +0100, Jerome Brunet wrote:
+> > Add helper functions to create a device on the auxiliary bus.
+> > 
+> > This is meant for fairly simple usage of the auxiliary bus, to avoid having
+> > the same code repeated in the different drivers.
+> > 
+> > Suggested-by: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  drivers/base/auxiliary.c      | 108 ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/auxiliary_bus.h |  17 +++++++
+> >  2 files changed, 125 insertions(+)
+> > 
+> > diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+> > index afa4df4c5a3f371b91d8dd8c4325495d32ad1291..a6d46c2759be81a0739f07528d5959c2a76eb8a8 100644
+> > --- a/drivers/base/auxiliary.c
+> > +++ b/drivers/base/auxiliary.c
+> > @@ -385,6 +385,114 @@ void auxiliary_driver_unregister(struct auxiliary_driver *auxdrv)
+> >  }
+> >  EXPORT_SYMBOL_GPL(auxiliary_driver_unregister);
+> >  
+> > +static void auxiliary_device_release(struct device *dev)
+> > +{
+> > +	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
+> > +
+> > +	kfree(auxdev);
+> > +}
+> > +
+> > +/**
+> > + * auxiliary_device_create - create a device on the auxiliary bus
+> > + * @dev: parent device
+> > + * @modname: module name used to create the auxiliary driver name.
+> > + * @devname: auxiliary bus device name
+> > + * @platform_data: auxiliary bus device platform data
+> > + * @id: auxiliary bus device id
+> > + *
+> > + * Helper to create an auxiliary bus device.
+> > + * The device created matches driver 'modname.devname' on the auxiliary bus.
+> > + */
+> > +struct auxiliary_device *auxiliary_device_create(struct device *dev,
+> > +						 const char *modname,
+> > +						 const char *devname,
+> > +						 void *platform_data,
+> > +						 int id)
+> > +{
+> > +	struct auxiliary_device *auxdev;
+> > +	int ret;
+> > +
+> > +	auxdev = kzalloc(sizeof(*auxdev), GFP_KERNEL);
+> > +	if (!auxdev)
+> > +		return NULL;
+> > +
+> > +	auxdev->id = id;
+> > +	auxdev->name = devname;
+> > +	auxdev->dev.parent = dev;
+> > +	auxdev->dev.platform_data = platform_data;
+> > +	auxdev->dev.release = auxiliary_device_release;
+> > +	device_set_of_node_from_dev(&auxdev->dev, dev);
+> > +
+> > +	ret = auxiliary_device_init(auxdev);
+> > +	if (ret) {
+> > +		kfree(auxdev);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	ret = __auxiliary_device_add(auxdev, modname);
+> > +	if (ret) {
+> 
+> This loses possible error return values from __auxiliary_device_add().
 
---xuwrpmy5uiyzauwm
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 2/3 RESEND] can: flexcan: Add quirk to handle separate
- interrupt lines for mailboxes
-MIME-Version: 1.0
+Why does that really matter?
 
-On 13.01.2025 14:07:03, Ciprian Costea wrote:
-> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
->=20
-> Introduce 'FLEXCAN_QUIRK_SECONDARY_MB_IRQ' quirk to handle a FlexCAN
-> hardware module integration particularity where two ranges of mailboxes
-> are controlled by separate hardware interrupt lines.
-> The same 'flexcan_irq' handler is used for both separate mailbox interrupt
-> lines, with no other changes.
->=20
-> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> ---
->  drivers/net/can/flexcan/flexcan-core.c | 24 +++++++++++++++++++++++-
->  drivers/net/can/flexcan/flexcan.h      |  5 +++++
->  2 files changed, 28 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/fle=
-xcan/flexcan-core.c
-> index ac1a860986df..3ae54305bf33 100644
-> --- a/drivers/net/can/flexcan/flexcan-core.c
-> +++ b/drivers/net/can/flexcan/flexcan-core.c
-> @@ -1762,14 +1762,25 @@ static int flexcan_open(struct net_device *dev)
->  			goto out_free_irq_boff;
->  	}
-> =20
-> +	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_SECONDARY_MB_IRQ) {
-> +		err =3D request_irq(priv->irq_secondary_mb,
-> +				  flexcan_irq, IRQF_SHARED, dev->name, dev);
-> +		if (err)
-> +			goto out_free_irq_err;
-> +	}
-> +
->  	flexcan_chip_interrupts_enable(dev);
-> =20
->  	netif_start_queue(dev);
-> =20
->  	return 0;
-> =20
-> + out_free_irq_err:
-> +	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_NR_IRQ_3)
-> +		free_irq(priv->irq_err, dev);
->   out_free_irq_boff:
-> -	free_irq(priv->irq_boff, dev);
-> +	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_NR_IRQ_3)
-> +		free_irq(priv->irq_boff, dev);
->   out_free_irq:
->  	free_irq(dev->irq, dev);
->   out_can_rx_offload_disable:
-> @@ -1799,6 +1810,9 @@ static int flexcan_close(struct net_device *dev)
->  		free_irq(priv->irq_boff, dev);
->  	}
-> =20
-> +	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_SECONDARY_MB_IRQ)
-> +		free_irq(priv->irq_secondary_mb, dev);
-> +
+> I'd suggest to return ERR_PTR(ret) here and in the
+> auxiliary_device_init() chunks and ERR_PTR(-ENOMEM) in case of kzalloc()
+> failure.
 
-While applying, I've changed the order to free the secondary IRQ first,
-to be symmetrical to flexcan_open().
+Will the caller do something different based on the error value here?
+All we care is that this worked or not, the specific error isn't going
+to matter for device creation like this.
 
-regards,
-Marc
+thanks,
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---xuwrpmy5uiyzauwm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAme1raAACgkQDHRl3/mQ
-kZwxnQgAm/qLQis4DHGGYASyvTu+okBD2sQvTNp0Fn7wq5ZOlgtVNZe51xpvZIMN
-UH4G6nujnF34X7q0nxGoztcOcZjod9Ts0++6IGyb8XbB0JLsZnt8+juJitpBE8N2
-NVp0A2dgfnLYuYHxeGWjP6uXR+LSW5adW8xoiC8k1Fjo7piY0Mw7WfISNaxTh7oY
-Jjc4jh0a/PRMqiBtOPhzRCfRZ7oUv2k8pzK1Bl8l/6Kij0rG+asVy/iXhWT+O6YY
-X0XbGdnFuyU1Sl9IauLqmWs0Nj5xwyNQv4DpjhWDnw3ifd1g5CDW2wnWZQufCxPB
-OVbDhCDx0GHr/exKbn175IHhJove4A==
-=XxV6
------END PGP SIGNATURE-----
-
---xuwrpmy5uiyzauwm--
+greg k-h
