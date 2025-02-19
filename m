@@ -1,136 +1,262 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B451EB5D9;
-	Wed, 19 Feb 2025 08:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9288C1F3BB6
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954328; cv=none; b=Oj0JE0TVyBpE4bBvlf+uoD4o/WItpGAQQSGcX0GOWY9P25qyJHXTq9krA6BNSAl1mUnXX63UnE0txNHq4KJbDMcn41jBKiUmWA4PB3auFs8kcKw42izB563+8lZXQMEg6oyoQqEV+fR8gwK9W0Mp6gLoL83BZianpK4BRc2yKRM=
+	t=1739954327; cv=none; b=dH3afcdM0mTtPu1/n8kL5LaHaXSvbPR7IpJ2u6jMJNng3iJeYYdW/0rEHjFk2ACIlJc/ldhpg40+7xwHLIyFCy1ruTzTK7SAMEReDyqDpt10haTKfVMKgA+6mQ3F49Or6MstL4B7beoHFn21ZaP2OAXVIsSkcn0DwwpPM9mjnsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954328; c=relaxed/simple;
-	bh=n6HJFfPj0cl/eHeh+siEvAHLLE8xCo+txOcfHDyE/gM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A9y/vcdrGYajd2GhiwixROldgqsmwzzA5m7HhafTMe/Fd9lW7txLNMvfHAwbdVcsRIWPDt9nWzZOMmh5jTyNgOOt46VLuzq5v0eTXIVTMQPfQH/P5yaxaxp+mQU7MlhuiFo4k5H6NanJzsKWcbSmZNwv+fuwS7I7PTt6hZ55DkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCg61H8z4f3jqL;
-	Wed, 19 Feb 2025 16:38:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 24A3C1A0F6F;
-	Wed, 19 Feb 2025 16:38:40 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S13;
-	Wed, 19 Feb 2025 16:38:40 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH md-6.15 v4 09/11] md/raid5: check before referencing mddev->bitmap_ops
-Date: Wed, 19 Feb 2025 16:34:54 +0800
-Message-Id: <20250219083456.941760-10-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250219083456.941760-1-yukuai1@huaweicloud.com>
-References: <20250219083456.941760-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1739954327; c=relaxed/simple;
+	bh=sSkJBdJIFGfc3oMTs08rgL6qZZ5qeZIovZ90HYpvPA0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=B6Z5FvietauHht+C0pTdljpgZR+ioDnkZPC1tHuKccghho2erqGVI2di7BaTmv4+wngNH4f39Qr3Z6SuW2Vap4T6aJu2s+5rhii1YeutDZ4E51fUc+D/8bIdCNI3mwmE0wrM6JzJVsxPLuga8v2MBE+TPMGg/q+kQ9Vb/0A4Nq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tkM/w88C; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tkM/w88C"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250219083836euoutp02357354ecde08832ca946c89a33f64821~ljzuKidHm2233822338euoutp02L
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250219083836euoutp02357354ecde08832ca946c89a33f64821~ljzuKidHm2233822338euoutp02L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739954316;
+	bh=6VHoY15Gd74cbqK2q1xU2So2fYHFema61iUif7A/vgQ=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=tkM/w88COXkKbniUZfISCQZVt0IsWY0RslgoqcRb3gQfLqnQ/IQfxBFqapnn5jc/w
+	 nRCbUXK1WfpP+npHirqtbmgcN4peY4PhuY/uS/EUgYuYVuYQmGhmgFlGujT7+G/PB5
+	 07iGjOJakEFTYnyQM01y66ZlnORr/QlLmYYAfte0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250219083836eucas1p26aa7fe037c01b0828959cd98380501ac~ljzt5nth91811318113eucas1p22;
+	Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id 95.5C.20397.C8895B76; Wed, 19
+	Feb 2025 08:38:36 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254~ljztcuI5s0030500305eucas1p1g;
+	Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250219083836eusmtrp2e7cfb0cca1e4d13332514bb9df6e63e4~ljztcMyMQ2901929019eusmtrp2F;
+	Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
+X-AuditID: cbfec7f5-ed1d670000004fad-f6-67b5988cd40d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 3B.3E.19920.C8895B76; Wed, 19
+	Feb 2025 08:38:36 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250219083835eusmtip13ff514541a0bb992c712835816369505~ljzsg7Vwc2399823998eusmtip1m;
+	Wed, 19 Feb 2025 08:38:35 +0000 (GMT)
+Message-ID: <dfe03f88-407e-4ef1-ad30-42db53bbd4e4@samsung.com>
+Date: Wed, 19 Feb 2025 09:38:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] gpiolib: check the return value of
+ gpio_chip::get_direction()
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
+	<linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz
+	Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S13
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4DJF15uF4rXr4UXF4xWFg_yoW8tF47p3
-	9rtFyaqry5ZrWagw4DJFykuF1Fva97tr9rtryfWw1fWwn7Gr9rWF4rWFyjqF1jya4rAFWr
-	J3y5AF45Cr13Wr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAV
-	WUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYcTQUUUU
-	U
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsWy7djP87o9M7amG5x9rWKx4tsaJotdD7ax
+	WUz5s5zJYvP8P4wWl3fNYbNYsPERowObx+Jrt1k97lzbw+bxeZNcAHMUl01Kak5mWWqRvl0C
+	V0bPvH7mgl7tihcrWpgaGB8odTFyckgImEhM2nuTvYuRi0NIYAWjxLRbjxkhnC+MEufeHGWC
+	cD4zSrx+8ZMFpqXhQCszRGI5o0TfjL9QLR8ZJXY9mM4EUsUrYCfxfssWMJtFQFXi3OZ3bBBx
+	QYmTM5+ATRIVkJe4f2sG0HIODmGBCIn7rfUgYRGBYIkvT2+wgcxkFuhhlLjz4zErSIJZQFzi
+	1pP5YDPZBAwlut52gc3kFPCSeHVsDhNEjbxE89bZYNdJCJzgkLj6ZSc7xNkuEk/X9jNB2MIS
+	r45vgYrLSPzfOZ8JoqGdUWLB7/tQzgRGiYbntxghqqwl7pz7xQZyKrOApsT6XfoQYUeJmys+
+	MoOEJQT4JG68FYQ4gk9i0rbpUGFeiY42IYhqNYlZx9fBrT144RLzBEalWUjBMgvJm7OQvDML
+	Ye8CRpZVjOKppcW56anFxnmp5XrFibnFpXnpesn5uZsYgYnm9L/jX3cwrnj1Ue8QIxMH4yFG
+	CQ5mJRHetvot6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5F+1vTRcSSE8sSc1OTS1ILYLJMnFw
+	SjUwSSju5ly2+zeD2Nf3z9T95/w8N8uz7yxPxWaJO14Bvow1L1+wr3sQonnugKPgJ7187d+B
+	r2O9z/8/LJ1Slb+89Pltrd+ZTYcYl1qpHnrXfsFw5+fqRT7zuq/UyfxzvW757oj6nLr7phOl
+	Z/sIM+5/WNR+/ZyDqqetGot2OYtux1rzHN0nJdoNmY8OKvzJnvS369+duYFuD1vdu9J/RT/Z
+	1nXeWVBqj87P48Vfk9jtWZ0d9Ra/ThVa8pO58LiH7oMlX4L4jIqZr9yYvefFWVEVBu47Pxfn
+	3794frrt2sC64vAWS74FKgb3g77aFWi839J0+8m91aGSPdttnnn/Z/qiq3AjJaF2LX/YLYHG
+	OO6fSizFGYmGWsxFxYkA/eY1OqMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsVy+t/xu7o9M7amG6zYwm6x4tsaJotdD7ax
+	WUz5s5zJYvP8P4wWl3fNYbNYsPERowObx+Jrt1k97lzbw+bxeZNcAHOUnk1RfmlJqkJGfnGJ
+	rVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXkbPvH7mgl7tihcrWpgaGB8o
+	dTFyckgImEg0HGhl7mLk4hASWMoosbrnFAtEQkbi5LQGVghbWOLPtS42iKL3jBKdj/6xgSR4
+	Bewk3m/ZwgRiswioSpzb/A4qLihxcuYTsEGiAvIS92/NYO9i5OAQFoiQuN9aDxIWEQiWWHS3
+	kxHEZhboYZQ4/d4cYn4no8TSn19ZIBLiEreezAebzyZgKNH1tgtsPqeAl8SrY3OYIGrMJLq2
+	dkENkpdo3jqbeQKj0CwkZ8xCMmoWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93E
+	CIyrbcd+bt7BOO/VR71DjEwcjIcYJTiYlUR42+q3pAvxpiRWVqUW5ccXleakFh9iNAWGxURm
+	KdHkfGBk55XEG5oZmBqamFkamFqaGSuJ87pdPp8mJJCeWJKanZpakFoE08fEwSnVwOSlGr39
+	1m7O/1GbK1X3njCSLUi76rl4vv6KsN51qZrlsZ/zvjLYtUSWLhbb1yl0QP7E/H2nbLz2+Kv1
+	SDz8daSf+ee9gw3bT0RufrtU03zh5G3/OAsd/yblue7bE9lsUhxzdpaeej+Ht0v2tm3+Rv69
+	NU/k1rwR1t6mveRvWAv76b+8vzaxas3R/Fl+WE/m37ma2TvM5SPM2uzve8yZfMCxacOlgtCf
+	j0Xm7PJrfqzmPfviX08W3txzX3UeR58R8P/KsTFDdtLd5NJI8XdzTgWICU759IS1WPZ68I2N
+	F3ZNzmrtslY/FxC1i5HXzOrN7FNudafabjFO8nvys7x1+yyjNKdX1m5ZB2O73X6eN1JiKc5I
+	NNRiLipOBAAH3wAGNAMAAA==
+X-CMS-MailID: 20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254
+References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
+	<20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
+	<CGME20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254@eucas1p1.samsung.com>
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi Bartosz,
 
-Prepare to introduce CONFIG_MD_BITMAP.
+On 10.02.2025 11:51, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> As per the API contract - gpio_chip::get_direction() may fail and return
+> a negative error number. However, we treat it as if it always returned 0
+> or 1. Check the return value of the callback and propagate the error
+> number up the stack.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>   drivers/gpio/gpiolib.c | 44 +++++++++++++++++++++++++++++---------------
+>   1 file changed, 29 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 679ed764cb14..5d3774dc748b 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1057,8 +1057,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   		desc->gdev = gdev;
+>   
+>   		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
+> -			assign_bit(FLAG_IS_OUT,
+> -				   &desc->flags, !gc->get_direction(gc, desc_index));
+> +			ret = gc->get_direction(gc, desc_index);
+> +			if (ret < 0)
+> +				goto err_cleanup_desc_srcu;
+> +
+> +			assign_bit(FLAG_IS_OUT, &desc->flags, !ret);
+>   		} else {
+>   			assign_bit(FLAG_IS_OUT,
+>   				   &desc->flags, !gc->direction_input);
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/raid5.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+This change breaks bcm2835 pincontrol/gpio driver (and probably others) 
+in next-20250218. The problem is that some gpio lines are initially 
+configured as alternate function (i.e. uart) and .get_direction returns 
+-EINVAL for them, what in turn causes the whole gpio chip fail to 
+register. Here is the log with WARN_ON() added to line 
+drivers/pinctrl/bcm/pinctrl-bcm2835.c:350 from Raspberry Pi 4B:
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 908b96c2b1d5..ebd4e815b2ab 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6505,7 +6505,8 @@ static inline sector_t raid5_sync_request(struct mddev *mddev, sector_t sector_n
- 					   &sync_blocks);
- 		else /* completed sync */
- 			conf->fullsync = 0;
--		mddev->bitmap_ops->close_sync(mddev);
-+		if (md_bitmap_enabled(mddev))
-+			mddev->bitmap_ops->close_sync(mddev);
- 
- 		return 0;
- 	}
-@@ -6543,7 +6544,8 @@ static inline sector_t raid5_sync_request(struct mddev *mddev, sector_t sector_n
- 		return sync_blocks * RAID5_STRIPE_SECTORS(conf);
- 	}
- 
--	mddev->bitmap_ops->cond_end_sync(mddev, sector_nr, false);
-+	if (md_bitmap_enabled(mddev))
-+		mddev->bitmap_ops->cond_end_sync(mddev, sector_nr, false);
- 
- 	sh = raid5_get_active_stripe(conf, NULL, sector_nr,
- 				     R5_GAS_NOBLOCK);
-@@ -6769,7 +6771,8 @@ static void raid5d(struct md_thread *thread)
- 			/* Now is a good time to flush some bitmap updates */
- 			conf->seq_flush++;
- 			spin_unlock_irq(&conf->device_lock);
--			mddev->bitmap_ops->unplug(mddev, true);
-+			if (md_bitmap_enabled(mddev))
-+				mddev->bitmap_ops->unplug(mddev, true);
- 			spin_lock_irq(&conf->device_lock);
- 			conf->seq_write = conf->seq_flush;
- 			activate_bit_delay(conf, conf->temp_inactive_list);
-@@ -8318,7 +8321,6 @@ static int raid5_resize(struct mddev *mddev, sector_t sectors)
- 	 */
- 	sector_t newsize;
- 	struct r5conf *conf = mddev->private;
--	int ret;
- 
- 	if (raid5_has_log(conf) || raid5_has_ppl(conf))
- 		return -EINVAL;
-@@ -8328,9 +8330,12 @@ static int raid5_resize(struct mddev *mddev, sector_t sectors)
- 	    mddev->array_sectors > newsize)
- 		return -EINVAL;
- 
--	ret = mddev->bitmap_ops->resize(mddev, sectors, 0);
--	if (ret)
--		return ret;
-+	if (md_bitmap_enabled(mddev)) {
-+		int ret = mddev->bitmap_ops->resize(mddev, sectors, 0);
-+
-+		if (ret)
-+			return ret;
-+	}
- 
- 	md_set_array_sectors(mddev, newsize);
- 	if (sectors > mddev->dev_sectors &&
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 1 at drivers/pinctrl/bcm/pinctrl-bcm2835.c:350 
+bcm2835_gpio_get_direction+0x80/0x98
+  Modules linked in:
+  CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
+6.14.0-rc3-next-20250218-dirty #9817
+  Hardware name: Raspberry Pi 4 Model B (DT)
+  pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+  pc : bcm2835_gpio_get_direction+0x80/0x98
+  lr : bcm2835_gpio_get_direction+0x18/0x98
+  ...
+  Call trace:
+   bcm2835_gpio_get_direction+0x80/0x98 (P)
+   gpiochip_add_data_with_key+0x874/0xef0
+   bcm2835_pinctrl_probe+0x354/0x53c
+   platform_probe+0x68/0xdc
+   really_probe+0xbc/0x298
+   __driver_probe_device+0x78/0x12c
+   driver_probe_device+0xdc/0x164
+   __driver_attach+0x9c/0x1ac
+   bus_for_each_dev+0x74/0xd4
+   driver_attach+0x24/0x30
+   bus_add_driver+0xe4/0x208
+   driver_register+0x60/0x128
+   __platform_driver_register+0x24/0x30
+   bcm2835_pinctrl_driver_init+0x20/0x2c
+   do_one_initcall+0x64/0x308
+   kernel_init_freeable+0x280/0x4e8
+   kernel_init+0x20/0x1d8
+   ret_from_fork+0x10/0x20
+  irq event stamp: 100380
+  hardirqs last  enabled at (100379): [<ffff8000812d7d5c>] 
+_raw_spin_unlock_irqrestore+0x74/0x78
+  hardirqs last disabled at (100380): [<ffff8000812c8918>] el1_dbg+0x24/0x8c
+  softirqs last  enabled at (93674): [<ffff80008005ed4c>] 
+handle_softirqs+0x4c4/0x4dc
+  softirqs last disabled at (93669): [<ffff8000800105a0>] 
+__do_softirq+0x14/0x20
+  ---[ end trace 0000000000000000 ]---
+  gpiochip_add_data_with_key: GPIOs 512..569 (pinctrl-bcm2711) failed to 
+register, -22
+  pinctrl-bcm2835 fe200000.gpio: could not add GPIO chip
+  pinctrl-bcm2835 fe200000.gpio: probe with driver pinctrl-bcm2835 
+failed with error -22
+
+
+Any suggestions how to fix this issue? Should we add 
+GPIO_LINE_DIRECTION_UNKNOWN?
+
+
+> @@ -2728,13 +2731,18 @@ int gpiod_direction_input_nonotify(struct gpio_desc *desc)
+>   	if (guard.gc->direction_input) {
+>   		ret = guard.gc->direction_input(guard.gc,
+>   						gpio_chip_hwgpio(desc));
+> -	} else if (guard.gc->get_direction &&
+> -		  (guard.gc->get_direction(guard.gc,
+> -					   gpio_chip_hwgpio(desc)) != 1)) {
+> -		gpiod_warn(desc,
+> -			   "%s: missing direction_input() operation and line is output\n",
+> -			   __func__);
+> -		return -EIO;
+> +	} else if (guard.gc->get_direction) {
+> +		ret = guard.gc->get_direction(guard.gc,
+> +					      gpio_chip_hwgpio(desc));
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (ret != GPIO_LINE_DIRECTION_IN) {
+> +			gpiod_warn(desc,
+> +				   "%s: missing direction_input() operation and line is output\n",
+> +				    __func__);
+> +			return -EIO;
+> +		}
+>   	}
+>   	if (ret == 0) {
+>   		clear_bit(FLAG_IS_OUT, &desc->flags);
+> @@ -2771,12 +2779,18 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
+>   						 gpio_chip_hwgpio(desc), val);
+>   	} else {
+>   		/* Check that we are in output mode if we can */
+> -		if (guard.gc->get_direction &&
+> -		    guard.gc->get_direction(guard.gc, gpio_chip_hwgpio(desc))) {
+> -			gpiod_warn(desc,
+> -				"%s: missing direction_output() operation\n",
+> -				__func__);
+> -			return -EIO;
+> +		if (guard.gc->get_direction) {
+> +			ret = guard.gc->get_direction(guard.gc,
+> +						      gpio_chip_hwgpio(desc));
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			if (ret != GPIO_LINE_DIRECTION_OUT) {
+> +				gpiod_warn(desc,
+> +					   "%s: missing direction_output() operation\n",
+> +					   __func__);
+> +				return -EIO;
+> +			}
+>   		}
+>   		/*
+>   		 * If we can't actively set the direction, we are some
+>
+Best regards
 -- 
-2.39.2
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
