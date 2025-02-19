@@ -1,94 +1,122 @@
-Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904D1184F;
-	Wed, 19 Feb 2025 19:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3434E1B0F33;
+	Wed, 19 Feb 2025 19:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739994048; cv=none; b=FgNLmo069tdvD8646EMzIxE3ma1/qUpSQMfDzVbkUEo64ys5hAg04zML3WY15P4h1c8Xp7KQf852oxlgobz740Wi5DY5DwTFCBbSEYPEFRw2oPUQqB+y/Vw+4DDpr6FKB+8rNrm7OPVfXGxBgzxntCt5sTfiwkRSieHs4Qh4mUo=
+	t=1739994133; cv=none; b=TnAVxSkposQyXfnNXF5zKEnoSwRH8ZKIaQK7kWweCBEXO+eO1rCL70rQ4tPej0g2ilo+hxnctliZiYaGreW5d2sHRatDsPGJQ5CWKwGmtcRNHi6F/jieMhleaZaY1NO2Qs31w2yIR/iglBMHd2v1xmGDMrcBu7oBSu4ON3AmF1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739994048; c=relaxed/simple;
-	bh=IZvZQ+Z2ANgypM5Ai42o0D3/NeLsJT0qXFUyLp8/kH4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Pgv8KC8VucHzqIr5RU3VmxC9LVMX8DTLpeVwENd7DUslcqSMCntA779RV/N4mZD7JrNLB05ma+Z9sXuqIsg442YOt6YN5+Jw5hW/wDjmADdOifIjh32r2LKpMlkF+d5+IZOO47KmhdmOKgAFoaNiXNnsMUokbRpsKJ0bcezBdgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=znhrNoNg; arc=none smtp.client-ip=168.119.26.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
+	s=arc-20240116; t=1739994133; c=relaxed/simple;
+	bh=jpDV+E4FWsQEf6WnMfXYCuqqpKYDdvTvL7ljXSS8Tos=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZNQkvMbap0XW602u7Zfg1UheAhdaGozDOkzGyIQLlaA6J1G3jTpxhpV0mN3jvgaOc+EUibF2Gt7RAvw4VeImrj4KyZHakT9TVU3x2sqbQMytNxz/H8sI9GllAlJiMpGxLTJByFoAR2aLV72ZDZ7KXHUh7TEgTVPjKGnoNi3S3zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Rw88Z40g; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="znhrNoNg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
-	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=uE1hvjxXsUUC1et/VMLf8EeRBWH8/5FEEmjbMg7Vyu0=; b=znhrNoNg1jDWT+rZCye1OrEbRx
-	0pK4ORsezD6ZZI0kEsrUVLnU6Nx0x8S2UJ1UbY6pnDID5AlvQe1b8CG6EwezIt/o3eEXl0jl/IfYL
-	cy/U8xZrKX6LqsFnPRE2/jtOZluTSUT8AAVceZq74UIt14nOJlvlCNZ7unA+pQwZAzB6ojwewx5CY
-	PqnALiqnk25KM0q0xudc6bxFSUwLVuBnAdFM60aFGc4TCaPnNMb73oUD/TFkK5PaPNs6eHmGN3Wl0
-	jF8oWQ78Dgl877QN45H4KhVuaPCxNxsHXaLuXXBhn6uuktsd4Ya7Wh5+CKTBOct8rRmtbBvAsrBtv
-	BjblUO8Q==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <git@apitzsch.eu>)
-	id 1tkpVW-000Geo-2e;
-	Wed, 19 Feb 2025 20:13:18 +0100
-Received: from [92.206.120.88] (helo=framework.lan)
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <git@apitzsch.eu>)
-	id 1tkpVV-000N4n-0Z;
-	Wed, 19 Feb 2025 20:13:17 +0100
-Message-ID: <426de13199c560301ed0a148d9ecd0155dfcff0f.camel@apitzsch.eu>
-Subject: Re: [PATCH next] media: i2c: imx214: Fix uninitialized variable in
- imx214_set_ctrl()
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Ricardo Ribalda <ribalda@kernel.org>, Sakari Ailus	
- <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-  Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	kernel-janitors@vger.kernel.org
-Date: Wed, 19 Feb 2025 20:13:15 +0100
-In-Reply-To: <1e4da85e-b975-4638-bd14-09ba0675d9d6@stanley.mountain>
-References: <1e4da85e-b975-4638-bd14-09ba0675d9d6@stanley.mountain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Rw88Z40g"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4E166442D1;
+	Wed, 19 Feb 2025 19:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739994122;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Qu8bmC+bJMdyIbAzv6s6vSAzbmr6QSn1AGgHeToUVqk=;
+	b=Rw88Z40gvyY5CqmwimK116YrV7tj5ntXdd7LTq0BemhllU/nDMfdQlbs4Ta2Ula/8NzVie
+	ee07DdK4bNv3mdAxvsPzOYfMcp7RnOQU+D7mjOq7ga9ZtG+GLAIEVjOI6piQ+P+UQ7Zsc1
+	/9mTBcXJLYbPLY/JFlGJPg2Y+pkEtNzWpmPziHXVGuyXRcOz+jf7/+j2v79j4XKnUh3NjE
+	mC5RjZ8QfshPUC2qHzsHgsQwZyWNbb8E+6Fdv4+xobZCi+RIDiOg45iWgDMx+lz/oSzope
+	XMW7+OEojQjfUaXPL0OZ0C1J/Ld0okk7zInXhCVhRdaKJqSvZIPv6BjKVtg97g==
+From: =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
+Date: Wed, 19 Feb 2025 20:41:39 +0100
+Subject: [PATCH] selftests/bpf: DENYLIST.aarch64: enable kprobe_multi tests
+ for ARM64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authenticated-Sender: andre@apitzsch.eu
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27554/Wed Feb 19 10:50:24 2025)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250219-enable_kprobe_multi_tests-v1-1-faeec99240c8@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAPIztmcC/x3MQQqDMBBG4avIrBvQhJTWq0gJmvxtBzVKJpaCe
+ HeDy2/x3k6CxBBqq50Sfiy8xILmVpH/9vEDxaGYdK1trZunQuyHCW5c0zLAzduU2WVIFuUfwRp
+ j7rA+UOnXhDf/r3f3Oo4TDjmk/WsAAAA=
+X-Change-ID: 20250219-enable_kprobe_multi_tests-c8d53336e5cd
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Bastien Curutchet <bastien.curutchet@bootlin.com>, ebpf@linuxfoundation.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, bpf@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeihedufecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrroculdgvuefrhfcuhfhouhhnuggrthhiohhnmdcuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefghfeiudduffetfeehueduffdtteeigeehvdeludetueffvedvfedttdekieevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehpdhhvghloheplgduledvrdduieekrddurdduleejngdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhugidruggvvhdprhgtphhtthhop
+ ehshhhurghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsughfsehfohhmihgthhgvvhdrmhgvpdhrtghpthhtohepvggsphhfsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvth
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-Am Dienstag, dem 18.02.2025 um 16:05 +0300 schrieb Dan Carpenter:
-> You can't pass uninitialized "ret" variables to cci_write().=C2=A0 It has
-> to start as zero.
->=20
-> Fixes: 4f0aeba4f155 ("media: i2c: imx214: Convert to CCI register
-> access helpers")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> =C2=A0drivers/media/i2c/imx214.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 6c3f6f3c8b1f..68775ee8256e 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -795,7 +795,7 @@ static int imx214_set_ctrl(struct v4l2_ctrl
-> *ctrl)
-> =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0 struct imx214, ctrls);
-> =C2=A0	const struct v4l2_mbus_framefmt *format =3D NULL;
-> =C2=A0	struct v4l2_subdev_state *state;
-> -	int ret;
-> +	int ret =3D 0;
-> =C2=A0
-> =C2=A0	if (ctrl->id =3D=3D V4L2_CID_VBLANK) {
-> =C2=A0		int exposure_max, exposure_def;
+The kprobe_multi feature was disabled on ARM64 due to the lack of fprobe
+support.
 
-Thanks.
+The fprobe rewrite on function_graph has been recently merged and thus
+brought support for fprobes on arm64.  This then enables kprobe_multi
+support on arm64, and so the corresponding tests can now be run on this
+architecture.
 
-Reviewed-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+Remove the tests depending on kprobe_multi from DENYLIST.aarch64 to
+allow those to run in CI. CONFIG_FPROBE is already correctly set in
+tools/testing/selftests/bpf/config
+
+Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
+---
+The tests being enabled with this series have been run locally in an
+ARM64 qemu environment, and in Github CI.
+
+I only did some testing to ensure that the tests depending on kprobe_multi
+now run correctly on arm64, it is fair to stress that all the hard
+work has actually been done by M. Hiramatsu ([0])
+
+[0] https://lore.kernel.org/bpf/173518987627.391279.3307342580035322889.stgit@devnote2/
+---
+ tools/testing/selftests/bpf/DENYLIST.aarch64 | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/tools/testing/selftests/bpf/DENYLIST.aarch64 b/tools/testing/selftests/bpf/DENYLIST.aarch64
+index 901349da680fa67896d279d184db78e964d9ae27..6d8feda27ce9de07d77d6e384666082923e3dc76 100644
+--- a/tools/testing/selftests/bpf/DENYLIST.aarch64
++++ b/tools/testing/selftests/bpf/DENYLIST.aarch64
+@@ -1,12 +1,3 @@
+-bpf_cookie/multi_kprobe_attach_api               # kprobe_multi_link_api_subtest:FAIL:fentry_raw_skel_load unexpected error: -3
+-bpf_cookie/multi_kprobe_link_api                 # kprobe_multi_link_api_subtest:FAIL:fentry_raw_skel_load unexpected error: -3
+-kprobe_multi_bench_attach                        # needs CONFIG_FPROBE
+-kprobe_multi_test                                # needs CONFIG_FPROBE
+-module_attach                                    # prog 'kprobe_multi': failed to auto-attach: -95
+ fentry_test/fentry_many_args                     # fentry_many_args:FAIL:fentry_many_args_attach unexpected error: -524
+ fexit_test/fexit_many_args                       # fexit_many_args:FAIL:fexit_many_args_attach unexpected error: -524
+ tracing_struct/struct_many_args                  # struct_many_args:FAIL:tracing_struct_many_args__attach unexpected error: -524
+-fill_link_info/kprobe_multi_link_info            # bpf_program__attach_kprobe_multi_opts unexpected error: -95
+-fill_link_info/kretprobe_multi_link_info         # bpf_program__attach_kprobe_multi_opts unexpected error: -95
+-fill_link_info/kprobe_multi_invalid_ubuff        # bpf_program__attach_kprobe_multi_opts unexpected error: -95
+-missed/kprobe_recursion                          # missed_kprobe_recursion__attach unexpected error: -95 (errno 95)
+
+---
+base-commit: d3417ac824b98e8773bc04b93e09c4b93c2c6cad
+change-id: 20250219-enable_kprobe_multi_tests-c8d53336e5cd
+
+Best regards,
+-- 
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
