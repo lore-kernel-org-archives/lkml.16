@@ -1,118 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D993B22A819;
-	Wed, 19 Feb 2025 19:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308FA22A81A
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 19:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739993104; cv=none; b=bDSPtcUQu/nAUr4G872VUg/XqNzch4KtVKj4vssYDNmIG6kQdTfMW+Unhf8CUg+J2aEvn7iET8z+CZehj9M/itvTjDqifkKNFO/RDI5bjG/phJ4z4f18kDLvzevf9kZXF4LBJ1SBsvHgJJyRGyuktBT6LG0MK/Q9+IhuSRb3hYs=
+	t=1739993127; cv=none; b=T1Dhtf2tR+LiRBjW636zDNz60YiK5BF8MHydS/Et+YgBbHOozerFL2Z6o9RXHdYsFkqtknHfROwn9CMKYEOW324ItuptojoGPmmTvuh+yrG/n8uA8Th1hWNa4g0Ei+TKvW7lX/aRXeWHYBDp1ZmUIpBEsYAcx7eZD+wZ0VYm7n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739993104; c=relaxed/simple;
-	bh=4xkjxsKSnDG+ejxVEfbphpK/6goWvTkMshFWpmtRGeA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OfxV3MGUefmwRufsQEZU8DXGkOgqLkfscYZ06Sj20xvBz+Wlvhid6LzqRlQKPSkag2YO5gO++aMrYwJcImWKkeoqUhGUjge/trUeBNUe08jxO3368A0TIPGZMI2FcKMIOMcHgm4aKdWi9h15S+l7MQfVBvseW/klxkHj9+KCQ/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fleSNih+; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739993127; c=relaxed/simple;
+	bh=SykixatIZerodgATAwVcTB8LToqqQLkJFQdVB2OSm9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EldJIiUj7vJucYLAL65ZyhJU1WbAXNz9SOWvet456kHWEM/ktsZE2jUMcwt/Dhl8eRpqJ+6pAj7YgpqJQNgAQlaVd7Q4LwIqgj2QEUcjmB7aZXAUJd1o1PSKTvEF7mj4LZExbA/i3MkMWHFASv1axnbrYOxyCDjkz+Sg3N2SP80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HAo43khA; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fleSNih+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739993103; x=1771529103;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=4xkjxsKSnDG+ejxVEfbphpK/6goWvTkMshFWpmtRGeA=;
-  b=fleSNih+rQIRNQmvCjmSFGbM3RUb+ZuTYk7Z3y1gI/CKRE3aez8XRrvX
-   Mm0dP7Gnj/dZeinbYIQ/S/+HR/vYZw07QB62uN8NFZlSW2fwCV5hRFOUI
-   9K8+s1URn2NDC5a4ZDazdVLwSi0BOG84kQ8yOnW13+LN0Dtw+cE/3g3cI
-   PVj2xOkpsHOhhJHLANJa7aB5srIR2ZNc7cR1qMNsem5YpnVNYvmHnyR6X
-   ACvKglWqNvxXQVxOhlcMUb/74tpWpBUFCoRsiQBpnD3FtpE1OvoxoKekv
-   hydZF+QIVt0XU52p6ywxG5oKzDMcbLnPRfThlJEstCcNbioaKwGWdIpZI
-   Q==;
-X-CSE-ConnectionGUID: aOdavW0RRAaww0BU75viLg==
-X-CSE-MsgGUID: /HsYx9OCQIOXk9dZHmUClg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40604683"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="40604683"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 11:25:00 -0800
-X-CSE-ConnectionGUID: sT6FCgk1RDag9ulyZnQRTg==
-X-CSE-MsgGUID: v13zxD0XTXmGo28FPVA9pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114791542"
-Received: from dprybysh-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.160])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:55:18 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Jim Qu <Jim.Qu@amd.com>, Lukas Wunner <lukas@wunner.de>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Takashi Iwai
- <tiwai@suse.de>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Su Hui
- <suhui@nfschina.com>
-Subject: Re: [PATCH] vgaswitcheroo: Fix error checking in
- vga_switcheroo_register_audio_client()
-In-Reply-To: <f608a3b5-320a-4194-bd03-cf08be04c317@stanley.mountain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <ae24cd32-1e78-4656-b983-051ed22d86b9@stanley.mountain>
- <87zfiim09n.fsf@intel.com>
- <f608a3b5-320a-4194-bd03-cf08be04c317@stanley.mountain>
-Date: Wed, 19 Feb 2025 20:54:41 +0200
-Message-ID: <87r03tn4su.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HAo43khA"
+Date: Wed, 19 Feb 2025 11:25:06 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739993112;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YWbTsmkFNVzUKGQASgjUS1od0uhjMSBLNuVdbUo2uHQ=;
+	b=HAo43khA9DU1uLsdSMUg9nTVrQVQR5iWPGhSRHK2Wp8bg/ugmPa8asiQlOuuhyqh54C2El
+	P0Ec3ptzNRyg2MaUQjrQu3nWUclL3MWyd0WopanhROR742V2qiKu4g9fHcKmpvzW/7fYJq
+	QFG4ENuIdGD3oxElJek7m3LHNJSXlG0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Marc Zyngier <maz@kernel.org>
+Cc: kvmarm@lists.linux.dev, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Colton Lewis <coltonlewis@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Janne Grunau <j@jannau.net>
+Subject: Re: [PATCH v2 06/14] KVM: arm64: Remap PMUv3 events onto hardware
+Message-ID: <Z7YwEptbRnX5s9Fw@linux.dev>
+References: <20250203183111.191519-1-oliver.upton@linux.dev>
+ <20250203183111.191519-7-oliver.upton@linux.dev>
+ <865xl5sx20.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <865xl5sx20.wl-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 19 Feb 2025, Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> On Wed, Feb 19, 2025 at 05:17:56PM +0200, Jani Nikula wrote:
->> On Wed, 19 Feb 2025, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->> > The "id" variable is an enum and in this context it's treated as an
->> > unsigned int so the error handling can never trigger.
->> 
->> When would that be true with GCC?
->
-> The C standard give compilers a lot of flexibility with regards to enums.
+On Wed, Feb 19, 2025 at 04:45:27PM +0000, Marc Zyngier wrote:
+> On Mon, 03 Feb 2025 18:31:03 +0000,
+> Oliver Upton <oliver.upton@linux.dev> wrote:
+> > 
+> > Use the provided helper to map PMUv3 event IDs onto hardware, if the
+> > driver exposes such a helper. This is expected to be quite rare, and
+> > only useful for non-PMUv3 hardware.
+> > 
+> > Tested-by: Janne Grunau <j@jannau.net>
+> > Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+> > ---
+> >  arch/arm64/kvm/pmu-emul.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> > index 62349b670cf9..60cf973e2af9 100644
+> > --- a/arch/arm64/kvm/pmu-emul.c
+> > +++ b/arch/arm64/kvm/pmu-emul.c
+> > @@ -673,6 +673,18 @@ static bool kvm_pmc_counts_at_el2(struct kvm_pmc *pmc)
+> >  	return kvm_pmc_read_evtreg(pmc) & ARMV8_PMU_INCLUDE_EL2;
+> >  }
+> >  
+> > +static u64 kvm_map_pmu_event(struct kvm *kvm, u64 eventsel)
+> > +{
+> > +	struct arm_pmu *pmu = kvm->arch.arm_pmu;
+> > +	int hw_event;
+> > +
+> > +	if (!pmu->map_pmuv3_event)
+> > +		return eventsel;
+> > +
+> > +	hw_event = pmu->map_pmuv3_event(eventsel);
+> > +	return (hw_event < 0) ? eventsel : hw_event;
+> 
+> I find this a bit odd. If we can translate events, but failed to do
+> so, we still install the originally requested event, and we have no
+> idea what this maps to on the HW.
+> 
+> I'd rather we just don't install that event at all rather than
+> counting something random.
 
-This I did know.
-
-> But in terms of GCC/Clang then enums default to unsigned int, if you
-> declare one as negative then they become signed int.  If they don't fit
-> in int, then they become u64 etc.
-
-But somehow I'd failed to appreciate GCC/Clang actually do use unsigned
-and signed on a case by case basis. I thought they defaulted to signed
-int. TIL.
-
-And I still consider myself a rather experienced C coder. There must be
-something wrong with either C or me. Or possibly both.
-
+Heh, this was a leftover party trick that I was using to try "raw"
+events from inside a VM. Happy to limit things to the PMUv3 event space
+though.
 
 Thanks,
-Jani.
-
->
-> enum u32_values {
-> 	zero,
-> };
->
-> enum s32_values {
-> 	minus_one = -1,
-> 	zero,
-> };
->
-> enum u64_values {
-> 	big = 0xfffffffffUL;
-> };
->
-> regards,
-> dan carpenter
->
-
--- 
-Jani Nikula, Intel
+Oliver
