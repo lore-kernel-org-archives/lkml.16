@@ -1,62 +1,62 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4354025760
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589C88BF8
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739943734; cv=none; b=E/MeMbVzGkikuFTUzjj/kq2t+/uus2KAfpRPe4u8eQG9YfdepaGajfmEDGc9MxIKWAV4CfoJ4/67flVxQ2rDfgBOApW0OVKao34m4ntjDLRdHaILxPXyy3FqNFn+x9j2PsEYyPo3UvHQc+c62rMGCVvCAa/vpcInbp9BOt+Xk4U=
+	t=1739943947; cv=none; b=M7Axs9hOsa5mZZgKy4kOqx51LVpIMqmCNbZc/2oHf5SyZH4nQAs1rv5l/YcKrEjdKN6vGt1IB8JXyfzt1YD60f0GT4RdbDDOZKAv8uvJVs3oHcRoPTCyHBkC6pOTKzlT00gp1F4CjSWxGllECViQdlj9ySEtTPBrehPtjdaS968=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739943734; c=relaxed/simple;
-	bh=UlxN5nIxHgy+wAG7x32fxZL8LlqDfxRzsgF07t+gqsY=;
+	s=arc-20240116; t=1739943947; c=relaxed/simple;
+	bh=kECMkiczJBY+HWUWDw6LnKgZH8be4eQ73OMVJR01HCI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvN+6AgUuthgU0wuguorojEFRCrnwCsbvhMGcxAzon1PsMvUoZq6/JxMho08881QVMGO2bU3z7tPLFkGCoYFiwcYSYYfeXNC/2qvtputLf/2ckTChJ0BkGrD1WluzJdGymXT6nZ3lyyq4G6CjS0oIouefTNU0aDVgAyWkv/TsAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gr5icUyw; arc=none smtp.client-ip=209.85.214.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=tcn/vc+JrJz8uESQClwtP61LjOpmlSMJUX6L+wZjK6jQUyPsARO6/ORB7LQiuaAkwDYoQFk4FBDJE1uDc3FMEZZrVFgan5OnmldxDznYsJr9xS/KKICW0WiZtyAIRpZlrSj8ibX7kMY5bNQogdhKhsr1u5JdKhQzwWAC8e+FB4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gD0Q+owD; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gr5icUyw"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-220bfdfb3f4so127577245ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 21:42:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gD0Q+owD"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fa48404207so12655239a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 21:45:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739943732; x=1740548532; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739943945; x=1740548745; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sw7t6rEqkTZXH92Wz/4+gNz4tFU3pvCeEiYAUtl7Rbc=;
-        b=Gr5icUywPWVr7KKXKa4D6/TQPndfU1OryjWZ+9n//bbxkdufIMfN1R+Z2GfHvPlBhb
-         0J0GoBEmYOIBpo2HdmSYe7j7S9jV53+fzeSteE178SSLJ8Ovq9E5RYwMsSTwuNB/LiYu
-         oiKrKcTsXagiq7n0A3rjJ9OJ7kOv927mauaDcAxbSmDUZv1zAN+jdAqMAkdyhpzViH/X
-         5kvA0zfpI2whjhwddbr9K51BISm90haF2etHzV9GwUJ4GgWbCxaFum5pHtr7v7mdXSEw
-         uN6yUueVcdkuxwhRsQoJHLefMLpIGUyYGQsWeXlQkWVHw/xfKKyoCrhdDI2ubjfJSaAv
-         AksQ==
+        bh=FRInsltroDfnSviS90CirrNU28rUPlNtIher41yQK9w=;
+        b=gD0Q+owDfBmdECcw2HUswj2FbM11eo6b7lfxFYSU8imc/NHZng0gbdSOxXk2gmjlyq
+         vkEdhniIIWbkaH18vzKcZNlsxSGrA8NDIYPxbSxYzu/AXWDqyLbIOyFIR3oVj/93Ybm1
+         UFD6M7wASwvfeNQXh7Sx2peXXMBrHVtIq0PjinerXMeIx+e4EMIvibv0X1QaoUJYCx12
+         3NhzcA/2XvQSBQaH8JVuG7H/CxsmlcL+xH4jir/konTl4M2IvpxcrIF02p40nMmoUBxM
+         wNbyUjyh2Q88zFzPLvfFLUpnMgfsQsvvlIlqRGmBMzOnRA88NPotVpp9iDnElKfr5umg
+         3EnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739943732; x=1740548532;
+        d=1e100.net; s=20230601; t=1739943945; x=1740548745;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Sw7t6rEqkTZXH92Wz/4+gNz4tFU3pvCeEiYAUtl7Rbc=;
-        b=brkp60M70iU8VEYEWitUT5aYpymMrf1qmyKjrN/+RIJVt+JWUzh/qBuD7S3t4frsbA
-         d7Dqe4UkwuSNXardiqRIxuID9/0W/5UPIiBcS7QYLIrpsivJCyBUPakFc4CiSRfYbpiJ
-         tBXYEnltK12x6CbhsISmfWUuTFkiQIC+sZmFIX/eD2rTciGv9Osq69Pk5+dpHNFIRkwI
-         kelbAMjIDsDzSXD0KEbAzrxlmvSgphCnN/o9k70THqg5KML51681yvXUgm51e01hppPx
-         34k8p5B0JSoPn6Zqejg9mCWWZEB+zsjf8BE+zviD5Df+81QLtp3vw5k5Gn1/PCEW6+9c
-         v7DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa2ZNrtjKw59t5cH6p2YRK/4RktbR2elbNEsMi0W4EsIwJoRIsPeLPAeYjyV2RhESbZl2K6vgcy+uTMaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxepEDfLkklarncoaEvMBQlSFuLUoZ3P/e6YaEyxSa+aiLFug8b
-	3L+LP+0MtLKhevSs8Y9FTQP9FEjZ3SuSzjFuBaxB/dRqyn9JXwiOBoQgX3fuby0=
-X-Gm-Gg: ASbGnctPcMARF1vlQ5moJWQ7cy2+d3hQVYlNh2GT7QrM7BzjVQKKR5c1ctd23Y16J9X
-	+Xj0HLozfGYiFaJTZ9AVI2q5Nh+oKV7II22AO/gX0muWpGYppoB1hwxsUkgfssdez7LrT8k9sJ4
-	sSZIS5n1Xj26hLIz9JzHWPAu4wNby7fJBvpoItw2Q6H6gy9uZQToFQhWE4X00HlxEuC+uoNxjMv
-	2zBToIyVVfaN3zb1QirubkfZG9RXmTOW9+XTmzJ5cMLiFG2BKwFY6d83ImmWFiakmpka5SiRbZC
-	PiRZuVFDRp+qNIEg2Q==
-X-Google-Smtp-Source: AGHT+IFmJl4t7FAw0hGuv5yC3n7fuRs/TbAcabQxCpBJfvULJjAbDJAYajm1qYLNhiNrv4hZgm/Tjg==
-X-Received: by 2002:a05:6a20:7491:b0:1ee:d3ac:56f7 with SMTP id adf61e73a8af0-1eed4fb2369mr3887537637.33.1739943732560;
-        Tue, 18 Feb 2025 21:42:12 -0800 (PST)
+        bh=FRInsltroDfnSviS90CirrNU28rUPlNtIher41yQK9w=;
+        b=XUYjXd9XFpWktyZqOSvccAl1TG1Wo+envHOYACsOi9OgvNsoQ9nE6HeVute6NTD1Ww
+         HHWSnDni1FKP0Lh1iGZQp+3gGjBJxB61qiWcPHLi4/LUDKE1Pr5mOJa37F7jB/dwfQSX
+         RtC4pRfMn68/Enn+Mavfp74AR/nQqVvrC3DahWsQ8Q2UkLqNVKKju83lJdiHnKyQ05Fc
+         e7P2m5w6ElUUndbYFb70IzDXGb2qQbL1QzeWWg9JPILUK+JpvlLRuUQMo7b0K0lSMyaR
+         bZthY+vsZGS2CEWk8S+qrlZ0WTV14B7ImC5rrBOsnhHR3i8dOGsvFYRPtMAIWtoBAv0m
+         nwEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZBUWXTCvwncdcs21ftAJ8Omh6FMf/5xdGcAvda7MF0C2pL76BNFxqgzV+N/i2XN5l0tH3dYW3d3Kq7BM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2VGSfpcrXvj2oYZbhFjtbhDz2GRt6W8cPr3qyzw7U2Pl1Qv+S
+	8MQfFR4i1s7Yi6bY+W2KrttFbSqRRy93pc1ZHB/gUxyPO3e1iagVnLC7QPhDLww=
+X-Gm-Gg: ASbGncvzyHx4xnIADfJ27PnG5z/kg4wwrpm6QGnNbFlricjtyfTg2NLF/rbYCVLZu0C
+	p8FPTs32mWCPYcvscoQyeb6SWOM/iUXmI5mJfBCXKpeO7YvIs/Ntxv7umFW452JPIoEJ64zInVi
+	TKDnnaYNbMooJ/IEieslni0/Vvl4FvxwVA0Y2aMu50ANRvvVI0GTFS5Ck/iQIzHUjwEasaN5FOV
+	Q9ccHXoH4hsXyZ5OJA78zcQKC/WLQ0hLFn+kBzcpdEjLo62yn/Z8AQ3HjXagGspObrZDt0kbOzX
+	jQ5s4MUnjYRvGWgv9A==
+X-Google-Smtp-Source: AGHT+IFDzea3Pp7rZ2dMCaYzxs9nrys/cZznA9NmmSQBwBK5duGLQELrvaTllazoUHAnVNqWR3kPyQ==
+X-Received: by 2002:a17:90b:2fc3:b0:2ea:b564:4b31 with SMTP id 98e67ed59e1d1-2fc40f21c49mr24036277a91.19.1739943945616;
+        Tue, 18 Feb 2025 21:45:45 -0800 (PST)
 Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242568adasm11461609b3a.52.2025.02.18.21.42.11
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf9757365sm13106540a91.0.2025.02.18.21.45.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 21:42:11 -0800 (PST)
-Date: Wed, 19 Feb 2025 11:12:09 +0530
+        Tue, 18 Feb 2025 21:45:45 -0800 (PST)
+Date: Wed, 19 Feb 2025 11:15:43 +0530
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: Mark Tseng <chun-jen.tseng@mediatek.com>
 Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
@@ -69,11 +69,11 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v3 1/3] cpufreq: mediatek: using global lock avoid race
- condition
-Message-ID: <20250219054209.erwfp7sgzchaiuds@vireshk-i7>
+Subject: Re: [PATCH v3 2/3] cpufreq: mediatek: Add CPUFREQ_ASYNC_NOTIFICATION
+ flag
+Message-ID: <20250219054543.4xt4tixsauwoqpst@vireshk-i7>
 References: <20250214074353.1169864-1-chun-jen.tseng@mediatek.com>
- <20250214074353.1169864-2-chun-jen.tseng@mediatek.com>
+ <20250214074353.1169864-3-chun-jen.tseng@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,22 +82,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250214074353.1169864-2-chun-jen.tseng@mediatek.com>
+In-Reply-To: <20250214074353.1169864-3-chun-jen.tseng@mediatek.com>
 
 On 14-02-25, 15:43, Mark Tseng wrote:
-> In mtk_cpufreq_set_target() is re-enter function but the mutex lock
-> decalre in mtk_cpu_dvfs_info structure for each policy. It should
-> change to global variable for critical session avoid race condition
-> with 2 or more policy.
+> Add CPUFREQ_ASYNC_NOTIFICATION flages for cpufreq policy because some of
+> process will get CPU frequency by cpufreq sysfs node. It may get wrong
+> frequency then call cpufreq_out_of_sync() to fixed frequency.
 
-And what exactly is the race condition here ? Can you please explain that ?
-Since the struct mtk_cpu_dvfs_info instance is per-policy, I don't think there
-is any race here.
+That's not why CPUFREQ_ASYNC_NOTIFICATION is used. It is used only for the cases
+where the target()/target_index() callback defers the work to some other entity
+(like a workqueue) and it is not guaranteed that the frequency will be changed
+before these helpers return.
 
-The lock was introduced earlier to avoid a potential race with notifiers, but it
-has nothing to do with calling target simultaneously.
-
-commit c210063b40ac ("cpufreq: mediatek: Add opp notification support")
+I don't think your patch is required.
 
 -- 
 viresh
