@@ -1,34 +1,35 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0AD1F8BAF;
-	Wed, 19 Feb 2025 13:50:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DD31FCCE4;
+	Wed, 19 Feb 2025 13:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973007; cv=none; b=qo1FJAGhmCyyLsQ6D7k9c3ku2CYsikfqEPHykAgirxlmKJkdi3zDrBsfdZXjyoEeTJpTH5P3zW7vFPndvstD9AMn5oFHJsAOorlHR4r/mstWPlSB3JTUBYG5kpDJ7+dbs7TujKrfm/2uSpq5YeZ3IzsQO7pUDgKCbyvbdADMrJk=
+	t=1739973010; cv=none; b=ZFyrMaRDGeJshVXkJ2CaXlO2/IJN+sEALqP4kny76q4998heXK7PPXJPVzreOq35BI06CRQAqmL7KKBiESNtVH4vQPPrTGqLhtRcIxpmM/1IzYVwfp1Txav6otNIppKG54507AOAfGPeEJJVxEVP/HZ7jqC0gkpRNbw+mfA1d5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739973007; c=relaxed/simple;
-	bh=m4eAQoWiz6TenXAjyN+I8pDhDV1KbKicqLmlxA8ZIe8=;
+	s=arc-20240116; t=1739973010; c=relaxed/simple;
+	bh=+8ateqMN21I0Gq5bsJ9NzgLNYYCHIEXxrMxyrObnok0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sXxnPcJ5dwF3NAvZBiXVTV5Zyj6hEzXmV79TGUhJEglhoc9bJfmAO9DVqVKSzcTAzFUyLe9KeQeJKsE0aV9d92nP4xkigttS3O7jB37bsElHG8Hw1lvITmQcgGnPcNmswC0Lc0vVTEx3v5QjjyeIR7ZQLTUWC8MzCR5E4MSq+Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dmM1/pYd; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:To:Cc; b=DO0krKtzpKZKJQA6/7ow+W97Ls1khgqiczbNgEa3z5hIS0QHRkIRVOqXgiJUqJxyP8jYncwQ9LQ0tYDekRHVfp9G9B8KDfU2aOj1a+XZTeuxBhawnTgOkpleaklFoiCezv8xZNtZGKNS7BK/GyfqT8HLYpTpuqkJoYPqSsPtbX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=PY5rLgbN; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dmM1/pYd"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PY5rLgbN"
 Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 298E7193E;
-	Wed, 19 Feb 2025 14:48:29 +0100 (CET)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6605F6D5;
+	Wed, 19 Feb 2025 14:48:31 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739972909;
-	bh=m4eAQoWiz6TenXAjyN+I8pDhDV1KbKicqLmlxA8ZIe8=;
+	s=mail; t=1739972912;
+	bh=+8ateqMN21I0Gq5bsJ9NzgLNYYCHIEXxrMxyrObnok0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dmM1/pYd9LzPD2hBu4BNHrjVXWsK4oVD89UVBDM2nfIppNcfN//LpAPVmABLcQSq/
-	 fFCShv647peKn+/YTstHwRmTMjo7BIbGzZw6jh+CIhQGbtoYTgjgiN6QIKXcZ6eyWC
-	 BZWjPZzryoUh9G6RrioCRxxobX57WNVjMKTE5K+Q=
+	b=PY5rLgbNDxFxMVXCimTIHU/ZuNg5nfXXYumYteJbV1diImLw1T3Hl8uVNfnQx1ExG
+	 uvDVp/Z0hoqEh5cF12I0iXZOYn8CkkS8VQoWAfr51YarNKq1gnFaFtpJfXn6IjkftM
+	 BIL9Yl1CgZig0cdzLZF4CT+M9ysq1yheMT4yqHec=
 From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Wed, 19 Feb 2025 15:49:06 +0200
-Subject: [PATCH 12/18] media: rcar-isp: Switch to Streams API
+Date: Wed, 19 Feb 2025 15:49:09 +0200
+Subject: [PATCH 15/18] media: rcar-csi2: Add more stream support to
+ rcsi2_calc_mbps()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-rcar-streams-v1-12-f1b93e370aab@ideasonboard.com>
+Message-Id: <20250219-rcar-streams-v1-15-f1b93e370aab@ideasonboard.com>
 References: <20250219-rcar-streams-v1-0-f1b93e370aab@ideasonboard.com>
 In-Reply-To: <20250219-rcar-streams-v1-0-f1b93e370aab@ideasonboard.com>
 To: =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
@@ -51,145 +52,59 @@ Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
  Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
  Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
 X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4119;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1250;
  i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=m4eAQoWiz6TenXAjyN+I8pDhDV1KbKicqLmlxA8ZIe8=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBnteF0BPuDAkU+raNhMcx+jc51L44Ey/A+MNFVu
- zfWyg/JlsaJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ7XhdAAKCRD6PaqMvJYe
- 9RRlEACWTyfywoNncmwtz7mPvXiDfXr4XAStp39UJ8yFdhZeqgSvjx9XbsfQozgR9WjlS+HhKE4
- BDKLKcvYCuMGV74k0hvmcclxBDeHZ4XJNpYKacsz3UQfBvpUUlT4P050Evpy6nIHQUM83IVLVfa
- GOQzUDNtGowv5/C5QWa32nTxqzZbRQakmdcy6mS7KfSzZ5qgr/fVG4VGxaMxWdPlb8vBooSgPzp
- 4pNgwfGxKB2Kyekotqpihpo3cEE4f+j0A8apNC9CeVF66OO61GieUiESULDfwxTBiR34X/nNbO1
- MQ1TXanB2bmteMiHxjb9dDZNmVxIH2YY8baKA4cNgxZg2PcbreULIhW3uu+FAIo2LcOZ8c74OUi
- bJW1yKsnlEgGmzSVY3KwK6UctzQtPmsokzvU9vgvN0GNiwLIFHxKh4NQHknxAt4mY9nWASg9cNh
- d5w3kICuD8LiqSAAwyXp/v5oGKQ0rHc2OyS+zg8oBCE4q01adgtbB8+6wqODm6JmeHsrmgZPzCO
- noLV9+4XZoz0yq0SwDKliI0NAVyjZIJe7crrjSi9warUBofTe/SgaX5yqb8A22uJaoPNsE91Gcr
- CaqUwMOWXQOzUSqWoZckQiPHbTcKDlLMqBVG1EeOnrYjm5WolkOBpVYN0k9WQpAEVOol6l+qADw
- J9HNq6AGFyxwP8Q==
+ bh=+8ateqMN21I0Gq5bsJ9NzgLNYYCHIEXxrMxyrObnok0=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBnteF1w/NKsVWrQBeuuvKI4HZ8XybS4keZqp431
+ K5f3QEwHeuJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ7XhdQAKCRD6PaqMvJYe
+ 9eYqD/9qdo2rAw/ovsECkeQbf/O/QOAQzR9JBSMKFuuHvaDM+yKBuWRYpONFMBz6bbVFLYT8tw5
+ j11ZvdrLd2+em1CvS3kuXszOX2bba4JgAziAp/m55uGTxV2Y/btkwLXSwOTePVmwLHvrlGQarkY
+ UWzXWoTYfDURqWGP4jBWmx26mZtgx4BLLEUVGW3MKK0woP8tLE9r73MynACqBjK5/K5HVCx+FC9
+ jkamN9MdU18R4TXjG9rX6ro4ywiHYdr4ufwNZjZqPYWma4e5uUhbBebg2HbHOHugh/bD91nGaGd
+ 2iiVSRjp08G2O4+3eDTSWReB3muLnZ+XyWF807HJPjH0RXYuyOioVH7x1i+U4Ag2dDzk1CbYc8q
+ 8k8rSSrsgM0G3StX+oNWJ0mHTt6HGISyJxN2igdTcTe7hmRFgaJXHDOqWK9vOrg637/XZdcgqU0
+ WYXEIhw3Oz2xE26sE+CFU42lBVNxFpzmP5poUUkyUWonlODVD/s/LdQhXP1ryvN7csCOOkHE83L
+ X4ySbw8Md7paQ7yNmYjU+OYJE0jeVU77qdcQdsI6LYhfEc4E4SgTerMciTnpcS2pUDtOtRb6f8g
+ PDSbMUjnJo+2ZK+5Kik2OaR6Xuv7fws8oPUP+PhH6YFbu//PlFHLoQUcwf/kFyc1PziiRn7FLOK
+ V+77UxD9RWn5I1w==
 X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
  fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Switch to Streams API with a single hardcoded route. This breaks any
-existing userspace which depended on the custom rcar streams
-implementation, but a single camera use case should continue to work.
+In the case where V4L2_CID_LINK_FREQ is not available, make sure we fail
+if there are more than one stream configured, and also use the correct
+stream number for that single stream.
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
 ---
- drivers/media/platform/renesas/rcar-isp.c | 62 +++++++++++++++++++++++++++----
- 1 file changed, 55 insertions(+), 7 deletions(-)
+ drivers/media/platform/renesas/rcar-csi2.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/renesas/rcar-isp.c b/drivers/media/platform/renesas/rcar-isp.c
-index 8e222c9ec604..5f3fcdb7e37e 100644
---- a/drivers/media/platform/renesas/rcar-isp.c
-+++ b/drivers/media/platform/renesas/rcar-isp.c
-@@ -124,6 +124,17 @@ static const struct rcar_isp_format rcar_isp_formats[] = {
- 	},
- };
+diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+index 17ded37d5ca7..3608437b72cd 100644
+--- a/drivers/media/platform/renesas/rcar-csi2.c
++++ b/drivers/media/platform/renesas/rcar-csi2.c
+@@ -1016,15 +1016,20 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
+ 		bpp = 0;
+ 		lanes = 0;
+ 	} else {
++		struct v4l2_subdev_route *route = &state->routing.routes[0];
+ 		const struct rcar_csi2_format *format;
+ 		struct v4l2_mbus_framefmt *fmt;
+ 		int ret;
  
-+static const struct v4l2_mbus_framefmt risp_default_fmt = {
-+	.width = 1920,
-+	.height = 1080,
-+	.code = MEDIA_BUS_FMT_RGB888_1X24,
-+	.colorspace = V4L2_COLORSPACE_SRGB,
-+	.field = V4L2_FIELD_NONE,
-+	.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT,
-+	.quantization = V4L2_QUANTIZATION_DEFAULT,
-+	.xfer_func = V4L2_XFER_FUNC_DEFAULT,
-+};
++		if (state->routing.num_routes > 1)
++			return -EINVAL;
 +
- static const struct rcar_isp_format *risp_code_to_fmt(unsigned int code)
- {
- 	unsigned int i;
-@@ -222,7 +233,7 @@ static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
- 	u32 sel_csi = 0;
- 	int ret;
+ 		ret = rcsi2_get_active_lanes(priv, &lanes);
+ 		if (ret)
+ 			return ret;
  
--	fmt = v4l2_subdev_state_get_format(state, RCAR_ISP_SINK);
-+	fmt = v4l2_subdev_state_get_format(state, RCAR_ISP_SINK, 0);
- 	if (!fmt)
- 		return -EINVAL;
+-		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
++		fmt = v4l2_subdev_state_get_format(state, route->sink_pad,
++						   route->sink_stream);
+ 		if (!fmt)
+ 			return -EINVAL;
  
-@@ -336,7 +347,7 @@ static int risp_set_pad_format(struct v4l2_subdev *sd,
- 			       struct v4l2_subdev_state *state,
- 			       struct v4l2_subdev_format *format)
- {
--	struct v4l2_mbus_framefmt *framefmt;
-+	struct v4l2_mbus_framefmt *fmt;
- 
- 	if (format->pad > RCAR_ISP_SINK)
- 		return v4l2_subdev_get_fmt(sd, state, format);
-@@ -344,10 +355,20 @@ static int risp_set_pad_format(struct v4l2_subdev *sd,
- 	if (!risp_code_to_fmt(format->format.code))
- 		format->format.code = rcar_isp_formats[0].code;
- 
--	for (unsigned int i = 0; i < RCAR_ISP_NUM_PADS; i++) {
--		framefmt = v4l2_subdev_state_get_format(state, i);
--		*framefmt = format->format;
--	}
-+	/* Set sink format */
-+	fmt = v4l2_subdev_state_get_format(state, format->pad, format->stream);
-+	if (!fmt)
-+		return -EINVAL;
-+
-+	*fmt = format->format;
-+
-+	/* Propagate to source format */
-+	fmt = v4l2_subdev_state_get_opposite_stream_format(state, format->pad,
-+							   format->stream);
-+	if (!fmt)
-+		return -EINVAL;
-+
-+	*fmt = format->format;
- 
- 	return 0;
- }
-@@ -364,6 +385,32 @@ static const struct v4l2_subdev_ops rcar_isp_subdev_ops = {
- 	.pad	= &risp_pad_ops,
- };
- 
-+static int risp_init_state(struct v4l2_subdev *sd,
-+			   struct v4l2_subdev_state *state)
-+{
-+	static struct v4l2_subdev_route routes[] = {
-+		{
-+			.sink_pad = RCAR_ISP_SINK,
-+			.sink_stream = 0,
-+			.source_pad = RCAR_ISP_PORT0,
-+			.source_stream = 0,
-+			.flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE,
-+		},
-+	};
-+
-+	static const struct v4l2_subdev_krouting routing = {
-+		.num_routes = ARRAY_SIZE(routes),
-+		.routes = routes,
-+	};
-+
-+	return v4l2_subdev_set_routing_with_fmt(sd, state, &routing,
-+						&risp_default_fmt);
-+}
-+
-+static const struct v4l2_subdev_internal_ops risp_internal_ops = {
-+	.init_state = risp_init_state,
-+};
-+
- /* -----------------------------------------------------------------------------
-  * Async handling and registration of subdevices and links
-  */
-@@ -510,11 +557,12 @@ static int risp_probe(struct platform_device *pdev)
- 
- 	isp->subdev.owner = THIS_MODULE;
- 	isp->subdev.dev = &pdev->dev;
-+	isp->subdev.internal_ops = &risp_internal_ops;
- 	v4l2_subdev_init(&isp->subdev, &rcar_isp_subdev_ops);
- 	v4l2_set_subdevdata(&isp->subdev, &pdev->dev);
- 	snprintf(isp->subdev.name, sizeof(isp->subdev.name), "%s %s",
- 		 KBUILD_MODNAME, dev_name(&pdev->dev));
--	isp->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	isp->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_STREAMS;
- 
- 	isp->subdev.entity.function = MEDIA_ENT_F_VID_MUX;
- 	isp->subdev.entity.ops = &risp_entity_ops;
 
 -- 
 2.43.0
