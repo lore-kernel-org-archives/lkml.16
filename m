@@ -1,110 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F33A1F9410
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E8D1EB1B7
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739981698; cv=none; b=MzAqC/wMuNf3f0Eam6o/DwJpQTC87vFzfc6Z/aoVapgguHl4in9JlcGSK5hXOxJFA2QviWL1EyYGD7bKzQhr3OvUdfoTNIzrmOq2ID6d4UuykNi4npgytPWAAmlEufcqVhwHCWvYDyOFukySuV+Z+mFZNQuwyzDxePk9TQpMm4I=
+	t=1739981755; cv=none; b=pFQ8ilKAc+HeoXfVuFaZ7KEsthwFxI+fYVrikA8Hz1zvl5C5fuJvC9q9kwth+gBs0e8T8AycdTLXu0/OQvdYEc0iNy6QTz2E9FFBQROZ4gbOMcA5otSnHof8uhNsjZEaR4zdOsTEGVxRFyy0Rp8ZpTB+YV6f18mfI5ErKlSMO9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739981698; c=relaxed/simple;
-	bh=BydXj2d1wp0pcKWu35dDfMG3nLQTkfZH/OgCQu++sK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XQ9j2yGzN6latHjz2JneuZDM8sJV53QnKHtJCcfwFQWAuIINuHTvpiQFyppTT+dzhtEj3yJw6A24wO3BJGbfUX8i/y6BMGgt8XSP9RQsISnFI/Ka8PEwrqO64q9vDlQf0rUi62JFsmTCOoU04iqGpMsMa4qkGYoFt+GV4xQ7urk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GuIaj+9h; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739981755; c=relaxed/simple;
+	bh=jYP3oUxOykgszQEZALo7cXOu9zDyqHi75sgn9lMVd8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LnkZin0leUwpmgxP3EoOy0VrF9IzI/J482bTgQR55OFkpmAKmkEwhSVWeNmaz3+rDJcrfoLPh+CiCFWISK+hqm1/kcCggPcujKCIqF+rq6snS+0fziCHu7OIz4pWy/y/EOEugW223A6EMWxNMtw6eguJpay5qJ1RtBiSeRlbeUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=NoKy3zm0; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GuIaj+9h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739981695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=tSeDNWgGZSmT9QMIfeqqrndMXQ69jdFLbo5e2ZUiTVs=;
-	b=GuIaj+9hKpkvpHvVBD7P2aqw8MymyFfIOmzaJPpj9jrCeUOTHMPAsQ0ZnA50LAcQ5uvxfD
-	9z4j9zGztWsNrXCdajxTaWFI/5XqqpWA/KeoAfRZz0YdTG1AZR9jVusijSIYyvLkZRJSES
-	0swNnhW7xtk0mK6XfUvQtJlmc6bDino=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-260-XWIhTvYmMxCtf7_1bTaH-A-1; Wed,
- 19 Feb 2025 11:14:51 -0500
-X-MC-Unique: XWIhTvYmMxCtf7_1bTaH-A-1
-X-Mimecast-MFC-AGG-ID: XWIhTvYmMxCtf7_1bTaH-A_1739981690
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91D8818EB2C6;
-	Wed, 19 Feb 2025 16:14:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.102])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id BADC1300019F;
-	Wed, 19 Feb 2025 16:14:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Feb 2025 17:14:22 +0100 (CET)
-Date: Wed, 19 Feb 2025 17:14:17 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Kees Cook <kees@kernel.org>, Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] yama: don't abuse rcu_read_lock/get_task_struct in
- yama_task_prctl()
-Message-ID: <20250219161417.GA20851@redhat.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="NoKy3zm0"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e04861e7a6so7153430a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:15:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1739981751; x=1740586551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h89HTe/tN0B10+LNl92cdXHG46JoxeywocoM5Bh9DWc=;
+        b=NoKy3zm0rYeRNrEmxrEpvL7/Q9TuUVep2la9SgPOmI/Y3pL+UFWSjFFJkbctCscZJ2
+         S5ocIMHUqwBHky9gWoGfF3BI+GU1QdVEY9zuJuFWiAS9s8bVUi4TI65qZGvNqjfVnMsI
+         sk0x8YXtG0x+ebmMKcbTGSAzLD3nl71LiyLX7QNY1IaIwL1Go8RYNvFXQm7T/VKpN3OY
+         E45Z2ZYvDnUil2f1LWSa8DQSdBx+kIZtzfmwHKQiDfO51X1sYXI8hs810QEt1dLMP8iG
+         Yq+TiuorteRTMHX9ZXsSLSkara+0jJgngdaIlFiu+fE6L3du9g320oAUy7nVl9e2wQog
+         tiVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739981751; x=1740586551;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h89HTe/tN0B10+LNl92cdXHG46JoxeywocoM5Bh9DWc=;
+        b=h/pkC9AYUEBlOpi14LrKR0BjuhXW33TBHcwN1FUf5/f5azfTW91IDt1BDxvPUjusgq
+         DHvz3iifZbW2ibQoVH6WE7SmieizhIzQSTbW5noDJN0diYwsE6j/LfNQtiLwkgh0PDTk
+         zEbiLIkwVsW6RGUr2vi7mcaP0l2M/gMvN2QiQqCoMh0pj61C+/Cv54UWViegc+5YoIJy
+         a4Rzhb3Qm6teLT3HJZ1wBJJPnPsfDHjuS2yCTwS1DqG+aDDgPJA3s7D4Nt0EvI8BQUpB
+         F7/SlKhaamLcHyOzTihgxXZSU7p8T4hSJ3DOatZWwFQoYtWONvxEIDwtYX2Alk7xzL5y
+         VBVg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3c2AJm2wat4Z2fOdwFyvmlmJdfiWGBQyuX+d3ygpf8h8YIG3xzUDA+UZK5waS9jZfJ3DUi6xup+3LvF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1fhbAdtmZarIbqDBacO8hXG4Kg8xbKrDtL3qR5M3xmQR4YS+N
+	MiqEvfEPDTXTOIDH4JgvhyhJCW1QF7DIJ+nJKq2NSZVMDkZjPZYZEw4ZnvmasH0=
+X-Gm-Gg: ASbGncvyw88MuXg1MuR353C+lSSQ67Wr6X+jAsoabneCOYLXlLHJexnyuTB2Yr+d++0
+	gyqNdxlDmJ10WMpcHg9/4o1lxieHq8KPrq+TPkRg/fIIHOSMjOSnzi/i/JsxV6KkTGiVj22sBYr
+	Z9VSR09/lC67ie8bP5AWVnFGz/lfadSfkfAg5CkOcwB9ORmTkPWJe8KrqOKTkvb/1iHia5I5QsY
+	fvR60wFgs6TgF5XKkbfRuz9q1HxOEbBrCVVX1aaGONDlB+9fruo5mlWgHlDrJwTuhuwRq7xz/8n
+	/bfkMXGpzYA9FiFc+J9nJlw=
+X-Google-Smtp-Source: AGHT+IFiFYqo71zXgrKVNjvpkw6kSC58U3/FltEHaZdAEiHjs1T3I77KF/UZNliKfKxYH2d2UsL+vA==
+X-Received: by 2002:a17:906:3118:b0:ab7:da56:af9f with SMTP id a640c23a62f3a-abb711c3de7mr1770699866b.49.1739981751230;
+        Wed, 19 Feb 2025 08:15:51 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.25])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb94e4d0adsm687953066b.56.2025.02.19.08.15.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2025 08:15:50 -0800 (PST)
+Message-ID: <b9b14a25-675e-4e3f-afcc-e82d5ed740a7@tuxon.dev>
+Date: Wed, 19 Feb 2025 18:15:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT 0/5] phy: renesas: rcar-gen3-usb2: Fixes for Renesas
+ RZ/G3S
+To: yoshihiro.shimoda.uh@renesas.com, vkoul@kernel.org, kishon@kernel.org,
+ horms+renesas@verge.net.au, fabrizio.castro@bp.renesas.com, robh@kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250219160749.1750797-1-claudiu.beznea.uj@bp.renesas.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250219160749.1750797-1-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-current->group_leader is stable, no need to take rcu_read_lock() and do
-get/put_task_struct().
+Adding reference to the missing series (see below).
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- security/yama/yama_lsm.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+On 19.02.2025 18:07, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Hi,
+> 
+> Series add fixes for the Renesas USB2 PHY driver identified while
+> working on the Renesas RZ/G3S USB support. These changes are
+> needed for the upcomming RZ/G3S USB support (especially for the
+> power management support).
+> 
+> Series (with [1] on top) was tested on Renesas RZ/G3S with consecutive
+> unbind/bind and data transfer tests before/after the unbind/bind.
+> 
+> The unbind/bind was also tested on the devices with the following
+> device trees but w/o checking the data transfer (as I only had
+> remote access w/o USB devices connected):
+> - r8a7742-iwg21d-q7.dts
+> - r8a7743-iwg20d-q7.dts
+> - r8a7744-iwg20d-q7.dts
+> - r8a7745-iwg22d-sodimm.dts
+> - r8a77470-iwg23s-sbc.dts
+> - r8a774a1-hihope-rzg2m-ex.dts
+> - r8a774b1-hihope-rzg2n-ex.dts
+> - r8a774e1-hihope-rzg2h-ex.dts
+> - r9a07g043u11-smarc.dts
+> - r9a07g044c2-smarc.dts
+> - r9a07g044l2-smarc.dts
+> - r9a07g054l2-smarc.dts
+> - r9a07g043f01-smarc.dts
+> 
+> Please give it a try also on your devices with [1] on top as well.
+> 
+> Thank you,
+> Claudiu Beznea
 
-diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
-index 1971710620c1..3d064dd4e03f 100644
---- a/security/yama/yama_lsm.c
-+++ b/security/yama/yama_lsm.c
-@@ -222,7 +222,7 @@ static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
- 			   unsigned long arg4, unsigned long arg5)
- {
- 	int rc = -ENOSYS;
--	struct task_struct *myself = current;
-+	struct task_struct *myself;
- 
- 	switch (option) {
- 	case PR_SET_PTRACER:
-@@ -232,11 +232,7 @@ static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
- 		 * leader checking is handled later when walking the ancestry
- 		 * at the time of PTRACE_ATTACH check.
- 		 */
--		rcu_read_lock();
--		if (!thread_group_leader(myself))
--			myself = rcu_dereference(myself->group_leader);
--		get_task_struct(myself);
--		rcu_read_unlock();
-+		myself = current->group_leader;
- 
- 		if (arg2 == 0) {
- 			yama_ptracer_del(NULL, myself);
-@@ -255,7 +251,6 @@ static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
- 			}
- 		}
- 
--		put_task_struct(myself);
- 		break;
- 	}
- 
--- 
-2.25.1.362.g51ebf55
+[1]
+https://lore.kernel.org/all/20250219161239.1751756-1-claudiu.beznea.uj@bp.renesas.com
 
+> 
+> Claudiu Beznea (5):
+>   phy: renesas: rcar-gen3-usb2: Fix role detection on unbind/bind
+>   phy: renesas: rcar-gen3-usb2: Move IRQ request in probe
+>   phy: renesas: rcar-gen3-usb2: Lock around hardware registers and
+>     driver data
+>   phy: renesas: rcar-gen3-usb2: Assert PLL reset on PHY power off
+>   phy: renesas: rcar-gen3-usb2: Set timing registers only once
+> 
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 134 +++++++++++++----------
+>  1 file changed, 74 insertions(+), 60 deletions(-)
+> 
 
