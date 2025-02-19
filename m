@@ -1,138 +1,116 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8101221423F;
-	Wed, 19 Feb 2025 17:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739985076; cv=pass; b=TKlxl4fDnJyNO8CnSEX9W+fZ21kcjd1/WdwO9bUwzqYb8F6yexQR2XjW44I3PIuZkvcQliRySydclppUdyhdrVEoZECfoiAK52cKHAlPu0Uk+cozdMGT3NpRLE3tgFojvVoZpl5NbF8+Ew+rH1QTw4Iy3iXzq2CEfyG0O6yoDsA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739985076; c=relaxed/simple;
-	bh=64//cwvqZljD4DhFAn2LbHsdiVrVrYGj0JhPZZKChF0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=KG83Iwb8rVH44WAWgZIfXaIzCpPBqnY9oGuZlE0Jjao8SGQBEzzU+Av6W2TCvkhw3J5Doa6v+Vt3K3dUF6vzErSH/eLRFUxTkr1qIuT8Jeid9Us1vgXHfKY/7vneHuq1CMatASlw+2aVoXaU8ytJujs4IqUYpkasbo/opZPTW+o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=GsU00JH5; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DD02144C8
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739985079; cv=none; b=cz4O5gbJcSekON17Mr5ZU7Mu2dIWm/QWkqmjWfspIc7IPjY8UnHK2sOXhlabnkTryi54vYJ2kryWaZn8sqpZrAxhoaNvMOBtlj2AFjJtqq3W2J4UTRnWUR9zXshbl9u+lkLTtI2AcpJFNEQ4cr0RX6buY97zNSAxK+LfTdWjlpA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739985079; c=relaxed/simple;
+	bh=qFOAoe/oJXNfqjoR0wzSc/QQQsNl/9s1vfShbsSca04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCwMrrBmD9X0DfyClHcPK66jMnU30mgWf6dgTUJxpsPxwvoIsiPuQWaGGc4CeQ/uMLCzTXhddzd37sdMT0XufrHFPrCFVTRMVpiQaHF/TqHOkxlh8Vaa2M7QEi4WrM+10wXf3q1Hgbyf3pck2gX+83ufufakU7iyLOj6aFc+Rsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MAkZpj/U; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="GsU00JH5"
-ARC-Seal: i=1; a=rsa-sha256; t=1739985048; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=B2gQVaWKYzh9iY/yq6HzDStvCZuc2z27HYNs55w+7ixPz9ccT/gUQSk5WDVLo/okYCync4b0f5+FtPfgDb1R2wLKeu9XPfcrJ651+PPTrehwDWrrS6Ami3vfp1x6NICau1YMrpw0TwlY0TeaXGtKtG9gzs05odx+gKH7aipenow=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739985048; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=64//cwvqZljD4DhFAn2LbHsdiVrVrYGj0JhPZZKChF0=; 
-	b=kJr/8t/3snpCPutPOGSF+Uv30Wj6TPJXHWjYeFwQt4uzS3bO5J39qxfgSDj4ahTMrMNFw4PIMphDSY4uOaCXvWjpE0f2Led6Q+SnJ9mc8cgdfMeAWf/oKKkZfZ2PcDssZEhZF+39be8zX/saeYrYzJfZxQ9xu0MiSVmU4CsMvDU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739985048;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=64//cwvqZljD4DhFAn2LbHsdiVrVrYGj0JhPZZKChF0=;
-	b=GsU00JH5GuZ25c9v3NmLIvoWgw0Q/HYE0/HIN7FjgWSsn4urIZ5dwUa03INZbCBK
-	P2dWMJyNGWsuXGZL365CspqPxQndUX8K8/oyXH0RQKkilRPm0G83p2gmt2nmf0dLuwW
-	Q+793qYsAx6h48FA3rk9nkxLW5TISKoSeZmGgveo=
-Received: by mx.zohomail.com with SMTPS id 1739985042434177.93514813296724;
-	Wed, 19 Feb 2025 09:10:42 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MAkZpj/U"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54524740032so55697e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:11:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739985075; x=1740589875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LVBCLwBb20SftVpr6Cb6gqWVa+/TpS0PacR3slD6cr4=;
+        b=MAkZpj/UgQ4a3tyLtP8ht4mAMT2edz2dcQA/T9lWGcpU0gSS2Nuj0USmNHhDdVPJ69
+         Mu08vip51LTcW+zSxyLeV7amDBWR2L2cDpmeeLmS4t91qIvXOgmXTXtSq/+r4vLKYgnw
+         xpey6ns34xNmmUJ4Vu00CBoN7Du/8iU8Cd8qCDhIDpMe4AUtPdahHhMZLPVmA5CNMvln
+         vZ0xScgsGvp+A7w6+EWNT32xG121qrlFNKGG0oyAfB8udj8OZs9jOke3qpcdOSPoKj6o
+         j+whlb0tJLAdwcUCx4MQ+WqfnxyrAKSPu97jZhH5a9bYbWpJKE4c+xS9MuxKOl2zaxa6
+         bqMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739985075; x=1740589875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LVBCLwBb20SftVpr6Cb6gqWVa+/TpS0PacR3slD6cr4=;
+        b=EPUXIML+Ern0MOS8j/OwFD9wN8bpNPLfijauKBEF1Z8j++SooibGFBcv31zBUgPlUq
+         GV9cghuJZTJk1tkaMTa75ixyTAKtBD+Uu6z7/9TVWQGeXJMUTw0VwLtMz3xcqzCrWmP4
+         sDRxOPRHmsgN6Qci5Ql48YLiztomgLiUplE91sBjB3bIAGI2s9icu7+11OtZ2wYYeyDB
+         5BacRBybWKuwzAt0mhJGKlGXk+w7DwwjPoVLp68RA4blx9ytqv+nAIfeIAxkxwvq2nzc
+         T7Evy+k7nISWk9aAzfHP+QvpLAz5I7nvYwvP6WvKDR5d1aGq1JLRqVRFJ45C3qFs+W0D
+         wRbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUivR+iua2K1xf+UpbjCawoQ+ZDZjAkkJahIcAksAMfOZi5NNhGsxVQR87VslErl+VruJ+RkPh0x3cAQnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCRtG2HJIkJX5wMVaRCxxnDTNdzwylBQvi03wvIn5C7Yt5ZJEe
+	+3Eqajc0y7fOB5nAcI0q4RqGCtO2CbgIY1STFQy02sEavdljGi0zUy2dyFOQlf0=
+X-Gm-Gg: ASbGncvCysVvxMLfwPc7/rEvHfoZxzUU2EFQHsQ5nZ+d64AbZhg/q1WywdijLr13uxd
+	EJHaY3ZTa1OSB8jXW8n0w7jKFL/N7EbRsxzlNbGE1ba014WiGJyZKb1zhkFeX/FcOOIg+QLU7o2
+	apk9AlfaFaeBfNm/1qImZHcAS6X01SsvLgb5C+Vy27mw8rTyCbFEsYL/pb0ZqsMPLV86R6eOVZ6
+	JcaEtDQwvHz8071yC1h9y1R058gA1kOb6XMRZgL0FTsiTvTID/IM4cTYD1y1wX5WHLqHsc6mczG
+	WYbxqr9juLC7RQVlPttYHeUFj383ThAJrwa0EH1YldBQLw/t9QgOYqNChBYaI2kHyUSWn38=
+X-Google-Smtp-Source: AGHT+IH7FL01qZOB3XAPbsmFC6KyEv2EmZ1yIsxjB78l1rwLXp5knouU37jT15QdaWHDAkHvPlzRzg==
+X-Received: by 2002:a05:6512:b12:b0:545:e7f:cf3d with SMTP id 2adb3069b0e04-5452fe2e4aemr7300090e87.5.1739985075494;
+        Wed, 19 Feb 2025 09:11:15 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452f3d38basm1661990e87.222.2025.02.19.09.11.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 09:11:14 -0800 (PST)
+Date: Wed, 19 Feb 2025 19:11:12 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jonathan Marek <jonathan@marek.ca>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Rob Clark <robdclark@chromium.org>
+Subject: Re: [PATCH v5 2/2] drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01]
+ bitfields and simplify saving
+Message-ID: <snvornde63yoviyjn6yitmz2vkw424jkyv4434jre7ts65cqe6@tbqgalok5e5n>
+References: <20250219-drm-msm-phy-pll-cfg-reg-v5-0-d28973fa513a@linaro.org>
+ <20250219-drm-msm-phy-pll-cfg-reg-v5-2-d28973fa513a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH] rust: regulator: add a bare minimum regulator abstraction
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CAH5fLgiErvnziU-hSCV6djNq7Q56ZfX9gZudmX7+r06hWoX0Tw@mail.gmail.com>
-Date: Wed, 19 Feb 2025 14:10:24 -0300
-Cc: lgirdwood@gmail.com,
- broonie@kernel.org,
- sebastian.reichel@collabora.com,
- sjoerd.simons@collabora.co.uk,
- ojeda@kernel.org,
- alex.gaynor@gmail.com,
- boqun.feng@gmail.com,
- gary@garyguo.net,
- bjorn3_gh@protonmail.com,
- a.hindborg@kernel.org,
- benno.lossin@proton.me,
- tmgross@umich.edu,
- dakr@kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E24A1EA3-DC87-4A33-AD93-1E3B307942E8@collabora.com>
-References: <20250219162517.278362-1-daniel.almeida@collabora.com>
- <CAH5fLgiErvnziU-hSCV6djNq7Q56ZfX9gZudmX7+r06hWoX0Tw@mail.gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219-drm-msm-phy-pll-cfg-reg-v5-2-d28973fa513a@linaro.org>
 
-Hi Alice,
+On Wed, Feb 19, 2025 at 05:23:33PM +0100, Krzysztof Kozlowski wrote:
+> Add bitfields for PHY_CMN_CLK_CFG0 and PHY_CMN_CLK_CFG1 registers to
+> avoid hard-coding bit masks and shifts and make the code a bit more
+> readable.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Changes in v5:
+> 1. Split part touching pll_7nm_register() to new patch.
+> 2. Update commit msg.
+> 
+> Changes in v4:
+> 1. Add mising bitfield.h include
+> 2. One more FIELD_GET and DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL (Dmitry)
+> 
+> Changes in v3:
+> 1. Use FIELD_GET
+> 2. Keep separate bit_clk_div and pix_clk_div
+> 3. Rebase (some things moved to previous patches)
+> 
+> Changes in v2:
+> 1. New patch
+> ---
+>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
 
-> On 19 Feb 2025, at 13:28, Alice Ryhl <aliceryhl@google.com> wrote:
->=20
-> I wonder if enabled vs disabled should be two different types?
->=20
-> Alice
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I thought about having two types too, but I think it complicates the =
-design.
-
-
-```
-let foo: Regulator =3D Regulator::get(/*=E2=80=A6*/)?;
-let foo_enabled: EnabledRegulator =3D foo.enable()?:
-```
-
-Let=E2=80=99s first agree that `Regulator::drop` is the right place to =
-have `regulator_put`, since
-`Regulator::get()` acquired the reference in the first place.
-
-This means that now, `EnabledRegulator` has to depend on `Regulator` =
-somehow to ensure
-a proper drop order. Otherwise you might have an enabled regulator for =
-which you don=E2=80=99t own
-the refcount. Furthermore, if Regulator drops while EnabledRegulator is =
-alive, you get a splat.
-
-In a driver, you now have to store both Regulator - for the refcount - =
-and EnabledRegulator
-- as a way to tell the system you need that regulator to be active.
-
-If EnabledRegulator is a guard type, this doesn=E2=80=99t work, as it =
-creates a self-reference - on top
-of being extremely clunky.
-
-You can then have EnabledRegulator consume Regulator, but this assumes =
-that the regulator
-will be on all the time, which is not true. A simple pattern of
-
-```
-regulator_enable()
-do_fancy_stuff()
-regulator_disable()
-```
-
-Becomes a pain when one type consumes the other:
-
-```
-self.my_regulator.enable() // error, moves out of `&self`
-```=20
-
-I am sure we can find ways around that, but a simple `bool` here seems =
-to fix this problem.
-
-Now you only have to store `Regulator`. If you need another part of your =
-code to also keep
-the regulator enabled, you store a `Regulator` there and enable that as =
-well. All calls to
-enable and disable will be automatically balanced for all instances of =
-`Regulator` by
-virtue of the `enabled` bool as well.
-
-=E2=80=94 Daniel
-
+-- 
+With best wishes
+Dmitry
