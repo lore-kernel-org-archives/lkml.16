@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE9E1EB19A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141551EB187;
 	Wed, 19 Feb 2025 13:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972597; cv=none; b=iGlMYK0ewS4VUrwI7/MGUelZyWbrqUTAFTk21qQIBtSKnJRE9kZPEbbfe4FpdveaAzj6dCh8E4P5gbX3iwuHymDOKB9chwQhSFnhYF7q68RplJVy4CNVo7mglshlYQg5qcB9OXNo9g293u+Z6CLfx6gwGC+rNXwJFgnA2UyPj3o=
+	t=1739972597; cv=none; b=Bn958lxgAXEtySNv3wkqDKhsZYvMBI4qWEuHboZRL4D1q6tVFiW+n3ECJ5lhOl8DPPmC1lCahlpfa1csgr3jJRcfr2pcoeUzHotYcqbg5rNEN2rCuMiWR9ue7gxZg0aIepmbo08WWJgaL/toE6xHw3vMQaIuwJfgxSlel/W3kw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739972597; c=relaxed/simple;
-	bh=oiRjy3yU3iR8pNoPEhJPyx535ffRUMg7nWD73L8N/VY=;
+	bh=+jVESXZjW+dQ6ogYvit07tGCXuExIHzEYBT/vq3CdkE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xr5dBGPFCWNeBdrEBeyvEjv+oVcrIaiCm+NqYdqA7gdYUhelKwjDzdla4e8AXMb9F+E1b6VAITpBSZY3uTJzg93Y8QA6bDIE2PShJeOIF1o21ThVlFKouhFORu5sxsWXkMwp6USacqe7Ez/VowxduavsG6PmKgR4GjqJ8cFb6mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLSRBOMn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q4c8Q5Q1CInvqm/lYX15j06aR+RF5WIy3DziglWqf/IkcvLVLJg5FohxTCPRTEWCV4YWxwKdBJCafd4HLZpKZ9Dv3PLDldITdtiLn9zAFLRmB20h9kMkf3H1cX+sB68dc/MaHwhf0n2xKppKUdZDryYgiAEi/S0dPVfmi/+L1dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBhKkPCn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLSRBOMn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B17C4CEE8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBhKkPCn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20D4C4CEEB;
 	Wed, 19 Feb 2025 13:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739972596;
-	bh=oiRjy3yU3iR8pNoPEhJPyx535ffRUMg7nWD73L8N/VY=;
+	bh=+jVESXZjW+dQ6ogYvit07tGCXuExIHzEYBT/vq3CdkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PLSRBOMnuNXWMpdqe0Xn5B0WSNE9dVrYu0EOAmohcv1IdHPlvRjciBeaED+v6oPmB
-	 v1ToO7nVkYcxmCOrOAndVyyh78gDHOjsLT4nVumTjnUTLXIP1ZAoTEfMqW/Vu/8mHJ
-	 nb/Fl7tAKcMQjTZFcBqA4VFExerFYcar4N37c2EhMWocW/od80Xn8qeOhqtsx4+G9I
-	 +1VPbdXj4HocGKQ6qcDQdRWHAs90iMY8m4WWzmgOpxMJK7qWBw6tTdttcdQ6lsloGR
-	 dvkieQagK4oMeHT4G6Zl38+05qjSzvPR5Z5xIjxDADsYdGYHz+l0QPGRiuN6Pm9/O8
-	 3mrNQenSSqFvA==
+	b=ZBhKkPCng5u4EaonnatZ6e97dhItGbW1ssKnoNHvbZX6b/JIGgPeGhXQE/mbGS6Ob
+	 LsEZGumgnTrlqnSYtfEG8wRFeYklLZRdjMAjECuO2tR16RcSmWsjgLEd0cnhWvdJnc
+	 cVzOeFcHe+Jr548urDs4+vY8ixTBVFhGGG9ULjFlpWEsAduI+TtbQStAwFDz4EU8vu
+	 GCz8G15tybg1CJTdkcmzjO5UrfgLTri/IpaPhbLDNPkzM4FyBh9pIwydyvxga4rtgP
+	 WZMBNMITvwcstlAkGmDBZpMC4YFIGlu/NzR0Ku8NK7TUdvrrrFWVs4bmopDoABwAor
+	 HSj8GYlLFR7yg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1tkkMI-0000000086Y-04Kt;
+	id 1tkkMI-0000000086e-1F5Y;
 	Wed, 19 Feb 2025 14:43:26 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -49,9 +49,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 1/6] dt-bindings: rtc: qcom-pm8xxx: document qcom,no-alarm flag
-Date: Wed, 19 Feb 2025 14:41:13 +0100
-Message-ID: <20250219134118.31017-2-johan+linaro@kernel.org>
+Subject: [PATCH v2 4/6] rtc: pm8xxx: implement qcom,no-alarm flag for non-HLOS owned alarm
+Date: Wed, 19 Feb 2025 14:41:16 +0100
+Message-ID: <20250219134118.31017-5-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <20250219134118.31017-1-johan+linaro@kernel.org>
 References: <20250219134118.31017-1-johan+linaro@kernel.org>
@@ -72,30 +72,92 @@ possible.
 Add a qcom,no-alarm flag to support RTC on this platform.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Link: https://lore.kernel.org/r/20241015004945.3676-3-jonathan@marek.ca
-[ johan: move vendor property; use boolean; reword description ]
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Link: https://lore.kernel.org/r/20241015004945.3676-2-jonathan@marek.ca
+[ johan: drop no_alarm flag and restructure probe() ]
+Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Tested-by: Steev Klimaszewski <steev@kali.org>
+Tested-by: Joel Stanley <joel@jms.id.au>
+Tested-by: Sebastian Reichel <sre@kernel.org> # Lenovo T14s Gen6
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- Documentation/devicetree/bindings/rtc/qcom-pm8xxx-rtc.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/rtc-pm8xxx.c | 43 ++++++++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/qcom-pm8xxx-rtc.yaml b/Documentation/devicetree/bindings/rtc/qcom-pm8xxx-rtc.yaml
-index d274bb7a534b..68ef3208c886 100644
---- a/Documentation/devicetree/bindings/rtc/qcom-pm8xxx-rtc.yaml
-+++ b/Documentation/devicetree/bindings/rtc/qcom-pm8xxx-rtc.yaml
-@@ -50,6 +50,11 @@ properties:
-     items:
-       - const: offset
+diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+index 68140ac39365..14707e21f343 100644
+--- a/drivers/rtc/rtc-pm8xxx.c
++++ b/drivers/rtc/rtc-pm8xxx.c
+@@ -606,9 +606,11 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
+ 	if (!rtc_dd->regmap)
+ 		return -ENXIO;
  
-+  qcom,no-alarm:
-+    type: boolean
-+    description:
-+      RTC alarm is not owned by the OS
+-	rtc_dd->alarm_irq = platform_get_irq(pdev, 0);
+-	if (rtc_dd->alarm_irq < 0)
+-		return -ENXIO;
++	if (!of_property_read_bool(pdev->dev.of_node, "qcom,no-alarm")) {
++		rtc_dd->alarm_irq = platform_get_irq(pdev, 0);
++		if (rtc_dd->alarm_irq < 0)
++			return -ENXIO;
++	}
+ 
+ 	rtc_dd->allow_set_time = of_property_read_bool(pdev->dev.of_node,
+ 						      "allow-set-time");
+@@ -624,8 +626,6 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, rtc_dd);
+ 
+-	device_init_wakeup(&pdev->dev, true);
+-
+ 	rtc_dd->rtc = devm_rtc_allocate_device(&pdev->dev);
+ 	if (IS_ERR(rtc_dd->rtc))
+ 		return PTR_ERR(rtc_dd->rtc);
+@@ -633,27 +633,32 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
+ 	rtc_dd->rtc->ops = &pm8xxx_rtc_ops;
+ 	rtc_dd->rtc->range_max = U32_MAX;
+ 
+-	rc = devm_request_any_context_irq(&pdev->dev, rtc_dd->alarm_irq,
+-					  pm8xxx_alarm_trigger,
+-					  IRQF_TRIGGER_RISING,
+-					  "pm8xxx_rtc_alarm", rtc_dd);
+-	if (rc < 0)
+-		return rc;
++	if (rtc_dd->alarm_irq) {
++		rc = devm_request_any_context_irq(&pdev->dev, rtc_dd->alarm_irq,
++						  pm8xxx_alarm_trigger,
++						  IRQF_TRIGGER_RISING,
++						  "pm8xxx_rtc_alarm", rtc_dd);
++		if (rc < 0)
++			return rc;
+ 
+-	rc = devm_rtc_register_device(rtc_dd->rtc);
+-	if (rc)
+-		return rc;
++		rc = dev_pm_set_wake_irq(&pdev->dev, rtc_dd->alarm_irq);
++		if (rc)
++			return rc;
+ 
+-	rc = dev_pm_set_wake_irq(&pdev->dev, rtc_dd->alarm_irq);
+-	if (rc)
+-		return rc;
++		device_init_wakeup(&pdev->dev, true);
++	} else {
++		clear_bit(RTC_FEATURE_ALARM, rtc_dd->rtc->features);
++	}
+ 
+-	return 0;
++	return devm_rtc_register_device(rtc_dd->rtc);
+ }
+ 
+ static void pm8xxx_remove(struct platform_device *pdev)
+ {
+-	dev_pm_clear_wake_irq(&pdev->dev);
++	struct pm8xxx_rtc *rtc_dd = platform_get_drvdata(pdev);
 +
-   wakeup-source: true
++	if (rtc_dd->alarm_irq)
++		dev_pm_clear_wake_irq(&pdev->dev);
+ }
  
- required:
+ static void pm8xxx_shutdown(struct platform_device *pdev)
 -- 
 2.45.3
 
