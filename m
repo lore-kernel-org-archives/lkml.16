@@ -1,80 +1,145 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81451FE44B;
-	Wed, 19 Feb 2025 16:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B006748F;
+	Wed, 19 Feb 2025 16:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739981759; cv=none; b=PORKhE7hvzPWbjw10xr6rTcsnkKKW7a2e+w+Mw6QToqHAcuO3F+7z3It9Bjj2nISLoBLoNfkiLEGzV5JGxpsXV+/30+NLX/f8Mnp9RtncJjDIAITDfne+9hTC6y4sxXRpi+8vv2yAKER/hSV4qRwxo18t3Hiw/VEXheZczHQDYA=
+	t=1739981784; cv=none; b=azJMnGutQ29eYKRH13JUzK44+7ol2b+AriH3K3DEL4NLVQVDVQMnDplQAjkUhFifIFGqYCaA7tD8cZTRoKFBGo8oHioVSZne+g8MScDZlK49R4fI/QVgijki2sS1+OSI0yjcjmABwA6pe6zRM+TW6ba9L6b8bjre/O06XVQzaiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739981759; c=relaxed/simple;
-	bh=5IKvBpIY6ht3t9ENjPzgnAa57QSsV7Y4M9VTaj8tbjA=;
+	s=arc-20240116; t=1739981784; c=relaxed/simple;
+	bh=CouTLvYHAtiNnlip9G0FD5i1Ag/n1t/QF1IZSAX1CUM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MevOGphl4eS7NYsCty7NroTpt7sywbXB1i3k29DlBqiiPmMwS6qtfW7KU+JbAb+GFVwoeSAmneubZpWhPTXM/baA9UR4YRBxESMvGNaR54JKEhqLOkGNKlVfCXlSUZJxtH30JmFT8rYvUEQt7Lv/RYuo0mrUjXvqXVLxSSN/RzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 51JGFhqM023043;
-	Wed, 19 Feb 2025 17:15:43 +0100
-Date: Wed, 19 Feb 2025 17:15:43 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>, David Airlie <airlied@gmail.com>,
-        linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <20250219161543.GI19203@1wt.eu>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <b7a3958e-7a0a-482e-823a-9d6efcb4b577@stanley.mountain>
- <2bcf7cb500403cb26ad04934e664f34b0beafd18.camel@HansenPartnership.com>
- <yq1mseim24a.fsf@ca-mkp.ca.oracle.com>
- <c1693d15d0a9c8b7d194535f88cbc5b07b5740e5.camel@HansenPartnership.com>
- <20250219153350.GG19203@1wt.eu>
- <e42e8e79a539849419e475ef8041e87b3bccbbfe.camel@HansenPartnership.com>
- <20250219155617.GH19203@1wt.eu>
- <20250219160723.GB11480@pendragon.ideasonboard.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MT8ReuoIgB7S4bAU/XADOv/mjc33aFlslZ7bsFF4LV52yzQ+Syfxb51iao7mnjWEP3vmiLL+CCXTMR7g+Gr2YWFfbQOsTVCJ0HUXF3BGo8vP6HQfbogpvA96KfuCJZv89Dgeuczi9C3455OJuwDLVErHdB/B9W4cOwKu2CimtcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=x9kPpfjt; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="x9kPpfjt"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id B9B981FBB9;
+	Wed, 19 Feb 2025 17:16:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1739981777;
+	bh=S95CwWHL/dwOp5pCYoF4ahbpyruv/6wZ8TXtXTkd3Sc=; h=From:To:Subject;
+	b=x9kPpfjtqHJZoRmH/qoGX2oUXBCDuEReb0dAFhh7Jaaxuqayh81oi8NuFuYo8GjpF
+	 wv16O8md/5XeETP1LuGDo+Zl8rNN7skzwaA2zTGh44Z+6eVCEXAm2P0hqear7XVNB0
+	 sf7u/R8c/6aIRU/DW5T3ILZpdVOL/8xLf+9HMcAf/FyvXyE6hyWDJzUvAEAA1i5364
+	 saCrKHtyRvGcMfGjADd9AgPeu7t4+sx7hszahL5+9mJxRCEPbMhizjvyLco+p0iJ3e
+	 HF66ubp9TBInBCV2ZcjQrH5vBNvuFm5Xwup3+8MG4G7C5FIKwx5c3eFgPJbF42xnCI
+	 8LL10B3n0W//Q==
+Date: Wed, 19 Feb 2025 17:16:11 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Quentin Schulz <quentin.schulz@cherry.de>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Farouk Bouabid <farouk.bouabid@cherry.de>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] hwmon: (amc6821) Add PWM polarity configuration
+ with OF
+Message-ID: <20250219161611.GB22470@francesco-nb>
+References: <20250218165633.106867-1-francesco@dolcini.it>
+ <20250218165633.106867-3-francesco@dolcini.it>
+ <eb5c844a-e726-44c0-a0c1-7796d1a28ec3@cherry.de>
+ <07ec64e7-041d-4f5a-a04c-daa4b0794111@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250219160723.GB11480@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <07ec64e7-041d-4f5a-a04c-daa4b0794111@roeck-us.net>
 
-On Wed, Feb 19, 2025 at 06:07:23PM +0200, Laurent Pinchart wrote:
-
-> > Regardless I do understand how these cleanups can help in a number of
-> > case, at least to avoid some code duplication.
+On Wed, Feb 19, 2025 at 05:46:10AM -0800, Guenter Roeck wrote:
+> On 2/19/25 02:08, Quentin Schulz wrote:
+> > Hi Francesco,
+> > 
+> > On 2/18/25 5:56 PM, Francesco Dolcini wrote:
+> > > From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > > 
+> > > Add support to configure the PWM-Out pin polarity based on a device
+> > > tree property.
+> > > 
+> > > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > > ---
+> > >   drivers/hwmon/amc6821.c | 7 +++++--
+> > >   1 file changed, 5 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
+> > > index 1e3c6acd8974..1ea2d97eebca 100644
+> > > --- a/drivers/hwmon/amc6821.c
+> > > +++ b/drivers/hwmon/amc6821.c
+> > > @@ -845,7 +845,7 @@ static int amc6821_detect(struct i2c_client *client, struct i2c_board_info *info
+> > >       return 0;
+> > >   }
+> > > -static int amc6821_init_client(struct amc6821_data *data)
+> > > +static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *data)
+> > >   {
+> > >       struct regmap *regmap = data->regmap;
+> > >       int err;
+> > > @@ -864,6 +864,9 @@ static int amc6821_init_client(struct amc6821_data *data)
+> > >           if (err)
+> > >               return err;
+> > > +        if (of_property_read_bool(client->dev.of_node, "ti,pwm-inverted"))
+> > 
+> > I know that the AMC6821 is doing a lot of smart things, but this really tickled me. PWM controllers actually do support that already via PWM_POLARITY_INVERTED flag for example. See Documentation/devicetree/bindings/hwmon/adt7475.yaml which seems to be another HWMON driver which acts as a PWM controller. I'm not sure this is relevant, applicable or desired but I wanted to highlight this.
+> > 
+> > > +            pwminv = 1;
+> > > +
+> > 
+> > This is silently overriding the module parameter.
+> > 
+> > I don't think this is a good idea, at the very least not silently.
+> > 
+> > I would suggest to add some logic in the probe function to set this value and check its consistency.
+> > 
+> > Something like:
+> > 
+> > """
+> > diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
+> > index 1e3c6acd89740..3a13a914e2bbb 100644
+> > --- a/drivers/hwmon/amc6821.c
+> > +++ b/drivers/hwmon/amc6821.c
+> > @@ -37,7 +37,7 @@ static const unsigned short normal_i2c[] = {0x18, 0x19, 0x1a, 0x2c, 0x2d, 0x2e,
+> >    * Insmod parameters
+> >    */
+> > 
+> > -static int pwminv;    /*Inverted PWM output. */
+> > +static int pwminv = -1;    /* -1 not modified by the user, 0 default PWM output, 1 inverted PWM output */
+> >   module_param(pwminv, int, 0444);
+> > 
+> >   static int init = 1; /*Power-on initialization.*/
+> > @@ -904,6 +904,7 @@ static int amc6821_probe(struct i2c_client *client)
+> >       struct amc6821_data *data;
+> >       struct device *hwmon_dev;
+> >       struct regmap *regmap;
+> > +    bool pwminv_dt;
+> >       int err;
+> > 
+> >       data = devm_kzalloc(dev, sizeof(struct amc6821_data), GFP_KERNEL);
+> > @@ -916,6 +917,18 @@ static int amc6821_probe(struct i2c_client *client)
+> >                        "Failed to initialize regmap\n");
+> >       data->regmap = regmap;
+> > 
+> > +    pwminv_dt = of_property_read_bool(client->dev.of_node, "ti,pwm-inverted");
+> > +
+> > +    if (pwminv == -1) {
+> > +        pwminv = pwminv_dt;
 > 
-> They're particularly useful to "destroy" local variables that don't need
-> to be returned. This allows implementing scope guards, to facilitate
-> lock handling for instance. Once a mutex guard is instantiated, the
-> mutex is locked, and it will be guaranteed to be unlocked in every
-> return path.
+> A devicetree property, associated with a single instance of the driver,
+> overriding a module parameter affecting all instances ? This is a no-go.
 
-Yeah absolutely. However I remember having faced code in the past where
-developers had abused this "unlock on return" concept resulting in locks
-lazily being kept way too long after an operation. I don't think this
-will happen in the kernel thanks to reviews, but typically all the stuff
-that's done after a locked retrieval was done normally is down outside
-of the lock, while here for the sake of not dealing with unlocks, quite
-a few lines were still covered by the lock for no purpose. Anyway
-there's no perfect solution.
+I will rework the patch in such a way that the module parameter, when
+specified, takes always the precedence over the DT code, works for you
+Guenter ?
 
-Ideally when a compiler is smart enough to say "I would have cleaned
-up here", it could be cool to just have a warning so that the developer
-decides where to perform it. The problem is that it'd quickly becomes
-a mess since the compiler cannot guess that you've done your own cleanup
-before (without yet other anotations), which precisely is the point of
-doing it unconditionally when leaving scope.
+Francesco
 
-Willy
