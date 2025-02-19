@@ -1,80 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DCE8F7D;
-	Wed, 19 Feb 2025 18:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99068F7D;
+	Wed, 19 Feb 2025 18:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739988329; cv=none; b=hYwKai0y9a5eQL9nq01Y5aeyl9GuJeL3VZcsxuHaWX9PoHlrHea7pjlFxT6ger2FovCyaLssuqR+qg/siYfIyu0prYUYizSMBytgLgxG4e0sExyjU/dPqVJ+OjKnbQvYYE/uE3nAjV3TdXq70V/a7TCbFAxtMR/quWsKLeOFFV8=
+	t=1739988359; cv=none; b=OUZm9FpScON5texNSrpLNfCwW1z0jy5hVr0rfGnDOMMuICWLZOpcqnprFQS8QlLpd0gSPQgPncJp5H//sT0eIBFWBcWn+nBU36jYZCIDx5XyJZ7EOYsVLjulC1vTVZwjmMvvrsMMjODgEN/6H7Q3yQQ8vOv3DoL3Uyl0o3GcFus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739988329; c=relaxed/simple;
-	bh=Ngnc6yPPF9a3q4ynxZspBzCReKVwJEbw+SE2Yv4Oy9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXMugAiOFchoJNA/kBj9wdoyUYxtkXHRWC+XOn0RcJrEB5hr+2rOhF8We4YCHW5BnlSvr3FXl5EPh4XqotCpBJGB6E2c+YViD4HKbeneEb1xbm+8YX8a4cp9TrpKRrZOXee60qOccwmXSaU4XL6hLFtRfM6MJBiz+IqkueanPLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KwcfDsLr; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739988359; c=relaxed/simple;
+	bh=rmLqgVZ46zmjfiZfRiXtm3hs21qb1OdC4OcV8JEeWnY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V+2jsVQx0OFu27NIpWeim+9DFXQRBCOYI3xRBnp01sXPmxxZpg48EB2F5wkhHzBGfvdjsuWJgcypUe3OfKoYZolRVjraeAJYgIFxtLQJFqsUBBDbol/r5p6BCJiT5zrmv3pS7pdxc/P4KTaKwcF2ldrc82F7eZB0Zd4GqNEJGIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SaEJREB5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KwcfDsLr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739988328; x=1771524328;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ngnc6yPPF9a3q4ynxZspBzCReKVwJEbw+SE2Yv4Oy9k=;
-  b=KwcfDsLrRZ8fDrJ+rKznSRU7PSxZE3uYsa17I+H95NfxXcDhG1JMvQoB
-   xE6vxXQHmrP2Y9l2fRa0gj9OcOPCXeo1HYt0z6bmO6hAXhe7yfeDGyD+O
-   pSl0CIthfleAevVDpAXZum1+6tMXkqFzB/wiuB2NGIsK0XQwpWJaLzkU9
-   Lu5lRM+JgiWts+AEk97LoSwyFlQQhW7u0uV+FzSueQF4nPe1NbKE5KydF
-   DNoViz+i0FT8dYHmS4b1uMV/vYPzddx5+zIbjMweTq4ymNGzHutj3PaUD
-   GSFglI2BiiGyaWPro+TApcAQdQfWdiLB4tcJR7xXT4OzxOt3qkEX+3EGa
-   Q==;
-X-CSE-ConnectionGUID: jiaFaKBrQw23uiMdjdGIUg==
-X-CSE-MsgGUID: EYOHzUrMQC6hLWym+omavg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="66097712"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="66097712"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:05:23 -0800
-X-CSE-ConnectionGUID: XDAsImKyRjWFGL1wU6uWXw==
-X-CSE-MsgGUID: jXZFRzS4TOuiZNk+OGejbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114534645"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.15])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:35:34 -0800
-Date: Wed, 19 Feb 2025 09:35:28 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming.li@zohomail.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] cxl/memdev: cxl_memdev_ioctl() cleanup
-Message-ID: <Z7YWYDfqR1jc0t1N@aschofie-mobl2.lan>
-References: <20250217144828.30651-1-ming.li@zohomail.com>
- <20250217144828.30651-4-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SaEJREB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D47B3C4CED1;
+	Wed, 19 Feb 2025 18:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739988358;
+	bh=rmLqgVZ46zmjfiZfRiXtm3hs21qb1OdC4OcV8JEeWnY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SaEJREB58NeGeSjmBxg/0nExTiXpnh6Q84pUBcA7IvrHNnkEVRwT/Pj9xCBkrPrkj
+	 D6arsBGguM/OYTfXJia8UXH/64lz9ZWjbH0ueSX45WDZMEgbpdtlFlKReN6xB44cCk
+	 gjMzRRyGrWue4wu1goWEVdxIyCZLZ0pZWv5XfNaKtJB12FJroAj0nU1uKxxp/6x88f
+	 emItFemMnYov45SvrZUpgnTutciuUiRSCdt6EDAx8eyWDOZNHilGwlM8q8Vugl2WXI
+	 dohAHFlC0MCrYcO+FyUCxZh8VI0RWaR6Zx+IJ+A6UnNdjXtreAKvjJVC8RAn+4lsx2
+	 CjCecO1xN9W4g==
+Message-ID: <fe9b5d8d-5cbb-4d0c-bd12-b15a8d44062d@kernel.org>
+Date: Wed, 19 Feb 2025 12:05:57 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217144828.30651-4-ming.li@zohomail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 17/18] cpufreq/amd-pstate: Rework CPPC enabling
+To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+Cc: Perry Yuan <perry.yuan@amd.com>,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250217220707.1468365-1-superm1@kernel.org>
+ <20250217220707.1468365-18-superm1@kernel.org>
+ <Z7X4BfEAbRwCg2Dg@BLRRASHENOY1.amd.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <Z7X4BfEAbRwCg2Dg@BLRRASHENOY1.amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 17, 2025 at 10:48:24PM +0800, Li Ming wrote:
-> In cxl_memdev_ioctl(), the down_read(&cxl_memdev_rwsem) and
-> up_read(&cxl_memdev_rwsem) can be replaced by a
-> guard(rwsem_read)(&cxl_memdev_rwsem), it helps to remove the open-coded
-> up_read(&cxl_memdev_rwsem). Besides, the local var 'rc' can be also
-> removed to make the code more cleaner.
+On 2/19/2025 09:25, Gautham R. Shenoy wrote:
+> On Mon, Feb 17, 2025 at 04:07:06PM -0600, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> The CPPC enable register is configured as "write once".  That is
+>> any future writes don't actually do anything.
+>>
+>> Because of this, all the cleanup paths that currently exist for
+>> CPPC disable are non-effective.
+>>
+>> Rework CPPC enable to only enable after all the CAP registers have
+>> been read to avoid enabling CPPC on CPUs with invalid _CPC or
+>> unpopulated MSRs.
+>>
+>> As the register is write once, remove all cleanup paths as well.
+>>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v3:
+>>   * Fixup for suspend/resume issue
+>> ---
+> [..snip..]
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
+>>   
+>> -static int shmem_cppc_enable(bool enable)
+>> +static int shmem_cppc_enable(struct cpufreq_policy *policy)
+>>   {
+>> -	int cpu, ret = 0;
+>> +	struct amd_cpudata *cpudata = policy->driver_data;
+>>   	struct cppc_perf_ctrls perf_ctrls;
+>> +	int ret;
+>>   
+>> -	if (enable == cppc_enabled)
+>> -		return 0;
+>> +	ret = cppc_set_enable(cpudata->cpu, 1);
+>> +	if (ret)
+>> +		return ret;
+>>   
+>> -	for_each_present_cpu(cpu) {
+>> -		ret = cppc_set_enable(cpu, enable);
+>> +	/* Enable autonomous mode for EPP */
+>> +	if (cppc_state == AMD_PSTATE_ACTIVE) {
+>> +		/* Set desired perf as zero to allow EPP firmware control */
+>> +		perf_ctrls.desired_perf = 0;
+>> +		ret = cppc_set_perf(cpudata->cpu, &perf_ctrls);
+>>   		if (ret)
+>>   			return ret;
+> 
+> We don't need the if condition here. There is nothing following this
+> inside the if block and the function return "ret" soon after coming
+> out of this if block.
+> 
+> 
+>> -
+>> -		/* Enable autonomous mode for EPP */
+>> -		if (cppc_state == AMD_PSTATE_ACTIVE) {
+>> -			/* Set desired perf as zero to allow EPP firmware control */
+>> -			perf_ctrls.desired_perf = 0;
+>> -			ret = cppc_set_perf(cpu, &perf_ctrls);
+>> -			if (ret)
+>> -				return ret;
+>> -		}
+>>   	}
+>>   
+>> -	cppc_enabled = enable;
+>>   	return ret;
+>>   }
+>>   
+>>   DEFINE_STATIC_CALL(amd_pstate_cppc_enable, msr_cppc_enable);
+>>   
+>> -static inline int amd_pstate_cppc_enable(bool enable)
+> [..snip..]
+> 
+>>   
+>> -static int amd_pstate_epp_reenable(struct cpufreq_policy *policy)
+>> +static int amd_pstate_epp_cpu_online(struct cpufreq_policy *policy)
+>>   {
+>>   	struct amd_cpudata *cpudata = policy->driver_data;
+>>   	union perf_cached perf = READ_ONCE(cpudata->perf);
+>>   	int ret;
+>>   
+>> -	ret = amd_pstate_cppc_enable(true);
+>> -	if (ret)
+>> -		pr_err("failed to enable amd pstate during resume, return %d\n", ret);
+>> -
+>> -
+>> -	return amd_pstate_epp_update_limit(policy);
+>> -}
+>> +	pr_debug("AMD CPU Core %d going online\n", cpudata->cpu);
+>>   
+>> -static int amd_pstate_epp_cpu_online(struct cpufreq_policy *policy)
+>> -{
+>> -	struct amd_cpudata *cpudata = policy->driver_data;
+>> -	int ret;
+>> +	ret = amd_pstate_cppc_enable(policy);
+>> +	if (ret)
+>> +		return ret;
+>>   
+>> -	pr_debug("AMD CPU Core %d going online\n", cpudata->cpu);
+>>   
+>> -	ret = amd_pstate_epp_reenable(policy);
+>> +	ret = amd_pstate_update_perf(policy, 0, 0, perf.highest_perf, cpudata->epp_cached, false);
+> 
+> Previously, when a CPU came online, the callpath would be
+> amd_pstate_epp_cpu_online(policy)
+> --> amd_pstate_epp_reenable(policy)
+>       --> amd_pstate_epp_update_limit(policy)
+>            --> amd_pstate_epp_update_limit(policy)
+> 
+> which reevaluates the min_perf_limit and max_perf_limit based on
+> policy->min and policy->max and then calls
+> 
+>        amd_pstate_update_perf(policy, min_limit_perf, 0, max_limit_perf, epp, false)
+> 
+> With this patch, we call
+> 
+>        amd_pstate_update_perf(policy, 0, 0, perf.highest_perf, cpudata->epp_cached, false);
+> 
+> which would set CPPC.min_perf to 0.
+> 
+> I guess this should be ok since cpufreq_online() would eventually call
+> amd_pstate_verify() and amd_pstate_epp_set_policy() which should
+> re-initialize the the min_limit_perf and max_limit_perf. Though I
+> haven't verified if the behaviour changes with this patch when the CPU
+> is offlined and brought back online.
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+I'll double check with removing amd_pstate_update_perf() call from 
+amd_pstate_epp_cpu_online().  I think it will be clearer to let it get 
+set from the amd_pstate_epp_set_policy() call.
 
-snip
