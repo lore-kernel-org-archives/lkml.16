@@ -1,157 +1,148 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03BD1EB1AA
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C9C286281;
+	Wed, 19 Feb 2025 14:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739974922; cv=none; b=Yzv2Vg5CA8dz6T++8nNpqWFEjo8inaNbuvzCphdsRN6lYRXv+HKH+Pze3WQ4SKkCk1c6WQ30LozClIjfvun+NdHoDHyv97guuWlI5/pheYj7/SfOmm8QD/8qaigShmALUtP6gPuUr1AQchzZqz2knOgrUA2IYquN8nAekO/5Tb8=
+	t=1739974956; cv=none; b=nS28O1ZjTyCnBx/sj7lrA2pqfolsXaAaaun+Z0YA0eFAA0EUuivoLZxNMXkdPqih7bVg6QvlKoXpSoQmeqbH7/eHhDcAg5l26eBpow1FBbVJl50Tu+aRPbNELUv+MLLOUNjTWfUIKWLpZE97o3I7hteb3fm5pqExeWeIhUDDpHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739974922; c=relaxed/simple;
-	bh=qocFPkQyCPvV1h2KH38pPVOHg99R91NSuDTDGCCnb+4=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=STSlt1Ao49ALvnG+1pk1sjzIPauJA5bKyqvLC32VAetM3Y8HLO4uv7+C9gOz9TRRXyyZSEi01xmHW/Dk46kM/vkgXhoBmhhGcPwFDgLd+4idgTIwyG09Goy5uxEZENuK6H/kJ8jcmeJvp1pd14hFwJA2Ll9LLXkfcxUkkGqzy4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=mGuX916h; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1739974956; c=relaxed/simple;
+	bh=reh2ru3wGs4xpgkwhP9irvC0VjoDeR95OIEbA777fUo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a+NO1JjFPCrUytroqKMu71HYIfOy8OMQuCCr6S6Vg6bamyA3abVnwsJHTYGZB1pQuR1eYSmiQ9AbfR/+/aLpAy3ddyf4r4TSXgWAR08VSyxgy4RtXdqFVYjvmrwDc0vNc+i2H49hC6e64QCCPX94WOBp2Vjnbw348LR6g4lCfcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rm8Lp1ml; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="mGuX916h"
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 800CD3F2F0
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739974917;
-	bh=TNFsSZbXf9eUik7wRM0fvibJQY2YnOZp+sKu7B0H7PU=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=mGuX916hjaGA3c9vr8PYPR/LXlipIYN8B8NTcMo5Xu2E+qIBaCv+d1QoLzIyQyRQN
-	 kt6d7wqwEpNKHfAEtVD6B8AS7SbmEpzvfzpmrLXe5Qe9Pz2DnS7R5YBcGis2j0P5v5
-	 ZNKWJhQPVabT0eP7Nu8LzQ0oGSZQzMbDCo78cHVsBUUB9ndwuEonibVJgbzTeDbvOK
-	 fs4bYQrNHy5cpTnIndZQTNRUk9wXzMgnY9uZHA3HWyW3c6+isc02dya1Ds1tVJzbYo
-	 LtA4bTDBTGTAjaAB7LhFlSd/VUzB08VUDd7A7G/OU+RVfU4GR3qWdr2iwW8sSm+7vO
-	 Te9g+YYvAlmtA==
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3f3fbe101f7so3260490b6e.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 06:21:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739974916; x=1740579716;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNFsSZbXf9eUik7wRM0fvibJQY2YnOZp+sKu7B0H7PU=;
-        b=Cu6NLryoxWcP59FznMzx5bXvLzw20IjrzKaTXltmWdNG3ZM8clPHRI2jRK4puZSlA5
-         cJiPWir+C7ZunJ4YWIBh6dptVsmiSIGLH7dB0NlTirS+zI6wsUDu+6QEq3iQFYGtD656
-         0HIufdfDSXiSHdPAjww/VorabL4oC3EOcVc+Xq/KqMAEVzE5BXdlhzjBv+f3N5ezoPG0
-         9g9DYmLTUyHifPoaY5whwYPgWFElpjZmATigIyrDlle2+rH8SXf738N0LD7UABsBGr9c
-         EZTFU3b2NHsv06OQ1Ks1mp4goyyM/q+w5ePII3leQLoNiBuRi488+Xvij6Yy3d0f3TAx
-         yNTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaQ1n8YsoIYkRMZopS8WwkC4FAw82ZBx8uEouD6DCm+WEBdruIyaQuKpFypBIvoJ74LHGNLyysgtVy8SE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygt/aR0yO62WuHUrqCtNDhg2D5jgsnrjQe+2Lim+bDaiDxCvus
-	fD/lWZYRpekJsNo0/4tVT1sLKh+C5K/QRckZVEUR6mhqfkzNN0nF1FreS8rJYANq8TnmiYqwleo
-	ZDgXiKWrgpNxVv2dWMX+IQXEayFajg+neLMxRcwoxVdG+mFVhYPQ34tnG3RieJSSUr/0TueALo+
-	vvN6CBKlHV80Jc5riO6ZH8Gx1nO0omVphmZ+gObIQUkA1zMf2esOSd
-X-Gm-Gg: ASbGncsKfvNaUJ+fR24hkaAFW//ke5uH1UrPtHBbQ2XVL5WQ2oZMI0V1x64+Bb1YhpS
-	hAW9mY409oHATcyklFFyiMMbOlwr+LgG8rQoewjpgWGmUOTUPqYZL5RQvheiYML6HTzJzpo/MJp
-	LwRkE7E7SEJr0chH8=
-X-Received: by 2002:a05:6808:2009:b0:3f4:28:1cf9 with SMTP id 5614622812f47-3f40f24c70bmr3215798b6e.37.1739974916175;
-        Wed, 19 Feb 2025 06:21:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEEKEwejCxHSGMNqBDr8UWGdz+HnH9g09SOIuN3EzxDyFqmETR+GIxaKnUFIYn1IRhg7V7hGhncJdXEh66k2zg=
-X-Received: by 2002:a05:6808:2009:b0:3f4:28:1cf9 with SMTP id
- 5614622812f47-3f40f24c70bmr3215763b6e.37.1739974915815; Wed, 19 Feb 2025
- 06:21:55 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 19 Feb 2025 06:21:55 -0800
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 19 Feb 2025 06:21:55 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20250215-fml13v01_emmc_speed-v1-1-e3bd224ae0e8@hotmail.com>
-References: <20250215-fml13v01_emmc_speed-v1-1-e3bd224ae0e8@hotmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rm8Lp1ml"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FEECC4AF0B;
+	Wed, 19 Feb 2025 14:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739974956;
+	bh=reh2ru3wGs4xpgkwhP9irvC0VjoDeR95OIEbA777fUo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Rm8Lp1ml+GLe9LpjM4u789wk9VDrcRCHCwOx5d1y1OyHKpQWu1SkSPWkLEj/iHM8K
+	 DhtqHwrVw9g5PBRsYAc09f/9PVPYCl78tlWVq7n12KDwO3oQyvj1K8udCXPVo2Xumc
+	 WRIok7A9Y6AeZRRgvrlNJLUoawaTA1/5LH7n1EYvbOBZtCPEyVuoampbIn2/R5dtDs
+	 /VPI3NwDIqO3E2udYGT8Q9n3e+vb42vS1fle+5mIAwLqbK7Vg3fAxONZsxm2T01Gfn
+	 gdIWBWtvVcBDtWRVhKRneSEyttJX26itrB7o/cTI44gZJt94az8kEgvd9i25Bu9C8E
+	 ErfCOx1KUGaQg==
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa48404207so13620163a91.1;
+        Wed, 19 Feb 2025 06:22:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU/NEaELVc8/bIIb0YqpIUv4Wu8/Vls7OQUGzH58/LREHNt5ZF9ACd82evlRA2QnFjJqh8R7Mz307c9fIrb@vger.kernel.org, AJvYcCXKUF9nir3iHxbnfMEXGmaaLpN8W3iivkVaWbO7cOdNZ013X48Vwl8xJh5AnqmjYyWDcoByvY6YDLUr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmRS04UwVMP6GNbhirtLvAOPyW66ilumUIPpIj0iGlmpI1QEdQ
+	I+5m5reujDZzbZnvh57klMDW0w8afD/sdgMX04BawS5UlYNoHHREXBwfEv+thMH7A/6nWn83Xn6
+	qZc6SLwjwEt4FxA29IjaonSNkyg==
+X-Google-Smtp-Source: AGHT+IFcqF5yaXmkd1Kkc/nRemVogPJJE5Ke5gvEz4B9RO5EGqWKjgjJjYnTiJJa8/Cdthu+CTDKxzr7KsWY9zI/Ph4=
+X-Received: by 2002:a17:90b:39cc:b0:2fa:229f:d03a with SMTP id
+ 98e67ed59e1d1-2fc4104056emr23304153a91.26.1739974955900; Wed, 19 Feb 2025
+ 06:22:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Wed, 19 Feb 2025 06:21:55 -0800
-X-Gm-Features: AWEUYZkshXOe8nO7q9Z2xgk8mlOteMmpUwpHHVMO_JGbLr-I9D65us9gjN0VrVM
-Message-ID: <CAJM55Z9GJr3BtbQeFpNU2P=nomsOvQ6dsVYFX_s=tHznu75ptQ@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: starfive: fml13v01: increase eMMC bus speed
-To: Maud Spierings via B4 Relay <devnull+maud_spierings.hotmail.com@kernel.org>, 
-	Conor Dooley <conor@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Maud Spierings <maud_spierings@hotmail.com>
+MIME-Version: 1.0
+References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com> <20250217154836.108895-25-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250217154836.108895-25-angelogioacchino.delregno@collabora.com>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Wed, 19 Feb 2025 22:23:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8qu6QeV=KJypYm=25PSGJD=jaMK6tMa2gWAoEF-mgPGg@mail.gmail.com>
+X-Gm-Features: AWEUYZm6NK2d9V3p_Lp0cN8OApA1MPTl0H47EFaINMxZJFCgqd5UGa_xL6LrvNY
+Message-ID: <CAAOTY_8qu6QeV=KJypYm=25PSGJD=jaMK6tMa2gWAoEF-mgPGg@mail.gmail.com>
+Subject: Re: [PATCH v7 24/43] drm/mediatek: mtk_hdmi: Move vendor/product
+ strings to drm_bridge
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	matthias.bgg@gmail.com, ck.hu@mediatek.com, jitao.shi@mediatek.com, 
+	jie.qiu@mediatek.com, junzhi.zhao@mediatek.com, 
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com, 
+	dmitry.baryshkov@linaro.org, lewis.liao@mediatek.com, 
+	ives.chenjh@mediatek.com, tommyyl.chen@mediatek.com, 
+	jason-jh.lin@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Maud Spierings via B4 Relay wrote:
-> From: Maud Spierings <maud_spierings@hotmail.com>
+Hi, Angelo:
+
+AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
+=BC
+2025=E5=B9=B42=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:=
+49=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> The assigned clock speed of 50 MHz is and max-frequency of 100MHz are
-> limitting this interface which is SDIO 5.0 capable. Sadly at 200MHz it
-> fails to mount an eMMC drive, 150MHz (really 132 MHz) is the highest it
-> was able to get.
+> Move the vendor and product strings to the appropriate entries
+> of struct drm_bridge and use that in mtk_hdmi_setup_spd_infoframe
+> instead of having the same as function parameters.
 >
-> This improves the seq read/write performance by 2x~
+> While at it, also beautify the strings, setting them to read
+> "MediaTek On-Chip HDMI".
+
+Applied to mediatek-drm-next [1], thanks.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
+
+Regards,
+Chun-Kuang.
+
 >
-> Signed-off-by: Maud Spierings <maud_spierings@hotmail.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
 > ---
-> I put this in this specific dts instead of the common one as I cannot
-> test if other boards are also able to handle these speeds.
-
-Hi Maud,
-
-Thanks for the patch!
-
-These settings work on my Milk-V Mars board booting off eMMC, but I'm not sure
-if that means we can just raise the frequency across all the JH7110 boards.
-The eMMC on my Milk-V mars is a detachable module that identifies as
-
-  mmcblk0: mmc0:0001 DG4016 14.7 GiB
-
-I guess what works might depend on the module too. Is the eMMC on the framework
-board soldered on?
-
-Raising the max-frequency to 200MHz seems right for all boards since we're
-already saying mmc0 supports HS200 mode.
-
-Maybe we could begin by raising the max frequency to 200MHz for all boards,
-but only assign the 150MHz rate on the framework board?
-
-/Emil
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 >
-> This patch depends on [1]
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
+ek/mtk_hdmi.c
+> index e9f2f15e98fa..4bf19574463d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> @@ -952,15 +952,14 @@ static int mtk_hdmi_setup_avi_infoframe(struct mtk_=
+hdmi *hdmi,
+>         return 0;
+>  }
 >
-> [1]: https://lore.kernel.org/all/20250207093618.126636-1-sandie.cao@deepcomputing.io/
-> ---
->  arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts | 5 +++++
->  1 file changed, 5 insertions(+)
+> -static int mtk_hdmi_setup_spd_infoframe(struct mtk_hdmi *hdmi,
+> -                                       const char *vendor,
+> -                                       const char *product)
+> +static int mtk_hdmi_setup_spd_infoframe(struct mtk_hdmi *hdmi)
+>  {
+> +       struct drm_bridge *bridge =3D &hdmi->bridge;
+>         struct hdmi_spd_infoframe frame;
+>         u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_SPD_INFOFRAME_SIZE];
+>         ssize_t err;
 >
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-> index 8d9ce8b69a71be78ca57618ae842c9f415648450..1f4bac9f89463a6af844b8f1743bdfa659e612ab 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-> @@ -11,6 +11,11 @@ / {
->  	compatible = "deepcomputing,fml13v01", "starfive,jh7110";
->  };
+> -       err =3D hdmi_spd_infoframe_init(&frame, vendor, product);
+> +       err =3D hdmi_spd_infoframe_init(&frame, bridge->vendor, bridge->p=
+roduct);
+>         if (err < 0) {
+>                 dev_err(hdmi->dev, "Failed to initialize SPD infoframe: %=
+zd\n",
+>                         err);
+> @@ -1328,7 +1327,7 @@ static void mtk_hdmi_send_infoframe(struct mtk_hdmi=
+ *hdmi,
+>  {
+>         mtk_hdmi_setup_audio_infoframe(hdmi);
+>         mtk_hdmi_setup_avi_infoframe(hdmi, mode);
+> -       mtk_hdmi_setup_spd_infoframe(hdmi, "mediatek", "On-chip HDMI");
+> +       mtk_hdmi_setup_spd_infoframe(hdmi);
+>         if (mode->flags & DRM_MODE_FLAG_3D_MASK)
+>                 mtk_hdmi_setup_vendor_specific_infoframe(hdmi, mode);
+>  }
+> @@ -1707,6 +1706,8 @@ static int mtk_hdmi_probe(struct platform_device *p=
+dev)
+>         hdmi->bridge.ops =3D DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID
+>                          | DRM_BRIDGE_OP_HPD;
+>         hdmi->bridge.type =3D DRM_MODE_CONNECTOR_HDMIA;
+> +       hdmi->bridge.vendor =3D "MediaTek";
+> +       hdmi->bridge.product =3D "On-Chip HDMI";
+>         drm_bridge_add(&hdmi->bridge);
 >
-> +&mmc0 {
-> +	max-frequency = <200000000>;
-> +	assigned-clock-rates = <150000000>;
-> +};
-> +
->  &pcie1 {
->  	perst-gpios = <&sysgpio 21 GPIO_ACTIVE_LOW>;
->  	phys = <&pciephy1>;
->
-> ---
-> base-commit: 0bc08ec1ff5a32449d2b04704173dbf3ebd6b014
-> change-id: 20250215-fml13v01_emmc_speed-67812bd9b404
->
-> Best regards,
+>         ret =3D mtk_hdmi_clk_enable_audio(hdmi);
 > --
-> Maud Spierings <maud_spierings@hotmail.com>
->
+> 2.48.1
 >
