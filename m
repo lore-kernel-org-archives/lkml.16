@@ -1,123 +1,142 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97C325A2D0
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 22:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBD125A2CD;
+	Wed, 19 Feb 2025 22:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740004676; cv=none; b=Upr3W/5iRP4yAdbBfBZRactBzJOCf+Aola4lEAhIsCdemMy3Teu1/DidUR313p6Ur7x8UfBBpMsXLidyB3Mx9kYX5h+yc/EXicmItdCBvIW/cgmWuGF5AbOIrTiamao7/yvUbVAd9snsfFw3jwBFYeDEBoZ/82Wfw5zwGWUPmBA=
+	t=1740004692; cv=none; b=NIPaI1DMakYO6ito2rkSsmStOXZT6G/M3jzJhrZbr5mmMrcUd//d79cp3WI2vFJvm+IW2PV6wg5EyXHH4aBxFsmTWDTHPIwiDb4j+7tCrlVn7X+SXGqhNtFtdEIQdBr5NcI32xUT13SHOI05Jc8vtc7n7nA6EMKfhNSDsr8it48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740004676; c=relaxed/simple;
-	bh=hhC3wygLORR7zsQGDIm40sQTPhR9KgGwxGKhnkJUH2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YVZg+DIv0Qbokse0ktYlqHDUQ0KhzGSjyON72OxMQOrd6JvEBmjQHli/zkiCIZNGJlJBhDOyUliF9zXdmrfwb34rYTIRrXkTBqZIFsUwFFO6IJWHOpAGbDhDXLdasNRvIMHMFEmYrm8szVlhRYStAo/q0mubh1dFRVzsv3/T6R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FxFzkK8T; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740004692; c=relaxed/simple;
+	bh=3n0Geo1g1jnDSHEKNDbBxRrW0MqCJbEfVtvyC8SrjB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C463KlwNHprcxyW18WxFJ9MyNR/LfOc6iH7jGOLv2m21Afy281cjtuvZE0XTtVrmwOP4hythXioqICJ3XV3Ra5T3zrmYkaeAaJlfFIPEeYeKv2dLW6T+9PlxMbbJ1ynZodP1isZSgngyeUL8106MvqdnAg6OWa76ZgsKnwH/x5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=cbs6+BBZ; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FxFzkK8T"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-219f6ca9a81so21775ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:37:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740004674; x=1740609474; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hhC3wygLORR7zsQGDIm40sQTPhR9KgGwxGKhnkJUH2c=;
-        b=FxFzkK8TDjMNIhLyHbRwJrY1oyAwbBO8K3biZQlohguwAfElOrr20O1bh70oFEtOkP
-         6E4m14vtwU9lnRhh4B21zyb65wvybOnUZSQt1RXr/jAUXqfpMm9BNMjCQyV+pFa90RUB
-         l9X/84Iy1tgBhDNrCYqAfWgKEaiJuV75gYwuO91tfpOWbbLbiPKkb4VO33o3kmZKNk8y
-         0MA24y15gfRHwadSztUXjDL0zCbTgtr4mNZVnT3iJchkYwVsx2eyw3BnhJ9ABSbKkUth
-         RhQXsnxmqCzmCR+btGg4O7/9JeVquLWz1SKNUHCHNOYXesQNEcMJcnmwe/JpI5xLd6Yz
-         ip6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740004674; x=1740609474;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hhC3wygLORR7zsQGDIm40sQTPhR9KgGwxGKhnkJUH2c=;
-        b=lKK5xo010+HVmHhtU0uwpCRMoiU5WQAubPGloDbvwCdhghs7o02tj0ZyLUcFI6MTwe
-         Uq+pT+A97V69XnSndJwB/eLiG5lxdxjOco+sAhkxV5oxfuqfoFmGBrC/trj0fZN0UnGD
-         ZUgtoZNJgXRd8xg4TQC/wGFy7mIDX8R4n2Govdkaen/VW8B7MPHifVsSa6VJPb6MQnDz
-         GcWHjK56GRtj3M8A7H/YoPpDrDLQfCi2ffmNVS+112uUkBEBKh70DKkCp8E5LoKic3UG
-         uDYFGO1raxjz2MJdz/hH31TTY2pI6cLoFfFsQ2bR/wJBCDDDZU8Lsork0Rc1qqcvHkF2
-         KSlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdAO04WyeS07dnWPtL0zwZ08+SHlG7Uuob3j8Dm9/K8ksryDTb4df6kLh/9If4gEO01UAe0lTsQyb/Tfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGBoZu6hETHnHBpXIvFmHr+nBL8BAz9AAG7IhhbtYlEO2Htqwx
-	nBhyOnJnjxPGB1n2SFNFHrEIBYBO+aPYHlUjlOWG53YSMsecP0YB9UhaBnF7bJAibmENDshQs/X
-	pwotWUlBd8sUhrZMGVPPu2T0yFK9HhEFMjoCG
-X-Gm-Gg: ASbGncuFlgSYWPuPHkAnrZBflKusF7kKNaGK4gwrdi6GMHo5q1QwQE4PQdCp+apM8E3
-	D7/jGQY9M2RXrRRJA3pZiWeb/xulQiXT+Inv/El1Wf0qLw2FV6x7tJJVb/aXmuMmnLkdApZHT
-X-Google-Smtp-Source: AGHT+IF0adqp6BJMWWYjgKq0IW4QVon9hnaPRO4nKLT+UDkOqC0hTXFQIJZpY/Iok7FAftfcxyKvXkHOsRQJ1NFPF64=
-X-Received: by 2002:a17:903:2289:b0:21d:dca4:21ac with SMTP id
- d9443c01a7336-2218db4dd79mr890985ad.6.1740004673917; Wed, 19 Feb 2025
- 14:37:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="cbs6+BBZ"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 47E9D10382D3C;
+	Wed, 19 Feb 2025 23:38:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1740004687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3CFR1KvYqGJu5XHi3W+uo1kT/GLaG+YUtUrdXZ244hc=;
+	b=cbs6+BBZgqDbJeBfk1zMSTh4bT5RYpQTKivyzc9qbOKAFLxWGjL3TWBCA9D7S4EudNO6QO
+	1qK8+7uCSQIWKZsVeyTsNk1h4GWp0mi7RaTlWEuz/9zFjBT3AbKPsucqmCVq8iOYpbdWeK
+	QhwSpUpOBMHGiLsLsU7mewNM8gqvkIe/ANVNoqDfSM+HyT3+WeA1K/OythlTpGSph/XPQU
+	0MdJa0bsI6eXgWUAGKhfQHWSW6DZRJE2pLBedfhstcUc3kej22U0ClvICtL7w98kjvd2dK
+	1uPh963Uoa5yWHVz9/02d+K3LySFYKySUs4L455EUDrna3RQImLLRhS/kVZaUA==
+Date: Wed, 19 Feb 2025 23:38:02 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Shawn
+ Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-clk@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm: clk: Add ETH switch clock description for vf610
+ SoC
+Message-ID: <20250219233802.20ec53e5@wsk>
+In-Reply-To: <3cebe152-6326-454c-9da6-5cf5a64f71c9@lunn.ch>
+References: <20250219114936.3546530-1-lukma@denx.de>
+	<3cebe152-6326-454c-9da6-5cf5a64f71c9@lunn.ch>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219203102.1053122-1-sdf@fomichev.me>
-In-Reply-To: <20250219203102.1053122-1-sdf@fomichev.me>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 19 Feb 2025 14:37:41 -0800
-X-Gm-Features: AWEUYZlrz6Rk78gsxnJsp41gH0btlBHazQiyiMfwOnDCCxkT-y3JHO_r-_Y-uqA
-Message-ID: <CAHS8izNWx39025Hm=cY6JDDL-VY1ggKWsx0+RvD-NCHULTT7sQ@mail.gmail.com>
-Subject: Re: [PATCH net v2] tcp: devmem: don't write truncated dmabuf CMSGs to userspace
-To: Stanislav Fomichev <sdf@fomichev.me>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org, 
-	ncardwell@google.com, kuniyu@amazon.com, dsahern@kernel.org, horms@kernel.org, 
-	kaiyuanz@google.com, asml.silence@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/yVJIrYnQ4O8OFO2hSM.94j5";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
+
+--Sig_/yVJIrYnQ4O8OFO2hSM.94j5
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 12:31=E2=80=AFPM Stanislav Fomichev <sdf@fomichev.m=
-e> wrote:
->
-> Currently, we report -ETOOSMALL (err) only on the first iteration
-> (!sent). When we get put_cmsg error after a bunch of successful
-> put_cmsg calls, we don't signal the error at all. This might be
-> confusing on the userspace side which will see truncated CMSGs
-> but no MSG_CTRUNC signal.
->
-> Consider the following case:
-> - sizeof(struct cmsghdr) =3D 16
-> - sizeof(struct dmabuf_cmsg) =3D 24
-> - total cmsg size (CMSG_LEN) =3D 40 (16+24)
->
-> When calling recvmsg with msg_controllen=3D60, the userspace
-> will receive two(!) dmabuf_cmsg(s), the first one will
-> be a valid one and the second one will be silently truncated. There is no
-> easy way to discover the truncation besides doing something like
-> "cm->cmsg_len !=3D CMSG_LEN(sizeof(dmabuf_cmsg))".
->
-> Introduce new put_devmem_cmsg wrapper that reports an error instead
-> of doing the truncation. Mina suggests that it's the intended way
-> this API should work.
->
-> Note that we might now report MSG_CTRUNC when the users (incorrectly)
-> call us with msg_control =3D=3D NULL.
->
+Hi Andrew,
 
-Hmm, this happens when the user essentially lies about the actual size
-of the buffer I guess? So the userspace does:
+> On Wed, Feb 19, 2025 at 12:49:36PM +0100, Lukasz Majewski wrote:
+> > The NXP's vf610 soc is equipped with L2 switch IP block from More
+> > Than IP (MTIP) vendor.
+> >=20
+> > It requires special clock (VF610_CLK_ESW) to be operational. =20
+>=20
+> So you have a driver for this switch? It has been talked about in the
+> past, but nobody made any progress with it. Ah, it was you in 2020.
 
-msg.msg_control =3D NULL;
-msg.msg_controllen =3D 100;
+Yes, I'm going to try another time to upstream it.... :-)
 
-If so, I think the user is giving obviously invalid input to the
-kernel. I think the user getting MSG_CTRUNC here is fine.
+> It
+> will be interesting to see what you came up with in the end, pure
+> switchdev or a DSA driver.
 
-I prefer if we handle this edge case. We could have put_devmem_cmsg()
-check for non-null msg->msg_control so we're absolutely sure the
-resulting put_cmsg() doesn't fail to find space. But I don't think
-it's very critical to handle this very invalid input from the user.
-MSG_CTRUNC in this scenario seems fine. So, FWIW,
+I think it would be:
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+1. Standalone driver, which would configure the L2 switch from the very
+beginning to work (this is different from FEC on imx28/vf610 where
+switch is bypassed)
+
+2. It will use the in-switch registers to have two network interfaces
+separated. As a result - it may be slower than the fec_main.c in this
+use case.
+
+3. When somebody call "bridge ..." on it - then the in-switch
+separation would be disabled. This is the "normal" state of operation
+for L2 switch, which would be a HW accelerator for bridging.
+
+4. The switchdev would be used to manage it
+
+5. This would be just a very simple driver - just bridging and startup
+of the L2 switch.
+
+After we would have a consensus (i.e. it would be pulled to mainline) -
+I would proceed further.
+
+I will try to not touch fec_main.c driver - just write standalone, new
+for MoreThanIP L2 switch driver.
+
+If somebody would like to use FEC, then he will insert the proper
+module. If switch, another one can be inserted, depending o the target
+use case.
+
+>=20
+> 	Andrew
+
+
+Best regards,
+
+Lukasz Majewski
 
 --
-Thanks,
-Mina
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/yVJIrYnQ4O8OFO2hSM.94j5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAme2XUoACgkQAR8vZIA0
+zr0H2wf+LDKQ2icJROSHbE6zYeCAmI0xkhWHqIw6W8DD1l7o1QJMYLJEsgSp9yP/
+UUWsmIh15IoamLIx3zCnhaiXns42Df+DUH7qsiAF8lLW0C11h9WAuVdJWSLNRLW7
+GQAuXwPM58hOymK71Cu9Eo1eacZ7vkd3SgZLpUa+7xIPd6Pei10g2VCpFJiv3ICw
+KM+lVEpZ93Orq35IGPAwAzTlhi4gGJPIsFez2+NtiW9vJ+KiodIfSb9mWw+bLqUn
+u9OY2vKtfVnuX8fYkd+ERBljmSeyR0fzU2ZB1+CbElSwI61y09f+CFBoSNwK4DhA
+Zoudj/6ZH6oCoKT6MoAO1nxGaCV49g==
+=xb9S
+-----END PGP SIGNATURE-----
+
+--Sig_/yVJIrYnQ4O8OFO2hSM.94j5--
