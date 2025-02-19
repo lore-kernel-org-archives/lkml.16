@@ -1,139 +1,315 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7F21C173D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D881C6889
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739958551; cv=none; b=l0hkDvSuERS8p4hhV80iz4Wu05k4gR7dGbXuJgoY1kR4q0qPSXDbXrZXio6x5ZkbjAar+XiIszkKMlCCzkVq5J73oZpgEtwmuj2W2CSnihvNSfbgeKeGtS9fUbbdsNjvpwJi+CbwhyLslPTYwJcbeLXNgDxk6Z/0m2PrdcIUur8=
+	t=1739958583; cv=none; b=ek8Dft3ygIN/8M5so/1P4mtKb+IYvs0PfAKKryjK6Qw598YywrfAeCeQ/NcN1BgND6gOSsgUVa0CnOfSnu4JkMEY+m3TJrOg6IwWftje2Pe3u8P3wnaxxkIaM3TfCkEiWC8ay9LMnUOoLuZrBCI73N8SGvhOeO4N31PNO0wzPrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739958551; c=relaxed/simple;
-	bh=WiJtGyijnTolZiQAprxhjQpCNTmmPeAe/13v/bUoM0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jn2nHNBgZH1O4B51OnmLxLNCHfiNDbLv4eLQNA4bYCvbdsnB8fyzGAqrLlNS5Dns6Ljq8o2mRW1POJUg/L+omIJRbVtuapa988P/xXQ25hh7yyhXqU+1DVG4NInnH/Q3SGvoAZn7A0/5JMrekzk4aTtuWhwWUGv4nPT/HRAVqvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4QJu6OX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739958583; c=relaxed/simple;
+	bh=ZvBa2kBOcQCE9ExJwxFznqfQmH2OCiHhoKbgXy+upps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FgsL28tGSNGQzQlKSHMbkZKpHlWBtRVXWWw8B4N3JPTx04XWfjwml1Gh9yA+N9/ISYUP7UxISqHyqE/O1KYwxzLUBhbz/fUCS8vzKMu0MseRJnuzlL6OnVfmYzVwd6S2jNKHt95oBekihToPIl9Yjw63oMVWg0PuYbsaL5IR2dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=fail smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EciNQtMQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VXx/4wy4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EciNQtMQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VXx/4wy4; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4QJu6OX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A6A3C4CEE6
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739958551;
-	bh=WiJtGyijnTolZiQAprxhjQpCNTmmPeAe/13v/bUoM0E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s4QJu6OXnngrW9SavgZHOErIX8TbgDtfYiIkY3BVY9a0/VsGFXNRJr3zTN4ziVgx0
-	 n2UKkyr1w18onYbQkaQvct/ZjJhYv9lXyWQzMLuuzlQXuCQWAFzA6bIcc6Elcs0AaH
-	 5YR8PpDroGOCSjtgF9QQfO+85O1mjrpitfAGYs9g08VxKRmhfDx3RQ0OUgL+1KLqDE
-	 zFuBPw93R/Tyfp8lYT7FzAE1OyeQkH7XZ6Q+3vybfKe1ZazV0hG1fVINvk4oL8ybTX
-	 1dP+DOXynjAP/31nAFFz+KifLQy/zuFXYO5Z1OqYr1ivU+TjmLMu/7T9GntjQ5uL1Z
-	 qPfbeyHp893Hw==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dee1626093so1287959a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 01:49:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXDueZb19Bu4OXzLSW1+6zurdIkZxDwEDqAG27Iw9Bcm9WNwYdPcBsbpF+wyiTJuU3zIm4A97LALJhXm0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDHEVz05MdM/eeTgKxf7CtGuqTPJbvpgJfuVbzUW8KoraAagbL
-	1q/7TrySnUF9zY9SBpQHNuyaSIS8g7EEUIQsCICgi72Tgn7YcVzjDskpPyr8JcatTAFZF92iAbP
-	mhKZkKNstTsLAvEKZ1JcZbwEkZTI=
-X-Google-Smtp-Source: AGHT+IHyn/QXaRB+dV33EFQe1SjGf1/yaS8648vX9OqMNYv+/PAWR6w/r4Lb7gWybn6Q0yovB9Qry8TtLZ74MONVR44=
-X-Received: by 2002:a17:907:d48f:b0:abb:dbc2:bfb6 with SMTP id
- a640c23a62f3a-abbdbc2c5d4mr108949766b.10.1739958549626; Wed, 19 Feb 2025
- 01:49:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EciNQtMQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VXx/4wy4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EciNQtMQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VXx/4wy4"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5460F21176;
+	Wed, 19 Feb 2025 09:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739958578; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cS9epS7evsUYDH97zcJKsfxUiDtQ6N8sItfOFs2DspQ=;
+	b=EciNQtMQ3vKGDFt2NcqGdvODxYiZWZjbuCDX/pXXSudYLkfVSwrIPpZSe0OarGsYxfsUPQ
+	DV67pHK6MEtgzRu5Lcjvov46Q/OcUjSFpqZp9Fb5vOUmYnpBHoTlaiAhFCv5KRrmO7hyRh
+	rsvV9VQUxgcqdlVghyPKNtJtI50Msxs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739958578;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cS9epS7evsUYDH97zcJKsfxUiDtQ6N8sItfOFs2DspQ=;
+	b=VXx/4wy4RVd3BeX2qG71wh9VagBfe8bTuugRpYXy7hYNrJIy51urC4oZosPxxmmWaRSth1
+	7jN9F7Hx5NyDNICg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=EciNQtMQ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="VXx/4wy4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739958578; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cS9epS7evsUYDH97zcJKsfxUiDtQ6N8sItfOFs2DspQ=;
+	b=EciNQtMQ3vKGDFt2NcqGdvODxYiZWZjbuCDX/pXXSudYLkfVSwrIPpZSe0OarGsYxfsUPQ
+	DV67pHK6MEtgzRu5Lcjvov46Q/OcUjSFpqZp9Fb5vOUmYnpBHoTlaiAhFCv5KRrmO7hyRh
+	rsvV9VQUxgcqdlVghyPKNtJtI50Msxs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739958578;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cS9epS7evsUYDH97zcJKsfxUiDtQ6N8sItfOFs2DspQ=;
+	b=VXx/4wy4RVd3BeX2qG71wh9VagBfe8bTuugRpYXy7hYNrJIy51urC4oZosPxxmmWaRSth1
+	7jN9F7Hx5NyDNICg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 146F413715;
+	Wed, 19 Feb 2025 09:49:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id izaoAzKptWepOgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 19 Feb 2025 09:49:38 +0000
+Message-ID: <81731c1c-b74d-4b60-8c01-cda9a92d9c1b@suse.de>
+Date: Wed, 19 Feb 2025 10:49:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
- <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
- <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
- <20250211233056.q47mp5askk7qrxcp@jpoimboe> <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
- <20250213025108.svqgj5nzseqs6qox@jpoimboe> <CAAhV-H5mYGnxHPxAeXkHo2XBvi-RtPjDQRBnDiDyKVtFv-ZBBQ@mail.gmail.com>
- <20250218174632.gwseuvgezj7eni2j@jpoimboe>
-In-Reply-To: <20250218174632.gwseuvgezj7eni2j@jpoimboe>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 19 Feb 2025 17:49:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Vwhsrp-y=pLa6xh=nVEOZy4wu2mPj00ES=OjsM7vruA@mail.gmail.com>
-X-Gm-Features: AWEUYZkJg7i0Hi0dLJ-jmeSaIFLF4cxfJR3uG1xj_DycnwEjbfACIhG8y_rl1dY
-Message-ID: <CAAhV-H4Vwhsrp-y=pLa6xh=nVEOZy4wu2mPj00ES=OjsM7vruA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/tiny: add driver for Apple Touch Bars in x86 Macs
+To: Aditya Garg <gargaditya08@live.com>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, Kerem Karabay <kekrby@gmail.com>,
+ Atharva Tiwari <evepolonium@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <4BAFD886-84E0-4C4C-94B3-90BF911ED0E7@live.com>
+ <F16BB9EB-632C-4BC4-A8BA-492BF32E43C1@live.com>
+ <d9304ed0-911b-4877-a15c-981b3335bbf9@suse.de>
+ <8051F1F7-C1B0-428E-BE12-353C242EA650@live.com>
+ <a88a6e48-8c55-410b-b553-8942dac3608a@suse.de>
+ <858CA9AF-6128-4974-9C98-9EC01FF4FDB1@live.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <858CA9AF-6128-4974-9C98-9EC01FF4FDB1@live.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 5460F21176
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[live.com];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,vger.kernel.org,lists.freedesktop.org];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Wed, Feb 19, 2025 at 1:46=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
+Hi
+
+Am 19.02.25 um 10:37 schrieb Aditya Garg:
+> Hi
 >
-> On Mon, Feb 17, 2025 at 11:13:43AM +0800, Huacai Chen wrote:
-> > On Thu, Feb 13, 2025 at 10:51=E2=80=AFAM Josh Poimboeuf <jpoimboe@kerne=
-l.org> wrote:
-> > >
-> > > On Wed, Feb 12, 2025 at 03:22:45PM +0800, Huacai Chen wrote:
-> > > > > The new series now has 7 patches:
-> > > > >
-> > > > > Tiezhu Yang (7):
-> > > > >   objtool: Handle various symbol types of rodata
-> > > > >   objtool: Handle different entry size of rodata
-> > > > >   objtool: Handle PC relative relocation type
-> > > > >   objtool/LoongArch: Add support for switch table
-> > > > >   objtool/LoongArch: Add support for goto table
-> > > > >   LoongArch: Enable jump table for objtool
-> > > > >   LoongArch: Convert unreachable() to BUG()
-> > > > >
-> > > > > I was planning on queueing all 7.
-> > > > >
-> > > > > In particular, patch 6 should stay with the objtool patches since
-> > > > > they're directly related.
-> > > > >
-> > > > > But I was also just going to grab 7 as well.
-> > > > >
-> > > > > Please let me know if you disagree.
-> > > > What about you merge the first 5 patches, and then I merge the last=
- 2
-> > > > to the loongarch tree? (I prefer to merge the whole series to the
-> > > > loongarch tree with your acked-by, but that may be inconvenient to
-> > > > you).
-> > >
-> > > I want the first 5 patches to go through the -tip tree because we'll
-> > > have other patches depending on them.
-> > >
-> > > I'll go ahead and take the first 5.
-> > >
-> > > If you take in patches 6 & 7 separately, that might introduce a lot o=
-f
-> > > warnings.  But it's up to you.
-> > >
-> > > For patches 6 & 7:
-> > >
-> > > Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > OK, please take the first 5 patches, I will merge your objtool/core to
-> > the loongarch tree and then apply the last 2 to avoid build warnings.
+>>> I’ve tried these changes, seem to be breaking the driver:
+>>>
+>>> —>8—
+>>>  From 16c920cabf65ec664663ebe1611c0ccf6e81de4a Mon Sep 17 00:00:00 2001
+>>> From: Aditya Garg <gargaditya08@live.com>
+>>> Date: Tue, 18 Feb 2025 18:54:10 +0530
+>>> Subject: [PATCH] better error handling
+>>>
+>>> ---
+>>>   .../apple-touchbar-advanced-0.1/appletbdrm.c  | 68 +++++++++++++------
+>>>   1 file changed, 46 insertions(+), 22 deletions(-)
+>>>
+>>> diff --git a/usr/src/apple-touchbar-advanced-0.1/appletbdrm.c b/usr/src/apple-touchbar-advanced-0.1/appletbdrm.c
+>>> index f2d9113..cb13b36 100644
+>>> --- a/usr/src/apple-touchbar-advanced-0.1/appletbdrm.c
+>>> +++ b/usr/src/apple-touchbar-advanced-0.1/appletbdrm.c
+>>> @@ -133,6 +133,17 @@ struct appletbdrm_device {
+>>>    struct drm_encoder encoder;
+>>>   };
+>>>   +struct appletbdrm_plane_state {
+>>> + struct drm_shadow_plane_state base;
+>>> + u8 *request_buffer;
+>>> + u8 *response_buffer;
+>>> +};
+>>> +
+>>> +static inline struct appletbdrm_plane_state *to_appletbdrm_plane_state(struct drm_plane_state *state)
+>>> +{
+>>> + return container_of(state, struct appletbdrm_plane_state, base.base);
+>>> +}
+>>> +
+>>>   static int appletbdrm_send_request(struct appletbdrm_device *adev,
+>>>      struct appletbdrm_msg_request_header *request, size_t size)
+>>>   {
+>>> @@ -311,24 +322,6 @@ static int appletbdrm_flush_damage(struct appletbdrm_device *adev,
+>>>    if (!frames_size)
+>>>    return 0;
+>>>   - request_size = ALIGN(sizeof(*request) + frames_size + sizeof(*footer), 16);
+>>> -
+>>> - request = kzalloc(request_size, GFP_KERNEL);
+>>> - if (!request)
+>>> - return -ENOMEM;
+>>> -
+>>> - response = kzalloc(sizeof(*response), GFP_KERNEL);
+>>> - if (!response) {
+>>> - ret = -ENOMEM;
+>>> - goto free_request;
+>>> - }
+>>> -
+>>> - ret = drm_gem_fb_begin_cpu_access(fb, DMA_FROM_DEVICE);
+>>> - if (ret) {
+>>> - drm_err(drm, "Failed to start CPU framebuffer access (%d)\n", ret);
+>>> - goto free_response;
+>>> - }
+>>> -
+>>>    request->header.unk_00 = cpu_to_le16(2);
+>>>    request->header.unk_02 = cpu_to_le16(0x12);
+>>>    request->header.unk_04 = cpu_to_le32(9);
+>>> @@ -389,10 +382,6 @@ static int appletbdrm_flush_damage(struct appletbdrm_device *adev,
+>>>     end_fb_cpu_access:
+>>>    drm_gem_fb_end_cpu_access(fb, DMA_FROM_DEVICE);
+>>> -free_response:
+>>> - kfree(response);
+>>> -free_request:
+>>> - kfree(request);
+>>>      return ret;
+>>>   }
+>>> @@ -415,6 +404,15 @@ static int appletbdrm_primary_plane_helper_atomic_check(struct drm_plane *plane,
+>>>    struct drm_plane_state *new_plane_state = drm_atomic_get_new_plane_state(state, plane);
+>>>    struct drm_crtc *new_crtc = new_plane_state->crtc;
+>>>    struct drm_crtc_state *new_crtc_state = NULL;
+>>> + struct appletbdrm_plane_state *appletbdrm_state = to_appletbdrm_plane_state(new_plane_state);
+>>> + struct drm_device *drm = plane->dev;
+>>> + struct drm_plane_state *plane_state = plane->state;
+>>> + struct appletbdrm_fb_request_response *response;
+>>> + struct appletbdrm_fb_request_footer *footer;
+>>> + struct drm_framebuffer *fb = plane_state->fb;
+>>> + struct appletbdrm_fb_request *request;
+>>> + size_t frames_size = 0;
+>>> + size_t request_size;
+>>>    int ret;
+>>>      if (new_crtc)
+>>> @@ -429,6 +427,22 @@ static int appletbdrm_primary_plane_helper_atomic_check(struct drm_plane *plane,
+>>>    else if (!new_plane_state->visible)
+>>>    return 0;
+>>>   + request_size = ALIGN(sizeof(*request) + frames_size + sizeof(*footer), 16);
+>>> +
+>>> + appletbdrm_state->request_buffer = kzalloc(request_size, GFP_KERNEL);
+>>> + if (!request)
+>>> + return -ENOMEM;
+>>> +
+>>> + appletbdrm_state->response_buffer = kzalloc(sizeof(*response), GFP_KERNEL);
+>>> + if (!response) {
+>>> + ret = -ENOMEM;
+>>> + }
+>>> +
+>>> + ret = drm_gem_fb_begin_cpu_access(fb, DMA_FROM_DEVICE);
+>>> + if (ret) {
+>>> + drm_err(drm, "Failed to start CPU framebuffer access (%d)\n", ret);
+>>> + }
+>>> +
+>>>    return 0;
+>>>   }
+>>>   @@ -464,6 +478,15 @@ static void appletbdrm_primary_plane_helper_atomic_disable(struct drm_plane *pla
+>>>    drm_dev_exit(idx);
+>>>   }
+>>>   +static void appletbdrm_primary_plane_destroy_state(struct drm_plane *plane,
+>>> + struct drm_plane_state *state)
+>>> +{
+>>> + struct appletbdrm_plane_state *appletbdrm_state = to_appletbdrm_plane_state(state);
+>>> +
+>>> + kfree(appletbdrm_state->request_buffer);
+>>> + kfree(appletbdrm_state->response_buffer);
+>>> +}
+>>> +
+>>>   static const struct drm_plane_helper_funcs appletbdrm_primary_plane_helper_funcs = {
+>>>    DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+>>>    .atomic_check = appletbdrm_primary_plane_helper_atomic_check,
+>>> @@ -474,6 +497,7 @@ static const struct drm_plane_helper_funcs appletbdrm_primary_plane_helper_funcs
+>>>   static const struct drm_plane_funcs appletbdrm_primary_plane_funcs = {
+>>>    .update_plane = drm_atomic_helper_update_plane,
+>>>    .disable_plane = drm_atomic_helper_disable_plane,
+>>> + .atomic_destroy_state = appletbdrm_primary_plane_destroy_state,
+>>>    .destroy = drm_plane_cleanup,
+>>>    DRM_GEM_SHADOW_PLANE_FUNCS,
+>> You don't allocate struct appletbdrm_plane_state. Instead of this macro, you also have to set your own helpers for the plane's .reset and .atomic_duplicate_state There's again example code in the ssd130x driver.
+> Any attempt make to allocate request and response outside appletdrm_flush_damage seems to be breaking the driver.
 >
-> Looks like that's not going to work.  Without patch 7 I'm getting a
-> warning (upgraded to a build error with a pending change to upgrade
-> objtool warnings to errors):
+> If I understand correctly, you want me to allocate them outside appletdrm_flush_damage, in appletbdrm_primary_plane_helper_atomic_check, return -ENOMEM if they fail. After that add kfree(return) and kfree(response) in appletbdrm_primary_plane_destroy_state.
 >
-> arch/loongarch/kernel/machine_kexec.o: error: objtool: kexec_reboot() fal=
-ls through to next function crash_shutdown_secondary()
-> arch/loongarch/kernel/machine_kexec.o: error: objtool:   kexec_reboot+0x1=
-c: (branch)
-> arch/loongarch/kernel/machine_kexec.o: error: objtool:   kexec_reboot+0x0=
-: <=3D=3D=3D (sym)
-> arch/loongarch/kernel/machine_kexec.o: error: objtool: 1 warning(s) upgra=
-ded to errors
->
-> And that would break bisection anyway, so that really needs to come
-> before the others.
-OK, then please take the whole series of V7, but please exchange the
-order of Patch-6 and Patch-7 (I think the enablement should be the
-last for bisection).
-For V7: Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> The ssd130x driver example isn’t really helping me. Could you please help me out here?
+
+What's the exact error message?
+
+Best regards
+Thomas
 
 
-Huacai
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
->
-> --
-> Josh
