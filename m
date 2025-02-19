@@ -1,129 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1069B1FCCE7;
-	Wed, 19 Feb 2025 15:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2F71F8AE5;
+	Wed, 19 Feb 2025 15:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739980580; cv=none; b=XUylcvMQTHPtLp+1+rc8+LciWJ0sGXKX3XJv6XV3F8vwu7dPK9P+lfkWFDmfo70TAn2g1cwzrHhVyJna+hH4CTKdty6V653DCrqifTu2v9O9c+qp4rCuAGh0OAYe5bC3FXtwX/HSx+1pypWz5aVd1CUCkVyCClsrDI9D5Y9LPdk=
+	t=1739980592; cv=none; b=lwY5kXw0SZaKPq9h/PSqZMmKKW2pK1NJp8ag4N8I3X5XJA26Bcy8kgRz6BQ/Y6387fMvmG1CutCd/t5AWkEbtuk9Zknus+nIJpAOlTZPseBtxf7iVyyBe1eqoup5UqqDBuCyOucESc3QOhp/Vw5j30A1ZwagvI/b4Z/5f7DvMig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739980580; c=relaxed/simple;
-	bh=uV3soKwL+HCNAvSymtrWOzDP+EtcGO1BQkAUCm5Wg+g=;
+	s=arc-20240116; t=1739980592; c=relaxed/simple;
+	bh=qPZnrOyaKEYq5hbsMRbqV7X6oIhpSL4apigxMYTnzfo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k8ihoQis5BMrsJSyR+VJ3NK9gH6MxP5xEBTlb5uanFZeKgw6YNb2iELwKlkWVP3iqJQ6aI4GdjdIVn6v4ontKtPuFNhv7X4xQMsswwgcxB9c3c9efBMLpL6Z6JUYYPItloEct+/cC3UHafqbbiEEgaN3vEN2uP3an3ulq2oVOYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lwlqJK1L; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lwlqJK1L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739980579; x=1771516579;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=uV3soKwL+HCNAvSymtrWOzDP+EtcGO1BQkAUCm5Wg+g=;
-  b=lwlqJK1LXTvxJ+EWudFro8aZPJMqcJPUT58kxjNEZ30GML6GSKnX9EAB
-   liAhzqJS5SDhtwvZcQMnOjFibzq++KcRAtqG30zoRL9mbRMYhlJVvLHWE
-   bu52UwMhnVY4w8glg6dMCLs/Ax2z3KE1P99rj0e51sfsjJvOcRvsRVnC5
-   0lfWofu3WTokGPBr9X39mAVp1xImbe3esC5xatTO7alkn7svGQ/jSqCQ5
-   pxUA0mChaMFS3bJs+yC9z2N5B0T1ehQeC0MuLGKtuS7gybUcwMbHaj3CP
-   nsD2xaEGaf+xVJPa2Q/lB0yICi0LRhMeUC1XMs4a4P2ex5jUPk5IiRJc5
-   w==;
-X-CSE-ConnectionGUID: p18e5709S3i1yRm3An+ukg==
-X-CSE-MsgGUID: c4WqoUpRTjW1gzzBzpm1ng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44641211"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="44641211"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 07:56:15 -0800
-X-CSE-ConnectionGUID: 9tQ7e4C6QyWDwrfSehe6Ew==
-X-CSE-MsgGUID: pjGdWZJjSauXppPQLfgMhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="145612236"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 07:23:30 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tkluw-0000000D3ix-2SQZ;
-	Wed, 19 Feb 2025 17:23:18 +0200
-Date: Wed, 19 Feb 2025 17:23:18 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mfd: lm3533: convert to use OF
-Message-ID: <Z7X3ZvQbSe75U-AR@smile.fi.intel.com>
-References: <20250218132702.114669-1-clamor95@gmail.com>
- <20250218132702.114669-3-clamor95@gmail.com>
- <Z7XqKcOUt5niXzpv@smile.fi.intel.com>
- <CAPVz0n1_WQyOHhtEVAh53uhEUhZvqqZSEJh6XALtSrVfkMSLYw@mail.gmail.com>
- <Z7XzgfHcjyK_UZKv@smile.fi.intel.com>
- <CAPVz0n2WwAOb1UU7J7aDTdhXXCaAZkCpYjW_nc_CBRgkGWdEOw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OxsRfgfVZpt/q6cSm9c/mo5RcNPKl6YP6HR35ggfC8Ob07PBQIWDwvFr6QA+mwU84o+ooQpG0E6PymYrZF7C8OpInXaqpOjPKbNFL6F8EhKg5ujEMV44uyEtHNP5yz53ycr430LTGMdydqOqFvhnFMJmFbrw15/yed43aDuHjcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 51JFuHFe022922;
+	Wed, 19 Feb 2025 16:56:17 +0100
+Date: Wed, 19 Feb 2025 16:56:17 +0100
+From: Willy Tarreau <w@1wt.eu>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        rust-for-linux <rust-for-linux@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>, David Airlie <airlied@gmail.com>,
+        linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <20250219155617.GH19203@1wt.eu>
+References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
+ <Z7SwcnUzjZYfuJ4-@infradead.org>
+ <b7a3958e-7a0a-482e-823a-9d6efcb4b577@stanley.mountain>
+ <2bcf7cb500403cb26ad04934e664f34b0beafd18.camel@HansenPartnership.com>
+ <yq1mseim24a.fsf@ca-mkp.ca.oracle.com>
+ <c1693d15d0a9c8b7d194535f88cbc5b07b5740e5.camel@HansenPartnership.com>
+ <20250219153350.GG19203@1wt.eu>
+ <e42e8e79a539849419e475ef8041e87b3bccbbfe.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPVz0n2WwAOb1UU7J7aDTdhXXCaAZkCpYjW_nc_CBRgkGWdEOw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <e42e8e79a539849419e475ef8041e87b3bccbbfe.camel@HansenPartnership.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, Feb 19, 2025 at 05:13:15PM +0200, Svyatoslav Ryhel wrote:
-> ср, 19 лют. 2025 р. о 17:07 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> пише:
-> > On Wed, Feb 19, 2025 at 04:36:38PM +0200, Svyatoslav Ryhel wrote:
-> > > ср, 19 лют. 2025 р. о 16:27 Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> пише:
-
-...
-
-> > > MFD part is removed since MFD cells binding is unconditional, while
-> > > the device supports any amount of children grater then one. For
-> > > example, my  device uses only backlight at bank A, while all other
-> > > subdevices are not present and used. This patch switches to dynamic
-> > > bind of children.
-> >
-> > MFD does the same. Please, take your time and get familiar with how MFD works.
+On Wed, Feb 19, 2025 at 10:46:03AM -0500, James Bottomley wrote:
+> > > > I like using cleanup attributes for some error handling. However,
+> > > > I'm finding that in many cases I want to do a bit more than a
+> > > > simple kfree(). And at that point things get syntactically messy
+> > > > in the variable declarations and harder to read than just doing a
+> > > > classic goto style unwind.
+> > > 
+> > > So the way systemd solves this is that they define a whole bunch of
+> > > _cleanup_<type>_ annotations which encode the additional logic.� It
+> > > does mean you need a globally defined function for each cleanup
+> > > type, but judicious use of cleanup types seems to mean they only
+> > > have a few dozen of these.
+> > 
+> > I may be missing something obvious, but this seems super dangerous to
+> > me to perform lightly without reference counting, as it increases the
+> > risks of use-after-free and double-free in case one of the allocated
+> > objects in question can sometimes be returned.
 > 
-> It does not. I have tried. If mfd cell binding is missing, driver will
-> complain and fail.
+> Who said anything about not reference counting?
 
-I really don't know what exactly is going on here, you can check it later, but
-I'm 100% sure that MFD works for only driver that are present. What you are
-describing is how component framework is designed.
+Nobody, but it was not said either that they were used at all!
 
-To proove my words you can check drivers/mfd/intel_soc_pmic_*.c and find listed
-cells that never had a driver in the Linux kernel. They are just placeholders.
+>  One the things the
+> _cleanup_X annotations can do is drop references (or even locks).
 
-...
+OK then!
 
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
+> >  Users of such mechanisms must be extremely cautious never to ever
+> > return a pointer derivated from a variable tagged as such, or to
+> > properly NULL-assign the original object for it not to double-free.
+> > So it might in the end require to be careful about null-setting on
+> > return instead of explicitly freeing what was explicitly allocated.
+> > I'm not sure about the overall benefit.
+> > Also I suspect it encourages to multiply the return points, which
+> > makes it even more difficult to possibly fix what needs to be fixed
+> > without coming from a locally allocated variable (e.g. restore a
+> > state in a parser etc). Maybe it's just me not seeing the whole
+> > picture, but as a general case I prefer to forget a free() call
+> > (worst case: memory leak) than forget a foo=NULL that may result in a
+> > double free, and the description here makes me think the latter might
+> > more easily happen.
+> 
+> Well we could all speculate about the mess we'll make with any new
+> tool.  All I'm saying is that another project with a large code base
+> (systemd), which you can go an look at, managed to use these
+> annotations very successfully to simplify their error legs. Perhaps
+> there are reasons why the kernel can't be as successful, but I think
+> assuming failure from the outset isn't the best way to flush these
+> reasons out.
 
-Please, when answering, remove unrelated context from the replies.
+I'm not trying to assume failure or anything, just saying that it's
+probably not always as simple as calling kfree() on anything locally
+allocated for error paths to be magically cleaned, and it actually is
+more subtle (and Laurent confirmed my concerns illustrating that this
+case is precisely covered in glib using transfer of ownership).
 
-...
+And the temptation to return from everywhere since it's the only
+required statement (instead of a goto to a collecting place) becomes
+great and should sometimes be resisted to.
 
-> Let this driver rot for now, I might return to it. At some point
+Regardless I do understand how these cleanups can help in a number of
+case, at least to avoid some code duplication.
 
-Up to you. But thanks for trying!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Willy
