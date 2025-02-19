@@ -1,85 +1,145 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7AF1DF974
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD5C28629B
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739968524; cv=none; b=GKNw0OcMnMqrjyh9MsR7b/DIIAxchpGswPFTQG3NO9FB8CSunnDHk1m1cK4Pmy9MTNaw9acsEO5zSY79GzIdeC/GADppWoffFddlRR1/F1w9eEwdH3LGJwvIzfiRHJ1mgqYJYQcWx+9kC3bDXciO1VnHT3gY64mE4K0RmnBDS+4=
+	t=1739968641; cv=none; b=O3upN9Gqh21OzRJwUNMq1sYQf7WRfvRR04cnkb7bNy0GsCx/alDPSsBiW/s6epwZf1L4z1dllMP2y7RigbT41j2WopbWA1qI5CH8dXqlsVCwerKgSvMI7d0HKBTVTuP1s2RNXpKjLutPNRdThcK25GJP6WxdAHl5RDxUts+Y5l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739968524; c=relaxed/simple;
-	bh=H8WSfdMhCzODixO0N46zNE3HNQO4o5GqoPy3m9Dy6IE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hBjw2l6IKzYOqQ0SWrvGuUHO6M6NzedO+bgtJMa5mJbyp+KWhRyjd5DkVMakNeRryyogLpnYfOoQmOMbLLjSoDFIJ8ETeOGSGHKR0G92ESlzNZzKx842+m7PDppp/bO5Yv2nJvBsRXLXPkV5wIDrxzj0PDbWzxXW1JRNTZa0yLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+	s=arc-20240116; t=1739968641; c=relaxed/simple;
+	bh=fr+FGwweffdvMwX96xjd42EBVdf6OIH88lgJo1Nuat0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=C+xfbk28bIag/BADKWpDqcmPvhtuFxX8KzICt3xOOq/zTxbZvXImC75/ZUjBpx7YG2ev2QT63d1ZcOd168kA/n7jQ12zUb0yUPlzyEeOaHDNizVy7QnrRdTC37KZN0UL7JCiodfPM2Y/kvgaZu2ebJHYlqv9CZXaKxK8sLN43QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo45041605ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 04:35:22 -0800 (PST)
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-8559d67a0daso479872239f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 04:37:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739968522; x=1740573322;
+        d=1e100.net; s=20230601; t=1739968639; x=1740573439;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W3h9YooYDexOFP94Bc3VihIouRy9Jayl7zYY5ED2IeU=;
-        b=WF/lgWk5kUOcYLSlZLvDgH+srAco7Tzee3Qq3LCMPNSHs8EQU+R3HAvfnJ4b7I7jJS
-         wKaAopt28rmKkTrJJICP+P3oJ37h+LxgKguwlpPvcML9r6DIgZ2pH71ouiCF1Kl/xm27
-         I25M+KUIMNfUdMvPgvlllMLFCggH264adAbAVJgWHIu7yz8DylVwR678b+SQeuzDwijw
-         h5gMeOiuHpQpMRfVzqfz8bsniMQSRKpjg/zUZVZHP1IH3rM7EmVd6aSjs695iRN78lM9
-         CbZGO1tMBvwbg5+k0oUuQvZo8CWg6/bqRuXftXXOZR+DV8+RrKWoNRgYfpRiuVZLWqXu
-         xL7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXVhoXlS5hnBSmRe4vrilS67Pd4Sh7m9ZXKBJe2LRnmobspdpjtCPCqAYQYK7cTSpJiwXxSSljiBnY2Y5Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+RfgovSm3uIurVygP926GFvvIlq/D8PLqp11ADoNWcgoEy8rs
-	9uKWMYfc6s9iqJe/F+ofKPMahrS94UXnYECNQSWtgVR6l5CzWc+166fRWzBGXmIjHmluzIxjr/w
-	xnfhDva3B4S4J3wHcrWCDk2BrTrgUyRdfNgiGXIO/lm43IGLCy0jSHHI=
-X-Google-Smtp-Source: AGHT+IHimSMAcs9ES8NnkWh433r8l65BzaQeou83CmrUP1d4GC9JuL33cc/XrPFpgmOEudJ7wNtrAlJlHvtoLl8Zzc7lf+PVq/X0
+        bh=CV8UhaeaHQzGOcLoJQO51E4uQ6mLpnmwrYcZ81MLIQg=;
+        b=bn/BCOL/b5eIcbcE/bcgihG+u9gkJuK/RdDH9/k5fr7lGtliWJ75EMpEhoBbUzmAiu
+         muhRSPOBUgXziRCrqoiurZS/mzRtQ4mryHmov/M3DUBzYh0c6DmAmpfbDEQmLdBJOBTv
+         mufBlIv68ziCI+0aaLmVADkssvvY73qb/1CHWvYbV62enCbF97kJd0flUY+WDavmBK2/
+         geft81OMk5TljVUZdtlKrEaILBBY5BnwbFjjk94HDDGm8XuvNacztZsvshh7CEtwpcta
+         8z5932Y2kQ/srsEN+5JORwBPTJ7dm7eNtVnv99E4phx12hCqbkHRTt+br9jXRdb+TpS8
+         abvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXG5xPQ2rbqVBi51ZH2v5o6JzQ0jm+Q5zK39jOaXoli8YbHTVZxOuRVJFE8CF0RdFM9RRIvIK7ZVfvi+UM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz31ZBzeN6XDzfkQhNJggb4RLFBxhWoWYy22KXlCE489XMKrY2C
+	PQiTEx67iRIfeuhHKg8/t4RzncgovYpao5iBdMf9gQDppQEzE6+p6klIszloR+fbfJ2lt/df7KZ
+	SRFZN4+SGQ4brxHr0Q2bo5UEAiT1YSfopAFUEa2JPI+cK8+kfA047SLM=
+X-Google-Smtp-Source: AGHT+IGldWd8pvHkwlYNMlExcruiWqubcvG79XG//cybN0VmTtnfRuAD5iUVgnHZOQ1R6Jh33IoTdawSI3G9JZC1GBNlEG5qU1Sl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a03:b0:3cf:bbb4:f1e with SMTP id
- e9e14a558f8ab-3d28079040bmr162268515ab.7.1739968522035; Wed, 19 Feb 2025
- 04:35:22 -0800 (PST)
-Date: Wed, 19 Feb 2025 04:35:22 -0800
+X-Received: by 2002:a92:ca0c:0:b0:3d0:618c:1b22 with SMTP id
+ e9e14a558f8ab-3d28088673emr146166245ab.11.1739968638545; Wed, 19 Feb 2025
+ 04:37:18 -0800 (PST)
+Date: Wed, 19 Feb 2025 04:37:18 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b5d00a.050a0220.14d86d.00e5.GAE@google.com>
-Subject: [syzbot] Monthly udf report (Feb 2025)
-From: syzbot <syzbot+listdfa7b5c14341dccb5f72@syzkaller.appspotmail.com>
-To: jack@suse.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <67b5d07e.050a0220.14d86d.00e6.GAE@google.com>
+Subject: [syzbot] [jfs?] KMSAN: uninit-value in diFree
+From: syzbot <syzbot+df6cdcb35904203d2b6d@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello udf maintainers/developers,
+Hello,
 
-This is a 31-day syzbot report for the udf subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/udf
+syzbot found the following issue on:
 
-During the period, 2 new issues were detected and 0 were fixed.
-In total, 8 issues are still open and 34 have already been fixed.
+HEAD commit:    6537cfb395f3 Merge tag 'sound-6.14-rc4' of git://git.kerne..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=103bc7f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8cf1217edc1cc7da
+dashboard link: https://syzkaller.appspot.com/bug?extid=df6cdcb35904203d2b6d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d2fdf980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16321498580000
 
-Some of the still happening issues:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0b4a6e38bb6d/disk-6537cfb3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/96b70942c42c/vmlinux-6537cfb3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fd3dc281a360/bzImage-6537cfb3.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/f4c577f978b2/mount_1.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=14d09ae4580000)
 
-Ref Crashes Repro Title
-<1> 8481    Yes   WARNING in udf_truncate_extents
-                  https://syzkaller.appspot.com/bug?extid=43fc5ba6dcb33e3261ca
-<2> 929     Yes   WARNING in __udf_add_aext (3)
-                  https://syzkaller.appspot.com/bug?extid=799a0e744ac47f928024
-<3> 201     Yes   possible deadlock in udf_free_blocks
-                  https://syzkaller.appspot.com/bug?extid=d472c32c5dd4cd2fb5c5
-<4> 31      Yes   WARNING in udf_setsize (2)
-                  https://syzkaller.appspot.com/bug?extid=db6df8c0f578bc11e50e
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+df6cdcb35904203d2b6d@syzkaller.appspotmail.com
+
+ERROR: (device loop0): diUpdatePMap: the iag is outside the map
+ERROR: (device loop0): remounting filesystem as read-only
+=====================================================
+BUG: KMSAN: uninit-value in hex_dump_to_buffer+0x888/0x1100 lib/hexdump.c:171
+ hex_dump_to_buffer+0x888/0x1100 lib/hexdump.c:171
+ print_hex_dump+0x13d/0x3e0 lib/hexdump.c:276
+ diFree+0x5ba/0x4350 fs/jfs/jfs_imap.c:876
+ jfs_evict_inode+0x510/0x550 fs/jfs/inode.c:156
+ evict+0x723/0xd10 fs/inode.c:796
+ iput_final fs/inode.c:1946 [inline]
+ iput+0x97b/0xdb0 fs/inode.c:1972
+ txUpdateMap+0xf3e/0x1150 fs/jfs/jfs_txnmgr.c:2367
+ txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]
+ jfs_lazycommit+0x627/0x11d0 fs/jfs/jfs_txnmgr.c:2733
+ kthread+0x6b9/0xef0 kernel/kthread.c:464
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4121 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ __kmalloc_cache_noprof+0x8e3/0xdf0 mm/slub.c:4320
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ diMount+0x61/0x7f0 fs/jfs/jfs_imap.c:105
+ jfs_mount+0xa8e/0x11d0 fs/jfs/jfs_mount.c:176
+ jfs_fill_super+0xa47/0x17c0 fs/jfs/super.c:523
+ get_tree_bdev_flags+0x6ec/0x910 fs/super.c:1636
+ get_tree_bdev+0x37/0x50 fs/super.c:1659
+ jfs_get_tree+0x34/0x40 fs/jfs/super.c:635
+ vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
+ path_mount+0x742/0x1f10 fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x71f/0x800 fs/namespace.c:4088
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
+ x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 UID: 0 PID: 113 Comm: jfsCommit Not tainted 6.14.0-rc3-syzkaller-00060-g6537cfb395f3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+=====================================================
+
 
 ---
 This report is generated by a bot. It may contain errors.
 See https://goo.gl/tpsmEJ for more information about syzbot.
 syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-You may send multiple commands in a single email message.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
