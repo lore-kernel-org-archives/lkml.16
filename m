@@ -1,107 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764DB1DFE22;
-	Wed, 19 Feb 2025 16:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28FA1F4620
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:22:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739982158; cv=none; b=a9YkIOIVHB+ncPOst8CVC+r7lNTVV4qaFbC8rSPnOKRqJX9+/D+IywUzhUG/d1Snv4BwCc/RqLAOPOMHwBS1BM28cT/58gYQzY0GvB5OzxcuY9nAKp5VI9ugomsUcFDKB9QdJALfaDPYFE/aFwdhW1WETKbYwbLnXUQ+X4HTftE=
+	t=1739982166; cv=none; b=vFMNcX8GdgKXEKV9O8oqrGl5dn9XpEspOaG7GG5gycrBZhHK/ciyfenF5bvgnRRUzc7/tiXG3509X3i/iCDFxLjtbXS9637U6c8xgEV2ZUjfwdrJfk6CvocPuCs0ku5sTEnpT0Kkq4TTOSq0vd7qh60JY5OgscoiBRBpF8u04DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739982158; c=relaxed/simple;
-	bh=+BlKhVXGeiezjeGrHAuLK/twb425aHVJCEUYJtYaH1s=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qtgckqRRqQ7jvEOM88K0Vy6izCf/s+JBwQUcJrCNudebPv4mJxqHCTRQtLCw36269NWWLh3kKsxYi5cLpTEtx6jVts9HpDhyXbxZl94yMDwANpfg075g7VjIZKiTZ0mQBX3kLwIuWu3qZ7rm+afaTnmZ1bzink0Z7RVD3BTkE5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8qISNlj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8qISNlj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7411C4CED1;
-	Wed, 19 Feb 2025 16:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739982158;
-	bh=+BlKhVXGeiezjeGrHAuLK/twb425aHVJCEUYJtYaH1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=r8qISNljlZ8kPTwo5/KE82yeb93xT17PEwdHDCI7JBTq26CuAIf5w7/q79L0LnJVa
-	 uJMF+us3dA+7TS8Wngrj4QokXtoZ7FWzrsp+IRDwfKHgqX8m3PFKGRxysiA3cYK3NG
-	 608HgQokUzdL3XkJNGLilgsE7TY1qFsamiPNS7pHPL8c5kAXgBd3Px/G0FeXcfMWlY
-	 fBmRYsN9j+GabDk6GnAXaPF2h4SZbT/b/yMnpEyCz7KxDt1vGhg7g0FaZB4PuRPZGd
-	 PA3vJfxua05bAvpG95UCcx+hh+q2uvyLvtIckZhEZdDOsXxeDrILWclQLx/NBh7hoH
-	 hCikICrII0vqA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tkmqH-005tUr-BB;
-	Wed, 19 Feb 2025 16:22:33 +0000
-Date: Wed, 19 Feb 2025 16:22:32 +0000
-Message-ID: <868qq1sy47.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: kvmarm@lists.linux.dev,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Colton Lewis <coltonlewis@google.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Janne Grunau <j@jannau.net>
-Subject: Re: [PATCH v2 01/14] drivers/perf: apple_m1: Refactor event select/filter configuration
-In-Reply-To: <20250203183111.191519-2-oliver.upton@linux.dev>
-References: <20250203183111.191519-1-oliver.upton@linux.dev>
-	<20250203183111.191519-2-oliver.upton@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1739982166; c=relaxed/simple;
+	bh=PSh/3fF365VRVdIYlepfiPt+5JXUEbpp9W7V2QjmLWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nn+bo05hI32qiQgMTK04pK74PYaFHkl9i4gFMffytTyRkzvJRDGmoAGdFzZnhjnSOrvgZwdli7B0GuFfSLAnwmskmQvamnWdj44h/h8S0SXkTFVU+XBUjG12UXe9jqhUoZZX1oJbUxdknsWiAMY3xZ5//ZKxNR/uUKwu26RmlmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB84AC4CED1;
+	Wed, 19 Feb 2025 16:22:44 +0000 (UTC)
+Date: Wed, 19 Feb 2025 11:23:08 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, Joel
+ Granados <joel.granados@kernel.org>, Anna Schumaker
+ <anna.schumaker@oracle.com>, Lance Yang <ioworker0@gmail.com>, Kent
+ Overstreet <kent.overstreet@linux.dev>, Yongliang Gao
+ <leonylgao@tencent.com>, Tomasz Figa <tfiga@chromium.org>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org, Linux
+ Memory Management List <linux-mm@kvack.org>, Lance Yang
+ <ioworker0@gmail.com>
+Subject: Re: [PATCH 1/2] hung_task: Show the blocker task if the task is
+ hung on mutex
+Message-ID: <20250219112308.5d905680@gandalf.local.home>
+In-Reply-To: <173997004932.2137198.7959507113210521328.stgit@mhiramat.tok.corp.google.com>
+References: <173997003868.2137198.9462617208992136056.stgit@mhiramat.tok.corp.google.com>
+	<173997004932.2137198.7959507113210521328.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, kvmarm@lists.linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, mizhang@google.com, coltonlewis@google.com, rananta@google.com, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, j@jannau.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
 
-On Mon, 03 Feb 2025 18:30:58 +0000,
-Oliver Upton <oliver.upton@linux.dev> wrote:
-> 
-> Supporting guest mode events will necessitate programming two event
-> filters. Prepare by splitting up the programming of the event selector +
-> event filter into separate headers.
+On Wed, 19 Feb 2025 22:00:49 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-s/headers/helpers/ ?
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> The "hung_task" shows a long-time uninterruptible slept task, but most
+> often, it's blocked on a mutex acquired by another task. Without
+> dumping such a task, investigating the root cause of the hung task
+> problem is very difficult.
+> 
+> Fortunately CONFIG_DEBUG_MUTEXES=y allows us to identify the mutex
+> blocking the task. And the mutex has "owner" information, which can
+> be used to find the owner task and dump it with hung tasks.
+> 
+> With this change, the hung task shows blocker task's info like below;
+> 
 
-> 
-> Opportunistically replace RMW patterns with sysreg_clear_set_s().
-> 
-> Tested-by: Janne Grunau <j@jannau.net>
-> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+We've hit bugs like this in the field a few times, and it was very
+difficult to debug. Something like this would have made our lives much
+easier!
+
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  arch/arm64/include/asm/apple_m1_pmu.h |  1 +
->  drivers/perf/apple_m1_cpu_pmu.c       | 52 ++++++++++++++++-----------
->  2 files changed, 33 insertions(+), 20 deletions(-)
+>  kernel/hung_task.c           |   38 ++++++++++++++++++++++++++++++++++++++
+>  kernel/locking/mutex-debug.c |    1 +
+>  kernel/locking/mutex.c       |    9 +++++++++
+>  kernel/locking/mutex.h       |    6 ++++++
+>  4 files changed, 54 insertions(+)
 > 
-> diff --git a/arch/arm64/include/asm/apple_m1_pmu.h b/arch/arm64/include/asm/apple_m1_pmu.h
-> index 99483b19b99f..02e05d05851f 100644
-> --- a/arch/arm64/include/asm/apple_m1_pmu.h
-> +++ b/arch/arm64/include/asm/apple_m1_pmu.h
-> @@ -37,6 +37,7 @@
->  #define PMCR0_PMI_ENABLE_8_9	GENMASK(45, 44)
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index 04efa7a6e69b..d1ce69504090 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -25,6 +25,8 @@
 >  
->  #define SYS_IMP_APL_PMCR1_EL1	sys_reg(3, 1, 15, 1, 0)
-> +#define SYS_IMP_APL_PMCR1_EL12	sys_reg(3, 1, 15, 7, 2)
+>  #include <trace/events/sched.h>
+>  
+> +#include "locking/mutex.h"
+> +
+>  /*
+>   * The number of tasks checked:
+>   */
+> @@ -93,6 +95,41 @@ static struct notifier_block panic_block = {
+>  	.notifier_call = hung_task_panic,
+>  };
+>  
+> +
+> +#ifdef CONFIG_DEBUG_MUTEXES
+> +static void debug_show_blocker(struct task_struct *task)
+> +{
+> +	struct task_struct *g, *t;
+> +	unsigned long owner;
+> +	struct mutex *lock;
+> +
+> +	if (!task->blocked_on)
+> +		return;
+> +
+> +	lock = task->blocked_on->mutex;
 
-nit: this should be moved to the following patch.
+This is a catch 22. To look at the task's blocked_on, we need the
+lock->wait_lock held, otherwise this could be an issue. But to get that
+lock, we need to look at the task's blocked_on field! As this can race.
 
-Otherwise looks good to me.
+Another thing is that the waiter is on the task's stack. Perhaps we need to
+move this into sched/core.c and be able to lock the task's rq. Because even
+something like:
 
-	M.
+	waiter = READ_ONCE(task->blocked_on);
 
--- 
-Without deviation from the norm, progress is not possible.
+May be garbage if the task were to suddenly wake up and run.
+
+Now if we were able to lock the task's rq, which would prevent it from
+being woken up, then the blocked_on field would not be at risk of being
+corrupted.
+
+-- Steve
+
+
+> +	if (unlikely(!lock)) {
+> +		pr_err("INFO: task %s:%d is blocked on a mutex, but the mutex is not found.\n",
+> +			task->comm, task->pid);
+> +		return;
+> +	}
+> +	owner = debug_mutex_get_owner(lock);
+> +	if (likely(owner)) {
+> +		/* Ensure the owner information is correct. */
+> +		for_each_process_thread(g, t)
+> +			if ((unsigned long)t == owner) {
+> +				pr_err("INFO: task %s:%d is blocked on a mutex owned by task %s:%d.\n",
+> +					task->comm, task->pid, t->comm, t->pid);
+> +				sched_show_task(t);
+> +				return;
+> +			}
+> +	}
+> +	pr_err("INFO: task %s:%d is blocked on a mutex, but the owner is not found.\n",
+> +		task->comm, task->pid);
+> +}
+> +#else
+> +#define debug_show_blocker(t)	do {} while (0)
+> +#endif
