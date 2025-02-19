@@ -1,45 +1,74 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB89B1EF0AC;
-	Wed, 19 Feb 2025 15:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4B21E8335;
+	Wed, 19 Feb 2025 15:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739977385; cv=none; b=d++p5MJEeiWiNDwjy9p3x2i6D9muv22PlzNTgA87xq2x2wa/7mRjQSFKOri6lokVZFz97GwisctCD2bH3b7ZifAaK1M2+UVkuHPEnMIdK4lvYi3iYYKF3+3PezdXJ9LJh0tIIlT/CGmiD8xyFuLT9gxktaFbfRw2DLCt3WDLQ0E=
+	t=1739977408; cv=none; b=a1gpzsPwFXMCLAS2PxxwQpYVkIp0198Y2R5NkMOd+f7oCw89t3vi2v/9QOsPmazkMnie2F3ldEoGDGZ4oDbdWgzouLr8LBholvuZ2+oJIGgpoiHUEg138U8Ux3W1gLnvXfcM7K5NNBndxvh5AFcNp6uTjSXCKzOc4gKlahT2fMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739977385; c=relaxed/simple;
-	bh=w9DOtnbRLPXb+ydK2GSSgRxzmQ4uz6uSWEfbMeMo018=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sr0moCXjUXxICCJFZ2Fr5S7vtPPnFHEZCMna0cZvjbBZGKu7PZMwBu/8gplO54qaTiS22Wyl2bJHbN83jFUMoBpebJITjJXi6wkC4BC9Lq1JkFkpz5jCsbT09FgvEhf2DlRTN0K9cfRXdq9TqI2DFRDnIt2jLQLhUOkUm2YKefo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=jPUMFM4J; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1739977408; c=relaxed/simple;
+	bh=gNJuCWWPkn2ogCPdL4vvTsSj8M6+e+4Ld5Z4O5u3VDw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c1StXEEmspeAfafER+qbHKOVENbhXhIDoMz2uctYqqOzOOn9Rbx+GSa6m3B1quPRFvR/k/Mv6dlv/3KOJXi7AnHX2PrTnEVNRR/NMr2zEBOAvZ1K6+DoO9nASNZiZaHEa+q4JSMAVhSh7aFOwoKgOgyHWrLziyExJkFajU1xMKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipx1Sekk; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="jPUMFM4J"
-Received: from mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2a9d:0:640:c19b:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id D9CC060C28;
-	Wed, 19 Feb 2025 18:01:48 +0300 (MSK)
-Received: from den-plotnikov-n.yandex-team.ru (unknown [2a02:6b8:b081:8::1:29])
-	by mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id h0YOfN0IjOs0-kZWnFubX;
-	Wed, 19 Feb 2025 18:01:48 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1739977308;
-	bh=yBGNG4f6oMyYrASU1Bnv5rpTKNYViHEtSHMTDULgYsU=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=jPUMFM4Jvlvw71cI7hXFgGXMZgghJHd/wG5UcZ7d5RbWztPEeS/q3Bc4MlvQhqZWs
-	 y7mqoLYcgs5ECqCvYcUwRvkMktSEMBMgdXkysPsa++KlJ9wz0/eoVwMHjyQuDg95RG
-	 /vX74l7G05N2eISzadWTNqwaWljGPe5HVUloUW2k=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Denis Plotnikov <den-plotnikov@yandex-team.ru>
-To: linux-kernel@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	mrangankar@marvell.com,
-	njavali@marvell.com
-Subject: [PATCH] qedi_iscsi: remove dead code from qedi_process_iscsi_error()
-Date: Wed, 19 Feb 2025 18:00:43 +0300
-Message-Id: <20250219150043.1051211-1-den-plotnikov@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipx1Sekk"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220d398bea9so96805465ad.3;
+        Wed, 19 Feb 2025 07:03:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739977406; x=1740582206; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C3nTO5fc7XlQrY1JQWL7gsnfSa3JDTvY1BadSivDT2o=;
+        b=ipx1SekkO/VUr4oWcI4m9lTxz4VN3EVM5LLB4U/Qosh+EQZQgtBeKG3OXnsFALbDZx
+         HNlk6USTtwFL7tCmCBwYkbDit+rSN4JneS5BBmzczFyrTZQsjGXaRWy87k7kd3ETofTg
+         1VsuWY49By9OrQtCbzE6oIlaLIFuTWJ1LQFbqqt1o6x7rV0TqeAJHoVn8gkK8ecNwoye
+         1KUKo6fRdwmuVQsujpVCf3IRePQc8hZcKsTN4R6SKBHt9n5QY08xQxdnBtP2zfIf9jSH
+         zml0qMWhXWHvFHBwu7TfGBzoLJCNDnuO4n8nfY2JwMCJnO4ri4OaNsvejCQnBrj5SkfL
+         fawA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739977406; x=1740582206;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C3nTO5fc7XlQrY1JQWL7gsnfSa3JDTvY1BadSivDT2o=;
+        b=O/AEsf/xAkJqTAszBkc7DrKIpBkgLAD8B+cfbXi/ZFBLvJ4C96k9han0MEP7rS/56a
+         OqqcgwNZhnbYAGXL3G465U89L/q2XiXRw+8pWvyyy6mOHyMZ5w983FQQkoBP/vdQj7i2
+         ER8XqZus86tWF4YnMriWyo2OJW+48A9Ug4fSiCBZfT1FbLTQ2m5iPYQ3Ijj9TdcC0j5+
+         RLG6rwqarwxEcE/HOmmcBYZk/A9WUSSuiRWdQipJ6X20Ehg6cHmirB+LwrUeVdVLqLts
+         ixSX4o4stYLVzuLivY2h7Kxkij2PRvpscnH1PoxBPZAOnBeP22V+Y9Ezciyst3gFeL/E
+         Tmew==
+X-Forwarded-Encrypted: i=1; AJvYcCUYK5JdSi3Pv/gct+5oWq5kSPFSb9MwYleUVWnGgvvDWBK9HvmyjzGpN8XKgJjNNsrcGToL+1nfmU/tqT0R@vger.kernel.org, AJvYcCXYUbZLfNAzE/qMuJfBcBCWaSvUGFxiUG/G7b+C2dU7MBXeHB63zidEBTHE1YfkQuoJKN9thgugXQc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykpCxXL/8us/cslzPYXqtFIKALKXAFFhKFxIjwi7AXAIiXyJ9s
+	PcXicz5CRtyWrBkR10Jl0Xg6eCNtink5jMVrKPbdD+abcD2vjs/v
+X-Gm-Gg: ASbGnctUjWQJg7ePf8eeJjpjprdy3cOOZRN2tWi/9KoNDyaOeZBIUJ8fbvCwYB0V6sQ
+	VLZFwEakFOMjTPRTpSHq3HaUl/QhaFnWseuP7JJ1X7xOckV1N7OawYcb/ngtW/AIrEHmCVsiATU
+	kOeXhxud5OKemzgmJvI0aSqYLrxSqf+z1uG20U/l6ynKj9VtjL0tpnenBlect/7InoGeaGjP+Bp
+	YnxC5Ckak0mn0pLCwgNwnvga2eS4tTjIYj3oQDWtofrCE2c2dMMR5HDZU+HmkYpMO7BBb6Onp1h
+	21c4n/bXL8nQZXgC
+X-Google-Smtp-Source: AGHT+IEX03nmjYzK0cFa6wZI0ro1+cfpRCqIyK2+pfEY58ZP+zRDt3B3RMAo7cq9uxNEfVRlx4zI7Q==
+X-Received: by 2002:a05:6a00:180f:b0:730:98ac:ad79 with SMTP id d2e1a72fcca58-732617d97b8mr28584490b3a.12.1739977406277;
+        Wed, 19 Feb 2025 07:03:26 -0800 (PST)
+Received: from arch.localdomain ([2a09:bac5:cb26:1541::21e:92])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7327367a960sm6888976b3a.150.2025.02.19.07.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 07:03:25 -0800 (PST)
+From: Jun Yan <jerrysteve1101@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jun Yan <jerrysteve1101@gmail.com>
+Subject: [PATCH 1/2] iio: gyro: bmg160_spi: add of_match_table
+Date: Wed, 19 Feb 2025 23:02:53 +0800
+Message-ID: <20250219150254.24664-2-jerrysteve1101@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250219150254.24664-1-jerrysteve1101@gmail.com>
+References: <20250219150254.24664-1-jerrysteve1101@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,59 +77,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-No functional changes, just dead code removal.
+Add of_match_table to bmg160_spi driver.
 
-Signed-off-by: Denis Plotnikov <den-plotnikov@yandex-team.ru>
+This fixes automatic driver loading by userspace
+When using the device tree and the driver is built
+as a module, devices can be probed.
+
+Signed-off-by: Jun Yan <jerrysteve1101@gmail.com>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 23 +++--------------------
- 1 file changed, 3 insertions(+), 20 deletions(-)
+ drivers/iio/gyro/bmg160_spi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 6ed8ef97642c8..1891a55fd83e9 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1649,12 +1649,6 @@ void qedi_process_iscsi_error(struct qedi_endpoint *ep,
- {
- 	struct qedi_conn *qedi_conn;
- 	struct qedi_ctx *qedi;
--	char warn_notice[] = "iscsi_warning";
--	char error_notice[] = "iscsi_error";
--	char unknown_msg[] = "Unknown error";
--	char *message;
--	int need_recovery = 0;
--	u32 err_mask = 0;
- 	char *msg;
+diff --git a/drivers/iio/gyro/bmg160_spi.c b/drivers/iio/gyro/bmg160_spi.c
+index fc2e453527b9..dd33b10dc1b3 100644
+--- a/drivers/iio/gyro/bmg160_spi.c
++++ b/drivers/iio/gyro/bmg160_spi.c
+@@ -41,9 +41,19 @@ static const struct spi_device_id bmg160_spi_id[] = {
  
- 	if (!ep)
-@@ -1669,25 +1663,14 @@ void qedi_process_iscsi_error(struct qedi_endpoint *ep,
- 	QEDI_ERR(&qedi->dbg_ctx, "async event iscsi error:0x%x\n",
- 		 data->error_code);
+ MODULE_DEVICE_TABLE(spi, bmg160_spi_id);
  
--	if (err_mask) {
--		need_recovery = 0;
--		message = warn_notice;
--	} else {
--		need_recovery = 1;
--		message = error_notice;
--	}
--
- 	msg = qedi_get_iscsi_error(data->error_code);
--	if (!msg) {
--		need_recovery = 0;
--		msg = unknown_msg;
--	}
- 
- 	iscsi_conn_printk(KERN_ALERT,
- 			  qedi_conn->cls_conn->dd_data,
--			  "qedi: %s - %s\n", message, msg);
-+			  "qedi: %s - %s\n", "iscsi_error",
-+			  msg ? msg : "Unknown error");
- 
--	if (need_recovery)
-+	if (msg)
- 		qedi_start_conn_recovery(qedi_conn->qedi, qedi_conn);
- }
- 
++static const struct of_device_id bmg160_of_match[] = {
++        { .compatible = "bosch,bmg160" },
++        { .compatible = "bosch,bmi055_gyro" },
++        { .compatible = "bosch,bmi088_gyro" },
++        { }
++};
++
++MODULE_DEVICE_TABLE(of, bmg160_of_match);
++
+ static struct spi_driver bmg160_spi_driver = {
+ 	.driver = {
+ 		.name	= "bmg160_spi",
++		.of_match_table = bmg160_of_match
+ 		.pm	= &bmg160_pm_ops,
+ 	},
+ 	.probe		= bmg160_spi_probe,
 -- 
-2.34.1
+2.48.1
 
