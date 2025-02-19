@@ -1,246 +1,79 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43FA1B87EF
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0510616A959;
+	Wed, 19 Feb 2025 18:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990289; cv=none; b=k7wPuaGHFiUYngCe8iALTMvujAGOcYEI9SoiqIo0vcYo75r1JFbNG+1sqL7NetE+TBJMEjiFYRxgHJ96sIJDtUE4XHu+pHGOunbHSVEeA3gMpTuOfizRgmIPSE1x7ymDHRf2iUyMEeui1EAeBBwY16zcQgsziB6EfxsG+weC7e8=
+	t=1739990333; cv=none; b=NhuMszY+ZMV1expkFyzvmlqB6d+wtp4FF4ufa0bCCG6LJJza/HQnJH/W9NFHx/gIVua5dibqo06mJnRsWjJuFumBgm5K3sc5BHiXNd4D3bx6Z/SVvhjPynoyip9W9BANSjBf89wQQsCOoeDK+6EpBWP29w00badS8b1RZnX/MA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990289; c=relaxed/simple;
-	bh=gBV2UZFIKjnRUsJGbf05jytvdaauuWzNkzGor8r73Lo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vwr7PxkZ91u0hRHO9LJGopTk9ICjW6ZckdmyP2Yb0OsldMUw4QbFF8rcC0unUEktJZXt7gVphsNM5Jv/bv+XcA8DLMh5WtnReHxlhVd/khf/Kel6AGHUyq67FYSgfoncZqydHb9B7VOL+Wr/Z79+30GrGkHwy4bpNXfYriFRKiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PTaSHOrk; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739990333; c=relaxed/simple;
+	bh=kAyGgjSGCXLuYKifOkU4LbkISii7MiIKlSZtDiSu6/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ou9DYLUUq/ngPq1uaEIAPyUgccAXzObmF0jWvnVf29IUBplxbIUF/kpBulZh9FDvpngO4baYjfFa8MfJ2MmQE82Wfq28ZIZTjUlNdkZrRKooCK8ei61ibUxL/fQgZRUlSa42RB5z0VqsGokkt7/kjTUqJjLjMScHR74NBidrxKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F7a/4ocE; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PTaSHOrk"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d19702f977so10495ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 10:38:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739990287; x=1740595087; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SH6gCwcBfooV/1R4mxoSj5XvySZqaE4EBHJnx789OnA=;
-        b=PTaSHOrkEwb/qtUrNkh0yZj0Xe1IXYm9RYznHRmt8vs/aa56TI6pW9sy5ZNahbF2rc
-         tcJKN4rAp5KH0A0HWVJ08NcnPJ8ObC8habCUYOxms4I71LVHPy/euiupC9Nh1PXH2abQ
-         /1qPVyBaBYDfKMXizpXutmYKyy3+bmHraFpjNw6aBZaJIFspnwF8OzdUBbNYG257qd/s
-         Yc9N9R/wHGEAB0Y3/lXNtu95MLO0KHcRuOGz0sWZIR8MD4GgzieVN1s9mqVIE0tW/D8F
-         bwN8kA2K6LiueiATIx9f16cGhjzLLWAcjVyQg2NYvrnbcDQ0aHZpgRGrrMPPff1XR2eA
-         9EzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739990287; x=1740595087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SH6gCwcBfooV/1R4mxoSj5XvySZqaE4EBHJnx789OnA=;
-        b=xQSwuB857H0D8kwNhoMgyGn2/ZcDOgqWB6qwIESryenjkG/jcvKHSNvvVZGKEowlxH
-         uSW0tPBfMuepPC8dstZVeieu4nf9AihfIOEFqReKKDEtMcHaC7jdAWM8hz34YbRNH+Qs
-         JroE096iCT+cNDUdvaroCNUzq/0YN3Ogg4FSXMFj3Wlb9P3jRIlde1ntGzVfvo3Hq/To
-         mYhIbeqLYNT081xLQODcaCFjBeOWBArRJk/F+SMe0gcqnNIUBYYr26n02i+TcXfI9iX9
-         2LGmccgG64PTevoSk5bVfwWeAclHOobsOIvOm7fBpebz3zCCo7/a2MmefcFrH0qtB2TY
-         eTrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWYLRkOTDmCeTkd18AmzhGVtEjHALBy+aWw1nDgpXnxPO7UWF0rGVaC2KX+BmfJmyhV3X5kS3KaubNI60A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDBXNl7B49CGqtdJL84TexTOCOcjDPy9526LhWkWx2eh3mdgVE
-	lmSCMVRmgcB7KWj0aVuzmCYrZWj1kAFf50kxtBS6zhM/9STmPSnQIrqv8nq1sErGJDdJQ/ampsm
-	PSDvwixR3KvTyS8TnFjllD5FvBt9/jJzdITXA
-X-Gm-Gg: ASbGncsBeHsHQSXSzcnl0xNCoVaX01aD9Pkm7CyN5/XCST4p6BgFe7I0sr7fVn5SYTA
-	WdfXDMvhJ3jC5tL7BacY5rbNQ7zjJmrz3kfGa7/lYuSk7iEZ9yzPi4pjivGXB9+nlZJtqggiJtP
-	clSOo29IfYFBZ+vEZAlnWc/m9qOQ==
-X-Google-Smtp-Source: AGHT+IEkPdMwZ8WcM0NCVDBRKNBfRF3H5QjAYRWB9xGokTDyk0HbI2IP6QgSQCQIroSqKz5jQL30tQKsNIXmV5emA5M=
-X-Received: by 2002:a05:6e02:170f:b0:3ce:7852:1e9 with SMTP id
- e9e14a558f8ab-3d2b7622218mr3867015ab.17.1739990286725; Wed, 19 Feb 2025
- 10:38:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F7a/4ocE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739990332; x=1771526332;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kAyGgjSGCXLuYKifOkU4LbkISii7MiIKlSZtDiSu6/c=;
+  b=F7a/4ocEfl1PU6dfQ6BF9Hsp6xbpjNOUPk9/3kNtVc35eqL/NjkrgcbD
+   d1CXQIxP+12/vKoYg4NTHhw8E6f+v4Gi8r56tN0zuQWcVv1sWm2itKTz0
+   DN9RkpImT/ETQO0AmuQpwK8tmXdB2tiP6y8Z5Yw0MFRzhDh+SnHa5MKy5
+   rWb0FHeRtaxidX/RSP3G13Pc/Jwhugd0Y1TIaBPFe33501uRGcwLOD8g6
+   g4/JwqgZn2KXB6sdudbS2EtdvoUqSzCNbofSGY1AR+8gbE1HWKs+mO004
+   GHbSceLIGfuU9PfX0hUU/XHEiKScu6Hq0GJ+ZPZMytLWXHpo8Aq7FYyfT
+   A==;
+X-CSE-ConnectionGUID: tUQZhUFUTBOCIdVyw42S2w==
+X-CSE-MsgGUID: JdjDIRrnQYyA+Jw4gpMWhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40759348"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="40759348"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:38:51 -0800
+X-CSE-ConnectionGUID: LVCmznmNQjqLeCUFp47u8Q==
+X-CSE-MsgGUID: rhSY53TNRdSCRXs8pq4BBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="145683863"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.15])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:33:36 -0800
+Date: Wed, 19 Feb 2025 09:33:29 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Li Ming <ming.li@zohomail.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] cxl/core: Use guard() to replace open-coded
+ down_read/write()
+Message-ID: <Z7YV6X-ipaQeJrrn@aschofie-mobl2.lan>
+References: <20250217144828.30651-1-ming.li@zohomail.com>
+ <20250217144828.30651-2-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
- <Z66YjGvjD_yzEHUg@google.com> <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
- <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org> <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
- <fe46069e-c52e-45ee-b4b3-8b929fb83b31@linaro.org> <Z7UHieRRnvRb5_oU@google.com>
- <CAP-5=fWXmNoFLyWv+vo7hhLSqTDy7hf+-huKRD9OUWnO-GESRw@mail.gmail.com> <2834c9d7-f401-4b29-8f92-22193eb9ce31@linaro.org>
-In-Reply-To: <2834c9d7-f401-4b29-8f92-22193eb9ce31@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Feb 2025 10:37:54 -0800
-X-Gm-Features: AWEUYZmb7ZDC7Xg-vuEYcAR-MFR4dQhVVLJv_XLUmWBSLQWG90K_v4rSjZP5nUo
-Message-ID: <CAP-5=fW_Sq4iFxoWPWuixz9fMLBPyPUO0RG0KPbYa-5T0DZbTA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520 events/metrics
-To: James Clark <james.clark@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Yangyu Chen <cyy@cyyself.name>, 
-	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217144828.30651-2-ming.li@zohomail.com>
 
-On Wed, Feb 19, 2025 at 7:25=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 18/02/2025 10:33 pm, Ian Rogers wrote:
-> > On Tue, Feb 18, 2025 at 2:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> >>
-> >> On Tue, Feb 18, 2025 at 09:30:23AM +0000, James Clark wrote:
-> >>>
-> >>>
-> >>> On 18/02/2025 12:41 am, Ian Rogers wrote:
-> >>>> On Fri, Feb 14, 2025 at 2:02=E2=80=AFAM James Clark <james.clark@lin=
-aro.org> wrote:
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> On 14/02/2025 5:49 am, Yangyu Chen wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>> On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wrot=
-e:
-> >>>>>>>
-> >>>>>>> Hello,
-> >>>>>>>
-> >>>>>>> On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
-> >>>>>>>> This patchset adds the perf JSON files for the Cortex-A720 and C=
-ortex-A520
-> >>>>>>>> processors. Some events have been tested on Raxda Orion 6 with C=
-ix P1 SoC
-> >>>>>>>> (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
-> >>>>>>>
-> >>>>>>> I'm curious how the name of PMUs look like.  It is cortex_a720 (o=
-r a520)?
-> >>>>>>
-> >>>>>> The name of PMUs comes from Arm's documentation. I have included t=
-hese
-> >>>>>> links in each patch.
-> >>>>>>
-> >>>>>>> I remember there's a logic to check the length of hex digits at t=
-he end.
-> >>>>>>>
-> >>>>>>
-> >>>>>> Could you provide more details about this?
-> >>>>>>
-> >>>>>>> Ian, are you ok with this?
-> >>>>>>>
-> >>>>>
-> >>>>> I think they wouldn't be merged because they're core PMUs, so shoul=
-d be
-> >>>>> fine? Even though they would otherwise be merged because they're mo=
-re
-> >>>>> than 3 hex digits.
-> >>>>
-> >>>> Do we know the PMU names? If they are cortex_a520 and cortex_a720 th=
-en
-> >>>
-> >>> It will be "armv9_cortex_a720" from this line:
-> >>>
-> >>>    PMUV3_INIT_SIMPLE(armv9_cortex_a720)
-> >>
-> >> I see, thanks!
-> >>
-> >>>
-> >>>> this comment at least reads a little stale:
-> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next=
-.git/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n76
-> >>>> ```
-> >>>> /*
-> >>>> * There is a '_{num}' suffix. For decimal suffixes any length
-> >>>> * will do, for hexadecimal ensure more than 2 hex digits so
-> >>>> * that S390's cpum_cf PMU doesn't match.
-> >>>> */
-> >>>> ```
-> >>>> James is right that core PMUs aren't put on the same list as uncore/=
-other PMUs.
-> >>
-> >> Ok, then I guess we're good.
-> >
-> > I think you may be able to do things that look odd, like today the
-> > "i915" PMU can be called just "i", I think the a520/a720 naming will
-> > allow "armv9_cortex/cycles/" as an event name, then open it on two
-> > PMUs if they are present.
->
-> I assumed that was the intended behavior. It seems fairly useful to be
-> able to open on ones with common prefixes.
->
-> > We may only show one PMU in perf list as
-> > that code I think assumes they're the same PMU as they only differ by
-> > suffix:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n384
->
-> Yeah that is the case. I didn't realise it when looking at the previous
-> fixes to keep the suffixes in perf stat output.
->
-> > I can imagine aggregation possibly being broken, but I think that
-> > works off the number of PMUs not the names of the PMUs, so it should
-> > be okay. Probably the only thing broken that matter is perf list when
-> > you have a BIG.little system with a520 and a720, this may be broken
-> > with say a a53 and a72 today as both of those suffix lengths are >2,
-> > but maybe they use the "armv8._pmuv3_0", "armv8._pmuv3_1", etc. naming
-> > convention. I suspect the >2 here:
->
-> Also the case for a53 and a72 right now. Even "perf list --unit
-> armv8_cortex_a57" doesn't work because we deduplicate before filtering.
-> Adding -v fixes it though because that disables deduplication. Perhaps
-> we can change it to disable it with the --unit argument?
->
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n80
-> > would still work and be correct if it were >4. If that changes then
-> > this will also need to change:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-to=
-ols-next#n12
->
-> That could be an easy fix. If >4 is enough to still get rid of all the
-> uncore duplicates I can make the change?
+On Mon, Feb 17, 2025 at 10:48:22PM +0800, Li Ming wrote:
+> Some down/up_read() and down/up_write() cases can be replaced by a
+> guard() simply to drop explicit unlock invoked. It helps to align coding
+> style with current CXL subsystem's.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> ---
 
-The change would be great. I think it is sufficient and doesn't break
-the suffix:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/drivers/perf/arm_dmc620_pmu.c?h=3Dperf-tools-next#n710
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/drivers/perf/arm_smmuv3_pmu.c?h=3Dperf-tools-next#n921
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/drivers/perf/marvell_cn10k_ddr_pmu.c?h=3Dperf-tools-next#n1062
-it is hard to tell as it is going to depend on the memory addresses
-placed in the PMU names. Perhaps you can clear this up and add zero
-padding in the drivers if the suffix is <=3D4 ?
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-No documentation here:
-https://www.kernel.org/doc/Documentation/admin-guide/perf/mrvl-odyssey-ddr-=
-pmu.rst
-
-On a test machine I see in /sys/devices :
-..
-arm_dmc620_10008c400
-..
-on a different one I see:
-..
-smmuv3_pmcg_20528a2
-..
-
-so >4 but this is an ARM specific issue as far as I can tell, so you'd
-be better placed to judge correctness than me.
-
-Thanks,
-Ian
-
-> >
-> > Thanks,
-> > Ian
-> >
-> >>
-> >> Thanks,
-> >> Namhyung
-> >>
->
+snip
