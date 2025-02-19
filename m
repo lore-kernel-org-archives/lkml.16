@@ -1,62 +1,76 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013065.outbound.protection.outlook.com [40.107.162.65])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2068.outbound.protection.outlook.com [40.107.100.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA9A215053
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 21:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248C624E4BB;
+	Wed, 19 Feb 2025 21:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739999356; cv=fail; b=KOuqnWZCwgUQzvnQQLhPZv79sSxF4ymhD/F86RbAiPPRi79fBSRMVArtMZXLUoURIRJ2hePS3LloKKEGzR4sLSGPlxUBblDeZFyJvUE7iCQ/DIDv4yKw26XqIVhjy/C8e7KUAN5jHyVHf64etRmVaAvGv4ZYJy9M8w+TZjgyLSE=
+	t=1739999401; cv=fail; b=mVSN2+x1RRmku/NCXFT38Q3la7NcHCLyOL9W5eICEPRym6DFIQ2FcdoeQTwo5cpuplzSXPxECj1La/6z+pkrVPy7HeyF9cbbfIUNPt/cU/Ta+rU2S7Fbd7Ktbm8ZTqkcIenr83TNGXVkSnDUmd4KsXM+sRmsfWSHOmCSfLaxKc4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739999356; c=relaxed/simple;
-	bh=ZfRcCZHRkPAtPsfT3Qu5SUH3EGIxReRokfJVnSmRvRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fiZyKWMCqG/laxidFeFkZD1Rn+46qMPK7dN+b6HzuUPDqg5IX/G9XkCG+bNzqmUliilDCNQSqBDoUae1/l7D9Ytx15avKJSYAnTypyArZJmQcwvNH1j+e93PgVxYD0shqt9yKvUPth/ML9OQUlhBUjgQKcuwjLm1tGNnF64EsUs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CcnjiLRm; arc=fail smtp.client-ip=40.107.162.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1739999401; c=relaxed/simple;
+	bh=RPfSY3uhN7vKYL12UUxaeMQBQiacIGZIr1PMIkQN7m4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=quE0xJcFHTwWyrMuG2kGMJf1lv6a3joc5T0ijt/GfV8FEbRL8Ovu56s7wGPTcWlnfbUHtxMHbVKnVoFYMioLwUOzRsbH9HBWyKThfkJdSpzo8E/Jqk5om765dJlvWaWupqxJHxbd3aLzqe0Uq0MpiQr/5YGROT16fCiqPxkjHy0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VQT7r4w2; arc=fail smtp.client-ip=40.107.100.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CcnjiLRm"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VQT7r4w2"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LaCkhUnmbkHJ0HryNXeMwcQgk/coiYWTuiWeJPtaAiCvLNg2y/OThqQP0tQM/y3R2DuqMuTj2Sa79GDbLaBu5C41sxfWlTi5xOD76RZP9XnqRlR9AfqjkYsek3UWH+j2GRzuOXoYKFtPc0jrR+mn3sa8nu4SF3PqFSi6yTXQVqeBjtjNRJzRKE9HgHDsKxuGZCSl9Cz1iu0gIzpjwXGoa9L3h+/Iz9J7HJZnvDdQ/Qh17dRgCCOQFQQGeDk3YvjHIWpIh1CNX35IxxdjlfRBEXWHuuSqBAopCeodvIvHSJ+Ur0c+eXUC6PWKfdacalPACI8cIlh9lacWcDbf0YM51w==
+ b=W7b4eezGr2sK9pyPX7sMvoFX2bzuFky5Zz3aIzWAa8XvSnbw+o0TiBzfpVuKaN0E1jyUZ9EgwLdUjMlfgUAPvb6QMj8nF1gPpVV/ErMUqpFbS6ca+8cn3ASgP0FGcTOdeNmafEK1nsu5C2bgbCoQHxeboGAL7hUhaTHsB0TpVOTKvPLAVZaGiqUxy5pqbpnK3+tCK3iVphDIdmYi2zpzD+hyHBlburEO6Vrf2SDiHA1Sadk9b0D+GIqYa9+u7IZ3JyWIQTeewMHM7jDP/Xo6RxYkO4xySkhFNGymV3a/Y9ZijHT82rIBbW6NSgIHuKAm/VmT4UXh333Q9YT5wjmiXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=StZuM41BBEkN7LbbfbkWdpwYv/ghXoMGv1SYoSib4Ek=;
- b=cAQhhMXL2d4aZPG5BNMNiz9QdIABq82VI4QmoSJuiPObARmO0j6w8j3lfK1kMcNiWNH5HP7uhpeHX27W+bDHEtXPaBmIs+mbGKA5DuYUTrz7Biecnhsbplb4eA1lNak4W0xbXHcKUBLIDsAJnMVdbY3q991qkmRXhCD4rvN+T3n5g6wU4Y7euJWO5Nt1f/0wUJTPGyMq7Zd1MImz8gZsnxl/HTcIzBtXFshiqS1lW4SNs4FoiXDEDM8zG9FrxwYPAdg5GMkSDn/KixeMb5qQ4yYH5xdke4lNkuEo26G5lMk9X3LANTd45gTc5VsWDO3udz1fPOWJV337en2G92XH2Q==
+ bh=fxx+EeAp9kLqRSgWAqUOIkN3npm+JQUuVZ5zadw137s=;
+ b=N+0s75tH9zp/38LIR8xISAGEtpFBw1ginCFAdDOPxx0eXwIJqwxn3AMnBVJ+OZSDjXh7ruaymbcf+daZb+Qh8CwHNq8/06zm+VBKuluwU1amIsp/BwTUScd9ZFKpBjaAtM9WeUViehcueIoDC/fwTEh2RwahY2qAZ+m8+uxNHbnIjdmdYMZtZ/tCX227qdUekiXEMJNXWx702sBdM0ozdnZh8gySIthNikEST3E7/3FyoRNHa7B6lMbe4jc5FYbfAI7QVcRRzn9JrT9aveb9GQkrg+/zVtB0iyhvw5vMd75poFplOWrE4V/U1Vgl43RXa2q/nKsu0mJX+PCVN1cgdg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=StZuM41BBEkN7LbbfbkWdpwYv/ghXoMGv1SYoSib4Ek=;
- b=CcnjiLRmh9RRjgz1+3lBPdRXm8H/RiuOniqK1rXSRgYkXaJzh4d3gi+Ah2SAxmjaQA0QG2wL+13vmS9LpEUneqj+lK34+cyfD1PA0cHz8YAWPlqr9GEt9StpcXf3tKJRcO+DF5Y1qvkMHJbV6wmPfQezMkg2fTcvvTAtzASF3gY38g6QKEKPGnVqCSsYmJxZT3/MkLNmHegyaKrSt5N34TBvjunIGSiy5VV0+5wTDr+/826SP5KLMLjCcC/H15fGR1VSaFIxCJOQJJgXxsFHPVIN7ER6ahEeTDlcfvCKjMgYZ2nQzqpUVNnbIWFn54mGMbN/FTlvn8tTDIMgIukOxg==
+ bh=fxx+EeAp9kLqRSgWAqUOIkN3npm+JQUuVZ5zadw137s=;
+ b=VQT7r4w2Ef4Jl8ygusHB/kph3OmUvqjCJjPDO9mK8l695BIRLZfkgqUDNLGA1GzeOgCluR9Zv0w4oH60S5ErkhhZgXKMrJeKtJSRw3+MpdUm57LQSNJ9VMN2NbE7kHPd7ham9okpxGH1PMdGDYILuVDTgub93ou4wtNAnU6RFR4=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB8PR04MB6857.eurprd04.prod.outlook.com (2603:10a6:10:114::21) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10)
+ by PH0PR12MB7095.namprd12.prod.outlook.com (2603:10b6:510:21d::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.20; Wed, 19 Feb
- 2025 21:09:11 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
- 21:09:11 +0000
-Date: Wed, 19 Feb 2025 16:09:03 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Stanley Chu <stanley.chuys@gmail.com>
-Cc: miquel.raynal@bootlin.com, alexandre.belloni@bootlin.com,
-	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
-	tomer.maimon@nuvoton.com, kwliu@nuvoton.com, yschu@nuvoton.com
-Subject: Re: [PATCH v1 2/3] i3c: master: svc: fix npcm845 FIFO empty issue
-Message-ID: <Z7ZIb3OpSdHw1w1Z@lizhi-Precision-Tower-5810>
-References: <20250219011019.1600058-1-yschu@nuvoton.com>
- <20250219011019.1600058-3-yschu@nuvoton.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219011019.1600058-3-yschu@nuvoton.com>
-X-ClientProxiedBy: SJ0PR05CA0154.namprd05.prod.outlook.com
- (2603:10b6:a03:339::9) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Wed, 19 Feb
+ 2025 21:09:54 +0000
+Received: from SA0PR12MB4557.namprd12.prod.outlook.com
+ ([fe80::d22d:666e:be69:117f]) by SA0PR12MB4557.namprd12.prod.outlook.com
+ ([fe80::d22d:666e:be69:117f%2]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
+ 21:09:53 +0000
+Message-ID: <45a0a88a-b31e-447e-9d62-bc0cdedf06f7@amd.com>
+Date: Wed, 19 Feb 2025 15:09:51 -0600
+User-Agent: Mozilla Thunderbird
+Reply-To: babu.moger@amd.com
+Subject: Re: [PATCH v11 22/23] x86/resctrl: Introduce interface to list
+ assignment states of all the groups
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: corbet@lwn.net, reinette.chatre@intel.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ tony.luck@intel.com, peternewman@google.com, x86@kernel.org, hpa@zytor.com,
+ paulmck@kernel.org, akpm@linux-foundation.org, thuth@redhat.com,
+ rostedt@goodmis.org, xiongwei.song@windriver.com,
+ pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
+ jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
+ kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
+ xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
+ mario.limonciello@amd.com, james.morse@arm.com, tan.shaopeng@fujitsu.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ maciej.wieczor-retman@intel.com, eranian@google.com
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <52c66bf98480c0ab6bb0f0762497e328fcbdeaac.1737577229.git.babu.moger@amd.com>
+ <Z7XiQ+u3Pc+uvJCK@e133380.arm.com>
+Content-Language: en-US
+From: "Moger, Babu" <babu.moger@amd.com>
+In-Reply-To: <Z7XiQ+u3Pc+uvJCK@e133380.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR08CA0033.namprd08.prod.outlook.com
+ (2603:10b6:805:66::46) To SA0PR12MB4557.namprd12.prod.outlook.com
+ (2603:10b6:806:9d::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,268 +78,216 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB8PR04MB6857:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00e9f148-8479-487b-9aea-08dd5129a7f0
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:EE_|PH0PR12MB7095:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba14fc0d-67bb-4068-e9e9-08dd5129c179
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OYSm1J7S3UbOi0DWZRm5I0ghWuR3aFgzUyMembgKjBeI9QZViomDc9KzOIef?=
- =?us-ascii?Q?Nzny05BM1BfLayn1GnXpW1SeR32+cehvYbMfraGy544QCp63MJZ9YVKNfusb?=
- =?us-ascii?Q?iBYw3jFBqLmRUJhxG+cAbhQVtVkI77+90tgBdYHbjUKNh+xNMyWt4EIMoSxV?=
- =?us-ascii?Q?SSDa9vmZCJnJ7pDgbQMdN4+Gb8NtDzmdtmiOn4jOd7hZu9H55MhDRbN+6/Xk?=
- =?us-ascii?Q?IZdzI1KlRSu8D68Xem2G1DM+el4Oup53R22oG0TBIr3B139WMgbiBBqWlXSS?=
- =?us-ascii?Q?HouC4mqxrpiQa8a9WLvdRx4vib0NS7/5/f1dRZcEEsZ+7m6uTCCef92o+TVr?=
- =?us-ascii?Q?eNWG4mHEvSbFi4zt1wgXHyx00Qj8zqFCbUgEgqf/B8PRTtLQdMj6AlkKCWv2?=
- =?us-ascii?Q?8RFS4ceRln8eyq3IFaLjKowOcCkV4j4eVBw351myFmXXYw81Z7jZs05NQDrN?=
- =?us-ascii?Q?OzBvlsefjt9IwAR63x7K0QFzgRuxk+J5Zy3JB7eOvs58LtiSzyYHmGaFB5s4?=
- =?us-ascii?Q?gWmSDD3/qvFnQzDVU8FUVIAB75tfFkvkwF6+i8/gor0pASQTJ3tCShe7TRPd?=
- =?us-ascii?Q?HmWnLBBVSMdiN698IUnsGgwZl2DNfm9SymmlwzcYhP0P5TXotjmIOgokSbf7?=
- =?us-ascii?Q?yZriEmCXPRZwymr7rPKQZSmvX+0X7fSnxRI86f2sNqGtwrtkFrFAcwrzB/h7?=
- =?us-ascii?Q?oGfDpjlMVVfoQLsG8RjOuEcPs1shCoIO6/2CQmUkvnXmh3+5NDhHVoXI0HsH?=
- =?us-ascii?Q?QvNyARQyoZbmBtLOVDyUG/8idVb3o6ayBRzWLH7l6xCUYHFQj1x413jLGtMk?=
- =?us-ascii?Q?zeEOldzmCU412KjsyKn/TdxhKxphxVLgDMIiJNWNHUeAIG+/dTIAo4KsLGZP?=
- =?us-ascii?Q?/jlJvXsIz2iDSZIMsuXTcCZBqbiHt7l+5YuU55+UodDESTS8STyWkU7JiWYf?=
- =?us-ascii?Q?e9aQ6zNl+LUB9KdC85Iljydg1yAtrwtYnsay5wKGqFM/jKLFXcBidE78jg+h?=
- =?us-ascii?Q?0yWkNotjJtEp0Er7kx4MjIz/O9gh8Pe56w4M1U+qergYHBYlN7lBQufF8f+N?=
- =?us-ascii?Q?9cfu2+lqBXPEOE5eZiOeD/YYXn2zfl9fTZfFxFaPZm9oiDlgz6ksA/eJoKUG?=
- =?us-ascii?Q?l3A17rEli0G0TF4Wt6UQi8DG20LqauyS1rW2O4bLOkGWj+bsyo3l1FlmVqXW?=
- =?us-ascii?Q?HmQnuorUqj5c5V1sKUHYEg+fMjuVYOjHXGoVp7nwKsUFgsdsZkROphEN12as?=
- =?us-ascii?Q?4mRWMJi7RjnI9y4H2v82y1q2L14mDXDOEqyK1PpDIc+8Q4rlgCsvUIrQoWIs?=
- =?us-ascii?Q?252lM3Vg1+w8F89iippqEaceNvez3vQFifD37lt9J2vyKa8M8ScgTKotJWES?=
- =?us-ascii?Q?6vJQlcrf0IafuvlabUkfY1IFd2zHDTrsdghv+QLnR8RQaT+JZmUHoY20yyyG?=
- =?us-ascii?Q?ZW3XTI//XhU/Zjjjdm7vZaCcbRWjXnRa?=
+	=?utf-8?B?NDFBZC9YNHVVY0Fla2kyWlJaTDFCTkN2Si9hR1RIbUsyNmZXcTlMbjZzSVZ6?=
+ =?utf-8?B?eXMvaldtY1c3dVp3ZWZRdmVxUDZ2bE5ibzFhNjZRa0JCN2tMZ1hYVWdrYXlC?=
+ =?utf-8?B?QUd5aUtRS3hQdXdWdGsyU1RVZTdvM2VkWlNwRnd0Snp4MVpxbjE0NTVSdnYx?=
+ =?utf-8?B?d1ZITjR1dHp4Y3pyekJIMXFJRzZQWDB0bkZhUjZkTjVsV3k3OFF6dUc1L1V3?=
+ =?utf-8?B?dVdrWEsvc1d1ckhMWFZJa1VzTjVtTXBaeG1oVkZqQ0NybnJTdEcwcm1UUFYw?=
+ =?utf-8?B?TWFydDZyUWhnM1Q0YjZMZ05BVlQwbzgvM3lRT1hOL3d3bzFLeGRUUlF5dGFJ?=
+ =?utf-8?B?N2U0ZUFKU2x1ZWtMQUJNRFFDVHFUVFl5NGd2Z1hjNS9SUHBYRHZ3NXhMU0lS?=
+ =?utf-8?B?NjEydzZoQmtqUlVoeGpVYlRNRzh6TVNNRnJiT050NSs3ZWliNWFETnpFSStl?=
+ =?utf-8?B?cmwvYi9nT2NtWEVJb292Rkk2YjBMRUhpUTBNUklKWDY1cTdBU2x3bWwxWHUz?=
+ =?utf-8?B?ZUZVM09xa01QSUw0RjBBVVVZc2orR1hDSjVHc3plUWljRWM3MjRLN0E0aVR4?=
+ =?utf-8?B?SmFrTVRJVUF0NWlJZndCQUxoR1V1Tlo3c2JpZTRWcUZJaEhnVVVMTjFpZGNI?=
+ =?utf-8?B?N0JHaXordDRVdFl5SzUwMnF0WnV4QkFjTFVWVTFxcGFkdkJRWDU2L1M2RnAw?=
+ =?utf-8?B?c0RHQ0VkSExlcU9kUkVJcHVqYVl6bHVwaGlodTFxcUg1QkZnWXVJeTFmUnQ0?=
+ =?utf-8?B?byt2REQrVlBzTnBhc2VIS3lsZWF1a0lBOVF2TmozT3lRRmlHeEl4Q05QM1Rl?=
+ =?utf-8?B?MW5kVXEveXBMVG5haEZBNmg0SzJNcnZBMkUrTmhCZ3dWSVlBMWt6L3ZlY1Rk?=
+ =?utf-8?B?YzZKNXJtdVpKMmQ5bHMwb0FZZktJd0QrVXVJK2dZczJYbjZqSVZiYmxFQTVv?=
+ =?utf-8?B?c0taWHU3djBiY0t5T0x0QVVrMmF2MC95T0RDNGhVbGJCNnQ2dU54TE9xbXgv?=
+ =?utf-8?B?SFltQkVRT0N5SkFPWkx2Z0U4ZUlkWWl1eU9EcW1SZWUvMFR5NHlNYU9rUHZu?=
+ =?utf-8?B?U1k1TUVDOE5SR0NCaVdRclhhblh6YzdoTjcxOFFCZGxtdW8vbmYvcXhyTDZy?=
+ =?utf-8?B?ZXMwZUh6MkdMbXh0cHZ2N3Z5MGJ5T1lMRkdXUHd2ZHhYaHhIK2RFNE5PdTJR?=
+ =?utf-8?B?eGp1ZXRCaHpTSkxpMFNweDZuR25ycFV3S1I0L3pkV1crY2ZDQlVvdFZkNGtv?=
+ =?utf-8?B?OEpuR09UaHRFVGRjMzlseThJUjF2ZWNZamRQaUF2d2oyRlUxR0g4eGhEVGRD?=
+ =?utf-8?B?bmdOQ0JqaDNiUDRGWEpmV3JHcWRob2xlRUlsNE5BRkdDSHM0clBqOGJMQ1kz?=
+ =?utf-8?B?bnd2cWhRRHkwelVpUElVd0EvNlM1elBpd0JaRjN4bm5RSVphTDJLS0x6V0py?=
+ =?utf-8?B?ck5ydklzd0pzOWExYXdtbjNHOGlUNnNxQ0ZLZnF2dGxEVThvU2Vmb2dQNkRm?=
+ =?utf-8?B?Z2psR1dGamltZ1hIWnNTV1JXSytvWEh6VU1hTnJ4YXpoSS8rL0Q5MFdzcGZk?=
+ =?utf-8?B?K1dLWXMvcW5CcEZvQy9uVG5tTlEzTnRmYmtKVUV0UGdPY3Q2ZmtxSG5pem9C?=
+ =?utf-8?B?bXlheWE3K20xOTN4NUhjanR6Nk5DRGpYdndkT1JaRk9wNTM5Q3lqQy91N2Rx?=
+ =?utf-8?B?WWJQN2xZQ282Sk15Nk1RZnppcEJLLzNYVm9ZeVE3NVE3TDMzR3U4TXdVaDFL?=
+ =?utf-8?B?MnlrSm5ocmVZSHZPMDVMQXk0M3hBam1sZWExWGhRUGFGNkVRWkkxKzdKcDE0?=
+ =?utf-8?B?VURCdXJRaURhb29WQis3dXhobGlhZmtsbXpJUGVVcW51bFdFZjhUdmZra3px?=
+ =?utf-8?Q?9tjosCueAU9hc?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jtYQkF1kmWjCKhpbCG6+oUreH/iICl1m61rNsEG8vkCNj2N55KGh3nO43EGP?=
- =?us-ascii?Q?4KhApFnptdoqHyetQmJTmouTDciy11gokfHcsvKtWXCI1iyQZrqKXzTGSMuS?=
- =?us-ascii?Q?YdZC2ZOIHYVpYvpg0zR6btQCp5IbdOTQ1AEKWwFVqiMI9LQBTWfyndTKyZPn?=
- =?us-ascii?Q?sO+8T/WyC3OVBZoMZp1/m86Wg2yPjPv9um5Uw8Qnlh0YOF8c/tv4/gKE1xIB?=
- =?us-ascii?Q?gt7IWPT6uej4InOkdTyus/TOjROawH5P9XDP+qrFajyvmfh7VfclLxrEGPoU?=
- =?us-ascii?Q?kcQX5XvGegrxLtmnQ65hI96lHxrjn9QfCdaBpLGu0ZStZjWf1Bn5v7yNNKup?=
- =?us-ascii?Q?VhA3ZkWjtTkk42KVfAQBJ7a9C1fIeC6tuQ4/dSedrr4ysrp78G3uFEowSCn/?=
- =?us-ascii?Q?bnfx/++tK41Ma8xhKVatY/1HPnuiGcY+BZXQmA2NUfDeb4o/lkJhyQ7B4rJe?=
- =?us-ascii?Q?pioM/acPnFqWoATrY39QKHsvFKvmCFc3Lb6OmRlL8bNrdXAaMelGfTPnjLNj?=
- =?us-ascii?Q?c94M74GBer6Iza5k0f2d1xBxA56aM/JvXOxWYshjlZr7jGDW1nvam2stvSiG?=
- =?us-ascii?Q?gagWrZ6WeH2Kpx6WZaB1Ku3IiAYazTjMD8xeSG8R7sR/1D8cdoqHullkx1kP?=
- =?us-ascii?Q?8C3SiA9XpexUEDLfyL3/6b0/yTRzSPCu6XnIb/Mfu5mP0hWLzzT2dt5REg0+?=
- =?us-ascii?Q?J+Pij6Nl15Dl8UxeQYKZb3xcBlmHIICGMBWGSHnUUk8hva9a/8A8wcOjudqa?=
- =?us-ascii?Q?y8DhC1x0qtm7iCCFsd5VZnQh5h8Az1XDfFy9eQ+qBDQwms6of34cuMXqa4DV?=
- =?us-ascii?Q?DwlhwlsW8JgAYiMSGKI8ZxcZGvxx5ihJ4dIiBBUfTQJnZQHTPrJk51Yl+ZCa?=
- =?us-ascii?Q?VInmHFeDTrZU15YfEp1ZWShuQkctyAAyBlw4DV/Vhcd1z6K3cegCzEuWZ/PN?=
- =?us-ascii?Q?35SZWiVpmTbpWra7klD7dmcQkpZFS2h/j1DkmKL5qeXakUDKEdX+mf42nUSl?=
- =?us-ascii?Q?cXEqSeWFhK9j8sdudqCbqJmjgjSA5KPVfF7GbyVitYZf19IFV1ooZYSt3zgU?=
- =?us-ascii?Q?NN4FdXqEDebI/6qBePV1yvdE30wNwXbOkbOPXM9Kuetu6yH2kMfVqhlTtxpV?=
- =?us-ascii?Q?B0sUnAaEI3d1bZNOfAweg9Obfk10hY7ld1qScHykMAKjXPkoUSJBCKBFDCcP?=
- =?us-ascii?Q?AawwCTJoTCViKBCd2Dxms6FhXve3iYXp7JH03GRiI9sm+DVEZowUhoAawxwY?=
- =?us-ascii?Q?RtuREpFx9IZlzzXGNxIPV7ZRQOk9bv4qNm5PM4d82rulW6+LbkGxlV/JfK1h?=
- =?us-ascii?Q?DTkhupn/hNkLlemZF1p8zYTbmokOhOYmJ8mhh7XKmhYhfkLVXcohpNgsC4FS?=
- =?us-ascii?Q?Hyyiibx/KI16RYDFSaVaGI/nuGeLm//mv4o0jxLtzW5Ys4k3jdJWtFjJRlzJ?=
- =?us-ascii?Q?BBSivjGc7oxT7TArn23vEoXlutvY8esU5+iBa6FFTznqLFORcts7PLS9+Q6O?=
- =?us-ascii?Q?ZIYUVBir/BsN/RhtxSni/LTTdGHHED2RKQ1Qto9JzYcPutlPvEaWgUXfbhJx?=
- =?us-ascii?Q?3pMa3yHpVGvxcWAgxbbkz1G03BaxmH65WQbUl/vB?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00e9f148-8479-487b-9aea-08dd5129a7f0
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+	=?utf-8?B?enFEcnczV2swcHFLQUtSYy9DaHNjd1cwaFJHNzh2czUzMzVVekdkRm5CU2dj?=
+ =?utf-8?B?NCtjQktpLzhodlN6cEFtTERtTHJVVk1hTHBLa1FnRnVVUUNHdXA4VU5HZ3Vp?=
+ =?utf-8?B?QUwyUmxIdC8vZDR0QlJqRDc4Y3dIczMyY0Z5TkVWY01MaEpOd25XNkVZbTYx?=
+ =?utf-8?B?LzM3YkFvdGNBMFFxUWZOM25nTGpDNThuc3lvNGhsTTR1dzlzTGM5SUFxb0x0?=
+ =?utf-8?B?SVRUUXAyTHc1NUxYbWswYWdOQjNqSi9YOGRLRk10QXFCY1c5MnV4eERQeW1N?=
+ =?utf-8?B?dTVDTm4xZE1KYVh3cTZndXFiU1pGRnhXL2xhRW5mMlQ5clFkVExZZ1diTnd5?=
+ =?utf-8?B?OHdSTUpVZ2ZUamFHSWFPNmlpZU9OYjRReXpmaWh6KytFeHl1R1dqK2JEMW1m?=
+ =?utf-8?B?VHVlS2QwSWlvSEkrOUpaNER3YStNL1pmeUQwdkhIREtaLzhrcVZhQzA2NnJQ?=
+ =?utf-8?B?ajc5K3ZlRkEvTWlsdGNnbHRaUHVpTkFHTUNnZGY2c0hYZjVocGJFbUprbjFL?=
+ =?utf-8?B?TjFtaUhuWm53ODM0RlJTWjVsL3p3T05NNUgraXAyUld3TlhENmJFbldUNGJR?=
+ =?utf-8?B?Z3E3bUNoV1BocFhIOEo1bEV2NUFLQnVLekRqNnFBOEFFclJyUjViLzQxdkFH?=
+ =?utf-8?B?MkFDeUxRdVA1TEtFaUhPYWk2eVBOVUpsKzhzY212N2R3OU84MlJiMm9wYTly?=
+ =?utf-8?B?NzJubEx2NVRmS2o1ZGJ6VGk1Q1hlVCt3MkQxS1FyazJmSndKcWRhZHp0YTlU?=
+ =?utf-8?B?SDVtMWlpL1ZobU42Z1k1RE1kUDlOZlQvMHBYOHg4aDRtM2xtRUQ4eElsbHBY?=
+ =?utf-8?B?M0Y5Ymt6N0hMQldJeHVXTytWcVdUbnFoVzFwV3FRNEMyUjNvdmlhVE81QmNM?=
+ =?utf-8?B?VDB2Z0NoRnVncXM0emxZTTIvaDA3eUpQY3VnSGJOeWFNV1dDUnpoUzVTTlRS?=
+ =?utf-8?B?eERTaGRiK01FbStHREMzSWJ1eWN4bEJUS3pOcjZEVW5GWXBKaHdLeDd6eUR1?=
+ =?utf-8?B?Qm1xQzdjSUpKa1QyWHgxYVhDamR6WSswQjJHUExoTjNSR1YwVjFxbllOeHh6?=
+ =?utf-8?B?a1kwczZXamN3VHdOZlZ0TmhoRVJyOXoyNGVwdzVYU1hxd0lNY0x3MVVVTEFp?=
+ =?utf-8?B?MU8vUzdoc3NoRUZYNEVoaW8rM05sS2JFbmFJd0NwRWllWTI2c0ljdHhSeVJp?=
+ =?utf-8?B?ajJuTnpKMmdZZTZ6V0RLc011YXkySjNKUkdYZzQrb1NOUU1DSzJ4ekY1eWZS?=
+ =?utf-8?B?aTdaMmRjK1JJdXU2c25XbzBnV3BscU1KWUpTd0E5SnpLc3daNGZwbm45QzNP?=
+ =?utf-8?B?SWhPaFhRQndKRElTdSttN0xnYzNBMzdXMUxrOXV6aEFHZHV5QVkzbkZpdWJB?=
+ =?utf-8?B?SER4OXZxc0o1cHZqbmVpOTRTZWdHVE9Bamd3ODBXZWNaaUo1NVhjWUtSaWdS?=
+ =?utf-8?B?YlhiZmRiTVpTZFhzUndGR1BDeU5EZDlvbDk3bXdqaUpwcG50REZNSzRrbzhv?=
+ =?utf-8?B?d1p4ZUNBTWlSMEJCc0pIUTB5bFpXS1VvbDhBdEhZK29xRGh2U1RtMittdWNN?=
+ =?utf-8?B?b2tWOGE1czVIZEFRUXJ1YkVRTHZQMTVXbnlpZ0NUdDlVVkpSNW9CalFkS0VK?=
+ =?utf-8?B?aTNhd3IrVEhSZ250VkNzeHIwVm91Qk9qNEV0MCtmbjFBeEkvVW1XNGFQOHFN?=
+ =?utf-8?B?RXZTU1QvdkRJR1ZFUi9lTUtkTlNGNzJ5U0FlMnlhWDE3ck4ycWx2MUpFZkhH?=
+ =?utf-8?B?YkxEVFB6S1hKSUFFOFg3K2hWWWVxQjhsZWY5L09EYkJNc1AyZnE2cGpXaXhU?=
+ =?utf-8?B?cW16WFNRMFU5UW5YK3ZJTlJMendBVy84NGhaQkdiRWRXUERadGtaaXBzaTJ0?=
+ =?utf-8?B?U1dvQTB6bGpaaEw0NGFNOFU1Ym9hcjE5NVY1VENrOURmUlJ0K0hydEpYWjJs?=
+ =?utf-8?B?RnFZUEkxeXlra29ST3N3bEVoU1loNUhsUHRESitCcnFrQmJyamlhS2JYemtz?=
+ =?utf-8?B?b1haUnozR3FQbWU2QS9zRTdDbUFmMkt4dVJLZDdJQWp0YmtsQXcvWG1sanlO?=
+ =?utf-8?B?QmpDbEpNOURxbmhHSFZBbTUxZG9SaHVkQUpFNlhyMEFNZFhRRm9Bd0tkMmFw?=
+ =?utf-8?Q?vcSo=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba14fc0d-67bb-4068-e9e9-08dd5129c179
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4557.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 21:09:11.0394
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 21:09:53.8987
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3+HPDBiw6LLh4iSaEgvFFn3z2slgOZRbpETbI8qVOaONtsc+hmMfBdn36RATp5jplChJrFhL88GFq0NVMVcz0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6857
+X-MS-Exchange-CrossTenant-UserPrincipalName: UE4DbKIRSe242+Jnbtyn78cgHFAC5Do2fYwSL27EvFHQlxWQ2NpiMXhDVui3Mn78
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7095
 
-On Wed, Feb 19, 2025 at 09:10:18AM +0800, Stanley Chu wrote:
-> npcm845 HW issue:
-> I3C HW stalls the write transfer if the transmit FIFO becomes empty,
-> when new data is written to FIFO, I3C HW resumes the transfer but
-> the first transmitted data bit may have the wrong value.
-> Workaround:
-> Fill the FIFO in advance to prevent FIFO from becoming empty.
->
-> Signed-off-by: Stanley Chu <yschu@nuvoton.com>
-> ---
->  drivers/i3c/master/svc-i3c-master.c | 58 ++++++++++++++++++++++++-----
->  1 file changed, 49 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-> index 813839498b2b..22cb1f1c1fdc 100644
-> --- a/drivers/i3c/master/svc-i3c-master.c
-> +++ b/drivers/i3c/master/svc-i3c-master.c
-> @@ -102,6 +102,7 @@
->  #define   SVC_I3C_MDATACTRL_TXTRIG_FIFO_NOT_FULL GENMASK(5, 4)
->  #define   SVC_I3C_MDATACTRL_RXTRIG_FIFO_NOT_EMPTY 0
->  #define   SVC_I3C_MDATACTRL_RXCOUNT(x) FIELD_GET(GENMASK(28, 24), (x))
-> +#define   SVC_I3C_MDATACTRL_TXCOUNT(x) FIELD_GET(GENMASK(20, 16), (x))
->  #define   SVC_I3C_MDATACTRL_TXFULL BIT(30)
->  #define   SVC_I3C_MDATACTRL_RXEMPTY BIT(31)
->
-> @@ -133,6 +134,16 @@
->  #define SVC_I3C_EVENT_IBI	GENMASK(7, 0)
->  #define SVC_I3C_EVENT_HOTJOIN	BIT(31)
->
-> +/*
-> + * SVC_I3C_QUIRK_FIFO_EMPTY:
-> + * I3C HW stalls the write transfer if the transmit FIFO becomes empty,
-> + * when new data is written to FIFO, I3C HW resumes the transfer but
-> + * the first transmitted data bit may have the wrong value.
-> + * Workaround:
-> + * Fill the FIFO in advance to prevent FIFO from becoming empty.
-> + */
-> +#define SVC_I3C_QUIRK_FIFO_EMPTY	BIT(0)
-> +
->  struct svc_i3c_cmd {
->  	u8 addr;
->  	bool rnw;
-> @@ -216,6 +227,7 @@ struct svc_i3c_master {
->  	struct mutex lock;
->  	u32 enabled_events;
->  	u32 mctrl_config;
-> +	u32 quirks;
->  };
->
->  /**
-> @@ -891,6 +903,7 @@ static int svc_i3c_master_do_daa_locked(struct svc_i3c_master *master,
->  	unsigned int dev_nb = 0, last_addr = 0;
->  	u32 reg;
->  	int ret, i;
-> +	u32 dyn_addr;
->
->  	while (true) {
->  		/* clean SVC_I3C_MINT_IBIWON w1c bits */
-> @@ -931,6 +944,15 @@ static int svc_i3c_master_do_daa_locked(struct svc_i3c_master *master,
->  		if (SVC_I3C_MSTATUS_RXPEND(reg)) {
->  			u8 data[6];
->
-> +			/*
-> +			 * SVC_I3C_QUIRK_FIFO_EMPTY fix:
-> +			 * The TX FIFO should be ready before the TX transmission is starting.
-> +			 */
-> +			dyn_addr = i3c_master_get_free_addr(&master->base, last_addr + 1);
-> +			if (dyn_addr < 0)
-> +				return dyn_addr;
-> +			writel(dyn_addr, master->regs + SVC_I3C_MWDATAB);
-> +
+Hi Dave,
 
-I think it should work for new svc controller. Fill data advance to avoid
-stall SCL clock. If it is true, comments/commit message need be updated.
+On 2/19/25 07:53, Dave Martin wrote:
+> On Wed, Jan 22, 2025 at 02:20:30PM -0600, Babu Moger wrote:
+>> Provide the interface to list the assignment states of all the resctrl
+>> groups in mbm_cntr_assign mode.
+> 
+> [...]
+> 
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index 5d305d0ac053..6e29827239e0 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -975,6 +975,81 @@ static ssize_t resctrl_mbm_assign_mode_write(struct kernfs_open_file *of,
+> 
+> [...]
+> 
+>> +static int resctrl_mbm_assign_control_show(struct kernfs_open_file *of,
+>> +					   struct seq_file *s, void *v)
+>> +{
+> 
+> [...]
+> 
+>> +	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
+>> +		seq_printf(s, "%s//", rdtg->kn->name);
+>> +
+>> +		sep = false;
+>> +		list_for_each_entry(dom, &r->mon_domains, hdr.list) {
+>> +			if (sep)
+>> +				seq_puts(s, ";");
+>> +
+>> +			seq_printf(s, "%d=%s", dom->hdr.id,
+>> +				   rdtgroup_mon_state_to_str(r, dom, rdtg, str));
+>> +
+>> +			sep = true;
+>> +		}
+>> +		seq_putc(s, '\n');
+>> +
+>> +		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list, mon.crdtgrp_list) {
+>> +			seq_printf(s, "%s/%s/", rdtg->kn->name, crg->kn->name);
+>> +
+>> +			sep = false;
+>> +			list_for_each_entry(dom, &r->mon_domains, hdr.list) {
+>> +				if (sep)
+>> +					seq_puts(s, ";");
+>> +				seq_printf(s, "%d=%s", dom->hdr.id,
+>> +					   rdtgroup_mon_state_to_str(r, dom, crg, str));
+> 
+> Unlike the other resctrl files, it looks like the total size of this
+> data will scale up with the number of existing monitoring groups
+> and the lengths of the group names (in addition to the number of
+> monitoring domains).
+> 
+> So, this can easily be more than a page, overflowing internal limits
+> in the seq_file and kernfs code.
+> 
+> Do we need to track some state between read() calls?  This can be done
+> by overriding the kernfs .open() and .release() methods and hanging
+> some state data (or an rdtgroup_file pointer) on of->priv.
+> 
+> Also, if we allow the data to be read out in chunks, then we would
+> either have to snapshot all the data in one go and stash the unread
+> tail in the kernel, or we would need to move over to RCU-based
+> enumeration or similar -- otherwise releasing rdtgroup_mutex in the
+> middle of the enumeration in order to return data to userspace is going
+> to be a problem...
 
->  			/*
->  			 * We only care about the 48-bit provisioned ID yet to
->  			 * be sure a device does not nack an address twice.
-> @@ -1009,21 +1031,20 @@ static int svc_i3c_master_do_daa_locked(struct svc_i3c_master *master,
->  		if (ret)
->  			break;
->
-> -		/* Give the slave device a suitable dynamic address */
-> -		ret = i3c_master_get_free_addr(&master->base, last_addr + 1);
-> -		if (ret < 0)
-> -			break;
-> -
-> -		addrs[dev_nb] = ret;
-> +		addrs[dev_nb] = dyn_addr;
->  		dev_dbg(master->dev, "DAA: device %d assigned to 0x%02x\n",
->  			dev_nb, addrs[dev_nb]);
-> -
-> -		writel(addrs[dev_nb], master->regs + SVC_I3C_MWDATAB);
->  		last_addr = addrs[dev_nb++];
->  	}
->
->  	/* Need manual issue STOP except for Complete condition */
->  	svc_i3c_master_emit_stop(master);
-> +	/*
-> +	 * Dynamic address is written to FIFO in advance for SVC_I3C_QUIRK_FIFO_EMPTY fix.
-> +	 * Flush FIFO in the failed case.
-> +	 */
-> +	if (ret)
-> +		svc_i3c_master_flush_fifo(master);
+Good catch.
 
-Needn't check ret, flash fifo unconditional should be fine and avoid left
-any data in fifo.
+I see similar buffer overflow is handled by calling seq_buf_clear()
+(look at process_durations() or in show_user_instructions()).
 
->  	return ret;
->  }
->
-> @@ -1210,7 +1231,6 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
->  	/* clean SVC_I3C_MINT_IBIWON w1c bits */
->  	writel(SVC_I3C_MINT_IBIWON, master->regs + SVC_I3C_MSTATUS);
->
-> -
->  	while (retry--) {
->  		writel(SVC_I3C_MCTRL_REQUEST_START_ADDR |
->  		       xfer_type |
-> @@ -1220,6 +1240,22 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
->  		       SVC_I3C_MCTRL_RDTERM(*actual_len),
->  		       master->regs + SVC_I3C_MCTRL);
->
-> +		if ((master->quirks & SVC_I3C_QUIRK_FIFO_EMPTY) && !rnw && xfer_len) {
-> +			int i, count, space;
-> +
-> +			reg = readl(master->regs + SVC_I3C_MDATACTRL);
-> +			space = SVC_I3C_FIFO_SIZE - SVC_I3C_MDATACTRL_TXCOUNT(reg);
-> +			count = xfer_len > space ? space : xfer_len;
-> +			for (i = 0; i < count; i++) {
-> +				if (i == xfer_len - 1)
-> +					writel(out[0], master->regs + SVC_I3C_MWDATABE);
-> +				else
-> +					writel(out[0], master->regs + SVC_I3C_MWDATAB);
-> +				out++;
-> +			}
-> +			xfer_len -= count;
+How about handling this by calling rdt_last_cmd_clear() before printing
+each group?
 
-I think you can call svc_i3c_master_write(),
-or improve svc_i3c_master_write(..., bool b_max_space)
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 484d6009869f..1828f59eb723 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1026,6 +1026,7 @@ static int resctrl_mbm_assign_control_show(struct
+kernfs_open_file *of,
+        }
 
-		ret = svc_i3c_master_write(master, out, count);
-		xfer_len -= ret;
-		out += ret;
+        list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
++               rdt_last_cmd_clear();
+                seq_printf(s, "%s//", rdtg->kn->name);
 
-> +		}
-> +
->  		ret = readl_poll_timeout(master->regs + SVC_I3C_MSTATUS, reg,
->  				 SVC_I3C_MSTATUS_MCTRLDONE(reg), 0, 1000);
->  		if (ret)
-> @@ -1308,6 +1344,7 @@ static int svc_i3c_master_xfer(struct svc_i3c_master *master,
->  emit_stop:
->  	svc_i3c_master_emit_stop(master);
->  	svc_i3c_master_clear_merrwarn(master);
-> +	svc_i3c_master_flush_fifo(master);
->
->  	return ret;
->  }
-> @@ -1877,6 +1914,9 @@ static int svc_i3c_master_probe(struct platform_device *pdev)
->
->  	svc_i3c_master_reset(master);
->
-> +	if (device_is_compatible(master->dev, "nuvoton,npcm845-i3c"))
-> +		master->quirks = SVC_I3C_QUIRK_FIFO_EMPTY;
-> +
+                sep = false;
+@@ -1041,6 +1042,7 @@ static int resctrl_mbm_assign_control_show(struct
+kernfs_open_file *of,
+                seq_putc(s, '\n');
 
-Generally, it'd better to add drvdata such as
+                list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
+mon.crdtgrp_list) {
++                       rdt_last_cmd_clear();
+                        seq_printf(s, "%s/%s/", rdtg->kn->name,
+crg->kn->name);
 
-struct svc_i3c_drvdata {
-	u32 quirks;
-};
+                        sep = false;
 
-const struct svc_i3c_drvdata nutoton = {
-	.quirks = SVC_I3C_QUIRK_FIFO_EMPTY;
-}
 
-static const struct of_device_id svc_i3c_master_of_match_tbl[] = {
-	...
-	{ .compatible = "nuvoton,npcm845-i3c", data = &nutoton },
-	...
-}
+> 
+>> +				sep = true;
+>> +			}
+>> +			seq_putc(s, '\n');
+>> +		}
+>> +	}
+>> +
+>> +	mutex_unlock(&rdtgroup_mutex);
+>> +	cpus_read_unlock();
+>> +	return 0;
+>> +}
+> 
+> [...]
+> 
+> Cheers
+> ---Dave
+> 
 
-Frank
-
->  	/* Register the master */
->  	ret = i3c_master_register(&master->base, &pdev->dev,
->  				  &svc_i3c_master_ops, false);
-> --
-> 2.34.1
->
+-- 
+Thanks
+Babu Moger
