@@ -1,117 +1,130 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC551C3029
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF411BD9D3;
+	Wed, 19 Feb 2025 07:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739949918; cv=none; b=PB1bpHwKKmupKVo7KSvTJliBMYF/Jxepu9ydQzHgC9Rcw++uFkvKNAoYVF7XFUS46AiGe77mXTYtrF0Uq7kaeH19YXn37hdFSONNyR8147IaqF2PfYWS/ohy6z1zAU/K6QieDHgThY+BIa6FagNsSgCDJwQWhar5q5CJyzeswBI=
+	t=1739949944; cv=none; b=YOA/dyoGQFUoJBlK3wrauNpte3IAc/kYa8bxYpoV2U6/m3v5QGqFJk4tDFuKYFqNFBI0ZIgIqnUEv85WHy9Wv2Q9xRugCRovu9SpU4Va640zuaODcYAcETsir7kCjgjVL8NDdt3kQcqKWNdpZxHkJVOJrJ4qhUydXZ5YOp0JeIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739949918; c=relaxed/simple;
-	bh=qUaR8Dt4Kdv1cC1MYP4bbXki7Ifg8k0kJZ9cKL7jJL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aoD6ojWWcXhRo3Mfi5pAc/Kua3Zvij0gJbPyexnUUwv4OonQlcoStZDukHASvlO4XbTtycllS2QjzEcFzdsoTpe9Scpvft2kXQZxINsbM7Ajl6CPDklc0zZv7gqeMnSiyhMWNYRYHe6I8WxeITWbUETs2ZLUxwlPBsYt4XDbbsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSRmGPnN; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739949944; c=relaxed/simple;
+	bh=mn7g0i0MWinLv2YGo+kZxHpbfVUa4TgH6wIWEUwX83A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i9Vtnuuog5HLsRwRScIWnSFA+cSWr2//q+Fjk42ny6l6gP7u3n7QCnlc7nPbwK1iHyn+UIgkJBX1O2bXwFqh28GyEboPQQnXyIj1s0oddljr5JtP4fVG8nm14pRNgj6lRa3MvfQscfe6nZspHiPRl81fgH9GsuaZc8DqHeGSSVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jo0MN+L4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSRmGPnN"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-546237cd3cbso3033330e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 23:25:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739949914; x=1740554714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A0ENxof8Q6q1VLO8ooi6Pw3i7LqiiqkWgEE8OJsU2qc=;
-        b=SSRmGPnN84TuaV10ZXszkN+g3HvUiT2thXgSVquXfJNtLN/dWWkPuizqIYF18ImDNb
-         fUWXQHhPyEu4Byp5BSvi3USpeiWEzixBJncjy4+/pvc7S8ckgMDi1UocJspf2iavVdWB
-         f7px/xXvrrdLmeTrLfb0aMYThNSbt7Zv4oC07cbKzAm++svazoqBZRVElLxOHm5WzYQ8
-         fe30sBLCNFYqrMIPxcIUrgx/0yvy5aO6Q2WncO1I84B9SJhmBeBZzuMoUHEPg0JK/pK+
-         TiKa33RlzeyVKqr5ME1NOr+7VD6hzWq0s9MkUFL7BuWkKYhPl5uoh31HasdRyN2g3oO3
-         xopQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739949914; x=1740554714;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A0ENxof8Q6q1VLO8ooi6Pw3i7LqiiqkWgEE8OJsU2qc=;
-        b=LfPN7UoTaCggu4mDLr0Mz6/7NsfGajiIlZyDwL5ovDAisO+BvWPaj2HzijjDD+VIUM
-         l+gF6XbxBNAWa/B5s4KxHQiGtvLq4GDqFDLMn0DNfgDA/gLg5bhT122K+YOHYzB2CUMu
-         0JS54CoRlrw7V8Y4CIm/SRVc0TkLnjpGvzGDuAW806d+vwQPc2rL8y9TipIAaHVqOFlF
-         si13PFkflq1esfp6TGPfB2D0xo6VQ5dqtyrfT8i82eiSvV2ISU5bwU8A/rSMWmQgTVBf
-         OhnRJcjxCJslQTYbooJKZ2lA0jzAi9Vs23A66gcdwLR97tU7vyMjLkVEvqVzn+0+G2xa
-         F5VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZJ/ALt5Aof9J8QnGKxRLHu0TsoFC0eJH3nEGbWLE3uZ+nBcVjkJ5OQwh0a71gdcQRqoiB44BO5JLaD/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG88UliIbzwUlZf48HTWsJe3a/n3m78J2ehxcWtlAucWVDHpZl
-	GdOy4I3SloTwzLzkJRUKaXKvt8eCeOYJ6QoyUhlpwbJWEsNjcUay
-X-Gm-Gg: ASbGncvGMTdbIFHo0QFWbt7yMbh6LhUk3bZc03uK9TKhV4vaZirwiVKsac0+yOtozMT
-	hBmQoAmN0Da0ZyFsPROQoUS25w0G0LGsXEObtFY8b+KJ1TGTeaBnd50/mawvUixaFq1JUs5vlj4
-	EsdZ8KRixOf6xIy4Fkm3V0bT9pcZORXhmJPSgHrOIiRiUe6lTLVPx7DMJVIDMtZL3T4CAor+OGH
-	PwI0ZWVarGw/8rRfIJxihrhHlfa1ih5YEtAuW3nIN6/Zrq9qrA+HBzqjnf48wWQjClUC9j9I6Tg
-	k991esgQC3hmYLH0I0VlA4HS3qrARbHHt+mPn1pmQzp0E/4KtWM10SQ7tg==
-X-Google-Smtp-Source: AGHT+IFg1nLj71evBy1252P5sjW+JPjU9JtEN4hRisyCPSebyAyUpOGhScMn16nbqjWJJiQwgMCMEA==
-X-Received: by 2002:a05:6512:1593:b0:545:e2e:8425 with SMTP id 2adb3069b0e04-5452fe904b8mr6084517e87.39.1739949914311;
-        Tue, 18 Feb 2025 23:25:14 -0800 (PST)
-Received: from rand-ubuntu-development.dl.local (mail.confident.ru. [85.114.29.218])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5461ca6f722sm1129423e87.71.2025.02.18.23.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 23:25:14 -0800 (PST)
-From: Rand Deeb <rand.sec96@gmail.com>
-To: Dave Kleikamp <shaggy@kernel.org>,
-	jfs-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: deeb.rand@confident.ru,
-	lvc-project@linuxtesting.org,
-	voskresenski.stanislav@confident.ru,
-	Rand Deeb <rand.sec96@gmail.com>
-Subject: [PATCH 5.10.y] fs/jfs: cast inactags to s64 to prevent potential overflow
-Date: Wed, 19 Feb 2025 10:25:04 +0300
-Message-Id: <20250219072504.1655151-1-rand.sec96@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jo0MN+L4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25288C4CED1;
+	Wed, 19 Feb 2025 07:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739949943;
+	bh=mn7g0i0MWinLv2YGo+kZxHpbfVUa4TgH6wIWEUwX83A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jo0MN+L40nZsA1Z3XLmqtTAFU4+nInYDLglMHXNfS2AWgOzeetC9vn00TVjVV+H9+
+	 rQaOBtcGPzPXGVyyTiFcCpL/nBV8pOM8Q4gmV4co22EBNknyhAhIQ5IzurwH1xZs5D
+	 9ZupQiXqdfdhBvy4JD5VrKUeuKr1eVOMSSkdgtpySL+EufzrfLjrRGqbFNvu3nHa6B
+	 /b5W+Y0ntMGSBuAk5O+mNwS70ivu6sfNCZi3UJ8fCaFpIZ1/CRE0Cn1aAnZq16m/Q5
+	 Um3231KPD8ZPih0fAIySoNxdGrfA0cv8JPQSfDj/hyxBae0+mQMSkcmUV9eOwlWzAf
+	 EzSsDgPrKpVQQ==
+Date: Wed, 19 Feb 2025 09:25:23 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v4 13/14] memblock: Add KHO support for reserve_mem
+Message-ID: <Z7WHY5RBJc9YxPPY@kernel.org>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206132754.2596694-14-rppt@kernel.org>
+ <20250217040448.56xejbvsr2a73h4c@master>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217040448.56xejbvsr2a73h4c@master>
 
-The expression "inactags << bmp->db_agl2size" in the function
-dbFinalizeBmap() is computed using int operands. Although the
-values (inactags and db_agl2size) are derived from filesystem
-parameters and are usually small, there is a theoretical risk that
-the shift could overflow a 32-bit int if extreme values occur.
+On Mon, Feb 17, 2025 at 04:04:48AM +0000, Wei Yang wrote:
+> On Thu, Feb 06, 2025 at 03:27:53PM +0200, Mike Rapoport wrote:
+> >From: Alexander Graf <graf@amazon.com>
+> >
+> >Linux has recently gained support for "reserve_mem": A mechanism to
+> >allocate a region of memory early enough in boot that we can cross our
+> >fingers and hope it stays at the same location during most boots, so we
+> >can store for example ftrace buffers into it.
+> >
+> >Thanks to KASLR, we can never be really sure that "reserve_mem"
+> >allocations are static across kexec. Let's teach it KHO awareness so
+> >that it serializes its reservations on kexec exit and deserializes them
+> >again on boot, preserving the exact same mapping across kexec.
+> >
+> >This is an example user for KHO in the KHO patch set to ensure we have
+> >at least one (not very controversial) user in the tree before extending
+> >KHO's use to more subsystems.
+> >
+> >Signed-off-by: Alexander Graf <graf@amazon.com>
+> >Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> >---
+> > mm/memblock.c | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> > 1 file changed, 131 insertions(+)
+> >
+> >diff --git a/mm/memblock.c b/mm/memblock.c
+> >index 84df96efca62..fdb08b60efc1 100644
+> >--- a/mm/memblock.c
+> >+++ b/mm/memblock.c
+> >@@ -16,6 +16,9 @@
+> > #include <linux/kmemleak.h>
+> > #include <linux/seq_file.h>
+> > #include <linux/memblock.h>
+> >+#include <linux/kexec_handover.h>
+> 
+> Looks this one breaks the memblock test in tools/testing/memblock.
+> 
+> memblock.c:19:10: fatal error: linux/kexec_handover.h: No such file or directory
+>    19 | #include <linux/kexec_handover.h>
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
 
-According to the C standard, shifting a signed 32-bit int can lead
-to undefined behavior if the result exceeds its range. In our
-case, an overflow could miscalculate free blocks, potentially
-leading to erroneous filesystem accounting.
-
-To ensure the arithmetic is performed in 64-bit space, we cast
-"inactags" to s64 before shifting. This defensive fix prevents any
-risk of overflow and complies with kernel coding best practices.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
----
- fs/jfs/jfs_dmap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
-index eedea23d70ff..3cc10f9bf9f8 100644
---- a/fs/jfs/jfs_dmap.c
-+++ b/fs/jfs/jfs_dmap.c
-@@ -3728,8 +3728,8 @@ void dbFinalizeBmap(struct inode *ipbmap)
- 	 * system size is not a multiple of the group size).
- 	 */
- 	inactfree = (inactags && ag_rem) ?
--	    ((inactags - 1) << bmp->db_agl2size) + ag_rem
--	    : inactags << bmp->db_agl2size;
-+	    (((s64)inactags - 1) << bmp->db_agl2size) + ag_rem
-+	    : ((s64)inactags << bmp->db_agl2size);
+Thanks, will fix.
  
- 	/* determine how many free blocks are in the active
- 	 * allocation groups plus the average number of free blocks
--- 
-2.34.1
+> >+#include <linux/kexec.h>
+> >+#include <linux/libfdt.h>
+> > 
+> 
+> -- 
+> Wei Yang
+> Help you, Help me
 
+-- 
+Sincerely yours,
+Mike.
