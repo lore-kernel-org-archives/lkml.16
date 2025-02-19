@@ -1,112 +1,92 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBACD2862AB;
-	Wed, 19 Feb 2025 11:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4949286291;
+	Wed, 19 Feb 2025 11:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739965632; cv=none; b=Dd3XURPVe8wgrpKoeBmTrJHvoJCn83TjDjq/Q6usbixa57Qr3GDjWPpMem/dwvdKGHHEfivyndXdltJCA8XpZsdeDc8fH4nPjFt170jS1V+ZiT0smQxB7iTFZIa4tBkXdWdD4zh0DUyzo4bzXjPc4BoBVi+NtcOx1j9MAsqufLs=
+	t=1739965633; cv=none; b=CPUh0OAhlfIANePLZnZQBXsBLc5g9Rqy07XEttXQK8qZ3X8UctFn3NemSspyS7gRNsqqa4JvN0bsRYcyUujTjfOfUSFOZwtfCwkRwKxarQ7nYFyAf5DkGAWXRqgR0ZeREPpsUMjAlYw3nD7CV7OTF2JK7oBgFEf3UznjguUqjTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739965632; c=relaxed/simple;
-	bh=rg6JGBnwoyXj86f8SpVJXTpW47+6OxJFViPXzvv9jmI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lp3gVgflR00HVvc4MKoe13IjyvzLuY9/14oEVUcHyfmVUwTHa/riDhL7F5IwCzdobTF6HLysVMONjBMHnygAIQEwUGZutIz/uLO+WAQi/T072sYUAo3/jXJDxDOMeBJ5H+8qsHd7ABxDYuGv0TOvwRzyEN1pylFHKPWe4lF0oCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fM/JeB2i; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739965633; c=relaxed/simple;
+	bh=Retzvs5vG+5gFRyDruhBMUVBksDT2ovoZ/r3ZucKP5g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fnaF/1ZHm6TVRxWHKC0HJ/9cNqmcn+SD9qNnsH2ArJvForQ0H73qTq87rVfmJS5YpbyQpwmpCtOewGwqZCEQ+JILsD1ALTIaBxiMkxxtK846aXkvHOxcgEFrAkWTDmtc0CFS6jeOdO9VVIaCgZIRRduai9NKRTa1fU3+cewku/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Ofpzvn79; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fM/JeB2i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739965628;
-	bh=rg6JGBnwoyXj86f8SpVJXTpW47+6OxJFViPXzvv9jmI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fM/JeB2iogD97w6JKDoOUBC8fWHgQxvym/3+yMS8tVYNmzRxXgf3ew69yFp61Pi02
-	 X4P+kFAV42toqtgLXBDW5tHHe9eJx/lpQVkkSasjoByjafe14qT2xeg+RGpu/amhGk
-	 dPxnHAA0aNQe7MFV/YqiuCipmCeP5pxTzn05fKDbj0Woa58DayOR64JbZoFdiYb1gm
-	 7GobKKkYXcAnNabim9Tf17vLgev3qcyfToNMRO/rT5GbUa1dKmVz3ZslgnrBCwen8H
-	 AelxJDR7Chti9r+sRRdVUcQbC0HqJAdwTSv9ahhFA4oWWiXN2EcZhY9LewKzDpSA/B
-	 sqy9KsGUl0GYw==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5A58617E0E92;
-	Wed, 19 Feb 2025 12:47:07 +0100 (CET)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: heikki.krogerus@linux.intel.com
-Cc: gregkh@linuxfoundation.org,
-	andre.draszik@linaro.org,
-	angelogioacchino.delregno@collabora.com,
-	linux@roeck-us.net,
-	shufan_lee@richtek.com,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com,
-	pablo.sun@mediatek.com
-Subject: [PATCH v2] usb: typec: tcpci_rt1711h: Unmask alert interrupts to fix functionality
-Date: Wed, 19 Feb 2025 12:47:00 +0100
-Message-ID: <20250219114700.41700-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ofpzvn79"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c30:4abb:6de5:9248:813e:8db3])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6153C169;
+	Wed, 19 Feb 2025 12:45:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739965546;
+	bh=Retzvs5vG+5gFRyDruhBMUVBksDT2ovoZ/r3ZucKP5g=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ofpzvn790t22Shr0jgetdByg5893wOjF6kiUYBWoa8hv5iP2uWlzYUA4tfTNiqJrz
+	 Ay9NjncRsS33MDGZZPIucvxKe0Pkd86Un9i0jRNbioSwWDGGlcpeDNJ5XIaLwdv1Up
+	 NR5D3h2qG7dPlqKMCA7TX1od4t/tbPR8IAk052UA=
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+Subject: [PATCH 0/3] media: i2c: imx219: Follow-up on binning fixes
+Date: Wed, 19 Feb 2025 17:16:42 +0530
+Message-Id: <20250219-imx219_fixes_v2-v1-0-0e3f5dd9b024@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKLEtWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0NL3czcCiAVn5ZZkVocX2aka2pskWphmWKeZGluogTUVVCUCpYDaoq
+ Ora0FANeYUT9hAAAA
+X-Change-ID: 20250219-imx219_fixes_v2-538e89d7b974
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+ Jai Luthra <jai.luthra@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=896;
+ i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
+ bh=Retzvs5vG+5gFRyDruhBMUVBksDT2ovoZ/r3ZucKP5g=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBntcS1tpfQR6Rw2IanXtksRVlnhr+t2p1A6fP2f
+ vWl5Yg+9ECJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ7XEtQAKCRBD3pH5JJpx
+ Rap4EACiOY44LjpZux/1efR1mhYAvEd/KMgHeMDDv37027ZCiJNiiPLKBGBhzLsx8drNKVdWOY3
+ xes17sAELzOKw2W0vTi4rNypQ9NkGkZEYX7lL8nX8BFCzNuQ5Hy59egOvkUZwowgwP8txKSdD9r
+ fhJVPUlQFT/MRIDLOyB2wRSWvY58zsdGpmTan9wJFk1gzQVV/JGE/oV1hTKhBQ7aTdeYnd1bUuq
+ n5eXzEa2nvHOfwuzWz3lG3dEA0aROqJft+gjdXXxSlCaLYfYGgoxptyENAPZvsdd0sCNfnLOod2
+ BiOTdfQvQlx/1LpHj/sD8nd4j02EwKTiGeffncKm+3zlCdHrxr6qGEuPSd16H52E1LCOxQwJTBv
+ zuLdoyd2SoXOkFDMTNCz4w7fpm35wdVHnjQdC+nHoLFCbG3iNDh8yVDYJn4hccDWOJcpQEIb6Xr
+ IXPx+EnqMfaZle+ZWTG4qfctjiaGmhRTZCbOCr+v1r34X8eV9CzEsQSpi07xlrJ4UYCu1r5Rruz
+ YaKxPvclJKCXOtCn9LFINrerwCLlJuVXyfs/qAUWb97npWvEM4ESj1jbc7Db93PBs/rqT4GKzBO
+ 9ql6SZlCa85xXn/vmbdjkw0EXPr/L5R+lFm1lezxEfSJkK8ViTBNpqOlQ2W0Ajubl9HdE3mETEu
+ I8tBUG6MBy27ZvQ==
+X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
+ fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
 
-During probe, the TCPC alert interrupts are getting masked to
-avoid unwanted interrupts during chip setup: this is ok to do
-but there is no unmasking happening at any later time, which
-means that the chip will not raise any interrupt, essentially
-making it not functional as, while internally it does perform
-all of the intended functions, it won't signal anything to the
-outside.
+This series is a follow-up for the already merged series fixing the
+binning for IMX219:
+https://lore.kernel.org/all/20250204-imx219_fixes-v6-0-84ffa5030972@ideasonboard.com/
 
-Unmask the alert interrupts to fix functionality.
+There were a few pending review comments and suggestions on the v6 and
+v7 of the previous series which are addressed here.
 
-Fixes: ce08eaeb6388 ("staging: typec: rt1711h typec chip driver")
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
 ---
+Jai Luthra (3):
+      media: i2c: imx219: Only use higher LLP_MIN for binned resolutions
+      media: i2c: imx219: Simplify binning mode
+      media: i2c: imx219: Use subdev state to calculate binning and pixelrate
 
-Changes in v2:
- - Moved interrupts enablement call to before enabling irq wakeup as
-   enable_irq_wake() cannot fail, and if anything goes wrong, since the
-   interrupt was previously requested with devm, no further action is
-   needed. Thanks Greg!
+ drivers/media/i2c/imx219.c | 88 ++++++++++++++++++++++++----------------------
+ 1 file changed, 45 insertions(+), 43 deletions(-)
+---
+base-commit: 955a999ca2336869a01bbc2d346185c348929e78
+change-id: 20250219-imx219_fixes_v2-538e89d7b974
 
- drivers/usb/typec/tcpm/tcpci_rt1711h.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-index 64f6dd0dc660..88c50b984e8a 100644
---- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-+++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-@@ -334,6 +334,11 @@ static int rt1711h_probe(struct i2c_client *client)
- {
- 	int ret;
- 	struct rt1711h_chip *chip;
-+	const u16 alert_mask = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_DISCARDED |
-+			       TCPC_ALERT_TX_FAILED | TCPC_ALERT_RX_HARD_RST |
-+			       TCPC_ALERT_RX_STATUS | TCPC_ALERT_POWER_STATUS |
-+			       TCPC_ALERT_CC_STATUS | TCPC_ALERT_RX_BUF_OVF |
-+			       TCPC_ALERT_FAULT;
- 
- 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
-@@ -382,6 +387,12 @@ static int rt1711h_probe(struct i2c_client *client)
- 					dev_name(chip->dev), chip);
- 	if (ret < 0)
- 		return ret;
-+
-+	/* Enable alert interrupts */
-+	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, alert_mask);
-+	if (ret < 0)
-+		return ret;
-+
- 	enable_irq_wake(client->irq);
- 
- 	return 0;
+Best regards,
 -- 
-2.48.1
+Jai Luthra <jai.luthra@ideasonboard.com>
 
