@@ -1,65 +1,65 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2DA1AC88B
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF421E8326
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739984550; cv=none; b=mDPxASclKA+2kWaMwGJY/rTSAldpix32RU4crl7d2nhK16dy5lD1xZrTI4OpAoVB7mdgyBU/q3MWCyXU8bfPDYsATjnU/qoEha8ievmo40RHzW0wL3XBt1yCMcp3j650bVteCUYKkSetZ6j57lXnQb2nUxpbHRyN6LaM37/U2tY=
+	t=1739984655; cv=none; b=Nvw3BKZEUSbxPwST9bpyo/lpYpvPlHT6G78LJ52cB25g1NdfvOn+GqhyAyxCe5M8IWXuQbA0M6LqNvlIUAOcgFBKY4DG210rOLi8fA2MyEDF5UNVdtlRnQSnTE8ev1114s1leYuyaC5RWlwH1tfzLdyeuO8G8w1dqbudANJCkuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739984550; c=relaxed/simple;
-	bh=QxtOwkajl6hH7/pEGXhsHbYvqnaO91BFc88oOREoqyc=;
+	s=arc-20240116; t=1739984655; c=relaxed/simple;
+	bh=ZSlCHoccH1fd2TiMJkNz1beL9R2IY6D8yT+/UdOdbKY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EY5mW5hhNMEjLYhOZBBTG5TGxIHnjo2kot/uSEVEto4xfuXWHYhTodo8gJKZSsu6R/7n0lEHQx8LjJs+hIbeSEVnDjEGRldxdJ7W8kOtikPfibCTi7rU+mhAVjsfeFS7sbNm9a8L9XImTslae+5OyV5wrlokQVMiDguhtgWRWS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rv8czQMD; arc=none smtp.client-ip=209.85.208.44
+	 In-Reply-To:Content-Type; b=BMMAY2sivFIZEXXnNoPJtpCiWsvKWxHM05S2xNKCDa8jJBhh0Zgml2AczJ+jDbsKWmPQ32IecyR4HZu03cSyjBddFAEokjeK0JkLUJKPq5ntV5mZsFLEW87VK4c46UYyCj/k1z76szQhZRA25TjvkAlgsY+W+odJufqWDy19/Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qqf0gLgC; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rv8czQMD"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dc050e6a9dso1455921a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:02:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqf0gLgC"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7c4350826so591966b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:04:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739984547; x=1740589347; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739984652; x=1740589452; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=0d5pqqN0Z8o3hwZnxZn3RZEZ0s3e/kci7dPdnavqqKI=;
-        b=rv8czQMDlCddXJIgk0eWlmZbL9IUJ/xZCUYGG4NWYi79ZOVSFnPiK8547iLl1ljj8E
-         NqX3cymCIYbD7JMNz8+A1QAB5hIN25FrONUbVVPemeSaNhq5GrMJKujdVgxzcp8aGcRs
-         11mmwmd2X5segNglN+Uq92p/FPldQEFSnzxZzlZZtjNKu9G/PVuzxEIvgqZHQ0TiCjv6
-         HZ7hfQaKfSBVmCkoY9fxYRnRjSlt6xnFNdsBqV1AHquyNysK4z7KRRbfwKTCYc1fC2uu
-         7VMZRgGpmBTyodm5gJyyyKRiC2uYlQ4faI9vf1oN9oYoVT3qbw2FdkvWyz3+Pv7I0ED/
-         GRXA==
+        bh=nS+re8IZzfg78cocQERJ5nCGG/g/BmDYdKGFLYilFLk=;
+        b=qqf0gLgCFha3f3ExQ7ULIY/83BgVgOqu6dB36siK9OEZUhwB0NdOaEqhuPoHrH3UtV
+         tj1Xav3TedRp9IlU0x9JADufvV3buKBVkWMVmvesuig4DOSrtXu90iJlgMvymyrGnNP0
+         WC+CESLVhcz7BI9Bzt4UwG6s5iQaS04OuNL1VwcBMnYimIzgIT8SKJAwLuIXAVTGmfb7
+         bISofjboxsjegqzTjUAAZiMFLv6wKWTAG85Uca2esEsewNoTLQM93005R+6DOVMooIGG
+         LogMuYWn9tUk4h6j6AyelaEU2y0+lfQ2Pxc+VqC/+0LeJu+0Plwt5j1/H92PcqEyJZsH
+         SMyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739984547; x=1740589347;
+        d=1e100.net; s=20230601; t=1739984652; x=1740589452;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0d5pqqN0Z8o3hwZnxZn3RZEZ0s3e/kci7dPdnavqqKI=;
-        b=T32Py9/cEX++zz1Cls5TXAmjnHbqpWmFDjiMqQ7Ht0JFsjdtEuNwH2GTTFuFnlSJXq
-         Y2NTCwOjRHc3KMBkDN2lcPvevXVZx8yawg1nHnOiUJ56yflNo9u/I0Ya9JTs6VXrkZsv
-         23EB9GHikewp3Z5JA05n+a9xORQHnEQTKqSpKvKukXj1KCAGMw5vkT8bk8A4A3T/sSg6
-         SBQbnFL5yC80LXtkJa3AiXML67iRUlzb3tyPVx8kfjWJbhZYnbNZ2twKZt4XLdd8ekW7
-         6gyAbgkT5ZYMIgqh6SSHyYi2Ax6SSWKN9EAULy+d6xY28khFEPJx+9CcJScjhsu+pbpN
-         Yvwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVObq65low+4YRrvqGldqdTNXpjQePUFEKaT5x7hBh4XpXyVW8cEejoQPU0UkaVQDJ3ZiH0NAf0myiJZXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYKDZ5s06fclsHzOgGwUfw6aAYDU/6t8xzhj4Zm5MookqrbKoC
-	V5wq3HIpXVc4tR5HdxsPTQSIcm4UX4uWdY3je1PHB74v3X9KRYa6OeIuat1x1/c=
-X-Gm-Gg: ASbGnct2t0LnYf+QDWXCgDkJxd0qahFiBnojhc7vJZStSR3hHjr9VpMkU5c2MHFM6YR
-	vP66dkW0gMMeiDZ4Wwk94Ibc45BaOfZYbAiwCK6JI5yJdryjSavhuWr9GDmIGx1mCxp7Fn4zNEK
-	iC+jTQyCLPwZGCwAA2xXVv7PgykGkjX2QXWY1V2kZfmP+YWlIc/RpTqiA1iuGy4p2JxMo2TO5Pb
-	vzLmxBGdgdGKcea8TsxrZ7Jx14GqAEGWPZz8obKQ2FvQeL/kT7i1CGaMwu/WgBqPi8No4qSRHt5
-	lNgZRaxwZO5j+vH5/ZiciLHVJMMzyFyXb24=
-X-Google-Smtp-Source: AGHT+IGMNGeUxobLczzfjsXrsUzCPQSf8SeShRohU3rVCmLL7Adrb3dgHVGFbZ9nRqq7UPcEGJNnkw==
-X-Received: by 2002:a05:6402:5193:b0:5de:d986:417 with SMTP id 4fb4d7f45d1cf-5e03620ee42mr6390666a12.10.1739984545744;
-        Wed, 19 Feb 2025 09:02:25 -0800 (PST)
+        bh=nS+re8IZzfg78cocQERJ5nCGG/g/BmDYdKGFLYilFLk=;
+        b=VfBLMSvF2WWyHcMW7WHfdKFu4M1xgLzyQKnm27yquMUAiSbK+3A/TvqMWmFl0gNApe
+         EYfU46S/dzGRYoG1uB48pcFvkB9WL9n/OiRsx9DJMIpQ+cN3v83DPZqIHprKFnMuv7K2
+         M1FdgfpVH0TRByhx9aVoNugaWmf/kPX9XxsILLGba/IiHntIWeZS7siXySpdOttpzBLk
+         cC1WF674mamEZ6/u+atIhH5bCqjXqVm39BtFYwvS52Kfk7eGsuuUxvIxgQ8wEfyDOVcA
+         88wcL7OQnY+ypPDobOWwwhj/HrlQ5uhNGM1yRlUIOP1i2mW+t1jJgbGoaAF9sKwLfmqj
+         wzsg==
+X-Forwarded-Encrypted: i=1; AJvYcCXt6fJzGEKcADTj7xncDiBDpgYI3OxhwO+rg4Bj+q617Zen/MkO9SHvi1DxtiIhGp6HnVqSU5YqD6+diN8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV1lJSIFUZF8Z08qyZ81P7RzkVwG6MtyQLJBuacAfYvxKyHyFV
+	FvNKEk8yC0QuLXy8YLFBo5VhXXPpSa7bploteJPydd7cL0+0HVLdg7v6Zj5VTek=
+X-Gm-Gg: ASbGncu4syb+SkoBm+3LtXR7TRa41t3vS6//U8w8ybCi6fvbiXQERJ5RjZxQuT3t3YB
+	+L8zCdqRuepWJ8do2NxD+ybxZwwCBMtHLatrSioQfErf/+jtBl2rvFKrdyhAAR6ww1XFObUvcD6
+	Yah7UC13f0WTvwyCOHffTiEvjzWfA6mGMBcREhmm/8Mzmu1xmUQqAo97DMpGzC65PAcq9WmxEsA
+	yjjgcURPywiU2uR+ssAxfF1Zm20Hhb+iBiPlV6KpzYxkqVkfm+qbMIw2Fpyp73MVw2OkwsOfyu7
+	UZjjTC+RlrQgns407uoMiMI3bZZUTfIplgY=
+X-Google-Smtp-Source: AGHT+IHSBmAP86VSnxXjkgY3cMH8/9ybX2ae7f5N9URrzW7hspPUH+L+dLL7ObVqx/KKAuYObmZ2zg==
+X-Received: by 2002:a17:907:7248:b0:ab6:6176:9dff with SMTP id a640c23a62f3a-abb7053d8e7mr780406166b.0.1739984652450;
+        Wed, 19 Feb 2025 09:04:12 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.206.225])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dedc94688bsm9374660a12.50.2025.02.19.09.02.21
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5323202dsm1299545566b.6.2025.02.19.09.04.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2025 09:02:24 -0800 (PST)
-Message-ID: <2dfe466c-ad94-4683-a2e9-a49e77a61f4f@linaro.org>
-Date: Wed, 19 Feb 2025 18:02:20 +0100
+        Wed, 19 Feb 2025 09:04:11 -0800 (PST)
+Message-ID: <4b2426d2-a7bb-4c19-9ebe-77f6a90caf5e@linaro.org>
+Date: Wed, 19 Feb 2025 18:04:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,8 +67,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/16] dt-bindings: display/msm: dp-controller: Add
- SM8750
+Subject: Re: [PATCH v2 15/16] drm/msm/dpu: Implement new v12.0 DPU differences
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
  <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
@@ -85,8 +84,8 @@ Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Srini Kandagatla <srinivas.kandagatla@linaro.org>
 References: <20250217-b4-sm8750-display-v2-0-d201dcdda6a4@linaro.org>
- <20250217-b4-sm8750-display-v2-5-d201dcdda6a4@linaro.org>
- <aqpuik4zitdfuk4pahn4wyzxdvxldy4dcqjs3mhr6fqtxpoxhf@ssfzzbfce2nu>
+ <20250217-b4-sm8750-display-v2-15-d201dcdda6a4@linaro.org>
+ <qlotuliwnm5spneolztca7avmh2a46pz2xqlxzqbw5kwa53m6q@oyhnzz7fhay3>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -133,23 +132,29 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <aqpuik4zitdfuk4pahn4wyzxdvxldy4dcqjs3mhr6fqtxpoxhf@ssfzzbfce2nu>
+In-Reply-To: <qlotuliwnm5spneolztca7avmh2a46pz2xqlxzqbw5kwa53m6q@oyhnzz7fhay3>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17/02/2025 19:58, Dmitry Baryshkov wrote:
-> On Mon, Feb 17, 2025 at 05:41:26PM +0100, Krzysztof Kozlowski wrote:
->> Add DisplayPort controller for Qualcomm SM8750 SoC which so far looks
->> fully compatible with earlier SM8650 variant.
+On 17/02/2025 20:18, Dmitry Baryshkov wrote:
+> On Mon, Feb 17, 2025 at 05:41:36PM +0100, Krzysztof Kozlowski wrote:
+>> Implement new features and differences coming in v12.0 of DPU present on
+>> Qualcomm SM8750 SoC:
+>> 1. 10-bit color alpha.
+>> 2. New CTL_PIPE_ACTIVE and CTL_LAYER_ACTIVE registers for pipes and
+>>    layer mixers.
+>> 2. Several differences in LM registers (also changed offsets) for LM
+>>    crossbar hardware changes.
 > 
-> As that became a question for QCS8300, does SM8750 also support exactly
-> two MST streams?
+> I'd really prefer for this patch to be split into a logical chunks
+> rather than "everything for 12.x"
+everything 12.x is still logical chunk. I can split more, but without
+guidance what is here logical chunk, will be tricky.
 
-v1.5 of DP (starting from SA8775p , then SM8650 and SM8750) support 4x
-MST for DPTX0 and 2x MST for DPTX1.
+For example 10-bit color alpha looks like separate feature. But
+remaining PIPE/LAYER active - not sure.
 
-The DP in SM8650 and SM8750 are identical, according to datasheet (v1.5.1).
-
+I can split them but I would not call such split necessarily logical.
 
 Best regards,
 Krzysztof
