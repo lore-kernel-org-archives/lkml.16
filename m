@@ -1,187 +1,93 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B610C1F417A
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E456A1FA267
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739982327; cv=none; b=OFrPyIZcr3QcOU+/viajfalME5TkKvcxd2rOof2F92se3zZYCp7mRbeRD3SJAlNU22EgObUNWioW/0MVWWy3xmgbkoy2REfLgEzeNzzU6zj0RiW5eI8vsa0BKWo4LXDZtrhWH0MXfrvIu+YMt7BXcUrOLId71ShpLiM1kHIiczA=
+	t=1739982367; cv=none; b=aBkAasEcef3O41DtqyX7e61fq3Gl9YRQhQjwDI4poIDgIOC3gOMw97r7hcsIQpNZXKTMbQoZKJ74OaIBD8A0G89V9zA1DESaqz6jIgTfWgORCUBT401n8kMxa8dFh/gmnNwVEhexOtGjZrHvS/vNxJ3C7tDftAFhGnAIVYHm+oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739982327; c=relaxed/simple;
-	bh=wfF5o1CDJal8cfQTpr0XKVI6lWBEXW9eOcdNhbClFU8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FS1b2YeTqs9zHghFVx7fZpwZmcX0iTfuhuJiqTaok18pjNv+CTvcIXWL8ZvZfJs49N1dtfAsFDCbxBYNE2XSVWKjab0wv+KoOOXLbEcQQDNSxBc1EeDMjPZkcakZ7V5Kh1oIAcdWA3bK0yVaLyN29GTxReRF3cz6V/rYlH/TCAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gsuIcR7V; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gsuIcR7V"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e07897bf66so2992204a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:25:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739982324; x=1740587124; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vfr8xcnV6SOXQrnYOMtzUn70KMqxWnNTiIb61QR+9Ko=;
-        b=gsuIcR7VCb5OlnJS9CGGJL6XPSi4FHTUwdMP/m2NYl/5x1B80szfpHSwX0hKJLjbUL
-         FDAVYFxcCwc3j8wAyFObpCQqCCCYirYVSDGvxnWU1W+z8eRWt4axObX8hyXp7GC6YOJz
-         ESd5BXTalas46BO2WAxwarpv8CLAfeMK3SGDgL7rXJM7fe1IAPkqvR8GxUuartbBKaeF
-         KwGWEXFbzkmhtpkV5Slm0+mEGdB76m3eHW0hSAAmOfIukvBjuuDQHEpz+XR3YvlYlHT5
-         fImA9KpCmAREWq6el3dGhvLXWrM2iqPTcEVOQOspbQRHBrjGFaAgnFRBZ1JAB56R7w2K
-         xREg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739982324; x=1740587124;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vfr8xcnV6SOXQrnYOMtzUn70KMqxWnNTiIb61QR+9Ko=;
-        b=Zw09Vzcg5SuLlCRi4dV1v98jzOzYSbUr/p2fyTTVGSzXq27SIGmElacaMwPI6DCcCJ
-         RdLy6r9yyls9MnZcDfjb0E3EU7u114izFIexSqeYIP4f8HoK4j3Z+R/SR14O2Kh+/4GJ
-         oJVTQEYRL2TbAId6EoYxeA+oZhJOT5ysQLFCY0DaOVmtWaooc6PgRDJdPw4F5lXvKTzI
-         5lb+vKjMGK3LW/AZa2cmRO9cWi0V/oMgxb2Y6UpVvRZ6VLW6R1L8eFC81yIKU0/JILg5
-         92qJaNp7xKd7WriRD0YekbL4li5E46+eQhvHGUD1u8i8UeW1iQTxbW9+rCF2G6aygB4e
-         hoAg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3UuVWRV+noCIjnBKixWa6d0j8hFibAVsR86lkl2GNJBaGKMg2vb1RWOdRwS5hkyPC47Fcm8Vuh/Qywdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj49zDUsXb3V33WhTXLRiuyq8vZYMpo/P5y+2C8us/EUcApZAo
-	iAzOLrRrmU/10n3K+WBn5P2tG9iXSbveYvAyqtaMNGsS11nRk3t0lnC6fPUH+2o5PTbQ6UQTSFE
-	JaokSyAtqTzkQ4vlCU37v5EbJa4d0kGw8DiIycg==
-X-Gm-Gg: ASbGnctIR5LU3HYCblBB4Ajp2aJzIlY/Jqs65rBNJT8SX9uDeXMxamsriL2A1DisaBo
-	zXQFI7kHoYz3u6OzGiApOGqJ3JMZHsYUwI9Nt6kQS1/lvKkQc4zookqJZRrnlfmu3vIGhfJus5J
-	ZkGex0+eNc9/87uruI6VnbBthFrw==
-X-Google-Smtp-Source: AGHT+IHQBEIHsZVyeycE7fivGlzMEEtEwNHnuqIzam/OZZjAgHRnz6FJFxQCLkYEUS034I3fKZFwV69phIEn6tQXZi4=
-X-Received: by 2002:a05:6402:42c9:b0:5de:481a:cbc1 with SMTP id
- 4fb4d7f45d1cf-5e08951cbe6mr4299900a12.16.1739982323909; Wed, 19 Feb 2025
- 08:25:23 -0800 (PST)
+	s=arc-20240116; t=1739982367; c=relaxed/simple;
+	bh=cRNKMwVBDiApieG+xjL/3lFQ/G1OmBO29LbAVz/Ag/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=F8FOYljfjQ7QjC5OJQYDc6URBDZL3m/ESz2qCulThbL6vH560ymS5RaGfRLm3M2bWvnSuWCw1GZTPdwd44q+26WkC9v0EHMX26o29uZKYRtcrcociWaGOU1eQDvRlfetYSU+7OcK/hiHnhS8THpQNsjXLaTyq7XQWnZPNDj4Jus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4EB81682;
+	Wed, 19 Feb 2025 08:26:22 -0800 (PST)
+Received: from [10.57.35.204] (unknown [10.57.35.204])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40A3C3F6A8;
+	Wed, 19 Feb 2025 08:25:58 -0800 (PST)
+Message-ID: <e0a6308f-5628-4698-95a7-ec1b918358b0@arm.com>
+Date: Wed, 19 Feb 2025 16:25:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219093747.2612-1-xuewen.yan@unisoc.com> <20250219093747.2612-2-xuewen.yan@unisoc.com>
-In-Reply-To: <20250219093747.2612-2-xuewen.yan@unisoc.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 19 Feb 2025 17:25:12 +0100
-X-Gm-Features: AWEUYZnAy44goPgfZ57mSEh_j555Ws6BqhvsM4T9ShWk7WDHRvA05P6bJ_F-NAU
-Message-ID: <CAKfTPtDuZSL4UdCbjkAqy2bnKo_FrqEU33EcuuPwfTS+sO8R3w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] sched/uclamp: Add uclamp_is_used() check before
- enable it
-To: Xuewen Yan <xuewen.yan@unisoc.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, christian.loehle@arm.com, 
-	hongyan.xia2@arm.com, ke.wang@unisoc.com, di.shen@unisoc.com, 
-	xuewen.yan94@gmail.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] arm64: Add BBM Level 2 cpu feature
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
+ yang@os.amperecomputing.com, catalin.marinas@arm.com, will@kernel.org,
+ joey.gouly@arm.com, broonie@kernel.org, mark.rutland@arm.com,
+ james.morse@arm.com, yangyicong@hisilicon.com, anshuman.khandual@arm.com,
+ maz@kernel.org, liaochang1@huawei.com, akpm@linux-foundation.org,
+ david@redhat.com, baohua@kernel.org, ioworker0@gmail.com,
+ oliver.upton@linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250219143837.44277-3-miko.lenczewski@arm.com>
+ <20250219143837.44277-5-miko.lenczewski@arm.com>
+ <a6846db8-9efa-46f8-9939-7727c83d1601@arm.com>
+ <cbc3f62b-8890-42ca-81ff-66f1e4ea1cf3@arm.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <cbc3f62b-8890-42ca-81ff-66f1e4ea1cf3@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 19 Feb 2025 at 10:40, Xuewen Yan <xuewen.yan@unisoc.com> wrote:
->
-> Because the static_branch_enable() would get the cpus_read_lock(),
-> and sometimes users may frequently set the uclamp value of tasks,
-> and this operation would call the static_branch_enable()
-> frequently, so add the uclamp_is_used() check to prevent calling
-> the cpus_read_lock() frequently.
-> And to make the code more concise, add a helper function to encapsulate
-> this and use it everywhere we enable sched_uclamp_used.
->
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+On 2025-02-19 3:43 pm, Ryan Roberts wrote:
+> On 19/02/2025 15:39, Robin Murphy wrote:
+>> Hi Miko,
+>>
+>> On 2025-02-19 2:38 pm, Mikołaj Lenczewski wrote:
+>>> The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+>>> and this commit adds a dedicated BBML2 cpufeature to test against
+>>> support for.
+>>>
+>>> This is a system feature as we might have a big.LITTLE architecture
+>>> where some cores support BBML2 and some don't, but we want all cores to
+>>> be available and BBM to default to level 0 (as opposed to having cores
+>>> without BBML2 not coming online).
+>>>
+>>> To support BBML2 in as wide a range of contexts as we can, we want not
+>>> only the architectural guarantees that BBML2 makes, but additionally
+>>> want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+>>> us having to prove that no recursive faults can be induced in any path
+>>> that uses BBML2, allowing its use for arbitrary kernel mappings.
+>>> Support detection of such CPUs.
+>>
+>> If this may be used for splitting/compacting userspace mappings, then similarly
+>> to 6e192214c6c8 ("iommu/arm-smmu-v3: Document SVA interaction with new pagetable
+>> features"), strictly we'll also want a check in arm_smmu_sva_supported() to make
+>> sure that the SMMU is OK with BBML2 behaviour too, and disallow SVA if not. Note
+>> that the corresponding SMMUv3.2-BBML2 feature is already strict about TLB
+>> conflict aborts, so is comparatively nice and straightforward.
+> 
+> Thanks for catching this, Robin, as I completely forgot to pass this onto Miko
+> yesterday after our conversation. I suggest we tack a commit on to the end of
+> this series to cover that?
+> 
+> I think that strictly this is not needed for Yang's series since that only uses
+> BBML2 for kernel mappings, and those pgtables would never be directly shared
+> with the SMMU.
 
-Apart the small comment below
+Yup, it's really more just a theoretical correctness concern - certainly 
+Arm's implementations from MMU-700 onwards do support BBML2, while 
+MMU-600 is now sufficiently old that nobody is likely to pair it with 
+new BBML-capable CPUs anyway - so it's just to cover the gap that in 
+principle there may be 3rd-party implementations which might get confused.
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-
-> ---
-> V2:
-> - change some commit message;
-> - Add a helper function and use it everywhere when enable uclamp (Vincent)
-> ---
-> ---
->  kernel/sched/core.c     |  6 +++---
->  kernel/sched/sched.h    | 14 ++++++++++++++
->  kernel/sched/syscalls.c |  2 +-
->  3 files changed, 18 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 38a7192bfc19..0466a2f61b99 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1942,12 +1942,12 @@ static int sysctl_sched_uclamp_handler(const struct ctl_table *table, int write,
->         }
->
->         if (update_root_tg) {
-> -               static_branch_enable(&sched_uclamp_used);
-> +               sched_uclamp_enable();
->                 uclamp_update_root_tg();
->         }
->
->         if (old_min_rt != sysctl_sched_uclamp_util_min_rt_default) {
-> -               static_branch_enable(&sched_uclamp_used);
-> +               sched_uclamp_enable();
->                 uclamp_sync_util_min_rt_default();
->         }
->
-> @@ -9295,7 +9295,7 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
->         if (req.ret)
->                 return req.ret;
->
-> -       static_branch_enable(&sched_uclamp_used);
-> +       sched_uclamp_enable();
->
->         guard(mutex)(&uclamp_mutex);
->         guard(rcu)();
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 3624fdce5536..bd22af347d0b 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -3407,6 +3407,18 @@ static inline bool uclamp_is_used(void)
->         return static_branch_likely(&sched_uclamp_used);
->  }
->
-> +/*
-> + * Enabling static branches would get the cpus_read_lock(),
-> + * check whether uclamp_is_used before enable it to avoid always
-> + * calling cpus_read_lock(). Because we never disable this
-> + * static key once enable it.
-
-Maybe, simply:
-
-Enabling static branches would get the cpus_read_lock(),
-check uclamp_is_used before enabling it. There is no race issue
-because we never disable this static key once enabled.
-
-
-> + */
-> +static inline void sched_uclamp_enable(void)
-> +{
-> +       if (!uclamp_is_used())
-> +               static_branch_enable(&sched_uclamp_used);
-> +}
-> +
->  static inline unsigned long uclamp_rq_get(struct rq *rq,
->                                           enum uclamp_id clamp_id)
->  {
-> @@ -3486,6 +3498,8 @@ static inline bool uclamp_is_used(void)
->         return false;
->  }
->
-> +static inline void sched_uclamp_enable(void) {}
-> +
->  static inline unsigned long
->  uclamp_rq_get(struct rq *rq, enum uclamp_id clamp_id)
->  {
-> diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-> index 456d339be98f..9100a77e9d79 100644
-> --- a/kernel/sched/syscalls.c
-> +++ b/kernel/sched/syscalls.c
-> @@ -368,7 +368,7 @@ static int uclamp_validate(struct task_struct *p,
->          * blocking operation which obviously cannot be done while holding
->          * scheduler locks.
->          */
-> -       static_branch_enable(&sched_uclamp_used);
-> +       sched_uclamp_enable();
->
->         return 0;
->  }
-> --
-> 2.25.1
->
+Cheers,
+Robin.
