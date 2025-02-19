@@ -1,140 +1,117 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F722862BE;
-	Wed, 19 Feb 2025 02:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8132BAF4
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 02:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739931403; cv=none; b=UTl0Y6OpkOhKqGIlEioItEnpiLWAWcruU6sxn00SDnpE3Nx9/VaNzI/K8cAvWeuePVnlya1n0MHYahi4BiYyaYZWvC4PiwTFb58nEY6frZabGNl4H4NQ7WPDvduJ+N65gDOcx1RW3J1b9tA+xq27BY95NyEObPl5SZT8CIkDlBo=
+	t=1739931502; cv=none; b=CvIRqtnoCNSuFWWmYSahHSN5M2rAjrz4Z2hnHuLP2jgu1SBhDVUebZIx5SNBjKn7eES3YsRCtHAiM4dHhEDrBg/iEZeCZvjdhBYTLNQct9qlArKUR9AutiNHMRFlV3ZoWUsnwuljQ6xX8p78GQF1ETpDwTJBNnVEBo9ccxCyyj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739931403; c=relaxed/simple;
-	bh=4bSW4K+gbt3sFOuxBssTMp43VhqeJuAd/btPUf4ThMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iwKN5oYsI5XCoWJq1nO69K4Id8UfOeH+z8lAP4ynA95g/SIl4dutbIxjQTQGTpWHP4lRH5Poh9dFbaX7cmMtPC14/7/DONYcHHDUIXcY4rvmg+iQ5rQlpOC/aUWQlmlcsSN4H+brZQW61HfNLHlvkHfRGm60FyuACN7I21vCrLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YyKdl69QgzjYD3;
-	Wed, 19 Feb 2025 10:11:55 +0800 (CST)
-Received: from dggemv703-chm.china.huawei.com (unknown [10.3.19.46])
-	by mail.maildlp.com (Postfix) with ESMTPS id B6161140367;
-	Wed, 19 Feb 2025 10:16:31 +0800 (CST)
-Received: from kwepemn100006.china.huawei.com (7.202.194.109) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 19 Feb 2025 10:16:31 +0800
-Received: from [10.174.176.245] (10.174.176.245) by
- kwepemn100006.china.huawei.com (7.202.194.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 19 Feb 2025 10:16:30 +0800
-Message-ID: <f3b279ea-92c3-457f-915a-2f4963746838@huawei.com>
-Date: Wed, 19 Feb 2025 10:16:29 +0800
+	s=arc-20240116; t=1739931502; c=relaxed/simple;
+	bh=d5gBe3uMzbzbRgMIs5yqF32u3cf3K3rckJ+RBQQLERc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h2hvekRRpSvH9JN9BM1Pek2X1f97C5A8iNfMT6C9d1U5EBt3toOm4Tc4NVoeKuoDd5S7Sf8uDVY/RtBbpN4p2t94p9WCd1I3wKnOwMfmxnUb7b31aapONGlzZfPfKsd38XAp+rW3/ODwTCsXboIHNPqYmbB7RfqI6UScct/BMqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e/B8l2iX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e/B8l2iX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739931499;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=I/mn+nVqK2FRLw7VBAQJ/H349Ch26E3Rtf6ayDMSoXY=;
+	b=e/B8l2iXMcyrw9a7lupBl6TdfLyIpCBOU2ZlRKfNMmI2asqy2x9aNOGoAvaSSJJOuzH7iL
+	9SvKPTezmTmQ2UXqRqMelDhYHXn8pWyvU+TMufKOJMAe8HMftGhSqDog9rhtJZO+dgPOmG
+	AYjCCT/v92y6xJregGnV4JMQQxArvuI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-385-cD9dy8IXPDaf652OcGdbqg-1; Tue,
+ 18 Feb 2025 21:18:14 -0500
+X-MC-Unique: cD9dy8IXPDaf652OcGdbqg-1
+X-Mimecast-MFC-AGG-ID: cD9dy8IXPDaf652OcGdbqg_1739931493
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 959811975AFC;
+	Wed, 19 Feb 2025 02:18:12 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.65.50])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9D6D01956094;
+	Wed, 19 Feb 2025 02:18:09 +0000 (UTC)
+From: Luiz Capitulino <luizcap@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	david@redhat.com,
+	yuzhao@google.com,
+	pasha.tatashin@soleen.com
+Cc: akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	muchun.song@linux.dev,
+	luizcap@redhat.com
+Subject: [PATCH 0/4] mm: page_ext: Introduce new iteration API
+Date: Tue, 18 Feb 2025 21:17:46 -0500
+Message-ID: <cover.1739931468.git.luizcap@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] tcp: Fix error ts_recent time during three-way
- handshake
-To: Eric Dumazet <edumazet@google.com>
-CC: <ncardwell@google.com>, <kuniyu@amazon.com>, <davem@davemloft.net>,
-	<dsahern@kernel.org>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<horms@kernel.org>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Jason Xing <kerneljasonxing@gmail.com>
-References: <20250218105824.34511-1-wanghai38@huawei.com>
- <CANn89iKF+LC_isruAAd+nyxgytr4LPeFTe9=ey0j=Xy5URMvkg@mail.gmail.com>
-Content-Language: en-US
-From: Wang Hai <wanghai38@huawei.com>
-In-Reply-To: <CANn89iKF+LC_isruAAd+nyxgytr4LPeFTe9=ey0j=Xy5URMvkg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemn100006.china.huawei.com (7.202.194.109)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
+Hi,
 
+  [ Thanks to David Hildenbrand for identifying the root cause of this
+    issue and proving guidance on how to fix it. The new API idea, bugs
+    and misconceptions are all mine though ]
 
-On 2025/2/18 21:35, Eric Dumazet wrote:
-> On Tue, Feb 18, 2025 at 12:00 PM Wang Hai <wanghai38@huawei.com> wrote:
->>
->> If two ack packets from a connection enter tcp_check_req at the same time
->> through different cpu, it may happen that req->ts_recent is updated with
->> with a more recent time and the skb with an older time creates a new sock,
->> which will cause the tcp_validate_incoming check to fail.
->>
->> cpu1                                cpu2
->> tcp_check_req
->>                                      tcp_check_req
->> req->ts_recent = tmp_opt.rcv_tsval = t1
->>                                      req->ts_recent = tmp_opt.rcv_tsval = t2
->>
->> newsk->ts_recent = req->ts_recent = t2 // t1 < t2
->> tcp_child_process
->> tcp_rcv_state_process
->> tcp_validate_incoming
->> tcp_paws_check
->> if ((s32)(rx_opt->ts_recent - rx_opt->rcv_tsval) <= paws_win) // failed
->>
->> In tcp_check_req, restore ts_recent to this skb's to fix this bug.
->>
->> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
->> Signed-off-by: Wang Hai <wanghai38@huawei.com>
->> ---
->>   net/ipv4/tcp_minisocks.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
->> index b089b08e9617..0208455f9eb8 100644
->> --- a/net/ipv4/tcp_minisocks.c
->> +++ b/net/ipv4/tcp_minisocks.c
->> @@ -878,6 +878,10 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
->>          sock_rps_save_rxhash(child, skb);
->>          tcp_synack_rtt_meas(child, req);
->>          *req_stolen = !own_req;
->> +       if (own_req && tcp_sk(child)->rx_opt.tstamp_ok &&
->> +           unlikely(tcp_sk(child)->rx_opt.ts_recent != tmp_opt.rcv_tsval))
->> +               tcp_sk(child)->rx_opt.ts_recent = tmp_opt.rcv_tsval;
->> +
->>          return inet_csk_complete_hashdance(sk, child, req, own_req);
-> 
-> Have you seen the comment at line 818 ?
-> 
-> /* TODO: We probably should defer ts_recent change once
->   * we take ownership of @req.
->   */
-> 
-> Plan was clear and explained. Why implement something else (and buggy) ?
-> 
-Hi Eric,
+Currently, trying to reserve 1G pages with page_owner=on and sparsemem
+causes a crash. The reproducer is very simple:
 
-Currently we have a real problem, so we want to solve it. This bug 
-causes the upper layers to be unable to be notified to call accept after 
-the successful three-way handshake.
+ 1. Build the kernel with CONFIG_SPARSEMEM=y and the table extensions
+ 2. Pass 'default_hugepagesz=1 page_owner=on' in the kernel command-line
+ 3. Reserve one 1G page at run-time, this should crash (see patch 1 for
+    backtrace) 
 
-Skb from cpu1 that fails at tcp_paws_check (which it could have 
-succeeded) will not be able to enter the TCP_ESTABLISHED state, and 
-therefore parent->sk_data_ready(parent) will not be triggered, and skb 
-from cpu2 can complete the three-way handshake, but there is also no way 
-to call parent->sk_data_ready(parent) to notify the upper layer, which 
-will result
-in the upper layer not being able to sense and call accept to obtain the 
-nsk.
+ [ A crash with page_table_check is also possible, but harder to trigger ]
 
-cpu1                                cpu2
-tcp_check_req
-                                     tcp_check_req
-req->ts_recent = tmp_opt.rcv_tsval = t1
-                                     req->ts_recent=tmp_opt.rcv_tsval= t2
+Apparently, starting with commit cf54f310d0d3 ("mm/hugetlb: use __GFP_COMP
+for gigantic folios") we now pass the full allocation order to page
+extension clients and the page extension implementation assumes that all
+PFNs of an allocation range will be stored in the same memory section (which
+is not true for 1G pages).
 
-newsk->ts_recent = req->ts_recent = t2 // t1 < t2
-tcp_child_process
-  tcp_rcv_state_process
-   tcp_validate_incoming
-    tcp_paws_check // failed
-  parent->sk_data_ready(parent); // will not be called
-                                     tcp_v4_do_rcv
-				     tcp_rcv_state_process // Complete the three-way handshake
-													// missing parent->sk_data_ready(parent);
+To fix this, this series introduces a new iteration API for page extension
+objects. The API checks if the next page extension object can be retrieved
+from the current section or if it needs to look up for it in another
+section.
+
+All details in patch 1. Also, this series is against Linus tree commit
+2408a807bfc3f738850ef5ad5e3fd59d66168996 .
+
+RFC -> v1
+=========
+
+- Revamped the API by introducing for_each_page_ext macros
+- Implemented various suggestions from David Hildenbrand, including page_ext
+  lookup optimization
+- Fixed changelogs
+
+Luiz Capitulino (4):
+  mm: page_ext: add an iteration API for page extensions
+  mm: page_table_check: use new iteration API
+  mm: page_owner: use new iteration API
+  mm: page_ext: make page_ext_next() private to page_ext
+
+ include/linux/page_ext.h | 67 +++++++++++++++++++++++++++++++++++++---
+ mm/page_ext.c            | 48 ++++++++++++++++++++++++++++
+ mm/page_owner.c          | 61 +++++++++++++++++-------------------
+ mm/page_table_check.c    | 39 +++++++----------------
+ 4 files changed, 152 insertions(+), 63 deletions(-)
+
+-- 
+2.48.1
 
