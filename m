@@ -1,171 +1,228 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2041.outbound.protection.outlook.com [40.107.22.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C1B1FE469
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739982229; cv=none; b=H8sdVL6w7he+0mveEfEw/xqcScfKDPM014FfVtyrGe01oi2ogxXvgNBnNTtbFNlU6KWO1xMOiDT/0DYH16mk1/ABrQQ4hQCuecvkn8x4f81zMujnY/XoK2AVp5aBvjWa3DgP234VDLTgOtkWWvOBleW7rOYPs/uQvsom4Jg5PkI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739982229; c=relaxed/simple;
-	bh=e7uWihHaRuX3l60xcjRDNo7zV9F+Ds60faI4+TOm1Tw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jtgIgszNG1FsExUX17/TtUooujEJftFEYE7VFzNI3mARVg0gX7GrAyVaaqTbbD9VoAwVN5SWcIGDs/KUQcY+I1DkSF+Ud5De+nqxwHCsxpkQgiz/4bNG48GmecLGOm8ICEXurc39UqMjEr8QYfBsh0a0aSMkxw4R2eqyKPz8MZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QSCGc83e; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8903E1FE469;
+	Wed, 19 Feb 2025 16:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739982239; cv=fail; b=rd3X8X4tpk6iCqTTHmSWKmHu3sGR9qYpMnu+HQOJhdOypLIsBFHwyJwdmTk6QTRrjBFwLMTD5RktoiFc2NJ1Yvro3NFvJC3PSCAqrf7HCgQUyPmZXkQtOb9J/4uMBtrd5Rh71osnckEYtgcTAbgB3HD2WWOSxb47I0b86/HwP5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739982239; c=relaxed/simple;
+	bh=JtLb3V2v26WXatdwaZxzFsoT2kCIQkygyNxnUxZYg3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=duzFjloK2ifkG3AbfHU4oLW85zqMj8M3/WntjkG4lWWD+mn8esNHSAj9LccW/zP5r3dCSc/SVjwo2gecElUnQg5LS5CKp3zoi3XPiiUC65tyK9WIIMgUvNN2VkxOel8NHe783ML1sJ+u90ckw/bm67CMAcWj8eez6FngVM2JOeA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=GpxOnN5c; arc=fail smtp.client-ip=40.107.22.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QSCGc83e"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4397185cfa9so4102415e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 08:23:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739982226; x=1740587026; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=STDYxeOydJEmeZwWEUJZhgJUaxAx3cfQSyjYXjHJqhE=;
-        b=QSCGc83eVgV9H49UYQE3nB15kElFnPfz8oT5zDy5Ho375u49jODjqCCJae5PJs+mf5
-         wh5CxuVvMtTAz5t/AYFk1S7sO8ryn7+zxMat3rVNPvDlg+H/OwCwPoNUQHFAbR++g+2J
-         LR1vDL2309owPum5sajjpQy5wX3GD/abaRad+SIjr1AF1EQ2LrR2kKVDiZC7zlyfwLOK
-         tmXMQplPFRSOQQIIn8Rdg+xhaGKY7HUDjEefvbyfe/wyGQRt0YlXVaAVpYfrkhia31+f
-         Fk3i5Pxfspb2tVtb5hM5DyQhzojXi6dkMSjIywVPHwGcwKOxkJWi5kmWCSc9u161jX2L
-         r5oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739982226; x=1740587026;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=STDYxeOydJEmeZwWEUJZhgJUaxAx3cfQSyjYXjHJqhE=;
-        b=qDhf5Qsd3FbrTXUjUVnaDQVqVJDIWAkwAxmp5yUP0X9zZE9zsbJ5P/22eqkgysHXK+
-         l7x2zlZxYEp2qhTiBTrt5jMKPPth1qkanHZNIO1pUhlSwhUe0uyT8ypIVMFKtA76OC+W
-         q+4Oj5II274zjYhAmPuu2QqlVUQE7IHg9xbxjWHDxGEu9Dbn5unqPpVAi1AxRGx6cvPb
-         CSoXju0ezi3F0Wf5YMVZiCaLkcxYWccHufjNMomT4mjPJ3eglgmdcMF+jtreEkztqYoA
-         3HLg0SdYj+nycYAuendya+rYxiLGL2SrddmwMZePJEjVTS/ewKvG3KqXPvRx2IvFDSii
-         3E7w==
-X-Forwarded-Encrypted: i=1; AJvYcCX11eUBUBqDtP9D562ZDwpeXtIC29Dt4jki1f+9C/Hs4Tpq7vbuQ+kICOfujW85fHJno8aTwL0YFdYwOdM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx43wBk6Fp3FjuJMNi8reu9VKWAPtToV2gx39libCq+rOFe6wvt
-	1Z2edvsjBQIA1kylJbQdsO7WNbYg+zkOanupW1XghgTgGt/CWCK1HZIOYgKpyCY=
-X-Gm-Gg: ASbGnctkws6qN0hGjVkDBbA4pY5S9lNCMvBXDwwwN3CF5LFGQ5DVT8QDEBVdX3C6pGl
-	Kg5n4BCCVubbjDUjVJcpCWXRe7cnKxSZ6nMQU/05J0j4awDHe1b9VGJ90k7qBG8Og/BnXuno8qV
-	ldeNYCFdx28bw+LCO1fIKD5b+mZvIoWOcvkG+FT50kV1xAvmjDy9Rl3izWvQyNqF0t6PeWPKUS9
-	gnNTgBj8J2vuGluMN0AEl2/P6wJLO+FMOwilyqbgzy7k07bsyucMVVgnm6cLhOwWW8TDbm2GoUd
-	serbo1YNi35AlxVNz3aQHyi4cZFSVNw=
-X-Google-Smtp-Source: AGHT+IFCXH6juWXCxM4namsDbJk7fdm7tD4GiYlIZEnzx6Vaog88SCNo/gNggeL5ghgnRcT3Fr5pqw==
-X-Received: by 2002:a05:600c:1512:b0:439:8b19:fa9a with SMTP id 5b1f17b1804b1-4398b19fc41mr36232625e9.2.1739982225613;
-        Wed, 19 Feb 2025 08:23:45 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.206.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f25a0fe5esm18442417f8f.99.2025.02.19.08.23.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 08:23:45 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 19 Feb 2025 17:23:33 +0100
-Subject: [PATCH v5 2/2] drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01]
- bitfields and simplify saving
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="GpxOnN5c"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fFHbcm8aDJlU1CbQ1sRlnXNkPFtyazzegRVSYFZfEKhqVACp9Hoxn2MOxrllzQ9cYp5pIpvK28smMHNwdc81LgSuKNHJMzuvpv5xUlpfpLkWfo/sEhEFm/2+M1nk1EPoffT1H8pari5sESrHY/6KktelOvA5OqmVS6EpHUgHPwLkx+g0mp8y0vQkk3QxY1Lf+4aHbYVuOSmb3fM4Z6nIQmfQHhZ0wsb2wVQ7d8enbRXLDi2HZu2/R+2IaR8lFBEmFdoGzNLfYiSuc8sWDpOPztspQE0R+Qq8OP/tiW0a8UpYwp2xZktPHABnGGDmoZMB1oDOhDeoCCTIkJLoNS4JaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=acWuaP7/tiffKcycS+rRgZfZGxHSkrHJbwJhE0LtJN4=;
+ b=JOdmvIWZLzAYVl34PQ/7pMPmDfNGL8RWufecFaWOmx7XJzqeDJ8C91TiYSGg+6+9Iyxehce0ZjPc4VsH+r3CGTVz9IVFFj/fiMu11NEmb14R9MaE6KtMOI8f3dPze0RF7kx9ZKnQLDvH3104UxAT3PlzogY3om0AmNNYgpctgCCeFpJnZoCSD0Plmu0VJM1DN1IFRIoMq9LRWfDaYChwOLH28RYlUFYsBi5SxhIRwFP2YCbPtl+UPek1KPAtk33Rn3YU4IApvuUKZjYRYIksIR1VP0moYtphe08hXyiPw29tt1rgJQZUmsS+Bt7cCZohOW8sxbewLeRhxcNmIb+crg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=acWuaP7/tiffKcycS+rRgZfZGxHSkrHJbwJhE0LtJN4=;
+ b=GpxOnN5cRBUVy52R+UzZ+7zN3ebQaXxP77uQkyPxksQSFYVyQMVzzf10+6ST+mnPpHPNVeYosPyiGzANhudhAAmTX24h/KR5K4CS3iYZdZ5WQXwHB/BbVqm6nAPcdN3MMnkKZSUh0N3ATjNJsYejXsfxiFuKM+nMTohc/f6NeXP40W2xm4mBRRmgLzUFO9Ign86s/1VKQldjpJGU73UUvD8VBDRnhiqDzeXQhEgJq7oQdGY3tLFfG7m/ESIvGA67FWkYJcbI1+2HqLkH8yaU5eGJU45HKYS3aGxWPgb+R7urGSGNZ3DN0iQBby1I3LQfFwrEhJBU7zMN30WneduufQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from AS8PR03MB6775.eurprd03.prod.outlook.com (2603:10a6:20b:29d::16)
+ by AM9PR03MB7186.eurprd03.prod.outlook.com (2603:10a6:20b:270::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Wed, 19 Feb
+ 2025 16:23:54 +0000
+Received: from AS8PR03MB6775.eurprd03.prod.outlook.com
+ ([fe80::8a03:2bdb:89c5:32e8]) by AS8PR03MB6775.eurprd03.prod.outlook.com
+ ([fe80::8a03:2bdb:89c5:32e8%4]) with mapi id 15.20.8466.015; Wed, 19 Feb 2025
+ 16:23:54 +0000
+Date: Wed, 19 Feb 2025 17:23:47 +0100
+From: Manuel Traut <manuel.traut@mt.com>
+To: Markus Burri <markus.burri@mt.com>
+Cc: linux-kernel@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Marek Vasut <marex@denx.de>,
+	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] rtc-rv8803: extend sysfs to trigger internal
+ ts-event
+Message-ID: <Z7YFk_SqDaucs092@mt.com>
+References: <20250116131532.471040-1-markus.burri@mt.com>
+ <20250116131532.471040-5-markus.burri@mt.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250116131532.471040-5-markus.burri@mt.com>
+X-ClientProxiedBy: CH0PR03CA0246.namprd03.prod.outlook.com
+ (2603:10b6:610:e5::11) To AS8PR03MB6775.eurprd03.prod.outlook.com
+ (2603:10a6:20b:29d::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-drm-msm-phy-pll-cfg-reg-v5-2-d28973fa513a@linaro.org>
-References: <20250219-drm-msm-phy-pll-cfg-reg-v5-0-d28973fa513a@linaro.org>
-In-Reply-To: <20250219-drm-msm-phy-pll-cfg-reg-v5-0-d28973fa513a@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jonathan Marek <jonathan@marek.ca>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Rob Clark <robdclark@chromium.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2560;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=e7uWihHaRuX3l60xcjRDNo7zV9F+Ds60faI4+TOm1Tw=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBntgWLptxlLsDSPuC13zxCb4GjCqFlevEaleizP
- 796ZuFHIgGJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ7YFiwAKCRDBN2bmhouD
- 1/uWD/9Tvjr1rRMWsPNMmAYYIaKkacdXn8m5XOmuCW4DbdnsCKrLkiQMbMlWLiy1dY6qPP7IJxt
- SwAnt2GRPWIxdM8N504hqqx+PG7vc85jOsIh55NAUUFMrHiJbTZ8pTrKat8MOCwb56TVtOLnuKa
- vHomGZwcGqRCZN2TfJ2YdtZWYVQGG01ylF9AEm3LSZHKYB2ykLLgD8locKlvyGymRkOPnSsIWy+
- bXwDv1PkzYSFrSo8CnA5asBzdJHJWEHzGkNbQJCqWuubTtqL1ribeOaYa++cyN/TSWXZMfHBmc0
- z5DZAVQn295rzoroUmrFVSoTEegzudPiICE2Y1NhdLMSZpn/8Oqu52C0/nbSbzMqpDjLb4JHtC4
- WQJtKv1zSumQI1p1xe+StDtLPCm6upiOEfIm0DA3EJaFcTrZWsxY4AnOiZ/V7+hv7QjmRsOBquM
- 28PZtgQBdeiW2Uy+2r3y0K7hHb6dJHWEWAdS1DvZDZ15soRKXKJjdZJtaZ21R0z28CeJIBrh2z1
- QgOWGlBbqsWdlFyuwc0Naioi03zY4xCOrJP5Yn7SJEOTBDJj5fckmQOzZkUAAPVDPxNmKjHaCLO
- 7psBxs/jikM6sJz/qX+6QfaItHvskVAmhULu23h45HYbbtZnQHf5mqac+g0KlRwMINhciDKtLyh
- VHtIGFCovaGZjJg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR03MB6775:EE_|AM9PR03MB7186:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34a99deb-947d-484b-2b29-08dd5101cdce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wEwFAzk97Npciu0tVpTN+spqJpLcmhzLWDpX5HYJGy6sbMzMMesRBPd6KQps?=
+ =?us-ascii?Q?B383F6Z0vfCR6sTuNyJsE3EBxKQMIPzvRJ7JGtsVkbftxJKZa8WSxSsFhX/m?=
+ =?us-ascii?Q?nQfjQmx244dIAq/RVgk44SVtEb3NjPG4wCPECJ/mWHS5Djozt77gDynJPTPK?=
+ =?us-ascii?Q?Y9KUCSAojRfcEZRr9woe829inKDXnoY5YvjP9rtXtszgUEl2WuBesFHMZsrN?=
+ =?us-ascii?Q?EzVhSkJiHvQMuh7yVVQjMZfolt8UpbGy606RkZr/VOg1YfLM/Bka+/vp7GQK?=
+ =?us-ascii?Q?0KUS++hmKvn+sEOKyqtrVVsBpetJKVAoyxFID4Ct7+/YuqXl7Z1yDLZcjlrR?=
+ =?us-ascii?Q?nWXeaDyxizj4NDMqcb3W///UPjFXGlOKoeEycakF3SW8FOnblBh4GnK9h63q?=
+ =?us-ascii?Q?PKdxqmZCbgzgtI56wgSPG89y0Xv33ZpJ5s58ZLgxX9Z6jo9/g39oOU6vk/uZ?=
+ =?us-ascii?Q?ieKaWwOUMumfivL079m48d2VokkrTUPRpZGX6sIPVjDu30e5OGztI16ksJQ9?=
+ =?us-ascii?Q?zHtF5O1m5FW1tPGp2aUQ6u3a/qGyyWpj3HKjV0gVy/hocPAbxUXRli4nyuD6?=
+ =?us-ascii?Q?zMUE/aee5LXg0TLZw+qTsRGRy3NFg2eaj9GeIRJ/6W6cgp6KWctdPkml6pKw?=
+ =?us-ascii?Q?wzADcAUdV4x1OJY6o+tc2JFMlC2eZCfXJXol5caZPiR9ikuKmkZo7zFs+EpG?=
+ =?us-ascii?Q?Tpwyog3Phbim9vgDQYgmeovt8l+eU6q5NLHaNx3cQxFc9Bu6K5WjADe67VGE?=
+ =?us-ascii?Q?7Meu8fflz9B8Vk2oY6/207qClcjlk8GKMNflxtiOVhbZT1BhDZ57Z51RwAad?=
+ =?us-ascii?Q?v0s3PKmF+39kDN9XsFlfwRVgcEedyrj0hlCS3ED1TdYXcvz2rVsU0WcCarMZ?=
+ =?us-ascii?Q?GQQnDixhrXCxnGPVMsWEZL6u60I5DNcka36DnX3qY6Zg0OoapTNFf/1u+5W6?=
+ =?us-ascii?Q?qaC9p5Cqq3n6KA88zYGGPLFkS/AcloQdb/8aj7Ep0QHypI69t2spW0IImqd7?=
+ =?us-ascii?Q?XvSMRaLtwq1t/YcxPOdH0dVCjYHKaTGeqnmgzv0tLskvRwHvVeFN/gnvvGRZ?=
+ =?us-ascii?Q?eAr+EQVQWODVDnGxHOby8O1o+4GJj5GQI3ANIBuVesD6g2l7FImMSuhaYMNj?=
+ =?us-ascii?Q?WIYGFE/65XOFZmqrsxrOywZC1xw9+uqVuX4yRXvCXBQKlxLMmBrE9QZoSXsL?=
+ =?us-ascii?Q?XQ1LD0BOKYA+AdDQjaCmknL0WYWsIEOgsS8izoZgxw4AyIsW+x/WiU70FN/E?=
+ =?us-ascii?Q?SZVQlgT6BoM5RL6YwRAEUJ/K+cpAjjtbZ+3bWbae4ypZ1r59IsLjYctXOc8u?=
+ =?us-ascii?Q?tLRXMOfSb9r9QjGGi+hN/FeY+JKOULdDJsdryWCU4sK0mF4YRp6gej/kLsma?=
+ =?us-ascii?Q?MZznfvukxGX5qNn4nr0AyVDh16ewLFgnPDf0YisvIjtoiNtd4Ed8WEl4tZf9?=
+ =?us-ascii?Q?+mY+kTBAD+UuiKKnAMhsk6ier97ezXSN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR03MB6775.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aozmmgBghvoihEKNBnKKJ3G2jhBRg0HIij4TlH+5e+VIiAiSca71TnqhChbO?=
+ =?us-ascii?Q?5i2JupdjN1Dl/oz7RXR0S/qVDZiNVqpAByxpdblue5pmDTvm3UNqP7jckurB?=
+ =?us-ascii?Q?NIIHHkJmGC9o3PfG7I0u/WiXo5Hk++7sNnQDghAhB3kTo3O8hkA9H3WVyJ5F?=
+ =?us-ascii?Q?6EA5FYo/AUWUTANw3ZkYBhI43VjwVQZhhIBw1cdm4VuAH6faInO4bxTMbUNw?=
+ =?us-ascii?Q?rQ4YxcJh0/PytYE6YtdVSfg0YZ4hoTx+XwV9GB2q7lusBE+KrWqa+KXbIbKg?=
+ =?us-ascii?Q?rU9P3lMMjV5v8vAYVwW155NVp/YRYR18/FhuoqDa0kBJpM8USUyYmva8UPAv?=
+ =?us-ascii?Q?6EVF7lADyjbWkbAF4bIXuPj5CZocsQ/DWwmzMO8UhQ/374Fr+jaEWjTx3igy?=
+ =?us-ascii?Q?80hlXJZekyIOpyl265gbeysjBVhb5bfmLzT3pcwNDKJZyok1K2Tat99u5wIK?=
+ =?us-ascii?Q?UWMbVIghv7V2sYrTpOVIn0oXLxgn/2qlLtzCwP11F5EA1Tw2/91eT2nmvJ1B?=
+ =?us-ascii?Q?ww49cKg4o7QnF5JC139hSQIh/ohi0Lz9dw1paXM71KbuKyWpkychWPXieM69?=
+ =?us-ascii?Q?85LyLSWGSQORoNox5rXMHz8OCMyzb50aM7lTLJ+ZMGAlGvk8Xg3WhOEx2j+g?=
+ =?us-ascii?Q?RfyGqgrd7cQDu2UcysEodO1w7jS82x2dzGbuFhVTzLmwR6BCAuhItTjJJzMJ?=
+ =?us-ascii?Q?7ZBmGwkrPb07t9v90hLCqWYJCH/53ZcyAZL/JGiYH1XudMuB0+F/koS9CEZF?=
+ =?us-ascii?Q?frxn/HHQTOu2jKmE1ofB7DnEROgzr3GyE9XIt8Nxald87MxlitGfdWCuT+kS?=
+ =?us-ascii?Q?AQ+WnpghYYKBf7vlkQx8M2XooCqAyMb8VvfVj7M6A+Eh6KJnKXiCJ0MrDKta?=
+ =?us-ascii?Q?bMW8z7HVIGsnMjbqm2BeYzyKGbfGBr3JxZ41MFQGiMv0KYFWN8GAkUrOlL3t?=
+ =?us-ascii?Q?kk3pMuphUF+aYKU0aC3dzQG1rU4ktlb6zxmmEyfV4pTr+ZSPr5MEN2LfT5mR?=
+ =?us-ascii?Q?jL/Mb/MG4zTD6J3+d3QHK4EelLgp2zOVnMiVwer/EIXcw/ig1hKWBeh5HTLW?=
+ =?us-ascii?Q?TZHZyRqvCP4l880L7mRUxAnnsijmvVLFVgzdgnUzNV4qwggziIhleCQjXj+W?=
+ =?us-ascii?Q?v+dZE8K+pL5E8te5tKm81zcHyVBgzuU5GinYLCVHuGmPQjiVbyU9kS/2VsML?=
+ =?us-ascii?Q?2+c4r2UKo2fC5hjS0z8UKh8CzsJfSHhEv635/QH0HVfkZbVzvw4mxdQA82QH?=
+ =?us-ascii?Q?/3BldLNHALHWneUS08SdXCGI098Nt6/rJFh0+6uG3ePH4OjseZc6CPFgGOQx?=
+ =?us-ascii?Q?6n5j5TnXzHQ0bSO8X5nG4L0fnbIo+r0fk5ttSu1GH2lVksqCDYRhCetbqy6W?=
+ =?us-ascii?Q?YzEyaVxIXd4k96ciiZi6uR2eZR4rR3o9F3qLbTq0bmWrXbvZKen0S2zp0XFM?=
+ =?us-ascii?Q?33US3YzGikc/1vOq9rgB2PhPeeXkkfCCH1LhgPi0hkFPRUKxsnEwSoRqBOKp?=
+ =?us-ascii?Q?JImfap13ZAB5frjHxt0a5VOErBf7T07E1dbS/TEIkVvwxZWFVzo20EluPPLH?=
+ =?us-ascii?Q?uMiQ/+P0m3dN+z0kxw+Y9D+gXDVcAPtUYnuDCAuU?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34a99deb-947d-484b-2b29-08dd5101cdce
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR03MB6775.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 16:23:54.7206
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0h0hZ0IY571UcUgRLZ9RayfPbnVWTiISo6zGWKRTlCv/u1rs5/IBmd+yewI38n6fReU222qgeHnjsaSWGCLcIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR03MB7186
 
-Add bitfields for PHY_CMN_CLK_CFG0 and PHY_CMN_CLK_CFG1 registers to
-avoid hard-coding bit masks and shifts and make the code a bit more
-readable.
+On Thu, Jan 16, 2025 at 02:15:31PM +0100, Markus Burri wrote:
+> Extend sysfs to trigger an internal time-stamp event.
+> 
+> The trigger function can be used from an application to trigger an
+> internal time-stamp event.
+> 
+> Signed-off-by: Markus Burri <markus.burri@mt.com>
+Reviewed-by: Manuel Traut <manuel.traut@mt.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
----
-
-Changes in v5:
-1. Split part touching pll_7nm_register() to new patch.
-2. Update commit msg.
-
-Changes in v4:
-1. Add mising bitfield.h include
-2. One more FIELD_GET and DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL (Dmitry)
-
-Changes in v3:
-1. Use FIELD_GET
-2. Keep separate bit_clk_div and pix_clk_div
-3. Rebase (some things moved to previous patches)
-
-Changes in v2:
-1. New patch
----
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-index 2fca469b10b33ac2350de5ab8a606704e84800ea..5ef5bc252019486c6f24f256d88d69ad3f6c838b 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2018, The Linux Foundation
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/iopoll.h>
-@@ -572,11 +573,11 @@ static void dsi_7nm_pll_save_state(struct msm_dsi_phy *phy)
- 	cached->pll_out_div &= 0x3;
- 
- 	cmn_clk_cfg0 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
--	cached->bit_clk_div = cmn_clk_cfg0 & 0xf;
--	cached->pix_clk_div = (cmn_clk_cfg0 & 0xf0) >> 4;
-+	cached->bit_clk_div = FIELD_GET(DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0__MASK, cmn_clk_cfg0);
-+	cached->pix_clk_div = FIELD_GET(DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4__MASK, cmn_clk_cfg0);
- 
- 	cmn_clk_cfg1 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--	cached->pll_mux = cmn_clk_cfg1 & 0x3;
-+	cached->pll_mux = FIELD_GET(DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK, cmn_clk_cfg1);
- 
- 	DBG("DSI PLL%d outdiv %x bit_clk_div %x pix_clk_div %x pll_mux %x",
- 	    pll_7nm->phy->id, cached->pll_out_div, cached->bit_clk_div,
-@@ -598,7 +599,8 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
- 	dsi_pll_cmn_clk_cfg0_write(pll_7nm,
- 				   DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0(cached->bit_clk_div) |
- 				   DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4(cached->pix_clk_div));
--	dsi_pll_cmn_clk_cfg1_update(pll_7nm, 0x3, cached->pll_mux);
-+	dsi_pll_cmn_clk_cfg1_update(pll_7nm, DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK,
-+				    cached->pll_mux);
- 
- 	ret = dsi_pll_7nm_vco_set_rate(phy->vco_hw,
- 			pll_7nm->vco_current_rate,
-
--- 
-2.43.0
-
+> ---
+>  .../ABI/testing/sysfs-class-rtc-tamper        |  7 ++++
+>  drivers/rtc/rtc-rv8803.c                      | 33 +++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-rtc-tamper b/Documentation/ABI/testing/sysfs-class-rtc-tamper
+> index f035d0fa5..2fd6578a6 100644
+> --- a/Documentation/ABI/testing/sysfs-class-rtc-tamper
+> +++ b/Documentation/ABI/testing/sysfs-class-rtc-tamper
+> @@ -18,4 +18,11 @@ Description:	(RO) Attribute to read the stored timestamps form buffer FIFO.
+>  		- "1234.567 EVIN1=1" for a trigger from EVIN1 changed from low to high
+>  		- "1234.567 EVIN1=0 EVIN2=1 for a simultaneous trigger of EVIN1 changed to low and
+>  		  EVIN2 changed to high.
+> +		- "1234.567 CMD=0" for a internal trigger
+>  
+> +What:		/sys/class/rtc/rtcX/tamper/trigger
+> +Date:		January 2025
+> +KernelVersion:	6.13
+> +Contact:	Markus Burri <markus.burri@mt.com>
+> +Description:	(WO) Attribute to trigger an internal timestamp event
+> +		Write a '1' to trigger an internal event and store a timestamp.
+> diff --git a/drivers/rtc/rtc-rv8803.c b/drivers/rtc/rtc-rv8803.c
+> index 764e654c2..ca3a19162 100644
+> --- a/drivers/rtc/rtc-rv8803.c
+> +++ b/drivers/rtc/rtc-rv8803.c
+> @@ -904,12 +904,45 @@ static ssize_t read_show(struct device *dev, struct device_attribute *attr, char
+>  	return offset;
+>  }
+>  
+> +static ssize_t trigger_store(struct device *dev, struct device_attribute *attr, const char *buf,
+> +			     size_t count)
+> +{
+> +	struct rv8803_data *rv8803 = dev_get_drvdata(dev->parent);
+> +	struct i2c_client *client = rv8803->client;
+> +	int ret;
+> +	unsigned long tmo;
+> +
+> +	guard(mutex)(&rv8803->flags_lock);
+> +
+> +	/* CMDTRGEN */
+> +	ret = rv8803_write_reg(client, RX8901_WRCMD_CFG, BIT(0));
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = rv8803_write_reg(client, RX8901_WRCMD_TRG, 0xFF);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	tmo = jiffies + msecs_to_jiffies(100); /* timeout 100ms */
+> +	do {
+> +		usleep_range(10, 2000);
+> +		ret = rv8803_read_reg(client, RX8901_WRCMD_TRG);
+> +		if (ret < 0)
+> +			return ret;
+> +		if (time_after(jiffies, tmo))
+> +			return -EBUSY;
+> +	} while (ret);
+> +
+> +	return count;
+> +}
+> +
+>  static DEVICE_ATTR_WO(enable);
+>  static DEVICE_ATTR_RO(read);
+> +static DEVICE_ATTR_WO(trigger);
+>  
+>  static struct attribute *rv8803_rtc_event_attrs[] = {
+>  	&dev_attr_enable.attr,
+>  	&dev_attr_read.attr,
+> +	&dev_attr_trigger.attr,
+>  	NULL
+>  };
+>  
+> -- 
+> 2.39.5
+> 
