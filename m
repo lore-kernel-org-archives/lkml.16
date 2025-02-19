@@ -1,161 +1,245 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D020C8F58;
-	Wed, 19 Feb 2025 17:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B688F58
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739985414; cv=none; b=axAaN957RYGoTNQbJgaaBUc41cAyD/fwHYeiR6ekDQQ0BQ9YUVR88ItBXcAenY995VQaO9uMsl7zVpN0LzQolAe20AaRak1bzDEUegHgSwkD7ppfmyWvwjDMmyJwkYzQZMrqPcnPU1VmCPBctCOgMYiQyWHEeT5av/Bvc1323O0=
+	t=1739985476; cv=none; b=HtidLVhw0aXKix/IYiUWVgBSoQr3RC69PG6BL7eVq8R5YckHPs4PLFL6uGJlJHByzOzBA7wk807ZVVekAp+VFNWA5+3UDFXUjXccgppE7VgDheC0l1OA0IXzNCqgYgHd8KYyxXYtMiKlb2KTTYU6prHIi9FQELsAzvsb7MgD44U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739985414; c=relaxed/simple;
-	bh=R/OdwvhxVB1hYtZC+4Q1DIFlz/AwuxZp29ASVZhUwKg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h5+Cidu4gfNXRIgKUGx80NCurN7ixsxAXB9MiNTj1ex63YajYL0U1FCE0G3x5aB9+EF46KrWdmR+vhQa0w0iKuuHglhNPV1CbjNiiyzFCLNJS+R7UB3rLzkY13i2LCdjRR7krg8pWw5IqzJKcYM3YOuvrT4W7pI/t5TvFCXyAOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j5YPgnNd; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739985476; c=relaxed/simple;
+	bh=OVEokc++S9KH6ryzdoMossQu0Y+z5+h9xa01Nfet8/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CYM9xOUribA2AlWTbSwBkYiMiAE4lzajY/52apCx5kGopb00zCGGkYtdEaCnL2Wf2XgudnFxk2KxCNCAu9xzquqXRWnKamf74ksp6Qf/6WqAcrrIvRKqFqtmNH35D8jzYFCE9mV+abSprI40FuMPEbh+FDMMZAr3rtKl4T9qu5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xbFfkkIH; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j5YPgnNd"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JGGsiJ015223;
-	Wed, 19 Feb 2025 17:16:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	qcppdkim1; bh=giV5lsik2DYjuuq0yoMBwaS1Pe40hyptVuBM7BRGT/E=; b=j5
-	YPgnNdyG3q+1XYQjpZ+RYOQ0rRNl+U7mXRgkb+MusHeB2qKn1k4chjJZOXXJh39L
-	bvRQBDyZrmKCeSP+fZS2hcWHGwo/iI9vSkgQ/o2VCUP4gu1sPA3x/21JJIeLkFo/
-	XQFB5lLtBKj9IMLa34m62N3BH45ixRmQe00CK+zPgKWb44qwl49MaIE2AE7bvUf3
-	G+FrxEFU8D21gA80KiE2+ET0xNJ+qw/kv6SmmqiO9vT7e/59UlbbTNi+4YunwcQE
-	/f24dt0d/gTjXStBw5++ZRt4NrW2wGMlmly/kqkSG3ft6F5E0PDEd/VlEDPBv7X2
-	79QzPHHVxFT1LWZgE8Yw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy4befr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 17:16:29 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51JHGRbK009094
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 17:16:27 GMT
-Received: from stor-berry.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 19 Feb 2025 09:16:27 -0800
-From: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
-To: <quic_cang@quicinc.com>, <quic_nitirawa@quicinc.com>, <bvanassche@acm.org>,
-        <avri.altman@wdc.com>, <peter.wang@mediatek.com>,
-        <manivannan.sadhasivam@linaro.org>, <minwoo.im@samsung.com>,
-        <adrian.hunter@intel.com>, <martin.petersen@oracle.com>
-CC: <linux-scsi@vger.kernel.org>, "Bao D. Nguyen" <quic_nguyenb@quicinc.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "open
- list:UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER..."
-	<linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/1] scsi: ufs: qcom: Remove dead code in ufs_qcom_cfg_timers()
-Date: Wed, 19 Feb 2025 09:16:06 -0800
-Message-ID: <547c484ce80fe3624ee746954b84cae28bd38a09.1739985266.git.quic_nguyenb@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xbFfkkIH"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7272f1de42fso1557556a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:17:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739985474; x=1740590274; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OVEokc++S9KH6ryzdoMossQu0Y+z5+h9xa01Nfet8/g=;
+        b=xbFfkkIH/bW1agzpu/VTz5cIVzF1fboMal96aSps5UaGXgRX3/vUdljfQN0+y9+eqP
+         MSrL4JllOwi5G02dJAGpLf4/Pmd9sfKtDFeKeG+xoV9w1zbe3Y5lmBbPqSOSQtq+58Ch
+         RJMcVVZOC8Sm+PI1oEIQqGObq2Rj8Tb9aCsGw4h52W453Ok4l0DwpTGUmEihT3e6vOFQ
+         DUeEiMdP8S1xGa1drjQ8cL+LmG81UML5hjma2diieAI694q6UaLaed006JaxtyxubOUB
+         YyFmZfI8e4dNlBFKo4ENFed7qdafue9UhprVtQSPEh8zgX3UmTA8kSoTwUAcxRnt5UNe
+         6YIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739985474; x=1740590274;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OVEokc++S9KH6ryzdoMossQu0Y+z5+h9xa01Nfet8/g=;
+        b=K7AXItOrl6CSCHFqxBTofWVgNbmZytWqP7Yoax006lluAjvsDYiUq9BqIw/LF8oPaw
+         ToCJuHE36cLLBEYOaHfC2lJlUS5hPm8TY5/5ZvRYRpACvjAi+usJM0yjqa7Wwk9ThW4T
+         mR8LKX4HpW4DN896x0Y0anlbXe/UI+zkl//xv+P2BTQQNrhGzykobdox7iOnPXsna7la
+         ocaObTF0EWfgVR97MZ+qX4zTfqKkotNEjok9HJ+FfYZacGIUxffyVf+ovLR36iiXtOL2
+         u295fyEoMwjDzuAwaH+hXF6CHI35bSC4Icu74kOGrvrBOmxUBiNuf4XvBz9H9y6KncMI
+         N+pA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhzzb2Tbl+2ZpA3Ksji3FyApOjEVqplzG29RFdGuDEc+X2FdIZAldHnxOlWYnAwtdzpz+t2onI7CavWZ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqriwNweIzlfcjl0HpZXxViDm9nXmTBzxkb40rTqGp/KXBvku3
+	hNdjlcVKKrRjdVhbDpfrCPRC3LChpElkrAGHXU0mEYo52tfMLnZ8Ix6ppJ0Tq+u2DnBrrxHjjbA
+	KPtj9tcl/MsuEVHmIwxEb2zxXNfF+rL2JlOAt
+X-Gm-Gg: ASbGnctOWZ7wOJm2ztPFBWX5fXmFf+BnfRhl0q5s/3wQqYA/SBmEUlYkpgWVF+Jb5SE
+	1RlziDUqfsM+kJWK7crFo3q+eSmJqD9Sxvl9ZVAyISwcVNtix0bNW8FLnk2CeMvIdXYR/1g==
+X-Google-Smtp-Source: AGHT+IFtTKY1jDjL5dUAYxyA8Qit+rF+HdRs0rA/paAkjRr1rXODcHay0xhy+IxufTt79brO1JJ/4wMTQIJGiFmJfCk=
+X-Received: by 2002:a05:6830:388f:b0:727:1041:4202 with SMTP id
+ 46e09a7af769-7273779be8emr4220238a34.21.1739985473786; Wed, 19 Feb 2025
+ 09:17:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9eHrJXrHe7Bf8IV3c54awopguxktShWm
-X-Proofpoint-ORIG-GUID: 9eHrJXrHe7Bf8IV3c54awopguxktShWm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_07,2025-02-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=999 spamscore=0 adultscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502190133
+References: <20250212032155.1276806-1-jeffxu@google.com> <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
+ <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
+ <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local> <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
+ <202502131240.A57C749@keescook> <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
+In-Reply-To: <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
+From: enh <enh@google.com>
+Date: Wed, 19 Feb 2025 12:17:42 -0500
+X-Gm-Features: AWEUYZkrJhHGOE4gkmIH4jm_-jQkhQ0BXH4tsu9GjGg65iZ6RBKYUV0BMKZMxwM
+Message-ID: <CAJgzZopodgaJqUmu_DPjUM6GnL5ZOrjn219wsHNv0Em+iyAgvQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
+To: Pedro Falcato <pedro.falcato@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org, 
+	akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
+	vbabka@suse.cz, Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, 
+	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
+	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, hca@linux.ibm.com, willy@infradead.org, 
+	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
+	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
+	peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org, 
+	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
+	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
+	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since 'commit 104cd58d9af8 ("scsi: ufs: qcom:
-Remove support for host controllers older than v2.0")',
-some of the parameters passed into the ufs_qcom_cfg_timers()
-function have become dead code. Clean up ufs_qcom_cfg_timers()
-function to improve the readability.
+On Tue, Feb 18, 2025 at 6:18=E2=80=AFPM Pedro Falcato <pedro.falcato@gmail.=
+com> wrote:
+>
+> On Thu, Feb 13, 2025 at 8:47=E2=80=AFPM Kees Cook <kees@kernel.org> wrote=
+:
+> >
+> > On Thu, Feb 13, 2025 at 07:59:48PM +0000, Pedro Falcato wrote:
+> > > On Wed, Feb 12, 2025 at 2:02=E2=80=AFPM Lorenzo Stoakes
+> > > <lorenzo.stoakes@oracle.com> wrote:
+> > > >
+> > > > (sorry I really am struggling to reply to mail as lore still seems =
+to be
+> > > > broken).
+> > > >
+> > > > On Wed, Feb 12, 2025 at 12:37:50PM +0000, Pedro Falcato wrote:
+> > > > > On Wed, Feb 12, 2025 at 11:25=E2=80=AFAM Lorenzo Stoakes
+> > > > > <lorenzo.stoakes@oracle.com> wrote:
+> > > > > >
+> > > > > > On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org w=
+rote:
+> > > > > > > From: Jeff Xu <jeffxu@chromium.org>
+> > > > > > >
+> > > > > > > The commit message in the first patch contains the full descr=
+iption of
+> > > > > > > this series.
+> > > > > >
+> > > > [...]
+> > > > >
+> > > > > FWIW, although it would (at the moment) be hard to pull off in th=
+e
+> > > > > libc, I still much prefer it to playing these weird games with CO=
+NFIG
+> > > > > options and kernel command line options and prctl and personality=
+ and
+> > > > > whatnot. It seems to me like we're trying to stick policy where i=
+t
+> > > > > doesn't belong.
+> > > >
+> > > > The problem is, as a security feature, you don't want to make it tr=
+ivially
+> > > > easy to disable.
+> > > >
+> > > > I mean we _need_ a config option to be able to strictly enforce onl=
+y making
+> > > > the feature enable-able on architectures and configuration option
+> > > > combinations that work.
+> > > >
+> > > > But if there is userspace that will be broken, we really have to ha=
+ve some
+> > > > way of avoiding the disconnect between somebody making policy decis=
+ion at
+> > > > the kernel level and somebody trying to run something.
+> > > >
+> > > > Because I can easily envision somebody enabling this as a 'good sec=
+urity
+> > > > feature' for a distro release or such, only for somebody else to la=
+ter try
+> > > > rr, CRIU, or whatever else and for it to just not work or fail subt=
+ly and
+> > > > to have no idea why.
+> > >
+> > > Ok so I went looking around for the glibc patchset. It seems they're
+> > > moving away from tunables and there was a nice
+> > > GNU_PROPERTY_MEMORY_SEAL added to binutils.
+> > > So my proposal is to parse this property on the binfmt_elf.c side, an=
+d
+> > > mm would use this to know if we should seal these mappings. This seem=
+s
+> > > to tackle compatibility problems,
+> > > and glibc isn't sealing programs without this program header anyway. =
+Thoughts?
+> >
+> > It seems to me that doing this ties it to the binary, rather than
+> > execution context, which may want to seal/not-seal, etc. I have a sense
+> > that it's be better as a secure bit, or prctl, or something like that. =
+The
+> > properties seem to be better suited for "this binary _can_ do a thing"
+> > or "this binary _requires_ a thing", like the GNU_STACK bits, etc. But
+> > maybe there's more to this I'm not considering?
+>
+> Doesn't this exactly kind of Just Work though? "This binary can
+> do/tolerate sealing". I would blindly guess that we don't have very
+> opinionated shared libraries that do this kind of shenanigans
+> unilaterally, so that's probably not something we really need to worry
+> about (though I admittedly need to read through the glibc patchset,
+> and nail down what they're thinking about doing with linking
+> mseal-ready and mseal-non-ready ELF execs/shared objects together).
+> The problem with something like prctl is that we either indirectly
+> provide some kind of limited form of munseal, or we require some sort
+> of handover (like personality(2) + execve(2)), which both sound like a
+> huge PITA and still don't solve any of our backwards compat issues...
+> all binaries would need to be patched with this
+> prctl/personality()/whatever call, and old ones wouldn't work.
+>
+> The semantics behind GNU_PROPERTY_MEMORY_SEAL are unclear to me (maybe
+> the toolchain folks could shed some light?), but it sounds like it'd
+> fit perfectly.
+> I suspect we probably want to parse this on the kernel's side anyway
+> (to seal the main program/interp's segments)[1], then extending them
+> to the kernel system mappings should be somewhat trivial...
+> I don't think we'll ever get a program that can't cope with sealing
+> the system mappings but can cope with sealing itself (and if we do, we
+> just won't seal the entire thing and that's _okay_).
+>
+> Deploying mseal-ready programs could then be done in a phased way by
+> distros. e.g chromeOS and android could simply enable the
+> corresponding linker option in LDFLAGS and let it rip. Other more
+> mainstream distros could obviously take a little longer or test/deploy
+> this on all programs not named gVisor and/or after CRIU is okay with
+> all of this. We then might not need a user-configurable CONFIG_ (only
+> an arch HAS_SYSTEM_MAPPINGS_MSEAL or whatever), nor a sysctl, and
+> everyone is happy.
+>
+> I glanced through libc-alpha again and it seems like the glibc folks
+> also seem to have reached the same idea, but I'd love to hear from
+> Adhemerval.
+>
+> Am I missing anything?
 
-Signed-off-by: Bao D. Nguyen <quic_nguyenb@quicinc.com>
----
- drivers/ufs/host/ufs-qcom.c | 25 ++++---------------------
- 1 file changed, 4 insertions(+), 21 deletions(-)
+Android's a bit interesting because there isn't really a "binary" in
+the usual sense. an Android app is basically a shared library of JNI
+code dlopen()ed into a clone() of an already-initialized Java runtime
+(the "zygote").
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 23b9f6e..d89faf6 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -509,16 +509,10 @@ static int ufs_qcom_hce_enable_notify(struct ufs_hba *hba,
-  * ufs_qcom_cfg_timers - Configure ufs qcom cfg timers
-  *
-  * @hba: host controller instance
-- * @gear: Current operating gear
-- * @hs: current power mode
-- * @rate: current operating rate (A or B)
-- * @update_link_startup_timer: indicate if link_start ongoing
-  * @is_pre_scale_up: flag to check if pre scale up condition.
-  * Return: zero for success and non-zero in case of a failure.
-  */
--static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
--			       u32 hs, u32 rate, bool update_link_startup_timer,
--			       bool is_pre_scale_up)
-+static int ufs_qcom_cfg_timers(struct ufs_hba *hba, bool is_pre_scale_up)
- {
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
- 	struct ufs_clk_info *clki;
-@@ -534,11 +528,6 @@ static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
- 	if (host->hw_ver.major < 4 && !ufshcd_is_intr_aggr_allowed(hba))
- 		return 0;
- 
--	if (gear == 0) {
--		dev_err(hba->dev, "%s: invalid gear = %d\n", __func__, gear);
--		return -EINVAL;
--	}
--
- 	list_for_each_entry(clki, &hba->clk_list_head, list) {
- 		if (!strcmp(clki->name, "core_clk")) {
- 			if (is_pre_scale_up)
-@@ -574,8 +563,7 @@ static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
- 
- 	switch (status) {
- 	case PRE_CHANGE:
--		if (ufs_qcom_cfg_timers(hba, UFS_PWM_G1, SLOWAUTO_MODE,
--					0, true, false)) {
-+		if (ufs_qcom_cfg_timers(hba, false)) {
- 			dev_err(hba->dev, "%s: ufs_qcom_cfg_timers() failed\n",
- 				__func__);
- 			return -EINVAL;
-@@ -831,9 +819,7 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
- 		}
- 		break;
- 	case POST_CHANGE:
--		if (ufs_qcom_cfg_timers(hba, dev_req_params->gear_rx,
--					dev_req_params->pwr_rx,
--					dev_req_params->hs_rate, false, false)) {
-+		if (ufs_qcom_cfg_timers(hba, false)) {
- 			dev_err(hba->dev, "%s: ufs_qcom_cfg_timers() failed\n",
- 				__func__);
- 			/*
-@@ -1348,12 +1334,9 @@ static int ufs_qcom_set_core_clk_ctrl(struct ufs_hba *hba, bool is_scale_up)
- 
- static int ufs_qcom_clk_scale_up_pre_change(struct ufs_hba *hba)
- {
--	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	struct ufs_pa_layer_attr *attr = &host->dev_req_params;
- 	int ret;
- 
--	ret = ufs_qcom_cfg_timers(hba, attr->gear_rx, attr->pwr_rx,
--				  attr->hs_rate, false, true);
-+	ret = ufs_qcom_cfg_timers(hba, true);
- 	if (ret) {
- 		dev_err(hba->dev, "%s ufs cfg timer failed\n", __func__);
- 		return ret;
--- 
-2.7.4
+that said, i'm not expecting sealing the vdso to be problematic (even
+if i'm not sure how useful it is to do so, being unaware of any
+exploit that's ever used this?).
 
+for me the tricky part is when it's used for regular user shared
+libraries which seems the most convincing use case to me, albeit
+mainly for app compat reasons ["stopping apps from poking at
+implementation details they shouldn't, which later causes breakage if
+the implementation detail changes"]. the irony being that it'll
+_cause_ app compat problems by breaking all such things all at once.
+so that'll be "fun" for someone to try to roll out!
+
+it also breaks dlclose() (unless your dlopen() was with RTLD_NODELETE,
+which is not the default on Android either). that's fine for OS
+libraries that have already been loaded by the zygote, but hard to
+make a default. that said, i do expect games and banking apps to be
+interested to try this when they hear about it.
+
+anyway, in general i think an ELF property per-library sounds
+reasonable, matching what we have for arm64 BTI. i have no strong
+opinion on the system mappings and what if anything executables should
+do, for the reasons given above, but the elf property sounds
+reasonable.
+
+> [1] we should probably nail this responsibility handover down before
+> glibc msealing (or bionic) makes it to a release. It'd probably be a
+> little nicer if we could mseal these segments from the kernel instead
+> of forcing the libc to take care of this, now that we have this
+> property.
+>
+> --
+> Pedro
