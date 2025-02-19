@@ -1,362 +1,116 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3547A1DE88C
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 21:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03F61DE88C;
+	Wed, 19 Feb 2025 21:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740001537; cv=none; b=gUgNs9YZvWaYo+STIS/rE/UKfKfugPTShGFSK/FqMSMTPd3juSlb4zhazV4WkPEughKEMooJxkP10tDgydIYTjDDrfRYGwlbT2djKpG05TPdpcCOttNXV88UcYmNm1jU/yPS1Ry3+i/efR6Ya3JrlOy3zbEnYGnnAtcbxQfAbyE=
+	t=1740001570; cv=none; b=dyy+I7ZOk3VZcyhRTftZzqwRfTK2oyP7jkUai9i/nedbcQ24j26z9uDpvQmZIbcEp+pDmr4ZZHMP6Hu13CC5FppYxt1Hm+i0b/G5yfXrrVb/TxXWyWpQTfhBqSuHYY8Mo+BP1hSooustgyLjel8ycCfc8/u5qu18CUDm4Wg0Zio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740001537; c=relaxed/simple;
-	bh=+eUkK/iMLMnPi2bDwVTw1Pgm27u0MPdVhFfDE74FNK4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=K2gHbCyfzREG5RtkgpQdv+Klt1pnIf2tCaLDkSxJAWivDDDkk7f8HfVl0eR2BHW1fwBAGWD8OuKtowkbeWobY3qWZgNpZVCjkLHKu+AWyH5Khiiwm8f1CTF7iAJFs6RHmFEwfSM1qCS5bO4CzaI+1OkxWkxVC1megHMSfgHOj+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JHgJS1Nz; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1740001570; c=relaxed/simple;
+	bh=V7MoC2zW7sWj9u+pbh19DBSYNN547r5t17dp94udUps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZSy13OKR/gugrC995z0ojctWYmEdrZVaMP16IhRzd6jFgbBq7t2JVu8ciIPWqAtSis643XUczD4GTcxHw/03kWVdk3vIm+i8sh6v21GyMk9rgfgY0A37f7MPa8WxC+TTlzPIl9idtojgk4Z478W06gFiyEtAm/qlwY7w9N4SN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4uNK/QF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JHgJS1Nz"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-220c86b3ef3so27279265ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:45:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740001535; x=1740606335; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R9XCsc+sgxUI5SOE40I45gWQYV0M4BiiAlFbbfMY96A=;
-        b=JHgJS1NzZ/drNPp1YHQefAW3CNgne0Z3Qn8szAl04Hyg3678etRQos5nRflqMniWhB
-         0BC0iEKNhTZ3LyoID/KnLnacSP1RyCb82hbs5x1MT2gvb4aLm0Kp3isbbeldSLwukC5r
-         XttV+6DfQ/XCy7k5j/VWhHdBDPqSPGM6SvIM1Usirg5Ekw0VrlbiVKrnscY81TZrDEap
-         x2cmxxn+bMb9BOIvO95iJHxIc53baZa9PCZJxa5jLRIczL2NoL+yWY0Ecmg4ULbKxhJ9
-         5t91+xqlKgw43C3xvvbtiqd0/9f27Sj5UWo7Iq3327wXBRWXOszygyi+wPbkddzArNV/
-         fMfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740001535; x=1740606335;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R9XCsc+sgxUI5SOE40I45gWQYV0M4BiiAlFbbfMY96A=;
-        b=jho3Bh06rxd5vo4ffSmZKuRjc0kAp1yh0+v9YnwG62lMfXEjObciz6l1z6P+DFvurD
-         FNOfsXgUKWZoHEzVGtVxiT9ETZztnJq6PS6vnlU4mbZV4vhx39c6xPgPd8KPsBecrwDI
-         t9nPH8V0yY6LZhN94QJEbkFYcIdgFaXzjGirVvUMI5oQlNaDPSqsFdf23pHEmT4luHgw
-         g6eAvtvQlsSxgYHTNfC2JSJHRrH30mPxd2+KzuMnJwGcQnQGbOyJ4q8lCHmYZc7/r4/V
-         tTfeoPF7RZUE4ZncQK4qOOvkJHw16v1/59zk0yPFlAkxKEFJp8h9QxaP56jIOHmHOkHf
-         j0nw==
-X-Gm-Message-State: AOJu0YwKz9JIxfHzfi4mgMJRqYJpOhmTXPJT/ynBKKHz6jSF2YBabsz6
-	BAJpU2i7hs8VYKgy0pbOshn5I6KFUOa3mdl8LB9TfRZY9Zbf0QZfM/6rhyAjWHmBNEVNJnMtPbr
-	qyprLgmPKwliKRNHgE4yVJVuF1bEttMvg1iuVyIfSEcTE5R3bF+i/U///CKwDs0wKNxpBzoMplH
-	5CnuWoXr2D5vcv0VF8runvt1y02Pv0D1TMwq7daW57
-X-Google-Smtp-Source: AGHT+IEr4XOJfbVGm62C1up0rxHHtYYCZ/jvQYmID3Q9Y23kgJjNXv8tTXR/JqI+FGWn2nzMhHvlem9jYWw=
-X-Received: from plqw12.prod.google.com ([2002:a17:902:a70c:b0:21f:4f0a:c7e2])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:8cb:b0:220:e98e:4f1b
- with SMTP id d9443c01a7336-2218c356405mr18224675ad.0.1740001535274; Wed, 19
- Feb 2025 13:45:35 -0800 (PST)
-Date: Wed, 19 Feb 2025 13:40:01 -0800
-In-Reply-To: <20250219214400.3317548-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4uNK/QF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8AEFC4CED1;
+	Wed, 19 Feb 2025 21:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740001570;
+	bh=V7MoC2zW7sWj9u+pbh19DBSYNN547r5t17dp94udUps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q4uNK/QFChz31+NC+j93t7UkCweE7BJU+8DRtb5qgKMD17V9p+kNw2zDIIO1vcf4V
+	 7blwlLDwnpnB5h3WQw8/R1wV+Z4BBR1gTWNuWT3e2X2QVzYwjVah/M5hA7uckzcEwX
+	 WjAfPnV+wUDh70Nr6UHgVwTqA1LFuis5Be73wYFNK5+F8dPRMKLX0ZM3NYaQZAVLGO
+	 p2Ntz7KzCdvedb7XHLHJmdNQsGgax8m/NF3ynNcTpJv+utMaBoqsIhqEcZ3frnR39k
+	 /zVKGzlZimahEhGWr4De65FYDeOA5ReS7PPHrku4HCIy076XjZEKIcjLso0NLjNaOH
+	 lJ/qVSgQcUz3A==
+Date: Wed, 19 Feb 2025 15:46:08 -0600
+From: Rob Herring <robh@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 2/7] dt-bindings: firmware: Add i.MX95 SCMI LMM and
+ CPU protocol
+Message-ID: <20250219214608.GA3003788-robh@kernel.org>
+References: <20250212-imx-lmm-cpu-v2-0-3aee005968c1@nxp.com>
+ <20250212-imx-lmm-cpu-v2-2-3aee005968c1@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250219214400.3317548-1-ctshao@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250219214400.3317548-3-ctshao@google.com>
-Subject: [PATCH v6 2/4] perf lock: Retrieve owner callstack in bpf program
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, nick.forrington@arm.com, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212-imx-lmm-cpu-v2-2-3aee005968c1@nxp.com>
 
-This implements per-callstack aggregation of lock owners in addition to
-per-thread.  The owner callstack is captured using `bpf_get_task_stack()`
-at `contention_begin()` and it also adds a custom stackid function for the
-owner stacks to be compared easily.
+On Wed, Feb 12, 2025 at 03:40:24PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Add i.MX SCMI Extension protocols bindings for:
+> - Logic Machine Management(LMM) Protocol
+>   intended for boot, shutdown, and reset of other logical machines (LM).
+>   It is usually used to allow one LM to manager another used as an offload
+>   or accelerator engine..
+> - CPU Protocol.
+>   allows an agent to start or stop a CPU. It is used to manage auxiliary
+>   CPUs in an LM (e.g. additional cores in an AP cluster).
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/firmware/nxp,imx95-scmi.yaml     | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+> index 1a95010a546b14b1d3d97aa990c0305a551f2620..75f63819285b191a815dc4287e34d299983b1c40 100644
+> --- a/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+> @@ -11,6 +11,14 @@ maintainers:
+>    - Peng Fan <peng.fan@nxp.com>
+>  
+>  properties:
+> +  protocol@80:
+> +    $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+> +    unevaluatedProperties: false
 
-The owner info is kept in a hash map using lock addr as a key to handle
-multiple waiters for the same lock.  At `contention_end()`, it updates the
-owner lock stat based on the info that was saved at `contention_begin()`.
-If there are more waiters, it'd update the owner pid to itself as
-`contention_end()` means it gets the lock now.  But it also needs to check
-the return value of the lock function in case task was killed by a signal
-or something.
+Please add 'description' to these to say what the protocol is.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 218 +++++++++++++++++-
- 1 file changed, 209 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 23fe9cc980ae..e8b113d5802a 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -197,6 +197,9 @@ int data_fail;
- int task_map_full;
- int data_map_full;
- 
-+struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
-+void bpf_task_release(struct task_struct *p) __ksym __weak;
-+
- static inline __u64 get_current_cgroup_id(void)
- {
- 	struct task_struct *task;
-@@ -420,6 +423,61 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
- 	return pelem;
- }
- 
-+static inline s32 get_owner_stack_id(u64 *stacktrace)
-+{
-+	s32 *id, new_id;
-+	static s64 id_gen = 1;
-+
-+	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
-+	if (id)
-+		return *id;
-+
-+	new_id = (s32)__sync_fetch_and_add(&id_gen, 1);
-+
-+	bpf_map_update_elem(&owner_stacks, stacktrace, &new_id, BPF_NOEXIST);
-+
-+	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
-+	if (id)
-+		return *id;
-+
-+	return -1;
-+}
-+
-+static inline void update_contention_data(struct contention_data *data, u64 duration, u32 count)
-+{
-+	__sync_fetch_and_add(&data->total_time, duration);
-+	__sync_fetch_and_add(&data->count, count);
-+
-+	/* FIXME: need atomic operations */
-+	if (data->max_time < duration)
-+		data->max_time = duration;
-+	if (data->min_time > duration)
-+		data->min_time = duration;
-+}
-+
-+static inline void update_owner_stat(u32 id, u64 duration, u32 flags)
-+{
-+	struct contention_key key = {
-+		.stack_id = id,
-+		.pid = 0,
-+		.lock_addr_or_cgroup = 0,
-+	};
-+	struct contention_data *data = bpf_map_lookup_elem(&owner_stat, &key);
-+
-+	if (!data) {
-+		struct contention_data first = {
-+			.total_time = duration,
-+			.max_time = duration,
-+			.min_time = duration,
-+			.count = 1,
-+			.flags = flags,
-+		};
-+		bpf_map_update_elem(&owner_stat, &key, &first, BPF_NOEXIST);
-+	} else {
-+		update_contention_data(data, duration, 1);
-+	}
-+}
-+
- SEC("tp_btf/contention_begin")
- int contention_begin(u64 *ctx)
- {
-@@ -437,6 +495,72 @@ int contention_begin(u64 *ctx)
- 	pelem->flags = (__u32)ctx[1];
- 
- 	if (needs_callstack) {
-+		u32 i = 0;
-+		u32 id = 0;
-+		int owner_pid;
-+		u64 *buf;
-+		struct task_struct *task;
-+		struct owner_tracing_data *otdata;
-+
-+		if (!lock_owner)
-+			goto skip_owner;
-+
-+		task = get_lock_owner(pelem->lock, pelem->flags);
-+		if (!task)
-+			goto skip_owner;
-+
-+		owner_pid = BPF_CORE_READ(task, pid);
-+
-+		buf = bpf_map_lookup_elem(&stack_buf, &i);
-+		if (!buf)
-+			goto skip_owner;
-+		for (i = 0; i < max_stack; i++)
-+			buf[i] = 0x0;
-+
-+		if (!bpf_task_from_pid)
-+			goto skip_owner;
-+
-+		task = bpf_task_from_pid(owner_pid);
-+		if (!task)
-+			goto skip_owner;
-+
-+		bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
-+		bpf_task_release(task);
-+
-+		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
-+		id = get_owner_stack_id(buf);
-+
-+		/*
-+		 * Contention just happens, or corner case `lock` is owned by process not
-+		 * `owner_pid`. For the corner case we treat it as unexpected internal error and
-+		 * just ignore the precvious tracing record.
-+		 */
-+		if (!otdata || otdata->pid != owner_pid) {
-+			struct owner_tracing_data first = {
-+				.pid = owner_pid,
-+				.timestamp = pelem->timestamp,
-+				.count = 1,
-+				.stack_id = id,
-+			};
-+			bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
-+		}
-+		/* Contention is ongoing and new waiter joins */
-+		else {
-+			__sync_fetch_and_add(&otdata->count, 1);
-+
-+			/*
-+			 * The owner is the same, but stacktrace might be changed. In this case we
-+			 * store/update `owner_stat` based on current owner stack id.
-+			 */
-+			if (id != otdata->stack_id) {
-+				update_owner_stat(id, pelem->timestamp - otdata->timestamp,
-+						  pelem->flags);
-+
-+				otdata->timestamp = pelem->timestamp;
-+				otdata->stack_id = id;
-+			}
-+		}
-+skip_owner:
- 		pelem->stack_id = bpf_get_stackid(ctx, &stacks,
- 						  BPF_F_FAST_STACK_CMP | stack_skip);
- 		if (pelem->stack_id < 0)
-@@ -473,6 +597,7 @@ int contention_end(u64 *ctx)
- 	struct tstamp_data *pelem;
- 	struct contention_key key = {};
- 	struct contention_data *data;
-+	__u64 timestamp;
- 	__u64 duration;
- 	bool need_delete = false;
- 
-@@ -500,12 +625,94 @@ int contention_end(u64 *ctx)
- 		need_delete = true;
- 	}
- 
--	duration = bpf_ktime_get_ns() - pelem->timestamp;
-+	timestamp = bpf_ktime_get_ns();
-+	duration = timestamp - pelem->timestamp;
- 	if ((__s64)duration < 0) {
- 		__sync_fetch_and_add(&time_fail, 1);
- 		goto out;
- 	}
- 
-+	if (needs_callstack && lock_owner) {
-+		struct owner_tracing_data *otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
-+
-+		if (!otdata)
-+			goto skip_owner;
-+
-+		/* Update `owner_stat` */
-+		update_owner_stat(otdata->stack_id, timestamp - otdata->timestamp, pelem->flags);
-+
-+		/* No contention is occurring, delete `lock` entry in `owner_data` */
-+		if (otdata->count <= 1)
-+			bpf_map_delete_elem(&owner_data, &pelem->lock);
-+		/*
-+		 * Contention is still ongoing, with a new owner (current task). `owner_data`
-+		 * should be updated accordingly.
-+		 */
-+		else {
-+			u32 i = 0;
-+			s32 ret = (s32)ctx[1];
-+			u64 *buf;
-+
-+			__sync_fetch_and_add(&otdata->count, -1);
-+
-+			buf = bpf_map_lookup_elem(&stack_buf, &i);
-+			if (!buf)
-+				goto skip_owner;
-+			for (i = 0; i < (u32)max_stack; i++)
-+				buf[i] = 0x0;
-+
-+			/*
-+			 * `ret` has the return code of the lock function.
-+			 * If `ret` is negative, the current task terminates lock waiting without
-+			 * acquiring it. Owner is not changed, but we still need to update the owner
-+			 * stack.
-+			 */
-+			if (ret < 0) {
-+				s32 id = 0;
-+				struct task_struct *task;
-+
-+				if (!bpf_task_from_pid)
-+					goto skip_owner;
-+
-+				task = bpf_task_from_pid(otdata->pid);
-+				if (!task)
-+					goto skip_owner;
-+
-+				bpf_get_task_stack(task, buf,
-+						   max_stack * sizeof(unsigned long), 0);
-+				bpf_task_release(task);
-+
-+				id = get_owner_stack_id(buf);
-+
-+				/*
-+				 * If owner stack is changed, update `owner_data` and `owner_stat`
-+				 * accordingly.
-+				 */
-+				if (id != otdata->stack_id) {
-+					update_owner_stat(id, pelem->timestamp - otdata->timestamp,
-+							  pelem->flags);
-+
-+					otdata->timestamp = pelem->timestamp;
-+					otdata->stack_id = id;
-+				}
-+			}
-+			/*
-+			 * Otherwise, update tracing data with the current task, which is the new
-+			 * owner.
-+			 */
-+			else {
-+				otdata->pid = pid;
-+				otdata->timestamp = timestamp;
-+				/*
-+				 * We don't want to retrieve callstack here, since it is where the
-+				 * current task acquires the lock and provides no additional
-+				 * information. We simply assign -1 to invalidate it.
-+				 */
-+				otdata->stack_id = -1;
-+			}
-+		}
-+	}
-+skip_owner:
- 	switch (aggr_mode) {
- 	case LOCK_AGGR_CALLER:
- 		key.stack_id = pelem->stack_id;
-@@ -589,14 +796,7 @@ int contention_end(u64 *ctx)
- 	}
- 
- found:
--	__sync_fetch_and_add(&data->total_time, duration);
--	__sync_fetch_and_add(&data->count, 1);
--
--	/* FIXME: need atomic operations */
--	if (data->max_time < duration)
--		data->max_time = duration;
--	if (data->min_time > duration)
--		data->min_time = duration;
-+	update_contention_data(data, duration, 1);
- 
- out:
- 	pelem->lock = 0;
--- 
-2.48.1.601.g30ceb7b040-goog
-
+> +
+> +    properties:
+> +      reg:
+> +        const: 0x80
+> +
+>    protocol@81:
+>      $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+>      unevaluatedProperties: false
+> @@ -19,6 +27,14 @@ properties:
+>        reg:
+>          const: 0x81
+>  
+> +  protocol@82:
+> +    $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        const: 0x82
+> +
+>    protocol@84:
+>      $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+>      unevaluatedProperties: false
+> 
+> -- 
+> 2.37.1
+> 
