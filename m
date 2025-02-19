@@ -1,145 +1,121 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A4D1E8855;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723961EB1AC;
 	Wed, 19 Feb 2025 08:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954752; cv=none; b=MIvc+ES/+k+/Jm+N3LYDhkJZOz/fEULA6ZZuILTv79Ro9Y+8OxwEFCMMx1LoyhZPyrw8NIw9gPoaCj+7xlo6wIYCXIzI/vLFgtLDgDz/VD04A8YOvmrHxg7ATHxyjGmH59CEGey5TI/eLCbuD2cB+R4/lXRIrGDuIdD2APGqVck=
+	t=1739954752; cv=none; b=ae0/SKG2BTJPmUZRk6BLRb/PLJa2hNGcDfIm1QBUiHnrayF/P5AH0nk50oO19VY4N6hWhUVhftyjWcoTg/uyn9PLUA9ImFLQPAFQmdyz6X8o2rAqAQeP4AMbSlXgAh/rkLmPB1zr3g70INE/xzVITeFeYfgQKKTkJ6UyqYvFQEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739954752; c=relaxed/simple;
-	bh=7R1XgXvH4k6kWI4gbUxzVizRcGgBTxxEExScXUbKaIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jjFj14fhHPy4gU5n56W/lmyA9CiPQV8xHB2GH3uvAU7UlND9OnrwVKhYl1tSsnj7tmQzYzPumiLRR45ZYF/DN8NaoBA7ld3HqfM+ntq6A/IrxznVA2oRQLDcLZDWX0S+ctY6L4+r0UzpteXD1e/WRfCuMRLvG5KQwP0ZRWL5gf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AlmgRuI4; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=b+o8oliSx4C99JhmKgDXrGvyBY0QzVEi/AJvfb97+sI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dmp/0i9yUUQR38FPXaqq1Kz4VJ+PC+J0NzcDO3TVoLYdf3amojul5HarjQnk3ngOjeTb1McxIFhHd+FYJt8YjKtXXGuWXBSWB/qOXlADkxx3u1xbyDulkzFPOvMoGSFqFsh1FxLd2V3zNIDV/SlKMjh/6haFZtsKL2IGtgz06YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=O9EV6sUu; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlmgRuI4"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220bfdfb3f4so130316975ad.2;
-        Wed, 19 Feb 2025 00:45:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739954746; x=1740559546; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TyzPIrh5uPcfgejnraHvrZOB70D7n28gMQT0mt8KoNg=;
-        b=AlmgRuI4UWzUcP7eteoCRldxO3fiKuR3jfvZepb9Awi9sBeNyaGVriiqriZFtm8f/+
-         f2/F0BJ806P6/s3lJc/Y/QzAz0PIrVjiySo67sAbLym9SVNdhBc7MrblJrN7tIgTtZq2
-         uHf+ONC8Ln3KWp6D/iEvdrVtI8Ra1gGHDpvj2b2DxWb858YKnGL1L/+EHUZMOePoY5tk
-         khW59rH1vGEUAtFXT0wWOC7TCuOcHKbmdzzVAK53AcBl/zWg7yARdcCw9uzHyay6lzCl
-         g5SXqk5ZPQUQNwproPZk/zO889J0JtAS+noShuZdMcXrE8qoTc1l4r2dcDu6vQILC0Ek
-         HYTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739954746; x=1740559546;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TyzPIrh5uPcfgejnraHvrZOB70D7n28gMQT0mt8KoNg=;
-        b=VtKezb7XEaa13AqAmrDyaHW+s/q7QmcpYhMDm8uPL2woPlTFQU+AP8Q8tcOHY25hIP
-         cZCMAHvSZuB/WVIWp/nvf+c9dQM8O9A6YmYILVxz2SjxeqZj85JXNwsJlS+XKqjak2GL
-         j9FABgRByWriKdPtQqk4+VdVs2ccH+ugtsINwsoO5SVXdN5FmlIcMgj0q/Jko/hPOzmC
-         INmmiyoVVvKw21KmIg2nUPwGfiwaIjAS4Mav6NRqOoYaK50wePfjlyAiFe/2M0H5n3OQ
-         1UuJXIoXBLayqR9Ph1i1f6zgYSlmOIPM6kFTg+1BAt1ev647LcBewMOA5R8RyKxuM9xN
-         bgNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEx8kcB26hxlIEdYH4CBApnn67PzgZqJq92H99HDOuykoJa866QKFdoeuQPXp7MtjsU+BEN5bDUTTHnQ==@vger.kernel.org, AJvYcCXaPD6eKRat0Ax6yiQNLMjlXPn5HgWmjHcO4qOqbA5cE1lsKVgpRhrpv2Wola83zNL8iKeLtXSEKBfPlek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFiUcwS35AvecRrqJNDWUA8Ekqujk7wklZ1SkJwi9ApNv9DF9X
-	0pfftAOS+zA6UPgNKBry96s/AHxnurWgYCkhKWEs8aktZzdap6fW
-X-Gm-Gg: ASbGnctyxETFp/P34ebyK3ji8nX4PYlnk4u+pJAoZhMErKBx3OpVFVIeCAZ8Pn+IgRw
-	nwq15ciyogeeJRd4Ph0cAnQx6wxDxT0aY61BMaFcMtsPyHYjK48b8PZ+jVvVlXwkP3hZrx5MUDP
-	ysUFHrFLYiNpCDjujxYX3b9OwrS+PqJSXUalStcgsRoj9BtQJG6LogNJPGHii7L27dEomOQKI0g
-	suyxFJCP7zEKEm+5MQ0Yacxlc7K1TLuL1gRYmTA2szdGQeXDBD4DJNfWhYwZyvlI2CbLDFW377A
-	bAxV3JmgdoaDaXM=
-X-Google-Smtp-Source: AGHT+IEadsqAT7HDWxhECrTjMWGYniQebpKUIG+KG1kh3Rxji0Yr4BRPTOwkOehWMk4RuFyZK58OWg==
-X-Received: by 2002:a17:902:ecca:b0:220:e9ef:ec98 with SMTP id d9443c01a7336-221709622b7mr51696985ad.19.1739954745827;
-        Wed, 19 Feb 2025 00:45:45 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55908a7sm100814075ad.240.2025.02.19.00.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 00:45:44 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id A59804208F47; Wed, 19 Feb 2025 15:45:41 +0700 (WIB)
-Date: Wed, 19 Feb 2025 15:45:41 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Christian Brauner <brauner@kernel.org>
-Cc: NeilBrown <neilb@suse.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the vfs-brauner tree
-Message-ID: <Z7WaNWHRkqt2rFGA@archie.me>
-References: <20250219153444.0046e433@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="O9EV6sUu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1739954734; x=1740559534; i=ps.report@gmx.net;
+	bh=b+o8oliSx4C99JhmKgDXrGvyBY0QzVEi/AJvfb97+sI=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=O9EV6sUuFiL6Ieuzvp3XsDFn5WSarNtNnQJmlhn+D5AiZ+5+K0X3T6H+0W1spOOj
+	 yWge+PSpqiEAxVGzNnZj/mFo68+XSTPjp60HxKUvGllX9Ja01xhPqWGllwaJoJsVm
+	 JZ49fg06D29eo7lcg4TlIfR5j+IqwggyoOzEQI6dZhSf/SBzHNKa/Qsax9ZjC+Mag
+	 mg4MawjuR/k968TvH30URju00XIPLjhK1c46DU+ROiqXoArN4xVpPf7CyAgrBURXS
+	 1YxTJdEMV2Zzangr76it9+jjcjJN2mMURQwLn4quKJeQI81TPm35Gmenf3zisl2in
+	 TizzDSxxNk0ho+BTmQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.fritz.box ([82.135.81.84]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1McpNo-1tBsvH3yqI-00fx6K; Wed, 19
+ Feb 2025 09:45:34 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Peter Seiderer <ps.report@gmx.net>,
+	Artem Chernyshev <artem.chernyshev@red-soft.ru>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH net-next v6 1/7] net: pktgen: replace ENOTSUPP with EOPNOTSUPP
+Date: Wed, 19 Feb 2025 09:45:21 +0100
+Message-ID: <20250219084527.20488-2-ps.report@gmx.net>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250219084527.20488-1-ps.report@gmx.net>
+References: <20250219084527.20488-1-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="x4wbRtB/Z/s8aFtD"
-Content-Disposition: inline
-In-Reply-To: <20250219153444.0046e433@canb.auug.org.au>
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:vMN1tYqw9IoIWT+xrsvQp9a+YgRGxnN18oFFuYAwSiNYyq4RCyO
+ s6vzZI5uI0ratJ6gtPk/yvPpJA8WVaOoLSrwgmS7Bsjgcwm0xztUGuSjWjdH2ri6Lqgl2hn
+ 7aDkyaXfqRI2gA8ggvkus2kmVSVkINPandLL5wmv0T4h9TkVmtq+XZm+3Yp7+TN6FMyFLfi
+ 3pQktRbNSDEKt2k8OXBWA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:M6J2T9fhYIg=;BcoOcjZTvZF2ACrD19fZ35nN0h5
+ asqXAhPtBo636PeqlL/2pIZys5Ze4s9TxfNIY2az3kSsO5ZNpRWKz0qYXyvjjSXRqax2T6nQH
+ N1oqjDpkdPNbDe9y1ge9xDOkwZcdk/JHq6TV3RAX/9DNQXZkVm4uwZokPESHajD+rKvcHfvD0
+ NcnmwmrbARNjusuuYGbKLHlxuL38Mbr4pYFtN2LYrLv3wdgVyvsbVl6MfHqgRQMzc8nroKCZt
+ ohw7Ytsjn9KQJEd+CZfpwctwAXgpMoZsWkVhdvbbFiOqDQYTkBKfz99hqqkqsYxQF6ESSjqU6
+ t409N+ALVufHDsAxSJ8w9WV2qhIyiqJ/r3wafZEPflaIkWdrRPvbqo+PmfZdRACjCHyMxqjwz
+ G7Moy0OZeZ9+7w2juxXy4ERdZPPiJ70+mp5nC1+/pXewIraxYZ3UGjOgJJEiux+0XGF21fNRh
+ R3Q2G5WYZXYpvWFgr2ycK5+989jjZ/n3uFzZWIDR0ud1v5x3EUsLcojzcFkw4h4iZiqJwkZvO
+ INsUtuQrk8V8cOJg8XsUqp84WIVBHFkPYdnFVCxKvTRmD18Ad4lH+IiKXWJ7Od5v2uhujbak2
+ InSfPh2I7RtcGFT4JiBuMnD0zss8eEHhH6oGeFR2DffbSuj3hWfykSR5P3x8NBAUVry3QygLa
+ y2z8MbkNThgCDr+W13qkTxt62zH5xrz3TXvZZIR+hyPqRX2Wo0o/u2kXrQ/29z9sQSPBPwca7
+ 81diTZiMR2pL8lpm8nj2hMvwTCR3BaysUZDTqEq9TRtWzLJpeDeZTM8Bp12GD39erKyL5TSZc
+ zS2BhvDM4rM2aGmcCd4zHHAPxZ3xo95m0MwnyJIAO0m0FxylY2/SSa5gfHAd1SiDUZb7/qoll
+ o/jlQJHjT5UDPXdE7EBpwFbVgLKc7oLlCePHcgg9wg2Z5N76eankRj7RN9fe/q78cAj6HUeIZ
+ bDNrVtkxgyhgTzPGSWMP856U82OCRarz02tS2H247fahDxkai3D8CEe+dZYPw89EziLKJf5uL
+ /ELMWF+6NbJclKkfLaWi9+yiBlyh0eIdkM5zbsxNNjzfDquzXJPMY1WbgiXwHMQNdHod8vfkC
+ bAVTDJiudByAZqlUO1fQJuxA+9PAqF7JIPygyJ3vgib4s5yAneYdRy0OcDr+ESc7d8d1lSjJd
+ UGMqrRaUySaBPFhXPqh1CDb0ioERo2nxyDeLqnWwVGQZGRBFn6NWUgNWrurAlJlLsaOu2CALz
+ gSaW6zjWP1WFVlmTTZIuYDtvxQNIWFn0v4dFmQKigVmv+x5zC0WV5WKTRGjnM60ZkV9H5e7/6
+ 5Dy9wMl2vQvJVLs/dHnngzWsJNDhxZsoxEiGjUiisexdnCv2ZDDQjMJeIHSUBmz4m71hX8XJ2
+ xLh92g840Yp95UB3sg5PB/5vBEy49Nck8NgJiQLIQx2qfM7lpnRhkbm93lsKFUlC8qUZpcNEj
+ pvCgFDw==
 
-
---x4wbRtB/Z/s8aFtD
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 19, 2025 at 03:34:44PM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> After merging the vfs-brauner tree, today's linux-next build (htmldocs)
-> produced this warning:
->=20
-> Documentation/filesystems/porting.rst:1173: ERROR: Unexpected indentation=
-=2E [docutils]
->=20
-> Introduced by commit
->=20
->   20c2c1baa9ab ("VFS: add common error checks to lookup_one_qstr_excl()")
->=20
-
-Separating the bullet list should suffice (plus s/recommend/recommended/
-for consistency with the rest of docs):
-
----- >8 ----
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesyst=
-ems/porting.rst
-index 3b6622fbd66be9..cfac50a7258db6 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -1166,10 +1166,11 @@ kern_path_locked() and user_path_locked() no longer=
- return a negative
- dentry so this doesn't need to be checked.  If the name cannot be found,
- ERR_PTR(-ENOENT) is returned.
-=20
--** recommend**
-+** recommended**
-=20
- lookup_one_qstr_excl() is changed to return errors in more cases, so
--these conditions don't require explicit checks.
-+these conditions don't require explicit checks:
-+
-  - if LOOKUP_CREATE is NOT given, then the dentry won't be negative,
-    ERR_PTR(-ENOENT) is returned instead
-  - if LOOKUP_EXCL IS given, then the dentry won't be positive,
-
-Let me know if I should send the formal patch.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---x4wbRtB/Z/s8aFtD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ7WaMAAKCRD2uYlJVVFO
-o7WUAQCpjVqxu4vPorEol6QTiRkibN5z05gM8EUTcxtmaA8jnQD/S576gdOuXSQZ
-zAqe9RIwNg7riMbvpjeZvaqwRfCKHgQ=
-=ClpC
------END PGP SIGNATURE-----
-
---x4wbRtB/Z/s8aFtD--
+UmVwbGFjZSBFTk9UU1VQUCB3aXRoIEVPUE5PVFNVUFAsIGZpeGVzIGNoZWNrcGF0Y2ggaGludAoK
+ICBXQVJOSU5HOiBFTk9UU1VQUCBpcyBub3QgYSBTVVNWNCBlcnJvciBjb2RlLCBwcmVmZXIgRU9Q
+Tk9UU1VQUAoKYW5kIGUuZy4KCiAgJCBlY2hvICJjbG9uZV9za2IgMSIgPiAvcHJvYy9uZXQvcGt0
+Z2VuL2xvXEAwCiAgLWJhc2g6IGVjaG86IHdyaXRlIGVycm9yOiBVbmtub3duIGVycm9yIDUyNAoK
+U2lnbmVkLW9mZi1ieTogUGV0ZXIgU2VpZGVyZXIgPHBzLnJlcG9ydEBnbXgubmV0PgpSZXZpZXdl
+ZC1ieTogU2ltb24gSG9ybWFuIDxob3Jtc0BrZXJuZWwub3JnPgotLS0KQ2hhbmdlcyB2NSAtPiB2
+NgogIC0gbm8gY2hhbmdlcwoKQ2hhbmdlcyB2NCAtPiB2NQogIC0gc3BsaXQgdXAgcGF0Y2hzZXQg
+aW50byBwYXJ0IGkvaWkgKHN1Z2dlc3RlZCBieSBTaW1vbiBIb3JtYW4pCgpDaGFuZ2VzIHYzIC0+
+IHY0CiAgLSBhZGQgcmV2LWJ5IFNpbW9uIEhvcm1hbgoKQ2hhbmdlcyB2MiAtPiB2MwogIC0gbm8g
+Y2hhbmdlcwoKQ2hhbmdlcyB2MSAtPiB2MgogIC0gbm8gY2hhbmdlcwotLS0KIG5ldC9jb3JlL3Br
+dGdlbi5jIHwgNiArKystLS0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvbmV0L2NvcmUvcGt0Z2VuLmMgYi9uZXQvY29yZS9wa3Rn
+ZW4uYwppbmRleCA4MmI2YTJjM2MxNDEuLjQ5NmFhMTY3NzNlNyAxMDA2NDQKLS0tIGEvbmV0L2Nv
+cmUvcGt0Z2VuLmMKKysrIGIvbmV0L2NvcmUvcGt0Z2VuLmMKQEAgLTExOTgsNyArMTE5OCw3IEBA
+IHN0YXRpYyBzc2l6ZV90IHBrdGdlbl9pZl93cml0ZShzdHJ1Y3QgZmlsZSAqZmlsZSwKIAkJaWYg
+KCh2YWx1ZSA+IDApICYmCiAJCSAgICAoKHBrdF9kZXYtPnhtaXRfbW9kZSA9PSBNX05FVElGX1JF
+Q0VJVkUpIHx8CiAJCSAgICAgIShwa3RfZGV2LT5vZGV2LT5wcml2X2ZsYWdzICYgSUZGX1RYX1NL
+Ql9TSEFSSU5HKSkpCi0JCQlyZXR1cm4gLUVOT1RTVVBQOworCQkJcmV0dXJuIC1FT1BOT1RTVVBQ
+OwogCQlpZiAodmFsdWUgPiAwICYmIChwa3RfZGV2LT5uX2ltaXhfZW50cmllcyA+IDAgfHwKIAkJ
+CQkgICEocGt0X2Rldi0+ZmxhZ3MgJiBGX1NIQVJFRCkpKQogCQkJcmV0dXJuIC1FSU5WQUw7CkBA
+IC0xMjU4LDcgKzEyNTgsNyBAQCBzdGF0aWMgc3NpemVfdCBwa3RnZW5faWZfd3JpdGUoc3RydWN0
+IGZpbGUgKmZpbGUsCiAJCSAgICAoKHBrdF9kZXYtPnhtaXRfbW9kZSA9PSBNX1FVRVVFX1hNSVQp
+IHx8CiAJCSAgICAgKChwa3RfZGV2LT54bWl0X21vZGUgPT0gTV9TVEFSVF9YTUlUKSAmJgogCQkg
+ICAgICghKHBrdF9kZXYtPm9kZXYtPnByaXZfZmxhZ3MgJiBJRkZfVFhfU0tCX1NIQVJJTkcpKSkp
+KQotCQkJcmV0dXJuIC1FTk9UU1VQUDsKKwkJCXJldHVybiAtRU9QTk9UU1VQUDsKIAogCQlpZiAo
+dmFsdWUgPiAxICYmICEocGt0X2Rldi0+ZmxhZ3MgJiBGX1NIQVJFRCkpCiAJCQlyZXR1cm4gLUVJ
+TlZBTDsKQEAgLTEzMDMsNyArMTMwMyw3IEBAIHN0YXRpYyBzc2l6ZV90IHBrdGdlbl9pZl93cml0
+ZShzdHJ1Y3QgZmlsZSAqZmlsZSwKIAkJfSBlbHNlIGlmIChzdHJjbXAoZiwgIm5ldGlmX3JlY2Vp
+dmUiKSA9PSAwKSB7CiAJCQkvKiBjbG9uZV9za2Igc2V0IGVhcmxpZXIsIG5vdCBzdXBwb3J0ZWQg
+aW4gdGhpcyBtb2RlICovCiAJCQlpZiAocGt0X2Rldi0+Y2xvbmVfc2tiID4gMCkKLQkJCQlyZXR1
+cm4gLUVOT1RTVVBQOworCQkJCXJldHVybiAtRU9QTk9UU1VQUDsKIAogCQkJcGt0X2Rldi0+eG1p
+dF9tb2RlID0gTV9ORVRJRl9SRUNFSVZFOwogCi0tIAoyLjQ4LjEKCg==
