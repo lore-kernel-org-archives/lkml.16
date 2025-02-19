@@ -1,104 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886BD17BB21;
-	Wed, 19 Feb 2025 06:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686391AE01B;
+	Wed, 19 Feb 2025 06:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739946378; cv=none; b=ccj7fF6549MzA6WjIgMJ2KtBLgPysQmrD+7sPpDVYN1cfwUlLQMA9qke2KUrity81t8SeA5po5e/5I2h6U6Lakl3ynUij/DdsJChol4doth8PzGZXiOpsheRqr7m+G12hVCqJa8gwHRRiVGgO/B7sTwsuwFSQYQQOjbK4FWak64=
+	t=1739946450; cv=none; b=GYoiwHyW9+aHn5MU/pFd0JRWsP6S6pl7ycLehQZ9RLu3o0It8msBGXTSNOYWHtFjGvQz09ZDr+rjAdr3ze0rjlGA1RTlXdRIGRuUyG5BvAUiYqaejQyzTNcpBGbHjeN0hkFXnfPrjMtKATxm+UUwgRLr+DbQyfRQ2uDhNdBCgQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739946378; c=relaxed/simple;
-	bh=gs8Atg05EuB92ani/mTzwjxh1rZsnVOwZpA1oIUYdO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QsgS7h2pfFau7BrZfozQWsTKG/u6Ld3X/5lSSUQaCLnIUVK+L+LBhVQkiWxEP4EfJkRpjHva7JdDx4I7228ToYYgJSjrGzoT5ChsNsG4x1W7lw8mcr2F0XHNtzXllNlVWiJSWKXMeNzgOucVO7dIDX4IoNWWsMXYqE7n4j6Tj3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SmPRWQ0b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739946450; c=relaxed/simple;
+	bh=r+iedKeiScb1dqX8mW7k4+xymZTfeRwsvVEqpB7LYZM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o4y0tBiS5JmNH+rgOL0MhW5OGjIKWo7yDCnoGmoBPTvkjgaajDWj4sN/dRSB3NbU/KbBQou6bTD+wB8fBsGZz6i1vti8G2tZ7FsC7dffIlC9F7MWPlEfpjyaPutLR86iHbS80JZ0O96KNdiYfaae5yDi2Gkkbn54M6j8XxEa70s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vpt1RadO; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SmPRWQ0b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2579AC4CEE6;
-	Wed, 19 Feb 2025 06:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739946378;
-	bh=gs8Atg05EuB92ani/mTzwjxh1rZsnVOwZpA1oIUYdO8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SmPRWQ0bmA8r6JDNq4EQiZtBOZyVsOxTjzVaOEV2ISiy5eUfCjSB1DfbVPDihvLv4
-	 rigP2iikysJ3QL7ln1Ll/HKk/8bprzAgDn5XeHheKtplFQ0rx9YnfzVpOlh5L8PYaM
-	 8RQpTF2U0wNX6WqjkyKh4ANqSE1we9bWm64Jf9aF783B0uDvYZeUG+gCcxMkWHSrzQ
-	 pHu1uUeMXdGk/i7vhskBB44omPDnLMmq/v2BBwNQkC557xkuDn5Btwdo/X3WRzXQ+s
-	 qhoBXy0/nLt7cJlCfbe4D7e86v5gIySR3A7cWFSCBYMPezP1X7dbhS1BGaEuFPxEPs
-	 TWgO97Yev6g/g==
-Message-ID: <54cb52eb-9429-40d9-8b16-368c517746fd@kernel.org>
-Date: Wed, 19 Feb 2025 07:26:15 +0100
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vpt1RadO"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51J6RCdh1884773
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Feb 2025 00:27:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739946432;
+	bh=VlVNFZBgMTyta3Sdh9B7e+RlAhPD+wCm7u6IJUX4tKw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=vpt1RadOOI4UXChW99+KmrwJg1Vu0Rv7W6apbG70QUAtIPbQbbOrl5Jpu1CdNhnPt
+	 AjTXIuMWwLGg2R6gPlWLvhnwVlCvDCxROHR1oU4OWviYlheUKwEc/tB7RETPKKTgZo
+	 pu41hULr7V9iREBaoo3imXJTrVOLVoRKbLZis/rk=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51J6RC2s002407
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 19 Feb 2025 00:27:12 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
+ Feb 2025 00:27:11 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 19 Feb 2025 00:27:11 -0600
+Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51J6RBUp080308;
+	Wed, 19 Feb 2025 00:27:11 -0600
+Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 51J6RBWG009531;
+	Wed, 19 Feb 2025 00:27:11 -0600
+From: Meghana Malladi <m-malladi@ti.com>
+To: <lokeshvutla@ti.com>, <vigneshr@ti.com>, <javier.carrasco.cruz@gmail.com>,
+        <diogo.ivo@siemens.com>, <m-malladi@ti.com>, <horms@kernel.org>,
+        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
+        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Roger Quadros
+	<rogerq@kernel.org>, <danishanwar@ti.com>
+Subject: [PATCH net v2 1/2] net: ti: icss-iep: Fix pwidth configuration for perout signal
+Date: Wed, 19 Feb 2025 11:57:00 +0530
+Message-ID: <20250219062701.995955-2-m-malladi@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250219062701.995955-1-m-malladi@ti.com>
+References: <20250219062701.995955-1-m-malladi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] tty/vt: Gather the code that outputs char with
- utf8 in mind
-To: Alexey Gladkov <legion@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-References: <cover.1739881707.git.legion@kernel.org>
- <35c2ae96b68b64ee71b636df0e0c1907e0766a24.1739881707.git.legion@kernel.org>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <35c2ae96b68b64ee71b636df0e0c1907e0766a24.1739881707.git.legion@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 18. 02. 25, 13:29, Alexey Gladkov wrote:
-> When we putting character to the tty, we take into account the keyboard
-> mode to properly handle utf8. This code is duplicated few times.
-> 
-> Signed-off-by: Alexey Gladkov <legion@kernel.org>
+icss_iep_perout_enable_hw() is a common function for generating
+both pps and perout signals. When enabling pps, the application needs
+to only pass enable/disable argument, whereas for perout it supports
+different flags to configure the signal.
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+But icss_iep_perout_enable_hw() function is missing to hook the
+configuration params passed by the app, causing perout to behave
+same a pps (except being able to configure the period). As duty cycle
+is also one feature which can configured for perout, incorporate this
+in the function to get the expected signal.
 
-thanks,
+Fixes: c1e0230eeaab2 ("net: ti: icss-iep: Add IEP driver")
+Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+---
+Changes from v1 (v2-v1):
+- replace u32 typecast with div_u64()
+
+ drivers/net/ethernet/ti/icssg/icss_iep.c | 28 ++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
+index 768578c0d958..0411438a3b5d 100644
+--- a/drivers/net/ethernet/ti/icssg/icss_iep.c
++++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
+@@ -406,9 +406,16 @@ static void icss_iep_update_to_next_boundary(struct icss_iep *iep, u64 start_ns)
+ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
+ 				     struct ptp_perout_request *req, int on)
+ {
++	struct timespec64 ts;
++	u64 ns_width;
+ 	int ret;
+ 	u64 cmp;
+ 
++	/* Calculate width of the signal for PPS/PEROUT handling */
++	ts.tv_sec = req->on.sec;
++	ts.tv_nsec = req->on.nsec;
++	ns_width = timespec64_to_ns(&ts);
++
+ 	if (iep->ops && iep->ops->perout_enable) {
+ 		ret = iep->ops->perout_enable(iep->clockops_data, req, on, &cmp);
+ 		if (ret)
+@@ -419,8 +426,9 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
+ 			regmap_write(iep->map, ICSS_IEP_CMP1_REG0, lower_32_bits(cmp));
+ 			if (iep->plat_data->flags & ICSS_IEP_64BIT_COUNTER_SUPPORT)
+ 				regmap_write(iep->map, ICSS_IEP_CMP1_REG1, upper_32_bits(cmp));
+-			/* Configure SYNC, 1ms pulse width */
+-			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG, 1000000);
++			/* Configure SYNC, based on req on width */
++			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG,
++				     div_u64(ns_width, iep->def_inc));
+ 			regmap_write(iep->map, ICSS_IEP_SYNC0_PERIOD_REG, 0);
+ 			regmap_write(iep->map, ICSS_IEP_SYNC_START_REG, 0);
+ 			regmap_write(iep->map, ICSS_IEP_SYNC_CTRL_REG, 0); /* one-shot mode */
+@@ -447,6 +455,8 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
+ 				   + req->period.nsec;
+ 			icss_iep_update_to_next_boundary(iep, start_ns);
+ 
++			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG,
++				     div_u64(ns_width, iep->def_inc));
+ 			/* Enable Sync in single shot mode  */
+ 			regmap_write(iep->map, ICSS_IEP_SYNC_CTRL_REG,
+ 				     IEP_SYNC_CTRL_SYNC_N_EN(0) | IEP_SYNC_CTRL_SYNC_EN);
+@@ -478,6 +488,12 @@ static int icss_iep_perout_enable(struct icss_iep *iep,
+ 
+ 	mutex_lock(&iep->ptp_clk_mutex);
+ 
++	/* Reject requests with unsupported flags */
++	if (req->flags & ~PTP_PEROUT_DUTY_CYCLE) {
++		ret = -EOPNOTSUPP;
++		goto exit;
++	}
++
+ 	if (iep->pps_enabled) {
+ 		ret = -EBUSY;
+ 		goto exit;
+@@ -486,6 +502,12 @@ static int icss_iep_perout_enable(struct icss_iep *iep,
+ 	if (iep->perout_enabled == !!on)
+ 		goto exit;
+ 
++	/* Set default "on" time (1ms) for the signal if not passed by the app */
++	if (!(req->flags & PTP_PEROUT_DUTY_CYCLE)) {
++		req->on.sec = 0;
++		req->on.nsec = NSEC_PER_MSEC;
++	}
++
+ 	ret = icss_iep_perout_enable_hw(iep, req, on);
+ 	if (!ret)
+ 		iep->perout_enabled = !!on;
+@@ -572,6 +594,8 @@ static int icss_iep_pps_enable(struct icss_iep *iep, int on)
+ 		rq.perout.period.nsec = 0;
+ 		rq.perout.start.sec = ts.tv_sec + 2;
+ 		rq.perout.start.nsec = 0;
++		rq.perout.on.sec = 0;
++		rq.perout.on.nsec = NSEC_PER_MSEC;
+ 		ret = icss_iep_perout_enable_hw(iep, &rq.perout, on);
+ 	} else {
+ 		ret = icss_iep_perout_enable_hw(iep, &rq.perout, on);
 -- 
-js
-suse labs
+2.43.0
+
