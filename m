@@ -1,251 +1,198 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2056.outbound.protection.outlook.com [40.107.236.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708411F2BAD;
-	Wed, 19 Feb 2025 15:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739980661; cv=none; b=opW5G2XmW8hVYM3Lynafng6/BaFy8bPE6fg3+pSIdOxnTuwlkY3zcvqlm1zD+VuT/mYaHdXfIbIzzuh2W+4yxnmFZFODq9eEXchFK927x/yqyATcN/pdjk/FBm1NNFhBQFPXhhnBYesvhRgNYf/k0dyzicH5dHa33ZHHXuciTEY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739980661; c=relaxed/simple;
-	bh=CXnnR0RtfFEyq3pM1N2aVMn1BbDcUCsIKNrSdsEIFu0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kPbC21YGcyjMBVPyS3YdMU/iX25dAXV31LdvcwNtCrzmwxDF2nrygQ3IBy2nyffhLJWqlJq8JLH94G7+bvAIGkcvIO211zfbsxfavwHL+lxTgLFQCNUTCK7mW9VM89K8TXzzwVG1T0uoAxRU4jw/4gXMwgChkihW2yRdcHCrC4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TjsD02zp; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502BB1D5175;
+	Wed, 19 Feb 2025 15:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739980674; cv=fail; b=iz3bgwD3NN+LXnc/8EZ5oLErioKStxiUXcNqG5p2n2QAwhnLlf7WUFhS0zbf+zxuojhKKtQ+LjYvTLLHC+BQ3hZPMKSBSCnUJxP7ap55HZm2W3tTrrbgxX0zXumS69sHiSuPr/PAXY2+hxeNWArdnpzwWOkAAPCAd8tDS+Mjjgo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739980674; c=relaxed/simple;
+	bh=hSdsb7ZeiK4YAjON6hD/AxYD81mVwTlFMrZAMHKTHro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=F5FLzWZGUrNI9tu4BywycR11o5zcdOaUaQ8Q9C+N/SRsd5+QSPamS4hf/pb25s4l3NbOUBnp0VjU5Th4jfzh7a0qg+LLOFclhWUFHowEq5/wnA1w3FVXC+MCO7u/ACatF6CwyWh2UtkYWraI2t9sonVBpjWgIbFZwQQ+ZGlAIt8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SwpZ0F7G; arc=fail smtp.client-ip=40.107.236.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TjsD02zp"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51J75Cq4005346;
-	Wed, 19 Feb 2025 15:57:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=RNRYAF
-	Z+vWlXibKC7lWNvKEzI0madAammI6tr38yBJI=; b=TjsD02zpA5OQUHOFu9tBNY
-	e0ZXRdvZSquZN+rlqwDxa+fL4iTI06177bEGHn+61Dnpk2rzqGv7FuozNywgYj+3
-	DqMvQejPpoOYMJ4JdVQxSorLrjiDkjUgA6Uq/feARiFq+X0QgAYntfQ1MwKiW/ab
-	1gayuPKGnWHCaPdUOMF+jf7hkjV27aeua+AjGg73OjVRWE9q8ljSTmxYkRFB138Q
-	CSExsiqjjrAtknEQ3cGZLYbTJEtz18Kaq1qbeirm054+zm+DagwvzIrrgMPD4djc
-	/VoGYVi25MC4PZ4XTKmMbz/KLqBSnIeBEYKkYnskTK4+Nc1CnTYM5AbdHHNMQL5g
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44w650bhd0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 15:57:16 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51JE1Ewr030243;
-	Wed, 19 Feb 2025 15:57:15 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w01x4vr9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 15:57:15 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51JFvDd318416154
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Feb 2025 15:57:13 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 753435805D;
-	Wed, 19 Feb 2025 15:57:14 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 65CFC58055;
-	Wed, 19 Feb 2025 15:57:13 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Feb 2025 15:57:13 +0000 (GMT)
-Message-ID: <7433b986-f048-494d-a66a-5888cd37b081@linux.ibm.com>
-Date: Wed, 19 Feb 2025 10:57:13 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SwpZ0F7G"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uZO8TD89L2OaPel17GP9kzE9eMlV6wslcros3G6YJbL9JZ1B97HHBHT/QMeKe/tioKtAkebuxbmX1m3930ULQAggH4rCKNjD/ptIHR8eYimMp7B22eS0lZu2ipvpdpmknxTJIeJnN3rVnIcCrvgRkq+mhAdc1NxxF7w6jkFtYek88zCUTcG6cMRhkZMNQL0EwTDe2mLNtXCFTOfUR927Lm/gkZ3xzEC5KYunoHnzt66fxwwRgbzHSD1nc0XEh89UUeHsF6ayNUV+Rd+pkIxoUfQro8TPvN9j/epcVUkFZp9eIpJUe8gspcOIR7fygHMqljpcSN8stKlWevHYhXwZsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aZYMMIAEx6g6WwEuASLdppXZMjG6/8H4QW8RVr/QTGQ=;
+ b=ykck39ZviQGKgCnhJAZnxSPZ2N8xBLCu5Q+hjgppWCwwbNyJt02/zeD0VvL1T/DngnpYVYwZ1fxLbgxabPM3zxQ+Mt/JVjpg+eCHPGTYPkQNaCj5Pc604t4dwWob3RDIQHbe0UVufuEwfpJUkLUZM8UIHyX8xBiKe0aI3tzLCq0RSJQR3SyTT/YBnPjDHb8F0JE/rSZALCffxgbtlfnYuxlhHWl7qj0labW9yJlCUtktDN3D89acmnN0giquZDAYbZDvFF7ghjtmG21HRBgVMmvJpgVhazbHSYqfoX6i98GntdguhXWY047P/NtRJ+FTHC0yzKBJ/DWI05DEeTEZVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aZYMMIAEx6g6WwEuASLdppXZMjG6/8H4QW8RVr/QTGQ=;
+ b=SwpZ0F7GQBe+z2Xg8ROiDGoKzC+48y4gs1gPgDn2w0VZosTpDHbYOc1NwtUKOpsuYRmNaRO3gZl4JLsyw7VwagWdW/GnK/ZQr6HcQseJyee+caMSg3sJPDB8+VE/GUkudZYpQTNqF6BwVvzB0BBz2C8nYcQgH1PO/IgmfP0ybAs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ PH7PR12MB5596.namprd12.prod.outlook.com (2603:10b6:510:136::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Wed, 19 Feb
+ 2025 15:57:49 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%5]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
+ 15:57:49 +0000
+Date: Wed, 19 Feb 2025 10:57:45 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "Luck, Tony" <tony.luck@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"Smita.KoralahalliChannabasappa@amd.com" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v2 07/16] x86/mce: Define BSP-only init
+Message-ID: <20250219155745.GB337534@yaz-khff2.amd.com>
+References: <20250213-wip-mca-updates-v2-0-3636547fe05f@amd.com>
+ <20250213-wip-mca-updates-v2-7-3636547fe05f@amd.com>
+ <CY8PR11MB71348FE4A5684E941992B5CA89FA2@CY8PR11MB7134.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY8PR11MB71348FE4A5684E941992B5CA89FA2@CY8PR11MB7134.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BN0PR04CA0140.namprd04.prod.outlook.com
+ (2603:10b6:408:ed::25) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 5/7] ima: kexec: move IMA log copy from kexec load to
- execute
-To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
- <20250218225502.747963-6-chenste@linux.microsoft.com>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20250218225502.747963-6-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: fIeIYbbJTYuYoV9uVtLxM_3bePvUUM8D
-X-Proofpoint-GUID: fIeIYbbJTYuYoV9uVtLxM_3bePvUUM8D
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_06,2025-02-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- impostorscore=0 suspectscore=0 mlxscore=0 clxscore=1015 bulkscore=0
- adultscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502190122
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|PH7PR12MB5596:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e01672d-d8b5-4c96-1210-08dd50fe28b1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Do9DLGkyyKH+8MUp8hrnGB7kPjdOs/q0CtKToz9sm2gjP037GXWmQQrqfXRK?=
+ =?us-ascii?Q?PcJk8dGLrwZZ/G06wIZtbnI0z/MbSGO0x6prBcbIl0PL+Vxn78udkP05omhF?=
+ =?us-ascii?Q?LkagKFodO147WLMjycvRHja3yKlxh+B86vApP+CWdwqZR7m7b12OHgO4B8rl?=
+ =?us-ascii?Q?sajnP35G/ji8mhc7LtOXdu9uw9aPgMci19E+L+pDc8V+jnjzI249ytXLlYJ2?=
+ =?us-ascii?Q?O8LZns0auoHpqpIpsEP8uvZl1GU0CeJTSez8L8rJzlTP5ITu9Wjv3TQDoB3c?=
+ =?us-ascii?Q?huP4tofeM82eo+VfQ1UqRXhDuipMRpX9+/no3DccAAob/MlUubtSiPUa9iBF?=
+ =?us-ascii?Q?sMvlXGCfYhhNuukxFPOOa/ZtJkXZ4lC5nC/AUahyca/Cyg86Zs2gduvDRnwR?=
+ =?us-ascii?Q?JD7/s/WCvDHwMHk2XNE8KIVOuPCGBxhoBArX7pcAplHZ4a3/1UCPgfPl9LPJ?=
+ =?us-ascii?Q?766E/YaOHdtztiFrzNKkEE+OJ7WrVvvXRtWvfLUpy5+xsWJYXLYU+1B7LPCD?=
+ =?us-ascii?Q?7FtXKKpib3URpSyDS++1oP0Vark6F+2zMwDmMyRjjDvaF7M7cnTML79+iOxY?=
+ =?us-ascii?Q?JJDEYkzZM18TtnvpkyCcAyt5hFKJl1Vl/uFpZVJHzU/ggYsAcz9oyT8K+R/Y?=
+ =?us-ascii?Q?Qq5n7tyTkcu/ewrVAY0WZ/y5hTYV2srFg4McKmdIWf9BNr9V/YNnv4PeMLWi?=
+ =?us-ascii?Q?5zOD//lBEDw7hihz0TKIJJsJjviWVFT4SNyt5Bcj1x+8J1UcoOKDQT4h8i/S?=
+ =?us-ascii?Q?XX9LC7UgHJyU7bF7fJmn/iiz3EO08QqC6Aupg74dFl+3HGbLmQ0xSWQ3aQzE?=
+ =?us-ascii?Q?Tk/n11+8PUpDmDJq/vk9yWtQv0fYe5woBjN3zoOeysbFLZp6Y34JLBaDMIKg?=
+ =?us-ascii?Q?XBuXno022/bsxM4jhTSeaxevy/diHDYli7xGbDjkkSqPV15s9ZU91gQgCrCU?=
+ =?us-ascii?Q?mPizevrgj7/RZHjN/IVbTmEG7nAkuN+iWRTLC1RrIXHU6IwsENaAgBjbpZmT?=
+ =?us-ascii?Q?ACZbjKCMNFXrOm+sHjKYZ/0A8d/+GV2BxvycxDmfINpi4V+Pe35DyBs/I6nN?=
+ =?us-ascii?Q?STj4MCeNcTDUme2WW368ASxLBWrn/MAAN+swVE29gkjkrhxoXDpJ8mFRZcqp?=
+ =?us-ascii?Q?ccr6c+HhcYtRahzCRxGlIqxjIk5/4reW4mmsmQvy2q2kR4wuigWL13NBR8st?=
+ =?us-ascii?Q?bV5Nm7q+nFpIpJaDKCh2rz5PFJbch4T/VRgnenyakMjjm6l62wAOoClXOjgw?=
+ =?us-ascii?Q?3rc+dEC1bJaWop5zLKaaUbcajIhUZGX5nqZvygJSyhTdOkbsukhpdrmU8Ghg?=
+ =?us-ascii?Q?qOSMfA4GlY81fdu0aQaQojBG6bl+6NgH+9EX2PidAsxHgOwx9DPZv0CDiJTU?=
+ =?us-ascii?Q?YP+lzLJcpbWZO17qYzDaeQK0u3ZZ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3jFoP48msgCNhnUfBEVVRUyOKto2KLXWapz/yA4WzhDfBV15BhMKD80yPphN?=
+ =?us-ascii?Q?v5UesXa7I2mdZB8+STUkm+T0j2vJmjx+8S81mC39zqfBOy71YKQHiQA70uYy?=
+ =?us-ascii?Q?AlKZcrUnMnGaDhdH1Mm03mSDk8BZ315T3iiSJPYdRnEqLyZjMr1OH5JFiyX+?=
+ =?us-ascii?Q?EtYqpLCFc87EdoIXnruslHki4L+MjB2U9wK4tqzNmE5b4oDeFvoej5SjVb+9?=
+ =?us-ascii?Q?2a45MuhdXxTR8UlwpbobMSPfUl+spekRlQjq2OglZ/jhq28d7cANPjpPntfj?=
+ =?us-ascii?Q?FkbHVr8/fNPQ8fOnnjWPUChmbuTveLwmMX1kyLZfwV0Of6H6uoDN0FKNwndW?=
+ =?us-ascii?Q?4K+wmVKhUdSaaCr9Q084/wqmGEKgJTm3uEk9Hc9iZHsxP/RDeRqK/30uVNFQ?=
+ =?us-ascii?Q?02XO6iseBU8JBIVRyc6BTNUD18BXghwPaabgIci4aiPVAAo4QZxKIr95GkUy?=
+ =?us-ascii?Q?ydHhkOZ5P+qqewsoCvew9TsCjj8rHPowIJ6FRYozDk1+2NJ6gOhOVMw1KAvo?=
+ =?us-ascii?Q?b3WZWwUJpXMHwiOJIm7VZ2Y1cQZU0nx9z3f4dW0WauYwUGPuYhbQH9WrpS2O?=
+ =?us-ascii?Q?Jw//m91AKJc/iejvwaA/r/FjUQI939jud5il61ceqXTbBx0BdBjI6PY++shS?=
+ =?us-ascii?Q?VuWWZTfbrOKQPpZRuSci+7teeLlMOpEsVp6ARd0/AhimFp/HDcHmZUBu5KZ1?=
+ =?us-ascii?Q?TX6o756CDtAleVTlptkc2ntLU2ZcXJdKGqdalPKcfYVovtu0pa/KmRgwiYhC?=
+ =?us-ascii?Q?C1FPOHEPnCaMlI+TFh+bro/6ezMNH2ShJr3U2ao5J0el43nigS6+nTf2aZye?=
+ =?us-ascii?Q?ynym+wHK+BxXPe86az1wEhNZ6Cl2BNNx9554CzZyyH+TTgDDf/ye/3Gn5Oqs?=
+ =?us-ascii?Q?vD51UgdRvQ0w1Q7gf/23jyotN1FkWd/o/jyV4PQIIvYPoZFawrfzjS1YqlKo?=
+ =?us-ascii?Q?BVAAeDJQzFsaTRzJqqmZ66sxi0bos0qshfDWTcuOQyszhDf43/DFHjPLhj+A?=
+ =?us-ascii?Q?GiZkvsrR+Xi2aSXdCU/gTQdG0HPemSXanvjSkhaiwhDShZsy5n+7GWBvyefU?=
+ =?us-ascii?Q?lZqKYRrg4p+aG8YCMQF3KGUEuzo3ImoJi1REzSPiGMpHujcbenm79sH8pOEP?=
+ =?us-ascii?Q?ktnOgvEMsCsOu8C+PONkQQnioqYiD/Ewdcanq1r5MYdp2cPZGu8tUV4XP0dL?=
+ =?us-ascii?Q?eKwr5UnQpt6ddk0q4MYuTVE9aGaDcSoJNhG0wvCcaO5YtWWgaWl3FhzpLkM1?=
+ =?us-ascii?Q?OHaNSND/GKOxuPmDtpL8ti0sCSVzLK7gMnH3s8+CZDJdaP9vbkHvA+urAncr?=
+ =?us-ascii?Q?lVISq7RrAwPaTMjJ9hQHAYJ5797HuKq4AtI4M2yYw8aWGBpVsJ5U249gvmrh?=
+ =?us-ascii?Q?1n4CIsKgfh960eaQvbqJTjvFk3OBTvcWNhLTJp6D1m2ZuknOvUHdXc7v1s7E?=
+ =?us-ascii?Q?HvmgCTjPXm+Auyx6kqlEyf3vAcJaVi3YDpDfv6ZIYgZO8LL/MtSEKKntKb9C?=
+ =?us-ascii?Q?T61ah2rkEqPtub4IuHA2H+DrQevMd3XEXEqMRIbM1MHJyiBBFcn9ohhix2vs?=
+ =?us-ascii?Q?03mvWAjkrfKGQddFiw838jP38iDzer+RmoAZekh7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e01672d-d8b5-4c96-1210-08dd50fe28b1
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 15:57:49.3133
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6g5eOpG7BvEqAHXVy+IShSeSzLdqgH9conlFpd3t+UjF1wPtKK8yjloTBeW2bbBgn7NT75XJyh6s6sZ9e7zkTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5596
 
-
-
-On 2/18/25 5:55 PM, steven chen wrote:
-> ima_dump_measurement_list() is called during kexec 'load', which may
-> result in loss of IMA measurements during kexec soft reboot.  It needs
-
-... due to missed measurements that only occurred after kexec 'load'. 
-Therefore, this function needs to be ...
-
-> to be called during kexec 'execute'.
+On Tue, Feb 18, 2025 at 03:16:49AM +0000, Zhuo, Qiuxu wrote:
+> > From: Yazen Ghannam <yazen.ghannam@amd.com>
+> > [...]
+> > diff --git a/arch/x86/kernel/cpu/mce/amd.c
+> > b/arch/x86/kernel/cpu/mce/amd.c index 302a310d0630..a4ef4ff1a7ff 100644
+> > --- a/arch/x86/kernel/cpu/mce/amd.c
+> > +++ b/arch/x86/kernel/cpu/mce/amd.c
+> > @@ -656,9 +656,6 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
+> >  	u32 low = 0, high = 0, address = 0;
+> >  	int offset = -1;
+> > 
+> > -	mce_flags.overflow_recov =
+> > cpu_feature_enabled(X86_FEATURE_OVERFLOW_RECOV);
+> > -	mce_flags.succor	 =
+> > cpu_feature_enabled(X86_FEATURE_SUCCOR);
+> > -	mce_flags.smca		 =
+> > cpu_feature_enabled(X86_FEATURE_SMCA);
+> >  	mce_flags.amd_threshold	 = 1;
+> > 
+> > [...]
+> > --- a/arch/x86/kernel/cpu/mce/core.c
+> > +++ b/arch/x86/kernel/cpu/mce/core.c
+> > [...]
+> > +/* Called only on the boot CPU. */
+> > +void cpu_mca_init(struct cpuinfo_x86 *c) {
+> > +	u64 cap;
+> > +
+> > +	if (!mce_available(c))
+> > +		return;
+> > +
+> > +	mce_flags.overflow_recov =
+> > cpu_feature_enabled(X86_FEATURE_OVERFLOW_RECOV);
+> > +	mce_flags.succor	 =
+> > cpu_feature_enabled(X86_FEATURE_SUCCOR);
+> > +	mce_flags.smca		 =
+> > cpu_feature_enabled(X86_FEATURE_SMCA);
 > 
-> This patch includes the following changes:
->   - Implement kimage_file_post_load() function to be invoked after the new
->     Kernel image has been loaded for kexec.
+> 1. Before this patch set, the above code was executed only if the following 
+>     condition was true. Do we still need this check?
+> 
+>     if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON) 
+>     {
+>           The above code.
+>      }
 
-s/Kernel/kernel
-
->   - Call kimage_file_post_load() from kexec_file_load() syscall only for
->     kexec soft reboot scenarios and not for KEXEC_FILE_ON_CRASH.  It will
->     map the IMA segment, and register reboot notifier for the function
->     ima_update_kexec_buffer() which would copy the IMA log at kexec soft
->     reboot.
->   - Make kexec_segment_size variable local static to the file, for it to be
-
-... to the file so that it becomes accessible ...
-
->     accessible both during kexec 'load' and 'execute'.
->   - Move ima_dump_measurement_list() call from ima_add_kexec_buffer()
->     to ima_update_kexec_buffer().
->   - Remove ima_reset_kexec_file() call from ima_add_kexec_buffer(), now
->     that the buffer is being copied at kexec 'execute', and resetting the
->     file at kexec 'load' will corrupt the buffer.
-
-s/will/would
+I don't think so. Feature checks should be independent of vendor, so the
+vendor checks are redundant.
 
 > 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-
-With  the above changes:
-
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-
-> ---
->   kernel/kexec_file.c                |  8 ++++++
->   security/integrity/ima/ima_kexec.c | 43 +++++++++++++++++++-----------
->   2 files changed, 36 insertions(+), 15 deletions(-)
+> 2. Can " mce_flags.amd_threshold  = 1;" also be moved here?
 > 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 606132253c79..76b6a877b842 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -201,6 +201,11 @@ kimage_validate_signature(struct kimage *image)
->   }
->   #endif
->   
-> +static void kimage_file_post_load(struct kimage *image)
-> +{
-> +	ima_kexec_post_load(image);
-> +}
-> +
->   /*
->    * In file mode list of segments is prepared by kernel. Copy relevant
->    * data from user space, do error checking, prepare segment list
-> @@ -428,6 +433,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
->   
->   	kimage_terminate(image);
->   
-> +	if (!(flags & KEXEC_FILE_ON_CRASH))
-> +		kimage_file_post_load(image);
-> +
->   	ret = machine_kexec_post_load(image);
->   	if (ret)
->   		goto out;
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 0fa65f91414b..f9dd7ff95b84 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -19,6 +19,7 @@
->   #ifdef CONFIG_IMA_KEXEC
->   static struct seq_file ima_kexec_file;
->   static void *ima_kexec_buffer;
-> +static size_t kexec_segment_size;
->   static bool ima_kexec_update_registered;
->   
->   static void ima_reset_kexec_file(struct seq_file *sf)
-> @@ -129,7 +130,6 @@ void ima_add_kexec_buffer(struct kimage *image)
->   	/* use more understandable variable names than defined in kbuf */
->   	void *kexec_buffer = NULL;
->   	size_t kexec_buffer_size = 0;
-> -	size_t kexec_segment_size;
->   	int ret;
->   
->   	/*
-> @@ -154,13 +154,6 @@ void ima_add_kexec_buffer(struct kimage *image)
->   		return;
->   	}
->   
-> -	ret = ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
-> -					kexec_segment_size);
-> -	if (ret < 0) {
-> -		pr_err("Failed to dump IMA measurements. Error:%d.\n", ret);
-> -		return;
-> -	}
-> -
->   	kbuf.buffer = kexec_buffer;
->   	kbuf.bufsz = kexec_buffer_size;
->   	kbuf.memsz = kexec_segment_size;
-> @@ -178,12 +171,6 @@ void ima_add_kexec_buffer(struct kimage *image)
->   	image->ima_segment_index = image->nr_segments - 1;
->   	image->is_ima_segment_index_set = true;
->   
-> -	/*
-> -	 * kexec owns kexec_buffer after kexec_add_buffer() is called
-> -	 * and it will vfree() that buffer.
-> -	 */
-> -	ima_reset_kexec_file(&ima_kexec_file);
-> -
->   	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
->   		      kbuf.mem);
->   }
-> @@ -194,7 +181,33 @@ void ima_add_kexec_buffer(struct kimage *image)
->   static int ima_update_kexec_buffer(struct notifier_block *self,
->   				   unsigned long action, void *data)
->   {
-> -	return NOTIFY_OK;
-> +	void *buf = NULL;
-> +	size_t buf_size = 0;
-> +	int ret = NOTIFY_OK;
-> +
-> +	if (!kexec_in_progress) {
-> +		pr_info("No kexec in progress.\n");
-> +		return ret;
-> +	}
-> +
-> +	if (!ima_kexec_buffer) {
-> +		pr_err("Kexec buffer not set.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = ima_dump_measurement_list(&buf_size, &buf,
-> +					kexec_segment_size);
-> +
-> +	if (ret)
-> +		pr_err("Dump measurements failed. Error:%d\n", ret);
-> +
-> +	if (buf_size != 0)
-> +		memcpy(ima_kexec_buffer, buf, buf_size);
-> +
-> +	kimage_unmap_segment(ima_kexec_buffer);
-> +	ima_kexec_buffer = NULL;
-> +
-> +	return ret;
->   }
->   
->   struct notifier_block update_buffer_nb = {
 
+No, because this flag is not based on a CPU feature. However, I think
+more cleanup can be done for this, but that will come later.
+
+Thanks,
+Yazen
