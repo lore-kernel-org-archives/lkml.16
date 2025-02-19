@@ -1,95 +1,145 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4F61C1F21
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 21:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EAF25334E;
+	Wed, 19 Feb 2025 21:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739999503; cv=none; b=UCTkQ+ktjpdoVwSzPRxk28few3peq8Afr/LqnOTNL354AHsXAG8tI1ybT9diC5AJR3FbxUYfqNOTxBidUQ7x+WIBBbvDFmZMJj+nLOIw7nGfbAMjHuxJoiehUKHAPVP2AHK3ifvqipEgpxQjdC9nTQc4dl/yKJId4wk826bGYK4=
+	t=1739999504; cv=none; b=j6xSE7znIQBZNeKLJUvFbpmgKtFmG/qCAN+htxW9dbAOP7mK3Txpw/OkSihGCS7KAmWh1jqWm0Dq7p3tAewylD4ZC20we8tP2c7FIU1HBc1iFJp9HcTKVJ0cVfxdJeAYglFdJKLNC6liocnZwfikNrrebo+nDHIFL68zkVL7gSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739999503; c=relaxed/simple;
-	bh=PGa2rQkVCqGcvdXSluNZLLuuyUMqnsgHGaONK+L9V6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rthX/XNrOpOfuZLvVjuTAkry+c6o2NTzxN3bOmiiSk3cBWHdY1d8uk1I+w45uDIjZqjeAm0+5WCLWjTfcheVRiHIXCRxDL1gRx10yuNtXuDjfmQbwnFsJDrbG7fUXZnHWQBZDxS//Guo27DsP1EiDXMk1G7HdSbWjA7Vz7tJlOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=O+fORw/e; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1739999504; c=relaxed/simple;
+	bh=PmoC+i0YxAQIPqJ9b7EIKVRSdP0/qmTSG3ODXrcWuAU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ft/Zs8E1ZlD9Laz6ggnhbQVG20Qn6kqrE5blO7ypsCY6J/bHFRkB78ynPcWrWdd+hmVFCeY8v6nRGOsAWSyPJqiqJ5xhSiRH8j6A/fVd3a1m0rVVDjZPjlBkD4vc6/MbPC/PnDYrAkVMrASwi0YC5JEDr1sVmlwpH9PLbysr2Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S7GPdm1o; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="O+fORw/e"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d193fc345aso703965ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:11:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1739999499; x=1740604299; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F7tT1yGSGZCPiLi9cXfTaPfy6ZirM2yQLUSmm+s4CHQ=;
-        b=O+fORw/eYI6jQ0Gyl1bCr7f5dwvESaJ0z9fYsJRInKyAnlIpfieJQjhlpScW53v9t4
-         az6i5akq1zr2KiPXCXA6Z7CNiuRoyBbPo87utrbAzlV0GGoMgmZdFeuokviRD5FSNXMm
-         96T/zbJkOC6m63nFcCz5l8DmK5bQpOI2ZcInk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739999499; x=1740604299;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F7tT1yGSGZCPiLi9cXfTaPfy6ZirM2yQLUSmm+s4CHQ=;
-        b=r8zXmxtPmuZesfSKObT3dUYJiRXIe/QaQIkINSB0lvogjXrO+AS2bQecGXmzxAnM+7
-         6njsTezCc8vkG/0yoeEq5V5LJnSIh0zuI37oweAR75wpxqO2BrSIj1nq4b+G6rMAMKZx
-         MdwG8ppdyXM+iBhyOzEYMvYndfg8mJ6HPObu9rEt/d4EjpnDWdNlkkHbonmbCltZ01Kw
-         VXwMYa5r9EjbzkIHplNSzezX3/9LkIySucNKt4yhsJ+SYQeM4AhjGnrvYqauQzEw2Xtg
-         iwo51QsoOlqtdrYatoMrYMAYLjs2YREOLGWiOkZZCy4DtEatJNHECX7eNGX1L2C9i+cu
-         2pcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWf6W6dQkWTaf+ztBpLNs7aQjFPL5DZTfX3D2vzmrj70A25WnZO8AMHZ1N3nR8XjOt+zZkB4is2IYBeO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaMMwhCoS+ixLBg9Sdbc48iiFn8jj24rqpXHGEsp7Lzm9rJ7sk
-	9WToP/OhcJ6mIDi4DpasD2vicBLCXo3IRqX1uXp4LLATE2mJqutFcHhCr3/5ChY=
-X-Gm-Gg: ASbGncutTZcuyxyo8cPBrDHKrXvOjRry9nodrKlG8zXxAtjtxRjmR1qfb00q4auWN7v
-	AYPl3WWCkJBtVpH7VimsRAdcIDeqOTpAKXiJ1SPoYNGgpQ94CL/K5VFpTwEoSKcPMKP0AJKDpHz
-	AT9ZhTeRXT1z9fQxC0+faVJSkPZkRN4WG29fWCk0M4jq8G2r89cKFOUIi82dg0hM8eGpgCIf3KN
-	oKT3hXz1D7eftupKjSYa02Q9KAbD/nHipnoLryev6z6UuqEbspB1rZHou7WGES+aKKxxu4aAnSt
-	q7QKke1CbZdsReCp1FWfOVOZuA==
-X-Google-Smtp-Source: AGHT+IHbiMmd6pm4ztK7iXzR9xSSArO8wZLiPdQ+1D9ZO47Ndh+1S88a89JINVkpcr76FT7K9xHfWg==
-X-Received: by 2002:a05:6e02:12e5:b0:3d1:97dc:2f93 with SMTP id e9e14a558f8ab-3d2b538ad3cmr49413385ab.20.1739999499041;
-        Wed, 19 Feb 2025 13:11:39 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eeaa4f5958sm1178326173.32.2025.02.19.13.11.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2025 13:11:38 -0800 (PST)
-Message-ID: <bed99965-09ad-4468-a5dd-f9615ffaf54e@linuxfoundation.org>
-Date: Wed, 19 Feb 2025 14:11:37 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S7GPdm1o"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JFdPtN001659;
+	Wed, 19 Feb 2025 21:11:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=/5pFPpwlGeDZA7LwOsaraBsXb5yQCmY13xNzaSTKa
+	y4=; b=S7GPdm1ovc53b8XeHN76G58d9fds+GbNq0Z03RGXf55OYxk0EsAC/ubrb
+	awg7fs+hmC3RyNc5UyzlAx/kbDRYLFdxEUrX76Klok1ViHp5/O0+PwGz1JpkkicX
+	UK2IUII//dTcTr5LXIcak/o/dquAlN89jnEApZJXyEEfkCG98aOtNLNTTik8uP6O
+	dZGxdiwVh+7kQ/3kM/P2ugDDfAXlnN1JdGr+w2GjJE+Scogqzpu9hOTnAYf2NvF0
+	q/qb+ynZhzaUmhxBFOC/EWw7vHSVw18jNH/QD/Gsf190acnKGsb3/fVO4TrP0HT7
+	CVMhwjBSUPOmaiqFP5qkTNs+7Obew==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wj4thn2g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 21:11:26 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51JL6iIi032018;
+	Wed, 19 Feb 2025 21:11:26 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wj4thn2b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 21:11:26 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51JKtuhD005817;
+	Wed, 19 Feb 2025 21:11:25 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w02xe9cc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Feb 2025 21:11:25 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51JLBOTr16384724
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Feb 2025 21:11:24 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D24A5805F;
+	Wed, 19 Feb 2025 21:11:24 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3AA958054;
+	Wed, 19 Feb 2025 21:11:23 +0000 (GMT)
+Received: from li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com.com (unknown [9.61.179.202])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Feb 2025 21:11:23 +0000 (GMT)
+From: Nick Child <nnac123@linux.ibm.com>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, horms@kernel.org,
+        david.laight.linux@gmail.com, nick.child@ibm.com, pmladek@suse.com,
+        rostedt@goodmis.org, john.ogness@linutronix.de,
+        senozhatsky@chromium.org, Nick Child <nnac123@linux.ibm.com>
+Subject: [PATCH net-next v3 0/3] Use new for_each macro to create hexdumps
+Date: Wed, 19 Feb 2025 15:10:59 -0600
+Message-ID: <20250219211102.225324-1-nnac123@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: vim2m: print device name after registering device
-To: Matthew Majewski <mattwmajewski@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Uwe Kleine-Konig <u.kleine-koenig@baylibre.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250219190501.295976-1-mattwmajewski@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250219190501.295976-1-mattwmajewski@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: P1LJ6NX2O1acrhWxbM7Jesjq_0kdOnow
+X-Proofpoint-ORIG-GUID: MclHQAyOKws6i7Z7NSyKlZ7NHcXAPjbw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-19_09,2025-02-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ priorityscore=1501 bulkscore=0 mlxlogscore=839 phishscore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502190158
 
-On 2/19/25 12:05, Matthew Majewski wrote:
-> Move the v4l2_info() call displaying the video device name after the
-> device is actually registered.
-> 
-> This fixes a bug where the driver was always displaying "/dev/video0"
-> since it was reading from the vfd before it was registered.
-> 
-> Signed-off-by: Matthew Majewski <mattwmajewski@gmail.com>
-> ---
+Currently, obtaining a hexdump can be done through one of the following:
+ 1. hex_dump_to_buffer - takes at most 32 bytes of a buffer and returns a 
+     hexdump string representation
+ 2. print_hex_dump - prints output of hex_dump_to_buffer iteratively over
+    a large buffer
 
-Thanks. Applied for 6.15-rc1 to be included in pull request to media
-maintainer.
+There is no functionality for iterating over a large buffer and receiving
+the string representation. It seems most users of hex_dump_to_buffer are
+calling hex_dump_to_buffer within the body of a loop which iterates
+through a buffer.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux.git/log/?h=vimc
+This patchset creates a for_each macro that accepts a buffer and fills
+out an output string with the converted hexdump. This loops over the
+buffer and takes care of incrementing pointers. Hopefully this makes
+writing sequential calls to hex_dump_to_buffer more straightforward.
 
-thanks,
--- Shuah
+From a users perspective there should be no difference in output.
+
+The inspiration here was I wanted to use print_hex_dump in ibmvnic code
+but I wanted to print through netdevice printing functions to maintain
+formatting. Looking at other users of hex_dump_to_buffer it seems they had
+similar intentions.
+
+Thanks to Dave, Simon, David, and Paolo for v2 review.
+
+Changes since v2:
+ - patch1: remove unnecssary call to min, this addresses Simon's observation of
+ gcc-7.5.0 warning. Other possible solutions were to change typing but it turns
+ out the call to min is unnecessary since hex_dump_to_buffer has logic for
+ handling len > rowlen and vice versa. So we can be honest about the len.
+ - patch1: cleanup for loop i increment in response to Dave's review
+ - patch3: fix ordering of [Signed-off,Reviewed]-by tags in the commit message
+ - target net-next thanks to Paolo's recommendation
+
+v2: https://lore.kernel.org/lkml/20250214162436.241359-1-nnac123@linux.ibm.com/
+
+Changes since v1:
+ - add Jacob's Reviewed-by
+ - fix kernel doc typo in patch 1 noted by Simon
+
+v1: https://lore.kernel.org/lkml/20250113221721.362093-1-nnac123@linux.ibm.com/
+
+similar intentions.
+Nick Child (3):
+  hexdump: Implement macro for converting large buffers
+  hexdump: Use for_each macro in print_hex_dump
+  ibmvnic: Print data buffers with kernel API's
+
+ drivers/net/ethernet/ibm/ibmvnic.c | 23 ++++++++++++++---------
+ include/linux/printk.h             | 20 ++++++++++++++++++++
+ lib/hexdump.c                      | 11 +++--------
+ 3 files changed, 37 insertions(+), 17 deletions(-)
+
+-- 
+2.48.1
+
