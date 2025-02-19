@@ -1,276 +1,101 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E311F417E;
-	Wed, 19 Feb 2025 15:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46C41F3D53
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739977573; cv=none; b=os0D4qxaw6yquRWigf0yVlB88rBbul86/YWa8Jv7aXD2VY1LuQqgB6t0bLtvEyigNjjTHmLUXHexF2zZEnlPfIwDu49sMk+Qymp/HYIog+RC1ocXqLlWHbadGUG6JymuqUzSBrfmWUTyQT/4ke6upl1y5P9yMcTGBOqYAVM+sjs=
+	t=1739977605; cv=none; b=a3JhE371Fy1d1cijy7qXimMIaxsv06511tkS302PNcvMYMjzaM3YWEbOhqaDEoKEFzil8XVuv0RI4JhK9dDyIm7uKbvi5NkyRx7KEyvr+NdZvibqIckMki7bu5IXPvyFz/4WVUou1uw0pLi+zsoB0JaM8+MqI4pZgi2L0wJ/iq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739977573; c=relaxed/simple;
-	bh=tIxf2kJ2DG7gfisurkYdaFjSbgVpZ/DLEHxNk3gVMlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hHzeVB1spOltKHA+tN/CB71XLKIFfMIyEWkUzeQ6YvHFM4XenfDMg1vqyXpbbICD9DriLwi5fjfovbNV1rWEl88/+s8W+FcW+ws8elEFsa6gxxfUrC/SzCpby3U/V7lkcQ9OJn3KgH5sKyEHxkAvt9nkirkppnbHwBOoP2Qdgdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=HNz74Uzy; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739977605; c=relaxed/simple;
+	bh=RsIgDGy7qZ8B3MBFSHhVZSusxcdoPT4+tAYIqqxrg48=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KkLjY1d58z20gvmgTXrcWPYz4aq88yKmrfMR9sHKy5TB3HPhNFrlFgMqjItqNNtA/JeVx6jF6Xu24SMTeubtlY8moaIOKPuIelSomu7eIelQ4w7iTqsWwkJhgdOiBbUsMNUNfV5sC8GO0CKapF8xDsJpacztXhJ0IiTy2ou5zQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=J1SaBKR3; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HNz74Uzy"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9AF8F169;
-	Wed, 19 Feb 2025 16:04:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739977486;
-	bh=tIxf2kJ2DG7gfisurkYdaFjSbgVpZ/DLEHxNk3gVMlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HNz74Uzy/VJyMGqyVU0Nk9FpWHneFQB0fd33CfjnvFpWXk6UMP05dAQ0PPD3Y0QP3
-	 LR34ZO1NHrtSN2T4a0o86H5/2nI1sPbz3PujXu7KOLX0iVQ6xOhboVYMVumxhWMkjb
-	 pX+Ts5a9M24ej97lpllzij/9/OjfuKU95ZqBRkOg=
-Date: Wed, 19 Feb 2025 17:05:53 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <20250219150553.GD15114@pendragon.ideasonboard.com>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
- <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
- <Z7VKW3eul-kGaIT2@Mac.home>
- <2025021954-flaccid-pucker-f7d9@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="J1SaBKR3"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-8559461c2c2so84438639f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:06:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1739977601; x=1740582401; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Facg3HecWXCU/JkqnQPL5G/CpP1AOCney8P06Ut0gwc=;
+        b=J1SaBKR3DXIo6mmI06ls4yYhyhN5ybupBUGq6q0R5sxOEISJvF9Yuww7eKb48URaFl
+         DjzAazQcGhGqc7ErtFVbhwCXiXDFpci59QhaxaDLuqN6xvBMDAPcijv+KdoE4vmwC1OM
+         UBDRzR4yQ6NEtHBpHLFC5j3d/AXsapAhcN6ZDM/QKRUgIYCDh4p6vFqPRcOHnbEPlNrO
+         ENwo+pDjgeDETgduC+zFwg6UPmWk6OW6iiQI02YLxDL3hNZRzbiq/0jsXgwhNAytBf9b
+         idUyIqhApS1g2j4TFuiH/uc9b1xjuqQoGu0zUNuS4Id0Hl508vFkoskD/JfnNnDNq2zm
+         lgEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739977601; x=1740582401;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Facg3HecWXCU/JkqnQPL5G/CpP1AOCney8P06Ut0gwc=;
+        b=MciOSNFrfoZ1e9Qi7v3pEF1JKoChS5SulXfzVb0DZSuilF/ZQJvWDfYC0BaDHQI4kJ
+         DY4sP7EtvO9BaKV0pT9fpLfRQdBaMxKiQbLcNG5oq/IjjSfGVDjH75l1zTm0gNBn1Wo0
+         /OsG0Khdh5ax3R3B0ogvYrb5q589+yIlheDNcVOzY2VI/HIikrH+gKwxJv3meI4rILUX
+         Wr9DpS9mcKk4+mZsOFi5i4JPaxYdcLJq8DChl6SgNBavufqCuy7ZUjKSnVAmW41yZtee
+         Bo+pXhthNdzM0pE8Eee8LdCrwcdxcqZfIdt7vSvIn863CmCd31QBOGMecoDpeZxTeJFD
+         g72w==
+X-Forwarded-Encrypted: i=1; AJvYcCVSlLG6JFfM8TNcrakTrv56TrU6qHbT516A+MzUVvyQfaC2+n3hj24d6+1lrlwBzkRocRYQgJr21rLafK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0ug8EZraifSaGV5eEKjaGsuZtN2BXYYQ1AWRy8W+aCIl0wfYf
+	JHlliMlPgQL8ayO8xFoNBUf6EcMRf5Mq7RNa75FkrWT3j0ZmvWP1zbHRC3OY54M=
+X-Gm-Gg: ASbGncu2fv+2Qaf1k+9tt0IL/4LPCMKloBRCH4QUrppSc2VhmZKZ7X7Cdrb6v6I0bSM
+	WxzWtiG32UnVQzXrnAgB0z5esvaLclNg8chGTBuNDVNJXZXv/SQeROcArrDRJN/snIRJ3bFoAAK
+	1Nc6Bfw9P8UClZDYIZhK6SWAg1m/QQTGbcfjhgpJ0gkKkaGrCp1zRGqQAvP57pQqaXZdYWGTdh5
+	00Njxs9oXSfg+TUe2A01TA12UDe4MiMKlrJ72HiL7qbUJIaukxjIpjjmkQ5un99fyow2PafTDqy
+	LAXxXA==
+X-Google-Smtp-Source: AGHT+IE900lcMYGFzRy4z2mV2nYf+DRnF5ozVCCn29CL/Gd+3WZwyLfLr39McanUqzpQSq2dm5K21w==
+X-Received: by 2002:a92:c247:0:b0:3d2:b4b8:bf54 with SMTP id e9e14a558f8ab-3d2b52bc919mr38993545ab.7.1739977601624;
+        Wed, 19 Feb 2025 07:06:41 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d2b374de28sm5304345ab.71.2025.02.19.07.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 07:06:40 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Pavel Begunkov <asml.silence@gmail.com>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250219033444.2020136-1-csander@purestorage.com>
+References: <20250219033444.2020136-1-csander@purestorage.com>
+Subject: Re: [PATCH] io_uring/rsrc: remove unused constants
+Message-Id: <173997760046.1535105.540337617191043636.b4-ty@kernel.dk>
+Date: Wed, 19 Feb 2025 08:06:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2025021954-flaccid-pucker-f7d9@gregkh>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-14bd6
 
-On Wed, Feb 19, 2025 at 06:39:10AM +0100, Greg KH wrote:
-> On Tue, Feb 18, 2025 at 07:04:59PM -0800, Boqun Feng wrote:
-> > On Tue, Feb 18, 2025 at 04:58:27PM -0800, H. Peter Anvin wrote:
-> > [...]
-> > > > > David Howells did a patch set in 2018 (I believe) to clean up
-> > > > > the C code in the kernel so it could be compiled with either C
-> > > > > or C++; the patchset wasn't particularly big and mostly
-> > > > > mechanical in nature, something that would be impossible with
-> > > > > Rust. Even without moving away from the common subset of C and
-> > > > > C++ we would immediately gain things like type safe linkage.
-> > > > 
-> > > > That is great, but that does not give you memory safety and everyone
-> > > > would still need to learn C++.
-> > > 
-> > > The point is that C++ is a superset of C, and we would use a subset of C++
-> > > that is more "C+"-style. That is, most changes would occur in header files,
-> > > especially early on. Since the kernel uses a *lot* of inlines and macros,
-> > > the improvements would still affect most of the *existing* kernel code,
-> > > something you simply can't do with Rust.
-> > > 
-> > 
-> > I don't think that's the point of introducing a new language, the
-> > problem we are trying to resolve is when writing a driver or some kernel
-> > component, due to the complexity, memory safety issues (and other
-> > issues) are likely to happen. So using a language providing type safety
-> > can help that. Replacing inlines and macros with neat template tricks is
-> > not the point, at least from what I can tell, inlines and macros are not
-> > the main source of bugs (or are they any source of bugs in production?).
-> > Maybe you have an example?
+
+On Tue, 18 Feb 2025 20:34:43 -0700, Caleb Sander Mateos wrote:
+> IO_NODE_ALLOC_CACHE_MAX has been unused since commit fbbb8e991d86
+> ("io_uring/rsrc: get rid of io_rsrc_node allocation cache") removed the
+> rsrc_node_cache.
 > 
-> As someone who has seen almost EVERY kernel bugfix and security issue
-> for the past 15+ years (well hopefully all of them end up in the stable
-> trees, we do miss some at times when maintainers/developers forget to
-> mark them as bugfixes), and who sees EVERY kernel CVE issued, I think I
-> can speak on this topic.
+> IO_RSRC_TAG_TABLE_SHIFT and IO_RSRC_TAG_TABLE_MASK have been unused
+> since commit 7029acd8a950 ("io_uring/rsrc: get rid of per-ring
+> io_rsrc_node list") removed the separate tag table for registered nodes.
 > 
-> The majority of bugs (quantity, not quality/severity) we have are due to
-> the stupid little corner cases in C that are totally gone in Rust.
-> Things like simple overwrites of memory (not that rust can catch all of
-> these by far), error path cleanups, forgetting to check error values,
-> and use-after-free mistakes.  That's why I'm wanting to see Rust get
-> into the kernel, these types of issues just go away, allowing developers
-> and maintainers more time to focus on the REAL bugs that happen (i.e.
-> logic issues, race conditions, etc.)
-> 
-> I'm all for moving our C codebase toward making these types of problems
-> impossible to hit, the work that Kees and Gustavo and others are doing
-> here is wonderful and totally needed, we have 30 million lines of C code
-> that isn't going anywhere any year soon.  That's a worthy effort and is
-> not going to stop and should not stop no matter what.
+> [...]
 
-I'd say it should accelerate. Ironically, I think it's also affected by
-the same maintainer burn out issue that is hindering adoption of rust.
-When time is limited, short term urgencies are very often prioritized
-over long term improvements.
+Applied, thanks!
 
-As a maintainer of some code in the kernel, I sometimes find it very
-hard to strike the right balance of yak shaving. Some of it is needed
-given the large scale of the project and the contributors/maintainers
-ratio, but tolerance to yak shaving isn't high. It varies drastically
-depending on the contributors (both individuals and companies), and I've
-recently felt in my small area of the kernel that some very large
-companies fare significantly worse than smaller ones.
+[1/1] io_uring/rsrc: remove unused constants
+      commit: fb3331f53e3cb1f1505f918f4f33bb0a3a231e4f
 
-(More on this below)
-
-> But for new code / drivers, writing them in rust where these types of
-> bugs just can't happen (or happen much much less) is a win for all of
-> us, why wouldn't we do this?  C++ isn't going to give us any of that any
-> decade soon, and the C++ language committee issues seem to be pointing
-> out that everyone better be abandoning that language as soon as possible
-> if they wish to have any codebase that can be maintained for any length
-> of time.
-> 
-> Rust also gives us the ability to define our in-kernel apis in ways that
-> make them almost impossible to get wrong when using them.  We have way
-> too many difficult/tricky apis that require way too much maintainer
-> review just to "ensure that you got this right" that is a combination of
-> both how our apis have evolved over the years (how many different ways
-> can you use a 'struct cdev' in a safe way?) and how C doesn't allow us
-> to express apis in a way that makes them easier/safer to use.  Forcing
-> us maintainers of these apis to rethink them is a GOOD thing, as it is
-> causing us to clean them up for EVERYONE, C users included already,
-> making Linux better overall.
-> 
-> And yes, the Rust bindings look like magic to me in places, someone with
-> very little Rust experience, but I'm willing to learn and work with the
-> developers who have stepped up to help out here.  To not want to learn
-> and change based on new evidence (see my point about reading every
-> kernel bug we have.)
-> 
-> Rust isn't a "silver bullet" that will solve all of our problems, but it
-> sure will help in a huge number of places, so for new stuff going
-> forward, why wouldn't we want that?
-> 
-> Linux is a tool that everyone else uses to solve their problems, and
-> here we have developers that are saying "hey, our problem is that we
-> want to write code for our hardware that just can't have all of these
-> types of bugs automatically".
-> 
-> Why would we ignore that?
-> 
-> Yes, I understand our overworked maintainer problem (being one of these
-> people myself), but here we have people actually doing the work!
-
-This got me thinking, this time with thoughts that are taking shape.
-Let's see if they make sense for anyone else.
-
-First, a summary of where we stand, in the particular area I'd like to
-discuss. Hopefully the next paragraph won't be controversial (but who
-knows, I may have an unclear or biased view).
-
-Maintainability, and maintainer burn out, are high in the lirst of the
-many arguments I've heard against rust in the kernel. Nobody really
-disputes the fact that we have a shortage of maintainers compared to the
-amount of contributions we receive. I have seen this argument being
-flipped by many proponents of rust in the kernel: with rust making some
-classes of bugs disappear, maintainers will have more time to focus on
-other issue (as written above by Greg himself). Everybody seems to agree
-that there will be an increased workload for maintainers in a transition
-period as they would need to learn a new language, but that increased
-workload would not be too significant as maintainers would be assisted
-by rust developers who will create (and to some extent maintain) rust
-bindings to kernel APIs. The promise of greener pastures is that
-everybody will be better off once the transition is over, including
-maintainers.
-
-In my experience, chasing bugs is neither the hardest nor the most
-mental energy consuming part of the technical maintenance [*]. What I
-find difficult is designing strong and stable foundations (either in
-individual drivers, or in subsystems as a whole) to build a maintainable
-code base on top. What I find even more horrendous is fixing all the
-mistakes we've made in this regard. As Greg also mentioned above, many
-of our in-kernel APIs were designed at a time when we didn't know better
-(remember device handling before the rewrite of the device/driver model
-? I was fortunately too inexperienced back then to understand how
-horrible things were, which allowed me to escape PTSD), and the amount
-of constraints that the C language allows compilers to enforce at
-compile time is very limited. I believe the former is a worse problem
-than the latter at this time: for lots of the in-kernel APIs,
-compile-time constraints enforcement to prevent misuse doesn't matter,
-because those APIs don't provide *any* way to be used safely. Looking at
-the two subsystems I know the best, V4L2 and DRM, handling the life time
-of objects safely in drivers isn't just hard, it's often plain
-impossible. I'd be surprised if I happened to have picked as my two
-main subsystems the only ones that suffer from this, so I expect this
-kind of issue to be quite widespread.
-
-History is history, I'm not blaming anyone here. There are mistakes we
-just wouldn't repeat the same way today. We have over the years tried to
-improve in-kernel APIs to fix this kind of issues. It's been painful
-work, which sometimes introduced more (or just different) problems than
-it fixed, again because we didn't know better (devm_kzalloc is *still*
-very wrong in the majority of cases). One of the promises of rust for
-the kernel is that it will help in this very precise area, thanks to its
-stronger philosophy of focussing efforts on interface design. As Greg
-mentioned above, it will also lead to improvements for the C users of
-the APIs. As part of their work on creating those rust bindings, rust
-for Linux developers and maintainers improving the situation for
-everybody. This is great. On paper.
-
-In reality, in order to provide API that are possible to use correctly,
-we have many areas deep in kernel code that will require a complete
-redesign (similar in effort to the introduction of the device model),
-affecting all the drivers using them. I understand that the development
-of rust bindings has already helped improving some in-kernel C APIs, but
-I have only seen such improvements of a relatively small scale compared
-to what would be needed to fix life time management of objects in V4L2.
-I would be very surprised if I was working in the only area in the
-kernel that is considered broken beyond repair by many people related to
-life time management, so I think this kind of maintainer nightmare is
-not an isolated case.
-
-The theory is that rust bindings would come with C API improvements and
-fixes. However, when I expressed the fact that rust bindings for V4L2
-would first require a complete rewrite of object life time management in
-the subsystem, I was told this was way too much yak shaving. As a
-maintainer facing the horrendous prospect of fixing this one day, I just
-can't agree to rust bindings being built on top of such a bad
-foundation, as it would very significantly increase the amount of work
-needed to fix the problem.
-
-If we want real maintainer buy-in for rust in the kernel, I believe this
-is the kind of problem space we should start looking into. Helping
-maintainers solve these issues will help decreasing their work load and
-stress level significantly in the long term, regardless of other
-benefits rust as a language may provide. I believe that cooperation
-between the C and rust camps on such issues would really improve mutual
-understanding, and ultimately create a lot of trust that seems to be
-missing. If someone were to be interested in rust bindings for V4L2 and
-willing to put significant time and effort in fixing the underlying
-issue, I would be very happy to welcome them, and willing to learn
-enough rust to review the rust API.
-
-
-[*] I'm leaving out here community building, which is the other
-important part of a maintainer's work, and also requires lots of
-efforts. How rust could help or hinder this is interesting but out of my
-scope right now. If you feel inclined to share your thoughts on this
-mine field, please do so in a reply to this e-mail separate from
-feedback on the technical subject to avoid mixing topics.
-
-> Yes, mixed language codebases are rough, and hard to maintain, but we
-> are kernel developers dammit, we've been maintaining and strengthening
-> Linux for longer than anyone ever thought was going to be possible.
-> We've turned our development model into a well-oiled engineering marvel
-> creating something that no one else has ever been able to accomplish.
-> Adding another language really shouldn't be a problem, we've handled
-> much worse things in the past and we shouldn't give up now on wanting to
-> ensure that our project succeeds for the next 20+ years.  We've got to
-> keep pushing forward when confronted with new good ideas, and embrace
-> the people offering to join us in actually doing the work to help make
-> sure that we all succeed together.
-
+Best regards,
 -- 
-Regards,
+Jens Axboe
 
-Laurent Pinchart
+
+
