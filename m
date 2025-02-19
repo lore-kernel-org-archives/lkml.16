@@ -1,82 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EAA1C68B6;
-	Wed, 19 Feb 2025 08:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ED31DDC3F;
+	Wed, 19 Feb 2025 08:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954296; cv=none; b=Y7uwBMyamSCeaPsIKNd3IMoBkGfgggBwVkTgnJdXbqEC7mNrjS/uarlvQbPScAYPCCQ4znqFx2WoLJP0TxU46zYr+51a5+SU54JgTwk9wg9/jPCgBs+noArfcMCPITKXGQsTM4+e93DgsZnc3zNGvo/Q5MOC1d11+rhsOdAmXbo=
+	t=1739954323; cv=none; b=QfjJwT+ki/Miqixa0zJhbWWQDZ8mV2Hw8w/1nBnMNkVylrqyaZEKOGhlsqw1hIBf7LPtyiu3KSVm6Qg5sqeuBvodbo1TBEuPYHdPN0dJrptkPVBcntIxe/lCilIZDmmYCt2XQGaVwz3f5aDNgWjdyk326xQaiqe9B9vgT98MPII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954296; c=relaxed/simple;
-	bh=hk/K7Xy7+TFm7X+Cn6nnIxxhnI2tKh7frk+g37U2Q3I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oE5MkctxSTRK9AkGKLU4AG22Jb+lJhoELxRWwHwfRURUSOeOkj+o/yLHLEL6dsk9iffm/HhNXm0HOOEkfOdThZYU5tpbPHw7pr2thBjxpu8BNE6He4rMPT1v89kVU9jSNPSWt3Or88X/p22/LBQnVzzCnDshUd/vdrOsfR95VsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdiEO0bX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdiEO0bX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9381CC4CEE6;
-	Wed, 19 Feb 2025 08:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739954296;
-	bh=hk/K7Xy7+TFm7X+Cn6nnIxxhnI2tKh7frk+g37U2Q3I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=CdiEO0bXmEsZKXKRm0QcP4p39t9yOvQaGKeztiXyCnaLcA+iLGYNj3M7FDnz60HT0
-	 IlZRSHn5bf8rt8snl1f97UsInPv0X+dtmdiwfqW/Son+bpG512eW8srjisHQ+NjyeA
-	 Lht9aAWWsN1fkZlJAXCyBovI6hMUp6xNPciTCEdnTUbXl631eqHtSVunWCVtcEPCFF
-	 c4/pGLrZTSqfoIZs62RSylT05bhAGNYWhluDhB3HmOeJqaHpuz5MRXYBs/Lh2554Yu
-	 W8M5soPpqrgv4BpgF2eAI22kg6QjPB2eHie8rS5eNWykXdgBjMe7qGYuVMs+jf5xK3
-	 jHy8G32JIuT2Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Asahi Lina" <lina@asahilina.net>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Jann Horn" <jannh@google.com>,
-  "Matthew Wilcox" <willy@infradead.org>,  "Paolo Bonzini"
- <pbonzini@redhat.com>,  "Danilo Krummrich" <dakr@kernel.org>,  "Wedson
- Almeida Filho" <wedsonaf@gmail.com>,  "Valentin Obst"
- <kernel@valentinobst.de>,  "Andrew Morton" <akpm@linux-foundation.org>,
-  <linux-mm@kvack.org>,  <airlied@redhat.com>,  "Abdiel Janulgue"
- <abdiel.janulgue@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <asahi@lists.linux.dev>
-Subject: Re: [PATCH 1/6] rust: types: Add Ownable/Owned types
-In-Reply-To: <20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net> (Asahi
-	Lina's message of "Sun, 02 Feb 2025 22:05:43 +0900")
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
-	<VqpY5D3uyf3txHBNgKZ7F-R6-AjemjEi3R2pH_tiaqEKbp8yxfK4YSqd6TxwvBrZ-MgC-xMbGufMlhXj8_ZWAg==@protonmail.internalid>
-	<20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 19 Feb 2025 09:37:50 +0100
-Message-ID: <87h64qe3dt.fsf@kernel.org>
+	s=arc-20240116; t=1739954323; c=relaxed/simple;
+	bh=UzWEyLS4m1QElei2gvXZLkx0L1q2cpSGuNlBw+FrgzE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mIauUeMMOx+0608Ugt8jzxN7C9aiFlInzPI/Pl7wGVdx2Qg8HO6zjnWk9B3165da9Pvu60tq1PeJUxf8RRawIElM6R6PCEfjMGgUh12Rvsz0rmYLiZQbr6ceaB0PjsUAYI7x8NJzB3GGezbIf8eY0/yiaPPYVHuebWlW7jPen1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCc4VbKz4f3jqL;
+	Wed, 19 Feb 2025 16:38:20 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id DF7DB1A0F86;
+	Wed, 19 Feb 2025 16:38:36 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S4;
+	Wed, 19 Feb 2025 16:38:34 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH md-6.15 v4 00/11] md/md-bitmap: introduce CONFIG_MD_BITMAP
+Date: Wed, 19 Feb 2025 16:34:45 +0800
+Message-Id: <20250219083456.941760-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw15Cr48Ar4xXF1rWF4Durg_yoW8tw13pa
+	9xt3y3uw15JFW7XFnxJrW8CFyFqwn7tasFkr97Gw4rWFyUZF98Xr48KF18tryqqryfXa47
+	Jr15tF18Gr18Za7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
+	UU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-"Asahi Lina" <lina@asahilina.net> writes:
+From: Yu Kuai <yukuai3@huawei.com>
 
-> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
-> C FFI) type that *may* be owned by Rust, but need not be. Unlike
-> AlwaysRefCounted, this mechanism expects the reference to be unique
-> within Rust, and does not allow cloning.
->
-> Conceptually, this is similar to a KBox<T>, except that it delegates
-> resource management to the T instead of using a generic allocator.
->
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
+Changes in v4:
+ - rebase on the top of other patchset [1].
+Changes in v3:
+ - update commit message.
+Changes in v2:
+ - don't export apis, and don't support build md-bitmap as module
 
-Over all looks good to me - I agree with the points already discussed.
+Due to known performance issues with md-bitmap and the unreasonable
+implementations like following:
 
-Could you put it in a separate module and file? `kernel::types::ownable`
-and then `pub use` in `types.rs`. `types.rs` is getting quite busy.
+ - self-managed pages, bitmap_storage->filemap;
+ - self-managed IO submitting like filemap_write_page();
+ - global spin_lock
+ ...
 
+I have decided not to continue optimizing based on the current bitmap
+implementation, and plan to invent a new lock-less bitmap. And a new
+kconfig option is a good way for isolation.
 
-Best regards,
-Andreas Hindborg
+However, we still encourage anyone who wants to continue optimizing the
+current implementation, the new bitmap will take some time to be ready.
+Please refer to the RFC version [2] if interested.
 
+[1] https://lore.kernel.org/all/20250215092225.2427977-1-yukuai1@huaweicloud.com/
+[2] https://lore.kernel.org/all/20250126083624.1675849-1-yukuai1@huaweicloud.com/
+
+Yu Kuai (11):
+  md/md-bitmap: remove the parameter 'init' for bitmap_ops->resize()
+  md/md-bitmap: merge md_bitmap_group into bitmap_operations
+  md/md-bitmap: add md_bitmap_registered/enabled() helper
+  md/md-bitmap: handle the case bitmap is not enabled before
+    start_sync()
+  md/md-bitmap: handle the case bitmap is not enabled before end_sync()
+  md/raid1: check bitmap before behind write
+  md/raid1: check before referencing mddev->bitmap_ops
+  md/raid10: check before referencing mddev->bitmap_ops
+  md/raid5: check before referencing mddev->bitmap_ops
+  md: check before referencing mddev->bitmap_ops
+  md/md-bitmap: introduce CONFIG_MD_BITMAP
+
+ drivers/md/Kconfig      |  18 +++++++
+ drivers/md/Makefile     |   3 +-
+ drivers/md/dm-raid.c    |   2 +-
+ drivers/md/md-bitmap.c  |  67 ++++++++++++------------
+ drivers/md/md-bitmap.h  |  62 ++++++++++++++++++++--
+ drivers/md/md-cluster.c |   2 +-
+ drivers/md/md.c         | 112 ++++++++++++++++++++++++++++------------
+ drivers/md/md.h         |   4 +-
+ drivers/md/raid1-10.c   |   2 +-
+ drivers/md/raid1.c      |  79 ++++++++++++++++------------
+ drivers/md/raid10.c     |  48 ++++++++---------
+ drivers/md/raid5.c      |  30 ++++++-----
+ 12 files changed, 281 insertions(+), 148 deletions(-)
+
+-- 
+2.39.2
 
