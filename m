@@ -1,107 +1,191 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C999B25A2C4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 22:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1071B4F21
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 22:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740002983; cv=none; b=IAfLtlikm9TEfSQ0Ah9tzPfDGeuP4SqwNdI1e2TrXnAGtCcqKI3q9zYCZhWe9jd19UE+u7FurQVM2/rMIAtkgoHNr9uPOVu022sh1AEzS9Fu6jUVaON+5QO5b6u8irdQnxEBGXDHL8BwXx2K/GwKl6wkcVCaG4yrd5QrfcbPK3g=
+	t=1740003118; cv=none; b=fVZFJ4A9rB1+N+YO8QxtSbFENAWiPQZ+2/KLsfOzFwGucquXzUQnzUpY3w2uzJRN8sc7f47MHcsmNzMowORgoFQH2ttSpll9kMmUikFUW4nyKAVvxhzEvAoVnGdHLJTGst6OXZAG071ugkLm2jyimEQs1exOYm1B/0gXaNfGnlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740002983; c=relaxed/simple;
-	bh=82rdocLjg7bYXR3a/TcdwqXAYcr+mVrMdClya9NXNxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h73xmr/om1Gp5VPGFpYjNXBBO3/zT52KzSpZu0TvfstbW7KOn6BwG8Jmnlz3on+Q6psvQfF0GYHLM4+lQPE+gbwibuTJ+d3h8fj2lDpranUmywS60rViBWbEUc9NSNOtnjqqkxi0vH4moSnFPdnAupEglaQ4tJhCtHtR0cc+E7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8989B153B;
-	Wed, 19 Feb 2025 14:09:59 -0800 (PST)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A20153F6A8;
-	Wed, 19 Feb 2025 14:09:39 -0800 (PST)
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: will@kernel.org,
-	robin.murphy@arm.com,
-	catalin.marinas@arm.com
-Cc: maz@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	aneesh.kumar@kernel.org,
-	steven.price@arm.com,
-	suzuki.poulose@arm.com,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 3/3] arm64: realm: Use aliased addresses for device DMA to shared buffers
-Date: Wed, 19 Feb 2025 22:07:51 +0000
-Message-ID: <20250219220751.1276854-4-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250219220751.1276854-1-suzuki.poulose@arm.com>
-References: <20250219220751.1276854-1-suzuki.poulose@arm.com>
+	s=arc-20240116; t=1740003118; c=relaxed/simple;
+	bh=ZSV2XFFcj0GPI8zUDnU8tdH44VjKfteko0rzddXUI0g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C9tLdw8Ue0t8IKf9faQ7NDkmM1+qdrsVFBHPdqqecfLyqVE4vApj5AVUaDJ3GzDYefJ0FBgB2cRA2u7Q9MSivu2cYanSwjlDtsN4sqmLLcuVBVYyKGIIaC3oKgkAjKdu/2WlxD/+d19+GV+1MlJ34ntFv3TTVFV2UTJCVylv/wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nv/4T04U; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nv/4T04U"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d18c325ee4so19475ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:11:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740003116; x=1740607916; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C6ArLCB4R8roBsda9VKkvi/MZSJCY2OE3VLm6uu/stU=;
+        b=Nv/4T04UZLA6R3cezr+UfAK/yqfNNb9qzjnv33RH3cGuPvkwBeVLCUGuKI1GN4t0Cu
+         kN4f3VenvuWmCxyAcTa9nRUVHXC4ZkSvUU2frJZqUbVF+lUbGnkP1bTgLbYrnW8hfAqi
+         oMBcATpFjam5Ah216oitlR9/HqNMg+TB7EbrbIVbRtjEi38uJyW9FoZYRitgf/2b++hD
+         +GVL8J4/388A4BjNIRDtDvP2UrmiKrVnQx4K8WujwvQEmQv3pPh68URjVf8ULTdvgYP7
+         thIx/PqL/YSCDShv5iiWErI1FItFpKLGFzxzOENXCNisTb3OY56t0Y06ENTlvhqt7EZi
+         Iecw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740003116; x=1740607916;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C6ArLCB4R8roBsda9VKkvi/MZSJCY2OE3VLm6uu/stU=;
+        b=JXiYlXnyUboPGyqOzk+sJThLbHJBups6N1gR/YDAK4eUMkxklDXgm5q5a/gBbGw+Lx
+         HdYWaNVubphkUiU/umBNjre5XQkf0HqwWM0cWEqVYPlus6Ge2fb6ccYcbH4pYzvyrTRl
+         sRoj4lXo6YNUDXVT4s1yixDcFvEd/ZdxYt5p3ot2+VAEBXJZelfI3V6W0vv7Ios4mhW5
+         TWbnzhjpwF6bML/I1IECc9169hG/lek4Lr8W707RCU2Xm+fVuEhqIfK9YMwNB5H3EBDf
+         aNLnVc6d2SdBZvC+uq926HOlKbmG2P7zqHqA7blSIKI/t3K3uYfOhYIkez+FUfN9GP+7
+         6okA==
+X-Forwarded-Encrypted: i=1; AJvYcCXN3xte9O6Cy3Nz0vGYKfrLtVhu0wV2DljBS1S8pJP9JKd7iEbOZEqkzKQjjvYSqt1zkHDm9xxZ1INWKso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRAk6Yt8THdOZfs0sDGSM1oXFx8V7ngOtA4BLCK9Sbyqbj/7pK
+	VQ9lh7klQi/B0hFD8jpW9J98QIQP5jjFbopaCHGfY11/hQyNQ9qcSFZCumxS+zHRdeceCimEcBY
+	mdX707SNg/2n1VlEnFJzNGZPNHHj7ZHEpp4XG
+X-Gm-Gg: ASbGncuSeIt6e339ibW2N71xYTLyyRto5NksG+5/AAl5LSq538wq1M9FxDB8NFVT6Cn
+	pUTSCS3RcpYY4tVz0YGyq6h7lYscMDP1SnzcyVOnLWpbQvtGaDfZiAEaeMXw0r53Yh3Bu4B91R6
+	ClSd0A11/w+LmxDJNOK6NFjGFSFQ==
+X-Google-Smtp-Source: AGHT+IGhcAVq+WRuRQVnOuGGJtUQeqPrN7aOEOZtJgaXAh4ql05WNUT5TuGe/Y3K+XW3iNQqSaY3slehVT3VVATri5c=
+X-Received: by 2002:a05:6e02:1564:b0:3a7:e3b3:2e3 with SMTP id
+ e9e14a558f8ab-3d2c24e2cabmr249395ab.17.1740003115887; Wed, 19 Feb 2025
+ 14:11:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250109175401.161340-1-irogers@google.com> <CAP-5=fWghT8+pBFVxn9JDbqHU9NPy9mgyT8Ee=pTdkCKxRoJgA@mail.gmail.com>
+ <CAP-5=fWZAk7XqtL+=CanefkuFxhDsJ22+-uHkrxXi4g8123oew@mail.gmail.com> <Z7ZD5phOOCbKggrn@google.com>
+In-Reply-To: <Z7ZD5phOOCbKggrn@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 19 Feb 2025 14:11:43 -0800
+X-Gm-Features: AWEUYZk6j6515T41cTNxcsJrjdJ1p2AxDpZySNgLbQrIYaG_Rg_DMAueizS4zec
+Message-ID: <CAP-5=fXeZM7iWNQq0ar1HmAwWrH4HAHqD3F=ueB=jaw-2UMn_w@mail.gmail.com>
+Subject: Re: [PATCH v1] perf parse-events: Tidy name token matching
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When a device performs DMA to a shared buffer using physical addresses,
-(without Stage1 translation), the device must use the "{I}PA address" with the
-top bit set in Realm. This is to make sure that a trusted device will be able
-to write to shared buffers as well as the protected buffers. Thus, a Realm must
-always program the full address including the "protection" bit, like AMD SME
-encryption bits.
+On Wed, Feb 19, 2025 at 12:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hi Ian,
+>
+> On Wed, Feb 19, 2025 at 11:02:40AM -0800, Ian Rogers wrote:
+> > On Mon, Feb 10, 2025 at 11:23=E2=80=AFAM Ian Rogers <irogers@google.com=
+> wrote:
+> > >
+> > > On Thu, Jan 9, 2025 at 9:54=E2=80=AFAM Ian Rogers <irogers@google.com=
+> wrote:
+> > > >
+> > > > Prior to commit 70c90e4a6b2f ("perf parse-events: Avoid scanning PM=
+Us
+> > > > before parsing") names (generally event names) excluded hyphen (min=
+us)
+> > > > symbols as the formation of legacy names with hyphens was handled i=
+n
+> > > > the yacc code. That commit allowed hyphens supposedly making
+> > > > name_minus unnecessary. However, changing name_minus to name has
+> > > > issues in the term config tokens as then name ends up having priori=
+ty
+> > > > over numbers and name allows matching numbers since commit
+> > > > 5ceb57990bf4 ("perf parse: Allow tracepoint names to start with dig=
+its
+> > > > "). It is also permissable for a name to match with a colon (':') i=
+n
+> > > > it when its in a config term list. To address this rename name_minu=
+s
+> > > > to term_name, make the pattern match name's except for the colon, a=
+dd
+> > > > number matching into the config term region with a higher priority
+> > > > than name matching. This addresses an inconsistency and allows grea=
+ter
+> > > > matching for names inside of term lists, for example, they may star=
+t
+> > > > with a number.
+> > > >
+> > > > Rename name_tag to quoted_name and update comments and helper
+> > > > functions to avoid str detecting quoted strings which was already d=
+one
+> > > > by the lexer.
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Ping. This patch addresses name parsing inconsistencies, in particula=
+r
+> > > events may start with a number without a PMU, but not with. It also
+> > > aims to give better names to patterns than name_minus and name_tag
+> > > (with term_name and quoted_name respectively) that have drifted from
+> > > their original meaning and become to me less than intention revealing=
+.
+> >
+> > Ping.
+>
+> Sorry for the delay.  Can you please give an example for better
+> understanding if there's a change in the behavior?
 
-Enable this by providing arm64 specific dma_{encrypted,decrypted,clear_encryption}
-helpers for Realms. Please note that the VMM needs to similarly make sure that
-the SMMU Stage2 in the Non-secure world is setup accordingly to map IPA at the
-unprotected alias.
+The example in:
+https://lore.kernel.org/r/20240510-perf_digit-v4-3-db1553f3233b@codewreck.o=
+rg
+is `perf trace -e '9p:*'` which allows the number to start a
+tracepoint name, but what is true for tracepoint names is also true
+for event names. I lack the tracepoint but the patch here is making
+that work if the event/tracepoint is specified with a PMU, so:
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Steven Price <steven.price@arm.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- arch/arm64/include/asm/mem_encrypt.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Before the input is just seen as broken:
+```
+$ perf stat -e 'tracepoint/9p:9p/' true
+event syntax error: 'tracepoint/9p:9p/'
+                               \___ Unrecognized input
+Run 'perf list' for a list of valid events
 
-diff --git a/arch/arm64/include/asm/mem_encrypt.h b/arch/arm64/include/asm/mem_encrypt.h
-index f8f78f622dd2..aeda3bba255e 100644
---- a/arch/arm64/include/asm/mem_encrypt.h
-+++ b/arch/arm64/include/asm/mem_encrypt.h
-@@ -21,4 +21,26 @@ static inline bool force_dma_unencrypted(struct device *dev)
- 	return is_realm_world();
- }
- 
-+static inline dma_addr_t dma_decrypted(dma_addr_t daddr)
-+{
-+	if (is_realm_world())
-+		daddr |= prot_ns_shared;
-+	return daddr;
-+}
-+#define dma_decrypted dma_decrypted
-+
-+static inline dma_addr_t dma_encrypted(dma_addr_t daddr)
-+{
-+	if (is_realm_world())
-+		daddr &= prot_ns_shared - 1;
-+	return daddr;
-+}
-+#define dma_encrypted dma_encrypted
-+
-+static inline dma_addr_t dma_clear_encryption(dma_addr_t daddr)
-+{
-+	return dma_encrypted(daddr);
-+}
-+#define dma_clear_encryption dma_clear_encryption
-+
- #endif	/* __ASM_MEM_ENCRYPT_H */
--- 
-2.43.0
+Usage: perf stat [<options>] [<command>]
 
+   -e, --event <event>   event selector. use 'perf list' to list
+available events
+```
+
+After the input fails because the event wasn't found:
+```
+$ perf stat -e 'tracepoint/9p:9p/' true
+event syntax error: 'tracepoint/9p:9p/'
+                    \___ Bad event or PMU
+
+Unable to find PMU or event on a PMU of 'tracepoint'
+
+event syntax error: 'tracepoint/9p:9p/'
+                               \___ unknown term '9p:9p' for pmu 'tracepoin=
+t'
+
+valid terms: config,config1,config2,config3,name,period,percore,metric-id
+
+event syntax error: 'tracepoint/9p:9p/'
+                               \___ unknown term '9p:9p' for pmu 'tracepoin=
+t'
+
+valid terms: config,config1,config2,config3,name,period,percore,metric-id
+Run 'perf list' for a list of valid events
+
+Usage: perf stat [<options>] [<command>]
+
+   -e, --event <event>   event selector. use 'perf list' to list
+available events
+```
+
+But the patch is just about making the name term more consistent and
+cleaner, the weirdness above wasn't its main point, I want the code to
+be easy to read and understand.
+
+Thanks,
+Ian
