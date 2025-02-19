@@ -1,55 +1,55 @@
 Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31B51EEA5A
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A8F1F417A
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973781; cv=none; b=ga8JgsexQ9XMB70gbxz2MAv9x5QbR1j3FP6nt1LBgcqvGOXGXixr1XHT/0BvR/Hm16hXVCTKVStHdFSHBI0nlEAQCw7QztX3dWNKauqIkVlTXa5jMmCLQRLfXfFzhSjERpKwORWRxHJ+142YYd/tVz912Zy6T8dugj8QlVdh3DA=
+	t=1739973784; cv=none; b=FtbE4xcRaHayund9ZfFmA5BFsjJ327qcx54kDHxX54XzYmODpoPCFneGSpN+bi1WFyOJZnk4l7ordwEBs7qZ1ZbVR1lkq7Pu96Vxq2Wsq4LHCqEAYD8wOsiB4wlU5XwyN3FvEhjouOApFWdI04D/JY3RJmtW9huZPRoneJ5o5Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739973781; c=relaxed/simple;
-	bh=WrERvvn1b5whyicN5Gk+982eJYbuiuFN+2Tce96eGzA=;
+	s=arc-20240116; t=1739973784; c=relaxed/simple;
+	bh=LjNeeGPZTSfwAfwVgmY6/aONFof+BNi8pWf8VZUD+9U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=VW85oxIKcUV3EtZ4JM9KIMv8Wz6vQ8NhvOg4odoXtgiBujg3owo07GscU480aJeVTbqXkZ64KEryRvOg4Q6UEkB5U5gId0J5a5IrUrzJ5IFsOtsFtqZqDz9P2Hcs//8uviZB7rWwK+AT8MlIEiX2iEmWoTlZePsG5s2VRM6jk1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tNxf2CxE; arc=none smtp.client-ip=210.118.77.12
+	 Content-Type:References; b=JYdbW8kAHAiLTdJvZGc6jalyQ9ihsSiid5d5+ukauCrLrUIpY7kBasNO0zzOTyyw04o3qyo9rjm3aCxVM7B7/d4zpZDWtpFdpoY1ho7Q4dPLcNhiOHDzmYy+bpmiiWc8swi8Gv3x5/pharisb0/bsl+5NgnHLQGu/g7uVpDH4xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=KRamccdO; arc=none smtp.client-ip=210.118.77.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tNxf2CxE"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250219140257euoutp02727ca73c794df3642da9f300944b0d20~loO6Mm0bH0188201882euoutp02E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:02:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250219140257euoutp02727ca73c794df3642da9f300944b0d20~loO6Mm0bH0188201882euoutp02E
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KRamccdO"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250219140259euoutp02ac4e17eb84469f1de538202e1de5be05~loO8gKBkq0188601886euoutp02F
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:02:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250219140259euoutp02ac4e17eb84469f1de538202e1de5be05~loO8gKBkq0188601886euoutp02F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739973777;
-	bh=WnNTtK4UqUpVNFsv+gdN6XHhmKBgOeWWQN5mo20i5Kg=;
+	s=mail20170921; t=1739973779;
+	bh=GvH+KGxOLMWPvCT3kvkzzW6sq/iRIHCpZUQmHgtdxxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tNxf2CxE7W/rQnkLt0Ewd7HwDea7Y6vCVXWcqRW6w1fAyqJB0GUHHgfaiRDdoyQl1
-	 2iAw/a5TdYTXnH9fk+Vl7K2HXfMXWELUYX73V3gL9PTYe0m3UXmQ5UwZjgghRx7MzH
-	 oIr7uiSYoYrNrxtI1u22cgr519sopc1z3HkDI+2g=
+	b=KRamccdODI4xtJOXEfZlia2Vbb7GGNxdNFQKN/vIpgq4DQuEo12Vo/PkKht5UAHtr
+	 S25SU5b3npyIeovR1tkcJPGnVZTcCB6mQLvf2L5Yug7x8Nn6jriIZTvEQPatQuN+y0
+	 vNXAhWqBWw/ZFLrgq+szp080vk28lL/vkAXq4EHI=
 Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250219140256eucas1p1c1d4c84e0a4a9753c3312cf481895bb2~loO5uoLSE2959629596eucas1p1g;
-	Wed, 19 Feb 2025 14:02:56 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id A4.73.20821.094E5B76; Wed, 19
-	Feb 2025 14:02:56 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	20250219140259eucas1p162c6901df4144326dfee8ecfed7fc319~loO8KKLAk1249312493eucas1p1f;
+	Wed, 19 Feb 2025 14:02:59 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 2A.73.20821.394E5B76; Wed, 19
+	Feb 2025 14:02:59 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250219140256eucas1p13aa7f19867f88185739552f116ef0fc1~loO45yeoM1049010490eucas1p1C;
-	Wed, 19 Feb 2025 14:02:56 +0000 (GMT)
+	20250219140259eucas1p114dbcacffe3b479d15cd800c7efbede2~loO7o8Igp2157921579eucas1p1_;
+	Wed, 19 Feb 2025 14:02:59 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250219140256eusmtrp197c44c19e009b34954ee854b0ca61387~loO44y0_G2416524165eusmtrp1U;
-	Wed, 19 Feb 2025 14:02:56 +0000 (GMT)
-X-AuditID: cbfec7f2-b09c370000005155-27-67b5e49043ac
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250219140258eusmtrp20bd4ced874c2d935b75951953f5dda95~loO7mH8422432224322eusmtrp2p;
+	Wed, 19 Feb 2025 14:02:58 +0000 (GMT)
+X-AuditID: cbfec7f2-b11c470000005155-32-67b5e493763b
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id FD.42.19654.F84E5B76; Wed, 19
-	Feb 2025 14:02:55 +0000 (GMT)
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 43.52.19654.294E5B76; Wed, 19
+	Feb 2025 14:02:58 +0000 (GMT)
 Received: from AMDC4942.home (unknown [106.210.136.40]) by
 	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250219140254eusmtip2d7608f91caeda22a5cb42989a93fdceb~loO3ipXEQ0084200842eusmtip2-;
-	Wed, 19 Feb 2025 14:02:54 +0000 (GMT)
+	20250219140257eusmtip2a2ebe2aba18fc2a9d6c1ef6da5b11e34~loO6S3NLf0697406974eusmtip2J;
+	Wed, 19 Feb 2025 14:02:57 +0000 (GMT)
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
 	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
@@ -62,11 +62,10 @@ To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
 Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
 	dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org, Michal Wilczynski
-	<m.wilczynski@samsung.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 05/21] dt-bindings: power: Add TH1520 SoC power domains
-Date: Wed, 19 Feb 2025 15:02:23 +0100
-Message-Id: <20250219140239.1378758-6-m.wilczynski@samsung.com>
+	<m.wilczynski@samsung.com>
+Subject: [PATCH v5 07/21] riscv: Enable PM_GENERIC_DOMAINS for T-Head SoCs
+Date: Wed, 19 Feb 2025 15:02:25 +0100
+Message-Id: <20250219140239.1378758-8-m.wilczynski@samsung.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250219140239.1378758-1-m.wilczynski@samsung.com>
 Precedence: bulk
@@ -76,100 +75,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xbZRjG851zek7pUjwUtJ+IImQa8QKDzezTLXMzM5xoNLIo7GI2yziU
-	OW5pYdONZCCXsNlyEYHQjpUhAkMqjLaMItBQGN24dKwwboGOJaAWC8hlkGFkUg7T/fe8z/t7
-	v+d9k4+Pi5pJb/6p+CRWFi+J9ScFRGPXI+tbeVMG6Y6qtJ3o1nA5hgx/qyhU22rFkKbTykN2
-	mx5Dgw/nSfTLdD+F/mhNI9BQdSmF0rvqSORQ2UnU+qeBQgsKOw8NNF8m0ZKyE6DGpQwSaTsn
-	KFT3UIOhqwsGAlU0NQOUdbGSh+52f4Am7LcI5BhQ4ChL9Qx63NJEofWh6wRSz5kopHfm85BF
-	G4EyTD8Q+32Z+ZFMinE6HATTkb1MMa0rZQRjVE1QjMLYC5iGmoskMz7UQjJXbocx97+zYIyu
-	4gKToe3CmNx/djDzbfdIJkdfAxhb+jD1qeioYG8UG3vqDCsL2velIObBHS2emCv8eqqyg5cK
-	lNsuATc+pHfBmWktz6VFdDWA1vpPLgHBhl4G0Dg6TnLFEoBjTUrekwlzbiaPa1QB2DZ3A+MK
-	J4BKnYZwUSQdAierNJuUF51JwMybacBV4LQGgz+vleAuypP+ENYXLWyE8PkE/QpMtX/msoX0
-	e3Dsuo3k4nyhqb0PdyFu9H7YdtebQzzg7ZKpzSx8A0k3qHHX85A2CGDZb9UYN3sQ9q4uE5z2
-	hDMWPcVpH9hToNjyE+CkYRHndAo0Kixbeg8ct65trobTAbCuOYizD0C9vgJz2ZB2hyOzHtwK
-	7vD7xmKcs4UwO0vE0a/CQoXyv1BrdePWYgzs+vEvKg/4qZ46RvXUMar/c8sAXgPEbLI8TsrK
-	g+PZs4FySZw8OV4aeDIhrgFsfO+edctiEyidWQg0A4wPzADycX8vYdYFvVQkjJJ8c46VJZyQ
-	JceycjN4gU/4i4XlpkypiJZKktjTLJvIyp50Mb6bdyoWVzSuTzky5f521/v31N268KoSz549
-	oSMBE1fP8gcLj8vsN31GCTY/O++LMKG6+Kcj3h1R6oCcE6H1fSFJ0p2S06n+EaaU59NyS60H
-	dnsxv88enzfXoL4IZ/i7hwJ0sb0DeQvzh7Gcus9PVr7p0T7uaxoY9CsperklerWm9qtcpRqX
-	NNjmkinxUtO1j6thaeSd84/P8HwmW4rfGKuLodsDQq/FTHhM/1pVb1mL3Lt+LJp4tr/Sy3Ys
-	2vmROiZ8X35UgTHxxm7N5ZfI1945rF4dzT86K8gP1uGTz6k1D17cbhUfDBoWT0UWfLsSlr1t
-	pbaw22EOXnTeLw85n/DonN+uQ9H9/oQ8RhL8Oi6TS/4Fum8SVk0EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0yTdxjF895bZ8NrqfEdM8N1WWLYVmml7N8NmB82/Qc/6LLJtMZBg6/F
-	UVrTljEWhizc5I6Jl1A6YBs4ZBQntqygLVIIlDnpCqxVBsUh6KpVVgUTN2fX2izx28k5vyfP
-	+XA4GP8sEcc5rNazWrVCJSTX4FeejvnebFi0KBPnK2XA6f0WBZZ/DBTotk2goHVkggC+STMK
-	pleXSdCz9CsF/rR9hQNP59cUKB09RwK/wUcC210LBYK1PgJMDRhJ8LBuBAF9D8tIYBqZo8C5
-	1VYUfBO04KDdOoCAiqozBHD//D6Y8zlx4J+qxUCFIQaELlkp8NRzHgfN9wcpYA4cJ8CY6WNQ
-	NngC3xYPl6+VUzDg9+Nw+NgKBW2P2nDYb5ijYG3/Lwjs7aoi4aznEglbxj+A8zVjKLzQfhSW
-	mUZR2PBvIly2/0bCenMXAidLvdRuvlyUotXk69lNORqdPlW4XwwkIrEMiCRJMpF461sH3pZI
-	hVvSUg6yqsOfsdotaVminD9cJuxIA+/zxTPDRAlS90I1wuUwdBLjaCgnqpE1HD7dgTCPLyyg
-	0WAj46nx41EdyzzxVJNR6A7CtF259wwiaQlz4/tWIqIF9Hc4Y7MXRiCM7kCZhdBlMhLE0unM
-	j6eCYc3h4PRrTInvo4jNo99lZs5PktEH8czg0FUsgnDpbYzdHRex+WFkon6eiOLrmPGmxWd9
-	sDBeamnGGhHa8FxkeC5qQ9AuRMDm6/KUeTqJSKfI0+WrlaJsTV4vEt5M3+hjsxU5eycociAo
-	B3EgDAcTCngVR81KPu+govALVqvJ1OarWJ0DkYZbH8fi1mdrwqNT6zPFyYlScVKyLFEqS94q
-	3MAjp12H+LRSoWdzWfYIq/3/DuVw40pQY0fRrsr4pr6/lqyZt4pj0gqOVRXQn9ze2d/JQ1+/
-	VoxImgKpN3JPje1qGlVu31zz3ofrGh0bG4uvE9y9LZtjH1DdK6f3da/OFlt6jLl/O6+adR0L
-	Xt9w8zvTuhzNUtlPLeqbih1yuSEpI+PBgdudKcv7NgX0MXpniBdq2a5qPOTmmlwJRX3398hP
-	qgp4P2hk9nQoBnuN7nuK38dfVmYNtrfPCFQJk1jGi9WXZy6yt3xZzsonZij31qdPDRXdrYJD
-	n+54CXnldDbRuz7Qj7YWupfqgvtny1c2vFG5+6Zg7cUQrPGuTR1IfmR0vTqFyifsvda56z1f
-	KoIn9rjE0pNCXJejECdgWp3iP9GWR4W8AwAA
-X-CMS-MailID: 20250219140256eucas1p13aa7f19867f88185739552f116ef0fc1
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0xbVRzOuff23tKl7FKIO4FlhPoIjvGYWfRkE2TEmes2jNOpU2JYdTcd
+	Eyi2INvCAqRQHitOeYxRwM66CAKFgm0F5OEQKK+Wx1yZC5RJWHiEh4WxZA+ZlNvp/vt+5/ed
+	75H8+LjITPry4xKTWXmiJF5MCghz74Ph4KIZkzSso84P9Y3rMGR6pKFQXbsNQ9puGw85xowY
+	+mN9hUT1d0coNNeeSSB7dSWFlL0NJJrXOEjkVDt46EZrBYnWCroBMq9lkUjfPUmhhnUthr53
+	mgh0rbkVIFXejzw0OnAITTr6CDR/Q40jlWY7etLWTKENeyOBypc7KWRc/JaHLPqPUFZnMRG5
+	i1m5lU0xi/PzBPN77j2Kab9/lWBaNJMUo24ZAkxTTR7JTNjbSOa7/mPM1EULxvx8LZ3J0vdi
+	zKV/wpiVjpsk87WxBjBjynHqXdEngtdPsfFxX7Hy0IiTgtPl+iEsqdjjrPrXETIDDFL5wIMP
+	6X0wx1qC5wMBX0RXA9hvzATccA/AqeUWkhvWAFxdd5JPv2Q+eIRxiyoAa+4PENywCGB1ewPm
+	YpH0K/BOlZbnWvjQ2QTM7uGEcXoWQPNMxZaWN30YZpY1b0Uh6Bdhrm6I58JC+g3YM6LEOD9/
+	2HnduhmRz/egI2HHqC9H8YL9ZTOEC+ObFKWpfKsFpBsFsF5X4c76Jqz962+cw95wwWJ0194J
+	n7Ro3foyeMe06uakwRa1xY0PwAnbQ9Lli9Mvw4bWUBeE9EG4PCDhoCe8teTFJfCEheZSnHsW
+	wlyViNN4CZaoC/7ztFWb3Z4MnPxzlvoGBGie6aJ5povmf9urAK8BO9gURYKUVexNZFNDFJIE
+	RUqiNORzWUIT2DztwQ3LajOoXHCGdAGMD7oA5ONiH6Eq3SgVCU9Jzp1n5bJYeUo8q+gCfnxC
+	vEOo68yWimipJJn9gmWTWPnTLcb38M3AUlv9DNHBi8He5dGiArW29mPVUl+OebWqxKGylQcG
+	JY3FdYdF2S70HJjOiRrfxpvc91ujM/fgRKp16VBg7XQhdvEEr+vDPUf9xaX9CdGepf5pj28X
+	fpmXD+RFvcdj6+Zuex2LCR+TDs75RBlaRXab4eh7l+tir69+VmGYNQTMvNVXuTOo7Pki7Z76
+	C/qIE6oj2z2Oh58fLlaOnNkv3chVR9l56a/BeYvsZtBzzPSlXxqH3zm8e6ryp4jkgG3Sc5Gm
+	htG0jIeBQLhg912RPb7r98FA2qdNZeFTJ8+8f1aXaKVmHa+2wfGqK6lvl4T+0KG6vCvG+kKE
+	SUwFX9k/JRXlDcpixITitGTvblyukPwLpsZf0EkEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsVy+t/xe7qTnmxNN5j2yNjixPVFTBZbf89i
+	t1iz9xyTxfwj51gt7l3awmRx5et7Not1Ty+wW7zY28hicW3FXHaL5mPr2SxezrrHZvGx5x6r
+	xeVdc9gsPvceYbTY9rmFzWLtkbvsFuu/zmeyWPhxK4vFkh27GC3aOpexWlw85Wpx994JFouX
+	l3uYLdpm8Vv837OD3eLftY0sFrPf7We32PJmIqvF8bXhFi37p7A4yHm8v9HK7vHm5UsWj8Md
+	X9g99n5bwOKxc9Zddo+enWcYPTat6mTzuHNtD5vHvJOBHve7jzN5bF5S79Gy9hiTR/9fA4/3
+	+66yefRtWcXocan5OnuAUJSeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6d
+	TUpqTmZZapG+XYJexuy1Z5gKpnBW9Oy+wNbAeJq9i5GTQ0LARKLx52+mLkYuDiGBpYwS+3om
+	M0MkZCSudb9kgbCFJf5c62IDsYUEXjFKbG02ALHZBIwkHiyfzwpiiwgsZpHYu68SZBCzwFtG
+	ieszN4I1Cwt4STTO3AG2jUVAVaJj0RmwBl4Be4mjF5qZIBbIS+w/eBZoMQcHp4CDxL6LUhC7
+	7CXO9d2HKheUODnzCdhIZqDy5q2zmScwCsxCkpqFJLWAkWkVo0hqaXFuem6xkV5xYm5xaV66
+	XnJ+7iZGYHLZduznlh2MK1991DvEyMTBeIhRgoNZSYS3rX5LuhBvSmJlVWpRfnxRaU5q8SFG
+	U6CzJzJLiSbnA9NbXkm8oZmBqaGJmaWBqaWZsZI4L9uV82lCAumJJanZqakFqUUwfUwcnFIN
+	TGYTp+i2JQRIZ+xJ+bzo9sb3f//wNc1UbZ3U+KNH55+PxcM0My1O9SdCSw6oFWtzVS6ZHJ10
+	Oj0hQdb8CKuuxqw7Lw4udNL8kiH73aFzNn9V99xtKo95zMLm3m3O8TNT/H21OlxtWdJOfT2D
+	uWdbnS8xCv45/m9nWcrunb0c+Y/OV81v3q1SfNNC5k/rlEW6HS1GJfXVm8NS4++srju/zmSS
+	gFou4wbjB9Ep7/6/vBz1fZ2dssr3NsaJ+7YX6ztPuiKu/vJxSN303R06nj3/k4Ui/Rn1ZzHu
+	Tpru4LrsyNzXO4ombv22VejwVdWeuSerZl9XVFfeda/31daES1flzfx3/Jrx5kn6gcWbBbNu
+	JSqxFGckGmoxFxUnAgAaQ0SqtwMAAA==
+X-CMS-MailID: 20250219140259eucas1p114dbcacffe3b479d15cd800c7efbede2
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250219140256eucas1p13aa7f19867f88185739552f116ef0fc1
+X-RootMTR: 20250219140259eucas1p114dbcacffe3b479d15cd800c7efbede2
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20250219140256eucas1p13aa7f19867f88185739552f116ef0fc1
+X-CMS-RootMailID: 20250219140259eucas1p114dbcacffe3b479d15cd800c7efbede2
 References: <20250219140239.1378758-1-m.wilczynski@samsung.com>
-	<CGME20250219140256eucas1p13aa7f19867f88185739552f116ef0fc1@eucas1p1.samsung.com>
+	<CGME20250219140259eucas1p114dbcacffe3b479d15cd800c7efbede2@eucas1p1.samsung.com>
 
-Add power domain ID's for the TH1520 SoC power domains.
+T-Head SoCs feature separate power domains (power islands) for major
+components like the GPU, Audio, and NPU. To manage the power states of
+these components effectively, the kernel requires generic power domain
+support.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This commit enables `CONFIG_PM_GENERIC_DOMAINS` for T-Head SoCs,
+allowing the power domain driver for these components to be compiled and
+integrated. This ensures proper power management and energy efficiency
+on T-Head platforms.
+
+By selecting `PM_GENERIC_DOMAINS`, we provide the necessary framework
+for the power domain drivers to function correctly on RISC-V
+architecture with T-Head SoCs.
+
 Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 ---
- MAINTAINERS                                   |  1 +
- .../dt-bindings/power/thead,th1520-power.h    | 19 +++++++++++++++++++
- 2 files changed, 20 insertions(+)
- create mode 100644 include/dt-bindings/power/thead,th1520-power.h
+ arch/riscv/Kconfig.socs | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3ee5a2f6cdee..781129d60349 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20424,6 +20424,7 @@ F:	drivers/mailbox/mailbox-th1520.c
- F:	drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c
- F:	drivers/pinctrl/pinctrl-th1520.c
- F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
-+F:	include/dt-bindings/power/thead,th1520-power.h
- F:	include/linux/firmware/thead/thead,th1520-aon.h
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index 1916cf7ba450..83833ded8908 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -53,6 +53,7 @@ config ARCH_THEAD
+ 	bool "T-HEAD RISC-V SoCs"
+ 	depends on MMU && !XIP_KERNEL
+ 	select ERRATA_THEAD
++	select PM_GENERIC_DOMAINS if PM
+ 	help
+ 	  This enables support for the RISC-V based T-HEAD SoCs.
  
- RNBD BLOCK DRIVERS
-diff --git a/include/dt-bindings/power/thead,th1520-power.h b/include/dt-bindings/power/thead,th1520-power.h
-new file mode 100644
-index 000000000000..8395bd1459f3
---- /dev/null
-+++ b/include/dt-bindings/power/thead,th1520-power.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (C) 2022 Alibaba Group Holding Limited.
-+ * Copyright (c) 2024 Samsung Electronics Co., Ltd.
-+ * Author: Michal Wilczynski <m.wilczynski@samsung.com>
-+ */
-+
-+#ifndef __DT_BINDINGS_POWER_TH1520_H
-+#define __DT_BINDINGS_POWER_TH1520_H
-+
-+#define TH1520_AUDIO_PD		0
-+#define TH1520_VDEC_PD		1
-+#define TH1520_NPU_PD		2
-+#define TH1520_VENC_PD		3
-+#define TH1520_GPU_PD		4
-+#define TH1520_DSP0_PD		5
-+#define TH1520_DSP1_PD		6
-+
-+#endif
 -- 
 2.34.1
 
