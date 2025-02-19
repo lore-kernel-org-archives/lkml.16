@@ -1,78 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEA91C3C00;
-	Wed, 19 Feb 2025 07:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C0C21C3C00;
+	Wed, 19 Feb 2025 07:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739950877; cv=none; b=FFukJDdExU2KSlIfjIisJNbf9PdN16uWYFk1GzBz37m0ZQyRRtRVj2Vi8opVqGou/PdiaHBaBw37la3YcvSe14Zuo4aUc/qA2rruedXmo5wDopw5KGHhV5BLTHvIbdtjJqOJf4nh1kwLCVv+w+4/YcQkFzNsGhADhTX9jVDq734=
+	t=1739950905; cv=none; b=oRwU0pIjcjsl9+i+I5yWkKeijjRFlI0mnqK3AnIOUUpeVyM1Xb247F2mNDyayQ2+60IAZySxmpnBOwhpgHt1kQ3GsRQhndAqZGU9qN3f7H0nBDJ1qjn8j/N9nuKrvGK5a9NE/u+w8dwoazxwLTRlLM96+8JP/ia0xE7mzoFSBSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739950877; c=relaxed/simple;
-	bh=QHxIJH5epUxZjVu5h2cfuDcM2p1sRKJAbrzZJcGNvMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJnwJSYKR3aFyWjNSS9DEw/iIvnKtevh9jk5XJW1ExLM39rCb+EPHYkF9L9YpGVEsIraOaTK2DBTtbdVjruAtZFhM5u8qF+fZli9Ddrj7BHl8TBAnV6jnnfWeuGlCwwpUBHZlrEc3ckDoHqvrMeBSuGjYnWYH8zFzq1y+q+ffAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acIw1C0C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739950905; c=relaxed/simple;
+	bh=kpxkBPCKlGNnhVjQVf+dePC+MVJfA5gCHGVc1xxZzzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lgZYRYdKSVt6GvhKbOlrLaj0lFNQ+GR9JUec9VPNPdOD8dzUxmi7OFI2/eRyg9WdL04Tkh4D00EZN3MnV+8RwHhsUBU/fJSIf6txm0TOhcqcKJc33JoDvyftMlCGkAJvAVxFeZNKNAI66AfKcF6vKNc9hKaWnI1a6MaLhnYQGVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UCOvT3/Y; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acIw1C0C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80ACAC4CED1;
-	Wed, 19 Feb 2025 07:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739950877;
-	bh=QHxIJH5epUxZjVu5h2cfuDcM2p1sRKJAbrzZJcGNvMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=acIw1C0CjsMJZs0NxvaNXZEOwph9coDZ00MyuVN+p4ffygEocuFmym4KFUBjB2lUH
-	 6t3btTiLolR9mDjRtbEphLvcoMOXP2Mx+wxKQ9eBC7DyLAuRRgXO2Au1KWAOupAGYE
-	 s03oiYSBHdSnA7j/zANmahH4ncsFs9y8yFhGxhbVVv8vYO+hsmn+3jOydAqZN80AEP
-	 SAg71euKcsel5m+86EEOWXtfawEtEhEGausZHuBKUnwOA1YjLfmYnzCCyrTnO1VHij
-	 R5RnvKhyqnyJsLnInjbxqPVKY8Enww1EyyOJV8y0Q/E3YI0wR5K4CHPwyre44xa5qw
-	 9sKKD7/cWtqhA==
-Date: Wed, 19 Feb 2025 08:41:13 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Simon Horman <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, 
-	Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
-	Maxime Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 10/12] dt-bindings: net: pse-pd:
- microchip,pd692x0: Add manager regulator supply
-Message-ID: <20250219-wild-denim-dodo-fbfc7d@krzk-bin>
-References: <20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com>
- <20250218-feature_poe_port_prio-v5-10-3da486e5fd64@bootlin.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UCOvT3/Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=7MpbM+6fg3KAR60DstuyWUUcvrlrvQHDRX+TIlD+t/0=;
+	b=UCOvT3/YJxIJ/U0B3iewDL6gKAru25jZTp4Du1ehaY8k1imzPXDTh3ByTiAM6v
+	cWL5LLLxpXBiL57bw8cS84lqZ5XtNgadDlEcBw7qnDcez9CQaw6Nu8fuzoLm/ULH
+	egALyum2WypNKmIa/bRuTm+/3pypLFd2LoujAS0cmQNa4=
+Received: from [10.42.20.80] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgBXM9XoirVnAf0OAQ--.45861S2;
+	Wed, 19 Feb 2025 15:40:25 +0800 (CST)
+Message-ID: <437a0a0e-f61d-45bf-b859-d527381a9763@163.com>
+Date: Wed, 19 Feb 2025 15:40:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250218-feature_poe_port_prio-v5-10-3da486e5fd64@bootlin.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2] fbdev: lcdcfb: add missing device_remove_file()
+To: Arnd Bergmann <arnd@arndb.de>, Helge Deller <deller@gmx.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ Lee Jones <lee@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?=
+ <u.kleine-koenig@baylibre.com>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ oushixiong <oushixiong@kylinos.cn>
+References: <20250208092918.251733-1-oushixiong1025@163.com>
+ <4f2ae439-1bdc-4593-9151-e15981509344@app.fastmail.com>
+Content-Language: en-US
+From: Shixiong Ou <oushixiong1025@163.com>
+In-Reply-To: <4f2ae439-1bdc-4593-9151-e15981509344@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgBXM9XoirVnAf0OAQ--.45861S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrAr1UAFWktrWDZF1UJr4xWFg_yoWxXFg_ua
+	10vF93uw1UXr1kXa47GFsrtFyDKw1qv398JF4rJF1rXas7tasFvrW29rZFvr1UKF4kCr1a
+	qrWYqrW2kr1I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_Ksj7UUUUU==
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXQz4D2e1iPoyfgAAsK
 
-On Tue, Feb 18, 2025 at 05:19:14PM +0100, Kory Maincent wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> 
-> This patch adds the regulator supply parameter of the managers.
 
-In the future:
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+在 2025/2/19 14:47, Arnd Bergmann 写道:
+> On Sat, Feb 8, 2025, at 10:29, oushixiong1025@163.com wrote:
+>> From: Shixiong Ou <oushixiong@kylinos.cn>
+>>
+>> 1. The device_remove_file() need to be called when driver is removing.
+>> 2. The device_remove_file() need to be called if the call to
+>>     device_create_file() fails.
+> This should probably use device_add_group() instead of
+> individual files to simplify both creation and removal.
+> It would also avoid the bug you introduced that gcc warns
+> about.
+>
+>        Arnd
 
-> It updates also the example as the regulator supply of the PSE PIs
-> should be the managers itself and not an external regulator.
-> 
-> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> ---
+Thank you for your suggestion. I will incorporate your advice and resend a patch.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+Thanks and Regards,
+Shixiong Ou.
 
