@@ -1,260 +1,1087 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7914D286284;
-	Wed, 19 Feb 2025 18:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990202; cv=pass; b=FsauBOoVHX0kb73kQ5B2a2lfBoXjelHSk+qxHiuMg2NkRRXb5Xkg7creyjXuH/Wt8d2hOZwvDXDeh+keyeFNvhIi2OQ3/TXrE/GeoqetP/Io55gn+4Mc90nq96tRYGyEZd/KmZ5zI0zHSF/s5j1ORE7+IlnDfmKWHha0HP2hfCA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990202; c=relaxed/simple;
-	bh=TsUixF9mIv/35vEeja6Bk/sYddab6SYJhgJi5S2YhrA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sd/AsQUb0hucGewHjBjqx66erZfyGdDXGQNWH7zjzcYyUMzGrGEQlIqijwRtu4hnCPW4JObVLwFyGZ9xpoFg1v3wNuuvY/x6Nz0ZAvPFWfNXBgz4Bb2SZwYcvVNgihh9tyJjUC8U1mooR3sX2JoRmP71YjXvXJfVqS+dpG6Nti8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=KOunV8es; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353CB214A9E;
+	Wed, 19 Feb 2025 18:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739990207; cv=none; b=JyyhZfEvO90lFTIdlTQtJxkJGQnCqVADbI491psj2bf7Yry9G4CoNny/Q/mSwfm9IkCV9a92fv6+/wGVzEBKRZ1e3F5jhE3LPOfqR5xwq1TTsQtqMWP9+F2RpumBdTfiNDA+2saVPUxPVzbl+TZ2lF1afPUGR7fCX3XaLcgTjNA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739990207; c=relaxed/simple;
+	bh=WdLpGyJ6STrJ2lQtr8UTro1RaBc01Y76dIlSYZ0ouwc=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Eo+YQ+FdABKwbHBYUrqEYghTeT+xymA7E7WX0uVIhVC05oP3BMlFFKXFdVcqXmIuH1T/nd9LgEYJ/KbDRh9gWRjjXB6RtZohh1IAVATQTei5vJm9EiN/5dVUFFyBVXwzkRsVzYqjHHzaxQ7EXJsC1RNftIVoBMwrPUIoxeQ2kdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iZiCycp+; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="KOunV8es"
-ARC-Seal: i=1; a=rsa-sha256; t=1739990144; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=gYnkSY7/jVSezHnWDffS2tNP3fqZwhApKxOUK0q6i6dOUFv72iitGi1VcQLsiEjlPwv4dcJJiXf6UNyjLA7PXXIyAnsA2jJeyAbBoCMzrupFutLd7IWeE5iJVBmMXnd6q8CWtUha8EgN6EJl6fkPX1TIZZnppjp6DhLc8hw5Ols=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739990144; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tIsfIrSG8Z3x+sFuGOSs6OyFacOIgUXadmEso+KA17k=; 
-	b=XgC2wxMT1phAWHbJ30TF4r2eoSbncZRC2RE8KS/xwZXFpbfmb7jN1kfk5EMECDmjXQbaq9LBvgkiEYV8hF8CIidoz+a8qSI6p9juN3HaXUsdFHUOc9yFJwYsCp2MjirCTghH2cn7wsrplGS23LEAS61alKEHFyJEerDwkQn+7x0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739990144;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=tIsfIrSG8Z3x+sFuGOSs6OyFacOIgUXadmEso+KA17k=;
-	b=KOunV8esVfnnMFXE3vjufoybEmlveiO6sMy+CNBOSH2/IYxmExzPNKNUYjx2Rt92
-	C8snIxuIISrZZCgFE5O800gUgQxwHQNz2sfwz/PBaHaOwstqaHTTPAJPIdyybgEht36
-	Bv1Sn1LqB7v+teUCxMWrY7xOpXf1v2ehaFKravvo=
-Received: by mx.zohomail.com with SMTPS id 1739990142683136.66201924766733;
-	Wed, 19 Feb 2025 10:35:42 -0800 (PST)
-Message-ID: <3fcdbd35-9ff2-4159-8076-98eefd6ed8c7@collabora.com>
-Date: Wed, 19 Feb 2025 21:35:36 +0300
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iZiCycp+"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51JIabJA1897231
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Feb 2025 12:36:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739990197;
+	bh=O1xAnFCnThPzLQfRToSbv6mkXHjpIdrSA0h6JVBfGoA=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date;
+	b=iZiCycp+B5DzhHfEKLyBVIvb7LD2Knd4W+0dPisif3zadMQyRH/XR7uBuW08E/47V
+	 IbG1FXpMjnlXTlshku5wQu5Qxbldy4oQ1RYs0C3Wvf1Z5B3s/zv/FG8/1RIMWVy2Kj
+	 uYgg3ICOqjILR5uEeBeTCM2fe6tPHWrt+il1zTJg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51JIabHZ050227
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 19 Feb 2025 12:36:37 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
+ Feb 2025 12:36:37 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 19 Feb 2025 12:36:36 -0600
+Received: from localhost (kamlesh.dhcp.ti.com [172.24.227.123])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51JIaa3x004906;
+	Wed, 19 Feb 2025 12:36:36 -0600
+From: Kamlesh Gurudasani <kamlesh@ti.com>
+To: T Pratham <t-pratham@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, T Pratham <t-pratham@ti.com>
+CC: <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Vignesh
+ Raghavendra" <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Manorit
+ Chawdhry" <m-chawdhry@ti.com>
+Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512
+ in DTHE V2 driver
+In-Reply-To: <20250218104943.2304730-2-t-pratham@ti.com>
+References: <20250218104943.2304730-1-t-pratham@ti.com>
+ <20250218104943.2304730-2-t-pratham@ti.com>
+Date: Thu, 20 Feb 2025 00:06:35 +0530
+Message-ID: <87r03t6ato.fsf@kamlesh.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/6] media: platform: synopsys: Add support for HDMI
- input driver
-To: Hans Verkuil <hverkuil@xs4all.nl>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>
-References: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
- <20250218184439.28648-5-dmitry.osipenko@collabora.com>
- <f32a0011-1653-48dd-9061-047f9009310b@xs4all.nl>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <f32a0011-1653-48dd-9061-047f9009310b@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Hans,
+T Pratham <t-pratham@ti.com> writes:
 
-Thank you very much for the review!
+> Add support for SHA224, SHA256, SHA384, SHA512 algorithms in the Hashing
+> Engine of the DTHE v2 hardware crypto accelerator driver.
+>
+> Signed-off-by: T Pratham <t-pratham@ti.com>
+> ---
+>  drivers/crypto/ti/Kconfig  |   2 +
+>  drivers/crypto/ti/dthev2.c | 864 ++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 855 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/crypto/ti/Kconfig b/drivers/crypto/ti/Kconfig
+> index c0f013336425..39d9d8cb6b78 100644
+> --- a/drivers/crypto/ti/Kconfig
+> +++ b/drivers/crypto/ti/Kconfig
+> @@ -4,6 +4,8 @@ config CRYPTO_DEV_TI_DTHE_V2
+>  	tristate "Support for TI DTHE V2 crypto accelerators"
+>  	depends on CRYPTO && CRYPTO_HW && ARCH_K3
+>  	select CRYPTO_SKCIPHER
+> +	select CRYPTO_SHA256
+> +	select CRYPTO_SHA512
+>  	help
+>  	  This enables support for the TI DTHE V2 hw crypto accelerator
+>  	  which can be found on TI K3 SOCs. Selecting this enables use
+> diff --git a/drivers/crypto/ti/dthev2.c b/drivers/crypto/ti/dthev2.c
+> index d610142dc5a7..d5ed0f4621f5 100644
+> --- a/drivers/crypto/ti/dthev2.c
+> +++ b/drivers/crypto/ti/dthev2.c
+> @@ -33,6 +33,19 @@
+>  
+>  /* Registers */
+>  
+> +// Hashing Engine
+> +#define DTHE_P_HASH_BASE		0x5000
+> +#define DTHE_P_HASH512_IDIGEST_A	0x0240
+> +#define DTHE_P_HASH512_DIGEST_COUNT	0x0280
+> +#define DTHE_P_HASH512_MODE		0x0284
+> +#define DTHE_P_HASH512_LENGTH		0x0288
+> +#define DTHE_P_HASH512_DATA_IN_START	0x0080
+> +#define DTHE_P_HASH512_DATA_IN_END	0x00FC
+> +
+> +#define DTHE_P_HASH_SYSCONFIG	0x0110
+> +#define DTHE_P_HASH_IRQSTATUS	0x0118
+> +#define DTHE_P_HASH_IRQENABLE	0x011C
+> +
+>  // AES Engine
+>  #define DTHE_P_AES_BASE		0x7000
+>  #define DTHE_P_AES_KEY1_0	0x0038
+> @@ -58,6 +71,26 @@
+>  #define DTHE_P_AES_IRQENABLE	0x0090
+>  
+>  /* Register write values and macros */
+> +enum dthe_hash_algSel {
+> +	DTHE_HASH_MD5		= 0,
+> +	DTHE_HASH_SHA1		= BIT(1),
+> +	DTHE_HASH_SHA224	= BIT(2),
+> +	DTHE_HASH_SHA256	= BIT(1) | BIT(2),
+> +	DTHE_HASH_SHA384	= BIT(0),
+> +	DTHE_HASH_SHA512	= BIT(0) | BIT(1)
+> +};
+> +
+> +#define DTHE_HASH_SYSCONFIG_INT_EN		BIT(2)
+> +#define DTHE_HASH_SYSCONFIG_DMA_EN		BIT(3)
+> +#define DTHE_HASH_IRQENABLE_EN_ALL		GENMASK(3, 0)
+> +#define DTHE_HASH_IRQSTATUS_OP_READY		BIT(0)
+> +#define DTHE_HASH_IRQSTATUS_IP_READY		BIT(1)
+> +#define DTHE_HASH_IRQSTATUS_PH_READY		BIT(2)
+> +#define DTHE_HASH_IRQSTATUS_CTX_READY		BIT(3)
+> +
+> +#define DTHE_HASH_MODE_USE_ALG_CONST		BIT(3)
+> +#define DTHE_HASH_MODE_CLOSE_HASH		BIT(4)
+> +
+>  enum dthe_aes_mode {
+>  	DTHE_AES_ECB = 0,
+>  	DTHE_AES_CBC,
+> @@ -99,6 +132,7 @@ struct dthe_tfm_ctx;
+>   * @dma_aes_tx: AES Tx DMA Channel
+>   * @dma_sha_tx: SHA Tx DMA Channel
+>   * @aes_mutex: Mutex protecting access to AES engine
+> + * @hash_mutex: Mutex protecting access to HASH engine
+>   * @ctx: Transform context struct
+>   */
+>  struct dthe_data {
+> @@ -112,6 +146,7 @@ struct dthe_data {
+>  	struct dma_chan *dma_sha_tx;
+>  
+>  	struct mutex aes_mutex;
+> +	struct mutex hash_mutex;
+>  
+>  	struct dthe_tfm_ctx *ctx;
+>  };
+> @@ -126,6 +161,32 @@ struct dthe_list {
+>  	spinlock_t lock;
+>  };
+>  
+> +/**
+> + * struct dthe_hash_ctx - Hashing engine ctx struct
+> + * @mode: Hashing Engine mode
+> + * @block_size: block size of hash algorithm selected
+> + * @digest_size: digest size of hash algorithm selected
+> + * @phash_available: flag indicating if a partial hash from a previous operation is available
+> + * @phash: buffer to store a partial hash from a previous operation
+> + * @phash_size: partial hash size of the hash algorithm selected
+> + * @digestcnt: stores the digest count from a previous operation
+> + * @data_buf: buffer to store part of input data to be carried over to next operation
+> + * @buflen: length of input data stored in data_buf
+> + * @hash_compl: Completion variable for use in manual completion in case of DMA callback failure
+> + */
+> +struct dthe_hash_ctx {
+> +	enum dthe_hash_algSel mode;
+Thanks for the patches.
 
-On 2/19/25 12:11, Hans Verkuil wrote:
-> Hi Dmitry,
-> 
-> More review comments. Some are trivial, but the real problem is that the 5V/HPD
-> handling is really confusing and, from what I can tell, incorrect in places.
-> 
-> I suspect that there are some misunderstandings on how this is supposed to
-> work. I've tried to explain it in my comments, but feel free to contact me if
-> anything is still unclear.
-> 
-...
->> +#define EDID_NUM_BLOCKS_MAX				2
-> 
-> Is this indeed the maximum number of supported EDID blocks?
-> These days 4 EDID blocks is typically the maximum. If the hardware
-> supports it, then I recommend implementing support for 4 EDID blocks.
-> 
-> If it really only supports 2 blocks, then add a comment stating that
-> this is a HW limitation.
+please use snake casing
+> +	u16 block_size;
+> +	u8 digest_size;
+> +	u8 phash_available;
+> +	u32 phash[SHA512_DIGEST_SIZE / sizeof(u32)];
+> +	u32 phash_size;
+> +	u32 digestcnt;
+> +	u8 data_buf[SHA512_BLOCK_SIZE];
+> +	u8 buflen;
+> +	struct completion hash_compl;
+> +};
+> +
+>  /**
+>   * struct dthe_aes_ctx - AES engine ctx struct
+>   * @mode: AES mode
+> @@ -151,6 +212,7 @@ struct dthe_tfm_ctx {
+>  	struct dthe_data *dev_data;
+>  	union {
+>  		struct dthe_aes_ctx *aes_ctx;
+> +		struct dthe_hash_ctx *hash_ctx;
+>  	} ctx_info;
+>  };
+>  
+> @@ -201,6 +263,674 @@ static struct dthe_data *dthe_get_dev(struct dthe_tfm_ctx *ctx)
+>  	return dev_data;
+>  }
+>  
+> +static struct scatterlist *dthe_set_src_sg(struct scatterlist *src, struct scatterlist *sg,
+> +					   int nents, int buflen)
+> +{
+> +	struct scatterlist *from_sg, *to_sg;
+> +	int sglen;
+> +
+> +	sg_init_table(src, nents);
+> +
+> +	for (to_sg = src, from_sg = sg; buflen && from_sg; buflen -= sglen) {
+> +		sglen = from_sg->length;
+> +		if (sglen > buflen)
+> +			sglen = buflen;
+> +		sg_set_buf(to_sg, sg_virt(from_sg), sglen);
+> +		from_sg = sg_next(from_sg);
+> +		to_sg = sg_next(to_sg);
+> +	}
+> +
+> +	return to_sg;
+> +}
+> +
+> +/**********************************************************************
+> + *				SHA
+> + **********************************************************************/
+> +
+> +static int dthe_sha512_cra_init(struct crypto_tfm *tfm)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +
+> +	if (!dev_data)
+> +		return -ENODEV;
+> +
+> +	ctx->ctx_info.hash_ctx = kzalloc(sizeof(*ctx->ctx_info.hash_ctx), GFP_KERNEL);
+> +	if (!ctx->ctx_info.hash_ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->ctx_info.hash_ctx->mode = DTHE_HASH_SHA512;
+> +	ctx->ctx_info.hash_ctx->block_size = SHA512_BLOCK_SIZE;
+> +	ctx->ctx_info.hash_ctx->digest_size = SHA512_DIGEST_SIZE;
+> +	ctx->ctx_info.hash_ctx->phash_size = SHA512_DIGEST_SIZE;
+> +	return 0;
+> +}
+> +
+> +static int dthe_sha384_cra_init(struct crypto_tfm *tfm)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +
+> +	if (!dev_data)
+> +		return -ENODEV;
+> +
+> +	ctx->ctx_info.hash_ctx = kzalloc(sizeof(*ctx->ctx_info.hash_ctx), GFP_KERNEL);
+> +	if (!ctx->ctx_info.hash_ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->ctx_info.hash_ctx->mode = DTHE_HASH_SHA384;
+> +	ctx->ctx_info.hash_ctx->block_size = SHA384_BLOCK_SIZE;
+> +	ctx->ctx_info.hash_ctx->digest_size = SHA384_DIGEST_SIZE;
+> +	ctx->ctx_info.hash_ctx->phash_size = SHA512_DIGEST_SIZE;
+> +	return 0;
+> +}
+> +
+> +static int dthe_sha256_cra_init(struct crypto_tfm *tfm)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +
+> +	if (!dev_data)
+> +		return -ENODEV;
+> +
+> +	ctx->ctx_info.hash_ctx = kzalloc(sizeof(*ctx->ctx_info.hash_ctx), GFP_KERNEL);
+> +	if (!ctx->ctx_info.hash_ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->ctx_info.hash_ctx->mode = DTHE_HASH_SHA256;
+> +	ctx->ctx_info.hash_ctx->block_size = SHA256_BLOCK_SIZE;
+> +	ctx->ctx_info.hash_ctx->digest_size = SHA256_DIGEST_SIZE;
+> +	ctx->ctx_info.hash_ctx->phash_size = SHA256_DIGEST_SIZE;
+> +	return 0;
+> +}
+> +
+> +static int dthe_sha224_cra_init(struct crypto_tfm *tfm)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +
+> +	if (!dev_data)
+> +		return -ENODEV;
+> +
+> +	ctx->ctx_info.hash_ctx = kzalloc(sizeof(*ctx->ctx_info.hash_ctx), GFP_KERNEL);
+> +	if (!ctx->ctx_info.hash_ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->ctx_info.hash_ctx->mode = DTHE_HASH_SHA224;
+> +	ctx->ctx_info.hash_ctx->block_size = SHA224_BLOCK_SIZE;
+> +	ctx->ctx_info.hash_ctx->digest_size = SHA224_DIGEST_SIZE;
+> +	ctx->ctx_info.hash_ctx->phash_size = SHA256_DIGEST_SIZE;
+> +	return 0;
+> +}
+> +
+> +static void dthe_hash_cra_exit(struct crypto_tfm *tfm)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
+> +
+> +	kfree(ctx->ctx_info.hash_ctx);
+> +}
+> +
+> +static void dthe_hash_dma_in_callback(void *data)
+> +{
+> +	struct dthe_dma_data *desc = (struct dthe_dma_data *)data;
+> +	struct ahash_request *req = (struct ahash_request *)desc->req;
+> +
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +	struct dthe_mapped_sg *mapped_sg = &desc->mapped_sg[0];
+> +	struct dthe_hash_ctx *sctx = ctx->ctx_info.hash_ctx;
+> +	u32 *data_out;
+> +	u32 out_len;
+> +	int waitcnt = 102400;
+No magic number please, create a meaningful macro and at other places
+> +
+> +	void __iomem *sha_base_reg = dev_data->regs + DTHE_P_HASH_BASE;
+> +
+> +	dma_unmap_sg(mapped_sg->dev, mapped_sg->sg, mapped_sg->nents, mapped_sg->dir);
+> +
+> +	while (waitcnt--) {
+> +		if (readl_relaxed(sha_base_reg + DTHE_P_HASH_IRQSTATUS) &
+> +		    (DTHE_HASH_IRQSTATUS_OP_READY | DTHE_HASH_IRQSTATUS_PH_READY))
+> +			break;
+> +	}
+Could you please explain why this loop is needed, if the READY bit is
+never TRUE, do you still want to continue?
 
-Good catch. Hardware supports 4 EDID blocks, will change in v8.
-
-...
->> +static int hdmirx_subscribe_event(struct v4l2_fh *fh,
->> +				  const struct v4l2_event_subscription *sub)
->> +{
->> +	switch (sub->type) {
->> +	case V4L2_EVENT_SOURCE_CHANGE:
->> +		if (fh->vdev->vfl_dir == VFL_DIR_RX)
-> 
-> This is weird, the direction is always RX, so can't you just drop this test?
-
-Suppose this code was copied from another driver, will drop.
-
-...
->> +static int hdmirx_set_edid(struct file *file, void *fh, struct v4l2_edid *edid)
->> +{
->> +	struct hdmirx_stream *stream = video_drvdata(file);
->> +	struct snps_hdmirx_dev *hdmirx_dev = stream->hdmirx_dev;
->> +	u16 phys_addr;
->> +	int ret = 0;
->> +
->> +	if (edid->pad)
->> +		return -EINVAL;
->> +
->> +	if (edid->start_block)
->> +		return -EINVAL;
->> +
->> +	if (edid->blocks > EDID_NUM_BLOCKS_MAX) {
->> +		edid->blocks = EDID_NUM_BLOCKS_MAX;
->> +		return -E2BIG;
->> +	}
->> +
->> +	hdmirx_disable_irq(hdmirx_dev->dev);
->> +
->> +	if (!edid->blocks) {
->> +		cec_phys_addr_invalidate(hdmirx_dev->cec->adap);
->> +		hdmirx_dev->edid_blocks_written = 0;
->> +
->> +		hdmirx_dev->hpd_pull_low = true;
->> +
->> +		if (tx_5v_power_present(hdmirx_dev))
->> +			hdmirx_plugout(hdmirx_dev);
->> +		else
->> +			hdmirx_hpd_ctrl(hdmirx_dev, false);
->> +	} else {
->> +		phys_addr = cec_get_edid_phys_addr(edid->edid,
->> +						   edid->blocks * 128, NULL);
->> +		ret = v4l2_phys_addr_validate(phys_addr, &phys_addr, NULL);
->> +		if (ret)
->> +			goto out;
->> +
->> +		if (tx_5v_power_present(hdmirx_dev))
->> +			hdmirx_plugout(hdmirx_dev);
->> +
->> +		hdmirx_dev->hpd_pull_low = false;
->> +		hdmirx_hpd_ctrl(hdmirx_dev, false);
->> +		hdmirx_write_edid(hdmirx_dev, edid);
->> +	}
->> +out:
->> +	hdmirx_enable_irq(hdmirx_dev->dev);
-> 
-> The way the HPD is handled is really confusing in the code. I had to dig through
-> the driver code to discover that the HPD is enabled via hdmirx_enable_irq(). But
-> normally interrupts have nothing to do with the HPD.
-> 
-> The HPD is really only controlled by whether there is an EDID or not, and optionally
-> whether 5V is high or not. The only reason for pulling the HPD low if 5V is low is
-> to save a bit of power: if nothing is connected, then there is no need to pull the HPD
-> high, after all, nobody is listening to it.
-> 
-> But this is typically entirely separate from interrupts.
-> 
-> The 5V decides whether there is a video source or not, so if it goes low, then you
-> stop streaming. The HPD tells the video source if there is an EDID or not. But that
-> is independent of video streaming. Updating the EDID while the source is sending
-> video shouldn't interrupt video capture. Most likely the source will detect an EDID
-> change, parse the new EDID and then it might decide to stop streaming and reconfigure,
-> or just continue streaming.
-> 
-> The code feels like you are trying to be smart, when it is really just a fairly
-> dumb mechanism.
-> 
-> I think this should be rewritten, unless there are some odd hardware constraints.
-> In which case that should be documented.
-
-Thanks a lot for the clarification! The HPD logic was borrowed from the downstream driver, will try to change it for v8. I'm not aware about hardware constraints and TRM suggests that driving HPD seprately from 5v should work fine, will see how it will work in practice.
-
-...
->> +static int hdmirx_g_parm(struct file *file, void *priv,
->> +			 struct v4l2_streamparm *parm)
->> +{
->> +	struct hdmirx_stream *stream = video_drvdata(file);
->> +	struct snps_hdmirx_dev *hdmirx_dev = stream->hdmirx_dev;
->> +	struct v4l2_fract fps;
->> +
->> +	if (parm->type != V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
->> +		return -EINVAL;
->> +
->> +	fps = v4l2_calc_timeperframe(&hdmirx_dev->timings);
->> +	parm->parm.capture.timeperframe.numerator = fps.numerator;
->> +	parm->parm.capture.timeperframe.denominator = fps.denominator;
-> 
-> You can just write:
-> 
-> 	parm->parm.capture.timeperframe = v4l2_calc_timeperframe(&hdmirx_dev->timings);
-
-Ack
-
-...
->> +static void hdmirx_plugin(struct snps_hdmirx_dev *hdmirx_dev)
->> +{
->> +	hdmirx_submodule_init(hdmirx_dev);
->> +	hdmirx_update_bits(hdmirx_dev, SCDC_CONFIG, POWERPROVIDED,
->> +			   POWERPROVIDED);
->> +	hdmirx_hpd_ctrl(hdmirx_dev, true);
-> 
-> Just because the 5V appeared, it doesn't mean that the HPD should
-> go high. That depends on whether there is an EDID or not.
-> 
-> As I said above, the whole 5V/HPD handling seems confused in this driver.
-
-In v6 I added 'hpd_pull_low' variable that force-disables HPD if there is no EDID. Hence, this hdmirx_hpd_ctrl() call doesn't enable HPD without EDID. I'll remove this call in v8 if driving HPD independently from 5v status will work fine.
-
-static void hdmirx_hpd_ctrl(struct snps_hdmirx_dev *hdmirx_dev, bool en)
-{
-...
-	if (hdmirx_dev->hpd_pull_low && en)
-		return;
-        ^^^^
-
-...
->> +static void hdmirx_delayed_work_res_change(struct work_struct *work)
->> +{
->> +	struct snps_hdmirx_dev *hdmirx_dev;
->> +	bool plugin;
->> +
->> +	hdmirx_dev = container_of(work, struct snps_hdmirx_dev,
->> +				  delayed_work_res_change.work);
->> +
->> +	mutex_lock(&hdmirx_dev->work_lock);
->> +	plugin = tx_5v_power_present(hdmirx_dev);
->> +	v4l2_dbg(1, debug, &hdmirx_dev->v4l2_dev, "%s: plugin:%d\n",
->> +		 __func__, plugin);
->> +	if (plugin) {
->> +		hdmirx_interrupts_setup(hdmirx_dev, false);
->> +		hdmirx_submodule_init(hdmirx_dev);
->> +		hdmirx_update_bits(hdmirx_dev, SCDC_CONFIG, POWERPROVIDED,
->> +				   POWERPROVIDED);
->> +		hdmirx_hpd_ctrl(hdmirx_dev, true);
->> +		hdmirx_phy_config(hdmirx_dev);
->> +
->> +		if (hdmirx_wait_signal_lock(hdmirx_dev)) {
->> +			hdmirx_plugout(hdmirx_dev);
-> 
-> plugout() pulls the HPD low, but why? That has nothing to do with the signal lock.
-> 
-> You need to take a good look at the 5V/HPD handling, this isn't right.
-> 
-> Feel free to ask questions if you are not clear on how it should behave.
-
-Again thanks a lot for the review, very appreciate! Will contact you if will become necessary.
-
--- 
-Best regards,
-Dmitry
+> +
+> +	/*
+> +	 * Overloading the phash_available variable to indicate whether we are coming
+> +	 * here from digest, update, final or finup function.
+> +	 * phash_available = 0: digest
+> +	 * phash_available = 1: update
+> +	 * phash_available = 2: final
+> +	 * phash_available = 3: finup
+> +	 */
+Assign ENUM to this states and use accordingly
+> +	if (sctx->phash_available == 1) {
+> +		// If coming from update, we need to read the phash and store it for future
+> +		data_out = sctx->phash;
+> +		out_len = sctx->phash_size / sizeof(u32);
+> +	} else {
+> +		// If coming from digest or final, we need to read the final digest
+> +		data_out = (u32 *)req->result;
+> +		out_len = sctx->digest_size / sizeof(u32);
+> +	}
+> +
+> +	for (int i = 0; i < out_len; ++i)
+> +		data_out[i] = readl_relaxed(sha_base_reg + DTHE_P_HASH512_IDIGEST_A + (4 * i));
+> +
+> +	if (!sctx->phash_available)
+> +		if (req->nbytes % sctx->block_size)
+> +			kfree(sg_virt(&mapped_sg->sg[mapped_sg->nents - 1]));
+> +
+> +	if (sctx->phash_available == 3)
+> +		if ((req->nbytes + sctx->buflen) % sctx->block_size)
+> +			kfree(sg_virt(&mapped_sg->sg[mapped_sg->nents - 1]));
+> +
+> +	kfree(mapped_sg->sg);
+> +	kfree(desc);
+> +
+> +	sctx->digestcnt = readl_relaxed(sha_base_reg + DTHE_P_HASH512_DIGEST_COUNT);
+> +	sctx->phash_available = 1;
+> +
+> +	ahash_request_complete(req, 0);
+> +	if (sctx->phash_available)
+> +		complete(&sctx->hash_compl);
+> +	mutex_unlock(&dev_data->hash_mutex);
+> +}
+> +
+> +static int dthe_hash_dma_start(struct ahash_request *req, struct scatterlist *src, size_t len)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +	struct dthe_hash_ctx *sctx = ctx->ctx_info.hash_ctx;
+> +	struct dma_slave_config cfg;
+> +	struct device *tx_dev;
+> +	struct dma_async_tx_descriptor *desc_out;
+> +	int src_nents;
+> +	int mapped_nents;
+> +	enum dma_data_direction src_dir = DMA_TO_DEVICE;
+> +	struct dthe_dma_data *tx_data;
+> +	int ret = 0;
+> +	int waitcnt = 1024;
+> +	void __iomem *sha_base_reg = dev_data->regs + DTHE_P_HASH_BASE;
+> +
+> +	// Config SHA DMA channel as per SHA mode
+> +	memzero_explicit(&cfg, sizeof(cfg));
+> +
+> +	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +	cfg.dst_maxburst = sctx->block_size / 4;
+> +
+> +	ret = dmaengine_slave_config(dev_data->dma_sha_tx, &cfg);
+> +	if (ret) {
+> +		dev_err(dev_data->dev, "Can't configure OUT2 dmaengine slave: %d\n", ret);
+> +		goto sha_err;
+> +	}
+> +
+> +	tx_dev = dmaengine_get_dma_device(dev_data->dma_sha_tx);
+> +	if (!tx_dev) {
+> +		ret = -ENODEV;
+> +		goto sha_err;
+> +	}
+> +
+> +	src_nents = sg_nents_for_len(src, len);
+> +	mapped_nents = dma_map_sg(tx_dev, src, src_nents, src_dir);
+> +	if (mapped_nents == 0) {
+> +		ret = -EINVAL;
+> +		goto sha_err;
+> +	}
+> +
+> +	desc_out = dmaengine_prep_slave_sg(dev_data->dma_sha_tx, src, mapped_nents,
+> +					   DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+> +	if (!desc_out) {
+> +		dev_err(dev_data->dev, "OUT prep_slave_sg() failed\n");
+> +		ret = -EINVAL;
+> +		goto sha_err;
+> +	}
+> +
+> +	tx_data = kzalloc(sizeof(struct dthe_dma_data), GFP_KERNEL);
+> +	if (!tx_data) {
+> +		ret = -ENOMEM;
+> +		goto sha_err;
+> +	}
+> +
+> +	tx_data->mapped_sg[0] = (struct dthe_mapped_sg) {
+> +		.sg = src,
+> +		.nents = src_nents,
+> +		.dir = src_dir,
+> +		.dev = tx_dev
+> +	};
+> +	tx_data->req = req;
+> +
+> +	desc_out->callback = dthe_hash_dma_in_callback;
+> +	desc_out->callback_param = tx_data;
+> +
+> +	waitcnt = 1024;
+> +	while (waitcnt--) {
+> +		if (readl_relaxed(sha_base_reg + DTHE_P_HASH_IRQSTATUS) &
+> +		    DTHE_HASH_IRQSTATUS_IP_READY)
+> +			break;
+> +	}
+> +
+> +	init_completion(&sctx->hash_compl);
+> +
+> +	dmaengine_submit(desc_out);
+> +
+> +	dma_async_issue_pending(dev_data->dma_sha_tx);
+> +
+> +	ret = wait_for_completion_timeout(&sctx->hash_compl, msecs_to_jiffies(2000));
+> +	if (!ret) {
+> +		u32 *data_out;
+> +		u32 out_len;
+> +
+> +		ret = -ETIMEDOUT;
+> +		dma_unmap_sg(tx_dev, src, src_nents, src_dir);
+> +
+> +		if (sctx->phash_available == 1) {
+> +			data_out = sctx->phash;
+> +			out_len = sctx->phash_size / sizeof(u32);
+> +		} else {
+> +			data_out = (u32 *)req->result;
+> +			out_len = sctx->digest_size / sizeof(u32);
+> +		}
+> +
+> +		for (int i = 0; i < out_len; ++i)
+> +			data_out[i] = readl_relaxed(sha_base_reg +
+> +						    DTHE_P_HASH512_IDIGEST_A +
+> +						    (4 * i));
+Assign meaningful name to 4 considering the context
+> +
+> +		sctx->digestcnt = readl_relaxed(sha_base_reg + DTHE_P_HASH512_DIGEST_COUNT);
+> +
+> +		if (!sctx->phash_available)
+> +			if (req->nbytes % sctx->block_size)
+> +				kfree(sg_virt(&src[src_nents - 1]));
+> +
+> +		if (sctx->phash_available == 3)
+> +			if ((req->nbytes + sctx->buflen) % sctx->block_size)
+> +				kfree(sg_virt(&src[src_nents - 1]));
+> +
+> +		kfree(src);
+> +
+> +		ahash_request_complete(req, ret);
+> +		kfree(tx_data);
+> +		goto sha_err;
+> +	}
+> +	return 0;
+> +sha_err:
+> +	mutex_unlock(&dev_data->hash_mutex);
+> +	return ret;
+> +}
+> +
+> +static int dthe_hash_init(struct ahash_request *req)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +
+> +	void __iomem *sha_base_reg = dev_data->regs + DTHE_P_HASH_BASE;
+> +	u32 sha_sysconfig_val = DTHE_HASH_SYSCONFIG_INT_EN | DTHE_HASH_SYSCONFIG_DMA_EN;
+> +
+> +	ctx->ctx_info.hash_ctx->phash_available = 0;
+> +	ctx->ctx_info.hash_ctx->buflen = 0;
+> +	ctx->ctx_info.hash_ctx->digestcnt = 0;
+> +
+> +	writel_relaxed(sha_sysconfig_val, sha_base_reg + DTHE_P_HASH_SYSCONFIG);
+> +	writel_relaxed(DTHE_HASH_IRQENABLE_EN_ALL, sha_base_reg + DTHE_P_HASH_IRQENABLE);
+> +	ahash_request_complete(req, 0);
+> +	return 0;
+> +}
+> +
+> +static int dthe_hash_update(struct ahash_request *req)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +	struct dthe_hash_ctx *sctx = ctx->ctx_info.hash_ctx;
+> +
+> +	struct scatterlist *src;
+> +	struct scatterlist *tmp;
+> +	int src_nents = 0;
+> +	int in_nents = sg_nents_for_len(req->src, req->nbytes);
+> +	unsigned int tot_len, cur_len;
+> +	unsigned int len_to_send, len_to_push;
+> +	u32 hash_mode_val;
+> +	int waitcnt = 1024;
+> +	int ret;
+> +
+> +	void __iomem *sha_base_reg = dev_data->regs + DTHE_P_HASH_BASE;
+> +
+> +	if (req->nbytes == 0) {
+> +		if (!sctx->phash_available && !sctx->buflen) {
+> +			if (sctx->mode == DTHE_HASH_SHA512)
+> +				memcpy(sctx->phash, sha512_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_SHA384)
+> +				memcpy(sctx->phash, sha384_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_SHA256)
+> +				memcpy(sctx->phash, sha256_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_SHA224)
+> +				memcpy(sctx->phash, sha224_zero_message_hash, sctx->digest_size);
+> +		}
+Is it possible to use switch case here, it will give better readability
+> +
+> +		return 0;
+> +	}
+> +
+> +	tot_len = sctx->buflen + req->nbytes;
+> +	len_to_send = tot_len - (tot_len % sctx->block_size);
+> +	len_to_push = ((len_to_send == 0) ? req->nbytes : (tot_len %
+> sctx->block_size));
+len_to_push and len_to_send sound same to me, do you mean length
+remaining? you can use len_rem, or something that make more sense to you
+> +	cur_len = 0;
+> +
+> +	if (tot_len % sctx->block_size == 0) {
+> +		len_to_send -= sctx->block_size;
+> +		if (tot_len == sctx->block_size)
+> +			len_to_push = req->nbytes;
+> +		else
+> +			len_to_push = sctx->block_size;
+> +	}
+> +
+> +	if (len_to_send == 0) {
+> +		sg_copy_to_buffer(req->src, in_nents, sctx->data_buf + sctx->buflen, len_to_push);
+> +		sctx->buflen += len_to_push;
+> +		return 0;
+> +	}
+> +
+> +	if (len_to_push < req->nbytes)
+> +		src_nents = sg_nents_for_len(req->src, req->nbytes - len_to_push);
+> +	if (sctx->buflen > 0)
+> +		src_nents++;
+> +
+> +	src = kcalloc(src_nents, sizeof(struct scatterlist), GFP_KERNEL);
+> +	if (!src)
+> +		return -ENOMEM;
+> +
+> +	tmp = src;
+> +
+> +	if (sctx->buflen > 0) {
+> +		sg_set_buf(tmp, sctx->data_buf, sctx->buflen);
+> +		tmp = sg_next(tmp);
+> +		cur_len += sctx->buflen;
+> +		src_nents--;
+> +	}
+> +	if (src_nents > 0)
+> +		dthe_set_src_sg(tmp, req->src, src_nents, len_to_send - cur_len);
+> +
+> +	waitcnt = 1024;
+> +
+> +	while (waitcnt--) {
+> +		if (readl_relaxed(sha_base_reg + DTHE_P_HASH_IRQSTATUS) &
+> +		    DTHE_HASH_IRQSTATUS_CTX_READY)
+> +			break;
+> +	}
+> +
+> +	mutex_lock(&dev_data->hash_mutex);
+> +
+> +	hash_mode_val = sctx->mode;
+> +	if (sctx->phash_available) {
+> +		for (int i = 0; i < sctx->phash_size / sizeof(u32); ++i)
+> +			writel_relaxed(sctx->phash[i],
+> +				       sha_base_reg + DTHE_P_HASH512_IDIGEST_A + (4 * i));
+> +
+> +		writel_relaxed(sctx->digestcnt, sha_base_reg + DTHE_P_HASH512_DIGEST_COUNT);
+> +	} else {
+> +		hash_mode_val |= DTHE_HASH_MODE_USE_ALG_CONST;
+> +	}
+> +
+> +	writel_relaxed(hash_mode_val, sha_base_reg + DTHE_P_HASH512_MODE);
+> +	writel_relaxed(len_to_send, sha_base_reg + DTHE_P_HASH512_LENGTH);
+> +
+> +	sctx->phash_available = 1;
+> +	ret = dthe_hash_dma_start(req, src, len_to_send);
+> +
+> +	sg_pcopy_to_buffer(req->src, in_nents, sctx->data_buf,
+> +			   len_to_push, req->nbytes - len_to_push);
+> +	sctx->buflen = len_to_push;
+> +
+> +	return ret;
+> +}
+> +
+> +static int dthe_hash_final(struct ahash_request *req)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +	struct dthe_hash_ctx *sctx = ctx->ctx_info.hash_ctx;
+> +	struct scatterlist *src;
+> +
+> +	void __iomem *sha_base_reg = dev_data->regs + DTHE_P_HASH_BASE;
+> +	u32 sha_mode_val = sctx->mode | DTHE_HASH_MODE_CLOSE_HASH;
+> +	int waitcnt = 1024;
+> +
+> +	if (sctx->buflen > 0) {
+> +		while (waitcnt--) {
+> +			if (readl_relaxed(sha_base_reg + DTHE_P_HASH_IRQSTATUS) &
+> +			    DTHE_HASH_IRQSTATUS_CTX_READY)
+> +				break;
+> +		}
+> +
+> +		mutex_lock(&dev_data->hash_mutex);
+> +		if (sctx->phash_available) {
+> +			for (int i = 0; i < sctx->phash_size / sizeof(u32); ++i)
+> +				writel_relaxed(sctx->phash[i],
+> +					       sha_base_reg + DTHE_P_HASH512_IDIGEST_A + (4 * i));
+> +
+> +			writel_relaxed(sctx->digestcnt,
+> +				       sha_base_reg + DTHE_P_HASH512_DIGEST_COUNT);
+> +		} else {
+> +			sha_mode_val |= DTHE_HASH_MODE_USE_ALG_CONST;
+> +		}
+> +
+> +		writel_relaxed(sha_mode_val, sha_base_reg + DTHE_P_HASH512_MODE);
+> +		writel_relaxed(sctx->buflen, sha_base_reg + DTHE_P_HASH512_LENGTH);
+> +
+> +		src = kzalloc(sizeof(struct scatterlist), GFP_KERNEL);
+> +		if (!src) {
+> +			mutex_unlock(&dev_data->hash_mutex);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		// Padding 0s. See note in digest function.
+> +		for (int i = sctx->buflen; i < sctx->block_size; ++i)
+> +			sctx->data_buf[i] = 0;
+> +
+> +		sg_set_buf(src, sctx->data_buf, sctx->block_size);
+> +
+> +		sctx->phash_available = 2;
+> +		return dthe_hash_dma_start(req, src, sctx->block_size);
+> +	} else if (!sctx->phash_available) {
+> +		if (sctx->mode == DTHE_HASH_SHA512)
+> +			memcpy(req->result, sha512_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_SHA384)
+> +			memcpy(req->result, sha384_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_SHA256)
+> +			memcpy(req->result, sha256_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_SHA224)
+> +			memcpy(req->result, sha224_zero_message_hash, sctx->digest_size);
+> +	}
+> +
+> +	memcpy(req->result, sctx->phash, sctx->digest_size);
+> +
+> +	ahash_request_complete(req, 0);
+> +	return 0;
+> +}
+> +
+> +static int dthe_hash_finup(struct ahash_request *req)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +	struct dthe_hash_ctx *sctx = ctx->ctx_info.hash_ctx;
+> +
+> +	unsigned int tot_len = sctx->buflen + req->nbytes;
+> +	unsigned int cur_len = 0;
+> +	unsigned int pad_len = 0;
+> +	struct scatterlist *src;
+> +	struct scatterlist *tmp_sg;
+> +	int src_nents = 0;
+> +	u32 hash_mode_val;
+> +	u8 *pad_buf;
+> +	int waitcnt = 64;
+same here
+> +
+> +	void __iomem *sha_base_reg = dev_data->regs + DTHE_P_HASH_BASE;
+> +
+> +	if (tot_len == 0) {
+> +		if (sctx->phash_available) {
+> +			memcpy(req->result, sctx->phash, sctx->digest_size);
+> +		} else {
+> +			if (sctx->mode == DTHE_HASH_SHA512)
+> +				memcpy(req->result, sha512_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_SHA384)
+> +				memcpy(req->result, sha384_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_SHA256)
+> +				memcpy(req->result, sha256_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_SHA224)
+> +				memcpy(req->result, sha224_zero_message_hash, sctx->digest_size);
+> +		}
+Is see this being used at few places, may be it is better to create a
+function for it
+> +		return 0;
+> +	}
+> +
+> +	if (tot_len % sctx->block_size)
+> +		pad_len = sctx->block_size - (tot_len % sctx->block_size);
+> +
+> +	if (req->nbytes > 0)
+> +		src_nents = sg_nents_for_len(req->src, req->nbytes);
+> +	if (sctx->buflen > 0)
+> +		src_nents++;
+> +	if (pad_len > 0)
+> +		src_nents++;
+> +
+> +	src = kcalloc(src_nents, sizeof(struct scatterlist), GFP_KERNEL);
+> +	if (!src)
+> +		return -ENOMEM;
+> +
+> +	tmp_sg = src;
+> +
+> +	if (sctx->buflen > 0) {
+> +		sg_set_buf(tmp_sg, sctx->data_buf, sctx->buflen);
+> +		tmp_sg = sg_next(tmp_sg);
+> +		cur_len += sctx->buflen;
+> +		src_nents--;
+> +	}
+> +	if (tot_len - cur_len > 0)
+> +		tmp_sg = dthe_set_src_sg(tmp_sg, req->src, src_nents, tot_len - cur_len);
+> +
+> +	if (pad_len > 0) {
+> +		pad_buf = kcalloc(pad_len, sizeof(u8), GFP_KERNEL);
+> +		if (!pad_buf)
+> +			return -ENOMEM;
+> +		sg_set_buf(tmp_sg, pad_buf, pad_len);
+> +	}
+> +
+> +	waitcnt = 1024;
+> +
+> +	while (waitcnt--) {
+> +		if (readl_relaxed(sha_base_reg + DTHE_P_HASH_IRQSTATUS) &
+> +		DTHE_HASH_IRQSTATUS_CTX_READY)
+> +			break;
+> +	}
+> +
+> +	mutex_lock(&dev_data->hash_mutex);
+> +
+> +	hash_mode_val = sctx->mode | DTHE_HASH_MODE_CLOSE_HASH;
+> +	if (!sctx->phash_available) {
+> +		hash_mode_val |= DTHE_HASH_MODE_USE_ALG_CONST;
+> +	} else {
+> +		for (int i = 0; i < sctx->phash_size / sizeof(u32); ++i)
+> +			writel_relaxed(sctx->phash[i],
+> +				       sha_base_reg + DTHE_P_HASH512_IDIGEST_A + (4 * i));
+> +
+> +		writel_relaxed(sctx->digestcnt,
+> +			       sha_base_reg + DTHE_P_HASH512_DIGEST_COUNT);
+> +	}
+> +
+> +	writel_relaxed(hash_mode_val, sha_base_reg + DTHE_P_HASH512_MODE);
+> +	writel_relaxed(tot_len, sha_base_reg + DTHE_P_HASH512_LENGTH);
+> +
+> +	sctx->phash_available = 3;
+> +	return dthe_hash_dma_start(req, src, tot_len + pad_len);
+> +}
+> +
+> +static int dthe_hash_digest(struct ahash_request *req)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +	struct dthe_hash_ctx *sctx = ctx->ctx_info.hash_ctx;
+> +	struct scatterlist *src, *tmp_sg;
+> +	int src_nents;
+> +	unsigned int pad_len = 0;
+> +	u8 *pad_buf;
+> +
+> +	u32 hash_sysconfig_val = DTHE_HASH_SYSCONFIG_DMA_EN | DTHE_HASH_SYSCONFIG_INT_EN;
+> +	u32 hash_mode_val = DTHE_HASH_MODE_CLOSE_HASH |
+> +			    DTHE_HASH_MODE_USE_ALG_CONST |
+> +			    sctx->mode;
+> +	void __iomem *sha_base_reg = dev_data->regs + DTHE_P_HASH_BASE;
+> +
+> +	int waitcnt = 1024;
+> +
+> +	sctx->phash_available = 0;
+> +	sctx->buflen = 0;
+> +	sctx->digestcnt = 0;
+> +
+> +	if (req->nbytes == 0) {
+> +		if (sctx->mode == DTHE_HASH_SHA512)
+> +			memcpy(req->result, sha512_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_SHA384)
+> +			memcpy(req->result, sha384_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_SHA256)
+> +			memcpy(req->result, sha256_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_SHA224)
+> +			memcpy(req->result, sha224_zero_message_hash, sctx->digest_size);
+> +		return 0;
+> +	}
+> +
+> +	writel_relaxed(hash_sysconfig_val, sha_base_reg + DTHE_P_HASH_SYSCONFIG);
+> +	writel_relaxed(DTHE_HASH_IRQENABLE_EN_ALL, sha_base_reg + DTHE_P_HASH_IRQENABLE);
+> +
+> +	while (waitcnt--) {
+> +		if (readl_relaxed(sha_base_reg + DTHE_P_HASH_IRQSTATUS) &
+> +		    DTHE_HASH_IRQSTATUS_CTX_READY)
+> +			break;
+> +	}
+> +
+> +	mutex_lock(&dev_data->hash_mutex);
+> +	writel_relaxed(hash_mode_val, sha_base_reg + DTHE_P_HASH512_MODE);
+> +	writel_relaxed(req->nbytes, sha_base_reg + DTHE_P_HASH512_LENGTH);
+> +
+> +	src_nents = sg_nents_for_len(req->src, req->nbytes);
+> +
+> +	if (req->nbytes % sctx->block_size)
+> +		src_nents++;
+> +
+> +	src = kzalloc(sizeof(struct scatterlist) * (src_nents), GFP_KERNEL);
+> +	if (!src) {
+> +		mutex_unlock(&dev_data->hash_mutex);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	tmp_sg = dthe_set_src_sg(src, req->src, src_nents, req->nbytes);
+> +
+> +	/* Certain DMA restrictions forced us to send data in multiples of BLOCK_SIZE
+> +	 * bytes. So, add a padding nent at the end of src scatterlist if data is not a
+> +	 * multiple of block_size bytes. The extra data is ignored by the DTHE hardware.
+> +	 */
+> +	if (req->nbytes % sctx->block_size) {
+> +		pad_len = sctx->block_size - (req->nbytes % sctx->block_size);
+> +		pad_buf = kcalloc(pad_len, sizeof(u8), GFP_KERNEL);
+> +		if (!pad_buf)
+> +			return -ENOMEM;
+> +
+> +		sg_set_buf(tmp_sg, pad_buf, pad_len);
+> +	}
+> +
+> +	return dthe_hash_dma_start(req, src, req->nbytes + pad_len);
+> +}
+> +
+> +static int dthe_hash_export(struct ahash_request *req, void *out)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +
+> +	memcpy(out, ctx->ctx_info.hash_ctx, sizeof(struct dthe_hash_ctx));
+> +	return 0;
+> +}
+> +
+> +static int dthe_hash_import(struct ahash_request *req, const void *in)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
+> +
+> +	memcpy(ctx->ctx_info.hash_ctx, in, sizeof(struct dthe_hash_ctx));
+> +	return 0;
+> +}
+> +
+>  /**********************************************************************
+>   *				AES
+>   **********************************************************************/
+> @@ -523,6 +1253,121 @@ static int dthe_aes_decrypt(struct skcipher_request *req)
+>  static unsigned int refcnt;
+>  static DEFINE_MUTEX(refcnt_lock);
+>  
+> +static struct ahash_alg hash_algs[] = {
+> +	{
+> +		.init	= dthe_hash_init,
+> +		.update	= dthe_hash_update,
+> +		.final	= dthe_hash_final,
+> +		.finup	= dthe_hash_finup,
+> +		.digest	= dthe_hash_digest,
+> +		.export = dthe_hash_export,
+> +		.import = dthe_hash_import,
+> +		.halg	= {
+> +			.digestsize = SHA512_DIGEST_SIZE,
+> +			.statesize = sizeof(struct dthe_hash_ctx),
+> +			.base = {
+> +				.cra_name	 = "sha512",
+> +				.cra_driver_name = "sha512-dthe_v2",
+keep it consistent throughout, either dthe_v2 or dthev2
+> +				.cra_priority	 = 400,
+> +				.cra_flags	 = CRYPTO_ALG_TYPE_AHASH |
+> +						   CRYPTO_ALG_ASYNC |
+> +						   CRYPTO_ALG_OPTIONAL_KEY |
+> +						   CRYPTO_ALG_KERN_DRIVER_ONLY |
+> +						   CRYPTO_ALG_ALLOCATES_MEMORY,
+> +				.cra_blocksize	 = SHA512_BLOCK_SIZE,
+> +				.cra_ctxsize	 = sizeof(struct dthe_tfm_ctx),
+> +				.cra_module	 = THIS_MODULE,
+> +				.cra_init	 = dthe_sha512_cra_init,
+> +				.cra_exit	 = dthe_hash_cra_exit,
+> +			}
+> +		}
+> +	},
+> +	{
+> +		.init	= dthe_hash_init,
+> +		.update	= dthe_hash_update,
+> +		.final	= dthe_hash_final,
+> +		.finup	= dthe_hash_finup,
+> +		.digest	= dthe_hash_digest,
+> +		.export = dthe_hash_export,
+> +		.import = dthe_hash_import,
+> +		.halg	= {
+> +			.digestsize = SHA384_DIGEST_SIZE,
+> +			.statesize = sizeof(struct dthe_hash_ctx),
+> +			.base = {
+> +				.cra_name	 = "sha384",
+> +				.cra_driver_name = "sha384-dthe_v2",
+> +				.cra_priority	 = 400,
+> +				.cra_flags	 = CRYPTO_ALG_TYPE_AHASH |
+> +						   CRYPTO_ALG_ASYNC |
+> +						   CRYPTO_ALG_OPTIONAL_KEY |
+> +						   CRYPTO_ALG_KERN_DRIVER_ONLY |
+> +						   CRYPTO_ALG_ALLOCATES_MEMORY,
+> +				.cra_blocksize	 = SHA384_BLOCK_SIZE,
+> +				.cra_ctxsize	 = sizeof(struct dthe_tfm_ctx),
+> +				.cra_module	 = THIS_MODULE,
+> +				.cra_init	 = dthe_sha384_cra_init,
+> +				.cra_exit	 = dthe_hash_cra_exit,
+> +			}
+> +		}
+> +	},
+> +	{
+> +		.init	= dthe_hash_init,
+> +		.update	= dthe_hash_update,
+> +		.final	= dthe_hash_final,
+> +		.finup	= dthe_hash_finup,
+> +		.digest	= dthe_hash_digest,
+> +		.export = dthe_hash_export,
+> +		.import = dthe_hash_import,
+> +		.halg	= {
+> +			.digestsize = SHA256_DIGEST_SIZE,
+> +			.statesize = sizeof(struct dthe_hash_ctx),
+> +			.base = {
+> +				.cra_name	 = "sha256",
+> +				.cra_driver_name = "sha256-dthe_v2",
+> +				.cra_priority	 = 400,
+> +				.cra_flags	 = CRYPTO_ALG_TYPE_AHASH |
+> +						   CRYPTO_ALG_ASYNC |
+> +						   CRYPTO_ALG_OPTIONAL_KEY |
+> +						   CRYPTO_ALG_KERN_DRIVER_ONLY |
+> +						   CRYPTO_ALG_ALLOCATES_MEMORY,
+> +				.cra_blocksize	 = SHA256_BLOCK_SIZE,
+> +				.cra_ctxsize	 = sizeof(struct dthe_tfm_ctx),
+> +				.cra_module	 = THIS_MODULE,
+> +				.cra_init	 = dthe_sha256_cra_init,
+> +				.cra_exit	 = dthe_hash_cra_exit,
+> +			}
+> +		}
+> +	},
+> +	{
+> +		.init	= dthe_hash_init,
+> +		.update	= dthe_hash_update,
+> +		.final	= dthe_hash_final,
+> +		.finup	= dthe_hash_finup,
+> +		.digest	= dthe_hash_digest,
+> +		.export = dthe_hash_export,
+> +		.import = dthe_hash_import,
+> +		.halg	= {
+> +			.digestsize = SHA224_DIGEST_SIZE,
+> +			.statesize = sizeof(struct dthe_hash_ctx),
+> +			.base = {
+> +				.cra_name	 = "sha224",
+> +				.cra_driver_name = "sha224-dthe_v2",
+> +				.cra_priority	 = 400,
+> +				.cra_flags	 = CRYPTO_ALG_TYPE_AHASH |
+> +						   CRYPTO_ALG_ASYNC |
+> +						   CRYPTO_ALG_OPTIONAL_KEY |
+> +						   CRYPTO_ALG_KERN_DRIVER_ONLY |
+> +						   CRYPTO_ALG_ALLOCATES_MEMORY,
+> +				.cra_blocksize	 = SHA224_BLOCK_SIZE,
+> +				.cra_ctxsize	 = sizeof(struct dthe_tfm_ctx),
+> +				.cra_module	 = THIS_MODULE,
+> +				.cra_init	 = dthe_sha224_cra_init,
+> +				.cra_exit	 = dthe_hash_cra_exit,
+> +			}
+> +		}
+> +	},
+> +};
+> +
+>  static struct skcipher_alg cipher_algs[] = {
+>  	{
+>  		.setkey	= dthe_ecb_aes_setkey,
+> @@ -596,6 +1441,9 @@ static int dthe_dma_init(struct dthe_data *dev_data)
+>  		goto err_dma_sha_tx;
+>  	}
+>  
+> +	// Do AES Rx and Tx channel config here because it is invariant of AES mode
+> +	// SHA Tx channel config is done before DMA transfer depending on hashing algorithm
+> +
+>  	memzero_explicit(&cfg, sizeof(cfg));
+>  
+>  	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> @@ -616,17 +1464,6 @@ static int dthe_dma_init(struct dthe_data *dev_data)
+>  		goto err_dma_config;
+>  	}
+>  
+> -	memzero_explicit(&cfg, sizeof(cfg));
+> -
+> -	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> -	cfg.dst_maxburst = 32;
+> -
+> -	ret = dmaengine_slave_config(dev_data->dma_sha_tx, &cfg);
+why is this being removed in this patch? Isn't this the first patch to
+add SHA support?
+> -	if (ret) {
+> -		dev_err(dev_data->dev, "Can't configure OUT2 dmaengine slave: %d\n", ret);
+> -		goto err_dma_config;
+> -	}
+> -
+>  	return 0;
+>  
+>  err_dma_config:
+> @@ -643,6 +1480,7 @@ static int dthe_register_algs(void)
+>  {
+>  	int ret = 0;
+>  
+> +	ret |= crypto_register_ahashes(hash_algs, ARRAY_SIZE(hash_algs));
+>  	ret |= crypto_register_skciphers(cipher_algs, ARRAY_SIZE(cipher_algs));
+>  
+>  	return ret;
+> @@ -650,6 +1488,7 @@ static int dthe_register_algs(void)
+>  
+>  static void dthe_unregister_algs(void)
+>  {
+> +	crypto_unregister_ahashes(hash_algs, ARRAY_SIZE(hash_algs));
+>  	crypto_unregister_skciphers(cipher_algs, ARRAY_SIZE(cipher_algs));
+>  }
+>  
+> @@ -679,6 +1518,7 @@ static int dthe_probe(struct platform_device *pdev)
+>  	spin_unlock(&dthe_dev_list.lock);
+>  
+>  	mutex_init(&dev_data->aes_mutex);
+> +	mutex_init(&dev_data->hash_mutex);
+>  
+>  	mutex_lock(&refcnt_lock);
+>  	if (!refcnt) {
+> @@ -692,6 +1532,7 @@ static int dthe_probe(struct platform_device *pdev)
+>  			spin_unlock(&dthe_dev_list.lock);
+>  
+>  			mutex_destroy(&dev_data->aes_mutex);
+> +			mutex_destroy(&dev_data->hash_mutex);
+>  
+>  			dma_release_channel(dev_data->dma_aes_rx);
+>  			dma_release_channel(dev_data->dma_aes_tx);
+> @@ -715,6 +1556,7 @@ static void dthe_remove(struct platform_device *pdev)
+>  	spin_unlock(&dthe_dev_list.lock);
+>  
+>  	mutex_destroy(&dev_data->aes_mutex);
+> +	mutex_destroy(&dev_data->hash_mutex);
+>  
+>  	mutex_lock(&refcnt_lock);
+>  	if (!--refcnt)
+> -- 
+> 2.34.1
