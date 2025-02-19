@@ -1,122 +1,233 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6046B1BAEDC;
-	Wed, 19 Feb 2025 08:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296DA42A93;
+	Wed, 19 Feb 2025 08:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739953310; cv=none; b=mZDBWD8HnHFPxt3xug0HbRxi7r3U+sgoFdWspEf9f2EJoJ3O6crHO4fViPH41x7NwkldsN1SYSm+xVCFjOR/3SdYgVNClFk9KQ07ce2qiWIMtSxdAIaVnizdV295nBZt2O+pYB32zulfqbsjPVBQtjUrkjHA+tojLbO0Z6wwJf4=
+	t=1739953495; cv=none; b=MMqP9s0r/ZuUF/maINuTdYQC2dHk84ao5wbJHwnRuVblEinrPTBgYd1tULAf+IHyYEzdzO29aIhV8Npvm6stT6FAv5LQGClvh2aI+6DxEJaEG0meRHiIEcmVuQpHrABLYVjfxgutxACDQg/gtG+TiuncDDLSzKyZ+c1gltpPArU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739953310; c=relaxed/simple;
-	bh=zvTczUtf8Y1eEofJZO2thlt6exdwrKA425Rp62SQESg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q+oYzPlZI+6WWhS2s967k3XdFXeuVJTVTBqCBA014g0SkMCylCIP174zi7LShu0oe8w03/6aVjr016gYvsQ/tn1sJkHwolO8ZgKnSxZldrqQPG/39Ju/9faVylJFNhGmvjeFbNbHPbq1jmPALB1F4k+7IvXveDKQvVayZZzfhEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bsb5hd33; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739953495; c=relaxed/simple;
+	bh=ZIJsfwsQLEyVHvM+8mOBi/uq5fGQbodBdhKs8C5LUNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VV4fyleGzS1mNuTEfK8ZW1j1fBbrZzbh/9ALDdwCVtKimMuBBfwb2NhJpynU1L9uAj9mcTPIDM5t+zatyN4167DymnCGPclPCNi7aSzEmN/y7LLDI75czHY730qsCrlM9DHpK1uIq+8qbAXHZXUAIixX11v6CmquYzIe/+eljHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WvAibkzs; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bsb5hd33"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fc0bd358ccso12850782a91.2;
-        Wed, 19 Feb 2025 00:21:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739953304; x=1740558104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5CCUQvs7skbbtsR/YI3q9DDNHuUZH7nkoZeezReFSZA=;
-        b=bsb5hd33OYDFm0ck5NRSw6Bd+FMXjpeql7sXlkzlUsphwf5jeC7IqMI6RSWGyTLSdz
-         5Kyz+Ol/XfSK0rgGZE1FulrHGZLBUwqamEtKqQfVTth/9niVLnoCl1j+7dXPCYFfE1ZA
-         f+qSfFcuRCTxAZntIiH+/iZjG6hKeIILgiUAd4Ak0ZiAYbGzuS0utmku0YpLBv8hILBv
-         oLGpMCL/H7Oel8W13hklLZR6aApSNXmK5p2MX9ScjQscg8iBtXMX99ry9atrZG7IKyfP
-         wpoHWyFurF+vNuxrRlcTtaZAiPRl3is+VxG6uTaeTcqf+9YMAjru+FmLnSbBA4HXztW2
-         IPrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739953304; x=1740558104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5CCUQvs7skbbtsR/YI3q9DDNHuUZH7nkoZeezReFSZA=;
-        b=mCgvVit2+6CHLduZA4eMuXWP+6Q1+Br9pD20c1sT3DzJfLD9tluDwylaGJsvorPo/g
-         vmMzai+Caz2G9WGnjmn70HjE0YgUsghCbb8h1e14Fhl5H5ekr1qNAY7Lcsd6/FryehRi
-         YJWU9lrXiUuZSoHMWaEyskpWW/qSVCyfDvW7adR+5Agyx/a/r1g0jT585Vypxc/ke7ye
-         kTvmdvwe8efM23owBPTHH8Ikt+DxvCLFnr16G8ZGy0L8CpSTZD0IWsOyoFDfZu39uHcU
-         kHfxh3RRoZf5zXKu78KC4NXXNAvm8usc3sfskPgburOY+6wf5pH6yYuK/u0iDZmAM2Cj
-         xc7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUmsnS92WcMrMwLm0NFiYo0y3PWSShLWhKVLJ+emjBUxTDTXRS3tD66q1j5BJ0WaiH5Uw68zANWscRoPJE=@vger.kernel.org, AJvYcCVIn5vU2AYF545uPP5GlwMzAzsT4C+H+mbbYjnebdwtd+jM2fA+gzI8dZk7knkNWhkbPtKfc02Vy/r57ZDqOJeN9A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBri2jZKoAM1hPP6SvLl354OsgwbuyRp6ZOXExlagWfGtR0/fM
-	2op+fz1LQn5m0HaSBTJv1J031s49eBXqkUxLCDGEGukfkweRkM0d7G1EUoW0ip29GfUbCuti4CN
-	voWEASW4x7LuOC9L0YBuLOB9b41MkWqjenCE=
-X-Gm-Gg: ASbGncvIU1uJQRw25w/4Sz0+KqfTgSk7JkExPWtUwS4m7/1gTY9QutCy0+7w3pbr9kN
-	6IgtHfTrV9Yz+e4uwwgUUbC56Jvvb/uQXTjpEDmOWP6zkPSU5lMIHC4DCElKIXOCHc8n3psyChA
-	pb+LqlU7CkvLwGffimgfTdgrISoeO6dRA=
-X-Google-Smtp-Source: AGHT+IFzIRpiLIjtv2iSzEdqta8V6rWObrEAdpRX7gMmj7WIN0aL5o3A9z+K6dA+admg76L3qNrsQ9fIjfYQvQGGYPo=
-X-Received: by 2002:a17:90b:3b92:b0:2ee:f687:6acb with SMTP id
- 98e67ed59e1d1-2fc40f0f07fmr26433153a91.13.1739953304594; Wed, 19 Feb 2025
- 00:21:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WvAibkzs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6353B44393;
+	Wed, 19 Feb 2025 08:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739953490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KlqEuekQPjwpj8AhBcBtdSFLM+Obju+wE/z6BfHhf0M=;
+	b=WvAibkzsumX6JV5bqT7TuhQsg7CpTgE5iEbehCMyNWFkZH3zykbb7eRAa7iIxk7Z2QQ7Jr
+	P+CvGnmt1DPRn3Fx5OvMbotcQNl9DkTrkCD9CcQikaIrOs6LZmLnEx5XIfkrpC1nheeXNC
+	GX+G4C8+toxkwMXwIL1aqM33ZbKcCscCqZCPOBykvrY2vdiwyOUFYh7C6n5/viOIRWCNiY
+	tRWfq7G6weRObYu+iFHQeXYce/WANly+lxS301fltTSvKa+d228zJycjpv8hA2v8nI1CpP
+	0wVx36Vzdln1xexmmAcSMlS3fJkzVzapwxjYqE+BDHi82vAvXWHEs5BzJdD0hw==
+Date: Wed, 19 Feb 2025 09:24:48 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Rob Herring
+ <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 0/5] Add support for the PCI host bridge device-tree
+ node creation.
+Message-ID: <20250219092448.2e3e8ac3@bootlin.com>
+In-Reply-To: <20250204073501.278248-1-herve.codina@bootlin.com>
+References: <20250204073501.278248-1-herve.codina@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218085712.66690-1-daniel.baluta@nxp.com> <20250218085712.66690-3-daniel.baluta@nxp.com>
- <Z7Stjh08+/RlUtek@lizhi-Precision-Tower-5810>
-In-Reply-To: <Z7Stjh08+/RlUtek@lizhi-Precision-Tower-5810>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Wed, 19 Feb 2025 10:21:32 +0200
-X-Gm-Features: AWEUYZn3t8RO4hNneBNPP3WTziJtjhP1rlkqNpTqV_tfmebhGCfYSHFlLx1Yy64
-Message-ID: <CAEnQRZAL1npc3-Z_O_7_-SWi=fvWkSv_fv2dcmVf5owVYsi0NQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] reset: imx8mp-audiomix: Prepare the code for more
- reset bits
-To: Frank Li <Frank.li@nxp.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, p.zabel@pengutronix.de, shawnguo@kernel.org, 
-	mathieu.poirier@linaro.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, andersson@kernel.org, 
-	linux-remoteproc@vger.kernel.org, iuliana.prodan@nxp.com, 
-	laurentiu.mihalcea@nxp.com, shengjiu.wang@nxp.com, krzk@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeifeejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmp
+ dhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehlihiihhhirdhhohhusegrmhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Tue, Feb 18, 2025 at 5:56=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
->
-> On Tue, Feb 18, 2025 at 10:57:09AM +0200, Daniel Baluta wrote:
-> > Current code supports EARC PHY Software Reset and EARC        Software
-> > Reset but it is not easily extensible to more reset bits.
-> >
-> > So, refactor the code in order to easily allow more reset bits
-> > in the future.
->
-> Nit: wrap at 75 chars
->
-> >
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  drivers/reset/reset-imx8mp-audiomix.c | 53 ++++++++++++++++++++++-----
-> >  1 file changed, 43 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/reset/reset-imx8mp-audiomix.c b/drivers/reset/rese=
-t-imx8mp-audiomix.c
-> > index 1fe21980a66c..6b1666c4e069 100644
-> > --- a/drivers/reset/reset-imx8mp-audiomix.c
-> > +++ b/drivers/reset/reset-imx8mp-audiomix.c
-> > @@ -12,7 +12,30 @@
-> >  #include <linux/reset-controller.h>
-> >
-> >  #define IMX8MP_AUDIOMIX_EARC_OFFSET          0x200
-> > -#define IMX8MP_AUDIOMIX_EARC_RESET_MASK              0x3
-> > +#define IMX8MP_AUDIOMIX_EARC_RESET_MASK              0x1
-> > +#define IMX8MP_AUDIOMIX_EARC_PHY_RESET_MASK  0x2
-> > +
-> > +#define IMX8MP_AUDIOMIX_EARC         0
-> > +#define IMX8MP_AUDIOMIX_EARC_PHY     1
->
->
-> Does dt binding need such macro?
->
-> If not, you can use enum.
-> If yes, create binding header file for it.
+Hi Greg, Bjorn,
 
-Thanks Philipp, Peng and Frank for your comments. All are valid.
 
-Will fix them in v2.
+I took into account feedback received on v5 and sent the v6 on 01/10/2025.
+I didn't receive any feedback on the v6. In the meantime, the kernel
+v6.14-rc1 has been released. I rebased the v6 and sent the v7 on 12/09/2024.
+
+Is there something blocking in this series from having feedback or having
+the series applied?
+
+Best regards,
+Hervé
+
+On Tue,  4 Feb 2025 08:34:55 +0100
+Herve Codina <herve.codina@bootlin.com> wrote:
+
+> Hi,
+> 
+> This series adds support for creating a device-tree node for the PCI
+> host bridge on non device-tree based system.
+> 
+> Creating device-tree nodes for PCI devices and PCI-PCI bridges already
+> exists upstream. It was added in commit 407d1a51921e ("PCI: Create
+> device tree node for bridge"). Created device-tree nodes need a parent
+> node to be attached to. For the first level devices, on device-tree
+> based system, this parent node (i.e. the PCI host bridge) is described
+> in the base device-tree. The PCI bus related to this bridge (PCI root
+> bus) inherit of the PCI host bridge device-tree node.
+> 
+> The LAN966x PCI device driver, available since commit 185686beb464
+> ("misc: Add support for LAN966x PCI device"), relies on this feature.
+> 
+> On system where the base hardware is not described by a device-tree, the
+> PCI host bridge to which first level created PCI devices need to be
+> attach to does not exist. This is the case for instance on ACPI
+> described systems such as x86.
+> 
+> This series goal is to handle this case.
+> 
+> In order to have the PCI host bridge device-tree node available even
+> on x86, this top level node is created (if not already present) based on
+> information computed by the PCI core. It follows the same mechanism as
+> the one used for PCI devices device-tree node creation.
+> 
+> As for device-tree based system, the PCI root bus handled by the PCI
+> host bridge inherit of this created node.
+> 
+> In order to have this feature available, a number of changes are needed:
+>   - Patch 1 and 2: Introduce and use device_{add,remove}_of_node().
+>     This function will also be used in the root PCI bus node creation.
+> 
+>   - Patch 3 and 4: Improve existing functions to reuse them in the root
+>     PCI bus node creation.
+> 
+>   - Patch 5: The PCI host bridge device-tree node creation itself.
+> 
+> With those modifications, the LAN966x PCI device is working on x86 systems
+> and all device-tree kunit tests (including the of_unittest_pci_node test)
+> pass successfully with the following command:
+>   qemu-system-x86_64 -machine q35 -nographic \
+>     -kernel arch/x86_64/boot/bzImage --append console=ttyS0 \
+>     -device pcie-root-port,port=0x10,chassis=9,id=pci.9,bus=pcie.0,multifunction=on,addr=0x3 \
+>     -device pcie-root-port,port=0x11,chassis=10,id=pci.10,bus=pcie.0,addr=0x3.0x1 \
+>     -device x3130-upstream,id=pci.11,bus=pci.9,addr=0x0 \
+>     -device xio3130-downstream,port=0x0,chassis=11,id=pci.12,bus=pci.11,multifunction=on,addr=0x0 \
+>     -device i82801b11-bridge,id=pci.13,bus=pcie.0,addr=0x4 \
+>     -device pci-bridge,chassis_nr=14,id=pci.14,bus=pci.13,addr=0x0 \
+>     -device pci-testdev,bus=pci.12,addr=0x0
+> 
+> Compare to previous iteration, this v7 series is the v6 series rebased
+> on top of v6.14-rc1 without other modifications.
+> 
+> Best regards,
+> Hervé Codina
+> 
+> Changes v6 -> v7
+>   v6: https://lore.kernel.org/lkml/20250110082143.917590-1-herve.codina@bootlin.com/
+> 
+>   Rebase on top of v6.14-rc1
+> 
+> Changes v5 -> v6
+>   v5: https://lore.kernel.org/lkml/20241209130339.81354-1-herve.codina@bootlin.com/
+> 
+>   - Patch 1
+>     Add a return error code in device_add_of_node()
+> 
+>   - Patches 2 and 5
+>     Handle the device_add_of_node() error code
+> 
+>   - Patches 3 and 4
+>     No changes
+> 
+> Changes v4 -> v5
+>   v4: https://lore.kernel.org/lkml/20241202131522.142268-1-herve.codina@bootlin.com/
+> 
+>   - Patch 1
+>     Use dev_warn() instead of WARN()
+> 
+>   - Patches 2 to 4
+>     No changes
+> 
+>   - Patch 5 (v4 patch 6)
+>     Use dev_err()
+>     Fix a typo in commit log
+> 
+>   Patch removed in v5
+>     - Patch 5 in v4
+>       Already applied
+> 
+> Changes v3 -> v4
+>   v3: https://lore.kernel.org/lkml/20241114165446.611458-1-herve.codina@bootlin.com/
+> 
+>   Rebase on top of v6.13-rc1
+> 
+>   - Patches 1 to 6
+>     No changes
+> 
+> Changes v2 -> v3
+>   v2: https://lore.kernel.org/lkml/20241108143600.756224-1-herve.codina@bootlin.com/
+> 
+>   - Patch 5
+>     Fix commit log.
+>     Use 2 for #size-cells.
+> 
+>   - Patches 1 to 4 and 6
+>     No changes
+> 
+> Changes v1 -> v2
+>   v1: https://lore.kernel.org/lkml/20241104172001.165640-1-herve.codina@bootlin.com/
+> 
+>   - Patch 1
+>     Remove Cc: stable
+> 
+>   - Patch 2
+>     Remove Fixup tag and Cc: stable
+> 
+>   - Patches 3 and 4
+>     No changes
+> 
+>   - Patch 5
+>     Add #address-cells/#size-cells in the empty root DT node instead of
+>     updating default values for x86.
+>     Update commit log and commit title.
+> 
+>   - Patch 6
+>     Create device-tree node for the PCI host bridge and reuse it for
+>     the PCI root bus. Rename functions accordingly.
+>     Use "pci" instead of "pci-root" for the PCI host bridge node name.
+>     Use "res->start - windows->offset" for the PCI bus addresses.
+>     Update commit log and commit title.
+> 
+> Herve Codina (5):
+>   driver core: Introduce device_{add,remove}_of_node()
+>   PCI: of: Use device_{add,remove}_of_node() to attach of_node to
+>     existing device
+>   PCI: of_property: Add support for NULL pdev in of_pci_set_address()
+>   PCI: of_property: Constify parameter in of_pci_get_addr_flags()
+>   PCI: of: Create device-tree PCI host bridge node
+> 
+>  drivers/base/core.c       |  61 ++++++++++++++++++++
+>  drivers/pci/of.c          | 115 +++++++++++++++++++++++++++++++++++++-
+>  drivers/pci/of_property.c | 114 +++++++++++++++++++++++++++++++++++--
+>  drivers/pci/pci.h         |   6 ++
+>  drivers/pci/probe.c       |   2 +
+>  drivers/pci/remove.c      |   2 +
+>  include/linux/device.h    |   2 +
+>  7 files changed, 295 insertions(+), 7 deletions(-)
+> 
+
