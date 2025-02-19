@@ -1,239 +1,99 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E311B4F21
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD651DFE22
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972808; cv=none; b=fcr7vWEjb3XoCZp9aBx/PA8NusGi7b8AEnq26iuZSzoQ4Fi+Old2KoxB9D3GrSZJGT98pIPAKvPTkfU05rL9Gal/UXFzTauAKwyd6HkTXE5hbnPdcdXJJJl0S97tqh6YM8BWT3zJi5xiIc7UoLUG+dLgx/fnhxPZrhUjHole9+A=
+	t=1739972815; cv=none; b=a3X4i6zmhfuZfiAODH0XG27X4MjeHqMRFKuDl/TG5QJIF3GBO496HCbIZOCjMITB3UaPzkN6F0RERKGSWEx1Gs04IxPCW6cQyirfc+83abM5u/TlNREz9xOX4H91nw1Cu7QJsRDAVVlHa1OtXw7errGORktYEw0kgniIsZtEDYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739972808; c=relaxed/simple;
-	bh=nUXrVDPszJmwB5Bwbq3NpI4cj5YAJ0KMDlWoPy/V5LI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TA2O9oYC9k0BG4s63Z05nkcPc1unGq7T3z6S5ZYc4YnyheqTliZCOnz4dmFWmXUyE5NSQjwo2bDPxagPJsYfBeKCC586YOByx5Devgl2f/iMLNJPXN72e2sZhb74wIO+aYt7wZ7/OpNesBdFnBEj3mk/63h9uZ+KWe3ov12MTLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EFQEn/vB; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739972815; c=relaxed/simple;
+	bh=UcJkjuEi1yYJnAiutiiyWh7ZzRjqlpKOLFtDnGJIPCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LwrYTdMIyez5x4UGMFH0RY6oSsxiJ9h/Y11L0CpHqKZvl50zZ/4v0wGaXPQ2tno8i2Ops7npXb6szxVN1DjWCfEab5yBxDDW4R7N0LYfsh3ERWdiIDmzxgEUodzG56+oglU7UN20SQNECQz1Nr/Av1AlLAGn2j4mvEP7oEHQ31c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W5f/W5bI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFQEn/vB"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22104c4de96so72923615ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:46:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739972805; x=1740577605; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ko00ndovSDIn9wXeXsjiQM4wpEigh6jTkcvJNJZTbVw=;
-        b=EFQEn/vBgCy3w99xC9Eazm/xV2XA90k7Lv4NrOWIYLslY94TIUc7Kl9hd9PAb1MPTk
-         2kKd6KLPuHGW7GUbWeCXaXyK5tnrmnMyABJ3+syxOCQ+mcz2RAmLtEdQ+Q0QDjJer3/X
-         a32yoP0Vp856O4Xvu2eNpa5VTjsoIm3fEuFqp5qG5o9ylQyLyXKAQLf/M7jRy/hOX2cA
-         ltZAS0ODItsuqq84ft2kDHt8TrXneus07vdTxCsty8kDJzHrgCUo8gEl9RoOxFz/Fn4T
-         DmuTzaQOarFyNoOvU0N1SBW72IUzXN2sfZSwcdonuM7dvvSlCOrH/01f0xBtaY03aUqq
-         iMbw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W5f/W5bI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739972812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UcJkjuEi1yYJnAiutiiyWh7ZzRjqlpKOLFtDnGJIPCQ=;
+	b=W5f/W5bIw1GjJ0UifYnGvvdJN9GOgRhGAMnX/xKyUExs2wkfReRetcud3NJJvQ+VuXfiWI
+	LMkyhdSkrg1ssNvFeqwud8Q2W8lttzMOB2BDJHFFmhRyMHp4owzWmpz3YT0hn2aKT4UVHc
+	At59Xo4+0gTXS8Sp2gf0JE1wbnk9LBI=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-297-56JxtoloOtGm1M2NtmTCnw-1; Wed, 19 Feb 2025 08:46:51 -0500
+X-MC-Unique: 56JxtoloOtGm1M2NtmTCnw-1
+X-Mimecast-MFC-AGG-ID: 56JxtoloOtGm1M2NtmTCnw_1739972811
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c0ae469d5eso320938485a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:46:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739972805; x=1740577605;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1739972811; x=1740577611;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ko00ndovSDIn9wXeXsjiQM4wpEigh6jTkcvJNJZTbVw=;
-        b=pgbJR8wYSanXdOdfceyfVUo+NXLvL8VR43hdEWmGdLz3DRonD4NTjc3ul/tUEzvHY2
-         f7+5qGAdCgVJBuZ+BIhlTvhX0kpWnguEzYA3m5ZalFZhLj81Vzc2ollrzl6pLQUkF9hP
-         wY7vNB9IsftHiwjw3fJx3v6EANGS/NxljZwyC5F05r7XjJ2T//8NJ7G0P4ONns9Jo1gR
-         oAC0jzeeb7vQjCijNUTYiVgksjY4ek7ZOhZlAeVYI7K9mci2qS/d3reUIzRlxiz6J84b
-         P3gQm2oDcXZdNPTbwn3eVATisp6ZerzcYMZYQaab1dsrnBuFVUtI5bd38xV4Xfs5+Xg7
-         jRUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyauwEbPLVA0Ib9A/b97VuPOrLt+LmdGAqy/Pu+wYl8EljIGaFUJGq8Ki6ynzTNrXSqhW5/T7/oYvxYNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZynkPMzy0Ufx+89IDJSIU4tTzFNb288diEsVcsk+PWeUUmAe6
-	Cn5IASZ7BfSE30y0BEdelat0ygZNqU15sTjk9V6V6cu7Q89Yo8rGVNMJeeJAEIk=
-X-Gm-Gg: ASbGncsSFKiGedlb56EBwLqNU0MhiXxHcQyGiW5zdF/+HB8FxE2pBNjXYFX0TigfbS/
-	o1ndG4GytdPY09mxMUUdzvxrKw9WeMJyt1B9qpQMBAbi1E9nCPpOT6qNHnkHYEL+3q9VHbWwpqV
-	r1CNYFqsS1AAwcfaJwJY0Tj1lY2yror+6dE4Bmt2wA2Q/vtNF7L0izg+L9gxy43OdFAh0l/xdZH
-	aONe0S0seI+3XVcJXOcKq0a8xoue+tcCumizMwhv7nzPst4uqfyAgdQl+1cyfzLkqW2HAPHb3+Y
-	fu8qwVVWI2VU/TlUzpnZYrQD3W1CNGPtB48/dv5/YckbzOuGXCUaGvibWvfOc+Cukda9VPkNpDV
-	77Jn/DnAOWjdDmH0=
-X-Google-Smtp-Source: AGHT+IHzud8yErWxQizk2X9LlTm6NcH2o64l3dhMPpAt69MusAto549t5CGCBpRameWQHlsswQzXpg==
-X-Received: by 2002:a17:903:2cb:b0:21f:7082:1146 with SMTP id d9443c01a7336-221040867e8mr282114035ad.30.1739972805371;
-        Wed, 19 Feb 2025 05:46:45 -0800 (PST)
-Received: from ?IPV6:2804:1b3:a7c3:f704:ed29:494:9f22:f6c5? ([2804:1b3:a7c3:f704:ed29:494:9f22:f6c5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5584dccsm104054335ad.205.2025.02.19.05.46.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2025 05:46:44 -0800 (PST)
-Message-ID: <191a4cc2-5c35-43f1-aaa4-01395299590b@linaro.org>
-Date: Wed, 19 Feb 2025 10:46:33 -0300
+        bh=UcJkjuEi1yYJnAiutiiyWh7ZzRjqlpKOLFtDnGJIPCQ=;
+        b=f+7B/I8G0KA3RvCOsYL4jCW4lX9Y3nWtC7mjS/H4k0k/kwOAnyZ9bpBCXHnJvpo7KQ
+         ywvMbaEA922J/ucoEA+IDCUJcpQT9NVkP/1Ih4PKIZ2idnxhrH16YOS5jSHgRzRx9FFG
+         4O3/Ci+qyQP1C/KoDyfkj+xK54AJmv31M8dDgjj3Zk0VLejIchyueLY/AjI3JtkvikJd
+         VPB+/NpCMj+vBH1pGbkjsWTa2LPYs/7mP+kEeCGPTctA1xwXz5lBX09QyrGB7QQv1K41
+         Kbr2jclYlMNFnhECMxhcgbQk3KJxUlHVqgXO+vWLsX/uzHnidLXgIJDamSxYYgQG9uw8
+         nwTQ==
+X-Gm-Message-State: AOJu0YxcQabf7z4Qb56gzbMKuPnhw0PurEdLLXLmBys7uIucjZ9ylnaN
+	jhesI52CUPK86vV0VkKJ5cgTVlzesM2dZKSms2guQATUkAgxLqKX9YQZeQkBzpi/bZ06cwaRn3R
+	DMqFTJCyLF8h9dGwZDrnbHnO2yGWsKOD4RwD/l+ub4YJ/IPQUy/giMONi8olzNAIDCcJzbQ==
+X-Gm-Gg: ASbGncsfB76xcSzassMq+RxW/Yl0i/QuDhOKsezu/B5OUv6iAbbkVkCmhQPGZjtsxwJ
+	EH89KIFfWK02s/j68EoVAOq1hsxEsAUDKxqV4smW/nV09McI8kmT1xeUUlHG15MDNRkM9ldBWEI
+	z118y32k2pOC10XcLaGmRb6KEqUWuXIciioSGFmm75SRjOSc0IYy5y8xfM8Sj0/ZU0KYqB+L58T
+	nO7OcdyoZsLpFtlGgmXzdL46nqENTD90fk+rQQFxGvKRcy6BVbZ5b9OTupZqFqVkza9Gq51v+xk
+	WS7BDVQn+VJ0iA==
+X-Received: by 2002:a05:620a:4805:b0:7c0:7818:8554 with SMTP id af79cd13be357-7c0b534e809mr606130085a.36.1739972810988;
+        Wed, 19 Feb 2025 05:46:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFvt4PQDCLcNiUnb5vuuQvPmYW2M9pE931fM7yXu2Gz/T9k/kTKHHri1sWt4hM/n19iDe3ROg==
+X-Received: by 2002:a05:620a:4805:b0:7c0:7818:8554 with SMTP id af79cd13be357-7c0b534e809mr606126185a.36.1739972810650;
+        Wed, 19 Feb 2025 05:46:50 -0800 (PST)
+Received: from polis (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c097e43fb4sm394598485a.107.2025.02.19.05.46.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 05:46:49 -0800 (PST)
+Date: Wed, 19 Feb 2025 14:46:46 +0100
+From: Danilo Krummrich <dakr@redhat.com>
+To: Karol Herbst <kherbst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	Dave Airlie <airlied@redhat.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [PATCH 1/1] MAINTAINERS: Remove myself
+Message-ID: <Z7XgxkxGIJm0OAue@polis>
+References: <20250215073753.1217002-1-kherbst@redhat.com>
+ <20250215073753.1217002-2-kherbst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
-To: Pedro Falcato <pedro.falcato@gmail.com>, Kees Cook <kees@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org,
- akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org,
- vbabka@suse.cz, Liam.Howlett@oracle.com, oleg@redhat.com, avagin@gmail.com,
- benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org,
- sroettger@google.com, hch@lst.de, ojeda@kernel.org,
- thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
- johannes@sipsolutions.net, hca@linux.ibm.com, willy@infradead.org,
- anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org,
- Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
- peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org,
- dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org,
- mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
- enh@google.com, rientjes@google.com, groeck@chromium.org,
- mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
- mike.rapoport@gmail.com
-References: <20250212032155.1276806-1-jeffxu@google.com>
- <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
- <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
- <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local>
- <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
- <202502131240.A57C749@keescook>
- <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
-Content-Language: en-US
-From: Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>
-Organization: Linaro
-In-Reply-To: <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250215073753.1217002-2-kherbst@redhat.com>
 
+Hi Karol,
 
+On Sat, Feb 15, 2025 at 08:37:53AM +0100, Karol Herbst wrote:
+> Please respect my wishes and put this statement as is into the tree.
 
-On 18/02/25 20:18, Pedro Falcato wrote:
-> On Thu, Feb 13, 2025 at 8:47 PM Kees Cook <kees@kernel.org> wrote:
->>
->> On Thu, Feb 13, 2025 at 07:59:48PM +0000, Pedro Falcato wrote:
->>> On Wed, Feb 12, 2025 at 2:02 PM Lorenzo Stoakes
->>> <lorenzo.stoakes@oracle.com> wrote:
->>>>
->>>> (sorry I really am struggling to reply to mail as lore still seems to be
->>>> broken).
->>>>
->>>> On Wed, Feb 12, 2025 at 12:37:50PM +0000, Pedro Falcato wrote:
->>>>> On Wed, Feb 12, 2025 at 11:25 AM Lorenzo Stoakes
->>>>> <lorenzo.stoakes@oracle.com> wrote:
->>>>>>
->>>>>> On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org wrote:
->>>>>>> From: Jeff Xu <jeffxu@chromium.org>
->>>>>>>
->>>>>>> The commit message in the first patch contains the full description of
->>>>>>> this series.
->>>>>>
->>>> [...]
->>>>>
->>>>> FWIW, although it would (at the moment) be hard to pull off in the
->>>>> libc, I still much prefer it to playing these weird games with CONFIG
->>>>> options and kernel command line options and prctl and personality and
->>>>> whatnot. It seems to me like we're trying to stick policy where it
->>>>> doesn't belong.
->>>>
->>>> The problem is, as a security feature, you don't want to make it trivially
->>>> easy to disable.
->>>>
->>>> I mean we _need_ a config option to be able to strictly enforce only making
->>>> the feature enable-able on architectures and configuration option
->>>> combinations that work.
->>>>
->>>> But if there is userspace that will be broken, we really have to have some
->>>> way of avoiding the disconnect between somebody making policy decision at
->>>> the kernel level and somebody trying to run something.
->>>>
->>>> Because I can easily envision somebody enabling this as a 'good security
->>>> feature' for a distro release or such, only for somebody else to later try
->>>> rr, CRIU, or whatever else and for it to just not work or fail subtly and
->>>> to have no idea why.
->>>
->>> Ok so I went looking around for the glibc patchset. It seems they're
->>> moving away from tunables and there was a nice
->>> GNU_PROPERTY_MEMORY_SEAL added to binutils.
->>> So my proposal is to parse this property on the binfmt_elf.c side, and
->>> mm would use this to know if we should seal these mappings. This seems
->>> to tackle compatibility problems,
->>> and glibc isn't sealing programs without this program header anyway. Thoughts?
->>
->> It seems to me that doing this ties it to the binary, rather than
->> execution context, which may want to seal/not-seal, etc. I have a sense
->> that it's be better as a secure bit, or prctl, or something like that. The
->> properties seem to be better suited for "this binary _can_ do a thing"
->> or "this binary _requires_ a thing", like the GNU_STACK bits, etc. But
->> maybe there's more to this I'm not considering?
-> 
-> Doesn't this exactly kind of Just Work though? "This binary can
-> do/tolerate sealing". I would blindly guess that we don't have very
-> opinionated shared libraries that do this kind of shenanigans
-> unilaterally, so that's probably not something we really need to worry
-> about (though I admittedly need to read through the glibc patchset,
-> and nail down what they're thinking about doing with linking
-> mseal-ready and mseal-non-ready ELF execs/shared objects together).
-> The problem with something like prctl is that we either indirectly
-> provide some kind of limited form of munseal, or we require some sort
-> of handover (like personality(2) + execve(2)), which both sound like a
-> huge PITA and still don't solve any of our backwards compat issues...
-> all binaries would need to be patched with this
-> prctl/personality()/whatever call, and old ones wouldn't work.
-> 
-> The semantics behind GNU_PROPERTY_MEMORY_SEAL are unclear to me (maybe
-> the toolchain folks could shed some light?), but it sounds like it'd
-> fit perfectly.
-> I suspect we probably want to parse this on the kernel's side anyway
-> (to seal the main program/interp's segments)[1], then extending them
-> to the kernel system mappings should be somewhat trivial...
-> I don't think we'll ever get a program that can't cope with sealing
-> the system mappings but can cope with sealing itself (and if we do, we
-> just won't seal the entire thing and that's _okay_).
-> 
-> Deploying mseal-ready programs could then be done in a phased way by
-> distros. e.g chromeOS and android could simply enable the
-> corresponding linker option in LDFLAGS and let it rip. Other more
-> mainstream distros could obviously take a little longer or test/deploy
-> this on all programs not named gVisor and/or after CRIU is okay with
-> all of this. We then might not need a user-configurable CONFIG_ (only
-> an arch HAS_SYSTEM_MAPPINGS_MSEAL or whatever), nor a sysctl, and
-> everyone is happy.
-> 
-> I glanced through libc-alpha again and it seems like the glibc folks
-> also seem to have reached the same idea, but I'd love to hear from
-> Adhemerval.
-> 
-> Am I missing anything?
+I applied this patch, as is, to drm-misc-fixes.
 
-Hi Pedro,
+I respect the reasons you have and that you do so out of firm belief, yet I'm
+sad to see you leaving this community.
 
-After discussing with CRIU developers, I plan to change how glibc will
-handle GNU_PROPERTY_MEMORY_SEAL to allow a more smooth enablement in
-distros (the latest version is at [1]).
+Thank you for all the work you put into the nouveau driver!
 
-The idea is only enable memory sealing iff the main binary (either 
-ET_EXEC or PIE) has the new sealing attribute.  If it were the case, 
-the loader will still check if the dependency has the attribute and 
-seal accordingly.
+- Danilo
 
-So if for any reason the binary does not support memory sealing at all,
-like CRIU for the snapshot restore phase, it just need to be built
-with -Wl,-z,nomemory-seal.  It is also for the case for libraries,
-although I think this will be rare.
-
-I will also work on adding a way to enable partially non-sealing
-sections, since Florian has hinted that he wants to use on some libgcc
-metadata (similar to how RELRO '.data.rel.ro' works).  My initial plan
-is just mimic what OpenBSD does with PT_OPENBSD_MUTABLE, which only
-works for ET_DYN (and I think it should not be a problem). But it is
-a userland problem, so no kernel support would be required.
-
-> 
-> 
-> [1] we should probably nail this responsibility handover down before
-> glibc msealing (or bionic) makes it to a release. It'd probably be a
-> little nicer if we could mseal these segments from the kernel instead
-> of forcing the libc to take care of this, now that we have this
-> property.
-> 
-
-Keep in mind that GNU_PROPERTY_MEMORY_SEAL is currently a glibc extension 
-and I am not sure if other runtime would be willing to adopt as well.  
-So its presence can not be implied that sealing will be applied by runtime.
-
-[1] https://patchwork.sourceware.org/project/glibc/list/?series=43524
