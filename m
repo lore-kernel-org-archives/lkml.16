@@ -1,215 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694461B6CE1;
-	Wed, 19 Feb 2025 17:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DA71AF0D3;
+	Wed, 19 Feb 2025 17:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987467; cv=none; b=J/OaTET0PqnBUSqkhFhcu2wwhzSeGKQcWDKGxOmHfocNtYALWlTQznuyKxMS6uivnaZMsnVnB2YDEH9ny8F0EAk0ZNhPp/eHSmM7yoHOp//cBljnwu7LpX2oL/wlCwvR5ps3KDVIRlm7/lYfU27gpr/2KJkOkNZY4yoTep8taY4=
+	t=1739987491; cv=none; b=qM7DWFLxo807/mf1u4txrQn/QPcjsodS9MZqWHtPLBMLQT6vS3Gw2iTPQv22NbSm54j05joqfiXqkKF438l/w2dTWTzLUHGqCAorGJL4nVl4P7cVusXoNZ8eZ40A2j/p+PH5ojAyLRZc4awmN5hG+y3gDI7NZMSm0OuYpLi/UC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987467; c=relaxed/simple;
-	bh=rZq5shPOxTksQy7eMPX745S268mJN4kuifZgD2XUNDE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Iild6iqgWcIjE0VnhZdMfDQCsTtX25KiLR7/E/x3W5cEZTmOgIUAZv5STaOx/TWoUH4k1PgEAlg0N7KH5bbnW70onrD6XTKzYJ0nraMSJv4aVW2J05O/pXDTGBFLiWj2loEx2DB/igIv/mMCrLWc9qkG7uFv/3JKYJpNbDgdi+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1OS2KG+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739987491; c=relaxed/simple;
+	bh=H5/3Y209ghOxqgg6POxPe1hvZOewNiPPmcfKtVsdFGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I6wJVnLdPHo+oFHLUR2U+Bbd/qxGl14+u4U8mabUE+J2y1zB5qX5j1KG0KY/dTf7MqMTKD3xZnog8QNbmvrlZ+Pjp7CQVWtBm0qQUgvXC6i6BnjaOItbR1cRLLMs7utE8ghhZ66eo1jtGndUk7FpCwxf1bzq7co1pEDW97rE94o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMViZhKJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1OS2KG+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B3CC4CEE6;
-	Wed, 19 Feb 2025 17:51:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMViZhKJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89815C4CED1;
+	Wed, 19 Feb 2025 17:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739987466;
-	bh=rZq5shPOxTksQy7eMPX745S268mJN4kuifZgD2XUNDE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=i1OS2KG+o4RQ4riPqf1kn536az+uq1VE29UXllFEmktDRwvaxtqEm5MjOuWxqTOvo
-	 U86FKb8bSUgqcgC9tbboS5FX1KTXorjuJKBPpYNkm27Eg6Qg3pzJrrv72rIkL/4bbF
-	 bU7HTvbpzfbcpTN6T8EJHDpAkQMNb7xCBZeUcXKqmsb/WiPOXhvL+Of2Rs7kZ5z5pt
-	 Bz/2am8SNYOZrIl+XDKDotcWjf+3m7OpINQain3AAz5rTL9Fwb0r/tL3xmm6gvGUeV
-	 9xfqeduF8bl5MZXDZ9MDCwBLKZAl+dfq3cHpNBTHB3neq8zXvkupv2SfCWMO98sh5I
-	 lTMv9VSBHMGXw==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5debbced002so174934a12.1;
-        Wed, 19 Feb 2025 09:51:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUD5HvrNhC+6ZhGhrqNAb8StLBJdZsidzElA6cSJJHBOIIRSo8F8jj1kFHCUIslKObKM9hDrT0Z2iUYUut7hNI=@vger.kernel.org, AJvYcCVQeK8DqEmYbyW6ibZXB9Q23x/HhLBB/s4pK3XqxehV626MNBeB79bD0ZD7CsvjfpHS6RAiThTCgwQq@vger.kernel.org, AJvYcCWkXn+pxpg6YF/SctZhKxo+eSCUM/tDtcnMt/ZsiekN27zEDM8J4G88vs0wEKb9gLcCx3NhSUgw3Jgt1Ysb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS/TP1S5ce2KWdOV1tcqcQ/AdTLrp1V+QEHMeGNfnghMwK+sz9
-	F10r/6faHl8Hzx2IFsh53g6d2rXqt/Thhz/ffsBGneDLtglRggOvIbLDffN+J1moGvjJezhQG6/
-	5/WJH0AWLZ4Lrha7m15/DH6h8a1k=
-X-Google-Smtp-Source: AGHT+IEcIR2sCxUot4XQbj6ANo59l5iFBJbJzbCYxaaMIQFtGd/3ncuB0BdMQ6St84iPMy5+WzS3SOBdcqQAMyhhJ/w=
-X-Received: by 2002:a05:6402:3215:b0:5dc:8fc1:b3b5 with SMTP id
- 4fb4d7f45d1cf-5e0a12c7561mr128280a12.15.1739987465682; Wed, 19 Feb 2025
- 09:51:05 -0800 (PST)
+	s=k20201202; t=1739987491;
+	bh=H5/3Y209ghOxqgg6POxPe1hvZOewNiPPmcfKtVsdFGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hMViZhKJG+IIBBzxumfv7bsA8LcTpXBCk66MtLx4tF4HdLTSzyaF4S3os6qkx+MSI
+	 aMcFB660Ro18FmMNHC0WdCMZSGkozVlHwCYhYIwYBr03Aews/K1jrDujiwiecIq2lJ
+	 3xO2CaeMG31qkI74EKXctu9YjtjHEYxCgDm4dIJS/avqWtrB9OJuwtO3LozGC+X0LT
+	 hQK2iPK9RjJCQrTX4UANqdK381MeXWCX9ro8Ct0RJi7VwQLtuC+iy7t53ZELsxMeVK
+	 FPioMQ2OzJ8T3ECCctvVHa6R693Pbwl0M5bFDupJz2Q7cc0MhQpUxb+GZX/EgxDJHj
+	 tdsDREETlNePw==
+Date: Wed, 19 Feb 2025 23:21:19 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Tsai Sung-Fu <danielsftsai@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andrew Chant <achant@google.com>, Sajid Dalvi <sdalvi@google.com>,
+	Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH] PCI: dwc: Separate MSI out to different controller
+Message-ID: <20250219175119.vjfdgvltutpzyyp5@thinkpad>
+References: <20250115083215.2781310-1-danielsftsai@google.com>
+ <20250127100740.fqvg2bflu4fpqbr5@thinkpad>
+ <CAK7fddC6eivmD0-CbK5bbwCUGUKv2m9a75=iL3db=CRZy+A5sg@mail.gmail.com>
+ <20250211075654.zxjownqe5guwzdlf@thinkpad>
+ <CAK7fddDkQX1aj5ZyTjh1_Pk+XME3AY=m5ouEFRgmLuJjBJytbA@mail.gmail.com>
+ <20250214071552.l4fufap6q5latcit@thinkpad>
+ <Z6-fjJv3LXTir1Yj@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z6GDiLZo5u4CqxBr@kspp> <b16ac12f-166a-4d25-bf33-b1ccf6e0dac7@oracle.com>
- <57b70bbc-c8d0-4181-98a9-5174517270a0@oracle.com> <CAFX2Jf=yktJ_Bz--c2VpoDmW13YyoY3MNSv5sJYSseWBGAV9Cw@mail.gmail.com>
- <0e5cf4db-8a69-4416-8514-b76daed3455c@oracle.com>
-In-Reply-To: <0e5cf4db-8a69-4416-8514-b76daed3455c@oracle.com>
-From: Anna Schumaker <anna@kernel.org>
-Date: Wed, 19 Feb 2025 12:50:47 -0500
-X-Gmail-Original-Message-ID: <CAFX2JfnrYnV664Ri-GJHqO6R72D+NJh0wKQRiKeKQWsQVq_QyA@mail.gmail.com>
-X-Gm-Features: AWEUYZmlJVmxNQW2wPkxZPYr4I0e1aqLvM8sMvVGx2Y7icsiLY0AlDZFh7qSzZw
-Message-ID: <CAFX2JfnrYnV664Ri-GJHqO6R72D+NJh0wKQRiKeKQWsQVq_QyA@mail.gmail.com>
-Subject: Re: [RESEND PATCH][next] fs: nfs: acl: Avoid -Wflex-array-member-not-at-end
- warning
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, Tom Talpey <tom@talpey.com>, 
-	Neil Brown <neilb@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6-fjJv3LXTir1Yj@google.com>
 
-On Wed, Feb 19, 2025 at 12:49=E2=80=AFPM Chuck Lever <chuck.lever@oracle.co=
-m> wrote:
->
-> On 2/19/25 12:46 PM, Anna Schumaker wrote:
-> > Hi Chuck,
-> >
-> > On Tue, Feb 18, 2025 at 1:10=E2=80=AFPM Chuck Lever <chuck.lever@oracle=
-.com> wrote:
-> >>
-> >> On 2/10/25 2:48 PM, Chuck Lever wrote:
-> >>> On 2/3/25 10:03 PM, Gustavo A. R. Silva wrote:
-> >>>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> >>>> getting ready to enable it, globally.
-> >>>>
-> >>>> So, in order to avoid ending up with a flexible-array member in the
-> >>>> middle of other structs, we use the `struct_group_tagged()` helper
-> >>>> to create a new tagged `struct posix_acl_hdr`. This structure
-> >>>> groups together all the members of the flexible `struct posix_acl`
-> >>>> except the flexible array.
-> >>>>
-> >>>> As a result, the array is effectively separated from the rest of the
-> >>>> members without modifying the memory layout of the flexible structur=
-e.
-> >>>> We then change the type of the middle struct member currently causin=
-g
-> >>>> trouble from `struct posix_acl` to `struct posix_acl_hdr`.
-> >>>>
-> >>>> We also want to ensure that when new members need to be added to the
-> >>>> flexible structure, they are always included within the newly create=
-d
-> >>>> tagged struct. For this, we use `static_assert()`. This ensures that=
- the
-> >>>> memory layout for both the flexible structure and the new tagged str=
-uct
-> >>>> is the same after any changes.
-> >>>>
-> >>>> This approach avoids having to implement `struct posix_acl_hdr` as a
-> >>>> completely separate structure, thus preventing having to maintain tw=
-o
-> >>>> independent but basically identical structures, closing the door to
-> >>>> potential bugs in the future.
-> >>>>
-> >>>> We also use `container_of()` whenever we need to retrieve a pointer =
-to
-> >>>> the flexible structure, through which we can access the flexible-arr=
-ay
-> >>>> member, if necessary.
-> >>>>
-> >>>> So, with these changes, fix the following warning:
-> >>>>
-> >>>> fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexib=
-le array member is not at the end of another structure [-Wflex-array-member=
--not-at-end]
-> >>>>
-> >>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >>>> ---
-> >>>>  fs/nfs_common/nfsacl.c    |  8 +++++---
-> >>>>  include/linux/posix_acl.h | 11 ++++++++---
-> >>>>  2 files changed, 13 insertions(+), 6 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
-> >>>> index ea382b75b26c..e2eaac14fd8e 100644
-> >>>> --- a/fs/nfs_common/nfsacl.c
-> >>>> +++ b/fs/nfs_common/nfsacl.c
-> >>>> @@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
-> >>>>  };
-> >>>>
-> >>>>  struct nfsacl_simple_acl {
-> >>>> -    struct posix_acl acl;
-> >>>> +    struct posix_acl_hdr acl;
-> >>>>      struct posix_acl_entry ace[4];
-> >>>>  };
-> >>>>
-> >>>> @@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned =
-int base, struct inode *inode,
-> >>>>          xdr_encode_word(buf, base, entries))
-> >>>>              return -EINVAL;
-> >>>>      if (encode_entries && acl && acl->a_count =3D=3D 3) {
-> >>>> -            struct posix_acl *acl2 =3D &aclbuf.acl;
-> >>>> +            struct posix_acl *acl2 =3D
-> >>>> +                    container_of(&aclbuf.acl, struct posix_acl, hdr=
-);
-> >>>>
-> >>>>              /* Avoid the use of posix_acl_alloc().  nfsacl_encode()=
- is
-> >>>>               * invoked in contexts where a memory allocation failur=
-e is
-> >>>> @@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xd=
-r, struct inode *inode,
-> >>>>              return false;
-> >>>>
-> >>>>      if (encode_entries && acl && acl->a_count =3D=3D 3) {
-> >>>> -            struct posix_acl *acl2 =3D &aclbuf.acl;
-> >>>> +            struct posix_acl *acl2 =3D
-> >>>> +                    container_of(&aclbuf.acl, struct posix_acl, hdr=
-);
-> >>>>
-> >>>>              /* Avoid the use of posix_acl_alloc().  nfsacl_encode()=
- is
-> >>>>               * invoked in contexts where a memory allocation failur=
-e is
-> >>>> diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
-> >>>> index e2d47eb1a7f3..62d497763e25 100644
-> >>>> --- a/include/linux/posix_acl.h
-> >>>> +++ b/include/linux/posix_acl.h
-> >>>> @@ -27,11 +27,16 @@ struct posix_acl_entry {
-> >>>>  };
-> >>>>
-> >>>>  struct posix_acl {
-> >>>> -    refcount_t              a_refcount;
-> >>>> -    unsigned int            a_count;
-> >>>> -    struct rcu_head         a_rcu;
-> >>>> +    /* New members MUST be added within the struct_group() macro be=
-low. */
-> >>>> +    struct_group_tagged(posix_acl_hdr, hdr,
-> >>>> +            refcount_t              a_refcount;
-> >>>> +            unsigned int            a_count;
-> >>>> +            struct rcu_head         a_rcu;
-> >>>> +    );
-> >>>>      struct posix_acl_entry  a_entries[] __counted_by(a_count);
-> >>>>  };
-> >>>> +static_assert(offsetof(struct posix_acl, a_entries) =3D=3D sizeof(s=
-truct posix_acl_hdr),
-> >>>> +          "struct member likely outside of struct_group_tagged()");
-> >>>>
-> >>>>  #define FOREACH_ACL_ENTRY(pa, acl, pe) \
-> >>>>      for(pa=3D(acl)->a_entries, pe=3Dpa+(acl)->a_count; pa<pe; pa++)
-> >>>
-> >>> Trond, Anna -
-> >>>
-> >>> Let me know if I need to take this one via the NFSD tree. If not,
-> >>>
-> >>> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> Gentle ping: Still waiting for a response.
-> >
-> > If you want it, it's yours! :)
-> >
-> > I am planning a bugfixes pull request soon, so I don't mind taking it
-> > if you don't have anything else planned for 6.14 at the moment.
->
-> This change doesn't look like a "fix" to me, so I would include it in
-> nfsd-testing / nfsd-next, as long as you (or Trond) can send me an
-> Acked-by.
+On Fri, Feb 14, 2025 at 11:54:52AM -0800, Brian Norris wrote:
+> On Fri, Feb 14, 2025 at 12:45:52PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Feb 11, 2025 at 04:23:53PM +0800, Tsai Sung-Fu wrote:
+> > > >Because you cannot set affinity for chained MSIs as these MSIs are muxed to
+> > > >another parent interrupt. Since the IRQ affinity is all about changing which CPU
+> > > >gets the IRQ, affinity setting is only possible for the MSI parent.
+> > > 
+> > > So if we can find the MSI parent by making use of chained
+> > > relationships (32 MSI vectors muxed to 1 parent),
+> > > is it possible that we can add that implementation back ?
+> > > We have another patch that would like to add the
+> > > dw_pci_msi_set_affinity feature.
+> > > Would it be a possible try from your perspective ?
+> > > 
+> > 
+> > This question was brought up plenty of times and the concern from the irqchip
+> > maintainer Marc was that if you change the affinity of the parent when the child
+> > MSI affinity changes, it tends to break the userspace ABI of the parent.
+> > 
+> > See below links:
+> > 
+> > https://lore.kernel.org/all/87mtg0i8m8.wl-maz@kernel.org/
+> > https://lore.kernel.org/all/874k0bf7f7.wl-maz@kernel.org/
+> 
+> It's hard to meaningfully talk about a patch that hasn't been posted
+> yet, but the implementation we have at least attempts to make *some*
+> kind of resolution to those ABI questions. For one, it rejects affinity
+> changes that are incompatible (by some definition) with affinities
+> requested by other virqs shared on the same parent line. It also updates
+> their effective affinities upon changes.
+> 
+> Those replies seem to over-focus on dynamic, user-space initiated
+> changes too. But how about for "managed-affinity" interrupts? Those are
+> requested by drivers internally to the kernel (a la
+> pci_alloc_irq_vectors_affinity()), and can't be changed by user space
+> afterward. It seems like there'd be room for supporting that, provided
+> we don't allow conflicting/non-overlapping configurations.
+> 
+> I do see that Marc sketched out a complex sysfs/hierarchy API in some of
+> his replies. I'm not sure that would provide too much value to the
+> managed-affinity cases we're interested in, but I get the appeal for
+> user-managed affinity.
+> 
 
-Acked-by: Anna Schumaker <anna.schumaker@oracle.com>
+Whatever your proposal is, please get it reviewed by Marc.
 
->
->
-> --
-> Chuck Lever
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
