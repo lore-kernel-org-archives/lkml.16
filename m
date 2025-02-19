@@ -1,51 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04386255E33;
-	Wed, 19 Feb 2025 22:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F94917CA12
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 22:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740004066; cv=none; b=jidpNVO9l7acKGFBYCle/uIrHmfttGe9kEiGyE1x5OIs1ZWhjVi/o01MwiUTpXYxTVkn8QXCFYUVfBmu2kCBFIs9mjgJEfoPv1Iz1Hx7f9mfIUf02DRfQI8co9ri91kzNN0KJsXBX0mmeNTB3zLEKM2dmBpDFNf43mottScuiHY=
+	t=1740004314; cv=none; b=FUrKyVF4ZD9wwoU8pP+a6i/IuqJo1tGSL3sW+B40FnQfWifdcoYJosYQ/VhG6WId5j/4oCC1ei7AE969UPH+dw9kmHZL5RN1KqPWCwO/NinXy8gHqTaPxXa//J/5Kb3OEsuBw1qxnfl5D5b265CJXl1YDrheSmb+20fvJycHetc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740004066; c=relaxed/simple;
-	bh=pxp1S3DrfSjlSFcTpmmei+K9bf/p1MkqUCDf1l9DrKM=;
+	s=arc-20240116; t=1740004314; c=relaxed/simple;
+	bh=BfXhadmmn5BoTgNdI8ix0+l4RUWut+XawK7kBFNdzVM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Asa+eiQiPOkFlxjXz0j1WKbuXvG/G8LJeU5BLIZnbho+B8BxpsTzXzqqfCxD9xaE3u/hxTuQNKgYqXmLenJMrc2B36aKE33pxyfqfHjQiPLRgQG3GhHLEilyWqWaLjv6YfjsSfrWIVSvJxsjqwjjPmpM8JaGL2ofNmlilczmWok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9fJ/C8h; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=f27TukNhAHBYqVKeOR6guDzfGzwICtM2ohOFYxl5J118xZQ24ezRFeOFywKQJYDey69IMAFSoyoD//7cxo90+xPXzeYy1YDYe94jkuVmT39eIh7LlQXtrlU6hE5VpAJxzFvEeRRIyr503UG05QPxrBhRBQvUpC0l8xUSaGlHAY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VLDXloDk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9fJ/C8h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17C3FC4CED1;
-	Wed, 19 Feb 2025 22:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740004065;
-	bh=pxp1S3DrfSjlSFcTpmmei+K9bf/p1MkqUCDf1l9DrKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X9fJ/C8h4dFds9YN9u/wZk9rHf7MK+AAdinHlBP8Fz2k5VLwcB9OURtkKOVmymaVw
-	 6p4/nyPWmyt8axtX1u9yndpqN8kN0RkOk1CsmOOjfUZH6dsY7Kb5T091dwmgLgFUgl
-	 2scaaSvCHrVMTlJlmJdURBVzXLei1kjRuwnuC+fHlvJIihKI2mvoK0TsIb++Ay7r5U
-	 K7D1z4P8oWNqXH+DdWjbqLfx+pZje914HdOv52g4iJYmKIRQScFMvBuaXlDoeIvfT8
-	 /2IVSsNS7hku6T02ubVx5Zhutoc71JK6S/Te6Od9ur7Ww2iVPEMNRDGYmvzF/FnBkQ
-	 gXDWCtYjbIDlQ==
-Date: Wed, 19 Feb 2025 14:27:43 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf parse-events: Tidy name token matching
-Message-ID: <Z7Za30xyVUQWI1tV@google.com>
-References: <20250109175401.161340-1-irogers@google.com>
- <CAP-5=fWghT8+pBFVxn9JDbqHU9NPy9mgyT8Ee=pTdkCKxRoJgA@mail.gmail.com>
- <CAP-5=fWZAk7XqtL+=CanefkuFxhDsJ22+-uHkrxXi4g8123oew@mail.gmail.com>
- <Z7ZD5phOOCbKggrn@google.com>
- <CAP-5=fXeZM7iWNQq0ar1HmAwWrH4HAHqD3F=ueB=jaw-2UMn_w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLDXloDk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740004311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nwVRr1A3F8af1I0I1pL7CZB8ciVv71prpzpBnOe/YHU=;
+	b=VLDXloDkTkGSRFP1kwDAEBDJDxYWwAh7+hmxJGzo9dO03oZnv3GEljan7IjfBjtp2DLhkZ
+	zv0zmd5tfLlMjakPNb9Y0oIqfO4x3Zu//IS3aKjVhYDsXcKHhy0bsHOJqAIQhejE038myE
+	y68+hLRImorYKHMFfs6xdC7YVvATmNY=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-jYfDdWmwP0mTDqSg3x61gQ-1; Wed, 19 Feb 2025 17:31:49 -0500
+X-MC-Unique: jYfDdWmwP0mTDqSg3x61gQ-1
+X-Mimecast-MFC-AGG-ID: jYfDdWmwP0mTDqSg3x61gQ_1740004309
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-3f3a3c8eb5cso98644b6e.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:31:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740004309; x=1740609109;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nwVRr1A3F8af1I0I1pL7CZB8ciVv71prpzpBnOe/YHU=;
+        b=nqXcgHQSfqIr2cshrENzv/5gVQeQN5MM7YcSZZ3ke4oqwjjGl6++cWsoSzu08U6351
+         o7Clqmbx/e7iblbnVnYO3UMMZcmX8NnyOKA8Awh8j2nSmXvRusdghiWKD76zazSwYy9O
+         EnkvvnBl4pfV3nfhmQ3Cib8lVvqK4SrM+iAZKzUSQESCCAFhzhJ5LhbnMUOitUd8awOK
+         ZNMdOuTPHmH5lB/i621zRbRXx7gmIEYYFmLnqReB0lDnA3DmJDQoyufxjnp6n7mEVrH4
+         E2nT5QxQ9Z/E+qvcevMqmWRZGWGX6dJ3YK8BS2bIpcDvk68aWnmOoSfSshhz5JecmAnR
+         yIXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRZYDB8n4tp12O9AHmoKXC6ANIYudk/TuT6sLdqIgMuEMfapZmYhJhHVbzdUBwnxOxvECMCyzvvJGQIts=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsuQYEaokNzJpWjMVevxUVfPERq8p4vkyv3lsam5k2dmFE6s3/
+	U6QmvaZCEamyFDgC/FSQ4lpiFRuFN7/oF7wU765M6ymO2Xca3RqhWinGk51/EF8ndBnynOYldNz
+	7wUEgCqGhkLl+KZ9k0tB6N5Ae3f1jLERkOWIWQVLpG5OcggFqakNxYAp+fqN2sA==
+X-Gm-Gg: ASbGncuCIFz9G0T/imI0jeDUdiflMxpWhFesUHIZrjUkGG3S1ahpOBriP0drKougfzO
+	f1HtrFL1EJEKyzV0RkZj2fPYq96iVOlIuXbMTvSW+4c2PuWHoxdqJgPYUNUIiNuYcAGO6dp6cJW
+	1Gfrw+CHWUc+LFLDQgOuQ3dGsDW8ipYgBaS8xnaLM4VP8b89qOm2IrgXOB224q9T225Fv46LnVE
+	TDjFFWJTLmR1OTnie61GJSzm/pIIhke9z8AfHa3J4XutDtrwIL36cZ8q0A=
+X-Received: by 2002:a05:6808:1898:b0:3f4:eee:1d34 with SMTP id 5614622812f47-3f40eee2300mr4932016b6e.31.1740004309203;
+        Wed, 19 Feb 2025 14:31:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHM2PFa4HNvuvw4ma9z+4Qp4NktXSsfaVezIT+bwiaMvhEnH644AQ6aAcn9dRdBsyRDf81xfg==
+X-Received: by 2002:a05:6808:1898:b0:3f4:eee:1d34 with SMTP id 5614622812f47-3f40eee2300mr4931990b6e.31.1740004308847;
+        Wed, 19 Feb 2025 14:31:48 -0800 (PST)
+Received: from x1.local ([2604:7a40:2041:2b00::1000])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f3ffd5a695sm1832129b6e.3.2025.02.19.14.31.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 14:31:48 -0800 (PST)
+Date: Wed, 19 Feb 2025 17:31:43 -0500
+From: Peter Xu <peterx@redhat.com>
+To: Barry Song <21cnbao@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, zhengtangquan@oppo.com,
+	Barry Song <v-songbaohua@oppo.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Brian Geffon <bgeffon@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Lokesh Gidra <lokeshgidra@google.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+	Nicolas Geoffray <ngeoffray@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Shuah Khan <shuah@kernel.org>,
+	ZhangPeng <zhangpeng362@huawei.com>
+Subject: Re: [PATCH RFC] mm: Fix kernel BUG when userfaultfd_move encounters
+ swapcache
+Message-ID: <Z7Zbz7_39JZgdLYa@x1.local>
+References: <20250219112519.92853-1-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,105 +96,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXeZM7iWNQq0ar1HmAwWrH4HAHqD3F=ueB=jaw-2UMn_w@mail.gmail.com>
+In-Reply-To: <20250219112519.92853-1-21cnbao@gmail.com>
 
-On Wed, Feb 19, 2025 at 02:11:43PM -0800, Ian Rogers wrote:
-> On Wed, Feb 19, 2025 at 12:49 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Wed, Feb 19, 2025 at 11:02:40AM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 10, 2025 at 11:23 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Thu, Jan 9, 2025 at 9:54 AM Ian Rogers <irogers@google.com> wrote:
-> > > > >
-> > > > > Prior to commit 70c90e4a6b2f ("perf parse-events: Avoid scanning PMUs
-> > > > > before parsing") names (generally event names) excluded hyphen (minus)
-> > > > > symbols as the formation of legacy names with hyphens was handled in
-> > > > > the yacc code. That commit allowed hyphens supposedly making
-> > > > > name_minus unnecessary. However, changing name_minus to name has
-> > > > > issues in the term config tokens as then name ends up having priority
-> > > > > over numbers and name allows matching numbers since commit
-> > > > > 5ceb57990bf4 ("perf parse: Allow tracepoint names to start with digits
-> > > > > "). It is also permissable for a name to match with a colon (':') in
-> > > > > it when its in a config term list. To address this rename name_minus
-> > > > > to term_name, make the pattern match name's except for the colon, add
-> > > > > number matching into the config term region with a higher priority
-> > > > > than name matching. This addresses an inconsistency and allows greater
-> > > > > matching for names inside of term lists, for example, they may start
-> > > > > with a number.
-> > > > >
-> > > > > Rename name_tag to quoted_name and update comments and helper
-> > > > > functions to avoid str detecting quoted strings which was already done
-> > > > > by the lexer.
-> > > > >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > >
-> > > > Ping. This patch addresses name parsing inconsistencies, in particular
-> > > > events may start with a number without a PMU, but not with. It also
-> > > > aims to give better names to patterns than name_minus and name_tag
-> > > > (with term_name and quoted_name respectively) that have drifted from
-> > > > their original meaning and become to me less than intention revealing.
-> > >
-> > > Ping.
-> >
-> > Sorry for the delay.  Can you please give an example for better
-> > understanding if there's a change in the behavior?
-> 
-> The example in:
-> https://lore.kernel.org/r/20240510-perf_digit-v4-3-db1553f3233b@codewreck.org
-> is `perf trace -e '9p:*'` which allows the number to start a
-> tracepoint name, but what is true for tracepoint names is also true
-> for event names. I lack the tracepoint but the patch here is making
-> that work if the event/tracepoint is specified with a PMU, so:
-> 
-> Before the input is just seen as broken:
-> ```
-> $ perf stat -e 'tracepoint/9p:9p/' true
-> event syntax error: 'tracepoint/9p:9p/'
->                                \___ Unrecognized input
-> Run 'perf list' for a list of valid events
-> 
-> Usage: perf stat [<options>] [<command>]
-> 
->    -e, --event <event>   event selector. use 'perf list' to list
-> available events
-> ```
-> 
-> After the input fails because the event wasn't found:
-> ```
-> $ perf stat -e 'tracepoint/9p:9p/' true
-> event syntax error: 'tracepoint/9p:9p/'
->                     \___ Bad event or PMU
-> 
-> Unable to find PMU or event on a PMU of 'tracepoint'
-> 
-> event syntax error: 'tracepoint/9p:9p/'
->                                \___ unknown term '9p:9p' for pmu 'tracepoint'
-> 
-> valid terms: config,config1,config2,config3,name,period,percore,metric-id
-> 
-> event syntax error: 'tracepoint/9p:9p/'
->                                \___ unknown term '9p:9p' for pmu 'tracepoint'
-> 
-> valid terms: config,config1,config2,config3,name,period,percore,metric-id
-> Run 'perf list' for a list of valid events
-> 
-> Usage: perf stat [<options>] [<command>]
-> 
->    -e, --event <event>   event selector. use 'perf list' to list
-> available events
-> ```
-> 
-> But the patch is just about making the name term more consistent and
-> cleaner, the weirdness above wasn't its main point, I want the code to
-> be easy to read and understand.
+On Thu, Feb 20, 2025 at 12:25:19AM +1300, Barry Song wrote:
+> @@ -1079,9 +1080,19 @@ static int move_swap_pte(struct mm_struct *mm,
+>  			 pmd_t *dst_pmd, pmd_t dst_pmdval,
+>  			 spinlock_t *dst_ptl, spinlock_t *src_ptl)
+>  {
+> +	struct folio *folio;
+> +	swp_entry_t entry;
+> +
+>  	if (!pte_swp_exclusive(orig_src_pte))
+>  		return -EBUSY;
+>  
+> +	entry = pte_to_swp_entry(orig_src_pte);
+> +	folio = filemap_get_folio(swap_address_space(entry), swap_cache_index(entry));
 
-Ok, so I guess there's no behavior change from the users perspective in
-this patchset.  Do you plan to add support for the tracepoint name in
-the config term (like tracepoint/9p:9p/) later?
+[Besides what's being discussed elsewhere..]
 
-Thanks,
-Namhyung
+swap_cache_get_folio() says:
+
+ * Caller must lock the swap device or hold a reference to keep it valid.
+
+Do we need get_swap_device() too here to avoid swapoff race?
+
+> +	if (!IS_ERR(folio)) {
+> +		folio_put(folio);
+> +		return -EBUSY;
+> +	}
+> +
+>  	double_pt_lock(dst_ptl, src_ptl);
+>  
+>  	if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src_pte,
+> -- 
+> 2.39.3 (Apple Git-146)
+> 
+
+-- 
+Peter Xu
 
