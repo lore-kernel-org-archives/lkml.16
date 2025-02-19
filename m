@@ -1,91 +1,115 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC8F1DE4F1;
-	Wed, 19 Feb 2025 11:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3AB1DFE16
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739966290; cv=none; b=otgaLKXnJ13HyS/5VkUg0jVhQRWbEB33kX2n5JR7ePxFC7yEJSrj2FvrersFtQIUv+0aelHWlQKV6oFhumdLtTJx10c6HIjzzjrn/3jLiXxdvZ6pRGHUIXB1QXMzsIELK3bWM0nb5+gEVemzximxAuun6EsE/PtNOi7O0G5nLMU=
+	t=1739966302; cv=none; b=ThUIurD4tteA7qHB3UJlrVFfW3bGvTuL/2voXM5Z8/4cJRZ+W6i91mKPFTehFLOtNB8rwZU1zCUAUVQzCffxVKSK0BS06+66obciKf4+qULtzf/2tpmWJOyO+jFDY2C48DR8Ib64FG61Ymyds4YB58HHVmMfg9vcFMK6e0iEKJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739966290; c=relaxed/simple;
-	bh=yfucNtav9zosEn23eavh+hcBR39Pgv6g7EaIOb9LX+w=;
-	h=From:To:Cc:Subject:MIME-Version:Content-Disposition:Content-Type:
-	 Message-Id:Date; b=pNB9KTp5ULPG+RE8nvrZdL0Vni52IyDk4en4vfErNbAT5XwOUCXlxY2je2rVZDZSHMp+KT3+YdIJM3WDqdfP7QfpPM4gp+MMItqZ0d5H45oeNgN0d6N7HskiyBjJhmteWi7S+TWWDdoTipeqG/QVIxvq9VW4c7xM3YwVK8ppq6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=POu1JT8g; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1739966302; c=relaxed/simple;
+	bh=IQwB3NFG8/IhCwRhCtQX9kYWbIOJ6ONhh9w6/Sqv+yM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=euIBlJJKfH7H02P2BDRnOQeSwQ1ZvYbZIAB4P4X92s98DcljYgBprBRUthsfOH6l+699miPOrXGgbE0FGuRnQeeg+jhfxXWuN/zsgCtCRvpHXoZoHT7DCxIr0UWFaVbfn2r5p1NbBtalVxG9cQNKE0yG3mClekMHJHkVG2JFIwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=l9XZjGoK; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="POu1JT8g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
-	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-	Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kpNp8MjIizYb7OH3AFJBJFxIeGnBoky4xSMY7bm6YaM=; b=POu1JT8gRqxYf6k2RglvMqqRcU
-	5E3AVChz13gXtmPBOcmfbqXveOI4iTx00Si/PAUESwrE837IShuGE9f8lYTcv5dSbogmxMCf3V2yz
-	33dAvKrQWiPtrDnLzLa8bQaRNHGiIcZheGBd9f1J0wb1WsKM5rrVZVOdWb9zJmVzsVpJUqzbTpE2x
-	6yxTjUA+Hc3UTz8JS7rRgs0HfyyPojCAMlT/1oNWJ99oHUgkDYrPshaRFOYoAMph0fS1WIrHIKM9E
-	FlJNQTl+TgZymAu1jFkAF+YgDjn+j7OJpDBeo7O9f5NZhz1T5SGDQ7M4XqT/aQ6ZM7IAur+UYQ9M9
-	EI7TY5+A==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:32898 helo=rmk-PC.armlinux.org.uk)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <rmk@armlinux.org.uk>)
-	id 1tkiiH-0005b1-2e;
-	Wed, 19 Feb 2025 11:58:01 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
-	id 1tkihy-004TEP-0O; Wed, 19 Feb 2025 11:57:42 +0000
-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"Jan Petrous (OSS)" <jan.petrous@oss.nxp.com>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH net] MAINTAINERS: fix dwmac-s32 entry
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="l9XZjGoK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1739966297; x=1740225497;
+	bh=1yjPbPUkyS2rXPiH+2wA1L6mLSmah2RfaLYZpwcCsXs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=l9XZjGoKFBcUwlPCk+rTDU+AsAOQO8vTEBzcOLWwuyaqckUcQpdAREHDpd/pAOz15
+	 rcXhaVq3u1ekNK4R/bJ6MTuB0gJ1iUbbxAWJz9fhNXVHtdiSqi1PSpOKb9yw7nVgL5
+	 gtbkr1BxgvXq4+Ie8yxCgw6twpVg4squfulBavusGIN2oz9llaxligHRITcUkGibDm
+	 wNNCZfLggrtrnPO1OL1dVkFuHkUGnfvRucsBquV1ugAoAh7m6suiH3bs426vHqzSPi
+	 ntvkGXJWhHyRcEbiLCdMGzi3TgeuqgxJuwcCocUnafqGJw+R5IjAAMlwwuSp8RUvhN
+	 o+Ac7F/Q0eAkA==
+Date: Wed, 19 Feb 2025 11:58:11 +0000
+To: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 01/14] rust: time: Add Ktime::from_ns()
+Message-ID: <693e39f6-70ac-4752-b371-74a3bd1fcf16@proton.me>
+In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-1-48dedb015eb3@kernel.org>
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org> <20250218-hrtimer-v3-v6-12-rc2-v8-1-48dedb015eb3@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 32e962c8e2da76ac38d1e5ab0428cf13ed85b6af
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1tkihy-004TEP-0O@rmk-PC.armlinux.org.uk>
-Sender: Russell King <rmk@armlinux.org.uk>
-Date: Wed, 19 Feb 2025 11:57:42 +0000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Using L: with more than a bare email address causes getmaintainer.pl
-to be unable to parse the entry. Fix this by doing as other entries
-that use this email address and convert it to an R: entry.
+On 18.02.25 14:27, Andreas Hindborg wrote:
+> From: Lyude Paul <lyude@redhat.com>
+>=20
+> A simple function to turn the provided value in nanoseconds into a Ktime
+> value. We allow any type which implements Into<bindings::ktime_t>, which
+> resolves to Into<i64>.
+>=20
+> This is useful for some of the older DRM APIs that never got moved to
+> Ktime.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Fixes: 6bc6234cbd5e ("MAINTAINERS: Add Jan Petrous as the NXP S32G/R DWMAC driver maintainer")
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Are these older DRM APIs on the C side, or on the Rust side? If they are
+on the Rust side, we should just move them to Ktime, no?
+
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
+
+This seems wrong considering the `From Lyude Paul` line above :) (or is
+it possible to review your own patch?)
+
+The patch itself looks good, so iff the above question is answered with
+"the older DRM APIs are on the C side" then:
+
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cheers,
+Benno
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0bfcbe6a74ea..4795b6209711 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2877,7 +2877,7 @@ F:	drivers/pinctrl/nxp/
- 
- ARM/NXP S32G/S32R DWMAC ETHERNET DRIVER
- M:	Jan Petrous <jan.petrous@oss.nxp.com>
--L:	NXP S32 Linux Team <s32@nxp.com>
-+R:	NXP S32 Linux Team <s32@nxp.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
- F:	drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
--- 
-2.30.2
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+>  rust/kernel/time.rs | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+> index 379c0f5772e57..87e47f2f5618d 100644
+> --- a/rust/kernel/time.rs
+> +++ b/rust/kernel/time.rs
+> @@ -8,6 +8,8 @@
+>  //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.=
+h).
+>  //! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
+>=20
+> +use core::convert::Into;
+> +
+>  /// The number of nanoseconds per millisecond.
+>  pub const NSEC_PER_MSEC: i64 =3D bindings::NSEC_PER_MSEC as i64;
+>=20
+> @@ -63,6 +65,12 @@ pub fn to_ns(self) -> i64 {
+>      pub fn to_ms(self) -> i64 {
+>          self.divns_constant::<NSEC_PER_MSEC>()
+>      }
+> +
+> +    /// Creates a new Ktime from the given duration in nanoseconds.
+> +    #[inline]
+> +    pub fn from_nanos(ns: impl Into<bindings::ktime_t>) -> Self {
+> +        Self { inner: ns.into() }
+> +    }
+>  }
+>=20
+>  /// Returns the number of milliseconds between two ktimes.
+>=20
+> --
+> 2.47.0
+>=20
+>=20
 
