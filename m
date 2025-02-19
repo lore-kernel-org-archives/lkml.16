@@ -1,291 +1,179 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2041.outbound.protection.outlook.com [40.107.101.41])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2050.outbound.protection.outlook.com [40.107.20.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562051E5718
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCC91DFE36;
+	Wed, 19 Feb 2025 13:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739971441; cv=fail; b=sLNOFJHSTv2e995Vnts18YEY7pi2wroZTaQf9/FdrFxoJeME5SlvkOLarBV6SHd6wQZL2XBKLBMV+kMzAQvqmyJHK+WI2nRLJbTSJGF8IoIGdKtHfDmrkJtFp+vhqVb76u33JX+TOutmXTQUaKzyiazz1vZKCp31P6OcPcsOn0k=
+	t=1739971503; cv=fail; b=fpZzWB2Gp2IEsESPD7dCxmROAZwDAK22t/TTtSXSuxgrl9tDwZmT4bTkWS2JzxogO5ycR4yr3EFdqHYMvpJPlY1fNrIfsig4YixzYkrdUfpS5p2j6eAxqi34JVtlFKQIJju4kPkIpL7Dwq8DzJ0I29XoTF6Oz+UnRYW+xtULU34=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739971441; c=relaxed/simple;
-	bh=B0DPKv7jQw7NuyJCR8wQHqEykJKcBruSMnbV6Bja4K4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SVWN/ob2qAPsSmlGCf5UBbSgeRNDa4PPiCII+ztWjGzrLzj9EGdbYzg2C3bFuhn9AE/23ci4LKQvm3uTQjpN1ghO/ARUVLEYtZ0rqfkR5FFCJSolJbYCahtcSj2pvtroroKklFeZMRpbSGb4U4qEjW+Eg5QrXXPw9eWZrmLTI+c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NpNAPF8R; arc=fail smtp.client-ip=40.107.101.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1739971503; c=relaxed/simple;
+	bh=7mgR0h3UHtUlg4rc+lsgU5soSeVNmb0DbBK1yjStrhY=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=nbT+cLxsgaqyye8+QOVRIIkVf/JcvPCGzyvnxzTYm6vIFDJZinzxT9ayT+HtOKrD0JdL9j2jaBOqQHrjoQLw3r2NaAaN0+ESpLC0BK8DV6Ti75suzTF/z+l3uIafPemtllj56uLTVkHH6d3d+77S3YDTcJWpZwlerwH66UytVH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=H4Tfm4y+; arc=fail smtp.client-ip=40.107.20.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NpNAPF8R"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="H4Tfm4y+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZDBPtxklDnWz0Ck5gog0FTEbg6orUt9ihOth1GbozKHFBTs/yaj569i/zXme8gJqxBsos8cOBw8uSI+s+BEQc9t+JS9bYDXI9vwzHFnK4HPc9GPIG67O31I11Tip6hmOQo9vQSFAiEQMHVcCkjIGhN0FOUDKib+CjPbsrlNHiYjbWMjEFRSjKkqXtvj0GxC1Esbi1/f5IqQ8tybhC8GDcrxi/jA8cil5YbOEJQNVnskfhOYDrHVBsBS4xL5lvOsFUW3Ypbsc4ROBC7j7qP27FIe9vf8b3FiEgwZejaBjE71VTWb+lCRIfkrUDDggBe7GsQKoRjk5ofLTYL1ZdskiBw==
+ b=Z4x+pz+10aQqbPJB+qaF+Iv4U/3gmMNiT32SeGtDOxhXDEaNmxl85k/vcpCG3M2Pth8OjuHQ/n0ZY2ppqAT3KAPstsoOd0YJUdtgLZJjxZWy4z77d+8aig6VZGcKNBN74bqelw+QlQ87QfADi5yf5Nt0jAWBGM6RpHlje1E157vEplCBrNgZPQPHlaMVcingL9t6unq/8V5EDOvD4Q2AlFBqvVCagTW2L/JCXoggj4NHb/rsX0+OPquwIOiWq16PhwaNMZh5XqzmMcMsIl0NpuuJYR8lcwI3MooYM2HoZl1TkyU9wx5lh15zImBOG3WbHUbBZEOoJrruFCb4FJaoNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rnQhyl/HscOCHSJ2YHZuaB0yhIxU5broTHsbK8+pb9Q=;
- b=RLsQKoDzCeSfzWtRd+8R89fJa2CzZN60FmWp0YTYKs4TWRUH2Eu4hQVnlm12IVOlvQ/bCvL4i4puBQxWsyW40Pi3k2hnKDmNJH7U8oNm38LOhsZ2HW4zhnMtE+6ZTiMbDDa17DbhrvIhHZZ0e+83wqCHbQWRYt/wZQqEsbPRKLgLyO4q/xQj5TExYCTsFalxAAI6b6Riba0SEqNYO2pfp49E8wLf/2dmFVZd9ulP7cBQVxmwZAqS6PUb4hFbeB3OOyeo/tov9p53I59SQuL4jikU5HYvX2vakwMIaWDNZMGdn/d3c7zn/XdTSJmCDbgW4XT2bVg8AFruJxmg25qgUA==
+ bh=SgoIhb7v2nUvVGSyYkSzqTYVeqIkDV616VOQwAYGtNo=;
+ b=MkGIXCG4Imi2saglYP85L/RTFGWX1jzUzY4OT8X7WvBi2odUdcRrZDZIkevQ7qx5JJfGd5J10cPImni/PQ3nRmYzjybqNEQRq6nIG/AZglazsjXyH7XcH/Gl/l1vaAFLiONcrLBGoMc+dSDJ3GWZMqQevLLWRnHcS8j5SoDkQ5QFSh/A3/9igUzpWchrJQ9zcWD1keC30GyXdr0P8+m9f+QMB9xNW0huFK/AU10DtIaMM4gmX44e/cN46Ge8qPLl24GAbmHIfzHPPnknKo8jurEfIpBbTsz0kt2g4KY5jXv7cw/Jir17wxtJNypN8toQoFj7D4ECS4i8B9DkdjpPNw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rnQhyl/HscOCHSJ2YHZuaB0yhIxU5broTHsbK8+pb9Q=;
- b=NpNAPF8Ro8q/dhkWQSreAfXiODyKY30uXI5gK6qK8aVOjrw4XNLL7qvfQaY3ahJ2NPDUkMTDvN3wG+Hv0nhephtWFNUkpuwEAIE7wyqvy5TVK2GeW6w64VlnvPrJsIT8r1MLf9JtRyosLwUHneoUPXWW3sZAudwwzL3WjoeRQGI=
+ bh=SgoIhb7v2nUvVGSyYkSzqTYVeqIkDV616VOQwAYGtNo=;
+ b=H4Tfm4y+4B/UKjAYHe+PhT19+lpDaLVMrQqGh3DYFw/0GuooU2EQu+na63eWDT/0ik8AHXSf6e5M6i82FRYzNL1nwTK6JcqDItwYvR4ENTZQFQTJTG8mfLjbmA3Li1ztIgvXlOu4puNqonKNiXXqWOA33+WIKfs+5tD5kT0CMVi05A7xYR0/2XYVBGBxXZOEWCfP4fiprdh1D2IEr9ZEEeds6MU/26w7YimAhtz0jfcRCvh2AQ611pvEUNHGD7lSj6Lk3F59ynAfWQPr4+tkJ6BZ+GsKkwoJw9O8kOSMAl21k6w0nJ9v5FBsluZDzUz/XvdmEKSeLCOLiPEWZUmWng==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by CY8PR12MB7316.namprd12.prod.outlook.com (2603:10b6:930:50::11) with
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU7PR04MB11163.eurprd04.prod.outlook.com (2603:10a6:10:5b3::14)
+ by PA1PR04MB10841.eurprd04.prod.outlook.com (2603:10a6:102:487::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Wed, 19 Feb
- 2025 13:23:56 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
- 13:23:56 +0000
-Message-ID: <e8dfc3df-69d6-46ba-81db-4a04484fb7c3@amd.com>
-Date: Wed, 19 Feb 2025 18:53:46 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 24/24] perf: Make perf_pmu_unregister() useable
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "mingo@kernel.org" <mingo@kernel.org>,
- "lucas.demarchi@intel.com" <lucas.demarchi@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "willy@infradead.org" <willy@infradead.org>,
- "acme@kernel.org" <acme@kernel.org>,
- "namhyung@kernel.org" <namhyung@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "jolsa@kernel.org" <jolsa@kernel.org>,
- "irogers@google.com" <irogers@google.com>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20250205102120.531585416@infradead.org>
- <20250205102450.888979808@infradead.org>
- <1f4e4bb1-ba5e-4e5f-b6e3-e7603e3d6b0e@amd.com>
- <20250212124945.GH19118@noisy.programming.kicks-ass.net>
- <57fa247d-9c85-4f20-9723-d568272651f9@amd.com>
- <20250214202438.GB2198@noisy.programming.kicks-ass.net>
- <a3b1a1fb-03a4-4f67-9f44-9157ee421913@amd.com>
- <d585f337-5ce7-4a02-b890-5f3888e59ad0@amd.com>
-Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <d585f337-5ce7-4a02-b890-5f3888e59ad0@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0162.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:c8::6) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Wed, 19 Feb
+ 2025 13:24:57 +0000
+Received: from DU7PR04MB11163.eurprd04.prod.outlook.com
+ ([fe80::3a74:80e4:4144:62db]) by DU7PR04MB11163.eurprd04.prod.outlook.com
+ ([fe80::3a74:80e4:4144:62db%2]) with mapi id 15.20.8398.021; Wed, 19 Feb 2025
+ 13:24:57 +0000
+From: florin.leotescu@oss.nxp.com
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Shych <michaelsh@nvidia.com>,
+	linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: viorel.suman@nxp.com,
+	carlos.song@nxp.com,
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	Florin Leotescu <florin.leotescu@nxp.com>
+Subject: [PATCH v2 0/3] emc2305 driver updates
+Date: Wed, 19 Feb 2025 15:32:18 +0200
+Message-Id: <20250219133221.2641041-1-florin.leotescu@oss.nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM0PR02CA0159.eurprd02.prod.outlook.com
+ (2603:10a6:20b:28d::26) To DU7PR04MB11163.eurprd04.prod.outlook.com
+ (2603:10a6:10:5b3::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CY8PR12MB7316:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7461ba33-a625-4dcf-9d1c-08dd50e8a912
+X-MS-TrafficTypeDiagnostic: DU7PR04MB11163:EE_|PA1PR04MB10841:EE_
+X-MS-Office365-Filtering-Correlation-Id: 787fee03-33cc-4f42-a1e2-08dd50e8cdce
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SzJqN2F0TnFzdFozcEo3WVVvRDdhOHpZQ3ZqSWxNTmNLRUhkOHUzZ1pwc212?=
- =?utf-8?B?dFpFRmxFUm9yRk5vdmU2VExrckFXajZBL2twWUVEb3pEUm1EMW45OUExdmR6?=
- =?utf-8?B?VUk4a05tNlNvaE54M0Y5TGpBcTlsOUVydnpXanFDVitDVEFTTFRnMnVSTklH?=
- =?utf-8?B?VEpySkhDcUtJOEsvRG5OL1ZKeWE5Zk9OMXE1T3AzMWppU0Z0YjA5QVROV1d4?=
- =?utf-8?B?VWxUUVhPeWducTU5bWJWZWUrZTllQnhKK1kvYW1iQWNWU0JEK2YwKzE0SlYw?=
- =?utf-8?B?YS9jakxEL0pzUVFiK1Jib2tyZXRmQzlac3pnczFKdlJSdkI2bkJkL3RsRkd4?=
- =?utf-8?B?a2N5ak5uR25WaGJadVljbWpQSHNtNExHWUw5NzdGRC9qbm1yalRkdnJnZWU1?=
- =?utf-8?B?a1JIS2tDVXI5Q1lSMmc3eU90dllGY0RvdWVIemhJSzdYaUxpa3g2V0hEMHJy?=
- =?utf-8?B?Z3BHeHRlMG8zRHQ5ZzlpbHArUm9UbDF0a3ZCbGZROHF1cE44UWN6Qkc0NU9N?=
- =?utf-8?B?K21neVNSazloNzlwK3pHK2JZdGpuR1ZTV01iZGE4REpjL0dIR3kydHJoSkhk?=
- =?utf-8?B?MUZiR3lCWkkzTlJnWm0xNm1uRDRudUJ3MWVoNlpFeUtibXJ5aXR4M2c3bDF1?=
- =?utf-8?B?aUZqRnNpTDJtT1BDTVU3NjNTWHpkY3kwTkMxdXFOSHJHeWl6M25KS04xQzNY?=
- =?utf-8?B?eC85Z05SUWlCN2phUDRxRlRPeFlWNkFWTHZOamxYZzBnM1pJSzh3T09RRUl1?=
- =?utf-8?B?ZnR6dkxLQlFFbk9LaUh0NlM4L1FnY3RqTFB3b0hkdUN5QTJubmxFNjY3Slo1?=
- =?utf-8?B?U09NcUc4NGZoeWtTYitud2RKMHM2V3JkdjNZaCtMb2dsazQzeG9PUEpiUEY4?=
- =?utf-8?B?QnAzOEVwYWV1emhrMlUrbzhsUFlZMnhvbThOOVIwbjkxVmZVOFRkWTdYTzdQ?=
- =?utf-8?B?aVBzUUFHZERvRGhzdVEvU1EwcHl2bHJZOTJQZjg3ZXUxWDNWSlAyZ1hCSCt5?=
- =?utf-8?B?bmowZ0hBTmtMNm1GWUEzTWUxZkg5NmxSd0ZmUXlmSlk0U1NVZ0IwYVhLQWRF?=
- =?utf-8?B?WHFDajVSNGxwaFdRQWxvT2wyOWhVRU1mMnlOQjN3b3l2eCtvanNRcldDQjQ3?=
- =?utf-8?B?U3hFRHlLdC9JWCtRRFozeFhuaVpSMHVwRTd5cVZqTUVLOXYzTDQ0Z0s3RXNG?=
- =?utf-8?B?Mm9NNUhkVkJEMERzd3R6OGlEVjc4dzZEWis1dVRtWmRLNW5KdXVpMC9ORkxh?=
- =?utf-8?B?TEtON3MzZmQ0UVY2d010bStjdzNrcVNYS0xEYzRlaUNEWGZ3QzNma2xUMXdK?=
- =?utf-8?B?NVhhVmJlM0JYcFVyc1NDK1Z0aU9SREF5SWhscTJDMlk0S0ZCWWdLSG9qemtR?=
- =?utf-8?B?WERqa2RXbWdwYTV4bmhIcWExSWhXNGxDN3dXZHI5TDhKaENvSkxMbTQyWTRJ?=
- =?utf-8?B?anA3QXliQjVaeUlmWklKMjVlV2kzdnE0Znh6czc5bUhxcDg3c3gwK2tKK1NG?=
- =?utf-8?B?VGlZU1FqT3JERFR2cjVPT25xZjBvU2JaK094aFNicnVGV3VtQ0lCbzFXWGVD?=
- =?utf-8?B?dEsvSkNCQ1RhZjQ2alppTmp6VkQ3bkZlWWxKWjVzTjM1TGxDOHFuYzZNQ2gz?=
- =?utf-8?B?QUx5UkpQRURiM2pXd2hIM2FpRHhBc09LbStZb1hXczBMK2k5bjhuRWMySXp3?=
- =?utf-8?B?eHJpMXVzUFEvYUxNekx0M09xRzBFdjhsdFFzbllvNFB2TkV2Yjl4TWVqRzl4?=
- =?utf-8?B?N3FwTU1pU3FRQ3daOEV0cEY3K1FGSysycXlwWDlVbWdCUmJrZXcyUnVhZmpY?=
- =?utf-8?B?Q2NxL2tEV3IydExpTTh5ZHZYMkNMQnk1OHJOODZIbmF4N0ZJSGE0RFJMc2k0?=
- =?utf-8?Q?RBc1x6z2/Zu1U?=
+	=?iso-8859-1?Q?zTjDZmhpiKflf9/4HgyLh3ncPB62YBX4EdTBDHq2FXLINpkiDy35wahUC8?=
+ =?iso-8859-1?Q?Hzgh6nSs4rewichbpBOP55le98Fhw89YAhKBAyciBWe/ENeJGgQ1HVcxiK?=
+ =?iso-8859-1?Q?lO+qgMvxccfzLT/NGGYvp6oryh8neLXQFiSV2BhEcbWNvBPIfzoNd2CBYV?=
+ =?iso-8859-1?Q?EwS/+4rShJ2tOzjz6oEThCdaydqAw5I2CL80uuC2m97TRJ9P/2yGJR5Qfi?=
+ =?iso-8859-1?Q?5oOLqoXQ97kvk/nwePkbw642699tfr8s4VcDRsonwMMlo8HK0D2XVyi5FO?=
+ =?iso-8859-1?Q?YVXWi99pfB+bDHwVtCuY5KCuc5vxH4VXI0miWxWGzZATmcwjcL6sbrN0Nc?=
+ =?iso-8859-1?Q?3/P9jiTv6yVipoRzRipa7mn0kalNj7UIyVWQgbZFGYIhTRckmKh7x/OV0L?=
+ =?iso-8859-1?Q?8IoSDcCkPOJPWKhwa/lcmanmPmq3EkAD2xHSpEtUNyB/F3/Esu4cJMGdzt?=
+ =?iso-8859-1?Q?I1IhHSBeeEFzJR1mFKlJtt9GcoLKzFPVwFmc3F4SDKI8b3dYlclaoioddZ?=
+ =?iso-8859-1?Q?A+f7QjDqsCeEwTvR4wT2QxVcJ0n3dFw0iieXMXoW6dwKOkJ71VXBDThWeL?=
+ =?iso-8859-1?Q?lDgKDCutTILEFVjf2pvU3Q4ti++uJ5/2g8zMwSZtbDBpq9s7gzHlUrC5OJ?=
+ =?iso-8859-1?Q?FnGuLBK52rCGS1h8mg1Z/C1d8VwESA0KbBKZY0ue3CYKxLrYM8ZuUd/Is/?=
+ =?iso-8859-1?Q?9ua7JYsC0Aeskn2i7Xao4dx9G3nb01wWB/jHXH4dP7/rFaZ2V4v61CNQOn?=
+ =?iso-8859-1?Q?/Xu2Rkb+3kT0MT/rqIoy/H6glj0y+SgSNVhQaFD+2289zRGt5SSMi2+WnI?=
+ =?iso-8859-1?Q?DoVTmOPazX0hNKUW/MLcIXmxGzglBKIkNKwARa5Fzy+QsYadFCuq7WT51q?=
+ =?iso-8859-1?Q?GugcltZdAEdFtS1q8oUJLTTRvpMh98c5YqvmY8ODw+FxTv+Mk/43Te4233?=
+ =?iso-8859-1?Q?blXv0dbmOfaE6GPYnwG0ywO7jENM5JgzciJ8nW2VawmM9plhOw1zJabS8r?=
+ =?iso-8859-1?Q?4lZ+R2ihy905T61B9UKMAQJyJ21UgW673wOGO6SX5CamBJlWatrfLYweis?=
+ =?iso-8859-1?Q?/+uHE2eUbIaz5EujdSKbzadqROVuKCfFmwVzlFAvRt5g4D1OXKi9QlsS0T?=
+ =?iso-8859-1?Q?yE5A8byFWqdTSMEDPyrqAwwH2lMdIDC6YcHieGHYxgNbwsJKiYBpqINBgL?=
+ =?iso-8859-1?Q?x54+y9PPz7iYDMxwjvUp6hvmm9z1OK3ZLveYx76LxsEXAv2rxdPxXauczx?=
+ =?iso-8859-1?Q?lOTz9ztEKFEvCjmkUMPSfTAHLm4RQkCK6Mv+8mF2dqrlt/L4xHI2U9lrCk?=
+ =?iso-8859-1?Q?WP+gCtMVU4BFqOyg8dTOZoMtKQ5797hqZRpvMN/VB40cZrD20PLC7TX6Wx?=
+ =?iso-8859-1?Q?UVkoyovYmgWglzNo7CT5tOZuvDlY+i0/KJ/86SUShRxCf3iUKCVQqhZKua?=
+ =?iso-8859-1?Q?VQZ/3J4ST/zOJHOB?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU7PR04MB11163.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VmNQb2IydEwvVThTQjUrVmg4RzFXdkFLZktFYnM4RE1DMWNteXR6MHdoejRy?=
- =?utf-8?B?WitCTEZlaUtMT09Id0pIMy8rVWhEYkdEQjZrV1VqdEg5NWZ2b3JoemhYNFNW?=
- =?utf-8?B?VmJuZ3M2WDl3WGZ6RUM0NVBodzIzcTVvN0JQR3V4RDNISktxN0NMTC9CWjdp?=
- =?utf-8?B?N0IwUVZDeURRV2c2QzA3YzR6dDNEcmM0ZUdIblk3ZGNyNkkyZ1NIRHU3eGti?=
- =?utf-8?B?L0tFenU0TTRlZGZlMkFDQjU2T1VEZCsrUnFPM0NYUTZHUUV4Q1FrcFRpVC91?=
- =?utf-8?B?azNoM0JsNjZMV1NjUUZhQlFVODBBM3Erb1MyQ3pOV2ZYSTliRHkwS280OWZM?=
- =?utf-8?B?LzBJZVJqNWdLeG5vOVVPMDNGRFVXOXQ3M3J1cXYzakwxRms3bDY4MlE2WGoy?=
- =?utf-8?B?WnRNMlJsR29OTnd5Z2ZDK2RYNXRTMVBrbHV2ZXV3NFZNV0ZOL0tmNE1PSEN1?=
- =?utf-8?B?ZjlZREthL1lDRStRcXZwQjFwcW1yV0ZhdmZoQ29tWG5CRW4vUk5tMjBLK1dz?=
- =?utf-8?B?RVpXQnVON0RQYXI3blNxRXhnWk5xRWVDeXpCRFdxcFY2Q3huRy94WTF5SmRZ?=
- =?utf-8?B?UzEvQ1N1WEQzN1ZmUnF3M1poYWxxNGVsa0o4NmlOZ2lVcWhTUWJRK3ZZRXZO?=
- =?utf-8?B?NWZVWGFzdy9SY2JiTWVmdUNVSUd2bS80bkgwak01UTR0Ly9uV0djWVhpaGFy?=
- =?utf-8?B?bmpIemREa3lsdTNkc2dOcGNFWEhFbTRucTE1S0FEVTBSdVRzTEkrRVNpOHNS?=
- =?utf-8?B?c3MvL1RsY3E1VzdZUnJDeEFvdjRJYm5xdTV4VkN1WWRUb3JpRy9ZQ25DT2lu?=
- =?utf-8?B?a2J1LzMxTkpyQVhOSStteEZmWUtQYVpuNmluYXBkeFJ4OFNadUN1YXYrYlRt?=
- =?utf-8?B?R3ByM2VhdzRVMEN5L1poQUVtdlltWlF3VFRjbFRCbjFnTENtcHRJMTJPRDhS?=
- =?utf-8?B?WWZkUXI4bnpQeDcvbE5WNDZHcTRUaldEa2QxYmtIdHFPaTB4SWZqWjNTSGgx?=
- =?utf-8?B?Q1FyUU4ySWRzSVZDYUhNZU5vcHdXbStwak1xeHFTeDFUTnkxVmMweFBCd3A5?=
- =?utf-8?B?M3M3YkwzZEo3Si8wQ3ZHUnJrWDJrTjdmREFpVm9QSVVQaU5iYzcvSzBwMXlj?=
- =?utf-8?B?cm13V3lieUp3Y3JYV3plaVNTZCtnQVViUzhYNDBYdHFpQzhXZVg3eTZqaERz?=
- =?utf-8?B?Q2dKSzRLK0dqckpTRjJtN09vaHZ3Smw5WnRnTXdoSWRmemFXNXhYVVlzV09G?=
- =?utf-8?B?NnM2Sis3YTVRN2dWKzhpOHlEcVk5cjM1QjRzbjBYNFZFSWREeXRUbTlFZkRG?=
- =?utf-8?B?RlVFKzJucXI4dmVNaklrVEIyUjFhRkJycUVaQnh6Qk1xTWxyYTBqZ0NpNUpV?=
- =?utf-8?B?U29HQUhjV0xzcG5lc3JSOEhvMW1PdVpKeTRmMnRDY1M1YVVuT2xDcUlnWVRz?=
- =?utf-8?B?SmNJSm1jR0I2eUkzaVN5aWdtamZlNmpvVmZHem01Y05ha1dsWktHaWlmZzRD?=
- =?utf-8?B?Q3BEbGxHeTlhdGtyK2dVYmI0WXMvS2xuejhoOHlxSWdTdC8yOXl5UFZoZUlw?=
- =?utf-8?B?U2hqenhxM1NLQ3Z1dDVxenpPTVBON2wybnBwSkFhR244RmR2QTN4K29GdEd4?=
- =?utf-8?B?NXQzREcvY2hsYTAxWnF3YWc1V2M2S3R6VzlSWmlST2lWMTRzUTBiK3FKc1hK?=
- =?utf-8?B?TlF2RkI5YmZiT082Z1ROZ0ROcTJEUFBsMFR4ZHVpcjJ0WVQwbm9EK1lwTU10?=
- =?utf-8?B?bXJnYkR3RytFUVAvdXlFNE9uN1ZpTTlnZ3Q4ZnZ1b1QxREgrc1JRR2hGeVdN?=
- =?utf-8?B?ZmNscUtjYWZXZ1VWaXhMbTV0Qy9xbUlXdjY3empSWDduTmNIZ1ZuR0ZHMTBR?=
- =?utf-8?B?YW52NWd2SWxUVHFYWjZUcUxzc3AxUGRLZ2NLaCtsYk5CUEFHcVl1UUkxQ2ls?=
- =?utf-8?B?QTFiYzQvOWlqbVJMZk5sVktKdGlKeFAvVFZwVy8zS2FuQTRZZHdYVlBwY3Rr?=
- =?utf-8?B?V3FyaU1ObjFXNUduWEJISFdjV01ENHRwb1B5cW13ZFM0VWl0dDNZejAzdW0v?=
- =?utf-8?B?UWl3YnZoRkJXTS9WS1B4Wi9kVXcvQXZ2Tm1yNGNpNVdlUDJ5cWtvMExaQVhQ?=
- =?utf-8?Q?5MNtuAM4TdJSA0io44fp+HWK3?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7461ba33-a625-4dcf-9d1c-08dd50e8a912
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+	=?iso-8859-1?Q?z3XUH0ifkPdQRT1Y/nxO/aOCHJo5JJ0A+9ScAHmCTJxIs1PX6m6YDCu9ZE?=
+ =?iso-8859-1?Q?MiYicN0kq40U4DqbN3hFRLF5jppGmQ6c7o4IY+1f+QbT9Bmlnvg1ADcZYb?=
+ =?iso-8859-1?Q?j+bX6OXe2jdmaWDWpDwDUNAUCHrSODLg81Kd4P4GCNgujjidkmO6jbcWtH?=
+ =?iso-8859-1?Q?haK28uHbk8JndViVE9TB4y8lHqEnhE8Gqb9NljqEsbvVH4rG/RhWKk51Yq?=
+ =?iso-8859-1?Q?+HVUCmMHckZAbPRLmNhizhBIDGLbaXDnaG9mPUUkIah4sDExzoxrYMg4Zx?=
+ =?iso-8859-1?Q?q9MS2Vw+GBZOv8y0a5+UAyrYA1HL+BjC5DJSs0m4UIet1KpKcsBsGQ/Ki6?=
+ =?iso-8859-1?Q?efrn1jgOk4K8UB9aFB5/DGgG7pLyMBmM/dyOwJcrOCAU4hIYqnUWJo4W1X?=
+ =?iso-8859-1?Q?UoLx5y16XBHNDOfLKn8B8xI5wkkfn51igbv5W3y2k6MtRQh5NiCYhIjyQQ?=
+ =?iso-8859-1?Q?aILdrRSL4rcmRLFjdsYqg80abuvioaPXF7U8tzoaKMQK92RL7Nec1MPkpW?=
+ =?iso-8859-1?Q?J55H50mu/88C5nQ6SzjcRaeQFuYkiAAhFO4S5l5WRt5bBisGEn2YPP9LDj?=
+ =?iso-8859-1?Q?Mgj3DtZQLsftO0Mkew4aTti30nPs7ZMNZvleemb2v6Z0AMXHgPPDRWf/hB?=
+ =?iso-8859-1?Q?mYisI7YGvTZHqAeY0K11oRy6bnhzb3OvCkfhsguI/PI8HlxxeasJMGESQy?=
+ =?iso-8859-1?Q?09/btULQrRl34SOPS0wu2vH5eDCmy//uap1viSWbRyR5mneV5kpG978qZ3?=
+ =?iso-8859-1?Q?cikZvtvUECOQb3eN9I2SSrYpPog4OabzEy+3QY/Zr5v7Bg8ZeZGgSiVFDv?=
+ =?iso-8859-1?Q?1Az1ac9nKO7GwoDMffaYaycSOWLufip6yxrrxqBavBa/FWkopXcagSzr3A?=
+ =?iso-8859-1?Q?5vqGeD8hfkjM/Et7I9LxCo2nIxQWaUOCaEhF+Cix2b3u9RImyE7TZz+XdG?=
+ =?iso-8859-1?Q?/vSpDNW9mUYQjt5CSixA0HPdCF8R3FIdnwzLL35mdC6vHkkyYEUHI0AGWx?=
+ =?iso-8859-1?Q?Db3X0kt2100BMJDRtqxqDxYY3DogDXTl3np36uDH7IgjxSWjNlt4pl2JAO?=
+ =?iso-8859-1?Q?RaI8nsbM5w0xNx3FnXed/JVCODPMRDPJEs6Xz6l78XbgkEdYgpJ2vYSSAb?=
+ =?iso-8859-1?Q?4hB6Ox0A79bSpJ9F5lteCubUohaD3iboJtld13KEDJ+pNbP9CHFO4x9fzo?=
+ =?iso-8859-1?Q?/f6XRzadXHiWjUVvLaeHZLRqU3JlIWsB5z9WhaS8xXZicvRh8yfkapHpHm?=
+ =?iso-8859-1?Q?VMSBqwGwLdZ4fl0VU8APNHzEJEVjn7+5W9SSXbiQrJTSFoF3JESyvUWXkp?=
+ =?iso-8859-1?Q?oQ1jwdf4gagpuASYksGdMR4hd1rHNns5qXk/ea2YVguSPDQz0SBZatYhDs?=
+ =?iso-8859-1?Q?uAeyKAW6jzqcPmvskGqG0Zz8fo++4dfkXsGTEmbm0ClqG01nUvng5NrkRS?=
+ =?iso-8859-1?Q?1r+6Q2z9t1Hq3z0wu3uJ/8ydkIc5B3cNhwLXRhnEZ1V8mwS7PLOHne7llG?=
+ =?iso-8859-1?Q?XaacecMNHo2Gyeds4y/wDnYiQzUoZrRPCq/dsq59JksiwJb5g3ZDDpPX3W?=
+ =?iso-8859-1?Q?ERy5Fyb6LyilLa6/OSzG/EgpDl2owglIKVn65CSEHxPOakVRtnbvmBfprg?=
+ =?iso-8859-1?Q?dAK4yGOH8zE1P/K9aH4U5Hazqu132OmVsf?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 787fee03-33cc-4f42-a1e2-08dd50e8cdce
+X-MS-Exchange-CrossTenant-AuthSource: DU7PR04MB11163.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 13:23:55.9439
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 13:24:57.4855
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 42LDJdyqxPcd5I70ugsThyv+nJvzGr/e8zIAGeACWDeP7JouzyILoGfy8K9MYMP2sUXWJ2erqNI8OZ+1kVcjUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7316
+X-MS-Exchange-CrossTenant-UserPrincipalName: LvB+Csie4fYGwlScDbji/1UuZ4pu3AiqS2jvy/zlLEQ7Qb3KSaOOfNdNB5gMDcs+zMBX9173FPloHjlehq9vLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10841
 
-Hi Peter,
+From: Florin Leotescu <florin.leotescu@nxp.com>
 
->>>> Apparently not, it ends up with:
->>>>
->>>>   ------------[ cut here ]------------
->>>>   WARNING: CPU: 145 PID: 5459 at kernel/events/core.c:281 event_function+0xd2/0xf0
->>>>   WARNING: CPU: 145 PID: 5459 at kernel/events/core.c:286 event_function+0xd6/0xf0
->>>
->>>>    remote_function+0x4f/0x70
->>>>    generic_exec_single+0x7f/0x160
->>>>    smp_call_function_single+0x110/0x160
->>>>    event_function_call+0x98/0x1d0
->>>>    _perf_event_disable+0x41/0x70
->>>>    perf_event_for_each_child+0x40/0x90
->>>>    _perf_ioctl+0xac/0xb00
->>>>    perf_ioctl+0x45/0x80
->>>
->>> Took me a long while trying to blame this on the 'event->parent =
->>> NULL;', but AFAICT this is a new, unrelated issue.
->>>
->>> What I think happens is this perf_ioctl(DISABLE) vs pmu_detach_events()
->>> race, where the crux is that perf_ioctl() path does not take
->>> event2->mutex which allows the following interleave:
->>
->> This one was only with perf_fuzzer, so pmu_detach_events() code path was
->> not invoked.
-> 
-> I think the issue is, unaccount_event() gets called for the child event
-> after the child is detached. Since event->parent is NULL, unaccount_event()
-> abruptly corrupts the perf_sched_work.
+This patch series enhance the emc2305 driver by introducing
+device tree support for configuring PWM output config (open drain /
+push pull) and PWM polarity config (default/inverted).
+Also updates the thermal management, to be configured based on 
+device tree definition.
 
-A different manifestation of the same underlying issue (perf_sched_work
-is getting corrupted because of event->parent = NULL):
+Changes since v1:
+- Add dt-binding documentation, as recommended by Guenter Roeck.
+- Remove emc2305_unset_tz due to 
+  devm_thermal_of_cooling_device_register use.
 
-  WARNING: CPU: 0 PID: 5799 at kernel/events/core.c:286 event_function+0xd6/0xf0
-  CPU: 0 UID: 1002 PID: 5799 Comm: perf_fuzzer Kdump: loaded Not tainted 6.14.0-rc1-pmu-unregister+ #263
-  RIP: 0010:event_function+0xd6/0xf0
-  RSP: 0018:ffa0000006a87828 EFLAGS: 00010086
-  RAX: 0000000000000007 RBX: ff11001008830ee0 RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-  RBP: ffa0000006a87850 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000000 R12: ffa0000006a87918
-  R13: 0000000000000000 R14: ff1100010e347c00 R15: ff110001226c9a40
-  FS:  0000000000000000(0000) GS:ff11001008800000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000595fed7d3e12 CR3: 000000016954c005 CR4: 0000000000f71ef0
-  PKRU: 55555554
-  Call Trace:
-   <TASK>
-   ? event_function+0xd6/0xf0
-   ? event_function+0x3d/0xf0
-   remote_function+0x4c/0x70
-   generic_exec_single+0x7c/0x160
-   smp_call_function_single+0x110/0x160
-   event_function_call+0x98/0x1d0
-   perf_remove_from_context+0x46/0xa0
-   perf_event_release_kernel+0x1f3/0x210
-   perf_release+0x12/0x20
+Florin Leotescu (3):
+  hwmon: emc2305: Update cooling device registration to include device
+    node
+  hwmon: emc2305: Add device tree support for polarity and pwm output
+  dt-bindings: hwmon: emc2305: Add YAML binding documentation for
+    emc2305 driver
 
-With the above trace as reference, something like below is what is
-happening. (Code paths are based on my understanding of traces, I've
-not verified each an every bit :P)
+ .../devicetree/bindings/hwmon/emc2305.yaml    | 95 +++++++++++++++++++
+ drivers/hwmon/emc2305.c                       | 55 ++++++-----
+ 2 files changed, 125 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/emc2305.yaml
 
-  Assume:
-  task1: event1
-  task2 (child of task1): event2 (child of event1)
-  task3: event3
+-- 
+2.34.1
 
-              CPU 1                                             CPU 2                                                               CPU 3                                                       CPU 4
-  
-                                                  /* task3 sched in */
-                                                  perf_event_task_sched_in()
-                                                    if (static_branch_unlikely(&perf_sched_events)) /* true */
-                                                        __perf_event_task_sched_in()
-                                                            ...
-
-  task2:
-  perf_event_exit_event() /* event2 */
-    event->parent = NULL /* by perf_perf_child_detach() */
-    free_event()
-      _free_event()
-        unaccount_event()
-          if (event->parent) /* false */
-              return; /* won't get executed */
-          perf_sched_work <== OFF  ------.
-                                         |
-                                         |        /* task3 sched out */
-                                         |        perf_event_task_sched_out()
-                                         '----->   if (static_branch_unlikely(&perf_sched_events)) /* false */
-                                         |             /* __perf_event_task_sched_out() won't get called */
-                                         |
-                                         |                                                                            /* task3 sched in */
-                                         |                                                                            perf_event_task_sched_in()
-                                         '-------------------------------------------------------------------------->   if (static_branch_unlikely(&perf_sched_events)) /* false */
-                                                                                                                             /* __perf_event_task_sched_in() won't get called
-                                                                                                                             So cpuctx->task_ctx will remains NULL; */
-  
-                                                                                                                                                                                         close(event3)
-                                                                                                                                                                                           perf_release()
-                                                                                                                                                                                             perf_event_release_kernel()
-                                                                                                                                                                                               perf_remove_from_context()
-                                                                                                                                                                                                 event_function_call()
-                                                                                                                                                                                                 /* IPI to CPU 3 ---> */
-                                                                                                                      /* ---> IPI from CPU 4 */
-                                                                                                                      event_function()
-                                                                                                                        if (ctx->task) {
-                                                                                                                            /* task_ctx is NULL whereas ctx is !NULL */
-                                                                                                                            WARN_ON_ONCE(task_ctx != ctx);
-
-                                                                                                                            ^^^^^^^^^^^^
-
-IIUC, event->parent is the only way to detect whether the event is a
-child or not, so it makes sense to preserve the ->parent pointer even
-after the child is detached.
-
-Thanks,
-Ravi
