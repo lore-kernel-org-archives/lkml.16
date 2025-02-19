@@ -1,82 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3421E1E885
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6AA1E885;
+	Wed, 19 Feb 2025 15:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978172; cv=none; b=IlFevPyLcR0NOj3jtYpYPzoPQSDcco3f1FxFbxcwzf/wLkVRVtHVmGQc4KMYJNWprRINDZ0Vizi2Fi2i2PyRCMVraCEmivEHb5PkSuAxSF6RjjKilDMBMivuhBAWL4yg0B6SIxIY9iVx9ULLuygAa57JDDEdh1eldOVrgOEpbYg=
+	t=1739978210; cv=none; b=TnCGQ2/3KFj215GixL13NwxjjTNcN2WZFeURRZ0LNP40TzRh/kipTYIwAhT709Ow8lL6zFzOI1Ypl5AmN84yiHhZdGnydssdQkHw0dLSdL8QbLFbEKESkoDr42zPfOkrqjC7ZHC9KvbQ+BvcTDcSDtrI8u6Sn3nhAym2HkXgbcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978172; c=relaxed/simple;
-	bh=MpYdKaUscPRH/iamTUXOGwIyLCFTHDfqMIQ7NaihEz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T8KB0E1rNwGHvtofDvtYCd37BJG0gP/rr5lBlaCmuqHKrB3wLSkeqGj0oVaxUhNE8FJsEjYhd6SPUK4nC+ARzHQndds/xnzDsBA4dQduBi1V76oAVKnHJ1fT4NMkqZkb7vuVdGUfyXTZFem/6G97Nz1+HUHMqiUTeQaW0VFbgsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08BD213D5;
-	Wed, 19 Feb 2025 07:16:29 -0800 (PST)
-Received: from [10.57.35.204] (unknown [10.57.35.204])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 738203F59E;
-	Wed, 19 Feb 2025 07:16:09 -0800 (PST)
-Message-ID: <a88b0a48-f7a0-4791-8ea7-a1e599c3313a@arm.com>
-Date: Wed, 19 Feb 2025 15:16:06 +0000
+	s=arc-20240116; t=1739978210; c=relaxed/simple;
+	bh=ZykFC8bnHwpmxrkNc+2ymmxT1VsaK/Ltu2/oL3ISzDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2LW1Xjf1gQ/r0CbIDb/v+CNrqPdO3ozW3pUUI8wTu7zv+/8rS2CUQlutl3SNpMMtu9PLH1+qztLyAyBRo2WxKUbpVILY33sOGPkS05fJk+9nJMPMk7bcC60fn3Z+YiWpIS4+rZCrTVo2L/Z4AEz98q21LCGRnK5yh2JraXInyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bIAHbkQx; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bIAHbkQx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=7XNjSxYshEtTvXChmY5fi80Lo+W2gHUxjNLerZH4GJI=; b=bIAHbkQx/aLzCkOW+Qx6j602+6
+	jT/V4PkuU1d6zs7eKtMXRUOb6gdGaIfV4qRrQ5epDKETwTLsmhoBmmt0T1wLlJwdRdKqSm7taSVl1
+	1sB4TukoM31nqxr6hwYyLyzN/QCjb1U9zXw7AF+WAxbee+3SBON7Z9x9bRjOXT171Yw8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tkloO-00FfIt-1k; Wed, 19 Feb 2025 16:16:32 +0100
+Date: Wed, 19 Feb 2025 16:16:32 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Sky Huang <SkyLake.Huang@mediatek.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v2 3/3] net: phy: mediatek: add driver for
+ built-in 2.5G ethernet PHY on MT7988
+Message-ID: <87318b5f-e67d-417d-8149-e1d918b23568@lunn.ch>
+References: <20250219083910.2255981-1-SkyLake.Huang@mediatek.com>
+ <20250219083910.2255981-4-SkyLake.Huang@mediatek.com>
+ <Z7WleP9v6Igx2MjC@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu: Spelling s/KConfig/Kconfig/
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <ff5b7c88eea8b126ed76029fb57254f29542aa22.1739976486.git.geert+renesas@glider.be>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <ff5b7c88eea8b126ed76029fb57254f29542aa22.1739976486.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7WleP9v6Igx2MjC@shell.armlinux.org.uk>
 
-On 2025-02-19 2:48 pm, Geert Uytterhoeven wrote:
-> Fix two misspellings of "Kconfig".
-
-Honestly after 6 years and no obvious complaints I'd be inclined to just 
-drop those two paragraphs referring to v4.x kernel behaviour, or indeed 
-maybe make a move on the aforementioned removal of the whole thing....
-
-Otherwise, frankly when the same thing is referred to 4 different ways 
-in the space of 6 sentences - "this Kconfig", "this config", "this 
-option", "This Kconfig option", "this config" - I would argue that 
-capitalisation is not the biggest issue with this text ;)
-
-Thanks,
-Robin.
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->   drivers/iommu/Kconfig | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, Feb 19, 2025 at 09:33:44AM +0000, Russell King (Oracle) wrote:
+> On Wed, Feb 19, 2025 at 04:39:10PM +0800, Sky Huang wrote:
+> > +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
+> > +{
+> > +	struct pinctrl *pinctrl;
+> > +	int ret;
+> > +
+> > +	/* Check if PHY interface type is compatible */
+> > +	if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL)
+> > +		return -ENODEV;
+> > +
+> > +	ret = mt798x_2p5ge_phy_load_fw(phydev);
+> > +	if (ret < 0)
+> > +		return ret;
 > 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 6cfd1b5b6e07f038..6c46e1d58987cd11 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -348,14 +348,14 @@ config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
->   	  an iommu domain will report an abort back to the device and
->   	  will not be allowed to pass through the SMMU.
->   
-> -	  Any old kernels that existed before this KConfig was
-> +	  Any old kernels that existed before this Kconfig was
->   	  introduced would default to _allowing_ bypass (AKA the
->   	  equivalent of NO for this config).  However the default for
->   	  this option is YES because the old behavior is insecure.
->   
->   	  There are few reasons to allow unmatched stream bypass, and
->   	  even fewer good ones.  If saying YES here breaks your board
-> -	  you should work on fixing your board.  This KConfig option
-> +	  you should work on fixing your board.  This Kconfig option
->   	  is expected to be removed in the future and we'll simply
->   	  hardcode the bypass disable in the code.
->   
+> Firmware should not be loaded in the .config_init method. The above
+> call will block while holding the RTNL which will prevent all other
+> network configuration until the firmware has been loaded or the load
+> fails.
 
+The aquantia and qt2025 drivers are good examples to copy.
+
+	Andrew
