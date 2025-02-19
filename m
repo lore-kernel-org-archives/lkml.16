@@ -1,53 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3CD1F3B85;
-	Wed, 19 Feb 2025 14:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E702E1E47A3;
+	Wed, 19 Feb 2025 14:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739976789; cv=none; b=TmRJoDR0bEcLVa/hqB89+MBMSdSbtokopYhu0RdFEVez/qYlvOFSGrvVQW0QDLs3Vfhfc9LOdDn1OEVTQMhoENleI/Pd+fdEQxDFICWkhLJbmWmB8WPVaACy3F3NPaqDhCEmOMYdac7tbXvzi+xNUBKVX1mV0+lv2Zi6kt5IqGw=
+	t=1739976788; cv=none; b=HjtZ1Nv+BxRW+Am17AR9yd2gk3/UDCnahHdKhdBjnEr5MZoVLClR7bQSm0OwZPrdhpMH7R8CL3q3QDXQRdw3xMua7JpTsJpjW4aCgXK3Yv7CbTuOev+47q+6JxhI9n0Ked88pNk6E8MGcIZk+m7Uy+zqfHtKyDOQpWX/Z1H4VSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739976789; c=relaxed/simple;
-	bh=uJumg9HfANwLa2GuanMHiIVQzENU/QGDz5hxvLMZtCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OoLIQ2DtrZo4oUOePIWTOSL6A1q1JKxk/NjLlOdrJdCnaPz7dqgwcJJehgrPzWXzidGvsBlfpnM95WO9+1IQNMMhVzgTnsXBPAv/V/r/VI/bHOD2Drc8bRNY4NaQ6sSRi+vkmKUz0WH6RYwr1sPXhPfG0ZsGigN41cPZxeNXTIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24CADC4CEED;
-	Wed, 19 Feb 2025 14:53:07 +0000 (UTC)
-Date: Wed, 19 Feb 2025 09:53:30 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Sven
- Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 4/5] fprobe: Always unregister fgraph function from ops
-Message-ID: <20250219095330.2e9f171c@gandalf.local.home>
-In-Reply-To: <20250219095715.26c7b7811b05d3952c7bfa56@kernel.org>
-References: <20250218193033.338823920@goodmis.org>
-	<20250218193126.785837383@goodmis.org>
-	<20250219095715.26c7b7811b05d3952c7bfa56@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739976788; c=relaxed/simple;
+	bh=xKZOw9hzrviAcvXKVZ1M5SSZtUleov7kmWdKELPA4Q8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=b4/EDqT0hEfS5gjgj2HBDvRBeWiMI8kvnZTkJHkqIvv5IV6uhZZhL5l30IQ9oUT0LCxF2vHNj0sb2H1NgFDx10DQ6hSEBPKaX7QOuG9oQOf5bOfE7gNASyPaUkukw6tEsvJUbFLvnU1KXyZd1J+Ixy2HhI43sFi36Z3Yu3gW3Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AiPClfsu; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AiPClfsu"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C20D20454;
+	Wed, 19 Feb 2025 14:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739976784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8u+UDft4UpY9KBk40YrkVV1XuG+FD5zM2TE/VNfUf+w=;
+	b=AiPClfsuSSXes2BKAC2KC+rwnDDlfrbieiZnCzo8nzDupE5WwvszjtTktRa0jq0qXvH6wZ
+	jlX/Tyn6X0t+zxewjeHbw2NGCvGnJDaT7QlfRLREzMhKAwzlhPEXo/PSHCK8CddLARcdTv
+	lnhkTNAyR/c0mYeungtXZgxT8XJ1Tp0oQazz8U8BGfxIO101Ehy5Kd1N3tlmrSON0Wxii5
+	1dUFfpaQt9tVTIhp2Q0wbBTarx769N1eJ9WbWKCCqoxe4WISiHU+yuBkZfAYQ/N1Q8MyEK
+	aMtR5LPMX+B/pHZDV30p3Y3yK5D1JaFpOfP42jF5VoxY05Hz+9R+WPidQjnUIw==
+From: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+Date: Wed, 19 Feb 2025 15:53:01 +0100
+Subject: [PATCH bpf-next v2 2/4] selftests/bpf: Optionally open a dedicated
+ namespace to run test in it
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250219-b4-tc_links-v2-2-14504db136b7@bootlin.com>
+References: <20250219-b4-tc_links-v2-0-14504db136b7@bootlin.com>
+In-Reply-To: <20250219-b4-tc_links-v2-0-14504db136b7@bootlin.com>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Alexis Lothore <alexis.lothore@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, bpf@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeigeehgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpedfuegrshhtihgvnhcuvehurhhuthgthhgvthculdgvuefrhfcuhfhouhhnuggrthhiohhnmddfuceosggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeefudfhuedttdeiffetffeljeffkeevveeiuddtgeejleeftdejgedtjedttdfhnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrohhluhhosehgohhoghhlvgdrtghomhdprhgtphhtthhopegsphhfsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihonhhghhhon
+ hhgrdhsohhngheslhhinhhugidruggvvhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhholhhsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
-On Wed, 19 Feb 2025 09:57:15 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Some tests are serialized to prevent interference with others.
 
-> Good catch! I forgot to remove the filter in this case.
-> Is there anyway to be sure the filter is empty or clear it if
-> fprobe_graph_active == 0?
+Open a dedicated network namespace when a test name starts with 'ns_' to
+allow more test parallelization. Use the test name as namespace name to
+avoid conflict between namespaces.
 
-You can call ftrace_free_filter(), but you need to make sure that the ops
-is not active. Hmm, I should add a warning and exit if the ops is active
-when that function is called.
+Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+---
+ tools/testing/selftests/bpf/test_progs.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
--- Steve
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index c9e745d49493e594b55d79ac26061b0466f9a039..0cb759632225d27ad8df7bc478bf1adb5651bf33 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -1365,10 +1365,19 @@ static int recv_message(int sock, struct msg *msg)
+ 	return ret;
+ }
+ 
++static bool ns_is_needed(const char *test_name)
++{
++	if (strlen(test_name) < 3)
++		return false;
++
++	return !strncmp(test_name, "ns_", 3);
++}
++
+ static void run_one_test(int test_num)
+ {
+ 	struct prog_test_def *test = &prog_test_defs[test_num];
+ 	struct test_state *state = &test_states[test_num];
++	struct netns_obj *ns = NULL;
+ 
+ 	env.test = test;
+ 	env.test_state = state;
+@@ -1376,10 +1385,13 @@ static void run_one_test(int test_num)
+ 	stdio_hijack(&state->log_buf, &state->log_cnt);
+ 
+ 	watchdog_start();
++	if (ns_is_needed(test->test_name))
++		ns = netns_new(test->test_name, true);
+ 	if (test->run_test)
+ 		test->run_test();
+ 	else if (test->run_serial_test)
+ 		test->run_serial_test();
++	netns_free(ns);
+ 	watchdog_stop();
+ 
+ 	/* ensure last sub-test is finalized properly */
+
+-- 
+2.48.1
+
