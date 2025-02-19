@@ -1,52 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B061EFFA7;
-	Wed, 19 Feb 2025 14:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D511F2B88;
+	Wed, 19 Feb 2025 14:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739975834; cv=none; b=uAutR/7doGUiS1I6oJvqTmFyNZ2kPYSutwEOguyzpDbipnx7mCkUWOsyO7tQxHGOqgr4kO6KDFGZIeGsRPHKOluUbCqx1Dqq67r6LrAOHF1qQaYa7F7ee3aUE6E1miyYlx1Pe3QfdKJoYXDUhMnLwuRKmOdfE6MhwLKo7uvoWCY=
+	t=1739975964; cv=none; b=hgYid5Qwd7rrJnC+U0amfp+GDQ/WF3ep3Q0SKYELHDknjlCPqCjWyRK8yQ5MnSVkhigigX+nK1is4iNqO/u6JnFPDMmXhP6W+2ZJs/msaj4wIRYuib1cxJttT+8A7lUamLkun0rltCveFTWnM/UeK+pUu/sCnK7udUS0MfDQ/MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739975834; c=relaxed/simple;
-	bh=2OXXf15MylmVkPO1M6mfZBuYLHkI7+be+5E8WanZ7c8=;
+	s=arc-20240116; t=1739975964; c=relaxed/simple;
+	bh=zg41uxLeF1XqKwA/EMGTDy9ivzajg7Z1s3Ntido7yDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mqg+3wmEbvjVqtO1P5gq7+5OxF3LxW87fUxyo02H5KagqmCxc6DJGL4Y+LGqrIHPihYMajA0wwiXOLKPPUCqs1HdV9m07mdqA+BxFVhILXn9FCeq0dK41ExWjZXOnbNrQab1YE/X8W4+2/4c4JU11lGWc/fgIouCE+Xg9uMzty0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IxEdsXud; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cA1pdF6o0xmln5yyoDNYhBr+XCuRDP/iicYnEWEhIdJDvxJBREDRO8vIATV+XgbxLsWiiaUqEYuiwtg3pEg+/yJ7bdUEvWc32K1jspovpjEUurRDxLnOgdEWVlpQBGLRVXt5DfBkWSZ8oOpqz1jvA4E7PyAEaQLaxjKfuTeI6Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVeoQbZx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IxEdsXud"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EDC3C4CED1;
-	Wed, 19 Feb 2025 14:37:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVeoQbZx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E1ACC4CED1;
+	Wed, 19 Feb 2025 14:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739975833;
-	bh=2OXXf15MylmVkPO1M6mfZBuYLHkI7+be+5E8WanZ7c8=;
+	s=k20201202; t=1739975963;
+	bh=zg41uxLeF1XqKwA/EMGTDy9ivzajg7Z1s3Ntido7yDE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IxEdsXudBVxd6Z2Y95E9FfjPhTSvQu2jg2mpUoJOhJ4jz0nqXBVuy9BSAESr4vPQg
-	 UUWD54vwxepxpyzSMO7v7vL6ityLa4wUjzcrkdX49cvpud2maHZqSn7c2BTm7D1tdx
-	 Ga0ytzg34ft+E7NHrZa8NVXzXEp2mUGpFUr9meFtjnRdDp1H2yXjS5EL0j4mziNgiK
-	 XuV0zuYbKLDVUwRgxomLwLntZmWuSVPZeVDiG0zPSfph6EV3/JXYQ3+gvvkUzzZoOc
-	 WHxdYPFCLqi+6kPr6GtxgerSWwJHYhAxOIiagViJKFE73ZRNxjjZgkMikBahpQHt9D
-	 yRyqO6twrMMjQ==
-Date: Wed, 19 Feb 2025 15:37:10 +0100
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf report: Add 'tgid' sort key
-Message-ID: <Z7XsltyqUWrdKma0@x1>
-References: <20250206000137.2026034-1-namhyung@kernel.org>
- <Z60NFEAf2C8cL8Xh@x1>
- <Z60Ndm8VVI4Ao31U@x1>
- <CAP-5=fXw09MM5XyozJMM3FjMANJei1aNVmBghSEQFiCKAtJmXw@mail.gmail.com>
- <CAP-5=fUqcykMdApHVweETg9bp2EVPJhJOj_PR8cByOOA6OyQGw@mail.gmail.com>
- <Z6_CL0RpUUvw0lR7@x1>
- <Z7TvZGjVix2asYWI@x1>
- <Z7T1LVSLo8EEMmkM@x1>
- <Z7UDlZKnqXRqNqQa@google.com>
+	b=NVeoQbZxARTuIRRNLLoesbA03JgG5KpgfNhmlEu3lR68IBae4oYRHhWI94pSSWOy/
+	 AbhMSX7vQwNXOZ7ZYQ8rl/B8iZn9sp3FymfII5MdeRiv7vmb7RlDPNWCNsDFjFVrKD
+	 4EIWgbDJr7eyNPrSHARv0mOznmETq/Hjff9Pfrv5DSaZkQ+KbT+Ai7IqiAsSDe+1M5
+	 U9+sVQuoZe5BD7hPeM2Qj4wGe5hLxGWj9H3z2Xp+51EJmkV87TShPXWaH/iiz7LJ/A
+	 DKxZqFdufJYhkiNxvCIyli6Fm/0HbbR7j5Zzih+2MAZIteczEkZj6h8kVq/IAI1sL6
+	 Ou3HiYRiEI1nQ==
+Date: Wed, 19 Feb 2025 08:39:22 -0600
+From: Rob Herring <robh@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: sound: convert ICS-43432 binding to
+ YAML
+Message-ID: <20250219143922.GA2527138-robh@kernel.org>
+References: <20250210104748.396399-1-o.rempel@pengutronix.de>
+ <20250210104748.396399-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,319 +54,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z7UDlZKnqXRqNqQa@google.com>
+In-Reply-To: <20250210104748.396399-2-o.rempel@pengutronix.de>
 
-On Tue, Feb 18, 2025 at 02:03:01PM -0800, Namhyung Kim wrote:
-> On Tue, Feb 18, 2025 at 10:01:33PM +0100, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Feb 18, 2025 at 09:36:52PM +0100, Arnaldo Carvalho de Melo wrote:
-> > > So the call to maps_fixup_end() will set maps->end_broken to false,
-> > > since it fixed up the map ends, etc, but then we insert more maps with
-> > > broken ends:
-> >  
-> > > #6  0x0000000000633d52 in check_invariants (maps=0xf967c0) at util/maps.c:95
-> > > 95						assert(map__end(prev) <= map__end(map));
-> > > (gdb) p prev->dso->name
-> > > $1 = 0xfc47ab "bpf_trampoline_6442522522"
-> > 
-> > So the above map is created overlapping a previously existing map:
-> > 
-> > root@number:~# perf probe -l
-> >   probe_perf:maps_fixup_end (on maps__fixup_end:1@util/maps.c in /home/acme/bin/perf with maps)
-> >   probe_perf:maps_insert (on maps__insert:1@util/maps.c in /home/acme/bin/perf with maps name start end)
-> > root@number:~# 
-> > 
-> > root@number:~# perf trace --lib -e probe_perf:maps* perf record sleep
-> > <SNIP>
-> >    319.791 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_egress" start=0xffffffffc0160788 end=0xffffffffc01607c8)
-> >    319.810 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=0xffffffffc01647b8 end=0xffffffffc01647f8)
-> >    319.822 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_egress" start=0xffffffffc016482c end=0xffffffffc016486c)
-> >    319.834 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=0xffffffffc01648ac end=0xffffffffc01648ec)
-> >    319.845 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_be31ae23198a0378_sd_devices" start=0xffffffffc0186388 end=0xffffffffc01864b2)
-> >    319.857 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_trampoline_6442522522" start=0xffffffffc0147640 end=0xffffffffc0148640)
-> > [ perf record: Captured and wrote 0.035 MB perf.data (7 samples) ]
-> > perf: util/maps.c:95: check_invariants: Assertion `map__end(prev) <= map__end(map)' failed.
-> > root@number:~# 
-> > 
-> > So a PERF_RECORD_KSYMBOL processing will add a map for
-> > "bpf_trampoline_6442522522" that has its start after before the
-> > "bpf_prog_40ddf486530245f5_sd_devices" start, ok, but ends after
-> > "bpf_prog_40ddf486530245f5_sd_devices", overlapping it.
-> > 
-> > machine__process_ksymbol_register() does:
-> > 
-> > 713			map__set_start(map, event->ksymbol.addr);
-> > 714			map__set_end(map, map__start(map) + event->ksymbol.len);
-> > 715			err = maps__insert(machine__kernel_maps(machine), map);
-> > 
-> > And:
-> > 
-> > (gdb) p /x event->ksymbol.addr
-> > $2 = 0xffffffffc0147a2c
-> > (gdb) p event->ksymbol.len
-> > $3 = 306
+On Mon, Feb 10, 2025 at 11:47:46AM +0100, Oleksij Rempel wrote:
+> Convert the ICS-43432 MEMS microphone device tree binding from text format
+> to YAML.
 > 
-> Hmm.. so I think the situation is like below.
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+> changes v2:
+> - use "enum" instead "oneOf + const"
+> ---
+>  .../devicetree/bindings/sound/ics43432.txt    | 19 -------
+>  .../bindings/sound/invensense,ics43432.yaml   | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/ics43432.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/invensense,ics43432.yaml
 > 
->                    (bpf_trampoline_6442522522)
->             +---------------------------------------+   
-> 	    |                                       |
-> 	    |       +------------------------+      |
-> 	    |       | (bpf_prog_40ddf486...) | <----+----  adding this
-> 	    |       |                        |      |
-> 	    |       |                        |      |
-> 	    |   c0147a2c                            |
-> 	    |                                       |
->         c0147640                                 c0148640
+> diff --git a/Documentation/devicetree/bindings/sound/ics43432.txt b/Documentation/devicetree/bindings/sound/ics43432.txt
+> deleted file mode 100644
+> index e6f05f2f6c4e..000000000000
+> --- a/Documentation/devicetree/bindings/sound/ics43432.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -Invensense ICS-43432-compatible MEMS microphone with I2S output.
+> -
+> -There are no software configuration options for this device, indeed, the only
+> -host connection is the I2S interface. Apart from requirements on clock
+> -frequency (460 kHz to 3.379 MHz according to the data sheet) there must be
+> -64 clock cycles in each stereo output frame; 24 of the 32 available bits
+> -contain audio data. A hardware pin determines if the device outputs data
+> -on the left or right channel of the I2S frame.
+> -
+> -Required properties:
+> -  - compatible: should be one of the following.
+> -     "invensense,ics43432": For the Invensense ICS43432
+> -     "cui,cmm-4030d-261": For the CUI CMM-4030D-261-I2S-TR
+> -
+> -Example:
+> -
+> -	ics43432: ics43432 {
+> -		compatible = "invensense,ics43432";
+> -	};
+> diff --git a/Documentation/devicetree/bindings/sound/invensense,ics43432.yaml b/Documentation/devicetree/bindings/sound/invensense,ics43432.yaml
+> new file mode 100644
+> index 000000000000..79ed8c8e8790
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/invensense,ics43432.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/invensense,ics43432.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Invensense ICS-43432-compatible MEMS Microphone with I2S Output
+> +
+> +maintainers:
+> +  - N/A
+
+If no one cares about this device, then we should just remove the 
+binding and driver.
+
+> +
+> +description: |
+
+Don't need '|' if no formatting to preserve.
+
+> +  The ICS-43432 and compatible MEMS microphones output audio over an I2S
+> +  interface and require no software configuration. The only host connection
+> +  is the I2S bus. The microphone requires an I2S clock frequency between
+> +  460 kHz and 3.379 MHz and 64 clock cycles per stereo frame. Each frame
+> +  contains 32-bit slots per channel, with 24 bits carrying audio data.
+> +  A hardware pin determines whether the microphone outputs audio on the
+> +  left or right channel of the I2S frame.
+> +
+> +allOf:
+> +  - $ref: dai-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - invensense,ics43432
+> +      - cui,cmm-4030d-261
+> +
+> +  port:
+> +    $ref: audio-graph-port.yaml#
+> +    unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    ics43432: ics43432 {
+> +        compatible = "invensense,ics43432";
+> +
+> +        port {
+> +          endpoint {
+> +            remote-endpoint = <&i2s1_endpoint>;
+> +            dai-format = "i2s";
+> +          };
+> +        };
+> +
+> +    };
+> --
+> 2.39.5
 > 
-> And it failed to add bpf_prog_40ddf486... in check_invariants() because
-> the end address is smaller than the previous map.
-
-No, it didn't fail to add, it managed to do it which left the kernel
-maps in a broken state, with overlappings while it had a cleared
-ends_broken, then, later, when the checks_invariant is finally called at
-perf record exit time:
-
-> > > > #4  0x00007ffff6e3681e in __assert_fail_base (fmt=0x7ffff6fc3bb8 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7bef08 "map__end(prev) <= map__end(map)",
-> > > >     file=file@entry=0x7bedf8 "util/maps.c", line=line@entry=95, function=function@entry=0x7bf1c0 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:96
-> > > > #5  0x00007ffff6e47047 in __assert_fail (assertion=0x7bef08 "map__end(prev) <= map__end(map)", file=0x7bedf8 "util/maps.c", line=95,
-> > > >     function=0x7bf1c0 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:105
-> > > > #6  0x00000000006347a1 in check_invariants (maps=0xf987e0) at util/maps.c:95
-> > > > #7  0x0000000000635ae2 in maps__remove (maps=0xf987e0, map=0xf98a80) at util/maps.c:538
-> > > > #8  0x000000000062afd2 in machine__destroy_kernel_maps (machine=0xf98178) at util/machine.c:1176
-> > > > #9  0x000000000062b32b in machines__destroy_kernel_maps (machines=0xf98178) at util/machine.c:1238
-> > > > #10 0x00000000006388af in perf_session__destroy_kernel_maps (session=0xf97f60) at util/session.c:105
-> > > > #11 0x0000000000638df0 in perf_session__delete (session=0xf97f60) at util/session.c:248
-> > > > #12 0x0000000000431f18 in __cmd_record (rec=0xecace0 <record>, argc=4, argv=0x7fffffffde60) at builtin-record.c:2888
-
-is when we detect the problem, but I see what you mean, I'm trying to
-figure out why this isn't caught here:
-
-machine__process_ksymbol_register() ->
-	int maps__insert(struct maps *maps, struct map *map)
-	{       
-		int ret;
-
-		down_write(maps__lock(maps));
-		ret = __maps__insert(maps, map);
-		check_invariants(maps);
-		up_write(maps__lock(maps));
-		return ret;
-	}
-
-Some more tracing:
-
-root@number:~# perf probe -d probe_perf:* ; perf probe -qx ~/bin/perf check_invariants maps 'maps->maps_by_address_sorted' ; perf probe -qx ~/bin/perf maps__insert maps 'map->dso->name:string' 'map->start' 'map->end' ; perf probe -qx ~/bin/perf maps__fixup_end maps ; perf probe -l
-Removed event: probe_perf:check_invariants
-Removed event: probe_perf:maps_fixup_end
-Removed event: probe_perf:maps_insert
-  probe_perf:check_invariants (on check_invariants:1@util/maps.c in /home/acme/bin/perf with maps maps_by_address_sorted)
-  probe_perf:maps_fixup_end (on maps__fixup_end:1@util/maps.c in /home/acme/bin/perf with maps)
-  probe_perf:maps_insert (on maps__insert:1@util/maps.c in /home/acme/bin/perf with maps name start end)
-root@number:~#
-
-And then:
-
-root@number:~# perf trace --lib -e probe_perf:maps_*,probe_perf:check_invariants/max-stack=32/ perf record sleep
-<SNIP>
-   316.283 perf/1882053 probe_perf:maps_insert((634e64) maps=0x342785d0 name="bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=0xffffffffc01648ac end=0xffffffffc01648ec)
-   316.284 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x0)
-                                       check_invariants (/home/acme/bin/perf)
-                                       maps__insert (/home/acme/bin/perf)
-                                       machine__process_ksymbol_register (/home/acme/bin/perf)
-                                       machine__process_ksymbol (/home/acme/bin/perf)
-                                       perf_event__process_ksymbol (/home/acme/bin/perf)
-                                       machines__deliver_event (/home/acme/bin/perf)
-                                       perf_session__deliver_event (/home/acme/bin/perf)
-                                       perf_session__process_event (/home/acme/bin/perf)
-                                       process_simple (/home/acme/bin/perf)
-                                       reader__read_event (/home/acme/bin/perf)
-                                       reader__process_events (/home/acme/bin/perf)
-                                       __perf_session__process_events (/home/acme/bin/perf)
-                                       perf_session__process_events (/home/acme/bin/perf)
-                                       process_buildids (/home/acme/bin/perf)
-                                       record__finish_output (/home/acme/bin/perf)
-                                       __cmd_record (/home/acme/bin/perf)
-                                       cmd_record (/home/acme/bin/perf)
-                                       run_builtin (/home/acme/bin/perf)
-                                       handle_internal_command (/home/acme/bin/perf)
-                                       run_argv (/home/acme/bin/perf)
-                                       main (/home/acme/bin/perf)
-                                       __libc_start_call_main (/usr/lib64/libc.so.6)
-                                       __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
-                                       _start (/home/acme/bin/perf)
-   316.296 perf/1882053 probe_perf:maps_insert((634e64) maps=0x342785d0 name="bpf_prog_be31ae23198a0378_sd_devices" start=0xffffffffc0186388 end=0xffffffffc01864b2)
-   316.298 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x0)
-                                       check_invariants (/home/acme/bin/perf)
-                                       maps__insert (/home/acme/bin/perf)
-                                       machine__process_ksymbol_register (/home/acme/bin/perf)
-                                       machine__process_ksymbol (/home/acme/bin/perf)
-                                       perf_event__process_ksymbol (/home/acme/bin/perf)
-                                       machines__deliver_event (/home/acme/bin/perf)
-                                       perf_session__deliver_event (/home/acme/bin/perf)
-                                       perf_session__process_event (/home/acme/bin/perf)
-                                       process_simple (/home/acme/bin/perf)
-                                       reader__read_event (/home/acme/bin/perf)
-                                       reader__process_events (/home/acme/bin/perf)
-                                       __perf_session__process_events (/home/acme/bin/perf)
-                                       perf_session__process_events (/home/acme/bin/perf)
-                                       process_buildids (/home/acme/bin/perf)
-                                       record__finish_output (/home/acme/bin/perf)
-                                       __cmd_record (/home/acme/bin/perf)
-                                       cmd_record (/home/acme/bin/perf)
-                                       run_builtin (/home/acme/bin/perf)
-                                       handle_internal_command (/home/acme/bin/perf)
-                                       run_argv (/home/acme/bin/perf)
-                                       main (/home/acme/bin/perf)
-                                       __libc_start_call_main (/usr/lib64/libc.so.6)
-                                       __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
-                                       _start (/home/acme/bin/perf)
-   316.310 perf/1882053 probe_perf:maps_insert((634e64) maps=0x342785d0 name="bpf_trampoline_6442522522" start=0xffffffffc0147640 end=0xffffffffc0148640)
-   316.311 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x0)
-                                       check_invariants (/home/acme/bin/perf)
-                                       maps__insert (/home/acme/bin/perf)
-                                       machine__process_ksymbol_register (/home/acme/bin/perf)
-                                       machine__process_ksymbol (/home/acme/bin/perf)
-                                       perf_event__process_ksymbol (/home/acme/bin/perf)
-                                       machines__deliver_event (/home/acme/bin/perf)
-                                       perf_session__deliver_event (/home/acme/bin/perf)
-                                       perf_session__process_event (/home/acme/bin/perf)
-                                       process_simple (/home/acme/bin/perf)
-                                       reader__read_event (/home/acme/bin/perf)
-                                       reader__process_events (/home/acme/bin/perf)
-                                       __perf_session__process_events (/home/acme/bin/perf)
-                                       perf_session__process_events (/home/acme/bin/perf)
-                                       process_buildids (/home/acme/bin/perf)
-                                       record__finish_output (/home/acme/bin/perf)
-                                       __cmd_record (/home/acme/bin/perf)
-                                       cmd_record (/home/acme/bin/perf)
-                                       run_builtin (/home/acme/bin/perf)
-                                       handle_internal_command (/home/acme/bin/perf)
-                                       run_argv (/home/acme/bin/perf)
-                                       main (/home/acme/bin/perf)
-                                       __libc_start_call_main (/usr/lib64/libc.so.6)
-                                       __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
-                                       _start (/home/acme/bin/perf)
-   316.369 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342a6950 maps_by_address_sorted=0x1)
-                                       check_invariants (/home/acme/bin/perf)
-                                       __maps__insert_sorted (/home/acme/bin/perf)
-                                       __maps__fixup_overlap_and_insert (/home/acme/bin/perf)
-                                       maps__fixup_overlap_and_insert (/home/acme/bin/perf)
-                                       thread__insert_map (/home/acme/bin/perf)
-                                       machine__process_mmap2_event (/home/acme/bin/perf)
-                                       perf_event__process_mmap2 (/home/acme/bin/perf)
-                                       build_id__process_mmap2 (/home/acme/bin/perf)
-                                       machines__deliver_event (/home/acme/bin/perf)
-                                       perf_session__deliver_event (/home/acme/bin/perf)
-                                       ordered_events__deliver_event (/home/acme/bin/perf)
-                                       do_flush (/home/acme/bin/perf)
-                                       __ordered_events__flush (/home/acme/bin/perf)
-                                       ordered_events__flush (/home/acme/bin/perf)
-                                       __perf_session__process_events (/home/acme/bin/perf)
-                                       perf_session__process_events (/home/acme/bin/perf)
-                                       process_buildids (/home/acme/bin/perf)
-                                       record__finish_output (/home/acme/bin/perf)
-                                       __cmd_record (/home/acme/bin/perf)
-                                       cmd_record (/home/acme/bin/perf)
-                                       run_builtin (/home/acme/bin/perf)
-                                       handle_internal_command (/home/acme/bin/perf)
-                                       run_argv (/home/acme/bin/perf)
-                                       main (/home/acme/bin/perf)
-                                       __libc_start_call_main (/usr/lib64/libc.so.6)
-                                       __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
-                                       _start (/home/acme/bin/perf)
-<SNIP>
-[ perf record: Captured and wrote 0.035 MB perf.data (7 samples) ]
-  1195.433 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x1)
-                                       check_invariants (/home/acme/bin/perf)
-                                       maps__remove (/home/acme/bin/perf)
-                                       machine__destroy_kernel_maps (/home/acme/bin/perfperf: util/maps.c:95: check_invariants: Assertion `map__end(prev) <= map__end(map)' failed.
-)
-                                       machines__destroy_kernel_maps (/home/acme/bin/perf)
-                                       perf_session__destroy_kernel_maps (/home/acme/bin/perf)
-                                       perf_session__delete (/home/acme/bin/perf)
-                                       __cmd_record (/home/acme/bin/perf)
-                                       cmd_record (/home/acme/bin/perf)
-                                       run_builtin (/home/acme/bin/perf)
-                                       handle_internal_command (/home/acme/bin/perf)
-                                       run_argv (/home/acme/bin/perf)
-                                       main (/home/acme/bin/perf)
-                                       __libc_start_call_main (/usr/lib64/libc.so.6)
-                                       __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
-                                       _start (/home/acme/bin/perf)
-root@number:~#
-
-check_invariants() doesn't check the ends because the
-maps_byh_address_sorted is not set, I'll soon disappear into a call, but
-the above should help as a checkpoint, I'll be back.
-
-- Arnaldo
-
- 
-> > Thread 1 "perf" hit Breakpoint 1, machine__process_ksymbol_register (machine=0xf96158, event=0x7ffff7fb9aa0, sample=0x7fffffffa860) at util/machine.c:688
-> > 688	{
-> > (gdb) bt
-> > #0  machine__process_ksymbol_register (machine=0xf96158, event=0x7ffff7fb9aa0, sample=0x7fffffffa860) at util/machine.c:688
-> > #1  0x00000000006294ca in machine__process_ksymbol (machine=0xf96158, event=0x7ffff7fb9aa0, sample=0x7fffffffa860) at util/machine.c:779
-> > #2  0x00000000005ce2fd in perf_event__process_ksymbol (tool=0xec8ce0 <record>, event=0x7ffff7fb9aa0, sample=0x7fffffffa860, machine=0xf96158) at util/event.c:296
-> > #3  0x000000000063b6e4 in machines__deliver_event (machines=0xf96158, evlist=0xf521f0, event=0x7ffff7fb9aa0, sample=0x7fffffffa860, tool=0xec8ce0 <record>, file_offset=31392, 
-> >     file_path=0xf96850 "perf.data") at util/session.c:1334
-> > #4  0x000000000063b8c9 in perf_session__deliver_event (session=0xf95f40, event=0x7ffff7fb9aa0, tool=0xec8ce0 <record>, file_offset=31392, file_path=0xf96850 "perf.data")
-> >     at util/session.c:1367
-> > #5  0x000000000063c6bd in perf_session__process_event (session=0xf95f40, event=0x7ffff7fb9aa0, file_offset=31392, file_path=0xf96850 "perf.data") at util/session.c:1626
-> > #6  0x000000000063de3d in process_simple (session=0xf95f40, event=0x7ffff7fb9aa0, file_offset=31392, file_path=0xf96850 "perf.data") at util/session.c:2203
-> > #7  0x000000000063daf4 in reader__read_event (rd=0x7fffffffafa0, session=0xf95f40, prog=0x7fffffffaf70) at util/session.c:2132
-> > #8  0x000000000063dcee in reader__process_events (rd=0x7fffffffafa0, session=0xf95f40, prog=0x7fffffffaf70) at util/session.c:2181
-> > #9  0x000000000063df8b in __perf_session__process_events (session=0xf95f40) at util/session.c:2226
-> > #10 0x000000000063e988 in perf_session__process_events (session=0xf95f40) at util/session.c:2390
-> > #11 0x000000000042d98b in process_buildids (rec=0xec8ce0 <record>) at builtin-record.c:1475
-> > #12 0x000000000042e963 in record__finish_output (rec=0xec8ce0 <record>) at builtin-record.c:1798
-> > #13 0x0000000000431c46 in __cmd_record (rec=0xec8ce0 <record>, argc=2, argv=0x7fffffffde80) at builtin-record.c:2841
-> > #14 0x000000000043513f in cmd_record (argc=2, argv=0x7fffffffde80) at builtin-record.c:4260
-> > #15 0x00000000004bcf65 in run_builtin (p=0xecbd60 <commands+288>, argc=3, argv=0x7fffffffde80) at perf.c:351
-> > #16 0x00000000004bd20c in handle_internal_command (argc=3, argv=0x7fffffffde80) at perf.c:404
-> > #17 0x00000000004bd365 in run_argv (argcp=0x7fffffffdc6c, argv=0x7fffffffdc60) at perf.c:448
-> > #18 0x00000000004bd6ae in main (argc=3, argv=0x7fffffffde80) at perf.c:556
-> > (gdb)
-> 
-> > So, this one liner "refixes" the "modules" ends when processing the
-> > records to find the build ids, unsure if it is the best solution tho:
-
-> I think it "fixes" the problem by not clearing maps->ends_broken during
-> the sample processing.  So check_invariants() will not check the end
-> addresses of overlapping bpf_trampoline and bpf_prog.
-
-You mean my one-liner?
-
-I meant "refixes" as in maps__fixup_end() will fixup the overlapping of
-the bpf_trampoline and bpf_prog and will re-clear maps->ends_broken
-(needlessly, it was already cleared by the first call to
-maps__fixup_end() after loading modules, at the start of the session).
-
-Then check_invariants() _will_, check again, because maps->ends_broken
-is cleared (was cleared twice even), the end addresses and there will
-not be any overlapping, no?
-
-- Arnaldo
- 
-> I'm curious how other commands (like perf report) are affected.  I think
-> the original concern was the output of `perf buildid-list -m`.
-> 
-> Thanks,
-> Namhyung
-> 
-> > 
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 5db1aedf48df92d2..5c4603d08ab5f2cb 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -1797,6 +1797,8 @@ record__finish_output(struct record *rec)
-> >  	if (!rec->no_buildid) {
-> >  		process_buildids(rec);
-> >  
-> > +		maps__fixup_end(machine__kernel_maps(&rec->session->machines.host));
-> > +
-> >  		if (rec->buildid_all)
-> >  			perf_session__dsos_hit_all(rec->session);
-> >  	}
-> > 
-> > 
