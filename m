@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498A08468;
-	Wed, 19 Feb 2025 18:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA2E1494DF
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739989195; cv=none; b=ocwkS9miayzivoz0ybwmmTn7lfdLYNjD2QeuC4kyayBiyW6I0hoIEqUJ98/mfgqhYT1WYx6Kdr4TuFQDnTVwvzJMUrof9juyO2CasEf7CzOVD7XPrH+9JsFgQzSNguPW1CqNLqKrnDm9Vg2KjEy7Gt9IcPeEubabjgVx0R0GVBU=
+	t=1739989229; cv=none; b=kAdYmk54/Yl2qczLUNIXRxXv2EgA3hZ1YNLlOLcA2Y5oT9gJlhMYB4iTilAc1Rpi9QmgvQy61Pw3Bmvy05VJToT+a5ZX2rjEMPGoSw3dF1pp1LJHJCXck0dMlejloZjRL8a9Fqv51+goH39qQA33bIK9S0yuAFdDuRnpqjSUlIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739989195; c=relaxed/simple;
-	bh=sHLR2umxSZ85uY5OTldNfRDRYKI9Bn9zbd8hKKtL81s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=S8CIlEqRIt+23jvuWady3s8gCBswMuwcyPNwQYpu5xsX8392vbQuOuhKYs7lL9gyCEKhwGv8QZRMo6gHZCWrcGE2VMG7xJHwu/jUPrx4vcxrPebGsTx+RcW0E9dZ6xKrh1lsAhd7QeDFtISSRXujzN0xlxzgvuseGph1J5hVEg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gEuHK7X9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739989229; c=relaxed/simple;
+	bh=DCjk6dDVCRMWeL58L3QZn9z12drE+ckbb/rbzxaBZj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CeaSGwIXybQevoUxak0uniRNAKkalhJmPX4xrMMbOWfSjvqL0bzyVy3sZEB2wjIAG8gNqjsR7AiFmfARLlUC2x3TnuqSp9+Vun0zPwj+HbFvwZQc/9mGa4JYG8kg52hHzkKoTMuw20hRUfaosLftkGoSQKrF5x5mBP/9BDzet94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uW2akTXo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gEuHK7X9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 032C1C4CED1;
-	Wed, 19 Feb 2025 18:19:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uW2akTXo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD170C4CED1;
+	Wed, 19 Feb 2025 18:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739989195;
-	bh=sHLR2umxSZ85uY5OTldNfRDRYKI9Bn9zbd8hKKtL81s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gEuHK7X9eCCR3c9KY3NED3a0CLUl+TAoWzoMJT6n7P0V2TwmstBmIee1a4Uatuj3z
-	 gC88UeGuL6zp8W6ho275A8vY/9N4RAklRoPFeb7O4uF78mllmFItNB4nEU2pWPxjEb
-	 zygLfW8wNapYSGYemf75nlbtfqgkjFjQGpu/rqhnvLZxJLtVb+n4ZKszTFx6Y9Ejlt
-	 vW9AZ8cDSP4+/4Tc16Il4BbuvuLX5zCdIk0vGfXjPxO9zifLQBWFgCxUD77ewRXcGl
-	 RpiEHy4TzdGUEesFXW+v17ST0tsnMh63WXnmBFvVRa0A/ohhA+hQLHHPnIwJZQ52ai
-	 QtU7FFpoERfJA==
-Date: Wed, 19 Feb 2025 12:19:52 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	jingoohan1@gmail.com
-Subject: Re: [PATCH v13 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Message-ID: <20250219181952.GA225098@bhelgaas>
+	s=k20201202; t=1739989228;
+	bh=DCjk6dDVCRMWeL58L3QZn9z12drE+ckbb/rbzxaBZj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uW2akTXoAwcO/+ojDy+ryGkKmLSXP+Wht5ZN3QW3CStdi5nU/nhCDlOMYz+B63/ip
+	 WuQKPyKWCITWZ7cQvkWibNk9bk0Ou3F6FH2z4L6rr4GJfThxHj/oMpH5egD0O3El8p
+	 pTiNFklhcJIvutAgWXyA4xggT8p7Gzg02etNsbWsbEaoHDI3N2yvN0zK3dXsF6Kv2L
+	 wj0AyHVtZ3tmX2yAhWfHyRgHV00VktvtOuPGzpXMse/BWeilM+bhjlb985prfll/tX
+	 66H8LeJ/7nvLF5hz1YlG9hrhbbQL4icWgM2BRjRyUR2DbuJRrWGSnfWT4bOI/Tw5A+
+	 +Q86/S+1FozYA==
+Date: Wed, 19 Feb 2025 10:20:25 -0800
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, alyssa.milburn@intel.com,
+	scott.d.constable@intel.com, joao@overdrivepizza.com,
+	andrew.cooper3@citrix.com, jpoimboe@kernel.org,
+	jose.marchesi@oracle.com, hjl.tools@gmail.com,
+	ndesaulniers@google.com, samitolvanen@google.com, nathan@kernel.org,
+	ojeda@kernel.org, alexei.starovoitov@gmail.com, mhiramat@kernel.org,
+	jmill@asu.edu
+Subject: Re: [PATCH v3 06/10] x86/traps: Decode LOCK Jcc.d8 #UD
+Message-ID: <202502191013.72E4EFFF0@keescook>
+References: <20250219162107.880673196@infradead.org>
+ <20250219163514.928125334@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,102 +48,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250219102124.725344-4-thippeswamy.havalige@amd.com>
+In-Reply-To: <20250219163514.928125334@infradead.org>
 
-On Wed, Feb 19, 2025 at 03:51:24PM +0530, Thippeswamy Havalige wrote:
-> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
+On Wed, Feb 19, 2025 at 05:21:13PM +0100, Peter Zijlstra wrote:
+> Because overlapping code sequences are all the rage.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-> +#define AMD_MDB_TLP_IR_STATUS_MISC		0x4C0
-> +#define AMD_MDB_TLP_IR_MASK_MISC		0x4C4
-> +#define AMD_MDB_TLP_IR_ENABLE_MISC		0x4C8
-> +#define AMD_MDB_TLP_IR_DISABLE_MISC		0x4CC
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+Semi-pointless stream of consciousness below...
+
+> ---
+>  arch/x86/include/asm/bug.h |    2 ++
+>  arch/x86/kernel/traps.c    |   30 +++++++++++++++++++++++++-----
+>  2 files changed, 27 insertions(+), 5 deletions(-)
+> 
+> --- a/arch/x86/include/asm/bug.h
+> +++ b/arch/x86/include/asm/bug.h
+> @@ -17,6 +17,7 @@
+>   * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
+>   */
+>  #define INSN_ASOP		0x67
+> +#define INSN_LOCK		0xf0
+>  #define OPCODE_ESCAPE		0x0f
+>  #define SECOND_BYTE_OPCODE_UD1	0xb9
+>  #define SECOND_BYTE_OPCODE_UD2	0x0b
+> @@ -26,6 +27,7 @@
+>  #define BUG_UD1			0xfffd
+>  #define BUG_UD1_UBSAN		0xfffc
+>  #define BUG_EA			0xffea
+> +#define BUG_LOCK		0xfff0
+>  
+>  #ifdef CONFIG_GENERIC_BUG
+>  
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -97,6 +97,7 @@ __always_inline int is_valid_bugaddr(uns
+>   * If it's a UD1, further decode to determine its use:
+>   *
+>   * FineIBT:      ea                      (bad)
+> + * FineIBT:      0f 75 f9                lock jne . - 6
+>   * UBSan{0}:     67 0f b9 00             ud1    (%eax),%eax
+>   * UBSan{10}:    67 0f b9 40 10          ud1    0x10(%eax),%eax
+>   * static_call:  0f b9 cc                ud1    %esp,%ecx
+> @@ -106,6 +107,7 @@ __always_inline int is_valid_bugaddr(uns
+>  __always_inline int decode_bug(unsigned long addr, s32 *imm, int *len)
+>  {
+>  	unsigned long start = addr;
+> +	bool lock = false;
+>  	u8 v;
+>  
+>  	if (addr < TASK_SIZE_MAX)
+> @@ -114,12 +116,29 @@ __always_inline int decode_bug(unsigned
+>  	v = *(u8 *)(addr++);
+>  	if (v == INSN_ASOP)
+>  		v = *(u8 *)(addr++);
+> -	if (v == 0xea) {
 > +
-> +#define AMD_MDB_TLP_PCIE_INTX_MASK	GENMASK(23, 16)
-> +
-> +#define AMD_MDB_PCIE_INTR_INTX_ASSERT(x)	BIT((x) * 2)
-
-> +#define AMD_MDB_PCIE_INTX_BIT(x) (1U << (2 * (x) + AMD_MDB_PCIE_INTR_INTX))
-
-I don't think you need both AMD_MDB_PCIE_INTR_INTX_ASSERT() and
-AMD_MDB_PCIE_INTX_BIT().
-
-AMD_MDB_PCIE_INTX_BIT() is essentially the same as
-FIELD_PREP(AMD_MDB_TLP_PCIE_INTX_MASK, AMD_MDB_PCIE_INTR_INTX_ASSERT).
-
-I would just do this:
-
-  #define AMD_MDB_PCIE_INTR_INTX(x)     BIT((x) * 2)
-
-and in amd_mdb_intx_irq_mask() and amd_mdb_intx_irq_unmask(), do this:
-
-  val = FIELD_PREP(AMD_MDB_TLP_PCIE_INTX_MASK,
-                   AMD_MDB_PCIE_INTR_INTX(data->hwirq));
-
-Then all the users do FIELD_PREP() or FIELD_GET() at the point of use.
-
-It's a little confusing for dw_pcie_rp_intx_flow() to do the
-FIELD_GET() there, but amd_mdb_intx_irq_mask() and
-amd_mdb_intx_irq_unmask() have the equivalent of FIELD_PREP() hidden
-inside AMD_MDB_PCIE_INTX_BIT().
-
-> +static void amd_mdb_intx_irq_mask(struct irq_data *data)
-> +{
-> +	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(data);
-> +	struct dw_pcie *pci = &pcie->pci;
-> +	struct dw_pcie_rp *port = &pci->pp;
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val = AMD_MDB_PCIE_INTX_BIT(data->hwirq);
-> +	pcie_write(pcie, val, AMD_MDB_TLP_IR_DISABLE_MISC);
-
-I guess AMD_MDB_TLP_IR_DISABLE_MISC and AMD_MDB_TLP_IR_ENABLE_MISC are
-set up so writing zero bits does nothing, and writing a one bit only
-masks or unmasks that single interrupt?  It's somewhat unusual, so a
-comment to that effect might be useful.
-
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static void amd_mdb_intx_irq_unmask(struct irq_data *data)
-> +{
-> +	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(data);
-> +	struct dw_pcie *pci = &pcie->pci;
-> +	struct dw_pcie_rp *port = &pci->pp;
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val = AMD_MDB_PCIE_INTX_BIT(data->hwirq);
-> +	pcie_write(pcie, val, AMD_MDB_TLP_IR_ENABLE_MISC);
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-
-> +static irqreturn_t dw_pcie_rp_intx_flow(int irq, void *args)
-> +{
-> +	struct amd_mdb_pcie *pcie = args;
-> +	unsigned long val;
-> +	int i;
-> +
-> +	val = FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
-> +			val = pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC));
-
-The "val = pcie_read()" looks like a useless assignment to val.  I
-would do something like this:
-
-  val = pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC);
-  intx_status = FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK, val);
-
-  for (i = 0; i < PCI_NUM_INTX; i++) {
-    if (intx_status & AMD_MDB_PCIE_INTR_INTX(i))
-      generic_handle_domain_irq(pcie->intx_domain, i);
-  }
-
-> +	for (i = 0; i < PCI_NUM_INTX; i++) {
-> +		if (val & AMD_MDB_PCIE_INTR_INTX_ASSERT(i))
-> +			generic_handle_domain_irq(pcie->intx_domain, i);
+> +	if (v == INSN_LOCK) {
+> +		lock = true;
+> +		v = *(u8 *)(addr++);
 > +	}
 > +
-> +	return IRQ_HANDLED;
-> +}
+> +	switch (v) {
+> +	case 0x70 ... 0x7f: /* Jcc.d8 */
+> +		addr += 1; /* d8 */
+> +		*len = addr - start;
+> +		WARN_ON_ONCE(!lock);
+> +		return BUG_LOCK;
+> +
+> +	case 0xea:
+>  		*len = addr - start;
+>  		return BUG_EA;
+> -	}
+> -	if (v != OPCODE_ESCAPE)
+> +
+> +	case OPCODE_ESCAPE:
+> +		break;
+> +
+> +	default:
+>  		return BUG_NONE;
+> +	}
+>  
+>  	v = *(u8 *)(addr++);
+>  	if (v == SECOND_BYTE_OPCODE_UD2) {
+> @@ -315,7 +334,8 @@ static noinstr bool handle_bug(struct pt
+>  
+>  	switch (ud_type) {
+>  	case BUG_EA:
+> -		if (handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> +	case BUG_LOCK:
+> +		if (handle_cfi_failure(ud_type, regs) == BUG_TRAP_TYPE_WARN) {
+>  			if (regs->ip == addr)
+>  				regs->ip += ud_len;
+>  			handled = true;
+> @@ -324,7 +344,7 @@ static noinstr bool handle_bug(struct pt
+>  
+>  	case BUG_UD2:
+>  		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> -		    handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> +		    handle_cfi_failure(ud_type, regs) == BUG_TRAP_TYPE_WARN) {
+>  			if (regs->ip == addr)
+>  				regs->ip += ud_len;
+>  			handled = true;
+
+I realize these are misplaced chunks, but passing ud_type into the
+handler feels like a layering violation to me. I struggled with this
+when making recommendations for the UBSAN handler too, so I'm not sure
+I have any better idea. It feels like there should be a way to separate
+this logic more cleanly. The handlers are all doing very similar things:
+
+1- find the address where a bad thing happened
+2- report about it
+3- whether to continue execution
+4- where to continue execution
+
+The variability happens with 1 and 4, where it depends on the instruction
+sequences. Meh, I dunno. I can't see anything cleaner, so passing down
+ud_type does seem best.
+
+-- 
+Kees Cook
