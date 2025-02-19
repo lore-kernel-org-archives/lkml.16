@@ -1,139 +1,155 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 721781B393D;
-	Wed, 19 Feb 2025 20:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F154D1B393D;
+	Wed, 19 Feb 2025 20:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739997040; cv=none; b=pWe8rIxpICRFDjIb6B1QWyTC9BP/lyoy98GQRvSodSsu2D8F4eegZ7fRB5SEJsWv8dftOGlXjQ4WrVqoe0cttmjCvBLueWMXKJA4X3soUwmP+yLhgxkMmDylALdd6pMYEEPLySfbqnLLw2jbP5Y55RAQwAxEsT35lXVlK64lyB8=
+	t=1739997066; cv=none; b=ifOK7KmGpQpQwy0yFJ8MuWvuBWn3E7ls+szqHnuoRm8gcE3NTpv/J9wrAIUQ8sXzC2u/jAbOrqAjbw24Ys9uP30gFocBhwLicYqpscGFv5FPmsF90gVNIPYkijMRkgb7NyZIQ39pQkvO8N0bitT5jjsw/nH0cF8YIvqzseWsjF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739997040; c=relaxed/simple;
-	bh=DQPWMVuUQIr0IxHiIYQ/n4uOkjrc8H0ifaBmg6YK+gM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KZgD/fqwA4IPLI6S9j5oY7jnG+qMu0x4vWY6CJSuBbU+RYQUdj43Gq6UR3a0djKVP1xWC+5ivcU5KvPVHLO4/4RIwRtqDLzdCj7/Kl3CWfS3fsFeyC1v9hlHjoSP5fbcy1lIUsZy7vlLtcx+aOpRdxF2Zg6wYF8E3ujGkARIsKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gHI/szIr; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gHI/szIr"
-Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1CAA02043E1D;
-	Wed, 19 Feb 2025 12:30:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1CAA02043E1D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739997038;
-	bh=90UV+JP+XbwbcCJgflCYjTDRG9AqL4zRGYQK3ZIz7DU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gHI/szIreKPPS8CxgVZkOrmds1yXBXX+RfhyiAWEF7PcU8TVQ0OV06loHmtB3AUfI
-	 58ImeFrYtjThwlYVfIYTdDyP5hnERUBNdU7qo7iuGhbT+d3WAuLF2z7gsLiCHbK/jt
-	 twqPKca7sGyepZzdk8+yUGqjwgkcEGptijcqgwI4=
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Date: Wed, 19 Feb 2025 20:30:37 +0000
-Subject: [PATCH net-next 2/3] netfilter: xt_IDLETIMER: convert timeouts to
- secs_to_jiffies()
+	s=arc-20240116; t=1739997066; c=relaxed/simple;
+	bh=0bePGmfHtl35NTbAMyaoUBDGce9xhv6pmYnUXL5lbhU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ttOCthpflrTwB/G0indTRC5MLk6fpOy1fQSWQJ6cj+kTQM7plojN0MVIlub23EoSHaf3Au3m7QUWF/dbHHsh5/buhubTL7MPwh/pjq4ssWQudC57gQ+uG2fUsAIgRWI5AXKOTr2tTWeeEHEu6qZTBnmUARrovtb1+4FqUnG3I+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22100006bc8so2943545ad.0;
+        Wed, 19 Feb 2025 12:31:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739997064; x=1740601864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kRK2JfG2AGCjzGSvpwHXZ3foDZgl6m2wW0qbGdXRWqE=;
+        b=kSs3VvCK83MMo9i8V74pNYu77l4Wt6HnReAz07jue9F5QHguDhkvo3yomEUbzjix/c
+         Blg3jYvv1Uv6BBr8EmRmJywfDUsTgUCPbR9NNwFt5+lYCDs1iFzh1iUMEr23nV+UA9wf
+         rmHg/ET+Lz/VKid8sb3mQTM27aMYlw6fAnNYRFhHs+4QtF4kxMYYi3+LaNKaxZ2Wd5PB
+         mC2lJvwZ33y1qUzjEXEy1mXGzAxUYbzc+cXcUmYfxbjzHImyKk+wD9eVeoIZjOsMfRrk
+         bW+kTM0XqHmb+9zPbQ0mbXcg0QetYF9o0KV7br/fgm73rloTOUZMIxTIxJlsZqxc7Pfa
+         yaDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkhDu4Z+3hUvh76SAdG0fwhHF+b/qdNmdhXyYK+9V+NLMfJ9WyXLZHyW+pxLFPMSVcXjM8sbF0yjet4/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYqit+1bPWGGZ9zcfcvS0O6MnfYF645z0WeljMpxUT67K+NcBz
+	1dmrbwPF0vDD4EYUMKo4gB5RVdsNqiO/Lh7G+hXb2+fDox7z90PEFTkY
+X-Gm-Gg: ASbGncuSLcCV9IrmvMx2e6oeyOrnoZ8aFm721V5lff22jLVEwxstLQ2d1ie8nMwk3Ws
+	4/xZMd9JR5kBJCHgUjpSLlLbYGd368n00uuieT9S/CteHSOdgG5NsHdZ7ze06c7HLTsFpLnwD9t
+	lxSnM9ssdAt5k3mcn5/UrowejmQzDPdmIn56mNVb491JXUsUFBaRFdf4x888HtcARLsmmXZOEz5
+	KWeccJK2KGJ4hMnlmGrUTN8TRDeDNwUk0TN9BdcNL5nEudY/4oCIL6LestLs4MwblpA1TNZvlzI
+	+je23ZGq/6u8dXE=
+X-Google-Smtp-Source: AGHT+IFT2XOWIrW/21fFy5EjwW01Qin5ADO++YJueG5kbDKcvcpEo3SznaoYKf8r8cA7PpXXITlWJA==
+X-Received: by 2002:a17:903:2351:b0:216:7ee9:220b with SMTP id d9443c01a7336-2210404e4e0mr367274285ad.22.1739997063934;
+        Wed, 19 Feb 2025 12:31:03 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:2844:3d8f:bf3e:12cc])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fcbab49a05sm805884a91.1.2025.02.19.12.31.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 12:31:03 -0800 (PST)
+From: Stanislav Fomichev <sdf@fomichev.me>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-kernel@vger.kernel.org,
+	ncardwell@google.com,
+	kuniyu@amazon.com,
+	dsahern@kernel.org,
+	horms@kernel.org,
+	almasrymina@google.com,
+	kaiyuanz@google.com,
+	asml.silence@gmail.com
+Subject: [PATCH net v2] tcp: devmem: don't write truncated dmabuf CMSGs to userspace
+Date: Wed, 19 Feb 2025 12:31:02 -0800
+Message-ID: <20250219203102.1053122-1-sdf@fomichev.me>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-netdev-secs-to-jiffies-part-2-v1-2-c484cc63611b@linux.microsoft.com>
-References: <20250219-netdev-secs-to-jiffies-part-2-v1-0-c484cc63611b@linux.microsoft.com>
-In-Reply-To: <20250219-netdev-secs-to-jiffies-part-2-v1-0-c484cc63611b@linux.microsoft.com>
-To: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, 
- "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, 
- Wen Gu <guwen@linux.alibaba.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Pablo Neira Ayuso <pablo@netfilter.org>, 
- Jozsef Kadlecsik <kadlec@netfilter.org>, David Ahern <dsahern@kernel.org>
-Cc: linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
- Easwar Hariharan <eahariha@linux.microsoft.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-secs_to_jiffies().  As the value here is a multiple of 1000, use
-secs_to_jiffies() instead of msecs_to_jiffies to avoid the multiplication.
+Currently, we report -ETOOSMALL (err) only on the first iteration
+(!sent). When we get put_cmsg error after a bunch of successful
+put_cmsg calls, we don't signal the error at all. This might be
+confusing on the userspace side which will see truncated CMSGs
+but no MSG_CTRUNC signal.
 
-This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
-the following Coccinelle rules:
+Consider the following case:
+- sizeof(struct cmsghdr) = 16
+- sizeof(struct dmabuf_cmsg) = 24
+- total cmsg size (CMSG_LEN) = 40 (16+24)
 
-@depends on patch@
-expression E;
-@@
+When calling recvmsg with msg_controllen=60, the userspace
+will receive two(!) dmabuf_cmsg(s), the first one will
+be a valid one and the second one will be silently truncated. There is no
+easy way to discover the truncation besides doing something like
+"cm->cmsg_len != CMSG_LEN(sizeof(dmabuf_cmsg))".
 
--msecs_to_jiffies(E * 1000)
-+secs_to_jiffies(E)
+Introduce new put_devmem_cmsg wrapper that reports an error instead
+of doing the truncation. Mina suggests that it's the intended way
+this API should work.
 
--msecs_to_jiffies(E * MSEC_PER_SEC)
-+secs_to_jiffies(E)
+Note that we might now report MSG_CTRUNC when the users (incorrectly)
+call us with msg_control == NULL.
 
-Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+Fixes: 8f0b3cc9a4c1 ("tcp: RX path for devmem TCP")
+Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
 ---
- net/netfilter/xt_IDLETIMER.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/ipv4/tcp.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/net/netfilter/xt_IDLETIMER.c b/net/netfilter/xt_IDLETIMER.c
-index 9f54819eb52ca28a6ef6544249e864f17ca3de7a..9082155ee558933c640f51f1a6fec8ccdc1f0fa2 100644
---- a/net/netfilter/xt_IDLETIMER.c
-+++ b/net/netfilter/xt_IDLETIMER.c
-@@ -168,7 +168,7 @@ static int idletimer_tg_create(struct idletimer_tg_info *info)
- 	INIT_WORK(&info->timer->work, idletimer_tg_work);
- 
- 	mod_timer(&info->timer->timer,
--		  msecs_to_jiffies(info->timeout * 1000) + jiffies);
-+		  secs_to_jiffies(info->timeout) + jiffies);
- 
- 	return 0;
- 
-@@ -229,7 +229,7 @@ static int idletimer_tg_create_v1(struct idletimer_tg_info_v1 *info)
- 	} else {
- 		timer_setup(&info->timer->timer, idletimer_tg_expired, 0);
- 		mod_timer(&info->timer->timer,
--				msecs_to_jiffies(info->timeout * 1000) + jiffies);
-+				secs_to_jiffies(info->timeout) + jiffies);
- 	}
- 
- 	return 0;
-@@ -254,7 +254,7 @@ static unsigned int idletimer_tg_target(struct sk_buff *skb,
- 		 info->label, info->timeout);
- 
- 	mod_timer(&info->timer->timer,
--		  msecs_to_jiffies(info->timeout * 1000) + jiffies);
-+		  secs_to_jiffies(info->timeout) + jiffies);
- 
- 	return XT_CONTINUE;
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 0d704bda6c41..ba77beba60c4 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2394,6 +2394,16 @@ static int tcp_xa_pool_refill(struct sock *sk, struct tcp_xa_pool *p,
+ 	return k ? 0 : err;
  }
-@@ -275,7 +275,7 @@ static unsigned int idletimer_tg_target_v1(struct sk_buff *skb,
- 		alarm_start_relative(&info->timer->alarm, tout);
- 	} else {
- 		mod_timer(&info->timer->timer,
--				msecs_to_jiffies(info->timeout * 1000) + jiffies);
-+				secs_to_jiffies(info->timeout) + jiffies);
- 	}
  
- 	return XT_CONTINUE;
-@@ -320,7 +320,7 @@ static int idletimer_tg_checkentry(const struct xt_tgchk_param *par)
- 	if (info->timer) {
- 		info->timer->refcnt++;
- 		mod_timer(&info->timer->timer,
--			  msecs_to_jiffies(info->timeout * 1000) + jiffies);
-+			  secs_to_jiffies(info->timeout) + jiffies);
++static int put_devmem_cmsg(struct msghdr *msg, int level, int type, int len,
++			   void *data)
++{
++	/* Don't produce truncated CMSGs */
++	if (msg->msg_controllen < CMSG_LEN(len))
++		return -ETOOSMALL;
++
++	return put_cmsg(msg, level, type, len, data);
++}
++
+ /* On error, returns the -errno. On success, returns number of bytes sent to the
+  * user. May not consume all of @remaining_len.
+  */
+@@ -2438,10 +2448,10 @@ static int tcp_recvmsg_dmabuf(struct sock *sk, const struct sk_buff *skb,
+ 			 */
+ 			memset(&dmabuf_cmsg, 0, sizeof(dmabuf_cmsg));
+ 			dmabuf_cmsg.frag_size = copy;
+-			err = put_cmsg(msg, SOL_SOCKET, SO_DEVMEM_LINEAR,
+-				       sizeof(dmabuf_cmsg), &dmabuf_cmsg);
++			err = put_devmem_cmsg(msg, SOL_SOCKET, SO_DEVMEM_LINEAR,
++					      sizeof(dmabuf_cmsg),
++					      &dmabuf_cmsg);
+ 			if (err || msg->msg_flags & MSG_CTRUNC) {
+-				msg->msg_flags &= ~MSG_CTRUNC;
+ 				if (!err)
+ 					err = -ETOOSMALL;
+ 				goto out;
+@@ -2499,12 +2509,11 @@ static int tcp_recvmsg_dmabuf(struct sock *sk, const struct sk_buff *skb,
+ 				offset += copy;
+ 				remaining_len -= copy;
  
- 		pr_debug("increased refcnt of timer %s to %u\n",
- 			 info->label, info->timer->refcnt);
-@@ -382,7 +382,7 @@ static int idletimer_tg_checkentry_v1(const struct xt_tgchk_param *par)
- 			}
- 		} else {
- 				mod_timer(&info->timer->timer,
--					msecs_to_jiffies(info->timeout * 1000) + jiffies);
-+					secs_to_jiffies(info->timeout) + jiffies);
- 		}
- 		pr_debug("increased refcnt of timer %s to %u\n",
- 			 info->label, info->timer->refcnt);
-
+-				err = put_cmsg(msg, SOL_SOCKET,
+-					       SO_DEVMEM_DMABUF,
+-					       sizeof(dmabuf_cmsg),
+-					       &dmabuf_cmsg);
++				err = put_devmem_cmsg(msg, SOL_SOCKET,
++						      SO_DEVMEM_DMABUF,
++						      sizeof(dmabuf_cmsg),
++						      &dmabuf_cmsg);
+ 				if (err || msg->msg_flags & MSG_CTRUNC) {
+-					msg->msg_flags &= ~MSG_CTRUNC;
+ 					if (!err)
+ 						err = -ETOOSMALL;
+ 					goto out;
 -- 
-2.43.0
+2.48.1
 
