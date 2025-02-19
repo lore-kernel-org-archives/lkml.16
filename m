@@ -1,160 +1,157 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573441FDE03;
-	Wed, 19 Feb 2025 14:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787651FF1B9
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973796; cv=none; b=uT7wATafTSRNE1LFHPyqdxogS2N7k6gLD/N+l9PffPj/V/nybwDOy3+qu4Qr9qTfD4JtQU5RAqNkqaOZpaKT+3mbEq6KmTSPmH00SUFDQwOrcT5qts0FiPQBpCZqnkyuMInIlGcLmQvUXlBh+NJmNyS2cF9iPcmV/5p0evlhhOU=
+	t=1739973796; cv=none; b=UMNF2vItc7zDvGqf7l/x6pYeCENiBt5113FTjUfndTS9CYUZw2x7qECUD3vrVGCthvy6lcLyCUU+oRt+5lb21PqgnSaqS6D2Io+EbNnhV28sF1J+H2AsW3lUEGYpmSiYx5A9w6lERFlIXhTOTOUs8x8is2fjkGncsc0lIOoEWc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739973796; c=relaxed/simple;
-	bh=+yoyTgslXEGlaSowE8SMsWkFERto3CdZJqou3uuI6Ok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRXub6Up4fVSgzNS1c3OP0556gDlhiXQpjD9NMDhPggFO9/qjcb9UfyLZRCToZB4+8PwtBAM/WgEdT3gVCCtyHutB/2E/uShYCmsSAmWRZX4KJSs5fbHnszLXny+oc0VncO5GcMSbif00FiiTGE8Z/zK9ETP2LW/40WpSIxdp2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TFExlLpO; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=fb54nvaJtb/ZPGsqSbw/2oh4n8cpPZXTtW15PG7l6Gk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=c5ZZd1lNStRUiFwdOMpfK5GmA7pGDRJY9gmfYdqt8po8ilA0rrWPK6dYOqkQQewQoP0tKADU8IPb6vInMHYdHP4DYQJBXDyUGX4RrmoTzdyzhnAtk9QwbJZCDytfM+59HV2ktUwCnqQYdIYvA9t3sYc2SZi37W4Hl62p4MAO7j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hA43bPnS; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TFExlLpO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739973791;
-	bh=+yoyTgslXEGlaSowE8SMsWkFERto3CdZJqou3uuI6Ok=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TFExlLpOj3jsnWCm2u34v6V3QmBM165e/qPBc7wdqoPKkaAkfZWJS0t5LphRnbsIq
-	 49LT+aBrQ1rbAogEwlX7fOJOpgFUwZ5PIVU6z/JLjPGY5hzZMRwjRsXjE+ESCWQdj+
-	 5rdavkl1WwyCgYZe1jJBfjNr1XHZcsDJIBydJkC1r7+jb8xfQ6FnDtTowrRWoC4xsq
-	 naZGbKRUnSlDxZ6oLNlzlCCmGZ6scV1NAE2hxKwQi0DJrf8SHa0gui19+MTnLB3E3R
-	 7JmUQ4nAzY3cxsD1t4liVDbbOGx75GTc2x99/d+JwWApIDNDDz5+1Yq7/qXuyXNck9
-	 Rf4IsUiiQItTA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4EFDB17E0860;
-	Wed, 19 Feb 2025 15:03:10 +0100 (CET)
-Message-ID: <c534a79b-c253-4d7e-9bc1-9efa491d1db0@collabora.com>
-Date: Wed, 19 Feb 2025 15:03:09 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hA43bPnS"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250219140312euoutp015e6840ba523696cc8918f93db5f9336c~loPIh6SGd1485914859euoutp01a
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:03:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250219140312euoutp015e6840ba523696cc8918f93db5f9336c~loPIh6SGd1485914859euoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739973792;
+	bh=cK8knrHIi4/lY6BD8KZcVTKMN8gTk1ruHsI3tUZU9iI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hA43bPnSNbNzT14y4id55JwVqBEtFFQUKexcmA2LuBwbAQf5LNq2jRWdffviZPtux
+	 YwqHGA6zc/d7QUCScs6OuIwLO9+45ellh74a4W+OpjKIfDw8tkeSDqxi0UcyuuCubC
+	 MAozI6OA8OckG5EJ7FckOWlwNL1J1V2tYAfzzZss=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250219140312eucas1p17867cca41ab6e0b80e747aad5dc71e44~loPIE2ptw1247112471eucas1p1W;
+	Wed, 19 Feb 2025 14:03:12 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id DF.83.20821.0A4E5B76; Wed, 19
+	Feb 2025 14:03:12 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250219140311eucas1p24ef4a7a95abdb527c2bd305f3ed51674~loPHmt5pF2656126561eucas1p2_;
+	Wed, 19 Feb 2025 14:03:11 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250219140311eusmtrp2d431462d3b4ef21ff91db998b2f784d2~loPHl0XEP2432224322eusmtrp2W;
+	Wed, 19 Feb 2025 14:03:11 +0000 (GMT)
+X-AuditID: cbfec7f2-b11c470000005155-72-67b5e4a0ac7b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 25.62.19654.F94E5B76; Wed, 19
+	Feb 2025 14:03:11 +0000 (GMT)
+Received: from AMDC4942.home (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250219140310eusmtip250965c3cbba74aa97a083b540660e2c8~loPGWiOI00642206422eusmtip2Q;
+	Wed, 19 Feb 2025 14:03:10 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
+	wefu@redhat.com, jassisinghbrar@gmail.com, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, frank.binns@imgtec.com,
+	matt.coster@imgtec.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	ulf.hansson@linaro.org, jszhang@kernel.org, p.zabel@pengutronix.de,
+	m.szyprowski@samsung.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org, Michal Wilczynski
+	<m.wilczynski@samsung.com>
+Subject: [PATCH v5 16/21] drm/imagination: Add support for IMG BXM-4-64 GPU
+Date: Wed, 19 Feb 2025 15:02:34 +0100
+Message-Id: <20250219140239.1378758-17-m.wilczynski@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250219140239.1378758-1-m.wilczynski@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] dt-bindings: display: mediatek: Add compatibles
- for MT8188 MDP3
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc: p.zabel@pengutronix.de, airlied@gmail.com, simona@ffwll.ch,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- mchehab@kernel.org, matthias.bgg@gmail.com, moudy.ho@mediatek.com,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel@collabora.com, sebastian.fricke@collabora.com,
- macpaul.lin@mediatek.com
-References: <20241218105320.38980-1-angelogioacchino.delregno@collabora.com>
- <20241218105320.38980-2-angelogioacchino.delregno@collabora.com>
- <CAAOTY_9J4TE=qo+00N7T6-daMET+eTt8psp+eV1DXdgrz+avEQ@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <CAAOTY_9J4TE=qo+00N7T6-daMET+eTt8psp+eV1DXdgrz+avEQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfVBUZRTG57337r2XHRcvqxPvkFMKYSHJRzHN28g4OJPNLYYZ+6PILGSF
+	26LxNbssllkuwiIICCKbsysEAgqsEUHsxqKwIxALmhSsrF8sH4Z8bm4rkkGIsXux/O85z/md
+	9zln5qVx8U+kD70/OY2TJUsSfUkhYehe+HVrxbheGvLo+lrUc6MSQ/p/tBT6rq0PQ+VdfQI0
+	PNCMoevzDhJ9f+83Ck21ZRDIWltGoczuBhJNa4dJ5MwfFiBLaymJ5gq6ADLMZZGovstGoYb5
+	cgyddeoJVN3SClB27nkB6r+yE9mGewg0bcnHUbZ2LXpyqYVCy9ZGAp25b6JQs/2kAJnro1GW
+	qYSIeIF13FRRrH16mmA7cx5SbNtfFQRr1NooNt/4C2CbdLkkO2S9RLLf9r7HjuSZMfbH6iNs
+	Vn03xhY+DmEd7YMke6JZB9iBzBvULvFHwvB4LnF/OicL3h4rTKhbGiVTTws/v3vVAJTARh8H
+	HjRkwqDzgp04DoS0mKkF0Pp7nYAvHgJ4tn12tZgD8O5gGfl05JTSivONGgB7bxcBvrAD2Kmq
+	Ay6KZF6DozXl7vH1jIqAqp8z3BTOTAJoGC91v7WOiYS36tS4SxOMP7RYLZRLi5gIWKoeI/i8
+	F6Hp8rUVhqY9Vvz2fh8e8YK9mnE3gq8gmfoz7pUgUy+ExZUanJ99CyqvDQBer4Mz5maK1xvg
+	E2M5xusUOKp/sMofhsZ886reBof6FklXLs4EwIbWYN7eAatGZoHLhownvPmHF7+CJyw2nMZ5
+	WwRzssU8vRmq8wv+C+2rNayGsvAb9TlBEdikfeYY7TPHaP/PrQC4DnhzCnmSlJOHJnMHg+SS
+	JLkiWRoUl5LUBFb+9tVl84MWUDbjDOoAGA06AKRx3/Wi7CPNUrEoXvLFIU6WslemSOTkHeB5
+	mvD1FlWaVFIxI5WkcZ9xXCone9rFaA8fJcalhQw7unLo1JLI21OVprQ1Jf7WsLE3HmN34ufv
+	TNzbHc8FTG4e2fmmRddf8/GG57LVHROzasfBzoWufZjl/L6M2DivPSPWT3t07+vxPe+E523R
+	NH6ibfkbm8kdHNNKAtcUeXMHgk/8kLrRPn+gYO/FjTHvbr8SqfA5mmgd8Uy/T+nCD33wUvjb
+	lvEw3I+tenTSHjKlVSvTF6N205OhF6PEHxp92saa1IvRC43UkvVyXuCtpcLYw2FR0V/7RXgU
+	054xpk1fkhmFpZYmx7Tq9a+ocza1JmZiedsujkGvOhW2HYF/HotLqHEaA4aOTVV11m3112QU
+	mY/O+IVFvZx84ZVqhS8hT5CEbsFlcsm/syouk0oEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsVy+t/xe7rzn2xNN9h/QdfixPVFTBZbf89i
+	t1iz9xyTxfwj51gt7l3awmRx5et7Not1Ty+wW7zY28hicW3FXHaL5mPr2SxezrrHZvGx5x6r
+	xeVdc9gsPvceYbTY9rmFzWLtkbvsFuu/zmeyWPhxK4vFkh27GC3aOpexWlw85Wpx994JFouX
+	l3uYLdpm8Vv837OD3eLftY0sFrPf7We32PJmIqvF8bXhFi37p7A4yHm8v9HK7vHm5UsWj8Md
+	X9g99n5bwOKxc9Zddo+enWcYPTat6mTzuHNtD5vHvJOBHve7jzN5bF5S79Gy9hiTR/9fA4/3
+	+66yefRtWcXocan5OnuAUJSeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6d
+	TUpqTmZZapG+XYJexso/D9gKpnNVPDq9jbGB8S5HFyMnh4SAicTkhmvMXYxcHEICSxkl/r9o
+	YIJIyEhc637JAmELS/y51sUGUfSKUeLghZtsIAk2ASOJB8vns4LYIgKLWST27qsEKWIWeMso
+	cX3mRrBuYQFviZsrpzKD2CwCqhKXr11mB7F5BRwk5kx9CLVBXmL/wbNANRwcnEDxfRelQMJC
+	AvYS5/rus0KUC0qcnPkErJwZqLx562zmCYwCs5CkZiFJLWBkWsUoklpanJueW2ykV5yYW1ya
+	l66XnJ+7iRGYXrYd+7llB+PKVx/1DjEycTAeYpTgYFYS4W2r35IuxJuSWFmVWpQfX1Sak1p8
+	iNEU6OyJzFKiyfnABJdXEm9oZmBqaGJmaWBqaWasJM7LduV8mpBAemJJanZqakFqEUwfEwen
+	VANTUufs24/Z/I3/fgiyT7bglj8t/cOJWyHAbrNEekpBQqpt7U/umlk/j0gcMN5idenO2VVl
+	+VpTpZIKT1dkv8p1Mv1x7vMWk9D+0qSIBK0FPZvCz+nd2yHwhSPaVrBta0h3xY6MhMAXjbo6
+	d+ZEMYTHeqa1H+zRMc1nrVNnirwuVpSeMGPPSc7IhekO/YnVrxPW3Hm+v0x566YVFw6Xb84I
+	UyhVvZbFqCkkXJxhfiGjcLpsRSKL3KH5p1/Pjfk+zdhv/+WoKY6F2iFy/AknHBUe3uivzH3M
+	pte48afTf28JA8d14tOTjIITZc/57bKYsMKx9P3X60J/tuzPzDbh8Tv8km3Rfelvm786Z74+
+	pMRSnJFoqMVcVJwIAEdJFBy4AwAA
+X-CMS-MailID: 20250219140311eucas1p24ef4a7a95abdb527c2bd305f3ed51674
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250219140311eucas1p24ef4a7a95abdb527c2bd305f3ed51674
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250219140311eucas1p24ef4a7a95abdb527c2bd305f3ed51674
+References: <20250219140239.1378758-1-m.wilczynski@samsung.com>
+	<CGME20250219140311eucas1p24ef4a7a95abdb527c2bd305f3ed51674@eucas1p2.samsung.com>
 
-Il 19/02/25 14:49, Chun-Kuang Hu ha scritto:
-> AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> 於
-> 2024年12月18日 週三 下午6:53寫道：
->>
->> Add compatible strings for the AAL, COLOR, MERGE and PADDING
->> hardware components found in MediaTek's MT8188 SoC.
->>
->> This hardware is compatible with MT8195.
-> 
-> Acked-by: Chun-Kuang Hu <chunkuang.hu@mediatek.com>
+The IMG BXM-4-64 GPU is integrated into the T-Head TH1520 SoC. This
+commit adds the compatible string "img,img-bxm" to the device tree match
+table in the drm/imagination driver, enabling support for this GPU.
 
-Thanks CK, much appreciated.
+By including this GPU in the compatible devices list, the driver can
+initialize and manage the BXM-4-64 GPU on the TH1520 SoC, providing
+graphics acceleration capabilities upstream.
 
-Cheers!
+Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+---
+ drivers/gpu/drm/imagination/pvr_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
->>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> ---
->>   .../bindings/display/mediatek/mediatek,aal.yaml        |  4 ++++
->>   .../bindings/display/mediatek/mediatek,color.yaml      |  4 ++++
->>   .../bindings/display/mediatek/mediatek,merge.yaml      |  4 ++++
->>   .../bindings/display/mediatek/mediatek,padding.yaml    | 10 +++++++---
->>   4 files changed, 19 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
->> index cf24434854ff..1479035da409 100644
->> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
->> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
->> @@ -25,6 +25,10 @@ properties:
->>             - mediatek,mt8173-disp-aal
->>             - mediatek,mt8183-disp-aal
->>             - mediatek,mt8195-mdp3-aal
->> +      - items:
->> +          - enum:
->> +              - mediatek,mt8188-mdp3-aal
->> +          - const: mediatek,mt8195-mdp3-aal
->>         - items:
->>             - enum:
->>                 - mediatek,mt2712-disp-aal
->> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml
->> index 7df786bbad20..799c0b8fc1f9 100644
->> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml
->> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml
->> @@ -27,6 +27,10 @@ properties:
->>             - mediatek,mt8167-disp-color
->>             - mediatek,mt8173-disp-color
->>             - mediatek,mt8195-mdp3-color
->> +      - items:
->> +          - enum:
->> +              - mediatek,mt8188-mdp3-color
->> +          - const: mediatek,mt8195-mdp3-color
->>         - items:
->>             - enum:
->>                 - mediatek,mt7623-disp-color
->> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml
->> index dae839279950..415a25bc18fa 100644
->> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml
->> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml
->> @@ -25,6 +25,10 @@ properties:
->>             - mediatek,mt8173-disp-merge
->>             - mediatek,mt8195-disp-merge
->>             - mediatek,mt8195-mdp3-merge
->> +      - items:
->> +          - enum:
->> +              - mediatek,mt8188-mdp3-merge
->> +          - const: mediatek,mt8195-mdp3-merge
->>         - items:
->>             - const: mediatek,mt6795-disp-merge
->>             - const: mediatek,mt8173-disp-merge
->> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,padding.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,padding.yaml
->> index be07bbdc54e3..86787866ced0 100644
->> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,padding.yaml
->> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,padding.yaml
->> @@ -20,9 +20,13 @@ description:
->>
->>   properties:
->>     compatible:
->> -    enum:
->> -      - mediatek,mt8188-disp-padding
->> -      - mediatek,mt8195-mdp3-padding
->> +    oneOf:
->> +      - enum:
->> +          - mediatek,mt8188-disp-padding
->> +          - mediatek,mt8195-mdp3-padding
->> +      - items:
->> +          - const: mediatek,mt8188-mdp3-padding
->> +          - const: mediatek,mt8195-mdp3-padding
->>
->>     reg:
->>       maxItems: 1
->> --
->> 2.46.1
->>
+diff --git a/drivers/gpu/drm/imagination/pvr_drv.c b/drivers/gpu/drm/imagination/pvr_drv.c
+index 0639502137b4..2776de095439 100644
+--- a/drivers/gpu/drm/imagination/pvr_drv.c
++++ b/drivers/gpu/drm/imagination/pvr_drv.c
+@@ -1474,6 +1474,7 @@ static void pvr_remove(struct platform_device *plat_dev)
+ 
+ static const struct of_device_id dt_match[] = {
+ 	{ .compatible = "img,img-axe", .data = NULL },
++	{ .compatible = "img,img-bxm", .data = NULL },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, dt_match);
+@@ -1498,3 +1499,4 @@ MODULE_DESCRIPTION(PVR_DRIVER_DESC);
+ MODULE_LICENSE("Dual MIT/GPL");
+ MODULE_IMPORT_NS("DMA_BUF");
+ MODULE_FIRMWARE("powervr/rogue_33.15.11.3_v1.fw");
++MODULE_FIRMWARE("powervr/rogue_36.52.104.182_v1.fw");
+-- 
+2.34.1
 
