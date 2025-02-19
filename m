@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5711D19D067;
-	Wed, 19 Feb 2025 15:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859231F462D;
+	Wed, 19 Feb 2025 15:18:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978320; cv=none; b=LBZC0WZ6hjunoB2eKcyv0EHltBTCoAS6x0bXf41JtSovcjikFy7SO4ewR/L4gaPBUUARkOg8MVq52BBzn1wBH8uYUxYwI7Y0OT6/463Mff1qhnOlaxdMpG/1f/sgEUosSmLiBGYLb+oGV7L1Keup0c8O0QlGWL2/LIrCZ6PSm3I=
+	t=1739978320; cv=none; b=T2+htAusYordsWL/8Z4wqCwK4qw3a1WcQdeH91F2VQJt2/fEzGK9sOqDeNfJUuyT/xH2byYy8bIriTU9LDOYnl+mLYi1yjrKbqHHrWIPTYfKpi2eCtlVhusJlhnrdkONcmx1tcnAPJ1iLofdSj+aNsC6Y+X+LJZjpzoaPEov5LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739978320; c=relaxed/simple;
-	bh=2gfuHK10pWbnp1kasPYwpA9FyJnNwp/Rer8OuBT8Dzc=;
+	bh=ZRPURUeCAkTDmo+Kg/vefAHs6hoBKvDj93aPdKVfbJw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=nYWQpnmDLWSfahqO5nU2MfHCYWXBKT77q3+t6nqvbAHzJvsapt5Ltu1PiM/YrELh+5yOwuOCF/HkI8rbJnTYjbNsaj9/rbMCv5zlNANsfj0BWyoaXPPj81fwpxZXCKRZ7ygniR7KafJCAXnK3tJkFN72JQLphxReNcz4jpdBaUk=
+	 Content-Type; b=fQJNMoy6xqmclFm+9czCfEXtFI3IOFaUUsPY23aS3tHW1nkJNVpeVmSuCFrY4CwH9YqJy/bFu+EqA5Ck+EThDa8uNechkU+orC2YLjiLqhu6wx2YnvGdq9EtBPitdWPh8/5vQ6RC2zpCqK4YwVgYOkWcKC8Rtd/FdD/epb/wWuo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACC3FC4CEE7;
-	Wed, 19 Feb 2025 15:18:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE14C4CEE8;
+	Wed, 19 Feb 2025 15:18:40 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tklqq-00000004bZJ-1CSm;
+	id 1tklqq-00000004bbG-42cL;
 	Wed, 19 Feb 2025 10:19:04 -0500
-Message-ID: <20250219151904.133228859@goodmis.org>
+Message-ID: <20250219151904.814826218@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 19 Feb 2025 10:18:17 -0500
+Date: Wed, 19 Feb 2025 10:18:21 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -42,7 +42,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Will Deacon <will@kernel.org>,
  Vasily Gorbik <gor@linux.ibm.com>,
  Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [for-next][PATCH 2/6] scripts/sorttable: Have mcount rela sort use direct values
+Subject: [for-next][PATCH 6/6] ftrace: Have ftrace pages output reflect freed pages
 References: <20250219151815.734900568@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,17 +54,26 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The mcount_loc sorting for when the values are stored in the Elf_Rela
-entries uses the compare_extable() function to do the compares in the
-qsort(). That function does handle byte swapping if the machine being
-compiled for is a different endian than the host machine. But the
-sort_relocs() function sorts an array that pulled in the values from the
-Elf_Rela section and has already done the swapping.
+The amount of memory that ftrace uses to save the descriptors to manage
+the functions it can trace is shown at output. But if there are a lot of
+functions that are skipped because they were weak or the architecture
+added holes into the tables, then the extra pages that were allocated are
+freed. But these freed pages are not reflected in the numbers shown, and
+they can even be inconsistent with what is reported:
 
-Create two new compare functions that will sort the direct values. One
-will sort 32 bit values and the other will sort the 64 bit value. One of
-these will be assigned to a compare_values function pointer and that will
-be used for sorting the Elf_Rela mcount values.
+ ftrace: allocating 57482 entries in 225 pages
+ ftrace: allocated 224 pages with 3 groups
+
+The above shows the number of original entries that are in the mcount_loc
+section and the pages needed to save them (225), but the second output
+reflects the number of pages that were actually used. The two should be
+consistent as:
+
+ ftrace: allocating 56739 entries in 224 pages
+ ftrace: allocated 224 pages with 3 groups
+
+The above also shows the accurate number of entires that were actually
+stored and does not include the entries that were removed.
 
 Cc: bpf <bpf@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
@@ -85,63 +94,66 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
 Cc: Vasily Gorbik <gor@linux.ibm.com>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Link: https://lore.kernel.org/20250218200022.538888594@goodmis.org
+Link: https://lore.kernel.org/20250218200023.221100846@goodmis.org
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- scripts/sorttable.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 4a34c275123e..f62a91d8af0a 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -552,6 +552,28 @@ static void *sort_orctable(void *arg)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index e657013424aa..27c8def2139d 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7006,6 +7006,7 @@ static int ftrace_process_locs(struct module *mod,
+ 	unsigned long addr;
+ 	unsigned long kaslr;
+ 	unsigned long flags = 0; /* Shut up gcc */
++	unsigned long pages;
+ 	int ret = -ENOMEM;
  
- #ifdef MCOUNT_SORT_ENABLED
+ 	count = end - start;
+@@ -7013,6 +7014,8 @@ static int ftrace_process_locs(struct module *mod,
+ 	if (!count)
+ 		return 0;
  
-+static int compare_values_64(const void *a, const void *b)
-+{
-+	uint64_t av = *(uint64_t *)a;
-+	uint64_t bv = *(uint64_t *)b;
++	pages = DIV_ROUND_UP(count, ENTRIES_PER_PAGE);
 +
-+	if (av < bv)
-+		return -1;
-+	return av > bv;
-+}
-+
-+static int compare_values_32(const void *a, const void *b)
-+{
-+	uint32_t av = *(uint32_t *)a;
-+	uint32_t bv = *(uint32_t *)b;
-+
-+	if (av < bv)
-+		return -1;
-+	return av > bv;
-+}
-+
-+static int (*compare_values)(const void *a, const void *b);
-+
- /* Only used for sorting mcount table */
- static void rela_write_addend(Elf_Rela *rela, uint64_t val)
- {
-@@ -583,6 +605,8 @@ static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
- 	void *vals;
- 	void *ptr;
+ 	/*
+ 	 * Sorting mcount in vmlinux at build time depend on
+ 	 * CONFIG_BUILDTIME_MCOUNT_SORT, while mcount loc in
+@@ -7124,6 +7127,8 @@ static int ftrace_process_locs(struct module *mod,
+ 			for (pg = pg_unuse; pg; pg = pg->next)
+ 				remaining += 1 << pg->order;
  
-+	compare_values = long_size == 4 ? compare_values_32 : compare_values_64;
++			pages -= remaining;
 +
- 	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
- 	shentsize = ehdr_shentsize(ehdr);
+ 			skip = DIV_ROUND_UP(skip, ENTRIES_PER_PAGE);
  
-@@ -640,7 +664,7 @@ static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
- 		}
+ 			/*
+@@ -7137,6 +7142,13 @@ static int ftrace_process_locs(struct module *mod,
+ 		synchronize_rcu();
+ 		ftrace_free_pages(pg_unuse);
  	}
- 	count = ptr - vals;
--	qsort(vals, count / long_size, long_size, compare_extable);
-+	qsort(vals, count / long_size, long_size, compare_values);
++
++	if (!mod) {
++		count -= skipped;
++		pr_info("ftrace: allocating %ld entries in %ld pages\n",
++			count, pages);
++	}
++
+ 	return ret;
+ }
  
- 	ptr = vals;
- 	for (int i = 0; i < shnum; i++) {
+@@ -7782,9 +7794,6 @@ void __init ftrace_init(void)
+ 		goto failed;
+ 	}
+ 
+-	pr_info("ftrace: allocating %ld entries in %ld pages\n",
+-		count, DIV_ROUND_UP(count, ENTRIES_PER_PAGE));
+-
+ 	ret = ftrace_process_locs(NULL,
+ 				  __start_mcount_loc,
+ 				  __stop_mcount_loc);
 -- 
 2.47.2
 
