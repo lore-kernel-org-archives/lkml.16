@@ -1,153 +1,130 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4ADB1C5D69
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934021C548C
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739956954; cv=none; b=SAr7ol1cAAPbIM7A/NU3VDsfwDYqAFP7e5HQd7FgtTmKOXq/iSXZYVfrDehT/QEP+yWVf3ky8t3A9WtTkuJe7yoDdkGsqYdYXitcb+SVEDy2rtxxKYzneqbv6d2aJHSR2M/DFkZo+hf52vZHUtN16LjZjjD93Ta6NzNRTdmzzwc=
+	t=1739956960; cv=none; b=hWt25RpAlu1ZTCJf7au52Uh6mMdPd8KUoalacYIZE/dwhOyZXVmee2Ia/Ugbq1AwUQSBTLNx0rHDCdMVQ0wPCCu3Qr/CwGgM1yU3UIvM7XwXUUOmJkXqgwQDV9pSzNC//xvBnDJ1yzbIaa9l+WX4SBWThTqUiRxXilXGtzJqGcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739956954; c=relaxed/simple;
-	bh=Emq0s37HWVf+yMAcB00SXuh2VSIdv4rvq6v00xkLO3s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a/W6DBUq4l19uqe36nuTuIm9YzRWYa2mUMiExlMQOHuOkvM9t+EGAoACnrtw+rIpWydkuRYKx1bIhZUbn5PZByjmYPH2kG8v5hgOoq82pk1Phkk7xtiUeQGZdzpPjyfeUxiwZ8oiZoyfYmUpeuMKS6bNrBnGs+J9q9BzT+ZdbwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=qdcGHmef; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1739956960; c=relaxed/simple;
+	bh=882+GeLvhOhZ90ZJo71O/xXswVk12JFwrOg2gd0h8EE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KfcE4qsx5c0CLViyTscC8AQUIGfzud6F7s6We6ZmoxKsWAH7lZuM1vy31tYJh/OkSHA9NuqpC+2CgwdNnuXfVepeyzx/+vBUypBErZnN8F7hHLBQSXWstnduTEf0ppr4fwi0+09XnjWGhnXwWm3VC8Fcv/EjdaOpvT/+golC/ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kRv3J7cR; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="qdcGHmef"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220bff984a0so116191965ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 01:22:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kRv3J7cR"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30a3092a9ebso34576791fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 01:22:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1739956951; x=1740561751; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739956957; x=1740561757; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zjpV/rOsBTZhvMzmuINLNFZE/6rbEow5DAVU2rYU1PQ=;
-        b=qdcGHmefAT+xBHykoCBohWDqLuGjyyk4gBR2fizHuEb3pIKIZEhVoD1ACMHbtbEbZ7
-         a1ZdP2SSuu5Q0k8ugHRKDNhZ9p32HVG8hMuLDx/eNQTnkXXK1AjxDvJ70uFgo2LlZ29f
-         vgikYZ5iiyl9tcBOQaWXX31305V3D7xoWWspw=
+        bh=882+GeLvhOhZ90ZJo71O/xXswVk12JFwrOg2gd0h8EE=;
+        b=kRv3J7cRUMV91yt5eJpe7WOu3+oEwlSoFvmbu9xD0Mb30r6YevqlS+xz0SXVAck0Jf
+         Mi5A5axfVZOo32XvdnGb/eg3arg5B65+uOLPq1JDQIFl9FrxLBtYvP8KJ4ghU8rfNzOC
+         bMcj5w4TAsFNZEiBv+EqyeC6JBGsCbag+Yq7QJIf6gXnL/EMzb4Ul8O2ZUSnwUN88MUq
+         3KlHRklNGXAwkUdSGnp77jWqqxCAzqGWjOG8BjIndmSIkOxdkr25tMfIB/aQKeA03w2/
+         n7xh5ddUNtsr/XZeS+Owfax+/faO3Q+A0HgZhUnvoiCO3bS0QErx+DXzliVGiD1vrDxd
+         3lDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739956951; x=1740561751;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739956957; x=1740561757;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zjpV/rOsBTZhvMzmuINLNFZE/6rbEow5DAVU2rYU1PQ=;
-        b=Dcn/qlc3RyCBc8Jkyxs35tXCjkyhP6dLosGewdoIDLHHZphRobKRKfgjUHvR/IKOQC
-         ffez3B9DPOidtTsHA0P+STLoTBmfzYP4Qm+80zES4XPuoUbN4WIuDup6/EpR47QOtaTV
-         AwfspnSkKe1zydyUikeu8XMUEDupx9RGGEOBD0a8RpjWx8ZjSQnEk3Fc8jNDpduP3iA2
-         6rgHxv1luokWHuAEofVQeFVgeJZzY8k/Mt2JpK4Rhx137nTjqLoGc2nDxBkBMzccaNI0
-         GmNmHMa1+3PH2bzx/082HIH9vEwm/vKr3vRULhdNLNsc9DE5uP+wLHkPKsgMuE9n4Plr
-         rYRg==
-X-Gm-Message-State: AOJu0YzasrMxvbrWzmsAWV/PQV1cZIJlQhMJg3AjQByhTiyl8tDERIRp
-	TOG7dp7x/+XUOvdDeHtZBeE2sWuiCZtpCoHkw7ZRZPc9xp69kirPhSTJSTeWLFmn4K6OutMKba5
-	+
-X-Gm-Gg: ASbGncvIUL2tqocwHba8MXLxCY0oLrOp//h6HoZn1mti/jOrQPN2g0JLJ4Em/qFo2sX
-	cd9olUMfXO4i7E9Arnx74sW0XU39eqNkNlA/UXXVbmyD3nqKgXiDfeoWNmd5JLkXL7WW3mzlM+M
-	+GsodnogNjBraJip0mFvbMGP+gcEIW8Q62pbfLFV6+6G0bqdS6D4ipz1w50ITl8fRBqlkWBWVi5
-	BW2LDa8HE1wdl5yKd8tlTJADCMk2PNLk4SuO9l9JMLR8zg8PpdZTNokly0ID0Ju5xW0AX2zhE4i
-	MYcUHAvQRM0hAxOGGPWg
-X-Google-Smtp-Source: AGHT+IEJm44nEb0TxcOjkAjrcsD0xsD/CPlwgrhHME8dtzpc5/4Onda8YE7jAeRTGmWr+ZG5phmDmw==
-X-Received: by 2002:a17:902:ce87:b0:21f:85ee:f2df with SMTP id d9443c01a7336-22103f16b56mr276089045ad.15.1739956950796;
-        Wed, 19 Feb 2025 01:22:30 -0800 (PST)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d621sm100543165ad.136.2025.02.19.01.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 01:22:30 -0800 (PST)
-From: Roger Pau Monne <roger.pau@citrix.com>
-To: linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-pci@vger.kernel.org
-Cc: Roger Pau Monne <roger.pau@citrix.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 2/3] PCI: vmd: Disable MSI remapping bypass under Xen
-Date: Wed, 19 Feb 2025 10:20:56 +0100
-Message-ID: <20250219092059.90850-3-roger.pau@citrix.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250219092059.90850-1-roger.pau@citrix.com>
-References: <20250219092059.90850-1-roger.pau@citrix.com>
+        bh=882+GeLvhOhZ90ZJo71O/xXswVk12JFwrOg2gd0h8EE=;
+        b=h4QDoR/0MILcAUJBJhW4Ueidj1ifY2tLqs2Bsyb4dyjJDbkvHJr2HFRKgAJdVgozD1
+         eupO210yvx6Czy4MWy03Tk55FbM0E4hPDgY08hhGW4RFGaUiM/9CjA94jtFu98gcUugu
+         Cd6D0E6FcRYvf9AmF8wvYY8L1DsrZDcY/Im8x71WGMvF8wHx+Es+IRrRSQWGk97sl3LP
+         HPDEuytcG2bhwX45sQTd6MCC6u+c6OMeuNY2j9lHQeZaZzMG8a3hHlIjAyNmM+upEEOp
+         WH21vF0DgFTMcdiN4O4tQOFlYXROAdeEGowBzpaY4xbpMqeH4l3h6pWYWiU3J1ogboal
+         oZUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgMJcK6a8n5yxytPjeOzlG66n0QB7ubaSMs3XWNaoNonHwNSlsBwW+RQu56hMdrai/fKnC8OUo6c6xFWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUoaHfcWzPzUEIDBUMPyvJVr5vkZFY6HeSeMCe2FU74WXyjUrF
+	1z2Maq6qxAjqxktPrN5SSzumM6SN4rRd5bIqR3l+9KuDo9OB3KLVqw9FrHTARngBZJCU1ns42rc
+	HhtMmR9vHwUiPnAhjmR68gGzbUFxBBfoVqza8Wg==
+X-Gm-Gg: ASbGncuhrYj+0qBg+er4B5HypqfMBBJl7cLYWSvVQX4n4ItEUDhm7lPVaQxJAPhXs+M
+	AwBsYyMHIjhsvFU44FepFs8I7Z7K9iTzxWTSO24dtFcaP0+85xA8gWXlpifr170PEZ57agApZ0G
+	pEEHSswv7rFNchhOGT6hj5RZUABjI=
+X-Google-Smtp-Source: AGHT+IFdq3DsLsQ07SUQyFjnXJ/TBOJSzpWcwna2L3NBWTn+vHCfPc0MhMyzYqgbujIH1hiHEH5Zd5fdTZyJSgFlEkc=
+X-Received: by 2002:a05:651c:a:b0:2ff:8e69:77d7 with SMTP id
+ 38308e7fff4ca-30927a64cacmr48765581fa.20.1739956956700; Wed, 19 Feb 2025
+ 01:22:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
+ <CGME20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254@eucas1p1.samsung.com>
+ <20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
+ <dfe03f88-407e-4ef1-ad30-42db53bbd4e4@samsung.com> <CAMRc=MduJK0_gat2aVQbR9udYNj9oDcoN=me0wa4K6L8dX_52Q@mail.gmail.com>
+ <7c045d13-146f-448c-ad73-60069059b242@samsung.com>
+In-Reply-To: <7c045d13-146f-448c-ad73-60069059b242@samsung.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 19 Feb 2025 10:22:25 +0100
+X-Gm-Features: AWEUYZm6Gj5cFgQ87Mb8LjORD5nmtpBio1fdKEzvV2SnbMSrnrl4QoWzxX_bD5k
+Message-ID: <CAMRc=Me2vsqtsZwuy1d9h6hA4+XVVGCeh8Nd77-Pq1QCMniUfQ@mail.gmail.com>
+Subject: Re: [PATCH 1/8] gpiolib: check the return value of gpio_chip::get_direction()
+To: Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-MSI remapping bypass (directly configuring MSI entries for devices on the
-VMD bus) won't work under Xen, as Xen is not aware of devices in such bus,
-and hence cannot configure the entries using the pIRQ interface in the PV
-case, and in the PVH case traps won't be setup for MSI entries for such
-devices.
+On Wed, Feb 19, 2025 at 10:14=E2=80=AFAM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> On 19.02.2025 09:50, Bartosz Golaszewski wrote:
+> > On Wed, Feb 19, 2025 at 9:38=E2=80=AFAM Marek Szyprowski
+> > <m.szyprowski@samsung.com> wrote:
+> >> On 10.02.2025 11:51, Bartosz Golaszewski wrote:
+> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>
+> >>> As per the API contract - gpio_chip::get_direction() may fail and ret=
+urn
+> >>> a negative error number. However, we treat it as if it always returne=
+d 0
+> >>> or 1. Check the return value of the callback and propagate the error
+> >>> number up the stack.
+> >>>
+> >> This change breaks bcm2835 pincontrol/gpio driver (and probably others=
+)
+> >> in next-20250218. The problem is that some gpio lines are initially
+> >> configured as alternate function (i.e. uart) and .get_direction return=
+s
+> >> -EINVAL for them, what in turn causes the whole gpio chip fail to
+> >> register. Here is the log with WARN_ON() added to line
+> >> drivers/pinctrl/bcm/pinctrl-bcm2835.c:350 from Raspberry Pi 4B:
+> >>
+> >> Any suggestions how to fix this issue? Should we add
+> >> GPIO_LINE_DIRECTION_UNKNOWN?
+> >>
+> > That would be quite an intrusive change and not something for the
+> > middle of the release cycle. I think we need to revert to the previous
+> > behavior for this particular use-case: check ret for EINVAL and assume
+> > it means input as it's the "safe" setting. Now the question is - can
+> > this only happen during the chip registration or should we filter out
+> > EINVAL at each gpiod_get_direction() call?
+>
+> IMHO it will be enough to use that workaround only in the
+> gpiochip_add_data_with_key() function. The other functions modified by
+> the $subject patch are strictly related to input or output gpio mode of
+> operation, so having the line set to proper input/output state seems to
+> be justified.
+>
 
-Until Xen is aware of devices in the VMD bus prevent the
-VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as
-any kind of Xen guest.
+Cc'ing Florian
 
-The MSI remapping bypass is an optional feature of VMD bridges, and hence
-when running under Xen it will be masked and devices will be forced to
-redirect its interrupts from the VMD bridge.  That mode of operation must
-always be supported by VMD bridges and works when Xen is not aware of
-devices behind the VMD bridge.
+After a quick glance at existing get_direction() callbacks, it seems
+this is the only driver that does it. I'm wondering if it wouldn't
+make sense to change the driver behavior instead and make it assume
+input for unknown functions.
 
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
----
-Changes since v2:
- - Adjust patch subject.
- - Adjust code comment.
-
-Changes since v1:
- - Add xen header.
- - Expand comment.
----
- drivers/pci/controller/vmd.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 9d9596947350..e619accca49d 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -17,6 +17,8 @@
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
- 
-+#include <xen/xen.h>
-+
- #include <asm/irqdomain.h>
- 
- #define VMD_CFGBAR	0
-@@ -970,6 +972,24 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	struct vmd_dev *vmd;
- 	int err;
- 
-+	if (xen_domain()) {
-+		/*
-+		 * Xen doesn't have knowledge about devices in the VMD bus
-+		 * because the config space of devices behind the VMD bridge is
-+		 * not known to Xen, and hence Xen cannot discover or configure
-+		 * them in any way.
-+		 *
-+		 * Bypass of MSI remapping won't work in that case as direct
-+		 * write by Linux to the MSI entries won't result in functional
-+		 * interrupts, as Xen is the entity that manages the host
-+		 * interrupt controller and must configure interrupts.  However
-+		 * multiplexing of interrupts by the VMD bridge will work under
-+		 * Xen, so force the usage of that mode which must always be
-+		 * supported by VMD bridges.
-+		 */
-+		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
-+	}
-+
- 	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
- 		return -ENOMEM;
- 
--- 
-2.46.0
-
+Bart
