@@ -1,200 +1,260 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2083.outbound.protection.outlook.com [40.107.102.83])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF6B192B66;
-	Wed, 19 Feb 2025 06:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739945686; cv=fail; b=C5lunnxFxfnGS+SBElyl+Exrvx8oYLlaZ2tY6Hn2DXzaAHFY0b5wV7QaIuspIYfLlIc0WVtLEBMrmWAqkekb7lZh5FhgWLo0JRB8KreIDodlkHT5eSBzod1NK/eOZWajuaLXwSOcLmANr8bierCxhHi/sC2LI7gqvKhStz/mnDg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739945686; c=relaxed/simple;
-	bh=23aFKc91xJXKbLUEudece32opRmYcmX8qRTzyBN/eRs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eB6nxxDFVHyPlTPxS+kSAhlslkpdpf4G8NAcSKshuVwogvuff6S2dyRqcyc6BI5mlyms/bZHZKRhuP3nHGMYcD64xrPzwLXuZJhFIM24odL/6DgHCnQXMl3jz2dWUoEtWM2rOPLgyblgZKIjhasZW1QHlLa0LfP+VL8DeZ78BLE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xfN42HXf; arc=fail smtp.client-ip=40.107.102.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xfN42HXf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZeWkpukemboOkMsTd01WOVftgn9Ic+T3PWv3Ub7pv+7ZeOfBbtc4KBKxpYz1Okg2CDZ9CZrzmKcORHtSWEWSh5JdhDGB+0xvVb3SHcZCjCOr42hE0KeS+vka+9Flrb/ju2EZ2rBa0KBKc/LehBWr4O2G/FDHaHzzI2cb+b2DqYn9zrpyBCYzom6AJplKMTdVzSey3oAZ5tItOkBclF3+9tzJUQD1QwLNgliXv/spNy5Kq2TL8a2iuiI58wo1wMXrbdiqXCcudaFjGcJ6fJ8xhtNCbq5RKYTmc0YmJfLrkwic8QJEgSLYa9D9d2q6SPedXrO5HS1L3KnIb4Vz2d2ovg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SNZ1YCb2i/owL7Dil8E18uU7/LY4d6UvVL6mKPsMjK8=;
- b=Fj3uU2FADlh+e02PAW6T2kfld+TEOn3rJDhJL3J6eur3TwyTuhGCdiE1i0fmGTKBa2we9SR6pn1NjrXJQMqRrolBmYMR7+hzS6D9bwMXUHkGJqmBcO4ktTvaMqJdzDN6aQpEB9HOvRIMs3YE6Tn/sgziXd9YJodJWOvT9MzsNirVQmlNe5s/ei12/9X7esKLRd/P76awGTwWTRTPjUEPGMKCEEHT15blocyq2MfQnRQCKfmMXI9V6orFV0ZoL0ZU9tBBkleqHaCJoinvAyHbT6WzWok699u0o0gYyY/oUeK1Ta6ho/lIW10fBQ1DR5Cm8+lTxv3AoYp2fZjb+Y15Zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SNZ1YCb2i/owL7Dil8E18uU7/LY4d6UvVL6mKPsMjK8=;
- b=xfN42HXfeW3p4cysupK3hF6vXTq1qPhJn9rsLiXssRWAtjOHNd7vcqWSWXGcsYIH5aHtaxqO9EfakiFbQNvoZQ6QJtkDtOAlDOQpDsg+uS+cHUxBUV/ZbCn1+gFVG39QN1Myv7DjNhAQTzU8x/zik8mVqHSTJ/NEx8ejErOI9ws=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
- by CH3PR12MB9456.namprd12.prod.outlook.com (2603:10b6:610:1c2::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Wed, 19 Feb
- 2025 06:14:42 +0000
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9%7]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
- 06:14:42 +0000
-Message-ID: <0729eed3-4034-4744-baf3-ddee54be1f7f@amd.com>
-Date: Wed, 19 Feb 2025 11:44:36 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/18] cpufreq/amd-pstate: Show a warning when a CPU
- fails to setup
-To: Mario Limonciello <superm1@kernel.org>,
- "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>
-Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250217220707.1468365-1-superm1@kernel.org>
- <20250217220707.1468365-3-superm1@kernel.org>
-Content-Language: en-US
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <20250217220707.1468365-3-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0156.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:c8::9) To LV8PR12MB9207.namprd12.prod.outlook.com
- (2603:10b6:408:187::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C7B4C6D
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 06:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739945793; cv=none; b=VzR1GE/zQ/Er+cg2C46Iz5vUmdFrGJgHc0FJJBto8PcwCV2a/NWBgmU0FD3ilGCfRqG5M8JuweGmsrLKbhi/wtpISYGpgd3D5XsbTfFzipoFX+GNCGDFuLnnlyVYi85rUtY99aHf/XpwPz99A2RV4lAl7uXpuxE7T09MWwj248I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739945793; c=relaxed/simple;
+	bh=RgYSUqPJkdoPQVBKv8aa8ZC8sQGAxp6ko1hDJrqt28Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gIvRtN+BHKLTjmX0oAjKiNCuM+5BCrue9Nw0qmjTiT7tXX3pFLYAC2mjvyDQMusVfFpKfwbahAF+c4UEAdk71iyzpOGdgQT+0OMBOBWkL+3rpg31vVtm7KTw6RjPlrAFNeunwGEr5zh8hiU0B+fwZ1BIDO1ZblpMhLuhLDatToU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YyQzM71BBz2JYb4;
+	Wed, 19 Feb 2025 14:12:31 +0800 (CST)
+Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
+	by mail.maildlp.com (Postfix) with ESMTPS id 865B8180214;
+	Wed, 19 Feb 2025 14:16:26 +0800 (CST)
+Received: from huawei.com (10.175.124.71) by kwepemg100017.china.huawei.com
+ (7.202.181.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 19 Feb
+ 2025 14:16:25 +0800
+From: Wupeng Ma <mawupeng1@huawei.com>
+To: <akpm@linux-foundation.org>, <david@redhat.com>, <osalvador@suse.de>,
+	<nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <mhocko@suse.com>
+CC: <mawupeng1@huawei.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] mm: memory-failure: update ttu flag inside unmap_poisoned_folio
+Date: Wed, 19 Feb 2025 14:06:52 +0800
+Message-ID: <20250219060653.3849083-1-mawupeng1@huawei.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <55e4ad74-752b-65c6-5ceb-b3a7fd7959a1@huawei.com>
+References: <55e4ad74-752b-65c6-5ceb-b3a7fd7959a1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|CH3PR12MB9456:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93042d17-a82d-4df8-e94b-08dd50acb305
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Zmc5WmE4Vlk0cytBc2JqYzk5RUh5YzZINXZBRi9Wa3VYclptWGs0Y3JqdStO?=
- =?utf-8?B?ZDF5dnE3WmRqM3RCY0N6cDNzWFdSQVkzSjgwbkI2bEdXMHJDTnBNUE91ZUJy?=
- =?utf-8?B?TkNlZTRjVEpackhnSjFSOFdyUkhxK2N3Ykx3M3lIKyttMmgrdy83NlhXYUNH?=
- =?utf-8?B?Zm9IeGVTTi9UVlE0T29iK3l2OUhhcy9mS0FtQUc0UHFVS0UweG53VmQ0a0Ro?=
- =?utf-8?B?U3MzYzE3K1FuR2NPckxPTkFmMWhuYkZLd09BS1lHYUZ2QlltUHJEZ0hoNXh2?=
- =?utf-8?B?eGN2WWl1N2tad0Qrck1ZQi9TNDV4bjdJVXVpY0RqL1VCYmE5RUZCZDJLY0tV?=
- =?utf-8?B?TzFzVlU4N1JSUXhTY3N1Vk5UbDhvNFB5YjQrcnlDSDU5VHZNb1pza1hIQmMv?=
- =?utf-8?B?d0QxcHdQSE4zQWFNWmdIU3B1WUdZR1dtUExtQTR2b1NMUUx2ZTVKNGYycDZO?=
- =?utf-8?B?OVRINjE4RGkvT2psS1RJVWdXa2Y2VjkxTVdIQ3NaTkwrUjRscXdUZFBJcG96?=
- =?utf-8?B?bVZ3OG5QVW9ZSUV0V3NKYVZYYlVNS0hOZmxhbTgvSTM3d2ttamRITFV5cmE3?=
- =?utf-8?B?QU90SjhpVWg1WFJJakF4cXJWVi94NGU1bm9lT0lQVGZjT3RNaERGMkZoZ09Z?=
- =?utf-8?B?Y2xSMjJUTVdDak1vN20yeG00VTZMUzNMcFpaTTU4SHFGWjdpQUZzdnkyM3Vj?=
- =?utf-8?B?eE1ESlpjWjhjMkZIaHRTMG10ZWFEVGZBVXkyZGNPc2tnWjNTRHNLOXVOVC9v?=
- =?utf-8?B?K3VmWFdCMm9SMURJRi9KVTNHSlFaTWNvSWNRbDV3ZXRGcC9WTDVIMDJlbzFQ?=
- =?utf-8?B?QmhOYXhjRmh1Y3pOOXpHNzcxZFduWisvM3ZzR21TWnVrT1REZHJycUlQb0FC?=
- =?utf-8?B?UHhIbHZHdjVIelVCSzA3MGVsL0wxcTVDMW1mRGxLRG4yOGo0SHBocVZkQm5G?=
- =?utf-8?B?cXpyKzVPM1hkNTVZazVVeWRWWUFtY0syYmIyM2NkSTdNVHBMWGRzSG9SQzlD?=
- =?utf-8?B?aXl3NnJLaUVxQldJL1F0b1NIaDRaOGF5M3BJTUdpWHlBSTJBYlRobTRRMXk5?=
- =?utf-8?B?SnFHQnpnczBzNjBQWDhJc0NKVUthemUvS2JVNWpweGUxR0d5S0IzaHlFbFJ2?=
- =?utf-8?B?ci9pQXdqQklxQ2c1YThSQXkveEMxRmppY3Y2alA1cDRaenoyREswMUlMNTdX?=
- =?utf-8?B?cXpKNXZyR3FmVzM3WUlGblJwN3p5RzJNemorMlJTZU1VbzNFazdJZWpHM1Ev?=
- =?utf-8?B?biswNllESW42UjdTTU1GdFE5YkQ0WUtBQUdxMjR3amprb2hranJzQk5nRzZ6?=
- =?utf-8?B?a1ZLV3RiSkRVUzg0WlJ5dGNaVlhwZHQ3VVJXczJYcWdYNzcxVlBTakptWTJC?=
- =?utf-8?B?U2ZKSlpzQ3kvV0JhMjBTTkVLNjRqckpEcVlVR3pqZFBpNmZkYzdZb0dPdEwx?=
- =?utf-8?B?bkltVWYzZHZwSUZvOGwzcXh2UmJFNTIvQ2hocGc2dE1kby9uRzlIUUlZOUFp?=
- =?utf-8?B?dUhSbStWSDAxbXhTNXI3YVBjN3dUcDRqbjdSYlJVYlFieHgreUlNeXNQUVo5?=
- =?utf-8?B?M3dEYkZQbVE5clhoTTRvVHlESUJUWHc4QXBYOUlNS1lnRUJlVDhFdGpkZzE2?=
- =?utf-8?B?K3cvS2RXWTliMm95dXFMWC9FOVR0aDZaL2hoRTZ1UW4vWEYrTnAwdFFOZzE1?=
- =?utf-8?B?NkM2MXdhRGJXejFmRHFMNzcyR0J0c3dnblp0Skd2ZVVMcWxiQUZmTlR1Uk5a?=
- =?utf-8?B?Tk9yT0Jlc1FydEE4bUgxSzUzWkp2TG5VQk5kK3R4WTlFMk8yNkJvQ1N5ZTFE?=
- =?utf-8?B?UmZtMk9zWnFQSmpQZmpHZVdrWVpHUmk1N1VLcW9wUUo2eFMxQTk3WGVTTHFG?=
- =?utf-8?Q?TBYFC6z7z9pOL?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bUFRNlZKY2llQk5YNkVWQ2pialZadzZ1NGtOSVliQTIxL2Y4ckpIcy9MVTNk?=
- =?utf-8?B?bTVQYWJJOGhHYTBxRmhMbXJBKzZIUkxlQ0JiVXpLdzZBSHU5SWc0RURDZDU5?=
- =?utf-8?B?U3JGcForRmhzdGcvMTNMWHF3SGVYYk53K3ViMm5Sc2NLaFIxejNYVUppU2Rw?=
- =?utf-8?B?cmo1RmhXeHdHcjdESlBKQnBRM3NLZnlueFB6dzV4RXovdjNvbDdTTm5jellY?=
- =?utf-8?B?M214Q1lqVUNKdHRTL2E1cnV0VDBRREFmZlRWOHBlbWhqUWVzV2dmRzZEc3RR?=
- =?utf-8?B?Yzh5eUpuNys2K3BYL2d0TkVhL01jMkcyQ05CTVhRN1ZxcXBoaXR3WU51dFJj?=
- =?utf-8?B?TlhLdGxoOXFaN3BWUG1DYzcreVI4Z2FWOWQ2U29UYjQwcVFhU0hMWGVvd3BU?=
- =?utf-8?B?Q0xSaU9FWmVsVXZqOGpUTHh1TFNmSUhXZ3lqVnZKZTY4UWNIUkRrNGo1N3Ar?=
- =?utf-8?B?S2JZMmxRdmZoTDVOU1BaR0FHSGZZQVNYeEVOS3NURGJad1VpQ0J2Tk1DdzVG?=
- =?utf-8?B?OUEvWmZpbU9zVWt1dHozQWNpcm53Nk12KzZ1T290R04rVFZKdURsbXl5ZUR6?=
- =?utf-8?B?dGJYRlQrUkxJWUVVTFBCYTRjUGFQNndQMHlsSTV0NktGdXVIcXA0K0FJWFVo?=
- =?utf-8?B?THNzejFyd0MrM1JtNG5LUW80MjJiOWtoMmszSW1TSUxwZUg0MDQ3QnNzdlZR?=
- =?utf-8?B?bzFsOFpncWZSTVpqMzNPbGlFWmRQZ3RxME1Dd252N0dsWmgrRTY4a1RkeE1t?=
- =?utf-8?B?VzRTNnBTT0tSSzFVWWpTdFRXSUdsc3F6UG9RTEJjbFFGQjlTOW9iTGQ1MVo3?=
- =?utf-8?B?Z29pQkVjQWhtUkJyT3l4NUhTTUJrdmdpNVp2MGQ4NlFFa0FEVjd6eE5uVytn?=
- =?utf-8?B?Yy9YdXJaVTRCL2ljbldDRHNrRTJ0TktuSEtIT3Y1eWxuMk9zbUVVWVJiekx1?=
- =?utf-8?B?dGdVdzRZNE1PblhwcUlLSFovS2hHek9QOXgxVTZ5MXdzbUU0dHcxWnNiVUhr?=
- =?utf-8?B?eCtuaUxteXBVQWtzNzl4WCtwRjk3NWFFazg5Nk5iNjkvZmxVaUVidWpkV1Vm?=
- =?utf-8?B?SlBFUDNkVkJGVEw4ZmVwd3c5Q1JQQlRVVHhlQWJQazZvUHY2NWdyUGhmRUVy?=
- =?utf-8?B?VlZqcG1ROStkdEZHdjlvZHIwbmM3OEFBOUhOVkxCVFkwdHlnY01mY0o2YXlJ?=
- =?utf-8?B?OWFHamYrTTZHc3lUbkhOd2hVMG5xY0JIWC9LMytXSzRuZVM3VjR1MzM2ZEpO?=
- =?utf-8?B?ak9XMVMvQjlyU3NwcWZObWU0SENObU9ORkFIbFpxY2FtR3JaMEllWG04WFYr?=
- =?utf-8?B?QWdOeFZBL0NlZzdQYnNGRE94RTB4L0pPcHp1cTV1RE5kVm1lMjFmZnBMdHR0?=
- =?utf-8?B?LzBCcDYyNjBaL2ZINVlGQk8rQmx1RUVTQkhpMFVRRVNOWld3d2c2b2xERkVi?=
- =?utf-8?B?TWFoazAyVU5Ca0laWDRhSFM5UFRiTndua2gvU3dxY3lHZ2JMYmNxSkorNk5y?=
- =?utf-8?B?Q01yQi9YVkFnZmMyci9JdEw0NnFadDY4c0k4a293UjZuRUNUaUV1NndiVVF1?=
- =?utf-8?B?MUxrWlNyOGpVNnloV0I2aU5wQS9vKzI4OC9mcEE1dEdOaHdqMjFpWkJ0MlZo?=
- =?utf-8?B?elM2ZSsvYUFEallEbnVtQnRUekh1bjB0c1NoOHRIUzkwdlh4RkJWME9ZVFMv?=
- =?utf-8?B?bHhwYmc5SFhmWjZwaE5zSTUvL2x5WkN3Y1hzSXhHaElrc28wZDRWVGxMbWpn?=
- =?utf-8?B?RkYrMnV5OTlDRGF4VzFEYjc1cXJYdklyaGdGNE4xbktjRmJBMzgwZzJ1YUJW?=
- =?utf-8?B?VldpZzNQTGt4d3VCekpmNW1yZ0F0YlVBTXg5czlCcitHNFFpZDJDRC9zbkZO?=
- =?utf-8?B?QndYRk9hVFhhZFFqdGVKNzl1UTNWbkJUd055QUNqQ2ZNTkNORDVONzA5NVdK?=
- =?utf-8?B?TStUSzd1YVZlTVdNcTRablZHWXB4bi9lbC84dG9RUXlwdXpxWjNLZU12anZ2?=
- =?utf-8?B?MDZ5a1ZXVGhkY3dDU0lqZlo1aWlOQkx1VWxjZG5tcERTZGRLYmprbGRZZzJF?=
- =?utf-8?B?YVd0TkFIQ3BmZUZrVFhJb3pQd2ZQd0FRV0ZPaUVZUVZyVjBkUk9aSTNGQUxZ?=
- =?utf-8?Q?4Ufp0fJnRQIelqYafz5xnYjza?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93042d17-a82d-4df8-e94b-08dd50acb305
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 06:14:42.7566
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ltji47o/je8yFJdHIY5jVS+85LuAvV9iylusz6w6QTWH4QRJhFHwNlBQjFtlL4/t52rB1DRklF/1U5H6jaENZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9456
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg100017.china.huawei.com (7.202.181.58)
 
-On 2/18/2025 3:36 AM, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> I came across a system that MSR_AMD_CPPC_CAP1 for some CPUs isn't
-> populated.  This is an unexpected behavior that is most likely a
-> BIOS bug. In the event it happens I'd like users to report bugs
-> to properly root cause and get this fixed.
-> 
-> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+From: Ma Wupeng <mawupeng1@huawei.com>
 
-Reviewed-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
+Commit 6da6b1d4a7df ("mm/hwpoison: convert TTU_IGNORE_HWPOISON to
+TTU_HWPOISON") introduce TTU_HWPOISON to replace TTU_IGNORE_HWPOISON
+in order to stop send SIGBUS signal when accessing an error page after
+a memory error on a clean folio. However during page migration, anon
+folio must be set with TTU_HWPOISON during unmap_*(). For pagecache
+we need some policy just like the one in hwpoison_user_mappings to
+set this flag. So move this policy from hwpoison_user_mappings to
+unmap_poisoned_folio to handle this warning properly.
 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/cpufreq/amd-pstate.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 12fb63169a24c..87c605348a3dc 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -1034,6 +1034,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->  free_cpudata2:
->  	freq_qos_remove_request(&cpudata->req[0]);
->  free_cpudata1:
-> +	pr_warn("Failed to initialize CPU %d: %d\n", policy->cpu, ret);
->  	kfree(cpudata);
->  	return ret;
->  }
-> @@ -1527,6 +1528,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->  	return 0;
->  
->  free_cpudata1:
-> +	pr_warn("Failed to initialize CPU %d: %d\n", policy->cpu, ret);
->  	kfree(cpudata);
->  	return ret;
->  }
+Warning will be produced during unamp poison folio with the following log:
+
+  ------------[ cut here ]------------
+  WARNING: CPU: 1 PID: 365 at mm/rmap.c:1847 try_to_unmap_one+0x8fc/0xd3c
+  Modules linked in:
+  CPU: 1 UID: 0 PID: 365 Comm: bash Tainted: G        W          6.13.0-rc1-00018-gacdb4bbda7ab #42
+  Tainted: [W]=WARN
+  Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+  pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+  pc : try_to_unmap_one+0x8fc/0xd3c
+  lr : try_to_unmap_one+0x3dc/0xd3c
+  Call trace:
+   try_to_unmap_one+0x8fc/0xd3c (P)
+   try_to_unmap_one+0x3dc/0xd3c (L)
+   rmap_walk_anon+0xdc/0x1f8
+   rmap_walk+0x3c/0x58
+   try_to_unmap+0x88/0x90
+   unmap_poisoned_folio+0x30/0xa8
+   do_migrate_range+0x4a0/0x568
+   offline_pages+0x5a4/0x670
+   memory_block_action+0x17c/0x374
+   memory_subsys_offline+0x3c/0x78
+   device_offline+0xa4/0xd0
+   state_store+0x8c/0xf0
+   dev_attr_store+0x18/0x2c
+   sysfs_kf_write+0x44/0x54
+   kernfs_fop_write_iter+0x118/0x1a8
+   vfs_write+0x3a8/0x4bc
+   ksys_write+0x6c/0xf8
+   __arm64_sys_write+0x1c/0x28
+   invoke_syscall+0x44/0x100
+   el0_svc_common.constprop.0+0x40/0xe0
+   do_el0_svc+0x1c/0x28
+   el0_svc+0x30/0xd0
+   el0t_64_sync_handler+0xc8/0xcc
+   el0t_64_sync+0x198/0x19c
+  ---[ end trace 0000000000000000 ]---
+
+Fixes: 6da6b1d4a7df ("mm/hwpoison: convert TTU_IGNORE_HWPOISON to TTU_HWPOISON")
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ mm/internal.h       |  5 ++--
+ mm/memory-failure.c | 63 ++++++++++++++++++++++-----------------------
+ mm/memory_hotplug.c |  3 ++-
+ 3 files changed, 36 insertions(+), 35 deletions(-)
+
+diff --git a/mm/internal.h b/mm/internal.h
+index 109ef30fee11..20b3535935a3 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1115,7 +1115,7 @@ static inline int find_next_best_node(int node, nodemask_t *used_node_mask)
+  * mm/memory-failure.c
+  */
+ #ifdef CONFIG_MEMORY_FAILURE
+-void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu);
++int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill);
+ void shake_folio(struct folio *folio);
+ extern int hwpoison_filter(struct page *p);
+ 
+@@ -1138,8 +1138,9 @@ unsigned long page_mapped_in_vma(const struct page *page,
+ 		struct vm_area_struct *vma);
+ 
+ #else
+-static inline void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
++static inline int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill)
+ {
++	return -EBUSY;
+ }
+ #endif
+ 
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 995a15eb67e2..327e02fdc029 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1556,11 +1556,35 @@ static int get_hwpoison_page(struct page *p, unsigned long flags)
+ 	return ret;
+ }
+ 
+-void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
++int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill)
+ {
+-	if (folio_test_hugetlb(folio) && !folio_test_anon(folio)) {
+-		struct address_space *mapping;
++	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
++	struct address_space *mapping;
++
++	if (folio_test_swapcache(folio)) {
++		pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
++		ttu &= ~TTU_HWPOISON;
++	}
+ 
++	/*
++	 * Propagate the dirty bit from PTEs to struct page first, because we
++	 * need this to decide if we should kill or just drop the page.
++	 * XXX: the dirty test could be racy: set_page_dirty() may not always
++	 * be called inside page lock (it's recommended but not enforced).
++	 */
++	mapping = folio_mapping(folio);
++	if (!must_kill && !folio_test_dirty(folio) && mapping &&
++	    mapping_can_writeback(mapping)) {
++		if (folio_mkclean(folio)) {
++			folio_set_dirty(folio);
++		} else {
++			ttu &= ~TTU_HWPOISON;
++			pr_info("%#lx: corrupted page was clean: dropped without side effects\n",
++				pfn);
++		}
++	}
++
++	if (folio_test_hugetlb(folio) && !folio_test_anon(folio)) {
+ 		/*
+ 		 * For hugetlb folios in shared mappings, try_to_unmap
+ 		 * could potentially call huge_pmd_unshare.  Because of
+@@ -1572,7 +1596,7 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
+ 		if (!mapping) {
+ 			pr_info("%#lx: could not lock mapping for mapped hugetlb folio\n",
+ 				folio_pfn(folio));
+-			return;
++			return -EBUSY;
+ 		}
+ 
+ 		try_to_unmap(folio, ttu|TTU_RMAP_LOCKED);
+@@ -1580,6 +1604,8 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
+ 	} else {
+ 		try_to_unmap(folio, ttu);
+ 	}
++
++	return folio_mapped(folio) ? -EBUSY : 0;
+ }
+ 
+ /*
+@@ -1589,8 +1615,6 @@ void unmap_poisoned_folio(struct folio *folio, enum ttu_flags ttu)
+ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
+ 		unsigned long pfn, int flags)
+ {
+-	enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
+-	struct address_space *mapping;
+ 	LIST_HEAD(tokill);
+ 	bool unmap_success;
+ 	int forcekill;
+@@ -1613,29 +1637,6 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
+ 	if (!folio_mapped(folio))
+ 		return true;
+ 
+-	if (folio_test_swapcache(folio)) {
+-		pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
+-		ttu &= ~TTU_HWPOISON;
+-	}
+-
+-	/*
+-	 * Propagate the dirty bit from PTEs to struct page first, because we
+-	 * need this to decide if we should kill or just drop the page.
+-	 * XXX: the dirty test could be racy: set_page_dirty() may not always
+-	 * be called inside page lock (it's recommended but not enforced).
+-	 */
+-	mapping = folio_mapping(folio);
+-	if (!(flags & MF_MUST_KILL) && !folio_test_dirty(folio) && mapping &&
+-	    mapping_can_writeback(mapping)) {
+-		if (folio_mkclean(folio)) {
+-			folio_set_dirty(folio);
+-		} else {
+-			ttu &= ~TTU_HWPOISON;
+-			pr_info("%#lx: corrupted page was clean: dropped without side effects\n",
+-				pfn);
+-		}
+-	}
+-
+ 	/*
+ 	 * First collect all the processes that have the page
+ 	 * mapped in dirty form.  This has to be done before try_to_unmap,
+@@ -1643,9 +1644,7 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
+ 	 */
+ 	collect_procs(folio, p, &tokill, flags & MF_ACTION_REQUIRED);
+ 
+-	unmap_poisoned_folio(folio, ttu);
+-
+-	unmap_success = !folio_mapped(folio);
++	unmap_success = !unmap_poisoned_folio(folio, pfn, flags & MF_MUST_KILL);
+ 	if (!unmap_success)
+ 		pr_err("%#lx: failed to unmap page (folio mapcount=%d)\n",
+ 		       pfn, folio_mapcount(folio));
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index e3655f07dd6e..e7e47838fd49 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1833,7 +1833,8 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+ 			if (WARN_ON(folio_test_lru(folio)))
+ 				folio_isolate_lru(folio);
+ 			if (folio_mapped(folio))
+-				unmap_poisoned_folio(folio, TTU_IGNORE_MLOCK);
++				unmap_poisoned_folio(folio, pfn, false);
++
+ 			continue;
+ 		}
+ 
+-- 
+2.43.0
 
