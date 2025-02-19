@@ -1,505 +1,388 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0C31DE896;
-	Wed, 19 Feb 2025 10:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739962627; cv=none; b=NULkBV2qwe95AsO8q+0LWNeRP0jWi8lomwvawj/BmSOawnFyk0OB/zMf5QgLypkaayDKcfT4cF0Y2hMwqhpViNeOaa+mw+TiC8GyAwcjAelu2MJ5Isi+VM3wauiyWMbxPjyRZZEmO8vSRKfzktpQBOjgbvL47L2RdSyhxZGLrcU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739962627; c=relaxed/simple;
-	bh=luKAxHsvrVJI3rjvtCOJTo+55XyMmeRCwJO3mKY+DZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxQDGzcwruVXYoXMByNPh/UlKsu0NGTIreXaYCbly4ZFMC8/RbAYNnw6K3zth35mkIzQ5pK3cczhtmzloLVoiRMSM7eirw9Jp0iL0tzeOOhw5QDVlwEGZStBMYKSKFZutvwvP7+URd34jZwiHMru4N9K1YkkUwvFBRqeFMN9v98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RfHqzYxe; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63561DE4FA;
+	Wed, 19 Feb 2025 10:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739962666; cv=fail; b=CMdH6t/bTgqfpSB/aniYP1AHBVdwpAHk3vBrJiRcNzr8SV33oPsGJ9RJx0OoMwG5al5DnZQVOUGh6NS+BEfUJ6+tihvJRTzwwNVXiLOIeDshrinP0hLOGbCq4ZoCu1piLMsmcNOqKHrNWcDiYNqhitUU+kYvjNL59e8WnTlPlH0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739962666; c=relaxed/simple;
+	bh=1f2bTaqm7Jdflxl5J4acinlxLUsKfizqF5l1Qubk+YY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dTsRwyxsAorXaaG5Rr0EgJpQn+aV/FGVioAUjl1wkMn8CFMxMdPnOInhc9nTFVS1XfYPV4r6HWmxbV39S3m8Y+hl/0OQA2ZHNXPbmZMLBnlAeXPRkdgY3HZkvrXArTd7eimnxFRvrNiB3RBpeG0CEwbFUgfIMKVcwyznxgfVgDQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1G81ik0y; arc=fail smtp.client-ip=40.107.223.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RfHqzYxe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1C20F40E01AD;
-	Wed, 19 Feb 2025 10:57:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id MuhRjJG8dSVG; Wed, 19 Feb 2025 10:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739962615; bh=fzmVeMolHHfNK8MWJfns5nr6CAxpqySaRGO9y0S6Ies=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RfHqzYxeNSeAwm0yBKkt3BFRT6WwRDtGptKKmYYtod2NbMtpM8bqaE4Am0115gKQq
-	 s6bzbi/QMuXqHH4rIsMbHnfyyDb/DMMnBqunn967EXG3HP4Vb787URNEAt2Jv4Wifz
-	 hjADK77YpGhp1s3RFjOLF/gYxWNONBAJagKefBNWITn6NJ0eYEU+ES1M54R+UHBl+2
-	 tFDb3vrO8d8gT/XUbWKLkelvkoUjHlGjcwLDD+3cyHcjf+qnaJ3xttjJD6YWMTsdic
-	 vLr5uy9kU/QcukaM9vg1ms3QLHmluggCCZkpJoPXOlSFrkZl6XiCR30lPvPnaiFo6Z
-	 gjzm0Lu9Sg2EN/W5nk9YuCgx01RXkLTj+B+bpR/wf2WkzodbKQao7sGsqbLQ6cHO5e
-	 lL5eYSFUOjHcUY7n0QWvEwe1q+pEZDIdy1LBMdgHOIP5xag8eQ49lWbSaBmCtqLpgO
-	 v0mj9+AWqeSta32LTtksTU3GcwgPcoNromU5+0ig0J1hp54vI0TNhPIbaiBUE/yxCx
-	 RByGXppWJ5Mz1zYQdan4Qc1DV2UoBXp+Yofox8o/3u74nyLd4cP9bb/l1FrGM8W9FD
-	 nOpA/QHPNBj0NZ6ejfAJrlH/EWHRG4iJHNVkYORtCbb3pumsRXfRjCOC1BU0BGCnZ0
-	 uvBdPPgX8OStzakizKy8yHUU=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7F08F40E0220;
-	Wed, 19 Feb 2025 10:55:10 +0000 (UTC)
-Date: Wed, 19 Feb 2025 11:55:03 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, Ofir Weisse <oweisse@google.com>,
-	Junaid Shahid <junaids@google.com>
-Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
-Message-ID: <20250219105503.GKZ7W4h6QW1CNj48U9@fat_crate.local>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-3-8419288bc805@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1G81ik0y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R5Cb2GEnw8QYmT5EW7UnMHtRvXZ/pz508Ka5qB7o/V90Ua2iouee2h5izhNfmonX4+vF5XcEl5ULVUUNX/AqG+AWv7qmCRCxXBnDWOvhaH+g7eIv3jjWVIY2+9nXFTZ49NtdmA7zq8CNO4o+SyhCVeOppRoDZs8f4g37KngeHrWh+7ak7oPKEg7RmFgYZkksHPkaV6fOTm1iDUgOj1z1c0EwiXvr7EMRQkdPfwCTRdv4F6fcoawLP0tBqKioFY0ZIZ1gYa9+x7CVHKHVQEw4Nd8ah7ZucM1+MKUxjcuTXPHodfLi6aDcxpswnu7kNUI3M9fW3VXJmICT6j9w5hS1Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2iXx91RMptBKxpuwvQnXkmoKsGuFwc6o7QooMwLheCk=;
+ b=AdhANJCiNBBZoFS+HH3fYd3iSwdrEOdBrZF4Jxk7Z4JqgimtGvEAjp9DZ0mbfUEijqNtg+B/bVoMn0vW8t2CcwsmG/R4Isy2EJil4yRgMLhRCh0pb3SCozKIdDxFNAXn5e8HhWi4nVi7L02cmrJypMkkx0z4aHbpcXIwRYARlpZ0m50ri8B3twGpGDhKWdnfFvemvnWEFRE+xv6xWVMrdU2x5Smvvd3JPhsNH2sJfrP/caIzKFBnYEVnlEVVzHGLtxYg51V1l2DTP3G1eGI3pWxLWW4jSS1BegMuycjDFQ4WoUxtDAuFZnPrGw0hOluABiQ79oTcNA6XxBpq3w2fJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2iXx91RMptBKxpuwvQnXkmoKsGuFwc6o7QooMwLheCk=;
+ b=1G81ik0yaEy/4W9pV2lYEpVzMUzGj55aoC2T/C3k1erOyHIR0+r3MjrYFTjnydXhPrstLliRVziK+fb1Ynx1STBJoFvl/rd1Js9m5b+QtfsPX/5FBaTz2LstZd3r7ZdtVd1GxltvlFYY1nPL9tBotVt2au6Dj2rp4ZzObmjYbAk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
+ by DM6PR12MB4171.namprd12.prod.outlook.com (2603:10b6:5:21f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Wed, 19 Feb
+ 2025 10:57:42 +0000
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9%7]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
+ 10:57:42 +0000
+Message-ID: <ccac287d-5bde-4b0d-a1d6-b1e8b5f4e6cb@amd.com>
+Date: Wed, 19 Feb 2025 16:27:35 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/18] cpufreq/amd-pstate: Move perf values into a
+ union
+To: Mario Limonciello <superm1@kernel.org>,
+ "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>
+Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250217220707.1468365-1-superm1@kernel.org>
+ <20250217220707.1468365-5-superm1@kernel.org>
+Content-Language: en-US
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <20250217220707.1468365-5-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2P287CA0003.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:21b::17) To LV8PR12MB9207.namprd12.prod.outlook.com
+ (2603:10b6:408:187::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250110-asi-rfc-v2-v2-3-8419288bc805@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|DM6PR12MB4171:EE_
+X-MS-Office365-Filtering-Correlation-Id: 42d31797-4319-47e2-a383-08dd50d43b97
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NjdDV3Z6azd6cFppbWJLTDVBVFVKWTdxSFlXQlFuU05xZHgxTG1NLytJcjNy?=
+ =?utf-8?B?N2hURVlCOHVFZzhhbTQ0RGlMMjQrbjdEMGZnSFg5YWJFVFdnblBKcWk3dUtV?=
+ =?utf-8?B?dUU0Y1FNaVptc0tHNlVPM2tISWZTN2pFTGNTNGp3YVE4akN5ekl5Mk80RHp2?=
+ =?utf-8?B?Nlc0M0orZWs3N25IVWY1Uk16WThqTlJyRzlheGNYNEpoT0F1NEUrc3JDeW9r?=
+ =?utf-8?B?Y1BUMmMvUEpBZVlhWkYwNHdTZTNhMlljT0FVaC9YOXd2aGdWTGNpdGFJMlZQ?=
+ =?utf-8?B?aUVqRnRCSFhWS3VzbzRYalpOdkI2YzM1NzRDV2N6aFlaQ0h3Z1o2N0xpQUkr?=
+ =?utf-8?B?V2dBVlNLU3JPWHM2VzNOUTdNNGkrZG9vMEh4eGpPZkJYcTVhQU11QW5yRjhq?=
+ =?utf-8?B?R1lZbUpSMHhZdlEyZjhpSVZKajFFbUxmOGxaRDRFZ2FqUXJONkI2UkM0TTVU?=
+ =?utf-8?B?clNTU00zeTJOMW5vRXgrams5NVVWMUJsOVA5V2k0NnhiMXNiZ3RJR1l0UjEv?=
+ =?utf-8?B?bkVqSnV6T1BqaEJsNnplR3h2TExETi8vSDZGbmVxbDAxV25RZkxkdkk2VGV3?=
+ =?utf-8?B?ZEx0RXJDbE1YUVNzNmdWNDNZbXZPeHFpRkc5SFM3OTU0RGtFbGNZZ3F2c0NO?=
+ =?utf-8?B?R3J0d2VkZnFITmdSTC9YMnFidEJWZFFLNHh5UTU0N1MxejN0Nkw2QlVZQnFr?=
+ =?utf-8?B?R2cweDdWY0RNM0pPT2UzSVljUG00TXptSGgzMU90d0dWUVlqZHZ0d05PZXdB?=
+ =?utf-8?B?aEE1alFCb1E2SVRzNUVveFl1RCt1akJuc2EvVlpGQ3dJdFZrc0FGU0EzTXFj?=
+ =?utf-8?B?cDlJMnYyWGpJL3JkNTNoVGZJUWJVU3dYaDBnNUdpV1BGeVd3bHlKNm5QN0Vs?=
+ =?utf-8?B?THE1bHpTNFZNWUtNNGxQTU9ha05VTkNXRHFLVWw1Tjl1eUhrdTJ4ZFk3ZVhz?=
+ =?utf-8?B?TnJUcTF4MVVGeC9TQUJKTDlnOEc2VGV5RVVhMVRJQmF0ZGRZbHh1NGRBWThr?=
+ =?utf-8?B?OC9wMkYxRHRLZVJnQS9OcHNjajB0bXdNRi9kL3FGREVZenhHTkNmWWJ5NUlD?=
+ =?utf-8?B?enJaSnIwdUZLcnFwVWl0WWdFd3hNOTNud2gxeGpSamFKYzZIS3JxaWtGSE5L?=
+ =?utf-8?B?SE1saWpHTVkwNm1QSk85Z0hDbFU4ekdhaVJsSFRWaVZrcTJIL0prYWFGdzFz?=
+ =?utf-8?B?UktmT25tUlZzSi9XT1pmR21aOW9mbnNOZ0NQcHk3SEsraytoYXByQWlZUVlC?=
+ =?utf-8?B?RVJ4d0s0NHNjM3EyNXNFN3pBRndXUUVnN3VBdUVsUklmYVh2VSs2TUVXNmV1?=
+ =?utf-8?B?ZnNrRGcycmZEOUNTaXJzZlA4akpLTjNkdkxoNzlMb010UTFBNk1QZDlMV0Nq?=
+ =?utf-8?B?TzhVdjFCMVBPc0xVQXdNaGNING02c2ZZS2ZYNk5uSkFJVGcydW9RSkdwK2Zp?=
+ =?utf-8?B?MkRRb0NISEdxMkZOTWN6RlVidW9xMzJtWUs5QlpnN0Fwa3hrUmdpaDZVbHg3?=
+ =?utf-8?B?RTN4c1pqbktYUm4xRXpZU2h4WjEwZmVVTHpNRkxyUzEzaUppMjlqb2d5bmhK?=
+ =?utf-8?B?MkF6S1lwSHlaU1ZSTUtXL3YxbFg0NHovaUpQejBuRlIwa3ZMa3ZsbkRTR3ZL?=
+ =?utf-8?B?Q1BmN3BSODVHQytwKzJqTjJOWjZRanRRSWI5Z1dtTzZYRlN5dGNIRkYyRFRT?=
+ =?utf-8?B?SkdBTFBHTEpIWXhUeE9tNWhhTitwZENacVdyVnpWQjNiUkIvWjg1RUFScGlP?=
+ =?utf-8?B?NUs4MVoySkhnbHBhZUFPMnhxOGtkOG5RQ1NPTEZBSlJkenNUb3V2ZW5xbGVV?=
+ =?utf-8?B?WHlNQlF2cThsdUtucFpNbUlERmUxMzNPMTMvOVlCdnMyOGxPbm82b0tTN25u?=
+ =?utf-8?Q?Qgc21hP/2tN21?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NzZyNkJlY2ttSEVBd2ZIMUIwV1pKYzlpcG40MHc3UlFSK0xwa1AyMmtlVEZt?=
+ =?utf-8?B?cnIxbUJBVHV0Z1dzbUl5YnVWeGt1cDdzRUswOTJTOUhYMUFzUFJ0Wksxd1hn?=
+ =?utf-8?B?S3V3TmJkU3JqMWZ1cVR1Zy9HWXFWWXpvWFhpSldHSlJIczNkZ1plVUljQlB4?=
+ =?utf-8?B?ZEFZa0hSQmtrMUFCRlZKeFNONjlpNExaVUIraStiR29uR3JZNlJRUDJaWWw1?=
+ =?utf-8?B?dHVHMUpIZnordkZUNWZkRXhNcFJ1MjVvTGlFbUhyM1ExVGFQd1B2eFJvcDQr?=
+ =?utf-8?B?bnBkMFpXRHRmbGJmU0FNc0czWlZCRit2Wk5uQ1dhb1hJRE81NjJBNVorb0Nm?=
+ =?utf-8?B?Uk55ak4yRGd3eUpldWZuOHhSMGgzTVNTNmthOGlXTWE0Uk14Um1ZQ29PRzNr?=
+ =?utf-8?B?UDlLcHJKR2N5ankxU0l3UFBTOENlODZLZDRTU1hkQ0FVOXFGdkMvY2hvQlVW?=
+ =?utf-8?B?M29LZnY2dzVWb1N3b1RsYm1OdWJPUlluTEpFNDE3NjRzZVhGOVdlcS95NkRI?=
+ =?utf-8?B?R1B0Zmc1eXdkVnVtS0FCMVcxeTROUlliRHZtNFhNdDBBcnV0RE4veXIyME90?=
+ =?utf-8?B?ejBMb0xTWVRsSWdieWwrejlBUllYTTlQSzBvNW14WlZlVkg3RG9taE9CaEVt?=
+ =?utf-8?B?dy9LZWpMZWkweWZ1UloyVkhpK2JPQ2tiUHdWOWJUbDJoYldwK0M3KzEwUXBV?=
+ =?utf-8?B?Y2F3RkVoK292L0xUS2VnU1YxRXBXR0lmSEFwSXpRUFQvU0FnQUQydGpFZTRm?=
+ =?utf-8?B?RFZKUGpyZTFoSnBqbUd6WVhHVCtpOGpLcHEvQkZFNUxPNEZ3N2xyajZpczFG?=
+ =?utf-8?B?ODlvQ2lkRkI4TnkrWjRkaHVCTXFMWS9rUWxEK3NJL0srbm1KT3FtZi9vYmgz?=
+ =?utf-8?B?a2VGVXh0Q3JjT0d0dlp6Y2tGbm1PMnBwYkJkMVZnV2hSdXRkMWMydVZHOU8x?=
+ =?utf-8?B?N2JJcUJCVXJsNTFvV3cvaW9pRzdsL3NEdUJ5YVlFOC9OZ1lLeXhuOVM3R3Z3?=
+ =?utf-8?B?Z2VuWGQ4ZDR1dlRzZHdNUFNVS0FmU291NFYyMXZoSXFFN0JQUVRrTUUyZkVi?=
+ =?utf-8?B?R0V0bkFtVW9QcFRuTzY5RzBqSzdxOFRkbnhXSUg5TUdPSjhsY1VzSGZxZkJw?=
+ =?utf-8?B?c21MaVpGTWQ3NTBDUHVQemNJakJtZ0llUmxybkZEUHd3NS9CTFV6UVBWVnVU?=
+ =?utf-8?B?MTA2U2x6ZzdPaGZzeDhMcm83TjNqMGFYNno0UzVzak9wVUdQWWlnSEdUT2ls?=
+ =?utf-8?B?L0RDQ0libllpSUVtQmVHVTVoajNTZXZWRjRqOEJzU2c5RDZ0QTdJcWZxN3F5?=
+ =?utf-8?B?WVQ5a1J6c2hZQ2ZWMUZ6RFM4VzZvWEcwRlZrT0VWeEJQNk9qVWVENHl3ZTZU?=
+ =?utf-8?B?WUhickZCTUFoOWhQaUY3bUpQQVBYODdZU0hEZjNPVGFuYkRleWxCdFFjazFx?=
+ =?utf-8?B?czJnNFkyek8xNmJxOWtJMEUzWWltV3IrL3FRZElxQmdHY0hEa3lsRVh1SHRY?=
+ =?utf-8?B?bTlsVnVqYWRtZVNjaFRTbTlZS0lrd1lTYW1sVlhhNWk1N1djNnRHYUJMd2t4?=
+ =?utf-8?B?ckxsWDFNN25kK2QvTmJad1pCSDlzMnZlK1BwVldqVFVWZERLN1lZTDdvVWow?=
+ =?utf-8?B?ODZNeXl3RGt4ODVLdlp4TEtqdFpabldEUG5SSTMzUFpyVloxTjdPSmgwMmJ2?=
+ =?utf-8?B?em12bEY4ZkZBNm83Wlg4RkJkbXJ4YzNBNVpNQ0RtUTljZWcwOFBkR2tTK3FI?=
+ =?utf-8?B?SEtsRjJVcGprazdYZGxGSHRhbHRJaVYvVU50MHB4bDlaRnV6RGtkUVlXc0VD?=
+ =?utf-8?B?UnR3M0M4a0Z5dDhlTlFZNDlDZzFLTlVPSHNUcTBGVU9ZUndvWGtYTmI4R0x0?=
+ =?utf-8?B?MEhKb1R3azIyVlcwOW43ZFVzTnQ4clo0UXBPR1ZBenpSTWxvVHhYVlFkMTBD?=
+ =?utf-8?B?MWR3QlZ0bTMyMDJBMzVHYm5iNStwSDdHbXVFaXU3YW5JMmtBOUYyWldqOC90?=
+ =?utf-8?B?dzZuTktXeWFRVmFHNmc5LzhVVGg2aXdtVVdQT1BST254VUhQeHE3VEpyQjFm?=
+ =?utf-8?B?Q09iUVh1ZHgwSUV1SzlpdEtJU1BBa2VVMkl5ckgwbXF1amxFVDJ3TERkc284?=
+ =?utf-8?Q?5LjhTollIK9h1B3uHG51mM7AB?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42d31797-4319-47e2-a383-08dd50d43b97
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 10:57:42.2499
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3qF2nanW8jjUUWUxep9jYqY0l3X61K7hz9FmC4uKFz3pYiq+jBoJ+Iy4JWJPkgIfR6LPuR0XpDUo/GUCEvPcVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4171
 
-On Fri, Jan 10, 2025 at 06:40:29PM +0000, Brendan Jackman wrote:
-> Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
-
-x86/asi: ...
-
-> Introduce core API for Address Space Isolation (ASI).  Kernel address
-> space isolation provides the ability to run some kernel
-> code with a restricted kernel address space.
+On 2/18/2025 3:36 AM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> There can be multiple classes of such restricted kernel address spaces
-> (e.g. KPTI, KVM-PTI etc.). Each ASI class is identified by an index.
-> The ASI class can register some hooks to be called when
-> entering/exiting the restricted address space.
+> By storing perf values in a union all the writes and reads can
+> be done atomically, removing the need for some concurrency protections.
 > 
-> Currently, there is a fixed maximum number of ASI classes supported.
-> In addition, each process can have at most one restricted address space
-> from each ASI class. Neither of these are inherent limitations and
-> are merely simplifying assumptions for the time being.
+> While making this change, also drop the cached frequency values,
+> using inline helpers to calculate them on demand from perf value.
 > 
-> To keep things simpler for the time being, we disallow context switches
-
-Please use passive voice in your commit message: no "we" or "I", etc,
-and describe your changes in imperative mood.
-
-Also, see section "Changelog" in
-Documentation/process/maintainer-tip.rst
-
-> within the restricted address space. In the future, we would be able to
-> relax this limitation for the case of context switches to different
-> threads within the same process (or to the idle thread and back).
-> 
-> Note that this doesn't really support protecting sibling VM guests
-> within the same VMM process from one another. From first principles
-> it seems unlikely that anyone who cares about VM isolation would do
-> that, but there could be a use-case to think about. In that case need
-> something like the OTHER_MM logic might be needed, but specific to
-> intra-process guest separation.
-> 
-> [0]:
-> https://lore.kernel.org/kvm/1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com
-> 
-> Notes about RFC-quality implementation details:
-> 
->  - Ignoring checkpatch.pl AVOID_BUG.
->  - The dynamic registration of classes might be pointless complexity.
->    This was kept from RFCv1 without much thought.
->  - The other-mm logic is also perhaps overly complex, suggestions are
->    welcome for how best to tackle this (or we could just forget about
->    it for the moment, and rely on asi_exit() happening in process
->    switch).
->  - The taint flag definitions would probably be clearer with an enum or
->    something.
-> 
-> Checkpatch-args: --ignore=AVOID_BUG,COMMIT_LOG_LONG_LINE,EXPORT_SYMBOL
-> Co-developed-by: Ofir Weisse <oweisse@google.com>
-> Signed-off-by: Ofir Weisse <oweisse@google.com>
-> Co-developed-by: Junaid Shahid <junaids@google.com>
-> Signed-off-by: Junaid Shahid <junaids@google.com>
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
->  arch/x86/include/asm/asi.h       | 208 +++++++++++++++++++++++
->  arch/x86/include/asm/processor.h |   8 +
->  arch/x86/mm/Makefile             |   1 +
->  arch/x86/mm/asi.c                | 350 +++++++++++++++++++++++++++++++++++++++
->  arch/x86/mm/init.c               |   3 +-
->  arch/x86/mm/tlb.c                |   1 +
->  include/asm-generic/asi.h        |  67 ++++++++
->  include/linux/mm_types.h         |   7 +
->  kernel/fork.c                    |   3 +
->  kernel/sched/core.c              |   9 +
->  mm/init-mm.c                     |   4 +
->  11 files changed, 660 insertions(+), 1 deletion(-)
+> v3:
+>  * Pick up tag
+> v2:
+>  * cache perf variable in unit tests
+>  * Drop unnecessary check from amd_pstate_update_min_max_limit()
+>  * Consistency with READ_ONCE()
+>  * Drop unneeded policy checks
+>  * add kdoc
+> ---
+>  drivers/cpufreq/amd-pstate-ut.c |  18 +--
+>  drivers/cpufreq/amd-pstate.c    | 195 ++++++++++++++++++--------------
+>  drivers/cpufreq/amd-pstate.h    |  49 +++++---
+>  3 files changed, 151 insertions(+), 111 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..7cc635b6653a3970ba9dbfdc9c828a470e27bd44
-> --- /dev/null
-> +++ b/arch/x86/include/asm/asi.h
-> @@ -0,0 +1,208 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_ASI_H
-> +#define _ASM_X86_ASI_H
+> diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
+> index 445278cf40b61..ba3e06f349c6d 100644
+> --- a/drivers/cpufreq/amd-pstate-ut.c
+> +++ b/drivers/cpufreq/amd-pstate-ut.c
+> @@ -129,6 +129,7 @@ static void amd_pstate_ut_check_perf(u32 index)
+>  	struct cppc_perf_caps cppc_perf;
+>  	struct cpufreq_policy *policy = NULL;
+>  	struct amd_cpudata *cpudata = NULL;
+> +	union perf_cached cur_perf;
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		policy = cpufreq_cpu_get(cpu);
+> @@ -162,19 +163,20 @@ static void amd_pstate_ut_check_perf(u32 index)
+>  			lowest_perf = AMD_CPPC_LOWEST_PERF(cap1);
+>  		}
+>  
+> -		if (highest_perf != READ_ONCE(cpudata->highest_perf) && !cpudata->hw_prefcore) {
+> +		cur_perf = READ_ONCE(cpudata->perf);
+> +		if (highest_perf != cur_perf.highest_perf && !cpudata->hw_prefcore) {
+>  			pr_err("%s cpu%d highest=%d %d highest perf doesn't match\n",
+> -				__func__, cpu, highest_perf, cpudata->highest_perf);
+> +				__func__, cpu, highest_perf, cpudata->perf.highest_perf);
+						  Can we use cur_perf.highest_perf here ?
+
+>  			goto skip_test;
+>  		}
+> -		if ((nominal_perf != READ_ONCE(cpudata->nominal_perf)) ||
+> -			(lowest_nonlinear_perf != READ_ONCE(cpudata->lowest_nonlinear_perf)) ||
+> -			(lowest_perf != READ_ONCE(cpudata->lowest_perf))) {
+> +		if (nominal_perf != cur_perf.nominal_perf ||
+> +		   (lowest_nonlinear_perf != cur_perf.lowest_nonlinear_perf) ||
+> +		   (lowest_perf != cur_perf.lowest_perf)) {
+>  			amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_FAIL;
+>  			pr_err("%s cpu%d nominal=%d %d lowest_nonlinear=%d %d lowest=%d %d, they should be equal!\n",
+> -				__func__, cpu, nominal_perf, cpudata->nominal_perf,
+> -				lowest_nonlinear_perf, cpudata->lowest_nonlinear_perf,
+> -				lowest_perf, cpudata->lowest_perf);
+> +				__func__, cpu, nominal_perf, cpudata->perf.nominal_perf,
+> +				lowest_nonlinear_perf, cpudata->perf.lowest_nonlinear_perf,
+> +				lowest_perf, cpudata->perf.lowest_perf);
+			          Can we use cur_perf.(nominal/lowest_nonlinear/lowest)_perf here as well ?						
+
+>  			goto skip_test;
+>  		}
+>
+[Snip]
+> @@ -888,25 +896,24 @@ static u32 amd_pstate_get_transition_latency(unsigned int cpu)
+>  }
+>  
+>  /*
+> - * amd_pstate_init_freq: Initialize the max_freq, min_freq,
+> - *                       nominal_freq and lowest_nonlinear_freq for
+> - *                       the @cpudata object.
+> + * amd_pstate_init_freq: Initialize the nominal_freq and lowest_nonlinear_freq
+> + *			 for the @cpudata object.
+>   *
+> - *  Requires: highest_perf, lowest_perf, nominal_perf and
+> - *            lowest_nonlinear_perf members of @cpudata to be
+> - *            initialized.
+> + * Requires: all perf members of @cpudata to be initialized.
+>   *
+> - *  Returns 0 on success, non-zero value on failure.
+> + * Returns 0 on success, non-zero value on failure.
+>   */
+>  static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
+>  {
+> -	int ret;
+>  	u32 min_freq, nominal_freq, lowest_nonlinear_freq;
+>  	struct cppc_perf_caps cppc_perf;
+> +	union perf_cached perf;
+> +	int ret;
+>  
+>  	ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+>  	if (ret)
+>  		return ret;
+> +	perf = READ_ONCE(cpudata->perf);
+>  
+>  	if (quirks && quirks->nominal_freq)
+>  		nominal_freq = quirks->nominal_freq;
+> @@ -918,6 +925,7 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
+>  
+>  	if (quirks && quirks->lowest_freq) {
+>  		min_freq = quirks->lowest_freq;
+> +		perf.lowest_perf = freq_to_perf(perf, nominal_freq, min_freq);
+
+I think we forgot to write back this value to the cpudata->perf variable
+
+>  	} else
+>  		min_freq = cppc_perf.lowest_freq;
+>  	min_freq *= 1000;
+> @@ -934,7 +942,7 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
+>  		return -EINVAL;
+>  	}
+>  
+> -	lowest_nonlinear_freq = perf_to_freq(cpudata, cpudata->lowest_nonlinear_perf);
+> +	lowest_nonlinear_freq = perf_to_freq(perf, nominal_freq, perf.lowest_nonlinear_perf);
+>  	WRITE_ONCE(cpudata->lowest_nonlinear_freq, lowest_nonlinear_freq);
+>  
+>  	if (lowest_nonlinear_freq <= min_freq || lowest_nonlinear_freq > nominal_freq) {
+[Snip]
+> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
+> index 0149933692458..8421c83c07919 100644
+> --- a/drivers/cpufreq/amd-pstate.h
+> +++ b/drivers/cpufreq/amd-pstate.h
+> @@ -13,6 +13,34 @@
+>  /*********************************************************************
+>   *                        AMD P-state INTERFACE                       *
+>   *********************************************************************/
 > +
-> +#include <linux/sched.h>
-> +
-> +#include <asm-generic/asi.h>
-> +
-> +#include <asm/pgtable_types.h>
-> +#include <asm/percpu.h>
-> +#include <asm/processor.h>
-> +
-> +#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-> +
-> +/*
-> + * Overview of API usage by ASI clients:
-> + *
-> + * Setup: First call asi_init() to create a domain. At present only one domain
-> + * can be created per mm per class, but it's safe to asi_init() this domain
-> + * multiple times. For each asi_init() call you must call asi_destroy() AFTER
-> + * you are certain all CPUs have exited the restricted address space (by
-> + * calling asi_exit()).
-> + *
-> + * Runtime usage:
-> + *
-> + * 1. Call asi_enter() to switch to the restricted address space. This can't be
-> + *    from an interrupt or exception handler and preemption must be disabled.
-> + *
-> + * 2. Execute untrusted code.
-> + *
-> + * 3. Call asi_relax() to inform the ASI subsystem that untrusted code execution
-> + *    is finished. This doesn't cause any address space change. This can't be
-> + *    from an interrupt or exception handler and preemption must be disabled.
-> + *
-> + * 4. Either:
-> + *
-> + *    a. Go back to 1.
-> + *
-> + *    b. Call asi_exit() before returning to userspace. This immediately
-> + *       switches to the unrestricted address space.
+> +/**
+> + * union perf_cached - A union to cache performance-related data.
+> + * @highest_perf: the maximum performance an individual processor may reach,
+> + *		  assuming ideal conditions
+> + *		  For platforms that do not support the preferred core feature, the
+> + *		  highest_pef may be configured with 166 or 255, to avoid max frequency
 
-So only from reading this, it does sound weird. Maybe the code does it
-differently - I'll see soon - but this basically says:
+s/highest_pef/highest_perf/
 
-I asi_enter(), do something, asi_relax() and then I decide to do something
-more and to asi_enter() again!? And then I can end it all with a *single*
-asi_exit() call?
+Also I think this statement is bit confusing, how about,
 
-Hm, definitely weird API. Why?
+"For platforms that support the preferred core feature, the highest_perf value maybe 
+configured to any value in the range 166-256 by the firmware (because the preferred 
+core ranking is encoded in the highest_perf value). To maintain consistency across 
+all platforms, we split the highest_perf and preferred core ranking values into 
+cpudata->perf.highest_perf and cpudata->prefcore_ranking."
 
-/*
- * Leave the "tense" state if we are in it, i.e. end the critical section. We
- * will stay relaxed until the next asi_enter.
- */
-void asi_relax(void);
-
-Yeah, so there's no API functions balance between enter() and relax()...
-
-> + *
-> + * The region between 1 and 3 is called the "ASI critical section". During the
-> + * critical section, it is a bug to access any sensitive data, and you mustn't
-> + * sleep.
-> + *
-> + * The restriction on sleeping is not really a fundamental property of ASI.
-> + * However for performance reasons it's important that the critical section is
-> + * absolutely as short as possible. So the ability to do sleepy things like
-> + * taking mutexes oughtn't to confer any convenience on API users.
-> + *
-> + * Similarly to the issue of sleeping, the need to asi_exit in case 4b is not a
-> + * fundamental property of the system but a limitation of the current
-> + * implementation. With further work it is possible to context switch
-> + * from and/or to the restricted address space, and to return to userspace
-> + * directly from the restricted address space, or _in_ it.
-> + *
-> + * Note that the critical section only refers to the direct execution path from
-> + * asi_enter to asi_relax: it's fine to access sensitive data from exceptions
-> + * and interrupt handlers that occur during that time. ASI will re-enter the
-> + * restricted address space before returning from the outermost
-> + * exception/interrupt.
-> + *
-> + * Note: ASI does not modify KPTI behaviour; when ASI and KPTI run together
-> + * there are 2+N address spaces per task: the unrestricted kernel address space,
-> + * the user address space, and one restricted (kernel) address space for each of
-> + * the N ASI classes.
+> + *		  calculated wrongly. we take the fixed value as the highest_perf.
+> + * @nominal_perf: the maximum sustained performance level of the processor,
+> + *		  assuming ideal operating conditions
+> + * @lowest_nonlinear_perf: the lowest performance level at which nonlinear power
+> + *			   savings are achieved
+> + * @lowest_perf: the absolute lowest performance level of the processor
+> + * @min_limit_perf: Cached value of the performance corresponding to policy->min
+> + * @max_limit_perf: Cached value of the performance corresponding to policy->max
 > + */
-> +
-> +/*
-> + * ASI uses a per-CPU tainting model to track what mitigation actions are
-> + * required on domain transitions. Taints exist along two dimensions:
-> + *
-> + *  - Who touched the CPU (guest, unprotected kernel, userspace).
-> + *
-> + *  - What kind of state might remain: "data" means there might be data owned by
-> + *    a victim domain left behind in a sidechannel. "Control" means there might
-> + *    be state controlled by an attacker domain left behind in the branch
-> + *    predictor.
-> + *
-> + *    In principle the same domain can be both attacker and victim, thus we have
-> + *    both data and control taints for userspace, although there's no point in
-> + *    trying to protect against attacks from the kernel itself, so there's no
-> + *    ASI_TAINT_KERNEL_CONTROL.
-> + */
-> +#define ASI_TAINT_KERNEL_DATA		((asi_taints_t)BIT(0))
-> +#define ASI_TAINT_USER_DATA		((asi_taints_t)BIT(1))
-> +#define ASI_TAINT_GUEST_DATA		((asi_taints_t)BIT(2))
-> +#define ASI_TAINT_OTHER_MM_DATA		((asi_taints_t)BIT(3))
-> +#define ASI_TAINT_USER_CONTROL		((asi_taints_t)BIT(4))
-> +#define ASI_TAINT_GUEST_CONTROL		((asi_taints_t)BIT(5))
-> +#define ASI_TAINT_OTHER_MM_CONTROL	((asi_taints_t)BIT(6))
-> +#define ASI_NUM_TAINTS			6
-> +static_assert(BITS_PER_BYTE * sizeof(asi_taints_t) >= ASI_NUM_TAINTS);
+> +union perf_cached {
+> +	struct {
+> +		u8	highest_perf;
+> +		u8	nominal_perf;
+> +		u8	lowest_nonlinear_perf;
+> +		u8	lowest_perf;
+> +		u8	min_limit_perf;
+> +		u8	max_limit_perf;
 
-Why is this a typedef at all to make the code more unreadable than it needs to
-be? Why not a simple unsigned int or char or whatever you need?
+Just a thought, how about adding the "u8 desired_perf" (last requested) and "u8 prefcore_ranking"
+in this. We can pursue it as a separate patch if you want.
 
-> +
-> +#define ASI_TAINTS_CONTROL_MASK \
-> +	(ASI_TAINT_USER_CONTROL | ASI_TAINT_GUEST_CONTROL | ASI_TAINT_OTHER_MM_CONTROL)
-> +
-> +#define ASI_TAINTS_DATA_MASK \
-> +	(ASI_TAINT_KERNEL_DATA | ASI_TAINT_USER_DATA | ASI_TAINT_OTHER_MM_DATA)
-> +
-> +#define ASI_TAINTS_GUEST_MASK (ASI_TAINT_GUEST_DATA | ASI_TAINT_GUEST_CONTROL)
-> +#define ASI_TAINTS_USER_MASK (ASI_TAINT_USER_DATA | ASI_TAINT_USER_CONTROL)
-> +
-> +/* The taint policy tells ASI how a class interacts with the CPU taints */
-> +struct asi_taint_policy {
-> +	/*
-> +	 * What taints would necessitate a flush when entering the domain, to
-> +	 * protect it from attack by prior domains?
-> +	 */
-> +	asi_taints_t prevent_control;
+I think there is value in adding desired_perf atleast, so that when we are caching the 
+min, max limits in the perf_cached variable, desired perf level is also atomically 
+updated into the shared cpudata structure.
 
-So if those necessitate a flush, why isn't this var called "taints_to_flush"
-or whatever which exactly explains what it is?
+Thanks,
+Dhananjay
 
-> +	/*
-> +	 * What taints would necessetate a flush when entering the domain, to
-
-+	 * What taints would necessetate a flush when entering the domain, to
-Unknown word [necessetate] in comment.
-Suggestions: ['necessitate',
-
-Spellchecker please. Go over your whole set.
-
-> +	 * protect former domains from attack by this domain?
-> +	 */
-> +	asi_taints_t protect_data;
-
-Same.
-
-> +	/* What taints should be set when entering the domain? */
-> +	asi_taints_t set;
-
-
-So "required_taints" or so... hm?
-
+> +	};
+> +	u64	val;
 > +};
 > +
-> +/*
-> + * An ASI domain (struct asi) represents a restricted address space. The
-
-no need for "(struct asi)" - it is right below :).
-
-> + * unrestricted address space (and user address space under PTI) are not
-> + * represented as a domain.
-> + */
-> +struct asi {
-> +	pgd_t *pgd;
-> +	struct mm_struct *mm;
-> +	int64_t ref_count;
-> +	enum asi_class_id class_id;
-> +};
+>  /**
+>   * struct  amd_aperf_mperf
+>   * @aperf: actual performance frequency clock count
+> @@ -30,20 +58,9 @@ struct amd_aperf_mperf {
+>   * @cpu: CPU number
+>   * @req: constraint request to apply
+>   * @cppc_req_cached: cached performance request hints
+> - * @highest_perf: the maximum performance an individual processor may reach,
+> - *		  assuming ideal conditions
+> - *		  For platforms that do not support the preferred core feature, the
+> - *		  highest_pef may be configured with 166 or 255, to avoid max frequency
+> - *		  calculated wrongly. we take the fixed value as the highest_perf.
+> - * @nominal_perf: the maximum sustained performance level of the processor,
+> - *		  assuming ideal operating conditions
+> - * @lowest_nonlinear_perf: the lowest performance level at which nonlinear power
+> - *			   savings are achieved
+> - * @lowest_perf: the absolute lowest performance level of the processor
+> + * @perf: cached performance-related data
+>   * @prefcore_ranking: the preferred core ranking, the higher value indicates a higher
+>   * 		  priority.
+> - * @min_limit_perf: Cached value of the performance corresponding to policy->min
+> - * @max_limit_perf: Cached value of the performance corresponding to policy->max
+>   * @min_limit_freq: Cached value of policy->min (in khz)
+>   * @max_limit_freq: Cached value of policy->max (in khz)
+>   * @nominal_freq: the frequency (in khz) that mapped to nominal_perf
+> @@ -68,13 +85,9 @@ struct amd_cpudata {
+>  	struct	freq_qos_request req[2];
+>  	u64	cppc_req_cached;
+>  
+> -	u8	highest_perf;
+> -	u8	nominal_perf;
+> -	u8	lowest_nonlinear_perf;
+> -	u8	lowest_perf;
+> +	union perf_cached perf;
 > +
-> +DECLARE_PER_CPU_ALIGNED(struct asi *, curr_asi);
+>  	u8	prefcore_ranking;
+> -	u8	min_limit_perf;
+> -	u8	max_limit_perf;
+>  	u32	min_limit_freq;
+>  	u32	max_limit_freq;
+>  	u32	nominal_freq;
 
-Or simply "asi" - this per-CPU var will be so prominent so that when you do
-"per_cpu(asi)" you know what exactly it is
-
-
-
-> +
-> +void asi_init_mm_state(struct mm_struct *mm);
-> +
-> +int asi_init_class(enum asi_class_id class_id, struct asi_taint_policy *taint_policy);
-> +void asi_uninit_class(enum asi_class_id class_id);
-
-"uninit", meh. "exit" perhaps? or "destroy"?
-
-And you have "asi_destroy" already so I guess you can do:
-
-asi_class_init()
-asi_class_destroy()
-
-to have the namespace correct.
-
-> +const char *asi_class_name(enum asi_class_id class_id);
-> +
-> +int asi_init(struct mm_struct *mm, enum asi_class_id class_id, struct asi **out_asi);
-> +void asi_destroy(struct asi *asi);
-> +
-> +/* Enter an ASI domain (restricted address space) and begin the critical section. */
-> +void asi_enter(struct asi *asi);
-> +
-> +/*
-> + * Leave the "tense" state if we are in it, i.e. end the critical section. We
-> + * will stay relaxed until the next asi_enter.
-> + */
-> +void asi_relax(void);
-> +
-> +/* Immediately exit the restricted address space if in it */
-> +void asi_exit(void);
-> +
-> +/* The target is the domain we'll enter when returning to process context. */
-> +static __always_inline struct asi *asi_get_target(struct task_struct *p)
-> +{
-> +	return p->thread.asi_state.target;
-> +}
-> +
-> +static __always_inline void asi_set_target(struct task_struct *p,
-> +					   struct asi *target)
-> +{
-> +	p->thread.asi_state.target = target;
-> +}
-> +
-> +static __always_inline struct asi *asi_get_current(void)
-> +{
-> +	return this_cpu_read(curr_asi);
-> +}
-> +
-> +/* Are we currently in a restricted address space? */
-> +static __always_inline bool asi_is_restricted(void)
-> +{
-> +	return (bool)asi_get_current();
-> +}
-> +
-> +/* If we exit/have exited, can we stay that way until the next asi_enter? */
-> +static __always_inline bool asi_is_relaxed(void)
-> +{
-> +	return !asi_get_target(current);
-> +}
-> +
-> +/*
-> + * Is the current task in the critical section?
-> + *
-> + * This is just the inverse of !asi_is_relaxed(). We have both functions in order to
-> + * help write intuitive client code. In particular, asi_is_tense returns false
-> + * when ASI is disabled, which is judged to make user code more obvious.
-> + */
-> +static __always_inline bool asi_is_tense(void)
-> +{
-> +	return !asi_is_relaxed();
-> +}
-
-So can we tone down the silly helpers above? You don't really need
-asi_is_tense() for example. It is still very intuitive if I read
-
-	if (!asi_is_relaxed())
-
-...
-
-> +
-> +static __always_inline pgd_t *asi_pgd(struct asi *asi)
-> +{
-> +	return asi ? asi->pgd : NULL;
-> +}
-> +
-> +#define INIT_MM_ASI(init_mm) \
-> +	.asi_init_lock = __MUTEX_INITIALIZER(init_mm.asi_init_lock),
-> +
-> +void asi_handle_switch_mm(void);
-> +
-> +#endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
-> +
-> +#endif
-
-Splitting the patch here and will continue with the next one as this one is
-kinda big for one mail.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
