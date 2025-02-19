@@ -1,105 +1,75 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3361E1C09
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C993C450F2;
+	Wed, 19 Feb 2025 14:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739976303; cv=none; b=FG+Sh0b6i6F+zyCV0nSMqIRWUYlqi56gaLLKl2IerOjEpVIuFntIfD6RjbPhbUcXARmOtx+b5p/THURdo1T6KQOcqmB0LJefdHjWElKJcmxRMv8xcbKt1orp7t80Ib3RZyYQIqBDGM96HUK0b7QuNRUgLMrzJul3X2DaWmcKyno=
+	t=1739976327; cv=none; b=KFGj4Q0b+2nbeJMJvt82GAfZcSIkYGOrymfZKNa3k9f0+feia9vtRq+DRHDa7M69m6i87nx5q0WsoNYEYXHypUrmLnY5+yapUcVifuymSlzDwB0vCuOfNnOo5GSc2fMIa1UfbCBgH16o2GR3kxTvIJZ/VzRdB4iIv9xAGP58ATo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739976303; c=relaxed/simple;
-	bh=Lg1Iyu4pbxer1+btJAh4izacBOCnj/tM+fmLEh+c/rg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pEeXIo0KMdgpN48Jnv5iH/VxjvCRNybDvMlR3oozn5/nfjHM3mTuzvO4XqaA995OxkoNgm263tXequ3Y3tVG9xuoyja32LFHxUFd0XSiivrGc/4i8c/n/tLFNtz1BPHV0HBx8iayvYJ12J7zjOZFIijtpj+mk8POWAVONtyhTCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B28513D5;
-	Wed, 19 Feb 2025 06:45:19 -0800 (PST)
-Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.18])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15FE53F59E;
-	Wed, 19 Feb 2025 06:44:57 -0800 (PST)
-From: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-To: ryan.roberts@arm.com,
-	yang@os.amperecomputing.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	joey.gouly@arm.com,
-	broonie@kernel.org,
-	mark.rutland@arm.com,
-	james.morse@arm.com,
-	yangyicong@hisilicon.com,
-	robin.murphy@arm.com,
-	anshuman.khandual@arm.com,
-	maz@kernel.org,
-	liaochang1@huawei.com,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	baohua@kernel.org,
-	ioworker0@gmail.com,
-	oliver.upton@linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-Subject: [PATCH v1 0/3] Initial BBML2 support for contpte_convert()
-Date: Wed, 19 Feb 2025 14:38:36 +0000
-Message-ID: <20250219143837.44277-3-miko.lenczewski@arm.com>
-X-Mailer: git-send-email 2.45.3
+	s=arc-20240116; t=1739976327; c=relaxed/simple;
+	bh=s0LycvToQG/6zkbDwJzQGNvC70N+j8gBHmFOolfYVhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hiWXw9qBJN6nV60LrL7WFfEmcf4Pyp1tlWrnNIS/m2naXQaYLHzcx5QxPLGb+ovxeUy16D+PAQu7/kVNSBO/jldC6XQ9GnXdZWkMmp5prQ248HPWQZ+8quFq21kyn6XwEsaIb0ZfCxDSlm09bigyZ8g4ng1pOSxPMu9NvpzBTYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746B8C4CED1;
+	Wed, 19 Feb 2025 14:45:26 +0000 (UTC)
+Date: Wed, 19 Feb 2025 09:45:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Sven
+ Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 3/5] fprobe: Fix accounting of when to unregister from
+ function graph
+Message-ID: <20250219094549.4d0899cc@gandalf.local.home>
+In-Reply-To: <20250219095332.f9667fe4f414ec9945093b73@kernel.org>
+References: <20250218193033.338823920@goodmis.org>
+	<20250218193126.619197190@goodmis.org>
+	<20250219095332.f9667fe4f414ec9945093b73@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi All,
+On Wed, 19 Feb 2025 09:53:32 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-This patch series adds adding initial support for eliding
-break-before-make requirements on systems that support BBML2 and
-additionally guarantee to never raise a conflict abort.
+> Can you use this version?
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 2560b312ad57..7d282c08549e 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -409,7 +409,8 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+>  		return;
+>  	}
+>  
+> -	ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
+> +	if (num)
+> +		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
+>  }
+>  
+>  static int symbols_cmp(const void *a, const void *b)
+> @@ -679,8 +680,7 @@ int unregister_fprobe(struct fprobe *fp)
+>  	}
+>  	del_fprobe_hash(fp);
+>  
+> -	if (count)
+> -		fprobe_graph_remove_ips(addrs, count);
+> +	fprobe_graph_remove_ips(addrs, count);
+>  
+>  	kfree_rcu(hlist_array, rcu);
+>  	fp->hlist_array = NULL;
 
-This support reorders and optionally elides a TLB invalidation in
-contpte_convert(). The elision of said invalidation leads to a 12%
-improvement when executing a microbenchmark designed to force the
-pathological path where contpte_convert() gets called. This
-represents an 80% reduction in the cost of calling contpte_convert().
+Yes, that looks better. I'll add that to v2.
 
-However, even without the elision, the reodering represents a
-performance improvement due to reducing thread contention, as there is
-a smaller time window for racing threads to see an invalid pagetable
-entry (especially if they already have a cached entry in their TLB
-that they are working off of).
-
-This series is based on v6.14-rc3 (0ad2507d5d93).
-
-Patch 1 implements an allow-list of cpus that support BBML2, but with
-the additional constraint of never causing TLB conflict aborts. We
-settled on this constraint because we will use the feature for kernel
-mappings in the future, for which we cannot handle conflict aborts
-safely.
-
-Yang Shi has a series at [1] that aims to use BBML2 to enable splitting
-the linear map at runtime. This series partially overlaps with it to add
-the cpu feature. We beleive this series is fully compatible with Yang's
-requirements and could go first, given there is still a lot of discussion
-around the best way to manage the mechanics of splitting/collapsing the
-linear map.
-
-[1]:
-  https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-yang@os.amperecomputing.com/
-
-Mikołaj Lenczewski (3):
-  arm64: Add BBM Level 2 cpu feature
-  arm64/mm: Delay tlbi in contpte_convert() under BBML2
-  arm64/mm: Elide tlbi in contpte_convert() under BBML2
-
- arch/arm64/Kconfig                  |  9 ++++++++
- arch/arm64/include/asm/cpufeature.h |  5 +++++
- arch/arm64/kernel/cpufeature.c      | 32 +++++++++++++++++++++++++++++
- arch/arm64/mm/contpte.c             |  3 ++-
- arch/arm64/tools/cpucaps            |  1 +
- 5 files changed, 49 insertions(+), 1 deletion(-)
-
--- 
-2.45.3
-
+-- Steve
