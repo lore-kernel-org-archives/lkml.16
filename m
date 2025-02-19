@@ -1,129 +1,127 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C857C1F30DE
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389861F4634
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978227; cv=none; b=GUQWd628dIMUKKkQ1fT77k7WHvbmYjnQTskFcwExYAQrzFUlleRmHvLJME4/oPw7vJ1nwpQi6kvvMxZLPodyWPGokbWsUeRzJJ4sm+8UY187V3nqIW/opKWO51SihBAzNfSZnILEREoVlSSf84MC9XVB2AeAktFR/igXAjpfZAg=
+	t=1739978231; cv=none; b=LFRvbRcWBFXq4+3qBSG0B7Wei56y0LytjTc1JxPMaEXfWVrBH7LLuLeSeRI0eGMMbX2EbTfUuaPmuzgDEneTlwMAmAWvzm2m9vlNcnVkoyCmPZhCGs5it/xOkN0PCyHnc3j4m/oKaEkDpmL527iZYKq03VraYAJ0rGe/1bapBeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978227; c=relaxed/simple;
-	bh=5Ef/H9SQz0qyD6vdyn2cJCrQtQNhElDaP1JYvY7e3sM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AKxs+NpggKm9wqJyB0taGppWsT3wPcCgTT1/r7mecTrRtL7EFXPWkf1UL6NxebAmhR68+dMZ02tqxgZhobe7EmN5TlFc23Cn5oI9roVSoI8KVNlDBU58WM356mLeXhfDbgJ6xK/SHXyY8mcQJUcNGhFYMU6Ze9xYSyQZUH3UKwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rvc2HCEm; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739978231; c=relaxed/simple;
+	bh=w7fP5VJsqdJFhYmueyYdah4nlb2jc1Wn/053sE2nQdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gDrNQf2mkKeM5bweg6/8lkiKqGgK5tLWO+GvHL29ILXpu8PeqtnJ89jh2MhexIh4JmLBJN8C/Q6PGQ8QyEJXWUKE8/9oqwbo3ynxf0l0xDbak8wufRKKckupeq4lkxhRhSoO/4jvg0lw0/+IbRWSlWJNz+B5tdsqdCbgTlJbO9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=vHQOQRek; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvc2HCEm"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so47389785e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:17:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="vHQOQRek"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7be6fdeee35so1216739085a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:17:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739978224; x=1740583024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AB8I4wegTQXb4Nt4v2IoDrjBpPCGZeradmAL978Ns8Q=;
-        b=rvc2HCEm003zi3oHKix3zVzhhJYyenN0h/SuqjE7ECNtQ35cAm2aq6QCF2MLsWBdbm
-         k1IpHQcDXREzOKBWz/ONaBCBLHkL2wysnqr9v2PwX53S4RE+/yAHx/8v/4GgH3tVzvdq
-         JriOpjotM9Zb6Znr+4JPDibbIjR+J6CpdVnyY5mziZs4aPtzrgMYf4lnwBdx+2MPKySG
-         nCr5dP5LTlPTdcFKorMzlzUeXol82e4KuGV5RC9hbY3vIng3L6qikjLkowtpjiHkyfRV
-         WJv093EwdiE2jH059rRJ1XNYjOBkhormcPGsUWyrOqo5WbdYaJEOZyR8iYfqzfgBFY+B
-         4ZoQ==
+        d=rowland.harvard.edu; s=google; t=1739978228; x=1740583028; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZLngn1c7OgszDhQYwrs3tuXmUNGW9guC8b5guhMRolg=;
+        b=vHQOQRek3SAuGGm5hZzY+o0gjg1WMNFjb6vlzofW6dsTijWzWQ4n4MXFp2SMqbdwWb
+         ZqOJQqIu/+0Gq4f8cHOJocdeyMLvAabxxNqI3AORcwEFdLOu+dCCrQNulEzZEIB2L/61
+         Ia6cqOAbxwPtHQLilAJm07+tJ1yOFgLJh/xYkZ2+jdRzP48y2nJjf045ilRbJllEnKQ5
+         BXj0vGJMn6YnU0G29HEmZ/cxlwn4MqNOD32knoRy9GDdEb8bZdSMRGxwkUQkgYXn9uhG
+         N8vJrQOV3HAwKY3w67pLt4WCMKLofdByGJfJBz1fPlYJTQn3D0/IOuZf0wb7Q/2R9DvX
+         oJbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739978224; x=1740583024;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AB8I4wegTQXb4Nt4v2IoDrjBpPCGZeradmAL978Ns8Q=;
-        b=ngBUH1joanTWB1xXU6cdy9oAIuqFNAkvu6jsQQ6IQv+bzEk8u1gfuIqqZ44Lbily1t
-         gE8QH2uXhYhYnFaLURCDHqoy/QZJGZVbf7lQxD8s1F65o8xBtm1wJXDL4AUnr8folV7f
-         gHLtWr4ggENUjak7AycahPmi6sg70rGJ9CJoRfPXW29DmU7kx5gXpPF5GJT2Pv/826LZ
-         n8pFiyVK/WTeRF1muHuh94dSsg1BuWFDya+zbf/ytJsCPL4peSgqiI0JFh98slHTp/LE
-         5IIBUboKM0mnfY/7izn4hDwDtOiZbzky3zIT7k8vM1orCPzaOdxXnY1ybybBZLodd1v+
-         kYVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFe4cTh3/7i1KFFcUwUQoi5OYtSveO7h8+OpEocq8XX2g+x1krcf+VOlgpwZjcAuELTsv31vcJvgUlwyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyozsRXhoiiDzODJpwm4JWitZC6DRH2PraDrMtZu4m291B6RW+5
-	HQbDBGffiytf02u8lyhj3ij7UF0Rn7UDJ6y09tVrSyuvMBsASlHHHxsveDYUu2A=
-X-Gm-Gg: ASbGncsURkVJVGDZbEkHA8eFM0zpqOv/1INEFlm0ph+TblP892FNFFd+r6dn4/RA/zV
-	0KxcM7LyOs/bN+Z0gM1MQW9lfUPHxnKnqwS+youUfz6MPWkZafz6xrEjfsj+s4QT8pvJdifjb+Y
-	brxZQ186b0DiA5gC5b1BLJCW3JSmdHx5jQK+MKLkpzn8j4Vj/NdU4Up6BFc0YnKu51uB0+wkgby
-	jvjElh2IWAXbpbMJ85a/pnfqUaP8wvc3lQjPwoCcZlgjvMulf99y52I9zU83reaoB1rIUT+8MqB
-	n83lC+Dt/OUePBk=
-X-Google-Smtp-Source: AGHT+IFghAhU4CVYMM0z3nQZRvpFSkI5KSPb68OtzHjy/xmGIk0I938mkd7Bxd8Al9toNUNiuN4WlQ==
-X-Received: by 2002:a05:600c:1f0f:b0:439:8653:20bb with SMTP id 5b1f17b1804b1-439865322ddmr114719455e9.14.1739978224110;
-        Wed, 19 Feb 2025 07:17:04 -0800 (PST)
-Received: from pop-os.. ([145.224.90.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04f8a2sm214703065e9.2.2025.02.19.07.17.01
+        d=1e100.net; s=20230601; t=1739978228; x=1740583028;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZLngn1c7OgszDhQYwrs3tuXmUNGW9guC8b5guhMRolg=;
+        b=jk0pMXcVolQQzqsxRGtH/gBI4IbOjudwry4Q29B1cGr/ISel+jPYUZOWpRsIz4QHHX
+         S7jrq6tzSXjo5dEg1JICrWY2DuFAg5yMPRcq18mcAXvCfYZ0RgXraD2pRCjVIb9J11ek
+         Z9EdO8n7QKymUho8jW7RxRaj9fEynwscuHVD0R6++5cHztJ7XA/lTLimgwn3XQ9dY/rP
+         tC45a4VHTfFGCRlua2pIG67JPWsOzYpX49koa899mAAFlwcv9Bo+J4UcAIK184oFy+mb
+         4a8uXJDrfvtE7pqBjZntS+h7L06XZ+mlP1knpRipLiCVNa+wn5s0kjw1rKOiqloWRiq/
+         lSwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU57S1xi4wWgHg74ed8EjIwArGsqWLIO/H/MFJ/eZHY28AFoilWIbKB5mGS9yxI3PR//auMJv1zalrM5jA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxKSuYR7Kl+Ihbm/tzfnovn0+MeT3lIKupmIFKG8fdRlgC+N0Q
+	KSas19IdCo0h/dA+1r3K92ZYccpMhEZ7Z4MV43zTcSIs5z9pzm5/1w9I4S32gA==
+X-Gm-Gg: ASbGncu60D44KeZZTO/eOZjBnZAcRpDpmEW9jMQaHQEk1TwiNLYP2ffIetJA+KHzYKQ
+	HMrPA6Pdoie7lFh49yLJ0UKiUH97VVQhEtvOczcz5c5fFW39h4zP99CefK2Tz/fzi7KuNeMgkAE
+	LcrpLpgRzfsizloJupdDVTGcujSZlQafwF1uGCsR+FGPAZcQgu8ENADxl4nAk87QdH5J0S2NZHQ
+	2kZd294VmKocCDC140x0O5pf1My4Kzg4hqoxv39hAfZa21NOPKQkdZXo5of85gXhTtPDoMFh2PE
+	X66sdtkzfcaJ/pr7bVEZF8Vvb6X/HVaNDg==
+X-Google-Smtp-Source: AGHT+IFU4MYbB6zopLM4Vw6VY01SbuBIlw1aYMolPw19EYJwiK6vA3t38BJTotpTUC2Ignn7JMiZCg==
+X-Received: by 2002:a05:620a:4550:b0:7c0:c0d7:580e with SMTP id af79cd13be357-7c0c0d75998mr89190785a.45.1739978227894;
+        Wed, 19 Feb 2025 07:17:07 -0800 (PST)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d9f36f5sm75044706d6.75.2025.02.19.07.17.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 07:17:03 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	namhyung@kernel.org,
-	cyy@cyyself.name
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf list: Also append PMU name in verbose mode
-Date: Wed, 19 Feb 2025 15:16:21 +0000
-Message-Id: <20250219151622.1097289-1-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        Wed, 19 Feb 2025 07:17:07 -0800 (PST)
+Date: Wed, 19 Feb 2025 10:17:05 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: Re: [PATCH v1] usb: core: replace usb_sndaddr0pipe macro with
+ usb_sndctrlpipe
+Message-ID: <8fba35c4-fe72-4dc3-85cf-270efb0c7765@rowland.harvard.edu>
+References: <20250219083745.10406-1-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219083745.10406-1-eichest@gmail.com>
 
-When listing in verbose mode, the long description is used but the PMU
-name isn't appended. There doesn't seem to be a reason to exclude it
-when asking for more information, so use the same print block for both
-long and short descriptions.
+On Wed, Feb 19, 2025 at 09:36:44AM +0100, Stefan Eichenberger wrote:
+> From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> 
+> The usb_sndaddr0pipe macro is only used in the hub_set_address function.
+> Replace it with usb_sndctrlpipe which provides the same functionality
+> but would also consider the endpoint device number.
+> 
+> If the device has not been initialised, it is safe to use
+> usb_sndctrlpipe in this context because udev->devnum is set to 0.
+> Therefore, this change does not affect behaviour, but reduces code
+> complexity by reusing the existing macro.
+> 
+> Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> ---
+> Even though this patch does not fix a bug it is related to the following
+> discussion and addresses the change proposed by Alan:
+> https://lore.kernel.org/all/aa0c06f6-f997-4bcf-a5a3-6b17f6355fca@rowland.harvard.edu/
+> ---
 
-Before:
-  $ perf list -v
-  ...
-  inst_retired
-       [Instruction architecturally executed]
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-After:
-  $ perf list -v
-  ...
-   inst_retired
-       [Instruction architecturally executed. Unit: armv8_cortex_a57]
-
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/builtin-list.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 9e7fdfcdd7ff..c19826f218a0 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -163,11 +163,10 @@ static void default_print_event(void *ps, const char *topic, const char *pmu_nam
- 	} else
- 		fputc('\n', fp);
- 
--	if (long_desc && print_state->long_desc) {
--		fprintf(fp, "%*s", 8, "[");
--		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
--		fprintf(fp, "]\n");
--	} else if (desc && print_state->desc) {
-+	if (long_desc && print_state->long_desc)
-+		desc = long_desc;
-+
-+	if (desc && (print_state->desc || print_state->long_desc)) {
- 		char *desc_with_unit = NULL;
- 		int desc_len = -1;
- 
--- 
-2.34.1
-
+>  drivers/usb/core/hub.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 59e38780f76d0..66dfdf0bab90b 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -4697,8 +4697,6 @@ void usb_ep0_reinit(struct usb_device *udev)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_ep0_reinit);
+>  
+> -#define usb_sndaddr0pipe()	(PIPE_CONTROL << 30)
+> -
+>  static int hub_set_address(struct usb_device *udev, int devnum)
+>  {
+>  	int retval;
+> @@ -4722,7 +4720,7 @@ static int hub_set_address(struct usb_device *udev, int devnum)
+>  	if (hcd->driver->address_device)
+>  		retval = hcd->driver->address_device(hcd, udev, timeout_ms);
+>  	else
+> -		retval = usb_control_msg(udev, usb_sndaddr0pipe(),
+> +		retval = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
+>  				USB_REQ_SET_ADDRESS, 0, devnum, 0,
+>  				NULL, 0, timeout_ms);
+>  	if (retval == 0) {
+> -- 
+> 2.45.2
+> 
