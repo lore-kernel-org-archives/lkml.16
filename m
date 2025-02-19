@@ -1,34 +1,34 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620451F5849;
-	Wed, 19 Feb 2025 13:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E0A1F891D;
+	Wed, 19 Feb 2025 13:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973004; cv=none; b=G27niOCJ3EZvDBiS5TAKgcbC6h6+7oYN2kwi2Fue4d7ktyTf72nDvx7bpY9E/dhMr/T9WBgJFMBZjzDJoKU84h1He9/2SJVTvoA/5S1Cox5gAmh71WTvrqdgGeVnM2LVaLTKruN8sR2z9JktbgdxOyBUrAMinrglwkgHWXfKFR8=
+	t=1739973006; cv=none; b=lK8BZurEBe2t85vgiCxxxkcDo9gQTafLsBYapFS6nYMWNmstzIXbW65+83K0/MU9xwhAagJxWUkG2eRgvPHKFeO7jX4ns9hWvfuu138UNRgpK5MKaMP+oFq8mWwwWcvbQSgfc5WGO8JVP+0nDZfeKWyoF+FRITZGZZ7qQYKlhak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739973004; c=relaxed/simple;
-	bh=JZv36af1jW5uhq9uaijH/ZEQNL7NFCncVCynBQYUP3o=;
+	s=arc-20240116; t=1739973006; c=relaxed/simple;
+	bh=vL1OANKaXYDEK1GHNVhZ9Igmc1X5JgHGxsFyphi/a3s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X/K8dqhza/vUFNw4iVIhyjP+WiaNQ+1MhqkEUMJHpBNj5bPPwh9QOmCjlH+HiM0asna0pBBen3sBJnTXY3SwoVqL2dWSgngwdcVHbpcqmoD2rkTNl65+ZoaQH3nxHQWpxlslu/M4gQA6JsbApvGPbXnCD3xkVE1V9F23/Fkip74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CALPf+Ej; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:To:Cc; b=IVU+Uq8r9zIdeWt06agZskRDKMkOniNh2PXgDEHPyleSoRyBmoOyWvNMEm9gjv4xMMpvlg/j8x0F6fAgb2LdG+muITxzLYAnIObbk5xQFTlOXB8CARdbaJd/djEymn28ofSDo/lmLwlyU+HizyLZ7F7q5mbFSKvL+x/j8oWn9pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=WzMrdpWb; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CALPf+Ej"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WzMrdpWb"
 Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 698251349;
-	Wed, 19 Feb 2025 14:48:28 +0100 (CET)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DD1F31980;
+	Wed, 19 Feb 2025 14:48:29 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739972909;
-	bh=JZv36af1jW5uhq9uaijH/ZEQNL7NFCncVCynBQYUP3o=;
+	s=mail; t=1739972910;
+	bh=vL1OANKaXYDEK1GHNVhZ9Igmc1X5JgHGxsFyphi/a3s=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CALPf+Ej9dH0L76hkGAORd7E5YHtnBM7LtsAfdFoECgQ34Sj/jLa5vYLfkSOiBmSV
-	 nM4FnH9CyzHMr5wcqmRwYrRzdCDLfGaFZCTDnVgZCL4UXGPzraUIi2LO8RQoxAw9n2
-	 UKdVRfNtCoA2syqKFUBH7J1eLotfRQzXJBjhumdE=
+	b=WzMrdpWbku8/DC9r4jyDU278X5KXK52EZCzMG0dzaeIZdErMeE0ecrfnggJut7iYr
+	 4wIurYmLHMm7YdxZl7sTKl9iBoXCpIyeqemH4Eg/vB/3vWUX++LLPJgHQuPTlekf41
+	 +tyIMtgBDbS7p1BiSOyan/MFDVHx2bRMys/Z9hNA=
 From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Wed, 19 Feb 2025 15:49:05 +0200
-Subject: [PATCH 11/18] media: rcar-csi2: Switch to Streams API
+Date: Wed, 19 Feb 2025 15:49:07 +0200
+Subject: [PATCH 13/18] media: rcar-csi2: Add .get_frame_desc op
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-rcar-streams-v1-11-f1b93e370aab@ideasonboard.com>
+Message-Id: <20250219-rcar-streams-v1-13-f1b93e370aab@ideasonboard.com>
 References: <20250219-rcar-streams-v1-0-f1b93e370aab@ideasonboard.com>
 In-Reply-To: <20250219-rcar-streams-v1-0-f1b93e370aab@ideasonboard.com>
 To: =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
@@ -51,135 +51,108 @@ Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
  Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
  Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
 X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4215;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2464;
  i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=JZv36af1jW5uhq9uaijH/ZEQNL7NFCncVCynBQYUP3o=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBnteFzSJMH1cGiXVYSjb23UJvk/F0Xz2gKI10je
- qih0J1i0y+JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ7XhcwAKCRD6PaqMvJYe
- 9dzrD/9CbbAqGM8SmE4ZCZR6ejOE5N3lBvUTZoOHhnEH4xI8EbBIn9x8FkNva6vjm7GPbhHrN37
- JUmUctUenKNLgAbMZ5uByW+wAPm+h0syCNqfshT4t9ZuL7GVc5eJ8sRcne2WpC9rp3OLYq9r+VK
- 6i/yo0QXzHnPGbD6KQkZWSH1vxaKg2H01n9Jltr/oESKwDz4EHxepdaCNGMKqBCVA0haRlg3fjY
- 9WeDBabKxf4OeySSq/iKUCImtxzf10oPEXWPWHobfS9ZP0xzxRrLl6ssp6n7yEFXHMvgl7xLhXh
- ZnfZiglbhjjlX30yqLw41NTmtl9V7LVm+UgZl7yxmCRaSWAWxMufwoc4FQdBfPxDAYuZvZPbQNs
- i5t3vnPSraH+ggb3FUkYhsMTXEpo/2V+0ZJsWq8o4lpQkFpkaNBNuvzjYo3SFhORtFRgDkRSGJ1
- Jwt+ZF8dhkMt1wE1uwM8XOSWXprjf9TCpae1LoxmLLdEKXlvkmk8iA8smkhXoL4tv6jlAEoaX+d
- 2YoTA7jQ3mD0U5XEbJgt6ol3j4Mj5AXVevafat1N0J1Drm6uvjEFR5651gtVHdO2pi6UNsOGjbd
- WsxxfFZITwfoE6BwtLiDOoGPycsgwIq1NuTdjT7vho9ll0YDXvbfPo5yByPuttdiQzoV480vuLz
- 6buFPxVs4csO+JQ==
+ bh=vL1OANKaXYDEK1GHNVhZ9Igmc1X5JgHGxsFyphi/a3s=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBnteF0Q2QWo/N8SvBzqo71J7n0uHTDsyh8m9Otw
+ wDqdnB3HYOJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ7XhdAAKCRD6PaqMvJYe
+ 9XevEACnJdyamtEl7qbglLToACR/jkmcU/wPCYH/t5hDEM0+TW6zWYBGQIC7e1ndQuYk1d2ncLr
+ pMvMbaJKWsurp0aZ061Hw51Lz1ykyHgDurg/pk7BulVybaszrCfdhrJBnCBz3FCEYD/uFg46m8J
+ e5o6oWgDtdHxE5sqMTzoxA4gYV9x1lq/XOk1Udo9F8gB4azmlzAMYOvxg6Q8bTHQD3SW1UadV34
+ 5f0IbzpPxFpxhdAIHx2btdKhv/Xvq7bABoaaCGn/ae9ha2mCfshReGg5o6gG7ELEZqOj61tqDR3
+ pbZloPmRTevpvUXrpRxQonGRjZ+Za+cwG1nWCDLgNSyJNEDnSdJwrZkNj9ye2H0jyWOWSYdZh6o
+ 9sVj1/82/ruLNKR6eFQmpT3EwOn/+b6vfPyaoKaQjyhAFPplZyu88C1s9ZKowJJ6T4QVDhOjkWO
+ r4pCQLhtPZLamDvpPSbS7R+sCKZVdyAfZxvNHrQFHr05yxsctK8n/jnMm5L5h1WrGWEEZQishUP
+ RRfKKOL1dksiIcmYTcSwkw1t6HUcV5mkTfbkUwCkBu5CkESlhHjz+83KVWlaYzkOhwMtEcJO3rF
+ lAhdy3Wp0jxNeW5Bv2VGzGIhftkqmEYfCzgKG51Yo2ESkyh7I/ZtDoJdmp607bpVDBfC9hfHGzH
+ wIU9t2G24mrNX8Q==
 X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
  fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Switch to Streams API with a single hardcoded route. This breaks any
-existing userspace which depended on the custom rcar streams
-implementation, but a single camera use case should continue to work.
+Add v4l2_subdev_pad_ops.get_frame_desc() implementation.
+
+We also implement a fallback for the case where the upstream subdevice
+does not implement .get_frame_desc. It assumes a single stream with VC =
+0 and DT based on the configured stream mbus format.
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
 ---
- drivers/media/platform/renesas/rcar-csi2.c | 47 +++++++++++++++++++++---------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ drivers/media/platform/renesas/rcar-csi2.c | 56 ++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
 diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-index d6d5c18b0b4c..71836a9e063b 100644
+index 71836a9e063b..17ded37d5ca7 100644
 --- a/drivers/media/platform/renesas/rcar-csi2.c
 +++ b/drivers/media/platform/renesas/rcar-csi2.c
-@@ -1024,7 +1024,7 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
- 		if (ret)
- 			return ret;
- 
--		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-+		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
- 		if (!fmt)
- 			return -EINVAL;
- 
-@@ -1065,7 +1065,7 @@ static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
- 	int mbps, ret;
- 
- 	/* Use the format on the sink pad to compute the receiver config. */
--	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-+	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
- 
- 	dev_dbg(priv->dev, "Input size (%ux%u%c)\n",
- 		fmt->width, fmt->height,
-@@ -1646,8 +1646,7 @@ static int rcsi2_set_pad_format(struct v4l2_subdev *sd,
- 				struct v4l2_subdev_state *state,
- 				struct v4l2_subdev_format *format)
- {
--	struct rcar_csi2 *priv = sd_to_csi2(sd);
--	unsigned int num_pads = rcsi2_num_pads(priv);
-+	struct v4l2_mbus_framefmt *fmt;
- 
- 	if (format->pad > RCAR_CSI2_SINK)
- 		return v4l2_subdev_get_fmt(sd, state, format);
-@@ -1655,11 +1654,20 @@ static int rcsi2_set_pad_format(struct v4l2_subdev *sd,
- 	if (!rcsi2_code_to_fmt(format->format.code))
- 		format->format.code = rcar_csi2_formats[0].code;
- 
--	*v4l2_subdev_state_get_format(state, format->pad) = format->format;
-+	/* Set sink format */
-+	fmt = v4l2_subdev_state_get_format(state, format->pad, format->stream);
-+	if (!fmt)
-+		return -EINVAL;
-+
-+	*fmt = format->format;
-+
-+	/* Propagate to source format */
-+	fmt = v4l2_subdev_state_get_opposite_stream_format(state, format->pad,
-+							   format->stream);
-+	if (!fmt)
-+		return -EINVAL;
- 
--	/* Propagate the format to the source pads. */
--	for (unsigned int i = RCAR_CSI2_SOURCE_VC0; i < num_pads; i++)
--		*v4l2_subdev_state_get_format(state, i) = format->format;
-+	*fmt = format->format;
- 
+@@ -1672,12 +1672,68 @@ static int rcsi2_set_pad_format(struct v4l2_subdev *sd,
  	return 0;
  }
-@@ -1679,8 +1687,15 @@ static const struct v4l2_subdev_ops rcar_csi2_subdev_ops = {
- static int rcsi2_init_state(struct v4l2_subdev *sd,
- 			    struct v4l2_subdev_state *state)
- {
--	struct rcar_csi2 *priv = sd_to_csi2(sd);
--	unsigned int num_pads = rcsi2_num_pads(priv);
-+	static struct v4l2_subdev_route routes[] = {
-+		{
-+			.sink_pad = RCAR_CSI2_SINK,
-+			.sink_stream = 0,
-+			.source_pad = RCAR_CSI2_SOURCE_VC0,
-+			.source_stream = 0,
-+			.flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE,
-+		},
-+	};
  
- 	static const struct v4l2_mbus_framefmt rcar_csi2_default_fmt = {
- 		.width		= 1920,
-@@ -1693,10 +1708,13 @@ static int rcsi2_init_state(struct v4l2_subdev *sd,
- 		.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
- 	};
++static int rcsi2_get_frame_desc_fallback(struct v4l2_subdev *sd,
++					 unsigned int pad,
++					 struct v4l2_mbus_frame_desc *fd)
++{
++	const struct rcar_csi2_format *format;
++	struct v4l2_subdev_state *state;
++	struct v4l2_mbus_framefmt *fmt;
++	int ret = 0;
++
++	state = v4l2_subdev_lock_and_get_active_state(sd);
++
++	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
++	if (!fmt) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	format = rcsi2_code_to_fmt(fmt->code);
++	if (!format) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	fd->num_entries = 1;
++	fd->type = V4L2_MBUS_FRAME_DESC_TYPE_CSI2;
++	fd->entry[0].stream = 0;
++	fd->entry[0].pixelcode = fmt->code;
++	fd->entry[0].bus.csi2.vc = 0;
++	fd->entry[0].bus.csi2.dt = format->datatype;
++
++out:
++	v4l2_subdev_unlock_state(state);
++
++	return ret;
++}
++
++static int rcsi2_get_frame_desc(struct v4l2_subdev *sd, unsigned int pad,
++				struct v4l2_mbus_frame_desc *fd)
++{
++	struct rcar_csi2 *priv = sd_to_csi2(sd);
++	int ret;
++
++	if (WARN_ON(!priv->info->use_isp))
++		return -ENOTTY;
++
++	if (WARN_ON(pad != RCAR_CSI2_SOURCE_VC0))
++		return -EINVAL;
++
++	ret = v4l2_get_frame_desc_passthrough(sd, pad, fd);
++	if (ret == -ENOIOCTLCMD)
++		ret = rcsi2_get_frame_desc_fallback(sd, pad, fd);
++	return ret;
++}
++
+ static const struct v4l2_subdev_pad_ops rcar_csi2_pad_ops = {
+ 	.enable_streams = rcsi2_enable_streams,
+ 	.disable_streams = rcsi2_disable_streams,
  
--	for (unsigned int i = RCAR_CSI2_SINK; i < num_pads; i++)
--		*v4l2_subdev_state_get_format(state, i) = rcar_csi2_default_fmt;
-+	static const struct v4l2_subdev_krouting routing = {
-+		.num_routes = ARRAY_SIZE(routes),
-+		.routes = routes,
-+	};
+ 	.set_fmt = rcsi2_set_pad_format,
+ 	.get_fmt = v4l2_subdev_get_fmt,
++
++	.get_frame_desc = rcsi2_get_frame_desc,
+ };
  
--	return 0;
-+	return v4l2_subdev_set_routing_with_fmt(sd, state, &routing,
-+						&rcar_csi2_default_fmt);
- }
- 
- static const struct v4l2_subdev_internal_ops rcar_csi2_internal_ops = {
-@@ -2352,7 +2370,8 @@ static int rcsi2_probe(struct platform_device *pdev)
- 	v4l2_set_subdevdata(&priv->subdev, &pdev->dev);
- 	snprintf(priv->subdev.name, sizeof(priv->subdev.name), "%s %s",
- 		 KBUILD_MODNAME, dev_name(&pdev->dev));
--	priv->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	priv->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE |
-+			     V4L2_SUBDEV_FL_STREAMS;
- 
- 	priv->subdev.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
- 	priv->subdev.entity.ops = &rcar_csi2_entity_ops;
+ static const struct v4l2_subdev_ops rcar_csi2_subdev_ops = {
 
 -- 
 2.43.0
