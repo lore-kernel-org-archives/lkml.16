@@ -1,125 +1,77 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000A719149F;
-	Wed, 19 Feb 2025 15:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760A185C5E;
+	Wed, 19 Feb 2025 15:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978511; cv=none; b=OxzTxv8aJkjyDvFJLLhfegwEXRBGu8kKf56y0gTPZ1rVCFvSBr5aFkb92XEfwtu9TQkJmoo8GjuSGMhw2QFgpjOqoKUhbopjQPRgPs3rcsDTCBZjE1gR1RpmG2LPVNC8mfZAr7fmvVIm4CxJKfXCW1uhgBsuHT+79D6w1ZPbJCY=
+	t=1739978519; cv=none; b=btjLN5IVQFU9sftt+q15/W2egIiRc2S7CtfkA0HOY3/lEhW3wMO4amz3iDJIfuSF7okohFAlh+EHfP2fQ7HQ/y4TOqohcq86R/RjXlvTNmipYgciqq9zXVvIoHCc4GdbT3usQdnFXkBmC2uzlvRbCKsBEABlZ2AlnaQk5saJIfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978511; c=relaxed/simple;
-	bh=lOJucpUBW1weD9sd1p/IHAQeHP3/bAsh8f4KjOledd0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tVCshiVBdCLtmAyFWSkBG7K8FwdojeTuWwqzbFJHg9PaU19kH8pAb0PPKnsIPvwzsDS7ppqSpIznE7wME8fciLWw4u6EZ0ei4InU7nVAa03B2y/+YtG0RpUUaG+M7RpIebQBsmKeUsCmTlvKect8aOwHmhblT/xlUOiEQGoDEII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=PgvKnhgm; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="PgvKnhgm"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JFH0rb028064;
-	Wed, 19 Feb 2025 09:21:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=/4n+9sQ6e4VHuMQm
-	Z1ycsESMXapriznal3x1bbRBntY=; b=PgvKnhgmJA+B2vQzECXpHdxyYgWfwhEq
-	AYGFLzn3LXmVINz5V3SwiREPa+iAuH18j3vTjw7cpErxMfiJYXEINlrkcdevcaHa
-	Q71Ht0eudcljTzP0d9r9w0eB7KQD2+yc8werYv4Xc/PPZHMBMNoUJg9CluIkpQ6g
-	NaPkncPDYFeGaOqrYBgqmPQvh86KHgOzkzLbsySk+O6oVKeNY+yQ67071d5Enrmt
-	5hvVHsZI2pgRFyyhTnpa6rpdkTjltzJz91bUstQ1qKy5Gcj7+FfKZOqJ/A30+Mv7
-	sIcr4Lx1jQzJOBD2607FnvEeMaEpd3yamE8r6SfTzfvLcTS93tKovg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44w8j7h2yx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 09:21:33 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Feb
- 2025 15:21:32 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Wed, 19 Feb 2025 15:21:32 +0000
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 31C5882025A;
-	Wed, 19 Feb 2025 15:21:32 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <linux-sound@vger.kernel.org>
-Subject: [PATCH] firmware: cs_dsp: test_bin_error: Use same test cases for adsp2 and Halo Core
-Date: Wed, 19 Feb 2025 15:21:32 +0000
-Message-ID: <20250219152132.1285941-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1739978519; c=relaxed/simple;
+	bh=6PhGFUTZ7jEy7Fueq9ZKSMRknajhNZU7gjTbXc05EUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C6KZAUJvOcrh/taEmtS+XfNARZhIgfOYBPKUpwRGOSRDYdbcPXHBsvhNjKeHcY0XC3py8nquHL0SH4s3amo2WjCFkboTsUkU+lXim/9L8HkhWYySztNvgEUoRadEhyIScFm2fppaPngyaxuSdLJhKxj8SqykVXr99nH6SIMcKCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 871CBC4CED1;
+	Wed, 19 Feb 2025 15:21:56 +0000 (UTC)
+Date: Wed, 19 Feb 2025 10:22:20 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas@fjasle.eu>, Zheng Yejian <zhengyejian1@huawei.com>, Martin
+ Kelly <martin.kelly@crowdstrike.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v4 0/6] scripts/sorttable: ftrace: Remove place holders
+ for weak functions in available_filter_functions
+Message-ID: <20250219102220.3b79ec5e@gandalf.local.home>
+In-Reply-To: <20250218145836.7740B3b-hca@linux.ibm.com>
+References: <20250217153401.022858448@goodmis.org>
+	<20250218145836.7740B3b-hca@linux.ibm.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: S1lhIE8zSIITQ9PYVKKrYFCSdQkJ8ihs
-X-Proofpoint-GUID: S1lhIE8zSIITQ9PYVKKrYFCSdQkJ8ihs
-X-Authority-Analysis: v=2.4 cv=ZY7nNtVA c=1 sm=1 tr=0 ts=67b5f6fd cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=jpo4JabcuIscFAbp0T0A:9 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Re-use the adsp2 test cases for the Halo Core test run. Before this the
-Halo Core kunit_case array was an empty placeholder.
+On Tue, 18 Feb 2025 15:58:36 +0100
+Heiko Carstens <hca@linux.ibm.com> wrote:
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
----
- .../firmware/cirrus/test/cs_dsp_test_bin_error.c    | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+> Hi Steven,
+> 
+> > This series removes the place holder __ftrace_invalid_address___ from
+> > the available_filter_functions file.
+> > 
+> > The rewriting of the sorttable.c code to make it more manageable
+> > has already been merged:
+> > 
+> >   https://git.kernel.org/torvalds/c/c0e75905caf368e19aab585d20151500e750de89
+> > 
+> > Now this is only for getting rid of the ftrace invalid function place holders.  
+> 
+> Since you asked me to test this on s390: seems to work with
+> HAVE_BUILDTIME_MCOUNT_SORT enabled; the ftrace selftests still
+> work as before.
 
-diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c b/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c
-index 5dcf62f19fafd..8748874f05524 100644
---- a/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c
-+++ b/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c
-@@ -534,11 +534,6 @@ static int cs_dsp_bin_err_test_adsp2_16bit_init(struct kunit *test)
- 	return cs_dsp_bin_err_test_common_init(test, dsp, 1);
- }
- 
--static struct kunit_case cs_dsp_bin_err_test_cases_halo[] = {
--
--	{ } /* terminator */
--};
--
- static void cs_dsp_bin_err_block_types_desc(const struct cs_dsp_bin_test_param *param,
- 					    char *desc)
- {
-@@ -560,7 +555,7 @@ KUNIT_ARRAY_PARAM(bin_test_block_types,
- 		  bin_test_block_types_cases,
- 		  cs_dsp_bin_err_block_types_desc);
- 
--static struct kunit_case cs_dsp_bin_err_test_cases_adsp2[] = {
-+static struct kunit_case cs_dsp_bin_err_test_cases[] = {
- 	KUNIT_CASE(bin_load_with_unknown_blocks),
- 	KUNIT_CASE(bin_err_wrong_magic),
- 	KUNIT_CASE(bin_err_too_short_for_header),
-@@ -578,21 +573,21 @@ static struct kunit_suite cs_dsp_bin_err_test_halo = {
- 	.name = "cs_dsp_bin_err_halo",
- 	.init = cs_dsp_bin_err_test_halo_init,
- 	.exit = cs_dsp_bin_err_test_exit,
--	.test_cases = cs_dsp_bin_err_test_cases_halo,
-+	.test_cases = cs_dsp_bin_err_test_cases,
- };
- 
- static struct kunit_suite cs_dsp_bin_err_test_adsp2_32bit = {
- 	.name = "cs_dsp_bin_err_adsp2_32bit",
- 	.init = cs_dsp_bin_err_test_adsp2_32bit_init,
- 	.exit = cs_dsp_bin_err_test_exit,
--	.test_cases = cs_dsp_bin_err_test_cases_adsp2,
-+	.test_cases = cs_dsp_bin_err_test_cases,
- };
- 
- static struct kunit_suite cs_dsp_bin_err_test_adsp2_16bit = {
- 	.name = "cs_dsp_bin_err_adsp2_16bit",
- 	.init = cs_dsp_bin_err_test_adsp2_16bit_init,
- 	.exit = cs_dsp_bin_err_test_exit,
--	.test_cases = cs_dsp_bin_err_test_cases_adsp2,
-+	.test_cases = cs_dsp_bin_err_test_cases,
- };
- 
- kunit_test_suites(&cs_dsp_bin_err_test_halo,
--- 
-2.39.5
+Great!
 
+I'm guessing by just adding the support in s390 with what is upstream as
+well as what is in my for-next would work? You can just add that for the
+next merge window then.
+
+Expect this code to be in linux-next later this week.
+
+-- Steve
