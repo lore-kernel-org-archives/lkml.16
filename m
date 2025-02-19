@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB772580F5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A812586C5
 	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 21:36:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740000967; cv=none; b=TKw3p4fcJm0gFc99dUrAGIzPOdfmNgZzNpHbCbD8V7npUICaR2QPXCDIvpf/ms0J2Vlh/f2ull5ClNJ/IeoDQpp8C8nHV3/Q6t6IAdwnjXXdPjPKPdCoiJBO3LonV2F3RW6sRSylWGWZiF1Za2Gzuyv5BDP5AwgX9wPwxvL0MQ4=
+	t=1740000968; cv=none; b=lHNkCGcc4NyaUyuT0YhvHw3+TSgYkMbBQ5YOGXZINAgx87BPMuxwaUucUPoAPrvLClF7Bfwj9oaabsTwReWCh2m8k/5/CNFt8MtBkcrCCEGeGhX8B76zGINc6dI7NrwubKj1p8KuugDiiHjE/sue+Eicmj9zx5CaYTkiPLOhrRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740000967; c=relaxed/simple;
-	bh=Yd21h06QtpKZ5jDPU1XJdXBSUmnuAlVUN80oCBhEekk=;
+	s=arc-20240116; t=1740000968; c=relaxed/simple;
+	bh=9s5md+Z6F8QlGH1qmCYf/s2qQ5LvNcggSmZZuDmybgs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LnXiYx9M5SQfatEtQ3JN6SM5G7Ijz8hnZ+JNleJYvbUQgu1Rea+nBJN2uA3WSxRFXBP3MQmbhIhGAi7OZixOTIB+9vNaR7wOGKmMAdJTsoDzgIKZC3P73Mlt7GpgKPPLQmfN3wnoQIq254t1FWrPwUamwe3LAzgrJl++42tj8Zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ZvfW1Bj0; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=VNZDI05LtZ6DfUUZR4GKqNPsxbTZ+63qbzXdXM7C7BlAf0V+lmlAxbrANVBYKBEINEJMVlMoCSzOp0BpW7bCesgX0bbtNweP0elexxydWfd35fRqpX0GtLLb+3CIQz9hyaFaJvlI3i6DjHWS40u68J+EaPsOW6pQfMdcWPVZHgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=bpa4Sry5; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ZvfW1Bj0"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="bpa4Sry5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1740000960;
-	bh=Yd21h06QtpKZ5jDPU1XJdXBSUmnuAlVUN80oCBhEekk=;
+	s=mail; t=1740000961;
+	bh=9s5md+Z6F8QlGH1qmCYf/s2qQ5LvNcggSmZZuDmybgs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ZvfW1Bj0R7UgBizBGX7kxmG7O/q6NvCla0YmHwrq25t6SiGZZnvZ40J2DFlrUE0WV
-	 o4hidc2H0XAHZvdI30PnnlZ97sPVYs/dKEmGIElf+/v8tmZgzYzg3zqNwDyWU6/7Ou
-	 EPChXXgfZrOgqsVQ1PPP6vRbbRmHiNyhp4+TEjbg=
+	b=bpa4Sry5bVBvEQsMj3DWLv4zHyL1TeQFSWNl6Hv+YsQU7RNRF/ue88sRvxu8pJNYT
+	 yBR2ACRXDVib4n2HnmK4mOvK6a6QS1khq/uinZiGgZ2vFFJnvJfiiB2l8n7t2CaHeM
+	 LmYg2aes73ynMnCwtoMT5fk4KQ5LF4ouhJ0KSqGs=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Wed, 19 Feb 2025 22:34:51 +0100
-Subject: [PATCH 2/6] sysfs: constify attribute_group::bin_attrs
+Date: Wed, 19 Feb 2025 22:34:55 +0100
+Subject: [PATCH 6/6] sysfs: remove attribute_group::bin_attrs_new
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250219-sysfs-const-bin_attr-final-v1-2-02828d86af3c@weissschuh.net>
+Message-Id: <20250219-sysfs-const-bin_attr-final-v1-6-02828d86af3c@weissschuh.net>
 References: <20250219-sysfs-const-bin_attr-final-v1-0-02828d86af3c@weissschuh.net>
 In-Reply-To: <20250219-sysfs-const-bin_attr-final-v1-0-02828d86af3c@weissschuh.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -42,67 +42,47 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc: linux-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740000960; l=1921;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740000960; l=1064;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=Yd21h06QtpKZ5jDPU1XJdXBSUmnuAlVUN80oCBhEekk=;
- b=YD5xDuyaaHZH64cU/E/gZ7wdbzE9XIpOjLO+36GIMio4S5uQK2OxheiW1qfzQKlWOKFGcY+kl
- 7xUc3pCsSmrCnJndbKDqETawF9d/hgoccXJnD8J9A75bvxI75dkQhfZ
+ bh=9s5md+Z6F8QlGH1qmCYf/s2qQ5LvNcggSmZZuDmybgs=;
+ b=+u/8cVqWSazs+Iq8GA2dGkvXvP9sQx0jBRzqDOHEHqY8U5tUHVFdBViTeLKf60iQwIydhcvNy
+ YUT9zk7Uk1iDiIoGN2LvZ0JaC3oxHtGl9Acin4DQwe25iZ91fyPln0B
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-All users of this field have been migrated to bin_attrs_new.
-It can now be constified.
+This transitional field is unused and unnecessary.
+Remove it.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- fs/sysfs/group.c      | 6 +++---
- include/linux/sysfs.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ include/linux/sysfs.h | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-index 8b01a7eda5fb3239e138372417d01967c7a3f122..2d78e94072a0d4ed957560c60cc3c5dd49ab6fb4 100644
---- a/fs/sysfs/group.c
-+++ b/fs/sysfs/group.c
-@@ -21,7 +21,7 @@ static void remove_files(struct kernfs_node *parent,
- 			 const struct attribute_group *grp)
- {
- 	struct attribute *const *attr;
--	struct bin_attribute *const *bin_attr;
-+	const struct bin_attribute *const *bin_attr;
- 
- 	if (grp->attrs)
- 		for (attr = grp->attrs; *attr; attr++)
-@@ -47,7 +47,7 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
- 			const struct attribute_group *grp, int update)
- {
- 	struct attribute *const *attr;
--	struct bin_attribute *const *bin_attr;
-+	const struct bin_attribute *const *bin_attr;
- 	int error = 0, i;
- 
- 	if (grp->attrs) {
-@@ -521,7 +521,7 @@ static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
- 	}
- 
- 	if (grp->bin_attrs) {
--		struct bin_attribute *const *bin_attr;
-+		const struct bin_attribute *const *bin_attr;
- 
- 		for (bin_attr = grp->bin_attrs; *bin_attr; bin_attr++) {
- 			kn = kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
 diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 576b8b3c60afb382e4ce18247fd5a3d50f08d579..f418aae4f1134f8126783d9e8eb575ba4278e927 100644
+index 7544f6d81c05982b5d168624f376cd647127ab51..9a25a29116528fab77d667390dd3ef5957b86554 100644
 --- a/include/linux/sysfs.h
 +++ b/include/linux/sysfs.h
-@@ -107,7 +107,7 @@ struct attribute_group {
+@@ -106,10 +106,7 @@ struct attribute_group {
+ 					    const struct bin_attribute *,
  					    int);
  	struct attribute	**attrs;
- 	union {
--		struct bin_attribute		**bin_attrs;
-+		const struct bin_attribute	*const *bin_attrs;
- 		const struct bin_attribute	*const *bin_attrs_new;
- 	};
+-	union {
+-		const struct bin_attribute	*const *bin_attrs;
+-		const struct bin_attribute	*const *bin_attrs_new;
+-	};
++	const struct bin_attribute	*const *bin_attrs;
  };
+ 
+ #define SYSFS_PREALLOC		010000
+@@ -293,7 +290,7 @@ __ATTRIBUTE_GROUPS(_name)
+ 
+ #define BIN_ATTRIBUTE_GROUPS(_name)				\
+ static const struct attribute_group _name##_group = {		\
+-	.bin_attrs_new = _name##_attrs,				\
++	.bin_attrs = _name##_attrs,				\
+ };								\
+ __ATTRIBUTE_GROUPS(_name)
+ 
 
 -- 
 2.48.1
