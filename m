@@ -1,115 +1,83 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2F71F8AE5;
-	Wed, 19 Feb 2025 15:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC2801D5175
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739980592; cv=none; b=lwY5kXw0SZaKPq9h/PSqZMmKKW2pK1NJp8ag4N8I3X5XJA26Bcy8kgRz6BQ/Y6387fMvmG1CutCd/t5AWkEbtuk9Zknus+nIJpAOlTZPseBtxf7iVyyBe1eqoup5UqqDBuCyOucESc3QOhp/Vw5j30A1ZwagvI/b4Z/5f7DvMig=
+	t=1739980649; cv=none; b=bX6yT5rONz3VYFUuvm7KiKd0Rrn3Os19znIwjCGh6oyhYPwBXo4b/TfbjbtgZ97XUAVHD6PkHUsFsRdRyMd8mArIcRZTHrZRhwvIGaR1CPihCch7SlpttexOW+XnY3gplAQhU9AfHt7Cik7Ww8qx510jeMnwKmPEQmLRkCVEtvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739980592; c=relaxed/simple;
-	bh=qPZnrOyaKEYq5hbsMRbqV7X6oIhpSL4apigxMYTnzfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OxsRfgfVZpt/q6cSm9c/mo5RcNPKl6YP6HR35ggfC8Ob07PBQIWDwvFr6QA+mwU84o+ooQpG0E6PymYrZF7C8OpInXaqpOjPKbNFL6F8EhKg5ujEMV44uyEtHNP5yz53ycr430LTGMdydqOqFvhnFMJmFbrw15/yed43aDuHjcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 51JFuHFe022922;
-	Wed, 19 Feb 2025 16:56:17 +0100
-Date: Wed, 19 Feb 2025 16:56:17 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>, David Airlie <airlied@gmail.com>,
-        linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <20250219155617.GH19203@1wt.eu>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <b7a3958e-7a0a-482e-823a-9d6efcb4b577@stanley.mountain>
- <2bcf7cb500403cb26ad04934e664f34b0beafd18.camel@HansenPartnership.com>
- <yq1mseim24a.fsf@ca-mkp.ca.oracle.com>
- <c1693d15d0a9c8b7d194535f88cbc5b07b5740e5.camel@HansenPartnership.com>
- <20250219153350.GG19203@1wt.eu>
- <e42e8e79a539849419e475ef8041e87b3bccbbfe.camel@HansenPartnership.com>
+	s=arc-20240116; t=1739980649; c=relaxed/simple;
+	bh=fqyFrR+Pdv64TBlOeVSNkbXzDJI9qs8N3HKHJZsuunk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oL+lm/5bEQlWLcPRMAPmXsM4TDJPvgWwXYAs/t+CgD/SQaX2DyJGMKZW71/6elAFmDOmmmqktPuXiV4Ud1cE02giMuGdNA3gA92vmtr9+Do8Ugkj+PwQVxESjp/0C0rTcC+UwThtBwuyFpEhqgL6p3OFxTDj5b/6fOnVr+O8+wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 739D91682;
+	Wed, 19 Feb 2025 07:57:44 -0800 (PST)
+Received: from [10.1.35.44] (e127648.arm.com [10.1.35.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98BDE3F6A8;
+	Wed, 19 Feb 2025 07:57:22 -0800 (PST)
+Message-ID: <ae526670-5a3d-4c86-991b-3c3175f6d03d@arm.com>
+Date: Wed, 19 Feb 2025 15:57:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e42e8e79a539849419e475ef8041e87b3bccbbfe.camel@HansenPartnership.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] sched/uclamp: Always using uclamp_is_used()
+To: Xuewen Yan <xuewen.yan@unisoc.com>, vincent.guittot@linaro.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com
+Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, hongyan.xia2@arm.com,
+ ke.wang@unisoc.com, di.shen@unisoc.com, xuewen.yan94@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250219093747.2612-1-xuewen.yan@unisoc.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <20250219093747.2612-1-xuewen.yan@unisoc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 19, 2025 at 10:46:03AM -0500, James Bottomley wrote:
-> > > > I like using cleanup attributes for some error handling. However,
-> > > > I'm finding that in many cases I want to do a bit more than a
-> > > > simple kfree(). And at that point things get syntactically messy
-> > > > in the variable declarations and harder to read than just doing a
-> > > > classic goto style unwind.
-> > > 
-> > > So the way systemd solves this is that they define a whole bunch of
-> > > _cleanup_<type>_ annotations which encode the additional logic.  It
-> > > does mean you need a globally defined function for each cleanup
-> > > type, but judicious use of cleanup types seems to mean they only
-> > > have a few dozen of these.
-> > 
-> > I may be missing something obvious, but this seems super dangerous to
-> > me to perform lightly without reference counting, as it increases the
-> > risks of use-after-free and double-free in case one of the allocated
-> > objects in question can sometimes be returned.
+On 2/19/25 09:37, Xuewen Yan wrote:
+> Now, we have the uclamp_is_used() func to judge the uclamp enabled,
+> so replace the static_branch_unlikely(&sched_uclamp_used) with it.
 > 
-> Who said anything about not reference counting?
-
-Nobody, but it was not said either that they were used at all!
-
->  One the things the
-> _cleanup_X annotations can do is drop references (or even locks).
-
-OK then!
-
-> >  Users of such mechanisms must be extremely cautious never to ever
-> > return a pointer derivated from a variable tagged as such, or to
-> > properly NULL-assign the original object for it not to double-free.
-> > So it might in the end require to be careful about null-setting on
-> > return instead of explicitly freeing what was explicitly allocated.
-> > I'm not sure about the overall benefit.
-> > Also I suspect it encourages to multiply the return points, which
-> > makes it even more difficult to possibly fix what needs to be fixed
-> > without coming from a locally allocated variable (e.g. restore a
-> > state in a parser etc). Maybe it's just me not seeing the whole
-> > picture, but as a general case I prefer to forget a free() call
-> > (worst case: memory leak) than forget a foo=NULL that may result in a
-> > double free, and the description here makes me think the latter might
-> > more easily happen.
+> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+> Reviewed-by: Hongyan Xia <hongyan.xia2@arm.com>
+> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+> V2:
+> - Correct the spelling mistakes in the commit message (Hongyan)
+> - Add Reviewed-by
+> ---
+> ---
+>  kernel/sched/core.c  |  4 ++--
+>  kernel/sched/sched.h | 28 ++++++++++++++--------------
+>  2 files changed, 16 insertions(+), 16 deletions(-)
 > 
-> Well we could all speculate about the mess we'll make with any new
-> tool.  All I'm saying is that another project with a large code base
-> (systemd), which you can go an look at, managed to use these
-> annotations very successfully to simplify their error legs. Perhaps
-> there are reasons why the kernel can't be as successful, but I think
-> assuming failure from the outset isn't the best way to flush these
-> reasons out.
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 9aecd914ac69..38a7192bfc19 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1757,7 +1757,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>  	 * The condition is constructed such that a NOP is generated when
+>  	 * sched_uclamp_used is disabled.
+>  	 */
+> -	if (!static_branch_unlikely(&sched_uclamp_used))
+> +	if (!uclamp_is_used())
+>  		return;
+>  
+>  	if (unlikely(!p->sched_class->uclamp_enabled))
+> @@ -1784,7 +1784,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+>  	 * The condition is constructed such that a NOP is generated when
+>  	 * sched_uclamp_used is disabled.
+>  	 */
+> -	if (!static_branch_unlikely(&sched_uclamp_used))
+> +	if (!uclamp_is_used())
+>  		return;
 
-I'm not trying to assume failure or anything, just saying that it's
-probably not always as simple as calling kfree() on anything locally
-allocated for error paths to be magically cleaned, and it actually is
-more subtle (and Laurent confirmed my concerns illustrating that this
-case is precisely covered in glib using transfer of ownership).
-
-And the temptation to return from everywhere since it's the only
-required statement (instead of a goto to a collecting place) becomes
-great and should sometimes be resisted to.
-
-Regardless I do understand how these cleanups can help in a number of
-case, at least to avoid some code duplication.
-
-Regards,
-Willy
+v2 includes the above two which inverse the likely annotation FYI.
