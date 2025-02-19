@@ -1,79 +1,211 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A6B214A8C
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA997214A73;
+	Wed, 19 Feb 2025 18:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990856; cv=none; b=kN6TwovN1Tm1f1headL8NS/h36f96T2ouXt4hzDL9XoqadJdV7Ca3V1Y66HhqoJqc9RqjcprbLuUSHrILMvTXWU0LWJGdqKlDq9hfS8Km6qYSIpcbWsKg9yBfjdzASbRGkfOLpiXzU9pBhZiG8xK396/d2BmtJHkBExAjB4bWIs=
+	t=1739990887; cv=none; b=aelPUdm+CZ7COUm7Kx0BgJ+W5pTyVIjt5FeiGLKJVuSAvDqIdvvQa93C65DkuR/KyEDqe4xvy5rwWn6BYi5xlIOUTxK2ZP24gryelRRENcnyw0imdctQI0t9niz6PrL+gcb66BNCLW8Lt28LsT+hi20KnNhmJugqt5zfV8kSpUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990856; c=relaxed/simple;
-	bh=XYhJ4WrFAoGFn3uC1pUi2Wtq7YiJ6MiWDQHpsJPopu8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R54JYNHi5vjr3ib6fLxJFXSHwUG4ENbUcvoztb+XHz6ZPRY4+QHGRMbhcGMMo2uKgU2pAw6xC5sqmwu7tg2xANA3KwrIh8Ycy8mbev5/M3lx3n2os5zNh2NyJQLNqD4matNtQN3YOzsC0pxgPOn1MrcsH12ounvgBnfBxfCvGsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UL0RVFUn; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739990887; c=relaxed/simple;
+	bh=jTRT9sRs1feag0TsJMyT+H3VLuwGKl4/WGWUSbb5QzY=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hGEhME0erj5l+fwQw7O/df5D9oblKFVQw0hwm+CV/wn/1EV80ZxTLiKSDEiWrvHzSem/YPJNLBOmY9G+Df0osOetmSTDI6bmiYo2xskrbI8FLxdtpzIcT1zTnsVIQ7jIBe6M85WDUlumtRd2wQM5HKZcfpGCNlcLaPosCUwoeGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZSngVkVt; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UL0RVFUn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=6r+svG78jzF9diT/8IAIF2P/yXmCgWfDm7zl/U5Du6M=; b=UL0RVFUnmLnPZOlRVdEqGxSfgu
-	neyCfCC5o83udL4W/hHni5zcy8Pxl4CqWlXw5u3kokWoWRjx5N7H5McL+hG4Crt5WPys448z+VJTl
-	44nryhDIcb3YrFVcJu6TioFoh0IqsXjjMpqBAtDOidpSzjI9lYT9dujME+G1lcmsDjRk2LdTkgZzX
-	fFKSN+yvyuaH4Mo9l3awCCLc1kRasqaLcHDLxHGPVz43ojbNIBDHwCGuiy6nCquK8yOW00XodVpOT
-	l7nEn9sp+5vwkPD2PGOrQv8TtV9omUZUHjONSg5eW919PVRy4Z5AG0tgTAB93oFNEQveNgO1nG93K
-	GllISfvA==;
-Received: from d162-157-58-14.abhsia.telus.net ([162.157.58.14] helo=maloca.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tkp6P-00EwF0-W5; Wed, 19 Feb 2025 19:47:28 +0100
-From: Rodrigo Siqueira <siqueira@igalia.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>
-Cc: amd-gfx@lists.freedesktop.org,
-	kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org,
-	Rodrigo Siqueira <siqueira@igalia.com>
-Subject: [PATCH 2/2] mailmap: Add entry for Rodrigo Siqueira
-Date: Wed, 19 Feb 2025 11:46:20 -0700
-Message-ID: <20250219184702.242924-3-siqueira@igalia.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250219184702.242924-1-siqueira@igalia.com>
-References: <20250219184702.242924-1-siqueira@igalia.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZSngVkVt"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51JIlxJx1901483
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Feb 2025 12:47:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739990879;
+	bh=9eC/m6gR8EQFlC+NiWtCR6k5N3/28z787tR15wvZnOI=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date;
+	b=ZSngVkVtp1bcevY4sge9WRBvJ5cfeqi2bRvraLRg8bi6VEg2CNRAm/drMjRWQrMZp
+	 kAiP2iTTEURW3hI47/S0N+JGzGPA7/DM67QiWwvJdMqGHwIHR3GPHmJnoubc2dJcAC
+	 /dacx9dv0GTw0g2P7q+plMBlJLS1xCmwdm0jT1qA=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51JIlxef008180
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 19 Feb 2025 12:47:59 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
+ Feb 2025 12:47:58 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 19 Feb 2025 12:47:59 -0600
+Received: from localhost (kamlesh.dhcp.ti.com [172.24.227.123])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51JIlwHZ016265;
+	Wed, 19 Feb 2025 12:47:58 -0600
+From: Kamlesh Gurudasani <kamlesh@ti.com>
+To: T Pratham <t-pratham@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, T Pratham <t-pratham@ti.com>
+CC: <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Vignesh
+ Raghavendra" <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Manorit
+ Chawdhry" <m-chawdhry@ti.com>
+Subject: Re: [PATCH RFC 2/2] crypto: ti: Add support for MD5 in DTHE V2
+ Hashing Engine driver
+In-Reply-To: <20250218104943.2304730-3-t-pratham@ti.com>
+References: <20250218104943.2304730-1-t-pratham@ti.com>
+ <20250218104943.2304730-3-t-pratham@ti.com>
+Date: Thu, 20 Feb 2025 00:17:57 +0530
+Message-ID: <87o6yx6aaq.fsf@kamlesh.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Map all of my previously used email addresses to my @igalia.com address.
+T Pratham <t-pratham@ti.com> writes:
 
-Signed-off-by: Rodrigo Siqueira <siqueira@igalia.com>
----
- .mailmap | 2 ++
- 1 file changed, 2 insertions(+)
+> Add support for MD5 algorithm of the hashing engine of DTHE V2 crypto
+> accelerator driver.
+>
+> Signed-off-by: T Pratham <t-pratham@ti.com>
+> ---
+>  drivers/crypto/ti/Kconfig  |  1 +
+>  drivers/crypto/ti/dthev2.c | 56 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+>
+> diff --git a/drivers/crypto/ti/Kconfig b/drivers/crypto/ti/Kconfig
+> index 39d9d8cb6b78..ab4da73dffc4 100644
+> --- a/drivers/crypto/ti/Kconfig
+> +++ b/drivers/crypto/ti/Kconfig
+> @@ -6,6 +6,7 @@ config CRYPTO_DEV_TI_DTHE_V2
+>  	select CRYPTO_SKCIPHER
+>  	select CRYPTO_SHA256
+>  	select CRYPTO_SHA512
+> +	select CRYPTO_MD5
+>  	help
+>  	  This enables support for the TI DTHE V2 hw crypto accelerator
+>  	  which can be found on TI K3 SOCs. Selecting this enables use
+> diff --git a/drivers/crypto/ti/dthev2.c b/drivers/crypto/ti/dthev2.c
+> index d5ed0f4621f5..ff2d5ef47c2a 100644
+> --- a/drivers/crypto/ti/dthev2.c
+> +++ b/drivers/crypto/ti/dthev2.c
+> @@ -25,6 +25,7 @@
+>  #include <crypto/internal/aead.h>
+>  #include <crypto/internal/hash.h>
+>  #include <crypto/internal/skcipher.h>
+> +#include <crypto/md5.h>
+>  #include <crypto/sha2.h>
+>  
+>  #include <linux/delay.h>
+> @@ -363,6 +364,25 @@ static int dthe_sha224_cra_init(struct crypto_tfm *tfm)
+>  	return 0;
+>  }
+>  
+> +static int dthe_md5_cra_init(struct crypto_tfm *tfm)
+> +{
+> +	struct dthe_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
+> +	struct dthe_data *dev_data = dthe_get_dev(ctx);
+> +
+> +	if (!dev_data)
+> +		return -ENODEV;
+> +
+> +	ctx->ctx_info.hash_ctx = kzalloc(sizeof(*ctx->ctx_info.hash_ctx), GFP_KERNEL);
+> +	if (!ctx->ctx_info.hash_ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->ctx_info.hash_ctx->mode = DTHE_HASH_MD5;
+> +	ctx->ctx_info.hash_ctx->block_size = MD5_BLOCK_WORDS * 4;
+Assign a meaningful macro
+> +	ctx->ctx_info.hash_ctx->digest_size = MD5_DIGEST_SIZE;
+> +	ctx->ctx_info.hash_ctx->phash_size = MD5_DIGEST_SIZE;
+> +	return 0;
+> +}
+> +
+>  static void dthe_hash_cra_exit(struct crypto_tfm *tfm)
+>  {
+>  	struct dthe_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
+> @@ -602,6 +622,8 @@ static int dthe_hash_update(struct ahash_request *req)
+>  				memcpy(sctx->phash, sha256_zero_message_hash, sctx->digest_size);
+>  			else if (sctx->mode == DTHE_HASH_SHA224)
+>  				memcpy(sctx->phash, sha224_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_MD5)
+> +				memcpy(sctx->phash, md5_zero_message_hash, sctx->digest_size);
+>  		}
+>  
+>  		return 0;
+> @@ -736,6 +758,8 @@ static int dthe_hash_final(struct ahash_request *req)
+>  			memcpy(req->result, sha256_zero_message_hash, sctx->digest_size);
+>  		else if (sctx->mode == DTHE_HASH_SHA224)
+>  			memcpy(req->result, sha224_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_MD5)
+> +			memcpy(req->result, md5_zero_message_hash, sctx->digest_size);
+>  	}
+>  
+>  	memcpy(req->result, sctx->phash, sctx->digest_size);
+> @@ -774,6 +798,8 @@ static int dthe_hash_finup(struct ahash_request *req)
+>  				memcpy(req->result, sha256_zero_message_hash, sctx->digest_size);
+>  			else if (sctx->mode == DTHE_HASH_SHA224)
+>  				memcpy(req->result, sha224_zero_message_hash, sctx->digest_size);
+> +			else if (sctx->mode == DTHE_HASH_MD5)
+> +				memcpy(req->result, md5_zero_message_hash, sctx->digest_size);
+>  		}
+>  		return 0;
+>  	}
+> @@ -870,6 +896,8 @@ static int dthe_hash_digest(struct ahash_request *req)
+>  			memcpy(req->result, sha256_zero_message_hash, sctx->digest_size);
+>  		else if (sctx->mode == DTHE_HASH_SHA224)
+>  			memcpy(req->result, sha224_zero_message_hash, sctx->digest_size);
+> +		else if (sctx->mode == DTHE_HASH_MD5)
+> +			memcpy(req->result, md5_zero_message_hash,
+>  	sctx->digest_size);
+Better to use Switch as it will give more readability and
+mainitainability. As number of cases are 5 with this patch, both will
+probably give same performance.
 
-diff --git a/.mailmap b/.mailmap
-index 5e829da09e7f..64413bbc286c 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -583,6 +583,8 @@ Richard Leitner <richard.leitner@linux.dev> <me@g0hl1n.net>
- Richard Leitner <richard.leitner@linux.dev> <richard.leitner@skidata.com>
- Robert Foss <rfoss@kernel.org> <robert.foss@linaro.org>
- Rocky Liao <quic_rjliao@quicinc.com> <rjliao@codeaurora.org>
-+Rodrigo Siqueira <siqueira@igalia.com> <rodrigosiqueiramelo@gmail.com>
-+Rodrigo Siqueira <siqueira@igalia.com> <Rodrigo.Siqueira@amd.com>
- Roman Gushchin <roman.gushchin@linux.dev> <guro@fb.com>
- Roman Gushchin <roman.gushchin@linux.dev> <guroan@gmail.com>
- Roman Gushchin <roman.gushchin@linux.dev> <klamm@yandex-team.ru>
--- 
-2.48.1
+Kamlesh
 
+>  		return 0;
+>  	}
+>  
+> @@ -1366,6 +1394,34 @@ static struct ahash_alg hash_algs[] = {
+>  			}
+>  		}
+>  	},
+> +	{
+> +		.init	= dthe_hash_init,
+> +		.update	= dthe_hash_update,
+> +		.final	= dthe_hash_final,
+> +		.finup	= dthe_hash_finup,
+> +		.digest	= dthe_hash_digest,
+> +		.export = dthe_hash_export,
+> +		.import = dthe_hash_import,
+> +		.halg	= {
+> +			.digestsize = MD5_DIGEST_SIZE,
+> +			.statesize = sizeof(struct dthe_hash_ctx),
+> +			.base = {
+> +				.cra_name	 = "md5",
+> +				.cra_driver_name = "md5-dthe_v2",
+> +				.cra_priority	 = 400,
+> +				.cra_flags	 = CRYPTO_ALG_TYPE_AHASH |
+> +						   CRYPTO_ALG_ASYNC |
+> +						   CRYPTO_ALG_OPTIONAL_KEY |
+> +						   CRYPTO_ALG_KERN_DRIVER_ONLY |
+> +						   CRYPTO_ALG_ALLOCATES_MEMORY,
+> +				.cra_blocksize	 = MD5_BLOCK_WORDS * 4,
+> +				.cra_ctxsize	 = sizeof(struct dthe_tfm_ctx),
+> +				.cra_module	 = THIS_MODULE,
+> +				.cra_init	 = dthe_md5_cra_init,
+> +				.cra_exit	 = dthe_hash_cra_exit,
+> +			}
+> +		}
+> +	},
+>  };
+>  
+>  static struct skcipher_alg cipher_algs[] = {
+> -- 
+> 2.34.1
