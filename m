@@ -1,108 +1,419 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCAA21481B;
-	Wed, 19 Feb 2025 18:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB480215047
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 18:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739989616; cv=none; b=tqCvWcixQzeQwJkShdb8WcD1cBiP2WSuIpvil4G/3SldR1HsyeRWWurOjEIYmV4Uc1j6CUmdWFypVjObMvV5Lbyx1QyPyPKbVkWPG1kGpjBqClLEwoFS5ihUwRwcNyMtdIlriw+ETlr1pZIuaE1TQG9hSZCC8y5703kknNDN19U=
+	t=1739989632; cv=none; b=eAan97D3oAoe5bJuCYDoatX1LZXo/pag7b+54zJHmbRTUE0W4zRR1yFNL/pEhU6sGKFSiudfB4CcAFRrCkD0robVxenlFPrinNp3N3ZS4pAR+6D5fWeF80XcTd+U4h1AJl8eSe5APmPH+1z32zb2vO7W38PhN6IaanSgvhC5PbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739989616; c=relaxed/simple;
-	bh=BynjFU2Ir4LMIytzR/2ljyenub6oAViTBqIdgJJdD3I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jG688b5/oxSQGuyAJ0PN68B/v83UzSOSkYHu+sokkKMaAfEtfysjF8FSrYm+8uLxHbkrmpw5O8iu+Si8XqJ6lRHmcAQaOjQThKFLm/L31E+NPelnaLGIpscHWTnGqm0J9eyWMyU3y+q6DGBQzy4wxKjiYmkZ9CplIlV9XqJEi08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VvxF8XA3; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739989632; c=relaxed/simple;
+	bh=faltCGozxegJPGXRaXXKp6RDgUF2nQvnAA7aCkVPoi8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BVhv75p0+Zcrj5uoy5LdhnH3Z3bx6dq3H9i4IG72EI/YG5q3ezFcB/QSTykKrurt+ENyYnqA77uewA9GBjhODzPDS2W6h3h89519PXk7j7dR/b6tLwgvcnZ0FaaVs9N5DCysEWe/Vr2XdDJR6FWwLv5HZP5BfD0K1UYoE1tSums=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LALIjqws; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VvxF8XA3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739989615; x=1771525615;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BynjFU2Ir4LMIytzR/2ljyenub6oAViTBqIdgJJdD3I=;
-  b=VvxF8XA3EUSeAir9u90jXQ5S6leTbu0F4UQnk8xqTmLnpHSi48p8F3Zc
-   jOxsP2XLKosedU/L5/ExXu6aa3Xe+UAQs/TC9R635EpEex2O/QyESMgUu
-   eEE4TJ9xMSDhKrwPqZfKu9YKtFhDtcFsvQ3KPgPT8r1xOxw3hiEwiweYe
-   MrVDZOB+BucC1RZUv2QEwAyULfWYmgg16p27hbf3MRqLuGvXODBFv2laq
-   lLuxxW/BYK9swrdLGtib/L9uFypIh5i/ByPcGjf11maJ1OY35JZ/MATxk
-   XmzpSbh6pD9HcE57OSqRv8drjCyUs5s7Gp8VQyDA62WSWl/8476xpMu1G
-   A==;
-X-CSE-ConnectionGUID: cXJoqJz4T1KjeetE7YATgw==
-X-CSE-MsgGUID: A3nHNWyeRlydTXJpqqn4sQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40756606"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="40756606"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:26:53 -0800
-X-CSE-ConnectionGUID: 0ikWnpgcRh++9TjK5rV0bA==
-X-CSE-MsgGUID: uor3T1kPTruOnoQnsDIn0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118923359"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.11]) ([10.125.110.11])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:16:35 -0800
-Message-ID: <ec04b92f-e916-4769-be82-93f369c9c593@intel.com>
-Date: Wed, 19 Feb 2025 10:16:22 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LALIjqws"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-472098e6e75so21551cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 10:27:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739989629; x=1740594429; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ED8ADjsrNyTyza7l4GAk/yD/qdQQ86Abl3R7CXd3+BY=;
+        b=LALIjqwsEgwwGMW80UtYgl4XjG79HNPe9lohg9CsPc4bCS24f6YL1rW1zhrPG6vSkf
+         2fpHWMlVPY8+BCZdmUT6rFVZd4wxqn4Rkw0hX2cDY9OUfsgUzQFfFbZ1UrOPZUAkX1By
+         jMnoazZuU9oZDpFccdIa26dkfMVZdy9tdHDpu53exPY91jMDM39/qdDRWpZbmCd6ABGU
+         omrRItTjDqLsbJQiEtlGFN86a4vD9r5gqTmX3ZQJM5gJ7NNdU2mfc07qOrgmwAhapT/D
+         kL9E5Tbn2UjQUsy5fpgv6+/cN/BQrczq/M/ta+x8ZRBhzOTl3Pd6bbOn680WsMLSTe4Z
+         IuLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739989629; x=1740594429;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ED8ADjsrNyTyza7l4GAk/yD/qdQQ86Abl3R7CXd3+BY=;
+        b=fr0AuIJD3dZUTyqnhZChn7bc5a0+xxsw8T3tVdUMJSJ/EwYEYmjWYV+unEJ+FWyELZ
+         HOYZEZ5jIMuEKYIlR/NZb/4LoaD6yPrT2fCRx9fNnYYD143ACshWOCLdgRjjf7m5+lk/
+         UMQd11NjqHuqScWZvlN0Wn5OQd4vSZri+tdWXcb+mx0qb9EwN0o3kaXqiuDD+H0ehX6C
+         kbBOQvis9e31jdQhq62o5we8WWsByRdMee8tW/kevSERDeE7SSZst1L0BCBh4L4ESqP3
+         q6NcgxozkNumUgXH8wk2ilj3mlic+rsT7B7tNVMylxz6xuefHuJfQmFbJmnNsMdb2f3u
+         Y0BA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqeLFtgVGKPmQA1wIph/Ah4cdb7TOnvq5i9HOnhJhQZdF7KH0n+H710CHDlkgr07AcvornZ3R2yePZr3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjauy5wWI7dCHCUV0Y4jY8UG72qq2zutGNUZsgE1nMvxEz7DMm
+	NEnroUFEG7X5k1GjR9oYedKCNLZMn8g6MeTNYQaHzaShtvHpBoKPndSWRTg6FLUTGspNde50BGN
+	FbgQWxQL94jRFEM39CDNXhJlBFfQCJ12SUGPZ
+X-Gm-Gg: ASbGncskaz923EUoVeFfXiSsSdECRHrCIHpnYjsnb8ugthMhnP8yBdi+9OyKMviTGTl
+	fKJ76wiKyq3htpk8s4aHTPYz4PXcTyyQh3ZmhEoSvVEli6GthQheq24fGcejX+da+pqUzBaEn
+X-Google-Smtp-Source: AGHT+IGIMJ+IWwFpEiNEczPSEHnUhEe/nPJaivwQA26nA4Edhf7vVhFQXSfhTn9pJ0oANeFF4rlkk5ozAmWP7rJdbmo=
+X-Received: by 2002:a05:622a:85:b0:471:b772:c717 with SMTP id
+ d75a77b69052e-472097c2b32mr4634891cf.26.1739989628403; Wed, 19 Feb 2025
+ 10:27:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] cxl/memdev: cxl_memdev_ioctl() cleanup
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250217144828.30651-1-ming.li@zohomail.com>
- <20250217144828.30651-4-ming.li@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250217144828.30651-4-ming.li@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250219112519.92853-1-21cnbao@gmail.com>
+In-Reply-To: <20250219112519.92853-1-21cnbao@gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 19 Feb 2025 10:26:56 -0800
+X-Gm-Features: AWEUYZnumNfAyKzC6WqGX5QChJFZuJaWAV648kE2mNdcaFd-vwIZYHCuCJdSKxs
+Message-ID: <CAJuCfpEWFz14R1vD4Rezy98WBk25HWWX+6DsGBekeYMugKTsfQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: Fix kernel BUG when userfaultfd_move encounters swapcache
+To: Barry Song <21cnbao@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, zhengtangquan@oppo.com, 
+	Barry Song <v-songbaohua@oppo.com>, Andrea Arcangeli <aarcange@redhat.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Brian Geffon <bgeffon@google.com>, Christian Brauner <brauner@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>, 
+	Kalesh Singh <kaleshsingh@google.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Lokesh Gidra <lokeshgidra@google.com>, Matthew Wilcox <willy@infradead.org>, 
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, 
+	Nicolas Geoffray <ngeoffray@google.com>, Peter Xu <peterx@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Shuah Khan <shuah@kernel.org>, 
+	ZhangPeng <zhangpeng362@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 19, 2025 at 3:25=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrot=
+e:
+>
+> From: Barry Song <v-songbaohua@oppo.com>
+>
+> userfaultfd_move() checks whether the PTE entry is present or a
+> swap entry.
+>
+> - If the PTE entry is present, move_present_pte() handles folio
+>   migration by setting:
+>
+>   src_folio->index =3D linear_page_index(dst_vma, dst_addr);
+>
+> - If the PTE entry is a swap entry, move_swap_pte() simply copies
+>   the PTE to the new dst_addr.
+>
+> This approach is incorrect because even if the PTE is a swap
+> entry, it can still reference a folio that remains in the swap
+> cache.
+>
+> If do_swap_page() is triggered, it may locate the folio in the
+> swap cache. However, during add_rmap operations, a kernel panic
+> can occur due to:
+>  page_pgoff(folio, page) !=3D linear_page_index(vma, address)
 
+Thanks for the report and reproducer!
 
-On 2/17/25 7:48 AM, Li Ming wrote:
-> In cxl_memdev_ioctl(), the down_read(&cxl_memdev_rwsem) and
-> up_read(&cxl_memdev_rwsem) can be replaced by a
-> guard(rwsem_read)(&cxl_memdev_rwsem), it helps to remove the open-coded
-> up_read(&cxl_memdev_rwsem). Besides, the local var 'rc' can be also
-> removed to make the code more cleaner.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>
+> $./a.out > /dev/null
+> [   13.336953] page: refcount:6 mapcount:1 mapping:00000000f43db19c index=
+:0xffffaf150 pfn:0x4667c
+> [   13.337520] head: order:2 mapcount:1 entire_mapcount:0 nr_pages_mapped=
+:1 pincount:0
+> [   13.337716] memcg:ffff00000405f000
+> [   13.337849] anon flags: 0x3fffc0000020459(locked|uptodate|dirty|owner_=
+priv_1|head|swapbacked|node=3D0|zone=3D0|lastcpupid=3D0xffff)
+> [   13.338630] raw: 03fffc0000020459 ffff80008507b538 ffff80008507b538 ff=
+ff000006260361
+> [   13.338831] raw: 0000000ffffaf150 0000000000004000 0000000600000000 ff=
+ff00000405f000
+> [   13.339031] head: 03fffc0000020459 ffff80008507b538 ffff80008507b538 f=
+fff000006260361
+> [   13.339204] head: 0000000ffffaf150 0000000000004000 0000000600000000 f=
+fff00000405f000
+> [   13.339375] head: 03fffc0000000202 fffffdffc0199f01 ffffffff00000000 0=
+000000000000001
+> [   13.339546] head: 0000000000000004 0000000000000000 00000000ffffffff 0=
+000000000000000
+> [   13.339736] page dumped because: VM_BUG_ON_PAGE(page_pgoff(folio, page=
+) !=3D linear_page_index(vma, address))
+> [   13.340190] ------------[ cut here ]------------
+> [   13.340316] kernel BUG at mm/rmap.c:1380!
+> [   13.340683] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT =
+SMP
+> [   13.340969] Modules linked in:
+> [   13.341257] CPU: 1 UID: 0 PID: 107 Comm: a.out Not tainted 6.14.0-rc3-=
+gcf42737e247a-dirty #299
+> [   13.341470] Hardware name: linux,dummy-virt (DT)
+> [   13.341671] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> [   13.341815] pc : __page_check_anon_rmap+0xa0/0xb0
+> [   13.341920] lr : __page_check_anon_rmap+0xa0/0xb0
+> [   13.342018] sp : ffff80008752bb20
+> [   13.342093] x29: ffff80008752bb20 x28: fffffdffc0199f00 x27: 000000000=
+0000001
+> [   13.342404] x26: 0000000000000000 x25: 0000000000000001 x24: 000000000=
+0000001
+> [   13.342575] x23: 0000ffffaf0d0000 x22: 0000ffffaf0d0000 x21: fffffdffc=
+0199f00
+> [   13.342731] x20: fffffdffc0199f00 x19: ffff000006210700 x18: 00000000f=
+fffffff
+> [   13.342881] x17: 6c203d2120296567 x16: 6170202c6f696c6f x15: 662866666=
+f67705f
+> [   13.343033] x14: 6567617028454741 x13: 2929737365726464 x12: ffff80008=
+3728ab0
+> [   13.343183] x11: ffff800082996bf8 x10: 0000000000000fd7 x9 : ffff80008=
+011bc40
+> [   13.343351] x8 : 0000000000017fe8 x7 : 00000000fffff000 x6 : ffff80008=
+29eebf8
+> [   13.343498] x5 : c0000000fffff000 x4 : 0000000000000000 x3 : 000000000=
+0000000
+> [   13.343645] x2 : 0000000000000000 x1 : ffff0000062db980 x0 : 000000000=
+000005f
+> [   13.343876] Call trace:
+> [   13.344045]  __page_check_anon_rmap+0xa0/0xb0 (P)
+> [   13.344234]  folio_add_anon_rmap_ptes+0x22c/0x320
+> [   13.344333]  do_swap_page+0x1060/0x1400
+> [   13.344417]  __handle_mm_fault+0x61c/0xbc8
+> [   13.344504]  handle_mm_fault+0xd8/0x2e8
+> [   13.344586]  do_page_fault+0x20c/0x770
+> [   13.344673]  do_translation_fault+0xb4/0xf0
+> [   13.344759]  do_mem_abort+0x48/0xa0
+> [   13.344842]  el0_da+0x58/0x130
+> [   13.344914]  el0t_64_sync_handler+0xc4/0x138
+> [   13.345002]  el0t_64_sync+0x1ac/0x1b0
+> [   13.345208] Code: aa1503e0 f000f801 910f6021 97ff5779 (d4210000)
+> [   13.345504] ---[ end trace 0000000000000000 ]---
+> [   13.345715] note: a.out[107] exited with irqs disabled
+> [   13.345954] note: a.out[107] exited with preempt_count 2
+>
+> Fully fixing it would be quite complex, requiring similar handling
+> of folios as done in move_present_pte.
 
-> ---
->  drivers/cxl/core/memdev.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 98c05426aa4a..6f90dcd626f9 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -668,15 +668,13 @@ static long cxl_memdev_ioctl(struct file *file, unsigned int cmd,
->  {
->  	struct cxl_memdev *cxlmd = file->private_data;
->  	struct cxl_dev_state *cxlds;
-> -	int rc = -ENXIO;
->  
-> -	down_read(&cxl_memdev_rwsem);
-> +	guard(rwsem_read)(&cxl_memdev_rwsem);
->  	cxlds = cxlmd->cxlds;
->  	if (cxlds && cxlds->type == CXL_DEVTYPE_CLASSMEM)
-> -		rc = __cxl_memdev_ioctl(cxlmd, cmd, arg);
-> -	up_read(&cxl_memdev_rwsem);
-> +		return __cxl_memdev_ioctl(cxlmd, cmd, arg);
->  
-> -	return rc;
-> +	return -ENXIO;
+How complex would that be? Is it a matter of adding
+folio_maybe_dma_pinned() checks, doing folio_move_anon_rmap() and
+folio->index =3D linear_page_index like in move_present_pte() or
+something more?
+
+> For now, a quick solution
+> is to return -EBUSY.
+> I'd like to see others' opinions on whether a full fix is worth
+> pursuing.
+>
+> For anyone interested in reproducing it, the a.out test program is
+> as below,
+>
+>  #define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <sys/mman.h>
+>  #include <sys/ioctl.h>
+>  #include <sys/syscall.h>
+>  #include <linux/userfaultfd.h>
+>  #include <fcntl.h>
+>  #include <pthread.h>
+>  #include <unistd.h>
+>  #include <poll.h>
+>  #include <errno.h>
+>
+>  #define PAGE_SIZE 4096
+>  #define REGION_SIZE (512 * 1024)
+>
+>  #ifndef UFFDIO_MOVE
+>  struct uffdio_move {
+>      __u64 dst;
+>      __u64 src;
+>      __u64 len;
+>      #define UFFDIO_MOVE_MODE_DONTWAKE        ((__u64)1<<0)
+>      #define UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES ((__u64)1<<1)
+>      __u64 mode;
+>      __s64 move;
+>  };
+>  #define _UFFDIO_MOVE  (0x05)
+>  #define UFFDIO_MOVE   _IOWR(UFFDIO, _UFFDIO_MOVE, struct uffdio_move)
+>  #endif
+>
+>  void *src, *dst;
+>  int uffd;
+>
+>  void *madvise_thread(void *arg) {
+>      if (madvise(src, REGION_SIZE, MADV_PAGEOUT) =3D=3D -1) {
+>          perror("madvise MADV_PAGEOUT");
+>      }
+>      return NULL;
 >  }
->  
->  static int cxl_memdev_open(struct inode *inode, struct file *file)
+>
+>  void *fault_handler_thread(void *arg) {
+>      struct uffd_msg msg;
+>      struct uffdio_move move;
+>      struct pollfd pollfd =3D { .fd =3D uffd, .events =3D POLLIN };
+>
+>      pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+>      pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+>
+>      while (1) {
+>          if (poll(&pollfd, 1, -1) =3D=3D -1) {
+>              perror("poll");
+>              exit(EXIT_FAILURE);
+>          }
+>
+>          if (read(uffd, &msg, sizeof(msg)) <=3D 0) {
+>              perror("read");
+>              exit(EXIT_FAILURE);
+>          }
+>
+>          if (msg.event !=3D UFFD_EVENT_PAGEFAULT) {
+>              fprintf(stderr, "Unexpected event\n");
+>              exit(EXIT_FAILURE);
+>          }
+>
+>          move.src =3D (unsigned long)src + (msg.arg.pagefault.address - (=
+unsigned long)dst);
+>          move.dst =3D msg.arg.pagefault.address & ~(PAGE_SIZE - 1);
+>          move.len =3D PAGE_SIZE;
+>          move.mode =3D 0;
+>
+>          if (ioctl(uffd, UFFDIO_MOVE, &move) =3D=3D -1) {
+>              perror("UFFDIO_MOVE");
+>              exit(EXIT_FAILURE);
+>          }
+>      }
+>      return NULL;
+>  }
+>
+>  int main() {
+>  again:
+>      pthread_t thr, madv_thr;
+>      struct uffdio_api uffdio_api =3D { .api =3D UFFD_API, .features =3D =
+0 };
+>      struct uffdio_register uffdio_register;
+>
+>      src =3D mmap(NULL, REGION_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE =
+| MAP_ANONYMOUS, -1, 0);
+>      if (src =3D=3D MAP_FAILED) {
+>          perror("mmap src");
+>          exit(EXIT_FAILURE);
+>      }
+>      memset(src, 1, REGION_SIZE);
+>
+>      dst =3D mmap(NULL, REGION_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE =
+| MAP_ANONYMOUS, -1, 0);
+>      if (dst =3D=3D MAP_FAILED) {
+>          perror("mmap dst");
+>          exit(EXIT_FAILURE);
+>      }
+>
+>      uffd =3D syscall(SYS_userfaultfd, O_CLOEXEC | O_NONBLOCK);
+>      if (uffd =3D=3D -1) {
+>          perror("userfaultfd");
+>          exit(EXIT_FAILURE);
+>      }
+>
+>      if (ioctl(uffd, UFFDIO_API, &uffdio_api) =3D=3D -1) {
+>          perror("UFFDIO_API");
+>          exit(EXIT_FAILURE);
+>      }
+>
+>      uffdio_register.range.start =3D (unsigned long)dst;
+>      uffdio_register.range.len =3D REGION_SIZE;
+>      uffdio_register.mode =3D UFFDIO_REGISTER_MODE_MISSING;
+>
+>      if (ioctl(uffd, UFFDIO_REGISTER, &uffdio_register) =3D=3D -1) {
+>          perror("UFFDIO_REGISTER");
+>          exit(EXIT_FAILURE);
+>      }
+>
+>      if (pthread_create(&madv_thr, NULL, madvise_thread, NULL) !=3D 0) {
+>          perror("pthread_create madvise_thread");
+>          exit(EXIT_FAILURE);
+>      }
+>
+>      if (pthread_create(&thr, NULL, fault_handler_thread, NULL) !=3D 0) {
+>          perror("pthread_create fault_handler_thread");
+>          exit(EXIT_FAILURE);
+>      }
+>
+>      for (size_t i =3D 0; i < REGION_SIZE; i +=3D PAGE_SIZE) {
+>          char val =3D ((char *)dst)[i];
+>          printf("Accessing dst at offset %zu, value: %d\n", i, val);
+>      }
+>
+>      pthread_join(madv_thr, NULL);
+>      pthread_cancel(thr);
+>      pthread_join(thr, NULL);
+>
+>      munmap(src, REGION_SIZE);
+>      munmap(dst, REGION_SIZE);
+>      close(uffd);
+>      goto again;
+>      return 0;
+>  }
+>
+> As long as you enable mTHP (which likely increases the residency
+> time of swapcache), you can reproduce the issue within a few
+> seconds. But I guess the same race condition also exists with
+> small folios.
+>
+> Fixes: adef440691bab ("userfaultfd: UFFDIO_MOVE uABI")
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Axel Rasmussen <axelrasmussen@google.com>
+> Cc: Brian Geffon <bgeffon@google.com>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Kalesh Singh <kaleshsingh@google.com>
+> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+> Cc: Lokesh Gidra <lokeshgidra@google.com>
+> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mike Rapoport (IBM) <rppt@kernel.org>
+> Cc: Nicolas Geoffray <ngeoffray@google.com>
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: ZhangPeng <zhangpeng362@huawei.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>  mm/userfaultfd.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index 867898c4e30b..34cf1c8c725d 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -18,6 +18,7 @@
+>  #include <asm/tlbflush.h>
+>  #include <asm/tlb.h>
+>  #include "internal.h"
+> +#include "swap.h"
+>
+>  static __always_inline
+>  bool validate_dst_vma(struct vm_area_struct *dst_vma, unsigned long dst_=
+end)
+> @@ -1079,9 +1080,19 @@ static int move_swap_pte(struct mm_struct *mm,
+>                          pmd_t *dst_pmd, pmd_t dst_pmdval,
+>                          spinlock_t *dst_ptl, spinlock_t *src_ptl)
+>  {
+> +       struct folio *folio;
+> +       swp_entry_t entry;
+> +
+>         if (!pte_swp_exclusive(orig_src_pte))
+>                 return -EBUSY;
+>
 
+Would be helpful to add a comment explaining that this is the case
+when the folio is in the swap cache.
+
+> +       entry =3D pte_to_swp_entry(orig_src_pte);
+> +       folio =3D filemap_get_folio(swap_address_space(entry), swap_cache=
+_index(entry));
+> +       if (!IS_ERR(folio)) {
+> +               folio_put(folio);
+> +               return -EBUSY;
+> +       }
+> +
+>         double_pt_lock(dst_ptl, src_ptl);
+>
+>         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src=
+_pte,
+> --
+> 2.39.3 (Apple Git-146)
+>
