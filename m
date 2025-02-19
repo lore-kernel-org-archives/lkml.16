@@ -1,87 +1,138 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553941DF25E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739985054; cv=none; b=eicz4BktrRgYd9eIBDgGxlZYAtgg45FEHe6gnw3/OUDejjQ1+e86bXdGNUJDFhgw+j9jgxrQcBVOYsdDGJM9qHseJQHAVvRsQthbZiGnFtleLt/Z60+2EAqmt9jfA1uNIBuuxhnMAZRke+Ne75Vk587FyWze55krEBVmMly4q5Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739985054; c=relaxed/simple;
-	bh=A9SVroBVZKdJKV7Sm3Iz9qfLk3V4QQaCU3wwaG+a1bQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kb+I7Bh0xvt+jpvi3bBDYMAkD5PAOl5nrqg5Je19e8b8HJdQZGlLBcPXEfmOXpAYE6Ck6FDGTs3GBOFV7qJrNAqp8KE/F77ibSHJLmWKDuu02j/FcIN7sxYL08qQcQ3/oCluKAvHKDoTqz1wphmdRTKu2/0ynDH5yUc0zULIMSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HPo9C13g; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8101221423F;
+	Wed, 19 Feb 2025 17:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739985076; cv=pass; b=TKlxl4fDnJyNO8CnSEX9W+fZ21kcjd1/WdwO9bUwzqYb8F6yexQR2XjW44I3PIuZkvcQliRySydclppUdyhdrVEoZECfoiAK52cKHAlPu0Uk+cozdMGT3NpRLE3tgFojvVoZpl5NbF8+Ew+rH1QTw4Iy3iXzq2CEfyG0O6yoDsA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739985076; c=relaxed/simple;
+	bh=64//cwvqZljD4DhFAn2LbHsdiVrVrYGj0JhPZZKChF0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=KG83Iwb8rVH44WAWgZIfXaIzCpPBqnY9oGuZlE0Jjao8SGQBEzzU+Av6W2TCvkhw3J5Doa6v+Vt3K3dUF6vzErSH/eLRFUxTkr1qIuT8Jeid9Us1vgXHfKY/7vneHuq1CMatASlw+2aVoXaU8ytJujs4IqUYpkasbo/opZPTW+o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=GsU00JH5; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPo9C13g"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fcc940bb14so18033a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 09:10:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739985052; x=1740589852; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BO/JREwfLPhGFs+lXpFct3A6gt+bq2saWFNYBOZXon4=;
-        b=HPo9C13grZlkk8WZhBXZXjWwIM8XdFiXkP+K5U/EPAVnos8A5elYuLcllBwU2a1xcz
-         EhPPcg/NRURF+M3F8RkxKV85vDdr9R5JtE9LsFWXa1/Y+/cRdY4NzX2ugaBuCCJNidXo
-         miM6pu6MObDgB44DjYbwBNbn5bmsfa/1mv04aBVo7MF83jsn53L12fsa4Cez3FGbwqvQ
-         pbLT10sXH8j3VfhyjypyybgnSmsX6jLwbeW3TVvE4Dj5JZSVr38yXaTKHF2/i26uSr0l
-         iMPKheJet5ztQikaZOTYBi0GQA7GQ7PNb+otjlBW8tyZHrji9xOkkMbjlKyPO4HDvdDJ
-         O33Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739985052; x=1740589852;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BO/JREwfLPhGFs+lXpFct3A6gt+bq2saWFNYBOZXon4=;
-        b=H2x9x7V4eVFG3T/STZ8O9uXaNFR3jrfpPOR47yjBq2SRAsrZrUA6R8UpHqyZwjFOTN
-         gtPyxSpM95FMwVRK4K+h/hvWIyuIF9N3AUc8J5mQbIROHIxCfki6p2EDsU/aoEhJxr6p
-         g8zYY2YbLlPq9GTbYNDoGz+pReVDD5VU4vZavwC+3/JNQMurtfTEWMpQkHq4eG3g7APs
-         SqjpqxclyDiD5mLhhWG7fBNo0P8Ip8fbgnrzPq2RHtzW2CYmbVlmVNK/h0tcXiTECpfn
-         xbpJSRMARNBJXWtY7jyXejB1OXIl7MQ4r1XhjabIg0x0SscJfC20RpgzHQMuXCvO+HUe
-         exFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSVc6eb5xJVV8gmmIVLE6P/MxvOkF1jZPrb1+NFRkTWSZgjpIyVpYIB4r6XTQiZxSzF+fr05ehMdh6lVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNY4ryK2gnOtSwLfJgi5743IzKZVYPMf+Vdw0Mm4tSjnsPlaxy
-	qSBj123vl4YLG/Cu+gUZCIjMHLh6BDdyS8OiNQGYANEFhh2Lu6khv6UVLL9dmfeMXtaNM4eVzI7
-	E1+OgImXkOF1oWiHDJjjraRmto7Y=
-X-Gm-Gg: ASbGncs7g11VLNlG4HPlMasGmZN/mnL3o9cHpkmctyax9WsnF0mUyBa4VY4zctdGuwZ
-	uHcrIQI7qwWQ2IHXU/vIJjm8mRl31+v8bRzcDqABFYaXPG54FX0pIqg0ophikIcY0cBsI8QlFeN
-	hmHWuMUyTsfuruTdiL6TLWnwuRgI0Exg==
-X-Google-Smtp-Source: AGHT+IFe/oTfY0X5/lo2gWknRepOi06/rCNUPYrTRXXN6GQ2c1vkJplxeF+wgaowlpxEyT+tqI8m70nX8GSHPgHDRCo=
-X-Received: by 2002:a17:90a:fa0a:b0:2fa:1f1b:3db9 with SMTP id
- 98e67ed59e1d1-2fc41045393mr23468139a91.26.1739985052542; Wed, 19 Feb 2025
- 09:10:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="GsU00JH5"
+ARC-Seal: i=1; a=rsa-sha256; t=1739985048; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=B2gQVaWKYzh9iY/yq6HzDStvCZuc2z27HYNs55w+7ixPz9ccT/gUQSk5WDVLo/okYCync4b0f5+FtPfgDb1R2wLKeu9XPfcrJ651+PPTrehwDWrrS6Ami3vfp1x6NICau1YMrpw0TwlY0TeaXGtKtG9gzs05odx+gKH7aipenow=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739985048; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=64//cwvqZljD4DhFAn2LbHsdiVrVrYGj0JhPZZKChF0=; 
+	b=kJr/8t/3snpCPutPOGSF+Uv30Wj6TPJXHWjYeFwQt4uzS3bO5J39qxfgSDj4ahTMrMNFw4PIMphDSY4uOaCXvWjpE0f2Led6Q+SnJ9mc8cgdfMeAWf/oKKkZfZ2PcDssZEhZF+39be8zX/saeYrYzJfZxQ9xu0MiSVmU4CsMvDU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739985048;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=64//cwvqZljD4DhFAn2LbHsdiVrVrYGj0JhPZZKChF0=;
+	b=GsU00JH5GuZ25c9v3NmLIvoWgw0Q/HYE0/HIN7FjgWSsn4urIZ5dwUa03INZbCBK
+	P2dWMJyNGWsuXGZL365CspqPxQndUX8K8/oyXH0RQKkilRPm0G83p2gmt2nmf0dLuwW
+	Q+793qYsAx6h48FA3rk9nkxLW5TISKoSeZmGgveo=
+Received: by mx.zohomail.com with SMTPS id 1739985042434177.93514813296724;
+	Wed, 19 Feb 2025 09:10:42 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250219114759.20110-2-thorsten.blum@linux.dev>
-In-Reply-To: <20250219114759.20110-2-thorsten.blum@linux.dev>
-From: Max Filippov <jcmvbkbc@gmail.com>
-Date: Wed, 19 Feb 2025 09:10:38 -0800
-X-Gm-Features: AWEUYZnR82iEHGbt9m4cHYSuZC6RPB7dhsyYUmQzpLHP3kMfOpKmjgh1snM1iz4
-Message-ID: <CAMo8BfKfSPtr4kj+M8WRJazcZvXT0o-FJVt0ouKrY+hufGLHvQ@mail.gmail.com>
-Subject: Re: [PATCH] xtensa: ptrace: Remove zero-length alignment array
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Oleg Nesterov <oleg@redhat.com>, Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH] rust: regulator: add a bare minimum regulator abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <CAH5fLgiErvnziU-hSCV6djNq7Q56ZfX9gZudmX7+r06hWoX0Tw@mail.gmail.com>
+Date: Wed, 19 Feb 2025 14:10:24 -0300
+Cc: lgirdwood@gmail.com,
+ broonie@kernel.org,
+ sebastian.reichel@collabora.com,
+ sjoerd.simons@collabora.co.uk,
+ ojeda@kernel.org,
+ alex.gaynor@gmail.com,
+ boqun.feng@gmail.com,
+ gary@garyguo.net,
+ bjorn3_gh@protonmail.com,
+ a.hindborg@kernel.org,
+ benno.lossin@proton.me,
+ tmgross@umich.edu,
+ dakr@kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <E24A1EA3-DC87-4A33-AD93-1E3B307942E8@collabora.com>
+References: <20250219162517.278362-1-daniel.almeida@collabora.com>
+ <CAH5fLgiErvnziU-hSCV6djNq7Q56ZfX9gZudmX7+r06hWoX0Tw@mail.gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
+X-ZohoMailClient: External
 
-On Wed, Feb 19, 2025 at 3:50=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
-dev> wrote:
->
-> Use a compiler attribute to align the areg field to 16 bytes instead of
-> using a zero-length alignment array.
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  arch/xtensa/include/asm/ptrace.h | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+Hi Alice,
 
-Thanks. Applied to my xtensa tree.
+> On 19 Feb 2025, at 13:28, Alice Ryhl <aliceryhl@google.com> wrote:
+>=20
+> I wonder if enabled vs disabled should be two different types?
+>=20
+> Alice
 
--- Max
+I thought about having two types too, but I think it complicates the =
+design.
+
+
+```
+let foo: Regulator =3D Regulator::get(/*=E2=80=A6*/)?;
+let foo_enabled: EnabledRegulator =3D foo.enable()?:
+```
+
+Let=E2=80=99s first agree that `Regulator::drop` is the right place to =
+have `regulator_put`, since
+`Regulator::get()` acquired the reference in the first place.
+
+This means that now, `EnabledRegulator` has to depend on `Regulator` =
+somehow to ensure
+a proper drop order. Otherwise you might have an enabled regulator for =
+which you don=E2=80=99t own
+the refcount. Furthermore, if Regulator drops while EnabledRegulator is =
+alive, you get a splat.
+
+In a driver, you now have to store both Regulator - for the refcount - =
+and EnabledRegulator
+- as a way to tell the system you need that regulator to be active.
+
+If EnabledRegulator is a guard type, this doesn=E2=80=99t work, as it =
+creates a self-reference - on top
+of being extremely clunky.
+
+You can then have EnabledRegulator consume Regulator, but this assumes =
+that the regulator
+will be on all the time, which is not true. A simple pattern of
+
+```
+regulator_enable()
+do_fancy_stuff()
+regulator_disable()
+```
+
+Becomes a pain when one type consumes the other:
+
+```
+self.my_regulator.enable() // error, moves out of `&self`
+```=20
+
+I am sure we can find ways around that, but a simple `bool` here seems =
+to fix this problem.
+
+Now you only have to store `Regulator`. If you need another part of your =
+code to also keep
+the regulator enabled, you store a `Regulator` there and enable that as =
+well. All calls to
+enable and disable will be automatically balanced for all instances of =
+`Regulator` by
+virtue of the `enabled` bool as well.
+
+=E2=80=94 Daniel
+
