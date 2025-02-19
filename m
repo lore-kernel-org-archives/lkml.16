@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107DB1DED63;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109041EA7C6;
 	Wed, 19 Feb 2025 13:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973480; cv=none; b=Ue4DGvjsYM5owbl+G5WpaDs6LzboL8iLwgS/nHDNy3L9HBbueYPGHoaV5ciENlF3ArmCZzblVWW4jWlAzh/58YoOOMBOXoy+/OpHFBXRsaO4FqTq6YlI96//EQYhlks2Ne1Aj0cpplG1vBNYLZAClBy7RpjX3H6YIG3ipIOL4OM=
+	t=1739973480; cv=none; b=pOI5E+WV2vHCQJxvV89xCxK8853W8f7n01iP4qOHhsE14fHz0c0tCeysemndcj4tYIQiJTlHg4DXp7Q2RJHjxpGOCrJ6+2PEqqJms9MrXAj1Mz20I+W9mA203IxkNyqS59UGIGum4az5faDvh8QHl2YT5ppWVyW1E/cz5f6Nj+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739973480; c=relaxed/simple;
-	bh=7R366oYKmHOPpm8w8SRMstX38EO00rzyOjDKwrc/HvM=;
+	bh=6Zn2EKfxJ7Vkt0h37tV3CPuGsXDQh4z4UJHEkZnGtBU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kCLHFxorVDkVxxrCFgZjzqJGpYYdWEHkxBxoQFucbdHktncPMkjAZZPNdS4ceRVDBmFS/xVjlm6IT8abMYvsrqs6wzyrahKgZtTXALA5Nnkrtm+2Gkeg9e9JHAPFdZUEg8vg01jlYpQ8AxytvG3hOtgTkJH7l8Aee9L1rDNd9xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6P5eAMg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sXhTL2P+rm1mpxezFumHAH/9vlo8l6ngxCLYROw/5rs7fYUW87G/dCwvEoRdf2T0dlA8Cu2pjVSKQJi5B2cGhYZHMEp3ZJz8zKcIhH+IPJsah8TENm9lQvV1RBw9Wy5MyhgRdzhLDasz5x+itrd0r777CTdb6N46fXFlRIbrNP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DgDFeI/O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6P5eAMg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AB3C4CED6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DgDFeI/O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B7B6C4CEDD;
 	Wed, 19 Feb 2025 13:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739973479;
-	bh=7R366oYKmHOPpm8w8SRMstX38EO00rzyOjDKwrc/HvM=;
+	bh=6Zn2EKfxJ7Vkt0h37tV3CPuGsXDQh4z4UJHEkZnGtBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R6P5eAMgEhntbiTEVUOj/hhs4F3GyrUMl49CX5ax4h1XPzEwNoCTKvymaKMt+NSX2
-	 Gzf9N5LIuHTomtvVCIRppzNkDgPsLGGiyft4HWrNbhsFTnjj+LiNCxxueAJBZuroqJ
-	 gWv2Tx3hLGFq5VhzFsVXdAGLKGiM3tUw0wS/mRGi00NjJ+MnJR3I6atPOZBwsuxiNH
-	 yei3iN/meR49MHNSF1Vj6DgUZqP7iUFcQJOsdhIxJNPpRS/kuUigetHmnh6likUC3M
-	 9xJ9A44QJybbXG+xQdLfziwNBCxI0fBxXDL7CWW8LDW5ZSZjcbMHu91SzyQcyiwwrx
-	 8zVW0WUeMVCLg==
+	b=DgDFeI/O2NNbrkNTZzx7DETQlfdJh1O6gY8v1fE6wo/efX3cuwikAt4W0MF8rfjLV
+	 nQ5vbJp61d/b8mj32OVIfXlPfaf/a7UdfJEOC3szOJH5sL3EgaFlFBVIyGwg7v9klx
+	 /l+pmKWiDscEUcMO5sx6PLbLHQNzWyae3n7AAuMZQHEEdVct02UvZQP5WRCkNgOql4
+	 9/+p0r8mwGDXj2SGqPyIqt6K0yp31wxmzMSPrUl/QJB/94MH3L3uUrzKMZJVIoBbZx
+	 WCNjotpdseScoPY1xwYmgl/ffAdDVSq5nNbdb0UnZ3BactZhPJJRMW3xHQj+InomvL
+	 qQTqBiN/jQpHw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tkkaL-0000000H1jV-11aI;
+	id 1tkkaL-0000000H1jJ-0gi4;
 	Wed, 19 Feb 2025 14:57:57 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] scripts/kernel-doc.py: properly handle KBUILD_BUILD_TIMESTAMP
-Date: Wed, 19 Feb 2025 14:57:40 +0100
-Message-ID: <35d0f26f8ab2845245b3c3b7817c1e3ab883f069.1739972906.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 2/6] scripts/kernel-doc.py: adjust some coding style issues
+Date: Wed, 19 Feb 2025 14:57:37 +0100
+Message-ID: <ad841ed077503f790f20fa10e543155d1d1bc1a0.1739972906.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739972906.git.mchehab+huawei@kernel.org>
 References: <cover.1739972906.git.mchehab+huawei@kernel.org>
@@ -51,96 +51,187 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The logic that handles KBUILD_BUILD_TIMESTAMP is wrong, and adds
-a dependency of a third party module (dateutil).
-
-Fix it.
+Make pylint happier by adding some missing documentation and
+addressing a couple of pylint warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/lib/kdoc/kdoc_files.py  |  9 ---------
- scripts/lib/kdoc/kdoc_output.py | 28 +++++++++++++++++++++-------
- 2 files changed, 21 insertions(+), 16 deletions(-)
+ scripts/kernel-doc.py           |  2 ++
+ scripts/lib/kdoc/kdoc_files.py  |  4 +--
+ scripts/lib/kdoc/kdoc_output.py | 51 ++++++++++++++++++++++++++-------
+ 3 files changed, 43 insertions(+), 14 deletions(-)
 
+diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+index d700451e9541..daae2b4f3307 100755
+--- a/scripts/kernel-doc.py
++++ b/scripts/kernel-doc.py
+@@ -90,6 +90,8 @@ neither here nor at the original Perl script.
+ 
+ 
+ class MsgFormatter(logging.Formatter):
++    """Helper class to format warnings on a similar way to kernel-doc.pl"""
++
+     def format(self, record):
+         record.levelname = record.levelname.capitalize()
+         return logging.Formatter.format(self, record)
 diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
-index a2417cafb1c8..19fe9c6f5352 100755
+index 957aaeaed7e6..e1ed2f6dae94 100755
 --- a/scripts/lib/kdoc/kdoc_files.py
 +++ b/scripts/lib/kdoc/kdoc_files.py
-@@ -12,9 +12,6 @@ import logging
- import os
- import re
- import sys
--from datetime import datetime
--
--from dateutil import tz
+@@ -3,8 +3,6 @@
+ # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
+ # SPDX-License-Identifier: GPL-2.0
  
- from kdoc_parser import KernelDoc
- from kdoc_output import OutputFormat
-@@ -136,12 +133,6 @@ class KernelFiles():
-         if out_style is None:
-             out_style = OutputFormat()
- 
--        dt = datetime.now()
--        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
--            # use UTC TZ
--            to_zone = tz.gettz('UTC')
--            dt = dt.astimezone(to_zone)
+-# TODO: implement warning filtering
 -
-         if not werror:
-             kcflags = os.environ.get("KCFLAGS", None)
-             if kcflags:
+ """
+ Parse lernel-doc tags on multiple kernel source files.
+ """
+@@ -127,7 +125,7 @@ class KernelFiles():
+     def __init__(self, verbose=False, out_style=None,
+                  werror=False, wreturn=False, wshort_desc=False,
+                  wcontents_before_sections=False,
+-                 logger=None, modulename=None, export_file=None):
++                 logger=None, modulename=None):
+         """
+         Initialize startup variables and parse all files
+         """
 diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index 13a74a687f89..166fcabbb4cf 100755
+index 7aeaec884545..97ec671e0b6e 100755
 --- a/scripts/lib/kdoc/kdoc_output.py
 +++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -18,8 +18,6 @@ import os
- import re
- from datetime import datetime
+@@ -1,10 +1,8 @@
+ #!/usr/bin/env python3
+-# pylint: disable=C0301,R0911,R0912,R0913,R0914,R0915,R0917
++# pylint: disable=C0301,R0902,R0911,R0912,R0913,R0914,R0915,R0917
+ # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
+ # SPDX-License-Identifier: GPL-2.0
  
--from dateutil import tz
+-# TODO: implement warning filtering
 -
- from kdoc_parser import KernelDoc, type_param
- from kdoc_re import Re
+ """
+ Implement output filters to print kernel-doc documentation.
  
-@@ -584,6 +582,15 @@ class ManFormat(OutputFormat):
-     )
-     blankline = ""
+@@ -51,6 +49,11 @@ type_member_func = type_member + Re(r"\(\)", cache=False)
  
-+    date_formats = [
-+        "%a %b %d %H:%M:%S %Z %Y",
-+        "%a %b %d %H:%M:%S %Y",
-+        "%Y-%m-%d",
-+        "%b %d %Y",
-+        "%B %d %Y",
-+        "%m %d %Y",
-+    ]
+ 
+ class OutputFormat:
++    """
++    Base class for OutputFormat. If used as-is, it means that only
++    warnings will be displayed.
++    """
 +
-     def __init__(self, modulename):
-         """
-         Creates class variables.
-@@ -595,11 +602,18 @@ class ManFormat(OutputFormat):
-         super().__init__()
-         self.modulename = modulename
+     # output mode.
+     OUTPUT_ALL          = 0 # output all symbols and doc sections
+     OUTPUT_INCLUDE      = 1 # output only specified symbols
+@@ -74,6 +77,10 @@ class OutputFormat:
+         self.data = ""
  
--        dt = datetime.now()
--        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
--            # use UTC TZ
--            to_zone = tz.gettz('UTC')
--            dt = dt.astimezone(to_zone)
-+        dt = None
-+        tstamp = os.environ.get("KBUILD_BUILD_TIMESTAMP")
-+        if tstamp:
-+            for fmt in self.date_formats:
-+                try:
-+                    dt = datetime.strptime(tstamp, fmt)
-+                    break
-+                except ValueError:
-+                    pass
+     def set_config(self, config):
++        """
++        Setup global config variables used by both parser and output.
++        """
 +
-+        if not dt:
-+            dt = datetime.now()
+         self.config = config
  
+     def set_filter(self, export, internal, symbol, nosymbol, function_table,
+@@ -116,6 +123,10 @@ class OutputFormat:
+         return block
+ 
+     def out_warnings(self, args):
++        """
++        Output warnings for identifiers that will be displayed.
++        """
++
+         warnings = args.get('warnings', [])
+ 
+         for warning, log_msg in warnings:
+@@ -145,6 +156,11 @@ class OutputFormat:
+         return False
+ 
+     def check_declaration(self, dtype, name, args):
++        """
++        Checks if a declaration should be output or not based on the
++        filtering criteria.
++        """
++
+         if name in self.nosymbol:
+             return False
+ 
+@@ -168,6 +184,10 @@ class OutputFormat:
+         return False
+ 
+     def msg(self, fname, name, args):
++        """
++        Handles a single entry from kernel-doc parser
++        """
++
+         self.data = ""
+ 
+         dtype = args.get('type', "")
+@@ -202,24 +222,24 @@ class OutputFormat:
+         return None
+ 
+     # Virtual methods to be overridden by inherited classes
++    # At the base class, those do nothing.
+     def out_doc(self, fname, name, args):
+-        pass
++        """Outputs a DOC block"""
+ 
+     def out_function(self, fname, name, args):
+-        pass
++        """Outputs a function"""
+ 
+     def out_enum(self, fname, name, args):
+-        pass
++        """Outputs an enum"""
+ 
+     def out_typedef(self, fname, name, args):
+-        pass
++        """Outputs a typedef"""
+ 
+     def out_struct(self, fname, name, args):
+-        pass
+-
++        """Outputs a struct"""
+ 
+ class RestFormat(OutputFormat):
+-    # """Consts and functions used by ReST output"""
++    """Consts and functions used by ReST output"""
+ 
+     highlights = [
+         (type_constant, r"``\1``"),
+@@ -264,6 +284,11 @@ class RestFormat(OutputFormat):
+             self.data += f".. LINENO {ln}\n"
+ 
+     def output_highlight(self, args):
++        """
++        Outputs a C symbol that may require being converted to ReST using
++        the self.highlights variable
++        """
++
+         input_text = args
+         output = ""
+         in_literal = False
+@@ -578,6 +603,10 @@ class ManFormat(OutputFormat):
          self.man_date = dt.strftime("%B %Y")
+ 
+     def output_highlight(self, block):
++        """
++        Outputs a C symbol that may require being highlighted with
++        self.highlights variable using troff syntax
++        """
+ 
+         contents = self.highlight_block(block)
+ 
+@@ -600,7 +629,7 @@ class ManFormat(OutputFormat):
+         sections = args.get('sections', {})
+ 
+         if not self.check_doc(name, args):
+-                return
++            return
+ 
+         self.data += f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX' + "\n"
  
 -- 
 2.48.1
