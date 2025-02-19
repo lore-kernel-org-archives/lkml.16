@@ -1,121 +1,132 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFB3286291
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15CC2862AB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739966145; cv=none; b=SNFPweUWuQD9p0Qvh28X9v2i2sidvUYTvcci7E3NoCWxcD5iAR6ms1soQcBHwR7KCyFE1LSyspvQwEKuSGbpDBfv8/AGdx0ReFXfnN30JK1rFvQydCOAB3/4PldKbwstOSfEc2edIGwYVIVV6MlKTCLF9kYLs3suaG01AHM3xHk=
+	t=1739966220; cv=none; b=VpJSGBdEwCHd+owOvJcC+F4rgEFHJqlVqcQ0NfpXXEaWBB9klSYIcZ3fzsLZZnMcHZ2UgxzWB3jeTjr/YgiWwYCiqx0sUDgmBlpD76vLSnoidkIVwIGDdnnjDOxnYMPgqdizX1sbvj3hFYy18752fxX+BM6RXJW+eRwqAGCHclw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739966145; c=relaxed/simple;
-	bh=cmcwUjQoopYu+8HGY2X8Lh2p1aPjgwBlSxNxgvGqn20=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uocPBZweyftcTLGybI645MaqTQf/J1z1ADRQclpT6UaZFly2vgJyrw1qT+xoB1c4EtyDhxI2NL6n/0cxigH/BTuC2tTD3obiwPcTJrSTX2+WcvMhuocNczKy6qj/pmNA1SlLvimCUgcH+/FUgOVBIcQZFEddCd+CMZ9p5+ZTOK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=LRBPD+9C; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739966220; c=relaxed/simple;
+	bh=OFl5zYCDn+BC+obPnwoUzo/NkgK1vfKApTzM/4yPedk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTWwQLehBemI8JXUxvFfLunxOcYYr+Qq7OGuewMx198UQSf7W6antUvCNS0+pL9omXF6Deb7i3F01UWiaZmp2ll8vsraQNwhq61Tk2/CUcSgNNdTZDIMEoDkAs3zitIY2Zy7fNxioGcSg5xb7Vrj6S03lF1TQuU4NBOyVbugd6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Szw9r31n; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="LRBPD+9C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739966091;
-	bh=7WqapH9hkRwnBXqdTtOxByg0Cq2hNow9/HDGmqbIlgQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=LRBPD+9Cti7CUZrezgucsc6t2zS9BTcK7IK+eoERjM05vbD5swV2yXFK7mSoYGj96
-	 sARCsjzNf66slTW509g59LqVOCm9e6E9kpoBwhUnh1zJLzr77BhlsYw/pmGwKtri/k
-	 qgpQg72HbjHOc+BQOERJH6FOB5F393Ch1Lxqj7MI=
-X-QQ-mid: bizesmtpip3t1739966045tgjfcps
-X-QQ-Originating-IP: O7SsgWhzKwnrxZounFROXcK2a+thI6ETPZgTVaPWgs4=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 19 Feb 2025 19:54:03 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15418192173615449267
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: wangyuli@uniontech.com,
-	maobibo@loongson.cn,
-	guanwentao@uniontech.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH] LoongArch: acpi: Conditional apic_id vs CONFIG_NR_CPUS comparison
-Date: Wed, 19 Feb 2025 19:53:07 +0800
-Message-ID: <C2885DC275589FDD+20250219115307.194770-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Szw9r31n"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A0D6B40E0220;
+	Wed, 19 Feb 2025 11:56:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id DyiDuI06pp0B; Wed, 19 Feb 2025 11:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739966209; bh=15QSN8fo+MeIxF3IRynj17rKxLBOmTuOswde/QN4K/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Szw9r31npCBjsCs8i8FM3NpOu8hvtevZD+xzMyeBjl78ustxGe4xIVc1FwUtZXYM8
+	 6kTdBljvG5d4R/HaId0k48XerJtQxm/2+kwAP2W3tIkZz0S9WVVtgIx2nDHS4ND1RE
+	 OVZ21ShLxOwMG3jmGx53Vn794H3F96Q2an9jNgytaXzyQH9SmQj14t0F5TvVuamNg6
+	 MGXZkA29XUS1WCqYqIhQad+WDtuvD/xyNPchj2FWymP5aXkXPImegGzcU/qmmtxJaJ
+	 2CEWRMHH+4yzDLrHKA/r1V4o9Weg2n8I4bnpsYQg295UBUvO+FdXRqcvZfgI/vgkD7
+	 G3h9IeioakfJ+eXelUY57yuaB4NCpRnHBmkt2JeboYHFeiwaqfF9sEsa+yCNrJCxoI
+	 rXXpZuDq7LFtG4DcdSSW6xClouIr9sf0pvDQGKuQBCW6bCFXr+4n5kcIpRGds7WoMU
+	 1GKPra0df36e4h1Rf6LD4m6OCA926BNGa41gpWEiQxmSoWX/+Z0o13TPYJyVsraa2b
+	 2WkFeokfEd3EO6VpdvQpIeh2670IR2uMc208sTIwCgYo3Lm1yg/CBTbjQByH83woWd
+	 tRQMUBtKGJD/+7Xl7xx9tQOvPeOUBAXabkZpJZXR+DUK3kItB/zJ4V6VTvTC9bK743
+	 LnGFB2Z1ShZXLdCeHwYNeXro=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7092840E0221;
+	Wed, 19 Feb 2025 11:56:33 +0000 (UTC)
+Date: Wed, 19 Feb 2025 12:56:26 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali Shukla <Manali.Shukla@amd.com>
+Subject: Re: [PATCH v11 04/12] x86/mm: get INVLPGB count max from CPUID
+Message-ID: <20250219115626.GMZ7XG6s-5ftg1XLoZ@fat_crate.local>
+References: <20250213161423.449435-1-riel@surriel.com>
+ <20250213161423.449435-5-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MRw/zKT/0BpPPS3mn+aFxUhlbq4zQw3/pyxz5UKRwFGOtJ0HZicqf658
-	LJix2s5YER5IAMms3tjrRkw0SqYjX+4ENvtgNMX1BRCXhsI52XUsdvKvv1KZ+AsPpMv2k0o
-	GSN2GZqhJTRFg+XA/72/9wLxGXikE/gbeewZsCkjcz8f+JTmVGpz0w1dKW84EH5uaeQrqqp
-	SyzWi4lKbOiJGwjYZOtbKkOaEKSlQ+pF/WaCnCfulUZc+w48gDxOcJeux5QTDvKJrB1EIyn
-	BpS0gqKk+rxJyBC/6Ut9fUAx8p+1Dm3Ypk4sRFUNmbEVkPWlEnpa0KjQwldIvp/ho7Y2gxS
-	ZFX0tyB3ymeTQQuDGqdnfPg76Jhzn+eQs0WZMbWUaTu47TDES47oVPA+5wFN5JnPKRbInPH
-	H7w9dgx198wsoNE5/Y/HN5BeNYMN4NGjf8QeaM4+Li+s1e9BWCpnzHxDmuonsyVIhygM4oH
-	GTl2p1wGzrh7guCeyOVx5yz/KPyc6Pm/tTMc6Ek8CkncZB0is3oHfGGLcIk9CZPwRqVeXU/
-	bXacKVJ5g3oowDsnoTyrVvdzSYiRSHO5YZCT8oJU8e6HRdcntEkctUxF3Ncz+/L++vTi+oG
-	1E/EZsNtUYj3QjMkHWkSWHBW2EcQjEz3dUcuq/jOkZtBL5sJXaOPeY6/dY42/s3jItz15Wo
-	hmBypzCTtoUve526/EJm2hO23ZitSWj6szJt0B3EMXCZ7ftbjT/5P4yeVqcsBUQ3Fk5U/py
-	fG799frSgViJ1yrY66FRQamPb66ld9hRhswMOEBES8aIrVpsUz7jifqSQT57lGtCHeX6/dT
-	eY5p/Se89KZlnd0/DGgCnWGZqGwWtL9nWGuet6yFmfLfyAgJTTEFM4PyVFFhS4YfKS6A/TC
-	CiMHb1Yq1MujFKMlrmN1raD1jn4wPqb0418ngMbrk2FZxbV7QO6HC+0U7QaQC3MpO5E/HG3
-	e/LbrXuHgK2Udd75YNnQAjz8I5x8DYgjfh+BcLIo8U+g4c1XyHSQ7NzK0Si1NHOvSvI3mUV
-	/AkhMXU4Fc0rUg1qHDfMwuc/Tw6h8hMHBaEu06WuG2ZuX4QoEW4fzt3yjbHUQ=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250213161423.449435-5-riel@surriel.com>
 
-The apic_id here, as declared as a u8 (unsigned char) in struct
-acpi_srat_cpu_affinity of acpi/actbl3.h, has a range up to 255.
+On Thu, Feb 13, 2025 at 11:13:55AM -0500, Rik van Riel wrote:
+> The CPU advertises the maximum number of pages that can be shot down
+> with one INVLPGB instruction in the CPUID data.
+> 
+> Save that information for later use.
+> 
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> Tested-by: Manali Shukla <Manali.Shukla@amd.com>
+> Tested-by: Brendan Jackman <jackmanb@google.com>
+> Tested-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  arch/x86/Kconfig.cpu               | 5 +++++
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  arch/x86/include/asm/tlbflush.h    | 7 +++++++
+>  arch/x86/kernel/cpu/amd.c          | 8 ++++++++
+>  4 files changed, 21 insertions(+)
+> 
+> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+> index 2a7279d80460..abe013a1b076 100644
+> --- a/arch/x86/Kconfig.cpu
+> +++ b/arch/x86/Kconfig.cpu
+> @@ -395,6 +395,10 @@ config X86_VMX_FEATURE_NAMES
+>  	def_bool y
+>  	depends on IA32_FEAT_CTL
+>  
+> +config X86_BROADCAST_TLB_FLUSH
+> +	def_bool y
+> +	depends on CPU_SUP_AMD && 64BIT
+> +
+>  menuconfig PROCESSOR_SELECT
+>  	bool "Supported processor vendors" if EXPERT
+>  	help
+> @@ -431,6 +435,7 @@ config CPU_SUP_CYRIX_32
+>  config CPU_SUP_AMD
+>  	default y
+>  	bool "Support AMD processors" if PROCESSOR_SELECT
+> +	select X86_BROADCAST_TLB_FLUSH
 
-Evidently, if CONFIG_NR_CPUS becomes 256 or more, the check
-"apic_id >= CONFIG_NR_CPUS" will always be false, which will produce
-a compiler warning.
+CPU_SUP_AMD selects X86_BROADCAST_TLB_FLUSH which depends on CPU_SUP_AMD which
+selects X86_BROADCAST_TLB_FLUSH which depends on CPU_SUP_AMD...
 
-Only compile this code if CONFIG_NR_CPUS is at most 255 consequently.
+Why do you really need yet another Kconfig symbol? Just whack
+X86_BROADCAST_TLB_FLUSH - it'll be enabled by default on everything anyway.
 
-Fix follow error with clang-18 when W=1e:
+> @@ -1139,6 +1141,12 @@ static void cpu_detect_tlb_amd(struct cpuinfo_x86 *c)
+>  		tlb_lli_2m[ENTRIES] = eax & mask;
+>  
+>  	tlb_lli_4m[ENTRIES] = tlb_lli_2m[ENTRIES] >> 1;
+> +
+> +	/* Max number of pages INVLPGB can invalidate in one shot */
+> +	if (boot_cpu_has(X86_FEATURE_INVLPGB)) {
+> +		cpuid(0x80000008, &eax, &ebx, &ecx, &edx);
+> +		invlpgb_count_max = (edx & 0xffff) + 1;
+> +	}
 
-arch/loongarch/kernel/acpi.c:302:18: error: result of comparison of constant 256 with expression of type 'u8' (aka 'unsigned char') is always false [-Werror,-Wtautological-constant-out-of-range-compare]
-  302 |         if (pa->apic_id >= CONFIG_NR_CPUS) {
-      |             ~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
-1 error generated.
+get_cpu_cap() already reads that leaf. You don't need to do it here again.
 
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/kernel/acpi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 2bb3bc42e6ed..ee471a80763e 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -299,11 +299,17 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
- 		return;
- 	}
- 
-+/*
-+ * apic_id's type is u8.
-+ * Conditionally skip this check to silence compiler warnings.
-+ */
-+#if CONFIG_NR_CPUS < 256
- 	if (pa->apic_id >= CONFIG_NR_CPUS) {
- 		pr_info("SRAT: PXM %u -> CPU 0x%02x -> Node %u skipped apicid that is too big\n",
- 				pxm, pa->apic_id, node);
- 		return;
- 	}
-+#endif /* CONFIG_NR_CPUS < 256 */
- 
- 	early_numa_add_cpu(pa->apic_id, node);
- 
 -- 
-2.47.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
