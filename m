@@ -1,46 +1,46 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A671A22FE0C;
-	Wed, 19 Feb 2025 19:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B90222D4C9;
+	Wed, 19 Feb 2025 19:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739993656; cv=none; b=N5XwzwsRgnrttObRZYremCwl5art68uAT9uyDi9deyakp/zvEXYvdD8ggi4SPsknMNTv1zEh60tRcDPIlv5yXCI6DY/GvXdZVH7vvcT/gsxEegfAzipbufl4zJ8SO9rpgXKQVwrkhvzXx1pm6niWzye9cRrLi1DY1Gx+E150F+A=
+	t=1739993649; cv=none; b=NJlSTIay97AReuhPefJRK8YH8WTHxsfXIW+az849Bk9dHNfciEZZUY0Sjpu90bw/Q3NBUZ1qWFjApPianFqwB2i9u93u3DRVaA7UOBlLjFC23U9Oik0IQ4ACKPTTXmR5VMW1HRSzBXF7mShB8jWhTjQFckmGPapRaKcqWSMdEX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739993656; c=relaxed/simple;
-	bh=9FeOV8opCfObi7tUr9fs/g4qDJP3TkkrH+YNcZHJ7x4=;
+	s=arc-20240116; t=1739993649; c=relaxed/simple;
+	bh=a7dvPRFq/idhe/Lkq50FH8iI+/kExkf5GjPK9TdlYdg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JZxZlCcPYBMXCL2irGVYc8J++IxYQf9mSbCgl1FAjIQoedYOwsNag84/9RCkQcyDz5V3INZ+SQoOIqcAu9x70jK8UFRbutRwzO0rxcZkCMif2r88WNqILOIcNotbT2YdIQLVUflqnojjys4/gR+4CRBt2wB9K6dQ9J2myWERRpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i/OR+iNN; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=Frw1DTTK1sNYvMIdCArBqWycn0cBjnrcEHPqDLQ5l4fP67D432gEDiRLmcTJN8L7YVWZQWd4JjBYkMSQ9epMUCHO8BqFTKJfR/2ZLKN5UrFzuFxaOsn9Mvo4YFxaNs65YZB2w68yV7yr3YW782PGLOrd415jK450i6797dKQHjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PU4Jmnib; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i/OR+iNN"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PU4Jmnib"
 Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JB9ZZX031423;
-	Wed, 19 Feb 2025 19:33:54 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JB9eCE031485;
+	Wed, 19 Feb 2025 19:33:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AspjgZU0NXlHOcDl8+7Gm7WhlKv9jpXd70aQl0fbvEo=; b=i/OR+iNNCSj7q64M
-	ZndljuuOIPrB6j/Fpo1LxhYuqlVJMXtojSsDqHyQFtuN0fuTQDX4xpxg8Wg2jT0M
-	Bl+GE/YZS9aW7WMI5GSwRJT2U07Oo+2NV+qLpu6niVdE44vyD3nep8ZKMf4pKUHk
-	JbG/vuCT+o1SdIGGMSVBJe4BN3dsj0QwFwddc30/pgROIOVs7wTw9DmLwnsae677
-	vJ4RJiy/fS7uuQbjn4ZXCEa1179Ku97guBHzQ0rdeR6NJXn+HaV52jabk5M2vjMq
-	q/aYyfwsU0BBg8DaMOYwf6koCVmjnDhJnZNbCcEWxWO9YzA9v7MFZHTv7uyDNP4K
-	mt9CLg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44we69hete-1
+	GAphQLGIWtnq5dVrVUeh/pBGqk8ONxk36gHsvCmDKhs=; b=PU4Jmnibf/zsx8Hs
+	3sbphseTXBPAzpMnbyZBfRDv28VUOE4gGUVPqDM81RB5rGORjf4yEFBfQEI2qSzS
+	TqXbLm5/dCcSbEVmj98rNnQSWz2ZrFwz+QiS430KOC/E/x4pKaaQGqndNwukRc2r
+	7tIhPa3fIjIrrwQ9tOlm0+7mOwezBwYpQcecI94hKuoePSQcuvONwfZ53Wj6/B4Y
+	k1H1furxHiH8azqk01ag+OPCriEG8Kd/HFuqSQcN7GY284YSENcGReVHe3XyKzkF
+	wb7WuR/NDEZBOJA5F0UWbytEEO09DdbBRa0szTE+iyDAgrR/A3XEoZAXfs7TGSpx
+	O2O44g==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44we69het2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 19:33:53 +0000 (GMT)
+	Wed, 19 Feb 2025 19:33:42 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51JJXr9L023958
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51JJXfRb013209
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 19:33:53 GMT
+	Wed, 19 Feb 2025 19:33:41 GMT
 Received: from PHILBER.qualcomm.com (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Feb
- 2025 11:33:47 -0800
+ 2025 11:33:35 -0800
 From: Peter Hilber <quic_philber@quicinc.com>
 To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>
 CC: Trilok Soni <quic_tsoni@quicinc.com>,
@@ -51,23 +51,23 @@ CC: Trilok Soni <quic_tsoni@quicinc.com>,
  Zhuo" <xuanzhuo@linux.alibaba.com>,
         =?UTF-8?q?Eugenio=20P=C3=A9rez?=
 	<eperezma@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
         <linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Ridoux, Julien" <ridouxj@amazon.com>, Marc Zyngier <maz@kernel.org>,
-        "Mark
- Rutland" <mark.rutland@arm.com>,
+        <netdev@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+        "Ridoux,
+ Julien" <ridouxj@amazon.com>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland
+	<mark.rutland@arm.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
         Parav Pandit
 	<parav@nvidia.com>,
         Matias Ezequiel Vara Larsen <mvaralar@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>, <virtio-dev@lists.linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Cochran
-	<richardcochran@gmail.com>, <netdev@vger.kernel.org>
-Subject: [PATCH v5 3/4] virtio_rtc: Add Arm Generic Timer cross-timestamping
-Date: Wed, 19 Feb 2025 20:32:58 +0100
-Message-ID: <20250219193306.1045-4-quic_philber@quicinc.com>
+        <linux-arm-kernel@lists.infradead.org>, <linux-rtc@vger.kernel.org>
+Subject: [PATCH v5 1/4] virtio_rtc: Add module and driver core
+Date: Wed, 19 Feb 2025 20:32:56 +0100
+Message-ID: <20250219193306.1045-2-quic_philber@quicinc.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250219193306.1045-1-quic_philber@quicinc.com>
 References: <20250219193306.1045-1-quic_philber@quicinc.com>
@@ -83,8 +83,8 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _P01MOAEurE50vWQg8Zm_Mj9kSECT_O8
-X-Proofpoint-ORIG-GUID: _P01MOAEurE50vWQg8Zm_Mj9kSECT_O8
+X-Proofpoint-GUID: yszdo367N965YPALHTd1oOZq9pEjqw-w
+X-Proofpoint-ORIG-GUID: yszdo367N965YPALHTd1oOZq9pEjqw-w
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-19_08,2025-02-19_01,2024-11-22_01
@@ -94,100 +94,1102 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogs
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502100000 definitions=main-2502190151
 
-Add PTP_SYS_OFFSET_PRECISE2 support on platforms using the Arm Generic
-Timer.
+Add the virtio_rtc module and driver core. The virtio_rtc module implements
+a driver compatible with the proposed Virtio RTC device specification.
+The Virtio RTC (Real Time Clock) device provides information about current
+time. The device can provide different clocks, e.g. for the UTC or TAI time
+standards, or for physical time elapsed since some past epoch. The driver
+can read the clocks with simple or more accurate methods.
 
-Always report the CP15 virtual counter as the HW counter in use by
-arm_arch_timer, since the Linux kernel's usage of the Arm Generic Timer
-should always be compatible with this.
+Implement the core, which interacts with the Virtio RTC device. Apart from
+this, the core does not expose functionality outside of the virtio_rtc
+module. A follow-up patch will expose PTP clocks.
+
+Provide synchronous messaging, which is enough for the expected time
+synchronization use cases through PTP clocks (similar to ptp_kvm) or RTC
+Class driver.
 
 Signed-off-by: Peter Hilber <quic_philber@quicinc.com>
 ---
 
 Notes:
+    v5:
+    
+    - Remove definitions dropped in virtio-rtc spec v7.
+    
+    - Fix style issues.
+    
+    - Add freeze/restore ops already in this patch.
+    
+    - Drop unnecessary memory barrier pair.
+    
+    - Return error status from device, whenever available.
+    
+    - Use secs_to_jiffies() macro.
+    
     v4:
     
-    - Update names and types to spec v6.
+    - Update Virtio interface to spec v6.
     
-    v2:
+    - Distinguish UTC-like clocks by handling of leap seconds (spec v6).
     
-    - Depend on prerequisite patch series "treewide: Use clocksource id for
-      get_device_system_crosststamp()".
+    - Remove unnecessary memory barriers.
     
-    - Return clocksource id instead of calling dropped arm_arch_timer helpers.
+    - Cosmetic improvements.
     
-    - Always report the CP15 virtual counter to be in use by arm_arch_timer,
-      since distinction of Arm physical and virtual counter appears unneeded
-      after discussion with Marc Zyngier.
+    v3:
+    
+    - merge readq and controlq into a single requestq (spec v3)
+    
+    - don't guard cross-timestamping with feature bit (spec v3)
+    
+    - pad message headers to 64 bits (spec v3)
+    
+    - reduce clock id to 16 bits (spec v3)
+    
+    - change Virtio status codes (spec v3)
+    
+    - use 'VIRTIO_RTC_REQ_' prefix for request messages (spec v3)
 
- drivers/virtio/Kconfig          | 13 +++++++++++++
- drivers/virtio/Makefile         |  1 +
- drivers/virtio/virtio_rtc_arm.c | 23 +++++++++++++++++++++++
- 3 files changed, 37 insertions(+)
- create mode 100644 drivers/virtio/virtio_rtc_arm.c
+ MAINTAINERS                          |   7 +
+ drivers/virtio/Kconfig               |  13 +
+ drivers/virtio/Makefile              |   2 +
+ drivers/virtio/virtio_rtc_driver.c   | 785 +++++++++++++++++++++++++++
+ drivers/virtio/virtio_rtc_internal.h |  24 +
+ include/uapi/linux/virtio_rtc.h      | 151 ++++++
+ 6 files changed, 982 insertions(+)
+ create mode 100644 drivers/virtio/virtio_rtc_driver.c
+ create mode 100644 drivers/virtio/virtio_rtc_internal.h
+ create mode 100644 include/uapi/linux/virtio_rtc.h
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a2cacb7fb830..73e43f324648 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25280,6 +25280,13 @@ S:	Maintained
+ F:	drivers/nvdimm/nd_virtio.c
+ F:	drivers/nvdimm/virtio_pmem.c
+ 
++VIRTIO RTC DRIVER
++M:	Peter Hilber <quic_philber@quicinc.com>
++L:	virtualization@lists.linux.dev
++S:	Maintained
++F:	drivers/virtio/virtio_rtc_*
++F:	include/uapi/linux/virtio_rtc.h
++
+ VIRTIO SOUND DRIVER
+ M:	Anton Yakovlev <anton.yakovlev@opensynergy.com>
+ M:	"Michael S. Tsirkin" <mst@redhat.com>
 diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index a14a2b77e142..3d8b366c0625 100644
+index 2eb747311bfd..83bcb06acb6c 100644
 --- a/drivers/virtio/Kconfig
 +++ b/drivers/virtio/Kconfig
-@@ -221,6 +221,19 @@ config VIRTIO_RTC_PTP
+@@ -188,4 +188,17 @@ config VIRTIO_DEBUG
  
- 	 If unsure, say Y.
+ 	  If unsure, say N.
  
-+config VIRTIO_RTC_ARM
-+	bool "Virtio RTC cross-timestamping using Arm Generic Timer"
-+	default y
-+	depends on VIRTIO_RTC_PTP && ARM_ARCH_TIMER
++config VIRTIO_RTC
++	tristate "Virtio RTC driver"
++	depends on VIRTIO
++	depends on PTP_1588_CLOCK_OPTIONAL
 +	help
-+	 This enables Virtio RTC cross-timestamping using the Arm Generic Timer.
-+	 It only has an effect if the Virtio RTC device also supports this. The
-+	 cross-timestamp is available through the PTP clock driver precise
-+	 cross-timestamp ioctl (PTP_SYS_OFFSET_PRECISE2 aka
-+	 PTP_SYS_OFFSET_PRECISE).
++	 This driver provides current time from a Virtio RTC device. The driver
++	 provides the time through one or more clocks.
 +
-+	 If unsure, say Y.
++	 To compile this code as a module, choose M here: the module will be
++	 called virtio_rtc.
 +
- endif # VIRTIO_RTC
- 
++	 If unsure, say M.
++
  endif # VIRTIO_MENU
 diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-index 88d6fb8d4731..dbd77f124ba9 100644
+index 58b2b0489fc9..c41c4c0f9264 100644
 --- a/drivers/virtio/Makefile
 +++ b/drivers/virtio/Makefile
-@@ -17,3 +17,4 @@ obj-$(CONFIG_VIRTIO_DEBUG) += virtio_debug.o
- obj-$(CONFIG_VIRTIO_RTC) += virtio_rtc.o
- virtio_rtc-y := virtio_rtc_driver.o
- virtio_rtc-$(CONFIG_VIRTIO_RTC_PTP) += virtio_rtc_ptp.o
-+virtio_rtc-$(CONFIG_VIRTIO_RTC_ARM) += virtio_rtc_arm.o
-diff --git a/drivers/virtio/virtio_rtc_arm.c b/drivers/virtio/virtio_rtc_arm.c
+@@ -14,3 +14,5 @@ obj-$(CONFIG_VIRTIO_VDPA) += virtio_vdpa.o
+ obj-$(CONFIG_VIRTIO_MEM) += virtio_mem.o
+ obj-$(CONFIG_VIRTIO_DMA_SHARED_BUFFER) += virtio_dma_buf.o
+ obj-$(CONFIG_VIRTIO_DEBUG) += virtio_debug.o
++obj-$(CONFIG_VIRTIO_RTC) += virtio_rtc.o
++virtio_rtc-y := virtio_rtc_driver.o
+diff --git a/drivers/virtio/virtio_rtc_driver.c b/drivers/virtio/virtio_rtc_driver.c
 new file mode 100644
-index 000000000000..211299d72870
+index 000000000000..92f41526e437
 --- /dev/null
-+++ b/drivers/virtio/virtio_rtc_arm.c
-@@ -0,0 +1,23 @@
++++ b/drivers/virtio/virtio_rtc_driver.c
+@@ -0,0 +1,785 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Provides cross-timestamp params for Arm.
++ * virtio_rtc driver core
 + *
-+ * Copyright (C) 2022-2023 OpenSynergy GmbH
++ * Copyright (C) 2022-2024 OpenSynergy GmbH
 + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
 +
-+#include <linux/clocksource_ids.h>
++#include <linux/completion.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/pm.h>
++#include <linux/virtio.h>
++#include <linux/virtio_config.h>
++#include <linux/virtio_ids.h>
 +
 +#include <uapi/linux/virtio_rtc.h>
 +
 +#include "virtio_rtc_internal.h"
 +
-+/* see header for doc */
++/* virtqueue order */
++enum {
++	VIORTC_REQUESTQ,
++	VIORTC_MAX_NR_QUEUES,
++};
 +
-+int viortc_hw_xtstamp_params(u8 *hw_counter, enum clocksource_ids *cs_id)
++/**
++ * struct viortc_vq - virtqueue abstraction
++ * @vq: virtqueue
++ * @lock: protects access to vq
++ */
++struct viortc_vq {
++	struct virtqueue *vq;
++	spinlock_t lock;
++};
++
++/**
++ * struct viortc_dev - virtio_rtc device data
++ * @vdev: virtio device
++ * @vqs: virtqueues
++ * @num_clocks: # of virtio_rtc clocks
++ */
++struct viortc_dev {
++	struct virtio_device *vdev;
++	struct viortc_vq vqs[VIORTC_MAX_NR_QUEUES];
++	u16 num_clocks;
++};
++
++/**
++ * struct viortc_msg - Message requested by driver, responded by device.
++ * @viortc: device data
++ * @req: request buffer
++ * @resp: response buffer
++ * @responded: vqueue callback signals response reception
++ * @refcnt: Message reference count, message and buffers will be deallocated
++ *	    once 0. refcnt is decremented in the vqueue callback and in the
++ *	    thread waiting on the responded completion.
++ *          If a message response wait function times out, the message will be
++ *          freed upon late reception (refcnt will reach 0 in the callback), or
++ *          device removal.
++ * @req_size: size of request in bytes
++ * @resp_cap: maximum size of response in bytes
++ * @resp_actual_size: actual size of response
++ */
++struct viortc_msg {
++	struct viortc_dev *viortc;
++	void *req;
++	void *resp;
++	struct completion responded;
++	refcount_t refcnt;
++	unsigned int req_size;
++	unsigned int resp_cap;
++	unsigned int resp_actual_size;
++};
++
++/**
++ * viortc_msg_init() - Allocate and initialize requestq message.
++ * @viortc: device data
++ * @msg_type: virtio_rtc message type
++ * @req_size: size of request buffer to be allocated
++ * @resp_cap: size of response buffer to be allocated
++ *
++ * Initializes the message refcnt to 2. The refcnt will be decremented once in
++ * the virtqueue callback, and once in the thread waiting on the message (on
++ * completion or timeout).
++ *
++ * Context: Process context.
++ * Return: non-NULL on success.
++ */
++static struct viortc_msg *viortc_msg_init(struct viortc_dev *viortc,
++					  u16 msg_type, unsigned int req_size,
++					  unsigned int resp_cap)
 +{
-+	*hw_counter = VIRTIO_RTC_COUNTER_ARM_VCT;
-+	*cs_id = CSID_ARM_ARCH_COUNTER;
++	struct device *dev = &viortc->vdev->dev;
++	struct virtio_rtc_req_head *req_head;
++	struct viortc_msg *msg;
++
++	msg = devm_kzalloc(dev, sizeof(*msg), GFP_KERNEL);
++	if (!msg)
++		return NULL;
++
++	init_completion(&msg->responded);
++
++	msg->req = devm_kzalloc(dev, req_size, GFP_KERNEL);
++	if (!msg->req)
++		goto err_free_msg;
++
++	req_head = msg->req;
++
++	msg->resp = devm_kzalloc(dev, resp_cap, GFP_KERNEL);
++	if (!msg->resp)
++		goto err_free_msg_req;
++
++	msg->viortc = viortc;
++	msg->req_size = req_size;
++	msg->resp_cap = resp_cap;
++
++	refcount_set(&msg->refcnt, 2);
++
++	req_head->msg_type = virtio_cpu_to_le(msg_type, req_head->msg_type);
++
++	return msg;
++
++err_free_msg_req:
++	devm_kfree(dev, msg->req);
++
++err_free_msg:
++	devm_kfree(dev, msg);
++
++	return NULL;
++}
++
++/**
++ * viortc_msg_release() - Decrement message refcnt, potentially free message.
++ * @msg: message requested by driver
++ *
++ * Context: Any context.
++ */
++static void viortc_msg_release(struct viortc_msg *msg)
++{
++	struct device *dev;
++
++	if (refcount_dec_and_test(&msg->refcnt)) {
++		dev = &msg->viortc->vdev->dev;
++
++		devm_kfree(dev, msg->req);
++		devm_kfree(dev, msg->resp);
++		devm_kfree(dev, msg);
++	}
++}
++
++/**
++ * viortc_do_cb() - generic virtqueue callback logic
++ * @vq: virtqueue
++ * @handle_buf: function to process a used buffer
++ *
++ * Context: virtqueue callback, typically interrupt. Takes and releases vq lock.
++ */
++static void viortc_do_cb(struct virtqueue *vq,
++			 void (*handle_buf)(void *token, unsigned int len,
++					    struct virtqueue *vq,
++					    struct viortc_vq *viortc_vq,
++					    struct viortc_dev *viortc))
++{
++	struct viortc_dev *viortc = vq->vdev->priv;
++	struct viortc_vq *viortc_vq;
++	bool cb_enabled = true;
++	unsigned long flags;
++	unsigned int len;
++	void *token;
++
++	viortc_vq = &viortc->vqs[vq->index];
++
++	for (;;) {
++		spin_lock_irqsave(&viortc_vq->lock, flags);
++
++		if (cb_enabled) {
++			virtqueue_disable_cb(vq);
++			cb_enabled = false;
++		}
++
++		token = virtqueue_get_buf(vq, &len);
++		if (!token) {
++			if (virtqueue_enable_cb(vq)) {
++				spin_unlock_irqrestore(&viortc_vq->lock, flags);
++				return;
++			}
++			cb_enabled = true;
++		}
++
++		spin_unlock_irqrestore(&viortc_vq->lock, flags);
++
++		if (token)
++			handle_buf(token, len, vq, viortc_vq, viortc);
++	}
++}
++
++/**
++ * viortc_requestq_hdlr() - process a requestq used buffer
++ * @token: token identifying the buffer
++ * @len: bytes written by device
++ * @vq: virtqueue
++ * @viortc_vq: device specific data for virtqueue
++ * @viortc: device data
++ *
++ * Signals completion for each received message.
++ *
++ * Context: virtqueue callback
++ */
++static void viortc_requestq_hdlr(void *token, unsigned int len,
++				 struct virtqueue *vq,
++				 struct viortc_vq *viortc_vq,
++				 struct viortc_dev *viortc)
++{
++	struct viortc_msg *msg = token;
++
++	msg->resp_actual_size = len;
++
++	complete(&msg->responded);
++	viortc_msg_release(msg);
++}
++
++/**
++ * viortc_cb_requestq() - callback for requestq
++ * @vq: virtqueue
++ *
++ * Context: virtqueue callback
++ */
++static void viortc_cb_requestq(struct virtqueue *vq)
++{
++	viortc_do_cb(vq, viortc_requestq_hdlr);
++}
++
++/**
++ * viortc_get_resp_errno() - converts virtio_rtc errnos to system errnos
++ * @resp_head: message response header
++ *
++ * Return: negative system errno, or 0
++ */
++static int viortc_get_resp_errno(struct virtio_rtc_resp_head *resp_head)
++{
++	switch (virtio_le_to_cpu(resp_head->status)) {
++	case VIRTIO_RTC_S_OK:
++		return 0;
++	case VIRTIO_RTC_S_EOPNOTSUPP:
++		return -EOPNOTSUPP;
++	case VIRTIO_RTC_S_EINVAL:
++		return -EINVAL;
++	case VIRTIO_RTC_S_ENODEV:
++		return -ENODEV;
++	case VIRTIO_RTC_S_EIO:
++	default:
++		return -EIO;
++	}
++}
++
++/**
++ * viortc_msg_xfer() - send message request, wait until message response
++ * @vq: virtqueue
++ * @msg: message with driver request
++ * @timeout_jiffies: message response timeout, 0 for no timeout
++ *
++ * Context: Process context. Takes and releases vq.lock. May sleep.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_msg_xfer(struct viortc_vq *vq, struct viortc_msg *msg,
++			   unsigned long timeout_jiffies)
++{
++	struct scatterlist out_sg[1];
++	struct scatterlist in_sg[1];
++	struct scatterlist *sgs[2];
++	unsigned long flags;
++	long timeout_ret;
++	bool notify;
++	int ret;
++
++	sgs[0] = out_sg;
++	sgs[1] = in_sg;
++
++	sg_init_one(out_sg, msg->req, msg->req_size);
++	sg_init_one(in_sg, msg->resp, msg->resp_cap);
++
++	spin_lock_irqsave(&vq->lock, flags);
++
++	ret = virtqueue_add_sgs(vq->vq, sgs, 1, 1, msg, GFP_ATOMIC);
++	if (ret) {
++		spin_unlock_irqrestore(&vq->lock, flags);
++		/*
++		 * Release in place of the response callback, which will never
++		 * come.
++		 */
++		viortc_msg_release(msg);
++		return ret;
++	}
++
++	notify = virtqueue_kick_prepare(vq->vq);
++
++	spin_unlock_irqrestore(&vq->lock, flags);
++
++	if (notify)
++		virtqueue_notify(vq->vq);
++
++	if (timeout_jiffies) {
++		timeout_ret = wait_for_completion_interruptible_timeout(
++			&msg->responded, timeout_jiffies);
++
++		if (!timeout_ret)
++			return -ETIMEDOUT;
++		else if (timeout_ret < 0)
++			return (int)timeout_ret;
++	} else {
++		ret = wait_for_completion_interruptible(&msg->responded);
++		if (ret)
++			return ret;
++	}
++
++	if (msg->resp_actual_size < sizeof(struct virtio_rtc_resp_head))
++		return -EINVAL;
++
++	ret = 0;
++
++	/*
++	 * There is not yet a case where returning a short message would make
++	 * sense, so consider any deviation an error.
++	 */
++	if (msg->resp_actual_size != msg->resp_cap)
++		ret = -EINVAL;
++
++	/*
++	 * Prioritize returning any device error status.
++	 */
++	return viortc_get_resp_errno(msg->resp) ?: ret;
++}
++
++/*
++ * common message handle macros for messages of different types
++ */
++
++/**
++ * VIORTC_DECLARE_MSG_HDL_ONSTACK() - declare message handle on stack
++ * @hdl: message handle name
++ * @msg_id: message type id
++ * @msg_req: message request type
++ * @msg_resp: message response type
++ */
++#define VIORTC_DECLARE_MSG_HDL_ONSTACK(hdl, msg_id, msg_req, msg_resp)         \
++	struct {                                                               \
++		struct viortc_msg *msg;                                        \
++		msg_req *req;                                                  \
++		msg_resp *resp;                                                \
++		unsigned int req_size;                                         \
++		unsigned int resp_cap;                                         \
++		u16 msg_type;                                                  \
++	} hdl = {                                                              \
++		NULL, NULL, NULL, sizeof(msg_req), sizeof(msg_resp), (msg_id), \
++	}
++
++/**
++ * VIORTC_MSG() - extract message from message handle
++ * @hdl: message handle
++ *
++ * Return: struct viortc_msg
++ */
++#define VIORTC_MSG(hdl) ((hdl).msg)
++
++/**
++ * VIORTC_MSG_INIT() - initialize message handle
++ * @hdl: message handle
++ * @viortc: device data (struct viortc_dev *)
++ *
++ * Context: Process context.
++ * Return: 0 on success, -ENOMEM otherwise.
++ */
++#define VIORTC_MSG_INIT(hdl, viortc)                                         \
++	({                                                                   \
++		typeof(hdl) *_hdl = &(hdl);                                  \
++									     \
++		_hdl->msg = viortc_msg_init((viortc), _hdl->msg_type,        \
++					    _hdl->req_size, _hdl->resp_cap); \
++		if (_hdl->msg) {                                             \
++			_hdl->req = _hdl->msg->req;                          \
++			_hdl->resp = _hdl->msg->resp;                        \
++		}                                                            \
++		_hdl->msg ? 0 : -ENOMEM;                                     \
++	})
++
++/**
++ * VIORTC_MSG_WRITE() - write a request message field
++ * @hdl: message handle
++ * @dest_member: request message field name
++ * @src_ptr: pointer to data of compatible type
++ *
++ * Writes the field in little-endian format.
++ */
++#define VIORTC_MSG_WRITE(hdl, dest_member, src_ptr)                         \
++	do {                                                                \
++		typeof(hdl) _hdl = (hdl);                                   \
++		typeof(src_ptr) _src_ptr = (src_ptr);                       \
++									    \
++		/* Sanity check: must match the member's type */            \
++		typecheck(typeof(_hdl.req->dest_member), *_src_ptr);        \
++									    \
++		_hdl.req->dest_member =                                     \
++			virtio_cpu_to_le(*_src_ptr, _hdl.req->dest_member); \
++	} while (0)
++
++/**
++ * VIORTC_MSG_READ() - read from a response message field
++ * @hdl: message handle
++ * @src_member: response message field name
++ * @dest_ptr: pointer to data of compatible type
++ *
++ * Converts from little-endian format and writes to dest_ptr.
++ */
++#define VIORTC_MSG_READ(hdl, src_member, dest_ptr)                     \
++	do {                                                           \
++		typeof(dest_ptr) _dest_ptr = (dest_ptr);               \
++								       \
++		/* Sanity check: must match the member's type */       \
++		typecheck(typeof((hdl).resp->src_member), *_dest_ptr); \
++								       \
++		*_dest_ptr = virtio_le_to_cpu((hdl).resp->src_member); \
++	} while (0)
++
++/*
++ * read requests
++ */
++
++/** timeout for clock readings, where timeouts are considered non-fatal */
++#define VIORTC_MSG_READ_TIMEOUT secs_to_jiffies(60)
++
++/**
++ * viortc_read() - VIRTIO_RTC_REQ_READ wrapper
++ * @viortc: device data
++ * @vio_clk_id: virtio_rtc clock id
++ * @reading: clock reading [ns]
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++int viortc_read(struct viortc_dev *viortc, u16 vio_clk_id, u64 *reading)
++{
++	VIORTC_DECLARE_MSG_HDL_ONSTACK(hdl, VIRTIO_RTC_REQ_READ,
++				       struct virtio_rtc_req_read,
++				       struct virtio_rtc_resp_read);
++	int ret;
++
++	ret = VIORTC_MSG_INIT(hdl, viortc);
++	if (ret)
++		return ret;
++
++	VIORTC_MSG_WRITE(hdl, clock_id, &vio_clk_id);
++
++	ret = viortc_msg_xfer(&viortc->vqs[VIORTC_REQUESTQ], VIORTC_MSG(hdl),
++			      VIORTC_MSG_READ_TIMEOUT);
++	if (ret) {
++		dev_dbg(&viortc->vdev->dev, "%s: xfer returned %d\n", __func__,
++			ret);
++		goto out_release;
++	}
++
++	VIORTC_MSG_READ(hdl, clock_reading, reading);
++
++out_release:
++	viortc_msg_release(VIORTC_MSG(hdl));
++
++	return ret;
++}
++
++/**
++ * viortc_read_cross() - VIRTIO_RTC_REQ_READ_CROSS wrapper
++ * @viortc: device data
++ * @vio_clk_id: virtio_rtc clock id
++ * @hw_counter: virtio_rtc HW counter type
++ * @reading: clock reading [ns]
++ * @cycles: HW counter cycles during clock reading
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++int viortc_read_cross(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
++		      u64 *reading, u64 *cycles)
++{
++	VIORTC_DECLARE_MSG_HDL_ONSTACK(hdl, VIRTIO_RTC_REQ_READ_CROSS,
++				       struct virtio_rtc_req_read_cross,
++				       struct virtio_rtc_resp_read_cross);
++	int ret;
++
++	ret = VIORTC_MSG_INIT(hdl, viortc);
++	if (ret)
++		return ret;
++
++	VIORTC_MSG_WRITE(hdl, clock_id, &vio_clk_id);
++	VIORTC_MSG_WRITE(hdl, hw_counter, &hw_counter);
++
++	ret = viortc_msg_xfer(&viortc->vqs[VIORTC_REQUESTQ], VIORTC_MSG(hdl),
++			      VIORTC_MSG_READ_TIMEOUT);
++	if (ret) {
++		dev_dbg(&viortc->vdev->dev, "%s: xfer returned %d\n", __func__,
++			ret);
++		goto out_release;
++	}
++
++	VIORTC_MSG_READ(hdl, clock_reading, reading);
++	VIORTC_MSG_READ(hdl, counter_cycles, cycles);
++
++out_release:
++	viortc_msg_release(VIORTC_MSG(hdl));
++
++	return ret;
++}
++
++/*
++ * control requests
++ */
++
++/**
++ * viortc_cfg() - VIRTIO_RTC_REQ_CFG wrapper
++ * @viortc: device data
++ * @num_clocks: # of virtio_rtc clocks
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_cfg(struct viortc_dev *viortc, u16 *num_clocks)
++{
++	VIORTC_DECLARE_MSG_HDL_ONSTACK(hdl, VIRTIO_RTC_REQ_CFG,
++				       struct virtio_rtc_req_cfg,
++				       struct virtio_rtc_resp_cfg);
++	int ret;
++
++	ret = VIORTC_MSG_INIT(hdl, viortc);
++	if (ret)
++		return ret;
++
++	ret = viortc_msg_xfer(&viortc->vqs[VIORTC_REQUESTQ], VIORTC_MSG(hdl),
++			      0);
++	if (ret) {
++		dev_dbg(&viortc->vdev->dev, "%s: xfer returned %d\n", __func__,
++			ret);
++		goto out_release;
++	}
++
++	VIORTC_MSG_READ(hdl, num_clocks, num_clocks);
++
++out_release:
++	viortc_msg_release(VIORTC_MSG(hdl));
++
++	return ret;
++}
++
++/**
++ * viortc_clock_cap() - VIRTIO_RTC_REQ_CLOCK_CAP wrapper
++ * @viortc: device data
++ * @vio_clk_id: virtio_rtc clock id
++ * @type: virtio_rtc clock type
++ * @leap_second_smearing: virtio_rtc smearing variant
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_clock_cap(struct viortc_dev *viortc, u16 vio_clk_id, u8 *type,
++			    u8 *leap_second_smearing)
++{
++	VIORTC_DECLARE_MSG_HDL_ONSTACK(hdl, VIRTIO_RTC_REQ_CLOCK_CAP,
++				       struct virtio_rtc_req_clock_cap,
++				       struct virtio_rtc_resp_clock_cap);
++	int ret;
++
++	ret = VIORTC_MSG_INIT(hdl, viortc);
++	if (ret)
++		return ret;
++
++	VIORTC_MSG_WRITE(hdl, clock_id, &vio_clk_id);
++
++	ret = viortc_msg_xfer(&viortc->vqs[VIORTC_REQUESTQ], VIORTC_MSG(hdl),
++			      0);
++	if (ret) {
++		dev_dbg(&viortc->vdev->dev, "%s: xfer returned %d\n", __func__,
++			ret);
++		goto out_release;
++	}
++
++	VIORTC_MSG_READ(hdl, type, type);
++	VIORTC_MSG_READ(hdl, leap_second_smearing, leap_second_smearing);
++
++out_release:
++	viortc_msg_release(VIORTC_MSG(hdl));
++
++	return ret;
++}
++
++/**
++ * viortc_cross_cap() - VIRTIO_RTC_REQ_CROSS_CAP wrapper
++ * @viortc: device data
++ * @vio_clk_id: virtio_rtc clock id
++ * @hw_counter: virtio_rtc HW counter type
++ * @supported: xtstamping is supported for the vio_clk_id/hw_counter pair
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++int viortc_cross_cap(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
++		     bool *supported)
++{
++	VIORTC_DECLARE_MSG_HDL_ONSTACK(hdl, VIRTIO_RTC_REQ_CROSS_CAP,
++				       struct virtio_rtc_req_cross_cap,
++				       struct virtio_rtc_resp_cross_cap);
++	u8 flags;
++	int ret;
++
++	ret = VIORTC_MSG_INIT(hdl, viortc);
++	if (ret)
++		return ret;
++
++	VIORTC_MSG_WRITE(hdl, clock_id, &vio_clk_id);
++	VIORTC_MSG_WRITE(hdl, hw_counter, &hw_counter);
++
++	ret = viortc_msg_xfer(&viortc->vqs[VIORTC_REQUESTQ], VIORTC_MSG(hdl),
++			      0);
++	if (ret) {
++		dev_dbg(&viortc->vdev->dev, "%s: xfer returned %d\n", __func__,
++			ret);
++		goto out_release;
++	}
++
++	VIORTC_MSG_READ(hdl, flags, &flags);
++	*supported = !!(flags & VIRTIO_RTC_FLAG_CROSS_CAP);
++
++out_release:
++	viortc_msg_release(VIORTC_MSG(hdl));
++
++	return ret;
++}
++
++/*
++ * init, deinit
++ */
++
++/**
++ * viortc_clocks_init() - init local representations of virtio_rtc clocks
++ * @viortc: device data
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_clocks_init(struct viortc_dev *viortc)
++{
++	u16 num_clocks;
++	int ret;
++
++	ret = viortc_cfg(viortc, &num_clocks);
++	if (ret)
++		return ret;
++
++	if (num_clocks < 1) {
++		dev_err(&viortc->vdev->dev, "device reported 0 clocks\n");
++		return -ENODEV;
++	}
++
++	viortc->num_clocks = num_clocks;
++
++	/* In the future, PTP clocks will be initialized here. */
++	(void)viortc_clock_cap;
++
++	return ret;
++}
++
++/**
++ * viortc_init_vqs() - init virtqueues
++ * @viortc: device data
++ *
++ * Inits virtqueues and associated data.
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_init_vqs(struct viortc_dev *viortc)
++{
++	struct virtqueue *vqs[VIORTC_MAX_NR_QUEUES];
++	struct virtqueue_info vqs_info[] = {
++		{ "requestq", viortc_cb_requestq },
++	};
++	struct virtio_device *vdev = viortc->vdev;
++	int nr_queues, ret;
++
++	nr_queues = VIORTC_REQUESTQ + 1;
++
++	ret = virtio_find_vqs(vdev, nr_queues, vqs, vqs_info, NULL);
++	if (ret)
++		return ret;
++
++	viortc->vqs[VIORTC_REQUESTQ].vq = vqs[VIORTC_REQUESTQ];
++	spin_lock_init(&viortc->vqs[VIORTC_REQUESTQ].lock);
 +
 +	return 0;
 +}
++
++/**
++ * viortc_probe() - probe a virtio_rtc virtio device
++ * @vdev: virtio device
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_probe(struct virtio_device *vdev)
++{
++	struct viortc_dev *viortc;
++	int ret;
++
++	viortc = devm_kzalloc(&vdev->dev, sizeof(*viortc), GFP_KERNEL);
++	if (!viortc)
++		return -ENOMEM;
++
++	vdev->priv = viortc;
++	viortc->vdev = vdev;
++
++	ret = viortc_init_vqs(viortc);
++	if (ret)
++		return ret;
++
++	virtio_device_ready(vdev);
++
++	ret = viortc_clocks_init(viortc);
++	if (ret)
++		goto err_reset_vdev;
++
++	return 0;
++
++err_reset_vdev:
++	virtio_reset_device(vdev);
++	vdev->config->del_vqs(vdev);
++
++	return ret;
++}
++
++/**
++ * viortc_remove() - remove a virtio_rtc virtio device
++ * @vdev: virtio device
++ */
++static void viortc_remove(struct virtio_device *vdev)
++{
++	/* In the future, PTP clocks will be deinitialized here. */
++
++	virtio_reset_device(vdev);
++	vdev->config->del_vqs(vdev);
++}
++
++static int viortc_freeze(struct virtio_device *dev)
++{
++	/*
++	 * Do not reset the device, so that the device may still wake up the
++	 * system through an alarmq notification.
++	 */
++
++	return 0;
++}
++
++static int viortc_restore(struct virtio_device *dev)
++{
++	struct viortc_dev *viortc = dev->priv;
++
++	return viortc_init_vqs(viortc);
++}
++
++static struct virtio_device_id id_table[] = {
++	{ VIRTIO_ID_CLOCK, VIRTIO_DEV_ANY_ID },
++	{ 0 },
++};
++MODULE_DEVICE_TABLE(virtio, id_table);
++
++static struct virtio_driver virtio_rtc_drv = {
++	.driver.name = KBUILD_MODNAME,
++	.id_table = id_table,
++	.probe = viortc_probe,
++	.remove = viortc_remove,
++	.freeze = pm_sleep_ptr(viortc_freeze),
++	.restore = pm_sleep_ptr(viortc_restore),
++};
++
++module_virtio_driver(virtio_rtc_drv);
++
++MODULE_DESCRIPTION("Virtio RTC driver");
++MODULE_AUTHOR("Qualcomm Innovation Center, Inc.");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/virtio/virtio_rtc_internal.h b/drivers/virtio/virtio_rtc_internal.h
+new file mode 100644
+index 000000000000..9c249c15b68f
+--- /dev/null
++++ b/drivers/virtio/virtio_rtc_internal.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * virtio_rtc internal interfaces
++ *
++ * Copyright (C) 2022-2023 OpenSynergy GmbH
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#ifndef _VIRTIO_RTC_INTERNAL_H_
++#define _VIRTIO_RTC_INTERNAL_H_
++
++#include <linux/types.h>
++
++/* driver core IFs */
++
++struct viortc_dev;
++
++int viortc_read(struct viortc_dev *viortc, u16 vio_clk_id, u64 *reading);
++int viortc_read_cross(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
++		      u64 *reading, u64 *cycles);
++int viortc_cross_cap(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
++		     bool *supported);
++
++#endif /* _VIRTIO_RTC_INTERNAL_H_ */
+diff --git a/include/uapi/linux/virtio_rtc.h b/include/uapi/linux/virtio_rtc.h
+new file mode 100644
+index 000000000000..6b3af4e9bbfb
+--- /dev/null
++++ b/include/uapi/linux/virtio_rtc.h
+@@ -0,0 +1,151 @@
++/* SPDX-License-Identifier: ((GPL-2.0+ WITH Linux-syscall-note) OR BSD-3-Clause) */
++/*
++ * Copyright (C) 2022-2024 OpenSynergy GmbH
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#ifndef _LINUX_VIRTIO_RTC_H
++#define _LINUX_VIRTIO_RTC_H
++
++#include <linux/types.h>
++
++/* read request message types */
++
++#define VIRTIO_RTC_REQ_READ			0x0001
++#define VIRTIO_RTC_REQ_READ_CROSS		0x0002
++
++/* control request message types */
++
++#define VIRTIO_RTC_REQ_CFG			0x1000
++#define VIRTIO_RTC_REQ_CLOCK_CAP		0x1001
++#define VIRTIO_RTC_REQ_CROSS_CAP		0x1002
++
++/* Message headers */
++
++/** common request header */
++struct virtio_rtc_req_head {
++	__le16 msg_type;
++	__u8 reserved[6];
++};
++
++/** common response header */
++struct virtio_rtc_resp_head {
++#define VIRTIO_RTC_S_OK			0
++#define VIRTIO_RTC_S_EOPNOTSUPP		2
++#define VIRTIO_RTC_S_ENODEV		3
++#define VIRTIO_RTC_S_EINVAL		4
++#define VIRTIO_RTC_S_EIO		5
++	__u8 status;
++	__u8 reserved[7];
++};
++
++/* read requests */
++
++/* VIRTIO_RTC_REQ_READ message */
++
++struct virtio_rtc_req_read {
++	struct virtio_rtc_req_head head;
++	__le16 clock_id;
++	__u8 reserved[6];
++};
++
++struct virtio_rtc_resp_read {
++	struct virtio_rtc_resp_head head;
++	__le64 clock_reading;
++};
++
++/* VIRTIO_RTC_REQ_READ_CROSS message */
++
++struct virtio_rtc_req_read_cross {
++	struct virtio_rtc_req_head head;
++	__le16 clock_id;
++/* Arm Generic Timer Counter-timer Virtual Count Register (CNTVCT_EL0) */
++#define VIRTIO_RTC_COUNTER_ARM_VCT	0
++/* x86 Time-Stamp Counter */
++#define VIRTIO_RTC_COUNTER_X86_TSC	1
++/* Invalid */
++#define VIRTIO_RTC_COUNTER_INVALID	0xFF
++	__u8 hw_counter;
++	__u8 reserved[5];
++};
++
++struct virtio_rtc_resp_read_cross {
++	struct virtio_rtc_resp_head head;
++	__le64 clock_reading;
++	__le64 counter_cycles;
++};
++
++/* control requests */
++
++/* VIRTIO_RTC_REQ_CFG message */
++
++struct virtio_rtc_req_cfg {
++	struct virtio_rtc_req_head head;
++	/* no request params */
++};
++
++struct virtio_rtc_resp_cfg {
++	struct virtio_rtc_resp_head head;
++	/** # of clocks -> clock ids < num_clocks are valid */
++	__le16 num_clocks;
++	__u8 reserved[6];
++};
++
++/* VIRTIO_RTC_REQ_CLOCK_CAP message */
++
++struct virtio_rtc_req_clock_cap {
++	struct virtio_rtc_req_head head;
++	__le16 clock_id;
++	__u8 reserved[6];
++};
++
++struct virtio_rtc_resp_clock_cap {
++	struct virtio_rtc_resp_head head;
++#define VIRTIO_RTC_CLOCK_UTC			0
++#define VIRTIO_RTC_CLOCK_TAI			1
++#define VIRTIO_RTC_CLOCK_MONOTONIC		2
++#define VIRTIO_RTC_CLOCK_UTC_SMEARED		3
++#define VIRTIO_RTC_CLOCK_UTC_MAYBE_SMEARED	4
++	__u8 type;
++#define VIRTIO_RTC_SMEAR_UNSPECIFIED	0
++#define VIRTIO_RTC_SMEAR_NOON_LINEAR	1
++#define VIRTIO_RTC_SMEAR_UTC_SLS	2
++	__u8 leap_second_smearing;
++	__u8 reserved[6];
++};
++
++/* VIRTIO_RTC_REQ_CROSS_CAP message */
++
++struct virtio_rtc_req_cross_cap {
++	struct virtio_rtc_req_head head;
++	__le16 clock_id;
++	__u8 hw_counter;
++	__u8 reserved[5];
++};
++
++struct virtio_rtc_resp_cross_cap {
++	struct virtio_rtc_resp_head head;
++#define VIRTIO_RTC_FLAG_CROSS_CAP	(1 << 0)
++	__u8 flags;
++	__u8 reserved[7];
++};
++
++/** Union of request types for requestq */
++union virtio_rtc_req_requestq {
++	struct virtio_rtc_req_read read;
++	struct virtio_rtc_req_read_cross read_cross;
++	struct virtio_rtc_req_cfg cfg;
++	struct virtio_rtc_req_clock_cap clock_cap;
++	struct virtio_rtc_req_cross_cap cross_cap;
++};
++
++/** Union of response types for requestq */
++union virtio_rtc_resp_requestq {
++	struct virtio_rtc_resp_read read;
++	struct virtio_rtc_resp_read_cross read_cross;
++	struct virtio_rtc_resp_cfg cfg;
++	struct virtio_rtc_resp_clock_cap clock_cap;
++	struct virtio_rtc_resp_cross_cap cross_cap;
++};
++
++#endif /* _LINUX_VIRTIO_RTC_H */
 -- 
 2.43.0
 
