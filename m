@@ -1,205 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E55D1EFFAF;
-	Wed, 19 Feb 2025 14:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33251EDA36;
+	Wed, 19 Feb 2025 14:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739975233; cv=none; b=lNchhz6GlACihDVAkLhJ6OxScdPOjKDSoVGl4kwGwxU0FTBU8MSgz5wkTXLAcuNht5VDcLZstNQV8V3cso2wV+zQd0Ot1z7Ye3oyyywvlItZSIgmk7YVR7mf4eMFhApgJ62u2gIfyLYeTnKNXbGE4bUAbmq4DydOUHjQG9yulT0=
+	t=1739975239; cv=none; b=pHQ9GNi2391n4f05627QzlwM5uTVcRamDEom4S9f3D97ge0TZi8Cln54BwXs+0zbkFi/beCBEHcUUhLzetWrQSn0zB9OYIbMOmTc/1Q6SOpgFycwmrxFDT65ho3DPFYhSqudJqPHBtpVEyaUdZNDpp95bS8w+8eqzqbtLhXJT3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739975233; c=relaxed/simple;
-	bh=vhmxI/qpUsmrpjWohWJgs/TMHfwXta/ulC9P6VHKIyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiQt0lUALPHcKQkTSCGmrcMoi3a8C7SeszpQFY7CobZVytj82YYR/WYXIm1H/lmsfFRgvPet+Vrhd67+Prmebcgjo86/6JMaXSiQc13QovkQHuq4j2SZ4Ap7yqfrGHPhr1riAUjO7gHftqmiccXNegfVkHTLDj6tuk7UaB8K2Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXgnPNuI; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739975239; c=relaxed/simple;
+	bh=0pFWGoZn4Prj7Yo7wgKAH1aCq2wU+y2KNw3p/vWZ0jk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=eQbRDT5Ko6E+PXB9OinTXiifcvEtD3lYwIZVAyYlLvn7iBiP80N22gb57D7KC2ULGMI1zLPu3qjVRmExGYobYXzM+MhK+b67jaCTh/yJgSB+pzthS9Nd8yT4fTtdrX34lrssX/MLfYdJk7ZQx6iEGynVegknbsoLww8FIPzt4cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AfOejkfP; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXgnPNuI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739975232; x=1771511232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vhmxI/qpUsmrpjWohWJgs/TMHfwXta/ulC9P6VHKIyA=;
-  b=PXgnPNuI3Zt8enFDOO6lW3DIwE+Ma37qC2yKch4wE6kvULdyS0RU38HF
-   YW2crhXxV6VvZsKmY9wMydPGG/kuBnr9js9KeNg76anZgzzY4RAMmqIf0
-   w1SHboauqv7Lv9W5eKYF8qXdgqP80uqSIN5Kdp1zZEwm5hDUdvDW0ZCph
-   +fHyozL78MzHM4iFSXZ3DWUFuWOCK6SRNzyNIgauALUfeYYYGxzV2gGBH
-   ypLxWNQ1yM4ykRSqcDjDE6aM8/KwQ9KfVjIs0L9ohmPxAexI5bc2/iZUt
-   E9gSyw2u8MVEN3itNEb+HSYpL77EteB+qgXWIZ2d9WJgITPKpl4g7EnOP
-   A==;
-X-CSE-ConnectionGUID: IXdy6efWSZGse9Jad5BS8w==
-X-CSE-MsgGUID: HCwKoiUcTHqXMHScFXiJ/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="66067582"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="66067582"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 06:26:56 -0800
-X-CSE-ConnectionGUID: 5fTf7ojeRZiQzvfXC1fUTQ==
-X-CSE-MsgGUID: zkUoBl+eRPGI1IYoJeFrYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="145620194"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 06:26:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tkl2H-0000000D2xx-20EC;
-	Wed, 19 Feb 2025 16:26:49 +0200
-Date: Wed, 19 Feb 2025 16:26:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mfd: lm3533: convert to use OF
-Message-ID: <Z7XqKcOUt5niXzpv@smile.fi.intel.com>
-References: <20250218132702.114669-1-clamor95@gmail.com>
- <20250218132702.114669-3-clamor95@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AfOejkfP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3ED624429B;
+	Wed, 19 Feb 2025 14:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739975233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EkMPD/etQhH7KFsqRASd4glbb25QFa2tlMnA5cz7dtI=;
+	b=AfOejkfPWIIkVVS8W7N/WjFh11EKqwCpwvfUvhcCF55VbZgZ+7dyzRVerahYA/U5QKvNfs
+	14b6ciDDvT7hBKzP3DiDkgFYkYytOirMWDUkTGuq+DbMLhUY3MRZHPoP3bJA1XNSKD1wjW
+	8t8dSAltbX1VBysPio9J42dgWNJuSh6bn7Ps7Yyx7asiipVUQt2goxVnpcf1Cdp4L378N3
+	xhxHuXcUx9G6CXd8eiplIkEuQWPr840iwyVF6m4MZPa7E4XaetWFV535aJ9gTLca+/EtiA
+	vBvfP3BS8R+ApQ0LHDv799HcSP6zWqhBEKTNqLobfSTtmzE2LwgFbCuvDyeXeA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218132702.114669-3-clamor95@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 19 Feb 2025 15:27:11 +0100
+Message-Id: <D7WHQQM7K8NI.3JS09W4941HY1@bootlin.com>
+Cc: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Romain Gantois"
+ <romain.gantois@bootlin.com>, "Magnus Damm" <magnus.damm@gmail.com>, "Rob
+ Herring" <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Herve Codina" <herve.codina@bootlin.com>,
+ "Milan Stevanovic" <milan.stevanovic@se.com>, "Jimmy Lalande"
+ <jimmy.lalande@se.com>, "Pascal Eberhard" <pascal.eberhard@se.com>,
+ <linux-renesas-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Gareth Williams"
+ <gareth.williams.jx@renesas.com>, "Wolfram Sang"
+ <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: r9a06g032: add r9a06g032-rzn1d400-eb
+ board device-tree
+From: "Thomas Bonnefille" <thomas.bonnefille@bootlin.com>
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20230209133507.150571-1-clement.leger@bootlin.com>
+ <20230209133507.150571-3-clement.leger@bootlin.com>
+ <CAMuHMdWUorkDYXZvsd-9rjwEkeJYC_FMfexZHaGYHDry=9Yjdg@mail.gmail.com>
+ <20230215092933.2f71ece0@fixe.home> <20230215115441.361aed53@fixe.home>
+ <CAMuHMdVhGFyrWx6oD-K9WhZRtYT_xJ_kWRA+vhdvB_JubFk8YA@mail.gmail.com>
+ <CAMuHMdX4nMA6HSu=UkNEWJWKK432VB5YVQCWn_rDZ6mNSv+41g@mail.gmail.com>
+ <87mshsvqjk.fsf@bootlin.com> <D7S772FNL7ZM.JNEXBJY6PJ44@bootlin.com>
+ <CAMuHMdVAJRhSLYbt27P-AzwHc89+MYKi-3KmkhT=hhXq27UFbQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVAJRhSLYbt27P-AzwHc89+MYKi-3KmkhT=hhXq27UFbQ@mail.gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeigeegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkfevuffhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfvfhhohhmrghsuceuohhnnhgvfhhilhhlvgdfuceothhhohhmrghsrdgsohhnnhgvfhhilhhlvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffekjeefheeuhfehtdeulefhieekteejuddvuddvuefgkeeiheffjeethedtieffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepthhhohhmrghsrdgsohhnnhgvfhhilhhlvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrghgnhhushdruggrmhhmsehgm
+ hgrihhlrdgtohhmpdhrtghpthhtoheprhhosghhodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriiihshiithhofhdrkhhoiihlohifshhkihdoughtsehlihhnrghrohdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomh
+X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-On Tue, Feb 18, 2025 at 03:27:00PM +0200, Svyatoslav Ryhel wrote:
-> Remove platform data and fully relay on OF and device tree
-> parsing and binding devices.
+Hello Geert,
 
-Thanks for following the advice, but the problem with this change as it does
-too much at once. It should be split to a few simpler ones.
-On top of that, this removes MFD participation from the driver but leaves it
-under MFD realm. Moreover, looking briefly at the code it looks like it open
-codes the parts of MFD. The latter needs a very goo justification which commit
-message is missing.
+> On Fri, 14 Feb 2025 at 14:20, Thomas Bonnefille
+> <thomas.bonnefille@bootlin.com> wrote:
+>> >> On Wed, Feb 15, 2023 at 12:31=E2=80=AFPM Geert Uytterhoeven
+>> >> <geert@linux-m68k.org> wrote:
+>> >>> On Wed, Feb 15, 2023 at 11:52 AM Cl=C3=A9ment L=C3=A9ger
+>> >>> <clement.leger@bootlin.com> wrote:
+>> >>> > Le Wed, 15 Feb 2023 09:29:33 +0100,
+>> >>> > Cl=C3=A9ment L=C3=A9ger <clement.leger@bootlin.com> a =C3=A9crit :
+>> >>> > > Le Tue, 14 Feb 2023 17:25:14 +0100,
+>> >>> > > Geert Uytterhoeven <geert@linux-m68k.org> a =C3=A9crit :
+>> >>> > > > On Thu, Feb 9, 2023 at 2:32 PM Cl=C3=A9ment L=C3=A9ger <clemen=
+t.leger@bootlin.com> wrote:
+>> >>> > > > > The EB board (Expansion board) supports both RZ/N1D and RZ-N=
+1S. Since this
+>> >>> > > > > configuration targets only the RZ/N1D, it is named r9a06g032=
+-rzn1d400-eb.
+>> >>> > > > > It adds support for the 2 additional switch ports (port C an=
+d D) that are
+>> >>> > > > > available on that board.
+>> >>> > > > >
+>> >>> > > > > Signed-off-by: Cl=C3=A9ment L=C3=A9ger <clement.leger@bootli=
+n.com>
+>> >>> > > >
+>> >>> > > > Thanks for your patch!
+>> >>> > > >
+>> >>> > > > > --- /dev/null
+>> >>> > > > > +++ b/arch/arm/boot/dts/r9a06g032-rzn1d400-eb.dts
+>> >>>
+>> >>> > > > > +       pinctrl-0 =3D <&pins_eth1>, <&pins_eth2>, <&pins_eth=
+3>, <&pins_eth4>,
+>> >>> > > > > +                   <&pins_mdio1>;
+>> >>> > > > > +
+>> >>> > > > > +       mdio {
+>> >>> > > > > +               /* CN15 and CN16 switches must be configured=
+ in MDIO2 mode */
+>> >>> > > > > +               switch0phy1: ethernet-phy@1 {
+>> >>> > > > > +                       reg =3D <1>;
+>> >>> > > > > +                       marvell,reg-init =3D <3 16 0 0x1010>=
+;
+>> >>> > > >
+>> >>> > > > marvell,reg-init is not documented in any DT bindings document=
+?
+>> >>> > >
+>> >>> > > Indeed, this is not somethiong that should be made available her=
+e. It's
+>> >>> > > only inverting the LED polarity but supported by some internal p=
+atch.
+>> >>> > > I'll remove that.
+>> >>>
+>> >>> > I actually was confused by a property I added in another device-tr=
+ee but
+>> >>> > marvell,reg-init exists, is handled by the marvell phy driver and =
+used
+>> >>> > in a few device-trees. Strangely, it is not documented anywhere. S=
+o I
+>> >>> > can either remove that (and the LED won't work properly) or let it=
+ live
+>> >>> > depending on what you prefer.
+>> >>>
+>> >>> In that case, please keep it.
+>> >>> But the property really should be documented, one day...
+>>
+>> As Cl=C3=A9ment mentioned, this property is used to set up the LEDs for
+>> Marvell PHY. However, Marvell's PHYs have no dedicated bindings; only
+>> their associated switches do. PHY's usually don't have their own yaml,
+>> so there is no easy place where to add this property. We could however
+>> describe them in the numerous switch bindings that embed a Marvell PHY,
+>> which are: Qualcomm ETHQOS, Cadence MACB/GEM, Gianfar, Freescale FEC,
+>> Renesas switches and of course Marvell switches.
+>>
+>> I already thought of doing it in the binding of the renesas switch, like
+>> this :
+>>
+>> Documentation/devicetree/bindings/net/dsa/renesas,rzn1-a5psw.yaml:
+>> ```
+>>
+>> \[...\]
+>>
+>> mdio:
+>> $ref: /schemas/net/mdio.yaml#
+>> patternProperties:
+>> '@\[0-9a-f\]+$':
+>> properties:
+>> marvel,reg-init:
+>> - description: Lorem Ipsum
+>>
+>> unevaluatedProperties: false
+>>
+>> \[...\]
+>>
+>> ```
+>> but it would document it only for this particular switch.
+>> It is also possible to do it in the main mdio.yaml on the model of this:
+>> https://elixir.bootlin.com/linux/v6.13.1/source/Documentation/devicetree=
+/bindings/spi/spi-peripheral-props.yaml#L121
+>>
+>> What's your opinion on this ?
+>
+> Oh, so this is a similar issue as the one preventing us from converting
+> the Micrel PHY bindings to dt-schema[1]?
+>
+> You could still document it in a text binding file:
+> Documentation/devicetree/bindings/net/marvell,phy.txt
+> That cannot be used for validation, but at least people can find the
+> property using git grep...
+>
 
-...
+Ack, I'll do that.
 
-> +static const struct of_device_id lm3533_als_match_table[] = {
-> +	{ .compatible = "ti,lm3533-als" },
-> +	{ },
+However, after the third version this series will no longer be related
+to the marvell,reg-init property. Therefore, I might document it in a
+different series.
 
-No comma for the terminator entry. I think I already pointed that out earlier.
+>> Moreover, everywhere this property is used in the kernel, it is to set
+>> up the LEDs. Nowadays, the Marvell PHY driver should be able to handle
+>> LEDs without this property. Therefore, this property should be
+>> deprecated in this case.
+>
+> So the LED works now on this board without the property?
+> Then the property can be dropped?
 
-> +};
+Yes it does, I "just" have to add an LED as a child node of the phy in
+the device-tree.
+I'll send a third version using this mechanism soon.
+However, I will not be able to test it on the real evaluation board but
+on a proprietary board using the same SoC and PHY. It should not cause
+any problem as I will reproduce exactly what the marvell,reg-init
+property was doing.
 
-...
-
-> +	device_property_read_string(&pdev->dev, "linux,default-trigger",
-> +				    &led->cdev.default_trigger);
-
-One prerequisite patch you probably want is an introduction of
-
-	struct device *dev = &pdev->dev;
-
-in the respective ->probe() implementations. This, in particular, makes the
-above lines shorter and fit one line.
-
-...
-
-> +static const struct of_device_id lm3533_led_match_table[] = {
-> +	{ .compatible = "ti,lm3533-leds" },
-> +	{ },
-
-As per above.
-
-> +};
-
-...
-
-> +		if (!strcmp(comatible, "ti,lm3533-als"))
-> +			lm3533->have_als = 1;
-
-If you end up having this, it's not the best what we can do. OF ID tables have
-a driver_data field exactly for the cases like this.
-
-...
-
-> +		if (!strcmp(comatible, "ti,lm3533-backlight"))
-> +			lm3533->have_backlights = 1;
-
-Ditto.
-
-...
-
-> +		if (!strcmp(comatible, "ti,lm3533-leds"))
-> +			lm3533->have_leds = 1;
-
-Ditto.
-
-...
-
-> +		ret = lm3533_update(bl->lm3533, LM3533_REG_CTRLBANK_AB_BCONF,
-> +				    1 << (2 * id + 1), 1 << (2 * id + 1));
-
-BIT() and better to use a temporary variable for this calculation.
-
-> +		if (ret)
-> +			return ret;
-
-...
-
-> +		ret = lm3533_update(bl->lm3533, LM3533_REG_OUTPUT_CONF1,
-> +				    id | id << 1, BIT(0) | BIT(1));
-
-		mask = GENMASK();
-		..., id ? mask : 0, mask);
-
-> +		if (ret)
-> +			return ret;
-> +	}
-
-...
-
-> +	bd = devm_backlight_device_register(&pdev->dev, pdev->name, pdev->dev.parent,
-> +					    bl, &lm3533_bl_ops, &props);
-
-
-With the advice from above:
-
-	bd = devm_backlight_device_register(dev, pdev->name, dev->parent, bl, &lm3533_bl_ops,
-					    &props);
-
-
->  	if (IS_ERR(bd)) {
->  		dev_err(&pdev->dev, "failed to register backlight device\n");
->  		return PTR_ERR(bd);
-
-Consider another prerequisite patch (which should come before the firstly
-proposed one):
-
-	struct device *dev = &pdev->dev; // yes, this can go in this change
-	...
-
-	if (IS_ERR(bd))
-		return dev_err_probe(dev, PTR_ERR(bd), "failed to register backlight device\n");
-
-...
-
-> +static const struct of_device_id lm3533_bl_match_table[] = {
-> +	{ .compatible = "ti,lm3533-backlight" },
-> +	{ },
-
-As per above.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Thomas
