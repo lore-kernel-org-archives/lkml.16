@@ -1,135 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332171F461F;
-	Wed, 19 Feb 2025 17:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B6C2144C8;
+	Wed, 19 Feb 2025 17:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739986999; cv=none; b=HubQI3/m3yuXBIQe8t6R5SMketIomEgEhoORpDZVaBjh/7/YPVfJrlbmYLJ2O7Ys1i+DHFv2oXrch0gT8Ri6z4VxIm4cZQUsGTQ0zP99CyVoS43Nu+l/SqIBa+qFtU7cuLdR2WuU17TpuQJHtLhTePWZkpE09jtUfXoEpJen7ZE=
+	t=1739987069; cv=none; b=JlM6bwGhXp/SQ44UkSWwUHQ/RqSUWV46dTRhJv5lPU9gs3SMN3j5zq2G8Y9SFRene7pgBTDDFILMwpsp0wucAm+iVJ+lRfSt4Q/BotbuwncbDOSgc06d42lfZBLk+1MMDFUOZ1a8Pbwnems4ozxyEG/syETNTnfRUYJhzeSkBFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739986999; c=relaxed/simple;
-	bh=dVqwsB+tDW/tubytCSFMsupA26ImOk8sdT2JruUEV3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=puNgAGl/tQFCyryRpekTM9mEMxg8m2uDcsNuNmQwXTn/rw0IpzbQgBtpWqLGONLD1LGQmihChOzRDSVwhk1Y8DESE2DbLomg30TcDRyCSbfG22zOVs+3/p0JmiRScDQZA+dTig9LiVa2+/dERkFFm55UBHMvb/t/IyLtUYFKWL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+JeniPh; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739987069; c=relaxed/simple;
+	bh=P9559ZQEN05cSHCNws4blnYdv7eulky3QojL+fa+sSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SeUEHuVtnp0RodkjdvrZCbgNOu4SkGA0CyOuSJjg4R9LycOW491TCwBT2ST4TRHsYCmrJ68PSIzigzfeDCEqZi+CuLIBujx5GQW5DbVKVwhSeKRkLsip2IjwCExdn6zf3pNRP7LpwUNH5s+5KootnyxBwLbULVX8x8qjZR8ULu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMVJe7fp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+JeniPh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739986997; x=1771522997;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dVqwsB+tDW/tubytCSFMsupA26ImOk8sdT2JruUEV3Y=;
-  b=f+JeniPhzzODmwFbCk/ikiCxbnM6XYyWt4LlfomIC+Nky+y87Gz4HVwn
-   T1B3qEvkq1M844TpSYN58qrL7nkeR7kzolsAzpmLCbuz/Y3IF1BDvaoIZ
-   vcvQk+IiA/KD/yNdrU/m8AFiOfbtrDTBuzOU+z3KgSW3C1mB0fKtFZ1Y/
-   PT8URY1Kh77y1b7SHXMcDFmjYpKcZ2HQO5c89NafZ7bPalHN1g4lhcZA5
-   mhHvVHQYmrLzJIVQtq1x2AshDNXfX3HhRU6TqPArLC0/ksdlTOvRvzSJX
-   L88jc/EIQNw/Ax2FJVixlZeXCqtZPKssvk7zHozlj9uyjSc2rJdX65i0H
-   w==;
-X-CSE-ConnectionGUID: RwHKtmJ/Th6wQqd8KZ5aQQ==
-X-CSE-MsgGUID: PT/c6h9CTNOIDSIWLZn0Hw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40997507"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="40997507"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:43:16 -0800
-X-CSE-ConnectionGUID: +OXqpB3PT8iVUOVncg8zuQ==
-X-CSE-MsgGUID: kxVG89nZRHyvI85adQqrZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114614079"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 19 Feb 2025 08:04:04 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tkmXb-00038M-04;
-	Wed, 19 Feb 2025 16:03:29 +0000
-Date: Thu, 20 Feb 2025 00:02:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-leds@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mfd: lm3533: convert to use OF
-Message-ID: <202502192343.twEQ3SSs-lkp@intel.com>
-References: <20250218132702.114669-3-clamor95@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMVJe7fp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59450C4CEEA;
+	Wed, 19 Feb 2025 17:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739987068;
+	bh=P9559ZQEN05cSHCNws4blnYdv7eulky3QojL+fa+sSY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DMVJe7fpqEzub1KPgxZn7wM8lKnowJesFXcu939vXCxxjWNHi/aaSGkjzV2USGA+I
+	 czG8H64YjZoKH52M9tfDkVBuMDmORYpf5usSq2BmX5x97cZfcZJE+pB4+rqgp5Kbys
+	 /zOwTN4d2ColFs79GZ2JjpaM19AiEL/2hUhWAQGA9i9Q9dHU+X4r+Wf0K5cf2J/rZk
+	 m3PQS6GOpT2h6FKx1ZjtZZhD9XIyBmVA+QpsGL8OL6xUHbSdQVLwJnCghE5o+6ds2F
+	 yJfGFafxs0NlQ6fMTrCF3hmeLGduHMgTEZLX+ZzHNDrnd9b6WMzVBjYkX47QukCp81
+	 KGRyOX85z96fA==
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-8559020a76aso1655339f.2;
+        Wed, 19 Feb 2025 09:44:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUL1gtX3Cq/Xtalee5AZ2x1cpAhZrpRcnF9NJZoNmtDevMV2Undrn54Rv8lGbDhvqmEmV6y9gjWAp8547ip8YMhhw==@vger.kernel.org, AJvYcCUW9jmdQjhFwaPY6rHJHitAp3JOh1MvSqjbe9GRvcGVeBtM+tE1d0OY2XWhelUnHgunnn4CE5DsLCVpmG3SBw==@vger.kernel.org, AJvYcCWadrG5YsE/4RfZDmGBiIJ7wl//WdxrQ5Sc9Fw4bTCpvkBUGPvtdfhinUlUZUygQWbQQJYPuSZXaG61Pzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP7CuRlED3WfnDgyCZte5zChJNy7i/blmoOy2o36hP+Q44j7lw
+	4wzFruE/yONQ0OYxn/6Z7iKq5o2YuEB3P6fZ+2YP6xEcCZ64elrEc5I+vAmeSI8Tn9Olj5k4TXl
+	tv/A/EfpUwgmIwKKiwwXL7+du1f4=
+X-Google-Smtp-Source: AGHT+IFqctJDLYt8o9POb825AvbprIhb3/YXU6tj6OURcv7+yyJpYdpSd7sBpONtuh0JXK7WxMebRgB47SmP6H7BRVc=
+X-Received: by 2002:a05:6e02:4604:b0:3d2:b34d:a25b with SMTP id
+ e9e14a558f8ab-3d2b34da6eamr51053525ab.16.1739987067676; Wed, 19 Feb 2025
+ 09:44:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218132702.114669-3-clamor95@gmail.com>
+References: <mb61py0yaz3qq.fsf@kernel.org> <CAPhsuW7dV7UR3PsGVx_DLBH5-95DAmLMGTPuY0NfUwWLZMSTrQ@mail.gmail.com>
+ <20250214080848.5xpi2y2omk4vxyoj@jpoimboe> <CAPhsuW6dxPtgqZaHrZEVhQXwm2+sETreZnGybZXVKYKfG9H6tg@mail.gmail.com>
+ <20250214193400.j4hp45jlufihv5eh@jpoimboe> <CAPhsuW6q+yhn0pGQb0K+RhXHYDkjEgomZ2pu3P_MEeX+xNRe0g@mail.gmail.com>
+ <20250214232342.5m3hveygqb2qafpp@jpoimboe> <CAPhsuW48h11yLuU7uHuPgYNCzwaxVKG+TaGOZeT7fR60+brTwA@mail.gmail.com>
+ <20250218063702.e2qrpjk4ylhnk5s7@jpoimboe> <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
+ <20250218184059.iysrvtaoah6e4bu4@jpoimboe>
+In-Reply-To: <20250218184059.iysrvtaoah6e4bu4@jpoimboe>
+From: Song Liu <song@kernel.org>
+Date: Wed, 19 Feb 2025 09:44:16 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW4pd8gEiRNj920kO8c4JuEWoXT=MhFK-nWvJZ9QseefaQ@mail.gmail.com>
+X-Gm-Features: AWEUYZlbvda0ssoST11NMSiSSWWtT-MfCvr9C6FVMAAFHGp3LqVR7dXcnBcn3yI
+Message-ID: <CAPhsuW4pd8gEiRNj920kO8c4JuEWoXT=MhFK-nWvJZ9QseefaQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>, Weinan Liu <wnliu@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, 
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Svyatoslav,
+On Tue, Feb 18, 2025 at 10:41=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.or=
+g> wrote:
+>
+> On Tue, Feb 18, 2025 at 10:20:10AM -0800, Song Liu wrote:
+> > Hi Josh,
+> >
+> > On Mon, Feb 17, 2025 at 10:37=E2=80=AFPM Josh Poimboeuf <jpoimboe@kerne=
+l.org> wrote:
+> > >
+> > > On Mon, Feb 17, 2025 at 08:38:22PM -0800, Song Liu wrote:
+> > > > On Fri, Feb 14, 2025 at 3:23=E2=80=AFPM Josh Poimboeuf <jpoimboe@ke=
+rnel.org> wrote:
+> > > > > Poking around the arm64 module code, arch/arm64/kernel/module-plt=
+s.c
+> > > > > is looking at all the relocations in order to set up the PLT.  Th=
+at also
+> > > > > needs to be done for klp relas, or are your patches already doing=
+ that?
+> > > >
+> > > > I don't think either version (this set and my RFC) added logic for =
+PLT.
+> > > > There is some rela logic on the kpatch-build side. But I am not sur=
+e
+> > > > whether it is sufficient.
+> > >
+> > > The klp relas looked ok.  I didn't see any signs of kpatch-build doin=
+g
+> > > anything wrong.  AFAICT the problem is that module-plts.c creates PLT
+> > > entries for regular relas but not klp relas.
+> >
+> > In my tests (with printk) module-plts.c processes the .
+> > klp.rela.vmlinux..text.copy_process section just like any other .rela.*
+> > sections. Do we need special handling of the klp.rela.* sections?
+>
+> Ok, I see how it works now:
+>
+> klp_write_section_relocs()
+>         apply_relocate_add()
+>                 module_emit_plt_entry()
+>
+> If that code is working correctly then I'm fresh out of ideas...
 
-kernel test robot noticed the following build errors:
+I tried to dump assembly of copy_process, but couldn't find any
+clue. I am wondering whether this is an issue with gcc-14.2.1.
 
-[auto build test ERROR on lee-mfd/for-mfd-next]
-[also build test ERROR on lee-leds/for-leds-next robh/for-next linus/master v6.14-rc3 next-20250219]
-[cannot apply to lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Puranjay, could you please try with a different gcc, like some
+version of gcc-14?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Svyatoslav-Ryhel/dt-bindings-mfd-Document-TI-LM3533-MFD/20250218-212857
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20250218132702.114669-3-clamor95%40gmail.com
-patch subject: [PATCH v2 2/2] mfd: lm3533: convert to use OF
-config: i386-buildonly-randconfig-003-20250219 (https://download.01.org/0day-ci/archive/20250219/202502192343.twEQ3SSs-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250219/202502192343.twEQ3SSs-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502192343.twEQ3SSs-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/device/driver.h:21,
-                    from include/linux/device.h:32,
-                    from include/linux/iio/iio.h:10,
-                    from drivers/iio/light/lm3533-als.c:15:
->> drivers/iio/light/lm3533-als.c:921:25: error: 'lm3533_match_table' undeclared here (not in a function); did you mean 'lm3533_als_match_table'?
-     921 | MODULE_DEVICE_TABLE(of, lm3533_match_table);
-         |                         ^~~~~~~~~~~~~~~~~~
-   include/linux/module.h:250:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
-     250 | extern typeof(name) __mod_device_table__##type##__##name                \
-         |               ^~~~
-   include/linux/module.h:250:21: error: '__mod_device_table__of__lm3533_match_table' aliased to undefined symbol 'lm3533_match_table'
-     250 | extern typeof(name) __mod_device_table__##type##__##name                \
-         |                     ^~~~~~~~~~~~~~~~~~~~
-   drivers/iio/light/lm3533-als.c:921:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
-     921 | MODULE_DEVICE_TABLE(of, lm3533_match_table);
-         | ^~~~~~~~~~~~~~~~~~~
-
-
-vim +921 drivers/iio/light/lm3533-als.c
-
-   916	
-   917	static const struct of_device_id lm3533_als_match_table[] = {
-   918		{ .compatible = "ti,lm3533-als" },
-   919		{ },
-   920	};
- > 921	MODULE_DEVICE_TABLE(of, lm3533_match_table);
-   922	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Song
