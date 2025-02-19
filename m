@@ -1,200 +1,155 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935911BEF70;
-	Wed, 19 Feb 2025 07:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E9C1BEF85
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739948428; cv=none; b=PgI6AnVcbwDwGgg8o2lsxi2xh0paj2zKdqSoQbIq91BikqC0pZ9em3U0NSW4XkxQ0iMy2SpNNkY+uq8pLzYXcsiToG/ou5dFsAj7KI5LDhrVFlKd8S7DK8PMsEoLmGFs4RvEodherpL0D5mqn9cB1sVr3V9DfogTyUe/V1rlWXE=
+	t=1739948432; cv=none; b=hmAB62LpMipJLS2IfctBA3BcgwI+qqnQDHcOpL5lL5K9b0KFSKm0FvhmYk+0IX1BhVpz/iZBwsAl27ebfExr7nsvQDWMyn6bi8EgSw7YuKSE4FzfPZbFd1sPdoVkfgonwhWC74wS0PJIu9OCwndAouvB4aT0x0qcAzrhS+sSW34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739948428; c=relaxed/simple;
-	bh=EyPRnOEmDMGyro6oEufQ1Ac8HRmfHVqfKm+/uSQeBpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N9KhK3HeGQkP0I9Du7mVIkIwmk9l0A/adhEud7mxEm1jIidPA6c0Uv21pc4m8H6XyysFVt4cGNd+cF1keU/WvIa15ZzqJRsRiC+kVBbg3U0LO5S3CNcMEMa1x4WvX5O2WF89lk4B6/JQU/irIKaMpmY9j5laP1AvEo3VMrny9R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n9nQAapI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739948432; c=relaxed/simple;
+	bh=uL9V65RrvzaO8QKxlRnOlh5JtJT0OS+u+SyoZslI2Y8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cdM+36VgKCceI9z5tmLNlO8C4D0okQ5y8u2fcq/VQDGj1el15Ux+CNRRvorD3POe9UOr5w/yxyJwsVbkLZWXtbx3x/bxtl68MWrMc8itJqNBdgkdKc2dWnzmIh5MIhWNpUj5GMzKg/ZulNpRfaBt2dlDla5AQ0bVbr30LqqQdvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CyL8xfXL; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n9nQAapI"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51J6gZPw020920;
-	Wed, 19 Feb 2025 07:00:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=VSSxu6cd8Y1QoaX22sebDySSx5Ce5oG5XF+7BGDAK
-	+E=; b=n9nQAapIhNPj6rKr4r50DF3Wz/uFCc2kKcELdyPIxzE5LjVhGLFnXomUL
-	+x7R59WsoGvOAnEGQ/m9ZEkXce8Nyq/14pL9U1bdv6HHi1IT3pbAIEKxDjff+i3t
-	66hMiyk6uXpcpxZ/pC3xcN+wdhsm6DpQUCcvfdmQEODxDXUzskPz+pI8Of8V1L0I
-	1k4dn4pj4j+45Sgfk+hboqZXpPFCuYoIMPLxerRxmUx/6IYGHywtiMRNKHJ3sWoC
-	5C/MkkDDPP7kxC7XnZUVyYuONL0DhxhAormh2f02P0M+vBAS+daPz+nol/wdoNQf
-	2HLnd7xUPOyE65ekqSJ77K0MTJ54g==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vyyptd4d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 07:00:17 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51J6tYhj005844;
-	Wed, 19 Feb 2025 07:00:16 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w02xan2n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 07:00:16 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51J70E5i52429082
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Feb 2025 07:00:14 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE85720040;
-	Wed, 19 Feb 2025 07:00:14 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C6D1A2004E;
-	Wed, 19 Feb 2025 07:00:13 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Feb 2025 07:00:13 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1E37A6033C;
-	Wed, 19 Feb 2025 18:00:11 +1100 (AEDT)
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, fbarrat@linux.ibm.com, ukrishn@linux.ibm.com,
-        clombard@linux.ibm.com, vaibhav@linux.ibm.com,
-        martin.petersen@oracle.com
-Subject: [PATCH v3 0/1] Remove cxl driver
-Date: Wed, 19 Feb 2025 18:00:05 +1100
-Message-ID: <20250219070007.177725-1-ajd@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CyL8xfXL"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4399509058dso2059135e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2025 23:00:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739948428; x=1740553228; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=sXqpspg2oyFM2qJRChCX03UIqMSUFVh2w86v8nO3Jzc=;
+        b=CyL8xfXLPnlMpgO+TWZa+ECoOuMbCRbiEkmXNLX1EyalG1MqWNYrqG5pRGsuXHYa2S
+         wzz+8HkN8uQZTjeUXlRTbUfasi6xwFGP41x3uwLOaOFeZBe0UfpMlkmI2geaLVpWqEb4
+         TbCnZTBWky6faPUGKyVy/q3xfqeSWGoXoxim43GBixK6LZySp1mAATIT+5JWvbA+/urC
+         ofJIpMDtg1NkWVoAYjYIzqtON14niDoFjctgIvPUafgV2Gz/vwxDy1yf7h1BDxZoJSlB
+         vhxeJnHO6Vixv9tGOL0P1xcPlr6TP9/TdzTE7hdnxpr57icJdQuU20lL5ErAVr19B0dc
+         3msQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739948428; x=1740553228;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sXqpspg2oyFM2qJRChCX03UIqMSUFVh2w86v8nO3Jzc=;
+        b=nDGjKZpUqAG5nuk8bLq6D4mBbpd0C9xf0VHHkn/P3N67lHi1aWIhNszc0cdBSEjnUu
+         V59mwplWWVLABvgAwhPEwShi7RZQ+FBDOXavnjbBSd12Am/1W/ikyWTvPSOPbliD8/GC
+         Z5L/jfpvZPFn/SRGNDpX+oDFeKOGtEZHDlB5RcUZ6YctSjL7yuNkWukKmewMLKDVQA2C
+         VHOl+mTlKtY9InGpiQAL0cl4dANmYXp0touNEtC6Uf9v+Kb/v+9tGdkPPMVbOdlyzr2j
+         3RuZF/3N4k6VSvvYJccxuzYhaQeOc1kWPJ8Nws8j1Jo2wdp+CfedY7G4vpnlfLWbfW69
+         dNmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUyZ1ylSbuutFugDtxGBOSPg/sZkicTbXU1I6CDhkYVzVAWdA56RVvDmQRk0Gnbmb8MZNREZZ67vAh7rE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuY9Uyo3/yUeA8VGk2QTEpVqYa1+k5vuGrNYEM7GuKKBnfOcfO
+	P4m4BqoQjtVJUhOKaRDbvz80w09ouB7Fw9vipoAOMxPucB4KhBjU09253k0O+Vs=
+X-Gm-Gg: ASbGncsUGZScX2bwk5ASzdezztBoxusDbXpWfAHVYBalxIeGyVB5q+7A77dVEFVTrPe
+	RE+bxoQmh7hhPg543bfe1T8gauFYMEij1LDHih5LobLqkA7t2VERxNGoTkVSx5wld+yHphCzGxf
+	AcMloXeCdx21KcB7jtSIGv5W8FvoWuSL4HviPh+/PVhr6hsAIII3b2hnCMZ5FYA7bCx0cO0IJBq
+	Ca3WP/87uvGtvZjqIxRWTEksHTcGy1LRaPfIuns0OLnm2eaWUyNARuRx2CMhLpCd4u51DJ3EqA/
+	V+GzQqxQVYmY/mLxmT+w9MxLR9N7hSpITTU=
+X-Google-Smtp-Source: AGHT+IE47nw5xYxzEaB3Enx4NCsdF8Nyu4IfJL37yvgW3Oid/E4yN/fP4q4eRoW55FrgGJ3+PEkGCQ==
+X-Received: by 2002:a05:600c:354b:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-4399ec50ea5mr733495e9.7.1739948428448;
+        Tue, 18 Feb 2025 23:00:28 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4398e84efb9sm54460205e9.10.2025.02.18.23.00.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 23:00:27 -0800 (PST)
+Message-ID: <dac33c2d-3bba-4ea6-8a20-12ff9b6ebbb3@linaro.org>
+Date: Wed, 19 Feb 2025 08:00:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Gz0sNBoF71q4pxq9lVYy0b_9lYRbLv1T
-X-Proofpoint-ORIG-GUID: Gz0sNBoF71q4pxq9lVYy0b_9lYRbLv1T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_03,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=619 clxscore=1015
- suspectscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- phishscore=0 spamscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502190053
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] i2c: qup: Vote for interconnect bandwidth to DRAM
+To: Andi Shyti <andi.shyti@kernel.org>,
+ Stephan Gerhold <stephan.gerhold@kernkonzept.com>
+Cc: Wolfram Sang <wsa@kernel.org>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231128-i2c-qup-dvfs-v1-0-59a0e3039111@kernkonzept.com>
+ <20231128-i2c-qup-dvfs-v1-3-59a0e3039111@kernkonzept.com>
+ <5dr5ps4vb57xj2mfelgsxgoyrr3gg4ggwqggqchff6pda3ffsn@thxpg4h6kgel>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <5dr5ps4vb57xj2mfelgsxgoyrr3gg4ggwqggqchff6pda3ffsn@thxpg4h6kgel>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This series removes the cxl for IBM CAPI devices.
+On 19/02/2025 00:02, Andi Shyti wrote:
+> Hi Stephen,
+> 
+> sorry for the very late reply here. Just one question.
+> 
+> ...
+> 
+>> downstream/vendor driver [1]. Due to lack of documentation about the
+>> interconnect setup/behavior I cannot say exactly if this is right.
+>> Unfortunately, this is not implemented very consistently downstream...
+> 
+> Can we have someone from Qualcomm or Linaro taking a peak here?
 
-CAPI devices have been out of production for some time, and we're not
-aware of any remaining users who are likely to want a modern kernel.
-There's almost certainly some remaining driver bugs and we don't have much
-hardware available to properly test the drivers any more. Removing these
-drivers will also mean we can get rid of a non-trivial amount of support
-code in arch/powerpc.
+You replied to some old email, not in my inbox anymore, but your quote
+lacks standard quote-template, like:
 
-Thanks to everyone who's worked on these drivers over the last decade.
+	On 19/02/2025 00:02, Andi Shyti wrote:
 
-This series does not affect the OpenCAPI/ocxl driver, nor does it affect
-Compute Express Link (the other cxl, an amusing but unfortunate naming
-collision).
+so I really don't know when was it sent. For sure more than a month ago,
+maybe more? This has to be resent if you want anything done here.
 
-The previous version of this series also removed the cxlflash driver,
-which has now been merged into the scsi tree as 772ba9b5bd27 ("scsi:
-cxlflash: Remove driver").
-
-This series applies on top of 772ba9b5bd27 and the patch at [0].
-
-[0] https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20250219064807.175107-1-ajd@linux.ibm.com/
-
-v1: https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=436014&state=*
-v2: https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=442572&state=*
-
-v1->v2: rebase and update docs
-v2->v3: rebase on docs changes
-
-Andrew Donnellan (1):
-  cxl: Remove driver
-
- .../ABI/{obsolete => removed}/sysfs-class-cxl |   55 +-
- Documentation/arch/powerpc/cxl.rst            |  470 ----
- Documentation/arch/powerpc/index.rst          |    1 -
- .../userspace-api/ioctl/ioctl-number.rst      |    2 +-
- MAINTAINERS                                   |   12 -
- arch/powerpc/configs/skiroot_defconfig        |    1 -
- arch/powerpc/include/asm/copro.h              |    6 -
- arch/powerpc/include/asm/device.h             |    3 -
- arch/powerpc/include/asm/pnv-pci.h            |   17 -
- arch/powerpc/mm/book3s64/hash_native.c        |   13 +-
- arch/powerpc/mm/book3s64/hash_utils.c         |   10 +-
- arch/powerpc/mm/book3s64/pgtable.c            |    1 -
- arch/powerpc/mm/book3s64/slice.c              |    6 +-
- arch/powerpc/mm/copro_fault.c                 |   12 -
- arch/powerpc/platforms/powernv/Makefile       |    1 -
- arch/powerpc/platforms/powernv/pci-cxl.c      |  153 --
- arch/powerpc/platforms/powernv/pci-ioda.c     |   43 -
- arch/powerpc/platforms/powernv/pci.c          |   61 -
- arch/powerpc/platforms/powernv/pci.h          |    2 -
- drivers/misc/Kconfig                          |    1 -
- drivers/misc/Makefile                         |    1 -
- drivers/misc/cxl/Kconfig                      |   28 -
- drivers/misc/cxl/Makefile                     |   14 -
- drivers/misc/cxl/api.c                        |  532 -----
- drivers/misc/cxl/base.c                       |  126 -
- drivers/misc/cxl/context.c                    |  362 ---
- drivers/misc/cxl/cxl.h                        | 1135 ---------
- drivers/misc/cxl/cxllib.c                     |  271 ---
- drivers/misc/cxl/debugfs.c                    |  134 --
- drivers/misc/cxl/fault.c                      |  341 ---
- drivers/misc/cxl/file.c                       |  699 ------
- drivers/misc/cxl/flash.c                      |  538 -----
- drivers/misc/cxl/guest.c                      | 1208 ----------
- drivers/misc/cxl/hcalls.c                     |  643 -----
- drivers/misc/cxl/hcalls.h                     |  200 --
- drivers/misc/cxl/irq.c                        |  450 ----
- drivers/misc/cxl/main.c                       |  383 ---
- drivers/misc/cxl/native.c                     | 1592 -------------
- drivers/misc/cxl/of.c                         |  346 ---
- drivers/misc/cxl/pci.c                        | 2103 -----------------
- drivers/misc/cxl/sysfs.c                      |  771 ------
- drivers/misc/cxl/trace.c                      |    9 -
- drivers/misc/cxl/trace.h                      |  691 ------
- drivers/misc/cxl/vphb.c                       |  309 ---
- include/misc/cxl-base.h                       |   48 -
- include/misc/cxl.h                            |  265 ---
- include/misc/cxllib.h                         |  129 -
- include/uapi/misc/cxl.h                       |  156 --
- 48 files changed, 42 insertions(+), 14312 deletions(-)
- rename Documentation/ABI/{obsolete => removed}/sysfs-class-cxl (87%)
- delete mode 100644 Documentation/arch/powerpc/cxl.rst
- delete mode 100644 arch/powerpc/platforms/powernv/pci-cxl.c
- delete mode 100644 drivers/misc/cxl/Kconfig
- delete mode 100644 drivers/misc/cxl/Makefile
- delete mode 100644 drivers/misc/cxl/api.c
- delete mode 100644 drivers/misc/cxl/base.c
- delete mode 100644 drivers/misc/cxl/context.c
- delete mode 100644 drivers/misc/cxl/cxl.h
- delete mode 100644 drivers/misc/cxl/cxllib.c
- delete mode 100644 drivers/misc/cxl/debugfs.c
- delete mode 100644 drivers/misc/cxl/fault.c
- delete mode 100644 drivers/misc/cxl/file.c
- delete mode 100644 drivers/misc/cxl/flash.c
- delete mode 100644 drivers/misc/cxl/guest.c
- delete mode 100644 drivers/misc/cxl/hcalls.c
- delete mode 100644 drivers/misc/cxl/hcalls.h
- delete mode 100644 drivers/misc/cxl/irq.c
- delete mode 100644 drivers/misc/cxl/main.c
- delete mode 100644 drivers/misc/cxl/native.c
- delete mode 100644 drivers/misc/cxl/of.c
- delete mode 100644 drivers/misc/cxl/pci.c
- delete mode 100644 drivers/misc/cxl/sysfs.c
- delete mode 100644 drivers/misc/cxl/trace.c
- delete mode 100644 drivers/misc/cxl/trace.h
- delete mode 100644 drivers/misc/cxl/vphb.c
- delete mode 100644 include/misc/cxl-base.h
- delete mode 100644 include/misc/cxl.h
- delete mode 100644 include/misc/cxllib.h
- delete mode 100644 include/uapi/misc/cxl.h
-
--- 
-2.48.1
+Best regards,
+Krzysztof
