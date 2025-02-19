@@ -1,140 +1,94 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4527184F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 19:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904D1184F;
+	Wed, 19 Feb 2025 19:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739993917; cv=none; b=QRshIrVfW/sx1ZKYlhi7zmhNqklMwSy3KIJsCtvlBjYu8k8ZUmd7IqdW75LzxZK4VgwhVnZgIyEIqTQBRVpNU0HOpE18/Casuy9+uRGQDeMJJ55MrOjkMhxwCLXKgQj3YFDGsAicej2goh+DYi6zV1IQV2ntjn8y+/eKezWA+xE=
+	t=1739994048; cv=none; b=FgNLmo069tdvD8646EMzIxE3ma1/qUpSQMfDzVbkUEo64ys5hAg04zML3WY15P4h1c8Xp7KQf852oxlgobz740Wi5DY5DwTFCBbSEYPEFRw2oPUQqB+y/Vw+4DDpr6FKB+8rNrm7OPVfXGxBgzxntCt5sTfiwkRSieHs4Qh4mUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739993917; c=relaxed/simple;
-	bh=sFzz87xmpa4DBWmRLEaYsXO+yEKSQPufKsStfayypuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ULPog5kABBS+SG0qdIu0jyQRoe9F6//HEEJribaWrZk9pM2Q+XwN8Geiuwz77FwZ3z98fLwtSDV2DYci5XEtucEgmaxhlAXH6qgcz67w7k7KPScShpU5ChbsCxovGcwfaMPaKKMurCtuYVPsvwAL2zk2GgS6ptrGjSnwJO7xJoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lh55lzyr; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739994048; c=relaxed/simple;
+	bh=IZvZQ+Z2ANgypM5Ai42o0D3/NeLsJT0qXFUyLp8/kH4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Pgv8KC8VucHzqIr5RU3VmxC9LVMX8DTLpeVwENd7DUslcqSMCntA779RV/N4mZD7JrNLB05ma+Z9sXuqIsg442YOt6YN5+Jw5hW/wDjmADdOifIjh32r2LKpMlkF+d5+IZOO47KmhdmOKgAFoaNiXNnsMUokbRpsKJ0bcezBdgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=znhrNoNg; arc=none smtp.client-ip=168.119.26.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lh55lzyr"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4399ca9d338so697685e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:38:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739993914; x=1740598714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JfZKZmH5FYTebhsLF0b17MePHU4Jur+WAQAG/XZ3ZWY=;
-        b=lh55lzyrQJLtCiHXxW1XYzVZT6YAdAAzRcwmS4AjuSWtEupC+y2s4a4NojPCqwzcSi
-         xCzLDfB/MJnxvmecWHD7gZ8rL1wak1m3a6cQPebUT7AFNf8H68gclGmwqLTgSYyo4p3E
-         ozDSawdEdpUnjK6upYVimrBXKQcujENiKunL82aTEStaFJyqa9WekSf575MST2pnYy1i
-         HmjTGqbtkjd3l1oeb48dIOyn/IsZW9pnhDxZD35lFS82bk3DTUoNAD3YCbonNo9HNdSX
-         iwH6/iMAY1qaUgZqlT67k7iF/VWWvfg9Wdy8pt+GKBkhI9+aotU1F4tQQFnacSLshEO9
-         s4Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739993914; x=1740598714;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JfZKZmH5FYTebhsLF0b17MePHU4Jur+WAQAG/XZ3ZWY=;
-        b=bQgVer0m64fkH5v9EP47xplhbc/WIWdMYtuS41qaiEaEU/ijBWUAxl5VD2VdKlM/c+
-         getnheDegH7dxSSRhZ+NAYvnXNy93CbnAClQnh61h/CxoqDmmxi36PfdLj+ZXjdeejmq
-         sES3tzGm2L/h8XJzuwqdWBi/VZoTOA1XK/cxzCztQ5z+fvgKqwTf944iJhNhkjvnugiL
-         2+LJH1ywy1So/8IL+5UXQfxW8a1Fx65Y5tmqY0jK+g9Bstb0OxXJtl6a0JkkhjGxGQw6
-         4LM1bgNR6mbikUSW15iwebNK55w4f6LhF5brhEKpwhJimRAedtlcVs6QbAJ4MO5hHMlV
-         IYaw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2hEgq2K2nAnceVC6lZBDPfTTmtu3rzG9zvOCetcO4GeJgN7NvOi1SY8/NcF778Zi1e+hNgS6zZKyuJ84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8mWcRiki0ORPWTSxxg91I0fybFUUpSB+t/QUZErS0Q2zCAF6k
-	jRXcSBK5goUUEhn1B3KoQJuQ2b7dUNXnupUJ6A2m01d8cypGbeFP
-X-Gm-Gg: ASbGncsZEmTdh9UQRAYjWqWYm1DWenDna410vxQP5hR6gKIhifH1dB/E+bXktyB96J0
-	Ci6W8XIkZOYXju6d2Sp+hwd42xkGoC+rPg0kcyTPSWWv9elMpy+DGykFI2+sFxK4rb0b0hUZZyR
-	M5h0YklRlSFbn/YDRprETJMdO9OVgJ2fr6bZpYz4D+SDgq15hA4JhWFpnQdTiKRvaCb9PSRb4TO
-	Xn4lTXIda05Ml9rhw24roGhIIwf63dvApoJon4KZeseoxkLv0lsl+EKbN8EoVB6L5XTereL3BND
-	iSp5pXzPFTOgUs+mFQfkj6e6Lfjaa8NOeQ51n/MBGdd1dbRJHSgDcQ==
-X-Google-Smtp-Source: AGHT+IGQ/AW4cri/ewPhu7V0AiejxybGKG+K4nwQWsbfvSJgMa2uzX3mMG75uQXSaEjRg1/F71XNlw==
-X-Received: by 2002:a05:600c:19cc:b0:439:9a28:9e8d with SMTP id 5b1f17b1804b1-4399a28a067mr46334905e9.12.1739993914036;
-        Wed, 19 Feb 2025 11:38:34 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f8273sm18242939f8f.89.2025.02.19.11.38.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 11:38:33 -0800 (PST)
-Date: Wed, 19 Feb 2025 19:38:32 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel
- <linux-kernel@vger.kernel.org>, Benjamin Segall <bsegall@google.com>, Eric
- Dumazet <eric.dumazet@gmail.com>
-Subject: Re: [PATCH V2 4/4] posix-timers: Use RCU in posix_timer_add()
-Message-ID: <20250219193832.6c3fa40f@pumpkin>
-In-Reply-To: <20250219125522.2535263-5-edumazet@google.com>
-References: <20250219125522.2535263-1-edumazet@google.com>
-	<20250219125522.2535263-5-edumazet@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="znhrNoNg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
+	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=uE1hvjxXsUUC1et/VMLf8EeRBWH8/5FEEmjbMg7Vyu0=; b=znhrNoNg1jDWT+rZCye1OrEbRx
+	0pK4ORsezD6ZZI0kEsrUVLnU6Nx0x8S2UJ1UbY6pnDID5AlvQe1b8CG6EwezIt/o3eEXl0jl/IfYL
+	cy/U8xZrKX6LqsFnPRE2/jtOZluTSUT8AAVceZq74UIt14nOJlvlCNZ7unA+pQwZAzB6ojwewx5CY
+	PqnALiqnk25KM0q0xudc6bxFSUwLVuBnAdFM60aFGc4TCaPnNMb73oUD/TFkK5PaPNs6eHmGN3Wl0
+	jF8oWQ78Dgl877QN45H4KhVuaPCxNxsHXaLuXXBhn6uuktsd4Ya7Wh5+CKTBOct8rRmtbBvAsrBtv
+	BjblUO8Q==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <git@apitzsch.eu>)
+	id 1tkpVW-000Geo-2e;
+	Wed, 19 Feb 2025 20:13:18 +0100
+Received: from [92.206.120.88] (helo=framework.lan)
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <git@apitzsch.eu>)
+	id 1tkpVV-000N4n-0Z;
+	Wed, 19 Feb 2025 20:13:17 +0100
+Message-ID: <426de13199c560301ed0a148d9ecd0155dfcff0f.camel@apitzsch.eu>
+Subject: Re: [PATCH next] media: i2c: imx214: Fix uninitialized variable in
+ imx214_set_ctrl()
+From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Ricardo Ribalda <ribalda@kernel.org>, Sakari Ailus	
+ <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+  Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	kernel-janitors@vger.kernel.org
+Date: Wed, 19 Feb 2025 20:13:15 +0100
+In-Reply-To: <1e4da85e-b975-4638-bd14-09ba0675d9d6@stanley.mountain>
+References: <1e4da85e-b975-4638-bd14-09ba0675d9d6@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: andre@apitzsch.eu
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27554/Wed Feb 19 10:50:24 2025)
 
-On Wed, 19 Feb 2025 12:55:22 +0000
-Eric Dumazet <edumazet@google.com> wrote:
-
-> If many posix timers are hashed in posix_timers_hashtable,
-> hash_lock can be held for long durations.
-> 
-> This can be really bad in some cases as Thomas
-> explained in https://lore.kernel.org/all/87ednpyyeo.ffs@tglx/
-> 
-> We can perform all searches under RCU, then acquire
-> the lock only when there is a good chance to need it,
-> and after cpu caches were populated.
-> 
-> Also add a cond_resched() in the possible long loop.
-
-Since this code fragment has a 'free choice' of the timer id, why not
-select an empty table slot and then pick a value that maps to it?
-
-You can run a free-list through the empty table slots so the allocate
-is (almost always) fixed cost and trivial.
-The only complexity arises when the table is full and needs to be
-reallocated twice as large.
-
-The high bits of the 'id' can be incremented every time the id is allocated
-so stale ids can be detected (until a quite large number of allocate/free).
-
-	David
-
-> 
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
+Am Dienstag, dem 18.02.2025 um 16:05 +0300 schrieb Dan Carpenter:
+> You can't pass uninitialized "ret" variables to cci_write().=C2=A0 It has
+> to start as zero.
+>=20
+> Fixes: 4f0aeba4f155 ("media: i2c: imx214: Convert to CCI register
+> access helpers")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  kernel/time/posix-timers.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-> index ed27c7eab456..bd73bc4707c1 100644
-> --- a/kernel/time/posix-timers.c
-> +++ b/kernel/time/posix-timers.c
-> @@ -125,7 +125,19 @@ static int posix_timer_add(struct k_itimer *timer)
->  
->  		head = &posix_timers_hashtable[hash(sig, id)];
->  
-> +		rcu_read_lock();
-> +		if (posix_timers_find(head, sig, id)) {
-> +			rcu_read_unlock();
-> +			cond_resched();
-> +			continue;
-> +		}
-> +		rcu_read_unlock();
->  		spin_lock(&hash_lock);
-> +		/*
-> +		 * We must perform the lookup under hash_lock protection
-> +		 * because another thread could have used the same id.
-> +		 * This is very unlikely, but possible.
-> +		 */
->  		if (!posix_timers_find(head, sig, id)) {
->  			timer->it_id = (timer_t)id;
->  			timer->it_signal = (struct signal_struct *)((unsigned long)sig | 1UL);
+> =C2=A0drivers/media/i2c/imx214.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> index 6c3f6f3c8b1f..68775ee8256e 100644
+> --- a/drivers/media/i2c/imx214.c
+> +++ b/drivers/media/i2c/imx214.c
+> @@ -795,7 +795,7 @@ static int imx214_set_ctrl(struct v4l2_ctrl
+> *ctrl)
+> =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0 struct imx214, ctrls);
+> =C2=A0	const struct v4l2_mbus_framefmt *format =3D NULL;
+> =C2=A0	struct v4l2_subdev_state *state;
+> -	int ret;
+> +	int ret =3D 0;
+> =C2=A0
+> =C2=A0	if (ctrl->id =3D=3D V4L2_CID_VBLANK) {
+> =C2=A0		int exposure_max, exposure_def;
 
+Thanks.
+
+Reviewed-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
