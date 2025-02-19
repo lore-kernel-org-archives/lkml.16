@@ -1,49 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF71B8F49;
-	Wed, 19 Feb 2025 20:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E194C24CED5;
+	Wed, 19 Feb 2025 20:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739998186; cv=none; b=sJa4v9XbXgSclRNGZ0CtRxquTDI4nd7vBaSj0G4mL3qrAfxTCVzE3JQ5xypBFVdczXtTdpq1CFKRrNgEbc8+Iq5oENDBpcMdEHECReftGo76bI7ups8WtAUMshHBS/x+irmEHWCGsWvEIACMt5+HEWmJMkUoXXhVaQ1pby/4bXQ=
+	t=1739998215; cv=none; b=d8H08NEy1FVNFs0kOe8kSDjio+fXZBmGVV6knn7LQS2USVTj9sXBvOyupU+UJVDuMIufDv3NwoYlDNnwCToSTBg+2abCDPGaWVSBopDG+LoV1089xX09Z6u7Q6O5Dqy0HKAhK1lrxPDNrQj/ZyHbE+R0Td2Df3q8CpF6yXmbibM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739998186; c=relaxed/simple;
-	bh=s03rz4axHKo31FDUMPilzZ69yl0nJqBHhKpgGNSRcUc=;
+	s=arc-20240116; t=1739998215; c=relaxed/simple;
+	bh=ZLyFZBzqrsgnKcvrGUwR8JD9fWxbGDJy+LYm8X4cAi8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KAO2IgTS348VNBN/7qCDRdTEciF5xLDWtM0EedTaYngi4vR/mK0nheUP1fh82TJxG2ZIPE2LHxRQQfFgZfD14RTI0KEqPIHtq60Pd3dpI1JtQRb3IciWu5tusk/RS2/7pDmjsSSaB8i5wdfd+UBg3722sZaJH3eP1BaLrewylD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRnSPk1J; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqtA13ZWL1UNZ1Bi4uM+Rpi0Cb5zJLoGgeA1SvwJ4pTzJsFQF+n0X/a834l5bY3LgoaQV8VVXO6rP75fktLgQ1RRla5Qxh1crIYFkn6asQbeySLwbzBInbbGmOOAd+8YX5c6BXlAC76uQpCZzoJLVUnkkxRN0r5Y8wnYNHlE5CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OuA3um8a; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRnSPk1J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CA3C4CED1;
-	Wed, 19 Feb 2025 20:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739998185;
-	bh=s03rz4axHKo31FDUMPilzZ69yl0nJqBHhKpgGNSRcUc=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OuA3um8a"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9445D40E0202;
+	Wed, 19 Feb 2025 20:50:11 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id D-KgR2PAqKU0; Wed, 19 Feb 2025 20:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739998206; bh=VsMO0GXil4Y39VGyYS3yPNRKTq+vkTy7NUC6d/1AgqI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RRnSPk1JTB1a3lwbp7n18QYjnuDJeirTNXlbWXNFx1toinRxRZp9Lph6PQ0MnketA
-	 VV63wu2RM7/yjPhpoNnU7R4cqJ3BaUQOXeh5z2d2AJunVHwQ09STFdylmvB/guVGb2
-	 wjKs9x31Tn56vq8OV3+eGtt2BA0850sloIgqSqWQvz7GEPCGi/XjS+7ZUixbChIUDj
-	 8f2bJQ6aZxIH1b+g+TX8l+cRpbPVZm2CzBirQ/NUlPWDnrotvnYdu4dH/KhFkKUjgL
-	 KqvM+zmnK9MLxP7wK/bS8NXB2GqPRh3gPfj3DdloYhUP/5vFoBSwiTD4q4wJMcUuvR
-	 a5J9LJyYitJ5A==
-Date: Wed, 19 Feb 2025 12:49:42 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf parse-events: Tidy name token matching
-Message-ID: <Z7ZD5phOOCbKggrn@google.com>
-References: <20250109175401.161340-1-irogers@google.com>
- <CAP-5=fWghT8+pBFVxn9JDbqHU9NPy9mgyT8Ee=pTdkCKxRoJgA@mail.gmail.com>
- <CAP-5=fWZAk7XqtL+=CanefkuFxhDsJ22+-uHkrxXi4g8123oew@mail.gmail.com>
+	b=OuA3um8aGktrJ32KgcNJizRtEgCUunE+Gmrari3ssYwlFLPY/NuNsg8hsyP+eQ7Rf
+	 mkta1lEX8k2ThRL9bF6sjiro1J8rpqOpV9Q/DrU4K88okgGBpId1SYN+DZSPPuqZqk
+	 lYvsE2zZ4YqhXctYCS4VPTNQ3N4SjRtWH9VzQ+qIGBenTIvMSm9iyQ8fkRoCt61YaD
+	 JR+ebQkmUi1iUA4IR4DheIl06djzfI2623hNtFYEmKmkGDNRgMg0kDJEiAMnoPOQWc
+	 Y9IL5K0PCAIQzJfNVYttfXRPtEBRIe6WdxiozGYQrtZl1NTdhtviOedDv4tUkmQC/D
+	 Ei0LQoNIJq6FdtMcxNka8dxHeqBV9+dORJ2ee+vYFPqJi6zotxhkQ5eKpQ6kI0rOYn
+	 8zPPdrVMnJ86svwMWX1fSljG8bNZJ76Fedw7NO4mkZcoL4fglzxtkGxW9HU9cai3gD
+	 vmGTPjBHcOhrjg21Rd6tUlb1UUmgTrxN6j2t9pkjj4VPFcOAtkli8475l86oufjWhb
+	 C/pyDq4Pp5xcT4G9qJja+R3fGl423SPj6j2IQYH23jmNuIn8hzL7S3+Ft1gEbIkOP6
+	 BeS6UKU9n83RonNjFfFOPCmVCl+qjVQenS8aY5EHILsa6KN4cql99ojVsC9lgKbo20
+	 C+XiLETYHCTntRzas46ZWMeo=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8B87040E0191;
+	Wed, 19 Feb 2025 20:49:50 +0000 (UTC)
+Date: Wed, 19 Feb 2025 21:49:45 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ruidong Tian <tianruidong@linux.alibaba.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, lpieralisi@kernel.org,
+	guohanjun@huawei.com, sudeep.holla@arm.com,
+	xueshuai@linux.alibaba.com, baolin.wang@linux.alibaba.com,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, rafael@kernel.org,
+	lenb@kernel.org, tony.luck@intel.com, yazen.ghannam@amd.com,
+	Tyler Baicar <baicar@os.amperecomputing.com>
+Subject: Re: [PATCH v3 1/5] ACPI/RAS/AEST: Initial AEST driver
+Message-ID: <20250219204945.GRZ7ZD6a4tEBboxYrH@fat_crate.local>
+References: <20250115084228.107573-1-tianruidong@linux.alibaba.com>
+ <20250115084228.107573-2-tianruidong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,49 +67,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWZAk7XqtL+=CanefkuFxhDsJ22+-uHkrxXi4g8123oew@mail.gmail.com>
+In-Reply-To: <20250115084228.107573-2-tianruidong@linux.alibaba.com>
 
-Hi Ian,
+Just some cursory review...
 
-On Wed, Feb 19, 2025 at 11:02:40AM -0800, Ian Rogers wrote:
-> On Mon, Feb 10, 2025 at 11:23 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Thu, Jan 9, 2025 at 9:54 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > Prior to commit 70c90e4a6b2f ("perf parse-events: Avoid scanning PMUs
-> > > before parsing") names (generally event names) excluded hyphen (minus)
-> > > symbols as the formation of legacy names with hyphens was handled in
-> > > the yacc code. That commit allowed hyphens supposedly making
-> > > name_minus unnecessary. However, changing name_minus to name has
-> > > issues in the term config tokens as then name ends up having priority
-> > > over numbers and name allows matching numbers since commit
-> > > 5ceb57990bf4 ("perf parse: Allow tracepoint names to start with digits
-> > > "). It is also permissable for a name to match with a colon (':') in
-> > > it when its in a config term list. To address this rename name_minus
-> > > to term_name, make the pattern match name's except for the colon, add
-> > > number matching into the config term region with a higher priority
-> > > than name matching. This addresses an inconsistency and allows greater
-> > > matching for names inside of term lists, for example, they may start
-> > > with a number.
-> > >
-> > > Rename name_tag to quoted_name and update comments and helper
-> > > functions to avoid str detecting quoted strings which was already done
-> > > by the lexer.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > Ping. This patch addresses name parsing inconsistencies, in particular
-> > events may start with a number without a PMU, but not with. It also
-> > aims to give better names to patterns than name_minus and name_tag
-> > (with term_name and quoted_name respectively) that have drifted from
-> > their original meaning and become to me less than intention revealing.
+On Wed, Jan 15, 2025 at 04:42:24PM +0800, Ruidong Tian wrote:
+> Add support for parsing the ARM Error Source Table and basic handling of
+> errors reported through both memory mapped and system register interfaces.
 > 
-> Ping.
+> Assume system register interfaces are only registered with private
+> peripheral interrupts (PPIs); otherwise there is no guarantee the
+> core handling the error is the core which took the error and has the
+> syndrome info in its system registers.
+> 
+> In kernel-first mode, all configuration is controlled by kernel, include
+> CE ce_threshold and interrupt enable/disable.
+> 
+> All detected errors will be processed as follow:
+>   - CE, DE: use a workqueue to log this hare errors.
+>   - UER, UEO: log it and call memory_failun workquee.
+>   - UC, UEU: panic in irq context.
 
-Sorry for the delay.  Can you please give an example for better
-understanding if there's a change in the behavior?
 
-Thanks,
-Namhyung
+Use a spellchecker for all your text.
 
+In addition, use AI to check your English formulations.
+
+> Signed-off-by: Tyler Baicar <baicar@os.amperecomputing.com>
+> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+
+Who's the author: Tyler or you?
+
+That's denoted with the From: field.
+
+Make sure you go over Documentation/process/submitting-patches.rst for basic
+mistakes.
+
+> ---
+>  MAINTAINERS                  |  10 +
+>  arch/arm64/include/asm/ras.h |  95 ++++
+>  drivers/acpi/arm64/Kconfig   |  11 +
+>  drivers/acpi/arm64/Makefile  |   1 +
+>  drivers/acpi/arm64/aest.c    | 335 ++++++++++++
+>  drivers/acpi/arm64/init.c    |   2 +
+>  drivers/acpi/arm64/init.h    |   1 +
+>  drivers/ras/Kconfig          |   1 +
+>  drivers/ras/Makefile         |   1 +
+>  drivers/ras/aest/Kconfig     |  17 +
+>  drivers/ras/aest/Makefile    |   5 +
+>  drivers/ras/aest/aest-core.c | 976 +++++++++++++++++++++++++++++++++++
+>  drivers/ras/aest/aest.h      | 323 ++++++++++++
+>  include/linux/acpi_aest.h    |  68 +++
+>  include/linux/cpuhotplug.h   |   1 +
+>  include/linux/ras.h          |   8 +
+>  16 files changed, 1855 insertions(+)
+
+This patch is huuge and unreviewable: split it.
+
+Also, I see issues like:
+
+check_for_todos: WARNING: drivers/ras/aest/aest-core.c:207: Hunk contains unfinished TODO:
++               /* TODO: translate Logical Addresses to System Physical Addresses */
+
+
+check_for_todos: WARNING: drivers/ras/aest/aest-core.c:446: Hunk contains unfinished TODO:
++       //TODO: Support 32B CEC threshold.
+
+A TODO tells me that patch is not ready for upstream.
+
+Also, get rid of all // comments in drivers/ras/ and use normal /* style.
+
+Enough for now.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
