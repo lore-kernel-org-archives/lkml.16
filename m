@@ -1,43 +1,31 @@
-Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661011C5D4D;
-	Wed, 19 Feb 2025 12:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739968121; cv=pass; b=tyFwjhUZWxAZECdxwVyakqHiXte+s4FInsgUNH2Lfm3Nh2RHH1INbF5IKayCGdTG8viZGspLmbLp2NMumAEumTD5HuYf7EvehFOxTfjnpEJn89cUQMdxVAviQyU7qoFmLNR/85j0IkQKwjalZC+YD7Ob0uXFwGiI2WqpdR6nfQI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739968121; c=relaxed/simple;
-	bh=dvj8qG75FkUp1jBuCA8jXNa1JtN7/smeUcFRA68hJ2k=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hRhEwzyjqrzykn6NvdEDpbnvbw85aKAcBTAEYXxyh+OkQ/KMGplmdWRibt2FyZyjgW/tAaHRwfvZ8hf/aDJy74X3s+ieS942/4uO0aSGR4O7D2aFl1zp83QLbFKxPsj/Qglp37sxHLkGuZAUgNVpn1Aj8SSSrMtAlMTQmhIgxG0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b=YmQwLOKG; arc=pass smtp.client-ip=136.143.188.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b="YmQwLOKG"
-ARC-Seal: i=1; a=rsa-sha256; t=1739968099; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=DwOm7E10jY6hnTNzCCj1JkCNeNmp5cnR4tsrNDv568EeiQsvOI/fwVWP12qAlSLNDuRdiPxHEtDk3H6B6MW/ilzNiWRmQIGhFujoZTZT55mLXNp02XahOi4c8BK6iWdE2E4xuWtSjAvW8o8mE+M1YkU/q2d6HsYQ4Ax2ECJLDmw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739968099; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ErJtYKOge+GvQHMf4JHdyvPeqtIfe3Bc9K5kgIMMY60=; 
-	b=dQEYNF8Q1JVEneqIpP27h2QC5ssWSgcbr4h5714G6T8NGejgkDF57eGhlBLXW1k788ivzYkWx0UbNwoTRhHNsmIVKhUiBlCcwy0YyUJF3hwwLsHpvBXqhCw/ywI8ZSWPtQzJeoMKOQviz+B9jsflr3dXyudkmBRre/BLHM8ShXo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=kingxukai@zohomail.com;
-	dmarc=pass header.from=<kingxukai@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739968099;
-	s=zm2022; d=zohomail.com; i=kingxukai@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:From:From:Subject:Subject:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=ErJtYKOge+GvQHMf4JHdyvPeqtIfe3Bc9K5kgIMMY60=;
-	b=YmQwLOKGu4rY5j4baZqxOl0lYivbcDkBNS9011a2kCnyIiCAWgJfLqind0Cv8/Z2
-	Yq9xFCDXXfMWWnNWsliFn/iXEpDCfzKpUo8EIo0SopzP+h2NiZGgpFhD+RiuDECJTK1
-	3uWd2oJSLy9Ye3Bi0N++NeFDTA+Im0QdyhzhTedQ=
-Received: by mx.zohomail.com with SMTPS id 1739968094991431.0733059111493;
-	Wed, 19 Feb 2025 04:28:14 -0800 (PST)
-Message-ID: <41b3863a-0b2a-4cb1-8d83-8397822ed788@zohomail.com>
-Date: Wed, 19 Feb 2025 20:28:02 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A951DFD91;
+	Wed, 19 Feb 2025 12:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739968197; cv=none; b=jD51Y2iDrl6YBv+go5rxZ2BrMSnmXNBRZPt0Gdi1Q2LLVX8JzM2rJGuo/Iwdtc/AZaY9zmyVePKtVkyzSC9GNfipGraFxXnPk3IeD3jSPJ3oAaecveVKC+7uOU06cwkrR5Rsrato7MGmmh/79R1VICSIJaIE7VYyBU4oZ7HRqjc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739968197; c=relaxed/simple;
+	bh=FCJOtv41Agf4mc6AQxG+YamyhLe7kyxpnwVuSp1A3Ac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d5tr2WnoJ9yA9fPnkmCmYG8qBf/55Eg5SZnb1/cmfuOsHimtnFRVdrfJBrJ3DzzGAyLz3x1VA3obHmVDA7QUbtSVSZ999Eho2vHvSJAzjeAR0NVlWWn/chJqKU5/9UhVG0bUM5DQgcaBZusLArSYsFTAQGXofiAg3iTVrb92GZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4YybGW1tRNzhZx2;
+	Wed, 19 Feb 2025 20:26:11 +0800 (CST)
+Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
+	by mail.maildlp.com (Postfix) with ESMTPS id DA40A180116;
+	Wed, 19 Feb 2025 20:29:34 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.71) by kwepemg500008.china.huawei.com
+ (7.202.181.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 19 Feb
+ 2025 20:29:33 +0800
+Message-ID: <68912db5-bfce-427c-b523-3407e0804d15@huawei.com>
+Date: Wed, 19 Feb 2025 20:29:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,69 +33,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Xukai Wang <kingxukai@zohomail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: clock: Add bindings for Canaan K230
- clock controller
-To: Stephen Boyd <sboyd@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- Samuel Holland <samuel.holland@sifive.com>,
- Troy Mitchell <TroyMitchell988@gmail.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250217-b4-k230-clk-v4-0-5a95a3458691@zohomail.com>
- <20250217-b4-k230-clk-v4-1-5a95a3458691@zohomail.com>
- <c68c14422c7d27278f6fc75f285db7c7.sboyd@kernel.org>
+Subject: Re: [PATCH] jbd2: fix off-by-one while erasing journal
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+CC: <linux-ext4@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
+	<jack@suse.cz>, <leah.rumancik@gmail.com>, <yi.zhang@huawei.com>,
+	<chengzhihao1@huawei.com>, <yukuai3@huawei.com>, <yangerkun@huawei.com>,
+	Baokun Li <libaokun1@huawei.com>
+References: <20250217065955.3829229-1-yi.zhang@huaweicloud.com>
 Content-Language: en-US
-In-Reply-To: <c68c14422c7d27278f6fc75f285db7c7.sboyd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227ebd6254e49c7c0cdfe03935a0000a6ec7566cfabf3e694acedeb925f7105b625ce95562fa49b8b:zu08011227354929267fad4875a2f0fd7400000a59bb746f134a904ecc190f99b7fc8c6d6568ac7781fb3d72:rf0801122bf18172995ae17d7bb5eb31740000b17bd183a15457a0257c4e8f72133640fc83bda074112f4bc6c1cc9f77:ZohoMail
-X-ZohoMailClient: External
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <20250217065955.3829229-1-yi.zhang@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500008.china.huawei.com (7.202.181.45)
 
-On 2025/2/19 05:51, Stephen Boyd wrote:
-> Quoting Xukai Wang (2025-02-17 06:45:16)
->> +$id: http://devicetree.org/schemas/clock/canaan,k230-clk.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Canaan Kendryte K230 Clock
->> +
->> +maintainers:
->> +  - Xukai Wang <kingxukai@zohomail.com>
-> Is this missing a description of the device?
+On 2025/2/17 14:59, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+>
+> In __jbd2_journal_erase(), the block_stop parameter includes the last
+> block of a contiguous region; however, the calculation of byte_stop is
+> incorrect, as it does not account for the bytes in that last block.
+> Consequently, the page cache is not cleared properly, which occasionally
+> causes the ext4/050 test to fail.
+>
+> Since block_stop operates on inclusion semantics, it involves repeated
+> increments and decrements by 1, significantly increasing the complexity
+> of the calculations. Optimize the calculation and fix the incorrect
+> byte_stop by make both block_stop and byte_stop to use exclusion
+> semantics.
+>
+> This fixes a failure in fstests ext4/050.
+>
+> Fixes: 01d5d96542fd ("ext4: add discard/zeroout flags to journal flush")
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Looks good, thanks for the patch!
 
-Alright. Here's the added description:
+Reviewed-by: Baokun Li <libaokun1@huawei.com>
+> ---
+>   fs/jbd2/journal.c | 15 ++++++---------
+>   1 file changed, 6 insertions(+), 9 deletions(-)
+>
+> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+> index d8084b31b361..49a9e99cbc03 100644
+> --- a/fs/jbd2/journal.c
+> +++ b/fs/jbd2/journal.c
+> @@ -1965,17 +1965,15 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
+>   			return err;
+>   		}
+>   
+> -		if (block_start == ~0ULL) {
+> -			block_start = phys_block;
+> -			block_stop = block_start - 1;
+> -		}
+> +		if (block_start == ~0ULL)
+> +			block_stop = block_start = phys_block;
+>   
+>   		/*
+>   		 * last block not contiguous with current block,
+>   		 * process last contiguous region and return to this block on
+>   		 * next loop
+>   		 */
+> -		if (phys_block != block_stop + 1) {
+> +		if (phys_block != block_stop) {
+>   			block--;
+>   		} else {
+>   			block_stop++;
+> @@ -1994,11 +1992,10 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
+>   		 */
+>   		byte_start = block_start * journal->j_blocksize;
+>   		byte_stop = block_stop * journal->j_blocksize;
+> -		byte_count = (block_stop - block_start + 1) *
+> -				journal->j_blocksize;
+> +		byte_count = (block_stop - block_start) * journal->j_blocksize;
+>   
+>   		truncate_inode_pages_range(journal->j_dev->bd_mapping,
+> -				byte_start, byte_stop);
+> +				byte_start, byte_stop - 1);
+>   
+>   		if (flags & JBD2_JOURNAL_FLUSH_DISCARD) {
+>   			err = blkdev_issue_discard(journal->j_dev,
+> @@ -2013,7 +2010,7 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
+>   		}
+>   
+>   		if (unlikely(err != 0)) {
+> -			pr_err("JBD2: (error %d) unable to wipe journal at physical blocks %llu - %llu",
+> +			pr_err("JBD2: (error %d) unable to wipe journal at physical blocks [%llu, %llu)",
+>   					err, block_start, block_stop);
+>   			return err;
+>   		}
 
-The K230 clock controller manages the PLLs and system clocks (sysclk),
-generating clocks for different domains. The internal PLLs are derived
-from the external osc24M, and all sysclk signals use either the PLLs'
-dividers or directly the osc24M source.
 
-Not all macros defined in include/dt-bindings/clock/canaan,k230-clk.h
-are available for use in clock consumer nodes yet.
-
-Does this looks appropriate?
-
->> +        reg = <0x91102000 0x1000>,
-> Is there a reason why the PLL range comes first?
-As I thought that the PLL is the base for other system clocks (sysclk),
-so I placed it first.
-> What's at 0x91101000? More clk hardware?
-
-Regarding 0x91101000, there is no clk hardware at that address; it is
-related to the Reset Management Unit (RMU).
-
-You can refer to the K230 Technical Reference Manual [1] on page 11 for
-its Address Space mapping.
-
-Thanks for your time.
-
-Link:
-https://kendryte-download.canaan-creative.com/developer/k230/HDK/K230%E7%A1%AC%E4%BB%B6%E6%96%87%E6%A1%A3/K230_Technical_Reference_Manual_V0.3.1_20241118.pdf
-[1]
-
->> +              <0x91100000 0x1000>;
