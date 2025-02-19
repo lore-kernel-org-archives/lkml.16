@@ -1,82 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EAD25E449;
-	Wed, 19 Feb 2025 23:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD9225A334;
+	Wed, 19 Feb 2025 23:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740006622; cv=none; b=Ee/aABQLy/c+gjVqOizYGb3eBn1hopeogJggmA6/2Dh90GE/kzIHRJZMFeKeh722wGJt2tmufI+u+ZvuANxWbgGPUUTGwqCCnwjJq2RfLdgBmQ3LV7fYTRz4sGn43sKAnH8QotjbhVf64Dh2yGPq1qLkDYJ+DiJpvjeTE1p9nSE=
+	t=1740006638; cv=none; b=FQGw3yfvm6wNqJ4ZuD6LQ6fyudaPmnOnq00g/W6l5YZSvOYeXj+DD9JrZ6UFAWamKE9Hnmp0oKT1xoMTDj03IBXlw3F88y5CKw0Iyrp7M+cWvt7lBu1zk5lH+Qhg4ARQJttKKFD7ZSAIovwzqseL/Ffmx8sB5/ZMoUBTvLCm5kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740006622; c=relaxed/simple;
-	bh=R+drP0ZeDBQHDs3Y/gXGGFAVwGvsC3oJl4MozRcpvvs=;
+	s=arc-20240116; t=1740006638; c=relaxed/simple;
+	bh=CYLczoHD6qvbYSNlRY5igolvyzZvd2e9ewBvJXOSbIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ta6C6evgWrcvOO2rJb+AuP314KJzdzl6izjJJsy5E8eoRR+i+b4/LyiZlnyno3Gvn2d0EmtnejAmKotrHWcIDuyFjgOUOQ1L8Kg+tKi799dMAw13uBvArxe2+DGpho4ngqgYpJh/tmNM+LkXLVl6UGZVdj/Wp4XTKKw9S4hvCo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJSlo3Kv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4EcFv9klRyyDuVV0XcPBjZuj7m0EEMb/3fDZduONNGKjLsYNmDjo62iGu34HYTeXxFcUfJwg+MlVPOHdG4Q376f4LL9eiiqS4ogpJQgywGyKJCMvmEu03E0cWEWkCzAKf60iEviRP3RqZOHz6OOp8sfnELfjBuZwdwTavhwblY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssGYmnJ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJSlo3Kv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B96C4CED1;
-	Wed, 19 Feb 2025 23:10:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssGYmnJ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA85C4CED1;
+	Wed, 19 Feb 2025 23:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740006621;
-	bh=R+drP0ZeDBQHDs3Y/gXGGFAVwGvsC3oJl4MozRcpvvs=;
+	s=k20201202; t=1740006637;
+	bh=CYLczoHD6qvbYSNlRY5igolvyzZvd2e9ewBvJXOSbIw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iJSlo3Kv4DtbBJBKiyIqxLFY/RQ5rk0qvA0ji03CHG89wssUXR2CeY15hzKp/1QWx
-	 +FRPn7HCVdYT3eD2VSdOXg+doGGKsLEn+awrf37MaVUpA8z8vQR4AUqmYPuF9amleZ
-	 rDKHD1zsgYtMQTa48P1bMqCeG3ds2wEcJCOf7QfCnEVLcrFvhvONRIaOJ/TXizxuzp
-	 5QlBYQLw6TYIcA/th4RS4kqnxV17IvjHEsHkunw2RxeJtzT3i0z3lb1aVePVFDY2so
-	 mt/v7nrXXv28vxhKCx2jANH+XyvqrzPBFrAR+nSIVw0aXTSwI5wiUJDLBgiSJd0kWA
-	 GkUgeJ5YwPRlQ==
-Date: Wed, 19 Feb 2025 23:10:19 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.13 000/274] 6.13.4-rc1 review
-Message-ID: <Z7Zk2x8qHLaV1oBf@finisterre.sirena.org.uk>
-References: <20250219082609.533585153@linuxfoundation.org>
+	b=ssGYmnJ9qxwuROAsGnBlSTwZir7tTkewQhMyWzapIUf0BfmMOI2Ju3oj8Vr49jREA
+	 lUF4QK8E0rZiO07qAKQLe0etXjkWtMS5tNUHq8pqqbknRdEIOnVI8XmdBSfze0riaJ
+	 QmWNOZmUeyzjZtAbiLv7WJLTu+X/breMLqPTt1Z563RcmmbjqUJMTPzpZcTuICsr13
+	 gyJYadZesKuK9+AnT7OrceSijZnMd92ubLhHUpUhSN+5jkVVB0NW1sZeFsyqGDr2Qb
+	 IxULEIJhGfskmfeCtB9KknZYkDsKvA6jpYULrSeRQ3CnTcVFr4P9ETmWiUq39Zt9+b
+	 AU2rl7Sggwogw==
+Date: Wed, 19 Feb 2025 17:10:36 -0600
+From: Rob Herring <robh@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@collabora.com, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] dt-bindings: thermal: rockchip: document otp thermal
+ trim
+Message-ID: <20250219231036.GA3137058-robh@kernel.org>
+References: <20250216-rk3576-tsadc-upstream-v1-0-6ec969322a14@collabora.com>
+ <20250216-rk3576-tsadc-upstream-v1-4-6ec969322a14@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TPvJc1INWGlJ4w32"
-Content-Disposition: inline
-In-Reply-To: <20250219082609.533585153@linuxfoundation.org>
-X-Cookie: Editing is a rewording activity.
-
-
---TPvJc1INWGlJ4w32
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250216-rk3576-tsadc-upstream-v1-4-6ec969322a14@collabora.com>
 
-On Wed, Feb 19, 2025 at 09:24:14AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.4 release.
-> There are 274 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sun, Feb 16, 2025 at 12:34:53AM +0100, Nicolas Frattaroli wrote:
+> Several Rockchip SoCs, such as the RK3576, can store calibration trim
+> data for thermal sensors in OTP cells. This capability should be
+> documented.
 
-Tested-by: Mark Brown <broonie@kernel.org>
+Is several most or a minority as this change is enabled for everyone.
 
---TPvJc1INWGlJ4w32
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Such a rockchip thermal sensor may reference cell handles that store
+> both a chip-wide trim for all the sensors, as well as cell handles
+> for each individual sensor channel pointing to that specific sensor's
+> trim value.
+> 
+> Additionally, the thermal sensor may optionally reference cells which
+> store the base in terms of degrees celsius and decicelsius that the trim
+> is relative to.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  .../bindings/thermal/rockchip-thermal.yaml         | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml b/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml
+> index 49ceed68c92ce5a32ed8d4f39bd88fd052de0e80..8d27ddefcc64e29f0faab059888805802c948b41 100644
+> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml
+> @@ -40,6 +40,21 @@ properties:
+>        - const: tsadc
+>        - const: apb_pclk
+>  
+> +  nvmem-cells:
+> +    items:
+> +      - description: cell handle of the low byte of the chip fallback trim value
+> +      - description: cell handle of the high byte of the chip fallback trim value
+> +      - description: cell handle to where the trim's base temperature is stored
+> +      - description:
+> +          cell handle to where the trim's tenths of Celsius base value is stored
+> +
+> +  nvmem-cell-names:
+> +    enum:
+> +      - trim_l
+> +      - trim_h
+> +      - trim_base
+> +      - trim_base_frac
+> +
+>    resets:
+>      minItems: 1
+>      maxItems: 3
+> @@ -51,6 +66,12 @@ properties:
+>        - const: tsadc
+>        - const: tsadc-phy
+>  
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+>    "#thermal-sensor-cells":
+>      const: 1
+>  
+> @@ -72,6 +93,29 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      enum: [0, 1]
+>  
+> +patternProperties:
+> +  "^([a-z]+)@[0-9]+$":
 
------BEGIN PGP SIGNATURE-----
+If each node is a sensor or channel, then make that the node name.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme2ZNoACgkQJNaLcl1U
-h9Bwzgf+OwQr9fsN70XZLLo965eCAZujezE47/OkGUOiPc/R0AQ+IEPO/s8VTESQ
-m6iRbXCXG+L9W8NjS/Ynt9yR9DrMbLIDcWtsdQZ5I9I8F/fmk5PN3PRK0v6dhxMO
-4FZad/pAbVh3oed5M2paqnhFoImmcr63QkyPSCwWoEd447aI35PQyh+XYARJP2L0
-Jc+Z0gpzXo2E62KOyidykQSoZUf+thjyJaQKfHGru21O+d8+gQloPj0BNosVWxav
-b3uaVhGFldsPXvSv72rNEpJlFmNuWsuv2xYTgUF13d0OwzSsUuMNTMpuFECO8kDY
-eClPNEOWIkrqZTAfMPsU2HEo6PLciQ==
-=QSOx
------END PGP SIGNATURE-----
-
---TPvJc1INWGlJ4w32--
+> +    type: object
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +        description: sensor ID, a.k.a. channel number
+> +
+> +      nvmem-cells:
+> +        items:
+> +          - description: handle of cell containing low byte of calibration data
+> +          - description: handle of cell containing high byte of calibration data
+> +
+> +      nvmem-cell-names:
+> +        items:
+> +          - const: trim_l
+> +          - const: trim_h
+> +
+> +    required:
+> +      - reg
+> +
+> +    unevaluatedProperties: false
+> +
+>  required:
+>    - compatible
+>    - reg
+> 
+> -- 
+> 2.48.1
+> 
