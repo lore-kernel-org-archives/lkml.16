@@ -1,121 +1,105 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B2A1F2B87
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3361E1C09
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 14:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739976246; cv=none; b=R0OvdHC0Uid2Qfi6BIpDdKcH2VzW282B1zu0Jh7uN6bLj8v4iulp+93+LkowFOTKT99FW5BWelpwWSvGiTVxUt9y88KONlx6xVP8VdSnMdjmwhy6R+NvjZRElxQeKHQp1hOkTcqmnsLLIl/cRpl+Wa4TM7Xwy98HWfWguWd4ujs=
+	t=1739976303; cv=none; b=FG+Sh0b6i6F+zyCV0nSMqIRWUYlqi56gaLLKl2IerOjEpVIuFntIfD6RjbPhbUcXARmOtx+b5p/THURdo1T6KQOcqmB0LJefdHjWElKJcmxRMv8xcbKt1orp7t80Ib3RZyYQIqBDGM96HUK0b7QuNRUgLMrzJul3X2DaWmcKyno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739976246; c=relaxed/simple;
-	bh=JIJ/E5tjz1JLehb66AzAvqmd8vmktuXELCPYG3qQBiQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pM/83m9O4i5AYrxlA/+MMHqnXqdd/C9e2ybklwnTaUFwOoSHlfVxt99maGzJYisDfkRxOVw+l7Otz6sKlH4k+nMLxHHavA2SMEaYd57vQvrppw9Mf4XVff+456/k5yttM80TfN/WkVAZ/vH6VN9kTlQJOxZ77YcaKoOP0RjMGGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gew0IX9/; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gew0IX9/"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso75236575e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 06:44:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739976243; x=1740581043; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjafTz2s5QAjTYhGL901I5LpQk//qv4ffra6sDQC6aY=;
-        b=gew0IX9/GzGT915p39fe2L1YqJUjww9MeT6cs79Q4JP0c181CX8ck8t7HmYaetL0pZ
-         ZeHPEuKxmIbbKDvkqDO7BNwJ38mRtc1vMS65hG16S+YU0MtgrHDT64sHMgGE+6DRbjH3
-         nxn/y6n4DRU3O7U3NCJzmmbzuXYVSuqDCxGq8Hp0snUjfigSi8qyhy0gCTXQtZpLtbny
-         0EiZKMCviZ3irZcPRyLRggsoRBsITPNjvCaWAGdbp5ieXyxHHC2yTRm5jCG6YJup6/Yl
-         y8uZTrQhwR/GGdU5gkyND7JgDRxPNnbkfAPXoS1myge7fxy0iB5wSUH7uekEE+u3STtJ
-         ydmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739976243; x=1740581043;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jjafTz2s5QAjTYhGL901I5LpQk//qv4ffra6sDQC6aY=;
-        b=o+o3NkTxQvw8FL1PUowfNfKevFLITuo+vBMNx21DLlRYPZgsSoezqggwTfmG0CFDMv
-         SxKpcSPtFF2gNn7RKaV9/aW+ctJe9DJl06N7q77pudn5aonaGXtn+ZPGcPKhh+JdvVBH
-         IAKw8ZhG+Ydm92exuu1IBVC1xPcD3RWKVAk+iBQnHAeMmJdxZidxHPYa90LWxPWcjUPL
-         zxXEV2TzBP3ikKS7WJChCssBKaXmrj+djSgEbnehlpWEDV2jJiA1VT7xQwNZhWpLKWM3
-         4i6HfbEK7EhQJp7n7iHvaSqgChrSjfA6M+PQQ35IzQPbqdO8+WqTriCGEeDAbTeoq3Nc
-         uGCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpJ9JOrNezIZBCnT7LYoEdLLNB1Y5FdatkXWTTzKFO8L5g5Zf2X3HBMhemdAsRW5ufitKQxkWGBbblD5I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsJf6bhnPdq0Qfe+snmCW+we//avKajTRm38ROFdU8zyO2MHIP
-	brPeT6JN0cI//Vi2Xb9bvkjryweP0p6jhf+lM75eKIC/80u24s3FtlA50w8gZfQJqLAKEMwx5hT
-	92Nc=
-X-Gm-Gg: ASbGncv/DCbdIVbOlgjKHNg5lUnX6hoZC6TU3JShQpKlJPAwhEW5oIv0ZwTh7Brg1tA
-	YJdVvUh3OGxAntg98qSZT/eCJqUSqQcaQSwbFxCPo1eOYq87NouqQ70ooK9hHLgCpJks69bR4jK
-	1EBEc8/GKe73QYKHxYNBA29wI/FiU0ZWQO/N3f/bKf7ob1Vsi4g9ykri9I63Qh+iC+96z9Fggo0
-	e8T2Cx0g06D/JQifnJ9nJP/Tl+6dy7uzBa4TBy717TAmx3Vi/nzIBOLcBeuoS/5FQKZrBR8yr+d
-	s/bLJ+g/Jg7wDw==
-X-Google-Smtp-Source: AGHT+IHk61Hym0qgekYAmPlkGyuZ3YcsegEJqHegHLnwBvZNjPjl/N8SXL2g7SZnxZqdvx9UkJKgPA==
-X-Received: by 2002:a05:600c:3b02:b0:439:9a40:aa0b with SMTP id 5b1f17b1804b1-4399a40ac9dmr31659175e9.25.1739976242610;
-        Wed, 19 Feb 2025 06:44:02 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:f0ed:3532:fe6:315c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43984924201sm92536685e9.6.2025.02.19.06.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 06:44:02 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] gpiolib: don't bail out if get_direction() fails in gpiochip_add_data()
-Date: Wed, 19 Feb 2025 15:43:56 +0100
-Message-ID: <20250219144356.258635-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1739976303; c=relaxed/simple;
+	bh=Lg1Iyu4pbxer1+btJAh4izacBOCnj/tM+fmLEh+c/rg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pEeXIo0KMdgpN48Jnv5iH/VxjvCRNybDvMlR3oozn5/nfjHM3mTuzvO4XqaA995OxkoNgm263tXequ3Y3tVG9xuoyja32LFHxUFd0XSiivrGc/4i8c/n/tLFNtz1BPHV0HBx8iayvYJ12J7zjOZFIijtpj+mk8POWAVONtyhTCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B28513D5;
+	Wed, 19 Feb 2025 06:45:19 -0800 (PST)
+Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.18])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15FE53F59E;
+	Wed, 19 Feb 2025 06:44:57 -0800 (PST)
+From: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
+To: ryan.roberts@arm.com,
+	yang@os.amperecomputing.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	joey.gouly@arm.com,
+	broonie@kernel.org,
+	mark.rutland@arm.com,
+	james.morse@arm.com,
+	yangyicong@hisilicon.com,
+	robin.murphy@arm.com,
+	anshuman.khandual@arm.com,
+	maz@kernel.org,
+	liaochang1@huawei.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	baohua@kernel.org,
+	ioworker0@gmail.com,
+	oliver.upton@linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
+Subject: [PATCH v1 0/3] Initial BBML2 support for contpte_convert()
+Date: Wed, 19 Feb 2025 14:38:36 +0000
+Message-ID: <20250219143837.44277-3-miko.lenczewski@arm.com>
+X-Mailer: git-send-email 2.45.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi All,
 
-Since commit 9d846b1aebbe ("gpiolib: check the return value of
-gpio_chip::get_direction()") we check the return value of the
-get_direction() callback as per its API contract. Some drivers have been
-observed to fail to register now as they may call get_direction() in
-gpiochip_add_data() in contexts where it has always silently failed.
-Until we audit all drivers, replace the bail-out to a kernel log
-warning.
+This patch series adds adding initial support for eliding
+break-before-make requirements on systems that support BBML2 and
+additionally guarantee to never raise a conflict abort.
 
-Fixes: 9d846b1aebbe ("gpiolib: check the return value of gpio_chip::get_direction()")
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/Z7VFB1nST6lbmBIo@finisterre.sirena.org.uk/
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Closes: https://lore.kernel.org/all/dfe03f88-407e-4ef1-ad30-42db53bbd4e4@samsung.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+This support reorders and optionally elides a TLB invalidation in
+contpte_convert(). The elision of said invalidation leads to a 12%
+improvement when executing a microbenchmark designed to force the
+pathological path where contpte_convert() gets called. This
+represents an 80% reduction in the cost of calling contpte_convert().
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 704452fd94bb..48cf1bb23e24 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1060,7 +1060,15 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
- 			ret = gc->get_direction(gc, desc_index);
- 			if (ret < 0)
--				goto err_cleanup_desc_srcu;
-+				/*
-+				 * FIXME: Bail-out here once all GPIO drivers
-+				 * are updated to not return errors in
-+				 * situations that can be considered normal
-+				 * operation.
-+				 */
-+				dev_warn(&gdev->dev,
-+					 "%s: get_direction failed: %d\n",
-+					 __func__, ret);
- 
- 			assign_bit(FLAG_IS_OUT, &desc->flags, !ret);
- 		} else {
+However, even without the elision, the reodering represents a
+performance improvement due to reducing thread contention, as there is
+a smaller time window for racing threads to see an invalid pagetable
+entry (especially if they already have a cached entry in their TLB
+that they are working off of).
+
+This series is based on v6.14-rc3 (0ad2507d5d93).
+
+Patch 1 implements an allow-list of cpus that support BBML2, but with
+the additional constraint of never causing TLB conflict aborts. We
+settled on this constraint because we will use the feature for kernel
+mappings in the future, for which we cannot handle conflict aborts
+safely.
+
+Yang Shi has a series at [1] that aims to use BBML2 to enable splitting
+the linear map at runtime. This series partially overlaps with it to add
+the cpu feature. We beleive this series is fully compatible with Yang's
+requirements and could go first, given there is still a lot of discussion
+around the best way to manage the mechanics of splitting/collapsing the
+linear map.
+
+[1]:
+  https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-yang@os.amperecomputing.com/
+
+Mikołaj Lenczewski (3):
+  arm64: Add BBM Level 2 cpu feature
+  arm64/mm: Delay tlbi in contpte_convert() under BBML2
+  arm64/mm: Elide tlbi in contpte_convert() under BBML2
+
+ arch/arm64/Kconfig                  |  9 ++++++++
+ arch/arm64/include/asm/cpufeature.h |  5 +++++
+ arch/arm64/kernel/cpufeature.c      | 32 +++++++++++++++++++++++++++++
+ arch/arm64/mm/contpte.c             |  3 ++-
+ arch/arm64/tools/cpucaps            |  1 +
+ 5 files changed, 49 insertions(+), 1 deletion(-)
+
 -- 
-2.45.2
+2.45.3
 
