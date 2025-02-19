@@ -1,40 +1,40 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484521FF1DF
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F351FE44E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 16:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739983014; cv=none; b=HIBBORXFl5SiX5jdIVG3K94suZig6ooXzKqJxozHuSYjKiio5EWnyRrJsFOx/FRr0Igz8cCG8jcUB0Qo+7vDUn2sbHE338oAycsn2EfmmcqBz/q7s//r8IQqfoMaVSFVdEaKaG2DyXg/9Sjr1fniL5YJwoCDqMdcVKbiIAmeYDM=
+	t=1739983012; cv=none; b=P92Ftb4JgxYI7W/FFTdoUxg/7Xv7L1LQVvSuMGkESk2DdtT1gR+lup+tpWvvkAE1UPXjxYdfq/E95mGMUmM5CeL17sLN3FOTAqFMuykwVWu7x/e6pL93L1oWqX5OwCdTVtw6aTAD9j6bYKMwUvF1WJanmKu2jV3+yJLxPrwzF4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739983014; c=relaxed/simple;
-	bh=4qlEk+2cA0A2mCx18eN4QRncWR/yLUGSj1VHVWvZTQ4=;
+	s=arc-20240116; t=1739983012; c=relaxed/simple;
+	bh=XH3MuXAiObT15pcf8fCzwAFGPy5FlpxKu3WYPUsMAT0=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=IB7IOanNl2mmGsfdPAMNnw++HIJwsaF8lpbuQixxmKB2vO+DWH3ftPcE0gbGjTtXKUX02vgRQIbNzMjpfhSIt1pPp3ddnxZ0SbhoK4B9KVwKR5j4s2+LMged1U5aNPQPQ23p+emtOdXy9++CChILQmv/ppn1xvL5JV1lCjuuZjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bV36ePHT; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type; b=t/Gbn6oNjUyd43ZNpIAkzlDINVN4U6Qe6ulUAYI9haRq6JOC9Na7vcgwN3+cnmuJ4SONLpNSJoIIzAywNR0xLCyNrLuH3V+AVEJNmZWlx5Z11Egg1kxw1ZMnuM0/WYP/6NlbWgnuBIbu3i8xvo3WS2CA3cRU5vPb7lP6nPcHQ9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FWS30tB5; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bV36ePHT"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FWS30tB5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=TqS8RQT0Cc1AuRp0tf3Zy97LsglkPcKd8GoxoofXqeQ=; b=bV36ePHTSizscnBsrTl3o0/AT2
-	YzrotZKwL2xH3s3kpMH1TcOXXGzEmEFSDVVRYhFhiIPRScFpmyB5/1fxpR6yvFcL5hOjKoAWiixsE
-	xpnBi+u31EG8bWfoQESJZvVLXq1y3zAbi9c2PpNcfVFiq6ahnF2DA5ARSKHh1JiHkH2vqLTfZMmAa
-	mg/ZGkNZ+yATidWc0TcUVx3SUboEfjL9dYsad+MBjyP0x1oACdCz9vu7QbAzrLnXgpq2eSZlCV9CY
-	zuErbquJi4Gl2ZCX6n5NDxM4Qcp5AxRoKaAylT55pypqdq106fnztulI9CmrZ9UH30sU2qfy+doPa
-	8MgTfJvg==;
+	bh=PiM728l6AQnzOFGFj6jdFclsn5t3z/jGFxhKy5mQQoA=; b=FWS30tB5oNIVLSFr17j7W9M5mv
+	iejn8xIniPiuKybqGO7uDy2IqKRMZxKfngiyzaw86whWdPXpFm1C9G3EIeSkZlqEBplS/D5SWmG34
+	9imVnrG3fCKxmBQLYl1fxqMhUaXtkfafOv5oDbumapMo8JQBcaJi0j2psxJOcAX/RstOJ3EaVk48/
+	j8ny9lIqZckxqLjImA09XgpVGwuUG6lgWThpg5vRCvqdXVzTXGwhjklJJs6I1G7Or9kG79I+/9XJK
+	TsggGE5n8hD6fxE+fveGA+H/OsKoZeJhphz8hqf6+GzvSL8ECJ6ZF7RqkR++c8aGh0PGm8dajMCAe
+	OtuB0QVw==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkn40-00000002HAF-0GxZ;
-	Wed, 19 Feb 2025 16:36:44 +0000
+	id 1tkn41-00000002HAX-065R;
+	Wed, 19 Feb 2025 16:36:45 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id EEADC3007A4; Wed, 19 Feb 2025 17:36:42 +0100 (CET)
-Message-ID: <20250219163514.475718637@infradead.org>
+	id 19081300201; Wed, 19 Feb 2025 17:36:43 +0100 (CET)
+Message-ID: <20250219163515.368430004@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 19 Feb 2025 17:21:09 +0100
+Date: Wed, 19 Feb 2025 17:21:17 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -54,7 +54,7 @@ Cc: linux-kernel@vger.kernel.org,
  alexei.starovoitov@gmail.com,
  mhiramat@kernel.org,
  jmill@asu.edu
-Subject: [PATCH v3 02/10] x86/ibt: Add exact_endbr() helper
+Subject: [PATCH v3 10/10] x86/ibt: Optimize fineibt-bhi arity 1 case
 References: <20250219162107.880673196@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,46 +64,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-For when we want to exactly match ENDBR, and not everything that we
-can scribble it with.
+Saves a CALL to an out-of-line thunk for the common case of 1
+argument.
 
+Suggested-by: Scott Constable <scott.d.constable@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/kernel/alternative.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/ibt.h    |    4 ++
+ arch/x86/kernel/alternative.c |   61 +++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 56 insertions(+), 9 deletions(-)
 
+--- a/arch/x86/include/asm/ibt.h
++++ b/arch/x86/include/asm/ibt.h
+@@ -70,6 +70,10 @@ static inline bool __is_endbr(u32 val)
+ 	if (val == gen_endbr_poison())
+ 		return true;
+ 
++	/* See cfi_fineibt_bhi_preamble() */
++	if (IS_ENABLED(CONFIG_FINEIBT_BHI) && val == 0x001f0ff5)
++		return true;
++
+ 	val &= ~0x01000000U; /* ENDBR32 -> ENDBR64 */
+ 	return val == gen_endbr();
+ }
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -863,6 +863,17 @@ __noendbr bool is_endbr(u32 *val)
- 	return false;
+@@ -1299,6 +1299,55 @@ static int cfi_rand_preamble(s32 *start,
+ 	return 0;
  }
  
-+static __noendbr bool exact_endbr(u32 *val)
++static void cfi_fineibt_bhi_preamble(void *addr, int arity)
 +{
-+	u32 endbr;
++	bool warn = IS_ENABLED(CONFIG_CFI_PREMISSIVE) || cfi_warn;
 +
-+	__get_kernel_nofault(&endbr, val, u32, Efault);
-+	return endbr == gen_endbr();
++	if (!arity)
++		return;
 +
-+Efault:
-+	return false;
++	if (!warn && arity == 1) {
++		/*
++		 * Crazy scheme to allow arity-1 inline:
++		 *
++		 * __cfi_foo:
++		 *  0: f3 0f 1e fa             endbr64
++		 *  4: 41 81 <ea> 78 56 34 12  sub     0x12345678, %r10d
++		 *  b: 49 0f 45 fa             cmovne  %r10, %rdi
++		 *  f: 75 f5                   jne     __cfi_foo+6
++		 * 11: 0f 1f 00                nopl    (%rax)
++		 *
++		 * Code that direct calls to foo()+0, decodes the tail end as:
++		 *
++		 * foo:
++		 *  0: f5                      cmc
++		 *  1: 0f 1f 00                nopl    (%rax)
++		 *
++		 * which clobbers CF, but does not affect anything ABI
++		 * wise.
++		 *
++		 * Notably, this scheme is incompatible with permissive CFI
++		 * because the cmov is unconditional and RDI will have been
++		 * clobbered.
++		 */
++		const u8 magic[9] = {
++			0x49, 0x0f, 0x45, 0xfa,
++			0x75, 0xf5,
++			BYTES_NOP3,
++		};
++
++		text_poke_early(addr + fineibt_preamble_bhi, magic, 9);
++
++		return;
++	}
++
++	text_poke_early(addr + fineibt_preamble_bhi,
++			text_gen_insn(CALL_INSN_OPCODE,
++				      addr + fineibt_preamble_bhi,
++				      __bhi_args[arity]),
++			CALL_INSN_SIZE);
 +}
 +
- static void poison_cfi(void *addr);
- 
- static void __init_or_module poison_endbr(void *addr)
-@@ -1427,10 +1438,9 @@ static void poison_cfi(void *addr)
- bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
+ static int cfi_rewrite_preamble(s32 *start, s32 *end)
  {
- 	unsigned long addr = regs->ip - fineibt_preamble_ud2;
--	u32 endbr, hash;
-+	u32 hash;
+ 	s32 *s;
+@@ -1329,14 +1378,8 @@ static int cfi_rewrite_preamble(s32 *sta
+ 			  "kCFI preamble has wrong register at: %pS %*ph\n",
+ 			  addr, 5, addr);
  
--	__get_kernel_nofault(&endbr, addr, u32, Efault);
--	if (endbr != gen_endbr())
-+	if (!exact_endbr((void *)addr))
- 		return false;
+-		if (!cfi_bhi || !arity)
+-			continue;
+-
+-		text_poke_early(addr + fineibt_preamble_bhi,
+-				text_gen_insn(CALL_INSN_OPCODE,
+-					      addr + fineibt_preamble_bhi,
+-					      __bhi_args[arity]),
+-				CALL_INSN_SIZE);
++		if (cfi_bhi)
++			cfi_fineibt_bhi_preamble(addr, arity);
+ 	}
  
- 	*target = addr + fineibt_preamble_size;
+ 	return 0;
+@@ -1349,7 +1392,7 @@ static void cfi_rewrite_endbr(s32 *start
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+ 
+-		if (!is_endbr(addr + 16))
++		if (!exact_endbr(addr + 16))
+ 			continue;
+ 
+ 		poison_endbr(addr + 16);
 
 
