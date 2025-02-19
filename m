@@ -1,140 +1,123 @@
-Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA2915CD52;
-	Wed, 19 Feb 2025 15:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3186195B33
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978136; cv=none; b=SmI3ipIM+QzfrBtAYAKTm9PO8vqP9HF+rYLOTQU3PkR7qj+1iIAGamYG9F7cHvMBNPNXpGV9A3x/TPJhDZpj4keFaUS+4OUniNp8TRzi89x0IA8jCzpbRxwhKNc9Um9IL4M0uS4IKCyYUpeQtXpac7XQD383foeHMyD2MHoaeGY=
+	t=1739978149; cv=none; b=j/rIqb9iEdBZQQ/Ee98Lt/UIWeEU5Xz4iWRzQ/XXgB2ceg/xmtX+5eAbIkTeVJfxjGiQA1OY0RLGxolQ9Qial14W9UM+VhZvCtwlIyPLZntybzZvkEvEnMNUvokg8O++0ftJ36+mrXOQSc+OkjmCor9v0Gh+tZyg078S42OzgEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978136; c=relaxed/simple;
-	bh=y9WgzGffg+Am1VM1kKEZ+wLyOI55SBmza0HtJx0xEaQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=WRft6mv9h6XVO1BXNZKUPEG778i8vQdYFwl6pjByQ/OhAoKSKHRYDG1WJ3ghfdNsxD/FwnPIOrZCejv6DKWNjpB2pLL4wrBbbPiXYdFWcDniwN+d4/muXBrVCZSrlO6kp6X4fmbsXb3101wV4b4+sRMGAQfRCC0IozivVHxDd9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tklnE-000C1J-Hk; Wed, 19 Feb 2025 16:15:20 +0100
-Received: from [2a0d:3344:1523:1f10:f118:b2d4:edbb:54af]
-	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tklnE-000GLI-1m;
-	Wed, 19 Feb 2025 16:15:20 +0100
-Message-ID: <fea35f08-3f29-4f7e-8be5-c77d4cee8be1@hetzner-cloud.de>
-Date: Wed, 19 Feb 2025 16:15:17 +0100
+	s=arc-20240116; t=1739978149; c=relaxed/simple;
+	bh=Iv6t7FRn2B5grw2+MtJh7t4h4IagAcD/o0AdA80NfQU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T7CvM/sAUFdIjXLVvfqKdC3+ZavjrF1oGQ9n5dPwVQXf4zrO3jUejGVmnH/9r/J1OGpMRgPJQynhYKsoEbcHdMLk3JFNb9M3LQuB70QB1gA48TkXLmkjpqlcbpALnDZvSqqgCmnj6IOMFb/mZDp2PyB0mPzqMrirLw4x+mX9Elo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i+HrCPnr; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i+HrCPnr"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-471f88518c8so16548781cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 07:15:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739978147; x=1740582947; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=i4BufmELc/H5oLk6Se7bfRixYeydt1UGAVr8rJzEKPM=;
+        b=i+HrCPnr7hj8spFtYLMmbJN4GrwJ4dfHSMUILPd3nugBjV6Pnep62sVeUZiv4uLgPh
+         T5XfHCpv0+RcshyV3tbuhiiWfnT2ld6d1s3K5xQdkNuz8mkTHXtYcR0ice9zLOF65Fw1
+         ubEkNcCK8a3lh8bd8Ah5syIhn5dN4swl3Ut1rbLkYuaXN7hFqruJ4qtoWtOc/1b+FlFK
+         ID9D2uAu2/J8lYsiNKaKaN4vKCZoTW0QTfXgK/LFcVaKetL5+vvGWn8YNipDnGOKGlq4
+         osbUvYG3abppm0KL0QsL1qi4AbwA5jcnintQewvvdc8dhBb9guGgDedOfqhdp1+IJ3tV
+         9mHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739978147; x=1740582947;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i4BufmELc/H5oLk6Se7bfRixYeydt1UGAVr8rJzEKPM=;
+        b=t+NQJL3pks5XXVOJspi9u9PM8YjYxX+vsYGSNwt7J/OFZb02FuwkQnwnCG3r2q959E
+         e0xhb2QwLSua0uIzFNtu72V/ejxnqUv9bu9Py6VS5KyMC5Q2WURcS2LJPZi/VoJQ30pH
+         MNgnY7+ZF++l7KR73KATFXIaJH2xi06IHqIx1hdJSb+/CN3b0CVaV/H/AOI3brE4mshB
+         8gzibEyt/jQyCTW2vF7BrOlK3T6GLFvYirA2SH4LUUZ7mEYKQPY3hLlDrKtoo7mXQ28W
+         Kesp4ecYRPPl3alyI+JLcZFNyJOEjX+oN0tEaq91IGWOlg3qMJuFyYhKe0PL0Rm8L9ev
+         kECw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfXlOgIHQwTNLXAiZzQ5AfymMdo3GTQo5gz3ZvTU3MeL4imYvSdUocgpPiOYUWomdYgimLWiePpzXqk44=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwogiMyF8prMSY2NP/I+rgcvQaezMUpPqCiU8xW8uOewvdnZsXv
+	D+2PjjIokae/k7xJl+J1ejdt5WOoktgFl/L9ZkpZqL9jLPguzB92TdTRm59cu3dV4Q/XPCUoLaY
+	+ohOid5JkiIC+wH0QBOW8qVLeZkeSYQoMIcUg6Q==
+X-Gm-Gg: ASbGncs7nMUG7/u9UI1BCj4jIrZHxnfUPeJ1uWrf7C4sU3dJj6T2agi8dESy8hKJOlG
+	tfN3E1UIaowI16guH0qKakCTtwDh3GWAXgibB1p+RR0vWTT5w4yQZ+rXuXE1AkFtRtYuWZAGrzl
+	4=
+X-Google-Smtp-Source: AGHT+IFOL53hLpR9huwVKcdEp9S5ol3K22XXCd3/mcd/L2bQqRKMnRbCt0AScL5oNtTya9R/VDI/ycGal6VHuQEUFVs=
+X-Received: by 2002:a05:6214:1d2c:b0:6e6:5d61:4f01 with SMTP id
+ 6a1803df08f44-6e6974fc658mr68832166d6.8.1739978146707; Wed, 19 Feb 2025
+ 07:15:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Cc: jasowang@redhat.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org,
- hawk@kernel.org
-References: <20250217172308.3291739-1-marcus.wichelmann@hetzner-cloud.de>
- <20250217172308.3291739-3-marcus.wichelmann@hetzner-cloud.de>
- <67b3e6b6b9dc6_c0e2529482@willemb.c.googlers.com.notmuch>
- <dee9bc39-e666-4d97-8a42-240ffb458bcc@hetzner-cloud.de>
- <67b5f392408d7_1b78d8294e7@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
- 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
- wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
-Subject: Re: [PATCH bpf-next v2 2/6] net: tun: enable transfer of XDP metadata
- to skb
-In-Reply-To: <67b5f392408d7_1b78d8294e7@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27554/Wed Feb 19 10:50:24 2025)
+References: <20250215075701.840225877@linuxfoundation.org> <CA+G9fYsBu8DOLEDQoGrdZmjwZKvz72tMmrVPnQSJLNMbefYymw@mail.gmail.com>
+In-Reply-To: <CA+G9fYsBu8DOLEDQoGrdZmjwZKvz72tMmrVPnQSJLNMbefYymw@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 19 Feb 2025 20:45:34 +0530
+X-Gm-Features: AWEUYZmBriKaF0g7ZN6AKPL4WUNipNS0LvWaItl7Uel4aGCuiaCeYdtgGR_kvUY
+Message-ID: <CA+G9fYugvbR5jJrOUHd==_h2MXKDfVjivRnaXxvwWL_dzBXdGw@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/418] 6.12.14-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Am 19.02.25 um 16:06 schrieb Willem de Bruijn:
-> Marcus Wichelmann wrote:
->> Am 18.02.25 um 02:47 schrieb Willem de Bruijn:
->>> [...]
->>> This is pointer comparison, which is tricky wrt type. It likely is
->>> ptrdiff_t and thus signed. But may want to use max_t(long int, ..) to
->>> make this explicit.
->>
->> Ah, I see, good point.
->>
->> So like that?
->>
->> 	metasize = max_t(long int, xdp->data - xdp->data_meta, 0);
->> 	if (metasize)
->> 		skb_metadata_set(skb, metasize);
-> 
-> Or just this? Also ensures the test uses signed int.
-> 
->      int metasize;
-> 
->      ...
-> 
-> 
->      metasize = xdp->data - xdp->data_meta;
->      if (metasize > 0)
->              skb_metadata_set(skb, metasize);
-> 
+On Mon, 17 Feb 2025 at 13:08, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Sat, 15 Feb 2025 at 13:29, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 6.12.14 release.
+> > There are 418 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Mon, 17 Feb 2025 07:52:41 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.14-rc3.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> Regression on qemu-arm64, qemu-armv7 and qemu-x86-64 on 6.12.14-rc3
+> We will investigate this and get back to you.
+>
+> Test regression: arm64, arm, x86 selftests: memfd: run_fuse_test.sh
+>
+> * fvp-aemva, kselftest-memfd
+>   - memfd_run_fuse_test_sh
+> * qemu-armv7, kselftest-memfd
+>   - memfd_run_fuse_test_sh
+> * qemu-arm64, kselftest-memfd
+>   - memfd_run_fuse_test_sh
+> * qemu-x86_64, kselftest-memfd
+>   - memfd_run_fuse_test_sh
+>
+> # Test log
+> selftests: memfd: run_fuse_test.sh
+> ./fuse_mnt: error while loading shared libraries: libfuse.so.2: cannot
+> open shared object file: No such file or directory
+> not ok 2 selftests: memfd: run_fuse_test.sh  exit=127
 
-Well, yeah, just keep it simple I guess. ;) Will do that.
+We are installing libfuse2 in our rootfs to fix this at our end.
 
-I'll send a V3 patch series with the change.
-
-Thanks!
-
-Marcus
+- Naresh
