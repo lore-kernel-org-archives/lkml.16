@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3FE1CEAC3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832921D6DB1;
 	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739953972; cv=none; b=mQbUjMxZAmYw7sQ70mMv6gwWHpD9L0YsTF8h06jPr5lR1IZjaHZD6Y7WdMPU51I3gZyKOOqR77WKMwqOGHTzGBme1J9tjsCmU9Z5M2WJJIA5sbaVowZEHFXAEcgcmpMK5508/CRJN7dHdovGudaPwy7ajRFRZ7qIuw2pXqN+sqA=
+	t=1739953972; cv=none; b=DlfPWahJZLtgapmj4NTWkSKS1y5djnfrVcehUYDhqIsFanqQo2s8sI+stwXYuIH2cEMTsJyx11jdIWWFhQFVt9jTcT4Al26a/xMwQaYkMNH5+6cJewpEL7hVcwSNCSIA7scujU8TuTt8g9VNkpPopHMlWgYJatBX1tSpf0emsos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739953972; c=relaxed/simple;
-	bh=o+1xc6xKU/lADwcvw9syISNuAVlcBEcy5nbY0N3w4kc=;
+	bh=g3yjKUYPJng0/MFnsVcxoDKnYWevbS21H1bMLGz3lcY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m3ePcNYcy9AXhnM+PvXEQEbwuSBo6MCfiKBu7+4e3vuZgNzvgmVNWE3nKJZ6cweXKZDdPaxqzuN2iyFbfV5fg5wD6jM5B34PVWQxujB7SlGKEyx/ut4bDSAwW8HeJtWslckJ5+43pXYOvgP7I+f0rJGTzBKJrQ/39zpbaecRc4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BW87f3rO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jrepDbew+aI4sL8WRc8YJ6vTWOymavLI397x38AeB/biG93VWLJa3mzttl76q7IorIDUHa/CQBvgSSJAOOd+j99ELJ5fZBITdhknfb2gl3NYNZmAT7RHEl7NNC9zwWgywgAF7wSnD2Wx1tgj9qG24uWRz0TG2zWzoWqNR8+3FT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pocYnLOh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BW87f3rO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE73DC4CEEC;
-	Wed, 19 Feb 2025 08:32:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pocYnLOh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351A9C4CEFC;
+	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739953972;
-	bh=o+1xc6xKU/lADwcvw9syISNuAVlcBEcy5nbY0N3w4kc=;
+	bh=g3yjKUYPJng0/MFnsVcxoDKnYWevbS21H1bMLGz3lcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BW87f3rOoOH+5hXco+hAjc/XgauazXzSPXWPdYnovT3YGvtx/gXgB8S5H5dGnAbU7
-	 Y5Hi60/+8kjez3kfnd87VWbbJNOpiZ2EkZrawW/BEHbO0pWG60t3O9ifPb+gtDmZ1D
-	 xAz4godOY6VqhLL6XT8va15kXSkUyO3qhmaIt6fMAlG4Pohc4gSDUFvpsV9EgC7eb0
-	 P6+v6bNQtjM20nkKFLT9qcMyXaxDU8uUqYbMKQg0kUkpHsRU26Gi6lG8t03/mK7vDi
-	 4LuiLKinCID3oNr33BSTuXIKT53CB5GCNgS8hGgkqed+AkNoxM8zqSM3oTISSIJgL7
-	 r1WnfC/wIMFqg==
+	b=pocYnLOhrSNnAbRY//C4qPP93xioq+v0SfxjfF/Ra+E+vYPx6tReflGH46n1XO14Z
+	 qtPFMfhiA9fdtfwZ99X0nlaCPM11queFP5k67f2SeGRA5QDU+WD7fKH3FlGQwYLXJf
+	 PbNyTeJZzzBTPN8KocKUh1M2sdIzN0cbRBUD7179O5neDdxew26ysYSkVhYb1ngz97
+	 x8fCqdNDi3bmavaXoTO2viLGAVo1E2fghEGPrKWZ9a5vMwLIh3gMEnEYxmz0QEbmt8
+	 KTr1ScQdthVgSJf26FiCUDmYwQNwH2CsKXf7VPlFSacHijCHCa9i2vYkeTMViKM7KC
+	 u41zIorP7f9+g==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tkfVi-0000000Gv4f-0M0d;
+	id 1tkfVi-0000000Gv4z-0vWf;
 	Wed, 19 Feb 2025 09:32:50 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 06/27] scripts/kernel-doc: drop dead code for Wcontents_before_sections
-Date: Wed, 19 Feb 2025 09:32:22 +0100
-Message-ID: <d7f83274d7039a17761d95cb721aba23140f42a6.1739952783.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 11/27] scripts/kernel-doc.py: better handle empty sections
+Date: Wed, 19 Feb 2025 09:32:27 +0100
+Message-ID: <2de0e2ced74c8d57810b83c5efc9e8e1555f0a63.1739952783.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739952783.git.mchehab+huawei@kernel.org>
 References: <cover.1739952783.git.mchehab+huawei@kernel.org>
@@ -51,81 +51,82 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-There is a warning about contents before sections, which doesn't
-work, since in_doc_sect variable is always true at the point
-it is checked.
+While doing the conversion, we opted to skip empty sections
+(description, return), but this makes harder to see the differences
+between kernel-doc (Perl) and kernel-doc.py.
 
-Drop the dead code.
+Also, the logic doesn't always work properly. So, change the
+way this is done by adding an extra step to remove such
+sections, doing it only for Return and Description.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc | 11 -----------
- 1 file changed, 11 deletions(-)
+ scripts/kernel-doc.py | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index d59552e1a31d..af6cf408b96d 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -137,7 +137,6 @@ my $verbose = 0;
- my $Werror = 0;
- my $Wreturn = 0;
- my $Wshort_desc = 0;
--my $Wcontents_before_sections = 0;
- my $output_mode = "rst";
- my $output_preformatted = 0;
- my $no_doc_sections = 0;
-@@ -223,7 +222,6 @@ use constant {
-     STATE_INLINE        => 7,        # gathering doc outside main block
- };
- my $state;
--my $in_doc_sect;
- my $leading_space;
+diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+index 8bc0470d3720..886256e87692 100755
+--- a/scripts/kernel-doc.py
++++ b/scripts/kernel-doc.py
+@@ -242,6 +242,19 @@ class KernelDoc:
+         name = self.entry.section
+         contents = self.entry.contents
  
- # Inline documentation state
-@@ -332,12 +330,9 @@ while ($ARGV[0] =~ m/^--?(.*)/) {
-         $Wreturn = 1;
-     } elsif ($cmd eq "Wshort-desc" or $cmd eq "Wshort-description") {
-         $Wshort_desc = 1;
--    } elsif ($cmd eq "Wcontents-before-sections") {
--        $Wcontents_before_sections = 1;
-     } elsif ($cmd eq "Wall") {
-         $Wreturn = 1;
-         $Wshort_desc = 1;
--        $Wcontents_before_sections = 1;
-     } elsif (($cmd eq "h") || ($cmd eq "help")) {
-         pod2usage(-exitval => 0, -verbose => 2);
-     } elsif ($cmd eq 'no-doc-sections') {
-@@ -1963,7 +1958,6 @@ sub process_export_file($) {
- sub process_normal() {
-     if (/$doc_start/o) {
-         $state = STATE_NAME;        # next line is always the function name
--        $in_doc_sect = 0;
-         $declaration_start_line = $. + 1;
-     }
- }
-@@ -2068,7 +2062,6 @@ sub process_body($$) {
-     }
++        # TODO: we can prevent dumping empty sections here with:
++        #
++        #    if self.entry.contents.strip("\n"):
++        #       if start_new:
++        #           self.entry.section = self.section_default
++        #           self.entry.contents = ""
++        #
++        #        return
++        #
++        # But, as we want to be producing the same output of the
++        # venerable kernel-doc Perl tool, let's just output everything,
++        # at least for now
++
+         if type_param.match(name):
+             name = type_param.group(1)
  
-     if (/$doc_sect/i) { # case insensitive for supported section names
--        $in_doc_sect = 1;
-         $newsection = $1;
-         $newcontents = $2;
+@@ -298,6 +311,19 @@ class KernelDoc:
  
-@@ -2085,14 +2078,10 @@ sub process_body($$) {
-         }
+         args["type"] = dtype
  
-         if (($contents ne "") && ($contents ne "\n")) {
--            if (!$in_doc_sect && $Wcontents_before_sections) {
--                emit_warning("${file}:$.", "contents before sections\n");
--            }
-             dump_section($file, $section, $contents);
-             $section = $section_default;
-         }
++        # TODO: use colletions.OrderedDict
++
++        sections = args.get('sections', {})
++        sectionlist = args.get('sectionlist', [])
++
++        # Drop empty sections
++        # TODO: improve it to emit warnings
++        for section in [ "Description", "Return" ]:
++            if section in sectionlist:
++                if not sections[section].rstrip():
++                    del sections[section]
++                    sectionlist.remove(section)
++
+         self.entries.append((name, args))
  
--        $in_doc_sect = 1;
-         $state = STATE_BODY;
-         $contents = $newcontents;
-         $new_start_line = $.;
+         self.config.log.debug("Output: %s:%s = %s", dtype, name, pformat(args))
+@@ -401,7 +427,7 @@ class KernelDoc:
+         # to ignore "[blah" in a parameter string.
+ 
+         self.entry.parameterlist.append(param)
+-        org_arg = Re(r'\s\s+').sub(' ', org_arg, count=1)
++        org_arg = Re(r'\s\s+').sub(' ', org_arg)
+         self.entry.parametertypes[param] = org_arg
+ 
+     def save_struct_actual(self, actual):
+@@ -1309,8 +1335,7 @@ class KernelDoc:
+             return
+ 
+         if doc_end.search(line):
+-            if self.entry.contents.strip("\n"):
+-                self.dump_section()
++            self.dump_section()
+ 
+             # Look for doc_com + <text> + doc_end:
+             r = Re(r'\s*\*\s*[a-zA-Z_0-9:\.]+\*/')
 -- 
 2.48.1
 
