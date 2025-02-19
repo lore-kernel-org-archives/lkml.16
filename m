@@ -1,30 +1,31 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CEBC191F6A;
-	Wed, 19 Feb 2025 03:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1663A1AA1FE;
+	Wed, 19 Feb 2025 03:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739936486; cv=none; b=H689w5ix8PhbgMjcLzXFTIL/vMJSgYZr+7tLCPUG8IILrhYsum4r9TDP2P+/DWT/Q18mG4jD+qsY3gwx2zf2+CaLE1CZGyyEEhJu2NXl77R1/adHrehgpjJaWrEx1lDETzvP14QhcP4TA8ZWW6QZHXnHkSbvnIhlijOBqTG9a5I=
+	t=1739936493; cv=none; b=m/Ox0moqtGcUvg0zdM7pE0OIxqxUShXRaWdmm2c803o8+91CjA+onOaewLlMkHcyc0kvcZGj8Cy2WEEz1700f9bLaRCXJbVBYj+xzbIo8wiX83leG20CT2F0io6Yo4gGqWJZwB0MBmxb3qP5KH7uPwC01RZuhgtfkg7ZWPc5VWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739936486; c=relaxed/simple;
-	bh=lYmU3jNMFnWvp4qwM/KagSvdxMoE3OdWx4ePB/DRziA=;
+	s=arc-20240116; t=1739936493; c=relaxed/simple;
+	bh=K5Wk5zWfhuZpxBxJbPYOUUEVd9Twy5U2kBxJZXTy+nY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tm57ds7eKDIL5ULjPnck8wmn9Gli9U5gR7G0CDoFS/VALZ2PbzsANb0jVkJ7tiuhBF3GCs0+OO+++9ybL7+oN+ZQE/H0Oqi956CdOYiDsBJEiN8r5AKR9gOZigUtYQcsD+7QyG1nyL4U8F52B5D0InIJOtnULPI/izjKgR7QsWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=PmBfPsb0; arc=none smtp.client-ip=117.135.210.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	 In-Reply-To:Content-Type; b=eoxgxpYEsB44PE4U9hUTqHhIQnpF+8GfrdPb85Lgm1t7KogEptUuW54iPlLYPpLU0J45o1BuDh0nDmTp0vzl57YKJCU0JXOJEOihQTOCmACoUF9/0Y0NPBOLS72J1CKQk/acth4cZKerc+zxYlmOOQ2FjwoewqPeI49pwYSbP3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=e6AGfs0e; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="PmBfPsb0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=VskwbQNxxGXSCd9W0yEExCUDqdZuOrvg+FF0QwLaHys=;
-	b=PmBfPsb0HiGDtL3NfDx3O1o1ajAsex+lnq3k3gCigLM5JJV9Nme/u2NlizN+sG
-	gv/ZFVnXui9EqAYC4CCP8YOdE8o2x4b01drz/qh7qegzdi0vWEyi/SLHespbB2Kr
-	4y/Ciz0tchOPs9bnvQekW4GTvjF3Yi28cImNZKS9dE04E=
-Received: from [172.19.20.199] (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PikvCgD3306SUrVnoI4wBA--.1330S2;
-	Wed, 19 Feb 2025 11:40:03 +0800 (CST)
-Message-ID: <462e8d90-c0d0-474b-851c-46a44282b768@126.com>
-Date: Wed, 19 Feb 2025 11:40:02 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="e6AGfs0e"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739936485; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=hIaBkE8+UmoWwYLNXAVzpAMzNdqrJST2j8vQ4BHyKd0=;
+	b=e6AGfs0emG8DaqVOAikp9/wZUpEXuZ0Ms4cIiUaL8D88z8WJde1r6DfjqwrAScFyh4JwWGkAIZ5WLTYD8TQ+tqe80vTHP8NU73suzG1vjzNMSjLwWITEZIbZX4eAbXrI+9fmOh1VihLIXZQXoeRbch8cm7REvTF4sW29+o6q8Ag=
+Received: from 30.221.144.226(mailfrom:guoheyi@linux.alibaba.com fp:SMTPD_---0WPnjerv_1739936484 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 19 Feb 2025 11:41:24 +0800
+Message-ID: <5a33f86d-d82c-4685-8da7-5e623487a40c@linux.alibaba.com>
+Date: Wed, 19 Feb 2025 11:41:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,111 +33,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] mm/hugetlb: wait for hugetlb folios to be freed
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
- osalvador@suse.de, liuzixing@hygon.cn
-References: <1739878828-9960-1-git-send-email-yangge1116@126.com>
- <f5c31616-41e8-464b-84ec-8aa0cedfa556@redhat.com>
- <17ad5bf5-545c-4418-8d08-459ce6ef54cb@126.com>
- <950cae5a-bff0-49e6-8fe4-a2447c63d8bc@redhat.com>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <950cae5a-bff0-49e6-8fe4-a2447c63d8bc@redhat.com>
+Subject: Re: [PATCH 1/2] driver/aspeed-wdt: fix pretimeout for counting down
+ logic
+To: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Eddie James <eajames@linux.ibm.com>
+References: <20250218031709.103823-1-guoheyi@linux.alibaba.com>
+ <50ab5a0a-b807-4bd7-bda8-7c6f4bfc76fc@roeck-us.net>
+Content-Language: en-US
+From: Heyi Guo <guoheyi@linux.alibaba.com>
+In-Reply-To: <50ab5a0a-b807-4bd7-bda8-7c6f4bfc76fc@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PikvCgD3306SUrVnoI4wBA--.1330S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWFy5KrW7tFyrXF4fWF47XFb_yoW5ZFW7pF
-	W5KF13GFWkJr9IyrnFqw1qkw1vkrWjvFW0gr4rtw13CFnIyrn3KFWayw1Y9ayrAr10kF40
-	qr40qrZxWF1UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjoGQUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifgL4G2e1Un4BNgAAsW
 
+Hi Guenter,
 
+Thanks for your comments.
 
-在 2025/2/19 1:22, David Hildenbrand 写道:
-> On 18.02.25 13:19, Ge Yang wrote:
+On 2025/2/18 13:33, Guenter Roeck wrote:
+> On 2/17/25 19:16, Heyi Guo wrote:
+>> Aspeed watchdog uses counting down logic, so the value set to register
+>> should be the value of subtracting pretimeout from total timeout.
 >>
+>> Fixes: 9ec0b7e06835 ("watchdog: aspeed: Enable pre-timeout interrupt")
 >>
->> 在 2025/2/18 19:45, David Hildenbrand 写道:
->>> On 18.02.25 12:40, yangge1116@126.com wrote:
->>>> From: Ge Yang <yangge1116@126.com>
->>>>
->>>> Since the introduction of commit c77c0a8ac4c52 ("mm/hugetlb: defer
->>>> freeing
->>>> of huge pages if in non-task context"), which supports deferring the
->>>> freeing of hugetlb pages, the allocation of contiguous memory through
->>>> cma_alloc() may fail probabilistically.
->>>>
->>>> In the CMA allocation process, if it is found that the CMA area is
->>>> occupied
->>>> by in-use hugetlb folios, these in-use hugetlb folios need to be 
->>>> migrated
->>>> to another location. When there are no available hugetlb folios in the
->>>> free hugetlb pool during the migration of in-use hugetlb folios, new
->>>> folios
->>>> are allocated from the buddy system. A temporary state is set on the
->>>> newly
->>>> allocated folio. Upon completion of the hugetlb folio migration, the
->>>> temporary state is transferred from the new folios to the old folios.
->>>> Normally, when the old folios with the temporary state are freed, it is
->>>> directly released back to the buddy system. However, due to the 
->>>> deferred
->>>> freeing of hugetlb pages, the PageBuddy() check fails, ultimately 
->>>> leading
->>>> to the failure of cma_alloc().
->>>>
->>>> Here is a simplified call trace illustrating the process:
->>>> cma_alloc()
->>>>       ->__alloc_contig_migrate_range() // Migrate in-use hugetlb folios
->>>>           ->unmap_and_move_huge_page()
->>>>               ->folio_putback_hugetlb() // Free old folios
->>>>       ->test_pages_isolated()
->>>>           ->__test_page_isolated_in_pageblock()
->>>>                ->PageBuddy(page) // Check if the page is in buddy
->>>>
->>>> To resolve this issue, we have implemented a function named
->>>> wait_for_freed_hugetlb_folios(). This function ensures that the hugetlb
->>>> folios are properly released back to the buddy system after their
->>>> migration
->>>> is completed. By invoking wait_for_freed_hugetlb_folios() before 
->>>> calling
->>>> PageBuddy(), we ensure that PageBuddy() will succeed.
->>>>
->>>> Fixes: c77c0a8ac4c52 ("mm/hugetlb: defer freeing of huge pages if in
->>>> non-task context")
->>>> Signed-off-by: Ge Yang <yangge1116@126.com>
->>>> Cc: <stable@vger.kernel.org>
->>>
->>>
->>>
->>> Acked-by: David Hildenbrand <david@redhat.com>
->>>> +void wait_for_freed_hugetlb_folios(void)
->>>> +{
->>>> +    flush_work(&free_hpage_work);
->>>
->>> BTW, I was wondering if we could optimize out some calls here by sensing
->>> if there is actually work.
->>>
->> for_each_hstate(h) {
->>     if (hugetlb_vmemmap_optimizable(h)) {
->>         flush_work(&free_hpage_work);
->  >         break;>     }
->> }
->> Is this adjustment okay?
-> 
-> I think that's better, except that it would still trigger in scenarios 
-> where hugetlb is completely unused if 
-> CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is around.
-> 
-> Can't we check hpage_freelist?
-> 
-> if (llist_empty(&hpage_freelist))
->      return;
-> flush_work(&free_hpage_work);
-> 
-Ok, thanks.
-> It should be able to deal with races (we don't care if something is 
-> getting added concurrently, only if there is something right now).
-> 
+>> Signed-off-by: Heyi Guo <guoheyi@linux.alibaba.com>
+>>
+>> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> Cc: Joel Stanley <joel@jms.id.au>
+>> Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
+>> Cc: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   drivers/watchdog/aspeed_wdt.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/watchdog/aspeed_wdt.c 
+>> b/drivers/watchdog/aspeed_wdt.c
+>> index b4773a6aaf8c..520d8aba12a5 100644
+>> --- a/drivers/watchdog/aspeed_wdt.c
+>> +++ b/drivers/watchdog/aspeed_wdt.c
+>> @@ -187,6 +187,13 @@ static int aspeed_wdt_set_pretimeout(struct 
+>> watchdog_device *wdd,
+>>       u32 actual = pretimeout * WDT_RATE_1MHZ;
+>>       u32 s = wdt->cfg->irq_shift;
+>>       u32 m = wdt->cfg->irq_mask;
+>> +    u32 reload = readl(wdt->base + WDT_RELOAD_VALUE);
+>> +
+>
+> It is unusual to use a register value here and not the configured timeout
+> value. I would have assumed that pretimeout is compared against 
+> wdt->timout,
+> not against the register value, and that the multiplication with 
+> WDT_RATE_1MHZ
+> is done after validation. This needs an explanation.
+It was supposed to be a straight-forward way to check if the pretimeout 
+value is supported by the hardware. I can change to wdt->timeout if it 
+is better.
 
+Further, in the case of wdt->timeout > max_hw_heartbeat_ms, shall we 
+restrict the pretimeout to be larger than wdt->timeout - 
+max_hw_heartbeat_ms  / 2? For the watchdog_kworker works in 
+max_hw_heartbeat_ms  / 2 interval, pretimeout event may be triggered 
+unexpected when watchdog is not pinged in (max_hw_heartbeat_ms - 
+(timeout - pretimeout)).
+
+>
+>> +    if (actual >= reload)
+>> +        return -EINVAL;
+>> +
+>
+> On top of that, you'll also need to explain why 
+> watchdog_pretimeout_invalid()
+> and with it the validation in watchdog_set_pretimeout() does not work 
+> for this
+> watchdog and why this extra validation is necessary.
+
+watchdog_pretimeout_invalid() will return false if wdt->timeout == 0, 
+but we can't determine the hardware pretimeout value if timeout == 0 here.
+
+Thanks,
+
+Heyi
+
+>
+> Guenter
+>
+>> +    /* watchdog timer is counting down */
+>> +    actual = reload - actual;
+>>         wdd->pretimeout = pretimeout;
+>>       wdt->ctrl &= ~m;
