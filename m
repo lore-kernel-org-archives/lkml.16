@@ -1,126 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0881A840D;
-	Wed, 19 Feb 2025 11:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806C61A840D
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 11:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739963276; cv=none; b=pnmrW9cxKlqjuyPEz3f50IUmkjtQ21fZYy/pA4VGO1v2sqMgrlDSvPID6Oj2rFW8nf8YCXWzXk9SOFWMcpMDjuwzv5IcqrHw+zuosSMKbpO9/cyDo6+jJp9oHJyx7I09QQxwo6R/SzbgjF72NQXDCF1MruXxK7II5RGJ5YlfivM=
+	t=1739963323; cv=none; b=kqOO6GH7j0lZx+f8dwkt74CutPvcV9gr0g+h5+3lw69Ag+WmJKNxX7HU2d2zoMpvLsktOgVYyN0JQkgcQ1bM53TdKx6HyvKjYkPkyfvVOrloLyUCL+zIpdsQCigquv7UXfTN4DKmtf/0r7OpIoUldhuX4vrnhxPU2qtmybWGbw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739963276; c=relaxed/simple;
-	bh=tl5pzB5lQ0dT/Bi0R1NrudW2rHGEeLRrxww72qbAKnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktI4UQO2ov69gfXWEd4bSvgCaEAP7AV6LRaI9AN6z3PNesP9F7KOAaPwGLwtidf+fFDCKFmwrInGqhYcm6BJ4ihgoK9ixzXCftvu5733WoEZu3+9CeY832bm872k0Ya05ipB5BObLLOcgtFPoRLC9w81+J5geL7BuvDX6ujPl8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bhEoV8Z+; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739963323; c=relaxed/simple;
+	bh=d3hwHJnXhEL3U4lpXF9O3OIISXIqjdYjDDjV0op+bOM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=U4AIm2cQ7EOLrMNmylcVXfTq2CtWHOprFuJdpESoJDJwVpj3ctkuLwqAN9aezH129yvnyoN981zffDesXDh/O9D3p7DsZz1rs4lxr09ZVKp36YCXLdD7KxDHiw37sezdu1kdWJpkb5VKJGMi3hRT2VMlx5M/LeEMlwg1DItVJSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LdfkQV3I; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bhEoV8Z+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739963275; x=1771499275;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tl5pzB5lQ0dT/Bi0R1NrudW2rHGEeLRrxww72qbAKnA=;
-  b=bhEoV8Z++qY8EYGnL0+f2HGbnbffexorbXWF13Cr9PasIqoEPR8YUjlt
-   4uWL8OulLxb33pqmk1xtruKuRkaJ/WVBPYSlRVBzWGK06md2N4wyUGf3H
-   C4qvC7kNN7EQwq7BB5O9crbu4BTCORhuFutvxLN0JVSOSJZU2j8AaAFdC
-   aOuf+aBEGsnCuJPLi4Q/UXsNetG+UV23Iin7bsNKY8WufhmP48aK//wIN
-   XU5sse2CeYyRtLK1w2BAlP++lQv+IJOCGl283z7Bvht5sa/OfASDNFVKg
-   2uF4oDAQx46PMpeSNax1nAljXpnb7A4LCJqGrBuRhZnTzN7ZVi60xFG2h
-   w==;
-X-CSE-ConnectionGUID: v/njSpbpT4q34DsXTjieAg==
-X-CSE-MsgGUID: T3Ie6bYnRBSJpVxaDtwxRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="58101236"
-X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
-   d="scan'208";a="58101236"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 03:07:55 -0800
-X-CSE-ConnectionGUID: wXhrJnbqR0q5d0rDK0cZnA==
-X-CSE-MsgGUID: CbAA0e9KS9OZe1ScliBf1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115580794"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 03:07:50 -0800
-Date: Wed, 19 Feb 2025 12:04:14 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, ioana.ciornei@nxp.com,
-	yangbo.lu@nxp.com, michal.swiatkowski@linux.intel.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH v2 net 9/9] net: enetc: fix the off-by-one issue in
- enetc_map_tx_tso_buffs()
-Message-ID: <Z7W6rtLwpHGlox3T@mev-dev.igk.intel.com>
-References: <20250219054247.733243-1-wei.fang@nxp.com>
- <20250219054247.733243-10-wei.fang@nxp.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LdfkQV3I"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5dbf65c0c4fso1179065a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 03:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739963320; x=1740568120; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4WCJJBquXtU0xuWId0qAETv4tq4g6KwlnFXnMWiiOMA=;
+        b=LdfkQV3I9uFlaiHeZYjrm+4Wz9+psWWBUln9N+WPNAZVWJl1kO0akRrXF9pkH3xaKz
+         OSZbh63rO0PJUedgkL1UPmzYVzfxhS/ske8ofY5paug09iduLdNg65X9AKeGMuzzUrR/
+         S3YiOda4SUfD0Etj0C3IG0baJQTCz0Nd5QgwKH8ZB8BPbn6DhSVCCQMHkoqIaakEJ6r5
+         P+luwxzvp3q0LZZvZgkcMB15MI58CiT4bdxBeyrOH/RikWZ4nTdOzC9qdyI0vjsd2TlT
+         4nwtSaXZCH+CCb8ErAoWU/o7hMAzROzZ/v8CzSBe50go2Pt+PinqzTfDp0PYJ3VXY0v4
+         BHzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739963320; x=1740568120;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4WCJJBquXtU0xuWId0qAETv4tq4g6KwlnFXnMWiiOMA=;
+        b=O4fdaYuNQ/LZU/+n4gWoYYl0+EOrQU3MUIzpl4uHYRQZWab17q7HmW2qV/bi8S5/Aa
+         lotYUkBPc0xtT6xYbPUAQa7Zq+/U1D+cO+aOQOglbBg/XSJdnMoNkPwsOkVN34xaI55t
+         JufvxeFgswStTmX9ndym+JFYqtwzB9oCj5DUZ0fGxzEjp5jsF7VT4Hhm31gycQloceiU
+         BOT13ZMcJ+irvCHv2HOAGjAj69VRDSqw+Wj+Su0cYGhxleo5uE861ovKvVhuy/Tr8a93
+         xrPxwTVysAaLheH1ysfDu+CwqpBD+rYggTl5nEzoMN8wFrZjLdhNebDmScBML7AuGCFq
+         cEhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhrD0uW3WRiTne0OkKKdyZYC4DWLefPUFEzdBKrkGVPz+YBCtgFQ466xC8eBLliP7eNNGcpDRyw3NCoI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1ky/k1xlCosFpU01El5LD7scSmkLnQxMmgOPS5e1K4lBp8oCx
+	CYjQeCcdDpRg2kFUHUAdyApl8zlC7LZkIYk5gy65MBM1OXx7HqNuday92o4AaT0=
+X-Gm-Gg: ASbGnct8qRB126n/aLT5TJv0j55Mr8dylfpwgK9p4Ak3bGp3ucRR2MYd1rCOQf5Y4jg
+	IJVquEOMBieW0r+BGhF+dQxhXB7hKD4j65DevMIet9tcxAIMNlIwahdqv5cg5L2NcL1rRl/Gswp
+	aFo7E7hs+oXg/IqBHF2cojjT8gNmEfG2aWAlxTPVwCA9Y6G/y83wivaU7GCJ6aav76Npp6DyBFF
+	ai/HK1TJgWkCyUJG8OEX0mIuZnHO3XGAj8izG9+PBh8AaSwP8zY/ySjYyuS5/t7BA9/57xYLP94
+	2gLWoVe/8T9WmlbVb+jGr8gSvbAfzqE=
+X-Google-Smtp-Source: AGHT+IEfgYfUdIbS9nfRVc6N/GSxlxs4zzk9e7TbLbd8Y1WZWb4NpfyhDpkjxjKwSOnEvxlwN1WD4Q==
+X-Received: by 2002:a05:6402:2356:b0:5dc:d9c7:a61f with SMTP id 4fb4d7f45d1cf-5e036169cbfmr6699580a12.7.1739963319786;
+        Wed, 19 Feb 2025 03:08:39 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1b4e8dsm10158156a12.14.2025.02.19.03.08.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 03:08:37 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250215112716.159110-1-ivo.ivanov.ivanov1@gmail.com>
+References: <20250215112716.159110-1-ivo.ivanov.ivanov1@gmail.com>
+Subject: Re: [PATCH v1 0/4] dt-bindings: soc: samsung: sysreg, pmu, chipid
+ for 2200
+Message-Id: <173996331626.137285.15610592693231757243.b4-ty@linaro.org>
+Date: Wed, 19 Feb 2025 12:08:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219054247.733243-10-wei.fang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Wed, Feb 19, 2025 at 01:42:47PM +0800, Wei Fang wrote:
-> There is an off-by-one issue for the err_chained_bd path, it will free
-> one more tx_swbd than expected. But there is no such issue for the
-> err_map_data path. To fix this off-by-one issue and make the two error
-> handling consistent, the loop condition of error handling is modified
-> and the 'count++' operation is moved before enetc_map_tx_tso_data().
-> 
-> Fixes: fb8629e2cbfc ("net: enetc: add support for software TSO")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> ---
->  drivers/net/ethernet/freescale/enetc/enetc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-> index 9a24d1176479..fe3967268a19 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-> @@ -832,6 +832,7 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb
->  			txbd = ENETC_TXBD(*tx_ring, i);
->  			tx_swbd = &tx_ring->tx_swbd[i];
->  			prefetchw(txbd);
-> +			count++;
->  
->  			/* Compute the checksum over this segment of data and
->  			 * add it to the csum already computed (over the L4
-> @@ -848,7 +849,6 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb
->  				goto err_map_data;
->  
->  			data_len -= size;
-> -			count++;
->  			bd_data_num++;
->  			tso_build_data(skb, &tso, size);
->  
-> @@ -874,13 +874,13 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb
->  	dev_err(tx_ring->dev, "DMA map error");
->  
->  err_chained_bd:
-> -	do {
-> +	while (count--) {
->  		tx_swbd = &tx_ring->tx_swbd[i];
->  		enetc_free_tx_frame(tx_ring, tx_swbd);
->  		if (i == 0)
->  			i = tx_ring->bd_count;
->  		i--;
-> -	} while (count--);
-> +	}
->  
->  	return 0;
->  }
 
-Thanks for fixing it.
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-
-> -- 
-> 2.34.1
+On Sat, 15 Feb 2025 13:27:12 +0200, Ivaylo Ivanov wrote:
+> Hey folks,
 > 
+> This patchset adds support for chipid of Exynos 2200, as well as
+> documents sysreg, pmu and chipid compatibles for that SoC.
+> 
+> Best regards,
+> Ivaylo
+> 
+> [...]
+
+Applied, thanks!
+
+[1/4] dt-bindings: soc: samsung: exynos-sysreg: add sysreg compatibles for exynos2200
+      https://git.kernel.org/krzk/linux/c/cd6381a6ed69747fbe1f8ddb926b00786027894a
+[2/4] dt-bindings: soc: samsung: exynos-pmu: add exynos2200 compatible
+      https://git.kernel.org/krzk/linux/c/801a116bb82431446cedf942842561348a2c67e6
+[3/4] dt-bindings: hwinfo: samsung,exynos-chipid: add exynos2200 compatible
+      https://git.kernel.org/krzk/linux/c/28e113a133b5033b47ffaadfc3e96994e6c5e132
+[4/4] soc: samsung: exynos-chipid: add exynos2200 SoC support
+      https://git.kernel.org/krzk/linux/c/c86e967e6ba73ec6ac2a189073e0f7b0f1313788
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
