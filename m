@@ -1,103 +1,144 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308FA22A81A
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 19:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AFD22ACD3;
+	Wed, 19 Feb 2025 19:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739993127; cv=none; b=T1Dhtf2tR+LiRBjW636zDNz60YiK5BF8MHydS/Et+YgBbHOozerFL2Z6o9RXHdYsFkqtknHfROwn9CMKYEOW324ItuptojoGPmmTvuh+yrG/n8uA8Th1hWNa4g0Ei+TKvW7lX/aRXeWHYBDp1ZmUIpBEsYAcx7eZD+wZ0VYm7n0=
+	t=1739993295; cv=none; b=bzakNKuVOpEmkup1JNp3fe7AbZmrRw0JU3cF5+l7Ka/CPKH2yvuhNndMOT5aKPTLtrv7R7FICQaD7d9YoVdEoB1qiml2yCATUfudBTu+8JCPHsmNVSvYHf3zRxO9xHpTIN0QlTd6rNbRPky7r/sdoW4Hw4FjKTzjm3RdCYKkKXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739993127; c=relaxed/simple;
-	bh=SykixatIZerodgATAwVcTB8LToqqQLkJFQdVB2OSm9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EldJIiUj7vJucYLAL65ZyhJU1WbAXNz9SOWvet456kHWEM/ktsZE2jUMcwt/Dhl8eRpqJ+6pAj7YgpqJQNgAQlaVd7Q4LwIqgj2QEUcjmB7aZXAUJd1o1PSKTvEF7mj4LZExbA/i3MkMWHFASv1axnbrYOxyCDjkz+Sg3N2SP80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HAo43khA; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739993295; c=relaxed/simple;
+	bh=GFfGVKb+6rQlP2ieo37lV1hk+auSeCSnZwEleBMmL24=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oR/e77X129F3CBcsqmxksSX+zXbGpNttDQZW7TTVSRxT826RC7xBnfLLhxysJ+baiVKdv87W43YnXbAZw09RJ5HHCVjEFAo3zES71yIo34lsW2oZLr9QAPqih2BhZotM2LjiRih9rfWLiWJinhPrAkLBsAgsNNd9VtdT7W4z4Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkeHyHxq; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HAo43khA"
-Date: Wed, 19 Feb 2025 11:25:06 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739993112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YWbTsmkFNVzUKGQASgjUS1od0uhjMSBLNuVdbUo2uHQ=;
-	b=HAo43khA9DU1uLsdSMUg9nTVrQVQR5iWPGhSRHK2Wp8bg/ugmPa8asiQlOuuhyqh54C2El
-	P0Ec3ptzNRyg2MaUQjrQu3nWUclL3MWyd0WopanhROR742V2qiKu4g9fHcKmpvzW/7fYJq
-	QFG4ENuIdGD3oxElJek7m3LHNJSXlG0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: kvmarm@lists.linux.dev, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Colton Lewis <coltonlewis@google.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Janne Grunau <j@jannau.net>
-Subject: Re: [PATCH v2 06/14] KVM: arm64: Remap PMUv3 events onto hardware
-Message-ID: <Z7YwEptbRnX5s9Fw@linux.dev>
-References: <20250203183111.191519-1-oliver.upton@linux.dev>
- <20250203183111.191519-7-oliver.upton@linux.dev>
- <865xl5sx20.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkeHyHxq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739993294; x=1771529294;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GFfGVKb+6rQlP2ieo37lV1hk+auSeCSnZwEleBMmL24=;
+  b=QkeHyHxq49FzB4WaGQtIgGh5firEejFLPxu94nNsbA1sp0pTZ5HzykH+
+   AfpPAv0gVsRGcs3E7wYGFd+6SY9yWfMLRFC4qYw7hSTs3Ahwc/gPMyyZo
+   pWWyq622Zd7lIRrt0OUBprN8AaUYDrVuQ6O1onKYQFE2uG/yLxmeXYpvS
+   5AyxmxXLhL32i5E1JqLTP33fV3Amc1qE4T735JaNrkV9pg3BXP70PQBo3
+   8y0bOFQyLC9BwCeJJSFpd60JhGami2PFHbT4i/soJLruoUlySnFw34pC2
+   GKaVVKdg8lcQaZLtnhtZHFGGj2HJ2p2xf/P6Gop4ekle4/rG1Vd2LDpGL
+   w==;
+X-CSE-ConnectionGUID: FmThzyNpRiSBDuAGHnc5yQ==
+X-CSE-MsgGUID: iFyyG/NNQPWhrj+t8s8d8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52182712"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52182712"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 11:28:13 -0800
+X-CSE-ConnectionGUID: I3yiiJAiRh6BMNeDQiaZMw==
+X-CSE-MsgGUID: yO8bzx7MSqO+nkaADoxAMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="115343992"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by fmviesa010.fm.intel.com with ESMTP; 19 Feb 2025 10:43:55 -0800
+From: Sohil Mehta <sohil.mehta@intel.com>
+To: x86@kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v3 00/15]  Prepare for new Intel Family numbers
+Date: Wed, 19 Feb 2025 18:41:18 +0000
+Message-ID: <20250219184133.816753-1-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <865xl5sx20.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 04:45:27PM +0000, Marc Zyngier wrote:
-> On Mon, 03 Feb 2025 18:31:03 +0000,
-> Oliver Upton <oliver.upton@linux.dev> wrote:
-> > 
-> > Use the provided helper to map PMUv3 event IDs onto hardware, if the
-> > driver exposes such a helper. This is expected to be quite rare, and
-> > only useful for non-PMUv3 hardware.
-> > 
-> > Tested-by: Janne Grunau <j@jannau.net>
-> > Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-> > ---
-> >  arch/arm64/kvm/pmu-emul.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-> > index 62349b670cf9..60cf973e2af9 100644
-> > --- a/arch/arm64/kvm/pmu-emul.c
-> > +++ b/arch/arm64/kvm/pmu-emul.c
-> > @@ -673,6 +673,18 @@ static bool kvm_pmc_counts_at_el2(struct kvm_pmc *pmc)
-> >  	return kvm_pmc_read_evtreg(pmc) & ARMV8_PMU_INCLUDE_EL2;
-> >  }
-> >  
-> > +static u64 kvm_map_pmu_event(struct kvm *kvm, u64 eventsel)
-> > +{
-> > +	struct arm_pmu *pmu = kvm->arch.arm_pmu;
-> > +	int hw_event;
-> > +
-> > +	if (!pmu->map_pmuv3_event)
-> > +		return eventsel;
-> > +
-> > +	hw_event = pmu->map_pmuv3_event(eventsel);
-> > +	return (hw_event < 0) ? eventsel : hw_event;
-> 
-> I find this a bit odd. If we can translate events, but failed to do
-> so, we still install the originally requested event, and we have no
-> idea what this maps to on the HW.
-> 
-> I'd rather we just don't install that event at all rather than
-> counting something random.
+---Summary---
+Mainstream Intel processors have been using Family 6 for a couple of decades.
+This series is an audit of all the arch/x86 Intel Family-model checks to get
+ready for the upcoming Family 18 and 19 models. It also converts the last
+reamaining Intel x86_model checks to VFM ones.
 
-Heh, this was a leftover party trick that I was using to try "raw"
-events from inside a VM. Happy to limit things to the PMUv3 event space
-though.
+Patch 1-8 : Include Dave Hansen's Acked-by.
+Patch 9-15: Almost ready to merge but don't have review tags yet.
 
-Thanks,
-Oliver
+---v3 changes---
+* Reordered the patches and moved the Acked ones to the front since they are
+  likely to get applied sooner.
+* Patches 11 and 14 have a slightly different approach now. 
+* Improved commit messages overall.
+* Dropped the drivers/ fixes. Will post them separately.
+
+---Previous versions---
+Refer the v2 cover letter for more background.
+
+v2: https://lore.kernel.org/lkml/20250211194407.2577252-1-sohil.mehta@intel.com/
+RFC-v1: https://lore.kernel.org/lkml/20241220213711.1892696-1-sohil.mehta@intel.com/
+
+Sohil Mehta (15):
+  x86/apic: Fix 32-bit APIC initialization for extended Intel Families
+  x86/cpu/intel: Fix the movsl alignment preference for extended
+    Families
+  x86/microcode: Update the Intel processor flag scan check
+  x86/mtrr: Modify a x86_model check to an Intel VFM check
+  x86/cpu/intel: Replace early Family 6 checks with VFM ones
+  x86/cpu/intel: Replace Family 15 checks with VFM ones
+  x86/cpu/intel: Replace Family 5 model checks with VFM ones
+  x86/acpi/cstate: Improve Intel Family model checks
+  x86/smpboot: Remove confusing quirk usage in INIT delay
+  x86/smpboot: Fix INIT delay assignment for extended Intel Families
+  x86/cpu/intel: Fix fast string initialization for extended Families
+  x86/pat: Replace Intel x86_model checks with VFM ones
+  x86/cpu/intel: Bound the non-architectural constant_tsc model checks
+  perf/x86: Simplify Intel PMU initialization
+  perf/x86/p4: Replace Pentium 4 model checks with VFM ones
+
+ arch/x86/events/intel/core.c          | 16 ++++--
+ arch/x86/events/intel/p4.c            |  7 +--
+ arch/x86/events/intel/p6.c            | 26 ++--------
+ arch/x86/include/asm/intel-family.h   | 21 +++++++-
+ arch/x86/kernel/acpi/cstate.c         |  8 +--
+ arch/x86/kernel/apic/apic.c           |  4 +-
+ arch/x86/kernel/cpu/intel.c           | 74 +++++++++++++--------------
+ arch/x86/kernel/cpu/microcode/intel.c |  2 +-
+ arch/x86/kernel/cpu/mtrr/generic.c    |  4 +-
+ arch/x86/kernel/smpboot.c             | 17 +++---
+ arch/x86/mm/pat/memtype.c             |  6 +--
+ 11 files changed, 93 insertions(+), 92 deletions(-)
+
+-- 
+2.43.0
+
