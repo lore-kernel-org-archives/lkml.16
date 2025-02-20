@@ -1,119 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0852835942;
-	Thu, 20 Feb 2025 13:51:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6638735942;
+	Thu, 20 Feb 2025 13:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740059489; cv=none; b=qHtEPAOezoTE4MhXmf7DURfKV08Vi32eKdJkwv68++oamW6K0ao+7Wbb7w6O5mFRLZLad1yuX/gH83y1RpDmC1w96NTusvb43qgJ1FLvBDolqj+RhIxZeQDrJBYPPhcj0tJnk1AFTm5W2NQoCXvxUHUg9q7jB+YAhEkHTWNELe8=
+	t=1740059514; cv=none; b=B8CKoccYHq1L2rpofmSTxeR0FHZLt9d+7x9qiJDPRFXDX44jyb6TRPOljRaV9LVyqDHe5ySgvhXNfFCVQq/MzJjX+bGLSGltxmywHjrOvH3KialCYtKCSyqru3L7FWwB3XgntpV+mc826CXNLQVQPhRmqL5TW0z8Ay2rYRFFIYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740059489; c=relaxed/simple;
-	bh=yyNMgC0L8EOqbQJBKtFwBZUUIlx9bNlp7wBIvGIHH5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SKcsDGVxe2/OO1OGBkMkp9cA+HI0QOaDoJnjO0RzODrXS9V5GbF2gmxbUTIR4I0uvkRCF+ZOH66JJ05v5lCJmt02gGEv8tkGLmEwr5znalkLRiMXQaJm7DEx5jSrCSWNQLNb3sSqt3cRGvcahQiuIljQyYy7RFcyK8pNbTWitrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE0CC4CED1;
-	Thu, 20 Feb 2025 13:51:24 +0000 (UTC)
-Message-ID: <d3cf3e65-fe43-4c0b-bfb5-03fdd3c9fc29@xs4all.nl>
-Date: Thu, 20 Feb 2025 14:51:23 +0100
+	s=arc-20240116; t=1740059514; c=relaxed/simple;
+	bh=rDJUlX+QEJ9KJ+mWc8LtQbvy7UqqnfUgehzBbPykXl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EXM0lxGeyFtsRfEMZm5jqo84R0AvU9q4sMswwPwkQ+ExDuqsIlhRnovTrP+huOtBC1D9Y0vYD6e6BrcTBo0amgwZ7P9PohY5+CJ0aFuIjSddw+qzZmVbm/olV56/SVU1D1DQTwSGnWiBG97dRUinAbOXBvODSkSAVHc8iqHYRzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUBuTOq0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUBuTOq0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A1A1C4CED1;
+	Thu, 20 Feb 2025 13:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740059513;
+	bh=rDJUlX+QEJ9KJ+mWc8LtQbvy7UqqnfUgehzBbPykXl4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OUBuTOq0xq22GqFdC1+jb5s32tEM90DnQkFAft/tbn9WfPrZESqQTUwWrbKDQY9ap
+	 uJ+yiQadhtwZasH/E7RsMd6RqEe92mW/WeFhvsGCR1L2wMPs6qshRKzrcKafavcS+E
+	 6Hg7VDwjWQ8gtHU1Np33c6pKwTy5Kuyi+9Q3ApkQJVzMrqdfNSQTmLIfha912gct2S
+	 Egr2AA3r/Xm4clZbodlQMAlngzAM02csDhOe04volXO+Zxy+s9gdyD5QKAcRfgO6Cb
+	 pIt7Ez5NcwS074INK2hB7ttOiTNJ6BTJ0hqPsAgfOPBK98FgfCuuk1aBgCipqz/vfl
+	 QZ/kaBK7DBITw==
+Date: Thu, 20 Feb 2025 13:51:50 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.1 000/569] 6.1.129-rc2 review
+Message-ID: <Z7czduDc47ywPzXm@finisterre.sirena.org.uk>
+References: <20250220104545.805660879@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] media: platform: Use str_enable_disable-like helpers
-Content-Language: en-US
-To: Tomasz Figa <tfiga@chromium.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Maxim Levitsky <maximlevitsky@gmail.com>, Sean Young <sean@mess.org>,
- Olli Salonen <olli.salonen@iki.fi>, Abylay Ospan <aospan@amazon.com>,
- Jemma Denson <jdenson@gmail.com>,
- Patrick Boettcher <patrick.boettcher@posteo.de>,
- Jacopo Mondi <jacopo+renesas@jmondi.org>,
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
- Tim Harvey <tharvey@gateworks.com>, Andy Walls <awalls@md.metrocast.net>,
- Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250114-str-enable-disable-media-v1-0-9316270aa65f@linaro.org>
- <20250114-str-enable-disable-media-v1-5-9316270aa65f@linaro.org>
- <20250114204240.GA29414@pendragon.ideasonboard.com>
- <Z4dmFlJ_0hugX2rY@kekkonen.localdomain>
- <CAAFQd5ASMNr2tO+R1sYa58diWLHJr8iomKA2-PinEojCdXT98A@mail.gmail.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-In-Reply-To: <CAAFQd5ASMNr2tO+R1sYa58diWLHJr8iomKA2-PinEojCdXT98A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1bdC0VFFraiDunUr"
+Content-Disposition: inline
+In-Reply-To: <20250220104545.805660879@linuxfoundation.org>
+X-Cookie: Editing is a rewording activity.
 
-On 1/15/25 08:47, Tomasz Figa wrote:
-> On Wed, Jan 15, 2025 at 4:39 PM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
->>
->> Hi Laurent,
->>
->> On Tue, Jan 14, 2025 at 10:42:40PM +0200, Laurent Pinchart wrote:
->>> Hi Krzysztof,
->>>
->>> Thank you for the patch.
->>>
->>> On Tue, Jan 14, 2025 at 08:46:21PM +0100, Krzysztof Kozlowski wrote:
->>>> Replace ternary (condition ? "enable" : "disable") syntax with helpers
->>>> from string_choices.h because:
->>>> 1. Simple function call with one argument is easier to read.  Ternary
->>>>    operator has three arguments and with wrapping might lead to quite
->>>>    long code.
->>>
->>> It's more difficult to read for me.
->>
->> I don't have any issue in using the ternary operator either. Using these
->> helpers makes the lines generally 3 characters shorter.
->>
->>>
->>>> 2. Is slightly shorter thus also easier to read.
->>>> 3. It brings uniformity in the text - same string.
->>>> 4. Allows deduping by the linker, which results in a smaller binary
->>>>    file.
->>>
->>> I don't see why the linker can't de-dup string in the current code.
->>
->> In fact the functions are static inline so from that point of view I don't
->> think there's any difference.
->>
->>>
->>> I'm sorry, I just don't see the point in doing this. I'd like to avoid
->>> those changes in the Linux media subsystem, or at the very least in
->>> drivers I maintain.
->>
->> I don't have much of an opinion, perhaps I slightly prefer using these as
->> the rest of the kernel does, too. Yet if we choose not to use these
->> helpers, we continue to be occasional targets of largish patchsets "fixing"
->> this.
-> 
-> To put one more aspect on the scales:
-> 
-> These kinds of patches actually make it more difficult to backport
-> changes (e.g. fixes) to stable kernels, so my preference would be to
-> only use the new helpers in new drivers.
 
-I agree with Tomasz. Now, if the whole kernel is converting to these
-new functions, then I guess we should follow, but from what I can tell
-that doesn't appear to be the case.
+--1bdC0VFFraiDunUr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'll reject this series. It can always be resurrected if there is
-sufficient demand for this.
+On Thu, Feb 20, 2025 at 11:57:56AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.129 release.
+> There are 569 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Regards,
+Tested-by: Mark Brown <broonie@kernel.org>
 
-	Hans
+--1bdC0VFFraiDunUr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Best regards,
-> Tomasz
-> 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme3M3UACgkQJNaLcl1U
+h9CKswf+NeZN+z+sFi2xjxLXJXHOS3wkBO+IzTdmz1Bmr2XtC7pBXaXrvWhPu3vT
+KmoZST4M6XdmsNCfvbTzQWPwe0dVJ9DJPgA47mn/POKM4Gv8zzO3YA84CtS/JVe8
+PkcNb4GjGdaNY1Npk4ARpkMRQRGRFl2ucIn30NA5kjshUs/6+zsZIf7lla3SXcJ5
+DQSaPSM5ohf52Fl9jN/aGIWPzAmMwsFYhLQLcaYPO6bb43/G36JDxFu5KleaYNoR
+Yzx0lCMiHikJ1EZ0ryeToLM51no69Z3wvP+MYUXJzkcLgYjyYh5yuURMFFltam4O
+ck1Jh4v/sFneZG8I+54lF4VEgkUvLQ==
+=+3WX
+-----END PGP SIGNATURE-----
+
+--1bdC0VFFraiDunUr--
