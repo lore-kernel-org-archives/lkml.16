@@ -1,153 +1,106 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1941F8917;
-	Thu, 20 Feb 2025 15:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B9C5234;
+	Thu, 20 Feb 2025 15:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065841; cv=none; b=OCfeymr0PlSWKmqR8DQ05hpuCz4JukEsersMAEuCWIYvBdsKcwGx4fFdCAyo1wFG4UCE60+pkQXyFqH9m7gpQpHr5CtletfiVfzhrfq0OFg/5wmkf7XDugPlBALjfJ+pMW88uDrVzR+um+vioQGVp0ZPEbeIqVQqtFOEiADQZLY=
+	t=1740065920; cv=none; b=lUpJxLTUyN2a9OHKme//cAvnS86Kax3FXwXS3XfioSeoaitTRMQQjrBs3mDMtJjOImR5Y/WLDuABALIGfkGZ5bDO6HxY4xfzxguFZosw5phuoB3kt15rmhf5xTTvdywSaVAKZPZuUJLi/wJwAFDic5S7zvTEnTNJTqxkOhOirxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065841; c=relaxed/simple;
-	bh=q/nUEhrNJ5UehSYMlQVLloZA8WLnpE2yUxDeRzb4+bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V3aBono3gmAbrkzyFHmeb6ErneLZejLzyPAaMc6XT1fau8nu9k+YhewRWbH/VTk3jwN9C6scqaNCUEE7Kl0LnPQIRtXyz3lwjs2kmZ2nDCaRcSpkYMhkBHhzKjFKrbHA+8dJAbX19IDYt9kgGxE2xD143QuxDznLc3OaX1BwBYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=AG6GnDh9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FkWnMGz8; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1740065920; c=relaxed/simple;
+	bh=W0xJ2fNlNVkFLcGpLh+E4eVhmwP7cxluh16zZZ0Z6xw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=g5cl8jsSPdn8VTpYLesj2App8QA6lNBFwbqSuzo3fH4Ge8cIV5c+IxLgW6JrKNf060QB/uxO6rU2d1N/1ltTmGjLcl9ByHjon3OSuoAkEYCGB6qG/WkGZEE3A5s6CRj390R5LXuU/eS25fiDLeoD8tRGBuFHUdIxAu7cjnfO/4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UEv+Xhy0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eWTEXZjT; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="AG6GnDh9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FkWnMGz8"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 0EB4125401BC;
-	Thu, 20 Feb 2025 10:37:18 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Thu, 20 Feb 2025 10:37:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740065837;
-	 x=1740152237; bh=B1UvY1IYtLyNW497kJtzd+CU1PZEN0eP92ThkOskQZM=; b=
-	AG6GnDh935gzeROMsbH8bh1b58R6MrOvUbP6DFQqZ/7MyHr7GhkS5vTIVUaLTCrA
-	MZSv/P0QDZW/aBPlNpduoDFjn1sfyM6RhzcB1be6aEGX5MC+GkWokLDR+V2mAr1O
-	BZai20tx0Wxqg6jugGHBCLaRQNfK6WLEVYEhCXuAUvn9mCt/XIY9mP3CUBYO82ui
-	giEp/wcmNa9Qfrezn3MNn+wNV82VZqrSMeyi8Grt/GgwzMCYidGQca0TF0Vtc4Iq
-	Juch4IofrEsf7qQS9JpG233Sq6sYu8YIiyJJvnco/I9jBH7acM9zUWqU3yaO2Gbd
-	VlABO80D4MUy9Xtua/gWDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1740065837; x=
-	1740152237; bh=B1UvY1IYtLyNW497kJtzd+CU1PZEN0eP92ThkOskQZM=; b=F
-	kWnMGz8Ky8UX7cDYCksEyFgOEdTRn9ipY7nVDupjN5GenCG62SwuJeShLvIkkv+9
-	uTwQtA0hz45FstHYiYg5RFQ+H5PyW8qfaOfgFv3vLQckch1urBwXUq/54OW2lvR3
-	+8PcFEKLa01sf4qZSVlQJ5QXwrMYdfXoI9s/DoPekLyB60JfWt6SPWiB5NwOrFSQ
-	JMHyvA9GnMNuK6Bute0UPUsrRxnwf+CQiwbmjK7a70BOv34Ym6kuqGmInHtzgxMj
-	yhXidSSncHE9bjD14UUJXtMFxSzpyC2wrSUKO4dnHFughLvaaCeYW/Q7OLw9S/C8
-	enrW0ht6CJ8/7Hc+EOnEg==
-X-ME-Sender: <xms:LEy3Z3NwJ60q0mBtlt6AsG-AXzZ00fupoVnmzLMCPb6-UN6XR1R3eQ>
-    <xme:LEy3Zx9PzNTcOCy5Szm5xYP6RGhcYbDh_mZ9Q2A4lHSTI80PmaBLXzVyGtEOnVNPi
-    -4u967icwjvftlix14>
-X-ME-Received: <xmr:LEy3Z2TiB_RTxzdE8wTF16qRf7YLHgMdXVOBXwFghGe9g25snup1HcZMWWpeGTbYjULlSICWYnu0YlEdA6Ri8UogTMievzSe2w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeijeeglecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
-    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
-    guvghrlhhunhguodhrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgr
-    thhtvghrnhepffekgfdukeeghffhjeetvdeitdegteeikeffieduhfegveetjeevtdffvd
-    ekffdtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigv
-    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluhhnug
-    dorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeduvddp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughimhgrrdhfvggurhgruhesghhmrg
-    hilhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthho
-    pehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigse
-    grrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhl
-    ohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpd
-    hrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghn
-    ihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepghhrvghgohhrrdhhvghrsghurhhgvg
-    hrsegvfidrthhqqdhgrhhouhhprdgtohhm
-X-ME-Proxy: <xmx:LEy3Z7uo1K0UTq276H62J9YqfOlKpR2AP1T5y1p2JmtDWEHVDovP-Q>
-    <xmx:LEy3Z_edywU1rN6U_Du7pnqd7BBlfp8l7pwDa_Bzd2UJBkiXXtjR_Q>
-    <xmx:LEy3Z33IOLoXI_uyYoZBtN1tI7L_BrRnQIIj1Isx0_9DZevfNzC_Jg>
-    <xmx:LEy3Z788J_pt7_gxpFGC0yHQvrYf2VYs-rbopmmg5tdCZebJHqJ_Mw>
-    <xmx:LUy3Z93qp58PZirZY1VH53MHHE7eh96Dlv0XTqZ_cPHS07enjbIUc2m6>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 20 Feb 2025 10:37:16 -0500 (EST)
-Date: Thu, 20 Feb 2025 16:37:13 +0100
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
-	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 3/3] net: phy: marvell-88q2xxx: enable
- temperature sensor in mv88q2xxx_config_init
-Message-ID: <20250220153713.GE515486@ragnatech.se>
-References: <20250214-marvell-88q2xxx-cleanup-v1-0-71d67c20f308@gmail.com>
- <20250214-marvell-88q2xxx-cleanup-v1-3-71d67c20f308@gmail.com>
- <20250214175938.GE2392035@ragnatech.se>
- <20250214194526.GB244828@debian>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UEv+Xhy0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eWTEXZjT"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740065916;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=79XZZfWENd7BMuAi8YpxWCwNIy5HxTade1ws5Y2S384=;
+	b=UEv+Xhy04QsdNk8fFr4bWxX706TJW95KRIU1ImNOYj1BFVoZodKVlW7UFobhdOW/Ny09TO
+	cn1ZudR9Y6KZIVWvrtTTa+o12iMkM8rHJIrq5NRJG0yfr27e5tWKBmW1izufpmk4XXmW6Y
+	L47W1P8rFC33GR2EB1b+YGO+GvPkx63wt8RtO47qwL2gPKbM0ZJk4DmuLVXyI+m5hFjVIK
+	uKmW5MbPRhQrR/r+06+l193AksDaWrvQnY3/DsiVua5Zs+up4Xd7Fq4dsr/2L9ZmxWOHBZ
+	4sEWxPQNL7Is2Ovn26eV922Qt6dg9eqef4NsKQEX0WgG2IMU6QIfxUx7OYpr6g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740065916;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=79XZZfWENd7BMuAi8YpxWCwNIy5HxTade1ws5Y2S384=;
+	b=eWTEXZjTBxrCHQXEKEEC/1feYTrdUiCzV5Om/tA3IXC08I7zOSSlrqZtPHKcmEjmu6JR/n
+	uWOITZvPhZHQCeDg==
+Date: Thu, 20 Feb 2025 16:38:29 +0100
+Subject: [PATCH] kunit: qemu_configs: SH: Respect kunit cmdline
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250214194526.GB244828@debian>
+Message-Id: <20250220-kunit-sh-v1-1-8b57dd05f55a@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAHRMt2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMD3ezSvMwS3eIM3TQTo0TjRIvk5FRjUyWg8oKi1LTMCrBR0bG1tQD
+ ZaRkjWgAAAA==
+X-Change-ID: 20250220-kunit-sh-f42a3a8cce35
+To: Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Shuah Khan <skhan@linuxfoundation.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740065916; l=1414;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=W0xJ2fNlNVkFLcGpLh+E4eVhmwP7cxluh16zZZ0Z6xw=;
+ b=F2vnJ7iVCM6t4pXlKp2MYuz4B3j2TJEm+iU3Ou/aBKHH9T9WBwd5XQkx1/6iSW0IaqhPOb6v6
+ ssSaNl1fsElD43Aqoi063+BGxOJx3h8PgYfF3V7dfuIhxq0n/Pgtomr
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi,
+The default SH kunit configuration sets CONFIG_CMDLINE_OVERWRITE which
+completely disregards the cmdline passed from the bootloader/QEMU in favor
+of the builtin CONFIG_CMDLINE.
+However the kunit tool needs to pass arguments to the in-kernel kunit core,
+for filters and other runtime parameters.
 
-On 2025-02-14 20:45:26 +0100, Dimitri Fedrau wrote:
-> Hi Niklas,
-> 
-> Am Fri, Feb 14, 2025 at 06:59:38PM +0100 schrieb Niklas Söderlund:
-> > Hi Dimitir,
-> > 
-> > Thanks for your work.
-> > 
-> > On 2025-02-14 17:32:05 +0100, Dimitri Fedrau wrote:
-> > > Temperature sensor gets enabled for 88Q222X devices in
-> > > mv88q222x_config_init. Move enabling to mv88q2xxx_config_init because
-> > > all 88Q2XXX devices support the temperature sensor.
-> > 
-> > Is this true for mv88q2110 devices too? The current implementation only 
-> > enables it for mv88q222x devices. The private structure is not even 
-> > initialized for mv88q2110, and currently crashes. I have fixed that [1], 
-> > but I'm not sure if that should be extended to also enable temperature 
-> > sensor for mv88q2110?
-> > 
-> Yes, according to the datasheet. I don't have a mv88q2110 device, so I
-> can't test it. I would like to see it enabled. So if you can test it and
-> it works why not enabling it. Thanks for finding this.
+Enable CONFIG_CMDLINE_EXTEND instead, so kunit arguments are respected.
 
-Thanks for confirming. I will attempt to test and enable this once as 
-soon as I can.
+Fixes: 8110a3cab05e ("kunit: tool: Add support for SH under QEMU")
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ tools/testing/kunit/qemu_configs/sh.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > > 
-> > > Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> > 
-> > In either case with [1] for an unrelated fix this is tested on 
-> > mv88q2110.
-> > 
-> > Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > 
-> > 1.  https://lore.kernel.org/all/20250214174650.2056949-1-niklas.soderlund+renesas@ragnatech.se/
-> >
-> [...]
-> 
-> Best regards,
-> Dimitri Fedrau
+diff --git a/tools/testing/kunit/qemu_configs/sh.py b/tools/testing/kunit/qemu_configs/sh.py
+index 78a474a5b95f3a7d6064a2d3b728810ced095606..f00cb89fdef6aa1c0abd83ca18e7004a4fdd96e1 100644
+--- a/tools/testing/kunit/qemu_configs/sh.py
++++ b/tools/testing/kunit/qemu_configs/sh.py
+@@ -7,7 +7,9 @@ CONFIG_CPU_SUBTYPE_SH7751R=y
+ CONFIG_MEMORY_START=0x0c000000
+ CONFIG_SH_RTS7751R2D=y
+ CONFIG_RTS7751R2D_PLUS=y
+-CONFIG_SERIAL_SH_SCI=y''',
++CONFIG_SERIAL_SH_SCI=y
++CONFIG_CMDLINE_EXTEND=y
++''',
+ 			   qemu_arch='sh4',
+ 			   kernel_path='arch/sh/boot/zImage',
+ 			   kernel_command_line='console=ttySC1',
 
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250220-kunit-sh-f42a3a8cce35
+
+Best regards,
 -- 
-Kind Regards,
-Niklas Söderlund
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
