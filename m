@@ -1,147 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4BD1F1307
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F73E1F12E0
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740047057; cv=none; b=gHJRqnrdBNEtwA7t0FKTjBplrU3O9ofhQ1m1OV1dRFY+90Tr+WlU0LlM7dMgjq36BGAX/tUX1l7grpjH1mWHpgQcWcKu9zNDGdBzZBzMV7KxtZ57OAVG8pNwKfU05th3oFHoVHbX40+rjVcqcmf8/V5pYquo6tgNtLv/0JV9BFc=
+	t=1740047062; cv=none; b=O12gflqnxXRubUkrdFm+KPhKIcSPIHSyJ5ircg2KoJSgi47kG0fGIGkg9ZsBxnOXh7/HpoCGncFmWK4spiw+CV877SVTDX1QgdAar8o0Ty+jI4pPC1gBPZBD9dJ6IgY0owCxO5WSIxj9E/5X+xFlv5IT72Z2djt9s60aHFFDRgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740047057; c=relaxed/simple;
-	bh=RikVMgwNlogdSzT23fODXi0t9zjQvH0kEweEh095GcE=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b3hjvvT4eDiDITVRFRy+UiTReYHQ4eiEnvtfIf2OyktM50MJEVdnPvJyANGl+wgcDHmyXdGshs0ov/rvW1+75C0F39IAJAOTSTwC9aCkBbE1VwqSp8zrjTXb6a27WjsilAr/dVRHf549QtY/4oEk0000I++k8Hwi1TYDcJxDYFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WQladiNX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740047062; c=relaxed/simple;
+	bh=q302bG0dYTRx3Q9MCyxwC8fqiRLPWMrMdb289xMHBhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tdm502+UQEuwworJEEWJRElobILoM4StC3tR8Cx1LGMwm+0wF0On2Ez1qPOwRtBLNqm1c7YLPnNLfJ8zI4COead/WYlM8Q2VoLWeFLTTHx5dmRfsG5t3FBRKZL2ZN9mrfJHvftIG0ybNBQ294HrG9I/IlwgWXg1D0fNMs4dLbYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=a5+I1Lno; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WQladiNX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740047055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PCfNk2irYZhiAVEAeMF3jzWLVhPjMhVSnPe0uvp0LKw=;
-	b=WQladiNX3kmGPXs7DkYsk/LemS+Koi5CQvbK3ZRxhAG35j0e+QQxUxOGC01mhOPPTwzU1U
-	GBGtyV/PQvRs0Fw8ulI6loCUNh75jSKYnkw9lDSXYwY04A2PVhl18HLF3D4R4Qkmwuhsb5
-	KcPXBXMHUdMKRlA6ur6SIvX9SJ7tsWU=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-Q4wBqL-dMwCzVt3ExSbMJQ-1; Thu, 20 Feb 2025 05:24:11 -0500
-X-MC-Unique: Q4wBqL-dMwCzVt3ExSbMJQ-1
-X-Mimecast-MFC-AGG-ID: Q4wBqL-dMwCzVt3ExSbMJQ_1740047051
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-220d9d98ea6so25025165ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 02:24:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740047050; x=1740651850;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PCfNk2irYZhiAVEAeMF3jzWLVhPjMhVSnPe0uvp0LKw=;
-        b=vvWCAfC7ssb4ggXcABG1PWf+6iWrzFbiyQSEzE3u02xSNXLtS2gdJmw6pnCcXdCxxK
-         e/M3JygdLkH4Vu0kSqZyjIUxRFdNZI845ufgnqm37uGvZ7es1ZecLkoXGE7HByvblhL2
-         zxaKn2UCsm+8KZ3BkwK6VLxfiac2Garcuw26AwB5GqB6fnKVXcG0eQba9knfDrl6sl2d
-         vHjLUrcXtPMlmQQRSitVPGSfADY58tYGT0DxrFI6JiYORMjTXP0zDMyzyJ9HsktNeTwH
-         nubBvyu83d7UFJgu/1S8KBKJjqFa8QCM+D79y+JxXdgeGMK/VJ0NAU7o6JysC0OUQkl6
-         gAlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPxFOE76Dy2DnO0xvvQDbZ3xQmg+CYQD6DU61+lOBNSdBeY41OzIzrT0He3g3Zv78dvja47d5u7DBxYZY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPRIUV+c8hkwIy81DeoQWYWxB8kcMZeIuT6FsX6zfJLkwN2wTD
-	RW5RPZynt+fZ5Fn0vMDs0vFbYWUTYT7T+MAqmjcld9WeACTxXA5Qj+xsEyEm4xtagHdJSizD59V
-	o587xpvIlykpDsyeFLuUEvxQF9nZqzmdEIqSGXHzkdjhkyoqLt833Bw+3itF3c1Y9FdCOPQP1j9
-	JVXV8fPpma1TZg6afzyblJKpJIhyBmJcxRYU1z
-X-Gm-Gg: ASbGncucf26bmM13UOBMe5pF+ufdkQzRCZDjl+ldLPVHmERDLSsmcFqWUaFQBp4h2Oq
-	58Q8PszU34YYlPTTc4m9k9EPFKQXQuFnt6sWATecZubXn+jzOXLIeBEPZUw==
-X-Received: by 2002:a17:902:e803:b0:216:1543:196c with SMTP id d9443c01a7336-221040620b2mr340108645ad.27.1740047050653;
-        Thu, 20 Feb 2025 02:24:10 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGhBmKY/Jd/FJcL0J0umaKdIJTK407yNESWW6lHPZ4yPs84G32nsvPhs1j0n5aPenBrC+US2evK7mAnibRfM8Q=
-X-Received: by 2002:a17:902:e803:b0:216:1543:196c with SMTP id
- d9443c01a7336-221040620b2mr340108255ad.27.1740047050275; Thu, 20 Feb 2025
- 02:24:10 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 20 Feb 2025 02:24:08 -0800
-From: Sergio Lopez Pascual <slp@redhat.com>
-In-Reply-To: <1f9a86a5-97d6-41d5-9a30-0422fc9ec137@collabora.com>
-References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
- <20250214-virtio-shm-page-size-v2-4-aa1619e6908b@redhat.com> <1f9a86a5-97d6-41d5-9a30-0422fc9ec137@collabora.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="a5+I1Lno"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 78FC640E0177;
+	Thu, 20 Feb 2025 10:24:15 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Y6CF0GisjbJy; Thu, 20 Feb 2025 10:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740047051; bh=G7hgjesSmpA0ko/eTOgvJmvU9Qe0b+EIBkdXyjk/XSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a5+I1Lno8dQW6mPso2rBSCErDnruVQpFMduikIWDT3ExtLMEG28z92Pia9zixNyIB
+	 JGKlTzGAuphWYDhZNaSa0Jwm7hTNhY/pwmUCvVRRxcJVO3hqEmtZdLU5SdCywq6FYO
+	 OMLM6vIl0ogEp9I2wbk1w6HgHhXjL9y1JPLOVrWvlNonVdWR2Ye2ceGbTDe2O4lUi3
+	 BADExEKmokHO1ll+EKOV5ltRK/wF4lg0c5bKXqU+fFOfUkqMHWo4jlZynGQQyEnR8u
+	 jof3vQjSxbwu0NcPlrAuJIJo0Vqrbmv18+Mkx2F78jZ3UDlOhdwwI83IjjGjn0TrFs
+	 OZMhilT0Lh/udTtOrfO6hahU5Mff+f4EfBVl3r4UYALmSJrbd0oSkljRe3aIuhZ0wz
+	 j6LhpNPQyYlgA57mmaGgpNMDabtjLqGBp/m9AY6dBU/XWTLV/gtGb1/260wGPCvVDo
+	 sh9htXGmYnnHYhju8pgpNMmBm+yu9poItopA5TDKbv3nBU8e2mHnmKRF9gvKZF3HH1
+	 j89onICHQaUFLf7THUTm7vAba0+Var8ces4qGdqLaRoFE2jyZ4pvUxxYAR8QWYWeOI
+	 lObdoTr2JblxajHwvt2e3BPCaEgo45yjOWzHlzNGanlO621cVnZ9JCcDoD2ViX80Fu
+	 RtxTJzCmXaMKFFyeI9Sg6z98=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4430340E01A0;
+	Thu, 20 Feb 2025 10:23:54 +0000 (UTC)
+Date: Thu, 20 Feb 2025 11:23:52 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Rik van Riel <riel@surriel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali Shukla <Manali.Shukla@amd.com>
+Subject: Re: [PATCH v11 05/12] x86/mm: add INVLPGB support code
+Message-ID: <20250220102352.GBZ7cCuGd_hy-OaHlK@fat_crate.local>
+References: <20250213161423.449435-1-riel@surriel.com>
+ <20250213161423.449435-6-riel@surriel.com>
+ <20250219120441.GNZ7XI2aWWUmXh2H2m@fat_crate.local>
+ <2930024a88be186faa6a0338fc003e8ffefb710b.camel@surriel.com>
+ <cb55a019-50f1-4824-9a9f-9431d8b89ed7@intel.com>
+ <20250219191519.GDZ7YtxzBiMxz3wwlr@fat_crate.local>
+ <ac406e2cc2daaed5856df0af787bf21597b95f5c.camel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 20 Feb 2025 02:24:08 -0800
-X-Gm-Features: AWEUYZlfgST3-O9VCrzw5HD0jnPovA3jL5BWDBB878el2RF0dCmg4Z8bMopNsuE
-Message-ID: <CAAiTLFXihV_DUpd25Mc-OcgsNJ5tVJx7XYsETgxh+7cFuicuHA@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 4/5] virtio-mmio: read shm region page size
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Daniel Verkamp <dverkamp@chromium.org>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
-	fnkl.kernel@gmail.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ac406e2cc2daaed5856df0af787bf21597b95f5c.camel@surriel.com>
 
-Dmitry Osipenko <dmitry.osipenko@collabora.com> writes:
+On Wed, Feb 19, 2025 at 09:49:01PM -0500, Rik van Riel wrote:
+> I'll re-do the series without ifdefs, except for
+> the one masking out X86_FEATURE_INVLPGB (on 32
+> bit systems).
+> 
+> Then the compiler should be able to get rid of
+> the other code, when the feature is hard-disabled.
 
-> On 2/14/25 18:16, Sergio Lopez wrote:
->> Use the newly introduced SHM_PAGE_SHIFT register to read the page shift
->> for the shared memory region, derive the page size from it and store the
->> resulting value into virtio_shm_region.
->>
->> Signed-off-by: Sergio Lopez <slp@redhat.com>
->> ---
->>  drivers/virtio/virtio_mmio.c     | 11 ++++++++++-
->>  include/uapi/linux/virtio_mmio.h |  3 +++
->>  2 files changed, 13 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
->> index 1f594b626d7a7734e8ec58766737a118c26bad94..0f892770739ea84b3e7be5615332773049b10ab1 100644
->> --- a/drivers/virtio/virtio_mmio.c
->> +++ b/drivers/virtio/virtio_mmio.c
->> @@ -537,6 +537,7 @@ static bool vm_get_shm_region(struct virtio_device *vdev,
->>  			      struct virtio_shm_region *region, u8 id)
->>  {
->>  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
->> +	u8 page_shift = 0;
->>  	u64 len, addr;
->>
->>  	/* Select the region we're interested in */
->> @@ -560,7 +561,15 @@ static bool vm_get_shm_region(struct virtio_device *vdev,
->>
->>  	region->addr = addr;
->>
->> -	region->page_size = 4096;
->> +	/* If supported by the device transport, read the region page size.
->> +	 * The page_shift variable is initialized to zero above, so if this
->> +	 * feature isn't supported it will result in a page_size of 4096, a
->> +	 * default safe value.
->> +	 */
->> +	if (__virtio_test_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE))
->> +		page_shift = (u8) readl(vm_dev->base + VIRTIO_MMIO_SHM_PAGE_SHIFT);
->> +
->> +	region->page_size = 1 << (page_shift + 12);
->>
->>  	return true;
->>  }
->> diff --git a/include/uapi/linux/virtio_mmio.h b/include/uapi/linux/virtio_mmio.h
->> index 0650f91bea6c70f935764070d825d181a2379afb..43348be30eff90ee228b6490b9d3c35ba4c50aa5 100644
->> --- a/include/uapi/linux/virtio_mmio.h
->> +++ b/include/uapi/linux/virtio_mmio.h
->> @@ -133,6 +133,9 @@
->>  #define VIRTIO_MMIO_SHM_BASE_LOW        0x0b8
->>  #define VIRTIO_MMIO_SHM_BASE_HIGH       0x0bc
->>
->> +/* Shared memory region page shift */
->> +#define VIRTIO_MMIO_SHM_PAGE_SHIFT      0x0c4
->
-> What's the logic behind choosing 0x0c4, why not 0x0c0?
+Thanks.
 
-It seems like Linux doesn't support it yet, but in the specs 0x0c0 is
-already reserved for QueueReset.
+In talking to Dave last night, I think we are fine with having the majority of
+ifdeffery in headers and keep it away from .c files.
 
-Sergio.
+Any new Kconfig symbol adds more configurations we must build and test but...
+oh well.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
