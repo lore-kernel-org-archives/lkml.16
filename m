@@ -1,98 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A8F1DEFF7;
-	Thu, 20 Feb 2025 06:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837D2442C;
+	Thu, 20 Feb 2025 07:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740034788; cv=none; b=Yaw0R9qbG/8h7jLV8c7tfdqOdKWotJF3V/X4/3BRxJ9/nLvl/YOb3nQH3H377T04+SiUiGmFmaovzZ+PUh1sxTepYSdgcSLcO2WKQRmTV3ynR8NoHtch0h+z62rxxK+IJcFlx3BEZmhI6V9fdb4UekJU4AwKAVA6degQKlag1LA=
+	t=1740034833; cv=none; b=JV26oK1R68my2mKGP9QPTpEZkaR+PY+b3OsH7uunm4IfQf2GcI7JLK03/aictX5SqbDI7plE5dWoujvlxkL8xJEj0kYFfkDNdSQBqbDbN/yfPUE6yWlytc1D29UuTwcjsvn4JpCpekR2mRIzvUU+yitAdI2U/3a7asD/qggEAYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740034788; c=relaxed/simple;
-	bh=H/yMB8RtQkvn72FexcC+tGE6YCZ9EmaqgGYEZeoF8eg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=IYJPULXoffW4cY611YbeUSxlZ8UAI44ZWcfE0vD+incRX41h9Fhzr99dm+8PDVXzKu6KUYT/1FjeOw/xVVLlvAl6T8zUn921UOz2GdRslXLIbwB1tWSbH7J3jhA8uhPoQaqRr3j3mlCK6AbCvKwgYdOZWxwcrrXqEKE4d0kKoO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKZouwLo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740034833; c=relaxed/simple;
+	bh=AjVnpHD2v2Yt6Kmq2yAOC5tiCK3gGmXJmt/gK2edgdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FTMmYCTfNtpAnZOUWzGBwz7HWgDsi5bxTiR1EaYJHuHnMpaZjYdHqFykrsouCdWQevGb5XqHxCUadD8e3eRe1OV2IO+uF+AQYHN7gPOjKz80jSjDrzXCX1BQAxQdWuVPip22EfYk/V2X4T/PHmILMVQk6+Plw/qi55B/pCZARCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e9HjhRzX; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKZouwLo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B2AC4CED1;
-	Thu, 20 Feb 2025 06:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740034787;
-	bh=H/yMB8RtQkvn72FexcC+tGE6YCZ9EmaqgGYEZeoF8eg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YKZouwLolbtiGDjWlDK9GDbyGZfTAcUxh9VwCfUDnSXmQ565GHrqrndpZOrucjH1Z
-	 jUpoLx/4YMc0EIuabtmSj3pMqLnLplIWF/+lM2Yuu1t+19J1AYxAS1w7rM+Z8ilhoc
-	 Vo2pHSFWFNYmbTbCdQvNrsLDsQpGTqno1BFQuamPa0wtH/wdP5khXWvoF2wR20g4Sy
-	 mHR2BzF6jR2m44YKUbJI8NDOvSjalPfkfDLHXO2DIgRWwgJSV4WhBowoQtkAjeMGqR
-	 sVS3LQYwUrOrfOqvOWecaH1Bj3OTRU2+h0fh8GjfX64IPMhEuGv7JVSdFXfLL2wbLg
-	 hV1f1Nhik//nA==
-Date: Thu, 20 Feb 2025 15:59:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Sven
- Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] ftrace: Do not add duplicate entries in subops
- manager ops
-Message-Id: <20250220155944.821ccc0cd98594b924c2752e@kernel.org>
-In-Reply-To: <20250219220511.054985490@goodmis.org>
-References: <20250219220436.498041541@goodmis.org>
-	<20250219220511.054985490@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e9HjhRzX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740034830; x=1771570830;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=AjVnpHD2v2Yt6Kmq2yAOC5tiCK3gGmXJmt/gK2edgdI=;
+  b=e9HjhRzXlNtRMU0U5PwDvr6ID3LeGov+tncWP0nUqksfwDTiMz3xOZCc
+   0HhgG2SLboVkHr3xhks/boPyaqsRcYfKPEKcF9fdLVv/DKQanXAqwRcEM
+   nossX5Y2ZLBBWaAVqdzi79tVBQBrtelsYbAAFPjtyDync/K4lmK6oIkdp
+   2e+28aLOGtED+T8bxZ4pU8IUjTclXaEvZCHHix8wXaEabZN4xhS6/TYqJ
+   MStmot4GjPxoLbfnpvKA+v3bJBpoz+3RxliYEbST30qHaYshJZZmtEOaA
+   +VSISszjcvz/c1d6dXXdlE27g1v5GuzOEpWGIn9uPzruMii9NxsF/GzD8
+   Q==;
+X-CSE-ConnectionGUID: kuhrqjW0RDSqXf2/NJ5vFg==
+X-CSE-MsgGUID: m8icS4HwTviuY28+LyDmAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44450184"
+X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
+   d="scan'208";a="44450184"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 23:00:29 -0800
+X-CSE-ConnectionGUID: kc2+8xHwQka5NTUIeHSFww==
+X-CSE-MsgGUID: vC2LJc8pRmePBXEk75jnrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="119041836"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 23:00:27 -0800
+Date: Thu, 20 Feb 2025 07:56:46 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Nick Hu <nick.hu@sifive.com>
+Cc: Jacob Keller <jacob.e.keller@intel.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Praneeth Bajjuri <praneeth@ti.com>, Andrew Lunn <andrew@lunn.ch>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: axienet: Set mac_managed_pm
+Message-ID: <Z7bSLq1vkYJUzvGM@mev-dev.igk.intel.com>
+References: <20250217055843.19799-1-nick.hu@sifive.com>
+ <889918c4-51ae-4216-9374-510e4cbdc3f1@intel.com>
+ <CAKddAkBZWZqY+-TERah+Q+WUfkqzcpFMA=ySSuTxxBjfP7tKZg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKddAkBZWZqY+-TERah+Q+WUfkqzcpFMA=ySSuTxxBjfP7tKZg@mail.gmail.com>
 
-On Wed, 19 Feb 2025 17:04:38 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Feb 20, 2025 at 10:47:40AM +0800, Nick Hu wrote:
+> Hi Jacob
 > 
-> Check if a function is already in the manager ops of a subops. A manager
-> ops contains multiple subops, and if two or more subops are tracing the
-> same function, the manager ops only needs a single entry in its hash.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 4f554e955614f ("ftrace: Add ftrace_set_filter_ips function")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> ---
->  kernel/trace/ftrace.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 03b35a05808c..189eb0a12f4b 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5717,6 +5717,9 @@ __ftrace_match_addr(struct ftrace_hash *hash, unsigned long ip, int remove)
->  			return -ENOENT;
->  		free_hash_entry(hash, entry);
->  		return 0;
-> +	} else if (__ftrace_lookup_ip(hash, ip) != NULL) {
-> +		/* Already exists */
-> +		return 0;
->  	}
->  
->  	entry = add_hash_entry(hash, ip);
-> -- 
-> 2.47.2
-> 
+> On Thu, Feb 20, 2025 at 7:29 AM Jacob Keller <jacob.e.keller@intel.com> wrote:
+> >
+> >
+> >
+> > On 2/16/2025 9:58 PM, Nick Hu wrote:
+> > Nit: subject should include the "net" prefix since this is clearly a bug
+> > fix.
+> >
+> I've added the 'net' prefix to the subject 'net: axienet: Set
+> mac_managed_pm'. Is there something I'm missing?
 > 
 
+It should be [PATCH net] net: axienet: Set mac_managed_pm
+Like here for example [1]. You can look at netdev FAQ [2]. It is
+described there how to specify the subject.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Probably you don't need to resend it only because of that.
+
+[1] https://lore.kernel.org/netdev/CAL+tcoC3TuZPTwnHTDvXC+JPoJbgW2UywZ2=xv=E=utokb3pCQ@mail.gmail.com/T/#m2b5603fbf355216ab035aa0f69c10c5f4ba98772
+[2] https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+
+Thanks,
+Michal
+
+> > > The external PHY will undergo a soft reset twice during the resume process
+> > > when it wake up from suspend. The first reset occurs when the axienet
+> > > driver calls phylink_of_phy_connect(), and the second occurs when
+> > > mdio_bus_phy_resume() invokes phy_init_hw(). The second soft reset of the
+> > > external PHY does not reinitialize the internal PHY, which causes issues
+> > > with the internal PHY, resulting in the PHY link being down. To prevent
+> > > this, setting the mac_managed_pm flag skips the mdio_bus_phy_resume()
+> > > function.
+> > >
+> > > Fixes: a129b41fe0a8 ("Revert "net: phy: dp83867: perform soft reset and retain established link"")
+> > > Signed-off-by: Nick Hu <nick.hu@sifive.com>
+> > > ---
+> >
+> > Otherwise, the fix seems correct to me.
+> >
+> > Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+> >
+> > >  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > index 2ffaad0b0477..2deeb982bf6b 100644
+> > > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > @@ -3078,6 +3078,7 @@ static int axienet_probe(struct platform_device *pdev)
+> > >
+> > >       lp->phylink_config.dev = &ndev->dev;
+> > >       lp->phylink_config.type = PHYLINK_NETDEV;
+> > > +     lp->phylink_config.mac_managed_pm = true;
+> > >       lp->phylink_config.mac_capabilities = MAC_SYM_PAUSE | MAC_ASYM_PAUSE |
+> > >               MAC_10FD | MAC_100FD | MAC_1000FD;
+> > >
+> >
+> 
+> Regards,
+> Nick
