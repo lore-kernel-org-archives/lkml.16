@@ -1,265 +1,160 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8951EC017;
-	Thu, 20 Feb 2025 09:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE691EE7A1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740043306; cv=none; b=uhosGHXD2zQtzTJ++wdoc1avocvMsCL9KcoduvrR7llnWH92q9dOK+pXE6BUTRrlrpGfhc61l+89MEwZ+jDalhuikqBeFt64aZbepGcEQVsq80BZXxcRAIHN/5HdmpzdFjcI+jkNCsoB6+BJCDLkzl3yPXZXMDzagqy3210G/+s=
+	t=1740043320; cv=none; b=n+2KIT66sqV+rXS5yCJEVzb+4ngMKX8RwvK9DQaE3ycOhT3qkYPglj4m52Y+XxMAQNfv6TmiBGw7pt1MQnHMiv9i3H562EkohnCsqJXe9e/v92BpPbtgVwVHsbs6jW0179isXdWu9+/YehlVUTVntHIgomtkFmEVx0DgkaDIOPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740043306; c=relaxed/simple;
-	bh=1ZbDgEjUMlMPwkjWk2+5MSacMuvC5THJOJR7tBYLl9M=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mxq6bCPqH9widlIk9edBQzus6WaUJG/HhZ3l7SZ9o+hpFKyxTUEuQCPivRnaFEY2WhKBDCfvqCq7LftC14dcvqzghvzsLa2Wbbr/DjGLGxS16Bf00H7nu3+exfrXCoiJVz0ivEQF9EXdX6/oDhqYJUXQfKJg+0nzOoxzd69/kEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=JA1HLaGc; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1740043320; c=relaxed/simple;
+	bh=gdVv0S4Jr0XUx2WgV77fCRKeiGKsRzP9xXdA8AtPhJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RsvKPUj2Qedw9hZLYvJpx9pRErFQ7fFS77eKBE9xR9b8TX/QdMq21pjJS0UONhI0H/3Pfr29HzLyMtk6539BrLy+HJHRMk47E/XBAAUkD4BZBy27qcVQKZu5UC2nvnddZHsnVwpRaWT+oy8Q7TKB6rGbExfh/tbfOAAhkc9Mn1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DZku1WR4; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="JA1HLaGc"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K7Zctf023149;
-	Thu, 20 Feb 2025 01:19:16 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=V6z79uj0D+hvHkgcPpuUpI1aZ
-	TG2v3akXnDlrGc8hqU=; b=JA1HLaGcYiGl7zln21xvb7uit6enZw6xlti8mDBlR
-	G4SJbwbdO7iO819Aev81Ct6m/q/6A1Kc4n+tXBmtMZehhrJPWZL4LkJCOexaL01n
-	tiQUPOBB9Ho/r3kG8CDGMp5SyIPW5rgylecfEDo7M64xRQgi971JyIQSkDNW2l8H
-	LWGW5gZac97OMItRvqat+JY/TRgM0rwWnCxHupHXGrZhusaDqKyNhO2Hvy+M+lca
-	SQwWFYwWbr0su9QcSS6+vo984zcS3e2kBZ7Mfob/SoXWFI83t6FmQzXWFsgzy7uk
-	gbzH1GqlhrS+2R2j6pCRF1BSHmawI4HEWaIp6vX+CDKMA==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44x04yg88b-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DZku1WR4"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K190BZ003228;
+	Thu, 20 Feb 2025 09:21:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=YUiKeOIJfkqR7L1A5Wr5JL2A04+Juu
+	dfcgaiPv0ln8M=; b=DZku1WR4eYQx4TgDy0eDUeVTx48zKT8rbdG/yDhAdL6dQq
+	xUyt06/8WHfQe53GZ9yJJGDNu5GF6oZ1xCWqfXKyo1++6RjgLwqAYkPvHRUZp/8d
+	NE6HvBZSee/8eT+j9+pesdlRsAfFm6Xym4PcbP1yDvuMOK2JjoOtArP1HqiiifBo
+	yOzhnvokJpK/1nAMwPTNkd/Gm8W/XeCdRYfsVzMl+gk00CwTj5RYgUgRbzdy+VL2
+	ktRfIEq8R6Its1kpCVi02peeNksk69yNtWA0PhHLqEDFaXqy6PrbTv2Wpk+T65NB
+	9l9MXIAHQUXRcwLQaccRd825nl5joYHLu2oyAWow==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wtfa1vx2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 01:19:16 -0800 (PST)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 20 Feb 2025 01:19:15 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 20 Feb 2025 01:19:15 -0800
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id BE6253F7058;
-	Thu, 20 Feb 2025 01:19:05 -0800 (PST)
-Date: Thu, 20 Feb 2025 14:49:04 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: parvathi <parvathi@couthit.com>
-CC: <danishanwar@ti.com>, <rogerq@kernel.org>, <andrew+netdev@lunn.ch>,
-        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <richardcochran@gmail.com>, <basharath@couthit.com>,
-        <schnelle@linux.ibm.com>, <diogo.ivo@siemens.com>,
-        <m-karicheri2@ti.com>, <horms@kernel.org>, <jacob.e.keller@intel.com>,
-        <m-malladi@ti.com>, <javier.carrasco.cruz@gmail.com>, <afd@ti.com>,
-        <s-anna@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <pratheesh@ti.com>, <prajith@ti.com>,
-        <vigneshr@ti.com>, <praneeth@ti.com>, <srk@ti.com>, <rogerq@ti.com>,
-        <krishna@couthit.com>, <pmohan@couthit.com>, <mohan@couthit.com>
-Subject: Re: [PATCH net-next v3 02/10] net: ti: prueth: Adds ICSSM Ethernet
- driver
-Message-ID: <20250220091904.GA1230612@maili.marvell.com>
-References: <20250214054702.1073139-1-parvathi@couthit.com>
- <20250214054702.1073139-3-parvathi@couthit.com>
+	Thu, 20 Feb 2025 09:21:52 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51K7u9QT009772;
+	Thu, 20 Feb 2025 09:21:51 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w03y95q7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 09:21:51 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51K9LnwJ20250994
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 09:21:49 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D1E5420043;
+	Thu, 20 Feb 2025 09:21:49 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C588A20040;
+	Thu, 20 Feb 2025 09:21:47 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.124.208.191])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 20 Feb 2025 09:21:47 +0000 (GMT)
+Date: Thu, 20 Feb 2025 14:51:44 +0530
+From: Vishal Chourasia <vishalc@linux.ibm.com>
+To: Phil Auld <pauld@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Vineeth Reddy <vineethr@linux.ibm.com>
+Subject: Re: [PATCH v2] sched/isolation: Make use of more than one
+ housekeeping cpu
+Message-ID: <Z7b0KPqtwGX4ffY7@linux.ibm.com>
+References: <20250218184618.1331715-1-pauld@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250214054702.1073139-3-parvathi@couthit.com>
-X-Proofpoint-ORIG-GUID: PTTJNwmlFUm2mcEocC2aGHWKxK5J707q
-X-Proofpoint-GUID: PTTJNwmlFUm2mcEocC2aGHWKxK5J707q
+In-Reply-To: <20250218184618.1331715-1-pauld@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NBiBl4b6etUpEseDvm0PklRgQQwxpnQv
+X-Proofpoint-GUID: NBiBl4b6etUpEseDvm0PklRgQQwxpnQv
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-20_03,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=704
+ bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200065
 
-On 2025-02-14 at 11:16:54, parvathi (parvathi@couthit.com) wrote:
-> From: Roger Quadros <rogerq@ti.com>
->
-> +static int icssm_prueth_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *eth0_node = NULL, *eth1_node = NULL;
-> +	struct device_node *eth_node, *eth_ports_node;
-> +	enum pruss_pru_id pruss_id0, pruss_id1;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np;
-> +	struct prueth *prueth;
-> +	int i, ret;
-> +
-> +	np = dev->of_node;
-> +	if (!np)
-> +		return -ENODEV; /* we don't support non DT */
-> +
-> +	prueth = devm_kzalloc(dev, sizeof(*prueth), GFP_KERNEL);
-> +	if (!prueth)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, prueth);
-> +	prueth->dev = dev;
-> +	prueth->fw_data = device_get_match_data(dev);
-> +
-> +	eth_ports_node = of_get_child_by_name(np, "ethernet-ports");
-> +	if (!eth_ports_node)
-> +		return -ENOENT;
-> +
-> +	for_each_child_of_node(eth_ports_node, eth_node) {
-> +		u32 reg;
-> +
-> +		if (strcmp(eth_node->name, "ethernet-port"))
-> +			continue;
-> +		ret = of_property_read_u32(eth_node, "reg", &reg);
-> +		if (ret < 0) {
-> +			dev_err(dev, "%pOF error reading port_id %d\n",
-> +				eth_node, ret);
-> +		}
-> +
-> +		of_node_get(eth_node);
-> +
-> +		if (reg == 0) {
-> +			eth0_node = eth_node;
-> +			if (!of_device_is_available(eth0_node)) {
-> +				of_node_put(eth0_node);
-> +				eth0_node = NULL;
-> +			}
-> +		} else if (reg == 1) {
-> +			eth1_node = eth_node;
-> +			if (!of_device_is_available(eth1_node)) {
-> +				of_node_put(eth1_node);
-> +				eth1_node = NULL;
-> +			}
-It depends on your DT, but is there any chance that more than once, we reach here in else case.
- { if (of_device_is_availabke(...) } ?
+On Tue, Feb 18, 2025 at 06:46:18PM +0000, Phil Auld wrote:
+> The exising code uses housekeeping_any_cpu() to select a cpu for
+> a given housekeeping task. However, this often ends up calling
+> cpumask_any_and() which is defined as cpumask_first_and() which has
+> the effect of alyways using the first cpu among those available.
+> 
+> The same applies when multiple NUMA nodes are involved. In that
+> case the first cpu in the local node is chosen which does provide
+> a bit of spreading but with multiple HK cpus per node the same
+> issues arise.
+> 
+> We have numerous cases where a single HK cpu just cannot keep up
+> and the remote_tick warning fires. It also can lead to the other
+> things (orchastration sw, HA keepalives etc) on the HK cpus getting
+> starved which leads to other issues.  In these cases we recommend
+> increasing the number of HK cpus.  But... that only helps the
+> userspace tasks somewhat. It does not help the actual housekeeping
+> part.
+> 
+> Spread the HK work out by having housekeeping_any_cpu() and
+> sched_numa_find_closest() use cpumask_any_and_distribute()
+> instead of cpumask_any_and().
+> 
+LGTM.
 
-> +		} else {
-> +			dev_err(dev, "port reg should be 0 or 1\n");
-> +		}
-> +	}
-> +
-> +	of_node_put(eth_ports_node);
-> +
-> +	/* At least one node must be present and available else we fail */
-> +	if (!eth0_node && !eth1_node) {
-> +		dev_err(dev, "neither port0 nor port1 node available\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (eth0_node == eth1_node) {
-> +		dev_err(dev, "port0 and port1 can't have same reg\n");
-> +		of_node_put(eth0_node);
-> +		return -ENODEV;
-> +	}
-> +
-> +	prueth->eth_node[PRUETH_MAC0] = eth0_node;
-> +	prueth->eth_node[PRUETH_MAC1] = eth1_node;
-  ...
-+
-> +	if (eth0_node) {
-> +		prueth->pru0 = pru_rproc_get(np, 0, &pruss_id0);
-> +		if (IS_ERR(prueth->pru0)) {
-> +			ret = PTR_ERR(prueth->pru0);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "unable to get PRU0: %d\n", ret);
-> +			goto put_pru;
-> +		}
-> +	}
-> +
-> +	if (eth1_node) {
-> +		prueth->pru1 = pru_rproc_get(np, 1, &pruss_id1);
-> +		if (IS_ERR(prueth->pru1)) {
-> +			ret = PTR_ERR(prueth->pru1);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "unable to get PRU1: %d\n", ret);
-> +			goto put_pru;
-> +		}
-> +	}
-> +
-> +	/* setup netdev interfaces */
-> +	if (eth0_node) {
-> +		ret = icssm_prueth_netdev_init(prueth, eth0_node);
-> +		if (ret) {
-> +			if (ret != -EPROBE_DEFER) {
-> +				dev_err(dev, "netdev init %s failed: %d\n",
-> +					eth0_node->name, ret);
-> +			}
-> +			goto put_pru;
-> +		}
-> +	}
-> +
-> +	if (eth1_node) {
-> +		ret = icssm_prueth_netdev_init(prueth, eth1_node);
-> +		if (ret) {
-> +			if (ret != -EPROBE_DEFER) {
-> +				dev_err(dev, "netdev init %s failed: %d\n",
-> +					eth1_node->name, ret);
-> +			}
-> +			goto netdev_exit;
-> +		}
-> +	}
-> +
-> +	/* register the network devices */
-> +	if (eth0_node) {
-> +		ret = register_netdev(prueth->emac[PRUETH_MAC0]->ndev);
-> +		if (ret) {
-> +			dev_err(dev, "can't register netdev for port MII0");
-> +			goto netdev_exit;
-> +		}
-> +
-> +		prueth->registered_netdevs[PRUETH_MAC0] =
-> +			prueth->emac[PRUETH_MAC0]->ndev;
-> +	}
-> +
-> +	if (eth1_node) {
-> +		ret = register_netdev(prueth->emac[PRUETH_MAC1]->ndev);
-> +		if (ret) {
-> +			dev_err(dev, "can't register netdev for port MII1");
-> +			goto netdev_unregister;
-> +		}
-> +
-> +		prueth->registered_netdevs[PRUETH_MAC1] =
-> +			prueth->emac[PRUETH_MAC1]->ndev;
-> +	}
-> +
-> +	if (eth1_node)
-> +		of_node_put(eth1_node);
-> +	if (eth0_node)
-> +		of_node_put(eth0_node);
-nit: A function would be better than code duplication for eth0_node and eth1_node ?
-> +	return 0;
-> +
-> +netdev_unregister:
-> +	for (i = 0; i < PRUETH_NUM_MACS; i++) {
-> +		if (!prueth->registered_netdevs[i])
-> +			continue;
-> +		unregister_netdev(prueth->registered_netdevs[i]);
-> +	}
-> +
-> +netdev_exit:
-> +	for (i = 0; i < PRUETH_NUM_MACS; i++) {
-> +		eth_node = prueth->eth_node[i];
-> +		if (!eth_node)
-> +			continue;
-> +
-> +		icssm_prueth_netdev_exit(prueth, eth_node);
-> +	}
-> +
-> +put_pru:
-> +	if (eth1_node) {
-> +		if (prueth->pru1)
-> +			pru_rproc_put(prueth->pru1);
-> +		of_node_put(eth1_node);
-> +	}
-> +
-> +	if (eth0_node) {
-> +		if (prueth->pru0)
-> +			pru_rproc_put(prueth->pru0);
-> +		of_node_put(eth0_node);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
+Reviewed-by: Vishal Chourasia <vishalc@linux.ibm.com>
+
+> Signed-off-by: Phil Auld <pauld@redhat.com>
+> Reviewed-by: Waiman Long <longman@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Frederic Weisbecker <frederic@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: linux-kernel@vger.kernel.org
+> Link: https://lore.kernel.org/lkml/20250211141437.GA349314@pauld.westford.csb/
+> 
+> ---
+> 
+> v2: Fix subject line. Update commit message. No code change. 
+> 
+>  kernel/sched/isolation.c | 2 +-
+>  kernel/sched/topology.c  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> index 81bc8b329ef1..93b038d48900 100644
+> --- a/kernel/sched/isolation.c
+> +++ b/kernel/sched/isolation.c
+> @@ -40,7 +40,7 @@ int housekeeping_any_cpu(enum hk_type type)
+>  			if (cpu < nr_cpu_ids)
+>  				return cpu;
+>  
+> -			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
+> +			cpu = cpumask_any_and_distribute(housekeeping.cpumasks[type], cpu_online_mask);
+>  			if (likely(cpu < nr_cpu_ids))
+>  				return cpu;
+>  			/*
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index c49aea8c1025..94133f843485 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -2101,7 +2101,7 @@ int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
+>  	for (i = 0; i < sched_domains_numa_levels; i++) {
+>  		if (!masks[i][j])
+>  			break;
+> -		cpu = cpumask_any_and(cpus, masks[i][j]);
+> +		cpu = cpumask_any_and_distribute(cpus, masks[i][j]);
+>  		if (cpu < nr_cpu_ids) {
+>  			found = cpu;
+>  			break;
+> -- 
+> 2.47.1
+> 
