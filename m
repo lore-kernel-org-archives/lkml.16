@@ -1,445 +1,360 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479F0214214;
-	Thu, 20 Feb 2025 18:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740076426; cv=none; b=iP64qd2te+c9u97OutTOfhCV8pPamw91jNJB9WjLdgnhvdjkw1+5VRV1WtlGS0Vdlf9gwgLJ8k6SA+Ki89C5PXfoqPFCkfn5pr37j20p3gBJnv2SjyKy+RFhQHxtsBi0oUGdsoMHUiZ8RRTs9x+JUcGFQO1iwhJvqmfwapJOZSY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740076426; c=relaxed/simple;
-	bh=9Hd8N3yhO7IJ07bojPOF9bK5EXjEU/i6QRAKx60a4HI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=rea8FMUloyYYIBo6YSyenQRPiu4l2gMPx/x/N6sT866JCxAfuoB1K+tbGl00Cj0Uyc+jJJtSwXnI/g2P82/6hM3mAI1FLGkdwCyaX0bcvccGAQb3b5bmV38MbwQ8Cwn0+HNtEOz566hj6oNaDcK+GqX2dcMmrMkRk/SAuWmF/5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rMgvqENd; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11020110.outbound.protection.outlook.com [52.101.56.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4213C1F1906;
+	Thu, 20 Feb 2025 18:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.110
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740076461; cv=fail; b=kDwTHA4OP3CsiDg2VK10QskE//yVN/rzWKH+ZlliBFl1T3+Huu46zsKKxrYToHf5B3VChijCwHl4GI6lS6kmiQHdum0iCZ4Yom5+B67zNVcqxH91oV3qjvTW+eyPxuTpIvRJ6/rpWZeHe0bKy/ebrWA0wTDu+tR2O6LVMxc7wBE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740076461; c=relaxed/simple;
+	bh=K1cqUEZm5vDXwAmf88/Q2onqRGgHY7vEsZH658jGYmk=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=qCb/hZkr7DwjwKLyfsfoafM+ZmLc1Kiln+NRLLZVcuF/Sz3K3Z9PvpcYmCHKyM2CgAVddb7k6EBluM4EDT4Pk1yrsFRhqF5ZLCDUc8T/uRkd0bZm5+g0vMWLYNbroFWMIHY++Q+aThYorctW7em3NyBXK8EM/qogeruzhvDjJYo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=D9KR6Q5Z; arc=fail smtp.client-ip=52.101.56.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rMgvqENd"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 079332059196;
-	Thu, 20 Feb 2025 10:33:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 079332059196
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740076418;
-	bh=pZYcBtyotntnb6ihw8FwEqgmcCvQh0sejhIZ9TpakUE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rMgvqENdQ3tmc0oee3/zJ+qQNq8RSIP8iOXV4pBvbQBUXGmC5T9sLVl6eIq5p/XPG
-	 9lvVlX3Ac1/uZ4yXVmKWpOL99NrBxGTqTnFRcOHXM6p90i4WVhR4i9OVHw8aydmhhc
-	 3fheJQt37wNta18YGS7QeVhm2X78hodP2oi+wx5c=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="D9KR6Q5Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EXB9aaiGGaoUkAcndFmGsJWolOCqSXdciZ0ytdahYwSxlJ1+wYIpntNyL/KVcvj5+pF4UnQZGyBvRy55vSEGzC9K9TcvCx7eAMdEM+0Sk1Ek/RuZ0Dvq/FvmJC7KU6wmZw4Mks/sb2cvqD9JrGyHjfUkBifZQRb53hU7iqENFQNjYdFe8zqCgwTa+s2cCQKqMgc0MVv2s4j3aJyBqoXYR/B5HjLIKg3NqJzuaDvU5IjJf3oJmjkdzw8Hk38i/Nqa/75mrkvFIECY0XoHdaZX4a9z4PR4KWB4AUli6YxTBihKxSrm892XZjZMEmc4WpXTbJmLiIuF5iEeTOtQTq2d6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=24n+1lV1Q9C8P+askK5LlN6Vs5I4g5KvJWcdIGUynZ8=;
+ b=B47bd3h2u7VZpeU4kk0a0BmYQjX2hcE3IF3/hI4dvmZfRqHWA5KIHd965jj3Jw0oK7EhQPity3fWideMIz8DkQk+WsCMYmdfmlLzWb1WptJP99yDR5T8MJMUm01bokid0q+4vtcEZhukRvxfsrNZ2c+0LHb6XQujeq2aqHZDDn1O/WCAR0be1FlpA/U6QTvEszO7Q3iEQOQLWdeD+Lgsday08+k15Lct2gsxap8okVub+fgLeqGChQAqU7AFgKJAS8d1WQ5BBupOBcMFhztOr7siCphkt3wXOfvKiL5fZRjeUxZcpnXWJ5TmGI57am4n0Xvh/CK01fI7gdGHS+qRzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=24n+1lV1Q9C8P+askK5LlN6Vs5I4g5KvJWcdIGUynZ8=;
+ b=D9KR6Q5ZDjercyCDk52H3DjiGRiNwUnmTCFeSxWVxtmrMdgHaomz6rJaMlsv7lF4ISWy4ClRKtG4+QnW2MivovRJHnN1JsoR0RD96hCmBmRkismB82yqNeSecV/pd1akbJGAEVK+hTcdfj5xaZ6AqxIo88IMO6b+Ba+LQlbskDQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SA0PR01MB6171.prod.exchangelabs.com (2603:10b6:806:e5::16) by
+ MW4PR01MB6433.prod.exchangelabs.com (2603:10b6:303:66::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.15; Thu, 20 Feb 2025 18:34:16 +0000
+Received: from SA0PR01MB6171.prod.exchangelabs.com
+ ([fe80::b0e5:c494:81a3:5e1d]) by SA0PR01MB6171.prod.exchangelabs.com
+ ([fe80::b0e5:c494:81a3:5e1d%4]) with mapi id 15.20.8466.015; Thu, 20 Feb 2025
+ 18:34:16 +0000
+From: admiyo@os.amperecomputing.com
+To:
+Cc: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	iommu@lists.linux.dev,
-	mhklinux@outlook.com,
-	eahariha@linux.microsoft.com
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	daniel.lezcano@linaro.org,
-	joro@8bytes.org,
-	robin.murphy@arm.com,
-	arnd@arndb.de,
-	jinankjain@linux.microsoft.com,
-	muminulrussell@gmail.com,
-	skinsburskii@linux.microsoft.com,
-	mukeshrathor@microsoft.com
-Subject: [PATCH v2 2/3] hyperv: Change hv_root_partition into a function
-Date: Thu, 20 Feb 2025 10:33:15 -0800
-Message-Id: <1740076396-15086-3-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1740076396-15086-1-git-send-email-nunodasneves@linux.microsoft.com>
-References: <1740076396-15086-1-git-send-email-nunodasneves@linux.microsoft.com>
+	Jeremy Kerr <jk@codeconstruct.com.au>,
+	Matt Johnston <matt@codeconstruct.com.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Huisong Li <lihuisong@huawei.com>
+Subject: [PATCH net-next v18 0/1] MCTP Over PCC Transport
+Date: Thu, 20 Feb 2025 13:34:09 -0500
+Message-ID: <20250220183411.269407-1-admiyo@os.amperecomputing.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL1PR13CA0129.namprd13.prod.outlook.com
+ (2603:10b6:208:2bb::14) To SA0PR01MB6171.prod.exchangelabs.com
+ (2603:10b6:806:e5::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA0PR01MB6171:EE_|MW4PR01MB6433:EE_
+X-MS-Office365-Filtering-Correlation-Id: a072a1d7-40e5-42a4-0231-08dd51dd2e09
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|52116014|376014|10070799003|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?fWWsVps71ApeElZdtRGpar9pu0iYRAl++M7TMOt+VuPFl6XliRz3EqFWDaAz?=
+ =?us-ascii?Q?DQQCJ3/mzRlnuC5xVHbWUVoA6BiJL7ZiFqs7OqSh+z5GQFOoLA8d9QNV3aR7?=
+ =?us-ascii?Q?fgcE4KgmjCD+DS+X/JeOOCje8S1ukV+8zUlQGGCr4vEpw7mGpCoHWJqi4Lm5?=
+ =?us-ascii?Q?MU2K1G6hboKFrotAWddJgF6DPbeBEwH4i+Bt0bfkF3df3GawH4S1a+7P6VI7?=
+ =?us-ascii?Q?DV7lIi6NodS/FYAGGtaOPNxtUSn6hn7o3x9b2fjrACyzeBWokdD+K0k9YXFU?=
+ =?us-ascii?Q?rgRdUIU+WCwgAtk71nK5Dx3u72TBoBh0WzYVgFNcASnp8WEJsgIvSXedlIXp?=
+ =?us-ascii?Q?E1U+ARFVxA15TaI3R2cNcEulV1AS9s/tlgVLXMd5vYW+NKJDxdx09ZOtqKXY?=
+ =?us-ascii?Q?3hb2KxW8+ckv4TmZbeGcWF6IlYR2uu/m0M1N9jbzyw+LNu6Vi9fBlpedaFVG?=
+ =?us-ascii?Q?dTagtZRtqBV4NHSRfhn7Mym/GoyZjQMgXUFKaL4xNdJLmvolcvHWXFc2moeN?=
+ =?us-ascii?Q?6xpGLLbI2lQowjgnvPiHdw3ZRTZQvDhKiH6lBjkKjefrT4shSLI2nR4Xtw0h?=
+ =?us-ascii?Q?PDx+jqPejOZmPvlMqhL+Po4ARGsvMB06RPDNsmUy4s7SGnZGET6RyALZi1kc?=
+ =?us-ascii?Q?bcPkJDwQAndVJSJAJGgkvmSUbWQuREtI6+niV/9hpTftwZsbUNkls773YCVW?=
+ =?us-ascii?Q?tFJZ6p+4HPhq0f96fBNCeZuYnru6rJydfdiauYUmzGattEAWr9rdYAFD4KRC?=
+ =?us-ascii?Q?JPLWg0yBseA7lyFvd93ZnPl/w/5rOCGMXW/u0BROHg5XKAuzRcKtCDU9G4xg?=
+ =?us-ascii?Q?TBeERbOFQv33XRN2L655RLP/7nTvCuvFWrOczMfpCNRtPSk/Cin9J0Rp+HTe?=
+ =?us-ascii?Q?5u57Xz6N4HD9quK/kfkA5hhtaUyVIk4RMna0LutFU++GRWFoTA2g/yhuMzlu?=
+ =?us-ascii?Q?3TtdU8IZsoYRzPUIXSOz0m4axzyek1hEkIOJbYfBuB/nQiSK0ygryWKUdLID?=
+ =?us-ascii?Q?93DPi1Nuea6hfN3yiLAJJPZ8m6YX/qrp3GwC0muKdd8aNpaprPpxjo/Cmec9?=
+ =?us-ascii?Q?C0oMKoGFh0LZM8HT1pqvvuF0ZJIqVFBZ54uXTedIDjRwxb3DH03minfOPDbj?=
+ =?us-ascii?Q?fPOf6HcK8AhaqIuLLjNoBM1DvYG78uPDbSytuqU8i7iSTTG2JAkxn9lrkQuv?=
+ =?us-ascii?Q?CdxoRfKnyGiP33mpBxJYF3Om3Fb2PVqIoOwhK6xMt2StiZ0js1xmw3fLb0B+?=
+ =?us-ascii?Q?qpk8mURNLyEEc3GoPPv+EvqM/8s+zaGvH2nUsmUOlmWMR13C2/mtNIynwgJv?=
+ =?us-ascii?Q?Xj1QHE+qjugY+UTfZ9G0W99Gn1jmHkmlP/npiXI29GdsCA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR01MB6171.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(10070799003)(1800799024)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?BTDr5xG8B8hWHNUQfZGgfshklO3LmLh6jm7rd+XuCbjx5c1JyyjqY874WUI1?=
+ =?us-ascii?Q?ETp5ciYWNBloQidDao+chbaxjr5AWya6OVzsD5fpnGGjJNNOF6dcJcRMkB/F?=
+ =?us-ascii?Q?I0/+h9oN0g0QHcuLDuCH91E+7WbmDdtXFA97yDuesf3Fb+Jfzy6k1vewCGQv?=
+ =?us-ascii?Q?SqC/1R+t7CkQn0aPxIBciZUpydR/z5/7dUuQ3VDwV4X1rcRfbJQ9Qg+45r4p?=
+ =?us-ascii?Q?rUEK5YnhxTURZuKJaysJC8nGmrWQMWLoCwYewu454VMrNFpICrw+ZhRP6JCM?=
+ =?us-ascii?Q?tHcuaXJCuYCNRbRYWKiAUwQ7Xr7A5HNOCdHdW3KSvtsXKBngHCHjDOnAdf9q?=
+ =?us-ascii?Q?rKxPXGRw7zktfZuToE9cKJKhiDRynOyIqWXLemG6fClN1HAEiROAid1ItqWc?=
+ =?us-ascii?Q?fvpNsYJZSBf92kGwxngxMTbMtDjpuAh3iNIV5qNt+kOJxeayCynUj9HGWeAK?=
+ =?us-ascii?Q?//0gJNrbDF1/ty/3QfHsX3OX37zwmjFLCGelbnuoU+E9O1FzRyM9HLpe3UaA?=
+ =?us-ascii?Q?BbNP/Np+h54vV/Cb+/b7xEPQCVoIkv3dCQTWraF9Er+AeGHIM97YSdTMbKJt?=
+ =?us-ascii?Q?ditSCct2i0W7mfCh6/N5M0iCT+5Dj7hh3USqudHuBV7dXxVtrPdJgGrq83Xw?=
+ =?us-ascii?Q?HVlBXZYvSFJ0dBTLi5L4qzfqHN5L1K3GTCCdj701NtLhrdwdKROmOVIz1Oe+?=
+ =?us-ascii?Q?EzioClXHbWn7scOePGhGmFOPMkRWPfkAf1nKh514UbLwKe6G39rd6WtpEkG0?=
+ =?us-ascii?Q?J3tW7XkQ6DPHsJzJY0S5iRgA/hS6I5iMul9gFvmMKvigTzuJfNHWqX3tgkro?=
+ =?us-ascii?Q?gwxEWiQioAULZ1jJY40hh5u1xc1e70Uo1Qsotd4nRowE/pZw01u0Oq+Ntct0?=
+ =?us-ascii?Q?YAl3XOHSMQc5d5aVPDGn5ME08TlWle8S3o0qxVciq483R9y5bCQo3AFOlN7Y?=
+ =?us-ascii?Q?zevPoPxC2UfVCDj3sy+DDFt/Lxd3e1Tg6sc8O6Ci/WmkEeuAOWkQmBrYXOEs?=
+ =?us-ascii?Q?y4yUu5b6t4QfFdPs8nlkjai3cVOGbacARLb5ziBFbV0qbZAoSz/7TewOda/E?=
+ =?us-ascii?Q?eZ32urmYyYSmCkPDSc3kFIDUrEZ6KUjxSc+pI+62ZdJc62XHK9JYXmSEEZVI?=
+ =?us-ascii?Q?pbNm4wvfB7yjvtzCeT1sJA97lNSG/PfmVJE5PsDyrd7wdmDYPTnst2YQ/LxH?=
+ =?us-ascii?Q?56u/AWfVsAMAlcwtQEOeInzevsZSDhqCBDbsEay9WarShQpXPGMBiv5ozuvY?=
+ =?us-ascii?Q?HMageCRNxPxmDqLLmV6SlbzspZtoL7LEFBKmlXzO/EZkC61khph9CraA0etN?=
+ =?us-ascii?Q?eMCiPSNlvO44xCG+dlMM10rGswhg168YfiZEtOJ/xdUBfPzjamqi/jJKdA3f?=
+ =?us-ascii?Q?TTFTvEb/y7g0bUQuzd+EtOmM2MfYLqPg+LmVsDGpTSWKa6NvVLY//F4JGPCv?=
+ =?us-ascii?Q?AcCfy5vem8ucEWavi3Ddp7jpns3jc31BW18JS6ErJHTCUFF6+cHmsp+pZBO5?=
+ =?us-ascii?Q?dMYzHpP/5xaWPollDQhA/NRWJzM5ne+e7ROQgmzQujzkuq3nVlBBxm1BduO3?=
+ =?us-ascii?Q?No4/Us8wOBqO3EdP/oquQl+UouR1mzddhJBAiCIW5gqSXkU3LJfGeIRQiSfK?=
+ =?us-ascii?Q?zXsPW4ewIDyQB125uv0wkkEvmfJuFvdxHxT5Hcu15/S3Gjv7CzPLwzERV1Kb?=
+ =?us-ascii?Q?Do7gk8++cyrJ0IHKNsypyCHf6/Q=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a072a1d7-40e5-42a4-0231-08dd51dd2e09
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR01MB6171.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 18:34:15.9770
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VIQj/UX6TTSsnkByu2pRO5GGbsDU5c+FJ7IcdG9F7QTofoURe+u/ZV7sYBquBfXkHgTF10m+6/fkVLgAVRU4znTz6RQ+Ky3VXZOBcp+2CFnCALDGpfbqWbm9msufQ01a
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR01MB6433
 
-Introduce hv_current_partition_type to store the partition type
-as an enum.
+From: Adam Young <admiyo@os.amperecomputing.com>
 
-Right now this is limited to guest or root partition, but there will
-be other kinds in future and the enum is easily extensible.
+This series adds support for the Management Control Transport Protocol (MCTP)
+over the Platform Communication Channel (PCC) mechanism.
 
-Set up hv_current_partition_type early in Hyper-V initialization with
-hv_identify_partition_type(). hv_root_partition() just queries this
-value, and shouldn't be called before that.
+DMTF DSP:0292
+https://www.dmtf.org/sites/default/files/standards/documents/DSP0292_1.0.0WIP50.pdf
 
-Making this check into a function sets the stage for adding a config
-option to gate the compilation of root partition code. In particular,
-hv_root_partition() can be stubbed out always be false if root
-partition support isn't desired.
+MCTP defines a communication model intended to
+facilitate communication between Management controllers
+and other management controllers, and between Management
+controllers and management devices
 
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
----
- arch/arm64/hyperv/mshyperv.c       |  2 ++
- arch/x86/hyperv/hv_init.c          | 10 ++++-----
- arch/x86/kernel/cpu/mshyperv.c     | 24 ++------------------
- drivers/clocksource/hyperv_timer.c |  4 ++--
- drivers/hv/hv.c                    | 10 ++++-----
- drivers/hv/hv_common.c             | 35 +++++++++++++++++++++++++-----
- drivers/hv/vmbus_drv.c             |  2 +-
- drivers/iommu/hyperv-iommu.c       |  4 ++--
- include/asm-generic/mshyperv.h     | 15 +++++++++++--
- 9 files changed, 61 insertions(+), 45 deletions(-)
+PCC is a mechanism for communication between components within
+the  Platform.  It is a composed of shared memory regions,
+interrupt registers, and status registers.
 
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index 29fcfd595f48..2265ea5ce5ad 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -61,6 +61,8 @@ static int __init hyperv_init(void)
- 		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
- 		ms_hyperv.misc_features);
- 
-+	hv_identify_partition_type();
-+
- 	ret = hv_common_init();
- 	if (ret)
- 		return ret;
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 9be1446f5bd3..ddeb40930bc8 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -90,7 +90,7 @@ static int hv_cpu_init(unsigned int cpu)
- 		return 0;
- 
- 	hvp = &hv_vp_assist_page[cpu];
--	if (hv_root_partition) {
-+	if (hv_root_partition()) {
- 		/*
- 		 * For root partition we get the hypervisor provided VP assist
- 		 * page, instead of allocating a new page.
-@@ -242,7 +242,7 @@ static int hv_cpu_die(unsigned int cpu)
- 
- 	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
- 		union hv_vp_assist_msr_contents msr = { 0 };
--		if (hv_root_partition) {
-+		if (hv_root_partition()) {
- 			/*
- 			 * For root partition the VP assist page is mapped to
- 			 * hypervisor provided page, and thus we unmap the
-@@ -317,7 +317,7 @@ static int hv_suspend(void)
- 	union hv_x64_msr_hypercall_contents hypercall_msr;
- 	int ret;
- 
--	if (hv_root_partition)
-+	if (hv_root_partition())
- 		return -EPERM;
- 
- 	/*
-@@ -518,7 +518,7 @@ void __init hyperv_init(void)
- 	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
- 	hypercall_msr.enable = 1;
- 
--	if (hv_root_partition) {
-+	if (hv_root_partition()) {
- 		struct page *pg;
- 		void *src;
- 
-@@ -592,7 +592,7 @@ void __init hyperv_init(void)
- 	 * If we're running as root, we want to create our own PCI MSI domain.
- 	 * We can't set this in hv_pci_init because that would be too late.
- 	 */
--	if (hv_root_partition)
-+	if (hv_root_partition())
- 		x86_init.irqs.create_pci_msi_domain = hv_create_pci_msi_domain;
- #endif
- 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index f285757618fc..4f01f424ea5b 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -33,8 +33,6 @@
- #include <asm/numa.h>
- #include <asm/svm.h>
- 
--/* Is Linux running as the root partition? */
--bool hv_root_partition;
- /* Is Linux running on nested Microsoft Hypervisor */
- bool hv_nested;
- struct ms_hyperv_info ms_hyperv;
-@@ -451,25 +449,7 @@ static void __init ms_hyperv_init_platform(void)
- 	pr_debug("Hyper-V: max %u virtual processors, %u logical processors\n",
- 		 ms_hyperv.max_vp_index, ms_hyperv.max_lp_index);
- 
--	/*
--	 * Check CPU management privilege.
--	 *
--	 * To mirror what Windows does we should extract CPU management
--	 * features and use the ReservedIdentityBit to detect if Linux is the
--	 * root partition. But that requires negotiating CPU management
--	 * interface (a process to be finalized). For now, use the privilege
--	 * flag as the indicator for running as root.
--	 *
--	 * Hyper-V should never specify running as root and as a Confidential
--	 * VM. But to protect against a compromised/malicious Hyper-V trying
--	 * to exploit root behavior to expose Confidential VM memory, ignore
--	 * the root partition setting if also a Confidential VM.
--	 */
--	if ((ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
--	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
--		hv_root_partition = true;
--		pr_info("Hyper-V: running as root partition\n");
--	}
-+	hv_identify_partition_type();
- 
- 	if (ms_hyperv.hints & HV_X64_HYPERV_NESTED) {
- 		hv_nested = true;
-@@ -618,7 +598,7 @@ static void __init ms_hyperv_init_platform(void)
- 
- # ifdef CONFIG_SMP
- 	smp_ops.smp_prepare_boot_cpu = hv_smp_prepare_boot_cpu;
--	if (hv_root_partition ||
-+	if (hv_root_partition() ||
- 	    (!ms_hyperv.paravisor_present && hv_isolation_type_snp()))
- 		smp_ops.smp_prepare_cpus = hv_smp_prepare_cpus;
- # endif
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index f00019b078a7..09549451dd51 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -582,7 +582,7 @@ static void __init hv_init_tsc_clocksource(void)
- 	 * mapped.
- 	 */
- 	tsc_msr.as_uint64 = hv_get_msr(HV_MSR_REFERENCE_TSC);
--	if (hv_root_partition)
-+	if (hv_root_partition())
- 		tsc_pfn = tsc_msr.pfn;
- 	else
- 		tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
-@@ -627,7 +627,7 @@ void __init hv_remap_tsc_clocksource(void)
- 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
- 		return;
- 
--	if (!hv_root_partition) {
-+	if (!hv_root_partition()) {
- 		WARN(1, "%s: attempt to remap TSC page in guest partition\n",
- 		     __func__);
- 		return;
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index fab0690b5c41..a38f84548bc2 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -144,7 +144,7 @@ int hv_synic_alloc(void)
- 		 * Synic message and event pages are allocated by paravisor.
- 		 * Skip these pages allocation here.
- 		 */
--		if (!ms_hyperv.paravisor_present && !hv_root_partition) {
-+		if (!ms_hyperv.paravisor_present && !hv_root_partition()) {
- 			hv_cpu->synic_message_page =
- 				(void *)get_zeroed_page(GFP_ATOMIC);
- 			if (!hv_cpu->synic_message_page) {
-@@ -272,7 +272,7 @@ void hv_synic_enable_regs(unsigned int cpu)
- 	simp.as_uint64 = hv_get_msr(HV_MSR_SIMP);
- 	simp.simp_enabled = 1;
- 
--	if (ms_hyperv.paravisor_present || hv_root_partition) {
-+	if (ms_hyperv.paravisor_present || hv_root_partition()) {
- 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
- 		u64 base = (simp.base_simp_gpa << HV_HYP_PAGE_SHIFT) &
- 				~ms_hyperv.shared_gpa_boundary;
-@@ -291,7 +291,7 @@ void hv_synic_enable_regs(unsigned int cpu)
- 	siefp.as_uint64 = hv_get_msr(HV_MSR_SIEFP);
- 	siefp.siefp_enabled = 1;
- 
--	if (ms_hyperv.paravisor_present || hv_root_partition) {
-+	if (ms_hyperv.paravisor_present || hv_root_partition()) {
- 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
- 		u64 base = (siefp.base_siefp_gpa << HV_HYP_PAGE_SHIFT) &
- 				~ms_hyperv.shared_gpa_boundary;
-@@ -367,7 +367,7 @@ void hv_synic_disable_regs(unsigned int cpu)
- 	 * addresses.
- 	 */
- 	simp.simp_enabled = 0;
--	if (ms_hyperv.paravisor_present || hv_root_partition) {
-+	if (ms_hyperv.paravisor_present || hv_root_partition()) {
- 		iounmap(hv_cpu->synic_message_page);
- 		hv_cpu->synic_message_page = NULL;
- 	} else {
-@@ -379,7 +379,7 @@ void hv_synic_disable_regs(unsigned int cpu)
- 	siefp.as_uint64 = hv_get_msr(HV_MSR_SIEFP);
- 	siefp.siefp_enabled = 0;
- 
--	if (ms_hyperv.paravisor_present || hv_root_partition) {
-+	if (ms_hyperv.paravisor_present || hv_root_partition()) {
- 		iounmap(hv_cpu->synic_event_page);
- 		hv_cpu->synic_event_page = NULL;
- 	} else {
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 2120aead98d9..c5c5dc92ff21 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -34,8 +34,11 @@
- u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
- EXPORT_SYMBOL_GPL(hv_current_partition_id);
- 
-+enum hv_partition_type hv_current_partition_type;
-+EXPORT_SYMBOL_GPL(hv_current_partition_type);
-+
- /*
-- * hv_root_partition, ms_hyperv and hv_nested are defined here with other
-+ * ms_hyperv and hv_nested are defined here with other
-  * Hyper-V specific globals so they are shared across all architectures and are
-  * built only when CONFIG_HYPERV is defined.  But on x86,
-  * ms_hyperv_init_platform() is built even when CONFIG_HYPERV is not
-@@ -43,9 +46,6 @@ EXPORT_SYMBOL_GPL(hv_current_partition_id);
-  * here, allowing for an overriding definition in the module containing
-  * ms_hyperv_init_platform().
-  */
--bool __weak hv_root_partition;
--EXPORT_SYMBOL_GPL(hv_root_partition);
--
- bool __weak hv_nested;
- EXPORT_SYMBOL_GPL(hv_nested);
- 
-@@ -283,7 +283,7 @@ static void hv_kmsg_dump_register(void)
- 
- static inline bool hv_output_page_exists(void)
- {
--	return hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
-+	return hv_root_partition() || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
- }
- 
- void __init hv_get_partition_id(void)
-@@ -594,7 +594,7 @@ EXPORT_SYMBOL_GPL(hv_setup_dma_ops);
- 
- bool hv_is_hibernation_supported(void)
- {
--	return !hv_root_partition && acpi_sleep_state_supported(ACPI_STATE_S4);
-+	return !hv_root_partition() && acpi_sleep_state_supported(ACPI_STATE_S4);
- }
- EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
- 
-@@ -717,3 +717,26 @@ int hv_result_to_errno(u64 status)
- 	}
- 	return -EIO;
- }
-+
-+void hv_identify_partition_type(void)
-+{
-+	/* Assume guest role */
-+	hv_current_partition_type = HV_PARTITION_TYPE_GUEST;
-+	/*
-+	 * Check partition creation and cpu management privileges
-+	 *
-+	 * Hyper-V should never specify running as root and as a Confidential
-+	 * VM. But to protect against a compromised/malicious Hyper-V trying
-+	 * to exploit root behavior to expose Confidential VM memory, ignore
-+	 * the root partition setting if also a Confidential VM.
-+	 */
-+	if ((ms_hyperv.priv_high & HV_CREATE_PARTITIONS) &&
-+	    (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
-+	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
-+		pr_info("Hyper-V: running as root partition\n");
-+		if (IS_ENABLED(CONFIG_MSHV_ROOT))
-+			hv_current_partition_type = HV_PARTITION_TYPE_ROOT;
-+		else
-+			pr_crit("Hyper-V: CONFIG_MSHV_ROOT not enabled!\n");
-+	}
-+}
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 75eb1390b45c..22afebfc28ff 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2656,7 +2656,7 @@ static int __init hv_acpi_init(void)
- 	if (!hv_is_hyperv_initialized())
- 		return -ENODEV;
- 
--	if (hv_root_partition && !hv_nested)
-+	if (hv_root_partition() && !hv_nested)
- 		return 0;
- 
- 	/*
-diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
-index 2a86aa5d54c6..53e4b37716af 100644
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv-iommu.c
-@@ -130,7 +130,7 @@ static int __init hyperv_prepare_irq_remapping(void)
- 	    x86_init.hyper.msi_ext_dest_id())
- 		return -ENODEV;
- 
--	if (hv_root_partition) {
-+	if (hv_root_partition()) {
- 		name = "HYPERV-ROOT-IR";
- 		ops = &hyperv_root_ir_domain_ops;
- 	} else {
-@@ -151,7 +151,7 @@ static int __init hyperv_prepare_irq_remapping(void)
- 		return -ENOMEM;
- 	}
- 
--	if (hv_root_partition)
-+	if (hv_root_partition())
- 		return 0; /* The rest is only relevant to guests */
- 
- 	/*
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 3f115e2bcdaa..d2b1a8fc074c 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -28,6 +28,11 @@
- 
- #define VTPM_BASE_ADDRESS 0xfed40000
- 
-+enum hv_partition_type {
-+	HV_PARTITION_TYPE_GUEST,
-+	HV_PARTITION_TYPE_ROOT,
-+};
-+
- struct ms_hyperv_info {
- 	u32 features;
- 	u32 priv_high;
-@@ -59,6 +64,7 @@ struct ms_hyperv_info {
- extern struct ms_hyperv_info ms_hyperv;
- extern bool hv_nested;
- extern u64 hv_current_partition_id;
-+extern enum hv_partition_type hv_current_partition_type;
- 
- extern void * __percpu *hyperv_pcpu_input_arg;
- extern void * __percpu *hyperv_pcpu_output_arg;
-@@ -190,8 +196,6 @@ void hv_remove_crash_handler(void);
- extern int vmbus_interrupt;
- extern int vmbus_irq;
- 
--extern bool hv_root_partition;
--
- #if IS_ENABLED(CONFIG_HYPERV)
- /*
-  * Hypervisor's notion of virtual processor ID is different from
-@@ -213,6 +217,7 @@ void __init hv_common_free(void);
- void __init ms_hyperv_late_init(void);
- int hv_common_cpu_init(unsigned int cpu);
- int hv_common_cpu_die(unsigned int cpu);
-+void hv_identify_partition_type(void);
- 
- void *hv_alloc_hyperv_page(void);
- void *hv_alloc_hyperv_zeroed_page(void);
-@@ -310,6 +315,7 @@ void hyperv_cleanup(void);
- bool hv_query_ext_cap(u64 cap_query);
- void hv_setup_dma_ops(struct device *dev, bool coherent);
- #else /* CONFIG_HYPERV */
-+static inline void hv_identify_partition_type(void) {}
- static inline bool hv_is_hyperv_initialized(void) { return false; }
- static inline bool hv_is_hibernation_supported(void) { return false; }
- static inline void hyperv_cleanup(void) {}
-@@ -321,4 +327,9 @@ static inline enum hv_isolation_type hv_get_isolation_type(void)
- }
- #endif /* CONFIG_HYPERV */
- 
-+static inline bool hv_root_partition(void)
-+{
-+	return hv_current_partition_type == HV_PARTITION_TYPE_ROOT;
-+}
-+
- #endif
+The MCTP over PCC driver makes use of two PCC channels. For
+sending messages, it uses a Type 3 channel, and for receiving
+messages it uses the paired Type 4 channel.  The device
+and corresponding channels are specified via ACPI.
+
+The first patch in the series implements a mechanism to allow the driver
+to indicate whether an ACK should be sent back to the caller
+after processing the interrupt.  This is an optional feature in
+the PCC code, but has been made explicitly required in another driver.
+The implementation here maintains the backwards compatibility of that
+driver.
+
+MCTP is a general purpose  protocol so  it would  be impossible to enumerate
+all the use cases, but some of the ones that are most topical are attestation
+and RAS support.  There are a handful of protocols built on top of MCTP, to
+include PLDM and SPDM, both specified by the DMTF.
+
+https://www.dmtf.org/sites/default/files/standards/documents/DSP0240_1.0.0.pdf
+https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.0.pd
+
+SPDM entails various usages, including device identity collection, device
+authentication, measurement collection, and device secure session establishment.
+
+PLDM is more likely to be used  for hardware support: temperature, voltage, or
+fan sensor control.
+
+At least two companies have devices that can make use of the mechanism. One is
+Ampere Computing, my employer.
+
+The mechanism it uses is called Platform Communication Channels is part of the
+ACPI spec: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/14_Platform_Communications_Channel/Platform_Comm_Channel.html
+
+Since it is a socket interface, the system administrator also has  the ability
+to ignore an MCTP link that they do not want to enable.  This link would be visible
+to the end user, but would not be usable.
+
+If MCTP support is disabled in the Kernel, this driver would also be disabled.
+
+PCC is based on a shared buffer and a set of I/O mapped memory locations that the
+Spec calls registers.  This mechanism exists regardless of the existence of the
+driver. Thus, if the user has the ability to map these  physical location to
+virtual locations, they have the ability to drive the hardware.  Thus, there
+is a security aspect to this mechanism that extends beyond the responsibilities
+of the operating system.
+
+If the hardware does not expose the PCC in the ACPI table, this device will never
+be enabled.  Thus it is only an issue on hard that does support PCC.  In that case,
+it is up to the remote controller to sanitize communication; MCTP will be exposed
+as a socket interface, and userland can send any crafted packet it wants.  It would
+thus also be incumbent on the hardware manufacturer to allow the end user to disable
+MCTP over PCC communication if they did not want to expose it.
+
+Previous Version:
+https://lore.kernel.org/lkml/20250205183244.340197-1-admiyo@os.amperecomputing.com/
+
+Changes in V18:
+- Added Acked-By
+- Fix minor spacing issue
+
+Changes in V17:
+- No new changes. Rebased on net-next post 6.13 release.
+
+Changes in V16:
+- do not duplicate cleanup after devm_add_action_or_reset calls
+
+Changes in V15:
+- corrected indentation formatting error
+- Corrected TABS issue in MAINTAINER entry
+
+Changes in V14:
+- Do not attempt to unregister a netdev that is never registered
+- Added MAINTAINER entry
+
+Changes in V13:
+- Explicitly Convert PCC header from little endian to machine native
+
+Changes in V12:
+- Explicitly use little endian conversion for PCC header signature
+- Builds clean with make C=1
+
+Changes in V11:
+- Explicitly use little endian types for PCC header
+
+Changes in V11:
+- Switch Big Endian data types to machine local for PCC header
+- use mctp specific function for registering netdev
+
+Changes in V10:
+- sync with net-next branch
+- use dstats helper functions
+- remove duplicate drop stat
+- remove more double spaces
+
+Changes in V9:
+- Prerequisite patch for PCC mailbox has been merged
+- Stats collection now use helper functions
+- many double spaces reduced to single
+
+Changes in V8:
+- change 0 to NULL for pointer check of shmem
+- add semi for static version of pcc_mbox_ioremap
+- convert pcc_mbox_ioremap function to static inline when client code is not being built
+- remove shmem comment from struct pcc_chan_info descriptor
+- copy rx_dropped in mctp_pcc_net_stats
+- removed trailing newline on error message
+- removed double space in dev_dbg string
+- use big endian for header members
+- Fix use full spec ID in description
+- Fix typo in file description
+- Form the complete outbound message in the sk_buff
+
+Changes in V7:
+- Removed the Hardware address as specification is not published.
+- Map the shared buffer in the mailbox and share the mapped region with the driver
+- Use the sk_buff memory to prepare the message before copying to shared region
+
+Changes in V6:
+- Removed patch for ACPICA code that has merged
+- Includes the hardware address in the network device
+- Converted all device resources to devm resources
+- Removed mctp_pcc_driver_remove function
+- uses acpi_driver_module for initialization
+- created helper structure for in and out mailboxes
+- Consolidated code for initializing mailboxes in the add_device function
+- Added specification references
+- Removed duplicate constant PCC_ACK_FLAG_MASK
+- Use the MCTP_SIGNATURE_LENGTH define
+- made naming of header structs consistent
+- use sizeof local variables for offset calculations
+- prefix structure name to avoid potential clash
+- removed unnecessary null initialization from acpi_device_id
+
+Changes in V5
+- Removed Owner field from ACPI module declaration
+- removed unused next field from struct mctp_pcc_ndev
+- Corrected logic reading  RX ACK flag.
+- Added comment for struct pcc_chan_info field shmem_base_addr
+- check against current mtu instead of max mtu for packet length\
+- removed unnecessary lookups of pnd->mdev.dev
+
+Changes in V4
+- Read flags out of shared buffer to trigger ACK for Type 4 RX
+- Remove list of netdevs and cleanup from devices only
+- tag PCCT protocol headers as little endian
+- Remove unused constants
+
+Changes in V3
+- removed unused header
+- removed spurious space
+- removed spurious semis after functiomns
+- removed null assignment for init
+- remove redundant set of device on skb
+- tabify constant declarations
+- added  rtnl_link_stats64 function
+- set MTU to minimum to start
+- clean up logic on driver removal
+- remove cast on void * assignment
+- call cleanup function directly
+- check received length before allocating skb
+- introduce symbolic constatn for ACK FLAG MASK
+- symbolic constant for PCC header flag.
+- Add namespace ID to PCC magic
+- replaced readls with copy from io of PCC header
+- replaced custom modules init and cleanup with ACPI version
+
+Changes in V2
+
+- All Variable Declarations are in reverse Xmass Tree Format
+- All Checkpatch Warnings Are Fixed
+- Removed Dead code
+- Added packet tx/rx stats
+- Removed network physical address.  This is still in
+  disucssion in the spec, and will be added once there
+  is consensus. The protocol can be used with out it.
+  This also lead to the removal of the Big Endian
+  conversions.
+- Avoided using non volatile pointers in copy to and from io space
+- Reorderd the patches to put the ACK check for the PCC Mailbox
+  as a pre-requisite.  The corresponding change for the MCTP
+  driver has been inlined in the main patch.
+- Replaced magic numbers with constants, fixed typos, and other
+  minor changes from code review.
+
+Adam Young (1):
+  mctp pcc: Implement MCTP over PCC Transport
+
+ MAINTAINERS                 |   6 +
+ drivers/net/mctp/Kconfig    |  13 ++
+ drivers/net/mctp/Makefile   |   1 +
+ drivers/net/mctp/mctp-pcc.c | 312 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 332 insertions(+)
+ create mode 100644 drivers/net/mctp/mctp-pcc.c
+
 -- 
-2.34.1
+2.43.0
 
