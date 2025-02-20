@@ -1,62 +1,62 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BE01EE006;
-	Thu, 20 Feb 2025 09:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2DD1EEA5E;
+	Thu, 20 Feb 2025 09:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740043248; cv=none; b=G3NIT8E+UlFpbd+cX7wO6putDtHChUqSTqs0Puk2CCbypoJm8T5R51qBIqURqzD1nQTbk3LwrFhfzPsAIvitR6My3Qe0mo7db4zZTDah+/XhB+n65NwVoJhh7xgcqznv5dNoQRWje4L4fanBunG63R8gCxdoh+PrTAMSXRC3mkI=
+	t=1740043251; cv=none; b=g8cRMJWw692G2b1cJCTZQpsRRi7TfnZfSGOzPhWBqaH4yHVmahtELmFJJXVBRHAiueTn0W6UXEAf66ZWcjJiYCO65O5PURgR4EmOZ/sRin3IML4ZSLgi/b204KVLVXXtWVrRF5msn1T7eu3g6Lp6zNSitNaITn8T+y5g/XRjD1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740043248; c=relaxed/simple;
-	bh=BshHmlA8ttxolsOurdqseo8CCumiC32LYbngrBvTgbo=;
+	s=arc-20240116; t=1740043251; c=relaxed/simple;
+	bh=Di0pc8+mVoIIZUxrN5rf1K7d3PKUOyY+l/aCtguTkgk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WLnLsgDCG7ftPuW/zMtwlqbR+GLj71Oj8QbyqdOiAv9n/4syNkNrzaCY8BWO59gCfvxv49fw4ORagWi0Q0IN6Hh/sC1tUVR95zR2ZwxnvuvVvmNdcZOlFFDQJjcRl9BbLT98ZziNn6yItcOWGry+roe5OmFn4mp8lXweX6StqIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dYTWUCr0; arc=none smtp.client-ip=209.85.208.42
+	 MIME-Version; b=D5x0ANBjpmmlMFgxsi1LCTKP5uu8cGUY/sFLVyYaGWqCEn+gxvUbg9Bgep4AE//w02rvyjhGW5MxT7C1BjoxwDa8+DNMAihl25VDLBi6LO9Mxz3j8+knV45hfR2wwRvrkAh2Ak2bBr/8usR2o6/nYJt8vNIPud/c5PY+/8XHMqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mEVA18bG; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYTWUCr0"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e04f2b1685so1035402a12.0;
-        Thu, 20 Feb 2025 01:20:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEVA18bG"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f22fe889aso528464f8f.3;
+        Thu, 20 Feb 2025 01:20:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740043244; x=1740648044; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740043248; x=1740648048; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rhrXKQcf4GiiAnwrWHJFmicl2O1JAWaNA8sd6GgkbRA=;
-        b=dYTWUCr0JLiy7uE8nssaGh0GTJ+AcBRErfzaSYFoybrUE/a+hmwWRPTuY999+SNzyA
-         UV9t9FoUmhNHboWB1SHMuxZpvYIGgkWeaiO93OwipkREsXN4p71Hg+s0V91Q38Gd1yKB
-         usnKyvif0NijLo1iCHZFdv/qzb0MqDkvqwq95Mvw6KrvYw8DCGFrhnzMTv3eegEBhdLs
-         f9VtOm7P6r083GQeN8NKbCnKA6BDjhuLGdHsaYIsMLGjEDLYonVKZr3HrL7apwHkg2kv
-         xkf+ZpLt8oOjOtIX0lwxWjTGrWHcnH8swjyEpzal0dIZSM4OKHfYvFmsHFjpnZcvnGKD
-         Y/SQ==
+        bh=MIvWg4Gn9o+G9evf8cWLdDcl8No09as61/YnZypW0HQ=;
+        b=mEVA18bGjDRMbpOHE+q6ZF4sa5ziOE8Gj9rjV2FqQZ024L7OacLpsCTpIz1mqrXXCA
+         PMQaLHa0E5LCOGaMbCu6PCE5A3rMzqfzeLLzacIzR0KL7eXiIm289mqE4k5KnXcxALQ3
+         PaWna5rrMEyrBW6zUGrtc2p2FEpEiso4RT5lGOn6DCaO9Yh7ppSW0YIbt3TGp+WV0hof
+         4bRMdT6OAKbIAH9BqpHHx8dKWMWyyxWbdSNnJbX9pLmyjmi3M4qlpgwgCIoDkABg5mCE
+         n+ft/hm8GgyU06UbQuzJ7AjJoKy0d8K2p3YzUCX470f2q4OHr4bte8nwqIAOAZy0PKUI
+         9xJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740043244; x=1740648044;
+        d=1e100.net; s=20230601; t=1740043248; x=1740648048;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rhrXKQcf4GiiAnwrWHJFmicl2O1JAWaNA8sd6GgkbRA=;
-        b=V6i2j5cV1iRxf0v6j4zicVPsqzC/x3iYyq/ZF+HYP//Z6rxcWNBk1qh0oFuMXYYJFj
-         LX/fUhH+awCHSdQvb7+Eooq+uGtD0ADSfThA1HRAKAnY0Pv4lKbmvFwJcpuIRs+q12O6
-         kOmQ2/e2jRWxhfYjc7aMgyuEV6xkcAGcF6aKPilopcNKWUDHVVTtTxTDCGFysXlzaNdl
-         ClpBBaArtxY12K2d6KuomV6ya+w08pQPhHjM8jTrZ5iRFmWJ/2BjyZGNCzv60jS1/5ue
-         fQuC4onkvh2h9Q17LjB/Y/rEehH/dBYsfD3JGhBfCgIvx2/ZAxlZyhYaEwX8uDfUVpex
-         mueg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIkQvp445XZtRZ1x/BTykEx3rm0Pvz/ntc2QlMTAvyR4VM+I7BCbOP5PrVe2APPtUcOzfIN+F5wqA1IPU=@vger.kernel.org, AJvYcCVVrbRH4RJd4IZhCMrqD5azux6npmYgkR1/RbkksmY/3Mf2dt/WxNPGqPhQRsZ4QJY8Wo9z9Muntd24Z4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk4wZkyv+d8+wmlcK4Uhr4IdOflfFaUnnqeblit4XzJQv2yWxQ
-	CAF65HyAYMNuSiMMnYoQNP2hMsIFLf/fYqPRLEZnKxMOS9QnSk66
-X-Gm-Gg: ASbGncu/7fA/RsmfBQqvG+wekOMLK3FaH24sK2o/YjarzuT7L91U5v/GMkRVyyTbFAK
-	UtgJhfuFEBea8O46ZW3OcZUuVX4wkFy3irgDoqAjrkrtA2Yd085QebCbQOiv2bYldg+Br/6AJPw
-	bfav7wxJOYghCUg2bnRNzBZ8BpgDgFnMFRFQLuSIizH8iW0SyUIiSvyHUtb6fw4rXe39LVenehC
-	cDyBJpVZhEIodDMViDbZWQW100rhhiD6hDCvb/ie/MrMuhU1lEDcToi6HYwGM/oS4ZduCcCR4lV
-	jdckSnGQOoI3Zd8rsTLZ/bAXbij8
-X-Google-Smtp-Source: AGHT+IGELBAVHlT1FsAwAPLAfs/8eHa7w1H1BXAuCz31GVyau0LU+/O4GL+wfZn7+PcEvnxYdppSug==
-X-Received: by 2002:a05:6402:1ecd:b0:5df:6a:54ea with SMTP id 4fb4d7f45d1cf-5e03602f764mr55679741a12.11.1740043243699;
-        Thu, 20 Feb 2025 01:20:43 -0800 (PST)
+        bh=MIvWg4Gn9o+G9evf8cWLdDcl8No09as61/YnZypW0HQ=;
+        b=wE9yMaNDsI56FsBJqZQn8hjZZO+rwYbZLvQI661cITZ0B9cZ+lVMDxLjgY1ftoVnPd
+         g97G1UNbQ/seVYESp32OYs8HuIGDmXkgO16TVHEVEftth64owpxWTwdSopTa7Kca99a+
+         TM/JgqOvbhmlPQrNfAG/fY3a/RaMYZDe+xhrQje4UD0hW1Zw0C9ryPwk9B/5TgxM9iyS
+         xrOjr9yAbVrwvXdw8wi/e9KRxdDXBHwQZ6FdFOE3eg2N8ylNZkIokOQ6RFdzjW5AXIYU
+         XNX4TkpWIhV3vAn37YnEr2fK/5qfLGhnUg41EASNVEAvTM0xAd8xBufY7MPeY3Evv8ab
+         LyOA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0XICeCqeKOpPC8DCf77UUBaISxXWFaiPOOhFUm/TB0+y3AYf5bngLH8ieEvS1KlSz/y15Awt+ZGloq4s=@vger.kernel.org, AJvYcCWXv2RBPhxMbHceKm9B3bJs2vj5OEeYsrZG4fe8LTUUHYaEBSLPukz1FmxIjmuYU9HnkTb39ELS7cpSB5Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF4bZd3tZZ3WFegOhKYZ5DIVRK5mQ5/xqy8xPVW/F6j85YykZX
+	R5yeXTpfLLN8+UG0VdlEJZIp01y3TrP5j9FlA541k0FA8rrOF6wD
+X-Gm-Gg: ASbGncuN2QOC+xzXHOGAN1TzX0Z1bzrDrBcsCVTjNJhI6vrxpOLXWyauDl1U/JSsmUD
+	XFggQFxFQRzbgEWJkoHm57e+EhG5BaY4mTbMPatBK4TWyY2MdhLc8E0OJL02oQ0zGpu+SjmyLpG
+	q/hcCAz3OBqq+0Tnl5PKgDN9xe4QGQPD6MC3BMC1wN+DNX52434jdVDsdYDqyzVcZF1oOacHrek
+	k/71CGG3CwfkG9CvBMIIFqZxFO8Dbomm7POiyVqWFoOgUfIU+3xCobCJw23Z1wTASQvZnoABFCD
+	Nw+Cjsic2Flm6fn6y5cCUXHAxMKC
+X-Google-Smtp-Source: AGHT+IFUfAy/nA4NjDORyka7i757ce3BhJX0W1jdcc9Lq8KT042PAkdLHvg8+1RRG5/LjvlPDzql7Q==
+X-Received: by 2002:adf:e709:0:b0:38c:3f12:64be with SMTP id ffacd0b85a97d-38f33f51157mr22341024f8f.35.1740043247411;
+        Thu, 20 Feb 2025 01:20:47 -0800 (PST)
 Received: from demon-pc.localdomain ([188.27.130.21])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abba358ec3asm665574866b.35.2025.02.20.01.20.42
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abba358ec3asm665574866b.35.2025.02.20.01.20.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 01:20:43 -0800 (PST)
+        Thu, 20 Feb 2025 01:20:47 -0800 (PST)
 From: Cosmin Tanislav <demonsingur@gmail.com>
 To: 
 Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
@@ -78,9 +78,9 @@ Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	linux-kernel@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/3] media: v4l: subdev: add v4l2_subdev_routing_xlate_streams()
-Date: Thu, 20 Feb 2025 11:20:33 +0200
-Message-ID: <20250220092036.6757-2-demonsingur@gmail.com>
+Subject: [PATCH v2 3/3] media: v4l: subdev: remove v4l2_subdev_state_xlate_streams()
+Date: Thu, 20 Feb 2025 11:20:35 +0200
+Message-ID: <20250220092036.6757-4-demonsingur@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250220092036.6757-1-demonsingur@gmail.com>
 References: <20250220092036.6757-1-demonsingur@gmail.com>
@@ -92,98 +92,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the v4l2_subdev_state_xlate_streams() function is used
-to translate streams from one pad to another.
-This function takes the entire subdev state as argument, but only makes
-use of the routing.
-
-Introduce a v4l2_subdev_routing_xlate_streams() function which can be
-used without the entire subdev state, to avoid passing the entire state
-around when not needed.
+All usages of v4l2_subdev_state_xlate_streams() have been replaced with
+v4l2_subdev_routing_xlate_streams(), remove it.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 ---
- drivers/media/v4l2-core/v4l2-subdev.c | 12 +++++++++---
- include/media/v4l2-subdev.h           | 20 +++++++++++++++++---
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ drivers/media/v4l2-core/v4l2-subdev.c |  7 -------
+ include/media/v4l2-subdev.h           | 14 --------------
+ 2 files changed, 21 deletions(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index a3074f469b150..91fa51259237e 100644
+index 91fa51259237e..985d30c22acae 100644
 --- a/drivers/media/v4l2-core/v4l2-subdev.c
 +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -2044,10 +2044,9 @@ v4l2_subdev_state_get_opposite_stream_format(struct v4l2_subdev_state *state,
+@@ -2069,13 +2069,6 @@ u64 v4l2_subdev_routing_xlate_streams(const struct v4l2_subdev_krouting *routing
  }
- EXPORT_SYMBOL_GPL(v4l2_subdev_state_get_opposite_stream_format);
+ EXPORT_SYMBOL_GPL(v4l2_subdev_routing_xlate_streams);
  
 -u64 v4l2_subdev_state_xlate_streams(const struct v4l2_subdev_state *state,
 -				    u32 pad0, u32 pad1, u64 *streams)
-+u64 v4l2_subdev_routing_xlate_streams(const struct v4l2_subdev_krouting *routing,
-+				      u32 pad0, u32 pad1, u64 *streams)
- {
--	const struct v4l2_subdev_krouting *routing = &state->routing;
- 	struct v4l2_subdev_route *route;
- 	u64 streams0 = 0;
- 	u64 streams1 = 0;
-@@ -2068,6 +2067,13 @@ u64 v4l2_subdev_state_xlate_streams(const struct v4l2_subdev_state *state,
- 	*streams = streams0;
- 	return streams1;
- }
-+EXPORT_SYMBOL_GPL(v4l2_subdev_routing_xlate_streams);
-+
-+u64 v4l2_subdev_state_xlate_streams(const struct v4l2_subdev_state *state,
-+				    u32 pad0, u32 pad1, u64 *streams)
-+{
-+	return v4l2_subdev_routing_xlate_streams(&state->routing, pad0, pad1, streams);
-+}
- EXPORT_SYMBOL_GPL(v4l2_subdev_state_xlate_streams);
- 
+-{
+-	return v4l2_subdev_routing_xlate_streams(&state->routing, pad0, pad1, streams);
+-}
+-EXPORT_SYMBOL_GPL(v4l2_subdev_state_xlate_streams);
+-
  int v4l2_subdev_routing_validate(struct v4l2_subdev *sd,
+ 				 const struct v4l2_subdev_krouting *routing,
+ 				 enum v4l2_subdev_routing_restriction disallow)
 diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index 57f2bcb4eb16c..e49dba3c59bd6 100644
+index e49dba3c59bd6..0fa732e6dd55d 100644
 --- a/include/media/v4l2-subdev.h
 +++ b/include/media/v4l2-subdev.h
-@@ -1584,9 +1584,9 @@ v4l2_subdev_state_get_opposite_stream_format(struct v4l2_subdev_state *state,
- 					     u32 pad, u32 stream);
+@@ -1606,20 +1606,6 @@ v4l2_subdev_state_get_opposite_stream_format(struct v4l2_subdev_state *state,
+ u64 v4l2_subdev_routing_xlate_streams(const struct v4l2_subdev_krouting *routing,
+ 				      u32 pad0, u32 pad1, u64 *streams);
  
- /**
+-/**
 - * v4l2_subdev_state_xlate_streams() - Translate streams from one pad to another
-+ * v4l2_subdev_routing_xlate_streams() - Translate streams from one pad to another
-  *
+- *
 - * @state: Subdevice state
-+ * @routing: Routing used to translate streams from one pad to another
-  * @pad0: The first pad
-  * @pad1: The second pad
-  * @streams: Streams bitmask on the first pad
-@@ -1595,7 +1595,7 @@ v4l2_subdev_state_get_opposite_stream_format(struct v4l2_subdev_state *state,
-  * the subdev state routing table. Stream numbers don't necessarily match on
-  * the sink and source side of a route. This function translates stream numbers
-  * on @pad0, expressed as a bitmask in @streams, to the corresponding streams
-- * on @pad1 using the routing table from the @state. It returns the stream mask
-+ * on @pad1 using the routing table from @routing. It returns the stream mask
-  * on @pad1, and updates @streams with the streams that have been found in the
-  * routing table.
+- * @pad0: The first pad
+- * @pad1: The second pad
+- * @streams: Streams bitmask on the first pad
+- *
+- * This is the same as v4l2_subdev_routing_xlate_streams, but takes subdevice
+- * state as parameter
+- */
+-u64 v4l2_subdev_state_xlate_streams(const struct v4l2_subdev_state *state,
+-				    u32 pad0, u32 pad1, u64 *streams);
+-
+ /**
+  * enum v4l2_subdev_routing_restriction - Subdevice internal routing restrictions
   *
-@@ -1603,6 +1603,20 @@ v4l2_subdev_state_get_opposite_stream_format(struct v4l2_subdev_state *state,
-  *
-  * Return: The bitmask of streams of @pad1 that are routed to @streams on @pad0.
-  */
-+u64 v4l2_subdev_routing_xlate_streams(const struct v4l2_subdev_krouting *routing,
-+				      u32 pad0, u32 pad1, u64 *streams);
-+
-+/**
-+ * v4l2_subdev_state_xlate_streams() - Translate streams from one pad to another
-+ *
-+ * @state: Subdevice state
-+ * @pad0: The first pad
-+ * @pad1: The second pad
-+ * @streams: Streams bitmask on the first pad
-+ *
-+ * This is the same as v4l2_subdev_routing_xlate_streams, but takes subdevice
-+ * state as parameter
-+ */
- u64 v4l2_subdev_state_xlate_streams(const struct v4l2_subdev_state *state,
- 				    u32 pad0, u32 pad1, u64 *streams);
- 
 -- 
 2.48.1
 
