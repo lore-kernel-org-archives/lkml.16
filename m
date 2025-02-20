@@ -1,161 +1,411 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4522F1F5425;
-	Thu, 20 Feb 2025 13:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDB51E766E;
+	Thu, 20 Feb 2025 13:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740057553; cv=none; b=BowxSsQKQgm+Ue5EiarBObx8IkGxWbgkppUbF3Vcg9bUtKsP5oT4soKA/Zt74eL8L4u+8LlDggwA1QVR9zeLZ2G4rJejy1i13v5tzHm85ejI+Wd0tN7jsfSDj4GyYSPTU1DWZqRMgEhJiyVmu74kVPfdTaKcxOoH6LjdBlmkyUU=
+	t=1740057595; cv=none; b=WctJ7yYZSspv2UBgalvlb0ZRmqzljvswwzt25dPBO57o1UvBtr2cpD0T/OCUOlivid6tfkIM4IEabWd/yOqpWwqprTss8EmUwqdwEPXaftJRfG/YpxomUuzOdN5tsQdv9C4OPDAOJt/qiA+OWB1UINbWkG4ykvQLDlDtcxRmzcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740057553; c=relaxed/simple;
-	bh=EsMTxchL/+qRXxcJQQGMEd1C37/sV2jkPmF5oFcvccw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=A6Rv4bAA7Zg+K7xVDQi+vbZ0xzg6JjVGWlVgSEUstmKYNOOzzVqGD3+drI7qPypHNtbuUr+V6fo6/hL2duo6+F2URMTa5YENR+YyiSLATRhmpfVuptR9MF4XKTgPaJj3PjxXuykGMXrvuYD86eKW80PJfFNjBZHDQXRP0bDit+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YnpeBoEo; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740057595; c=relaxed/simple;
+	bh=APbqXh88xg3nJ04q86baKMgK+Abnc2gYjbREC8lsUVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ap1O7Vn+2QO0kXS9hSgzxJLQq49KLZ0gw5H1dSbbB0fuqSGTGJYtKe9S3D5K3+UEZU4ImVGDgdVHG6iahhg2bq6ZRFEoIwgKO6qZOXVqGuBAgh1WmO2OwtGPRwCQdxAOzeRNDCZUkihqieZnA3vkl0Z8DEHOgAxhFgWuCVKxSVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UQmY8fqA; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnpeBoEo"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-21c2f1b610dso24067225ad.0;
-        Thu, 20 Feb 2025 05:19:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740057551; x=1740662351; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v9P9H3YBcyOxNExufhwVnRqWtrvWAZlTnbL5BKFsIaA=;
-        b=YnpeBoEoAa5I2hhbMAP6La9qvqhldvWrvpgV7pvrhql/pvF1hAPrfNCKAJ2BaTSQfg
-         JIUcXFi30MxJEUt+h3hw3OaKXCBAp8iCJcKB/H7yio6Blm20Mavbv9Mu6ZbLdVjel7wx
-         eHoQsm7yC7JcYfdJhtaS0i1b/pertQekBoSfTdmQduHMG5vtvt9o+vUkSSMU05RuXb8G
-         1yFi3oJKkkhVdD3H/I8o/CO+KfSAUXGJvtDHGlz+7t8gFcCGUd/HHnAtXQbIpYVhws6o
-         2tnlP0yVqzrBPim1JP2tHtIphC+0CZy/rC+3pDsMtclmpZJDLqTvG5C+cJ90OUgeliVd
-         Z+Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740057551; x=1740662351;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v9P9H3YBcyOxNExufhwVnRqWtrvWAZlTnbL5BKFsIaA=;
-        b=F2dgt8TihC7lEljiwnNulQ0pRCcZIkR8aQtn7HrFqhyrie6E7gF/CHd61WLu558DP7
-         VnXFJ68sTrXiL9hdFlrQW7wy0WJaJh9JuTlCxInpq1gfAp87v5YWrmuaAsKH36XNACpe
-         Al1XDoRRulbs2CEApq482F4QdB5rD3ofvQgK7LGDLAMMDgRHQ1VrvMRnrv3wxc7nE/9s
-         FX109m229WKWE2WFMt718Wd+jPpx4BPJgfqdttPFlIkq0wcNwxMJy1K5pIfdbh7AHagO
-         rHfvYorSn1R+aTvoA/Y16759Goe/sWbFCo7QUy9WsLLs6knHt7ZNFT7ESzm+MycGzDKX
-         9C+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWtX2BzeCwrXN3Lj+DF+iHeIA2+fJq+uT4vyE8XcAHv5J6FOEKP+FIwZ56voO8cBAdk+KMjvxsY71g=@vger.kernel.org, AJvYcCXfDvD/t4vWN+xwmpyC9Y7+VI2bPUCwCWHTLni1UaaGAci1fDSkOiBqWSDR6uAnERAk8X8B6so4Ph8Bp2HT8Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm8Q7QVRHBNKVY2hdMocRZrxCl4L7gkvb9MUCEpxw/z6S/ucYN
-	ZoAB0S1A7f10ReSoZ8vyMuTRPOqn/c+k+gHcawaLEG6XDQdl4nB8q1/BZEVkwp4BDQ==
-X-Gm-Gg: ASbGncvI0+5X4mn+8KIz+3p0W/MZRN1QkVNZ4GA8yrBVVNYxmZfCcPsUzgW2y95ySCa
-	zy6BLGrvDAPpNmsRPvHHaOElva1m+QoXMxAzPio7nw1kGsHoDrb6HXFYODYTm4GX9Qza0/J5n5X
-	8648XezftSRPsIf7LuNJlQrPMar2KQagM/DX5KK447u4Em38WzQyQSGKGHDhqxhmqg9xHFh654u
-	fdPpEb4D0RJccbQ2MLF4em8oZZtwWxprhtqSHo//O/ZF0wvNxNqoOsiBJTPuG0uAddiU9HkVK4f
-	cmATzuUzutDawMlJnXw51RW9QkgjjyhXGqnlkCk=
-X-Google-Smtp-Source: AGHT+IHV3IxbgmEM1wB7ObFBeZ2yaA43f2JaFF7cUg1ubdEneG9dIov6yvjHeNOJIP6aCRMznDzcmQ==
-X-Received: by 2002:a05:6a20:244c:b0:1ee:d92d:f6f9 with SMTP id adf61e73a8af0-1eed92dfa33mr11913487637.31.1740057551011;
-        Thu, 20 Feb 2025 05:19:11 -0800 (PST)
-Received: from localhost.localdomain ([103.49.135.232])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ade083277b3sm9113400a12.27.2025.02.20.05.19.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2025 05:19:10 -0800 (PST)
-From: Ruiwu Chen <rwchen404@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: corbet@lwn.net,
-	viro@zeniv.linux.org.uk,
-	mcgrof@kernel.org,
-	keescook@chromium.org,
-	zachwade.k@gmail.com,
-	Ruiwu Chen <rwchen404@gmail.com>
-Subject: [PATCH v2] drop_caches: re-enable message after disabling
-Date: Thu, 20 Feb 2025 21:18:38 +0800
-Message-Id: <20250220131838.10564-1-rwchen404@gmail.com>
-X-Mailer: git-send-email 2.18.0.windows.1
-In-Reply-To: <20250216101729.2332-1-rwchen404@gmail.com>
-References: <20250216101729.2332-1-rwchen404@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UQmY8fqA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740057593; x=1771593593;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=APbqXh88xg3nJ04q86baKMgK+Abnc2gYjbREC8lsUVg=;
+  b=UQmY8fqAzQaqGCbvcnO2xTXt5J7fjMm3vlzf3+Wrqk9tSWBJ3jGMDCIg
+   74GAEpn7zp+OlVCmj1H+S0spAEUgG8Sgzl/BZ1dss9650rwnIgA+kzwt4
+   4lsRHB7YtdDL8L4zeCPf+ZjhsQ/yLmjXQUkzMwyjfQBumDbMiaLlOIaWt
+   jyyPscMsFoaZqB/87ACDopmsXXS63NqemWPH0eS+HGzGK1MX0BiSA11B2
+   RL/wxeSNlB64U3Ov5l627vVxV8HAnupeUAVPsyQVj4bMKU/A4JWTQK7A3
+   mqz9m607wUp8GnDg/05jJmNcoZaOXLTIQKDN9vjVMGcqaMxR47B/jnZAH
+   Q==;
+X-CSE-ConnectionGUID: 5NDcW4O8RBqrS+66E8XSWg==
+X-CSE-MsgGUID: QubNOprOTNylDos94auaDw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40756665"
+X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
+   d="scan'208";a="40756665"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 05:19:53 -0800
+X-CSE-ConnectionGUID: bfgHlItuQcabMG+IUuOhZQ==
+X-CSE-MsgGUID: PnXraADXQ4quK8KNT4xacw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
+   d="scan'208";a="145892227"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 05:19:51 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id E89A911F7F2;
+	Thu, 20 Feb 2025 15:19:47 +0200 (EET)
+Date: Thu, 20 Feb 2025 13:19:47 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: shravan kumar <shravan.chippa@microchip.com>
+Cc: mchehab@kernel.org, kieran.bingham@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	conor.dooley@microchip.com, valentina.fernandezalanis@microchip.com,
+	praveen.kumar@microchip.com
+Subject: Re: [PATCH V4] media: i2c: imx334: Add support for 1280x720 &
+ 640x480 resolutions
+Message-ID: <Z7cr8x6i8NZbdjIQ@kekkonen.localdomain>
+References: <20250218093356.3608409-1-shravan.chippa@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218093356.3608409-1-shravan.chippa@microchip.com>
 
-When 'echo 4 > /proc/sys/vm/drop_caches' the message is disabled,
-but there is no interface to enable the message, only by restarting
-the way, so I want to add the 'echo 0 > /proc/sys/vm/drop_caches'
-way to enabled the message again.
+Hi Shravan,
 
-Signed-off-by: Ruiwu Chen <rwchen404@gmail.com>
----
-v2: - updated Documentation/ to note this new API.
-    - renamed the variable.
- Documentation/admin-guide/sysctl/vm.rst | 11 ++++++++++-
- fs/drop_caches.c                        |  9 ++++++---
- kernel/sysctl.c                         |  2 +-
- 3 files changed, 17 insertions(+), 5 deletions(-)
+On Tue, Feb 18, 2025 at 03:03:56PM +0530, shravan kumar wrote:
+> From: Shravan Chippa <shravan.chippa@microchip.com>
+> 
+> Added support for 1280x720@30 and 640x480@30 resolutions and
+> optimized the resolution arrays by incorporating a common
+> register array.
+> 
+> Updated the register array values for 1920x1080@30 and 3840x2160@30
+> resolutions in accordance with the common register array values.
+> 
+> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+> 
+> ---
+> changelog:
+> v3 -> v4
+> In response to the review request, the dependency of the common register value
+> array on the 445M link frequency has been eliminated.
+> 
+> Although I do not have a test setup for 4k resolution at an 819M link frequency, 
+> I have made adjustments based on the IMX334 data sheet, the latest 4k resolution,
+> and the common register value array. 
+> 
+> Additionally, the 4k resolution has been switched to master mode to ensure
+> consistency with other resolutions that also use master mode.
+> 
+> changelog:
+> v2 -> v3
+> removied blank lines reported by media CI robot 
+> 
+> v1 -> v2
+> Optimized the resolution arrays by added common register
+> array
+> ---
+> 
+>  drivers/media/i2c/imx334.c | 214 +++++++++++++++++++------------------
+>  1 file changed, 109 insertions(+), 105 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
+> index a544fc3df39c..0172406780df 100644
+> --- a/drivers/media/i2c/imx334.c
+> +++ b/drivers/media/i2c/imx334.c
+> @@ -167,8 +167,8 @@ static const s64 link_freq[] = {
+>  	IMX334_LINK_FREQ_445M,
+>  };
+>  
+> -/* Sensor mode registers for 1920x1080@30fps */
+> -static const struct imx334_reg mode_1920x1080_regs[] = {
+> +/* Sensor common mode registers values */
+> +static const struct imx334_reg common_mode_regs[] = {
+>  	{0x3000, 0x01},
+>  	{0x3018, 0x04},
+>  	{0x3030, 0xca},
+> @@ -176,26 +176,10 @@ static const struct imx334_reg mode_1920x1080_regs[] = {
+>  	{0x3032, 0x00},
+>  	{0x3034, 0x4c},
+>  	{0x3035, 0x04},
+> -	{0x302c, 0xf0},
+> -	{0x302d, 0x03},
+> -	{0x302e, 0x80},
+> -	{0x302f, 0x07},
+> -	{0x3074, 0xcc},
+> -	{0x3075, 0x02},
+> -	{0x308e, 0xcd},
+> -	{0x308f, 0x02},
+> -	{0x3076, 0x38},
+> -	{0x3077, 0x04},
+> -	{0x3090, 0x38},
+> -	{0x3091, 0x04},
+> -	{0x3308, 0x38},
+> -	{0x3309, 0x04},
+> -	{0x30C6, 0x00},
+> +	{0x30c6, 0x00},
+>  	{0x30c7, 0x00},
+>  	{0x30ce, 0x00},
+>  	{0x30cf, 0x00},
+> -	{0x30d8, 0x18},
+> -	{0x30d9, 0x0a},
+>  	{0x304c, 0x00},
+>  	{0x304e, 0x00},
+>  	{0x304f, 0x00},
+> @@ -210,7 +194,7 @@ static const struct imx334_reg mode_1920x1080_regs[] = {
+>  	{0x300d, 0x29},
+>  	{0x314c, 0x29},
+>  	{0x314d, 0x01},
+> -	{0x315a, 0x06},
+> +	{0x315a, 0x0a},
 
-diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-index f48eaa98d22d..1b9ae9bc6cf9 100644
---- a/Documentation/admin-guide/sysctl/vm.rst
-+++ b/Documentation/admin-guide/sysctl/vm.rst
-@@ -266,7 +266,16 @@ used::
- 	cat (1234): drop_caches: 3
- 
- These are informational only.  They do not mean that anything is wrong
--with your system.  To disable them, echo 4 (bit 2) into drop_caches.
-+with your system.
-+
-+To disable informational::
-+
-+    echo 4 > /proc/sys/vm/drop_caches
-+
-+To enable informational::
-+
-+    echo 0 > /proc/sys/vm/drop_caches
-+
- 
- enable_soft_offline
- ===================
-diff --git a/fs/drop_caches.c b/fs/drop_caches.c
-index d45ef541d848..5d02c1d99d9f 100644
---- a/fs/drop_caches.c
-+++ b/fs/drop_caches.c
-@@ -57,7 +57,7 @@ int drop_caches_sysctl_handler(const struct ctl_table *table, int write,
- 	if (ret)
- 		return ret;
- 	if (write) {
--		static int stfu;
-+		static bool silent;
- 
- 		if (sysctl_drop_caches & 1) {
- 			lru_add_drain_all();
-@@ -68,12 +68,15 @@ int drop_caches_sysctl_handler(const struct ctl_table *table, int write,
- 			drop_slab();
- 			count_vm_event(DROP_SLAB);
- 		}
--		if (!stfu) {
-+		if (!silent) {
- 			pr_info("%s (%d): drop_caches: %d\n",
- 				current->comm, task_pid_nr(current),
- 				sysctl_drop_caches);
- 		}
--		stfu |= sysctl_drop_caches & 4;
-+		if (sysctl_drop_caches == 0)
-+			silent = false;
-+		else if (sysctl_drop_caches == 4)
-+			silent = true;
- 	}
- 	return 0;
- }
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index cb57da499ebb..f2e06e074724 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2088,7 +2088,7 @@ static const struct ctl_table vm_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0200,
- 		.proc_handler	= drop_caches_sysctl_handler,
--		.extra1		= SYSCTL_ONE,
-+		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_FOUR,
- 	},
- 	{
+What's the effect of this change and why is it done?
+
+>  	{0x3168, 0xa0},
+>  	{0x316a, 0x7e},
+>  	{0x319e, 0x02},
+> @@ -330,116 +314,103 @@ static const struct imx334_reg mode_1920x1080_regs[] = {
+>  	{0x3002, 0x00},
+>  };
+>  
+> +/* Sensor mode registers for 640x480@30fps */
+> +static const struct imx334_reg mode_640x480_regs[] = {
+> +	{0x302c, 0x70},
+> +	{0x302d, 0x06},
+> +	{0x302e, 0x80},
+> +	{0x302f, 0x02},
+> +	{0x3074, 0x48},
+> +	{0x3075, 0x07},
+> +	{0x308e, 0x49},
+> +	{0x308f, 0x07},
+> +	{0x3076, 0xe0},
+> +	{0x3077, 0x01},
+> +	{0x3090, 0xe0},
+> +	{0x3091, 0x01},
+> +	{0x3308, 0xe0},
+> +	{0x3309, 0x01},
+> +	{0x30d8, 0x30},
+> +	{0x30d9, 0x0b},
+> +};
+> +
+> +/* Sensor mode registers for 1280x720@30fps */
+> +static const struct imx334_reg mode_1280x720_regs[] = {
+> +	{0x302c, 0x30},
+> +	{0x302d, 0x05},
+> +	{0x302e, 0x00},
+> +	{0x302f, 0x05},
+> +	{0x3074, 0x84},
+> +	{0x3075, 0x03},
+> +	{0x308e, 0x85},
+> +	{0x308f, 0x03},
+> +	{0x3076, 0xd0},
+> +	{0x3077, 0x02},
+> +	{0x3090, 0xd0},
+> +	{0x3091, 0x02},
+> +	{0x3308, 0xd0},
+> +	{0x3309, 0x02},
+> +	{0x30d8, 0x30},
+> +	{0x30d9, 0x0b},
+> +};
+> +
+> +/* Sensor mode registers for 1920x1080@30fps */
+> +static const struct imx334_reg mode_1920x1080_regs[] = {
+> +	{0x302c, 0xf0},
+> +	{0x302d, 0x03},
+> +	{0x302e, 0x80},
+> +	{0x302f, 0x07},
+> +	{0x3074, 0xcc},
+> +	{0x3075, 0x02},
+> +	{0x308e, 0xcd},
+> +	{0x308f, 0x02},
+> +	{0x3076, 0x38},
+> +	{0x3077, 0x04},
+> +	{0x3090, 0x38},
+> +	{0x3091, 0x04},
+> +	{0x3308, 0x38},
+> +	{0x3309, 0x04},
+> +	{0x30d8, 0x18},
+> +	{0x30d9, 0x0a},
+> +};
+> +
+>  /* Sensor mode registers for 3840x2160@30fps */
+>  static const struct imx334_reg mode_3840x2160_regs[] = {
+> -	{0x3000, 0x01},
+> -	{0x3002, 0x00},
+> -	{0x3018, 0x04},
+> -	{0x37b0, 0x36},
+> -	{0x304c, 0x00},
+> -	{0x300c, 0x3b},
+
+This was the only location this register was written to.
+
+Please split this into two to make it more reviewable: splitting register
+lists into two and then to adding new modes.
+
+> -	{0x300d, 0x2a},
+> -	{0x3034, 0x26},
+> -	{0x3035, 0x02},
+> -	{0x314c, 0x29},
+> -	{0x314d, 0x01},
+> -	{0x315a, 0x02},
+> -	{0x3168, 0xa0},
+> -	{0x316a, 0x7e},
+> -	{0x3288, 0x21},
+> -	{0x328a, 0x02},
+>  	{0x302c, 0x3c},
+>  	{0x302d, 0x00},
+>  	{0x302e, 0x00},
+>  	{0x302f, 0x0f},
+> +	{0x3074, 0xb0},
+> +	{0x3075, 0x00},
+> +	{0x308e, 0xb1},
+> +	{0x308f, 0x00},
+>  	{0x3076, 0x70},
+>  	{0x3077, 0x08},
+>  	{0x3090, 0x70},
+>  	{0x3091, 0x08},
+> -	{0x30d8, 0x20},
+> -	{0x30d9, 0x12},
+>  	{0x3308, 0x70},
+>  	{0x3309, 0x08},
+> -	{0x3414, 0x05},
+> -	{0x3416, 0x18},
+> -	{0x35ac, 0x0e},
+> -	{0x3648, 0x01},
+> -	{0x364a, 0x04},
+> -	{0x364c, 0x04},
+> -	{0x3678, 0x01},
+> -	{0x367c, 0x31},
+> -	{0x367e, 0x31},
+> -	{0x3708, 0x02},
+> -	{0x3714, 0x01},
+> -	{0x3715, 0x02},
+> -	{0x3716, 0x02},
+> -	{0x3717, 0x02},
+> -	{0x371c, 0x3d},
+> -	{0x371d, 0x3f},
+> -	{0x372c, 0x00},
+> -	{0x372d, 0x00},
+> -	{0x372e, 0x46},
+> -	{0x372f, 0x00},
+> -	{0x3730, 0x89},
+> -	{0x3731, 0x00},
+> -	{0x3732, 0x08},
+> -	{0x3733, 0x01},
+> -	{0x3734, 0xfe},
+> -	{0x3735, 0x05},
+> -	{0x375d, 0x00},
+> -	{0x375e, 0x00},
+> -	{0x375f, 0x61},
+> -	{0x3760, 0x06},
+> -	{0x3768, 0x1b},
+> -	{0x3769, 0x1b},
+> -	{0x376a, 0x1a},
+> -	{0x376b, 0x19},
+> -	{0x376c, 0x18},
+> -	{0x376d, 0x14},
+> -	{0x376e, 0x0f},
+> -	{0x3776, 0x00},
+> -	{0x3777, 0x00},
+> -	{0x3778, 0x46},
+> -	{0x3779, 0x00},
+> -	{0x377a, 0x08},
+> -	{0x377b, 0x01},
+> -	{0x377c, 0x45},
+> -	{0x377d, 0x01},
+> -	{0x377e, 0x23},
+> -	{0x377f, 0x02},
+> -	{0x3780, 0xd9},
+> -	{0x3781, 0x03},
+> -	{0x3782, 0xf5},
+> -	{0x3783, 0x06},
+> -	{0x3784, 0xa5},
+> -	{0x3788, 0x0f},
+> -	{0x378a, 0xd9},
+> -	{0x378b, 0x03},
+> -	{0x378c, 0xeb},
+> -	{0x378d, 0x05},
+> -	{0x378e, 0x87},
+> -	{0x378f, 0x06},
+> -	{0x3790, 0xf5},
+> -	{0x3792, 0x43},
+> -	{0x3794, 0x7a},
+> -	{0x3796, 0xa1},
+> -	{0x3e04, 0x0e},
+> +	{0x30d8, 0x20},
+> +	{0x30d9, 0x12},
+>  	{0x319e, 0x00},
+>  	{0x3a00, 0x01},
+>  	{0x3a18, 0xbf},
+> -	{0x3a19, 0x00},
+>  	{0x3a1a, 0x67},
+> -	{0x3a1b, 0x00},
+>  	{0x3a1c, 0x6f},
+> -	{0x3a1d, 0x00},
+>  	{0x3a1e, 0xd7},
+>  	{0x3a1f, 0x01},
+> +	{0x300d, 0x2a},
+> +	{0x3034, 0x26},
+> +	{0x3035, 0x02},
+> +	{0x315a, 0x02},
+>  	{0x3a20, 0x6f},
+>  	{0x3a21, 0x00},
+>  	{0x3a22, 0xcf},
+>  	{0x3a23, 0x00},
+>  	{0x3a24, 0x6f},
+>  	{0x3a25, 0x00},
+> +	{0x3a24, 0x6f},
+> +	{0x3a25, 0x00},
+>  	{0x3a26, 0xb7},
+>  	{0x3a27, 0x00},
+>  	{0x3a28, 0x5f},
+> @@ -505,6 +476,32 @@ static const struct imx334_mode supported_modes[] = {
+>  			.num_of_regs = ARRAY_SIZE(mode_1920x1080_regs),
+>  			.regs = mode_1920x1080_regs,
+>  		},
+> +	}, {
+> +		.width = 1280,
+> +		.height = 720,
+> +		.hblank = 2480,
+> +		.vblank = 1170,
+> +		.vblank_min = 45,
+> +		.vblank_max = 132840,
+> +		.pclk = 297000000,
+> +		.link_freq_idx = 1,
+> +		.reg_list = {
+> +			.num_of_regs = ARRAY_SIZE(mode_1280x720_regs),
+> +			.regs = mode_1280x720_regs,
+> +		},
+> +	}, {
+> +		.width = 640,
+> +		.height = 480,
+> +		.hblank = 2480,
+> +		.vblank = 1170,
+> +		.vblank_min = 45,
+> +		.vblank_max = 132840,
+> +		.pclk = 297000000,
+> +		.link_freq_idx = 1,
+> +		.reg_list = {
+> +			.num_of_regs = ARRAY_SIZE(mode_640x480_regs),
+> +			.regs = mode_640x480_regs,
+> +		},
+>  	},
+>  };
+>  
+> @@ -989,6 +986,13 @@ static int imx334_start_streaming(struct imx334 *imx334)
+>  	const struct imx334_reg_list *reg_list;
+>  	int ret;
+>  
+> +	ret = imx334_write_regs(imx334, common_mode_regs,
+> +				ARRAY_SIZE(common_mode_regs));
+> +	if (ret) {
+> +		dev_err(imx334->dev, "fail to write common registers");
+> +		return ret;
+> +	}
+> +
+>  	/* Write sensor mode registers */
+>  	reg_list = &imx334->cur_mode->reg_list;
+>  	ret = imx334_write_regs(imx334, reg_list->regs,
+
 -- 
-2.27.0
+Kind regards,
 
+Sakari Ailus
