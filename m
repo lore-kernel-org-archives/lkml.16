@@ -1,430 +1,324 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016921EDA08
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740044158; cv=fail; b=Xdys68/sNGjbVlL2ieVBfTS551ySlbix4SFZN9q0TrjAXZW/0bX1GKDyUfBMH8/b2PND1qycCtg4SMshBNUtU76DAThKs0AoNmzf7FW71DkZIE2aRoTKAwUSbaj7LZqb569/N7jrtl8TMG5h57KAdGiSWoXj7AXO1FLlxlKekhc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740044158; c=relaxed/simple;
-	bh=gEJNMxBDe3sWUsSn19wU+R+KS/4ddbI8seGEJVwGxpU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qkYC11PY0Hr0f4xS8+KNOBVghLywQXmiZyGS3cGPD09XC8EtBVxR3ThX+aj2UHwMKQO7V35vZ03XtcOgwD7ce4BzzzNvpQY+0jdhbYwjuxDIrFdsveEprc76DL5t+mqdtizlTX4a+O1hctU9Z7xx2DzlxhoyGzr5Nh7zdyMP99M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OI+HP+dp; arc=fail smtp.client-ip=40.107.94.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D541EE032
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740044174; cv=none; b=qWrConZM12fHOHCJMOBHTkgzif2nFMjcspJYrvwP59taSCTaA+t7Ontfs23e7rZZXgjPt5iAUmKDZCjZATXJS+sqkoKHR4JxcAyG52NsqmntvtdqXTwlcOGuIYav3yCcWqdIGTGwfrdPn1KyF8qj2dQgt3iIufxwlLEeTcGuDDk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740044174; c=relaxed/simple;
+	bh=ZdBF763obzTVBhG64xwpizgbH9FpyxzV8Isbo0UTpNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lsYsCFwK+0KFUWZLygL6TeNOvLltZJdGRZGeVE/u3aXxj6IWFTtG//FIXNsZbM+ETmNhUSRnrwwaZP/nefqRoWz1AlTCtNR3ck+eYHYgjizx8TSdiCAjpMOtoBK0B2Es9854BtGWHCwbXfUAHlsokXQViCmP8WdfBuRLfPND4xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KiWp0Jhe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OI+HP+dp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=irl6I4I4T7iSK4T18wn2tFDRe1VvZHoJyRJcCHYv/p7PMEhIR2pSUiuhKWOSLNv4njX1r+T1ebIQQmpOV5SNfakU2MSYXxw0bb9FCTdUb6Qhzb0xazstwYc7t5uvWHhZuJXVJR4cOBZARxf+aNpV5a7WLUpz9DtfSaazN1ZoqWwWEq2FADLtMktpRLbfnTG3dKs/JOiHhU/k/gchOScsLLtvpJMo8N+YE6hvP2qB4e+Egz5J4KyNtTEJvNFO21ptspwicIhJLGoj+tFMTQt3tc5DiGC5HG8+Ja/+FIKlsKS6WV60xYceZxE1Rp2iZFGotn/OvjgE4HOFPrSlCZeIPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RHWX5d7o1X/WWHhVJpbpRN159IorwOAvTto4D1H/Nho=;
- b=ftEEEIcEX1CwUUz0pXZlbiZDsLvNgkPL0QneAWqdXyQZP1NVFO2+lpUb/gIkUS4z1PG9dSSuuFd7+oCxvtS/27fVQ2fcmGFLCNG5imxBGdISNt4291r6Bgc2Y4cWI1yupjiGWzzXFbxFAt/MGKabiHQtLzMyR7hJnfwt7Dwmh+uKI0PgzHtIid5uzqWXNa6Gl2T81FU2eXv2EKnPjDg1SFi6qasxDZA+y6dH9cAcuj3UHRJMY+xzAYGSeoMpn193W1zEDrUa5DgHtQX0WQ2iapb8MYBl+l3W0v+MOFZNiWGglONMVPzcj++F88Jl2agPYa39HmESsy4SDX5r6uTTWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RHWX5d7o1X/WWHhVJpbpRN159IorwOAvTto4D1H/Nho=;
- b=OI+HP+dp26RCEoOGRnpR5e4psFESXr7xvbSuGTaYyJlgu/Dt1AuW5aJQZAiTCfbzLPzv+ILDppYB43taKNN+Ixq16sBunnphRbISJJciEkofiwBGZRTC5GEoyksqvqGLfqRjcR59MBmkigbN/a8biNaD7ro8eUGvoy7woLSI11I=
-Received: from DS7PR03CA0204.namprd03.prod.outlook.com (2603:10b6:5:3b6::29)
- by MN0PR12MB6001.namprd12.prod.outlook.com (2603:10b6:208:37d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Thu, 20 Feb
- 2025 09:35:52 +0000
-Received: from DS3PEPF000099DF.namprd04.prod.outlook.com
- (2603:10b6:5:3b6:cafe::e4) by DS7PR03CA0204.outlook.office365.com
- (2603:10b6:5:3b6::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.16 via Frontend Transport; Thu,
- 20 Feb 2025 09:35:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099DF.mail.protection.outlook.com (10.167.17.202) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 09:35:51 +0000
-Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Feb
- 2025 03:35:43 -0600
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Valentin Schneider <vschneid@redhat.com>, "Ben
- Segall" <bsegall@google.com>, Thomas Gleixner <tglx@linutronix.de>, "Andy
- Lutomirski" <luto@kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>, "Sebastian Andrzej
- Siewior" <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
-	<linux-rt-devel@lists.linux.dev>, Tejun Heo <tj@kernel.org>, "Frederic
- Weisbecker" <frederic@kernel.org>, Barret Rhoden <brho@google.com>, "Petr
- Mladek" <pmladek@suse.com>, Josh Don <joshdon@google.com>, Qais Yousef
-	<qyousef@layalina.io>, "Paul E. McKenney" <paulmck@kernel.org>, David Vernet
-	<dvernet@meta.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "Gautham R.
- Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: [RFC PATCH 07/22] sched/fair: Propagate preempted entity information up cgroup hierarchy
-Date: Thu, 20 Feb 2025 09:32:42 +0000
-Message-ID: <20250220093257.9380-8-kprateek.nayak@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250220093257.9380-1-kprateek.nayak@amd.com>
-References: <20250220093257.9380-1-kprateek.nayak@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KiWp0Jhe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740044171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=vrYU4001NHaQhiJmOd3K1FtCOLIFErMLyFW/eFn+XB0=;
+	b=KiWp0JheT8Ed5cxrokIDbhV1dwtZkXy+FJcU8c68SqczMYekNHRBq4b0ELMZXxW1hV8X19
+	VhzEc+xBuweJS97QyzT7L2PpWnepUTYHkECy81NIpzhBfpH9iG3Ej3AenHoQhWBELr+Nsw
+	j3YxJ6sE1UCf/npJkRWt3c5TqalMaaw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-152-qametMycP-6LZo9FpwieuA-1; Thu, 20 Feb 2025 04:36:09 -0500
+X-MC-Unique: qametMycP-6LZo9FpwieuA-1
+X-Mimecast-MFC-AGG-ID: qametMycP-6LZo9FpwieuA_1740044168
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f20b530dfso600723f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:36:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740044168; x=1740648968;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vrYU4001NHaQhiJmOd3K1FtCOLIFErMLyFW/eFn+XB0=;
+        b=VwTg04TdBCJaDCD/0elozeXvW0XeJzNhNvUhT9nKkw7l2pHOzmBew6K0lm9iAqjb1m
+         y5etYTDl255u7VJ0gxZFPSCy2eIdOx9zeZIxcIg0GO+73MMefoH1GkFX8rWAWgkUKU9F
+         KYyCvp4Be1yZyTJN+PGrGFs9M8a6UkhsnqZ+pfnjYPZrMNv3IJwlqzc9wKoSmZT+s2yA
+         xqMrZq5muiKgUHSYFqvlaODtFPTetbGwq3kGlV+JokFLZXAQM/c2x4HlwBn3CzFzDOrM
+         ff99GfUqdFyxvUaEmLnDy7qcoWK+afCYNtgul6E3A1Ll3NcqChFscCar4cTXbKQLn5ro
+         CdDw==
+X-Forwarded-Encrypted: i=1; AJvYcCURWYpM6hJkcjfKZ9EjUVhuZznLam5qs+IP/I5DZ5Z2HnpisjbWhSp2iZgrRsy5LMzqDClAdwoFzSeSbQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM6PQnQcpecCRSnu/PSmj0mDmm8OqwBbapgVQOsGG6knV3Dmfm
+	OkjBWyOvMz0WxJf2FkW5E9PAwxvndycNdzezmCJgzUjfj2/YUBU0dcyca98cCJRaIymMOR1R4jM
+	etllr6IezQqul3ocEqvTgd8oyfXVp+GoUXR465O/QJVMGQebP0Y5YYTU+6b66Zg==
+X-Gm-Gg: ASbGnctFs2Vu5VHf7oRYQ5BH40mLfWVAMfjPKJnzjxQkX836QHQ9ukYym11gKxxoryA
+	IXj6rV+WWsPpHDzUjXhZfDK8VHFkPwWfIQO2gKBpE8M3+dJQTVb1EdQLwgAje++vMWBCJzdzu6x
+	+MASvD/mP1LAXZx/PqKNeH0+cjb+frNyepeSA6EHHgy0OlfrqI4Cg+ylHWP+Me273p0FzemGa0G
+	PVzEWPhab8ZtR7Ny/E2G72l5/WMp9ry8+nm+d2yE+bjrHDM/ERd9Jg1TJyyvc6WVcdMnWBFyP7o
+	IwKQjozjkVdgk4iGI+LCI4fnWpibVfS21pSUpckdxFlwphzf4IYA2dJtyR1i8yGfWR5x/Ox/Arg
+	ZwUj7Q6P9xizfzeB40jNR/HuKEDMgKA==
+X-Received: by 2002:a5d:47a7:0:b0:38f:4b15:32fc with SMTP id ffacd0b85a97d-38f4b153521mr11406766f8f.8.1740044167991;
+        Thu, 20 Feb 2025 01:36:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGGDI3PIijcqL6Npq5bzetxWMrfv6WDENSOSRWNWHnOiqmuOkxIT9qTk+3OzM7GLprjVFUdKg==
+X-Received: by 2002:a5d:47a7:0:b0:38f:4b15:32fc with SMTP id ffacd0b85a97d-38f4b153521mr11406725f8f.8.1740044167556;
+        Thu, 20 Feb 2025 01:36:07 -0800 (PST)
+Received: from ?IPV6:2003:cb:c706:2000:e44c:bc46:d8d3:be5? (p200300cbc7062000e44cbc46d8d30be5.dip0.t-ipconnect.de. [2003:cb:c706:2000:e44c:bc46:d8d3:be5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4398e84efb9sm86595125e9.10.2025.02.20.01.36.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 01:36:06 -0800 (PST)
+Message-ID: <d198e62d-4c3a-44ae-a93f-7964e4f05fc8@redhat.com>
+Date: Thu, 20 Feb 2025 10:36:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] mm: Fix kernel BUG when userfaultfd_move encounters
+ swapcache
+To: Barry Song <21cnbao@gmail.com>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+ Lokesh Gidra <lokeshgidra@google.com>, linux-mm@kvack.org,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ zhengtangquan@oppo.com, Barry Song <v-songbaohua@oppo.com>,
+ Andrea Arcangeli <aarcange@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ Axel Rasmussen <axelrasmussen@google.com>, Brian Geffon
+ <bgeffon@google.com>, Christian Brauner <brauner@kernel.org>,
+ Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
+ Kalesh Singh <kaleshsingh@google.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>,
+ Mike Rapoport <rppt@kernel.org>, Nicolas Geoffray <ngeoffray@google.com>,
+ Peter Xu <peterx@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Shuah Khan <shuah@kernel.org>, ZhangPeng <zhangpeng362@huawei.com>,
+ Yu Zhao <yuzhao@google.com>
+References: <20250219112519.92853-1-21cnbao@gmail.com>
+ <CAJuCfpEWFz14R1vD4Rezy98WBk25HWWX+6DsGBekeYMugKTsfQ@mail.gmail.com>
+ <CAGsJ_4yx1=jaQmDG_9rMqHFFkoXqMJw941eYvtby28OqDq+S7g@mail.gmail.com>
+ <50566d42-7754-4017-b290-f29d92e69231@redhat.com>
+ <CAGsJ_4zNounCe-N=BpqSLsk27FOJBJ9=eRbOE8CzOKF=H7kE0Q@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAGsJ_4zNounCe-N=BpqSLsk27FOJBJ9=eRbOE8CzOKF=H7kE0Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DF:EE_|MN0PR12MB6001:EE_
-X-MS-Office365-Filtering-Correlation-Id: 26d1426f-96a8-4178-4a7a-08dd5191f767
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EHIYfl/HanvZQ83qOmPsSvqXheiF/0AFRfjtnxUz8kl08btcbLsAGkwXSX9l?=
- =?us-ascii?Q?jlQ5blFOZpGK33DFXOeOmYh/mFM/Bg2qLhpOEc9d1Hj0U3PzxRzvJoa0zjMN?=
- =?us-ascii?Q?gCGryXiY40s1Y2eWBbN2eNlDaCcVYwsfKGU2S1qmBiOIXZs8dFAyqt4zJzIJ?=
- =?us-ascii?Q?BiBA1keQWyzhTfociuCRCEyro4ZeRAWeGEifBtGZxTqKkzyr4qtv1zskr1xA?=
- =?us-ascii?Q?Ob4i3XSXkE0Rk9YKk+tKn4VL3nZu4bSU1/bK8Gkvnr0hZWzcmjquaxT4Aks8?=
- =?us-ascii?Q?xFHORi7e442hI8t6gI26Si/2cS66Y443FEpHgDHZS3/C5ulQiWX6gX1eZFN+?=
- =?us-ascii?Q?3ieyh0iPM5e7mrgN7j5JaEai2EYJwavg9yJmBJHjIGH6f2+K3gNH67DKMT3W?=
- =?us-ascii?Q?AyuLjoAD1YP+mpoO5VNlXpstPGdu3PRPOanqgs2sBpQq8mcVyvbMfrn41h5A?=
- =?us-ascii?Q?MuEh+vx0ab3DJjlMU6CXsdoOfFKvjkmJity1wnRMYT3TTIIJeX+3fEgXFyTz?=
- =?us-ascii?Q?MaommAfQyItPtI/hvfv2HDwG4659tRvi2bv+6LByUrCGRfwPgs8Vhc4itMVH?=
- =?us-ascii?Q?SGwOWhOefNegOORmHc/rDOTea3GDXqHN+CfWxpEXv2HU91vasJrMklNAYIM7?=
- =?us-ascii?Q?UV7dzrHwdu7OdHc0mr5aodS5yl/rtHyl+3jNaw0C4pHDoWco6VmXOg+NYNLf?=
- =?us-ascii?Q?GmTpj7whQ0ibMKmEcyYoVCoZf2Yjx2tKPKDJYg5YCOFTEwYG18sv07Nl//Ez?=
- =?us-ascii?Q?AcVpj2E5wOElyGiHsQoyCshnTuK024LvSObMx/58s/cAUm243ZONvKop+fvC?=
- =?us-ascii?Q?A/zlfmleSUkdaUQZwBgdS4vXKFZk4pGObB6lVARsyzh9nXKhyDV12Xy16J7C?=
- =?us-ascii?Q?ugf+48qL+qA5/iTFUe1qzVAg+uyt+C1bLrA5ARaAEK3P/YNMmVW/aMe6uyPx?=
- =?us-ascii?Q?B/HlFChuzrSOVjTDu4pgDrc587Bv7V/8SHwexRg6FEVH/agcJZJgoBCm4Byq?=
- =?us-ascii?Q?XiZeSVCUB6hPD6SHXwFIkASZe13/ZZo0laQOZzSiqBSSPLNWSGAX3L6Tnnm+?=
- =?us-ascii?Q?9urpZ3NckQujc3ABcj+DdHGXYDnD8UpYzgwiiw5DlpeP3wItbKMlrrCChI/m?=
- =?us-ascii?Q?2IBeAsVa7soCh5qb7TBvKBs4YSqK0PBWN00b6EQzo270Hfvf8B684zr+AKrr?=
- =?us-ascii?Q?nHJPF66x6el1q0sXvoWMa7l5utI1QkzYZc6yr36kml/TTsJWSJgvaPYvAqUV?=
- =?us-ascii?Q?E75j0jNhbnMUs67w0NVaTb88awlCl8yIB8UKabf/lONoLud2Jmhf3xSb4nfB?=
- =?us-ascii?Q?u+OJdllpVhX0VrQxtUinr0d25SzjvGFIPxmbyVQOitN6nFlAmv5mheHOYtRJ?=
- =?us-ascii?Q?Lg7j4pEqvsGyE4wj7T11cCT1GraUpoDSs7Vw6Cq/TdbcjQSh0mbHPecK50XB?=
- =?us-ascii?Q?j5CpHMToVxLViUroELXXBRUsatM2qXCinu/Mnq4GLg12ALGSnCXSNxb3iTl1?=
- =?us-ascii?Q?C+6KX0drdtLXfbM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 09:35:51.8390
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26d1426f-96a8-4178-4a7a-08dd5191f767
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099DF.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6001
 
-Use "kernel_cs_count" in cfs_rq's sched entity to track the number of
-preempted entities queued on the cfs_rq. Since the current task can
-frequently switch in and out of kernel mode, "cfs_rq->curr" and the
-whole sched entity hierarchy of the current task is treated special.
+On 20.02.25 10:31, Barry Song wrote:
+> On Thu, Feb 20, 2025 at 9:51 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 19.02.25 21:37, Barry Song wrote:
+>>> On Thu, Feb 20, 2025 at 7:27 AM Suren Baghdasaryan <surenb@google.com> wrote:
+>>>>
+>>>> On Wed, Feb 19, 2025 at 3:25 AM Barry Song <21cnbao@gmail.com> wrote:
+>>>>>
+>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>
+>>>>> userfaultfd_move() checks whether the PTE entry is present or a
+>>>>> swap entry.
+>>>>>
+>>>>> - If the PTE entry is present, move_present_pte() handles folio
+>>>>>     migration by setting:
+>>>>>
+>>>>>     src_folio->index = linear_page_index(dst_vma, dst_addr);
+>>>>>
+>>>>> - If the PTE entry is a swap entry, move_swap_pte() simply copies
+>>>>>     the PTE to the new dst_addr.
+>>>>>
+>>>>> This approach is incorrect because even if the PTE is a swap
+>>>>> entry, it can still reference a folio that remains in the swap
+>>>>> cache.
+>>>>>
+>>>>> If do_swap_page() is triggered, it may locate the folio in the
+>>>>> swap cache. However, during add_rmap operations, a kernel panic
+>>>>> can occur due to:
+>>>>>    page_pgoff(folio, page) != linear_page_index(vma, address)
+>>>>
+>>>> Thanks for the report and reproducer!
+>>>>
+>>>>>
+>>>>> $./a.out > /dev/null
+>>>>> [   13.336953] page: refcount:6 mapcount:1 mapping:00000000f43db19c index:0xffffaf150 pfn:0x4667c
+>>>>> [   13.337520] head: order:2 mapcount:1 entire_mapcount:0 nr_pages_mapped:1 pincount:0
+>>>>> [   13.337716] memcg:ffff00000405f000
+>>>>> [   13.337849] anon flags: 0x3fffc0000020459(locked|uptodate|dirty|owner_priv_1|head|swapbacked|node=0|zone=0|lastcpupid=0xffff)
+>>>>> [   13.338630] raw: 03fffc0000020459 ffff80008507b538 ffff80008507b538 ffff000006260361
+>>>>> [   13.338831] raw: 0000000ffffaf150 0000000000004000 0000000600000000 ffff00000405f000
+>>>>> [   13.339031] head: 03fffc0000020459 ffff80008507b538 ffff80008507b538 ffff000006260361
+>>>>> [   13.339204] head: 0000000ffffaf150 0000000000004000 0000000600000000 ffff00000405f000
+>>>>> [   13.339375] head: 03fffc0000000202 fffffdffc0199f01 ffffffff00000000 0000000000000001
+>>>>> [   13.339546] head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
+>>>>> [   13.339736] page dumped because: VM_BUG_ON_PAGE(page_pgoff(folio, page) != linear_page_index(vma, address))
+>>>>> [   13.340190] ------------[ cut here ]------------
+>>>>> [   13.340316] kernel BUG at mm/rmap.c:1380!
+>>>>> [   13.340683] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+>>>>> [   13.340969] Modules linked in:
+>>>>> [   13.341257] CPU: 1 UID: 0 PID: 107 Comm: a.out Not tainted 6.14.0-rc3-gcf42737e247a-dirty #299
+>>>>> [   13.341470] Hardware name: linux,dummy-virt (DT)
+>>>>> [   13.341671] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>>>> [   13.341815] pc : __page_check_anon_rmap+0xa0/0xb0
+>>>>> [   13.341920] lr : __page_check_anon_rmap+0xa0/0xb0
+>>>>> [   13.342018] sp : ffff80008752bb20
+>>>>> [   13.342093] x29: ffff80008752bb20 x28: fffffdffc0199f00 x27: 0000000000000001
+>>>>> [   13.342404] x26: 0000000000000000 x25: 0000000000000001 x24: 0000000000000001
+>>>>> [   13.342575] x23: 0000ffffaf0d0000 x22: 0000ffffaf0d0000 x21: fffffdffc0199f00
+>>>>> [   13.342731] x20: fffffdffc0199f00 x19: ffff000006210700 x18: 00000000ffffffff
+>>>>> [   13.342881] x17: 6c203d2120296567 x16: 6170202c6f696c6f x15: 662866666f67705f
+>>>>> [   13.343033] x14: 6567617028454741 x13: 2929737365726464 x12: ffff800083728ab0
+>>>>> [   13.343183] x11: ffff800082996bf8 x10: 0000000000000fd7 x9 : ffff80008011bc40
+>>>>> [   13.343351] x8 : 0000000000017fe8 x7 : 00000000fffff000 x6 : ffff8000829eebf8
+>>>>> [   13.343498] x5 : c0000000fffff000 x4 : 0000000000000000 x3 : 0000000000000000
+>>>>> [   13.343645] x2 : 0000000000000000 x1 : ffff0000062db980 x0 : 000000000000005f
+>>>>> [   13.343876] Call trace:
+>>>>> [   13.344045]  __page_check_anon_rmap+0xa0/0xb0 (P)
+>>>>> [   13.344234]  folio_add_anon_rmap_ptes+0x22c/0x320
+>>>>> [   13.344333]  do_swap_page+0x1060/0x1400
+>>>>> [   13.344417]  __handle_mm_fault+0x61c/0xbc8
+>>>>> [   13.344504]  handle_mm_fault+0xd8/0x2e8
+>>>>> [   13.344586]  do_page_fault+0x20c/0x770
+>>>>> [   13.344673]  do_translation_fault+0xb4/0xf0
+>>>>> [   13.344759]  do_mem_abort+0x48/0xa0
+>>>>> [   13.344842]  el0_da+0x58/0x130
+>>>>> [   13.344914]  el0t_64_sync_handler+0xc4/0x138
+>>>>> [   13.345002]  el0t_64_sync+0x1ac/0x1b0
+>>>>> [   13.345208] Code: aa1503e0 f000f801 910f6021 97ff5779 (d4210000)
+>>>>> [   13.345504] ---[ end trace 0000000000000000 ]---
+>>>>> [   13.345715] note: a.out[107] exited with irqs disabled
+>>>>> [   13.345954] note: a.out[107] exited with preempt_count 2
+>>>>>
+>>>>> Fully fixing it would be quite complex, requiring similar handling
+>>>>> of folios as done in move_present_pte.
+>>>>
+>>>> How complex would that be? Is it a matter of adding
+>>>> folio_maybe_dma_pinned() checks, doing folio_move_anon_rmap() and
+>>>> folio->index = linear_page_index like in move_present_pte() or
+>>>> something more?
+>>>
+>>> My main concern is still with large folios that require a split_folio()
+>>> during move_pages(), as the entire folio shares the same index and
+>>> anon_vma. However, userfaultfd_move() moves pages individually,
+>>> making a split necessary.
+>>>
+>>> However, in split_huge_page_to_list_to_order(), there is a:
+>>>
+>>>           if (folio_test_writeback(folio))
+>>>                   return -EBUSY;
+>>>
+>>> This is likely true for swapcache, right? However, even for move_present_pte(),
+>>> it simply returns -EBUSY:
+>>>
+>>> move_pages_pte()
+>>> {
+>>>                   /* at this point we have src_folio locked */
+>>>                   if (folio_test_large(src_folio)) {
+>>>                           /* split_folio() can block */
+>>>                           pte_unmap(&orig_src_pte);
+>>>                           pte_unmap(&orig_dst_pte);
+>>>                           src_pte = dst_pte = NULL;
+>>>                           err = split_folio(src_folio);
+>>>                           if (err)
+>>>                                   goto out;
+>>>
+>>>                           /* have to reacquire the folio after it got split */
+>>>                           folio_unlock(src_folio);
+>>>                           folio_put(src_folio);
+>>>                           src_folio = NULL;
+>>>                           goto retry;
+>>>                   }
+>>> }
+>>>
+>>> Do we need a folio_wait_writeback() before calling split_folio()?
+>>>
+>>> By the way, I have also reported that userfaultfd_move() has a fundamental
+>>> conflict with TAO (Cc'ed Yu Zhao), which has been part of the Android common
+>>> kernel. In this scenario, folios in the virtual zone won’t be split in
+>>> split_folio(). Instead, the large folio migrates into nr_pages small folios.
+>>   > > Thus, the best-case scenario would be:
+>>>
+>>> mTHP -> migrate to small folios in split_folio() -> move small folios to
+>>> dst_addr
+>>>
+>>> While this works, it negates the performance benefits of
+>>> userfaultfd_move(), as it introduces two PTE operations (migration in
+>>> split_folio() and move in userfaultfd_move() while retry), nr_pages memory
+>>> allocations, and still requires one memcpy(). This could end up
+>>> performing even worse than userfaultfd_copy(), I guess.
+>>   > > The worst-case scenario would be failing to allocate small folios in
+>>> split_folio(), then userfaultfd_move() might return -ENOMEM?
+>>
+>> Although that's an Android problem and not an upstream problem, I'll
+>> note that there are other reasons why the split / move might fail, and
+>> user space either must retry or fallback to a COPY.
+>>
+>> Regarding mTHP, we could move the whole folio if the user space-provided
+>> range allows for batching over multiple PTEs (nr_ptes), they are in a
+>> single VMA, and folio_mapcount() == nr_ptes.
+>>
+>> There are corner cases to handle, such as moving mTHPs such that they
+>> suddenly cross two page tables I assume, that are harder to handle when
+>> not moving individual PTEs where that cannot happen.
+> 
+> This is a useful suggestion. I’ve heard that Lokesh is also interested in
+> modifying ART to perform moves at the mTHP granularity, which would require
+> kernel modifications as well. It’s likely the direction we’ll take after
+> fixing the current urgent bugs. The current split_folio() really isn’t ideal.
+> 
+> The corner cases you mentioned are definitely worth considering. However,
+> once we can perform batch UFFDIO_MOVE, I believe that in most cases,
+> the conflict between userfaultfd_move() and TAO will be resolved ?
 
-This is similar to "runnable_sum" except "kernel_cs_count" does not
-have a corresponding count in the in struct cfs_rq.
+Well, as soon as you would have varying mTHP sizes, you'd still run into 
+the split with TAO. Maybe that doesn't apply with Android today, but I 
+can just guess that performing sub-mTHP moving would still be required 
+for GC at some point.
 
-The counts are managed at enqueue, dequeue, and task pick boundaries
-since the entities on rbtree have a stable "kernel_cs_count". Use
-min_vruntime_cb_propagate() generated from RB_DECLARE_CALLBACKS() to
-propagate the adjustments to the root of the rbtree.
-
-Since propagations require the state of the task being enqueued /
-dequeued / put / set, expose se_in_kernel() to generic code to
-streamline the propagation.
-
-Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
----
- include/linux/sched.h |   7 ++-
- kernel/sched/fair.c   | 121 ++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 124 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4bb7e45758f4..48115de839a7 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -589,7 +589,12 @@ struct sched_entity {
- 	 * - For task: It represents if the task is currently
- 	 *   running in kernel mode. It is always 0 or 1.
- 	 *
--	 * TODO: Describe for sched_entity when implementing.
-+	 * - For cfs_rq: It represents the sum of the
-+	 *   kernel_cs_count of the entities queued below it
-+	 *   except for the "current". Since the current task can
-+	 *   frequently switch in and out of kernel mode, its
-+	 *   hierarchy is treated  special and its contribution
-+	 *   is accounted at key decision points.
- 	 */
- 	int				kernel_cs_count;
- 					/* hole */
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ba1bd60ce433..9f28624e4442 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6732,7 +6732,7 @@ __always_inline void sched_notify_critical_section_exit(void)
- 	current->se.kernel_cs_count--;
- }
- 
--static inline int se_in_kernel(struct sched_entity *se)
-+static __always_inline int se_in_kernel(struct sched_entity *se)
- {
- 	return se->kernel_cs_count;
- }
-@@ -6817,6 +6817,76 @@ static inline bool min_kcs_vruntime_update(struct sched_entity *se)
- 	return se->min_kcs_vruntime == old_min_kcs_vruntime;
- }
- 
-+static inline void account_kcs_enqueue(struct cfs_rq *gcfs_rq, bool in_kernel)
-+{
-+	struct sched_entity *se;
-+	struct cfs_rq *cfs_rq;
-+
-+	if (!in_kernel)
-+		return;
-+
-+	se = gcfs_rq->tg->se[cpu_of(rq_of(gcfs_rq))];
-+	if (!se)
-+		return;
-+
-+	cfs_rq = cfs_rq_of(se);
-+	se->kernel_cs_count++;
-+
-+	/* se has transitioned into a kernel mode preempted entity */
-+	if (se->kernel_cs_count == 1 && se != cfs_rq->curr && se->on_rq) {
-+		/*
-+		 * Must be done after "kernel_cs_count" has been
-+		 * incremented since avg_kcs_vruntime_add() only
-+		 * adjusts the stats if it believes the entity is in
-+		 * the kernel mode.
-+		 */
-+		avg_kcs_vruntime_add(cfs_rq, se);
-+
-+		/* Propagate min_kcs_vruntime_update() till rb_root */
-+		min_vruntime_cb_propagate(&se->run_node, NULL);
-+	}
-+
-+	/* Sanity check */
-+	SCHED_WARN_ON(se->kernel_cs_count > gcfs_rq->h_nr_queued);
-+}
-+
-+static inline void account_kcs_dequeue(struct cfs_rq *gcfs_rq, bool in_kernel)
-+{
-+	struct sched_entity *se;
-+	struct cfs_rq *cfs_rq;
-+	bool transition_out;
-+
-+	if (!in_kernel)
-+		return;
-+
-+	se = gcfs_rq->tg->se[cpu_of(rq_of(gcfs_rq))];
-+	if (!se)
-+		return;
-+
-+	cfs_rq = cfs_rq_of(se);
-+	transition_out = se->kernel_cs_count == 1;
-+
-+	/*
-+	 * Discount the load and avg_kcs_vruntime contribution if the
-+	 * entity is transitioning out. Must be done before
-+	 * "kernel_cs_count" is decremented as avg_kcs_vruntime_sub()
-+	 * should still consider it to be in kernel mode to adjust
-+	 * the stats.
-+	 */
-+	if (transition_out && se != cfs_rq->curr && se->on_rq)
-+		avg_kcs_vruntime_sub(cfs_rq, se);
-+
-+	se->kernel_cs_count--;
-+
-+	/* Propagate min_kcs_vruntime_update() till rb_root */
-+	if (transition_out && se != cfs_rq->curr && se->on_rq)
-+		min_vruntime_cb_propagate(&se->run_node, NULL);
-+
-+	/* Sanity checks */
-+	SCHED_WARN_ON(se->kernel_cs_count > gcfs_rq->h_nr_queued);
-+	SCHED_WARN_ON(se->kernel_cs_count < 0);
-+}
-+
- #ifdef CONFIG_NO_HZ_FULL
- /* called from pick_next_task_fair() */
- static void sched_fair_update_stop_tick(struct rq *rq, struct task_struct *p)
-@@ -6889,6 +6959,11 @@ bool cfs_task_bw_constrained(struct task_struct *p)
- __always_inline void sched_notify_critical_section_entry(void) {}
- __always_inline void sched_notify_critical_section_exit(void) {}
- 
-+static __always_inline int se_in_kernel(struct sched_entity *se)
-+{
-+	return false;
-+}
-+
- static __always_inline void avg_kcs_vruntime_add(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
- static __always_inline void avg_kcs_vruntime_sub(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
- static __always_inline void avg_kcs_vruntime_update(struct cfs_rq *cfs_rq, s64 delta) {}
-@@ -6899,6 +6974,9 @@ static inline bool min_kcs_vruntime_update(struct sched_entity *se)
- 	return true;
- }
- 
-+static inline void account_kcs_enqueue(struct cfs_rq *gcfs_rq, bool in_kernel) {}
-+static inline void account_kcs_dequeue(struct cfs_rq *gcfs_rq, bool in_kernel) {}
-+
- #endif /* CONFIG_CFS_BANDWIDTH */
- 
- #if !defined(CONFIG_CFS_BANDWIDTH) || !defined(CONFIG_NO_HZ_FULL)
-@@ -7056,6 +7134,8 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- {
- 	struct cfs_rq *cfs_rq;
- 	struct sched_entity *se = &p->se;
-+	/* A task on CPU has its in-kernel stats discounted */
-+	bool task_in_kernel = !task_on_cpu(rq, p) && se_in_kernel(se);
- 	int h_nr_idle = task_has_idle_policy(p);
- 	int h_nr_runnable = 1;
- 	int task_new = !(flags & ENQUEUE_WAKEUP);
-@@ -7110,6 +7190,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		cfs_rq->h_nr_runnable += h_nr_runnable;
- 		cfs_rq->h_nr_queued++;
- 		cfs_rq->h_nr_idle += h_nr_idle;
-+		account_kcs_enqueue(cfs_rq, task_in_kernel);
- 
- 		if (cfs_rq_is_idle(cfs_rq))
- 			h_nr_idle = 1;
-@@ -7136,6 +7217,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		cfs_rq->h_nr_runnable += h_nr_runnable;
- 		cfs_rq->h_nr_queued++;
- 		cfs_rq->h_nr_idle += h_nr_idle;
-+		account_kcs_enqueue(cfs_rq, task_in_kernel);
- 
- 		if (cfs_rq_is_idle(cfs_rq))
- 			h_nr_idle = 1;
-@@ -7196,6 +7278,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- 	bool task_sleep = flags & DEQUEUE_SLEEP;
- 	bool task_delayed = flags & DEQUEUE_DELAYED;
- 	struct task_struct *p = NULL;
-+	bool task_in_kernel = false;
- 	int h_nr_idle = 0;
- 	int h_nr_queued = 0;
- 	int h_nr_runnable = 0;
-@@ -7205,6 +7288,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- 	if (entity_is_task(se)) {
- 		p = task_of(se);
- 		h_nr_queued = 1;
-+		/* A task on CPU has its in-kernel stats discounted */
-+		task_in_kernel = !task_on_cpu(rq, p) && se_in_kernel(se);
- 		h_nr_idle = task_has_idle_policy(p);
- 		if (task_sleep || task_delayed || !se->sched_delayed)
- 			h_nr_runnable = 1;
-@@ -7226,6 +7311,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- 		cfs_rq->h_nr_runnable -= h_nr_runnable;
- 		cfs_rq->h_nr_queued -= h_nr_queued;
- 		cfs_rq->h_nr_idle -= h_nr_idle;
-+		account_kcs_dequeue(cfs_rq, task_in_kernel);
- 
- 		if (cfs_rq_is_idle(cfs_rq))
- 			h_nr_idle = h_nr_queued;
-@@ -7267,6 +7353,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- 		cfs_rq->h_nr_runnable -= h_nr_runnable;
- 		cfs_rq->h_nr_queued -= h_nr_queued;
- 		cfs_rq->h_nr_idle -= h_nr_idle;
-+		account_kcs_dequeue(cfs_rq, task_in_kernel);
- 
- 		if (cfs_rq_is_idle(cfs_rq))
- 			h_nr_idle = h_nr_queued;
-@@ -9029,6 +9116,8 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
- 	 */
- 	if (prev != p) {
- 		struct sched_entity *pse = &prev->se;
-+		bool prev_in_kernel = task_on_rq_queued(prev) && se_in_kernel(pse);
-+		bool next_in_kernel = se_in_kernel(se);
- 		struct cfs_rq *cfs_rq;
- 
- 		while (!(cfs_rq = is_same_group(se, pse))) {
-@@ -9036,18 +9125,35 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
- 			int pse_depth = pse->depth;
- 
- 			if (se_depth <= pse_depth) {
--				put_prev_entity(cfs_rq_of(pse), pse);
-+				cfs_rq = cfs_rq_of(pse);
-+
-+				account_kcs_enqueue(cfs_rq, prev_in_kernel);
-+				put_prev_entity(cfs_rq, pse);
- 				pse = parent_entity(pse);
- 			}
- 			if (se_depth >= pse_depth) {
--				set_next_entity(cfs_rq_of(se), se);
-+				cfs_rq = cfs_rq_of(se);
-+
-+				set_next_entity(cfs_rq, se);
- 				se = parent_entity(se);
-+				account_kcs_dequeue(cfs_rq, next_in_kernel);
- 			}
- 		}
- 
- 		put_prev_entity(cfs_rq, pse);
- 		set_next_entity(cfs_rq, se);
- 
-+		if (prev_in_kernel != next_in_kernel) {
-+			for_each_sched_entity(se) {
-+				cfs_rq = cfs_rq_of(se);
-+
-+				if (prev_in_kernel)
-+					account_kcs_enqueue(cfs_rq, prev_in_kernel);
-+				else
-+					account_kcs_dequeue(cfs_rq, next_in_kernel);
-+			}
-+		}
-+
- 		__set_next_task_fair(rq, p, true);
- 	}
- 
-@@ -9114,10 +9220,17 @@ void fair_server_init(struct rq *rq)
- static void put_prev_task_fair(struct rq *rq, struct task_struct *prev, struct task_struct *next)
- {
- 	struct sched_entity *se = &prev->se;
-+	/*
-+	 * When next is NULL, it is a save-restore operation. If the task is no
-+	 * longer queued on the rq, the stats have been already discounted at
-+	 * pick and should not be adjusted here.
-+	 */
-+	bool task_in_kernel = next && task_on_rq_queued(prev) && se_in_kernel(se);
- 	struct cfs_rq *cfs_rq;
- 
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
-+		account_kcs_enqueue(cfs_rq, task_in_kernel);
- 		put_prev_entity(cfs_rq, se);
- 	}
- }
-@@ -13424,11 +13537,13 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
- static void set_next_task_fair(struct rq *rq, struct task_struct *p, bool first)
- {
- 	struct sched_entity *se = &p->se;
-+	bool task_in_kernel = !task_on_cpu(rq, p) && se_in_kernel(se);
- 
- 	for_each_sched_entity(se) {
- 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
- 
- 		set_next_entity(cfs_rq, se);
-+		account_kcs_dequeue(cfs_rq, task_in_kernel);
- 		/* ensure bandwidth has been allocated on our new cfs_rq */
- 		account_cfs_rq_runtime(cfs_rq, 0);
- 	}
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
