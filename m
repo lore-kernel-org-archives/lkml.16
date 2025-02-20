@@ -1,107 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8B21FF5F4;
-	Thu, 20 Feb 2025 14:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A32D1FC7F7;
+	Thu, 20 Feb 2025 14:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062377; cv=none; b=B/ZTAjdgSZH66W8WJYChX7iQQlX5RYpSFEDHMrzqrH3SNltrrd6tLsw0b0nGp3bg7vscLpN/3jbj4a8ozCCFDye0ebIGXUbSU3mzi5lw2pvZhoXd8hYFnDZ2vW4KyHX5tdSVqQFUL88d876sblo4tZXhuYYaYaRUB5chs3YZo2M=
+	t=1740062383; cv=none; b=KVebsYfpesXwdsdujQq45zpRoDU7BGDBtcfEAkeQa/b7aaYczTxQ9jp5VixXxPM5jmW+IgUqkujW6xoXJsKwDDmRtLwocyjUMQJxD/bYDECY6Sh4z2G1Jbt7JiO9Enn7muiQ/J78n10GKXHD+4JnfQJRIMXdMeFkKhiRyh1UQXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062377; c=relaxed/simple;
-	bh=v+81w0g/n3oTHfg+Hd5w5U9CvQiJXdr4f0oeUc7t3sI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pfwH1MvEsM/mx0eUfpxjxNf5ccpA/hOopkpXdq10H65vm/QLM030A3qTvEbhxRNzykHwXvc3/roV2RVzcpGDFS9aRpPosuky2//hMaHrGRGrB/mkEUdzW5l6GGT0Glj+1D+wtteuOro9Xa/wPO5V3Lq2JHYizcspFwsGezlkWlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jq4xU9fI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740062383; c=relaxed/simple;
+	bh=1LKdPwjEyhWLYIelpzALC3HYu2XbKwz8JQ2qvcNVomc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tEtD6DcUTMsHQuTcEXQHd8G8s8TL9i/ALAVBXtWc8dx3hfWBQgkNaS1dhHMRB16192yjQNbjvmFjcvy/Q8Iuqpsukrmi3X81C7Pk2uuzDUPSvmh95nGxXmr5JI8nK/ulp23VWP552h034AMNlblSH2hSTGCEPQDDdDOiZB62JnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X7438IKv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jq4xU9fI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE5AC4CED1;
-	Thu, 20 Feb 2025 14:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740062376;
-	bh=v+81w0g/n3oTHfg+Hd5w5U9CvQiJXdr4f0oeUc7t3sI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jq4xU9fIytnCQo4hM7XAn3x/Co3QNMrgKqBG2oTdrrvH7kzyc9m9RmTdNEJ0X0dwt
-	 B0smeoyhHj35IXZC9KreXT7yo3fCV3Q8067u2Lvfe+288zO6cS1pbmZ4585cGbWAiB
-	 VclyZSiGYyHdXH1v+zqU51ldnHajxScHCGoGMaPjKL1ferZAp+wbQyPHlcrV0hgE7/
-	 l7dSBhQDOf7BhK3jG+pcbz/Eb35QuLbQaotx+W4qETTaRVJPJHzltJmGT7JZDIgIHK
-	 AUr9U4XwE05wxbb1Hr9egAtgDw7SfDt+3b0CO7xKaMh3IW2eraFuseFzoWtEOrpjUa
-	 6vBMInJgWkYGg==
-Message-ID: <fd4263f1-3a8b-440f-aa89-af331d3b9829@kernel.org>
-Date: Thu, 20 Feb 2025 15:39:31 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X7438IKv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1FCAC4CED1;
+	Thu, 20 Feb 2025 14:39:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740062383;
+	bh=1LKdPwjEyhWLYIelpzALC3HYu2XbKwz8JQ2qvcNVomc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X7438IKvi0a1iUnPvD8iwTdIM4xZM8RWtZ7THG08xYI2/hZhZpMXAONXmFcykrL6V
+	 xshXF4u5A0+U8kUUf+OH5d/NYHbk/Xj2t46piXlnGVSSfb9O0TYuTbfsv4cUgfc7ly
+	 WnKdCWLZdq4nrbgGDsCRMlX4h3kZOdJsF50t7/w4=
+Date: Thu, 20 Feb 2025 15:39:40 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH 26/29] serial: 8250: use serial_in/out() helpers
+Message-ID: <2025022032-movie-citation-b267@gregkh>
+References: <20250220111606.138045-1-jirislaby@kernel.org>
+ <20250220111606.138045-27-jirislaby@kernel.org>
+ <Z7cfvXUCHXVXK_mp@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: trivial-devices: Add ti,tps546b24
-To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
- monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
-Cc: Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>
-References: <c79f69d0d37e7eb61f93f5dea69148b7756a3ee5.1740056021.git.michal.simek@amd.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <c79f69d0d37e7eb61f93f5dea69148b7756a3ee5.1740056021.git.michal.simek@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7cfvXUCHXVXK_mp@smile.fi.intel.com>
 
-On 20/02/2025 13:53, Michal Simek wrote:
-> Describe TPS546B24 DC-DC converter which is very similar to tps546d24
-> version. The difference is that B version handles up to 20A. D version up
-> to 40A.
+On Thu, Feb 20, 2025 at 02:27:41PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 20, 2025 at 12:16:03PM +0100, Jiri Slaby (SUSE) wrote:
+> > There are serial_in/out() helpers to be used instead of direct
+> > p->serial_in/out(). Use them in various 8250 drivers.
 > 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
+> Is this just a mechanical (compile-only) conversion?
+> IIRC 8250 DW code is twisted in some cases and it might
+> be a possibility of dead loops, but I don't remember it
+> by heart and haven't checked myself before writing this
+> reply.
 > 
+> TL;DR: this needs a thorough review.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+Wonderful, are you going to do it?  :)
