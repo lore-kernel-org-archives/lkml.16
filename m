@@ -1,144 +1,121 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6532F2638BC
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 373F12B9AA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740094585; cv=none; b=ZmlTHOPGMzgt7l/Ners4mjUn3XS2HVr2EOC3QlTWNzUHDuwSg7ZvFPda5VbMe4KoTuIR7kmsEWOmuaQNdLA+IP2KKZv1uHKuFvnJ+gG4IONFEa/HaM7cFY38cTbJp1wvFtep/tKWaLPtm0KzaQDWmzeYUidvt58wpMDXmn3Jnog=
+	t=1740094643; cv=none; b=t/fbYmeWXvOC7OJwQiZU0owpE10ya4GaUdTOOgvnwqNysJhJCwEhUtob8nV+dpgd+Wd0p3AWZsgN2GjQE6CZOVDTRwUs4tu7f/RvRtPTg9k/sieXL3ePKrvDs84Y3JC0+rEzQXfmyQVa3gOE8Wfq5wkq/iqRS/pG3SWgD6s0cmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740094585; c=relaxed/simple;
-	bh=Z9rlOKsYkSiSq3B/m2yiuXoWI6S0rVlJ+V/aoQY6ZzA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o0TvmuOjcNKxIgMycJE5Q+RoZeixb9kp9xexXz0vC/BE2TVNHMrIo+ZCA+qFu/veB0jPlKWtt5RzRx71a+e35Bl1QcDQuWR/xBuBeZZXUVpvzzZwuT7VEvo4Swlc/mG8wIGalp7plDn9kadJLmdUoeVL9SvnylsUF1k1qwH0GwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=dfqDKRYk; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="dfqDKRYk"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 4B4C6240029
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:36:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1740094576; bh=Z9rlOKsYkSiSq3B/m2yiuXoWI6S0rVlJ+V/aoQY6ZzA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 From;
-	b=dfqDKRYk5INa4ZSVXa1etFrBZSQ1Q3WSYiFhA5jW/FjJJnhy7udM3KKUcuO/CuzrQ
-	 pAq/L/jiD4HiIa+jl2eFLBKgJEt7cs3uqzfkpINTiWci/oYp6EWJjl/69dIFAaL41L
-	 60fYEXqs6KInHx3QSnLSCVPm/R0psvBiObjVgyvx3DIPTQk3VV+j3pptsIOXz2QqJV
-	 wvf584JaF13ozIFt7cKvQ+40HeEzgDhGp15naLlaD6VLknIGQ0acY9cdytS9jpYF61
-	 vlvOkvstUJSEGB7jdnfDDzzW7Qh4HCO0x4SZqGo9AmzJjJ38TKCDdg84B2a7V7lmyQ
-	 YoySinZe1inOw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YzV571Zd5z6tw2;
-	Fri, 21 Feb 2025 00:36:11 +0100 (CET)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-Cc: a.hindborg@kernel.org,  alex.gaynor@gmail.com,  aliceryhl@google.com,
-  apw@canonical.com,  arnd@arndb.de,  aswinunni01@gmail.com,
-  axboe@kernel.dk,  benno.lossin@proton.me,  bhelgaas@google.com,
-  bjorn3_gh@protonmail.com,  boqun.feng@gmail.com,  dakr@kernel.org,
-  dwaipayanray1@gmail.com,  ethan.twardy@gmail.com,
-  fujita.tomonori@gmail.com,  gary@garyguo.net,
-  gregkh@linuxfoundation.org,  joe@perches.com,  lukas.bulwahn@gmail.com,
-  ojeda@kernel.org,  pbonzini@redhat.com,  tmgross@umich.edu,
-  walmeida@microsoft.com,  rust-for-linux@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 2/2] checkpatch: throw error for malformed arrays
-In-Reply-To: <20250220161951.844367-3-trintaeoitogc@gmail.com>
-References: <20250220161951.844367-1-trintaeoitogc@gmail.com>
-	<20250220161951.844367-3-trintaeoitogc@gmail.com>
-Date: Thu, 20 Feb 2025 23:36:03 +0000
-Message-ID: <m2pljcgpek.fsf@Mac.home>
+	s=arc-20240116; t=1740094643; c=relaxed/simple;
+	bh=RrO2xl0zgRBrG7hJH/gMtLoi81v+CEpyWJYacx9omhQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7zcTwiMZWvZ/IlVcBwFx/amvcAx6+5Kd53uNiHNqnyemwm+1FKF0vE4ojIutuZOg8lT9Y36efWv7ssZfsW72XR4xz870xQSh0hQ/QyvSpOjDMsOgwH2OUFgAluWscO3iqwfCsDiaKkGEFdOe1J1yo4q73On0KqJ1EnIh0U5pJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-d1-67b7bcabd130
+Date: Fri, 21 Feb 2025 08:37:10 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com,
+	akpm@linux-foundation.org, ying.huang@intel.com,
+	vernhao@tencent.com, mgorman@techsingularity.net, hughd@google.com,
+	willy@infradead.org, david@redhat.com, peterz@infradead.org,
+	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+Message-ID: <20250220233710.GB39373@system.software.com>
+References: <20250220052027.58847-1-byungchul@sk.com>
+ <8accbd91-ca59-43f8-b190-7e1ac3df5e11@intel.com>
+ <fc94c383-5788-43c8-beb3-2fd76acae7bd@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc94c383-5788-43c8-beb3-2fd76acae7bd@suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsXC9ZZnke7qPdvTDWbNMbKYs34Nm8XnDf/Y
+	LD69fMBo8WJDO6PF1/W/mC2efupjsbi8aw6bxb01/1ktzu9ay2qxY+k+JotLBxYwWRzvPcBk
+	Mf/eZzaLzZumMlvMbuxjtDg+ZSqjxe8fQB0nZ01mcRDy+N7ax+Kxc9Zddo8Fm0o9Nq/Q8li8
+	5yWTx6ZVnWwemz5NYvd4d+4cu8eJGb9ZPOadDPR4v+8qm8eZBUfYPbb+svNonHqNzePzJrkA
+	/igum5TUnMyy1CJ9uwSujI3PZ7EX9AtVbN78nbGBcRFfFyMnh4SAiUR72zo2GPve+4nMIDaL
+	gKrE5UvdYDabgLrEjRs/wWwRARWJRxuOsnYxcnEwCyxhlljx7xkTSEJYIELiyaETYDavgIVE
+	+/7X7CBFQgIzGSUmLjrAApEQlDg58wmYzSygJXHj30ugBg4gW1pi+T8OkDCngLVE/7J9jCC2
+	qICyxIFtx5lA5kgIHGOXaLvziAXiUkmJgytusExgFJiFZOwsJGNnIYxdwMi8ilEoM68sNzEz
+	x0QvozIvs0IvOT93EyMwUpfV/onewfjpQvAhRgEORiUe3gTT7elCrIllxZW5hxglOJiVRHjb
+	6rekC/GmJFZWpRblxxeV5qQWH2KU5mBREuc1+laeIiSQnliSmp2aWpBaBJNl4uCUamCcNK/k
+	reHL/EAvwwVZD8VmLnY6H/n2LqtshVrqUlGmFOH0/69slnzgOdbLLtmYnfXj9/W4S23RWmbh
+	1+SD5fsPR5Q1Tnrn9L5lXtDZnh8zY59v85Kd/+XmRb7zn15Kt2wJ6/ySIifc0Jzsk7NylU7Z
+	3pK3Sxk32Bw3XFFWv+0Xd8iSi1vNGC8osRRnJBpqMRcVJwIAXw4c7tACAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsXC5WfdrLt6z/Z0gynNahZz1q9hs/i84R+b
+	xaeXDxgtXmxoZ7T4uv4Xs8XTT30sFofnnmS1uLxrDpvFvTX/WS3O71rLarFj6T4mi0sHFjBZ
+	HO89wGQx/95nNovNm6YyW8xu7GO0OD5lKqPF7x9AHSdnTWZxEPb43trH4rFz1l12jwWbSj02
+	r9DyWLznJZPHplWdbB6bPk1i93h37hy7x4kZv1k85p0M9Hi/7yqbx+IXH5g8ziw4wu6x9Zed
+	R+PUa2wenzfJBQhEcdmkpOZklqUW6dslcGVsfD6LvaBfqGLz5u+MDYyL+LoYOTkkBEwk7r2f
+	yAxiswioSly+1A1mswmoS9y48RPMFhFQkXi04ShrFyMXB7PAEmaJFf+eMYEkhAUiJJ4cOgFm
+	8wpYSLTvf80OUiQkMJNRYuKiAywQCUGJkzOfgNnMAloSN/69BGrgALKlJZb/4wAJcwpYS/Qv
+	28cIYosKKEsc2HacaQIj7ywk3bOQdM9C6F7AyLyKUSQzryw3MTPHVK84O6MyL7NCLzk/dxMj
+	MO6W1f6ZuIPxy2X3Q4wCHIxKPLwJptvThVgTy4orcw8xSnAwK4nwttVvSRfiTUmsrEotyo8v
+	Ks1JLT7EKM3BoiTO6xWemiAkkJ5YkpqdmlqQWgSTZeLglGpgdN7l1f3pqNMk5mtbg9bO+X3+
+	1nQfwTVLFyjPkD9xf8+OLU80ZjW+/r7MyXS1GH/mue99wvofZyrZbl66c9+8FZ++Jkw/MeXn
+	oqx9RVwyzRYloRLXz0bPUmFR2nF7guknWfdVQQveC6zxEt4m5ZCa9PKZ254V/851Twi922vY
+	JHfwzx2Jp+9W7LiuxFKckWioxVxUnAgA6om6xLcCAAA=
+X-CFilter-Loop: Reflected
 
-Guilherme Giacomo Simoes <trintaeoitogc@gmail.com> writes:
+On Thu, Feb 20, 2025 at 04:29:51PM +0100, Vlastimil Babka wrote:
+> On 2/20/25 16:15, Dave Hansen wrote:
+> > On 2/19/25 21:20, Byungchul Park wrote:
+> >> I'm posting the latest version so that anyone can try luf mechanism if
+> >> wanted by any chance.  However, I tagged RFC again because there are
+> >> still issues that should be resolved to merge to mainline:
+> > 
+> > I don't see anything fundamentally different here from the last 11
+> > versions. I think the entire approach is dangerous and basically makes
+> > things impossible to debug. It's not clear that some of the failure
+> > scenarios that I've brought up in the past have actually been fixed.
+> 
+> Yes, and it's still an invasive change to the buddy allocator.
 
-> Implement a check to ensure these fields are correctly formatted. If a
-> line contains one of these keys that should be of type Vec<String>, use
-> a regex to verify whether the array holds multiple values.
-> * If the array contains more than one value, enforce vertical formatting
-> * If the array has only one value, it can remain on the same line
->
-> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-> ---
->  scripts/checkpatch.pl | 43 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 7b28ad331742..1133fe68054b 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2775,6 +2775,9 @@ sub process {
->  	$realcnt = 0;
->  	$linenr = 0;
->  	$fixlinenr = -1;
-> +
-> +	my %array_parse_module;
-> +
->  	foreach my $line (@lines) {
->  		$linenr++;
->  		$fixlinenr++;
-> @@ -3567,6 +3570,46 @@ sub process {
->  # ignore non-hunk lines and lines being removed
->  		next if (!$hunk_line || $line =~ /^-/);
->  
-> +# check if arrays has more than one value in the same line
-> +		my $inline = 0;
-> +		my $key = "";
-> +		my $add_line = $line =~ /^\+/;
-> +
-> +		if ($line =~ /\s*.*\b(author|alias|firmware)\s*:\s*\[/) {
+Didn't want.. but admit.
 
-Hi Guilherme,
+> IIRC at Plumbers the opinion in the audience was that there might be ways to
+> improve the batching on unmap to reduce the flushes without such an invasive
+> and potentially dangerous change? Has that been investigated?
 
-Will this work now that the field is called "authors" and not "author"?
-I think you forgot to update the regex here.
+Sure.  I tried like, by holding those pages not freed until either no
+one accesses the interesting pages or memory pressure is high.  However,
+unfortunately it was super hard to fix performance degradation by the
+number of page reclaim increased due to the unfreed pages.
 
-> +			$inline = 1;
-> +			$array_parse_module{$1} = 1;
-> +		}
-> +
-> +		my @keys = keys %array_parse_module;
-> +		if (@keys) {
-> +			$key = $keys[0];
-> +		}
-> +
-> +		if ($add_line && $key) {
-> +			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
-> +
-> +			my $counter = () = $line =~ /"/g;
-> +			my $more_than_one = $counter > 2;
-> +			if ($more_than_one) {
-> +				WARN("ARRAY_MODULE_MACRO",
-> +                     "Prefer a single-line value$herevet");
+> Also "Rebase on akpm/mm.git mm-unstable(5a7056135b) as of Nov 22, 2024." is
+> very outdated at this point?
 
-What do you think about this instead?
-"Prefer each array element on a separate line$herevet"
+Sorry for that.  I will rebase and share.
 
-> +			} elsif ($inline && $line !~ /\]/ && $line !~ /,/ && $line =~ /"/) {
-> +				WARN("ARRAY_MODULE_MACRO",
-> +                     "Prefer declare ] on the same line$herevet");
-> +			} elsif (!$inline && $line =~ /\]/ && $line =~ /\"/) {
-> +				WARN("ARRAY_MODULE_MACRO",
-> +                     "Prefer a new line after the last value and before ]$herevet");
-> +			} elsif ($inline && $line =~ /,/ && $line !~ /\]/) {
-> +				WARN("ARRAY_MODULE_MACRO",
-> +                     "Prefer a new line after [$herevet");
-> +			}
-> +		}
-> +
-> +		#END OF ANALYZE FIELD
-> +		if ($line =~ /\]/) {
-> +			delete $array_parse_module{$key};
-> +		}
-> +
->  #trailing whitespace
->  		if ($line =~ /^\+.*\015/) {
->  			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
+	Byungchul
+> 
+> Thanks,
+> Vlastimil
+> 
+> > What I've said here still stands:
+> > 
+> >> https://lore.kernel.org/all/fab1dd64-c652-4160-93b4-7b483a8874da@intel.com/
+> > 
+> >> I think tglx would call all of this "tinkering".  The approach to this
+> >> series is to "fix" narrow, specific cases that reviewers point out, make
+> >> it compile, then send it out again, hoping someone will apply it.
+> >> 
+> >> So, for me, until the approach to this series changes: NAK, for x86.
+> >> Andrew, please don't take this series.  Or, if you do, please drop the
+> >> patch enabling it on x86.
+> > 
+> > I think I'd also like to stop being cc'd on this. If LUF is merged into
+> > mainline and proven to work on arm64 or riscv for a year, I'd be happy
+> > to take another look at enabling it on x86. I think that's just about
+> > the only thing that would make me reconsider.
+> > 
