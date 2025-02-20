@@ -1,167 +1,138 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8411FDA89;
-	Thu, 20 Feb 2025 14:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4987A1F9A8B;
+	Thu, 20 Feb 2025 14:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062313; cv=none; b=s2BCb+hR5gv1azX5bC6rYtXMek4XKROSkXJoJQx4+pYp21gzvpcrTs2xVuxkLPx7f123xCbUoejnflkGkUFOXU8EU06nFbntLf01ZM0+BCmi2zvZFfKFdEOhRkCG6OApODupPzSl8zcYvMsQGd6x0J1wmjRg2EP2SjTDJKKfoyI=
+	t=1740062362; cv=none; b=hBq+yi00Adkqtz90HXQPKDguMKP708BHw2auEL5PzjwPQYfcudj1gv1KefD+lweLJVz87vMhK1AL20/dU6dezKRuitwRJRercLCD1O4WwP5hKi4eMVrJ2/2qOaDJ9gYvhfCX4utkBzHiG06yGrk1mdk2O+JoyRTanPKqwptrj9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062313; c=relaxed/simple;
-	bh=mOxseKTpZNgDLNSeo4kqfO+xUKZPU7nr0V66dGz3Hus=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=sKjbSQtIMIHTW8gUs17iybPKNLPSAZD4gLIltxswOJzWdXo68faeMLPP24Ikpm/YOPrir0FsydQ3UqamquFJUfla0KDcUlnfuAwvyFmwKRn+oSG2AxMPUxzOY1T8RxjeFB0cZBt8Liw2YbA/dvsZwhD/OFsX6meg95B5TjEo3Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F9bNGvmq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740062362; c=relaxed/simple;
+	bh=iLN8B9ksN1GWWVoWVQYBbBJYJyiBr+s/2FAxSdsnkwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouHhBYhNV13Iw6gr3bc72kxoK5W4YyBNcCXn/ANfL5pUE3CCjcVSAk6afeHT4oNrugcbphLCQYSOnEnoJCF8M0caUOLkkT8SWV+3wP46FKbxtczJgsOM+z4finQV2j5EeUhR5UO3bSARs8+skZHAkeBPS07TUUtr1qeI9wP5V5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ix5yJ1MN; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F9bNGvmq"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KAk9f3011747;
-	Thu, 20 Feb 2025 14:38:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	uqgp4ZF/glsbBvLDvzSpKr94BotpGNSm9OPTQtrkRvY=; b=F9bNGvmqLetiKWSk
-	qDf7chw9u5ZHwXhVGDoZ7VHdQCsfN00nYDqFvRnLfd7hA1NeDudpe6feLKWqGvFE
-	ZrFD45Ak+HNU7qpGWK/Bgj7+2jj+MXGtIWEcJonDBfo0yshPOcINLmzsP+qbQTIi
-	YmVDg4enKxADd94XGt8aw2PzXvU5BpGUqqaSUnWOWft0lPK9+XAL7L+n5z2RT8v7
-	zQeLZIEdh7DVBcmHMOGvpThQI0agtdDkRhP/F0Rbd+WFH5lLoKGRq+yWb+Py/bTn
-	rU35v35S3XnZGoJDU3Bq7XFhK/9bR+1V1lSwX14wArqZL7gvJ1oy2oAy+rJm4YSw
-	DhswAQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44x2xb8kud-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 14:38:14 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51KEcDc7002660
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 14:38:13 GMT
-Received: from [10.253.79.77] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Feb
- 2025 06:38:06 -0800
-Message-ID: <c592c262-5928-476f-ac2a-615c44d67277@quicinc.com>
-Date: Thu, 20 Feb 2025 22:38:03 +0800
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ix5yJ1MN"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 716881193;
+	Thu, 20 Feb 2025 15:37:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740062274;
+	bh=iLN8B9ksN1GWWVoWVQYBbBJYJyiBr+s/2FAxSdsnkwI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ix5yJ1MNLbToTzjhWXv1kPGV+NribVBMxOfjCISY3kBKoor1qeqmue2KOaVn9Elun
+	 yAZX8xvnBq34+BFHbklcx77G6lqUeyCL8CqExMt9c4jWKJkpp8weUbzT0+S/9pMA3+
+	 iAhC+RUnOTS7ms8NZiaJSnCW2R9nxIGz2uGKgKfY=
+Date: Thu, 20 Feb 2025 16:39:02 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Cosmin Tanislav <demonsingur@gmail.com>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Julien Massot <julien.massot@collabora.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	=?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/3] media: add v4l2_subdev_state_xlate_streams()
+Message-ID: <20250220143902.GA17500@pendragon.ideasonboard.com>
+References: <20250220092036.6757-1-demonsingur@gmail.com>
+ <tw6x663t5dmxsdarrxjtopza3mou3lnhwazu3dfv2k27fv47v2@bvftfepqqhss>
+ <c94580f0-3ab0-4a19-a996-9bb37e23dd39@gmail.com>
+ <Z7c5U6u5rr0-X0aK@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jie Luo <quic_luoj@quicinc.com>
-Subject: Re: [PATCH net-next v3 04/14] net: ethernet: qualcomm: Initialize PPE
- buffer management for IPQ9574
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
- <a79027ed-012c-4771-982c-b80b55ab0c8a@lunn.ch>
-Content-Language: en-US
-In-Reply-To: <a79027ed-012c-4771-982c-b80b55ab0c8a@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tJv55sSpdC_lXmerUQf9-QwnyZ0Cyls-
-X-Proofpoint-ORIG-GUID: tJv55sSpdC_lXmerUQf9-QwnyZ0Cyls-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_06,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 impostorscore=0 spamscore=0
- mlxlogscore=606 clxscore=1015 priorityscore=1501 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502200105
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z7c5U6u5rr0-X0aK@kekkonen.localdomain>
 
-
-
-On 2/11/2025 9:22 PM, Andrew Lunn wrote:
->> +	/* Configure BM flow control related threshold. */
->> +	PPE_BM_PORT_FC_SET_WEIGHT(bm_fc_val, port_cfg.weight);
->> +	PPE_BM_PORT_FC_SET_RESUME_OFFSET(bm_fc_val, port_cfg.resume_offset);
->> +	PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(bm_fc_val, port_cfg.resume_ceil);
->> +	PPE_BM_PORT_FC_SET_DYNAMIC(bm_fc_val, port_cfg.dynamic);
->> +	PPE_BM_PORT_FC_SET_REACT_LIMIT(bm_fc_val, port_cfg.in_fly_buf);
->> +	PPE_BM_PORT_FC_SET_PRE_ALLOC(bm_fc_val, port_cfg.pre_alloc);
+On Thu, Feb 20, 2025 at 02:16:51PM +0000, Sakari Ailus wrote:
+> On Thu, Feb 20, 2025 at 03:01:41PM +0200, Cosmin Tanislav wrote:
+> > On 2/20/25 1:38 PM, Jacopo Mondi wrote:
+> > > On Thu, Feb 20, 2025 at 11:20:32AM +0200, Cosmin Tanislav wrote:
+> > > > Currently, the v4l2_subdev_state_xlate_streams() function is used
+> > > > to translate streams from one pad to another.
+> > > > This function takes the entire subdev state as argument, but only makes
+> > > > use of the routing.
+> > > 
+> > > Correct, but is this a problem ?
+> > > 
+> > 
+> > No, it's not a problem.
 > 
-> ...
+> I think I have a slight preference to keep the pattern of referring to the
+> state as other functions do.
 > 
->> +#define PPE_BM_PORT_FC_CFG_TBL_ADDR		0x601000
->> +#define PPE_BM_PORT_FC_CFG_TBL_ENTRIES		15
->> +#define PPE_BM_PORT_FC_CFG_TBL_INC		0x10
->> +#define PPE_BM_PORT_FC_W0_REACT_LIMIT		GENMASK(8, 0)
->> +#define PPE_BM_PORT_FC_W0_RESUME_THRESHOLD	GENMASK(17, 9)
->> +#define PPE_BM_PORT_FC_W0_RESUME_OFFSET		GENMASK(28, 18)
->> +#define PPE_BM_PORT_FC_W0_CEILING_LOW		GENMASK(31, 29)
->> +#define PPE_BM_PORT_FC_W1_CEILING_HIGH		GENMASK(7, 0)
->> +#define PPE_BM_PORT_FC_W1_WEIGHT		GENMASK(10, 8)
->> +#define PPE_BM_PORT_FC_W1_DYNAMIC		BIT(11)
->> +#define PPE_BM_PORT_FC_W1_PRE_ALLOC		GENMASK(22, 12)
->> +
->> +#define PPE_BM_PORT_FC_SET_REACT_LIMIT(tbl_cfg, value)	\
->> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_REACT_LIMIT)
->> +#define PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(tbl_cfg, value)	\
->> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_RESUME_THRESHOLD)
-> 
-> Where is u32p_replace_bits()?
+> I wonder what Laurent and Hans think, too.
 
-u32p_replace_bits is defined by the macro __MAKE_OP(32) in the header
-file "include/linux/bitfield.h".
+I agree, I think the state should be passed everywhere. This lowers the
+risk of subsystem-wide refactoring if a function that receives a pointer
+to part of a state (such as v4l2_subdev_routing_xlate_streams()) is
+later found to need more information from the state.
 
-> 
-> This cast does not look good. 
+The situation would be different if the states were not monolithic, for
+instance if the routing table could be locked separatly from other parts
+of the state, but that's not the case and I don't foresee moving to
+finer-grained objects.
 
-Yes, we can remove the cast.
+> > > Is this the first step for a larger rework or is this a drive-by
+> > > beautification ?
+> > 
+> > Mostly a drive-by beautification to avoid passing the whole state around
+> > where we only need the routing. I'm planning to submit drivers for more
+> > GMSL2/3 chips and we're using this just to not pass the whole state
+> > around. I think I can just use v4l2_subdev_state_xlate_streams(),
+> > but I had these patches in my tree and it would have been good to get
+> > them upstream, in preparations for submitting the GMSL2/3 drivers.
+> > 
+> > > I'm asking because (and I know it's hard to strike a balance) this
+> > > kind of changes tend to make back-porting a more painful, and if
+> > > only justified by "it looks better" I would be a bit hesitant in
+> > > taking them.
+> > > 
+> > > > Introduce a v4l2_subdev_routing_xlate_streams() function which can be
+> > > > used without the entire subdev state, to avoid passing the entire state
+> > > > around when not needed.
+> > > > 
+> > > > Convert all usages of v4l2_subdev_state_xlate_streams() to
+> > > > v4l2_subdev_routing_xlate_streams().
+> > > > 
+> > > > Remove v4l2_subdev_state_xlate_streams().
+> > > > 
+> > > > V2:
+> > > >    * Fix description of parameters
+> > > > 
+> > > > Cosmin Tanislav (3):
+> > > >    media: v4l: subdev: add v4l2_subdev_routing_xlate_streams()
+> > > >    media: use v4l2_subdev_routing_xlate_streams()
+> > > >    media: v4l: subdev: remove v4l2_subdev_state_xlate_streams()
+> > > > 
+> > > >   drivers/media/i2c/ds90ub913.c                 | 14 ++++++-----
+> > > >   drivers/media/i2c/ds90ub953.c                 | 14 ++++++-----
+> > > >   drivers/media/i2c/max96714.c                  | 16 ++++++-------
+> > > >   drivers/media/i2c/max96717.c                  | 23 ++++++++++---------
+> > > >   drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c | 14 ++++++-----
+> > > >   .../platform/nxp/imx8-isi/imx8-isi-crossbar.c |  2 +-
+> > > >   drivers/media/v4l2-core/v4l2-subdev.c         |  7 +++---
+> > > >   include/media/v4l2-subdev.h                   | 10 ++++----
+> > > >   8 files changed, 53 insertions(+), 47 deletions(-)
 
-> And this does not look like anything any
-> other driver does. I suspect you are not using FIELD_PREP() etc when
-> you should.
-> 
-> https://elixir.bootlin.com/linux/v6.14-rc2/source/include/linux/bitfield.h
-> 
-> 	Andrew
+-- 
+Regards,
 
-The PPE_BM_XXX macros defined here write to either of two different
-32bit words in the register table, and the actual word used (0 or 1)
-is hidden within the macro. For example, the below macro.
-
-#define PPE_BM_PORT_FC_SET_CEILING_HIGH(tbl_cfg, value)	\
-	u32p_replace_bits((u32 *)(tbl_cfg) + 0x1, value,
-	PPE_BM_PORT_FC_W1_CEILING_HIGH)
-
-We could have used FIELD_PREP as well for this purpose. However using
-u32p_replace_bits() seemed more convenient and cleaner in this case,
-since with FIELD_PREP, we would have needed an assignment statement to
-be defined in the macro implementation. We also noticed many other
-drivers using u32_replace_bits(). Hope this is ok.
-
-
+Laurent Pinchart
