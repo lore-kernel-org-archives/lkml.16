@@ -1,156 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBA61F3FE5
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309031DE4CE
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740066057; cv=none; b=M0+9GHz7FlEea18snlY9SJx7FZ4iUs74z/UiUslaFR3ym+3KMNuHZxrys3f0qt2zuHi/rKpF+AscoU+AyCpLGa5z8383jpjgkacFgxGcjKDpcV819HE1YdYRp10Ij5KkiXssOzUraX5GiXnsr9wocdxrnG5zSoZcnoZ+a4Aznqc=
+	t=1740066101; cv=none; b=BwWNgUdB4s4Ki6pVkfCIPpo8EsaZmjoVl1SJp9KZcKjErSHSlrcmuwu0d/nsBPf5J5acxuUaIkmhcdrF9KkTr7HbvhRB56oAF1fZjIeFsHPZOUc+fpUeR4Wh2SmOWWxRn33V6ME5bhwlO3LhtBVq686yCQMXnRVsa0SGzkIFga0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740066057; c=relaxed/simple;
-	bh=XHNz2LwepouDOIXy+bmb3D7UCDqdWRymySARZERzu0A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=M5/3fN4nc7XfZf/JGOvB8bnQzxmaHP13Q0bDP9Rpk5qGZN24L5c0uelMQW+oquPn/ZT64O27IQkPtxrDf2EMH8Uy1qRhTwq2bRRhZKxfzSeoKHNVjZ2muBjZvQ1Y/dHV2a+S7pzIYMuMOhIvT+I8cRUTe69S+aN+lejjszv45dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R5+9UdzV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740066101; c=relaxed/simple;
+	bh=iDnkUJ6+qKrz4yi0lcczfYKLL8cZ5N7uOIHYPvi8lfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p3KVXJcP4zV5AILrVWI1cI/deq6xtBWCsgPGnmsq8sKJ/erJBQlORqF6RhyiqLiOtWWuXOJqzpRnphBOtTFp5kex2GTiTXc2kMor7G6PNEqSBwrD7Ph07Qd5eGM4BkDVyN9SBjnNUU17pDd/JoxkQ7UXg/+OneZ3ddJ+f8zIhDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vINIICQt; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R5+9UdzV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740066054;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XHNz2LwepouDOIXy+bmb3D7UCDqdWRymySARZERzu0A=;
-	b=R5+9UdzVmbSUUec56oNraTzlvBjKlPnekFXCVdnCXrnKPlVkmqQvYaw8+G1MooNq1Z9Xly
-	vUsn+6tJU05THAxYSlVGI6XPqG5i+eoDDFX5zyD5ybQoS+nM6ioTyvLmbpfTrZgyXQcouR
-	i2m4xAv/3smj/rHV7QeCAtqK6/XQpMU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-688-WUyEYPMMOG2tVSm8pF6ehg-1; Thu, 20 Feb 2025 10:40:53 -0500
-X-MC-Unique: WUyEYPMMOG2tVSm8pF6ehg-1
-X-Mimecast-MFC-AGG-ID: WUyEYPMMOG2tVSm8pF6ehg_1740066051
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38f45a86efdso593302f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:40:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vINIICQt"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e064eff5daso168479a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:41:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740066097; x=1740670897; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xMexPyi4X/XFWoEQeqC/jUtxuZa+FuBdiAX8hec2Nrk=;
+        b=vINIICQtPZ1LNH+8AZ6DutURhlBEGPHhCRB47+ys321ojK3YzSDKPV5H5hrSbxR0or
+         SmqhQhbE9yIWLF5ezIv/62pwlG9TJ4Zht50l2IfFW14pDtR4iWlfzNRm/uJSE6cFwFW1
+         3ZoX9aLGWHGkGcbhyfWj9qCgmaMuPd/skOk8fRtHlUsp4ZI/7gOSkobWJNaqvo+CdJu0
+         /ZbfXMYWqyYqg75DfU0KEhaWDOrlJAyzZdmX4QGAZGzEBYKl2QG9NY+e0H+gPbffpl/M
+         u+I+p/cBh8HjNSZx4myrleNepUIbUJA659TyNgeQp+gVo3KNIj1L2AvW5i/14gygDM0p
+         hKSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740066051; x=1740670851;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XHNz2LwepouDOIXy+bmb3D7UCDqdWRymySARZERzu0A=;
-        b=wK5swNLzTTbhp73LCgchosV9iCfXjohxQuQqbvQpQD3rtccLtFuYFge0+2qyjKkTYU
-         L+qPwu427GQK3721KFwLcS9TeAGCysbt4wE4hvsI40cuD1KHLKHXkgTvyTPBQWX702WF
-         gS8Nr029w89pP88iJNJnENUep+POJuWqkMfr+zX9ZYRsZRjR+d0HyH6Hjt6eHVeinfEI
-         L8FfZF9qMBpMoeGllz27o9ObZ/4Ow9/8eCi6C6C/qCtBqSWJf8p13mawRqtTDf6hqhW8
-         OQcRke49xDjju4foOd8iAlYHSxdK+lUrxlNcAK57gI+2Uu/ywypyBPtsEb9yUpcEJMUC
-         hDcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDTcbJgZNvPBpAI1IP/V4qb9SipeHhzVHC1v357TCB0rkwZ2FEjmBjNBgM61CCOvk9ftRVFsnGQeY3XlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0J8T3sAhlZuaQeZI5b4T/rnTfwVl1ALZVlHjRUSaX7dV0NYhq
-	lC2jPHvNBVi/nregmRu2anxyp1ICtVbiaAYlnoMxXwOb3SdC78VltzYPEUh4g03n7/4uubRo4Oz
-	zsi1Hxg1iQNXchNKmWitZOs2mi81kZLJ0IoJHUK19chXfe2Ax/b09bqYd0JZMVw==
-X-Gm-Gg: ASbGnctOmfsWxbCNwMjQmuiDNNe1bhK1vO/jSaUp06rbUAnAcZ4ahNg9w77YbPG9hLs
-	nNJN+x+2O752z4CXsogIi2FINaElPkM3BuyYZPjEjVS5eTa28UvZoS+312K9ljt/xZh+OjcebBP
-	y82rzAtKLLcNxgKzK4Uk8AlJf6D8Xdz7CHCHafAAekklxMcx+U01swtlidais2qmgQrqc8fax4n
-	FDqpk2D8616OwfoQDQaeM65H9p2s4iVQ3g9Bjb1HYHnH0sWJlHzD0JMJ82GBSX3W1jIhvqTOHPb
-	r6zOJs6+xw9LiR8hqqXHXzNyHpF8Ow44SXeIhAHsfgbnz3bGpAmGd0lByUUXluSvPg==
-X-Received: by 2002:a05:6000:b07:b0:38f:2a5e:f169 with SMTP id ffacd0b85a97d-38f651405d3mr2086329f8f.37.1740066051318;
-        Thu, 20 Feb 2025 07:40:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGJepg3rIyVKWrj3xeOEkClHlAOZYXoumzKiusFghxTUIBGvYNcurpQRKe8xP1WWM4kXUgn8g==
-X-Received: by 2002:a05:6000:b07:b0:38f:2a5e:f169 with SMTP id ffacd0b85a97d-38f651405d3mr2086316f8f.37.1740066050924;
-        Thu, 20 Feb 2025 07:40:50 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258f5fb6sm20683058f8f.44.2025.02.20.07.40.49
+        d=1e100.net; s=20230601; t=1740066097; x=1740670897;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xMexPyi4X/XFWoEQeqC/jUtxuZa+FuBdiAX8hec2Nrk=;
+        b=NoRqwXWzzWdkiiZ8zov4ctckDU9/EQyUDjCPWEtqyzHbdzzQQMl0cYKoxXzI3EbL1a
+         TH6okYjb0Qil1nFfwhpdcHJvUyux4xq1OYBwfh8naZdok7opWCFhz3KrgQHapf5EDteJ
+         1Q7nCNGScu2QLK1JrvBb6PY9L3kLnrY+DTWsVUxmVS1bgX+NOeSKomX1d6I4JTYNLd10
+         csUABKkc/uxvrvM5Z5+WpkU49hWNjx65Ugw0xCWgyTqwzE2qbWOlxxyi1p1REaYq23xJ
+         s8n3OZTSTct8ON0C3DRpoj6WZsjt7D9xQM4EgDGDanrQ+CPsP/5FffX9KkTP7fI3OqDz
+         OXZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVv/7SxiqgQqK2aCwPsygPQ0A/qUt/Mku8LD/tUPCsV3x4xxPx4KHFmrLUbzyYMJKL1Fro+aut1ozEZt9k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrN5n1XI0eGa1Y+sBLgGiKjFVORT/71PRCug6Bsz2Wh1ddWa5w
+	rQuuiPc8bfPP7pR987tJIB4q15XNcclxJw7nuUxhJgbmsZWZah2S0S+hbUIOOpI=
+X-Gm-Gg: ASbGncttDBn5+oXtk3xHUsHB5Pz4UELegrtpYiI78rOcG8NVpTCdEU7MIfaSfaqN9P+
+	xSWbiBOBGpmNo5yB6VQH4DqWMCccDrR6JnNw6Qm9f3mKrjtyEie6uQGZOQboIIO4gZZ9lVAZSOs
+	/ekFZ+CVNV35VE5u0Hyw3+2P4Sc6T9V5XWPUg5VtElRYke9iZTcInkItO6edhnx+sPA1dqToZov
+	qaSQ38LT4P6MBqApbImlCAbwcE/O8JOXfUuJ8m8b7+qm2dLGDeJ0fsXW6TF/2xm2fzHwGekxyWm
+	ciNHMEvtCAFUySKWo/ayCYnlYwJ3n1ABsd5GMGwiGNOQh0cyK2eXsdDAzXMBk69h
+X-Google-Smtp-Source: AGHT+IHVrRSBtxWk0xruTGzrrqWlO/GFxEj4pebcghpMR+QZr6zgSIjoWLBIHWmQUFf2sytBbCsuiQ==
+X-Received: by 2002:a05:6402:234f:b0:5de:ba38:b691 with SMTP id 4fb4d7f45d1cf-5e0361db9f3mr8506084a12.9.1740066097529;
+        Thu, 20 Feb 2025 07:41:37 -0800 (PST)
+Received: from krzk-bin.. (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece287c7fsm12097608a12.70.2025.02.20.07.41.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 07:40:50 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>, K Prateek Nayak
- <kprateek.nayak@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Ben Segall
- <bsegall@google.com>, Thomas Gleixner <tglx@linutronix.de>, Andy
- Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org, Dietmar
- Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mel Gorman <mgorman@suse.de>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
- linux-rt-devel@lists.linux.dev, Tejun Heo <tj@kernel.org>, Frederic
- Weisbecker <frederic@kernel.org>, Barret Rhoden <brho@google.com>, Petr
- Mladek <pmladek@suse.com>, Josh Don <joshdon@google.com>, Qais Yousef
- <qyousef@layalina.io>, "Paul E. McKenney" <paulmck@kernel.org>, David
- Vernet <dvernet@meta.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: Re: [RFC PATCH 00/22] sched/fair: Defer CFS throttling to exit to
- user mode
-In-Reply-To: <20250220113227.GL34567@noisy.programming.kicks-ass.net>
-References: <20250220093257.9380-1-kprateek.nayak@amd.com>
- <20250220105558.GJ34567@noisy.programming.kicks-ass.net>
- <b2386349-2879-4dce-afb0-f6486c24c117@amd.com>
- <20250220113227.GL34567@noisy.programming.kicks-ass.net>
-Date: Thu, 20 Feb 2025 16:40:48 +0100
-Message-ID: <xhsmhikp44oan.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        Thu, 20 Feb 2025 07:41:37 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [RESEND PATCH 2/2] remoteproc: qcom: pas: Add SM8750 MPSS
+Date: Thu, 20 Feb 2025 16:41:32 +0100
+Message-ID: <20250220154132.199358-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250220154132.199358-1-krzysztof.kozlowski@linaro.org>
+References: <20250220154132.199358-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On 20/02/25 12:32, Peter Zijlstra wrote:
-> On Thu, Feb 20, 2025 at 04:48:58PM +0530, K Prateek Nayak wrote:
->
->> The rationale there was with growing number of tasks on cfs_rq, the
->> throttle path has to perform a lot of dequeues and the unthrottle at
->> distribution has to enqueue all the dequeued threads back.
->>
->> This is one way to keep all the tasks queued but allow pick to only
->> select among those that are preempted in kernel mode.
->>
->> Since per-task throttling needs to tag, dequeue, and re-enqueue each
->> task, I'm putting this out as an alternate approach that does not
->> increase the complexities of tg_tree walks which Ben had noted on
->> Valentin's series [1]. Instead we retain the per cfs_rq throttling
->> at the cost of some stats tracking at enqueue and dequeue
->> boundaries.
->>
->> If you have a strong feelings against any specific part, or the entirety
->> of this approach, please do let me know, and I'll do my best to see if
->> a tweaked approach or an alternate implementation can scale well with
->> growing thread counts (or at least try to defend the bits in question if
->> they hold merit still).
->>
->> Any and all feedback is appreciated :)
->
-> Pfff.. I hate it all :-)
->
-> So the dequeue approach puts the pain on the people actually using the
-> bandwidth crud, while this 'some extra accounting' crap has *everybody*
-> pay for this nonsense, right?
->
-> I'm not sure how bad this extra accounting is, but I do fear death by a
-> thousand cuts.
+Add remote processor PAS loaders for SM8750 MPSS (modem), which differs
+from SM8650 by lack of fifth memory region for Qlink Logging.
 
-FWIW that was my main worry with the dual tree approach and why I gave up
-on it in favor of the per-task dequeue faff. Having the overhead mainly
-contained in throttle/unthrottle is a lot more attractive than adding
-(arguably small) overhead to the enqueue/dequeue paths. There was also the
-headache of figuring out what to do with the .*nr_running fields and what
-is reflected to load balance, which isn't an issue with the per-task thing.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/remoteproc/qcom_q6v5_pas.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-As pointed by Ben in [1], the issue with the per-task approach is the
-scalability of the unthrottle. You have the rq lock held and you
-potentially end up unthrottling a deep cgroup hierarchy, putting each
-individual task back on its cfs_rq.
-
-I can't find my notes on that in a hurry, but my idea with that for a next
-version was to periodically release the rq lock as we go up the cgroup
-hierarchy during unthrottle - the idea being that we can mess with part of
-hierarchy, and as long as that part isn't connected to the rest (i.e. it's
-not enqueued, like we currently do for CFS throttling), "it should be
-safe".
-
-FYI I haven't given up on this, it's just that repeatedly context switching
-between IPI deferral and this didn't really work for me so I'm sticking to
-one 'till it gets somewhere.
-
-[1]: https://lore.kernel.org/lkml/xm26y15yz0q8.fsf@google.com/
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index 97c4bdd9222a..c34b7780f786 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -1409,6 +1409,30 @@ static const struct adsp_data sm8650_mpss_resource = {
+ 	.region_assign_vmid = QCOM_SCM_VMID_MSS_MSA,
+ };
+ 
++static const struct adsp_data sm8750_mpss_resource = {
++	.crash_reason_smem = 421,
++	.firmware_name = "modem.mdt",
++	.dtb_firmware_name = "modem_dtb.mdt",
++	.pas_id = 4,
++	.dtb_pas_id = 0x26,
++	.minidump_id = 3,
++	.auto_boot = false,
++	.decrypt_shutdown = true,
++	.proxy_pd_names = (char*[]){
++		"cx",
++		"mss",
++		NULL
++	},
++	.load_state = "modem",
++	.ssr_name = "mpss",
++	.sysmon_name = "modem",
++	.ssctl_id = 0x12,
++	.smem_host_id = 1,
++	.region_assign_idx = 2,
++	.region_assign_count = 2,
++	.region_assign_vmid = QCOM_SCM_VMID_MSS_MSA,
++};
++
+ static const struct of_device_id adsp_of_match[] = {
+ 	{ .compatible = "qcom,msm8226-adsp-pil", .data = &adsp_resource_init},
+ 	{ .compatible = "qcom,msm8953-adsp-pil", .data = &msm8996_adsp_resource},
+@@ -1474,6 +1498,7 @@ static const struct of_device_id adsp_of_match[] = {
+ 	{ .compatible = "qcom,sm8650-adsp-pas", .data = &sm8550_adsp_resource},
+ 	{ .compatible = "qcom,sm8650-cdsp-pas", .data = &sm8650_cdsp_resource},
+ 	{ .compatible = "qcom,sm8650-mpss-pas", .data = &sm8650_mpss_resource},
++	{ .compatible = "qcom,sm8750-mpss-pas", .data = &sm8750_mpss_resource},
+ 	{ .compatible = "qcom,x1e80100-adsp-pas", .data = &x1e80100_adsp_resource},
+ 	{ .compatible = "qcom,x1e80100-cdsp-pas", .data = &x1e80100_cdsp_resource},
+ 	{ },
+-- 
+2.43.0
 
