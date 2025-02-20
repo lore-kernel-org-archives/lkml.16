@@ -1,244 +1,149 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2501EE7D6
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740044472; cv=fail; b=QLwgLYCgR6BCiEKYAKwFZPbbT45agjT70JvEImNw4eFD37FI8Q81IC/ozO+z0ruOuQRNLWmsv4g1ngv9eKOTEMBXY+I6EwWphHTh1yTjvZaYwU/MKbR8bHG9JLdriD/aVOCneNLdyajW1JuLQnGMbXZf712Q/uYgsqyuxL7vkwQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740044472; c=relaxed/simple;
-	bh=f+rub2I1ceHEufMM+Pq3RFHwT8dL31PEHEVJKWpBgO0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Byr+Z1L4sQPa5+wmfggDFZjWRVZpZ8xar68cVo7WpND9QGRA33Wffb8RgS5VipZzX++R9H/T9bz+ul3rk6zgLcAe1twlLue43nfKmJEbHi944nzcvCf6cQ2gNnKukYosWB4af2VBQh7NbdQISQ2DuMugAwXbTCacERFDSoeQsE8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pnniTs1K; arc=fail smtp.client-ip=40.107.220.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BC21E9B36
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740044533; cv=none; b=TExOBMAc+PkKY0sxfswEAhI33xaYcscbJLEDllHgHJqG8iS2gLtRiel7y+uR1KKdRccUy74xRx1yH/JC7PlD8p7X9BzyN2rXHH1dnWmW15vaVv05ZgpPKj9tk61VLUEsA/RkzV2pNO6fwRhUia+/QaxWnb1gEuwSl/6ZtgVroig=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740044533; c=relaxed/simple;
+	bh=rChncOtg0mnw9AqVWObnAr5EAgepiFacUpox0dBd+Fs=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=ABfASpGCHjcvQp+jj83pEOJwDE3JKgSfYA1le/HGlFCxlh2Ns11vSDot6wpvdvjj8fkGfe6aGZLOTF0z5J2c9OsbparsOeirrzR+0olq14xeRuujw6VzsVCuXJHo4FDDc2ILDVvE3muOfrugFtCepsBVTiu8TAF2hZkV2Q/+FRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZWgqL5yH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pnniTs1K"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OXzOwT1+8HIickO102oS+VrJhNUPOtOqCJVdd++/V9djJY1NSqzXtzOZ8asfqZ0kSJ80zJruKhKfZZ6GeKPjagl4ZzqSuGCIiuydM+MZCiD8HYTgz+JG4sCj0TYjSBtEjX4SRswb3PlgC1Gxs0Xcg8Q0FI1Zplgx3wHn/QWS01sGzf5MBshama3CHCPAMuI6RmZQclRdP6lXy/VbjIHjJDWMiD51hgXzfgSYpX4geLRscHwNrmmZlO3DZNFad0ecb219t7YWNtGVwVK9drJvMDqiDne+lCreVuuotWcd6YbOMb9BVcs4C76Xem0HQhON4ZWpkiBhs8b9P8uzdxIC7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XvVuFHTJROWVbhlzzqo+qUY7y97z8qAQmAld3AquM2Y=;
- b=IAKvJpsFfpQrtZXoWAVukmp83ZxPTQ4h7hkEuJt4+EjQv8OSFVXTkKAIRLNkHB8Y22Z9DUbY26PpBn80hP1rHwhPiLXJGAahTL3JoTiTCxxZx/RVjoSTBMgmFaRFZipCdkPD5As2C6fFQPLCIRNRXqQ8AZ90aCzfMyFBnIjBYVt7ADA49CDPTMSkten9eQ5P8mXwqfiIT65P4OmvKnwnD2hfEy8tA7n3jgYNl/kdrB1CFOisl7+S9MsZMy4QFNqzsPg8KXbwMNz+JqFb8B+q8AaRHMrxtHY5xZOajIdElhHNXmFKoKYx4ab5m3/kkG9vRKBiXfug/tLTWKiF9opc8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XvVuFHTJROWVbhlzzqo+qUY7y97z8qAQmAld3AquM2Y=;
- b=pnniTs1KmN6o2fJYG1Kaj3mRaziVrv66OpnyBxp70u2JCy+y0C5vcoPnh6ETm9/MOrih+XjVgqxJLIt0Vx3+oCl/LN1LgEWNX3PKdFsGQPKOGXtx/Aonr4Qut3YzZBqvaWniiT9oQ+jjulHXRnHMwYboneY2oXb7YlifdA/DMJs=
-Received: from BL6PEPF00013DFD.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1001:0:1d) by DM6PR12MB4372.namprd12.prod.outlook.com
- (2603:10b6:5:2af::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Thu, 20 Feb
- 2025 09:41:05 +0000
-Received: from BN1PEPF00006000.namprd05.prod.outlook.com
- (2a01:111:f403:c803::2) by BL6PEPF00013DFD.outlook.office365.com
- (2603:1036:903:4::4) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.24 via Frontend Transport; Thu,
- 20 Feb 2025 09:41:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF00006000.mail.protection.outlook.com (10.167.243.232) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 09:41:05 +0000
-Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Feb
- 2025 03:40:57 -0600
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Valentin Schneider <vschneid@redhat.com>, "Ben
- Segall" <bsegall@google.com>, Thomas Gleixner <tglx@linutronix.de>, "Andy
- Lutomirski" <luto@kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>, "Sebastian Andrzej
- Siewior" <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
-	<linux-rt-devel@lists.linux.dev>, Tejun Heo <tj@kernel.org>, "Frederic
- Weisbecker" <frederic@kernel.org>, Barret Rhoden <brho@google.com>, "Petr
- Mladek" <pmladek@suse.com>, Josh Don <joshdon@google.com>, Qais Yousef
-	<qyousef@layalina.io>, "Paul E. McKenney" <paulmck@kernel.org>, David Vernet
-	<dvernet@meta.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "Gautham R.
- Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: [RFC PATCH 22/22] [DEBUG] sched/fair: Debug pick_eevdf() returning NULL!
-Date: Thu, 20 Feb 2025 09:32:57 +0000
-Message-ID: <20250220093257.9380-23-kprateek.nayak@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250220093257.9380-1-kprateek.nayak@amd.com>
-References: <20250220093257.9380-1-kprateek.nayak@amd.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZWgqL5yH"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K6ewSt014973;
+	Thu, 20 Feb 2025 09:42:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=VfpJvRD9QaopNkfQklaUs3
+	pO73GIB0PfsxYTdpdK/Mc=; b=ZWgqL5yHLn0fz+gK7P4sak8i5q6X57FyEq7wD8
+	bLDqaj7/SVvqOZXh5ewRHUTvcuYUW/P7yvs/j9tkMfWIXdEKQw51Q6j9SZPUEmXv
+	KWLSnoeu3HsbLMUUZsqvZ5CV920Wz6zh6l1GXdttyiDhhcqaMp1fbsiwc0aXCzYL
+	kqHklkhHEYSLuv3cPT39VjKuVWDFkU/BPNealtUEjJudn1r9+yUe2u3sEhPqZI3E
+	FS0NNyN0mzZozfaKu9ussw04pghdJUNDmWUlElyXetGuXFm2+eW9tKQAacvHcX8l
+	csEq79vAcFcBPpzSdw/tZ5CGFYzNxVSmhV375z9MOd6FiXtw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy15kt2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 09:42:00 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51K9fxRK014047
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 09:41:59 GMT
+Received: from yuanfang4-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Feb 2025 01:41:54 -0800
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Subject: [PATCH 0/5] coresight: Add Coresight Trace NOC driver
+Date: Thu, 20 Feb 2025 17:41:20 +0800
+Message-ID: <20250220-trace-noc-driver-v1-0-15d78bd48e12@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00006000:EE_|DM6PR12MB4372:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31e09937-1c8d-4255-8d5d-08dd5192b21c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zXLIAuh/XE/hNLK4veFHF2IiKQG/5Bxy1Ef30e2s5rOJqmmCXQXu2YkbCnzN?=
- =?us-ascii?Q?GZsuC8I21L3bCc7dIAKdhp8yT7XLhEV3ED/pToqmgY09Nao3oEHbpx8SlXbQ?=
- =?us-ascii?Q?YJ9AkG45oRjx9BplBQJZfZx3svOkdnny/s4UzUDy0g238umrqmx8f1BPkq3D?=
- =?us-ascii?Q?Ts3wDm70t0TbeQ4It6thghzckypM8FFImIB8mSLpEuI91juSFNx5kxTNy0Sw?=
- =?us-ascii?Q?MumuwqtFP9S2Z0wnpVUXoqmWEionGcyW6PHs2U/v/lA6UFCoXHq7+pD0P0Pf?=
- =?us-ascii?Q?yg/pM6DvjpKWOMc851b0S8xG1dzfNggPd8HkPRJWWH+66E0JsQtwgONo5k/k?=
- =?us-ascii?Q?HQRzrWkq+TvkO66IstR96Ctk1Zt/xP5/jDLMi4PrNq80csTDLgAAvrCYlJHV?=
- =?us-ascii?Q?DZvbX/4lGcYNtTJF/mp5oCwZuJv7s4kO4aATk6LFGG96AYHyeieoH3/B5b1Z?=
- =?us-ascii?Q?OjfaFv0X9SOjMmDHSPzcZ3blcmdgj57TsQVhYoVg1I+3IkeclYKqXngQt7ot?=
- =?us-ascii?Q?q7YM5umLrHrKpRMd1sQBDeOmQFbquQkjmuea+9+W2Owx0AOnYyqjoEWA9x2j?=
- =?us-ascii?Q?u5dzPKKRv1dtyvBe+i9R/PqcRId88s97UH3bf8dypzMtG+CdKY/sRUFfwn/2?=
- =?us-ascii?Q?2+kwP2oPSOq58wsYkj/mtr8gI1fHeF4SOLdqnyT7AfflEdI7h7VffzQmKXVh?=
- =?us-ascii?Q?qYq25/qb0TWAI5pztiKsGg0J0OGjCw+GIKC0xKkZH0oEUZjE28qJKP4T3CDC?=
- =?us-ascii?Q?8PAZx7GbI+rQTGeJulSvl6I8v2j05jvyxmxAkP6ThNEMgiGBl30Q8qoNdAql?=
- =?us-ascii?Q?1dO2Ky4C80x0gkBMqFhaGNQl0X7XvJeYSjzPuoJBGMfqKeLJcVD3iXuFaf40?=
- =?us-ascii?Q?dQHSkDso5wy7Vl+dwKjwc2ko74wOjVOytLoTTTGgQ2bndmtvG5aRC1FDREv9?=
- =?us-ascii?Q?jSLvrY86Fr6jw2/aMt2R9fMYwKLGS3Li4WSLxKROqH1Hyuvf3M9UmHVC5+4Q?=
- =?us-ascii?Q?zzDLlx6Qbe8tJcLeQJoj24m21qPTTzytq9sA8Dn89Jjm6WC5TE1tiTV1FIQF?=
- =?us-ascii?Q?IosYtKmFOoD3riy/hMYGdx6zxELtqwcXU9CPU7nnb9Ruyar0dBc53vYBULlY?=
- =?us-ascii?Q?p8PFDpcK7fEziMPkyaukW9WGI2j6D/DlL1q8EYmTse+vmvsOIUal0UXkOxYe?=
- =?us-ascii?Q?Z6IU1Aq03f7QDwDsMybZJOuDcb+8Ymxf87hSvQ27Qc8FmLIoz5XmWkPoTaxD?=
- =?us-ascii?Q?bf11kskCpm8SPvaIpFZhfiez70jz6kpZM8/V/CyH1AXMbfMHhfyQlDQGHu4A?=
- =?us-ascii?Q?6SdNe7qe13JokYbuWZym24FxWyp7JLt/8fFZ4T3QnDDFfb47PbVoJZZ8tKdh?=
- =?us-ascii?Q?+khRf2jTIfCsa2XvJU+QjhpbtAFei3J+r27kQHr60tp13pzmEZftO1K9nbWd?=
- =?us-ascii?Q?pByMxf95f4WbhJWBFhRsslsV+5F8cowUQHh5IIDQa+t88hO+WanCFPv4QZuK?=
- =?us-ascii?Q?1EgClHHdoG0U6DM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 09:41:05.1300
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31e09937-1c8d-4255-8d5d-08dd5192b21c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00006000.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4372
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMH4tmcC/x3MTQqAIBBA4avIrBtISfq5SrQQHWs2FmNIEN49a
+ fkt3nshkzBlWNQLQoUzn6lBdwr84dJOyKEZTG9sb7TBW5wnTKfHIFxIcKbRhnHSeogOWnYJRX7
+ +5brV+gEAUMmZYgAAAA==
+X-Change-ID: 20250212-trace-noc-driver-9e75d78114fa
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>
+CC: <kernel@quicinc.com>, <linux-kernel@vger.kernel.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740044513; l=3442;
+ i=quic_yuanfang@quicinc.com; s=20241209; h=from:subject:message-id;
+ bh=rChncOtg0mnw9AqVWObnAr5EAgepiFacUpox0dBd+Fs=;
+ b=fwJHywpBov/tTCZnx/SMPba0s3hUQU5hbdWZ5i7ciTSJSEI4KqjfVQJkHMNb73HNUJYi4bLd9
+ Sxm6CcV9DaXCygbcMLKAQTV7Zh9c6fHQmUpQND6oJo2jiPtFPVOXs0T
+X-Developer-Key: i=quic_yuanfang@quicinc.com; a=ed25519;
+ pk=ZrIjRVq9LN8/zCQGbDEwrZK/sfnVjwQ2elyEZAOaV1Q=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 1NST2Js7Ik9nZIuKBQ2XdtCNEriUiruF
+X-Proofpoint-ORIG-GUID: 1NST2Js7Ik9nZIuKBQ2XdtCNEriUiruF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_04,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502100000 definitions=main-2502200070
 
-Dump the stats of cfs_rq and the entities queued on it when pick_eevdf()
-fails to find a runnable entity. Take the panic that follows since this
-scenario implies breakdown of the scheduling algorithm.
+The Trace NoC is an integration hierarchy which is a replacement of
+Dragonlink configuration. It brings together debug component like TPDA,
+funnel and interconnect Trace Noc which collects trace from subsystems
+and transfers to QDSS sink.
 
-XXX: This will only build with CONFIG_CFS_BANDWIDTH enabled.
+Compared to DL, it has the following advantages:
+1. Reduce wires between subsystems.
+2. Continue cleaning the infrastructure.
+3. Reduce Data overhead by transporting raw data from source to target.
 
-Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+    +--------------+                                         +-------------+     
+    | SDCC5 TPDM   |                                         |  SDCC5 TPDM |     
+    +--------------+                                         +-------------+     
+           |                                                        |            
+           |                                                        |            
++----------|-------------------+                                    |            
+|          v                   |                                    |            
+|  +----v----+     Dragon Link |                                    v            
+|  |DLNT TPDA|     North       |                         +----------------------+
+|  +---------+                 |                         |    TRACE NOC AG      |
+|       |                      |                         |                      |
+|       v-------------+        |                         +----------------------+
+|                     |        |                                   |             
+|              +------v-----+  |                                   |             
+|              | DLNT Funnel|  |                                   |             
+|              +------------+  |                                   |             
+|                   |          |                                   |             
++-------------------|----------+                                   |             
+              <-----+                                              |             
+             |                                                     |             
+             |                                                     |             
+             v                                                     v             
+    +----------------+                                      +---------------+    
+    |     QDSS       |                                      |    QDSS       |    
+    +----------------+                                      +---------------+
+    
+
+Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
 ---
- kernel/sched/fair.c | 75 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+Yuanfang Zhang (5):
+      dt-bindings: arm: Add Coresight device Trace NOC definition
+      coresight: add coresight Trace NOC driver
+      coresight-tnoc: add nodes to configure flush
+      coresight-tnoc: add node to configure flag type
+      coresight-tnoc: add nodes to configure freq packet
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 97566a043398..270e5f4b2741 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5610,6 +5610,78 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
- 
- static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags);
- 
-+static void debug_print_se(int cpu, struct sched_entity *se, bool h_throttled)
-+{
-+	struct cfs_rq *cfs_rq = cfs_rq_of(se);
-+
-+	pr_warn("CPU%d: se: load(%lu) vruntime(%lld) entity_key(%lld) deadline(%lld) min_vruntime(%lld) on_rq(%d)\n", cpu, scale_load_down(se->load.weight), se->vruntime, entity_key(cfs_rq, se), se->deadline, se->min.vruntime, se->on_rq);
-+	pr_warn("CPU%d: se kcs: kernel_cs_count(%d) min_kcs_vruntime(%lld) pick_entity(%d)\n", cpu, se->kernel_cs_count, se->min.kcs_vruntime, pick_entity(cfs_rq, se, h_throttled));
-+}
-+
-+static void debug_print_cfs_rq(int cpu, struct cfs_rq *cfs_rq, struct sched_entity *se, bool h_throttled)
-+{
-+	pr_warn("CPU%d: ----- cfs_rq ----\n", cpu);
-+	pr_warn("CPU%d: cfs_rq: throttled?(%d) cfs_rq->throttled(%d) h_nr_queued(%d) h_nr_runnable(%d) nr_queued(%d) gse->kernel_cs_count(%d)\n", cpu, h_throttled, cfs_rq->throttled, cfs_rq->h_nr_queued, cfs_rq->h_nr_runnable, cfs_rq->nr_queued, (se)? se->kernel_cs_count: -1);
-+	pr_warn("CPU%d: cfs_rq EEVDF: avg_vruntime(%lld) avg_load(%lld) avg_kcs_vruntime(%lld) avg_kcs_load(%lld) \n", cpu, cfs_rq->avg_vruntime, cfs_rq->avg_load, cfs_rq->avg_kcs_vruntime, cfs_rq->avg_kcs_load);
-+
-+	if (cfs_rq->curr) {
-+		pr_warn("CPU%d: ----- cfs_rq->curr ----\n", cpu);
-+		debug_print_se(cpu, cfs_rq->curr, h_throttled);
-+	}
-+	pr_warn("CPU%d: ----- cfs_rq done ----\n", cpu);
-+}
-+
-+static void debug_recursive(int cpu, struct rb_node *node, bool h_throttled)
-+{
-+	debug_print_se(cpu, __node_2_se(node), h_throttled);
-+
-+	if (node->rb_left) {
-+		pr_warn("CPU%d: ----- Left Subtree ----\n", cpu);
-+		debug_recursive(cpu, node->rb_left, h_throttled);
-+		pr_warn("CPU%d: ----- Left Subtree Done ----\n", cpu);
-+	}
-+
-+	if (node->rb_right) {
-+		pr_warn("CPU%d: ----- Right Subtree ----\n", cpu);
-+		debug_recursive(cpu, node->rb_right, h_throttled);
-+		pr_warn("CPU%d: ----- Right Subtree Done ----\n", cpu);
-+	}
-+}
-+
-+static void debug_pick_next_entity(struct cfs_rq *cfs_rq, bool h_throttled)
-+{
-+	struct sched_entity *se = cfs_rq->tg->se[cpu_of(rq_of(cfs_rq))];
-+	struct rb_node *node = cfs_rq->tasks_timeline.rb_root.rb_node;
-+	struct task_struct *p = rq_of(cfs_rq)->curr;
-+	int cpu = smp_processor_id();
-+
-+	if (p) {
-+		pr_warn("CPU%d: ----- current task ----\n", cpu);
-+		pr_warn("CPU%d: pid(%d) comm(%s) task_cpu(%d) task_on_rq_queued(%d) task_on_rq_migrating(%d) normal_policy(%d) idle_policy(%d)\n", cpu, p->pid, p->comm, task_cpu(p), task_on_rq_queued(p), task_on_rq_migrating(p), normal_policy(p->policy), idle_policy(p->policy));
-+		pr_warn("CPU%d: ----- current task done ----\n", cpu);
-+	}
-+
-+	debug_print_cfs_rq(cpu, cfs_rq, se, h_throttled);
-+
-+	if (node) {
-+		pr_warn("CPU%d: ----- rbtree traversal: root ----\n", cpu);
-+		debug_recursive(cpu, node, h_throttled);
-+		pr_warn("CPU%d: ----- rbtree done ----\n", cpu);
-+	}
-+
-+	cfs_rq = cfs_rq_of(se);
-+	se = parent_entity(se);
-+
-+	for_each_sched_entity(se) {
-+		pr_warn("CPU%d: ----- parent cfs_rq ----\n", cpu);
-+		debug_print_cfs_rq(cpu, cfs_rq, se, h_throttled);
-+
-+		cfs_rq = cfs_rq_of(se);
-+	}
-+
-+	debug_print_cfs_rq(cpu, cfs_rq, NULL, false);
-+}
-+
- /*
-  * Pick the next process, keeping these things in mind, in this order:
-  * 1) keep things fair between processes/task groups
-@@ -5633,6 +5705,9 @@ pick_next_entity(struct rq *rq, struct cfs_rq *cfs_rq, bool h_throttled)
- 	}
- 
- 	se = pick_eevdf(cfs_rq, h_throttled);
-+	if (!se)
-+		debug_pick_next_entity(cfs_rq, h_throttled);
-+
- 	if (se->sched_delayed) {
- 		dequeue_entities(rq, se, DEQUEUE_SLEEP | DEQUEUE_DELAYED);
- 		/*
+ .../bindings/arm/qcom,coresight-tnoc.yaml          | 107 ++++++
+ drivers/hwtracing/coresight/Kconfig                |  10 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-tnoc.c       | 401 +++++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-tnoc.h       |  57 +++
+ 5 files changed, 576 insertions(+)
+---
+base-commit: 92514ef226f511f2ca1fb1b8752966097518edc0
+change-id: 20250212-trace-noc-driver-9e75d78114fa
+
+Best regards,
 -- 
-2.43.0
+Yuanfang Zhang <quic_yuanfang@quicinc.com>
 
