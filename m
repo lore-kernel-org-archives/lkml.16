@@ -1,423 +1,184 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2F71F4639
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06BA1F236E;
+	Thu, 20 Feb 2025 12:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740054474; cv=none; b=JfRIQprOVuMy4EnSg2JGtk5VPGhezSNZWtCDvKyFj2+wAW+dxRw5CICP00MHnMWwCAM+fMlyQafF9lrYBuE03JRA8WqcAk+6rT+iKw8WoNsMdLEvR8fyJjSKR6c7Yv8EbABnAARzrKRsE7Rnf7Oecl0b1jGB9PGHqc+sLOwX6cQ=
+	t=1740054511; cv=none; b=iwJz+EX1yRgdAJv5/qDbDGjfY3LNpu48rgHfGeo5PtoctPFOi31Uoy3L+ECLsEqY/ZZ0P8hHcLkZwqA6ZaAQGrzboct13mSFq5kCZ/wKMIzktNPUYrECM2RI30jyWQjCfv6Yt37okB6u/GfTgjqtsqYMVoOshRO7F/Ye40qO1rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740054474; c=relaxed/simple;
-	bh=yNxxGdM8OmPByZC8RvcWlyb9o1/CAVfTT7/HjURa6TQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c6QeifqylfpIUgmKwC77u6ayZsiHqQN43tCYv2zDH0+YHhvItj7l2DblFnHhs23xi7Zm+7b1OsMtAx6kcvuwi0lOJnX93jhmRT1Dy0rZ3WteRBPPPtABz0PEAiKIc9qc0qWSTe0AL9cehOojvDE0ZBXeh4Dx477c5QaY0nauwlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LhDhKL/v; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740054511; c=relaxed/simple;
+	bh=o1rmug3+zIYeul0bU23G6irri56m1LeHH0/3fCiMcqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G1Hnnxq3X8Tc19agvMRgm9mlCwfgr3LPa3J2WK0NcfL/41uhX+4xdlam+uXc2fIOKY8d1x8v1RD9ELMaJ6RYvvn6c5SFLCyHG9bsupi7mr7kun4RmoYDpXb+ZyIdUh+MV7X23jhwz7h/vWOzGwHOZswiwXpA2sfzNah7pbnFw/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hAfWuxZH; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LhDhKL/v"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e6827984b2so9453816d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:27:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740054471; x=1740659271; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FbRa/SyyqhMI1XRW1HseAJArWJsqsKnDvEDBmaO7eNE=;
-        b=LhDhKL/v0KJ8a/44UE9pUtR62vHbdM9xlrbhQ+ZdSTr40ZNjkpM3V/pF52YUNIxEve
-         +Plg/IWmB/SRsa4f0EnYn0gP6QxXLW3Ym0kai2OUOo4kooGRfxXK9Jff1hHc2a2lqn28
-         7hZL26ZDKopiarfAaQK2HwLSe+uaPglufrVyQQOHzXdug3NQAebAyqYXxkBlmbCTt69I
-         C2QOpyIOIgpk30piHIFuNsYpPaysDuhAcm2K/uJmv63ob2rY6F5qB5pULDZWtmSeFYUj
-         PYQtaFFCZuGwor3N/N4aArKp4zCTRX8ex4FXas1PtaqEuYftGmHI60qttj5UaAg8VOV8
-         KtXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740054471; x=1740659271;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FbRa/SyyqhMI1XRW1HseAJArWJsqsKnDvEDBmaO7eNE=;
-        b=b7B/WWARRAR9rGKGTlqgBihoDyUth983V2Wgn+FFIV9uH+gQjkxDhddnzTsjRqIr4J
-         M310fvXRpAAn85mwTRBPO2vw5LVSAZSGckLxJpcHzJEcwwSfYghqZxKIGwEL2CKYq+r/
-         MnQHNb2TDH9ivnSNNAQq8QBsRyNohSL5sAZH3DtYKumwnCpMwmk6cEx5/ky7obmLecBA
-         o/VWJQLBMTioB+5lOYBexnjTCCoNk2NNe2Ky+5APtCvf5OIzrlrjL2EBzDKpEfIydTfE
-         Q4bnMCGBQW3gyi0vZPyDDNeAmT0++GAEjAhNSiU0O7Wovs80I1JFRZr3RFEHDp2aJ/72
-         20eA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnPcWkdKoHlDRkSMfzgXIjy5MJZbitlrnn/HC5hFsx/DtnSS5bLUWdps+Ql+1P5rW3I/fnCJHAdV0YMKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRklN1CWnEnwSVhWw6uHLpVGc2k5MJznusoAQUZnTto1G+0Hxk
-	ObeRf2pxbxIFDcEcklD68kiS+xSvBvvvokOA/Xx+lfjTUG2Y5MeKaHcn2bTGFJ5KecBYd9GKlr+
-	DOl3RYXTZpVgxzAKMpSfWNyPN7g7jWV97wkuD
-X-Gm-Gg: ASbGnct4tTlCNm305gVRCQBa1kuRXAV+8cdhF7rZP4V5sWmKCoqvISUtS5EZaCQ/f2n
-	GHBTYXR9kr4v5rSAjD1CwCNN51qqYQJKpy/zrNeZrVWZjtNJjDzNjhTXoL0al3onaUwhEm+lH0g
-	==
-X-Google-Smtp-Source: AGHT+IFNVnESFkkM5fzQC/jSeYc3dguhIMLyK4DBeC8RA+sMRt5pB4tBCnOjWdSCZSaM7ZWcTPjNgdEHp7s32/0Yid0=
-X-Received: by 2002:a05:6214:f23:b0:6e4:2e12:3a0c with SMTP id
- 6a1803df08f44-6e66ce28e77mr317727456d6.39.1740054471332; Thu, 20 Feb 2025
- 04:27:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hAfWuxZH"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 95144526;
+	Thu, 20 Feb 2025 13:27:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740054424;
+	bh=o1rmug3+zIYeul0bU23G6irri56m1LeHH0/3fCiMcqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hAfWuxZHKtz4+oTsk9SnZ/G5Oote2P/BKuUxWfEIWdoDdlWeSkaN/JWPzfZpZa2C4
+	 EwJEeraWjaiAIDo5hWmc1Tfo/g1LloT0D9ZOa5FaAUe/M7c7nKAc3KQkmuBJ6ps9bV
+	 aHpVzCZ3q+ARCc3byctOqyONOC9pEo7SUryKwMNI=
+Date: Thu, 20 Feb 2025 14:28:12 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Quentin Schulz <foss+kernel@0leil.net>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpio: pcf857x: add support for reset-gpios on (most)
+ PCA967x
+Message-ID: <20250220122812.GC20111@pendragon.ideasonboard.com>
+References: <20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de>
+ <20250220-pca976x-reset-driver-v1-2-6abbf043050e@cherry.de>
+ <6110750.alqRGMn8q6@diego>
+ <5bebdc73-b2e0-483b-8c8e-3737cda34811@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219201602.1898383-1-gary@garyguo.net> <20250219201602.1898383-4-gary@garyguo.net>
-In-Reply-To: <20250219201602.1898383-4-gary@garyguo.net>
-From: David Gow <davidgow@google.com>
-Date: Thu, 20 Feb 2025 20:27:37 +0800
-X-Gm-Features: AWEUYZm_fm4aq3QwK3n1GWvksYk7OxFAf-E3RC9EmkOpICMnxSR4mVS9WbDAgoc
-Message-ID: <CABVgOS=0O0+xEwEWL1gFZfwKaBDx_oz2RDS9up=yfRFFcv7eRA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] rust: block: convert `block::mq` to use `Refcount`
-To: Gary Guo <gary@garyguo.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, 
-	Francesco Zardi <frazar00@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b126be062e920001"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5bebdc73-b2e0-483b-8c8e-3737cda34811@cherry.de>
 
---000000000000b126be062e920001
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Feb 20, 2025 at 01:13:06PM +0100, Quentin Schulz wrote:
+> On 2/20/25 11:52 AM, Heiko Stübner wrote:
+> > Am Donnerstag, 20. Februar 2025, 10:56:52 MEZ schrieb Quentin Schulz:
+> >> From: Quentin Schulz <quentin.schulz@cherry.de>
+> >>
+> >> The PCA9670, PCA9671, PCA9672 and PCA9673 all have a RESETN input pin
+> >> that is used to reset the I2C GPIO expander.
+> >>
+> >> One needs to hold this pin low for at least 4us and the reset should be
+> >> finished after about 100us according to the datasheet[1]. Once the reset
+> >> is done, the "registers and I2C-bus state machine will be held in their
+> >> default state until the RESET input is once again HIGH.".
+> >>
+> >> Because the logic is reset, the latch values eventually provided in the
+> >> Device Tree via lines-initial-states property are inapplicable so they
+> >> are simply ignored if a reset GPIO is provided.
+> >>
+> >> [1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5 and fig 22.
+> >> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> >> ---
+> >>   drivers/gpio/gpio-pcf857x.c | 29 ++++++++++++++++++++++++++---
+> >>   1 file changed, 26 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+> >> index 7c57eaeb0afeba8953d998d8eec60a65b40efb6d..94077208e24ae99a1e8762e783f0eabc580fa520 100644
+> >> --- a/drivers/gpio/gpio-pcf857x.c
+> >> +++ b/drivers/gpio/gpio-pcf857x.c
+> >> @@ -5,6 +5,7 @@
+> >>    * Copyright (C) 2007 David Brownell
+> >>    */
+> >>   
+> >> +#include <linux/delay.h>
+> >>   #include <linux/gpio/driver.h>
+> >>   #include <linux/i2c.h>
+> >>   #include <linux/interrupt.h>
+> > 
+> > this is missing
+> > #include <linux/gpio/consumer.h>
+> > 
+> > because otherwise you end up with
+> > ../drivers/gpio/gpio-pcf857x.c: In function ‘pcf857x_probe’:
+> > ../drivers/gpio/gpio-pcf857x.c:300:21: error: implicit declaration of function ‘devm_gpiod_get_optional’; did you mean ‘devm_regulator_get_optional’? [-Wimplicit-function-declaration]
+> >    300 |         rstn_gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
+> >        |                     ^~~~~~~~~~~~~~~~~~~~~~~
+> >        |                     devm_regulator_get_optional
+> > ../drivers/gpio/gpio-pcf857x.c:300:68: error: ‘GPIOD_OUT_HIGH’ undeclared (first use in this function)
+> >    300 |         rstn_gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
+> >        |                                                                    ^~~~~~~~~~~~~~
+> > ../drivers/gpio/gpio-pcf857x.c:300:68: note: each undeclared identifier is reported only once for each function it appears in
+> > ../drivers/gpio/gpio-pcf857x.c:309:17: error: implicit declaration of function ‘gpiod_set_value’ [-Wimplicit-function-declaration]
+> >    309 |                 gpiod_set_value(rstn_gpio, 0);
+> >        |                 ^~~~~~~~~~~~~~~
+> > 
+> 
+> It compiles just fine on my end, this is all very suspicious.
+> 
+> GPIO_PCF857X symbol depends on GPIOLIB which builds this function.
+> 
+> Now, I have no clue how it finds the declaration for me without this 
+> include. Any clue?
 
-On Thu, 20 Feb 2025 at 04:17, Gary Guo <gary@garyguo.net> wrote:
->
-> Currently there's a custom reference counting in `block::mq`, which uses
-> `AtomicU64` Rust atomics, and this type doesn't exist on some 32-bit
-> architectures. We cannot just change it to use 32-bit atomics, because
-> doing so will make it vulnerable to refcount overflow. So switch it to
-> use the kernel refcount `kernel::sync::Refcount` instead.
->
-> There is an operation needed by `block::mq`, atomically decreasing
-> refcount from 2 to 0, which is not available through refcount.h, so
-> I exposed `Refcount::as_atomic` which allows accessing the refcount
-> directly.
->
-> Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Signed-off-by: Gary Guo <gary@garyguo.net>
-> ---
+Possibly indirect includes that depend on your kernel config ? The above
+functions and macros are declared and defined in linux/gpio/consumer.h,
+so you should include it regardless.
 
-Thanks very much. I can confirm this fixes 32-bit UML.
+> >> @@ -272,12 +273,11 @@ static const struct irq_chip pcf857x_irq_chip = {
+> >>   
+> >>   static int pcf857x_probe(struct i2c_client *client)
+> >>   {
+> >> +	struct gpio_desc *rstn_gpio;
 
-Tested-by: David Gow <davidgow@google.com>
+I'd call it reset_gpio as in drivers we deal with logical signals. Up to
+you.
 
-Cheers,
--- David
+> >>   	struct pcf857x *gpio;
+> >> -	unsigned int n_latch = 0;
+> >> +	unsigned int n_latch;
+> >>   	int status;
+> >>   
+> >> -	device_property_read_u32(&client->dev, "lines-initial-states", &n_latch);
+> >> -
+> >>   	/* Allocate, initialize, and register this gpio_chip. */
+> >>   	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
+> >>   	if (!gpio)
+> >> @@ -297,6 +297,29 @@ static int pcf857x_probe(struct i2c_client *client)
+> >>   	gpio->chip.direction_output	= pcf857x_output;
+> >>   	gpio->chip.ngpio		= (uintptr_t)i2c_get_match_data(client);
+> >>   
+> >> +	rstn_gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
+> >> +	if (IS_ERR(rstn_gpio)) {
+> >> +		return dev_err_probe(&client->dev, PTR_ERR(rstn_gpio),
+> >> +				     "failed to get reset GPIO\n");
+> >> +	}
 
->  rust/kernel/block/mq/operations.rs |  7 +--
->  rust/kernel/block/mq/request.rs    | 70 ++++++++++--------------------
->  rust/kernel/sync/refcount.rs       | 14 ++++++
->  3 files changed, 40 insertions(+), 51 deletions(-)
->
-> diff --git a/rust/kernel/block/mq/operations.rs b/rust/kernel/block/mq/operations.rs
-> index 864ff379dc91..c399dcaa6740 100644
-> --- a/rust/kernel/block/mq/operations.rs
-> +++ b/rust/kernel/block/mq/operations.rs
-> @@ -10,9 +10,10 @@
->      block::mq::Request,
->      error::{from_result, Result},
->      prelude::*,
-> +    sync::Refcount,
->      types::ARef,
->  };
-> -use core::{marker::PhantomData, sync::atomic::AtomicU64, sync::atomic::Ordering};
-> +use core::marker::PhantomData;
->
->  /// Implement this trait to interface blk-mq as block devices.
->  ///
-> @@ -78,7 +79,7 @@ impl<T: Operations> OperationsVTable<T> {
->          let request = unsafe { &*(*bd).rq.cast::<Request<T>>() };
->
->          // One refcount for the ARef, one for being in flight
-> -        request.wrapper_ref().refcount().store(2, Ordering::Relaxed);
-> +        request.wrapper_ref().refcount().set(2);
->
->          // SAFETY:
->          //  - We own a refcount that we took above. We pass that to `ARef`.
-> @@ -187,7 +188,7 @@ impl<T: Operations> OperationsVTable<T> {
->
->              // SAFETY: The refcount field is allocated but not initialized, so
->              // it is valid for writes.
-> -            unsafe { RequestDataWrapper::refcount_ptr(pdu.as_ptr()).write(AtomicU64::new(0)) };
-> +            unsafe { RequestDataWrapper::refcount_ptr(pdu.as_ptr()).write(Refcount::new(0)) };
->
->              Ok(0)
->          })
-> diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
-> index 7943f43b9575..7c782d70935e 100644
-> --- a/rust/kernel/block/mq/request.rs
-> +++ b/rust/kernel/block/mq/request.rs
-> @@ -8,12 +8,13 @@
->      bindings,
->      block::mq::Operations,
->      error::Result,
-> +    sync::Refcount,
->      types::{ARef, AlwaysRefCounted, Opaque},
->  };
->  use core::{
->      marker::PhantomData,
->      ptr::{addr_of_mut, NonNull},
-> -    sync::atomic::{AtomicU64, Ordering},
-> +    sync::atomic::Ordering,
->  };
->
->  /// A wrapper around a blk-mq [`struct request`]. This represents an IO request.
-> @@ -37,6 +38,9 @@
->  /// We need to track 3 and 4 to ensure that it is safe to end the request and hand
->  /// back ownership to the block layer.
->  ///
-> +/// Note that driver can still obtain new `ARef` even if there is no `ARef`s in existence by using
-> +/// `tag_to_rq`, hence the need to distinct B and C.
-> +///
->  /// The states are tracked through the private `refcount` field of
->  /// `RequestDataWrapper`. This structure lives in the private data area of the C
->  /// [`struct request`].
-> @@ -98,13 +102,17 @@ pub(crate) unsafe fn start_unchecked(this: &ARef<Self>) {
->      ///
->      /// [`struct request`]: srctree/include/linux/blk-mq.h
->      fn try_set_end(this: ARef<Self>) -> Result<*mut bindings::request, ARef<Self>> {
-> -        // We can race with `TagSet::tag_to_rq`
-> -        if let Err(_old) = this.wrapper_ref().refcount().compare_exchange(
-> -            2,
-> -            0,
-> -            Ordering::Relaxed,
-> -            Ordering::Relaxed,
-> -        ) {
-> +        // To hand back the ownership, we need the current refcount to be 2.
-> +        // Since we can race with `TagSet::tag_to_rq`, this needs to atomically reduce
-> +        // refcount to 0. `Refcount` does not provide a way to do this, so use the underlying
-> +        // atomics directly.
-> +        if this
-> +            .wrapper_ref()
-> +            .refcount()
-> +            .as_atomic()
-> +            .compare_exchange(2, 0, Ordering::Relaxed, Ordering::Relaxed)
-> +            .is_err()
-> +        {
->              return Err(this);
->          }
->
-> @@ -168,13 +176,13 @@ pub(crate) struct RequestDataWrapper {
->      /// - 0: The request is owned by C block layer.
->      /// - 1: The request is owned by Rust abstractions but there are no [`ARef`] references to it.
->      /// - 2+: There are [`ARef`] references to the request.
-> -    refcount: AtomicU64,
-> +    refcount: Refcount,
->  }
->
->  impl RequestDataWrapper {
->      /// Return a reference to the refcount of the request that is embedding
->      /// `self`.
-> -    pub(crate) fn refcount(&self) -> &AtomicU64 {
-> +    pub(crate) fn refcount(&self) -> &Refcount {
->          &self.refcount
->      }
->
-> @@ -184,7 +192,7 @@ pub(crate) fn refcount(&self) -> &AtomicU64 {
->      /// # Safety
->      ///
->      /// - `this` must point to a live allocation of at least the size of `Self`.
-> -    pub(crate) unsafe fn refcount_ptr(this: *mut Self) -> *mut AtomicU64 {
-> +    pub(crate) unsafe fn refcount_ptr(this: *mut Self) -> *mut Refcount {
->          // SAFETY: Because of the safety requirements of this function, the
->          // field projection is safe.
->          unsafe { addr_of_mut!((*this).refcount) }
-> @@ -200,47 +208,13 @@ unsafe impl<T: Operations> Send for Request<T> {}
->  // mutate `self` are internally synchronized`
->  unsafe impl<T: Operations> Sync for Request<T> {}
->
-> -/// Store the result of `op(target.load())` in target, returning new value of
-> -/// target.
-> -fn atomic_relaxed_op_return(target: &AtomicU64, op: impl Fn(u64) -> u64) -> u64 {
-> -    let old = target.fetch_update(Ordering::Relaxed, Ordering::Relaxed, |x| Some(op(x)));
-> -
-> -    // SAFETY: Because the operation passed to `fetch_update` above always
-> -    // return `Some`, `old` will always be `Ok`.
-> -    let old = unsafe { old.unwrap_unchecked() };
-> -
-> -    op(old)
-> -}
-> -
-> -/// Store the result of `op(target.load)` in `target` if `target.load() !=
-> -/// pred`, returning [`true`] if the target was updated.
-> -fn atomic_relaxed_op_unless(target: &AtomicU64, op: impl Fn(u64) -> u64, pred: u64) -> bool {
-> -    target
-> -        .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |x| {
-> -            if x == pred {
-> -                None
-> -            } else {
-> -                Some(op(x))
-> -            }
-> -        })
-> -        .is_ok()
-> -}
-> -
->  // SAFETY: All instances of `Request<T>` are reference counted. This
->  // implementation of `AlwaysRefCounted` ensure that increments to the ref count
->  // keeps the object alive in memory at least until a matching reference count
->  // decrement is executed.
->  unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {
->      fn inc_ref(&self) {
-> -        let refcount = &self.wrapper_ref().refcount();
-> -
-> -        #[cfg_attr(not(CONFIG_DEBUG_MISC), allow(unused_variables))]
-> -        let updated = atomic_relaxed_op_unless(refcount, |x| x + 1, 0);
-> -
-> -        #[cfg(CONFIG_DEBUG_MISC)]
-> -        if !updated {
-> -            panic!("Request refcount zero on clone")
-> -        }
-> +        self.wrapper_ref().refcount().inc();
->      }
->
->      unsafe fn dec_ref(obj: core::ptr::NonNull<Self>) {
-> @@ -252,10 +226,10 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Self>) {
->          let refcount = unsafe { &*RequestDataWrapper::refcount_ptr(wrapper_ptr) };
->
->          #[cfg_attr(not(CONFIG_DEBUG_MISC), allow(unused_variables))]
-> -        let new_refcount = atomic_relaxed_op_return(refcount, |x| x - 1);
-> +        let is_zero = refcount.dec_and_test();
->
->          #[cfg(CONFIG_DEBUG_MISC)]
-> -        if new_refcount == 0 {
-> +        if is_zero {
->              panic!("Request reached refcount zero in Rust abstractions");
->          }
->      }
-> diff --git a/rust/kernel/sync/refcount.rs b/rust/kernel/sync/refcount.rs
-> index a6a683f5d7b8..3d7a1ffb3a46 100644
-> --- a/rust/kernel/sync/refcount.rs
-> +++ b/rust/kernel/sync/refcount.rs
-> @@ -4,6 +4,8 @@
->  //!
->  //! C header: [`include/linux/refcount.h`](srctree/include/linux/refcount.h)
->
-> +use core::sync::atomic::AtomicI32;
-> +
->  use crate::types::Opaque;
->
->  /// Atomic reference counter.
-> @@ -30,6 +32,18 @@ fn as_ptr(&self) -> *mut bindings::refcount_t {
->          self.0.get()
->      }
->
-> +    /// Get the underlying atomic counter that backs the refcount.
-> +    ///
-> +    /// NOTE: This will be changed to LKMM atomic in the future.
-> +    #[inline]
-> +    pub fn as_atomic(&self) -> &AtomicI32 {
-> +        let ptr = self.0.get() as *const AtomicI32;
-> +        // SAFETY: `refcount_t` is a transparent wrapper of `atomic_t`, which is an atomic 32-bit
-> +        // integer that is layout-wise compatible with `AtomicI32`. All values are valid for
-> +        // `refcount_t`, despite some of the values are considered saturated and "bad".
-> +        unsafe { &*ptr }
-> +    }
-> +
->      /// Set a refcount's value.
->      #[inline]
->      pub fn set(&self, value: i32) {
-> --
-> 2.47.2
->
->
+No need for curly braces.
 
---000000000000b126be062e920001
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+> >> +
+> >> +	if (rstn_gpio) {
+> >> +		/* Reset already held with devm_gpiod_get_optional with GPIOD_OUT_HIGH */
+> >> +		usleep_range(4, 8); /* tw(rst) > 4us */
+> >> +		gpiod_set_value(rstn_gpio, 0);
+> >> +		usleep_range(100, 200); /* trst > 100uS */
 
-MIIUqgYJKoZIhvcNAQcCoIIUmzCCFJcCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-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
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgb5eiumDbmk5rvtqYH/SnllP9Wk2E
-xvVnZzEsTRE1K9owGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MjIwMTIyNzUxWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
-BAIBMA0GCSqGSIb3DQEBAQUABIIBAB35kTMMToJzQfpWAwPIjjzpgUMqbGqkmfTXKUWtyUSN/Ha9
-uW8wYnCGEOUEO1QuFr23zzDuKwAzZErxDU1eeaMf7duHLLVQK5i4/RB2utQxi/cYBl8FUZX90tVm
-Ru2BAgsIDP+tjESW8WQMUbG+7OlS1UN7blxqGIE0GYbPUWfMfq1sn/TH9oVEI5tSXVHy78jgIMwT
-EV0xfWx0nOqqhNyCcR/PwrDs97mnlrMr6qunhrKZatu8g+5liKDb1CGbvzy2nj62XJ3Ioh/oJft5
-yAipNW9bAgJPFWibcEjENb89IqStmcqiLUrsdaPwxfxd/l555Bp82GoQLK0lHk5d58M=
---000000000000b126be062e920001--
+Maybe use fsleep() for both ?
+
+> >> +
+> >> +		/*
+> >> +		 * Reset "will initialize to their default states of all I/Os to
+> >> +		 * inputs with weak current source to VDD", which is the same as
+> >> +		 * writing 1 for all I/Os which is 0 in n_latch.
+> >> +		 */
+> >> +		n_latch = 0;
+> >> +	} else {
+> >> +		device_property_read_u32(&client->dev, "lines-initial-states",
+> >> +					 &n_latch);
+> > 
+> > device_property_read_u32 will not fill n_latch if the property is missing.
+> > Before n_latch was always set to 0 at the declaration point above.
+> > I guess that should be kept, because we want 0, except if
+> > device_property_read_u32 provides a different value.
+> 
+> Yes, this was an oversight from me, will restore n_latch = 0 at the top 
+> of the function. Thanks for catching that.
+
+-- 
+Regards,
+
+Laurent Pinchart
