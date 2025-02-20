@@ -1,96 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F15A1F03DE
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740044607; cv=none; b=oLBUwYwG/ZqGV3cEAZDR5TrKcLsAI+MRYCf8+hAPQ5ao+VDS3wpAXcPqrgnNvDfu+v+E3ubdJYGHTOpoyX2PJJ0lPsqhLERpFGnbwWqtUZX3X5QqOamaNjTu0/xs+AvJGftFeGqYuUFBkge8QSU8YIbbztsjZYicmFoeERWY/bc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740044607; c=relaxed/simple;
-	bh=Rervc4K6IK6z3wDlFY4lh0T75HvSwycQ75TaiQNg8AE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UUN207o12ZxR5cwgW+BqcLX5wDVSlB5F5zq/y7szsB0Gv0VrSAFMj4nFFAr7Rj/VZlb8b4qraWh89a6iUVdFy41N7wrR23MtTsc3PUY0NlZwfLPJ9recT0cgyQMuTWdrE/4NLTiYLpt8XYMTMh8UqJ+5dEPu8DO0rr8XtpIYX6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4blYxCr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4blYxCr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405DAC4CED1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE9B1F03DA;
 	Thu, 20 Feb 2025 09:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740044606;
-	bh=Rervc4K6IK6z3wDlFY4lh0T75HvSwycQ75TaiQNg8AE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C4blYxCr+s9ZMpboatq3WcW8OV1FXLirXFmumOvmvfJfwgc+tbjCOA1U75DvvyWk8
-	 a5Hg9GT7SCNwZPqlfOaqwZQX1i+v4AnVmTdvLisRRUOoA0zwgnyDiQ9GHgdn3GLAVg
-	 eYWIn49roZPbksy8fhngURrn4iKGDVg7AGxYjMItY5aLC6L0I9U5UZNOqLS8M+FlRi
-	 9BQGiqtkR8CxrlglFkST9ZNzr9G7K3dc7eJoBLbiWX6n1yDX87Wkb8Zf9Fd2A0bxzq
-	 3q35rnHDqgFX0IDq6L7q85dz/OeHgfIEregchdxXfy1qT6IOnMUlx2rtwMDdw4aw3r
-	 EcyoKaC7T36Wg==
-Date: Thu, 20 Feb 2025 10:43:23 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Shixiong Ou <oushixiong1025@163.com>
-Cc: Liviu Dudau <liviu.dudau@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Shixiong Ou <oushixiong@kylinos.cn>
-Subject: Re: [PATCH] drm/arm/komeda: Add a condition check before removing
- sysfs attribute
-Message-ID: <20250220-spiked-quirky-nightingale-6ad2ed@houat>
-References: <20250220085358.232883-1-oushixiong1025@163.com>
- <20250220-tiny-pragmatic-pug-5addfc@houat>
- <c3b340a6-04fe-adc2-d9e5-be95135aa0ab@163.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740044608; cv=none; b=C430IPfszOy9V+xhQJjCfIZWCXkZLQwUdgLtZdNISILqqvLZ9EApYjFF2rT6hr4kQSXAoFBmSYvhoBx86flFH4EHysDutNPUhaouq/clrRwbwG82PgBW+ncvnw2VbWHdWRexCOnkVXtqovG6a9c6DQ0b/wx/PWLt6T/p0AT098c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740044608; c=relaxed/simple;
+	bh=YhtyvLzFcNykdqygpd3K3BVMtEXPx1ZiEQps8Gn6VBc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CzO+qsb2TrrkeRmeI1Qy+fsqQpII+eyAnS3+b95iwbqWCVaDiuy3S+jQGuBBsHAVanwObbi5yvNaIuR03/qHJj7H6CBcoHtoN8/aqln+kae3FHxY0BKJUEuBVMgG+b85Wbp6CzsaawvFemOwSDO1GnvFysg6l3MK7ae/9aLS+zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kwmAfWxf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kwmAfWxf"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K6lKrG012222;
+	Thu, 20 Feb 2025 09:43:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PwtYak/t8SAuznkwdylC4P9QNNgY0KZtvTLFAk0VUwk=; b=kwmAfWxfcnX00oGX
+	t9E0SeqUScNN9fXx3gpXHBM7YOt9JedHEGsfAmW+k06X0cfZTsGT5hr3PnmARe+q
+	1LLJ19uMa6Fv9DxtBKweFyblgeVr2ozNNOrg2qcpMqCqbr3u54zPf9f7Cj/RQNvV
+	xgmcYnmIblnWoWMBoJ1ukNOXD/f435zYatGjVNjI7GzT6kmt5gUoDmFnypWMotgG
+	O5V7geUKFIxdVeK1t9oyahSZwnz5D02cX0k7nLunL8NSwiKhuBQF/U8t10JJtYSy
+	e0AgQn5klmjtBRQ6z+D9XdHK1rKJ5noEqJuV9MlsQDYCHKFiPyCRmpfjZ96notxr
+	E/ykfA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1nnxb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 09:43:15 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51K9hEXB007321
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 09:43:14 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Feb 2025 01:43:08 -0800
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <p.zabel@pengutronix.de>, <quic_varada@quicinc.com>,
+        <quic_nsekar@quicinc.com>, <dmitry.baryshkov@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v11 1/7] dt-bindings: phy: qcom,uniphy-pcie: Document PCIe uniphy
+Date: Thu, 20 Feb 2025 15:12:45 +0530
+Message-ID: <20250220094251.230936-2-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250220094251.230936-1-quic_varada@quicinc.com>
+References: <20250220094251.230936-1-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="dfzhoh7bq5tokgfb"
-Content-Disposition: inline
-In-Reply-To: <c3b340a6-04fe-adc2-d9e5-be95135aa0ab@163.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Mqw34Q5l79gzvj59udn6eXncnS03_a3x
+X-Proofpoint-ORIG-GUID: Mqw34Q5l79gzvj59udn6eXncnS03_a3x
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_04,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200071
 
+From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
---dfzhoh7bq5tokgfb
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/arm/komeda: Add a condition check before removing
- sysfs attribute
-MIME-Version: 1.0
+Document the Qualcomm UNIPHY PCIe 28LP present in IPQ5332.
 
-On Thu, Feb 20, 2025 at 05:20:48PM +0800, Shixiong Ou wrote:
->=20
-> =E5=9C=A8 2025/2/20 17:12, Maxime Ripard =E5=86=99=E9=81=93:
-> > On Thu, Feb 20, 2025 at 04:53:58PM +0800,oushixiong1025@163.com  wrote:
-> > > From: Shixiong Ou<oushixiong@kylinos.cn>
-> > >=20
-> > > [WHY] If the call to sysfs_create_group() fails, there is
-> > >        no need to call function sysfs_remove_group().
-> > >=20
-> > > [HOW] Add a condition check before removing sysfs attribute.
-> > >=20
-> > > Signed-off-by: Shixiong Ou<oushixiong@kylinos.cn>
-> > What are you trying to fix exactly? AFAIK, there's no code path that
-> > calls komeda_dev_destroy() after komeda_dev_create() has failed.
->
-> |if calling |||sysfs_create_group() fails, it will go to lable
-> 'err_cleanup:', and it will call |komeda_dev_destroy() laterly.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+---
+v8: Add 'Reviewed-by: Krzysztof Kozlowski'
 
-Ah, right. Then that's what you should fix.
+v7: * Add data type definition to 'num-lanes'
 
-Maxime
+v6: * Fix num-lanes definition
+    * Make it mandatory
 
---dfzhoh7bq5tokgfb
-Content-Type: application/pgp-signature; name="signature.asc"
+v5: * Drop '3x1' & '3x2' from compatible string
+    * Use 'num-lanes' to differentiate instead of '3x1' or '3x2'
+      in compatible string
+    * Describe clocks and resets instead of just maxItems
 
------BEGIN PGP SIGNATURE-----
+v4: Remove reset-names as the resets are not used individually
+    Remove clock-output-names as its usage is removed from driver
+    Fix order in the 'required' section
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ7b5NwAKCRAnX84Zoj2+
-dhEsAYDGy/OEZUIBXjEWZz2IvJT25BidrqUoLDbizs7KqicTq0LkJ7lid+iu0i/n
-PszTkeIBfAmbu9/3RnueHcnt2+beEl9IbIwkRunrNMr4YtvjA8rVm5yqZ03niU60
-9n7SXNRTew==
-=Pkhr
------END PGP SIGNATURE-----
+v3: Fix compatible string to be similar to other phys and rename file accordingly
+    Fix clocks minItems -> maxItems
+    Change one of the maintainer from Sricharan to Varadarajan
 
---dfzhoh7bq5tokgfb--
+v2: Rename the file to match the compatible
+    Drop 'driver' from title
+    Dropped 'clock-names'
+    Fixed 'reset-names'
+---
+ .../phy/qcom,ipq5332-uniphy-pcie-phy.yaml     | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+new file mode 100644
+index 000000000000..e39168d55d23
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq5332-uniphy-pcie-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm UNIPHY PCIe 28LP PHY
++
++maintainers:
++  - Nitheesh Sekar <quic_nsekar@quicinc.com>
++  - Varadarajan Narayanan <quic_varada@quicinc.com>
++
++description:
++  PCIe and USB combo PHY found in Qualcomm IPQ5332 SoC
++
++properties:
++  compatible:
++    enum:
++      - qcom,ipq5332-uniphy-pcie-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: pcie pipe clock
++      - description: pcie ahb clock
++
++  resets:
++    items:
++      - description: phy reset
++      - description: ahb reset
++      - description: cfg reset
++
++  "#phy-cells":
++    const: 0
++
++  "#clock-cells":
++    const: 0
++
++  num-lanes:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2]
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++  - "#phy-cells"
++  - "#clock-cells"
++  - num-lanes
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,ipq5332-gcc.h>
++
++    pcie0_phy: phy@4b0000 {
++        compatible = "qcom,ipq5332-uniphy-pcie-phy";
++        reg = <0x004b0000 0x800>;
++
++        clocks = <&gcc GCC_PCIE3X1_0_PIPE_CLK>,
++                 <&gcc GCC_PCIE3X1_PHY_AHB_CLK>;
++
++        resets = <&gcc GCC_PCIE3X1_0_PHY_BCR>,
++                 <&gcc GCC_PCIE3X1_PHY_AHB_CLK_ARES>,
++                 <&gcc GCC_PCIE3X1_0_PHY_PHY_BCR>;
++
++        #clock-cells = <0>;
++
++        #phy-cells = <0>;
++
++        num-lanes = <1>;
++    };
+-- 
+2.34.1
+
