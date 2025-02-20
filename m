@@ -1,57 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9AA442C;
-	Thu, 20 Feb 2025 07:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9961E47A8;
+	Thu, 20 Feb 2025 07:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740035254; cv=none; b=cSH0TWvqxSsfwCVKmOrIND31y1kd6cvXf7b5ALJL3ipDitzNzccTFppGpRt1YliY90tOevDhhLLFb800aaHO1tDgr6G77ZYsEBkuKvU4fV/kbiDnY7BitO5DALRCrmmeArug0aw+PdIJ4I+oWMRDlG+HBjR/prZJbcSaaBOrv6Q=
+	t=1740035361; cv=none; b=fAKjMN23nBgMNcgolbjAvtTOud+bWdhUggVLPuX5ubOj0Lf5uYc47WBxeE6UTCYtOonVrP61NENYA94bGGuonfU7kQsQyv6hLprqgHCB9Sn9a81CkFJQGRmLR2KIv9fA5QuAKQV6dJQG901yYRC0Y65V2IJO9lPLLHvmUwMW7O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740035254; c=relaxed/simple;
-	bh=PEqaQq3z7OYwiHe4pXAOBQKVNqOKwupXRK90MFiAV7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JRltElAUEq50EHjAnZPDH+IDbs4etFACxFMFgeH1+tNJx7ZYdoFNuZp9Rk/oxGyA07fpds+qsZJ6kHswhQA/PVa12dKpyKOrMJ5i0PlYkY1l79JoZlJQ67oCnOuqCfoFhgK635BNkDz/pATXyc+CIRioed8WSniuPWut1E/VHKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WA8BV9iX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740035361; c=relaxed/simple;
+	bh=DuHKVyAUSeH0AYeZxe02EjNiVrFQ9M67Vo/uZCOZ0Vo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=H9MuN0p7DHOiln9Oj0C9/EHYitU/aIOBNdGWlLNxTi5Q5jRn9BFICDlC0UwCexS8FmNq6YLymc+nurFXcj+Ii+OKCQ8Z4YIiV9zO/aMd+dYRgXXGgXlJubrHPczEDZvty6rmhkZLeDH7IB3NyaHEUyWZ0sC8zkEoopV6p/9Cn7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fosNQizh; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WA8BV9iX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A98F8C4CEE3;
-	Thu, 20 Feb 2025 07:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740035254;
-	bh=PEqaQq3z7OYwiHe4pXAOBQKVNqOKwupXRK90MFiAV7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WA8BV9iXAxJpm2EtzQ8UMvgeOTiZHOCvhdwc8arrRxBTgoOMzm+oCRbBNMUGS5P9y
-	 8LUlHLoY2V9O7N8FuwLZTMaxfAi6om1B0F7DM/Iy3LrX2XSyOIhaeqvNae5YFqOfzf
-	 DTNeg/4HdzQuy+Bl0DEVgMmvZRfcAxkZ6SB8PzTXi+pHMp5Alytm3yiun684I+sU8P
-	 qsxhMo8MiiDlHwJXx2Z2lkj9lFXo5DtS8Q6lKObkV3vpz+9Ogr3u5togN1CQqJXHve
-	 fjpDwX/P4n4qfwLAFQLtYu6KaJ0GlgVLFuxcKaJ0J7cFiRlY7YkgVJ4pfuN7ZbSOFZ
-	 mO8tFLmHRj/dw==
-Date: Thu, 20 Feb 2025 09:07:29 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] rdma: Converge on using secs_to_jiffies()
-Message-ID: <20250220070729.GK53094@unreal>
-References: <20250219-rdma-secs-to-jiffies-v1-0-b506746561a9@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fosNQizh"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K6fmgO011610;
+	Thu, 20 Feb 2025 07:09:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jdRurz3BGPu1yPaTZwh+HKIzTOwhCAXUFtw2FUQjgpQ=; b=fosNQizhYn8vx50P
+	PodEVKZEzJ2Brz3QuxloD4yrYigWzekMQtrJVgnIZFCX8H1YloaqP563cU4IYyd7
+	2VIcLY8DTenuyrxWOC0F/Mkm0MrHJqnHuYn7lq4MFE5424qa/cK0qS4QjmrS8r0L
+	MGLYUH+ilI1WVZ5Gmilyo15XJwA9mrCQbTvdWtZWm52X/xl6lVknRl2WUapMRiTP
+	ZHVILhxZUbeZ8Wdx8YmAbeVuOMuuIzU6ROhaqOtG84yo6TiDpVtNAE9fHJOyZFnt
+	y3Uw4ltDOQXAFp3VAY6/k4ICB3ZSEH6xyuWFebTF7Lkjjv45bv7q3xERtF40krFq
+	TrL0hQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy3n6ue-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 07:09:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51K7979m015781
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 07:09:07 GMT
+Received: from [10.217.216.47] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Feb
+ 2025 23:09:02 -0800
+Message-ID: <c4f5c1fb-123d-4dd1-9885-031808f37419@quicinc.com>
+Date: Thu, 20 Feb 2025 12:38:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219-rdma-secs-to-jiffies-v1-0-b506746561a9@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: Add MXC power domain to videocc
+ nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Ajit Pandey
+	<quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        "Taniya
+ Das" <quic_tdas@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250218-videocc-pll-multi-pd-voting-v1-0-cfe6289ea29b@quicinc.com>
+ <20250218-videocc-pll-multi-pd-voting-v1-5-cfe6289ea29b@quicinc.com>
+ <dprxueuq5avpv3mek4kc4sy2mddydsoskqgbizi4lpyapuhg4t@zcdgm2wcsaco>
+Content-Language: en-US
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+In-Reply-To: <dprxueuq5avpv3mek4kc4sy2mddydsoskqgbizi4lpyapuhg4t@zcdgm2wcsaco>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VUkyZPULRCPb9IyVEDHFvpl5aTncfrYv
+X-Proofpoint-GUID: VUkyZPULRCPb9IyVEDHFvpl5aTncfrYv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_02,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 mlxlogscore=672 bulkscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502100000 definitions=main-2502200050
 
-On Wed, Feb 19, 2025 at 09:36:38PM +0000, Easwar Hariharan wrote:
-> This series converts users of msecs_to_jiffies() that either use the
-> multiply pattern of either of:
-> - msecs_to_jiffies(N*1000) or
-> - msecs_to_jiffies(N*MSEC_PER_SEC)
+
+
+On 2/18/2025 11:02 PM, Dmitry Baryshkov wrote:
+> On Tue, Feb 18, 2025 at 07:56:50PM +0530, Jagadeesh Kona wrote:
+>> Videocc requires both MMCX and MXC rails to be powered ON
+>> to configure the video PLLs on SM8450, SM8550 and SM8650
+>> platforms. Hence add MXC power domain to videocc node on
+>> these platforms.
+>>
+>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 3 ++-
+>>  arch/arm64/boot/dts/qcom/sm8550.dtsi | 3 ++-
+>>  arch/arm64/boot/dts/qcom/sm8650.dtsi | 3 ++-
+>>  3 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> where N is a constant or an expression, to avoid the multiplication.
+> Three separate patches, please. With that in mind:
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
 
-Can you please provide justification for that? What is wrong with current code?
+Sure, will split this into separate patches.
 
-Thanks
+Thanks,
+Jagadeesh
+
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+>> index 9c809fc5fa45a98ff5441a0b6809931588897243..4f8dca8fc64212191780067c5d8815e3a2bb137f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+>> @@ -3136,7 +3136,8 @@ videocc: clock-controller@aaf0000 {
+>>  			reg = <0 0x0aaf0000 0 0x10000>;
+>>  			clocks = <&rpmhcc RPMH_CXO_CLK>,
+>>  				 <&gcc GCC_VIDEO_AHB_CLK>;
+>> -			power-domains = <&rpmhpd RPMHPD_MMCX>;
+>> +			power-domains = <&rpmhpd RPMHPD_MMCX>,
+>> +					<&rpmhpd RPMHPD_MXC>;
+>>  			required-opps = <&rpmhpd_opp_low_svs>;
+>>  			#clock-cells = <1>;
+>>  			#reset-cells = <1>;
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> index eac8de4005d82f246bc50f64f09515631d895c99..a039ae71e1b7bba8124128d19de5e00c65217770 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> @@ -2889,7 +2889,8 @@ videocc: clock-controller@aaf0000 {
+>>  			reg = <0 0x0aaf0000 0 0x10000>;
+>>  			clocks = <&bi_tcxo_div2>,
+>>  				 <&gcc GCC_VIDEO_AHB_CLK>;
+>> -			power-domains = <&rpmhpd RPMHPD_MMCX>;
+>> +			power-domains = <&rpmhpd RPMHPD_MMCX>,
+>> +					<&rpmhpd RPMHPD_MXC>;
+>>  			required-opps = <&rpmhpd_opp_low_svs>;
+>>  			#clock-cells = <1>;
+>>  			#reset-cells = <1>;
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+>> index 86684cb9a9325618ddb74458621cf4bbdc1cc0d1..32af2a0f7a0030f155b7d8c93faeffa384a42768 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+>> @@ -3524,7 +3524,8 @@ videocc: clock-controller@aaf0000 {
+>>  			reg = <0 0x0aaf0000 0 0x10000>;
+>>  			clocks = <&bi_tcxo_div2>,
+>>  				 <&gcc GCC_VIDEO_AHB_CLK>;
+>> -			power-domains = <&rpmhpd RPMHPD_MMCX>;
+>> +			power-domains = <&rpmhpd RPMHPD_MMCX>,
+>> +					<&rpmhpd RPMHPD_MXC>;
+>>  			#clock-cells = <1>;
+>>  			#reset-cells = <1>;
+>>  			#power-domain-cells = <1>;
+>>
+>> -- 
+>> 2.34.1
+>>
+> 
