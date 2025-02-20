@@ -1,168 +1,161 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6B71F152A
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DC01C6FE9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740048977; cv=none; b=UUEw2AfuoSeHFXlkZ+0KYsMSy3bY6AWrkSEdsMhilS/FuKo+wzxrXD+8zJgPHySNNzUfEs69nX9qE/y2EjZKG7bHRT6YR2IqR9O7zvX/3nTfG6tHxwZljkVjCEmHZ7Pmolx6Uxq+bqtloddNFOjkqMYGDJc+lKyPV7fvvEyM9WI=
+	t=1740048996; cv=none; b=qky2jqg6sGgyynLjwQ8cc1+IkByFa2JoRes33Kvn53zb5SiR3APE1SWpRsnx0XdWowNWrSy/QZdCZAPWs8W0abVoRASTIcZj3RtL7q/hs9gmjMHpgu7NONgl2WbIRCQAhsHurSDbXo+HTCiqQIAQxQE6SMljK8wTJ/Jd9ZUiXQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740048977; c=relaxed/simple;
-	bh=AZ8pByUgDxIB+wqTibIJ3mjIR1Kc+wjA2PZxVI5tpFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CZJBhwUbQHpW372UWYbX+jou7qRdwGSRSFTXRXHT3yve9opXjxWYi69RH/sfke3eCU4BmUjs+qxTc01YsE5XWSg5bgiWzXEf6mCzHe7Kaf5bRWG2dC629QCqA+DQSkOhcYUVp37hYY+tyFdgWr9mgpQnpHhUFD4gZV7DhDUGaGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tl4Dy-0001Kc-V5; Thu, 20 Feb 2025 11:56:10 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tl4Dy-001vBZ-1a;
-	Thu, 20 Feb 2025 11:56:10 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tl4Dy-0084Uc-1E;
-	Thu, 20 Feb 2025 11:56:10 +0100
-Date: Thu, 20 Feb 2025 11:56:10 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>
-Subject: Re: [PATCH v2 4/6] mmc: core: add undervoltage handler for MMC/eMMC
- devices
-Message-ID: <Z7cKSuKWOedGVZ5G@pengutronix.de>
-References: <20250220074429.2906141-1-o.rempel@pengutronix.de>
- <20250220074429.2906141-5-o.rempel@pengutronix.de>
- <be715535-8931-489f-a2be-50aa6ec423a1@arm.com>
+	s=arc-20240116; t=1740048996; c=relaxed/simple;
+	bh=fRu8eUbZlr5WjUOyfFTKMd8WKBc7SWVXg5JE+CVhBFw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jifdhuP9garhgPhzGULhXRRlvO7Ov6rn3fnnnuxmHnTjKNBEhrwcf5Mv08HMg882NASIKkZWWVAiq0uVqbdc+TlFIpAFF4pjeaw5mkZXT4f8Q1FOe8C5ASUiPKEQ22ai8blkUVSMoMGSti1h/O3N+38nW3AO5IQD9rJcb69tm/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KqPMuErv; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqPMuErv"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30a440effcfso19272791fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 02:56:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740048993; x=1740653793; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fRu8eUbZlr5WjUOyfFTKMd8WKBc7SWVXg5JE+CVhBFw=;
+        b=KqPMuErv3HRCkVp5lM8rv66hBFAIByefLjYyc8wU39MkenoNx2ER1NcihuHCjK0TRV
+         lLhUUTLFlizxpMkcNW+EyBZPQ1EwMiwbd+DuX4qfmox3GHT/Qk6D1brKWZQn7lAapgZB
+         J044HYP/2s+pCln0/lEPU7Hm4BD6+U3N3yUDdC+uQf76YAtVhSmPWKjq5TgrGGVtXMDg
+         U8VFDb9lWHxBLbn5h3dxYCSb2fqIXU/0DnCCHwXTCx7AyqaDWBiRPbKwwyAcjl1Ig9B0
+         iJvmmXDOHGqvoaEW+0xeeopXqfhuSMgme9DtzveB9txWDyLvSmxKRr3N48kan99Ot39x
+         RfbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740048993; x=1740653793;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fRu8eUbZlr5WjUOyfFTKMd8WKBc7SWVXg5JE+CVhBFw=;
+        b=eGsZWEzTAEdR5BMXuI4L+kM//bfQg3mGQSZdZz4yunfFb2IWSpWRqdc6XFX+Ad1W5L
+         CyqlOSzBrIKKDWf1jGXwHawZ4OiWTyrlFeyiwg71gLqU6t1WjuHXxCF0mdcCl6vT0iKZ
+         Fnymx9hzubXB2mUKUKVcAc9JsICDlVfkE2T+iRRJHwkaJEB2K6b6J4os2hsequptdcVu
+         TPOMCRYtGo08UH/O+UqdDmqf2vuWLmGvKeEAVvg6IguMGyRXDEgK6pIQYbaStMc1TncW
+         YEA4Q0t8qBP3I9ROkkAY1xkOyUT0vg4wMaSh1ZI8Nc4Fhmpb4Wyi27n6defqDTGa0PSV
+         wccA==
+X-Forwarded-Encrypted: i=1; AJvYcCXp3WjZCPOSyN1K56x2cSwAqF/Yb4qI5Gp8rB6y/lM/IhEpF0Nrtu6yrT/ZLhm4+/SkwMZroLCh20cT0v0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeHT/KnD484IEPqiZ7TVHI1YE08/CaJLG1lpW0jRtht00NzixH
+	DwL8bHoyvF5wIUBvi+fK1u0fPJ81WeTzzuMh6zZlfimTvdfG6ONhcwavucmzNUhruLsJVN68x6N
+	bX9hFew24stTsSVLjSBeQouUdygsIaqEo
+X-Gm-Gg: ASbGncvQf2KaqnOUDBvkj31QC4rYrFcishxjkpPAQQ+jLlcO2M3CBt/Z/0pnfBX5d+4
+	sASqJ2qY4hMis4skb7ahctSFEIuULOFu/wfjK8xt2XNfstQ7HhKc1QbHKL2nbKXxbAVTmtuum
+X-Google-Smtp-Source: AGHT+IFg16Cpi34Nx5OBZZj3UBP9+BvW4NSgYKS5HcY+H9ccmPPfkhdxLu3CL/Ze5+kyj/MWpUu3PhkPOeBDVIPYNDg=
+X-Received: by 2002:a05:6512:3d1b:b0:545:2e8b:5959 with SMTP id
+ 2adb3069b0e04-546e5f768bemr964670e87.24.1740048992642; Thu, 20 Feb 2025
+ 02:56:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <be715535-8931-489f-a2be-50aa6ec423a1@arm.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250123190747.745588-1-brgerst@gmail.com> <Z7RRZ0jdqsrADMm0@gmail.com>
+ <CAFULd4Z_QoOLKCOawyeFtRe6V4+oaaGxfQxav9dS-Di-Ne7tfw@mail.gmail.com>
+ <Z7XE0P6ZFHxtlYXw@gmail.com> <CAMzpN2gyhEnYsimxLhLNPc4HTpVdRGTiBfm9pXiFTL6_3-O=sg@mail.gmail.com>
+ <CAFULd4ZQ8VoKvQ7aOgcfeLNROM4-rDYn=wHo=FYMO8ZkuQeSAQ@mail.gmail.com>
+ <CAMj1kXFgfbLqVkcs2T8QHRKKJ0X7+mLd-bNjricfd_niY-dxRA@mail.gmail.com>
+ <CAFULd4aYjnWzWaN8WA0LetN1Li7F8MY3qnxbhY8=tNFxqHCP1w@mail.gmail.com> <CAMj1kXGG4J76o17d=e4jv-5jjzcSGyZdKRcNNB17SkCqD6+8qQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXGG4J76o17d=e4jv-5jjzcSGyZdKRcNNB17SkCqD6+8qQ@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Thu, 20 Feb 2025 11:56:21 +0100
+X-Gm-Features: AWEUYZnteaXMK8HgJJ6iL5SHU5Azq-Dcxyy5M3SLgdeblJ4cJF0EGkot4QPPSoI
+Message-ID: <CAFULd4b63uHvZs_tUjkiNRykThiztwn59jnZ-5JkTEXR16oVeg@mail.gmail.com>
+Subject: Re: [PATCH v6 00/15] x86-64: Stack protector and percpu improvements
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 10:47:01AM +0000, Christian Loehle wrote:
-> On 2/20/25 07:44, Oleksij Rempel wrote:
-> > Introduce _mmc_handle_undervoltage() to handle undervoltage events for
-> > MMC/eMMC devices. This function interrupts ongoing operations using HPI
-> > and performs a controlled suspend. After completing the sequence, the card
-> > is marked as removed to prevent further interactions.
-> > 
-> > To support this, introduce __mmc_suspend() and __mmc_resume() as internal
-> > helpers that omit mmc_claim_host()/mmc_release_host(), allowing them to be
-> > called when the host is already claimed. Update mmc_shutdown() to skip the
-> > normal shutdown sequence if the host is flagged as undervoltage to avoid
-> > repeating of the shutdown procedure.
-> 
-> "of" can be removed here.
-> 
-> Given that this introduces large parts of the mmc handling IMO this commit
-> deserves a lot more explanation of what steps exactly do for which cards
-> and why.
+On Thu, Feb 20, 2025 at 11:52=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> w=
+rote:
+>
+> On Thu, 20 Feb 2025 at 11:46, Uros Bizjak <ubizjak@gmail.com> wrote:
+> >
+> > On Thu, Feb 20, 2025 at 11:05=E2=80=AFAM Ard Biesheuvel <ardb@kernel.or=
+g> wrote:
+> > >
+> > > Hi Uros,
+> > >
+> > > On Thu, 20 Feb 2025 at 10:51, Uros Bizjak <ubizjak@gmail.com> wrote:
+> > > >
+> > > > On Wed, Feb 19, 2025 at 2:18=E2=80=AFPM Brian Gerst <brgerst@gmail.=
+com> wrote:
+> > > > >
+> > > > > On Wed, Feb 19, 2025 at 6:47=E2=80=AFAM Ingo Molnar <mingo@kernel=
+.org> wrote:
+> > > > > >
+> > > > > > * Uros Bizjak <ubizjak@gmail.com> wrote:
+> > > > > >
+> > > > > > > I wonder if there would be any benefit if stack canary is put=
+ into
+> > > > > > > struct pcpu_hot?
+> > > > > >
+> > > > > > It should definitely be one of the hottest data structures on x=
+86, so
+> > > > > > moving it there makes sense even if it cannot be measured expli=
+citly.
+> > > > > >
+> > > > >
+> > > > > It would have to be done with linker tricks, since you can't make=
+ the
+> > > > > compiler use a struct member directly.
+> > > >
+> > >
+> > > Interesting take. I'd have tried to put the canary at offset 0x0, and
+> > > simply use pcpu_hot as the guard symbol.
+> > >
+> > >
+> > > > It boots and runs without problems.
+> > > >
+> > > > However, when building the kernel, I get "Absolute relocations
+> > > > present" warning with thousands of locations:
+> > > >
+> ...
+> > >
+> > > The warning is about the type of __ref_stack_chk_guard, not about the
+> > > type of the relocation.
+> >
+> > Thanks, I got distracted by the text of the warning that mentions reloc=
+ation.
+> >
+> > > $ nm vmlinux |grep \\s__ref_sta
+> > > ffffffff8350c620 A __ref_stack_chk_guard
+> > >
+> > > Without your patch:
+> > >
+> > > $ nm vmlinux |grep \\s__ref_sta
+> > > ffffffff834fba10 D __ref_stack_chk_guard
+> >
+> > Is this a problem in our specific case?
+>
+> I don't think so - the whole notion of absolute ELF symbols is rather
+> flaky IME, so I don't think we should be pedantic here.
+>
+> > We can list the symbol in arch/x86/tools/relocs.c to quiet the
+> > warning, but I would need some help with auditing the symbol itself.
+> >
+> > OTOH, we could simply do it your way and put stack canary at the
+> > beginning of pcpu_hot structure, with
+> >
+> > static_assert(offsetof(struct pcpu_hot, stack_canary) =3D=3D 0));
+> >
+> > for good measure.
+>
+> I think this would be the most straight-forward if there are no other
+> locality concerns this might interfere with.
 
-ack
+OK, let me prepare a patch then.
 
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  drivers/mmc/core/mmc.c | 81 +++++++++++++++++++++++++++++++++++-------
-> >  1 file changed, 68 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> > index 86b608843232..e626213e7a52 100644
-> > --- a/drivers/mmc/core/mmc.c
-> > +++ b/drivers/mmc/core/mmc.c
-> > @@ -2104,8 +2104,8 @@ static int _mmc_flush_cache(struct mmc_host *host)
-> >  	return err;
-> >  }
-> >  
-> > -static int _mmc_suspend(struct mmc_host *host, bool is_suspend,
-> > -			bool is_undervoltage)
-> > +static int __mmc_suspend(struct mmc_host *host, bool is_suspend,
-> > +			 bool is_undervoltage)
-> 
-> The is_undervoltage doesn't do anything? Did you forget something here?
-
-This was done in the previous patch "mmc: core: refactor _mmc_suspend()
-for undervoltage handling"
-
-> > @@ -2189,6 +2205,9 @@ static int mmc_shutdown(struct mmc_host *host)
-> >  {
-> >  	int err = 0;
-> >  
-> > +	if (host->undervoltage)
-> > +		return 0;
-> > +
-> 
-> Probably deserves a comment.
-
-ack
-
-> >  	/*
-> >  	 * In a specific case for poweroff notify, we need to resume the card
-> >  	 * before we can shutdown it properly.
-> > @@ -2280,6 +2299,41 @@ static int _mmc_hw_reset(struct mmc_host *host)
-> >  	return mmc_init_card(host, card->ocr, card);
-> >  }
-> >  
-> > +static int _mmc_handle_undervoltage(struct mmc_host *host)
-> > +{
-> > +	struct mmc_card *card = host->card;
-> > +	int err = 0;
-> > +
-> > +	mmc_claim_host(host);
-> > +
-> > +	if (!host->card)
-> > +		goto out;
-> > +
-> > +	if (mmc_can_poweroff_notify(host->card) &&
-> > +		!(host->caps2 & MMC_CAP2_FULL_PWR_CYCLE))
-> > +		err = __mmc_resume(host);
-> 
-> I'm not sure I follow this.
-> Why would we power-up a card that currently doesn't have power when we
-> know we are about to powerfail it?
-
-It is part of the mmc_shutdown, but it is not used on my HW. So, can be
-skip it.
-
-> > +
-> > +	if (!err) {
-> > +		err = mmc_interrupt_hpi(card);
-> > +		if (err)
-> > +			pr_err("%s: Interrupt HPI failed, error %d\n",
-> > +				mmc_hostname(host), err);
-> 
-> There's no point in calling this for SD but I don't see why it currently
-> wouldn't be called for SD.
-
-I tried to keep budget low, until we agree that it is the way to go.
-After this patch stack is accepted, i can try to request more time to
-add and test the SD handler.
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Uros.
