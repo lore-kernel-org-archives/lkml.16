@@ -1,75 +1,97 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC7C2862BD;
-	Thu, 20 Feb 2025 11:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740050790; cv=pass; b=VJy87mvmDOAR3ZgGTuNgqus2/AY1HnpE920hXmvIA1HlcLfEFDzxobTrKhG+zXii9YOl9rY4svrfgW+8pm6z+0KFT2KXLPqsgPsJB/lZiT0pKIaHnGPhheStZaiQS2VMoxK929sBsVPy7A+baKUQj1V6a0c2B/Ak/IyxyAEsuB0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740050790; c=relaxed/simple;
-	bh=UcTySv7yRgTK+Er4uEWu3DshPkzc+A+pII3v5N4La2w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FbZAyT81NC33sW6enCE3chYMgjL5mkHuZWH0jJsAM8HnRBJ/vM8yJEpEiEg4yUD89D0vpymJQw3Q3IApa1q4MCOB/Vj18nNd2NUZOoF33foVZJxp1Ka7XfVMYV7/3gxz1ms3GYwQIZ1lBLfrXobMc5IX2jKaJB7MAKes9Dgkk+Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=CIjUyMZw; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AA51EB5C1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740050840; cv=none; b=Akvwytx+NiIFkXqrjKZZ6i7kGSbJME9ddsN8YXgQIXsWQgrtTF2Oo0wM0kSPGEkAF4MWWP9MqZFGqCRdG8ii+zKHtmEE8RQVIFt4dn5Gow+ZKjHH7cCWFB3vPt8npkGbk3OkW2gLPg/rH9Fo7wQoW3pcJgzkNj9ulqs72kVPwrE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740050840; c=relaxed/simple;
+	bh=ZrlRfrcBXh4uaH0Ud+OUgXEPg7k8eqGRpbqwRuRQEc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EwmkqxOs7J6TMwnkqJGKuD2n1yXdkUaPT5kSmX8VLl9oz6mPpdYDa78n7cdUjLTUUSsP3xyV+YUyXhlcjZ/eP65SyU0bOWZ7Iz1IRVW8bgWyaiWDugTzRt6zzGDsBSp2CsFa1bHDTc8lKWsiE4J3FazvOCRcw4BgF94Jqsx3yzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tY1va3X1; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="CIjUyMZw"
-ARC-Seal: i=1; a=rsa-sha256; t=1740050775; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=T7xFPqBdoxerqbeMe1yzwjWAGpS+Y5w3CEiczOwVyLoYvPwp4SVRVeBC3D6GYbRpx8hm1sjZ6w9gEts1D06pmqWptIiPSroa5P80eXQXNuU2FLz8JrquoA8clKE2cMUEQ6/UUTT2ycrNILqKYadOnbLfpBLe7TpnG0vXIgMeEL0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740050775; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UcTySv7yRgTK+Er4uEWu3DshPkzc+A+pII3v5N4La2w=; 
-	b=WJFDDw4bPYahOQY5nXA4LuqQ714yQfMJIYio7pB4YM7Bic88oONVF0hkJnbhhoXWfeVM6ISyIHdZBMnFeIbc1MN1xDdRd99fkeDUWZ7AGvneYVlaLncEnAk9HENVrpfh9xhyWzypfK9CL0knpRZ/sBjCXpSYxrS2VLL2HTaMccs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
-	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740050775;
-	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=UcTySv7yRgTK+Er4uEWu3DshPkzc+A+pII3v5N4La2w=;
-	b=CIjUyMZwgejveaRMbS0/DDfMwI7BJ1/pB+oBMgRefs3Z9M7gOij/96HnvwovwlAD
-	1uWW7CQA4X2IlwfJRTqRsZjGndQqiuRc7E74Ku7gG1b22fdRbfW80U4qwTqoya6Ezv2
-	sLJIH9i/4t87o835FLCHtTmu2FJk7OtnxEiX3etk=
-Received: by mx.zohomail.com with SMTPS id 1740050773492288.7099199553145;
-	Thu, 20 Feb 2025 03:26:13 -0800 (PST)
-From: Askar Safin <safinaskar@zohomail.com>
-To: hpa@zytor.com
-Cc: airlied@gmail.com,
-	gregkh@linuxfoundation.org,
-	hch@infradead.org,
-	ksummit@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	miguel.ojeda.sandonis@gmail.com,
-	rust-for-linux@vger.kernel.org,
-	torvalds@linux-foundation.org
-Subject: Re: Rust kernel policy
-Date: Thu, 20 Feb 2025 14:26:08 +0300
-Message-Id: <20250220112608.38689-1-safinaskar@zohomail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
-References: <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tY1va3X1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xeieqahpS1+yJtpt/ipGZCcQwPWo1aVFI5tk9S0PZhU=; b=tY1va3X1uwaU2ZKt/+jqdSJUWY
+	ePxCbX1xb3etkeFOzffue+f2+9pjNoExM+MWBJMC5zKckArxIWlkW3KeTVTTI64CBNpdQM7Fg1xwe
+	PCelEW4LiNmaRyLcXB4diNP3iIlhtw9swOHnePPm3zgIhNvz5nxoMAi2bJ1qhyEg3gH1SJ68yi/aw
+	zfJ26SgSUbYdW/lKSt/inDK5GaYlsWg1wkwoA6Z53xE/6P/MluNujtNn899N3+tDi+grYV5ko1MTa
+	A52cgpnku0x9GcvfOZcbzEtL5uD/zG4FbSAHwvetzVl7R0HxniSiPNpDz7tg8hSfRQTuYR/YzVPuq
+	hm/6smNA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tl4hz-00000009PWb-1Xh8;
+	Thu, 20 Feb 2025 11:27:11 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E5B7B300677; Thu, 20 Feb 2025 12:27:10 +0100 (CET)
+Date: Thu, 20 Feb 2025 12:27:10 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, alyssa.milburn@intel.com,
+	scott.d.constable@intel.com, joao@overdrivepizza.com,
+	andrew.cooper3@citrix.com, jpoimboe@kernel.org,
+	jose.marchesi@oracle.com, hjl.tools@gmail.com,
+	ndesaulniers@google.com, samitolvanen@google.com, nathan@kernel.org,
+	ojeda@kernel.org, kees@kernel.org, alexei.starovoitov@gmail.com,
+	mhiramat@kernel.org, jmill@asu.edu
+Subject: Re: [PATCH v3 00/10] x86/ibt: FineIBT-BHI
+Message-ID: <20250220112710.GK34567@noisy.programming.kicks-ass.net>
+References: <20250219162107.880673196@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112275422e61a1a58357afe378aac00003d1164aa230fcf63c5871fcd730d1108f86aecec240cbf592f:zu0801122769cb5feecf658d2ef00c864b00004d7be2ff8ee73349425b32e13002307bc2df5bdb4888642d74:rf0801122d971e074fe3376032099687aa0000f4264f89751fa38743803f9dabb168aa10d602f5ff2d2ecb3ea9d4111f90b8:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219162107.880673196@infradead.org>
 
-> As far as I understand, Rust-style memory safety is being worked on for C++
+On Wed, Feb 19, 2025 at 05:21:07PM +0100, Peter Zijlstra wrote:
+> Hi all!
+> 
+> Having landed much of the previous series in tip/x86/core, I was hoping for an
+> easy time landing the final two patches.. alas.
+> 
+> This whole FineIBT SYSCALL pivot thing showed up, which got me to develop the
+> paranoid FineIBT variant. And because testing I added a cfi=warn knob, and then
+> I migrated bhi to an option etc..
+> 
+> Then just as I was to post this stuff, Scott out-nerds me with a whole new
+> instruction sequence. Which got me to rework the entire pile once again, and
+> it is now another 10 patches again :/
+> 
+> Anyway, be warned, Scott loves overlapping instructions.
+> 
+> This is tested with:
+> 
+>   cfi=fineibt,warn
+>   cfi=fineibt,warn,paranoid
+>   cfi=fineibt,warn,bhi
+>   cfi=fineibt,warn,paranoid,bhi
+>   cfi=fineibt,paranoid,bhi
+> 
+> Also note that LKDTM's CFI_FORWARD_PROTO test will do a double splat for
+> paranoid in warn/permissive mode, since both the caller and callee hash check
+> will fail.
+> 
+> Also available at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/fineibt-bhi2
 
-Yes, there is PoC called "Safe C++" [1]. And it is already implemented in Circle C++ compiler.
-You can see at the link how Safe C++ looks like. But it seems that this proposal will not be
-accepted to standard, so if we choose this path, our code will not be written in standard C++.
+I've updated this tree with the latest version of the patches.
 
-As you can see, Safe C++ is much different from normal C or C++. So if we choose Safe C++, whole
-kernel should be rewritten. (But I personally will totally love if some company spends billions of
-dollars for such rewritting.)
+Notably, Kees, I've not taken your Reviewed-by tag for patches that saw
+significant rework -- even when in response to your own feedback :)
 
-[1]: https://safecpp.org/draft.html
+(ud_type propagation is now gone)
+
+I'll repost in a few days, to give people a chance to catch up.
