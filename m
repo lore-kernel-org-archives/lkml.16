@@ -1,63 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AA41B4259;
-	Thu, 20 Feb 2025 18:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479882135CE;
+	Thu, 20 Feb 2025 18:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740076368; cv=none; b=kcDy0wTbYdxNMnDGsK7anJF2GF9FEfOPx8rgGjQJ4alKd65d2/wySaARvaBYk9pQ4frN4JzuPmlopqFSbl2UayRQlWlUUBvGhAqnYuFqrRXuXEFh2Mz/nKqaTOVK9u79coyB/R4Qzxh11n9Jrg5c8z3LCHkRvnmqIIq8XSQPmLY=
+	t=1740076425; cv=none; b=aCc39qOyyGngnVzZ2WB8fqHyMiMvlIgDpSoJF6NXELTxz2Mv6yxxgmeZ7PNzxlY/DHgD725bpCj8qDrXRlL3xfT3G+wk+/mfMpuPlvOrxaV64v3VL9DT/xjq3ZAWskjn0CkoX46VXZaXYlRB8hsxJAbH9nLDSeqYmKY3ef3Tf+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740076368; c=relaxed/simple;
-	bh=B4S/+9lzX6SHv9NS31A8A0/WdqnWoKEIeWmgKoBnjrg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Y0qK3Z2Fn0GlXeisMHMGQdtzgA9o81dZUqJv4WEA8aXmUgYvXhwvSKmXuchcFNGz1oDVFtruj19TSB8N54e+Ifo5Q+2KAIhzuJxDPPAIKFStbb7ZRa9K0FvYfN0E4miHWDKsRmlfvwmzXaabXY9zeW4ijfL3GelTDV6MC70lTKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mE70Hejy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740076425; c=relaxed/simple;
+	bh=y8op8gMJiSWq38zB64ubHfJyTYIQSUa9uSXp5JC6yZc=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=C3tOsVN0F/NIq7JzcX8iJrDkiiGqQ74S4+91bFPQsjdigk13yLwjQ+JLszhsDYJNmPfVU7agH2mThEXZU9P/n8sxv8a/ACAq+D2DmruQI9HXiF/7VImzYoHS8NclO00sD+HLcIdUzu4Iu/PozBRYDhM18Upxsn3SJxeriSEOU3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eREcWoQD; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mE70Hejy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C18EC4CED1;
-	Thu, 20 Feb 2025 18:32:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740076368;
-	bh=B4S/+9lzX6SHv9NS31A8A0/WdqnWoKEIeWmgKoBnjrg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=mE70HejyHbrump5mRCSFHjFxrGKD3WR+4Ddt0ZdhGYBI7lvoSyueDqu1fcT0tW968
-	 mm4R4UfodeYetUABu3I5DIrlEY6ujtl1THtnWdNZnF0S1hdRPOppsp56X3sMyigc6R
-	 JBM9y7hnMO2syNMAXw+nDBKgd8AzSvJb+oC/BIA70LgOxwRdcHiXIVX+yYUjAu9aI/
-	 zCOEE/RHHDnroN74g+JS/wDjN7f5h3BFRoV7sZ5PULYjCEtI/AR++1eYfm5hLNl4n/
-	 vaTn6XXF/sd29unL7BeyN9x6e3/TpNoUu7zQX29jlPRD4EeEzwSuqkqGzrW26FFueB
-	 44C1US33eAnRQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71098380CEE2;
-	Thu, 20 Feb 2025 18:33:20 +0000 (UTC)
-Subject: Re: [GIT PULL] Networking for v6.14-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250220112033.26001-1-pabeni@redhat.com>
-References: <20250220112033.26001-1-pabeni@redhat.com>
-X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250220112033.26001-1-pabeni@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.14-rc4
-X-PR-Tracked-Commit-Id: dd3188ddc4c49cb234b82439693121d2c1c69c38
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 27eddbf3449026a73d6ed52d55b192bfcf526a03
-Message-Id: <174007639913.1419987.8628797914755252836.pr-tracker-bot@kernel.org>
-Date: Thu, 20 Feb 2025 18:33:19 +0000
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eREcWoQD"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C2CE72059190;
+	Thu, 20 Feb 2025 10:33:37 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C2CE72059190
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740076417;
+	bh=f+ig3Q6VESYArDvAdBr8s45cHmi1z9IqT8I/IrDLwWo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eREcWoQDX0aF/mtm+qMUFXwVTYYhadnAuREcLTeteFsSHPZiqup5cmrOo89zcKYGm
+	 9rBebnUAfAqYA854eWWb4zIGWhwOEEkz5onLG2aJv82kdhW6Lebi0chP7mqOyw9hhM
+	 /W+T9/0l/Ybbqhfq/f4ltH0nPNHV9HMnWVpuPk7o=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	iommu@lists.linux.dev,
+	mhklinux@outlook.com,
+	eahariha@linux.microsoft.com
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	daniel.lezcano@linaro.org,
+	joro@8bytes.org,
+	robin.murphy@arm.com,
+	arnd@arndb.de,
+	jinankjain@linux.microsoft.com,
+	muminulrussell@gmail.com,
+	skinsburskii@linux.microsoft.com,
+	mukeshrathor@microsoft.com
+Subject: [PATCH v2 0/3] Introduce CONFIG_MSHV_ROOT for root partition code
+Date: Thu, 20 Feb 2025 10:33:13 -0800
+Message-Id: <1740076396-15086-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 20 Feb 2025 12:20:33 +0100:
+Running in the root partition is a unique and specialized case that
+requires additional code. CONFIG_MSHV_ROOT allows Hyper-V guest kernels
+to exclude this code, which is important since significant additional code
+specific to the root partition is expected to be added over time.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.14-rc4
+To do this, change hv_root_partition to be a function which is stubbed out
+to return false if CONFIG_MSHV_ROOT=n, and don't compile hv_proc.c at all,
+stubbing out those functions with inline versions.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/27eddbf3449026a73d6ed52d55b192bfcf526a03
+Store the partition type (guest or root) in an enum hv_current_partition_type,
+which can be extended beyond just guest and root partition.
 
-Thank you!
+While at it, introduce hv_result_to_errno() to convert Hyper-V status codes
+to regular linux errors. This is useful because the caller of a hypercall
+helper function (such as those in hv_proc.c) usually can't and doesn't
+interpret the Hyper-V status, so it is better to convert it to an error code
+and reduce the possibility of misinterpreting it. This also alows the stubbed
+versions of the hv_proc.c functions to just return a linux error code.
+
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+---
+Changes in v2:
+* Add patch to convert hypercall statuses to linux error codes [Easwar
+  Hariharan]
+* While at it, split the original patch into two logical pieces, one to change
+  hv_root_partition into a function, and one to introduce MSHV_CONFIG_ROOT
+* Improve the clarity of and add an error message to
+  hv_identify_partition_type() [Easwar Hariharan] [Michael Kelley]
+* Better explain *why* the patches are useful, in the commit messages [Michael
+  Kelley]
+* Add a Kconfig comment explaining why PAGE_SIZE_4KB is needed [Michael Kelley]
+* Minor style and typo fixes
+
+Nuno Das Neves (3):
+  hyperv: Convert hypercall statuses to linux error codes
+  hyperv: Change hv_root_partition into a function
+  hyperv: Add CONFIG_MSHV_ROOT to gate root partition support
+
+ arch/arm64/hyperv/mshyperv.c       |  2 +
+ arch/x86/hyperv/hv_init.c          | 10 ++---
+ arch/x86/kernel/cpu/mshyperv.c     | 24 +----------
+ drivers/clocksource/hyperv_timer.c |  4 +-
+ drivers/hv/Kconfig                 | 16 +++++++
+ drivers/hv/Makefile                |  3 +-
+ drivers/hv/hv.c                    | 10 ++---
+ drivers/hv/hv_common.c             | 69 +++++++++++++++++++++++++++---
+ drivers/hv/hv_proc.c               |  6 +--
+ drivers/hv/vmbus_drv.c             |  2 +-
+ drivers/iommu/hyperv-iommu.c       |  4 +-
+ include/asm-generic/mshyperv.h     | 40 ++++++++++++++---
+ 12 files changed, 137 insertions(+), 53 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
