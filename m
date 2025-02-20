@@ -1,186 +1,128 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6136B1E990E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005B419AD8D
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740036143; cv=none; b=NiV9cImoQi5rawDTnVjcouClterSy6wG1Tv7bXF/NPq0AYyTT3n/LzFkH6o0/A2jA0D6XyNURk8HzV3oq4OeBvm2FTQIDdarmu/O0CPQR2zfV2ZIucUAOM6lhwkNW0DWqrFEelgBVO6oEGmA11UHPUZj9o6IkC/l39JVLBFxgAA=
+	t=1740036150; cv=none; b=ptGHFugum7ANt5be0VuW+cgejNKR8SaEqi0B5LNGsfKygvDnqqq5spjE+o+3hdztsNPI0WYW/dgvzH7DZpiQv7Kc7zM9/I+DLfjtfN332El+GYMm7KbPt+e7UWNyouJdW1ZY3qyvuhjPw8TtaAlUivMDFB6uwP2aagl4Vnz2qkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740036143; c=relaxed/simple;
-	bh=r1iGZ3ZCMqNEqxUQX7mMzJEzTkiUGMTBbkaulz0nvgk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
-	 References; b=qHp39PMtj7WaroN7+4J0JAKx8JfvuYb4+4G8kyRRkOo/CX8PWnIw7qMNBWHDgIR39jAK/pdZbi0KZnY85k6PWqh7sge94Ip/e7YGCZi08nKHJPF+YfTjHaMR6w8x/PUiTMkpbYM1cncgTAkO4MABC3vFfh+VPweOH0CPa1x479k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=B50vyntq; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740036150; c=relaxed/simple;
+	bh=zrsb17kkEekWilONs567qtMz+pCVr2F+/DpHIyDcdiY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Uysv6cQ1lQ3J8HPxzJC8mVGrzQe+GKoOIJEI6DN1nA2ouVVFT/9TNzhYt3IcZ8OxtrtfvVoB5YBUj1ArMxT/JeMXL07ne3IzubeivkLucEqRjOe5z9lZhhWPPca6U+9qGQHaHRTJ6yRFFZER6c5awhcjqMsUp+30b+CYI4juqbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJ24PUdd; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B50vyntq"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250220072219epoutp02429e01aa8b53bc05fff857ad321df6d4~l2aZOxkdt0608706087epoutp02M
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:22:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250220072219epoutp02429e01aa8b53bc05fff857ad321df6d4~l2aZOxkdt0608706087epoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740036139;
-	bh=VosXjbK9hgCnWe/dUqqI+OCmClOYizovvRAwqgJ17+k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B50vyntqJ4OE0IwRn9/Mmk8Em53hD18OlgKhWRQVz6zIOvF+asJ7CPg1+ITwhNmpz
-	 bJZEjY1DZRzeb54qKWChF1CSN1rR8BT2tELoa5sNaOl/ZcEudo+FVIRSo0H7zDoext
-	 aWXXDDL9298ylBd8CkaD/rSjIHf9AjzGlibZggxo=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250220072218epcas5p3fc7ee5d0a3010456fb638d960ede238d~l2aYgbmB_1640116401epcas5p3G;
-	Thu, 20 Feb 2025 07:22:18 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Yz4TN3ZDsz4x9Q1; Thu, 20 Feb
-	2025 07:22:16 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	76.DA.20052.828D6B76; Thu, 20 Feb 2025 16:22:16 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250220044132epcas5p305e4ed7ed1c84f9800299c2091ea0790~l0OBJU5K50967409674epcas5p30;
-	Thu, 20 Feb 2025 04:41:32 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250220044132epsmtrp1ba3b75104fbe2e8a9edb8b730e14fd19~l0OBIY3pU1731817318epsmtrp1F;
-	Thu, 20 Feb 2025 04:41:32 +0000 (GMT)
-X-AuditID: b6c32a49-3fffd70000004e54-00-67b6d8289d9b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	F5.3E.33707.C72B6B76; Thu, 20 Feb 2025 13:41:32 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250220044129epsmtip1080e8366a6271e78c49953e1cc002298~l0N_ZBEgv1683716837epsmtip1q;
-	Thu, 20 Feb 2025 04:41:29 +0000 (GMT)
-From: Swathi K S <swathi.ks@samsung.com>
-To: krzk+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	conor+dt@kernel.org, richardcochran@gmail.com, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: rmk+kernel@armlinux.org.uk, swathi.ks@samsung.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
-Subject: [PATCH v7 2/2] net: stmmac: dwc-qos: Add FSD EQoS support
-Date: Thu, 20 Feb 2025 10:07:12 +0530
-Message-Id: <20250220043712.31966-3-swathi.ks@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250220043712.31966-1-swathi.ks@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBJsWRmVeSWpSXmKPExsWy7bCmlq7GjW3pBt8OSFr8fDmN0WL5gx2s
-	Fmv2nmOymHO+hcVi/pFzrBZPjz1it7h5YCeTxctZ99gsLmzrY7XY9Pgaq8XlXXPYLLquPWG1
-	mPd3LavFsQViFt9Ov2G0WLT1C7vFww972C2OnHnBbHGpfyKTxf89O9gtvmy8ye4g6nH52kVm
-	jy0rbzJ5PO3fyu6xc9Zddo8Fm0o9Nq3qZPPYvKTeY+eOz0we7/ddZfPo27KK0ePgPkOPz5vk
-	Aniism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgH5V
-	UihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BSYFOgVJ+YWl+al6+WlllgZGhgYmQIV
-	JmRnPH65m6WgX6ji+MfLTA2MXfxdjJwcEgImEq+uLWbtYuTiEBLYzSjRPOctlPOJUaLxajcT
-	nLP67XJmmJaXs+4zQiR2Mko8WfaSGcL5wihx52U3I0gVm4CGxPUV29lBEiICvxglPkw6DVbF
-	LLCcSeL0gytgs4QFnCTuH74B1sEioCqx63szC4jNK2Al8fH2ASaIffISqzccAKvnFLCWWLHn
-	F9huCYE7HBJ/Pn2CKnKROPxrFRuELSzx6vgWdghbSuJlfxuUHS+xuu8qC4SdIXH310SoenuJ
-	A1fmAMU5gK7TlFi/Sx8iLCsx9dQ6sPHMAnwSvb+fQK3ildgxD8ZWlvj7+hrUSEmJbUvfQ63y
-	kJi37gkLJFj6GCXuT1jLOIFRbhbCigWMjKsYJVMLinPTU4tNCwzzUsvhEZecn7uJEZyktTx3
-	MN598EHvECMTB+MhRgkOZiUR3rb6LelCvCmJlVWpRfnxRaU5qcWHGE2BATiRWUo0OR+YJ/JK
-	4g1NLA1MzMzMTCyNzQyVxHmbd7akCwmkJ5akZqemFqQWwfQxcXBKNTAFCBWsWhhceG1r2dlD
-	fjcib8vpCrMt5/KQ9xZ174jj138bENh3+KjI0gx/1W9LCtotrq6KMmJunKny2uHV732PqjnX
-	G+gsXW208Jcsc/2s6ncTjx04vohvy91t9j/6SqRbph/v5sv4c/2OyDSvGX5N748LaLf/DT7D
-	w5NyMvlXYP8ypy79tcuDteImN+7Pi6p/b3NgXs6XXK/Nrot1TvL1sh9nfli28pnelPuHJyvy
-	HGg+tnd/1nW+Fr5fQafa59Vs2PPl6bFNW36tPRZ7O3HjypO5Ti7Pdad5hFZ+9BX/rssisS99
-	X5+HlIrKQtXS2xUrOP/M33vTJiS1pTJsKsOaVk/buYx3rNhZS0J78tYrsRRnJBpqMRcVJwIA
-	6LStElsEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJLMWRmVeSWpSXmKPExsWy7bCSnG7Npm3pBm9uqFv8fDmN0WL5gx2s
-	Fmv2nmOymHO+hcVi/pFzrBZPjz1it7h5YCeTxctZ99gsLmzrY7XY9Pgaq8XlXXPYLLquPWG1
-	mPd3LavFsQViFt9Ov2G0WLT1C7vFww972C2OnHnBbHGpfyKTxf89O9gtvmy8ye4g6nH52kVm
-	jy0rbzJ5PO3fyu6xc9Zddo8Fm0o9Nq3qZPPYvKTeY+eOz0we7/ddZfPo27KK0ePgPkOPz5vk
-	AniiuGxSUnMyy1KL9O0SuDIev9zNUtAvVHH842WmBsYu/i5GTg4JAROJl7PuM3YxcnEICWxn
-	lPh25hwTREJS4lPzVFYIW1hi5b/n7BBFnxgljt6/wg6SYBPQkLi+YjtYQkSgg0liz9STzCAO
-	s8BGJoljlzaDVQkLOEncP3yDEcRmEVCV2PW9mQXE5hWwkvh4+wDUOnmJ1RsOMIPYnALWEiv2
-	/AKq5wBaZyUxu8F1AiPfAkaGVYyiqQXFuem5yQWGesWJucWleel6yfm5mxjBsaMVtINx2fq/
-	eocYmTgYDzFKcDArifC21W9JF+JNSaysSi3Kjy8qzUktPsQozcGiJM6rnNOZIiSQnliSmp2a
-	WpBaBJNl4uCUamCK0N8vfvSN+eUdpycnB/menSBrscNoxxcduft3pRa4XIuaobUmu1WalbNU
-	/ZuX6vW4b/PFPVP8tON2vX6ptP9HiPQFkUc/O9cqVb3QP9O8/fiJ/s6AHIUl6lOvVXV9Lz4Q
-	Lfn0jtqMf6aHpDa8tZu97PoZOc/Zuzuq1hivck59rj5X9JiSgd/+qplcKo9feYu4L/26ZOYR
-	t8If0ml3FDaLhqhI/3z8OML47q31zI15XyNY+Q+WSBose5+RcUqxqebKbLXUjntdFVmBs54Y
-	aewS6FK6dJCtqlHoydcNLV/mls5U+vff4mTusZkby38/dYvzC0wQ/lPIdNwhcrOABCu/8Z6p
-	H37ZaE7K2+Bh9qRHiaU4I9FQi7moOBEA8feWCwwDAAA=
-X-CMS-MailID: 20250220044132epcas5p305e4ed7ed1c84f9800299c2091ea0790
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250220044132epcas5p305e4ed7ed1c84f9800299c2091ea0790
-References: <20250220043712.31966-1-swathi.ks@samsung.com>
-	<CGME20250220044132epcas5p305e4ed7ed1c84f9800299c2091ea0790@epcas5p3.samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJ24PUdd"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fc11834404so982565a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 23:22:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740036148; x=1740640948; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zrsb17kkEekWilONs567qtMz+pCVr2F+/DpHIyDcdiY=;
+        b=IJ24PUddunbaHE7X1g2htJlGQ9d2D5jvkZF8fs4ihcAAnmGPtet83EqOtCBXlsFJD7
+         KKD9vktKXvMvgZ2FlJRoiHO+j4YMnt64GabY3maYwgaH/ZanGDBUtD/rVLmDah2wTQG9
+         PeyC1ELR92g7EmxP1yoK82Y6kB+QIdwkIQaHPormy46gGIXrwos+XI10Lcqze5SLOXSI
+         dZqpq4t5GEoRvtfYSaPPdap04MTYAOzq5RsEk0sWiozfRVt7bgpCzXVYKhUkZRRJtEJj
+         lnTGyF4/mCqC399Rv4H9Vi3cLT7f9XUmEjs4bbYhCTZ5+wfHxEDicPBILQG4iCj97YVI
+         lwHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740036148; x=1740640948;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zrsb17kkEekWilONs567qtMz+pCVr2F+/DpHIyDcdiY=;
+        b=lXWmI+9cqJL9nX+r9JXvyvUt6sHeU+wHrkdXbGMKzU54EYKtBZVc/RxbBcHTFpc0Mo
+         HRigL+5O1tutTzIftx23+NLgg9Wyr/Puh1nln1q+2nHNVFZmkoUvBmnNoDNxu9Xm8zkb
+         6r4bb9uAqAWj6aE9MAL9o7rnj0wkjcQHXavsBe5nIWGLldCvubljmtn4HRHAQRxQwQbb
+         WKuNzhsc10hRp/zlkkG7IYnFMCeAuubn6HShZLVRJ/dd88v/hW7C1HyQfkKkDpm+PbSo
+         Z0s2IRyLjJfZgXy7nKcK21f60Ay8q6A3qbzau7pimSgkoEMGcJVC7LxHYkZbQGAXLSJv
+         DKpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMUgMQKo4kxivCsK0dglOEcIWFgM9I/x+mldmd7LDR8GhD4EEFVl4IgAiTJH1Nmfjd1hQwTzI2Q1VSchE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUIUf629C3CMg7PjzgoadWDaiH6fq5wEu0Y70hwRig3EUI7QU1
+	C3EZbCZIHHaXm2L8c3WViwuCTqiMc0+RmQyZJ6VMMVQYsNqHo/7EK76NbQ==
+X-Gm-Gg: ASbGncvjp1GPG7yGZVPEmlIIIVbrCuX/HoPjVJ32MErpvFC4Pr7oHKazRdqY7Qf6PBx
+	5/z1gK9W68MVnNl2EzoYCCMOqkkAWJ/jWopO+cjslG7TM6oyAObSzZErgsqKW/URoubpgSUC+bd
+	ov/oV9HV2j8ZFMtffN0/UR2/JAztDPuhfWaLENhALrX8P4Tw5UC+wTfVmUUTZqIb6Qfv2L2l+sW
+	GdgO1YHCFKMA9L2fp94+3JSVIP5sH95oZ3eBprsxQqU9K5PUNxHYecsFgKAu9QiUSFBlS7lMWKJ
+	WEmzPFeQfSYS2Rt4GVDqcj4=
+X-Google-Smtp-Source: AGHT+IHncCP6wXIG+44d/eTWwBF2w97yHr2QCgigcgnFkdSUFlvxHfNPy4dWEYlqkuedYryqae5xfQ==
+X-Received: by 2002:a17:90b:17c1:b0:2f5:88bb:118 with SMTP id 98e67ed59e1d1-2fc41044ffemr27454531a91.22.1740036148044;
+        Wed, 19 Feb 2025 23:22:28 -0800 (PST)
+Received: from ?IPv6:::1? ([2601:647:5e00:4acd:1571:cf3a:b215:dfab])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d534af3asm114901105ad.44.2025.02.19.23.22.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2025 23:22:27 -0800 (PST)
+Date: Wed, 19 Feb 2025 23:22:25 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Dirk Behme <dirk.behme@de.bosch.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/2=5D_Revert_=22drivers=3A_core=3A_sy?=
+ =?US-ASCII?Q?nchronize_really=5Fprobe=28=29_and_dev=5Fuevent=28=29=22?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <2025022051-happy-plant-b40b@gregkh>
+References: <20250220064647.2437048-1-dmitry.torokhov@gmail.com> <2025022051-happy-plant-b40b@gregkh>
+Message-ID: <9232C7B6-627B-43F9-AD5C-1EA4BB69E40D@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The FSD SoC contains two instance of the Synopsys DWC ethernet QOS IP core.
-The binding that it uses is slightly different from existing ones because
-of the integration (clocks, resets).
+On February 19, 2025 11:13:00 PM PST, Greg Kroah-Hartman <gregkh@linuxfound=
+ation=2Eorg> wrote:
+>On Wed, Feb 19, 2025 at 10:46:44PM -0800, Dmitry Torokhov wrote:
+>> This reverts commit c0a40097f0bc81deafc15f9195d1fb54595cd6d0=2E
+>>=20
+>> Probing a device can take arbitrary long time=2E In the field we observ=
+ed
+>> that, for example, probing a bad micro-SD cards in an external USB card
+>> reader (or maybe cards were good but cables were flaky) sometimes takes
+>> longer than 2 minutes due to multiple retries at various levels of the
+>> stack=2E We can not block uevent_show() method for that long because ud=
+ev
+>> is reading that attribute very often and that blocks udev and interfere=
+s
+>> with booting of the system=2E
+>>=20
+>> The change that introduced locking was concerned with dev_uevent()
+>> racing with unbinding the driver=2E However we can handle it without
+>> locking (which will be done in subsequent patch)=2E
+>
+>So shouldn't we take the second patch first to prevent any issues here?
 
-Signed-off-by: Swathi K S <swathi.ks@samsung.com>
----
- .../stmicro/stmmac/dwmac-dwc-qos-eth.c        | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+I think the potential for the NULL dereference is extremely small, we live=
+d with it for many years=2E But if you prefer the patches can be swapped=2E
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-index 1fadb8ba1d2f..22a263664f0a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-@@ -307,6 +307,29 @@ static void tegra_eqos_remove(struct platform_device *pdev)
- 	gpiod_set_value(eqos->reset, 1);
- }
- 
-+static int fsd_eqos_probe(struct platform_device *pdev,
-+			  struct plat_stmmacenet_data *data,
-+			  struct stmmac_resources *res)
-+{
-+	struct clk *clk_rx1 = NULL;
-+	struct clk *clk_rx2 = NULL;
-+
-+	for (int i = 0; i < data->num_clks; i++) {
-+		if (strcmp(data->clks[i].id, "slave_bus") == 0)
-+			data->stmmac_clk = data->clks[i].clk;
-+		else if (strcmp(data->clks[i].id, "eqos_rxclk_mux") == 0)
-+			clk_rx1 = data->clks[i].clk;
-+		else if (strcmp(data->clks[i].id, "eqos_phyrxclk") == 0)
-+			clk_rx2 = data->clks[i].clk;
-+	}
-+
-+	/* Eth0 RX clock doesn't support MUX */
-+	if (clk_rx1)
-+		clk_set_parent(clk_rx1, clk_rx2);
-+
-+	return 0;
-+}
-+
- struct dwc_eth_dwmac_data {
- 	int (*probe)(struct platform_device *pdev,
- 		     struct plat_stmmacenet_data *data,
-@@ -323,6 +346,10 @@ static const struct dwc_eth_dwmac_data tegra_eqos_data = {
- 	.remove = tegra_eqos_remove,
- };
- 
-+static const struct dwc_eth_dwmac_data fsd_eqos_data = {
-+	.probe = fsd_eqos_probe,
-+};
-+
- static int dwc_eth_dwmac_probe(struct platform_device *pdev)
- {
- 	const struct dwc_eth_dwmac_data *data;
-@@ -401,6 +428,7 @@ static void dwc_eth_dwmac_remove(struct platform_device *pdev)
- static const struct of_device_id dwc_eth_dwmac_match[] = {
- 	{ .compatible = "snps,dwc-qos-ethernet-4.10", .data = &dwc_qos_data },
- 	{ .compatible = "nvidia,tegra186-eqos", .data = &tegra_eqos_data },
-+	{ .compatible = "tesla,fsd-ethqos", .data = &fsd_eqos_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, dwc_eth_dwmac_match);
--- 
-2.17.1
+>
+>> There was also claim that synchronization with probe() is needed to
+>> properly load USB drivers, however this is a red herring: the change
+>> adding the lock was introduced in May of last year and USB loading and
+>> probing worked properly for many years before that=2E
+>>=20
+>> Revert the harmful locking=2E
+>>=20
+>> Signed-off-by: Dmitry Torokhov <dmitry=2Etorokhov@gmail=2Ecom>
+>
+>No Fixes: or cc: stable for this?
 
+I did not think we need "fixes" for a revert=2E=2E=2E Do we?
+
+As far as stable goes: you're the maintainer so IMO it's for you to decide=
+, but yes, I'd like it to land in stable=2E
+
+Thanks=2E=20
+Hi Greg,=20
+--=20
+Dmitry
