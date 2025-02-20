@@ -1,132 +1,163 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A43E26389E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D1C26463B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740094929; cv=none; b=uLGM3ldOqk6XhTDC1S75uov064dqQYrgyHRTapiuqiqGV6Xrjuy3qstEEgDir5USW6HUZjRqfdD3oE89WiYJvrmuFCy33B8WoyqjX56bT+s7m1NGVJeo3jh+IO1ADau9e0+yeIf5rnxjyO8uL7KJZX/NTh5XB1F+PZNlO/wE8rY=
+	t=1740094967; cv=none; b=qkyrLwKoR7B1LrzD+NzqA5PNuj9wVFOCWhloexw31/Yd2PWVyres4yz/+kATVFT/tWcpTkzG6JcZBJLmsacnZVyVMww/QHDjvgHNgLr5SpmVln5jb9HXrzyK756hRAfV9ZD3Rp0CkUpQvz9PtJKq9wo6F+dsRFkMOTYyFRJz7FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740094929; c=relaxed/simple;
-	bh=Loy+u2W6mTad4wG5QE0+AHtwRi2IesgDd6Xo4jwfNA4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kcH3Uc6HsHFb3JO87e/WZ7EClrWbwwYG2i4ffQiEBqLf0s6s1ZaXVS4+XyuFDA75T6UrXMAmSlyQBpqysbqNDa+ennyPKJd57YoHVt+aFxYGqcuTH+ju0VDSt1JvNyyjJp1nx3S8ppKVYqd495wigxQoLHzr+PyMQaqObMRM+so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=lPMEb5bI; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740094967; c=relaxed/simple;
+	bh=cUeKf4PCCVtFVO53wxl3QweJJfWATQQ7W81yy0YfVQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=S8bI+IDEpz/nsX//2Km9/J7KFxmqdjVAbiEIRSvJ0/neRxk30hBVBuocokNg8RwCmuMBGPJrI+6R2jMkQ2A1IhtXnT2jcHY1HXGj6hyeWp9BICIDvHr+YJ4aPkReLLRxfWghPZP/V/qlfjtmTSpk8s5BA5p7JCff7vH30RijLQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gLKq6lv0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="lPMEb5bI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8ei/G/C+Q2EB4HolW6F+KXHikaTWJisX5oA6+ZThEK8=; b=lPMEb5bIU9ybnKqWwCujlG8mZ+
-	+nrXybstNXgJrS/gk9FKpnPBrt4LdexLrxAh6ngSYgDYdscNrm6grTGIh8daT0i+/744cO/kTGtXm
-	TrFzZq+Gn+1Yht+okl3AuxMo3ck21UwFeXLBjS+Hsfj+CbOld+kzMEqUp1/y5hU4oWbPpD01ChFC/
-	h1QLCsBnTcXxKx8caaERXETyL5XSBgpMQVJjRrckjGVzDawDcdr45XOa2ly1HqleO1TcY9xMxkSGS
-	EaZpdkB94mynONN90I4JJF+taU3sCB+jOfuxVRkoSeX+BjPUbDP3K2xmv1vjFFV5Q3bJ8TtvfgX0Q
-	Wq1eJi0A==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tlGAy-0004Wc-Dt; Fri, 21 Feb 2025 00:41:52 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: gregkh@linuxfoundation.org,
-	heiko@sntech.de
-Cc: rafael@kernel.org,
-	dakr@kernel.org,
-	hjc@rock-chips.com,
-	andy.yan@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	quentin.schulz@cherry.de
-Subject: [PATCH 1/2] drivers: base: component: add function to query the bound status
-Date: Fri, 21 Feb 2025 00:41:40 +0100
-Message-ID: <20250220234141.2788785-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250220234141.2788785-1-heiko@sntech.de>
-References: <20250220234141.2788785-1-heiko@sntech.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLKq6lv0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740094964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=64ZpdAsvcI+F+rxDlYFyucFy3wRloEAxpqLq+Ucj4cI=;
+	b=gLKq6lv0rjdqfS4tn1BQaLevv5gavFAPmI0+Zx1vHZLwzCq3eCG7YvFnb+SBvjZAmkUsbA
+	B7usJgLZcaBYqGdPtD6Cm4CJHgAtTpz6U7IMIfm+ncLAwdmGmjqq6CobY62q8yxxoE9W9D
+	aPDe6aXvisLTLf7bKGVhpqOU9L2rxFo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-481-WkgjWr35PWSIlwtfPwR61Q-1; Thu, 20 Feb 2025 18:42:43 -0500
+X-MC-Unique: WkgjWr35PWSIlwtfPwR61Q-1
+X-Mimecast-MFC-AGG-ID: WkgjWr35PWSIlwtfPwR61Q_1740094962
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-abbe5ac36a9so255809566b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:42:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740094961; x=1740699761;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=64ZpdAsvcI+F+rxDlYFyucFy3wRloEAxpqLq+Ucj4cI=;
+        b=swlTwNL+RbtlqalbpnKXrHOy29HX1M9qTIf60twnerAFvQf7wW69gOojzIlyfePqEm
+         YVO4099tlkw/qHEIRTl3af2iT5v1i4NuM5OdyBEtNvttb9Wgu1nDg01rgOt0AKvyRutl
+         GqVzTbnet3UZOwn9wqWMptOxPYnxvjQhRQH1lgDpzaynzmcJWDsoB8vcLAzv6myJy7M4
+         QkDMEb5FAqwL+mEKMHcDajdB9Nd/g1G8gJER+vZtek0bsdrUwYzxCeeN+zGcHFniCLoR
+         SwOghgtgOLpp+jZKbYRdiyeOMdku5HaYtoPZbI6H+KY9dnMh+oCCf2K28LHYgo6MVrLb
+         RmWw==
+X-Gm-Message-State: AOJu0Yz9a9y50XfHiTVmN7/qaczA7ctVp6wNWidFAydRgKHuawO8Z2Hx
+	qbDvk6Z+9QvlxpBmdK22uTmad7lUVo5Z+sFzdPFnBlsuMPjAkek7JXmhkghQUudzNyt3i7glY+g
+	ZnCCVvc1FKejuOeFlfRCQ3pUgnqeIUanD55Dlc6cBnPZ785XByYwpnPQxysE5T4OWZHdgjd6mes
+	78qlvHMylR02eMDOmaso6ZA2xfniLoCbsHABAKjwM=
+X-Gm-Gg: ASbGncuyxDamAg0EA8nqvHzxm8hUSEREOI0c3I6sGOiD2zFBJjhTf70Hsv+fcNwBo84
+	ZmCwMFs08L6oVc5Num6x1ndzyNjjVM+QX4RW+ExwAneLcSWEw6TlN1dY8wrv4sGWCSbVdtxk0ND
+	Iqon0zgQ7eWOw8+7hza/DmgmLDwMStKSZzyoKfTDnR32vAqiR/anzjRx0KoZLbuZyc639AsNOUa
+	J7+f4AO27ReJDWZMiK+7Ks6NKknyICI5YunclkU+GDaejIfS0eKcGP+NjcFa3x5FnpvvA==
+X-Received: by 2002:a17:907:7eaa:b0:ab7:c00c:680f with SMTP id a640c23a62f3a-abc0de4f6f8mr58469966b.53.1740094961022;
+        Thu, 20 Feb 2025 15:42:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHhhgQ2tD8HKuJBp4jMU5+KqRB/WeK8wqr6fsH8j2hzo2w7lM401/yo0RsV3QgWvZIqWnWv5g==
+X-Received: by 2002:a17:907:7eaa:b0:ab7:c00c:680f with SMTP id a640c23a62f3a-abc0de4f6f8mr58468066b.53.1740094960585;
+        Thu, 20 Feb 2025 15:42:40 -0800 (PST)
+Received: from redhat.com ([2.55.163.174])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb945da4a1sm934223766b.132.2025.02.20.15.42.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 15:42:38 -0800 (PST)
+Date: Thu, 20 Feb 2025 18:42:35 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Eric Auger <eauger@redhat.com>,
+	Hongyu Ning <hongyu.ning@linux.intel.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	virtualization@lists.linux.dev
+Subject: [PATCH] virtio: break and reset virtio devices on device_shutdown()
+Message-ID: <c1dbc7dbad9b445245d3348f19e6742b0be07347.1740094946.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 
-The component helpers already expose the bound status in debugfs, but at
-times it might be necessary to also check that state in the kernel and
-act differently depending on the result.
+Hongyu reported a hang on kexec in a VM. QEMU reported invalid memory
+accesses during the hang.
 
-For example the shutdown handler of a drm-driver might need to stop
-a whole output pipeline if the drm device is up and running, but may
-run into problems if that drm-device has never been set up before,
-for example because the binding deferred.
+	Invalid read at addr 0x102877002, size 2, region '(null)', reason: rejected
+	Invalid write at addr 0x102877A44, size 2, region '(null)', reason: rejected
+	...
 
-So add a little helper that returns the bound status for a componet
-device.
+It was traced down to virtio-console. Kexec works fine if virtio-console
+is not in use.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+The issue is that virtio-console continues to write to the MMIO even after
+underlying virtio-pci device is reset.
+
+Additionally, Eric noticed that IOMMUs are reset before devices, if
+devices are not reset on shutdown they continue to poke at guest memory
+and get errors from the IOMMU. Some devices get wedged then.
+
+The problem can be solved by breaking all virtio devices on virtio
+bus shutdown, then resetting them.
+
+Reported-by: Eric Auger <eauger@redhat.com>
+Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/base/component.c  | 14 ++++++++++++++
- include/linux/component.h |  4 +++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 741497324d78..d63e01f4851d 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -569,6 +569,20 @@ void component_master_del(struct device *parent,
+diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+index c1cc1157b380..e5b29520d3b2 100644
+--- a/drivers/virtio/virtio.c
++++ b/drivers/virtio/virtio.c
+@@ -377,6 +377,36 @@ static void virtio_dev_remove(struct device *_d)
+ 	of_node_put(dev->dev.of_node);
  }
- EXPORT_SYMBOL_GPL(component_master_del);
  
-+bool component_master_is_bound(struct device *parent,
-+	const struct component_master_ops *ops)
++static void virtio_dev_shutdown(struct device *_d)
 +{
-+	struct aggregate_device *adev;
++	struct virtio_device *dev = dev_to_virtio(_d);
++	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
 +
-+	guard(mutex)(&component_mutex);
-+	adev = __aggregate_find(parent, ops);
-+	if (!adev)
-+		return 0;
++	/*
++	 * Stop accesses to or from the device.
++	 * We only need to do it if there's a driver - no accesses otherwise.
++	 */
++	if (!drv)
++		return;
 +
-+	return adev->bound;
++	/*
++	 * Some devices get wedged if you kick them after they are
++	 * reset. Mark all vqs as broken to make sure we don't.
++	 */
++	virtio_break_device(dev);
++	/*
++	 * The below virtio_synchronize_cbs() guarantees that any interrupt
++	 * for this line arriving after virtio_synchronize_vqs() has completed
++	 * is guaranteed to see vq->broken as true.
++	 */
++	virtio_synchronize_cbs(dev);
++	/*
++	 * As IOMMUs are reset on shutdown, this will block device access to memory.
++	 * Some devices get wedged if this happens, so reset to make sure it does not.
++	 */
++	dev->config->reset(dev);
 +}
-+EXPORT_SYMBOL_GPL(component_master_is_bound);
 +
- static void component_unbind(struct component *component,
- 	struct aggregate_device *adev, void *data)
- {
-diff --git a/include/linux/component.h b/include/linux/component.h
-index df4aa75c9e7c..9d6c66401280 100644
---- a/include/linux/component.h
-+++ b/include/linux/component.h
-@@ -3,7 +3,7 @@
- #define COMPONENT_H
+ static const struct bus_type virtio_bus = {
+ 	.name  = "virtio",
+ 	.match = virtio_dev_match,
+@@ -384,6 +414,7 @@ static const struct bus_type virtio_bus = {
+ 	.uevent = virtio_uevent,
+ 	.probe = virtio_dev_probe,
+ 	.remove = virtio_dev_remove,
++	.shutdown = virtio_dev_shutdown,
+ };
  
- #include <linux/stddef.h>
--
-+#include <linux/types.h>
- 
- struct device;
- 
-@@ -90,6 +90,8 @@ int component_compare_dev_name(struct device *dev, void *data);
- 
- void component_master_del(struct device *,
- 	const struct component_master_ops *);
-+bool component_master_is_bound(struct device *parent,
-+	const struct component_master_ops *ops);
- 
- struct component_match;
- 
+ int __register_virtio_driver(struct virtio_driver *driver, struct module *owner)
 -- 
-2.47.2
+MST
 
