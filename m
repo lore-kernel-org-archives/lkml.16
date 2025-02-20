@@ -1,283 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021561F3FE2;
-	Thu, 20 Feb 2025 11:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B46A1F3FE2;
+	Thu, 20 Feb 2025 11:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740051507; cv=none; b=LbR5lZQUN+M5H545ejW39rIZMqDQQSbq3WjDEMUZOsK5zp+I4gdZW2Jqy1vVpXgcFHK+YoqG8d4Qbtb4oniOalGFaWqd+M+81iDztbQpB8J8vmFmUNMwKdkWrDGuDHfwjCN22Ak7vE4UkOL5n7zafeYEB+Tk+iINhT9skN/P9JI=
+	t=1740051513; cv=none; b=idqc/ybz0dR3gK+K86FqCKwKDPkgU/NzJNUrQOnD6ou6MwWzHVw+PXuu6GTDFn7FUOrdDqTOzOtlAJdvoMjalvPEwi6OYD2zz0pN2JRokziJ6AwXEv2neeKSzuW/sap5dlXUkcMMOclh+KGafAORWjEW+FVzIqzkYSAmyy6kEGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740051507; c=relaxed/simple;
-	bh=OW4tV7XHQY75duXBFKoVLdDiJWkwE9tK7bUXvwMMnfc=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Kik4hhAeYTYHa6z/15BaBECP6DjB16eavBhy7EDbBSfHwwaFPRERohbP8KVtWovBC4v161BoKaCmWbLGEvb59BstaWODt/4lKfzG5H/LHkv5lv6VpDvHtza1p5ijDn7Ok3LjzZBEaVorRHTX4v1KuBkPwxo3BH0tQ/9R1DMoIxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hp/94yaa; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740051513; c=relaxed/simple;
+	bh=+Bz4MMy1JRSDhE2rgB6ML0bRlLGnbn9wbdNBtvLsphQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PDv96iyPOYx6MGuIyiVgUjvTOCJJQZqvDYSkMDH6mw7ZeTaYbTIZWM6EGs4+uBpVis1Eydn1JuZTuukyLc74SBBU2MMqQwGidc0Juc2je6cNmfIvsc+0pxzbMqkMme0f5Ftr283Y1gOD6R3GDQwWpk82xLrZWwbGpRsUEkaJ4BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=klO8C5eZ; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hp/94yaa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740051505; x=1771587505;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OW4tV7XHQY75duXBFKoVLdDiJWkwE9tK7bUXvwMMnfc=;
-  b=hp/94yaaTJVa7hRR31/isyBnLIskP5vrRjrjB8gbyWNKdhEYHJ5KzzyO
-   +FC/KQSrTS2fsQtLa3cYvTV2cwYnh6uvyh0pRv4xYSdi26BM03nQVcT4v
-   VgULu9vdFQLlG06rBxTc0x8d7kYnj+Zlrq7SVSic7FrrzAZslqCMMk11I
-   EZ4oVUtcH0hS4s9kpkxIhcHN9xbEi/08C7N53n+IcQGOd/V3wMNHVgLND
-   b79cYGTlcuT8S8tajIgyAgFQKeEbGfBoRnFFwoOgtugYZpVWA18+W/j0+
-   MXABuLDz6H0cSxt6OyYvJlWkxcy70D4Vm51Gog22Zs+YICPHsrNkDoFMd
-   g==;
-X-CSE-ConnectionGUID: uE+oW1e/RXqO61icG8nyEQ==
-X-CSE-MsgGUID: QD9MMweOSdC6tqP+VDfluA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40681134"
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="40681134"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 03:38:24 -0800
-X-CSE-ConnectionGUID: ImoEWPGUT1O38l92vqulmA==
-X-CSE-MsgGUID: JBerQi//ThaorSclckLfxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="138216925"
-Received: from lzhu41-mobl3.ccr.corp.intel.com (HELO [10.124.240.48]) ([10.124.240.48])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 03:38:22 -0800
-Message-ID: <7d58c0bd-2828-4adc-8c57-8b359c9f0b9f@linux.intel.com>
-Date: Thu, 20 Feb 2025 19:38:19 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klO8C5eZ"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb90f68f8cso165990266b.3;
+        Thu, 20 Feb 2025 03:38:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740051510; x=1740656310; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ExfFdnElv6RE+Criap0BQCRCLdiCh0cHD/QHqlYNoyM=;
+        b=klO8C5eZDN3Ob2wT2vlcb4yHXvYzxYojEU2MRUMdKHqZHufIHsaf2IRsxVN7WONkYA
+         UfpWPEKtLdtl82w0/2hYLQG7uHU0tvXCvFRfft+Zj2YxgATArFkrirKPDsZq3AVWMlai
+         u+tT6/U/x2ZD+WZWdV8CFFKuiOdG9B/XtfITxRSYTRQc0mFM4Y8oby8haOyQySMFhQ+q
+         nwJz4ddv3XmpPhWWqU/iu0O+BB6zuW9k5KW+iTjo4u6N2on5t/uM6FlP4xExW2nxo1Um
+         f1KWyJGC621mJ8mHIVEuGnq6bi9no/ZbQmDp4VzGbrdxa81o4oNk78b7DefL8n3cbm3W
+         kNHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740051510; x=1740656310;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ExfFdnElv6RE+Criap0BQCRCLdiCh0cHD/QHqlYNoyM=;
+        b=MeSt5o7Q4a0AkPRCQm+XCBQgJSwSnOYg4p/S4L4ZJlNlaZj0m5ocuFkxTaKHCJQ0a+
+         wJwMnYVdre+2wtTTQojK4oocwlR2vyezWScE7x1hImZl8mX6cUb4iZf1fAClUMBE8qcF
+         0sS149zMU5hXnGKD91kS0tW/qsNLoKB6HXSgIQQ96JpNpgFp20GPlXzSWmuwbofch4yG
+         3E3oClXkHUunM80fG2CY91X0qFOAbfhXIx3I+E6qkCRmc443fHrS8zS4fLXXwaGMHHvs
+         UqEm7HPoytMa06OX3WkE3lOF0r18VvutnkyLqxCjFOzVfGXNX2nbcupbo/T8z35TUdgC
+         6I8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUJLmkucLMxgDlItYQB1g8SZl0mo1xMft0v+iv6Tj+2az0fm8lmuzCpJEk3u/FRAUVPRFFVA9FGjmw=@vger.kernel.org, AJvYcCXFaEivd9benfeaWo5k63S4Zy0n9Bq8y0HV3L/SCPjmxsqc3IAIv16iTfsd67vbjzflK4r8LGLJTcpqA77z@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCle23qwJQ1E35ln8icqcqvIiA3VJdDEDHbxGkYnvhvWkRobXi
+	v97SnX9nEOgW3bPUY2CkGHtAK7cZvLB4RyIIhYfZLUaLQRXenEc1
+X-Gm-Gg: ASbGncv+OWJNxztMBVOOVjY9Y1S43TZELyikJqWcKFFcjWa4q1pAIZyLay3X3GSK48a
+	a8RwGZk3oSgGcmfVelJ8V1UeyIfd3cirEox4TYmbks/4sNQ62Fokw4DA7DCWrDgg0MK8Po1Y0zn
+	fDSt6PDAwj7wze+LOUEpijqhY7crkpL1oM+nRBd72Viy5uNGEhzBIQu2CXcH4zjOwJCOS3o+mY2
+	7R44KswR1YH9Z2SppdB6PMAU9hp5JmGZtZrMWn1rQrPuemIRxtz9Eglzf+PrPRwkJq3a0cRGxzZ
+	l8B+cVMAyOQFbgBbNADyClWx+vgIb3emSik/RQ6/j8sCk2j5gc+W89VxBZyeFLOj0Eto/6nWrKD
+	6IA==
+X-Google-Smtp-Source: AGHT+IGjGppdPvcKBaNnCyGcV/by69IhzWTFcP15FubbfmQQ7R/MJ4PUeEtgq7WsyithVWyBUUJNNw==
+X-Received: by 2002:a17:907:c02:b0:ab6:d575:9540 with SMTP id a640c23a62f3a-abb70df619emr2280560566b.50.1740051509436;
+        Thu, 20 Feb 2025 03:38:29 -0800 (PST)
+Received: from localhost.localdomain (146.10-240-81.adsl-dyn.isp.belgacom.be. [81.240.10.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb7200144fsm1047675466b.184.2025.02.20.03.38.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 03:38:29 -0800 (PST)
+From: Philippe Simons <simons.philippe@gmail.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner sunXi SoC support),
+	linux-sunxi@lists.linux.dev (open list:ARM/Allwinner sunXi SoC support),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Philippe Simons <simons.philippe@gmail.com>,
+	Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH v3 1/1] clk: sunxi-ng: h616: Reparent GPU clock during frequency changes
+Date: Thu, 20 Feb 2025 12:38:08 +0100
+Message-ID: <20250220113808.1122414-2-simons.philippe@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250220113808.1122414-1-simons.philippe@gmail.com>
+References: <20250220113808.1122414-1-simons.philippe@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Ido Schimmel <idosch@idosch.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/1] iommu/vt-d: Fix suspicious RCU usage
-To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-References: <20250218022422.2315082-1-baolu.lu@linux.intel.com>
- <BN9PR11MB5276EEC28691FD6C77EC493A8CC42@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276EEC28691FD6C77EC493A8CC42@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2025/2/20 15:21, Tian, Kevin wrote:
->> From: Lu Baolu<baolu.lu@linux.intel.com>
->> Sent: Tuesday, February 18, 2025 10:24 AM
->>
->> Commit <d74169ceb0d2> ("iommu/vt-d: Allocate DMAR fault interrupts
->> locally") moved the call to enable_drhd_fault_handling() to a code
->> path that does not hold any lock while traversing the drhd list. Fix
->> it by ensuring the dmar_global_lock lock is held when traversing the
->> drhd list.
->>
->> Without this fix, the following warning is triggered:
->>   =============================
->>   WARNING: suspicious RCU usage
->>   6.14.0-rc3 #55 Not tainted
->>   -----------------------------
->>   drivers/iommu/intel/dmar.c:2046 RCU-list traversed in non-reader section!!
->>                 other info that might help us debug this:
->>                 rcu_scheduler_active = 1, debug_locks = 1
->>   2 locks held by cpuhp/1/23:
->>   #0: ffffffff84a67c50 (cpu_hotplug_lock){++++}-{0:0}, at:
->> cpuhp_thread_fun+0x87/0x2c0
->>   #1: ffffffff84a6a380 (cpuhp_state-up){+.+.}-{0:0}, at:
->> cpuhp_thread_fun+0x87/0x2c0
->>   stack backtrace:
->>   CPU: 1 UID: 0 PID: 23 Comm: cpuhp/1 Not tainted 6.14.0-rc3 #55
->>   Call Trace:
->>    <TASK>
->>    dump_stack_lvl+0xb7/0xd0
->>    lockdep_rcu_suspicious+0x159/0x1f0
->>    ? __pfx_enable_drhd_fault_handling+0x10/0x10
->>    enable_drhd_fault_handling+0x151/0x180
->>    cpuhp_invoke_callback+0x1df/0x990
->>    cpuhp_thread_fun+0x1ea/0x2c0
->>    smpboot_thread_fn+0x1f5/0x2e0
->>    ? __pfx_smpboot_thread_fn+0x10/0x10
->>    kthread+0x12a/0x2d0
->>    ? __pfx_kthread+0x10/0x10
->>    ret_from_fork+0x4a/0x60
->>    ? __pfx_kthread+0x10/0x10
->>    ret_from_fork_asm+0x1a/0x30
->>    </TASK>
->>
->> Simply holding the lock in enable_drhd_fault_handling() will trigger a
->> lock order splat. Avoid holding the dmar_global_lock when calling
->> iommu_device_register(), which starts the device probe process.
-> Can you elaborate the splat issue? It's not intuitive to me with a quick
-> read of the code and iommu_device_register() is not occurred in above
-> calling stack.
+The H616 manual does not state that the GPU PLL supports
+dynamic frequency configuration, so we must take extra care when changing
+the frequency. Currently any attempt to do device DVFS on the GPU lead
+to panfrost various ooops, and GPU hangs.
 
-The lockdep splat looks like below:
+The manual describes the algorithm for changing the PLL
+frequency, which the CPU PLL notifier code already support, so we reuse
+that to reparent the GPU clock to GPU1 clock during frequency
+changes.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  6.14.0-rc3-00002-g8e4617b46db1 #57 Not tainted
-  ------------------------------------------------------
-  swapper/0/1 is trying to acquire lock:
-  ffffffffa2a67c50 (cpu_hotplug_lock){++++}-{0:0}, at: 
-iova_domain_init_rcaches.part.0+0x1d3/0x210
+Signed-off-by: Philippe Simons <simons.philippe@gmail.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+---
+ drivers/clk/sunxi-ng/ccu-sun50i-h616.c | 36 +++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-  but task is already holding lock:
-  ffff9f4a87b171c8 (&domain->iova_cookie->mutex){+.+.}-{4:4}, at: 
-iommu_dma_init_domain+0x122/0x2e0
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h616.c b/drivers/clk/sunxi-ng/ccu-sun50i-h616.c
+index 190816c35..6050cbfa9 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h616.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h616.c
+@@ -328,10 +328,16 @@ static SUNXI_CCU_M_WITH_MUX_GATE(gpu0_clk, "gpu0", gpu0_parents, 0x670,
+ 				       24, 1,	/* mux */
+ 				       BIT(31),	/* gate */
+ 				       CLK_SET_RATE_PARENT);
++
++/*
++ * This clk is needed as a temporary fall back during GPU PLL freq changes.
++ * Set CLK_IS_CRITICAL flag to prevent from being disabled.
++ */
++#define SUN50I_H616_GPU_CLK1_REG        0x674
+ static SUNXI_CCU_M_WITH_GATE(gpu1_clk, "gpu1", "pll-periph0-2x", 0x674,
+ 					0, 2,	/* M */
+ 					BIT(31),/* gate */
+-					0);
++					CLK_IS_CRITICAL);
+ 
+ static SUNXI_CCU_GATE(bus_gpu_clk, "bus-gpu", "psi-ahb1-ahb2",
+ 		      0x67c, BIT(0), 0);
+@@ -1120,6 +1126,19 @@ static struct ccu_pll_nb sun50i_h616_pll_cpu_nb = {
+ 	.lock		= BIT(28),
+ };
+ 
++static struct ccu_mux_nb sun50i_h616_gpu_nb = {
++	.common		= &gpu0_clk.common,
++	.cm		= &gpu0_clk.mux,
++	.delay_us	= 1, /* manual doesn't really say */
++	.bypass_index	= 1, /* GPU_CLK1@400MHz */
++};
++
++static struct ccu_pll_nb sun50i_h616_pll_gpu_nb = {
++	.common		= &pll_gpu_clk.common,
++	.enable		= BIT(29),	/* LOCK_ENABLE */
++	.lock		= BIT(28),
++};
++
+ static int sun50i_h616_ccu_probe(struct platform_device *pdev)
+ {
+ 	void __iomem *reg;
+@@ -1170,6 +1189,14 @@ static int sun50i_h616_ccu_probe(struct platform_device *pdev)
+ 	val |= BIT(0);
+ 	writel(val, reg + SUN50I_H616_PLL_AUDIO_REG);
+ 
++	/*
++	 * Set the input-divider for the gpu1 clock to 3, to reach a safe 400 MHz.
++	 */
++	val = readl(reg + SUN50I_H616_GPU_CLK1_REG);
++	val &= ~GENMASK(1, 0);
++	val |= 2;
++	writel(val, reg + SUN50I_H616_GPU_CLK1_REG);
++
+ 	/*
+ 	 * First clock parent (osc32K) is unusable for CEC. But since there
+ 	 * is no good way to force parent switch (both run with same frequency),
+@@ -1190,6 +1217,13 @@ static int sun50i_h616_ccu_probe(struct platform_device *pdev)
+ 	/* Re-lock the CPU PLL after any rate changes */
+ 	ccu_pll_notifier_register(&sun50i_h616_pll_cpu_nb);
+ 
++	/* Reparent GPU during GPU PLL rate changes */
++	ccu_mux_notifier_register(pll_gpu_clk.common.hw.clk,
++				  &sun50i_h616_gpu_nb);
++
++	/* Re-lock the GPU PLL after any rate changes */
++	ccu_pll_notifier_register(&sun50i_h616_pll_gpu_nb);
++
+ 	return 0;
+ }
+ 
+-- 
+2.48.1
 
-  which lock already depends on the new lock.
-
-
-  the existing dependency chain (in reverse order) is:
-
-  -> #4 (&domain->iova_cookie->mutex){+.+.}-{4:4}:
-         __lock_acquire+0x4a0/0xb50
-         lock_acquire+0xd1/0x2e0
-         __mutex_lock+0xa5/0xce0
-         iommu_dma_init_domain+0x122/0x2e0
-         iommu_setup_dma_ops+0x65/0xe0
-         bus_iommu_probe+0x100/0x1d0
-         iommu_device_register+0xd6/0x130
-         intel_iommu_init+0x527/0x870
-         pci_iommu_init+0x17/0x60
-         do_one_initcall+0x7c/0x390
-         do_initcalls+0xe8/0x1e0
-         kernel_init_freeable+0x313/0x490
-         kernel_init+0x24/0x240
-         ret_from_fork+0x4a/0x60
-         ret_from_fork_asm+0x1a/0x30
-
-  -> #3 (&group->mutex){+.+.}-{4:4}:
-         __lock_acquire+0x4a0/0xb50
-         lock_acquire+0xd1/0x2e0
-         __mutex_lock+0xa5/0xce0
-         bus_iommu_probe+0x95/0x1d0
-         iommu_device_register+0xd6/0x130
-         intel_iommu_init+0x527/0x870
-         pci_iommu_init+0x17/0x60
-         do_one_initcall+0x7c/0x390
-         do_initcalls+0xe8/0x1e0
-         kernel_init_freeable+0x313/0x490
-         kernel_init+0x24/0x240
-         ret_from_fork+0x4a/0x60
-         ret_from_fork_asm+0x1a/0x30
-
--> #2 (dmar_global_lock){++++}-{4:4}:
-        __lock_acquire+0x4a0/0xb50
-        lock_acquire+0xd1/0x2e0
-        down_read+0x31/0x170
-        enable_drhd_fault_handling+0x27/0x1a0
-        cpuhp_invoke_callback+0x1e2/0x990
-        cpuhp_issue_call+0xac/0x2c0
-        __cpuhp_setup_state_cpuslocked+0x229/0x430
-        __cpuhp_setup_state+0xc3/0x260
-        irq_remap_enable_fault_handling+0x52/0x80
-        apic_intr_mode_init+0x59/0xf0
-        x86_late_time_init+0x29/0x50
-        start_kernel+0x642/0x7f0
-        x86_64_start_reservations+0x18/0x30
-        x86_64_start_kernel+0x91/0xa0
-        common_startup_64+0x13e/0x148
-
--> #1 (cpuhp_state_mutex){+.+.}-{4:4}:
-        __lock_acquire+0x4a0/0xb50
-        lock_acquire+0xd1/0x2e0
-        __mutex_lock+0xa5/0xce0
-        __cpuhp_setup_state_cpuslocked+0x81/0x430
-        __cpuhp_setup_state+0xc3/0x260
-        page_alloc_init_cpuhp+0x2d/0x40
-        mm_core_init+0x1e/0x3a0
-        start_kernel+0x277/0x7f0
-        x86_64_start_reservations+0x18/0x30
-        x86_64_start_kernel+0x91/0xa0
-        common_startup_64+0x13e/0x148
-
--> #0 (cpu_hotplug_lock){++++}-{0:0}:
-        check_prev_add+0xe2/0xc50
-        validate_chain+0x57c/0x800
-        __lock_acquire+0x4a0/0xb50
-        lock_acquire+0xd1/0x2e0
-        __cpuhp_state_add_instance+0x40/0x250
-        iova_domain_init_rcaches.part.0+0x1d3/0x210
-        iova_domain_init_rcaches+0x41/0x60
-        iommu_dma_init_domain+0x1af/0x2e0
-        iommu_setup_dma_ops+0x65/0xe0
-        bus_iommu_probe+0x100/0x1d0
-        iommu_device_register+0xd6/0x130
-        intel_iommu_init+0x527/0x870
-        pci_iommu_init+0x17/0x60
-        do_one_initcall+0x7c/0x390
-        do_initcalls+0xe8/0x1e0
-        kernel_init_freeable+0x313/0x490
-        kernel_init+0x24/0x240
-        ret_from_fork+0x4a/0x60
-        ret_from_fork_asm+0x1a/0x30
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    cpu_hotplug_lock --> &group->mutex --> &domain->iova_cookie->mutex
-
-   Possible unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(&domain->iova_cookie->mutex);
-                                 lock(&group->mutex);
-                                 lock(&domain->iova_cookie->mutex);
-    rlock(cpu_hotplug_lock);
-
-   *** DEADLOCK ***
-
-  3 locks held by swapper/0/1:
-   #0: ffffffffa6442ab0 (dmar_global_lock){++++}-{4:4}, at: 
-intel_iommu_init+0x42c/0x87
-   #1: ffff9f4a87b11310 (&group->mutex){+.+.}-{4:4}, at: 
-bus_iommu_probe+0x95/0x1d0
-   #2: ffff9f4a87b171c8 (&domain->iova_cookie->mutex){+.+.}-{4:4}, at: 
-iommu_dma_init_d
-
-  stack backtrace:
-  CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
-6.14.0-rc3-00002-g8e4617b46db1 #57
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x93/0xd0
-   print_circular_bug+0x133/0x1c0
-   check_noncircular+0x12c/0x150
-   check_prev_add+0xe2/0xc50
-   ? add_chain_cache+0x108/0x460
-   validate_chain+0x57c/0x800
-   __lock_acquire+0x4a0/0xb50
-   lock_acquire+0xd1/0x2e0
-   ? iova_domain_init_rcaches.part.0+0x1d3/0x210
-   ? rcu_is_watching+0x11/0x50
-   __cpuhp_state_add_instance+0x40/0x250
-   ? iova_domain_init_rcaches.part.0+0x1d3/0x210
-   iova_domain_init_rcaches.part.0+0x1d3/0x210
-   iova_domain_init_rcaches+0x41/0x60
-   iommu_dma_init_domain+0x1af/0x2e0
-   iommu_setup_dma_ops+0x65/0xe0
-   bus_iommu_probe+0x100/0x1d0
-   iommu_device_register+0xd6/0x130
-   intel_iommu_init+0x527/0x870
-   ? __pfx_pci_iommu_init+0x10/0x10
-   pci_iommu_init+0x17/0x60
-   do_one_initcall+0x7c/0x390
-   do_initcalls+0xe8/0x1e0
-   kernel_init_freeable+0x313/0x490
-   ? __pfx_kernel_init+0x10/0x10
-   kernel_init+0x24/0x240
-   ? _raw_spin_unlock_irq+0x33/0x50
-   ret_from_fork+0x4a/0x60
-   ? __pfx_kernel_init+0x10/0x10
-   ret_from_fork_asm+0x1a/0x30
-   </TASK>
-
-Thanks,
-baolu
