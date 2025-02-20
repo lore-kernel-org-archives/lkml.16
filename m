@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A94264F9D;
-	Thu, 20 Feb 2025 22:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEAF26561B;
+	Thu, 20 Feb 2025 22:21:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740090071; cv=none; b=Dfgy/AbokAZ4JvjkGorwhYrPk36XhAROA0FNBjl77RVkFEQyNDB7Le42R3HneWRvdHql4gJ9BHr4xgyZ4Ttut2H/grHiqXE2ch/q/1YF57OIWF53LF48Y/it0oa8p8T51lvhUApgi0vEH/6F+/5hyo4m/hffuE8c7R+JQcqmV/I=
+	t=1740090073; cv=none; b=R2w4X+KLEzF5g9SvONvXateZBgqK2Mk+JUrCCm718L2Zo04BBgMXlJ+aKSIpdmiOjlHqX7OhkRudmTXM0XEcbEPm25zWr/+b15stIgfJjBIZEnjtktZan0NI460Io4MoMQnqPshkUAoLuFBFao1mrmygtD0aRrj/WfJn4Py9ZcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740090071; c=relaxed/simple;
-	bh=xdByUxBFQMRecAxfFpKFiT/Wl2s1mHfXGDQtiVjb3iY=;
+	s=arc-20240116; t=1740090073; c=relaxed/simple;
+	bh=2nHcaqwq501Afb3+1z7ui4ugJwK1kJYJmikmASHfmIE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jc27J9R7YX2IfxJND8vUPdiwuzk2gr+c472irpOQF6i6N0swQNyuy7U0+3B5f7M3BccU99jSxFck1u9hT/w+aEgMjpPghYvGWPiJqWm4XbQICyPyzYT9jtDBTqq74x/rN5qpr74ZGg/1Jtpp/wxefdItpQ4DmKmcgGHSK1EpE6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzdMpnjg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=FlQhMxTBU7OZM+xLaPgZiL/yyIVtPaUOFA0HL/py6B+odh0mh4RjwORL+NrUvqHAQaCwB5+wU+ihk/JVHUcnGTZVC9LIhNzwUqf5iYcdOBtrGQXgDD4xVrvWr2QGQOV7mWO8nG8m3Zpxwsz5ftbFpbIsGy69k2fGK048YW5WnlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPMeJcwQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzdMpnjg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FF6C4CED1;
-	Thu, 20 Feb 2025 22:21:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPMeJcwQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C617AC4CEE3;
+	Thu, 20 Feb 2025 22:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740090071;
-	bh=xdByUxBFQMRecAxfFpKFiT/Wl2s1mHfXGDQtiVjb3iY=;
+	s=k20201202; t=1740090073;
+	bh=2nHcaqwq501Afb3+1z7ui4ugJwK1kJYJmikmASHfmIE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mzdMpnjgtjSPRvk099z2JsG7dViWop3nCZF801xf1x0ol5koTJCX7ooDE4T4jWF9W
-	 Rf+aB5dZu22Jrtd7NQyotUAmTlyBAEh/1YPpf80hC3qXAOWYq505tMgFFWuE572MEI
-	 Z4ciyQffsYlFFBk6LpuWYLp41rqJYVo2lrRs+iYeDFEZe8al2sAx7xBJxuG8Y4NVU/
-	 LVvHOt63P7Ck/+TEjUMM8L9Bw9y8k+jxzevl3Q0D7daIFLWEJoffAYWROOokVaNCzw
-	 bffwMKtdwHh3vaUheJTFQCLxTSc3p9uKiNe3uKCh+UVs6JQC3u+6CIzWnDjEkKzDm2
-	 y4bfr67SKXHSw==
+	b=OPMeJcwQPmicrAw5LSJdouT50qDIlGx0nZu4B8hS0Q8Td4l9neDBCyvPpZ03wv6T1
+	 Uy/CGXU6RIvXCD1ynowdkjAINmH/GPJ64f940/ILzdswLSHByPqwLhyxROEBcNrn+w
+	 YSK5gwUXTtVCM5tghMB+HM4q3+VNmKWnvu5KHLcPTDp8wtluioTowGF8944WaxOeRN
+	 7ttxu7WcsJmPz410Q2C1M3XTRkOSnKFv+yPXtuARw9PZvBTIF6EU3rGVvbwARTV7x5
+	 lwsUPCBz0d8JXqs8rvvwtFquo0m+dFzJtZ/568rlMhxM+23EGP6nRvrK35GrtCoTto
+	 sExihVCV7ASmQ==
 From: Mark Brown <broonie@kernel.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-sound@vger.kernel.org
-In-Reply-To: <20250219152132.1285941-1-rf@opensource.cirrus.com>
-References: <20250219152132.1285941-1-rf@opensource.cirrus.com>
-Subject: Re: [PATCH] firmware: cs_dsp: test_bin_error: Use same test cases
- for adsp2 and Halo Core
-Message-Id: <174009007007.2293478.14977304010488785265.b4-ty@kernel.org>
-Date: Thu, 20 Feb 2025 22:21:10 +0000
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250220120156.1663-2-thorsten.blum@linux.dev>
+References: <20250220120156.1663-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] ASoC: soc-core: Use str_yes_no() in
+ snd_soc_close_delayed_work()
+Message-Id: <174009007159.2293478.12356716411143352052.b4-ty@kernel.org>
+Date: Thu, 20 Feb 2025 22:21:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,9 +46,8 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-42535
 
-On Wed, 19 Feb 2025 15:21:32 +0000, Richard Fitzgerald wrote:
-> Re-use the adsp2 test cases for the Halo Core test run. Before this the
-> Halo Core kunit_case array was an empty placeholder.
+On Thu, 20 Feb 2025 13:01:56 +0100, Thorsten Blum wrote:
+> Remove hard-coded strings by using the str_yes_no() helper function.
 > 
 > 
 
@@ -58,8 +57,8 @@ Applied to
 
 Thanks!
 
-[1/1] firmware: cs_dsp: test_bin_error: Use same test cases for adsp2 and Halo Core
-      commit: 2e2f89b184644f0e29f1ec0b4dcfd0361d2635cb
+[1/1] ASoC: soc-core: Use str_yes_no() in snd_soc_close_delayed_work()
+      commit: 64899904d6103500ad01be7b763298dc939285ae
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
