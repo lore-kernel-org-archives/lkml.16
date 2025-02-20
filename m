@@ -1,149 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A64213E75
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 17:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18CD1E0B66;
+	Thu, 20 Feb 2025 17:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740071229; cv=none; b=n3lumqyFeDPWS4H/+b1v1IF6If3xesEwhLwhoBUY67mTmjruprb2x7OXSulO3VEF3msAvFdTd4O68vrP/8NAEfMbIXSejgDOauzi4+8AAsAKEK0i+1ikgx9qTIH4gs2rZ+OrGyIvXsNlVFcYlnH0icfmZudeFx6L7nVn4+oq5M0=
+	t=1740071301; cv=none; b=gnEeBt5telSgC8rTA/hfJ/ytpFkfOuP0j0Jl19ZU2Ex8bqlWAMisGMuNoACDUQJX/MLBTVdFyFDA3pjuNxovs4SsBC0FQOcxeunOo4v5xZdotf34vU/h46PuZX1F6ElQyQL5V57VixFrE1Ysb+SqzXMSEpYs0YUgDodTs4z6dXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740071229; c=relaxed/simple;
-	bh=WjyPZsuYt/J1ZXDdahnzCeLRanspFNYQ0w02lSCEdig=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IwlmnSwSt7AFNbbjMkErfQR08ozbOwXkVm+4UhO2QuM1FUoqDhHiHJDg/txhXmidPHIeqIrSE+7wc7HtFSp0iyJxFw2dF39+8JH8njmrRTTa+dMvvNZ5VwNkvl7z7qx13gNgo7i8pV5LGVYarD9x8oUFX53EMMSDFsMZRWjhjfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=isZx8VU3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740071301; c=relaxed/simple;
+	bh=zlAXRsJeJIm22gl5gl92JVR7nBolZAa4T8bMv6g+yE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvuawHdtmGODIbG+Kbt5cVph4btx8FRZKFGHKSJzi5NTgg5dmPTYW1TjKqYpVlxBjNEO3O1Y4snFTmRCPMUXzOSqWRit0Vg3R1JtuvpkyDuVDl6+nhwjIakhHdv/xzfl/REACsBg4Sup2Vy89cqwlpN1BktO/v4qL8XnKs0tLPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/213mEP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="isZx8VU3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740071227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yw+GWEMGktTe2EG3idQ1LE3+Xb5+a50/AkTUJ8BT5dQ=;
-	b=isZx8VU3lI1gX2y5Cd5HX9jUfoB5CIAVk5Z9RsofSinG0lKIkq6pJ7y2LSP/oCJ6gRxZgq
-	+8Umkfya9Wz2FZiH52dYnVuQIG6EZxYWBv4ZVZLTnejV/1PBt3knYh7US7wPGMJszXoGxX
-	xKeFPcr0BFNeycBv06ZCVUhX4seYbUA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-271-2GvadszLNS-7OACkx05beA-1; Thu,
- 20 Feb 2025 12:06:50 -0500
-X-MC-Unique: 2GvadszLNS-7OACkx05beA-1
-X-Mimecast-MFC-AGG-ID: 2GvadszLNS-7OACkx05beA_1740071209
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 056B31800872;
-	Thu, 20 Feb 2025 17:06:49 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0AF8819412A4;
-	Thu, 20 Feb 2025 17:06:47 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 29/30] KVM: x86/mmu: Taking guest pa into consideration when calculate tdp level
-Date: Thu, 20 Feb 2025 12:06:03 -0500
-Message-ID: <20250220170604.2279312-30-pbonzini@redhat.com>
-In-Reply-To: <20250220170604.2279312-1-pbonzini@redhat.com>
-References: <20250220170604.2279312-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/213mEP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E869C4CED1;
+	Thu, 20 Feb 2025 17:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740071301;
+	bh=zlAXRsJeJIm22gl5gl92JVR7nBolZAa4T8bMv6g+yE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W/213mEPCMdWwJbimZg3N/GiPzMA6A5uG7RTBiKkmfI5lseq78POsQdNmEwqhmHkr
+	 fgjfqJtips7gSJp1OxBYUPljXrtpEw9ntElkrOf37zRvI8B7/1kiFNFLtXcyZx2CCW
+	 fTwI3sf+9lLv+rrGsOj40w2c2paMDZfCXnCgMdn4WXJhNvOKtauVz1/E11X0l27JKS
+	 DHbtfauSLsQLRdqk21t7MKO/halXwSf2dz5PWHXVkFM/75giHmiWSD3N9A3J4YAHe4
+	 WsEm4KjkZHvaVVSo+JCGLVRjgtul/IOkunYchzceAwwULy/sjg1MXCLNIB9t/+fpMo
+	 RqsA3Zcb+Hu3w==
+Date: Thu, 20 Feb 2025 17:08:15 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, marcel@holtmann.org,
+	luiz.dentz@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Amitkumar Karwar <amitkumar.karwar@nxp.com>,
+	Sherry Sun <sherry.sun@nxp.com>, Luke Wang <ziniu.wang_1@nxp.com>,
+	johan.korsnes@remarkable.no, kristian.krohn@remarkable.no,
+	Manjeet Gupta <manjeet.gupta@nxp.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: nxp: Add support to
+ set BD address
+Message-ID: <20250220-oversweet-dominoes-1661eca0c96c@spud>
+References: <20250220114157.232997-1-neeraj.sanjaykale@nxp.com>
+ <184919f9-25bd-4f65-9ed9-dc452a6f4418@molgen.mpg.de>
+ <AS4PR04MB96921164DAA8A63B2C0841AAE7C42@AS4PR04MB9692.eurprd04.prod.outlook.com>
+ <0e5f23a9-b1d7-4d8c-bb05-83f7a15a7285@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
-
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-
-For TDX, the maxpa (CPUID.0x80000008.EAX[7:0]) is fixed as native and
-the max_gpa (CPUID.0x80000008.EAX[23:16]) is configurable and used
-to configure the EPT level and GPAW.
-
-Use max_gpa to determine the TDP level.
-
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/cpuid.c   | 14 ++++++++++++++
- arch/x86/kvm/cpuid.h   |  1 +
- arch/x86/kvm/mmu/mmu.c |  9 ++++++++-
- 3 files changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 936c5dd13bd5..7ff84079c1f4 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -494,6 +494,20 @@ int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu)
- 	return 36;
- }
- 
-+int cpuid_query_maxguestphyaddr(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_cpuid_entry2 *best;
-+
-+	best = kvm_find_cpuid_entry(vcpu, 0x80000000);
-+	if (!best || best->eax < 0x80000008)
-+		goto not_found;
-+	best = kvm_find_cpuid_entry(vcpu, 0x80000008);
-+	if (best)
-+		return (best->eax >> 16) & 0xff;
-+not_found:
-+	return 0;
-+}
-+
- /*
-  * This "raw" version returns the reserved GPA bits without any adjustments for
-  * encryption technologies that usurp bits.  The raw mask should be used if and
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 91bde94519f9..46e059b47825 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -37,6 +37,7 @@ void __init kvm_init_xstate_sizes(void);
- u32 xstate_required_size(u64 xstate_bv, bool compacted);
- 
- int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu);
-+int cpuid_query_maxguestphyaddr(struct kvm_vcpu *vcpu);
- u64 kvm_vcpu_reserved_gpa_bits_raw(struct kvm_vcpu *vcpu);
- 
- static inline int cpuid_maxphyaddr(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index d4ac4a1f8b81..c1c54a7a7735 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5416,12 +5416,19 @@ void __kvm_mmu_refresh_passthrough_bits(struct kvm_vcpu *vcpu,
- 
- static inline int kvm_mmu_get_tdp_level(struct kvm_vcpu *vcpu)
- {
-+	int maxpa;
-+
-+	if (vcpu->kvm->arch.vm_type == KVM_X86_TDX_VM)
-+		maxpa = cpuid_query_maxguestphyaddr(vcpu);
-+	else
-+		maxpa = cpuid_maxphyaddr(vcpu);
-+
- 	/* tdp_root_level is architecture forced level, use it if nonzero */
- 	if (tdp_root_level)
- 		return tdp_root_level;
- 
- 	/* Use 5-level TDP if and only if it's useful/necessary. */
--	if (max_tdp_level == 5 && cpuid_maxphyaddr(vcpu) <= 48)
-+	if (max_tdp_level == 5 && maxpa <= 48)
- 		return 4;
- 
- 	return max_tdp_level;
--- 
-2.43.5
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZONTg+LTYUZHcXVT"
+Content-Disposition: inline
+In-Reply-To: <0e5f23a9-b1d7-4d8c-bb05-83f7a15a7285@molgen.mpg.de>
 
 
+--ZONTg+LTYUZHcXVT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 20, 2025 at 01:11:41PM +0100, Paul Menzel wrote:
+> Dear Neeraj,
+>=20
+>=20
+> Thank you for your prompt reply.
+>=20
+> Am 20.02.25 um 12:59 schrieb Neeraj Sanjay Kale:
+>=20
+> > > Am 20.02.25 um 12:41 schrieb Neeraj Sanjay Kale:
+> > > > Allow user to set custom BD address for NXP chipsets.
+> > > >=20
+> > > > Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> > > > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > > ---
+> > > > v2: Add allOf and unevaluatedProperties: false (Krzysztof)
+> > > > v3: Drop local-bd-address: true (Krzysztof)
+> > > > ---
+> > > >    .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml   | 6 =
++++++-
+> > > >    1 file changed, 5 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git
+> > > a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> > > b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> > > > index 0a2d7baf5db3..a84c1c21b024 100644
+> > > > --- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-b=
+t.yaml
+> > > > +++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-b=
+t.yaml
+> > > > @@ -17,6 +17,9 @@ description:
+> > > >    maintainers:
+> > > >      - Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> > > >=20
+> > > > +allOf:
+> > > > +  - $ref: bluetooth-controller.yaml#
+> > > > +
+> > > >    properties:
+> > > >      compatible:
+> > > >        enum:
+> > > > @@ -43,7 +46,7 @@ properties:
+> > > >    required:
+> > > >      - compatible
+> > > >=20
+> > > > -additionalProperties: false
+> > > > +unevaluatedProperties: false
+> > >=20
+> > > How is this diff related to the change mentioned in the commit messag=
+e?
+> >=20
+> > This is based on review comment from Krzysztof in V1 DT patch.
+> > allOf ref will import all properties defined in bluetooth-controller.ya=
+ml, including local-bd-address:
+> > https://github.com/torvalds/linux/blob/master/Documentation/devicetree/=
+bindings/net/bluetooth/bluetooth-controller.yaml#L18
+>=20
+> Thank you. I=E2=80=99d include this in the commit message, but my comment=
+ was about
+> the replacement of `additionalProperties` by `unevaluatedProperties`.
+
+The change is needed to permit the property defined in
+bluetooth-controller.yaml to be used.
+
+--ZONTg+LTYUZHcXVT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ7dhfwAKCRB4tDGHoIJi
+0qowAQDJqiC9gO011LY1RwVtMuwshi6ln8BiwMUgXiIZWRVH0wD+Mq9pmPDdKqn4
+BOQOd7lVprKNQNq5Hn83ESn4eWMmzAk=
+=FRXl
+-----END PGP SIGNATURE-----
+
+--ZONTg+LTYUZHcXVT--
