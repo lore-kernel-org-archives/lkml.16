@@ -1,114 +1,137 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEAC1DEFF7;
-	Thu, 20 Feb 2025 03:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740020949; cv=none; b=Oapt4NoYNnot4V4jJOu9UKWnhIgnf9qMBTaefIyZsf6UzjzfxfZ8xMcKaQTaM9qlF0w+6PI+f/A06lRgea05QJdeQIj0SXS+HMVgiqAT73fMDJn+7oYIfvG/v5H4Ug+KKtjcKMvZI3pbjFATYRhUKRlf/9RViT3wLLn+1x+rsgk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECE11DEFD9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 03:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740020949; cv=pass; b=WJSHRsLUcUfe43CTzLotrCa7Pju7LO+9hqzMYcdmez8doM/CQ2cxQC2tErG2yXxYmdRJLYoZZwaXSD6KdR14UJVSqGHViNn2nYo6JYxBuAufJEZ+AnoRPQXbtgUN67AaJcpSMepv4JMTUA9aIBWmSZk4rrLfZLUm7aBKtdqyOxA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740020949; c=relaxed/simple;
-	bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cTc3rori+49sKhia8dMEWyZ2IeEc08gE15e69XalYTgrTMJ3pTR/rJ6sSNNBhs0RzxdIWsibxAnP1hQAN6O0FsEECEq1eXthOZvp58YikEJ+m+SOQDToi0CLNtpKtOkmSbr7s7XhPjd7dSi4vkLymr6FVftFCIYiPTOTqDNO4wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g7cTiT7j; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=xfhIdynj1BOrr5J3UbPjAp/L+hhP6a12c2XXRdv+AUU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rts3tLLpBoHcWWlq3R6QgBXE275d2dKDFgrmj4E5Wvew6wJ4aGroQeHMFfIBbhu2KfljVJjva/1U4GQ49c571Mx25Jc+WqC631aACDZLJ+BVyi4W5du7SEzH8FtFr1wRycPUqh7ONIx4JH1zAcNJcKwqC6kT/KsgFiGkfLUTd10=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=DIKFljpP; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7cTiT7j"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa8ac56891so709604a91.2;
-        Wed, 19 Feb 2025 19:09:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740020947; x=1740625747; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
-        b=g7cTiT7jTLJsqEbH7gc9kSwgk9WKI0QAfOCY5JklBGRuj3GbrtOGeYDhn+uSfJBAWe
-         AbcdhlyK78+eB/j/YWxY97fbkr10g+UaIBunJCJN2ZocuuIGFV9NVjcVV3gGsdP6qARA
-         1wPWzS4Eh6QQU+5adYrf0R/NP5+Kmhm4Wjp9sh7ha89TCpVHUu20LhPLQZL4/0qINzdC
-         ApaYcNND2uXV28ViahzCe6CQ3Ry425T1orqmqj7v92lXl2vIDS3ZA2kYjbTOj5gZFVFI
-         tPazfjpO11L1/1hfyMRcYhgscjkbeWn5AK1hQdKxj36fiJbXwki1LlW6Muf8ey+8hMgB
-         Lylw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740020947; x=1740625747;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
-        b=bcSwDKHlkBVDdGTahynw7We9Zio/LYkVBmiZOh0S8O3KFpOsSOOusb9WXYEl6yAx/h
-         qfpSOT12WeZz41vgKpfhBWffAGAb60X4bVns4dbF3HqbKSsGFbecOB1V5UNC1YJjcwAL
-         i+HmhCJlhUBDpHeATZgwNJCAjUoXGfKUO1Qiw+8NlRwF9nOU7PXW++t3L7erO2CLDF9z
-         U7yFAeqOyY7okbOro/zn1KQXVHHZRKXNqCdKUreAxjqpti6UvTRbSmpQKaPHEUrxqaJk
-         Of9OQEd9iL+Y7aQiXF9SYzq+pXBqc6VOookRuxchDwiUWWhVFIRCuCl6rYyAGi3rpzvp
-         4TJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpVRpZVbN5ZDMJTGpvlM1xUSPOnW6U5GBvvQks1eif0gsu/QJr1eXWVC958vNbr3rKavQo841OeXODl/d8jCkCe0i3@vger.kernel.org, AJvYcCXSzK+XR9ckP0Uo8v/+Qfi1fhvVyTblzxO3GGevYE975qxY6h8+rrErYzzmCBfgvEThrZnyJXFpXKBQ8hsh@vger.kernel.org, AJvYcCXuIvMNz2Ty570XKeGEFhGknyrg7QFA0VgbqJPQvxUYFALVP8o/IUIVxqHHM1gLk2sduW0ORxYiBRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUnmtAM6BaWL8qZPoJH/YUM7AY77VaThwOTzyms4eVg3+wynR8
-	pxakBeQKD1jege0CUPDhXJQoLJZB7FLE7OZqIXbVe7VbiLItAKKf
-X-Gm-Gg: ASbGncssfNPXT6RkUFe+35ghv8ei0OqwIq8Au5V0hfHsqlhIbyTwcN0nNKWpAk8/J+g
-	lUBeVgTci/XwO8c4xO8mbx22Wo+gqDt5j9Ig5HpcKAK97lVOG3SJjSHQIZ35xWlhb7DTz+Jo1kU
-	oszi4N3aDoXOLUZwm7oC9UW3xMLrmuAV0Ma74eIBic4Bdxi/dmcM6GCUibZJMkjvGXGxFLxql+q
-	m6DZ3qA6i/NSDqyATuX7X55n5u+biBudDAcu6rzUZ80XImclTxDNdzIO3Sc9zXR8dozc58nEVVs
-	3VgqnxeC2e659P4=
-X-Google-Smtp-Source: AGHT+IHY+jkVOxxqyb7oeuPNdMxN/x/S20vcx2nSe/tuB0SSxqUCO1KkygpT8VsNxFzmTEcR5XhbIg==
-X-Received: by 2002:a17:90b:4a49:b0:2ea:aa56:499 with SMTP id 98e67ed59e1d1-2fc40d13e61mr31473657a91.1.1740020947025;
-        Wed, 19 Feb 2025 19:09:07 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98b3255sm14701558a91.8.2025.02.19.19.09.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 19:09:06 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 1F4794208FB6; Thu, 20 Feb 2025 10:09:02 +0700 (WIB)
-Date: Thu, 20 Feb 2025 10:09:02 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Purva Yeshi <purvayeshi550@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net
-Cc: skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs: tracing: Reduce maxdepth in index documentation
-Message-ID: <Z7aczkdNVgLy1NeP@archie.me>
-References: <20250217112109.7734-1-purvayeshi550@gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="DIKFljpP"
+ARC-Seal: i=1; a=rsa-sha256; t=1740020924; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=LD1ORXenoLaViYaG5cbMYZJqHL03jlVoOwTQn6FDNfe+WZ6WMEWL2Kdavt1JiWUU5nG7qA+AIONFtt/8atT/Xv+CkTi/8vOB5NJoPTfdG6XAPP7+5D5/1CArRVkvfit8y9YvOnppDhWH7AisyvZVT8hRF86WYTVKuQKzmqbG7ko=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740020924; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=D+4Yg1sIOnwm4kyjhgsdw96gYTuVHcmlk5nuiTt5ijs=; 
+	b=Ic27AqaqFOnyNJ0XUs/UvxX8VK9i90+VKKpajV7l/sHfKhR+2HG3veuB093qbuG3yn2uB/BsvBF9khzvZk9JsE7CARQRvpuumP6uKeG5ZRHWGxFX10uTNSENHo1hQ7VhEaMGU0N3X5VanF37cM6hqSvw7U2mulRkKizfWXpW/JM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740020924;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=D+4Yg1sIOnwm4kyjhgsdw96gYTuVHcmlk5nuiTt5ijs=;
+	b=DIKFljpPNFko5H4SBJLHHYwAUIHDreMamf8erb9gS1D63xYNj182PVBZOHsWEBYB
+	ZdWgQLs37qojungPuzgGh4KvH3PMmdgJR/5mlLWe4XDjd7P8mkTj/y+JpoaLy4GFutZ
+	rIGQ3I330OkrgJuc1n+jh0uWvFuQK91bLU2B5Sq8=
+Received: by mx.zohomail.com with SMTPS id 1740020921513211.06059206425857;
+	Wed, 19 Feb 2025 19:08:41 -0800 (PST)
+Message-ID: <ddafa68a-6043-4b65-a34c-62a34373ef46@collabora.com>
+Date: Thu, 20 Feb 2025 06:08:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zfvOq29s0SxCOtX0"
-Content-Disposition: inline
-In-Reply-To: <20250217112109.7734-1-purvayeshi550@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 2/5] virtio: introduce VIRTIO_F_SHM_PAGE_SIZE
+To: Sergio Lopez <slp@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Daniel Verkamp <dverkamp@chromium.org>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, David Airlie <airlied@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+ fnkl.kernel@gmail.com
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
+ <20250214-virtio-shm-page-size-v2-2-aa1619e6908b@redhat.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250214-virtio-shm-page-size-v2-2-aa1619e6908b@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
+On 2/14/25 18:16, Sergio Lopez wrote:
+> Introduce VIRTIO_F_SHM_PAGE_SIZE, a feature bit which indicates that the
+> transport provides the page size for SHM regions.
+> 
+> Signed-off-by: Sergio Lopez <slp@redhat.com>
+> ---
+>  drivers/virtio/virtio_pci_modern.c | 3 +++
+>  drivers/virtio/virtio_ring.c       | 2 ++
+>  include/uapi/linux/virtio_config.h | 7 ++++++-
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index d7aeb2e50a3c499dfb68d58cb89b829ea2e50454..ab0e1d9148057c431676bfacfe5f68cc97eebb12 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -367,6 +367,9 @@ static void vp_transport_features(struct virtio_device *vdev, u64 features)
+>  
+>  	if (features & BIT_ULL(VIRTIO_F_ADMIN_VQ))
+>  		__virtio_set_bit(vdev, VIRTIO_F_ADMIN_VQ);
+> +
+> +	if (features & BIT_ULL(VIRTIO_F_SHM_PAGE_SIZE))
+> +		__virtio_set_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE);
+>  }
+>  
+>  static int __vp_check_common_size_one_feature(struct virtio_device *vdev, u32 fbit,
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index fdd2d2b07b5a2aca864bc917306536685afb66a6..d853d5cf7e553be8bbe0ff461dc7312b258c6e58 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -2983,6 +2983,8 @@ void vring_transport_features(struct virtio_device *vdev)
+>  			break;
+>  		case VIRTIO_F_NOTIFICATION_DATA:
+>  			break;
+> +		case VIRTIO_F_SHM_PAGE_SIZE:
+> +			break;
+>  		default:
+>  			/* We don't understand this bit. */
+>  			__virtio_clear_bit(vdev, i);
+> diff --git a/include/uapi/linux/virtio_config.h b/include/uapi/linux/virtio_config.h
+> index 2445f365bce74b4e926c6929322b269252ab6830..3171e3792263c2cd472ac09da18e593ab400751d 100644
+> --- a/include/uapi/linux/virtio_config.h
+> +++ b/include/uapi/linux/virtio_config.h
+> @@ -52,7 +52,7 @@
+>   * rest are per-device feature bits.
+>   */
+>  #define VIRTIO_TRANSPORT_F_START	28
+> -#define VIRTIO_TRANSPORT_F_END		42
+> +#define VIRTIO_TRANSPORT_F_END		43
+>  
+>  #ifndef VIRTIO_CONFIG_NO_LEGACY
+>  /* Do we get callbacks when the ring is completely used, even if we've
+> @@ -120,4 +120,9 @@
+>   */
+>  #define VIRTIO_F_ADMIN_VQ		41
+>  
+> +/*
+> + * This feature indicates that the transport provides the SHM page size.
+> + */
+> +#define VIRTIO_F_SHM_PAGE_SIZE		42
+> +
+>  #endif /* _UAPI_LINUX_VIRTIO_CONFIG_H */
+> 
 
---zfvOq29s0SxCOtX0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 
-On Mon, Feb 17, 2025 at 04:51:09PM +0530, Purva Yeshi wrote:
-> Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
-> contents, showing only top-level document titles for better readability.
->=20
-
-Is this patch mean to be applied on top of/squashed into your toctree
-refactoring ([1])?
-
-Confused...
-
-[1]: https://lore.kernel.org/linux-doc/20250217110637.6640-1-purvayeshi550@=
-gmail.com/
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---zfvOq29s0SxCOtX0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ7acxgAKCRD2uYlJVVFO
-ozBWAQDOLzWpuGIWnJnyZ4TZ4GfFwpnG/SQ4r4S4B3NYiBRs/AEA48g0UAiGeSgh
-WGK0r3sF6uZ84Ahm7ecC/1WwaCUxGAw=
-=IEAJ
------END PGP SIGNATURE-----
-
---zfvOq29s0SxCOtX0--
+-- 
+Best regards,
+Dmitry
