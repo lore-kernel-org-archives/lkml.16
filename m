@@ -1,115 +1,108 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E728D1D5160
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 20:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352622641C3;
+	Thu, 20 Feb 2025 20:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740082751; cv=none; b=uSOGGx1QRMgupBh4om70vPC5fnHnTRSl4gFsGxyuI56JNO2YiC1DpEsbNkrEwRrh1hv/beX1IibiPqUYLn3vUS78l60v9YSDjpO/bve3hfcAxYW7VsYvyP1y6/F/8MVto7Czcm7lbAtrdb+5qWU01GUaMpQLDJJUkAvBkZLOKB4=
+	t=1740082828; cv=none; b=UWuKO5AhHWHi109LARYg9IYBCilpSI1unZbI+hRgIa0qMhtEUYQFTeXlHjnDXRq8JLkXgoqepdk48UVJcP/gPLnu1//jCXPPOtcX4ovoawcFNAXAFjwnIMiY1MPZekuRJbn/Y4CqdWnmBPwEhhfPk/37SDfxa9SjlYl4OMnSOhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740082751; c=relaxed/simple;
-	bh=6LJFzXXkSSPJ9SlpoWBIFIr+sZHFQrtuMRLPXUlLdWA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PL3lSeib+HxH9w9B23Sms95/lD1qMZFIt2C1MljaCVU0kkmL3ebvOFyiBafbQ7AMh8QxT0QeDjIiKo+hxhoEp/NaAhzPdf/3Hhm0tgVxiGAXlWVXGEN1wYBbMspUbEBntC0wRvMflL3DlN4lqbHX6+kPvEGK6IZCPXtHqldfd9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af4e3.dynamic.kabel-deutschland.de [95.90.244.227])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 0848F61E6479C;
-	Thu, 20 Feb 2025 21:18:49 +0100 (CET)
-Message-ID: <47903c9d-3949-43b3-8f27-d59db20acb1e@molgen.mpg.de>
-Date: Thu, 20 Feb 2025 21:18:48 +0100
+	s=arc-20240116; t=1740082828; c=relaxed/simple;
+	bh=vsLgiLMWDg2JG9MMUpEvXVPsNEGJdkE/7EGROK1ECyc=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=AtQgabvYPoavZP9uo46Q4iP0G3hMBbvyxAt0cWXCEPkF/8sAM60TNrExx0vlC6EfSxnmjKfrY0fizbjpX/gWlYxKDp3EC5kzvOwZ6vDezovt9H99jYbcaczRMb/LPuVh5zE0cdb3nfKBupBWr4pHWKtDsBDmGB8VbWFuIZszKI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA09BC4CED1;
+	Thu, 20 Feb 2025 20:20:27 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tlD2V-00000005fWI-08Cx;
+	Thu, 20 Feb 2025 15:20:55 -0500
+Message-ID: <20250220202009.689253424@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 20 Feb 2025 15:20:09 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: [PATCH v3 0/5] ftrace: Fix fprobe with function graph accounting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux warns `sched: DL replenish lagged too much`
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <6ebe1130-0143-4388-9d69-ead0bf1fddf9@molgen.mpg.de>
- <Z7cvifR-y0CWK1e6@jlelli-thinkpadt14gen4.remote.csb>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <Z7cvifR-y0CWK1e6@jlelli-thinkpadt14gen4.remote.csb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Dear Juri,
 
 
-Thank you for your quick reply.
+Heiko Carstens reported[1] a bug when running the ftrace selftests.
+After running them, he noticed that the enabled_functions file had
+all functions enabled in it. That means something was registered to
+ftrace that shouldn't be.
 
-Am 20.02.25 um 14:35 schrieb Juri Lelli:
+The issue was with the accounting of the new fprobe logic which was
+built on top of the function graph infrastructure. Patch 3 of this
+series is the fix for that bug, but while debugging that, 3 other
+accounting bugs were discovered.
 
-> On 20/02/25 11:47, Paul Menzel wrote:
+The bug fix for the reported bug was that fprobes would update its counter
+every time a new fprobe was added, even if a new fprobe was attached to a
+function that was already attached to another fprobe. But when removing the
+fprobe, it would not decrement the counter of an fprobe with a duplicate.
+This left the fprobe ops attached to function graph and when it removed the
+last probe from the hash, it would create an empty filter hash which would
+tell function graph that it wanted to trace all functions. The solution was
+to always decrement the counter when a fprobe was removed.
 
->> On the Intel Kaby Lake laptop Dell XPS 13 with Linux
->> 6.14.0-rc3-00060-g6537cfb395f3, waking it up from ACPI S3 with an LMP USB-C
->> mini dock connected, that had an Ethernet cable and a power adapter plugged
->> in, everything was lagging, and also the video in the opened Firefox Nightly
->> browser lagged quite a bit. This has happened in the past, but not that bad
->> and long. Today for the first time, Linux logged the warning below:
->>
->>      sched: DL replenish lagged too much
->>
->> (This is from `kernel/sched/deadline.c`.)
->>
->> I have no idea, if it’s related to the hardware itself, that causes it to
->> lag, that a suspend/resume cycle fixes, or if it’s related to the USB-C
->> controller that has bugs in that early generation, or if it’s related to
->> GNOME/Mutter (*mutter-common* 48~beta-3) or Firefox or the Web video player
->> used by the site.
->>
->> As often the case with this, I have no way to reliably reproduce it, and in
->> this case to reproduce the warning. I can only say, that this warning has
->> not been logged in the available log files since September 2024. Linux
->> “6.11-rc0” was used then. Please find the log messages attached.
->>
->> In case this information is not useful, should this happen again, it’d be
->> great if you could suggest what and how I should collect debugging
->> information next time.
-> 
-> Assuming no explicit usage of SCHED_DEADLINE, I would say the warning
-> message might be related to the recently introduced deadline servers:
-> 5f6bd380c7bd ("sched/rt: Remove default bandwidth control") and related
-> commits.
-> 
-> They were merged in v6.12 (IIRC), though,
+The first of the other bugs was that when enabling a second subops to the
+function graph infrastructure, it would add all functions to be called back
+and not just the functions for the two subops for tracing. This was due to
+the creation of the filter hash for the manager ops that controls the
+subops. The first iteration where the manage ops hash was NULL was mistaken
+as an "empty hash" which means to trace all functions.
 
-Indeed, it first appeared in v6.12-rc1.
+The second bug was when adding a function to the hash where the hash already
+had that function, it would allocate and create a new entry for it.  This
+leaves duplicates and causes unnecessary overhead and memory wastage.
 
-> so I would expect you had noticed already before if they introduced
-> issues on your setup? That said, it might also be the case that
-> something else changed more recently that now triggers a corner
-> case.
+The third bug was when the last fprobe was removed, it would just unregister
+from function graph but it did not remove the function from its own ops
+hash. When adding a new fprobe, it would not only enable the function for
+that new fprobe, but it would also enable the function of the last fprobe
+that was removed.
 
-On this device, I sometimes experience lags after resuming from ACPI S3, 
-and, although I cannot prove it, using USB-C mini docks (LMP USB-C mini 
-Dock [1] or Dell DA300) seems to increase the chances of hitting the 
-problem. Re-plugging and doing ACPI S3 suspend/resume again often helps.
+Finally, a test was added to check and fail if any of the bugs were
+introduced, with the exception of the duplicate hash entries, as that
+was more of a memory waste and not something visible by user space.
 
-> The warning message per-se it's not fatal, it just warns that the kernel
-> is recovering from an unexpected situation. Did you notice that things
-> went back to normal (no lag from a user perspective) right after that
-> message was printed?
+[1] https://lore.kernel.org/all/20250217114918.10397-A-hca@linux.ibm.com/
 
-As far as I remember, the lagging stayed even after the log was printed. 
-In this case, I had to reboot the device, and until now – with no ACPI 
-S3 suspend/resume – it works fine.
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20250219220436.498041541@goodmis.org/
+
+- Have append_hashes() return EMPTY_HASH instead of NULL when the resulting
+  hash is empty.
+
+Changes since v1: https://lore.kernel.org/all/20250218193033.338823920@goodmis.org/
+
+- Moved the "Always unregister fgraph function from ops" to patch 3
+
+- Change the "Fix accounting" patch to do the update in
+  fprobe_graph_remove_ips() to make it match fprobe_graph_add_ips().
 
 
-Kind regards,
+Steven Rostedt (5):
+      ftrace: Fix accounting of adding subops to a manager ops
+      ftrace: Do not add duplicate entries in subops manager ops
+      fprobe: Always unregister fgraph function from ops
+      fprobe: Fix accounting of when to unregister from function graph
+      selftests/ftrace: Update fprobe test to check enabled_functions file
 
-Paul
-
-
-[1]: https://lmp-adapter.com/product/lmp-usb-c-mini-dock/
+----
+ kernel/trace/fprobe.c                              | 12 ++---
+ kernel/trace/ftrace.c                              | 36 ++++++++++-----
+ .../ftrace/test.d/dynevent/add_remove_fprobe.tc    | 54 ++++++++++++++++++++++
+ 3 files changed, 84 insertions(+), 18 deletions(-)
