@@ -1,90 +1,73 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85DEC1FCCFF;
-	Thu, 20 Feb 2025 15:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6C85258;
+	Thu, 20 Feb 2025 15:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740063688; cv=none; b=aEcgP8qPiAYeMl5HXZfJPeOXwU3yZABqstb094pF2LipDembakjFv+7JXLioXcctORVbcCuZoj6wTWsSgXODVRlqA4lt911FYBZBrTRCJ8oxk6wZjorWwVL1P/G+bwfZZ8rErtm9tPJNGe97fbPTk1L4f7X0W99Cw71m33SDoeI=
+	t=1740063688; cv=none; b=QEpK7R3KJx/qtjQji6UBEoYnQBfvQMK7lnVtB00MwJ01TaFmRLp/TuYZifnwUGV/8nw24rDUyYCNeN36CtzFNNFnk80vEek12bZPI9QI1Ju4hC4jb822U4dBNjaja3D59bxYtnnuO1QhZpyL/xcpN/OxbSHOYiThfZK50/Q6aZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740063688; c=relaxed/simple;
-	bh=1q67/sKbU01LNwNTA+BXBDgeiYOVo0tD17OvaQniJOg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RugljIkjoFG7ke5AwDJVhY0dVwZGgehajT59ok4dov3dn1BXsLFYGzStkT0FlDsKnrKHKA6kUXQejXid9dNSAGeRf7S/cYTIIcrroy8tniG8M5gqf4rZ7U12jjaoqTi1Rbt/GnpH0KjUHt/JCvjjH7qMACUfP+svjQMbIRNfr4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: wsm71mwiSx2xciw/TMYjng==
-X-CSE-MsgGUID: BM1zE8w1Sdm7bR1Gzus/SQ==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Feb 2025 00:01:26 +0900
-Received: from mulinux.example.org (unknown [10.226.92.65])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 0324842C8309;
-	Fri, 21 Feb 2025 00:01:21 +0900 (JST)
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 2/7] dt-bindings: dma: rz-dmac: Restrict properties for RZ/A1H
-Date: Thu, 20 Feb 2025 15:01:05 +0000
-Message-Id: <20250220150110.738619-3-fabrizio.castro.jz@renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250220150110.738619-1-fabrizio.castro.jz@renesas.com>
-References: <20250220150110.738619-1-fabrizio.castro.jz@renesas.com>
+	bh=94ImA64uIlnzboeoRY4vrSCi/VzI+cwRL+UuXNa/SLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OiywS2Zad0PGrz61Vb2/RVjqlryGAKpMkXQdanlOYphy3ezsMwrLMJxKh9jwYVYhzuBQRfDR+10NBRg9YxZQ9Wu5hREIS0yAmgtYFGf0zeAQqLAAghuiQfkYHNCDeG/6viIKSi1QyWDlWa3GTKShyR0XVv0FFhOaA6RCNQOCIr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2v74DSA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2v74DSA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B14C4CEDD;
+	Thu, 20 Feb 2025 15:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740063687;
+	bh=94ImA64uIlnzboeoRY4vrSCi/VzI+cwRL+UuXNa/SLs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U2v74DSAVPKxwZWVivMnCo5KSnhBdn4f1U+zitFnUIUD9P0+EZo8oy/wGwXXUn7lm
+	 cWHjhgl8GYp31A0AHErNqFCjrdS3Sl7Ybxfaq/qNS4Srp2Vh2MaeoMcB8WgN80z7n0
+	 GQ+k6Wr3N2lnNB6LvYTNyMUujLvTLJMWg8mUx/nmNZcHg4HnYZ/k52oM53umDu1cNV
+	 FgoiGzFPd91yzoOAWtpKDyWhhIls+ce5JcEAFDVgpEbaOHGkEvXNS3AzCXKDnGosf6
+	 hX7Swfy+QTJ2JvcakC3DL17XDxNSCtKhZcaLlV9FJX+gUO1IFPvjhVS1VMVfXO5K46
+	 1SD3Tg/pdbDuA==
+Date: Thu, 20 Feb 2025 15:01:23 +0000
+From: Lee Jones <lee@kernel.org>
+To: Manuel Fombuena <fombuena@outlook.com>
+Cc: pavel@ucw.cz, corbet@lwn.net, linux-leds@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 1/5] leds: leds-st1202: fix NULL pointer access on
+ race condition
+Message-ID: <20250220150123.GD778229@google.com>
+References: <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+ <CWLP123MB547377D20905AF224E682BFBC5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+ <20250211133149.GN1868108@google.com>
+ <CWLP123MB547308A731A2B7F1B7FF12DFC5FC2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+ <20250213102449.GC2756671@google.com>
+ <CWLP123MB54739D3E587725A0E408E2E3C5FF2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CWLP123MB54739D3E587725A0E408E2E3C5FF2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
 
-Make sure we don't allow for the clocks, clock-names, resets,
-reset-names. and power-domains properties for the Renesas
-RZ/A1H SoC because its DMAC doesn't have clocks, resets,
-and power domains.
+On Thu, 13 Feb 2025, Manuel Fombuena wrote:
 
-Fixes: 209efec19c4c ("dt-bindings: dma: rz-dmac: Document RZ/A1H SoC")
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
----
-v3->v4:
-* No change.
-v2->v3:
-* No change.
-v1->v2:
-* No change.
----
- .../devicetree/bindings/dma/renesas,rz-dmac.yaml          | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> On Thu, 13 Feb 2025, Lee Jones wrote:
+> 
+> > Then you need to separate the set into patches you expect to be
+> > submitted to the -rcs and ones which can be applied during the next
+> > cycle, then go to lengths to explain that either in the diff section of
+> > each patch (preferred) or in the cover-letter.
+> 
+> One question so I don't take more of your time later on on this. Should I 
+> continue the set with 5 patches as v2, applying the above and the other 
+> comments, or would it be preferable to send this patch with its 
+> cover letter separately and drop it from this set?
 
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-index b356251de5a8..82de3b927479 100644
---- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-+++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-@@ -112,6 +112,14 @@ allOf:
-         - resets
-         - reset-names
- 
-+    else:
-+      properties:
-+        clocks: false
-+        clock-names: false
-+        power-domains: false
-+        resets: false
-+        reset-names: false
-+
- additionalProperties: false
- 
- examples:
+This and any other patches due for the -rcs need splitting out.
+
+Please submit them all again.
+
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
