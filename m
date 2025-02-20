@@ -1,77 +1,122 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A961F03C4
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 22:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37961EEA56
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 22:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740089364; cv=none; b=otjF8DAeaA8w0nWgEu9iOSMVCWo8ENK4fTVCttxs2II8hcCn9HJDSVpylkJ8yEBVaiuOUhjQSdeyAyA+oJ0X77bIJLN9Lj7l+h9oH1Pqt89yntx4HbkUuBl5YH6jgsYfjCUoEinZwbjuddwaUlqAxC1XME9TwC/yzhtZQmNC1os=
+	t=1740089504; cv=none; b=RfFYnKuQgm9S6kG54Zkw4QtVKOL76lnVyReVYoatcUsUn6fPDPZ2uA3PGa1b528YsKm4JMVsGccUYOjaL1LYdXdBQAie+8n9wRSu/bDeoO6vpuA3D2hXX55N+URqRFhynroBzBLe2TrpBFta7O8zOa1436Csb/K9Bopv/5NSt1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740089364; c=relaxed/simple;
-	bh=Qk46eOwmfnB/fNW3txcLxyQ//kct9eJkKtX0ruYzmGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7HyftiD9bQE9xAXrre9WG4e512KgSrBfn/7w9SsVdLhqi1MXphZLodFmrLVD8gjMtRfjPFzROGFVdlYF9tahXkhiJhSm+df9+V++0+eh3Ewjg3UAEs6hIdssrWVjQdzBYHEoXVe/Udp8hM6y5wsZXHv/fEKh+1ycb0LhtZrH0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L19XVOcB; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740089504; c=relaxed/simple;
+	bh=XoQ9YNrhSqddyyvTwy9PGAcc33M/ALNhUIP4UPWv6bU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dTct2+prdEPunhQyI8IiSeKYfiMhodPZWJiOpwexva19+a/CpO1Gv4Z9GC3dM/DT4jkN5doHdPMLqI8g+6XlJNhgbdHDYMMkxnRqb4VI+pvsfqOMhOwSWEsBKi/8shyLueR5adCzXgg9rOH++POVqYNHnTruNJR1TGHdY8wIUes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cUTitxb1; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L19XVOcB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E62F843137;
-	Thu, 20 Feb 2025 22:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740089360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XR5kIZpUVnxd7NQva8Zt0gnaC0IasQ2WCr4TJ7Zil3U=;
-	b=L19XVOcBHKdvLxCS0Zx5UodskMhTSSsvc+dv4kDB9sXNQ6yMsGw9B4R9q31athnkEHjlpT
-	Ml+tFdPj3xrLyvHT3QYTMIhrFtfcMFnL4XwiSuTd3ZrqvUvQIEH5w5AhHHacdx35FMuCn5
-	t/sFUZbFYufljky9AHMGCnH5aZ4hTcXZDRSyf/GQtM9esLe/oLUzn+1ilqwdEKqNWggZBo
-	yvpfEmC0FXlfoxjJ7WF4VbvswDBzmOVQgF6DVwWKKhOG0U07Vubeb6XA35CyToB50lTEk+
-	/Nwk4PXYCvOBTcAAU6T2LcFlMAnDoRPNKqaaQI5TzWVVHcZNqIC4+fDg7AiMuw==
-Date: Thu, 20 Feb 2025 23:09:19 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: frank.li@nxp.com, miquel.raynal@bootlin.com
-Cc: conor.culhane@silvaco.com, imx@lists.linux.dev,
-	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] MAINTAINERS: I3C: Remove Conor Culhane from Silvaco
- driver maintainer
-Message-ID: <174008931864.597348.8655184807057605761.b4-ty@bootlin.com>
-References: <20250204161151.2179596-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cUTitxb1"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso2657063a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:11:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740089502; x=1740694302; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uxsIjlZZ4NvCMtUBbUKBaSillRpgb0iDSMQ6jrfUP4s=;
+        b=cUTitxb17CVOZ65WqYbOURmx9+U9mtcDcGUW8KnMeH/9Yk8X9fCSvF8+MZdz3jiJ0t
+         cpbjFDR2alhSXIK3+w9YtWgdB63OOjJUbNYCMsU5JFRzxnsgwB319rIPwVpuI3h/wSpg
+         9EOjtjhjEmrN3yIwvmn3bAh+sjmjz+4lLNtJNAooxncnNKmhflruQrb3eCTuhHjbn9Wb
+         +obM9/Clv0OvQMJMxXoQ0hob8NCg9UBTYPeDxv5sAKe2kLhk0uUYpoHGzghcTuCdP31w
+         8YG12Mw0Xfh/co+MtybvONvXq3wzQl8Yev+OASOmXO3RV1FaUSkV2Kkfyvn9qd7WIUFO
+         6w0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740089502; x=1740694302;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uxsIjlZZ4NvCMtUBbUKBaSillRpgb0iDSMQ6jrfUP4s=;
+        b=lw9L7w7iiA5r6IWFLJXqSwuur1v7tdc1CTvt3k03TOVIzaWRvQrDgLpfllefT78GCv
+         r8o10A/WRf1Z6fUoIjaPrdwIjf2WrO1o53qYxHSb0K8kLxHAzah9F9dySz2kQ9CDY0Xy
+         jsw2av5TTmozzvogANHlfh7ioF6YpdlDEET4cooxt1NatwQLu2wnuRUYV247SoId3q2G
+         5dLo+TVFgL0k8aWcjz3NQNgGJeeIQfnQO0p3opX0PyXEfEV1prAPhU5DNt57QjtA+HVv
+         TcZA81Ofj7dr9hlYM3EkO/iST0t+owePgF2hSW9X2fS1okTUo/Tz2fOQkW7sJ7pDYUuN
+         OlPw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/OBFVrzj3uq8tUdI3R0rRMHi0ODiWIzVU3UVM8928lPX3KZNxDJJ3e6VOb5Eb+ijpClTlGNihwKvQ59U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiMNdxSW7A4aehx4j6EvR5rGaBqoc+jvdMBA8cHi0/+zo9qYSA
+	j6zCeHL8LVDjpToxIz60d1+ZUBDMdVzXnmKqaRknB8iWIsq/V+5Q6tCEM/+C3tcwkOiLmPPLLUs
+	HdGvGtN3W/6yEyG8GfTS8sXxAD+daDdzhIBb6
+X-Gm-Gg: ASbGncsVGVkXQgx2g7p/LxiPaZiHqa6EmYqd4d/df/ZqiPhtHU9J+XglFgWpAzVpLTh
+	FU6LMrWIv146yCsoxIc9gVCfoVzaN08mIg4l9/VU3l4oH0hh6gT6jnr0eW2hDLy28ggbapwz9eX
+	DIr6SLBOZGFu9ADPD2ZRCa6305lnxv
+X-Google-Smtp-Source: AGHT+IEIWdX9z1JOma8AW9llag/RxdGA7fLsY2vLgpN0yC7kc+omWzG4eOOU8H13xunLk2NWo3uoV4TbIB9wngAORbk=
+X-Received: by 2002:a17:90b:56cd:b0:2fa:22a2:26a3 with SMTP id
+ 98e67ed59e1d1-2fce7ae91d9mr1293778a91.6.1740089501933; Thu, 20 Feb 2025
+ 14:11:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204161151.2179596-1-Frank.Li@nxp.com>
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeikedvjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieejfefhffekjeeuheevueevjedvleevjeetudffheeutdffudefjeduffeuvddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepfhhrrghnkhdrlhhisehngihprdgtohhmpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegtohhnohhrrdgtuhhlhhgrnhgvsehsihhlv
- hgrtghordgtohhmpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhifegtsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
+References: <20250206181711.1902989-1-elver@google.com> <20250206181711.1902989-16-elver@google.com>
+ <a1483cb1-13a5-4d6e-87b0-fda5f66b0817@paulmck-laptop>
+In-Reply-To: <a1483cb1-13a5-4d6e-87b0-fda5f66b0817@paulmck-laptop>
+From: Marco Elver <elver@google.com>
+Date: Thu, 20 Feb 2025 23:11:04 +0100
+X-Gm-Features: AWEUYZlmUbD3zD2pKUzd_1_BxaT4jGAHcCF6wIRviSAHlg-jN4GDUIL9VOeu9Kg
+Message-ID: <CANpmjNOPiZ=h69V207AfcvWOB=Q+6QWzBKoKk1qTPVdfKsDQDw@mail.gmail.com>
+Subject: Re: [PATCH RFC 15/24] rcu: Support Clang's capability analysis
+To: paulmck@kernel.org
+Cc: Alexander Potapenko <glider@google.com>, Bart Van Assche <bvanassche@acm.org>, 
+	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
+	Jann Horn <jannh@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Josh Triplett <josh@joshtriplett.org>, 
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
+	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 04 Feb 2025 11:11:51 -0500, Frank Li wrote:
-> Conor Culhane's email address (conor.culhane@silvaco.com) is no longer
-> accessible, and there has been no activity from him on
-> https://lore.kernel.org/linux-i3c/ in the past two years.
-> 
-> To avoid email delivery failure messages when sending patches to the I3C
-> mailing list, remove him from the Maintainers section and move him to the
-> credits.
-> 
-> [...]
+On Thu, 20 Feb 2025 at 23:00, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Thu, Feb 06, 2025 at 07:10:09PM +0100, Marco Elver wrote:
+> > Improve the existing annotations to properly support Clang's capability
+> > analysis.
+> >
+> > The old annotations distinguished between RCU, RCU_BH, and RCU_SCHED.
+> > However, it does not make sense to acquire rcu_read_lock_bh() after
+> > rcu_read_lock() - annotate the _bh() and _sched() variants to also
+> > acquire 'RCU', so that Clang (and also Sparse) can warn about it.
+>
+> You lost me on this one.  What breaks if rcu_read_lock_bh() is invoked
+> while rcu_read_lock() is in effect?
 
-Applied, thanks!
+I thought something like this does not make sense:
 
-[1/1] MAINTAINERS: I3C: Remove Conor Culhane from Silvaco driver maintainer
-      https://git.kernel.org/abelloni/c/6f61e5dce268
+  rcu_read_lock_bh();
+  ..
+  rcu_read_lock();
+  ..
+  rcu_read_unlock();
+  ..
+  rcu_read_unlock_bh();
 
-Best regards,
+However, the inverse may well be something we might find somewhere in
+the kernel?
+Another problem was that if we want to indicate that "RCU" read lock
+is held, then we should just be able to write
+"__must_hold_shared(RCU)", and it shouldn't matter if rcu_read_lock()
+or rcu_read_lock_bh() was used. Previously each of them acquired their
+own capability "RCU" and "RCU_BH" respectively. But rather, we're
+dealing with one acquiring a superset of the other, and expressing
+that is also what I attempted to solve.
+Let me rethink this...
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+-- Marco
