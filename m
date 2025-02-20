@@ -1,90 +1,132 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32821F4626;
-	Thu, 20 Feb 2025 12:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104D71F4706
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740053648; cv=none; b=OGdvgp4CZqTiMkZyUodJ3hMsjOY6R2r21qORGaq8SSSBAN7ygV2LLOSznYxr5nTlP7vSEzLeVn3yYT+ynNTMXufOnN2y8cOMlpJIvFU39uS/LMGNJ3HMFG4PYpXNnTHExep5HHVP3nDX8ZPSY0ehSrI0MVyh67QEfnuT/hOwriI=
+	t=1740053678; cv=none; b=klERyiyNy0cY8gd0DPUftrmi3R0kexUutcacIStYJp0IEePZobQi693qN9zpj+dKY4U4R1QKWKPLdS/srjxYy8eJExUzJGgtFjA2IzOdvG5+Q239lXNXpxkogN1u3cjUc6wXp5oRAHlTw127IGAUYDObzMOfxxWEq5gYB5Ck4js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740053648; c=relaxed/simple;
-	bh=PtQW4VmpX3Gux2bL+ZFcWOaxQzQHWQuzF3wYCZ+6j/o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=dOIFKMblmSq+W/o0jVuJnnsH4sk9hKlchHB+bdVucobk7zP/Ify+cykUT6sfEp8ctRSbrugMl6elEdEniXmLvmMr3DRSe3wR9Ibit6WpN/1fMIYIbhjK32Fi6sXZ10Md1URap+BAo7GI4z07rG5/cQWd9DrmMAsyeiXGp0xmVfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FT8HuSje; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1740053678; c=relaxed/simple;
+	bh=ZrSW3WlFsoq4+pWbmw5nXV2YhyzQXMLfxD78lA6xThE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxyP8rzVZNuINLSYtRqShUUbf0EfottG7Pbfr8ZJzsVqn/KDf1e5tOaUkdyKero1LYinKVvahLSuiVGCxNVCI+YVMGrrDHGSUOTY7AbP0yqmr4GZGajBoge3P/+RNh2+6VY4p16/jbTb91uErSW+L1hDtu40Ve5hhENqV229JVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=KGq8p2Sl; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FT8HuSje"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51KCDxS02195213
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 20 Feb 2025 04:14:00 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51KCDxS02195213
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740053640;
-	bh=GhMAHSBtV9/kfMoKmY83r+p25mAz8E0HTxvLo+40ST8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=FT8HuSjeZC5A832cO6iAOgJF0qznA0PAd3qlSb34Zac6fWKZuEOdqOPRIyeVFqqw4
-	 Ol5CBxY1NaPfJxNw+Lg6VNyPpIF7qG1RnxkJCNixDZwyxp44MMV+vWGomixexz8uFJ
-	 QEDZzqzcTLOoivbEgcNPl/hpG8kjxIDyFSFywdzpjbeqnQ+sQWy6aZ63qu2/Lrqqxs
-	 CmFqz+A9uOSyxGjkumLk4w719MSIEI0sIYKERzNtgpjTEiQg5jwXEmJD/GX9U51sNT
-	 kMlga5a/rWMNgeaITUxRp9vTg8q9lIR2YiT8V02jvnUMpAgv0jB+r4oN2qTreds3SU
-	 lUyXDI1ZQlKBQ==
-Date: Thu, 20 Feb 2025 04:13:59 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-CC: Kees Cook <kees@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>, David Airlie <airlied@gmail.com>,
-        linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-User-Agent: K-9 Mail for Android
-In-Reply-To: <6E8DAA21-2CCE-4E53-A5A8-3B82D4A2334C@zytor.com>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com> <Z7SwcnUzjZYfuJ4-@infradead.org> <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com> <202502191026.8B6FD47A1@keescook> <785A9F60-F687-41DE-A116-34E37F5B407A@zytor.com> <f77d549c-b776-4182-b170-571d1e5bb288@p183> <6E8DAA21-2CCE-4E53-A5A8-3B82D4A2334C@zytor.com>
-Message-ID: <1D187908-AA1B-4D17-A0AF-8672BE7476C2@zytor.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="KGq8p2Sl"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38f26a82d1dso486991f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:14:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1740053675; x=1740658475; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hGUCY7fitgab0ytTT0Om1EzRQzqjeCpPDOFA2YcYuWg=;
+        b=KGq8p2SlE9lGyKwo4KR4SRbF18g7v3cAIylOvrFSmGGhiDQdq36duUd0DrqygZxipQ
+         6C2qnAyWlcroug/Mukv4Nz1dJkFyFZs/IMeReYcLpj9zePqAuK84qIIgxaINYmsRTg/s
+         6lGrNZZlzaG1wZHtNVseHA3w5Co6W/POSsYUU9mIsJEdLUlOkXyv4238DhvmNoSzg58X
+         E8WqJH7Po2MjJyBz4pcsq6ldyHb/yV+lrEy/ndDwRJXD4t9qJ8E1TKVOG3SLc90WCu/l
+         a6l/tvoeaeF2JdQl5/XzmnWmOc2w3ewIMN5hk3Emo9jdiCAxSZVU+F0AZThAMtJlWg/G
+         5/DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740053675; x=1740658475;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hGUCY7fitgab0ytTT0Om1EzRQzqjeCpPDOFA2YcYuWg=;
+        b=k/2YvDLrLxnFZqF9uM9tsjk52GDNYAMp64m64PPMoeS/ohbUcPRpogqAzwpN+OnJ8t
+         QUN/7XkLhSPGThZ8zyoeJGk7uGNsj64fgJ9TWr5scLLESF+3NBRSU6WmwMKqEHkFAD14
+         Uk5oJwap53ZecLduKKD+mW+0s6y4rk5ERR/Qv1RA+A0jVoXivpBfW9bHStCcprk4VyBH
+         fy2M0qYD95m1CTkqP63tYUm2wa1C0YRGAZ6orRSMGjcjwHjsl3lf9teBkpNJP0BoGNpn
+         MRyrbaxwvr9dvQJCnY/5K4+F0VmjGnAFnXwEGe3cqKiqaAVL++QuuyWkL/C/zyKAbrY+
+         urww==
+X-Forwarded-Encrypted: i=1; AJvYcCVqnLtoaHq9yoN3V0MZO8n+LHXspKG9QjqNeiDqYkIJPWzKoJZ0IGO6UmZ9lLJzV9BtiDW7ibPXByGDOMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgZ/tLxqlMVlvrgK8ceCHrOc0533DlzomUUSltPjm3Xe09rOpz
+	c7oY9yoeY8i7w1KiklVTwiSRd9o6Xg7EyBYOZsW1+XIn0fyZheii0ddRFMkaoOM=
+X-Gm-Gg: ASbGncsrjhaw+jhi1p1YQEDjE276MiVKXYl96z2BjE5Fiko5ZHTl+5hbffoWhV9svBl
+	oj/xdcRmu+bw5GCoBRsXexrCzioqtAS+HASkY+WsTLLqgx2lD2PW+huNp/auNZJQi7EkQMsRzJX
+	9KSbFx+zy5AAElNjjPxXg/EwImIttQhV/3b7l+r7lfSPQkocKUzMC4BSesTrA7x6KlFC/OI2l/p
+	qCcKSR88rhDEizXHrf4DFxIHoFGyTPtYcDwXBw+GI55JbSnYo/A/JqN5AjaeT8hG0eC+KwYr8HK
+	OG4=
+X-Google-Smtp-Source: AGHT+IEmpbegrxw5t/KNdPkGK27oe1/PS+rd7I9A+5GvQsjNYkwQPD+h7mTbFOVdsQ9qj72tvmQ1qQ==
+X-Received: by 2002:a05:6000:188c:b0:38d:d7a4:d447 with SMTP id ffacd0b85a97d-38f33f52ee9mr22748723f8f.34.1740053675184;
+        Thu, 20 Feb 2025 04:14:35 -0800 (PST)
+Received: from localhost ([2a02:8308:a00c:e200::766e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439ac276ef7sm4896085e9.40.2025.02.20.04.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 04:14:34 -0800 (PST)
+Date: Thu, 20 Feb 2025 13:14:33 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: xiangwencheng <xiangwencheng@lanxincomputing.com>, anup@brainfault.org, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
+Message-ID: <20250220-1581569f8559049399549cae@orel>
+References: <20250219015426.1939-1-xiangwencheng@lanxincomputing.com>
+ <D7WALEFMK28X.13HQ0UL1S3NM5@ventanamicro.com>
+ <38cc241c40a8ef2775e304d366bcd07df733ecf0.f7f1d4c7.545f.42a8.90f5.c5d09b1d32ec@feishu.cn>
+ <20250220-f9c4c4b3792a66999ea5b385@orel>
+ <38cc241c40a8ef2775e304d366bcd07df733ecf0.818d94fe.c229.4f42.a074.e64851f0591b@feishu.cn>
+ <D7X576NHG512.2HBBO3JLIA1JH@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D7X576NHG512.2HBBO3JLIA1JH@ventanamicro.com>
 
-On February 20, 2025 4:01:28 AM PST, "H=2E Peter Anvin" <hpa@zytor=2Ecom> w=
-rote:
->On February 19, 2025 10:32:15 PM PST, Alexey Dobriyan <adobriyan@gmail=2E=
-com> wrote:
->>On Wed, Feb 19, 2025 at 11:33:56AM -0800, H=2E Peter Anvin wrote:
->>> b=2E Can we use existing mature tools, such as C++, to *immediately* i=
-mprove the quality (not just memory safety!) of our 37-year-old, 35-million=
- line code base and allow for further centralized improvements without the =
-major lag required for compiler extensions to be requested and implemented =
-in gcc (and clang) *and* dealing with the maturity issue?
->>
->>We can't and for technical reasons:
->>
->>* g++ requires C99 initializers to be in declaration order,
->>  even in cases where there is no reason to do so=2E
->>
->>* g++ doesn't support __seg_gs at all:
->>
->>	$ echo -n -e 'int __seg_gs gs;' | g++ -xc++ - -S -o /dev/null
->>	<stdin>:1:14: error: expected initializer before =E2=80=98gs=E2=80=99
->>
->>  x86 added this to improve codegen quality so this would be step backwa=
-rds=2E
->
->Ok, so those are obvious problems, and I agree that having to rely on the=
- legacy implementation of gs: is undesirable as anything than a transaction=
- crutch=2E
->
->
+On Thu, Feb 20, 2025 at 09:50:06AM +0100, Radim Krčmář wrote:
+> 2025-02-20T16:17:33+08:00, xiangwencheng <xiangwencheng@lanxincomputing.com>:
+> >> From: "Andrew Jones"<ajones@ventanamicro.com>
+> >> On Thu, Feb 20, 2025 at 03:12:58PM +0800, xiangwencheng wrote:
+> >> > In kvm_arch_vcpu_blocking it will enable guest external interrupt, which
+> >
+> >> > means wirting to VS_FILE will cause an interrupt. And the interrupt handler
+> >
+> >> > hgei_interrupt which is setted in aia_hgei_init will finally call kvm_vcpu_kick
+> >
+> >> > to wake up vCPU.
+> 
+> (Configure your mail client, so it doesn't add a newline between each
+>  quoted line when replying.)
+> 
+> >> > So I still think is not necessary to call another kvm_vcpu_kick after writing to
+> >> > VS_FILE.
+> 
+> So the kick wasn't there to mask some other bug, thanks.
+> 
+> >> Right, we don't need anything since hgei_interrupt() kicks for us, but if
+> >> we do
+> >> 
+> >> @@ -973,8 +973,8 @@ int kvm_riscv_vcpu_aia_imsic_inject(struct kvm_vcpu *vcpu,
+> >>         read_lock_irqsave(&imsic->vsfile_lock, flags);
+> >> 
+> >>         if (imsic->vsfile_cpu >= 0) {
+> >> +               kvm_vcpu_wake_up(vcpu);
+> >>                 writel(iid, imsic->vsfile_va + IMSIC_MMIO_SETIPNUM_LE);
+> >> -               kvm_vcpu_kick(vcpu);
+> >>         } else {
+> >>                 eix = &imsic->swfile->eix[iid / BITS_PER_TYPE(u64)];
+> >>                 set_bit(iid & (BITS_PER_TYPE(u64) - 1), eix->eip);
+> >> 
+> >> then we should be able to avoid taking a host interrupt.
+> 
+> The wakeup is asynchronous, and this would practically never avoid the
+> host interrupt, but we'd do extra pointless work...
+> I think it's much better just with the write.  (The wakeup would again
+> make KVM look like it has a bug elsewhere.)
 
-Make that *transition* crutch=2E Stupid autocorrect=2E
+Ah yes, the wakeup is asynchronous. Just dropping the kick is the right
+way to go then.
+
+Thanks,
+drew
