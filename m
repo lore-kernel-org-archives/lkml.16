@@ -1,67 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCBF1CA84;
-	Thu, 20 Feb 2025 15:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEEC1CA84
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740063810; cv=none; b=biMGRqsRQPCMTGD/4cwFZZrAqAVUi5gQZkVkELJfcRPx/B9R+xTu6m0fpIovB7mSE4alrrGyZGFlw/2G6BV2bekY+ABTK0UbeXv2bP9S3/ja+E5cRCWZDArGdNlpnSa2Q0/NyTh7rLV7XskwXSxjIwMViDbmky+3ZPPRA02ziu4=
+	t=1740063822; cv=none; b=WZFaE7BZpulscExQAB4YeJi0fq8YV6AMypH+OPRj4DDs+4U2esXOG+c5QgyHa6akvyc5B1ZZXT5RJUJJGVCjEiBVVx1eT3e1qnDkrSWbSnRyASreLSh0PbEnnaa40y451QC8a9JOH9yrL5kkD8Sd7wzNEU+LZHTZWk4kkKDX6xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740063810; c=relaxed/simple;
-	bh=MXppZVgS57LyPkie3W4jmuwlmfX7xCTlj0CpJckGO9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NWk89Eylb8CGOvkGY3AV29iMINIzshXJKqmNMY2huIV7rxE8pRfKCyWq/jyO9LiXlhCKUGdF48ZQ8HL3tRsKUjmK15Ti7VEB8zIbDTm9QptsjWNU2s4pTesQzKZZ5SX+d1BUHYDvblepNTA7iswtDi1ihQkjbc0/CUzFc1eceSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kulN/gCs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740063822; c=relaxed/simple;
+	bh=wTvQAECQfBGvJfO2IYpS/3+nrOvLzdHfn9tUhrflZ/Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=clluBVFj4TlWADu6w6+lz5inT3U2BWuZoJd9dve3AStj9Vga176TkBMLLQTDgwcmEWP91YANkr0+4Xzp+jer74CxYNxwQoRNWsSUVaS9GH3RnS8uDhgRxoq17QTrwV+akRRL540+yHLkcLzuQrqEVRM6hYrM+gAOKw8465x1i8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bUoC0AA0; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kulN/gCs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7CCC4CED1;
-	Thu, 20 Feb 2025 15:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740063809;
-	bh=MXppZVgS57LyPkie3W4jmuwlmfX7xCTlj0CpJckGO9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kulN/gCsg5OYZAoHwdr4ADAXXkNUB1BDL5AS1Bj9+DWmSfE79BbOpRseTIMOaFg4B
-	 AZ8y6X2HXYXwxS4qhP9UbzZnyvCr+7aYbofQvck4Dd225ffRyJT2d6C0Ec8kzsL7hg
-	 sL2Uu7dnX2gUwZrMAWCRtdswpBoCJQUsrPqo5UAFQpE+4+1hlRly+5hPGogbr969Nk
-	 dZUyiAbg6OXsvNsUic2bQY7nv/etYOx9Lf8DriprSvDjE8vpfpsHjFhhqLYs4hNitS
-	 OnHL1T7SnyCQjRVymrZ8dZSP/Gzmhnlq965RstJ5i3CBpiQydkARb+XhW+PfDgFA9S
-	 Z/BDfpxhHKDCg==
-Date: Thu, 20 Feb 2025 15:03:25 +0000
-From: Lee Jones <lee@kernel.org>
-To: Manuel Fombuena <fombuena@outlook.com>
-Cc: pavel@ucw.cz, corbet@lwn.net, linux-leds@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 0/5] LED1202 / leds-st1202 fixes and improvements
-Message-ID: <20250220150325.GE778229@google.com>
-References: <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
- <20250213104119.GD2756671@google.com>
- <CWLP123MB5473AD120D1AA064D44B10C7C5FF2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bUoC0AA0"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4393e873962so5257675e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:03:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740063819; x=1740668619; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2cU3uizp658OhdQ9kd90hu4zfUwjiA1W6x03uXXmdAQ=;
+        b=bUoC0AA0yYpCR2qG8hS2519OU4flKz6spdmdlzEjC9Tg9T8xVsGdQxsFP/ezGfdWnE
+         lnu2/rZt89ylFBhnG4LxKb6nBO+Y+ydnkuRP+g9ZZ076qXN9bw3UT98nZR8ten3HkBdK
+         eqcxS0GLMIFB6US5WFp90keMDlFdO1v7z44P4Q/+tsOAr8uPVZZULAAT5me0aXss4ClH
+         AsJQVpbh65vClj+C/HGhSt7G4USFrN2JE2HPeQVIZ4g4SN+e4oyqAmiyObsccBHSvZCG
+         GQzkghLJk4oE+OrHA4nh3bSqoDwJQ5InF//2qGjj0zhbbc27/hNSqRTNaKGPWWh6HED/
+         2Oww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740063819; x=1740668619;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2cU3uizp658OhdQ9kd90hu4zfUwjiA1W6x03uXXmdAQ=;
+        b=hXbRRWC6vB7gRMBg/w1SPzIRQEfJouFf7CHPzdzfzRvH7mh4/WPfwLlU/6IYQwpTNr
+         K+aHQv1Wv49V1Xi5cIIsF1lU6Uv7vqfVDDzmb5C7rv/vd4BqFkIwv+SUvgV/NBvgZSTx
+         swCPi0upXUKMr5lbEnkaDaNoq3ElJZ3up/KoCMYay1qJWnFqgujogaQU8FAWqUZX/stn
+         +flA+SqPffo85cdTUgp1znyV4Zrf8T7A6gXKEdn3UvctqyYuvaXdyT76LmVd13PNOek1
+         JB+XUxR0AXaaczKj0f6CrIiyOjk7hFbxHYdu5K5ukzomv014XeceL2zgUNTdyrFs7Z6t
+         VAuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWUQkpcfTkSABnJp7ILKsfI/j3xBGSIXrqUiLPh42joVPKHxORDI1tom+wwMILK1vfU3ECnl+HVsAI4sI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb2ccBlV249UhhAZoDhjs6gxDvFX6GJnIbDxum4fOHNbdbqFtc
+	DzoW2S7v4KqxRTrUYO+0nkW93Z7enxmFjsqmHZtI+SzBsvpEfRVVpP1c3x6m4o9P1zZIowcPG9s
+	Fy5T4kOUAuQ==
+X-Google-Smtp-Source: AGHT+IH7Qp/pmO8pBHKiL7eXO7DplNVB/xHNtFV3XhImarHE5JEn5i8DofNI9hIkq/P/8BZvkb36yjXAHrLGvQ==
+X-Received: from wmqc19.prod.google.com ([2002:a05:600c:a53:b0:439:65f0:b039])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:190b:b0:439:a1ad:6851 with SMTP id 5b1f17b1804b1-439a1ad6abfmr43641015e9.23.1740063818621;
+ Thu, 20 Feb 2025 07:03:38 -0800 (PST)
+Date: Thu, 20 Feb 2025 15:03:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CWLP123MB5473AD120D1AA064D44B10C7C5FF2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIADBEt2cC/x3MQQqAIBBA0avErBNsSIKuEi0kxxpIC0ciEO+et
+ HyL/wsIJSaBuSuQ6GHhKzYMfQfbYeNOil0zoEajEbUKQQmdPpNkUegmp82I3m4ELbkTeX7/3bL W+gHv8BzMXgAAAA==
+X-Change-Id: 20250220-mm-selftests-2d7d0542face
+X-Mailer: b4 0.15-dev
+Message-ID: <20250220-mm-selftests-v1-0-9bbf57d64463@google.com>
+Subject: [PATCH 0/6] selftests/mm: Some cleanups from trying to run them
+From: Brendan Jackman <jackmanb@google.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, 13 Feb 2025, Manuel Fombuena wrote:
+I never had much luck running mm selftests so I spent a couple of hours
+digging into why.
 
-> On Thu, 13 Feb 2025, Lee Jones wrote:
-> 
-> > Stripping the separators from patch file names and pasting them
-> > culminates in a terrible summary.  In no way does this cover-letter
-> > describe what you're trying to achieve, why you're trying to achieve it
-> > and the consequences for not applying the set.  Nor does it communicate
-> > any merge intentions (which is required due to the assumptions made, as
-> > described in our previous conversation).
-> 
-> Do the messages in the diff section of the patches need similar 
-> improvements?
+Looks like most of the reason is missing SKIP checks, so this series is
+just adding a bunch of those that I found. I did not do anything like
+all of them, just the ones I spotted in gup_test, mmap, userfaultfd and
+memfd_secret.
 
-You can use the patch-level diff sections to add per-patch changelogs.
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+---
+Brendan Jackman (6):
+      selftests/mm: Report errno when things fail
+      selftests/mm: Fix assumption that sudo is present
+      selftests/mm: Skip uffd-stress if userfaultfd not available
+      selftests/mm: Skip uffd-wp-mremap if userfaultfd not available
+      selftests/mm: Print some details when uffd-stress gets bad params
+      selftests/mm: Don't fail uffd-stress if too many CPUs
 
+ tools/testing/selftests/mm/gup_longterm.c   | 32 ++++++++++++++---------------
+ tools/testing/selftests/mm/run_vmtests.sh   | 22 ++++++++++++++++----
+ tools/testing/selftests/mm/uffd-stress.c    | 11 +++++++---
+ tools/testing/selftests/mm/uffd-wp-mremap.c |  5 ++++-
+ 4 files changed, 46 insertions(+), 24 deletions(-)
+---
+base-commit: 87a132e73910e8689902aed7f2fc229d6908383b
+change-id: 20250220-mm-selftests-2d7d0542face
+
+Best regards,
 -- 
-Lee Jones [李琼斯]
+Brendan Jackman <jackmanb@google.com>
+
