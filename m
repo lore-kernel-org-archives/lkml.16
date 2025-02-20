@@ -1,161 +1,78 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15821E511
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FA117BD9;
+	Thu, 20 Feb 2025 12:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740054983; cv=none; b=S3fORf673rqwqkBqy1mRffAkKXcWoBgol08YpkhCYq2aW8bjc1o0kcQPEXYwjz1XDuRvaY4m61gPPBQ2BUOQjeh69qrmeVLbp9wY0lPSWu/1nWcuqt37Cs0Vo7yFS6RsECtql60NJxqCPeldT6XDl7mfgzTT4HBb9YLLh15O9lk=
+	t=1740055070; cv=none; b=O/Fcqi/5gxEqKsPyZ39sCqGMf6Jna01QcPfKVCd9DXvXfhNiBYehd3HXdPyUCrjbFGL23OFpNrf4DOwej5J/Jpi6mzWF9H2GOFCejCLltEU8H7X3H4fblYSo+ij2QVGuChZiaPc0JL2b3mrLdUtrh9ht5HsRmsTpkS5zaUputA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740054983; c=relaxed/simple;
-	bh=+RsXx75rtK9qhdP3CuabmwzJas95QtZ+HmS/k8i4Qvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=snFe8TQ+v79GkKyS+Vi1YgDGPrET8qVFE1H/tej0I65Jq1+hpB77sEMo0tYJwbiJpnHHdzqyOK8zw+8kGhTKGwYZsFEt2c2Q2WCCeRQxu12rxnAWihJzCFmVIQrmkEwEUebfxv6+toaouk/7ylyuZlrWZ7tjp7t5j7YvQx3jiZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XH96zluq; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740055070; c=relaxed/simple;
+	bh=giOkKYSWvXP5XpSwiqiqP2R17fK2x7YAHCFDt+x1ZxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fokAVsf4xq946CmJV2Lz1gJHg8FPY1FTSjk6SVhXpSN8m/GQkxWKJXKKNCs6Goo0qFiOtJiz/bqruts+HldrJnBdzlEY3IXJhTlLvROd6BOnmKapkAJkMQZ6yXvbb6pvFX9auFekmKDQrqgmFL1oTzFeTuj7WZvfrOc6T6DPFkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ynP4yddS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XH96zluq"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7e08f56a0so16036766b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:36:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740054980; x=1740659780; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=1iW33Ulq3w91tzgnMYUCJrJE/eQwp+X1Zcfnd3PIjjc=;
-        b=XH96zluqpP6EKClHETzlds5mMffv8BBODUekaa3+xjph0Jlbuynx39R+3Eip1w2xtJ
-         7ScGt1ML/vT9CAvxBqIWugIj7uZey6TILsR5+7WOei5Ey4O/NAmGq2FwsYwldjhoKFeK
-         /CSLTAREnZwfEF9ti1TfLrrnNgou5kYxZ6ULLAm3L+43Pq4BA12uJDGMT+ue1Uk63SOv
-         1ealQGgbqAGHwBeHPSBjE8gz1Hon98jQb8QZsInW+rEZkM7WDkZadUbTC6qY3zKbE1Ab
-         Q6fi90dgvkyRzn/JCXBU0dn5WNJBQqz3hxOMyK5Y8lmvNefT99N2Vc+AFCoiWXlMWuKp
-         YJIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740054980; x=1740659780;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1iW33Ulq3w91tzgnMYUCJrJE/eQwp+X1Zcfnd3PIjjc=;
-        b=a49N7DEa/8Ga9FpTGUrXh4VQbq4HWx5aKVFt91j2/t16q3CcgY7GWgBsR+U7X+W7m1
-         hNbapBDNSnjbedKmDu3hwTCXxXe5JQVPM0eN8ydqmbV4GYk2aPzQnaADoJz5CnAPz2rS
-         EKDRBhlUWFSY5HfJ/0K9ZT5FOi1p0Ox5L+Hjg+g3Sv1BQGmsvuXV45pN5Z0xrRjsHNOa
-         BPRI+s64BbC3TVWKesDB5n3UHdJ22vMpli5wbbKRuohJFNY37vPX5XZwL3aCVBCGP/fE
-         z81MM9XkDD0j6Rg/rA128AyIwupYw3T4YxZ0O7a7FTVaFD8FoA+/CeCOS90Ya1i9gZHG
-         d7nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWo7Jmf5XKB3QhXb/5TIYi2cso6lepxaV1ToLvsgaxD7uWoqd2EvwyguRKlWD+ZfFsJNL91udYM3ePPCnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqG2mB0qtRQx18w793LpvQ4dcxaz6ega52hnd/YirPUpOukHnk
-	fkRAdnlJd/5/qoHs074mpzJ9iDc1Sdk3pgAzEYvXjjkjzmIuD27hDblS/HO5Z7jzJk87XU+t+sF
-	dAUADIw==
-X-Gm-Gg: ASbGncv71REeLH/JSOe3Bkba6Gj0qMgpCNOoKGtXm8F+FgEKVypG8hB3L5lEi7+PRgB
-	i5B+IROL9w+XAtB6g4eu/k30MQLHdM0RNPED1RJZ3cW6Y48K9uZbaUIyIrNKGxvnaTwJFs/3WiK
-	W/VH+9hnOTb3M6wfENJP65KlALS9on3UPGmdwNhF/YnsJ6JzUCNe5z7TyvJ8U0y3kQ1hsJIuJ0J
-	GYtt3h6tcOlC7fyxZf0r23JR2O7SzPp8r8hyNjnWq3i33HzpsoXSiN8uJSuuyIZ8k6nhtaBD79T
-	YpQXF/cVma8Twx+MCbwxSf1n6hnzkL/BrZ68sczeMQr2inRXj1TCSxDTH8cEHi9j79tqcw==
-X-Google-Smtp-Source: AGHT+IFmI7ojpVPGR3hGsnFZknvMtkXj5GFmksL1gS3a2gPX7IWtAJaDbmSJO3ueDklCGuq7n2K7gQ==
-X-Received: by 2002:a17:906:3511:b0:abb:eec3:3937 with SMTP id a640c23a62f3a-abbeec34fc5mr76602266b.10.1740054979905;
-        Thu, 20 Feb 2025 04:36:19 -0800 (PST)
-Received: from [192.168.0.18] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbdb24d6dcsm291029566b.185.2025.02.20.04.36.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 04:36:19 -0800 (PST)
-Message-ID: <46eb04f6-d387-4200-a32e-1f44dfd5024e@linaro.org>
-Date: Thu, 20 Feb 2025 13:36:17 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ynP4yddS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26BACC4CED1;
+	Thu, 20 Feb 2025 12:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740055069;
+	bh=giOkKYSWvXP5XpSwiqiqP2R17fK2x7YAHCFDt+x1ZxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ynP4yddSXKFK/K9mc/U5Yn7NVo480h1xiEIN1UuRYkR0Kr+JnS+6BLV/ekCTWjvD2
+	 +ki998if/ulYG3k4rXsEWgOJnO5JPyES8gEgRjDkPjG9l8eXFfWphbIMc6r7WKdN/o
+	 fzn+ebNHRKZ5UWGHiN+u9G0zS1ku74l17oGJteYs=
+Date: Thu, 20 Feb 2025 13:37:46 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jan Engelhardt <ej@inai.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+	ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <2025022052-ferment-vice-a30b@gregkh>
+References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
+ <Z7SwcnUzjZYfuJ4-@infradead.org>
+ <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
+ <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
+ <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
+ <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
+ <Z7VKW3eul-kGaIT2@Mac.home>
+ <2025021954-flaccid-pucker-f7d9@gregkh>
+ <2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] arm64: dts: qcom: sm8750: Initial audio support
- (not yet complete)
-To: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Melody Olvera <quic_molvera@quicinc.com>,
- Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-References: <20250220-sm8750-audio-v2-0-fbe243c4afc3@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20250220-sm8750-audio-v2-0-fbe243c4afc3@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
 
-On 20/02/2025 09:49, Krzysztof Kozlowski wrote:
-> Hi,
+On Thu, Feb 20, 2025 at 01:28:58PM +0100, Jan Engelhardt wrote:
 > 
-> Changes in v2:
-> - Use 0x0 to match rest of sm8750
-> - Re-order some nodes to keep preferred order by unit address
-> - Add Rb tags
-> - Link to v1: https://lore.kernel.org/r/20241101-sm8750-audio-v1-0-730aec176459@linaro.org
+> On Wednesday 2025-02-19 06:39, Greg KH wrote:
+> >
+> >The majority of bugs (quantity, not quality/severity) we have are due to
+> >the stupid little corner cases in C that are totally gone in Rust.
 > 
-> Dependencies
-> ============
-> Depends on: https://lore.kernel.org/r/20241112004936.2810509-4-quic_molvera@quicinc.com
+> If and when Rust receives its own corner cases in the future,
+> I will happily point back to this statement.
 
-I forgot to update cover letter:
-There is no dependency anymore, things got merged.
+I'm not saying that rust has no such issues, I'm saying that a huge
+majority of the stupid things we do in C just don't happen in the same
+code implemented in rust (i.e. memory leaks, error path cleanups, return
+value checking, etc.)
 
-> 
-> Bindings for these
-> ==================
-> All DTS added here have corresponding bindings, on the list:
-> https://lore.kernel.org/all/20241022064238.22941-1-krzysztof.kozlowski@linaro.org/
-> https://lore.kernel.org/all/20241101170309.382782-1-krzysztof.kozlowski@linaro.org/
+So sure, let's make different types of errors in the future, not
+continue to make the same ones we should have learned from already
+please :)
 
+thanks,
 
-And these are already in mainline.
-
-
-
-
-Best regards,
-Krzysztof
+greg k-h
