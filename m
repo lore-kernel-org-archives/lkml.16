@@ -1,86 +1,77 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AD91F3FED;
-	Thu, 20 Feb 2025 12:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740056070; cv=pass; b=ZMw7h7R5WtJ32f74Yz3YAdIaeTdFcucd3VuusLKg9bFmXsoQc0msldusDWunZoFCL3IG8qocJKazKXJZ1/UQkZrTAnAWUQinyerkzCk9UwWIctEc66bqw5yXOVPff4D8+PKxt+qzzSRbWrghnj7ExPl+y32KkQ6LWLmoFSOOojU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740056070; c=relaxed/simple;
-	bh=J5CvJDQHpOwgRWbALGcQjiRqOO0Zlzbce36pyVTD7xA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tZLz/meK4jKiiWL/DvIRTav6hHkdHZT3v9dd9gOJwnEDuTDmJMvq8GFZHtbB3FKuhF6QhohEYDqjpbBNmB3KWd6z/uhbSxmnmTmy/R7zXRQLj7wplNi/snjCvOK9iN0e0Q8mQKxDENnDW1UxuHg4nmOT8PzUuV/lYkNd5d7/l7Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=RoeWHZCO; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281251F3FED;
+	Thu, 20 Feb 2025 12:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740056074; cv=none; b=sW0Ozh7nMkuCXVhSIlckmRy7jflbOFEFFME7d7gNJWuyfelEj4WTxa7IZp1PimVF6VwjO6mGWGYtcRU76OguOHuO6MBfS72yn/Zp/j1H2M9RTNpKogvjUZ9fjggAvb/8lk6TkZwA22twywP6D6yt1f7XUBYfw4fLsAB5KJXNxZQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740056074; c=relaxed/simple;
+	bh=gtg+Q/NNLXydxjooTCTdHuHrfQqGn/j2nsDU1YMjgOc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XYlAQIoKWZ0WZPU50GvXacNqtk0J3br+VX7RHDYPaFqN9YHoa7S8/cKU+aXV3OPyi4xByYVP953i9CBBH+MJRX2Bb+5I0ux0U7gQQqfgMPW3PxRZDWmnYiiXDU2mA5hnGbNCrGC/q10QqkHkSx6W2JPGI0tkE4R8lHU++O+grtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnHPz/Rv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="RoeWHZCO"
-ARC-Seal: i=1; a=rsa-sha256; t=1740055996; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=R/qQr7wWyrdtX7UBgfy9V3OpdGNSna/00YuGzPVDeycnnG+3IIHgvZ9MtC0mqCetl/Qwhpx15Uc8EnFyE0nySqceeKstXDdDP6UvCwRxxpXu+paluaPOpgz2mcb+oW5nv9XbnVVfjJfKVQ8I7M7g6XaQKmFPlYqbENfMwt07UXk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740055996; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=f67Esv9H1xTt8XSor73BkW+OmrH1KkQDE3TlbweM+xI=; 
-	b=UQRVSWrrO99KOa93GwcGWfosO0X7fYAfOyxCM8btbeB88kGwggiKsQT+zimYi4sXr30G431vC7N6BP4KGgCcu79fqgAN/MGJtORIaCvx9A/wmYNZZR/VkZSlg5GbeVJca9keMpaWYK2C/T8y43lY0XzQrWPoaddT8Ax8yGJ68+s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740055996;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=f67Esv9H1xTt8XSor73BkW+OmrH1KkQDE3TlbweM+xI=;
-	b=RoeWHZCO2jmELKTJCR9BEryn4grgVyBkwSjDGE1Wp3ZsgYq7iEV+8MA1M+v07m6+
-	gUPpj2i6ZVVVCcJqAEGL/qVFzdedCT+sqM+ZqVKxpZntGGekJBBAz2/4a/ZOoAPJ406
-	kXXE1vKmqGb/rqVDZ7ITFQqXuoeV5S/b/xio4VD4=
-Received: by mx.zohomail.com with SMTPS id 1740055994655425.8638948132052;
-	Thu, 20 Feb 2025 04:53:14 -0800 (PST)
-Message-ID: <e3c9d3b4-cf78-473e-8520-79dbf932fbe1@collabora.com>
-Date: Thu, 20 Feb 2025 15:53:08 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnHPz/Rv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD22C4CED1;
+	Thu, 20 Feb 2025 12:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740056073;
+	bh=gtg+Q/NNLXydxjooTCTdHuHrfQqGn/j2nsDU1YMjgOc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZnHPz/Rvdx42vIu9ch7pFcpCY1lW52+Rns90qH46ru2ui849ew9YY4zmnf9EDI1Ww
+	 Prnb6zIw2bvq6HCWqrUlq7lUNwpfDxv1kQToPM0r66xoOqPZ2GFHvI/IbLagIwHDSG
+	 rJuV/m0eexoDfjIbOgIRVkei3X62m96nbJ7pqlPVLFOeGgszO68h8E13rViZtQo+7X
+	 ZRgCqPaOHcAiS1V5SBYvGsEoxg/RG/0dW7Vx87K0eVY1ZNMHrc7cZu3IGx9a2M7NCS
+	 9AxYjiJKRbEpmNdiGJx78V2ZuRqMSukfzaVeluuC8r6lx7jKKfTW1nsNq3n1HGMDhi
+	 koyEZFlpR0ZWw==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5439a6179a7so1029533e87.1;
+        Thu, 20 Feb 2025 04:54:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVba6Q2NQmcyFDBrqwgFXPrne6+OC/HkxAFz3UVdDlIa9EcAJb2aQtKajG+RNzwAJs8Idk4isUs5m/7CZhb@vger.kernel.org, AJvYcCVwKD+9jR+N8uMvU0mLwhRosu7QsDajnKB0a64JmIOx156Jg/ZakkBAO+pi9CXM0BO3YExw6DRPfuY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx26Uu3N+xGdvNG/KpbvuiMdoTaid8byAMEAnWBlfahyTO326e
+	dsQRUzgNS9L1hirKXL7P8PAj7/SQA8k6l8+/PiuWdxUT/qHQmKzH5NzcS0coJfruXKHIQsYjcvo
+	9/kzlUkRjHybW95nky3l4/v7a6XI=
+X-Google-Smtp-Source: AGHT+IFO+WPs1sJlb+fu1U7kSTL4NlxywB1EQREGG9craD08px4/tSGEdqnSbF7T5TNDGekwyGuuUzuHgRFRWyqFJsA=
+X-Received: by 2002:ac2:4c0a:0:b0:545:2a9a:aa02 with SMTP id
+ 2adb3069b0e04-546e5000497mr978274e87.19.1740056071884; Thu, 20 Feb 2025
+ 04:54:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/6] media: platform: synopsys: Add support for HDMI
- input driver
-To: Hans Verkuil <hverkuil@xs4all.nl>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>
-References: <20250218184439.28648-1-dmitry.osipenko@collabora.com>
- <20250218184439.28648-5-dmitry.osipenko@collabora.com>
- <f32a0011-1653-48dd-9061-047f9009310b@xs4all.nl>
- <3fcdbd35-9ff2-4159-8076-98eefd6ed8c7@collabora.com>
- <f188dd6f-c98e-4a70-a1f0-3d205b924b78@xs4all.nl>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <f188dd6f-c98e-4a70-a1f0-3d205b924b78@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <20250210174941.3251435-9-ardb+git@google.com> <CAMj1kXHOqMM5uGxLTYuEf9KrxY5WzYvwo847JzoB-Qa2SN67Sg@mail.gmail.com>
+ <20250220124831.GFZ7cknypjWiZoZzK5@fat_crate.local>
+In-Reply-To: <20250220124831.GFZ7cknypjWiZoZzK5@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 20 Feb 2025 13:54:20 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEkkShwDfbwJ5abc9Q+LaqbvTNh1O5rVXy3EW85DdYTuQ@mail.gmail.com>
+X-Gm-Features: AWEUYZluNgy6069In6F_ZrD7XyXSo6Dr6LBPV7bsob5yDG-8ruGB4ZVQBrzVLzU
+Message-ID: <CAMj1kXEkkShwDfbwJ5abc9Q+LaqbvTNh1O5rVXy3EW85DdYTuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] x86/efi/mixed: Decouple from legacy decompressor
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, hdegoede@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/20/25 10:03, Hans Verkuil wrote:
->> Good catch. Hardware supports 4 EDID blocks, will change in v8.
-> Ah, good. Make sure you test this, both writing 4 blocks to it and read it
-> from a transmitter. With v4l2-ctl --set-edid type=displayport-with-cta861
-> sets 3 blocks, and type=hdmi-4k-600mhz-with-displayid sets 4 blocks. So test
-> with both variants.
+On Thu, 20 Feb 2025 at 13:48, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Thu, Feb 20, 2025 at 12:29:30PM +0100, Ard Biesheuvel wrote:
+> > Unless anyone minds, I'd like to queue this up in the EFI tree.
+> >
+> > Boris, Ingo?
+>
+> FWIW, it looks like a nice cleanup to me and it boots in my 64-bit OVMF guest
+> but that doesn't mean a whole lot.
+>
 
-Tested it yesterday with reading 4 blocks from transmitter, worked fine.
+Thanks. For the record, I tested this both on 32-bit OVMF and on a
+mixed mode tablet (with 32-bit AMI firmware) that I keep for testing
+purposes. Notably, 32-bit OVMF boots with paging (and PAE) enabled
+whereas the AMI firmware doesn't.
 
-The HPD change also works well with the preliminary testing.
-
--- 
-Best regards,
-Dmitry
+Not sure how many users of mixed mode remain and how invested they are
+in upgrading to newer kernels, but decoupling it from the legacy
+decompressor does help the cleanup work I am doing in that area.
