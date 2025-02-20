@@ -1,229 +1,79 @@
-Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87B61C4A16
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 03:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F16F4C98;
+	Thu, 20 Feb 2025 03:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740022978; cv=none; b=r0oWXM5STWgDhBa30wPEBV6bkm07QrIZyctj25/KqNkyUqyVWfSwODAFPRiNfaSGOD7/TVz6y16+dyWW2aWcAAOVU99F+uSKBOjJN5zBGwzLiikPM5xCzglvQW8/EyNOJ6E8dOjAsALAEygXMCXmQ2KVps30YXZ23qjjWRlJExE=
+	t=1740023138; cv=none; b=jVsrxOCuPqMJBvltFzC0Q1Mpj1ZwxDYU+UhCmpQdRNphpakMfUgEz+I0PMUEWphw0W041wkjsQOL5aGN43dTYOSgyns5xBf/wLL611tSqI1RwL4tY8iHuW2b8x7gIE6QUE3dFBuxWy2PpR6nponTgPkkucLE85KuQ+r11NcNms4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740022978; c=relaxed/simple;
-	bh=Ajw4pG0ev5Bnl5ToC1yPOZWqbvcdoYkdElP8zGPfIyM=;
-	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=I+OVqTz4HDI3l0Gxjr7dpJkzmvDk7IYkhrIz6wOnVF8GnEmssNm84Ekzt+ykyNJMj/b3nZ4/WnOzF1cjgbdCk0DzavQW7naB4MPiHym2eEAUgl5LoZn7EZ+tlddZLhvFDbO8aI+3CAQowyAzo4956vGvcMs0Sncy3JsrhPvLzQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=pass smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Jmux3xhH; arc=none smtp.client-ip=203.205.221.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1740023138; c=relaxed/simple;
+	bh=MYDhR5pkMKlUbmACzzPlkOun406rZCvLsd7oICDCOpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PvGh+yAdGfQtpvVZVu2FjJOIpN67AiLPtwTauVfKlq5YhJLY6RwxBmlnRlCWtTDwLOIDITlAKR9rrLr4XQx2actocEoXZbQGBEGYQEoWUeLKpXPwlTa+ah3aLXfHMie0sMOtLgg3WXVy/DJN71mI3G4idvF0UCCKylSR0fz1jYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=kVayVrZ7; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Jmux3xhH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1740022663; bh=QrztbhIzhEGt6f3MGaPx3+gUNHg1v0QODEPxhGsrfR4=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=Jmux3xhHpiWhhxGFY2yykB2gNrlZWrcjz8P2lBKHeTcyN0ExnhtfdD3xnNHGyx+gR
-	 m4gTLaOd/CQh1EDG++xyvGA05uyJqTgTbKMjZqciFR3PoLlXJK/YCwcpDUinWrBko9
-	 LZPJxj3lP2w15VWvahIxGZcuMGzDXEQVosgVRj2g=
-Received: from smtpclient.apple ([2408:8207:18a0:b53f:e516:fb34:5948:11a1])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id 966A72EB; Thu, 20 Feb 2025 11:37:38 +0800
-X-QQ-mid: xmsmtpt1740022658t0dl3oa06
-Message-ID: <tencent_F70BEE494C40C8752302DF97608DF680E306@qq.com>
-X-QQ-XMAILINFO: NY3HYYTs4gYSd8sfm6LPIWrV+Z0MsMT1ELpP2j1ne2+F7AJakzc5o2w+7Ea9/L
-	 r1plFCfFbwppqIwvN68tO2uPPWIqp/qMqXbJANZAvRVJEdPpD70OXwegSNuVJJ/zQjgaaXpu85j0
-	 aS+2JjqONPqm61y5sc/kd90nJ2o7mUg8msNuGfR6DXnRbZ8UWNXo15cs07pmlHKCEKdXaDjE1Bhp
-	 IaQRdSW/jcF68mst7X1gIjAayzETZoOq2nnCTtdXI4Kcejo9wxfkRA0eJhTGYRpp7gUtbtM3kZSE
-	 qFmttZiIp9Aylbb2yLhabRykQsh3Hz1Lf8NXE0NKs+3TRME938r6ttXmMFMw7QtnTlRI0/D4u4au
-	 qbdL8Hfac9nUSU/C/Pw2cju+C/HsjpZZNTLz3cOR3SpuImGUdn87YdAbd/+KzlWR1tRMHywqbLGQ
-	 Dgpg5XO3sWXCTNyiMuDUN6AdRABY77lCIQ3UePEmnDv7GWq+59BJwLQEaG3cqAw2sCbpS3SLScHv
-	 jdjAK/rczEfjRxEyDPNV/Zi9UJPDcfzm4eb/2RskNBpgR8NmJ6mVfTgXMc+LJxupS4szuMtuRVBf
-	 NxKcmGGJz48c3F+nNk2fhXTnSXVfizzOMyFscU5syfcbzGSEfUYNhplX71l6n4/Dg3gqzTg7QIwv
-	 yXAlNdnDrdygvmq0Z9pjUUjXw5rm3VKor1R2IFEbp5AY5c6fGEejLjEcKo+35XOgZnVE9nxRQJYb
-	 +hNuB23jGA8WQcR2Ukwjd8PtdozrCqiDkQ07SYsL3zXDQM95wIm8Uxav1sL1PO18+5c7+yzQig8N
-	 SfGwRXaTQpkwcDI3MF0xPlEwX7eM4saLuAcqahO7A3tKEOTCwDRM9kY0snAePzWStq3b3N1djRpb
-	 /aGn81KIa1YKhw1Gvrjh8tZ8KoUIbRi3MIZjhto66G7Phf6qr5FGg4newHxdX4KCtEh2/ywtMwK3
-	 XyWxGwPJdrto8K43jVl+uYlrnpkfEFXZ8uqt9w1DrIA8clrGaSdQ==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="kVayVrZ7"
+Received: from bender.morinfr.org (unknown [82.66.66.112])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id 2280B2003C1;
+	Thu, 20 Feb 2025 04:45:28 +0100 (CET)
+Authentication-Results: smtp2-g21.free.fr;
+	dkim=pass (1024-bit key; unprotected) header.d=morinfr.org header.i=@morinfr.org header.a=rsa-sha256 header.s=20170427 header.b=kVayVrZ7;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
+	; s=20170427; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=1TSHQMXxic8Dk/8gtJBn/BlxJqxqs8YjARGrCZPR4VI=; b=kVayVrZ7Y5y9ptA489uRVXFI40
+	/CGj0Nnmexgpxn/18fFbgePpyg7B9e7HwGcfL3P2MekBiMk+mcjN+ICDnNUtZ/VncsdQg0fuB+9B5
+	gwEfsoIuXcA3H+BgnrUhfJtvjcCIlRZMMXRQ1ovGtqfA6fjZ8CgF1eLFbkq8Ce7CZe2o=;
+Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
+	(envelope-from <guillaume@morinfr.org>)
+	id 1tkxVA-000E9R-1A;
+	Thu, 20 Feb 2025 04:45:28 +0100
+Date: Thu, 20 Feb 2025 04:45:28 +0100
+From: Guillaume Morin <guillaume@morinfr.org>
+To: Yu Kuai <yukuai3@huawei.com>
+Cc: Guillaume Morin <guillaume@morinfr.org>,
+	Yu Kuai <yukuai1@huaweicloud.com>, linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org, song@kernel.org
+Subject: Re: [BUG] possible race between md_free_disk and md_notify_reboot
+Message-ID: <Z7alWBZfQLlP-EO7@bender.morinfr.org>
+References: <ad286d5c-fd60-682f-bd89-710a79a710a0@huaweicloud.com>
+ <82BF5B2B-7508-47DB-9845-8A5F19E0D0E5@morinfr.org>
+ <53e93d6e-7b73-968b-c5f2-92d1b124ecd5@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520
- events/metrics
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <CAP-5=fWXmNoFLyWv+vo7hhLSqTDy7hf+-huKRD9OUWnO-GESRw@mail.gmail.com>
-Date: Thu, 20 Feb 2025 11:37:28 +0800
-Cc: Namhyung Kim <namhyung@kernel.org>,
- James Clark <james.clark@linaro.org>,
- linux-perf-users@vger.kernel.org,
- John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Liang Kan <kan.liang@linux.intel.com>,
- Yoshihiro Furudera <fj5100bi@fujitsu.com>,
- linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-X-OQ-MSGID: <4EC06A50-E35D-42EF-8219-E6CAF007A620@cyyself.name>
-References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
- <Z66YjGvjD_yzEHUg@google.com>
- <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
- <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org>
- <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
- <fe46069e-c52e-45ee-b4b3-8b929fb83b31@linaro.org>
- <Z7UHieRRnvRb5_oU@google.com>
- <CAP-5=fWXmNoFLyWv+vo7hhLSqTDy7hf+-huKRD9OUWnO-GESRw@mail.gmail.com>
-To: Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <53e93d6e-7b73-968b-c5f2-92d1b124ecd5@huawei.com>
 
+On 20 Feb 11:19, Yu Kuai wrote:
+>
+> Hi,
+> 
+> 在 2025/02/20 11:05, Guillaume Morin 写道:
+> > how it was guaranteed that mddev_get() would fail as mddev_free() does not check or synchronize with the active atomic
+> 
+> Please check how mddev is freed, start from mddev_put(). There might be
+> something wrong, but it's not what you said.
 
+I will take a look. Though if you're confident that this logic protects
+any uaf, that makes sense to me.
 
-> On 19 Feb 2025, at 06:33, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Tue, Feb 18, 2025 at 2:19=E2=80=AFPM Namhyung Kim =
-<namhyung@kernel.org> wrote:
->>=20
->> On Tue, Feb 18, 2025 at 09:30:23AM +0000, James Clark wrote:
->>>=20
->>>=20
->>> On 18/02/2025 12:41 am, Ian Rogers wrote:
->>>> On Fri, Feb 14, 2025 at 2:02=E2=80=AFAM James Clark =
-<james.clark@linaro.org> wrote:
->>>>>=20
->>>>>=20
->>>>>=20
->>>>> On 14/02/2025 5:49 am, Yangyu Chen wrote:
->>>>>>=20
->>>>>>=20
->>>>>>> On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> =
-wrote:
->>>>>>>=20
->>>>>>> Hello,
->>>>>>>=20
->>>>>>> On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
->>>>>>>> This patchset adds the perf JSON files for the Cortex-A720 and =
-Cortex-A520
->>>>>>>> processors. Some events have been tested on Raxda Orion 6 with =
-Cix P1 SoC
->>>>>>>> (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
->>>>>>>=20
->>>>>>> I'm curious how the name of PMUs look like.  It is cortex_a720 =
-(or a520)?
->>>>>>=20
->>>>>> The name of PMUs comes from Arm's documentation. I have included =
-these
->>>>>> links in each patch.
->>>>>>=20
->>>>>>> I remember there's a logic to check the length of hex digits at =
-the end.
->>>>>>>=20
->>>>>>=20
->>>>>> Could you provide more details about this?
->>>>>>=20
->>>>>>> Ian, are you ok with this?
->>>>>>>=20
->>>>>=20
->>>>> I think they wouldn't be merged because they're core PMUs, so =
-should be
->>>>> fine? Even though they would otherwise be merged because they're =
-more
->>>>> than 3 hex digits.
->>>>=20
->>>> Do we know the PMU names? If they are cortex_a520 and cortex_a720 =
-then
->>>=20
->>> It will be "armv9_cortex_a720" from this line:
->>>=20
->>>  PMUV3_INIT_SIMPLE(armv9_cortex_a720)
->>=20
->> I see, thanks!
->>=20
->>>=20
->>>> this comment at least reads a little stale:
->>>> =
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/t=
-ree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n76
->>>> ```
->>>> /*
->>>> * There is a '_{num}' suffix. For decimal suffixes any length
->>>> * will do, for hexadecimal ensure more than 2 hex digits so
->>>> * that S390's cpum_cf PMU doesn't match.
->>>> */
->>>> ```
->>>> James is right that core PMUs aren't put on the same list as =
-uncore/other PMUs.
->>=20
->> Ok, then I guess we're good.
->=20
-> I think you may be able to do things that look odd, like today the
-> "i915" PMU can be called just "i", I think the a520/a720 naming will
-> allow "armv9_cortex/cycles/" as an event name, then open it on two
-> PMUs if they are present. We may only show one PMU in perf list as
-> that code I think assumes they're the same PMU as they only differ by
-> suffix:
-> =
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/t=
-ree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n384
-> I can imagine aggregation possibly being broken, but I think that
-> works off the number of PMUs not the names of the PMUs, so it should
-> be okay. Probably the only thing broken that matter is perf list when
-> you have a BIG.little system with a520 and a720, this may be broken
-> with say a a53 and a72 today as both of those suffix lengths are >2,
-> but maybe they use the "armv8._pmuv3_0", "armv8._pmuv3_1", etc. naming
-> convention. I suspect the >2 here:
-> =
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/t=
-ree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n80
-> would still work and be correct if it were >4. If that changes then
-> this will also need to change:
-> =
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/t=
-ree/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-tool=
-s-next#n12
->=20
-> Thanks,
-> Ian
->=20
+However as I mentioned this is not what the crash was about (I mentioned
+the UAF in passing). The GPF seems to be about deleting the _next_
+pointer while iterating over all mddevs. The mddev_get on the
+current item is not going to help with this.
 
-On my system, the names of PMUs are `armv8_pmuv3_0` and
-`armv8_pmuv3_1`:
-
-```
-$ ls /sys/bus/event_source/devices/
-armv8_pmuv3_0  armv8_pmuv3_1  breakpoint  kprobe  software  tracepoint  =
-uprobe
-```
-
-I searched for ACPI DSDT on my platform, but there's no mention of
-a720 or a520. I haven't delved into the PMU kernel driver yet.
-
-Additionally, there's a more significant problem for aarch64
-BIG.little platforms when two or more types of cores don't have the
-same PMUs. The perf list can only display the core PMUs on core0
-unless we use the PERF_CPUID env to override it. This is because
-perf will only probe the first MIDR here:
-=
-https://github.com/torvalds/linux/blob/87a132e73910e8689902aed7f2fc229d690=
-8383b/tools/perf/arch/arm64/util/header.c#L60
-
-However, I think this doesn't block this patch for adding events and =
-metrics?
-
-
-Thanks,
-Yangyu Chen
-
->>=20
->> Thanks,
->> Namhyung
-
+-- 
+Guillaume Morin <guillaume@morinfr.org>
