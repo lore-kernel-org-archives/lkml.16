@@ -1,58 +1,67 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098711FECD8;
-	Thu, 20 Feb 2025 16:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40391361;
+	Thu, 20 Feb 2025 16:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068598; cv=none; b=mnQYyM5uIxBNGkZtz0ijreI9r60OQTeEI5UDbXEevAD6Rfjf83jEfrjg+6aCqieDB/YO9jBtszhQsHBI1hyFA1g9Ondl8jlkThrC1qKnEwqL9Wg2d4OrEUZT2sTSmYgyg00mkb4hBxjYAAm8BvjskXrfM1wJAnppUJpRgvtULjg=
+	t=1740068644; cv=none; b=BxPeCr9GiKlyL+MWKnJMVhfNyl1hbFL2Z99qRIOBaU+HC88zzSuPo6xyQPVCPUiV/GL1eUkhJcWedw7e8C3C1W7r6gYPaZVxaCdwxxPtYj8MulcA5rIY/Y3xAdgxXiy8Y5c5zvL5JX05R8yn1Xy1aOcL5jtjc2ubYys+5TaeWRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068598; c=relaxed/simple;
-	bh=UV91EEUA7p1dTgOf/1BFgaJCW0c53QB7ivumCRNw6nU=;
+	s=arc-20240116; t=1740068644; c=relaxed/simple;
+	bh=uOFqaQTmDrXCIj1iofrLWIHxInLGegkKu/z/F5jTj5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1N2rB/9XrfOLRivVfNRLV6ebnzUvAw8ak7AMG9vVPjOM01j2iHAYyE98KlhN77ZvFwfKT4RQzKXOUKypRyBSdRnlBV+nWOU96ht0MfKK8KdTVTWm9BJaJ0YzAhjPKYlpjWTAKN/85XyG2ABzfR4TM9Ft1yZqEpeX9Hd0GpTWSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-221206dbd7eso22553015ad.2;
-        Thu, 20 Feb 2025 08:23:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740068596; x=1740673396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dgLm1m+OvFNAJVKM8oPbqnxCJCCi3KlXydcSUynOK6g=;
-        b=k79Bmwo6yQNE2b7jxwE33F+22mk1fdVx9vONrgWfFC1QgY7ajPrzunt53uY8G65aCL
-         mH67egfAk44v/n1/QN04ILfZ0sMpsxxxhzujoIoDWbNbUNuXH3vFktIU03ky0Jjljwpv
-         iSRuoGLE8tuR8iMFuenShJbx/+wV4t8dcA0BYF+35iyLbEIt4BLMQm9+USN2zY+iQmgJ
-         GH6qCZEveWYsSxZeCJe9Xhnr1W8mGV1If2xzdC3GKdBwV4sLGj7R/eAYMwV6JdYIca7G
-         5QF5pNXs6nvYG2AGnmnyBKbKD3AVJWjpqOFDmZdN54PQTWemDBHOK5Am2VFZfprhwxhF
-         Sfzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQlwSsmMiwTsEL/JvkHeMgbE7wc3U3HieEbL41kRGUxWlBufNf0EBVSXLKbth+Gj+4G2Esvm9zxaUd@vger.kernel.org, AJvYcCVXpk7Tz4GYknC28hDAmqnysTfAPa65QnyJZJupkFkxxftGhCxM4Metkv+2WJ/zQ+hUqGi6F76/@vger.kernel.org, AJvYcCXSP8NlpagSuxweKBdVL69KqpJ9QgN3vkt/6rTDvsGG17XEiTuOI558rTa9d21kO5noo5fkodfRGvidkRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMKlxqVUGgAInMz/kN0Db5Mx370ICCXAvktmzJh5z9ijl25qLV
-	JnugnOO87adg3CUSKKdmg5BqTuHINITOtufqRG0wRSlHl0dqWcOS
-X-Gm-Gg: ASbGncuC/KL/VGmv075Xwv88lLtHT9d9la9lw+2TYFWQ6lKrUK6x/uiv7SDyE9Icv02
-	Jr/OAF5lWrF6x5r22Jr9x83E1fbPZqKuvrchT2XtNwO5by3o7k21O0F7SJI/hN5LOzJ1Ts/9+Ab
-	96JJNxgQEtZkhtFt1Lhhc9CBFrE+g+HvPJuLhzqkftSQYXt9yxDZoQqwgLRODjI3V1MM5zCi+Qj
-	Bwo6B3OPMG0cxFM789ngrLbZQn/dqnpkpUGiW250Jc+GeM3QfyiAQVeAlza/BsUYXSXhG3ZpRAP
-	v3itHQUyqZtHcL7ZW/l44iXc4uZiEqSPhpZHW6w+PN51x9/gSQ==
-X-Google-Smtp-Source: AGHT+IGxDghjV24MGlpOLAShvGV5okwWCIIPd34UUJWTKrxs47PV8/eOQe8MU2IpkQPtA2BMbQevKQ==
-X-Received: by 2002:a17:903:2307:b0:220:fe24:7910 with SMTP id d9443c01a7336-22170968867mr139817165ad.15.1740068596290;
-        Thu, 20 Feb 2025 08:23:16 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d53494c0sm122756675ad.6.2025.02.20.08.23.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 08:23:15 -0800 (PST)
-Date: Fri, 21 Feb 2025 01:23:13 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Ma Ke <make24@iscas.ac.cn>
-Cc: lpieralisi@kernel.org, mani@kernel.org, kishon@kernel.org,
-	bhelgaas@google.com, jpinto@synopsys.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Fix a double free in __pci_epc_create()
-Message-ID: <20250220162313.GD2510987@rocinante>
-References: <20250107074601.789649-1-make24@iscas.ac.cn>
- <20250114005737.GA2004845@rocinante>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZGvhxSNywfdfjSEdOcgZp3dwxSd6v/lNiN9t5NRiohSkc65be/kV+Ko/0rmg5LsmoIThyaZ/8LpBvsnJKqThQoDVzVrRYObvMlWtDiCLqxQh8bDK+xmghUncPXliIXEBCoT+KwbhsXu08vn6A6PXu2CVqDxy05R1www+eyFnYBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OC4Cz5et; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OC4Cz5et"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740068643; x=1771604643;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uOFqaQTmDrXCIj1iofrLWIHxInLGegkKu/z/F5jTj5o=;
+  b=OC4Cz5etMFzeiGMRSJTi/kPR80DbU6rkARQ8oDRz8xvhNx6BdUrwXHNq
+   WmsujXKM6R0Y2MvOcwPQV4vu3/2ybZsfeGPIKVAvYCqfN/PPWDjmEP274
+   nQxfzyGHPf7miaJ+3Fn+uYBsBXNDjwxD0iQ5mSTF9LCih3QV6exglHngx
+   /69XNVTjnMYvLmGzen0ethLLo8jaT9jbJRLzq9mgpbkCTThc3vkgUwoLa
+   XL+IbNoZIpEg7CEyJNt2+702o1B4XLmnB3azXA6zcVvHGm64Eoti0bHpo
+   WVOki/7ePL2ietUO86d0CuKSuS47JSLxQGy5HYdXxL4bCgAc8NiAnOk2c
+   A==;
+X-CSE-ConnectionGUID: k/l3DvvKTSepveD8W/qywQ==
+X-CSE-MsgGUID: nvvR14LFR9mRE32SE+fzgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="58263732"
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="58263732"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:24:03 -0800
+X-CSE-ConnectionGUID: NF1qba7rR4WTRHMifzp/Ww==
+X-CSE-MsgGUID: sWE7DlE+Rweyiins6F18fw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120307196"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:24:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tl9LA-0000000DO9w-1Unr;
+	Thu, 20 Feb 2025 18:23:56 +0200
+Date: Thu, 20 Feb 2025 18:23:56 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: Re: [PATCH v1 0/4] gpiolib: finish conversion to devm_*_action*()
+ APIs
+Message-ID: <Z7dXHNI6GcANkPNL@smile.fi.intel.com>
+References: <20250220141645.2694039-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,26 +70,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250114005737.GA2004845@rocinante>
+In-Reply-To: <20250220141645.2694039-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
-
-> > The put_device(&epc->dev) call will trigger pci_epc_release() which
-> > frees "epc" so the kfree(epc) on the next line is a double free.
-> > 
-> > Found by code review.
-
-[...]
-> Which kernel release did you review?  I don't see this kfree() when looking
-> at the current code base per:
+On Thu, Feb 20, 2025 at 03:44:56PM +0200, Andy Shevchenko wrote:
+> GPIOLIB has some open coded stuff that can be folded to the devm_*_action*()
+> calls. This mini-series is for that. The necessary prerequisites are here
+> as well, namely:
+> 1) moving the respective APIs to the devres.h;
+> 2) adding a couple of simple helpers that GPIOLIB will rely on;
+> 3) finishing the GPIOLIB conversion to the device managed action APIs.
 > 
->   https://elixir.bootlin.com/linux/v6.13-rc1/source/drivers/pci/endpoint/pci-epc-core.c#L956-L1020
+> The series is based on another series that's available via immutable tag
+> devres-iio-input-pinctrl-v6.15 [1]. The idea is to route this via GPIOLIB
+> tree (or Intel GPIO for the starter) with an immutable tag for the device
+> core and others if needed. Please, review and acknowledge.
 
-I will answer my own question.  This surplus kfree() has already been
-removed as part of the following commit:
+Please, don't waste time on this, I have just sent a v2 which is simpler:
+https://lore.kernel.org/r/20250220162238.2738038-1-andriy.shevchenko@linux.intel.com
 
-  c9501d268944 ("PCI: endpoint: Fix double free in __pci_epc_create()")
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Nevertheless, thank you for the patch.
 
-	Krzysztof
