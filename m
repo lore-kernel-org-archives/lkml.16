@@ -1,180 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B67C1F3D20
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6301EFFA4;
+	Thu, 20 Feb 2025 11:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740051892; cv=none; b=uXK06/UJjWRXP9JWCHulCiH/D42XEkBi8KnY0Hdvi2Q0GqbdsYOb1ts/57/HErjBQ9ZX9Tr0fAtGj35sgXb329qgaSNVlKvk2LvoTxnrsOCpjnSaNCTvUkVfvpfE3UCYuqCls6vYB30hjdbMOHBJGU9qzOfifOtLbVEYuFrmbxY=
+	t=1740051927; cv=none; b=kHTd9iNRCmV0TZ4XlmPvrAAFtN/sYl9uoZnOwHWY73kLsX6kaong46Mhedlj8kXzQFqKE3vNjfXo5mbs8bG+HikKWWI9tFDzBIyX037+sr3AFQFi+RrEc28eX/70tWTeljBIZrFhfoOK9dQ203UH5FWgt6qpJB/ZpexPc5R5xuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740051892; c=relaxed/simple;
-	bh=j7oUgAr194ldPjOe7CnpcilB7J+0su/COvJrMzapXUE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Zw//uMWNCsNGBIUooO0MuVHnJnni0lHtCm2Fge8s8yMcNqN0FHqpFoP1LUhWxy1F78CBxEAwp3+JWUaBsqrALSoiKqoZqJMVPOk2TOvngDFFPsKb2wU7CM6bJ+cgRO1iefZ26OReW0vcABjrIoojjw74kBelfQvhZFu3fO92hCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kdWxwYT4; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kdWxwYT4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740051891; x=1771587891;
-  h=date:from:to:cc:subject:message-id;
-  bh=j7oUgAr194ldPjOe7CnpcilB7J+0su/COvJrMzapXUE=;
-  b=kdWxwYT4T4XrmFYcEoxLwEt5hmZ0GNqfxQ1t5VScCVhrogcub8ec0LyV
-   X4EQVY5/65UCWi73axylxbXyTrODAkgVZZoIGrRW7Ho2AxqJkTMCKyxU+
-   LfqElEzSCX/1tKqO1B5Qqs+fndyDRmFLuZg6A2BE5qkNS4FX1ZfSEaLK+
-   WGLZx0VbUmFO6n0+KjXPn4wUiDTQWFBVGFxOwOkdkoPtUS8N5O85Mc4bP
-   YIB5Q0tyItDGt4G8raSOS1rCu3WYOR6wWrH3Mn2MCblbdCqzi6kBySnJ1
-   uO+Aq6YXTVlPunpBZ38THEUedvRmCiq2z6FCIL2e/Py6LTMoU+7PAI74C
-   Q==;
-X-CSE-ConnectionGUID: VbGS7jzRSn2Q57PM94Rulg==
-X-CSE-MsgGUID: VytfAg0WTD+GIE6uqHH+jA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="58369473"
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="58369473"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 03:44:50 -0800
-X-CSE-ConnectionGUID: MSHQE5bwSd+Rbl8Q3KXjnQ==
-X-CSE-MsgGUID: VCGSP9mmSrmtgI1fUURQsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="152216294"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 20 Feb 2025 03:44:48 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tl4yz-0004Eh-2H;
-	Thu, 20 Feb 2025 11:44:45 +0000
-Date: Thu, 20 Feb 2025 19:43:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250210-2] BUILD SUCCESS
- 987bc66d587f719478850fce6270d713a37747d1
-Message-ID: <202502201949.Y0hBKoBt-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740051927; c=relaxed/simple;
+	bh=2EEW45Yj8xi2tZwxxOWNkFYSQ4lVAi8o8LQZMo4zddc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lxUlMe8Ye5wAVtAGZHyIqSrr86S+YM761enrCokthufrS3aYQFdPGxX/hhcXLEvMJkNDQH4Dgz0lWyzkJgf6w0+7pxakiBYfPfNbbzVmQ7pw++ZYBdr4BHdlhxCb5AqvFnK12kYmgXoBHdQVcC8hvLjYU0EJU+56lbynfTB7gP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af4d1.dynamic.kabel-deutschland.de [95.90.244.209])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 03CC261E6478A;
+	Thu, 20 Feb 2025 12:45:04 +0100 (CET)
+Message-ID: <184919f9-25bd-4f65-9ed9-dc452a6f4418@molgen.mpg.de>
+Date: Thu, 20 Feb 2025 12:45:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: nxp: Add support to
+ set BD address
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ amitkumar.karwar@nxp.com, sherry.sun@nxp.com, ziniu.wang_1@nxp.com,
+ johan.korsnes@remarkable.no, kristian.krohn@remarkable.no,
+ manjeet.gupta@nxp.com
+References: <20250220114157.232997-1-neeraj.sanjaykale@nxp.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20250220114157.232997-1-neeraj.sanjaykale@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250210-2
-branch HEAD: 987bc66d587f719478850fce6270d713a37747d1  bcache: Avoid -Wflex-array-member-not-at-end warnings
+Dear Neeraj,
 
-elapsed time: 1451m
 
-configs tested: 103
-configs skipped: 2
+Thank you for your patch.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250219    gcc-13.2.0
-arc                   randconfig-002-20250219    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250219    gcc-14.2.0
-arm                   randconfig-002-20250219    clang-17
-arm                   randconfig-003-20250219    clang-15
-arm                   randconfig-004-20250219    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250219    clang-21
-arm64                 randconfig-002-20250219    gcc-14.2.0
-arm64                 randconfig-003-20250219    gcc-14.2.0
-arm64                 randconfig-004-20250219    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250219    gcc-14.2.0
-csky                  randconfig-002-20250219    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250219    clang-14
-hexagon               randconfig-002-20250219    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250219    clang-19
-i386        buildonly-randconfig-002-20250219    clang-19
-i386        buildonly-randconfig-003-20250219    gcc-12
-i386        buildonly-randconfig-004-20250219    clang-19
-i386        buildonly-randconfig-005-20250219    clang-19
-i386        buildonly-randconfig-006-20250219    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250219    gcc-14.2.0
-loongarch             randconfig-002-20250219    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250219    gcc-14.2.0
-nios2                 randconfig-002-20250219    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250219    gcc-14.2.0
-parisc                randconfig-002-20250219    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250219    clang-15
-powerpc               randconfig-002-20250219    clang-17
-powerpc               randconfig-003-20250219    gcc-14.2.0
-powerpc64             randconfig-001-20250219    gcc-14.2.0
-powerpc64             randconfig-002-20250219    gcc-14.2.0
-powerpc64             randconfig-003-20250219    gcc-14.2.0
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250219    clang-21
-riscv                 randconfig-002-20250219    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250219    clang-18
-s390                  randconfig-002-20250219    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250219    gcc-14.2.0
-sh                    randconfig-002-20250219    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250219    gcc-14.2.0
-sparc                 randconfig-002-20250219    gcc-14.2.0
-sparc64               randconfig-001-20250219    gcc-14.2.0
-sparc64               randconfig-002-20250219    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250219    clang-21
-um                    randconfig-002-20250219    clang-21
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250219    gcc-12
-x86_64      buildonly-randconfig-002-20250219    clang-19
-x86_64      buildonly-randconfig-003-20250219    gcc-12
-x86_64      buildonly-randconfig-004-20250219    clang-19
-x86_64      buildonly-randconfig-005-20250219    gcc-12
-x86_64      buildonly-randconfig-006-20250219    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250219    gcc-14.2.0
-xtensa                randconfig-002-20250219    gcc-14.2.0
+Am 20.02.25 um 12:41 schrieb Neeraj Sanjay Kale:
+> Allow user to set custom BD address for NXP chipsets.
+> 
+> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+> v2: Add allOf and unevaluatedProperties: false (Krzysztof)
+> v3: Drop local-bd-address: true (Krzysztof)
+> ---
+>   .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml   | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> index 0a2d7baf5db3..a84c1c21b024 100644
+> --- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> +++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> @@ -17,6 +17,9 @@ description:
+>   maintainers:
+>     - Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+>   
+> +allOf:
+> +  - $ref: bluetooth-controller.yaml#
+> +
+>   properties:
+>     compatible:
+>       enum:
+> @@ -43,7 +46,7 @@ properties:
+>   required:
+>     - compatible
+>   
+> -additionalProperties: false
+> +unevaluatedProperties: false
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+How is this diff related to the change mentioned in the commit message?
+
+>   
+>   examples:
+>     - |
+> @@ -54,5 +57,6 @@ examples:
+>               fw-init-baudrate = <3000000>;
+>               firmware-name = "uartuart8987_bt_v0.bin";
+>               device-wakeup-gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+> +            local-bd-address = [66 55 44 33 22 11];
+>           };
+>       };
+
+
+Kind regards,
+
+Paul
