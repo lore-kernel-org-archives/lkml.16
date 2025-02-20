@@ -1,193 +1,153 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2083.outbound.protection.outlook.com [40.107.92.83])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B171EFF9B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740049011; cv=fail; b=YvNFbQQjNmWmMFtZf9fFSx8KOS1aZCcZHJllzEVV/weU9iHFLZV2rr7i5iQAak7N7m7Ue7S4WRT/h+uPRv+/HQBEQAvXdl63kGyHvcRc0L7cavrWaR5wH34Gymo9pOYpGkaDmvz1JrVA79u7yOBM/GSWIwacdlW0VDj4A13DHsU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740049011; c=relaxed/simple;
-	bh=CxtzJI9enoo4NyM/DlyABw9Ub7NBxZgtaHZTlulK1r8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tKqxL7pnRS35kfZFztb9dsY8oW5CvDsh6AK/BSzlhtRWccdQW9c4nAn1GO0h4V1KijD3hTmEu7LQxlyfNJNwONannBxd5osv27OhkvOc/Y6g2OtXOsG3/v3+aJb73iU6yabVuuHuBp+Ajp9TjVQmgiJ/MADARKk9OmjUFt9PBc8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hJrt2GmQ; arc=fail smtp.client-ip=40.107.92.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581C11EFF9B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740049022; cv=none; b=eDW6ImnSMWXJFauKCjnGkdUCdH6KLyZBOiby+mcDX4JxPgj/Lgo+xZKC4Z7EISUu9p1Qyvb1/1p+YYxPpKA0KDLF2+34/k7/afQ5v6rvclwsLacEftVHKwdnyqLuikCa0efP44a9QRzdL+p79ryjY5rWMhJMOdYMvjza0/9Li24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740049022; c=relaxed/simple;
+	bh=SZfmAmb2rQMuLecJdA141op3zsd5xJtkGc/NfORa9JQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=L/EeNd601aS77OQaLkVUfLOvXZDO0bTWbVN5u14vpMQyT8PqH4GMUkrgjf9M2sv3ru2jSv6fKEsLHimDN5N6XlhhkxBZWT2XwfwWvQhTy7XfoUmQQNqP72qyMvQgpsMhqyHSqrr8jkqI6GS16HqMkuQ2gPUVzLM4yzbs3cpyzNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=KmSC6Rr3; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hJrt2GmQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tSy/rY3PR8kaTLDiknCDYfp6EojxMANMFVBn2U1W/q+AAeSzrcO70kFvkB0uSyPm4awPOCth4pu51RaJNzGCq7cOrBv8vxGf9qfKfiFe6HijhiYkp+8NxoShUseGvB28kBCg3xSli0Zhi4tL7oqYat8wEH/39Y8+Dxowi23GeGWkmeGt+6Hib2YvpmMg3cKJ/xKMb0+lE5jLD74z38J49YJBG4ZItEv24vDfGi3FU0s1U5R80fXFSMpbaozZIdbX6rf9dRlo1VfvfKRQwRem2sF9D2XgoceXXNQfYyoBxynk510u9v2IO33e+70qhHpHQBucmjo1lGSGS3wli6AV1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2Swhwgp7RA5vdRGKFE5K/EHYWItn6w9KAg6e32wqHiI=;
- b=j/uoMCtZKgeIqi38QFqRZRYSkdlfRt4P1hSt4bau8wXdhdXcAeHAVLbV9xroA9GBmOse3P6bcosl/7AkD/+YRIdZwA7yvLwDnVhXqMIea/3pg9rpu0MxSfxcpuKr03UUU6ZPvigGxqlJCLHRMh1lm1pUZudWayyhzFTlR6rbOcnN5DpDaFbli7ds3ZHD75GDUuWy/BCPYH9HNcc0/peF3e/WLi/tckPlFSdtNua2vSQrluKmojjGJgMBsEaTfvzV+JiYapOgN+MR3pV2GdUhJFykDy/l6/VExDDhMY3kbSzEYJuZfLnZvWcEYpB7fPDpQrTGJuleyTmMRWGRocvdlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Swhwgp7RA5vdRGKFE5K/EHYWItn6w9KAg6e32wqHiI=;
- b=hJrt2GmQT/Q3vrNW9CTgncwGG8SLGTnyh/10tnTrW7JJKUNeJy9K8usNK+34Y0bvpAel0ZHgaPUHJIbhDYT0Sd/23F5TjJMn84kcIBX94/Emqm/RcWGbIRAZffeA6ZOXgR79dOdeg4PUs96CcmZ2IvWegV2yqeGXTcfBWfNm1Ko=
-Received: from BN9PR03CA0055.namprd03.prod.outlook.com (2603:10b6:408:fb::30)
- by DM6PR12MB4388.namprd12.prod.outlook.com (2603:10b6:5:2a9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.20; Thu, 20 Feb
- 2025 10:56:46 +0000
-Received: from BL6PEPF00022571.namprd02.prod.outlook.com
- (2603:10b6:408:fb:cafe::5c) by BN9PR03CA0055.outlook.office365.com
- (2603:10b6:408:fb::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.16 via Frontend Transport; Thu,
- 20 Feb 2025 10:56:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF00022571.mail.protection.outlook.com (10.167.249.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 10:56:45 +0000
-Received: from [10.252.205.52] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Feb
- 2025 04:56:38 -0600
-Message-ID: <5b4aa0d0-62b9-484d-a95f-316f5defbc28@amd.com>
-Date: Thu, 20 Feb 2025 16:26:15 +0530
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="KmSC6Rr3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1740049006; bh=odwZp9Z8xIMju+pCsGHH8ZjGFNxI2nF5rOdnRbiIXro=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=KmSC6Rr3sA2U/vowrVP3F0SDYqRaxqCr/TM2fbrdLF4JW7Q2Q9MJVF/etv3QXgd0Z
+	 vF4ooqYGwgK7OgQjPNilt9L3YG8zYaipbc2aRRtzYkLBV3tPLzbkr2hn8f8EmeTA9K
+	 sNthHZrM1yKBD0vVtzczBZAGVySjdg3iF/wu/PMs=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
+	id E2C0E25E; Thu, 20 Feb 2025 18:56:44 +0800
+X-QQ-mid: xmsmtpt1740049004tuormpf61
+Message-ID: <tencent_B2A58C0DE192505DFEDD889955CFD58DA207@qq.com>
+X-QQ-XMAILINFO: NafziRg7Bx69kwZHI7Dzm5Kz+VynHXEGcfBu7ol1O+aJB+yjqEYqVTuiMARVBH
+	 qXRS0yuyV9I1H5Nw2PLZ+UseJAEDOHYYA8w50WQjxhFJnKq7RFs9TBuhXUzfZNZeenGrKswb4NxG
+	 mmCRdFvAHqnFU/RJuG/HSGIR8qyGbABWQHh+AWeNZ86PzkFlTNcvCsy824lxzaA7YWCfeHTXfyCv
+	 ODBRnVgZUwr2p6DKciEskBBCcal0KC+Kyy5gayDYBQJeCMcfyh/and76ESnbToKfaNN80wzJg2hr
+	 U/JNlNE+M1PU7UtB11cg8vHse3QnmfZZYT6jd2GsAdg7A2CQJt4o0HkWt7K1zOm51hm92+ebPTa5
+	 2I8qZeUd5z3p4ErMyKqAWOP7QJBZLptxHBqrPWsangz76ObnMzx7N3hk5Guv/jKPnCbatSIcwwBu
+	 oUfSJlPO+c1w0WmV5mdsHzkHr8EfWiIdXyAZksDrQSQoaCLjY6vGVS1f/h6+QBpBNVyhw7xecX6I
+	 XLU97WSM6586zDMk79v1utkkH68kQ8VHRBf0Pju95+x3Tr8DSCEb2+PrsUy7VuU8cD8pLKfbPih0
+	 VypribhaXvw/Ce8ajAEWzTWP0XarZL8f5uoBeIWjP/EBjqiXHAXhglCk/k2ZgrhoSi7fW3oqURPL
+	 5Yu4ryLwSmThjY8hA1hGxpeQXIsLWjo8amkTv3QRWJMJUDNckNi7wQ70YBX5mqk7HmAohbFTxe7j
+	 F7cLoxn4fHXEbWbB17QEK0LY6gB7HIVhH84hYHMD1e3LdCbJbCJsrifd6nTiWy01qEvv6PSHc2r5
+	 uZbNWzLArVHKUszZTBhz3ytmCAPVa3to5ura1or8YU2ZFFUM+/VK8UMOElcbvjNtFUebujsxo8jw
+	 lhNKPU+ADvJY7YI+VISeHVOT0BF/JMGVbFtJYBeNENZxpyfTM4FqI=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: dave.kleikamp@oracle.com
+Cc: jfs-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	shaggy@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH V2] jfs: Initialized first 8 members of the dinomap when creating imap
+Date: Thu, 20 Feb 2025 18:56:45 +0800
+X-OQ-MSGID: <20250220105644.2282263-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <046f91fc-dc84-48de-b2e0-9f072283facd@oracle.com>
+References: <046f91fc-dc84-48de-b2e0-9f072283facd@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 01/22] kernel/entry/common: Move
- syscall_enter_from_user_mode_work() out of header
-To: Peter Zijlstra <peterz@infradead.org>
-CC: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>, Valentin Schneider
-	<vschneid@redhat.com>, Ben Segall <bsegall@google.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>,
-	<linux-kernel@vger.kernel.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	"Sebastian Andrzej Siewior" <bigeasy@linutronix.de>, Clark Williams
-	<clrkwllms@kernel.org>, <linux-rt-devel@lists.linux.dev>, Tejun Heo
-	<tj@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, Barret Rhoden
-	<brho@google.com>, Petr Mladek <pmladek@suse.com>, Josh Don
-	<joshdon@google.com>, Qais Yousef <qyousef@layalina.io>, "Paul E. McKenney"
-	<paulmck@kernel.org>, David Vernet <dvernet@meta.com>, "Gautham R. Shenoy"
-	<gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
-References: <20250220093257.9380-1-kprateek.nayak@amd.com>
- <20250220093257.9380-2-kprateek.nayak@amd.com>
- <20250220104355.GI34567@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250220104355.GI34567@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00022571:EE_|DM6PR12MB4388:EE_
-X-MS-Office365-Filtering-Correlation-Id: de99e257-aec9-4ebd-bc94-08dd519d4477
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NTRNcm5PMUthanB1SHFvQ2R2dnJzWVVmSUNhbU5CcmsxMzAwZXdUM0ZGTUFj?=
- =?utf-8?B?aDBEZUpXZlI1aFpMNDVxT3FsNldXZkxyWnRYL0c1NllQN0plSkE3M0xpcjV0?=
- =?utf-8?B?OU51TWY3WDlhVVNkTG16MU9GQjUxaVlEWmZuN1N3dnlKVWR0eTFTa3B1NGRa?=
- =?utf-8?B?eGw0UTZXQjhDdC83dU4wb0Q5aTI4VzRsNmFNM3lybExFT3BzdUo4MlZEd0tv?=
- =?utf-8?B?bnF6cFVhcnRSRXBha0VLUGU2a09NNFRlY1JYZzlqdHRtUTkrZkNVRldwVlJk?=
- =?utf-8?B?ZlJxRzhYWWl3MW1haVc3aTc1ak9PR25Ud0EzQU5zenFHRmxMVWRQMDJGMDFQ?=
- =?utf-8?B?dHRON2R1eExVTXZsNVZxTCtGV1haaTRSSG5FYXBtNmx1MjBsaGNQSGgyaHRk?=
- =?utf-8?B?Sm94UkZER2ZodkYrRUpSb1ZwUVNZa0lIc2JUa29ycTZvZ05jRXQ5QlZ6Qzgz?=
- =?utf-8?B?Y3pnUkFYZTc0RnBrM0o3NHRkZTNBaitzT0hpSzY4b1ZvaElRZS96N2hFNHpj?=
- =?utf-8?B?bWN1eHdOOFo2SjJLRkgxWHYzZmxaWHVNTE83blZaS3ZoR0JTVHBXN2I1anVL?=
- =?utf-8?B?b21VTC94cVdGWDRNekVUWFZzS3pGVTIrSHZ0ZXJHeWZqL0JhODhqeUNpRTI1?=
- =?utf-8?B?RlR2UFBGS0ZiRklQdUxsVitYOGhFR0E1aGpRSzh4V3h2WER1cFB3M1RubTYr?=
- =?utf-8?B?TWlPM0NleGV1c1pseTJJOXorSCttNHFVakFTby9MZFZzOFBZU21uVS8reDRX?=
- =?utf-8?B?cWNIL0xkOUFETEJUQTVqMDFvcThVcVc2MjVLSkVha0luN2ducnVaZjZvV3A3?=
- =?utf-8?B?bzJVc2ZIVjN4YkdqKzhjZWpPbXVtT1d5Ulo2cmNkZVp6NkRnakl6RkdaRjdR?=
- =?utf-8?B?VHYzOGhZMUM1dEJqTG8rZU1rOFBjcEQ1d3lYcUZJcFdEb2lHU0ZBNG8xSjcv?=
- =?utf-8?B?RTBKMXJ5KytybmVoaDJ3bmJETUMyWHJoNEN0MUVaYm9nM0RuOHB1VzJEYUxW?=
- =?utf-8?B?ekRCQnJQOXJ3N2RjOWkzMkd4dXNRKzhnbGxRMzBHTDNDZXVLblRzMkF3cHZm?=
- =?utf-8?B?Z3dGK3JsSTJHa0J5Tk9yRXVISER5M1g3bzB2cEQwcnIxaGNUZi9nYmZtb05W?=
- =?utf-8?B?bkMzVkJMTk94dHFibDlaL3VpUGZQTU5uTldNNU9weDl2S1VSVGplNDh1Tjkv?=
- =?utf-8?B?dkxYdGo0RjFrOUhIS0x3ZXhxbDNROG8zM2FyUkhJMUVvTU5iSUkzWEdtM21I?=
- =?utf-8?B?aXhiZktTUDlJanhWakZCVEZyTXg3dC9VRnBGTitpWmFnaGVsSEpTUFlDZHl3?=
- =?utf-8?B?NjNpUWpZZUdxMTZmcUN4SjVPVHpITUxKZ2VDSG1lTkdRR1RiMm10MFVEQVgy?=
- =?utf-8?B?UUdwN2tqRVoxRkZ1OFdiUWsxdlBhZjN1bHNJYmtkTUROdEkzYXN5NG1VQ2kz?=
- =?utf-8?B?YVBWeXZub3BBQVJjcStVTVZnUFRMbldQeDBrZGN5SDY2SmV4UjZUUHNjdFRj?=
- =?utf-8?B?N0lxdnhQQTNxQ01MNkQwVFI4eXNxZzlCa1E3bHBNUkdUUGVKaUVCL0wzZVBV?=
- =?utf-8?B?eW5NRE1QbXZOY09abjlhbHZNZzQvNEZJOEFYamdhdU5aMitESTYwcGs1MG1Q?=
- =?utf-8?B?cEVpaUNTOC9LUmx6MVRxaGpYVUc1WDlkemNyZWhJaDBmQ0xNWXphVGE5aHdk?=
- =?utf-8?B?UWlPVWdTcWdWcW5JNm40dFl0d1d0RlFvUStDNG9nL1c0ZWUybS9EYzBNUGUx?=
- =?utf-8?B?ZUI3S0pGam4wMGZFeGJzKzhOU0FHYVZKQlZFc3p5QWpSejdSVFRuUTZuOEVM?=
- =?utf-8?B?dmpUYTQraElmZ2Z3UUVOOGFOQ0dJK3REbUkvaCtPa3UvbGZmaTZRNGdkWm9J?=
- =?utf-8?B?aWw0UzYrVDNKRlJ2ZmZTeVErTUhxRDJtV2szWmVuVTBBN2lwbDZTbmtLWWpJ?=
- =?utf-8?B?QnlKa0dJOVZIZUxzTHF4U1pPb3QrMnU2eEZ3Ky9iRHNPU2NxRGd1TU44cG9Z?=
- =?utf-8?Q?tPYRkg7JmpeyJCNaTTN7z4Ni2MC+c4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 10:56:45.6422
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: de99e257-aec9-4ebd-bc94-08dd519d4477
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00022571.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4388
+Content-Transfer-Encoding: 8bit
 
-Hello Peter,
+syzbot reported a uninit-value in diFree. [1]
 
-Thank you for taking a look.
+When print_hex_dump() is called to print the first 32 bytes of imap, the
+first 8 members in struct dinomap are the first 32 bytes of imap, because
+in_numinos, in_numfree, in_diskblock and in_maxag are not initialized when
+imap is created.
 
-On 2/20/2025 4:13 PM, Peter Zijlstra wrote:
-> On Thu, Feb 20, 2025 at 09:32:36AM +0000, K Prateek Nayak wrote:
->> Retain the prototype of syscall_enter_from_user_mode_work() in
->> linux/entry-common.h and move the function definition to
->> kernel/entry/common.c in preparation to notify the scheduler of task
->> entering and exiting kernel mode for syscall. The two architectures that
->> use it directly (x86, s390) and the four that call it via
->> syscall_enter_from_user_mode() (x86, riscv, loongarch, s390) end up
->> selecting GENERIC_ENTRY, hence, no functional changes are intended.
->>
->> [..snip..]
->>
->> @@ -79,6 +79,16 @@ noinstr void syscall_enter_from_user_mode_prepare(struct pt_regs *regs)
->>   	instrumentation_end();
->>   }
->>   
->> +__always_inline long syscall_enter_from_user_mode_work(struct pt_regs *regs, long syscall)
->> +{
->> +	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
->> +
->> +	if (work & SYSCALL_WORK_ENTER)
->> +		syscall = syscall_trace_enter(regs, syscall, work);
->> +
->> +	return syscall;
->> +}
->> +
->>   /* Workaround to allow gradual conversion of architecture code */
->>   void __weak arch_do_signal_or_restart(struct pt_regs *regs) { }
-> 
-> This breaks s390. While you retain an external linkage, the function
-> looses the noinstr tag that's needed for correctness.
-> 
-> Also, extern __always_inline is flaky as heck. Please don't do this.
+When creating imap, set in_numinos, in_numfree, in_diskblock and in_maxag
+to 0 to prevent this issue from happening.
 
-Noted! I'll try to find another way around this.
+[1]
+BUG: KMSAN: uninit-value in hex_dump_to_buffer+0x888/0x1100 lib/hexdump.c:171
+ hex_dump_to_buffer+0x888/0x1100 lib/hexdump.c:171
+ print_hex_dump+0x13d/0x3e0 lib/hexdump.c:276
+ diFree+0x5ba/0x4350 fs/jfs/jfs_imap.c:876
+ jfs_evict_inode+0x510/0x550 fs/jfs/inode.c:156
+ evict+0x723/0xd10 fs/inode.c:796
+ iput_final fs/inode.c:1946 [inline]
+ iput+0x97b/0xdb0 fs/inode.c:1972
+ txUpdateMap+0xf3e/0x1150 fs/jfs/jfs_txnmgr.c:2367
+ txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]
+ jfs_lazycommit+0x627/0x11d0 fs/jfs/jfs_txnmgr.c:2733
+ kthread+0x6b9/0xef0 kernel/kthread.c:464
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4121 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ __kmalloc_cache_noprof+0x8e3/0xdf0 mm/slub.c:4320
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ diMount+0x61/0x7f0 fs/jfs/jfs_imap.c:105
+ jfs_mount+0xa8e/0x11d0 fs/jfs/jfs_mount.c:176
+ jfs_fill_super+0xa47/0x17c0 fs/jfs/super.c:523
+ get_tree_bdev_flags+0x6ec/0x910 fs/super.c:1636
+ get_tree_bdev+0x37/0x50 fs/super.c:1659
+ jfs_get_tree+0x34/0x40 fs/jfs/super.c:635
+ vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
+ path_mount+0x742/0x1f10 fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x71f/0x800 fs/namespace.c:4088
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
+ x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+
+Reported-by: syzbot+df6cdcb35904203d2b6d@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=df6cdcb35904203d2b6d
+Tested-by: syzbot+df6cdcb35904203d2b6d@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+V1 -> V2: add missing others two fields of dinomap
+
+ fs/jfs/jfs_imap.c | 4 ++++
+ fs/jfs/jfs_imap.h | 2 ++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/fs/jfs/jfs_imap.c b/fs/jfs/jfs_imap.c
+index a360b24ed320..0cedaccb7218 100644
+--- a/fs/jfs/jfs_imap.c
++++ b/fs/jfs/jfs_imap.c
+@@ -134,6 +134,10 @@ int diMount(struct inode *ipimap)
+ 		imap->im_agctl[index].numfree =
+ 		    le32_to_cpu(dinom_le->in_agctl[index].numfree);
+ 	}
++	imap->im_diskblock = 0;
++	imap->im_maxag = 0;
++	imap->im_enuminos = 0;
++	imap->im_enumfree = 0;
+ 
+ 	/* release the buffer. */
+ 	release_metapage(mp);
+diff --git a/fs/jfs/jfs_imap.h b/fs/jfs/jfs_imap.h
+index dd7409febe28..9af1da2e4591 100644
+--- a/fs/jfs/jfs_imap.h
++++ b/fs/jfs/jfs_imap.h
+@@ -144,6 +144,8 @@ struct inomap {
+  */
+ #define	im_diskblock	im_imap.in_diskblock
+ #define	im_maxag	im_imap.in_maxag
++#define	im_enuminos	im_imap.in_numinos
++#define	im_enumfree	im_imap.in_numfree
+ 
+ extern int diFree(struct inode *);
+ extern int diAlloc(struct inode *, bool, struct inode *);
 -- 
-Thanks and Regards,
-Prateek
+2.43.0
 
