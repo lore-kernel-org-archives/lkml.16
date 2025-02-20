@@ -1,26 +1,72 @@
-Received: from mail-m19731107.qiye.163.com (mail-m19731107.qiye.163.com [220.197.31.107])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44322AE74;
-	Thu, 20 Feb 2025 04:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8F61922E7
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740024979; cv=none; b=PhaiOMhZjydhxtZBnuVSF27rg8omOoh9lwTpd1OiUzhiivxZnOaeQkkul0Kwe9Za8l1tFijIW4AgF7ZnqHTPhA01LXF5DwhOIcUSH9uzbOnHdVH/FVG9ofGS6TgiJXKR+hp89/zggWxTAdN3A3rVHAH0plWYAHU5YJ2TrEmvs9E=
+	t=1740025088; cv=none; b=bEvZgnwuLB9he2VMpkBOj+5rmCARCSjEMfBxHuPMq5d1TJU5Y3VfSNSd5sf/T4X/axq8TJFggA3tzpF42RhBB1JUJXWDA6pOjAmvG4DuiBzezX29KAUSdGgeUOV5jFv1wfGcNxKzV3SnjZ+Pbbk3jaIHDFtn+923kp1r6A7NF+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740024979; c=relaxed/simple;
-	bh=kTVEpN6+LFzOeLE8CLLajgv8R95++2NW96EUIp7cVGY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LDrFvmHFtoQGorlcg9pbsr0XroR99vPGxf2LoKMjr64I2LiAxCawthu3x6PETkmqezIPBdCOfVkPaf0BBQYwwzRV9Eakv1bUuuzy8w5Eq2ZonpjrhYIf/K8VTDDRZCMked7ZjA8aPhFFmbhLLfoYAAk5J1orvt/gyLOsSZ+/tH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=fHN2jfFt; arc=none smtp.client-ip=220.197.31.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1740025088; c=relaxed/simple;
+	bh=YSEjraTqXDeRQBh8CNH5p+277cVhLpkvPPYGjeg65IQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kaq4D1xkAbzSL2ZZ8Qa8v1KWIQoxZe7aSLzgh+vXEPVmSs+upIJtn73SmSJ5YDwHkw6dSUeadfV0zmUuQYHqZqm52wl4IInACW7eLYSD84yP5E7xiYL6yNHqDC6zwhty/vuaxqAkOLP/z/oeJvJlaWgcFK2dIV1xIDN96t4pbSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TZf73HGj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="fHN2jfFt"
-Received: from [172.16.12.45] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id b986b031;
-	Thu, 20 Feb 2025 09:53:44 +0800 (GMT+08:00)
-Message-ID: <4e07e570-25ef-4d03-b1b8-5acf8bc8bc8a@rock-chips.com>
-Date: Thu, 20 Feb 2025 09:53:44 +0800
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TZf73HGj"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JGdEH2016840
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:18:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	xrKJIPHCFT6rlsmSWrKg/q/1/2FaZ14FL8GOa1MNCoo=; b=TZf73HGjsb+qg3wZ
+	+1d5Jtj0BNMnP7S3YZjDbFqkVR3rzPRg5/zyILZptIL4TiogMLZr1yTDB/tNzoR2
+	+3PfgBFJ0eRqh4Ry6TrykpnfEnXX7NpCifKuqehVz94/siVo/1EjwqCX1S3YKA0L
+	cmI7oH8nxHf71SJxL9T20hjogxgljjs0oNJ/+NBGc/+e5lZcT5TmbWvj3TT2QTlk
+	Ohq3KeE0bVAFH8IRShzWim0mJ5uCQTnBbGHKdD8/a5iVsl0ciEysTbpBr00XXmrz
+	DLmwUDNL3kytO3yJeHevnu0V6Op0iH8LC5oZvYnJvbpvRi2MnfYsm6Go5hlB6Jsy
+	1391vw==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy0crjq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:18:04 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-220cb5924a4so16777655ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 20:18:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740025084; x=1740629884;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xrKJIPHCFT6rlsmSWrKg/q/1/2FaZ14FL8GOa1MNCoo=;
+        b=U8X7bI7ZtkKgEXVNqzp9Q7paIPL+rdGFG37xIS2wbMsEzObWeRrs2W0gMGqjmFwTS3
+         Jq79C8i+9uz0Mm9qebFpyKHvNAVbmGfYSykf62ZT4vHL1/0lk7P5XjFJ1MCaJPyaFHu1
+         PgIzLEiybuF9uIatvdr1RHukoQlPAF05hJHP1g/FBI4NEJ83qlm/AeVU/2+8Pduwr5lG
+         BQA4VwQHqRO+Ev3hMQOoJHbKp4RozVTYDyX4t7fv0FEXknfwHh1WO+0OX4PQdSXZAJAV
+         h2pxE4dcQMSguB/maQQi2q+WlaaWJWvHfl2j3Blj107CfD4c8NtIFVMUW7+heA96dnmn
+         rJdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnObCPMvV8ChhOF4O+x8EEUV+vfsVfuSdAEI3III+UOkQYNXCY4wPi0Vm0fWBqJw4EkyNfaQzcxx2Mg2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYjW7IIJRIyQQguPygl+EWGHo/N4hW9ScviqCObLmAllCR6JHN
+	KUrtrGm06QncRQZFuligbNm6x9YIBT2DX866cZmy0GpOfsQ0AmbNsH50SvOzhQblVDV7B3PI++K
+	7LQ3aAaY1QPfgTtCvG9XgDGEPuXtIT0546PLWztfJqgdnGV9jHV2Dpulj865gvBA=
+X-Gm-Gg: ASbGncvkUwRpMt7YA8uwSbNP7hDXXBUGoVp6NlANZAhZEOOUCceuaLlopqKSW+XkOTu
+	xL7GfdmMomKBo1PSY2RfgMRntLCPJ/0LQ9zvxYNkfuoZuRq3HqK3EzkndLqOZmDkEd9pTDe+chZ
+	VnFXL2/Pu+OYTmeUS2ni3zytnhmViZIVQOfaJXlEoKGFzKcz9UnghtQQhW8B4NilAuecAHyIaBl
+	vMHyOhdWqaRM4uWRB1PeXiWoJc67k631lUmc0dHwAjOQsK1k+krDvyskVMORjdjKdjzHH49IEgZ
+	G8+roGXYFexnZs7dp0dlnucM6DFp9Q==
+X-Received: by 2002:a17:902:e841:b0:21f:564:80a4 with SMTP id d9443c01a7336-221040a9a0emr339499415ad.33.1740025083663;
+        Wed, 19 Feb 2025 20:18:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF0vXRoyxvwqbbblzXnK13q+MpjTSXUGq/NUysKQUCJgl+Rkbw2yURC2qoquAwYe7kkwpg46w==
+X-Received: by 2002:a17:902:e841:b0:21f:564:80a4 with SMTP id d9443c01a7336-221040a9a0emr339499095ad.33.1740025083308;
+        Wed, 19 Feb 2025 20:18:03 -0800 (PST)
+Received: from [10.218.35.239] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb5a92b959sm11605161a12.63.2025.02.19.20.18.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2025 20:18:02 -0800 (PST)
+Message-ID: <158c9087-8252-432d-92a7-dad69add1133@oss.qualcomm.com>
+Date: Thu, 20 Feb 2025 09:47:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,70 +74,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Heiko Stuebner <heiko@sntech.de>
-Subject: Re: linux-next: build failure after merge of the pmdomain tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Ulf Hansson <ulf.hansson@linaro.org>
-References: <20250220113338.60ba2290@canb.auug.org.au>
-Content-Language: en-GB
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20250220113338.60ba2290@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkkYSVYaGEgaSUNCTBkZH01WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a95210f95d809cckunmb986b031
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NT46Szo5ITIWCS0IEkoyLU4L
-	AgkaCRFVSlVKTE9LS0pNT0lOSUJCVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpJTk43Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=fHN2jfFtUOHW8HxjGan8tRKqKCIW1hgwEn91a/mKizUUx79Ikgh5RjdlmOWKu9nAeEG49sTX+keGPF/RM3hrWyKQ3aG7Wzw+BpzWWp7jaDuiUZW1fyvn9qS6p9GphAjhX0/SNqQvyoAj0tDKQvSTY0Nv9hmohFPfFLO45hRy/JY=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=kz2RbdNXW8q9JlPloKdddNUyjkRikvpmhR8YLFqMJdQ=;
-	h=date:mime-version:subject:message-id:from;
-
-在 2025/2/20 8:33, Stephen Rothwell 写道:
-> Hi all,
-> 
-> After merging the pmdomain tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> x86_64-linux-gnu-ld: vmlinux.o: in function `rockchip_do_pmu_set_power_domain':
-> pm-domains.c:(.text+0x19aa103): undefined reference to `arm_smccc_1_1_get_conduit'
-> 
-> Caused by commit
-> 
->    61eeb9678789 ("pmdomain: rockchip: Check if SMC could be handled by TA")
-> 
-> $ grep CONFIG_HAVE_ARM_SMCCC_DISCOVERY .config
-
-It seems x86_64_defconfig did't enable  CONFIG_HAVE_ARM_SMCCC_DISCOVERY 
-which apparently belongs to ARM stuff.
-
-Selecting HAVE_ARM_SMCCC_DISCOVERY and ARM_PSCI_FW should pass the
-x86_64 allmodconfig compile.
-
---- a/drivers/pmdomain/rockchip/Kconfig
-+++ b/drivers/pmdomain/rockchip/Kconfig
-@@ -5,6 +5,8 @@ config ROCKCHIP_PM_DOMAINS
-         bool "Rockchip generic power domain"
-         depends on PM
-         select PM_GENERIC_DOMAINS
-+       select ARM_PSCI_FW
-+       select HAVE_ARM_SMCCC_DISCOVERY
-         help
-           Say y here to enable power domain support.
-           In order to meet high performance and low power requirements, 
-a power
+Subject: Re: [PATCH] usb: gadget: Increase the limit of USB_GADGET_VBUS_DRAW
+ to 900mA
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Simona Vetter <simona.vetter@ffwll.ch>, Takashi Iwai <tiwai@suse.de>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250120111702.3738161-1-prashanth.k@oss.qualcomm.com>
+ <894f42a7-50a5-401e-a705-a06eafd6161d@rowland.harvard.edu>
+ <1b1587e8-5c38-4138-a27a-1de71ff07ce3@oss.qualcomm.com>
+ <e36303c0-9d1f-4c66-bc40-891958507275@rowland.harvard.edu>
+ <d308300f-2559-4d13-8d15-5a2416ac00c9@oss.qualcomm.com>
+ <e823a961-a0a1-46c3-84a9-7da3cd718f4c@rowland.harvard.edu>
+Content-Language: en-US
+From: Prashanth K <prashanth.k@oss.qualcomm.com>
+In-Reply-To: <e823a961-a0a1-46c3-84a9-7da3cd718f4c@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: fNHcMu7Qgce3k8TfiT8OxIWbE0gHDq6E
+X-Proofpoint-ORIG-GUID: fNHcMu7Qgce3k8TfiT8OxIWbE0gHDq6E
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-19_11,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=319 clxscore=1015 mlxscore=0 lowpriorityscore=14 adultscore=0
+ phishscore=0 suspectscore=0 bulkscore=14 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200026
 
 
-> $
-> 
-> I have used the pmdomain tree from next-20250219 for today.
-> 
 
+On 22-01-25 12:56 am, Alan Stern wrote:
+> On Tue, Jan 21, 2025 at 10:19:08PM +0530, Prashanth K wrote:
+>>
+>>
+>> On 21-01-25 08:36 pm, Alan Stern wrote:
+>>> On Tue, Jan 21, 2025 at 09:50:08AM +0530, Prashanth K wrote:
+>>>>
+>>>>
+>>>> On 20-01-25 08:17 pm, Alan Stern wrote:
+>>>>> On Mon, Jan 20, 2025 at 04:47:02PM +0530, Prashanth K wrote:
+>>>>>> Currently CONFIG_USB_GADGET_VBUS_DRAW limits the maximum current
+>>>>>> drawn from Vbus to be up to 500mA. However USB gadget operating
+>>>>>> in SuperSpeed or higher can draw up to 900mA. Also, MaxPower in
+>>>>>> ConfigFS takes its default value from this config. Hence increase
+>>>>>> the allowed range of CONFIG_USB_GADGET_VBUS_DRAW to 900mA.
+>>>>>
+>>>>> Is this the sort of thing that really needs to be a Kconfig option?  Why 
+>>>>> not make the decision at runtime, based on the needs of the gadget or 
+>>>>> function drivers and the connection speed?
+>>>>>
+>>>>> Alan Stern
+>>>>>
+>>>>
+>>>> Right, set_config() in composite.c does this in runtime based on the
+>>>> values of MaxPower (from configFS), VBUS_DRAW defconfig and speed.
+>>>> If we don't set MaxPower from configFS, this config helps to set it
+>>>> during compile time. In fact MaxPower in configFS takes its default
+>>>> value from CONFIG_USB_GADGET_VBUS_DRAW . Sent this patch because Kconfig
+>>>> has this limitation where it's only allowing values upto 500mA.
+>>>
+>>> Why does MaxPower need to be set at compile time?  Why not set it at 
+>>> runtime instead?
+>>>
+>>> If MaxPower gets set at runtime then it can take its default value to be 
+>>> 500 mA or 900 mA depending on the connection speed.  There will be no 
+>>> need for CONFIG_USB_GAGDGET_VBUS_DRAW.
+>>>
+>>
+>> Yes, agreed. Can we mark CONFIG_USB_GAGDGET_VBUS_DRAW as legacy and
+>> maybe also avoid configfs/composite from using it?
+> 
+> Indeed, the whole idea is to avoid using CONFIG_USB_GADGET_VBUS_DRAW in 
+> configfs and composite.
+> 
+> If nothing will still be using it, just remove it entirely.  No need to 
+> mark it as legacy.
+> 
+> Alan Stern
+
+Hi Alan, small doubt, I see that gadget/legacy/webcam.c is a super-speed
+gadget which uses CONFIG_USB_GADGET_VBUS_DRAW. I'm quite not really sure
+if anyone uses it now, but if someone uses it, then wouldn't my patch be
+applicable there?
+
+Noticed this while preparing a patch to remove dependency of VBUS_DRAW
+config from configfs/composite layer. Its ready, will send that after
+some testing.
+
+Regards,
+Prashanth K
