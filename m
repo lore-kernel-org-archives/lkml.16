@@ -1,273 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D060205E1A;
-	Thu, 20 Feb 2025 16:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098711FECD8;
+	Thu, 20 Feb 2025 16:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068571; cv=none; b=hZgU6fOZSmqiq0OWva6xRMNrfi0koc9vhZbjgxZTsmurf6pVH6Q/y14u1U8BJkjqFslcvs8GUOSnk9XaGaUt4PoffPRWOa3KZIHxQ3npxhB9hEtp8xXbcKAhA8vmRS1Fh/SdyvRDERzTqY5IG3PEi+LmAoHCrdWmssUkfl46lDg=
+	t=1740068598; cv=none; b=mnQYyM5uIxBNGkZtz0ijreI9r60OQTeEI5UDbXEevAD6Rfjf83jEfrjg+6aCqieDB/YO9jBtszhQsHBI1hyFA1g9Ondl8jlkThrC1qKnEwqL9Wg2d4OrEUZT2sTSmYgyg00mkb4hBxjYAAm8BvjskXrfM1wJAnppUJpRgvtULjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068571; c=relaxed/simple;
-	bh=uFJOzNRpBJs4ZgU0El5Jll6c9b+JXEfrF2/5rB8rErk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZiyrqzVkclRICayMdAr7FjlZ0icoq85+eaQen4AZu5jtV/72YvGAojPL62tT2CE+7AYyT3zpPTwLfm1Hzj7RMynHVlbERVodeLjN7tJtT/vfUjoRzkSieVp8z9MtzI8ICxsrUl57jRh+4QOxWJ7nWG6qEmzxy4N5vlWVMtsJqGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ta6vj8K7; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ta6vj8K7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740068570; x=1771604570;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uFJOzNRpBJs4ZgU0El5Jll6c9b+JXEfrF2/5rB8rErk=;
-  b=Ta6vj8K7xV7+tCXBYjTQgXQDpbOj/ND3uVaeyiM0wqUJ6Hu2nCYg13kU
-   nr9EObD/7ApbTDWvIh4qgGJzJEKR6Rx8G5VYENuaQ+ruziKShjH+3NOTL
-   jKnA8+8ksM1Bu22VmvezuIUoOuNwOv8njgc+3hvSYvqUwjaDH3VCU31aw
-   2E9jHcC3MZkB5oXnlAXSJtArmtSzDSkdsc9deHaWkAthBgps1USIzIdwW
-   uY9oSJ6JQYbx+rwltGzgZnQX9dOSfUs/hkKIS+r+IvAJS0MyWtGqC5C2P
-   mBAHd9RNkHZdLB4zFDENOCY/j9J39j13FPgqjD0JdwjnEo9pkasObAbZS
-   Q==;
-X-CSE-ConnectionGUID: MQRKu7qYSuyqzt5KdIRhFw==
-X-CSE-MsgGUID: l19djoqaSIeaR9+B0pRTKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40043975"
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="40043975"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:22:45 -0800
-X-CSE-ConnectionGUID: Tt+VWLeWQnqEtxJ2MHDbMQ==
-X-CSE-MsgGUID: YoqKOrm3S+O/RXoUFWC7Xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="115061338"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 20 Feb 2025 08:22:42 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D651D4E8; Thu, 20 Feb 2025 18:22:40 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 3/3] gpiolib: devres: Finish the conversion to use devm_add_action()
-Date: Thu, 20 Feb 2025 18:20:28 +0200
-Message-ID: <20250220162238.2738038-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
-In-Reply-To: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
-References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1740068598; c=relaxed/simple;
+	bh=UV91EEUA7p1dTgOf/1BFgaJCW0c53QB7ivumCRNw6nU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d1N2rB/9XrfOLRivVfNRLV6ebnzUvAw8ak7AMG9vVPjOM01j2iHAYyE98KlhN77ZvFwfKT4RQzKXOUKypRyBSdRnlBV+nWOU96ht0MfKK8KdTVTWm9BJaJ0YzAhjPKYlpjWTAKN/85XyG2ABzfR4TM9Ft1yZqEpeX9Hd0GpTWSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-221206dbd7eso22553015ad.2;
+        Thu, 20 Feb 2025 08:23:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740068596; x=1740673396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dgLm1m+OvFNAJVKM8oPbqnxCJCCi3KlXydcSUynOK6g=;
+        b=k79Bmwo6yQNE2b7jxwE33F+22mk1fdVx9vONrgWfFC1QgY7ajPrzunt53uY8G65aCL
+         mH67egfAk44v/n1/QN04ILfZ0sMpsxxxhzujoIoDWbNbUNuXH3vFktIU03ky0Jjljwpv
+         iSRuoGLE8tuR8iMFuenShJbx/+wV4t8dcA0BYF+35iyLbEIt4BLMQm9+USN2zY+iQmgJ
+         GH6qCZEveWYsSxZeCJe9Xhnr1W8mGV1If2xzdC3GKdBwV4sLGj7R/eAYMwV6JdYIca7G
+         5QF5pNXs6nvYG2AGnmnyBKbKD3AVJWjpqOFDmZdN54PQTWemDBHOK5Am2VFZfprhwxhF
+         Sfzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQlwSsmMiwTsEL/JvkHeMgbE7wc3U3HieEbL41kRGUxWlBufNf0EBVSXLKbth+Gj+4G2Esvm9zxaUd@vger.kernel.org, AJvYcCVXpk7Tz4GYknC28hDAmqnysTfAPa65QnyJZJupkFkxxftGhCxM4Metkv+2WJ/zQ+hUqGi6F76/@vger.kernel.org, AJvYcCXSP8NlpagSuxweKBdVL69KqpJ9QgN3vkt/6rTDvsGG17XEiTuOI558rTa9d21kO5noo5fkodfRGvidkRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMKlxqVUGgAInMz/kN0Db5Mx370ICCXAvktmzJh5z9ijl25qLV
+	JnugnOO87adg3CUSKKdmg5BqTuHINITOtufqRG0wRSlHl0dqWcOS
+X-Gm-Gg: ASbGncuC/KL/VGmv075Xwv88lLtHT9d9la9lw+2TYFWQ6lKrUK6x/uiv7SDyE9Icv02
+	Jr/OAF5lWrF6x5r22Jr9x83E1fbPZqKuvrchT2XtNwO5by3o7k21O0F7SJI/hN5LOzJ1Ts/9+Ab
+	96JJNxgQEtZkhtFt1Lhhc9CBFrE+g+HvPJuLhzqkftSQYXt9yxDZoQqwgLRODjI3V1MM5zCi+Qj
+	Bwo6B3OPMG0cxFM789ngrLbZQn/dqnpkpUGiW250Jc+GeM3QfyiAQVeAlza/BsUYXSXhG3ZpRAP
+	v3itHQUyqZtHcL7ZW/l44iXc4uZiEqSPhpZHW6w+PN51x9/gSQ==
+X-Google-Smtp-Source: AGHT+IGxDghjV24MGlpOLAShvGV5okwWCIIPd34UUJWTKrxs47PV8/eOQe8MU2IpkQPtA2BMbQevKQ==
+X-Received: by 2002:a17:903:2307:b0:220:fe24:7910 with SMTP id d9443c01a7336-22170968867mr139817165ad.15.1740068596290;
+        Thu, 20 Feb 2025 08:23:16 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d53494c0sm122756675ad.6.2025.02.20.08.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 08:23:15 -0800 (PST)
+Date: Fri, 21 Feb 2025 01:23:13 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: lpieralisi@kernel.org, mani@kernel.org, kishon@kernel.org,
+	bhelgaas@google.com, jpinto@synopsys.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Fix a double free in __pci_epc_create()
+Message-ID: <20250220162313.GD2510987@rocinante>
+References: <20250107074601.789649-1-make24@iscas.ac.cn>
+ <20250114005737.GA2004845@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250114005737.GA2004845@rocinante>
 
-With a recently added helper we can complete the conversion of
-the GPIOLIB code to use devm_add_action() in all suitable cases.
-So do this.
+Hello,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-devres.c | 90 ++++++++++-------------------------
- 1 file changed, 25 insertions(+), 65 deletions(-)
+> > The put_device(&epc->dev) call will trigger pci_epc_release() which
+> > frees "epc" so the kfree(epc) on the next line is a double free.
+> > 
+> > Found by code review.
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 08205f355ceb..840d0ad7c5ba 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -6,7 +6,7 @@
-  * Copyright (c) 2011 John Crispin <john@phrozen.org>
-  */
- 
--#include <linux/device.h>
-+#include <linux/device/devres.h>
- #include <linux/err.h>
- #include <linux/export.h>
- #include <linux/gfp.h>
-@@ -19,32 +19,14 @@
- struct fwnode_handle;
- struct lock_class_key;
- 
--static void devm_gpiod_release(struct device *dev, void *res)
-+static void devm_gpiod_release(void *desc)
- {
--	struct gpio_desc **desc = res;
--
--	gpiod_put(*desc);
-+	gpiod_put(desc);
- }
- 
--static int devm_gpiod_match(struct device *dev, void *res, void *data)
-+static void devm_gpiod_release_array(void *descs)
- {
--	struct gpio_desc **this = res, **gpio = data;
--
--	return *this == *gpio;
--}
--
--static void devm_gpiod_release_array(struct device *dev, void *res)
--{
--	struct gpio_descs **descs = res;
--
--	gpiod_put_array(*descs);
--}
--
--static int devm_gpiod_match_array(struct device *dev, void *res, void *data)
--{
--	struct gpio_descs **this = res, **gpios = data;
--
--	return *this == *gpios;
-+	gpiod_put_array(descs);
- }
- 
- /**
-@@ -114,8 +96,8 @@ struct gpio_desc *__must_check devm_gpiod_get_index(struct device *dev,
- 						    unsigned int idx,
- 						    enum gpiod_flags flags)
- {
--	struct gpio_desc **dr;
- 	struct gpio_desc *desc;
-+	int ret;
- 
- 	desc = gpiod_get_index(dev, con_id, idx, flags);
- 	if (IS_ERR(desc))
-@@ -126,23 +108,16 @@ struct gpio_desc *__must_check devm_gpiod_get_index(struct device *dev,
- 	 * already under resource management by this device.
- 	 */
- 	if (flags & GPIOD_FLAGS_BIT_NONEXCLUSIVE) {
--		struct devres *dres;
-+		bool dres;
- 
--		dres = devres_find(dev, devm_gpiod_release,
--				   devm_gpiod_match, &desc);
-+		dres = devm_is_action_added(dev, devm_gpiod_release, desc);
- 		if (dres)
- 			return desc;
- 	}
- 
--	dr = devres_alloc(devm_gpiod_release, sizeof(struct gpio_desc *),
--			  GFP_KERNEL);
--	if (!dr) {
--		gpiod_put(desc);
--		return ERR_PTR(-ENOMEM);
--	}
--
--	*dr = desc;
--	devres_add(dev, dr);
-+	ret = devm_add_action_or_reset(dev, devm_gpiod_release, desc);
-+	if (ret)
-+		return ERR_PTR(ret);
- 
- 	return desc;
- }
-@@ -171,22 +146,16 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 					      enum gpiod_flags flags,
- 					      const char *label)
- {
--	struct gpio_desc **dr;
- 	struct gpio_desc *desc;
--
--	dr = devres_alloc(devm_gpiod_release, sizeof(struct gpio_desc *),
--			  GFP_KERNEL);
--	if (!dr)
--		return ERR_PTR(-ENOMEM);
-+	int ret;
- 
- 	desc = gpiod_find_and_request(dev, fwnode, con_id, index, flags, label, false);
--	if (IS_ERR(desc)) {
--		devres_free(dr);
-+	if (IS_ERR(desc))
- 		return desc;
--	}
- 
--	*dr = desc;
--	devres_add(dev, dr);
-+	ret = devm_add_action_or_reset(dev, devm_gpiod_release, desc);
-+	if (ret)
-+		return ERR_PTR(ret);
- 
- 	return desc;
- }
-@@ -244,22 +213,16 @@ struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
- 						     const char *con_id,
- 						     enum gpiod_flags flags)
- {
--	struct gpio_descs **dr;
- 	struct gpio_descs *descs;
--
--	dr = devres_alloc(devm_gpiod_release_array,
--			  sizeof(struct gpio_descs *), GFP_KERNEL);
--	if (!dr)
--		return ERR_PTR(-ENOMEM);
-+	int ret;
- 
- 	descs = gpiod_get_array(dev, con_id, flags);
--	if (IS_ERR(descs)) {
--		devres_free(dr);
-+	if (IS_ERR(descs))
- 		return descs;
--	}
- 
--	*dr = descs;
--	devres_add(dev, dr);
-+	ret = devm_add_action_or_reset(dev, devm_gpiod_release_array, descs);
-+	if (ret)
-+		return ERR_PTR(ret);
- 
- 	return descs;
- }
-@@ -307,8 +270,7 @@ EXPORT_SYMBOL_GPL(devm_gpiod_get_array_optional);
-  */
- void devm_gpiod_put(struct device *dev, struct gpio_desc *desc)
- {
--	WARN_ON(devres_release(dev, devm_gpiod_release, devm_gpiod_match,
--		&desc));
-+	devm_release_action(dev, devm_gpiod_release, desc);
- }
- EXPORT_SYMBOL_GPL(devm_gpiod_put);
- 
-@@ -321,20 +283,19 @@ EXPORT_SYMBOL_GPL(devm_gpiod_put);
-  * you want to hand over lifecycle management of a descriptor to another
-  * mechanism.
-  */
--
- void devm_gpiod_unhinge(struct device *dev, struct gpio_desc *desc)
- {
- 	int ret;
- 
- 	if (IS_ERR_OR_NULL(desc))
- 		return;
--	ret = devres_destroy(dev, devm_gpiod_release,
--			     devm_gpiod_match, &desc);
-+
- 	/*
- 	 * If the GPIO descriptor is requested as nonexclusive, we
- 	 * may call this function several times on the same descriptor
- 	 * so it is OK if devres_destroy() returns -ENOENT.
- 	 */
-+	ret = devm_remove_action_nowarn(dev, devm_gpiod_release, desc);
- 	if (ret == -ENOENT)
- 		return;
- 	/* Anything else we should warn about */
-@@ -353,8 +314,7 @@ EXPORT_SYMBOL_GPL(devm_gpiod_unhinge);
-  */
- void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs)
- {
--	WARN_ON(devres_release(dev, devm_gpiod_release_array,
--			       devm_gpiod_match_array, &descs));
-+	devm_remove_action(dev, devm_gpiod_release_array, descs);
- }
- EXPORT_SYMBOL_GPL(devm_gpiod_put_array);
- 
--- 
-2.45.1.3035.g276e886db78b
+[...]
+> Which kernel release did you review?  I don't see this kfree() when looking
+> at the current code base per:
+> 
+>   https://elixir.bootlin.com/linux/v6.13-rc1/source/drivers/pci/endpoint/pci-epc-core.c#L956-L1020
 
+I will answer my own question.  This surplus kfree() has already been
+removed as part of the following commit:
+
+  c9501d268944 ("PCI: endpoint: Fix double free in __pci_epc_create()")
+
+Nevertheless, thank you for the patch.
+
+	Krzysztof
