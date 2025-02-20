@@ -1,101 +1,92 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F401190072;
-	Thu, 20 Feb 2025 18:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3DA212D83;
+	Thu, 20 Feb 2025 18:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740075349; cv=none; b=TDK5vL805kIfbNtj2ajaZz9Wcp4nK2OgYl5QwfMp8VGpkNq1HZLbdrfNqAiHtA9fcaCqyiV/IDwizS6SXYL81k5sVh+p0UOZbCitCCQP/NwJEae1I5zBsJ86sEWZbpjWAocXjK3xGdP3GnFiIsidLzCXyxo/b4krJ1cFtBT95uk=
+	t=1740075356; cv=none; b=KuDwyU1InR2cra8ZhxYY6fQrGShgxcILTb4rdHCmgwOhjm4C8vAgenCshhs6sH5X929yO02Qp6iZ9yhVK7tBUk5B2MumNBhUYTpaQBYcfUQKnfHMAKYz3tWAemRV9MH7wU7h9d172f+Kb8QAxQBKCUACGLygZWJT+1DYvSRHgZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740075349; c=relaxed/simple;
-	bh=Wys9QJlwepm1v9SnOdbDr+MsRfT7ylIdLIDqZxLfcQI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=arMK/xEy2Duz/sDchlOnnOIFAm4XRaDXL5G0eG5M2WP+6oBUstqt6jlTFXBCI9PMWZadsP3y+v8+vlCYHnunnlHe8TdxQZVOveYt9KgrsAOg9gGgJh/BW5k9DJmNqYWT/n+h+nCcWWR5EcGq/CBk2GMxm6r8c3NhV10T+H8/Mm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EmyOHCPL; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740075356; c=relaxed/simple;
+	bh=pXZMKzzYYg2ZzL6hhYg/dSMY9TOUI17UUV6T2oswPNU=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=T7BNFvilq5NhSfrbHLcidEyZlwMc1SGE7SSmIcyeHcrCcrQX34i4/Cd/25cfzPdR0nu/xKYSxcHuSZ6ONuIOBcBFhqbvajZwS5fBY+q0nUazZzgIlXgCQMsJv+m42Agneym8Kc7leqRCq6AONOTW9/u9JEwebXzyHNbhKocynvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HN+Fu6ow; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmyOHCPL"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22185cddbffso34734705ad.1;
-        Thu, 20 Feb 2025 10:15:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740075348; x=1740680148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wys9QJlwepm1v9SnOdbDr+MsRfT7ylIdLIDqZxLfcQI=;
-        b=EmyOHCPLfcpWh5MXgMKhbm+2EnrOJcJ1IaeH3q/evtv3LhHlZqxKjoEIA3ae7753dQ
-         D0ljSkP0iif5PR+I0t2Ov7YoykQtCnIfbRHcGyXShBSkYky5F030Le9P2m/geu1GkUnn
-         DRuWBwSOHtS16w/Dw9J0E0GRdJPl6lBGNs0gxg63W8lPyKmSXSCwckiSWzieKRpYB3Pf
-         5sOFK02iA8AbmDdIjmVznJQvYpQgiQqwKQEwqWyKZiAOSUwgHWxp0Z1VG7zthA1Mni97
-         tbHYvqybZ7y/c2x83IiNqevBTBYudlR6UVHpA+rPs1B+PzQW5ZkEGtVEURwyVSbyoprw
-         TY9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740075348; x=1740680148;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wys9QJlwepm1v9SnOdbDr+MsRfT7ylIdLIDqZxLfcQI=;
-        b=mTrNTXnMto6KluxHNKM2NB7C63/6cbI9cKWfzrwrzMQu8mHJkE7z4qj8P4A0Ja7ZC3
-         Cpv4M2/lo45fNfmhf31l32KxlDkBewpi78/yeknsIoSF0hbEF79v2+N71NLVdsX5hv55
-         cJkyK+o7q0PlnS1h780qPoHGyFg5Nm7tJtiO3tSaWVNKbR1L6qPhGk0oKvOsPEcZrElC
-         sI7pvRfgQRM0wD88q+l3ZlEHOstyJXh2YUiHRVThSVNBR1BCyMt5JJv7khIRkMA32ZK7
-         ZRJHYSgbbyoEIulN0oWxH83NUT/rc7TBDr36g/1lpzrixVGzqSuFpe9uEBYnLncIk8QZ
-         yxxw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/zhV1mmC2QYJFLYXSlg+Ql2yJncDX0qudSZ+tu54eCakHTwMHF4wPLswI5IZM2BKxcJtozXrPJPqq25I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuafitmDy3mTX44DG6+E+BgyvSoLsxONg/9xbcAKjMpi6oqGVi
-	IY97gSxOBCjBZelXssGXOGLc4xd6BvV9nimgZTqpXBhLBcXuIDlw
-X-Gm-Gg: ASbGncuVV5NxnMG/SqB869SRT2We1/hKWC0tadOhCXESmTMtfgPV06AwlBhm7AF/n5A
-	3GGe0dkDiSWONP1M2QtpiZfHqr6mcmAaV+elPEnvR/NyxyjVIXUyQuPGKUBo47uPPN+YuKmD7jh
-	SEuW0G5FZfXSMD/GyncTvDszy+3aIN6inXLTuOxfkIYWjWHODtM1TjGFv8nBKfmEr8/b9RAnHdx
-	VuSjc+zijL/5539OKBAXIzmyl/TQgzkqO2c7YGtBwiPJcq0VtN0wg0AxyB06w26EjCRoMhV5MRG
-	gvV9nGx9nHd6fYc9Vq2Dn5piJ8vIe2HGF1oe
-X-Google-Smtp-Source: AGHT+IEgWjnfefIgsoTVd8PQY1J0HjbKRI8HYOxidDm3zelm4SFoeJsjfCDC06yoM88BTtdOynEoMQ==
-X-Received: by 2002:a05:6a00:2e14:b0:730:9637:b2ff with SMTP id d2e1a72fcca58-73425ca201fmr166326b3a.7.1740075347655;
-        Thu, 20 Feb 2025 10:15:47 -0800 (PST)
-Received: from DESKTOP-P76LG1N.localdomain ([14.162.192.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7326ea62b03sm9457853b3a.70.2025.02.20.10.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 10:15:46 -0800 (PST)
-From: Nam Tran <trannamatk@gmail.com>
-To: pavel@kernel.org,
-	lee@kernel.org
-Cc: linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nam Tran <trannamatk@gmail.com>
-Subject: [PATCH v1 0/2] leds: add new LED driver for TI LP5812
-Date: Fri, 21 Feb 2025 01:15:39 +0700
-Message-Id: <20250220181541.2341-1-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HN+Fu6ow"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE9EC4CED1;
+	Thu, 20 Feb 2025 18:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740075355;
+	bh=pXZMKzzYYg2ZzL6hhYg/dSMY9TOUI17UUV6T2oswPNU=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=HN+Fu6owbbSdAO12UCxvkCKglYK6ULsESp0b5X4bmkghqjDvD2Af4kblKeQqxFwNk
+	 cBtkfqu5PiA3Z6DfAWszErsIQ+DSeRS3nVW48RBqX+d9+NV5jhLrJkLiOHW7vM9pQa
+	 Y/Q1HLb3bvVfnWTWXeroU9uF3dJa8TNtAfHZzqGRskh2roiC8IMoMaA8DASYo1UtJU
+	 lB5noWBLe6UMIVvqDIHOjMhdb4xYqgZrio1Pvn0bVKqqEx9fHI8wBby806DswVdLHt
+	 9G8HH2E8t8jr4j6U8AfoJIYt37pQ1dN3GuhEk5TN6R3Sfrq085w00opmRbbGuBIVnF
+	 3xZL0//vZBqZQ==
+Date: Thu, 20 Feb 2025 12:15:54 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: claudiu.beznea.uj@bp.renesas.com, geert+renesas@glider.be, 
+ rui.zhang@intel.com, sboyd@kernel.org, linux-renesas-soc@vger.kernel.org, 
+ biju.das.jz@bp.renesas.com, devicetree@vger.kernel.org, 
+ p.zabel@pengutronix.de, lukasz.luba@arm.com, rafael@kernel.org, 
+ conor+dt@kernel.org, mturquette@baylibre.com, john.madieu@gmail.com, 
+ linux-kernel@vger.kernel.org, krzk+dt@kernel.org, magnus.damm@gmail.com, 
+ linux-clk@vger.kernel.org, daniel.lezcano@linaro.org
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20250220152640.49010-4-john.madieu.xa@bp.renesas.com>
+References: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
+ <20250220152640.49010-4-john.madieu.xa@bp.renesas.com>
+Message-Id: <174007535477.3240838.6529561683095110061.robh@kernel.org>
+Subject: Re: [PATCH 3/7] dt-bindings: thermal: r9a09g047-tsu: Document the
+ TSU unit
 
-From: Nam Tran <trannamatk@gmail.com>
-To: Pavel Machek <pavel@kernel.org>, Lee Jones <lee@kernel.org>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This patch series adds support for the Texas Instruments LP5812 LED driver.
-Patch 1 adds the Device Tree (DT) bindings documentation.
-Patch 2 introduces the core driver implementation.
+On Thu, 20 Feb 2025 16:26:08 +0100, John Madieu wrote:
+> The Renesas RZ/G3E SoC includes a Thermal Sensor Unit (TSU) block designed
+> to measure the junction temperature. The device provides real-time temperature
+> measurements for thermal management, utilizing a single dedicated channel
+> (channel 1) for temperature sensing.
+> 
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> ---
+>  .../thermal/renesas,r9a09g047-tsu.yaml        | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+> 
 
-The LP5812 is an I2C-controlled LED driver capable of driving up to 4 LEDs with independent brightness control and pattern programming.
-This driver provides support through the Linux LED framework and includes device tree bindings for proper integration.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-This driver has been tested on Raspberry Pi 4 B using kernel version 6.1.13.
+yamllint warnings/errors:
 
-I kindly request feedback from the community to ensure that this driver adheres to the Linux LED subsystem standards.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.example.dtb: thermal@14002000: reg: [[0, 335552512], [0, 4096]] is too long
+	from schema $id: http://devicetree.org/schemas/thermal/renesas,r9a09g047-tsu.yaml#
 
-Thank you for your consideration.
+doc reference errors (make refcheckdocs):
 
-Best regards,
-Nam
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250220152640.49010-4-john.madieu.xa@bp.renesas.com
 
----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-Changes in v1:
-- Initial submission.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Signed-off-by: Nam Tran <trannamatk@gmail.com>
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
