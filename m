@@ -1,124 +1,100 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A501E9B36
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE621E9912;
+	Thu, 20 Feb 2025 09:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740045172; cv=none; b=DmNqjcuQ7kRPBT6bh/6GSCZELRJtv30hg4GngS9bnEDhyVOJDVKS4IaVo0en7D3pwf+kuiYS91rfXgoJvSqqHNpmgigkTnDONh0FeBIfeEPgwQYlsNbVcO/VeUasq686Tj3/n7XtrjblM054i47vtMknaN2tB7dt/HzOJ2cKj34=
+	t=1740045176; cv=none; b=IvLB0hlrQ19ZD0a47EFzCgHDvv3+Ahx2fr1mPA/qHJzplfKaqtxn8PgfTONnnp5IsF/MboO7AA1SPgK7yGpNbYXfh6Q8o44iUY4V5ewNMlkmmrUWvhHUHIGTU8M9Ulba5JMCoA5OZ6Rwbm2n7oLhZuEE1kERM6d5Hor0OLkaIIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740045172; c=relaxed/simple;
-	bh=6UUs/Jo7ZbJdxRb140Kxx2e+0xZg0ypRcjIrjXbe06w=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b1LKTxGKAQKF2WMsJ+KS1bGofhUxR/RGvJk3UR4NFJsSZoKdMCI6BwaGEB7RQGw7QTrY6k1cg4gToVZSujaeLYhFWAi2I3PDgz0zKCk+jXKaNCoFw/JL4vBuZ7jhYVllK0Kc7CuC0XvLAl2IvgqKhXQAQwh+DgUHCG3gYAppnL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=dZYMHoki; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dZYMHoki"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K6O27F006861;
-	Thu, 20 Feb 2025 03:52:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=yY+l2M/rIyGedVKpG4E7Aob3HsYRuTepJXAzAhoO6+U=; b=
-	dZYMHokiH2PG3fSTyficisHYbBMPyv8m7dU40dU996JdARnLGjlRLz4o8abSCP0l
-	i/bZbC5MNX7Jv64yPe2iquk3yaMshxvjaq4HP8UiiYu8gi09irG4jfb8p0w5VMiD
-	HFeaeLLJWDYa0uWpfjC5FpbJwogZT4VmXl3dASuGIGAUkX7mzaK0KKXvE/hQvJfP
-	/pL7w+AU8sVxtj81PLK5WZU6gteXR6rQDoyFETONieSZaDNlXmJoxeIOlNglkXgB
-	Pcttq22XSab1Zc8YvVB+9FuZL3c/5CltLQmnRg6PRvORkACHKnjyTpObl/S/ZbYH
-	rayIumwR8yXlBivD1YzH4A==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44vyywv5k4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 03:52:38 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 20 Feb
- 2025 09:52:35 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Thu, 20 Feb 2025 09:52:35 +0000
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id AE22482025A;
-	Thu, 20 Feb 2025 09:52:35 +0000 (UTC)
-Date: Thu, 20 Feb 2025 09:52:34 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-CC: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-        Mark Brown <broonie@kernel.org>,
-        Simon Trimmer
-	<simont@opensource.cirrus.com>,
-        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] firmware: cs_dsp: Remove usage of GFP_DMA
-Message-ID: <Z7b7Ylk55D1LZ2WX@opensource.cirrus.com>
-References: <20250211-cs_dsp-gfp_dma-v1-0-afc346363832@linutronix.de>
- <0e9c1cca-592f-4983-93f4-ab2f76a3c97e@opensource.cirrus.com>
- <e93d1b72-43da-4e96-9523-e1bbf3853031@opensource.cirrus.com>
- <1e251815-5d58-436b-9120-e88f75a7ecaa@sirena.org.uk>
- <20250213161059-a4c53711-fdf6-480c-af49-f9f36227ba42@linutronix.de>
- <8d15d138-658c-4083-885b-62495023bb9a@opensource.cirrus.com>
+	s=arc-20240116; t=1740045176; c=relaxed/simple;
+	bh=p3jUliwfLRPcDyQ9R4QDPtRJjUXusVtL9hqIDKIUrGo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r1HDN0Ksl4WzK5bIRsM9Q4ChzGptJPTm/5b+NtRz3yvTPWXu2buvBTDA/U8L82Dc4kGSFwHtbY5N1BFrehcnvXpLLznASLUWxZGLpwIqa9rf1judliIOgwhXqQxD41eRUQN9i/H6lMDfLWisKmozXLQRXHxzIGTfjFk62ytv4/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowAD3n_pj+7Zn_87hDg--.4050S2;
+	Thu, 20 Feb 2025 17:52:40 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: gregkh@linuxfoundation.org
+Cc: stern@rowland.harvard.edu,
+	christophe.jaillet@wanadoo.fr,
+	mka@chromium.org,
+	make_ruc2021@163.com,
+	javier.carrasco@wolfvision.net,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] usb: core: Add error handling in usb_reset_device for autoresume failure
+Date: Thu, 20 Feb 2025 17:52:18 +0800
+Message-ID: <20250220095218.970-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8d15d138-658c-4083-885b-62495023bb9a@opensource.cirrus.com>
-X-Proofpoint-GUID: hh4Z1bQdNNYjCpIXScJUQhCzOajF4DKZ
-X-Proofpoint-ORIG-GUID: hh4Z1bQdNNYjCpIXScJUQhCzOajF4DKZ
-X-Authority-Analysis: v=2.4 cv=WOSFXmsR c=1 sm=1 tr=0 ts=67b6fb66 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=8nJEP1OIZ-IA:10 a=T2h4t0Lz3GQA:10 a=0uJkZ3h_mcAHihPl4hIA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
-X-Proofpoint-Spam-Reason: safe
+X-CM-TRANSID:qwCowAD3n_pj+7Zn_87hDg--.4050S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zry8Wr48GrWxtFWxCrW5trb_yoW8GF1fpw
+	48Aayqkry8Gr1rCa1jy34kuFy5Zw4Sy3y3JF93Ww1Igr97A345JFyrAFy3ta4rArZ5tF9x
+	tFW3K3yF9Fy7AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjAsqtUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsTA2e22-l9yQAAsb
 
-On Wed, Feb 19, 2025 at 04:26:55PM +0000, Richard Fitzgerald wrote:
-> On 13/02/2025 3:16 pm, Thomas Weißschuh wrote:
-> > On Thu, Feb 13, 2025 at 03:06:59PM +0000, Mark Brown wrote:
-> > > On Thu, Feb 13, 2025 at 02:28:06PM +0000, Richard Fitzgerald wrote:
-> > > > On 11/02/2025 5:21 pm, Richard Fitzgerald wrote:
-> > > 
-> > > > > > Not tested on real hardware.
-> > > > > > This came up while porting kunit to mips64.
-> > > > > > Apparently GFP_DMA does not work there, but IMO the usage of GFP_DMA by
-> > > 
-> > > > I would say that is a bug in mips64 that should be fixed in mips64.
-> > > > It is not reasonable to expect generic drivers to have special cases for
-> > > > platforms that don't handle GFP_DMA.
-> > 
-> > Indeed, I did that, too.
-> > 
-> > > What specifically is the issue?  If it's a build time issue I'd
-> > > definitely agree that we should just be able to assume that platforms at
-> > > least build.  IIRC there is a Kconfig you can depend on for DMA but it
-> > > seems more trouble than it's worth to fix all users.
-> > 
-> > More details in [0], It's only a runtime issue.
-> > 
-> > I'm still wondering how all the on-stack buffers used with regmap_raw_read()
-> > and regmap_raw_write() by cs_dsp are satisfying the DMA requirements.
-> > 
-> There are 3 suspicious regmap_raw_read(). The others are all integers,
-> which are guaranteed not to cross a page boundary.
-> 
-> However, it looks like it might be safe to remove the GFP_DMA flags
-> now. regmap_raw_read() calls spi_write_then_read() which specifically
-> says that the buffers do not need to be DMA-safe and internally uses a
-> DMA-safe buffer. regmap_raw_write() uses either a temporary physically
-> contiguous buffer or GFP_DMA buffer (the implementation is terrifyingly
-> complex so it's difficult to determine exactly what it does).
-> 
-> (Some older systems could only use certain special memory areas for DMA
-> but we haven't seen any of those used with cs_dsp.)
-> 
+In usb_reset_device(),  the function continues execution and
+calls usb_autosuspend_device() after usb_autosuspend_device fails.
 
-We also need to consider what the I2C subsystem does, I have a
-vague memory of thinking the SPI system will attempt to remap
-buffers but I2C will just use them as is. cs_dsp will be used
-with both, although SPI is slightly more common for obvious
-reasons.
+To fix this, add error handling for usb_autoresume_device()
+and return the error code immediately. This ensures that
+usb_autosuspend_device() is not called when usb_autoresume_device()
+fails, maintaining device state consistency.
 
-Thanks,
-Charles
+Fixes: 94fcda1f8ab5 ("usbcore: remove unused argument in autosuspend")
+Cc: stable@vger.kernel.org # 2.6.20+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/usb/core/hub.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 21ac9b464696..f2efdbdd1533 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -6292,7 +6292,9 @@ int usb_reset_device(struct usb_device *udev)
+ 	noio_flag = memalloc_noio_save();
+ 
+ 	/* Prevent autosuspend during the reset */
+-	usb_autoresume_device(udev);
++	ret = usb_autoresume_device(udev);
++	if (ret < 0)
++		goto error_autoresume;
+ 
+ 	if (config) {
+ 		for (i = 0; i < config->desc.bNumInterfaces; ++i) {
+@@ -6341,6 +6343,7 @@ int usb_reset_device(struct usb_device *udev)
+ 	}
+ 
+ 	usb_autosuspend_device(udev);
++error_autoresume:
+ 	memalloc_noio_restore(noio_flag);
+ 	udev->reset_in_progress = 0;
+ 	return ret;
+-- 
+2.42.0.windows.2
+
