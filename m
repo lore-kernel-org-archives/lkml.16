@@ -1,77 +1,144 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF29F1FECD8
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE3F1FF5FE;
+	Thu, 20 Feb 2025 16:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068404; cv=none; b=SgnhLUrIFtLwGV/l49oBSJCcI4IANnTPRwGwrRLDxvulOYPpfO6HGWnwHH1FI+L4PDvDbLR+YpWCO1IMEQbB04tnMiO8dgoSRMMUEeX7yz+q0JDpSwwUvqQAvoYaSXXPZZKH719xMRR7UakMjisTC50EuxnV00usxvmhwxexUN0=
+	t=1740068405; cv=none; b=H6NVhFJHeA91l3tGa+na4DVgg23/UtUA25hQAIIY0Sts3rLQtcOSn203qwPkctyQGB3YlkbPpTsIIPLzHTVUIMwKoQOiUpADJS+bGpxXvwGnhMxRBXoz2JIVF0HFOLwjZardheOfrOmaIjxc9FwH9T0Vn6NXSz1ka4qqX1oG33s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068404; c=relaxed/simple;
-	bh=APzJKwyhb3OuH1pPBqJmkSn0GS/wNMS+wru7Yxj4RO8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ffj92GxdfFvbyDVW6JJYidJqjxWrJwCIhhOJ40WCMbtd3OuGduPNSy5YAS0rHCiTnowXtmo9dOCC+BHpZGYKooewvuBGtC2odTHeFijS8WXNXtXEdTACCKHW2x+qK+g+wIgVc5uIy8mqBykhER/snf7hMJEsf088MuD++mYJnlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d2b6d933acso8375025ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:20:02 -0800 (PST)
+	s=arc-20240116; t=1740068405; c=relaxed/simple;
+	bh=JTx/DivSX26tTibgAJFvQhL7qIqzPuH+ImHcd7gNfjg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ez+VqJsFyS7oPBWcDnB0hQqQPvWW2ZBIw5Ht1tZESXFzIR7zdkiAymZO8Vqi1BvHYUyUjXDv05TfNKOaHuBUewAyhTrQv+NN3dtIFGuwyBnIr8f47Ru6Rmg49SxthYzGeUOQxWuWc+/fjc0h6ulGVaXuFw0sWbObgs8bT6usjnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aj9r+giO; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aj9r+giO"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2210d92292eso32406925ad.1;
+        Thu, 20 Feb 2025 08:20:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740068403; x=1740673203; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=H6MKYjKIt6NeyvlVec3PO0rK9zJCfJF3a0DPT/uo2+w=;
+        b=aj9r+giOGSNKJ3mzOStk7rMOARvT2LXYfHhcefvqidb3vpoK6bdokSfTr4kZt+o11u
+         1mvlcha9JPmISeE7tBbu+IHAAsEUYyjQ+agDVIQZtzi8AJXrmYfR1s/OqNQALkQkMnqo
+         Imueh8Ww9j3tNhp6s7MNeySmhJ0PsJiovHxLvlYYoTbjUQk5DqEAYt87rflIUNlc6ORv
+         Gxs+L/2j3OSAxe4ZNZy+6/gglSdq0qnscnTxEJSLyKzKG2t+GHP+4Ojf96w1R5maiUox
+         fqEg8aH3QnWE/5+FdRpz2h1Y6unnXCkqWYcxeIL2+oXNja8SvHtMUnNvrx7LaKejHnwK
+         UwVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740068402; x=1740673202;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l7pYURb2UEyQVm3UDJSJZBqVAJmGORVXuCUKt2v1imU=;
-        b=MuTjOSUSGgYBQ/Dj4VUwBy8dywIAynohRayv5l/GC0ahvZS7csY8h3VycSB69F2700
-         /6fyJTpZ3UvrGnmUPbYVL9hKI/rtaviYdaO3z/CNG4ZrJjcAKT64l4tXgY/Iou0S6lub
-         +zDpRHvLZmhjxjAbNVLnjA3ic+dcMaDGw7BPZhabMUoda/WiFXS55o1swPg63XHF4S9A
-         EE8i2+cuUKr1697XwKT5nNKSwIbdVe/5MdOmlhuo7mbnCW5uoPHcd78/9TkvKUKqGqJB
-         jnXylTKc+rJ83hylGDyKC2eI/a6wg9ZG9qhPm51A//P5H3bpviIe39qeII5IW9F81SXD
-         v2jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhsp/nF0vtGMAYhsUVkM6+FP4INKqX992y1JWl8gpT/KgKl+3GBH+It0nOeiB931OY8oLifgR8CuNSTI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz89x7/PSSlHliJ2mIsvb60Vx1Awm8Zo5nqyLBIuupJvpHl/kJk
-	j/wvF1/yWAjXED+YtbR4d9t1G5kHJW39ennZyzddOMa9Vc1rM4zLmLbFzMn+8rmM8oUliEBtb1K
-	+dImA8f7mXGBfAFXRNkivKpRKZj7AyZyZAhTB5Ljb8AnrVPnOg16/HX8=
-X-Google-Smtp-Source: AGHT+IGuEGXZgTpLDMgM/7S6GNTYnUn0UKrpL/T5rB0YUuM5iNtKYmjKbdIOL1xmpNOVQAHIaCIJ4uHlLv+tqDA4IfFw1W0JU8s5
+        d=1e100.net; s=20230601; t=1740068403; x=1740673203;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H6MKYjKIt6NeyvlVec3PO0rK9zJCfJF3a0DPT/uo2+w=;
+        b=RhPwlc71RGGQmHLl64XwDnY1BL+xHJw0y/0eShqxdZ7feMeTsViWnUOs4szwISBbfl
+         5BsgxX9S18rKaaposEHlS2ZOjkCyd3NuNSe+VK7Fx1zqvvRbKS/626u1LdKGolK51AC8
+         iZXFjLpO+zga8TTLm+OjtZJ7TfM229bZEDCIz9MPKHpzCSyShGaaLZluIMgrcxGhMqDP
+         /mVBfpZ/FyC4LvBM9cMUfBXvz9dROiM2Der+I7mQHimCfzPQcpA4kOsvw6tFgnojIK8J
+         q6qAnIxhwbEzi8hg+1EvmiPeTQ/el50cT87ailV4OMD20+tn9dQCHl7cIyU4yLOVQaBo
+         kkew==
+X-Forwarded-Encrypted: i=1; AJvYcCWEuKVKhz7wZxoIK18bm4ZauY7le7EpgqHJqoIOp7XGYnt5UBYeIc6aecUBKZs6VTLrsDUwRIe7s2DNg0s=@vger.kernel.org, AJvYcCXWFvIWT4TUKwEtU1C6vYcjpl8oQ729+LesL/SkKiROzBSRMblAMvJT8b70lAwOGPBFuURO+KXnTnkL33TfoF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe2ziZjmW6CdNRWd61h6yWjOCK1pqPx5d1abCaYM7SX3wm8GR/
+	ufYq3fen1gvxzlBT2sL2jqIlHYY5z1jzjjduOpgjuQaJOu9slIkX
+X-Gm-Gg: ASbGnctpJgyXr8WRYIi4LRD9AfPCkk6p2ebDFOyNjFsxeUnQng+Mh4Lw/fZhnI7zH+H
+	VoiDsahU+Vl0YC8WmsEBqsZoFVjqThJyKLhRHIr4TaMN7Hzcxq7e0vC46nOSSsa+dDeDKPVy98L
+	gBKoPvhQEO2d1nyQYSBrhIUEMSR+5WueqY+Pw2ZfzUB1VxNFguYKVTOFBaQ4pEjxwiAcba6U60d
+	Gc60ggIOgm8ViH1WOHdj042bLdJuwjZTIIgOCs7PemLm77+917WUaBv2hvVsINgr139FgXEHply
+	9lEjU3UjwFSdynHwKdICk3k=
+X-Google-Smtp-Source: AGHT+IE7MbYH5ETLR/2hPUtk/sU+CWVfQzb+DFjnspOOiMHyuCK9fpqPk01ZvLszAiyRvUSLp50FHQ==
+X-Received: by 2002:a17:902:f689:b0:220:bd01:6507 with SMTP id d9443c01a7336-22170988a48mr126888115ad.25.1740068402760;
+        Thu, 20 Feb 2025 08:20:02 -0800 (PST)
+Received: from linuxsimoes.. ([177.21.141.136])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d7a540aasm120910545ad.245.2025.02.20.08.19.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 08:20:02 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	apw@canonical.com,
+	arnd@arndb.de,
+	aswinunni01@gmail.com,
+	axboe@kernel.dk,
+	benno.lossin@proton.me,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	dwaipayanray1@gmail.com,
+	ethan.twardy@gmail.com,
+	fujita.tomonori@gmail.com,
+	gary@garyguo.net,
+	gregkh@linuxfoundation.org,
+	joe@perches.com,
+	lukas.bulwahn@gmail.com,
+	ojeda@kernel.org,
+	pbonzini@redhat.com,
+	tmgross@umich.edu,
+	walmeida@microsoft.com
+Cc: trintaeoitogc@gmail.com,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V3 0/2] author field in module! macro should be a array
+Date: Thu, 20 Feb 2025 13:19:49 -0300
+Message-Id: <20250220161951.844367-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c24d:0:b0:3d1:966c:fc8c with SMTP id
- e9e14a558f8ab-3d2809066demr217751225ab.17.1740068402061; Thu, 20 Feb 2025
- 08:20:02 -0800 (PST)
-Date: Thu, 20 Feb 2025 08:20:02 -0800
-In-Reply-To: <000000000000d0021505f0522813@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b75632.050a0220.14d86d.02e4.GAE@google.com>
-Subject: Re: [syzbot] [mm] [fs] possible deadlock in page_cache_ra_unbounded
-From: syzbot <syzbot+47c7e14e1bd09234d0ad@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, axboe@kernel.dk, brauner@kernel.org, 
-	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, reiserfs-devel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+In the module! macro, the author field is currently of type String.
+Since modules can have multiple authors, this limitation prevents
+specifying more than one.
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+- Change the author field to Option<Vec<String>> to allow creating
+  modules with multiple authors.
 
-    fs: Block writes to mounted block devices
+- rename the field from author to authors to make it explicit that it
+  can refer to multiple authors.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16e867f8580000
-start commit:   861deac3b092 Linux 6.7-rc7
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e1e118a9228c45d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=47c7e14e1bd09234d0ad
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100b9595e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1415ff9ee80000
+- In modules that use the author field, update its value to an array of
+  strings, and also rename it from author to authors.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+- Change the checkpatch.pl to find poorly formatted arrays in the macro
+  module!
 
-#syz fix: fs: Block writes to mounted block devices
+---
+V3 changes 
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+- Improved commit messages
+- Changed field name from author to authors
+- Included the forgeted samples/rust/rust_driver_platform.rs in 1/2
+- Change the documentation in rnull.rs
+- Fixing the WARNING messages in checkpatch
+- Fixing align messages in checkpatch
+- Removed unneccessary \n in $herevet in checkpatch
+--- 
+
+Guilherme Giacomo Simoes (2):
+  rust: module: change author to an array
+  checkpatch: throw error for malformed arrays
+
+ drivers/block/rnull.rs               |  2 +-
+ rust/kernel/net/phy.rs               |  4 +--
+ rust/kernel/pci.rs                   |  2 +-
+ rust/macros/lib.rs                   |  6 ++--
+ rust/macros/module.rs                | 12 ++++----
+ samples/rust/rust_driver_pci.rs      |  2 +-
+ samples/rust/rust_driver_platform.rs |  2 +-
+ samples/rust/rust_minimal.rs         |  2 +-
+ samples/rust/rust_misc_device.rs     |  2 +-
+ samples/rust/rust_print_main.rs      |  2 +-
+ scripts/checkpatch.pl                | 43 ++++++++++++++++++++++++++++
+ 11 files changed, 62 insertions(+), 17 deletions(-)
+
+-- 
+2.34.1
+
