@@ -1,248 +1,277 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B8B204F94;
-	Thu, 20 Feb 2025 16:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068655; cv=fail; b=UECG9Ve7O0JHajylpY4aYGnKt6DM4kp0NUceYBaKSrpPjphawxt1yH+KxovjEj8Ue6Oi23SBxYjzOTnyc6vWzj7rgmS6qGGH07CmWj8ih84zq4IzU2D6SPJAMFpIw1YqO3HnJn8Di88qWayJIA997hwgW+j0+TnwuWMIvtBnWwk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068655; c=relaxed/simple;
-	bh=8qso2sqsvb3M5UdYJ3+iZPMzhkR7RIJU0DuFh5jQxOM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jxWH5ungk9NVk+U+MaKDuI8icImOrOSAG4ut0PBQ646TMgxSwgRs6upb3ly+DH8j8DmtcguAezzDaV4EnmSG/36AhF89XJN79kC0hRWYfMdPtG485opIK4bOIqkFx9KkvhWGsMRRUUTW/GEAI0nnb4Pl0J21wDOfhKvt7zOmv+k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=NB6taFx2; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bOaiZq0h; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB8D1361
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740068731; cv=none; b=e2wQTcuZ7eloCOVtJeqgch/Gatm/3TXMiir6lsT6xYmHCuswTtwUmjuQ3lH1d/G/HzghFGYDUoKCiClSuetqM1hyBz2KzvhOIkL9RgJ4uucAa4kkCt024CKBGLjYQm1OGN+989sexWMww7FE9mTXLpy5gdftukXJ1xMNDWzbekg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740068731; c=relaxed/simple;
+	bh=XJ1YHwGc4HOgLzYcRMCmQLIo3HHSOhcJrGIu+v08SWM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jVhfpcw3fVkrkySVbGhQg4hAtXFMQHDVRyJif3GwMAIfVRUkch6e4uNB4kOzyoDVTvNnio1lywb+4pLpCBwoKn81BXGn3pwlyzc3Timoko1XRV9EQEa+2iYUZfljovap8agMIylOzoNwBL9d3y5u2XIqk8nrzEhwUbkEbyM6euE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pHO3cIWr; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NB6taFx2";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bOaiZq0h"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KFMdGd012647;
-	Thu, 20 Feb 2025 16:24:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=RQJpfSY0AkPyxaFyCqqbyyDAv6ShNIB56JkSIuaQMds=; b=
-	NB6taFx2CnH4koMezQex3SgmLkEweqrZMQoUB4k/lsQqo4xXZtV9Zc79q6j/MrDl
-	gZOftQmYi85tZGAsdgHHl/ptzCLTimtapvAC8PJX4VVswyybqoUAOfDzNHdxtrFp
-	gIIJ/s9/mzDpCAn6kjJWRHUqKf+QWjNdjz0Sa2uNbNra8VpsyNMERcU/JeEZHKvR
-	fQUxiqqZZCNe+KJHFuuQ6cNh7stId+lcQCM/hNzvUxO5+uEEmGU97fA5LytV62eb
-	NpmUR1GRloTG4A7O+BQNiFivlW26w1LhEYd3Qz18fOpP+u55yEEQAlhE5lauCVu6
-	GYJ8mZ/B29R7vsT1PyTheA==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44w00nmfmw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 16:24:08 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51KFmW0Q002371;
-	Thu, 20 Feb 2025 16:24:07 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2041.outbound.protection.outlook.com [104.47.57.41])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44w0tncvgv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 16:24:07 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=efGhRysu/Qc0LN/NEXxzA9+k7vEim44vP8shiInYL7YyUa32WhrixlE4l8N/66KD+VyjbD48wF7EM6tqUMSPstgWVjDRIVf0DDOI3VeChRkzx2aBNUU93Talg5Q13IxEGFgxqiDFKqCa+EWFClpBjHaAk1MPRygHLuVxh79IbBsodgPGXYiGErGftKWRs96YYXMpB7bX8SFCaQR+5MStl4zW5tXgNdMoCy0bcuvWLKKmx0UcRj7AJms0+H/ers8GZZAbzX+0vCSvV/0gnaXNwDw4z5pNTyuho8sDddQYw/HRoLAZqpcOxL1XygNi4VnEp8ElybyL1N5UtfNtH0ej+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RQJpfSY0AkPyxaFyCqqbyyDAv6ShNIB56JkSIuaQMds=;
- b=iMEVIEnddX56A4zpl8OpXaUfMUiwuVgU5nz8IrhEGCJ8NpsvNvZHECg46hUASil//obaiiJBhCoWSMBT4+W8Zuvw+mqSYw3ci5m4OGw3gD37EgASu7zCPDl4uN1YKZeBwkesgUCnZTne+tQbUPGuOp8CXf+Fu4hGbZz02frfEr4HhR/uVireSibOthcDLgAFAgbG+4UoLZfsntXGiW0zWwVhxtzQe+cTLll0YdCBrFy062OJa9hCZmfC3G63NN+cOK0P1dWC1gBxM17CvoLIQaqtGutEoiYGrdydjolOl0mO/ZLXp50aCADi8INPAE/QDGj+cTDhM1aeEIVuLvacQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pHO3cIWr"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4ba0eb3b0f9so370971137.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:25:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RQJpfSY0AkPyxaFyCqqbyyDAv6ShNIB56JkSIuaQMds=;
- b=bOaiZq0hmUoDcvi09bnLee1hiJG8joIOqK07l2K3dUIN0xQgGBzc9EdnPTC/MaqIE5Bs5aiyiqLM13Q+FGawG2GpBiP8Lb/8MXdMjl7JrM34FBb5KMft02CPiBRNcxdj3Mf3z/Na5n1QND9FuMptg23SPrO6K3NvlwTCH7YAaf4=
-Received: from CH3PR10MB7211.namprd10.prod.outlook.com (2603:10b6:610:125::22)
- by SA2PR10MB4459.namprd10.prod.outlook.com (2603:10b6:806:11f::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Thu, 20 Feb
- 2025 16:24:05 +0000
-Received: from CH3PR10MB7211.namprd10.prod.outlook.com
- ([fe80::4c63:cc47:6a4:e38e]) by CH3PR10MB7211.namprd10.prod.outlook.com
- ([fe80::4c63:cc47:6a4:e38e%5]) with mapi id 15.20.8445.019; Thu, 20 Feb 2025
- 16:24:05 +0000
-Message-ID: <0d22f89a-d896-44ed-b4a9-c860c63450fa@oracle.com>
-Date: Thu, 20 Feb 2025 21:53:58 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests: sched: add sched as a default selftest target
-To: Chris Hyser <chris.hyser@oracle.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shuah@kernel.org" <shuah@kernel.org>
-References: <20250219064658.449069-1-sinadin.shan@oracle.com>
- <74dddd26-4a0e-4bb6-958a-229cca3c24d1@linux.ibm.com>
- <a3b5bbc0-f875-451f-8528-38a7eafc4949@oracle.com>
- <CO1PR10MB4705883FED10DAE126DEC9D59BC42@CO1PR10MB4705.namprd10.prod.outlook.com>
-Content-Language: en-US
-From: Shan <sinadin.shan@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <CO1PR10MB4705883FED10DAE126DEC9D59BC42@CO1PR10MB4705.namprd10.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: JH0PR01CA0083.apcprd01.prod.exchangelabs.com
- (2603:1096:990:55::7) To CH3PR10MB7211.namprd10.prod.outlook.com
- (2603:10b6:610:125::22)
+        d=linaro.org; s=google; t=1740068728; x=1740673528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o4NVZ4u4g0mYQeqWa/31JJuaJEaKiBQfTCzwM9NxQa8=;
+        b=pHO3cIWr5Vftccyf0V4h29kuVqTcibVwDmK64XvvaGpyVyYRsCcy+ZzD57+hX8fD8U
+         S2aSvEo93sAoM+U0aytJLhZ3MW+eVQXPYkaSY4PuogBL/0nxs6IkAxgmnKF1wweZMIm9
+         6R/VFxUZCu1JDTDY8gByp7yc4s774IWnwt+2PA2yttpxcl4MmOYnGNKwHcx5oQp4F746
+         mRhNd+LuokqWupw6fH+pqH/GFHAdqFJugmdaMf56glHf0F1caVbe2NvHtsKhbbErHNcM
+         q1VQs5tA/jRfdgNHumhZ1EgIAfhv2DQuVW8Um93vmyATCVverAkntMiDH3kTs465C/0+
+         7Pag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740068728; x=1740673528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o4NVZ4u4g0mYQeqWa/31JJuaJEaKiBQfTCzwM9NxQa8=;
+        b=GQBa4zMt4K+aacptOWysDHjl8u6jN4ktH52E4e8HWHICoZSIfqnRB8S4nLkwMFlTrz
+         G4gFw4ycnKZTME8F400vro3y86EhkYoqRjlWquo3FFlJB9zDn+XQ/pJAi7TT6ChE4YzZ
+         nkpbx3BM/RrGIeq6/8mhD6k5nvrUKydjkBHLMoBpI2EKKWzKpcF98rtoDxUqyPYIFrvW
+         5GGKnvwkDFIQmQCRpNMT+IE/ujwvZlP/TgPcmBLak5yTEwXl1QEPgSpwDmDTksdqyqtZ
+         Ja7r48hsuVwpxP+KJmSKCeMJkPmTcAd5DDmUVlVT/miPYZrWADh+dRFBiaoJX4beBsGW
+         N12w==
+X-Forwarded-Encrypted: i=1; AJvYcCUu8ly1oYptWMxLAPmEAv/S/k1AgVXmAy0jAG8wUZTUGAfg5n6xrYT6CcM07QkpfAH/DWajo+fIZbZc098=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ7SqVPHh9DinR3OR24c66+YmXfMJM3IAYKrs9LGPiqwnY1sj3
+	aKRgRC6+yVYe0CNuyWiehYDgUmJ2GRoGHMlM29/qATc6lBl/sfuTKsRUzjL+65fw9yNzPFgyruL
+	i5JUifB3e3FTrncHoaW3hDsBXhaq7YQZ0wcUX9Q==
+X-Gm-Gg: ASbGncsxtOcPfUhEE4GksWBytxvwuANkQol9NZ+wsJ8Xp7MTc1q9cvvv9ru7XUPtS/h
+	q5T8i5e8oVea9snJZtuSdILmCD6EUvn06iC9nBEACxLZZMie/d41BPHlZUNZjNtesXmr8qofx25
+	KYARYZzQK7fyR+UQuO7GCHnOjK1ohWxQ==
+X-Google-Smtp-Source: AGHT+IGAPsB8fOGFnMsc5bbDL/20Hc4p5mldlRlSsXETttbyejgn8/EaugsjmRRuL/VRAqS5GhQVa3kdI+AXpngBYvA=
+X-Received: by 2002:a05:6102:2c82:b0:4ba:9689:8725 with SMTP id
+ ada2fe7eead31-4bd3fd51580mr13177418137.14.1740068728182; Thu, 20 Feb 2025
+ 08:25:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB7211:EE_|SA2PR10MB4459:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9cf6b10-f3ea-4d98-c898-08dd51cafe64
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MzVhQUZ0cHVmK2YraU9vVFVEcS9vMEJEeXYrYjdETHR1cVpmNVROVGFKajZk?=
- =?utf-8?B?OHNTRmpyc0Z6a2J4SVZXT0RpWm4rOEk0eVNuYkRGR1h3YTN0K1NkcHJMTzlp?=
- =?utf-8?B?SUdDdHMyUVRvZ2FjamZVV1FzZ2dSZTVtc0E4WUhnalMyMkowRlZrOGppK0hQ?=
- =?utf-8?B?RVBOdDRhZWQ4Wm93b2puWHcyYlhJM3BGVjFDL1ZQSWxUSEIrRVVGV0FqRXZS?=
- =?utf-8?B?aU9IcnhUYnBITnpCKzVHOG94NmRGd0dMV1lqdmpudTZFc3dJSGRqbmEwTE12?=
- =?utf-8?B?c3V5UWRrRmdEeWZYQVBjUEEzNGEyT2xuMDV1a2ZtR1ZkMkI4SzduZWlMSWJ0?=
- =?utf-8?B?WlRMSTdGdnJCdHc1ZHIwbGZFcVAwcnNDWnRMOXcxdGU4Z1l3SVphVitGYzgy?=
- =?utf-8?B?WFRoMWw3QVdVaHE0WDZlUmNDd0hZT3BDbFB0cW1lODhQZGhHVXZ4bE5hNkpv?=
- =?utf-8?B?ODlBR1duRW9jU1A0eEZkSFpiQjlPbmZuclh4MitFWUNmQ3p1TVBJODVud1RB?=
- =?utf-8?B?V05nbnh2VlExaVJlZ1k3TWlnL2QwYTcyK3ZtVTRlUWwybWRIemZuRzhQY3Vv?=
- =?utf-8?B?QUdnRTNrUWlVNnZaSW9qeXZBcXFJVzMwLzVna3p1dEJ0TEZYVFVKQnVpWHU2?=
- =?utf-8?B?OUVuZzVmSmg3VThRbXprUDRDZy80aHVmMkRkNGRWUjI3K1ZwVnJqZHZDK0VU?=
- =?utf-8?B?c2pOWVBCR2cwMTNtZ20zTUVxc29XR0FYSG1IUHgxdVBna3l1NHVFL2tmMC83?=
- =?utf-8?B?RDlnenNjd2xTTmRnb2dFdkd3UkVkRXoxVVV6VXcxVVFIWTNvRmFmMDhzNmpu?=
- =?utf-8?B?aXVyVHVWVGhGbmpsV3U4WU42RzhLbnRVV1lCN094VHJHMWtPcVhQTVhBMTNG?=
- =?utf-8?B?eE5sL0J5Q01MNDlPdk8vY3VXR3pZdGFZYXh0UmM1Sk1Rc09lV3BRRFoxblBi?=
- =?utf-8?B?ZDBnSXkzNDVhMEZnUERtclk1bmFxZlpxdjRkbEpNVEhxdDBnRGczajUxQzFk?=
- =?utf-8?B?YW9XRXhxNWtNYVF1VkdUL25qMUFQVWo1TDd6UUlpWlc1d29yQkZRb1Z1MTlU?=
- =?utf-8?B?VzgxUDk2T3FaK0pGbURDNi9VUUlUVlhIN2VITGFqZ1FiZmRSVUk1RVNQbE8x?=
- =?utf-8?B?QkRxQW8vY1RLbDFCREVseWlRa2owNjJDSkF3WDhmVVgzYmdEdVNlSm8wY3Ex?=
- =?utf-8?B?YmFBTGlKTWdtVHVKRSt5T1NXOFNseHk1UjU4bmZVVXRBaDBIOTMwK0pNTTMx?=
- =?utf-8?B?a1JwV3J3L2kyOUhXT1NCOXYraGxoUUhCY1paRXFhOWsxb2RoLzBhQ2Y2bVN1?=
- =?utf-8?B?c1VESG8zallObkhxVWg3Qmxqc2p0RXkrWlFPUW4rNUxpcHhYQ2JGVndVVHFG?=
- =?utf-8?B?YWhBQ1hMUFd6VmM5d2ZESUJMc0VBeGVna2ozejR1bVdUOE03Ym5GM2F2Ukox?=
- =?utf-8?B?K01xKy9zRjAyOWk2eEFSbHhIaW9lN1JuRmVjdEJHa2oxU21vcnZFbDdFOXA4?=
- =?utf-8?B?Vk43OFZoNGhBY2YzWGRCdDE0ek16TE9EZGZKY1BOb3hyWFFSN2lOdmdsODJu?=
- =?utf-8?B?UUFOYlRVQ2RkbUppUGFQSS9Cb1RnVVZ5R0FORkdWWVNmWXAwL0dLbzlZRHZn?=
- =?utf-8?B?S1FvQXJmYzZPdElVbUlxQ2JzdEFNK2pCYW5ySUlvZmh5NE8ycTY4WFNEc0xt?=
- =?utf-8?B?N0t3RXR6cmd0SHQ3Wk0rbUxWTjFVazUwc1ZCN1lWZjJLS3FLMFFiejJhczdt?=
- =?utf-8?B?T0FyV0lBSmZUWW1qQmgyV2h1RFdYMjRjbXV2OFA1VDBBdU16NmRmZjBZOGdh?=
- =?utf-8?B?OVhrM1VzeXBubjJheG9iNHJobHgrZWxobDIyWkkvbWwxT3Y4Z0ZsSjBjZUdr?=
- =?utf-8?Q?4oPWtxjC4oNOV?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7211.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MUxGMVI5L25leWR6aXBhTmc0WU1Pd2tZcFVuQko0OVdHRk10T1lFWVBLN1dr?=
- =?utf-8?B?UnZaT0hzQnZubWt6bS84d01IR0hVOU9jRGdabHF1ck9leDhJZUd1QmhyN2Rl?=
- =?utf-8?B?VzRMVTEwWGc5ZzVGYVV5SFUvN29keU1tNWxwckFsRkFtRWVjZjRvZ3FDVmRZ?=
- =?utf-8?B?NmhMdlJNWFAyMXV0akpiZ2tpbTN4SnpZbitwVXJUVGl1TzB3bDJJMWV1WUhu?=
- =?utf-8?B?ME1hZUNrd0J0VTdkTENmank2M2p5ZGNEYXRNZ0pVWTVSSk5iVm5zemxHVWtF?=
- =?utf-8?B?a3MzWmtEUWpMN0RNcGlvRnBwektUQlFDd053NVhUam1JUldKTmZ2OEpBZytD?=
- =?utf-8?B?TGQ2eW42WjA5TVkvZVN5SS9yTjhwV2ZHZ1gxeFZ4b1FHaHZVU0tjREFESnhj?=
- =?utf-8?B?MzJmeDVkTy9vek5nRUxJWkhpcy9WSDBja1ZDZnpPN1BydmZ0Ym1DRm56K2FQ?=
- =?utf-8?B?ellONzFkZ2Q1OXE0R2VrdVdHYWhEbXUrTHpKQ2phWHcxUTBnaVkyU2RDYmpB?=
- =?utf-8?B?Q0c5eU9xLzJhSFRleHBhU09LMm8yZmNubGxEeTE5WUJneG5ueENkQ0tTS3Uy?=
- =?utf-8?B?Rk5qdGVObkpobWdxOEkxVU1nNGdVUk56VTRuSWVtdFdyWUZGdDR0QWZSNDVy?=
- =?utf-8?B?K1FxUlVlTlI5MEtaVTRSSHdQZmRUQlR4UlJJdzZaZFk3NkEzTzZJZGUwS043?=
- =?utf-8?B?SVIxcTRoSEFrMjhiaTl6ZVBsUGNUUUVCUTRHTXBmWWZEQVp0dWQ4U3pFSEJL?=
- =?utf-8?B?S0x0TXpEZkVGNGVrMlF6VnJCSDJ0RWlySHVqY3JLc2pZb1IvMEtGZWFFcjJo?=
- =?utf-8?B?NERsUXJqZUlObFh4RUdORi84S09UZWpjcDZ3cTBBbE04YnhCcXdTT0tDQ3pU?=
- =?utf-8?B?QnltbTk1b1BiSXB4UjhrdSt4cGplUW9HM1JpMm90eklLQnB3RDMxbjJ3RzVn?=
- =?utf-8?B?QzdqQXhpTzlVYml5YkxTVFpBVE9ZNFRreGc3WjZ4UW95Rzkwb1ltNDV6Qlhr?=
- =?utf-8?B?NUs1L0R1bU1PcFIyblJndGlZN1c0cDBOOHhkR1lsS2lnbmU1M0I1TmFmSVJs?=
- =?utf-8?B?dXlWbjdJdjVOVHhqUmM5ZzdDMzRmdCtvRlFSWFArK0pRZFdhTkhXT0UrV3A3?=
- =?utf-8?B?QllLdXFaV0xOREZxb3pYOUZmRnFBRGNHUStJK2VWNE9ycHFUUGtpdzJ6U2xw?=
- =?utf-8?B?RXlBOUZtVlBjU0VnbVJQdHZVVzRDQy96STBYZTBMVVlISS9XOWlLZG9uMmxI?=
- =?utf-8?B?T1g1YmIrcWQvYWliRjRCOGQzQ1VHelA0UGNZeWVGSm82SEhTSFVTWG56eXFt?=
- =?utf-8?B?cjJpNUZVcUZFbnArMmdPeW45MVp6ajdxTS9uMS8rZ0hpSmxXMnN4K3ZJdkFE?=
- =?utf-8?B?OEJoa1gwaUxkQndwREtBQTdyalp2OHExOFkyekhHS0ZlSjZzTkhEVEViRUIy?=
- =?utf-8?B?TmM3YUJ1MVFzdWlKZGk2UzhJYUxvQmNLWTBPdzQwb05hdGs3c1FQL1orVVNz?=
- =?utf-8?B?aWtSU0IzNXJzUWh4TEh1ZHRQOTRKaGRDaURnYTFNaHkwZ3JacUxCOEY5ZFdL?=
- =?utf-8?B?cUxSbkJFamozblZYTW5oWEJVV2tFU1pmSlJkdnk1VkwxTmFVb3BBT2tSTWIz?=
- =?utf-8?B?eXhaRVJjWWh5OEpnRW9HN2xYejR0Ni9lcWpHQUtaamliYkRDbGtObjRNZEtt?=
- =?utf-8?B?bThhOE5SYlJTd0R1ZkF1ejE2eGNpbXIrYkFocXFyTngrdWw4ZEwyRlI0cTgy?=
- =?utf-8?B?T0w1cXZSQW01aytGYlk0bksxUFpkU29aN0NPOWl3Y2VyMUo0WW80Ri9OVWNU?=
- =?utf-8?B?Q0NJWjNZUWtTdjE3NldqNjJTMEZZNGN0N1RhVUdsclljWEFhVG9qL1gvNVM2?=
- =?utf-8?B?SFdhVFlhRWFOQVh0OGFpOWFWWGY5aGdSSitwV3g1ZmE3UGFMOVNFOTQ2aW9u?=
- =?utf-8?B?dDJpRFY3RHZBSDNRcnR5dEt1b3FJRkF6cStPY0JUcTA4Y3NMOWwwUjlsdXR0?=
- =?utf-8?B?TTczUkNkL05icEdpQUNucGlUdXF0LzR6UldIc05rRmcwaTY0ajVyT2JBcVdo?=
- =?utf-8?B?MU8xbTlnMjhmRktsNVhUVHYzWFdEYWd5aVo1c2NGT2pPbjE1MVpjelpxeGJW?=
- =?utf-8?B?L01SL29oYllndVlKZk1nVEwvanJ4Ynk0RmlFT1NlMWQ4TGZ6ZDEwQlpBNk1P?=
- =?utf-8?B?UEE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Xf4r4PGSHko4p6nyDWOUrLUv7m7xlOnzId4MkbBgnYUr0Kd9SfvSRhZC1EcEYo3UxjB/EShoRn2oyxVjLoIw6Nx61NRHI4xd3811/0d4H6YF2hdTYjqn5ojw32+yMybeBKPAigSsQo7T5RAptuH8F8HANZp3GiG05CgSg32mXFq58suLcZRr4ux0P89LsK9qYGjQAxLHg0bkyhIIFwOs2BfCI4lkXjNmJESJFuFEybRd818Uy9D09BzMlavuZC6Dhrl+XJKZeMKmhT1+mrZSjwfdNyD8xXeBtvRlea/Q07l9+v0X498rasTyud+wMNPCqgYmdIt3jHnryaJGpKBCWyip3oK9f6j9krRwyB8VmkuODvcz4NWYICKTEh+YGjJD5wwHyOkU9H2wBFTUH4I4yL2ciB0O5U3VsgLUnQsZJRsau3rUu9hcW/c22Dd7KjwN/wLdJQFjr5nXi2FjfH3CjpV8q5o95aXAYwIrc6IYJ6lnz7aXQch9rpMJM7KE5CEAy9TgfPi9Hf8sDKDPtKd8NjT7bJcQr+S2Zl/XonNmTVHns/IHOH3wHp1aiOMXQVT+DjxUWKZ7Le0jY+jN0SMkYjfXRnTOeEQoH9EIiYkb7Qo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9cf6b10-f3ea-4d98-c898-08dd51cafe64
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7211.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 16:24:05.3585
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SNpLlWDgkmYEX3GncGTE8UeH+1dwvHb6tGRNvqglD3vkh0ugnWnKjG5w8O38MdMoLX5/wwBbYFTIhnwOkX71nQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4459
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_07,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502200115
-X-Proofpoint-ORIG-GUID: e9XhGxBxPBiXjXNlqnGn1CVUBTtib3fy
-X-Proofpoint-GUID: e9XhGxBxPBiXjXNlqnGn1CVUBTtib3fy
+References: <CA+G9fYuVngeOP_t063LbiJ+8yf-f+5tRt-A3-Hj=_X9XmZ108w@mail.gmail.com>
+In-Reply-To: <CA+G9fYuVngeOP_t063LbiJ+8yf-f+5tRt-A3-Hj=_X9XmZ108w@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 20 Feb 2025 21:55:17 +0530
+X-Gm-Features: AWEUYZn1l7Lv2Zb-WyCLSGTtO5qeqIeMQIdyyZsol69LDhzeihx6MkTJeGQixZg
+Message-ID: <CA+G9fYs-cbuu+o15E9V+AneYT0kp_e2CQWS+4HTxkM+zuz0cMQ@mail.gmail.com>
+Subject: Re: next-20250218: arm64 LTP pids kernel panic loop_free_idle_workers
+To: linux-block <linux-block@vger.kernel.org>, Cgroups <cgroups@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mm <linux-mm@kvack.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	LTP List <ltp@lists.linux.it>
+Cc: Jens Axboe <axboe@kernel.dk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, 20 Feb 2025 at 21:43, Naresh Kamboju <naresh.kamboju@linaro.org> wr=
+ote:
+>
+> Regression on qemu-arm64 the kernel panic noticed while running the
+> LTP controllers pids.sh test cases on Linux next 20250218 and started
+> from the next-20250214
+>
+> Test regression: arm64 LTP pids kernel panic loop_free_idle_workers
+>
+> Started noticing from next-20250214.
+> Good: next-20250213
+> Bad: next-20250213..next-20250218
 
-On 20-02-2025 09:26 pm, Chris Hyser wrote:
-> From: Sinadin Shan <sinadin.shan@oracle.com>
-> Sent: Thursday, February 20, 2025 9:52 AM
-> To: Shrikanth Hegde; Chris Hyser
-> Cc: linux-kselftest@vger.kernel.org; linux-kernel@vger.kernel.org; shuah@kernel.org
-> Subject: Re: [PATCH] selftests: sched: add sched as a default selftest target
-> 
->> On 20-02-2025 01:15 pm, Shrikanth Hegde wrote:
->>
->>> If CONFIG_SCHED_CORE=n, the test fails. So you might end up seeing
->>> default selftests failing on such systems? or this is only compiling?>
->>
->> Yes, this patch would enable the test to be compiled and run by default.
->>
->>> Likely the selftests/sched needs to modified for CONFIG_SCHED_CORE=n
->>
->> Agree. Chris, I suppose then a graceful skip would be a more right
->> option for kernels with core scheduling disabled?
-> 
-> By graceful skip, do you mean a 0 return code and not printing failure? I confess,
-> I originally wrote the test as stand-alone for me to get the prctl code right and it
-> got shoved in here.
+[Sorry typo ]
+Bad: next-20250214..next-20250218
 
-By graceful skip, I meant printing that SCHED_CORE is disabled for the 
-kernel and exiting with a return code 4 on such kernels. This would also 
-make the kselftest framework pick up the skip, say when compiled tests 
-are run through run_kselftest.sh
-
-> 
-> I guess my question is what if SCHED_CORE was supposed to be configed into
-> the test kernel?  Silently burying the error might be bad. I'm not strongly tied to
-> that, just looking for opinions. At the same time, if you put the orig change in,
-> people w/o SCHED_CORE on will start seeing "failures" they didn't see before,
-> yes? and that seems bad.
-
-Yes, that seems bad as rightly pointed out by Shrikant. I have a patch 
-that does the above mentioned skip, and if skipping is a right option to 
-take here I can send it in the next version.
-
-Regards,
-Shan
-> 
-> I'm happy to make this better behaved. I'm the reason it is the way it is.
-> 
-> -chrish
-> 
-> 
-
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Boot log:
+> ---------
+> [    0.000000] Linux version 6.14.0-rc2-next-20250214
+> (tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 13.3.0-12) 13.3.0,
+> GNU ld (GNU Binutils for Debian) 2.43.90.20250127) #1 SMP PREEMPT
+> @1739528119
+> <trim>
+> command: pids.sh 6 50 0
+> <12>[  221.776255] /usr/local/bin/kirk[262]: starting test pids_6_50
+> (pids.sh 6 50 0)
+> pids 1 TINFO: Running: pids.sh 6 50 0
+> pids 1 TINFO: Tested kernel: Linux
+> runner-ykxhnyexq-project-40964107-concurrent-0
+> 6.14.0-rc2-next-20250214 #1 SMP PREEMPT @1739528119 aarch64 GNU/Linux
+> pids 1 TINFO: ceiling LTP_TIMEOUT_MUL to 11
+> pids 1 TINFO: timeout per run is 0h 55m 0s
+> pids 1 TINFO: test starts with cgroup version 2
+> pids 1 TINFO: Running testcase 6 with 50 processes
+> pids 1 TINFO: set a limit that is smaller than current number of pids
+> <1>[  224.406844] Unable to handle kernel paging request at virtual
+> address dead000000000108
+> <1>[  224.407052] Mem abort info:
+> <1>[  224.407100]   ESR =3D 0x0000000096000044
+> <1>[  224.407219]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> <1>[  224.407315]   SET =3D 0, FnV =3D 0
+> <1>[  224.407400]   EA =3D 0, S1PTW =3D 0
+> <1>[  224.407459]   FSC =3D 0x04: level 0 translation fault
+> <1>[  224.407536] Data abort info:
+> <1>[  224.407577]   ISV =3D 0, ISS =3D 0x00000044, ISS2 =3D 0x00000000
+> <1>[  224.407621]   CM =3D 0, WnR =3D 1, TnD =3D 0, TagAccess =3D 0
+> <1>[  224.407697]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> <1>[  224.407809] [dead000000000108] address between user and kernel
+> address ranges
+> <0>[  224.408307] Internal error: Oops: 0000000096000044 [#1] PREEMPT SMP
+> <4>[  224.416979] Modules linked in: btrfs blake2b_generic xor
+> xor_neon raid6_pq zstd_compress sm3_ce sm3 sha3_ce sha512_ce
+> sha512_arm64 fuse drm backlight ip_tables x_tables
+> <4>[  224.421352] CPU: 0 UID: 0 PID: 3368 Comm: pids_task2 Not tainted
+> 6.14.0-rc2-next-20250214 #1
+> <4>[  224.422657] Hardware name: linux,dummy-virt (DT)
+> <4>[  224.423946] pstate: 224020c9 (nzCv daIF +PAN -UAO +TCO -DIT
+> -SSBS BTYPE=3D--)
+> <4>[ 224.424677] pc : loop_free_idle_workers (include/linux/list.h:195
+> include/linux/list.h:218 include/linux/list.h:229
+> drivers/block/loop.c:917)
+> <4>[ 224.426548] lr : loop_free_idle_workers (drivers/block/loop.c:911
+> (discriminator 2))
+> <4>[  224.427338] sp : ffff800080003d50
+> <4>[  224.427910] x29: ffff800080003d50 x28: fff238a88301c500 x27:
+> fff238a883084c00
+> <4>[  224.429587] x26: ffffa298bac57000 x25: ffffffffffffc568 x24:
+> dead000000000122
+> <4>[  224.430697] x23: fff238a880370ac8 x22: dead000000000100 x21:
+> 0000000000000000
+> <4>[  224.432004] x20: fff238a880370ab8 x19: dead0000000000b8 x18:
+> ffff800083d9bb90
+> <4>[  224.432538] x17: fff296100496b000 x16: ffff800080000000 x15:
+> 0000ffff8d0a9fff
+> <4>[  224.433866] x14: 0000000000000000 x13: 1ffe47151065cc61 x12:
+> fff238a8832e630c
+> <4>[  224.434769] x11: 003a9cb01550c679 x10: fff238a8bf4b7f70 x9 :
+> ffffa298b8fc3cd0
+> <4>[  224.436209] x8 : ffff800080003c28 x7 : 0000000000000101 x6 :
+> ffff800080003ce0
+> <4>[  224.437070] x5 : fff238a880eba680 x4 : dead000000000100 x3 :
+> dead000000000122
+> <4>[  224.438027] x2 : 0000000000000000 x1 : 00000000ffff50fc x0 :
+> 00000000ffff7b68
+> <4>[  224.439174] Call trace:
+> <4>[ 224.439882] loop_free_idle_workers (include/linux/list.h:195
+> include/linux/list.h:218 include/linux/list.h:229
+> drivers/block/loop.c:917) (P)
+> <4>[ 224.440765] loop_free_idle_workers_timer (drivers/block/loop.c:932)
+> <4>[ 224.441223] call_timer_fn (arch/arm64/include/asm/jump_label.h:36
+> include/trace/events/timer.h:127 kernel/time/timer.c:1790)
+> <4>[ 224.441822] __run_timers (kernel/time/timer.c:1841
+> kernel/time/timer.c:2414)
+> <4>[ 224.442389] run_timer_base (kernel/time/timer.c:2427
+> kernel/time/timer.c:2418 kernel/time/timer.c:2435)
+> <4>[ 224.442855] run_timer_softirq
+> (arch/arm64/include/asm/jump_label.h:36 kernel/time/timer.c:342
+> kernel/time/timer.c:2448)
+> <4>[ 224.443547] handle_softirqs
+> (arch/arm64/include/asm/jump_label.h:36 include/trace/events/irq.h:142
+> kernel/softirq.c:562)
+> <4>[ 224.444121] __do_softirq (kernel/softirq.c:596)
+> <4>[ 224.444755] ____do_softirq (arch/arm64/kernel/irq.c:82)
+> <4>[ 224.445204] call_on_irq_stack (arch/arm64/kernel/entry.S:897)
+> <4>[ 224.445670] do_softirq_own_stack (arch/arm64/kernel/irq.c:87)
+> <4>[ 224.445964] __irq_exit_rcu (kernel/softirq.c:442 kernel/softirq.c:66=
+2)
+> <4>[ 224.446295] irq_exit_rcu (kernel/softirq.c:680)
+> <4>[ 224.446808] el1_interrupt (arch/arm64/include/asm/current.h:19
+> arch/arm64/kernel/entry-common.c:280
+> arch/arm64/kernel/entry-common.c:563
+> arch/arm64/kernel/entry-common.c:575)
+> <4>[ 224.447585] el1h_64_irq_handler (arch/arm64/kernel/entry-common.c:58=
+1)
+> <4>[ 224.448079] el1h_64_irq (arch/arm64/kernel/entry.S:596)
+> <4>[ 224.448796] try_charge_memcg (mm/memcontrol.c:1803
+> mm/memcontrol.c:2222) (P)
+> <4>[ 224.449589] charge_memcg (mm/memcontrol.c:4541)
+> <4>[ 224.450399] __mem_cgroup_charge (include/linux/cgroup_refcnt.h:78
+> mm/memcontrol.c:4558)
+> <4>[ 224.451234] __handle_mm_fault (mm/memory.c:1059 (discriminator 1)
+> mm/memory.c:5462 (discriminator 1) mm/memory.c:5574 (discriminator 1)
+> mm/memory.c:4091 (discriminator 1) mm/memory.c:5935 (discriminator 1)
+> mm/memory.c:6078 (discriminator 1))
+> <4>[ 224.451763] handle_mm_fault (mm/memory.c:6247)
+> <4>[ 224.452307] do_page_fault (arch/arm64/mm/fault.c:647)
+> <4>[ 224.452881] do_translation_fault (arch/arm64/mm/fault.c:787)
+> <4>[ 224.453358] do_mem_abort (arch/arm64/mm/fault.c:919 (discriminator 1=
+))
+> <4>[ 224.453890] el0_da (arch/arm64/include/asm/irqflags.h:82
+> (discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+> 1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:165 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:178 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:605 (discriminator 1))
+> <4>[ 224.454329] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:7=
+66)
+> <4>[ 224.454897] el0t_64_sync (arch/arm64/kernel/entry.S:600)
+> <0>[ 224.455654] Code: 8b190000 eb01001f 54000684 a9448f84 (f9000483)
+> All code
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>    0: 8b190000 add x0, x0, x25
+>    4: eb01001f cmp x0, x1
+>    8: 54000684 b.mi 0xd8  // b.first
+>    c: a9448f84 ldp x4, x3, [x28, #72]
+>   10:* f9000483 str x3, [x4, #8] <-- trapping instruction
+>
+> Code starting with the faulting instruction
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>    0: f9000483 str x3, [x4, #8]
+> <4>[  224.456945] ---[ end trace 0000000000000000 ]---
+> <0>[  224.458162] Kernel panic - not syncing: Oops: Fatal exception in in=
+terrupt
+> <2>[  224.459437] SMP: stopping secondary CPUs
+> <0>[  224.460808] Kernel Offset: 0x229838400000 from 0xffff800080000000
+> <0>[  224.461525] PHYS_OFFSET: 0xfffdc75880000000
+> <0>[  224.462166] CPU features: 0x000,000000d0,60bef2f8,cb7e7f3f
+> <0>[  224.463148] Memory Limit: none
+> <0>[  224.463861] ---[ end Kernel panic - not syncing: Oops: Fatal
+> exception in interrupt ]---
+>
+> ## Source
+> * Kernel version: 6.14.0-rc2-next-20250214
+> * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
+xt.git
+> * Git sha: 0ae0fa3bf0b44c8611d114a9f69985bf451010c3
+> * Git describe: next-20250214
+> * Project details:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250214/
+>
+> ## Build
+> * Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/ne=
+xt-20250214/testrun/27292264/suite/log-parser-test/test/panic-multiline-ker=
+nel-panic-not-syncing-oops-fatal-exception-in-interrupt-89d94046139a63ab8ef=
+657ef456dab84b63ef36eb42dc7c556dfa0f7a59423da/log
+> * Test history:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250214/=
+testrun/27292264/suite/log-parser-test/test/panic-multiline-kernel-panic-no=
+t-syncing-oops-fatal-exception-in-interrupt-89d94046139a63ab8ef657ef456dab8=
+4b63ef36eb42dc7c556dfa0f7a59423da/history/
+> * Test details:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250214/=
+testrun/27292264/suite/log-parser-test/test/panic-multiline-kernel-panic-no=
+t-syncing-oops-fatal-exception-in-interrupt-89d94046139a63ab8ef657ef456dab8=
+4b63ef36eb42dc7c556dfa0f7a59423da/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2t1m4RtgCbRZ2vhQrd=
+EIwwj3DIY/config
+> * Architecures: arm64
+> * Toolchain version: gcc-13
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
