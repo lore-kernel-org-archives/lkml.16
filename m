@@ -1,96 +1,113 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF47910FD;
-	Thu, 20 Feb 2025 03:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740020759; cv=none; b=lR48uQHpu4A7sanEqy6W3QZbBxRgdy2TakECXrzVwAI/ympqjPaGkBNJr1X8Dj91hbuvUOCtjp2w58WWdJADA+x3bzLopeI2hAI31hRkuDokI5RCeBuTYcO30MlpNzMPBx3UK4abiPP+3zQdyxAjZYbNCWk/9VojPC1UZ0ZokVQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740020759; c=relaxed/simple;
-	bh=gLcUWzCuqcBIs963ZirCDgcZ246XTVr9ptFAbXAP7y8=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=fEjUeF+xtQ48ZwNN+CEHkEgmJBM5lBFRQ/aJjOM3x2wq53veK5b0qAsouXi05mxA9e2X+qdqI3y1dbheaJus1fnx7qfdtRzSFbgfDK+cd0E1FMJtKx2Rix7xYj4QVdiwiRptCZQGXpCJOd81gEReJ+X+1uXK0kAfgpEYcSA9pzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=K7hMZLcr; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F74BEC5
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 03:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740020865; cv=pass; b=QCtsi1E8nIeTWrsihHR1KwuTDnIqEJeO/QvEmzKA3zKBX+D01u0juTdq4dCvTZsWtcqkdU8zZoYZ/gBWx0O3HHclyVMhdVr7WfGmqTI1HEXkI/qoToCLX4+qsUqmroS2Ks1Ckjp2RBuxmWoKEcv7HpbSdF2jXw8c+GKnUBt3jB8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740020865; c=relaxed/simple;
+	bh=E4JWbMuiJ1aOXMeomwMqViqYp812yAx6oUwT7BKClfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jnV5LmY2asUsKX48yvuIxwEuzA+fQr08UR5glzpcMLBXOmzfLCSl+Mk9eSVL7nS7o+nEujW6Ff8RLWviRcYuYD70i5XazFwB8s2qOtB3Q811ouJw8GfnRHa8mUxfZyX7duqXf98i8xauthLdLFpNKqRLnZ5ClZLGtx/TxbvMX7M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=NzvX+TBd; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="K7hMZLcr"
-Received: from bender.morinfr.org (unknown [82.66.66.112])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id 1FD2B20039E;
-	Thu, 20 Feb 2025 04:05:49 +0100 (CET)
-Authentication-Results: smtp2-g21.free.fr;
-	dkim=pass (1024-bit key; unprotected) header.d=morinfr.org header.i=@morinfr.org header.a=rsa-sha256 header.s=20170427 header.b=K7hMZLcr;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
-	; s=20170427; h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:
-	Mime-Version:From:Content-Transfer-Encoding:Content-Type:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=b9iwwgNjnUKsZjvuBTSw2mTc1uDqLUwG3TRTK52nBig=; b=K7hMZLcrMw/Ix5bfh9JgyAzRpG
-	h6/xE+WyY2s5yzdcHwWgrX5xCReIrOhePfwfsjrmauHCSpmKpRKEr7vPIUZlFMaNnOfGeGUdgbCuP
-	NudSY5lF2iyBLKVjsWLzk2WukzFAiGG7c9iBVCxe9fnxg+t9vpMp54EQFY+pi562pk6M=;
-Received: from [216.103.176.130] (helo=smtpclient.apple)
-	by bender.morinfr.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <guillaume@morinfr.org>)
-	id 1tkwsm-000DF6-2k;
-	Thu, 20 Feb 2025 04:05:49 +0100
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Guillaume Morin <guillaume@morinfr.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="NzvX+TBd"
+ARC-Seal: i=1; a=rsa-sha256; t=1740020837; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZXkPzyFtCdI7/MNx7P0a9vhMmGG09UuFiUeXiGJItJ4H+LHna5t6UKuhd0gRGy4jGpxZUdf6zUMDEN/hz6zH3q8L0DS6pEL9qu+YMmYRy+JTMlmeEce6SZGRpXiDqvc/gaoMmYDpEU6zZR8wIUSqBjfXqlgHQWb3/NaxTCnjGFY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740020837; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CZQfbH3KbzP7Bj9KoZzlxkG1srKiHYUm6CWgToaXURs=; 
+	b=jlg+tTbRUsQzW4tCn3//ZXZO/wllesz+Ly7AxxRZrhMQLhsd7k0e2ws77zeB3a2o6jZw/rCL8VRoEKol8VvnGygmgeBLPS/lfZyIKd8BqLppx6q+pa6AcTWpTxmAT5/sMF9He1VvaCZG4P/NlHZGeBRBOtpyt4lvKKL4+3hMzwI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740020837;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=CZQfbH3KbzP7Bj9KoZzlxkG1srKiHYUm6CWgToaXURs=;
+	b=NzvX+TBdjBz6ujTn7H0GZSwo8XNBPwlwQd4EAUNhlG8JhE9K9X7GEm+5D5WIBwu3
+	mggAukPJn2+iqJbKphnnAQ6nUvXadoXI9KOUIQeH2UcdvqFuHQlrkX3sHOnwdoNzcwP
+	ef6DfCVW80B0L6z0pepTx8WKsmz/amXTc36AFzrU=
+Received: by mx.zohomail.com with SMTPS id 1740020835488353.06590206575595;
+	Wed, 19 Feb 2025 19:07:15 -0800 (PST)
+Message-ID: <29100f93-a7e6-4c81-ac83-af94ecd942a1@collabora.com>
+Date: Thu, 20 Feb 2025 06:07:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [BUG] possible race between md_free_disk and md_notify_reboot
-Date: Thu, 20 Feb 2025 00:05:33 -0300
-Message-Id: <82BF5B2B-7508-47DB-9845-8A5F19E0D0E5@morinfr.org>
-References: <ad286d5c-fd60-682f-bd89-710a79a710a0@huaweicloud.com>
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- song@kernel.org, yukuai <yukuai3@huawei.com>
-In-Reply-To: <ad286d5c-fd60-682f-bd89-710a79a710a0@huaweicloud.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-X-Mailer: iPhone Mail (22D72)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 1/5] virtio_config: add page_size field to
+ virtio_shm_region
+To: Sergio Lopez <slp@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Daniel Verkamp <dverkamp@chromium.org>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, David Airlie <airlied@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+ fnkl.kernel@gmail.com
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
+ <20250214-virtio-shm-page-size-v2-1-aa1619e6908b@redhat.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250214-virtio-shm-page-size-v2-1-aa1619e6908b@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
+On 2/14/25 18:16, Sergio Lopez wrote:
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index 5d78c2d572abfcfe2b84cdd82df622320fe97d5d..1f594b626d7a7734e8ec58766737a118c26bad94 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -560,6 +560,8 @@ static bool vm_get_shm_region(struct virtio_device *vdev,
+>  
+>  	region->addr = addr;
+>  
+> +	region->page_size = 4096;
+> +
+>  	return true;
+>  }
+>  
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index 5eaade7578606e4b02af0d66447417ad6aa11064..d7aeb2e50a3c499dfb68d58cb89b829ea2e50454 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -862,6 +862,7 @@ static bool vp_get_shm_region(struct virtio_device *vdev,
+>  
+>  	region->len = len;
+>  	region->addr = (u64) phys_addr + offset;
+> +	region->page_size = 4096;
+>  
+>  	return true;
+>  }
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index 169c7d367facb36dcabf9596068580ea8b8516c7..c1b2ce71ea55e81978e18db05494deab193fa4fb 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -14,6 +14,7 @@ struct irq_affinity;
+>  struct virtio_shm_region {
+>  	u64 addr;
+>  	u64 len;
+> +	u32 page_size;
+>  };
 
+Nit: I'd squash this into patches #3/4, to not add code that is changed
+by a next patch.
 
-> On Feb 19, 2025, at 10:26=E2=80=AFPM, Yu Kuai <yukuai1@huaweicloud.com> wr=
-ote:
->=20
-> =EF=BB=BFHi
->=20
->> =E5=9C=A8 2025/02/20 3:43, Guillaume Morin =E5=86=99=E9=81=93:
->> There seems to be nothing in the code that tries to prevent this
->> specific race
->=20
-> Did you noticed that mddev_get() is called from md_notify_reboot() while
-> the lock is still held, and how can mddev_free() can race here if
-> mddev_get() succeed?
->=20
-
-Yes, I did notice that. Though it was not clear to me how it was guaranteed t=
-hat mddev_get() would fail as mddev_free() does not check or synchronize wit=
-h the active atomic. But i might be missing some logic outside of md.c. If t=
-here is guarantee that mddev_get() fails after mddev_free is called this wou=
-ld definitely address the uaf concern.=20
-
-However  the main race we have reported is where the item pointed by the *ne=
-xt* pointer (n) in the loop is erased by mddev_free().  The next pointer is s=
-aved by the list iteration macro and afaict there is nothing preventing from=
- this item to be deleted while the lock is released and then the poisoned va=
-lues to be accessed at the end of loop when the next pointer is used.=20
-
-If this is incorrect, I am not sure how the crash would  happen. I should ha=
-ve mentioned that originally but it is reproducible so it=E2=80=99s not a on=
-e off issue. Do you see  an alternative explanation for the crash?
-
-Thanks in advance for your help
-
-
-> Thanks,
-> Kuai
->=20
+-- 
+Best regards,
+Dmitry
