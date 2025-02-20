@@ -1,134 +1,174 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF8B1F03DE;
-	Thu, 20 Feb 2025 09:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB90A1F03E0
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740044991; cv=none; b=rMiATddkX6KoGRdHaWz/LLt9jVRJLtNvB03Y/DkwmmsNu5XXHTiwZUOrq+br2C6i3643F9jU7fFDwAN3nDZIpo+JeLxpi6lOelGt6LwjJqpCn4bUXCBw/XehoWlX+q9RIujokSX/VbJwh/IbMEEUpYTE5xKRE0s/Iu4UPvgtG7U=
+	t=1740044999; cv=none; b=I5mSyHY0X8YyTY73aZ/ZKZzS8FfB2apLnftqTuIm5w5ApvkjPZCrlL+VFAbUcCEO9EP/0HcyFojVO1nBfxxIiK7E13p+b/5U+YzTTNJUugEamL87R4p6rUMjRFyFLJgLJWqhPk5rtFp5hpjd2Os3fpfJgk1nYKcbyVeS2okyplQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740044991; c=relaxed/simple;
-	bh=ql5dyUwzsmgYnivLcSbAiC+k4nEzrGO6ammvLo/uFNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FQmpLf4AFGJC4SnK/57Pljb2BvMwBW+1DaCKtxg8norP6dKDjyZ2vvsRo1kDSPCQFHfcAd88nnGzkfksLMXldOiK5zmYys0lao3WxamTqJaXaRIWhkQL+4Pjnyg5QDubLFPuzkkgemDpUdBODNCOYrCulXAqaJX7aWM+yb0uGpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=hsLnC1K5; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1740044999; c=relaxed/simple;
+	bh=gLrdVTM/31gaRQa+WjgnRFidn/3PsESlygiB84pi/7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6KxgV7Q6oOQCgfd5wQfd5i/29EGr838fGmPhct+uCVj/PQnKaekQKurjmmQ2Ed8zp3SI26/qLyiD3wgxC2GsTRkTCH1m2QJu0JxaUbib5Wl+DL1TOcml+t3jGJQlREvuJHpXQuDvO9lyB+QSK7MbmhEwfl9klnagam8XVZ2dso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Cs1UL0rf; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hsLnC1K5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=ql5dyUwzsmgYnivLcSbAiC+k4nEzrGO6ammvLo/uFNs=; b=hsLnC1K5q78HwAijmfQrsz7sQy
-	98Kv/yILHk2lR8N1mro4X2N0PGTSjyWk1iFZ9yFWhqMmZBUqucdWMoMeqGIDoMZF6LhrVH4LWqCUc
-	DLJyWEsYXDwb43jgAzD+r9kE6gJebd0N4MMHcmbh30jbpYA1eAj+cQ17EjQDQHcf8oAhya0zyk42j
-	pzbtrno64PTIqK477bve9Nx9ZfTxRswAdFH87xiv8gURfw5NozPYlYL5JwSCAalSCGQmuY/ulVewT
-	7dTtFaUZ9ApmmHGJiKdr0HS+RHB4Ob82Aldc8FdzOvOa+lDKqXsi25Hcd+o2sBuJNjtTcFmTS0Dr8
-	LLzNM6Og==;
-Date: Thu, 20 Feb 2025 10:08:52 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: vigneshr@ti.com, aaro.koskinen@iki.fi, khilman@baylibre.com,
- rogerq@kernel.org, tony@atomide.com, jmkrzyszt@gmail.com, reidt@ti.com,
- wsa@kernel.org, linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [PATCH] i2c: omap: fix IRQ storms
-Message-ID: <20250220100745.05c0eff8@akair>
-In-Reply-To: <c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
-References: <20250207185435.751878-1-andreas@kemnade.info>
-	<c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Cs1UL0rf"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f1e8efef5so372250f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:49:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1740044996; x=1740649796; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z7SecTuWmwnoGQvx5fWAJpnW1FaqciuMmH5iox49O5c=;
+        b=Cs1UL0rfsz/XrG7BLPD4VWxczCQGaDfzYJGPaaLlNjh+D7XTcSC9TuwnrYUWGvQLd4
+         fTt90GLPXWZ8Ow35AEivPXMGaKrdzfAIJDOYLoqZH9Us7xOLv8vbv50FSgCliytIrMRu
+         5EtVNxNiNpn6hP/PwzecxxMkfRiyRGt5HhECk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740044996; x=1740649796;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z7SecTuWmwnoGQvx5fWAJpnW1FaqciuMmH5iox49O5c=;
+        b=UgNa+lnnez3OR/4ZFVPH1uF+W47Ka0HBfwUnfqStxtt/N6RtviapA38e+Rq2Oh7OCS
+         CyVjCwRgIexkqob85uwwdryzuwL9iw46WwWV3tESyNoCZJyDQ0TXP1ilaU6YFYEgsytR
+         BiTcNABjX2WH5pSLB6wmP0ZZaHMKw25y63f6YY1c5iCtEKXaBr7uVE7Q6pKM5mcJqELd
+         G378K+kovdOY8045sRmhjpckifk0cUBmMfvEig2ttNh6optDnhjVt9Z/NXHZz6IaJrZo
+         0p98TsDVzF3tU28DQsy92t5fmW7z04kCt7iHQC9XTiyO8yow0GKKjfZGwtjHR3n1+KWV
+         9U7A==
+X-Forwarded-Encrypted: i=1; AJvYcCW+YJjBpghZSQH0ysmfJys5h8Voc9/bAS58caMagLqqMDoM4Ta2LLAAnyEDyuEXab6O9GDTV32VWcQDvIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuo28CTwUR8kAIshS8IIpMW03cED+IghJrVZH/xLmZWsCryFrD
+	V6PIGVflzAFvi5jumUlrZg3YV8eNox4jLC0XvFVuKBvZDD0MHHQ1xMsMh11Z+3I=
+X-Gm-Gg: ASbGncvDF73oSlxIwGfeyjXK8pul6nEzjtBJSjFE2ikp1uO9BpKjc2JHHwCvTFmhhwG
+	v73b0LXsrMo+3/4wHJt98JrtHCN1N39jkOA63YQOjROHjN4D22XhyIlo+IvNTdUc/7OLn5LqAEk
+	Ze1FN6zCJJJd5bEOMI5uME62PJ7ElCzFAtrC3CRHF3fk7+6WdWmcCJc3FgRFEfCuspQfFgZAm6j
+	8xzuFNhTbt+/fAYYe04LT/QhK4aiyi+XP1Lip9AUbKX1KQAQVbVcqk/AJrXi69YRMAZqBqI3hmH
+	0ZyUS7/2O4JxYCiQGGSlJBHvOnA=
+X-Google-Smtp-Source: AGHT+IG1XNq+yvNmwPgumPAiB8sDygsjgkleurSBqiGod07eF/zDW+EUm3aE6kOmPHgxFKCHHicsIA==
+X-Received: by 2002:a5d:6486:0:b0:38f:6149:9235 with SMTP id ffacd0b85a97d-38f614992eemr2689445f8f.16.1740044995913;
+        Thu, 20 Feb 2025 01:49:55 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04f8c1sm239212715e9.8.2025.02.20.01.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 01:49:54 -0800 (PST)
+Date: Thu, 20 Feb 2025 10:49:52 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 31/37] drm/bridge: Provide pointers to the connector
+ and crtc in bridge state
+Message-ID: <Z7b6wBF9VNwYkB5w@phenom.ffwll.local>
+Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org>
+ <20250213-bridge-connector-v3-31-e71598f49c8f@kernel.org>
+ <Z7NmtF83adILfasi@phenom.ffwll.local>
+ <20250218-adamant-translucent-civet-aebcc5@houat>
+ <Z7XeHaTmtS8ClOV-@phenom.ffwll.local>
+ <20250219-gregarious-condor-of-prestige-a6ce0c@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pGvym2.eb.LfB7wXpsrzdqG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219-gregarious-condor-of-prestige-a6ce0c@houat>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
---Sig_/pGvym2.eb.LfB7wXpsrzdqG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 19, 2025 at 04:56:11PM +0100, Maxime Ripard wrote:
+> On Wed, Feb 19, 2025 at 02:35:25PM +0100, Simona Vetter wrote:
+> > On Tue, Feb 18, 2025 at 11:23:00AM +0100, Maxime Ripard wrote:
+> > > Hi,
+> > > 
+> > > Thanks for your answer
+> > > 
+> > > On Mon, Feb 17, 2025 at 05:41:24PM +0100, Simona Vetter wrote:
+> > > > On Thu, Feb 13, 2025 at 03:43:50PM +0100, Maxime Ripard wrote:
+> > > > > Now that connectors are no longer necessarily created by the bridges
+> > > > > drivers themselves but might be created by drm_bridge_connector, it's
+> > > > > pretty hard for bridge drivers to retrieve pointers to the connector and
+> > > > > CRTC they are attached to.
+> > > > > 
+> > > > > Indeed, the only way to retrieve the CRTC is to follow the drm_bridge
+> > > > > encoder field, and then the drm_encoder crtc field, both of them being
+> > > > > deprecated.
+> > > > 
+> > > > Eh, this isn't quite how this works. So unless bridges have become very
+> > > > dynamic and gained flexible routing the bridge(->bridge->...)->encoder
+> > > > chain is static. And the crtc for an encoder you find by walking the
+> > > > connector states in a drm_atomic_state, finding the right one that points
+> > > > at your encoder, and then return the ->crtc pointer from that connector
+> > > > state.
+> > > > 
+> > > > It's a bit bonkers, but I think it's better to compute this than adding
+> > > > more pointers that potentially diverge. Unless there's a grand plan here,
+> > > > but then I think we want some safety checks that all the pointers never
+> > > > get out of sync here.
+> > > 
+> > > That work stemed from this series
+> > > https://lore.kernel.org/all/20250210132620.42263-1-herve.codina@bootlin.com/
+> > > 
+> > > and in particular:
+> > > https://lore.kernel.org/all/20250210132620.42263-5-herve.codina@bootlin.com/
+> > > 
+> > > Bridges, outside of the modesetting code path, don't have a way to
+> > > access the drm_atomic_state since drm_bridge_state->state is typically
+> > > cleared after swap_state. So accessing the connectors and CRTCs don't
+> > > work anymore.
+> > > 
+> > > In this particular case, we needed to access those from the bridge
+> > > interrupt handler.
+> > 
+> > Uh for interrupt handler you can't use anything stored in state objects
+> > anyway. So I'm even more confused.
+> 
+> Why not? As long as we're in a threaded handler, and take the proper
+> locks, what's wrong with it, and how is it fundamentally different than,
+> idk, cec or audio hooks?
 
-Am Wed, 19 Feb 2025 20:22:13 +0100
-schrieb Andi Shyti <andi.shyti@kernel.org>:
+Well, _threaded_ interrupt handler is a quite important distinction. Then
+it's indeed fine from a locking pov. I'm still not sure it's actually what
+you want, because obj->state is the logical state. It does not reflect the
+hw state, and grabbing a lock won't change that. You can do nonblocking
+atomic modeset changes after all. So you might still run the risk that
+your irq handler is looking at state which does not reflect the actual hw
+configuration. And if it's then messing around with it, you're racing
+against a concurrent atomic commit work.
 
-> Hi,
->=20
-> On Fri, Feb 07, 2025 at 07:54:35PM +0100, Andreas Kemnade wrote:
-> > On the GTA04A5 writing a reset command to the gyroscope causes IRQ
-> > storms because NACK IRQs are enabled and therefore triggered but not
-> > acked.
-> >=20
-> > Sending a reset command to the gyroscope by
-> > i2cset 1 0x69 0x14 0xb6
-> > with an additional debug print in the ISR (not the thread) itself
-> > causes
-> >=20
-> > [ 363.353515] i2c i2c-1: ioctl, cmd=3D0x720, arg=3D0xbe801b00
-> > [ 363.359039] omap_i2c 48072000.i2c: addr: 0x0069, len: 2, flags: 0x0, =
-stop: 1
-> > [ 363.366180] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x1110)
-> > [ 363.371673] omap_i2c 48072000.i2c: IRQ (ISR =3D 0x0010)
-> > [ 363.376892] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
-> > [ 363.382263] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
-> > [ 363.387664] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
-> > repeating till infinity
-> > [...]
-> > (0x2 =3D NACK, 0x100 =3D Bus free, which is not enabled)
-> > Apparently no other IRQ bit gets set, so this stalls.
-> >=20
-> > Do not ignore enabled interrupts and make sure they are acked.
-> > If the NACK IRQ is not needed, it should simply not enabled, but
-> > according to the above log, caring about it is necessary unless
-> > the Bus free IRQ is enabled and handled. The assumption that is
-> > will always come with a ARDY IRQ, which was the idea behind
-> > ignoring it, proves wrong.
-> > It is true for simple reads from an unused address.
-> >=20
-> > So revert
-> > commit c770657bd261 ("i2c: omap: Fix standard mode false ACK readings").
-> >=20
-> > The offending commit was used to reduce the false detections in
-> > i2cdetect. i2cdetect warns for confusing the I2C bus, so having some
-> > rare false detections (I have never seen such on my systems) is the
-> > lesser devil than having basically the system hanging completely.
-> >=20
-> > No more details came to light in the corresponding email thread since
-> > several months:
-> > https://lore.kernel.org/linux-omap/20230426194956.689756-1-reidt@ti.com/
-> > so no better fix to solve both problems can be developed right now. =20
->=20
-> I need someone from TI or someone who can test to ack here.
->=20
-> Can someone help?
->
-The original (IMHO minor) problem which should be fixed by c770657bd261
-is hard to test, I have never seen that on any system (and as a
-platform maintainer have a bunch of them) I have access to.
-There is not much description anywhere about the system in which the
-original system occured, and no reaction since several months from the
-author, so I do not see anything which can be done.
-Maybe it was just faulty hardware.
+This is why all the vblank state is protected by separate spinlocks, and
+copied over to that separate state at the appropriate time within the
+atomic commit sequence. So if you need something like this for bridges,
+you probably need still need the spinlock (or a mutex, for threaded
+interrupt handlers) and separate state.
 
-As said in the commit message, reverting it should be the lesser devil.
-And that state was tested for many years.
-
-Regards,
-Andreas
-
---Sig_/pGvym2.eb.LfB7wXpsrzdqG
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQT6OyBG8iTmbVOVWD8X53T0dSWG3AUCZ7bxJAAKCRAX53T0dSWG
-3CEnAQD9YPchBZTlbER2pSZE6PR2QcdauLXq2J6xDhm69AFTVAD6AiOkdkrGCCLi
-aYx1UJCBw1gI8VZjHqDZljSOEvWjCgY=
-=OlEK
------END PGP SIGNATURE-----
-
---Sig_/pGvym2.eb.LfB7wXpsrzdqG--
+Meaning: I'm still rather skeptical of what you're doing here ...
+-Sima
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
