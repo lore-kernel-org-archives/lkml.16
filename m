@@ -1,121 +1,104 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED58E433BE;
-	Thu, 20 Feb 2025 13:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DCF433BE
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 13:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740056958; cv=none; b=iI11bAbkXs6hr6BzHq6XhBWUwm+hrbCSv15yk4uw2m99pEzk/uxoHXQKzNpryhU9wtbgfFqU0DmSOmk7Jr2kkM2vhpCHgla2eu7o2ipUcRuXWe+Id/ZIw1wpEQ7Ko4EfZjQduoF8+O9HIscSlQlS0itzkSgvLRvd95r/EF+y/Hk=
+	t=1740056964; cv=none; b=Dxub19+qq/E7G1xGa2nCSF79zXQuHObOUuFIN3ecWvXnOpT9RojJZPFPufkTAuVPR/KiS0fKL2HN4lz0OgDn713ML/nhBT9x3rVMMW7zSbnd9eN9EoBZC4hfs1yrZiO/KkN7+EQ8Kte0IlS5hiir9ymVw3QCdlni5O7bI9wqgcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740056958; c=relaxed/simple;
-	bh=W/AaU9zQ+ebqSlBRJDmH5DuXDrw3yPJKEFkVtD+zW+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TEhiovpQZEEMkiGCxp7OcwL5+ClBpplxqmypo9gAcrsUySsapRNufcTF+qUEKNcQ83XFL0iPXEuptCx447G6Kq4B8vk8gO0CcDJDvyuw55TisYiBsOM6yb7nGvzlVJwPLgWW8ohBMaMkYeWAiia9p9pqPBoPPz/vIg6OeAn35Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ESFL38GH; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740056964; c=relaxed/simple;
+	bh=EMGp+waGDautIwmgUrw6ZO1fNBDQkmfgSGqUyA8y5PM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SLrMD6PeHulbebXqneEDitrKHnReNDSccMCxEnWTOztsNonWH1WDxqPRJWLhYxCYqMgTn5NaRxrrafzfqRA9KfAy+aqc0H8gXlzyMMtVcOTqxjH3sJWtWnPlyEgdszeG+Gie8l8c5Zgluyfe7O7wAvuxE0PZfZayQkzcfo3aZUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WvQEJBM5; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESFL38GH"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-545284eac3bso970489e87.0;
-        Thu, 20 Feb 2025 05:09:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WvQEJBM5"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38f5fc33602so510029f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 05:09:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740056955; x=1740661755; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2gk7K5xKt5lap69DIxnTu5qNeauqSAnaZ5fDcbkzPww=;
-        b=ESFL38GHN6X0P5/0/u64BCVq9kez5lNpLSYno4j6k0d4zBb1Z+4KOFc2/Uj6Pk4JQe
-         gWEylu+4KanJidu/KGQAVDsvnCWtwllHH4rq6GAGJV6GhVl7JB9tOsoQiCA+bLt72nzO
-         U7dmdwu/01Ne+I1zs0ws6A1rEH8gwY8ezEyXdeVxuOR7zRpYGh3jhNGD6cDR4XUrTfXN
-         VA+yXN4h76pzGNBpcC2/F0Dp5vV6DaqVZvFwsMPeYKvxkhOduT6znWKyrss2TWWQqu72
-         tWWiomh/F5uTEbp7jeAfBZAj3C3yWyr/rDSFHZ0LLFDtDYvxsLRNN3/bdaUSTUdzdp5f
-         WNcA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740056961; x=1740661761; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PmtqWvOt9IGhgCN8MYbu66ivp1lZ7PoGeZdQgNdj5Ek=;
+        b=WvQEJBM5pJzH1Zzs8Z5+60jY3Cmt4+u7FkLc4wfSixkXKdN63Ir0RLey3wX4NQBmPR
+         1cfNcnFMxujVMWYMVbrK8ZnhlvimOXB9iOH/N+V7u63yZOfJmzXQPixgibp0ZLJ2lUCt
+         FOox3NGIP31NEeVHUqecbauyYzOP6CR2t5Vh3cNSwOqBM1Jky6FsxmnENElB5LYzN0kj
+         LYigL7HZHQjWfQ17/qCu+BAtj+DlTC9yjTQ4+T/Cp45FNsqqqM1+s73lb3iMMHDVqSsl
+         E9K02Yybg5X8VAUbrgzsE3koezBxi+P6G2kmZ4HVdNlGCtfYAqiesUeiAx/jpbazI+cj
+         oanw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740056955; x=1740661755;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2gk7K5xKt5lap69DIxnTu5qNeauqSAnaZ5fDcbkzPww=;
-        b=bCFMP3O1eKOHXwKT0t/vCed1R89sdslk6xhMdcc4dXH1BOimzgkA3RcrFyKA1Qbr+M
-         SuQYt/qvHQuHEkoL4kPy8CaS5vgvAGhrTiPnBP94ViNYz1zskaJ7Pem9DWGZMEEOvdW4
-         l1iQ7/2eH9E7W03gAmooZG2RoB1qp5dMxoXZwajr1WxIB3O1aRcaimiW9X96THpJ9/tR
-         ZYUjgy1uuTl7rXuko7G4DGqxEqy/Bo08+NQEu606ALVbcYgvDp6KvNBSFNNqiJu80YYj
-         gvScLum+1k3fbshbvs6DwHY3I8vNCvbRtfH0yiDZCogHmFHKfCjm3Bcd41rpmANi0UT/
-         a35A==
-X-Forwarded-Encrypted: i=1; AJvYcCUYIt2Jp6DVb0P8G27fI2z8PxkTzX5nuUU420tPjsPsebByvCZ+jnjkzLKJxAxQqEroSh1CVxt7JIlZyG7I@vger.kernel.org, AJvYcCVJIAHAQ5XVEK+O48NsurIRM79WzBphT9feKEqKqXXvD5QBclO4Fc/uSWGeVpGlwIrcuprkkpnQyva1jw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0vzzWLzWIhCB936Np7xPjLcDWqoq9j3fMrxSBnqVEgr0StZ3l
-	3S2j8Y5cgACd/lnAxUb2DWKFS6+O9oCLGm2MSmQ3tLU+0NFbsAsS
-X-Gm-Gg: ASbGncv2cYLlkXD2RhkftgGAjgDF8YmtnZet4EbGOBM9DLRipQGOPzjb8uPUZMn33hC
-	8gk3x6iiR3JoSkWUeox7lQo30wb5Z5mwMFP83pWT1LfDji86MOFrMrYAgjUCu89lON5mSVEp/HC
-	3xKziOlsFhN71fafwHEgxqG+5PqtKOooSf0fLChNzCe669tPl7hqWJ6JhsmTLOuiFs0dOAN7A48
-	9JoqYESwRUA7A4+w58p13CeJ18vyVbyPiHBFHaNTPC7bQy9zB4pn8igDuwxytN3/4Y5f5t2xPVa
-	2En4EawoOLTtKD3QbspQ55wzVbFFwj+xFRqa2ojN
-X-Google-Smtp-Source: AGHT+IHrgrWgmv/Wvs6TG1OESMVcUmy2fyvCn7+js39SlyI1RFinqYK2+J4/FDAHnvnRuM3Fo5oRxQ==
-X-Received: by 2002:a05:6512:3b07:b0:545:2c40:ec1d with SMTP id 2adb3069b0e04-5462ef22fb7mr3352033e87.44.1740056954355;
-        Thu, 20 Feb 2025 05:09:14 -0800 (PST)
-Received: from NB-5917.corp.yadro.com (avpn01.yadro.com. [89.207.88.243])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545254f7072sm2194289e87.127.2025.02.20.05.09.13
+        d=1e100.net; s=20230601; t=1740056961; x=1740661761;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PmtqWvOt9IGhgCN8MYbu66ivp1lZ7PoGeZdQgNdj5Ek=;
+        b=DLzEmGEPZX10miXODB+v1G8+4xp2sFPilwdmKg5c6vf9t5Ne5suy0Secfj/balTT36
+         WiS/twDQBUGC7W+XqE5YRh+67/CWCWjfxmmzK3mqnbHGL/IbiNGzPiDcL9g66LXNA6kP
+         Yd/CvDkpW/zB3YvpVpdBDKNrBQfTQag+q4YRidh1ZK9oJWcAjVtpgrAAmWp4Axm/u8Mo
+         gbdWU42wpJ9ajSmqDMmYD6QbB/Z8FrnzCmB2N/rxcCDH6t0CGSUwq/AatIKaI1qHQ3tA
+         llSDx4lVej2ZFJEY7xdMWeNJN79mb1nUNAUwPZASHrL18bdNfCMZHoCrXfZ/VXvQJdQ6
+         6jSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnczpk4ICNmdWZOijUVGlNn7+qj3Y+YrRF2+Hm5N+9eVRwMt1w4mbA8m270QtlaKSOpQ9DzipHNryZmrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3iG3FplYAMY5gGzvIYnjmne3FrMkXHL60Kk+70nKAiogj3sxD
+	XdmoiHjwQQ7UHvA63YUVLXMVIwySDWyjXM+cPG8X4Apy07mXjJJESbxRVhq/GI4=
+X-Gm-Gg: ASbGncscl2vWi9v71/TJPFPLCZfJzYhkyZvdya/WTfBXT/GL0KFEJDBh0w2lQP2ILHR
+	p16V2GeqD4dw7KQf9QXt99BM+BTs2u/cR6rqRyXb1bSz5VhHKZO9Y+YuCXXz5NywbnRqzQeTJ8D
+	ueg/qFqTBYxWzlX1Ps8yalg7lVBJkKrV/unPIjqweOdu2C+Zoh3klXv5h+2X+M7KB45FIdUF/7m
+	0Q7IKlOyrskznel1B2o/5CPrdM7nZpUv5VGBN/7q9qnQVMmeFT5hzHoJ5DXr+2gY7kbOWYsy4F5
+	xFu0R1OqqQ8nGA==
+X-Google-Smtp-Source: AGHT+IGbIfdv9XOdYL2F63zJDoBS3KeglPP1iXZ2SnLsZHSe0oSYlpnW6eY7wK10PTAW2BxL87BbAg==
+X-Received: by 2002:a5d:5f4d:0:b0:38c:5da8:5f88 with SMTP id ffacd0b85a97d-38f61609df3mr3636052f8f.28.1740056960879;
+        Thu, 20 Feb 2025 05:09:20 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:e2e4:418d:7462:9cf])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258ccd2csm21129660f8f.30.2025.02.20.05.09.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 05:09:13 -0800 (PST)
-From: Dmitry Mastykin <mastichi@gmail.com>
-To: job@noorman.info,
-	dmitry.torokhov@gmail.com,
-	linux-input@vger.kernel.org,
+        Thu, 20 Feb 2025 05:09:20 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	felix@kaechele.ca
-Cc: Dmitry Mastykin <mastichi@gmail.com>
-Subject: [PATCH v2] Input: himax_hx83112b - add support for HX83102J
-Date: Thu, 20 Feb 2025 16:07:49 +0300
-Message-Id: <20250220130749.2019419-1-mastichi@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Mark Brown <broonie@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] gpiolib: don't bail out if get_direction() fails in gpiochip_add_data()
+Date: Thu, 20 Feb 2025 14:09:19 +0100
+Message-ID: <174005695734.63211.7320786041973824393.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250219144356.258635-1-brgl@bgdev.pl>
+References: <20250219144356.258635-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Tested on: Starry Electronic XR109IA2T LCM
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Dmitry Mastykin <mastichi@gmail.com>
----
-v2: Add compatible
 
- drivers/input/touchscreen/himax_hx83112b.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Wed, 19 Feb 2025 15:43:56 +0100, Bartosz Golaszewski wrote:
+> Since commit 9d846b1aebbe ("gpiolib: check the return value of
+> gpio_chip::get_direction()") we check the return value of the
+> get_direction() callback as per its API contract. Some drivers have been
+> observed to fail to register now as they may call get_direction() in
+> gpiochip_add_data() in contexts where it has always silently failed.
+> Until we audit all drivers, replace the bail-out to a kernel log
+> warning.
+> 
+> [...]
 
-diff --git a/drivers/input/touchscreen/himax_hx83112b.c b/drivers/input/touchscreen/himax_hx83112b.c
-index 896a145ddb2b..8f112e3038dd 100644
---- a/drivers/input/touchscreen/himax_hx83112b.c
-+++ b/drivers/input/touchscreen/himax_hx83112b.c
-@@ -399,6 +399,12 @@ static const struct himax_chip hx83100a_chip = {
- 	.read_events = hx83100a_read_events,
- };
- 
-+static const struct himax_chip hx83102j_chip = {
-+	.id = 0x831029,
-+	.check_id = himax_check_product_id,
-+	.read_events = himax_read_events,
-+};
-+
- static const struct himax_chip hx83112b_chip = {
- 	.id = 0x83112b,
- 	.check_id = himax_check_product_id,
-@@ -407,6 +413,7 @@ static const struct himax_chip hx83112b_chip = {
- 
- static const struct i2c_device_id himax_ts_id[] = {
- 	{ "hx83100a", (kernel_ulong_t)&hx83100a_chip },
-+	{ "hx83102j", (kernel_ulong_t)&hx83102j_chip },
- 	{ "hx83112b", (kernel_ulong_t)&hx83112b_chip },
- 	{ /* sentinel */ }
- };
-@@ -415,6 +422,7 @@ MODULE_DEVICE_TABLE(i2c, himax_ts_id);
- #ifdef CONFIG_OF
- static const struct of_device_id himax_of_match[] = {
- 	{ .compatible = "himax,hx83100a", .data = &hx83100a_chip },
-+	{ .compatible = "himax,hx83102j", .data = &hx83102j_chip },
- 	{ .compatible = "himax,hx83112b", .data = &hx83112b_chip },
- 	{ /* sentinel */ }
- };
+Applied, thanks!
+
+[1/1] gpiolib: don't bail out if get_direction() fails in gpiochip_add_data()
+      commit: 96fa9ec477ff60bed87e1441fd43e003179f3253
+
+Best regards,
 -- 
-2.34.1
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
