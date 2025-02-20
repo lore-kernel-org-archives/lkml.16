@@ -1,151 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90753214200;
-	Thu, 20 Feb 2025 19:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551D51E9B1C;
+	Thu, 20 Feb 2025 19:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740078262; cv=none; b=DLVE2NBPHqtT5++fE3dSFiEQ6/jC4CEUePUMjEzz7OvrMjUN3wsg2QgaW1YB8w4LGB1u+CpAXbR+Ze6e+IUiDsDk/OYYAHEdto/1eTlDmiSUqay7slNYO2iB/qN6cFZyvSR5uukd73tzi7miileWh5Zp2RqpCwh58sjePSdtvU8=
+	t=1740078287; cv=none; b=S7XR+Ao6kcnBVbQm1qZ48VrsP/gRUmk8eWt54w6VFb3brjZfjMvXyj4L0TPPL4lRqxmYjjApdvN7KBGSQOp17wpZ49+FMRuoOCqTWIsYi1rVQafnpj+5QibsEMHEkFq+EAZzech8i+Kk6wtW7mMNbTOIgTm3JD2WNYbBPR8ZzPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740078262; c=relaxed/simple;
-	bh=9+MGxImlt2d6gStwzBbL3qDomWlTxi21P36nqCq0rds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E1jJni1A0zgfFXjOJrelfBitS8vUGYUYXVFxbcqVo0GHpjnk0L8+qqSVWvnujEkuBbiWafrxg/t5BozmrDlOX1+2yTZ6yi8x//BwFqnRnoKhCDqwJH7xWO+QNhiGIC6u7CeeX/E0RKmqd7h3aiJ+AiLkCmfEaqrkcJVDa/qPPZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF56A1007;
-	Thu, 20 Feb 2025 11:04:37 -0800 (PST)
-Received: from [10.122.18.111] (unknown [10.122.18.111])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3E083F59E;
-	Thu, 20 Feb 2025 11:04:19 -0800 (PST)
-Message-ID: <7c913fc0-0f2c-4327-99ee-510bdff8a537@arm.com>
-Date: Thu, 20 Feb 2025 13:04:19 -0600
+	s=arc-20240116; t=1740078287; c=relaxed/simple;
+	bh=BidZBS4eZtZfPvk6NhNjN/ATM5JUN1oiVrgLI+zExt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a0dZmKoUO08xh5e2+gqeFFtvP7s+1sJC3ZHvHF1fE8aF+UP7O+bi67zcZQdQEOprI6zFsPsm03vqhY2z3e/Mpz/mlOX40bnftzDnp9e9Pqhr2OmYgzevNpzYWSLhMgd6om+BjmcIAvjuoN10aUPDUMTzrrmgCWdMDxQgb/xgWhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK/iqH6P; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK/iqH6P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC9BC4CED1;
+	Thu, 20 Feb 2025 19:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740078286;
+	bh=BidZBS4eZtZfPvk6NhNjN/ATM5JUN1oiVrgLI+zExt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FK/iqH6PNbcQF5B1y3CsPysLW0iMFMA7tEmbhrHcz84/IYRfR4UolbVwGexX2jmSA
+	 7J6FR+6QoDlivhw+cgvcxeuG6cyO9qh1zwmP+vUeQZGL4enPSMt+nFULd9RKrLkLV/
+	 U1457FIcVKH/qJaHB/4puMeiVV91SdAS8d/W1D74Saprm6T5Ot825DS/poIICRPrpy
+	 kS+141SgXIMHX2OJiK23PoKYh10q7RI5iKzqWWLrygplonbp7EUsnGYG77t1C344QK
+	 Fen5Z4thKWJuwK88Iv9/x+DGM6LB3R38omFR3kdkygLp47tcWAkmvnGuA+24VjhKvC
+	 f4uutTlLjKZpg==
+Date: Thu, 20 Feb 2025 11:04:44 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] IBPB cleanups and a fixup
+Message-ID: <20250220190444.7ytrua37fszvuouy@jpoimboe>
+References: <20250219220826.2453186-1-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] tpm_crb: clean-up and refactor check for idle
- support
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
- sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250219201014.174344-1-stuart.yoder@arm.com>
- <20250219201014.174344-3-stuart.yoder@arm.com> <Z7b2BlllE6HVIZNN@kernel.org>
-Content-Language: en-US
-From: Stuart Yoder <stuart.yoder@arm.com>
-In-Reply-To: <Z7b2BlllE6HVIZNN@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250219220826.2453186-1-yosry.ahmed@linux.dev>
 
-
-
-On 2/20/25 3:29 AM, Jarkko Sakkinen wrote:
-> On Wed, Feb 19, 2025 at 02:10:11PM -0600, Stuart Yoder wrote:
->> Refactor TPM idle check to tpm_crb_has_idle(), and reduce paraentheses
->> usage in start method checks
->>
->> Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
->> ---
->>   drivers/char/tpm/tpm_crb.c | 36 +++++++++++++++++++++---------------
->>   1 file changed, 21 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
->> index ea085b14ab7c..31db879f1324 100644
->> --- a/drivers/char/tpm/tpm_crb.c
->> +++ b/drivers/char/tpm/tpm_crb.c
->> @@ -115,6 +115,16 @@ struct tpm2_crb_pluton {
->>   	u64 reply_addr;
->>   };
->>   
->> +/*
->> + * Returns true if the start method supports idle.
->> + */
->> +static inline bool tpm_crb_has_idle(u32 start_method)
->> +{
->> +	return start_method == ACPI_TPM2_START_METHOD ||
->> +	       start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD ||
->> +	       start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC;
->> +}
->> +
->>   static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
->>   				unsigned long timeout)
->>   {
->> @@ -173,9 +183,7 @@ static int __crb_go_idle(struct device *dev, struct crb_priv *priv)
->>   {
->>   	int rc;
->>   
->> -	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
->> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
->> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
->> +	if (!tpm_crb_has_idle(priv->sm))
->>   		return 0;
->>   
->>   	iowrite32(CRB_CTRL_REQ_GO_IDLE, &priv->regs_t->ctrl_req);
->> @@ -222,9 +230,7 @@ static int __crb_cmd_ready(struct device *dev, struct crb_priv *priv)
->>   {
->>   	int rc;
->>   
->> -	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
->> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
->> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
->> +	if (!tpm_crb_has_idle(priv->sm))
->>   		return 0;
->>   
->>   	iowrite32(CRB_CTRL_REQ_CMD_READY, &priv->regs_t->ctrl_req);
->> @@ -423,13 +429,13 @@ static int crb_send(struct tpm_chip *chip, u8 *buf, size_t len)
->>   	 * report only ACPI start but in practice seems to require both
->>   	 * CRB start, hence invoking CRB start method if hid == MSFT0101.
->>   	 */
->> -	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
->> -	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED) ||
->> -	    (!strcmp(priv->hid, "MSFT0101")))
->> +	if (priv->sm == ACPI_TPM2_COMMAND_BUFFER ||
->> +	    priv->sm == ACPI_TPM2_MEMORY_MAPPED ||
->> +	    !strcmp(priv->hid, "MSFT0101"))
->>   		iowrite32(CRB_START_INVOKE, &priv->regs_t->ctrl_start);
->>   
->> -	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
->> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD))
->> +	if (priv->sm == ACPI_TPM2_START_METHOD ||
->> +	    priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD)
->>   		rc = crb_do_acpi_start(chip);
->>   
->>   	if (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
->> @@ -449,8 +455,8 @@ static void crb_cancel(struct tpm_chip *chip)
->>   
->>   	iowrite32(CRB_CANCEL_INVOKE, &priv->regs_t->ctrl_cancel);
->>   
->> -	if (((priv->sm == ACPI_TPM2_START_METHOD) ||
->> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD)) &&
->> +	if ((priv->sm == ACPI_TPM2_START_METHOD ||
->> +	     priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) &&
->>   	     crb_do_acpi_start(chip))
->>   		dev_err(&chip->dev, "ACPI Start failed\n");
->>   }
->> @@ -609,8 +615,8 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
->>   	 * the control area, as one nice sane region except for some older
->>   	 * stuff that puts the control area outside the ACPI IO region.
->>   	 */
->> -	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
->> -	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
->> +	if (priv->sm == ACPI_TPM2_COMMAND_BUFFER ||
->> +	    priv->sm == ACPI_TPM2_MEMORY_MAPPED) {
->>   		if (iores &&
->>   		    buf->control_address == iores->start +
->>   		    sizeof(*priv->regs_h)) 
->> -- 
->> 2.34.1
->>
+On Wed, Feb 19, 2025 at 10:08:20PM +0000, Yosry Ahmed wrote:
+> This series removes X86_FEATURE_USE_IBPB, and fixes a KVM nVMX bug in
+> the process. The motivation is mostly the confusing name of
+> X86_FEATURE_USE_IBPB, which sounds like it controls IBPBs in general,
+> but it only controls IBPBs for spectre_v2_mitigation. A side effect of
+> this confusion is the nVMX bug, where virtualizing IBRS correctly
+> depends on the spectre_v2_user mitigation.
 > 
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> The feature bit is mostly redundant, except in controlling the IBPB in
+> the vCPU load path. For that, a separate static branch is introduced,
+> similar to switch_mm_*_ibpb.
 
-Thanks for the review.  Do you want me to respin and send out
-a v6 with your Reviewed-by tags on patches 2/5 and 5/5?
+Thanks for doing this.  A few months ago I was working on patches to fix
+the same thing but I got preempted multiple times over.
 
-Thanks,
-Stuart
+> I wanted to do more, but decided to stay conservative. I was mainly
+> hoping to merge indirect_branch_prediction_barrier() with entry_ibpb()
+> to have a single IBPB primitive that always stuffs the RSB if the IBPB
+> doesn't, but this would add some overhead in paths that currently use
+> indirect_branch_prediction_barrier(), and I was not sure if that's
+> acceptable.
 
+We always rely on IBPB clearing RSB, so yes, I'd say that's definitely
+needed.  In fact I had a patch to do exactly that, with it ending up
+like this:
+
+static inline void indirect_branch_prediction_barrier(void)
+{
+	asm volatile(ALTERNATIVE("", "call write_ibpb", X86_FEATURE_IBPB)
+		     : ASM_CALL_CONSTRAINT
+		     : : "rax", "rcx", "rdx", "memory");
+}
+
+I also renamed "entry_ibpb" -> "write_ibpb" since it's no longer just
+for entry code.
+
+-- 
+Josh
