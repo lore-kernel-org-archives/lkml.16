@@ -1,257 +1,256 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2086.outbound.protection.outlook.com [40.107.105.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539B41CD15;
-	Thu, 20 Feb 2025 12:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740054610; cv=none; b=E439aSvSBJet6xPpQW092RHgBJz0vSzMZ6wdSJrPY0C0J/ijC6DjhZEZ1u9TcUf+YNziPrITcU25E7/X6up1qNqlmcbuo8d79jjMqhLWqMzXObvbN3o77/Z0+PHPSlLfBaTq0RfDmsRWENBstf3KNXpgXkAIyD83zdWuHT4iW7w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740054610; c=relaxed/simple;
-	bh=2oH03Hf7Yq330CJVN6/UZLAQGmSYLUaXYXtI4buRWmY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XH86s+Y7Qki3qscvyjTVYSaOXiDRHZc/2y4BW3+He++W5vBt+Ft5dxDcsPwPoy9iggAZ97noeLbWMZwOyrx5VyFfQi61TycTmKo99l501fcSFQybEHnZ+gB2DrBZPbWtl7TQB7IUXxhCG0zwIFlGGYPaqZzqNYIKkFaPlJlLLsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8DlLwpP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C360134B0;
+	Thu, 20 Feb 2025 12:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740054667; cv=fail; b=ilcLY7nkbL8D0WITpSj0YVKlxq4kQpU0oSz5Kf+l8q/FIP8xvlpzcG8t419uswyTP/LNrIjQfuHCfEyXWFC2kwIl0UltEUAjzf16d+VhzRG/ykSA9R88ip9Kqi9xoD9QZdQCAZ/2C0kjIRxddL5/rzSHEarmH/NB8naEdr+OWgc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740054667; c=relaxed/simple;
+	bh=NPCbtsImtOh6IgyUhyUVBiZkZ5E7HPgGaVtiIY9gX8s=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aCBZHRpBDavDiurmCuATdsp2h9JR5nKCVF1rh0HuQmPRwDMPreTJ/GMSbeMbnwGKAb1jJDATQpuNs2hmrDyOQpstFqzQQKkg+HocDYkoxqwO1YRonMZIMnGqxywsXdGkHNxcNHs+TP86zw19FjWWB5LNE+00WpZGfoZrs2ZX3KA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jzL//0u+; arc=fail smtp.client-ip=40.107.105.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8DlLwpP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2A357C4CED1;
-	Thu, 20 Feb 2025 12:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740054610;
-	bh=2oH03Hf7Yq330CJVN6/UZLAQGmSYLUaXYXtI4buRWmY=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Q8DlLwpP7npsOZSieCsYgxpdejQMuRG2PraJUbrnpVVu7k3VUOYt9GhJaObfc01Rs
-	 v5cWXF3SuKDT+/pPFF3cBnzKfkPTc1JbQXKsC/CcjDWXVTll7JB1H8FIGnzwN/bwmD
-	 45lxiTfILIXmkLQXR949tASQO69XadBjRi2itwBOCoo/nNlWJwJtUuP+fLg4BBb3cy
-	 TNZLd01QVt32B2lGwWTIj+NHR4P+S3/+fhhFknWBCloxE2EkFPTAp8kIUZX3iPIlXj
-	 XdExBwI2oVIAj7sdtgo1FVS40PjQrnK9cF9aWDBDIQvGYbYJTcpxCHk1MX779mYZo+
-	 MMGMoJsCC29BA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E907C021B1;
-	Thu, 20 Feb 2025 12:30:10 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Thu, 20 Feb 2025 13:29:58 +0100
-Subject: [PATCH v3] dt-bindings: pci: Convert fsl,mpc83xx-pcie to YAML
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jzL//0u+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UQBbb5pCvEK2slKKxe0t9NRHorGMxNRWhhGaGoy9QJMhn/hUhEjp1O2uDVm82nO+vLqqpxGChyQ53VzIR1txWytMTGRctzJB+AozRRNd3DiowkHzxkNtymteXsHOxEsQa1Z0GI/Nu5TwRjX5UuInMSXNEvYoOddMA1vPnMrzufYoY5VjnuKx0b7yRbcDYIH3aOHwhf0UvbRWXmZ8qml118qNkkqh/ARdhH6ZauVwOOaGPI0plXGlS8b8b5j0ZN0JGwzjRV4jGW61TkbJu9Ar5SOd9GxIX2bpOy9O1Q14t/yuVg26AFAz/oDkIYsLwXXY/VKHmNMvAoKxNhoqSDkkvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C7OMH0y1VedvtPD97d7ZUfoG6LWwziAGF6xtHPZg6LM=;
+ b=fud9nYDCwhlQ9CoXe+yve1xZKGRebehKI+dRNXYyTei7e+helzhwjvFA5PaW1LSSqYH57EOlnPveW3d54nYtC9pSGlX4593FDlEfrdPfN0VQPjgsKtHSvs4q6bz7KWgXrabgflNctzejqHx20kTqojgDFIehxU0XNtn+LV+i3u8VB4r56KQ6JpJZkojtphK1HmJRjxWlIDQ8KqGyh6A0n8W5FKVB1yKqnVwt46+xL8oNOKVfsM2brHqIGued6zE1DhRAQByzBjw0O61tDzQRCmD7G5Kjb4Vi0m4kcoQVX42ijFOzILwOh/QSUEg/cZvjoDHkYX0FvYIJE1FFoTJtaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C7OMH0y1VedvtPD97d7ZUfoG6LWwziAGF6xtHPZg6LM=;
+ b=jzL//0u+gQVVp9cRCMauFaCJgXqhjqfpNLiIFl2vFk1uao43lZnURt1wNMgPT7OAvEt/r8Wt3RDlXsTi3HhaNoA0zWo8iLj95qPlLnfJaxX9I2dDqYLufOYFpt4+viHSmrceD1bo3/XWt9dJ11gX3L2V51CDQd/buhwZRUPFSwT0dhsQ9GTxBELtYfSXdj7xj/64D00rdRzvTEpT6NclAyC1hjl6R5OkIHUDiN0I9HM7csXcWC/SjTTz0pqISaFmlxWfpihoDvnlFrIPwjWRhF8vnGOhyIaJX6unN49YWp8RgGDK8AcrlTHLGG4jdSDzNeJ1CPz9IVSLaFtS8FmUoQ==
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
+ by GVXPR04MB11020.eurprd04.prod.outlook.com (2603:10a6:150:227::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Thu, 20 Feb
+ 2025 12:30:58 +0000
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299%4]) with mapi id 15.20.8445.017; Thu, 20 Feb 2025
+ 12:30:58 +0000
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+CC: "marcel@holtmann.org" <marcel@holtmann.org>, "luiz.dentz@gmail.com"
+	<luiz.dentz@gmail.com>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, "linux-bluetooth@vger.kernel.org"
+	<linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, Amitkumar Karwar <amitkumar.karwar@nxp.com>,
+	Sherry Sun <sherry.sun@nxp.com>, Luke Wang <ziniu.wang_1@nxp.com>,
+	"johan.korsnes@remarkable.no" <johan.korsnes@remarkable.no>,
+	"kristian.krohn@remarkable.no" <kristian.krohn@remarkable.no>, Manjeet Gupta
+	<manjeet.gupta@nxp.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: nxp: Add support to
+ set BD address
+Thread-Topic: [PATCH v5 1/2] dt-bindings: net: bluetooth: nxp: Add support to
+ set BD address
+Thread-Index: AQHbg5NLufHtSaUyJ0GEN9n1ioVKHw==
+Date: Thu, 20 Feb 2025 12:30:58 +0000
+Message-ID:
+ <AS4PR04MB96928A5C527D1720B9BE0AE0E7C42@AS4PR04MB9692.eurprd04.prod.outlook.com>
+References: <20250220114157.232997-1-neeraj.sanjaykale@nxp.com>
+ <184919f9-25bd-4f65-9ed9-dc452a6f4418@molgen.mpg.de>
+ <AS4PR04MB96921164DAA8A63B2C0841AAE7C42@AS4PR04MB9692.eurprd04.prod.outlook.com>
+ <0e5f23a9-b1d7-4d8c-bb05-83f7a15a7285@molgen.mpg.de>
+In-Reply-To: <0e5f23a9-b1d7-4d8c-bb05-83f7a15a7285@molgen.mpg.de>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS4PR04MB9692:EE_|GVXPR04MB11020:EE_
+x-ms-office365-filtering-correlation-id: b251b921-0eb1-45aa-11ef-08dd51aa6dae
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?0J9z688HS8v8Nqv7zRzXCUEicMVS+FbnwkhzIEIEnzIYYQiXKLMdanglvpOr?=
+ =?us-ascii?Q?o8h7NBZ0AdEFTLCwgAPR5E26FYcLriRb7uMPcOZjddTwEJNliaVuCGbLg8mr?=
+ =?us-ascii?Q?AUbOI63scomfZxRMu90H3WF4TZWa2wCfxsmx7gJLkxFb3sVnkElz4LJEtZXG?=
+ =?us-ascii?Q?laq+tQxU6JroTWd27uL1Ht9L2f7ur0tNbGcCIxfXrkaU9AfRtN0fbvl5qbOQ?=
+ =?us-ascii?Q?XCelWgleJTscJ3W18S95a0Cn0m/QENn5qhfla/P4g0tC5OTEXFsDWArdLYT+?=
+ =?us-ascii?Q?Qy9h/xEEPp9UIIXMWNHdCF2sBd4V3GAWAbsQW+/LutTJixuSXZPleFr7NH9R?=
+ =?us-ascii?Q?aGZ8Hi/TjtErmLyYRTXvcDKxjt4fxVsNM0gm4ZDAHLWOrt16rlQr3zAbHcjr?=
+ =?us-ascii?Q?W5BbGDZ4MULEKzrLR6q1XMl1RbAlmYj/J4inM/XwCE75rPmFnkpiZzo3p/Mc?=
+ =?us-ascii?Q?2kq8FJbmchdrPoAtANFjTJ2UauBHxnx2vFQsOUvXbrsQK0oZJb5a0hPiguvE?=
+ =?us-ascii?Q?IFigOtJqMZUBkfBJ8uagtSyxe4x+MBoST2iudM7Q+GnidSC2ZD3AuO0JT7Sd?=
+ =?us-ascii?Q?/hF0VFzU9UvbZkB3FUtR8Dse08nXC+KeJCoOK6S2IHoFiP2xwdj3SGxogI6v?=
+ =?us-ascii?Q?3SqJV9Ngre9tmDQkD5D76wyIv8d8m3BkLy8Tq4hIruEWzvqK5t4nY52I8D5B?=
+ =?us-ascii?Q?peLmM6iJX4Tvc5hVqOF4YmUEC+66buCxRfm/e1srqwyG46ybOFLprfNhYx1V?=
+ =?us-ascii?Q?BcdMriE/CxVuT1ft+tRw7Jl/n5BvYcm2NZ1d/bmkbxnVs2vBy9jkjuWLrPZN?=
+ =?us-ascii?Q?SLqjV4zky65wb5otOEOl4FHAlK/uJFoVEIi08rHcFqpPk2eGBqjW54B2WDu5?=
+ =?us-ascii?Q?dp1Bl8XfS/7g7zMicbIBnDhcnP1NLuWAO05F7k1lYSVdCK0BcWMjnfToIweF?=
+ =?us-ascii?Q?VG9zjmDoCM7qXr1s9YfooWymR/tgB3m3izQ2+hF84lh0G6o2KsRHiFfDVsvf?=
+ =?us-ascii?Q?JWR+HM3URnHu6ZaUbZ8Tq4efKoZP8RxBWzPfA59bfL4nPptSaB9tHFUhRM09?=
+ =?us-ascii?Q?fRwcVlnJCwcWagvm0iRUjwcd/JXw3acKRfkaiOKctlL/0Skof+QL6AYCHufF?=
+ =?us-ascii?Q?bbTh4gU48+PaIf5v5tVTH5kQ8yFfqD7j7mj3BmKH3kZWxQ1zXDeNSxWE6NRK?=
+ =?us-ascii?Q?9ITR77dzloTQveTwreOivbSAKLY3OzoJIxb9udsmrzYFD7Y/ahHTeNJOcwtv?=
+ =?us-ascii?Q?F+GKJEPoaDiiVdbff9K7EWK/8fO8inTT1uyxY+0jCy/2O3EVME3V5a2RGR6G?=
+ =?us-ascii?Q?5SI5lQvBN0YAjRJmsYifnpL3WVZo27DwdCc+Wn6rPpxWTIuHF1ZRtdoDtalG?=
+ =?us-ascii?Q?xCupMDAXMgiDqzi1EgIiuKGkPKltLjwyJJGKAJya9dsKz8q7Vf8/ltnLjDgf?=
+ =?us-ascii?Q?yDOaiCf+srTV5e2eCZQdcgkP9JpDhl5m?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?4V07Mc5I7WI5gAxU+3Yu++30ZSn8wRYZo3A4UWx/tH4PDPT5/oVbpZE5nuqo?=
+ =?us-ascii?Q?XbIt8jtUMOkR4tw0rW8Qk5NbIAcT0XjmYDrb4DrAFp981FJigCIButH7lfds?=
+ =?us-ascii?Q?CH3IZO8VkXheMo8A/pPchuXwwzTaBUrtg+S6oTQFuJbdkwHDgaOgrLDp02yc?=
+ =?us-ascii?Q?xzLNJEzx7+iZo1k5p3KzSIapc3hkqfse/gJm2N3Rk3WsL4qT/jS50aLuOZIo?=
+ =?us-ascii?Q?fJMWBBcXTlL3dB2h01LwSSILl9Z3oETd7rVIP/mJBnxo4S2tu8+G6zDHt5qI?=
+ =?us-ascii?Q?xanDMXsLPFJotJxpabABk/F6oBH3oSgKZxCFeFd83NhtQFOznMtWIht5WZkR?=
+ =?us-ascii?Q?s884eiDUEnsrEQfn9qN/YlhPUNzY/1F5WefgeARaS0Uvr5oPGenjf8mZQS7i?=
+ =?us-ascii?Q?XZyhnfcIYTg+kJ0BoQmauzaLUeucY04LEWBFpb+/XPOSKGcRCfTZT03o+Jzi?=
+ =?us-ascii?Q?kqzU0NDaGXuouSNbML3ZXXjKFnhM1q1vAmalqqKegnpyLSUgLb168c8epx+2?=
+ =?us-ascii?Q?B8ibXoBmbNAyZWxLK0TxMILK1EyD54Kn2FXaR7fbCXGaMxED/mzh4iCQC+bk?=
+ =?us-ascii?Q?VIto3AIK02dAzp7kNkqVZ6lzvOO7IhiTIF1ot9/q+wjw/AeNqJoh10ZKU2S0?=
+ =?us-ascii?Q?5BoaOI6s1euuD/hmd5TnUqM+44qepRWtf/Je+jWnOOOGE6tUniJ7di6m9s1e?=
+ =?us-ascii?Q?hR8ILGw0cvdrRtayPcbIBXbo7QuW/TGjhONpf+DeT7WeAcbULJhUblwFXLqz?=
+ =?us-ascii?Q?56zfX/M2OVAW8OMJ7iM5YC/4ALAz025nkyrZsv5cGJCE081HqjO+9489/DQm?=
+ =?us-ascii?Q?AL0sOxvM8T3QM2otKcT0PvxTQcuYsa1JKF7sqDpdQxGIzS3dRIrsjYNwDivZ?=
+ =?us-ascii?Q?jVKs0H1MM+GkG/wG2uEjCfHetLa4Pstd5i5afR7K2M8leZB9OGyFQizcOSwT?=
+ =?us-ascii?Q?r+PiTld/xM3Qzbl0KAjhcoa1rG3TqqBM1TUHNEi0Cm2T+ICZucEYXXb+mUOK?=
+ =?us-ascii?Q?q4oJ6bIY+Ay+46RoN6AkUxU68IAsLBRGZvRkYFiwxTB84mmdSnhtl4nZv4hn?=
+ =?us-ascii?Q?ku+SwNUak4sXl+x/StB1tyWpI/zoEeSAV4H06hEiDHwqmn6iXZqwP5YjOcbE?=
+ =?us-ascii?Q?+D4BLYw83GU4tIMU81UiXZ2stLlYqTuoXpd/0XQEv/vp+TpSyAcIkWlcNLaD?=
+ =?us-ascii?Q?fT5r/tczrN3rUjd8IiYHP/lFwUlyOu4S0ybRFCKWLYEneF8LbZlf/i766ZzE?=
+ =?us-ascii?Q?nHZZQkX4B7BlI5FWevZaN2H/YbtNqGbsBF9abHnxmoC0gbeeHRkH8l6aKsPg?=
+ =?us-ascii?Q?Y5LmA9INz0k5gdgKHeL4zNNaZ4oKjymy5CnIK32Pr4GzK4wi4FJqhPjGCVPz?=
+ =?us-ascii?Q?7bCH7qTfQlj90iXbkjbBHi1A7i9DLDHlxmCFit4lTVNP1vseRXjnohYBHsjf?=
+ =?us-ascii?Q?g0yxp3+depCXLj1SoqRUH8Uk4NYsY1IATrxtK9t0fP1rJV+4zUgafTljzY4K?=
+ =?us-ascii?Q?UkZcPhKsgEpp9ts06PiS9ITWL3VEYIhOPZuDp9fhpY24emORqYa4t5KZNR26?=
+ =?us-ascii?Q?SBl54Aa7gpyEfki4ZbeeSccV6f84lfZSLleCusHH?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250220-ppcyaml-pci-v3-1-ca94a4f62a85@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAEUgt2cC/x3MQQqAIBBA0avIrBPErEVXiRYyztRAmShEId09a
- fkW/1colIUKTKpCpkuKnLGh7xTg5uNKWkIzWGMHY63RKeHjj10nFO0YkQPyyOSgFSkTy/3f5uV
- 9P73N1kldAAAA
-X-Change-ID: 20250220-ppcyaml-pci-4fccfdcf6fe4
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740054609; l=6184;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=RgTRIY2UX+irY5tpqSZ3owLYm4IerY9v/YGL00K/T60=;
- b=SiGw6Nl9deNVcLRAfAQxTcbtWjLnoLVT6BuXjE7q1wX6JbtWQzDZgsSLH5lPiy8rkyodxTrGE
- eaOstuZRlEQCmen97M9JBylA4s1inXeDiqS2UvpJqn8zh5kUS9CBwEm
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b251b921-0eb1-45aa-11ef-08dd51aa6dae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2025 12:30:58.2507
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7CAgkOjZstPq9sJYCUfQOq1jhiTEuL71KxRFpnkp250VwUYPk1WRZZSIS15Tx3BBFIMU0r3xaDr4mzMrwPOpaNWd4nYkY2xbrn4jumZ7zVs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB11020
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+Hi Paul,
+=20
+> >> Am 20.02.25 um 12:41 schrieb Neeraj Sanjay Kale:
+> >>> Allow user to set custom BD address for NXP chipsets.
+> >>>
+> >>> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> >>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >>> ---
+> >>> v2: Add allOf and unevaluatedProperties: false (Krzysztof)
+> >>> v3: Drop local-bd-address: true (Krzysztof)
+> >>> ---
+> >>>    .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml   | 6 ++=
++++-
+> >>>    1 file changed, 5 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git
+> >> a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-
+> bt.yaml
+> >> b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-
+> bt.yaml
+> >>> index 0a2d7baf5db3..a84c1c21b024 100644
+> >>> ---
+> >>> a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-
+> bt.yam
+> >>> l
+> >>> +++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-
+> bt
+> >>> +++ .yaml
+> >>> @@ -17,6 +17,9 @@ description:
+> >>>    maintainers:
+> >>>      - Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> >>>
+> >>> +allOf:
+> >>> +  - $ref: bluetooth-controller.yaml#
+> >>> +
+> >>>    properties:
+> >>>      compatible:
+> >>>        enum:
+> >>> @@ -43,7 +46,7 @@ properties:
+> >>>    required:
+> >>>      - compatible
+> >>>
+> >>> -additionalProperties: false
+> >>> +unevaluatedProperties: false
+> >>
+> >> How is this diff related to the change mentioned in the commit message=
+?
+> >
+> > This is based on review comment from Krzysztof in V1 DT patch.
+> > allOf ref will import all properties defined in bluetooth-controller.ya=
+ml,
+> including local-bd-address:
+> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
+h
+> >
+> ub.com%2Ftorvalds%2Flinux%2Fblob%2Fmaster%2FDocumentation%2Fdevic
+> etree
+> > %2Fbindings%2Fnet%2Fbluetooth%2Fbluetooth-
+> controller.yaml%23L18&data=3D0
+> >
+> 5%7C02%7Cneeraj.sanjaykale%40nxp.com%7Cea6b9bba11954062a8ab08dd5
+> 1a7c28
+> >
+> 9%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C638756503156741
+> 597%7CUn
+> >
+> known%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAw
+> MCIsIlAiOi
+> >
+> JXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DNf
+> 5EkxiY
+> > rHPZQjCBa1XFeu8Y5T8cXpQwXHZ757YvGFw%3D&reserved=3D0
+>=20
+> Thank you. I'd include this in the commit message, but my comment was
+> about the replacement of `additionalProperties` by `unevaluatedProperties=
+`.
+As per DT documentation, if we include other schemas, we must use "unevalua=
+tedProperties:false" instead of "additionalProperties:false"
 
-Formalise the binding for the PCI controllers in the Freescale MPC8xxx
-chip family. Information about PCI-X-specific properties was taken from
-fsl,pci.txt. The examples were taken from mpc8315erdb.dts and
-xpedite5200_xmon.dts.
+https://docs.kernel.org/devicetree/bindings/writing-bindings.html
 
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
----
-V3:
-- split out as a single patch
-- remove obsolete reference to fsl,pci.txt
-- remove unnecessary newline near the end of fsl,mpc8xxx-pci.yaml
+With "additionalProperties:false", make dt_binding_check fails as it is una=
+ble to find the 'local-bd-address' property.
 
-V2:
-- part of series [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT bindings
-  Link: https://lore.kernel.org/lkml/20250207-ppcyaml-v2-6-8137b0c42526@posteo.net/
-- merge fsl,pci.txt into fsl,mpc8xxx-pci.yaml
-- regroup compatible strings, list single-item values in one enum
-- trim subject line (remove "binding")
-- fix property order to comply with dts coding style
----
- .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 113 +++++++++++++++++++++
- Documentation/devicetree/bindings/pci/fsl,pci.txt  |  27 -----
- 2 files changed, 113 insertions(+), 27 deletions(-)
+>=20
+> >>>
+> >>>    examples:
+> >>>      - |
+> >>> @@ -54,5 +57,6 @@ examples:
+> >>>                fw-init-baudrate =3D <3000000>;
+> >>>                firmware-name =3D "uartuart8987_bt_v0.bin";
+> >>>                device-wakeup-gpios =3D <&gpio 11 GPIO_ACTIVE_HIGH>;
+> >>> +            local-bd-address =3D [66 55 44 33 22 11];
+> >>>            };
+> >>>        };
+>=20
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..28759ab1caaa9c7a475d6d9c61a6607c49dbcbb2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
-@@ -0,0 +1,113 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+
-+$id: http://devicetree.org/schemas/pci/fsl,mpc8xxx-pci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale MPC83xx PCI/PCI-X/PCIe controllers
-+
-+description:
-+  Binding for the PCI/PCI-X/PCIe host bridges on MPC8xxx SoCs
-+
-+maintainers:
-+  - J. Neuschäfer <j.neuschaefer@gmx.net>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - fsl,mpc8314-pcie
-+          - fsl,mpc8349-pci
-+          - fsl,mpc8540-pci
-+          - fsl,mpc8548-pcie
-+          - fsl,mpc8641-pcie
-+      - items:
-+          - enum:
-+              - fsl,mpc8308-pcie
-+              - fsl,mpc8315-pcie
-+              - fsl,mpc8377-pcie
-+              - fsl,mpc8378-pcie
-+          - const: fsl,mpc8314-pcie
-+      - items:
-+          - const: fsl,mpc8360-pci
-+          - const: fsl,mpc8349-pci
-+      - items:
-+          - const: fsl,mpc8540-pcix
-+          - const: fsl,mpc8540-pci
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description: internal registers
-+      - description: config space access registers
-+
-+  clock-frequency: true
-+
-+  interrupts:
-+    items:
-+      - description: Consolidated PCI interrupt
-+
-+  fsl,pci-agent-force-enum:
-+    type: boolean
-+    description:
-+      Typically any Freescale PCI-X bridge hardware strapped into Agent mode is
-+      prevented from enumerating the bus. The PrPMC form-factor requires all
-+      mezzanines to be PCI-X Agents, but one per system may still enumerate the
-+      bus.
-+
-+      This property allows a PCI-X bridge to be used for bus enumeration
-+      despite being strapped into Agent mode.
-+
-+required:
-+  - reg
-+  - compatible
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    pcie@e0009000 {
-+        compatible = "fsl,mpc8315-pcie", "fsl,mpc8314-pcie";
-+        reg = <0xe0009000 0x00001000>;
-+        ranges = <0x02000000 0 0xa0000000 0xa0000000 0 0x10000000
-+                  0x01000000 0 0x00000000 0xb1000000 0 0x00800000>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        #interrupt-cells = <1>;
-+        device_type = "pci";
-+        bus-range = <0 255>;
-+        interrupt-map-mask = <0xf800 0 0 7>;
-+        interrupt-map = <0 0 0 1 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 2 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 3 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 4 &ipic 1 IRQ_TYPE_LEVEL_LOW>;
-+        clock-frequency = <0>;
-+    };
-+
-+  - |
-+    pci@ef008000 {
-+        compatible = "fsl,mpc8540-pcix", "fsl,mpc8540-pci";
-+        reg = <0xef008000 0x1000>;
-+        ranges = <0x02000000 0 0x80000000 0x80000000 0 0x20000000
-+                  0x01000000 0 0x00000000 0xd0000000 0 0x01000000>;
-+        #interrupt-cells = <1>;
-+        #size-cells = <2>;
-+        #address-cells = <3>;
-+        device_type = "pci";
-+        clock-frequency = <33333333>;
-+        interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+        interrupt-map = </* IDSEL */
-+                         0xe000 0 0 1 &mpic 2 1
-+                         0xe000 0 0 2 &mpic 3 1>;
-+        interrupts-extended = <&mpic 24 2>;
-+        bus-range = <0 0>;
-+        fsl,pci-agent-force-enum;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/pci/fsl,pci.txt b/Documentation/devicetree/bindings/pci/fsl,pci.txt
-deleted file mode 100644
-index d8ac4a768e7e65b465f83308cc918ec471309dcf..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/pci/fsl,pci.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Bus Enumeration by Freescale PCI-X Agent
--
--Typically any Freescale PCI-X bridge hardware strapped into Agent mode
--is prevented from enumerating the bus. The PrPMC form-factor requires
--all mezzanines to be PCI-X Agents, but one per system may still
--enumerate the bus.
--
--The property defined below will allow a PCI-X bridge to be used for bus
--enumeration despite being strapped into Agent mode.
--
--Required properties:
--- fsl,pci-agent-force-enum : There is no value associated with this
--  property. The property itself is treated as a boolean.
--
--Example:
--
--	/* PCI-X bridge known to be PrPMC Monarch */
--	pci0: pci@ef008000 {
--		fsl,pci-agent-force-enum;
--		#interrupt-cells = <1>;
--		#size-cells = <2>;
--		#address-cells = <3>;
--		compatible = "fsl,mpc8540-pcix", "fsl,mpc8540-pci";
--		device_type = "pci";
--		...
--		...
--	};
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250220-ppcyaml-pci-4fccfdcf6fe4
-
-Best regards,
--- 
-J. Neuschäfer <j.ne@posteo.net>
-
-
+Thanks,
+Neeraj
