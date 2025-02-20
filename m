@@ -1,114 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5CF1FECD1;
-	Thu, 20 Feb 2025 17:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1EF211A0B;
+	Thu, 20 Feb 2025 17:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740072039; cv=none; b=rM7BAosNVfd4DDj/gRodPCay6Fn55cS5yJCwnm733h8WfMbCT6tm0xQhZbO2Or/018wvMOyCLX0+PL8Yrz9xe5c3YdfVAFf09kJo78kw71p4yIyzWFWVJTAaa8QM9xP/dqaplCDCPSwf06JNZuAXNBNQ0mv7GQ5k5bX4Nor3714=
+	t=1740072048; cv=none; b=X/a7frZMHfUBdHJ0Ngp/Q4vTEaoJ8rTfbkO507LhVY8TAziasY6371qz6i+n0WpplJ9iGFP5O4JLlES8p8v8qnFpk/IaJrHuSvQ5LsaKIIFur1Z5sVpjlVIUnpc48biu6mH8RH6YlbCYzS75SO+W6tNSemQAfhtS6YpfWVcyyi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740072039; c=relaxed/simple;
-	bh=Hu1WTAfqe+K8mtqQXODfypOXtNqLo8VKfdA62K3E6Jo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j+gLzeb5WBatOKX8aBS6HQdK2IqWSxTPSprWoqm6RENHN9LO9LiPzmiALOmDontDZ5faD0d5gLf99mMHkES8foapr4jXtl2HFxO8gNQ4FraRlmNfOnZOfnncGZCzlTHxlruTDCoqwrPdav9v3m6vlR5FQXKnxvnK0UW+UWp/E4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V48dg0Ro; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740072048; c=relaxed/simple;
+	bh=tNl3JYwXD9ShFZNzOjInS1Tn8LUzlGf9ITtlvxPDJTk=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=IeH5wdh7rf6aYdRXlPFfSDB5BV15WaTi6G4KtOza6uYEB00Fdrb7UwLnqbQjJUoilgwOf/L+VXOXTx9q5SsPzBo8cW2lSJZM3otW44akM9aF5/VJgxKvhaj0W46fRvHnwMCEi3bOVYqm1LfryfE0sgbDhXKGnjyzFuG/T2CFrGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OwCsdhMd; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V48dg0Ro"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62945C4CED1;
-	Thu, 20 Feb 2025 17:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740072039;
-	bh=Hu1WTAfqe+K8mtqQXODfypOXtNqLo8VKfdA62K3E6Jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V48dg0RoRUN6ItMpHAomEWvzy7LCNB16MvbcB3yO8qei7e0TU8wMFwJTPYb/VsmxR
-	 YznzFN2hyHtMkOv/KBFyFFvYkpCeyPtbBaN+mkU9vS4jb6PvV+UWM7waQL2VfoUo9J
-	 +HDxcPhFqIUbWlHqJThGXpqU51bSKDTgN2mDT+ZSBWx+NtJLUZeFZGxsaQvP67ETG3
-	 h9VtqEX9FycYDcR4NWW0LNjSW1ZfHxCuNxSUBYxIwczx1oQCU+alH1IeQjLpE9Ku0J
-	 C83KM5q1+Ep5V74SENppQ1ge1clkV3+QIxLFib6Nx4mbks5yK2pmMwOw+X8C4BUUWl
-	 4W4UKo20naVEA==
-Date: Thu, 20 Feb 2025 17:20:35 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: can: fsl,flexcan: add transceiver
- capabilities
-Message-ID: <20250220-underfed-taekwondo-22c1d4f4eea9@spud>
-References: <20250220-flexcan-add-transceiver-caps-v2-0-a81970f11846@liebherr.com>
- <20250220-flexcan-add-transceiver-caps-v2-1-a81970f11846@liebherr.com>
- <20250220-tasteful-loud-firefly-1e2438-mkl@pengutronix.de>
- <20250220155642.GA43726@debian>
- <20250220-intelligent-serious-badger-978793-mkl@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OwCsdhMd"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KH8Yh6020440;
+	Thu, 20 Feb 2025 17:20:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=J0Ppn/rWoGswZL2H79mmA0
+	DqGgrqXSVdijtNbly8JdQ=; b=OwCsdhMdHBd2eOKtSJ7s2NeUCptzjVu+KvUezH
+	MB2Fv2vwu6abD8c0je1fguQghGuoMg4Y0s5dJuPvlgqcVZGc14TkqhNAR03Xjg21
+	k0j/O0RJmC6G8iAnpJ8Osc5VXT7Srhy+ODa776Qy2af6TNABYoa+G4RVrFVDoQN7
+	uTb2APpnEitmXhe1NPgkylrrlwIy0YAHPlUNV1/weaNkrGVACTPBW0JWyq4lvbDp
+	3UnTe5NY9mqNpclCcH4Ny1g16zShJjKDNq+eTCWp1H2snQ1gr8w2KFjb2LFvvadO
+	O6KqphjfrX1j851bmsQfYZoxAqoY9eo+LE3flsLnH624tlpw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44x06t1jsj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 17:20:40 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51KHKdAv016719
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 17:20:39 GMT
+Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Feb 2025 09:20:35 -0800
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+Subject: [PATCH v5 0/4] Venus driver fixes to avoid possible OOB accesses
+Date: Thu, 20 Feb 2025 22:50:07 +0530
+Message-ID: <20250220-venus_oob_2-v5-0-4d29347c669a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cvX9SZ/wFqhw/Mos"
-Content-Disposition: inline
-In-Reply-To: <20250220-intelligent-serious-badger-978793-mkl@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEdkt2cC/23M0QrCIBiG4VsJjzP0n27WUfcRMZz7ax6kpU2Ks
+ XvPjSJGHX4fPO9AIgaLkexWAwmYbLTe5SHXK2I67c5IbZs3AQaCcy5pQtfH2vumBgq8YgqKLa9
+ KTbK4BjzZx1w7HPPubLz78JzjCab33QG16CSgjApVaGRalKJR+1tvjXVmY/yFTKVUfLRkP7rIm
+ nEh0CCWqv2jxVcDq5ZaZC0BWs2aUjUASz2O4wsGQLXiJAEAAA==
+X-Change-ID: 20241115-venus_oob_2-21708239176a
+To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+CC: Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab+samsung@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>, <stable@vger.kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740072035; l=2048;
+ i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
+ bh=tNl3JYwXD9ShFZNzOjInS1Tn8LUzlGf9ITtlvxPDJTk=;
+ b=hx2dHPjXT3EZ/V56Bjj9ECWdOyaHswgglo2ht4VG/0O5U76M0m7vpGtvzs3mzsOuob2WIxhKh
+ F3kqIQzNuTWAni9NAueNx+7DFDFD9xZwDMQdiJEb8oD3KlqtQgd2neJ
+X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
+ pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: o-55cWh7AbqRMzgZFtJT3tYLvz9009iZ
+X-Proofpoint-GUID: o-55cWh7AbqRMzgZFtJT3tYLvz9009iZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_07,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ clxscore=1015 spamscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200121
 
+This series primarily adds check at relevant places in venus driver 
+where there are possible OOB accesses due to unexpected payload from 
+venus firmware. The patches describes the specific OOB possibility.
 
---cvX9SZ/wFqhw/Mos
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please review and share your feedback.
 
-On Thu, Feb 20, 2025 at 05:02:56PM +0100, Marc Kleine-Budde wrote:
-> On 20.02.2025 16:56:42, Dimitri Fedrau wrote:
-> > Am Thu, Feb 20, 2025 at 09:44:50AM +0100 schrieb Marc Kleine-Budde:
-> > > On 20.02.2025 09:22:10, Dimitri Fedrau via B4 Relay wrote:
-> > > > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> > > >=20
-> > > > Currently the flexcan driver does only support adding PHYs by using=
- the
-> > > > "old" regulator bindings. Add support for CAN transceivers as a PHY.
-> > > >=20
-> > > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > > > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> > >=20
-> > > Is it possible express in the biding that we either want to have
-> > > xceiver-supply or phys?
-> > >
-> > I didn't found anything to express that in the binding.
->=20
-> What about something like this:
->=20
-> | dependencies:
-> |   prop-a: ["!prop-b"]
-> |   prop-b: ["!prop-a"]
+Validated on sc7180(v4), rb5(v6) and db410c(v1).
 
-  # the internal reference buffer always requires high-z mode
-  - if:
-      required:
-        - refin-supply
-    then:
-      properties:
-        adi,no-ref-high-z: false
+Changes in v5
+- Add few checks as per comments from Hans 
+- Link to v4: https://lore.kernel.org/r/20250207-venus_oob_2-v4-0-522da0b68b22@quicinc.com
 
-Do it like so ;)
+Changes in v4:
+- fix an uninitialize variable(media ci)
+- Link to v3: https://lore.kernel.org/r/20250128-venus_oob_2-v3-0-0144ecee68d8@quicinc.com
 
-Cheers,
-Conor.
+Changes in v3:
+- update the packet parsing logic in hfi_parser. The utility parsing api 
+  now returns the size of data parsed, accordingly the parser adjust the 
+  remaining bytes, taking care of OOB scenario as well (Bryan)
+- Link to v2: 
+  https://lore.kernel.org/r/20241128-venus_oob_2-v2-0-483ae0a464b8@quicinc.com
 
---cvX9SZ/wFqhw/Mos
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v2:
+- init_codec to always update with latest payload from firmware
+  (Dmitry/Bryan)
+- Rewrite the logic of packet parsing to consider payload size for
+  different packet type (Bryan)
+- Consider reading sfr data till available space (Dmitry)
+- Add reviewed-by tags
+- Link to v1: 
+  https://lore.kernel.org/all/20241105-venus_oob-v1-0-8d4feedfe2bb@quicinc.com/
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+---
+Vikash Garodia (4):
+      media: venus: hfi_parser: add check to avoid out of bound access
+      media: venus: hfi_parser: refactor hfi packet parsing logic
+      media: venus: hfi: add check to handle incorrect queue size
+      media: venus: hfi: add a check to handle OOB in sfr region
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ7dkYwAKCRB4tDGHoIJi
-0sOqAQChswDW5EztBIATr02uhJsvr3xn+8xab4wiA4bMf6Q9aQEAhXf6L4AA8aOv
-abXs1cmkgb+Qd63fLNDXupY9Ymvq/QM=
-=BfK4
------END PGP SIGNATURE-----
+ drivers/media/platform/qcom/venus/hfi_parser.c | 100 ++++++++++++++++++-------
+ drivers/media/platform/qcom/venus/hfi_venus.c  |  18 ++++-
+ 2 files changed, 90 insertions(+), 28 deletions(-)
+---
+base-commit: c7ccf3683ac9746b263b0502255f5ce47f64fe0a
+change-id: 20241115-venus_oob_2-21708239176a
 
---cvX9SZ/wFqhw/Mos--
+Best regards,
+-- 
+Vikash Garodia <quic_vgarodia@quicinc.com>
+
