@@ -1,100 +1,100 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFB61FCF6B;
-	Thu, 20 Feb 2025 15:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24261FDE08;
+	Thu, 20 Feb 2025 15:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065261; cv=none; b=ubIxvGoSJsqd90EJ0r85X3RrZu0k6KF6f3WwujUJFqDZtAw92cQJ1CIBJS50jfdgzRlSd6O9BqwZRT1ESXBS/wb9zB2jLphxbi5jqHbHF0AQVqwD4RXhIOJPJ531dxBNF/qfyiru0idBmfdvIzkIIIFQqTfWW/lP5Va/1fFLqlw=
+	t=1740065263; cv=none; b=goXG9H5Z1Oa26wj/uX+ByZ76nq5ygG7IFI1ZkjWak4AIwxI7IKCt3Ksp9GfG96cgk2cV8xyxzMnTjVnLeGhh+IyKIIU23EiDO80VbjxehHwe6HYQI06Ykprr0DpWfEfF4ktR4/2LuFSP+n7mvBmc0+t1Mmu0xuxP8BR0L9XtjwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065261; c=relaxed/simple;
-	bh=+oGoxw2St+KAb0RzXyAAChRY7fZPyFzJUmlMrZyCNWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p+u7eWtwrXvZ60Pg4fWZ12xdcNOkE/1HPB6gPwLNTHx/U5+CRxo8BJQxWeGnt4rhH77TLO3ZsBsxfIpPOvddJ/3iubJoKo2sr03yzd/UUyC/2wBPrO3lni1/8GBPHc8NHiXfZv/LgKukRVew/cVinV1VtyiBOfV4p+jpHvvxzUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: xpjqCMLHR0ajY3bA2LXALw==
-X-CSE-MsgGUID: /L6eAmP/Ty+a+/dn3J48kw==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Feb 2025 00:27:37 +0900
-Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.134])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7B31840436EB;
-	Fri, 21 Feb 2025 00:27:31 +0900 (JST)
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: mturquette@baylibre.com,
-	magnus.damm@gmail.com,
-	krzk+dt@kernel.org,
-	rui.zhang@intel.com,
-	daniel.lezcano@linaro.org,
-	sboyd@kernel.org,
-	geert+renesas@glider.be,
-	lukasz.luba@arm.com,
-	rafael@kernel.org,
-	robh@kernel.org,
-	p.zabel@pengutronix.de
-Cc: biju.das.jz@bp.renesas.com,
-	claudiu.beznea.uj@bp.renesas.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	john.madieu@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 0/7] thermal: renesas: Add support fot RZ/G3E
-Date: Thu, 20 Feb 2025 16:26:05 +0100
-Message-ID: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1740065263; c=relaxed/simple;
+	bh=m1j9pVe50EmwhieBaHz88aACdf31p01e6DOvHsva5BE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LwbP/hiJ277PJ5BJn/dSnZ2KgjaFd3gt4e50OaWFQk6ON9UJDYALHABAOB2sEI4byiO/RRSd96tLcvrSJkX3ydfHSxLvUsQqQZ/EYKw116/924w/uw24eDz5ennQ1lzOmnFb9iOgn+hBA81uhTLF2aDRVYJXa6gJJyXUxq7lvi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bIMO1cTR; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bIMO1cTR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740065262; x=1771601262;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=m1j9pVe50EmwhieBaHz88aACdf31p01e6DOvHsva5BE=;
+  b=bIMO1cTRZJ2imD9qrb26SMDqp3mdIn6ppFWLoEBPLkc7doPIe84aAkw6
+   NSVZuGFXQ8arxQdKOKmri/YL2SdyWuzxabMf0mkEjjoCTbS3zwtfSerB5
+   bVMjzV9cXKQ3wFkND/m6oeJpFW7a9YO0PU/YKRGH5krm8A5oHCOU43KTH
+   +rgX9LgqHi/+oqB2zGOYBELizkPepi6WfnoZ23mD0WVLDt/MF7vSK8Mdf
+   6zD49bgHrS74rcQ/02Z0jaAImx2lVvLRNxqUaZJt3a0K71yfa5vsk3/o1
+   TkDLXGYK17gYKOJGI49tf/tSxEB2oGTMaxo/QCDqT66Nl4JCHABtzaRlF
+   g==;
+X-CSE-ConnectionGUID: guI+dRxDQ+iaeoN4cVKW8g==
+X-CSE-MsgGUID: llVgETIPRb6Rxqb25i8Skg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52279934"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52279934"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 07:27:41 -0800
+X-CSE-ConnectionGUID: 7/KyD8eNRvKtdwWOVqLJLg==
+X-CSE-MsgGUID: HuAX0+2mSMeYYOPdNUxDVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="145963578"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 07:27:39 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tl8Sf-0000000DNJI-09Lm;
+	Thu, 20 Feb 2025 17:27:37 +0200
+Date: Thu, 20 Feb 2025 17:27:36 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH 26/29] serial: 8250: use serial_in/out() helpers
+Message-ID: <Z7dJ6I3Qu5Ho35o5@smile.fi.intel.com>
+References: <20250220111606.138045-1-jirislaby@kernel.org>
+ <20250220111606.138045-27-jirislaby@kernel.org>
+ <Z7cfvXUCHXVXK_mp@smile.fi.intel.com>
+ <2025022032-movie-citation-b267@gregkh>
+ <Z7dCvmLLk6P9rbs7@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7dCvmLLk6P9rbs7@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
+On Thu, Feb 20, 2025 at 04:57:02PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 20, 2025 at 03:39:40PM +0100, Greg KH wrote:
+> > On Thu, Feb 20, 2025 at 02:27:41PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Feb 20, 2025 at 12:16:03PM +0100, Jiri Slaby (SUSE) wrote:
+> > > > There are serial_in/out() helpers to be used instead of direct
+> > > > p->serial_in/out(). Use them in various 8250 drivers.
+> > > 
+> > > Is this just a mechanical (compile-only) conversion?
+> > > IIRC 8250 DW code is twisted in some cases and it might
+> > > be a possibility of dead loops, but I don't remember it
+> > > by heart and haven't checked myself before writing this
+> > > reply.
+> > > 
+> > > TL;DR: this needs a thorough review.
+> > 
+> > Wonderful, are you going to do it?  :)
+> 
+> Why not. Just give me some time.
 
-This series adds support for the temperature sensor unit (TSU) found on the
-Renesas RZ/G3E SoC.
-
-The series consists of 7 patches (some of which are not related to the thermal
-framework) that progressively add TSU support as follows:
-- patch 1/7:	adds syscon/regmap support for accessing system controller
-		registers, enabling access to TSU calibration values
-- patch 2/7:	adds clock and reset signals to the CPG driver
-
-- patch 3/7:	adds dt-bindings
-- patch 4/7:	adds the actual TSU driver for the RZ/G3E
-- patch 5/6:	adds safety mechanism to make sure we we protect the chip in
-		case of consecutive read failures
-- patch 6-7/7:	add DT node and defconfig enablement
-
-Regards,
-
-John Madieu (7):
-  soc: renesas: rz-sysc: add syscon/regmap support
-  clk: renesas: r9a09g047: Add clock and reset signals for the TSU IP
-  dt-bindings: thermal: r9a09g047-tsu: Document the TSU unit
-  thermal: renesas: rzg3e: Add thermal driver for the Renesas RZ/G3E SoC
-  thermal: renesas: rzg3e: Add safety check when reading temperature
-  arm64: dts: renesas: r9a09g047: Add TSU node
-  arm64: defconfig: Enable RZ/G3E thermal
-
- .../thermal/renesas,r9a09g047-tsu.yaml        | 123 +++++
- MAINTAINERS                                   |   7 +
- arch/arm64/boot/dts/renesas/r9a09g047.dtsi    |  49 ++
- arch/arm64/configs/defconfig                  |   1 +
- drivers/clk/renesas/r9a09g047-cpg.c           |   3 +
- drivers/soc/renesas/Kconfig                   |   1 +
- drivers/soc/renesas/r9a09g047-sys.c           |   1 +
- drivers/soc/renesas/rz-sysc.c                 |  30 +-
- drivers/soc/renesas/rz-sysc.h                 |   2 +
- drivers/thermal/renesas/Kconfig               |   7 +
- drivers/thermal/renesas/Makefile              |   1 +
- drivers/thermal/renesas/rzg3e_thermal.c       | 479 ++++++++++++++++++
- 12 files changed, 703 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
- create mode 100644 drivers/thermal/renesas/rzg3e_thermal.c
+Just done it, I think we need small improvements as I suggested in the separate
+reply. Otherwise I like the idea to unify this.
 
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
