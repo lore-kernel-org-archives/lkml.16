@@ -1,350 +1,116 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE2920CCC3;
-	Thu, 20 Feb 2025 16:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0171920C034
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069623; cv=none; b=bvLIEJXD5Npfymf8qVHAOOLBMElqlbuCP7jdne6qIXCgmjylS7e0EeCOv/GYkYC4VZ45NUXOur3Van/fPWsGYgMsXmmKabVyMa0+jNlDUDiWiR4lqm08EbkgWuIZ09rSDvhyF3ONUykLtfPlTLfAhDBff385SDIu4yqvYww60S8=
+	t=1740069633; cv=none; b=rNAQWYrUBmraBSdz5Ojc9Mn86oKnLnBrQ2oSsrPqtAbOfModNMRs+Oa927y21FE0LzgG/0ZYmy8UShzkUlaXXH677O5leHO071+vfZn5Aa3c6RvFy5+waKBbnoVg1pjlZ6/kyewZqUknZtLQhhuu1dCV5teKO71X9dz1N2Qu2ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069623; c=relaxed/simple;
-	bh=/pEY2pbZ+ePlTQQjsQZio+7TRqK1puqgKhuPQizw+tM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KHXY2ZuwroaO3Mm3Sh8fjcgw85zxDa5Ps/gJdwljy9mkav/Xo2CMb/geZD+CDdsvpDtRO/rpQRHsbcQqcIm56C1fat6FfHqJfdm14j1873CKWZ3ReXNwDvXoOaa6cFpLIOHlXP/Er5rI6+wo/e9BnZBHn7FcyJQFSRfLQAO/lM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Z1hBa5cC; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740069633; c=relaxed/simple;
+	bh=eSBNTn4Wei7MvSd7KTecAx4Wv8JIaBEaD1KQ7IcmbDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G6N206/8ojPvxk2FRfE55WcpCkAX5AqsSVqjQS3HEd4Q8IlrIW/sF4bMq/KVPEEhf2yJhk0KBPM/EC3aBLZtfNOKtvfalHXytT3PTgtbHbZD6fkf8o6SvHQRqz0oZHt4Wr1Haad4NM9M0gPw16JyiGn6/EZwSCqfCMoCo2B38FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=oPM6Dbpc; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Z1hBa5cC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8668A44400;
-	Thu, 20 Feb 2025 16:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740069619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eoC4EhCrV7YwNNF4Th0SR8RDWFklJMXxytRmlEsEeNA=;
-	b=Z1hBa5cCtstUzZqEWBsC67fZel86wMGcqg3ZbdtnxVaM/mu860oTNxM3S9VJogGx9SEi4n
-	NuEoKFFZYV+RZUnjT9Z4d201to5tbbgZ2uXbpBY/jA4qv4T1KxyGzdpedF5X9VERg9/KiG
-	go18hbr5kQyX5f1+oGFn5DHbIFvd85D1/FEvNiH8DxnuLQkzKbYHi6E5MxMgNDhtIBh1Jj
-	+ne1AjLIi4BQ5YSg7qA38w6o8p56GdnONsiTdC7Nug/inv/2+zVoiW6cQPyxvPAkN2IFZm
-	+Am44ZQIqBnkH2lhxSSw2h7pp0ZjWwqBMih4ovHMlx+M23GLkw1soq92P+9tzg==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] i2c: atr: add passthrough flag
-Date: Thu, 20 Feb 2025 17:40:13 +0100
-Message-ID: <2209854.PYKUYFuaPT@fw-rgant>
-In-Reply-To: <72a4a706-c673-4f64-b0b4-6d70e2daf621@gmail.com>
-References:
- <20250203121629.2027871-1-demonsingur@gmail.com>
- <4414628.ejJDZkT8p0@fw-rgant>
- <72a4a706-c673-4f64-b0b4-6d70e2daf621@gmail.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="oPM6Dbpc"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4398c8c8b2cso11897715e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:40:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1740069629; x=1740674429; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ULQr0sXJ+T57rYA6unBEw0SRnUfX3L+nBpEtFm34hbM=;
+        b=oPM6DbpcgQzVlBX59AEA021448KJV7QdUesUQy/vSug6hIqZsYW1thhsWXF0Zl7ZnG
+         1iIUXPyOO4kOmZKHeNs2j46/j5Qo5OZXzJ+Nm3LiKowvm7nha+efCmk5acvRw4rW0L2B
+         bUOzFiSWKIZhv5Ss5U8PYRCsArM2xjsRGa7R7NEciPzipVrjsqFZEqk4/ZvAzPmMRQjb
+         PaemPpqouP8lVQb1idfHSsRTRWH6uVg9yJHbK0Sej/ulN2be8bPpNSN5jg/uQSD7NY/z
+         9svDNyQSdwULHhQJyctinq1aY6Xm2Kb6PL9CL+A1bS0HUw6PHTHnm5LwvyuT3CNceTBL
+         p7/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740069629; x=1740674429;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ULQr0sXJ+T57rYA6unBEw0SRnUfX3L+nBpEtFm34hbM=;
+        b=hkwsxCFMKGSnto7Kr/fzcyPS78I7RQbLBR5UIsZZiwU5icEfrgvTZ6FpFA/vjd/wxF
+         BFqI4Agok8Pu48eziv7L2uJEQUoOWhC7OfSnlUY59gOvVj1Ox+pDo5IvT2q0EQkieuI/
+         fhMxQ+AXjLNkrtvW+VzlEtSD6Bx/y5yy9fD/AT/8trP/bpmiPRkrNAiBAuGSuR5bu1OV
+         9oCTZfW0w02hjc6evX95W/tPwcmWJ1kccjtVv1tlEi3dXnm9kmNBKj+YA7GAgTsu6EP0
+         y1FKeZDyaH0Ae6KIVlpqXO7Mv649nUu+Bpq48JfNUh3HtWjX8hsbgrQszLzM1Yw4j6hl
+         wWxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWuf1CeODNZjcGTnet2BsG4guuavh+cnWD83Jp3mN5/51hf1aphR+vI3S/i2Z6dHVbcomH52NiVjOwvEuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAGB1JqKEia4m/pl+Z2//UvmsnOudTr3zNum9SsS39owGaGqUp
+	KUqhavGZCgRU4C0u3irfps0jomE4qg1pVEUYf8yGAQ+DKncg6XU/Y5YdVRqRGcM=
+X-Gm-Gg: ASbGncsRIekPFNHnZClE4OAd6H+enM0Bx0QVUjbFo5Q4N+a8WkZwo5HIqIZNgqz8RwQ
+	lUxS+PannkW0a/NuFham9OdzbrlTgDmV0VJtA8f6v8QBwbDxzmtMLZ7+38Z/izflB1TUrADXAnP
+	VcHzVYssKUvehCUW6LqbXpXeIoQZTbohEWevGYeFCT0Yp1Zlnw6fiPtSUaHA6FiT61FYYPw/6/W
+	cns+bhWviduqPf6qYX7RY/bwBvQX3nGScW6Ym2KO7/IUwk43j82pLuFmse9jU0Y2cCrnJQkG6TH
+	M4nSNFrOs3BRBG5P28tfhjDi0DIz9oUoKT6LbRG6Go0ZAmOJPIIQqVOvUZ011GyyBUF30fA=
+X-Google-Smtp-Source: AGHT+IHSMvs2kzmsmKiQHxZFyIcYPymD0uCa2DDj89kJ9d8q2/htWsAaOvyyBs/FSYI9s7/vlQ3GgA==
+X-Received: by 2002:a05:600c:a384:b0:439:88bb:d023 with SMTP id 5b1f17b1804b1-43988bbd481mr201896195e9.11.1740069629081;
+        Thu, 20 Feb 2025 08:40:29 -0800 (PST)
+Received: from ?IPV6:2a02:2f04:6203:2100:5146:3c6d:da37:b887? ([2a02:2f04:6203:2100:5146:3c6d:da37:b887])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439a416caeasm25629165e9.18.2025.02.20.08.40.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 08:40:28 -0800 (PST)
+Message-ID: <d1e4fead-d486-4836-a48f-8421571b8ed8@tuxon.dev>
+Date: Thu, 20 Feb 2025 18:40:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart22817234.EfDdHjke4D";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeijeeiudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfgggtsehgtderredttdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfdvleekvefgieejtdduieehfeffjefhleegudeuhfelteduiedukedtieehlefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehffidqrhhgrghnthdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsr
- ghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: romain.gantois@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: renesas: rz-sysc: Suppress binding attributes
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: magnus.damm@gmail.com, john.madieu.xa@bp.renesas.com,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250215131843.228905-1-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdW4sN6x5C7iQgiZD=Vmzg=BA1v+WjS7aapXmuM2_y8JvQ@mail.gmail.com>
+ <CAMuHMdWwzwHnZazp79q0R7n7MjKDQXRH_RqRSmNd1vdN_9JTqA@mail.gmail.com>
+Content-Language: en-US
+From: "claudiu beznea (tuxon)" <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdWwzwHnZazp79q0R7n7MjKDQXRH_RqRSmNd1vdN_9JTqA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---nextPart22817234.EfDdHjke4D
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Subject: Re: [PATCH 3/3] i2c: atr: add passthrough flag
-Date: Thu, 20 Feb 2025 17:40:13 +0100
-Message-ID: <2209854.PYKUYFuaPT@fw-rgant>
-In-Reply-To: <72a4a706-c673-4f64-b0b4-6d70e2daf621@gmail.com>
-MIME-Version: 1.0
+Hi, Geert,
 
-On mercredi 19 f=C3=A9vrier 2025 11:22:12 heure normale d=E2=80=99Europe ce=
-ntrale Cosmin=20
-Tanislav wrote:
-> On 2/19/25 11:52 AM, Romain Gantois wrote:
-> > Hello Cosmin,
-> >=20
-> > On lundi 3 f=C3=A9vrier 2025 13:15:17 heure normale d=E2=80=99Europe ce=
-ntrale Cosmin
-> >=20
-> > Tanislav wrote:
-> >> Some I2C ATRs can have other I2C ATRs as children. The I2C messages of
-> >> the child ATRs need to be forwarded as-is since the parent I2C ATR can
-> >> only do address remapping for the direct children.
-> >>=20
-> >> In the case of GMSL, the deserializer I2C ATR actually doesn't have I2C
-> >> address remapping hardware capabilities, but it is able to select which
-> >> GMSL link to talk to, allowing it to change the address of the
-> >> serializer.
-> >>=20
-> >> The child ATRs need to have their alias pools defined in such a way to
-> >> prevent overlapping addresses between them, but there's no way around
-> >> this without orchestration between multiple ATR instances.
-> >>=20
-> >> To allow for this use-case, add a flag that allows unmapped addresses
-> >> to be passed through, since they are already remapped by the child ATR=
-s,
-> >> and disables dynamic remapping, since devices that need passthrough
-> >> messages to be forwarded as-is, can only handle remapping for their
-> >> direct children.
-> >>=20
-> >> There's no case where a non-remapped address will hit the parent ATR.
-> >=20
-> > I'm having trouble understanding this, because it seems like there's a
-> >=20
-> > contradiction with your previous statement:
-> >> add a flag that allows unmapped addresses to be passed through
-> >=20
-> > Unmapped addresses are "non-remapped" by definition right? And they can
-> > hit the parent ATR since we're adding a flag to allow them to pass
-> > through...
-> Non-remapped address means addresses that have never been remapped, on
-> any ATR instance, not on the parent one.
->=20
+On 2/20/25 18:37, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+>
+> On Thu, 20 Feb 2025 at 17:00, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> On Sat, 15 Feb 2025 at 14:18, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>
+>>> The matching data for the rz-sysc driver is marked with __initconst, which
+>>> means it is discarded after initialization. Because of this, attempting to
+>>> unbind/bind the driver through sysfs after system boot can lead to "Unable
+>>> to handle kernel paging request at virtual address" errors due to accessing
+>>> freed memory.
+>>>
+>>> Since the System Controller (SYSC) is an essential block for Renesas SoCs,
+>>> suppress binding attributes to prevent them being exposed in sysfs,
+>>> avoiding potential issues.
+>>>
+>>> Fixes: 1660e5ea6a3e ("soc: renesas: Add SYSC driver for Renesas RZ family")
+>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> i.e. will queue in renesas-devel for v6.15.
+> As the offending commit is only in renesas-devel, I'll fold the fix into
+> the original commit.
 
-Ah I see, that makes more sense.
+Sure, thank you!
 
-> It's impossible for non-remapped addresses to reach the parent ATR
-> since the direct children are remapped by the parent ATR and the
-> children of the child ATRs are remapped by the child ATRs.
->=20
-> Unampped address means addresses that are not remapped on the current
-> ATR instance (the parent one, in this case, since that's where the flag
-> is supposed to be used).
->=20
-> I agree that my explanation was a bit confusing.
->=20
-
-Well ATR's aren't the most straightforward kind of component anyway, but in=
-=20
-any case I definitely think that these explanations of the "unmapped" and "=
-non-
-remapped" terminology should be in the commit log.
-=20
-> >> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> >> ---
-> >>=20
-> >>   drivers/i2c/i2c-atr.c   | 26 ++++++++++++++++++--------
-> >>   include/linux/i2c-atr.h | 20 +++++++++++++++++---
-> >>   2 files changed, 35 insertions(+), 11 deletions(-)
-> >>=20
-> >> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-> >> index 13f7e07fd8e87..5f0e8f1cf69f7 100644
-> >> --- a/drivers/i2c/i2c-atr.c
-> >> +++ b/drivers/i2c/i2c-atr.c
-> >> @@ -106,6 +106,7 @@ struct i2c_atr_chan {
-> >>=20
-> >>    * @lock:      Lock for the I2C bus segment (see &struct
-> >>=20
-> >> i2c_lock_operations) * @lock_key:  Lock key for @lock
-> >>=20
-> >>    * @max_adapters: Maximum number of adapters this I2C ATR can have
-> >>=20
-> >> + * @flags:     Flags for ATR
-> >>=20
-> >>    * @alias_pool: Optional common pool of available client aliases
-> >>    * @i2c_nb:    Notifier for remote client add & del events
-> >>    * @adapter:   Array of adapters
-> >>=20
-> >> @@ -122,6 +123,7 @@ struct i2c_atr {
-> >>=20
-> >>   	struct mutex lock;
-> >>   	struct lock_class_key lock_key;
-> >>   	int max_adapters;
-> >>=20
-> >> +	u32 flags;
-> >>=20
-> >>   	struct i2c_atr_alias_pool *alias_pool;
-> >>=20
-> >> @@ -241,7 +243,7 @@ static void i2c_atr_release_alias(struct
-> >> i2c_atr_alias_pool *alias_pool, u16 ali
-> >>=20
-> >>   /* Must be called with alias_pairs_lock held */
-> >>   static struct i2c_atr_alias_pair *
-> >>=20
-> >> -i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
-> >> +i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr, bool
-> >> new_addr) {
-> >=20
-> > IMO the "new_addr" naming is quite confusing.
->=20
-> Could you suggest a better name? I picked new_addr since when that flag
-> is true, we are mapping a new address, the call is coming from
-> i2c_atr_attach_addr().
-
-My issue with this terminology is that "new address" could mean a number of=
-=20
-things, including "an address that the ATR hasn't encountered before". IMO =
-the=20
-effects of the flag on the function body should be understandable without h=
-aving=20
-to go through all of the function's call sites.
-
-Rather than renaming the flag however, I'd rather we not handle this logic =
-in=20
-find_mapping_by_addr() at all. If we just search for mappings in=20
-find_mapping_by_addr() and separate out mapping creation into another funct=
-ion,=20
-we can avoid the need for such a flag altogether.
-
-> When we're mapping a new address, and we are in passthrough mode, we're
-> free to reserve a new alias.
-> I've since then modified the conditions slightly to cover an edge case.
->=20
-> if (!new_addr && (atr->flags & I2C_ATR_PASSTHROUGH))
-> 	return NULL;
->=20
-> ret =3D i2c_atr_reserve_alias(chan->alias_pool);
-> if (ret < 0) {
-> 	if (atr->flags & I2C_ATR_PASSTHROUGH)
-> 		return NULL;
->=20
-> 	...
-> }
->=20
-> With this change, if we've made it past the section where we look for
-> an existing mapping, and we're not adding a new address, and we're in
-> passthrough mode, we return NULL. Passthrough mode shouldn't allow
-> aliases to be reserved dynamically, since the hardware can only map
-> direct children.
->=20
-> Also, if we are adding a new address, and we failed to reserve a free
-> alias, and we are in passthrough mode, we don't allow replacing an
-> existing mapping.
->=20
-> > After this patch is applied, the expected behavior is:
-> >=20
-> > i2c_atr_find_mapping_by_addr() called from i2c_atr_attach_addr():
-> >    1. find existing mapping, return it
-> >    2. OR find free alias, create mapping and return it
-> >    3. OR remap used alias, return mapping
-> >    4. OR fail
-> >=20
-> > i2c_atr_find_mapping_by_addr(), called from anywhere else:
-> >     1. find existing mapping, return it
-> >     2. OR find free alias, create mapping and return it
-> >     3. OR if the ATR has PASSTHROUGH set, fail
-> >     4. OR remap used alias, return mapping
-> >     5. OR fail
-> >=20
-> > To me, the proposed code doesn't make it immediately obvious why the
-> > PASSTHROUGH flag should have anything to do with not attempting alias
-> > remapping.
-> >=20
-> > Moreover, if we truly want to ignore *all* unmapped addresses, then
-> > shouldn't we also give up on step 2.? (the one that tries to map a free
-> > alias to the requested address).
-> >=20
-> > In that case, I think something like this would be clearer:
-> >=20
-> > in  i2c_atr_smbus_xfer() and i2c_atr_map_msgs():
-> >=20
-> > ```
-> > #never attempts to create a new mapping, only to find an existing one
-> > c2a =3D i2c_atr_find_mapping_by_addr(chan, msgs[i].addr);
-> > if (!c2a) {
-> >=20
-> > 	if (PASSTHROUGH)
-> > =09
-> > 		# Since passthrough is set, we ignore unmapped addresses
-> > 		goto success or whatever;
-> > =09
-> > 	c2a =3D i2c_atr_create_mapping(chan, msgs[i].addr);
-> > 	if (!c2a)
-> > =09
-> > 		fail;
-> >=20
-> > }
-> > ```
-> >=20
-> > in i2c_atr_attach_addr():
-> >=20
-> > ```
-> > c2a =3D i2c_atr_find_mapping_by_addr(chan, msgs[i].addr);
-> > if (!c2a) {
-> >=20
-> > 	c2a =3D i2c_atr_create_mapping(chan, msgs[i].addr);
-> > 	if (!c2a)
-> > =09
-> > 		fail;
-> >=20
-> > }
-> > ```
-> >=20
-> > So what I'm suggesting is to remove all c2a mapping creation logic from
-> > find_mapping_by_addr() entirely, and to move it to a separate function.
-> >=20
-> > Please let me know what you think.
->=20
-> In the case of passthrough ATR, mapping creation should only be allowed
-> when direct devices are attached, ie: in the call to
-> i2c_atr_find_mapping_by_addr() from i2c_atr_attach_addr().
-> If i2c_atr_find_mapping_by_addr() cannot find a free alias in that case,
-> it should fail.
->=20
-
-I think it would be better if i2c_atr_find_mapping_by_addr() never tried to=
-=20
-create a new mapping, not even if an alias is available. This would elimina=
-te=20
-the need for a special flag passed to the function and let=20
-i2c_atr_attach_addr() handle it's own logic instead.
-
-> Other calls to i2c_atr_find_mapping_by_addr() should either return an
-> existing alias or NULL, and not attempt to create a new one or to
-> replace an existing one.
->=20
-> Let me know if my explanations made it clearer and what the you think
-> about going forward with this patch. In the meantime, I'll try to see
-> how the code looks with splitting creating from finding.
->=20
-
-The patch itself looks like a valid idea to me, but indeed I'd really prefe=
-r=20
-to see a solution where mapping creation and finding are completely separat=
-ed,=20
-including for cases where a free alias is used to create a mapping.
-
-Thanks,
-
-=2D-=20
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---nextPart22817234.EfDdHjke4D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAme3Wu0ACgkQ3R9U/FLj
-287kvA/9HbfCNlcZK1k75XoTGOw71Eb9M+gfzCnZOWGvMppNgb3wNVa7jbi7tfKE
-9XHPDP8XiEWV/DuJPT5/rrcIRVthHYPpjJVXafq0dlyNEnwcihbZeRSap4EksJAT
-sEkmRu4Cc0D3QAi6IqjoezZlhDHc4EBLCb9I0BzcuDsAS77w9CuG8vnib2l9dbfK
-cZ80J0WsKfCngY/SgwiQORX5hNQtnvUeY9IC/YdIZGrXYUC6A+TgSnJwCSDT2FEz
-7QuZMtWqtqLlaN4dvXpXfVa9/lJc5qd+7zpIxaya7a0Uv0VHfh8L9RuzyDdW3X1Z
-HLjqx5l8HLRnlaPX18VOldbPx7vROi/uwGVB7JrvCkHtHIGDE3ACNg0NJOoB8J0x
-dmSEjv95bvVmNEjS5Glgk0i72KuKTAL4d5T4e/yMn2zXL4FUVSCM1guTdfOr/2yl
-jgRXEAIhkdkSLdDS+zOZ59MXgN2lRhBcWNTV9cRMODY+SSWd96WR57cMxtnWmBUo
-xBylgP1ZNiDnV/dz1b0aWB4+sE/7Ij/BWTimdPyiXhP70hw8Q7KrYZN2xiwQq+X6
-WqgDcaxyHYpVxc0kk53Ll5bZOzLToMKjbnEG7y9pCymTntghb1QJDQnP/ZvlYmXv
-rbdWVvlnzRRg3/WO2dOtpbmOuwMEWbVKudLYSEF33WB0SYDCLHA=
-=G1qL
------END PGP SIGNATURE-----
-
---nextPart22817234.EfDdHjke4D--
-
-
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
 
