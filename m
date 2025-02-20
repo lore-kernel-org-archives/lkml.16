@@ -1,156 +1,105 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E921FFC75;
-	Thu, 20 Feb 2025 15:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B4F8F5B;
+	Thu, 20 Feb 2025 15:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740066969; cv=none; b=ArFc2wJZdxCfehNG3KQ5EBtGDVb6pwEcGlqv8liZrmUGl6n7VA8HeOf4SNXzfMivJ/aRJ6KAWGRRgLwLnT3YgiVD/5fnEWRO//2jeRquj/I9WBRM9ZIBw2ilWFlS0ysM89CtJ99v0vtj997v94tM1LxdQJDS2KkIrwr2U4x5TR4=
+	t=1740067009; cv=none; b=A52ewjvE0IMJ72az5pSbGY6L7pj8TiasMZRgpMwUEVv+yKRdvQfEh1cA2ytU3oAFhiiwfy0v2GNFmIVRzxEvoemY4t+H/gtI2DPYpyHOu5YJdt6+nFlE2ezGOV068aTexCgCp/qldo6tfHQj8+tlJpp+f7SWLGPiJi4ULulHu2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740066969; c=relaxed/simple;
-	bh=csYMwQYi1/ukoONMPh7xjnuAaW6ABJTCc8Cmm3+Jzgo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UCpIQ5+CAEpSvOOcATRWcFDLF7hnXkbEuq1WJ9f6dG83DQl+tSHbDi8z6osBdwqJfLQFbAldWUH5a+Rfk27uuDwo+YvAODNJfCDm2fOyy7gPUH3zmkVTXNp7+lFmMN226rBgJmtR4DBl3YGNIJzzh0mVX/cEPNGxH9xVq2q470M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CBn5mjLD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740067009; c=relaxed/simple;
+	bh=nffl1SGgb9k0XBd8LUDc+D1JLkHpjuO5YPcb5/zg9yg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j2WhqGFNafoz6mI6ItXESX71Z1utftdqlemfVwd7N/0kU3mYuuXe1LOD94BkUf6RAeO/Lgs9uV7euic/yroOxkuKBAPmLsxjaQWWPLbyD+48AyhSPdDVPFubKHDqRou6xCDmxH6Xd6CZu8osbf/Mopk6nUzMP03ORizoFTEsfIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uc5iwXNz; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CBn5mjLD"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KFDd9x022494;
-	Thu, 20 Feb 2025 15:56:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dwUmOPS/L7EcNqYj17pKL2o1WKtP7IUxBa4fM6nNd4s=; b=CBn5mjLDlJQeazw7
-	zS6GAfSqTqZJot++YjrV7BHDJzvN29yt5Ac4HlTjybPA020iTSszFpAcAeQ/na3P
-	A8nEUM5irrW30EKbM9FUBtzw5PMUxrjeOjdjht5N+coKbpMdL9TIVRXa4n5yGFfN
-	DfEkbS/DRn+EotOPCYpto7qaxgOLuM+jEycKkMiVAffnw6neSyLpmwzVol4gWCPh
-	2xHqI0vBwSSRgwEx2RQDrPF1FdVS7OU28XYG4Zv0tJqI+U7TwEPDRrFgNc8jbUTC
-	HY+T3qoy4HvqIhj8m4iFL2oqTOVGtVBJ8mcfosyMnUlHVifdjbsNHa37Qv9YA2z5
-	aROr4Q==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy3pqcj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 15:56:01 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51KFu0LR001519
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 15:56:00 GMT
-Received: from [10.216.21.168] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Feb
- 2025 07:55:56 -0800
-Message-ID: <b1721d46-ffbf-e21c-ce18-e96e3e8ee35f@quicinc.com>
-Date: Thu, 20 Feb 2025 21:25:53 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uc5iwXNz"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so351149a12.0;
+        Thu, 20 Feb 2025 07:56:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740067006; x=1740671806; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GsbE5OioLs2uyCIYYbmafxzSYqPUZVYTy2gzhJIQqy0=;
+        b=Uc5iwXNz2VoZ+RZnHH7Fc8l3u7B3agQeHeYPsFkbM1cKVEbVQrIkqmODbGIuy1oaQR
+         2RwC3yiTOWf1J/K0JEhTE1ESa/jisDXwxY+s1OKeTsCLGi2XXu7dxFdAKXb/ShffFFv0
+         azuu+kzxjXXFF766LEB97qZ8eerhD90oFgZ/AdyvgkRGadoEBGGJJWb2Gvi0bNfd68i0
+         uy0lwFKzepMYUwZc5zG/dze0u7t2hCd8/wykyZNx/Wczr1QrhHKdbwMVywkXXd9wF47h
+         WUrgj4TaukX0oop6/XKyzUNINibxH87DV1q2owbfs2NOob8608IAyzd/KM0vy+1bYR7v
+         0U8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740067006; x=1740671806;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GsbE5OioLs2uyCIYYbmafxzSYqPUZVYTy2gzhJIQqy0=;
+        b=gwo7fRxQjGvShJMW6/mo0T2dmgSQfnCsH9dghpa9DRDn8GrcNrk4O5/Y9EKzJrZjBr
+         maGc83t8+pBAX2M+3veLFTwcTh2gpI7QQ9CPZ+QOETASkcM5OwkIeNorwu6zQk5o1xpu
+         X6OxZr4svr0h7dIBywO6zYCg9XRb2S148TZoZNvRqD62vSut5Yv2QMjNlOai6RK40S2u
+         wXaA71bUb1Ol/4A0m9U0amuubefZpurkmp1TzYnWjhce6rogqULQ/HXu4TXHpuz/HDPK
+         ZFPTvjfJcAuFh0yzADo0fpLbNYz3Bozo7V88RiHASU08XaoHMluS+SWVQIW1tPJwqmLv
+         W80Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUAT7ldHsgGvpiinpUfCoa5XHpRyrRFIIVMQw5iYXS1j4ot8lZzvpV5hNSnBK7QpvI0mkwgt5l88YEO@vger.kernel.org, AJvYcCULyXqkgAnzqZKLDK+jH6PPXKz1ETFB1QedUIEMzyVe2pV/jc46zdejzEpJNu56o9wSBypE5sJuT79zn8M8@vger.kernel.org, AJvYcCWel0txuIpg4suINM+wmPWQBaOCpCBGPNul616ifffYzf2Zlolr3sGi5begTx86fpNWqGFWjLgPkjF3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCI2u3IqoXXKpGMxPpuopL0sQcp5AX8jnq/uRicsNsV2zc7+E5
+	Im7xoa0Vc31oXrjK1jaiqsgUBRll6+Kq/MMpQtSB0QvzuZ5vmWiqyo4+0A==
+X-Gm-Gg: ASbGncuz8oqX8NkMiP3d9Zk7gU1f0KppjPbDzvnFGqLYdpOVCy+W4K9/a3eCphsvgKG
+	/1n4sKHeIfsHgkAV3y1+H5CQWj8Nl4l+iTJzSUoHnUhGHtmSBGIpd+1WjpeDzQlOnK1iC8dsZWm
+	khY2soP9TASxntUBMjEut3rID6VzlyJBYNiyTcpHmR2HVHh0Kqn0ALaTT5L4pTjTRlKk/7raqtF
+	pkuxM2HhMeWerAf7/lDAvxmZ0tVJDrd9Gj3PC62n93aKvtkL4a1eIMNCstuA6mlAZ9mqCY/hMFZ
+	sAQI3eilz8M0
+X-Google-Smtp-Source: AGHT+IGIujcWQDxo5qV8UJ8g4ZyLG5Wa9jYKSb9r73rJ517jMf8TRzcFwudi44KSrQwdSdCPdZ92FQ==
+X-Received: by 2002:a05:6402:5306:b0:5dc:c3c2:225e with SMTP id 4fb4d7f45d1cf-5e03607063fmr19939243a12.8.1740067005059;
+        Thu, 20 Feb 2025 07:56:45 -0800 (PST)
+Received: from debian ([2a00:79c0:604:ea00:45fb:7d1a:5e4d:9727])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece270affsm12053072a12.54.2025.02.20.07.56.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 07:56:44 -0800 (PST)
+Date: Thu, 20 Feb 2025 16:56:42 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: can: fsl,flexcan: add transceiver
+ capabilities
+Message-ID: <20250220155642.GA43726@debian>
+References: <20250220-flexcan-add-transceiver-caps-v2-0-a81970f11846@liebherr.com>
+ <20250220-flexcan-add-transceiver-caps-v2-1-a81970f11846@liebherr.com>
+ <20250220-tasteful-loud-firefly-1e2438-mkl@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 4/4] media: venus: hfi: add a check to handle OOB in
- sfr region
-Content-Language: en-US
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-CC: Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab+samsung@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20250207-venus_oob_2-v4-0-522da0b68b22@quicinc.com>
- <20250207-venus_oob_2-v4-4-522da0b68b22@quicinc.com>
- <e794c047-ab0e-4589-a1d2-0f73b813eacc@xs4all.nl>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <e794c047-ab0e-4589-a1d2-0f73b813eacc@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bt0_6-EXNdK8Sfwpl33svMnQiDYhg7yq
-X-Proofpoint-ORIG-GUID: bt0_6-EXNdK8Sfwpl33svMnQiDYhg7yq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_06,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0
- malwarescore=0 phishscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220-tasteful-loud-firefly-1e2438-mkl@pengutronix.de>
 
+Am Thu, Feb 20, 2025 at 09:44:50AM +0100 schrieb Marc Kleine-Budde:
+> On 20.02.2025 09:22:10, Dimitri Fedrau via B4 Relay wrote:
+> > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > 
+> > Currently the flexcan driver does only support adding PHYs by using the
+> > "old" regulator bindings. Add support for CAN transceivers as a PHY.
+> > 
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> 
+> Is it possible express in the biding that we either want to have
+> xceiver-supply or phys?
+>
+I didn't found anything to express that in the binding.
 
-On 2/20/2025 8:53 PM, Hans Verkuil wrote:
-> On 2/7/25 09:24, Vikash Garodia wrote:
->> sfr->buf_size is in shared memory and can be modified by malicious user.
->> OOB write is possible when the size is made higher than actual sfr data
->> buffer. Cap the size to allocated size for such cases.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
->> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
->> ---
->>  drivers/media/platform/qcom/venus/hfi_venus.c | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
->> index 6b615270c5dae470c6fad408c9b5bc037883e56e..c3113420d266e61fcab44688580288d7408b50f4 100644
->> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
->> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
->> @@ -1041,18 +1041,23 @@ static void venus_sfr_print(struct venus_hfi_device *hdev)
->>  {
->>  	struct device *dev = hdev->core->dev;
->>  	struct hfi_sfr *sfr = hdev->sfr.kva;
->> +	u32 size;
->>  	void *p;
->>  
->>  	if (!sfr)
->>  		return;
->>  
->> -	p = memchr(sfr->data, '\0', sfr->buf_size);
->> +	size = sfr->buf_size;
-> 
-> If this is ever 0...
-> 
->> +	if (size > ALIGNED_SFR_SIZE)
->> +		size = ALIGNED_SFR_SIZE;
->> +
->> +	p = memchr(sfr->data, '\0', size);
->>  	/*
->>  	 * SFR isn't guaranteed to be NULL terminated since SYS_ERROR indicates
->>  	 * that Venus is in the process of crashing.
->>  	 */
->>  	if (!p)
->> -		sfr->data[sfr->buf_size - 1] = '\0';
->> +		sfr->data[size - 1] = '\0';
-> 
-> ...then this will overwrite memory. It probably can't be 0, but a check or perhaps
-> just a comment might be good. It looks a bit scary.
-Thats correct, it would not be 0 as its a prefixed one [1]. I can put up a
-comment here.
+Best regards,
+Dimitri Fedrau
 
-[1]
-https://elixir.bootlin.com/linux/v6.14-rc3/source/drivers/media/platform/qcom/venus/hfi_venus.c#L836
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>  
->>  	dev_err_ratelimited(dev, "SFR message from FW: %s\n", sfr->data);
->>  }
->>
-Regards,
-Vikash
+[...]
+
