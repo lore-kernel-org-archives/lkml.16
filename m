@@ -1,65 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail115-79.sinamail.sina.com.cn (mail115-79.sinamail.sina.com.cn [218.30.115.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DA21EE01B;
-	Thu, 20 Feb 2025 11:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F4F1EE01B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740052745; cv=none; b=GUwvH+JSSyhfdSa2cd4mLSUf/xcRzCNbMCMCM4DxwdD07BAXK3anSeoleRsR8dW6BHJKvYtC7NIIMl9K0KkW4iWENlLEdRVIrttz6MMuWG3/jYZqxoj7UxOrq/dyTympRCpBMwkDp7zw6VvUKSgQ0psORZAtg1LV6i6dDkoStjA=
+	t=1740052755; cv=none; b=bamuiNzNmq28aNqc6ji068bM4pYjGWOLWnBt+6O6B40Xby2tNpQoWMKLRpoqast13x4cGVtrtZGz3LiByru8zDLvnc3q3dad5+FHRosm0iAb22mT0dJKqj4nfnmEo0uGPJHIi93w36wcIxBBJYiqSZ6y8xKLOBKJ+PSpGY/earg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740052745; c=relaxed/simple;
-	bh=u5NMKxhWnD/Z/8UewhmeT1rkRCBSaZTnMl4Wu8+zXuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C50C4sEb6GndeCpEIj3W8TFdLeWDurIvl3ydG61+Y/rp6tHVHgBkFOdiNr/+jIBYgtUuDMlE3zisaq9/PWvHsczM/Jccfx8immpRSqXHb4WXplZWo/FVjIyjatYn+JC0PuYOAiWN5eAHQe4vIuvy4DqaXCSxiWjzbXAsj8sAZtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HncoimCz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HncoimCz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6DAC4CED1;
-	Thu, 20 Feb 2025 11:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740052744;
-	bh=u5NMKxhWnD/Z/8UewhmeT1rkRCBSaZTnMl4Wu8+zXuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HncoimCzjpPgiY69pow9cn2yJ35BmIAxe4A4s9l8THAR16vcGz0k2msc+2k13CaTB
-	 O3dGPemm1LjE8XIXkmsybBKNsIo8NfIptc/5ILtiDVlnDJPnCA0VZEwzt4wFamMrh5
-	 2wA3YY21LcFubIwv8X8c5VNygUjtAMkuBxdnLRBc=
-Date: Thu, 20 Feb 2025 12:59:02 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: arnd@arndb.de, rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	dmitry.torokhov@gmail.com, jic23@kernel.org,
-	przemyslaw.kitszel@intel.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 02/12] driver core: Split devres APIs to
- device/devres.h
-Message-ID: <2025022052-profound-barmaid-dfe0@gregkh>
-References: <20250212062513.2254767-1-raag.jadav@intel.com>
- <20250212062513.2254767-3-raag.jadav@intel.com>
+	s=arc-20240116; t=1740052755; c=relaxed/simple;
+	bh=VnBygHI1QJwOIYQ/g2J+eJivC5SOxDBSn4PU3NWh0V0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DRGpG8VtsGWwXGg3PzpM+6m3XDa7fBiYAvcINSo8MyqunzWCoYU7FGKsnlURCO/rUBxHUZNYTIqokSS+6MpvtkUpWBNDvci/fiWSyNOg8+VJwwGt83riXdWdWp3oV4ReU3+x2+4UsinQIJGrcMU109feBfV3p9QFPgBiDwOwb3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.51.172])
+	by sina.com (10.185.250.22) with ESMTP
+	id 67B716C700007EBD; Thu, 20 Feb 2025 19:49:31 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 5901547602708
+X-SMAIL-UIID: EDD8DF5FFF434C329343F466FEF693FA-20250220-194931-1
+From: Hillf Danton <hdanton@sina.com>
+To: Byungchul Park <byungchul@sk.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel_team@skhynix.com
+Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers over 90%
+Date: Thu, 20 Feb 2025 19:49:19 +0800
+Message-ID: <20250220114920.2383-1-hdanton@sina.com>
+In-Reply-To: <20250220110935.GA64704@system.software.com>
+References: <20250220052027.58847-1-byungchul@sk.com> <20250220103223.2360-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212062513.2254767-3-raag.jadav@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 11:55:03AM +0530, Raag Jadav wrote:
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thu, 20 Feb 2025 20:09:35 +0900 Byungchul Park wrote:
+> On Thu, Feb 20, 2025 at 06:32:22PM +0800, Hillf Danton wrote:
+> > On Thu, 20 Feb 2025 14:20:01 +0900 Byungchul Park <byungchul@sk.com>
+> > > To check luf's stability, I ran a heavy LLM inference workload consuming
+> > > 210GiB over 7 days on a machine with 140GiB memory, and decided it's
+> > > stable enough.
+> > > 
+> > > I'm posting the latest version so that anyone can try luf mechanism if
+> > > wanted by any chance.  However, I tagged RFC again because there are
+> > > still issues that should be resolved to merge to mainline:
+> > > 
+> > >    1. Even though system wide total cpu time for TLB shootdown is
+> > >       reduced over 95%, page allocation paths should take additional cpu
+> > >       time shifted from page reclaim to perform TLB shootdown.
+> > > 
+> > >    2. We need luf debug feature to detect when luf goes wrong by any
+> > >       chance.  I implemented just a draft version that checks the sanity
+> > >       on mkwrite(), kmap(), and so on.  I need to gather better ideas
+> > >       to improve the debug feature.
+> > > 
+> > > ---
+> > > 
+> > > Hi everyone,
+> > > 
+> > > While I'm working with a tiered memory system e.g. CXL memory, I have
+> > > been facing migration overhead esp. tlb shootdown on promotion or
+> > > demotion between different tiers.  Yeah..  most tlb shootdowns on
+> > > migration through hinting fault can be avoided thanks to Huang Ying's
+> > > work, commit 4d4b6d66db ("mm,unmap: avoid flushing tlb in batch if PTE
+> > > is inaccessible").
+> > > 
+> > > However, it's only for migration through hinting fault.  I thought it'd
+> > > be much better if we have a general mechanism to reduce all the tlb
+> > > numbers that we can apply to any unmap code, that we normally believe
+> > > tlb flush should be followed.
+> > > 
+> > > I'm suggesting a new mechanism, LUF(Lazy Unmap Flush), that defers tlb
+> > > flush until folios that have been unmapped and freed, eventually get
+> > > allocated again.  It's safe for folios that had been mapped read-only
+> > > and were unmapped, as long as the contents of the folios don't change
+> > > while staying in pcp or buddy so we can still read the data through the
+> > > stale tlb entries.
+> > >
+> > Given pcp or buddy, you are opening window for use after free which makes
+> > no sense in 99% cases.
 > 
-> device.h is a huge header which is hard to follow and easy to miss
-> something. Improve that by splitting devres APIs to device/devres.h.
+> Just in case that I don't understand what you meant and for better
+> understanding, can you provide a simple and problematic example from
+> the u-a-f?
 > 
-> In particular this helps to speedup the build of the code that includes
-> device.h solely for a devres APIs.
-> 
-> While at it, cast the error pointers to __iomem using IOMEM_ERR_PTR()
-> and fix sparse warnings.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+Tell us if it is illegal to commit rape without pregnancy in your home town?
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+PS defering flushing tlb [1,2] is no go.
+
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+[1] https://lore.kernel.org/lkml/20250127155146.GB25757@willie-the-truck/
+[2] https://lore.kernel.org/lkml/xhsmhwmdwihte.mognet@vschneid-thinkpadt14sgen2i.remote.csb/
