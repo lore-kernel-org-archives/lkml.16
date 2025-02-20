@@ -1,193 +1,115 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D8F24BCF5;
-	Thu, 20 Feb 2025 18:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F061224BCFB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 18:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740076932; cv=none; b=tZtddSJeLu2u0sswXIVI7ML6004+kxJZJMVtWlrAAcx8DOjk3nU0d8OA07esz4Y1oAR/Rf/CUCw4yex+uC9q82gnafS+7WmMokfwtiNQUAkNOIvXLbGxsriIofYeSEsM1i7RUwEumSnHbmbPKHmkyY/9wXysOGuMeoo0OG7Z7xI=
+	t=1740076956; cv=none; b=IAuaYEzZ7hUmvpnOoxw//rT+euPhCW8Cfmd0EQ6JOuItHW3g04T3ARVS37u0FOGAjo+SJ8AZUJH3ktbP4wRF8reghsPAQTZpTPPyLwrPCYE9aaELXPgrHwyOb/q1XYwV/+bhpztJnQZXZtweuvVj86/mBXoD24YGqc/XBOxfFuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740076932; c=relaxed/simple;
-	bh=wtnnZPkOf7BrsKB8Z/mdzevF6TxC5hF2ePYSpdm6h0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4js7nZo5PoWJ5eGxFdQB5m6dhiTU9QGUC3Mf0/FgVBwsl8zhNZu+ZWWp1t6ir4sjGY7eNs9+L+KuoDRUDcNysnUmUe80+AA6S1QNHBP2a1upGx6huuGxeel/zIvrU6SQ0GMD4nl87kIe0SCsWDwFhOjkTld7ICTbHViowyHIWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=mmVao0ba; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
+	s=arc-20240116; t=1740076956; c=relaxed/simple;
+	bh=fcu6YN7bbsrKHVm/xLNXz/ZhQ6TV6qlqWZuPfAueep4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nopfmo5BuZr2MFqQpSMLP9rjJSTtIeg5jOhBpohCZOeZ0OJnt+znOQ7lmwc8Q5o40xliy5YQFHYOTAsR2kkUTMMlSQ38U0WyadrBub8fSRw8SNWmMJ6njdG46fAc71zINgx/nToshG6IAe8M5Hf8/mQKVjdTzQuye8A9//0eBjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XlvXJw9z; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="mmVao0ba"
-Received: from bender.morinfr.org (unknown [82.66.66.112])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id AAB4A2003EF;
-	Thu, 20 Feb 2025 19:41:50 +0100 (CET)
-Authentication-Results: smtp2-g21.free.fr;
-	dkim=pass (1024-bit key; unprotected) header.d=morinfr.org header.i=@morinfr.org header.a=rsa-sha256 header.s=20170427 header.b=mmVao0ba;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
-	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=uLVen2E3RvhESJ8F8MBdYo2bGGGeVIqkqKDEqDdgtGQ=; b=mmVao0baO+xoUcVvp5rDnrVvkF
-	dQwWxlr39sUrAt4F7QoJNAku6XY+MjjSGy45QStx1pNW+VkBR54NCpA+pauZ9aWqKFHWZaMURyYnd
-	XMgCaluaqWdCvVpF+lFbo0aj8ID7T1BKCgZwk5Hkuhl7yGrT/LThiZsV6TbJ0PV1jD3E=;
-Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
-	(envelope-from <guillaume@morinfr.org>)
-	id 1tlBUb-000f4t-2f;
-	Thu, 20 Feb 2025 19:41:49 +0100
-Date: Thu, 20 Feb 2025 19:41:49 +0100
-From: Guillaume Morin <guillaume@morinfr.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: song@kernel.org, yukuai3@huawei.com, hare@suse.de, axboe@kernel.dk,
-	logang@deltatee.com, linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-	yangerkun@huawei.com, hch@lst.de, guillaume@morinfr.org
-Subject: Re: [PATCH v3] md: fix mddev uaf while iterating all_mddevs list
-Message-ID: <Z7d3bY2EoScBIk4k@bender.morinfr.org>
-References: <20250220124348.845222-1-yukuai1@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XlvXJw9z"
+Message-ID: <f3de1e79-9732-451c-a973-e94e27703a65@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740076952;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VFI3sZtS19TZcUN2UuyJdB3DsPElU8NTdbS7gCIcLnw=;
+	b=XlvXJw9z7FbYfQL5h1eadTWe+1VXyRglI5NEGDsWkK98Tm2TGQ8pTQmAjBLG12WF6Am947
+	4znteRRgnrOsfzlDsq4a0Y2HzkNC3YnLHKU9Kkn3R8hp/9ksi9tEmFE46YKpyBh/OiIPON
+	dWkA/7hKWEa10VpIjafgS6l2H5FD/N4=
+Date: Thu, 20 Feb 2025 13:42:25 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220124348.845222-1-yukuai1@huaweicloud.com>
+Subject: Re: [PATCH net-next 0/2] net: cadence: macb: Modernize statistics
+ reporting
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: patchwork-bot+netdevbpf@kernel.org, nicolas.ferre@microchip.com,
+ claudiu.beznea@tuxon.dev, netdev@vger.kernel.org, davem@davemloft.net,
+ edumazet@google.com, andrew+netdev@lunn.ch, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org
+References: <20250214212703.2618652-1-sean.anderson@linux.dev>
+ <173993104298.103969.17353080742885832903.git-patchwork-notify@kernel.org>
+ <12896f89-e99c-4bbc-94c1-fac89883bd92@linux.dev>
+ <20250220085945.14961e28@kernel.org>
+ <561bc925-d9ad-4fe3-8a4e-18489261e531@linux.dev>
+ <20250220101823.20516a77@kernel.org>
+ <1510cd3c-b986-4da2-aaa3-0214e4f43fe6@linux.dev>
+ <20250220103223.5f2c0c58@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250220103223.5f2c0c58@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 20 Feb 20:43, Yu Kuai wrote:
->
-> From: Yu Kuai <yukuai3@huawei.com>
+On 2/20/25 13:32, Jakub Kicinski wrote:
+> On Thu, 20 Feb 2025 13:22:29 -0500 Sean Anderson wrote:
+>> > If no - will the code in net still work (just lacking lock protection)?
+>> > 
+>> > If there is a conflict you can share a resolution with me and I'll slap
+>> > it on as part of the merge.  
+>> 
+>> OK, what's the best way to create that? git rerere?
 > 
-> While iterating all_mddevs list from md_notify_reboot() and md_exit(),
-> list_for_each_entry_safe is used, and this can race with deletint the
-> next mddev, causing UAF:
-> 
-> t1:
-> spin_lock
-> //list_for_each_entry_safe(mddev, n, ...)
->  mddev_get(mddev1)
->  // assume mddev2 is the next entry
->  spin_unlock
->             t2:
->             //remove mddev2
->             ...
->             mddev_free
->             spin_lock
->             list_del
->             spin_unlock
->             kfree(mddev2)
->  mddev_put(mddev1)
->  spin_lock
->  //continue dereference mddev2->all_mddevs
-> 
-> The old helper for_each_mddev() actually grab the reference of mddev2
-> while holding the lock, to prevent from being freed. This problem can be
-> fixed the same way, however, the code will be complex.
-> 
-> Hence switch to use list_for_each_entry, in this case mddev_put() can free
-> the mddev1 and it's not safe as well. Refer to md_seq_show(), also factor
-> out a helper mddev_put_locked() to fix this problem.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Fixes: f26514342255 ("md: stop using for_each_mddev in md_notify_reboot")
-> Fixes: 16648bac862f ("md: stop using for_each_mddev in md_exit")
-> Reported-by: Guillaume Morin <guillaume@morinfr.org>
-> Closes: https://lore.kernel.org/all/Z7Y0SURoA8xwg7vn@bender.morinfr.org/
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/md.c | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 827646b3eb59..f501bc5f68f1 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -629,6 +629,12 @@ static void __mddev_put(struct mddev *mddev)
->  	queue_work(md_misc_wq, &mddev->del_work);
->  }
->  
-> +static void mddev_put_locked(struct mddev *mddev)
-> +{
-> +	if (atomic_dec_and_test(&mddev->active))
-> +		__mddev_put(mddev);
-> +}
-> +
->  void mddev_put(struct mddev *mddev)
->  {
->  	if (!atomic_dec_and_lock(&mddev->active, &all_mddevs_lock))
-> @@ -8461,9 +8467,7 @@ static int md_seq_show(struct seq_file *seq, void *v)
->  	if (mddev == list_last_entry(&all_mddevs, struct mddev, all_mddevs))
->  		status_unused(seq);
->  
-> -	if (atomic_dec_and_test(&mddev->active))
-> -		__mddev_put(mddev);
-> -
-> +	mddev_put_locked(mddev);
->  	return 0;
->  }
->  
-> @@ -9895,11 +9899,11 @@ EXPORT_SYMBOL_GPL(rdev_clear_badblocks);
->  static int md_notify_reboot(struct notifier_block *this,
->  			    unsigned long code, void *x)
->  {
-> -	struct mddev *mddev, *n;
-> +	struct mddev *mddev;
->  	int need_delay = 0;
->  
->  	spin_lock(&all_mddevs_lock);
-> -	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
-> +	list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
->  		if (!mddev_get(mddev))
->  			continue;
->  		spin_unlock(&all_mddevs_lock);
-> @@ -9911,8 +9915,8 @@ static int md_notify_reboot(struct notifier_block *this,
->  			mddev_unlock(mddev);
->  		}
->  		need_delay = 1;
-> -		mddev_put(mddev);
->  		spin_lock(&all_mddevs_lock);
-> +		mddev_put_locked(mddev);
->  	}
->  	spin_unlock(&all_mddevs_lock);
->  
-> @@ -10245,7 +10249,7 @@ void md_autostart_arrays(int part)
->  
->  static __exit void md_exit(void)
->  {
-> -	struct mddev *mddev, *n;
-> +	struct mddev *mddev;
->  	int delay = 1;
->  
->  	unregister_blkdev(MD_MAJOR,"md");
-> @@ -10266,7 +10270,7 @@ static __exit void md_exit(void)
->  	remove_proc_entry("mdstat", NULL);
->  
->  	spin_lock(&all_mddevs_lock);
-> -	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
-> +	list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
->  		if (!mddev_get(mddev))
->  			continue;
->  		spin_unlock(&all_mddevs_lock);
-> @@ -10278,8 +10282,8 @@ static __exit void md_exit(void)
->  		 * the mddev for destruction by a workqueue, and the
->  		 * destroy_workqueue() below will wait for that to complete.
->  		 */
-> -		mddev_put(mddev);
->  		spin_lock(&all_mddevs_lock);
-> +		mddev_put_locked(mddev);
->  	}
->  	spin_unlock(&all_mddevs_lock);
->  
-> -- 
-> 2.39.2
-> 
+> rerere image or a three way diff will work
 
-I confirm that this patch fixes our reproducer for the GPF
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3098,16 +3098,9 @@
+ {
+ 	struct gem_stats *hwstat = &bp->hw_stats.gem;
+ 
+-<<<<<<<
+-	if (!netif_running(bp->dev))
+-		return nstat;
+-
+ 	spin_lock_irq(&bp->stats_lock);
+-	gem_update_stats(bp);
+-=======
+ 	if (netif_running(bp->dev))
+ 		gem_update_stats(bp);
+->>>>>>>
+ 
+ 	nstat->rx_errors = (hwstat->rx_frame_check_sequence_errors +
+ 			    hwstat->rx_alignment_errors +
+@@ -3136,12 +3129,7 @@
+ 	nstat->tx_aborted_errors = hwstat->tx_excessive_collisions;
+ 	nstat->tx_carrier_errors = hwstat->tx_carrier_sense_errors;
+ 	nstat->tx_fifo_errors = hwstat->tx_underrun;
+-<<<<<<<
+-=======
+ 	spin_unlock_irq(&bp->stats_lock);
+-
+-	return nstat;
+->>>>>>>
+ }
+ 
+ static void gem_get_ethtool_stats(struct net_device *dev,
+@@ -3240,11 +3228,8 @@
+ 	nstat->tx_carrier_errors = hwstat->tx_carrier_errors;
+ 	nstat->tx_fifo_errors = hwstat->tx_underruns;
+ 	/* Don't know about heartbeat or window errors... */
+-<<<<<<<
+ 	spin_unlock_irq(&bp->stats_lock);
+-=======
+ }
+->>>>>>>
+ 
+ static void macb_get_pause_stats(struct net_device *dev,
+ 				 struct ethtool_pause_stats *pause_stats)
 
-Thanks
-
-Tested-by: Guillaume Morin <guillaume@morinfr.org>
-
--- 
-Guillaume Morin <guillaume@morinfr.org>
