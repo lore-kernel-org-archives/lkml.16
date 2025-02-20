@@ -1,88 +1,137 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2940F1D5AB9;
-	Thu, 20 Feb 2025 03:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8127C1D416B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 03:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740021669; cv=none; b=IKdfSnzRA47YyqERVxqI0lrEzdrwMz756JovRkhbHZgcIoXwrQecYRPT/jURFWY4i/MR0FuRJ+RBiBtofI6pR2Tcldbeb6NlhQBr4+hY55urhQKUZZ0B0b/XMK6tvZBPct39R4K1mxCOi27RTWuPdN9PA2rATWkr3D32MXd+H/s=
+	t=1740021886; cv=none; b=SfPGUhX5kDsKoCCYVNrcacwinbXzULMkajIG5mRfQO7GLXX5d3FO1Lj0MZsL4NfOJnf2hFYl3SnyZOM/bt8SCMONhXnw088rYCalrXU1yLKCpH5Cn0ZUmX9Thkxeyc2YErUtCtSZ3j05Fb/yoTxgwI0jBMn0qbVbtWSDxeVvA+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740021669; c=relaxed/simple;
-	bh=Qy2N8oC+a7tGQLAD4iW0NcTrv1a6+NZUXNIZOzhwdqU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OENFVVoEo/gILs2GRWxpDM9mjLRWVNnWdFJmqHJkUl6Mq/tU6znsAZ7Pmubi3NkO2bucZbFqn20xIBZM3OVJsUgLv5m0F438s6JQ691NCKRcST5yQp/R8wLbB9gv6ASA766OZvk+SSPM5G40j3R/GwPvkMmSiltj4WVOAKU1FIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Yyz3T48Hbz233Gd;
-	Thu, 20 Feb 2025 11:17:57 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id B51F9180044;
-	Thu, 20 Feb 2025 11:20:58 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 20 Feb 2025 11:20:58 +0800
-Received: from localhost.localdomain (10.28.79.22) by
- kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 20 Feb 2025 11:20:57 +0800
-From: Huisong Li <lihuisong@huawei.com>
-To: <linux-hwmon@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux@roeck-us.net>, <jdelvare@suse.com>,
-	<liuyonglong@huawei.com>, <zhanjie9@hisilicon.com>,
-	<zhenglifeng1@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH] hwmon: (acpi_power_meter) Fix the fake power alarm reporting
-Date: Thu, 20 Feb 2025 11:08:32 +0800
-Message-ID: <20250220030832.2976-1-lihuisong@huawei.com>
-X-Mailer: git-send-email 2.22.0
+	s=arc-20240116; t=1740021886; c=relaxed/simple;
+	bh=hrH3gSSJua0XF6ylKhTxk9/7/HmWaV/IGstgRSn8BRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSQrC3eQEBocMrHXCy5zYbNPLCfH2wgoEqvGWhhPvYgUQN0wdkY9cKDbaDGx0CfwpM215cZq0hHQLAhURA+H4e2jfvKBKRtUWOMaKVA5V9MQWUUes90oeRKJEQ3/LSZLLWPK0+s5JJGRsXBZ1BtHoLRZ0bRWkDgFwT2+Hy+INHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=by1e4sDT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="by1e4sDT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740021883;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YwMMjZVnNw2vA2fx0hn8CT1DbaKYBifmxuPgJ8avEu8=;
+	b=by1e4sDTFIwylUAlCaa8twr99Z7BAvB7yVezLw4zxRqlhCFBcQgBjUEDkO11LCxdjV98rO
+	gIgKgqLPIaEZy1vC+12NdWIF8DlcWuvjlZ77lCkscuJD4Xxvl3uIMe8rJ2QEUhe1oI4xsh
+	xVZXs4EPMC/m/k5vy5UkI+9mF2NA8zU=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-318-Lz2G54FlNGWqzKqq0g1jtQ-1; Wed,
+ 19 Feb 2025 22:24:39 -0500
+X-MC-Unique: Lz2G54FlNGWqzKqq0g1jtQ-1
+X-Mimecast-MFC-AGG-ID: Lz2G54FlNGWqzKqq0g1jtQ_1740021878
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C06619373D9;
+	Thu, 20 Feb 2025 03:24:37 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.127])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 19B0E1800359;
+	Thu, 20 Feb 2025 03:24:34 +0000 (UTC)
+Date: Thu, 20 Feb 2025 11:24:30 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Chris Li <chrisl@kernel.org>, Barry Song <v-songbaohua@oppo.com>,
+	Hugh Dickins <hughd@google.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	Kalesh Singh <kaleshsingh@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/7] mm, swap: use percpu cluster as allocation fast path
+Message-ID: <Z7agbvvnshLwt0k7@MiWiFi-R3L-srv>
+References: <20250214175709.76029-1-ryncsn@gmail.com>
+ <20250214175709.76029-6-ryncsn@gmail.com>
+ <Z7WOCvQq3xi9wxnt@MiWiFi-R3L-srv>
+ <CAMgjq7C0Yg164SHJcP6wDC0od-xRuBMxLsJJwB0oWavpgsr8tg@mail.gmail.com>
+ <Z7W4p0p/Qkke2LTp@MiWiFi-R3L-srv>
+ <CAMgjq7AixL=Jn_c5jQFWWJt5+gPz0O+1rxtTWhzOmo2ef3dWhQ@mail.gmail.com>
+ <Z7aU7wEx9jKo3TaT@MiWiFi-R3L-srv>
+ <CAMgjq7DoV=ZdHeREeMq1=hKzD_O40NkfHCym1Wo9m=J=cBnUvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemn100009.china.huawei.com (7.202.194.112)
+In-Reply-To: <CAMgjq7DoV=ZdHeREeMq1=hKzD_O40NkfHCym1Wo9m=J=cBnUvw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-We encountered a problem that a fake power alarm is reported to
-user on the platform unsupported notifications at the second step
-below:
-1> Query 'power1_alarm' attribute when the power capping occurs.
-2> Query 'power1_alarm' attribute when the power capping is over
-   and the current average power is less then power cap value.
+On 02/20/25 at 10:48am, Kairui Song wrote:
+> On Thu, Feb 20, 2025 at 10:35 AM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > On 02/19/25 at 07:12pm, Kairui Song wrote:
+> > >
+> > > > n reality it may be very difficult to achieve the 'each 2M space has been consumed for each order',
+> > >
+> > > Very true, but notice for order >= 1, slot cache never worked before.
+> > > And for order == 0, it's very likely that a cluster will have more
+> > > than 64 slots usable. The test result I posted should be a good
+> > > example, and device is very full during the test, and performance is
+> > > basically identical to before. My only concern was about the device
+> >
+> > My worry is the global percpu cluster may impact performance among
+> > multiple swap devices. Before, per si percpu cluster will cache the
+> > valid offset in one cluster for each order. For multiple swap devices,
+> > this consumes a little bit more percpu memory. While the new global
+> > percpu cluster could be updated to a different swap device easily only
+> > of one order is available, then the whole array is invalid. That looks a
+> > little drastic cmpared with before.
+> 
+> Ah, now I got what you mean. That's seems could be a problem indeed.
+> 
+> I think I can change the
+> 
+> +struct percpu_swap_cluster {
+> +       struct swap_info_struct *si;
+> 
+> to
+> 
+> +struct percpu_swap_cluster {
+> +       struct swap_info_struct *si[SWAP_NR_ORDERS];
+> 
+> Or embed the swp type in the offset, this way each order won't affect
+> each other.  How do you think?
 
-The root cause is that the resource->power_alarm is set to true
-at the first step. And power meter use this old value to show
-the power alarm state instead of the current the comparison value.
+Yes, this looks much better. You may need store both si and offset, the
+above demonstrated struct percpu_swap_cluster lacks offset which seems
+not good.
 
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
----
- drivers/hwmon/acpi_power_meter.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index 44afb07409a4..f05986e4f379 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -437,9 +437,13 @@ static ssize_t show_val(struct device *dev,
- 			ret = update_cap(resource);
- 			if (ret)
- 				return ret;
-+			resource->power_alarm = resource->power > resource->cap;
-+			val = resource->power_alarm;
-+		} else {
-+			val = resource->power_alarm ||
-+				 resource->power > resource->cap;
-+			resource->power_alarm = resource->power > resource->cap;
- 		}
--		val = resource->power_alarm || resource->power > resource->cap;
--		resource->power_alarm = resource->power > resource->cap;
- 		break;
- 	case 7:
- 	case 8:
--- 
-2.22.0
+> 
+> Previously high order allocation will bypass slot cache so allocation
+> could happen on different same priority devices too. So the behaviour
+> that each order using different device should be acceptable.
+> 
+> >
+> > Yeah, the example you shown looks good. Wonder how many swap devices are
+> > simulated in your example.
+> >
+> > > rotating, as slot cache never worked for order >= 1, so the device
+> > > rotates was very frequently. But still seems no one really cared about
+> > > it, mthp swapout is a new thing and the previous rotation rule seems
+> > > even more confusing than this new idea.
+> >
+> > I never contact a real product environment with multiple tier and
+> > many swap devices. In reality, with my shallow knowledge, usually only
+> > one swap device is deployed. If that's true in most of time, the old
+> > code or new code is fine, otherwise, seems we may need consider the
+> > impact.
+> 
 
