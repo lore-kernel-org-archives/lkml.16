@@ -1,110 +1,225 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.94])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDCF1F0E29;
-	Thu, 20 Feb 2025 10:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1781F03DE
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740046151; cv=none; b=rdyy6SwEL+N7cWAPS2EEq1mmRa19WNApbfdFhWwhum0YD4zT0/YnvWZES07zc08fNYpTEYqPRLI3cghvsSub9iO1mMPlKtFHxUJQpJ51YBN9iYXg6R1NrwN+/1vCdUGeKv63ZxGJWltNs8g36zaRT8mQbNs9SlqF2b/dhLcPfFU=
+	t=1740046185; cv=none; b=A1XbdMJmZDKROwVAn/jlx0f7CMHiLxOneMUGkNGgW2wZ9cr9eq5S/yYOgvYybfxvpKoZmIzSiBdyHDqBkLyRiwOV2yRVqD+Af+cBDVJ1jec9t4A6fuzCbWIlKRRXqKqM2U39jEib/yh+ICQVNvx+tp8qTdMZPm19BH4EWxo95KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740046151; c=relaxed/simple;
-	bh=50txLVVCRobSv4NuU/82XKthyZkFsywUPDHvc9nxY2M=;
+	s=arc-20240116; t=1740046185; c=relaxed/simple;
+	bh=Zoo9uQ8Drs94E3LT5wK9nBC48YVNSJ75dwbnTzaoVHw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QgOgztdDUus/F0uftWZjTbjPa8K+ka4hXA4RsybLfYQ5RDENQ3BmBurSN3F5LrrwokAVGqJ9oqlU8ISE3EnUWbTxlXbzJR1gMtx6tpN8LfKozloF+xU83PxUcRDlaoSlkLTbP51o5XFmU3RpMHiOW1hUqP/cCYPwc8gULQNa73c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=WlLD/52C; arc=none smtp.client-ip=212.42.244.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=RtXF3dPj/Or5VaAtk8PL2gixCn8n4n/VJR6H+nkPIoGuC1U+vgmkKhVb4ladRmDkZebUlGJ7DSt6zDU2JyUlULIpetkQbcdXImYYij0v0K8U+8ZKTAi30DZUotbnHPJpsZlg0x68UZu7JZ2077teywmJfsDLbXXzrBDc9l6358k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TbnxBlwP; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="WlLD/52C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1740045793; bh=50txLVVCRobSv4NuU/82XKthyZkFsywUPDHvc9nxY2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WlLD/52C6GCjWesK9gEN8XWUfhzgR4ROGpYpf03EHywvuCQYvIP3U+1EBwKRVaGBB
-	 yzkI6DQXRi2eXRNE8NSNVW+ibNXXf2Gh9WAeSBY6Pnhk3Jq4uOdcACXsUcZWwFZHoq
-	 TfYK444OcOr9G7NfuEBPI4GTAwtbyYCMqObqs9EU=
-Received: from [212.42.244.71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
-	(envelope-from <n.schier@avm.de>)
-	id 67b6fde1-714a-7f0000032729-7f000001d908-1
-	for <multiple-recipients>; Thu, 20 Feb 2025 11:03:13 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Thu, 20 Feb 2025 11:03:13 +0100 (CET)
-Received: from l-nschier-nb (unknown [IPv6:2001:9e8:9e4:1f01:9fb7:d3c6:7f35:9b14])
-	by mail-auth.avm.de (Postfix) with ESMTPSA id D89ED806E9;
-	Thu, 20 Feb 2025 11:03:12 +0100 (CET)
-Date: Thu, 20 Feb 2025 11:03:11 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH 3/4] kbuild: slim down package for building external
- modules
-Message-ID: <20250220-red-antelope-of-education-5417aa@l-nschier-nb>
-References: <20240727074526.1771247-1-masahiroy@kernel.org>
- <20240727074526.1771247-4-masahiroy@kernel.org>
- <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbnxBlwP"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f3ee8a119so358176f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 02:09:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740046181; x=1740650981; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VKAFazs0bK/4Q6jQNje2L8Expu/NOgNPeCn90wFFS4o=;
+        b=TbnxBlwPjjyp5w4jK7dHSTOLWZ2jty0K7BW6YS3sGDpseukWSP+NfndN8IXkZbspVn
+         y/2hRbyjkA7okR7Npwye0REGht+j8z4kKPj++qi+dFBcIwmBfBx11ZwI93N+aq7BWRY7
+         4MUHHO+fzvDRFoIqRGAsRaY4GmlMbuvHA/Yx8dxKTVQ744Y/oGu+NlhUmvY9jQOHx6GU
+         XWw5cnlAmw1B2bOx1iRckt9Zla4faaKXtB9VzVCZISstygkJR3MziNB2CaSZT8DsLrQD
+         DwYHFgSgJVm0l/J9lVq4/1wtcJS50Kie/9SNSysy8thpkUl4RigzHFMAVxMnz6xfuVx5
+         AK+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740046181; x=1740650981;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VKAFazs0bK/4Q6jQNje2L8Expu/NOgNPeCn90wFFS4o=;
+        b=YaCqkOdKPhk1uDqDosoolVrhudJwPM25KENfUJLTKr2trAmX5jBbB1riFDivzKGyl9
+         CF8nbYVQAQV43gr8Q8Hus1zl2Mj/uzSV6LEN3xuZ0huGRhzUL56rYoztZ7TEHbR4sJWW
+         QrGpxJt/VtxRP0atIBHPAAfOrxSAFoseUF+R3BifMPZF2kXD2DhH2mZ6tNXu6vHQIfU9
+         2TYnvV4yMDOIcDtPxZg1VlYspRrDRiTswiuxAbH9ympPwnaKTXu3B+glNO9j4Wl1Y8Ge
+         NO7Nwf2l7PYOhp4+09W1HYThc3Z1sOwVkY2wsZhZTI9olVgiF69/ch/5LVXELK27UyPs
+         atJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVm3PCrL6PLCrh8Fg6Cvs2Q++FTiNSjUffqn7xZXISi+3jxuMnGfDHsQ2mFSaLe8tDKP5dDjdWmjZs4ZcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS5o699ESegOg6ywIfImcT43m3jEeLiIM56K7fyCNfbc5LawmN
+	KydZ7XL0JAusJJ1d5cRRudFrDzj9dhIphyLsMW7yVigzAbyEMtLye3+sFLayTuM=
+X-Gm-Gg: ASbGncsNYQQLa/xR6KM9xGq4hd8bxpAlDChTrloG7txuEIgekG6OFzKAWMTKVjvC8cV
+	09qyX95HnU7riCcqABI466HcwBWZfwoHkL1pLFG33p8GxWBHKC1NyyvC0aKFo4eKCyc7AIZpU16
+	WGsw3e99+22OH1pWj5fY1k7a0pzvP71qeyMCpHP9QP0WVe5A82I9DOZmrYZCqYDMM7/lli+tCIS
+	2yX6AxLQwYnvEbrHK81JZZicmwiKjZwg+EJawY4GnTUJ14j0Cv9sJGGbDT24YgHM/QDWjluJd7u
+	0RdxqiDo5ZINceJ5qiPvbu+weRA=
+X-Google-Smtp-Source: AGHT+IERc6hIPqaeWn2CPZBGtZZAAoxkqyWFInBWc9QDvWlSHwq2D21AKF4IMfL83X3LHVGKdeB0Yw==
+X-Received: by 2002:a5d:59a2:0:b0:38d:d9bd:18a6 with SMTP id ffacd0b85a97d-38f33f437fdmr19446268f8f.42.1740046181176;
+        Thu, 20 Feb 2025 02:09:41 -0800 (PST)
+Received: from linaro.org ([2a02:2454:ff21:ef30:b30c:3d94:4d4a:a6eb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4123sm20741585f8f.17.2025.02.20.02.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 02:09:40 -0800 (PST)
+Date: Thu, 20 Feb 2025 11:09:38 +0100
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Yuvaraj Ranganathan <quic_yrangana@quicinc.com>,
+	Anusha Rao <quic_anusha@quicinc.com>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>
+Subject: Re: [PATCH 7/8] dt-bindings: dma: qcom: bam-dma: Add missing
+ required properties
+Message-ID: <Z7b_YgzGJUT_un5z@linaro.org>
+References: <20250212-bam-dma-fixes-v1-0-f560889e65d8@linaro.org>
+ <20250212-bam-dma-fixes-v1-7-f560889e65d8@linaro.org>
+ <22ce4c8d-1f3b-42c9-b588-b7d74812f7b0@oss.qualcomm.com>
+ <Z6231bBqNhA2M4Ap@linaro.org>
+ <d674d626-e6a3-4683-8f45-81b09200849f@oss.qualcomm.com>
+ <Z64OKcj9Ns1NkUea@linaro.org>
+ <20250219222739.GA3078392-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
-X-purgate-ID: 149429::1740045793-D9F66CDC-45E15D99/0/0
-X-purgate-type: clean
-X-purgate-size: 1706
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
+In-Reply-To: <20250219222739.GA3078392-robh@kernel.org>
 
-On Tue, Feb 18, 2025 at 01:25:38PM -0700, Jeffrey Hugo wrote:
-> On 7/27/2024 1:42 AM, Masahiro Yamada wrote:
-> > Exclude directories and files unnecessary for building external modules:
+On Wed, Feb 19, 2025 at 04:27:39PM -0600, Rob Herring wrote:
+> On Thu, Feb 13, 2025 at 04:22:17PM +0100, Stephan Gerhold wrote:
+> > On Thu, Feb 13, 2025 at 03:00:00PM +0100, Konrad Dybcio wrote:
+> > > On 13.02.2025 10:13 AM, Stephan Gerhold wrote:
+> > > > On Wed, Feb 12, 2025 at 10:01:59PM +0100, Konrad Dybcio wrote:
+> > > >> On 12.02.2025 6:03 PM, Stephan Gerhold wrote:
+> > > >>> num-channels and qcom,num-ees are required when there are no clocks
+> > > >>> specified in the device tree, because we have no reliable way to read them
+> > > >>> from the hardware registers if we cannot ensure the BAM hardware is up when
+> > > >>> the device is being probed.
+> > > >>>
+> > > >>> This has often been forgotten when adding new SoC device trees, so make
+> > > >>> this clear by describing this requirement in the schema.
+> > > >>>
+> > > >>> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> > > >>> ---
+> > > >>>  Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 4 ++++
+> > > >>>  1 file changed, 4 insertions(+)
+> > > >>>
+> > > >>> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> > > >>> index 3ad0d9b1fbc5e4f83dd316d1ad79773c288748ba..5f7e7763615578717651014cfd52745ea2132115 100644
+> > > >>> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> > > >>> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> > > >>> @@ -90,8 +90,12 @@ required:
+> > > >>>  anyOf:
+> > > >>>    - required:
+> > > >>>        - qcom,powered-remotely
+> > > >>> +      - num-channels
+> > > >>> +      - qcom,num-ees
+> > > >>>    - required:
+> > > >>>        - qcom,controlled-remotely
+> > > >>> +      - num-channels
+> > > >>> +      - qcom,num-ees
+> > > >>
+> > > >> I think I'd rather see these deprecated and add the clock everywhere..
+> > > >> Do we know which one we need to add on newer platforms? Or maybe it's
+> > > >> been transformed into an icc path?
+> > > > 
+> > > > This isn't feasible, there are too many different setups. Also often the
+> > > > BAM power management is tightly integrated into the consumer interface.
+> > > > To give a short excerpt (I'm sure there are even more obscure uses):
+> > > > 
+> > > >  - BLSP BAM (UART, I2C, SPI on older SoCs):
+> > > >     1. Enable GCC_BLSP_AHB_CLK
+> > > >     -> This is what the bam_dma driver supports currently.
+> > > > 
+> > > >  - Crypto BAM: Either
+> > > >     OR 1. Vote for single RPM clock
+> > > >     OR 1. Enable 3 separate clocks (CE, CE_AHB, CE_AXI)
+> > > >     OR 1. Vote dummy bandwidth for interconnect
+> > > > 
+> > > >  - BAM DMUX (WWAN on older SoCs):
+> > > >     1. Start modem firmware
+> > > >     2. Wait for BAM DMUX service to be up
+> > > >     3. Vote for power up via the BAM-DMUX-specific SMEM state
+> > > >     4. Hope the firmware agrees and brings up the BAM
+> > > > 
+> > > >  - SLIMbus BAM (audio on some SoCs):
+> > > >     1. Start ADSP firmware
+> > > >     2. Wait for QMI SLIMBUS service to be up via QRTR
+> > > >     3. Vote for power up via SLIMbus-specific QMI messages
+> > > >     4. Hope the firmware agrees and brings up the BAM
+> > > > 
+> > > > Especially for the last two, we can't implement support for those
+> > > > consumer-specific interfaces in the BAM driver. Implementing support for
+> > > > the 3 variants of the Crypto BAM would be possible, but it's honestly
+> > > > the least interesting use case of all these. It's not really clear why
+> > > > we are bothing with the crypto engine on newer SoCs at all, see e.g. [1].
+> > > > 
+> > > > [1]: https://lore.kernel.org/linux-arm-msm/20250118080604.GA721573@sol.localdomain/
+> > > > 
+> > > >> Reading back things from this piece of HW only to add it to DT to avoid
+> > > >> reading it later is a really messy solution.
+> > > > 
+> > > > In retrospect, it could have been cleaner to avoid describing the BAM as
+> > > > device node independent of the consumer. We wouldn't have this problem
+> > > > if the BAM driver would only probe when the consumer is already ready.
+> > > > 
+> > > > But I think specifying num-channels in the device tree is the cleanest
+> > > > way out of this mess. I have a second patch series ready that drops
+> > > > qcom,num-ees and validates the num-channels once it's safe reading from
+> > > > the BAM registers. That way, you just need one boot test to ensure the
+> > > > device tree description is really correct.
+> > > 
+> > > Thanks for the detailed explanation!
+> > > 
+> > > Do you think it could maybe make sense to expose a clock/power-domain
+> > > from the modem/adsp rproc and feed it to the DMUX / SLIM instances when
+> > > an appropriate ping arrives? This way we'd also defer probing the drivers
+> > > until the device is actually accessible.
+> > > 
 > > 
-> >   - include/config/  (except include/config/auto.conf)
-> >   - scripts/atomic/
-> >   - scripts/dtc/
-> >   - scripts/kconfig/
-> >   - scripts/mod/mk_elfconfig
-> >   - scripts/package/
-> >   - scripts/unifdef
-> >   - .config
+> > Maybe, but that would result in a cyclic dependency between the DMA
+> > provider and consumer. E.g.
+> > 
+> > 	bam_dmux_dma: dma-controller@ {
+> > 		#dma-cells = <1>;
+> > 		power-domains = <&bam_dmux>;
+> > 	};
+> > 
+> > 	remoteproc@ {
+> > 		/* ... */
+> > 
+> > 		bam_dmux: bam-dmux {
+> > 			dmas = <&bam_dmux_dma 4>, <&bam_dmux_dma 5>;
+> > 			dma-names = "tx", "rx";
+> > 		};
+> > 	};
+> > 
+> > fw_devlink will likely get confused by that.
 > 
-> Please revert this (the removal of .config).
+> Why? We have a property to break cycles: post-init-providers
 > 
-> I got some strange reports that our external module install broke, and
-> traced it to this change.  Our external module references the .config
-> because we have different logic for the build depending on if other, related
-> modules are present or not.
+> That doesn't work here?
 > 
-> Also, it looks like this broke DKMS for some configurations, which not only
-> impacts DKMS itself [1] but also downstream projects [2].
-> 
-> While DKMS may be updated going forward to avoid this issue, there are
-> plenty of affected version out in the wild.
-> 
-> Also, I haven't surveyed every distro, but it looks like Ubuntu still
-> packages the .config with their headers in their upcoming "Plucky" release
-> based on 6.12.  I suspect they wouldn't do that if they didn't feel it was
-> needed/useful.
-> 
-> -Jeff
-> 
-> [1]: https://github.com/dell/dkms/issues/464
-> [2]: https://github.com/linux-surface/linux-surface/issues/1654
 
-Hi Jeff,
+Thanks, I was not aware of that property. This looks quite useful for
+fixing up some of the other cyclic dependencies we have!
 
-do you know the related thread [1]?  According to the last mail, DKMS
-has fixed its issue already in December.
+Nevertheless, for this specific case, I still think we should not make
+such large breaking changes at this point. As I pointed out further
+below in my quoted email, this is a legacy hardware block that will
+likely not get any major new users in the future. We're essentially
+discussing to rework several bindings and drivers just to drop a single
+straightforward "num-channels = <N>" property. A property that we will
+need to keep support for anyway, to support users with older DTBs. This
+effort (and risk) is really better spent elsewhere.
 
-Kind regards,
-Nicolas
-
-[1]: https://lore.kernel.org/linux-kbuild/CAK7LNARqEOVOzP5vdUVF0KxQBNb9xtYs-COSXXWDMpBzGaLGow@mail.gmail.com/T/#m95f48caf46357a41c1df5e038e227a01ab89dbda
+Thanks,
+Stephan
