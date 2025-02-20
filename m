@@ -1,150 +1,150 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 062B620E316;
-	Thu, 20 Feb 2025 15:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67161CDA0B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740066273; cv=none; b=us3fysDdktP/xxwpWRPufe/9u9imSXC4cYcyUwX49nRKkT8LRuF6dBP22LmjnqdnZmOq3cpF9Yh46Ssv26MJBl+eBXXxHacPO2XMwl9vhb029nB6mHFa6QZ7CiFQfqGsbudEQnZUGaWPBT0UfDHHPyFzt90ZeOUZaYXzsllW7TE=
+	t=1740066333; cv=none; b=o5byRqSHATEjnzm06Ke6Y0qJ/4hU9KspJ/chcp1g1DPZnLSP7qioooliVMk49ugW7ehXvEDvts/P78KijqQMjsllZLssW/nJv7S6jL1ZjrUMrmG6+4fjajEeI1IKqRt9fVdVCYPLpUstIrgr+K1i4Dq36yn7qPDr/lIFgFM32sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740066273; c=relaxed/simple;
-	bh=Vs6rNY3qTbEpZYfiwoGz3htUlmZ2gN6bpbwkGZfN5Uo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b4S0cSl2L1SlgoPAuQbrg3p3k2DF4XAr8oRdmrSvi7gs1C9AEPwsIr2SrhYtt+oRzO8NbuWsHW07bi/lDaLheKQ1CvZ+gj0wt8f14Sx73uwfKA0MhUjvZqB1XfZr8eCFn6LeMFEIyZPn0YCNdXTuDVEifBXbNcczie9dA+ottpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42B5D16F3;
-	Thu, 20 Feb 2025 07:44:49 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07B793F59E;
-	Thu, 20 Feb 2025 07:44:26 -0800 (PST)
-Date: Thu, 20 Feb 2025 15:44:24 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: "Moger, Babu" <babu.moger@amd.com>
-Cc: corbet@lwn.net, reinette.chatre@intel.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	tony.luck@intel.com, peternewman@google.com, x86@kernel.org,
-	hpa@zytor.com, paulmck@kernel.org, akpm@linux-foundation.org,
-	thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com,
-	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
-	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
-	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
-	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
-	mario.limonciello@amd.com, james.morse@arm.com,
-	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
-	eranian@google.com
-Subject: Re: [PATCH v11 22/23] x86/resctrl: Introduce interface to list
- assignment states of all the groups
-Message-ID: <Z7dN2KpsQjVUb3KR@e133380.arm.com>
-References: <cover.1737577229.git.babu.moger@amd.com>
- <52c66bf98480c0ab6bb0f0762497e328fcbdeaac.1737577229.git.babu.moger@amd.com>
- <Z7XiQ+u3Pc+uvJCK@e133380.arm.com>
- <45a0a88a-b31e-447e-9d62-bc0cdedf06f7@amd.com>
+	s=arc-20240116; t=1740066333; c=relaxed/simple;
+	bh=I5AKNyz1woS7lsaTJ5RrOa6I3nEatNmzHER7C9F0AFA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ESm2RlFF4Wq4PV4pDNXPDnXyzCKsqmVEwqcxlDOmzW6LzNsJ3+Z7R/gGq6s+ceIM3vxik1jCGV84n965g1y0kkf9msjK4wROY+F5JcojihBBWpv0YNfeYw6FdU32clT2ZaX+e+FbRSaqZs59tEFhpls0LDnlxu7Os276kuxb7lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ejpRHR0p; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ejpRHR0p"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f666c94285so9436437b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740066331; x=1740671131; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=caj6pSHnNXWHcTKHiPPWfy3wKXfZWUVBt2Cq5t/KZXw=;
+        b=ejpRHR0pXnPWoXKPeqFnjIclDgbVDmjx48KDaUr62YMc1J7JazJItorZJnaPDgF0eW
+         9k/43LXfMcyf3+GQDPJ1W36oSiOctqGidcoiAq8dY6NM9MB0o0jegkij9s7loMiBWDtj
+         EzeTk9FlKX4GP6QFh+BEIE0CNIA7TqIXkmAoRa4aiiPiKpON2qDZobyVEGMgHn5oMv5g
+         NlNcYIr35sqk71siXfFG67zjJHRtwWb0tTMlTHWJHvaF8VymMzWDVJuvqVf3ILpa7hIb
+         n7mrCPUP8FTWAWgPT+ONHV08bJWN74Xt+qPV1fAfIDTnLfQyogi/FtJzyuxIKVNleJZE
+         14Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740066331; x=1740671131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=caj6pSHnNXWHcTKHiPPWfy3wKXfZWUVBt2Cq5t/KZXw=;
+        b=C090gQUSwwk1vAUaLETRvql0ghI6NF7bmJYv4VDJbDnJnE6BYFV4sGexzmDqJeed7w
+         qcRLdfh3ZjfrGDrmgUlDaXJgOzglPSQvm40Q9Yvt6+0uUzU5LhEwNlZE0uOq/pWElM5X
+         idZ/aTLgA7LC6S7vGFzd2+Gyopi+J6tTfWhFex7UdSst1KdkCGsuxZ1QPwUidXwPye23
+         uEOUQVU9xRO5X3pSl5TXOHfNjwsV57caR6giWODF1tuNIPchMx4e3OOpzXc3vAYCFObj
+         sJqTnIhnUmusncJilUUiJGetRqrT+N8qrBj2eO0f16uAWiXTqCn8r8dzwOuw5uYOAYDl
+         FUBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNclsxJfOQ0Wv00HgEgc/c7VKjXVJr2M9OwAlVnLhSYfpBAU9tXC/iXsMbB2dJGo2PBHmHdI3C8Wo/YKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHbqdVko2DLSeZuVeJdVsSnQBDmq9824Mf+5u4vQtE/xJfR7Cz
+	O9pdIf6iahgq7m6dhSbdPaWnW/bxuFdSKNLDwRZsdz9SSZQpv/cusU4YEz3Ww7gpmIGp4rKuZuI
+	Qx4bndXPcJPUxb2axAUvqDfID4nz2FIf151czNw==
+X-Gm-Gg: ASbGnctlsOX9g0sDY/gAxAvPqw+g4jqNmGTtWPgo97kZjuNikQxVJ0sHkpB3iyns+IZ
+	uq0CrnPlwYs8z1JVsMeLAlk/bcX1EZp47Po8hScNVuqujv/lP2NlKSpPnIux9LAN32n7oMkympJ
+	ZN
+X-Google-Smtp-Source: AGHT+IFG8SQEvQPyPA1X148UgsKK5bEmhiv/YocBv364w+iyBZWcNKIHT7rnzjN/l/ohIkB1RhFxo8T7boVqG1XXrxE=
+X-Received: by 2002:a05:690c:4482:b0:6fb:9822:bbd7 with SMTP id
+ 00721157ae682-6fb9822be7dmr102049387b3.15.1740066330764; Thu, 20 Feb 2025
+ 07:45:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45a0a88a-b31e-447e-9d62-bc0cdedf06f7@amd.com>
+References: <20250220-dual-dsi-v2-0-6c0038d5a2ef@linaro.org>
+ <20250220-dual-dsi-v2-1-6c0038d5a2ef@linaro.org> <tu6aaz6whzkqz4at26o2h6pvcua53squfpgfmiw3i4qshojoij@2erqc3zmxmos>
+In-Reply-To: <tu6aaz6whzkqz4at26o2h6pvcua53squfpgfmiw3i4qshojoij@2erqc3zmxmos>
+From: Jun Nie <jun.nie@linaro.org>
+Date: Thu, 20 Feb 2025 23:45:18 +0800
+X-Gm-Features: AWEUYZmYsYjKrn2CbJfu7EO98jbyUBGJnmOHIdlgcyPvmpQCuWq9GXUcgPDpBig
+Message-ID: <CABymUCNYypP9h+r1mPhxtmJsFTfXW1DzvwRLk=6p+9qmY5ofFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] drm/msm/dsi: add support VBIF_CTRL_PRIORITY to
+ v2.8.0 controller
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Krishna Manikandan <quic_mkrishn@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Jonathan Marek <jonathan@marek.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =E4=BA=8E2025=E5=B9=B42=E6=
+=9C=8820=E6=97=A5=E5=91=A8=E5=9B=9B 18:27=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Thu, Feb 20, 2025 at 06:07:52PM +0800, Jun Nie wrote:
+> > This change originates from the Qualcomm Android Linux driver. It is
+> > essential to support a dual-DSI configuration with two panels in
+> > some circumstances per testing. As the name suggests, this modification
+> > may enhance the bandwidth robustness of a bus.
+>
+> Please start by describing the problem and the result of the changes.
+> Otherwise it reads as it "may enhance or may worsen" the robustness.
 
-On Wed, Feb 19, 2025 at 03:09:51PM -0600, Moger, Babu wrote:
-> Hi Dave,
-> 
-> On 2/19/25 07:53, Dave Martin wrote:
-> > On Wed, Jan 22, 2025 at 02:20:30PM -0600, Babu Moger wrote:
-> >> Provide the interface to list the assignment states of all the resctrl
-> >> groups in mbm_cntr_assign mode.
-
-[...]
-
-> >> +static int resctrl_mbm_assign_control_show(struct kernfs_open_file *of,
-> >> +					   struct seq_file *s, void *v)
-> >> +{
-
-[...]
-
-> > Unlike the other resctrl files, it looks like the total size of this
-> > data will scale up with the number of existing monitoring groups
-> > and the lengths of the group names (in addition to the number of
-> > monitoring domains).
-> > 
-> > So, this can easily be more than a page, overflowing internal limits
-> > in the seq_file and kernfs code.
-> > 
-> > Do we need to track some state between read() calls?  This can be done
-> > by overriding the kernfs .open() and .release() methods and hanging
-> > some state data (or an rdtgroup_file pointer) on of->priv.
-> > 
-> > Also, if we allow the data to be read out in chunks, then we would
-> > either have to snapshot all the data in one go and stash the unread
-> > tail in the kernel, or we would need to move over to RCU-based
-> > enumeration or similar -- otherwise releasing rdtgroup_mutex in the
-> > middle of the enumeration in order to return data to userspace is going
-> > to be a problem...
-> 
-> Good catch.
-> 
-> I see similar buffer overflow is handled by calling seq_buf_clear()
-> (look at process_durations() or in show_user_instructions()).
-> 
-> How about handling this by calling rdt_last_cmd_clear() before printing
-> each group?
-
-Does this work?
-
-Once seq_buf_has_overflowed() returns nonzero, data has been lost, no?
-So far as I can see, show_user_instructions() just gives up on printing
-the affected line, while process_durations() tries to anticipate
-overflow and prints out the accumulated text to dmesg before clearing
-the buffer.
-
-In our case, we cannot send more data to userspace than was requested
-in the read() call, so we might have nowhere to drain the seq_buf
-contents to in order to free up space.
-
-sysfs "expects" userspace to do a big enough read() that this problem
-doesn't happen.  In practice this is OK because people usually read
-through a buffered I/O layer like stdio, and in realistic
-implementations the user-side I/O buffer is large enough to hide this
-issue.
-
-But mbm_assign_control data is dynamically generated and potentially
-much bigger than a typical sysfs file.
-
-> 
-> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> index 484d6009869f..1828f59eb723 100644
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> @@ -1026,6 +1026,7 @@ static int resctrl_mbm_assign_control_show(struct
-> kernfs_open_file *of,
->         }
-> 
->         list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
-> +               rdt_last_cmd_clear();
->                 seq_printf(s, "%s//", rdtg->kn->name);
-> 
->                 sep = false;
-> @@ -1041,6 +1042,7 @@ static int resctrl_mbm_assign_control_show(struct
-> kernfs_open_file *of,
->                 seq_putc(s, '\n');
-> 
->                 list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
-> mon.crdtgrp_list) {
-> +                       rdt_last_cmd_clear();
-
-I don't see how this helps.
-
-Surely last_cmd_status has nothing to do with s?
-
-[...]
-
-Cheers
----Dave
+OK, will re-test it with older branch. I remember it cause LCD to go
+to black without
+this patch, but not fully confident with my memory. With latest code,
+there is no
+difference to have this patch or not.
+>
+> >
+> > Co-developed-by: Jonathan Marek <jonathan@marek.ca>
+> > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> > Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> > ---
+> >  drivers/gpu/drm/msm/dsi/dsi_host.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/d=
+si/dsi_host.c
+> > index 42e100a8adca09d7b55afce0e2553e76d898744f..f59c4cd6bc8cdb31c1302f8=
+e3ff395486c0b4898 100644
+> > --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> > +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> > @@ -2238,13 +2238,23 @@ int msm_dsi_host_cmd_rx(struct mipi_dsi_host *h=
+ost,
+> >       return ret;
+> >  }
+> >
+> > +#define DSI_VBIF_CTRL                        (0x01CC - 4)
+> > +#define DSI_VBIF_CTRL_PRIORITY               0x07
+> > +
+> >  void msm_dsi_host_cmd_xfer_commit(struct mipi_dsi_host *host, u32 dma_=
+base,
+> >                                 u32 len)
+> >  {
+> >       struct msm_dsi_host *msm_host =3D to_msm_dsi_host(host);
+> > +     const struct msm_dsi_cfg_handler *cfg_hnd =3D msm_host->cfg_hnd;
+> > +     u32 reg;
+> >
+> >       dsi_write(msm_host, REG_DSI_DMA_BASE, dma_base);
+> >       dsi_write(msm_host, REG_DSI_DMA_LEN, len);
+> > +     if (cfg_hnd->minor >=3D MSM_DSI_6G_VER_MINOR_V2_8_0) {
+> > +             reg =3D dsi_read(msm_host, DSI_VBIF_CTRL);
+> > +             reg |=3D (DSI_VBIF_CTRL_PRIORITY & 0x7);
+> > +             dsi_write(msm_host, DSI_VBIF_CTRL, reg);
+> > +     }
+> >       dsi_write(msm_host, REG_DSI_TRIG_DMA, 1);
+> >
+> >       /* Make sure trigger happens */
+> >
+> > --
+> > 2.34.1
+> >
+>
+> --
+> With best wishes
+> Dmitry
