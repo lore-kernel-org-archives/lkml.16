@@ -1,105 +1,147 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD2C20485B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 18:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D8F1FAC30;
+	Thu, 20 Feb 2025 18:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740075126; cv=none; b=mLPKbJ7DrmBMfPCRmRWNMuO+EAcZbmhTbTyfRy7ZFtO1wlk0bRC7T+sHwBpflMybQzR2Z2BTIROJUJCcZb52c/VxYGDpRxVZyzO6NisSql0uDcRxFlM7fBgIhpe0JY8nMDFn77sfnrsVVoIihaHB70t8aHOKpfzNdXIKkSpe5Tk=
+	t=1740075169; cv=none; b=ttUTWhWfUieiRePl/+1oQdXsXSjXnbpflkX6qHw//e+F7HH9l7UI6E1+5+1tUXBjpouLdUaJ5D/NK29bwLNjaOGCofeLb3UP2aaCcjO3wU8JEb6hq+J6S1YA/KsGb6GwakXVXkJ9VJy034lC77UeIa20BOX9JtawawezR+aNhDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740075126; c=relaxed/simple;
-	bh=U7NEU5p+86CmS2ot4xSRm3tLGJInLZjdrsEntbaiLRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ukLVbyD2rasYqMFoLguJfHnM4BRWL6wgdQ6UMVIvmiVjW2JNbzCg+EMnZWh5tJPOjJVkPJ+ZOl/w3yTL5d5MJfEU94HcPaby3vCQLTJ6cG9qJ6W69BEirxPm13dSHjx3LiktA3vROssMGMZZZ/Ik5u0wYpnBG++eVE9Gm33jTVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gBxOHilS; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740075169; c=relaxed/simple;
+	bh=RVJ0Ui+e4wiQwjjazPtlbUqFxh8TiHfnG0fw+upHVBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YjOzCxot8W6bCl6UaqpZIuqlGIffwW2TAi8iaswnhWn74tOCn0tryAHjk2XLVrE/wpX60e+vFxP2HDhhP5Zq5UMoDGcP0BkVDLjAQILm/Hxye+VuahWQivN7NrfCcEtlERtFXraB0PiMrq+0r92Wu7K1x+wPDNbZ/rlyL+sO7/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VabyIUYV; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBxOHilS"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-220e989edb6so34463215ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:12:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VabyIUYV"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f286b5281so673262f8f.1;
+        Thu, 20 Feb 2025 10:12:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740075125; x=1740679925; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JPYGV4/Ybq5Qlp+Qgl6PHP0uBHTPtS+cFplKODIBa0c=;
-        b=gBxOHilSHraDFl9BFQwNJSKLd67RETnveFaNS20138PAxx2tYixi7JSDodM9pNOSUJ
-         rMI+hrJ8k8WOV+nc2W0DzjE+Hv9rdV1hIYUuw8gWt7WKH1Y3BIUFfyYxMU046y4apTeN
-         NDpiMNJRvr/gW9SxxYhFxSuqmaGZsjjOu91SV/Kw5tofvvsr0GI4RNiMjvMhjnQZxu6J
-         tfUCd5gIexSDEU0EwXDrv+ZJ9hcEwAi/pvWd3qDWmknOghcahhrXpg/JmYeADxiFtxUo
-         1k/BuosOD4kb+mEHSX1wg4geCeu0/TaUKhLIxVLNlf+NS4Z8LwXaStIUDY7gEZDRn2Ia
-         nvwg==
+        d=gmail.com; s=20230601; t=1740075166; x=1740679966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hf9BmegiktNtcY6HS4qZYakNRxia/v7+na1LdoL1VGI=;
+        b=VabyIUYV3sVDetbVm7sSECrrdTE8/kD4Tp77zlnSdgwp11QJ+Qs40xTCtC2TjWrdeK
+         /M+AfcrbRw8XB/mNrBjHaHB3S7TXMkGyABGt9ZOknh3MW06f3VQb6IYkqJEdxNvgOroz
+         0cmvEoC2UT1GfmU+89DMVUq5zcl0Va8k/DoqDTZD8s9sswXJAt26t0P9gTc9HsCHxqE7
+         aZ2VXaN10ccpKDCTiIqmiBD0tGOxanLhqYDoYiws4pqqmiTcZWlfXDkfO+7NwczVhuqx
+         3C+n3tIea7jh6DpVXaYAQbaWwHDkYNDbv85mrDueNBR1VzZCU/3/NuvR1uLCM4IZuZNm
+         ED0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740075125; x=1740679925;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JPYGV4/Ybq5Qlp+Qgl6PHP0uBHTPtS+cFplKODIBa0c=;
-        b=JjHOQRZSxSLKGJFsQR6t2C9CFMeE1pwPUj/11HlB77lNdS33vNDsdSXaHagxZMWKGH
-         HIznDaNQmpqwy8AC3ChCjrc0XtiTK1aGoyPi8THTek+DoTSZIFa32iZYszJ6ZjjB4lYh
-         ecCcxz5iQRnLKFm9P4+wndPd08Wm4idcmov6Ud/7DaqrZjhaBDkYUGmUILxoSI1qPczi
-         d2bDyoZCJ3WODZ3CMOf9Tu2GdyKBCUeRkBHJN3nVFy11GQakezaCHD+sL2ujTOeiJE8i
-         Wcxy5Nc4b2LCKRA1VxpHf4J7UzgncGW7SQRgbF5do6OCmpcqU0eE4zPohM0hjX7sAJ1k
-         MQPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnjcOj3Uw6D6vuTzSDCzzgstp/bvOGtaVSeAZxvEZ+pjSSoKWjPIkJA9HvT37ZHkCDO/Oy8oKVcGWmHc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFxGlEDdZDmX42ixWC95XCc2qIT+KdVfegO4xFE4eryqpG9XR8
-	obvLEugFUt6mNqzLCFKr/qt0bgEHLJj4jmd+TboiUu0ib1jtK6JMlsV487xdC3o=
-X-Gm-Gg: ASbGncu6V6i3JiIoJeOiZqhMSTFVezS0wpmR1WsBd9vfP3HN8vSEh6MjKQGv9wpxt+g
-	mCw7Us/w9kRXlygLVVE/AbemSWJ4I8+k5EFnyzzqPsbYvADmjlCn14g8cJGhmnzkF43wju8jbYN
-	8ssQtKEpg5f9Ne3WSXPfnZJE2mufUJiSYoCPwBcHN/L3i1N/tAEJdS+5+w7I15xyqEgneHw0zs6
-	Eh5d2jGumsgwEob1GS+qNo2Z9p7XQT0/VbbGZn/kNW7HInv7mQ7o60TJN8s6jixUg8AxUy0HmXH
-	w5fNxsYSesS9kgHLBKiMQroyuC8TZxwBesWLUk7KxXjVgSFmPqo/41k=
-X-Google-Smtp-Source: AGHT+IEYJgTH2xijRGZv7IRxIjgPMGI3m3DAMNwwlL4W85cg6VLecg7jKjF0QGzCafBl8PC63PSroA==
-X-Received: by 2002:a05:6a21:7011:b0:1ee:d860:61eb with SMTP id adf61e73a8af0-1eef3deaa0amr134496637.39.1740075124654;
-        Thu, 20 Feb 2025 10:12:04 -0800 (PST)
-Received: from [192.168.0.4] (71-212-39-66.tukw.qwest.net. [71.212.39.66])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb58618700sm13027051a12.36.2025.02.20.10.12.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 10:12:04 -0800 (PST)
-Message-ID: <dfb14748-c5b8-4a50-990b-d61765a6a75c@linaro.org>
-Date: Thu, 20 Feb 2025 10:12:02 -0800
+        d=1e100.net; s=20230601; t=1740075166; x=1740679966;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hf9BmegiktNtcY6HS4qZYakNRxia/v7+na1LdoL1VGI=;
+        b=mbsgs33I0dNao/h5Vbl9CCN7U1GhyCwf1hKtXpYH9tN1by9m0z/QvXhh2s9o6qK/aw
+         l6PRN8oGxEPMv2giya9UmZj09oZBnUhXs/W7peFc9jd97H6ZTDwzXZJns2uRt4m0CXXW
+         yHtaGM2x5vsJhmiwd53qEgL4Vj1LsU5a6MkZt5YJXue2rFq+hJGljsvqxoKN7lfS2Aqv
+         mGxj//qtLS1DorWRKF2cBhM/3a6Ctn0qJnfvN3UorteNs+VwRH9WzCHLm8c1IRLIMGdr
+         x9iDj2zy1JoXl1hxR9y0GyNTzOSVoQJ/R6hxpPRVXuF7ugDg1zRGmK5KJ+QY5sewVf3e
+         u96A==
+X-Forwarded-Encrypted: i=1; AJvYcCVD7bligKGJArtFDKGAvwYfUOGFXMDS+3rBkkN6quuQZ/CJKMOJdN92s3sJ+5Q0PB6hl6757L8Rw3E=@vger.kernel.org, AJvYcCXYmUGJHiive6pwP8TVA21tz559i2xjpyBTQjusM1u2S24BttrQ/L/+qdzTWSZ6cT0qFvDAYzGDMXNST95s@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQLczEARdfIeSrJ+vH0q5E0CfO71G6rVqk8f8k5UTr3iSWEo4b
+	oloCv4cqoD4fBUTvI+CabqEVXSd/j4ZutMPyozDLzpFatTzT9mP1
+X-Gm-Gg: ASbGncudxbJS1bIiLK7DTc2lL1ZscNkB96Q4QKsf/SIZPuK5D3ET7AjTXUukVcSHOrB
+	im8vC9N1nErvQUkpo8Y2QpATzBlalA9wYnhn9smz7aYw7jlf0phJ5492y/tjoOjE4pqL3KvThR+
+	4SxPGYNhQ+l3vv5chf+Ux7DDeIhOkAthtVtRoDC615RdNNumKjvrW+VoUaRTQ5hx59Lb+XjLJdI
+	DbUcTW4mdwm24tnkjl6CYW4nUbnrGkOoiYVEQr/mGoKtXaxo90IPTrEnb5QuVc65dJqvndssKfh
+	qv8SSQJIE//YNWrFHCmHQDLJpfjfEqyArKpvFFtMQmkGaDcxII+0/0yHpzo73zjQOdE=
+X-Google-Smtp-Source: AGHT+IG8SxlEpGzhrbOAaMiZSLB6w/8BQXRpKpsCxpcNHWG6kyfbSzJtzHPfDd1frA7kH4B1Z2SqFw==
+X-Received: by 2002:a5d:6dd1:0:b0:38f:4f25:14a3 with SMTP id ffacd0b85a97d-38f6e979d1amr195111f8f.30.1740075166029;
+        Thu, 20 Feb 2025 10:12:46 -0800 (PST)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258f5efdsm21016778f8f.43.2025.02.20.10.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 10:12:45 -0800 (PST)
+From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Emilio =?UTF-8?B?TMOzcGV6?= <emilio@elopez.com.ar>,
+ David Laight <david.laight.linux@gmail.com>,
+ Anastasia Belova <abelova@astralinux.ru>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
+ Maxime Ripard <mripard@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+Subject: Re: [PATCH] clk: sunxi: clean up rate counting
+Date: Thu, 20 Feb 2025 19:12:43 +0100
+Message-ID: <2385242.n0HT0TaD9V@jernej-laptop>
+In-Reply-To: <20250203112930.650813-1-abelova@astralinux.ru>
+References: <20250203112930.650813-1-abelova@astralinux.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data consistency
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
- Ivan Kokshaysky <ink@unseen.parts>, Matt Turner <mattst88@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Magnus Lindholm <linmag7@gmail.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk>
- <45155869-1490-49ab-8df1-7ad13f79c09a@linaro.org>
- <CAHk-=wj42Dks1vknzKKBbXUMCrs-iuLZHq=0z3P0AN9TrXNP+A@mail.gmail.com>
-Content-Language: en-US
-From: Richard Henderson <richard.henderson@linaro.org>
-In-Reply-To: <CAHk-=wj42Dks1vknzKKBbXUMCrs-iuLZHq=0z3P0AN9TrXNP+A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 2/20/25 09:59, Linus Torvalds wrote:
-> On Thu, 20 Feb 2025 at 09:54, Richard Henderson
-> <richard.henderson@linaro.org> wrote:
->>
->> Crucially, when emulating non-aligned, you should not strive to make it atomic.  No other
->> architecture promises atomic non-aligned stores, so why should you do that here?
-> 
-> I'm not disagreeing with the "it doesn't necessarily have to be
-> atomic", but I will point out that x86 does indeed promise atomic
-> non-aligned accesses.
+Dne ponedeljek, 3. februar 2025 ob 12:29:28 Srednjeevropski standardni =C4=
+=8Das je Anastasia Belova napisal(a):
+> If n =3D 255, the result of multiplication of n and 24000000
+> may not fit int type. Swap division and shift with multiplication.
+>=20
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>=20
+> Fixes: 6424e0aeebc4 ("clk: sunxi: rewrite sun9i_a80_get_pll4_factors()")
+> Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
 
-I should have been more expansive with that statement: I didn't mean "no unaligned 
-atomics" (e.g. lock orw), but "unaligned normal stores may be non-atomic" (e.g. movw 
-across a cacheline).
+While this should work, should we try to remove (old) sunxi clock drivers
+instead? Drivers we converted 8 years ago, except A20 GMAC and A80 PRCM clo=
+cks.
+Even if we convert them now, we need some transition time for them.
 
-My guess about the gcc patches is that it's the latter that wanted emulation here.
+Best regards,
+Jernej
+
+> ---
+>  drivers/clk/sunxi/clk-sun9i-core.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/clk/sunxi/clk-sun9i-core.c b/drivers/clk/sunxi/clk-s=
+un9i-core.c
+> index d93c7a53c6c0..639c83ed63b8 100644
+> --- a/drivers/clk/sunxi/clk-sun9i-core.c
+> +++ b/drivers/clk/sunxi/clk-sun9i-core.c
+> @@ -25,12 +25,12 @@
+> =20
+>  static void sun9i_a80_get_pll4_factors(struct factors_request *req)
+>  {
+> -	int n;
+> -	int m =3D 1;
+> -	int p =3D 1;
+> +	unsigned int n;
+> +	unsigned int m =3D 1;
+> +	unsigned int p =3D 1;
+> =20
+>  	/* Normalize value to a 6 MHz multiple (24 MHz / 4) */
+> -	n =3D DIV_ROUND_UP(req->rate, 6000000);
+> +	n =3D DIV_ROUND_UP(req->rate, 6000000ul);
+> =20
+>  	/* If n is too large switch to steps of 12 MHz */
+>  	if (n > 255) {
+> @@ -50,7 +50,11 @@ static void sun9i_a80_get_pll4_factors(struct factors_=
+request *req)
+>  	else if (n < 12)
+>  		n =3D 12;
+> =20
+> -	req->rate =3D ((24000000 * n) >> p) / (m + 1);
+> +	/* Division and shift should be done before multiplication to
+> +	 * avoid overflow. The result will be correct because '>> p' and
+> +	 * '/ (m + 1)' are both just conditional 'divide by 2'
+> +	 */
+> +	req->rate =3D ((24000000ul >> p) / (m + 1)) * n;
+>  	req->n =3D n;
+>  	req->m =3D m;
+>  	req->p =3D p;
+>=20
 
 
-r~
+
+
