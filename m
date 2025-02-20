@@ -1,67 +1,52 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF42D1D5AD4;
-	Thu, 20 Feb 2025 14:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6581D5AD4;
+	Thu, 20 Feb 2025 14:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062094; cv=none; b=V/PgfJ7GXoRnRsg3efwJSJQwqys5btERKDGHYrvm7P6xCgsQS5FT1CmOWLFXd2YNQhtA5GCgmdKmjZtt1sfzjQWPur9BuGrt33idXKq5bHN83BinM49uSb5Ki2P2I0FeS5u5Ucu3t02H8X3JDSbp22pQR8SorjgfGDt7UjvnnD8=
+	t=1740062105; cv=none; b=fHsRTbdd/gWBGlZiW3gCsRvp90fU0+JTKS0TSBXvciNWi+somUVDg6XJ8EbhNkjVVjmREeD+1/dlcioA+EfgjN4NE2oMJzxTZxa6QSbEzDSk7SRq7IngNQY7qFYIOkP1b7QdCSN2SxxCTPmc12WghrJ7GY2Yi0Bdcs50TrT5H80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062094; c=relaxed/simple;
-	bh=lE5AXf9alDZl07YL5bLXxY1kDbZritBNauw65SCYKY4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZnfkwXzjQpHDbVN+x6q8fcvKilk/q3k7At3n36fTgCAjYnt7E3VK9AfEcthNCH2gwF+R3OShXxMGUWH8qE6Cs1OO9iOZ6w3vSGKi4+DehjT0Ta3Usz9ycrJ42bqEsYwl+ulUJO3T7DK3Kk1tQolS3anFAkcgQiz+Ey2R4axRsLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pOPGWVnn; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1740062105; c=relaxed/simple;
+	bh=xxoB+UIOPvZk4BVlBN52bLxBYkRLA3Dg2MLLG17vDCw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ngz0MDM+sMIDKS4d6Bu7BhaMEucDrwXBVb6/ZBVyLexk+87KrweSsFC7IJ8nw2+eeJrtsqV9kn21TpyDjIL9ZKcRm2Di+YkbkXGMVcefGzYYn8mDqJC+aD8ipYiNr0yNKt/sfDqII1ykzlfjL/K5WAr5ccHW0Ljd6gBvZrbZtS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=IgLFjm+4; arc=none smtp.client-ip=89.58.62.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pOPGWVnn"
-X-UUID: d59e5932ef9711efaae1fd9735fae912-20250220
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PSrQTSCqMjbqIbURLRKTd4NKXbT6AEa8/dleY0GQJaQ=;
-	b=pOPGWVnnNq48hkYu4FY898PCNbCrVpZpKkJIgVMO+nkEmfRYrDDh7V/FHSVQIW2iN+I1Faiu7/9iRzNe6nPUSRSTVClE78miqt2BhK8l+VZLbAxNs0FYbfNPdfNriJUkJJxIFR4mjlOlEUS9LFlLiSO3Vg66uMEDo2dijLxWXvE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:c927acf8-5a3b-4064-8c00-fea434e67a8a,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:b09921dc-d480-4873-806f-0f365159227b,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: d59e5932ef9711efaae1fd9735fae912-20250220
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <macpaul.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2005052567; Thu, 20 Feb 2025 22:34:47 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 20 Feb 2025 22:34:46 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Thu, 20 Feb 2025 22:34:46 +0800
-From: Macpaul Lin <macpaul.lin@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, Alexandre Mergnat
-	<amergnat@baylibre.com>
-CC: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
-	Macpaul Lin <macpaul.lin@mediatek.com>, Macpaul Lin <macpaul@gmail.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<linux-usb@vger.kernel.org>, Chris-qj chen <chris-qj.chen@mediatek.com>,
-	Fabien Parent <fparent@baylibre.com>, Simon Sun <simon.sun@yunjingtech.com>
-Subject: [PATCH v4 2/2] arm64: dts: mediatek: mt8395-genio-1200-evk: add support for MUX IT5205
-Date: Thu, 20 Feb 2025 22:33:54 +0800
-Message-ID: <20250220143354.2532448-2-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250220143354.2532448-1-macpaul.lin@mediatek.com>
-References: <20250220143354.2532448-1-macpaul.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="IgLFjm+4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=default; t=1740062101;
+	bh=xxoB+UIOPvZk4BVlBN52bLxBYkRLA3Dg2MLLG17vDCw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Message-ID:Date:From:
+	 Reply-To:Subject:To:Cc:In-Reply-To:References:Resent-Date:
+	 Resent-From:Resent-To:Resent-Cc:User-Agent:Content-Type:
+	 Content-Transfer-Encoding;
+	b=IgLFjm+4B5/jg7TpCYIrAhgnHeU9KYvsGApQEOzTGIK+JJh/50NFZiosrQ8ja1nHj
+	 RglqIjevgcqDo8TNjzQEUgFLZKsJZlCi9AxQuXikFa/BUuCdZDWS7aRmP5qFZts9EB
+	 uvX64oOvBSisPg5HlVhMxD+miPHftldtwfzLD62Gf4nnuMUptuSXx1nAuHNGOICjZr
+	 wvnAQMxqGY8dfXoHkJpArWr9juJKsdRLKZRfO+YZcoZxht/5tCZlfxKo7D+Wny3rbO
+	 oQTc3LQx66we3Lksx9wzRjVa2X0sqpwy22LXbxY5kScO+8A5RoE+5MRoQBjfUCZA2v
+	 MGkS3Q1TvvPgA==
+Received: from integral2.. (unknown [182.253.126.96])
+	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id 59E8320744A7;
+	Thu, 20 Feb 2025 14:34:59 +0000 (UTC)
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
+	io-uring Mailing List <io-uring@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
+Subject: [PATCH liburing v1 3/3] Fix missing `aligned_alloc()` on some Android devices
+X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
+Date: Thu, 20 Feb 2025 21:34:22 +0700
+Message-Id: <20250220143422.3597245-4-ammarfaizi2@gnuweeb.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
+References: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,72 +54,189 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
-Add ITE IT5205 (TYPEC MUX) under I2C2 bus and configure its properties;
-also add references to it5205fn from MT6360 TYPE-C connector for TYPEC
-configuration.
+Some Android versions lack `aligned_alloc()` in `<stdlib.h>`. Compiling
+on Termux 0.118.0 yields this error:
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
-Signed-off-by: Simon Sun <simon.sun@yunjingtech.com>
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+```
+cmd-discard.c:383:11: warning: call to undeclared library function \
+'aligned_alloc' with type 'void *(unsigned long, unsigned long)'; ISO \
+C99 and later do not support implicit function declarations \
+[-Wimplicit-function-declaration]
+
+        buffer = aligned_alloc(lba_size, lba_size);
+                 ^
+```
+
+To avoid making large changes in tests, define a helper function that
+wraps `posix_memalign()` as our own `aligned_alloc()`.
+
+Just another day of working around platform quirks.
+
+Co-authored-by: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
+Signed-off-by: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
+Signed-off-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
 ---
- .../dts/mediatek/mt8395-genio-1200-evk.dts    | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ examples/helpers.c  | 10 ++++++++++
+ examples/helpers.h  |  7 +++++++
+ examples/reg-wait.c |  2 ++
+ test/helpers.c      | 10 ++++++++++
+ test/helpers.h      |  8 ++++++++
+ 5 files changed, 37 insertions(+)
 
-Changes for v2:
- - This is a new patch in the v2 patch.
-
-Changes for v3:
- - No change.
-
-Changes fo4 v4:
- - Drop it5205fn phandle for node typec-mux@48.
- - Reorder properties of typec-mux@48
- - Add "Reviewed-by:" tag. Thanks!
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
-index ca039c8e4c71..8ec5c4cf59f3 100644
---- a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
-@@ -224,6 +224,21 @@ &i2c2 {
- 	pinctrl-0 = <&i2c2_pins>;
- 	pinctrl-names = "default";
- 	status = "okay";
+diff --git a/examples/helpers.c b/examples/helpers.c
+index b70ce7c1f314..59b31ecb4aeb 100644
+--- a/examples/helpers.c
++++ b/examples/helpers.c
+@@ -51,12 +51,22 @@ int setup_listening_socket(int port, int ipv6)
+ 	if (ret < 0) {
+ 		perror("bind()");
+ 		return -1;
+ 	}
+ 
+ 	if (listen(fd, 1024) < 0) {
+ 		perror("listen()");
+ 		return -1;
+ 	}
+ 
+ 	return fd;
+ }
 +
-+	typec-mux@48 {
-+		compatible = "ite,it5205";
-+		reg = <0x48>;
-+		vcc-supply = <&mt6359_vibr_ldo_reg>;
-+		mode-switch;
-+		orientation-switch;
-+		status = "okay";
++void *aligned_alloc(size_t alignment, size_t size)
++{
++	void *ret;
 +
-+		port {
-+			it5205_sbu_ep: endpoint {
-+				remote-endpoint = <&mt6360_ssusb_sbu_ep>;
-+			};
-+		};
-+	};
++	if (posix_memalign(&ret, alignment, size))
++		return NULL;
++
++	return ret;
++}
+diff --git a/examples/helpers.h b/examples/helpers.h
+index 9b1cf34f9b0d..d73ee4a5bc1a 100644
+--- a/examples/helpers.h
++++ b/examples/helpers.h
+@@ -1,7 +1,14 @@
+ /* SPDX-License-Identifier: MIT */
+ #ifndef LIBURING_EX_HELPERS_H
+ #define LIBURING_EX_HELPERS_H
+ 
+ int setup_listening_socket(int port, int ipv6);
+ 
++/*
++ * Some Android versions lack aligned_alloc in stdlib.h.
++ * To avoid making large changes in tests, define a helper
++ * function that wraps posix_memalign as our own aligned_alloc.
++ */
++void *aligned_alloc(size_t alignment, size_t size);
++
+ #endif
+diff --git a/examples/reg-wait.c b/examples/reg-wait.c
+index 0e119aaf4f03..ff61b8d10387 100644
+--- a/examples/reg-wait.c
++++ b/examples/reg-wait.c
+@@ -4,24 +4,26 @@
+  *
+  * (C) 2024 Jens Axboe <axboe@kernel.dk>
+  */
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <assert.h>
+ #include <sys/time.h>
+ #include <liburing.h>
+ 
++#include "helpers.h"
++
+ static unsigned long long mtime_since(const struct timeval *s,
+ 				      const struct timeval *e)
+ {
+ 	long long sec, usec;
+ 
+ 	sec = e->tv_sec - s->tv_sec;
+ 	usec = (e->tv_usec - s->tv_usec);
+ 	if (sec > 0 && usec < 0) {
+ 		sec--;
+ 		usec += 1000000;
+ 	}
+ 
+diff --git a/test/helpers.c b/test/helpers.c
+index e84aaa7aee15..0718691174de 100644
+--- a/test/helpers.c
++++ b/test/helpers.c
+@@ -354,12 +354,22 @@ unsigned long long utime_since(const struct timeval *s, const struct timeval *e)
+ 
+ 	sec *= 1000000;
+ 	return sec + usec;
+ }
+ 
+ unsigned long long utime_since_now(struct timeval *tv)
+ {
+ 	struct timeval end;
+ 
+ 	gettimeofday(&end, NULL);
+ 	return utime_since(tv, &end);
+ }
++
++void *aligned_alloc(size_t alignment, size_t size)
++{
++	void *ret;
++
++	if (posix_memalign(&ret, alignment, size))
++		return NULL;
++
++	return ret;
++}
+diff --git a/test/helpers.h b/test/helpers.h
+index 9e1cdf5ec05c..d0294eba63e4 100644
+--- a/test/helpers.h
++++ b/test/helpers.h
+@@ -4,36 +4,44 @@
+  */
+ #ifndef LIBURING_HELPERS_H
+ #define LIBURING_HELPERS_H
+ 
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+ 
+ #include "liburing.h"
+ #include "../src/setup.h"
+ #include <arpa/inet.h>
+ #include <sys/time.h>
++#include <stdlib.h>
+ 
+ enum t_setup_ret {
+ 	T_SETUP_OK	= 0,
+ 	T_SETUP_SKIP,
  };
  
- &i2c6 {
-@@ -368,6 +383,13 @@ typec_con_ss: endpoint {
- 							remote-endpoint = <&mtu3_ss0_role_sw>;
- 						};
- 					};
+ enum t_test_result {
+ 	T_EXIT_PASS   = 0,
+ 	T_EXIT_FAIL   = 1,
+ 	T_EXIT_SKIP   = 77,
+ };
+ 
++/*
++ * Some Android versions lack aligned_alloc in stdlib.h.
++ * To avoid making large changes in tests, define a helper
++ * function that wraps posix_memalign as our own aligned_alloc.
++ */
++void *aligned_alloc(size_t alignment, size_t size);
 +
-+					port@2 {
-+						reg = <2>;
-+						mt6360_ssusb_sbu_ep: endpoint {
-+							remote-endpoint = <&it5205_sbu_ep>;
-+						};
-+					};
- 				};
- 			};
- 		};
+ /*
+  * Helper for binding socket to an ephemeral port.
+  * The port number to be bound is returned in @addr->sin_port.
+  */
+ int t_bind_ephemeral_port(int fd, struct sockaddr_in *addr);
+ 
+ 
+ /*
+  * Helper for allocating memory in tests.
+  */
+ void *t_malloc(size_t size);
+ 
 -- 
-2.45.2
+Ammar Faizi
 
