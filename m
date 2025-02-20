@@ -1,108 +1,127 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E07C212FB3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 17:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264D920485D
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 17:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740071703; cv=none; b=ua4YffTrbO63+1wZ0eKg9tG+3Eo80rpobIXCVQgyBaK+hSHdh2/lu73CADG5gsPwgVOuMRpWM2Lz2Y0pgcOK/kXPpH8IR1lUC6XsKxDf28gMPzu5iG0EfisCvFgDD1IKDd4JGJnpwj9X4S5pvmrvyB0uEfLhI4r4C3nSsfvoFkE=
+	t=1740071811; cv=none; b=DAPu+EQ3lSB9lo/OTEFsWjbDdM2BUZXKj9vv4A5Fy7sCFlP56UHp8YFh4LEl7Vl25ZBeYplYkCqTE1B5vfffrqxc4OoqqOfttHjcgiqMKgjeniKuv9m4tfk9JmHgukExhUqSHVNZi5UcgYwWcFOu6MlTpCdcamiDujP3ilkmd80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740071703; c=relaxed/simple;
-	bh=QDzvTG6s8X3v7JBFs6BYnTXCw/eUqyjWci0yVfOV4Vk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LwtwSuzi8395aolrk/IkeaVl94gsefV9JOSS99aQI3yjDsUNcYjGAngmmWSKVc/gC0DA5NVKXTEmQjASZ3p/Mzcj2DzJvUrb4FVBBFI+DoyiqWSyM74B2pUM673kJKcT0j1WP6hcZKSNW5v8iGo8p0B2cfSIVFXJazO935FHNC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=MLGiFGfv; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1740071811; c=relaxed/simple;
+	bh=244XeKEKX+5A8ehxHdeeLmwJwhJA1rgjh3BsIfR/8tM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mVn80J7Z0QHDrtc6eGiwZjxK4DMKNfhxza9TOHTj9vCLM52qnYtCr7j9DtmVqIDfS17Xng19vFy4EuA9bxqbEzYhot4TLyJKLg+8/4R9G0dm++w8NuvPH89wPo8xwJTjvFMF/0mqJCuvxjWDllRpreSdAR+j0cwY0NuQpDzaj78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0dHwAlgy; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="MLGiFGfv"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6fb95249855so10289747b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:15:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0dHwAlgy"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5fcd509468eso639209eaf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:16:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1740071700; x=1740676500; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dwq4WmBNfvZIFl95mQweHpQSFemw3YwiC0sTz3/2Y5I=;
-        b=MLGiFGfvUOXisQEdl5IaKupUBH92wcfmswLy55IghtEIqtMohZbFDN4NXNhG3oj14t
-         DEvqBvieVxklJz2OlsFGl/zf9gIMpBQumfaO9JgiSUBVj+zETLx8vOV//424M6jdft9x
-         VAu17OgfzIJYNwYrkUfFwqu45ap4YxO6GqXTgRHzzIqawGAoCXqOEYHJhGlxX656dndi
-         Mo+0aYmp/hth53dsLn991+rbHWR5Vd1UnOupARV3XZJLTxYmIfEd3zifNF278NuehEIg
-         R2I3tRSR1IARK48KMWOHVttX+ISGwDz+9pcsKv4EwOjvxYYmJqaDw84bvuwa9yCYwpRe
-         x41g==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740071808; x=1740676608; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QcApaWVKSxQSIvLEEHhnSoFMNHumzt0nl4dOj28dnl0=;
+        b=0dHwAlgykdXsqX1wYLYwXt2Ts6SA+KR2AVFl1WMrJgrYcqwb03g2FGq+gIlg79FlGl
+         HxGhNcYVONWq8D+2KmxIXUuurbEKtF5vSXt6rNUzHDenwAPnne5yVzPmYKFhRUestJUt
+         lnTuxe3XS4a+qI4UZdD/MqPZ/iSKemhkEga8k3sBjRsqEnrXSginVeTCQyBWYKjIrR1w
+         9m01GH1SD5LP5gObtGkv2JLIRP8g7Rttsrfda6eFuGk8j720J9T5rKunXb0SrEsRTrB5
+         PrpiTOkYk14eJuJrhMuJlOrg/UI8dDwO3e6bepwWbwqQZ92UqXDPipJ2wzSQTSeT1onq
+         5YJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740071700; x=1740676500;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Dwq4WmBNfvZIFl95mQweHpQSFemw3YwiC0sTz3/2Y5I=;
-        b=YFD1x+VMhRkENIaYKXLsha9Q1NuKgAyiIu+CJhfwGm9NIpOv8PA5aD3wA4Qr+dqfqw
-         WDMub1KXzLyuXfmFAFYaPW6jXMWO3LJjJ8KEStzNvlbDnOkVOd6QK9urUZOUHJFVWs+5
-         /A1196JRuSy1yzJvFkbBvJN612Dh24Ur7HUB+XdXK0IMK5cxGmU5u47k289RyaFqKuLi
-         /GYqJitXIwBShTQz9zQ5qLIeiVIsBvUVj5V/67h78kzBHS+G5F+iHMbZpt1fpIa1sNZM
-         w/zesJR1d/9D6zVRX8CYfum9HmqoN657Pes0yhOdjvEmTho1OenxbsCatJvk3atiEmnY
-         JvDg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3z2e2fRozv5y9hEXeu417xTkeZ/wnBJBgSnhNpHvhQtsLYWASgwPKH/cl/8ZxcjwrOu0nQZkGyifI4+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1ez5hbUOcUAf2gjPNWg7WzUVAjc0WUCjcT7OxoIQVeyBCaVfR
-	o/mYNV6YPavAg8CAI3eesxF5T0e+NOEpe+X5oq+nKMNlqnkHgoyYBbKQFzsQbU4D8Y+zXGbxIIM
-	iKDfmIjGgB5miPsUO/uvXsOdt6Qo6orOw8tpEV26ngVCrwMPM
-X-Gm-Gg: ASbGncvHjPrOu5F3MfbzCpwjSbQFg1RwCN4/p9i0yI4+zfEZaHZBUAumJY31chNXLkr
-	AVYl6KYnG3J62wnRLPu7GUiMoCaNElhYOXE/E31SOrJ4wKxx9fMkl1h2OQxrmcP0sq8HwhDbXgY
-	dyUeXKwVoFDHHaUmod1wW4hgp2epyY
-X-Google-Smtp-Source: AGHT+IFO49Zspuw3Y4wLu3ybRNvKs4qpn85CyMjYcPYJhNXmmry9pN/CTOklRPcKwt06H80cWgbXBccGMGOIS9WbEwE=
-X-Received: by 2002:a05:690c:480a:b0:6f7:ae31:fdf with SMTP id
- 00721157ae682-6fb58293a79mr195681887b3.12.1740071699101; Thu, 20 Feb 2025
- 09:14:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740071808; x=1740676608;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QcApaWVKSxQSIvLEEHhnSoFMNHumzt0nl4dOj28dnl0=;
+        b=bpBqcc6qfqHWZ0yhVMdq5w64lpNUXVD5C+Bd6Dezy9zXYoN63dS1qZw9zWiiJl3Zkj
+         6BpDFcWjjKoxM3Gbe8X3oCU0ZFSll6qpey48/9UhXNxRUiIOnkYhLMsY3V5le8NBicRk
+         neItK6iSS0lzCYs8FL98RXDAKVqqIlLvRD4AY1Q4PxDFm5/BrdRYYGrj9aVSrfEtW8O+
+         ibKWnp/XJokPyFJkui5PV/w/0C5GE9hp7UTNycTQLTngDVS68SqQ2G5H8UuSKZefAIa8
+         I1Z9HQ0vmqmHuMiHnVdgogCiSJaDg2D8AO1VtsGIahphfW3AUg13NOs8aF0DEDbBrSM1
+         urRw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ZzDue6wendTCN1kEVvY3cGYEnhW9XOm5E1ayG3F/mL9jBdQscAlG/XHprJTw87nBoZZgwSxCGe4e3zI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ2kJ/7wl7N8Ni23CKwpz7H5wMEMbmc3RI0Oxg1ZwbLwn5lAeE
+	+w1HGxFaMj1HhYq3lqZFIBzqVNnLpWH28mT1tQ3/G9D5piD/Y7f8uyUseeBdLvc=
+X-Gm-Gg: ASbGncuHEKPVufDrlkkpLIMOruCqRek1/MrtA2o00rmhZJbhAHFpRdkR4iDCYM+QAnR
+	G/uPFnzhhOTUns2pIR3FT7r2n2lgu4IFUb50UzjJso/GNm/MGhaZBUp2V3G+84iIJb8hebr/owG
+	zSLac0QCsGvvBaPuhgZA/Ceah5wIezpK/K7fYjUZfkn2C9mVwS35ieZbZqAcPBbxONk/DHxge+6
+	pBxnLWCVKVnaxSRJ6jTXa1CC0b3wXw+3obOcvUojv5euz1O56Zdn4kVtEYbLFvm7H9wKH9kewpR
+	aHmey8imijGhPPHLam31TGap4WCbc1NA4/LrAXBbW034gUSAGcn0
+X-Google-Smtp-Source: AGHT+IFQ4fpht1GK2L64Lff/K3FzPWt1QsXeXeofzfatOKhBNQXj463x1jUtS3u3WnZ5Fb1+N2LaOQ==
+X-Received: by 2002:a05:6808:3996:b0:3f4:205c:d9aa with SMTP id 5614622812f47-3f424701c1dmr163494b6e.21.1740071808115;
+        Thu, 20 Feb 2025 09:16:48 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f3da962049sm5144033b6e.21.2025.02.20.09.16.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 09:16:46 -0800 (PST)
+Message-ID: <37dc5907-b04f-4879-8271-68e36a6a2924@baylibre.com>
+Date: Thu, 20 Feb 2025 11:16:44 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220140636.146506-1-demonsingur@gmail.com>
-In-Reply-To: <20250220140636.146506-1-demonsingur@gmail.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Thu, 20 Feb 2025 17:14:40 +0000
-X-Gm-Features: AWEUYZkEoEHAzoYp6ApjAyCcr86g2Xt6MXZfxRvrXit0l0TR_2CU3wyUn3r-_Ks
-Message-ID: <CAPY8ntBNtz__=otVz_7b4cWBiHCoimBwij0EUUad8EXvTJ+8hQ@mail.gmail.com>
-Subject: Re: [PATCH] media: i2c: imx219: remove context around case
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/15] bus: ts-nbus: use bitmap_get_value8()
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Simon Horman <horms@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+ <20250210-gpio-set-array-helper-v3-5-d6a673674da8@baylibre.com>
+ <20250220101742.GR1615191@kernel.org>
+ <CAHp75Vch7QKyT8Fbya3u=YrPR8z-2-mbWXjHyOwZ-fqcBjjm0A@mail.gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <CAHp75Vch7QKyT8Fbya3u=YrPR8z-2-mbWXjHyOwZ-fqcBjjm0A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Cosmin
+On 2/20/25 6:06 AM, Andy Shevchenko wrote:
+> On Thu, Feb 20, 2025 at 12:17 PM Simon Horman <horms@kernel.org> wrote:
+>> On Mon, Feb 10, 2025 at 04:33:31PM -0600, David Lechner wrote:
+> 
+> ...
+> 
+>> But when compiling with GCC 14.2.0 I see warnings that values
+>> is used uninitialised - bitmap_set_value8() appears to rely on
+>> it being so.
+> 
+>> In file included from drivers/bus/ts-nbus.c:13:
+>> In function ‘bitmap_write’,
+>>     inlined from ‘ts_nbus_reset_bus’ at drivers/bus/ts-nbus.c:111:2:
+>> ./include/linux/bitmap.h:818:12: error: ‘values’ is used uninitialized [-Werror=uninitialized]
+>>   818 |         map[index] &= (fit ? (~(mask << offset)) : ~BITMAP_FIRST_WORD_MASK(start));
+>>       |         ~~~^~~~~~~
+> 
+> Heh, the compiler is dumb. Even if it's not initialised we do not care.
+> 
+> ...
+> 
+> Wondering if the bitmap_write() will work better...
+> 
 
-Thanks for the patch.
+It is already using that:
 
-On Thu, 20 Feb 2025 at 14:06, Cosmin Tanislav <demonsingur@gmail.com> wrote:
->
-> There are no longer variable declarations here, the context is useless.
->
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-> ---
->  drivers/media/i2c/imx219.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index f662c9d755114..fcd98ee54768e 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -947,10 +947,9 @@ static int imx219_get_selection(struct v4l2_subdev *sd,
->                                 struct v4l2_subdev_selection *sel)
->  {
->         switch (sel->target) {
-> -       case V4L2_SEL_TGT_CROP: {
-> +       case V4L2_SEL_TGT_CROP:
->                 sel->r = *v4l2_subdev_state_get_crop(state, 0);
->                 return 0;
-> -       }
->
->         case V4L2_SEL_TGT_NATIVE_SIZE:
->                 sel->r.top = 0;
-> --
-> 2.48.1
->
+#define bitmap_set_value8(map, value, start)		\
+	bitmap_write(map, value, start, BITS_PER_BYTE)
