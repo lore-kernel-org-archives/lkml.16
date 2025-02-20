@@ -1,88 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721701D5CDE
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0F71FDE3B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065431; cv=none; b=G+7PpYyou0vF65ijztKBjV0w8AvtuA1GTEYN1w45c0SEq+XlTvAD3ziSiEIj+++obHTrmR0wsv8Zv5gF8hLtjkK3cfuu60QHGIfuly0y4SSXfgovvxAYXG49dNcASEQld9qRZe2bH6f0sabRSOgmP/sbeLvV6sB3tyoUfNAIz04=
+	t=1740065436; cv=none; b=R/zh5842r261qHOncuWp3wUoht8ksJ0w92KMqzmj4wlXrDwY7zu15rVkAfhETr0/K8Kwhem7HCBZpz8H/IdYL8XDb/DFJgXWOydF+hpi+A1GY9NEJYC932pEGuelr3TfNKL0OI7sbT5IJoEea0X/et1N3aZpefM90mGRnB2Rrw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065431; c=relaxed/simple;
-	bh=/aCOLlQa56ogQjSEhr6EEGpJHe2bTEFvNX+Zf99/rvg=;
+	s=arc-20240116; t=1740065436; c=relaxed/simple;
+	bh=qm9WvDuYycYiuUHaVWaVaDQf7WgjRQcqpsklGSqFdck=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cmCBUXsosM6Y0jw5q7fcfEypLuytRW9z6J56G9jlmoj0O+65LFfUxD78+cTZudCJwXP0X3Wbm3LraESMi5C2bku03yLhhyLTXzyOawinoJL/Zurj0H0D6I1arliS44NB8AFA50KeD2eGUaRUt3WQfeV4Y9ebtMNOrNjWb/BuoW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aV5RvMYA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aV5RvMYA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740065428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=eKTaHaEvddQzU5722WOjI+3oiQgOlFUwv2UlcnuFPYs=;
-	b=aV5RvMYAjcUxNoqFCKgz2ihOaLRGCGnq7oJC2nSpzl9QPT7VkAsYIFW7ihKV0cI3pAvxd6
-	i3WhxT8c6iA0YF25/moe83kAiAPMvYqZu//ZAOQHh0MC7F7tzK8TkPekC3cN8Td0VHGyYn
-	MsDcpRkG7cgtBCpIU0oRn5l8zdWUjlc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-332-jpIZdr9kN4SGGPZKwPk0Lw-1; Thu, 20 Feb 2025 10:30:27 -0500
-X-MC-Unique: jpIZdr9kN4SGGPZKwPk0Lw-1
-X-Mimecast-MFC-AGG-ID: jpIZdr9kN4SGGPZKwPk0Lw_1740065426
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38f37b4a72fso1118309f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:30:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740065426; x=1740670226;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eKTaHaEvddQzU5722WOjI+3oiQgOlFUwv2UlcnuFPYs=;
-        b=U004nemrmQmJVJNXCr5kl8ArNj6q0yc4nE+i/fmq8Q2c+QZEycT9ixernzNsGwe/C8
-         1XQvZprfAPdWuaC6gnxVZhEDwvpj6xhvWd76YUBwcseM/Puc49zdBC8DtjKOByOGxRId
-         ZJwAYXbxEIjOM4b6X+QkTz3GuqXlQhFC3ulj/7EcbfePoCDG3t5O/xG3hQ+mKrjl/W3x
-         u2xcQ7eNNffQfwMc7sT7LBnGKESUNFxkvWKzndNCcGX4DBSRfV9BV9GB7Iq0xqKr0kU4
-         8F4vDmK29JrcDjKTLoNsASvTS/InPkGfTuXi+CNoKH46RJ5g01DWRaj/M9JBBs8Mppyu
-         1tOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsFynDiTP8RXh8PLA82OAs/QDrYWlD009YXtV6WnSjB8DxfktrGVMKwGH7iSPFqfeZKwFHDkporIHLiVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsBp1t8wIDWUJqRve6f8oyy1W/R5OqOqzvCOn6NhYVUnqoJUEf
-	RCugGYR5izHpc8Zv6t4Psze8Am3sxmmQd3k1CCSHPlgnynrYLTwL5F1ni2FAnt4TAZ8uzoDIf8s
-	bRCdhtYFdbTvNLy2lHM6fUVxCIjtr8yp7iqyZ7FDbu/0lpcbUhZILMMZ6nNBTf2hzRsNpqkLp
-X-Gm-Gg: ASbGncsDBvp6PXLqUighebGKtmEgRqjmGMvCbLNIuYwTHLgI9tM/CBvB5Pr0gaURDrO
-	keGeeyWdpoy6Xd0+wdv2Z4XDMf49+RLL6l5sUBdrGuNY4UQaGo/un+NY0Y+WdW1CX5UFKnV5lkX
-	aS9LemtbyFpVQl6MYTxymmlgCtXBdXNt+uWPJFPSU6WbusNbzuPHvpEMy2gnDCgVFfBlUuesUxc
-	kAvf9OFwNoTiA6MBdvwFNEFlyWCa5DKkOgtChSGB+yuFgca64pE/Z26ILnLUqHRrbqySdBEK+Cm
-	+Je68fP/1F4z6uHj5cqHf8I43j1Tpis=
-X-Received: by 2002:a05:6000:4712:b0:38f:32d5:3a92 with SMTP id ffacd0b85a97d-38f614b827bmr3184414f8f.12.1740065425435;
-        Thu, 20 Feb 2025 07:30:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEMOK8qLm4hhqAb33GHsQI0q1jZIRok0DsJ4GBWPKskL8lGrJaQSLX5IEEJZeKsfMRaXgbN3Q==
-X-Received: by 2002:a05:6000:4712:b0:38f:32d5:3a92 with SMTP id ffacd0b85a97d-38f614b827bmr3184376f8f.12.1740065424988;
-        Thu, 20 Feb 2025 07:30:24 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f561bee3esm6316858f8f.21.2025.02.20.07.30.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 07:30:24 -0800 (PST)
-Message-ID: <ebc70e9e9ad4a7055286d0db93085536ed070a6f.camel@redhat.com>
-Subject: Re: [PATCH v8 1/2] sched: Move task_mm_cid_work to mm work_struct
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- "Paul E. McKenney"	 <paulmck@kernel.org>, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, Shuah Khan <shuah@kernel.org>
-Date: Thu, 20 Feb 2025 16:30:22 +0100
-In-Reply-To: <c9026605-da1b-4631-b0dd-68ae0700ec87@efficios.com>
-References: <20250220102639.141314-1-gmonaco@redhat.com>
-	 <20250220102639.141314-2-gmonaco@redhat.com>
-	 <c9026605-da1b-4631-b0dd-68ae0700ec87@efficios.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
+	 Content-Type:MIME-Version; b=q/9PHyVG1B7rtcf5rwdANDSMD4INrJ9hSYiPtQxb8ZEqg9jdZXFVTe/ZclbDN71rwU55NLVjm/Zng/SE9z3N8T/WZi9pd45579B11/IkSdq1CTa0xMRm9jSWfIO383Ws2Jz1s2XRlByPf0lRSALf9jbxBz8vrw4D5G2NC4wOtq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tl8Qv-000000002GQ-09SX;
+	Thu, 20 Feb 2025 10:25:49 -0500
+Message-ID: <2d1168630e5c25d0cd28f0de3104ada9ceda168f.camel@surriel.com>
+Subject: Re: [PATCH v11 09/12] x86/mm: enable broadcast TLB invalidation for
+ multi-threaded processes
+From: Rik van Riel <riel@surriel.com>
+To: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org, 
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, 	thomas.lendacky@amd.com, kernel-team@meta.com,
+ linux-mm@kvack.org, 	akpm@linux-foundation.org, jackmanb@google.com,
+ jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
+ Shukla	 <Manali.Shukla@amd.com>
+Date: Thu, 20 Feb 2025 10:25:48 -0500
+In-Reply-To: <b067a9fc-ff5f-4baa-a1ff-3fa749ae4d44@intel.com>
+References: <20250213161423.449435-1-riel@surriel.com>
+	 <20250213161423.449435-10-riel@surriel.com>
+	 <b067a9fc-ff5f-4baa-a1ff-3fa749ae4d44@intel.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
@@ -92,137 +69,129 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Sender: riel@surriel.com
 
-
-
-On Thu, 2025-02-20 at 09:42 -0500, Mathieu Desnoyers wrote:
-> On 2025-02-20 05:26, Gabriele Monaco wrote:
-> > Currently, the task_mm_cid_work function is called in a task work
-> > triggered by a scheduler tick to frequently compact the mm_cids of
-> > each
-> > process. This can delay the execution of the corresponding thread
-> > for
-> > the entire duration of the function, negatively affecting the
-> > response
-> > in case of real time tasks. In practice, we observe
-> > task_mm_cid_work
-> > increasing the latency of 30-35us on a 128 cores system, this order
-> > of
-> > magnitude is meaningful under PREEMPT_RT.
-> >=20
-> > Run the task_mm_cid_work in a new work_struct connected to the
-> > mm_struct rather than in the task context before returning to
-> > userspace.
-> >=20
-> > This work_struct is initialised with the mm and disabled before
-> > freeing
-> > it. The queuing of the work happens while returning to userspace in
-> > __rseq_handle_notify_resume, maintaining the checks to avoid
-> > running
-> > more frequently than MM_CID_SCAN_DELAY.
-> > To make sure this happens predictably also on long running tasks,
-> > we
-> > trigger a call to __rseq_handle_notify_resume also from the
-> > scheduler
-> > tick (which in turn will also schedule the work item).
-> >=20
-> > The main advantage of this change is that the function can be
-> > offloaded
-> > to a different CPU and even preempted by RT tasks.
-> >=20
-> > Moreover, this new behaviour is more predictable with periodic
-> > tasks
-> > with short runtime, which may rarely run during a scheduler tick.
-> > Now, the work is always scheduled when the task returns to
-> > userspace.
-> >=20
-> > The work is disabled during mmdrop, since the function cannot sleep
-> > in
-> > all kernel configurations, we cannot wait for possibly running work
-> > items to terminate. We make sure the mm is valid in case the task
-> > is
-> > terminating by reserving it with mmgrab/mmdrop, returning
-> > prematurely if
-> > we are really the last user while the work gets to run.
-> > This situation is unlikely since we don't schedule the work for
-> > exiting
-> > tasks, but we cannot rule it out.
-> >=20
-> > Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced
-> > by mm_cid")
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> > ---
-> [...]
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 9aecd914ac691..363e51dd25175 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -5663,7 +5663,7 @@ void sched_tick(void)
-> > =C2=A0=C2=A0		resched_latency =3D cpu_resched_latency(rq);
-> > =C2=A0=C2=A0	calc_global_load_tick(rq);
-> > =C2=A0=C2=A0	sched_core_tick(rq);
-> > -	task_tick_mm_cid(rq, donor);
-> > +	rseq_preempt(donor);
-> > =C2=A0=C2=A0	scx_tick(rq);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	rq_unlock(rq, &rf);
+On Fri, 2025-02-14 at 11:53 -0800, Dave Hansen wrote:
+> On 2/13/25 08:14, Rik van Riel wrote:
 >=20
-> There is one tiny important detail worth discussing here: I wonder if
-> executing a __rseq_handle_notify_resume() on return to userspace on
-> every scheduler tick will cause noticeable performance degradation ?
 >=20
-> I think we can mitigate the impact if we can quickly compute the
-> amount
-> of contiguous unpreempted runtime since last preemption, then we
-> could
-> use this as a way to only issue rseq_preempt() when there has been a
-> minimum amount of contiguous unpreempted execution. Otherwise the
-> rseq_preempt() already issued by preemption is enough.
+
+> > +#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
 >=20
-> I'm not entirely sure how to compute this "unpreempted contiguous
-> runtime" value within sched_tick() though, any ideas ?
+> How cleanly could we throw this hunk in a new file? I always dislike
+> big
+> #ifdefs like this. They seem like magnets for causing weird compile
+> problems.
 
-I was a bit concerned but, at least from the latency perspective, I
-didn't see any noticeable difference. This may also depend on the
-system under test, though.
+It looks like if we compile the X86_FEATURE_INVLPGB
+out through arch/x86/include/asm/disabled-features.h,
+the compiler can be smart enough to elide the no
+longer necessary code ... but only if we have these
+functions in the same compilation unit as their
+callers.
 
-We may not need to do that, what we are doing here is improperly
-calling rseq_preempt. What if we call an rseq_tick which sets a
-different bit in rseq_event_mask and take that into consideration while
-running __rseq_handle_notify_resume?
+That means we should be able to get rid of the ifdef,=C2=A0
+if we keep these functions in arch/x86/mm/tlb.c
 
-We could follow the periodicity of the mm_cid compaction and, if the
-rseq event is a tick, only continue if it is time to compact (and we
-can return this value from task_queue_mm_cid to avoid checking twice).
-We would be off by one period (commit the rseq happens before we
-schedule the next compaction), but it should be acceptable:
+>=20
+> > +/*
+> > + * Logic for broadcast TLB invalidation.
+> > + */
+> > +static DEFINE_RAW_SPINLOCK(global_asid_lock);
+>=20
+> The global lock definitely needs some discussion in the changelog.
+>=20
+> > +static u16 last_global_asid =3D MAX_ASID_AVAILABLE;
+> > +static DECLARE_BITMAP(global_asid_used, MAX_ASID_AVAILABLE) =3D { 0
+> > };
+> > +static DECLARE_BITMAP(global_asid_freed, MAX_ASID_AVAILABLE) =3D { 0
+> > };
+>=20
+> Isn't the initialization to all 0's superfluous for a global
+> variable?
+>=20
+I'll remove that, and will add documentation for
+the spinlock.
 
-    __rseq_handle_notify_resume()
-    {
-        should_queue =3D task_queue_mm_cid();
-        if (!should_queue && test_bit(RSEQ_EVENT_TICK, &t-
->rseq_event_mask))
-            return;
-        /* go on with __rseq_handle_notify_resume */
-    }
 
-Does it sound like an acceptable solution?
+> > +static int global_asid_available =3D MAX_ASID_AVAILABLE -
+> > TLB_NR_DYN_ASIDS - 1;
+> > +
+> > +static void reset_global_asid_space(void)
+> > +{
+> > +	lockdep_assert_held(&global_asid_lock);
+> > +
+> > +	/*
+> > +	 * A global TLB flush guarantees that any stale entries
+> > from
+> > +	 * previously freed global ASIDs get flushed from the TLB
+> > +	 * everywhere, making these global ASIDs safe to reuse.
+> > +	 */
+> > +	invlpgb_flush_all_nonglobals();
+>=20
+> Ugh, my suggestion to use the term "global ASID" really doesn't work
+> here, does it?
+>=20
+> Also, isn't a invlpgb_flush_all_nonglobals() _relatively_ slow? It
+> has
+> to go out and talk over the fabric to every CPU, right? This is also
+> holding a global lock.
+>=20
+> That's seems worrisome.
 
-Another doubt about this case, here we are worrying about this
-hypothetical long-running task, I'm assuming this can happen only for:
-1. isolated cpus with nohz_full and 1 task (the approach wouldn't work)
-  or
-2. tasks with RT priority mostly starving the cpu
+This only happens on ASID rollover, when we have
+reached the end of global ASID space, and are
+about to restart the search from the beginning.
 
-In 1. I'm not sure the user would really need rseq in the first place,
-in 2., assuming nothing like stalld/sched rt throttling is in place, we
-will probably also never run the kworker doing mm_cid compaction (I'm
-using the system_wq), for this reason it's probably wiser to use the
-system_unbound_wq, which as far as I could understand is the only one
-that would allow the work to run on any other CPU.
+We do not do a flush at every allocation, but
+only once every few thousand global ASID allocations.
 
-I might be missing something trivial here, what do you think though?
+>=20
+> > +static bool needs_global_asid_reload(struct mm_struct *next, u16
+> > prev_asid)
+> > +{
+> > +	u16 global_asid =3D mm_global_asid(next);
+> > +
+> > +	/* Process is transitioning to a global ASID */
+> > +	if (global_asid && prev_asid !=3D global_asid)
+> > +		return true;
+> > +
+> > +	/* Transition from global->local ASID does not currently
+> > happen. */
+> > +	if (!global_asid && is_global_asid(prev_asid))
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> I'm going to throw in the towel at this point. This patch needs to
+> get
+> broken up. It's more at once than my poor little brain can handle.
+>=20
+> The _least_ it can do is introduce the stub functions and injection
+> into
+> existing code changes, first. Then, in a second patch, introduce the
+> real implementation.
+>=20
+> I also suspect that a big chunk of the ASID allocator could be broken
+> out and introduced separately.
+>=20
+> Another example is broadcast_tlb_flush(). To reduce complexity in
+> _this_
+> patch, it could do something suboptimal like always do a
+> invlpgb_flush_all_nonglobals() regardless of the kind of flush it
+> gets.
+> Then, in a later patch, you could optimize it.
+>=20
+With the config option and ifdefs (mostly) gone, I
+think the split would probably have to be in two
+patches:
+1) Modify existing code to call non-functional
+   stub functions.
+2) Modify the stub functions to then do something.
 
-Thanks,
-Gabriele
+I'm not sure quite how much this will help with review,
+since to review the second patch you'll have to go back
+to the first patch, but I might as well try...
 
+--=20
+All Rights Reversed.
