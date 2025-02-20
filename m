@@ -1,173 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E38F20C00D;
-	Thu, 20 Feb 2025 16:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DC8211A0B;
+	Thu, 20 Feb 2025 16:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740070047; cv=none; b=Ib05OyMALr/ykVj2svW48JibBX8EobdpgYFOZGRofEbfwPpBWJHYc7/ZeJjrpePrm17kQsUQveXAAYob1nH+FV66/3AM3uQfc/2kA78XVMdRw4Ezan8HthbeeKOCn4TIL/l3M6Nc6WRttooM/gG6sQQYpD4FL9PVehx529iC5OM=
+	t=1740070048; cv=none; b=OOF4P2kW7Y6InBzm163zAGyW+2c7neKLjpGCoeX+XJCPOHXqqNGqy4VyZIX4s1Gsv6/l85QMHt9Sr7YGg7biU6mzfHkXeSI5c4/Y1eR+ejAQX7szBqTblJJNzbjypMGw4JcRXSSeXaZiDc4Lv9gp4NiVUsOAx1bV415QlqojInk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740070047; c=relaxed/simple;
-	bh=3OtB9akMB0pxoL9AejNzjcClgt8iH/E/EAXwsKV7QKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=smcuEg95KnZdimzwRypYMb8f2Zi+3cIckxm+2DlNx109ZFdoqZ/RO0WxJxTnLvziHQ9J7XIlRKvmnbR+f+p9px3pMiKRM2+oDvmJrs3SzG1k/5YM/EP3/W6s4LFNPIcmHqxJS15AQJBTa9KNaMU3BFmZAEI6MLjavpsqGfMwBP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGeWywHG; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740070048; c=relaxed/simple;
+	bh=C5p/ojW3QfHFyvcxVtc9cHreBC7v/KQwFhn3nzGhpEk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BP9i5yEkzTgl+sGONhMayOtyHGFYMTtS8gqZmLskA7b6zt+Sk6gcV04ZLgoW9jny1a2lEP+jxsb/B0tfM0G3xLSDwZdYYmb/Piu2fbzhEW7Ha13q3hpKAq8yspJjm5blw50r3A2/qZxQO1srQ1r7PNipbf+gDKVzuNFVgfVwCcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGWGbma/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGeWywHG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740070045; x=1771606045;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3OtB9akMB0pxoL9AejNzjcClgt8iH/E/EAXwsKV7QKM=;
-  b=GGeWywHG59KwjXp2z1prQ8QIm7CITuA/79kTarjmDJyu+OCg+pA445gI
-   840Msor8UbDN2EjcDJKHa/KyzwQgsxCz5b5pxQ9Z1jxX8eEzk5zzMBJVh
-   H2hX+CUV3lKOt+6VM5AEok8+5buZJkQ32XRoEWIsF1G0X1S7sbpb998LR
-   0JFL+eChPgIRlj2zzdG8lXkliLVWF/lpoxIoFLPw/pSzogx5zc+gVXKSv
-   qYm16Zm7nxZzezFY4S0TaZASNCP61+FHtdjqTiDT5g0HaYZrxgrdr79b3
-   xGMSHo1vvOMp1HacWVw4XAiaML5ezwHrvbLRWMMXblbmqMH+vAQLzkbiz
-   A==;
-X-CSE-ConnectionGUID: 2oRY97heQ+Wo0z+/6xYntQ==
-X-CSE-MsgGUID: uVunncHxTeyGJ0CgelCorQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="44508163"
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="44508163"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:47:24 -0800
-X-CSE-ConnectionGUID: /7uwIiSFTNWHbiSkGLSVCA==
-X-CSE-MsgGUID: +mazolK2Tge/cv+YU0RAGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="114819612"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:47:25 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 1046420B5713;
-	Thu, 20 Feb 2025 08:47:22 -0800 (PST)
-Message-ID: <7de719b4-1e5c-42ee-80fc-0563b68299ef@linux.intel.com>
-Date: Thu, 20 Feb 2025 11:47:21 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGWGbma/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A8EC4CED1;
+	Thu, 20 Feb 2025 16:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740070047;
+	bh=C5p/ojW3QfHFyvcxVtc9cHreBC7v/KQwFhn3nzGhpEk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=CGWGbma/2m6e3p5frqXg8A57Bj7nJ5u+W/FJtb4NSzwtzngyTqCipaoF0iek5XMmi
+	 +1H6iIPL64tCVlp4DvjDNXLD/VOITyCC57K2LnrdYe/Fn4VITZwKJVVZbN26cuDax8
+	 8/syzH/8t0sqCTjor8rbVLLNevpQu4vtvcsP46jnp9HpGFPVhhiD0owy0qBs4cCcNP
+	 XlSjD8gVp0okq533aK0sXseGuQzS5Ult4yGJvsC/w9AWPhyLVA9axsu99+3UUIzCbE
+	 gPleLuY+nfft2Yeex7FttY15TBwrr7t4KosAAAyaISoLbRQ9au9+ptOMd8uD2GNH25
+	 /MZwLnW0Dj+SA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/5] nfsd: don't allow concurrent queueing of workqueue
+ jobs
+Date: Thu, 20 Feb 2025 11:47:12 -0500
+Message-Id: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/rapl: Fix PP1 event for Intel Meteor/Lunar Lake
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
- linux-perf-users@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: dave.hansen@linux.intel.com, Zhang Rui <rui.zhang@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Ulisses Furquim <ulisses.furquim@intel.com>, intel-xe@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org
-References: <20250220153857.2593704-6-lucas.demarchi@intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250220153857.2593704-6-lucas.demarchi@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJBct2cC/3XMQQ7CIBRF0a00fywGsAJ15D5MBxQ+LWkDBgzRN
+ Oxd7Nzhfck7O2RMHjPcuh0SFp99DC34qQOz6DAj8bY1cMqvlDNFgsuWGL1tkzYrcZJfJtUPykg
+ F7fNM6Pz78B5j68XnV0yfgy/st/6TCiOUsN4NQgxCWqvuK6aA2zmmGcZa6xfkVP6mqwAAAA==
+X-Change-ID: 20250218-nfsd-callback-f723b8498c78
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Li Lingfeng <lilingfeng3@huawei.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2116; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=C5p/ojW3QfHFyvcxVtc9cHreBC7v/KQwFhn3nzGhpEk=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnt1yZ6kX4I9MSfm+jtr2Ija35JdQx9LrKP4IuD
+ gg38AGdRLOJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ7dcmQAKCRAADmhBGVaC
+ FQRwEADPhXqfHOWJH4PaK6HRJCcfOPYMiY+S9T4vJScKVFrns5+qirVozTX6Vn2+O2V7xyhu0LU
+ qBLJYlmoWNk2xLl7GaQIj8k1yFOXHDa6+InP4qgwaVHOp6g0gyAWHZMOIgjMub9vhdFU2Maky4/
+ W1TC31NiZS60Oguwb66tvCzNrw1HFhqCBUYGjwK+ZOP5wfRTgAFlLvvVnkr+hPERpFyEYHdK+hr
+ pIn/pmWSBFbQdXMUTFFeYNO38AfM0BkRMUr0rEdlrMTxbmUEEs/TqtSTWCmNws8sVfjD/cB3UXb
+ dOSoqQpWkWoNvt26eFdBgaP3Ymi9ieIso2WwwfpUzJVcZAv1YDkujS3czIClhIIlvIiPqP9sSVI
+ j/YRN02VcXXJH9pXDJ6imxb6Rk8oV9WSTGTGiyfM0WdqjB+VXH2SAKrSOd5+pitzpCtv9egQsLA
+ iWm5BPZEd1p5uoKTLJQ9oBMy69HBZt2G0WcIYlRSo+uY65T9UfWTU/7xysDR3uX6AiagsX/AatQ
+ S4WinM3aAZL5VDMGtHn4K9siw8gfPjoILsZ0otD4SHuqITDWXjfGQ6SYIz8dtEk5O5bgozS2E2w
+ 1VSda0Vl/KtnzgNuHIwoN3juJSPhPraru+yhHR+lS5DWvk0sjjlFS78eErxNzOsjvVcAkzbYUsB
+ Sn4jAbK4XUwSOtQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
+While looking at the problem that Li Lingfeng reported [1] around
+callback queueing failures, I noticed that there were potential
+scenarios where the callback workqueue jobs could run concurrently with
+an rpc_task. Since they touch some of the same fields, this is incorrect
+at best and potentially dangerous.
 
+This patchset adds a new mechanism for ensuring that the same
+nfsd4_callback can't run concurrently with itself, regardless of where
+it is in its execution. This also gives us a more sure mechanism for
+handling the places where we need to take and hold a reference on an
+object while the callback is running.
 
-On 2025-02-20 10:36 a.m., Lucas De Marchi wrote:
-> On some boots the read of MSR_PP1_ENERGY_STATUS msr returns 0, causing
-> perf_msr_probe() to make the power/events/energy-gpu event non-visible.
-> When that happens, the msr always read 0 until the graphics module (i915
-> for Meteor Lake, xe for Lunar Lake) is loaded. Then it starts returning
-> something different and re-loading the rapl module "fixes" it.
-> 
-> This is tested on the following platforms with the fail rates before
-> this patch:
-> 
-> 	Alder Lake S	0/20
-> 	Arrow Lake H	0/20
-> 	Lunar Lake M	8/20
-> 	Meteor Lake U	6/20
-> 	Raptor Lake P	4/20
-> 	Raptor Lake S	0/20
-> 
-> For those platforms failing, use a separate msr list with .no_check
-> set so it doesn't check the runtime value to create the event - it will
-> just return 0 until the i915/xe module initializes the GPU.
-> 
-> The issue https://github.com/ulissesf/qmassa/issues/4 is workarounded by
-> reading the MSR directly since it works after xe is loaded, but the
-> issue with not having the perf event is still there.
-> 
-> Closes: https://github.com/ulissesf/qmassa/issues/4
-> Closes: https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/4241
-> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com
-> ---
-> 
-> Maybe a clearer alternative is to just move all the platforms after
-> RAPTORLAKE with a gpu to use the new msr list.
-> 
->  arch/x86/events/rapl.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index 4952faf03e82d..18e324b8fa82c 100644
-> --- a/arch/x86/events/rapl.c
-> +++ b/arch/x86/events/rapl.c
-> @@ -588,6 +588,14 @@ static struct perf_msr intel_rapl_spr_msrs[] = {
->  	[PERF_RAPL_PSYS] = { MSR_PLATFORM_ENERGY_STATUS, &rapl_events_psys_group,  test_msr, true, RAPL_MSR_MASK },
->  };
->  
-> +static struct perf_msr intel_rapl_mtl_msrs[] = {
-> +	[PERF_RAPL_PP0]  = { MSR_PP0_ENERGY_STATUS,      &rapl_events_cores_group, test_msr, false, RAPL_MSR_MASK },
-> +	[PERF_RAPL_PKG]  = { MSR_PKG_ENERGY_STATUS,      &rapl_events_pkg_group,   test_msr, false, RAPL_MSR_MASK },
-> +	[PERF_RAPL_RAM]  = { MSR_DRAM_ENERGY_STATUS,     &rapl_events_ram_group,   test_msr, false, RAPL_MSR_MASK },
-> +	[PERF_RAPL_PP1]  = { MSR_PP1_ENERGY_STATUS,      &rapl_events_gpu_group,   test_msr, true,  RAPL_MSR_MASK },
-> +	[PERF_RAPL_PSYS] = { MSR_PLATFORM_ENERGY_STATUS, &rapl_events_psys_group,  test_msr, false, RAPL_MSR_MASK },
-> +};
-> +
->  /*
->   * Force to PERF_RAPL_PKG_EVENTS_MAX size due to:
->   * - perf_msr_probe(PERF_RAPL_PKG_EVENTS_MAX)
-> @@ -826,6 +834,16 @@ static struct rapl_model model_spr = {
->  	.rapl_pkg_msrs	= intel_rapl_spr_msrs,
->  };
->  
-> +static struct rapl_model model_rpl = {
-> +	.pkg_events	= BIT(PERF_RAPL_PP0) |
-> +			  BIT(PERF_RAPL_PKG) |
-> +			  BIT(PERF_RAPL_RAM) |
-> +			  BIT(PERF_RAPL_PP1) |
-> +			  BIT(PERF_RAPL_PSYS),
-> +	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-> +	.rapl_pkg_msrs  = intel_rapl_mtl_msrs,
+This should also fix the problem that Li Lingfeng reported, since
+queueing the work from nfsd4_cb_release() should never fail. Note that
+their earlier patch (fdf5c9413ea) should be dropped from nfsd-testing
+before this will apply cleanly.
 
-It's better to make the name consistent, e.g., intel_rapl_rpl_msrs.
+[1]: https://lore.kernel.org/linux-nfs/20250218135423.1487309-1-lilingfeng3@huawei.com/
 
-Thanks,
-Kan
-> +};
-> +
->  static struct rapl_model model_amd_hygon = {
->  	.pkg_events	= BIT(PERF_RAPL_PKG),
->  	.core_events	= BIT(PERF_RAPL_CORE),
-> @@ -873,13 +891,13 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
->  	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&model_spr),
->  	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&model_spr),
->  	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&model_skl),
-> -	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&model_skl),
-> +	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&model_rpl),
->  	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&model_skl),
-> -	X86_MATCH_VFM(INTEL_METEORLAKE,		&model_skl),
-> -	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&model_skl),
-> +	X86_MATCH_VFM(INTEL_METEORLAKE,		&model_rpl),
-> +	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&model_rpl),
->  	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&model_skl),
->  	X86_MATCH_VFM(INTEL_ARROWLAKE,		&model_skl),
-> -	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&model_skl),
-> +	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&model_rpl),
->  	{},
->  };
->  MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- added patche to handle rpc_call_async() errors
+- rename NFSD4_CALLBACK_RESTART to NFSD4_CALLBACK_REQUEUE
+- add patch to replace CB_GETATTR_BUSY with NFSD4_CALLBACK_REQUEUE
+- Link to v1: https://lore.kernel.org/r/20250218-nfsd-callback-v1-0-14f966967dd8@kernel.org
+
+---
+Jeff Layton (5):
+      nfsd: prevent callback tasks running concurrently
+      nfsd: eliminate cl_ra_cblist and NFSD4_CLIENT_CB_RECALL_ANY
+      nfsd: replace CB_GETATTR_BUSY with NFSD4_CALLBACK_RUNNING
+      nfsd: move cb_need_restart flag into cb_flags
+      nfsd: handle errors from rpc_call_async()
+
+ fs/nfsd/nfs4callback.c | 26 +++++++++++++++++---------
+ fs/nfsd/nfs4layouts.c  |  7 ++++---
+ fs/nfsd/nfs4proc.c     |  2 +-
+ fs/nfsd/nfs4state.c    | 31 ++++++++++++++-----------------
+ fs/nfsd/state.h        | 18 +++++++++++-------
+ fs/nfsd/trace.h        |  2 +-
+ 6 files changed, 48 insertions(+), 38 deletions(-)
+---
+base-commit: b7e85fd7c8964e31f8fa1cf7333b12f442b642f1
+change-id: 20250218-nfsd-callback-f723b8498c78
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
