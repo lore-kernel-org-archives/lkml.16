@@ -1,121 +1,141 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5F22F3B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1E02AD16;
+	Thu, 20 Feb 2025 01:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740014901; cv=none; b=qWRVqRzhzvYw5TWOHeknli+9bQBQ03o3fEVgOal2/9tEG6JszlEu6vCx5j2r0iDIIbPWg94PrVisNwPexaUlCK0xYtTER1EccPY3OSJ79+ICl1Yy0qgGr+al4fGUL6LuS9gWQ3v+uO33T9JIUHdnstJeqf1nZUE3xfbzng2zXrQ=
+	t=1740014920; cv=none; b=CXYiV6FzvBdFU6G/vQKLSi5+4ld3nljEbUmxBOAeJoR6sQpv089iKelNt20/MpxceGOlQUG+xvx/JJT7NJ+iukmqREArH5lPTwPO/P8wMin4WQUqfhSirt4ybCbRW8CiiPaPnI/Tgp1D8GKG86BC+x7tymcE2Qxbgqi63QbPYqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740014901; c=relaxed/simple;
-	bh=a/O/h/jPiGjc4TGG/pt+Cu2AWbJ1PHxilINnTaEszI4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sl6UkOxvhxZe3MhbV7SOGq5g2X8SnQqaSFtE/GyVenmR5IfmrdLuSBiIJv5eXaZdytsIAGVrfhj6fQf5drMevuZHVT4bdwr6Jrnku3m5B7XMDUalNOzqPsROtR/RORY+axBAlWXooetIsvK8mMqJ19MYMgRFoKjTiWwGpI1xCAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PonCgoil; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740014920; c=relaxed/simple;
+	bh=TxwQblYIrtsHX+cs7fiBg5nYEFzMEzY04MyorO352eU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DbIAlKrmAJwjYEWDsHyjxBOKWBAn9+IBiFXvvP38iyluc6riWaO9RNwB1mObsKiIQqw4TvmE9g4EC4P9h+WK+4+ut/9jj0Z02tCVjbMCbNMXLyp5c8PTLTspH+KFTqJ0CypCjuSCbWs762N4CulO14q3ThpJA1D7l9+F4Fmy/Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=H7lalOPn; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PonCgoil"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e08064b4ddso490467a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:28:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740014898; x=1740619698; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a/O/h/jPiGjc4TGG/pt+Cu2AWbJ1PHxilINnTaEszI4=;
-        b=PonCgoil0odQQKWliWVIjR7IXbliYeEVsjBhA4lnJ5rdfJ5UzpQiIvLKc2tNQaYHE+
-         XxcBUhIFoKYwoNDT8bzqb2vDK+WrTjuwnIlqYtn/bS40kEoA+8stXVprxzuCluUofXhu
-         j9d1y2ihsBgx8U1q3Zv3kyJEIIGjJhEgRFimO0uNwTJ6tkSO5JLPvkj4s1NPHwZfkmSJ
-         wSyWRQD+eARPC76FXzC0wbOByJKx3e3bLnCVZOzm/D+50yke0B2EimijH2Qp82TWnWno
-         iaSlsmH3PSiLVXNR3EnrQmACS9vQ7hba5xDiA8nZXgiVfzqTToiUJdEs7J2LGYxTeNfB
-         vtkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740014898; x=1740619698;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a/O/h/jPiGjc4TGG/pt+Cu2AWbJ1PHxilINnTaEszI4=;
-        b=VTgDaOIT7FUkvntwPm8Y7qXdEldhZZON51MAT8UH9uCABmQqj4dLg7p2SOVNasTg+3
-         9wvz99Kbba8+KgCvcV44uMKKysyIk8be2AOum0HsbZ633FdWKjtXRwK1TtpaMY+MwUUY
-         AHYXTFpyoALl/GJowOpioYlf8SXpPNKZ+4Icz1Mmg3ywc/GY109oEUsqV8c7DgrpyXOe
-         2crU94VUPpOwbaf5WRN0JKCQ2valluLu+1Bkvw18c4g/+YWEJTWQMGEVr8oSTZanDltR
-         i230ErGEUCD8khHCYletkneTqF83hvm8zp7UX0XoKLKpHXOE6ze93Yw6fRCcgPK1Mka7
-         U7Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1kHMlyndEIzijjeEEF234MtFtx2Dir8y+rGQbfx6SZwCmUduC4/eJfEtnzWmQwHGWz9zGiHoM5ayLCJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRDwdF9Lqdz0Zi7kdojQQqZ0zqMZCVPvAnLvQqJV925cKNnw7S
-	0zJU2Shzc/kHrODwblWu9JGpBdLcAGc14Hdzqz/c2yFcvLpE1TZ3AJOyrmKs2jSNOJzaW8y0la2
-	E+jb1ZC1ezXeDjBVjWeZgyPTC/oo=
-X-Gm-Gg: ASbGncsEWXNh8dSWkdpsRj0Am2XNT4GugUTavXciYdrmL9TduHTTSunuABsDXwvKfL4
-	LVMVsPIxmuTu2aOUb4whUHxaqysTxfN3+fw2ExUH1pvz97Um7gt0jTkE8/ewpNjppP69tZiI1Q0
-	k=
-X-Google-Smtp-Source: AGHT+IFohYzsh69AFMAPOGBjzpqdgJLhpj/draOxVD6z9yyV6DjZ9yTR3e0keblXhrmXJq/A4V6AYCzNz062upvfFIo=
-X-Received: by 2002:a05:6402:2084:b0:5e0:8c55:52b with SMTP id
- 4fb4d7f45d1cf-5e08c5515cemr4152501a12.15.1740014897427; Wed, 19 Feb 2025
- 17:28:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H7lalOPn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1740014913;
+	bh=ymPGS3K8PtvdLHv0pCnuqbZVNZlMes3BilfU1Lqnccg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=H7lalOPnBxLeghgNDfRCx7wufj2Hm2+MxWZnjIyJx1vGO1zreqwO06W3zPqH4ApD0
+	 9MUyNRiEUH4ZHGW1lMoRnIIUaWD8a4bCdJzCP7/s+VwSWIocCkoXhX6fBtxTIcOy7Y
+	 kAqQqIO0jWBkw+kZl2HvaU0heD4UQJ6kb1++TeXOSdu3BdnrPae7cdp4EmIweCD4GY
+	 XaIGTA4vr4Kq+RETGLBnab4MghnwsVq5r8hkYHnc2QcG3A1+c1VT/mPVWOLEvPO2Rq
+	 cE2BJae+CSx65tamtt8dADkqq6JvOqeOlLINWI22Qp8tZW6xrB0Pz7xG0PsqGWHhQi
+	 HRUWdaFj9AxpQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YywdD5sjpz4wyk;
+	Thu, 20 Feb 2025 12:28:32 +1100 (AEDT)
+Date: Thu, 20 Feb 2025 12:28:32 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alex Deucher <alexdeucher@gmail.com>, Dave Airlie <airlied@redhat.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Harry Wentland <harry.wentland@amd.com>, DRI
+ <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Roman Li <roman.li@amd.com>
+Subject: linux-next: manual merge of the amdgpu tree with the drm tree
+Message-ID: <20250220122832.0d9d9eb9@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <173997003868.2137198.9462617208992136056.stgit@mhiramat.tok.corp.google.com>
- <CAK1f24knkxX34hNLRjT20mjyyOwasmXgXJBbTDX=7WYwiw9S1g@mail.gmail.com>
- <CAK1f24m-Ci3BvgfVYGW2tFSUEkPwiO9=0M_w4kpOt1qViiDXdg@mail.gmail.com> <8ca57548-4b18-401d-bfda-95bc12216adf@redhat.com>
-In-Reply-To: <8ca57548-4b18-401d-bfda-95bc12216adf@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Thu, 20 Feb 2025 09:27:41 +0800
-X-Gm-Features: AWEUYZlzlohia0QNps6pKktO2akrT3P7RyQaOiIubTHsvWFO4MwWmKRtSuxY_2I
-Message-ID: <CAK1f24m1PwK7uA+eiHmeVSAuX84VizUKg3ThmeHHgnvKa+dtVg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] hung_task: Dump the blocking task stacktrace
-To: Waiman Long <llong@redhat.com>
-Cc: mhiramat@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Joel Granados <joel.granados@kernel.org>, Anna Schumaker <anna.schumaker@oracle.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Yongliang Gao <leonylgao@tencent.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tomasz Figa <tfiga@chromium.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org, 
-	Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/efS0uCbL9qU9bEaGXfn_NVJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/efS0uCbL9qU9bEaGXfn_NVJ
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 4:20=E2=80=AFAM Waiman Long <llong@redhat.com> wrot=
-e:
->
->
-> On 2/19/25 10:02 AM, Lance Yang wrote:
-> > On Wed, Feb 19, 2025 at 9:33=E2=80=AFPM Lance Yang <ioworker0@gmail.com=
-> wrote:
-> >> CC linux-mm
-> >>
-> >> On Wed, Feb 19, 2025 at 9:00=E2=80=AFPM Masami Hiramatsu (Google)
-> >> <mhiramat@kernel.org> wrote:
-> >>> Hi,
-> >>>
-> >>> The hung_task detector is very useful for detecting the lockup.
-> >>> However, since it only dumps the blocked (uninterruptible sleep)
-> >>> processes, it is not enough to identify the root cause of that
-> >>> lockup.
-> >>>
-> >>> For example, if a process holds a mutex and sleep an event in
-> >>> interruptible state long time, the other processes will wait on
-> >>> the mutex in uninterruptible state. In this case, the waiter
-> >>> processes are dumped, but the blocker process is not shown
-> >>> because it is sleep in interruptible state.
-> > Cool! I just ran into something similar today, but with rwsem. In that
-> > case, the blocked process was locked up, and we could not identify
-> > the root cause either ;(
->
-> Once this patch series is settled down, we can extend rwsem to provide
-> similar feature.
+Hi all,
 
-Sounds good! Really looking forward to it ;p
+Today's linux-next merge of the amdgpu tree got a conflict in:
 
-Thanks,
-Lance
+  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
 
->
-> Cheers,
-> Longman
->
+between commit:
+
+  b255ce4388e0 ("drm/amdgpu: don't change mode in amdgpu_dm_connector_mode_=
+valid()")
+
+from the drm tree and commit:
+
+  cbf4890c6f28 ("drm/amd/display: Don't treat wb connector as physical in c=
+reate_validate_stream_for_sink")
+
+from the amdgpu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 1ea40696c955,8672c0c3c5db..000000000000
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@@ -7476,9 -7536,11 +7536,12 @@@ enum drm_mode_status amdgpu_dm_connecto
+  {
+  	int result =3D MODE_ERROR;
+  	struct dc_sink *dc_sink;
+ +	struct drm_display_mode *test_mode;
+  	/* TODO: Unhardcode stream count */
+  	struct dc_stream_state *stream;
++ 	/* we always have an amdgpu_dm_connector here since we got
++ 	 * here via the amdgpu_dm_connector_helper_funcs
++ 	 */
+  	struct amdgpu_dm_connector *aconnector =3D to_amdgpu_dm_connector(connec=
+tor);
+ =20
+  	if ((mode->flags & DRM_MODE_FLAG_INTERLACE) ||
+@@@ -7501,16 -7563,11 +7564,16 @@@
+  		goto fail;
+  	}
+ =20
+ -	drm_mode_set_crtcinfo(mode, 0);
+ +	test_mode =3D drm_mode_duplicate(connector->dev, mode);
+ +	if (!test_mode)
+ +		goto fail;
+ =20
+ -	stream =3D create_validate_stream_for_sink(connector, mode,
+ +	drm_mode_set_crtcinfo(test_mode, 0);
+ +
+- 	stream =3D create_validate_stream_for_sink(aconnector, test_mode,
+++	stream =3D create_validate_stream_for_sink(connector, test_mode,
+  						 to_dm_connector_state(connector->state),
+  						 NULL);
+ +	drm_mode_destroy(connector->dev, test_mode);
+  	if (stream) {
+  		dc_stream_release(stream);
+  		result =3D MODE_OK;
+
+--Sig_/efS0uCbL9qU9bEaGXfn_NVJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme2hUAACgkQAVBC80lX
+0GwDxwf9GOEhJAsOiyeHp+Bg89a6OutNo2Kq/Eks3y4IxmsoDxmJ5Fw4HcF4GG1H
+h18UUvF1iCxozICVtzIHxQxt8L+QBp3fvqSEb3yW5sa2X4Gs4vs8I9retJOC7Thq
+1iWSfc+JHTL9N/Tw9uqkLeDyd9fwuIWsiqyhtRAymqLd06nhHPo8MMzY1mivSet8
+pF2PZ1WSjkn2NkA8U4Otl+XnAh6H8ebvFkHL4er5qRIv5lIxWUvnqpI3vg/stxPt
+ikSxvejUHM5ZUBy0eS2dE6KxEGUutNXubDVQj5j8bwEZG4RZ7SIeuIZsHKHmLsYf
+JEZD3iqDZ0bOKdrCtulxiC83iZVGng==
+=sycq
+-----END PGP SIGNATURE-----
+
+--Sig_/efS0uCbL9qU9bEaGXfn_NVJ--
