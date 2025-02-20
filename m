@@ -1,142 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1B21F63F5;
-	Thu, 20 Feb 2025 13:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293D11F9ED2;
+	Thu, 20 Feb 2025 13:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740059748; cv=none; b=gDMXwXIjLOtqqKn7ovj3R2fhSVAEeiVkyfG4MH/95LR4sz05gUrADIHlE0x6STgwMMBhfC4t3s7aeYpy1QV/BWHbdqfBjJ6Fs04ucucLyPXIwluGsCjms8wm6FbLJFmNHkAVhRPVZ6JDcw073KteUeN9OrP7F0TECb7EFvzIjgw=
+	t=1740059775; cv=none; b=HCMZrZLGbxdxgId1lct0h2wlYtLUbZzX5c3J4LaU9QMiHn5hBEn+cks2grGtMziga2bG/96m05G+etnpPbw474Pz8pRAYbh6G5UG2CRWSIgju20ba3auiiP66Ri2W/s4W6xDLRh6Iu9c2AsmQZnAN1WcTtBxWzGxsx2ejb2CdhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740059748; c=relaxed/simple;
-	bh=kAq/HYLtL9V56JsyiHkrDyP7zD0/m2fHT0iIr6/MOpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MN+CCFaRy5DosAGZo/IUX/i0JoG9VYl8nInAA/WHuofEXlY+Pcs8i9dCi0FM70CzaFnyUWuS0tQC16Wnc9p1RscmaoMCsTRP/jGCmd7kYvQslQWjJsMqOtcP0+gyf9NWchRyWvWfLGjB7t5IiYhIS5DIZ+EJC1E5d2sWTVL5CEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D95B3C4CED1;
-	Thu, 20 Feb 2025 13:55:43 +0000 (UTC)
-Message-ID: <c896221c-5ff2-4a2b-b431-7c7f805b4f68@xs4all.nl>
-Date: Thu, 20 Feb 2025 14:55:42 +0100
+	s=arc-20240116; t=1740059775; c=relaxed/simple;
+	bh=4IxQHPmAb3NjL5mQa0oAFxhPVAq8fpKTtW2QfqKxpcg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HPjZn9ybXEr/IgiyLqkR+DxPCcjTXdIKIKxDvWnqj/yR8KYbyBvh6TOXXcWa2HOtGAwEMwTddhs+waGA1ihPjQR7YyBYxhwieEzDP94L5j4dKmFYBZXeoHH/KLwiCqqNOK1xosNXhWMVrOw8+i20m+V5fdcoTJfASD00GqIvnqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=tpEaSE36; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="tpEaSE36"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KCCqjP024131;
+	Thu, 20 Feb 2025 08:56:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=/NCZmUDdjkhdulyQwY89SaRH8rD
+	5ZYNAaWWkjksia0U=; b=tpEaSE36ipzl1ysKoYVwtB9ZSn5S6gauRXkUcp8fFst
+	YTZpS7VhH0r/MRLJZZkOPOCjlcJSTpWpMyPaV24m/xvCdyz8166+4+LvGcMJ5cim
+	7/1NUHNjqAzn4ZTgt9TiqA3bUt34Kd8n3do8RkGnVgTfn2CziFMvAIAO99H6LCj+
+	VLTvFo6U2yNekBRz2TbbRjrzJ/6nVScXaD4U7Ea2WC6RNfSQyX9RC544/cTS25We
+	zcGvz4iDOOFtRY4qRMaDgBSKVHmcyGxxamvXMytQKDbbw+S7T5htkKm0louo5rIJ
+	LTJOVD59FFs4l881SULdVtsFSEx9aBSR2hBoM+urINQ==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44x46yrc66-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 08:56:11 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 51KDuAsX054116
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 20 Feb 2025 08:56:10 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 20 Feb 2025 08:56:09 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 20 Feb 2025 08:56:09 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 20 Feb 2025 08:56:09 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.155])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51KDtxqn008409;
+	Thu, 20 Feb 2025 08:56:01 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH 00/14] Add support for AD4080 ADC
+Date: Thu, 20 Feb 2025 15:54:10 +0200
+Message-ID: <20250220135429.8615-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] media: cx231xx: Convert enum into a define
-Content-Language: en-US
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Ricardo Ribalda <ribalda@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Tiffany Lin <tiffany.lin@mediatek.com>,
- Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-staging@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20241202-fix-llvm9-v1-0-2a50f5acfd0b@chromium.org>
- <20241202-fix-llvm9-v1-1-2a50f5acfd0b@chromium.org>
- <20241203093114.0ca49c01@foz.lan>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-In-Reply-To: <20241203093114.0ca49c01@foz.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: MO5n39ntajc5qJTyWlSQVLPvZ3Bua9gX
+X-Authority-Analysis: v=2.4 cv=QdWcvtbv c=1 sm=1 tr=0 ts=67b7347b cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=T2h4t0Lz3GQA:10 a=rf51Nvf0UCcQLYGYZMkA:9
+X-Proofpoint-ORIG-GUID: MO5n39ntajc5qJTyWlSQVLPvZ3Bua9gX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_05,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502200101
 
-On 12/3/24 09:31, Mauro Carvalho Chehab wrote:
-> Em Mon, 02 Dec 2024 15:47:15 +0000
-> Ricardo Ribalda <ribalda@chromium.org> escreveu:
-> 
->> The code is running arithmentics with the enum, which when not done with
->> care makes the compiler a bit nervous.
->>
->> Because those enums are only used as defines (no argument or variable
->> from that enumeration type), convert it into a define and move on.
->>
->> It is required to build with llvm 9 without these warnings:
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:673:17: warning: bitwise operation between different enumeration types ('enum TS_PORT' and 'enum POWE_TYPE') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:680:21: warning: bitwise operation between different enumeration types ('enum AVDEC_STATUS' and 'enum POWE_TYPE') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:687:21: warning: bitwise operation between different enumeration types ('enum AVDEC_STATUS' and 'enum POWE_TYPE') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:702:17: warning: bitwise operation between different enumeration types ('enum TS_PORT' and 'enum POWE_TYPE') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:709:21: warning: bitwise operation between different enumeration types ('enum TS_PORT' and 'enum POWE_TYPE') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:718:21: warning: bitwise operation between different enumeration types ('enum AVDEC_STATUS' and 'enum POWE_TYPE') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:727:21: warning: bitwise operation between different enumeration types ('enum AVDEC_STATUS' and 'enum TS_PORT') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:737:21: warning: bitwise operation between different enumeration types ('enum AVDEC_STATUS' and 'enum TS_PORT') [-Wenum-enum-conversion]
->> drivers/media/usb/cx231xx/cx231xx-pcb-cfg.c:749:21: warning: bitwise operation between different enumeration types ('enum AVDEC_STATUS' and 'enum TS_PORT') [-Wenum-enum-conversion]
->>
->> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->> ---
->>  drivers/media/usb/cx231xx/cx231xx-pcb-cfg.h | 18 +++++++-----------
->>  1 file changed, 7 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/media/usb/cx231xx/cx231xx-pcb-cfg.h b/drivers/media/usb/cx231xx/cx231xx-pcb-cfg.h
->> index 5bc44f194d0a..62ffa16bb82c 100644
->> --- a/drivers/media/usb/cx231xx/cx231xx-pcb-cfg.h
->> +++ b/drivers/media/usb/cx231xx/cx231xx-pcb-cfg.h
->> @@ -57,19 +57,17 @@ enum USB_SPEED{
->>  };
->>  
->>  #define TS_MASK         0x6
->> -enum TS_PORT{
->> -	NO_TS_PORT = 0x0,	/* 2'b00: Neither port used. PCB not a Hybrid,
->> +#define NO_TS_PORT	0x0	/* 2'b00: Neither port used. PCB not a Hybrid,
->>  				   only offers Analog TV or Video */
->> -	TS1_PORT = 0x4,		/* 2'b10: TS1 Input (Hybrid mode :
->> +#define TS1_PORT	0x4	/* 2'b10: TS1 Input (Hybrid mode :
->>  				Digital or External Analog/Compressed source) */
->> -	TS1_TS2_PORT = 0x6,	/* 2'b11: TS1 & TS2 Inputs
->> +#define TS1_TS2_PORT	0x6	/* 2'b11: TS1 & TS2 Inputs
->>  				(Dual inputs from Digital and/or
->>  				External Analog/Compressed sources) */
->> -	TS1_EXT_CLOCK = 0x6,	/* 2'b11: TS1 & TS2 as selector
->> +#define TS1_EXT_CLOCK	0x6	/* 2'b11: TS1 & TS2 as selector
->>  						to external clock */
->> -	TS1VIP_TS2_PORT = 0x2	/* 2'b01: TS1 used as 656/VIP Output,
->> +#define TS1VIP_TS2_PORT 0x2	/* 2'b01: TS1 used as 656/VIP Output,
->>  				   TS2 Input (from Compressor) */
->> -};
->>  
->>  #define EAVP_MASK       0x8
->>  enum EAV_PRESENT{
->> @@ -89,10 +87,8 @@ enum AT_MODE{
->>  };
->>  
->>  #define PWR_SEL_MASK    0x40
->> -enum POWE_TYPE{
->> -	SELF_POWER = 0x0,	/* 0: self power */
->> -	BUS_POWER = 0x40	/* 1: bus power */
->> -};
->> +#define SELF_POWER	0x0	/* 0: self power */
->> +#define BUS_POWER	0x40	/* 1: bus power */
->>  
->>  enum USB_POWE_TYPE{
->>  	USB_SELF_POWER = 0,
->>
-> 
-> IMO keeping them into enums are a lot better than defines.
-> 
-> Perhaps the right thing would be to join both enums here.
+The AD4080 is a high-speed, low noise, low distortion, 20-bit, Easy
+Drive, successive approximation register (SAR) analog-to-digital
+converter (ADC). Maintaining high performance (signal-to-noise and
+distortion (SINAD) ratio > 90 dBFS) at signal frequencies in excess
+of 1 MHz enables the AD4080 to service a wide variety of precision,
+wide bandwidth data acquisition applications. Simplification of the
+input anti-alias filter design can be accomplished by applying over-
+sampling along with the integrated digital filtering and decimation to
+reduce noise and lower the output data rate for applications that do
+not require the lowest latency of the AD4080.
 
-ORing enums is really not a good idea: you would normally never do that, and the
-compiler warning is IMHO appropriate.
+Antoniu Miclaus (14):
+  iio: backend: add support for filter config
+  iio: backend: add support for sync process
+  iio: backend: add support for self sync
+  iio: backend: add support for sync status
+  iio: backend: add support for number of lanes
+  dt-bindings: iio: adc: add ad408x axi variant
+  iio: adc: adi-axi-adc: add filter enable/disable
+  iio: adc: adi-axi-adc: add bitslip enable/disable
+  iio: adc: adi-axi-adc: add self sync support
+  iio: adc: adi-axi-adc: add sync status
+  iio: adc: adi-axi-adc: add num lanes support
+  dt-bindings: iio: adc: add ad4080
+  iio: adc: ad4080: add driver support
+  Documentation: ABI: testing: ad4080 docs
 
-I think this is a good change and I plan to take this.
+ .../ABI/testing/sysfs-bus-iio-adc-ad4080      |  55 ++
+ .../bindings/iio/adc/adi,ad4080.yaml          |  92 +++
+ .../bindings/iio/adc/adi,axi-adc.yaml         |   2 +
+ drivers/iio/adc/Kconfig                       |  15 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/ad4080.c                      | 768 ++++++++++++++++++
+ drivers/iio/adc/adi-axi-adc.c                 | 115 +++
+ drivers/iio/industrialio-backend.c            | 113 +++
+ include/linux/iio/backend.h                   |  24 +
+ 9 files changed, 1185 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad4080
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4080.yaml
+ create mode 100644 drivers/iio/adc/ad4080.c
 
-Regards,
-
-	Hans
-
-> 
-> 
-> Thanks,
-> Mauro
-> 
+-- 
+2.48.1
 
