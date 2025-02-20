@@ -1,73 +1,83 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E917A442F;
-	Fri, 21 Feb 2025 02:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ABB2442F;
+	Fri, 21 Feb 2025 02:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740106244; cv=none; b=BE0eu79AARy6CRkRGn5btoYgdyvKmsLQninmn5g0Va6j10AdSUZi9l1vKQ9KGuUb5NPVu7uyCiLfYiZkw9mCTV2IJnAYI3noteQActyeZ4bCFsFWPOHDpGB+cgPmCYNU3/G8cRVIIaFfq3l71RKEpRiTGs5xcCoahOCmcjwCZFU=
+	t=1740106306; cv=none; b=JgYp0CHk1UlMuIKUe9fB4Prx6mfdXW+8vHk0HKEMq2R1Or7WzuC8d2Cv/ijr5t1Ita3/BD0WdCZXsVgiUIf5rrqhdge7BDZFIRGahVfHRdWE1bBarh08f+acvA22RE4PlpN2nWaDjGv+z/d1lg/B9GWchIY4BlWk1OslLRo9Zpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740106244; c=relaxed/simple;
-	bh=UnJlIFv0UPUzNd+Vm3edQcV3c4YlHIanESgLP3djvo0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XhpBAnfagB6CNJYk+rW2BtXsBvsJsSdetbB4UK2LyGaQSypv6Iql4o5BcmSfbJUtjQdvAC0f699hEKFWYRTyM8x6Pxc/BgpuUzhWKLvmEC+qH8ifD5p9iPlfSxEDpC74Yf+fwmEvvNmgnyRVBx3RSWh2QxvdLR/R7aKgWk6qNfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=bS3XDmJS; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1740106306; c=relaxed/simple;
+	bh=AEVqJje+U/dlYf1eeame0lCbwtleOMiyWF4wKhvGhlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MOiSmIH7ek1wC36hOgLK8MdJPNYAwiZULNqqru35+CX1SIpom3kf1VKkY7qOnQFEnuYRNp7YqUSR2AF6mCJ+7l1tDl/6kWbFq/1Y0aRXlx7BB+Xd/itrLu369/cbV3sax1I69xF6TS//oNzN5kCIGbKByAF7Vcx8XBjkDNMO+oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=dCl5jRC+; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="bS3XDmJS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1740106233;
-	bh=UnJlIFv0UPUzNd+Vm3edQcV3c4YlHIanESgLP3djvo0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=bS3XDmJSaRwxBcjtYnMTwIb+H/BxFKEtm3Pk7VaDsbV19owr6Q+j1opLuCdtqhQjD
-	 6+dx3TMF4X+YLGT3ur3e/AynpgFoaPBP+vI223VEgbjjCuBxhzUe2/vHDgY8UUS0cH
-	 tpBvqc2ZQBtmnsdWHuqYkOS0I56/E++xdqSsN1+TrdBmEqzThNE3Mt9bOaUCZdn5W/
-	 WdhUezPTM4PI7OoUGenB05aasczV9qn3O4nKodwZiLdtHvP0rDpANhShljodZzXkja
-	 OkbLOh5h3ULoqcIbv8eNIuBjrOS2om0ynANUpLZCNQDTt2xg1fj4v7QJ7m0hoFy9Ec
-	 7ljKn+ys0IO6Q==
-Received: from [192.168.53.88] (ppp118-210-81-188.adl-adc-lon-bras32.tpg.internode.on.net [118.210.81.188])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 59BAE76B4D;
-	Fri, 21 Feb 2025 10:50:29 +0800 (AWST)
-Message-ID: <eec1e53185baeed99e5e0c86875f121ab4d25fd1.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5] ARM: dts: aspeed: yosemite4: add I3C config in DTS
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Delphine CC Chiu <delphine_cc_chiu@wiwynn.com>, patrick@stwcx.xyz, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>
-Cc: MarshallZhan-wiwynn <marshall_zhan@wiwynn.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date: Fri, 21 Feb 2025 13:20:28 +1030
-In-Reply-To: <20250220023233.1686419-1-delphine_cc_chiu@wiwynn.com>
-References: <20250220023233.1686419-1-delphine_cc_chiu@wiwynn.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="dCl5jRC+"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id C807914C2DB;
+	Fri, 21 Feb 2025 03:41:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1740105717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NNcc6KqdVu2nSV8k3rLKueper8Fe7B+V1orHMollzx8=;
+	b=dCl5jRC+GxQ5RPQm/4sx5ZFxY8gLFJD5qdZ3wzn3yrDMXS5jrpI5rlSoKd5CmqX+yZ6SMX
+	m1e/gsuiBpM0jGWHcjWdSLybmW6NTUIYjjhCA0poC+CYo5BYYTQQ8ciRYXLvLqHj7hggBk
+	daBN+L/aV11DQDPy6e8B9fi1HH6Y58/xs/DeZeysPjCsFPWbBCT6Z7T5Zz6guxJfHYG9U/
+	sE27G8BQPX7MPQ37qUnrnmEjYMXjnBwPXK8fT3s6Oyqbe7B7IGhWlQ6wndVxrdz1M2KEz/
+	jW5aj55riEt8jx5mYeLxN1+XaaqEumPFkFrMqMZB6iqGoDDrz/TG1Hd/D5dWyA==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 56f7ec9c;
+	Thu, 20 Feb 2025 22:06:01 +0000 (UTC)
+Date: Fri, 21 Feb 2025 07:05:46 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: syzbot <syzbot+c0dc46208750f063d0e0@syzkaller.appspotmail.com>,
+	v9fs@lists.linux.dev, dhowells@redhat.com, jlayton@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [netfs?] kernel BUG in folio_unlock (3)
+Message-ID: <Z7enOheevlbS1xpH@codewreck.org>
+References: <67b75198.050a0220.14d86d.02e2.GAE@google.com>
+ <Z7dVOaTWTVCojNzr@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z7dVOaTWTVCojNzr@casper.infradead.org>
 
-Hi,
+Matthew Wilcox wrote on Thu, Feb 20, 2025 at 04:15:53PM +0000:
+> On Thu, Feb 20, 2025 at 08:00:24AM -0800, syzbot wrote:
+> > ------------[ cut here ]------------
+> > kernel BUG at mm/filemap.c:1499!
+> 
+> Tried to unlock a folio that wasn't locked.
+> 
+> The entire log is interesting:
+> 
+> https://syzkaller.appspot.com/x/log.txt?x=12af2fdf980000
+> 
+> It injects a failure which hits p9_tag_alloc() (so adding the 9p people
+> to the cc)
 
-On Thu, 2025-02-20 at 10:32 +0800, Delphine CC Chiu wrote:
-> From: MarshallZhan-wiwynn <marshall_zhan@wiwynn.com>
+9p is calling iov_iter_revert() in p9_client_write() on failure, but at
+this point of the failure copy_from_iter_full (which advanced the iter)
+wasn't called yet because the format processing happens after
+allocation...
 
-Typically git's user.name config should reflect your well-known name
-(with spaces between your individual names, and without e.g. a -wiwynn
-suffix).
+This was changed by Al Viro in 2015 so it's a "fairly old" bug, but it's
+a bug on 9p side alright - thanks for the cc
 
->=20
-> Set I3C config in yosemite4 DTS.
->=20
-> Test plan:
-> Tested PLDM GetTID successfully with the I3C hub driver.
+Now to figure out how to decide if we want to revert or not... I
+honestly don't have any bright idea, but I don't know the iov API well
+at all -- perhaps it's possible to copy without advancing and only
+advance the iov if IO worked?
 
-How was this successful? Your patch fails to build on top of v6.14-rc1.
-
-Please make sure you're testing against an upstream kernel tree.
-
-Andrew
+-- 
+Dominique Martinet | Asmadeus
