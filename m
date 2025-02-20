@@ -1,32 +1,61 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845D31FF5FE;
-	Thu, 20 Feb 2025 16:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614B31FE46F
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068253; cv=none; b=GP1gizp5nR4jQdIwykO7NXNhOw4qUGrp8EWrEQGUlcHStrWZO4+QcPHEtrdgjtWG5sAUPbFsZu2e6cUdp99b5Zd3qTq4F60FKcDffqAMs5D2b7lpQ9nMDCr0nmal4YaLxCBo6CihZfkTNU4RM0qJMeQL7ny6fOaLb/9Ide9RHjU=
+	t=1740068293; cv=none; b=k6VrkBvF5P5yGnZJLKsM+lZyIkIkjB0UTMme+cNhTxDIGs9rAXDwJcYtYgvVzgsMPmdLTVNFR/oHo95/7KaKBYyAJALm7fPebVZzQZVT9O7duVioTHvG9dsTKRvoZ69Xh/ZmRP21KUhT3LdiMwzvMKrUBbmEcEhm93HZsaCNJfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068253; c=relaxed/simple;
-	bh=S2Cp2QeCTboIPkqp369Oo0lo+0M7cZnbKd+wHZSVx9k=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TEth15fjnl2V4FdWB7oQSKrbB6NI5j6HU5js2Unj3262HcTOkwvvO8bxeMsklZZol/+MUEaDFpSGcy2ZVlQepmVa4bxKyQVrJ2Q/z8Eum9jFVjb5eNCDVI5vviDyd0Jro4wzH5k02e6SgwIYRSQxaWmCnlPnC3D4RLebrpshd30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=M9vRRCbA; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1740068293; c=relaxed/simple;
+	bh=/dWabNOB3H/l45GLrHuFpQul4Awb4+rHqOfNRlYWSVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tqs6x3VSe4+RyAOtRqQLV+3wgyBEVr+w4+KWCUvfHgqf9wJGYlQv+l5NjdkbfCy/z/nfMimfHrITLUXBG9NbIiVpG5RqJM2SsQiGnnfNuyrVqEres8i84VGrZWM57KPubN5DnnP4MAKx/1pIbpqIX8yLUV58iCc1kH6mnASbZhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JThSDjfx; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="M9vRRCbA"
-Received: from [192.168.35.166] (c-24-22-154-137.hsd1.wa.comcast.net [24.22.154.137])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9D0E220376CD;
-	Thu, 20 Feb 2025 08:17:30 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9D0E220376CD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740068250;
-	bh=GkPk3vpo3fjZ76nSYEcI8RaFBSu99lnwsP2xmX+YLqI=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=M9vRRCbA4t8agc57RtPDTlFanjsd1kyMTIKmtK0WIEi0jKc0MN5zrDxWFmqHcc2tN
-	 QxaJA7UOEH+zXoIs/YyoFF9eyPOwTmc4dCP8PHrdqd0QLuLGdNEYqNV675HZa6V7S4
-	 JGi5ZSgtld/s2UCGDlFjmzsQK/iWwwlNhfL2haSc=
-Message-ID: <bfd711f3-2de6-44d0-afe9-e24470448011@linux.microsoft.com>
-Date: Thu, 20 Feb 2025 08:17:31 -0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JThSDjfx"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-855a5aa9360so77081839f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:18:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1740068290; x=1740673090; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XgyoPRXU6a6kG4N3+disEL2MEnPtdcZMZBxF77QaXes=;
+        b=JThSDjfxYNINHmAnk9NMcxlPw/YGxJiLcxuatlHW2d8cem7g3uF7+VCOvam6wXu3jN
+         V1nWqwwZZf8QksaJMEYHT4Jx7sX2A5wf+CfAkNyqi70iJ/HrF/2s8q3h1cqgrVZ8y9VU
+         91w+O3ObA+uUPuGF7rlYnZDga3LacDjT+RWxI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740068290; x=1740673090;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XgyoPRXU6a6kG4N3+disEL2MEnPtdcZMZBxF77QaXes=;
+        b=oAsYaPNEPOMZ3ps28TVD2gftZgS+X7a1dPJvYysXB1ikJt8Tqi5aOPKMhwXhmTHwcP
+         zWZVaQBnBZBxWQ2nMf8b7kQ0IhMpJsb+XiIFRjZbmFkt14XDEoO13xVTQhCdFRMqkjXQ
+         uvMXu2h0UvNogmAYT7bonMxcsOGi6ZNEo1Rdu/GFdArT2FD6tVxGJqs6ZTp+q/pW92gR
+         Ma0kxXXUFjtucfx4kBfLJsULVrkqiUcU2BZffwFuAPx0n3JJWqg+LXM9JuTi4gL5UeSG
+         ULT2sSlMpOMKwn3T6Zb7FB3oaQasaY0CcJa34MsEAdVY1kF2RvZUPW6rNBfAzjiFUhcz
+         aq8Q==
+X-Gm-Message-State: AOJu0YwfvcOEQfKfU5M3m32KfJvEt2JEOjeSscwktQR6fkK6buHBPHL9
+	bjwsVwADGXztJjSkA8eA8HGmoR6RcMUmJtI8wrW2RK9OzvtSaAN/ankVOAYzUBqNV2y9MNqncYP
+	V
+X-Gm-Gg: ASbGncvEWSB5UBrl60DHbTlsftJ8Jm9iTL3Wid6IX6WJ3ES1oW81JD9uOrcUiaoHoai
+	K+EMxGAI+j3csJPJP7KXEu6NP4JY09NL8GT6Vnq75zeEclluhX/ag8mdwW4O5i0wMJHxVCByMta
+	ya86KUolJsRz2LX9a3oAXbC4GYOk2EehgCDwNaLaHVOWY8hRfv31iO/E3qk6VVzZFDBZv5kTarr
+	ZvcB/TXIbC0PJ+zVaDRXFW56sJgtRdLNCvNVON6EZ02LeUKR81cRhhXn2R0UwRgL+nhGJInL9bp
+	ru1TcACygZXk/wyb+TGMYYLuDA==
+X-Google-Smtp-Source: AGHT+IEJ7Oc5HsTMETSfAVR01i2ff6EJ8L0D+zb08Ob/9RlyCuyRRRxFupWsQAosXlRZJP1IxnAqqQ==
+X-Received: by 2002:a05:6602:6c03:b0:855:bd9c:717a with SMTP id ca18e2360f4ac-855bd9c724cmr892782639f.4.1740068290492;
+        Thu, 20 Feb 2025 08:18:10 -0800 (PST)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-855c0791a3esm56942139f.29.2025.02.20.08.18.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 08:18:09 -0800 (PST)
+Message-ID: <3ae6c7de-fb0a-4c65-afca-c0c91289650b@linuxfoundation.org>
+Date: Thu, 20 Feb 2025 09:18:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,36 +63,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com, Yishai Hadas <yishaih@nvidia.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] rdma: Converge on using secs_to_jiffies()
-To: Leon Romanovsky <leon@kernel.org>
-References: <20250219-rdma-secs-to-jiffies-v1-0-b506746561a9@linux.microsoft.com>
- <20250220070729.GK53094@unreal>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Subject: Re: [PATCH] selftests/tracing: Test only toplevel README file not the
+ instances
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ linux-kselftest@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250115191758.35b62738@gandalf.local.home>
+ <20250115202607.00c6d353@gandalf.local.home>
+ <571133ce-b4ae-4a9f-8601-443774804d1e@linuxfoundation.org>
+ <20250123172530.474e873f@gandalf.local.home>
+ <d39de60f-c87f-4c59-9226-9080f9008f3e@linuxfoundation.org>
 Content-Language: en-US
-In-Reply-To: <20250220070729.GK53094@unreal>
-Content-Type: text/plain; charset=UTF-8
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <d39de60f-c87f-4c59-9226-9080f9008f3e@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/19/2025 11:07 PM, Leon Romanovsky wrote:
-> On Wed, Feb 19, 2025 at 09:36:38PM +0000, Easwar Hariharan wrote:
->> This series converts users of msecs_to_jiffies() that either use the
->> multiply pattern of either of:
->> - msecs_to_jiffies(N*1000) or
->> - msecs_to_jiffies(N*MSEC_PER_SEC)
+On 1/23/25 16:54, Shuah Khan wrote:
+> On 1/23/25 15:25, Steven Rostedt wrote:
+>> On Thu, 23 Jan 2025 14:56:55 -0700
+>> Shuah Khan <skhan@linuxfoundation.org> wrote:
 >>
->> where N is a constant or an expression, to avoid the multiplication.
+>>>>
+>>>> Damn, I forgot to add Shuah and kselftests mailing list to that one though :-p
+>>>
+>>> Do I need to do anything or is this taken care of?
+>>
+>> I think you can take that series. If you want I can resend with you and the
+>> mailing list Cc'd.
+>>
 > 
-> Can you please provide justification for that? What is wrong with current code?
+> Yes please resend.
 > 
 
-There is nothing specifically wrong with the current code, it just does an unnecessary
-multiplication for what it does, as the cover letter mentions. IMHO, it's also more readable
-to just see secs_to_jiffies(30) and understand that it's a 30 second timeout.
+Steve, did you resend the series?
 
-Thanks,
-Easwar (he/him)
-
-
+thanks,
+-- Shuah
