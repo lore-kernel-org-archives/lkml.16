@@ -1,99 +1,177 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D601F0E37
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0413E1F0E42;
+	Thu, 20 Feb 2025 10:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740046970; cv=none; b=RaLW4Xgkbyf5HNupsUkc7/sNJunOd+bvcNVLmekehD9JvDkItOrTzLztiLlXuN/NOm7hLUxhGY2cAndr30mHY1+/1l/K+pZISS/GbiXVk9Ot4bPrpAWHCtfmaR/XglVmC/5Cp6E5++dOTKmCPu00sYhF6I4qjEx/OeMNFWPHY7A=
+	t=1740046993; cv=none; b=pLRCTHL0wWsKdOolVz+g+YhNrVBhvbm/jon+rxLspTtZ1MRCpo3wlvgoS731EbV/uyRhEhWKhy0mHlgzlolFwmXNbJD2QlIl9z/uJh66kg40I9Iah9npLm6ec348KULJhejr0Q6Kv2+fqM4wn+2BUWf7kB9JDC/atma/asDdmiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740046970; c=relaxed/simple;
-	bh=dwV5C1T08uCJyhf61xNHGbLrnXfynaFJ/L/Ujo0Xy28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g5nVKWT+cMtUFfT2kOEGc+uMHLuwbbA5WJMjf/C5D6+IXQk0lsbHvhWoZO/8Ci7/Qbab4i22uVq2129OLGZP9jBsIpS2GJuG+KA1Ji3/s2T0BP2VsuAnQaxgM9CLn+JtdgkyvaP87tSK5iZg2yyGZHqpHYu6gqe7QTbzBkXxmXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AN6xyaBQ; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1740046993; c=relaxed/simple;
+	bh=R40fF5GhiuNsPygWq7n89nQYMfRRe9+e5UJvKpRakJQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ToCjRRKTTQAoerMTxpY4XW0M1ElQ5feNH2fF0ai1/aO5nmKEMavWnkLK+TbN8f2m8+x4QRS566PSBLuxo0H7gelZ6Yh33r3T9MInzM58vtlSsEcTmmNjzZg0vxFyyvBhGJAhuW5zK5y6M9GFpzVH1ix1w4s805vs4jYVFvzyF6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jeK21Mzx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AN6xyaBQ"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38f265c6cb0so363392f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 02:22:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740046967; x=1740651767; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mdJ1tjXDGbz7fnnLGr6p9xq7nJI8m1bb43amubJ0qpU=;
-        b=AN6xyaBQmi9zBQcVep+o0zVfgKluhdmta3a2sU90KfgCm5Kfjp1sT/3Jbmh4tlaAxw
-         NgWxJUcR4LdAIxqSrMUYRoxyWh3G1pUYQds0foLS+dJPQybkMKgq/la0xZvOJRDrBokl
-         bQo17+XbHm6MJ0gycY1BkfKhSdnkHmPqfemN2nQph9V3jqEPPlyop6JXKK4+iQFbtf/J
-         GtiyN8gDwRSZpY2Usno9vkxZFtxUNyJwNLgzAzopxMCJ/aJM+DRNdsgFjhheXATGlmTd
-         YOs8Nw+nmrOZIEMQ824ZwlxNA/LP3x+Bj96sR0yaWH10wLb/Rh+p5ky3ZLaHGeEcTcWQ
-         3zDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740046967; x=1740651767;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mdJ1tjXDGbz7fnnLGr6p9xq7nJI8m1bb43amubJ0qpU=;
-        b=QYahgEMcyrIRt8rI5pHeC9msc8ROIY5UOBTHequpYolTL7VZb+C1ko828Ryf9yBO7c
-         V+VzP/eOh0qMBa+0CXKxrskViUVNkdDSGlU6248FQ2sAU6CTzP5Xii+5pjStYqowXLcL
-         3Ypp2IhkSdGObO+LsthLIlwdTJYnMCtlGrjzfIbejVzHSTUgJ5vjxm6PE1Dj/qExHSVN
-         kF8imjFMSwQEBD82hiHbEh8ss5eoXTqra80Cjn2KmC+wuyV48KEHJIz4MRjuMDFDrtTE
-         7+OPSiMtRkWDXb54K6OFGbauMrbu+7dtUY0oqnXCzYMIC+DB3BXRd3+JBsnqjfIMFQll
-         oCuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtALqNnBhORhplA3eYNTkFfhfaZm8ApCeJDVQeBilRAPoVEkMEp1FPBXtQp+mpUIvGkEO6qP+nCgS2OfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYdIvvGRRkRHf8aL4+E035+F4cY8k9WB0Bjq7tBI270nn52Rbp
-	8n2vOewBlPMojJRKzWrufdeE0k100MvGa7khbDbNLhu2nXWl4cGDbP9Q2LUA9jA=
-X-Gm-Gg: ASbGncsVHE9JORUrAFSvgt0GKH24gHVSgrJwQlKaD5cxn7RLcaDG8tDKwpa549R3UD0
-	dzcuxVhfA+s/4/F1v/sgWKoRZe/XNqfYFSD3vou9sYoEDoOuAn/mnJqhK2w9czgFqBzFuk4us2E
-	YtPiNlWqFfSKwaCoVYuPqGbC8895JbOLFw9Q0AcZPPEZ7jHHlS1IHDtUectTvB1bIDRdThrY4MC
-	LvP6FpJdhitd+5+h7g3mWHT5h7GFj+D/iUrybi2hFdaS+CvvuGvP6sVpQUTbIWyjtg2fy+aU49d
-	PYBblRwTa7cz1iIC4mqIqUpzceb+EvbzM/CxCMo4Yv6RZuI/W2eLIzcNuA==
-X-Google-Smtp-Source: AGHT+IFNBKicqin94xs9R9bvB+x/bbDZRuNAbanJhmggJELPLRHyKJNVbt685+Z4xzMPELU/nUfw9w==
-X-Received: by 2002:a05:6000:1fa5:b0:38f:4fa5:58ce with SMTP id ffacd0b85a97d-38f4fa55a25mr10752304f8f.6.1740046966694;
-        Thu, 20 Feb 2025 02:22:46 -0800 (PST)
-Received: from ?IPV6:2001:a61:136c:cf01:505d:b6ac:9103:aec6? ([2001:a61:136c:cf01:505d:b6ac:9103:aec6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d65bcsm20344688f8f.65.2025.02.20.02.22.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 02:22:46 -0800 (PST)
-Message-ID: <6d14b473-6d26-4b9e-88df-2532b0c88565@suse.com>
-Date: Thu, 20 Feb 2025 11:22:44 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jeK21Mzx"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K6ZPAJ015223;
+	Thu, 20 Feb 2025 10:23:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=bZuXYjIP32j
+	tFMyKcrVGY6ChZN4RiO9+gyy4du6TX9Y=; b=jeK21MzxdJnoHfgX1nqHgkVE+SA
+	j3lvKH32YYPewPr+ss3hGPqWo5n7YDpki4OpAB8xAwyH3jrnvDPKNyTyoFk4+HzH
+	TovWyK+7PEDImRcZxQDr9tzfvnmJCbndv+QYymivRKahsgAvCbOU1WmvJgNAVEOD
+	haClIgugmH0sLtCVx6TWcJrB2eAWv6z4eS+DQ0kDrWYEH+dq8RE9McZWfmWNh0Dy
+	6gepAelFcTJVrilPQCQE9gXzHOQOx/gJmxNwNJD/GKtQjp5yc4HnZkkqcGuxj67n
+	nCyZ6WIvgp4YRQlbwxTUwboBRai9TnQVgTLNbnYd7UiPGbnwruXUf6zBI9w==
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy4dtfw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 10:23:02 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KAN0LS013677;
+	Thu, 20 Feb 2025 10:23:00 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 44tm0m1a0k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 10:23:00 +0000
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51KAN0GE013668;
+	Thu, 20 Feb 2025 10:23:00 GMT
+Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 51KAMxWR013666
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 10:23:00 +0000
+Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 4635958)
+	id EF13940C3B; Thu, 20 Feb 2025 18:22:58 +0800 (CST)
+From: Wenbin Yao <quic_wenbyao@quicinc.com>
+To: vkoul@kernel.org, kishon@kernel.org, p.zabel@pengutronix.de,
+        dmitry.baryshkov@linaro.org, abel.vesa@linaro.org,
+        quic_qianyu@quicinc.com, neil.armstrong@linaro.org,
+        manivannan.sadhasivam@linaro.org, quic_devipriy@quicinc.com,
+        konrad.dybcio@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: quic_wenbyao@quicinc.com
+Subject: [PATCH v4 1/2] phy: qcom: pcie: Determine has_nocsr_reset dynamically
+Date: Thu, 20 Feb 2025 18:22:52 +0800
+Message-Id: <20250220102253.755116-2-quic_wenbyao@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250220102253.755116-1-quic_wenbyao@quicinc.com>
+References: <20250220102253.755116-1-quic_wenbyao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: core: Add error handling in usb_reset_device for
- autoresume failure
-To: Wentao Liang <vulab@iscas.ac.cn>, gregkh@linuxfoundation.org
-Cc: stern@rowland.harvard.edu, christophe.jaillet@wanadoo.fr,
- mka@chromium.org, make_ruc2021@163.com, javier.carrasco@wolfvision.net,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250220095218.970-1-vulab@iscas.ac.cn>
-Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <20250220095218.970-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: sEk2ufSEp702F8080S5VKOYASz-xIGm8
+X-Proofpoint-ORIG-GUID: sEk2ufSEp702F8080S5VKOYASz-xIGm8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_04,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 adultscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200077
 
-On 20.02.25 10:52, Wentao Liang wrote:
-> In usb_reset_device(),  the function continues execution and
-> calls usb_autosuspend_device() after usb_autosuspend_device fails.
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-This can only fail if the device needs to be physically
-resumed. In that case you called usb_reset_device() while
-you weren't supposed to. The purpose of the call is to keep
-the counter elevated in order to disable runtime power management
-temporarily.
+Decide the in-driver logic based on whether the nocsr reset is present
+and defer checking the appropriateness of that to dt-bindings to save
+on boilerplate.
 
-The code is older than helpers to elevate the count. The correct
-fix would be to use them rather than handle an error that cannot
-happen.
+Reset controller APIs are fine consuming a nullptr, so no additional
+checks are necessary there.
 
-	Regards
-		Oliver
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+index 873f2f9844c6..219266125cf2 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+@@ -2793,8 +2793,6 @@ struct qmp_phy_cfg {
+ 
+ 	bool skip_start_delay;
+ 
+-	bool has_nocsr_reset;
+-
+ 	/* QMP PHY pipe clock interface rate */
+ 	unsigned long pipe_clock_rate;
+ 
+@@ -3685,7 +3683,6 @@ static const struct qmp_phy_cfg sm8550_qmp_gen4x2_pciephy_cfg = {
+ 
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+ 	.phy_status		= PHYSTATUS_4_20,
+-	.has_nocsr_reset	= true,
+ 
+ 	/* 20MHz PHY AUX Clock */
+ 	.aux_clock_rate		= 20000000,
+@@ -3718,7 +3715,6 @@ static const struct qmp_phy_cfg sm8650_qmp_gen4x2_pciephy_cfg = {
+ 
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+ 	.phy_status		= PHYSTATUS_4_20,
+-	.has_nocsr_reset	= true,
+ 
+ 	/* 20MHz PHY AUX Clock */
+ 	.aux_clock_rate		= 20000000,
+@@ -3836,7 +3832,6 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x2_pciephy_cfg = {
+ 
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+ 	.phy_status		= PHYSTATUS_4_20,
+-	.has_nocsr_reset	= true,
+ };
+ 
+ static const struct qmp_phy_cfg x1e80100_qmp_gen4x4_pciephy_cfg = {
+@@ -3870,7 +3865,6 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x4_pciephy_cfg = {
+ 
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+ 	.phy_status		= PHYSTATUS_4_20,
+-	.has_nocsr_reset	= true,
+ };
+ 
+ static const struct qmp_phy_cfg x1e80100_qmp_gen4x8_pciephy_cfg = {
+@@ -3902,7 +3896,6 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x8_pciephy_cfg = {
+ 
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+ 	.phy_status		= PHYSTATUS_4_20,
+-	.has_nocsr_reset	= true,
+ };
+ 
+ static void qmp_pcie_init_port_b(struct qmp_pcie *qmp, const struct qmp_phy_cfg_tbls *tbls)
+@@ -4203,12 +4196,10 @@ static int qmp_pcie_reset_init(struct qmp_pcie *qmp)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "failed to get resets\n");
+ 
+-	if (cfg->has_nocsr_reset) {
+-		qmp->nocsr_reset = devm_reset_control_get_exclusive(dev, "phy_nocsr");
+-		if (IS_ERR(qmp->nocsr_reset))
+-			return dev_err_probe(dev, PTR_ERR(qmp->nocsr_reset),
+-						"failed to get no-csr reset\n");
+-	}
++	qmp->nocsr_reset = devm_reset_control_get_optional_exclusive(dev, "phy_nocsr");
++	if (IS_ERR(qmp->nocsr_reset))
++		return dev_err_probe(dev, PTR_ERR(qmp->nocsr_reset),
++				     "failed to get no-csr reset\n");
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
 
