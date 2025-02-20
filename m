@@ -1,124 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583D91EEA3B;
-	Thu, 20 Feb 2025 14:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC641DE4DB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740061278; cv=none; b=gr6Jh0XuaeyQ6p3c2fWA/EWZaAO+J9184oYOoIdfMkGmuDvtTW1ThObHf37aunmUPFlkSk1RlDzc1j56nbF0uorebvtqK+CveSAAGiLLRqbiQ9w2fOuTkBx1RfrenBv8qZFpCAHS+ERM0KqIovVZTIBXTxwZS12mXx1iNmeFSyM=
+	t=1740061282; cv=none; b=MQ/df5JaK5RY/6xzWncaysQEG8U0NkxsvhiQsmGRU/oqrfO4/U3Krc+R0Yf0uN2U/81Omx0lSnFP+w7FqLfj5XdMfahJGYDy1B8okavxynFjK3x8wevoDmWHiacKepDCf9Ytxj6bCXXSvnCpTeRxi1L/Av9ywzd2tfgjPkdH4gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740061278; c=relaxed/simple;
-	bh=t1YRfXHSR0r4DzbqO4O5hCHBJK6Wk9U+htitk02MAB8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tTxETJNUXX17jP+GCFkGSebF+jdaC4aRX+qZ/1ooKSokzNfWFQGx2439maG1vda3b1wxTeiTCyshYiJlH9dLA7dvCGC6KggIn/3jCYSnacYwP/l7Zk9edvUVkdYNIBir3X90ZIlnOhFMN+9CW1zfXE0joyXZ0VQy/RDx/Z/f8iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTQJE6OD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740061282; c=relaxed/simple;
+	bh=lJ1fuL6wK8CkBl8tMlUZAzn0eYU+XWFjZX7mmgbguCc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JNRvUYYnYoNXAWsjkNJ24zAgPtkMlC4gnfIeTirHSCHIIEgvRFQQNXTUSou0KDHcE6lvEoyAqYGynLgxTbiWlZGPnGlfBqZAFGIJYnvwDUveM0c06t1U7te8F/s8m6mk7nKEJ8iR+7LMrmpn7cH9215yz2w1cVpgwOcDL3hEgGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3oufnGd7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D9Knt0/Y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTQJE6OD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B221C4CEDD;
-	Thu, 20 Feb 2025 14:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740061278;
-	bh=t1YRfXHSR0r4DzbqO4O5hCHBJK6Wk9U+htitk02MAB8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pTQJE6OD2Wd1RK/TY96gGa7OLrWKjlapSJ9+hEKgspSGa7NMMEswTg4pLgf5PhESR
-	 01sOIB5OdAY2Ax5kGfuICyeMuo20X0kiE7bDMJxqsMWGrj3ZL/AWVoUWu2cFWi8hVJ
-	 a5XN0lV5TJiAtfsgShNAePZ/esyekVbL+rn/3tsFVIX1JVbfefTa6rKK1Qq1fuWcXJ
-	 N9sXWpJfhUWq1b8mc8pFPrdKogm1UTYmVYfJuSyKs6a+nyEg9M4nnpw9MwGappcGH/
-	 hXfj3IVJUVXI9OCIY3wo/BkTwBKDJjU44bCQD8iFNEDV8NRpflFHMkT6Dyu2OmVl2e
-	 wIaT4/Y4tTJvA==
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fcce9bb0ecso1775877a91.3;
-        Thu, 20 Feb 2025 06:21:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW4v5haYIrc+1FzTvGZXM4B6JTVMVsT0glLLQN75+oW9Xu54p0Fk3TZ35K6e4VS0VLr8CdWIZWWRuy/@vger.kernel.org, AJvYcCXFmKso7vhsrXDJL0uyYe2YJtZfcA+u+7KL9KCOsfVbM4ZMdXEZaopxMsGXOtBf93c8lbs8An9PJRSaLggG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2duVEXeglVhK5JF/sx8gqvJAjW/1Dw0G1TDZnRp/nLz6Ah8wJ
-	vN8djYMvTOoZx9/iYkWCZhiPghUMiVofR6Jn3AwXTG3lN3Ec08QZcyHGZCFgn0GIW+RtqvipMoL
-	9vdrAkbXujR51L+Qrt4R5RMaxEQ==
-X-Google-Smtp-Source: AGHT+IEM7TeLueuZHPQaOMtrQ+jefGLGWiXk9sVHtvUBeiE5X3S4o44Ic7KtorBRdm5c8t14xyWBYmEyM00igBUqouk=
-X-Received: by 2002:a17:90b:2250:b0:2fa:b84:b31f with SMTP id
- 98e67ed59e1d1-2fc41040fcemr33893917a91.25.1740061277661; Thu, 20 Feb 2025
- 06:21:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3oufnGd7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D9Knt0/Y"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740061279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/BmtFl2k81SUm/1VjrdU/jVgNub5nHsJ466sJIBSwU=;
+	b=3oufnGd79cXN4jTTMDZ7Z6srl8Ucj1sL35GTITM5ip/hhNfLdNEYBcfYEMW975QF6921cA
+	cciHlQX7+abbQrJT0TieGU8ctAA7wGO0cqj2/piqAaIcbrDv5L/4HeIGVwShaFC3Bq48YH
+	suiMDHR3vg34aEAzMe+BV0KSW9VSPNgdjwW63lvegZgL1TQ5UiPythFZ5KnPHQRHxJG2Xj
+	giFg2lDq21Vm2EoS1vuwvtqlttU4FdQYnquG8StF/7Qc2U1dMZXYRZ0FtVE75DzBMrzz/P
+	N3504pfJR4o/GLBBGIeWk5v9l0bJsYmm0QupTJ+nNCCVRtaoXf+P0gSK0HcClw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740061279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/BmtFl2k81SUm/1VjrdU/jVgNub5nHsJ466sJIBSwU=;
+	b=D9Knt0/YpIddKDTVG7BDrv4vvrba0CkVNAk6jPl1IKKFJVU+mQyOoOkRYYlV8EljvtiK2B
+	sr28C0ab+/lVqCAQ==
+To: Mark Brown <broonie@kernel.org>, Anup Patel <apatel@ventanamicro.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, hpa@zytor.com, Marc
+ Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement
+ <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Atish Patra
+ <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, Sunil V L
+ <sunilvl@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH v6 02/10] irqchip/irq-msi-lib: Optionally set default
+ irq_eoi/irq_ack
+In-Reply-To: <87jz9kiuvu.ffs@tglx>
+References: <20250217085657.789309-1-apatel@ventanamicro.com>
+ <20250217085657.789309-3-apatel@ventanamicro.com>
+ <Z7Xto0WZ-Crxunik@finisterre.sirena.org.uk> <87jz9kiuvu.ffs@tglx>
+Date: Thu, 20 Feb 2025 15:21:18 +0100
+Message-ID: <878qq0itnl.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com> <20250217154836.108895-32-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250217154836.108895-32-angelogioacchino.delregno@collabora.com>
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date: Thu, 20 Feb 2025 22:22:01 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8JLpoF4isgm-F7Z6W-tSxkdqACSaHvyARgaPo8PNdWsg@mail.gmail.com>
-X-Gm-Features: AWEUYZkuEEgZl0b7vlV6l42zcGpmz08ZpO3TrJPmfidMvCivGVZgPuOu7_J_xKI
-Message-ID: <CAAOTY_8JLpoF4isgm-F7Z6W-tSxkdqACSaHvyARgaPo8PNdWsg@mail.gmail.com>
-Subject: Re: [PATCH v7 31/43] drm/mediatek: mtk_hdmi: Remove goto in mtk_hdmi_clk_enable_audio()
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
-	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, ck.hu@mediatek.com, jitao.shi@mediatek.com, 
-	jie.qiu@mediatek.com, junzhi.zhao@mediatek.com, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kernel@collabora.com, 
-	dmitry.baryshkov@linaro.org, lewis.liao@mediatek.com, 
-	ives.chenjh@mediatek.com, tommyyl.chen@mediatek.com, 
-	jason-jh.lin@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi, Angelo:
+On Thu, Feb 20 2025 at 14:54, Thomas Gleixner wrote:
+> On Wed, Feb 19 2025 at 14:41, Mark Brown wrote:
+>> On Mon, Feb 17, 2025 at 02:26:48PM +0530, Anup Patel wrote:
+>> I'm seeing boot regressions with qemu on arm64 in -next which bisect
+>> down to this patch.  We hit a NULL pointer dereference:
+>>
+>> <6>[    0.898900] virtio_blk virtio1: 1/0/0 default/read/poll queues
+>> <5>[    0.910197] virtio_blk virtio1: [vda] 3906250 512-byte logical blocks (2.00 GB/1.86 GiB)
+>> <1>[    0.924459] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+>> <1>[    0.924508] Mem abort info:
+>> <1>[    0.924521]   ESR = 0x000000008600002b
+>> <1>[    0.924559]   EC = 0x21: IABT (current EL), IL = 32 bits
+>> <1>[    0.924580]   SET = 0, FnV = 0
+>> <1>[    0.924597]   EA = 0, S1PTW = 0
+>> <1>[    0.924616]   FSC = 0x2b: level -1 translation fault
+>> <1>[    0.924667] [0000000000000000] user address but active_mm is swapper
+>> <0>[    0.924833] Internal error: Oops: 000000008600002b [#1] PREEMPT
+>> SMP
+>
+> Uuurg. I wish I had double checked that the final submitted patch covers
+> _ALL_ incarnations of this. The below delta patch should address it.
 
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
-=BC
-2025=E5=B9=B42=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:=
-50=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> If the clk_prepare_enable() call for the SPDIF clock fails, just
-> disable and unprepare the clock in the error check branch and
-> return immediately instead of jumping to the end with a goto,
-> slightly reducing code size.
->
-> This commit brings no functional changes.
+I'll redo the branch accordingly.
 
-Applied to mediatek-drm-next [1], thanks.
+Thanks,
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
-log/?h=3Dmediatek-drm-next
-
-Regards,
-Chun-Kuang.
-
->
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_hdmi.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
-ek/mtk_hdmi.c
-> index bf8cf7fc8c07..2e98a8ed6cbe 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -1095,13 +1095,12 @@ static int mtk_hdmi_clk_enable_audio(struct mtk_h=
-dmi *hdmi)
->                 return ret;
->
->         ret =3D clk_prepare_enable(hdmi->clk[MTK_HDMI_CLK_AUD_SPDIF]);
-> -       if (ret)
-> -               goto err;
-> +       if (ret) {
-> +               clk_disable_unprepare(hdmi->clk[MTK_HDMI_CLK_AUD_BCLK]);
-> +               return ret;
-> +       }
->
->         return 0;
-> -err:
-> -       clk_disable_unprepare(hdmi->clk[MTK_HDMI_CLK_AUD_BCLK]);
-> -       return ret;
->  }
->
->  static void mtk_hdmi_clk_disable_audio(struct mtk_hdmi *hdmi)
-> --
-> 2.48.1
->
+         tglx
