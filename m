@@ -1,106 +1,88 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7329E1B3927
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61FE1EBA1E;
+	Thu, 20 Feb 2025 08:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740041682; cv=none; b=TAJ8GNoiBm0IbUxJ1o0B/5OACNOvzElfxJ+1s0dBQZdD2JhePPFoR9Kz6U325W7Np7J04mLXwTpXd407ZpArerlrgW2OQn2ng3kTfnRk0DZU7G0KWc81VlKWku8VP4gowUFk0Rmi740OvY63IFPG0xhZyYusfPEKmo34ZWgs/1w=
+	t=1740041683; cv=none; b=VIAH0V/Ag9q/7+eoMtPwgrXLR4UH/1S9KKngpxkzVJtoICiWXU1iAKgFsmeiEhAIETnbM1PxxJxGPNZliHsHy/dXqUtAFWJFyOKzyGtCPBuSAbH0BovBL7WAFXhg8l5COI7sHdmK1GWaZrZ9EfWUvgGCybQu/DBFz3C3bDYlGHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740041682; c=relaxed/simple;
-	bh=XuBYkqKTh1TJ8ljtBKLvAKKsI9mJGYCYOnlqLVE2wdc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gNkU2PcAwdOD+pMS5LookwSEI4DpwES3/U+oNn58gC7ywSLch9r5IVsShQZ2KjyOnku3I7ya0jKpV9o2yG8/8+xbxTbFo6CffaCKZxtgKPAd+2hAUAsfgWINnVLgsGyqFRcs/ZiT3LPPCAWSmeo+NemrkYaP+ahbh8SznV2AUVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HVTauNK1; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740041683; c=relaxed/simple;
+	bh=dqQ0SKzivqhys/digMbmEeqWgEakp5WM9xDxA2nBruI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=rDIsZ4x9nyFXJiKFfDb7ziyFbVw8GrSkW6jORDP19ET4ksDzOfsXfGm5zoFrGS/tSsOlbsOtzUHYxvmirB8NOZhs7ST2Nrewv7ernKmi8MRZS/bpxSNoIoShAsYGTqGlnAHXSRtfwlDSfpAaA9W75j3l6mXn8gyCpcZCInUbbhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhusA3n6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HVTauNK1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=tR6HK
-	7BPrCbBvCzg+WZMBSOfkdZaQhKpZsbhz6ow2Vs=; b=HVTauNK1y44q7bM8/Pohf
-	BKz69UW8HYcPFVzf1WXvs9y0Ir2xzkbXbRwwJCu/jYMrMyGrdtY3jv7SgbiZ82GQ
-	zp1TlyRu3Kpn5KosQWjAM4DC3xnhj8QsHbxjgjBzp88mzA74myaRtm6DlEKf+ghu
-	TfzzptIPP5VFAiAguPouxo=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDnLwmn7bZnUN9jNQ--.46079S2;
-	Thu, 20 Feb 2025 16:54:01 +0800 (CST)
-From: oushixiong1025@163.com
-To: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH] drm/arm/komeda: Add a condition check before removing sysfs attribute
-Date: Thu, 20 Feb 2025 16:53:58 +0800
-Message-Id: <20250220085358.232883-1-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhusA3n6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02976C4CED1;
+	Thu, 20 Feb 2025 08:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740041682;
+	bh=dqQ0SKzivqhys/digMbmEeqWgEakp5WM9xDxA2nBruI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=AhusA3n6ogCPeJqwzTIc7zCEpBx9gtTPjhqFynV6rpziPNetpO3duWtTdc57/82Ef
+	 TSE22uU8nonEekQNXvox2yHOCF8mZQhsV4c6VFJ5FYXmM/g8jI3zLTF/F2+oqsOnYt
+	 RpD6joKq1boATFnQfokKRWrlephU5XQfJVx0ZaxZziOX+nEe5G4dTAPWjX2NCt8nfU
+	 xn4XZhIdOVKE05XnjP71qzQ7tlUXl6+42VaR+sXc3G+E1wiCOEt4jJMMenc7dRMffG
+	 Nj13tJzfMQpgVF4cpr675uj4brbSg+EZfM/Ca9+XTUBgcHqF1KgQKh+ue1VQN+5Bqk
+	 Zsn4tbSNIA3iA==
+Date: Thu, 20 Feb 2025 00:54:38 -0800
+From: Kees Cook <kees@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+CC: Allison Henderson <allison.henderson@oracle.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, linux-hardening@vger.kernel.org,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_net-next=5D_net/rds=3A_Replace_?=
+ =?US-ASCII?Q?deprecated_strncpy=28=29_with_strscpy=5Fpad=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <08A0C3AE-A255-467F-A007-5584E8E44517@linux.dev>
+References: <20250219224730.73093-2-thorsten.blum@linux.dev> <202502191855.C9B9A7AA@keescook> <08A0C3AE-A255-467F-A007-5584E8E44517@linux.dev>
+Message-ID: <CCF15545-8AF8-40A8-917C-E44B6373D9AE@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnLwmn7bZnUN9jNQ--.46079S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WFyUWr1xGF4xAr1kKw17Jrb_yoW8ZF1Upa
-	nrJ3WjqryUKanIyr9rAa1UuF1rGw4fWw4xGryUuw13u343AF18KF95XFWqyrZrJFWfCF1a
-	qrs7XrW7WFs3Kr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jncTPUUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXRD5D2e25TahOwAAsj
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
 
-[WHY] If the call to sysfs_create_group() fails, there is
-      no need to call function sysfs_remove_group().
 
-[HOW] Add a condition check before removing sysfs attribute.
+On February 19, 2025 11:04:18 PM PST, Thorsten Blum <thorsten=2Eblum@linux=
+=2Edev> wrote:
+>On 20=2E Feb 2025, at 03:57, Kees Cook wrote:
+>> On Wed, Feb 19, 2025 at 11:47:31PM +0100, Thorsten Blum wrote:
+>>> strncpy() is deprecated for NUL-terminated destination buffers=2E Use
+>>> strscpy_pad() instead and remove the manual NUL-termination=2E
+>>=20
+>> When doing these conversions, please describe two aspects of
+>> conversions:
+>>=20
+>> - Why is it safe to be NUL terminated
+>> - Why is it safe to be/not-be NUL-padded
+>>=20
+>> In this case, the latter needs examination=2E Looking at how ctr is use=
+d,
+>> it is memcpy()ed later, which means this string MUST be NUL padded or i=
+t
+>> will leak stack memory contents=2E
+>>=20
+>> So, please use strscpy_pad() here=2E :)
+>
+>I am using strscpy_pad() here already because of the NUL-padding=2E
+>
+>Did you just miss that?
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
----
- drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 7 ++++++-
- drivers/gpu/drm/arm/display/komeda/komeda_dev.h | 2 ++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+Well that's embarrassing=2E Yes, I must need stronger glasses=2E *sigh* Ap=
+ologies for the noise!
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-index 5ba62e637a61..7d646f978640 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-@@ -259,6 +259,8 @@ struct komeda_dev *komeda_dev_create(struct device *dev)
- 		goto err_cleanup;
- 	}
- 
-+	mdev->sysfs_attr_enabled = true;
-+
- 	mdev->err_verbosity = KOMEDA_DEV_PRINT_ERR_EVENTS;
- 
- 	komeda_debugfs_init(mdev);
-@@ -278,7 +280,10 @@ void komeda_dev_destroy(struct komeda_dev *mdev)
- 	const struct komeda_dev_funcs *funcs = mdev->funcs;
- 	int i;
- 
--	sysfs_remove_group(&dev->kobj, &komeda_sysfs_attr_group);
-+	if (mdev->sysfs_attr_enabled) {
-+		sysfs_remove_group(&dev->kobj, &komeda_sysfs_attr_group);
-+		mdev->sysfs_attr_enabled = false;
-+	}
- 
- 	debugfs_remove_recursive(mdev->debugfs_root);
- 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-index 5b536f0cb548..af087540325c 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-@@ -216,6 +216,8 @@ struct komeda_dev {
- #define KOMEDA_DEV_PRINT_DUMP_STATE_ON_EVENT BIT(8)
- 	/* Disable rate limiting of event prints (normally one per commit) */
- #define KOMEDA_DEV_PRINT_DISABLE_RATELIMIT BIT(12)
-+
-+	bool sysfs_attr_enabled;
- };
- 
- static inline bool
--- 
-2.17.1
+Reviewed-by: Kees Cook <kees@kernel=2Eorg>
 
+
+--=20
+Kees Cook
