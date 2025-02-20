@@ -1,134 +1,173 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC14720C00D
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E38F20C00D;
+	Thu, 20 Feb 2025 16:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740070040; cv=none; b=bEJKUP4+cB2+UWBoF1gC8rUbcGR2G9pdBQueYyKf7ffyoZrmwe/qzOjrSn97khRyTmUoio0zRlicJIBwc3dwg5pLbuLHCxQM4ljH3T5QQI2IwYrcZFAHk0jl6Zq9ddszY52dj+CLELzEdIRRhrw/O1DqV0IDGz/sug9Jpp5WlVk=
+	t=1740070047; cv=none; b=Ib05OyMALr/ykVj2svW48JibBX8EobdpgYFOZGRofEbfwPpBWJHYc7/ZeJjrpePrm17kQsUQveXAAYob1nH+FV66/3AM3uQfc/2kA78XVMdRw4Ezan8HthbeeKOCn4TIL/l3M6Nc6WRttooM/gG6sQQYpD4FL9PVehx529iC5OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740070040; c=relaxed/simple;
-	bh=dQbcpcb/Fr1fg1CoD0pZkGdNzzEl80AydjsiI1ZsQkE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XJeRND2ZZo2GnRxkkXm7kRaFQMGtAli21/OjlS8mplk2WE6UyhGKcUT5ZQcSG/0BnKUrzV69uPhV0iKL35DpuoO2KevDK/cVrIho8lV7dN9nsyL5qlNnClRqurIhL/eze2B6EjbjphZXMSj4/SN7DoKV82o2cREgSmdTTF76itA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=M9DdC7w6; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1740070047; c=relaxed/simple;
+	bh=3OtB9akMB0pxoL9AejNzjcClgt8iH/E/EAXwsKV7QKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=smcuEg95KnZdimzwRypYMb8f2Zi+3cIckxm+2DlNx109ZFdoqZ/RO0WxJxTnLvziHQ9J7XIlRKvmnbR+f+p9px3pMiKRM2+oDvmJrs3SzG1k/5YM/EP3/W6s4LFNPIcmHqxJS15AQJBTa9KNaMU3BFmZAEI6MLjavpsqGfMwBP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGeWywHG; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="M9DdC7w6"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abb9709b5b5so225876166b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:47:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740070037; x=1740674837; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZPfZYNg8NOtUAiK1S11L7/kf32fZfQ/BKwR+IkGA/Y=;
-        b=M9DdC7w6260jKTOFJ3Pu+r1l27iOppTCtLWLJfDJx9HT7DmC2QjkqDXiDB65wTZGle
-         FAZ3KmLsi/KxhmU8GSJqJJ0ECGdLIsfE5KfCrumYYKNW2Nya/1Pdwx0pykO/Lb2ycAhw
-         h78tTpZ3dF3vsrzhxV69qGPJXkE0Eva+FZMps=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740070037; x=1740674837;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YZPfZYNg8NOtUAiK1S11L7/kf32fZfQ/BKwR+IkGA/Y=;
-        b=Ikj3B5wMgzKQlFfVLdFh04wCVWGDhPbgfD65lqtWfoNCtn2eof1PRgufsilhk2/EBv
-         Ch5ROcr3+4ZWIhCWTKtlWj/iudvq0pjvk75TJsZgb0t6maD44K9UADTdyZFfOULrqP5C
-         aQr6vDcSmJyKYoCdpkxFEiv0l47cpLo5EisVzgIWQtvdJ78aLHoUXgpxAtD2TG7XZLXi
-         2SaBKmtWHEds60kwvdnY1lDRuJGY401J5/NIzfgJItLWX342S+3CE8Cj6pYvLGKaAPiC
-         twDYnQPig2jQjgaz2/dAmBatgWWjYhMV6fKFWogHRBZHDYziHcv0Fbr8h6Jp8UKsrs3a
-         P2VA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/PoYOG28sX/gB5EvBmwyb3603IacULa5z+pr+hsNTL/jZaiX7LCTeb0776sFzNOcCKXfW3dq1CGAQHjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwExTj5waHFYkWYO7Gs/Tq82VF8jORwyOJ5/uWw7gqpxiJSJ7jb
-	qixVobXAg2EEcpzj34za00Z14yujr35+lLKjEfZHbQgyrTFsXW6o3UUipUuwqk5Wk1KyHs/PcYJ
-	g1tM=
-X-Gm-Gg: ASbGncvn1p3LK8tGb9fU2EAWmX5/elf9esn3ZdjhVEIMgnmrNF9cM0y3GDK2aaYdmZQ
-	PJkxJEWQABh5iTZ36IQiuC2SthCqFbeWctjXRtsZfx9ZtZacxIRv1k5GbOd2BFOlSQZIvf0J5cV
-	wDHEPJnDciuTRC5qEELZywqYpuybTZ9XrspNe4r6G8wpmXVz7NIyjZ0Yyu8VVomh3W/TEvWsHzf
-	0XgnqrZ1X3e4ZMGIuTMdi9X/0+MBEFrsvNktpStwBKydlTS2kqfMpZ6t4gR83PSa+MOI+yhtFtf
-	GPnLVS3v30pa+IIiz1uWUhiFUIl12ENTnyBD15DQyfc3GLKTmzP/HefjN/CluIBfOw==
-X-Google-Smtp-Source: AGHT+IFhqFoTEmCUyfzzP4aVbghhg8Ga5Q3lnrBpap68Vke8Q3uTyIENRIkyZwG72k+bUs7mHCrTnA==
-X-Received: by 2002:a17:906:c113:b0:ab7:8930:5669 with SMTP id a640c23a62f3a-abc09a43488mr2641966b.18.1740070036805;
-        Thu, 20 Feb 2025 08:47:16 -0800 (PST)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbab9e9863sm685870766b.64.2025.02.20.08.47.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 08:47:14 -0800 (PST)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaec61d0f65so248213566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:47:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUymc4T88knJTH0ataPyV1K9V2jSwMKnePvc7pC9K0byzJBD7enJUt/jdLerqIKKIrRvFpfa07Zi9CrWRA=@vger.kernel.org
-X-Received: by 2002:a17:907:7743:b0:ab9:137d:f6e7 with SMTP id
- a640c23a62f3a-abc099ca6bfmr2068366b.7.1740070033907; Thu, 20 Feb 2025
- 08:47:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGeWywHG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740070045; x=1771606045;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3OtB9akMB0pxoL9AejNzjcClgt8iH/E/EAXwsKV7QKM=;
+  b=GGeWywHG59KwjXp2z1prQ8QIm7CITuA/79kTarjmDJyu+OCg+pA445gI
+   840Msor8UbDN2EjcDJKHa/KyzwQgsxCz5b5pxQ9Z1jxX8eEzk5zzMBJVh
+   H2hX+CUV3lKOt+6VM5AEok8+5buZJkQ32XRoEWIsF1G0X1S7sbpb998LR
+   0JFL+eChPgIRlj2zzdG8lXkliLVWF/lpoxIoFLPw/pSzogx5zc+gVXKSv
+   qYm16Zm7nxZzezFY4S0TaZASNCP61+FHtdjqTiDT5g0HaYZrxgrdr79b3
+   xGMSHo1vvOMp1HacWVw4XAiaML5ezwHrvbLRWMMXblbmqMH+vAQLzkbiz
+   A==;
+X-CSE-ConnectionGUID: 2oRY97heQ+Wo0z+/6xYntQ==
+X-CSE-MsgGUID: uVunncHxTeyGJ0CgelCorQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="44508163"
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="44508163"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:47:24 -0800
+X-CSE-ConnectionGUID: /7uwIiSFTNWHbiSkGLSVCA==
+X-CSE-MsgGUID: +mazolK2Tge/cv+YU0RAGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="114819612"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:47:25 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1046420B5713;
+	Thu, 20 Feb 2025 08:47:22 -0800 (PST)
+Message-ID: <7de719b4-1e5c-42ee-80fc-0563b68299ef@linux.intel.com>
+Date: Thu, 20 Feb 2025 11:47:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org> <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <326CC09B-8565-4443-ACC5-045092260677@zytor.com> <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com> <Z7VKW3eul-kGaIT2@Mac.home>
- <2025021954-flaccid-pucker-f7d9@gregkh> <2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
- <2025022052-ferment-vice-a30b@gregkh> <9B01858A-7EBD-4570-AC51-3F66B2B1E868@zytor.com>
- <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
-In-Reply-To: <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 20 Feb 2025 08:46:56 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgb1g9VVHRaAnJjrfRFWAOVT2ouNOMqt0js8h3D6zvHDw@mail.gmail.com>
-X-Gm-Features: AWEUYZnMkN-x0Rtej4417GBTUm2ZZTOyavgfNoxIwCkZFobkcHssn8sD-O-61LI
-Message-ID: <CAHk-=wgb1g9VVHRaAnJjrfRFWAOVT2ouNOMqt0js8h3D6zvHDw@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Jan Engelhardt <ej@inai.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Greg KH <gregkh@linuxfoundation.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/rapl: Fix PP1 event for Intel Meteor/Lunar Lake
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+ linux-perf-users@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: dave.hansen@linux.intel.com, Zhang Rui <rui.zhang@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Ulisses Furquim <ulisses.furquim@intel.com>, intel-xe@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org
+References: <20250220153857.2593704-6-lucas.demarchi@intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250220153857.2593704-6-lucas.demarchi@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Feb 2025 at 07:17, Jan Engelhardt <ej@inai.de> wrote:
->
->
-> On Thursday 2025-02-20 14:23, H. Peter Anvin wrote:
-> >
-> >People writing C seem to have a real aversion for using structures
-> >as values (arguments, return values or assignments) even though that
-> >has been valid since at least C90 and can genuinely produce better
-> >code in some cases.
->
-> The aversion stems from compilers producing "worse" ASM to this
-> date, as in this case for example:
 
-We actually use structures for arguments and return values in the
-kernel, and it really does generate better code - but only for
-specific situations.
 
-In particular, it really only works well for structures that fit in
-two registers. That's the magic cut-off point, partly due calling
-convention rules, but also due to compiler implementation issues (ie
-gcc has lots of special code for two registers, I am pretty sure clang
-does too).
+On 2025-02-20 10:36 a.m., Lucas De Marchi wrote:
+> On some boots the read of MSR_PP1_ENERGY_STATUS msr returns 0, causing
+> perf_msr_probe() to make the power/events/energy-gpu event non-visible.
+> When that happens, the msr always read 0 until the graphics module (i915
+> for Meteor Lake, xe for Lunar Lake) is loaded. Then it starts returning
+> something different and re-loading the rapl module "fixes" it.
+> 
+> This is tested on the following platforms with the fail rates before
+> this patch:
+> 
+> 	Alder Lake S	0/20
+> 	Arrow Lake H	0/20
+> 	Lunar Lake M	8/20
+> 	Meteor Lake U	6/20
+> 	Raptor Lake P	4/20
+> 	Raptor Lake S	0/20
+> 
+> For those platforms failing, use a separate msr list with .no_check
+> set so it doesn't check the runtime value to create the event - it will
+> just return 0 until the i915/xe module initializes the GPU.
+> 
+> The issue https://github.com/ulissesf/qmassa/issues/4 is workarounded by
+> reading the MSR directly since it works after xe is loaded, but the
+> issue with not having the perf event is still there.
+> 
+> Closes: https://github.com/ulissesf/qmassa/issues/4
+> Closes: https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/4241
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com
+> ---
+> 
+> Maybe a clearer alternative is to just move all the platforms after
+> RAPTORLAKE with a gpu to use the new msr list.
+> 
+>  arch/x86/events/rapl.c | 26 ++++++++++++++++++++++----
+>  1 file changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index 4952faf03e82d..18e324b8fa82c 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -588,6 +588,14 @@ static struct perf_msr intel_rapl_spr_msrs[] = {
+>  	[PERF_RAPL_PSYS] = { MSR_PLATFORM_ENERGY_STATUS, &rapl_events_psys_group,  test_msr, true, RAPL_MSR_MASK },
+>  };
+>  
+> +static struct perf_msr intel_rapl_mtl_msrs[] = {
+> +	[PERF_RAPL_PP0]  = { MSR_PP0_ENERGY_STATUS,      &rapl_events_cores_group, test_msr, false, RAPL_MSR_MASK },
+> +	[PERF_RAPL_PKG]  = { MSR_PKG_ENERGY_STATUS,      &rapl_events_pkg_group,   test_msr, false, RAPL_MSR_MASK },
+> +	[PERF_RAPL_RAM]  = { MSR_DRAM_ENERGY_STATUS,     &rapl_events_ram_group,   test_msr, false, RAPL_MSR_MASK },
+> +	[PERF_RAPL_PP1]  = { MSR_PP1_ENERGY_STATUS,      &rapl_events_gpu_group,   test_msr, true,  RAPL_MSR_MASK },
+> +	[PERF_RAPL_PSYS] = { MSR_PLATFORM_ENERGY_STATUS, &rapl_events_psys_group,  test_msr, false, RAPL_MSR_MASK },
+> +};
+> +
+>  /*
+>   * Force to PERF_RAPL_PKG_EVENTS_MAX size due to:
+>   * - perf_msr_probe(PERF_RAPL_PKG_EVENTS_MAX)
+> @@ -826,6 +834,16 @@ static struct rapl_model model_spr = {
+>  	.rapl_pkg_msrs	= intel_rapl_spr_msrs,
+>  };
+>  
+> +static struct rapl_model model_rpl = {
+> +	.pkg_events	= BIT(PERF_RAPL_PP0) |
+> +			  BIT(PERF_RAPL_PKG) |
+> +			  BIT(PERF_RAPL_RAM) |
+> +			  BIT(PERF_RAPL_PP1) |
+> +			  BIT(PERF_RAPL_PSYS),
+> +	.msr_power_unit = MSR_RAPL_POWER_UNIT,
+> +	.rapl_pkg_msrs  = intel_rapl_mtl_msrs,
 
-So in the kernel, we use this whole "pass structures around by value"
-(either as arguments or return values) mainly in very specific areas.
-The main - and historical: we've been doing it for decades - case is
-the page table entries. But there are other cases where it happens.
+It's better to make the name consistent, e.g., intel_rapl_rpl_msrs.
 
-The other problem with aggregate data particularly for return values
-is that it gets quite syntactically ugly in C. You can't do ad-hoc
-things like
+Thanks,
+Kan
+> +};
+> +
+>  static struct rapl_model model_amd_hygon = {
+>  	.pkg_events	= BIT(PERF_RAPL_PKG),
+>  	.core_events	= BIT(PERF_RAPL_CORE),
+> @@ -873,13 +891,13 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+>  	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&model_spr),
+>  	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&model_spr),
+>  	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&model_skl),
+> -	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&model_skl),
+> +	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&model_rpl),
+>  	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&model_skl),
+> -	X86_MATCH_VFM(INTEL_METEORLAKE,		&model_skl),
+> -	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&model_skl),
+> +	X86_MATCH_VFM(INTEL_METEORLAKE,		&model_rpl),
+> +	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&model_rpl),
+>  	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&model_skl),
+>  	X86_MATCH_VFM(INTEL_ARROWLAKE,		&model_skl),
+> -	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&model_skl),
+> +	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&model_rpl),
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
 
-   { a, b } = function_with_two_return_values();
-
-like you can in some other languages (eg python), so it only tends to
-work cleanly only with things that really are "one" thing, and it gets
-pretty ugly if you want to return something like an error value in
-addition to some other thing.
-
-Again, page table entries are a perfect example of where passing
-aggregate values around works really well, and we have done it for a
-long long time because of that.
-
-            Linus
