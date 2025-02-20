@@ -1,186 +1,135 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67682135BB;
-	Thu, 20 Feb 2025 19:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740080412; cv=fail; b=m8yDMrZFcGzfUtLXQoHKa/DVhTsIeLe4F+7S2h6UQYon4w15n6Q9YxNx6Ru5Rw9rZVUo0yBGSiO772TdbJ0fIRyNyBtIgOY/aifHz1gd0l/fgunKV3HUyN6oWCxovhwOKLVVYsB976HrFE2XVzk2ziGib4Jf2S1EYvQ9lyI7yps=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740080412; c=relaxed/simple;
-	bh=CBqm1Fqk8jMIKNdea7uYXMQmcKuEctyOHf36PORjkpI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cFjKNuGvO9LcB7GkXoiCAcmK3pSCE1kFngTWLzWg240xrryKMuXaog83T6pH0okC1WN/u0tWeIVTCdC7ta3V5ap4NOEvcxM8n3kWlC/QpEU2jzFtdEyXAl0cum4U3VjIzo3CZZreJNyytaOfb2FI5EakEqYa8RZQHb+OM/Sly0Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TrATA7tw; arc=fail smtp.client-ip=40.107.243.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7DA2641C3;
+	Thu, 20 Feb 2025 19:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740080421; cv=none; b=c4YTbgceMwidREEhee/finkUEY97jLAA+z4whHRJO8szkuUaaKo7DS0c+yGrH6oqWK/BXRlgFpEIGPtDIbqcCl1dcybp+U9X36az6rHyDIiG05/xrdlL91w7oN4jppukrtkAnJbfF+RjMuKS3drOGcibn0ME0QYcCkZGhEe3w5g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740080421; c=relaxed/simple;
+	bh=hqCoKjej+HHeQWhag6pZZ21Tn6VeD1hPTK2ajP5mzTM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cH6Ox4skaNaEcNFSksUJfp5RHM3zA6cBpvEAAj1WP7C5be35INFFhZ9wLdkDt8NWgGIRz66HY4B24u38NbK8XK67GlmamteW1ocRiFPKfbrniPA6YEStXNAm0R1ngFsCZbWZU9K2JTAIHG7l7MZPiOEfqq2oipPCn/uilRPHHGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9SMbXV1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TrATA7tw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TiOQ517m9lfDQPXE/9WycyZhtBSmNqtqDkcp6QfHRi2u8x5uDTNW7yix3zR8CUfMgliX/69drXLAgFvS5HvVZeRdxD3q8VxxQlBBMmvcaddIeM7dCddOpuI9wlXtS7+dCYgGUMAvZAOo7c+JV5mk1844gkzC7xFnTBbZkbTBBEtPdCaI9s79GJPrKqhBjdy1C8Gp0drpaedrVNNHrhQlh0quGMwUTQ/JQTenFezG584PVlPYoo4MVhIwlbJjFxRscpZLaKCksmFJVPJhomD/XmXOvrZPj2BHP9cDenC2abOjfidWsiUQnxSn62Qjpmn88NDV+pk3C69htux072kezQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lUVRy7wyUKTn/gJhDGGEBDKzDKhUk889JAGtm9Zd2bU=;
- b=GBjiKPUAF+6ecmJ/DAwkV0iydHxIeSUDttWVRK3G3/18zdGiupC3g4BjIHklGv3Rp4Dplj/DYy/9p1EvqkP5foXtmlESUwlCX5SkmPl820Q9qqlOumFUL9uP5g3BdQCo4deYD90X1W0OxR6/wa+WiX+7BGUOxRSwxHY6Y0+DCaUsLEULK1VBmNb9Dywmx7htBliXT4RdXDkbuEt8RUf3F7gR0LgTzSDuNCpfn2CYR+6ZBPpNLXYzHWxu8WIfZv4fs9/s9PK5M9JDNEY5XJ46O7DSJ+3hIAp0kiYm1Pa97Q5nt5/PgSVAwzB9NbZGaw2OFi2EBF7gL8GbB3h6uD7c3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lUVRy7wyUKTn/gJhDGGEBDKzDKhUk889JAGtm9Zd2bU=;
- b=TrATA7twCrzFI1MLyQ00Y57ZKxsaoB2AosqPnh2tl/0eFu5txXzEJqVerTKKT4sOKoDH1Pj9BEYuOgd0RZZengAgjjlVHicUQsrh3wFQKflfCROS1iQzWrDqvmSXjD9b34BFWxkkANlkl4zC43epKxdLBK8Z+sDCZbEIyaWqqxDjiNKFzPYiU+/nor+nCO/3VsOWTToR5MJcrE015Jxcvu/v/N5a8GZWNMYHzW6hiu+0E6CEX4Dk40IFkWwbywBMi73oZ2QdCDeWoIKcDcHbK2RqdTTswhK+C/K5T/PsOgdRKzfd9KZjYbDuwDoyV06X6srvpqKOBAwaARwm6/gUEw==
-Received: from SJ0PR03CA0073.namprd03.prod.outlook.com (2603:10b6:a03:331::18)
- by PH7PR12MB6444.namprd12.prod.outlook.com (2603:10b6:510:1f8::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Thu, 20 Feb
- 2025 19:40:04 +0000
-Received: from SJ1PEPF000026C7.namprd04.prod.outlook.com
- (2603:10b6:a03:331:cafe::c9) by SJ0PR03CA0073.outlook.office365.com
- (2603:10b6:a03:331::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.15 via Frontend Transport; Thu,
- 20 Feb 2025 19:40:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SJ1PEPF000026C7.mail.protection.outlook.com (10.167.244.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 19:40:03 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 20 Feb
- 2025 11:39:56 -0800
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 20 Feb 2025 11:39:56 -0800
-Received: from c-237-113-200-209.mtl.labs.mlnx (10.127.8.14) by
- mail.nvidia.com (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.14
- via Frontend Transport; Thu, 20 Feb 2025 11:39:53 -0800
-From: Dragos Tatulea <dtatulea@nvidia.com>
-To: "Michael S . Tsirkin" <mst@redhat.com>, <virtualization@lists.linux.dev>
-CC: Dragos Tatulea <dtatulea@nvidia.com>, Jason Wang <jasowang@redhat.com>,
-	Eugenio Perez Martin <eperezma@redhat.com>, Si-Wei Liu
-	<si-wei.liu@oracle.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Gal Pressman <gal@nvidia.com>, Xuan Zhuo
-	<xuanzhuo@linux.alibaba.com>, <stable@vger.kernel.org>, Cong Meng
-	<cong.meng@oracle.com>
-Subject: [PATCH vhost v2] vdpa/mlx5: Fix oversized null mkey longer than 32bit
-Date: Thu, 20 Feb 2025 21:37:33 +0200
-Message-ID: <20250220193732.521462-2-dtatulea@nvidia.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9SMbXV1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED810C4CEE3;
+	Thu, 20 Feb 2025 19:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740080421;
+	bh=hqCoKjej+HHeQWhag6pZZ21Tn6VeD1hPTK2ajP5mzTM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=E9SMbXV13/O+n+JHVn3ZkQ6zLRpO/zX/ETt6+LiplteEaHOcsB/bqV9VXtWzvQzm8
+	 sHjae1t4GnUgBo7yta3DnWo/n/kC2IAn1pGHpAndsUO5MtHzbKqBj1Ggvq5SyS3U1x
+	 gk2jTtUTVmKqKC3qmMeuQcqX4/U/SGesE0qYDiMTvntCKaBgOb7U83WvsUtHFkiZbk
+	 RzpwJMBzBgoYF5exMQba4dIS23u/OZLE/NwymQJYL4+8mciajZ1AZeoyEkDrf1sexc
+	 H/Oy2HbY8JMImsa9AU7qAQlVjRqAp1OKCbIz06xbbjKFUnS+XphhSY3QxPg8V8n4j6
+	 M+CJdO83ujn7g==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3f3fa7ba7f4so1328500b6e.0;
+        Thu, 20 Feb 2025 11:40:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV6bWU7ESTWi09oEslKpcLZ5BogGFtpPKwywPDaf2Ax6g+0MKXJ5qMzO7iSotpmjy+UR0Y8zHk/Vj4=@vger.kernel.org, AJvYcCV9n1ZiMUbpwf0WFMaG3OfWQTYCzL/brXm4+wMs+8VOSFuWy2fbW53GaUMZXwhc7piRv8Eg2gY4v5D7KNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2BLHsCcxYcrN0ylDRqVEXRvzGSRHDrU4a5q3anlz3Lenczvnj
+	S++IuWY2WSRxmBgSY26Bf9uW9BY3M/qqcqWlaUrJ9mfI9q4mC5M7A8l1DGWHXgVptV8Ua7KsZkJ
+	8cwUEqOnbC1aI1HvaTUKdtLSV5N8=
+X-Google-Smtp-Source: AGHT+IHWV2RVedyag4xEq/eZocEihT21AL0l6xxWtsJ3G+q055XmaMvqdtKSX60qspfED8kb5ejbpgVxWsGX3lwcS6U=
+X-Received: by 2002:a05:6808:3987:b0:3f4:9e6:fb7 with SMTP id
+ 5614622812f47-3f424c163c7mr457397b6e.1.1740080420264; Thu, 20 Feb 2025
+ 11:40:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250219-fix-power-allocator-weight-v1-1-79b1a99e94eb@chromium.org>
+In-Reply-To: <20250219-fix-power-allocator-weight-v1-1-79b1a99e94eb@chromium.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 20 Feb 2025 20:40:09 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0h8MyqEgC8Hf1_s4=kCj2W3Y0TWdVnbhwAiVLqED7WPow@mail.gmail.com>
+X-Gm-Features: AWEUYZmMyp9vg4hoThN2tGblMv8_mn1f8LkJzK_odRUXDFoN5MveJJKCYiPo29Y
+Message-ID: <CAJZ5v0h8MyqEgC8Hf1_s4=kCj2W3Y0TWdVnbhwAiVLqED7WPow@mail.gmail.com>
+Subject: Re: [PATCH] thermal: gov_power_allocator: Update total_weight on bind
+ and cdev updates
+To: Yu-Che Cheng <giver@chromium.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chen-Yu Tsai <wenst@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C7:EE_|PH7PR12MB6444:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef044da4-09b1-4e11-70ba-08dd51e65f38
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UDc5VGZ5dTQ2dFVwemlnQ3ZnZ3M4czFidnVZZXpGNjQ0aGhVeFBHU0cySTkw?=
- =?utf-8?B?QzAxYkNPcE9oRnZqcjhjbGU3TGFFOS91V1ZxRWdPSlFmMFBXTnhIK29mNytY?=
- =?utf-8?B?NXRjWVFhaHN0Vi9ISzgxWWo2VWxlMmo4bUNMWUorSEhoRzlaa1JvWTJRV0NH?=
- =?utf-8?B?V1VTOVAyZThESS9LN1UyeU9xYlhpUE1kcTNkeHl0UjVKcTA3MlYzanhxQjQ5?=
- =?utf-8?B?L3NvVVhrZFBsUVNDQVE0SXdnUzFnWlNZaE02WC9KOFFXUExoV2lidHQ4bTRz?=
- =?utf-8?B?RjRvY2JycnpLV3JIaHNhdm1RUk9ZYm5WcnIydmFSNVJEcnBDNFVVRk5IdXd0?=
- =?utf-8?B?RTIvdXpFNGFSS1FNMHVXd3oveXFaaWNmaU8vbmQ0TU9TNDNpQlg0cFVkUTBu?=
- =?utf-8?B?cndjdzlETjZiT2dSenhqWW5qVFA3SnF3WVNzcm9XaWpwUmZZN3o2S1JGbTFR?=
- =?utf-8?B?SC80aGtIWGxMSExveXM3cURXS0dNUWJTMXE0WU1YOXVJSmZnN3lrb1NWeGdM?=
- =?utf-8?B?Y1JLOHFWaTlZRmV4aE0zOVNVUCtMQUdYdG5vTjNvcXJ5M3NvTTRCMEgrMGUw?=
- =?utf-8?B?N1BzajJ6U0JhaXM4UmJqQTd6eWsrRFhxdTlXMDM4aCtlaURrM3NvRmFxQjVu?=
- =?utf-8?B?bzJwM1V4UlRSdWx0bnRvNElqVTFqWFJzSG0xUlJmNDdzUnYyV1JBdGJ3dVVJ?=
- =?utf-8?B?dEE5ODR1WWZraTVHSGM3RVBwQUhDdURoeE5hMUNoenVsSzlsN01FWXlzbVcy?=
- =?utf-8?B?bSt2UkszK0ZiYWNPQ1ppNmNrNDZYaHdMTVdETklCWi9YVVRiNXIzVkxpdzdB?=
- =?utf-8?B?UEJPU3M1Z1RjS3VzOUZYWm5tUVFSK0tXclhDYjNWOFhCNUdxTkgxQ1RTWTR4?=
- =?utf-8?B?c2lVSFVETEFnSDZwOThPTHgrdG4wSGJDby9BVEtOUkQzN1BBUXdiZ1dvVkVr?=
- =?utf-8?B?M2ZPV28yQ3oySXJJeCtMSVdIbVJlTEhRSG5IWTdBMTRBaU81eUs3MERWaDlB?=
- =?utf-8?B?TndtTElscVRXa2YzWTRUc2RnaTF3d0MvaGhld2F0RXJRdzNXZ2lWZTZaMWUx?=
- =?utf-8?B?d1FuZmJyRC9UUWltQlJybWIrMDMxejdWOTY5MEgyeDNOa0s1Wkh3TFMyWC9j?=
- =?utf-8?B?NW1ETTZHSXd3RmNPUXB3dWNMM0VDU3k0Z0xTQzAwZmpSMTdyS1B2TDBVRDVr?=
- =?utf-8?B?dnc2YVdjVWZoQndvWE8raEtrZC9KQkhHdTE1SmtEdHhwajhFR2F3OXNuMUdj?=
- =?utf-8?B?aitpeDlrR0xJSzdqZ0M4ZHNuOUVwdHZvOHUyc01CSGh4Rzg2L2tITk0wTklX?=
- =?utf-8?B?ZEZISk9MckNaaHJoRUV4cnRWNUhmK1hFYmt6N3UwcW1KcFdKUlpOdkVnSm5W?=
- =?utf-8?B?WkoySTUrNlc4aWY1VWtHNnlmeUZyaDZvWkljaXRma0FOREZyNmtZSHFsZmxY?=
- =?utf-8?B?UDN5eTkyVzlSRHRyRHA0Vmx1T1Nwam9EendqdHBQTzY4NHNDU0d5cGVKSC95?=
- =?utf-8?B?S0lFVUdHRFl0cjVxeTA3eGVjRGpMNE5UemFkdTVoMHY1Q2hhbEdneHBJejRw?=
- =?utf-8?B?WW9CWW1DbW1NR2FlWVBhanJ5ckpPL3ZuOWcxcDUwTGdUa2hhL3NSeXhUK25u?=
- =?utf-8?B?Sno5WjhxWjJQOU9WN1VaM3RqTGZIaDFMTDQ2NlgzWjFZdDQ5djJud3ppbDdG?=
- =?utf-8?B?NVU0REdoUUQyaWxKbDF3RTVqYzZoeDdJYVlEcXNFUHBKWHRFUHdXSytqTkdE?=
- =?utf-8?B?ODBBalhaL25oZFptSkszK0g1cHdPQURkOEVvd09POVltTUY4WEc4K2lFK1k5?=
- =?utf-8?B?emsrK2JtVEFxdy9pYTBwbFB4NXBVU3VUdWtlV092R0JYUHoxZ0RjalJSN0dO?=
- =?utf-8?B?VVpRUk40MHh3K0ZlamxiUzBoSEdDeEJhRG5kb2dLcEhHK0RXa2IrenVpQXFV?=
- =?utf-8?B?OUpMV2QxanJzZVI1NXhxMnFLNGRrcUY5aVN1eVo2eG8vd2cveU1oNGpPNkUw?=
- =?utf-8?Q?80TnAw0IWLv0rayuN2Qj1BRbmz9XDU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 19:40:03.7871
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef044da4-09b1-4e11-70ba-08dd51e65f38
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000026C7.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6444
+Content-Transfer-Encoding: quoted-printable
 
-From: Si-Wei Liu <si-wei.liu@oracle.com>
+On Wed, Feb 19, 2025 at 8:07=E2=80=AFAM Yu-Che Cheng <giver@chromium.org> w=
+rote:
+>
+> params->total_weight is not initialized during bind and not updated when
+> the bound cdev changes. The cooling device weight will not be used due
+> to the uninitialized total_weight, until we trigger an update via sysfs.
+>
+> The bound cdev update will be triggered during thermal zone registration,
+> where each cooling device will be bound to the thermal zone one by one.
+>
+> The power_allocator_bind can be called without additional cdev update
+> when manually changing the policy of a thermal zone via sysfs.
+>
+> Update total_weight when bind and cdev updates to ensure total_weight is
+> correct.
+>
+> Fixes: a3cd6db4cc2e ("thermal: gov_power_allocator: Support new update ca=
+llback of weights")
+> Signed-off-by: Yu-Che Cheng <giver@chromium.org>
+> ---
+>  drivers/thermal/gov_power_allocator.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_=
+power_allocator.c
+> index 3b644de3292e..600cb0e367c3 100644
+> --- a/drivers/thermal/gov_power_allocator.c
+> +++ b/drivers/thermal/gov_power_allocator.c
+> @@ -656,11 +656,10 @@ static void power_allocator_update_tz(struct therma=
+l_zone_device *tz,
+>                         if (power_actor_is_valid(instance))
+>                                 num_actors++;
+>
+> -               if (num_actors =3D=3D params->num_actors)
+> -                       return;
+> +               if (num_actors !=3D params->num_actors)
+> +                       allocate_actors_buffer(params, num_actors);
+>
+> -               allocate_actors_buffer(params, num_actors);
+> -               break;
+> +               fallthrough;
 
-create_user_mr() has correct code to count the number of null keys
-used to fill in a hole for the memory map. However, fill_indir()
-does not follow the same to cap the range up to the 1GB limit
-correspondingly. Fill in more null keys for the gaps in between,
-so that null keys are correctly populated.
+This is basically fine, but I would add a new function, say
+power_allocator_update_weight(), for updating the weight.
 
-Fixes: 94abbccdf291 ("vdpa/mlx5: Add shared memory registration code")
-Cc: stable@vger.kernel.org
-Reported-by: Cong Meng <cong.meng@oracle.com>
-Signed-off-by: Si-Wei Liu <si-wei.liu@oracle.com>
-Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-Acked-by: Eugenio Pérez <eperezma@redhat.com>
----
-Changes in v2:
-- Added Reported-by tag.
-- Fixed typo found during review.
----
- drivers/vdpa/mlx5/core/mr.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+>         case THERMAL_INSTANCE_WEIGHT_CHANGED:
 
-diff --git a/drivers/vdpa/mlx5/core/mr.c b/drivers/vdpa/mlx5/core/mr.c
-index 8455f08f5d40..61424342c096 100644
---- a/drivers/vdpa/mlx5/core/mr.c
-+++ b/drivers/vdpa/mlx5/core/mr.c
-@@ -190,9 +190,12 @@ static void fill_indir(struct mlx5_vdpa_dev *mvdev, struct mlx5_vdpa_mr *mkey, v
- 			klm->bcount = cpu_to_be32(klm_bcount(dmr->end - dmr->start));
- 			preve = dmr->end;
- 		} else {
-+			u64 bcount = min_t(u64, dmr->start - preve, MAX_KLM_SIZE);
-+
- 			klm->key = cpu_to_be32(mvdev->res.null_mkey);
--			klm->bcount = cpu_to_be32(klm_bcount(dmr->start - preve));
--			preve = dmr->start;
-+			klm->bcount = cpu_to_be32(klm_bcount(bcount));
-+			preve += bcount;
-+
- 			goto again;
- 		}
- 	}
--- 
-2.43.0
+And I'd call it from here and from power_allocator_bind() below.
 
+>                 params->total_weight =3D 0;
+>                 list_for_each_entry(instance, &td->thermal_instances, tri=
+p_node)
+> @@ -731,6 +730,8 @@ static int power_allocator_bind(struct thermal_zone_d=
+evice *tz)
+>
+>         tz->governor_data =3D params;
+>
+> +       power_allocator_update_tz(tz, THERMAL_INSTANCE_WEIGHT_CHANGED);
+
+Because this is kind of confusing (although it will work AFAICS).
+
+> +
+>         return 0;
+>
+>  free_params:
+>
+> ---
+> base-commit: 2408a807bfc3f738850ef5ad5e3fd59d66168996
+> change-id: 20250218-fix-power-allocator-weight-5dac6d4b5797
+>
+> Best regards,
+> --
+> Yu-Che Cheng <giver@chromium.org>
+>
