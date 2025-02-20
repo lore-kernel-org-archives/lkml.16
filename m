@@ -1,182 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351FA263C91;
-	Thu, 20 Feb 2025 20:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1881E2845
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 20:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740082828; cv=none; b=nMPZ/2KA2i/dN3/vBi9PffQzKoi9GNt34YGU0rPxvE6DgCQjFOGAW359NeZqTtX/nRbckvhVgOuTeE9Ecd3mtMaMk0YFeyIp2MFzm92eTac4ZY9I+vjd56ArZI7JtFS0sgfuDwiTssu8kFe3siBCewbTtDDcwLL1FK1ZMJZ2CJ0=
+	t=1740082827; cv=none; b=S3yvQ2nh31eZ67mh9nuhyjs4+p2fXB2qbxLc377eDYf7Ov/fHB9zrxqrAbg/ME+e78n1UOodoxlEp7wTnAmD5MHatRjt9/Z2LhUHFk9bb2OXEZhvbvaFOJaHJz5rykIxiMjV+BTo/7+GS/S2d6YeJAY4turViafxbYRPw2FCyhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740082828; c=relaxed/simple;
-	bh=dM6dxwW9oxxt/IqEqbgNISiBMYoBatiOHbCtlpdPUio=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=iLEH8MvxqGx8D02oKG/GxYTU6GXmP2ouK3h5MA8zc/mOvkSRNVKo/XiuT1uTV3tAipK3Y+7IcW9VTqg/agiYL5Z7EooLfFBJuJlGXn/WcZksVbbUNyz5ghF48DEM5gIvhCz5gzm27ZfBZjiUTa8gtKoIuvXNipPU0br9SDuepSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8281C4CEE4;
-	Thu, 20 Feb 2025 20:20:27 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tlD2V-00000005fWo-0rdz;
-	Thu, 20 Feb 2025 15:20:55 -0500
-Message-ID: <20250220202055.060300046@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 20 Feb 2025 15:20:10 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Heiko Carstens <hca@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- stable@vger.kernel.org
-Subject: [PATCH v3 1/5] ftrace: Fix accounting of adding subops to a manager ops
-References: <20250220202009.689253424@goodmis.org>
+	s=arc-20240116; t=1740082827; c=relaxed/simple;
+	bh=9AJ8NJ3fQ71s31AL2ReKVKY4uz5K/1w53C9zcgxtO+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BzUlXVuyQagshsj/9YcpCl8Z/oVb72FQSOK1kdiutjWc5L/G6pDsbVrLbQKc86koAizV0HNDQwpb9jcaDuWXWX07t31VKzm3gz9xMVmgVkmdAbBKZFMpE0pRLfF+B3xEHc1D2sVdRP7R/Pmf1HwOCGuLqdzbEvnj+FiRfFkNmtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VATQUrUp; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VATQUrUp"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5fcde65241cso948979eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:20:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740082823; x=1740687623; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3YA0S6DeTYDLSFKZ0z+n+MPKwXA/ZHvwCQOrhZShsds=;
+        b=VATQUrUpyhnfA/wKRR5imajWPBWt/CitSu1NwmIu5xZMmmgvi51TsTD3b7iDHmreTd
+         fW397KmI+vuS8Y9unSiTWOvpzOClSXH8q2ytMJgrFUw8q7BIP4KZ0coUzZbxUfhPXExI
+         6BdGBuc+E5IMnCfkHaYCH0eOnRdzL5x7RcShAYfzG1BvoxW5u2cwevhvYUdHkl+Ag1O/
+         +dVjnqYOIKPjSMVHQefpq39AW4lhAicb8MPuAmeoeEj9iv8AQWQSTxxPuvUPwZ42Zz45
+         33ykJ1otFBQixPV8p8jj0Nm2mHIcycNW7rZntb1SguOMqaxszLtC5gu/kvSiP6At7gDC
+         Zq4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740082823; x=1740687623;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3YA0S6DeTYDLSFKZ0z+n+MPKwXA/ZHvwCQOrhZShsds=;
+        b=OgBbh000BlN7AxwtNeGnt65CpeFG/SEcMFRXhgzhN1/sWyzmTOsxaRvqwSkQaf0WwT
+         01ynzcy7zNJQ1C6jteVrYAJ3s2tXHdIHeyrQn26PSLBvrjvEJB2B2NrUEpxPGXIjULWc
+         n0zNsVjzsNu+ErfczqGG20Y6NtORZftxPEserV2y8uu6rhMN4gxnVASZP9loKPFbuvVp
+         5X82+M+379py91JgDz5mgwe6CEGx2vEaHaRYN9ydD+4p7tgGvnLm+RSx2pa5xQb1Ej41
+         71HGFH09+Pq+Ww6S9Gc2Lisa0dYmI47YXDH3KvSM1qw+093p+JEA5AUwYxiZuieNS/Oq
+         yA+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUZgeeUFxIfuWct8FTSrpvlmS9FmjTORTjhD/aksRPDs97GxE0JY4z2ONSJcjYxkF5PiwisMpJ2rdqMEJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqohmY4zLJyOLXsReEvOncLZiU+NG4GRbiGgMUWVDCc0kk1/lF
+	/qB5N74Hf83xFWEw6yaFrnzcB+p69LkzlkLZzEEO+cOQ6RPGe6b7M3/G0vUU6Zw=
+X-Gm-Gg: ASbGnctPTR9yr4JP6cB++f15OxmcZUpWrY5QTbgZLeq7udgIf9DP3KtifK7NmoWSNiS
+	Orpzdc91f6L5R+662+wGNnWyfstsx5KO4fcWoOtmgyOXuahQtnwNOx127+4WB2nnekwupxnqpmK
+	Fg4wINz9/aY5FtcDtFG/b2Vz+9M/HedtCNOw8QmkO4lyAbf+eLZe/S1xKHoqwsMH3LqQfx/Fl23
+	sW9noJh3CMWADVyNwELOFpicJXuYl2DBvSJ35lIE83+d1uS6iIn05VOQb9YimyRyCJ9iyFTu1U5
+	rAxR7QsclS4exmhHiekxE9211CqifOPvHw6tfCVhRP1ugS2DbtV/
+X-Google-Smtp-Source: AGHT+IGSPaTaOucH2dLQqzNmLsQTf0sq/ili5Qrkv0KGKys857Oj5ka28XQilT2mB8kbG8XY9mj4fw==
+X-Received: by 2002:a05:6808:2112:b0:3f3:d5a1:a928 with SMTP id 5614622812f47-3f4247c1ef4mr590369b6e.32.1740082823499;
+        Thu, 20 Feb 2025 12:20:23 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f41a6fc550sm504082b6e.39.2025.02.20.12.20.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 12:20:22 -0800 (PST)
+Message-ID: <13c5e420-a3ca-468b-8810-3528b24d8664@baylibre.com>
+Date: Thu, 20 Feb 2025 14:20:20 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/14] iio: backend: add support for number of lanes
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
+ robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250220135429.8615-1-antoniu.miclaus@analog.com>
+ <20250220135429.8615-6-antoniu.miclaus@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250220135429.8615-6-antoniu.miclaus@analog.com>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 2/20/25 7:54 AM, Antoniu Miclaus wrote:
+> Add iio backend support for number of lanes to be enabled.
+> 
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+This is why I was pushing for a similar function to be an iio_backend
+function in [1]. :-)
 
-Function graph uses a subops and manager ops mechanism to attach to
-ftrace.  The manager ops connects to ftrace and the functions it connects
-to is defined by a list of subops that it manages.
+[1]: https://lore.kernel.org/linux-iio/94efa413-5fa9-4014-86c2-331442e9d42e@baylibre.com/
 
-The function hash that defines what the above ops attaches to limits the
-functions to attach if the hash has any content. If the hash is empty, it
-means to trace all functions.
-
-The creation of the manager ops hash is done by iterating over all the
-subops hashes. If any of the subops hashes is empty, it means that the
-manager ops hash must trace all functions as well.
-
-The issue is in the creation of the manager ops. When a second subops is
-attached, a new hash is created by starting it as NULL and adding the
-subops one at a time. But the NULL ops is mistaken as an empty hash, and
-once an empty hash is found, it stops the loop of subops and just enables
-all functions.
-
-  # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
-  # cat /sys/kernel/tracing/enabled_functions
-kernel_clone (1)           	tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-
-  # echo "f:myevent2 schedule_timeout" >> /sys/kernel/tracing/dynamic_events
-  # cat /sys/kernel/tracing/enabled_functions
-trace_initcall_start_cb (1)             tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-run_init_process (1)            tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-try_to_run_init_process (1)             tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-x86_pmu_show_pmu_cap (1)                tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-cleanup_rapl_pmus (1)                   tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-uncore_free_pcibus_map (1)              tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-uncore_types_exit (1)                   tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-uncore_pci_exit.part.0 (1)              tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-kvm_shutdown (1)                tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-vmx_dump_msrs (1)               tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-vmx_cleanup_l1d_flush (1)               tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-[..]
-
-Fix this by initializing the new hash to NULL and if the hash is NULL do
-not treat it as an empty hash but instead allocate by copying the content
-of the first sub ops. Then on subsequent iterations, the new hash will not
-be NULL, but the content of the previous subops. If that first subops
-attached to all functions, then new hash may assume that the manager ops
-also needs to attach to all functions.
-
-Cc: stable@vger.kernel.org
-Fixes: 5fccc7552ccbc ("ftrace: Add subops logic to allow one ops to manage many")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/20250219220510.888959028@goodmis.org
-
-- Have append_hashes() return EMPTY_HASH and not NULL if the resulting
-  new hash is empty.
-
- kernel/trace/ftrace.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 728ecda6e8d4..bec54dc27204 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3220,15 +3220,22 @@ static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
-  *  The filter_hash updates uses just the append_hash() function
-  *  and the notrace_hash does not.
-  */
--static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
-+static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash,
-+		       int size_bits)
- {
- 	struct ftrace_func_entry *entry;
- 	int size;
- 	int i;
- 
--	/* An empty hash does everything */
--	if (ftrace_hash_empty(*hash))
--		return 0;
-+	if (*hash) {
-+		/* An empty hash does everything */
-+		if (ftrace_hash_empty(*hash))
-+			return 0;
-+	} else {
-+		*hash = alloc_ftrace_hash(size_bits);
-+		if (!*hash)
-+			return -ENOMEM;
-+	}
- 
- 	/* If new_hash has everything make hash have everything */
- 	if (ftrace_hash_empty(new_hash)) {
-@@ -3292,16 +3299,18 @@ static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_has
- /* Return a new hash that has a union of all @ops->filter_hash entries */
- static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
- {
--	struct ftrace_hash *new_hash;
-+	struct ftrace_hash *new_hash = NULL;
- 	struct ftrace_ops *subops;
-+	int size_bits;
- 	int ret;
- 
--	new_hash = alloc_ftrace_hash(ops->func_hash->filter_hash->size_bits);
--	if (!new_hash)
--		return NULL;
-+	if (ops->func_hash->filter_hash)
-+		size_bits = ops->func_hash->filter_hash->size_bits;
-+	else
-+		size_bits = FTRACE_HASH_DEFAULT_BITS;
- 
- 	list_for_each_entry(subops, &ops->subop_list, list) {
--		ret = append_hash(&new_hash, subops->func_hash->filter_hash);
-+		ret = append_hash(&new_hash, subops->func_hash->filter_hash, size_bits);
- 		if (ret < 0) {
- 			free_ftrace_hash(new_hash);
- 			return NULL;
-@@ -3310,7 +3319,8 @@ static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
- 		if (ftrace_hash_empty(new_hash))
- 			break;
- 	}
--	return new_hash;
-+	/* Can't return NULL as that means this failed */
-+	return new_hash ? : EMPTY_HASH;
- }
- 
- /* Make @ops trace evenything except what all its subops do not trace */
-@@ -3505,7 +3515,8 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
- 		filter_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->filter_hash);
- 		if (!filter_hash)
- 			return -ENOMEM;
--		ret = append_hash(&filter_hash, subops->func_hash->filter_hash);
-+		ret = append_hash(&filter_hash, subops->func_hash->filter_hash,
-+				  size_bits);
- 		if (ret < 0) {
- 			free_ftrace_hash(filter_hash);
- 			return ret;
--- 
-2.47.2
+Not sure if that changes what we want to do here, but just pointing it
+out as a similar case to help us decide what the most useful generic
+function would be for this.
 
 
