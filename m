@@ -1,322 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1847579CD;
-	Thu, 20 Feb 2025 12:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606D979CD;
+	Thu, 20 Feb 2025 12:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740055600; cv=none; b=UukhdS/zN8htDZiA32bkATu9lpcvwPX0v8B/QiB406y+CSOqBusZjUlxRqv3qocTrKbMy0uk2b8fGa0b1+7Nklo4fE1d1GC0UaOr92Mot09kvAcVhw+JfvV3zjGVNZWMtB0GVdmccpo74w7pMBOOLzac4Q8mSV12OW9a1u6Q4RU=
+	t=1740055659; cv=none; b=t7BFHEcCeCmXD7qf/1hf0PvYq7zVPdAPgQazOQ/nux65LWPU6T9b3QVzpPEs7jrcQjQP1JmhiPuzqXfprUN00GARtukCGPA9pskwXhhCCr8wlbj32G2CSzDi5yvAak7R6caZM0+dydtstxvSQN3SYwTSaIPWsCIQnX7dGQ2IqFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740055600; c=relaxed/simple;
-	bh=g2f//fK8aq39T2Pf40WB9z+ft2RgJY8RkoVFTl07iro=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a7zkPz/r+Tvp9nohsX9r8NSv/BdJ41uAco4G1o3bTe2PesvjZxxE/xmp7TPoFfKAbegNy57OCTENljyLaYyJx31QBx9NiqCCV6VdT7ccajCGG7DIPbfV5wUBmrhj7vWHqPPOJ/pYHve+9dBzU3u3FxGIUeOAGvUVjhbNGx/Pf+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCqtXfko; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCqtXfko"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 98095C4CED1;
-	Thu, 20 Feb 2025 12:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740055599;
-	bh=g2f//fK8aq39T2Pf40WB9z+ft2RgJY8RkoVFTl07iro=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=jCqtXfkoRqoRNaR/4Y+oEAWHZlB5kCJvT8WIioEVAp0p9EedZ6jlTprD8OtXzwd7F
-	 RWOIAI3+5N0e6rp+SpIoZUGuzcdV6/6Ua7FcEspz18d+MGWGJ8JK+rY7i4nRqpPp/v
-	 E4VpeIEpeo2XVKFCTqXa27KY++7WQdG7+WxVYQQwNKBEZwHplxAO1WwpO7vJxJfAz5
-	 oNfEYQt9+o47msCg9ku+6UVgAn0QdmmYiiTaaVpZkvwgNMxfdaZeAzbXnz4Llyis0E
-	 7Xg/9TymcdyYhwP8b3E0qHk3JsqufigVaBpHjmZmO13O5IJFMJq2xTvHbZ5Lp5f+Vm
-	 OPAtORO4fHcCQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790C6C021B1;
-	Thu, 20 Feb 2025 12:46:39 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Thu, 20 Feb 2025 13:46:32 +0100
-Subject: [PATCH v3] dt-bindings: spi: Convert Freescale SPI bindings to
- YAML
+	s=arc-20240116; t=1740055659; c=relaxed/simple;
+	bh=DzsGVY7B3W9qUDARt5o5KYc/6ezxGdKjkMX5DdP5NOY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N4LtWj75/6h8BbaqICNWUX5BBWbFefIZisvn8D8SlJr/r7nHZgq2z6mLOu+aCUdv8ntqQAZblY9/sW/lK7bHV0JcIBqnIOC93yiZbM+WWyh47SMBA8vz+pN4g5i5Lj6AMlxQBdJOff1H1fIMkbNGoNsuvNdcJkrzrHyVzj0snc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YzChF5m56z4f3kvv;
+	Thu, 20 Feb 2025 20:47:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id D17A21A0D5C;
+	Thu, 20 Feb 2025 20:47:32 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgBHq19gJLdn4NmPEQ--.56042S4;
+	Thu, 20 Feb 2025 20:47:30 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com,
+	hare@suse.de,
+	axboe@kernel.dk,
+	logang@deltatee.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	hch@lst.de,
+	guillaume@morinfr.org
+Subject: [PATCH v3] md: fix mddev uaf while iterating all_mddevs list
+Date: Thu, 20 Feb 2025 20:43:48 +0800
+Message-Id: <20250220124348.845222-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250220-ppcyaml-spi-v3-1-e340613c7875@posteo.net>
-X-B4-Tracking: v=1; b=H4sIACckt2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIyMD3YKC5MrE3Bzd4oJMXQvTNGMLI4skIxNjUyWgjoKi1LTMCrBp0bG
- 1tQBkMzqJXQAAAA==
-X-Change-ID: 20250220-ppcyaml-spi-85f3828b2435
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740055598; l=7775;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=boF0Ptb0S1YPvdr9oEqVUSafvrLS+pZmCso6Fl1gjco=;
- b=PO2ytQrrgjrqH3PJyuQ+9iOvcuAke4DEX0xzz8Cm49UN4/5+8w6OZPfs71uwvMhAAjIDJMerw
- 3HmahTtu0QwCZZN+iy42ppYB5whvaaz+5KXKgEiX/ZflrYRBt/PmFZx
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
+X-CM-TRANSID:gCh0CgBHq19gJLdn4NmPEQ--.56042S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFW7urW3AryxCw4ktrW3GFg_yoWrGr1kpF
+	WagFWfGr48Xr93XF4DGa1kuFy5Ww18trWDtry7Ka1rCr15twn5Wr1Sqr15XFyY9ayrXrn0
+	ya1UJ345Zr1UWwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+From: Yu Kuai <yukuai3@huawei.com>
 
-fsl-spi.txt contains the bindings for the fsl,spi and fsl,espi
-contollers. Convert them to YAML.
+While iterating all_mddevs list from md_notify_reboot() and md_exit(),
+list_for_each_entry_safe is used, and this can race with deletint the
+next mddev, causing UAF:
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+t1:
+spin_lock
+//list_for_each_entry_safe(mddev, n, ...)
+ mddev_get(mddev1)
+ // assume mddev2 is the next entry
+ spin_unlock
+            t2:
+            //remove mddev2
+            ...
+            mddev_free
+            spin_lock
+            list_del
+            spin_unlock
+            kfree(mddev2)
+ mddev_put(mddev1)
+ spin_lock
+ //continue dereference mddev2->all_mddevs
+
+The old helper for_each_mddev() actually grab the reference of mddev2
+while holding the lock, to prevent from being freed. This problem can be
+fixed the same way, however, the code will be complex.
+
+Hence switch to use list_for_each_entry, in this case mddev_put() can free
+the mddev1 and it's not safe as well. Refer to md_seq_show(), also factor
+out a helper mddev_put_locked() to fix this problem.
+
+Cc: Christoph Hellwig <hch@lst.de>
+Fixes: f26514342255 ("md: stop using for_each_mddev in md_notify_reboot")
+Fixes: 16648bac862f ("md: stop using for_each_mddev in md_exit")
+Reported-by: Guillaume Morin <guillaume@morinfr.org>
+Closes: https://lore.kernel.org/all/Z7Y0SURoA8xwg7vn@bender.morinfr.org/
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
-V3:
-- split out as a single patch
-- use IRQ_TYPE_* constants in examples
-- drop interrupt-parent from examples, add Rob's review tag
+ drivers/md/md.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-V2:
-- part of series [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT bindings
-  Link: https://lore.kernel.org/lkml/20250207-ppcyaml-v2-8-8137b0c42526@posteo.net/
-- add missing end-of-document ("...") markers
-- add missing constraints to interrupts, fsl,espi-num-chipselects,
-  fsl,csbef and fsl,csaft properties
-- remove unnecessary type from clock-frequency property
-- fix property order to comply with dts coding style
----
- .../devicetree/bindings/spi/fsl,espi.yaml          | 65 +++++++++++++++++++
- Documentation/devicetree/bindings/spi/fsl,spi.yaml | 74 ++++++++++++++++++++++
- Documentation/devicetree/bindings/spi/fsl-spi.txt  | 62 ------------------
- 3 files changed, 139 insertions(+), 62 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/fsl,espi.yaml b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..d267bbfaf02f56e5b1ab8f6b2a8a34be13fb6766
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/fsl,espi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 827646b3eb59..f501bc5f68f1 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -629,6 +629,12 @@ static void __mddev_put(struct mddev *mddev)
+ 	queue_work(md_misc_wq, &mddev->del_work);
+ }
+ 
++static void mddev_put_locked(struct mddev *mddev)
++{
++	if (atomic_dec_and_test(&mddev->active))
++		__mddev_put(mddev);
++}
 +
-+title: Freescale eSPI (Enhanced Serial Peripheral Interface) controller
-+
-+maintainers:
-+  - J. Neuschäfer <j.ne@posteo.net>
-+
-+properties:
-+  compatible:
-+    const: fsl,mpc8536-espi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,espi-num-chipselects:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 1, 4 ]
-+    description: The number of the chipselect signals.
-+
-+  fsl,csbef:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 15
-+    description: Chip select assertion time in bits before frame starts
-+
-+  fsl,csaft:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 15
-+    description: Chip select negation time in bits after frame ends
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,espi-num-chipselects
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    spi@110000 {
-+        compatible = "fsl,mpc8536-espi";
-+        reg = <0x110000 0x1000>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        interrupts = <53 IRQ_TYPE_EDGE_FALLING>;
-+        fsl,espi-num-chipselects = <4>;
-+        fsl,csbef = <1>;
-+        fsl,csaft = <1>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/spi/fsl,spi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..d74792fc9bf2d74c1e3126c1dc28878df95bf57e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/fsl,spi.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/fsl,spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale SPI (Serial Peripheral Interface) controller
-+
-+maintainers:
-+  - J. Neuschäfer <j.ne@posteo.net>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,spi
-+      - aeroflexgaisler,spictrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  cell-index:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      QE SPI subblock index.
-+      0: QE subblock SPI1
-+      1: QE subblock SPI2
-+
-+  mode:
-+    description: SPI operation mode
-+    enum:
-+      - cpu
-+      - cpu-qe
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    description: input clock frequency to non FSL_SOC cores
-+
-+  cs-gpios: true
-+
-+  fsl,spisel_boot:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      For the MPC8306 and MPC8309, specifies that the SPISEL_BOOT signal is used
-+      as chip select for a slave device. Use reg = <number of gpios> in the
-+      corresponding child node, i.e. 0 if the cs-gpios property is not present.
-+
-+required:
-+  - compatible
-+  - reg
-+  - mode
-+  - interrupts
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    spi@4c0 {
-+        compatible = "fsl,spi";
-+        reg = <0x4c0 0x40>;
-+        cell-index = <0>;
-+        interrupts = <82 0>;
-+        mode = "cpu";
-+        cs-gpios = <&gpio 18 IRQ_TYPE_EDGE_RISING          // device reg=<0>
-+                    &gpio 19 IRQ_TYPE_EDGE_RISING>;        // device reg=<1>
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-deleted file mode 100644
-index 0654380eb7515d8bda80eea1486e77b939ac38d8..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
-+++ /dev/null
-@@ -1,62 +0,0 @@
--* SPI (Serial Peripheral Interface)
+ void mddev_put(struct mddev *mddev)
+ {
+ 	if (!atomic_dec_and_lock(&mddev->active, &all_mddevs_lock))
+@@ -8461,9 +8467,7 @@ static int md_seq_show(struct seq_file *seq, void *v)
+ 	if (mddev == list_last_entry(&all_mddevs, struct mddev, all_mddevs))
+ 		status_unused(seq);
+ 
+-	if (atomic_dec_and_test(&mddev->active))
+-		__mddev_put(mddev);
 -
--Required properties:
--- cell-index : QE SPI subblock index.
--		0: QE subblock SPI1
--		1: QE subblock SPI2
--- compatible : should be "fsl,spi" or "aeroflexgaisler,spictrl".
--- mode : the SPI operation mode, it can be "cpu" or "cpu-qe".
--- reg : Offset and length of the register set for the device
--- interrupts : <a b> where a is the interrupt number and b is a
--  field that represents an encoding of the sense and level
--  information for the interrupt.  This should be encoded based on
--  the information in section 2) depending on the type of interrupt
--  controller you have.
--- clock-frequency : input clock frequency to non FSL_SOC cores
--
--Optional properties:
--- cs-gpios : specifies the gpio pins to be used for chipselects.
--  The gpios will be referred to as reg = <index> in the SPI child nodes.
--  If unspecified, a single SPI device without a chip select can be used.
--- fsl,spisel_boot : for the MPC8306 and MPC8309, specifies that the
--  SPISEL_BOOT signal is used as chip select for a slave device. Use
--  reg = <number of gpios> in the corresponding child node, i.e. 0 if
--  the cs-gpios property is not present.
--
--Example:
--	spi@4c0 {
--		cell-index = <0>;
--		compatible = "fsl,spi";
--		reg = <4c0 40>;
--		interrupts = <82 0>;
--		interrupt-parent = <700>;
--		mode = "cpu";
--		cs-gpios = <&gpio 18 1		// device reg=<0>
--			    &gpio 19 1>;	// device reg=<1>
--	};
--
--
--* eSPI (Enhanced Serial Peripheral Interface)
--
--Required properties:
--- compatible : should be "fsl,mpc8536-espi".
--- reg : Offset and length of the register set for the device.
--- interrupts : should contain eSPI interrupt, the device has one interrupt.
--- fsl,espi-num-chipselects : the number of the chipselect signals.
--
--Optional properties:
--- fsl,csbef: chip select assertion time in bits before frame starts
--- fsl,csaft: chip select negation time in bits after frame ends
--
--Example:
--	spi@110000 {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "fsl,mpc8536-espi";
--		reg = <0x110000 0x1000>;
--		interrupts = <53 0x2>;
--		interrupt-parent = <&mpic>;
--		fsl,espi-num-chipselects = <4>;
--		fsl,csbef = <1>;
--		fsl,csaft = <1>;
--	};
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250220-ppcyaml-spi-85f3828b2435
-
-Best regards,
++	mddev_put_locked(mddev);
+ 	return 0;
+ }
+ 
+@@ -9895,11 +9899,11 @@ EXPORT_SYMBOL_GPL(rdev_clear_badblocks);
+ static int md_notify_reboot(struct notifier_block *this,
+ 			    unsigned long code, void *x)
+ {
+-	struct mddev *mddev, *n;
++	struct mddev *mddev;
+ 	int need_delay = 0;
+ 
+ 	spin_lock(&all_mddevs_lock);
+-	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
++	list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
+ 		if (!mddev_get(mddev))
+ 			continue;
+ 		spin_unlock(&all_mddevs_lock);
+@@ -9911,8 +9915,8 @@ static int md_notify_reboot(struct notifier_block *this,
+ 			mddev_unlock(mddev);
+ 		}
+ 		need_delay = 1;
+-		mddev_put(mddev);
+ 		spin_lock(&all_mddevs_lock);
++		mddev_put_locked(mddev);
+ 	}
+ 	spin_unlock(&all_mddevs_lock);
+ 
+@@ -10245,7 +10249,7 @@ void md_autostart_arrays(int part)
+ 
+ static __exit void md_exit(void)
+ {
+-	struct mddev *mddev, *n;
++	struct mddev *mddev;
+ 	int delay = 1;
+ 
+ 	unregister_blkdev(MD_MAJOR,"md");
+@@ -10266,7 +10270,7 @@ static __exit void md_exit(void)
+ 	remove_proc_entry("mdstat", NULL);
+ 
+ 	spin_lock(&all_mddevs_lock);
+-	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
++	list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
+ 		if (!mddev_get(mddev))
+ 			continue;
+ 		spin_unlock(&all_mddevs_lock);
+@@ -10278,8 +10282,8 @@ static __exit void md_exit(void)
+ 		 * the mddev for destruction by a workqueue, and the
+ 		 * destroy_workqueue() below will wait for that to complete.
+ 		 */
+-		mddev_put(mddev);
+ 		spin_lock(&all_mddevs_lock);
++		mddev_put_locked(mddev);
+ 	}
+ 	spin_unlock(&all_mddevs_lock);
+ 
 -- 
-J. Neuschäfer <j.ne@posteo.net>
-
+2.39.2
 
