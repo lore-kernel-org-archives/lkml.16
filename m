@@ -1,439 +1,186 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB52E1FCF6B;
-	Thu, 20 Feb 2025 14:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1E41FC0FC
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740061605; cv=none; b=rfvXqgwtxScsoNEDxK176v0hFTK3RB27L0B/eqCWE/RAJ7C2EMMjh1XgyDkcJAvzlERY9PndzNFlA9bVBZcxBPO5Tbe5cwoQwKYo69UVg/rRpTCVnrYwe60AOfldlwodM+EKGGhNgUSYyHh6r1BTke66Rhfsx+Vw6Ga0vfkuILQ=
+	t=1740061636; cv=none; b=DqTI8pCU/Y4ZDVILnfiuP4FjhhlAr1q+kfqN/7evkl3QQTipDfBrBZQz/bDzCGgq0Vv2Sf7l5f7SS3dPm6ARqUDFFbIUm0RS1c9fboFGEOUMgPe+hpA/mp4D8K/Uyd05E9EPmNYGCiHG+KvpIXLUv4bxh8z9phKQyFndjZz4Y+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740061605; c=relaxed/simple;
-	bh=p1ryNSiXOYRbISfoRzmptUbG3GSr7Li69nDs9Butufw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ehY/JVMViCgF4u3aOq8mGlch2N4TX9eiS8dK30XufyBTorx6wGQio1OAjbkR1nTZYtdhJD0ZZBeqU5dWFOzQMa+aAple3KUQ5QhvN2goZLK8EQmKEKtn8vo2+NeZx25ra8gB97zAi18/riH3lExp7yPqXqhLT1eTCYd8G7BsmwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dBf1z0VR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qiuCTPuO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740061636; c=relaxed/simple;
+	bh=D6cKUGAMjY2KP9aAcuVHBx8VTJJeLQ/lOCGq6SoaKoY=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WUBAwsrbqdtuDwVkMEdQjrGSXhE57lXQCoDA2hClvc+HntASMFUyhJwJPU8gZvqLyAZXMeHOR+ikU0k2dmoBIFg8uEMkHkDEfIq3+jnfX8XBPjCb+I+owQoeOqk6qsrAblCBAygwZnN9PD8HvQ+yLZ2Ea8EE5Lj51L2dLTQ8XKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1m3xmRyk; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dBf1z0VR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qiuCTPuO"
-Date: Thu, 20 Feb 2025 14:26:40 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740061600;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z9eS3oFs/KNQ1eeJtZK6VXdng0xJyGtwNqsn2/+xIU4=;
-	b=dBf1z0VR65h4dpT8667JP2eJSgpyOTID2uPLBv8TWjSwzzcY8aLO2x4vJgWGQDQSGF5SME
-	7VIzYaRv7/yhRCycXPCMztPgJZRVDyr11FO+gtYk14YEX4kFw4mFPHyu48RTyu+Ph4Ae3k
-	Oexwtdrkg0739CSRXvTVEYlSrxKBNsQgWMlp/2HBHPD0ezzgrzJgv9XbumgRDUzAEICVGq
-	K9nnt84PflIgaqg0WOJhc7OKacExSGVn3KNuQxj5NiafKENYISon8X5WceNSVVZGdpuErd
-	qI5EzaDVGqIecL4qcK76BLtGesjSvAI7f7JImmhZXAd+WQGckilowLVmC52g3g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740061600;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z9eS3oFs/KNQ1eeJtZK6VXdng0xJyGtwNqsn2/+xIU4=;
-	b=qiuCTPuOsIQHm72jg5L8VExdWWEiyH3IcxItVcNocSOt0SOQ5Z+tti8GUIX8GaBJPrsKgV
-	w1yeyYWce5qhH+BA==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/drivers] genirq: Introduce common irq_force_complete_move()
- implementation
-Cc: Thomas Gleixner <tglx@linutronix.de>, Anup Patel <apatel@ventanamicro.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250217085657.789309-5-apatel@ventanamicro.com>
-References: <20250217085657.789309-5-apatel@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1m3xmRyk"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30a2d4b61e4so7375941fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 06:27:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740061633; x=1740666433; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f4w4pCG0U42bM1eFKeaBN0EiFoNbUjvKtinnx1nWT1E=;
+        b=1m3xmRykIuZhKeySuszDijNS5tRgWKAj3JorvIq88ISoinxUpTQqYJ8kElekvXgTnL
+         hx3K9+bo+Sv40qqPlCkdYWDol0/+UivyxvriNVn3fhfifaYGofdvXCWqpMZd7I9VosKS
+         3/u1NCKXNvaXf7MT8iouYxLoK4kQQ11B14CzKaXb/Y5Pj6eNyuI8tE5aJHefEvMwU1Cq
+         ey4tnWvMGRUdaG92IR9swdufHVZ9gCXUeSJP5ShNYvni6jM6afPTA+MPNoXBdrB4O5Z4
+         KPuwd2G3w2NCe5Cn60iA9aUQSqueXs3suE+J1Pvu23Mt+BBU90emWuV49welFUqCXnuv
+         ZOUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740061633; x=1740666433;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f4w4pCG0U42bM1eFKeaBN0EiFoNbUjvKtinnx1nWT1E=;
+        b=SAsUPtlrr+ylhIFGj4PbjALtuwmNWTpMrbLLPZnJIUgpPxziXn0ZK5PSdfbho8BVNY
+         rnt9BdXFX/Ngz+3vLYhKBEFXwgmYUM/hqTO55gh4ATJ85lKMYOpFBy0iNc9wNHcKVhkD
+         jQocfh6u1QqNbP8MgB8JwhF8VBsBMJTfcLxok8hiBJRPeBzYGoGpmA74BxfMMUHzs9Or
+         zvhdEIFKfd2Kz4uQwDCiUK5yPtj2c6TOwDWe+w0dBg9aCFIjKB3x12t5o2QSnxKg4rSI
+         4OT8HXZHxgY20/+Rq0EWwIoB7aoT91NwKI7xOtwCzUTjVLpbFXXQFTsGM2OurYuJXREv
+         RfMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGY7nwJidIB4dHWg37x0eJHS3OwcbaSzVFwByGmVe1w5b/NjdTJxRso1L9kvc3XuZDDCpUnhR5yHndmqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3VRJulaFW9zoqY0DatBuRFL6SdYVNwa9daDWGkrVhe8/LLijH
+	YM6hhkZ4Yjv4VLw2bSu9okIGdKmSr4ENpOHj/ZsVRTtwpy4rgjAjwDajFq7op5R3yiR74B957kJ
+	nWBW/TI1QNQmxuG1IcZ6hTlqidp1QbvpYaG9LNA==
+X-Gm-Gg: ASbGncuZugyTgOqeFNsyT+cGghY2oFr763yVDiyGyAOv7QrR9h+ioWiPEsi/wWTHRLD
+	R16tTtsiZaJU8j0T6oLEJ6+HhGcCgji7jdDGglGxjBqV+HwLGnxzggFIaMxF1oiWbkTM4nnS+J1
+	tqe0nSV3Z7M6whGTStp881YbxwO8c=
+X-Google-Smtp-Source: AGHT+IFS//uyEFsNocKn2QLBwjZb9V54vS30Ztrpi06h9vM6OhVZ6S9T58uetg7ksyx1gj4KaWKe+Evafv0S+hCPfHg=
+X-Received: by 2002:a2e:900f:0:b0:309:26cd:9304 with SMTP id
+ 38308e7fff4ca-30a45043f96mr31527421fa.26.1740061632696; Thu, 20 Feb 2025
+ 06:27:12 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 20 Feb 2025 15:27:11 +0100
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 20 Feb 2025 15:27:11 +0100
+From: brgl@bgdev.pl
+In-Reply-To: <20250115103004.3350561-1-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174006160011.10177.4380660981340509896.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250115103004.3350561-1-quic_mdalam@quicinc.com>
+Date: Thu, 20 Feb 2025 15:27:11 +0100
+X-Gm-Features: AWEUYZnDIRu5h76xjpO3J8aX5TCNfdHy8wWm6gSkGIVob_i8mUp6Yw4WICtLlfY
+Message-ID: <CAMRc=MeW7D+6rUNWBQ61kP-zx9paiLKFF-Y7SbFq+_fRKiq8=w@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] dmaengine: qcom: bam_dma: add cmd descriptor support
+To: Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: quic_utiwari@quicinc.com, quic_srichara@quicinc.com, 
+	quic_varada@quicinc.com, vkoul@kernel.org, corbet@lwn.net, 
+	thara.gopinath@gmail.com, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	martin.petersen@oracle.com, enghua.yu@intel.com, u.kleine-koenig@baylibre.com, 
+	dmaengine@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The following commit has been merged into the irq/drivers branch of tip:
+On Wed, 15 Jan 2025 11:29:52 +0100, Md Sadre Alam
+<quic_mdalam@quicinc.com> said:
+> Requirements:
+>   In QCE crypto driver we are accessing the crypto engine registers
+>   directly via CPU read/write. Trust Zone could possibly to perform some
+>   crypto operations simultaneously, a race condition will be created and
+>   this could result in undefined behavior.
+>
+>   To avoid this behavior we need to use BAM HW LOCK/UNLOCK feature on BAM
+>   pipes, and this LOCK/UNLOCK will be set via sending a command descriptor,
+>   where the HLOS/TZ QCE crypto driver prepares a command descriptor with a
+>   dummy write operation on one of the QCE crypto engine register and pass
+>   the LOCK/UNLOCK flag along with it.
+>
 
-Commit-ID:     751dc837dabd275d0ab165fc737c10f80e2e863a
-Gitweb:        https://git.kernel.org/tip/751dc837dabd275d0ab165fc737c10f80e2e863a
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 17 Feb 2025 14:26:50 +05:30
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 20 Feb 2025 15:19:26 +01:00
+On rb3gen2 I'm seeing the following when running cryptsetup benchmark:
 
-genirq: Introduce common irq_force_complete_move() implementation
+# cryptsetup benchmark
+# Tests are approximate using memory only (no storage IO).
+PBKDF2-sha1      1452321 iterations per second for 256-bit key
+PBKDF2-sha256    2641249 iterations per second for 256-bit key
+PBKDF2-sha512    1278751 iterations per second for 256-bit key
+PBKDF2-ripemd160  760940 iterations per second for 256-bit key
+PBKDF2-whirlpool     N/A
+argon2i       4 iterations, 1008918 memory, 4 parallel threads (CPUs)
+for 256-bit key (requested 2000 ms time)
+argon2id      4 iterations, 1048576 memory, 4 parallel threads (CPUs)
+for 256-bit key (requested 2000 ms time)
+[   43.558496] NET: Registered PF_ALG protocol family
+[   43.570034] arm-smmu 15000000.iommu: Unhandled context fault:
+fsr=0x402, iova=0xfffdf000, fsynr=0x7b0003, cbfrsynra=0x4e4, cb=0
+[   43.582069] arm-smmu 15000000.iommu: FSR    = 00000402 [Format=2
+TF], SID=0x4e4
+[   43.592758] arm-smmu 15000000.iommu: FSYNR0 = 007b0003 [S1CBNDX=123 PLVL=3]
+[   43.608107] Internal error: synchronous external abort:
+0000000096000010 [#1] PREEMPT SMP
+[   43.616509] Modules linked in: algif_skcipher af_alg bluetooth
+ecdh_generic ecc ipv6 snd_soc_hdmi_codec phy_qcom_edp venus_dec
+venus_enc videobuf2_dma_contig videobuf2_memops nb7vpq904m
+lontium_lt9611uxc msm leds_qcom_lpg qcom_battmgr pmic_glink_altmode
+aux_hpd_bridge ocmem qcom_pbs venus_core ucsi_glink drm_exec
+typec_ucsi qcom_pon qcom_spmi_adc5 led_class_multicolor
+qcom_spmi_temp_alarm rtc_pm8xxx gpu_sched v4l2_mem2mem ath11k_ahb
+qcom_vadc_common nvmem_qcom_spmi_sdam drm_dp_aux_bus videobuf2_v4l2
+qcom_stats dispcc_sc7280 drm_display_helper videodev ath11k
+videobuf2_common coresight_stm drm_client_lib camcc_sc7280
+videocc_sc7280 mac80211 mc i2c_qcom_geni phy_qcom_qmp_combo stm_core
+coresight_replicator aux_bridge coresight_tmc coresight_funnel
+llcc_qcom libarc4 gpi icc_bwmon typec phy_qcom_snps_femto_v2 coresight
+qcrypto qcom_q6v5_pas authenc qcom_pil_info qcom_q6v5 gpucc_sc7280
+ufs_qcom libdes qcom_sysmon qcom_common pinctrl_sc7280_lpass_lpi
+qcom_glink_smem mdt_loader phy_qcom_qmp_ufs lpassaudiocc_sc7280
+[   43.616763]  pinctrl_lpass_lpi cfg80211 phy_qcom_qmp_pcie
+icc_osm_l3 rfkill qcom_rng qrtr nvmem_reboot_mode display_connector
+socinfo drm_kms_helper pmic_glink pdr_interface qcom_pdr_msg
+qmi_helpers drm backlight
+[   43.727571] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
+6.14.0-rc3-next-20250220-00012-g2a8d60663e03-dirty #53
+[   43.738291] Hardware name: Qualcomm Technologies, Inc. Robotics RB3gen2 (DT)
+[   43.745535] pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   43.752685] pc : bam_dma_irq+0x374/0x3b0
+[   43.756736] lr : bam_dma_irq+0x2c8/0x3b0
+[   43.760781] sp : ffff800080003e90
+[   43.764200] x29: ffff800080003e90 x28: ffffd03eaae84880 x27: 000000009edf8000
+[   43.771543] x26: ffff45a746642c80 x25: 0000000a24f8499b x24: ffff45a742dca080
+[   43.778886] x23: ffff45a742df7600 x22: 000000000000006e x21: ffff8000811c3000
+[   43.786228] x20: ffff45a742df7630 x19: ffff45a742eaab80 x18: 0000000000000001
+[   43.793568] x17: ffff75698e7b4000 x16: ffff800080000000 x15: 0000000000000034
+[   43.800902] x14: 0000000000000038 x13: 0000000000010008 x12: 071c71c71c71c71c
+[   43.808244] x11: 0000000000000040 x10: ffff45a74000a230 x9 : ffff45a74000a228
+[   43.815587] x8 : ffff45a7407a1dd0 x7 : 0000000000000000 x6 : 0000000000000000
+[   43.822920] x5 : ffff45a7407a1da8 x4 : 0000000000000000 x3 : 0000000000000018
+[   43.830253] x2 : ffff8000811c0000 x1 : ffff8000811c0018 x0 : 0000000000000002
+[   43.837594] Call trace:
+[   43.840115]  bam_dma_irq+0x374/0x3b0 (P)
+[   43.844163]  __handle_irq_event_percpu+0x48/0x140
+[   43.849006]  handle_irq_event+0x4c/0xb0
+[   43.852961]  handle_fasteoi_irq+0xa0/0x1bc
+[   43.857186]  handle_irq_desc+0x34/0x58
+[   43.861054]  generic_handle_domain_irq+0x1c/0x28
+[   43.865812]  gic_handle_irq+0x4c/0x120
+[   43.869680]  call_on_irq_stack+0x24/0x64
+[   43.873728]  do_interrupt_handler+0x80/0x84
+[   43.878039]  el1_interrupt+0x34/0x68
+[   43.881732]  el1h_64_irq_handler+0x18/0x24
+[   43.885955]  el1h_64_irq+0x6c/0x70
+[   43.889465]  cpuidle_enter_state+0xac/0x320 (P)
+[   43.894133]  cpuidle_enter+0x38/0x50
+[   43.897826]  do_idle+0x1e4/0x260
+[   43.901151]  cpu_startup_entry+0x38/0x3c
+[   43.905195]  rest_init+0xdc/0xe0
+[   43.908531]  console_on_rootfs+0x0/0x6c
+[   43.912490]  __primary_switched+0x88/0x90
+[   43.916621] Code: b9409063 1b047c21 8b030021 8b010041 (b9000020)
+[   43.922881] ---[ end trace 0000000000000000 ]---
+[   43.927633] Kernel panic - not syncing: synchronous external abort:
+Fatal exception in interrupt
+[   43.936653] SMP: stopping secondary CPUs
+[   43.941042] Kernel Offset: 0x503e28e00000 from 0xffff800080000000
+[   43.947306] PHYS_OFFSET: 0xfff0ba59c0000000
+[   43.951615] CPU features: 0x300,00000170,00801250,8200720b
+[   43.957257] Memory Limit: none
+[   43.960405] ---[ end Kernel panic - not syncing: synchronous
+external abort: Fatal exception in interrupt ]---
 
-CONFIG_GENERIC_PENDING_IRQ requires an architecture specific implementation
-of irq_force_complete_move() for CPU hotplug. At the moment, only x86
-implements this unconditionally, but for RISC-V irq_force_complete_move()
-is only needed when the RISC-V IMSIC driver is in use and not needed
-otherwise.
-
-To allow runtime configuration of this mechanism, introduce a common
-irq_force_complete_move() implementation in the interrupt core code, which
-only invokes the completion function, when a interrupt chip in the
-hierarchy implements it.
-
-Switch X86 over to the new mechanism. No functional change intended.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250217085657.789309-5-apatel@ventanamicro.com
-
-
----
- arch/x86/kernel/apic/vector.c | 231 +++++++++++++++------------------
- include/linux/irq.h           |   5 +-
- kernel/irq/internals.h        |   2 +-
- kernel/irq/migration.c        |  10 +-
- 4 files changed, 123 insertions(+), 125 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 736f628..72fa4bb 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -888,8 +888,109 @@ static int apic_set_affinity(struct irq_data *irqd,
- 	return err ? err : IRQ_SET_MASK_OK;
- }
- 
-+static void free_moved_vector(struct apic_chip_data *apicd)
-+{
-+	unsigned int vector = apicd->prev_vector;
-+	unsigned int cpu = apicd->prev_cpu;
-+	bool managed = apicd->is_managed;
-+
-+	/*
-+	 * Managed interrupts are usually not migrated away
-+	 * from an online CPU, but CPU isolation 'managed_irq'
-+	 * can make that happen.
-+	 * 1) Activation does not take the isolation into account
-+	 *    to keep the code simple
-+	 * 2) Migration away from an isolated CPU can happen when
-+	 *    a non-isolated CPU which is in the calculated
-+	 *    affinity mask comes online.
-+	 */
-+	trace_vector_free_moved(apicd->irq, cpu, vector, managed);
-+	irq_matrix_free(vector_matrix, cpu, vector, managed);
-+	per_cpu(vector_irq, cpu)[vector] = VECTOR_UNUSED;
-+	hlist_del_init(&apicd->clist);
-+	apicd->prev_vector = 0;
-+	apicd->move_in_progress = 0;
-+}
-+
-+/*
-+ * Called from fixup_irqs() with @desc->lock held and interrupts disabled.
-+ */
-+static void apic_force_complete_move(struct irq_data *irqd)
-+{
-+	unsigned int cpu = smp_processor_id();
-+	struct apic_chip_data *apicd;
-+	unsigned int vector;
-+
-+	guard(raw_spinlock)(&vector_lock);
-+	apicd = apic_chip_data(irqd);
-+	if (!apicd)
-+		return;
-+
-+	/*
-+	 * If prev_vector is empty or the descriptor is neither currently
-+	 * nor previously on the outgoing CPU no action required.
-+	 */
-+	vector = apicd->prev_vector;
-+	if (!vector || (apicd->cpu != cpu && apicd->prev_cpu != cpu))
-+		return;
-+
-+	/*
-+	 * This is tricky. If the cleanup of the old vector has not been
-+	 * done yet, then the following setaffinity call will fail with
-+	 * -EBUSY. This can leave the interrupt in a stale state.
-+	 *
-+	 * All CPUs are stuck in stop machine with interrupts disabled so
-+	 * calling __irq_complete_move() would be completely pointless.
-+	 *
-+	 * 1) The interrupt is in move_in_progress state. That means that we
-+	 *    have not seen an interrupt since the io_apic was reprogrammed to
-+	 *    the new vector.
-+	 *
-+	 * 2) The interrupt has fired on the new vector, but the cleanup IPIs
-+	 *    have not been processed yet.
-+	 */
-+	if (apicd->move_in_progress) {
-+		/*
-+		 * In theory there is a race:
-+		 *
-+		 * set_ioapic(new_vector) <-- Interrupt is raised before update
-+		 *			      is effective, i.e. it's raised on
-+		 *			      the old vector.
-+		 *
-+		 * So if the target cpu cannot handle that interrupt before
-+		 * the old vector is cleaned up, we get a spurious interrupt
-+		 * and in the worst case the ioapic irq line becomes stale.
-+		 *
-+		 * But in case of cpu hotplug this should be a non issue
-+		 * because if the affinity update happens right before all
-+		 * cpus rendezvous in stop machine, there is no way that the
-+		 * interrupt can be blocked on the target cpu because all cpus
-+		 * loops first with interrupts enabled in stop machine, so the
-+		 * old vector is not yet cleaned up when the interrupt fires.
-+		 *
-+		 * So the only way to run into this issue is if the delivery
-+		 * of the interrupt on the apic/system bus would be delayed
-+		 * beyond the point where the target cpu disables interrupts
-+		 * in stop machine. I doubt that it can happen, but at least
-+		 * there is a theoretical chance. Virtualization might be
-+		 * able to expose this, but AFAICT the IOAPIC emulation is not
-+		 * as stupid as the real hardware.
-+		 *
-+		 * Anyway, there is nothing we can do about that at this point
-+		 * w/o refactoring the whole fixup_irq() business completely.
-+		 * We print at least the irq number and the old vector number,
-+		 * so we have the necessary information when a problem in that
-+		 * area arises.
-+		 */
-+		pr_warn("IRQ fixup: irq %d move in progress, old vector %d\n",
-+			irqd->irq, vector);
-+	}
-+	free_moved_vector(apicd);
-+}
-+
- #else
--# define apic_set_affinity	NULL
-+# define apic_set_affinity		NULL
-+# define apic_force_complete_move	NULL
- #endif
- 
- static int apic_retrigger_irq(struct irq_data *irqd)
-@@ -923,39 +1024,16 @@ static void x86_vector_msi_compose_msg(struct irq_data *data,
- }
- 
- static struct irq_chip lapic_controller = {
--	.name			= "APIC",
--	.irq_ack		= apic_ack_edge,
--	.irq_set_affinity	= apic_set_affinity,
--	.irq_compose_msi_msg	= x86_vector_msi_compose_msg,
--	.irq_retrigger		= apic_retrigger_irq,
-+	.name				= "APIC",
-+	.irq_ack			= apic_ack_edge,
-+	.irq_set_affinity		= apic_set_affinity,
-+	.irq_compose_msi_msg		= x86_vector_msi_compose_msg,
-+	.irq_force_complete_move	= apic_force_complete_move,
-+	.irq_retrigger			= apic_retrigger_irq,
- };
- 
- #ifdef CONFIG_SMP
- 
--static void free_moved_vector(struct apic_chip_data *apicd)
--{
--	unsigned int vector = apicd->prev_vector;
--	unsigned int cpu = apicd->prev_cpu;
--	bool managed = apicd->is_managed;
--
--	/*
--	 * Managed interrupts are usually not migrated away
--	 * from an online CPU, but CPU isolation 'managed_irq'
--	 * can make that happen.
--	 * 1) Activation does not take the isolation into account
--	 *    to keep the code simple
--	 * 2) Migration away from an isolated CPU can happen when
--	 *    a non-isolated CPU which is in the calculated
--	 *    affinity mask comes online.
--	 */
--	trace_vector_free_moved(apicd->irq, cpu, vector, managed);
--	irq_matrix_free(vector_matrix, cpu, vector, managed);
--	per_cpu(vector_irq, cpu)[vector] = VECTOR_UNUSED;
--	hlist_del_init(&apicd->clist);
--	apicd->prev_vector = 0;
--	apicd->move_in_progress = 0;
--}
--
- static void __vector_cleanup(struct vector_cleanup *cl, bool check_irr)
- {
- 	struct apic_chip_data *apicd;
-@@ -1068,99 +1146,6 @@ void irq_complete_move(struct irq_cfg *cfg)
- 		__vector_schedule_cleanup(apicd);
- }
- 
--/*
-- * Called from fixup_irqs() with @desc->lock held and interrupts disabled.
-- */
--void irq_force_complete_move(struct irq_desc *desc)
--{
--	unsigned int cpu = smp_processor_id();
--	struct apic_chip_data *apicd;
--	struct irq_data *irqd;
--	unsigned int vector;
--
--	/*
--	 * The function is called for all descriptors regardless of which
--	 * irqdomain they belong to. For example if an IRQ is provided by
--	 * an irq_chip as part of a GPIO driver, the chip data for that
--	 * descriptor is specific to the irq_chip in question.
--	 *
--	 * Check first that the chip_data is what we expect
--	 * (apic_chip_data) before touching it any further.
--	 */
--	irqd = irq_domain_get_irq_data(x86_vector_domain,
--				       irq_desc_get_irq(desc));
--	if (!irqd)
--		return;
--
--	raw_spin_lock(&vector_lock);
--	apicd = apic_chip_data(irqd);
--	if (!apicd)
--		goto unlock;
--
--	/*
--	 * If prev_vector is empty or the descriptor is neither currently
--	 * nor previously on the outgoing CPU no action required.
--	 */
--	vector = apicd->prev_vector;
--	if (!vector || (apicd->cpu != cpu && apicd->prev_cpu != cpu))
--		goto unlock;
--
--	/*
--	 * This is tricky. If the cleanup of the old vector has not been
--	 * done yet, then the following setaffinity call will fail with
--	 * -EBUSY. This can leave the interrupt in a stale state.
--	 *
--	 * All CPUs are stuck in stop machine with interrupts disabled so
--	 * calling __irq_complete_move() would be completely pointless.
--	 *
--	 * 1) The interrupt is in move_in_progress state. That means that we
--	 *    have not seen an interrupt since the io_apic was reprogrammed to
--	 *    the new vector.
--	 *
--	 * 2) The interrupt has fired on the new vector, but the cleanup IPIs
--	 *    have not been processed yet.
--	 */
--	if (apicd->move_in_progress) {
--		/*
--		 * In theory there is a race:
--		 *
--		 * set_ioapic(new_vector) <-- Interrupt is raised before update
--		 *			      is effective, i.e. it's raised on
--		 *			      the old vector.
--		 *
--		 * So if the target cpu cannot handle that interrupt before
--		 * the old vector is cleaned up, we get a spurious interrupt
--		 * and in the worst case the ioapic irq line becomes stale.
--		 *
--		 * But in case of cpu hotplug this should be a non issue
--		 * because if the affinity update happens right before all
--		 * cpus rendezvous in stop machine, there is no way that the
--		 * interrupt can be blocked on the target cpu because all cpus
--		 * loops first with interrupts enabled in stop machine, so the
--		 * old vector is not yet cleaned up when the interrupt fires.
--		 *
--		 * So the only way to run into this issue is if the delivery
--		 * of the interrupt on the apic/system bus would be delayed
--		 * beyond the point where the target cpu disables interrupts
--		 * in stop machine. I doubt that it can happen, but at least
--		 * there is a theoretical chance. Virtualization might be
--		 * able to expose this, but AFAICT the IOAPIC emulation is not
--		 * as stupid as the real hardware.
--		 *
--		 * Anyway, there is nothing we can do about that at this point
--		 * w/o refactoring the whole fixup_irq() business completely.
--		 * We print at least the irq number and the old vector number,
--		 * so we have the necessary information when a problem in that
--		 * area arises.
--		 */
--		pr_warn("IRQ fixup: irq %d move in progress, old vector %d\n",
--			irqd->irq, vector);
--	}
--	free_moved_vector(apicd);
--unlock:
--	raw_spin_unlock(&vector_lock);
--}
--
- #ifdef CONFIG_HOTPLUG_CPU
- /*
-  * Note, this is not accurate accounting, but at least good enough to
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 8daa17f..56f6583 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -486,6 +486,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
-  * @ipi_send_mask:	send an IPI to destination cpus in cpumask
-  * @irq_nmi_setup:	function called from core code before enabling an NMI
-  * @irq_nmi_teardown:	function called from core code after disabling an NMI
-+ * @irq_force_complete_move:	optional function to force complete pending irq move
-  * @flags:		chip specific flags
-  */
- struct irq_chip {
-@@ -537,6 +538,8 @@ struct irq_chip {
- 	int		(*irq_nmi_setup)(struct irq_data *data);
- 	void		(*irq_nmi_teardown)(struct irq_data *data);
- 
-+	void		(*irq_force_complete_move)(struct irq_data *data);
-+
- 	unsigned long	flags;
- };
- 
-@@ -619,11 +622,9 @@ static inline void irq_move_irq(struct irq_data *data)
- 		__irq_move_irq(data);
- }
- void irq_move_masked_irq(struct irq_data *data);
--void irq_force_complete_move(struct irq_desc *desc);
- #else
- static inline void irq_move_irq(struct irq_data *data) { }
- static inline void irq_move_masked_irq(struct irq_data *data) { }
--static inline void irq_force_complete_move(struct irq_desc *desc) { }
- #endif
- 
- extern int no_irq_affinity;
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index a979523..d4e190e 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -442,6 +442,7 @@ static inline struct cpumask *irq_desc_get_pending_mask(struct irq_desc *desc)
- 	return desc->pending_mask;
- }
- bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear);
-+void irq_force_complete_move(struct irq_desc *desc);
- #else /* CONFIG_GENERIC_PENDING_IRQ */
- static inline bool irq_can_move_pcntxt(struct irq_data *data)
- {
-@@ -467,6 +468,7 @@ static inline bool irq_fixup_move_pending(struct irq_desc *desc, bool fclear)
- {
- 	return false;
- }
-+static inline void irq_force_complete_move(struct irq_desc *desc) { }
- #endif /* !CONFIG_GENERIC_PENDING_IRQ */
- 
- #if !defined(CONFIG_IRQ_DOMAIN) || !defined(CONFIG_IRQ_DOMAIN_HIERARCHY)
-diff --git a/kernel/irq/migration.c b/kernel/irq/migration.c
-index eb150af..e110300 100644
---- a/kernel/irq/migration.c
-+++ b/kernel/irq/migration.c
-@@ -35,6 +35,16 @@ bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear)
- 	return true;
- }
- 
-+void irq_force_complete_move(struct irq_desc *desc)
-+{
-+	for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = d->parent_data) {
-+		if (d->chip && d->chip->irq_force_complete_move) {
-+			d->chip->irq_force_complete_move(d);
-+			return;
-+		}
-+	}
-+}
-+
- void irq_move_masked_irq(struct irq_data *idata)
- {
- 	struct irq_desc *desc = irq_data_to_desc(idata);
+Bartosz
