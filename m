@@ -1,54 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EB42641C2;
-	Thu, 20 Feb 2025 19:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F381B15A858;
+	Thu, 20 Feb 2025 19:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740079133; cv=none; b=VURyDzIjPksblULk2fKcpJVMNcdljW/IwSC34v/EKS+NZ85ca8BQ0ENaDHgglb7QpmPd2qBT3OVI5h3F8MS1w7+hQpB4q3vnXfhXuZyqsqDfDVOo4AuxbJY6QJDLGxQdt4FXEh9SFWLucL91384kGpb+Ij81AgbefRnWt7GyKNc=
+	t=1740079182; cv=none; b=abmYATMLJR0ejm1y/Ti7VQ7sDgtB6EoxwnECX4nF+fExxImOgRQD2pCLI4rd9rzCUvG31o5W06IOWURJJByKr71FwH1OifNTWuCgfYnGso27XVLgN/bAip8HVXWWooyu2pBUwQq1t6Y3xnYdxHMzbgEiVpbzT35yrPFLKwk4pO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740079133; c=relaxed/simple;
-	bh=4d1KNIx+INvlRFOF2ii16MQOHOzRY+Sq2mlvYHJFWXE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=maPzpqCUNJlsUpmOLMceq+aFmpQZPsZZm9Lj3Nqn6rJbXZG1uiIzNf74wel+PktLxQh2wsNkxURa3FT45Fi8Abdo0vYLnObBPkqYfgpMMiHlxc66BmPMcQDK6mzjugvRz2AICpWTRs5/JSxUxbgpSeBDIHFO71i3SPVgcB90rZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsnlYSb6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740079182; c=relaxed/simple;
+	bh=+0OClTSDtciyZQXNExzuhepJzGzEk7ZP1QX/R7XxbUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MA02/4dV5lEHSyWn2tWq+neJddk6CiJTKLNQBXC4LVodM2RLVGWEJ7winc8W6kcfoNjQo6ONzXGO1khGS2vnSe1M0uzQlaRqBc5MD/I7HiNpJq+g1UPlU073cLKO24KqnhTlLkjFERo3TIxFkVmismkZjlSBKHVXyD8TGB1/rSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Li1wYMRm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsnlYSb6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A43AEC4CED6;
-	Thu, 20 Feb 2025 19:18:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Li1wYMRm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5697CC4CED1;
+	Thu, 20 Feb 2025 19:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740079132;
-	bh=4d1KNIx+INvlRFOF2ii16MQOHOzRY+Sq2mlvYHJFWXE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=YsnlYSb63skk/fWlHJtmIfHJag4qUEnaxKf53MBGT67M9wYVeRLnpj5qniNRURqgl
-	 SgJDds7mUqBUsVOb22i9WI7MIK3EzSaSMvYgsBIh2u7hpvN2pauxVs3zWnMqxEJxnW
-	 Udp4wxHheMO0dg9qjGe+WkKaB+NhDLsfTpGv/dLuDwIk1XjN48XywcU/cTIaAg3/im
-	 dwqLYVWGz7mb5+Ma587cAwV6D4RavsJzBGsbvNRH+RTdPYSmlKVgEuGr3nA8vOg4ym
-	 WGvuPg+2dcCd3DpxFNs2zyxbtF0Wac+ZF+tWN3Sa9/waj+0BDW3pMIcwQlKGGySP3o
-	 9IXQaLGAEHWQg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Gary Guo <gary@garyguo.net>,  Miguel Ojeda <ojeda@kernel.org>,  Alex
- Gaynor <alex.gaynor@gmail.com>,  Boqun Feng <boqun.feng@gmail.com>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  Benno Lossin
- <benno.lossin@proton.me>,  Alice Ryhl <aliceryhl@google.com>,  Trevor
- Gross <tmgross@umich.edu>,  Danilo Krummrich <dakr@kernel.org>,  Will
- Deacon <will@kernel.org>,  Peter Zijlstra <peterz@infradead.org>,  Mark
- Rutland <mark.rutland@arm.com>,  Jens Axboe <axboe@kernel.dk>,  Francesco
- Zardi <frazar00@gmail.com>,  rust-for-linux@vger.kernel.org,
-  linux-block@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] rust: block: convert `block::mq` to use `Refcount`
-In-Reply-To: <CAJ-ks9mEqo72Cwq5_BMtdLPjGSb_sQbm_p+TV_u=iNuYSnuPKQ@mail.gmail.com>
- (Tamir
-	Duberstein's message of "Wed, 19 Feb 2025 17:53:43 -0500")
-References: <20250219201602.1898383-1-gary@garyguo.net>
-	<20250219201602.1898383-4-gary@garyguo.net>
-	<CAJ-ks9=10h9ha403aqL20Yk+y0oXpgvR=hbxA2+6T_CvbXN2bA@mail.gmail.com>
-	<CAJ-ks9mEqo72Cwq5_BMtdLPjGSb_sQbm_p+TV_u=iNuYSnuPKQ@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 20 Feb 2025 20:18:37 +0100
-Message-ID: <8734g8ifw2.fsf@kernel.org>
+	s=k20201202; t=1740079181;
+	bh=+0OClTSDtciyZQXNExzuhepJzGzEk7ZP1QX/R7XxbUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Li1wYMRmL9KK6l4WaYL0PcSVJKqrcCa10Y6PHxcMEmTa6dtMdvVsK9SC3SnMWeIT7
+	 9PC+m6PbqUF0f2cSKFxu2XNJ9j4JN/0wfhzFnlSYwM2hMJTnzd4tfnI3u8ZuexbzLr
+	 h/5+jea8bk80FA7Sif/DJo+n5mb4iQFTc33VmwYqD4vk7Ex1KxBXvj5jvpXoUT6HZr
+	 ds3TV1OFRECgpfpbFNhSbCL7JcxmHFv8GZTq/NeiSyR4YHxXJWDb4lV3LO3LkqjTuZ
+	 lRVDG+fDGn4xH4rpa0fSsjMSlxhn4olEvUQX2gU5Vi76hsjkLwgmkP7O5x0y6sCEFz
+	 GLVhh/JbmCuIA==
+Date: Thu, 20 Feb 2025 19:19:39 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: neil.armstrong@linaro.org, linux-crypto@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 9/9] crypto: qce - switch to using a mutex
+Message-ID: <20250220191939.GA2098877@google.com>
+References: <20241203-crypto-qce-refactor-v1-0-c5901d2dd45c@linaro.org>
+ <20241203-crypto-qce-refactor-v1-9-c5901d2dd45c@linaro.org>
+ <d6220576-eaf5-4415-b25f-b5984255ab78@linaro.org>
+ <CAMRc=MevaM4tUNQUs_LjFYaUtDH=YqE-t2gBponGqtK5xE9Gpw@mail.gmail.com>
+ <20250118080604.GA721573@sol.localdomain>
+ <CAMRc=MeFMYzMY4pU9D6fEpg9bQuuzqg4rQhBU8=z_2eMU+Py-g@mail.gmail.com>
+ <20250118175502.GA66612@sol.localdomain>
+ <CAMRc=MdR-8AnwAsMzHn8zj2awZUumO32C_S1-CkjBEqbuKPdeg@mail.gmail.com>
+ <CAMRc=MetohPUcxRLO0qS-LYyzZhiAMAHzLm0xqX8_TXdTgBnVA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,91 +54,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MetohPUcxRLO0qS-LYyzZhiAMAHzLm0xqX8_TXdTgBnVA@mail.gmail.com>
 
-Tamir Duberstein <tamird@gmail.com> writes:
+On Thu, Feb 20, 2025 at 10:14:20AM +0100, Bartosz Golaszewski wrote:
+> On Mon, Jan 20, 2025 at 2:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > On Sat, Jan 18, 2025 at 6:55 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> > >
+> > > On Sat, Jan 18, 2025 at 10:28:26AM +0100, Bartosz Golaszewski wrote:
+> > > > I was testing with kcapi-speed and cryptsetup benchmark. I've never
+> > > > seen any errors.
+> > > >
+> > > > Is this after my changes only or did it exist before? You're testing
+> > > > with the tcrypt module? How are you inserting it exactly? What params?
+> > >
+> > > Those are all benchmarks, not tests.  The tests run at registration time if you
+> > > just enable the kconfig options for them:
+> > >
+> > >     # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+> > >     CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+> > >
+> > > The test failures and KASAN error occur on mainline too, so yes they occur
+> > > before your patchset too.
+> > >
+> > > > >
+> > > > > I personally still struggle to understand how this driver could plausibly be
+> > > > > useful when the software crypto has no issues, is much faster, and is much
+> > > > > better tested.  What is motivating having this driver in the kernel?
+> > > >
+> > > > We want to use it in conjunction with the upcoming scminvoke (for
+> > > > loading TAs and invoking objects - used to program the keys into the
+> > > > QCE) to support the DRM use-case for decrypting streaming data inside
+> > > > secure buffers upstream.
+> > >
+> > > Notably lacking is any claim that any of the current features of the driver are
+> > > actually useful.
+> > >
+> >
+> > Noted. I'm still quite early into working on the upstream-bound code
+> > supporting the streaming use-case but I will consider a proposal to
+> > remove existing features that are better provided by ARM CE.
+> >
+> > Thanks,
+> > Bartosz
+> 
+> Just an FYI, I was informed by Qualcomm that upcoming platforms will
+> contain an upgrade to this IP and it will be up to 3x faster than ARM
+> CE.
 
-> On Wed, Feb 19, 2025 at 5:26=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
->>
->> On Wed, Feb 19, 2025 at 3:17=E2=80=AFPM Gary Guo <gary@garyguo.net> wrot=
-e:
->> >
->> > Currently there's a custom reference counting in `block::mq`, which us=
-es
->> > `AtomicU64` Rust atomics, and this type doesn't exist on some 32-bit
->> > architectures. We cannot just change it to use 32-bit atomics, because
->> > doing so will make it vulnerable to refcount overflow. So switch it to
->> > use the kernel refcount `kernel::sync::Refcount` instead.
->> >
->> > There is an operation needed by `block::mq`, atomically decreasing
->> > refcount from 2 to 0, which is not available through refcount.h, so
->> > I exposed `Refcount::as_atomic` which allows accessing the refcount
->> > directly.
->> >
->> > Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
->> > Signed-off-by: Gary Guo <gary@garyguo.net>
->> > ---
->> >  rust/kernel/block/mq/operations.rs |  7 +--
->> >  rust/kernel/block/mq/request.rs    | 70 ++++++++++--------------------
->> >  rust/kernel/sync/refcount.rs       | 14 ++++++
->> >  3 files changed, 40 insertions(+), 51 deletions(-)
->> >
->> > diff --git a/rust/kernel/block/mq/operations.rs b/rust/kernel/block/mq=
-/operations.rs
->> > index 864ff379dc91..c399dcaa6740 100644
->> > --- a/rust/kernel/block/mq/operations.rs
->> > +++ b/rust/kernel/block/mq/operations.rs
->> > @@ -10,9 +10,10 @@
->> >      block::mq::Request,
->> >      error::{from_result, Result},
->> >      prelude::*,
->> > +    sync::Refcount,
->> >      types::ARef,
->> >  };
->> > -use core::{marker::PhantomData, sync::atomic::AtomicU64, sync::atomic=
-::Ordering};
->> > +use core::marker::PhantomData;
->> >
->> >  /// Implement this trait to interface blk-mq as block devices.
->> >  ///
->> > @@ -78,7 +79,7 @@ impl<T: Operations> OperationsVTable<T> {
->> >          let request =3D unsafe { &*(*bd).rq.cast::<Request<T>>() };
->> >
->> >          // One refcount for the ARef, one for being in flight
->> > -        request.wrapper_ref().refcount().store(2, Ordering::Relaxed);
->> > +        request.wrapper_ref().refcount().set(2);
->> >
->> >          // SAFETY:
->> >          //  - We own a refcount that we took above. We pass that to `=
-ARef`.
->> > @@ -187,7 +188,7 @@ impl<T: Operations> OperationsVTable<T> {
->> >
->> >              // SAFETY: The refcount field is allocated but not initia=
-lized, so
->> >              // it is valid for writes.
->> > -            unsafe { RequestDataWrapper::refcount_ptr(pdu.as_ptr()).w=
-rite(AtomicU64::new(0)) };
->> > +            unsafe { RequestDataWrapper::refcount_ptr(pdu.as_ptr()).w=
-rite(Refcount::new(0)) };
->>
->> Could we just make the field pub and remove refcount_ptr? I believe a
->> few callers of `wrapper_ptr` could be replaced with `wrapper_ref`.
->
-> I took a stab at this to check it was possible:
-> https://gist.github.com/tamird/c9de7fa6e54529996f433950268f3f87
+I suspect that is measured under some ideal condition that won't be reached in
+the real world, but we'll see.
 
-The access method uses a raw pointer because it is not always safe to
-reference the field.
-
-I think line 25 in your patch is UB as the field is not initialized.
-
-At any rate, such a change is orthogonal. You could submit a separate
-patch with that refactor.
-
-
-Best regards,
-Andreas Hindborg
-
-
-
+- Eric
