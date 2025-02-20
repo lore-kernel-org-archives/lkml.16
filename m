@@ -1,254 +1,312 @@
-Received: from mail-gw01.astralinux.ru (mail-gw01.astralinux.ru [37.230.196.243])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC771F584A;
-	Thu, 20 Feb 2025 13:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.230.196.243
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740056815; cv=none; b=Jg8v5lmp2DW1g4cnxbus5D51wNfWk43tBPhArGlmlsE14glsyaiIrL6cXOq8fsZjcWsq31kME4hmzzXKmiafgXvB0epd3cmil0YDKvs+B/UzRzuyuY9hjFIKPh7MggC21sK7nwwU6vu+TOZpMERBBS98A1Rq2lvvtkiBuU5Dd+o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740056815; c=relaxed/simple;
-	bh=WCZJrQimBDJD6iuV+oyaGhnj6QAoxK0ucp+seR2Z6ZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GEAHwdpAExUfwVuXY8tWcsON6nJLZ497AyScjJnhy1J+SUmLm6rhrAcsE8dw0Yn6QpQ5T98g+zEBZV2+MF6hN9dS1qzEu2M7dYxROQtEvqD2EqHqd5GpLqWDJofVzqPWANtdHzXw1ZbtRacJtXZpGTR2rbUAVVjFQ3gTrODvbQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=37.230.196.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from gca-sc-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw01.astralinux.ru (Postfix) with ESMTP id 60BA324BA2;
-	Thu, 20 Feb 2025 16:01:06 +0300 (MSK)
-Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw01.astralinux.ru (Postfix) with ESMTPS;
-	Thu, 20 Feb 2025 16:01:02 +0300 (MSK)
-Received: from localhost.localdomain (unknown [10.177.20.111])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4YzD0F3VTxz1h0Mx;
-	Thu, 20 Feb 2025 16:01:01 +0300 (MSK)
-From: Anastasia Belova <abelova@astralinux.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Enzo Matsumiya <ematsumiya@suse.de>,
-	Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.10/5.15] smb: client: fix UAF in async decryption
-Date: Thu, 20 Feb 2025 16:00:52 +0300
-Message-ID: <20250220130054.9478-1-abelova@astralinux.ru>
-X-Mailer: git-send-email 2.47.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842201F3BAF;
+	Thu, 20 Feb 2025 13:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740056812; cv=fail; b=uPA92H66ijSzV4aKDbgtkyddYzI5a0tiDdwfDlo0adN0Ddky34fzQo5QO1g8Ml+VZ7nJAe7WeNQTbnbrACm4FDfJ1b0FkI5iTFb19WBm/hqaJVFF4WJhRtjbTkVD2rPAH6ko34MDr7CeEcITVXfmNYIA7MbxODl/eL42IWyLLYY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740056812; c=relaxed/simple;
+	bh=3WX1Fqq3Ikz06OMDlOJQ8DbhTdjzKwOPpm9+RGjmo0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=b4DlzDXE8WQY1zI8yWKtkiBlm30G/M9pDNcdtrKsSnH7UMLRq5JhNzcSfmXNjhEKN0DsdokSWy194lHa5enSWy1VxfAllULBxWabDVU/4+NPe/E+w1ROPyX73tJjn6fRL2Id+FNjR0sVIAOS0TxX5KPgnUrPGHQTDmBtNHrzYrM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lKBZPpmB; arc=fail smtp.client-ip=40.107.92.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lKBZPpmB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=S20zAGIKocje4AOedSBvyp1BjSiYLXFtKIldckmZHUrCz/G3E5zt5/AO4E4imCM4j/cndfdBxWXxPAVT7GDjCMQgYLuP+1jzZUil0HRSwfSv2qWQkSdC8QwztulouAmLKq17HStZIq5eG4dbqC9TtAKBvHHq8kx402/sAIiDO2K9FnRgg6sG+S321y6eE4mM7ir+NTKRvprEe7GAlom8X7U5vX/9+at8tfm9v+wsMRwip8dt4AC5KfB2R6bilu1n5goUGx9t6EwyZJzlzC1wfH+wVcL1izCs65sRCqCVnLtkOmOUdvSMOSvn9iYscdr1bwEMUwSHTWAJU8BptDcKRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q/o0c+PUBGv50NPnKGpXhXSCI/MQkSkFe/qW7tRNmBQ=;
+ b=pr1HZswUoKm/0VfwU6gf3CVwnvfwsO2ORXEk/qj+7wnfk09x0PIqJSPgQKKcTyq5sKjkbDqsLOVKriqe7fCf0r2TjTvo3EOsUnFM7D7VviNHf3KFNYFPbLLgkNwb0ZmXwsNKK+BPXgfGBvuY6mllwp1aRVHnZm+Zk2tkaFXsl+3LJ0TsKfhySTTFFVN9v4Bf9NJzLsEfA4WaV9DLichcSYEv/bYpLOJa6IOxCiIOyKSDezFgqwZ90QW23WWZj7M7ToTPRi+5dyPK453iqx3Cl1YAAL/vLxRJJqhCwwmsdfl0vPl0WBPMTuAXOXssq1xcekApBWmX1csAvsqtAorosg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q/o0c+PUBGv50NPnKGpXhXSCI/MQkSkFe/qW7tRNmBQ=;
+ b=lKBZPpmBMNkRIH1VAWNOjAMhOeOmXQzlAqVmWc6eMxj6J5pDvDJMeYsTJQNZw/5ilsTDL0RJn3nhq7UPSMgZ1YIVwVtC4cOQj8xm79wz9Gwo8idikW6kq69lSJ/31VaiJS/z9zxrYqlCzVHTDTnnK+5UnudGWJwFnrzInaviUgMZOPVpNGJML3v2KKc7cI4Q+jCQdnL04SaFulP1P/Vrg8xGwxHOrakvvyb9jvrsBFrBL6RBlntvFDFiIanhK9rXYL3bjiTfXE7Azifn00s5oqLZcPl4H4cQZ9UOB0UIhrqX91F8tKW6CbXdj7LOi0Pxi3KcRNsGJRqd0EhjLq5agg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Thu, 20 Feb
+ 2025 13:06:38 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8466.015; Thu, 20 Feb 2025
+ 13:06:38 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>,
+ Kairui Song <kasong@tencent.com>, Miaohe Lin <linmiaohe@huawei.com>,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 2/2] mm/shmem: use xas_try_split() in
+ shmem_split_large_entry()
+Date: Thu, 20 Feb 2025 08:06:36 -0500
+X-Mailer: MailMate (2.0r6222)
+Message-ID: <42440332-96FF-4ECB-8553-9472125EB33F@nvidia.com>
+In-Reply-To: <2e4b9927-562d-4cfa-9362-f23e3bcfc454@linux.alibaba.com>
+References: <20250218235444.1543173-1-ziy@nvidia.com>
+ <20250218235444.1543173-3-ziy@nvidia.com>
+ <f899d6b3-e607-480b-9acc-d64dfbc755b5@linux.alibaba.com>
+ <AD348832-5A6A-48F1-9735-924F144330F7@nvidia.com>
+ <47d189c7-3143-4b59-a3af-477d4c46a8a0@linux.alibaba.com>
+ <2e4b9927-562d-4cfa-9362-f23e3bcfc454@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN8PR07CA0023.namprd07.prod.outlook.com
+ (2603:10b6:408:ac::36) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_from_domain_doesnt_match_to}, new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 191143 [Feb 20 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/20 08:57:00 #27373308
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|BY5PR12MB4130:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3241747c-2abb-41e2-b369-08dd51af6943
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NmxybGVVN1FkdW1BcnlxU2RmRHJCdkhoSFd5YXpmaU5jUWlQeTh5eGpsRXNQ?=
+ =?utf-8?B?OE9SVm9zNUtDanhtcXFWU3dhNU81N3hRMkM1RVFQSlRMbVovdXFFQkVRczJ0?=
+ =?utf-8?B?R2dqaTd3c241bC9PTHdaMkVGWHNOTC9QVURtSTRJNnk4U2gzTkxOcGxlM3VM?=
+ =?utf-8?B?U3UwdkViaFBpcGc4RytCcndZUVEvckZDZ3VDS2RSU2VoTmhmL3JzZWUrd3Ir?=
+ =?utf-8?B?TkJxNWRHd0doWCt5M2p6ZmZSSk5TaFFXRnBwTVNPRDBCUUYrVWt6bTBsaU1E?=
+ =?utf-8?B?OXRYckxvTkhQSzhZK2ZzUVhlTTBqbFpYTHcyTTlDV3FCMXdjUTFXeDVWRDd2?=
+ =?utf-8?B?dnlRd25kTnY0akZGVXNFVkZnZ3lHUTA4aFFPb0taRGRtdmgvdUhpd1ovL2ly?=
+ =?utf-8?B?TGZYVE9GZXRGZVhxYStCR0Y4V0IwaEQ2VWpiT0YzbHg0WUpoR2pxY3JhNlE0?=
+ =?utf-8?B?a1kvb2NMREJCd3hsT282ajdmZVRhdkowQjk0UldwNi9DemtkOVkwVGNjSWxr?=
+ =?utf-8?B?aWw1M0pLU20wTWlQR0FTSUFNQkd6RkExYWtGNzFRNmtjY0RvTzh3eWwwT1ZZ?=
+ =?utf-8?B?M2JnMWQ4ZFg3MFFpSHhUaFlGZEVwRmp6VWFqTVhuU0s1Mzdyd1g1SnRkeEpK?=
+ =?utf-8?B?TXQ3TnJJODlheWhxMC9XMmUwMFF0WDZkK2FxbVExbkxsYkl0SXU4Y3pDRFd2?=
+ =?utf-8?B?TjdGYnp1Q3RpREdNZmNoK0NjQUNlaXNqWDFlenhPZmt6MnM5Q2Y0eE5pVUR4?=
+ =?utf-8?B?S0dkbVZsU0lRMWdrcEdDOTBBZmhzclEvUEFxTDQrQ2toR0ZSemg0clk5OWFS?=
+ =?utf-8?B?Tld3RTBnOWtqeVNCRkprTlQ2Qm1ERzdFS2JmRkFqZHNrdGtIbDNjUDE0cEdv?=
+ =?utf-8?B?VnJPS2U0ZWF5K1JGNHFuaU0wWlgvdGJpeEhhaHR1dmV5cU4xajRkYS9CTGZh?=
+ =?utf-8?B?dWRoQnFaTERFOUlKQW9tQTlhYXNjK3RneXg3MHNoY0V1NzVjTkZZL1NPenFY?=
+ =?utf-8?B?TkVNdjFmYnFjdE82MmRpcnJmQnU5RE9Ha0dWKzdYQng3VEo2dHNTa09vZjZJ?=
+ =?utf-8?B?anM4YlQrSEhsWHF3ME1GTWRjUmFuOTRGSHNsYk9XZ09nZGhEQzNGSGwvMGNz?=
+ =?utf-8?B?aTFlZlRVVTU3VWcrYWRiUUl1S2JMQ3ByaDVMZkhmV0tQYjczZGt5alFCMHM0?=
+ =?utf-8?B?eTZpM1IzR2R3WW53YmVkdDVPWHRoNWVYMG1tMUkvVVRUNW1FeXU5czRLRlFW?=
+ =?utf-8?B?dE5pRkpkM0N0bDNsaDJHOGtXNGYzY0hjb3U1S2tFN2diM0c5TzlYNDY1SjRx?=
+ =?utf-8?B?aWhEemdRcXZzcE9ZdVVSVUl5UjBjSHRkcEZEc2R4cEtsOU9uWGhGeUNoMTNp?=
+ =?utf-8?B?L0JNMXJVSjFKMmtNU0FhdjBsT1ZsY2t3dlpyS0RMYWU5QU9sdEY4dTZwTCs5?=
+ =?utf-8?B?eG0wSllCNmh2UTFPTm50S1BGdE04aHRtWDhVTTVQSkdiR2ViNkZBOFFyeHBr?=
+ =?utf-8?B?cnk2RFJTSHdMSmFlY3k3dllYWlo4ZTJSb2MyQUsySEEwbFZ1a3ZxNmI0bjRR?=
+ =?utf-8?B?MTk1TDVCM01DN1YrY1VWZHMydUNCQlZ1eDFKNk1OTkhiY2FmMkdPNFNHQkRp?=
+ =?utf-8?B?ZG9OcWZlald0Z2UvWU4vdUtGZkZ1SUVtak94RDgvNzgydUlzb210NjZ0Z09K?=
+ =?utf-8?B?eWtyQllINkMwb2srZkl0U3JnR2RQWS90cWRwem9BY0ppR2pNMGhjZXRlL0o4?=
+ =?utf-8?B?MnA5K1p3Y2VPOXZyRkF1amh0akhjeldNYlYvSDlMR2NoMmtndDRKQnEzNnU5?=
+ =?utf-8?B?Rkt0Sm1DWnphM28vUkRmVWt6T1BKTjVLdGd1OVF0WWY5dXJjSEQ2NjN5QWdj?=
+ =?utf-8?Q?e2yEsYv500DW0?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VGRVRFZKZ2pZSUo3aXRFNWo4Q1VZL1hMcy84YWV6UFRSTU9KNHBZblE0WVU4?=
+ =?utf-8?B?VUovMHhJUEMvSU9iZ2xPTDlaVThrOGhHRm50ZjhnamozaWU1MmxwWlRxQnF1?=
+ =?utf-8?B?aVgxcGY2YTN5S2FLeGxTSm00dGl6RmY2ak5yS1k0SzBTV25jNis1NDVURlJM?=
+ =?utf-8?B?bzVFS0U3b2s5NmVoVi80L1JuRFVXSWJnODNFdHdVeU9sOGk3Um52d1BwMmxt?=
+ =?utf-8?B?dnhGRUJYa1laYWVsQVF3RWsrTzd6Z1lLUmZTWU1BeXIwRnh0OEFadm93KzVK?=
+ =?utf-8?B?a2dhZno2VnM1T1pQOTg4aGFiTmI0UHlVZ0dLckhOMHBGVlZPSkpOL0lkZDd4?=
+ =?utf-8?B?NDdFOUZVU01IWDNpMWhKKzFaS1dWVE5MYmdoeVV3T1dEbktubmdVZHFkazRK?=
+ =?utf-8?B?ZklGdXN5bHJ6aFUyeForSTZrQlhtU1oxMU1nT3RjQzhWMSs5dFU0OGdlMGlW?=
+ =?utf-8?B?b3Mvc2dRZ2JZc1VBVUVKM29MQ3hFeCs3ZHZvU2dtMWcvaGtEbVI0b1c4S05q?=
+ =?utf-8?B?NFUwQjFCd1BhUXFmQkNlWjhTWFg5bHVtSk9hWjIzMkJrc29MNUFINHd3Unl3?=
+ =?utf-8?B?aWlQeUJlYkNuc0gzNGlMUUFQbTNnNjkvOEVqeTM3cm5zNC9ndllzNWEwVjhx?=
+ =?utf-8?B?aHZkSkdkbTlYSlZkSU5JYms1SHgwczRVSU84UXJ3K3J5a0xhM05PZXc3QTBB?=
+ =?utf-8?B?cnBnTjh4dkRUZHEzVDc2K0dWK1VlREl2bTFhVDlpOEw0cVZlQWZvOWRXZ0Vl?=
+ =?utf-8?B?VG9VMjdUblBXZXk5SiswelF1QVBkdU5XWnlvazYxdkkwbVZhanY5d3RNSWdx?=
+ =?utf-8?B?NjlYMEhoNnRkVzBuSzVRVkFzRlE4S2hVQWlsaG8xbDFIeTVtY3JVVFg1RGc1?=
+ =?utf-8?B?dkdEOW9PZFRqT1B2RVQyQUJmams3WXM5VnBJc0V1WkgrMWtxOVc3R0lEb1E4?=
+ =?utf-8?B?d2N2VmpmN3lZayt6Sk9iZmJWVjFnOWNCNzBCeVVEOXEwMXNKbWFSL2RPYWRq?=
+ =?utf-8?B?dVJhZU5uNndDMHgySWsweUpWZS84R2xOS21DTGNIV0NMTWNkL21pb0RNSkFa?=
+ =?utf-8?B?d21VRStzL1l1L1daenZqUzNRM1NpL3VYd0xrdkFpZjZyRjhTMGtnNDN4YUcw?=
+ =?utf-8?B?ZnR6dGRaYndQZ1dFVUxnNERBWUhqVml3SFVDZnJzRC9SYUQ2YzBGNVVxUXZq?=
+ =?utf-8?B?dDFMbmVBTllSVlc5MEI5TDYrSDA3bGZGYlY3aTZYdmF5eStrZEVPYzlZd2VQ?=
+ =?utf-8?B?czNEYktYUjI1QWJraFhzMFpDMnBMTEE3RG4yei9HYVFGT2c5T285VWRPb3FR?=
+ =?utf-8?B?a1dDSVhUSjJBQnB5RUkwRGttcU00OC9QcEtIeEJzTVhGSVN0VjI5YWl2cnFx?=
+ =?utf-8?B?cG1FOG9mTmpuQ1pjTDFGR0dpRmJWajBxSktIMUdnUGJJaGwxbngxYXhEcWZi?=
+ =?utf-8?B?WWs2dVZsUFpLWHNySEJ2eXlGMU5oSXhwRE11TVVqb3VvL1YzZFRqeWcwdEZ5?=
+ =?utf-8?B?VGNEYlpXS0cyRGFGcXdjdks4Q1VRTkRJc2ZNbmhXRTlaK3JBNm9jUEtlYWFG?=
+ =?utf-8?B?Wk1pOTlQT1Z5eTloZWphY0ZSUEI3aDRaUmpWZ2M0aFJ2dTZuNTFtTE1SbnJs?=
+ =?utf-8?B?c2Y1c2pmSm1Ta0VPQWE0NjZUaytPZEJkYjl4aENnTXp4WFRhcWkyME52ZXdR?=
+ =?utf-8?B?Mmp4YW4zQlZuYWtlblhpd3B6Qys2NHVJVTFBWkhkbmxnR1hsWExiVmlFRWNn?=
+ =?utf-8?B?WkVWbVdEZTlHL2xMdi93Y2I5THl4ZVgyc3VWU1VyTyt0K0h4NmY2WWVhRUpZ?=
+ =?utf-8?B?MUdOMjg3SEl3ajhzQUxRdHltMzVNRzU1cFgvelQvdWxtQm9NWlhrdmo5RmlZ?=
+ =?utf-8?B?UEVBK0Y2WW16R0w2UHFuYm50QUc3TS9LYTFOOWtQZ1JxbER1RUVrNTFrVDZx?=
+ =?utf-8?B?SWxrbGFzQXdVWVFGSjVHbml3cDBTVmc0MThVUldtSzZjZ3ZsUWhlMVg5UUVl?=
+ =?utf-8?B?cEhjYlJSOUdieVI5NE1US2w5NllvME5nUFJqeHZuZW4rbit3cVJsTnNEblNX?=
+ =?utf-8?B?b0Q0ZDRhbmNFVFMwZVBxRGQyaHdaVVJBTW1FdjFLZTNEZS9mTlJ2TUlhUFQx?=
+ =?utf-8?Q?SaAw=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3241747c-2abb-41e2-b369-08dd51af6943
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 13:06:38.4932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LhzwikCBAVFJzN4KV3MeuNY8tRywSMeE5IDD43ySmGAe6potK3mDiTogC5fShDkm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4130
 
-From: Enzo Matsumiya <ematsumiya@suse.de>
+On 20 Feb 2025, at 4:27, Baolin Wang wrote:
 
-commit b0abcd65ec545701b8793e12bc27dc98042b151a upstream.
+> On 2025/2/20 17:07, Baolin Wang wrote:
+>>
+>>
+>> On 2025/2/20 00:10, Zi Yan wrote:
+>>> On 19 Feb 2025, at 5:04, Baolin Wang wrote:
+>>>
+>>>> Hi Zi,
+>>>>
+>>>> Sorry for the late reply due to being busy with other things:)
+>>>
+>>> Thank you for taking a look at the patches. :)
+>>>
+>>>>
+>>>> On 2025/2/19 07:54, Zi Yan wrote:
+>>>>> During shmem_split_large_entry(), large swap entries are covering n s=
+lots
+>>>>> and an order-0 folio needs to be inserted.
+>>>>>
+>>>>> Instead of splitting all n slots, only the 1 slot covered by the foli=
+o
+>>>>> need to be split and the remaining n-1 shadow entries can be retained=
+ with
+>>>>> orders ranging from 0 to n-1.=C2=A0 This method only requires
+>>>>> (n/XA_CHUNK_SHIFT) new xa_nodes instead of (n % XA_CHUNK_SHIFT) *
+>>>>> (n/XA_CHUNK_SHIFT) new xa_nodes, compared to the original
+>>>>> xas_split_alloc() + xas_split() one.
+>>>>>
+>>>>> For example, to split an order-9 large swap entry (assuming XA_CHUNK_=
+SHIFT
+>>>>> is 6), 1 xa_node is needed instead of 8.
+>>>>>
+>>>>> xas_try_split_min_order() is used to reduce the number of calls to
+>>>>> xas_try_split() during split.
+>>>>
+>>>> For shmem swapin, if we cannot swap in the whole large folio by skippi=
+ng the swap cache, we will split the large swap entry stored in the shmem m=
+apping into order-0 swap entries, rather than splitting it into other order=
+s of swap entries. This is because the next time we swap in a shmem folio t=
+hrough shmem_swapin_cluster(), it will still be an order 0 folio.
+>>>
+>>> Right. But the swapin is one folio at a time, right? shmem_split_large_=
+entry()
+>>
+>> Yes, now we always swapin an order-0 folio from the async swap device at=
+ a time. However, for sync swap device, we will skip the swapcache and swap=
+in the whole large folio by commit 1dd44c0af4fa, so it will not call shmem_=
+split_large_entry() in this case.
 
-Doing an async decryption (large read) crashes with a
-slab-use-after-free way down in the crypto API.
+Got it. I will check the commit.
 
-Reproducer:
-    # mount.cifs -o ...,seal,esize=1 //srv/share /mnt
-    # dd if=/mnt/largefile of=/dev/null
-    ...
-    [  194.196391] ==================================================================
-    [  194.196844] BUG: KASAN: slab-use-after-free in gf128mul_4k_lle+0xc1/0x110
-    [  194.197269] Read of size 8 at addr ffff888112bd0448 by task kworker/u77:2/899
-    [  194.197707]
-    [  194.197818] CPU: 12 UID: 0 PID: 899 Comm: kworker/u77:2 Not tainted 6.11.0-lku-00028-gfca3ca14a17a-dirty #43
-    [  194.198400] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-3-gd478f380-prebuilt.qemu.org 04/01/2014
-    [  194.199046] Workqueue: smb3decryptd smb2_decrypt_offload [cifs]
-    [  194.200032] Call Trace:
-    [  194.200191]  <TASK>
-    [  194.200327]  dump_stack_lvl+0x4e/0x70
-    [  194.200558]  ? gf128mul_4k_lle+0xc1/0x110
-    [  194.200809]  print_report+0x174/0x505
-    [  194.201040]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-    [  194.201352]  ? srso_return_thunk+0x5/0x5f
-    [  194.201604]  ? __virt_addr_valid+0xdf/0x1c0
-    [  194.201868]  ? gf128mul_4k_lle+0xc1/0x110
-    [  194.202128]  kasan_report+0xc8/0x150
-    [  194.202361]  ? gf128mul_4k_lle+0xc1/0x110
-    [  194.202616]  gf128mul_4k_lle+0xc1/0x110
-    [  194.202863]  ghash_update+0x184/0x210
-    [  194.203103]  shash_ahash_update+0x184/0x2a0
-    [  194.203377]  ? __pfx_shash_ahash_update+0x10/0x10
-    [  194.203651]  ? srso_return_thunk+0x5/0x5f
-    [  194.203877]  ? crypto_gcm_init_common+0x1ba/0x340
-    [  194.204142]  gcm_hash_assoc_remain_continue+0x10a/0x140
-    [  194.204434]  crypt_message+0xec1/0x10a0 [cifs]
-    [  194.206489]  ? __pfx_crypt_message+0x10/0x10 [cifs]
-    [  194.208507]  ? srso_return_thunk+0x5/0x5f
-    [  194.209205]  ? srso_return_thunk+0x5/0x5f
-    [  194.209925]  ? srso_return_thunk+0x5/0x5f
-    [  194.210443]  ? srso_return_thunk+0x5/0x5f
-    [  194.211037]  decrypt_raw_data+0x15f/0x250 [cifs]
-    [  194.212906]  ? __pfx_decrypt_raw_data+0x10/0x10 [cifs]
-    [  194.214670]  ? srso_return_thunk+0x5/0x5f
-    [  194.215193]  smb2_decrypt_offload+0x12a/0x6c0 [cifs]
+>>
+>>> should split the large swap entry and give you a slot to store the orde=
+r-0 folio.
+>>> For example, with an order-9 large swap entry, to swap in first order-0=
+ folio,
+>>> the large swap entry will become order-0, order-0, order-1, order-2,=E2=
+=80=A6 order-8,
+>>> after the split. Then the first order-0 swap entry can be used.
+>>> Then, when a second order-0 is swapped in, the second order-0 can be us=
+ed.
+>>> When the last order-0 is swapped in, the order-8 would be split to
+>>> order-7,order-6,=E2=80=A6,order-1,order-0, order-0, and the last order-=
+0 will be used.
+>>
+>> Yes, understood. However, for the sequential swapin scenarios, where ori=
+ginally only one split operation is needed. However, your approach increase=
+s the number of split operations. Of course, I understand that in non-seque=
+ntial swapin scenarios, your patch will save some xarray memory. It might b=
+e necessary to evaluate whether the increased split operations will have a =
+significant impact on the performance of sequential swapin?
 
-This is because TFM is being used in parallel.
+Is there a shmem swapin test I can run to measure this? xas_try_split() sho=
+uld
+performance similar operations as existing xas_split_alloc()+xas_split().
 
-Fix this by allocating a new AEAD TFM for async decryption, but keep
-the existing one for synchronous READ cases (similar to what is done
-in smb3_calc_signature()).
+>>
+>>> Maybe the swapin assumes after shmem_split_large_entry(), all swap entr=
+ies
+>>> are order-0, which can lead to issues. There should be some check like
+>>> if the swap entry order > folio_order, shmem_split_large_entry() should
+>>> be used.
+>>>>
+>>>> Moreover I did a quick test with swapping in order 6 shmem folios, how=
+ever, my test hung, and the console was continuously filled with the follow=
+ing information. It seems there are some issues with shmem swapin handling.=
+ Anyway, I need more time to debug and test.
+>>> To swap in order-6 folios, shmem_split_large_entry() does not allocate
+>>> any new xa_node, since XA_CHUNK_SHIFT is 6. It is weird to see OOM
+>>> error below. Let me know if there is anything I can help.
+>>
+>> I encountered some issues while testing order 4 and order 6 swapin with =
+your patches. And I roughly reviewed the patch, and it seems that the new s=
+wap entry stored in the shmem mapping was not correctly updated after the s=
+plit.
+>>
+>> The following logic is to reset the swap entry after split, and I assume=
+ that the large swap entry is always split to order 0 before. As your patch=
+ suggests, if a non-uniform split is used, then the logic for resetting the=
+ swap entry needs to be changed? Please correct me if I missed something.
+>>
+>> /*
+>>  =C2=A0* Re-set the swap entry after splitting, and the swap
+>>  =C2=A0* offset of the original large entry must be continuous.
+>>  =C2=A0*/
+>> for (i =3D 0; i < 1 << order; i++) {
+>>  =C2=A0=C2=A0=C2=A0=C2=A0pgoff_t aligned_index =3D round_down(index, 1 <=
+< order);
+>>  =C2=A0=C2=A0=C2=A0=C2=A0swp_entry_t tmp;
+>>
+>>  =C2=A0=C2=A0=C2=A0=C2=A0tmp =3D swp_entry(swp_type(swap), swp_offset(sw=
+ap) + i);
+>>  =C2=A0=C2=A0=C2=A0=C2=A0__xa_store(&mapping->i_pages, aligned_index + i=
+,
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 swp_to_rad=
+ix_entry(tmp), 0);
+>> }
 
-Also remove the calls to aead_request_set_callback() and
-crypto_wait_req() since it's always going to be a synchronous operation.
+Right. I will need to adjust swp_entry_t. Thanks for pointing this out.
 
-Signed-off-by: Enzo Matsumiya <ematsumiya@suse.de>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
-[ Anastasia: ]
----
-Backport fix for CVE-2024-50047
- fs/cifs/smb2ops.c | 48 +++++++++++++++++++++++++++--------------------
- fs/cifs/smb2pdu.c |  6 ++++++
- 2 files changed, 34 insertions(+), 20 deletions(-)
+>
+> In addition, after your patch, the shmem_split_large_entry() seems always=
+ return 0 even though it splits a large swap entry, but we still need re-ca=
+lculate the swap entry value after splitting, otherwise it may return error=
+s due to shmem_confirm_swap() validation failure.
+>
+> /*
+>  * If the large swap entry has already been split, it is
+>  * necessary to recalculate the new swap entry based on
+>  * the old order alignment.
+>  */
+>  if (split_order > 0) {
+> 	pgoff_t offset =3D index - round_down(index, 1 << split_order);
+>
+> 	swap =3D swp_entry(swp_type(swap), swp_offset(swap) + offset);
+> }
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 68f93de2b152..8cfce01cf699 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -4291,7 +4291,7 @@ smb2_get_enc_key(struct TCP_Server_Info *server, __u64 ses_id, int enc, u8 *key)
-  */
- static int
- crypt_message(struct TCP_Server_Info *server, int num_rqst,
--	      struct smb_rqst *rqst, int enc)
-+	      struct smb_rqst *rqst, int enc, struct crypto_aead *tfm)
- {
- 	struct smb2_transform_hdr *tr_hdr =
- 		(struct smb2_transform_hdr *)rqst[0].rq_iov[0].iov_base;
-@@ -4302,8 +4302,6 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 	u8 key[SMB3_ENC_DEC_KEY_SIZE];
- 	struct aead_request *req;
- 	u8 *iv;
--	DECLARE_CRYPTO_WAIT(wait);
--	struct crypto_aead *tfm;
- 	unsigned int crypt_len = le32_to_cpu(tr_hdr->OriginalMessageSize);
- 	void *creq;
- 
-@@ -4314,15 +4312,6 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 		return rc;
- 	}
- 
--	rc = smb3_crypto_aead_allocate(server);
--	if (rc) {
--		cifs_server_dbg(VFS, "%s: crypto alloc failed\n", __func__);
--		return rc;
--	}
--
--	tfm = enc ? server->secmech.ccmaesencrypt :
--						server->secmech.ccmaesdecrypt;
--
- 	if ((server->cipher_type == SMB2_ENCRYPTION_AES256_CCM) ||
- 		(server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
- 		rc = crypto_aead_setkey(tfm, key, SMB3_GCM256_CRYPTKEY_SIZE);
-@@ -4361,11 +4350,7 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 	aead_request_set_crypt(req, sg, sg, crypt_len, iv);
- 	aead_request_set_ad(req, assoc_data_len);
- 
--	aead_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
--				  crypto_req_done, &wait);
--
--	rc = crypto_wait_req(enc ? crypto_aead_encrypt(req)
--				: crypto_aead_decrypt(req), &wait);
-+	rc = enc ? crypto_aead_encrypt(req) : crypto_aead_decrypt(req);
- 
- 	if (!rc && enc)
- 		memcpy(&tr_hdr->Signature, sign, SMB2_SIGNATURE_SIZE);
-@@ -4454,7 +4439,7 @@ smb3_init_transform_rq(struct TCP_Server_Info *server, int num_rqst,
- 	/* fill the 1st iov with a transform header */
- 	fill_transform_hdr(tr_hdr, orig_len, old_rq, server->cipher_type);
- 
--	rc = crypt_message(server, num_rqst, new_rq, 1);
-+	rc = crypt_message(server, num_rqst, new_rq, 1, server->secmech.ccmaesencrypt);
- 	cifs_dbg(FYI, "Encrypt message returned %d\n", rc);
- 	if (rc)
- 		goto err_free;
-@@ -4480,8 +4465,9 @@ decrypt_raw_data(struct TCP_Server_Info *server, char *buf,
- 		 unsigned int npages, unsigned int page_data_size,
- 		 bool is_offloaded)
- {
--	struct kvec iov[2];
-+	struct crypto_aead *tfm;
- 	struct smb_rqst rqst = {NULL};
-+	struct kvec iov[2];
- 	int rc;
- 
- 	iov[0].iov_base = buf;
-@@ -4496,9 +4482,31 @@ decrypt_raw_data(struct TCP_Server_Info *server, char *buf,
- 	rqst.rq_pagesz = PAGE_SIZE;
- 	rqst.rq_tailsz = (page_data_size % PAGE_SIZE) ? : PAGE_SIZE;
- 
--	rc = crypt_message(server, 1, &rqst, 0);
-+	if (is_offloaded) {
-+		if ((server->cipher_type == SMB2_ENCRYPTION_AES128_GCM) ||
-+		    (server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
-+			tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
-+		else
-+			tfm = crypto_alloc_aead("ccm(aes)", 0, 0);
-+		if (IS_ERR(tfm)) {
-+			rc = PTR_ERR(tfm);
-+			cifs_server_dbg(VFS, "%s: Failed alloc decrypt TFM, rc=%d\n", __func__, rc);
-+
-+			return rc;
-+		}
-+	} else {
-+		if (unlikely(!server->secmech.ccmaesdecrypt))
-+			return -EIO;
-+
-+		tfm = server->secmech.ccmaesdecrypt;
-+	}
-+
-+	rc = crypt_message(server, 1, &rqst, 0, tfm);
- 	cifs_dbg(FYI, "Decrypt message returned %d\n", rc);
- 
-+	if (is_offloaded)
-+		crypto_free_aead(tfm);
-+
- 	if (rc)
- 		return rc;
- 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index 03651cc6b7a5..245e2dd5a194 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -998,6 +998,12 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
- 		else
- 			cifs_server_dbg(VFS, "Missing expected negotiate contexts\n");
- 	}
-+
-+	if (server->cipher_type && !rc) {
-+		rc = smb3_crypto_aead_allocate(server);
-+		if (rc)
-+			cifs_server_dbg(VFS, "%s: crypto alloc failed, rc=%d\n", __func__, rc);
-+	}
- neg_exit:
- 	free_rsp_buf(resp_buftype, rsp);
- 	return rc;
--- 
-2.43.0
+Got it. I will fix it.
 
+BTW, do you mind sharing your swapin tests so that I can test my new versio=
+n
+properly?
+
+Thanks.
+
+Best Regards,
+Yan, Zi
