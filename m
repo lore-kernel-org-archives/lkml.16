@@ -1,88 +1,79 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587DA2139CE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1A524BD1C
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 19:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740078206; cv=none; b=h4jaywxMXfobYyeLUbWHua7SnFFah7+Amz3VkZIAjD6fLB607jIv59X0TwHOsut6TkKPeG6tVCuw2EnK0unTzbuJ5AuPtQaJZPL5GpFueix5f9n1U3Xd/H0z6iHf2c4TlJdBcWxYH4dARKdVI2uH9mxakhmXX5jaYn2jQ2uGNr0=
+	t=1740078206; cv=none; b=jzI/bDXdJND6NuX85BBos91XJJOkrgSUvK+GQAAmFe6z0AC8/Nt8IcL9XAgHwUqb3xUnck0vmKO5sOomZaVF9874iZntgrcQnFlP4EBjEtTlAjsTErZ/Aj1kyqd/zcwv+etBd34/1H1mtJqpCzXOEezY61UWJex8kZqFCtEMYx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740078206; c=relaxed/simple;
-	bh=lQjy5Tbt7SOKgHum3uUoO2fOLJDZZlD6bMZGv7JUG2o=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=t1jviKMlAJBrDlYUgZ3lH071EDgWUpePITucOrhCbv5B6G7XhNl0KMbTXiWLYs/r7P7qfWTJl4a3ZhmWRJY52p3FbyN8Vl/0p2MURQyYpkoYUt0HFxTFzB9+aEv4VHnnGQhIfAcYMrPn9xeJippcXM3PLpiAdNGTkqL9zXrQUL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+	bh=d3l8CS1D4AR7C0awY6wO7jlChCwpNEUfxkadXODt4/0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=E+ds7ddrlfoUtXu4bFtsE/sPbHsRfOzF3qWkMCxWVNeYolhHAm3dyr+rsZxrP6j6sCruxCwwZZ7IawMn6db9BNfbkvdJwdD27inKtOTi/co/rteGNrKGGv7NS3fc0Ui5wDTtOvK0jfay2I0Z4kSIGeAunqJYjqh4KoKoyExLytM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d2b6d933baso27638845ab.3
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ce81a40f5cso23820435ab.1
         for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:03:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740078203; x=1740683003;
+        d=1e100.net; s=20230601; t=1740078204; x=1740683004;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=IHPONpBhaL8KVkMvvXywPynT8Hy32yQffO5v7e4WWk4=;
-        b=fowPVuChY/OC/Vl8nj72apBDmfpIYOBE7e8bE1X6D3g6toIMnXvb77xhDKdYzL89+T
-         cItr8jCo0CwHL2e+1Xu99JcehSgwR9Jf9NiCikRJP8h/3H20Cc36Gy35VBGs27VSy7iu
-         mWmVuycWz8D1Q+R0oC7AmlfcS5R4Eq8XE3UQwlBKzJgKOtcCafa+8j1cEwTIhoFC36zS
-         E8kqrs1ggiC9OH9Crc1bzJgVF+v4wJ4GVutc6Io1Pz28zCbWEvsOnZH3fyT9VG++YzHy
-         OJuOvDGyzcF63LcYD0gw7N/ZTIAEQ+V+VqmyTI6oGwVSELKt6U+Da9x2o5h1s8qptLoq
-         kBsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwsjE1DYLAK2r6297h3IwMOlzHT3YASg+6/dyucro+E0VLOBVFt55iVvoMh2nQH910a5OoIwPfjP+dtgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrTOksOa4ZH6Jmr5AJHhX2tJXOODMBl07WJeSIKPKcS9Ci8Ek8
-	6NRk6Z+yuHFTyfb6FnVrUuS6owjVv+K1ydlvEyWI/8c9ckbyjZzNsjX+r+Kfy6ryKv4xjuDh5Uh
-	WucKQOt0lM5Uuh+wcQBUQgbw8Fwtqhoe3RVKadblVyv+zI15PBpjc184=
-X-Google-Smtp-Source: AGHT+IFbeB0rKTkfnKixOR1ULdMQGD+e+nLetXnqw/agrnFULWn8S5n3wmktH/6G2fxeWduuFbPVi7GW8Ihc//NVyD8BAsxI/4cN
+        bh=asha2d+gaWgF7tXpH4ijjuoW/rkiwLBPdgYVataGXuc=;
+        b=dya49XMqEkmay/uDbbV3FDP20B1CqlWxiK0aRcXNzJx6pnDk3hbxGvgAkHZ+jNht8m
+         22Y81Mzkm4mpVuj3gPoUPmuhJGj2jvZUN3VfRLmrpFa0vDAp28oXxkDJsdsufxKS6C4c
+         xJSttpvR+itAI0nVFdHFBoOExkigF3dZc+et29jDYgPZQKOk4Bi9vZ9VC50tGRfwNRNk
+         rzAk/VZ9IpyRARnLcBEHCewC+vQyx4dA7RQlZ2iqT/Anuun30HV9ouPd7RauRLMuNZt8
+         fIsovysBGU91isj5dWxoNsNg/eK2Q0c4F9v9Y7CsvQx2DOi0PRGhwk6/f5uXteOPfQeL
+         6KXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnnEj4bU0mQVTFqa0pfYNWgnBrkrxltcCiiRR1VdGPEe68FV/zHL6RteCE/gIenIHNGI3kYkcMdx2GO7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFi+I0TlE6V7fwh6/KaqtvLMT7dbsdC5S2LjwTnVGXB1ne3nMm
+	mWKFoGETB5KHltBM2zJsJoeRpM2TBuJesuIRMRK8tH8Ao3ULZ2Pg1/7JEl3xTNlI79K2viuTuJT
+	l1Ymh9S55H+saqyufezau532SCVR8tw7oe/7I2D/R0n3jLP0r4MsRXlA=
+X-Google-Smtp-Source: AGHT+IG5NIfus11FtMwEICWdt6qwkZVAAbwAfbNMEzWrbpTfafx7LHufOVPGuIKDnYXQaTjWBBlBMbXHuh9AeHh51RZexJNBHEH3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:310c:b0:3d0:4bce:cfa8 with SMTP id
- e9e14a558f8ab-3d2cae4cefemr2978485ab.3.1740078203645; Thu, 20 Feb 2025
+X-Received: by 2002:a05:6e02:1a67:b0:3d0:3851:c3cc with SMTP id
+ e9e14a558f8ab-3d2caf19e17mr2079135ab.16.1740078203833; Thu, 20 Feb 2025
  11:03:23 -0800 (PST)
 Date: Thu, 20 Feb 2025 11:03:23 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b77c7b.050a0220.14d86d.02f6.GAE@google.com>
-Subject: [syzbot] Monthly bpf report (Feb 2025)
-From: syzbot <syzbot+list291bd82fd4f9cf97dab3@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <67b77c7b.050a0220.14d86d.02f7.GAE@google.com>
+Subject: [syzbot] Monthly xfs report (Feb 2025)
+From: syzbot <syzbot+list8dc11289063655991065@syzkaller.appspotmail.com>
+To: chandan.babu@oracle.com, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello bpf maintainers/developers,
+Hello xfs maintainers/developers,
 
-This is a 31-day syzbot report for the bpf subsystem.
+This is a 31-day syzbot report for the xfs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/bpf
+https://syzkaller.appspot.com/upstream/s/xfs
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 32 issues are still open and 280 have already been fixed.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 20 issues are still open and 26 have already been fixed.
 
 Some of the still happening issues:
 
-Ref  Crashes Repro Title
-<1>  21436   Yes   possible deadlock in trie_delete_elem
-                   https://syzkaller.appspot.com/bug?extid=9d95beb2a3c260622518
-<2>  2116    Yes   WARNING in bpf_map_lookup_percpu_elem
-                   https://syzkaller.appspot.com/bug?extid=dce5aae19ae4d6399986
-<3>  1993    Yes   possible deadlock in __bpf_ringbuf_reserve
-                   https://syzkaller.appspot.com/bug?extid=850aaf14624dc0c6d366
-<4>  232     Yes   INFO: rcu detected stall in sys_clone (8)
-                   https://syzkaller.appspot.com/bug?extid=c4c6c3dc10cc96bcf723
-<5>  177     Yes   possible deadlock in __queue_map_get
-                   https://syzkaller.appspot.com/bug?extid=8bdfc2c53fb2b63e1871
-<6>  71      Yes   possible deadlock in queue_stack_map_push_elem
-                   https://syzkaller.appspot.com/bug?extid=252bc5c744d0bba917e1
-<7>  52      Yes   possible deadlock in __stack_map_get
-                   https://syzkaller.appspot.com/bug?extid=dddd99ae26c656485d89
-<8>  32      Yes   INFO: rcu detected stall in sys_unshare (9)
-                   https://syzkaller.appspot.com/bug?extid=872bccd9a68c6ba47718
-<9>  23      Yes   BUG: MAX_STACK_TRACE_ENTRIES too low! (4)
-                   https://syzkaller.appspot.com/bug?extid=c6c4861455fdd207f160
-<10> 16      Yes   INFO: rcu detected stall in task_numa_work (2)
-                   https://syzkaller.appspot.com/bug?extid=06d48cbf3e767907cec2
+Ref Crashes Repro Title
+<1> 160     Yes   possible deadlock in xfs_can_free_eofblocks (2)
+                  https://syzkaller.appspot.com/bug?extid=53d541c7b07d55a392ca
+<2> 125     Yes   BUG: Bad page state in iomap_write_begin
+                  https://syzkaller.appspot.com/bug?extid=c317c107c68f8bc257d9
+<3> 94      Yes   INFO: task hung in xfs_buf_item_unpin (2)
+                  https://syzkaller.appspot.com/bug?extid=837bcd54843dd6262f2f
+<4> 20      No    possible deadlock in xfs_fs_dirty_inode (2)
+                  https://syzkaller.appspot.com/bug?extid=1116a7b7b96b9c426a1a
+<5> 15      Yes   possible deadlock in xfs_buf_find_insert
+                  https://syzkaller.appspot.com/bug?extid=acb56162aef712929d3f
+<6> 9       No    BUG: unable to handle kernel paging request in xfs_destroy_mount_workqueues
+                  https://syzkaller.appspot.com/bug?extid=63340199267472536cf4
 
 ---
 This report is generated by a bot. It may contain errors.
