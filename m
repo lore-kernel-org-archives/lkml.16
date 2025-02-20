@@ -1,113 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67672641CA;
-	Thu, 20 Feb 2025 18:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D3C2641DE;
+	Thu, 20 Feb 2025 18:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740077899; cv=none; b=hQFwv7jFqJPic/4MY2YXEaoR3eSdj2kCZK7upzhZTH7djgeIZH27PBkCQOdPoxPQAFTdX49Bz+TpLC/DnH7rHz+D6pxs54DXZ4pnNi+JbduERdQTXZv5UDCd/uLWMwL6lFTVo0BiZgCbGv07puZdVtbfeVvk53/fpNt1N5ns9MQ=
+	t=1740077917; cv=none; b=AcEoL4gvmDR6LqlryAZ1S1uNprLp6UcmqWsrUhz7nm3YM5KkJu51NtSZdQhj8uctpS2jjTtvle5DTifb8Pz2I6Ad3FepHErk4DNVmxPHcqXQpwnzv3lSEl6IgMQYXyzJXt1XmmkaWZjZrir3klkEFJ9vDlQSWkVmrdmxR83O6ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740077899; c=relaxed/simple;
-	bh=lPuj0ekgwa4nGe2Psfs+Hs0cZVNwWFBLvLFT3XB+EUQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kQUXOj2pEFJOjN577nCCcQiqW7IrnYug9IBGmcyeM6hCCdc5004H4beayhulMf+hcVVxAnZ6ElCuD89JqHwt2O9yvq8JbTWx89C6kDjnwW5pwB4rE3Nv7UCNumutmcNnbUEw8GBncIXV+gsLo2VMY4iL+fvvGursmQYNsgjAWCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41139C4CEEB;
-	Thu, 20 Feb 2025 18:58:19 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tlBl0-00000005cSN-2WIK;
-	Thu, 20 Feb 2025 13:58:46 -0500
-Message-ID: <20250220185846.451234966@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 20 Feb 2025 13:58:02 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Shuah Khan <shuah@kernel.org>
-Subject: [RESEND][PATCH 3/3] selftests/tracing: Allow some more tests to run in instances
-References: <20250220185759.811830333@goodmis.org>
+	s=arc-20240116; t=1740077917; c=relaxed/simple;
+	bh=b/2SnrTHVsQJ8AcXUtfVUyoN3MTuFOMma2+Z9/HxMzM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=l3cwEaypscvmh8U17WulbSTedcleg9Hu/PcjdUV4G8jdXHrQNAXzilTV6DNN3FeGXjmh5RnCqHnwDtrZCWx6hBILv9/zA1YZ4ot4OIe7jhO3IvsGn6NC3U45xKE52HIT0MhiJqOcwMRhhPMIk4fzf9kMTrpWEb6yI1vgAbjn9ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RMPQ8NxY; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RMPQ8NxY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740077913;
+	bh=b/2SnrTHVsQJ8AcXUtfVUyoN3MTuFOMma2+Z9/HxMzM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RMPQ8NxYPziX6JPCu9aJTDUQx0ZuFTKwBUJmChkhfgLM5cNI2OycXNvRoSgj9TL1n
+	 rtcOuiFvTxdJahWTGQZy+xrvmH7ChG1dAIqNUVUB5lUd9F4p3E6CJGpeCGWS2WlpLO
+	 x7C/vB1qzZ1Dkmx8EiQA3xxEyHi+5vYRtCSvpkWztupbYgMwJWlKsUrGlIsGyBPhHD
+	 f1+OgK1aBUiI2f9eROKDA/wr7IlE32ToFuAJVAbmkIGpgnY8G6e2xiBL2ztm0HN2hm
+	 Om5nDbiTnOJOl+fE6J5ZA2EbGAoG2fc1UxvZPp38IJPFa0+k6h3ZRtk183LgTurkoC
+	 Ae9/2lRnfxlGQ==
+Received: from jupiter.universe (dyndsl-091-248-085-196.ewe-ip-backbone.de [91.248.85.196])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 60E9117E1572;
+	Thu, 20 Feb 2025 19:58:33 +0100 (CET)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 0C6C4480036; Thu, 20 Feb 2025 19:58:33 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Date: Thu, 20 Feb 2025 19:58:05 +0100
+Subject: [PATCH v6 2/8] pmdomain: rockchip: cleanup mutex handling in
+ rockchip_pd_power
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250220-rk3588-gpu-pwr-domain-regulator-v6-2-a4f9c24e5b81@kernel.org>
+References: <20250220-rk3588-gpu-pwr-domain-regulator-v6-0-a4f9c24e5b81@kernel.org>
+In-Reply-To: <20250220-rk3588-gpu-pwr-domain-regulator-v6-0-a4f9c24e5b81@kernel.org>
+To: Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, 
+ Elaine Zhang <zhangqing@rock-chips.com>, 
+ =?utf-8?q?Adri=C3=A1n_Mart=C3=ADnez_Larumbe?= <adrian.larumbe@collabora.com>, 
+ Boris Brezillon <boris.brezillon@collabora.com>, 
+ Peter Geis <pgwipeout@gmail.com>, Tomeu Vizoso <tomeu@tomeuvizoso.net>, 
+ Vignesh Raman <vignesh.raman@collabora.com>, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ devicetree@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1396; i=sre@kernel.org;
+ h=from:subject:message-id; bh=b/2SnrTHVsQJ8AcXUtfVUyoN3MTuFOMma2+Z9/HxMzM=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGe3e1gCOsfx+eKTwS4JKtRAfv6m5LqpIOJYM
+ aLUJwTjS7Ey04kCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJnt3tYAAoJENju1/PI
+ O/qa1JkP/A/mucKd5UTnEFrBQ6IbiAE19wyc4pStxQ+CXOHXUjOOnXPq4kVO7EQ3SuXCR0GkzPu
+ qD/WBwYGpNfzWqWWgDtX+8AuVklCX23Cf9IQxdHZtmtnDpUr15Avo3R6EsLsa+oBUJ4XgF0prkV
+ V1BByYlG1kSyCIP+9dl+PvrAHUxvaXtklD3LekiZWf0xxAC3sc/9wOv7FKQ/zEfQT6kXfncXXWp
+ 9J2F0pP/jbZWf24Xzj+jurtkfhnBSj2q/FovzXjYkvN2rQjnbyTRIDTflyIqWoo1JNF7VoveD3P
+ sM42Dr9u9B0sz5Qyj+KGMgoMuYn8a+V495lcauOCdEeBfNQl9vPWTCwg3DJMq08U7KHDBFY0FX+
+ i0eo0DU5M9UcVZsYHQaGPaIhSR1agP3UwYW3bubAHadhKUtLNldEaZCi0iY0uphxRJ7EiW0EeSf
+ 00qVs38G79n4pl0VheemG3p2btRmfos+RPz0KMLWpCazlLQAO+QkOZq3EOKumSK//qgoqajd38e
+ lqoeSUhvt8GTxrrVe7jt7EVldabX3cNARBTJ8sCKtQl02lSoWQMQoSdF5FI6Zvgfnrk0wHIWWTm
+ SD4d5uDqnmz4ylm8p9zR5/RA956Dth8UVaGQYoxgXsiwUE+7PSjSdMF8d3LX9Rkq4YM2hkSqCpa
+ TSUt/HJFOA2j9wZ5QmPQ3kw==
+X-Developer-Key: i=sre@kernel.org; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Use the cleanup infrastructure to handle the mutex, which
+slightly improve code readability for this function.
 
-The tests:
-
-  trigger-action-hist-xfail.tc
-  trigger-onchange-action-hist.tc
-  trigger-snapshot-action-hist.tc
-  trigger-hist-expressions.tc
-
-can all run in an instance. Test them in an instance as well.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Adrian Larumbe <adrian.larumbe@collabora.com> # On Rock 5B
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- .../test.d/trigger/inter-event/trigger-action-hist-xfail.tc      | 1 +
- .../test.d/trigger/inter-event/trigger-onchange-action-hist.tc   | 1 +
- .../test.d/trigger/inter-event/trigger-snapshot-action-hist.tc   | 1 +
- .../selftests/ftrace/test.d/trigger/trigger-hist-expressions.tc  | 1 +
- 4 files changed, 4 insertions(+)
+ drivers/pmdomain/rockchip/pm-domains.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-index 1590d6bfb857..20a35fea13f8 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-@@ -2,6 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger expected fail actions
- # requires: set_event snapshot "snapshot()":README
-+# flags: instance
+diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
+index cb0f938001382fad302ccaf6f3959f5ee4dcbb8a..a161ee13c63362ca8ee0f79090a2a8d4db18a591 100644
+--- a/drivers/pmdomain/rockchip/pm-domains.c
++++ b/drivers/pmdomain/rockchip/pm-domains.c
+@@ -574,13 +574,12 @@ static int rockchip_pd_power(struct rockchip_pm_domain *pd, bool power_on)
+ 	struct rockchip_pmu *pmu = pd->pmu;
+ 	int ret;
  
- fail() { #msg
-     echo $1
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-index 2430f541cd5d..55ab0270e5f7 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-@@ -2,6 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger onchange action
- # requires: set_event "onchange(var)":README ping:program
-+# flags: instance
+-	mutex_lock(&pmu->mutex);
++	guard(mutex)(&pmu->mutex);
  
- fail() { #msg
-     echo $1
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-index 334595daa9f4..9eb37c2fa417 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-@@ -2,6 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger snapshot action
- # requires: set_event snapshot events/sched/sched_process_fork/hist "onchange(var)":README "snapshot()":README ping:program
-+# flags: instance
+ 	if (rockchip_pmu_domain_is_on(pd) != power_on) {
+ 		ret = clk_bulk_enable(pd->num_clks, pd->clks);
+ 		if (ret < 0) {
+ 			dev_err(pmu->dev, "failed to enable clocks\n");
+-			mutex_unlock(&pmu->mutex);
+ 			return ret;
+ 		}
  
- fail() { #msg
-     echo $1
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-expressions.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-expressions.tc
-index 05ffba299dbf..0ebda2068a00 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-expressions.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-expressions.tc
-@@ -2,6 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test histogram expression parsing
- # requires: set_event events/sched/sched_process_fork/trigger events/sched/sched_process_fork/hist error_log "<var1>=<field|var_ref|numeric_literal>":README
-+# flags: instance
+@@ -606,7 +605,6 @@ static int rockchip_pd_power(struct rockchip_pm_domain *pd, bool power_on)
+ 		clk_bulk_disable(pd->num_clks, pd->clks);
+ 	}
  
+-	mutex_unlock(&pmu->mutex);
+ 	return 0;
+ }
  
- fail() { #msg
+
 -- 
 2.47.2
-
 
