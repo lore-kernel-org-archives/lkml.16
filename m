@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09CD31EA7C9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 05:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AAEA1EB181
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 05:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740029772; cv=none; b=Ixv5R4C9sONh8wwz6vM3j/0QmNN8baL17Lq2Kv/wVieiaoMNAyPHmPJ/fWEn3kD6Fs3LZE5CHzi+MkgmCkMgtZQI2BLJgL73k6GuqerVfNnhlforGkw8axQNhYVquySNZBhykc4xkP2RT3ndzOz5HN2siIQa0C9R+LH90rwizD0=
+	t=1740029773; cv=none; b=XxCXZplPuRTMcnLx589IbwJhq/KKWZjmVdyjzxUhpY+ZTuH2qjMEj1qUXB/HHeKK2UeHs5+ZF8M9UeD6rvfYBKRt5nanH3D43XH7vNfT0dFwGb9RVMeGDjXH+y5XztJnwFxNg+N0KBx0dLBwMXMBtMdDLJGnuntZDE+YhtV6jRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740029772; c=relaxed/simple;
-	bh=kJUOmAXIN+Be88pGq5nqP4G6HpOEuI3dn+5Ika8a0VA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=OwAiVf12CzMpGt+TWqFSJjGKK/8uK+hrgE9uzA9ZvK8tcGe9AOcC83eUI64UGUHUfzmGqf8czG6G/u0vDdZHsb9UsrT7KCBjnf7F3LrfO+3ZIQvFp1G/f5n0D3WVyYrWGFXwfev0UeF4zSuHLoV7Fs0LA5DBm8+Qdbx7NK5psRU=
+	s=arc-20240116; t=1740029773; c=relaxed/simple;
+	bh=aNFdWmd/IwFyCddRF7YVe0SPx1Jlwdld/eJ0DPmsUqs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=k/1CPTuIcLJL6TMxjYHgtg0GYPsqLQEPcdIVsJtokHCDw/z9I9Axwi4r2sgqVRDCGGlCWr2iU58jvN/8c0+c8wsSmgEpVGSs358nJXAuQ4ksMLU9llBwcR0VTBzYRLcf6JjpeZBoxPFdUdVo4CRGk6RdAKA+OkNgLIm2zPfBtlc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3c9ff7000001d7ae-1c-67b6bba7c1f0
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-12-67b6bba718ad
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -30,36 +30,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [RFC PATCH v12 22/26] mm/page_alloc: not allow to tlb shootdown if !preemptable() && non_luf_pages_ok()
-Date: Thu, 20 Feb 2025 14:20:23 +0900
-Message-Id: <20250220052027.58847-23-byungchul@sk.com>
+Subject: [RFC PATCH v12 20/26] mm, fs: skip tlb flushes for luf'd filemap that already has been done
+Date: Thu, 20 Feb 2025 14:20:21 +0900
+Message-Id: <20250220052027.58847-21-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250220052027.58847-1-byungchul@sk.com>
 References: <20250220052027.58847-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsXC9ZZnoe7y3dvSDTafkbKYs34Nm8XnDf/Y
-	LF5saGe0+Lr+F7PF0099LBaXd81hs7i35j+rxflda1ktdizdx2Rx6cACJovjvQeYLObf+8xm
-	sXnTVGaL41OmMlr8/gFUfHLWZBYHAY/vrX0sHjtn3WX3WLCp1GPzCi2PxXteMnlsWtXJ5rHp
-	0yR2j3fnzrF7nJjxm8Vj3slAj/f7rrJ5bP1l59E49Rqbx+dNcgF8UVw2Kak5mWWpRfp2CVwZ
-	/z8LFXyxqnjyaxJrA+M7gy5GDg4JAROJCQ/9uhg5wcwZvfeYQWw2AXWJGzd+gtkiAmYSB1v/
-	sIPYzAJ3mSQO9LOB2MICBRLbfpwFi7MIqEosODeZBcTmBao/umcyO8RMeYnVGw6AzeEEiv+Y
-	0QvWKyRgKvFuwSWmLkYuoJr3bBKXmjczQjRIShxccYNlAiPvAkaGVYxCmXlluYmZOSZ6GZV5
-	mRV6yfm5mxiBYb+s9k/0DsZPF4IPMQpwMCrx8M5o3ZYuxJpYVlyZe4hRgoNZSYS3rX5LuhBv
-	SmJlVWpRfnxRaU5q8SFGaQ4WJXFeo2/lKUIC6YklqdmpqQWpRTBZJg5OqQZGqb/ib325lm7U
-	UV2V5PjJkflWyEXbJsZVFQpHXhycpc0a+Ez9Za3bt5odtx9MjLlzaOLt92pim7WZll2Ynb/n
-	3ku9U171OvN72DZe7z0zWdR9wp13LoYLvTp3f5Pe5JAcflVFz3phb424T6oqo7X2gcK3bk+O
-	vQ5bpfx/tkRe0jEzKa/dR5aoKrEUZyQaajEXFScCAB6fEFp3AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsXC5WfdrLt897Z0g62/BSzmrF/DZvF5wz82
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsXC9ZZnoe7y3dvSDZp3CFrMWb+GzeLzhn9s
+	Fi82tDNafF3/i9ni6ac+FovLu+awWdxb85/V4vyutawWO5buY7K4dGABk8Xx3gNMFvPvfWaz
+	2LxpKrPF8SlTGS1+/wAqPjlrMouDgMf31j4Wj52z7rJ7LNhU6rF5hZbH4j0vmTw2repk89j0
+	aRK7x7tz59g9Tsz4zeIx72Sgx/t9V9k8tv6y82iceo3N4/MmuQC+KC6blNSczLLUIn27BK6M
+	pQ8WMBdcCqg4uG8XWwPjWYcuRk4OCQETiRNP3zPC2NN3XGUBsdkE1CVu3PjJDGKLCJhJHGz9
+	ww5iMwvcZZI40M/WxcjBISyQInHgnQZImEVAVeJn4zEmEJsXqLx31TUmiJHyEqs3HAAbwwkU
+	/zGjlw3EFhIwlXi34BJQDRdQzWc2ieOfnrFCNEhKHFxxg2UCI+8CRoZVjEKZeWW5iZk5JnoZ
+	lXmZFXrJ+bmbGIGBv6z2T/QOxk8Xgg8xCnAwKvHwzmjdli7EmlhWXJl7iFGCg1lJhLetfku6
+	EG9KYmVValF+fFFpTmrxIUZpDhYlcV6jb+UpQgLpiSWp2ampBalFMFkmDk6pBsbci8EnElQl
+	DrVo5kx1c7znJDjZ69em24H5IUe2TjyfVqzNoRQUsO3uk65EXcGqxWFWphq/r24SXFta/TWy
+	eSrDwUOn/u+/EmHZvIRRacoZf73l8k0njgot+vV6vx1T0v4Kn9ky329dmBq9+Ijylr4/nEZX
+	lj+fNYNR0ER60e6c4HjnyPrctNtKLMUZiYZazEXFiQAFu6/BeAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsXC5WfdrLt897Z0g18f2S3mrF/DZvF5wz82
 	ixcb2hktvq7/xWzx9FMfi8XhuSdZLS7vmsNmcW/Nf1aL87vWslrsWLqPyeLSgQVMFsd7DzBZ
 	zL/3mc1i86apzBbHp0xltPj9A6j45KzJLA6CHt9b+1g8ds66y+6xYFOpx+YVWh6L97xk8ti0
 	qpPNY9OnSewe786dY/c4MeM3i8e8k4Ee7/ddZfNY/OIDk8fWX3YejVOvsXl83iQXwB/FZZOS
-	mpNZllqkb5fAlfH/s1DBF6uKJ78msTYwvjPoYuTkkBAwkZjRe48ZxGYTUJe4ceMnmC0iYCZx
-	sPUPO4jNLHCXSeJAPxuILSxQILHtx1mwOIuAqsSCc5NZQGxeoPqjeyazQ8yUl1i94QDYHE6g
-	+I8ZvWC9QgKmEu8WXGKawMi1gJFhFaNIZl5ZbmJmjqlecXZGZV5mhV5yfu4mRmAYL6v9M3EH
-	45fL7ocYBTgYlXh4Hzzemi7EmlhWXJl7iFGCg1lJhLetfku6EG9KYmVValF+fFFpTmrxIUZp
-	DhYlcV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA+OKor7yNV8CgneJvYxO6zj1tKOtUPXc/jam
-	j+aXcvfd6DU3lN+3e6l/9NHNlZvmJNb5vzhx6ejWwB3Pt8ZKLfJgWybJU14fNH3tmbVV4u8U
-	Mja+5f4TKl01qfT16oUn9vQ9Ulq/4EzE9YeL576ocf+UXO2/JrAy97ZTx4rvh8IULnfrfJu+
-	76qREktxRqKhFnNRcSIAHburZl8CAAA=
+	mpNZllqkb5fAlbH0wQLmgksBFQf37WJrYDzr0MXIySEhYCIxfcdVFhCbTUBd4saNn8wgtoiA
+	mcTB1j/sIDazwF0miQP9bF2MHBzCAikSB95pgIRZBFQlfjYeYwKxeYHKe1ddY4IYKS+xesMB
+	sDGcQPEfM3rZQGwhAVOJdwsuMU1g5FrAyLCKUSQzryw3MTPHVK84O6MyL7NCLzk/dxMjMIyX
+	1f6ZuIPxy2X3Q4wCHIxKPLwPHm9NF2JNLCuuzD3EKMHBrCTC21a/JV2INyWxsiq1KD++qDQn
+	tfgQozQHi5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qBsXjb1Vn7X9zP7HIrCK5ZZTFlypzJ
+	M4wau3MnvGIL6AqOfmtlybexSN9Q9+PB1faP5WZlvl7IqnFE4cNH9xUbJwj33597NlE3b8GD
+	sNY5zREfZu1WevJla3F5+beOdU2GeQoro/xOf2ap12VSXiftE73WgEH6zsada+Z99zj4SIB/
+	t8weiZ7VN5RYijMSDbWYi4oTAR3U4EpfAgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,212 +67,324 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Do not perform tlb shootdown if the context is in preempt disable and
-there are already enough non luf pages, not to hurt preemptibility.
+For luf'd filemap, tlb shootdown is performed when updating page cache,
+no matter whether tlb flushes required already has been done or not.
+
+By storing luf meta data in struct address_space and updating the luf
+meta data properly, we can skip unnecessary tlb flush.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- mm/compaction.c     |  6 +++---
- mm/internal.h       |  5 +++--
- mm/page_alloc.c     | 27 +++++++++++++++------------
- mm/page_isolation.c |  2 +-
- mm/page_reporting.c |  4 ++--
- 5 files changed, 24 insertions(+), 20 deletions(-)
+ fs/inode.c               |  1 +
+ include/linux/fs.h       |  4 ++-
+ include/linux/mm_types.h |  2 ++
+ mm/memory.c              |  4 +--
+ mm/rmap.c                | 59 +++++++++++++++++++++++++---------------
+ mm/truncate.c            | 14 +++++-----
+ mm/vmscan.c              |  2 +-
+ 7 files changed, 53 insertions(+), 33 deletions(-)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index a7f17867decae..8fa9de6db2441 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -605,7 +605,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 
- 	page = pfn_to_page(blockpfn);
- 
--	luf_takeoff_start();
-+	luf_takeoff_start(cc->zone);
- 	/* Isolate free pages. */
- 	for (; blockpfn < end_pfn; blockpfn += stride, page += stride) {
- 		int isolated;
-@@ -1601,7 +1601,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 		if (!area->nr_free)
- 			continue;
- 
--		can_shootdown = luf_takeoff_start();
-+		can_shootdown = luf_takeoff_start(cc->zone);
- 		spin_lock_irqsave(&cc->zone->lock, flags);
- 		freelist = &area->free_list[MIGRATE_MOVABLE];
- retry:
-@@ -2413,7 +2413,7 @@ static enum compact_result compact_finished(struct compact_control *cc)
- 	 * luf_takeoff_{start,end}() is required to identify whether
- 	 * this compaction context is tlb shootdownable for luf'd pages.
- 	 */
--	luf_takeoff_start();
-+	luf_takeoff_start(cc->zone);
- 	ret = __compact_finished(cc);
- 	luf_takeoff_end(cc->zone);
- 
-diff --git a/mm/internal.h b/mm/internal.h
-index e634eaf220f00..fba19c283ac48 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1594,7 +1594,7 @@ static inline void accept_page(struct page *page)
- #endif /* CONFIG_UNACCEPTED_MEMORY */
- #if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
- extern struct luf_batch luf_batch[];
--bool luf_takeoff_start(void);
-+bool luf_takeoff_start(struct zone *zone);
- void luf_takeoff_end(struct zone *zone);
- bool luf_takeoff_no_shootdown(void);
- bool luf_takeoff_check(struct zone *zone, struct page *page);
-@@ -1608,6 +1608,7 @@ static inline bool non_luf_pages_ok(struct zone *zone)
- 
- 	return nr_free - nr_luf_pages > min_wm;
- }
-+
- unsigned short fold_unmap_luf(void);
- 
- /*
-@@ -1694,7 +1695,7 @@ static inline bool can_luf_vma(struct vm_area_struct *vma)
- 	return true;
- }
- #else /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
--static inline bool luf_takeoff_start(void) { return false; }
-+static inline bool luf_takeoff_start(struct zone *zone) { return false; }
- static inline void luf_takeoff_end(struct zone *zone) {}
- static inline bool luf_takeoff_no_shootdown(void) { return true; }
- static inline bool luf_takeoff_check(struct zone *zone, struct page *page) { return true; }
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index b81931c6f2cfd..ccbe49b78190a 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -623,22 +623,25 @@ compaction_capture(struct capture_control *capc, struct page *page,
- #endif /* CONFIG_COMPACTION */
- 
- #if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
--static bool no_shootdown_context(void)
-+static bool no_shootdown_context(struct zone *zone)
- {
- 	/*
--	 * If it performs with irq disabled, that might cause a deadlock.
--	 * Avoid tlb shootdown in this case.
-+	 * Tries to avoid tlb shootdown if !preemptible().  However, it
-+	 * should be allowed under heavy memory pressure.
- 	 */
-+	if (zone && non_luf_pages_ok(zone))
-+		return !(preemptible() && in_task());
-+
- 	return !(!irqs_disabled() && in_task());
+diff --git a/fs/inode.c b/fs/inode.c
+index 46fbd5b234822..e155e51be2d28 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -404,6 +404,7 @@ static void __address_space_init_once(struct address_space *mapping)
+ 	init_rwsem(&mapping->i_mmap_rwsem);
+ 	INIT_LIST_HEAD(&mapping->i_private_list);
+ 	spin_lock_init(&mapping->i_private_lock);
++	luf_batch_init(&mapping->luf_batch);
+ 	mapping->i_mmap = RB_ROOT_CACHED;
  }
  
- /*
-  * Can be called with zone lock released and irq enabled.
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index ec88270221bfe..0cc588c704cd1 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -461,6 +461,7 @@ extern const struct address_space_operations empty_aops;
+  * @i_private_lock: For use by the owner of the address_space.
+  * @i_private_list: For use by the owner of the address_space.
+  * @i_private_data: For use by the owner of the address_space.
++ * @luf_batch: Data to track need of tlb flush by luf.
   */
--bool luf_takeoff_start(void)
-+bool luf_takeoff_start(struct zone *zone)
- {
- 	unsigned long flags;
--	bool no_shootdown = no_shootdown_context();
-+	bool no_shootdown = no_shootdown_context(zone);
+ struct address_space {
+ 	struct inode		*host;
+@@ -482,6 +483,7 @@ struct address_space {
+ 	struct list_head	i_private_list;
+ 	struct rw_semaphore	i_mmap_rwsem;
+ 	void *			i_private_data;
++	struct luf_batch	luf_batch;
+ } __attribute__((aligned(sizeof(long)))) __randomize_layout;
+ 	/*
+ 	 * On most architectures that alignment is already the case; but
+@@ -508,7 +510,7 @@ static inline int mapping_write_begin(struct file *file,
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+ 	if (!ret)
+-		luf_flush(0);
++		luf_flush_mapping(mapping);
  
- 	local_irq_save(flags);
+ 	return ret;
+ }
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 8de4c190ad514..c50cfc1c6282f 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1279,10 +1279,12 @@ extern void tlb_finish_mmu(struct mmu_gather *tlb);
+ void luf_flush(unsigned short luf_key);
+ void luf_flush_mm(struct mm_struct *mm);
+ void luf_flush_vma(struct vm_area_struct *vma);
++void luf_flush_mapping(struct address_space *mapping);
+ #else
+ static inline void luf_flush(unsigned short luf_key) {}
+ static inline void luf_flush_mm(struct mm_struct *mm) {}
+ static inline void luf_flush_vma(struct vm_area_struct *vma) {}
++static inline void luf_flush_mapping(struct address_space *mapping) {}
+ #endif
  
-@@ -2588,7 +2591,7 @@ static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
- 		 * luf_takeoff_{start,end}() is required for
- 		 * get_page_from_free_area() to use luf_takeoff_check().
+ struct vm_fault;
+diff --git a/mm/memory.c b/mm/memory.c
+index b02f86b1adb91..c98af5e567e89 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -6161,10 +6161,10 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 	if (flush) {
+ 		/*
+ 		 * If it has a VM_SHARED mapping, all the mms involved
+-		 * should be luf_flush'ed.
++		 * in the struct address_space should be luf_flush'ed.
  		 */
--		luf_takeoff_start();
-+		luf_takeoff_start(zone);
- 		spin_lock_irqsave(&zone->lock, flags);
- 		for (order = 0; order < NR_PAGE_ORDERS; order++) {
- 			struct free_area *area = &(zone->free_area[order]);
-@@ -2829,7 +2832,7 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
- 	unsigned long flags;
- 	int i;
+ 		if (mapping)
+-			luf_flush(0);
++			luf_flush_mapping(mapping);
+ 		luf_flush_mm(mm);
+ 	}
  
--	luf_takeoff_start();
-+	luf_takeoff_start(zone);
- 	spin_lock_irqsave(&zone->lock, flags);
- 	for (i = 0; i < count; ++i) {
- 		struct page *page = __rmqueue(zone, order, migratetype,
-@@ -3455,7 +3458,7 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
+diff --git a/mm/rmap.c b/mm/rmap.c
+index e0304dc74c3a7..0cb13e8fcd739 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -691,7 +691,7 @@ void fold_batch(struct tlbflush_unmap_batch *dst,
+ #define NR_LUF_BATCH (1 << (sizeof(short) * 8))
  
- 	do {
- 		page = NULL;
--		luf_takeoff_start();
-+		luf_takeoff_start(zone);
- 		spin_lock_irqsave(&zone->lock, flags);
- 		if (alloc_flags & ALLOC_HIGHATOMIC)
- 			page = __rmqueue_smallest(zone, order, MIGRATE_HIGHATOMIC);
-@@ -3600,7 +3603,7 @@ static struct page *rmqueue_pcplist(struct zone *preferred_zone,
- 	struct page *page;
- 	unsigned long __maybe_unused UP_flags;
+ /*
+- * Use 0th entry as accumulated batch.
++ * XXX: Reserve the 0th entry for later use.
+  */
+ struct luf_batch luf_batch[NR_LUF_BATCH];
  
--	luf_takeoff_start();
-+	luf_takeoff_start(NULL);
- 	/* spin_trylock may fail due to a parallel drain or IRQ reentrancy. */
- 	pcp_trylock_prepare(UP_flags);
- 	pcp = pcp_spin_trylock(zone->per_cpu_pageset);
-@@ -5229,7 +5232,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 	if (unlikely(!zone))
- 		goto failed;
+@@ -936,7 +936,7 @@ void luf_flush_vma(struct vm_area_struct *vma)
+ 		mapping = vma->vm_file->f_mapping;
  
--	luf_takeoff_start();
-+	luf_takeoff_start(NULL);
- 	/* spin_trylock may fail due to a parallel drain or IRQ reentrancy. */
- 	pcp_trylock_prepare(UP_flags);
- 	pcp = pcp_spin_trylock(zone->per_cpu_pageset);
-@@ -7418,7 +7421,7 @@ unsigned long __offline_isolated_pages(unsigned long start_pfn,
+ 	if (mapping)
+-		luf_flush(0);
++		luf_flush_mapping(mapping);
+ 	luf_flush_mm(mm);
+ }
  
- 	offline_mem_sections(pfn, end_pfn);
- 	zone = page_zone(pfn_to_page(pfn));
--	luf_takeoff_start();
-+	luf_takeoff_start(zone);
- 	spin_lock_irqsave(&zone->lock, flags);
- 	while (pfn < end_pfn) {
- 		page = pfn_to_page(pfn);
-@@ -7536,7 +7539,7 @@ bool take_page_off_buddy(struct page *page)
- 	unsigned int order;
- 	bool ret = false;
+@@ -962,6 +962,29 @@ void luf_flush_mm(struct mm_struct *mm)
+ 	try_to_unmap_flush();
+ }
  
--	luf_takeoff_start();
-+	luf_takeoff_start(zone);
- 	spin_lock_irqsave(&zone->lock, flags);
- 	for (order = 0; order < NR_PAGE_ORDERS; order++) {
- 		struct page *page_head = page - (pfn & ((1 << order) - 1));
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index eae33d188762b..ccd36838f9cff 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -211,7 +211,7 @@ static void unset_migratetype_isolate(struct page *page, int migratetype)
- 	struct page *buddy;
++void luf_flush_mapping(struct address_space *mapping)
++{
++	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct luf_batch *lb;
++	unsigned long flags;
++	unsigned long lb_ugen;
++
++	if (!mapping)
++		return;
++
++	lb = &mapping->luf_batch;
++	read_lock_irqsave(&lb->lock, flags);
++	fold_batch(tlb_ubc, &lb->batch, false);
++	lb_ugen = lb->ugen;
++	read_unlock_irqrestore(&lb->lock, flags);
++
++	if (arch_tlbbatch_diet(&tlb_ubc->arch, lb_ugen))
++		return;
++
++	try_to_unmap_flush();
++}
++EXPORT_SYMBOL(luf_flush_mapping);
++
+ /*
+  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
+  * important if a PTE was dirty when it was unmapped that it's flushed
+@@ -1010,7 +1033,8 @@ void try_to_unmap_flush_dirty(void)
  
- 	zone = page_zone(page);
--	luf_takeoff_start();
-+	luf_takeoff_start(zone);
- 	spin_lock_irqsave(&zone->lock, flags);
- 	if (!is_migrate_isolate_page(page))
- 		goto out;
-diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-index b23d3ed34ec07..83b66e7f0d257 100644
---- a/mm/page_reporting.c
-+++ b/mm/page_reporting.c
-@@ -170,7 +170,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 	if (free_area_empty(area, mt))
- 		return err;
+ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
+ 				      unsigned long uaddr,
+-				      struct vm_area_struct *vma)
++				      struct vm_area_struct *vma,
++				      struct address_space *mapping)
+ {
+ 	struct tlbflush_unmap_batch *tlb_ubc;
+ 	int batch;
+@@ -1032,27 +1056,15 @@ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
+ 		tlb_ubc = &current->tlb_ubc;
+ 	else {
+ 		tlb_ubc = &current->tlb_ubc_ro;
++
+ 		fold_luf_batch_mm(&mm->luf_batch, mm);
++		if (mapping)
++			fold_luf_batch_mm(&mapping->luf_batch, mm);
+ 	}
  
--	can_shootdown = luf_takeoff_start();
-+	can_shootdown = luf_takeoff_start(zone);
- 	spin_lock_irq(&zone->lock);
+ 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, uaddr);
+ 	tlb_ubc->flush_required = true;
+ 
+-	if (can_luf_test()) {
+-		struct luf_batch *lb;
+-		unsigned long flags;
+-
+-		/*
+-		 * Accumulate to the 0th entry right away so that
+-		 * luf_flush(0) can be uesed to properly perform pending
+-		 * TLB flush once this unmapping is observed.
+-		 */
+-		lb = &luf_batch[0];
+-		write_lock_irqsave(&lb->lock, flags);
+-		__fold_luf_batch(lb, tlb_ubc, new_luf_ugen());
+-		write_unlock_irqrestore(&lb->lock, flags);
+-	}
+-
+ 	/*
+ 	 * Ensure compiler does not re-order the setting of tlb_flush_batched
+ 	 * before the PTE is cleared.
+@@ -1134,7 +1146,8 @@ void flush_tlb_batched_pending(struct mm_struct *mm)
+ #else
+ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
+ 				      unsigned long uaddr,
+-				      struct vm_area_struct *vma)
++				      struct vm_area_struct *vma,
++				      struct address_space *mapping)
+ {
+ }
+ 
+@@ -1503,7 +1516,7 @@ int folio_mkclean(struct folio *folio)
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(mapping);
+ 
+ 	return cleaned;
+ }
+@@ -2037,6 +2050,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 	enum ttu_flags flags = (enum ttu_flags)(long)arg;
+ 	unsigned long pfn;
+ 	unsigned long hsz = 0;
++	struct address_space *mapping = folio_mapping(folio);
  
  	/*
-@@ -250,7 +250,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 		/* update budget to reflect call to report function */
- 		budget--;
+ 	 * When racing against e.g. zap_pte_range() on another cpu,
+@@ -2174,7 +2188,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 				 */
+ 				pteval = ptep_get_and_clear(mm, address, pvmw.pte);
  
--		luf_takeoff_start();
-+		luf_takeoff_start(zone);
+-				set_tlb_ubc_flush_pending(mm, pteval, address, vma);
++				set_tlb_ubc_flush_pending(mm, pteval, address, vma, mapping);
+ 			} else {
+ 				pteval = ptep_clear_flush(vma, address, pvmw.pte);
+ 			}
+@@ -2414,6 +2428,7 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
+ 	enum ttu_flags flags = (enum ttu_flags)(long)arg;
+ 	unsigned long pfn;
+ 	unsigned long hsz = 0;
++	struct address_space *mapping = folio_mapping(folio);
  
- 		/* reacquire zone lock and resume processing */
- 		spin_lock_irq(&zone->lock);
+ 	/*
+ 	 * When racing against e.g. zap_pte_range() on another cpu,
+@@ -2563,7 +2578,7 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
+ 				 */
+ 				pteval = ptep_get_and_clear(mm, address, pvmw.pte);
+ 
+-				set_tlb_ubc_flush_pending(mm, pteval, address, vma);
++				set_tlb_ubc_flush_pending(mm, pteval, address, vma, mapping);
+ 			} else {
+ 				pteval = ptep_clear_flush(vma, address, pvmw.pte);
+ 			}
+diff --git a/mm/truncate.c b/mm/truncate.c
+index 14618c53f1910..f9a3416610231 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -128,7 +128,7 @@ void folio_invalidate(struct folio *folio, size_t offset, size_t length)
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(folio->mapping);
+ }
+ EXPORT_SYMBOL_GPL(folio_invalidate);
+ 
+@@ -170,7 +170,7 @@ int truncate_inode_folio(struct address_space *mapping, struct folio *folio)
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(mapping);
+ 	return 0;
+ }
+ 
+@@ -220,7 +220,7 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(folio->mapping);
+ 
+ 	if (!folio_test_large(folio))
+ 		return true;
+@@ -282,7 +282,7 @@ long mapping_evict_folio(struct address_space *mapping, struct folio *folio)
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(mapping);
+ 
+ 	return ret;
+ }
+@@ -417,7 +417,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(mapping);
+ }
+ EXPORT_SYMBOL(truncate_inode_pages_range);
+ 
+@@ -537,7 +537,7 @@ unsigned long mapping_try_invalidate(struct address_space *mapping,
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(mapping);
+ 	return count;
+ }
+ 
+@@ -704,7 +704,7 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(mapping);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(invalidate_inode_pages2_range);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index ffc4a48710f1d..cbca027d2a10e 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -836,7 +836,7 @@ long remove_mapping(struct address_space *mapping, struct folio *folio)
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this mapping.
+ 	 */
+-	luf_flush(0);
++	luf_flush_mapping(mapping);
+ 
+ 	return ret;
+ }
 -- 
 2.17.1
 
