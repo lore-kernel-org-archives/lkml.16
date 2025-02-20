@@ -1,64 +1,73 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1FE1FAC25;
-	Thu, 20 Feb 2025 14:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE56F1F03C9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740061306; cv=none; b=AyqfLkS0x40C4AQnYg5+pm8euO9FqLGHgQnhoiz8zow+NGpu3C/zZ2a10je17B0ibDZrQMNC/+onGErkcYoyxWjUSq27t/qYR/uXJUEryWIZchkZvWcgQDgRB8RD8NCboDY2Ci94pSim8MowHFH7AG0d0MGKtVDnrpc/Js10KtQ=
+	t=1740061349; cv=none; b=c/FJk+3fc+iU8mXOZNJsJEG7CPyzcpPAqTD/OYUfa2KN8NEOhl8Pes8qw61hu2napHRAFNIwOJj08IAfLqyvRcteIfx1If/3AUzsV5m/Wy133HRsZv+jycBB1b/Ut4vDW75BJ2b7wT3+7eHYc6XwMyjsSP8npFsDSq6Yxfus5FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740061306; c=relaxed/simple;
-	bh=PpVzdWc+hNukxIACDuAxZaeAROL3OgZe4+gSpyqxYFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uuNngiy6+sXeuugJjoZWg6R0KhQ8JgodngFsdg4BcyIxhKlxyA8WOGrZbG+JuT7QELxhmrY/r1fljzCZbArfk+frjs53hljsf3Uy9binm/a/Y6Ix+0r+6xWzVR5VK9DUfNyEDGvdGbbKng9X1h6+1LOr0fsMjd5YS5PW0uRJe40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z5wJgBhw; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740061349; c=relaxed/simple;
+	bh=RvMBdWtOp3DESzFvYDUh9x1/kB+bNsyJc9bwkbnB5Sc=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=occIhiXhmyVtQqrgzCa2r3ZZ8E+1PzjWJFpzwHnzhEKxkrPcZZTzFWAsbcBcBgCj9Ce4vf66pX8A6RFmcmLbnc2FCA4+5T3b5chcB0SRRBqo9iQpGyRvNPxOyDu+2nKhG2wut3I9/kxuC7AflM6sInfUX3HVg+HKlw+oNzAA2vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ClT12c+Y; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5wJgBhw"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54605bfcc72so2406007e87.0;
-        Thu, 20 Feb 2025 06:21:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740061303; x=1740666103; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mzmoiLCG8SAcHQOd7ewiQtwf2LHT2fH6DKF15WTZxJc=;
-        b=Z5wJgBhwdD+TzhkVluXL7JlBWzuZwO5hy+wlp4lfqzdQ2avgIN6DrE0hMGKV/te5LP
-         jLJNjq9/if86cG3RkvW1O8hFTr8lenVBnn7Vo5W0jWYzeJ51GvXGifkPAE4HgFbN6vT8
-         qKJBu9aATDiNBpfNfkokHFOdebQ2rGsg+P3kALz33b401buJsRa5Z5YQtc+PII7YRG2v
-         vsFPLILY+0zRNG3OA4WdcZtSWEjS2d4oDuIw+h4dz3i7gppzRDn9lblK3gj91XMJTi4Q
-         w/z9dbFZdOnTe8u9xrwmU0Yo7b2jQ/R9bWqBE4fwENtX9OluKjuifbrRjIiK+PkTcg2O
-         CPCA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ClT12c+Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740061346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H7r14EXjFIx3XwpfOuxJfMQcfssTHWQYqFB5E5YFqFI=;
+	b=ClT12c+YFB9RbXloR8eZe7Vq7v+ivtuojqHeuvGMSBU1Knw/H6lgtUHwjYSESbf+RnmDnN
+	cpP8K0UsFgriGVJ+gb5l9MW5spN1tY+5gwEvENF2TgvRLaZi6ZWkgF0EPusk80frKiipPH
+	SfT4lvjz/Gjw558pQ2UHZEp+Opxhs/E=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-606-pMri7GDjM6qd6tNHTPZ7VQ-1; Thu, 20 Feb 2025 09:22:25 -0500
+X-MC-Unique: pMri7GDjM6qd6tNHTPZ7VQ-1
+X-Mimecast-MFC-AGG-ID: pMri7GDjM6qd6tNHTPZ7VQ_1740061345
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-471ea7666c7so18957251cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 06:22:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740061303; x=1740666103;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1740061345; x=1740666145;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mzmoiLCG8SAcHQOd7ewiQtwf2LHT2fH6DKF15WTZxJc=;
-        b=Gi07b2nSjf1PRgkpo4rO8vQWHhEmIcFfSbAFzSEBP5v+hZTHGurlEu61JJVv3i+Fmq
-         NzXehb1Y1ST5SKBg6xU6rSWlTUVTreQay3KAc1azvm1R8JyDd0rMzJ6ker+sm1OAN49S
-         SHqrOfh+11Y+wMHjH2u6N5PlHc+i9F2toQTRtinjJ1wEOx2Ioj+L2ADAaoCIFgbR/xIB
-         A9p5O7nb+Q3Hee0ADAlplZh82wTDZ9vwiPFPu4cvFTGCgG1uZNWfkL5BnGtyCw0v+flS
-         bG92Q+IeiH5q1XVkuw2PRN5UfDqq0p7bmXZVY85hNE157Dap+/U/5vJw8NuF/QMT3F5V
-         QO2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUkLl4J8AGgTxr1KPBR0n9YfM4I77KZMqhEMdkB8WLx3HBFYfdwJDKfoNQBXwqUn1mSRAo/HC1O73BHbLmE@vger.kernel.org, AJvYcCVbn2Awi6+nZpXKcR6srsANstXGdP9LFq17RHK4f8fQzq82O8bJCAlElBRP7qAZXIGXlsqQYBAORcWH@vger.kernel.org, AJvYcCXZJNpKNhwYpZrjavHpki4lebiKzViIvd17/7eLD5sAdXleFKnReQpFWSQs0wHl99shA1fw6Ru/KjPqAAEybEaxaFE=@vger.kernel.org, AJvYcCXjkkCOigGd0frIaKpqm6094F98UbjnOV5RmuDZ9FoMxe4lUjeh61XCmlBBEVOXgdQal7h8gFAXQJ3P@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfze3p3EbfIApoi+J/166a1ICAcjMB2dwWaSPIpXtHL/yKjCN1
-	snIeIOyD00016rNW0DHehjpDDQ3JqDyF7cGWmoSfhETqHeZZh/F8
-X-Gm-Gg: ASbGncvZjRn3kOVNyhKfqcAbHHC0im4e76iZyWGA28YIi2OOTK11i2wIFKlZZljUK2t
-	H7Auj5tSoU7WJR53MWAsMZQPy0ERy3zEcQzvMXQcnHfJS6JibwXC37RQxs8QgM/j3KAiil7yJOs
-	3RRrvhc3GXru8u+DkRiMqezpzhZls+auw00HZFIsCIThVr1UByz/B8ufxb1q0H79Usu9FY+bx0H
-	NseScM7SnspWkwXTEucuIOHktkZf3biYrkKeSnCO5eH3Fn2bMr7dDQQjl3/PRzQimEp1EgyEEVT
-	5Ed28vlGwDxPiVi1QnKC6IkmicOLHHn6QYz5y3U1k1fyi24UPjhU7ks2i6BXQd0tIbOjOiKt
-X-Google-Smtp-Source: AGHT+IEnorexehar0T56dUSxxROrZLAf2XndxCCWnC99AsuPb3902B0+uwY/QTJ7hoY8ePb04Bn4Lg==
-X-Received: by 2002:a05:6512:4010:b0:545:16a8:6a5d with SMTP id 2adb3069b0e04-546e3c9c9e0mr1209013e87.2.1740061302295;
-        Thu, 20 Feb 2025 06:21:42 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452fcf6487sm1893226e87.137.2025.02.20.06.21.38
+        bh=H7r14EXjFIx3XwpfOuxJfMQcfssTHWQYqFB5E5YFqFI=;
+        b=J7Y0i4K8SEpzONZ76uTDQYY9ofnqukTeA+JI3irCIHA9Q1+DZQn9fgMMq6noZVktHe
+         fH5RzUbmrv1HfuqmeTcU4YtkQkXCPYQRCKx9zzWtwy4pBHAqN2agyS5ZSAU9V85D2m0C
+         AO/bTiasUo8oqtNzw3CcXQkf04f4x2BgMcC4vKnqzwpq+FqwFzn5C8Vw5Fkv2t0Ygpku
+         sIC02bA4blTnaJlQBkpyCgXSVsgNUhn1gjXGNE9bX8Z9Ipo2D86vafFYPlq+hWMJHZ5Y
+         04+xCKjZzquShJ+Cau/qqxYre/aDW0dNkm1wq+I/gLAgvpGU7TRmnCtdgFYzm4ba2yn0
+         C8tA==
+X-Forwarded-Encrypted: i=1; AJvYcCXlhgZKyHpDM6aakTfN2Q2erUcdZKoIn0+hy5b7JWCQYerHySHbZBoXbvp8HmF8Cck6W2p4q5wLNWRSCmA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAucvoFiIMGPTDPYYS/6Cc3g6yqcPNkxLh6D8lNm6FCaO93oqm
+	1T/D+A72Jpkj9orJalztI9APlcz5n+Ve1GO3lUIbA3M0kK7nu+9FrxwvfWY5ebRpyIJZKUdi+Zv
+	NvpCPw29KjZeDcmUBRE3kLKyJikr9NChm0uh65c1ueGFOBm+yaiBDMiSj1PoEiQ==
+X-Gm-Gg: ASbGncsuqLFd7L2lm5LXhr0k947Yc3AfL5Bx+a61UT94Dq8Ut+Rr3OT4/1BBntkJ/0m
+	9BY0FtM5y4Yr+x22fshjCsiHSP8ak+ul2It58PInRUbidEQ/6aUfjzu9LHRtjdSr+7j++AeMJK5
+	cvXuPwyxn9WzDm+NkxS+Hzd/pSX3e/aeM3frq7Ic1Q1fpiY/i94jHV22dqPTmDMGq5smoEFXnbo
+	a1qKp6xwZV6priFMelPal4eygupjK2U1TZTccn+4lMW5NZFG+xmFOtAZvd8e2cutssIQYMfILNF
+	hOLr/DRiOUVThd5sMKtVACcAe2K4SXBPQJBYVIedjokO/zIm
+X-Received: by 2002:a05:622a:13cb:b0:471:fa92:9239 with SMTP id d75a77b69052e-471fa929817mr150698631cf.35.1740061344901;
+        Thu, 20 Feb 2025 06:22:24 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHHcKCnyjKgYMKC7pmhTIxMT9x10jSRgTftOyocqc0ie8YVpDcc0KW4B/4fFt77IpT4ToCA2g==
+X-Received: by 2002:a05:622a:13cb:b0:471:fa92:9239 with SMTP id d75a77b69052e-471fa929817mr150698401cf.35.1740061344576;
+        Thu, 20 Feb 2025 06:22:24 -0800 (PST)
+Received: from ?IPV6:2601:188:c100:5710:627d:9ff:fe85:9ade? ([2601:188:c100:5710:627d:9ff:fe85:9ade])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d7a3c20sm86544956d6.53.2025.02.20.06.22.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 06:21:40 -0800 (PST)
-Message-ID: <9018e23c-da28-41b0-b774-1598b946a2a1@gmail.com>
-Date: Thu, 20 Feb 2025 16:21:37 +0200
+        Thu, 20 Feb 2025 06:22:23 -0800 (PST)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <edd2d160-e1ca-4d2e-be92-cb033d3b791f@redhat.com>
+Date: Thu, 20 Feb 2025 09:22:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,257 +75,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/9] iio: adc: add helpers for parsing ADC nodes
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <cover.1739967040.git.mazziesaccount@gmail.com>
- <6c5b678526e227488592d004c315a967b9809701.1739967040.git.mazziesaccount@gmail.com>
- <Z7ZB7RQhyI5Dohrq@smile.fi.intel.com>
- <b1c1ed68-2f4d-447c-9957-5a1bbc63ef6e@gmail.com>
- <Z7ci7tUlRQqZEZSN@smile.fi.intel.com>
- <ec76334b-bb13-4076-811d-9174170dd677@gmail.com>
- <Z7c2cBQpjoc9-Vyu@smile.fi.intel.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <Z7c2cBQpjoc9-Vyu@smile.fi.intel.com>
+Subject: Re: [PATCH 0/2] hung_task: Dump the blocking task stacktrace
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Waiman Long <llong@redhat.com>
+Cc: Lance Yang <ioworker0@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Boqun Feng
+ <boqun.feng@gmail.com>, Joel Granados <joel.granados@kernel.org>,
+ Anna Schumaker <anna.schumaker@oracle.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Yongliang Gao <leonylgao@tencent.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Tomasz Figa <tfiga@chromium.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org,
+ Linux Memory Management List <linux-mm@kvack.org>
+References: <173997003868.2137198.9462617208992136056.stgit@mhiramat.tok.corp.google.com>
+ <CAK1f24knkxX34hNLRjT20mjyyOwasmXgXJBbTDX=7WYwiw9S1g@mail.gmail.com>
+ <CAK1f24m-Ci3BvgfVYGW2tFSUEkPwiO9=0M_w4kpOt1qViiDXdg@mail.gmail.com>
+ <8ca57548-4b18-401d-bfda-95bc12216adf@redhat.com>
+ <20250220231857.6e377e5f208b60a7ba303cea@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250220231857.6e377e5f208b60a7ba303cea@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/02/2025 16:04, Andy Shevchenko wrote:
-> On Thu, Feb 20, 2025 at 03:40:30PM +0200, Matti Vaittinen wrote:
->> On 20/02/2025 14:41, Andy Shevchenko wrote:
->>> On Thu, Feb 20, 2025 at 09:13:00AM +0200, Matti Vaittinen wrote:
->>>> On 19/02/2025 22:41, Andy Shevchenko wrote:
->>>>> On Wed, Feb 19, 2025 at 02:30:27PM +0200, Matti Vaittinen wrote:
-> 
-> ...
-> 
->>>>>> +EXPORT_SYMBOL_GPL(iio_adc_device_num_channels);
->>>>>
->>>>> No namespace?
+
+On 2/20/25 9:18 AM, Masami Hiramatsu (Google) wrote:
+> On Wed, 19 Feb 2025 15:20:39 -0500
+> Waiman Long <llong@redhat.com> wrote:
+>
+>> On 2/19/25 10:02 AM, Lance Yang wrote:
+>>> On Wed, Feb 19, 2025 at 9:33 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>> CC linux-mm
 >>>>
->>>> I was considering also this. The IIO core functions don't belong into a
->>>> namespace - so I followed the convention to keep these similar to other IIO
->>>> core stuff.
->>>
->>> But it's historically. We have already started using namespaces
->>> in the parts of IIO, haven't we?
->>
->> Yes. But as I wrote, I don't think adding new namespaces for every helper
->> file with a function or two exported will scale. We either need something
->> common for IIO (or IIO "subsystems" like "adc", "accel", "light", ... ), or
->> then we just keep these small helpers same as most of the IIO core.
-> 
-> It can be still pushed to IIO_CORE namespace. Do you see an issue with that?
-
-No. I've missed the fact we have IIO_CORE O_o. Thanks for pointing it out!
-
-> Or a new opaque namespace for the mentioned cases, something like IIO_HELPERS.
-
-I am unsure if it really benefits to split this out of the IIO_CORE. 
-I've a feeling it falls into the category of making things harder for 
-user with no apparent reason. But yes, the IIO_CORE makes sense.
-
->>>> (Sometimes I have a feeling that the trend today is to try make things
->>>> intentionally difficult in the name of the safety. Like, "more difficult I
->>>> make this, more experience points I gain in the name of the safety".)
->>>>
->>>> Well, I suppose I could add a namespace for these functions - if this
->>>> approach stays - but I'd really prefer having all IIO core stuff in some
->>>> global IIO namespace and not to have dozens of fine-grained namespaces for
->>>> an IIO driver to use...
-> 
-> ...
-> 
->>>>>> +	if (!allowed_types || allowed_types & (~IIO_ADC_CHAN_PROP_TYPE_ALL)) {
+>>>> On Wed, Feb 19, 2025 at 9:00 PM Masami Hiramatsu (Google)
+>>>> <mhiramat@kernel.org> wrote:
+>>>>> Hi,
 >>>>>
->>>>> Unneeded parentheses around negated value.
+>>>>> The hung_task detector is very useful for detecting the lockup.
+>>>>> However, since it only dumps the blocked (uninterruptible sleep)
+>>>>> processes, it is not enough to identify the root cause of that
+>>>>> lockup.
 >>>>>
->>>>>> +	if (found_types & (~allowed_types)) {
->>>>>
->>>>> Ditto.
->>>>>
->>>>>> +		long unknown_types = found_types & (~allowed_types);
->>>>>
->>>>> Ditto and so on...
->>>>>
+>>>>> For example, if a process holds a mutex and sleep an event in
+>>>>> interruptible state long time, the other processes will wait on
+>>>>> the mutex in uninterruptible state. In this case, the waiter
+>>>>> processes are dumped, but the blocker process is not shown
+>>>>> because it is sleep in interruptible state.
+>>> Cool! I just ran into something similar today, but with rwsem. In that
+>>> case, the blocked process was locked up, and we could not identify
+>>> the root cause either ;(
+>> Once this patch series is settled down, we can extend rwsem to provide
+>> similar feature.
+> While discussing about rwsem with Sergey, he pointed that we can not
+> identify a single blocker on rwsem, because several readers can block
+> several writers. In this case, we need to dump all of them but we
+> don't have such info.
+>
+> So anyway, I would like to start from mutex, which is the simplest one.
+> For the other locks, we will discuss later. (or start with limited
+> support, like showing only rwsem::owner)
 
-...
+Yes, reader tracking is a problem as the rw_semaphore structure doesn't 
+store information about the reader-owners as the count can vary. That is 
+a limitation that we have to live with.
 
->>>> during the moves I lost my printed list of operator precedences which I used
->>>> to have on my desk. I've been writing C for 25 years or so, and I still
->>>> don't remember the precedence rules for all bitwise operations - and I am
->>>> fairly convinced I am not the only one.
->>>
->>> ~ (a.k.a. negation) is higher priority in bitops and it's idiomatic
->>> (at least in LK project).
->>
->> I know there are well established, accurate rules. Problem is that I never
->> remember these without looking.
-> 
-> There are very obvious cases like below.
-
-I think we just disagree on if this is obvious.
-
->>>> What I understood is that I don't really have to have a printed list at
->>>> home, or go googling when away from home. I can just make it very, very
->>>> obvious :) Helps me a lot.
->>>
->>> Makes code harder to read, especially in the undoubtful cases like
->>>
->>> 	foo &= (~...);
->>
->> This is not undoubtful case for me :) And believe me, reading and
->> deciphering the
->>
->> foo &= (~bar);
->>
->> is _much_ faster than seeing:
-> 
-> Strongly disagree. One need to parse an additional pair of parentheses,
-> and especially when it's a big statement inside with nested ones along
-> with understanding what the heck is going on that you need them in the
-> first place.
-> 
-> On top of that, we have a common practices in the LK project and
-> with our history of communication it seems you are trying to do differently
-> from time to time. Sounds like a rebellion to me :-)
-
-I only rebel when I (in my opinion) have a solid reason :)
-
->> foo &= ~bar;
->>
->> and having to google the priorities.
-> 
-> Again, this is something a (regular) kernel developer keeps refreshed.
-> Or even wider, C-language developer.
-
-Ha. As I mentioned, I've been writing C on a daily bases for almost 25 
-years. I wonder if you intent to say I am not a kernel/C-language 
-developer? Bold claim.
-
->>>>>> +		int type;
->>>>>> +
->>>>>> +		for_each_set_bit(type, &unknown_types,
->>>>>> +				 IIO_ADC_CHAN_NUM_PROP_TYPES - 1) {
->>>>>> +			dev_err(dev, "Unsupported channel property %s\n",
->>>>>> +				iio_adc_type2prop(type));
->>>>>> +		}
->>>>>> +
->>>>>> +		return -EINVAL;
->>>>>> +	}
-> 
-> ...
-> 
->>>>>> +		tmp.required &= (~BIT(IIO_ADC_CHAN_PROP_COMMON));
->>>>>
->>>>> Redundant outer parentheses. What's the point, please?
->>>>
->>>> Zero need to think of precedence.
->>>
->>> Huh? See above.
->>> Everything with equal sign is less precedence than normal ops.
->>
->> Sure. It's obvious if you remember that "Everything with equal sign is less
->> precedence than normal ops". But as I said, I truly have hard time
->> remembering these rules. When I try "going by memory" I end up having odd
->> errors and suggestions to add parenthesis from the compiler...
-> 
-> The hardest to remember probably the
-> 
-> 	foo && bar | baz
-> 
-> case and alike. These are the only ones that I totally agree on with you.
-> But negation.
-> 
->> By the way, do you know why anyone has bothered to add these
->> warnings/suggestions about adding the parenthesis to the compiler? My guess
->> is that I am not only one who needs the precedence charts ;)
-> 
-> Maybe someone programmed too much in LISP?.. (it's a rhetorical one)
-> 
-> ...
-> 
->>>>>> +		ret = fwnode_property_read_u32(child, "common-mode-channel",
->>>>>> +					       &common);
->>>>>
->>>>> I believe this is okay to have on a single line,
->>>>
->>>> I try to keep things under 80 chars. It really truly helps me as I'd like to
->>>> have 3 parallel terminals open when writing code. Furthermore, I hate to
->>>> admit it but during the last two years my near vision has deteriorated... :/
->>>> 40 is getting more distant and 50 is approaching ;)
->>>
->>> It's only 86 altogether with better readability.
->>> We are in the second quarter of 21st century,
->>> the 80 should be left in 80s...
->>>
->>> (and yes, I deliberately put the above too short).
->>
->> I didn't even notice you had squeezed the lines :)
->>
->> But yeah, I truly have problems fitting even 3 80 column terminals on screen
->> with my current monitor. And when working on laptop screen it becomes
->> impossible. Hence I strongly prefer keeping the 80 chars limit.
-> 
-> Maybe you need a bigger monitor after all? (lurking now :-)
-
-Wouldn't fit my table :)
-
-> ...
-> 
->>>>>> +#include <linux/iio/iio.h>
->>>>>
->>>>> I'm failing to see how this is being used in this header.
->>>>
->>>> I suppose it was the struct iio_chan_spec. Yep, forward declaration could
->>>> do, but I guess there would be no benefit because anyone using this header
->>>> is more than likely to use the iio.h as well.
->>>
->>> Still, it will be a beast to motivate people not thinking about what they are
->>> doing. I strongly prefer avoiding the use of the "proxy" or dangling headers.
->>
->> Ehh. There will be no IIO user who does not include the iio.h.
-> 
-> It's not your concern. That's the idea of making C units as much independent
-> and modular as possible (with common sense in mind). And in this case I see
-> no point of including this header. Again, the main problem is this will call
-> people to use the new header as a "proxy" and that's what I fully against to.
-> 
->> And, I need the iio_chan_spec here.
-> 
-> Do you really need it or is it just a pointer?
-
-Just a pointer. Forward declaration could do it. Hmm. I didn't think of 
-people using this header as a proxy. I guess you have a point here :)
-
-> 
-> ...
-> 
->> And as I said, I suggest saving some of the energy for reviewing the next
->> version. I doubt the "property type" -flags and bitwise operations stay, and
->> it may be all of this will be just meld in the bd79124 code - depending on
->> what Jonathan & others think of it.
-> 
-> Whenever this code will be trying to land, the review comments still apply.
-
-Sure! But chances are plenty of this code gets erased :) I just wanted 
-to warn you that some of the effort on this version is likely to get 
-wasted. I did consider reverting this back to a RFC - but going back'n 
-forth with the RFC status felt odd...
-
-Yours,
-	-- Matti
+Cheers,
+Longman
 
