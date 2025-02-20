@@ -1,304 +1,221 @@
-Received: from sonic313-15.consmr.mail.ne1.yahoo.com (sonic313-15.consmr.mail.ne1.yahoo.com [66.163.185.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E7F1C5F26
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 17:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.185.38
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740071038; cv=none; b=u82HW/2PfJP9eHijc6Z5N6dL9VawMahr7Qxemh6zd7oJaNqZm0rKb5lxoZ6TkPHEAfZAUuO27ktniSSolwH8h/pJgOMwww4K5P5/efdmnvqhBg2FGCcJT1BnfSnQQ5l77WE1caBL3nlOqM3HMnW1BfznCTkvhWrIJsQjV6kbGoM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740071038; c=relaxed/simple;
-	bh=5+S9/Si9gNsDr9p4HVkVVkrMAupZZtn+rX610VhWUJ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ig7HB5MaFeJXXU3k5hWOBODQpCxXIAK7sxhdauqB1TYg0r/kcHMMb6rmhPn1Ofq42rT8yMW1waQP+bFT+6uCt7zB3aMqCNd62DSr5Zx8XnxqAvXQPvNcfo15r35uOOU4w4CXQsf7ptvK1cCCGFybNtXsk59QmlOi+l6RHzoeXyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=M7lICHL3; arc=none smtp.client-ip=66.163.185.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058D620D4E2;
+	Thu, 20 Feb 2025 17:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740071067; cv=pass; b=ucUDCIlc05F7f9hTiaGaod7M2Du//2I7xyJOBreNDH0B76n6sxjeIA79dG53XmnPHsEnAXWbuydWCJxgWGL5r7tD7/upxSahDBb7btsaog7GlXP9ghuph2ljqegPwc82apdIz2gGOL+GXMw8XdZHRw+JE9hhAlbUvdz67oYPn5Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740071067; c=relaxed/simple;
+	bh=1eFK9osyTJtbHiC66D0wNYp1jhfVBtNoPsaqtV7u2a8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rm81m7lMkgB9pneTGLiPpWr5SfgMQMGgHY/XlsIeXphm8S2i7RKO9pnS6EmoppmTnz4vDbIJZd69utpv7Zu8/5E+PWy0aJwdOauoyOc1MgMkxfGRN6qGQo1GVANpYrHjqGYgMVUoUdN7cRbHpXDyYYeTyqXltxaQf3Grcm+NQ+Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=NELb89ZN; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="M7lICHL3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1740071034; bh=MBDOOJln965UMaLJqLVpgP08hYXFIFAWNSXzmCDWeXg=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=M7lICHL3itRZ+cCsgKXVJsl9YJySNq2OPCSdWpMvqTPcWXjXkt+GLwsL2oEU5bpHsCN2ibtGaFAWEFo/qIEBXEkrFrULLBrefZFLZf9nyhjzpuQWydVwnX1MIsb7C/DTplj60symk6uG4q8kzWOmdMDGO7bUFoYdyOOfJVOJzuQ75SFcsCZq+A4/WFv47lpOqhsuIUgpg2lNHhjd181woBMi15udgwYCQnMpwUsZT4o2r5Av1S9fcVTU6sKovsetX+0raHKvFJp2wyb9mJwc9Akl5C8McIA6UdqsKpiyy0gBUEY67PL/4qTinV2D6wEgwIxUOLSi++4alHH51xzjIg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1740071034; bh=JVQSUMU/Fz2jay0QMUPBfbps1oXEq+ChL2f7ZKDEWf5=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=tnjXs1npUQ+tG56DWrbGNrc7qiAahj2qbACv3QieMr506DSG0NbxQffmdv2d/oYkoYwn3izvDGbhTyFDGj3VnTD2R2Kd1p8EhWbLs1g0lVTRoYWRf2lo59T9OF+FOrXW3y6x3vXLtj2tQ9nzfgl/d2fs0F3u563FUjj87Y4VrMAx4t5LjGWuS6owTzE8rFhpCoHTo86o7mb98vwZcQQbcZB5NPlq7s4xLRyz70MsVRN462xhKEDI0zB2Iy6D7Z5xU+B0NolB/H1jVJwCTsq/g2u2moPvH/W6r1WJQO9SaLZeZDQM/FQanPCJxCVgUDUxB8EkffUJC6pxTNelFmuLGA==
-X-YMail-OSG: Q8qn1SIVM1kVUO_za3yB4ULvDAxXYeAhMsZZ8aPjrY.3V6jwf0fuxXgqmdKomIg
- WSA8IZdDoqnjz9l.Qjv9vz9n7EZ.w67WyskmuQZrkD_HbUl29CmTbYIrokjUpPbsRHaSftvVNzKF
- iKrx9.fXk6dmJQFxGGzh1t.mCR0ZHydGkD1dJN0ZTyq7oXZiwP6XawS.Lz1uETY4HSoinG5gTEhP
- t0vGKbbaLEh.qQW6tYTkA1P052inloMr3XPyMdaLkYsUcYixIw6o0xIDMwkE_OovtqNaCs4mdCoS
- Out9ZpXz8XO_4SOllgljUn8tVpS7zGBtutcd9MV6Nx2dVLGNIwm9OSLLhTxMXNzYVlhGHg2DH1Cg
- QG03Cfv70of3yHJWnezFKZ46TKooZiK2eikrBWJ8ZpgfzqUVHsTCjhC1K60YMieoDV9x1JslavrO
- 9LCJFQhPwjeqkapFLF372eImj9MOQLwZhiJCWo7Otp7GHq_9CEW2Ws6cY7MdeJSEnAPPGCGrBaP7
- _0cpSC_1RnuJN6eQrMg7VJFTN52psui6shP6.YyoKWN3QolwSbaWiRNxSoBgiYrD3XND8kzjJHMz
- 0n.usN7gzLINIZF_aMqqSLI6jaGdHL9GXTcanGEAOgMiWapbm31qDuTkZU9v23iX4J8GrIFtFJpY
- oEJbz30QH56J.aYVkIxJcXjSv6pujtEz1ieghEzdpohVyOIA738UYPlUnQyGHBcN3mlH41Nnqfio
- bEbUyNXzaVfnFY8niVaVFurRVlbukE3CudMcy6DUCtbzf0jmokU65GOcQRJkGLYgWE2I53d4tmXK
- iSBaWrtRvh3LZMUT2KDk40s2ecmBN3VWu6XSmNtMWSdKNlPtlWh4vjysbEvogoCK1N0suPxHVF2N
- bbwrSn2h4yNbpnnEuMjmnnc85XFKaCEn.ip5sdnuQkyCGxt72sdPICTbnCjFb4f5rgd6N53Rzm57
- uJJ9clW3oxXjGaBt0MShC9s8xaADLHeJOjbT5oRjJrTZ4uRDyJpPrA0CoXoSAbXjRZ._YWq1evZ0
- QF3H.V1ozCp92yrBMQzq1o.NyJQ1dMtna4avGCWxizac9ran2NOCUbR4hLQ3TvQo9TxDCsVv_wab
- UNYwTbuBj10.a_7p7oP2XCdwLgqzcPIo2IgS31TVdvn2v6IDsC2tWoy6Ou6w_u9JS4KMTWzcU2mW
- fUPUKvKmEUqvRVwtsEQm9tObgPPQjyz_JhRNJP3GE8bx81S_CPSFXu0Teiv1hbgkVt2BCSdiN0s3
- KWcCGmxffQtzy2t0R3OCb8mPUkgriRJbbYwe8zZb.dJ2hhT4X1qYyq1rapJKsdfdY.AApeZEXyGO
- MsGMwWv7RwTfSeHy7Ds_.jSHKLDbEWvSCkb.qU10RgKRUdgOZFL2tOjOEpUAVjzsVxWyuidNWi._
- Eg66oxsvEztM4B6LAC7jKXp2_vQvPtF9UjpH5NmKmwfJXuDMwMqZPF7FCql7Y9oChigwymWFp5FT
- AMI5S9eVVEmHAiuQvgBfUxbzMsBfOiCTl3cR8FU5LR581ksLhylMJ0G2gtr1wLPANyoWxSqGYHZo
- 8PJRwrUzkEHbSmhJiJJxVbS0xhone2jwhtZaCksl_dRkbar1QjsrWtYVWsU3q.4B.BktUOeZauTd
- d9mm4fuTRmTH93GY8.kUi0LTwiyImSnmXaqWvq8osgVl0PeOyMrKI_646PRotHeRhgmuArIOnv_1
- sw4FfuZM6gGrhb6SpFoBR977sEq8pXy5.GwnclBKINzLT1uu37vYOTL9HypYIB3cZQC9lnVG7EAx
- QfPs8WWgldmrTz21ZTpQ06fFXpvIwIbNPM2nnphryVoqbXqfKm9LX9DE2yE02ByinBsdO2XMqIc4
- Oqr02ZQM74M6dA0N8RxAabPPN8ZidHU4TJ0LlwavO4hNloJ_REAyImtaFuZyqNHVkqX1sIvaLvB4
- SzlP1.ZV34OaterGu3hEcIA6rZLcX6dDIgOolbHSJEkSYTlIWOaazpbvW2bIGpL5BnRZiAuasyS.
- hgAkhprPDJGFnuVUToutkZRSG3PniWkbLSN3U4bXCCj8S9NClroyBpacmNEdEaTHDiwTABDGIeVd
- fFZ.b0UC1.dyJOVZS03w.9gNohuCTzAXPFRb0gGubWYKr5mX6.0CKy_Klk3IOMADPa4m76N6PzN.
- yawHaTnCfWpjRZmDNTN4kc6L6Brl6oJpuX9neunj8D9AtGXZ_EqS_7D_t7zS1IphZ_7EfnfSXmgh
- EmQfXHZw4v5xRyOSgoTyBS598oHj1JdZbHKhN2N9899BNdVlPwM84qbch.g2PUz_2hxcP4_1X.x6
- pXKotBCpR8jRRqO9qfzka5eZ0
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 0151b712-c283-4737-8710-2e744a49dee7
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Thu, 20 Feb 2025 17:03:54 +0000
-Received: by hermes--production-gq1-5dd4b47f46-n48bg (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID aa324dd32419f52d60922829ecd3f996;
-          Thu, 20 Feb 2025 17:03:51 +0000 (UTC)
-Message-ID: <91cc89cd-a9c0-4936-8449-1b9ac6273dfc@schaufler-ca.com>
-Date: Thu, 20 Feb 2025 09:03:49 -0800
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="NELb89ZN"
+ARC-Seal: i=1; a=rsa-sha256; t=1740070995; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=H89tZtPw7hGWA9a6QAt88m0WFcYXkG5Shk09kN07BWC4axWYt9GNDZVOo9cm8gqKdIuyxlp+eTDURTlCIanQuanEpv+yche0oDkjwz5c6eP0IQgbahG4lJxd694XY98EFGKvJchBOPyvsHbveZCZFX5JEsc7jNsldWYVrK/dYyk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740070995; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=w2pzTobpi9TjSTtQRUPn0hmQfMoOEaBAec03sFh2SIY=; 
+	b=M3OpeGvfafnAuq6NV8y0Hhz6ZUI1aOEGkTngOe0sXIMQ4y7O4i5GresbkUnyO35KEt+eduI3r1HyHjKANSuBnn/8+PeY5v6fes2GuWOk7M1O59qsBIOnZdI6h7/2rssPSLwql77vZ0ao5qMazDEgfTS76c1UCIsRUbRLMiX2ty0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740070995;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=w2pzTobpi9TjSTtQRUPn0hmQfMoOEaBAec03sFh2SIY=;
+	b=NELb89ZNA/vXF0KU9d+s8iAZUlWP1ItsG7o0stqFKUD5nWiCOsTLt9XovGPpdD/h
+	S+UrbkLBOPJawvm7CbURNWQk5ZNHga+QTdqIjkp7h5Pju5Se+rXy9RG6I0SY7wkyWIi
+	jxGaj47YWQDXlIlaxnKbaa63k5yd81xmDyncUIs4=
+Received: by mx.zohomail.com with SMTPS id 1740070993591486.8817863804003;
+	Thu, 20 Feb 2025 09:03:13 -0800 (PST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Algea Cao <algea.cao@rock-chips.com>,
+ Heiko Stuebner <heiko@sntech.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ dri-devel@lists.freedesktop.org, Niklas Cassel <cassel@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, kernel@collabora.com,
+ David Airlie <airlied@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
+ Robert Foss <rfoss@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org,
+ Chen-Yu Tsai <wens@csie.org>, FUKAUMI Naoki <naoki@radxa.com>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Johan Jonker <jbx6244@gmail.com>, linux-arm-kernel@lists.infradead.org,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Alexey Charkov <alchark@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v7 0/3] Add HDMI audio on the rk3588 SoC
+Date: Thu, 20 Feb 2025 12:03:09 -0500
+Message-ID: <2357838.ElGaqSPkdT@earth>
+In-Reply-To: <B8EF5196-55FB-44EC-B93C-E327C791225B@gmail.com>
+References:
+ <20250217215641.372723-1-detlev.casanova@collabora.com>
+ <B8EF5196-55FB-44EC-B93C-E327C791225B@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] netlabel: Remove unused cfg_calipso funcs
-To: "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: paul@paul-moore.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
-References: <20250220140808.71674-1-linux@treblig.org>
- <aa6c6f4c-7d46-4e7e-bafc-f042436f47b6@schaufler-ca.com>
- <Z7dcxAYj_jsG9WL6@gallifrey>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <Z7dcxAYj_jsG9WL6@gallifrey>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.23369 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-ZohoMailClient: External
 
-On 2/20/2025 8:48 AM, Dr. David Alan Gilbert wrote:
-> * Casey Schaufler (casey@schaufler-ca.com) wrote:
->> On 2/20/2025 6:08 AM, linux@treblig.org wrote:
->>> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->>>
->>> netlbl_cfg_calipso_map_add(), netlbl_cfg_calipso_add() and
->>> netlbl_cfg_calipso_del() were added in 2016 as part of
->>> commit 3f09354ac84c ("netlabel: Implement CALIPSO config functions for
->>> SMACK.")
->>>
->>> Remove them.
->> Please don't. The Smack CALIPSO implementation has been delayed
->> for a number of reasons, some better than others, but is still on
->> the roadmap.
-> Hmm OK.
-> If it makes it to 10 years next year then perhaps it should hold
-> a birthday party!
+Hi Piotr,
 
-The difference between network and security developers is that a
-network developer thinks 10 microseconds is a long time, while a
-security developer thinks 10 years is no time at all.
+On Thursday, 20 February 2025 06:16:20 EST Piotr Oniszczuk wrote:
+> > Wiadomo=C5=9B=C4=87 napisana przez Detlev Casanova <detlev.casanova@col=
+labora.com> w
+> > dniu 17 lut 2025, o godz. 22:47:
+> >=20
+> > To support HDMI audio on the rk3588 based devices, the generic HDMI
+> > Codec framework is used in the dw-hdmi-qp DRM bridge driver.
+> >=20
+> > The implementation is mainly based on the downstream driver, ported to =
+the
+> > generic HDMI Codec framework [1] recently merged in the master branch.
+> > The parameters computation has been kept as is and the data stored in t=
+he
+> > dw_hdmi_qp struct as been cleaned up.
+> >=20
+> > The table for the N values has been edited to reflect N recommended val=
+ues
+> > as well as CTS recommended values.
+> >=20
+> > The downstream kernel also implements a machine driver for HDMI audio b=
+ut
+> > it is doing exactly what the simple-audio-card driver does, so use that
+> > instead in the RK3588 SoC device tree.
+> >=20
+> > This adds HDMI audio support for both HDMI TX ports.
+> >=20
+> > *** Dependencies ***
+> >=20
+> > Based on Linus' master branch, but also needs Cristian's dts patches for
+> > HDMI1 support [2], which depends on Heiko's patchset for
+> > phy-rockchip-samsung-hdptx [3]. Patches will apply without [3], but HDMI
+> > will not work (at all).
+> >=20
+> > [1]:
+> > https://lore.kernel.org/all/20241224-drm-bridge-hdmi-connector-v10-0-dc=
+89
+> > 577cd438@linaro.org [2]:
+> > https://lore.kernel.org/linux-rockchip/20241211-rk3588-hdmi1-v2-0-02cdc=
+a2
+> > 2ff68@collabora.com [3]:
+> > https://lore.kernel.org/lkml/20241206103401.1780416-3-heiko@sntech.de/
+> >=20
+> > Changes since v6:
+> > - Fix arguments alignement (checkpatch --strict warnings)
+> > - Add hdmi1 audio support too
+> > - Move hdmi0_sound node under hdmi0_out_con
+> >=20
+> > Changes since v5:
+> > - Simplify audio math computation for N
+> > - Move hdmi0-sound node up with other address-less nodes
+> >=20
+> > Changes since v4:
+> > - Moved hdmi0_audio node the rk3588-base.dtsi
+> > - Enable hdmi0_audio in rk3588-rock-5b.dts
+> >=20
+> > Changes since v3:
+> > - Renamed function to start with dw_hdmi_qp
+> >=20
+> > Changes since v2:
+> > - Also clear the audio infoframe
+> > - Write AUDI_CONTENTS0 to its default value in case it gets overwritten.
+> > - Store tmds_char_rate in the dw_hdmi_qp struct in atomic_enable
+> > - Clear tmds_char_rate in atomic_disable and only write registers when
+> >=20
+> >   tmds_char_rate is not 0.
+> >=20
+> > - Do not use connector_state duplicates
+> >=20
+> > Changes since v1:
+> > - Remove useless audio_mutex (was used downstream for multiple drivers
+> > access>=20
+> >   to audio functions)
+> >=20
+> > - Let hdmi_codec build and setup audio infoframes
+> > - Only access audio registers when connector is connected
+> > - Rebased on master branch
+> >=20
+> > Detlev Casanova (2):
+> >  arm64: dts: rockchip: Add HDMI audio outputs for rk3588 SoC
+> >  arm64: dts: rockchip: Enable HDMI audio outputs for Rock 5B
+> >=20
+> > Sugar Zhang (1):
+> >  drm/bridge: synopsys: Add audio support for dw-hdmi-qp
+> >=20
+> > arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  17 +
+> > .../arm64/boot/dts/rockchip/rk3588-extra.dtsi |  17 +
+> > .../boot/dts/rockchip/rk3588-rock-5b.dts      |  16 +
+> > drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c  | 489 ++++++++++++++++++
+> > 4 files changed, 539 insertions(+)
+>=20
+> Detelv,
+>=20
+> Just curious of your opinion:
+>=20
+> I=E2=80=99m on 6.14-rc3 and using
+> https://gitlab.collabora.com/cristicc/linux-next/-/commits/rk3588-hdmi-br=
+id
+> ge + this v7 series.
 
->
-> Dave
->
->>> (I see a few other changes in that original commit, whether they
->>> are reachable I'm not sure).
->>>
->>> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
->>> ---
->>>  include/net/netlabel.h       |  26 -------
->>>  net/netlabel/netlabel_kapi.c | 133 -----------------------------------
->>>  2 files changed, 159 deletions(-)
->>>
->>> diff --git a/include/net/netlabel.h b/include/net/netlabel.h
->>> index 02914b1df38b..37c9bcfd5345 100644
->>> --- a/include/net/netlabel.h
->>> +++ b/include/net/netlabel.h
->>> @@ -435,14 +435,6 @@ int netlbl_cfg_cipsov4_map_add(u32 doi,
->>>  			       const struct in_addr *addr,
->>>  			       const struct in_addr *mask,
->>>  			       struct netlbl_audit *audit_info);
->>> -int netlbl_cfg_calipso_add(struct calipso_doi *doi_def,
->>> -			   struct netlbl_audit *audit_info);
->>> -void netlbl_cfg_calipso_del(u32 doi, struct netlbl_audit *audit_info);
->>> -int netlbl_cfg_calipso_map_add(u32 doi,
->>> -			       const char *domain,
->>> -			       const struct in6_addr *addr,
->>> -			       const struct in6_addr *mask,
->>> -			       struct netlbl_audit *audit_info);
->>>  /*
->>>   * LSM security attribute operations
->>>   */
->>> @@ -561,24 +553,6 @@ static inline int netlbl_cfg_cipsov4_map_add(u32 doi,
->>>  {
->>>  	return -ENOSYS;
->>>  }
->>> -static inline int netlbl_cfg_calipso_add(struct calipso_doi *doi_def,
->>> -					 struct netlbl_audit *audit_info)
->>> -{
->>> -	return -ENOSYS;
->>> -}
->>> -static inline void netlbl_cfg_calipso_del(u32 doi,
->>> -					  struct netlbl_audit *audit_info)
->>> -{
->>> -	return;
->>> -}
->>> -static inline int netlbl_cfg_calipso_map_add(u32 doi,
->>> -					     const char *domain,
->>> -					     const struct in6_addr *addr,
->>> -					     const struct in6_addr *mask,
->>> -					     struct netlbl_audit *audit_info)
->>> -{
->>> -	return -ENOSYS;
->>> -}
->>>  static inline int netlbl_catmap_walk(struct netlbl_lsm_catmap *catmap,
->>>  				     u32 offset)
->>>  {
->>> diff --git a/net/netlabel/netlabel_kapi.c b/net/netlabel/netlabel_kapi.c
->>> index cd9160bbc919..13b4bc1c30ec 100644
->>> --- a/net/netlabel/netlabel_kapi.c
->>> +++ b/net/netlabel/netlabel_kapi.c
->>> @@ -394,139 +394,6 @@ int netlbl_cfg_cipsov4_map_add(u32 doi,
->>>  	return ret_val;
->>>  }
->>>  
->>> -/**
->>> - * netlbl_cfg_calipso_add - Add a new CALIPSO DOI definition
->>> - * @doi_def: CALIPSO DOI definition
->>> - * @audit_info: NetLabel audit information
->>> - *
->>> - * Description:
->>> - * Add a new CALIPSO DOI definition as defined by @doi_def.  Returns zero on
->>> - * success and negative values on failure.
->>> - *
->>> - */
->>> -int netlbl_cfg_calipso_add(struct calipso_doi *doi_def,
->>> -			   struct netlbl_audit *audit_info)
->>> -{
->>> -#if IS_ENABLED(CONFIG_IPV6)
->>> -	return calipso_doi_add(doi_def, audit_info);
->>> -#else /* IPv6 */
->>> -	return -ENOSYS;
->>> -#endif /* IPv6 */
->>> -}
->>> -
->>> -/**
->>> - * netlbl_cfg_calipso_del - Remove an existing CALIPSO DOI definition
->>> - * @doi: CALIPSO DOI
->>> - * @audit_info: NetLabel audit information
->>> - *
->>> - * Description:
->>> - * Remove an existing CALIPSO DOI definition matching @doi.  Returns zero on
->>> - * success and negative values on failure.
->>> - *
->>> - */
->>> -void netlbl_cfg_calipso_del(u32 doi, struct netlbl_audit *audit_info)
->>> -{
->>> -#if IS_ENABLED(CONFIG_IPV6)
->>> -	calipso_doi_remove(doi, audit_info);
->>> -#endif /* IPv6 */
->>> -}
->>> -
->>> -/**
->>> - * netlbl_cfg_calipso_map_add - Add a new CALIPSO DOI mapping
->>> - * @doi: the CALIPSO DOI
->>> - * @domain: the domain mapping to add
->>> - * @addr: IP address
->>> - * @mask: IP address mask
->>> - * @audit_info: NetLabel audit information
->>> - *
->>> - * Description:
->>> - * Add a new NetLabel/LSM domain mapping for the given CALIPSO DOI to the
->>> - * NetLabel subsystem.  A @domain value of NULL adds a new default domain
->>> - * mapping.  Returns zero on success, negative values on failure.
->>> - *
->>> - */
->>> -int netlbl_cfg_calipso_map_add(u32 doi,
->>> -			       const char *domain,
->>> -			       const struct in6_addr *addr,
->>> -			       const struct in6_addr *mask,
->>> -			       struct netlbl_audit *audit_info)
->>> -{
->>> -#if IS_ENABLED(CONFIG_IPV6)
->>> -	int ret_val = -ENOMEM;
->>> -	struct calipso_doi *doi_def;
->>> -	struct netlbl_dom_map *entry;
->>> -	struct netlbl_domaddr_map *addrmap = NULL;
->>> -	struct netlbl_domaddr6_map *addrinfo = NULL;
->>> -
->>> -	doi_def = calipso_doi_getdef(doi);
->>> -	if (doi_def == NULL)
->>> -		return -ENOENT;
->>> -
->>> -	entry = kzalloc(sizeof(*entry), GFP_ATOMIC);
->>> -	if (entry == NULL)
->>> -		goto out_entry;
->>> -	entry->family = AF_INET6;
->>> -	if (domain != NULL) {
->>> -		entry->domain = kstrdup(domain, GFP_ATOMIC);
->>> -		if (entry->domain == NULL)
->>> -			goto out_domain;
->>> -	}
->>> -
->>> -	if (addr == NULL && mask == NULL) {
->>> -		entry->def.calipso = doi_def;
->>> -		entry->def.type = NETLBL_NLTYPE_CALIPSO;
->>> -	} else if (addr != NULL && mask != NULL) {
->>> -		addrmap = kzalloc(sizeof(*addrmap), GFP_ATOMIC);
->>> -		if (addrmap == NULL)
->>> -			goto out_addrmap;
->>> -		INIT_LIST_HEAD(&addrmap->list4);
->>> -		INIT_LIST_HEAD(&addrmap->list6);
->>> -
->>> -		addrinfo = kzalloc(sizeof(*addrinfo), GFP_ATOMIC);
->>> -		if (addrinfo == NULL)
->>> -			goto out_addrinfo;
->>> -		addrinfo->def.calipso = doi_def;
->>> -		addrinfo->def.type = NETLBL_NLTYPE_CALIPSO;
->>> -		addrinfo->list.addr = *addr;
->>> -		addrinfo->list.addr.s6_addr32[0] &= mask->s6_addr32[0];
->>> -		addrinfo->list.addr.s6_addr32[1] &= mask->s6_addr32[1];
->>> -		addrinfo->list.addr.s6_addr32[2] &= mask->s6_addr32[2];
->>> -		addrinfo->list.addr.s6_addr32[3] &= mask->s6_addr32[3];
->>> -		addrinfo->list.mask = *mask;
->>> -		addrinfo->list.valid = 1;
->>> -		ret_val = netlbl_af6list_add(&addrinfo->list, &addrmap->list6);
->>> -		if (ret_val != 0)
->>> -			goto cfg_calipso_map_add_failure;
->>> -
->>> -		entry->def.addrsel = addrmap;
->>> -		entry->def.type = NETLBL_NLTYPE_ADDRSELECT;
->>> -	} else {
->>> -		ret_val = -EINVAL;
->>> -		goto out_addrmap;
->>> -	}
->>> -
->>> -	ret_val = netlbl_domhsh_add(entry, audit_info);
->>> -	if (ret_val != 0)
->>> -		goto cfg_calipso_map_add_failure;
->>> -
->>> -	return 0;
->>> -
->>> -cfg_calipso_map_add_failure:
->>> -	kfree(addrinfo);
->>> -out_addrinfo:
->>> -	kfree(addrmap);
->>> -out_addrmap:
->>> -	kfree(entry->domain);
->>> -out_domain:
->>> -	kfree(entry);
->>> -out_entry:
->>> -	calipso_doi_putdef(doi_def);
->>> -	return ret_val;
->>> -#else /* IPv6 */
->>> -	return -ENOSYS;
->>> -#endif /* IPv6 */
->>> -}
->>> -
->>>  /*
->>>   * Security Attribute Functions
->>>   */
+Do you have the branch available somewhere ?
+
+> On mine rock5b all works nicely but - at boot time - i=E2=80=99m getting =
+some oops
+> in kernel like this:
+> https://gist.github.com/warpme/e1668acbef7817e5d2a88a6840328722
+
+I did notice that at one point but it disappeard after a rebase on the the=
+=20
+latest master so I didn't look further into that.
+Could it be related to 2518a0e1b878042f9afa45ae063e544a16efc1a3 "ASoC: simp=
+le-
+card: use __free(device_node) for device node" ?
+
+I'm not exactly sure how __free(device_node) works though, but reverting th=
+at=20
+commit could fix the issue.
+
+> I=E2=80=99m not sure where issue is but it looks to me like kind of inter=
+ference
+> between analog audio and hdmi audio as commenting analog audio in dts (
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arc=
+h/
+> arm64/boot/dts/rockchip/rk3588-rock-5b.dts?h=3Dv6.14-rc3#n24 ) stops kern=
+el
+> from oops=E2=80=99ing=E2=80=A6.
+
+I cannot reproduce anymore, so if you have a branch/config that you use, I=
+=20
+could try, looking into that.
+I don't see any relevant commits that would change this behavior on master=
+=20
+since v6.14-rc3, so I'm not sure what is going on.
+
+>  rock5b dts i=E2=80=99m using is like this:
+> https://gist.github.com/warpme/a8a32afd4a05d4b7f25d2808984b05ac
+
+Regards,
+Detlev.
+
+
