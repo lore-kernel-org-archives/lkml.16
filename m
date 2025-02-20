@@ -1,111 +1,103 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26E026463B;
-	Thu, 20 Feb 2025 23:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85611EE006
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740094872; cv=none; b=p2i99PR9zlFMzkFmIQ9rzlfU/v583CfHBpLi9aLtH9LXu2coVh2QlrgXp3wS11yfxelapBzcnt/+MNtQdLbIC2wqd8PLQvB+NCzvXR3gpvLuoJxKO9oKGc3Q6v0RAcgn2km7Q4dv6KMyp0PT78+Kexvdyq6c+ygLhgN1iM/iO9I=
+	t=1740094928; cv=none; b=N4p6YiNgJVBv/vFpk2ZU/Yn0zi5FCLcuz/DPHLh31GoIfJDpFNFSQMlJXSXQSqVd4z81sGgEOdcs3WVzfjdDG5Llsqteb10Tx3+Ug0P+Xpe9v7zRue4hOk0Lr0X1VMFVmzx/xWvV0k2Skc1XKE5p2rmTeD34T3C+PeIJNjmRx9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740094872; c=relaxed/simple;
-	bh=irbzh/oe51A79xVYF3jxZzKe+dVGiUXNJMFjUvq6beY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZF8QlyZfkzMOwdR5p26lotGLBxkFG9fl/BlYfaWUhfLhosbhEioASwcQ6cpLxpnPCAFDsYOUCujKeamjT6F/fMoZpGlRxPCRtFIMwZgWEjHofuY6eT7gAiAjz9E0CcIt00raAufFrcgnxaNY8FX1ihW4At22pzspu3lR6dwMUpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UxBspcVw; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740094928; c=relaxed/simple;
+	bh=Mngn8QbF7U3veJNGgXDU9h29JVMU3OJaq5L4lgj4WfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rVy2H5WHZIeub/ERl8TFkQgnAn8tdByql1CrLOEFw3s3av2GnJOJlNn7rV7SXL+wCDWJnh7N7Hp56Et9HjUMyF9cSWvj52vgHmhlpp6kRKqPa9JViYOq415JGV/KPiikOSxCdAWo351/AIpqYz30UuTQmVTYy9br6covPiCdjCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=DHfx1VNR; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxBspcVw"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f2f5e91393so368180a91.0;
-        Thu, 20 Feb 2025 15:41:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740094870; x=1740699670; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=irbzh/oe51A79xVYF3jxZzKe+dVGiUXNJMFjUvq6beY=;
-        b=UxBspcVw702KjLZ2SYc+H3HdVoZNipdIGC84Qviuy/FU1w5m2WLBdWIjIn2yFDLcOi
-         b5mOziwdkjqKBQsbSi/D+2mzpmalslm08ScWATcC84Iyo5FgVdr4RjVNeHZjN9+xJwlT
-         xcAykwv24GlhyvyH8tERbOGpvQN3jQNlQjT2YzSMMMXcrL9J/ZEoPiXtcp/FiEjD85iR
-         KWzwNVuA8+mFE5riTHvYCYvot3TFJucBm+0Qc9yPoB0MDyXJghemk3XmOlkMAbbqM1VI
-         yxivh5vjsfvO8z8YUq+aZxOXFGyDgdvn7p/SQCGC2N+7Rn5+vSldQnx5cMCNzOF2lxC4
-         GXgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740094870; x=1740699670;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=irbzh/oe51A79xVYF3jxZzKe+dVGiUXNJMFjUvq6beY=;
-        b=VXv7KyP64qsNxi75aErd0a6UQGTM4FktBfcJRZaXiw6ca3Jjovg8i2PX4dq7e+ND9K
-         acIdao/FCQJRhynB6s8l1oQXWT6rEtbDmULIdJg4qj37Ha0Zga61WksaUQJ5PCBLg7DI
-         vFd926y3F8u7MXSqQnPImxWsAQKp5xzdXgIzpxk6y/I/ZXPkaDS7+ysxFOHGT2JuFgFo
-         IkIa4delWVSCUC6falP48SrHTAKGd37rR/Bro3BeOCA7DR/LMcjNCxkU/yXoUPRVWCYB
-         uAaDyNnj5odj34FDzcBPk3tMb6+ia1SJNpsTPQRhUhLSz5w/ae7sqtzctmdBIdWYwAkx
-         GITQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCuLIf6M+xxjwyOqXYdFDvjoAelGFIVI1yvCXWYYYd+Wk1vLRem3MNDdW/BgbGnjY9gGcpw5knvy4mdBc=@vger.kernel.org, AJvYcCXuxh3/Q00vSmgu7FMx8XCxpffxhZQ55zpeVfoZ1KmJUEOQ9HufnKmFh08AkDoXZEy0mQJl6MaqTn9mXzhNnrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVJP5r0fBisYWtGHXeZOZEnoKevnXgrHULFOcEPH6Q15A5DX0U
-	T7NWNiUhdfHQnVDFrcAXhagrX8WBDw9CrifDNvNEDeW+Axx8ALvG7fLsFMa7+rF6d6j1Ip3nky/
-	EDxS6A9KSfnX7O/0r46LEULATVIc=
-X-Gm-Gg: ASbGnctuzOW6gFxvSmazkbsPgjRFc6Mg1/zv+C8VaLH1Xwh48Hgjyq5ZLiI32qjkxYy
-	bDa0tvFCYplP/wmQL1R5kBNu+Davhua1a4tXCN86LjvzfeI6N6RpNBNELssprAbbTAciKa523
-X-Google-Smtp-Source: AGHT+IE3tTMC50ciOK+8N/4de26wZ6Pg8vooUK40uWXc0KvimGcWwvs1xaU2vMuCSIhfeBeWHEofydflMa9Ma5wDnkg=
-X-Received: by 2002:a17:90b:1e05:b0:2fa:17d2:158 with SMTP id
- 98e67ed59e1d1-2fce75dfdb1mr694090a91.0.1740094870138; Thu, 20 Feb 2025
- 15:41:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="DHfx1VNR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eK4Q+gaIL/QDz6EnUoiKhEYDORlBBBWA6cwM5FTMJWU=; b=DHfx1VNRaazraKTN/FWLVGZCpy
+	z1l/UskSBoxSdyWKGdBQIVOxFWCazo8EgM97zvh7yvzc9gXxO1gnzbWer374BOM4qps/DO9rh/eAo
+	tjVLhlHI7+mTC0xa11E6zThVmfY2rFinw600vsJjzVQvd8YgGb1UWT8Ka69GegAuWLkVJ+zSwC8Ug
+	GCFu0SoGzA2cI8yZFJA6rzI1m+NLAWzsJxg+mI1S/jV6jUcTMhjhk5d0+We6BO574D7HqRLjzyvJ0
+	9tI5+05x6oJdn5AI4r538D6/N0gdMCU8dltkviQm0Ogs5H8BFYz3580Fee2CFTJ2V51Pkjk/dQWTe
+	7phMiwFw==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tlGAz-0004Wc-0R; Fri, 21 Feb 2025 00:41:53 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: gregkh@linuxfoundation.org,
+	heiko@sntech.de
+Cc: rafael@kernel.org,
+	dakr@kernel.org,
+	hjc@rock-chips.com,
+	andy.yan@rock-chips.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	quentin.schulz@cherry.de
+Subject: [PATCH 2/2] drm/rockchip: Fix shutdown when no drm-device is set up
+Date: Fri, 21 Feb 2025 00:41:41 +0100
+Message-ID: <20250220234141.2788785-3-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250220234141.2788785-1-heiko@sntech.de>
+References: <20250220234141.2788785-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z7SwcnUzjZYfuJ4-@infradead.org> <b0a8ee53b767b7684de91eeb6924ecdf5929d31e.camel@HansenPartnership.com>
- <CANiq72nnnOsGZDrPDm8iWxYn2FL=wJqx-P8aS63dFYez3_FEOg@mail.gmail.com>
- <a627845f73f2f7bedc7a820cfdf476be9993e30f.camel@HansenPartnership.com>
- <CANiq72m5KB-X1zck1E43yffXOTeD4xRmZgDx_oUiNwR941ce0w@mail.gmail.com> <20250219170623.GB1789203@mit.edu>
-In-Reply-To: <20250219170623.GB1789203@mit.edu>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 21 Feb 2025 00:40:57 +0100
-X-Gm-Features: AWEUYZmuZcjvGrCyDvmTbEKuMO6tYd_p5yChnLfIZmwrF8AsdfajLNX5ZuOK-5U
-Message-ID: <CANiq72=O+sz0mU-urYmviCm55GL0jWzsbjAJviJpT+3MLmQSCA@mail.gmail.com>
-Subject: Re: Rust kernel policy
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Christoph Hellwig <hch@infradead.org>, rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 6:06=E2=80=AFPM Theodore Ts'o <tytso@mit.edu> wrote=
-:
->
-> I do understand (now) what Wedson was trying to do, was to show off
-> how expressive and powerful Rust can be, even in the face of a fairly
-> complex interface.
+When the drm-driver probes, it mainly creates the component device, where
+all the sub-drivers (vops, hdmi, etc) hook into.
 
-Thanks for saying that.
+This will cause the shutdown handler to get called on shutdown, even
+though the drm-device might not have been set up, or the component bind
+might have failed.
 
-> It turns out there were some good reasons for why
-> the VFS handles inode creation, but in general, I'd encourage us to
-> consider whether there are ways to change the abstractions on the C
-> side so that:
+So use the new component helper to check whether the drm-device is up
+and only then call the drm-atomic helper to release all the drm magic.
 
-Definitely -- improving the C side (not just for Rust callers, but
-also for C ones) would be great, whether that is with extra
-annotations/extensions or redesigns.
+This prevents failures when the drm-device is never set, or has been
+freed up already for example by a probe-defer during the component bind.
 
-In the beginning (pre-merge), we tried hard not to require changes on
-the C side, because we wanted to show that it is possible to use Rust
-(i.e. create safe abstractions for C APIs) even with minimal or no
-changes to C headers. We thought it was a useful property.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-But then we got C maintainers that welcomed improvements that would
-benefit both sides, which was nice to see, and opens up some doors --
-as a simple example, Greg added made some APIs `const`-correct so that
-we got the right pointer type on the Rust bindings.
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+index 439edc165ff6..285b721ff28a 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -484,9 +484,11 @@ static void rockchip_drm_platform_remove(struct platform_device *pdev)
+ 
+ static void rockchip_drm_platform_shutdown(struct platform_device *pdev)
+ {
+-	struct drm_device *drm = platform_get_drvdata(pdev);
++	if (component_master_is_bound(&pdev->dev, &rockchip_drm_ops)) {
++		struct drm_device *drm = platform_get_drvdata(pdev);
+ 
+-	drm_atomic_helper_shutdown(drm);
++		drm_atomic_helper_shutdown(drm);
++	}
+ }
+ 
+ static const struct of_device_id rockchip_drm_dt_ids[] = {
+-- 
+2.47.2
 
-So, yeah, anything in that direction (that either improves the C side
-and/or simplifies the Rust bindings/abstractions) would be great.
-
-Cheers,
-Miguel
