@@ -1,160 +1,158 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FAA15A858
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 19:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA76221421E;
+	Thu, 20 Feb 2025 19:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740079188; cv=none; b=pRgOOUd5iYduT/eoLIvQsALwLgUGJCgKVQsfniIxLBiKCu6p1aCBGHo+hk6p4IfYUoPkcztopzzW9Q1bAIjbyV4Ju3x4I+aGrwF3bIsTWD2nm8pIoJxZrmYSAzXcZ7KFcGx9rj3Jiwo77TcuSc2JT2dU35LT+kqfFFb9eCktQAs=
+	t=1740079218; cv=none; b=cfF7thq5lqPS0KHJOxoVEJVI64HzWFb3s0lBH2UWmsMldHLrNLH02R7PV5TSvbHc1I4q3OlZVAZV7WzMHxMaOzK7tcfp4snAtNwUYfvlvx8kcIVqJ5BuCijtPk6ZyDhx15UqcmX9AZOjH5eT9oJoWMuXI3emnY+5c8G6Tgw88o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740079188; c=relaxed/simple;
-	bh=XPLckCW7KbOh/q0QI/XuPYL53ckTknIShj/3d4FhpCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IjuWAZcpP+VKOnaVR0BM1snIEbNSQMAe+XAuVC3j2U8MxY6ltLAAiRo04B6DSMxvDvXhjB4TUkLqOkZ03ih6VbumOz27BTtQlyXN1+NWtjaX4ypAWOSYJdN6p4qJHGGgqEwT/vvL5IRCCOv7vxT+TzmjLqO1OGIQKeMUiJEy5xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HaGVyRUl; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740079218; c=relaxed/simple;
+	bh=eW/6EzbcporBkyLlJcaeoXZrQxrk9siNiuKHy0ERrCA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PqK1Vbfc4Olyue3gPvtF7DLFNZrwUDsOE97jPdHugbf/v5IfBApgmwCxcIxtFuO9x2Tp0+Lf8HHx+THYYVDWZG6ShU6GUhNYS71WDPO6GaEsk8M+1IZhi1lBJtKdAeXZThEyDpsvSFLPSktce8qciD44pD0Iy1KKMb0jMcqxwRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpPscSdC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HaGVyRUl"
-Date: Thu, 20 Feb 2025 19:19:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740079184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9qLHFXtQGQVNsXa8u/AS6W8A4GS6B80oE++6/uSF8kI=;
-	b=HaGVyRUl6Q7oTBYvdJ8kblVxZU42Y1yTbHVjVwplC+asm7dippCPK1KZJ3LSDVF180XWcN
-	Y/5w+AEFwZC7nu68O4yXG/oIC6pH7XOr82O72jB7JQtkMekoD6Mcf7ytuOBCGRG+tBgT6w
-	p5fbDl5Ihwbkmh6Ywecfe4w7aCs1sks=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Hillf Danton <hdanton@sina.com>, Kairui Song <ryncsn@gmail.com>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 11/17] zsmalloc: make zspage lock preemptible
-Message-ID: <Z7eAS9T3E5n2i6v4@google.com>
-References: <20250214045208.1388854-1-senozhatsky@chromium.org>
- <20250214045208.1388854-12-senozhatsky@chromium.org>
- <Z7eAEKpZ7VnGsVej@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpPscSdC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2129FC4CEED;
+	Thu, 20 Feb 2025 19:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740079218;
+	bh=eW/6EzbcporBkyLlJcaeoXZrQxrk9siNiuKHy0ERrCA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KpPscSdC77PJcDds3Sb3QPQ3KSEuyTfqCa5UE6SVRgFvdhVuiBF1TxAul/Pe1qapV
+	 NExxM6LcQ9OIePFJnlxb+naHiko5X4cUjSqG1P605tGjaK9n81l++GXYwHNJJvrFla
+	 mM1Bbz1m1YAEbb7xp1FCKW4XFyB+kJvIEbgXgQofbRecMUj7pHZ1s0KsKL/8vGbw88
+	 yCjZs54GPLcKpojvC/t8fNZBf4m6AQuzHeNWJOIj2/xfVnTAuRKD+ll++bWo/SvBAX
+	 HqBG5aFISe3kgZ4oHsoh6Cs0gnD6yLblYfvdWxcK6L/8Yv9Ni4rX8gW0YFPSxKEGYt
+	 ltSt/y9/4TlcA==
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7272cc739f7so1295386a34.1;
+        Thu, 20 Feb 2025 11:20:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVG23FVA0yvh2oC7Dc/N2A6a4pRalUIkBt3bEuD/KRg6ca8OGZa78KrQ8YhnKtOjS3lnbK3N6AaGYIjcS30/QkNfA==@vger.kernel.org, AJvYcCW4jxQAPWWc+qgWv/TQr/cRjqGrWAjLaIqLF3On0UzIb1YAMkla/AuKn4ZNAPNDmgKP8ocSuUhSyPQO@vger.kernel.org, AJvYcCWN9nLb1cjkBOM73Wgl6MMuZ1b3yIF/nNs+8wNHGZiFmexcdmlDMc5QpDIBwl2UiL9ppGsw4IUyP31VcI0K@vger.kernel.org, AJvYcCWryDD2vSVyf6jWT0Z3vfl2fzM4Fnjf5rWGGbLx27Svvv6UXd091Atf3+afytKH3OdxuGgbLcYU1Go=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQh0FqmzZ3oa68wZ+Mo5PnzdWtkg+dwee8I4V+zC6Z3ThIKBz1
+	FrSibQif2kmJwI6k577FJjFCmUkqWHwDLjb43ga8/RLwux/RBx4IsjPu0XleUn5Pnk9y0tlLdcr
+	hEd7zL/X4vsTexFu6OU3GxWUTN9M=
+X-Google-Smtp-Source: AGHT+IFtnS7H25wVx2/d7TV4BBEAl89/Nsh8UjACXA0fSLmiZXsB9lLv52jTs/zoA8/wVyPENkWf8sIOSW/K78QcbJU=
+X-Received: by 2002:a05:6808:f0c:b0:3f4:7c4:ca27 with SMTP id
+ 5614622812f47-3f419f14e7amr3783387b6e.9.1740079217083; Thu, 20 Feb 2025
+ 11:20:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7eAEKpZ7VnGsVej@google.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250219184133.816753-1-sohil.mehta@intel.com> <20250219184133.816753-9-sohil.mehta@intel.com>
+In-Reply-To: <20250219184133.816753-9-sohil.mehta@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 20 Feb 2025 20:20:06 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iRxdpr9Lc9XJDbN5KbO6Ch=TEG39PC53gQJOTW_L9hnw@mail.gmail.com>
+X-Gm-Features: AWEUYZkHa_18F7_XRL1v6sTvE25boM9CeaseQIQ_yIgYuXVNMo5-nm0iD0EOlkk
+Message-ID: <CAJZ5v0iRxdpr9Lc9XJDbN5KbO6Ch=TEG39PC53gQJOTW_L9hnw@mail.gmail.com>
+Subject: Re: [PATCH v3 08/15] x86/acpi/cstate: Improve Intel Family model checks
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>, 
+	Andrew Cooper <andrew.cooper3@citrix.com>, David Laight <david.laight.linux@gmail.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 07:18:40PM +0000, Yosry Ahmed wrote:
-> On Fri, Feb 14, 2025 at 01:50:23PM +0900, Sergey Senozhatsky wrote:
-> > In order to implement preemptible object mapping we need a zspage lock
-> > that satisfies several preconditions:
-> > - it should be reader-write type of a lock
-> > - it should be possible to hold it from any context, but also being
-> >   preemptible if the context allows it
-> > - we never sleep while acquiring but can sleep while holding in read
-> >   mode
-> > 
-> > An rwsemaphore doesn't suffice, due to atomicity requirements, rwlock
-> > doesn't satisfy due to reader-preemptability requirement.  It's also
-> > worth to mention, that per-zspage rwsem is a little too memory heavy
-> > (we can easily have double digits megabytes used only on rwsemaphores).
-> > 
-> > Switch over from rwlock_t to a atomic_t-based implementation of a
-> > reader-writer semaphore that satisfies all of the preconditions.
-> > 
-> > The spin-lock based zspage_lock is suggested by Hillf Danton.
-> > 
-> > Suggested-by: Hillf Danton <hdanton@sina.com>
-> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > ---
-> >  mm/zsmalloc.c | 246 +++++++++++++++++++++++++++++++++++++++-----------
-> >  1 file changed, 192 insertions(+), 54 deletions(-)
-> > 
-> > diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-> > index 2e338cde0d21..bc679a3e1718 100644
-> > --- a/mm/zsmalloc.c
-> > +++ b/mm/zsmalloc.c
-> > @@ -226,6 +226,9 @@ struct zs_pool {
-> >  	/* protect zspage migration/compaction */
-> >  	rwlock_t lock;
-> >  	atomic_t compaction_in_progress;
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > +	struct lock_class_key lock_class;
-> > +#endif
-> >  };
-> >  
-> >  static inline void zpdesc_set_first(struct zpdesc *zpdesc)
-> > @@ -257,6 +260,18 @@ static inline void free_zpdesc(struct zpdesc *zpdesc)
-> >  	__free_page(page);
-> >  }
-> >  
-> > +#define ZS_PAGE_UNLOCKED	0
-> > +#define ZS_PAGE_WRLOCKED	-1
-> > +
-> > +struct zspage_lock {
-> > +	spinlock_t lock;
-> > +	int cnt;
-> > +
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > +	struct lockdep_map dep_map;
-> > +#endif
-> > +};
-> > +
-> >  struct zspage {
-> >  	struct {
-> >  		unsigned int huge:HUGE_BITS;
-> > @@ -269,7 +284,7 @@ struct zspage {
-> >  	struct zpdesc *first_zpdesc;
-> >  	struct list_head list; /* fullness list */
-> >  	struct zs_pool *pool;
-> > -	rwlock_t lock;
-> > +	struct zspage_lock zsl;
-> >  };
-> >  
-> >  struct mapping_area {
-> > @@ -279,6 +294,148 @@ struct mapping_area {
-> >  	enum zs_mapmode vm_mm; /* mapping mode */
-> >  };
-> >  
-> > +static void zspage_lock_init(struct zspage *zspage)
-> > +{
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > +	lockdep_init_map(&zspage->zsl.dep_map, "zspage->lock",
-> > +			 &zspage->pool->lock_class, 0);
-> > +#endif
-> > +
-> > +	spin_lock_init(&zspage->zsl.lock);
-> > +	zspage->zsl.cnt = ZS_PAGE_UNLOCKED;
-> > +}
-> > +
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> 
-> Instead of the #ifdef and repeating all the functions, can't we do
-> something like:
-> 
-> #ifdef CONFIG_DEBUG_LOCK_ALLOC
-> #define zspage_lock_map(zsl) (&zsl->dep_map)
-> #else
-> #define zspage_lock_map(zsl) /* empty or NULL */
-> #endif
-> 
-> Then we can just have one version of the functions and use
-> zspage_lock_map() instead of zsl->dep_map, right?
-> 
-> > +static inline void __read_lock(struct zspage *zspage)
-> > +{
-> > +	struct zspage_lock *zsl = &zspage->zsl;
-> > +
-> > +	rwsem_acquire_read(&zsl->dep_map, 0, 0, _RET_IP_);
-> > +
-> > +	spin_lock(&zsl->lock);
-> > +	zsl->cnt++;
-> 
-> Shouldn't we check if the lock is write locked?
+On Wed, Feb 19, 2025 at 8:29=E2=80=AFPM Sohil Mehta <sohil.mehta@intel.com>=
+ wrote:
+>
+> Update the Intel Family checks to consistently use Family 15 instead of
+> Family 0xF. Also, get rid of one of last usages of x86_model by using
+> the new VFM checks.
+>
+> Update the incorrect comment since the check has changed[1][2] since the
+> initial commit ee1ca48fae7e ("ACPI: Disable ARB_DISABLE on platforms
+> where it is not needed").
+>
+> [1]: commit 3e2ada5867b7 ("ACPI: fix Compaq Evo N800c (Pentium 4m) boot
+> hang regression") removed the P4 - Family 15.
+>
+> [2]: commit 03a05ed11529 ("ACPI: Use the ARB_DISABLE for the CPU which
+> model id is less than 0x0f.") got rid of CORE_YONAH - Family 6, model E.
+>
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
-Never mind we keep the spinlock held on write locking.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+and I'm assuming that this series will go in via x86.
+
+Thanks!
+
+> ---
+> v3: Pick up Dave's Ack.
+> v2: Improve commit message.
+> ---
+>  arch/x86/include/asm/intel-family.h | 3 +++
+>  arch/x86/kernel/acpi/cstate.c       | 8 ++++----
+>  2 files changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/i=
+ntel-family.h
+> index 9e6a13f03f0e..deb17c9c21e5 100644
+> --- a/arch/x86/include/asm/intel-family.h
+> +++ b/arch/x86/include/asm/intel-family.h
+> @@ -187,6 +187,9 @@
+>  #define INTEL_XEON_PHI_KNL             IFM(6, 0x57) /* Knights Landing *=
+/
+>  #define INTEL_XEON_PHI_KNM             IFM(6, 0x85) /* Knights Mill */
+>
+> +/* Notational marker denoting the last Family 6 model */
+> +#define INTEL_FAM6_LAST                        IFM(6, 0xFF)
+> +
+>  /* Family 15 - NetBurst */
+>  #define INTEL_P4_WILLAMETTE            IFM(15, 0x01) /* Also Xeon Foster=
+ */
+>  #define INTEL_P4_PRESCOTT              IFM(15, 0x03)
+> diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.=
+c
+> index 5854f0b8f0f1..444602a0a3dd 100644
+> --- a/arch/x86/kernel/acpi/cstate.c
+> +++ b/arch/x86/kernel/acpi/cstate.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/sched.h>
+>
+>  #include <acpi/processor.h>
+> +#include <asm/cpu_device_id.h>
+>  #include <asm/cpuid.h>
+>  #include <asm/mwait.h>
+>  #include <asm/special_insns.h>
+> @@ -47,12 +48,11 @@ void acpi_processor_power_init_bm_check(struct acpi_p=
+rocessor_flags *flags,
+>         /*
+>          * On all recent Intel platforms, ARB_DISABLE is a nop.
+>          * So, set bm_control to zero to indicate that ARB_DISABLE
+> -        * is not required while entering C3 type state on
+> -        * P4, Core and beyond CPUs
+> +        * is not required while entering C3 type state.
+>          */
+>         if (c->x86_vendor =3D=3D X86_VENDOR_INTEL &&
+> -           (c->x86 > 0xf || (c->x86 =3D=3D 6 && c->x86_model >=3D 0x0f))=
+)
+> -                       flags->bm_control =3D 0;
+> +           (c->x86 > 15 || (c->x86_vfm >=3D INTEL_CORE2_MEROM && c->x86_=
+vfm <=3D INTEL_FAM6_LAST)))
+> +               flags->bm_control =3D 0;
+>
+>         if (c->x86_vendor =3D=3D X86_VENDOR_CENTAUR) {
+>                 if (c->x86 > 6 || (c->x86 =3D=3D 6 && c->x86_model =3D=3D=
+ 0x0f &&
+> --
+> 2.43.0
+>
