@@ -1,213 +1,172 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A68A214A72
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8AB2116F6;
+	Thu, 20 Feb 2025 16:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740070359; cv=none; b=uePjsQM6leyl93qye8uXPwO8/95EOurfuuuNMirKkei8cVZdevHZ4NOqHbAkT8SqpsRdE6r1mBCNc+DNhOxWkM3+4+Y24otBWUHqMyJUEFUYW1+y1z5LXx9tDxKUdMQm9jSEw1ECt1KRv5e5L1IUYlCTRvaqgIsHiX/UI12erWA=
+	t=1740070410; cv=none; b=U0JM6hU+UVq150l81LXmDMe4njPLlfwu5jCYSDGlCLYPMqVdN0YPyKzG1CgNNW8xEeCwX+zg9v50N1awEpcJ4XWdr5rCA+gYAHEOiHgBbAqpRtXHSli8ExrjDDIAfEPfdrOP+WvFkaIhKrAdjNVq5Bw5LN11IkA/DLG7ODK6Nqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740070359; c=relaxed/simple;
-	bh=6ZGEY1CUTUb9hIZs02aQ9APntILoEmml24syPbtm05w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K3bzZNix9TkSCZwGpW8KpZYHCPTg5+D9SN0CqqpdLZ17KLpDIhYIMNyuN47H+/w5UBrM8aJRQDKx/D1hru2a5c89h0P/DB+4mmkuaJCR6qWsSiUcjbEwI9YyOY2yBS7l9XFBp9yTPgOS90cRymg9NDmhW/dd3h+26upYosSmQ3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vR7l+TDF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7zjXn4G4; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vR7l+TDF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7zjXn4G4; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740070410; c=relaxed/simple;
+	bh=wnA9/JOYe+0mgZDcoziJ6ed0Ll4qweWetDgvFkY1Rtw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YxnRlnY2CNkY06WKk6ma9lGZ6iAjVBEVnum6IH2dV5xbodYfrrnOW9jyY3mChEmQcPi0OtHs3OhJ3lpZhtJTgL6wK3XJpGxJLq/b2TQKZPZQVyVS0uB0l69hwV3tGOJmvuwqIjLD2zlKMYJU4cDTUVALI5hdukSG3/WBxL15xGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BnITrn3E; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vR7l+TDF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7zjXn4G4";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vR7l+TDF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7zjXn4G4"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id B9A6221186;
-	Thu, 20 Feb 2025 16:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hH9uSFhc8XNqgswkvUUEW9uh5z40NPrJwxzIGYRAvqU=;
-	b=vR7l+TDFHoQkJcuzxpxWN12po112UZHuh6/OAATx4v9jBC9K9qy6mIAmm+LWAuBAK82iFZ
-	SwDNsyO4jC7Rk/W89RhamlC+MXPERH2UtMnj23slI8py9ZKNqSDanS1JQYb68bY82WOuHp
-	dTaoB8ckoNaLpJYYbytYXiuFO+N8hpE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070355;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hH9uSFhc8XNqgswkvUUEW9uh5z40NPrJwxzIGYRAvqU=;
-	b=7zjXn4G4ZCuWjVS5/GJCXpVdrmZ3Aa1fUFf1swFrLtFv7JmkHLXPMd9XuUUBr1+M8LQeKn
-	DjLfbLTdD0epgKCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hH9uSFhc8XNqgswkvUUEW9uh5z40NPrJwxzIGYRAvqU=;
-	b=vR7l+TDFHoQkJcuzxpxWN12po112UZHuh6/OAATx4v9jBC9K9qy6mIAmm+LWAuBAK82iFZ
-	SwDNsyO4jC7Rk/W89RhamlC+MXPERH2UtMnj23slI8py9ZKNqSDanS1JQYb68bY82WOuHp
-	dTaoB8ckoNaLpJYYbytYXiuFO+N8hpE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070355;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hH9uSFhc8XNqgswkvUUEW9uh5z40NPrJwxzIGYRAvqU=;
-	b=7zjXn4G4ZCuWjVS5/GJCXpVdrmZ3Aa1fUFf1swFrLtFv7JmkHLXPMd9XuUUBr1+M8LQeKn
-	DjLfbLTdD0epgKCA==
-Date: Thu, 20 Feb 2025 17:52:35 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v2 2/5] kdump: implement reserve_crashkernel_cma
-Message-ID: <Z7dd0_XLzmb1tBUk@dwarf.suse.cz>
-References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BnITrn3E"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abb86beea8cso237723366b.1;
+        Thu, 20 Feb 2025 08:53:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740070407; x=1740675207; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EOgvK9AFJe3WHPextjB1ThOrVLGAoD7o8PiZ9/mpfSE=;
+        b=BnITrn3EEviLggzqo2Jf/ac+UCqYKMn6Uqcm8BFWSBY32XZVZBFM9Tk2SImynO5WUY
+         DcUV+w3vkMmS8JIl3dlDQj/O4F9MbWzuyXBtzStBLUYVlDxZ4LMgxudKQVBIi9SEjjSi
+         XHCVtqAmsK1p1PUqh63o7FELT7cLsNPcBgi5PgmY5BMicV2VNqc9VXl/fHrzprA5Fdpj
+         pNNe2AvRby8VuxwnbmD7X6kSYtzBaHH5lBa5M9xHryOZf2dYscu8XTBtfT/lZs8Cz5Ey
+         INxqMFnV3FhcWsV0vUIE3cYJiYtXN8xs+/xcOXx7GWxzMePOIg4otPzE2ll2k2byFeSD
+         3yNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740070407; x=1740675207;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EOgvK9AFJe3WHPextjB1ThOrVLGAoD7o8PiZ9/mpfSE=;
+        b=IqZ5OP0lp0Zol8n4V/nJ5D3G3QzpwjfdVcZRmuSDyOtFtzeGh2G9OmKGym+9tSDthX
+         O9VK/T3opAJb/emqKL7Q8AKkFpJbQXaegEpap17mwvvUZJh45L51BzRe25fiy28mh2/j
+         EEEtoWCW2UnZ4gHOMIuy9l/Tqxy+Ih181UH7Nrz/TXauHWZPZQD0sUKYSDBXhr8kEfhb
+         +MntJNEEDkjMY2Vj/5JoE5Ey4sgdO5v2wsNjPmdnXuYwQIvQ9gWeKo3/UUKMuXgB1duO
+         pdjXDjIk3rpD4iCZMNmQjPPNsShLXObVZw8u+o1TfgTaTqgoT2UzZfuALrgG+QQ7In+G
+         T3kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/aoBRpvfE7XkiVeCYorJ9FVAbDlg+5ZodkD6AUEeUCDs4c0C3UaeBhPI+qUlb9YqC5GzQIlTJeCgpR3U=@vger.kernel.org, AJvYcCWux90aXzUNa0hYB1yGgZv5XDit2kxSekrMgmRmkGw8I86rkUW7yMlgUv0FCDxIIRXLDNLnZTZL+ijYdS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLnvFW1QETsmfjfj1N53IeUM3Ax3ss3T0P6eossudZEVRAi03X
+	GSvJGh2SBgwVUU/4v6PkncGwuMP3BOnNocr9C6YF5KfURImPug2b
+X-Gm-Gg: ASbGncvXta9xfUE3m8F+0qleiu2Yw2WKvNLdE7C5cRgITP1QgTNFjySLAd0hrsIkx9V
+	rcEveKTEQYuKPESKQETxkJcdsLH1PXHyRr9DXgWqGBnNsLB9iNtN4zRb/nBT+1iCgwdEHn00fpH
+	Sxjoh6GVq+tcybcAon5wtD5kuMOT33iQzp4z33I1hgQ732G0TKpsPIvoLIWk/zKnaQIT04VAXzK
+	banNjivncR2XcGKQ1iRKnxX2JLHLt5LljP60TKEyl/c76TWTyolwiSxdk9EFhYxmOayotDBMngz
+	Vt7GymaY72iWpxqiOvHddw==
+X-Google-Smtp-Source: AGHT+IHX9VnmIkzgRI4Ll9tv4A4sJkmlBH401wTqrrD1a2+Mvl3kRu9TX2s5UtqBj6iP6Tz2hhj6nw==
+X-Received: by 2002:a17:907:7f93:b0:aae:fb7c:50df with SMTP id a640c23a62f3a-abc09d33e2fmr2980866b.36.1740070407215;
+        Thu, 20 Feb 2025 08:53:27 -0800 (PST)
+Received: from [192.168.0.100] ([188.27.130.21])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbaa99f283sm681653066b.32.2025.02.20.08.53.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 08:53:26 -0800 (PST)
+Message-ID: <8c1c7703-42b0-418a-9c51-fd0e76e3a68e@gmail.com>
+Date: Thu, 20 Feb 2025 18:53:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
-X-Spam-Score: -4.26
-X-Spamd-Result: default: False [-4.26 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.16)[-0.776];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ZERO(0.00)[0];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,localhost:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] media: add v4l2_subdev_state_xlate_streams()
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Julien Massot <julien.massot@collabora.com>,
+ Bingbu Cao <bingbu.cao@intel.com>, Tianshu Qiu <tian.shu.qiu@intel.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+ Umang Jain <umang.jain@ideasonboard.com>, =?UTF-8?Q?Pawe=C5=82_Anikiel?=
+ <panikiel@google.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org
+References: <20250220092036.6757-1-demonsingur@gmail.com>
+ <tw6x663t5dmxsdarrxjtopza3mou3lnhwazu3dfv2k27fv47v2@bvftfepqqhss>
+ <c94580f0-3ab0-4a19-a996-9bb37e23dd39@gmail.com>
+ <Z7c5U6u5rr0-X0aK@kekkonen.localdomain>
+ <20250220143902.GA17500@pendragon.ideasonboard.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250220143902.GA17500@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-reserve_crashkernel_cma() reserves CMA ranges for the
-crash kernel. If allocating the requested size fails,
-try to reserve in smaller blocks.
 
-Store the reserved ranges in the crashk_cma_ranges array
-and the number of ranges in crashk_cma_cnt.
----
- include/linux/crash_reserve.h | 12 +++++++++
- kernel/crash_reserve.c        | 49 +++++++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
 
-diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
-index a681f265a361..97964f2a583d 100644
---- a/include/linux/crash_reserve.h
-+++ b/include/linux/crash_reserve.h
-@@ -13,12 +13,24 @@
-  */
- extern struct resource crashk_res;
- extern struct resource crashk_low_res;
-+extern struct range crashk_cma_ranges[];
-+#if defined(CONFIG_CMA) && defined(CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION)
-+#define CRASHKERNEL_CMA
-+#define CRASHKERNEL_CMA_RANGES_MAX 4
-+extern int crashk_cma_cnt;
-+#else
-+#define crashk_cma_cnt 0
-+#define CRASHKERNEL_CMA_RANGES_MAX 0
-+#endif
-+
- 
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base,
- 		unsigned long long *low_size, unsigned long long *cma_size,
- 		bool *high);
- 
-+void __init reserve_crashkernel_cma(unsigned long long cma_size);
-+
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
- #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index e72a9c897694..d71aff19a28d 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -14,6 +14,8 @@
- #include <linux/cpuhotplug.h>
- #include <linux/memblock.h>
- #include <linux/kmemleak.h>
-+#include <linux/cma.h>
-+#include <linux/crash_reserve.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -470,6 +472,53 @@ void __init reserve_crashkernel_generic(char *cmdline,
- #endif
- }
- 
-+struct range crashk_cma_ranges[CRASHKERNEL_CMA_RANGES_MAX];
-+#ifdef CRASHKERNEL_CMA
-+int crashk_cma_cnt = 0;
-+void __init reserve_crashkernel_cma(unsigned long long cma_size)
-+{
-+	unsigned long long request_size = roundup(cma_size, PAGE_SIZE);
-+	unsigned long long reserved_size = 0;
-+
-+	while (cma_size > reserved_size &&
-+	       crashk_cma_cnt < CRASHKERNEL_CMA_RANGES_MAX) {
-+
-+		struct cma *res;
-+
-+		if (cma_declare_contiguous(0, request_size, 0, 0, 0, false,
-+				       "crashkernel", &res)) {
-+			/* reservation failed, try half-sized blocks */
-+			if (request_size <= PAGE_SIZE)
-+				break;
-+
-+			request_size = roundup(request_size / 2, PAGE_SIZE);
-+			continue;
-+		}
-+
-+		crashk_cma_ranges[crashk_cma_cnt].start = cma_get_base(res);
-+		crashk_cma_ranges[crashk_cma_cnt].end =
-+			crashk_cma_ranges[crashk_cma_cnt].start +
-+			cma_get_size(res) - 1;
-+		++crashk_cma_cnt;
-+		reserved_size += request_size;
-+	}
-+
-+	if (cma_size > reserved_size)
-+		pr_warn("crashkernel CMA reservation failed: %lld MB requested, %lld MB reserved in %d ranges\n",
-+			cma_size >> 20, reserved_size >> 20, crashk_cma_cnt);
-+	else
-+		pr_info("crashkernel CMA reserved: %lld MB in %d ranges\n",
-+			reserved_size >> 20, crashk_cma_cnt);
-+}
-+
-+#else /* CRASHKERNEL_CMA */
-+void __init reserve_crashkernel_cma(unsigned long long cma_size)
-+{
-+	if (cma_size)
-+		pr_warn("crashkernel CMA reservation not supported\n");
-+}
-+#endif
-+
- #ifndef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
- static __init int insert_crashkernel_resources(void)
- {
+On 2/20/25 4:39 PM, Laurent Pinchart wrote:
+> On Thu, Feb 20, 2025 at 02:16:51PM +0000, Sakari Ailus wrote:
+>> On Thu, Feb 20, 2025 at 03:01:41PM +0200, Cosmin Tanislav wrote:
+>>> On 2/20/25 1:38 PM, Jacopo Mondi wrote:
+>>>> On Thu, Feb 20, 2025 at 11:20:32AM +0200, Cosmin Tanislav wrote:
+>>>>> Currently, the v4l2_subdev_state_xlate_streams() function is used
+>>>>> to translate streams from one pad to another.
+>>>>> This function takes the entire subdev state as argument, but only makes
+>>>>> use of the routing.
+>>>>
+>>>> Correct, but is this a problem ?
+>>>>
+>>>
+>>> No, it's not a problem.
+>>
+>> I think I have a slight preference to keep the pattern of referring to the
+>> state as other functions do.
+>>
+>> I wonder what Laurent and Hans think, too.
+> 
+> I agree, I think the state should be passed everywhere. This lowers the
+> risk of subsystem-wide refactoring if a function that receives a pointer
+> to part of a state (such as v4l2_subdev_routing_xlate_streams()) is
+> later found to need more information from the state.
+> 
+> The situation would be different if the states were not monolithic, for
+> instance if the routing table could be locked separatly from other parts
+> of the state, but that's not the case and I don't foresee moving to
+> finer-grained objects.
+> 
 
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
+Got it. We can drop these patches then.
+
+>>>> Is this the first step for a larger rework or is this a drive-by
+>>>> beautification ?
+>>>
+>>> Mostly a drive-by beautification to avoid passing the whole state around
+>>> where we only need the routing. I'm planning to submit drivers for more
+>>> GMSL2/3 chips and we're using this just to not pass the whole state
+>>> around. I think I can just use v4l2_subdev_state_xlate_streams(),
+>>> but I had these patches in my tree and it would have been good to get
+>>> them upstream, in preparations for submitting the GMSL2/3 drivers.
+>>>
+>>>> I'm asking because (and I know it's hard to strike a balance) this
+>>>> kind of changes tend to make back-porting a more painful, and if
+>>>> only justified by "it looks better" I would be a bit hesitant in
+>>>> taking them.
+>>>>
+>>>>> Introduce a v4l2_subdev_routing_xlate_streams() function which can be
+>>>>> used without the entire subdev state, to avoid passing the entire state
+>>>>> around when not needed.
+>>>>>
+>>>>> Convert all usages of v4l2_subdev_state_xlate_streams() to
+>>>>> v4l2_subdev_routing_xlate_streams().
+>>>>>
+>>>>> Remove v4l2_subdev_state_xlate_streams().
+>>>>>
+>>>>> V2:
+>>>>>     * Fix description of parameters
+>>>>>
+>>>>> Cosmin Tanislav (3):
+>>>>>     media: v4l: subdev: add v4l2_subdev_routing_xlate_streams()
+>>>>>     media: use v4l2_subdev_routing_xlate_streams()
+>>>>>     media: v4l: subdev: remove v4l2_subdev_state_xlate_streams()
+>>>>>
+>>>>>    drivers/media/i2c/ds90ub913.c                 | 14 ++++++-----
+>>>>>    drivers/media/i2c/ds90ub953.c                 | 14 ++++++-----
+>>>>>    drivers/media/i2c/max96714.c                  | 16 ++++++-------
+>>>>>    drivers/media/i2c/max96717.c                  | 23 ++++++++++---------
+>>>>>    drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c | 14 ++++++-----
+>>>>>    .../platform/nxp/imx8-isi/imx8-isi-crossbar.c |  2 +-
+>>>>>    drivers/media/v4l2-core/v4l2-subdev.c         |  7 +++---
+>>>>>    include/media/v4l2-subdev.h                   | 10 ++++----
+>>>>>    8 files changed, 53 insertions(+), 47 deletions(-)
+> 
 
