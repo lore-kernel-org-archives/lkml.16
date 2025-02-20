@@ -1,84 +1,115 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8A41F1908;
-	Thu, 20 Feb 2025 11:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB6679CD;
+	Thu, 20 Feb 2025 11:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740051699; cv=none; b=S47brgd9+G7TxI5SgIH+E2u83co6OJ4bbycrIDJaikYsqnjOZNX15IQcccVxzowPt3pPyHt3+Uz2DuAV9k/NEqI8fF5l0uwUwIVedIYo7t0vsIA2AyWZyaiMPR6S77/JHEgAWOKkOIE2/6A/dBBSOP8IEriMFriAj0c8veMIm4w=
+	t=1740051881; cv=none; b=U+LVJkzYhIZcQhj9KWe0SCG3Wh1w8lHnAKskADmHzc93W3Gaw8UueGDTVwTovpqkgpMuu2Ege/Vw1itS8TMHmYao4tz03l1voXVOtdOIquU3CElmpLUwIuM16zw13L2tKJV6EhEbcTHQYPkVsURA4Lp4dhdvY5xb+SlVC/0oG70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740051699; c=relaxed/simple;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=CX5dn4WYriPc1hGRExcBL3URGwDGHw+IvCPhatVsMS7tP5bZUANLOOaCHuFcgrudhtNf2SkRCmF4pF78THx183LF2d4WtpJZNz52LsboYNCFXJLLbViO5ad0q+s+EZOKedg7A7CiEY4AI+PaY1YI4BgMEg/LBSirb8jVshuJZzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=FKFxTpAn; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1740051881; c=relaxed/simple;
+	bh=dRD2Z+QEueUpm7pZtyoK8qbcEyBONj0ZELWYH9A92MA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lPEXLiALlHFHTN7V8SRKfDuyMHw+pHZJXpld1mJuSrOdnt03yFbHB2V1GvfodiWE6EH1JBEKWkhvXW/GpFGwC4B3TsfcSrIwgSTRB9SI3HTFJABlGDVxapSlz/HHawJv8E6Dk3dPRhM+9GsCpNMD8HOP/EaMAISwF65HoXcbKF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=xt5DFqDv; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="FKFxTpAn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1740051694; x=1740656494; i=rwarsow@gmx.de;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=FKFxTpAnukRQyEk+GC8zx2+Rd/pFU0KUxBJw2dlgcVnWiUYm/lKdosZMKhHdBgjC
-	 bwX4Uwaod0vLjJjtb7S7NsYdriDhmOuv+u6QlnjWDwIeHD/2ar+o19ZrT18HZVxmw
-	 3ZvQI4/XvbU0ra9eNerBkXo58hWvZB7iHmf/tNl1PUS6s/CAMsjI3xvmzh2nmvohs
-	 85D1rqfc4xAeHtAuwOYcmrrYu5Gzsk4GA4M9iLdj8yqMw2WqYmxB7/dR+9buR7o2+
-	 x+U3Pf9ao+9oiddwFlEorBmt7plodFG9+oWJcRkqdIzvMAZazef7SqZtBjamJUkAt
-	 WB7JI2NWNo6tRyFU8A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.33.75]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M2O2Q-1tldQW1mgg-00B1Tt; Thu, 20
- Feb 2025 12:41:34 +0100
-Message-ID: <a5c4d183-8daf-475e-b66b-7e101e7ac4aa@gmx.de>
-Date: Thu, 20 Feb 2025 12:41:34 +0100
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xt5DFqDv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=OMt4+h4M2hi9bh1j74Xva35n6PD/Vbe0tDN67Tdnx4w=; b=xt5DFqDvVS+9dt404mDOkGLP+E
+	1fyXCW3pqplrlhIIjhaQEICw6ArRyUhDDKMZd21/ALbjtqYBc1DvJQNHlIjHP4EiSUy8obeO4BviH
+	/h5rYxya6ZA0d0sJl3WgV32fccXeoV0Xo+2C+IH34+2DYD3tig4tX44Pk7yfPkaYEXG1Jz3SdpUse
+	9ghw7gaj3bvKMnwLV5qkZQFtr+2eE89jzJhJ16pUw374/yDw38JMMEjOWGn3w7OLSnbZMxnvIaV+L
+	2AM3Sz3//5OAL0/lES7735aRaZ3YsKDPgM9o0Pa/EQwZBE6cSFyFztT2qtR/XfIflhAbW67EFjW95
+	ylRToIDQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46900)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tl4yg-0000om-0U;
+	Thu, 20 Feb 2025 11:44:26 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tl4yd-0000x2-1n;
+	Thu, 20 Feb 2025 11:44:23 +0000
+Date: Thu, 20 Feb 2025 11:44:23 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>
+Cc: Sean Anderson <sean.anderson@linux.dev>, Andrew Lunn <andrew@lunn.ch>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	"Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"git (AMD-Xilinx)" <git@amd.com>,
+	"Katakam, Harini" <harini.katakam@amd.com>
+Subject: Re: [PATCH net-next 2/2] net: axienet: Add support for AXI 2.5G MAC
+Message-ID: <Z7cVlwPDtJ2fdTbY@shell.armlinux.org.uk>
+References: <20241118081822.19383-1-suraj.gupta2@amd.com>
+ <20241118081822.19383-3-suraj.gupta2@amd.com>
+ <ZztjvkxbCiLER-PJ@shell.armlinux.org.uk>
+ <657764fd-68a1-4826-b832-3bda91a0c13b@linux.dev>
+ <9d26a588-d9ac-43c5-bedc-22cb1f0923dd@lunn.ch>
+ <72ded972-cd16-4124-84af-8d8ddad049f0@linux.dev>
+ <ZzyzhCVBgXtQ_Aop@shell.armlinux.org.uk>
+ <BL3PR12MB6571FE73FA8D5AAB9FB4BB3CC9C42@BL3PR12MB6571.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Ronald Warsow <rwarsow@gmx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Content-Language: de-DE, en-US
-Subject: Re: [PATCH 6.13 000/258] 6.13.4-rc2 review
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ihtNfLb5I1SGXnn+F0AqGtNh2p5hO/YNMQvYt3b9N1M0rZkJKei
- tW8Ip2vhuaHWApJfiHBLOonYOTZDAfKsapz1xCFuJ18DGfwGfsFl3e4O0bLe6b8CpuoaDZf
- tvYr4WqQXNBe6Wjkx6xluzwxk/+8pgthfgI55TFBoDToVM8m+etwyxIK03ugN9t2s64bGtI
- to/QouyOcDNAc66G+Ns6Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HF8JqxsqmuQ=;nZ8DHURBp8HVqy7+p2g/z0DxnQC
- jsM8bdcOhQ22LzTSmNKy98pbTh9G/iqA7725ztmoSwlDqCK3TkcCC0FA1S9L2tTLvE3vJknLd
- 7LxtxY1iRcs9X0pCmmKC06MIClgDo2g/K65GqLDWgfY/EhZ68VYVJ11TQdsqvMv/bgih8G5l8
- FghdhclfHmHip7/Wrocry8YGdX07GiVR3SpHXu7EyUQ8z7hY9OK+eHL5igU249XE8+rxEF8rg
- D6u40bmBz0PEkPYxN9p42w9A3apHLDeLDYTAfhjmrMP565hMyA45BKosn+iHBgiC6FnkjTI+5
- bsvZpM+P/YQe34RR1FesicWtXTQ00C9AKgZEuA9Yrdb46lWXtXeZLWHOehW3FwR/KgO7m3MVl
- J4G/lYzR8QhRvhTWbQiZfcpIooqhiqDTujrpQZn+IY2nABGwkrhSMnFR5j2esJ4BxMagYCcsm
- UflbxPRBvFXpZlhJ5rI5R6zt7rgj1YNhevh9PdR8S2xqq2TMZoQ+T3tMTU8RO9L4jzZjlMq+5
- 5OBUHcX9I6WT7Bfk0R5QIFpdlJfZ/vxGR1Abv+2Le8Sc+mHZCUU4fBV7OWm/3+7vv3Nfoncwy
- xmtsNwRr36WyVnTMTNPq/oNjWoXULdhW/OW0B/zgjjOUg4oBH5mw3nZH5kr5jyOqXgY9UvVWQ
- a4QW6HlkfyP9LsGyCstPjo5PTHdgvOmm042mpKtlT3XxE831yJdSSwntdz4VIXDCQt4lvBNGY
- XCzhplJjexhR7BJf30D5AroHHASZH4xb3TQvFmFGGFr4IwCGWrGSYR2iIW5WrIGDvSVRGYwBx
- yisIZ1hiRajle5b+qXD9GRsab62l8kYHl3wWT1dVukm3iYNv42349LrnLFBDMbdPl16p0bNAJ
- tYFfqKHC50od/5pMHE0vBXACOpy06Mlux1lypLnQys97jNJUttiP4m0ftaJoJZxunBqjNJfz0
- 6ayPWeIsLpFPr0sTiudlYcUetzNAR8yh9fAvVJ439M9s2GWS45rEEo8D/f6niYwhWbv72+9mX
- NgbQbnBfv/h2U1mZqhDHWukSjY/rKvVyH8VpSMNuJrQj3nr7nHHgllhiCzc7m/qtWQDzwJTqm
- YtOZ3ly1j8hm+bGPfYrLCc1HR6h48hpjA+5M4UVgOOXv9Nb6bDLisb6Tl03ATAY5LtxseIwyM
- 0BLaE5T/tXuRE0Xaoy/Fqeh/ysxUhE5nX3PEQrUdLkz6N/X/CHSC2DYupqCOYV3X0pTyAnXiU
- rvAl6IKGBqHiIpiLyZ0D0Yi9aqXBrK2pLdiNDdOn58UZ710e2xCUrHGxdw1siaJ9DYBauCVhU
- ObKVpwiTmY4f2Kv2xdVCTYrdzLTujoTJKwYirTQhAZ1gvI1bkMIYVViD5fCLNJXOHSxwavQlm
- VABDMhK2qftMQH05Z/21tXGe+OUTGkDYjLIFPnsbZmFw319yn1iCnXKzcF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL3PR12MB6571FE73FA8D5AAB9FB4BB3CC9C42@BL3PR12MB6571.namprd12.prod.outlook.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Greg
+On Thu, Feb 20, 2025 at 11:30:52AM +0000, Gupta, Suraj wrote:
+> Sorry for picking up this thread after long time, we checked
+> internally with AMD IP and hardware experts and it is true that you
+> can use this MAC and PCS to operate at 1G and 2.5G both. It is also
+> possible to switch between these two speeds dynamically using
+> external GT and/or if an external RTL logic is implemented in the
+> FPGA. That will include some GPIO or register based selections to
+> change the clock and configurations to switch between the speeds.
+> Our current solution does not support this and is meant for a
+> static speed selection only.
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
+Thanks for getting back on this.
 
-Thanks
+Okay, so it's a synthesis option, where that may be one of:
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
+1. SGMII/1000base-X only
+2. 2500base-X only
+3. dynamically switching between (1) and (2).
+
+> We'll use MAC ability register to detect if MAC is configured for
+> 2.5G. Will it be fine to advertise both 1G and 2.5G in that case?
+
+Please document in a comment that the above are synthesis options,
+and that dynamically changing between them is possible but not
+implemented by the driver. Note that should anyone use axienet for
+SFP modules, then (1) is essentially the base functionality, (2) is
+very limiting, and (3) would be best.
+
+Not only will one want to limit the MAC capabilities, but also the
+supported interface modes. As it's been so long since the patch was
+posted, I don't remember whether it did that or not.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
