@@ -1,159 +1,96 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECD5212B0B;
-	Thu, 20 Feb 2025 16:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A344A1FECD0;
+	Thu, 20 Feb 2025 16:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069013; cv=none; b=i4ChbWRThMvwQO+7tktOAjI/YMMorIZHjHRGJuDRk667zXI0sZ0XFK5p4duHmXK26nNc3yfsZN3oUgflp5wWtFtuCE25CCvSv27D0jcv72xCtjwdWWEUW79LuJV3KsusZ6NsfSXCnj44Hf6aJSgTuYDywbgaZBtZKgu0rPeRSS0=
+	t=1740069049; cv=none; b=OPJysfUzBJAaq/hsSaA1NrrTwLD82QaEss+SkW/tu6AXRSX8NhT7nkEezg6EVIeBlb/nnjpxNFA5lOi07RVXklnHbpwDD7BayUhSpi7YHiHgSTdSHZT6/+G2NW2prZSvT/F/kMUnHS+NpwGT0OwKKUjFjNMmvgEQuccI9HFqLCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069013; c=relaxed/simple;
-	bh=bUFRh/z0JE+Kbj6gH5vsY77Jp0K4hGvEKNQgkEbUZ5c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D5i0aCNh5XbrzNNvAueXJ/oIJ/8OYwpbRilCuPsDPGKdibyWURp+Bsx8xaPNxoX6GTIc78cM0fJBZvlirY7xEnDHuLcz4f/8geLKlq24/eVDq84vK6/PW4uozYLraYe0NbY0ALwJC++ejzEEA+hZqANqTutmfTb3/rXms4uBy04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lcR7nfbp; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lcR7nfbp"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740069008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AhgezydcIAuiz95/Z6Dv2Ddbkghm0SNItVxer/dvUWA=;
-	b=lcR7nfbprjyIAW+4P7/+W7hc+kcMTO6iZ5E4gT5VGBjDYckOTPQfdqxfY16IOg1gAkRaxT
-	Poqp8Q8QOFOlbFaCSEUATRqnhjXX0oVx8Qxm1vtviBKzsNDQhTwZJ5Hwsc6M2gtWmpGjv5
-	SR6NMOjzggF1f3S4boIO02OM3fnIMu4=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	linux-kernel@vger.kernel.org,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH net v2] net: cadence: macb: Synchronize stats calculations
-Date: Thu, 20 Feb 2025 11:29:50 -0500
-Message-Id: <20250220162950.95941-1-sean.anderson@linux.dev>
+	s=arc-20240116; t=1740069049; c=relaxed/simple;
+	bh=h7I4a1m+lKDemV4C/AVPCUByB+1VJoQjS1c/3WUoNkM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H4WqFihEr8YSY7zS11o/XXAfOzHy9SmADzz1sGu6/f79zsfE84Crpv+mIkPVstFoLKidu2s/R+7U5nkioixbpzWNFKZqjmfL38DtUgLgUgsA7I/RtwH135xA8spjBZCyoAEo91t1X0HOQIB6vzWswRQdDvk9v/pmQfb2MJX0vM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YzJZH19G7z6L4tx;
+	Fri, 21 Feb 2025 00:27:19 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 355FB140257;
+	Fri, 21 Feb 2025 00:30:45 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Feb
+ 2025 17:30:44 +0100
+Date: Thu, 20 Feb 2025 16:30:43 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Gregory Price <gourry@gourry.net>
+CC: <lsf-pc@lists.linux-foundation.org>, <linux-mm@kvack.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [LSF/MM] CXL Boot to Bash - Section 1: BIOS, EFI, and Early
+ Boot
+Message-ID: <20250220163043.000000cd@huawei.com>
+In-Reply-To: <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+	<Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Stats calculations involve a RMW to add the stat update to the existing
-value. This is currently not protected by any synchronization mechanism,
-so data races are possible. Add a spinlock to protect the update. The
-reader side could be protected using u64_stats, but we would still need
-a spinlock for the update side anyway. And we always do an update
-immediately before reading the stats anyway.
 
-Fixes: 89e5785fc8a6 ("[PATCH] Atmel MACB ethernet driver")
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+> 
+> Example CEDT Entries (truncated) 
+>          Subtable Type : 00 [CXL Host Bridge Structure]
+>               Reserved : 00
+>                 Length : 0020
+> Associated host bridge : 00000005
+> 
+>          Subtable Type : 01 [CXL Fixed Memory Window Structure]
+>               Reserved : 00
+>                 Length : 002C
+>               Reserved : 00000000
+>    Window base address : 000000C050000000
+>            Window size : 0000003CA0000000
+> 
+> If this memory is NOT marked "Special Purpose" by BIOS (next section),
 
-Changes in v2:
-- Use spin_lock_irq when not in IRQ context since we take this lock in
-  macb_interrupt
+Specific purpose.  You don't want to know how long that term took to
+agree on...
 
- drivers/net/ethernet/cadence/macb.h      |  2 ++
- drivers/net/ethernet/cadence/macb_main.c | 12 ++++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
+> you should find a matching entry EFI Memory Map and /proc/iomem
+> 
+> BIOS-e820:   [mem 0x000000c050000000-0x000000fcefffffff] usable
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 5740c98d8c9f..2847278d9cd4 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -1279,6 +1279,8 @@ struct macb {
- 	struct clk		*rx_clk;
- 	struct clk		*tsu_clk;
- 	struct net_device	*dev;
-+	/* Protects hw_stats and ethtool_stats */
-+	spinlock_t		stats_lock;
- 	union {
- 		struct macb_stats	macb;
- 		struct gem_stats	gem;
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 48496209fb16..c1f57d96e63f 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1978,10 +1978,12 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
- 
- 		if (status & MACB_BIT(ISR_ROVR)) {
- 			/* We missed at least one packet */
-+			spin_lock(&bp->stats_lock);
- 			if (macb_is_gem(bp))
- 				bp->hw_stats.gem.rx_overruns++;
- 			else
- 				bp->hw_stats.macb.rx_overruns++;
-+			spin_unlock(&bp->stats_lock);
- 
- 			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
- 				queue_writel(queue, ISR, MACB_BIT(ISR_ROVR));
-@@ -3102,6 +3104,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
- 	if (!netif_running(bp->dev))
- 		return nstat;
- 
-+	spin_lock_irq(&bp->stats_lock);
- 	gem_update_stats(bp);
- 
- 	nstat->rx_errors = (hwstat->rx_frame_check_sequence_errors +
-@@ -3131,6 +3134,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
- 	nstat->tx_aborted_errors = hwstat->tx_excessive_collisions;
- 	nstat->tx_carrier_errors = hwstat->tx_carrier_sense_errors;
- 	nstat->tx_fifo_errors = hwstat->tx_underrun;
-+	spin_unlock_irq(&bp->stats_lock);
- 
- 	return nstat;
- }
-@@ -3138,12 +3142,13 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
- static void gem_get_ethtool_stats(struct net_device *dev,
- 				  struct ethtool_stats *stats, u64 *data)
- {
--	struct macb *bp;
-+	struct macb *bp = netdev_priv(dev);
- 
--	bp = netdev_priv(dev);
-+	spin_lock_irq(&bp->stats_lock);
- 	gem_update_stats(bp);
- 	memcpy(data, &bp->ethtool_stats, sizeof(u64)
- 			* (GEM_STATS_LEN + QUEUE_STATS_LEN * MACB_MAX_QUEUES));
-+	spin_unlock_irq(&bp->stats_lock);
- }
- 
- static int gem_get_sset_count(struct net_device *dev, int sset)
-@@ -3193,6 +3198,7 @@ static struct net_device_stats *macb_get_stats(struct net_device *dev)
- 		return gem_get_stats(bp);
- 
- 	/* read stats from hardware */
-+	spin_lock_irq(&bp->stats_lock);
- 	macb_update_stats(bp);
- 
- 	/* Convert HW stats into netdevice stats */
-@@ -3226,6 +3232,7 @@ static struct net_device_stats *macb_get_stats(struct net_device *dev)
- 	nstat->tx_carrier_errors = hwstat->tx_carrier_errors;
- 	nstat->tx_fifo_errors = hwstat->tx_underruns;
- 	/* Don't know about heartbeat or window errors... */
-+	spin_unlock_irq(&bp->stats_lock);
- 
- 	return nstat;
- }
-@@ -5097,6 +5104,7 @@ static int macb_probe(struct platform_device *pdev)
- 		}
- 	}
- 	spin_lock_init(&bp->lock);
-+	spin_lock_init(&bp->stats_lock);
- 
- 	/* setup capabilities */
- 	macb_configure_caps(bp, macb_config);
--- 
-2.35.1.1320.gc452695387.dirty
+Trivial but that's not the EFI memory map, that's the e820.
+On some architectures this really will be coming from the EFI memory map.
+
+
+> /proc/iomem: c050000000-fcefffffff : System RAM
+
+
+> 
+> 
+> ---------------------------------------------------------------
+> Step 3: EFI_MEMORY_SP - Deferring Management to the CXL Driver.
+> ---------------------------------------------------------------
+> 
+> Assuming you DON'T want CXL memory to default to SystemRAM and prefer
+> NOT to have your kernel allocate arbitrary resources on CXL, you
+> probably want to defer managing these memory regions to the CXL driver.
+> 
+> The mechanism for is setting EFI_MEMORY_SP bit on CXL memory in BIOS.
+> This will mark the memory "Special Purpose".
+
+Specific purpose if we are keeping the UEFI naming.
+
 
