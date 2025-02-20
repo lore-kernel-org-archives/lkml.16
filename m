@@ -1,105 +1,149 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99C91FF60B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEEAE1DEFE1;
+	Thu, 20 Feb 2025 16:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069979; cv=none; b=XbGPPS/gk9U3rmCCloW3MPoPiUIdPiNsDrVwrOl2NGmh4I9Vvo3cXdbZ5sIBU7WixRxX6Brke1rgvcgvc+OtJA1xO57dQLXlc1BNvIr2DM/ywTYHrYzhJu5UGTYmFLBA/XknS2KABOQHhv+uwEYxvdZ68dLHyf0FSGETI8K0tq8=
+	t=1740070010; cv=none; b=sufKTBBEvkeELa/alqQrthubmdAvk6uBWTljBMPmsLG7iwDs4+k6Gi/m0zoD/EJnlr6+kIP2ci5Z8UsNdqZWKi0jUDX+BPHw/sQBHOArNSbWS2+zn+2SsNsQa7zRlTjLdfdTnwsgHL9e1TFovra8+3ir9ihFRMMZj5bElj25Zx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069979; c=relaxed/simple;
-	bh=Q96fH2ufnyrRSkdVqFWpIfJckWGdN24HBgnQJQFk4P0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=huSAL8lPSSDF8xuYPFyzn83f1W26F95aMeBFi79F0AETho7kTDa7/tH/wAU77RK4+odTgkNGf7VJFPnQOscZ3W9OpI5AAKRVbx0WsBy4P5Z+wBd7MZb3v4HL4OjMwHcOpVlGURKGIhA5p4HrZT10DbqOqnI65ICh85s74LQOiIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=FGFxLouZ; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="FGFxLouZ"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5fcd811d939so1301365eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:46:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740069976; x=1740674776; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rh4eTXTu+c11RkR0T9DFkG9ZleZyfYRGduufAwusFKE=;
-        b=FGFxLouZGl2ZLZWqdYnsnUJhzUlf60op0SLfHJqzZ6NYM8I+VuHW2a3Rwx5N6GKwct
-         4BPBAqzoLfrVJXo2orBJ9ocY6NSuiGyIhHP8D34XKTfVjV+rL/zH1gZRAM3l9zHGrSwH
-         gopJRsIz1xc+Rs1PPPzZGsnRYC0Vcs6cPixpO3Xr2uNLdST8crs94e1tkxBFN9gQz3RZ
-         5LkLkDZN1ttE7eDowRZOXQsgrLPjbE2C6ta2zkP6HjOLXh9qtP0yTAVU3Ycwp2oIq+jR
-         dznYTHwkzHUBVkX9R+OimkMF08CRlAxmJslSaoDqJsJaYfS83mzPrNyoTAhCf2drqNsj
-         XbpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740069976; x=1740674776;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rh4eTXTu+c11RkR0T9DFkG9ZleZyfYRGduufAwusFKE=;
-        b=uxGft3G0TzEWilyuKsze+zeS3T+QQjE6IFF0Yj6wvNt2nAcPOzuz8/VHHUMAPCq75j
-         LnnhU7ueMkdKOQgIOPdny0yIPQ2i9evK78/bitdqv6R3F6kRC5xkle8wJjmILMu/7w1E
-         fBVynl9HmOfkrRvGhdsdJ0tBdI4cmQCWDTMvBHTQ48pBeXfdZ21OKGmQRimCw8HjtA5V
-         KrUl+2iC4E09MvCxMBDUC4y/MnivZD9uwyfWO7hNctxhSIVvSPjWIn19ENBtzmunTsev
-         GqK2CimdVJtZQGO8uleusf6rOz917AX3lItmHf1JTJqU7XHokrueC9RCvx/n4WiP+lFN
-         BJ2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXzKjXc5U/nLlnotqPKLRBV3PC3SMCbuNTwDmjCB/1Il19aIlKN3iDbivFTzh2RHJiFd3XkKM6FlLkcPCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQLY6krE3vHVQwBNnelQ/5B0FcgTLxwpi8fzBPBqfGUCeA/hPi
-	fnHt6uyiuTN0vxEApwPrSALnCeYAYqPjfyjGNUvLamnh/uj1TIB0ztT5DRnhTH5+YdhFyndHdgu
-	F
-X-Gm-Gg: ASbGncu613nCZKQPHrrMgAekdYOW967uqJaHiUMPUXt0NaGRWFtfV5SmwOq7ydhYZ6k
-	/ayg/oCM0DdONnATz+ibXLwO8h0jr+1eOgOpjMKiU8H9rxfbE1lz959Nxpb9eaijpW+DvH31ld/
-	dCFtXNmHCWqqxt+ghoZ0Uy7sABIEuT+dQ8okaYDLxH18cuHaqPUxeDLr/2S9W1anGvw7BNWOqjX
-	1fTJ+/tiBIod6KpRqzSmVBEJPuQ9NZqFwzzSklGl5VZo+ngRFQU16Pk6FeVaz4DNiMQm6fdHlaq
-	Y6F1Nf8t5+U=
-X-Google-Smtp-Source: AGHT+IG+EYLLqM6THWYE8hAauMhRAcU2Nk6bktOc2WtjLtNwvqYq1DbYMyEayXYWgyo4XXN/dzNAHg==
-X-Received: by 2002:a05:6e02:12e8:b0:3d0:26a5:b2c with SMTP id e9e14a558f8ab-3d2c01cbd32mr32793245ab.8.1740069966144;
-        Thu, 20 Feb 2025 08:46:06 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ee9f935135sm1841325173.42.2025.02.20.08.46.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 08:46:04 -0800 (PST)
-Message-ID: <d178e65f-0168-4046-b516-1304db75820d@kernel.dk>
-Date: Thu, 20 Feb 2025 09:46:03 -0700
+	s=arc-20240116; t=1740070010; c=relaxed/simple;
+	bh=i++VPGe3JpqhwNQa6BuqC+Ahkz2MVhr+j1/ixd4HO7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aDfY+ratiVLYHo0DCn5dsgxxsstel1dJ6M2I2cedIlzlRM25gb4jBoMacuNQKeXc3cK+wXy66tzv+sBVZbU4V4M/kisRIhzMRboOsg0I7gXRX4SOBy8GgqJ8pIU2rt8H95sNlp5R7irPRal29q0o0IwOHMUjvWW+TAOmzvBIfGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0099116F3;
+	Thu, 20 Feb 2025 08:47:05 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07B2A3F5A1;
+	Thu, 20 Feb 2025 08:46:42 -0800 (PST)
+Date: Thu, 20 Feb 2025 16:46:40 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Peter Newman <peternewman@google.com>, "Moger, Babu" <bmoger@amd.com>,
+	Babu Moger <babu.moger@amd.com>, corbet@lwn.net, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	tony.luck@intel.com, x86@kernel.org, hpa@zytor.com,
+	paulmck@kernel.org, akpm@linux-foundation.org, thuth@redhat.com,
+	rostedt@goodmis.org, xiongwei.song@windriver.com,
+	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
+	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
+	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
+	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
+	mario.limonciello@amd.com, james.morse@arm.com,
+	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
+	eranian@google.com
+Subject: Re: [PATCH v11 00/23] x86/resctrl : Support AMD Assignable Bandwidth
+ Monitoring Counters (ABMC)
+Message-ID: <Z7dccLOTPzySYTXL@e133380.arm.com>
+References: <Z6zeXby8ajh0ax6i@e133380.arm.com>
+ <9e849476-7c4b-478b-bd2a-185024def3a3@intel.com>
+ <Z64tw2NbJXbKpLrH@e133380.arm.com>
+ <76b02daf-1b45-473e-9d75-5988a11c6887@intel.com>
+ <8ef51f28-e01a-4a7d-ba86-059437edb60b@amd.com>
+ <a07fca4c-c8fa-41a6-b126-59815b9a58f9@intel.com>
+ <CALPaoCh7WpohzpXhSAbumjSZBv1_+1bXON7_V1pwG4bdEBr52Q@mail.gmail.com>
+ <ccd9c5d7-0266-4054-879e-e084b6972ad5@intel.com>
+ <CALPaoCj1TH+GN6+dFnt5xuN406u=tB-8mj+UuMRSm5KWPJW2wg@mail.gmail.com>
+ <2b5a11e3-ee19-47ba-b47e-b7de2818f237@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250218: arm64 LTP pids kernel panic loop_free_idle_workers
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- linux-block <linux-block@vger.kernel.org>, Cgroups
- <cgroups@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>,
- linux-mm <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, LTP List <ltp@lists.linux.it>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Roman Gushchin <roman.gushchin@linux.dev>, Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYuVngeOP_t063LbiJ+8yf-f+5tRt-A3-Hj=_X9XmZ108w@mail.gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CA+G9fYuVngeOP_t063LbiJ+8yf-f+5tRt-A3-Hj=_X9XmZ108w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b5a11e3-ee19-47ba-b47e-b7de2818f237@intel.com>
 
-On 2/20/25 9:13 AM, Naresh Kamboju wrote:
-> Regression on qemu-arm64 the kernel panic noticed while running the
-> LTP controllers pids.sh test cases on Linux next 20250218 and started
-> from the next-20250214
+Hi,
+
+On Wed, Feb 19, 2025 at 09:56:29AM -0800, Reinette Chatre wrote:
+> Hi Peter,
 > 
-> Test regression: arm64 LTP pids kernel panic loop_free_idle_workers
+> On 2/19/25 3:28 AM, Peter Newman wrote:
+
+[...]
+
+> > In the letters as events model, choosing the events assigned to a
+> > group wouldn't be enough information, since we would want to control
+> > which events should share a counter and which should be counted by
+> > separate counters. I think the amount of information that would need
+> > to be encoded into mbm_assign_control to represent the level of
+> > configurability supported by hardware would quickly get out of hand.
+> > 
+> > Maybe as an example, one counter for all reads, one counter for all
+> > writes in ABMC would look like...
+> > 
+> > (L3_QOS_ABMC_CFG.BwType field names below)
+> > 
+> > (per domain)
+> > group 0:
+> >  counter 0: LclFill,RmtFill,LclSlowFill,RmtSlowFill
+> >  counter 1: VictimBW,LclNTWr,RmtNTWr
+> > group 1:
+> >  counter 2: LclFill,RmtFill,LclSlowFill,RmtSlowFill
+> >  counter 3: VictimBW,LclNTWr,RmtNTWr
+> > ...
+> > 
 > 
-> Started noticing from next-20250214.
-> Good: next-20250213
-> Bad: next-20250213..next-20250218
+> I think this may also be what Dave was heading towards in [2] but in that
+> example and above the counter configuration appears to be global. You do mention
+> "configurability supported by hardware" so I wonder if per-domain counter
+> configuration is a requirement?
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Until now I viewed counter configuration separate from counter assignment,
+> similar to how AMD's counters can be configured via mbm_total_bytes_config and
+> mbm_local_bytes_config before they are assigned. That is still per-domain
+> counter configuration though, not per-counter.
 
-Should already be fixed in the current tree.
+I hadn't tried to work the design through in any detail: it wasn't
+intended as a suggestion for something we should definitely do right
+now; rather, it was just an incomplete sketch of one possible future
+evolution of the interface.
 
--- 
-Jens Axboe
+Either way these feel like future concerns, if the first iteration of
+ABMC is just to provide the basics so that ABMC hardware can implement
+resctrl without userspace seeing counters randomly stopping and
+resetting...
 
+Peter, can you give a view on whether the ABMC as proposed in this series
+is a useful stepping-stone?  Or are there things that you need that you
+feel could not be added as a later extension without ABI breakage?
+
+[...]
+
+> > I believe that shared assignments will take care of all the
+> > high-frequency and performance-intensive batch configuration updates I
+> > was originally concerned about, so I no longer see much benefit in
+> > finding ways to textually encode all this information in a single file
+> > when it would be more manageable to distribute it around the
+> > filesystem hierarchy.
+> 
+> This is significant. The motivation for the single file was to support
+> the "high-frequency and performance-intensive" usage. Would "shared assignments"
+> not also depend on the same files that, if distributed, will require many
+> filesystem operations? 
+> Having the files distributed will be significantly simpler while also
+> avoiding the file size issue that Dave Martin exposed. 
+> 
+> Reinette
+
+I still haven't fully understood the "shared assignments" proposal;
+I need to go back and look at it.
+
+If we split the file, it will be more closely aligned with the design
+of the rest of the resctrlfs interface.
+
+OTOH, the current interface seems workable and I think the file size
+issue can be addressed without major re-engineering.
+
+So, from my side, I would not consider the current interface design
+a blocker.
+
+[...]
+
+Cheers
+---Dave
