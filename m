@@ -1,97 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348F21DA10C;
-	Thu, 20 Feb 2025 11:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984541F0E3C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740049677; cv=none; b=DK+IScL0RPFFdAL6MvqsyykMKWktNEofiQ23aN3lKz/PzJM06T3xyBUap6T1l+ftHZgpvtbd5OesnrJKAvVTrTi3mcIb524AWjyvD8Z0A55SdlPPI1mtNV94u8Vlhk/N54iuCfVF/ixvfQCNJ47n/l1lSLU3cWZSuBWSigji7rc=
+	t=1740049713; cv=none; b=JQM+Ze0L+dw/ZrDZAai+2gty7VvwHnuPrHNLTeLht23kBycLdnLqd0X5FmB+14p2x4bZ2ENLj27/+uLQBlZMMSJTDVQeiIMHW3x0HccUyD3OmOPdGqvt3yily+ZFEuQKZ38eTEwwINXtMQYMlQL5/40NklMu07xulh1QAXeq5to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740049677; c=relaxed/simple;
-	bh=dAOMnkWM48ceYbBeCq/KlkjRsHjtl1h9WRQVQqfvtZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=niIJz9FReumCiYCkUeBAsN0F+Qn3j9WbloPKm55tVXhLRdDCvX+sr1HMwS7zi5F+Ail7LVBLNqQDuFpo1JnSffgz8yY5n9FNFHC2zukPNmHDEKtneFJZE0B0bA3uPsu3H3c9kisyL01ri9BEh9v0T9i7q1+qqvoYsKUh2YgDQJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXN6T/bO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740049713; c=relaxed/simple;
+	bh=wsklMZucUPkbHHT0MAAjFIJG2P6Hdi5divFOEI5Inq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ba5o1fGI55hrRw49ds6ZvVcBRIZa1+EwDJf/8xv4Y4ePDrX19moDEgFOMVnkplAdzcFDlhYd+h8URFs4fDZne/PrOG552ZyOR9RIqNUVG+pNI4xt/FfaURbb0bEy0zJPEl86TjA8sVeONbUcR7rJbPYmZlG06WPzb1qDGF3Bt3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UL+0Jqbp; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXN6T/bO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72118C4CED1;
-	Thu, 20 Feb 2025 11:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740049676;
-	bh=dAOMnkWM48ceYbBeCq/KlkjRsHjtl1h9WRQVQqfvtZ4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tXN6T/bO2IjYq/nkfp+mmiBNhdPL9VdR+tsFySJNtsEg5XMq2UBD3kpt83/dadFtQ
-	 2hbPJU7ltSoPM35sXf6XY2uYCUlC55M/sPqZvX6534rChiAnORAd7fCDm1f00iaxBI
-	 c0/o4/xabwJzQVm5tHgCGO+m/S6u5HEDAXjYGJh4xWQ/oeFR30LHSlbLa3kVXr9StQ
-	 M9GMgyZCM5xmLxf8fgmkMqykU9ymmMv9vIW95qf+DrukU9O+3vrrFR0OKeITL0kkYb
-	 7pV6kmPsu21FWI3p51DxPt2h3VRBuYlu1cFh4YnaJpXR9qsVVWIFp3o6/dSE/867do
-	 +sy7UED9bCXBA==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: kuba@kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Dmitry Yakunin <zeil@yandex-team.ru>,
-	Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Subject: [PATCH] net: set the minimum for net_hotdata.netdev_budget_usecs
-Date: Thu, 20 Feb 2025 12:07:52 +0100
-Message-ID: <20250220110752.137639-1-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UL+0Jqbp"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-543cc81ddebso961757e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 03:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740049709; x=1740654509; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Wq8QeYYoAG6GqdK6ykrRH0bnFwzccAb5pciRQeLX7g=;
+        b=UL+0JqbpGKdX+6wAg8n25yk7LN3eWa9O8ksL1Qn3M4E7RKVgPDe4msk2cJXSZwHE12
+         viQHYXSj7d4sgdhZu9b6Q1jK4c04KMYPABr3h8y/bDRQIGHZGmBg4XolP69UTqh/G7hU
+         Jp5cORW0Ldk/pnfhVNxu3ChgU68I3k9L/E9R+rntVxsql9TEOTA+KCvW+h8crJga9miT
+         QtVjjnCEvU6bYvsZCkNKqbRJ76JJTQu+cBxJghktDNxuMILbjDvLm3wshhtBXV0XMkcT
+         tPckx9HQQeLSPrf9I2Wq9JjKwwYz3YwxZKaYNVtdoIGl1oOIMGHhnZ8iODOaGS1J687d
+         2FXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740049709; x=1740654509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2Wq8QeYYoAG6GqdK6ykrRH0bnFwzccAb5pciRQeLX7g=;
+        b=KBgSyuGqsmP8QP1Bcs7mGfz78zPsbDcsCQU9XAe0TLPsfsBq9cHfD2GGSTG1nP+WVr
+         nWoPmd5n9gyA/wgf31x8/riBDJrtyaJPuHYRs/EiI053O1jKYpePR5f42ZGvSYuepbz8
+         xXOBjl7wO0/xqAoMcCfNCEq+Eb+x/BdGLsKaLBA5igovj+83yqfY/ZiNHXcEGvx4emMI
+         FNTNADcCM8M1CDRVnBFheOd+xnuXF49a4hLXEvk/Dgrt0p8nUMr75Avd2dcwI0CEteWj
+         9tXWVCBVsEJD3GJe0rW3L2bNtCMzHtGlWTATOc1rSdY8O2nNad4p4ESW1NgFxHpx6j4i
+         JJRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbkfFFH6wGK0rHZydEwAxFeJwKCMFPWOpr+V3ma4sOX7bRVk765ldTPgc0A+2Ni5MnY0HFYoe8KcoeH6M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxklxtWP3L+GPOHw84DLrucIG4RknKNoZZO2XVzzC4EQsyV55WM
+	9X5HcsbybJdPOsAk9ZuW4CwI2LqqsO6Rk10Wwxu51S1Khz5YwQzsHsWOX2zQf7fs+ER8/0/DK8d
+	FSmkw8zCisS2IKI+/LyYh8tamivm9dqs7Y9Nz6P2GsVZjWRInUwM=
+X-Gm-Gg: ASbGnctPiLd7hS9FNZULWbvrphbgBQUkDAaBh1p/hn+IAKF6+ZYXkY4vCiUhmqOgk47
+	s8paBKZQkF2EYuCG+lNXNuLZfwy3tKwUnNGEk29T+4VXwri00IQZwD6OPv/ruZuNPV3qYiO0jxt
+	2IdHwnVyhtJJvOSGs+78BpLJM7tGE=
+X-Google-Smtp-Source: AGHT+IGfnHxc0LwSbIsH3Kf0h9dCgr8wHOa++ItKwQprXHL288wbvCBlEUijw2k3KO0J+QRayqaZh9njys8ex67sVUI=
+X-Received: by 2002:a05:6512:318c:b0:545:2b20:5b21 with SMTP id
+ 2adb3069b0e04-5452feaafc1mr7290527e87.50.1740049709567; Thu, 20 Feb 2025
+ 03:08:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250218160333.605829-1-koichiro.den@canonical.com> <20250218160333.605829-3-koichiro.den@canonical.com>
+In-Reply-To: <20250218160333.605829-3-koichiro.den@canonical.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 20 Feb 2025 12:08:18 +0100
+X-Gm-Features: AWEUYZm27-QxV--npSm6sC1JkRv8xgNE48OfDabPsd9PEnwFWvOwLgvBjR1dAuo
+Message-ID: <CAMRc=Mc5XfcQPsw1K70ogT6Oyxhy=PJ8neHT9xA8wrZmk069eQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] gpio: sim: convert to use dev-sync-probe utilities
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs
-to enable softirq tuning") added a possibility to set
-net_hotdata.netdev_budget_usecs, but added no lower bound checking.
+On Tue, Feb 18, 2025 at 5:04=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
+> Update gpio-sim to use the new dev-sync-probe helper functions for
+> synchronized platform device creation, reducing code duplication.
+>
+> No functional change.
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> ---
+>  drivers/gpio/Kconfig    |  2 +
+>  drivers/gpio/gpio-sim.c | 84 ++++++-----------------------------------
+>  2 files changed, 14 insertions(+), 72 deletions(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 2e4c5f0a94f7..ba06f052b9ea 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1866,6 +1866,7 @@ endmenu
+>  # This symbol is selected by drivers that need synchronous fake device c=
+reation
+>  config DEV_SYNC_PROBE
+>         tristate "Utilities for synchronous fake device creation"
+> +       depends on GPIO_SIM
 
-Commit a4837980fd9f ("net: revert default NAPI poll timeout to 2 jiffies")
-made the *initial* value HZ-dependent, so the initial value is at least
-2 jiffies even for lower HZ values (2 ms for 1000 Hz, 8ms for 250 Hz, 20
-ms for 100 Hz).
+No, it does not. Please drop this.
 
-But a user still can set improper values by a sysctl. Set .extra1
-(the lower bound) for net_hotdata.netdev_budget_usecs to the same value
-as in the latter commit. That is to 2 jiffies.
+>         help
+>           Common helper functions for drivers that need synchronous fake
+>           device creation.
+> @@ -1916,6 +1917,7 @@ config GPIO_SIM
+>         tristate "GPIO Simulator Module"
+>         select IRQ_SIM
+>         select CONFIGFS_FS
+> +       select DEV_SYNC_PROBE
+>         help
+>           This enables the GPIO simulator - a configfs-based GPIO testing
+>           driver.
+> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> index a086087ada17..d1cdea450937 100644
+> --- a/drivers/gpio/gpio-sim.c
+> +++ b/drivers/gpio/gpio-sim.c
+> @@ -10,7 +10,6 @@
+>  #include <linux/array_size.h>
+>  #include <linux/bitmap.h>
+>  #include <linux/cleanup.h>
+> -#include <linux/completion.h>
+>  #include <linux/configfs.h>
+>  #include <linux/device.h>
+>  #include <linux/err.h>
+> @@ -37,6 +36,8 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/types.h>
+>
+> +#include "dev-sync-probe.h"
+> +
+>  #define GPIO_SIM_NGPIO_MAX     1024
+>  #define GPIO_SIM_PROP_MAX      4 /* Max 3 properties + sentinel. */
+>  #define GPIO_SIM_NUM_ATTRS     3 /* value, pull and sentinel */
+> @@ -541,14 +542,9 @@ static struct platform_driver gpio_sim_driver =3D {
+>  };
+>
+>  struct gpio_sim_device {
+> +       struct dev_sync_probe_data data;
 
-Fixes: a4837980fd9f ("net: revert default NAPI poll timeout to 2 jiffies")
-Fixes: 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs to enable softirq tuning")
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Dmitry Yakunin <zeil@yandex-team.ru>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: David S. Miller <davem@davemloft.net>
----
- net/core/sysctl_net_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Maybe something more indicative of the purpose? probe_data? sync_probe_data=
+?
 
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index ad2741f1346a..c7769ee0d9c5 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -34,6 +34,7 @@ static int min_sndbuf = SOCK_MIN_SNDBUF;
- static int min_rcvbuf = SOCK_MIN_RCVBUF;
- static int max_skb_frags = MAX_SKB_FRAGS;
- static int min_mem_pcpu_rsv = SK_MEMORY_PCPU_RESERVE;
-+static int netdev_budget_usecs_min = 2 * USEC_PER_SEC / HZ;
- 
- static int net_msg_warn;	/* Unused, but still a sysctl */
- 
-@@ -587,7 +588,7 @@ static struct ctl_table net_core_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
-+		.extra1		= &netdev_budget_usecs_min,
- 	},
- 	{
- 		.procname	= "fb_tunnels_only_for_init_net",
--- 
-2.48.1
-
+Bart
