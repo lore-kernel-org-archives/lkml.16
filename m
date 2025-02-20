@@ -1,99 +1,117 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C87C1EA7EA;
-	Thu, 20 Feb 2025 08:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611921EB1BA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740040882; cv=none; b=ifoEElAYp9FHgJoUf/TLzK3kqYpsc74pd5320bcEsHzZHvhvMkqLuCtJ+aYDYE2n6OqShbeTUbcxBlKJP2TCwWbmJNAr4G5Djj9m6/PlnoMpvXTht6R76UL1HRmyzQiND7drh4eYXwueks8bclov8rLV5M+WrImkE2lRzu3nzf8=
+	t=1740040882; cv=none; b=sfd76Z14Cb0x4JK4wCR8aLUr9PF+94KkYPU7IZl2ErDRhLtxaE2LnLN/Ig6KF/UtkdgOnMJ/Uosyk/gg+YLq3ypL0Eg0YKN6bcrItZxMaynUaJHGdVuPNIyhhtoFK2z0sn8qYbBwiCPWKRzjt5LZ37kvr8aHC4EUZGcgDKgflL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740040882; c=relaxed/simple;
-	bh=+P/f3Pco0SV3HiLvIs4PGt/+Zb6gJaq5XpDW/83iFvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RH+CSa3gYXNgy8zgPb2PLQJ8kPy08ygDcocu/56r8Fud9V4Rg9TGe4f4k2oIIAy0FsqK++8le6G+fSzcKQvDa0h227e9hcbwVxh9TxBmCvaNJGwcD/j1XCGaaahAXtlwTBbVBSObH1hnY2vpfI1lC+87sMsuYvnS5kZNL9EiU/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=vObxMYH8; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+	bh=L664zTQ1YO5UiCR4eV/bv8qw2cOnMXFx6Vdv9gD0gtU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SG57iD06Pgw1ZKWRa3ixqgtwcIWal6HSK/0of91Oh8gyg7I+woBKBq3e7KgTwAZz/9UWz0WB068t3wiwJ65AGSuxwzqRWW5FmkPyKUcSA2AK1GFMH1tsqpUKLwz9xtDQUOLdE33WKIbZNvrhPdNCGfE34m+73Fnnq2FrVzr95IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vvuDOKZZ; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="vObxMYH8"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1740040368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=e8y4xFmSdR7Yn+mCHwZfTZJE3tGNbtGvx49bSepz6m8=;
-	b=vObxMYH8RhMNuj+KEcQVwBJRXX5K7yY9OPbJdvgVeVIWQ2OqH++iGHToYJ3fXvWb5xhx+C
-	FR5txUKKEH7/2A2Lc2FgE2BNdGcsyyfebAFf/xNotZh65hydnfCvYTEQ+NvLqkaJevMmDW
-	9L/mBWcmcUi4E0BZR3g0m00L7CL0XRA=
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 6.1] f2fs: fix shift-out-of-bounds in parse_options()
-Date: Thu, 20 Feb 2025 11:32:45 +0300
-Message-ID: <20250220083248.5887-1-arefev@swemel.ru>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vvuDOKZZ"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dedae49c63so1263234a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 00:41:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740040878; x=1740645678; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f/B0GfEgs5YAFmdnX0UDSsDPd37I3/eSnTdtkRhowSE=;
+        b=vvuDOKZZh0edXdFrw517xJlg/fgu3R81X/k0zMZfHKL/xW3ffLlOs3dfx9FLdQ+/Vz
+         5mNKg3g/thW4SKnfK1XaPLZ/koeRfrQURAPmFDCYoN+3XxM4ArTgfqtCYWkpedZL1Qw0
+         7+tiSX4lj4rLWqtiklMp77JEmE9xnSKuxPeQOaGlUZ7E7A+DHx/4UXEy+/ODimGu2N5O
+         /wPx47NerzK5IlqHR7DOTr+EmJcLlemA/nyNU4DYOZjAWpZrgYa/PH+m3D0vCn3uHr3o
+         q9rJjom4hsGgwzG2Icrz6m+O09ZVcX1TiXfSwi/o/+NRGLNblLI4L5n0T34HKxPoQKiU
+         2QkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740040878; x=1740645678;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f/B0GfEgs5YAFmdnX0UDSsDPd37I3/eSnTdtkRhowSE=;
+        b=EhrmiictFcVf/Z59yeRgdTMR3YKiVqFAixX8Nk+yfsdC/In/OOVESoPj4DG1xtcn8a
+         XI3wcOIYVIjPDWd/T9UL+A+WFT77nI84qMbd+0P3f23qNgQ97vzKVL35frV67OU0Ducw
+         Mqv7k0/klofGPSjYwfwi04FmkjwIdoXJ/yI+dTRIQ5jgA0/3Mv6gYUN66x7e/zDKHENq
+         I2A4fy0OzJOTkM2CQXtmdCct1yr4JA0ddgwDFvJo3UIOnirFROMqthR5mLWD1JRsRAz9
+         DvJbD9JBjwS12HkQC0B6anp4z5EZAw2INM+MNv9+e9RccBi0441Mt3b9IoR7VL4vJPOE
+         UNaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwOoKf7d6EKURrIMRU4yKrBEPC+DStV2DZJLEzf8zDf1QgUVTwDosP4dmjCfIHxXvbdgYVebkAGZihS7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9Koz7JsX5xkqT5nRoksqijAHC93cji3ElK/BjJiwUFFdG3HDs
+	20RdN7uA9wXID4ACOr6DkqcRn/Jt6RTXMOcJDJ1iom00J+Y7BKutl+eBzeyC/d77sxQIpa9D0oZ
+	0xbdABOuw2YxeIBvnyDOmov7HOXWpVEQtZBeQ
+X-Gm-Gg: ASbGnctOlINrptTe7FOrGT0bPYHSisxBMD4vF3+Y37sl2dpb7CdZ/Vf3KfvA8bqKwnj
+	tcwxFaTrYcxS28x2r3cwOSWoIGcL6/WmbEKKjVEPJ/CRovuSuzXAA4arPWf1udT75WCu51VGfq3
+	LV/rGGd2k3ux9Fh4E1+aNrxUusTfPHQg==
+X-Google-Smtp-Source: AGHT+IFXcAFjpaJKujW5+KZDWSQQYXeZUtaOWrv/hWArWKingf+nZ1HYZNj6AugPO4FJR8wHz+Cx53odmSQ5wEFD2SM=
+X-Received: by 2002:a05:6402:5246:b0:5d1:1f1:a283 with SMTP id
+ 4fb4d7f45d1cf-5e03604866bmr18955746a12.4.1740040878368; Thu, 20 Feb 2025
+ 00:41:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250218105824.34511-1-wanghai38@huawei.com> <CANn89iKF+LC_isruAAd+nyxgytr4LPeFTe9=ey0j=Xy5URMvkg@mail.gmail.com>
+ <4dff834e-f652-447c-a1f0-bfd851449f70@huawei.com>
+In-Reply-To: <4dff834e-f652-447c-a1f0-bfd851449f70@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 20 Feb 2025 09:41:07 +0100
+X-Gm-Features: AWEUYZlEUz2j68qETDQCnXjzA4LCLg5wCCIyRAG4vH3HmM2uGgUFOuI3cdrgTlw
+Message-ID: <CANn89iJGzLBVpOExJyeR3S3oVU2pUp62BpuqD3HgRay5aBK7ag@mail.gmail.com>
+Subject: Re: [PATCH net] tcp: Fix error ts_recent time during three-way handshake
+To: Wang Hai <wanghai38@huawei.com>
+Cc: ncardwell@google.com, kuniyu@amazon.com, davem@davemloft.net, 
+	dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jason Xing <kerneljasonxing@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-No upstream commit exists for this commit.
+On Wed, Feb 19, 2025 at 4:08=E2=80=AFAM Wang Hai <wanghai38@huawei.com> wro=
+te:
+>
 
-Using an arbitrary value that does not fall into the required range as an 
-argument of the shift operator when outputting an error is wrong in itself.
+> Hi Eric,
+>
+> According to the plan, can we fix it like this?
+>
+> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+> index b089b08e9617..1210d4967b94 100644
+> --- a/net/ipv4/tcp_minisocks.c
+> +++ b/net/ipv4/tcp_minisocks.c
+> @@ -814,13 +814,6 @@ struct sock *tcp_check_req(struct sock *sk, struct
+> sk_buff *skb,
+>          }
+>
+>          /* In sequence, PAWS is OK. */
+> -
+> -       /* TODO: We probably should defer ts_recent change once
+> -        * we take ownership of @req.
+> -        */
+> -       if (tmp_opt.saw_tstamp && !after(TCP_SKB_CB(skb)->seq,
+> tcp_rsk(req)->rcv_nxt))
+> -               WRITE_ONCE(req->ts_recent, tmp_opt.rcv_tsval);
+> -
+>          if (TCP_SKB_CB(skb)->seq =3D=3D tcp_rsk(req)->rcv_isn) {
+>                  /* Truncate SYN, it is out of window starting
+>                     at tcp_rsk(req)->rcv_isn + 1. */
+> @@ -878,6 +871,9 @@ struct sock *tcp_check_req(struct sock *sk, struct
+> sk_buff *skb,
+>          sock_rps_save_rxhash(child, skb);
+>          tcp_synack_rtt_meas(child, req);
+>          *req_stolen =3D !own_req;
+> +       if (own_req && tmp_opt.saw_tstamp && !after(TCP_SKB_CB(skb)-
+> seq, tcp_rsk(req)->rcv_nxt))
+> +               tcp_sk(child)->rx_opt.ts_recent =3D tmp_opt.rcv_tsval;
+> +
+>          return inet_csk_complete_hashdance(sk, child, req, own_req);
 
-Call Trace:
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e3/0x2cb lib/dump_stack.c:106
- ubsan_epilogue lib/ubsan.c:151 [inline]
- __ubsan_handle_shift_out_of_bounds+0x3bf/0x420 lib/ubsan.c:321
- parse_options+0x4ad6/0x4ae0 fs/f2fs/super.c:919
- f2fs_fill_super+0x321b/0x7c40 fs/f2fs/super.c:4214
- mount_bdev+0x2c9/0x3f0 fs/super.c:1443
- legacy_get_tree+0xeb/0x180 fs/fs_context.c:632
- vfs_get_tree+0x88/0x270 fs/super.c:1573
- do_new_mount+0x2ba/0xb40 fs/namespace.c:3051
- do_mount fs/namespace.c:3394 [inline]
- __do_sys_mount fs/namespace.c:3602 [inline]
- __se_sys_mount+0x2d5/0x3c0 fs/namespace.c:3579
- do_syscall_x64 arch/x86/entry/common.c:51 [inline]
- do_syscall_64+0x3b/0xb0 arch/x86/entry/common.c:81
- entry_SYSCALL_64_after_hwframe+0x68/0xd2
-
-There is a commit 87161a2b0aed ("f2fs: deprecate io_bits") that completely 
-removes these strings, but it's not practical to backport it.
-
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-
-Link: syzbot+410500002694f3ff65b1@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=410500002694f3ff65b1
-Fixes: ec91538dccd4 ("f2fs: get io size bit from mount option")
-Signed-off-by: Denis Arefev <arefev@swemel.ru>
----
- fs/f2fs/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 72160b906f4b..7d7766761fe4 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -916,8 +916,8 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 			if (args->from && match_int(args, &arg))
- 				return -EINVAL;
- 			if (arg <= 0 || arg > __ilog2_u32(BIO_MAX_VECS)) {
--				f2fs_warn(sbi, "Not support %ld, larger than %d",
--					BIT(arg), BIO_MAX_VECS);
-+				f2fs_warn(sbi, "Not support 2^%d, invalid argument %d",
-+					arg, BIO_MAX_VECS);
- 				return -EINVAL;
- 			}
- 			F2FS_OPTION(sbi).write_io_size_bits = arg;
--- 
-2.43.0
-
+Yes, this was the plan ;)
