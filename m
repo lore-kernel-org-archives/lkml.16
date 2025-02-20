@@ -1,115 +1,133 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5316821323F;
-	Thu, 20 Feb 2025 17:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D5A1D63D9;
+	Thu, 20 Feb 2025 17:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740072897; cv=none; b=QCCvuBKlWDZVivZsqIIyRLvth3otiaRLpe1Zyzo+QHc2iK8Yw1b3Exf6WLUDfP7u8UNuUC4zkM+1cAh+QunnceuOPrTdNq5uUNfv5uahoPm0cRalgp6dP3uupQ2i+iWvisc7WUK/27ka6NahgPGDTbLvJJ8Z3sDWRsF24Q9YsSk=
+	t=1740072964; cv=none; b=drgDZaiuPyTJ6xojL59l/Z5mLvpNIZhLtuf2r086PlU5fQGDiiBuKJLY2XzZv60hF7KXFGjOMirtDJRHhVL7lJra+CGol1M72hiVozleXZgEVpuQGaH3mMTYYMmOKBzVR3YOHrgZ67wpWK/5F/gmUZ3sXlRZdFOicV6pfXOblS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740072897; c=relaxed/simple;
-	bh=3j5meLBzlPzoYaZHYVuzGBPkwAKe4KxyEluapquIWYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hLU5gJLkjhlf3SyRBJX0f73JVpDJbWODNifxUwZM4bJ02opxeR50TKojp7daGYcgCZZXvBOSrva2SyQBzAkhj6nJKV7K05gPfpYQn93g/L9NrmINPXiw5FebZpTBHllgXZlSIPSOh3IxVMU9lbIi/JmUzf46fGVrwwnHWzZSDFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PRqyBaJW; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740072964; c=relaxed/simple;
+	bh=mss40UVn6MKCpG4DM/UKrxGj+Gt8FmPcxueuRBW0i+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VU8Oa49XIrqeCrUsVpVelDLHfrdlJ/BJmXomIdlrRxQcAhOK1Jg8JCeXrrrLbZYKFpSQUSDP0BnQMXxHr0UImdpgjCMSKVHurahl6ToA5iOQEgZT3jq4w7nBLfd0drasYYwv68ya1wwHk75iTvh7VsuFpCiTW6G66a6lsiBrmTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z0SRgeI9; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRqyBaJW"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4399deda4bfso8925505e9.0;
-        Thu, 20 Feb 2025 09:34:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740072894; x=1740677694; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3j5meLBzlPzoYaZHYVuzGBPkwAKe4KxyEluapquIWYM=;
-        b=PRqyBaJWkh3aRkpFd1+gt0nAYuY5VXK3pLsVmcN+akUbBWAqxBEzDFMSzkYhdbGd8n
-         4TQSi/Zr8lFkdB2gIwKSKUodhFhb/p25aPHMiSEQHRc/Tns0rYAX24Ca4m5jHN/Jghrr
-         uOR9NT24S1vJfAl2ieSEAThsI6OmvHjJHxVhSuyR0AQ6SnX37xEAHoSlAXTyqtfTpjIi
-         epajFG+4BD4s60M7UJbmPjafz0P1pABtTyfIxHQSujVDoqFgaQG5d5IJYvtAh3B4OkVZ
-         nOz/LvWtcmls4FgbKxCc13kL6lw2th+M90MiV/+cGO5ybYt4u1Kzsco0abji3UaOR1E5
-         40KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740072894; x=1740677694;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3j5meLBzlPzoYaZHYVuzGBPkwAKe4KxyEluapquIWYM=;
-        b=OJbyGdKQiBoYxHSdCbjz0Eznmmga/z/850sMiI8i6XmurIjr1hKtfcFRm+BCzzywLH
-         jlx/YZIXsdz5r/G/RSePOzi5RybhlXhmykyicSiPHp77A+21KDdj9XYD/TzvhlMhSL9A
-         UkZlF+gTWPnUy51vR7RR00l1mEJtZHh6ItpRCy/+kxjlW3KrBGb7h/wLQwZavEu7jcyd
-         QHS5rQc7coCkqXhG5w4THl6zcEIF/nvJTmD4VomItyJ6L4UCPOOtshAbHKSIiJEBD7ZP
-         3c3gGgW3wI5pTRTtM2HKVZ10Z1jsWJXub7ZM+kb1SF2Zvy3TlXxB+qiryUMUJzsqdkgs
-         hnEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5lfo6z2N7JwrT0YD1vesypqPUy8R85uLhMkyK13/vzvdBEvz8E0IMjiVobZKh7Uc1zQ2Ic8jUW7eoA5o=@vger.kernel.org, AJvYcCXzo7Tz8yge/Q4ZQ3nPERvImiur1MWZ31cM8+eO7FkSpAyRf8/pm/aWmgFCRKGNJUL8h6BQlx0EBCS5IPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCOrviaQ0VHA8Q7cUNckHp/MwyHYmZhlWmbH6g7AGgVPgugHA5
-	Ytw8inccutnprkpqegGnF4lzf3j6oMEEJ4ZlntLCoDTOyqqn/i3K
-X-Gm-Gg: ASbGncv9uqiiI5RoCe8Hb9uCnHyO4tUK9O6Lew4MkcN/koXim0A4C69k2JDm3uT2pWj
-	CAbdaqMmFtRqJr3R5PKsO1w2Hk1iBokfCDocCHlOShZKkkyDFucpwB7rQ9ARMHV0AbmfnxczBhJ
-	UggeBso/OfxodLxwWWPU0hlKAYq3xU+ZnbeYKNfPaM+klX80nYOq0gyKKO5jfyMHWh5a8zGmXSn
-	LjzezEGBTCs8nwmb2VSPy3XdQDJBrmFZRNWcd3hgIA8fB8mtgghKqH0TWLrrVvbT9DxnjOpCe+N
-	aZATe6LlnkURFP9PkwwkmLF8w5uIVYM+Bm6htG9hfYT9GU8gg6rBA/811ChdwUeTAAI=
-X-Google-Smtp-Source: AGHT+IEPmmiKlS/ysPrkAIpR7/izG7EDUAs9G1mfa/hbF+C9JMVOv9VrwAD1oHez+9k3pqPo2/fSbg==
-X-Received: by 2002:a05:600c:5493:b0:439:9e8b:228e with SMTP id 5b1f17b1804b1-439ae21cdddmr609075e9.20.1740072894371;
-        Thu, 20 Feb 2025 09:34:54 -0800 (PST)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43987088ecbsm117191125e9.31.2025.02.20.09.34.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 09:34:53 -0800 (PST)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>,
- Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-staging@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] media: cedrus: Don't require requests for all codecs
-Date: Thu, 20 Feb 2025 18:34:52 +0100
-Message-ID: <2235304.C4sosBPzcN@jernej-laptop>
-In-Reply-To: <b3ab99a1-2e72-4b7e-8569-f7fe9beb3018@suswa.mountain>
-References:
- <20240731164422.206503-1-linkmauve@linkmauve.fr>
- <20240731164422.206503-5-linkmauve@linkmauve.fr>
- <b3ab99a1-2e72-4b7e-8569-f7fe9beb3018@suswa.mountain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z0SRgeI9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740072963; x=1771608963;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mss40UVn6MKCpG4DM/UKrxGj+Gt8FmPcxueuRBW0i+w=;
+  b=Z0SRgeI9hTKDBdhRZgmU3WTK3fqQb1fCA2V+Ts/hore4ikAgdNsOVo5Q
+   8shW/waHzkHdA/6ZO52+iH3ncVwR93si+7KERytjB8szK9OtEvF9mowYP
+   NWjbB8sGlVtmtek72SLcMWyU4MRFTc2L36ctEgy0khKicX/W436gmLX7m
+   NwdCd6oYGsP3P4dxSrHZ42gWW11R7bYVCSUs7IlyzQYZDzIhOI73nGyLd
+   ulwGzk6GivgzczjGaQPMR4HVE6OHZy2itN6EY4IMAQfsLfXXf2sgUgkDR
+   7zYNed0IiuGtDbqoyyadB42QMGLc/qQgznl5gKjWfh8UR3HkuWUXAXj3U
+   Q==;
+X-CSE-ConnectionGUID: vlnheEJgSpKH/9FRqn53og==
+X-CSE-MsgGUID: ZeZz4lnCT3+L6o79Mh+Hig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40725440"
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="40725440"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:36:02 -0800
+X-CSE-ConnectionGUID: HF0zkCVpQ2GkiO0SHisTDg==
+X-CSE-MsgGUID: q8A91EifQk6kF0/AGZyKgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="115779257"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:36:01 -0800
+Message-ID: <3e232358-cb42-4b17-9b00-f04eb517a79f@intel.com>
+Date: Thu, 20 Feb 2025 10:35:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-
-Dne sreda, 31. julij 2024 ob 18:56:15 Srednjeevropski standardni =C4=8Das j=
-e Dan Carpenter napisal(a):
-> On Wed, Jul 31, 2024 at 06:44:14PM +0200, Emmanuel Gil Peyrot wrote:
-> > From: Jernej Skrabec <jernej.skrabec@gmail.com>
-> >=20
-> > JPEG decoding doesn=E2=80=99t need it currently.
-> >=20
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> > ---
->=20
-> Does this change have an effect on runtime?
-
-Ideally, driver should allow only JPEG format to be used without request ap=
-i.
-Other codecs still require it (decoding doesn't work properly without it).
-
-Best regards,
-Jernej
-
->=20
-> regards,
-> dan carpenter
->=20
->=20
->=20
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 15/18] cxl/region: Add a dev_warn() on registration
+ failure
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>
+References: <20250211095349.981096-1-rrichter@amd.com>
+ <20250211095349.981096-16-rrichter@amd.com>
+ <20250214163502.0000575f@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250214163502.0000575f@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
+On 2/14/25 9:35 AM, Jonathan Cameron wrote:
+> On Tue, 11 Feb 2025 10:53:45 +0100
+> Robert Richter <rrichter@amd.com> wrote:
+> 
+>> Esp. in complex system configurations with multiple endpoints and
+>> interleaving setups it is hard to detect region setup failures as its
+>> registration may silently fail. Add messages to show registration
+>> failures.
+>>
+>> Example log message:
+>>
+>>   cxl region5: region sort successful
+>>   cxl region5: mem0:endpoint5 decoder5.0 add: mem0:decoder5.0 @ 0 next: none nr_eps: 1 nr_targets: 1
+>>   cxl_port endpoint5: decoder5.0: range: 0x22350000000-0x2634fffffff iw: 1 ig: 256
+>>   cxl region5: pci0000:e0:port1 decoder1.2 add: mem0:decoder5.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
+>>   cxl region5: pci0000:e0:port1 iw: 1 ig: 256
+>>   cxl region5: pci0000:e0:port1: decoder1.2 expected 0000:e0:01.2 at 0
+>>   cxl endpoint5: failed to attach decoder5.0 to region5: -6
+>>   cxl_port endpoint5: probe: 0
+>>
+>> Signed-off-by: Robert Richter <rrichter@amd.com>
+>> Reviewed-by: Gregory Price <gourry@gourry.net>
+>> Tested-by: Gregory Price <gourry@gourry.net>
+> I'm in general fine with this, but we have previously been reluctant in
+> some cases to go above dev_dbg.  Hence would like input from more
+> people on this one.
+
+If this error message has been helpful in determining the cause of issues when debugging a platform, I'm all for it.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> From me though
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+>> ---
+>>  drivers/cxl/core/region.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index ebcfbfe9eafc..3031d4773274 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -2147,6 +2147,12 @@ static int attach_target(struct cxl_region *cxlr,
+>>  	rc = cxl_region_attach(cxlr, cxled, pos);
+>>  	up_read(&cxl_dpa_rwsem);
+>>  	up_write(&cxl_region_rwsem);
+>> +
+>> +	if (rc)
+>> +		dev_warn(cxled->cxld.dev.parent,
+>> +			"failed to attach %s to %s: %d\n",
+>> +			dev_name(&cxled->cxld.dev), dev_name(&cxlr->dev), rc);
+>> +
+>>  	return rc;
+>>  }
+>>  
+> 
 
