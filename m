@@ -1,177 +1,116 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E54A1D8A14
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 03:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740021272; cv=pass; b=TaI+CQteBHPDEL4rLvbVWvZ4WagzDFufPazVIDqy8+y2+xgs3WD3NN6n4iS8RRTfDNBfyAfKgK72KbXYKI9NwQLl7TRr/OJfEWH4eXfDBzTW6OOHE3YvQYOEQbSRNXpEdC3tAh8Ah4StRIpkip793A2oVPbQNgK9KQVtaH8uJqY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740021272; c=relaxed/simple;
-	bh=hjkPo301IwvKXCK8z0NV/UMtyhfvY8CN9AsypI043cA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GQrS6f9v4Qf1WNUA1cctfeHAfxtq1zBzZbE+yUOtmaA+oDgnt6dv4ArRF8XlFn8yyKcoVuTnNQRWEEj2hz/jaDJJq8dvcBgYEHpFfv0Aynp+E5QtuuvKCKx2XuiwgGWFlxecnNcjaJ3uQUPVO/n9/fxbF+nqpMEiNZtIBAJ86iw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Djt0ewfI; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608A535958;
+	Thu, 20 Feb 2025 03:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740021368; cv=none; b=ueYixDDtNKpLzYkDuir48pDbQVLGh/BdniODIjpiNI+XikNVROmycnygQImSudFSwZXhGtdt4KaZbSTfb8ix2KkOwpP2RaWVk5JLQzAJ0/adkuBBUTv/VyxVp1963nNhdyZKvRLCHWFVlJ1MFUvHEopZd1iYBYYtV7igqZs3L6I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740021368; c=relaxed/simple;
+	bh=nPGMhUWYIpks9e6EFpGHLY29CxqRvzdWGksM9NHzd5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jZXQZ5Rt2wc5V2XmDxWlgxpnXXYQJ7KzMfyu6uRAG4PElz3Dt9diqe76mzVvIppaBwwj1ntUn1MZLFuGqGf69HvdG4b9fP97hx2RSSSbh22KQjD7Fn+M/tMxx0TQOuMO/0UXu8gpKtJ5b3nPvCRJ1zMr2mBk3ZiIFPvPOr7fUNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=DChuayI8; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Djt0ewfI"
-ARC-Seal: i=1; a=rsa-sha256; t=1740021249; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mOCCBW4P+vHFK6bmftOr8KOfGSv5YxMfDmboA/aIH8B6bibBXsrcoLo/+sni94tWvHpf7ZA1XvnH2NWcEqz1XH3inqnRlvJ0oZ044SfzU0JMkFzGBXrm2PVXWGtcgZKeMixDnkGO/HJrScriKC0AGywM5jV+t0wP+n57XZR+n7c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740021249; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=z7+n+N2D09r6sO17RNYIc1mmndOABNK1IA6PGR36WYY=; 
-	b=TJQDd6GDXM5JDkkR6ctmFuAA504oEbr8tKi6tAHpxCxMZOJG6GXqd5M9bPfP7U2IOzyJJfkGdgzBLKQvlr26ppN3P+zZfBuxnc5mBK2f8RhQ67QlSMUD2o6z1ALJ9gWVIVHvhhZpIwI8UmXuXzOpEzqsuvpjFro8nallliAIllk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740021249;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=z7+n+N2D09r6sO17RNYIc1mmndOABNK1IA6PGR36WYY=;
-	b=Djt0ewfIgMHCKkVsBk7cZEFmHEXHZwpInEFhXO6tWf98ksRNCX8nVsj/Z7M8LToY
-	6d7+TpaLABsrHP61wxC0wGc94+Pvsq+XEBF8WDb1NaXm1frXURfvbEcAHGNSta5NeNG
-	HNrjP5CmPOAmD9YmU8zwt88PAvAO4CRel378nMp0=
-Received: by mx.zohomail.com with SMTPS id 1740021248065311.2995734910809;
-	Wed, 19 Feb 2025 19:14:08 -0800 (PST)
-Message-ID: <7f5a1552-f143-40c8-b796-20568d373d14@collabora.com>
-Date: Thu, 20 Feb 2025 06:14:02 +0300
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DChuayI8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1740021361;
+	bh=/yXepqxGrxwJecrbe8Vndr28izqVsiN8I1cu2CtsYw8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DChuayI8AHvlNgki5zjdX16WaRo0VHcmn+QLmlpgw+xoMS66UwFi29Vwkczfl8VPM
+	 KZPweJZod63+aHXPCeb27rnHKD35bpb9QLipUZaOY+cY+1zw0JKO3OWn+cY3u8yLpc
+	 Bvw9/UPGUs0juc+1lksVmm9O5BXMs9CC+7H43Jowwg1QdfnjJF1tab6vTUmc3lGX8b
+	 E92ey9ftFglboRDwl5/8xGNWvkA/WCRcxvrou6UGz8CawaL+W33llgJVlCbQ7ukHIB
+	 P87isOFGiS6Qb2KmKQe0VEM1iY+xugUc7HY5/6UtQ1Ek59KZuxNFwnoz/QDf/RWOIf
+	 XRIOyBpKsOIoA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yyz1D4Yr2z4wyk;
+	Thu, 20 Feb 2025 14:16:00 +1100 (AEDT)
+Date: Thu, 20 Feb 2025 14:15:59 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>
+Cc: "Christian A. Ehrhardt" <lk@c--e.de>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Fedor Pchelkin <boddah8794@gmail.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the usb tree with the usb.current tree
+Message-ID: <20250220141559.71d7db7c@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 3/5] virtio-pci: extend virtio_pci_cap with
- page_shift
-To: Sergio Lopez <slp@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Daniel Verkamp <dverkamp@chromium.org>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, David Airlie <airlied@redhat.com>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
- fnkl.kernel@gmail.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
- <20250214-virtio-shm-page-size-v2-3-aa1619e6908b@redhat.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250214-virtio-shm-page-size-v2-3-aa1619e6908b@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: multipart/signed; boundary="Sig_/56WW9O0FjtZFH7h00Xb79xW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 2/14/25 18:16, Sergio Lopez wrote:
-> If VIRTIO_F_SHM_PAGE_SIZE has been negotiated and cfg_type is
-> VIRTIO_PCI_CAP_SHARED_MEMORY_CFG, the driver must read the page_shift
-> field, derive the supported page size from it, and honor it when
-> requesting the map of memory into the shared memory region to the
-> device.
-> 
-> Extend virtio_pci_cap to hold that field, and use it to feed
-> virtio_shm_region with the corresponding page size.
-> 
-> Signed-off-by: Sergio Lopez <slp@redhat.com>
-> ---
->  drivers/virtio/virtio_pci_modern.c | 22 +++++++++++++++++-----
->  include/uapi/linux/virtio_pci.h    |  3 ++-
->  2 files changed, 19 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-> index ab0e1d9148057c431676bfacfe5f68cc97eebb12..562a8e1c2bfe6876cffabe26f02cd61ad7fea2cd 100644
-> --- a/drivers/virtio/virtio_pci_modern.c
-> +++ b/drivers/virtio/virtio_pci_modern.c
-> @@ -770,14 +770,15 @@ static void del_vq(struct virtio_pci_vq_info *info)
->  	vring_del_virtqueue(vq);
->  }
->  
-> -static int virtio_pci_find_shm_cap(struct pci_dev *dev, u8 required_id,
-> -				   u8 *bar, u64 *offset, u64 *len)
-> +static int virtio_pci_find_shm_cap(struct virtio_device *vdev, struct pci_dev *dev,
-> +				   u8 required_id, u8 *bar, u64 *offset, u64 *len,
-> +				   u32 *page_size)
->  {
->  	int pos;
->  
->  	for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR); pos > 0;
->  	     pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
-> -		u8 type, cap_len, id, res_bar;
-> +		u8 type, cap_len, id, res_bar, page_shift = 0;
->  		u32 tmp32;
->  		u64 res_offset, res_length;
->  
-> @@ -808,6 +809,15 @@ static int virtio_pci_find_shm_cap(struct pci_dev *dev, u8 required_id,
->  		 * Looks good.
->  		 */
->  
-> +		/* Read the page shift if supported. The page_shift variable is
-> +		 * initialized to zero above, so if this feature isn't supported it
-> +		 * will result in a page_size of 4096, a default safe value.
-> +		 */
-> +		if (__virtio_test_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE)) {
-> +			pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +								 page_shift), &page_shift);
-> +		}
-> +
->  		/* Read the lower 32bit of length and offset */
->  		pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap,
->  							  offset), &tmp32);
-> @@ -829,6 +839,7 @@ static int virtio_pci_find_shm_cap(struct pci_dev *dev, u8 required_id,
->  		*bar = res_bar;
->  		*offset = res_offset;
->  		*len = res_length;
-> +		*page_size = 1 << (page_shift + 12);
->  
->  		return pos;
->  	}
-> @@ -841,11 +852,12 @@ static bool vp_get_shm_region(struct virtio_device *vdev,
->  	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
->  	struct pci_dev *pci_dev = vp_dev->pci_dev;
->  	u8 bar;
-> +	u32 page_size;
->  	u64 offset, len;
->  	phys_addr_t phys_addr;
->  	size_t bar_len;
->  
-> -	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len))
-> +	if (!virtio_pci_find_shm_cap(vdev, pci_dev, id, &bar, &offset, &len, &page_size))
->  		return false;
->  
->  	phys_addr = pci_resource_start(pci_dev, bar);
-> @@ -865,7 +877,7 @@ static bool vp_get_shm_region(struct virtio_device *vdev,
->  
->  	region->len = len;
->  	region->addr = (u64) phys_addr + offset;
-> -	region->page_size = 4096;
-> +	region->page_size = page_size;
->  
->  	return true;
->  }
-> diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
-> index 8549d4571257142ac6c9dad5c01369923791a85a..1a76df52b4eccf548df78a8ee7d3a04591f55522 100644
-> --- a/include/uapi/linux/virtio_pci.h
-> +++ b/include/uapi/linux/virtio_pci.h
-> @@ -127,7 +127,8 @@ struct virtio_pci_cap {
->  	__u8 cfg_type;		/* Identifies the structure. */
->  	__u8 bar;		/* Where to find it. */
->  	__u8 id;		/* Multiple capabilities of the same type */
-> -	__u8 padding[2];	/* Pad to full dword. */
-> +	__u8 page_shift;	/* Page shift for VIRTIO_PCI_CAP_SHARED_MEMORY_CFG. */
-> +	__u8 padding[1];	/* Pad to full dword. */
->  	__le32 offset;		/* Offset within bar. */
->  	__le32 length;		/* Length of the structure, in bytes. */
->  };
-> 
+--Sig_/56WW9O0FjtZFH7h00Xb79xW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Hi all,
 
--- 
-Best regards,
-Dmitry
+Today's linux-next merge of the usb tree got a conflict in:
+
+  drivers/usb/typec/ucsi/ucsi_acpi.c
+
+between commit:
+
+  976e7e9bdc77 ("acpi: typec: ucsi: Introduce a ->poll_cci method")
+
+from the usb.current tree and commit:
+
+  f9cf5401526c ("usb: typec: ucsi: acpi: move LG Gram quirk to ucsi_gram_sy=
+nc_control()")
+
+from the usb tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/usb/typec/ucsi/ucsi_acpi.c
+index ac1ebb5d9527,ada5d0d21ee6..000000000000
+--- a/drivers/usb/typec/ucsi/ucsi_acpi.c
++++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
+@@@ -131,25 -131,7 +137,8 @@@ static int ucsi_gram_sync_control(struc
+  static const struct ucsi_operations ucsi_gram_ops =3D {
+  	.read_version =3D ucsi_acpi_read_version,
+  	.read_cci =3D ucsi_acpi_read_cci,
+ +	.poll_cci =3D ucsi_acpi_poll_cci,
+- 	.read_message_in =3D ucsi_gram_read_message_in,
++ 	.read_message_in =3D ucsi_acpi_read_message_in,
+  	.sync_control =3D ucsi_gram_sync_control,
+  	.async_control =3D ucsi_acpi_async_control
+  };
+
+--Sig_/56WW9O0FjtZFH7h00Xb79xW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme2nm8ACgkQAVBC80lX
+0Gwyxwf9HpCikWafXgbbEUMxUiX20jElj4UWbs+Byar5e0P96fTBj26twq08YOI8
+gRJFG0U6FgAIBUpnOUN097bgKgMtOJA8mUsiConMJvaQzPXNhdX3hliLrJtSGghz
+25OfEdXRB6oF2OadVbWVS6gYicMZDyTBH233J8nWfo3B+NO1eJYtDfmicxq4DYiI
+QwtC3PxWlgiDZpfhyKTEQAtCzhorJUlGqyYH5CtmyNsuN6Q6Vmbg0qk8LA1ULrZ0
+SPHWKvzCkPNO631rvv5pBNu2KXHb5k3HHC10wwDNQCNJ1TaIWF3JYZlHVPSZii+O
+SJQK4CmI/V7QqWe3T4cwQo1toameMQ==
+=ba5A
+-----END PGP SIGNATURE-----
+
+--Sig_/56WW9O0FjtZFH7h00Xb79xW--
