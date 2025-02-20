@@ -1,63 +1,72 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3301F03FF;
-	Thu, 20 Feb 2025 09:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7FD1F3B9D
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740044631; cv=none; b=C+wYLiYql9Qq6Y8jfSQnvKG/kBg8ay3x8uRFo1lDQCgEDTKkE+jZgqlWRkxadoFcoHkUEVSCtbPJ33hWQC3RywNq6NqbAtU4JA7AwyoJw3TgZ8LsptxPNaL0BPNZkta1bAW1/eRTa0SVxqmDMFXXqCxyUek72ALSSBb0VgijHhw=
+	t=1740044634; cv=none; b=JV2CCUlQYC+HpjQ2qLVrhgF5vIbORkcV3LXF19j0OMRFXGCsGR8LE7cm9aaiq3XM/WEQDimBZ/HghrfynSFJuojlUGQYZ+avSFcVV8lAmKINhlo2pRGKCaWUh3Flp0xkkSKgomT4jMuj71KjpSLev51Z2maoAIKT2/o6oFgedHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740044631; c=relaxed/simple;
-	bh=6zFccnyK28j0nWGmhNrSZEECVxCCZemt/LbLgmabjzI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C/oiJre7us82OG3rOhDwXh7RuD3vhTzPbuK+M9n6+afntEbkLhJ8HkKMYbY78UTyDPsuCj41epevVoPreZQ6renTfN7RlUyCOj47PfE9qMG98qzcmlsi+3Tsz8hKrWLpG60v6TLOSkVZO9IviD6pwO8ll28Ui+FLxckbjYAhQgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bPBxQcYH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740044634; c=relaxed/simple;
+	bh=siQfZG6q7O2sigyc4bjU1Rsm1nhMkVlYV4r4rO8LUAI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i7mDRLUKVOl4xie5uTW6bs5l2WroOT1mv9UGjHY2ir4AsGBm6FVpuhCvqRPAIMVST/XR28kMIkVtJ95w2YC5hJ9/DWr91BLdYgZdqdLZIUEvJipyQ2tPJ3mm/K6Zuo1YSomBGgQlPSAUorEitH9JBZLWjC+VRv0+fBGBLr2LSlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b3JrxH4l; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bPBxQcYH"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K7KfwJ016802;
-	Thu, 20 Feb 2025 09:43:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	D/3x8oDV74kIZT1yzrY7CxdXusMwAGj+vnnbJOq/tus=; b=bPBxQcYHomMSJid4
-	f2rfS+vZt5YN+aRm0LIE6RRE0028fXLOxHplyjqapVE2ZQDSUpiYSuzHyGiq2ZPl
-	6iFhKutjw+w6W4leBqjevpll2zH4jl6eJAipowIYDxpKmwSqonDfn09LHo1v+SCn
-	BA7SJ7L9PDAKyaSh19Jv5OqsCW5g/0cWIo37BMmAOW7xXd9Ls5P7gvt0PdK6R/e/
-	BzoznWo9g/coyDRYerccEBF13CjI74Jo6H1ME/kSrNJ/piWYmO8JiB9m/vdHdrq5
-	GGgFi6YmDYatY8Cx2uSqevkyI6c1h3n2TgDQvTVP8ig3VXPKI7rV/6HIavoKT5f9
-	7WCubA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy0dkp4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 09:43:39 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51K9hdfE012156
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 09:43:39 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 20 Feb 2025 01:43:33 -0800
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <p.zabel@pengutronix.de>, <quic_varada@quicinc.com>,
-        <quic_nsekar@quicinc.com>, <dmitry.baryshkov@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v11 5/7] dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller
-Date: Thu, 20 Feb 2025 15:12:49 +0530
-Message-ID: <20250220094251.230936-6-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3JrxH4l"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-545fed4642aso820835e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:43:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740044630; x=1740649430; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BJJaDhjE30elvjUE90iF7FHjBFvFQhwKbe1es1j+S7w=;
+        b=b3JrxH4lMECCpcIxQ1hydeOXdjkFicbzGMLaYGj8baKCcD8EBsnn8vZunt7eUALfwe
+         a5yjt5o79xQMEglGbJxckoG5ELKWZdjtOWlDQdit+80zmXkpSevXhwwt5AmVBkTkvjbL
+         qAGyAc9Ozycsl55nsd0ZxK3s4+a5M4R564u9hYmZqEnOqs4j52K82tghBrjpb+r0jV1l
+         hCaGCQoA7nUH1+WZfCsCd0PKL5D6xnEHuO2j/jHi+q1rNq/iDT8eJ/5Ka3UZyn8Qpttj
+         bM3Dms+YNqCOtJ6zqIybkls2NPHwrYDls+YZ3sii09Ru6wmtze4C+JnKNHHI2OhQiFZu
+         a+4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740044630; x=1740649430;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BJJaDhjE30elvjUE90iF7FHjBFvFQhwKbe1es1j+S7w=;
+        b=E+xYT0502IILP+S1zMh/awPZfER5+CwDc74o6LZN8uw0/Vw+zxEKyL4rIFZR88akO7
+         b3/mZVHKXySl8g31EhAa04sO+/osRZYpawnrm0CvLk8wkN2y+ahtm8Mvz20/4YKcT1gq
+         gFqFUx82Xztr7XdMfygfgBEBRnrCmAftZ1wF0MLcetFZdxdjUzL01Ypznuo/pSRV6+3j
+         n2EwBdRrNO8N3Uh9PYdoJSQuD0CaXPcUqPwimNpoFM0RbJ/sgP9tXOrWtQYA3G74ilby
+         zvGkar38JsPxl+83ncSJe+xaYld+tTAE/lbUensgjUTUvpccncQ1fs7jmf3ncZotsvi8
+         esow==
+X-Forwarded-Encrypted: i=1; AJvYcCWoLtmZ6Ij2iASe79fx2dMSu7qrmAy/1QdZlE/TPBZAghGxy6jpSz+fZg7NTmgE5RK+Jj3bl1jB+T2bSZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAUDEKRi6H+lyQvVipqNpRRu5b/RRmxd3qt4wFHvd7lI2UdcrL
+	e0RhmB53kXEM2bib30wNH0b8qEzxxQoPOT1MdCUGLkv6bHlQeE3/
+X-Gm-Gg: ASbGnctpvgEsnIlvXtGOdUZNyj/1Uommlx6jflI9OBPMeTnZFY230e2UmsHFiMlSoPD
+	0QxpFJZJ7wS0ISnkzPlK6TEN6mWJC2K0vaXaYhL59cDPt2nAMSTeBaevPdHvHgkXtqiJgt3WPDW
+	qcRSkJojGB61LCPZZZb8plkTpuxQiEG5BLrquF3KiJqqKMDXhg8XtB6vnWymaY/n+2+JHHrB+mQ
+	G491sOKXUcQZKwWaZB7xmSMynJFPGJzapgQzqZ4z2LdSNIahQ2qmM0iK1o+H2lEDPqfawfSyPGR
+	TCneoE7E9OrV+mUcOZqem4FNZVPxQ+zDuGRHJ8Ox/lCfmm9Omv4TdCIS8g==
+X-Google-Smtp-Source: AGHT+IHbjmlrQKyZa9vOcI3zku2nA08D6JCeRqFIufLZ/yEvKNLBxeThOwDv51mb+aAJjfRscer+Dw==
+X-Received: by 2002:ac2:4c46:0:b0:545:bf4:4bc7 with SMTP id 2adb3069b0e04-547243c348amr811852e87.19.1740044630137;
+        Thu, 20 Feb 2025 01:43:50 -0800 (PST)
+Received: from rand-ubuntu-development.dl.local (mail.confident.ru. [85.114.29.218])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-546222619d3sm1158816e87.209.2025.02.20.01.43.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 01:43:49 -0800 (PST)
+From: Rand Deeb <rand.sec96@gmail.com>
+To: Dave Kleikamp <shaggy@kernel.org>,
+	jfs-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Cc: deeb.rand@confident.ru,
+	lvc-project@linuxtesting.org,
+	voskresenski.stanislav@confident.ru,
+	Rand Deeb <rand.sec96@gmail.com>
+Subject: [PATCH] fs/jfs: cast inactags to s64 to prevent potential overflow
+Date: Thu, 20 Feb 2025 12:43:49 +0300
+Message-Id: <20250220094349.1685195-1-rand.sec96@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250220094251.230936-1-quic_varada@quicinc.com>
-References: <20250220094251.230936-1-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,104 +74,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: WvlHqzJ1DHr-aPJLVMWKElmHJu57Zs0N
-X-Proofpoint-ORIG-GUID: WvlHqzJ1DHr-aPJLVMWKElmHJu57Zs0N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 clxscore=1015 mlxscore=0 lowpriorityscore=0 adultscore=0
- phishscore=0 suspectscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200071
 
-Document the PCIe controller on IPQ5332 platform. IPQ5332 will use IPQ9574
-as the fall back compatible.
+The expression "inactags << bmp->db_agl2size" in the function
+dbFinalizeBmap() is computed using int operands. Although the
+values (inactags and db_agl2size) are derived from filesystem
+parameters and are usually small, there is a theoretical risk that
+the shift could overflow a 32-bit int if extreme values occur.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+According to the C standard, shifting a signed 32-bit int can lead
+to undefined behavior if the result exceeds its range. In our
+case, an overflow could miscalculate free blocks, potentially
+leading to erroneous filesystem accounting.
+
+To ensure the arithmetic is performed in 64-bit space, we cast
+"inactags" to s64 before shifting. This defensive fix prevents any
+risk of overflow and complies with kernel coding best practices.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
 ---
-v11: Add 'Reviewed-by: Krzysztof Kozlowski'
+ fs/jfs/jfs_dmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v10: Remove unnecessary ipq5332 constraint in 'power domains' not required
-     constraint
-     Fix maxItems for interrupts contstraint of sdm845
-
-v9: Remove superfluous ipq5332 constraint since the fallback is present
-
-v8: Use ipq9574 as fallback compatible for ipq5332 along with ipq5424
-
-v7: Moved ipq9574 related changes to a separate patch
-    Add 'global' interrupt
-
-v6: Commit message update only. Add info regarding the moving of
-    ipq9574 from 5 "reg" definition to 5 or 6 reg definition.
-
-v5: Re-arrange 5332 and 9574 compatibles to handle fallback usage in dts
-
-v4: * v3 reused ipq9574 bindings for ipq5332. Instead add one for ipq5332
-    * DTS uses ipq9574 compatible as fallback. Hence move ipq9574 to be able
-      to use the 'reg' section for both ipq5332 and ipq9574. Else, dtbs_check
-      and dt_binding_check flag errors.
----
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 4b4927178abc..6696a36009da 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -33,6 +33,7 @@ properties:
-           - qcom,pcie-sdx55
-       - items:
-           - enum:
-+              - qcom,pcie-ipq5332
-               - qcom,pcie-ipq5424
-           - const: qcom,pcie-ipq9574
-       - items:
-@@ -49,11 +50,11 @@ properties:
+diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
+index f9009e4f9ffd..f89f07c9580e 100644
+--- a/fs/jfs/jfs_dmap.c
++++ b/fs/jfs/jfs_dmap.c
+@@ -3666,8 +3666,8 @@ void dbFinalizeBmap(struct inode *ipbmap)
+ 	 * system size is not a multiple of the group size).
+ 	 */
+ 	inactfree = (inactags && ag_rem) ?
+-	    ((inactags - 1) << bmp->db_agl2size) + ag_rem
+-	    : inactags << bmp->db_agl2size;
++	    (((s64)inactags - 1) << bmp->db_agl2size) + ag_rem
++	    : ((s64)inactags << bmp->db_agl2size);
  
-   interrupts:
-     minItems: 1
--    maxItems: 8
-+    maxItems: 9
- 
-   interrupt-names:
-     minItems: 1
--    maxItems: 8
-+    maxItems: 9
- 
-   iommu-map:
-     minItems: 1
-@@ -443,6 +444,7 @@ allOf:
-         interrupts:
-           minItems: 8
-         interrupt-names:
-+          minItems: 8
-           items:
-             - const: msi0
-             - const: msi1
-@@ -452,6 +454,7 @@ allOf:
-             - const: msi5
-             - const: msi6
-             - const: msi7
-+            - const: global
- 
-   - if:
-       properties:
-@@ -599,6 +602,7 @@ allOf:
-         - properties:
-             interrupts:
-               minItems: 8
-+              maxItems: 8
-             interrupt-names:
-               items:
-                 - const: msi0
+ 	/* determine how many free blocks are in the active
+ 	 * allocation groups plus the average number of free blocks
 -- 
 2.34.1
 
