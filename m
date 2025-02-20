@@ -1,59 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F6A1F0E38;
-	Thu, 20 Feb 2025 09:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C1B1B87EE;
+	Thu, 20 Feb 2025 09:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740044667; cv=none; b=HdFxuTYp7qbx3W2APZ8TmJGa80AKLlshtFCTxVEIRdw+s81yrMKwNKOIcJxs5eZ5jzOwdAXzjFjm57uNnAlfGYUocLwBaUeobORlqkPaIiswfhfFJvhUeDK/sMa0ExtAQBXKgG5tD5Z8SNEeazI3wAV0UtFQKtruGom/Ze6+/bs=
+	t=1740044689; cv=none; b=LNrGadGlqALuxeGHlCVUi9Q7+SBc7YoueEX+MjNvEDzWYEi32QQff0OlwbdZlKfiOKVnBOlvvVcHegxX+HzsACPgApdiJMqx2MWl2NQmXYo372HBPFInEuiaNgZQ/YLlCR34wqng+zPPvtUsBwwyeRZJrOYzyn/kIljnzUvGhsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740044667; c=relaxed/simple;
-	bh=c2wuFwNlBSJDce9EXlu8wsXo2D0l1HDxk8QZtLt+F54=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d4YaLBugL2LQEXBh9k85D6mOJPOQJUDscgih7PCDJlopd4TTUVIESRQ5rWjLwXF83ePj4WvKnSwygmBCxvjOZ0YGFX43nh75d7vPHcX0CpXbrQvVB/iLzHUzv0E+PP2ZO+QXt1mnfZle6wewhg86fBPlaSZ7sCD16UfUbHAhs4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZvLsyra; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740044689; c=relaxed/simple;
+	bh=O+NWxy4b1KytTcS0ZHrugC8vxmfgabRh5HNWwRO/Ks8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bANa6q0KlUg1P5WcJs9+Yy0pBuKHddboKBIAf/MR3fmfoJbor02dloK4z5OY9rpHmhYJ5UUZpblSvH3tniJBWSOwBDaLiEo5Rmp2cL+3BvJfqXMvY4b+X5VLMZSHSPy65U8LtFAQJRptRcLoyWvdMT04expkB/FWC5gX0692tGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=LxQLSg+p; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZvLsyra"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740044666; x=1771580666;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=c2wuFwNlBSJDce9EXlu8wsXo2D0l1HDxk8QZtLt+F54=;
-  b=TZvLsyra0gbbFyD7aV1t7dZPuAhQ314Mm7RFWnLApNoKeIYnqqSpMrdC
-   AfjUAdLzlKAr5IG/oZIVEyaL+NSAU2o0w32LoCvxDs5k6WOZ/yNX0jKND
-   YAldv39OkFooMGs66ddztnwz5Y+eZTKX1oIMXIyDnyjhUO57gi2FnRbvh
-   5H2bd69CsrZc5qh/1eJ9aFQUs6oOfkFcbAZ601jgZvhnsh8UY2C6muzda
-   mhnenzBwOLP4UvJn0ymy/902/zsL8v/xPpqYqS19jyj4tjMUXWqtbgkUh
-   4HXU19ZCDWthDgX2aj3YcLs6f0XD09a9j4YOpTRu71k9nMNfk/QzDsBDW
-   Q==;
-X-CSE-ConnectionGUID: GghYShNPQG6JhpPr3iX4PQ==
-X-CSE-MsgGUID: Vq1j+g2WRVG1WbcPB0vC8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40935687"
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="40935687"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 01:44:26 -0800
-X-CSE-ConnectionGUID: SSFjhIjKQ66YA1tyIM6LmQ==
-X-CSE-MsgGUID: n/0fFVSiRvOQZse0eRfozw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="152183805"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by orviesa001.jf.intel.com with ESMTP; 20 Feb 2025 01:44:24 -0800
-From: niravkumar.l.rabara@intel.com
-To: Vinod Koul <vkoul@kernel.org>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
-	nirav.rabara@altera.com,
-	dmaengine@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="LxQLSg+p"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.14])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 788AD407853D;
+	Thu, 20 Feb 2025 09:44:44 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 788AD407853D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1740044684;
+	bh=VSyXhzk/oou5dN2ui5up8lh68VSTsNSjPW0MQf8saxc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LxQLSg+pO5Zrb++WnEfFMOLfDZlylCRorRX+hy2M9oknFiuIyqIHGquos+7adQrwl
+	 GZI7LQHFDCnKBBhOjeyUStOZWPzlz6g14FBc5mv9BAY7C04Ly/sxONUGRozxwZKcvl
+	 1KKN5d5kdwuClDc0TQXyWy6rauU5cRtimHlKGk9c=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+	Kashyap Desai <kashyap.desai@broadcom.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Ranjan Kumar <ranjan.kumar@broadcom.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	mpi3mr-linuxdrv.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Jisheng Zhang <jszhang@kernel.org>
-Subject: [PATCH v4] dma: dw-axi-dmac: remove unnecessary axi_dma_enable() calling
-Date: Thu, 20 Feb 2025 17:40:47 +0800
-Message-Id: <20250220094047.3799548-1-niravkumar.l.rabara@intel.com>
-X-Mailer: git-send-email 2.25.1
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH] scsi: mpi3mr: fix invalid 64-bit phy bitmask calculation
+Date: Thu, 20 Feb 2025 12:44:31 +0300
+Message-ID: <20250220094431.38185-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,45 +52,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+ffs() operates on arguments of type 'int', not generally considered to be
+64-bit values.
 
-DMA is always enabled before calling axi_chan_block_xfer_start(),
-so it does not need to be enabled again here.
+Shifts like (1 << i) can also only be helpful for calculations that are
+expected to have a range equal to the width of type 'int'. When the left
+operand is of type 'int', valid values of the shift argument should not
+exceed the width of this type (almost always 32 bits), otherwise it is
+considered as undefined behavior.
 
-Re-enabling DMA causes random failures in the dmatest test when running
-multiple iterations.
-e.g.
-[   29.600722] dmatest: dma0chan2-copy0: summary 100 tests, 1 failures 160.26 iops 1299 KB/s (0)
+Since there is a need for manipulating the phy mask bits higher than that,
+perform the calculations directly in 64 bits.
 
-Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
-Tested-by :Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+Found by Linux Verification Center (linuxtesting.org).
+
+Fixes: cb5b60894602 ("scsi: mpi3mr: Increase maximum number of PHYs to 64 from 32")
+Cc: stable@vger.kernel.org
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
 ---
+ drivers/scsi/mpi3mr/mpi3mr_transport.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-Changes in v4:
-  * Add fixes tag
-  * Rebase to v6.14-rc1 
-
-link to v3:
- - https://lore.kernel.org/all/20230521101216.4084-4-jszhang@kernel.org/
-
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index b23536645ff7..43d30c7b8f03 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -435,8 +435,6 @@ static void axi_chan_block_xfer_start(struct axi_dma_chan *chan,
- 		return;
+diff --git a/drivers/scsi/mpi3mr/mpi3mr_transport.c b/drivers/scsi/mpi3mr/mpi3mr_transport.c
+index 0ba9e6a6a13c..f0da8c0dc55d 100644
+--- a/drivers/scsi/mpi3mr/mpi3mr_transport.c
++++ b/drivers/scsi/mpi3mr/mpi3mr_transport.c
+@@ -7,6 +7,7 @@
+  *
+  */
+ 
++#include <linux/bits.h>
+ #include <linux/vmalloc.h>
+ 
+ #include "mpi3mr.h"
+@@ -608,10 +609,12 @@ static void mpi3mr_delete_sas_phy(struct mpi3mr_ioc *mrioc,
+ 	mr_sas_port->num_phys--;
+ 
+ 	if (host_node) {
+-		mr_sas_port->phy_mask &= ~(1 << mr_sas_phy->phy_id);
++		mr_sas_port->phy_mask &= ~BIT_ULL(mr_sas_phy->phy_id);
+ 
+-		if (mr_sas_port->lowest_phy == mr_sas_phy->phy_id)
+-			mr_sas_port->lowest_phy = ffs(mr_sas_port->phy_mask) - 1;
++		if (mr_sas_port->lowest_phy == mr_sas_phy->phy_id &&
++		    mr_sas_port->phy_mask)
++			mr_sas_port->lowest_phy =
++				__ffs64(mr_sas_port->phy_mask) - 1;
+ 	}
+ 	sas_port_delete_phy(mr_sas_port->port, mr_sas_phy->phy);
+ 	mr_sas_phy->phy_belongs_to_port = 0;
+@@ -639,10 +642,11 @@ static void mpi3mr_add_sas_phy(struct mpi3mr_ioc *mrioc,
+ 	list_add_tail(&mr_sas_phy->port_siblings, &mr_sas_port->phy_list);
+ 	mr_sas_port->num_phys++;
+ 	if (host_node) {
+-		mr_sas_port->phy_mask |= (1 << mr_sas_phy->phy_id);
++		mr_sas_port->phy_mask |= BIT_ULL(mr_sas_phy->phy_id);
+ 
+ 		if (mr_sas_phy->phy_id < mr_sas_port->lowest_phy)
+-			mr_sas_port->lowest_phy = ffs(mr_sas_port->phy_mask) - 1;
++			mr_sas_port->lowest_phy =
++				__ffs64(mr_sas_port->phy_mask) - 1;
+ 	}
+ 	sas_port_add_phy(mr_sas_port->port, mr_sas_phy->phy);
+ 	mr_sas_phy->phy_belongs_to_port = 1;
+@@ -1396,7 +1400,7 @@ static struct mpi3mr_sas_port *mpi3mr_sas_port_add(struct mpi3mr_ioc *mrioc,
+ 		    &mr_sas_port->phy_list);
+ 		mr_sas_port->num_phys++;
+ 		if (mr_sas_node->host_node)
+-			mr_sas_port->phy_mask |= (1 << i);
++			mr_sas_port->phy_mask |= BIT_ULL(i);
  	}
  
--	axi_dma_enable(chan->chip);
--
- 	config.dst_multblk_type = DWAXIDMAC_MBLK_TYPE_LL;
- 	config.src_multblk_type = DWAXIDMAC_MBLK_TYPE_LL;
- 	config.tt_fc = DWAXIDMAC_TT_FC_MEM_TO_MEM_DMAC;
+ 	if (!mr_sas_port->num_phys) {
+@@ -1406,7 +1410,7 @@ static struct mpi3mr_sas_port *mpi3mr_sas_port_add(struct mpi3mr_ioc *mrioc,
+ 	}
+ 
+ 	if (mr_sas_node->host_node)
+-		mr_sas_port->lowest_phy = ffs(mr_sas_port->phy_mask) - 1;
++		mr_sas_port->lowest_phy = __ffs64(mr_sas_port->phy_mask) - 1;
+ 
+ 	if (mr_sas_port->remote_identify.device_type == SAS_END_DEVICE) {
+ 		tgtdev = mpi3mr_get_tgtdev_by_addr(mrioc,
+@@ -1738,7 +1742,7 @@ mpi3mr_refresh_sas_ports(struct mpi3mr_ioc *mrioc)
+ 		found = 0;
+ 		for (j = 0; j < host_port_count; j++) {
+ 			if (h_port[j].handle == attached_handle) {
+-				h_port[j].phy_mask |= (1 << i);
++				h_port[j].phy_mask |= BIT_ULL(i);
+ 				found = 1;
+ 				break;
+ 			}
+@@ -1765,7 +1769,7 @@ mpi3mr_refresh_sas_ports(struct mpi3mr_ioc *mrioc)
+ 		port_idx = host_port_count;
+ 		h_port[port_idx].sas_address = le64_to_cpu(sasinf->sas_address);
+ 		h_port[port_idx].handle = attached_handle;
+-		h_port[port_idx].phy_mask = (1 << i);
++		h_port[port_idx].phy_mask = BIT_ULL(i);
+ 		h_port[port_idx].iounit_port_id = sas_io_unit_pg0->phy_data[i].io_unit_port;
+ 		h_port[port_idx].lowest_phy = sasinf->phy_num;
+ 		h_port[port_idx].used = 0;
 -- 
-2.25.1
+2.48.1
 
