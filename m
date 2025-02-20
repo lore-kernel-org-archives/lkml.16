@@ -1,175 +1,206 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-57.ptr.blmpb.com (va-2-57.ptr.blmpb.com [209.127.231.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB51E47A9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C221DFD83
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740039572; cv=none; b=g2hG/35mW8kHcQoL6qitvMMoU7IMLpas4bodL4Ti+UZhptQeLZJ5qZTrAKZksdpeDWSNC0S+T+YVgbK6Y0EIOmbxALt0i3naxQmk/hTRVytWsS0/AKgr3nnnN3EU42VpfCq6d6lbZGBVvr2tIrzkj+Ne9Kcr/rno30eJr75FCUY=
+	t=1740039602; cv=none; b=PKLWO5qexo+wSBV2RxTrwd2lcz8v1kmDI5QDcRU85kBC0qIdF6lUIhNqPb5Awj5jiPRMbFmR4HSIYTssfBziN4YVU6p/+irz91DtkJJTOifc55ozukKGMXCYZNNaH+6LlFoEzBcX3jeLsYw71iZvJhuc1Yx0wy6ShKMm8gLcbLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740039572; c=relaxed/simple;
-	bh=AnxfGq1sBrpj+0AxbPEvMNfDTPZW33DoaXZnkynvupw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Zv6pvqSm/Ti4RWy7bxkspNdxeMHX83Ym9ROBKBUAf5Lf/Mt5Z8jwRMURq59zfNWcdXDuO/CcIa22tDfKRjMGeOPS/mw27qm+MWAM+/UnDxTaHisQlpl4WiTTayNwB8rXqRh93yPgmJ1aiD+UA0cbEbSQMSxAJrTFPWfHR9Wyt6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y0iH2cyh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Hw4/0TjS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740039602; c=relaxed/simple;
+	bh=pmGu7qlT9sN4uFBznTexCJJyE2/CEgvGdWTgk5+9oHI=;
+	h=To:Mime-Version:In-Reply-To:Date:Message-Id:From:References:
+	 Content-Type:Cc:Subject; b=MzV+Io7SASiBoNjZymDFAAtM3+BWvxP09vVv9iks99a9H5U94xarKBrt7oJ7M8JoV3DQFRsXUZglzalUEQYQJVOc+EM75sMbxBQTQHqOJ6+zWBf2s38G5OYdbGPYopvbPlF0lW+KMNF8WwK4EHZStXc/Za6890QuQt5WtKCKdiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=eUdNYUYT; arc=none smtp.client-ip=209.127.231.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y0iH2cyh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Hw4/0TjS"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740039568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IBI/qr04EcfMpMz+CIEPlEAjb4rJHmUXuT6iedhH71Y=;
-	b=y0iH2cyh3Ahm5fhmK8f1YNb1CvZmgEMUbwkM0iKBfdFuKUcqtvj+9ADA2t8f0DysmiHy0M
-	23fWeR4Qz/Z6PgXvWEOQiIfJ1aR+ceAx7FRg+QE/jlm3BkwIXi+KJz98q8bkWcys/2Z4ee
-	qQ0ErKVwppKNnmyqUPmYLPWqg8G0dlgjCMKqzCTXkhxPqoQri4Uo6UqWWn4qIlgAE6TCid
-	Y+vEZz20X/QW8rKFc6NeZLoNhM2I9VBDXpzrlmFYDpPh9yuxl/4n9pEOF7X1ILaoEL9PpK
-	54YMcVc35ubUkCUH2An2qUO5L7MyjgJf+ktNPyZuFxnEynW91HEjPKFYYMBniA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740039568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IBI/qr04EcfMpMz+CIEPlEAjb4rJHmUXuT6iedhH71Y=;
-	b=Hw4/0TjSv/4cO8SzJ+1sDwFrmAd8PXYroJ1xfF7flOwaB69SyV1HIICgWLDsRPdGrDeTA2
-	buig94TUdJNx9YBQ==
-To: Eric Dumazet <edumazet@google.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Segall
- <bsegall@google.com>, Eric Dumazet <eric.dumazet@gmail.com>, Eric Dumazet
- <edumazet@google.com>
-Subject: Re: [PATCH V2 3/4] posix-timers: Initialise timer->it_signal in
- posix_timer_add()
-In-Reply-To: <20250219125522.2535263-4-edumazet@google.com>
-References: <20250219125522.2535263-1-edumazet@google.com>
- <20250219125522.2535263-4-edumazet@google.com>
-Date: Thu, 20 Feb 2025 09:19:28 +0100
-Message-ID: <87r03thvu7.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="eUdNYUYT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1740039456;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=pmGu7qlT9sN4uFBznTexCJJyE2/CEgvGdWTgk5+9oHI=;
+ b=eUdNYUYT66qLI47XM+Bp4foSDc1HjUmiaDUY4GHxey6tVOrjIDP2OsT3YpnJhE1PhoUL9u
+ 7P/oMwZ5gykMCDrkjhvfLodt04Q9kl4cDH/HwHbcKJSaaZfVfLWR3rBoV+vAbWrGZCKvTl
+ Y9i/K3o9Ra3X+rGygkYkCzUnAfDsbwrjjWYKw3KXfZAZ/ChceIWIy0/N40PglscGqbWb2Z
+ fwiC4aSmCn2wKGkidxwJKHnE7do1sM7SmnyiViohHX2LgVmWfSqwiMvAjy3TIECM52Wz60
+ tLRZLc061LpGWuVIlgrQvpPEnFlsEebbcNboo1uygKIscWqKOK3+XKwhhxQYgA==
+To: "Andrew Jones" <ajones@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+In-Reply-To: <20250220-f9c4c4b3792a66999ea5b385@orel>
+Date: Thu, 20 Feb 2025 16:17:33 +0800
+Message-Id: <38cc241c40a8ef2775e304d366bcd07df733ecf0.818d94fe.c229.4f42.a074.e64851f0591b@feishu.cn>
+From: "xiangwencheng" <xiangwencheng@lanxincomputing.com>
+X-Lms-Return-Path: <lba+167b6e51e+f6566d+vger.kernel.org+xiangwencheng@lanxincomputing.com>
+References: <20250219015426.1939-1-xiangwencheng@lanxincomputing.com> <D7WALEFMK28X.13HQ0UL1S3NM5@ventanamicro.com> <38cc241c40a8ef2775e304d366bcd07df733ecf0.f7f1d4c7.545f.42a8.90f5.c5d09b1d32ec@feishu.cn>
+	<20250220-f9c4c4b3792a66999ea5b385@orel>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Cc: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>, 
+	<anup@brainfault.org>, <kvm-riscv@lists.infradead.org>, 
+	<kvm@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
+	<linux-kernel@vger.kernel.org>, <atishp@atishpatra.org>, 
+	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>, 
+	<aou@eecs.berkeley.edu>, 
+	"linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
 
-On Wed, Feb 19 2025 at 12:55, Eric Dumazet wrote:
-> Instead of leaving a NULL value in timer->it_signal,
-> set it to the current sig pointer, but with the low order bit set.
 
-And that low order bit set does what?
+> From: "Andrew Jones"<ajones@ventanamicro.com>
+> Date:=C2=A0 Thu, Feb 20, 2025, 16:01
+> Subject:=C2=A0 Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
+> To: "xiangwencheng"<xiangwencheng@lanxincomputing.com>
+> Cc: "Radim Kr=C4=8Dm=C3=A1=C5=99"<rkrcmar@ventanamicro.com>, <anup@brainf=
+ault.org>, <kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>, <linux-r=
+iscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, <atishp@atishpat=
+ra.org>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkel=
+ey.edu>, "linux-riscv"<linux-riscv-bounces@lists.infradead.org>
+> On Thu, Feb 20, 2025 at 03:12:58PM +0800, xiangwencheng wrote:
 
-> This fixes a potential race, in the unlikely case a thread
-> was preempted long enough that other threads created more than
-> 2^31 itimers.
+> ...
 
-and then what happens?
+> > As "KVM:=C2=A0 WFI wake-up using IMSIC VS-files" that described in [1],=
+ writing to=C2=A0
 
-> Rename __posix_timers_find() to posix_timers_find()
+> > VS-FILE will wake up vCPU.
 
-That's not what the patch does. It renames to posix_sig_owner(). Aside
-of that the rename is not relevant to the problem itself.
+> >=C2=A0
 
-> Mask the low order bit in posix_timers_find().
+> > KVM has also handled the situation of WFI. Here is the WFI emulation pr=
+ocess:
 
-What for?
+> > kvm_riscv_vcpu_exit=C2=A0
 
-I pointed you before to the changelog documentation, which clearly says:
+> > =C2=A0=C2=A0=C2=A0 -> kvm_riscv_vcpu_virtual_insn=C2=A0
 
-  A good structure is to explain the context, the problem and the
-  solution in separate paragraphs and this order.
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 -> system_opcode_insn=C2=A0
 
-It's not asked too much to write proper change logs.
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 -> wfi_insn=C2=A0
 
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> ---
->  kernel/time/posix-timers.c | 28 +++++++++++++++++++++-------
->  1 file changed, 21 insertions(+), 7 deletions(-)
->
-> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-> index 1f73ea955756..ed27c7eab456 100644
-> --- a/kernel/time/posix-timers.c
-> +++ b/kernel/time/posix-timers.c
-> @@ -72,15 +72,22 @@ static int hash(struct signal_struct *sig, unsigned int nr)
->  	return hash_32(hash32_ptr(sig) ^ nr, HASH_BITS(posix_timers_hashtable));
->  }
->  
-> -static struct k_itimer *__posix_timers_find(struct hlist_head *head,
-> +static struct signal_struct *posix_sig_owner(const struct k_itimer *timer)
-> +{
-> +	/* timer->it_signal can be set concurrently */
-> +	unsigned long val = (unsigned long)READ_ONCE(timer->it_signal);
-> +
-> +	return (struct signal_struct *)(val & ~1UL);
-> +}
-> +
-> +static struct k_itimer *posix_timers_find(struct hlist_head *head,
->  					    struct signal_struct *sig,
->  					    timer_t id)
->  {
->  	struct k_itimer *timer;
->  
->  	hlist_for_each_entry_rcu(timer, head, t_hash, lockdep_is_held(&hash_lock)) {
-> -		/* timer->it_signal can be set concurrently */
-> -		if ((READ_ONCE(timer->it_signal) == sig) && (timer->it_id == id))
-> +		if ((posix_sig_owner(timer) == sig) && (timer->it_id == id))
->  			return timer;
->  	}
->  	return NULL;
-> @@ -90,8 +97,14 @@ static struct k_itimer *posix_timer_by_id(timer_t id)
->  {
->  	struct signal_struct *sig = current->signal;
->  	struct hlist_head *head = &posix_timers_hashtable[hash(sig, id)];
-> +	struct k_itimer *timer;
->  
-> -	return __posix_timers_find(head, sig, id);
-> +	hlist_for_each_entry_rcu(timer, head, t_hash) {
-> +		/* timer->it_signal can be set concurrently */
-> +		if ((READ_ONCE(timer->it_signal) == sig) && (timer->it_id == id))
-> +			return timer;
-> +	}
-> +	return NULL;
->  }
->  
->  static int posix_timer_add(struct k_itimer *timer)
-> @@ -113,8 +126,9 @@ static int posix_timer_add(struct k_itimer *timer)
->  		head = &posix_timers_hashtable[hash(sig, id)];
->  
->  		spin_lock(&hash_lock);
-> -		if (!__posix_timers_find(head, sig, id)) {
-> +		if (!posix_timers_find(head, sig, id)) {
->  			timer->it_id = (timer_t)id;
-> +			timer->it_signal = (struct signal_struct *)((unsigned long)sig | 1UL);
->  			hlist_add_head_rcu(&timer->t_hash, head);
->  			spin_unlock(&hash_lock);
->  			return id;
-> @@ -453,7 +467,7 @@ static int do_timer_create(clockid_t which_clock, struct sigevent *event,
->  	}
->  	/*
->  	 * After succesful copy out, the timer ID is visible to user space
-> -	 * now but not yet valid because new_timer::signal is still NULL.
-> +	 * now but not yet valid because new_timer::signal low order bit is 1.
->  	 *
->  	 * Complete the initialization with the clock specific create
->  	 * callback.
-> @@ -463,7 +477,7 @@ static int do_timer_create(clockid_t which_clock, struct sigevent *event,
->  		goto out;
->  
->  	spin_lock_irq(&current->sighand->siglock);
-> -	/* This makes the timer valid in the hash table */
-> +	/* This makes the timer valid in the hash table, clearing low order bit. */
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_ri=
+scv_vcpu_wfi
 
-Clearing the low order bit of what? This is a full write and not a clear
-low order bit operation.
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 -> kvm_vcpu_halt
 
->  	WRITE_ONCE(new_timer->it_signal, current->signal);
->  	hlist_add_head(&new_timer->list, &current->signal->posix_timers);
->  	spin_unlock_irq(&current->sighand->siglock);
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 -> kvm_vcpu_block
 
-Thanks,
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_arch_vcpu_blocking
 
-        tglx
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_riscv_aia_wa=
+keon_hgei
+
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 -> csr_set(CSR_HGEIE, BIT(hgei));
+
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> set_current_state(TASK_INTERRUPTIBLE)=
+;
+
+> > =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> schedule
+
+> >=C2=A0
+
+> > In kvm_arch_vcpu_blocking it will enable guest external interrupt, whic=
+h
+
+> > means wirting to VS_FILE will cause an interrupt. And the interrupt han=
+dler
+
+> > hgei_interrupt which is setted in aia_hgei_init will finally call kvm_v=
+cpu_kick
+
+> > to wake up vCPU.
+
+> >=C2=A0
+
+> > So I still think is not necessary to call another kvm_vcpu_kick after w=
+riting to
+
+> > VS_FILE.
+
+> >=C2=A0
+
+> > Waiting for more info. Thanks.
+
+> >=C2=A0
+
+> > [1]=C2=A0 https://kvm-forum.qemu.org/2022/AIA_Virtualization_in_KVM_RIS=
+CV_final.pdf
+
+> >
+
+>=C2=A0
+> Right, we don't need anything since hgei_interrupt() kicks for us, but if
+
+> we do
+
+>=C2=A0
+> @@ -973,8 +973,8 @@ int kvm_riscv_vcpu_aia_imsic_inject(struct kvm_vcpu *=
+vcpu,
+
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 read_lock_irqsave(&imsic->vsfile_lock, flags)=
+;
+
+>=C2=A0
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (imsic->vsfile_cpu >=3D 0) {
+
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 kvm_vcpu_wake_up(vcpu)=
+;
+
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 writel(iid, imsic=
+->vsfile_va + IMSIC_MMIO_SETIPNUM_LE);
+
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 kvm_vcpu_kick(vcpu);
+
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else {
+
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 eix =3D &imsic->s=
+wfile->eix[iid / BITS_PER_TYPE(u64)];
+
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 set_bit(iid & (BI=
+TS_PER_TYPE(u64) - 1), eix->eip);
+
+>=C2=A0
+> then we should be able to avoid taking a host interrupt.
+
+But it may schedule again in the for(;;) loop of kvm_vcpu_block after kvm_v=
+cpu_wake_up but=C2=A0
+before the write of vsfile, and we will still get a host interrupt.
+@@ -3573,6 +3573,8 @@ bool kvm_vcpu_block(struct kvm_vcpu *vcpu)
+=C2=A0=C2=A0 =C2=A0 =C2=A0=C2=A0 for (;;) {
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 set_current_st=
+ate(TASK_INTERRUPTIBLE);
+
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 // Here will not break b=
+efore the write of vsfile,
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 // and then we will sche=
+dule again.
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 if (kvm_vcpu_c=
+heck_block(vcpu) < 0)
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0=C2=A0 break;
+
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 waited =3D tru=
+e;
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 schedule();
+=C2=A0=C2=A0 =C2=A0 =C2=A0=C2=A0 }
+
+Thanks=C2=A0
+
+>=C2=A0
+> Thanks,
+
+> drew
+>=C2=A0
