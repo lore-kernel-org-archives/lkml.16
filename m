@@ -1,66 +1,66 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076BB1F0E20
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CC41F0E34
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740045441; cv=none; b=q1iiikaR+EjO+Qc2wb+NJSzUdO/71Sktuj/87HqT0yS4UCFgjBO34zwPQ2LpeNbpx11KkRvOLg1GBy2lQN/WSmKJuq2WIFLS8rnb/ie1s762r3Q8aNayQpMveoijdl2c2yCYx8EBamfrerONuYDw+R59k1BZRdTAZuhOd9E0MW4=
+	t=1740045443; cv=none; b=KJknGJ3FqKTgbSfeWVmS5C8SCgfb8h03PvWs6eesyQfXTXvNUQnKvzWoWekkKoADROzGAE4xTjDa2vKtEiWriCNtGGgbpfQ7seYyvrLOxCtA5AhV2/bWXh/hPOEhZ6xJEsqXhJzv6vm2zaZbYws37eBZ1NFg5bUVwUKnvroLMAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740045441; c=relaxed/simple;
-	bh=iO/ZbpMvZ02JRqCkfPBpteZT3vWeK7OdysnNM0BDtZQ=;
+	s=arc-20240116; t=1740045443; c=relaxed/simple;
+	bh=RNJNJ+PGyKQWS40w6Hglqc3fY+OmbLq4bUxyI0fU5t4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EvoP+6QwTyzDDtCOp1/3r/uNq2XLFVRgzwM7xeCxVbyDdZukuSjtbmLA0v/M57flq9QGOgzWMjw5DCOrY1Kfo4G8qieCVcX4yh1tyrOifAgCUR3afJC4jt3QKic/WEeApnykB7EEBOs8vrDBO5Y74E5lBimCw3t8Ptot44o2w1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LZE7nVQs; arc=none smtp.client-ip=209.85.221.41
+	 In-Reply-To:To:Cc; b=G3B8g5BgNNwFFa17J56FAHE3tllpPgQD6YtFEmADt/VpgH2RQo3ZsgO6wCjc5oh5gFBCvJzKngFheKSIebo7MmdYkxaT17ZU1F5/j0iaBhxtPk9lFwWr+4QYHY0v9X2fiukwQ16KUWJZYuiJjBPYTYdKoOKgFydpzELjHNVw+HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bcoSw5au; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LZE7nVQs"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38f488f3161so320809f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:57:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bcoSw5au"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38f3ac22948so359216f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:57:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740045437; x=1740650237; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740045439; x=1740650239; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iAbjZEsyovWHnhnuIRi16DbT8cLgW12JjjHyyk7tJPo=;
-        b=LZE7nVQs7IFhPcSCZ0CZeEm8zasfDud0HXRQVRKFoZWlrp4qcE6ilLtuLoz5EX+8JZ
-         8gz/VZ+rOXZSMTQvEZOaV/nI2iUjQunYRJN6KA0YGbPnklEwIuWNIO72za8iiZ/ayyXd
-         dq4OGQPyRFjNKn94qOXOo2Fq2TKFN1Jfs5ZSjJcReCzqR998AfSUFPUix9MD0GWnt3wC
-         BqwApHG2ZWHtHUwdF2SfD+KD+sctgXeQepO3/1M7rBZoUC7ur1Pok9hPlnXkTZ6h87wU
-         2UNfYtjb92VQK3MDc3FG//Il2B9OvpLrncF3nM3AlbwU7tU+Pg1EMVViHl5ZITgGCfvk
-         Xlvg==
+        bh=oK7z7kPUwbiYR8aIbiZmR8S1YTF2yDqL+/19TJNz4qU=;
+        b=bcoSw5aunqwrL6ZajzVcVRxUXc5NcSS2kvRpzZtQbfOgXtL9HYJrW5Vfau2I9LWJoi
+         67OP3og8RWFBii+bq3u3YyyF8BlQbQ/xEJk9oswHri9bd2/3U26LpP0lcQ/GNIN+adkj
+         3ToZhhXQxrakU+06HsMmoV6u48RQFHjse4Th+pItxkqiUN2DCGuUEtdAanuSLO1YNQnW
+         PfaQ9FCP8EW3q4kQeeTPz9yuvvVFjinLDvw2yeRdvsro/ZADYcJgO0TjOH9OowIkwtnF
+         xdmVKA1bL8lyGfYvaS2m99jD5R7kADRJ6YS7TA2/GnSYR77f2R5Fxf5vQu+oXs1rYWy0
+         XhaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740045437; x=1740650237;
+        d=1e100.net; s=20230601; t=1740045439; x=1740650239;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iAbjZEsyovWHnhnuIRi16DbT8cLgW12JjjHyyk7tJPo=;
-        b=W4zwE3sLCB58SltGvTZOXsIFKMX2PozDFCZp/K4zjhJlvkT8AZ08e/41qc3t+fJwc5
-         jFnKuWmh5cQb1J0Zn3/H5OncGkHP7llxn0lYeP6QxMmgbKU2JY7GuDsgB2z0Znc1u1LJ
-         wTFhJKFLqal8gmFZceDwgOx+dxPMc2p9x5pwQ8NhIb5go/NSP+UdQcSBff44hZ+7/9NV
-         GiroNKf4j+kGQB3jVpXK9SVI/+t/2HPGyMWkV/d7GljK1q+IEf1lx5Q4jOQsyezqNvNX
-         hjgf02e1lB1eyNR4E6ztCQ3C0KFwanbrXNsB9NxXbGJ3hebUrfFHYvRf4q3juSFoN5CV
-         j07Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWTtpv6LJKR9AMki6VfAZZbKz0XyL4cBJrKc9J2xJVB48RW0tQHfMMXgq1jYmtbGRG5dsgKXw/9J3oocnY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx76AZEfBP5XLyysl/GEjap0rpslAQQn1zvzaZ5xtB6KIUPv3I7
-	FnyEWr6tbRehYIQyni/ZlWZLVzIgbh/QcrV7Kjw8KARPNWWhBxxQGjev1PoWG00+mLo2jdh2hwC
-	vL8E=
-X-Gm-Gg: ASbGnctBFu1gNj/AIxHI5e8T19mIBIlxHzbo5jckoNXTOs/NlMDdVUUnz5EEaEXVEWc
-	fyeO+hh1ZpdkSZ48LcDsXHb7RQi/ax8FOb9+rN5ZJP/XHUWaX/PblSaETALHVCFZ+Ty7rVnZ9YS
-	qyow2skthOiJ6eP5He5o9yO8GkMCaP7uO7UiD0E29DBWMhYVjKtWGjCVnSXQM4TJspu3Wxe/x46
-	6f1OqtGtVfZY1sVlF5tg4+WJOW8my6JwY0+RoIrLlRl6AVzDQk9kVfHMv5+ksnAe5lXjERgWp5x
-	tlvoSwY=
-X-Google-Smtp-Source: AGHT+IG5BbyoigVPB4H90q685mzj9qEeNBW2m9Kp/DNWxK7ykBjIOJ5A2hfa/IcK//xPSW2E7ZnkZQ==
-X-Received: by 2002:adf:e8d2:0:b0:38d:d603:ff46 with SMTP id ffacd0b85a97d-38f33f1c86fmr15011096f8f.14.1740045437112;
-        Thu, 20 Feb 2025 01:57:17 -0800 (PST)
+        bh=oK7z7kPUwbiYR8aIbiZmR8S1YTF2yDqL+/19TJNz4qU=;
+        b=gZF4YgMO1iV6CIsMH+vuTSURfchv9c4UvrtlwZl2mXimigBtTkS9udsZMfOoC9I0l+
+         fs9UkKfZf8vU9NOeJRMyfoX3ON9oB0niiK5gWeT6ad0zg4x8CyGF6TKnaQ2/TbnO742p
+         8M6ilcqpCY2oDlDZ2Tu5QGtQhIrd6MRcfim8jyeBaBQa8rRM+TKSTotF2MbUqHTXBNpn
+         OtUKQTgFo68xOqykkzeiIIQgAw/B1nF8HehoNaCEDhpC2eRKvNja8l3ex0Es8+IWxQbW
+         pN9QzDi14hdwlDk+i4RFaPpPQr/EJ8eCT6P+W8fhEVFeqd3kEm/WbtSVqhH8agfin96o
+         s0eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUC+4rZuMrcbB/T4Ja4A+f1hnDlDr4NYWfLx/EShifoDh78hwUGXe2zevXBGYLwIShqJsG+lDHc3onVyEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybtApXsR3HVjpjv/CO1n9lMeZsG9Kjty/JyBFnJMxckS3o20Vx
+	Yq8y25RiJDywMFr6Am4RT6iQ/9Srm0IaKQdObDfMV82M6A4U4yksboqPIC17h3Q=
+X-Gm-Gg: ASbGncuw5KPKbiv5s9R+TBbjNeBuxw5tWOtgYXk3avc56av+bBtrHIBxNmOPVmn/HUm
+	O6+d45py6g/wVdIWxslkgH6N/vbaf4d02viZ5ZK4MPK0YhqcjHMDbSkZuqM+AAm1ejBLmoXm2Mm
+	1Kuk1DM+Klj5COauwfD6/SFPHBBlbHSKtZJqiZk0WH2DxEywjFYumtn0BlHqFaBc3LS9BM7caDh
+	GCqCIQcx5UWc+R/iuHX6P6npFGmjnnY+pIUOZ0UdfjVEWk25SiUDHincSbZpklJoQUJvHz7beC8
+	WzjpefI=
+X-Google-Smtp-Source: AGHT+IHdxXE+wkntxsbZcPRj34UPFgSF33vvtbpTzksheLUargpon2xXaSy37ux13ny+vp77dBRVMg==
+X-Received: by 2002:a5d:64e8:0:b0:38f:4308:e552 with SMTP id ffacd0b85a97d-38f4308ea65mr14863294f8f.14.1740045438946;
+        Thu, 20 Feb 2025 01:57:18 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:e2e4:418d:7462:9cf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d65dfsm20509174f8f.64.2025.02.20.01.57.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d65dfsm20509174f8f.64.2025.02.20.01.57.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 01:57:16 -0800 (PST)
+        Thu, 20 Feb 2025 01:57:18 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 20 Feb 2025 10:56:59 +0100
-Subject: [PATCH v2 02/15] gpiolib: make value setters have return values
+Date: Thu, 20 Feb 2025 10:57:01 +0100
+Subject: [PATCH v2 04/15] gpiolib: rework the wrapper around
+ gpio_chip::set_multiple()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250220-gpio-set-retval-v2-2-bc4cfd38dae3@linaro.org>
+Message-Id: <20250220-gpio-set-retval-v2-4-bc4cfd38dae3@linaro.org>
 References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
 In-Reply-To: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -81,328 +81,120 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11632;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3176;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=gHQNRRs7OqLd+yRQPCZEx3EYSJvoT3gylIXinac1eso=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBntvx2XKvoHEC22D24BWdlPEFovVL26UxJ5fipn
- kNJXttemTWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ7b8dgAKCRARpy6gFHHX
- cooHEADGQUNaICr47kZlYSbFnf1TF9rYgWpKy3wu9evpIF2GrZWUNoF59nooKLAyRKNf/WnaZ4N
- xN5xMQYrdHldE7NocU43m8UaC9k6QW0eVhs0TwW76PSK2jpPYMCUK/0dc4N0f617mrYSY3x4Hlo
- eZhZwpyclDrh98dlFa9GkVkb9aBE85fdOqDBtDdqzOuCM/90hbxT5Op1+UQyfwFSG82+xP3Wssf
- U9XrIzSFVprFb7SeHz4CF93a8CbRfHWLb2P2v39IOa5afUAE8w5xSp7N5WYqT5uINXj//Xm6QmL
- qMVB4xw+FoAWMdEC4CuH+BxD53CZzlO+QBGjVnR8cWfEpBwI/PNthZwmXmYuXQPsVNvJQ2UESjh
- opICYQ3aC2AY76Q21sbL+Qg9ixW1hd3F2R0MWw0HFIU5jZkk4HMftSOQjY0EQ7e+nR36vCU2QRf
- vp75fTlbq3h7AHgCQZLrpqNjeHeKNwjObC2+ciRHhmv6fGIooSpDallwNSZCmm/xuuv96bUcQW6
- E9JhiK8wS5MGP4LsXtXWHXnHFWzQaX/osqc1tzsRQh1DXMckSeabVCvnviEwK6fDzORkIGzXmaR
- SPyKKGHWdTGRhot/mTfN8GEImkDlrkU3hJG5H01sYfG1rfW5mRl+7vW3f63RAVVsd8OmrFlGaQ9
- dcjXjvmk/wqYudQ==
+ bh=/NIPd7ogpCDV54abkx+5Qvd5OSnBBOxjUL7k4561kEw=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBntvx2hTPlqMvIbDt8rrDsNS+Jz72qIvaMe3VD5
+ 07XlnC7QfaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ7b8dgAKCRARpy6gFHHX
+ cmmJEACdZa0JZ8nPMZNjF3M1FUSZMRLt4T/dfJhH1y3g6AJezAVkjz++qC6PaEhyC5iu4HiONj0
+ TkLxXdykhwv3wbH6rzcwQFYp45F4ONns+8PAxRDGjJmuNUNObix/7BzDKGcR4vwz/HLAZsG6tzX
+ 4dciGqQ7ph1oXOzJOlCeETaPJ9JBI04kXW5GrKWK/FJ3UknnBf3h6Yzgj9PrGMuM5h1wn1pWgwx
+ PkaAe0q9rnxo9uLZDEOwCvI5/2U3zqMrRedQKnCEFZw0cfUwIEC4JlLsPXkMthLPX+e8y/+9CAp
+ pIuBYR/atk83zkrBFeIgpNgesPl8F7zvZaDi4A8KHZ9APBZnGY9el8xBAxgXqQjK0vy24c9BkQL
+ aRO2XSWXAyCmyaa4LBMuv6ah68zrCaXyiEmjEZPaLpBnRNbisZXgh4N4CMbgU1A5AIVo1S31Tig
+ IzMs8sy9Caw6Nhf0LxQggvBLayNSZiOW8Ix9Bhez3gz3rN+kgMBYJa8vg3qFowajuG7mbpBEaz7
+ mzOCMsDqSLx0LJK7+JGjNpe14MYUvBycO3y4m/zF4jNENDspLWciqjGMuWxoSxmAqGc0Ry0eqrw
+ KiG8IrckaPV0CiEhcLBbFWeVqjw1Ws9WQ9R/yrR+8Gs7+KQRJOGHlpBiYQNPBkxPlaWVTCmgImt
+ dfU9MnqKzV2zD9A==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Change the in-kernel consumer interface for GPIOs: make all variants of
-value setters that don't have a return value, return a signed integer
-instead. That will allow these routines to indicate failures to callers.
+Make the existing wrapper around gpio_chip::set_multiple() consistent
+with the one for gpio_chip::set(): make it return int, add a lockdep
+assertion, warn on missing set callback and move the code a bit for
+better readability.
 
-This doesn't change the implementation just yet, we'll do it in
-subsequent commits.
-
-We need to update the gpio-latch module as it passes the address of
-value setters as a function pointer argument and thus cares about its
-type.
+Add return value checks in all call places.
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-latch.c     |  2 +-
- drivers/gpio/gpiolib.c        | 53 ++++++++++++++++++++++++-------------------
- include/linux/gpio.h          |  4 ++--
- include/linux/gpio/consumer.h | 22 ++++++++++--------
- 4 files changed, 46 insertions(+), 35 deletions(-)
+ drivers/gpio/gpiolib.c | 42 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 30 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-latch.c b/drivers/gpio/gpio-latch.c
-index 46cdfb08747a..64174ea7d008 100644
---- a/drivers/gpio/gpio-latch.c
-+++ b/drivers/gpio/gpio-latch.c
-@@ -73,7 +73,7 @@ static int gpio_latch_get_direction(struct gpio_chip *gc, unsigned int offset)
- }
- 
- static void gpio_latch_set_unlocked(struct gpio_latch_priv *priv,
--				    void (*set)(struct gpio_desc *desc, int value),
-+				    int (*set)(struct gpio_desc *desc, int value),
- 				    unsigned int offset, bool val)
- {
- 	int latch = offset / priv->n_latched_gpios;
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 704452fd94bb..0a47fb38dd61 100644
+index 040b4689eb8e..b1e7d368bc7d 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -3405,13 +3405,13 @@ EXPORT_SYMBOL_GPL(gpiod_get_array_value);
-  * @desc: gpio descriptor whose state need to be set.
-  * @value: Non-zero for setting it HIGH otherwise it will set to LOW.
+@@ -3490,21 +3490,33 @@ static int gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+  *        defines which outputs are to be changed
+  * @bits: bit value array; one bit per output; BITS_PER_LONG bits per word
+  *        defines the values the outputs specified by mask are to be set to
++ *
++ * Returns: 0 on success, negative error number on failure.
   */
--static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
-+static int gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
+-static void gpio_chip_set_multiple(struct gpio_chip *gc,
+-				   unsigned long *mask, unsigned long *bits)
++static int gpiochip_set_multiple(struct gpio_chip *gc,
++				 unsigned long *mask, unsigned long *bits)
  {
- 	int ret = 0, offset = gpio_chip_hwgpio(desc);
++	unsigned int i;
++	int ret;
++
+ 	lockdep_assert_held(&gc->gpiodev->srcu);
  
- 	CLASS(gpio_chip_guard, guard)(desc);
- 	if (!guard.gc)
--		return;
-+		return -ENODEV;
- 
- 	if (value) {
- 		ret = guard.gc->direction_input(guard.gc, offset);
-@@ -3425,6 +3425,8 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
- 		gpiod_err(desc,
- 			  "%s: Error in set_value for open drain err %d\n",
- 			  __func__, ret);
++	if (WARN_ON(unlikely(!gc->set_multiple && !gc->set)))
++		return -EOPNOTSUPP;
++
+ 	if (gc->set_multiple) {
+ 		gc->set_multiple(gc, mask, bits);
+-	} else {
+-		unsigned int i;
+-
+-		/* set outputs if the corresponding mask bit is set */
+-		for_each_set_bit(i, mask, gc->ngpio)
+-			gpiochip_set(gc, i, test_bit(i, bits));
++		return 0;
+ 	}
++
++	/* set outputs if the corresponding mask bit is set */
++	for_each_set_bit(i, mask, gc->ngpio) {
++		ret = gpiochip_set(gc, i, test_bit(i, bits));
++		if (ret)
++			break;
++	}
 +
 +	return ret;
  }
  
- /*
-@@ -3432,13 +3434,13 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
-  * @desc: gpio descriptor whose state need to be set.
-  * @value: Non-zero for setting it HIGH otherwise it will set to LOW.
-  */
--static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value)
-+static int gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value)
+ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+@@ -3514,7 +3526,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 				  unsigned long *value_bitmap)
  {
- 	int ret = 0, offset = gpio_chip_hwgpio(desc);
+ 	struct gpio_chip *gc;
+-	int i = 0;
++	int i = 0, ret;
  
- 	CLASS(gpio_chip_guard, guard)(desc);
- 	if (!guard.gc)
--		return;
-+		return -ENODEV;
+ 	/*
+ 	 * Validate array_info against desc_array and its size.
+@@ -3537,7 +3549,10 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 			bitmap_xor(value_bitmap, value_bitmap,
+ 				   array_info->invert_mask, array_size);
  
- 	if (value) {
- 		ret = guard.gc->direction_output(guard.gc, offset, 1);
-@@ -3452,16 +3454,20 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
- 		gpiod_err(desc,
- 			  "%s: Error in set_value for open source err %d\n",
- 			  __func__, ret);
-+
-+	return ret;
- }
+-		gpio_chip_set_multiple(gc, array_info->set_mask, value_bitmap);
++		ret = gpiochip_set_multiple(gc, array_info->set_mask,
++					    value_bitmap);
++		if (ret)
++			return ret;
  
--static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
-+static int gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
- {
- 	CLASS(gpio_chip_guard, guard)(desc);
- 	if (!guard.gc)
--		return;
-+		return -ENODEV;
+ 		i = find_first_zero_bit(array_info->set_mask, array_size);
+ 		if (i == array_size)
+@@ -3614,8 +3629,11 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 		} while ((i < array_size) &&
+ 			 gpio_device_chip_cmp(desc_array[i]->gdev, guard.gc));
+ 		/* push collected bits to outputs */
+-		if (count != 0)
+-			gpio_chip_set_multiple(guard.gc, mask, bits);
++		if (count != 0) {
++			ret = gpiochip_set_multiple(guard.gc, mask, bits);
++			if (ret)
++				return ret;
++		}
  
- 	trace_gpio_value(desc_to_gpio(desc), 0, value);
- 	guard.gc->set(guard.gc, gpio_chip_hwgpio(desc), value);
-+
-+	return 0;
- }
- 
- /*
-@@ -3619,12 +3625,12 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
-  * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
--void gpiod_set_raw_value(struct gpio_desc *desc, int value)
-+int gpiod_set_raw_value(struct gpio_desc *desc, int value)
- {
--	VALIDATE_DESC_VOID(desc);
-+	VALIDATE_DESC(desc);
- 	/* Should be using gpiod_set_raw_value_cansleep() */
- 	WARN_ON(desc->gdev->can_sleep);
--	gpiod_set_raw_value_commit(desc, value);
-+	return gpiod_set_raw_value_commit(desc, value);
- }
- EXPORT_SYMBOL_GPL(gpiod_set_raw_value);
- 
-@@ -3637,16 +3643,17 @@ EXPORT_SYMBOL_GPL(gpiod_set_raw_value);
-  * different semantic quirks like active low and open drain/source
-  * handling.
-  */
--static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
-+static int gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
- {
- 	if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
- 		value = !value;
-+
- 	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
--		gpio_set_open_drain_value_commit(desc, value);
-+		return gpio_set_open_drain_value_commit(desc, value);
- 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
--		gpio_set_open_source_value_commit(desc, value);
--	else
--		gpiod_set_raw_value_commit(desc, value);
-+		return gpio_set_open_source_value_commit(desc, value);
-+
-+	return gpiod_set_raw_value_commit(desc, value);
- }
- 
- /**
-@@ -3660,12 +3667,12 @@ static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
-  * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
--void gpiod_set_value(struct gpio_desc *desc, int value)
-+int gpiod_set_value(struct gpio_desc *desc, int value)
- {
--	VALIDATE_DESC_VOID(desc);
-+	VALIDATE_DESC(desc);
- 	/* Should be using gpiod_set_value_cansleep() */
- 	WARN_ON(desc->gdev->can_sleep);
--	gpiod_set_value_nocheck(desc, value);
-+	return gpiod_set_value_nocheck(desc, value);
- }
- EXPORT_SYMBOL_GPL(gpiod_set_value);
- 
-@@ -4084,11 +4091,11 @@ EXPORT_SYMBOL_GPL(gpiod_get_array_value_cansleep);
-  *
-  * This function is to be called from contexts that can sleep.
-  */
--void gpiod_set_raw_value_cansleep(struct gpio_desc *desc, int value)
-+int gpiod_set_raw_value_cansleep(struct gpio_desc *desc, int value)
- {
- 	might_sleep();
--	VALIDATE_DESC_VOID(desc);
--	gpiod_set_raw_value_commit(desc, value);
-+	VALIDATE_DESC(desc);
-+	return gpiod_set_raw_value_commit(desc, value);
- }
- EXPORT_SYMBOL_GPL(gpiod_set_raw_value_cansleep);
- 
-@@ -4102,11 +4109,11 @@ EXPORT_SYMBOL_GPL(gpiod_set_raw_value_cansleep);
-  *
-  * This function is to be called from contexts that can sleep.
-  */
--void gpiod_set_value_cansleep(struct gpio_desc *desc, int value)
-+int gpiod_set_value_cansleep(struct gpio_desc *desc, int value)
- {
- 	might_sleep();
--	VALIDATE_DESC_VOID(desc);
--	gpiod_set_value_nocheck(desc, value);
-+	VALIDATE_DESC(desc);
-+	return gpiod_set_value_nocheck(desc, value);
- }
- EXPORT_SYMBOL_GPL(gpiod_set_value_cansleep);
- 
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 6270150f4e29..c1ec62c11ed3 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -91,7 +91,7 @@ static inline int gpio_get_value_cansleep(unsigned gpio)
- }
- static inline void gpio_set_value_cansleep(unsigned gpio, int value)
- {
--	return gpiod_set_raw_value_cansleep(gpio_to_desc(gpio), value);
-+	gpiod_set_raw_value_cansleep(gpio_to_desc(gpio), value);
- }
- 
- static inline int gpio_get_value(unsigned gpio)
-@@ -100,7 +100,7 @@ static inline int gpio_get_value(unsigned gpio)
- }
- static inline void gpio_set_value(unsigned gpio, int value)
- {
--	return gpiod_set_raw_value(gpio_to_desc(gpio), value);
-+	gpiod_set_raw_value(gpio_to_desc(gpio), value);
- }
- 
- static inline int gpio_to_irq(unsigned gpio)
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 0b2b56199c36..51ab6728a998 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -121,7 +121,7 @@ int gpiod_get_array_value(unsigned int array_size,
- 			  struct gpio_desc **desc_array,
- 			  struct gpio_array *array_info,
- 			  unsigned long *value_bitmap);
--void gpiod_set_value(struct gpio_desc *desc, int value);
-+int gpiod_set_value(struct gpio_desc *desc, int value);
- int gpiod_set_array_value(unsigned int array_size,
- 			  struct gpio_desc **desc_array,
- 			  struct gpio_array *array_info,
-@@ -131,7 +131,7 @@ int gpiod_get_raw_array_value(unsigned int array_size,
- 			      struct gpio_desc **desc_array,
- 			      struct gpio_array *array_info,
- 			      unsigned long *value_bitmap);
--void gpiod_set_raw_value(struct gpio_desc *desc, int value);
-+int gpiod_set_raw_value(struct gpio_desc *desc, int value);
- int gpiod_set_raw_array_value(unsigned int array_size,
- 			      struct gpio_desc **desc_array,
- 			      struct gpio_array *array_info,
-@@ -143,7 +143,7 @@ int gpiod_get_array_value_cansleep(unsigned int array_size,
- 				   struct gpio_desc **desc_array,
- 				   struct gpio_array *array_info,
- 				   unsigned long *value_bitmap);
--void gpiod_set_value_cansleep(struct gpio_desc *desc, int value);
-+int gpiod_set_value_cansleep(struct gpio_desc *desc, int value);
- int gpiod_set_array_value_cansleep(unsigned int array_size,
- 				   struct gpio_desc **desc_array,
- 				   struct gpio_array *array_info,
-@@ -153,7 +153,7 @@ int gpiod_get_raw_array_value_cansleep(unsigned int array_size,
- 				       struct gpio_desc **desc_array,
- 				       struct gpio_array *array_info,
- 				       unsigned long *value_bitmap);
--void gpiod_set_raw_value_cansleep(struct gpio_desc *desc, int value);
-+int gpiod_set_raw_value_cansleep(struct gpio_desc *desc, int value);
- int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
- 				       struct gpio_desc **desc_array,
- 				       struct gpio_array *array_info,
-@@ -360,10 +360,11 @@ static inline int gpiod_get_array_value(unsigned int array_size,
- 	WARN_ON(desc_array);
- 	return 0;
- }
--static inline void gpiod_set_value(struct gpio_desc *desc, int value)
-+static inline int gpiod_set_value(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
- 	WARN_ON(desc);
-+	return 0;
- }
- static inline int gpiod_set_array_value(unsigned int array_size,
- 					struct gpio_desc **desc_array,
-@@ -389,10 +390,11 @@ static inline int gpiod_get_raw_array_value(unsigned int array_size,
- 	WARN_ON(desc_array);
- 	return 0;
- }
--static inline void gpiod_set_raw_value(struct gpio_desc *desc, int value)
-+static inline int gpiod_set_raw_value(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
- 	WARN_ON(desc);
-+	return 0;
- }
- static inline int gpiod_set_raw_array_value(unsigned int array_size,
- 					    struct gpio_desc **desc_array,
-@@ -419,10 +421,11 @@ static inline int gpiod_get_array_value_cansleep(unsigned int array_size,
- 	WARN_ON(desc_array);
- 	return 0;
- }
--static inline void gpiod_set_value_cansleep(struct gpio_desc *desc, int value)
-+static inline int gpiod_set_value_cansleep(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
- 	WARN_ON(desc);
-+	return 0;
- }
- static inline int gpiod_set_array_value_cansleep(unsigned int array_size,
- 					    struct gpio_desc **desc_array,
-@@ -448,11 +451,12 @@ static inline int gpiod_get_raw_array_value_cansleep(unsigned int array_size,
- 	WARN_ON(desc_array);
- 	return 0;
- }
--static inline void gpiod_set_raw_value_cansleep(struct gpio_desc *desc,
--						int value)
-+static inline int gpiod_set_raw_value_cansleep(struct gpio_desc *desc,
-+					       int value)
- {
- 	/* GPIO can never have been requested */
- 	WARN_ON(desc);
-+	return 0;
- }
- static inline int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
- 						struct gpio_desc **desc_array,
+ 		if (mask != fastpath_mask)
+ 			bitmap_free(mask);
 
 -- 
 2.45.2
