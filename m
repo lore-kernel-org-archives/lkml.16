@@ -1,124 +1,136 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FF21F63F0;
-	Thu, 20 Feb 2025 12:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817401F4632;
+	Thu, 20 Feb 2025 12:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740054119; cv=none; b=Sj+6g/0e3CIvr1SpK8+jOnnBkigq5IuZxF48o/kRP/QgKXcIgqkqeEfb5pIMexFupQJg5KbnCz+zocWAR7ZFIeEPFiZZeqx31bh7Bj17Xl6sRhtgsrceOn14hshJC0Cs4Rcm6JrNaixHSE2TiPsTlIQ3XXlbLri6hxXcAj5ptFs=
+	t=1740054149; cv=none; b=hQXyU0lSfSO+8JnRE5WD9kX2UlZ5W5FQ1g/Tx7UxlYgC+z0XbnqfUqfLdfmzxKsFxcuWBFaGVUkaNQAFKOqQL+7d0MiptgJRVEjKTcBciZJzu8Gu0GJsqjKGNRzm26wb7fAdWR4z+Rap6vWRi9zE0LY7hCOEX3EqHhL/a31Hi5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740054119; c=relaxed/simple;
-	bh=yu5nuGyzsBAWau1vPX5hO8Wz+P+nRxHfgC/xFUEm9xU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IDuwSPWSN5GF4vosiX5hQLPKTTWAWBWNGw7akp5C7AH6gW9s5WSMTm+AhU2sAYPAS91ZshXXxHMUAQF4MwrBN/c1kbu27m4A9uiYB7q3CPet6JBKlBz/c2Nz+AZhpLE2JhqWhZntpM7yt8dvFKQ+t10zRgQVt4PDAShlbgOvf1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=rjngVgfU; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1740054149; c=relaxed/simple;
+	bh=x8vUs23nLD376IRPtFWOy/bkius73HrUEIt6auOclws=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kpAmbAd25uwho/AvcDeWVnjcW8mTqRmECmtD+hU3YieVyu6Mm0uz17OX/iOOGpQg6kWpCCsjg8SVPQN06aRJy4jL1G/mCdMxMyMkOj4bSSftts7NDJaXc0bW76rFPu3pjcoKV1qzjyQ3ghJgN5TIgQXq1Sp8/wCF7uJdhXcNYDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DS1flgh5; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rjngVgfU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1740053721;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+Gl3G6XUYkIShZYZNz/CumKvDXy706ENSlqU/a6wAK4=;
-	b=rjngVgfUX5tuj8FKXlqRQWA7w5v0ML6X43i/5KFkp3Da6az3cPc3Vt6suEc0EcbTadPO0m
-	sGsA+1nePPI0Rn+lGyZkQnlg8hiHpF8HhCfCNF4meakXWNlVhtBfzjMeFySAObio1mU74H
-	UTqZ41OfpAtcyPsYwv6fzzbmZQWmeaA=
-Message-ID: <04b87029f2237e209d8c8b620d009692d80eea2f.camel@crapouillou.net>
-Subject: Re: [PATCH v1] PM: Discard runtime_xx() handles using pm_ptr()
-From: Paul Cercueil <paul@crapouillou.net>
-To: Raag Jadav <raag.jadav@intel.com>, rafael@kernel.org, 
-	andriy.shevchenko@linux.intel.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 20 Feb 2025 13:15:19 +0100
-In-Reply-To: <20250220080318.2660840-1-raag.jadav@intel.com>
-References: <20250220080318.2660840-1-raag.jadav@intel.com>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
- LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
- FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
- z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
- +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
- 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
- 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
- 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
- dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
- 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
- rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
- lBwgAhlGy6nqP7O3u7q23hRU=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DS1flgh5"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-221050f3f00so16218295ad.2;
+        Thu, 20 Feb 2025 04:22:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740054147; x=1740658947; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PxoHLUi1TIyVjtHTj1O4KVcJUPyjk0t7xM63xGaqPFA=;
+        b=DS1flgh5Kl6sqaWmS5ej0Vz4sqUlrXcOKF32dCwPwlRYes9qXobjfKmXFYE/rr09bf
+         3dGRvRsaT6LNROE4KZqGKWg2Kfym3PpMdir0w+U/W3DO+ZTQfzTKo6EjNIVGKb/HDnih
+         0YzS8fhes9T+5nYlP9Di+E9RW7k5evHhecHDAJdBaXcsmYK/Y7MKfjxDO9mqwuJ5ZQnU
+         TLumqgVlKPVLg3See5aEyU7zujTAjsEmnDbsscmcujgpQx4oxyIjlKMaacmquswPAoQ7
+         qzW01kTiD6vHpImwq6xrPQVgzkMm5lsZFJWPWZojQlRFBkfaGQrd6NOC/pZ2QwUKgmqa
+         T7tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740054147; x=1740658947;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PxoHLUi1TIyVjtHTj1O4KVcJUPyjk0t7xM63xGaqPFA=;
+        b=N3v0etign3OgqIrO6LCGZrc1EzI2qj6J3hM2K/wEpHdYlKnqpWRSSjZn6eJitytADL
+         CJSErfnJLUVw5c+6CTkroLmMvDrsLXG7YaBq922vwhN6QCkVvDjnBa1ERKCS/Y4xdXj7
+         e3Hv5BCF4ZliMlKpWtNM9mOmGiHpPduXTk/9WphzskW7C76VL2uqB2erA6I2MTvsTJDR
+         sJ25vqRCdFLfg1ECVWQnZ5+nc6lGleleR45yA/P341odDATf5xgcUf0HvnZ256oeWwwp
+         ceAJ4EWps3jhOGpCh75YS2ztkq7XPvoQirzb4UdJ3ruUwn356TY9kRuemr74dKcfcj5l
+         5FDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfro3gbqOR4fgwpp+fokvvupIonmTATcjEQ/EI+cQwHolSkCTVeRP16aP0Zir2FrNR2M/Ru/mG/37g@vger.kernel.org, AJvYcCUwVymTgL1qr9ElXHSjd6Pw8cORcV20BFLb4RVBuxZNBzYFXPjJWnEIYXicg3KlKU2YAllMru0K5+6hAwjN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpFZh+N4YE3e8YuQ7/Ww8rJULLwBLQomZ1JuWUr3sG0WdkZT1d
+	uYCiHrN0uxbxiMfJpXhlfXzMdbCEZCzYnLFGBHCcuh5fvKN1OqT/
+X-Gm-Gg: ASbGncvUzMwRkvQ8gBNqwLLHBG/LFt0ifqd7MOMaxnkSWfvOVZ54OiRBPgBa63Zankx
+	B73ello4K0YCUpbocT6k9b5NZG2avfz3ZiRauvuWlxMfxFE4DhfPBFQDz7hJbkDmAsnQatpkxbd
+	HxnYLb5vQf5Le+AvivtWTN6y8AvbOS5KEAwLhT+H+YuVV3e+L29vLqyugjl2zu1hGDNB0baFe6S
+	N0zR/v1ua6+GMjQ+dQVHOVU22DzY+XnRw0/i+2tPzNjtN5k2Mov/QPngm1I8d/ZTs0Gt7oKnvTR
+	+XpG9LsSNc0v4N67Mw==
+X-Google-Smtp-Source: AGHT+IFPQJbD8Y0DfSGbKnFh8OFeQduLpjR2nCX2HZ+uxq5kUCQXB763DW1dJpfmXDKj/IsrLgKhzA==
+X-Received: by 2002:a05:6a00:1903:b0:730:888a:252a with SMTP id d2e1a72fcca58-732618c1eb9mr32642016b3a.15.1740054146231;
+        Thu, 20 Feb 2025 04:22:26 -0800 (PST)
+Received: from [127.0.1.1] ([59.188.211.160])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73242568146sm13653149b3a.47.2025.02.20.04.22.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 04:22:25 -0800 (PST)
+From: Nick Chan <towinchenmi@gmail.com>
+Subject: [PATCH 0/9] arm64: dts: apple: Add CPU cache information for Apple
+ A7-A11, T2 SoCs
+Date: Thu, 20 Feb 2025 20:21:41 +0800
+Message-Id: <20250220-caches-v1-0-2c7011097768@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFUet2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMD3eTE5IzUYt2k1ETTFGOjNEvDtCQloOKCotS0zAqwQdGxtbUAg5z
+ SUFgAAAA=
+X-Change-ID: 20250220-caches-bea5d32f91fb
+To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nick Chan <towinchenmi@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1554; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=x8vUs23nLD376IRPtFWOy/bkius73HrUEIt6auOclws=;
+ b=owEBbQKS/ZANAwAIAQHKCLemxQgkAcsmYgBntx568W0BJpT5y33IzqtpAl5xiNefECBeocdaA
+ G3h6DdBr9iJAjMEAAEIAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCZ7ceegAKCRABygi3psUI
+ JJ2mEACU7xnn3GkLol4g6uNkJmYfTXbvOFRtGSPksAHFzpaPYHeF6tCJ+QOL2JxMqXjJ2z58uM6
+ eI97d1zgxWGEcPbGOh5jVJGjXzZxqJm8KPNtF3DMfRKMYUmjZ0Lmih1ghU7l+BAwKMcW37B3s0q
+ 0eKbwQVfrWHt7AGSumZXWnYZ/PeNLbvW1f+q5zk/EnVCRjEXp9hbYfLbvYk2Au+d1t0XD/79gp0
+ teTwCARVArcj33NMB360pVAJW+NaiLBdJWRwJVqr0hEpeHSq7DSgaQQm7Jp4JbabpsaevpM/PnD
+ lKjUJO5Gql8AQBeqt2CtoLJiereJ1RBpn8LW6c/jWoxh4+HqR69liJxkknq4jL/TmSKvOdNzG8q
+ lNhxXt/Cmf8Gow5qtPdR2tLfaIHMgiwLupckugNj5cxisnrWMhyIqaNdbmq8XLGC9sxP2cUYvT1
+ aFFry5dp3kAwof5raujuJSGOPvhyQiUOUWOoEUHaoAOmZSzh6Fe4N3iLQhLuYQc3sXWXHqFtlpx
+ jBQCLj+IgeaMeGb5eqDr4jJsIcRA7+eAiBnBHyRsVMGeZbkNJL6kP8iDYy8RzCNF27FSHKtfFPL
+ GfFLtCHP8kdqAW8ObzUIwJ7Vt+ZxZv8Rrigm4kQ2O0dcqx6o+p0Uc553mjCQQolg9Wt896+vm2z
+ imvAjodSIWFfQxA==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-Hi Raag,
+Add CPU cache information for Apple A7-A11, T2 SoCs. On Apple
+A10 (T8010), A10X (T8011), T2 (T8012), only the caches in one of the
+CPU clusters can be used due to the "Apple Fusion Architecture"
+big.LITTLE switcher. The values for the P-cluster is used in this
+case.
 
-Le jeudi 20 f=C3=A9vrier 2025 =C3=A0 13:33 +0530, Raag Jadav a =C3=A9crit=
-=C2=A0:
-> Discard runtime_xx() handles in RUNTIME_PM_OPS() using pm_ptr() macro
-> and drop unnecessary CONFIG_PM ifdeffery.
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+---
+Nick Chan (9):
+      arm64: dts: apple: s5l8960x: Add CPU caches
+      arm64: dts: apple: t7000: Add CPU caches
+      arm64: dts: apple: t7001: Add CPU caches
+      arm64: dts: apple: s800-0-3: Add CPU caches
+      arm64: dts: apple: s8001: Add CPU caches
+      arm64: dts: apple: t8010: Add CPU caches
+      arm64: dts: apple: t8011: Add CPU caches
+      arm64: dts: apple: t8012: Add CPU caches
+      arm64: dts: apple: t8015: Add CPU caches
 
-So the RUNTIME_PM_OPS() is newer and people should use that, but we're
-not yet at the point where the older SET_RUNTIME_PM_OPS() macro can be
-dropped.
+ arch/arm64/boot/dts/apple/s5l8960x.dtsi | 13 +++++++++++++
+ arch/arm64/boot/dts/apple/s800-0-3.dtsi | 13 +++++++++++++
+ arch/arm64/boot/dts/apple/s8001.dtsi    | 13 +++++++++++++
+ arch/arm64/boot/dts/apple/t7000.dtsi    | 13 +++++++++++++
+ arch/arm64/boot/dts/apple/t7001.dtsi    | 16 ++++++++++++++++
+ arch/arm64/boot/dts/apple/t8010.dtsi    | 13 +++++++++++++
+ arch/arm64/boot/dts/apple/t8011.dtsi    | 16 ++++++++++++++++
+ arch/arm64/boot/dts/apple/t8012.dtsi    | 13 +++++++++++++
+ arch/arm64/boot/dts/apple/t8015.dtsi    | 32 ++++++++++++++++++++++++++++++++
+ 9 files changed, 142 insertions(+)
+---
+base-commit: 3febe9de5ca5267618675650871a626d0901f8cb
+change-id: 20250220-caches-bea5d32f91fb
 
-The difference is that in the !CONFIG_PM case, the former will
-reference the suspend/resume functions, but they will be detected as
-dead code; on the other hand, the latter macro won't reference them at
-all. Many drivers still wrap their suspend/resume functions in a #ifdef
-CONFIG_PM to avoid warnings about unused static functions. Therefore if
-you unconditionally force the use of the first macro everywhere, many
-drivers will fail to compile in the !CONFIG_PM case.
-
-As for adding pm_ptr() inside RUNTIME_PM_OPS(), it is unnecesary, as
-the whole pm_ops struct should be referenced through pm_ptr() or
-pm_sleep_ptr() anyway, which means that the whole struct and the
-callback functions will be garbage-collected if PM is disabled.
-
-Cheers,
--Paul
-
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
-> PS: I'm not very confident about this but thought I'd give it a try.
->=20
-> =C2=A0include/linux/pm.h | 10 +++-------
-> =C2=A01 file changed, 3 insertions(+), 7 deletions(-)
->=20
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index 78855d794342..416561c60e81 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -334,9 +334,9 @@ struct dev_pm_ops {
-> =C2=A0	.restore_noirq =3D pm_sleep_ptr(resume_fn),
-> =C2=A0
-> =C2=A0#define RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn) \
-> -	.runtime_suspend =3D suspend_fn, \
-> -	.runtime_resume =3D resume_fn, \
-> -	.runtime_idle =3D idle_fn,
-> +	.runtime_suspend =3D pm_ptr(suspend_fn), \
-> +	.runtime_resume =3D pm_ptr(resume_fn), \
-> +	.runtime_idle =3D pm_ptr(idle_fn),
-> =C2=A0
-> =C2=A0#ifdef CONFIG_PM_SLEEP
-> =C2=A0#define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
-> @@ -359,12 +359,8 @@ struct dev_pm_ops {
-> =C2=A0#define SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn)
-> =C2=A0#endif
-> =C2=A0
-> -#ifdef CONFIG_PM
-> =C2=A0#define SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn) \
-> =C2=A0	RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn)
-> -#else
-> -#define SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn)
-> -#endif
-> =C2=A0
-> =C2=A0#define _DEFINE_DEV_PM_OPS(name, \
-> =C2=A0			=C2=A0=C2=A0 suspend_fn, resume_fn, \
+Best regards,
+-- 
+Nick Chan <towinchenmi@gmail.com>
 
