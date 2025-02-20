@@ -1,134 +1,101 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801CC1EB1BE;
-	Thu, 20 Feb 2025 08:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5488B1E9B2A
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740039089; cv=none; b=IEalLc+0ytAdYnD2SsEaW8PT/lrpz+Xg5uw6rjha4R865Ka1DjjmgIHcjeuAzf8ceQE1xiBSLze0TuUS3HxDcEo23x+OhnzpX6iW5QNVTikN8YnM9idVKXEtUWsLGtGsK7nYf7yRamPmzbLsl6TPdVEEkP+CyUF+R4Z08DEGpWA=
+	t=1740039147; cv=none; b=UhSFBOgyA0lyI1jBGzCccYdW8sKOPa46euJc0W5vIBBbYLLEyt8jvBdeWgk6p0k9lNq09uYIi65B/EF0t7R21DPTw4JxNoZl0X0CI+qjpZExHN4YqeqFvByXCYW6yvSJt7Xcxbd2DlHHm2ZZNMuYzoZ9WAHgk4sIsB1TRmmKRHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740039089; c=relaxed/simple;
-	bh=9pfFTAEw5xRe7qd2RZMPcVj1+s1NyMA2SsmkU7YZllY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZfSa0t+zu83XFuHcpbyYtp1bTbU8mVy7+4/GjDch/uIOt4p/9NpUBlyJGbxVW0pgyDR8hI5Y88z5y0aJsAt6a1X36mReRgxZaXlVZrs/EXobT9N0AyYo2U3SK6wKu9zAO1hbX1yu8scTZLPUr5xS/u27+2hueraWF5GnfBmCdoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z0zLB135; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740039147; c=relaxed/simple;
+	bh=H3tFC200g8yvVKGoWYBP6BDYu/3DGTGmDR2JGI04DSU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=B1jIFDKkDeMruOiolHjUbojNWkwl5uc4OJKBnH3HAf0FbJq+NglLrO0EPtOGjvV95GxjEjFXA7pMgngr38c5kCsBgUlq5DlQOZt5490q4VNqnCukBgRWPGdX7z5Rr9KRCA9XvwE/Bd+7R59yYVa7c4Zbr6ALC1BYluPeg4N5OwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rlJGFKqK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fU1qmEQl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0zLB135"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ded51d31f1so1057173a12.3;
-        Thu, 20 Feb 2025 00:11:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740039086; x=1740643886; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gORQdWcxjjeK6bAaehY1vON9E7DkN1S+hDpTXfC6an4=;
-        b=Z0zLB135SnJU48lvaRDPRwSAU01hL6swHP22jk0RphNsHMWRzgsrzoZoQ1hWkgc3kz
-         KhCc/tEUoU2cAgf4mN85CIRG6LFzk/CvPnJFGoKKxLWZkkLLUxBknvRLsG1s9nFzVtIb
-         NxvkJ8UHOVhjC6nF9fDjcFAWPhhU67xGOwK8otUr0wnz8xqHfZOC0ivsQejDbJapiwxN
-         I+0zuuIbiQsbhoNqqJOjFdXr89UNxomg5zLF/RejgUunYmv7TeuuMm4+UHE1sDuQ03Ru
-         y/DXuXBHiomc6AsA/289AxCFi2k+bXjPxquZhMx42bTQ9HgxKnMXtwpccRqKFdW/mQbk
-         QNUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740039086; x=1740643886;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gORQdWcxjjeK6bAaehY1vON9E7DkN1S+hDpTXfC6an4=;
-        b=kHF3+0a8qmHn5JJJqpajcYNEOmDGklBBoGeApOj3UYrEKg+buUW80sLh/Gdrq/ZO96
-         7mjnEMokYkZCxgnMoOisU891H0sDhkjm0/O7EcX8t1GCLOiupiUz8sPfwBMQtE67u5ls
-         Gt/rHN6K1hTKN2bPVSYadj3mS5viZPW6p+vbflZuWzW3pBdBHaoWTSqtn9IrN8NyoILf
-         ctK+QVRe9HDV39dTycQzhEJG81B8d9dHXSD5Yicalt0v48Kq/IwlgOrg9+4AUdil7qW/
-         DfRLzuhHgbV8mdA77ir0WW82n1CTVDXJ+NymlwrQauW2JP+0tgulVDXGtHQUGeOT0Ttm
-         lLdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHpO3yU6ObQ6/WDoRXfbVvL5CQG3223TYFWiRBRJPp5SQcZMJHOrbU9SvmmlrBY9dnGJ6J4NAny1K082E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwVtGlpvD1+8wBUm4+zK4a/GayrUzBYjrT6ZGqaSVgfbZvvBdn
-	aApKpb/y10OyIbYJKowa3FMACqQhuG6KPj48QbH/YwU71SbWVk4J
-X-Gm-Gg: ASbGncuJqTA0bpsEWXvE0HrxQqvR/Jo+kH8JLJb38hfjDg36MpPWpSuZVoyYiT7VuA8
-	UzqdUODgF57T6PvtlWI4OYGxJs6C4pVppuU9UIqE+twJG8h4AF+Nf3PjzQunhhr2yRgAuZvpqbY
-	Osrn5XOmf8pl5lSyEzunR1UDzdgxAAmPoO9KiFy/pBsRLrgU2Tho1x5Pmcu+WdxKV6d1aIjDGwV
-	00WW+sgsXZD6L4SREDsJAcUip00Gojk0claZdxbCaFFr62qfHCoZewpIcNRqrMautYwxo0OunA/
-	SZpiEup9enGRl0VkUQE=
-X-Google-Smtp-Source: AGHT+IHQL4G1sEuXWxgbgH9kDqBZvrmRjg3l77gCr3Rt1IgGFRlCL/kA2hdAaY5j4Jq/YALaP1ohzQ==
-X-Received: by 2002:a05:6402:51ce:b0:5e0:8261:ebb2 with SMTP id 4fb4d7f45d1cf-5e08950c0aamr6468527a12.12.1740039085543;
-        Thu, 20 Feb 2025 00:11:25 -0800 (PST)
-Received: from [127.0.1.1] ([2a00:79c0:604:ea00:45fb:7d1a:5e4d:9727])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece270967sm11636298a12.55.2025.02.20.00.11.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 00:11:24 -0800 (PST)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-Date: Thu, 20 Feb 2025 09:11:12 +0100
-Subject: [PATCH net-next v2 2/2] net: phy: marvell-88q2xxx: Prevent hwmon
- access with asserted reset
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rlJGFKqK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fU1qmEQl"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740039143;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NY4yXpe1ZjPgFcfvLmakZ3jQqRumnHseJKr7+agy5OM=;
+	b=rlJGFKqKRgeuzM9kRnnEnMIQGT8VB19SaK7Kc+hrBH6M44X91NAwsknUCbVLVI/UMTE9tE
+	10OhqxT4NtjTqX+Y8cqWY4tePgwr0IMOJnAyjCu+mkjM7+k4Unc3GbTs1g9yna6KwEYXfn
+	S8ytNMgeoqxhicWUFCNOGqtoRMMumoIvXQqCcRHMm5H6aIyyJMXJ7j1apWFmMmcUdo2qk9
+	X3RIrc5Fq/G7As1nSh8FdY4o5/J6rIIJXJyQgEhK26l46nO9IItnnE1mvahVC+lHHX/IiR
+	TXnx2Mfu4YwR8shQA16aYllSdupjId5zIrPLu7L64zvkC3uOHUJI4WP+1YUa3A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740039143;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NY4yXpe1ZjPgFcfvLmakZ3jQqRumnHseJKr7+agy5OM=;
+	b=fU1qmEQlLkv+RsYnJujB47z1j+7Z9zea/C2RH/hspKCQyafnya8AkYA+JuFWqm2hg1OyKA
+	D882TlkcEZ5/uSDA==
+To: Eric Dumazet <edumazet@google.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Segall
+ <bsegall@google.com>, Eric Dumazet <eric.dumazet@gmail.com>, Eric Dumazet
+ <edumazet@google.com>
+Subject: Re: [PATCH V2 2/4] posix-timers: Initialise timer->it_id in
+ posix_timer_add()
+In-Reply-To: <20250219125522.2535263-3-edumazet@google.com>
+References: <20250219125522.2535263-1-edumazet@google.com>
+ <20250219125522.2535263-3-edumazet@google.com>
+Date: Thu, 20 Feb 2025 09:12:22 +0100
+Message-ID: <87tt8phw61.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250220-marvell-88q2xxx-hwmon-enable-at-probe-v2-2-78b2838a62da@gmail.com>
-References: <20250220-marvell-88q2xxx-hwmon-enable-at-probe-v2-0-78b2838a62da@gmail.com>
-In-Reply-To: <20250220-marvell-88q2xxx-hwmon-enable-at-probe-v2-0-78b2838a62da@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
- Gregor Herburger <gregor.herburger@ew.tq-group.com>, 
- Stefan Eichenberger <eichest@gmail.com>, 
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dimitri Fedrau <dima.fedrau@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-If the PHYs reset is asserted it returns 0xffff for any read operation.
-This might happen if the user admins down the interface and wants to read
-the temperature. Prevent reading the temperature in this case and return
-with an network is down error. Write operations are ignored by the device
-when reset is asserted, still return a network is down error in this
-case to make the user aware of the operation gone wrong.
+On Wed, Feb 19 2025 at 12:55, Eric Dumazet wrote:
+> A timer is visible only when both timer->signal and timer->i_id
+> are set to their final values.
+>
+> We can initialize timer->it_id sooner.
 
-Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
----
- drivers/net/phy/marvell-88q2xxx.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+This changelog tells nothing. What is this fixing, why is it required to
+initialize this sooner?
 
-diff --git a/drivers/net/phy/marvell-88q2xxx.c b/drivers/net/phy/marvell-88q2xxx.c
-index 342a909a12a2785ad579656eb369c69acaace9d1..ea9a2a923146bf432a33ff46b606c08debb69a4f 100644
---- a/drivers/net/phy/marvell-88q2xxx.c
-+++ b/drivers/net/phy/marvell-88q2xxx.c
-@@ -698,6 +698,12 @@ static int mv88q2xxx_hwmon_read(struct device *dev,
- 	struct phy_device *phydev = dev_get_drvdata(dev);
- 	int ret;
- 
-+	/* If the PHYs reset is asserted it returns 0xffff for any read
-+	 * operation. Return with an network is down error in this case.
-+	 */
-+	if (phydev->mdio.reset_state == 1)
-+		return -ENETDOWN;
-+
- 	switch (attr) {
- 	case hwmon_temp_input:
- 		ret = phy_read_mmd(phydev, MDIO_MMD_PCS,
-@@ -737,6 +743,14 @@ static int mv88q2xxx_hwmon_write(struct device *dev,
- {
- 	struct phy_device *phydev = dev_get_drvdata(dev);
- 
-+	/* If the PHYs reset is asserted it ignores any write operation, return
-+	 * with an network is down error in this case. Without returning an
-+	 * error the user would not know that writing the temperature threshold
-+	 * has gone wrong.
-+	 */
-+	if (phydev->mdio.reset_state == 1)
-+		return -ENETDOWN;
-+
- 	switch (attr) {
- 	case hwmon_temp_max:
- 		clamp_val(val, -75000, 180000);
+We can... We also can not ... Aside of that please write changelogs in
+imperative mood as Documentation asks for.
 
--- 
-2.39.5
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> ---
+>  kernel/time/posix-timers.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+> index 204a351a2fd3..1f73ea955756 100644
+> --- a/kernel/time/posix-timers.c
+> +++ b/kernel/time/posix-timers.c
+> @@ -114,6 +114,7 @@ static int posix_timer_add(struct k_itimer *timer)
+>  
+>  		spin_lock(&hash_lock);
+>  		if (!__posix_timers_find(head, sig, id)) {
+> +			timer->it_id = (timer_t)id;
+>  			hlist_add_head_rcu(&timer->t_hash, head);
+>  			spin_unlock(&hash_lock);
+>  			return id;
+> @@ -407,8 +408,7 @@ static int do_timer_create(clockid_t which_clock, struct sigevent *event,
+>  
+>  	/*
+>  	 * Add the timer to the hash table. The timer is not yet valid
+> -	 * because new_timer::it_signal is still NULL. The timer id is also
+> -	 * not yet visible to user space.
 
+Even with this change the timer ID is not yet visible to user space
+because it has not yet been copied back ....
+
+Thanks,
+
+        tglx
