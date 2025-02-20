@@ -1,393 +1,228 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501E81E3DEF;
-	Thu, 20 Feb 2025 07:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08D51E3DEF;
+	Thu, 20 Feb 2025 07:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740035367; cv=none; b=DnrW9p+mY83efCSBLPl+Am3fzzZz5j/u6CJAc6vi1DoFXna/LVLKz+XAvBIw0JjN7JjUAsUGJvYNU70FBxEPqIYt/HOMGHgyH6KYoPTJL74mwh9CgxI5G6XEvI4FVZsOQTRIQF8LbY5ztkJdTuahpTLtVrF4+iw9r2EAoy/0bWY=
+	t=1740035414; cv=none; b=prwefrQUvQOZPhZfNYFiy35FFzCIeC3ynx887k5Q0rRViNk7fPqh2JhvZ8epM4yJjVFA37rxQ4oAMQm4FhFb+lOtJ95ib1o8ELkHImpwBRyig7GDHo9PlKW3pOT99Sp/bPd/tWku5k7eBCIT/4skTP/Czzi9d0P8n5cZNQw1OdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740035367; c=relaxed/simple;
-	bh=T2rVqvm4zBroEsOPvSBM8CrAORbDgr9+Kt/EHWp8+lU=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=IJhuPZf91sFqYqMhhOYynrA/U+T6sc+a7Xn4ORR6NuJQrkNYaWASUM7cajWJPULq66um/6pfOAlsb1W4JY0yOLqcU9J+diMa9X5NaqUO5d0qtb8fTVQHa3GQTJRN4aycyBLjPdXJUWi/jRw0IEPectv3E5aTgDlX02wbJDNFH40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=hxaf8t82; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+	s=arc-20240116; t=1740035414; c=relaxed/simple;
+	bh=eRPAElEUQRhTF2bycVJ8zY1sUK27uy0WvVugrYviEas=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IOvKR0fdGtdDlolZ3TQMCre1yvtLA8hOPHfWmGPtFd7fG9LLAoy21sOJY4mUuYilCZnLPJ4Q+0+SU1ZWATd3Q8iNDVNAgC92Z/avjxoJt1PiAQUCIE44jYVMfUlBoGcCWNE0DE3orMqx8fBbXB4lOV67NYGt0cXHKv30mcKhDqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aWwa+n/a; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="hxaf8t82"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1740035333;
-	bh=g2vHaIOAz4d5yt8VkIHIK73HFH3hA6hpTBt/zjEj4u4=;
-	h=From:Mime-Version:Subject:Message-Id:Date:To;
-	b=hxaf8t82flzmyJNliOTtvoXnJ4w9I+l9ZPQvdx4TFa7USI1pUiUuhxYmnTWoG2Ulz
-	 tV9aNRkPTBmNdHAVH1rdzo0e8lv8xNmMdUbNPKz9m4Z5420/2v2NHgoXTpe01afznO
-	 +p7TxaYGQxpa0jismfNv0sHbpxSjSs9fV/VvYi2U=
-X-QQ-mid: bizesmtpip2t1740035327t2cr158
-X-QQ-Originating-IP: EQmKbY0xtrJZswQcKG+cdPyDE3TgJwarTmkXYHDbnjQ=
-Received: from smtpclient.apple ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 20 Feb 2025 15:08:46 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7114628657633862664
-From: Kun Hu <huk23@m.fudan.edu.cn>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWwa+n/a"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220d39a5627so8449595ad.1;
+        Wed, 19 Feb 2025 23:10:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740035412; x=1740640212; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yvmhmxQBJd3Pxct/LB/6igLYaJZhPSkR0ZLw5XhDmV4=;
+        b=aWwa+n/avtzYmWBQZYAHMbBGBVjafvy++hrg+iZbtXwSqlDSY4DU8efj/QgrxT1dIG
+         ec8TisbEB5sc57Kumv+0R/lEQk8o0eShO9/SIvqwPzDkGGC9YsLvvOa5lQ0M98aj+NYd
+         +fmwZ8q5n1sMVlztSTJEKq7dZ/Mls1P09T+esFmJDwCvbZ4Eho+i8lKBDfY8b+/Tvc8z
+         O1PzA6QGjOLCF/UizEAAtqzJKwMMdGqjb5vcX54svl4ZjSILLoCXDCe3tDoRpjc8QzO9
+         kvk+by1gwAotBRjs0nbjiM4PfXZNIyX373bd3kshKBf6FzvajxrC6XT6qubZJKa3AQ+u
+         caDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740035412; x=1740640212;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yvmhmxQBJd3Pxct/LB/6igLYaJZhPSkR0ZLw5XhDmV4=;
+        b=Y9EKBfh9EKhelvO2k+U2WBEkUV1zD2zKFnUFba6jv0ENZGKebdHvp1lj6shUZN2aQu
+         1wlZRChDJAdqI+wtS/LYuQ9QEPk6QoVelcwa+ED4crdVsdeR7X1Kp/uvPoXDQ9N7YTla
+         G9cp38Ya4nE7FZSksabD2HlyocDB+QfqscLaSujDX7C//bRuYtKWtxRv74T2oNPZPuLS
+         2aIcW/neGcC9dRa7L/0cB54PC5yF0vrFBNLiX1a355403JZj2klcxrx8URYtAEVLntav
+         vi+AWYluNGV+6LEPK0U6RaNiWoiK1W9tzGDT8lPeLwUnJPn7jnQaLvA4FWuK1w93wyIJ
+         12rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWnAzyrwedDIpKxvFmXKGVyBs8K5OiNtM/taWtCFQLMYTQ5DZaZDTI1aoMPviN92url75X4nI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNoyDzS4z4j5tAxumORXh2q/dqzYDm3C542vsKLGDzLC5OrX78
+	uGs+kbFbfYy+pScVpBjA6ZUnM/uV3KFwJqmFEd3//eBddzEqHszCBC6a6ZkK
+X-Gm-Gg: ASbGnctcSTSAE9PFofzD6FiznYJ9D0ZQ8iU3/s45vRpaTY+DEIVNXzdYIWRnjaXdBTd
+	oC+BPU4MnQ9Tb8/i4dQ8SZUhMwEz2BZpJwORTEPiKdcQCeiCwQObMZzXLUdS+wsK+wzmQG+doCz
+	iBbmv11fjEZHqiwGLR6NnQwXOemb4Wp4K1O7E887WJHyGl5Fr9AQOjmpIM2LQpaZXLXHHVwZy0o
+	FcKgq1QwdQ0yXzZ34AFhvyLr6WOFpIY21MdnR2nDtK7P5OJhWjMttBSNF/5o8JKz7UB2JPs93E4
+	w4kIHuhmXT+P4IcP62u0b6jDC8WHQAO/EPZ9s+0scr7xaA7B7yNzSjW3iGXUBxp7qqA=
+X-Google-Smtp-Source: AGHT+IHSiFTWo7GVfctdCwosRMbmchdXoEfhP3nrqjscH3dzq+e9S7RJpTceJFyt6pD8yDn0HAVk9A==
+X-Received: by 2002:a05:6a00:2da0:b0:730:1da:d0e with SMTP id d2e1a72fcca58-7341734ee72mr2402726b3a.18.1740035411544;
+        Wed, 19 Feb 2025 23:10:11 -0800 (PST)
+Received: from mew.. (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242568af8sm13059672b3a.48.2025.02.19.23.10.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 23:10:11 -0800 (PST)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: rust-for-linux@vger.kernel.org,
+	netdev@vger.kernel.org,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	tmgross@umich.edu,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	anna-maria@linutronix.de,
+	frederic@kernel.org,
+	tglx@linutronix.de,
+	arnd@arndb.de,
+	jstultz@google.com,
+	sboyd@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	tgunders@redhat.com,
+	me@kloenk.dev,
+	david.laight.linux@gmail.com
+Subject: [PATCH v11 0/8] rust: Add IO polling
+Date: Thu, 20 Feb 2025 16:06:02 +0900
+Message-ID: <20250220070611.214262-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: UBSAN_ shift-out-of-bounds in bch2_trans_iter_init_outlined
-Message-Id: <DB301B35-8966-4CB7-AE21-9A792CE4AC6C@m.fudan.edu.cn>
-Date: Thu, 20 Feb 2025 15:08:35 +0800
-Cc: syzkaller@googlegroups.com,
- linux-bcachefs@vger.kernel.org,
- "jjtan24@m.fudan.edu.cn" <jjtan24@m.fudan.edu.cn>,
- linux-kernel@vger.kernel.org
-To: kent.overstreet@linux.dev
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: N2K7JO7TcIoE7X1ljt5Hm+PosNQPi5q19IZ0FPZwTVTrhqpCp9mxK9rW
-	7qSsMWBs6py/tgCEevq0glZ2mCW1VKawe2iwJB72I+STqlUAvx4xRs9Ym/vv7cpuH911T7k
-	QVWnki+sVTn5aRoO3o9FcoeXU5f+fQ+8XYxLarHt5eAo2MBNcPEzXIfwmn8JOuTUfpAZ3gF
-	lHwXlhMIclADu28YBD0AGENk+ojMvY+CdAmvN/E91hUaTSsITRXuNRYrc0yQgqBqRyy2qUD
-	dTa2p2TwnkFfSIkCbt4lZNQ4dNwS22Chnm52phWbyhx4IKd3eTnrZEp2H2f1vx68XeRLMG9
-	g/7D68wc1YW69hdLdt7A1+wMg/htEesqHv4y+5ffawdaVb7OCVzhCU00f2LA47DJioRnrdp
-	inXAITrUCJ8e6vpOgIBMFUR9Qa+jzq2RFYNlB4MZ5TLosumJhEvGGulvPQYK/sLGrNnIyvf
-	sdd/FHumHmkQjwvXEar4DLtJLlJQESDhZfBILHM0/5RTToP32IoXsQFS5pK6zWequfi1EMD
-	uEAhJqeuGafk1P/tHKw3HyRQ7swYURFp5onqs1WCAKUJ9238Pbvnfr7g/Br5E3hWLSfcpWB
-	v6uZXXEm9zrN7LRqexmxajs/7jkT6Bf8GqUF3ZmW6g+9b4d4Bohk+VrOqIiK8PZCua5YS/Y
-	sWcnkM0R6y85NYuqFRpZ7fuDk9d3njHBdNmgK4C/VqLCGF9eIxJVAQEaiUVnwehS3VS8nmS
-	bKzdZflfXNEDxd9WflFbliwGtPWMgGyg3YxeDHoGdLwnqKRe8esoBEQKq39qa4sICkYbbj2
-	eUBtZBjONTokcJoho8+xtoTdVhRx8JAOTg1v8iWpv+JcfziDtt+/f8Xb3OjZ98wPV+QW9x2
-	GPcfWFl/GQ8HKIP+lUAFqP8xyG1qsDdwXWdgz8Pkwjf8cjia2T4DRVTy8wtL7Lw5EDMFja6
-	PMcuWsEcX42ANp+T836HGkNgsC16yE3ciRZNN6Jgr0G9JOw==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Kent,
+Add a helper function to poll periodically until a condition is met or
+a timeout is reached. By using the function, the 8th patch fixes
+QT2025 PHY driver to sleep until the hardware becomes ready.
 
-When using our customized Syzkaller to fuzz the latest Linux kernel, the =
-following crash (76s)
-was triggered.
+The first patch is for sched/core, which adds
+__might_sleep_precision(), rust friendly version of __might_sleep(),
+which takes a pointer to a string with the length instead of a
+null-terminated string. Rust's core::panic::Location::file(), which
+gives the file name of a caller, doesn't provide a null-terminated
+string. __might_sleep_precision() uses a precision specifier in the
+printk format, which specifies the length of a string; a string
+doesn't need to be a null-terminated.
 
-HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
-git tree: upstream
-Console output: =
-https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_=
-%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/report%20on%20=
-6.14-r3.txt
-Kernel config: =
-https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/config.tx=
-t=20
-C reproducer: =
-https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_=
-%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/repro.c
-Syzlang reproducer: =
-https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_=
-%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/repro.syz.txt
+The remaining patches are for the Rust portion and updates to the
+MAINTAINERS file.
 
-We have reproduced this issue repeatedly in 6.14-rc3. =46rom the syscall =
-reproducer, the syscall syz_mount_image mounts a constructed bcachefs =
-image. When the file system attempted to parse these parameters, it =
-caused the btree_id_is_extents, btree_type_has_snapshots, and =
-btree_type_has_snapshot_field functions in btree_types.h to shift out of =
-bounds. It is speculated that the constructed mirror may have caused the =
-btree_id to exceed the u64 bit width, which in turn triggered the shift =
-out-of-bounds. Also, the report shows that the bch2_time_to_timespec =
-function in bcachefs.h also undergoes a shift operation, but this does =
-not seem to be the case when I look at the source code. If you think =
-this issue has little impact on your system, please ignore it =E2=98=BA.
+This introduces two new types, Instant and Delta, which represent a
+specific point in time and a span of time, respectively.
 
-If you fix this issue, please add the following tag to the commit:
-Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin =
-<jjtan24@m.fudan.edu.cn>
+Unlike the old rust branch, This adds a wrapper for fsleep() instead
+of msleep(). fsleep() automatically chooses the best sleep method
+based on a duration.
 
-2025/02/19 18:35:12 reproducing crash 'UBSAN: shift-out-of-bounds in =
-bch2_trans_iter_init_outlined': final repro crashed as =
-(corrupted=3Dfalse):
-  u64s 6 type extent 1610612736:24:U32_MAX len 24 ver 0: durability: 1 =
-ptr: 0:34:8 gen 0
-  u64s 6 type extent 1610612736:24:U32_MAX len 24 ver 0: durability: 1 =
-ptr: 0:34:8 gen 0
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/bcachefs/bcachefs.h:1193:41
-shift exponent 128 is too large for 32-bit type 'unsigned int'
-CPU: 2 UID: 0 PID: 877 Comm: syz.1.16 Not tainted 6.13.0-rc7 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x180/0x1b0 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_shift_out_of_bounds+0xf2/0x1e0 lib/ubsan.c:468
- btree_id_cached fs/bcachefs/bcachefs.h:1193 [inline]
- bch2_btree_iter_flags fs/bcachefs/btree_iter.h:472 [inline]
- bch2_trans_iter_init_outlined.cold+0x55/0x78 =
-fs/bcachefs/btree_iter.c:2904
- bch2_trans_iter_init fs/bcachefs/btree_iter.h:520 [inline]
- bch2_btree_insert_trans+0x18c/0x290 fs/bcachefs/btree_update.c:647
- drop_dev_and_update+0x3d4/0x580 fs/bcachefs/backpointers.c:456
- check_bp_exists+0x1bd2/0x3140 fs/bcachefs/backpointers.c:603
- check_extent_to_backpointers+0x8d4/0x11f0 =
-fs/bcachefs/backpointers.c:688
- bch2_check_extents_to_backpointers_pass+0xa6f/0xf20 =
-fs/bcachefs/backpointers.c:884
- bch2_check_extents_to_backpointers+0x352/0xac0 =
-fs/bcachefs/backpointers.c:937
- bch2_run_recovery_pass+0x94/0x1a0 fs/bcachefs/recovery_passes.c:191
- bch2_run_recovery_passes+0x4a4/0x760 fs/bcachefs/recovery_passes.c:244
- bch2_fs_recovery+0x24d0/0x4f00 fs/bcachefs/recovery.c:861
- bch2_fs_start+0x2f6/0x610 fs/bcachefs/super.c:1037
- bch2_fs_get_tree+0x4b6/0x2020 fs/bcachefs/fs.c:2170
- vfs_get_tree+0x93/0x340 fs/super.c:1814
- do_new_mount fs/namespace.c:3511 [inline]
- path_mount+0x1272/0x1ba0 fs/namespace.c:3838
- do_mount+0xf8/0x110 fs/namespace.c:3851
- __do_sys_mount fs/namespace.c:4061 [inline]
- __se_sys_mount fs/namespace.c:4038 [inline]
- __x64_sys_mount+0x193/0x230 fs/namespace.c:4038
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f75b6feb51e
-Code: ff ff ff 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 =
-00 00 00 00 66 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffceb0a77a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000005b13 RCX: 00007f75b6feb51e
-RDX: 0000000020005b00 RSI: 0000000020005b40 RDI: 00007ffceb0a7800
-RBP: 00007ffceb0a7840 R08: 00007ffceb0a7840 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000020005b00
-R13: 0000000020005b40 R14: 00007ffceb0a7800 R15: 0000000020000080
- </TASK>
----[ end trace ]---
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/bcachefs/btree_types.h:798:9
-shift exponent 129 is too large for 64-bit type 'long long unsigned int'
-CPU: 2 UID: 0 PID: 877 Comm: syz.1.16 Not tainted 6.13.0-rc7 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x180/0x1b0 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_shift_out_of_bounds+0xf2/0x1e0 lib/ubsan.c:468
- btree_node_type_is_extents fs/bcachefs/btree_types.h:798 [inline]
- btree_id_is_extents fs/bcachefs/btree_types.h:803 [inline]
- __bch2_btree_iter_flags fs/bcachefs/btree_iter.h:451 [inline]
- bch2_btree_iter_flags fs/bcachefs/btree_iter.h:478 [inline]
- bch2_trans_iter_init_outlined.cold+0x37/0x78 =
-fs/bcachefs/btree_iter.c:2904
- bch2_trans_iter_init fs/bcachefs/btree_iter.h:520 [inline]
- bch2_btree_insert_trans+0x18c/0x290 fs/bcachefs/btree_update.c:647
- drop_dev_and_update+0x3d4/0x580 fs/bcachefs/backpointers.c:456
- check_bp_exists+0x1bd2/0x3140 fs/bcachefs/backpointers.c:603
- check_extent_to_backpointers+0x8d4/0x11f0 =
-fs/bcachefs/backpointers.c:688
- bch2_check_extents_to_backpointers_pass+0xa6f/0xf20 =
-fs/bcachefs/backpointers.c:884
- bch2_check_extents_to_backpointers+0x352/0xac0 =
-fs/bcachefs/backpointers.c:937
- bch2_run_recovery_pass+0x94/0x1a0 fs/bcachefs/recovery_passes.c:191
- bch2_run_recovery_passes+0x4a4/0x760 fs/bcachefs/recovery_passes.c:244
- bch2_fs_recovery+0x24d0/0x4f00 fs/bcachefs/recovery.c:861
- bch2_fs_start+0x2f6/0x610 fs/bcachefs/super.c:1037
- bch2_fs_get_tree+0x4b6/0x2020 fs/bcachefs/fs.c:2170
- vfs_get_tree+0x93/0x340 fs/super.c:1814
- do_new_mount fs/namespace.c:3511 [inline]
- path_mount+0x1272/0x1ba0 fs/namespace.c:3838
- do_mount+0xf8/0x110 fs/namespace.c:3851
- __do_sys_mount fs/namespace.c:4061 [inline]
- __se_sys_mount fs/namespace.c:4038 [inline]
- __x64_sys_mount+0x193/0x230 fs/namespace.c:4038
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f75b6feb51e
-Code: ff ff ff 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 =
-00 00 00 00 66 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffceb0a77a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000005b13 RCX: 00007f75b6feb51e
-RDX: 0000000020005b00 RSI: 0000000020005b40 RDI: 00007ffceb0a7800
-RBP: 00007ffceb0a7840 R08: 00007ffceb0a7840 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000020005b00
-R13: 0000000020005b40 R14: 00007ffceb0a7800 R15: 0000000020000080
- </TASK>
----[ end trace ]---
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/bcachefs/btree_types.h:825:9
-shift exponent 128 is too large for 64-bit type 'long long unsigned int'
-CPU: 2 UID: 0 PID: 877 Comm: syz.1.16 Not tainted 6.13.0-rc7 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x180/0x1b0 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_shift_out_of_bounds+0xf2/0x1e0 lib/ubsan.c:468
- btree_type_has_snapshot_field fs/bcachefs/btree_types.h:825 [inline]
- __bch2_btree_iter_flags fs/bcachefs/btree_iter.h:455 [inline]
- bch2_btree_iter_flags fs/bcachefs/btree_iter.h:478 [inline]
- bch2_trans_iter_init_outlined.cold+0x19/0x78 =
-fs/bcachefs/btree_iter.c:2904
- bch2_trans_iter_init fs/bcachefs/btree_iter.h:520 [inline]
- bch2_btree_insert_trans+0x18c/0x290 fs/bcachefs/btree_update.c:647
- drop_dev_and_update+0x3d4/0x580 fs/bcachefs/backpointers.c:456
- check_bp_exists+0x1bd2/0x3140 fs/bcachefs/backpointers.c:603
- check_extent_to_backpointers+0x8d4/0x11f0 =
-fs/bcachefs/backpointers.c:688
- bch2_check_extents_to_backpointers_pass+0xa6f/0xf20 =
-fs/bcachefs/backpointers.c:884
- bch2_check_extents_to_backpointers+0x352/0xac0 =
-fs/bcachefs/backpointers.c:937
- bch2_run_recovery_pass+0x94/0x1a0 fs/bcachefs/recovery_passes.c:191
- bch2_run_recovery_passes+0x4a4/0x760 fs/bcachefs/recovery_passes.c:244
- bch2_fs_recovery+0x24d0/0x4f00 fs/bcachefs/recovery.c:861
- bch2_fs_start+0x2f6/0x610 fs/bcachefs/super.c:1037
- bch2_fs_get_tree+0x4b6/0x2020 fs/bcachefs/fs.c:2170
- vfs_get_tree+0x93/0x340 fs/super.c:1814
- do_new_mount fs/namespace.c:3511 [inline]
- path_mount+0x1272/0x1ba0 fs/namespace.c:3838
- do_mount+0xf8/0x110 fs/namespace.c:3851
- __do_sys_mount fs/namespace.c:4061 [inline]
- __se_sys_mount fs/namespace.c:4038 [inline]
- __x64_sys_mount+0x193/0x230 fs/namespace.c:4038
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f75b6feb51e
-Code: ff ff ff 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 =
-00 00 00 00 66 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffceb0a77a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000005b13 RCX: 00007f75b6feb51e
-RDX: 0000000020005b00 RSI: 0000000020005b40 RDI: 00007ffceb0a7800
-RBP: 00007ffceb0a7840 R08: 00007ffceb0a7840 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000020005b00
-R13: 0000000020005b40 R14: 00007ffceb0a7800 R15: 0000000020000080
- </TASK>
----[ end trace ]---
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/bcachefs/btree_types.h:814:9
-shift exponent 128 is too large for 64-bit type 'long long unsigned int'
-CPU: 2 UID: 0 PID: 877 Comm: syz.1.16 Not tainted 6.13.0-rc7 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x180/0x1b0 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_shift_out_of_bounds+0xf2/0x1e0 lib/ubsan.c:468
- btree_type_has_snapshots fs/bcachefs/btree_types.h:814 [inline]
- __bch2_btree_iter_flags fs/bcachefs/btree_iter.h:459 [inline]
- bch2_btree_iter_flags fs/bcachefs/btree_iter.h:478 [inline]
- bch2_trans_iter_init_outlined.cold+0x73/0x78 =
-fs/bcachefs/btree_iter.c:2904
- bch2_trans_iter_init fs/bcachefs/btree_iter.h:520 [inline]
- bch2_btree_insert_trans+0x18c/0x290 fs/bcachefs/btree_update.c:647
- drop_dev_and_update+0x3d4/0x580 fs/bcachefs/backpointers.c:456
- check_bp_exists+0x1bd2/0x3140 fs/bcachefs/backpointers.c:603
- check_extent_to_backpointers+0x8d4/0x11f0 =
-fs/bcachefs/backpointers.c:688
- bch2_check_extents_to_backpointers_pass+0xa6f/0xf20 =
-fs/bcachefs/backpointers.c:884
- bch2_check_extents_to_backpointers+0x352/0xac0 =
-fs/bcachefs/backpointers.c:937
- bch2_run_recovery_pass+0x94/0x1a0 fs/bcachefs/recovery_passes.c:191
- bch2_run_recovery_passes+0x4a4/0x760 fs/bcachefs/recovery_passes.c:244
- bch2_fs_recovery+0x24d0/0x4f00 fs/bcachefs/recovery.c:861
- bch2_fs_start+0x2f6/0x610 fs/bcachefs/super.c:1037
- bch2_fs_get_tree+0x4b6/0x2020 fs/bcachefs/fs.c:2170
- vfs_get_tree+0x93/0x340 fs/super.c:1814
- do_new_mount fs/namespace.c:3511 [inline]
- path_mount+0x1272/0x1ba0 fs/namespace.c:3838
- do_mount+0xf8/0x110 fs/namespace.c:3851
- __do_sys_mount fs/namespace.c:4061 [inline]
- __se_sys_mount fs/namespace.c:4038 [inline]
- __x64_sys_mount+0x193/0x230 fs/namespace.c:4038
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f75b6feb51e
-Code: ff ff ff 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 =
-00 00 00 00 66 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffceb0a77a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000005b13 RCX: 00007f75b6feb51e
-RDX: 0000000020005b00 RSI: 0000000020005b40 RDI: 00007ffceb0a7800
-RBP: 00007ffceb0a7840 R08: 00007ffceb0a7840 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000020005b00
-R13: 0000000020005b40 R14: 00007ffceb0a7800 R15: 0000000020000080
- </TASK>
----[ end trace ]---
-bcachefs (loop1): duplicate versions of same extent, deleting smaller
-  u64s 6 type extent 1610612736:24:U32_MAX len 24 ver 0: durability: 1 =
-ptr: 0:34:8 gen 0
-  u64s 6 type extent 1610612736:24:U32_MAX len 24 ver 0: durability: 1 =
-ptr: 0:34:8 gen 0
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/bcachefs/btree_types.h:814:9
-shift exponent 128 is too large for 64-bit type 'long long unsigned int'
-CPU: 0 UID: 0 PID: 877 Comm: syz.1.16 Not tainted 6.13.0-rc7 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x180/0x1b0 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_shift_out_of_bounds+0xf2/0x1e0 lib/ubsan.c:468
- btree_type_has_snapshots fs/bcachefs/btree_types.h:814 [inline]
- bch2_trans_update_extent_overwrite.cold+0x1d/0x66 =
-fs/bcachefs/btree_update.c:254
- bch2_trans_update_extent+0x65d/0x1000 fs/bcachefs/btree_update.c:318
- bch2_trans_update+0x360/0x5b0 fs/bcachefs/btree_update.c:518
- bch2_btree_insert_trans+0x223/0x290 fs/bcachefs/btree_update.c:650
- drop_dev_and_update+0x3d4/0x580 fs/bcachefs/backpointers.c:456
- check_bp_exists+0x1bd2/0x3140 fs/bcachefs/backpointers.c:603
- check_extent_to_backpointers+0x8d4/0x11f0 =
-fs/bcachefs/backpointers.c:688
- bch2_check_extents_to_backpointers_pass+0xa6f/0xf20 =
-fs/bcachefs/backpointers.c:884
- bch2_check_extents_to_backpointers+0x352/0xac0 =
-fs/bcachefs/backpointers.c:937
- bch2_run_recovery_pass+0x94/0x1a0 fs/bcachefs/recovery_passes.c:191
- bch2_run_recovery_passes+0x4a4/0x760 fs/bcachefs/recovery_passes.c:244
- bch2_fs_recovery+0x24d0/0x4f00 fs/bcachefs/recovery.c:861
- bch2_fs_start+0x2f6/0x610 fs/bcachefs/super.c:1037
- bch2_fs_get_tree+0x4b6/0x2020 fs/bcachefs/fs.c:2170
- vfs_get_tree+0x93/0x340 fs/super.c:1814
- do_new_mount fs/namespace.c:3511 [inline]
- path_mount+0x1272/0x1ba0 fs/namespace.c:3838
- do_mount+0xf8/0x110 fs/namespace.c:3851
- __do_sys_mount fs/namespace.c:4061 [inline]
- __se_sys_mount fs/namespace.c:4038 [inline]
- __x64_sys_mount+0x193/0x230 fs/namespace.c:4038
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f75b6feb51e
-Code: ff ff ff 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 =
-00 00 00 00 66 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffceb0a77a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000005b13 RCX: 00007f75b6feb51e
-RDX: 0000000020005b00 RSI: 0000000020005b40 RDI: 00007ffceb0a7800
-RBP: 00007ffceb0a7840 R08: 00007ffceb0a7840 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000020005b00
-R13: 0000000020005b40 R14: 00007ffceb0a7800 R15: 0000000020000080
- </TASK>
+[1]: https://github.com/rust-lang/libs-team/issues/466
 
----------------
-thanks,
-Kun Hu=
+v11
+- use file_len arg name in __might_resched_precision() instead of len for clarity
+- remove unnecessary strlen in __might_resched(); just use a large value for the precision
+- add more doc and example for read_poll_timeout()
+- fix read_poll_timeout() to call __might_sleep() only with CONFIG_DEBUG_ATOMIC_SLEEP enabled
+- call might_sleep() instead of __might_sleep() in read_poll_timeout() to match the C version
+- Add new sections for the abstractions in MAINTAINERS instead of adding rust files to the existing sections
+v10: https://lore.kernel.org/netdev/20250207132623.168854-1-fujita.tomonori@gmail.com/
+- rebased on rust-next
+- use Option type for timeout argument for read_poll_timeout()
+- remove obsoleted comment on read_poll_timeout()
+v9: https://lore.kernel.org/lkml/20250125101854.112261-1-fujita.tomonori@gmail.com/
+- make the might_sleep() changes into as a separate patch
+- add as_millis() method to Delta for Binder driver
+- make Delta's as_*() methods const (useful in some use cases)
+- add Delta::ZERO const; used in fsleep()
+- fix typos
+- use intra-doc links
+- place the #[inline] marker before the documentation
+- remove Instant's from_raw() method
+- add Invariants to Instant type
+- improve Delta's methods documents
+- fix fsleep() SAFETY comment
+- improve fsleep() documents
+- lift T:Copy restriction in read_poll_timeout()
+- use MutFn for Cond in read_poll_timeout() instead of Fn
+- fix might_sleep() call in read_poll_timeout()
+- simplify read_poll_timeout() logic
+v8: https://lore.kernel.org/lkml/20250116044100.80679-1-fujita.tomonori@gmail.com/
+- fix compile warnings
+v7: https://lore.kernel.org/lkml/20241220061853.2782878-1-fujita.tomonori@gmail.com/
+- rebased on rust-next
+- use crate::ffi instead of core::ffi
+v6: https://lore.kernel.org/lkml/20241114070234.116329-1-fujita.tomonori@gmail.com/
+- use super::Delta in delay.rs
+- improve the comments
+- add Delta's is_negative() method
+- rename processor.rs to cpu.rs for cpu_relax()
+- add __might_sleep_precision() taking pointer to a string with the length
+- implement read_poll_timeout as normal function instead of macro
+v5: https://lore.kernel.org/lkml/20241101010121.69221-1-fujita.tomonori@gmail.com/
+- set the range of Delta for fsleep function
+- update comments
+v4: https://lore.kernel.org/lkml/20241025033118.44452-1-fujita.tomonori@gmail.com/
+- rebase on the tip tree's timers/core
+- add Instant instead of using Ktime
+- remove unused basic methods
+- add Delta as_micros_ceil method
+- use const fn for Delta from_* methods
+- add more comments based on the feedback
+- add a safe wrapper for cpu_relax()
+- add __might_sleep() macro
+v3: https://lore.kernel.org/lkml/20241016035214.2229-1-fujita.tomonori@gmail.com/
+- Update time::Delta methods (use i64 for everything)
+- Fix read_poll_timeout to show the proper debug info (file and line)
+- Move fsleep to rust/kernel/time/delay.rs
+- Round up delta for fsleep
+- Access directly ktime_t instead of using ktime APIs
+- Add Eq and Ord with PartialEq and PartialOrd
+v2: https://lore.kernel.org/lkml/20241005122531.20298-1-fujita.tomonori@gmail.com/
+- Introduce time::Delta instead of core::time::Duration
+- Add some trait to Ktime for calculating timeout
+- Use read_poll_timeout in QT2025 driver instead of using fsleep directly
+v1: https://lore.kernel.org/netdev/20241001112512.4861-1-fujita.tomonori@gmail.com/
+
+FUJITA Tomonori (8):
+  sched/core: Add __might_sleep_precision()
+  rust: time: Add PartialEq/Eq/PartialOrd/Ord trait to Ktime
+  rust: time: Introduce Delta type
+  rust: time: Introduce Instant type
+  rust: time: Add wrapper for fsleep() function
+  MAINTAINERS: rust: Add new sections for DELAY/SLEEP and TIMEKEEPING
+    API
+  rust: Add read_poll_timeout functions
+  net: phy: qt2025: Wait until PHY becomes ready
+
+ MAINTAINERS               |  14 ++++
+ drivers/net/phy/qt2025.rs |  10 ++-
+ include/linux/kernel.h    |   2 +
+ kernel/sched/core.c       |  61 +++++++++------
+ rust/helpers/helpers.c    |   2 +
+ rust/helpers/kernel.c     |  18 +++++
+ rust/helpers/time.c       |   8 ++
+ rust/kernel/cpu.rs        |  13 ++++
+ rust/kernel/error.rs      |   1 +
+ rust/kernel/io.rs         |   2 +
+ rust/kernel/io/poll.rs    | 120 +++++++++++++++++++++++++++++
+ rust/kernel/lib.rs        |   1 +
+ rust/kernel/time.rs       | 155 ++++++++++++++++++++++++++++++--------
+ rust/kernel/time/delay.rs |  49 ++++++++++++
+ 14 files changed, 402 insertions(+), 54 deletions(-)
+ create mode 100644 rust/helpers/kernel.c
+ create mode 100644 rust/helpers/time.c
+ create mode 100644 rust/kernel/cpu.rs
+ create mode 100644 rust/kernel/io/poll.rs
+ create mode 100644 rust/kernel/time/delay.rs
+
+
+base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
+-- 
+2.43.0
+
