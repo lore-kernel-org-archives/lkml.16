@@ -1,132 +1,136 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A651B3927
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98FD1E25F4
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740041300; cv=none; b=Fs1yRFabXpF1q3oUpuHl4ORKPM8yGAWvXvUhYab1FA/DHM6+bmldHGtudteUVXFW+lJRZ8F8LFetafbcLD8cTDXQvGtISweTxCFYvp65uU3ny78IhOptpj098fpSCKhyFEVQW0t5dcAXH10dVe7GgO7aQOWtstkxEP9QIbnu5GU=
+	t=1740041388; cv=none; b=OneiqxOhTWHohiEDFTG0cDhr+k5VqFxZ+7wI4sBnKLMARku1qlbNAWMEMhAItWpVwmJwlaGvM+p5biRbdK02Gu0EEwlK83EUAh31JrWMfocFrBuof8L4LsRwmuzN3oIXvJGFlBLBGEZLe3OitD+WBI20fGOZgTx2KihBlx2O+L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740041300; c=relaxed/simple;
-	bh=eOJF46IaUTaNfT4QyMAMjESNMVY8lwoauqmqP5QZNAU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=On+EIFsx+SdFvRIyx5V4irXmsrGGeSk/3Hmp+whbNLSqQBTqGA4p8+6nwo8gYAa9TEPou0e6SEhlt7nNLW3IB/crAl2aAHHvLk5vUpsTI8nUTg5250DOqE1PZiDnM8LbK8N0axykhBF/3RWDTtJ9ut/vhLKlbhj8ncd6Uyxgflo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sbdmn09a; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740041388; c=relaxed/simple;
+	bh=9GRQle34YcjfgiWZwko3yDvtJTlH367rXx3Cbqx4DF8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=k2A3eksQkj7dogk6A6W1JagScgHSBqNIv7moz+mtxUyH6ZcHH0zmSEjsYJCgHlRvEaxt3hShJI85+4C2jEW0C/ZiKxtkWSnqjZmsEhXnppihTTRTGlwfM+AMF+fjUUJ1j5dE+HQ0Aj7mFVGFfIZECgDI1AK30+FmMb53BLkxsIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LQeZ4ApO; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sbdmn09a"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e058ca6806so1103492a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 00:48:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LQeZ4ApO"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38c62ef85daso51820f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 00:49:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740041293; x=1740646093; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wn8U20v5f+rx/ps3pY4w1/ateGC6xo29Rt3tQiIDuAA=;
-        b=sbdmn09aMWBv+kofs1i/IjKf0HK7QwdVVYtKlQPRPVltnAmZzRwCCUNRlXhyfIWLS1
-         2BBOZwmGYURCIFja3ZpYtaR+EcThtVZt6O4ZSWJXw0N3gzSVv/kys8pM1SNnjTZn8LdI
-         aiqUhuY+kEbvY4ShBDZ1fODHmfn/WFg5OL2fLYgrmtkMFTyMICTDennEx2Yoykosu0F9
-         ++yhL5TOgKdfSac9sk66dQNvOd00+YBu8BnbdyOWrV6DhCDkENOT9hSfo4FkpCxMRh6H
-         ZidvINNCEzvXG5sjJt0A3+AWpJ9D/sOgdk1AU/VJWKMRoHxqYoimX43F9TUIcfLZ3Xg7
-         d32w==
+        d=linaro.org; s=google; t=1740041384; x=1740646184; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJjAYRgPzkjQ/gM/tfY/GlddEkfV8+B5j+nIT1URPMg=;
+        b=LQeZ4ApOCQ3619Zpt4UAlO5BsMvylwfiFvzUv3u07AsALu9iH7RjjYGgtCAGRbBENl
+         0qtlqC+Fi7C6TnwtJA8dct4+rUmE/4Y/ZXsRoJjGeXlvuIHAZ4xSC/eXipuh4DK+Z6qJ
+         SbloEXesOznX7JijPtAtVN7H+gjamE2sLNPCRDFOb6LsaglwsB/5lwZiYic/fa4p/y1d
+         NsdQKTeEwxM5UAFlVL6y1YqvOT8Htf6CfX3JerUE1ib++EZaaaGhv3sJJw5sSpOwxMd+
+         5LthOLjj1rnwAogLeJuRl0lmGJSAsVB/h/tGrlvK+tTDPtBYLNoLgBbCTIZki4kqn6jE
+         sEIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740041293; x=1740646093;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wn8U20v5f+rx/ps3pY4w1/ateGC6xo29Rt3tQiIDuAA=;
-        b=HNv47IMI0/pnmUmUkR1JH/O88ASXDcVTbcWHqe9Dq/Vs129TakRdF/F+xZTOjSoTzw
-         ygA1EHgD9QUpeRGeP8kPyI2Q5fZ2pHC8QXwRJ8Z1IYnZoBD0QlpQwTJoOkuI953f1J5u
-         zJqpqsZw53DkUAvxmcgVgCo8KW9K5s0bkOUbJzb2rkRLQqA0Ls/OQ43k5eCz7sf+K4P8
-         02bUzObElea+snB1F5CnWY5u6fwmGJH2OPu66e5780w1S+FdI68iQZaoNKmXwYE7hxSO
-         soZxhuTmEcGeXM7CXiewVVlx8yQxv7IpU6FSG2UTFvwdAdxJeaBMU80ofdzADcepUED9
-         ieVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfz78i1GnNfPNdIUL+uhAK0mBBgcGMZ1ucUPl89tHupS2v/5GJ9vFz2/s7+5YnFJ7GD2KXQXLiGvMKqkI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWVo2G7pr2gGMY0G4DdGnVc24Do4MDB0XiiiZ4rKS0+YtuD4RF
-	PeE4Z7Mpf14de5IpKP/50ZbFqOZ0qZSSTQZtbIFaTpTYMr9wqHJVGS8AuK/UiAUowA1EK4F4Oci
-	+vezYVSimj7Maftzpm05xC8lZEfYBoYIoBKgNgD8/f+Q5kw921zSr
-X-Gm-Gg: ASbGncv6qnf1zNQo+UEEf+uqU7Y2JS59DMns4viKKSMEVzKnIdosnrNObFM9w8TMUMB
-	038Zo8UoTOwGiBCRHMPHHTxZ80XLOJWa3O6Qd/3zzrLuq3/JMBx8TL4Tj246rTrYWqRRza7k+Lg
-	O7bEk4GEaoPf9XsHynk18UBEtnIxRvvw==
-X-Google-Smtp-Source: AGHT+IFYZLNBrrxeZ0D/1Dd1enkXOye9zIxSSkI1C9v/ccGwQ2J88/lDeiWpn10jQOqgPMQUeWzt7xAhWI3SyCu5yrE=
-X-Received: by 2002:a05:6402:a001:b0:5e0:4408:6bcf with SMTP id
- 4fb4d7f45d1cf-5e04408718bmr15446691a12.10.1740041293384; Thu, 20 Feb 2025
- 00:48:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740041384; x=1740646184;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LJjAYRgPzkjQ/gM/tfY/GlddEkfV8+B5j+nIT1URPMg=;
+        b=oIx7HjtDRDTSYvjWBqPUXXq4B2k5NVB8uUm7EF06JdE9O8T3tiHuCiIXaEz8w9eVKf
+         zCNR6LsJ9dnTc4ALqFyS8p3KSnhoVZNDfSqHwBIa2bE04wa4qeLPcne0nzjDWE94HdEf
+         +6XuqdNuc8QXS0BWpdH6nH1rvyxTGJxcHZj4im43yf8OePFLYS1DVzUv7O4BcSZLHTAA
+         97EWMTMHF1K+EvmKY92oLVzRbrqbnxVix7N0wV7gbU7nbpMfuPjPtdUXyPMfRWhfILHN
+         4TzuGh9Xklw8tIGnJyHC/LrINc59/ZHQev/xbQtM+2/ns1hMVlqjcS2TwdK9w9HUy/Wx
+         Ahiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpcQy13aQnSVXRgWG9CQjUkc2RjM+3oEDP7wSeuGHh+IyFJW4S0OQWNM3Q09rCPpdJNpYeNiQqQKYlcKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo6leiVGKQoZO/74KidiPyezG7C0TkymatGkJPKp4lg8x2KiEI
+	llZsvc8xehx0H0NV4YahT9t5nzoSuKDHTcnPNxRnX7ylSuMk9pQgUauNjBLD5tk=
+X-Gm-Gg: ASbGncu3A8jEndctVPmHlr4a5JLbxhoblXME7Ke+a9aXabIw+N2lz4e8HbNYkHs1lDo
+	UoSIwVPVXVmXhMPRbAdBF006zcdg5k/59q4HDcYqPxPp4EfCp0Nx0reeqSV6HyM1TW+JN54cdXI
+	crXQBuVnRNSrxEt0+PczXf4B5G8tTZu4UwIs9cPyvxauHLp+SZXH8tYS9SrIV0wX/V3rUj34JDf
+	UXn/1BwrX6zs7rOrxgLAOHh7X90fwdTypYLdg2KPSpOaP7NIkpD5Uxji0xEpjyGnEZKBQLfGGHt
+	W4NL9CyFbvriMy3J758ULXe7YNtjZzQ2B7D7oW4mOSdTPOOl6+C7WYitjrPqQFyQ
+X-Google-Smtp-Source: AGHT+IGlrjw3yzFug/Hb4OGULJMWTF1gWp98xewA6c7xrzvNNBzktDK7efl8Wrgxer7Jqlz1DFDcAQ==
+X-Received: by 2002:a05:600c:4f02:b0:439:930a:589b with SMTP id 5b1f17b1804b1-439930a5a88mr33223935e9.3.1740041383895;
+        Thu, 20 Feb 2025 00:49:43 -0800 (PST)
+Received: from [127.0.1.1] (46-253-189-43.dynamic.monzoon.net. [46.253.189.43])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a1b8397sm234417565e9.36.2025.02.20.00.49.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 00:49:42 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 0/4] arm64: dts: qcom: sm8750: Initial audio support
+ (not yet complete)
+Date: Thu, 20 Feb 2025 09:49:39 +0100
+Message-Id: <20250220-sm8750-audio-v2-0-fbe243c4afc3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219125522.2535263-1-edumazet@google.com> <20250219125522.2535263-3-edumazet@google.com>
- <87tt8phw61.ffs@tglx>
-In-Reply-To: <87tt8phw61.ffs@tglx>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 20 Feb 2025 09:48:02 +0100
-X-Gm-Features: AWEUYZmkvPY51rZ39kRG4J0w-NvpyifR9W9MU2pp3GCuPxC4z2SZ_RGgJDL1kQs
-Message-ID: <CANn89iKQ2oVX6pzWxN1rEqHfrkDXkxEgcF6MHW-OiyGc2C=ybw@mail.gmail.com>
-Subject: Re: [PATCH V2 2/4] posix-timers: Initialise timer->it_id in posix_timer_add()
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Segall <bsegall@google.com>, 
-	Eric Dumazet <eric.dumazet@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKPstmcC/1XMQQ7CIBCF4as0sxbD0BbUlfcwXWA7bSdRaECJp
+ uHuYl25/F/yvhUiBaYIp2qFQIkje1dC7SroZ+smEjyUBiVVg1IpEe8H00phnwN7MdRkxqs22qC
+ GclkCjfzauEtXeub48OG96Qm/6w9Cif9QQiGFqaWlHo1u2uP5xs4Gv/dhgi7n/AGVowxNqQAAA
+ A==
+X-Change-ID: 20241022-sm8750-audio-d3e7fb676716
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Melody Olvera <quic_molvera@quicinc.com>, 
+ Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Thu, Feb 20, 2025 at 9:12=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> On Wed, Feb 19 2025 at 12:55, Eric Dumazet wrote:
-> > A timer is visible only when both timer->signal and timer->i_id
-> > are set to their final values.
-> >
-> > We can initialize timer->it_id sooner.
->
-> This changelog tells nothing. What is this fixing, why is it required to
-> initialize this sooner?
+Hi,
 
+Changes in v2:
+- Use 0x0 to match rest of sm8750
+- Re-order some nodes to keep preferred order by unit address
+- Add Rb tags
+- Link to v1: https://lore.kernel.org/r/20241101-sm8750-audio-v1-0-730aec176459@linaro.org
 
-Just  to make the series more readable and bisectable.
+Dependencies
+============
+Depends on: https://lore.kernel.org/r/20241112004936.2810509-4-quic_molvera@quicinc.com
 
->
-> We can... We also can not ... Aside of that please write changelogs in
-> imperative mood as Documentation asks for.
+Bindings for these
+==================
+All DTS added here have corresponding bindings, on the list:
+https://lore.kernel.org/all/20241022064238.22941-1-krzysztof.kozlowski@linaro.org/
+https://lore.kernel.org/all/20241101170309.382782-1-krzysztof.kozlowski@linaro.org/
 
-I do not understand.
+Other bindings were already applied.
 
-I wrote more than 5000 upstream linux patches, you  are trying to
-educate me in 2025 ?
+Description
+===========
+Add necessary SoC components for sound on SM8750: ADSP and relates
+blocks, LPASS pin controller and macro codecs.
 
->
-> > Signed-off-by: Eric Dumazet <edumazet@google.com>
-> > ---
-> >  kernel/time/posix-timers.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-> > index 204a351a2fd3..1f73ea955756 100644
-> > --- a/kernel/time/posix-timers.c
-> > +++ b/kernel/time/posix-timers.c
-> > @@ -114,6 +114,7 @@ static int posix_timer_add(struct k_itimer *timer)
-> >
-> >               spin_lock(&hash_lock);
-> >               if (!__posix_timers_find(head, sig, id)) {
-> > +                     timer->it_id =3D (timer_t)id;
-> >                       hlist_add_head_rcu(&timer->t_hash, head);
-> >                       spin_unlock(&hash_lock);
-> >                       return id;
-> > @@ -407,8 +408,7 @@ static int do_timer_create(clockid_t which_clock, s=
-truct sigevent *event,
-> >
-> >       /*
-> >        * Add the timer to the hash table. The timer is not yet valid
-> > -      * because new_timer::it_signal is still NULL. The timer id is al=
-so
-> > -      * not yet visible to user space.
->
-> Even with this change the timer ID is not yet visible to user space
-> because it has not yet been copied back ....
->
+This is an early release, as I don't have sound yet fully ready, but
+speakers and DMICs work with these patches on my WIP branch.
 
-It is seen in concurrent lookups.
+Best regards,
+Krzysztof
+
+---
+Krzysztof Kozlowski (4):
+      arm64: dts: qcom: sm8750: Add IPCC, SMP2P, AOSS and ADSP
+      arm64: dts: qcom: sm8750: Add LPASS macro codecs and pinctrl
+      arm64: dts: qcom: sm8750-mtp: Enable ADSP
+      arm64: dts: qcom: sm8750-qrd: Enable ADSP
+
+ arch/arm64/boot/dts/qcom/sm8750-mtp.dts |   7 +
+ arch/arm64/boot/dts/qcom/sm8750-qrd.dts |   7 +
+ arch/arm64/boot/dts/qcom/sm8750.dtsi    | 342 ++++++++++++++++++++++++++++++++
+ 3 files changed, 356 insertions(+)
+---
+base-commit: 9be34b68f9b3a5990fddf4ee5c1437be454d7fcb
+change-id: 20241022-sm8750-audio-d3e7fb676716
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
