@@ -1,38 +1,36 @@
 Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9231FC0E4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99C1FC7E8;
 	Thu, 20 Feb 2025 14:39:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062374; cv=none; b=bzzw8UBV02+snS5JLuSP9tZr73+pr0Amcj6X1XZEWyucrVckzTrCYSlShPeVbO5NLZljtpTk3khjfMKFF6YT93agVE8MTw5rKBwbhOxHqGYO8vP7uFl6uYVWzYXhLsumll3dTJTIbmdOis9rgGvPwMZiHa4KF6ZM6itSZNi6Q2E=
+	t=1740062376; cv=none; b=XpOs4crRxa7jK9E0XfeLgmmcOkhilPjIKgErgZd9SQdzkgE4IAotK3F/Ujn1Q5bZH7RR1zpIOZbGpIHnSMjXsaEa37wYNm3Q0Z3g6slCXT8gogT+/NrCLYKcLpOAHHxvaazjnj6ZKDBNqwwycjmFARrTeebUdIJdAAnItrdZMso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062374; c=relaxed/simple;
-	bh=LbQkwTDIu9g+6v+t8LjVmjJshSoNf7WjKV5AFx6vUuE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ClWqQsU5BTXRHMaV0PHg6b7XuxdSQD8R3HaocMsCYZDr/B4NKBUQCj9M/EXRqTdZlID2eKjewZa1GnNQJusTjvrmKTnqi5dkP5elzXUiWtvnZ4//yaLTroX1qYFmr/lHRHaen/0oYL7r4+TDKfm+5ui4AT8JjYkLM38ogi+wVLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=LPtvd8tl; arc=none smtp.client-ip=89.58.62.56
+	s=arc-20240116; t=1740062376; c=relaxed/simple;
+	bh=LcSlaUKd8gp4f67QCYONctlj5MrgKx7MxQCQ8IbGlws=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y7RNwTJ15VltTzKKlgRBdU1tFINMKp8cFEOteK9Rxf3ykdP1VuXWxSj1QDXCWTFyl/Zzg6d893HME03hVZ79lp0Z9wL5CCn8/WxcZE9eSDEHk+h3J+fw102Teon91KUUw5zxt/n94OQTQ6r9f9ZvrgeCWiafL16uyNzbQcVl4y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=LV6b5JX3; arc=none smtp.client-ip=89.58.62.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="LPtvd8tl"
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="LV6b5JX3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1740062098;
-	bh=LbQkwTDIu9g+6v+t8LjVmjJshSoNf7WjKV5AFx6vUuE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Message-ID:Date:From:
-	 Reply-To:Subject:To:Cc:In-Reply-To:References:Resent-Date:
-	 Resent-From:Resent-To:Resent-Cc:User-Agent:Content-Type:
-	 Content-Transfer-Encoding;
-	b=LPtvd8tlVb2viqcehzfDj2Z5F19wvvm861uzy2+3IEa644XN3neHmVWYcCH5+pIOg
-	 ByT7QcKSE90hNTDJIivsuiXH+vL1TrdazRsLrf7+7P8H2D645yb0/JNkA2lDdzJ1XV
-	 OMPzyhOuojCRByx6+0TlCQMg0u6pI5O0HFtReDFHzdC4oZYS4mPRklwWJwuSAB71v7
-	 nhmd5mvwOuFpITeGmkJzAp6ie2DtUkkyQPoQZ7A/yyCemKSX27Rs76hQfnQqIMm4cD
-	 M1odogMBwWoEYIA9XQZ5MVdutgt/XqENO4kaehxRfusxpmxxRNmsl+q+MgS5/wCb+8
-	 yJAUK5QkE8OPg==
+	s=default; t=1740062093;
+	bh=LcSlaUKd8gp4f67QCYONctlj5MrgKx7MxQCQ8IbGlws=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
+	 Content-Transfer-Encoding:Message-ID:Date:From:Reply-To:Subject:To:
+	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
+	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
+	b=LV6b5JX3cwKegcP8ZA3zOd5pVdDqr7uvtIxZaxB1WGM3XuRTliTErn6yKSG8cfILB
+	 DXU6pGL0KlIFlsCVs1bb7wrtfNLNAtmhS7gYjivWIQCLiJcZrdfynB+B5uO63LdRYL
+	 ji1B5i4gRc3icHDpxLB1RfvdKhEn7WNDgCzJJaqCMq1tIdXre1kpxfTB1GBP0DbFl4
+	 4D/Jux9yIDtuCUXdnl3SwhE4GMAt3/K8jkqfS0jmAG4nD+q4sAbJ/w5G3HSkP3cRu+
+	 +NgQcJz2gBAyKCbw6dxHtZtStqzL/birU9/9kImd7c2wD/fAnEkIB8G6+cbsGE/p9X
+	 e1DROzYDXnctA==
 Received: from integral2.. (unknown [182.253.126.96])
-	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id DF02A20744A5;
-	Thu, 20 Feb 2025 14:34:56 +0000 (UTC)
+	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id D34DB20744A3;
+	Thu, 20 Feb 2025 14:34:50 +0000 (UTC)
 From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
@@ -40,13 +38,11 @@ Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
 	io-uring Mailing List <io-uring@vger.kernel.org>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
-Subject: [PATCH liburing v1 2/3] liburing.h: Explain the history of `io_uring_get_sqe()`
+Subject: [PATCH liburing v1 0/3] Fix Compilation Error on Android and Some Cleanup
 X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
-Date: Thu, 20 Feb 2025 21:34:21 +0700
-Message-Id: <20250220143422.3597245-3-ammarfaizi2@gnuweeb.org>
+Date: Thu, 20 Feb 2025 21:34:19 +0700
+Message-Id: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
-References: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,63 +51,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a comment for `io_uring_get_sqe()` to provide historical context
-and prevent misunderstandings, as seen in Pull Request 1336.
+Hi Jens,
 
-Link: https://github.com/axboe/liburing/pull/1336
+Another day in the thrilling world of cross-platform compatibility...
+
+Alviro discovered that some Android versions are missing `aligned_alloc()`
+in `<stdlib.h>`, leading to a compilation error on Termux 0.118.0:
+
+```
+cmd-discard.c:383:11: warning: call to undeclared library function \
+'aligned_alloc' with type 'void *(unsigned long, unsigned long)'; ISO \
+C99 and later do not support implicit function declarations \
+[-Wimplicit-function-declaration]
+
+        buffer = aligned_alloc(lba_size, lba_size);
+                 ^
+```
+
+To resolve this without rewriting large portions of liburing tests,
+introduce a helper function that wraps `posix_memalign()` and provides
+our own `aligned_alloc()`.
+
+While we're at it, there's a redundant double negation lurking in
+`liburing.h`. Let's clean that up too.  
+
+Also, to prevent yet another round of confusion like what happened in
+PR #1336, document the history of `io_uring_get_sqe()` in the header
+file.
+
+Ref: https://github.com/axboe/liburing/pull/1336
+
+Signed-off-by: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
 Signed-off-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
 ---
- src/include/liburing.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
 
-diff --git a/src/include/liburing.h b/src/include/liburing.h
-index b2d76f3224e2..98419e378f72 100644
---- a/src/include/liburing.h
-+++ b/src/include/liburing.h
-@@ -1622,24 +1622,43 @@ IOURINGINLINE int io_uring_buf_ring_available(struct io_uring *ring,
- 					      unsigned short bgid)
- {
- 	uint16_t head;
- 	int ret;
- 
- 	ret = io_uring_buf_ring_head(ring, bgid, &head);
- 	if (ret)
- 		return ret;
- 
- 	return (uint16_t) (br->tail - head);
- }
- 
-+/*
-+ * As of liburing-2.2, io_uring_get_sqe() has been converted into a
-+ * "static inline" function. However, this change breaks seamless
-+ * updates of liburing.so, as applications would need to be recompiled.
-+ * To ensure backward compatibility, liburing keeps the original
-+ * io_uring_get_sqe() symbol available in the shared library.
-+ *
-+ * To accomplish this, io_uring_get_sqe() is defined as a non-static
-+ * inline function when LIBURING_INTERNAL is set, which only applies
-+ * during liburing.so builds.
-+ *
-+ * This strategy ensures new users adopt the "static inline" version
-+ * while preserving compatibility for old applications linked against
-+ * the shared library.
-+ *
-+ * Relevant commits:
-+ * 8be8af4afcb4 ("queue: provide io_uring_get_sqe() symbol again")
-+ * 52dcdbba35c8 ("src/queue: protect io_uring_get_sqe() with LIBURING_INTERNAL")
-+ */
- #ifndef LIBURING_INTERNAL
- IOURINGINLINE struct io_uring_sqe *io_uring_get_sqe(struct io_uring *ring)
- {
- 	return _io_uring_get_sqe(ring);
- }
- #else
- struct io_uring_sqe *io_uring_get_sqe(struct io_uring *ring);
- #endif
- 
- ssize_t io_uring_mlock_size(unsigned entries, unsigned flags);
- ssize_t io_uring_mlock_size_params(unsigned entries, struct io_uring_params *p);
- 
+Ammar Faizi (3):
+  liburing.h: Remove redundant double negation
+  liburing.h: Explain the history of `io_uring_get_sqe()`
+  Fix missing `aligned_alloc()` on some Android devices
+
+ examples/helpers.c     | 10 ++++++++++
+ examples/helpers.h     |  7 +++++++
+ examples/reg-wait.c    |  2 ++
+ src/include/liburing.h | 21 ++++++++++++++++++++-
+ test/helpers.c         | 10 ++++++++++
+ test/helpers.h         |  8 ++++++++
+ 6 files changed, 57 insertions(+), 1 deletion(-)
+
+
+base-commit: 66b071d1470ae787d47d4cb8d9cb3836249baf61
 -- 
 Ammar Faizi
-
