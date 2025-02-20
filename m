@@ -1,77 +1,114 @@
-Received: from mail.hillapex-8.site (mail.hillapex-8.site [92.113.147.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAB71487E9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 18:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.113.147.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D47247DF0;
+	Thu, 20 Feb 2025 18:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740076808; cv=none; b=fgTe5NMWpxHqDBSiPwLQxsIU3/h7AjRz0NW0sndfwz3ynWTYBHe4Kw+FoOf3S8BKunIo+OD1aeB/Y3y2VMEkSn1fAkZ/D2w3P707QWWzHzj0G6r1H5bgKa3cPI1pofmFfhrO+eDp91rzldEWlVI+xdn3pAcz9wHCgyhmckIQp9A=
+	t=1740076848; cv=none; b=DC0O/jTFZe1Qlqs5WaV4yo0A12DyIxvicwPTUvGxPYqdX2n6Lf4hOBaVknmKrvBTeifX1XGmcqb/EB42GiYvG/fzuVodO0EIUu1Tj347cNEoADD902q1qf9c3y/6vIor5beZ17xKopZnnCuAtiZmQVwZs/egu9JFNn6swKzE4Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740076808; c=relaxed/simple;
-	bh=PdsMbBAF/OUQAFCOucNpNTA0P2eutQfnDF6WpSM73Hs=;
-	h=Message-ID:From:To:Subject:Date:MIME-Version:Content-Type; b=t7okddtKoW6FjDBVlEgUJRm69K+Wddlq5jUlpmCi7Po/livRkqoohuskWDT0GHmbYbPdqQ7rNFFZfnmRsn6qofu/05egGxulirdHwlV6idO9LVOi54GDDUkBAx3OYr8kN1ek2shCiTwkrz9ThN7EX5XX86HVFr87qj/5sH5X/6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hillapex-8.site; spf=pass smtp.mailfrom=hillapex-8.site; dkim=pass (2048-bit key) header.d=hillapex-8.site header.i=@hillapex-8.site header.b=qlMWCuGI; arc=none smtp.client-ip=92.113.147.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hillapex-8.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hillapex-8.site
+	s=arc-20240116; t=1740076848; c=relaxed/simple;
+	bh=E2DR+BJJfXCSeI1cfeXIx9bKllVF0rrNynMBB0GIgg8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mlR+OBExcUiECcGtGCQ5ojKxxY6Ce0F76tbGaOR8FUTtsnzOOF9mYeasEuzTaUrsGA3EFGb/kCgbp1fc1svS9AozEkB8rWBuCfKfbrmlksRDbcDgLSKmZvYObTh0OcXbEB7Nx0pZ3BtR6HymLPBHi+VSRNxuNDs0oDlNS1AAZrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlgLDOiI; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hillapex-8.site header.i=@hillapex-8.site header.b="qlMWCuGI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hillapex-8.site;
-	s=default; t=1740076771;
-	bh=2n11Zu0md9PxChiVD4IoSSvrvvNTm4OZzq38NYa6lzA=;
-	h=Received:Received:From:To:Subject;
-	b=qlMWCuGI1/JiojpnAuysoDa2clmDUd6mSoEE4NGrjBdNCvI/7nZl72nYiEo4HiNRK
-	 xxzQlMA//V4m780FI+CwrXPPOWsgY8mdgnaxwC3jHn1S4/UdD1xMz70RxU1jqBm5U+
-	 CADgTxzQ7OjQb609p9VhUHbFSIf1n6equN6aPthY0jx6fNQNuswXP6SVdGwggIN/kc
-	 Y9iJ0oPgBhi2DS/LqW/5i6kHPQt5l6MAEd0JeG7rHgO+A11K3k8Xv8VbzFE1OS6b8V
-	 m63XO93Up9lY2pp+TfqNB5KSecwpypKU1N1VFVvhGdvXKLzl5LGPzrEE9gj1dfuO0j
-	 boCNmiJSCPaNQ==
-Received: (qmail 776969 invoked from network); 20 Feb 2025 18:32:51 +0000
-Authentication-Results: mail.hillapex-8.site;
-        spf=pass (sender IP is 39.63.200.206) smtp.mailfrom=saad@hillapex-8.site smtp.helo=Knrybfx
-Received-SPF: pass (mail.hillapex-8.site: connection is authenticated)
-Received: from unknown (HELO Knrybfx) (39.63.200.206)
-  by mail.hillapex-8.site with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted,
- authenticated); 20 Feb 2025 18:32:50 +0000
-Message-ID: <6D2C1F19E42287549213DEC24D696473@Knrybfx>
-From: <saad@hillapex-8.site>
-To: <linux-kernel@vger.kernel.org>
-Reply-To: <saad@hillapex.com>
-Subject: Sports bag backpack & sportswear
-Date: Thu, 20 Feb 2025 23:33:21 +0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlgLDOiI"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38dd9b3419cso675304f8f.0;
+        Thu, 20 Feb 2025 10:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740076845; x=1740681645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LDpYiKzs73InvLQsXoENmuSiu34F9WT8BsmsAiGCuxQ=;
+        b=SlgLDOiIHLaD88Koa2EGuQBDk+VokO/3IXgsXGNtPLki9hn0ql89e7yHlWJ7BTV5ea
+         Ptiprus3iBJSAuV04Wefnp0wfmkxXInhshga/Qrs6OQuLjoHTvYqOiIQUycWgOTb7x4I
+         qNM8GHuwvl7qQHtLG71Y84PVRqYSUuQDaV9EwEpLPYzsa8Xe5wwaFewsrE2c/sio4R+i
+         fwjoWNP/lScZhmyr3rjURH9uPdygGapuN7iN6F50rBr6N7CvfD6wr/nEOIxuu6xADARW
+         b8TCErVykQ+YB6BiCujaYK2+YTIX9mtnsVVLTKJ6nMHAdyRzbFi0Qhlau5lDs9+bm32m
+         PBeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740076845; x=1740681645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LDpYiKzs73InvLQsXoENmuSiu34F9WT8BsmsAiGCuxQ=;
+        b=jrV4jJ3eIwfscmVEjY40IndMvG+3yKTqyPGbLfg+YzFQjh+8ptTfok79igHwDINH0Z
+         Cy+/kIbLz7j/b9VgQgo//yQtJKxUOIn16mpsYibQOMPiKnSIzdueLYbtBipvdAwcd88K
+         nLMyYkz0rpo6vlFQewhhHYTA0Hz6M5UmGCK1jolTz1wmXmUXcbLpHXb90kQt+ZBQKRz3
+         RaDQRme2uozsgcnRXenFMfO8JzJf2Pe1vSk8hr7boECpRqzh1pNK6pAdyZMA8zLB8IQy
+         k67VH0dNZgVHGZq4OLqs3gMlhrfof2M0ldANh4T3afj8x3C79evDZULPRqdF7CmAq+2U
+         cdUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlx0L4swRv0beZLw0iexJeMkhf572bDHPUUfrVYN9upVswrjSz5MpoK9TpzsWahs1IqAMiCFuA2Lr99+MoVxc=@vger.kernel.org, AJvYcCVzQ09I4mcr6462Ki4YBjFuT6RyrTARLabPC3u4w5oLmzS4fxAKshUMS6g4qX9YY+JhOIMz3blgW7IFDMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt01uRyZUe1/ARHriSE0vY7sO3dAN2et6JRqv1Pjzd7/1CjN6b
+	/KXAkWFBJDPy7ro2CU2yGFTFxpTdbXod7e+M4iT7EY10/vWzCNoRU2ce8/1Lpwad4qj8ClXB8Fn
+	WvpVb+wjWfIsoxpz6cJlmOEew2+U=
+X-Gm-Gg: ASbGncur/lWmnBo17GRROo5/KIGVIVf5kePd1TVmukvR80lLHMm2Z8qTrNJu0fpQOY9
+	g3JEAugBcCOMXJYME47cR5a93vHLsk2PErBrNOqUNbKaYZXdORDbd+a1fngPLxEoPWEP4VW0C1N
+	Z87vGomZddiuNf
+X-Google-Smtp-Source: AGHT+IHkfgnrV+BJNL4baF5nekJSwGBo3ZopJ8YNhxStsP2Hf7g6+UzEp276HXeTQtpo/E5x2POhhtXsLL4/gCTqORA=
+X-Received: by 2002:adf:f3c9:0:b0:38f:2b59:3f78 with SMTP id
+ ffacd0b85a97d-38f6f0ac5a3mr257914f8f.45.1740076844972; Thu, 20 Feb 2025
+ 10:40:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	format=flowed;
-	charset="iso-8859-1";
-	reply-type=original
-Content-Transfer-Encoding: 8bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2900.5843
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.5579
-X-PPP-Message-ID: 
- <174007637123.776964.8469039975705701995@exciting-pascal.92-113-147-146.plesk.page>
-X-PPP-Vhost: hillapex-8.site
+References: <Z7SwcnUzjZYfuJ4-@infradead.org> <45rpsr92-4416-9no4-8o26-r0998nr77nr8@xreary.bet>
+ <Z7bMnpq1cUezsNDl@infradead.org>
+In-Reply-To: <Z7bMnpq1cUezsNDl@infradead.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 20 Feb 2025 10:40:32 -0800
+X-Gm-Features: AWEUYZlQ2ngnBUpsPvZmt-IUjjrYChxu8xuPgnYSqjT2MUxJIeYsrj1qt7MyBZU
+Message-ID: <CAADnVQ+cX_oH_0GcdYkixrMxyvwAKrvSnzx1uofD3BM2E+L6eg@mail.gmail.com>
+Subject: Re: Rust kernel policy
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
+	rust-for-linux <rust-for-linux@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	David Airlie <airlied@gmail.com>, LKML <linux-kernel@vger.kernel.org>, 
+	ksummit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi linux-kernel@vger.kernel.org
+On Wed, Feb 19, 2025 at 10:33=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
+rg> wrote:
+>
+> On Tue, Feb 18, 2025 at 06:36:55PM +0100, Jiri Kosina wrote:
+> > > [2] The idea of drivers in eBPF as done by HID also really doesn't he=
+lp
+> > > with that as much as I like eBPF for some use cases
+> >
+> > I don't necessarily agree on this specific aspect, but what (at least t=
+o
+> > me personally) is the crucial point here -- if we at some point decide
+> > that HID-eBPF is somehow potentially unhealthy for the project /
+> > ecosystem, we can just drop it and convert the existing eBPF snippets t=
+o a
+> > proper simple HID bus drivers trivially (I'd even dare to say that to s=
+ome
+> > extent perhaps programatically).
+>
+> Well, Linus declared any bpf kfunc / helper program type change that
+> breaks userspace as a no-go.  And such a change very much does.
 
-We make sublimated sports bags, backpacks, and sportswear. To get delivery prices, please:
+Have to chime in into this rust thread to correct the facts.
 
-1. Visit hillapex.com and pick an item.
-2. Let us know your order quantity.
-3. Provide your country name.
+See the doc:
+https://github.com/torvalds/linux/blob/master/Documentation/bpf/kfuncs.rst#=
+3-kfunc-lifecycle-expectations
+TLDR:
+"A kfunc will never have any hard stability guarantees. BPF APIs
+cannot and will not ever hard-block a change in the kernel..."
 
-Best regards,
-Saad Afzal
+git log proves the history of changing/removing kfuncs.
 
-Hill Apex
-Website: hillapex.com
-Email: hill.apex.1@gmail.com
-Contact:  0092 300 7101027
-WhatsApp: 0092 300 7101027
-Chenab ranger's road
-51310 Sialkot Pakistan
+hid-bpf iself is another example of that policy.
+It was redesigned from one way of hooking into hid core to
+a completely different approach.
+It may happen again, if necessary.
