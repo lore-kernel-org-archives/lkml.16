@@ -1,114 +1,115 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D47247DF0;
-	Thu, 20 Feb 2025 18:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DA2247DF0
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 18:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740076848; cv=none; b=DC0O/jTFZe1Qlqs5WaV4yo0A12DyIxvicwPTUvGxPYqdX2n6Lf4hOBaVknmKrvBTeifX1XGmcqb/EB42GiYvG/fzuVodO0EIUu1Tj347cNEoADD902q1qf9c3y/6vIor5beZ17xKopZnnCuAtiZmQVwZs/egu9JFNn6swKzE4Dc=
+	t=1740076931; cv=none; b=DVGWL+RV7JwJy4cyBGBSmzVZXvc/nySqDZ2+cXNPxbA+2IJyd6NS9VjStRN+qMBj7KAjhznNPHwZetF2a0VKbhdWgJkQ+xQ0W1kSA/+y6Lw8O6YQXybUEYChbw9ozJwNxDC4+sMqdjcJtanSLt4xtB5SaeIj+wFPM/O9qni1VNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740076848; c=relaxed/simple;
-	bh=E2DR+BJJfXCSeI1cfeXIx9bKllVF0rrNynMBB0GIgg8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mlR+OBExcUiECcGtGCQ5ojKxxY6Ce0F76tbGaOR8FUTtsnzOOF9mYeasEuzTaUrsGA3EFGb/kCgbp1fc1svS9AozEkB8rWBuCfKfbrmlksRDbcDgLSKmZvYObTh0OcXbEB7Nx0pZ3BtR6HymLPBHi+VSRNxuNDs0oDlNS1AAZrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlgLDOiI; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740076931; c=relaxed/simple;
+	bh=p5xm1o22PRFvmKnwXPUj7mBJCX1wDvSvLIhEab3PO58=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OY1H9Y1Bsooqf8e45ip0A2VXreuVPGkn70393rXGbZeZleBSg32PZWXcQ7aV9lhJvnrbcNWcKwONnIwcReF0zMi4bMTbtFfNgtx6sk82MPTK1HdYdUaHfkqDG5bOF0ibfpJAxnIUqdWyhYVbv6kXLTxXu88imKQsbCbwsHFK4Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=l6vwVNjq; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlgLDOiI"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38dd9b3419cso675304f8f.0;
-        Thu, 20 Feb 2025 10:40:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="l6vwVNjq"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e66d4f3be2so16518636d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:42:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740076845; x=1740681645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LDpYiKzs73InvLQsXoENmuSiu34F9WT8BsmsAiGCuxQ=;
-        b=SlgLDOiIHLaD88Koa2EGuQBDk+VokO/3IXgsXGNtPLki9hn0ql89e7yHlWJ7BTV5ea
-         Ptiprus3iBJSAuV04Wefnp0wfmkxXInhshga/Qrs6OQuLjoHTvYqOiIQUycWgOTb7x4I
-         qNM8GHuwvl7qQHtLG71Y84PVRqYSUuQDaV9EwEpLPYzsa8Xe5wwaFewsrE2c/sio4R+i
-         fwjoWNP/lScZhmyr3rjURH9uPdygGapuN7iN6F50rBr6N7CvfD6wr/nEOIxuu6xADARW
-         b8TCErVykQ+YB6BiCujaYK2+YTIX9mtnsVVLTKJ6nMHAdyRzbFi0Qhlau5lDs9+bm32m
-         PBeQ==
+        d=gourry.net; s=google; t=1740076928; x=1740681728; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gx0W/uUZlTRGbJlDEomLybSdty7XE+fwJpN36vGWqNQ=;
+        b=l6vwVNjqQOS2498+ipxt3sNWZMLteLmYoVkpt8+lOiRxwyRoa7fx9XOHopubJmCf9D
+         vPxEZotp15CIHH2mK+snURXqWPwvm3a6KBltG7Jhl+CL3fXOGQvqIWLFzGykCeHDX8uy
+         g4y9Kvd20FLElnGl9dTEedTV1S6BJt+5N7YSmoL2PvEJ77lC2QD8wQ9B0ym1bzbaM7Bn
+         yXHuNbADzdeDR4jvufGQPpb17tIEtvtnqkermr1xh7G+iZn7G5m85lm6A42HBehCXVak
+         rkt5mTYv3Saie7mGH4pukmhtWoHGhKuGGm0KsUlty+g2GJlMwQ6cpIBqsJp1zGJf6P9J
+         Jdhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740076845; x=1740681645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LDpYiKzs73InvLQsXoENmuSiu34F9WT8BsmsAiGCuxQ=;
-        b=jrV4jJ3eIwfscmVEjY40IndMvG+3yKTqyPGbLfg+YzFQjh+8ptTfok79igHwDINH0Z
-         Cy+/kIbLz7j/b9VgQgo//yQtJKxUOIn16mpsYibQOMPiKnSIzdueLYbtBipvdAwcd88K
-         nLMyYkz0rpo6vlFQewhhHYTA0Hz6M5UmGCK1jolTz1wmXmUXcbLpHXb90kQt+ZBQKRz3
-         RaDQRme2uozsgcnRXenFMfO8JzJf2Pe1vSk8hr7boECpRqzh1pNK6pAdyZMA8zLB8IQy
-         k67VH0dNZgVHGZq4OLqs3gMlhrfof2M0ldANh4T3afj8x3C79evDZULPRqdF7CmAq+2U
-         cdUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlx0L4swRv0beZLw0iexJeMkhf572bDHPUUfrVYN9upVswrjSz5MpoK9TpzsWahs1IqAMiCFuA2Lr99+MoVxc=@vger.kernel.org, AJvYcCVzQ09I4mcr6462Ki4YBjFuT6RyrTARLabPC3u4w5oLmzS4fxAKshUMS6g4qX9YY+JhOIMz3blgW7IFDMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt01uRyZUe1/ARHriSE0vY7sO3dAN2et6JRqv1Pjzd7/1CjN6b
-	/KXAkWFBJDPy7ro2CU2yGFTFxpTdbXod7e+M4iT7EY10/vWzCNoRU2ce8/1Lpwad4qj8ClXB8Fn
-	WvpVb+wjWfIsoxpz6cJlmOEew2+U=
-X-Gm-Gg: ASbGncur/lWmnBo17GRROo5/KIGVIVf5kePd1TVmukvR80lLHMm2Z8qTrNJu0fpQOY9
-	g3JEAugBcCOMXJYME47cR5a93vHLsk2PErBrNOqUNbKaYZXdORDbd+a1fngPLxEoPWEP4VW0C1N
-	Z87vGomZddiuNf
-X-Google-Smtp-Source: AGHT+IHkfgnrV+BJNL4baF5nekJSwGBo3ZopJ8YNhxStsP2Hf7g6+UzEp276HXeTQtpo/E5x2POhhtXsLL4/gCTqORA=
-X-Received: by 2002:adf:f3c9:0:b0:38f:2b59:3f78 with SMTP id
- ffacd0b85a97d-38f6f0ac5a3mr257914f8f.45.1740076844972; Thu, 20 Feb 2025
- 10:40:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740076928; x=1740681728;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gx0W/uUZlTRGbJlDEomLybSdty7XE+fwJpN36vGWqNQ=;
+        b=FSCdzR/HgK1gQD2KKSnaYnQu2OwlgNXyB/DExkxdaQK9KLuLftYRYwq7e/jlBp2IQN
+         zGeRdKzrdRYm0i3RiQsgsj2dIf2nHtjWvw4TgtAmXOlqPYyanhq8ZHUkuuf13yYPcdxV
+         togpGUXI6S4yi/yLeYg1XYBVZZb4/DBDh4uhp6guaHSs5n0JapIsMsGzLQcSDi+KMu82
+         HhWLFospNqw4fLJyM0ldW4/tFo7RfFoPuDX4eBQ7NQnrK4OzCNq8gZIa9OUlu2U5r421
+         +ZUzcDt9rsf0OGazZFhwYIrHhjqFytYYib5hqAD6diekrIpGEnNG3nmg+J86Jkj85IfH
+         vc5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWCvsM2+bRP7SJZH2+ElEH1rbRXhByJnLTNEubC7b6wg28UmkeSmi7MwYzvpeIOkXC760JERWpg17f2ja8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLgs62bflZRO2lTQ/NFqGPIQyg6yKrmNIsr7qx5P+3nM+b14u5
+	/+EY1HQfWU4wKzdNxU64jhTWObnX1oS00KeNCxiZ0L26AgVj+lZx/Ww1GrLbU58=
+X-Gm-Gg: ASbGncvTdXb/hJHs6Wez/DDQiOckGpgknPwjhiIWtjYunpJcLdnQ5ul41CpoZbhm8pk
+	ZHzqMPgAzdP9tvelYq5yuimk38Z5nFQdRc4Kjdpn1IA+Tfsy8H0Hip7UjJbh//uqIH+uHVf08mi
+	akTuRPqqBQRWF2gj00dmBhK62aDNm7HPKkQeVsk8Wy1dHiI31T9O1sN+/Va6BwIUQK/xHyOmhcW
+	IdsbAHlcEwwyQgoVxWSlBq+PmDypqjNRPIbmDTfN4R9ltlYaqrckyIqpKB40rUolEJxwqceebDl
+	YfBIr87c1iG1SFGLGgh7Fu/hFKfA3mDvSHiU+f9R6PUSmvot8Ca4PDFkA7ti+ObHGa2PM/X4gQ=
+	=
+X-Google-Smtp-Source: AGHT+IHxs7YJJAceyj3jfJdQOg1vrzRGu2Ox2ngK865GcPb4UiuNqVh3X9LOAtp+SMVMNER6i4rkEw==
+X-Received: by 2002:a05:6214:e8d:b0:6e6:9c39:ae4b with SMTP id 6a1803df08f44-6e6ae9e2293mr2780336d6.42.1740076928276;
+        Thu, 20 Feb 2025 10:42:08 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d7a40bdsm89111136d6.59.2025.02.20.10.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 10:42:07 -0800 (PST)
+Date: Thu, 20 Feb 2025 13:42:06 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 05/15] cxl/region: Calculate and store the SPA range
+ of an endpoint
+Message-ID: <Z7d3fuL_YuwFWM2n@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-6-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z7SwcnUzjZYfuJ4-@infradead.org> <45rpsr92-4416-9no4-8o26-r0998nr77nr8@xreary.bet>
- <Z7bMnpq1cUezsNDl@infradead.org>
-In-Reply-To: <Z7bMnpq1cUezsNDl@infradead.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 20 Feb 2025 10:40:32 -0800
-X-Gm-Features: AWEUYZlQ2ngnBUpsPvZmt-IUjjrYChxu8xuPgnYSqjT2MUxJIeYsrj1qt7MyBZU
-Message-ID: <CAADnVQ+cX_oH_0GcdYkixrMxyvwAKrvSnzx1uofD3BM2E+L6eg@mail.gmail.com>
-Subject: Re: Rust kernel policy
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	David Airlie <airlied@gmail.com>, LKML <linux-kernel@vger.kernel.org>, 
-	ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-6-rrichter@amd.com>
 
-On Wed, Feb 19, 2025 at 10:33=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
->
-> On Tue, Feb 18, 2025 at 06:36:55PM +0100, Jiri Kosina wrote:
-> > > [2] The idea of drivers in eBPF as done by HID also really doesn't he=
-lp
-> > > with that as much as I like eBPF for some use cases
-> >
-> > I don't necessarily agree on this specific aspect, but what (at least t=
-o
-> > me personally) is the crucial point here -- if we at some point decide
-> > that HID-eBPF is somehow potentially unhealthy for the project /
-> > ecosystem, we can just drop it and convert the existing eBPF snippets t=
-o a
-> > proper simple HID bus drivers trivially (I'd even dare to say that to s=
-ome
-> > extent perhaps programatically).
->
-> Well, Linus declared any bpf kfunc / helper program type change that
-> breaks userspace as a no-go.  And such a change very much does.
+On Tue, Feb 18, 2025 at 02:23:46PM +0100, Robert Richter wrote:
+> To find the correct region and root port of an endpoint of a system
+> needing address translation, the endpoint's HPA range must be
+> translated to each of the parent port address ranges up to the root
+> decoder.
+> 
+> Calculate the SPA range using the newly introduced callback function
+> port->to_hpa() that translates the decoder's HPA range to its parent
+> port's HPA range of the next outer memory domain. Introduce the helper
+> function cxl_port_calc_hpa() for this to calculate address ranges
+> using the low-level port->to_hpa() callbacks. Determine the root port
+> SPA range by iterating all the ports up to the root. Store the
+> endpoint's SPA range for later use.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+>  
+> +	/*
+> +	 * Address translation is only supported for auto-discovery of
+> +	 * decoders. There is no need to support address translation
+> +	 * here. That is, do not recalculate ctx.hpa_range here.
+> +	 */
 
-Have to chime in into this rust thread to correct the facts.
+Can we at least add why translation is not supported / needed?  Just
+saying "there is no need" doesn't help devs after us understand the code.
 
-See the doc:
-https://github.com/torvalds/linux/blob/master/Documentation/bpf/kfuncs.rst#=
-3-kfunc-lifecycle-expectations
-TLDR:
-"A kfunc will never have any hard stability guarantees. BPF APIs
-cannot and will not ever hard-block a change in the kernel..."
+With that change:
 
-git log proves the history of changing/removing kfuncs.
-
-hid-bpf iself is another example of that policy.
-It was redesigned from one way of hooking into hid core to
-a completely different approach.
-It may happen again, if necessary.
+Reviewed-by: Gregory Price <gourry@gourry.net>
