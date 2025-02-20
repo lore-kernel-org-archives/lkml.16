@@ -1,89 +1,113 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E0C1E47A9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC391B87D1;
+	Thu, 20 Feb 2025 08:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740039700; cv=none; b=Wl1S9V53C9HjUJaXvCy9xJwwT7s9L822sLHLtUT3iMVUFeQwiBnfQUTbn2sbypCFJdvWL4g1+QPKLI5smHRUxNFLrdyDcUt/eAHdPpqAzvy3HrZ3PRvN/mD+95EFGN/Xz3DV629SKVAril5VOGArygQKfS/Zbhh4oNiBhDzaqa4=
+	t=1740039710; cv=none; b=Au6uDGDBWWlcvWXlyjY5Qmijo+oTfZlNaHDiGYVcgz5bPfKDqGAiOnwBrGPAMml+8FYfrNa6noqc+SezFSkY3emz2MB39Eb5U00o848GVn1wvKjWl+XhAhBjDf1NXAnW31Smh5bQh22A8mY9KcO5s+938eKY3QEYodeVqdA/k0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740039700; c=relaxed/simple;
-	bh=DhSWZ+LnqyXxtYIOPMoINYFhyYorGyErQ8agFapfXKs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CH5RDrY2H1fzaKEOWOziMGuS0TKXjS1+u7zwwoCtwCQ1BJ6R3lNM7MllNYSTMo8Mch/Y/Ok+ZHHX07xci5TnT9vq4LkwM57Hoeu6SE8cqb2ceYPb3n23M4jMyC98TC9NUkNM0SIxOoJm4BZ3bODOBUgRvn9PFNEwi24JUU0/C4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4luRZru; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740039710; c=relaxed/simple;
+	bh=CbeXuoiGFZQ70AfXrqqYy0da8e+BHVxPbEhnsbE7NMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FfwXljVcCjb2RnBzKIdz9oAXEFx8KUQxIdiqOPlU50GW6waTV/Nx+IiXM3g172j93imT51z+kTi8AVkgTsfFvRrgy6meP5TI6O7z8Bdpe0SarCOe/kPDQBBvdAixCxdEq33/amZamjaOffA1QA3jPQ5tf2hClBH6QhaDT8gzI4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kd0iNM4M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4luRZru"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dedae49c63so1230775a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 00:21:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740039697; x=1740644497; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j0My/IGnAu2uHnB18eW1eQLeiw1eTtEqdmu5EKWaXMI=;
-        b=b4luRZrudbjLTte7t83IvrSSkY1M7BqSLLWBlC7LeCoheLbsRV9G4neaqdHMkqKB+A
-         jYbn+CPxvwi3tgL72G9E7VPKtDJCQOFOmGm8cBipHAkyd2hlx10XXCsUTq2CXxoNvpZ6
-         6FLprdTFu5w0UerKOHqqwVQrUp/NNLTPtL0diPZ0SP+ueTi3RiO81R7Wff9U+InUzA0C
-         vfu4wyhyWF7VWEZE2F3zScUU4k7pz0zxWqrgTNfRNpkG46fGvKLRQRaC4+BFZjVuJiEP
-         c38lMLb66f3DGYxmreefnpaVYHSgNaHEdsdy6o8tjYw9IxHk5xH+DemXdPhx8vs4/ue8
-         Mycw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740039697; x=1740644497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j0My/IGnAu2uHnB18eW1eQLeiw1eTtEqdmu5EKWaXMI=;
-        b=m4JVsEK0zqCrb9lsrsBpqsSZjaFBKG/lV0gDZbgqV63EuZXHHX8R1Aphsi4albtdcR
-         RnVb+jKcGbbSEjeqGGD/fuBVpu1ZEm2mbTqJ6bf/T5VuuMgQsp4Ak2nDjWSlNETx37Ad
-         q1AaKHeT+qc55BpDfnPbvGSecYdlew4I8VBhzHLJG+7wzYGhU3kpUHqAPQ3OqmHN/wkk
-         anfWqspUQmXfFnKeansecsS5syBRY211rJSDt7kka1TD/jRMpZ1EOQ2BB7epBlUN1juY
-         M08EPh3EdG2W4pKYqtqAEZYSeb/UCQ4y917Y+dmCviTAhQeA2q/OClKqm4eAsbElOsrG
-         KMJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXe6zt83qmX5tU8r7lRpXpnHKNSg87ZoP1eWT1AcyedfxDh63RL321I0Lq+ABbpwHE3XD4ml+0dnSMUcjg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMJVHxbUs7TOee/LklxAO7ZcLcXNjL9ZIjOPKZfVhPM76ngP9P
-	FRG2pRgHDqFoWFAgWQRLRuZ2btOlqlv4IyNf/BEIjuF7/5Xa6ybTAfHTYhQn96y8vJZjx/m9OvA
-	9cNSCo+0Zu9XA7+B9WbfyOVhEtMPEtci0OEs=
-X-Gm-Gg: ASbGncvA2ERLjvZdl0D3PebrEZXmbSTLq9yo2Xq+3UZLwLfqnPXcHupDCJG8ggP6rM+
-	vpAoK+HT43ER9qlVbgluIij2nMxGwbpFy6YRDxoURcPChFIhLksetHHH1EffTDIJFnIcaeLrl
-X-Google-Smtp-Source: AGHT+IHdcQTzN/ZyBxiJ2XxJrOj9cR/iZnDvdLIe7MJjIt7l9Sayz8tDNRoUzfXldl11nL9Ekj7qIe2XSwES1YuHN64=
-X-Received: by 2002:a17:906:6a0c:b0:ab7:db5d:44ea with SMTP id
- a640c23a62f3a-abb70b36c02mr2262813166b.27.1740039697170; Thu, 20 Feb 2025
- 00:21:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kd0iNM4M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C196AC4CEE4;
+	Thu, 20 Feb 2025 08:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740039709;
+	bh=CbeXuoiGFZQ70AfXrqqYy0da8e+BHVxPbEhnsbE7NMw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kd0iNM4MfN9Zm59iNyF9hyhGAmicRzHSrBealkIu37LlcEzJt0Vlu7qfFyi9el+Ks
+	 V587NKIBGzKERvKyfQmUpv59+ER2zcwzEGT7HR1WI0osRR4EspXrvhnQ01dz0wlDwr
+	 eq1wG7kwpg5tjT6Fj4ORZ1770Nli0hWQ1qDG+O9l7O62QwUuhoMA4c3B0uNxak/kOQ
+	 zHw4Sggo3T+6VGv9XnE++HcDq8/XCZmOKkZ2z3hPwPjiWkrWTeHx3LmPNdj1ibE+id
+	 /a+v7kf/NnNPPiHQSI+K9TSlNLmAz9UXGEdYnHIpqRF3m1dp3QAFlNvAR19J/sAB3N
+	 8YPnsshpBZnMA==
+Message-ID: <63f69d97-6a0a-4568-b3ac-d8dd320fb3b3@kernel.org>
+Date: Thu, 20 Feb 2025 09:21:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <11603b392e2899b44fce61bbc8626a1aaa32b8f0.1740037706.git.geert@linux-m68k.org>
-In-Reply-To: <11603b392e2899b44fce61bbc8626a1aaa32b8f0.1740037706.git.geert@linux-m68k.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 20 Feb 2025 10:21:00 +0200
-X-Gm-Features: AWEUYZl4rQIYbMyfzqYq5tF3XFCtTFLr0W2jUlYHGwI2blIFaJ9vjMhs_t7KGFw
-Message-ID: <CAHp75VcMweeEa=oAsVOLefuUKx96YJVg4ifdqT-uySPLXWeAeg@mail.gmail.com>
-Subject: Re: [PATCH v2] auxdisplay: MAX6959 should select BITREVERSE
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/2] dt-bindings: net: Add FSD EQoS device tree
+ bindings
+To: Swathi K S <swathi.ks@samsung.com>, krzk+dt@kernel.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, conor+dt@kernel.org,
+ richardcochran@gmail.com, mcoquelin.stm32@gmail.com,
+ alexandre.torgue@foss.st.com
+Cc: rmk+kernel@armlinux.org.uk, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
+References: <20250220043712.31966-1-swathi.ks@samsung.com>
+ <CGME20250220044128epcas5p1484d81bea4377bef4cbe7bc7b9f03713@epcas5p1.samsung.com>
+ <20250220043712.31966-2-swathi.ks@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250220043712.31966-2-swathi.ks@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 20, 2025 at 9:48=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> If CONFIG_BITREVERSE is not enabled:
->
->     max6959.c:(.text+0x92): undefined reference to `byte_rev_table'
+On 20/02/2025 05:37, Swathi K S wrote:
+> Add FSD Ethernet compatible in Synopsys dt-bindings document. Add FSD
+> Ethernet YAML schema to enable the DT validation.
+> 
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
+> Signed-off-by: Swathi K S <swathi.ks@samsung.com>
+> ---
 
-LGTM now, thanks.
-Do you think we are in an emergency to send it for v6.14?
-If possible, I would prefer to send this in PR for v6.15 as the
-problem was from day 1 and only bitbot found the configuration so far
-that fails to build.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Krzysztof
