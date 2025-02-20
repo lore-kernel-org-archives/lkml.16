@@ -1,204 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B1F266EF8;
-	Thu, 20 Feb 2025 23:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B8926389E
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740094791; cv=none; b=uLnjzdKwXn9la7U1U5IgGJT+MmhI3BUpJ7aF8l9AiIHyGJHTAeiSkp2mGyXcOBN4WwQafKqVpy0LIE5645SOOdv/Ja+i8pvcYNAeo9GVbu5D+zcbM/zHNrPt4LQGc5lnV9eV6RKsgWvItU2WpgAXwYuqOzhDxX6VHYVzTqPbfUw=
+	t=1740094850; cv=none; b=iDtc0g+uoT6YR6wh5l5unyWooOlOwlmcZRhADBoV8BQCvaw5DsZuAdH5ZGsOfXallG+u2l3jvlEdy/t2xrg1E+aVc/gCTzPu3vCPhyfR0/ZaqY+tC6St7Hg1qvs/6MWkn+cFUTmBrqmN/reuMkPIPyrndmsYR5T3Zv4vL46Lrc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740094791; c=relaxed/simple;
-	bh=a+ewDhWyQHdcj13JBzjWs2K8bIJieZ0GId/WQZ9C2s4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Dqiw3DxgsDOniRCpimFnLhcfWv6G6DlBCprcRW5gQi5b7Q0i3iioa4pK/62p/9wWl9XeMO3ieUEdUQ7+bAQn53e49f5alIIlFQn1xeA5BpRRqXtNWNwxwqG/q1SmFR0ZP2Un0xEYsdehPQpu+7C2JTCfihoCUrl7whFFWUvvYBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdX+hPRU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740094850; c=relaxed/simple;
+	bh=/eAMc3UR3kjJf3NPEKw2BvpiegPPiUL7zxp0YnBFdPw=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=ooDMRIHYXyYKP79Nkx0dqTFY8rJOfc+YwuKPp7ya62hdYgxyE2OWXLUYxHLGiv7mV4qcMi9BARpHr+Yl6v18JJEv18Raukv3M/HeOhqf+uCMSZ+eEe+Y43BmcHQyElnPtWS2bZ+YamSAysL5ChqhPzEcutClSm6YJMu9Lj8HRKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=l+ErdpT6; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdX+hPRU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BC4C4CED1;
-	Thu, 20 Feb 2025 23:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740094791;
-	bh=a+ewDhWyQHdcj13JBzjWs2K8bIJieZ0GId/WQZ9C2s4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IdX+hPRUg8L6jGDvbir/xmIYvttvKycBjY5Tb6n6vh1si2XrPpfkHGSGNNL+iJbMd
-	 biu6St1nK/HpjapPIDNJ3+aw6reEvRcNnmiJhhdM8UTQBANrzds0jQFPRjiJkcLG3P
-	 rmdEn2otRaBMRxwa/6NgidHTXNdVNTm0KAYU622NaABSozmBISY1TmIyICdEmSetkB
-	 mu7aaS9hdtzoWo/yO+x4aUUHJhG51x7cc3Egopl2iqUFfPLgb83EEgQkSfza9Foszt
-	 s90O82eSCBNwNNtN41Balo1biyTuzl6hWqjSwTnEafQbpB73a+mh1T+//WsCxIMfuK
-	 VNKaH2c0wuf3g==
-Date: Fri, 21 Feb 2025 08:39:46 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Sven
- Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] ftrace: Fix accounting of adding subops to a
- manager ops
-Message-Id: <20250221083946.ad92f6914b7bc6fe7bcf0423@kernel.org>
-In-Reply-To: <20250220202055.060300046@goodmis.org>
-References: <20250220202009.689253424@goodmis.org>
-	<20250220202055.060300046@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="l+ErdpT6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1740094541; bh=VLDA73BVAeJVMPeUhBwuP3jCY55hbvalaLQ/p6JAU/Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=l+ErdpT6uthv/160RYD6sbQ9NAPg2aNgpajEjIUl/gzs4WaxZR8hIfauWuKCVnXaI
+	 EzL2AJwrwlgYQikEN51EmsTYtSX8jQsig22HxR1adJRMIJabmZjLflYIebX1j9Rjbd
+	 pfEMefwoMlhPVpwA16/7nUT7kCHlJg9h3BdsX4HU=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
+	id 74311CC8; Fri, 21 Feb 2025 07:29:03 +0800
+X-QQ-mid: xmsmtpt1740094143tmmwp9vzk
+Message-ID: <tencent_A5A3A64447B765576B46C09365A369A96605@qq.com>
+X-QQ-XMAILINFO: MIAHdi1iQo+zkFhFFlQicchYa4SqsFxX4R3T5UzD3XP93iz/Bj7Lyw5RXtEWcH
+	 z0Zd3bDxOgL9B7glOSSOKdDxioh3n/ffLrebm1LFgfCpr0C5CMGW91TuOxNMsoqlY7Bc9RO/Zj/r
+	 o9oIkx2BVsl2DM22ngrbIOD3OzOw7OF3JZKaiw7RVM2hVpkkOuM6FHaYxmVMGbHk+8XBjfNWgOPf
+	 ivjpyD/TIhfXCp7tup4fo5KZkDH4YrLvLibfWYpKFgeTb19HF/4fgv8o3fRyuyK+q7hZVIeC3DdW
+	 +h9CXUzy61u0V4SZ1Yg/KfOIUCRX8tuZ6TQQjkdgDTf2p6jHvTap/fqJYapkdsy/8ZAxpkLNrRAl
+	 YtpVMhVfyGo6aA8aNbMkcK1b6FpL1RFNxx9jYhSc2Iv8n93YqXamqTLnQmQRnDhw83RHLKnV8WOK
+	 IzO4Q7e4vUDVAZDxXMr8A4hn6XXdpKifJ43omlQKVsQ52t4Dcls4aNNbQjSDKgiC9b+2LuX8oCmv
+	 VrUyi6yE+3hkqmimC8XJfmgpIPGsffCfUbbiXlSwVC8Qf22q3rv+K1kcB0jLH/2F9qoo5IrZK/lG
+	 ucMh6HzOswdHGXIeniKt4DL7MJ88WwOabxlczAKb2/+wg8S9Ms26q40ltZ4tWsZP3EAheKHYLMCz
+	 1Z0i02H/Yl2ZatJd2wh4P2vq1iUqRUW/tFig1zjC3U7cmOl/V/KlTBwCURCac+96Z4r2kh2/irQ/
+	 nhBhQp+lNcDVMxT4s3LxspKTCKXZHEZQsA5LLRkp6AQsPa8TbyIKSwz4csH/igV2tY4Q4Mn/CHIo
+	 q5rEYePJrv5pqESyvvHcv9EAMb/4/eoD3Rw7qVA9UD7mAO81OJRvdBUzWJwN+0Gy/G4SLmDppPpd
+	 V82tT1THDi3/NdsNMIv+0kgElBB176Un87oBnEtWNBq6V4hukZWKxyhlA/bnz8I1NGHrSXVLI0lS
+	 MB0KnbxQbXNJDNd/oE1w==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: dave.kleikamp@oracle.com
+Cc: eadavis@qq.com,
+	jfs-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	shaggy@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH V2] jfs: Initialized first 8 members of the dinomap when creating imap
+Date: Fri, 21 Feb 2025 07:29:02 +0800
+X-OQ-MSGID: <20250220232901.2483093-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <4d47e3cc-d1e6-4281-9a7c-463e6fb0af62@oracle.com>
+References: <4d47e3cc-d1e6-4281-9a7c-463e6fb0af62@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 20 Feb 2025 15:20:10 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+> > syzbot reported a uninit-value in diFree. [1]
+> > 
+> > When print_hex_dump() is called to print the first 32 bytes of imap, the
+> > first 8 members in struct dinomap are the first 32 bytes of imap, because
+> > in_numinos, in_numfree, in_diskblock and in_maxag are not initialized when
+> > imap is created.
+> > 
+> > When creating imap, set in_numinos, in_numfree, in_diskblock and in_maxag
+> > to 0 to prevent this issue from happening.
+> 
+> I appreciate the patch, but I'm accepting a different patch to fix the 
+> problem:
+I am very disappointed with your choice. The design of "KMSAN: uninit-value X"
+is used to find improper data usage and defects in the program. If you directly
+use functions such as kzmalloc to clear the memory to 0, you will lose a valuable
+asset--KMSAN uninit-value.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Function graph uses a subops and manager ops mechanism to attach to
-> ftrace.  The manager ops connects to ftrace and the functions it connects
-> to is defined by a list of subops that it manages.
-> 
-> The function hash that defines what the above ops attaches to limits the
-> functions to attach if the hash has any content. If the hash is empty, it
-> means to trace all functions.
-> 
-> The creation of the manager ops hash is done by iterating over all the
-> subops hashes. If any of the subops hashes is empty, it means that the
-> manager ops hash must trace all functions as well.
-> 
-> The issue is in the creation of the manager ops. When a second subops is
-> attached, a new hash is created by starting it as NULL and adding the
-> subops one at a time. But the NULL ops is mistaken as an empty hash, and
-> once an empty hash is found, it stops the loop of subops and just enables
-> all functions.
-> 
->   # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
->   # cat /sys/kernel/tracing/enabled_functions
-> kernel_clone (1)           	tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> 
->   # echo "f:myevent2 schedule_timeout" >> /sys/kernel/tracing/dynamic_events
->   # cat /sys/kernel/tracing/enabled_functions
-> trace_initcall_start_cb (1)             tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> run_init_process (1)            tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> try_to_run_init_process (1)             tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> x86_pmu_show_pmu_cap (1)                tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> cleanup_rapl_pmus (1)                   tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> uncore_free_pcibus_map (1)              tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> uncore_types_exit (1)                   tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> uncore_pci_exit.part.0 (1)              tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> kvm_shutdown (1)                tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> vmx_dump_msrs (1)               tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> vmx_cleanup_l1d_flush (1)               tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-> [..]
-> 
-> Fix this by initializing the new hash to NULL and if the hash is NULL do
-> not treat it as an empty hash but instead allocate by copying the content
-> of the first sub ops. Then on subsequent iterations, the new hash will not
-> be NULL, but the content of the previous subops. If that first subops
-> attached to all functions, then new hash may assume that the manager ops
-> also needs to attach to all functions.
-> 
+BR,
+Edward
 
-Looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-> Cc: stable@vger.kernel.org
-> Fixes: 5fccc7552ccbc ("ftrace: Add subops logic to allow one ops to manage many")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v2: https://lore.kernel.org/20250219220510.888959028@goodmis.org
-> 
-> - Have append_hashes() return EMPTY_HASH and not NULL if the resulting
->   new hash is empty.
-> 
->  kernel/trace/ftrace.c | 33 ++++++++++++++++++++++-----------
->  1 file changed, 22 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 728ecda6e8d4..bec54dc27204 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -3220,15 +3220,22 @@ static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
->   *  The filter_hash updates uses just the append_hash() function
->   *  and the notrace_hash does not.
->   */
-> -static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
-> +static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash,
-> +		       int size_bits)
->  {
->  	struct ftrace_func_entry *entry;
->  	int size;
->  	int i;
->  
-> -	/* An empty hash does everything */
-> -	if (ftrace_hash_empty(*hash))
-> -		return 0;
-> +	if (*hash) {
-> +		/* An empty hash does everything */
-> +		if (ftrace_hash_empty(*hash))
-> +			return 0;
-> +	} else {
-> +		*hash = alloc_ftrace_hash(size_bits);
-> +		if (!*hash)
-> +			return -ENOMEM;
-> +	}
->  
->  	/* If new_hash has everything make hash have everything */
->  	if (ftrace_hash_empty(new_hash)) {
-> @@ -3292,16 +3299,18 @@ static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_has
->  /* Return a new hash that has a union of all @ops->filter_hash entries */
->  static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
->  {
-> -	struct ftrace_hash *new_hash;
-> +	struct ftrace_hash *new_hash = NULL;
->  	struct ftrace_ops *subops;
-> +	int size_bits;
->  	int ret;
->  
-> -	new_hash = alloc_ftrace_hash(ops->func_hash->filter_hash->size_bits);
-> -	if (!new_hash)
-> -		return NULL;
-> +	if (ops->func_hash->filter_hash)
-> +		size_bits = ops->func_hash->filter_hash->size_bits;
-> +	else
-> +		size_bits = FTRACE_HASH_DEFAULT_BITS;
->  
->  	list_for_each_entry(subops, &ops->subop_list, list) {
-> -		ret = append_hash(&new_hash, subops->func_hash->filter_hash);
-> +		ret = append_hash(&new_hash, subops->func_hash->filter_hash, size_bits);
->  		if (ret < 0) {
->  			free_ftrace_hash(new_hash);
->  			return NULL;
-> @@ -3310,7 +3319,8 @@ static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
->  		if (ftrace_hash_empty(new_hash))
->  			break;
->  	}
-> -	return new_hash;
-> +	/* Can't return NULL as that means this failed */
-> +	return new_hash ? : EMPTY_HASH;
->  }
->  
->  /* Make @ops trace evenything except what all its subops do not trace */
-> @@ -3505,7 +3515,8 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
->  		filter_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->filter_hash);
->  		if (!filter_hash)
->  			return -ENOMEM;
-> -		ret = append_hash(&filter_hash, subops->func_hash->filter_hash);
-> +		ret = append_hash(&filter_hash, subops->func_hash->filter_hash,
-> +				  size_bits);
->  		if (ret < 0) {
->  			free_ftrace_hash(filter_hash);
->  			return ret;
-> -- 
-> 2.47.2
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
