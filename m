@@ -1,203 +1,152 @@
-Received: from lf-2-54.ptr.blmpb.com (lf-2-54.ptr.blmpb.com [101.36.218.54])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30391E5B99
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.36.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474451E571A
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740035818; cv=none; b=bahxcFDbaHFgH/sphOutCGM5zTbyVkILFXDfo17VpgRbhsBoN4pcJygvjN8coH9TT0BIpooKrqwD/KJCBc7oL4v4EdukvB09BgDXFoKFbcJInL4Zoki5IRAXerXgETav0Hh0cuvF1N52jB+M/R6oP6+mrn2HQzceO/H+xhuvnFM=
+	t=1740035992; cv=none; b=EZIxf91hDecJv1ymEIOBbPvGqXIl4zgqM05ma4pAq30CBEkKdJ3WeR7e0wKMPZgFcqlSq0LFzAyEeUVYS8wHcJ4b8Zlx9gNJwnXZuPwz+ffRRR4fpMu+u+7vq/kAFv8N793PQ8qw96+/FeajRhc+q+PMAlYrjlqp7FPXJyAaz5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740035818; c=relaxed/simple;
-	bh=EQlwESW28jy8H3w3MMdhsY3PYvVTowSGooaNS8KU2J0=;
-	h=To:From:Mime-Version:In-Reply-To:References:Date:Message-Id:Cc:
-	 Subject:Content-Type; b=E8m1n4JQOH+LZLbTInotprMA99gU3GEYm05Im8ZfSJkCNIhb5r82Lw7k3lNdZrWAxvXWBMVXxPdNyKPoieJzyCBsqfP4qMgAyi7AGSvM/DlKyA/3JHeOdpPyFbQ7RObi0wi2U4wnU1ejEmMNKqR4fcXDUGRRNT9IqC5iqzsW/JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=TXWMQaL4; arc=none smtp.client-ip=101.36.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1740035992; c=relaxed/simple;
+	bh=dSKE5I1F5l6I4pWkjzFMa6oZu20U6ZVKkb/GOJ9jS3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqML6BUf1YV7D2Wb6Y4vrPwIgrnaQ2bzmnpCNwKAr4jw96hsrE9pEIW1lS9r/Swqb/8xaXlF3kUC+gkHUUKtSacJhjhNDNfIOWuBHpUjy4ktNA/IeJvnG2xPsQfC+NPdGqsS36vyePdQ6HlGH6TdzvfeOsKqSrK+Fut6xdFbDQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VNLZAx69; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="TXWMQaL4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1740035581;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=EQlwESW28jy8H3w3MMdhsY3PYvVTowSGooaNS8KU2J0=;
- b=TXWMQaL4r92kd/4/msL40bUej1du5Q2f6Wi6H+qgWGT3SsAr8qCZS/f33LbaNkfBC+zaJ8
- WQxji9HJsd/OF8eonzba5eCrrGcAln4nuzkNo06NfSeug4BR42x+vunmgmrvrZavpdqRe+
- YZAb8eBv6BxYHW0m3hBuTy88C0k+N+XmIkI4+vkr5vELr1q+D5ilwxVR4d/gn3kzQgRDsl
- 2sBVToqvLBlB1/o7W6S5UlzoFv3XhAjVeY7X7GEZhwc3R3HnY5XUhYJ9VrcY8FkBcX03aT
- a2A3Bb885FtZnqjpgOx6WmbKKJUO645ln1Bsek9TntpnGGL7Zcgy0rk4M/q8TA==
-To: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-From: "xiangwencheng" <xiangwencheng@lanxincomputing.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VNLZAx69"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-220c92c857aso10921945ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 23:19:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740035990; x=1740640790; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+Ur9dFsKFbvJEs8mC6dKdEyGV45W+SbQs+6opIdZpbs=;
+        b=VNLZAx69oomZ2UsY/9Cxo311gLJEFuu4zoHEWnn1HdOYJ9H10PWen//VB7OkXM8aji
+         indTno01AIY1BtmqmZYus2N/06rkmcBhlI30jb5ajRX/zpxpUB6+mNx7tNSNqIVgRJVf
+         vNZ30uYjL2fChu7wE58nPLJ3nBi7J7uOnv75wFOStLEwCDpAui1WcThIDnvjarRAJYQu
+         /uvJzscP7FiTToS7UrurzWbRm3lRQpnROxA6I23IzQUHXaJMXHg50pnfbP2KSNNB7W96
+         byLYJ26/72OF5AUZ85DUTrdOqZOtqL5mZ2euyH3V0FMx2hx+s1YW+gm5glkFveDzBGSw
+         0d+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740035990; x=1740640790;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Ur9dFsKFbvJEs8mC6dKdEyGV45W+SbQs+6opIdZpbs=;
+        b=hwARHqR7P1i/sxgZzz9DHsvicEMefX4bwMzV1Y8tALxYCfDY5BLHkF9hgG/PrxTALw
+         Sb+/3COr/QHb3QYZH2M/XYZoipwZc70nYhx9v1KX0uHYYMbIiZqmn5V4DMRhEiBaraGT
+         CpRf/68mp3Rhb6aKrHsYjJvr1lEyskBah1lk0g/w/8vSgmOibo4OVC7msPvwOnguyRgS
+         nG3Dt26agYByEseH2UKsHiKjIBhfRxjLqNwDsp3hW+fAJx95VDfaJACae1Xf7pWSciSd
+         GOJT2yX0KdqrVRR+L5kWetmqU5ggVSbh60WKvkmHUhk7qPBw4MVwvUqoEKgR476kaMMP
+         MosA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgI/3j4e3AuDpslETsCaepJTMgGJ15eiC3QTtYZhkTf+p3ZJ1wCLvQbAhgdAE0JEPlZng5wzmYRy+cK78=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwISjbSn4ovWQAo4FEelNE9XwtsvEL1y0TrfqeN7VQBquO/Kv0N
+	LKDxihocC+xeA+Xh7kz6kqRg7WpkesAxlZOD1efIp0DdT6i/+Xa1UugkpcgXoA==
+X-Gm-Gg: ASbGncsU32m9ayM5Skfaz959hZeb6SAuWfBK4eajInD0UuWI0/+f0CdKvywDv7NWeqE
+	8AZFPKsYJRVMLLbYsaSfAcwUDqPE/a/Ri2Gx6wQDe5xSkdxcOzoti7+xO0uqH6PlWI5XXyqiZWM
+	BytB0k0RquRlGk5nXtgky2AVxvhSVhMRa6VZlQTzvbyarQe0SXlnVkJujKXzgqX/QHhoMKa21k5
+	/5dG/iD+jklc6WYoZR5pSlb9LESKNCOCBDOVYvFrBSzQBPo8ghu2qOVO5gLeTazpd1QS5YmtX85
+	bf0jihmvGNAUjQctXO97Ke8qVg==
+X-Google-Smtp-Source: AGHT+IF3yihejjwT/v8s1qaCn8nd+GpEMzld00Wlnl4a36L6UHNc/5ltRo3ZjwkDna6NDtWQ/sG8kQ==
+X-Received: by 2002:a17:902:f54d:b0:216:271d:e06c with SMTP id d9443c01a7336-2218c3db4d8mr38128005ad.4.1740035990566;
+        Wed, 19 Feb 2025 23:19:50 -0800 (PST)
+Received: from thinkpad ([120.60.70.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d537bd1asm115277265ad.102.2025.02.19.23.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 23:19:50 -0800 (PST)
+Date: Thu, 20 Feb 2025 12:49:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: PCI: qcom-ep: describe optional IOMMU
+Message-ID: <20250220071943.edn6q65ijmeldnag@thinkpad>
+References: <20250217-sar2130p-pci-v1-0-94b20ec70a14@linaro.org>
+ <20250217-sar2130p-pci-v1-1-94b20ec70a14@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-In-Reply-To: <D7WALEFMK28X.13HQ0UL1S3NM5@ventanamicro.com>
-References: <20250219015426.1939-1-xiangwencheng@lanxincomputing.com>
-	<D7WALEFMK28X.13HQ0UL1S3NM5@ventanamicro.com>
-X-Lms-Return-Path: <lba+167b6d5fb+5aa47e+vger.kernel.org+xiangwencheng@lanxincomputing.com>
-Date: Thu, 20 Feb 2025 15:12:58 +0800
-Message-Id: <38cc241c40a8ef2775e304d366bcd07df733ecf0.f7f1d4c7.545f.42a8.90f5.c5d09b1d32ec@feishu.cn>
-Cc: <anup@brainfault.org>, <ajones@ventanamicro.com>, 
-	<kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>, 
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, 
-	<atishp@atishpatra.org>, <paul.walmsley@sifive.com>, 
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, 
-	"linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Subject: Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250217-sar2130p-pci-v1-1-94b20ec70a14@linaro.org>
 
+On Mon, Feb 17, 2025 at 08:56:13PM +0200, Dmitry Baryshkov wrote:
+> Platforms which use eDMA for PCIe EP transfers (like SA8775P) also use
+> IOMMU in order to setup transfer windows.
 
-> From: "Radim Kr=C4=8Dm=C3=A1=C5=99"<rkrcmar@ventanamicro.com>
-> Date:=C2=A0 Wed, Feb 19, 2025, 16:51
-> Subject:=C2=A0 Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
-> To: "BillXiang"<xiangwencheng@lanxincomputing.com>, <anup@brainfault.org>
-> Cc: <ajones@ventanamicro.com>, <kvm-riscv@lists.infradead.org>, <kvm@vger=
-.kernel.org>, <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.=
-org>, <atishp@atishpatra.org>, <paul.walmsley@sifive.com>, <palmer@dabbelt.=
-com>, <aou@eecs.berkeley.edu>, "linux-riscv"<linux-riscv-bounces@lists.infr=
-adead.org>
-> 2025-02-19T09:54:26+08:00, BillXiang <xiangwencheng@lanxincomputing.com>:
+eDMA has nothing to do with IOMMU. In fact, it is not clear on what IOMMU does
+on the endpoint side since we do not assign SID based on the RID from RC.
 
-> > Thank you Andrew Jones, forgive my errors in the last email.
+But the binding should describe it anyway since IOMMU does sit between DDR and
+PCIe IP.
 
-> > I'm wondering whether it's necessary to kick the virtual hart
+- Mani
 
-> > after writing to the vsfile of IMSIC.
+> Fix the schema in order to
+> allow specifying the IOMMU.
+> 
+> Fixes: 9d3d5e75f31c ("dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> index 1226ee5d08d1ae909b07b0d78014618c4c74e9a8..800accdf5947e7178ad80f0759cf53111be1a814 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> @@ -75,6 +75,9 @@ properties:
+>        - const: doorbell
+>        - const: dma
+>  
+> +  iommus:
+> +    maxItems: 1
+> +
+>    reset-gpios:
+>      description: GPIO used as PERST# input signal
+>      maxItems: 1
+> @@ -233,6 +236,20 @@ allOf:
+>            minItems: 3
+>            maxItems: 3
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,sdx55-pcie-ep
+> +    then:
+> +      properties:
+> +        iommus:
+> +          false
+> +
+> +    else:
+> +      required:
+> +        - iommus
+> +
+>  unevaluatedProperties: false
+>  
+>  examples:
+> 
+> -- 
+> 2.39.5
+> 
 
-> > From my understanding, writing to the vsfile should directly
-
-> > forward the interrupt as MSI to the virtual hart. This means that
-
-> > an additional kick should not be necessary, as it would cause the
-
-> > vCPU to exit unnecessarily and potentially degrade performance.
-
->=C2=A0
-> Andrew proposed to avoid the exit overhead, but do a wakeup if the VCPU
-
-> is "sleeping". =C2=A0I talked with Andrew and thought so as well, but now=
- I
-
-> agree with you that we shouldn't have anything extra here.
-
->=C2=A0
-> Direct MSIs from IOMMU or other harts won't perform anything afterwards,
-
-> so what you want to do correct and KVM has to properly handle the memory
-
-> write alone.
-
->=C2=A0
-> > I've tested this behavior in QEMU, and it seems to work perfectly
-
-> > fine without the extra kick.
-
->=C2=A0
-> If the rest of KVM behaves correctly is a different question.
-
-> A mistake might result in a very rare race condition, so it's better to
-
-> do verification rather than generic testing.
-
->=C2=A0
-> For example, is `vsfile_cpu >=3D 0` the right condition for using direct
-
-> interrupts?
-
->=C2=A0
-> I don't see KVM setting vsfile_cpu to -1 before descheduling after
-
-It's not necessary to set vsfile_cpu to -1 as it doesn't release it, and
-the vsfile still belongs to the vCPU after WFI.
-
-> emulating WFI, which could cause a bug as a MSI would never cause a wake
-
-> up. =C2=A0It might still look like it works, because something else could=
- be
-
-> waking the VCPU up and then the VCPU would notice this MSI as well.
-
->=C2=A0
-> Please note that I didn't actualy verify the KVM code, so it can be
-
-> correct, I just used this to give you an example of what can go wrong
-
-> without being able to see it in testing.
-
->=C2=A0
-> I would like to know if KVM needs fixing before this change is accepted.
-
-> (It could make bad things worse.)
-
-As "KVM:=C2=A0 WFI wake-up using IMSIC VS-files" that described in [1], wri=
-ting to=C2=A0
-VS-FILE will wake up vCPU.
-
-KVM has also handled the situation of WFI. Here is the WFI emulation proces=
-s:
-kvm_riscv_vcpu_exit=C2=A0
-=C2=A0=C2=A0=C2=A0 -> kvm_riscv_vcpu_virtual_insn=C2=A0
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 -> system_opcode_insn=C2=A0
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 -> wfi_insn=C2=A0
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_riscv_=
-vcpu_wfi
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- -> kvm_vcpu_halt
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 -> kvm_vcpu_block
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_arch_vcpu_blocking
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_riscv_aia_wakeon_h=
-gei
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> c=
-sr_set(CSR_HGEIE, BIT(hgei));
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> set_current_state(TASK_INTERRUPTIBLE);
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> schedule
-
-In kvm_arch_vcpu_blocking it will enable guest external interrupt, which
-means wirting to VS_FILE will cause an interrupt. And the interrupt handler
-hgei_interrupt which is setted in aia_hgei_init will finally call kvm_vcpu_=
-kick
-to wake up vCPU.
-
-So I still think is not necessary to call another kvm_vcpu_kick after writi=
-ng to
-VS_FILE.
-
-Waiting for more info. Thanks.
-
-[1]=C2=A0 https://kvm-forum.qemu.org/2022/AIA_Virtualization_in_KVM_RISCV_f=
-inal.pdf
-
->=C2=A0
-> > Would appreciate any insights or confirmation on this!
-
->=C2=A0
-> Your patch is not acceptable because of its commit message, though.
-
-> Please look again at the document that Andrew posted and always reply
-
-> the previous thread if you do not send a new patch version.
-
->=C2=A0
-> The commit message should be on point.
-
-> Please avoid extraneous information that won't help anyone reading the
-
-> commit. =C2=A0Greeting and commentary can go below the "---" line.
-
-> (And possibly above a "---8<---" line, although that is not official and
-
-> =C2=A0may cause issues with some maintainers.)
-
->=C2=A0
-> Thanks.
->=C2=A0
+-- 
+மணிவண்ணன் சதாசிவம்
