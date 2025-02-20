@@ -1,289 +1,132 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463041E3761;
-	Thu, 20 Feb 2025 18:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B4A1E3761
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 18:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740077276; cv=none; b=h/JLkBqeAaE9jgNsAawgoLESQgObfFJ+o54lgad2IWwDuw79KxDNwIxk1dfP7qRk2fh1H26AZZY5mdaHPpfOXrdxllH3xB+dgiVJ7sP3hn7GQpupuMuoyjjudGIQjgXItMS15DCBirEsKfBGbcHDsoywMrpMxj+QGploz+8mmDg=
+	t=1740077345; cv=none; b=BPUYeAO8xYEBl55QgmqI1Ss4LEuESK1ltCA0f5ehuGkhHKzg9rCehGZNDvg/5LujDm8KBjb8TuV2LbnViqygehwl87xxmeJpe90poaTBoz9NJpkatlo2E9FLi7y2jirGvtPgFzg7eb77+a9+HEerZH8MNX4zWfmJ4pccguJG1Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740077276; c=relaxed/simple;
-	bh=U/v7Z2RwsmYdj4bE/uoN4+EXjKlJnSaWg6pKH5TQUQo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kC6NWt83ikCoPycKMIVC/U0aS7HFAHLYPqYltj3IPuw2t3imSMMzfrBvi6q2zeYvnrjCxedk7DByUW2k91LTAJmQuh0ik6kmX1L4Kx52xSm815GtFWLX9PYlzV4hCYjvKfRJbGfzMEkIoS7byxNO2Uncs2vQsik6ahFW/yLwrkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CfYG8yng; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740077345; c=relaxed/simple;
+	bh=HhmUsnUAA9FXfyyFZW1O/vQBTW1dafCygMEgR1PSV2w=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UYwWVsntCR3YRiFXGPe8P53IVPPsiGs0l0k9TbFqKcEoFQtbr5NajwlfepBmWINf5ivUBIOYX9SJFMbFbr5N19jqHKHO9+Djnpt7HXTLrd85uAB4CSyqh6LpJitqmWBv3buSEnzje3hkv86juBni5Ou23W3+SJh4bWXRhaNROJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WGmpSk0J; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfYG8yng"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f2b7ce2e5so764033f8f.2;
-        Thu, 20 Feb 2025 10:47:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WGmpSk0J"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1a70935fso2729644a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:49:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740077272; x=1740682072; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FYowbf1CODQB9n/ooqpW/RrguAGNvEkQlicasZTK5YI=;
-        b=CfYG8yngsK1fyHL9G8RvxYoSuJj/xFeBUq1AU5wThBpq/LE94w38crCJduaEBafE8a
-         F4mV3fTeQ+USHwJ7ts45uzqtVyFNep942XQ7esTor6PRLIErC8J0Vjwfepf9DBJeQFMW
-         Lkzg2kXn0w3MGY0kUp79ITC/h7p2nWYYy+Eq5eIcKQYEPrZHNyQSojukEsoVUJQ+TwQM
-         +Ojf/EggWlNgb3EemK5yAornFDWW3nEK+NEi8hECZ5Sgz193qD0Qm5uU+ZWtpcvfV99R
-         7rAE+4CmTsGF9z/aU4vQ2QB9bvY1HAyTvBFtuBduGab/G3BAnUluFvsRCCKyvpGR4FrY
-         tMYw==
+        d=google.com; s=20230601; t=1740077343; x=1740682143; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nrIXE8v94l6Qz63J0EW6oWgUR3NGdxme+Ofja+voZ/I=;
+        b=WGmpSk0JTG4rZuTDErNhp7zDGK93oHpE2qdZiC2KwW9Pjm/fVHPXObRNy4G/r9ygwI
+         LwWVefCZ+FrWf/MD//EMXRcmwdTQq4s0g/aMIamzf5pGUZu3OkZUKgvavaD91L3Ovai2
+         y0NSspvRMCz0glu3CHPlQ5prwa8I5oAiYxhhVUe3TddmORLnH8Ksat0WVeU+Gb/dNw1y
+         Dxp1jPyRrulCuLsPcm0x8mNw26hDEX88FN7hLr/ul//Q+k/C4g5Y34mo6eai92Ss7DG6
+         d467FSILgsPA4P0Y1rQl9ujj5Kz0RBlwvfcRS9vdZpR3xHs8H+uqoHF2gxp3et64ipBd
+         g3FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740077272; x=1740682072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FYowbf1CODQB9n/ooqpW/RrguAGNvEkQlicasZTK5YI=;
-        b=rGrMSA9cV2JTif/bGYAe0884dtUAIoc8PYEZFcKhw9nk7agSFKKjOjgc+n5CMs+erA
-         BL0+SihHq3dgV4cURx/BH6OtCYQp02r7H5YdY4/fbR3oCKMNZopXqck9Z/SNpKcQEAmX
-         2KReucfy/alZEEcSqbt38DgcKxpQLDEGa9R4u5KEgb2/PELweUVTYu36ZjxXpzSODc/a
-         wf/Q9ztuhNx9GmImsa9FsSHNGLPUcNXNP0K7XF8i6P+pwRDstFnm4DgVwibGylwHyG0y
-         Nf3yPeafVbYU/uxIcSZh/0AsKYsC7LGDawuHqSg6rnVH2Y0jrOSlpy4ey5EVPA4bMPxq
-         h8hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyH17x8H18yB3YXiJZOlE5EFNEI74bLLSbRqm3yQD6JHnmyPloykkxWkgESOtbCam5e3T6+g1wk1PMpfRl@vger.kernel.org, AJvYcCX8QECsLtorzVNoS1WXRVAxqIuz7FP0konE8Q5B6zm4J0SJbfYYzn7/VOxRMpahd3q45svjXJXBT5Li@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/X+bVzNv3qn5eJfK/MKnmH94ybujT9HA6IWHujw9ZAuWwWtEx
-	uB4/PHJ9mVnNlkqE0loaRjzlwr9ifXB3PtZP2Ofyowf3vWIo2RP57bwUJHrIH+DLhW7tAOJ6xHt
-	5utUHf1xAQydLsePbahz294YXFus=
-X-Gm-Gg: ASbGncvrEix12eUmvjFWhkYyItaaZPnYxhm1O5JPi64tG7RQ0PFAkoiKVkWdbsqkYbV
-	PkoEyjK+obx8AryZ1WEWppph5iPKOa4EpCaQ9U4Xi8FOeDMSvmRJHcqCft8X1e1L0CO51dvJ5eg
-	==
-X-Google-Smtp-Source: AGHT+IG1h/GefZOV4P1HsTrp8FNSeQFVHto9fM1VgGfcvU3zZQIk8JhTxjoMYMD9GYGAM+8+jDBfjPdO0nrQTyxDfco=
-X-Received: by 2002:a5d:588c:0:b0:38d:ddf2:afea with SMTP id
- ffacd0b85a97d-38f6e95f301mr354116f8f.13.1740077272198; Thu, 20 Feb 2025
- 10:47:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740077343; x=1740682143;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nrIXE8v94l6Qz63J0EW6oWgUR3NGdxme+Ofja+voZ/I=;
+        b=NUO6+eAEa+BMS/EPL6eA5LYz6ICAoyceWBmrJrka2xzH19qmxP5/yHcWH/T5fIn660
+         +/aTL2jmU+NeKuHKAOivY8duQuRzTqEcqJ+JL1ssBjfvzLNEP4WKBwKVINnRyxOivoTk
+         4yzf9FDJWsNJe01YrvjNXawp7MMu2tHgwoFEqYZRGVc1t6jC3BCo1APLprBolOdom0zw
+         zHrLBnZVSoCD2sXUYfVgBFkSGxekKk2SZd6VatBsp5wKhebK9QvzQYlUGSSdUqehrGly
+         G/ZmYdWDRBFl3qqPglsQVQ0R9HOt2uDQkEh0tdLnPSoyL0csNby8OznKqNMAIk5D6DKv
+         lrBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMZMt2l2YoSMRcUVR7PqU8KLPeN+XKhCpzTMrTeF8HcPIjXBVhdD1qZ6NLkkqUtiZbMXMCKBnikZTR9og=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNYJgwH4M2u7eD/N1VwckmVLxRzi/baYU+NR34j/IcmzMAJPuD
+	q4kTPAFo90iAyoc84wfO7bneN4GN+QcKWVirnrQFUO4fg1osOc3ZpYI+MglvOPw4ijBnq2F55UQ
+	N4g==
+X-Google-Smtp-Source: AGHT+IHkerbpaVTlWjWkXbgwvL2U1KNbZ8XETkgVM++qObug4lOq8hnkxEb0uReFtMabhh0VMSMpaVYDsx0=
+X-Received: from pjboh5.prod.google.com ([2002:a17:90b:3a45:b0:2ef:82c0:cb8d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3848:b0:2f9:d9fe:e72e
+ with SMTP id 98e67ed59e1d1-2fce78d3e37mr429085a91.16.1740077343307; Thu, 20
+ Feb 2025 10:49:03 -0800 (PST)
+Date: Thu, 20 Feb 2025 10:49:01 -0800
+In-Reply-To: <6eddd049-7c7a-406d-b763-78fa1e7d921b@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250217140910.108175-1-clamor95@gmail.com> <20250217140910.108175-3-clamor95@gmail.com>
- <zmwn3dnnmwhms2qxqwb6ksshx27fcq2i4wujz5utuldaiqs6oz@idvy3dirrmuo>
- <CAPVz0n3bqLhuC0gxXD-=L0ETMmhOv1Ku0PrWUb_Yn09v3UNuOA@mail.gmail.com>
- <hemnpzzz3ddibdbqwkazwuoalmvuc2mekebqxfrnxiod6futni@sgdjgtrbcwza>
- <CAPVz0n24o5yar-0oO5dPb3vLzuK=Ln8+JKuaooSRwPfiaLQ9vA@mail.gmail.com>
- <jo7nnxrzwi43qqii7wtekdbc6vluakkvg4ndw266ajgkpe3y52@whd5nly34nju>
- <CAPVz0n3HsXJeyRJGP=_UMhs7d4OA-P_yXx5B9EQDU7vQCz8qoA@mail.gmail.com>
- <3lms6xzzu3hfhkncikcmvl6btzdcc2cwoh4kwhw53hdakecrij@yqoyl3bqmm5m>
- <CAPVz0n3YZass3Bns1m0XrFxtAC0DKbEPiW6vXimQx97G243sXw@mail.gmail.com> <eard52ujlocxwshi6ynoimmvfyktpx6f5gcwfn2chaxul2l7my@e24kauxjsw2a>
-In-Reply-To: <eard52ujlocxwshi6ynoimmvfyktpx6f5gcwfn2chaxul2l7my@e24kauxjsw2a>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Thu, 20 Feb 2025 20:47:41 +0200
-X-Gm-Features: AWEUYZl-KaoI55H_XPbgbTsfitI_Et-bq7N7i7G6bn1Yk0vigS5xOUWgbobezIQ
-Message-ID: <CAPVz0n3GqWhMvos_dacsgEyiv3dV5_VnYR7YuNGe2XTLWe30jQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drm: bridge: Add support for Solomon SSD2825
- RGB/DSI bridge
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20241118123948.4796-1-kalyazin@amazon.com> <Z6u-WdbiW3n7iTjp@google.com>
+ <a7080c07-0fc5-45ce-92f7-5f432a67bc63@amazon.com> <Z7X2EKzgp_iN190P@google.com>
+ <6eddd049-7c7a-406d-b763-78fa1e7d921b@amazon.com>
+Message-ID: <Z7d5HT7FpE-ZsHQ9@google.com>
+Subject: Re: [RFC PATCH 0/6] KVM: x86: async PF user
+From: Sean Christopherson <seanjc@google.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, jthoughton@google.com, david@redhat.com, 
+	peterx@redhat.com, oleg@redhat.com, vkuznets@redhat.com, gshan@redhat.com, 
+	graf@amazon.de, jgowans@amazon.com, roypat@amazon.co.uk, derekmn@amazon.com, 
+	nsaenz@amazon.es, xmarcalx@amazon.com
+Content-Type: text/plain; charset="us-ascii"
 
-=D1=87=D1=82, 20 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 17:07 Dmit=
-ry Baryshkov <dmitry.baryshkov@linaro.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Thu, Feb 20, 2025 at 02:26:22PM +0200, Svyatoslav Ryhel wrote:
-> > =D1=82, 20 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 13:35 Dmitry=
- Baryshkov <dmitry.baryshkov@linaro.org> =D0=BF=D0=B8=D1=88=D0=B5:
-> > >
-> > > On Thu, Feb 20, 2025 at 09:37:18AM +0200, Svyatoslav Ryhel wrote:
-> > > > =D1=81=D1=80, 19 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 15=
-:34 Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =D0=BF=D0=B8=D1=88=D0=B5=
-:
-> > > > >
-> > > > > On Tue, Feb 18, 2025 at 04:36:17PM +0200, Svyatoslav Ryhel wrote:
-> > > > > > =D0=B2=D1=82, 18 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=
-=BE 16:20 Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =D0=BF=D0=B8=D1=88=
-=D0=B5:
-> > > > > > >
-> > > > > > > On Tue, Feb 18, 2025 at 02:45:19PM +0200, Svyatoslav Ryhel wr=
-ote:
-> > > > > > > > =D0=B2=D1=82, 18 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =
-=D0=BE 14:31 Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =D0=BF=D0=B8=D1=
-=88=D0=B5:
-> > > > > > > > >
-> > > > > > > > > On Mon, Feb 17, 2025 at 04:09:10PM +0200, Svyatoslav Ryhe=
-l wrote:
-> > > > > > > > > > SSD2825 is a cost-effective MIPI Bridge Chip solution t=
-argeting mainly
-> > > > > > > > > > smartphones. It can convert 24bit RGB interface into 4-=
-lane MIPI-DSI
-> > > > > > > > > > interface to drive display modules of up to 800 x 1366,=
- while supporting
-> > > > > > > > > > AMOLED, a-si LCD or LTPS panel technologies for smartph=
-one applications.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > > > > > > > > > ---
-> > > > > > > > > >  drivers/gpu/drm/bridge/Kconfig   |  14 +
-> > > > > > > > > >  drivers/gpu/drm/bridge/Makefile  |   1 +
-> > > > > > > > > >  drivers/gpu/drm/bridge/ssd2825.c | 824 +++++++++++++++=
-++++++++++++++++
-> > > > > > > > > >  3 files changed, 839 insertions(+)
-> > > > > > > > > >  create mode 100644 drivers/gpu/drm/bridge/ssd2825.c
-> > > > > > > > > >
-> > ...
-> > > > > > > > >
-> > > > > > > > > From v1:
-> > > > > > > > >
-> > > > > > > > > Most of these flags should be set depending on the
-> > > > > > > > > mipi_dsi_device.mode_flags.
-> > > > > > > > >
-> > > > > > > > > > +             ssd2825_write_reg(priv, SSD2825_PLL_CTRL_=
-REG, 0x0001);
-> > > > > > > > > > +             ssd2825_write_reg(priv, SSD2825_VC_CTRL_R=
-EG, 0x0000);
-> > > > > > > > >
-> > > > > > > > > Why? Why do you need this special handling for the
-> > > > > > > > > MIPI_DCS_SET_DISPLAY_ON? Why can't it just go to .atomic_=
-enable()?
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > This has to be called after panel init dsi sequence complet=
-es, is
-> > > > > > > > atomic_enable called after panel init dsi seq is completed?=
- Maybe you
-> > > > > > > > can suggest where to place it.
-> > > > > > >
-> > > > > > > That depends on a panel. Significant number of panel drivers =
-call all
-> > > > > > > DSI programming in .prepare because some DSI hosts can not tr=
-ansfer
-> > > > > > > commands after starting DSI video stream.
-> > > > > > >
-> > > > > > > So these commands should go to your .enable().
-> > > > > > >
-> > > > > >
-> > > > > > This is weird and counter intuitive to send dsi commands in pre=
-pare,
-> > > > > > there should be smth like enable_post. Oh well, fine, I will tr=
-y to
-> > > > > > fit this somehow.
-> > > > > >
-> > > >
-> > > > Who had made this cursed framework?
-> > > >
-> > > > Functions are called in the next seq
-> > > >
-> > > > panel_prepare > bridge_pre_enable > bridge_enable > panel_enable
-> > >
-> > > Use drm_bridge.pre_enable_prev_first or drm_panel.prepare_prev_first.=
- I
-> > > think that fixes your order issues.
-> > >
-> >
-> > This seems to have no effect. I have set panel.prepare_prev_first =3D
-> > true in the panel probe, which should result in
-> > bridge_atomic_pre_enable be called before panel prepare,
-> > and yet I still have this:
->
-> I've cc'ed you on the patch that should fix this behaviour.
->
+On Thu, Feb 20, 2025, Nikita Kalyazin wrote:
+> On 19/02/2025 15:17, Sean Christopherson wrote:
+> > On Wed, Feb 12, 2025, Nikita Kalyazin wrote:
+> > The conundrum with userspace async #PF is that if userspace is given only a single
+> > bit per gfn to force an exit, then KVM won't be able to differentiate between
+> > "faults" that will be handled synchronously by the vCPU task, and faults that
+> > usersepace will hand off to an I/O task.  If the fault is handled synchronously,
+> > KVM will needlessly inject a not-present #PF and a present IRQ.
+> 
+> Right, but from the guest's point of view, async PF means "it will probably
+> take a while for the host to get the page, so I may consider doing something
+> else in the meantime (ie schedule another process if available)".
 
-And this did not resolve my issue. I managed to configure panel to
-work, but it makes panel degrade.
+Except in this case, the guest never gets a chance to run, i.e. it can't do
+something else.  From the guest point of view, if KVM doesn't inject what is
+effectively a spurious async #PF, the VM-Exiting instruction simply took a (really)
+long time to execute.
 
-With the flag above seq is better bridge_prep > panel_prep > bridge_en
-> panel_en but this is still not enough.
+> If we are exiting to userspace, it isn't going to be quick anyway, so we can
+> consider all such faults "long" and warranting the execution of the async PF
+> protocol.  So always injecting a not-present #PF and page ready IRQ doesn't
+> look too wrong in that case.
 
-It seems that my panel hw must be enabled before bridge_pre_enable,
-preferable just before it is called, if I contain all in panel_prepare
-I get no image with light halo in the middle. If I set hw
-configuration in panel probe as a last step, it will be active and
-panel degrades so I end up with flickering once image appears.
+There is no "wrong", it's simply wasteful.  The fact that the userspace exit is
+"long" is completely irrelevant.  Decompressing zswap is also slow, but it is
+done on the current CPU, i.e. is not background I/O, and so doesn't trigger async
+#PFs.
 
-This partially is related to a 6.13 regression which causes bridge to
-be pre/enabled extremely late, approx 75 sec from start and it skips
-entire bootanimation.
+In the guest, if host userspace resolves the fault before redoing KVM_RUN, the
+vCPU will get two events back-to-back: an async #PF, and an IRQ signalling completion
+of that #PF.
 
-> >
-> > [   45.280653] renesas_r61307_prepare start
-> > [   45.300873] renesas_r61307_prepare end
-> > [   45.301070] ssd2825_bridge_atomic_pre_enable start
-> > [   45.317248] ssd2825_bridge_atomic_pre_enable end
-> > [   45.317287] ssd2825_bridge_atomic_enable start
-> > [   45.331650] ssd2825_bridge_atomic_enable end
-> > [   45.331677] renesas_r61307_enable start
-> > [   45.520959] renesas_r61307_enable end
-> >
-> > With or without the flag it is same
-> >
-> > > > There is no gap in between bridge_pre_enable and bridge enable, hen=
-ce
-> > > > I cannot call dsi commands in panel_prepare since bridge is not eve=
-n
-> > > > pre_enabled, and if I call then in panel_enable, I cannot complete
-> > > > bridge configuration since bridge enable is called before. like WTF=
-!
-> > > >
-> > > > I enclose log with function call seq
-> > > >
-> > > > DSI commands in panel prepare
-> > > > [   75.149700] ssd2825_dsi_host_transfer start  << this is panel pr=
-epare
-> > > > [   75.149737] ssd2825 spi0.2: Bridge is not enabled
-> > > > [   75.149750] panel-renesas-r61307 spi0.2.1: Failed to exit sleep =
-mode: -19
-> > > > [   75.149779] ssd2825_bridge_atomic_pre_enable start
-> > > > [   75.178518] ssd2825_bridge_atomic_pre_enable end
-> > > > [   75.178552] ssd2825_bridge_atomic_enable start
-> > > > [   75.179026] ssd2825_bridge_atomic_enable end
-> > > >
-> > > > DSI commands in panel enable
-> > > >
-> > > > [  102.821580] ssd2825_bridge_atomic_pre_enable start
-> > > > [  102.852000] ssd2825_bridge_atomic_pre_enable end
-> > > > [  102.852057] ssd2825_bridge_atomic_enable start
-> > > > [  102.852840] ssd2825_bridge_atomic_enable end
-> > > > [  102.852866] ssd2825_dsi_host_transfer start  << panel enable
-> > > > [  102.853876] ssd2825_dsi_host_transfer end
-> > > > [  102.948420] ssd2825_dsi_host_transfer start
-> > > > [  102.949289] ssd2825_dsi_host_transfer end
-> > > > [  102.978389] ssd2825_dsi_host_transfer start
-> > > > [  102.979567] ssd2825_dsi_host_transfer end
-> > > > [  102.980117] ssd2825_dsi_host_transfer start
-> > > > [  102.981248] ssd2825_dsi_host_transfer end
-> > > > [  102.981809] ssd2825_dsi_host_transfer start
-> > > > [  102.982851] ssd2825_dsi_host_transfer end
-> > > > [  102.983537] ssd2825_dsi_host_transfer start
-> > > > [  102.984556] ssd2825_dsi_host_transfer end
-> > > > [  102.986743] ssd2825_dsi_host_transfer start
-> > > > [  102.988078] ssd2825_dsi_host_transfer end
-> > > > [  102.989445] ssd2825_dsi_host_transfer start
-> > > > [  102.990411] ssd2825_dsi_host_transfer end
-> > > > [  102.990912] ssd2825_dsi_host_transfer start
-> > > > [  102.992274] ssd2825_dsi_host_transfer end
-> > > >
-> > > > In both cases there is no gap in between bridge pre_enable and enab=
-le
-> > > >
-> > > > > > > But what is the case for these calls? Are you manually implem=
-enting the
-> > > > > > > MIPI_DSI_MODE_LPM flag? What exactly do they do? What happens=
- if the
-> > > > > > > panel driver asks for the MIPI_DCS_SET_DISPLAY_ON command aft=
-er you've
-> > > > > > > programmed those registers? What happens if the panel asks fo=
-r the
-> > > > > > > backlight control?
-> > > > > > >
-> > > > > >
-> > > > > > Backlight is externally controlled, at least on my device, so I=
- cannot
-> > > > > > test other cases. If I configure those registers before dsi seq=
-uence
-> > > > > > is completed panel stays black. If I simply remove those
-> > > > > > configuration, panel stays black.
-> > > > > >
->
-> --
-> With best wishes
-> Dmitry
+> > > What advantage can you see in it over exiting to userspace (which already exists
+> > > in James's series)?
+> > 
+> > It doesn't exit to userspace :-)
+> > 
+> > If userspace simply wakes a different task in response to the exit, then KVM
+> > should be able to wake said task, e.g. by signalling an eventfd, and resume the
+> > guest much faster than if the vCPU task needs to roundtrip to userspace.  Whether
+> > or not such an optimization is worth the complexity is an entirely different
+> > question though.
+> 
+> This reminds me of the discussion about VMA-less UFFD that was coming up
+> several times, such as [1], but AFAIK hasn't materialised into something
+> actionable.  I may be wrong, but James was looking into that and couldn't
+> figure out a way to scale it sufficiently for his use case and had to stick
+> with the VM-exit-based approach.  Can you see a world where VM-exit
+> userfaults coexist with no-VM-exit way of handling async PFs?
+
+The issue with UFFD is that it's difficult to provide a generic "point of contact",
+whereas with KVM userfault, signalling can be tied to the vCPU, and KVM can provide
+per-vCPU buffers/structures to aid communication.
+
+That said, supporting "exitless" KVM userfault would most definitely be premature
+optimization without strong evidence it would benefit a real world use case.
