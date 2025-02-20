@@ -1,214 +1,104 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB881EF0A3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D131D63C2;
+	Thu, 20 Feb 2025 11:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740051448; cv=none; b=aEMLX+gpdniZzzxHZhEAzeNi3iUqy4fBszOgzdfadOAzKriDtCeyrzJJGWlRMgmG6OnuBrUVVoxIzZJC4cbhdgOS1XuDzMRclGSaqc01YyATb4GDr1ADCTlP4z1h2T43s8RB767grtUm6De8U+ju6mWuBVdYhwANzGu9kW5xld8=
+	t=1740051502; cv=none; b=VCKtyFWiFYqBJue4qbV13lUUSnFjcWa50djP+1HjwpptcnmjbyjuBycCl0mbXAU7FIJzIcLBb80+m/dQjZZy7uaA9NN6dgJ7q7sBZHbLTK7pgWhSLmil2wOMhillzCgU2ToLklCludazXA18VrWZmcaTecmMVVYuKKGKSuTR0yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740051448; c=relaxed/simple;
-	bh=88G0YOIoPPOL/EjQy1wtDWVST89b/CpWuK/PGMVcl54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aLbFrEKMIR852glngsboLLkKOnvu25F+YHHzW2H8za17IRH/E38agiNKs152EuEZ8cZ+6u43Yipu+Ay61uV+O8hvgw+LT9PtWZ5UCQipUHO8Fd7RI48yMPoyf830Jy/xqblz6NU2VuyvZFOxyngglNH3NsszZ5y2S7I8qyvchOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JPu99uq4; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740051502; c=relaxed/simple;
+	bh=xlLl1DJawLisfXNM+nY3LWGqJWif1fFYtqrXN7NQV9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPwpuv0xLsQ9ZIGOvP2yhZ6Q8BB99IIdfhbPA6nz2FdQOk2uHy5Hx5X0WBqxFM/NqdhLWv6nMaOV1rUYQd1un0KN1wDrmzyb1xnYFJV9jxUvTd0u/k5/brRbZzn+ENte/b/PqBk35UKrZ1BpL7DDxGvOv0MuFRP/qlskY2tinnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GKwk5ZKU; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPu99uq4"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-520b9dc56afso242909e0c.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 03:37:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740051445; x=1740656245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IuzVq9OkutvCNEzS5JGhlxT8oPc0+NNNyZEuizMTif8=;
-        b=JPu99uq4joWinTrzx9qtuLlX2QJsyJVIrn5YDfMne7gvtINGm3hbST6WGvMRsijYy4
-         aD7m14WQ7GJ6ZlOXM+7S/EXBLJtgOpM1VKn8O2uOR0fyF+245HnlyswNEGWw84UK1o9l
-         VRUfq08FG4tDyaXs+Nbl187RCEDWub2EBMqxjY8Gm3966xP3STFG3I46RPsBt974KvYf
-         8C01XM/JXZqoQcl2rQc6CVMoAIwqcTjp/8j0PJIXfRf18Gl9DeTWf5pN7eCc3ftSBnYP
-         hGsi+6Bh1dSLShqhv2XXHoDuu5y+09PwulSPD8h73LeD9H/08v1Qq2nBhyuO2GIr15xB
-         2xug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740051445; x=1740656245;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IuzVq9OkutvCNEzS5JGhlxT8oPc0+NNNyZEuizMTif8=;
-        b=L+FaRDuAAjHPYlBADqcluxwM9cJirittoXzc+y9qLCZk+nn8Hrq4wWXnUjh2Fj0CFe
-         Crb9TFt6n4XLATKHR+lOqFgnTJmMEJ8taVcrafz8FDMe04TQ0jruHCCIhSPX+svq9v03
-         UU8Ca/YCZveyzwL2cib2jUtvr4sWRLyqDyRmvN1ciQolirBwbxORYxElFEP66A+RmLX8
-         gmITC9mXdr6HdvTEOBUMqpfjYodd/KxFMPWBC/7cGcJhoVmxMoVuq8YLkwDiIfx3ZLgv
-         gjNWxkI/jZbtu/Xj8yfkmct7iwIxwSDFwYtqiqrvkrgLU3GmtqH7Hao59S9+Agky/QeI
-         in2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUkyz6uiSd+RsNuLbjZD542nDFdSZPQizoinYYYoSIfdyrOq1CqwOOmIT554CnnUw6pMBOPBS7uSEdhig4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysSvFYgEriF0eZ8WgPKDyFQ4AsBpFV36LFfKgPDcB8Klqdpi8T
-	U0f60o1mzzdUErA75VMYS6So/T6Ro5xz+gTRUtp3kOgZGMDOzDAowgQP+a/I+0cRm5lMH9bN3cE
-	VizN3pnlpc5G7YMDAQFYTUnY5QZ3lYLB6URLhyQ==
-X-Gm-Gg: ASbGnctzGVjbJ18kdFX5WOrpe2NdwlTPh1ySQ6VMoGOER0tJOsvluoYRXOXtjB929uz
-	c1JHjB5PwhgOrAqSCYyC/P2ydGI2vXHJfk4w5362HpwaFmsyz17GT8+97hCs+5i6PvGvepb3sUi
-	iAX4n383g/k5ql0PEAd1faDPOWYqMp
-X-Google-Smtp-Source: AGHT+IHzJnQ8UdPjYSfM/OBiu2LSuTlvIs57FBk1cINHCNnyxHhaqri2pojhFlOAyHI/OO7q6pneJlQKoZbBkFzte7w=
-X-Received: by 2002:a05:6122:506:b0:50a:c70b:9453 with SMTP id
- 71dfb90a1353d-5209de6718cmr9371127e0c.10.1740051445536; Thu, 20 Feb 2025
- 03:37:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GKwk5ZKU"
+Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5799074C;
+	Thu, 20 Feb 2025 12:36:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740051415;
+	bh=xlLl1DJawLisfXNM+nY3LWGqJWif1fFYtqrXN7NQV9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GKwk5ZKUmbL7p+4UlYHMd9yLoF+qhwDfO0XI15X3Y/17FQw11Lyfn8Kw7Vu8ZJV3D
+	 fL9TUKSCylYI7F86cDZtGiMbY+Rdwp9hz2A2cjAlcVR9dUHs34BbpXuJc7B36waG6K
+	 KP2QE64oFCS07JtT6hLnotuPVhTLCfhOAlktIsy0=
+Date: Thu, 20 Feb 2025 12:38:15 +0100
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Julien Massot <julien.massot@collabora.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@intel.com>, 
+	Tianshu Qiu <tian.shu.qiu@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Umang Jain <umang.jain@ideasonboard.com>, 
+	=?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/3] media: add v4l2_subdev_state_xlate_streams()
+Message-ID: <tw6x663t5dmxsdarrxjtopza3mou3lnhwazu3dfv2k27fv47v2@bvftfepqqhss>
+References: <20250220092036.6757-1-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219082550.014812078@linuxfoundation.org>
-In-Reply-To: <20250219082550.014812078@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 20 Feb 2025 17:07:14 +0530
-X-Gm-Features: AWEUYZnQO4inOznO9_79aYbIKplawCDHNLm1B1JD3EKc_OH-xNl-HvFQIbOwsf8
-Message-ID: <CA+G9fYv7WoDA1OC9VtQ6qAqwoaJA5+mpWMahE+7j+vwp1dTS6g@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/152] 6.6.79-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250220092036.6757-1-demonsingur@gmail.com>
 
-On Wed, 19 Feb 2025 at 14:28, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Cosmin
+
+On Thu, Feb 20, 2025 at 11:20:32AM +0200, Cosmin Tanislav wrote:
+> Currently, the v4l2_subdev_state_xlate_streams() function is used
+> to translate streams from one pad to another.
+> This function takes the entire subdev state as argument, but only makes
+> use of the routing.
+
+Correct, but is this a problem ?
+
+Is this the first step for a larger rework or is this a drive-by
+beautification ?
+
+I'm asking because (and I know it's hard to strike a balance) this
+kind of changes tend to make back-porting a more painful, and if
+only justified by "it looks better" I would be a bit hesitant in
+taking them.
+
+
 >
-> This is the start of the stable review cycle for the 6.6.79 release.
-> There are 152 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Introduce a v4l2_subdev_routing_xlate_streams() function which can be
+> used without the entire subdev state, to avoid passing the entire state
+> around when not needed.
 >
-> Responses should be made by Fri, 21 Feb 2025 08:25:11 +0000.
-> Anything received after that time might be too late.
+> Convert all usages of v4l2_subdev_state_xlate_streams() to
+> v4l2_subdev_routing_xlate_streams().
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.79-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
+> Remove v4l2_subdev_state_xlate_streams().
 >
-> thanks,
+> V2:
+>   * Fix description of parameters
 >
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build
-* kernel: 6.6.79-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: de6988e4026e1da2b3653e74a33e46860cb3f717
-* git describe: v6.6.78-153-gde6988e4026e
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.7=
-8-153-gde6988e4026e
-
-## Test Regressions (compared to v6.6.77-274-ge4f2e2ad0f5f)
-
-## Metric Regressions (compared to v6.6.77-274-ge4f2e2ad0f5f)
-
-## Test Fixes (compared to v6.6.77-274-ge4f2e2ad0f5f)
-
-## Metric Fixes (compared to v6.6.77-274-ge4f2e2ad0f5f)
-
-## Test result summary
-total: 67097, pass: 53621, fail: 1765, skip: 11452, xfail: 259
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 127 total, 127 passed, 0 failed
-* arm64: 39 total, 39 passed, 0 failed
-* i386: 26 total, 22 passed, 4 failed
-* mips: 24 total, 24 passed, 0 failed
-* parisc: 3 total, 3 passed, 0 failed
-* powerpc: 30 total, 30 passed, 0 failed
-* riscv: 18 total, 18 passed, 0 failed
-* s390: 13 total, 12 passed, 1 failed
-* sh: 12 total, 10 passed, 2 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 32 total, 32 passed, 0 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-crypto
-* ltp-cve
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> Cosmin Tanislav (3):
+>   media: v4l: subdev: add v4l2_subdev_routing_xlate_streams()
+>   media: use v4l2_subdev_routing_xlate_streams()
+>   media: v4l: subdev: remove v4l2_subdev_state_xlate_streams()
+>
+>  drivers/media/i2c/ds90ub913.c                 | 14 ++++++-----
+>  drivers/media/i2c/ds90ub953.c                 | 14 ++++++-----
+>  drivers/media/i2c/max96714.c                  | 16 ++++++-------
+>  drivers/media/i2c/max96717.c                  | 23 ++++++++++---------
+>  drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c | 14 ++++++-----
+>  .../platform/nxp/imx8-isi/imx8-isi-crossbar.c |  2 +-
+>  drivers/media/v4l2-core/v4l2-subdev.c         |  7 +++---
+>  include/media/v4l2-subdev.h                   | 10 ++++----
+>  8 files changed, 53 insertions(+), 47 deletions(-)
+>
+> --
+> 2.48.1
+>
+>
