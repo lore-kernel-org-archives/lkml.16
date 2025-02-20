@@ -1,110 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63D13A87C;
-	Thu, 20 Feb 2025 16:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3758A20B812;
+	Thu, 20 Feb 2025 16:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069705; cv=none; b=C9PRK7qtOSAfEGV/KAn9rnCbVXtaulZ4qLauSO/31E0LpT1CWxaBvNZPaTrgnL/22UUwBFj+M2vyj7b8EIhohNmxLt1cIoFJ/VWcxu8qfRg7gY4ErAm7L/6a2nUMKYnCpShu9m+yW+ITkG9wQdX19RginuqDGTfiOtdn/Ml0pqY=
+	t=1740069717; cv=none; b=e/ihQzpkQ3R0wdAVeXKJFKzz5kB3lBpJMyVllEWw09dQnQUAiIlGW1JZubumRht4B7y7UJGdTFkBhi0pZd/tWxBwSYCSwr3Zj9AO484JuOEXPPitZfeneeFNlP6b4rOEJLBs4vxW51A7/S7vSyOEmX48GGnFjsKqOUzSfRnwRfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069705; c=relaxed/simple;
-	bh=HyXshobuVqA0RqPRtuVurArIvohbfETQanVpkFcibTg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QW+X3UYnjvMG1YnYnhXKYKLFpWYAYJukEnOHym72Bt7YO8hST9Rvruz4amOehGAad21s/JjiG1q4GY9oI+Oh6ctUaocahz0eQleOvDOpdKM9o3S3tIxzD2NIIMNmUJbkx7ZL9eoe832eLdsMskl4Y04G/N3U9U5e3a681gRR1sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJNJYCpa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740069717; c=relaxed/simple;
+	bh=TYfO4NMFHURGbPNs1cXbVVlPxLhwPSr2YHLvwtMjhy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BfVsm20NTzoP24EQd3M8UGi1T/JHVzvfvHBNCjhRHTUGcBaP313EMYYrk2mNfkEsTBtTqrQ2AZjMF6cnb/wUt8xqLsX6OYd/O0duZMpSkKmiuOenhibsghHmXV94b8vrtpLC7C3OaMMki56/A+8biweE1xROHuk3QibOSXLsziw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RfNgWwSK; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJNJYCpa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F95C4CED1;
-	Thu, 20 Feb 2025 16:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740069704;
-	bh=HyXshobuVqA0RqPRtuVurArIvohbfETQanVpkFcibTg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NJNJYCpaUum1F7pXgvxKAzTey+/y/cSpzoDM/1W7Qu5koLF4xu5BI9n4sa6HJrJ2p
-	 gTuBaxgIbeEIo4Iw53vdKou1gUzUOt7Pi8aPAvlifYsVd4zFObR5+XPDUi+e5Gke7y
-	 f7lqiUbf6rjVoBOlQvZxwRXgoWv1FobuJruVyuN+NSNAx62rUj0LWxpiy9mOZ7Do/h
-	 MFM4NdiPOX3m0jOTCqbL8SxY45FE/byY60Y5VWf7/lzFYQIILdEk0nG05icel81aWu
-	 ak0P+K0yHJt+VNYirpTV1eKknp3F9X3zw9nwgs0cn4sqJbEIuMxAlFieytPCCiq77q
-	 iOjR9ZiBdHF6A==
-Received: by wens.tw (Postfix, from userid 1000)
-	id 984635FB8F; Fri, 21 Feb 2025 00:41:41 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Chen-Yu Tsai <wens@csie.org>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND net-next] net: stmmac: dwmac-rk: Provide FIFO sizes for DWMAC 1000
-Date: Fri, 21 Feb 2025 00:40:31 +0800
-Message-Id: <20250220164031.1886057-1-wens@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RfNgWwSK"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7A0F8203D5E9;
+	Thu, 20 Feb 2025 08:41:55 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A0F8203D5E9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740069715;
+	bh=pNJT56BxP7UvWA0Xz758yN9Ks+B/eGQRDTpNl6/uydA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RfNgWwSKvEiPibsl6QYn1+eHkT30Nn1lw5OPsw1d6PPbcISNOFjUL/xQSqvKSFf8o
+	 yoOIzOPYQSxDpQlLZwzRdyB7IKxJeSJ80SjCCl6Rmtksk16rj7gF1Vbsd9EZG8Perr
+	 ZiNK0h99Ko8rPXUvLfCrhbWuuKMw7GXCc7mIDVdc=
+Message-ID: <13059366-bf72-4e84-ab6c-032b735edaec@linux.microsoft.com>
+Date: Thu, 20 Feb 2025 08:41:55 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v4 6/6] PCI: hv: Get vPCI MSI IRQ domain from
+ DeviceTree
+To: Michael Kelley <mhklinux@outlook.com>, "arnd@arndb.de" <arnd@arndb.de>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "kw@linux.com" <kw@linux.com>, "kys@microsoft.com" <kys@microsoft.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "mingo@redhat.com" <mingo@redhat.com>, "robh@kernel.org" <robh@kernel.org>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
+ <will@kernel.org>, "devicetree@vger.kernel.org"
+ <devicetree@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+Cc: "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+References: <20250212014321.1108840-1-romank@linux.microsoft.com>
+ <20250212014321.1108840-7-romank@linux.microsoft.com>
+ <SN6PR02MB4157911BEF8664EDE2B62835D4C52@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157911BEF8664EDE2B62835D4C52@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Chen-Yu Tsai <wens@csie.org>
 
-The DWMAC 1000 DMA capabilities register does not provide actual
-FIFO sizes, nor does the driver really care. If they are not
-provided via some other means, the driver will work fine, only
-disallowing changing the MTU setting.
 
-The recent commit 8865d22656b4 ("net: stmmac: Specify hardware
-capability value when FIFO size isn't specified") changed this by
-requiring the FIFO sizes to be provided, breaking devices that were
-working just fine.
+On 2/19/2025 3:29 PM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Tuesday, February 11, 2025 5:43 PM
 
-Provide the FIFO sizes through the driver's platform data, to not
-only fix the breakage, but also enable MTU changes. The FIFO sizes
-are confirmed to be the same across RK3288, RK3328, RK3399 and PX30,
-based on their respective manuals. It is likely that Rockchip
-synthesized their DWMAC 1000 with the same parameters on all their
-chips that have it.
+[...]
 
-Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
-Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
-(Resending to net-next instead of netdev.)
+>>   }
+> 
+> These changes to rename hv_dev to vmbus_root_device, along with the
+> introduction of hv_get_vmbus_root_device(), seem like a separate
+> patch from the vPCI changes. The rename is definitely needed because
+> "hv_dev" as a symbol is very overloaded. But the rename is "no functional
+> change", and it doesn't touch the pci-hyperv.c file. You don't have a
+> consumer for hv_get_vmbus_root_device() until the vPCI changes, but
+> that seems OK to me to be in the subsequent patch.
+> 
 
-The commit that broke things has already been reverted in netdev.
+Thanks, will split the NFC out! I've asked the ACPI maintainers if a
+small change in ACPI would be fine to make the functional part of this
+patch more palatable, too.
 
-The reason for stable inclusion is not to fix the device breakage
-(which only broke in v6.14-rc1), but to provide the values so that MTU
-changes can work in older kernels.
-
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index a4dc89e23a68..71a4c4967467 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1966,8 +1966,11 @@ static int rk_gmac_probe(struct platform_device *pdev)
- 	/* If the stmmac is not already selected as gmac4,
- 	 * then make sure we fallback to gmac.
- 	 */
--	if (!plat_dat->has_gmac4)
-+	if (!plat_dat->has_gmac4) {
- 		plat_dat->has_gmac = true;
-+		plat_dat->rx_fifo_size = 4096;
-+		plat_dat->tx_fifo_size = 2048;
-+	}
- 	plat_dat->fix_mac_speed = rk_fix_speed;
- 
- 	plat_dat->bsp_priv = rk_gmac_setup(pdev, plat_dat, data);
 -- 
-2.39.5
+Thank you,
+Roman
 
