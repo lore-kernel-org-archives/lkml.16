@@ -1,143 +1,148 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AAE214232;
-	Thu, 20 Feb 2025 17:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FE71E2848;
+	Thu, 20 Feb 2025 17:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740072062; cv=none; b=cvqoF4lTeuf5RiLpVFWHLEFEHEROlFhndPAT8GIDwd5FwMhqgsg4uepBc7tVEoij42TY6O+MnSqgdOMFaHFgPVsO3DAwYjjzVm4KGfcuQrHG6lJr/Ol7Uym2q7DsDwg894M5F2TNlg/7joH35Ov1ZMItNFohggEmweik8dLyc/A=
+	t=1740072174; cv=none; b=TLLhSDhUu2JuFiTfIvEJ/rMg8ziGzxlVvTtx+851TH9itTSblEb2DeaTzMiYLPKS8YiiRgG1yIOdOx3paWGCGxHdY9ExIkTuWA9IRZu4Tm7xuHMjGgQtTKNddKIR062H4YyHbVZ/cKTWojjlFYVHgQGHHNt+eozEjS+vgznBPmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740072062; c=relaxed/simple;
-	bh=LkZ8pI84U/9kAaduOXRZY8k8VUWS/C02iCLVHt+jVkI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=qqvblH6dhF36h/u26Hv7ITZ1HaniYZzJK8DnigpGTEySHbFHrC6XMwWLGUIbkgtPky95kMBw93zxRklSbjbmRbYmRAqhn/SR50oBo5vgUXvYqdGgCNlk+BVQgsWUwW/8xYXIdBiAir1bn9Z1hUgJbpKnLBpJMIWeqc1cMqSoWO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pHqq7xYs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740072174; c=relaxed/simple;
+	bh=iiCsnaoU0TQVN3Wn3gsInJiV1kvV/CCfVEHy+i7LKgI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qu9T7PjBMswDflRKzhLPeTtFbibtWZ2diCeLqETxCY1viZq7VQWYA1/GBZoqpq5eXxE5Myzsk51i3J0eXLoYcRjzujqw0b132Tqr+NZwvmVgHjHXWXm2QMqApmnI86u8HaocFQPJS2BH5TAFSXeobr84mmlKLNDQZV0gwwk9N9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XYDRTG/p; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pHqq7xYs"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KFX7Dt011183;
-	Thu, 20 Feb 2025 17:20:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	jRPDAc8074s/X+XmlhCqpA0yiW+yZCJFuWdqVnM+YhI=; b=pHqq7xYsigJioX6G
-	s9Ao/dDsHoWG4a4QU52EOb+AskvICmtQPXnD4r2YSyoESeDI6dH+poebmtSBcm3z
-	//WsesgBk4y2E1LXqSIaqi+Sust9QP+nlTHKdjvZlJu55HFm/cB9wpYHFg2pFSwf
-	dllGSYbgaCFt+p4UaDADGsk/FMMH+KsINkCSN+5SOOrAZw/AnWxNeXIUh9XcCtT7
-	Vu9GhgB0mVzDGELuR436ZNCA8EUThNxaT7S7eilhxv/40sSOegu7PyApXrrKhzS5
-	vcG0LFqT7cjtvyt/qoO00ZmDWnGKxu0UqAR8uqY+BrD6jiYBDiPbCEgav1FSPPrR
-	2+6sSg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1xxmy-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XYDRTG/p"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KH1ew6007899;
+	Thu, 20 Feb 2025 17:22:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=S+lsw3
+	J2GGZrkffZVS1uXbFw8jdnLUvAixzKeCH+EC0=; b=XYDRTG/pmvtz43XuqCR8Lk
+	q4wHnqTWDvJyI0a7mnMN/TMyrLAhH596y1MmXEgma9OFnlhI+iKKbjY6fviALDQn
+	6aiO/uZAbxz5/5aRiMeOEWEiQICjUbrSiNEyKH5g2+cThWluGSBhHTB5rF4df7Tf
+	hDRuP2ebQnkB42k2hPyuQzOgqQhFCh3B8YV8sWeAbl6Lk5d96FXd+LgPxIxC3YOA
+	7rhN9NYb2ZsL7YskeRvvtBbJ2uoUa4CkK++p6X+h9qI5Km6CTMYp61Twel/meDIq
+	L3BQnS0D9aQHN+1NRj8JmS2ayvrOgbf4/I3lnazhbl2AsEjXyDVeGdaaVEHLR7XQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wtfa4bag-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 17:20:55 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51KHKsKc029300
+	Thu, 20 Feb 2025 17:22:27 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KF6sLU002343;
+	Thu, 20 Feb 2025 17:22:26 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w03xb6d3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 17:20:54 GMT
-Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 20 Feb 2025 09:20:50 -0800
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-Date: Thu, 20 Feb 2025 22:50:11 +0530
-Subject: [PATCH v5 4/4] media: venus: hfi: add a check to handle OOB in sfr
- region
+	Thu, 20 Feb 2025 17:22:26 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KHMPT129098640
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 17:22:25 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E5D558052;
+	Thu, 20 Feb 2025 17:22:25 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E475F58056;
+	Thu, 20 Feb 2025 17:22:23 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.68.26])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Feb 2025 17:22:23 +0000 (GMT)
+Message-ID: <c76a6a741b6f465d270153b65ea6f728383ca608.camel@linux.ibm.com>
+Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Thu, 20 Feb 2025 12:22:23 -0500
+In-Reply-To: <20250218225502.747963-3-chenste@linux.microsoft.com>
+References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+	 <20250218225502.747963-3-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250220-venus_oob_2-v5-4-4d29347c669a@quicinc.com>
-References: <20250220-venus_oob_2-v5-0-4d29347c669a@quicinc.com>
-In-Reply-To: <20250220-venus_oob_2-v5-0-4d29347c669a@quicinc.com>
-To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-CC: Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab+samsung@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>, <stable@vger.kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740072035; l=1598;
- i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
- bh=LkZ8pI84U/9kAaduOXRZY8k8VUWS/C02iCLVHt+jVkI=;
- b=KiKQgNmHnhZw9YsqpqeFyuUc4Pdd2AjiHAO4JIFFMdFnwbN2uEbL6icD+k2oCAwTi3uFpMnhT
- FMEFOz6ehteAHohRqidNGQrFaTeudHlBrkhXU9LJlWMwujgGnoEaW1Y
-X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
- pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DGoiH8-xPF9g9PXLBshLLknGRdRr6j2s
-X-Proofpoint-ORIG-GUID: DGoiH8-xPF9g9PXLBshLLknGRdRr6j2s
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9eyMENDAtdtjGXHKLQ0XI_TrwLnteDmW
+X-Proofpoint-GUID: 9eyMENDAtdtjGXHKLQ0XI_TrwLnteDmW
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-20_07,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=979 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200121
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200119
 
-sfr->buf_size is in shared memory and can be modified by malicious user.
-OOB write is possible when the size is made higher than actual sfr data
-buffer. Cap the size to allocated size for such cases.
+Hi Steven,
 
-Cc: stable@vger.kernel.org
-Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
----
- drivers/media/platform/qcom/venus/hfi_venus.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+On Tue, 2025-02-18 at 14:54 -0800, steven chen wrote:
+> Currently, the mechanism to map and unmap segments to the kimage
+> structure is not available to the subsystems outside of kexec.=C2=A0 This
+> functionality is needed when IMA is allocating the memory segments
+> during kexec 'load' operation.=C2=A0 Implement functions to map and unmap
+> segments to kimage.
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-index 6b615270c5dae470c6fad408c9b5bc037883e56e..ab93757fff4b31910f05831170ca1a54f4925b2b 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.c
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-@@ -1041,18 +1041,26 @@ static void venus_sfr_print(struct venus_hfi_device *hdev)
- {
- 	struct device *dev = hdev->core->dev;
- 	struct hfi_sfr *sfr = hdev->sfr.kva;
-+	u32 size;
- 	void *p;
- 
- 	if (!sfr)
- 		return;
- 
--	p = memchr(sfr->data, '\0', sfr->buf_size);
-+	size = sfr->buf_size;
-+	if (!size)
-+		return;
-+
-+	if (size > ALIGNED_SFR_SIZE)
-+		size = ALIGNED_SFR_SIZE;
-+
-+	p = memchr(sfr->data, '\0', size);
- 	/*
- 	 * SFR isn't guaranteed to be NULL terminated since SYS_ERROR indicates
- 	 * that Venus is in the process of crashing.
- 	 */
- 	if (!p)
--		sfr->data[sfr->buf_size - 1] = '\0';
-+		sfr->data[size - 1] = '\0';
- 
- 	dev_err_ratelimited(dev, "SFR message from FW: %s\n", sfr->data);
- }
+Obviously up to now Kexec was mapping the segments. Missing from this patch=
+ description is
+the reason "why" these functions are needed now.  It's not enough to say "i=
+s needed when
+IMA is allocating the memory segments during kexec 'load' operation".  The =
+question is why
+does "IMA" need to allocate the memory segments.  Don't make the kexec/kexe=
+c_dump
+maintainers guess.
 
--- 
-2.34.1
+Refer to the section "Describe your changes" in
+https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
+
+>=20
+> Implement kimage_map_segment() to enable mapping of IMA buffer source
+> pages to the kimage structure post kexec 'load'.=C2=A0 This function,
+> accepting a kimage pointer, an address, and a size, will gather the
+> source pages within the specified address range, create an array of page
+> pointers, and map these to a contiguous virtual address range.=C2=A0 The
+> function returns the start of this range if successful, or NULL if
+> unsuccessful.
+>=20
+> Implement kimage_unmap_segment() for unmapping segments
+> using vunmap().
+>=20
+> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+
+Again, no such thing as an "Author" tag.  Refer to the comments on 1/7.
+
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+
+As previously requested, please add the Cc's inline here and in all the kex=
+ec/kdump
+related patches:
+
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>=20
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+
+thanks,
+
+Mimi
 
