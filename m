@@ -1,345 +1,181 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2075.outbound.protection.outlook.com [40.107.92.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAB1264F84;
-	Thu, 20 Feb 2025 21:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740087473; cv=none; b=J99uZ4gwnIo4g2Eq4C3zLpOVvkcoQRDwPDICABMun/2VAIvkhSX7IdNgzpkglRs6+7k+j3Hjd7w8syo0zvEKg9dhcerTZ5MYE1Wsyh0pe27nULy5iLA3NWgCMPWOfCTEd8LQ2daW2KSGqupa+Rtc9mr804Y8ErBrZF6MoY4OxWk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740087473; c=relaxed/simple;
-	bh=ZMzUV7EagjYA+QnVxN3/s78mmN3Mb1SrscUo0Fe/3wk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O3NwwDp/kfNA5CnAY97mQx5oa7vD1VnWlvGo3ip4peNXIzTPNBmAof9PsfUGuo/0ony4it/E7JFrsmm8Ig85DbytbGPXQkITenn69uPZ36vATdUrO8weuqD3jpGbuNAOY4YMegOUAmB9887kKWZuB7MALEgfnBlBQ1IzadRyOUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZdxNSsVJ; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E132638B8;
+	Thu, 20 Feb 2025 21:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740087664; cv=fail; b=QfLGmzlS/PlAHNfYwe0s3OYvMWZkZTcfc1uuGFGmFM3chLVw/v79XVgyBCl/S+c6tZLGxLA2tHlTXFVgHeBWNGn9dbuyzKvXQT4h6Yhsn6B4OVHLsqicxsU6+K5uPsYYwfwPv9i/J6RL9+XPyCXxSQl7c8YgbXLSVoqRJyad28E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740087664; c=relaxed/simple;
+	bh=rhhVF5oHD97YHuWAIHw7c+umqMt0g2jvEeiO5jVUFos=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UOMWQlnOi9KR94C9j0cgXbypGlYyU8KbULhgwxuZzMHEnokXoJ/1zadDVE/zFkkfFmUBSXT/Y17I5fAPTbztvTohl29KEpK+CsSDVS5vSmEEvLToDL25cScIebs/BogWNhEC24YG87W8hBVaxmOvwUoXFGLAnee5KdubDSKdPNM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dek5FiXo; arc=fail smtp.client-ip=40.107.92.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdxNSsVJ"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30a440effcfso25454031fa.0;
-        Thu, 20 Feb 2025 13:37:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740087470; x=1740692270; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3/AHxN53omPCKDXXdtdccLlHfpgjy3pWDMb4ampTqog=;
-        b=ZdxNSsVJ+e+3qyZ1LZBNzM5vIAsFfB3Ciar9H8NMvNxpKGb6w8DRIWV1qdOHTWB4Or
-         h0FU1u5vV7gJWbEsG1o9proV3WxZ+HuS6IyHHrEBcinBW9aHGsJSs794ufrhWDgg2Qjq
-         6g00Uzp0atSw6dQx0Av/xNp6vmlBPrGSUXh7CCobIIJ8/whicEEpBpWLvoJ1EswH8u+B
-         wj24CydfVQ7hWygQ9qMsqBIeFYBrMr3Iy5q4Vq9+cq4t8d3n0arHW8NMzHkhN7u0xDd3
-         pkZo8c6qKrnUkDWxXbfpr8FQ2xwzy8Wxgsq+4FXhnaOYlhAzU09Ngk/wYKz4LoWPuwIC
-         fltg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740087470; x=1740692270;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3/AHxN53omPCKDXXdtdccLlHfpgjy3pWDMb4ampTqog=;
-        b=se+33muFYlAuM91aAB9jsnyHnYtCU63KJgM9IrfVcakOe1obgg3cZ3DUWIeK60pDyr
-         zjYQv5UiAlvWsNQFu1MtF+Xhcyl6mFuso9feX241LifybW4Zhem68K5F/QLvepfSpjVl
-         wvfvEWaI1l7XkTjlJpzZyzT7NIJ9MNy3GAompRx8JZWmcZs0UsuFBpL9IcqTy6Ho+Tfq
-         9sxO01tLlmE7XONwtDmgWRBBBi2pfsc2U6CsECBhz5wJXDK4Njh+o5J6ZgDpJBu8a5OC
-         1FkH/90YVa7sb9FgT/gyJIpz4L4mCMOV1DNZY8WjR2pWjgSPyP7/IlXa2xH4/rsbbZAq
-         swvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQD6myUk2PcfSCg6buxSN+g9In9s7VATP0fKJ15OIC8YbWuXAA5fd4xMj+7CYkpM/TJIhgt8P+1ZZuqnI=@vger.kernel.org, AJvYcCWZ584yMhl/lIl8iq84n4LHmy4NN0oASn2B7ZeNDP4BKFrKsN3PyHlLAlg6BTrASQGJEYw5aGuDIpJOmoBDHDw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQGgqnkogAChiUzBbv/0K+lsWkvXTtv6febHa/s4UgIxmCmTat
-	m/2+7ZADi2Zc4xNw1YyAg06Clp6rU6yGK+IsHAoIm4/MmEIvT+9p0XUzuayAvllWWPZTDuYDm+I
-	Hm5TaQnj1v/Zq3ReO6Ab+a4IaBW0=
-X-Gm-Gg: ASbGncs1QUrEgiQMXABCSvdSxjnc/shpKkE6nQx3+6KTvGwP7c/Li7C2+VbX4MPByAE
-	GsXZ2KoeD6GPfC7V0HwQVZ5f6Hbxrfe8ssIwwTQjST8RuwfJeHFMMkRRVuYZX6qY6BYVk+Jqr7/
-	+GrsljHZntHHyv
-X-Google-Smtp-Source: AGHT+IHdSCDkdxH6Hph3vQPQOkkb7o/CwxydrLmfjQec6aN1CpZ6Znom9bkSkM5L8ajHu6+nL2LCTH97mNKWdeuMMoY=
-X-Received: by 2002:a2e:3c14:0:b0:309:2999:77d4 with SMTP id
- 38308e7fff4ca-30a505d863cmr18037481fa.6.1740087469451; Thu, 20 Feb 2025
- 13:37:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dek5FiXo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xtgUqxEUyITN3lqteqNivapAocn8mYyhtq26veP0KPEHZa87Q+l+ROvjCl2WDOTl1FCENLrcHaUF6wfOiRoaNtAOiaqX5CSziVXTAsP5tNCeqlc4IuGvEoHHRFOQag5HqP+98krh43H7xm2XG6gCoyXBHX2BhhLGBGLui21Kp1rIqsoY9auWQwjAvv9/y7pQ/FtZJPPdarN9mTJzrV6lcqvkN0L0TPblqvUsZgBKXzZOEaaZLfp+kfRwmtbAcXaagnQuffxdzJ2rvAn7kPSmr62rIzOtA1thNwddHfUgct2bLsxgh17Yy5Z1aFVsAluQQbS87XgsHXy26qObIeMlXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eZI4YGyeyBiOWEiiV5OuMBv0V24LtnJljyPE2c4Bslc=;
+ b=Qp7/N1NISAU4taPv/N4c/CXEs5tOexACz1One+7NuKE7uK5s09m/sk+YPZTnsdgR9O1ePA9IzPBVLUbi4onV5j0XvJSdPMtqWJkQO7aGWqVUcZLNd/2U4LsI8ixyywSTll+xqhm8luaKn+tEa9qivJCB2VK5N6Kbzqsoiht6+Yb3Ua6LAWn4fr78ANamNWppwKBL/LkH2fjhWZzVEFnEQ2r9WW34JEv4vu44QQGuWUq+IgmcNho3f5BfjPG4GB6SvNIg8bicvKkHvUxX+cQfGn1bnO2+NNKL+/j4nNtmuUPdRox4D1Tkwbn95C1RwbAZT2Omg/8ONtyyjNmd0PXqZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eZI4YGyeyBiOWEiiV5OuMBv0V24LtnJljyPE2c4Bslc=;
+ b=dek5FiXoeuDZm+VIaME/X6TQskUpzhx0vNzwf99aW/Mv1hGp89mMxS7h3RdNQto4/VutCumfNIOsSQVgJhFIulbZGs5UDWmaa3tUAQm7ljnM6ziUglEJKwKtw1zpOKb4RHPUVu6MeD2lOqf6hrqwOoxFQ2AkPSAiEmRNvpjfd6r8ag4TOHKALnO484sRdyJ6zSGVPXTrLkX14PUaQSe/PKTf3Ca8xoKZuyQi1OsbTq9bKJh0oqwN00CgcG4JntIWrW6qwDkwuS2EFATPm7kP4Xh7F+BlkuCaJHnRqwo/5NPDTmDzCZz6sQZnnPrYjTyXWX2GlAvKsS5gu4EtXG+vyA==
+Received: from SA0PR12CA0012.namprd12.prod.outlook.com (2603:10b6:806:6f::17)
+ by CY8PR12MB8411.namprd12.prod.outlook.com (2603:10b6:930:6e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Thu, 20 Feb
+ 2025 21:40:58 +0000
+Received: from SN1PEPF00026368.namprd02.prod.outlook.com
+ (2603:10b6:806:6f:cafe::1a) by SA0PR12CA0012.outlook.office365.com
+ (2603:10b6:806:6f::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.15 via Frontend Transport; Thu,
+ 20 Feb 2025 21:40:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SN1PEPF00026368.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 21:40:58 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 20 Feb
+ 2025 13:40:42 -0800
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 20 Feb 2025 13:40:41 -0800
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Thu, 20 Feb 2025 13:40:38 -0800
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: Gal Pressman <gal@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, "Saeed
+ Mahameed" <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Tariq
+ Toukan <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Jianbo Liu
+	<jianbol@nvidia.com>
+Subject: [PATCH net-next 0/8] net/mlx5e: Move IPSec policy check after decryption
+Date: Thu, 20 Feb 2025 23:39:50 +0200
+Message-ID: <20250220213959.504304-1-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
- <20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
- <KDmrJnQA2_Ojf67mD8WA_UafgVCACRRleB9t-D_1yl_bua8e1VWdGQAUvmMGHscqRHu1gzPJCKe_BfotutZm5Q==@protonmail.internalid>
- <CAJ-ks9ncOyGyQsDFOBxg-7wmXkrQYiZr6H6eEFWsFstk=p1uAA@mail.gmail.com> <87wmdkgvr0.fsf@kernel.org>
-In-Reply-To: <87wmdkgvr0.fsf@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 20 Feb 2025 16:37:13 -0500
-X-Gm-Features: AWEUYZliI_VrX4T85KKg7MveWeq-OsXOuwjUJx6sq2N3HSgYQwiWJGGDJMDmzvU
-Message-ID: <CAJ-ks9mNidHZvWkFJE1jExc2oVk_bbJpiO_DRMrWu5nYhTpKgg@mail.gmail.com>
-Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
-	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026368:EE_|CY8PR12MB8411:EE_
+X-MS-Office365-Filtering-Correlation-Id: c4f37fb3-c47b-4470-81e2-08dd51f7432f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NUJuVXhaek1ld2xlN3Y4KzY4RnhLZm00K1F4Qm10Q0RwbmtlRzNiSkVzZ3Vu?=
+ =?utf-8?B?bktaS0dOMHVrN0hDOEd6clpDV2w1aTc5dEtTVmtwaEJVWFBuQzhGeHBZT1dU?=
+ =?utf-8?B?MkhnNnhJTjUvVm5md3FrQ3hlY2UwWTRrSkQ4SXF5dEo4T2hoOU90YldtOWh1?=
+ =?utf-8?B?VHllZW03WFYvWFFyQVhWTDRhL1cyWURZRk9zSCtWTkZLcnd5RUVQb0krNW5k?=
+ =?utf-8?B?cUVrajBWQ1V2dUxZQVdCbDhzVDNucThJK0tLa3d4dy94Q3Y1emcyU1lxUE8z?=
+ =?utf-8?B?VVlOSDFPOXJ4ZDFXU3ZXaDh1b3ZOdjBwdC9LeWp1aGRnRERNMFRLTzBnbzRU?=
+ =?utf-8?B?aHVmMU1DOXl3TnFFR1JCY0VzcUpYSzN2VzhyVmRXMjgvc0EwYytDRlF6QkIw?=
+ =?utf-8?B?aFJ1YlNiQ3J3NWJna0ZnZGVNRzZKYUZvTXFocm5qYzBQdWxtSnZrempBQ3RS?=
+ =?utf-8?B?ekdZTmVhSUM0WHRQOXRrUDk3b0w5Z0kwQTJna1hTc3lGeWovdUtXL3BDdGlL?=
+ =?utf-8?B?TWVxenorN2hIL2MyVEtLOVY2ckh4ZzhmUDdXbWEzc2pBdTgxeDNYNFdRV2M1?=
+ =?utf-8?B?SnRiZXpyVHlXRk85WXhLVS90ZVRyMTFSVk9MMkxSejN1OFVpMWxkbUJuZlUx?=
+ =?utf-8?B?a0FSTDkxbFQwdDNTNDJVSU1YWVRHMmlzTUNZTm9tcHNKZmpHYXpjMXRibkRM?=
+ =?utf-8?B?eVpsaGtUYmVxY2wwejg0NmE3eXBQU3E5czgrVW90b1k2Tjl1M3NtT1dQZVlE?=
+ =?utf-8?B?MmN6emdQUXMxL05nNFk4N2NDK1Jad0xJejJha0xBK3M5RjdlcXNsWGFndXZ5?=
+ =?utf-8?B?cFI4VG5EalV4UklCNEhrRXk2cERrY0l3eElqbEpMc0RDSHQ1aWM2emYrcUhp?=
+ =?utf-8?B?MjZoOHFiTm12WWlFOVRuQWdmY1QwNFRJK084YkM3K01wV3B6M3Vxc3dURisv?=
+ =?utf-8?B?V1loQnNLc1ZtNDQ4S05UenhVK3pLdmFreDdzcEtybGxhMXpESitHVnB1T1FH?=
+ =?utf-8?B?UWtDWmNZb20wOVNHWFJDSlN4NDVZVHNNSEg4Zk9UTGZxWC81NCtuajhpZm1Z?=
+ =?utf-8?B?cDM2bzg1UmtSL3hBWXk3N2NqSXlxa0FSc2VjdGpPTU5JK0hMZkdTemY4MTlR?=
+ =?utf-8?B?N2ZONjgzdEJ1YTBEbkRWVmtLOFVSNzU1S2MyZ2ZIdmxYUWVnYVNzUW03bUlu?=
+ =?utf-8?B?U0lYb0JFeEN1YUJ3Qjh2cExxYXpkdFNlR09EdTZIbThvNDh1d2VwcWFXNXZ6?=
+ =?utf-8?B?bzBCbDB2THVrZCtZOTdZb2VVSm9WbmxMQ2pJYkxBQzJjSkNxaThvZWNyWkJo?=
+ =?utf-8?B?ZmZWbW5OTHBObFVwV0xxa1A4VzFhMUxkOXBWdERTZm04akJ3ekVtdWhvdHB6?=
+ =?utf-8?B?QUY4M3ZzaE9NOCtFc05FbXBrMUNNTXR5VFBzWDc0QTc4Q2RyNjJUdXIydDZ2?=
+ =?utf-8?B?SjlneEZySnQ4eHozQ29xRTZkektHYVNnRjhGdUY3ME1Pbks5Ry9Xb2tzZld5?=
+ =?utf-8?B?N2FUbFprc0NIQ1RUZDErZnpCQkZNaW9hOUZUVTdFaU5WQkxJRW9FSEJHOXQ2?=
+ =?utf-8?B?cEtSQjJsdThMRXJmR2Z2YmxCeUsxbjJ0dXp1czRZTmkwZVpqWm9DYkRFcjds?=
+ =?utf-8?B?bmtyS2hrdWRoUUt3Nk5TSmJWU0lyLzVlam41SFh4eUtHTmtPUVcwTXJoUG1v?=
+ =?utf-8?B?MjJUVkNkcnFuTG1naDBadXhIcVJ1Y0Z2MVlFckRaWDJOdzdqYmhhemlPS1Jq?=
+ =?utf-8?B?dklDVVFyN0pmbVhHSUJISmVMNUJ2ZUtMNXBOaWlkTS9RUmY0NEFVUEpIRWIz?=
+ =?utf-8?B?NnFGUDRjMVJWSWJQdk9kREVDaWZvb0YyOGg1RkxSNnA4TitGdDFrL3hTdzhE?=
+ =?utf-8?B?SDJTS1BRL2JmUWkwQ2NGUjkzYU9wMzcxMloybExWQmNpdWhRVGlZREtqWDV0?=
+ =?utf-8?B?cWkxbjZvZGdyLzVhQm9BMWNSaG9LaS9IZ0c4UFMxa1FGbnZhenhLSnJuUFF3?=
+ =?utf-8?Q?C7iub7foPQRwIvFHgeuDfdupbj9HjU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 21:40:58.1187
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4f37fb3-c47b-4470-81e2-08dd51f7432f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026368.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8411
 
-On Thu, Feb 20, 2025 at 4:19=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> "Tamir Duberstein" <tamird@gmail.com> writes:
->
-> > On Tue, Feb 18, 2025 at 8:29=E2=80=AFAM Andreas Hindborg <a.hindborg@ke=
-rnel.org> wrote:
-> >>
->
-> [...]
->
-> >> +//! ## State Diagram
-> >> +//!
-> >> +//! ```text
-> >> +//!                  <-- Stop ----
-> >> +//!                  <-- Cancel --
-> >> +//!                  --- Start -->
-> >> +//!        +---------+        +---------+
-> >> +//!   O--->| Stopped |        | Running |---o
-> >> +//!        +---------+        +---------+   |
-> >> +//!                                  ^      |
-> >> +//!                  <- Expire --    |      |
-> >> +//!                                  o------o
-> >> +//!                                   Restart
-> >> +//! ```
-> >> +//!
-> >> +//! A timer is initialized in the **stopped** state. A stopped timer =
-can be
-> >> +//! **started** with an **expiry** time. After the timer is started, =
-it is
-> >> +//! **running**. When the timer **expires**, the timer handler is exe=
-cuted.
-> >> +//! After the handler has executed, the timer may be **restarted** or
-> >> +//! **stopped**. A running timer can be **canceled** before it's hand=
-ler is
-> >
-> > "it's" =3D it is. This should be "its" (possessive).
->
-> Thanks =F0=9F=91=8D
->
-> > Just to be clear, after the handler has executed and before the timer
-> > has been **restarted** or **stopped** the timer is still in the
-> > **running** state?
->
-> It depends on the return value of the handler. If the handler returns res=
-tart,
-> the timer the timer does not enter the stopped state. If the handler
-> returns stop, the timer enters the stopped state.
->
-> The timer is still considered to be in running state the handler is
-> running.
->
-> I can add this info to the section.
+Hi,
 
-Yeah, some clarification here would be useful.
+This series by Jianbo adds IPsec policy check after decryption.
 
-> >
-> >
-> >> +//! executed. A timer that is cancelled enters the **stopped** state.
-> >> +//!
-> >> +
-> >> +use crate::{init::PinInit, prelude::*, time::Ktime, types::Opaque};
-> >> +use core::marker::PhantomData;
-> >> +
-> >> +/// A timer backed by a C `struct hrtimer`.
-> >> +///
-> >> +/// # Invariants
-> >> +///
-> >> +/// * `self.timer` is initialized by `bindings::hrtimer_setup`.
-> >> +#[pin_data]
-> >> +#[repr(C)]
-> >> +pub struct HrTimer<T> {
-> >> +    #[pin]
-> >> +    timer: Opaque<bindings::hrtimer>,
-> >> +    _t: PhantomData<T>,
-> >> +}
-> >> +
-> >> +// SAFETY: Ownership of an `HrTimer` can be moved to other threads an=
-d
-> >> +// used/dropped from there.
-> >> +unsafe impl<T> Send for HrTimer<T> {}
-> >> +
-> >> +// SAFETY: Timer operations are locked on C side, so it is safe to op=
-erate on a
-> >> +// timer from multiple threads
-> >> +unsafe impl<T> Sync for HrTimer<T> {}
-> >> +
-> >> +impl<T> HrTimer<T> {
-> >> +    /// Return an initializer for a new timer instance.
-> >> +    pub fn new() -> impl PinInit<Self>
-> >> +    where
-> >> +        T: HrTimerCallback,
-> >> +    {
-> >> +        pin_init!(Self {
-> >> +            // INVARIANTS: We initialize `timer` with `hrtimer_setup`=
- below.
-> >> +            timer <- Opaque::ffi_init(move |place: *mut bindings::hrt=
-imer| {
-> >> +                // SAFETY: By design of `pin_init!`, `place` is a poi=
-nter to a
-> >> +                // live allocation. hrtimer_setup will initialize `pl=
-ace` and
-> >> +                // does not require `place` to be initialized prior t=
-o the call.
-> >> +                unsafe {
-> >> +                    bindings::hrtimer_setup(
-> >> +                        place,
-> >> +                        Some(T::CallbackTarget::run),
-> >> +                        bindings::CLOCK_MONOTONIC as i32,
-> >> +                        bindings::hrtimer_mode_HRTIMER_MODE_REL,
-> >> +                    );
-> >> +                }
-> >> +            }),
-> >> +            _t: PhantomData,
-> >> +        })
-> >> +    }
-> >> +
-> >> +    /// Get a pointer to the contained `bindings::hrtimer`.
-> >> +    ///
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// `ptr` must point to a live allocation of at least the size of=
- `Self`.
-> >> +    unsafe fn raw_get(ptr: *const Self) -> *mut bindings::hrtimer {
-> >> +        // SAFETY: The field projection to `timer` does not go out of=
- bounds,
-> >> +        // because the caller of this function promises that `ptr` po=
-ints to an
-> >> +        // allocation of at least the size of `Self`.
-> >> +        unsafe { Opaque::raw_get(core::ptr::addr_of!((*ptr).timer)) }
-> >> +    }
-> >
-> > Can you help me understand why the various functions here operate on
-> > *const Self? I understand the need to obtain a C pointer to interact
-> > with bindings, but I don't understand why we're dealing in raw
-> > pointers to the abstraction rather than references.
->
-> We cannot reference the `bindings::hrtimer` without wrapping it in
-> `Opaque`. This would be the primary reason. At other times, we cannot
-> produce references because we might not be able to prove that we satisfy
-> the safety requirements for turning a pointer into a reference. If we
-> are just doing offset arithmetic anyway, we don't need a reference.
+In current mlx5 driver, the policy check is done before decryption for
+IPSec crypto and packet offload. This series changes that order to
+make it consistent with the processing in kernel xfrm. Besides, RX
+state with UPSPEC selector is supported correctly after new steering
+table is added after decryption and before the policy check.
 
-Why do we have a pointer, rather than a reference, to Self in the
-first place? I think this is the key thing I don't understand.
+Regards,
+Tariq
 
->
->
-> > This extends to
-> > HrTimerPointer, which is intended to be implemented by *pointers to*
-> > structs that embed `HrTimer`; why isn't it implemented on by the
-> > embedder itself?
->
-> Not sure what you mean here. If you refer to for instance the
-> implementation of `HrTimerPointer for Arc<T>`, I get why you might
-> wonder, why does `HasHrTimer::start` not take a reference instead of a
-> pointer? We could do that, but we would just immediately break it down
-> again in the implementation of `HasHrTimer::start`. Might still be a
-> good idea though.
+Jianbo Liu (8):
+  net/mlx5e: Add helper function to update IPSec default destination
+  net/mlx5e: Change the destination of IPSec RX SA miss rule
+  net/mlx5e: Add correct match to check IPSec syndromes for switchdev
+    mode
+  net/mlx5e: Move IPSec policy check after decryption
+  net/mlx5e: Skip IPSec RX policy check for crypto offload
+  net/mlx5e: Add num_reserved_entries param for ipsec_ft_create()
+  net/mlx5e: Add pass flow group for IPSec RX status table
+  net/mlx5e: Support RX xfrm state selector's UPSPEC for packet offload
 
-I was trying to say that my question (which I clarified above,
-hopefully) extends to the description and name of this trait.
-Specifically for this trait I don't understand why its semantics are
-described in terms of pointers rather than references (and AsRef, to
-allow for Arc and friends).
+ .../net/ethernet/mellanox/mlx5/core/en/fs.h   |   4 +-
+ .../mellanox/mlx5/core/en_accel/ipsec.h       |   5 +
+ .../mellanox/mlx5/core/en_accel/ipsec_fs.c    | 620 +++++++++++++++---
+ .../mellanox/mlx5/core/en_accel/ipsec_stats.c |   1 +
+ .../mellanox/mlx5/core/esw/ipsec_fs.c         |  15 +-
+ .../mellanox/mlx5/core/esw/ipsec_fs.h         |   5 +
+ include/linux/mlx5/eswitch.h                  |   2 +
+ 7 files changed, 558 insertions(+), 94 deletions(-)
 
-> >
-> > I realize we discussed this on v6, sorry for not keeping up there.
->
-> No worries, it is good that we discuss this.
->
-> [...]
->
-> >> +
-> >> +/// A handle representing a potentially running timer.
-> >> +///
-> >> +/// More than one handle representing the same timer might exist.
-> >> +///
-> >> +/// # Safety
-> >> +///
-> >> +/// When dropped, the timer represented by this handle must be cancel=
-led, if it
-> >> +/// is running. If the timer handler is running when the handle is dr=
-opped, the
-> >> +/// drop method must wait for the handler to finish before returning.
-> >
-> > Between this comment and the comment on cancel we say "if it is
-> > running" 3 times. Can we say it just once, on the method, and here say
-> > that cancel must be called in Drop?
->
-> Well, the comment on `cancel` is just a description of what the function
-> does. This piece of text is a safety requirement.
->
-> We could make the safety requirement for implementing the trait "Implemen=
-t
-> the methods according to their documentation". But that would not help wi=
-th
-> the drop requirement.
 
-My suggestion is that the safety comment read: when dropped,
-[Self::cancel] must be called. Something like that.
+base-commit: 5d6ba5ab8582aa35c1ee98e47af28e6f6772596c
+-- 
+2.45.0
 
->
-> >
-> >> +pub unsafe trait HrTimerHandle {
-> >> +    /// Cancel the timer, if it is running. If the timer handler is r=
-unning, block
-> >> +    /// till the handler has finished.
-> >> +    fn cancel(&mut self) -> bool;
-> >> +}
-> >> +
-> >> +/// Implemented by structs that contain timer nodes.
-> >> +///
-> >> +/// Clients of the timer API would usually safely implement this trai=
-t by using
-> >> +/// the [`crate::impl_has_hr_timer`] macro.
-> >> +///
-> >> +/// # Safety
-> >> +///
-> >> +/// Implementers of this trait must ensure that the implementer has a=
- [`HrTimer`]
-> >> +/// field at the offset specified by `OFFSET` and that all trait meth=
-ods are
-> >> +/// implemented according to their documentation.
-> >> +///
-> >> +/// [`impl_has_timer`]: crate::impl_has_timer
-> >> +pub unsafe trait HasHrTimer<T> {
-> >> +    /// Offset of the [`HrTimer`] field within `Self`
-> >> +    const OFFSET: usize;
-> >
-> > Does this need to be part of the trait? As an alternative the provided
-> > methods could be generated in the macro below and reduce the
-> > opportunity to implement this trait incorrectly.
->
-> There is no risk of implementing the trait wrong, because it is usually
-> derived by a macro.
-
-There's no risk when it's implemented by the macro, but you used the
-word usually,  which means there is a risk.
-
-> We need at least one of the methods to be able to have the type system
-> verify that the type for which we implement `HasHrTImer` actually has a
-> field with the name we specify, and that this field has the right type.
-> And to have that, we need the OFFSET.
-
-I don't follow this logic. OFFSET is calculated in the body of the
-macro. I'm suggesting that the macro generate the method
-implementations (which would no longer be provided). In effect I'm
-saying: keep OFFSET private.
-
-I'm also noticing now that the macro generates an implementation of
-raw_get_timer *in addition to* the provided implementation. Why are
-both needed?
-
->
->
->
-> Best regards,
-> Andreas Hindborg
->
->
