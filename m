@@ -1,128 +1,129 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A048A1E9B36;
-	Thu, 20 Feb 2025 08:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CA91EC01B;
+	Thu, 20 Feb 2025 08:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740041076; cv=none; b=gmJYO/aNQTLs76rnMMGKZIVOlTh1ctDXJCAlgqvMCkC8m/rs3NnRCLq0vQsAfaxrbNTQ7D2YuEWOLBAczpKIEEhNe9RSuK720d+36ty8qkwSl1gmZlEh/Xm1okJs4qbg0FmvGdOj9Ro+3k4eMz5IvBnYQSE1Kwr3kf+8U53IIzg=
+	t=1740041082; cv=none; b=j9WRGGsRXZwpzJwVQ5jUf4YH5uUrV5o4qOrAJsp+olft1/Z40xA40hGaMMf1/j4O98fzFLx2S0aWG0YVTX9Bpsx58bJsRJ2/GKbQRvsIWZZMRQxoZvxsvYFSa4eSVmEPDQ1omsCUSEbq8A5dz0y34VMtpMJWvYTvh6h8tJ1A1jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740041076; c=relaxed/simple;
-	bh=6+WfYSvPN9wYhd23shFQB9I2w3/8Wmt3Of+LUyAJjXw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hTkHq1tV/Gi3v2eX908LUUfk1hbTKQ52DJqiAzOto236YsVY0Tb9KlRaZrcmdLCOWVle0C8T86FvCdymYl4sigcPreCI4+BWMRsNUjEhD+rD9hN1EshZnnXJ6VXhMBVrlaV/EB35k1u6KLdtqKEo3eVlqvjdskogu8vu5shfR28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxaWoc67ZnZxF8AA--.17651S3;
-	Thu, 20 Feb 2025 16:43:08 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDx_MQa67ZntvQdAA--.44622S2;
-	Thu, 20 Feb 2025 16:43:07 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>
-Subject: [RFC] LoongArch: KVM: Handle interrupt early before enabling irq
-Date: Thu, 20 Feb 2025 16:43:06 +0800
-Message-Id: <20250220084306.323967-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1740041082; c=relaxed/simple;
+	bh=HJ1XECDgshy0YbD6yjuBXd5UXHQVou2y7AGLiVEqzXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q1xYfZKgT0x35e7t4aDNkcefwFBFfLgII9VkrAhgWJBowQ0VlvbaLWnM/GQBGcLQev3lhUeXUO1jbxGN2vdBOgffRSJMMgoCyH98dNKZSyQKgKweDwMG2IwG/+MmfabKrtdx/03xWT3rMB8fXJoQFJO/auDQKC3ivshm8xKxqec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CwDbV/fg; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwDbV/fg"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7483b9bf7so105060966b.3;
+        Thu, 20 Feb 2025 00:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740041079; x=1740645879; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1DLM9VCekfySYxigQbv6wSfMUfeFAysoJQtS7Tibb7c=;
+        b=CwDbV/fgPmNLlmPvRGiS/Lk4LgrwcbOTBjCiQlnT7ilMlktvAgU8MccJqta+5dy1qg
+         GWxpXvWP/8lOwzP5Jg/lNAbMv51sjZp/P9L40kgp0xhLXy84hxBNtFvdwTYPOWOGaY0Y
+         UlhaxWglSdDJdeBE+AbzWAFjy4QQxwYyGnQpYlWPQtqa7nWHi7dvf5uoPNVU5o92FkZ3
+         RrjUthX50vVEomPMF33t7ochgo3NCQciegZA8tfKIPJFbc+H/JgbVDHn+NMsi9GCJZVi
+         WRpTCBs3YmhfG+PUHrDSrq8G9h8qZGm6yMUoXWZTA31sfAueBe8jyyksw8vCCQAJZLxG
+         z6WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740041079; x=1740645879;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1DLM9VCekfySYxigQbv6wSfMUfeFAysoJQtS7Tibb7c=;
+        b=YnL8vUnIU1IrrpVfWY5vK4mClRsHzLFouUer8wBoM2V/HBfYYjfUQOQU6gsiROLQjV
+         Zvkvtnvuq98CV5eaEs3QWhxBtsEUp2lbKGIVHN9EmgMC3vsHJU39vBsUvEdQVf8+a83+
+         0gkvg4BtLwK3b8LbXx+pv6xFXYTTptLimB3YaUJXeArYipWCMj+Rd0EHT1Lw+EYAtYee
+         v73sOKdqNnZGUxDdrU9fSV9fN3GYRDtY95fzo4yZdlnAap+MG5C86F3WJIfay2olawhk
+         9co8zFRAKYHXhwVdqZce8NpdN+aZBZ4e7tf2WAMcsu3Qojtp+3tnnuKlAyDI58173ZXI
+         hNig==
+X-Forwarded-Encrypted: i=1; AJvYcCWX9/p1SPUdPHNOLRhuZEteKiohSoQbTLN3p0Kp4RTmfhijJaRlBIm6HTYJo2xkUKuJxNv/vOPnfncn31ZPFKU=@vger.kernel.org, AJvYcCXei+UYgLrUQ80kru6TNhDjhqUOMCTnG1Y8ZRPyXsiTuRI6FwL31NJhSq79Ue1T0F2q/8nMxrmVV9vZggU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG+LVbGpgQPzpib2oKifhnXnYG3NO069gAkCfqTM0u02SRNpWQ
+	RVzI77R7sntUxCkM5tJ6NiIymv8/3raQRoztJoQj8P07TYUuZao=
+X-Gm-Gg: ASbGnctVNAE4ZKuVIyQmqDnPrQFfWj0ebRqt76Zt6g0dxbl8zAnUY2wmlKFAlnxhYy/
+	BNwk15RFcN/mMEWFMukhJAVsKslePxvhT1CSKQ/GcNQlxNxdbpickxG0ux41lgnrQmSDN3T+fD5
+	BNL1s/b9BSrx+SOQgfZHHvlTOvYf1PNpI2HYcCyZmWvOkueXzKYTyJgmamuuaYJdDZgi+K5rGIt
+	g5olTyyArmrhkSq8grDXVMaUFWzzw6MPzv9MBrw79PXdpVoW57HQwuD26d53LBReB5GrQhxYIg2
+	6mPpeA==
+X-Google-Smtp-Source: AGHT+IHkGOjFEoRaJEgxmDz/0pEkyx2wuvk3PlN0KnRZZ7gxXlC16HVyEqS3RgGwpnpudH9gdVbcQA==
+X-Received: by 2002:a17:907:3f10:b0:ab7:d87f:6662 with SMTP id a640c23a62f3a-abbcd0b1265mr522929066b.52.1740041078195;
+        Thu, 20 Feb 2025 00:44:38 -0800 (PST)
+Received: from p183 ([178.172.146.173])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9553fbd0sm789621866b.84.2025.02.20.00.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 00:44:37 -0800 (PST)
+Date: Thu, 20 Feb 2025 11:44:35 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+	ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <ad27a7b8-f21d-47e5-8a3a-131cc2fb1398@p183>
+References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
+ <Z7SwcnUzjZYfuJ4-@infradead.org>
+ <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
+ <202502191026.8B6FD47A1@keescook>
+ <785A9F60-F687-41DE-A116-34E37F5B407A@zytor.com>
+ <f77d549c-b776-4182-b170-571d1e5bb288@p183>
+ <2025022007-angelfish-smite-a69d@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx_MQa67ZntvQdAA--.44622S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+In-Reply-To: <2025022007-angelfish-smite-a69d@gregkh>
 
-If interrupt arrive when vCPU is running, vCPU will exit because of
-interrupt exception. Currently interrupt exception is handled after
-local_irq_enable() is called, and it is handled by host kernel rather
-than KVM hypervisor. It will introduce extra another interrupt
-exception and then host will handle irq.
+On Thu, Feb 20, 2025 at 07:53:28AM +0100, Greg KH wrote:
+> On Thu, Feb 20, 2025 at 09:32:15AM +0300, Alexey Dobriyan wrote:
+> > On Wed, Feb 19, 2025 at 11:33:56AM -0800, H. Peter Anvin wrote:
+> > > b. Can we use existing mature tools, such as C++, to *immediately* improve the quality (not just memory safety!) of our 37-year-old, 35-million line code base and allow for further centralized improvements without the major lag required for compiler extensions to be requested and implemented in gcc (and clang) *and* dealing with the maturity issue?
+> > 
+> > We can't and for technical reasons:
+> > 
+> > * g++ requires C99 initializers to be in declaration order,
+> >   even in cases where there is no reason to do so.
+> > 
+> > * g++ doesn't support __seg_gs at all:
+> > 
+> > 	$ echo -n -e 'int __seg_gs gs;' | g++ -xc++ - -S -o /dev/null
+> > 	<stdin>:1:14: error: expected initializer before ‘gs’
+> > 
+> >   x86 added this to improve codegen quality so this would be step backwards.
+> > 
+> 
+> And then there's my special addition to the kernel "struct class" :)
 
-If KVM hypervisor detect that it is interrupt exception, interrupt
-can be handle early in KVM hypervisor before local_irq_enable() is
-called.
+"struct class" is the trivialest of the problems.
 
-On 3C5000 dual-way machine, there will be 10% -- 15% performance
-improvement with netperf UDP_RR option with 10G ethernet card.
-                   original     with patch    improvement
-  netperf UDP_RR     7200          8100           +12%
+> Anyway, no sane project should switch to C++ now, ESPECIALLY as many are
+> starting to move away from it due to the known issues with complexity
+> and safety in it's use.  Again, see all of the recent issues around the
+> C++ standard committee recently AND the proposal from Google about
+> Carbon, a way to evolve a C++ codebase into something else that is
+> maintainable and better overall.  I recommend reading at least the
+> introduction here:
+> 	https://docs.carbon-lang.dev/
+> for details, and there are many other summaries like this one that go
+> into more:
+> 	https://herecomesthemoon.net/2025/02/carbon-is-not-a-language/
+> 
+> In short, switching to C++ at this stage would be ignoring the lessons
+> that many others have already learned already, and are working to
+> resolve.  It would be a step backwards.
 
-The total performance is low because irqchip is emulated in qemu VMM,
-however from the same testbed, there is performance improvement
-actually.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kernel/traps.c |  1 +
- arch/loongarch/kvm/vcpu.c     | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 2ec3106c0da3..eed0d8b02ee3 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -1114,6 +1114,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
- 
- 	irqentry_exit(regs, state);
- }
-+EXPORT_SYMBOL(do_vint);
- 
- unsigned long eentry;
- unsigned long tlbrentry;
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20f941af3e9e..775f7aa6d904 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/kvm_host.h>
- #include <linux/entry-kvm.h>
-+#include <asm/exception.h>
- #include <asm/fpu.h>
- #include <asm/lbt.h>
- #include <asm/loongarch.h>
-@@ -304,6 +305,17 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
- 	return ret;
- }
- 
-+static void kvm_handle_irq(struct kvm_vcpu *vcpu)
-+{
-+	struct pt_regs regs;
-+
-+	/* Construct pseudo pt_regs, only necessary registers is added */
-+	regs.csr_prmd = CSR_PRMD_PIE;
-+	regs.csr_era = vcpu->arch.pc;
-+	regs.regs[3] = vcpu->arch.host_sp;
-+	do_vint(&regs, (unsigned long)&regs);
-+}
-+
- /*
-  * Return 1 for resume guest and "<= 0" for resume host.
-  */
-@@ -323,6 +335,12 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
- 
- 	guest_timing_exit_irqoff();
- 	guest_state_exit_irqoff();
-+	/*
-+	 * VM exit because of host interrupt
-+	 * Handle irq directly before enabling irq
-+	 */
-+	if (!ecode && intr)
-+		kvm_handle_irq(vcpu);
- 	local_irq_enable();
- 
- 	trace_kvm_exit(vcpu, ecode);
-
-base-commit: 2408a807bfc3f738850ef5ad5e3fd59d66168996
--- 
-2.39.3
-
+If it is not source compatible with C then it is not an option,
+for the same reason Rust is not an option.
