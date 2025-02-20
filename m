@@ -1,157 +1,153 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EFF204F94
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5E820C00D;
+	Thu, 20 Feb 2025 16:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069788; cv=none; b=i04dESmdjl7jwCNLjWS6un/KZBMp0g+AoeG50gHufzixY6MtoGXnbNRR7b1JQUpYJE1GR/OfkwntLhp/zcm2jJb+rI434KfHcxKF486PVi21FC0Fq10jZYoE3W/Ag82ZbrJfV5eKAGuYRoY8gLgCYp+rpNuXjY7ww5WKWQodNR4=
+	t=1740069808; cv=none; b=EfiHvV36kl2GodIMT3S3BChxRScBlH0PTCIEiBJpf6JGcmNsm6AvnOxhpU5O0ue1t/pBWCNY3rJQmA6sxNaGlGy6WXjN3+yI4eUuqYcKXNDJ3ZlF3oqWd0by9C6QT5f7rUWg3zQLMcOO51I1h2tQfRvwuXc1kkahATdv6ph7Y14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069788; c=relaxed/simple;
-	bh=CETFckSGLagswl0Pqfs57UFAtqcIvAdVoYsbh8b7tPc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ue+hLS4yMEd5KpfmFwhLHXQsckkrF0L2m/UHxN7A11T1SDKYYN04Lf3TGiawJ+6MlSo7Q6gNs6k1eFgzrFXNJWIYSmJR09BGJuOT0qDHOYZclSCJzKJsioMKTie8qYqr1w1JbwMIJF7o8HZPtb62hL+DEgT6eYwCaf5WM5pvMHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JgTLL5R6; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740069808; c=relaxed/simple;
+	bh=vVECa4utTX4xbUhcnJWoWLUVHp/KMDoJ9zPavXCFBLE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ekUH/UimQ5T4+8c8T71IF9Y14fZfUw93GV+j31yINhdsT1yyds59ttasQd7plh7eqtnT0GrF4NuN5GI+rvIZ4+oo5jqraIQLytmHknr5RJfuPse+XA8+2Sp3fMEDaGltc7ahaNv5i5X4v69lIhlV1PP3h8iY5k4icpmE2Ygf4EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IRzEymQz; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JgTLL5R6"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740069783;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2EPvTSWtCKlN86g9+N+uYkxsZa3IluO/QJHLmqnQGwE=;
-	b=JgTLL5R6XUz4U+PfdujS2vMn1wjtV0gVZO6rqKXmZ/7W72pDRE8AIcvp5uozE7B6jnGZnv
-	f0XJCGACVuz+pDyK8Dx0I+R7dmaM0GkyZtnxlW9W05ilnEn2uL+0HiLiPMfuMfzWvk7EIF
-	kSj4Wy19C56PM9ZK0bB1MF5sTfc3sp4=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	netdev@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	linux-kernel@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH net-next v2] net: cadence: macb: Implement BQL
-Date: Thu, 20 Feb 2025 11:42:57 -0500
-Message-Id: <20250220164257.96859-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRzEymQz"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fc4418c0e1so4005513a91.1;
+        Thu, 20 Feb 2025 08:43:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740069806; x=1740674606; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TGKStiuvmu6PZ8iLcfPINnLEtELIaRoHYvov97O+LS8=;
+        b=IRzEymQzOj9QOg7SyFdfAictqfazKy2RYm2Tv58CbPI8i1RS4TFQQD/Omw9qfU3gPa
+         ePuZdhTVv3SjyKJS6lxm4wRAY+Mo6u5FtZ6awXGIZ9Gj+h86Fdn6lIpee21MACG3gaeG
+         77jnyncXD3YNCy6piVffOPYVltJ+j9Vv7rZzDIDo7FSnP2zMJkwl2ILvtybcBwusZ49B
+         188wj8UdlnXKmQIQABmn7VRF1mIiPAPr/gakgcqtxtN4i0JppJ7mOMZDp7NcZY0JHrXF
+         SzqVdjO6BpekgAXljpuUbrJH3r6y98490+7QJ7dqLQu81OfODHYsn0QI3jwpIdvw6qyc
+         uxmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740069806; x=1740674606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TGKStiuvmu6PZ8iLcfPINnLEtELIaRoHYvov97O+LS8=;
+        b=GdeUqfxt+ENqZH6v/NbNC49xvMowj+nRwOE3EwZUvsx/YJ3Olb9TBtBguGkMdER4JR
+         QCGUEpqH06V3c/Pu4Pv1cyuzMlbL+4QWcMA+6sLHkv5ifK28qt8YcQSfaBerSjzV+JMA
+         wGVimMbZWB32obGchImKWOqVw/o6hLPAKWPN2BNu10JGnVdnoWrAuAepBpPyMhQSRaqU
+         YPyQe6xtBLi1vvpbFIWXmSBJ94RPtPh+G+DtMQzuM1W4jK4/W7U+KEtuBhonqipMC3n1
+         WOX6fMVzz5nb9Lyu2Ymbe8Nk3lV3uMJ4U9lkB0XGza22wb+zRY6/NKBoD+er/+OsojCS
+         nWbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAoq8ohybFccddFxRNqwdFzBZH5yQduaLH/hSIy9bvBCwbXjYuiByJ2NR2X3OAhQTGGz9vYQbJhPKNpVQAVTmcHqrNBntd@vger.kernel.org, AJvYcCVUnfWeWNvjLwSg0rpQ+LNqLqaeQET/WGHzZluvLNRT3zy58HVcrrDakopXlHM8WCKcyxRt/AXwBXG0@vger.kernel.org, AJvYcCVWPW3Kp75ZlCYM4vUc8tNBu0kq/mVA/VdIMo4XzLUTdOtdcHs3cF+ro/LTcdtDWc6hoiIBe9dLTTpz@vger.kernel.org, AJvYcCWxbZqBmWxHeZV1CgNzsfUbiZHqG6uSfcreonewHxdUWoLRQBo+mpmZYI3B5+10q16VmeE08EPJrI1XcB+5@vger.kernel.org, AJvYcCX6bfJmksfn/IubZ47/ZxUCCWxL9WreeXl2oanaLxG4KQBG3Rr4cknZXkuc88RWg0v3VKtMcDYWmg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW8GIbYUMJsIBBIKFXyhTPErtihLU4mjmnjEMaaqscL0ym/hbG
+	Ya6VKAWMBlz1xaCEutoH2lHQJxxVVUXXs8njWxwv5Ey7qcYnBC09vmR3Sv0Asvr3CliuNEoB5qw
+	9gmwcAykLUtlzJpJs4HyxXa7GwaE=
+X-Gm-Gg: ASbGnctRQmWH2lAwzmYgrYZYOqY/ab1PgpM0aU1HpFfXt5ZVqM1oF2aWTq2GZXvXnWk
+	h5YCEQ9lgHCsnxdKnam6ufKHo3vnm72U0Nstqm4ThyMa+T3tKGMfWrnVZJRZhuVNJ+yxImvWb
+X-Google-Smtp-Source: AGHT+IGbA2Q+XEnVZAQ4NEP7BEgN3IdARfcH5GHq6FTupNzUVVzv1CrxmhQmgth2w7JIYa+zxno9NRI2IlvxRC+uy/8=
+X-Received: by 2002:a17:90b:2d46:b0:2ee:8cbb:de28 with SMTP id
+ 98e67ed59e1d1-2fccc1287e9mr7457400a91.8.1740069806451; Thu, 20 Feb 2025
+ 08:43:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20241023212158.18718-1-casey@schaufler-ca.com> <20241023212158.18718-5-casey@schaufler-ca.com>
+In-Reply-To: <20241023212158.18718-5-casey@schaufler-ca.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Thu, 20 Feb 2025 11:43:15 -0500
+X-Gm-Features: AWEUYZk5wAy-pDKUyIeTJwZ9O0NtnaTtHtgvwhFaZG6kHfsbWwV584YyTGAvgfs
+Message-ID: <CAEjxPJ56H_Y-ObgNHrCggDK28NOARZ0CDmLDRvY5qgzu=YgE=A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] LSM: lsm_context in security_dentry_init_security
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: paul@paul-moore.com, linux-security-module@vger.kernel.org, 
+	jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, 
+	john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp, 
+	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, mic@digikod.net, 
+	ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Implement byte queue limits to allow queuing disciplines to account for
-packets enqueued in the ring buffer but not yet transmitted. There are a
-separate set of transmit functions for AT91 that I haven't touched since
-I don't have hardware to test on.
+On Wed, Oct 23, 2024 at 5:23=E2=80=AFPM Casey Schaufler <casey@schaufler-ca=
+.com> wrote:
+>
+> Replace the (secctx,seclen) pointer pair with a single lsm_context
+> pointer to allow return of the LSM identifier along with the context
+> and context length. This allows security_release_secctx() to know how
+> to release the context. Callers have been modified to use or save the
+> returned data from the new structure.
+>
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> Cc: ceph-devel@vger.kernel.org
+> Cc: linux-nfs@vger.kernel.org
+> ---
+>  fs/ceph/super.h               |  3 +--
+>  fs/ceph/xattr.c               | 16 ++++++----------
+>  fs/fuse/dir.c                 | 35 ++++++++++++++++++-----------------
+>  fs/nfs/nfs4proc.c             | 20 ++++++++++++--------
+>  include/linux/lsm_hook_defs.h |  2 +-
+>  include/linux/security.h      | 26 +++-----------------------
+>  security/security.c           |  9 ++++-----
+>  security/selinux/hooks.c      |  9 +++++----
+>  8 files changed, 50 insertions(+), 70 deletions(-)
+>
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 76776d716744..0b116ef3a752 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -114,6 +114,7 @@ static inline struct nfs4_label *
+>  nfs4_label_init_security(struct inode *dir, struct dentry *dentry,
+>         struct iattr *sattr, struct nfs4_label *label)
+>  {
+> +       struct lsm_context shim;
+>         int err;
+>
+>         if (label =3D=3D NULL)
+> @@ -128,21 +129,24 @@ nfs4_label_init_security(struct inode *dir, struct =
+dentry *dentry,
+>         label->label =3D NULL;
+>
+>         err =3D security_dentry_init_security(dentry, sattr->ia_mode,
+> -                               &dentry->d_name, NULL,
+> -                               (void **)&label->label, &label->len);
+> -       if (err =3D=3D 0)
+> -               return label;
+> +                               &dentry->d_name, NULL, &shim);
+> +       if (err)
+> +               return NULL;
+>
+> -       return NULL;
+> +       label->label =3D shim.context;
+> +       label->len =3D shim.len;
+> +       return label;
+>  }
+>  static inline void
+>  nfs4_label_release_security(struct nfs4_label *label)
+>  {
+> -       struct lsm_context scaff; /* scaffolding */
+> +       struct lsm_context shim;
+>
+>         if (label) {
+> -               lsmcontext_init(&scaff, label->label, label->len, 0);
+> -               security_release_secctx(&scaff);
+> +               shim.context =3D label->label;
+> +               shim.len =3D label->len;
+> +               shim.id =3D LSM_ID_UNDEF;
 
-Changes in v2:
-- Reset BQL after disabling NAPI
-- Adjust variable ordering for improved aesthetics
+Is there a patch that follows this one to fix this? Otherwise, setting
+this to UNDEF causes SELinux to NOT free the context, which produces a
+memory leak for every NFS inode security context. Reported by kmemleak
+when running the selinux-testsuite NFS tests.
 
- drivers/net/ethernet/cadence/macb_main.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 48496209fb16..d0eac42d9ae0 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1081,15 +1081,18 @@ static void macb_tx_error_task(struct work_struct *work)
- 						      tx_error_task);
- 	bool			halt_timeout = false;
- 	struct macb		*bp = queue->bp;
-+	u32			queue_index;
-+	u32			packets = 0;
-+	u32			bytes = 0;
- 	struct macb_tx_skb	*tx_skb;
- 	struct macb_dma_desc	*desc;
- 	struct sk_buff		*skb;
- 	unsigned int		tail;
- 	unsigned long		flags;
- 
-+	queue_index = queue - bp->queues;
- 	netdev_vdbg(bp->dev, "macb_tx_error_task: q = %u, t = %u, h = %u\n",
--		    (unsigned int)(queue - bp->queues),
--		    queue->tx_tail, queue->tx_head);
-+		    queue_index, queue->tx_tail, queue->tx_head);
- 
- 	/* Prevent the queue NAPI TX poll from running, as it calls
- 	 * macb_tx_complete(), which in turn may call netif_wake_subqueue().
-@@ -1142,8 +1145,10 @@ static void macb_tx_error_task(struct work_struct *work)
- 					    skb->data);
- 				bp->dev->stats.tx_packets++;
- 				queue->stats.tx_packets++;
-+				packets++;
- 				bp->dev->stats.tx_bytes += skb->len;
- 				queue->stats.tx_bytes += skb->len;
-+				bytes += skb->len;
- 			}
- 		} else {
- 			/* "Buffers exhausted mid-frame" errors may only happen
-@@ -1160,6 +1165,9 @@ static void macb_tx_error_task(struct work_struct *work)
- 		macb_tx_unmap(bp, tx_skb, 0);
- 	}
- 
-+	netdev_tx_completed_queue(netdev_get_tx_queue(bp->dev, queue_index),
-+				  packets, bytes);
-+
- 	/* Set end of TX queue */
- 	desc = macb_tx_desc(queue, 0);
- 	macb_set_addr(bp, desc, 0);
-@@ -1230,6 +1238,7 @@ static int macb_tx_complete(struct macb_queue *queue, int budget)
- 	unsigned int tail;
- 	unsigned int head;
- 	int packets = 0;
-+	u32 bytes = 0;
- 
- 	spin_lock(&queue->tx_ptr_lock);
- 	head = queue->tx_head;
-@@ -1271,6 +1280,7 @@ static int macb_tx_complete(struct macb_queue *queue, int budget)
- 				bp->dev->stats.tx_bytes += skb->len;
- 				queue->stats.tx_bytes += skb->len;
- 				packets++;
-+				bytes += skb->len;
- 			}
- 
- 			/* Now we can safely release resources */
-@@ -1285,6 +1295,9 @@ static int macb_tx_complete(struct macb_queue *queue, int budget)
- 		}
- 	}
- 
-+	netdev_tx_completed_queue(netdev_get_tx_queue(bp->dev, queue_index),
-+				  packets, bytes);
-+
- 	queue->tx_tail = tail;
- 	if (__netif_subqueue_stopped(bp->dev, queue_index) &&
- 	    CIRC_CNT(queue->tx_head, queue->tx_tail,
-@@ -2386,6 +2399,8 @@ static netdev_tx_t macb_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	/* Make newly initialized descriptor visible to hardware */
- 	wmb();
- 	skb_tx_timestamp(skb);
-+	netdev_tx_sent_queue(netdev_get_tx_queue(bp->dev, queue_index),
-+			     skb->len);
- 
- 	spin_lock_irq(&bp->lock);
- 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
-@@ -3021,6 +3036,7 @@ static int macb_close(struct net_device *dev)
- 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
- 		napi_disable(&queue->napi_rx);
- 		napi_disable(&queue->napi_tx);
-+		netdev_tx_reset_queue(netdev_get_tx_queue(dev, q));
- 	}
- 
- 	phylink_stop(bp->phylink);
--- 
-2.35.1.1320.gc452695387.dirty
-
+> +               security_release_secctx(&shim);
+>         }
+>  }
+>  static inline u32 *nfs4_bitmask(struct nfs_server *server, struct nfs4_l=
+abel *label)
