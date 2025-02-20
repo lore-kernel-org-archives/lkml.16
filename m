@@ -1,221 +1,157 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC383212B0B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A6F1FE45B;
+	Thu, 20 Feb 2025 16:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740070137; cv=none; b=nNjmAGoNnGs0aNN2tOo/rrswLfnb5PaF/nQxMWyTNPtpN1ipRb2M7XllTKICVJpoUsHKUI8iZKoEQZMJWhWVxfEs6SNIDoVJaTJoWpwOUF+hB9lo252m9DJL+M02y2P+FQewHmA+a/QxqimFXyTojUNaXFNcsiX8ocn25GqIxQs=
+	t=1740070169; cv=none; b=qiuvNfuwlkDZ6gAdwm6E47BhvkLnNFJ2F3HFnl88NmfBN2nx4jU4vzdeVnEqAUBLEPu9hdMZvD7TGSVRM55l76HMW3+mftV+t0iuqTid14TGajfm2wcbBFiIgGxjNVwF8l0Rm50+YjiM81+2oqFbPlOx2Jw4SEPI9jLqPExrsx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740070137; c=relaxed/simple;
-	bh=FSWsPkXtGrHvxWc0xW8O17Np79yUtk3c/vJujctcH40=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=si6q9UiLdfidy0/fWnJ/yux66KyrOcBdAf5ZK3tnnhoRQ1IbOfWPIw9AQZTDRS849whajJe/yiF1dUtgHbeQ+907mxrtsbvPLfSp7OQdQx7J8gLw6R6S86ga0Kw6pf0DQczSEgJz9f0+PsPWJU64AbT2BkDA0ob5fg8clmFAuqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KDPzZXgY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jaVelelT; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mlzmnRHX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LuBSDR35; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740070169; c=relaxed/simple;
+	bh=NyaKtCp9XVV3XhUKdIR4g8VrMV+o03TRilenlKrY/l0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Digk4GZ4HkIflmDHrchtUwCvn1kvecyy7NjHY4NW+SEUOpbNVmvKLLOPbnBN8Ic9vvQXjii7hGaYGxQr+7/G2OEovk9oxua6qF6Y9BmGaUcisC+RNU3CPFD/f/CKdGxqDl5b83FhvIY3rFHMtEoacEdjlnmKGKN7KSmBZD6N/EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b41m+xP+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KDPzZXgY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jaVelelT";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mlzmnRHX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LuBSDR35"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id E187621174;
-	Thu, 20 Feb 2025 16:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070133; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=eycWCZrUY9oYFEOBQb+MXQehSWR10pq30K6aITRSEao=;
-	b=KDPzZXgYU9kRWjVtay4Tq8Cpl/9kLOnFxKbygJcCMdSn4/M17OiDWNyGxJ5upVZ3kdffhk
-	bSpcVJsGcAWW8fSj9Y+bmUsW5y7TwpscDbLTLVWfF4RWATxwuWDYIWS68brUdFDJtmvLSP
-	hpZ85hrhsZzS9X/dGcNzLNF1IU1T+M8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070133;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=eycWCZrUY9oYFEOBQb+MXQehSWR10pq30K6aITRSEao=;
-	b=jaVelelTIsAL3g4vkLT/TNt4iSk6JZPghgPITzpnq6FZB6R3aSiRModqdkd5+ocB6tW3XL
-	U0LtFKmZ+89uurBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740070132; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=eycWCZrUY9oYFEOBQb+MXQehSWR10pq30K6aITRSEao=;
-	b=mlzmnRHXmZM9ScdSNn+kp6KwsEYokNAFm+u1Z0yiMXSM/FOerOwCEKE9mE3whhgjGBCHdy
-	yycCkZ+ietDr7H+tLVJQXUJKQtLtKPwc21kSzCR2sRhb6FQTNGhOCwT1POMJ2z+P1vBF+y
-	VojlWrnY+oy/ZbMY1gLJZKztoLNtmYE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740070132;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=eycWCZrUY9oYFEOBQb+MXQehSWR10pq30K6aITRSEao=;
-	b=LuBSDR35rGbmzOVehZ6zILnp3iRX8OoJZIR89evmw8q8ivxDFtzAcWX5ptKPL0debNw90H
-	zMfzcnkFicc4S3DQ==
-Date: Thu, 20 Feb 2025 17:48:52 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b41m+xP+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FFBC4CEDD;
+	Thu, 20 Feb 2025 16:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740070169;
+	bh=NyaKtCp9XVV3XhUKdIR4g8VrMV+o03TRilenlKrY/l0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b41m+xP+Yyeb9OzIWmjHiDtiVXMqOtQmSKw0q8KPSXT70eAxuaIMD8VlHx/iXYQTK
+	 Lv2fhOHeppLtLuVabku1v4YMq0zhARLK4OvfDfRYhYnW+NTtkyXdPje/8a+48arjTE
+	 MVzx6pDtQWmpCkZndHnnxLKu0aSoeVAKPPyik1zQ=
+Date: Thu, 20 Feb 2025 17:49:26 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: Nicolas Schier <n.schier@avm.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+	Ben Hutchings <ben@decadent.org.uk>, regressions@lists.linux.dev
+Subject: Re: [PATCH 3/4] kbuild: slim down package for building external
+ modules
+Message-ID: <2025022020-armband-clock-69af@gregkh>
+References: <20240727074526.1771247-1-masahiroy@kernel.org>
+ <20240727074526.1771247-4-masahiroy@kernel.org>
+ <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
+ <20250220-red-antelope-of-education-5417aa@l-nschier-nb>
+ <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
+ <20250220-kickass-famous-kittiwake-c11f5b@l-nschier-nb>
+ <80cf4e9a-5d49-4bc3-8160-1b23c31d4d36@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.976];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ZERO(0.00)[0];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,localhost:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <80cf4e9a-5d49-4bc3-8160-1b23c31d4d36@quicinc.com>
 
-Hi,
+On Thu, Feb 20, 2025 at 09:31:14AM -0700, Jeffrey Hugo wrote:
+> On 2/20/2025 8:54 AM, Nicolas Schier wrote:
+> > On Thu, Feb 20, 2025 at 08:03:32AM -0700, Jeffrey Hugo wrote:
+> > > On 2/20/2025 3:03 AM, Nicolas Schier wrote:
+> > > > On Tue, Feb 18, 2025 at 01:25:38PM -0700, Jeffrey Hugo wrote:
+> > > > > On 7/27/2024 1:42 AM, Masahiro Yamada wrote:
+> > > > > > Exclude directories and files unnecessary for building external modules:
+> > > > > > 
+> > > > > >     - include/config/  (except include/config/auto.conf)
+> > > > > >     - scripts/atomic/
+> > > > > >     - scripts/dtc/
+> > > > > >     - scripts/kconfig/
+> > > > > >     - scripts/mod/mk_elfconfig
+> > > > > >     - scripts/package/
+> > > > > >     - scripts/unifdef
+> > > > > >     - .config
+> > > > > 
+> > > > > Please revert this (the removal of .config).
+> > > > > 
+> > > > > I got some strange reports that our external module install broke, and
+> > > > > traced it to this change.  Our external module references the .config
+> > > > > because we have different logic for the build depending on if other, related
+> > > > > modules are present or not.
+> > > > > 
+> > > > > Also, it looks like this broke DKMS for some configurations, which not only
+> > > > > impacts DKMS itself [1] but also downstream projects [2].
+> > > > > 
+> > > > > While DKMS may be updated going forward to avoid this issue, there are
+> > > > > plenty of affected version out in the wild.
+> > > > > 
+> > > > > Also, I haven't surveyed every distro, but it looks like Ubuntu still
+> > > > > packages the .config with their headers in their upcoming "Plucky" release
+> > > > > based on 6.12.  I suspect they wouldn't do that if they didn't feel it was
+> > > > > needed/useful.
+> > > > > 
+> > > > > -Jeff
+> > > > > 
+> > > > > [1]: https://github.com/dell/dkms/issues/464
+> > > > > [2]: https://github.com/linux-surface/linux-surface/issues/1654
+> > > > 
+> > > > Hi Jeff,
+> > > > 
+> > > > do you know the related thread [1]?  According to the last mail, DKMS
+> > > > has fixed its issue already in December.
+> > > 
+> > > DKMS tip might be fixed, but production versions are in various distros,
+> > > which are not updated.  Therefore actual users are impacted by this.
+> > > 
+> > > What happened to the #1 rule of kernel, that we do not break users?
+> > 
+> > I think, Masahiro already provided valid and profound reasons for
+> > keeping it the way it is.  Users of run-time kernel interfaces are not
+> > affected by the change.  Concretely reported issues were, as far as I
+> > know, only a matter of specific non-official way to work with .config
+> > for other reasons than just building external kernel modules in the way
+> > it is thought to work.
+> 
+> I'm CCing the regressions list, which I probably should have done initially.
+> 
+> I'm pretty sure Linus has indicated that as soon as users start doing
+> something, that becomes the "official way".  I believe your response is not
+> consistent with the precedent set by Linus.
+> 
+> Quoting from [1]:
+> It’s a regression if some application or practical use case running fine
+> with one Linux kernel works worse or not at all with a newer version
+> compiled using a similar configuration. The “no regressions” rule forbids
+> this to take place; if it happens by accident, developers that caused it are
+> expected to quickly fix the issue."
 
-this series implements a way to reserve additional crash kernel
-memory using CMA.
+Regressions are at runtime, not with how external tools poke around in
+kernel source trees and try to make decisions.  If we were to never be
+able to change our source just because there might be an external user
+that we don't know of, that would be crazy.
 
-Link to the v1 discussion:
-https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
-See below for the changes since v1 and how concerns from the 
-discussion have been addressed.
+We want users to not be afraid to upgrade their kernel, that has nothing
+to do with how the kernel build is interacted with external stuff.
 
-Currently, all the memory for the crash kernel is not usable by
-the 1st (production) kernel. It is also unmapped so that it can't
-be corrupted by the fault that will eventually trigger the crash.
-This makes sense for the memory actually used by the kexec-loaded
-crash kernel image and initrd and the data prepared during the
-load (vmcoreinfo, ...). However, the reserved space needs to be
-much larger than that to provide enough run-time memory for the
-crash kernel and the kdump userspace. Estimating the amount of
-memory to reserve is difficult. Being too careful makes kdump
-likely to end in OOM, being too generous takes even more memory
-from the production system. Also, the reservation only allows
-reserving a single contiguous block (or two with the "low"
-suffix). I've seen systems where this fails because the physical
-memory is fragmented.
+> As far as I understand its not acceptable to force users to change (the DKMS
+> fix) or update userspace to work with a new kernel.  You could make a change
+> if userspace updated, and all old versions needing the previous behavior
+> were phased out of use, but we have 2 reports indicating that is not the
+> case.
 
-By reserving additional crashkernel memory from CMA, the main
-crashkernel reservation can be just large enough to fit the 
-kernel and initrd image, minimizing the memory taken away from
-the production system. Most of the run-time memory for the crash
-kernel will be memory previously available to userspace in the
-production system. As this memory is no longer wasted, the
-reservation can be done with a generous margin, making kdump more
-reliable. Kernel memory that we need to preserve for dumping is 
-never allocated from CMA. User data is typically not dumped by 
-makedumpfile. When dumping of user data is intended this new CMA 
-reservation cannot be used.
+You are attempting to build kernel modules outside of the kernel tree,
+and as such, have to adapt to things when they change.  That's always
+been the case, you've had to change things many times over the years,
+right?
 
-There are five patches in this series:
+> From the thread you pointed out, it looks like Masahiro recommends
+> ${kernel_source_dir}/include/config/auto.conf as a replacement for the
+> .config.  Ignoring that such a suggestion seems to violate the regressions
+> rule, doing a diff of that and the .config on a 6.11 build (before the
+> change we are discussing), there are many changes.  It does not look like
+> that is an equivalent replacement.
 
-The first adds a new ",cma" suffix to the recenly introduced generic
-crashkernel parsing code. parse_crashkernel() takes one more
-argument to store the cma reservation size.
+What do you need/want to parse the .config file in the first place?  Why
+not rely on the generated .h files instead as those can be parsed the
+same way as before, right?
 
-The second patch implements reserve_crashkernel_cma() which
-performs the reservation. If the requested size is not available
-in a single range, multiple smaller ranges will be reserved.
+thanks,
 
-The third patch updates Documentation/, explicitly mentioning the
-potential DMA corruption of the CMA-reserved memory.
-
-The fourth patch adds a short delay before booting the kdump
-kernel, allowing pending DMA transfers to finish.
-
-The fifth patch enables the functionality for x86 as a proof of
-concept. There are just three things every arch needs to do:
-- call reserve_crashkernel_cma()
-- include the CMA-reserved ranges in the physical memory map
-- exclude the CMA-reserved ranges from the memory available
-  through /proc/vmcore by excluding them from the vmcoreinfo
-  PT_LOAD ranges.
-
-Adding other architectures is easy and I can do that as soon as
-this series is merged.
-
-With this series applied, specifying
-	crashkernel=100M craskhernel=1G,cma
-on the command line will make a standard crashkernel reservation
-of 100M, where kexec will load the kernel and initrd.
-
-An additional 1G will be reserved from CMA, still usable by the
-production system. The crash kernel will have 1.1G memory
-available. The 100M can be reliably predicted based on the size
-of the kernel and initrd.
-
-The new cma suffix is completely optional. When no
-crashkernel=size,cma is specified, everything works as before.
-
----
-Changes since v1:
-
-The key concern raised in the v1 discussion was that pages in the
-CMA region may be pinned and used for a DMA transfer, potentially
-corrupting the new kernel's memory. When the cma suffix is used, kdump
-may be less reliable and the corruption hard to debug
-
-This v2 series addresses this concern in two ways:
-
-1) Clearly stating the potential problem in the updated
-Documentation and setting the expectation (patch 3/5)
-
-Documentation now explicitly states that:
-- the risk of kdump failure is increased
-- the CMA reservation is intended for users who can not or don't
-  want to sacrifice enough memory for a standard crashkernel reservation
-  and who prefer less reliable kdump to no kdump at all
-
-This is consistent with the documentation of the
-crash_kexec_post_notifiers option, which can also increase the
-risk of kdump failure, yet may be the only way to use kdump on
-some systems. And just like the crash_kexec_post_notifiers
-option, the cma crashkernel suffix is completely optional:
-the series has zero effect when the suffix is not used.
-
-2) Giving DMA time to finish before booting the kdump kernel
-   (patch 4/5)
-
-Pages can be pinned for long term use using the FOLL_LONGTERM
-flag. Then they are migrated outside the CMA region. Pinning
-without this flag shows that the intent of their user is to only
-use them for short-lived DMA transfers. 
-
-Delay the boot of the kdump kernel when the CMA reservation is
-used, giving potential pending DMA transfers time to finish.
-
-Other minor changes since v1:
-- updated for 6.14-rc2
-- moved #ifdefs and #defines to header files
-- added __always_unused in parse_crashkernel() to silence a false
-  unused variable warning
- 
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
-
+greg k-h
