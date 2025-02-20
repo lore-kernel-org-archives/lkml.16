@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FA526460D;
-	Thu, 20 Feb 2025 19:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCA5264638;
+	Thu, 20 Feb 2025 19:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740080118; cv=none; b=GBCEgzslb9tJYp75mf/PhhdK8iCepWVjPxAQlFaVHrlnklHajlgSyNcwigsvVtcHRUlW3yRSCD4hdg0QuKKaCw4bVELXjU0BBpvEOE6GzCC5XC081qSBhV+EhlegHw9cjS1EUjeDe1pdGlhs7QEFLfUvVrkE4K6Fm/qLIefFXY8=
+	t=1740080119; cv=none; b=XUdL/Vh86PlAa4GdKxlPid7vlpK1DHwSx/7Zq4SL17ZXcqpdIXwunxS3bK1a7Fb+/UZG41OjX+bCUn7ZRlb66AuBto4vhQMT4siSL2WKj1HKcC/IPI1z2k7znM1133Gn0X+2YvuPSGFPH7Vz5PkjF+RKWK5B3zziN4JLggggtAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740080118; c=relaxed/simple;
-	bh=vASrAL/pnHBXCkrPC/c/PavcC1+wtiSIVa/v3Hmh35w=;
+	s=arc-20240116; t=1740080119; c=relaxed/simple;
+	bh=GU12uco2vMf4JAexsBOLi5pNACf7z+JWPqGOUvIGCS0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sKOiFRn6Plz3W8E+j9bBk6VJil3LtkkwwApxEWpJzddqMKIML3TbIkW3TF5VM1PFE3pIHmgkB03GIRyR622ecyBdxMI+RBAM7dKqRXU+WoMNo5wYVHu9N3DGHmzm+4Gzvg1rIAddJLH5XKi5OJeXT8gYGnbNVIMEhPu26QcXqjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8MMfv/t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FgDIgcMwWtpnvDS5REJ4icHkzKYH36eDL/jRrjApQ0zcXBCAAVGNM8iiDbqn4kNPdWiT642HRGoAN6lmKZvYqkGWAtZCxgRCBS7NiACGXT4H7bNqaRpROYwoDd617dMdX37DUy/rL46HoniULmhi+q3CqYU27RrlWUU5fnfouzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BeyIYp78; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8MMfv/t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4DCC4CED1;
-	Thu, 20 Feb 2025 19:35:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BeyIYp78"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E3BC4CED1;
+	Thu, 20 Feb 2025 19:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740080115;
-	bh=vASrAL/pnHBXCkrPC/c/PavcC1+wtiSIVa/v3Hmh35w=;
+	s=k20201202; t=1740080118;
+	bh=GU12uco2vMf4JAexsBOLi5pNACf7z+JWPqGOUvIGCS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P8MMfv/tOGNBm1TAxJCJDAx4QYLjeYuaj6aAYaqtgN0vsN33ugXGEIHaijFDoIquG
-	 hLi2NLkdNHlU/CFkARa3eUpElnZLE1UdG9kRTP7K0eHH9qBlhme2MEp0+wAEfP7+I0
-	 t9G5Uy34RRTBzJSCbKuKIKfwqtoVj/Us5EY+LGCbn7qT2JbrkRV3Is/No+Iwq1lJVk
-	 ln3aK/2A4z2vLOp8Tik53VVrLURf9TjF9L3U1buOI51CMrFaRNs1w+9A+Xo2UCY5fh
-	 +ZTGB87uLddNh2LGGQCm133hhclagskCW+4JjKQ5t5U+lK4ajkxzxNNF8ibAfb1JWr
-	 u2qF/Qu63N8NA==
+	b=BeyIYp78GztU1YYwb+ca3cS2Yi8BGrJD3+R7gQXyZWNhNe6K1eIWckOwHrUEGeFQj
+	 21vcAgPEer4wqEwTJLzAzZ3riFyBOSPwGEt4Myr9BRaQG5/cnNuye38TmkNjBK3T0L
+	 EDHfmBOcvRtjIrtkwONumdBuwS5XWBFhwDMEZLvgpexhs+UrvRZ7m9Sj0Dekp/IekM
+	 odpTa6ritv1555zu1SF1eUNwc0Xk57Z9VZi4+rHWc2Or0na3danBy6cEnuMVP1j8tu
+	 7grOWDow9U938cuH6/agBg+ZWIAn4fNkD58ZTAdFfsvfBbEDmDWHYog0XIXIHSaGAs
+	 CVxgLV9EilVtQ==
 From: SeongJae Park <sj@kernel.org>
 To: 
 Cc: SeongJae Park <sj@kernel.org>,
@@ -34,9 +34,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	kernel-team@meta.com,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH 1/9] mm/damon/core: introduce damos->ops_filters
-Date: Thu, 20 Feb 2025 11:35:01 -0800
-Message-Id: <20250220193509.36379-2-sj@kernel.org>
+Subject: [RFC PATCH 4/9] mm/damon/core: put ops-handled filters to damos->ops_filters
+Date: Thu, 20 Feb 2025 11:35:04 -0800
+Message-Id: <20250220193509.36379-5-sj@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250220193509.36379-1-sj@kernel.org>
 References: <20250220193509.36379-1-sj@kernel.org>
@@ -48,67 +48,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DAMOS filters can be categorized into two groups depending on which
-layer they are handled, namely core layer and ops layer.  Also their
-evaluation sequence is decided by the categorization.  Currently, all
-filters are maintained in single list in mix.  It makes the filters
-evaluation loop inefficient since it should do the categorization in the
-loop for every iteration.  Introduce another list that will be used for
-having all operations layer-handled DAMOS filters.
-
-Note that this change simply adds the list and does not change any DAMON
-code to use it in real.  It will be done by following changes.
+damos->ops_filters has introduced to be used for operations layer
+handled filters.  But DAMON kernel API callers can put any type of DAMOS
+filters to any of damos->filters and damos->ops_filters.  DAMON ABI
+users have no way other than still using only damos->filters.  Update
+damos_add_filter(), which should be used by API callers to install DAMOS
+filters, to add core layers and operation layer handled filters to
+->filters and ->ops_filters, respectively.  The change is applied to
+both API callers and ABI users since ABI users use the API internally.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- include/linux/damon.h | 8 ++++++++
- mm/damon/core.c       | 1 +
- 2 files changed, 9 insertions(+)
+ mm/damon/core.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 795ca09b1107..add82fdc1117 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -448,6 +448,7 @@ struct damos_access_pattern {
-  * @wmarks:		Watermarks for automated (in)activation of this scheme.
-  * @target_nid:		Destination node if @action is "migrate_{hot,cold}".
-  * @filters:		Additional set of &struct damos_filter for &action.
-+ * @ops_filters:	ops layer handling &struct damos_filter objects list.
-  * @last_applied:	Last @action applied ops-managing entity.
-  * @stat:		Statistics of this scheme.
-  * @list:		List head for siblings.
-@@ -503,6 +504,7 @@ struct damos {
- 		int target_nid;
- 	};
- 	struct list_head filters;
-+	struct list_head ops_filters;
- 	void *last_applied;
- 	struct damos_stat stat;
- 	struct list_head list;
-@@ -810,6 +812,12 @@ static inline unsigned long damon_sz_region(struct damon_region *r)
- #define damos_for_each_filter_safe(f, next, scheme) \
- 	list_for_each_entry_safe(f, next, &(scheme)->filters, list)
- 
-+#define damos_for_each_ops_filter(f, scheme) \
-+	list_for_each_entry(f, &(scheme)->ops_filters, list)
-+
-+#define damos_for_each_ops_filter_safe(f, next, scheme) \
-+	list_for_each_entry_safe(f, next, &(scheme)->ops_filters, list)
-+
- #ifdef CONFIG_DAMON
- 
- struct damon_region *damon_new_region(unsigned long start, unsigned long end);
 diff --git a/mm/damon/core.c b/mm/damon/core.c
-index 38f545fea585..bcb7e42098dc 100644
+index ffdd84ff6fa5..78126a5145fd 100644
 --- a/mm/damon/core.c
 +++ b/mm/damon/core.c
-@@ -374,6 +374,7 @@ struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
- 	 */
- 	scheme->next_apply_sis = 0;
- 	INIT_LIST_HEAD(&scheme->filters);
-+	INIT_LIST_HEAD(&scheme->ops_filters);
- 	scheme->stat = (struct damos_stat){};
- 	INIT_LIST_HEAD(&scheme->list);
+@@ -281,9 +281,24 @@ struct damos_filter *damos_new_filter(enum damos_filter_type type,
+ 	return filter;
+ }
  
++static bool damos_filter_for_ops(enum damos_filter_type type)
++{
++	switch (type) {
++	case DAMOS_FILTER_TYPE_ADDR:
++	case DAMOS_FILTER_TYPE_TARGET:
++		return false;
++	default:
++		break;
++	}
++	return true;
++}
++
+ void damos_add_filter(struct damos *s, struct damos_filter *f)
+ {
+-	list_add_tail(&f->list, &s->filters);
++	if (damos_filter_for_ops(f->type))
++		list_add_tail(&f->list, &s->ops_filters);
++	else
++		list_add_tail(&f->list, &s->filters);
+ }
+ 
+ static void damos_del_filter(struct damos_filter *f)
 -- 
 2.39.5
