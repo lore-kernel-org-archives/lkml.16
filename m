@@ -1,96 +1,106 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
+Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E280E265CBA
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B511D1E5701;
+	Thu, 20 Feb 2025 23:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740093614; cv=none; b=m0ONSKDNHTw1ibKO50QVSvCVm+70fraFzxgH+F6anA5xhaWz+QuJ8bmVD0szush3Gs7KH8+SK2v6vwKudd41WAA8aJrPpm6x5CDjeDvsHzwG0eoNkDmyhqpO2WCpV3s35tUMlZqnLK677Ij4DprkAJHmjtJqISTFi9w2tREQnyQ=
+	t=1740093649; cv=none; b=tRBX6I6Oa9dAQCO8eoqlsBU1WX7fR+k/ApPxaHbxuGKa9+sUSPi4jAF5wDQgueEvrhQVjaEA/nBh9iPj/VBpKkVb39PTD14SdZ6notBkV+5Q6SnQjTBKXETCCQ6zbg2Zrpwdc3Bqb4HRArl43Ux79GItUN9iBMaPQER+YaqOobA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740093614; c=relaxed/simple;
-	bh=2ei6Xr8KtKfCuxF3biIuGcx1xmTWqeXDWTditoITIUs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VSi60hdBQ1JUb3E6G9Z1hvokEEO39M8kbJ/tEEm/mX99HjXyGqWNv4Rjo30XvhCYIK7VD5JUbnP2JR9k8LLMOxBbWUuxiUDkRvbCipMcQcu+nrYPnJgTd5QDve/lHGZh2dBUML5Q7nwDKhxZ5GmTedeG+951+1f9vfv8TiA4Kvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=I5XwWEB9; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="I5XwWEB9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=hf4scjpobzbqbotakuxbbsmlbu.protonmail; t=1740093610; x=1740352810;
-	bh=R0xXNryglluujxdF1vg6HlVzkuQzuuyku/Gv+SN/ma4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=I5XwWEB9oCiZSQLGZThpNvKa1tZx+ebcEoQ5JD1bBpqke73RCtzaoluhYftci4m/p
-	 6doCLvRIjgqnTXtHKMYOo/efw8vCdQu6e/Fwi/hRL0Z2sZvwjiV43RcJ1oCu3sbGbw
-	 cXORL99EwF75W72rWrByZGzIoFTDsOkSxZ2ShipUeNuLylnO8tLfyA9FGxFx+lyAS7
-	 K6xH1E8quXz8oqpSNr2Nq9e4NXzZfySevh4GBAx0vRu126/mkymOitN5af/86dF6OP
-	 QUo85TeYWjhzFqSftXHgYx7bn+EfnqZu8uUKxy04gBNyOvhW4VAtHo4NL5G6ka7Wcr
-	 zMBDo59DJ/zVQ==
-Date: Thu, 20 Feb 2025 23:20:03 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 10/14] rust: alloc: add `Box::into_pin`
-Message-ID: <2a7283fb-4c93-42c4-a895-36a6e3d1935d@proton.me>
-In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-10-48dedb015eb3@kernel.org>
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org> <20250218-hrtimer-v3-v6-12-rc2-v8-10-48dedb015eb3@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 542a649b1cda4b467438e54e139b96c08afc3fe5
+	s=arc-20240116; t=1740093649; c=relaxed/simple;
+	bh=vVytazyt0sbs8TsO2gk8s3MlvJH9kebbxFYc6H9Tv7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FeRr0bDkq+7SkbsogeTu2nyfFQDzgefPl5Vg6B+PBEhfPMqk8oYN7C2V60Vm25FH6G5FTO8T/W9XiWSr/RzPG2GUr1vxuyrAj9/mGAR2DIdkSPWLnsIXCqJc+SCGlqwJrrVsnIicodQACE3NS1IiHOJW2vAOOVAaj9r/vuM4TQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 477612012A;
+	Fri, 21 Feb 2025 00:20:43 +0100 (CET)
+Date: Fri, 21 Feb 2025 00:20:41 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] drm/msm/dpu: program master INTF value
+Message-ID: <btkhximqopd3wmp7hxape6hsx53kzdfyl5ciyu5fe472nphzra@lbq3ybphm4h3>
+References: <20250220-dpu-active-ctl-v1-0-71ca67a564f8@linaro.org>
+ <20250220-dpu-active-ctl-v1-2-71ca67a564f8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220-dpu-active-ctl-v1-2-71ca67a564f8@linaro.org>
 
-On 18.02.25 14:27, Andreas Hindborg wrote:
-> Add an associated function to convert a `Box<T>` into a `Pin<Box<T>>`.
-
-Why don't you use `into()` directly where you need it? Do you want the
-function call to be more descriptive?
-(To be clear, I'm not against the addition, just wanting to check if our
-motivation is the same)
-
-> Acked-by: Danilo Krummrich <dakr@kernel.org>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-
----
-Cheers,
-Benno
-
+On 2025-02-20 12:26:19, Dmitry Baryshkov wrote:
+> If several interfaces are being handled through a single CTL, a main
+> ('master') INTF needs to be programmed into a separate register. Write
+> corresponding value into that register.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  rust/kernel/alloc/kbox.rs | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/rust/kernel/alloc/kbox.rs b/rust/kernel/alloc/kbox.rs
-> index cb4ebea3b0742..9da4a32e60bc3 100644
-> --- a/rust/kernel/alloc/kbox.rs
-> +++ b/rust/kernel/alloc/kbox.rs
-> @@ -245,6 +245,12 @@ pub fn pin(x: T, flags: Flags) -> Result<Pin<Box<T, =
-A>>, AllocError>
->          Ok(Self::new(x, flags)?.into())
->      }
->=20
-> +    /// Convert a [`Box<T,A>`] to a [`Pin<Box<T,A>>`]. If `T` does not i=
-mplement
-> +    /// [`Unpin`], then `x` will be pinned in memory and can't be moved.
-> +    pub fn into_pin(this: Self) -> Pin<Self> {
-> +        this.into()
-> +    }
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c | 3 +++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h | 2 ++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+> index 321a89e6400d2824ebda2c08be5e6943cb0f6b11..db36bfa98fc310c1bf35c4817d601ae6cf88d151 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+> @@ -582,6 +582,9 @@ static void dpu_hw_ctl_intf_cfg_v1(struct dpu_hw_ctl *ctx,
+>  	DPU_REG_WRITE(c, CTL_WB_ACTIVE, wb_active);
+>  	DPU_REG_WRITE(c, CTL_DSC_ACTIVE, dsc_active);
+>  
+> +	if (cfg->intf_master)
+> +		DPU_REG_WRITE(c, CTL_INTF_MASTER, BIT(cfg->intf_master - INTF_0));
 > +
->      /// Forgets the contents (does not run the destructor), but keeps th=
-e allocation.
->      fn forget_contents(this: Self) -> Box<MaybeUninit<T>, A> {
->          let ptr =3D Self::into_raw(this);
->=20
-> --
-> 2.47.0
->=20
->=20
 
+We should not forget to unset the master mode when this INTF is "removed"
+from the CTL.  When I modified and prepared your patches for sending, I did
+it like this to only clear it in reset_intf_v1 if the current intf is equal to
+the mater interface, similar to how it's removing the current intf _bit_ from
+CTL_INTF_ACTIVE without touching the rest:
+
+https://github.com/SoMainline/linux/commit/f5a0789c3b9fcba08f6e8fb67637d16dc553cb9b#diff-e9e5209e670102755be2a30d223e79da644dfb8c28ac2ef61e5c49bb46457bb9R667-R673
+
+>  	if (cfg->merge_3d)
+>  		DPU_REG_WRITE(c, CTL_MERGE_3D_ACTIVE, merge_3d_active);
+>  
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
+> index 85c6c835cc8780e6cb66f3a262d9897c91962935..e95989a2fdda6344d0cb9d3036e6ed22a0458675 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
+> @@ -36,6 +36,7 @@ struct dpu_hw_stage_cfg {
+>  /**
+>   * struct dpu_hw_intf_cfg :Describes how the DPU writes data to output interface
+>   * @intf :                 Interface id
+> + * @intf_master:           Master interface id in the dual pipe topology
+
+Will this apply to quad topology etc as well?  Maybe needs to be generalized.
+
+- Marijn
+
+>   * @mode_3d:               3d mux configuration
+>   * @merge_3d:              3d merge block used
+>   * @intf_mode_sel:         Interface mode, cmd / vid
+> @@ -45,6 +46,7 @@ struct dpu_hw_stage_cfg {
+>   */
+>  struct dpu_hw_intf_cfg {
+>  	enum dpu_intf intf;
+> +	enum dpu_intf intf_master;
+>  	enum dpu_wb wb;
+>  	enum dpu_3d_blend_mode mode_3d;
+>  	enum dpu_merge_3d merge_3d;
+> 
+> -- 
+> 2.39.5
+> 
