@@ -1,1128 +1,218 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523EC1A9B4E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 05:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5801F1513
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 05:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740029773; cv=none; b=dQV2fchm2If2pihomNY59U7/rwPv79qGkcgGV0djyWqTLT4LPbkXt5wvUWrDgZUrIJqnnGtmTYf8q+weeB5XsAKIsRV5TONqC2vSSq85Xv00k4iKqPcGIC8hZ9qjsqoD3gUErHjkznZlkgf+sc0vXdbWTI0MD7cg1+eHmrhKFAw=
+	t=1740029786; cv=none; b=eCtz39jM7LO1ot5UwIt6hVbMj3Uu0uIXPXrjTImXXtCblQxoHefCc+OzqJETrVCJcdnDQ32rUALI8j+/W8CH6e2+/bEPt+bBxms4WHolc/ZoPQxXYfqDftKtuHD/edXHS1kYLaYj6rdtI1fTldExNX5EV4of8Th7WOUhxdQRIBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740029773; c=relaxed/simple;
-	bh=z0wUCn9bKKNR5vbYMEsxSaOb7Sjpa/9nbJ27NHSiqaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TNNg+5uPYxwP9zeuYuDT2cXZJ+G/iRU5OEkrb6h8odZKAH9fhXJ561tnjueZWBK7xNbLTDu6zf6uazpU6WS7G3Ov4mOcj1vV4+JtVZmHDIjWlyyhqJRH45Jy9gYy8RIv412q24yHnziC9ArDgR4YOz++kLWSasYopDEb9evAJWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3c9ff7000001d7ae-17-67b6bba717eb
-From: Byungchul Park <byungchul@sk.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: kernel_team@skhynix.com,
-	akpm@linux-foundation.org,
-	ying.huang@intel.com,
-	vernhao@tencent.com,
-	mgorman@techsingularity.net,
-	hughd@google.com,
-	willy@infradead.org,
-	david@redhat.com,
-	peterz@infradead.org,
-	luto@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	rjgolo@gmail.com
-Subject: [RFC PATCH v12 21/26] mm: perform luf tlb shootdown per zone in batched manner
-Date: Thu, 20 Feb 2025 14:20:22 +0900
-Message-Id: <20250220052027.58847-22-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250220052027.58847-1-byungchul@sk.com>
-References: <20250220052027.58847-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoe7y3dvSDea+ErOYs34Nm8XnDf/Y
-	LF5saGe0+Lr+F7PF0099LBaXd81hs7i35j+rxflda1ktdizdx2Rx6cACJovjvQeYLObf+8xm
-	sXnTVGaL41OmMlr8/gFUfHLWZBYHAY/vrX0sHjtn3WX3WLCp1GPzCi2PxXteMnlsWtXJ5rHp
-	0yR2j3fnzrF7nJjxm8Vj3slAj/f7rrJ5bP1l59E49Rqbx+dNcgF8UVw2Kak5mWWpRfp2CVwZ
-	f87tZy6438NUsfH/HMYGxj/XGbsYOTkkBEwkXnyfxw5jP7rxH8xmE1CXuHHjJzOILSJgJnGw
-	9Q9YnFngLpPEgX42EFtYIFzi99I7rCA2i4CqxLOna8Bm8gLVb7mxnxViprzE6g0HwOZwAsV/
-	zOgF6xUSMJV4t+ASUxcjF1DNZzaJjrXT2SAaJCUOrrjBMoGRdwEjwypGocy8stzEzBwTvYzK
-	vMwKveT83E2MwPBfVvsnegfjpwvBhxgFOBiVeHhntG5LF2JNLCuuzD3EKMHBrCTC21a/JV2I
-	NyWxsiq1KD++qDQntfgQozQHi5I4r9G38hQhgfTEktTs1NSC1CKYLBMHp1QDo9AnntNepS/s
-	7kW/2Mt863fB50MTE6tdz0Y/MMn58Czy+b+Zx6XWlpt92/7o0/xV/8Na9WSK188orXmTkFT/
-	+pJKs03MreLC/73HbiuVfir7z9M/WUcu3epBcXaR63Xngy5vH9ql5c1LPnI58qHqySLGwqU7
-	6gr4gn0NSvSz9q29ycyYu/WWqhJLcUaioRZzUXEiAFHrTcV7AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsXC5WfdrLt897Z0gwv3uS3mrF/DZvF5wz82
-	ixcb2hktvq7/xWzx9FMfi8XhuSdZLS7vmsNmcW/Nf1aL87vWslrsWLqPyeLSgQVMFsd7DzBZ
-	zL/3mc1i86apzBbHp0xltPj9A6j45KzJLA6CHt9b+1g8ds66y+6xYFOpx+YVWh6L97xk8ti0
-	qpPNY9OnSewe786dY/c4MeM3i8e8k4Ee7/ddZfNY/OIDk8fWX3YejVOvsXl83iQXwB/FZZOS
-	mpNZllqkb5fAlfHn3H7mgvs9TBUb/89hbGD8c52xi5GTQ0LAROLRjf/sIDabgLrEjRs/mUFs
-	EQEziYOtf8DizAJ3mSQO9LOB2MIC4RK/l95hBbFZBFQlnj1dAzaHF6h+y439rBAz5SVWbzgA
-	NocTKP5jRi9Yr5CAqcS7BZeYJjByLWBkWMUokplXlpuYmWOqV5ydUZmXWaGXnJ+7iREYzMtq
-	/0zcwfjlsvshRgEORiUe3gePt6YLsSaWFVfmHmKU4GBWEuFtq9+SLsSbklhZlVqUH19UmpNa
-	fIhRmoNFSZzXKzw1QUggPbEkNTs1tSC1CCbLxMEp1cA4q6dGsWb9c9kO+Qeu4XWnRHyb4hfe
-	ZpRdye3SdWBJ/3KZB18P3k7YfqD2kfreKxq7DXfpNM74cIC/+NXpy0UL3TaqT6w04LX3e7Hg
-	SnDk0teaCqni04494vftmr13a54j7z33iX9UYi+o+sRMkxTQN+zq4uIsZZull/4u1m/qmdx1
-	y965vJ2uxFKckWioxVxUnAgAJ6ln02ICAAA=
-X-CFilter-Loop: Reflected
+	s=arc-20240116; t=1740029786; c=relaxed/simple;
+	bh=86RSQWT0uVYy4scXIZ9dM43r6v/ZNArLrqQm7EBIK1U=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=p5m5XoWR//Xwg6kpxQkZkqW1omuIcKoMuCI2psW/MOk6e5kMmaBnRzQNqX0I/tqc0D4qGQQxmYJQYmA/J0afvF8iTxLH3obYMcpqhDeD3l4+2638GK5B1kX0lUkfXRyibC/2LtscO0br2igbWO2GZoKZ5jkx+YJw3irR5m68MdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85592464231so42976739f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 21:36:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740029784; x=1740634584;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fYhZ/2V7h65SbZlesbaNdyANplft1cKNDYa6w4+fdR8=;
+        b=KdQSVNJvUgOlCd0Px1leMfKuNAO/2u60OuxwwWvsOOcQDJwd8dcDfswqh+tUu3PjQ1
+         E9IeNfY21wQ3YQqLFf41YWgbzLTigDCkYw6eaPtZDFTEp38jcuYAeF98MPTTZPuZFDuW
+         vcnH2awwJnUGHn7vJ810rqIcqYc5ozoJRiDCDHkKx3FRWHyrQeEHEe3PRCkttgJRTWkd
+         zQNlyVp07TIhczf6JmEitgLP5x/tZaHV0HIWnvNPsizbtxprWadiNldBvxWlTJ92ve+O
+         T0z/84czTzSr9wwvfXZFwpvKpQq3iZip6TaZa+zl1AMNo1GoymdUh/lLj+k0dbfoY661
+         cBAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsCEnoJN9AC/kKHKNAuFGfFm1NnfMAx7LMODYvYe55xtGG+Z6WlvIBIO0dRfhilOgp+d2ta/vjV3bc2Tg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynrPfm5MGKDgkEn7Nc/7RvaaoJ2RL+K6hJTqO2qkJ5XiWstxZ1
+	hXfWsRAVuCbVZh1puB9GAHbFiNJf+gHkBvP79hU08vPCXXZj2x5TCUuCAO3pscGfELHPybfudkC
+	uZDC8utG0FgQtGQgQ2tll6Ko6cDT2azUHXWF6pC8MhdXeOXr2ozCSciA=
+X-Google-Smtp-Source: AGHT+IF4SSsRXK5FDcjsQWUM747QTtBlCp47gNgaJCN2Yefw0KribdmuVD8q4lBmQ5pjuT3IFtzI3ScPnrrZpwKJa5/M6oPVpgKC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1aaf:b0:3d2:bac3:b45f with SMTP id
+ e9e14a558f8ab-3d2bac3b647mr39160245ab.4.1740029783936; Wed, 19 Feb 2025
+ 21:36:23 -0800 (PST)
+Date: Wed, 19 Feb 2025 21:36:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b6bf57.050a0220.14d86d.015b.GAE@google.com>
+Subject: [syzbot] [usb?] BUG: corrupted list in usb_hcd_link_urb_to_ep (4)
+From: syzbot <syzbot+a2e67807a84a561c08fb@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Each luf page in buddy has its pending tlb shootdown information and
-performs the corresponding tlb shootdown on exit from buddy.  However,
-every exit from buddy causes small but frequent IPIs.  Even though total
-IPIs get reduced, unnecessary waits on conflict CPUs in IPI handler have
-been observed via perf profiling.
+Hello,
 
-Thus, made it perfrom luf tlb shootdown per zone in batched manner when
-pages exit from buddy so as to avoid frequent IPIs.
+syzbot found the following issue on:
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
+HEAD commit:    87a132e73910 Merge tag 'mm-hotfixes-stable-2025-02-19-17-4..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=169c2ba4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f4f6914bcba459be
+dashboard link: https://syzkaller.appspot.com/bug?extid=a2e67807a84a561c08fb
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c59498580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-87a132e7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b5894cc33e97/vmlinux-87a132e7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1830194f2698/bzImage-87a132e7.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a2e67807a84a561c08fb@syzkaller.appspotmail.com
+
+list_add double add: new=ffff8880333c4718, prev=ffff8880333c4718, next=ffff88804b2fe070.
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:35!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 2 UID: 0 PID: 68 Comm: kworker/u32:3 Not tainted 6.14.0-rc3-syzkaller-00079-g87a132e73910 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: netns cleanup_net
+RIP: 0010:__list_add_valid_or_report+0x143/0x190 lib/list_debug.c:35
+Code: 89 f1 48 c7 c7 80 56 d3 8b 48 89 ee e8 66 8a cf fc 90 0f 0b 48 89 f2 48 89 e9 4c 89 e6 48 c7 c7 00 57 d3 8b e8 4e 8a cf fc 90 <0f> 0b 48 89 f7 48 89 34 24 e8 ef 51 53 fd 48 8b 34 24 e9 07 ff ff
+RSP: 0018:ffffc90000658910 EFLAGS: 00010086
+RAX: 0000000000000058 RBX: ffff8880333c4700 RCX: ffffffff819943d9
+RDX: 0000000000000000 RSI: ffffffff8199a74e RDI: 0000000000000005
+RBP: ffff88804b2fe070 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000104 R11: ffffffff96261ff8 R12: ffff8880333c4718
+R13: ffff88804b2fe078 R14: ffff8880333c4718 R15: ffff88804b2fe078
+FS:  0000000000000000(0000) GS:ffff88806a800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055c8f0f403d8 CR3: 000000002c20a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ __list_add_valid include/linux/list.h:88 [inline]
+ __list_add include/linux/list.h:150 [inline]
+ list_add_tail include/linux/list.h:183 [inline]
+ usb_hcd_link_urb_to_ep+0x21d/0x390 drivers/usb/core/hcd.c:1158
+ dummy_urb_enqueue+0x291/0x8e0 drivers/usb/gadget/udc/dummy_hcd.c:1288
+ usb_hcd_submit_urb+0x258/0x1c60 drivers/usb/core/hcd.c:1533
+ usb_submit_urb+0x87c/0x1730 drivers/usb/core/urb.c:581
+ cm109_submit_buzz_toggle+0xd8/0x180 drivers/input/misc/cm109.c:351
+ cm109_toggle_buzzer_async+0x90/0xa0 drivers/input/misc/cm109.c:484
+ cm109_input_ev+0x171/0x1b0 drivers/input/misc/cm109.c:615
+ input_event_dispose drivers/input/input.c:321 [inline]
+ input_handle_event+0x14e/0x14d0 drivers/input/input.c:369
+ input_inject_event+0x1c8/0x380 drivers/input/input.c:423
+ kd_sound_helper+0x17a/0x280 drivers/tty/vt/keyboard.c:256
+ input_handler_for_each_handle+0xd4/0x250 drivers/input/input.c:2554
+ call_timer_fn+0x1a0/0x610 kernel/time/timer.c:1789
+ expire_timers kernel/time/timer.c:1840 [inline]
+ __run_timers+0x6e8/0x930 kernel/time/timer.c:2414
+ __run_timer_base kernel/time/timer.c:2426 [inline]
+ __run_timer_base kernel/time/timer.c:2418 [inline]
+ run_timer_base+0x114/0x190 kernel/time/timer.c:2435
+ run_timer_softirq+0x1a/0x40 kernel/time/timer.c:2445
+ handle_softirqs+0x213/0x8f0 kernel/softirq.c:561
+ __do_softirq kernel/softirq.c:595 [inline]
+ invoke_softirq kernel/softirq.c:435 [inline]
+ __irq_exit_rcu+0x109/0x170 kernel/softirq.c:662
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+ sysvec_apic_timer_interrupt+0xa4/0xc0 arch/x86/kernel/apic/apic.c:1049
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:lockdep_unregister_key+0x1b2/0x2b0 kernel/locking/lockdep.c:6595
+Code: 54 fd ff ff 48 89 df e8 9c c3 ff ff 89 c3 e8 05 d9 ff ff 9c 58 f6 c4 02 0f 85 92 00 00 00 41 f7 c5 00 02 00 00 74 01 fb 84 db <75> 4f 5b 5d 41 5c 41 5d 41 5e 41 5f e9 cd 99 0a 00 48 c7 c0 34 82
+RSP: 0018:ffffc90000d5f7c0 EFLAGS: 00000246
+RAX: 0000000000000046 RBX: 0000000000000000 RCX: 0000000000000001
+RDX: dffffc0000000000 RSI: ffffffff8b6cef60 RDI: ffffffff8bd35480
+RBP: ffff888030eb7a98 R08: ffffffff9386d86e R09: 000000000001d777
+R10: ffffffff96e83eaf R11: 0000000000002ba2 R12: 0000000000000000
+R13: 0000000000000246 R14: ffffffff97056128 R15: ffff888030eb7aa0
+ __qdisc_destroy+0x11a/0x4b0 net/sched/sch_generic.c:1080
+ qdisc_put+0xab/0xe0 net/sched/sch_generic.c:1106
+ shutdown_scheduler_queue+0xa5/0x160 net/sched/sch_generic.c:1159
+ netdev_for_each_tx_queue include/linux/netdevice.h:2590 [inline]
+ dev_shutdown+0xad/0x430 net/sched/sch_generic.c:1491
+ unregister_netdevice_many_notify+0x9fb/0x1f30 net/core/dev.c:11791
+ unregister_netdevice_many net/core/dev.c:11866 [inline]
+ default_device_exit_batch+0x867/0xae0 net/core/dev.c:12351
+ ops_exit_list+0x128/0x180 net/core/net_namespace.c:177
+ cleanup_net+0x5c6/0xbf0 net/core/net_namespace.c:652
+ process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+ kthread+0x3af/0x750 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__list_add_valid_or_report+0x143/0x190 lib/list_debug.c:35
+Code: 89 f1 48 c7 c7 80 56 d3 8b 48 89 ee e8 66 8a cf fc 90 0f 0b 48 89 f2 48 89 e9 4c 89 e6 48 c7 c7 00 57 d3 8b e8 4e 8a cf fc 90 <0f> 0b 48 89 f7 48 89 34 24 e8 ef 51 53 fd 48 8b 34 24 e9 07 ff ff
+RSP: 0018:ffffc90000658910 EFLAGS: 00010086
+RAX: 0000000000000058 RBX: ffff8880333c4700 RCX: ffffffff819943d9
+RDX: 0000000000000000 RSI: ffffffff8199a74e RDI: 0000000000000005
+RBP: ffff88804b2fe070 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000104 R11: ffffffff96261ff8 R12: ffff8880333c4718
+R13: ffff88804b2fe078 R14: ffff8880333c4718 R15: ffff88804b2fe078
+FS:  0000000000000000(0000) GS:ffff88806a800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055c8f0f403d8 CR3: 000000002c20a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess), 4 bytes skipped:
+   0:	48 89 df             	mov    %rbx,%rdi
+   3:	e8 9c c3 ff ff       	call   0xffffc3a4
+   8:	89 c3                	mov    %eax,%ebx
+   a:	e8 05 d9 ff ff       	call   0xffffd914
+   f:	9c                   	pushf
+  10:	58                   	pop    %rax
+  11:	f6 c4 02             	test   $0x2,%ah
+  14:	0f 85 92 00 00 00    	jne    0xac
+  1a:	41 f7 c5 00 02 00 00 	test   $0x200,%r13d
+  21:	74 01                	je     0x24
+  23:	fb                   	sti
+  24:	84 db                	test   %bl,%bl
+* 26:	75 4f                	jne    0x77 <-- trapping instruction
+  28:	5b                   	pop    %rbx
+  29:	5d                   	pop    %rbp
+  2a:	41 5c                	pop    %r12
+  2c:	41 5d                	pop    %r13
+  2e:	41 5e                	pop    %r14
+  30:	41 5f                	pop    %r15
+  32:	e9 cd 99 0a 00       	jmp    0xa9a04
+  37:	48                   	rex.W
+  38:	c7                   	.byte 0xc7
+  39:	c0                   	.byte 0xc0
+  3a:	34 82                	xor    $0x82,%al
+
+
 ---
- include/linux/mm.h       |  44 ++++-
- include/linux/mm_types.h |  19 +-
- include/linux/mmzone.h   |   9 +
- include/linux/sched.h    |   2 +
- mm/compaction.c          |  10 +-
- mm/internal.h            |  13 +-
- mm/mm_init.c             |   5 +
- mm/page_alloc.c          | 363 +++++++++++++++++++++++++++++++--------
- mm/page_reporting.c      |   9 +-
- mm/rmap.c                |   6 +-
- 10 files changed, 383 insertions(+), 97 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 53a5f1cb21e0d..46638e86e8073 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4161,12 +4161,16 @@ static inline int do_mseal(unsigned long start, size_t len_in, unsigned long fla
- }
- #endif
- 
--#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
- /*
-  * luf_ugen will start with 2 so that 1 can be regarded as a passed one.
-  */
- #define LUF_UGEN_INIT 2
-+/*
-+ * zone_ugen will start with 2 so that 1 can be regarded as done.
-+ */
-+#define ZONE_UGEN_INIT 2
- 
-+#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
- static inline bool ugen_before(unsigned long a, unsigned long b)
- {
- 	/*
-@@ -4177,7 +4181,11 @@ static inline bool ugen_before(unsigned long a, unsigned long b)
- 
- static inline unsigned long next_ugen(unsigned long ugen)
- {
--	if (ugen + 1)
-+	/*
-+	 * Avoid zero even in unsigned short range so as to treat
-+	 * '(unsigned short)ugen == 0' as invalid.
-+	 */
-+	if ((unsigned short)(ugen + 1))
- 		return ugen + 1;
- 	/*
- 	 * Avoid invalid ugen, zero.
-@@ -4187,7 +4195,11 @@ static inline unsigned long next_ugen(unsigned long ugen)
- 
- static inline unsigned long prev_ugen(unsigned long ugen)
- {
--	if (ugen - 1)
-+	/*
-+	 * Avoid zero even in unsigned short range so as to treat
-+	 * '(unsigned short)ugen == 0' as invalid.
-+	 */
-+	if ((unsigned short)(ugen - 1))
- 		return ugen - 1;
- 	/*
- 	 * Avoid invalid ugen, zero.
-@@ -4195,4 +4207,30 @@ static inline unsigned long prev_ugen(unsigned long ugen)
- 	return ugen - 2;
- }
- #endif
-+
-+/*
-+ * return the biggest ugen but it should be before the real zone_ugen.
-+ */
-+static inline unsigned long page_zone_ugen(struct zone *zone, struct page *page)
-+{
-+	unsigned long zone_ugen = zone->zone_ugen;
-+	unsigned short short_zone_ugen = page->zone_ugen;
-+	unsigned long cand1, cand2;
-+
-+	if (!short_zone_ugen)
-+		return 0;
-+
-+	cand1 = (zone_ugen & ~(unsigned long)USHRT_MAX) | short_zone_ugen;
-+	cand2 = cand1 - USHRT_MAX - 1;
-+
-+	if (!ugen_before(zone_ugen, cand1))
-+		return cand1;
-+
-+	return cand2;
-+}
-+
-+static inline void set_page_zone_ugen(struct page *page, unsigned short zone_ugen)
-+{
-+	page->zone_ugen = zone_ugen;
-+}
- #endif /* _LINUX_MM_H */
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index c50cfc1c6282f..e3132e1e5e5d2 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -132,11 +132,20 @@ struct page {
- 					 */
- 					unsigned short order;
- 
--					/*
--					 * For tracking need of tlb flush,
--					 * by luf(lazy unmap flush).
--					 */
--					unsigned short luf_key;
-+					union {
-+						/*
-+						 * For tracking need of
-+						 * tlb flush, by
-+						 * luf(lazy unmap flush).
-+						 */
-+						unsigned short luf_key;
-+
-+						/*
-+						 * Casted zone_ugen with
-+						 * unsigned short.
-+						 */
-+						unsigned short zone_ugen;
-+					};
- 				};
- 			};
- 		};
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index ac3178b5fc50b..3c1b04d21fda9 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -117,6 +117,7 @@ extern int page_group_by_mobility_disabled;
- struct free_area {
- 	struct list_head	free_list[MIGRATE_TYPES];
- 	struct list_head	pend_list[MIGRATE_TYPES];
-+	unsigned long		pend_zone_ugen[MIGRATE_TYPES];
- 	unsigned long		nr_free;
- };
- 
-@@ -998,6 +999,14 @@ struct zone {
- 	atomic_long_t		vm_numa_event[NR_VM_NUMA_EVENT_ITEMS];
- 	/* Count pages that need tlb shootdown on allocation */
- 	atomic_long_t		nr_luf_pages;
-+	/* Generation number for that tlb shootdown has been done */
-+	unsigned long		zone_ugen_done;
-+	/* Generation number to control zone batched tlb shootdown */
-+	unsigned long		zone_ugen;
-+	/* Approximate latest luf_ugen that have ever entered */
-+	unsigned long		luf_ugen;
-+	/* Accumulated tlb batch for this zone */
-+	struct tlbflush_unmap_batch zone_batch;
- } ____cacheline_internodealigned_in_smp;
- 
- enum pgdat_flags {
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 5c6c4fd021973..463cb2fb8f919 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1378,6 +1378,8 @@ struct task_struct {
- 	int luf_no_shootdown;
- 	int luf_takeoff_started;
- 	unsigned long luf_ugen;
-+	unsigned long zone_ugen;
-+	unsigned long wait_zone_ugen;
- #endif
- 
- 	struct tlbflush_unmap_batch	tlb_ubc;
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 27f3d743762bb..a7f17867decae 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -653,7 +653,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 				goto isolate_fail;
- 		}
- 
--		if (!luf_takeoff_check(page))
-+		if (!luf_takeoff_check(cc->zone, page))
- 			goto isolate_fail;
- 
- 		/* Found a free page, will break it into order-0 pages */
-@@ -689,7 +689,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 	/*
- 	 * Check and flush before using the pages taken off.
- 	 */
--	luf_takeoff_end();
-+	luf_takeoff_end(cc->zone);
- 
- 	/*
- 	 * Be careful to not go outside of the pageblock.
-@@ -1611,7 +1611,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 			order_scanned++;
- 			nr_scanned++;
- 
--			if (unlikely(consider_pend && !luf_takeoff_check(freepage)))
-+			if (unlikely(consider_pend && !luf_takeoff_check(cc->zone, freepage)))
- 				goto scan_next;
- 
- 			pfn = page_to_pfn(freepage);
-@@ -1679,7 +1679,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 		/*
- 		 * Check and flush before using the pages taken off.
- 		 */
--		luf_takeoff_end();
-+		luf_takeoff_end(cc->zone);
- 
- 		/* Skip fast search if enough freepages isolated */
- 		if (cc->nr_freepages >= cc->nr_migratepages)
-@@ -2415,7 +2415,7 @@ static enum compact_result compact_finished(struct compact_control *cc)
- 	 */
- 	luf_takeoff_start();
- 	ret = __compact_finished(cc);
--	luf_takeoff_end();
-+	luf_takeoff_end(cc->zone);
- 
- 	trace_mm_compaction_finished(cc->zone, cc->order, ret);
- 	if (ret == COMPACT_NO_SUITABLE_PAGE)
-diff --git a/mm/internal.h b/mm/internal.h
-index 77657c17af204..e634eaf220f00 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1595,10 +1595,10 @@ static inline void accept_page(struct page *page)
- #if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
- extern struct luf_batch luf_batch[];
- bool luf_takeoff_start(void);
--void luf_takeoff_end(void);
-+void luf_takeoff_end(struct zone *zone);
- bool luf_takeoff_no_shootdown(void);
--bool luf_takeoff_check(struct page *page);
--bool luf_takeoff_check_and_fold(struct page *page);
-+bool luf_takeoff_check(struct zone *zone, struct page *page);
-+bool luf_takeoff_check_and_fold(struct zone *zone, struct page *page);
- 
- static inline bool non_luf_pages_ok(struct zone *zone)
- {
-@@ -1608,7 +1608,6 @@ static inline bool non_luf_pages_ok(struct zone *zone)
- 
- 	return nr_free - nr_luf_pages > min_wm;
- }
--
- unsigned short fold_unmap_luf(void);
- 
- /*
-@@ -1696,10 +1695,10 @@ static inline bool can_luf_vma(struct vm_area_struct *vma)
- }
- #else /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
- static inline bool luf_takeoff_start(void) { return false; }
--static inline void luf_takeoff_end(void) {}
-+static inline void luf_takeoff_end(struct zone *zone) {}
- static inline bool luf_takeoff_no_shootdown(void) { return true; }
--static inline bool luf_takeoff_check(struct page *page) { return true; }
--static inline bool luf_takeoff_check_and_fold(struct page *page) { return true; }
-+static inline bool luf_takeoff_check(struct zone *zone, struct page *page) { return true; }
-+static inline bool luf_takeoff_check_and_fold(struct zone *zone, struct page *page) { return true; }
- static inline bool non_luf_pages_ok(struct zone *zone) { return true; }
- static inline unsigned short fold_unmap_luf(void) { return 0; }
- 
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 12b96cd6a87b0..58e616ceef52a 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1397,6 +1397,7 @@ static void __meminit zone_init_free_lists(struct zone *zone)
- 	for_each_migratetype_order(order, t) {
- 		INIT_LIST_HEAD(&zone->free_area[order].free_list[t]);
- 		INIT_LIST_HEAD(&zone->free_area[order].pend_list[t]);
-+		zone->free_area[order].pend_zone_ugen[t] = ZONE_UGEN_INIT;
- 		zone->free_area[order].nr_free = 0;
- 	}
- 
-@@ -1404,6 +1405,10 @@ static void __meminit zone_init_free_lists(struct zone *zone)
- 	INIT_LIST_HEAD(&zone->unaccepted_pages);
- #endif
- 	atomic_long_set(&zone->nr_luf_pages, 0);
-+	zone->zone_ugen_done = ZONE_UGEN_INIT - 1;
-+	zone->zone_ugen = ZONE_UGEN_INIT;
-+	zone->luf_ugen = LUF_UGEN_INIT - 1;
-+	reset_batch(&zone->zone_batch);
- }
- 
- void __meminit init_currently_empty_zone(struct zone *zone,
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 0b6e7f235c4a1..b81931c6f2cfd 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -663,16 +663,29 @@ bool luf_takeoff_start(void)
- 	return !no_shootdown;
- }
- 
-+static void wait_zone_ugen_done(struct zone *zone, unsigned long zone_ugen)
-+{
-+	while (ugen_before(READ_ONCE(zone->zone_ugen_done), zone_ugen))
-+		cond_resched();
-+}
-+
-+static void set_zone_ugen_done(struct zone *zone, unsigned long zone_ugen)
-+{
-+	WRITE_ONCE(zone->zone_ugen_done, zone_ugen);
-+}
-+
- /*
-  * Should be called within the same context of luf_takeoff_start().
-  */
--void luf_takeoff_end(void)
-+void luf_takeoff_end(struct zone *zone)
- {
- 	struct tlbflush_unmap_batch *tlb_ubc_takeoff = &current->tlb_ubc_takeoff;
- 	unsigned long flags;
- 	bool no_shootdown;
- 	bool outmost = false;
- 	unsigned long cur_luf_ugen;
-+	unsigned long cur_zone_ugen;
-+	unsigned long cur_wait_zone_ugen;
- 
- 	local_irq_save(flags);
- 	VM_WARN_ON(!current->luf_takeoff_started);
-@@ -700,6 +713,8 @@ void luf_takeoff_end(void)
- 		goto out;
- 
- 	cur_luf_ugen = current->luf_ugen;
-+	cur_zone_ugen = current->zone_ugen;
-+	cur_wait_zone_ugen = current->wait_zone_ugen;
- 
- 	current->luf_ugen = 0;
- 
-@@ -707,10 +722,38 @@ void luf_takeoff_end(void)
- 		reset_batch(tlb_ubc_takeoff);
- 
- 	try_to_unmap_flush_takeoff();
-+
-+	if (cur_wait_zone_ugen || cur_zone_ugen) {
-+		/*
-+		 * pcp(zone == NULL) doesn't work with zone batch.
-+		 */
-+		if (zone) {
-+			current->zone_ugen = 0;
-+			current->wait_zone_ugen = 0;
-+
-+			/*
-+			 * Guarantee that tlb shootdown required for the
-+			 * zone_ugen has been completed once observing
-+			 * 'zone_ugen_done'.
-+			 */
-+			smp_mb();
-+
-+			/*
-+			 * zone->zone_ugen_done should be updated
-+			 * sequentially.
-+			 */
-+			if (cur_wait_zone_ugen)
-+				wait_zone_ugen_done(zone, cur_wait_zone_ugen);
-+			if (cur_zone_ugen)
-+				set_zone_ugen_done(zone, cur_zone_ugen);
-+		}
-+	}
- out:
- 	if (outmost) {
- 		VM_WARN_ON(current->luf_no_shootdown);
- 		VM_WARN_ON(current->luf_ugen);
-+		VM_WARN_ON(current->zone_ugen);
-+		VM_WARN_ON(current->wait_zone_ugen);
- 	}
- }
- 
-@@ -741,9 +784,9 @@ bool luf_takeoff_no_shootdown(void)
-  * Should be called with either zone lock held and irq disabled or pcp
-  * lock held.
-  */
--bool luf_takeoff_check(struct page *page)
-+bool luf_takeoff_check(struct zone *zone, struct page *page)
- {
--	unsigned short luf_key = page_luf_key(page);
-+	unsigned long zone_ugen;
- 
- 	/*
- 	 * No way.  Delimit using luf_takeoff_{start,end}().
-@@ -753,7 +796,29 @@ bool luf_takeoff_check(struct page *page)
- 		return false;
- 	}
- 
--	if (!luf_key)
-+	if (!zone) {
-+		unsigned short luf_key = page_luf_key(page);
-+
-+		if (!luf_key)
-+			return true;
-+
-+		if (current->luf_no_shootdown)
-+			return false;
-+
-+		return true;
-+	}
-+
-+	zone_ugen = page_zone_ugen(zone, page);
-+	if (!zone_ugen)
-+		return true;
-+
-+	/*
-+	 * Should not be zero since zone-zone_ugen has been updated in
-+	 * __free_one_page() -> update_zone_batch().
-+	 */
-+	VM_WARN_ON(!zone->zone_ugen);
-+
-+	if (!ugen_before(READ_ONCE(zone->zone_ugen_done), zone_ugen))
- 		return true;
- 
- 	return !current->luf_no_shootdown;
-@@ -763,13 +828,11 @@ bool luf_takeoff_check(struct page *page)
-  * Should be called with either zone lock held and irq disabled or pcp
-  * lock held.
-  */
--bool luf_takeoff_check_and_fold(struct page *page)
-+bool luf_takeoff_check_and_fold(struct zone *zone, struct page *page)
- {
- 	struct tlbflush_unmap_batch *tlb_ubc_takeoff = &current->tlb_ubc_takeoff;
--	unsigned short luf_key = page_luf_key(page);
--	struct luf_batch *lb;
--	unsigned long lb_ugen;
- 	unsigned long flags;
-+	unsigned long zone_ugen;
- 
- 	/*
- 	 * No way.  Delimit using luf_takeoff_{start,end}().
-@@ -779,28 +842,94 @@ bool luf_takeoff_check_and_fold(struct page *page)
- 		return false;
- 	}
- 
--	if (!luf_key)
--		return true;
-+	/*
-+	 * pcp case
-+	 */
-+	if (!zone) {
-+		unsigned short luf_key = page_luf_key(page);
-+		struct luf_batch *lb;
-+		unsigned long lb_ugen;
- 
--	lb = &luf_batch[luf_key];
--	read_lock_irqsave(&lb->lock, flags);
--	lb_ugen = lb->ugen;
-+		if (!luf_key)
-+			return true;
-+
-+		lb = &luf_batch[luf_key];
-+		read_lock_irqsave(&lb->lock, flags);
-+		lb_ugen = lb->ugen;
-+
-+		if (arch_tlbbatch_check_done(&lb->batch.arch, lb_ugen)) {
-+			read_unlock_irqrestore(&lb->lock, flags);
-+			return true;
-+		}
-+
-+		if (current->luf_no_shootdown) {
-+			read_unlock_irqrestore(&lb->lock, flags);
-+			return false;
-+		}
- 
--	if (arch_tlbbatch_check_done(&lb->batch.arch, lb_ugen)) {
-+		fold_batch(tlb_ubc_takeoff, &lb->batch, false);
- 		read_unlock_irqrestore(&lb->lock, flags);
-+
-+		if (!current->luf_ugen || ugen_before(current->luf_ugen, lb_ugen))
-+			current->luf_ugen = lb_ugen;
- 		return true;
- 	}
- 
--	if (current->luf_no_shootdown) {
--		read_unlock_irqrestore(&lb->lock, flags);
-+	zone_ugen = page_zone_ugen(zone, page);
-+	if (!zone_ugen)
-+		return true;
-+
-+	/*
-+	 * Should not be zero since zone-zone_ugen has been updated in
-+	 * __free_one_page() -> update_zone_batch().
-+	 */
-+	VM_WARN_ON(!zone->zone_ugen);
-+
-+	if (!ugen_before(READ_ONCE(zone->zone_ugen_done), zone_ugen))
-+		return true;
-+
-+	if (current->luf_no_shootdown)
- 		return false;
--	}
- 
--	fold_batch(tlb_ubc_takeoff, &lb->batch, false);
--	read_unlock_irqrestore(&lb->lock, flags);
-+	/*
-+	 * zone batched flush has been already set.
-+	 */
-+	if (current->zone_ugen)
-+		return true;
-+
-+	/*
-+	 * Others are already performing tlb shootdown for us.  All we
-+	 * need is to wait for those to complete.
-+	 */
-+	if (zone_ugen != zone->zone_ugen) {
-+		if (!current->wait_zone_ugen ||
-+		    ugen_before(current->wait_zone_ugen, zone_ugen))
-+			current->wait_zone_ugen = zone_ugen;
-+	/*
-+	 * It's the first time that zone->zone_ugen has been set to
-+	 * current->zone_ugen.  current->luf_ugen also get set.
-+	 */
-+	} else {
-+		current->wait_zone_ugen = prev_ugen(zone->zone_ugen);
-+		current->zone_ugen = zone->zone_ugen;
-+		current->luf_ugen = zone->luf_ugen;
-+
-+		/*
-+		 * Now that tlb shootdown for the zone_ugen will be
-+		 * performed at luf_takeoff_end(), advance it so that
-+		 * the next zone->lock holder can efficiently avoid
-+		 * unnecessary tlb shootdown.
-+		 */
-+		zone->zone_ugen = next_ugen(zone->zone_ugen);
- 
--	if (!current->luf_ugen || ugen_before(current->luf_ugen, lb_ugen))
--		current->luf_ugen = lb_ugen;
-+		/*
-+		 * All the luf pages will eventually become non-luf
-+		 * pages by tlb flushing at luf_takeoff_end() and,
-+		 * flush_pend_list_if_done() will empty pend_list.
-+		 */
-+		atomic_long_set(&zone->nr_luf_pages, 0);
-+		fold_batch(tlb_ubc_takeoff, &zone->zone_batch, true);
-+	}
- 	return true;
- }
- #endif
-@@ -822,6 +951,42 @@ static inline void account_freepages(struct zone *zone, int nr_pages,
- 			   zone->nr_free_highatomic + nr_pages);
- }
- 
-+static void flush_pend_list_if_done(struct zone *zone,
-+		struct free_area *area, int migratetype)
-+{
-+	unsigned long zone_ugen_done = READ_ONCE(zone->zone_ugen_done);
-+
-+	/*
-+	 * tlb shootdown required for the zone_ugen already has been
-+	 * done.  Thus, let's move pages in pend_list to free_list to
-+	 * secure more non-luf pages.
-+	 */
-+	if (!ugen_before(zone_ugen_done, area->pend_zone_ugen[migratetype]))
-+		list_splice_init(&area->pend_list[migratetype],
-+				 &area->free_list[migratetype]);
-+}
-+
-+#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-+/*
-+ * Should be called with zone->lock held and irq disabled.
-+ */
-+static void update_zone_batch(struct zone *zone, unsigned short luf_key)
-+{
-+	unsigned long lb_ugen;
-+	struct luf_batch *lb = &luf_batch[luf_key];
-+
-+	read_lock(&lb->lock);
-+	fold_batch(&zone->zone_batch, &lb->batch, false);
-+	lb_ugen = lb->ugen;
-+	read_unlock(&lb->lock);
-+
-+	if (ugen_before(zone->luf_ugen, lb_ugen))
-+		zone->luf_ugen = lb_ugen;
-+}
-+#else
-+static void update_zone_batch(struct zone *zone, unsigned short luf_key) {}
-+#endif
-+
- /* Used for pages not on another list */
- static inline void __add_to_free_list(struct page *page, struct zone *zone,
- 				      unsigned int order, int migratetype,
-@@ -830,6 +995,12 @@ static inline void __add_to_free_list(struct page *page, struct zone *zone,
- 	struct free_area *area = &zone->free_area[order];
- 	struct list_head *list;
- 
-+	/*
-+	 * Good chance to flush pend_list just before updating the
-+	 * {free,pend}_list.
-+	 */
-+	flush_pend_list_if_done(zone, area, migratetype);
-+
- 	VM_WARN_ONCE(get_pageblock_migratetype(page) != migratetype,
- 		     "page type is %lu, passed migratetype is %d (nr=%d)\n",
- 		     get_pageblock_migratetype(page), migratetype, 1 << order);
-@@ -839,8 +1010,9 @@ static inline void __add_to_free_list(struct page *page, struct zone *zone,
- 	 * positive is okay because it will cause just additional tlb
- 	 * shootdown.
- 	 */
--	if (page_luf_key(page)) {
-+	if (page_zone_ugen(zone, page)) {
- 		list = &area->pend_list[migratetype];
-+		area->pend_zone_ugen[migratetype] = zone->zone_ugen;
- 		atomic_long_add(1 << order, &zone->nr_luf_pages);
- 	} else
- 		list = &area->free_list[migratetype];
-@@ -862,6 +1034,7 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
- 				     unsigned int order, int old_mt, int new_mt)
- {
- 	struct free_area *area = &zone->free_area[order];
-+	unsigned long zone_ugen = page_zone_ugen(zone, page);
- 
- 	/* Free page moving can fail, so it happens before the type update */
- 	VM_WARN_ONCE(get_pageblock_migratetype(page) != old_mt,
-@@ -878,9 +1051,12 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
- 	 * positive is okay because it will cause just additional tlb
- 	 * shootdown.
- 	 */
--	if (page_luf_key(page))
-+	if (zone_ugen) {
- 		list_move_tail(&page->buddy_list, &area->pend_list[new_mt]);
--	else
-+		if (!area->pend_zone_ugen[new_mt] ||
-+		    ugen_before(area->pend_zone_ugen[new_mt], zone_ugen))
-+			area->pend_zone_ugen[new_mt] = zone_ugen;
-+	} else
- 		list_move_tail(&page->buddy_list, &area->free_list[new_mt]);
- 
- 	account_freepages(zone, -(1 << order), old_mt);
-@@ -898,7 +1074,7 @@ static inline void __del_page_from_free_list(struct page *page, struct zone *zon
- 	if (page_reported(page))
- 		__ClearPageReported(page);
- 
--	if (page_luf_key(page))
-+	if (page_zone_ugen(zone, page))
- 		atomic_long_sub(1 << order, &zone->nr_luf_pages);
- 
- 	list_del(&page->buddy_list);
-@@ -936,29 +1112,39 @@ static inline struct page *get_page_from_free_area(struct zone *zone,
- 	 */
- 	pend_first = !non_luf_pages_ok(zone);
- 
-+	/*
-+	 * Good chance to flush pend_list just before updating the
-+	 * {free,pend}_list.
-+	 */
-+	flush_pend_list_if_done(zone, area, migratetype);
-+
- 	if (pend_first) {
- 		page = list_first_entry_or_null(&area->pend_list[migratetype],
- 				struct page, buddy_list);
- 
--		if (page && luf_takeoff_check(page))
-+		if (page && luf_takeoff_check(zone, page))
- 			return page;
- 
- 		page = list_first_entry_or_null(&area->free_list[migratetype],
- 				struct page, buddy_list);
- 
--		if (page)
-+		if (page) {
-+			set_page_zone_ugen(page, 0);
- 			return page;
-+		}
- 	} else {
- 		page = list_first_entry_or_null(&area->free_list[migratetype],
- 				struct page, buddy_list);
- 
--		if (page)
-+		if (page) {
-+			set_page_zone_ugen(page, 0);
- 			return page;
-+		}
- 
- 		page = list_first_entry_or_null(&area->pend_list[migratetype],
- 				struct page, buddy_list);
- 
--		if (page && luf_takeoff_check(page))
-+		if (page && luf_takeoff_check(zone, page))
- 			return page;
- 	}
- 	return NULL;
-@@ -1023,6 +1209,7 @@ static inline void __free_one_page(struct page *page,
- 	unsigned long combined_pfn;
- 	struct page *buddy;
- 	bool to_tail;
-+	unsigned long zone_ugen;
- 
- 	VM_BUG_ON(!zone_is_initialized(zone));
- 	VM_BUG_ON_PAGE(page->flags & PAGE_FLAGS_CHECK_AT_PREP, page);
-@@ -1034,20 +1221,25 @@ static inline void __free_one_page(struct page *page,
- 	account_freepages(zone, 1 << order, migratetype);
- 
- 	/*
--	 * Use the page's luf_key unchanged if luf_key == 0.  Worth
--	 * noting that page_luf_key() will be 0 in most cases since it's
--	 * initialized at free_pages_prepare().
-+	 * Use the page's zone_ugen unchanged if luf_key == 0.  Worth
-+	 * noting that page_zone_ugen() will be 0 in most cases since
-+	 * it's initialized at free_pages_prepare().
-+	 *
-+	 * Update page's zone_ugen and zone's batch only if a valid
-+	 * luf_key was passed.
- 	 */
--	if (luf_key)
--		set_page_luf_key(page, luf_key);
--	else
--		luf_key = page_luf_key(page);
-+	if (luf_key) {
-+		zone_ugen = zone->zone_ugen;
-+		set_page_zone_ugen(page, (unsigned short)zone_ugen);
-+		update_zone_batch(zone, luf_key);
-+	} else
-+		zone_ugen = page_zone_ugen(zone, page);
- 
- 	while (order < MAX_PAGE_ORDER) {
- 		int buddy_mt = migratetype;
--		unsigned short buddy_luf_key;
-+		unsigned long buddy_zone_ugen;
- 
--		if (!luf_key && compaction_capture(capc, page, order, migratetype)) {
-+		if (!zone_ugen && compaction_capture(capc, page, order, migratetype)) {
- 			account_freepages(zone, -(1 << order), migratetype);
- 			return;
- 		}
-@@ -1080,17 +1272,15 @@ static inline void __free_one_page(struct page *page,
- 		else
- 			__del_page_from_free_list(buddy, zone, order, buddy_mt);
- 
-+		buddy_zone_ugen = page_zone_ugen(zone, buddy);
-+
- 		/*
--		 * !buddy_luf_key && !luf_key : do nothing
--		 *  buddy_luf_key && !luf_key : luf_key = buddy_luf_key
--		 * !buddy_luf_key &&  luf_key : do nothing
--		 *  buddy_luf_key &&  luf_key : merge two into luf_key
-+		 * if (!zone_ugen && !buddy_zone_ugen) : nothing to do
-+		 * if ( zone_ugen && !buddy_zone_ugen) : nothing to do
- 		 */
--		buddy_luf_key = page_luf_key(buddy);
--		if (buddy_luf_key && !luf_key)
--			luf_key = buddy_luf_key;
--		else if (buddy_luf_key && luf_key)
--			fold_luf_batch(&luf_batch[luf_key], &luf_batch[buddy_luf_key]);
-+		if ((!zone_ugen && buddy_zone_ugen) ||
-+		    ( zone_ugen && buddy_zone_ugen && ugen_before(zone_ugen, buddy_zone_ugen)))
-+			zone_ugen = buddy_zone_ugen;
- 
- 		if (unlikely(buddy_mt != migratetype)) {
- 			/*
-@@ -1103,7 +1293,7 @@ static inline void __free_one_page(struct page *page,
- 
- 		combined_pfn = buddy_pfn & pfn;
- 		page = page + (combined_pfn - pfn);
--		set_page_luf_key(page, luf_key);
-+		set_page_zone_ugen(page, zone_ugen);
- 		pfn = combined_pfn;
- 		order++;
- 	}
-@@ -1446,6 +1636,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
- 		do {
- 			unsigned long pfn;
- 			int mt;
-+			unsigned short luf_key;
- 
- 			page = list_last_entry(list, struct page, pcp_list);
- 			pfn = page_to_pfn(page);
-@@ -1456,7 +1647,16 @@ static void free_pcppages_bulk(struct zone *zone, int count,
- 			count -= nr_pages;
- 			pcp->count -= nr_pages;
- 
--			__free_one_page(page, pfn, zone, order, mt, FPI_NONE, 0);
-+			/*
-+			 * page private in pcp stores luf_key while it
-+			 * stores zone_ugen in buddy.  Thus, the private
-+			 * needs to be cleared and the luf_key needs to
-+			 * be passed to buddy.
-+			 */
-+			luf_key = page_luf_key(page);
-+			set_page_private(page, 0);
-+
-+			__free_one_page(page, pfn, zone, order, mt, FPI_NONE, luf_key);
- 
- 			trace_mm_page_pcpu_drain(page, order, mt);
- 		} while (count > 0 && !list_empty(list));
-@@ -1499,7 +1699,15 @@ static void free_one_page(struct zone *zone, struct page *page,
- 	 * valid luf_key can be passed only if order == 0.
- 	 */
- 	VM_WARN_ON(luf_key && order);
--	set_page_luf_key(page, luf_key);
-+
-+	/*
-+	 * Update page's zone_ugen and zone's batch only if a valid
-+	 * luf_key was passed.
-+	 */
-+	if (luf_key) {
-+		set_page_zone_ugen(page, (unsigned short)zone->zone_ugen);
-+		update_zone_batch(zone, luf_key);
-+	}
- 
- 	split_large_buddy(zone, page, pfn, order, fpi_flags);
- 	spin_unlock_irqrestore(&zone->lock, flags);
-@@ -1659,7 +1867,7 @@ static inline unsigned int expand(struct zone *zone, struct page *page, int low,
- 		if (set_page_guard(zone, &page[size], high))
- 			continue;
- 
--		if (page_luf_key(&page[size]))
-+		if (page_zone_ugen(zone, &page[size]))
- 			tail = true;
- 
- 		__add_to_free_list(&page[size], zone, high, migratetype, tail);
-@@ -1677,7 +1885,7 @@ static __always_inline void page_del_and_expand(struct zone *zone,
- 	int nr_pages = 1 << high;
- 
- 	__del_page_from_free_list(page, zone, high, migratetype);
--	if (unlikely(!luf_takeoff_check_and_fold(page)))
-+	if (unlikely(!luf_takeoff_check_and_fold(zone, page)))
- 		VM_WARN_ON(1);
- 	nr_pages -= expand(zone, page, low, high, migratetype);
- 	account_freepages(zone, -nr_pages, migratetype);
-@@ -2199,7 +2407,7 @@ steal_suitable_fallback(struct zone *zone, struct page *page,
- 		unsigned int nr_added;
- 
- 		del_page_from_free_list(page, zone, current_order, block_type);
--		if (unlikely(!luf_takeoff_check_and_fold(page)))
-+		if (unlikely(!luf_takeoff_check_and_fold(zone, page)))
- 			VM_WARN_ON(1);
- 		change_pageblock_range(page, current_order, start_type);
- 		nr_added = expand(zone, page, order, current_order, start_type);
-@@ -2438,12 +2646,12 @@ static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
- 			WARN_ON_ONCE(ret == -1);
- 			if (ret > 0) {
- 				spin_unlock_irqrestore(&zone->lock, flags);
--				luf_takeoff_end();
-+				luf_takeoff_end(zone);
- 				return ret;
- 			}
- 		}
- 		spin_unlock_irqrestore(&zone->lock, flags);
--		luf_takeoff_end();
-+		luf_takeoff_end(zone);
- 	}
- 
- 	return false;
-@@ -2644,12 +2852,15 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
- 		 * pages are ordered properly.
- 		 */
- 		list_add_tail(&page->pcp_list, list);
-+
-+		/*
-+		 * Reset all the luf fields.  tlb shootdown will be
-+		 * performed at luf_takeoff_end() below if needed.
-+		 */
-+		set_page_private(page, 0);
- 	}
- 	spin_unlock_irqrestore(&zone->lock, flags);
--	/*
--	 * Check and flush before using the pages taken off.
--	 */
--	luf_takeoff_end();
-+	luf_takeoff_end(zone);
- 
- 	return i;
- }
-@@ -3163,7 +3374,7 @@ int __isolate_free_page(struct page *page, unsigned int order, bool willputback)
- 	}
- 
- 	del_page_from_free_list(page, zone, order, mt);
--	if (unlikely(!willputback && !luf_takeoff_check_and_fold(page)))
-+	if (unlikely(!willputback && !luf_takeoff_check_and_fold(zone, page)))
- 		VM_WARN_ON(1);
- 
- 	/*
-@@ -3262,7 +3473,7 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
- 
- 			if (!page) {
- 				spin_unlock_irqrestore(&zone->lock, flags);
--				luf_takeoff_end();
-+				luf_takeoff_end(zone);
- 				return NULL;
- 			}
- 		}
-@@ -3270,7 +3481,7 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
- 		/*
- 		 * Check and flush before using the pages taken off.
- 		 */
--		luf_takeoff_end();
-+		luf_takeoff_end(zone);
- 	} while (check_new_pages(page, order));
- 
- 	__count_zid_vm_events(PGALLOC, page_zonenum(page), 1 << order);
-@@ -3360,7 +3571,7 @@ struct page *__rmqueue_pcplist(struct zone *zone, unsigned int order,
- 		}
- 
- 		list_for_each_entry(page, list, pcp_list) {
--			if (luf_takeoff_check_and_fold(page)) {
-+			if (luf_takeoff_check_and_fold(NULL, page)) {
- 				list_del(&page->pcp_list);
- 				pcp->count -= 1 << order;
- 				break;
-@@ -3395,7 +3606,7 @@ static struct page *rmqueue_pcplist(struct zone *preferred_zone,
- 	pcp = pcp_spin_trylock(zone->per_cpu_pageset);
- 	if (!pcp) {
- 		pcp_trylock_finish(UP_flags);
--		luf_takeoff_end();
-+		luf_takeoff_end(NULL);
- 		return NULL;
- 	}
- 
-@@ -3412,7 +3623,7 @@ static struct page *rmqueue_pcplist(struct zone *preferred_zone,
- 	/*
- 	 * Check and flush before using the pages taken off.
- 	 */
--	luf_takeoff_end();
-+	luf_takeoff_end(NULL);
- 	if (page) {
- 		__count_zid_vm_events(PGALLOC, page_zonenum(page), 1 << order);
- 		zone_statistics(preferred_zone, zone, 1);
-@@ -3451,6 +3662,7 @@ struct page *rmqueue(struct zone *preferred_zone,
- 							migratetype);
- 
- out:
-+
- 	/* Separate test+clear to avoid unnecessary atomics */
- 	if ((alloc_flags & ALLOC_KSWAPD) &&
- 	    unlikely(test_bit(ZONE_BOOSTED_WATERMARK, &zone->flags))) {
-@@ -5059,7 +5271,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 	/*
- 	 * Check and flush before using the pages taken off.
- 	 */
--	luf_takeoff_end();
-+	luf_takeoff_end(NULL);
- 
- 	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_account);
- 	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_account);
-@@ -5069,7 +5281,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 
- failed_irq:
- 	pcp_trylock_finish(UP_flags);
--	luf_takeoff_end();
-+	luf_takeoff_end(NULL);
- 
- failed:
- 	page = __alloc_pages_noprof(gfp, 0, preferred_nid, nodemask);
-@@ -7235,7 +7447,7 @@ unsigned long __offline_isolated_pages(unsigned long start_pfn,
- 		VM_WARN_ON(get_pageblock_migratetype(page) != MIGRATE_ISOLATE);
- 		order = buddy_order(page);
- 		del_page_from_free_list(page, zone, order, MIGRATE_ISOLATE);
--		if (unlikely(!luf_takeoff_check_and_fold(page)))
-+		if (unlikely(!luf_takeoff_check_and_fold(zone, page)))
- 			VM_WARN_ON(1);
- 		pfn += (1 << order);
- 	}
-@@ -7243,7 +7455,7 @@ unsigned long __offline_isolated_pages(unsigned long start_pfn,
- 	/*
- 	 * Check and flush before using the pages taken off.
- 	 */
--	luf_takeoff_end();
-+	luf_takeoff_end(zone);
- 
- 	return end_pfn - start_pfn - already_offline;
- }
-@@ -7305,7 +7517,7 @@ static void break_down_buddy_pages(struct zone *zone, struct page *page,
- 		if (set_page_guard(zone, current_buddy, high))
- 			continue;
- 
--		if (page_luf_key(current_buddy))
-+		if (page_zone_ugen(zone, current_buddy))
- 			tail = true;
- 
- 		add_to_free_list(current_buddy, zone, high, migratetype, tail);
-@@ -7337,7 +7549,7 @@ bool take_page_off_buddy(struct page *page)
- 
- 			del_page_from_free_list(page_head, zone, page_order,
- 						migratetype);
--			if (unlikely(!luf_takeoff_check_and_fold(page_head)))
-+			if (unlikely(!luf_takeoff_check_and_fold(zone, page_head)))
- 				VM_WARN_ON(1);
- 			break_down_buddy_pages(zone, page_head, page, 0,
- 						page_order, migratetype);
-@@ -7353,7 +7565,7 @@ bool take_page_off_buddy(struct page *page)
- 	/*
- 	 * Check and flush before using the pages taken off.
- 	 */
--	luf_takeoff_end();
-+	luf_takeoff_end(zone);
- 	return ret;
- }
- 
-@@ -7372,6 +7584,13 @@ bool put_page_back_buddy(struct page *page)
- 		int migratetype = get_pfnblock_migratetype(page, pfn);
- 
- 		ClearPageHWPoisonTakenOff(page);
-+
-+		/*
-+		 * Reset all the luf fields.  tlb shootdown has already
-+		 * been performed by take_page_off_buddy().
-+		 */
-+		set_page_private(page, 0);
-+
- 		__free_one_page(page, pfn, zone, 0, migratetype, FPI_NONE, 0);
- 		if (TestClearPageHWPoison(page)) {
- 			ret = true;
-diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-index e152b22fbba8a..b23d3ed34ec07 100644
---- a/mm/page_reporting.c
-+++ b/mm/page_reporting.c
-@@ -118,7 +118,8 @@ page_reporting_drain(struct page_reporting_dev_info *prdev,
- 
- 		/*
- 		 * Ensure private is zero before putting into the
--		 * allocator.
-+		 * allocator.  tlb shootdown has already been performed
-+		 * at isolation.
- 		 */
- 		set_page_private(page, 0);
- 
-@@ -194,7 +195,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 		if (PageReported(page))
- 			continue;
- 
--		if (unlikely(consider_pend && !luf_takeoff_check(page))) {
-+		if (unlikely(consider_pend && !luf_takeoff_check(zone, page))) {
- 			VM_WARN_ON(1);
- 			continue;
- 		}
-@@ -238,7 +239,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 		/*
- 		 * Check and flush before using the pages taken off.
- 		 */
--		luf_takeoff_end();
-+		luf_takeoff_end(zone);
- 
- 		/* begin processing pages in local list */
- 		err = prdev->report(prdev, sgl, PAGE_REPORTING_CAPACITY);
-@@ -283,7 +284,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 	/*
- 	 * Check and flush before using the pages taken off.
- 	 */
--	luf_takeoff_end();
-+	luf_takeoff_end(zone);
- 
- 	return err;
- }
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 0cb13e8fcd739..ebe91ff1bcb16 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -650,7 +650,11 @@ static unsigned long new_luf_ugen(void)
- {
- 	unsigned long ugen = atomic_long_inc_return(&luf_ugen);
- 
--	if (!ugen)
-+	/*
-+	 * Avoid zero even in unsigned short range so as to treat
-+	 * '(unsigned short)ugen == 0' as invalid.
-+	 */
-+	if (!(unsigned short)ugen)
- 		ugen = atomic_long_inc_return(&luf_ugen);
- 
- 	return ugen;
--- 
-2.17.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
