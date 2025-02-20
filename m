@@ -1,134 +1,104 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.120])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B08A1FECD8;
-	Thu, 20 Feb 2025 16:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE78B1CA84;
+	Thu, 20 Feb 2025 16:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740067207; cv=none; b=iBTEM1WyXgCqOhhzNA8a6N4oaoIm0mTFA6KhsU9zD6GBZ8Bj5g10GlJUa4b9CBJ2T/jaufFkNRx4ip2bOFjRThLby4u0QLvRgMospPo1EesWdzOyElx2xn8ZoePPrvxZYXVeNaSEoDXyYDPWsKDP4BbyPVSQg4RHSs2Yb605Foc=
+	t=1740067221; cv=none; b=vFtRbTM50aEKVGm45wc3EYcN7eHSerGqHlX/pwtc7/9+bELH9IrLC+NcSQPx21ggLB66WV0ogQ3EGug/3gdIpfgPPclTeMxQS4MSu41dV5zn6nmNRG0RLVrnuDBJfChnBe8561X1kRJPJW2TvcXpoD4uvpXgyl4beKg/u2fbrCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740067207; c=relaxed/simple;
-	bh=GLKbcC3ae72AZ7nESSdOgYNj0ol85ebzOyHSvnHXZHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEc2+TRzMYpF78smf6cFIBNIjoQoX3soWeoGEQmIDWZKub+YenUDW2Ff4HYrXgOJiN6RDmSD/DlxNiaulu5YKGTciMIzF7Ipet3zvsgQVADuhi/bYkfFn2ytO8XsArVFAQEHb+TcEi83+vzg7oPdpVkn+olvVIPQI1dxtzytYNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=jDqO7kjd; arc=none smtp.client-ip=212.42.244.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="jDqO7kjd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1740066880; bh=GLKbcC3ae72AZ7nESSdOgYNj0ol85ebzOyHSvnHXZHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jDqO7kjdUAwCYHOwrzNre8nXySaFwgR1XN+9uhYa9JKm3YsUFS/JC/diif4Pz+3fG
-	 5LvX8tp5JyQTQJFsGBz1+OOjNdc4JT0x8zlLQreb0QulHhPi4XHTxGVACn+kZ7ihrq
-	 7IvFPUSL589un9VtwLsqfAd5w7PdGEOGPmmTHU8o=
-Received: from [212.42.244.71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
-	(envelope-from <n.schier@avm.de>)
-	id 67b75040-038b-7f0000032729-7f0000019174-1
-	for <multiple-recipients>; Thu, 20 Feb 2025 16:54:40 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Thu, 20 Feb 2025 16:54:40 +0100 (CET)
-Received: from l-nschier-nb (unknown [IPv6:2001:9e8:9e4:1f01:9fb7:d3c6:7f35:9b14])
-	by mail-auth.avm.de (Postfix) with ESMTPSA id 4DD318083B;
-	Thu, 20 Feb 2025 16:54:40 +0100 (CET)
-Date: Thu, 20 Feb 2025 16:54:39 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH 3/4] kbuild: slim down package for building external
- modules
-Message-ID: <20250220-kickass-famous-kittiwake-c11f5b@l-nschier-nb>
-References: <20240727074526.1771247-1-masahiroy@kernel.org>
- <20240727074526.1771247-4-masahiroy@kernel.org>
- <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
- <20250220-red-antelope-of-education-5417aa@l-nschier-nb>
- <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
+	s=arc-20240116; t=1740067221; c=relaxed/simple;
+	bh=lITit8E8HgMiorpzx6jMrHL0bTT4WYvXtwGYjILa31g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gh6M5k5DvEJUWEwUCscFLzOufhwNLuHFdi6jiE68OHHN7/HTlsOFiy3S7GEOO6dThsokvheaLcLRkFtd8V7B6vXql+hQb0KJv4omakMyaFe78X8bdCXo4PudxyL8DPb4nqSE5LNeB/VbKrnES43vVOflazigNHiCwONPbX8pW4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4bda3ea7076so751639137.0;
+        Thu, 20 Feb 2025 08:00:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740067217; x=1740672017;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8DP/IzhvLEYt7X5yzWJGnuxtGhjL06pFsb15h3dFGzY=;
+        b=owpDX88XxyCPmze/u1UzHJjb40GNmrJh1h0fQWN4/qdxi9jPWyG9rER80T1IMBtrY3
+         IZeOJS7xzOtOSp18p05uF5e4eZCN1wVZ9RjPATQoPqZEeyGuTXWN/y5FBRj6crnGOPpm
+         C7Y/m8LqGPc/NSYC/EBvM5fSUiPxw+jtg55lJo72hdiy0stzLpMXhPQm/ux2ZU3HBM49
+         7n0fOucF2Taaiy45t0PEoiDK45b0XjaJP3wrq7OdFnwEEBhQJFyumL3zEi5zh/9c+PW2
+         RWFSon4CnCKppVtslm7HmG9sYegS+KS/+njo9pPTBbm+OuctVuPe77NQBPlQklZjH6yJ
+         FWRg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8R27ypKL1fPzxeK9sa51kXLHzbCvpdBfvdJqWhHCG7T5f3kJuXJvRALnNtMqdT/Q07zhMchUk/uBNti4=@vger.kernel.org, AJvYcCWzMb694+LoMLARfDmc55ZsqqN2xKD7lVBA6MTIzmWR1jBXEhxOF/RNuWkACfK8p9vO+EyMmwl+c2koJVjVtIaBJHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKG0z5FItZnp8rtyGNT+Tkl3WKEzy/Q6pjsPg444EPxrbOUJtP
+	BuqeFeC1e8IXyeyLOq2gdW6QDr25qxptsFanfHKirV1kpaY4GrYpK7rcAz5w
+X-Gm-Gg: ASbGncttscPaRcQcgyTdZ1whOlx8+XwQcrdsNoy3naOWbcZf7sSmyzTmiZLwmUdySUJ
+	+DWqVQUsGrXZTeQN8u6aHRHDYmRSpJget3smGUb4K/TlcYLmjDQLeFNnTW1u+lzuVgsk4oc8I1S
+	kqsPZ9BxWxYzOBs+GglX/Wub6meXTbYMXSI+z6Kej+rCI4wDFlAHdqvk5rRGKq2ZpwdkwcfcabW
+	RomuAlsAq1ERuLaiAQqTlSibSUK2NMYgap/fNBT5wSJXmB1VZWSLmN01YN9yzI+yjXn2ASmds7C
+	CWFEnPj9qaPGG105JkhGgQBhl96STzt0/iQJbqtNMpBEVGEyB6WfCg==
+X-Google-Smtp-Source: AGHT+IFL444QRSN4eUstz1CBWE6gNgO4/kChxX6sG+E1dTMbjGSg5oudtsH0eO6qwr87Kfx28ap8qQ==
+X-Received: by 2002:a05:6102:441b:b0:4bd:39c7:804d with SMTP id ada2fe7eead31-4be98bc9720mr1953861137.0.1740067217139;
+        Thu, 20 Feb 2025 08:00:17 -0800 (PST)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4be52eee266sm2238343137.24.2025.02.20.08.00.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 08:00:16 -0800 (PST)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4bd3989f027so670258137.1;
+        Thu, 20 Feb 2025 08:00:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWDOV+d9P7A7aU63bdujX54PCi4P8nyw53A/vg5CECsPld5xEYAEypq3CxxmWAEcDBU9c8e2RMtzEufT+S9oS8CY+8=@vger.kernel.org, AJvYcCXzTV1z5em0DvSa5XmZCz4tVpDJ8tJSqH47R1S5QbVzLQAKWgL3Q1OCjlcA+0zONvuUXTxKVA5P9onSBQg=@vger.kernel.org
+X-Received: by 2002:a05:6102:5c0c:b0:4be:5b97:ea09 with SMTP id
+ ada2fe7eead31-4be990d7724mr1561355137.1.1740067216583; Thu, 20 Feb 2025
+ 08:00:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
-X-purgate-ID: 149429::1740066880-5220FE17-CD29D720/0/0
-X-purgate-type: clean
-X-purgate-size: 2696
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
+References: <20250215131843.228905-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250215131843.228905-1-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 20 Feb 2025 17:00:05 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW4sN6x5C7iQgiZD=Vmzg=BA1v+WjS7aapXmuM2_y8JvQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnZothNAEF-GE_ObB0k-KNQl8S7t-UJTvE2SkEwVyzmqKOynwhwqd67DpU
+Message-ID: <CAMuHMdW4sN6x5C7iQgiZD=Vmzg=BA1v+WjS7aapXmuM2_y8JvQ@mail.gmail.com>
+Subject: Re: [PATCH] soc: renesas: rz-sysc: Suppress binding attributes
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: magnus.damm@gmail.com, john.madieu.xa@bp.renesas.com, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 20, 2025 at 08:03:32AM -0700, Jeffrey Hugo wrote:
-> On 2/20/2025 3:03 AM, Nicolas Schier wrote:
-> > On Tue, Feb 18, 2025 at 01:25:38PM -0700, Jeffrey Hugo wrote:
-> > > On 7/27/2024 1:42 AM, Masahiro Yamada wrote:
-> > > > Exclude directories and files unnecessary for building external modules:
-> > > > 
-> > > >    - include/config/  (except include/config/auto.conf)
-> > > >    - scripts/atomic/
-> > > >    - scripts/dtc/
-> > > >    - scripts/kconfig/
-> > > >    - scripts/mod/mk_elfconfig
-> > > >    - scripts/package/
-> > > >    - scripts/unifdef
-> > > >    - .config
-> > > 
-> > > Please revert this (the removal of .config).
-> > > 
-> > > I got some strange reports that our external module install broke, and
-> > > traced it to this change.  Our external module references the .config
-> > > because we have different logic for the build depending on if other, related
-> > > modules are present or not.
-> > > 
-> > > Also, it looks like this broke DKMS for some configurations, which not only
-> > > impacts DKMS itself [1] but also downstream projects [2].
-> > > 
-> > > While DKMS may be updated going forward to avoid this issue, there are
-> > > plenty of affected version out in the wild.
-> > > 
-> > > Also, I haven't surveyed every distro, but it looks like Ubuntu still
-> > > packages the .config with their headers in their upcoming "Plucky" release
-> > > based on 6.12.  I suspect they wouldn't do that if they didn't feel it was
-> > > needed/useful.
-> > > 
-> > > -Jeff
-> > > 
-> > > [1]: https://github.com/dell/dkms/issues/464
-> > > [2]: https://github.com/linux-surface/linux-surface/issues/1654
-> > 
-> > Hi Jeff,
-> > 
-> > do you know the related thread [1]?  According to the last mail, DKMS
-> > has fixed its issue already in December.
-> 
-> DKMS tip might be fixed, but production versions are in various distros,
-> which are not updated.  Therefore actual users are impacted by this.
-> 
-> What happened to the #1 rule of kernel, that we do not break users?
+On Sat, 15 Feb 2025 at 14:18, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The matching data for the rz-sysc driver is marked with __initconst, which
+> means it is discarded after initialization. Because of this, attempting to
+> unbind/bind the driver through sysfs after system boot can lead to "Unable
+> to handle kernel paging request at virtual address" errors due to accessing
+> freed memory.
+>
+> Since the System Controller (SYSC) is an essential block for Renesas SoCs,
+> suppress binding attributes to prevent them being exposed in sysfs,
+> avoiding potential issues.
+>
+> Fixes: 1660e5ea6a3e ("soc: renesas: Add SYSC driver for Renesas RZ family")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-I think, Masahiro already provided valid and profound reasons for
-keeping it the way it is.  Users of run-time kernel interfaces are not
-affected by the change.  Concretely reported issues were, as far as I
-know, only a matter of specific non-official way to work with .config
-for other reasons than just building external kernel modules in the way
-it is thought to work.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.15.
 
-Kind regards,
-Nicolas
+>  drivers/soc/renesas/rz-sysc.c | 1 +
 
-> This still needs to be reverted.
-> 
-> -Jeff
-> 
-> > 
-> > Kind regards,
-> > Nicolas
-> > 
-> > [1]: https://lore.kernel.org/linux-kbuild/CAK7LNARqEOVOzP5vdUVF0KxQBNb9xtYs-COSXXWDMpBzGaLGow@mail.gmail.com/T/#m95f48caf46357a41c1df5e038e227a01ab89dbda
-> 
+Looks like there are more opportunities for similar changes?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
