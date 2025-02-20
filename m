@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D82D1E98FF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA1F1E9919
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740037477; cv=none; b=oGY71lgQMq8E95Dvm/pGAY/GIT6uGmBmpTo2Sh2RH+n6N0d5JWhPyBiAiP4u/lz+tcu7WsHFiqteCZVZ2DRWcOvqfGvI2aYTrfB4RXCXG8sYQM7t0gThm2G1aUJoXFM2/0A7HemQf2+1ZZejEP9H3gMNrWN1cyM4rd2lklE3gjA=
+	t=1740037477; cv=none; b=YrJTjl2+MZtAU5MfL2vBmoS4KZRFfbin8lKdJWmk72wserHtzH02qBka4VAyVJgRS0h/l50M0gcuaNbdqho2eCAdxANRi7qUUGzXHrdyAewIgEUI7uZ+rMWotc7HOiP4RlK4qMO/ob8dbEitJ1udMCDdroORCemXVeot2G72ryY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740037477; c=relaxed/simple;
-	bh=G5incWbHtDEe7N+cSOTb3Owqxt38o2con0kl3Rz0mSA=;
+	bh=e6uUNN/5YcOI8FAcrOwzJaNiC1Ml4nY7w/gShuB8HF8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PzRJxNbfaKQ2v5entrjJIIp+pzPkP7StPNK8qnXQZEZ38JDiCwWM3ewKPzOYwC11LXO+dIsWVzT08rrcjhBbJ5FzKbbm2d+U8zYJLt488BbHI6LGHe/yGWuAxlf6MOX8aKqTb+HjWAzvVZv26PTP+XRKE8cwIPNAaCSK3iohYUI=
+	 MIME-Version; b=RFV2gnJJ4dJ5Yk5mK+p/1rRYc6/wx6UR9NuMhKPu0jZRI0XXKlKv4CtbJcgBH1B6rn8DZYrgmSUNOG9FzaunF/doK4CIT5NbyTJYC4po7Jp2YE1FTgIKIv6x8asC5MJ2t0h3Tbedv+rEeg061Hc04SwYs+MC9Zzw0xuAYMDFlSI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tl1EV-0004TU-1C; Thu, 20 Feb 2025 08:44:31 +0100
+	id 1tl1EV-0004TR-1C; Thu, 20 Feb 2025 08:44:31 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tl1EU-001tqX-2F;
+	id 1tl1EU-001tqQ-21;
 	Thu, 20 Feb 2025 08:44:30 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tl1EU-00CC2j-21;
+	id 1tl1EU-00CC2E-1q;
 	Thu, 20 Feb 2025 08:44:30 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Ulf Hansson <ulf.hansson@linaro.org>
@@ -40,9 +40,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
 	Christian Loehle <christian.loehle@arm.com>
-Subject: [PATCH v2 6/6] mmc: sdhci: prevent command execution after undervoltage shutdown
-Date: Thu, 20 Feb 2025 08:44:29 +0100
-Message-Id: <20250220074429.2906141-7-o.rempel@pengutronix.de>
+Subject: [PATCH v2 3/6] mmc: core: refactor _mmc_suspend() for undervoltage handling
+Date: Thu, 20 Feb 2025 08:44:26 +0100
+Message-Id: <20250220074429.2906141-4-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250220074429.2906141-1-o.rempel@pengutronix.de>
 References: <20250220074429.2906141-1-o.rempel@pengutronix.de>
@@ -58,63 +58,80 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Introduce an emergency_stop flag in struct mmc_host to block further
-MMC/SD commands after an undervoltage shutdown. If emergency_stop is
-set, sdhci_send_command() will reject new requests with -EBUSY and log a
-warning. This helps diagnose and identify code paths that may still
-attempt writes after the undervoltage shutdown sequence has completed.
+Introduce an is_undervoltage parameter to _mmc_suspend() to apply a
+short power-off sequence and optionally flush the cache. This refactoring
+prepares for undervoltage support in a follow-up patch.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/mmc/core/mmc.c   | 1 +
- drivers/mmc/host/sdhci.c | 9 +++++++++
- include/linux/mmc/host.h | 1 +
- 3 files changed, 11 insertions(+)
+ drivers/mmc/core/mmc.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index e626213e7a52..8aa5881293d8 100644
+index 6a23be214543..86b608843232 100644
 --- a/drivers/mmc/core/mmc.c
 +++ b/drivers/mmc/core/mmc.c
-@@ -2326,6 +2326,7 @@ static int _mmc_handle_undervoltage(struct mmc_host *host)
- 		pr_err("%s: Undervoltage emergency stop failed\n",
- 			mmc_hostname(host));
+@@ -2104,20 +2104,27 @@ static int _mmc_flush_cache(struct mmc_host *host)
+ 	return err;
+ }
  
-+	host->emergency_stop = 1;
- 	mmc_card_set_removed(host->card);
- 
- out:
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index f4a7733a8ad2..8d67f27e7d9e 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1658,6 +1658,15 @@ static bool sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
- 
- 	WARN_ON(host->cmd);
- 
-+	if (host->mmc->emergency_stop) {
-+		pr_warn("%s: Ignoring normal request, emergency stop is active\n",
-+			mmc_hostname(host->mmc));
-+		WARN_ON_ONCE(1);
+-static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
++static int _mmc_suspend(struct mmc_host *host, bool is_suspend,
++			bool is_undervoltage)
+ {
++	unsigned int notify_type;
+ 	int err = 0;
+-	unsigned int notify_type = is_suspend ? EXT_CSD_POWER_OFF_SHORT :
+-					EXT_CSD_POWER_OFF_LONG;
 +
-+		cmd->error = -EBUSY;
-+		return true;
++	if (is_undervoltage || is_suspend)
++		notify_type = EXT_CSD_POWER_OFF_SHORT;
++	else
++		notify_type = EXT_CSD_POWER_OFF_LONG;
+ 
+ 	mmc_claim_host(host);
+ 
+ 	if (mmc_card_suspended(host->card))
+ 		goto out;
+ 
+-	err = _mmc_flush_cache(host);
+-	if (err)
+-		goto out;
++	if (is_undervoltage) {
++		err = _mmc_flush_cache(host);
++		if (err)
++			goto out;
 +	}
-+
- 	/* Initially, a command has no error */
- 	cmd->error = 0;
  
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 4e147ad82804..5dfe2cdde59f 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -501,6 +501,7 @@ struct mmc_host {
- 	unsigned int		can_dma_map_merge:1; /* merging can be used */
- 	unsigned int		vqmmc_enabled:1; /* vqmmc regulator is enabled */
- 	unsigned int		undervoltage:1;	 /* Undervoltage state */
-+	unsigned int		emergency_stop:1; /* Emergency stop. No transfers are allowed. */
+ 	if (mmc_can_poweroff_notify(host->card) &&
+ 	    ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend ||
+@@ -2144,7 +2151,7 @@ static int mmc_suspend(struct mmc_host *host)
+ {
+ 	int err;
  
- 	int			rescan_disable;	/* disable card detection */
- 	int			rescan_entered;	/* used with nonremovable devices */
+-	err = _mmc_suspend(host, true);
++	err = _mmc_suspend(host, true, false);
+ 	if (!err) {
+ 		pm_runtime_disable(&host->card->dev);
+ 		pm_runtime_set_suspended(&host->card->dev);
+@@ -2191,7 +2198,7 @@ static int mmc_shutdown(struct mmc_host *host)
+ 		err = _mmc_resume(host);
+ 
+ 	if (!err)
+-		err = _mmc_suspend(host, false);
++		err = _mmc_suspend(host, false, false);
+ 
+ 	return err;
+ }
+@@ -2215,7 +2222,7 @@ static int mmc_runtime_suspend(struct mmc_host *host)
+ 	if (!(host->caps & MMC_CAP_AGGRESSIVE_PM))
+ 		return 0;
+ 
+-	err = _mmc_suspend(host, true);
++	err = _mmc_suspend(host, true, false);
+ 	if (err)
+ 		pr_err("%s: error %d doing aggressive suspend\n",
+ 			mmc_hostname(host), err);
 -- 
 2.39.5
 
