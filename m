@@ -1,104 +1,107 @@
-Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99C1FC7E8;
-	Thu, 20 Feb 2025 14:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8B21FF5F4;
+	Thu, 20 Feb 2025 14:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062376; cv=none; b=XpOs4crRxa7jK9E0XfeLgmmcOkhilPjIKgErgZd9SQdzkgE4IAotK3F/Ujn1Q5bZH7RR1zpIOZbGpIHnSMjXsaEa37wYNm3Q0Z3g6slCXT8gogT+/NrCLYKcLpOAHHxvaazjnj6ZKDBNqwwycjmFARrTeebUdIJdAAnItrdZMso=
+	t=1740062377; cv=none; b=B/ZTAjdgSZH66W8WJYChX7iQQlX5RYpSFEDHMrzqrH3SNltrrd6tLsw0b0nGp3bg7vscLpN/3jbj4a8ozCCFDye0ebIGXUbSU3mzi5lw2pvZhoXd8hYFnDZ2vW4KyHX5tdSVqQFUL88d876sblo4tZXhuYYaYaRUB5chs3YZo2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062376; c=relaxed/simple;
-	bh=LcSlaUKd8gp4f67QCYONctlj5MrgKx7MxQCQ8IbGlws=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y7RNwTJ15VltTzKKlgRBdU1tFINMKp8cFEOteK9Rxf3ykdP1VuXWxSj1QDXCWTFyl/Zzg6d893HME03hVZ79lp0Z9wL5CCn8/WxcZE9eSDEHk+h3J+fw102Teon91KUUw5zxt/n94OQTQ6r9f9ZvrgeCWiafL16uyNzbQcVl4y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=LV6b5JX3; arc=none smtp.client-ip=89.58.62.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+	s=arc-20240116; t=1740062377; c=relaxed/simple;
+	bh=v+81w0g/n3oTHfg+Hd5w5U9CvQiJXdr4f0oeUc7t3sI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pfwH1MvEsM/mx0eUfpxjxNf5ccpA/hOopkpXdq10H65vm/QLM030A3qTvEbhxRNzykHwXvc3/roV2RVzcpGDFS9aRpPosuky2//hMaHrGRGrB/mkEUdzW5l6GGT0Glj+1D+wtteuOro9Xa/wPO5V3Lq2JHYizcspFwsGezlkWlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jq4xU9fI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="LV6b5JX3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1740062093;
-	bh=LcSlaUKd8gp4f67QCYONctlj5MrgKx7MxQCQ8IbGlws=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
-	 Content-Transfer-Encoding:Message-ID:Date:From:Reply-To:Subject:To:
-	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
-	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
-	b=LV6b5JX3cwKegcP8ZA3zOd5pVdDqr7uvtIxZaxB1WGM3XuRTliTErn6yKSG8cfILB
-	 DXU6pGL0KlIFlsCVs1bb7wrtfNLNAtmhS7gYjivWIQCLiJcZrdfynB+B5uO63LdRYL
-	 ji1B5i4gRc3icHDpxLB1RfvdKhEn7WNDgCzJJaqCMq1tIdXre1kpxfTB1GBP0DbFl4
-	 4D/Jux9yIDtuCUXdnl3SwhE4GMAt3/K8jkqfS0jmAG4nD+q4sAbJ/w5G3HSkP3cRu+
-	 +NgQcJz2gBAyKCbw6dxHtZtStqzL/birU9/9kImd7c2wD/fAnEkIB8G6+cbsGE/p9X
-	 e1DROzYDXnctA==
-Received: from integral2.. (unknown [182.253.126.96])
-	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id D34DB20744A3;
-	Thu, 20 Feb 2025 14:34:50 +0000 (UTC)
-From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
-	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
-	io-uring Mailing List <io-uring@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
-Subject: [PATCH liburing v1 0/3] Fix Compilation Error on Android and Some Cleanup
-X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
-Date: Thu, 20 Feb 2025 21:34:19 +0700
-Message-Id: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jq4xU9fI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE5AC4CED1;
+	Thu, 20 Feb 2025 14:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740062376;
+	bh=v+81w0g/n3oTHfg+Hd5w5U9CvQiJXdr4f0oeUc7t3sI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Jq4xU9fIytnCQo4hM7XAn3x/Co3QNMrgKqBG2oTdrrvH7kzyc9m9RmTdNEJ0X0dwt
+	 B0smeoyhHj35IXZC9KreXT7yo3fCV3Q8067u2Lvfe+288zO6cS1pbmZ4585cGbWAiB
+	 VclyZSiGYyHdXH1v+zqU51ldnHajxScHCGoGMaPjKL1ferZAp+wbQyPHlcrV0hgE7/
+	 l7dSBhQDOf7BhK3jG+pcbz/Eb35QuLbQaotx+W4qETTaRVJPJHzltJmGT7JZDIgIHK
+	 AUr9U4XwE05wxbb1Hr9egAtgDw7SfDt+3b0CO7xKaMh3IW2eraFuseFzoWtEOrpjUa
+	 6vBMInJgWkYGg==
+Message-ID: <fd4263f1-3a8b-440f-aa89-af331d3b9829@kernel.org>
+Date: Thu, 20 Feb 2025 15:39:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: trivial-devices: Add ti,tps546b24
+To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
+Cc: Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>
+References: <c79f69d0d37e7eb61f93f5dea69148b7756a3ee5.1740056021.git.michal.simek@amd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c79f69d0d37e7eb61f93f5dea69148b7756a3ee5.1740056021.git.michal.simek@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Jens,
+On 20/02/2025 13:53, Michal Simek wrote:
+> Describe TPS546B24 DC-DC converter which is very similar to tps546d24
+> version. The difference is that B version handles up to 20A. D version up
+> to 40A.
+> 
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
+> 
 
-Another day in the thrilling world of cross-platform compatibility...
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Alviro discovered that some Android versions are missing `aligned_alloc()`
-in `<stdlib.h>`, leading to a compilation error on Termux 0.118.0:
-
-```
-cmd-discard.c:383:11: warning: call to undeclared library function \
-'aligned_alloc' with type 'void *(unsigned long, unsigned long)'; ISO \
-C99 and later do not support implicit function declarations \
-[-Wimplicit-function-declaration]
-
-        buffer = aligned_alloc(lba_size, lba_size);
-                 ^
-```
-
-To resolve this without rewriting large portions of liburing tests,
-introduce a helper function that wraps `posix_memalign()` and provides
-our own `aligned_alloc()`.
-
-While we're at it, there's a redundant double negation lurking in
-`liburing.h`. Let's clean that up too.  
-
-Also, to prevent yet another round of confusion like what happened in
-PR #1336, document the history of `io_uring_get_sqe()` in the header
-file.
-
-Ref: https://github.com/axboe/liburing/pull/1336
-
-Signed-off-by: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
-Signed-off-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
----
-
-Ammar Faizi (3):
-  liburing.h: Remove redundant double negation
-  liburing.h: Explain the history of `io_uring_get_sqe()`
-  Fix missing `aligned_alloc()` on some Android devices
-
- examples/helpers.c     | 10 ++++++++++
- examples/helpers.h     |  7 +++++++
- examples/reg-wait.c    |  2 ++
- src/include/liburing.h | 21 ++++++++++++++++++++-
- test/helpers.c         | 10 ++++++++++
- test/helpers.h         |  8 ++++++++
- 6 files changed, 57 insertions(+), 1 deletion(-)
-
-
-base-commit: 66b071d1470ae787d47d4cb8d9cb3836249baf61
--- 
-Ammar Faizi
+Best regards,
+Krzysztof
