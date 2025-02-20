@@ -1,105 +1,90 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF4F1FBC9E;
-	Thu, 20 Feb 2025 15:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DA51DF75D
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740066966; cv=none; b=Vkq3/3pACjs9h9I9BqkegMOw6z2GZxFR+WIqpjqKwqZR8eOxRhRp0mJ68zL2nqPlkSkeRAC1W+YRA+0zwtUpxS1SD9/N93quLt4619u2F7dzJUcZIDZfgdKojwN/QwBH6ce7qqpGF7JoYxO0fYtLbQmLa0SMYeBOS1KG2R3Yit0=
+	t=1740066966; cv=none; b=aLM9Wn3OAl8i5QiM4xwK7ZNWnur3e5WOrhKDkiwICtHMVCA2YrcK1QvnabKTnd3Y8HhEKgzwcqpNh0ARfUU4uuhKy1/uXmiDdwJ71ZkeeB1c3bJ62mOrLUTGJYK1KwUZFxvqNhZsHrcKaXkutUmSIGtH5M3iN7Se+o3wkJzywco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740066966; c=relaxed/simple;
-	bh=Dd68mWyJibumUB8TwEojxnqCXZ3BFmtso9EvwgpCMTQ=;
+	bh=nhYN2GbUzsXa4cjLPXbV4eUQPu/IKKaTnKG8XoaoATY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4T9IZbZvyuc8j7G8ulIEmuMFfP6ClWKkpnTJsNH1QWEI4CCzeRc3hdin9VIRu237xHF694/Lw/Mr+Tit6YIVOM8gwuHumwnoaC4gX9i4CNNRwfbO7kIKhRfq50NF4zvQHGlc/sjACcGAnQsEbbyqDW0icIigswrUArywoypeQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gvRfdxP1; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=iPOVTcma9Zzh++HCXzFfx/8jiOUPP6f30TU0kF6lR2okijfr3RO/EDuq2+UHw2DHR1STQXrb2zQAIWw3IeQnLekyn0+IAQLCmAWlqWdVVDjvE8OLvVQsIERiw90jQUShWgoQe5cN8yEZ4IHibbZVhYAiNjgUnMAQxe/G7nzkCX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=thybdZfO; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gvRfdxP1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740066962;
-	bh=Dd68mWyJibumUB8TwEojxnqCXZ3BFmtso9EvwgpCMTQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gvRfdxP1yjGqu7HQ7lttCRdMEE4nZ8PLonPHC5dan9B3mNW1GnHKIiDLkkjIj2v3g
-	 KHypzBBQk2cW9FHUWtjDzw4ryElrN1yujKOACsgkVW4B/QXOmrUs+LQ2BYG7Nli+hP
-	 O0K8W5n7G0IjxbxqSTYZ5XTCki04ysZiEtImkwyPARnqBIyobzZTex7ihtm7UrZYIC
-	 dgLhEjpr1FJs3EU81c5mxE81nm5/f+Ux4GfhYn9TGYAyIV/J6FDRpD8aNOLVWuJ+Bo
-	 A2j0WrGnX2umT9I3mFst3Ft6at+hoj4OMwnJV4mHWTPhnaZolCe5GyrsLCg/MWIV9A
-	 siui4kJs6qApQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3E4F617E0E95;
-	Thu, 20 Feb 2025 16:56:01 +0100 (CET)
-Message-ID: <ae34efcd-4fe1-4e45-a1e1-0744138a84b9@collabora.com>
-Date: Thu, 20 Feb 2025 16:56:00 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="thybdZfO"
+Message-ID: <10a50a6c-a6be-4723-80b3-62119f667977@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740066960;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Up76eQNOfacddlQs6IG6ddJKmIeZ0tEzsFl4x96svGY=;
+	b=thybdZfO1kWLW7dneUHxK3W2lJuskGvpikEy0T7i1mCJVlui2m7i/emTde1TfrM5woF6Nn
+	e9agtZ9W5YY941OvQTRP/7VFbwclmcLpMA8eLehw253qrTKxGEb1yz2c7g8QbgqgYhjkyj
+	Cs5Pj6HLKRHHyipCxzgd+B2AT1pxqHo=
+Date: Thu, 20 Feb 2025 10:55:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: usb: mtu3: Add ports property
-To: Macpaul Lin <macpaul.lin@mediatek.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Chunfeng Yun <chunfeng.yun@mediatek.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- Alexandre Mergnat <amergnat@baylibre.com>
-Cc: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
- Macpaul Lin <macpaul@gmail.com>,
- Project_Global_Chrome_Upstream_Group@mediatek.com,
- Chris-qj chen <chris-qj.chen@mediatek.com>
-References: <20250220142230.2530583-1-macpaul.lin@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH net-next] net: cadence: macb: Implement BQL
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, netdev@vger.kernel.org,
+ "David S . Miller" <davem@davemloft.net>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, linux-kernel@vger.kernel.org,
+ Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>
+References: <20250214211643.2617340-1-sean.anderson@linux.dev>
+ <20250218175700.4493dc49@kernel.org>
 Content-Language: en-US
-In-Reply-To: <20250220142230.2530583-1-macpaul.lin@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250218175700.4493dc49@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Il 20/02/25 15:22, Macpaul Lin ha scritto:
-> Define the ports property in the mediatek,mtu3 device tree binding schema.
-> Include definitions for port@0 and port@1, specifying their roles as
-> High Speed (HS) and Super Speed (SS) data buses, respectively.
+On 2/18/25 20:57, Jakub Kicinski wrote:
+> On Fri, 14 Feb 2025 16:16:43 -0500 Sean Anderson wrote:
+>> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+>> index 48496209fb16..63c65b4bb348 100644
+>> --- a/drivers/net/ethernet/cadence/macb_main.c
+>> +++ b/drivers/net/ethernet/cadence/macb_main.c
+>> @@ -1081,6 +1081,9 @@ static void macb_tx_error_task(struct work_struct *work)
+>>  						      tx_error_task);
+>>  	bool			halt_timeout = false;
+>>  	struct macb		*bp = queue->bp;
+>> +	u32			queue_index = queue - bp->queues;
 > 
-> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> nit: breaking reverse xmas tree here
 
-Some SoCs do have SuperSpeed peripheral mode, so for this commit
+It has to happen here since bp isn't available earlier.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-> ---
->   .../devicetree/bindings/usb/mediatek,mtu3.yaml       | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
+>> +	u32			packets = 0;
+>> +	u32			bytes = 0;
+>>  	struct macb_tx_skb	*tx_skb;
+>>  	struct macb_dma_desc	*desc;
+>>  	struct sk_buff		*skb;
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml b/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
-> index d4e187c78a0b..21fc6bbe954f 100644
-> --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
-> @@ -155,6 +155,18 @@ properties:
->         property is used. See graph.txt
->       $ref: /schemas/graph.yaml#/properties/port
->   
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: High Speed (HS) data bus.
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Super Speed (SS) data bus.
-> +
->     enable-manual-drd:
->       $ref: /schemas/types.yaml#/definitions/flag
->       description:
+> 
+>> @@ -3019,6 +3033,7 @@ static int macb_close(struct net_device *dev)
+>>  	netif_tx_stop_all_queues(dev);
+>>  
+>>  	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
+>> +		netdev_tx_reset_queue(netdev_get_tx_queue(dev, q));
+>>  		napi_disable(&queue->napi_rx);
+>>  		napi_disable(&queue->napi_tx);
+> 
+> I think you should reset after napi_disable()? 
+> Lest NAPI runs after the reset and tries to complete on an empty queue..
 
+OK.
 
+--Sean
