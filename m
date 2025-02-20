@@ -1,69 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CE41FAC5E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9F51FC7F1;
+	Thu, 20 Feb 2025 14:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062372; cv=none; b=TusJclk2l5d57QmcOzaEx3azgzUAEESGBdOo5SXwJNZN0K8SbqzvjN4Z8lLGw9GPGMkOOmxvHXXM7frBmb0938kHZ/pXw7O9Sn6g2vs59cG/npr35fEDPhAWCED14JzMsVBQLSxOd3SWxY1MPez0LIBVz8s+ygWt0Nu/FC+O6WM=
+	t=1740062374; cv=none; b=QNKrfZj3id0YyJBU0PryTeBoKseigipqwkQbES4B9pXV2+mTvkRSRieLbfW880Un7ojG1y0rP5j0CCZ67xeHwl51JQLAx4ABQO6+BKHnIsB45pz2PGONckR2LZkAQXImKghBdv3ISJLMzc0LRmJKQ7to73gDU3VD/BjbfeoSB1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062372; c=relaxed/simple;
-	bh=vEyLaVHDdR1C24A3uylVTmInW2SohGDRZTXRBJjZQFA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kt6XGnChoOvDCKcTh3GsAutgzO84KKAXDK+LRO6KcBZkbuzWmbpghOT4lMYMReSnzxa8HvBNwXdfbvdlWLg8ZRA3hrs1tqMsWOwz4yB9/a7KAX3H9ZbXcKNgPwqH9jSgmTW5FA0GnbOIYh8LIyCPkEbSJviwf4pQy4WAPyAduUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcaf+zXt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740062374; c=relaxed/simple;
+	bh=NXzmlJbcyvCFApkcvBVHzM26nc8bwg9PTyW6PRPeox4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F4CUAKc1aZPgV6vRNkbBSVhzAdaatng3ASJc+0uJBAKxSGrMARoUmbn9x7zM0OPitE4XEfutO2vZs08YxC6E2N0nJkj0CprkcLeXz1hmlZ6K8wXlzY9qushvzKOfXFOBSjhhByquuu9AjB/WjiHVLrJ9p1Ut+j2k9270JqygMs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=rl6CRDA9; arc=none smtp.client-ip=89.58.62.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcaf+zXt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B8AC4CED1;
-	Thu, 20 Feb 2025 14:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740062372;
-	bh=vEyLaVHDdR1C24A3uylVTmInW2SohGDRZTXRBJjZQFA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=tcaf+zXtwZGffuDdqq5c8IDxSOmexCoiWboGzi2PppBSNBnxGSqwOr7StOOIaA6z/
-	 KVh1McReelBuZIn6KWIMzy/bgx+RLjdT2Ys1YjnKRe7YFwhkqpn6liQ9pqpCbtxtKR
-	 QnRTZrevlpdfcHpxVJObVO5XJ2oCm3Mowx3tYijMgrOnoAMB0mjQf52wnoHCrIGqWo
-	 BU8kmnnOdZHq28hK15RoGB1jPCZLoHylqYZ8vcjYZpjXXaNYa6wAY7pDL75YkkqY+5
-	 oqKMqasEcgxuzPekQK0e1nG9dfKsFj4irK8QnguZ5LOhuPFYGdueO1QAMVxzaUI5ZV
-	 MRxVbo0bRTMVA==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-kernel@vger.kernel.org
-In-Reply-To: <20250212170403.36619-2-u.kleine-koenig@baylibre.com>
-References: <20250212170403.36619-2-u.kleine-koenig@baylibre.com>
-Subject: Re: (subset) [PATCH] mfd: lp3943: Drop #include <linux/pwm.h> from
- header
-Message-Id: <174006237143.779236.13661749478683671069.b4-ty@kernel.org>
-Date: Thu, 20 Feb 2025 14:39:31 +0000
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="rl6CRDA9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=default; t=1740062095;
+	bh=NXzmlJbcyvCFApkcvBVHzM26nc8bwg9PTyW6PRPeox4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Message-ID:Date:From:
+	 Reply-To:Subject:To:Cc:In-Reply-To:References:Resent-Date:
+	 Resent-From:Resent-To:Resent-Cc:User-Agent:Content-Type:
+	 Content-Transfer-Encoding;
+	b=rl6CRDA9zzbIVO5XlJXKxJ9ifgO0vgYJmlRFNbINzNSaIK6Nwi3wawzFZ6cuRiqCs
+	 ToclivVe6TTC0Oqfu+TTQe1BUPH8kB6SymxNgc+osWFh1ktrMYyX7JQjfzBHw1pmcW
+	 zb8wuelI130vzcbeDuQVFRfTBcCRawrSPnNax5YlOPy6JdRHKXYZ0zDo7Dl5/ISwOu
+	 jonfT+8200Zw5Eopq5ztwSWKkHqESFUIPK43gnJ0IcOg2JVKovAhJwBfJIPzeDZlVS
+	 i959gG2ORFC1JfzBnFA9Zj5GYfugmmAlX/8aP299O9se8/W973vRDAZH34QL2FrTyW
+	 OrMViV/d0EmtA==
+Received: from integral2.. (unknown [182.253.126.96])
+	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id F1D3720744A4;
+	Thu, 20 Feb 2025 14:34:53 +0000 (UTC)
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
+	io-uring Mailing List <io-uring@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
+Subject: [PATCH liburing v1 1/3] liburing.h: Remove redundant double negation
+X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
+Date: Thu, 20 Feb 2025 21:34:20 +0700
+Message-Id: <20250220143422.3597245-2-ammarfaizi2@gnuweeb.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
+References: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
 
-On Wed, 12 Feb 2025 18:04:03 +0100, Uwe Kleine-König wrote:
-> The header doesn't make use of any symbols declared in <linux/pwm.h>.
-> There are tree files that #include <mfd/lp3943.h>. Two of them
-> (i.e. drivers/gpio/gpio-lp3943.c and drivers/mfd/lp3943.c) also don't
-> use any and the third (drivers/pwm/pwm-lp3943.c) has an explicit include
-> of <linux/pwm.h> itself.
-> 
-> So drop the unused include. The intended side effect is that
-> drivers/gpio/gpio-lp3943.c and drivers/mfd/lp3943.c stop importing the
-> "PWM" module namespace.
-> 
-> [...]
+The `enabled` variable is already a boolean, so applying the negation
+operator twice has no effect. Remove it to improves clarity and
+simplicity.
 
-Applied, thanks!
+Signed-off-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+---
+ src/include/liburing.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1/1] mfd: lp3943: Drop #include <linux/pwm.h> from header
-      commit: 5a917e808b56319d977b3062331293136ee1c34c
-
---
-Lee Jones [李琼斯]
+diff --git a/src/include/liburing.h b/src/include/liburing.h
+index 6393599cb3bf..b2d76f3224e2 100644
+--- a/src/include/liburing.h
++++ b/src/include/liburing.h
+@@ -1410,25 +1410,25 @@ IOURINGINLINE bool io_uring_cq_eventfd_enabled(const struct io_uring *ring)
+ 	return !(*ring->cq.kflags & IORING_CQ_EVENTFD_DISABLED);
+ }
+ 
+ /*
+  * Toggle eventfd notification on or off, if an eventfd is registered with
+  * the ring.
+  */
+ IOURINGINLINE int io_uring_cq_eventfd_toggle(struct io_uring *ring,
+ 					     bool enabled)
+ {
+ 	uint32_t flags;
+ 
+-	if (!!enabled == io_uring_cq_eventfd_enabled(ring))
++	if (enabled == io_uring_cq_eventfd_enabled(ring))
+ 		return 0;
+ 
+ 	if (!ring->cq.kflags)
+ 		return -EOPNOTSUPP;
+ 
+ 	flags = *ring->cq.kflags;
+ 
+ 	if (enabled)
+ 		flags &= ~IORING_CQ_EVENTFD_DISABLED;
+ 	else
+ 		flags |= IORING_CQ_EVENTFD_DISABLED;
+ 
+-- 
+Ammar Faizi
 
