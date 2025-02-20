@@ -1,121 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769CA28EA;
-	Thu, 20 Feb 2025 14:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE32028EA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740061923; cv=none; b=tGODDkhuWgX4MExmHhSjWVtJx+thbUfYtXKoMz1mGxvHcvenHKgv6JisxpqvA+mv5P+ZfeOAwpeUxQMLPUY3MXc+904USLz/WA14CL2FUHugiYvL7rnZloM3OVEKyN6OisekLt6Lvbl7aBKNRWrj0w1u9JQMqojjMUiSrPtM4k4=
+	t=1740061929; cv=none; b=Tb6tXNIs/1x/Ey1tPTLeDpZHXOf8pqfa0IG7okvl/gTlD4G1Cg2xhuwmtYRQotxIhMWRJ3UvqkoZPW3ySZSrLDtScopdrsj3bavX5yu85qkh45eZ8JkK3Cikod7t5O0ANpxisyX0kNnqEZz0UH85FaWml1ijkYjyNHXCDtZftIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740061923; c=relaxed/simple;
-	bh=GoGvedSskUunt8JR0ab0OKe1KhMr9oaefFluEv4FAqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aCtv064fO0b2ntfdeQBiTht7hxG6kLD2Rde0C4usWd+Bd6Nijf/Dixw+HlQYRWleRGlnPj3gjhtnCgIcfpDZXdNiAhBP50maSWh/JsPpcRpAaaNm8FSGVIFY8myDGfx7oCnRihdXfIXLoeU8TtmJO2pDNtzizjcSRQrjZcI07W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BjmJyU+j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740061929; c=relaxed/simple;
+	bh=CzV9bxd149p9CWYR37KvE/72WikwSMD+HRF/P+rIC1g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Tfa93B74z5rtbDFFJCosCYwBGNCbrpJquEQkNyev+T/GroizzL6IjVf/qA5s6Wi89KEH4mbVgGNV0CQEEqAV+AAeoyJrH35528O2O2Nx1W4Ci3wlCCEoEx9W18oThuj3s0EPd6yagW/744rP08+h7Q3UU2g2HR0ePrV4Pw1B+9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YmJ1XQLT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0/1TACzH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BjmJyU+j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3917C4AF09;
-	Thu, 20 Feb 2025 14:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740061923;
-	bh=GoGvedSskUunt8JR0ab0OKe1KhMr9oaefFluEv4FAqY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BjmJyU+jXO9wcmng76nLJ/zgZme8LgV8F0crqAhH7kvY3zW9ea74lEjJqAxWsXukp
-	 N01BsmLRRcczRdhIGbHIrQ40uIgVOojwYi1/l/YgZOoThWIjLxQtc6Y5A/ywMc3Z8b
-	 Da3lgj4JchDjRNlOyD+TMTLzdSIY1deamLy/aWzZfpOg4M1TZLmsPWqwu5jzBeWLDi
-	 wbf6WtxKT1bOmH4UvHf2L4aIQBS4u1ybc7uPjYHM4GjJ8J8+zl7gEE+5S8hKHzJekb
-	 BwNuueGBvkDmvA5w0y5IZoD8JK/m1eTEmOESlVJrXPvmq7Of4cgq8qZiFdBnbADiQ+
-	 vKL9WXO9MkwEQ==
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fc3027c7aeso2092813a91.0;
-        Thu, 20 Feb 2025 06:32:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUvNVHhYd6Qa+CI1nQm0xlEeHzFj3+Wtz1HyeVo+EOrmavgrKltjSuiLYs4nIM22lvC9MeRkZopJl8qi4sf@vger.kernel.org, AJvYcCXaR9kQ57or3aKhYqSXZhwGhTn7HzyvPl436LbOINvWPjAmc3C0B71ctTEVhdURTtZHGrfI9ef2Dsl/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBjH0Yx4hJ6QGvDXuLGKpUkzFnMT82FKZH1+zB08swVYNAn9Jw
-	+M1UikN0zOS81547STJWBl1iww1alD23O0WsqLBGtuWmPLXza4CrQdwTrT1TqJz66yVts/hsZ89
-	FAru//AYEkPqBRugdLL/294EeAg==
-X-Google-Smtp-Source: AGHT+IEEvVnA4H81470tv1H4G5h0w0yEGHELm51+9xXj/GLBqX14Y9VHjS4nUzKS5Ntqk6uBqNxa9Lc6bKjwcl3wf1E=
-X-Received: by 2002:a17:90b:3809:b0:2ee:d024:e4fc with SMTP id
- 98e67ed59e1d1-2fc411509b7mr38299734a91.33.1740061922487; Thu, 20 Feb 2025
- 06:32:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YmJ1XQLT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0/1TACzH"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740061926;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Egw6G4ZiL9DKYfKWl69qMwUYm0iJLmehOs6BqDDJDU=;
+	b=YmJ1XQLTsqaym8YoHOcJpFK11R7Z5IKFYJHB8wl4I+VwIoQkavmxAO6IZlYKZ0IPY6sJHe
+	Qm034pTEawWB2Ua/u22sF0kxQX7KrokFxjT2+np/SBUqw46P+HuwszktbPNaaAhAeEcvQQ
+	PmxqqVwM2CzBhzDKik9zq/hc5qtunR4FuoiYL5yOkeXTi1wY/Qz5pvg+sWg8qTppoEZRpr
+	MncL4jym29W24mHlmBYbsFVK7gwn5TPO+PgwhGRLWgA0L1ip2+tNJPg3DgysSIRMZwAlsU
+	MnDZMap5XXsa3Wn3Id4sQU+bHqIkKWWD+ohNp2hx+wMziunXudKfbOITR26HWg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740061926;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Egw6G4ZiL9DKYfKWl69qMwUYm0iJLmehOs6BqDDJDU=;
+	b=0/1TACzHVdWsCK/pbUNKLkLkppM0yhrm8leecBpvcyK4jKkj88p1OQiMVLBRhA0Ir3PLd4
+	fqlEXVM8aFAaltAA==
+To: Eric Dumazet <edumazet@google.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>,
+ Benjamin Segall <bsegall@google.com>, Eric Dumazet
+ <eric.dumazet@gmail.com>
+Subject: Re: [PATCH V2 1/4] posix-timers: Make next_posix_timer_id an atomic_t
+In-Reply-To: <87h64oiuey.ffs@tglx>
+References: <20250219125522.2535263-1-edumazet@google.com>
+ <20250219125522.2535263-2-edumazet@google.com> <87wmdlhwa8.ffs@tglx>
+ <CANn89i+LJFHhA=VF2T5v_kN0=sFLeropuRERnhWdadj5w6kiyw@mail.gmail.com>
+ <87h64oiuey.ffs@tglx>
+Date: Thu, 20 Feb 2025 15:32:05 +0100
+Message-ID: <8734g8it5m.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217154836.108895-1-angelogioacchino.delregno@collabora.com> <20250217154836.108895-34-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250217154836.108895-34-angelogioacchino.delregno@collabora.com>
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date: Thu, 20 Feb 2025 22:32:47 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8a+oV_XwBACyy09bKdwKVy+iEPxbfZBkkdYm2jYD_k2w@mail.gmail.com>
-X-Gm-Features: AWEUYZnj0eBVMJFGwcqYWEal64YwZLRUffmMdq4xRpXkJqA2A3_JsPYTIk5oAgc
-Message-ID: <CAAOTY_8a+oV_XwBACyy09bKdwKVy+iEPxbfZBkkdYm2jYD_k2w@mail.gmail.com>
-Subject: Re: [PATCH v7 33/43] drm/mediatek: mtk_hdmi: Cleanup function mtk_hdmi_resume()
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
-	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, ck.hu@mediatek.com, jitao.shi@mediatek.com, 
-	jie.qiu@mediatek.com, junzhi.zhao@mediatek.com, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kernel@collabora.com, 
-	dmitry.baryshkov@linaro.org, lewis.liao@mediatek.com, 
-	ives.chenjh@mediatek.com, tommyyl.chen@mediatek.com, 
-	jason-jh.lin@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Angelo:
+On Thu, Feb 20 2025 at 15:04, Thomas Gleixner wrote:
+> On Thu, Feb 20 2025 at 09:49, Eric Dumazet wrote:
+>> On Thu, Feb 20, 2025 at 9:09=E2=80=AFAM Thomas Gleixner <tglx@linutronix=
+.de> wrote:
+>>> > This allows the following patch to use RCU.
+>>>
+>>> Your patch ordering is slightly off by two :)
+>>>
+>>> And it fails to explain for what RCU can be used....
+>>
+>> This is explained in the following patches.
+>
+> The changelog of a patch has to be self contained. The 'following patch'
+> has no meaning when the patch is merged.
 
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
-=BC
-2025=E5=B9=B42=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:=
-50=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Remove the error print in case of mtk_hdmi_clk_enable_audio()
-> failures: since the APIs will already print on their own, having
-> one in there is redundant.
+That said, please just fold this into the patch which actually does this RCU
+lookup upfront. The change is trivial enough that it does not really
+require to be seperate. If the lockless increment would cause issues,
+then the subsequent RCU lookup is the least of the worries :)
 
-Applied to mediatek-drm-next [1], thanks.
+Thanks,
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
-log/?h=3Dmediatek-drm-next
-
-Regards,
-Chun-Kuang.
-
->
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_hdmi.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
-ek/mtk_hdmi.c
-> index 50f9ab48cbf9..2614561e2634 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -1704,15 +1704,8 @@ static __maybe_unused int mtk_hdmi_suspend(struct =
-device *dev)
->  static __maybe_unused int mtk_hdmi_resume(struct device *dev)
->  {
->         struct mtk_hdmi *hdmi =3D dev_get_drvdata(dev);
-> -       int ret =3D 0;
->
-> -       ret =3D mtk_hdmi_clk_enable_audio(hdmi);
-> -       if (ret) {
-> -               dev_err(dev, "hdmi resume failed!\n");
-> -               return ret;
-> -       }
-> -
-> -       return 0;
-> +       return mtk_hdmi_clk_enable_audio(hdmi);
->  }
->
->  static SIMPLE_DEV_PM_OPS(mtk_hdmi_pm_ops, mtk_hdmi_suspend, mtk_hdmi_res=
-ume);
-> --
-> 2.48.1
->
+	tglx
