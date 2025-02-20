@@ -1,227 +1,338 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE3F1D5AB8
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740027041; cv=fail; b=oAM9pKc5iRjfbXNYIAsVqgTkhtMb4gPkHTzP/ilBEEUXotE9OU2ZllsPuEu0L3mvuDVIT5TzGfaAB4TG30yUnXDAvdsWTdf0m4qehjCo66S3fO35kRUrrxaUrlkZZB9Gi08jeiF8Qr2V3d3ESvt+VQVsjTmWmeyPID5yWLgNEvk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740027041; c=relaxed/simple;
-	bh=+w1PbDYSbnow5KrgWIaOuzWJgQIWUGFBhzkfUof+EFI=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OjqCb7hPxSx7T4+oJ6jLeVrk+kVMaUd1YYRGuCtFGjV8QyKLgpzsnPHKj2Nh2G7FqzcsGVaGjc+7xsuZZr7f4NdhnOer6Bst+szNmT7Y6wAAo9Y0/v2KesSbAE0XDr78qDSmspmvcKZpVUl5cRxzpwJP+97EYjkvwUu7VAIBXFM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VJLlLYc4; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B431DE896
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740027500; cv=none; b=rg/bscuc2r62n/62aqK5DcGE07xm7xngPy3LXNRB1AZyHrPGTZHrN+jhDn1NY/dLsMERql94H5f48Jj2vMHKKk6QkpygCiyrh9fZ91tm3SzqDfTCXvEY9W8EcFu0Jix0GZdGV5vJkS6z2B/VWwzZxQw4HQzB6sEdRPfa1lPl49o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740027500; c=relaxed/simple;
+	bh=OEymnkP4WWTy1OOiyp6Pwo/iA8tVLpTqteb21aP8xRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QMKd16SyTxxep24nxW/SgebZ6U/rlX3SHctRvFYfMmTFzfeDafK14nZSG4Bcy2yeYsRly22mKoeUl7P7XbZs2a2AXBVPgtE/WCHHzXYycWcTEKOBbsck4mDUMWF1c8j4E1SRJAVLdeY10dav4I5p/0noALH9Hus6sn/40ebGSLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FMmrZMx5; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VJLlLYc4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740027040; x=1771563040;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+w1PbDYSbnow5KrgWIaOuzWJgQIWUGFBhzkfUof+EFI=;
-  b=VJLlLYc4zxVySHDF3GxxBKXMUji8zjsaqikCV5GCVcAbne0p3S/YTv0G
-   LmzXBbKBUkqhMmu/+DT+a1Yl/NSXpKN2rO9E8E2Mv9BtDgCXrWF3Rv13F
-   nHo+JUrpsLXspYkDLb0z1XP+nbXOwA8Wg0djMC4BpuOdeapXkuPAxhVdO
-   GEBDiV5yJGTEZ54Uf9+lSMdLG4A9N7fLxB3kwc+9V7vNpiN97I1bv+2W2
-   VKNPelH3LYcDZcN0bgfphBRYvMJiemBn+2s09QbhIiA4GgH157nRvfKCY
-   URT8YDQl2lznmKK5+0THGKqjA1f4QVQ+RVlh2aDtGRBJx5Ht8r0zEJXXp
-   Q==;
-X-CSE-ConnectionGUID: R6Kp//q1QkWEw+B1JlrLzQ==
-X-CSE-MsgGUID: Y4ioR4+USjOzS5y77H1Ytg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="51004007"
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="51004007"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 20:50:39 -0800
-X-CSE-ConnectionGUID: haJnd9LzT3uAwY+E7cP5Lg==
-X-CSE-MsgGUID: /xsfnilrTuiexa5SmBlu9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="152126146"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 20:50:39 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 19 Feb 2025 20:50:38 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 19 Feb 2025 20:50:38 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 19 Feb 2025 20:50:37 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TAUpb4HZmCHjMd7uWOYxDJDuYM6kkaCfIDwhtRdLwV5GlzwVj5GvAZLDywN4OxE3QutGCFx4LCQIbzDjlZSRRdxCwroA2LxAoBINmk15iD8SHmVErsvUeKLu/YbM7J1kIqh7L38/Spb9cc5KmpWFxyZT36P+NGE162jpdMc2nZGHLZx/5mW7ZvpEBOXXViktjbJY1FAExUjLxt+VqQ6a/6gCMGv82h0677marQIhre+7qnom95tRFnz6RZfI7fS5SmNsiCKqgSiXQ35M6kx5gVf6MvghRrkABV/NGItLsj6zJ53KBi92fO60Nse9FjBG15OlBRHR9Q94fi8ZcAqhEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RElYxSsJcQgVr7mTUbsBo5tVOaqsUV+zlONH9uR0nU4=;
- b=ntuB0hEIWZ9qWJWYBH2BNB59M9Q8DtGEkaf+LiCHOi4lVvXwvCh7n4kMM7YVYd2ggY1nqMBw1cvShz+gbDC9e9cQI5E/t050QogVcoRaMpR2VrAp2iPUhUa53VIP6TA+feEFQrzwqva1HLSX7TfHMZkv6Y30SlFvxksEu7bzgGRCJtFMEJ1GLD7S0jmlRr2/YQguejmFCefA3tqhJP+vk6NOFQ2p69WoM5Gn0f7J08ICaHxrs5zztRqFhkOTOibMm2eWJ3AATj6p10gb/4SzDuOHgUvs8RTZYbxSR93Y8mWOzhk9rI1SFW9rHzt8S2duvnQxPiZmoBsneO6oH4AG1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SA2PR11MB4860.namprd11.prod.outlook.com (2603:10b6:806:11b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Thu, 20 Feb
- 2025 04:50:07 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%4]) with mapi id 15.20.8466.013; Thu, 20 Feb 2025
- 04:50:06 +0000
-Message-ID: <51f61480-1b5f-460b-917a-402272c3ab22@intel.com>
-Date: Wed, 19 Feb 2025 20:50:04 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 36/42] x86/resctrl: Add end-marker to the
- resctrl_event_id enum
-To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
-	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
- Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
-	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>, Shaopeng Tan
-	<tan.shaopeng@jp.fujitsu.com>, "Tony Luck" <tony.luck@intel.com>
-References: <20250207181823.6378-1-james.morse@arm.com>
- <20250207181823.6378-37-james.morse@arm.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20250207181823.6378-37-james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW2PR16CA0040.namprd16.prod.outlook.com
- (2603:10b6:907:1::17) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMmrZMx5"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fc20e0f0ceso772766a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 20:58:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740027497; x=1740632297; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x79i0bhLqpiDBJcBajlZ43nChj/icM/N7Ue738YpG3s=;
+        b=FMmrZMx5ZHVNHJear0bHitGr3ES8YNXn1VZccPiv133/JQZ90Slm9UacmkDe+w06t/
+         RehNyNidvKttpXgqEfSlBJi7lU8m3IJ/NBkhiIdgTVhZt7hJVofD7rAfmUmyf3MFvWGS
+         H4clgfw5sMvdjs/DimuXnf+W3CQxIar884wo41icVR4H0lczH9peL1/BUzei+Gx/QmkT
+         xoDZNU4ijE1q0qUd9KEipssUb1N1+Hx+jingo2cOassjqT8hsaAoR722Nars7rnlCoB6
+         TSoT1xaXFgKDotTipothzOHV+N8hYzG8+49CN2hLoWhKhXdD4w0/mOyv7/l3mv5tOPCF
+         Uu6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740027497; x=1740632297;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x79i0bhLqpiDBJcBajlZ43nChj/icM/N7Ue738YpG3s=;
+        b=XyFbt9C4j+otZgPpcjYhOe98LJqewh9DF2PH/ofZwvGG/oWrD/jN370T5hNUfvGi+j
+         qCtFyrHskfOwR9Y7bU/aYHDe+EbpG7gJckd6hIv8IefXh0ToBBoVx6xCKFDr4nnKqRPQ
+         thIopP3as9GzUZWXwDYKj/+zVwOpQJqV5rvM6mkm4JP6V4peHJiSmKqJoPphitJQfUeV
+         eRXsk6PzZjLF3velcPCqJWtAN0j65Xv0y3zB4mz+u0mEMLZy1KDuwGPb61BzSvoCAB1w
+         +d9eWFbp7az4j0fPK6IcKPLa24sAvxiaJ3df3RAJasVjUm5p/Izl+hgSbNwEexoLfvFq
+         Kcjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN1cxtVsfMoMUKZ6i5t1k0Y4yIQYfvvGljxeMDKo27j7oVsRqCweydNTZP7upofkwLmY5cKFaA2bx54DI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjUSA7/kP5xBjHPesWHFIpxpkFUbQmFXA2j5nbRLP3jUISlS6o
+	7eQNlRnh8jjyQ7qJSuI/bk1ucDrY0bL6q+artbO7swn3srGeAyUG
+X-Gm-Gg: ASbGncuEcwTbqZXYnyXNpIe8Ein5RLz3kmrBk+F+p+W5JXMb4f1F6nTxmGPLws8HyIP
+	bg/gm8e6T9rWrFAMdhddTXHLgCKfPMB4PLeiZnrJq6MgK4FZcNYTmRS1lEzvYls7N4HMZHZlTNY
+	RyMmF1hv+3jk9NwWRzF0HzSsLQYrHnaaKDxB4QHKJ6nkQwoYFaBGGaV7giukSpwmC6iKGhsXCOr
+	uM9hVMpyYwRuuBzHEEqKyfgRz1yldiolSYO/q7BBdSeAmfttq1ARP17+iqCq1909AAG6sOVeptl
+	stNWmcI7g9XY3W1gRtBSL7qRfbvghNISoS1KWA==
+X-Google-Smtp-Source: AGHT+IHrngJ9wsLKpkmfVQR0Zl8QKv2Ahs8dagIFjlgk1+gYTfOhpaMk96T6lHuygPJ2/XQ7+lJnNA==
+X-Received: by 2002:a17:90b:47:b0:2ee:d7d3:3019 with SMTP id 98e67ed59e1d1-2fcb5a1aa37mr11785103a91.12.1740027497539;
+        Wed, 19 Feb 2025 20:58:17 -0800 (PST)
+Received: from distilledx.localdomain ([2401:4900:6273:d0ef:80a7:d92e:7b3e:31e8])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98cfd19sm14993179a91.14.2025.02.19.20.58.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 20:58:17 -0800 (PST)
+From: Tejas Vipin <tejasvipin76@gmail.com>
+To: neil.armstrong@linaro.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: quic_jesszhan@quicinc.com,
+	dianders@chromium.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Tejas Vipin <tejasvipin76@gmail.com>
+Subject: [PATCH v2] drm/mipi-dsi: extend "multi" functions and use them in sony-td4353-jdi
+Date: Thu, 20 Feb 2025 10:27:21 +0530
+Message-ID: <20250220045721.145905-1-tejasvipin76@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SA2PR11MB4860:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93ca66d4-35da-481c-d9cc-08dd516a0c04
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NERibVpJdW0wcnhua1ZjeGViT3NWUVFoOGRuMFNPMXZETVRzV2NQNElsVE44?=
- =?utf-8?B?K2x1ZDAwdEhxcjRqMHdGMlJXbEVpamhTTkUwK2ZMNGl5Qlc1bTRHOVhLbk9i?=
- =?utf-8?B?elRsNnQrMXdNRW4vclhEN29nTVp1RnBUVEJERUZEdmRpelNVMmsrMEVBZVNo?=
- =?utf-8?B?Qnp5RHJIUkRzcFRkTVhXWHQ4YzdZM3JDS3lYRjU5d0FnZWZpRDQxeDFjMDRN?=
- =?utf-8?B?alAxOW4zUHN2NkEybGZISTdnUVlLVy9LZkRLVTFlbkltNm42bEUrTC84azIw?=
- =?utf-8?B?QWY1aDh4dENpTnFwdFc1bnNrNng5Wm1YeG15cWg5ZWJiY3A2QU5uSEQyV3N3?=
- =?utf-8?B?ODJweHFQM3hhSHFaZGE2ZmRiL25uMW1kUWRUWXI5emNQbDlhRnAwbno5V08v?=
- =?utf-8?B?cEJDY2RKTnJFVkJYa1gzNkg2bDNyUXpKTitQa3VESzYzOTd5YnRSSTBSaFJ5?=
- =?utf-8?B?MUJpS1FNbGNhbFZjNDVsWGoycjJhT1MzUUViZXZzamZIbC9CbE96cGkzTm5M?=
- =?utf-8?B?Z01ENUNlVjUwbS9IU0w5WFdlenloNTIwR1JjL0F6SHVoaUZqdG0zcjZVL05E?=
- =?utf-8?B?TlhMU2Q3L2JFSlBqZjBOQTh4RGM0M1J5bDZtcFFnbE5aU1VqZzRNSFBjRXR4?=
- =?utf-8?B?L1VtM2dZZGdrTzZzTUFPNFIwTko2TEZOQW1DT3FFZFJVS3R0ZXdjZlQ3MmFF?=
- =?utf-8?B?cGVQTnFhUU45NHB4TmJ1WXN0eC8xUUJMaHY0UGo0OFlSWUhzMmN1SDBPemJv?=
- =?utf-8?B?SEtHbVN6KysvcTUxSjhqWmpWMFdhSTNIb09hSkxKYWV4ckMrZ3ZQaHpPOTQ1?=
- =?utf-8?B?dHJIU0tQYlRic083T0VIbWt5Y2RHZTl2d01JTnpFQkIyWDVwemVEbWQ4OVVl?=
- =?utf-8?B?a3BaaUY0WGF3NXVhN0pjREFRd0F2WTFHSkE0ZjBOUlV1anBmMGE5YTdQNGZo?=
- =?utf-8?B?WWIyV0ZtVnBaNXBvOWFNSXg0V2VRekF3U1Y5Tkh3RWNvN3B6bHc2dGw5VnM3?=
- =?utf-8?B?ZVNQQXRlRnVCZ1VEazVhem1sMFVWL29sK0pLd2kvRS83VCtLREE0OWZaVnpW?=
- =?utf-8?B?K1FqcXI3TmZ4N3VNWXNFeVpQU2hrUEpmM1pQMjdOT25maklIbXhMVUUxeXY3?=
- =?utf-8?B?NGc2RUNWWm5uajFGQWk3SXJSWVlocWhjbms2Vy94cThMLzlQenk2bUFrYTZj?=
- =?utf-8?B?aXdEVVJvYVFQSERIdkpqT2RmUC85U1NGUnM2VzZNYzNlZER4Y1FwMFVJR1Rn?=
- =?utf-8?B?bnM2cy9wOEdVN0xoR2NBWW1Yc1hyTlNpb2JwUHZ3WDBYb0c4LytoVnVrelJX?=
- =?utf-8?B?RGt0RlZGRmNMa0Y4RzNkSnAweDlCVjV1ek5Jc2RGcU9mRFIwQjQ5MlE1UFZE?=
- =?utf-8?B?N0tPYkVzMFVYc24rU0dlKzVoWUtxdkt1VzlKcGxtZFJvRk9LVU1PZEdIQWho?=
- =?utf-8?B?SnhWTUROcXFPWWo3TllETWh2VHJQaU9yb1k0aWtUUXUrWmh2M1RSMTMvTkZn?=
- =?utf-8?B?UHM1bnBjcTNhK0dhNWs2TW1nWDd5dHBaQ29adFg4UkU0N05pUGxnbkV6U1Jh?=
- =?utf-8?B?TTk4bVp1OElxYiszUnZyWC9KRWlGMk5MOUxsT1pPREZ2aFZ0c2dONzFKMHRH?=
- =?utf-8?B?c1c4SlRtazBzNTdmQkRwV3Bsd00rbFNqbFZFb0hWRDljalc4a2FWZHltYnk4?=
- =?utf-8?B?b0E5cUpjOEJmUEZjaXNkcGd6QjRVVHNvRnA5S1VmcEVvQko2b3hWRm5TS1NM?=
- =?utf-8?B?ZnhPMGJCekUvOHJKRk4xRnZ4VjZYMkF5cmpOaWgwayszYldwUGV3cUQvRHNM?=
- =?utf-8?B?cXpoNGVrbU5kZ0d6OThqMjB1MFpGYXN5Q1hiNG0xbnJVRm91V3NJaytRUXBK?=
- =?utf-8?Q?JCYkmB7PRb4xp?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q013d2x2U2pPWlVjeGxNbXVDd2tJUHVBQVBzQTFMQkczZUFqL05ZUkN2dnZL?=
- =?utf-8?B?ZWJLejNwUjEvaUdDTk5XcVN4WDAyR1U2a2FhTjA3c3VNYVplaDdicTBvQWZh?=
- =?utf-8?B?djJZR3ZYWWlsT3RSNUw3UEYxMS94RTZMWWNURjErYWtHdFRtZW5BYUp3amF2?=
- =?utf-8?B?eFIySS9Xc2MyRDM4Wi9WRWpxMHdSNXN1VmVLQlVQcW9oWVpmZzZ0cnowbzdp?=
- =?utf-8?B?WDJxYzNHR3dtYnE0SFo3b2Zac3o4cjlHTFBKejZnWFpPWTIxR2F1bGR1V1VK?=
- =?utf-8?B?clZxWUpsT01mK0JNNUxwVG1HRzIrVDBHTEplQzh5cWtqMlU1S0o2QlRaTFlR?=
- =?utf-8?B?SnR6NGVCN1JOc2VTU25kL3UrM2xJUldoNEJwdGMzcmtiT3h2d242RlBvRjhh?=
- =?utf-8?B?U3ZSZ3hCYjNhUkFhK2k0enl3cFFsUVEwMENwWmNxSmhNN1dHQlhhL0gvTGU2?=
- =?utf-8?B?K2w0N3VmQ0RYQnplZzJGd1MyNlYwSnlFcmYvaStFQjNvM0lWM1p3NC84ZExU?=
- =?utf-8?B?bTdHdXQySzNvUDlwRldzSExLUVB4SnNWT0x0cVF2MytmamxwcTdxalJXQmhB?=
- =?utf-8?B?a0VPcGl1c3kvYVFyZjMzYk1JaGtDKzhRQllUM0l5Y2ZKUnkrTkNNOS9URjcr?=
- =?utf-8?B?YnRXTmlJdk1CQlBGTnBKdUErVzYyamdCL0kvQytLTG80RVBBZDQ5b21YenFa?=
- =?utf-8?B?akxzZkJreVZVOEthak10RG1ZYW51RVNsMzRHWjdlb05Rc3I4djRSRE56VmY0?=
- =?utf-8?B?N0p0YVNOZ1puMzFQTjhCRERWd1dxTS80bE5RbHJjakM3NldHTWIxbTJsKzJ3?=
- =?utf-8?B?STZHWXFrMHRtR0RtdmVBYjdNaldiOTBIZ3NMemVoUVA4MGFXUkVOczAwYjBq?=
- =?utf-8?B?Qm9wemI2MVB0S09TczljbVZxY2c4U2paWXhiU3lQV1BCUEhQR2tpb2RXRkw5?=
- =?utf-8?B?ckNvTGpYbUdKU1hvSEZFQVhNcDQxdlFlb3k2N3FlOHBKNkorRDZDY3VxQzA1?=
- =?utf-8?B?dDhtWUVqdG40YWQ5WllzeXI4ODZ6TzM2QnovVHRsNGszOXk0Q3BlanBUcW9W?=
- =?utf-8?B?YmZCcTlCN1ZjNnhEMmJYT1dqeTFmeW1IbnpkN3VZVkt1Wk5sa2o4RTM2Tmh3?=
- =?utf-8?B?NXRQbWlkakRsQXBUT0lSenQyOGplZDE4VkxxT0pEREFYSC8razBJRnZGb1F3?=
- =?utf-8?B?M0Y2b2lKVFRXSVZyMXlKWTl5YWVVMGcvQWV4MEMvVmRoYSt3a2JtbHZERk5Z?=
- =?utf-8?B?L2JhYTlOVnJJVzRSbjl1RmIxVTh0dGsrVmowUk41VkdMTXlha0dhZ2htS1dS?=
- =?utf-8?B?SW9JTFA3ekRseFdkS09nL1JjL2JPZHpXTis2TjRGWXNpTE0yQVh2Y291cW4x?=
- =?utf-8?B?SGlRZzg2TTc5ZTZ5MW44a3c5SmR5cis5VHNKUUdHdnBZQy80eHNWcm9TYlll?=
- =?utf-8?B?b05oQ29EbFlWMVk5allyYkhnTFhNNnJqZVYvZ3lWVFRKK1JCR3dPVlNrRkY0?=
- =?utf-8?B?anBOekZFOU9PUmlaY0ZRUDlSQ2oxa2JENFU2VWh6OG1jU2Y5cjRKME5oRmJZ?=
- =?utf-8?B?SjR2b1hQVjFHWGxsT0xzOXR4VSs4SHhuejNnY044UjBKZ1pyNVg3cDZCcVV0?=
- =?utf-8?B?NTdyUjZ4eitOVFlTUlNCa2FMOW03K3MzK0ZldVg3OElDRGNWMkZoaDF6aW5E?=
- =?utf-8?B?eTdHN21lNWp3YTRFRFNiQlpXQ0NXdHlLT1pjZWRLZ0t0eHE3YmZ1dVRMazd0?=
- =?utf-8?B?OForS1V3Qkl0N2hJZGJuM3JUU2hQQkhDTlJBM21Td3k0ak9UMGtTU0h5QnZJ?=
- =?utf-8?B?SXA3YVJldWpLelJxaW1lYnFieVRuTXZNaE1QQ0N4VGZoQkpCSXpQVHp1M0tT?=
- =?utf-8?B?OER0WTZUaE9uV3grV2JUNk15aFdSRVhqZDZoSHhZRFFxSE83U3Q0Sk1BTDYr?=
- =?utf-8?B?ZTVYV29xZnF2TFFxM29yZzFLOElMdkJNMHVJbDBEeTFPdEZ1cmVYajBJd1lN?=
- =?utf-8?B?VnYrZy8wTis5a2lHM0w5SmtYanh4RzVKbFZ1MHFaYnA4N05ScGc2K3pKTnNt?=
- =?utf-8?B?R3FEdGtucEExSnNtZHFCa29RazgxbnljNGljcmR5dHdnUGU2WlZMZWVFZGhU?=
- =?utf-8?B?THZ3cmx3TTg2cU4vOWJwMkVGdjlXTk5SZEc3cmxTY0ZQamhaNGt1NERVSkdC?=
- =?utf-8?B?VGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93ca66d4-35da-481c-d9cc-08dd516a0c04
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 04:50:06.7865
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P6Yk90RP0Tr7xeGeb+0+6/56dyQcqNG/ZYe6MVO/HVYzRnlUNcRnQCAHp1MsUqyrZaWokTqsMTuQl56SWGiSzHehmVAdMKF/uPktX5zL6QU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4860
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi James,
+Removes mipi_dsi_dcs_set_tear_off and replaces it with a
+multi version as after replacing it in sony-td4353-jdi, it doesn't
+appear anywhere else. sony-td4353-jdi is converted to use multi style
+functions, including mipi_dsi_dcs_set_tear_off_multi.
 
-On 2/7/25 10:18 AM, James Morse wrote:
-> The resctrl_event_id enum gives names to the counter event numbers on x86.
-> These are used directly by resctrl.
-> 
-> To allow the MPAM driver to keep an array of these the size of the enum
-> needs to be known.
-> 
-> Add a 'num_events' define which can be used to size an array. This isn't
-> a member of the enum to avoid updating switch statements that would
-> otherwise be missing a case.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-> Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-> Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
+Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+---
+Changes in v2:
+    - Squashed panel changes and mipi_dsi changes into 1 patch
 
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Link to v1: https://lore.kernel.org/all/20250214172958.81258-1-tejasvipin76@gmail.com/
+---
+ drivers/gpu/drm/drm_mipi_dsi.c                |  42 +++----
+ drivers/gpu/drm/panel/panel-sony-td4353-jdi.c | 107 ++++--------------
+ include/drm/drm_mipi_dsi.h                    |   2 +-
+ 3 files changed, 47 insertions(+), 104 deletions(-)
 
-Reinette
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 5e5c5f84daac..2e148753ea97 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -1265,25 +1265,6 @@ int mipi_dsi_dcs_set_page_address(struct mipi_dsi_device *dsi, u16 start,
+ }
+ EXPORT_SYMBOL(mipi_dsi_dcs_set_page_address);
+ 
+-/**
+- * mipi_dsi_dcs_set_tear_off() - turn off the display module's Tearing Effect
+- *    output signal on the TE signal line
+- * @dsi: DSI peripheral device
+- *
+- * Return: 0 on success or a negative error code on failure
+- */
+-int mipi_dsi_dcs_set_tear_off(struct mipi_dsi_device *dsi)
+-{
+-	ssize_t err;
+-
+-	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_TEAR_OFF, NULL, 0);
+-	if (err < 0)
+-		return err;
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(mipi_dsi_dcs_set_tear_off);
+-
+ /**
+  * mipi_dsi_dcs_set_tear_on() - turn on the display module's Tearing Effect
+  *    output signal on the TE signal line.
+@@ -1713,6 +1694,29 @@ void mipi_dsi_turn_on_peripheral_multi(struct mipi_dsi_multi_context *ctx)
+ }
+ EXPORT_SYMBOL(mipi_dsi_turn_on_peripheral_multi);
+ 
++/**
++ * mipi_dsi_dcs_set_tear_off_multi() - turn off the display module's Tearing Effect
++ *    output signal on the TE signal line
++ * @ctx: Context for multiple DSI transactions
++ */
++void mipi_dsi_dcs_set_tear_off_multi(struct mipi_dsi_multi_context *ctx)
++{
++	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct device *dev = &dsi->dev;
++	ssize_t err;
++
++	if (ctx->accum_err)
++		return;
++
++	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_TEAR_OFF, NULL, 0);
++	if (err < 0) {
++		ctx->accum_err = err;
++		dev_err(dev, "Failed to set tear off: %d\n",
++			ctx->accum_err);
++	}
++}
++EXPORT_SYMBOL(mipi_dsi_dcs_set_tear_off_multi);
++
+ /**
+  * mipi_dsi_dcs_soft_reset_multi() - perform a software reset of the display module
+  * @ctx: Context for multiple DSI transactions
+diff --git a/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c b/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c
+index 472195d4bbbe..97f4bb4e1029 100644
+--- a/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c
++++ b/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c
+@@ -47,93 +47,40 @@ static inline struct sony_td4353_jdi *to_sony_td4353_jdi(struct drm_panel *panel
+ static int sony_td4353_jdi_on(struct sony_td4353_jdi *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+ 	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+ 
+-	ret = mipi_dsi_dcs_set_column_address(dsi, 0x0000, 1080 - 1);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set column address: %d\n", ret);
+-		return ret;
+-	}
+-
+-	ret = mipi_dsi_dcs_set_page_address(dsi, 0x0000, 2160 - 1);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set page address: %d\n", ret);
+-		return ret;
+-	}
+-
+-	ret = mipi_dsi_dcs_set_tear_scanline(dsi, 0);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set tear scanline: %d\n", ret);
+-		return ret;
+-	}
+-
+-	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set tear on: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_set_column_address_multi(&dsi_ctx, 0x0000, 1080 - 1);
++	mipi_dsi_dcs_set_page_address_multi(&dsi_ctx, 0x0000, 2160 - 1);
++	mipi_dsi_dcs_set_tear_scanline_multi(&dsi_ctx, 0);
++	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_ADDRESS_MODE, 0x00);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x00);
+-
+-	ret = mipi_dsi_dcs_set_pixel_format(dsi, 0x77);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set pixel format: %d\n", ret);
+-		return ret;
+-	}
+-
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_PARTIAL_ROWS,
+-			  0x00, 0x00, 0x08, 0x6f);
+-
+-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(70);
++	mipi_dsi_dcs_set_pixel_format_multi(&dsi_ctx, 0x77);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_PARTIAL_ROWS,
++				     0x00, 0x00, 0x08, 0x6f);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_MEMORY_START);
++	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
++	mipi_dsi_msleep(&dsi_ctx, 70);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_MEMORY_START);
++	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+ 
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to turn display on: %d\n", ret);
+-		return ret;
+-	}
+-
+-	return 0;
++	return dsi_ctx.accum_err;
+ }
+ 
+-static int sony_td4353_jdi_off(struct sony_td4353_jdi *ctx)
++static void sony_td4353_jdi_off(struct sony_td4353_jdi *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+ 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+ 
+-	ret = mipi_dsi_dcs_set_display_off(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display off: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(22);
+-
+-	ret = mipi_dsi_dcs_set_tear_off(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set tear off: %d\n", ret);
+-		return ret;
+-	}
+-
+-	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(80);
+-
+-	return 0;
++	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
++	mipi_dsi_msleep(&dsi_ctx, 22);
++	mipi_dsi_dcs_set_tear_off_multi(&dsi_ctx);
++	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
++	mipi_dsi_msleep(&dsi_ctx, 80);
+ }
+ 
+ static void sony_td4353_assert_reset_gpios(struct sony_td4353_jdi *ctx, int mode)
+@@ -146,14 +93,11 @@ static void sony_td4353_assert_reset_gpios(struct sony_td4353_jdi *ctx, int mode
+ static int sony_td4353_jdi_prepare(struct drm_panel *panel)
+ {
+ 	struct sony_td4353_jdi *ctx = to_sony_td4353_jdi(panel);
+-	struct device *dev = &ctx->dsi->dev;
+ 	int ret;
+ 
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enable regulators: %d\n", ret);
++	if (ret < 0)
+ 		return ret;
+-	}
+ 
+ 	msleep(100);
+ 
+@@ -161,7 +105,6 @@ static int sony_td4353_jdi_prepare(struct drm_panel *panel)
+ 
+ 	ret = sony_td4353_jdi_on(ctx);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to power on panel: %d\n", ret);
+ 		sony_td4353_assert_reset_gpios(ctx, 0);
+ 		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+ 		return ret;
+@@ -173,12 +116,8 @@ static int sony_td4353_jdi_prepare(struct drm_panel *panel)
+ static int sony_td4353_jdi_unprepare(struct drm_panel *panel)
+ {
+ 	struct sony_td4353_jdi *ctx = to_sony_td4353_jdi(panel);
+-	struct device *dev = &ctx->dsi->dev;
+-	int ret;
+ 
+-	ret = sony_td4353_jdi_off(ctx);
+-	if (ret < 0)
+-		dev_err(dev, "Failed to power off panel: %d\n", ret);
++	sony_td4353_jdi_off(ctx);
+ 
+ 	sony_td4353_assert_reset_gpios(ctx, 0);
+ 	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+index 94400a78031f..bd40a443385c 100644
+--- a/include/drm/drm_mipi_dsi.h
++++ b/include/drm/drm_mipi_dsi.h
+@@ -346,7 +346,6 @@ int mipi_dsi_dcs_set_column_address(struct mipi_dsi_device *dsi, u16 start,
+ 				    u16 end);
+ int mipi_dsi_dcs_set_page_address(struct mipi_dsi_device *dsi, u16 start,
+ 				  u16 end);
+-int mipi_dsi_dcs_set_tear_off(struct mipi_dsi_device *dsi);
+ int mipi_dsi_dcs_set_tear_on(struct mipi_dsi_device *dsi,
+ 			     enum mipi_dsi_dcs_tear_mode mode);
+ int mipi_dsi_dcs_set_pixel_format(struct mipi_dsi_device *dsi, u8 format);
+@@ -379,6 +378,7 @@ void mipi_dsi_dcs_set_page_address_multi(struct mipi_dsi_multi_context *ctx,
+ 					 u16 start, u16 end);
+ void mipi_dsi_dcs_set_tear_scanline_multi(struct mipi_dsi_multi_context *ctx,
+ 					  u16 scanline);
++void mipi_dsi_dcs_set_tear_off_multi(struct mipi_dsi_multi_context *ctx);
+ 
+ /**
+  * mipi_dsi_generic_write_seq - transmit data using a generic write packet
+-- 
+2.48.1
 
