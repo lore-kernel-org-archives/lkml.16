@@ -1,100 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7875D1F03E2
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF8B1F03DE;
+	Thu, 20 Feb 2025 09:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740044963; cv=none; b=gMjtQAdASoB/JqbterKihZxFI6UpARmURIElRkieVyttqQTyR0KN6knwGvH3TPMMQWnj6v8FeuappDSK9VxZXs6TiYZDV/iUhXcpHwrlKvC0qNC5UkUHUZxHST943bCYOSuDCaq9OXfKzlfUb00bvXxa1gbSLx3wPCk7NB2wHFA=
+	t=1740044991; cv=none; b=rMiATddkX6KoGRdHaWz/LLt9jVRJLtNvB03Y/DkwmmsNu5XXHTiwZUOrq+br2C6i3643F9jU7fFDwAN3nDZIpo+JeLxpi6lOelGt6LwjJqpCn4bUXCBw/XehoWlX+q9RIujokSX/VbJwh/IbMEEUpYTE5xKRE0s/Iu4UPvgtG7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740044963; c=relaxed/simple;
-	bh=ArcLgFk2io66TkX35tqAR2Buc0pUYz2AJzitE5PaYuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XsLD0zk7O4ZKKqLR/RvhmFG4g1c2H2F/WsDtYJIOpc56D8g40cC/deAV8rPThjS2PlPsQL3MUTjrRPssEjkX+4qrKSYj2sHH7YgTPLHT+QMI8i3QYAwaV3/p3hEETdOYs/r09HWjLQn4XofYNd/gbh8tIlylCxAoveFv80NdliY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4yQ/+N2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740044991; c=relaxed/simple;
+	bh=ql5dyUwzsmgYnivLcSbAiC+k4nEzrGO6ammvLo/uFNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FQmpLf4AFGJC4SnK/57Pljb2BvMwBW+1DaCKtxg8norP6dKDjyZ2vvsRo1kDSPCQFHfcAd88nnGzkfksLMXldOiK5zmYys0lao3WxamTqJaXaRIWhkQL+4Pjnyg5QDubLFPuzkkgemDpUdBODNCOYrCulXAqaJX7aWM+yb0uGpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=hsLnC1K5; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4yQ/+N2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092D1C4AF0B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740044963;
-	bh=ArcLgFk2io66TkX35tqAR2Buc0pUYz2AJzitE5PaYuo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h4yQ/+N2jxxsI0C8gBGC92X0RZ0eAas6xX/uKm1RM0aktZl2+55m+tpnh/SOr2E6Y
-	 9TU0pDQCOuVRJNn94W2euN1zRXqHqEh/VybQtBQaX0ggh1RCPbHOEFyV09j86Sl2rn
-	 /wUTA5oFRFngTC1nQ5rIk+00BJxAMlbxagWthqSBZRkuTteviIQhph9uJF/PuACeQ4
-	 9EfMkK+cJ5tvRxkGMXKe/B+teDXjCdE7xiXsFW48yC4LWUv3Rv1HnouFpcAkYkGb7q
-	 zs8tNGNbp/9YaFLgFlTCisinHB8BVmNle2TXZ5uIp8lrNbliK1fNnREJqK+jNKFw1q
-	 HWmKMCVqWLVHQ==
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e5df8468d6eso693538276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:49:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXW+MfmDTb0AJSwRUjECJfeRCRn5xeKoIbGsOi/f1GCe+tL3WCqfrWckpJC7pOfj8HeUm8SmCUUYNq+fKs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuvLNZVRecKvv3GxLHhWuJTUxE28Zwo2FoX/hI4vlVCq6moK6g
-	0VJh2o/ryftHE/+tSYHmsYhKJQaHtnH+T+XCKhnnO2CrlYySqhQJnwQSDHyiwB5qTYZmc++GTBi
-	nODxBvY0E13Ejm+uy4CW7YpZXjyX6ZVcj3jAesQ==
-X-Google-Smtp-Source: AGHT+IG2VfvF2GnkRpoys0YJzodvdqc/5xzJY6uPb9btHNHUh2VENPQuq2gVXoso8g5unIWhVfhtqhWMRKw8m8MprAc=
-X-Received: by 2002:a05:6902:1706:b0:e5b:4482:a4f7 with SMTP id
- 3f1490d57ef6-e5e0a09240fmr5734034276.12.1740044962299; Thu, 20 Feb 2025
- 01:49:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hsLnC1K5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=ql5dyUwzsmgYnivLcSbAiC+k4nEzrGO6ammvLo/uFNs=; b=hsLnC1K5q78HwAijmfQrsz7sQy
+	98Kv/yILHk2lR8N1mro4X2N0PGTSjyWk1iFZ9yFWhqMmZBUqucdWMoMeqGIDoMZF6LhrVH4LWqCUc
+	DLJyWEsYXDwb43jgAzD+r9kE6gJebd0N4MMHcmbh30jbpYA1eAj+cQ17EjQDQHcf8oAhya0zyk42j
+	pzbtrno64PTIqK477bve9Nx9ZfTxRswAdFH87xiv8gURfw5NozPYlYL5JwSCAalSCGQmuY/ulVewT
+	7dTtFaUZ9ApmmHGJiKdr0HS+RHB4Ob82Aldc8FdzOvOa+lDKqXsi25Hcd+o2sBuJNjtTcFmTS0Dr8
+	LLzNM6Og==;
+Date: Thu, 20 Feb 2025 10:08:52 +0100
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: vigneshr@ti.com, aaro.koskinen@iki.fi, khilman@baylibre.com,
+ rogerq@kernel.org, tony@atomide.com, jmkrzyszt@gmail.com, reidt@ti.com,
+ wsa@kernel.org, linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH] i2c: omap: fix IRQ storms
+Message-ID: <20250220100745.05c0eff8@akair>
+In-Reply-To: <c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
+References: <20250207185435.751878-1-andreas@kemnade.info>
+	<c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220094456.32818-1-clamor95@gmail.com> <20250220094456.32818-4-clamor95@gmail.com>
-In-Reply-To: <20250220094456.32818-4-clamor95@gmail.com>
-From: Robert Foss <rfoss@kernel.org>
-Date: Thu, 20 Feb 2025 10:49:11 +0100
-X-Gmail-Original-Message-ID: <CAN6tsi5cfXCOiYDFCGVdt5+Ug_YVfWrY92RA6GWt66-3j73vCw@mail.gmail.com>
-X-Gm-Features: AWEUYZl5H9Gg9NYfvDiAyEwJCEBbXZYFr80mYoMdK-I6EKVYjTLvZcUu8t-JWBE
-Message-ID: <CAN6tsi5cfXCOiYDFCGVdt5+Ug_YVfWrY92RA6GWt66-3j73vCw@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] drm/bridge: simple-bridge: Add support for MStar TSUMU88ADT3-LF-1
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxim Schwalm <maxim.schwalm@gmail.com>, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/pGvym2.eb.LfB7wXpsrzdqG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/pGvym2.eb.LfB7wXpsrzdqG
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 10:45=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail.c=
-om> wrote:
->
-> From: Maxim Schwalm <maxim.schwalm@gmail.com>
->
-> A simple HDMI bridge used in ASUS Transformer AiO P1801-T.
->
-> Signed-off-by: Maxim Schwalm <maxim.schwalm@gmail.com>
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> ---
->  drivers/gpu/drm/bridge/simple-bridge.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/gpu/drm/bridge/simple-bridge.c b/drivers/gpu/drm/bri=
-dge/simple-bridge.c
-> index ab0b0e36e97a..c0f1f7baaa37 100644
-> --- a/drivers/gpu/drm/bridge/simple-bridge.c
-> +++ b/drivers/gpu/drm/bridge/simple-bridge.c
-> @@ -277,6 +277,11 @@ static const struct of_device_id simple_bridge_match=
-[] =3D {
->                         .timings =3D &ti_ths8134_bridge_timings,
->                         .connector_type =3D DRM_MODE_CONNECTOR_VGA,
->                 },
-> +       }, {
-> +               .compatible =3D "mstar,tsumu88adt3-lf-1",
-> +               .data =3D &(const struct simple_bridge_info) {
-> +                       .connector_type =3D DRM_MODE_CONNECTOR_HDMIA,
-> +               },
->         },
->         {},
->  };
-> --
-> 2.43.0
->
+Am Wed, 19 Feb 2025 20:22:13 +0100
+schrieb Andi Shyti <andi.shyti@kernel.org>:
 
-Reviewed-by: Robert Foss <rfoss@kernel.org>
+> Hi,
+>=20
+> On Fri, Feb 07, 2025 at 07:54:35PM +0100, Andreas Kemnade wrote:
+> > On the GTA04A5 writing a reset command to the gyroscope causes IRQ
+> > storms because NACK IRQs are enabled and therefore triggered but not
+> > acked.
+> >=20
+> > Sending a reset command to the gyroscope by
+> > i2cset 1 0x69 0x14 0xb6
+> > with an additional debug print in the ISR (not the thread) itself
+> > causes
+> >=20
+> > [ 363.353515] i2c i2c-1: ioctl, cmd=3D0x720, arg=3D0xbe801b00
+> > [ 363.359039] omap_i2c 48072000.i2c: addr: 0x0069, len: 2, flags: 0x0, =
+stop: 1
+> > [ 363.366180] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x1110)
+> > [ 363.371673] omap_i2c 48072000.i2c: IRQ (ISR =3D 0x0010)
+> > [ 363.376892] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
+> > [ 363.382263] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
+> > [ 363.387664] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
+> > repeating till infinity
+> > [...]
+> > (0x2 =3D NACK, 0x100 =3D Bus free, which is not enabled)
+> > Apparently no other IRQ bit gets set, so this stalls.
+> >=20
+> > Do not ignore enabled interrupts and make sure they are acked.
+> > If the NACK IRQ is not needed, it should simply not enabled, but
+> > according to the above log, caring about it is necessary unless
+> > the Bus free IRQ is enabled and handled. The assumption that is
+> > will always come with a ARDY IRQ, which was the idea behind
+> > ignoring it, proves wrong.
+> > It is true for simple reads from an unused address.
+> >=20
+> > So revert
+> > commit c770657bd261 ("i2c: omap: Fix standard mode false ACK readings").
+> >=20
+> > The offending commit was used to reduce the false detections in
+> > i2cdetect. i2cdetect warns for confusing the I2C bus, so having some
+> > rare false detections (I have never seen such on my systems) is the
+> > lesser devil than having basically the system hanging completely.
+> >=20
+> > No more details came to light in the corresponding email thread since
+> > several months:
+> > https://lore.kernel.org/linux-omap/20230426194956.689756-1-reidt@ti.com/
+> > so no better fix to solve both problems can be developed right now. =20
+>=20
+> I need someone from TI or someone who can test to ack here.
+>=20
+> Can someone help?
+>
+The original (IMHO minor) problem which should be fixed by c770657bd261
+is hard to test, I have never seen that on any system (and as a
+platform maintainer have a bunch of them) I have access to.
+There is not much description anywhere about the system in which the
+original system occured, and no reaction since several months from the
+author, so I do not see anything which can be done.
+Maybe it was just faulty hardware.
+
+As said in the commit message, reverting it should be the lesser devil.
+And that state was tested for many years.
+
+Regards,
+Andreas
+
+--Sig_/pGvym2.eb.LfB7wXpsrzdqG
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQT6OyBG8iTmbVOVWD8X53T0dSWG3AUCZ7bxJAAKCRAX53T0dSWG
+3CEnAQD9YPchBZTlbER2pSZE6PR2QcdauLXq2J6xDhm69AFTVAD6AiOkdkrGCCLi
+aYx1UJCBw1gI8VZjHqDZljSOEvWjCgY=
+=OlEK
+-----END PGP SIGNATURE-----
+
+--Sig_/pGvym2.eb.LfB7wXpsrzdqG--
