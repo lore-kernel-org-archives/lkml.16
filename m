@@ -1,105 +1,105 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BC113FD86
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17D31F3B93
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740053880; cv=none; b=rq4UojhdhIDdnvvWxqEtq6rIXLRa1iBpjUxU2QA4WmiJuy2rpzrqc8B88QkHWF2CGFU41sDhVv9ttj6r6XRlAyCYJwHHqoV5ok3ynhi3FX0yMUeJiCd4lYsjJDTWJPjTcHPKrkSFGc9pP2ihxbFyJGUnXfwsX6uLG0L90TkkEw8=
+	t=1740053883; cv=none; b=lbBCIe7MXgeAVLjJdgZKesyi1ZpZ1U3TCdtIfr0tNbKMAdSU6PuIvmWdcInZXOvHpfwNGm2+2A7PDH0siz5L4KebCT+88cKBM1DDWjZVVgRoDADFs3VNwVDMGEbyRCIqxOvcGeT6C/Im1M0flvX0tkBoR6rIBtGTp+fFG8JXJ8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740053880; c=relaxed/simple;
-	bh=ovInfsJ96+xONzJYIftLY8ItKnYcVc+4SXbTYAmQao8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mmYDDVnpP+fkBRMZsIvSBcsJmIhofJbGLiCHWnqxjow8UT/xm8pDzqTnE6WdNmNEaXWRsnJUpX1rNTVi7/NAeiBofJCwzxRANGXMJWQ5n+BvaljgIqYeQPIMlk3ncpKeIV+V3UcCeCcx2E505K4d3G60fcGd8XvnhLQ9083Gzs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SjZ+KiG+; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1740053883; c=relaxed/simple;
+	bh=6m3pn5teB6D33EiP9PjyRNzHejwBzfVH65xximy5EQU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p3BFETxeyPfPldzs1jF12PK6XGuJw8PkTZdSyIOoOmpe8PBXZfTuZEym1A/Rv7PfbEFjNkUrsacAd6Hx8PVe9IMWQUzfyf5RIH0HBr4hatbnP1O4JkzM2p8+SPDLqPE7oSIYzg11jwrGXe0XQKex7DvAavIm6r2EuHXZLb0RVaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=SF0fAFAs; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SjZ+KiG+"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220e6028214so16490325ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:17:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="SF0fAFAs"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d193fc345aso2987735ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 04:18:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740053878; x=1740658678; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Mhxc0Zvns6Yn1JJtRPi3TJJp5srNdU12f0u9NFGaDA=;
-        b=SjZ+KiG+85PWwNTuFGrqjAvwy002TYPYJWUiMSawMdMnB1+5PITTJvks6tIMBrEvbb
-         wT4uX8sdYwMM5jua464yjhOIJn6MCPdj4uptitZtazjIp5ebEbwD1op3z8ConAI4gXsE
-         WNJY49wb+xWUTve6pvzjQvwgu7mRQkPErqadiebR3Gazu8dbZ3qkGptA5ESGJWoVQ++7
-         akmK+NyAJcY7yUO8fokZ/d6D/Z2L6aEUvxIxtUfNE4akqdBa4xVXOTpnofBRGz1GdYqF
-         ZTGVssazxVwB0QsTs1Ak4HL/WHlQYyh92LSeOE/PecG4dmGDlB//DgcLLy89IYN2LrQf
-         sPhg==
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1740053881; x=1740658681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rmI+w9rW7xuxQgzQY4zgyZiBf+VpYD43wlkF4w4/Fxk=;
+        b=SF0fAFAss56S5/kldJcO5bNJILxkssyS1ga/tzhkdUQFpBVB590jWwLiJ7+E/iAuQU
+         3JGWKPr81N7OzTonmnzjWbQqGsxt/mHQyDEBAG2Hr/+1aOON3SIX8PppB8LcXfoLqQwP
+         vKkT8Ald8KMtl9lkMRI2B0j/83OK6smXaFF8vr8SCA9fkSXNh8DpG5uOZJ813LUTNvnc
+         iC1BLBzzb+W0sa0z1wDPV2Yr7Y9ZC+9MutpF+5yUvTXEIJojFqC/QWA8ZivI0IlamuAi
+         xtf428dOypj71Ev8mcTG3ZvvDS4+h3CcwX5HyQuohPeE4NQlI/Y71jx1O7K6aJ77H9RY
+         EldQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740053878; x=1740658678;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Mhxc0Zvns6Yn1JJtRPi3TJJp5srNdU12f0u9NFGaDA=;
-        b=QJ0oik2FHZAwHdEZydD6tQLF45t+eHKV0VYXALU/Bt4uC4RNVnNE4DqlLN745oMM80
-         bsMbjKsj0Z1qV/eEUxOBSEy4PMsgvUz1BC/wreIOOpNuLUoA8oJdsF2/euW+6bivOi4R
-         8IpeV7oPVLdSBS7rGV7KaILOtsFRPd4f+Iyt9xU2o0C6bOMCvG8SrWWQzOXfiwl+Ltnk
-         LxzJA/1fykcWMgfQdc0TsVcOW0A0Dk0ruwd9X+45tKxL97SOx7M5Q0S0f08MPDweXvOj
-         1Boq0E0DrTU/uVLXjBmvAveZEMlzrmVlnQDQvZKQC04f1TNihzosYmZD1SGkHq5JibZ4
-         idvA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaJrzRfctix8xO/079EBAwE6w+/AQpB22UM+lg1u7YIgrjG++k6qsGhxQ1bHshNALi59ivHpKralwISuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvRM9hllVrv5jPRc5s92QXVXGaxKpWT4ya4ELo9/LHpu3loDNV
-	JZI6qJX40DvuIT7o/MF7LzFu2k+CuDISzUezMCVOEcOk9mHGIWKeNHsaBzkznwg=
-X-Gm-Gg: ASbGncvLC8s0mQ+yexs3r2/SIXHxEZYRsK/9pLHkcCAFVONILVp7V/oAz7Hx0+dDQU6
-	MsefIXdc5Wtsd2s2/ZpGIIR/mu8NMcURdFFVFXVIRHR/11rV41YDrgM+XMOk3nmoRnHsSXYzu4N
-	QB0F6/yJ3J9k02IQvqYuxqyUNdCXRXrCe/OPDMG7eMghpAVpA7ccERxZtjiUtrGDZpf8lUWQdIx
-	9kNFk3qfvy516NrpN7wQXSdmMAFE8sB8hzo15HBIiZbccRLv8veYIyu98KHGMYBQumZCufzHyYX
-	09SCC2EWTCPaCDG2O6l9l28m/d52Gvb3hsODmBh7Qn/Kfiqvew==
-X-Google-Smtp-Source: AGHT+IGDJ50LQRWaa3WO9QsRF4eufVt9fyhtOZXwrn91dXqUgW/zlEdNiAcm4tKuEZGfurYEc02gAQ==
-X-Received: by 2002:a17:902:e806:b0:21f:81f4:21b8 with SMTP id d9443c01a7336-221906a6c10mr37088815ad.50.1740053878554;
-        Thu, 20 Feb 2025 04:17:58 -0800 (PST)
-Received: from L6YN4KR4K9.bytedance.net ([139.177.225.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-221040434d9sm87773895ad.196.2025.02.20.04.17.55
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 20 Feb 2025 04:17:58 -0800 (PST)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>
-Subject: [PATCH v4 0/2] Fix dwc_pcie pmu driver issues
-Date: Thu, 20 Feb 2025 20:17:14 +0800
-Message-Id: <20250220121716.50324-1-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+        d=1e100.net; s=20230601; t=1740053881; x=1740658681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rmI+w9rW7xuxQgzQY4zgyZiBf+VpYD43wlkF4w4/Fxk=;
+        b=k+cUVB/amDOGf4AlhFx76teA3k6sDLiTIvuRrvwdiJTF4O+NehmPorNcnfuGolDkNf
+         m7Q99GC/KIEVdQ6HHjuVdRKBAD/2fOs+5iOaU8+pmxyAIqpJFZPeM3U+OZSa1TqZlxDr
+         UxRQHppyMNh7Q2uXHkUaMUpSx0Ok0deQe/Mz3q4DFrFE5rxaWkR7Rv8RagaSrvVNFl4C
+         PvkoPIvP+WFIrAZJZhxbL+zn/TsD+wjXiDYbGdmLXvDkANdpuUZsFyMMIc8CmNmESGwD
+         EJ41S3yc8xPXkY1J/hIcLiimkhXwyfSZh3k/sEXzLWQ60oQOO48XxhzfPxMMQr+dZPHE
+         mJrw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+xHpX3st3T/4xDN9KC/buPR75t2nrI3DKWSM4anesh+xeZjlkGj93mnlccCmXZ2Qp6GL9koF1DMjzWGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAfn0YIDsAJUIgBFMKpEDe5Qz8rYz6vyg/JAC1bVWnLMegHkGD
+	IMMNCTZSaJgoMggn03AgIDnXw8UNJkJ/9wgWBfUE/SU3iPS3V4qARut4valbhB4u44POmWzMdsT
+	DTeH1lE4MpTv1xnzZZxzSgI0t1rFuJunPnKVLXw==
+X-Gm-Gg: ASbGncsfUKw+50QbKJ+ADNcIGSsblhu2jndAOHeG8usqcNKvNjH3b340n1NUUEWLdYF
+	vOVN4X8ytoCLuF1g1ghExiibAI9LiWUHBA1EyO6JtWDX8YG4c5Hz99YidxJPcSPOVXAy42aSXGQ
+	==
+X-Google-Smtp-Source: AGHT+IHL3+9MtLF5+UaRybyEp8BV4Gc3bjSjy3kw4hdoypBWleJFfSGz7eyOLjRCOfAS7PzLJ2idDqWgGFTRfAm5dPo=
+X-Received: by 2002:a05:6e02:152d:b0:3d1:9236:ca52 with SMTP id
+ e9e14a558f8ab-3d2b5131279mr59896385ab.0.1740053880695; Thu, 20 Feb 2025
+ 04:18:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217084506.18763-7-ajones@ventanamicro.com>
+In-Reply-To: <20250217084506.18763-7-ajones@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Thu, 20 Feb 2025 17:47:49 +0530
+X-Gm-Features: AWEUYZmV63eOiG44RnPBMnqx1Uo6sIZHLWWs9x29seXyEVn1h53Dh8XbVUUsj0U
+Message-ID: <CAAhSdy0cqoN5MehwDtQEtK7EYSTXPekwYEJWgPvAK+Y4uk=40Q@mail.gmail.com>
+Subject: Re: [PATCH 0/5] riscv: KVM: Fix a few SBI issues
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, cleger@rivosinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-v1:
-Only sent the patch titled "fix duplicate pci_dev devices".
+On Mon, Feb 17, 2025 at 2:15=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
+om> wrote:
+>
+> Fix issues found with kvm-unit-tests[1], which is currently focused
+> on SBI.
+>
+> [1] https://gitlab.com/jones-drew/kvm-unit-tests/-/commits/riscv/sbi
+>
+> Andrew Jones (5):
+>   riscv: KVM: Fix hart suspend status check
+>   riscv: KVM: Fix hart suspend_type use
+>   riscv: KVM: Fix SBI IPI error generation
+>   riscv: KVM: Fix SBI TIME error generation
+>   riscv: KVM: Fix SBI sleep_type use
 
-v2:
-1. New patch: "fix the incorrect reference count".
-2. The "fix duplicate pci_dev devices" change is made in two places:
-One is to remove the modification of the PMU name. The other is to change
-"for_each_pci_dev" to "pci_get_domain_bus_and_slot".
+Queued these fixes for Linux-6.14-rcX.
 
-v3:
-patch[1]: Remove the logic of "fixing the reference count".
-patch[2]: When pr_err, also output the sbdf.
+Regards,
+Anup
 
-v4:
-patch[2]: Restore "platform_dwc_pcie" to "dwc_pcie_pmu".
-
-
-Yunhui Cui (2):
-  perf/dwc_pcie: fix some unreleased resources
-  perf/dwc_pcie: fix duplicate pci_dev devices
-
- drivers/perf/dwc_pcie_pmu.c | 51 ++++++++++++++++++++++++-------------
- 1 file changed, 34 insertions(+), 17 deletions(-)
-
--- 
-2.39.2
-
+>
+>  arch/riscv/kvm/vcpu_sbi_hsm.c     | 11 ++++++-----
+>  arch/riscv/kvm/vcpu_sbi_replace.c | 15 ++++++++++++---
+>  arch/riscv/kvm/vcpu_sbi_system.c  |  3 ++-
+>  3 files changed, 20 insertions(+), 9 deletions(-)
+>
+> --
+> 2.48.1
+>
