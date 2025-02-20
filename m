@@ -1,100 +1,105 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5510D1FFC78
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF4F1FBC9E;
+	Thu, 20 Feb 2025 15:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740066948; cv=none; b=XCpQDh2/5Y1+ydWWuGV4TVADGPH82Rrmo/RIenSNHas/VYkhi1OJZ7AslZb61zfybvS6mjieXgxrubi28SGWEVlGfYGpam5+dGnkMgH88arEn1zbgArurn22lNsVHnvWs5wlnNvyB5MRS11YmYXv6WMTTAHXXtX38IEzoR57SOE=
+	t=1740066966; cv=none; b=Vkq3/3pACjs9h9I9BqkegMOw6z2GZxFR+WIqpjqKwqZR8eOxRhRp0mJ68zL2nqPlkSkeRAC1W+YRA+0zwtUpxS1SD9/N93quLt4619u2F7dzJUcZIDZfgdKojwN/QwBH6ce7qqpGF7JoYxO0fYtLbQmLa0SMYeBOS1KG2R3Yit0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740066948; c=relaxed/simple;
-	bh=nGjY0pcALgantTol9y3eDcS8ift8hVBdT5A0SWQDHUg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IXBesTRiEqATZ6w13EycS0wMEA+9lD1No+CmnADZJRwC5QCdjpU8nsPFl5/2yAsCPWrf8JTg2Toe8wjM5p0sNaqqN+x5/SxZzEUWf1YAtDucWQ6TL/Yxe7coXz65X6i4++SjZ1bFnkGY53zaoWspEUqPnN5oSI3OAcGmx4irB8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PNwqK2ba; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740066966; c=relaxed/simple;
+	bh=Dd68mWyJibumUB8TwEojxnqCXZ3BFmtso9EvwgpCMTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f4T9IZbZvyuc8j7G8ulIEmuMFfP6ClWKkpnTJsNH1QWEI4CCzeRc3hdin9VIRu237xHF694/Lw/Mr+Tit6YIVOM8gwuHumwnoaC4gX9i4CNNRwfbO7kIKhRfq50NF4zvQHGlc/sjACcGAnQsEbbyqDW0icIigswrUArywoypeQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gvRfdxP1; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PNwqK2ba"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-472098e6e75so300111cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:55:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740066946; x=1740671746; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xqf65nED3NYJwmlnVPTvXBomckILIduk3AQAFu4O9k0=;
-        b=PNwqK2baPDmaRfZtyCmk1BJ6kk3baSK4E16rOBF/bIHfe4lkGs5XNVDXGNVkRgIfjt
-         stKA9To9oVOE8LvHh0AAVIYguoBxSmE3DnV84MFxcaJw5046bze+eM5A+jWASaqPtfG8
-         KEdnQoDTKMd7nDNOzz2nWsNnljOPXExVdHmAgiA+bjktH9eGjWFwqxG/SWz+yoiButaU
-         FUkZX0QEB7apg2yPundG0d/M34Ms3KIGq+LEHUvKum7rYbQvx06ZART0ztJefGX4uLpb
-         2dQ2qZPM661rXQzpy8zgFy77z6jsKSHV1NgR3UVGqZaqYAYzFBOu2gjc/WLP5acxCvgK
-         c1zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740066946; x=1740671746;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xqf65nED3NYJwmlnVPTvXBomckILIduk3AQAFu4O9k0=;
-        b=FfhVeyp9SM77Qq65RBTgyjITzH9vYqogXTwCMRebbxf9Gz+ziThOMzVXUMWJLH/mdP
-         Hir0S/ert7iRUJdxUss4Fn0S4CzbhOU9KmnNxnqpULDaiZIvG/DLeHln9zsQt4HTppS8
-         Z10n46smr2ZmhAkmxW76pP5N8bm3TOtIqyHlQnydBaBksNH0auhHh9ltJutn9H1fKvfM
-         vbdfzMlaj2LR4iaJ6cAkCkHP10xNgCh5ReteeDGRBfe4fEXZSw+lW1+NyeUw+uJYq4HB
-         0Adx7TFupsdY5VHZL/MokYdlSPOSjr/w2XxfDSO5CuXHNHRGdQD8FpcqTX3e2GdIJNpn
-         mELg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQsYQ0Zk5wRLfOOvWLKu7RP2/jaQ5UC68muxt7/EIbh6ydzTT5A8orA4WcmmQTDdx9kjlbIyizKIwwexg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsHQAQ+p3XgaJzwntkxTFf5YnR3uc/FwjT7C/4WHrQRL3pWZ2D
-	0Q8tJZzTpWe6AA+0STsCaFoUHvVlHrQ1lPkfVreRodPEyIjuP3ApAGfrqNS/+id8aKT2h+1mqFR
-	8Pikplepb2UrPa0UOcNAJ2PR5swR87lPFh/kL7+UQeJitViL3FWh4
-X-Gm-Gg: ASbGncs2caZn+foMcm8yIMSTbMmnokzpo5XZI265T2k6gXe/7gVteclk0v/WyAzq9W2
-	ZDqbiQRMB2fVDnzbxcZpyAlUqSO6BxwZvDeirT86A9dg2mPDI4LsAQk2S4ndN4ygSYG5UTeiZZm
-	DHmsYJ+EwICPdlrLoqfd0S3rGY2Bc=
-X-Google-Smtp-Source: AGHT+IHOdWO/3Z/ofouQMFSA/yPXXraLlaV7hAkItx8s9YCocwCXJATlNZf0CcBawq4mps1HDugVCO75m47tbi/iLio=
-X-Received: by 2002:a05:622a:428a:b0:471:f257:7a5f with SMTP id
- d75a77b69052e-4721711149bmr4179751cf.13.1740066946034; Thu, 20 Feb 2025
- 07:55:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gvRfdxP1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740066962;
+	bh=Dd68mWyJibumUB8TwEojxnqCXZ3BFmtso9EvwgpCMTQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gvRfdxP1yjGqu7HQ7lttCRdMEE4nZ8PLonPHC5dan9B3mNW1GnHKIiDLkkjIj2v3g
+	 KHypzBBQk2cW9FHUWtjDzw4ryElrN1yujKOACsgkVW4B/QXOmrUs+LQ2BYG7Nli+hP
+	 O0K8W5n7G0IjxbxqSTYZ5XTCki04ysZiEtImkwyPARnqBIyobzZTex7ihtm7UrZYIC
+	 dgLhEjpr1FJs3EU81c5mxE81nm5/f+Ux4GfhYn9TGYAyIV/J6FDRpD8aNOLVWuJ+Bo
+	 A2j0WrGnX2umT9I3mFst3Ft6at+hoj4OMwnJV4mHWTPhnaZolCe5GyrsLCg/MWIV9A
+	 siui4kJs6qApQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3E4F617E0E95;
+	Thu, 20 Feb 2025 16:56:01 +0100 (CET)
+Message-ID: <ae34efcd-4fe1-4e45-a1e1-0744138a84b9@collabora.com>
+Date: Thu, 20 Feb 2025 16:56:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220-mm-selftests-v1-0-9bbf57d64463@google.com>
- <20250220-mm-selftests-v1-6-9bbf57d64463@google.com> <da1c3dcb-5296-47bd-b5ed-9cb8833377cf@arm.com>
-In-Reply-To: <da1c3dcb-5296-47bd-b5ed-9cb8833377cf@arm.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Thu, 20 Feb 2025 16:55:34 +0100
-X-Gm-Features: AWEUYZlPMDgaqu__QrVZ4KFp2sTS1uCxjoo7b3B-CAxYQcbUHy2R1SAZIvagXmU
-Message-ID: <CA+i-1C1VjdMb6YLEvORkZhiqVCE_G5BphJmAcr00U6KCfC7xtw@mail.gmail.com>
-Subject: Re: [PATCH 6/6] selftests/mm: Don't fail uffd-stress if too many CPUs
-To: Dev Jain <dev.jain@arm.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: usb: mtu3: Add ports property
+To: Macpaul Lin <macpaul.lin@mediatek.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ Alexandre Mergnat <amergnat@baylibre.com>
+Cc: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
+ Macpaul Lin <macpaul@gmail.com>,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ Chris-qj chen <chris-qj.chen@mediatek.com>
+References: <20250220142230.2530583-1-macpaul.lin@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250220142230.2530583-1-macpaul.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Feb 2025 at 16:48, Dev Jain <dev.jain@arm.com> wrote:
->
->
->
-> On 20/02/25 8:33 pm, Brendan Jackman wrote:
-> > This calculation divides a fixed parameter by an environment-dependent
-> > parameter i.e. the number of CPUs.
-> >
-> > The simple way to avoid machine-specific failures here is to just put a
-> > cap on the max value of the latter.
->
-> I haven't read the test, but if nr_cpus is being computed, then this
-> value must be important to the test somehow? Would it potentially be
-> wrong to let the test run for nr_cpus != actual number of cpus?
+Il 20/02/25 15:22, Macpaul Lin ha scritto:
+> Define the ports property in the mediatek,mtu3 device tree binding schema.
+> Include definitions for port@0 and port@1, specifying their roles as
+> High Speed (HS) and Super Speed (SS) data buses, respectively.
+> 
+> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
 
-Based on my _extremely hasty_ reading, the variable is misnamed and
-it's actually a thread count not a CPU count. I can double check
-that's the case and rename it.
+Some SoCs do have SuperSpeed peripheral mode, so for this commit
 
-> Also, if the patch is correct then will it be better to also print a
-> diagnostic telling the user that the number of cpus is going to be
-> capped for the test to run?
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Sure. The level of detail in the  logging and error messages is
-extremely low here so I didn't feel like being too anomalous, but why
-not.
+> ---
+>   .../devicetree/bindings/usb/mediatek,mtu3.yaml       | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml b/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
+> index d4e187c78a0b..21fc6bbe954f 100644
+> --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
+> @@ -155,6 +155,18 @@ properties:
+>         property is used. See graph.txt
+>       $ref: /schemas/graph.yaml#/properties/port
+>   
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +    properties:
+> +      port@0:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: High Speed (HS) data bus.
+> +
+> +      port@1:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: Super Speed (SS) data bus.
+> +
+>     enable-manual-drd:
+>       $ref: /schemas/types.yaml#/definitions/flag
+>       description:
+
+
